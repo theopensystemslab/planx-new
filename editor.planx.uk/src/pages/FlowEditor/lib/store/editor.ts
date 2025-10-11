@@ -26,8 +26,6 @@ import axios from "axios";
 import { client } from "lib/graphql";
 import navigation from "lib/navigation";
 import debounce from "lodash/debounce";
-import isEmpty from "lodash/isEmpty";
-import omitBy from "lodash/omitBy";
 import { type } from "ot-json0";
 import { ContextMenuPosition, ContextMenuSource } from "pages/FlowEditor/components/Flow/components/ContextMenu";
 import { NewFlow } from "pages/Team/components/AddFlow/types";
@@ -177,10 +175,6 @@ export const editorUIStore: StateCreator<
   }
 );
 
-interface PublishFlowResponse {
-  alteredNodes: Store.Node[];
-  message: string;
-}
 
 export type PublishedFlowSummary = {
   publishedAt: string;
@@ -218,6 +212,17 @@ interface CopiedPayload {
   nodes: { originalId: string; nodeData: Store.Node }[];
 }
 
+export interface Template {
+  id: string;
+  team: {
+    name: string;
+  };
+  publishedFlows: {
+    publishedAt: string;
+    summary: string;
+  }[];
+};
+
 export interface EditorStore extends Store.Store {
   addNode: (node: any, relationships?: Relationships) => void;
   archiveFlow: (
@@ -232,7 +237,6 @@ export interface EditorStore extends Store.Store {
   createFlow: (newFlow: NewFlow) => Promise<string>;
   createFlowFromTemplate: (newFlow: NewFlow) => Promise<string>;
   createFlowFromCopy: (newFlow: NewFlow) => Promise<string>;
-  validateAndDiffFlow: (flowId: string) => Promise<any>;
   getFlows: (teamId: number) => Promise<FlowSummary[]>;
   isClone: (id: NodeId) => boolean;
   lastPublished: (flowId: string) => Promise<string>;
@@ -242,16 +246,7 @@ export interface EditorStore extends Store.Store {
   isFlowPublished: boolean;
   isTemplate: boolean;
   isTemplatedFrom: boolean;
-  template?: {
-    id: string;
-    team: {
-      name: string;
-    };
-    publishedFlows: {
-      publishedAt: string;
-      summary: string;
-    }[];
-  };
+  template?: Template;
   makeUnique: (id: NodeId, parent?: NodeId) => void;
   moveFlow: (
     flowId: string,
@@ -271,11 +266,6 @@ export interface EditorStore extends Store.Store {
    * Recursively inserts all nested children
    */
   pasteNode: (toParent: NodeId, toBefore?: NodeId) => void;
-  publishFlow: (
-    flowId: string,
-    summary: string,
-    templatedFlowIds?: string[],
-  ) => Promise<PublishFlowResponse>;
   removeNode: (id: NodeId, parent: NodeId) => void;
   updateNode: (node: any, relationships?: any) => void;
   undoOperation: (ops: OT.Op[]) => void;
@@ -502,20 +492,6 @@ export const editorStore: StateCreator<
     return response.data.id;
   },
 
-  validateAndDiffFlow(flowId: string) {
-    const token = get().jwt;
-
-    return axios.post(
-      `${import.meta.env.VITE_APP_API_URL}/flows/${flowId}/diff`,
-      null,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-  },
-
   getFlows: async (teamId) => {
     client.cache.reset();
     const {
@@ -598,10 +574,10 @@ export const editorStore: StateCreator<
       query: gql`
         query GetLastPublisher($id: uuid!) {
           flow: flows_by_pk(id: $id) {
-            published_flows(order_by: { created_at: desc }, limit: 1) {
+            publishedFlows: published_flows(order_by: { created_at: desc }, limit: 1) {
               user {
-                first_name
-                last_name
+                firstName: first_name
+                lastName: last_name
               }
             }
           }
@@ -612,9 +588,9 @@ export const editorStore: StateCreator<
       },
     });
 
-    const { first_name, last_name } = data.flow.published_flows[0].user;
+    const { firstName, lastName } = data.flow.publishedFlows[0].user;
 
-    return first_name.concat(" ", last_name);
+    return firstName.concat(" ", lastName);
   },
 
   isFlowPublished: false,
@@ -747,36 +723,6 @@ export const editorStore: StateCreator<
     } catch (err) {
       alert((err as Error).message);
     }
-  },
-
-  async publishFlow(
-    flowId: string,
-    summary: string,
-    templatedFlowIds?: string[],
-  ) {
-    const token = get().jwt;
-
-    const urlWithParams = (url: string, params: any) =>
-      [url, new URLSearchParams(omitBy(params, isEmpty))]
-        .filter(Boolean)
-        .join("?");
-
-    const { data } = await axios.post<PublishFlowResponse>(
-      urlWithParams(
-        `${import.meta.env.VITE_APP_API_URL}/flows/${flowId}/publish`,
-        { summary, templatedFlowIds },
-      ),
-      null,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-
-    set({ isFlowPublished: true });
-
-    return data;
   },
 
   removeNode: (id, parent) => {
