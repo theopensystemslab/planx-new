@@ -14,7 +14,7 @@ Our `/gis` API sets the passport variable `articleFour` by default for _any_ ent
 
 3. **Council & Planx content team** - Write `articleFour` flow in Planx editor and fill out "GIS spreadsheet" googlesheet template. Content team creates a Trello ticket in "New requests" when this is complete.
 
-4. **Planx** - Create a new metadata template in `api.planx.uk/modules/gis/service/local_authorities/metadata/{council}.ts`. 
+4. **Planx** - Create a new metadata template in `apps/api.planx.uk/modules/gis/service/local_authorities/metadata/{council}.ts`. 
 
 It should be formatted like this:
 ```ts
@@ -46,7 +46,7 @@ The dictionary of `records` should have one key/value pair per each unique granu
 
 The council should map their GIS identifiers themselves in the spreadsheet, but often this is partially complete or missing and simpler to quickly match against planning.data.gov.uk search results ourselves than start a communication back and forth (it's often not the same council person who knows the Article 4 rules as who understands the spatial data structure).
 
-5. **Planx** - Add an entry for this council to the `localAuthorityMetadata` variable defined at the top of `api.planx.uk/modules/gis/service/digitalLand.ts`
+5. **Planx** - Add an entry for this council to the `localAuthorityMetadata` variable defined at the top of `apps/api.planx.uk/modules/gis/service/digitalLand.ts`
    
 6. **Planx** - Toggle the database column `team_settings.has_article4_schema` to be `true` via the Hasura console. This is used by the admin panel view for platform admins.
 

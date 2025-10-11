@@ -21,4 +21,4 @@ Planx queries planning.data.gov.uk to fetch data about constraints for councils 
 
 ## Exceptions
 - In the rare event that the ODP Schema _does not_ have an entry for this dataset per #2, then raise to content team & in #planx-schemas. The team will decide on a new data value and begin the steps to queue up a new release of the schema before #3 can be completed
-- If the data associated with this constraint has attributes which should be assigned granular data values (eg listed building "grades", flood risk "zones", article 4s), then additional changes to our API logic will be required in `api.planx.uk/modules/gis/digitalLand.ts`. These are handled on a case-by-case basis
+- If the data associated with this constraint has attributes which should be assigned granular data values (eg listed building "grades", flood risk "zones", article 4s), then additional changes to our API logic will be required in `apps/api.planx.uk/modules/gis/digitalLand.ts`. These are handled on a case-by-case basis

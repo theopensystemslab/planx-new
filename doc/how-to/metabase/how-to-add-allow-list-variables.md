@@ -14,7 +14,7 @@ In these docs I will run through the steps for adding a new variable to `ALLOW_L
 ### Step 1 - Add variables to `ALLOW_LIST` array
 
  You will need to add the desired variables to two places in the codebase
-  `api.planx.uk/modules/webhooks/service/analyzeSessions/operations.ts` and `editor.planx.uk/src/pages/FlowEditor/lib/analytics/provider.tsx`.
+  `apps/api.planx.uk/modules/webhooks/service/analyzeSessions/operations.ts` and `editor.planx.uk/src/pages/FlowEditor/lib/analytics/provider.tsx`.
 
   Each file should have an array looking like the below:
 

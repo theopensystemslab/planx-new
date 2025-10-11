@@ -43,7 +43,7 @@ const createPaymentSendEvents = async (
     }
 
     // Find this sessions Send component, determine which "destinations" we need to queue up events for
-    //   REMINDER to keep these destinations in sync with api.planx.uk/modules/send/createSendEvents/controller.ts
+    //   REMINDER to keep these destinations in sync with apps/api.planx.uk/modules/send/createSendEvents/controller.ts
     const sendNode: [string, Node] | undefined = Object.entries(
       publishedFlowData,
     ).find(([_nodeId, nodeData]) => nodeData.type === ComponentType.Send);
