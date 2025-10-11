@@ -14,7 +14,8 @@ import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { AlteredNode, HistoryItem, TemplatedFlows, ValidationCheck } from "api/publishFlow/types";
+import { AlteredNode, HistoryItem, PublishFlowArgs, TemplatedFlows, ValidationCheck } from "api/publishFlow/types";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { FONT_WEIGHT_BOLD } from "theme";
 import InputLabel from "ui/editor/InputLabel";
@@ -78,14 +79,10 @@ interface ChangesDialogProps {
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   alteredNodes: AlteredNode[];
   history?: HistoryItem[];
-  lastPublishedTitle: string;
+  status: string;
   validationChecks: ValidationCheck[];
   previewURL: string;
-  handlePublish: (
-    summary: string,
-    templatedFlowIds?: string[],
-  ) => Promise<void>;
-  isTemplate: boolean;
+  handlePublish: (args: PublishFlowArgs) => Promise<void>;
   templatedFlows?: TemplatedFlows;
 }
 
@@ -95,13 +92,14 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
     setDialogOpen,
     alteredNodes,
     history,
-    lastPublishedTitle,
+    status,
     validationChecks,
     previewURL,
     handlePublish,
-    isTemplate,
     templatedFlows,
   } = props;
+
+  const [isTemplate] = useStore(state => [state.isTemplate])
 
   const steps = ["Review", "Test", "Publish"];
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -136,7 +134,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
             </ErrorWrapper>
             <AlteredNodesSummaryContent
               alteredNodes={alteredNodes}
-              lastPublishedTitle={lastPublishedTitle}
+              title={status}
               history={history}
             />
           </>
@@ -253,7 +251,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
       if (invalidInput) {
         setShowError(true);
       } else {
-        handlePublish(summary, templatedFlowIds);
+        handlePublish({ summary, templatedFlowIds });
         setActiveStep(0);
         setSummary("");
       }
