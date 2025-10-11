@@ -14,6 +14,7 @@ import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { AlteredNode, HistoryItem, TemplatedFlows, ValidationCheck } from "api/publishFlow/types";
 import React, { useState } from "react";
 import { FONT_WEIGHT_BOLD } from "theme";
 import InputLabel from "ui/editor/InputLabel";
@@ -22,10 +23,8 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 
 import { CopyButton } from "../../Settings/ServiceSettings/FlowStatus/PublicLink";
-import { HistoryItem } from "../EditHistory";
-import { AlteredNode, AlteredNodesSummaryContent } from "./AlteredNodes";
-import { TemplatedFlows } from "./CheckForChangesButton";
-import { ValidationCheck, ValidationChecks } from "./ValidationChecks";
+import { AlteredNodesSummaryContent } from "./AlteredNodes";
+import { ValidationChecks } from "./ValidationChecks";
 
 interface NoChangesDialogProps {
   dialogOpen: boolean;
