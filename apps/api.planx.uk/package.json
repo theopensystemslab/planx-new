@@ -68,7 +68,7 @@
     "test:coverage": "TZ=Europe/London vitest run --coverage && open coverage/lcov-report/index.html",
     "test:watch": "TZ=Europe/London vitest --ui --coverage",
     "build": "rimraf ./dist && npx tsc && pnpm copy-swagger-files",
-    "prepare": "cd .. && husky install apps/api.planx.uk/.husky",
+    "prepare": "cd ../.. && husky install apps/api.planx.uk/.husky",
     "copy-swagger-files": "copyfiles '**/docs.yaml' dist"
   },
   "lint-staged": {
