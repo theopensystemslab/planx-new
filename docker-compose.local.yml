@@ -16,7 +16,7 @@ services:
 
   sharedb:
     volumes:
-      - "./sharedb.planx.uk:/sharedb"
+      - "./apps/sharedb.planx.uk:/sharedb"
       - "/sharedb/node_modules"
 
 volumes:

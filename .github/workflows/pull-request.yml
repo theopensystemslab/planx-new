@@ -57,7 +57,7 @@ jobs:
             editor:
               - 'editor.planx.uk/**'
             sharedb:
-              - 'sharedb.planx.uk/**'
+              - 'apps/sharedb.planx.uk/**'
             localplanning:
               - 'apps/localplanning.services/**'
 
