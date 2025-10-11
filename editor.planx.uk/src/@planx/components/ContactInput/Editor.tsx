@@ -12,11 +12,15 @@ import InputRow from "ui/shared/InputRow";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
-import { ContactInput, parseContactInput, validationSchema } from "./model";
+import {
+  ContactInput,
+  editorValidationSchema,
+  parseContactInput,
+} from "./model";
 
 export type Props = EditorProps<TYPES.ContactInput, ContactInput>;
 
-export default function ContactInputComponent(props: Props): FCReturn {
+const ContactInputComponent: React.FC<Props> = (props) => {
   const formik = useFormik({
     initialValues: parseContactInput(props.node?.data),
     onSubmit: (newValues) => {
@@ -27,13 +31,13 @@ export default function ContactInputComponent(props: Props): FCReturn {
         });
       }
     },
-    validationSchema,
+    validationSchema: editorValidationSchema,
     validateOnBlur: false,
     validateOnChange: false,
   });
 
   return (
-    <form onSubmit={formik.handleSubmit} id="modal">
+    <form onSubmit={formik.handleSubmit} id="modal" name="modal">
       <TemplatedNodeInstructions
         isTemplatedNode={formik.values.isTemplatedNode}
         templatedNodeInstructions={formik.values.templatedNodeInstructions}
@@ -68,6 +72,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
             />
           </InputRow>
           <DataFieldAutocomplete
+            data-testid="contact-input-data-field"
             required
             value={formik.values.fn}
             onChange={(value) => formik.setFieldValue("fn", value)}
@@ -79,4 +84,6 @@ export default function ContactInputComponent(props: Props): FCReturn {
       <ModalFooter formik={formik} disabled={props.disabled} />
     </form>
   );
-}
+};
+
+export default ContactInputComponent;
