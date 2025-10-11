@@ -16,7 +16,7 @@ services:
     container_name: editor
     image: pierrezemb/gostatic
     volumes:
-      - ./editor.planx.uk/build:/srv/http
+      - ./apps/editor.planx.uk/build:/srv/http
     entrypoint: "/goStatic -fallback /index.html"
 
   localplanning:
@@ -30,7 +30,7 @@ services:
     container_name: storybook
     image: pierrezemb/gostatic
     volumes:
-      - ./editor.planx.uk/build/storybook:/srv/http
+      - ./apps/editor.planx.uk/build/storybook:/srv/http
     entrypoint: "/goStatic -port 8044 -fallback /index.html"
 
   caddy:

@@ -1,6 +1,6 @@
 node_modules/
 /ignore/
-editor.planx.uk/.eslintcache
+apps/editor.planx.uk/.eslintcache
 /minio-data
 .pnpm-debug.log
 .DS_Store
@@ -10,6 +10,9 @@ editor.planx.uk/.eslintcache
 .envrc
 .env.prod
 .env.temp
+apps/api.planx.uk/.env.test
+apps/editor.planx.uk/.env
+apps/hasura.planx.uk/.env.test
 api.planx.uk/.env.test
 editor.planx.uk/.env
 hasura.planx.uk/.env.test
