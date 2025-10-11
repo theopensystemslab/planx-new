@@ -85,10 +85,10 @@ interface AlteredNodesSummary {
 
 export const AlteredNodesSummaryContent = (props: {
   alteredNodes: AlteredNode[];
-  lastPublishedTitle: string;
+  title: string;
   history?: HistoryItem[];
 }) => {
-  const { alteredNodes, lastPublishedTitle, history } = props;
+  const { alteredNodes, title, history } = props;
   const [expanded, setExpanded] = useState(false);
   const comments = history?.filter((item) => item.type === "comment") || [];
   const operations = history?.filter((item) => item.type === "operation") || [];
@@ -96,7 +96,7 @@ export const AlteredNodesSummaryContent = (props: {
   const isPlatformAdmin = useStore.getState().user?.isPlatformAdmin;
 
   const changeSummary: AlteredNodesSummary = {
-    title: lastPublishedTitle,
+    title,
     portals: [],
     updated: 0,
     deleted: 0,
