@@ -3,6 +3,7 @@ import {
   DateInput,
   dateInputValidationSchema,
   paddedDate,
+  UserData,
 } from "@planx/components/DateInput/model";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
@@ -16,7 +17,7 @@ import { object } from "yup";
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 
-export type Props = PublicProps<DateInput>;
+export type Props = PublicProps<DateInput> & { autoAnswer?: UserData };
 
 const DateInputPublic: React.FC<Props> = (props) => {
   const uniqueId = useId();

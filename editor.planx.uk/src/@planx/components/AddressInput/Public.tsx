@@ -13,7 +13,7 @@ import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import type { AddressInput } from "./model";
 import { addressValidationSchema } from "./model";
 
-export type Props = PublicProps<AddressInput>;
+export type Props = PublicProps<AddressInput> & { autoAnswer?: Address };
 
 export default function AddressInputComponent(props: Props): FCReturn {
   const formik = useFormik<Address>({

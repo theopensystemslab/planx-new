@@ -11,7 +11,7 @@ import { ERROR_MESSAGE } from "../shared/constants";
 import type { Contact, ContactInput } from "./model";
 import { contactValidationSchema } from "./model";
 
-export type Props = PublicProps<ContactInput>;
+export type Props = PublicProps<ContactInput> & { autoAnswer?: Contact };
 
 export default function ContactInputComponent(props: Props): FCReturn {
   const previouslySubmittedData =

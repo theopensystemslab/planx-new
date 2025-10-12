@@ -66,6 +66,7 @@ import TaskListComponent from "@planx/components/TaskList/Public";
 import type { TextInput } from "@planx/components/TextInput/model";
 import TextInputComponent from "@planx/components/TextInput/Public";
 import { hasFeatureFlag } from "lib/featureFlags";
+import { AutoAnswerableInputMap } from "pages/FlowEditor/lib/store/preview";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 import { exhaustiveCheck } from "utils";
@@ -104,21 +105,25 @@ const Node: React.FC<Props> = (props) => {
   const previouslySubmittedData =
     nodeId && cachedBreadcrumbs ? cachedBreadcrumbs[nodeId] : undefined;
 
-  const getComponentProps = <T extends object>() => ({
+  const getComponentProps = <
+    TData extends object,
+    TComponentType extends keyof AutoAnswerableInputMap = never,
+  >() => ({
     id: nodeId,
     previouslySubmittedData,
     resetPreview,
     handleSubmit,
-    ...(props.node.data as T),
+    autoAnswer: nodeId
+      ? autoAnswerableInputs<TComponentType>(nodeId)
+      : undefined,
+    ...(props.node.data as TData),
   });
 
   switch (props.node.type) {
     case TYPES.AddressInput: {
-      const autoAnswer = nodeId ? autoAnswerableInputs(nodeId) : undefined;
       return (
         <AddressInputComponent
-          {...getComponentProps<AddressInput>()}
-          autoAnswer={autoAnswer}
+          {...getComponentProps<AddressInput, TYPES.AddressInput>()}
         />
       );
     }
@@ -165,11 +170,9 @@ const Node: React.FC<Props> = (props) => {
       return <ConfirmationComponent {...getComponentProps<Confirmation>()} />;
 
     case TYPES.ContactInput: {
-      const autoAnswer = nodeId ? autoAnswerableInputs(nodeId) : undefined;
       return (
         <ContactInputComponent
-          {...getComponentProps<ContactInput>()}
-          autoAnswer={autoAnswer}
+          {...getComponentProps<ContactInput, TYPES.ContactInput>()}
         />
       );
     }
@@ -178,11 +181,9 @@ const Node: React.FC<Props> = (props) => {
       return <ContentComponent {...getComponentProps<Content>()} />;
 
     case TYPES.DateInput: {
-      const autoAnswer = nodeId ? autoAnswerableInputs(nodeId) : undefined;
       return (
         <DateInputComponent
-          {...getComponentProps<DateInput>()}
-          autoAnswer={autoAnswer}
+          {...getComponentProps<DateInput, TYPES.DateInput>()}
         />
       );
     }
@@ -226,11 +227,9 @@ const Node: React.FC<Props> = (props) => {
       return <NoticeComponent {...getComponentProps<Notice>()} />;
 
     case TYPES.NumberInput: {
-      const autoAnswer = nodeId ? autoAnswerableInputs(nodeId) : undefined;
       return (
         <NumberInputComponent
-          {...getComponentProps<NumberInput>()}
-          autoAnswer={autoAnswer}
+          {...getComponentProps<NumberInput, TYPES.NumberInput>()}
         />
       );
     }
@@ -317,11 +316,9 @@ const Node: React.FC<Props> = (props) => {
     }
 
     case TYPES.TextInput: {
-      const autoAnswer = nodeId ? autoAnswerableInputs(nodeId) : undefined;
       return (
         <TextInputComponent
-          {...getComponentProps<TextInput>()}
-          autoAnswer={autoAnswer}
+          {...getComponentProps<TextInput, TYPES.TextInput>()}
         />
       );
     }

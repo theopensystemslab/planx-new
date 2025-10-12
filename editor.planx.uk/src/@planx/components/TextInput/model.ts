@@ -1,4 +1,3 @@
-import { Value } from "@opensystemslab/planx-core/types";
 import { richText } from "lib/yupExtensions";
 import { mixed, object, string } from "yup";
 
@@ -69,7 +68,6 @@ export const editorValidationSchema = baseNodeDataValidationSchema.concat(
           },
         }),
     }),
-    autoAnswer: string().nullable(),
   }),
 );
 
@@ -126,7 +124,6 @@ export interface TextInput extends BaseNodeData {
   fn?: string;
   type?: TextInputType;
   customLength?: number;
-  autoAnswer?: Value;
 }
 
 export const parseTextInput = (

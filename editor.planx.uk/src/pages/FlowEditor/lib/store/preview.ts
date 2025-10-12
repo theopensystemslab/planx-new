@@ -1,4 +1,5 @@
 import type {
+  Address,
   Flag,
   FlagSet,
   GovUKPayment,
@@ -13,6 +14,7 @@ import {
   flatFlags,
 } from "@opensystemslab/planx-core/types";
 import { getNoResultFlag } from "@opensystemslab/planx-core/types";
+import { Contact } from "@planx/components/ContactInput/model";
 import { FileList } from "@planx/components/FileUploadAndLabel/model";
 import { DEFAULT_FN as planningConstraintsFn } from "@planx/components/PlanningConstraints/model";
 import { SetValue } from "@planx/components/SetValue/model";
@@ -63,6 +65,14 @@ interface CollectedFlags {
   [category: string]: Array<Flag["text"] | undefined>;
 }
 
+export interface AutoAnswerableInputMap {
+  [TYPES.AddressInput]: Address;
+  [TYPES.ContactInput]: Contact;
+  [TYPES.DateInput]: string;
+  [TYPES.NumberInput]: number;
+  [TYPES.TextInput]: string;
+}
+
 export interface PreviewStore extends Store.Store {
   collectedFlags: () => CollectedFlags;
   currentCard: ({ id: NodeId } & Store.Node) | null;
@@ -100,7 +110,9 @@ export interface PreviewStore extends Store.Store {
   saveToEmail?: string;
   overrideAnswer: (fn: string) => void;
   requestedFiles: () => FileList;
-  autoAnswerableInputs: (id: NodeId) => Value | undefined;
+  autoAnswerableInputs: <T extends keyof AutoAnswerableInputMap>(
+    id: NodeId,
+  ) => AutoAnswerableInputMap[T];
   autoAnswerableOptions: (id: NodeId) => Array<NodeId> | undefined;
   autoAnswerableFlag: (filterId: NodeId) => NodeId | undefined;
   hasAcknowledgedWarning: boolean;

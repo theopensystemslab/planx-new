@@ -16,7 +16,6 @@ export interface NumberInput extends BaseNodeData {
   units?: string;
   allowNegatives?: boolean;
   isInteger?: boolean;
-  autoAnswer?: Value;
 }
 
 export type UserData = number;
@@ -97,6 +96,5 @@ export const editorValidationSchema = baseNodeDataValidationSchema.concat(
     units: string(),
     allowNegatives: boolean(),
     isInteger: boolean(),
-    autoAnswer: number().nullable(),
   }),
 );

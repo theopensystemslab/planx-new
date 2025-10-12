@@ -11,10 +11,10 @@ import { object } from "yup";
 
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
-import type { TextInput } from "./model";
+import type { TextInput, UserData } from "./model";
 import { getTextLimit, textInputValidationSchema } from "./model";
 
-export type Props = PublicProps<TextInput>;
+export type Props = PublicProps<TextInput> & { autoAnswer?: UserData };
 
 // TODO: fix this data field bug for all components
 const TextInputComponent: React.FC<Props> = (props) => {
