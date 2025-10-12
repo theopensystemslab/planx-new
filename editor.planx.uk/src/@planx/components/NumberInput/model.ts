@@ -1,6 +1,5 @@
-import { Value } from "@opensystemslab/planx-core/types";
 import { richText } from "lib/yupExtensions";
-import { boolean, number, object, string } from "yup";
+import { boolean, object, string } from "yup";
 
 import {
   BaseNodeData,

@@ -11,10 +11,10 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
-import type { NumberInput, UserData } from "./model";
+import type { NumberInput } from "./model";
 import { parseNumber, publicValidationSchema } from "./model";
 
-export type Props = PublicProps<NumberInput> & { autoAnswer?: UserData };
+export type Props = PublicProps<NumberInput> & { autoAnswer?: string };
 
 export default function NumberInputComponent(props: Props): FCReturn {
   const formik = useFormik({
@@ -43,7 +43,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
   // Auto-answered NumberInputs still set a breadcrumb even though they render null
   useEffect(() => {
     if (props.autoAnswer) {
-      const parsed = parseNumber(props.autoAnswer as string);
+      const parsed = parseNumber(props.autoAnswer);
       if (!isNil(parsed)) {
         props.handleSubmit?.({
           ...makeData(props, parsed),
