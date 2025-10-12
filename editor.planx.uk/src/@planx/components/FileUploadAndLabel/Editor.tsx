@@ -166,6 +166,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
         value={props.value.fn}
         disabled={props.disabled}
         onChange={(value) => props.onChange(merge(props.value, { fn: value }))}
+        allowCustomValues={false}
       />
       <ModalSubtitle title="Rule" />
       <InputRow>

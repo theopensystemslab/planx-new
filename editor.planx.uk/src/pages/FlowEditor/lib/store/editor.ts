@@ -10,6 +10,7 @@ import {
 } from "@opensystemslab/planx-core/types";
 import {
   add,
+  buildGraphFromNodes,
   clone,
   isClone,
   makeUnique,
@@ -17,6 +18,7 @@ import {
   Relationships,
   remove,
   ROOT_NODE_KEY,
+  uniqueId,
   update,
 } from "@planx/graph";
 import { OT } from "@planx/graph/types";
@@ -27,6 +29,7 @@ import debounce from "lodash/debounce";
 import isEmpty from "lodash/isEmpty";
 import omitBy from "lodash/omitBy";
 import { type } from "ot-json0";
+import { ContextMenuPosition, ContextMenuSource } from "pages/FlowEditor/components/Flow/components/ContextMenu";
 import { NewFlow } from "pages/Team/components/AddFlow/types";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
@@ -65,6 +68,15 @@ export interface EditorUIStore {
   previousURL?: string;
   currentURL: string;
   initURLTracking: () => void;
+  openContextMenu: (
+    position: ContextMenuPosition,
+    relationships: Relationships,
+    source: ContextMenuSource,
+  ) => void;
+  contextMenuRelationships: Relationships;
+  contextMenuPosition: ContextMenuPosition | null;
+  closeContextMenu: () => void;
+  contextMenuSource: ContextMenuSource | null;
 }
 
 export const editorUIStore: StateCreator<
@@ -119,6 +131,38 @@ export const editorUIStore: StateCreator<
         }));
       });
     },
+
+    contextMenuPosition: null,
+
+    contextMenuRelationships: {
+      nodeId: undefined,
+      parent: ROOT_NODE_KEY,
+      before: undefined,
+    },
+
+    openContextMenu: (position, relationships, source) => {
+      const isOpen = Boolean(get().contextMenuPosition);
+      if (isOpen) return get().closeContextMenu();
+
+      set({
+        contextMenuPosition: position,
+        contextMenuRelationships: relationships,
+        contextMenuSource: source,
+      });
+    },
+
+    closeContextMenu: () =>
+      set({
+        contextMenuSource: null,
+        contextMenuPosition: null,
+        contextMenuRelationships: {
+          self: undefined,
+          parent: ROOT_NODE_KEY,
+          before: undefined,
+        },
+      }),
+
+    contextMenuSource: null,
   }),
   {
     name: "editorUIStore",
@@ -130,7 +174,7 @@ export const editorUIStore: StateCreator<
       showDataFields: state.showDataFields,
       showHelpText: state.showHelpText,
     }),
-  },
+  }
 );
 
 interface PublishFlowResponse {
@@ -169,6 +213,11 @@ export interface FlowSummary {
   };
 }
 
+interface CopiedPayload {
+  rootId: string;
+  nodes: { originalId: string; nodeData: Store.Node }[];
+}
+
 export interface EditorStore extends Store.Store {
   addNode: (node: any, relationships?: Relationships) => void;
   archiveFlow: (
@@ -176,7 +225,10 @@ export interface EditorStore extends Store.Store {
   ) => Promise<{ id: string; name: string } | void>;
   connect: (src: NodeId, tgt: NodeId, object?: any) => void;
   connectTo: (id: NodeId) => Promise<void>;
+  cloneNode: (id: NodeId) => void;
+  getClonedNodeId: () => string | null;
   copyNode: (id: NodeId) => void;
+  getCopiedNode: () => { node: Store.Node; children: Store.Node[] };
   createFlow: (newFlow: NewFlow) => Promise<string>;
   createFlowFromTemplate: (newFlow: NewFlow) => Promise<string>;
   createFlowFromCopy: (newFlow: NewFlow) => Promise<string>;
@@ -212,7 +264,13 @@ export interface EditorStore extends Store.Store {
     toBefore?: NodeId,
     toParent?: NodeId,
   ) => void;
-  pasteNode: (toParent: NodeId, toBefore: NodeId) => void;
+  pasteClonedNode: (toParent: NodeId, toBefore?: NodeId) => void;
+  /**
+   * Paste a new node from the clipboard
+   * Generates new IDs for all new nodes
+   * Recursively inserts all nested children
+   */
+  pasteNode: (toParent: NodeId, toBefore?: NodeId) => void;
   publishFlow: (
     flowId: string,
     summary: string,
@@ -328,8 +386,59 @@ export const editorStore: StateCreator<
     );
   },
 
-  copyNode(id) {
-    localStorage.setItem("clipboard", id);
+  cloneNode(id) {
+    localStorage.removeItem("copiedNode");
+    localStorage.setItem("clonedNodeId", id);
+  },
+
+  getClonedNodeId: () => localStorage.getItem("clonedNodeId"),
+
+  copyNode(id: string) {
+    const { flow } = get();
+    const rootNode = flow[id];
+    if (!rootNode) return;
+
+    const nodesToCopy: CopiedPayload["nodes"] = [];
+    const visited = new Set<string>();
+
+    // Recursively crawl all descendants, allowing us to "deep copy" a node and all its children
+    const getDescendants = (nodeId: string) => {
+      if (!nodeId || visited.has(nodeId)) return;
+
+      visited.add(nodeId);
+      const currentNode = flow[nodeId];
+      if (!currentNode) return;
+
+      nodesToCopy.push({ originalId: nodeId, nodeData: currentNode });
+
+      currentNode.edges?.forEach((edgeId) => {
+        getDescendants(edgeId);
+      });
+    };
+
+    getDescendants(id);
+
+    const payload: CopiedPayload = {
+      rootId: id,
+      nodes: nodesToCopy,
+    };
+    
+    try {
+      localStorage.setItem("copiedNode", JSON.stringify(payload));
+    } catch (error) {
+      if (error instanceof Error && error.name === "QuotaExceededError") {
+        alert("Failed to copy. Please try copying a smaller branch of the graph");
+      } else {
+        alert(`Failed to copy - unknown error. Details: ${error}`);
+      }
+    }
+  },
+
+  getCopiedNode: () => {
+    const payload = localStorage.getItem("copiedNode");
+    if (!payload) return;
+
+    return JSON.parse(payload);
   },
 
   createFlow: async (newFlow) => {
@@ -574,15 +683,69 @@ export const editorStore: StateCreator<
     }
   },
 
-  pasteNode(toParent, toBefore) {
+  pasteClonedNode(toParent, toBefore) {
     try {
-      const id = localStorage.getItem("clipboard");
+      const id = get().getClonedNodeId();
       if (id) {
         const [, ops] = clone(id, { toParent, toBefore })(get().flow);
         send(ops);
       }
-    } catch (err: any) {
-      alert(err.message);
+    } catch (err) {
+      alert((err as Error).message);
+    }
+  },
+
+  pasteNode(parent: string, before?: string) {
+    const copiedString = localStorage.getItem("copiedNode");
+    if (!copiedString) return;
+
+    try {
+      const { rootId, nodes: copiedNodes }: CopiedPayload =
+        JSON.parse(copiedString);
+      if (!copiedNodes || copiedNodes.length === 0) return;
+
+      // Keep a map of originalId: newId allowing us to insert unique nodes and maintain our edge relationships
+      const idMap = new Map<string, string>();
+      const newNodes: { [id: string]: Store.Node } = {};
+      let newRootId: string | null = null;
+
+      // 1. First pass: Create new nodes and build the ID map
+      copiedNodes.forEach(({ originalId, nodeData }) => {
+        const newId = uniqueId();
+        idMap.set(originalId, newId);
+        newNodes[newId] = structuredClone(nodeData);
+
+        if (originalId === rootId) {
+          newRootId = newId;
+        }
+      });
+
+      if (!newRootId) {
+        throw new Error("Root node for pasting could not be found.");
+      }
+
+      // 2. Second pass: Re-link edges using the ID map
+      Object.values(newNodes).forEach((node) => {
+        if (node.edges && node.edges.length > 0) {
+          node.edges = node.edges
+            .map((oldEdgeId) => idMap.get(oldEdgeId))
+            .filter((id): id is string => !!id);
+        }
+      });
+
+      // 3. Rebuild the graph structure from our flat node list
+      const { id, children, ...nodeData } = buildGraphFromNodes(
+        newRootId,
+        newNodes
+      );
+
+      // 4. Finally, insert the original pasted node, and all its nested children
+      get().addNode(
+        { id, ...nodeData },
+        { parent, before, children }
+      );
+    } catch (err) {
+      alert((err as Error).message);
     }
   },
 

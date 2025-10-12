@@ -5,6 +5,7 @@ import { ComponentType, NodeTag } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
 import classNames from "classnames";
 import gql from "graphql-tag";
+import { useContextMenu } from "hooks/useContextMenu";
 import useScrollOnPreviousURLMatch from "hooks/useScrollOnPreviousURLMatch";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
@@ -165,11 +166,13 @@ const InternalPortal: React.FC<any> = (props) => {
     }),
   });
 
-  const handleContext = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    copyNode(props.id);
-  };
+  const handleContextMenu = useContextMenu({
+    source: "node", relationships: {
+      parent,
+      before: props.id,
+      self: props.id,
+    }
+  });
 
   const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(props.id);
 
@@ -199,7 +202,7 @@ const InternalPortal: React.FC<any> = (props) => {
                 href={href}
                 prefetch={false}
                 ref={drag}
-                onContextMenu={handleContext}
+                onContextMenu={handleContextMenu}
               >
                 <span>{props.data.text}</span>
               </Link>

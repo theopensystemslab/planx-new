@@ -17,7 +17,7 @@ env:
   FULL_DOMAIN: ${{ github.event.number }}.planx.pizza
   PULLREQUEST_ID: ${{ github.event.number }}
   EDITOR_DIRECTORY: editor.planx.uk
-  LOCALPLANNING_SERVICES_DIRECTORY: localplanning.services
+  LOCALPLANNING_SERVICES_DIRECTORY: apps/localplanning.services
 
 jobs:
   changes:
@@ -59,7 +59,7 @@ jobs:
             sharedb:
               - 'sharedb.planx.uk/**'
             localplanning:
-              - 'localplanning.services/**'
+              - 'apps/localplanning.services/**'
 
   integration_tests:
     name: Run Integration tests
@@ -84,7 +84,7 @@ jobs:
           fail: true
       - name: Setup .gitconfig
         run: mv .gitconfig ~/.gitconfig
-      - uses: pnpm/action-setup@v4.1.0
+      - uses: pnpm/action-setup@v4.2.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v4
@@ -127,7 +127,7 @@ jobs:
           fail: true
       - name: Setup .gitconfig
         run: mv .gitconfig ~/.gitconfig
-      - uses: pnpm/action-setup@v4.1.0
+      - uses: pnpm/action-setup@v4.2.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v4
@@ -163,7 +163,7 @@ jobs:
         with:
           files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
           fail: true
-      - uses: pnpm/action-setup@v4.1.0
+      - uses: pnpm/action-setup@v4.2.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v4
@@ -192,11 +192,11 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
-          key: ${{ runner.os }}-${{ hashFiles('localplanning.services/pnpm-lock.yaml', 'localplanning.services/src/**', 'localplanning.services/public/**') }}
+          key: ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
           restore-keys: |
-            ${{ runner.os }}-${{ hashFiles('localplanning.services/pnpm-lock.yaml', 'localplanning.services/src/**', 'localplanning.services/public/**') }}
+            ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
             ${{ runner.os }}-
-      - uses: pnpm/action-setup@v4.1.0
+      - uses: pnpm/action-setup@v4.2.0
         if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
         with:
           version: ${{ vars.PNPM_VERSION }}
@@ -229,7 +229,7 @@ jobs:
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
           key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**') }}
-      - uses: pnpm/action-setup@v4.1.0
+      - uses: pnpm/action-setup@v4.2.0
         if: steps.cache-planx-frontend-build-assets.outputs.cache-hit != 'true'
         with:
           version: ${{ vars.PNPM_VERSION }}
@@ -288,7 +288,7 @@ jobs:
           aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
           aws-region: eu-west-2
           aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
-      - uses: pnpm/action-setup@v4.1.0
+      - uses: pnpm/action-setup@v4.2.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v4
@@ -308,10 +308,10 @@ jobs:
         id: cache-localplanning-build-assets
         uses: actions/cache@v4
         with:
-          path: ./localplanning.services/dist
-          key: ${{ runner.os }}-${{ hashFiles('localplanning.services/pnpm-lock.yaml', 'localplanning.services/src/**', 'localplanning.services/public/**') }}
+          path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
+          key: ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
           restore-keys: |
-            ${{ runner.os }}-${{ hashFiles('localplanning.services/pnpm-lock.yaml', 'localplanning.services/src/**', 'localplanning.services/public/**') }}
+            ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
             ${{ runner.os }}-
       - uses: pulumi/actions@v5
         with:
@@ -466,9 +466,9 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
-          key: ${{ runner.os }}-${{ hashFiles('localplanning.services/pnpm-lock.yaml', 'localplanning.services/src/**', 'localplanning.services/public/**') }}
+          key: ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
           restore-keys: |
-            ${{ runner.os }}-${{ hashFiles('localplanning.services/pnpm-lock.yaml', 'localplanning.services/src/**', 'localplanning.services/public/**') }}
+            ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
             ${{ runner.os }}-
 
       - name: upload built localplanning.services
@@ -534,7 +534,7 @@ jobs:
       - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
         run: ./scripts/pull-secrets.sh
       - name: Setup PNPM
-        uses: pnpm/action-setup@v4.1.0
+        uses: pnpm/action-setup@v4.2.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - name: Setup Node

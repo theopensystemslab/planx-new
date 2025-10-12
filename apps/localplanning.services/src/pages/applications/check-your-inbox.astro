@@ -1,0 +1,16 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Masthead from "@components/Masthead.astro";
+import Container from "@components/Container.astro";
+
+const title = "Check your inbox";
+---
+
+<Layout title={title}>
+  <Masthead title={title} />
+  <Container paddingY>
+    <section class="styled-content">
+      <p>We've sent you a magic link to access your applications. Please check your email inbox.</p>
+    </section>
+  </Container>
+</Layout>

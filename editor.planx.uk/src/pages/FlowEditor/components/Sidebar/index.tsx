@@ -20,6 +20,7 @@ import { DebugConsole } from "./DebugConsole";
 import EditHistory from "./EditHistory";
 import { PreviewBrowser } from "./PreviewBrowser";
 import { CheckForChangesToPublishButton } from "./Publish/CheckForChangesButton";
+import Reviews from "./Review";
 import Search from "./Search";
 import StyledTab from "./StyledTab";
 
@@ -28,7 +29,8 @@ type SidebarTabs =
   | "History"
   | "Search"
   | "Console"
-  | "Customise";
+  | "Customise"
+  | "Review";
 
 const SIDEBAR_WIDTH = "500px";
 const SIDEBAR_WIDTH_MINIMISED = "20px";
@@ -226,6 +228,9 @@ const Sidebar: React.FC = React.memo(() => {
               <StyledTab value="PreviewBrowser" label="Preview" />
               <StyledTab value="History" label="History" />
               <StyledTab value="Search" label="Search" />
+              {!isTemplatedFrom && (
+                <StyledTab value="Review" label="To review" />
+              )}
               <StyledTab value="Console" label="Console" />
             </Tabs>
           </TabList>
@@ -252,6 +257,11 @@ const Sidebar: React.FC = React.memo(() => {
           {activeTab === "Console" && (
             <SidebarContainer>
               <DebugConsole />
+            </SidebarContainer>
+          )}
+          {activeTab === "Review" && (
+            <SidebarContainer>
+              <Reviews />
             </SidebarContainer>
           )}
         </SidebarWrapper>

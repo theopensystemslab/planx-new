@@ -13,6 +13,7 @@ concurrency: staging_environment
 
 env:
   DEPLOYMENT_ENVIRONMENT: staging
+  LOCALPLANNING_SERVICES_DIRECTORY: apps/localplanning.services
 
 jobs:
   build_planx_frontend:
@@ -108,14 +109,14 @@ jobs:
       - name: Setup .gitconfig
         run: mv .gitconfig ~/.gitconfig
       - run: pnpm install --frozen-lockfile
-        working-directory: localplanning.services
+        working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
       - run: pnpm build --site https://localplanning.editor.planx.dev --mode staging
-        working-directory: localplanning.services
+        working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
       - name: Upload LocalPlanning.services build artifact
         uses: actions/upload-artifact@v4
         with:
           name: localplanning_services_build
-          path: ./localplanning.services/dist
+          path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
           if-no-files-found: error
 
   preview:
@@ -148,7 +149,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: localplanning_services_build
-          path: ./localplanning.services/dist
+          path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
       - uses: pulumi/actions@v5
         with:
           command: up

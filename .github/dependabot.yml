@@ -49,7 +49,7 @@ updates:
 
   # localplanning.services
   - package-ecosystem: "npm"
-    directory: "/localplanning.services"
+    directory: "/apps/localplanning.services"
     schedule:
       interval: "monthly"
     labels:

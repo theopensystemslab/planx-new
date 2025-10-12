@@ -7,6 +7,7 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
 import classNames from "classnames";
+import { useContextMenu } from "hooks/useContextMenu";
 import React from "react";
 import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
@@ -28,15 +29,17 @@ type Props = {
 };
 
 const Question: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes, copyNode, showHelpText, showTags] = useStore(
-    (state) => [
-      state.isClone,
-      state.childNodesOf(props.id),
-      state.copyNode,
-      state.showHelpText,
-      state.showTags,
-    ],
-  );
+  const [
+    isClone,
+    childNodes,
+    showHelpText,
+    showTags,
+  ] = useStore((state) => [
+    state.isClone,
+    state.childNodesOf(props.id),
+    state.showHelpText,
+    state.showTags,
+  ]);
 
   const parent = getParentId(props.parent);
 
@@ -57,11 +60,13 @@ const Question: React.FC<Props> = React.memo((props) => {
     href = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
   }
 
-  const handleContext = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    copyNode(props.id);
-  };
+  const handleContextMenu = useContextMenu({
+    source: "node", relationships: {
+      parent,
+      before: props.id,
+      self: props.id,
+    }
+  });
 
   const Icon = props.type === "Error" ? ErrorIcon : ICONS[props.type];
   // If there is an error, the icon has a semantic meaning and needs a title
@@ -97,7 +102,7 @@ const Question: React.FC<Props> = React.memo((props) => {
           <Link
             href={href}
             prefetch={false}
-            onContextMenu={handleContext}
+            onContextMenu={handleContextMenu}
             ref={drag}
           >
             {props.data?.img && (

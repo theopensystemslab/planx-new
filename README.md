@@ -21,7 +21,7 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 - `hasura.planx.uk` is a [Hasura](https://hasura.io/) GraphQL engine for our PostgreSQL database
 - `sharedb.planx.uk` is our implementation of [ShareDB](https://github.com/share/sharedb), a library for realtime document collaboration based on JSON Operational Transformation (OT) used in our "editor" environment
 - `infrastructure` is [Pulumi](https://www.pulumi.com/) infrastructure-as-code for configuring and managing our AWS environments
-- `localplanning.services` a public facing directory of PlanX services, built using [Astro](https://astro.build/).
+- `apps/localplanning.services` a public facing directory of PlanX services, built using [Astro](https://astro.build/).
 
 ## Running locally
 

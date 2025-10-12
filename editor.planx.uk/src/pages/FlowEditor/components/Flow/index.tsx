@@ -5,6 +5,7 @@ import { Link } from "react-navi";
 import { rootFlowPath } from "routes/utils";
 
 import { useStore } from "../../lib/store";
+import { ContextMenu } from "./components/ContextMenu";
 import EndPoint from "./components/EndPoint";
 import Hanger from "./components/Hanger";
 import Node from "./components/Node";
@@ -102,6 +103,7 @@ const Flow = ({
         ) : null}
         <EndPoint text="end" />
       </ol>
+      <ContextMenu />
     </>
   );
 };

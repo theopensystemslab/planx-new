@@ -1,0 +1,65 @@
+---
+import { ClientRouter } from "astro:transitions";
+import "@styles/global.css";
+import Header from "@components/Header.astro";
+import Footer from "@components/Footer.astro";
+import Analytics from "@components/Analytics.astro";
+import { Font } from "astro:assets";
+import { SEO } from "astro-seo";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const siteName = "Find local planning services";
+const { 
+  title,
+  description = "Modern digital services to send planning applications, reports and notices directly to local planning authorities"
+} = Astro.props;
+
+const fullTitle = title ? `${title} | ${siteName}` : siteName;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <Font cssVariable="--font-inter" preload />
+    <ClientRouter />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <SEO
+      title={fullTitle}
+      description={description}
+    />
+    <Analytics />
+    <script src="../scripts/registerWebcomponents.js"></script>
+  </head>
+  <body class="bg-black">
+    <Header />
+    <main class="bg-white" id="main-content">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    color: var(--color-text-main);
+  }
+</style>
+
+<script>
+  import { navigate } from "astro:transitions/client";
+  
+  // Force ClientRouter navigation event on browser "back" event
+  // When navigating from /applications/:lpa back to /applications, Astro doesn't always re-render
+  window.addEventListener("popstate", () => navigate(window.location.pathname));
+</script>
