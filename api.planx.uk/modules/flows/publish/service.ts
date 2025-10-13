@@ -7,10 +7,8 @@ import { gql } from "graphql-request";
 import * as jsondiffpatch from "jsondiffpatch";
 import { getClient } from "../../../client/index.js";
 import { dataMerged, getMostRecentPublishedFlow } from "../../../helpers.js";
-import {
-  createScheduledEvent,
-  type ScheduledEventResponse,
-} from "../../../lib/hasura/metadata/index.js";
+import { createScheduledEvent } from "../../../lib/hasura/metadata/index.js";
+import type { CreateScheduledEventResponse } from "../../../lib/hasura/metadata/types.js";
 import { userContext } from "../../auth/middleware.js";
 import { hasComponentType } from "../validate/helpers.js";
 
@@ -30,7 +28,7 @@ export const publishFlow = async (
   templatedFlowIds?: string[],
 ): Promise<{
   alteredNodes: Node[];
-  templatedFlowsScheduledEventsResponse?: ScheduledEventResponse[];
+  templatedFlowsScheduledEventsResponse?: CreateScheduledEventResponse[];
 } | null> => {
   const userId = userContext.getStore()?.user?.sub;
   if (!userId) throw Error("User details missing from request");
@@ -93,7 +91,7 @@ export const publishFlow = async (
 
   // If we're publishing a source flow, queue up events to additionally update each of its' templated flows
   let templatedFlowsScheduledEventsResponse:
-    | ScheduledEventResponse[]
+    | CreateScheduledEventResponse[]
     | undefined;
   if (templatedFlowIds && templatedFlowIds?.length > 0) {
     templatedFlowsScheduledEventsResponse = await Promise.all(
