@@ -173,10 +173,10 @@ services:
     container_name: sharedb
     restart: unless-stopped
     build:
-      context: ./sharedb.planx.uk
+      context: ./apps/sharedb.planx.uk
       target: production
     volumes:
-      - "./sharedb.planx.uk:/sharedb"
+      - "./apps/sharedb.planx.uk:/sharedb"
       - "/sharedb/node_modules"
     depends_on:
       hasura-proxy:

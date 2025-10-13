@@ -4,7 +4,7 @@ import type { Doc } from "sharedb";
 import sharedb from "sharedb/lib/client";
 import type { Socket } from "sharedb/lib/sharedb";
 
-// Please see sharedb.planx.uk/server.js
+// Please see apps/sharedb.planx.uk/server.js
 // Docs: https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent/code#value
 const TOKEN_EXPIRY_CODE = 4001 as const;
 

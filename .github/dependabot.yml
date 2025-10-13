@@ -115,7 +115,7 @@ updates:
   
   # ShareDB
   - package-ecosystem: "npm"
-    directory: "/sharedb.planx.uk"
+    directory: "/apps/sharedb.planx.uk"
     schedule:
       interval: "monthly"
     labels:
@@ -130,12 +130,12 @@ updates:
   
   # ShareDB - sharedb-sync group
   - package-ecosystem: "npm"
-    directory: "/sharedb.planx.uk"
+    directory: "/apps/sharedb.planx.uk"
     patterns: ["sharedb"]
     multi-ecosystem-group: "sharedb-sync"
 
   - package-ecosystem: "docker"
-    directory: "/sharedb.planx.uk"
+    directory: "/apps/sharedb.planx.uk"
     schedule:
       interval: "monthly"
     labels:
