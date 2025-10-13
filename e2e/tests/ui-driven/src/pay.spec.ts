@@ -444,7 +444,7 @@ async function resumeSessionViaMagicLink({
  * Router interception is not a reliable alternative here - it's likely that
  * GovPay are stripping some headers on redirect
  *
- * Ref: apps/editor.planx.uk/src/pages/Preview/ResumePage.tsx
+ * Ref: editor.planx.uk/src/pages/Preview/ResumePage.tsx
  */
 async function setGovPayReferrer(page: Page) {
   await page.addInitScript(() => {

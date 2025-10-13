@@ -7,7 +7,7 @@ import type { Operation } from "../sanitiseApplicationData/types.js";
 
 /**
  * ALLOW_LIST should stay in sync with
- *   apps/editor.planx.uk/src/pages/FlowEditor/lib/analyticsProvider
+ *   editor.planx.uk/src/pages/FlowEditor/lib/analyticsProvider
  *
  * If appending values to ALLOW_LIST please also update the
  *  `analytics_summary` & `submission_services_summary` views to extract the value into its own column

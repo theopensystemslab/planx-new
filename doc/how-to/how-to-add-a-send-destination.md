@@ -9,7 +9,7 @@ This guide outlines the steps required to add a new integration destination to P
 ## Frontend
 1. **Update Editor component**
    - Add new destination label and checkbox in Editor component
-   - Location: `apps/editor.planx.uk/src/@planx/components/Send/Editor.tsx`
+   - Location: `editor.planx.uk/src/@planx/components/Send/Editor.tsx`
    - Follow existing pattern for label text and styling in `options` object
 
 1. **Implement validation rules**

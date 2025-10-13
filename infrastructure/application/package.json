@@ -17,7 +17,7 @@
     "tldjs": "^2.3.1"
   },
   "scripts": {
-    "build-editor": "cd ../../apps/editor.planx.uk && pnpm build"
+    "build-editor": "cd ../../editor.planx.uk && pnpm build"
   },
   "packageManager": "pnpm@10.10.0",
   "pnpm": {

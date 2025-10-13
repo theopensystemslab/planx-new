@@ -23,7 +23,7 @@ import { flow, updatedQuestionAnswers } from "./mocks/flows/sections-flow.js";
 import { TestContext } from "./helpers/types.js";
 
 // TODO: move this type to planx-core
-// also defined in apps/editor.planx.uk/src/types.ts
+// also defined in editor.planx.uk/src/types.ts
 export enum SectionStatus {
   NeedsUpdated = "NEW INFORMATION NEEDED",
   ReadyToContinue = "READY TO CONTINUE",

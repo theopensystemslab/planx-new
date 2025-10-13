@@ -1,6 +1,6 @@
 node_modules/
 /ignore/
-apps/editor.planx.uk/.eslintcache
+editor.planx.uk/.eslintcache
 /minio-data
 .pnpm-debug.log
 .DS_Store
@@ -11,8 +11,7 @@ apps/editor.planx.uk/.eslintcache
 .env.prod
 .env.temp
 apps/api.planx.uk/.env.test
-apps/editor.planx.uk/.env
-apps/hasura.planx.uk/.env.test
+editor.planx.uk/.env
 apps/hasura.planx.uk/.env.test
 
 # IDE
