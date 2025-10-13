@@ -1,4 +1,4 @@
-# Plan✕
+# Plan✕ 
 
 Plan✕ is a platform for creating and publishing digital planning services.
 
