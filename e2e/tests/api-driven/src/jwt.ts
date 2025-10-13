@@ -2,7 +2,7 @@ import JWT from "jsonwebtoken";
 import { User, Role } from "@opensystemslab/planx-core/types";
 import { $admin } from "./client.js";
 
-// This code is copied from api.planx.uk/modules/auth/service.ts
+// This code is copied from apps/api.planx.uk/modules/auth/service.ts
 
 export const buildJWT = async (email: string): Promise<string | undefined> => {
   const user = await $admin.user.getByEmail(email);

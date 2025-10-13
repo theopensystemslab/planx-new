@@ -1,6 +1,6 @@
 import { addDays, format, subDays } from "date-fns";
 
-// Must value set in api.planx.uk/saveAndReturn/utils.ts
+// Must value set in apps/api.planx.uk/saveAndReturn/utils.ts
 // This ensures that dates will be aligned in the public interface and in emails
 export const DAYS_UNTIL_EXPIRY = 28;
 
