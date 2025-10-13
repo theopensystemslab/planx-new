@@ -18,7 +18,7 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 
 - `apps/api.planx.uk` is a Node/Express server and REST endpoints
 - `editor.planx.uk` is our React frontend, which consists of two main environments: an "editor" for service designers and a "preview" for public applicants. Our components are written with Material UI and broadly follow GOV.UK design patterns
-- `hasura.planx.uk` is a [Hasura](https://hasura.io/) GraphQL engine for our PostgreSQL database
+- `apps/hasura.planx.uk` is a [Hasura](https://hasura.io/) GraphQL engine for our PostgreSQL database
 - `apps/sharedb.planx.uk` is our implementation of [ShareDB](https://github.com/share/sharedb), a library for realtime document collaboration based on JSON Operational Transformation (OT) used in our "editor" environment
 - `infrastructure` is [Pulumi](https://www.pulumi.com/) infrastructure-as-code for configuring and managing our AWS environments
 - `apps/localplanning.services` a public facing directory of PlanX services, built using [Astro](https://astro.build/).
@@ -44,9 +44,9 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 
 ***Please Note***: If using a Mac running Apple silicone (M1 -M4) chips and running into Docker image compatibility issues please see our [troubleshooting guide](https://github.com/theopensystemslab/planx-new/blob/main/doc/how-to/aws/how-to-setup-aws-sso-credentials.md)
 
-5. Move into the hasura directory `cd ../hasura.planx.uk` and install dependencies `pnpm i`.
+5. Move into the hasura directory `cd ../apps/hasura.planx.uk` and install dependencies `pnpm i`.
 
-6. Open [Hasura's](https://hasura.io/) web console (`cd hasura.planx.uk` then `pnpm start`) and check that your Google email address is in the `users` table, if not then add it. This will eventually allow you to authenticate into the application as an admin.
+6. Open [Hasura's](https://hasura.io/) web console (`cd apps/hasura.planx.uk` then `pnpm start`) and check that your Google email address is in the `users` table, if not then add it. This will eventually allow you to authenticate into the application as an admin.
 
 7. Move into the editor directory `cd ../editor.planx.uk` & install dependencies `pnpm i`.
 
@@ -68,9 +68,9 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 
 4. Run `pnpm start` from the project root to set up docker containers for the application's backend (postgres, sharedb, api and hasura server processes). Please note you will not be able to run commands that sync seed data from production.
 
-5. Move into the hasura directory `cd ../hasura.planx.uk` and install dependencies `pnpm i`.
+5. Move into the hasura directory `cd apps/hasura.planx.uk` and install dependencies `pnpm i`.
 
-6. Open [Hasura's](https://hasura.io/) web console (`cd hasura.planx.uk` then `pnpm start`) and add your Google email address to the `users` table. You'll also likely want to create an initial `team`. This will eventually allow you to authenticate into the application as an admin.
+6. Open [Hasura's](https://hasura.io/) web console (`cd apps/hasura.planx.uk` then `pnpm start`) and add your Google email address to the `users` table. You'll also likely want to create an initial `team`. This will eventually allow you to authenticate into the application as an admin.
 
 7. Follow steps 7-9 above to start the editor and login !
 

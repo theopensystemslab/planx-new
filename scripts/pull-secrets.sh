@@ -7,7 +7,7 @@ then
     echo "Fetching secrets for CI"
     aws s3 cp s3://pizza-secrets/root.env ./../.env
     aws s3 cp s3://pizza-secrets/api.env.test ./../apps/api.planx.uk/.env.test
-    aws s3 cp s3://pizza-secrets/hasura.env.test ./../hasura.planx.uk/.env.test
+    aws s3 cp s3://pizza-secrets/hasura.env.test ./../apps/hasura.planx.uk/.env.test
     aws s3 cp s3://pizza-secrets/editor.env ./../editor.planx.uk/.env
 else 
     echo "Fetching secrets for developer"
@@ -15,7 +15,7 @@ else
     aws sso login --profile $profile
     aws s3 cp s3://pizza-secrets/root.env ./../.env --profile $profile
     aws s3 cp s3://pizza-secrets/api.env.test ./../apps/api.planx.uk/.env.test --profile $profile
-    aws s3 cp s3://pizza-secrets/hasura.env.test ./../hasura.planx.uk/.env.test --profile $profile
+    aws s3 cp s3://pizza-secrets/hasura.env.test ./../apps/hasura.planx.uk/.env.test --profile $profile
     aws s3 cp s3://pizza-secrets/editor.env ./../editor.planx.uk/.env --profile $profile
 fi
 

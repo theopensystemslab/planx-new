@@ -11,6 +11,7 @@ on:
 env:
   EDITOR_DIRECTORY: editor.planx.uk
   API_DIRECTORY: apps/api.planx.uk
+  HASURA_DIRECTORY: apps/hasura.planx.uk
 
 jobs:
   integration_tests:
@@ -30,7 +31,7 @@ jobs:
         id: check_files
         uses: andstor/file-existence-action@v2
         with:
-          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, hasura.planx.uk/.env.test"
+          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, ${{ env.HASURA_DIRECTORY }}/.env.test"
           fail: true
       - name: Setup .gitconfig
         run: mv .gitconfig ~/.gitconfig
@@ -47,11 +48,11 @@ jobs:
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
       - name: Postgres Tests
-        run: ./hasura.planx.uk/run-postgres-tests.sh
+        run: ./${{ env.HASURA_DIRECTORY }}/run-postgres-tests.sh
       - run: pnpm i -g hasura-cli@2.36.1
       - name: Hasura Tests
         run: pnpm install --frozen-lockfile && pnpm test
-        working-directory: hasura.planx.uk/tests
+        working-directory: ${{ env.HASURA_DIRECTORY }}/tests
 
   api_tests:
     name: Run API Tests
@@ -71,7 +72,7 @@ jobs:
         id: check_files
         uses: andstor/file-existence-action@v2
         with:
-          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, hasura.planx.uk/.env.test"
+          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, ${{ env.HASURA_DIRECTORY }}/.env.test"
           fail: true
       - uses: pnpm/action-setup@v4.2.0
         with:
@@ -107,7 +108,7 @@ jobs:
         id: check_files
         uses: andstor/file-existence-action@v2
         with:
-          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, hasura.planx.uk/.env.test"
+          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, ${{ env.HASURA_DIRECTORY }}/.env.test"
           fail: true
       - uses: pnpm/action-setup@v4.2.0
         with:

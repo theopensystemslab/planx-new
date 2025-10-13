@@ -6,7 +6,7 @@ import { getFormattedEnvironment } from "../../../../helpers.js";
 
 /**
  * Called by Hasura cron job `sanitise_application_data` on a nightly basis
- * See hasura.planx.uk/metadata/cron_triggers.yaml
+ * See apps/hasura.planx.uk/metadata/cron_triggers.yaml
  */
 export const sanitiseApplicationData = async () => {
   const operations = getOperations();

@@ -70,7 +70,7 @@ export const createHasuraService = async ({
       }),
       containers: {
         hasuraProxy: {
-          image: repo.buildAndPushImage("../../hasura.planx.uk/proxy"),
+          image: repo.buildAndPushImage("../../apps/hasura.planx.uk/proxy"),
           cpu: config.requireNumber("hasura-proxy-cpu"),
           memory: config.requireNumber("hasura-proxy-memory"),
           portMappings: [hasuraListenerHttp],
@@ -102,7 +102,7 @@ export const createHasuraService = async ({
           // hasuraProxy dependency timeout should mirror migration timeout
           startTimeout: 180,
           stopTimeout: 30,
-          image: repo.buildAndPushImage("../../hasura.planx.uk"),
+          image: repo.buildAndPushImage("../../apps/hasura.planx.uk"),
           cpu: config.requireNumber("hasura-cpu"),
           memory: config.requireNumber("hasura-memory"),
           healthCheck: {
