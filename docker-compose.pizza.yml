@@ -34,8 +34,6 @@ services:
     entrypoint: "/goStatic -port 8044 -fallback /index.html"
 
   caddy:
-    build:
-      context: ./ci/caddy
     image: lhr.vultrcr.com/planx/caddy-vultr:latest
     # default to pulling image from private Vultr registry (if not available)
     pull_policy: missing
