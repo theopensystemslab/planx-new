@@ -611,12 +611,12 @@ export = async () => {
   });
 
   fsWalk
-    .walkSync("../../apps/editor.planx.uk/build/", {
+    .walkSync("../../editor.planx.uk/build/", {
       basePath: "",
       entryFilter: (e) => !e.dirent.isDirectory(),
     })
     .forEach(({ path }) => {
-      const relativeFilePath = `../../apps/editor.planx.uk/build/${path}`;
+      const relativeFilePath = `../../editor.planx.uk/build/${path}`;
       const contentType = mime.getType(relativeFilePath) || "";
       const contentFile = new aws.s3.BucketObject(
         relativeFilePath,

@@ -16,7 +16,7 @@ env:
   DOMAIN: planx.pizza
   FULL_DOMAIN: ${{ github.event.number }}.planx.pizza
   PULLREQUEST_ID: ${{ github.event.number }}
-  EDITOR_DIRECTORY: apps/editor.planx.uk
+  EDITOR_DIRECTORY: editor.planx.uk
   LOCALPLANNING_SERVICES_DIRECTORY: apps/localplanning.services
   API_DIRECTORY: apps/api.planx.uk
   HASURA_DIRECTORY: apps/hasura.planx.uk
@@ -57,7 +57,7 @@ jobs:
             infrastructure:
               - 'infrastructure/**'
             editor:
-              - 'apps/editor.planx.uk/**'
+              - 'editor.planx.uk/**'
             sharedb:
               - 'apps/sharedb.planx.uk/**'
             localplanning:
@@ -230,7 +230,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles(format('{0}/**', env.EDITOR_DIRECTORY)) }}
+          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**') }}
       - uses: pnpm/action-setup@v4.2.0
         if: steps.cache-planx-frontend-build-assets.outputs.cache-hit != 'true'
         with:
@@ -305,7 +305,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles(format('{0}/**', '!{0}/build/**', env.EDITOR_DIRECTORY)) }}
+          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}
       - name: Download LPS build assets
         id: cache-localplanning-build-assets
         uses: actions/cache@v4
@@ -452,7 +452,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles(format('{0}/**', '!{0}/build/**', env.EDITOR_DIRECTORY)) }}
+          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}
       - name: upload built editor
         uses: appleboy/scp-action@master
         with:

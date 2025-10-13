@@ -14,7 +14,6 @@ concurrency: staging_environment
 env:
   DEPLOYMENT_ENVIRONMENT: staging
   LOCALPLANNING_SERVICES_DIRECTORY: apps/localplanning.services
-  EDITOR_DIRECTORY: apps/editor.planx.uk
 
 jobs:
   build_planx_frontend:
@@ -54,9 +53,9 @@ jobs:
       - name: Setup .gitconfig
         run: mv .gitconfig ~/.gitconfig
       - run: pnpm install --frozen-lockfile
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
+        working-directory: editor.planx.uk
       - run: pnpm build
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
+        working-directory: editor.planx.uk
         env:
           VITE_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
           VITE_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
@@ -70,7 +69,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: planx_frontend_build
-          path: ./${{ env.EDITOR_DIRECTORY }}/build
+          path: ./editor.planx.uk/build
           if-no-files-found: error
 
   build_localplanning_services:
@@ -145,7 +144,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: planx_frontend_build
-          path: ./${{ env.EDITOR_DIRECTORY }}/build
+          path: ./editor.planx.uk/build
       - name: Download LocalPlanning.services build artifact
         uses: actions/download-artifact@v4
         with:

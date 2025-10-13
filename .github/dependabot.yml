@@ -24,7 +24,7 @@ updates:
 
   # Editor
   - package-ecosystem: "npm"
-    directory: "/apps/editor.planx.uk"
+    directory: "/editor.planx.uk"
     schedule:
       interval: "monthly"
     labels:
@@ -43,7 +43,7 @@ updates:
 
   # Editor - sharedb-sync group
   - package-ecosystem: "npm"
-    directory: "/apps/editor.planx.uk"
+    directory: "/editor.planx.uk"
     patterns: ["sharedb"]
     multi-ecosystem-group: "sharedb-sync"
 

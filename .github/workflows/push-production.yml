@@ -13,7 +13,6 @@ concurrency: production_environment
 
 env:
   DEPLOYMENT_ENVIRONMENT: production
-  EDITOR_DIRECTORY: apps/editor.planx.uk
 
 jobs:
   build_react:
@@ -53,9 +52,9 @@ jobs:
       - name: Setup .gitconfig
         run: mv .gitconfig ~/.gitconfig
       - run: pnpm install --frozen-lockfile
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
+        working-directory: editor.planx.uk
       - run: pnpm build
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
+        working-directory: editor.planx.uk
         env:
           VITE_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
           VITE_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
@@ -69,7 +68,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build
-          path: ./${{ env.EDITOR_DIRECTORY }}/build
+          path: ./editor.planx.uk/build
           if-no-files-found: error
 
   preview:
@@ -97,7 +96,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build
-          path: ./${{ env.EDITOR_DIRECTORY }}/build
+          path: ./editor.planx.uk/build
       - uses: pulumi/actions@v5
         with:
           command: up
