@@ -37,11 +37,11 @@ export const parseAddressInput = (
 export const formatAsSingleLineAddress = (address: Address) =>
   Object.values(address).filter(Boolean).join(", ");
 
-export const validationSchema: SchemaOf<AddressInput> =
+export const editorValidationSchema: SchemaOf<AddressInput> =
   baseNodeDataValidationSchema.concat(
     object({
-      fn: string().nullable().required(),
       title: string().required(),
       description: richText(),
+      fn: string().nullable().required(),
     }),
   );

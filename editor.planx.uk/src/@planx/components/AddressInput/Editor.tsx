@@ -12,11 +12,15 @@ import InputRow from "ui/shared/InputRow";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
-import { AddressInput, parseAddressInput, validationSchema } from "./model";
+import {
+  AddressInput,
+  editorValidationSchema,
+  parseAddressInput,
+} from "./model";
 
 export type Props = EditorProps<TYPES.AddressInput, AddressInput>;
 
-export default function AddressInputComponent(props: Props): FCReturn {
+const AddressInputComponent: React.FC<Props> = (props) => {
   const formik = useFormik({
     initialValues: parseAddressInput(props.node?.data),
     onSubmit: (newValues) => {
@@ -27,13 +31,13 @@ export default function AddressInputComponent(props: Props): FCReturn {
         });
       }
     },
-    validationSchema,
+    validationSchema: editorValidationSchema,
     validateOnChange: false,
     validateOnBlur: false,
   });
 
   return (
-    <form onSubmit={formik.handleSubmit} id="modal">
+    <form onSubmit={formik.handleSubmit} id="modal" name="modal">
       <TemplatedNodeInstructions
         isTemplatedNode={formik.values.isTemplatedNode}
         templatedNodeInstructions={formik.values.templatedNodeInstructions}
@@ -68,6 +72,8 @@ export default function AddressInputComponent(props: Props): FCReturn {
             />
           </InputRow>
           <DataFieldAutocomplete
+            data-testid="address-input-data-field"
+            required
             value={formik.values.fn}
             onChange={(value) => formik.setFieldValue("fn", value)}
             disabled={props.disabled}
@@ -78,4 +84,6 @@ export default function AddressInputComponent(props: Props): FCReturn {
       <ModalFooter formik={formik} disabled={props.disabled} />
     </form>
   );
-}
+};
+
+export default AddressInputComponent;

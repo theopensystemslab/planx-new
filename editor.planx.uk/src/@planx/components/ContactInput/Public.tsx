@@ -2,23 +2,22 @@ import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import type { PublicProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import InputRowItem from "ui/shared/InputRowItem";
 
 import { ERROR_MESSAGE } from "../shared/constants";
 import type { Contact, ContactInput } from "./model";
-import { userDataSchema } from "./model";
+import { contactValidationSchema } from "./model";
 
-export type Props = PublicProps<ContactInput>;
+export type Props = PublicProps<ContactInput> & { autoAnswer?: Contact };
 
 export default function ContactInputComponent(props: Props): FCReturn {
   const previouslySubmittedData =
     props.fn &&
-    props.previouslySubmittedData?.data?.[`_contact.${props.fn}`]?.[
-      `${props.fn}`
-    ];
+    props.previouslySubmittedData?.data?.[`_contact.${props.fn}`]?.[props.fn];
+
   const formik = useFormik<Contact>({
     initialValues: previouslySubmittedData ?? {
       title: "",
@@ -29,31 +28,45 @@ export default function ContactInputComponent(props: Props): FCReturn {
       email: "",
     },
     onSubmit: (values) => {
-      // map values to the existing/expected passport structure to minimize conditional handling later in Send schemas, etc
-      const newPassportData: any = {};
-      newPassportData[`${props.fn}.title`] = values.title;
-      newPassportData[`${props.fn}.name.first`] = values.firstName;
-      newPassportData[`${props.fn}.name.last`] = values.lastName;
-      newPassportData[`${props.fn}.company.name`] = values.organisation;
-      newPassportData[`${props.fn}.phone.primary`] = values.phone;
-      newPassportData[`${props.fn}.email`] = values.email;
-
-      const passportData = {
-        [`_contact.${props.fn}`]: { [`${props.fn}`]: values },
-        ...newPassportData,
-      };
-
-      const submissionData: any = {
-        data: passportData,
-      };
-
-      // update passport on submit
-      props.handleSubmit?.(submissionData);
+      props.handleSubmit?.({
+        data: formatUserData(values),
+      });
     },
     validateOnBlur: false,
     validateOnChange: false,
-    validationSchema: userDataSchema,
+    validationSchema: contactValidationSchema(),
   });
+
+  const formatUserData = (values: Contact) => {
+    // Map values to the existing/expected passport structure to minimize conditional handling later in Send schemas, etc
+    const newPassportData: any = {};
+    newPassportData[`${props.fn}.title`] = values.title;
+    newPassportData[`${props.fn}.name.first`] = values.firstName;
+    newPassportData[`${props.fn}.name.last`] = values.lastName;
+    newPassportData[`${props.fn}.company.name`] = values.organisation;
+    newPassportData[`${props.fn}.phone.primary`] = values.phone;
+    newPassportData[`${props.fn}.email`] = values.email;
+
+    return {
+      [`_contact.${props.fn}`]: { [`${props.fn}`]: values },
+      ...newPassportData,
+    };
+  };
+
+  // Auto-answered ContactInputs still set a breadcrumb even though they render null
+  useEffect(() => {
+    if (props.autoAnswer) {
+      props.handleSubmit?.({
+        data: formatUserData(props.autoAnswer as Contact),
+        auto: true,
+      });
+    }
+  }, [props.autoAnswer, props.handleSubmit]);
+
+  // Auto-answered ContactInputs are not publicly visible
+  if (props.autoAnswer) {
+    return null;
+  }
 
   return (
     <Card handleSubmit={formik.handleSubmit}>

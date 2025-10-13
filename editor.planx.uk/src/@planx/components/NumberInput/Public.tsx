@@ -11,10 +11,10 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
-import type { NumberInput } from "./model";
+import type { NumberInput, UserData } from "./model";
 import { parseNumber, publicValidationSchema } from "./model";
 
-export type Props = PublicProps<NumberInput>;
+export type Props = PublicProps<NumberInput> & { autoAnswer?: UserData };
 
 export default function NumberInputComponent(props: Props): FCReturn {
   const formik = useFormik({
@@ -39,6 +39,23 @@ export default function NumberInputComponent(props: Props): FCReturn {
   useEffect(() => {
     props.autoFocus && inputRef.current?.focus();
   }, [props.autoFocus]);
+
+  // Auto-answered NumberInputs still set a breadcrumb even though they render null
+  useEffect(() => {
+    if (props.autoAnswer) {
+      if (!isNil(props.autoAnswer)) {
+        props.handleSubmit?.({
+          ...makeData(props, props.autoAnswer),
+          auto: true,
+        });
+      }
+    }
+  }, [props.autoAnswer, props.handleSubmit]);
+
+  // Auto-answered NumberInputs are not publicly visible
+  if (props.autoAnswer) {
+    return null;
+  }
 
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>

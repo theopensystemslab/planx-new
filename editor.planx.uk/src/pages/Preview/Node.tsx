@@ -66,6 +66,7 @@ import TaskListComponent from "@planx/components/TaskList/Public";
 import type { TextInput } from "@planx/components/TextInput/model";
 import TextInputComponent from "@planx/components/TextInput/Public";
 import { hasFeatureFlag } from "lib/featureFlags";
+import { AutoAnswerableInputMap } from "pages/FlowEditor/lib/store/preview";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 import { exhaustiveCheck } from "utils";
@@ -87,12 +88,14 @@ const Node: React.FC<Props> = (props) => {
     resetPreview,
     cachedBreadcrumbs,
     autoAnswerableFlag,
+    autoAnswerableInputs,
     autoAnswerableOptions,
   ] = useStore((state) => [
     state.childNodesOf,
     state.resetPreview,
     state.cachedBreadcrumbs,
     state.autoAnswerableFlag,
+    state.autoAnswerableInputs,
     state.autoAnswerableOptions,
   ]);
 
@@ -102,17 +105,28 @@ const Node: React.FC<Props> = (props) => {
   const previouslySubmittedData =
     nodeId && cachedBreadcrumbs ? cachedBreadcrumbs[nodeId] : undefined;
 
-  const getComponentProps = <T extends object>() => ({
+  const getComponentProps = <
+    TData extends object,
+    TComponentType extends keyof AutoAnswerableInputMap = never,
+  >() => ({
     id: nodeId,
     previouslySubmittedData,
     resetPreview,
     handleSubmit,
-    ...(props.node.data as T),
+    autoAnswer: nodeId
+      ? autoAnswerableInputs<TComponentType>(nodeId)
+      : undefined,
+    ...(props.node.data as TData),
   });
 
   switch (props.node.type) {
-    case TYPES.AddressInput:
-      return <AddressInputComponent {...getComponentProps<AddressInput>()} />;
+    case TYPES.AddressInput: {
+      return (
+        <AddressInputComponent
+          {...getComponentProps<AddressInput, TYPES.AddressInput>()}
+        />
+      );
+    }
 
     case TYPES.Calculate:
       return <CalculateComponent {...getComponentProps<Calculate>()} />;
@@ -155,14 +169,24 @@ const Node: React.FC<Props> = (props) => {
     case TYPES.Confirmation:
       return <ConfirmationComponent {...getComponentProps<Confirmation>()} />;
 
-    case TYPES.ContactInput:
-      return <ContactInputComponent {...getComponentProps<ContactInput>()} />;
+    case TYPES.ContactInput: {
+      return (
+        <ContactInputComponent
+          {...getComponentProps<ContactInput, TYPES.ContactInput>()}
+        />
+      );
+    }
 
     case TYPES.Content:
       return <ContentComponent {...getComponentProps<Content>()} />;
 
-    case TYPES.DateInput:
-      return <DateInputComponent {...getComponentProps<DateInput>()} />;
+    case TYPES.DateInput: {
+      return (
+        <DateInputComponent
+          {...getComponentProps<DateInput, TYPES.DateInput>()}
+        />
+      );
+    }
 
     case TYPES.DrawBoundary:
       return <DrawBoundaryComponent {...getComponentProps<DrawBoundary>()} />;
@@ -202,8 +226,13 @@ const Node: React.FC<Props> = (props) => {
     case TYPES.Notice:
       return <NoticeComponent {...getComponentProps<Notice>()} />;
 
-    case TYPES.NumberInput:
-      return <NumberInputComponent {...getComponentProps<NumberInput>()} />;
+    case TYPES.NumberInput: {
+      return (
+        <NumberInputComponent
+          {...getComponentProps<NumberInput, TYPES.NumberInput>()}
+        />
+      );
+    }
 
     case TYPES.Page:
       return <PageComponent {...getComponentProps<Page>()} />;
@@ -286,8 +315,13 @@ const Node: React.FC<Props> = (props) => {
       );
     }
 
-    case TYPES.TextInput:
-      return <TextInputComponent {...getComponentProps<TextInput>()} />;
+    case TYPES.TextInput: {
+      return (
+        <TextInputComponent
+          {...getComponentProps<TextInput, TYPES.TextInput>()}
+        />
+      );
+    }
 
     // These types are never seen by users, nor do they leave their own breadcrumbs entry
     case TYPES.Answer:
