@@ -84,13 +84,13 @@ const EditorHeaderContainer = styled(Box)(({ theme }) => ({
   padding: theme.spacing(0, 2),
 }));
 
-const InnerContainer = styled(Box)(() => ({
+export const InnerContainer = styled(Box)(() => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
 }));
 
-const LeftBox = styled(Box)(({ theme }) => ({
+export const LeftBox = styled(Box)(({ theme }) => ({
   display: "flex",
   flexGrow: 1,
   flexShrink: 0,
@@ -99,7 +99,7 @@ const LeftBox = styled(Box)(({ theme }) => ({
   gap: theme.spacing(1.5),
 }));
 
-const RightBox = styled(Box)(() => ({
+export const RightBox = styled(Box)(() => ({
   display: "flex",
   flexGrow: 0,
   flexShrink: 0,
