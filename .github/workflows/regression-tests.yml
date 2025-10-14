@@ -10,6 +10,8 @@ on:
 
 env:
   EDITOR_DIRECTORY: editor.planx.uk
+  API_DIRECTORY: apps/api.planx.uk
+  HASURA_DIRECTORY: apps/hasura.planx.uk
 
 jobs:
   integration_tests:
@@ -18,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -29,11 +31,11 @@ jobs:
         id: check_files
         uses: andstor/file-existence-action@v2
         with:
-          files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
+          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, ${{ env.HASURA_DIRECTORY }}/.env.test"
           fail: true
       - name: Setup .gitconfig
         run: mv .gitconfig ~/.gitconfig
-      - uses: pnpm/action-setup@v4.1.0
+      - uses: pnpm/action-setup@v4.2.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v4
@@ -46,11 +48,11 @@ jobs:
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
       - name: Postgres Tests
-        run: ./hasura.planx.uk/run-postgres-tests.sh
+        run: ./${{ env.HASURA_DIRECTORY }}/run-postgres-tests.sh
       - run: pnpm i -g hasura-cli@2.36.1
       - name: Hasura Tests
         run: pnpm install --frozen-lockfile && pnpm test
-        working-directory: hasura.planx.uk/tests
+        working-directory: ${{ env.HASURA_DIRECTORY }}/tests
 
   api_tests:
     name: Run API Tests
@@ -59,7 +61,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -70,9 +72,9 @@ jobs:
         id: check_files
         uses: andstor/file-existence-action@v2
         with:
-          files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
+          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, ${{ env.HASURA_DIRECTORY }}/.env.test"
           fail: true
-      - uses: pnpm/action-setup@v4.1.0
+      - uses: pnpm/action-setup@v4.2.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v4
@@ -84,10 +86,10 @@ jobs:
         run: mv .gitconfig ~/.gitconfig
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        working-directory: api.planx.uk
+        working-directory: ${{ env.API_DIRECTORY }}
       - name: Run API Tests
         run: pnpm install --frozen-lockfile && pnpm check --quiet && pnpm test
-        working-directory: api.planx.uk
+        working-directory: ${{ env.API_DIRECTORY }}
 
   test_react:
     name: Run React Tests
@@ -95,7 +97,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -106,9 +108,9 @@ jobs:
         id: check_files
         uses: andstor/file-existence-action@v2
         with:
-          files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
+          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, ${{ env.HASURA_DIRECTORY }}/.env.test"
           fail: true
-      - uses: pnpm/action-setup@v4.1.0
+      - uses: pnpm/action-setup@v4.2.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v4
@@ -122,7 +124,7 @@ jobs:
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build
         working-directory: ${{ env.EDITOR_DIRECTORY }}
-      - run: pnpm test:silent --retry 1
+      - run: pnpm test:silent --retry=1
         working-directory: ${{ env.EDITOR_DIRECTORY }}
 
   end_to_end_tests:
@@ -132,7 +134,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -140,7 +142,7 @@ jobs:
       - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
         run: ./scripts/pull-secrets.sh
       - name: Setup PNPM
-        uses: pnpm/action-setup@v4.1.0
+        uses: pnpm/action-setup@v4.2.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - name: Setup Node

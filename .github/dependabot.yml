@@ -49,7 +49,7 @@ updates:
 
   # localplanning.services
   - package-ecosystem: "npm"
-    directory: "/localplanning.services"
+    directory: "/apps/localplanning.services"
     schedule:
       interval: "monthly"
     labels:
@@ -63,7 +63,7 @@ updates:
 
   # Hasura
   - package-ecosystem: "npm"
-    directory: "/hasura.planx.uk"
+    directory: "/apps/hasura.planx.uk"
     schedule:
       interval: "monthly"
     labels:
@@ -76,7 +76,7 @@ updates:
         update-types: ["version-update:semver-patch", "version-update:semver-minor"]
 
   - package-ecosystem: "docker"
-    directory: "/hasura.planx.uk"
+    directory: "/apps/hasura.planx.uk"
     schedule:
       interval: "monthly"
     labels:
@@ -87,7 +87,7 @@ updates:
       - "theopensystemslab/planx"
 
   - package-ecosystem: "docker"
-    directory: "/hasura.planx.uk/proxy"
+    directory: "/apps/hasura.planx.uk/proxy"
     schedule:
       interval: "monthly"
     labels:
@@ -99,7 +99,7 @@ updates:
       - "theopensystemslab/planx"
 
   - package-ecosystem: "npm"
-    directory: "/hasura.planx.uk/tests"
+    directory: "/apps/hasura.planx.uk/tests"
     schedule:
       interval: "monthly"
     labels:
@@ -115,7 +115,7 @@ updates:
   
   # ShareDB
   - package-ecosystem: "npm"
-    directory: "/sharedb.planx.uk"
+    directory: "/apps/sharedb.planx.uk"
     schedule:
       interval: "monthly"
     labels:
@@ -130,12 +130,12 @@ updates:
   
   # ShareDB - sharedb-sync group
   - package-ecosystem: "npm"
-    directory: "/sharedb.planx.uk"
+    directory: "/apps/sharedb.planx.uk"
     patterns: ["sharedb"]
     multi-ecosystem-group: "sharedb-sync"
 
   - package-ecosystem: "docker"
-    directory: "/sharedb.planx.uk"
+    directory: "/apps/sharedb.planx.uk"
     schedule:
       interval: "monthly"
     labels:
@@ -147,7 +147,7 @@ updates:
 
   # API
   - package-ecosystem: "npm"
-    directory: "/api.planx.uk"
+    directory: "/apps/api.planx.uk"
     schedule:
       interval: "monthly"
     labels:
@@ -166,7 +166,7 @@ updates:
           - "@vitest/ui"
 
   - package-ecosystem: "docker"
-    directory: "/api.planx.uk"
+    directory: "/apps/api.planx.uk"
     schedule:
       interval: "monthly"
     labels:

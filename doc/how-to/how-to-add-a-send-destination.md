@@ -33,7 +33,7 @@ The frontend "Send" components generates a `CombinedEventsPayload` object, this 
 1. **Create payment send events**
 Submission can also be driven by an invite to pay event (not triggered by an applicant directly hitting the public "Send" component). We need to ensure that this event can generate a submission event for the new destination.
 
- - Parse `CombinedResponse` in `createPaymentSendEvents()` (location: `api.planx.uk/modules/pay/service/inviteToPay/createPaymentSendEvents.ts`)
+ - Parse `CombinedResponse` in `createPaymentSendEvents()` (location: `apps/api.planx.uk/modules/pay/service/inviteToPay/createPaymentSendEvents.ts`)
  - Generate a Hasura scheduled event for the new send destination
 
 2. **Add API Routes**
@@ -65,7 +65,7 @@ Submission can also be driven by an invite to pay event (not triggered by an app
 ## Data sanitation
 1. **Update sanitation job**
    - Add table to sanitation cron job
-   - Location: `api.planx.uk/modules/webhooks/service/sanitiseApplicationData/operations.ts`
+   - Location: `apps/api.planx.uk/modules/webhooks/service/sanitiseApplicationData/operations.ts`
    - Implement specific sanitation rules if needed
    - Test sanitation works as expected
 

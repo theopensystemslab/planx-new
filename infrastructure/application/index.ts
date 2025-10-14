@@ -348,7 +348,7 @@ export = async () => {
       }),
       container: {
         image: repo.buildAndPushImage({
-          context: "../../api.planx.uk",
+          context: "../../apps/api.planx.uk",
           target: "production",
         }),
         cpu: 2048,
@@ -574,7 +574,7 @@ export = async () => {
         retentionInDays: 30,
       }),
       container: {
-        image: repo.buildAndPushImage("../../sharedb.planx.uk"),
+        image: repo.buildAndPushImage("../../apps/sharedb.planx.uk"),
         memory: 512 /*MB*/,
         portMappings: [sharedbListenerHttp],
         environment: [

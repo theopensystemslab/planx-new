@@ -47,7 +47,7 @@ services:
   hasura:
     container_name: hasura
     build:
-      context: ./hasura.planx.uk
+      context: ./apps/hasura.planx.uk
     depends_on:
       postgres:
         condition: service_healthy
@@ -64,8 +64,8 @@ services:
       timeout: 3s
       retries: 10
     volumes:
-      - "./hasura.planx.uk/metadata:/hasura-metadata"
-      - "./hasura.planx.uk/migrations:/hasura-migrations"
+      - "./apps/hasura.planx.uk/metadata:/hasura-metadata"
+      - "./apps/hasura.planx.uk/migrations:/hasura-migrations"
     restart: unless-stopped
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
@@ -81,7 +81,7 @@ services:
   hasura-proxy:
     container_name: hasura-proxy
     build:
-      context: ./hasura.planx.uk/proxy
+      context: ./apps/hasura.planx.uk/proxy
     depends_on:
       hasura:
         condition: service_healthy
@@ -101,7 +101,7 @@ services:
     container_name: api
     restart: unless-stopped
     build:
-      context: ./api.planx.uk
+      context: ./apps/api.planx.uk
       target: production
     depends_on:
       hasura-proxy:
@@ -173,10 +173,10 @@ services:
     container_name: sharedb
     restart: unless-stopped
     build:
-      context: ./sharedb.planx.uk
+      context: ./apps/sharedb.planx.uk
       target: production
     volumes:
-      - "./sharedb.planx.uk:/sharedb"
+      - "./apps/sharedb.planx.uk:/sharedb"
       - "/sharedb/node_modules"
     depends_on:
       hasura-proxy:

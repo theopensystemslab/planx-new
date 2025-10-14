@@ -28,7 +28,7 @@ export const parseNumber = (raw: string): number | null => {
 };
 
 export const parseNumberInput = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): NumberInput => ({
   title: data?.title || "",
   description: data?.description,
@@ -80,7 +80,9 @@ export const numberInputValidationSchema = ({
       },
     });
 
-export const publicValidationSchema = (args: FieldValidationSchema<NumberInput>) =>
+export const publicValidationSchema = (
+  args: FieldValidationSchema<NumberInput>,
+) =>
   object({
     value: numberInputValidationSchema(args),
   });
@@ -93,5 +95,5 @@ export const editorValidationSchema = baseNodeDataValidationSchema.concat(
     units: string(),
     allowNegatives: boolean(),
     isInteger: boolean(),
-  })
+  }),
 );

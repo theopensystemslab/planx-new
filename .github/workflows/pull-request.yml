@@ -17,7 +17,9 @@ env:
   FULL_DOMAIN: ${{ github.event.number }}.planx.pizza
   PULLREQUEST_ID: ${{ github.event.number }}
   EDITOR_DIRECTORY: editor.planx.uk
-  LOCALPLANNING_SERVICES_DIRECTORY: localplanning.services
+  LOCALPLANNING_SERVICES_DIRECTORY: apps/localplanning.services
+  API_DIRECTORY: apps/api.planx.uk
+  HASURA_DIRECTORY: apps/hasura.planx.uk
 
 jobs:
   changes:
@@ -47,19 +49,19 @@ jobs:
         with:
           filters: |
             api:
-              - 'api.planx.uk/**'
+              - 'apps/api.planx.uk/**'
             e2e:
               - 'e2e/**'
             hasura:
-              - 'hasura.planx.uk/**'
+              - 'apps/hasura.planx.uk/**'
             infrastructure:
               - 'infrastructure/**'
             editor:
               - 'editor.planx.uk/**'
             sharedb:
-              - 'sharedb.planx.uk/**'
+              - 'apps/sharedb.planx.uk/**'
             localplanning:
-              - 'localplanning.services/**'
+              - 'apps/localplanning.services/**'
 
   integration_tests:
     name: Run Integration tests
@@ -69,7 +71,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -80,11 +82,11 @@ jobs:
         id: check_files
         uses: andstor/file-existence-action@v2
         with:
-          files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
+          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, ${{ env.HASURA_DIRECTORY }}/.env.test"
           fail: true
       - name: Setup .gitconfig
         run: mv .gitconfig ~/.gitconfig
-      - uses: pnpm/action-setup@v4.1.0
+      - uses: pnpm/action-setup@v4.2.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v4
@@ -97,11 +99,11 @@ jobs:
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
       - name: Postgres Tests
-        run: ./hasura.planx.uk/run-postgres-tests.sh
+        run: ./${{ env.HASURA_DIRECTORY }}/run-postgres-tests.sh
       - run: pnpm i -g hasura-cli@2.36.1
       - name: Hasura Tests
         run: pnpm install --frozen-lockfile && pnpm test
-        working-directory: hasura.planx.uk/tests
+        working-directory: ${{ env.HASURA_DIRECTORY }}/tests
 
   api_tests:
     name: Run API Tests
@@ -112,7 +114,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -123,11 +125,11 @@ jobs:
         id: check_files
         uses: andstor/file-existence-action@v2
         with:
-          files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
+          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, ${{ env.HASURA_DIRECTORY }}/.env.test"
           fail: true
       - name: Setup .gitconfig
         run: mv .gitconfig ~/.gitconfig
-      - uses: pnpm/action-setup@v4.1.0
+      - uses: pnpm/action-setup@v4.2.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v4
@@ -137,10 +139,10 @@ jobs:
           cache-dependency-path: "**/pnpm-lock.yaml"
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        working-directory: api.planx.uk
+        working-directory: ${{ env.API_DIRECTORY }}
       - name: Run API Tests
         run: pnpm install --frozen-lockfile && pnpm check && pnpm test
-        working-directory: api.planx.uk
+        working-directory: ${{ env.API_DIRECTORY }}
 
   test_react:
     name: Run React Tests
@@ -150,7 +152,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -161,9 +163,9 @@ jobs:
         id: check_files
         uses: andstor/file-existence-action@v2
         with:
-          files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
+          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, ${{ env.HASURA_DIRECTORY }}/.env.test"
           fail: true
-      - uses: pnpm/action-setup@v4.1.0
+      - uses: pnpm/action-setup@v4.2.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v4
@@ -177,7 +179,7 @@ jobs:
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build
         working-directory: ${{ env.EDITOR_DIRECTORY }}
-      - run: pnpm test:silent --retry 1
+      - run: pnpm test:silent --retry=1
         working-directory: ${{ env.EDITOR_DIRECTORY }}
 
   build_localplanning_services:
@@ -192,11 +194,11 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
-          key: ${{ runner.os }}-${{ hashFiles('localplanning.services/pnpm-lock.yaml', 'localplanning.services/src/**', 'localplanning.services/public/**') }}
+          key: ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
           restore-keys: |
-            ${{ runner.os }}-${{ hashFiles('localplanning.services/pnpm-lock.yaml', 'localplanning.services/src/**', 'localplanning.services/public/**') }}
+            ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
             ${{ runner.os }}-
-      - uses: pnpm/action-setup@v4.1.0
+      - uses: pnpm/action-setup@v4.2.0
         if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
         with:
           version: ${{ vars.PNPM_VERSION }}
@@ -229,7 +231,7 @@ jobs:
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
           key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**') }}
-      - uses: pnpm/action-setup@v4.1.0
+      - uses: pnpm/action-setup@v4.2.0
         if: steps.cache-planx-frontend-build-assets.outputs.cache-hit != 'true'
         with:
           version: ${{ vars.PNPM_VERSION }}
@@ -283,12 +285,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
           aws-region: eu-west-2
           aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
-      - uses: pnpm/action-setup@v4.1.0
+      - uses: pnpm/action-setup@v4.2.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v4
@@ -308,10 +310,10 @@ jobs:
         id: cache-localplanning-build-assets
         uses: actions/cache@v4
         with:
-          path: ./localplanning.services/dist
-          key: ${{ runner.os }}-${{ hashFiles('localplanning.services/pnpm-lock.yaml', 'localplanning.services/src/**', 'localplanning.services/public/**') }}
+          path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
+          key: ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
           restore-keys: |
-            ${{ runner.os }}-${{ hashFiles('localplanning.services/pnpm-lock.yaml', 'localplanning.services/src/**', 'localplanning.services/public/**') }}
+            ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
             ${{ runner.os }}-
       - uses: pulumi/actions@v5
         with:
@@ -334,7 +336,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           hasura_endpoint: https://hasura.${{ env.FULL_DOMAIN }}
-          project_dir: ./hasura.planx.uk
+          project_dir: ./${{ env.HASURA_DIRECTORY }}
       - uses: marocchino/sticky-pull-request-comment@v2
         if: ${{steps.hasura-change.outputs.change_html != ''}}
         with:
@@ -402,7 +404,7 @@ jobs:
             echo -e "\nROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
             cat .env .env.temp .env.staging > .env.pizza
 
-            SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} ./scripts/pullrequest/create.sh
+            SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} VULTR_CR_URN=${{ secrets.VULTR_CR_URN }} ./scripts/pullrequest/create.sh
 
       # UPDATE STEPS
 
@@ -440,7 +442,7 @@ jobs:
             echo -e "\nROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
             cat .env .env.temp .env.staging > .env.pizza
 
-            ./scripts/pullrequest/update.sh
+            VULTR_CR_URN=${{ secrets.VULTR_CR_URN }} ./scripts/pullrequest/update.sh
 
       # CREATE & UPDATE STEPS
 
@@ -466,9 +468,9 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
-          key: ${{ runner.os }}-${{ hashFiles('localplanning.services/pnpm-lock.yaml', 'localplanning.services/src/**', 'localplanning.services/public/**') }}
+          key: ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
           restore-keys: |
-            ${{ runner.os }}-${{ hashFiles('localplanning.services/pnpm-lock.yaml', 'localplanning.services/src/**', 'localplanning.services/public/**') }}
+            ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
             ${{ runner.os }}-
 
       - name: upload built localplanning.services
@@ -526,7 +528,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -534,7 +536,7 @@ jobs:
       - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
         run: ./scripts/pull-secrets.sh
       - name: Setup PNPM
-        uses: pnpm/action-setup@v4.1.0
+        uses: pnpm/action-setup@v4.2.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - name: Setup Node

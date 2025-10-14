@@ -1,0 +1,44 @@
+---
+import type { AstroBuiltinAttributes } from "astro";
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"a"> {
+  variant?: "primary" | "secondary";
+  size?: "small" | "medium" | "large";
+  external?: boolean;
+}
+
+const {
+  variant = "primary",
+  size = "medium",
+  external = false,
+  class: className = "",
+  ...rest
+} = Astro.props;
+
+const variantClasses = {
+  primary: "button--primary",
+  secondary: "button--secondary",
+};
+
+const sizeClasses = {
+  small: "text-body-sm py-2 clamp-[px,2,3]",
+  medium: "text-body-md clamp-[py,2,3] clamp-[px,3,4]",
+  large: "text-body-lg clamp-[py,3,4] clamp-[px,4,5]",
+};
+
+const externalClasses = external ? "after:content-['_↗']" : "";
+
+const classes: AstroBuiltinAttributes["class:list"] = [
+  "button",
+  "button-focus-style",
+  variantClasses[variant],
+  sizeClasses[size],
+  externalClasses,
+  className,
+];
+---
+
+<a class:list={classes} {...rest}>
+  <slot />
+</a>

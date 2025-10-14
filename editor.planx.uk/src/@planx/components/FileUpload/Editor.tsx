@@ -75,6 +75,7 @@ function Component(props: Props) {
             value={formik.values.fn}
             onChange={(value) => formik.setFieldValue("fn", value)}
             disabled={props.disabled}
+            allowCustomValues={false}
           />
         </ModalSectionContent>
       </ModalSection>

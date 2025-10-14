@@ -1,7 +1,11 @@
 import { richText } from "lib/yupExtensions";
 import { mixed, object, string } from "yup";
 
-import { BaseNodeData, baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
+import {
+  BaseNodeData,
+  baseNodeDataValidationSchema,
+  parseBaseNodeData,
+} from "../shared";
 
 export type UserData = string;
 
@@ -48,7 +52,7 @@ export const editorValidationSchema = baseNodeDataValidationSchema.concat(
       "extraLong",
       "email",
       "phone",
-      "custom"
+      "custom",
     ]),
     customLength: string().when("type", {
       is: "custom",
@@ -64,7 +68,8 @@ export const editorValidationSchema = baseNodeDataValidationSchema.concat(
           },
         }),
     }),
-  }));
+  }),
+);
 
 export const textInputValidationSchema = ({
   data: { type, customLength },

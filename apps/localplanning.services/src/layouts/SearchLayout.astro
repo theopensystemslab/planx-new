@@ -1,0 +1,32 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/Container.astro";
+import Masthead from "@components/Masthead.astro";
+import AddressSearch from "@components/AddressSearch.tsx";
+import ApplicationsBanner from "@components/ApplicationsBanner.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<Layout
+  title={title} 
+  {...(description && { description: description })}
+>
+  <Masthead title={title}>
+    <p>{description}</p>
+  </Masthead>
+  <Container paddingY>
+    <section class="mb-4">
+      <AddressSearch client:load/>
+      <div class="styled-content mt-8">
+        <p>or see the <a href="/directory" class="paragraph-link">directory of local planning authorities</a></p>
+      </div>
+    </section>
+  </Container>
+  <ApplicationsBanner />
+</Layout>

@@ -1,0 +1,15 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Masthead from "@components/Masthead.astro";
+import Container from "@components/Container.astro";
+import { ApplicationViewer } from "@components/applications/ApplicationViewer";
+
+const title = "Your application";
+---
+
+<Layout title={title}>
+  <Masthead title={title} />
+  <Container paddingY>
+    <ApplicationViewer client:only="react" />
+  </Container>
+</Layout>

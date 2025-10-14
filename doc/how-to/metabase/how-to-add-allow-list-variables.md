@@ -14,7 +14,7 @@ In these docs I will run through the steps for adding a new variable to `ALLOW_L
 ### Step 1 - Add variables to `ALLOW_LIST` array
 
  You will need to add the desired variables to two places in the codebase
-  `api.planx.uk/modules/webhooks/service/analyzeSessions/operations.ts` and `editor.planx.uk/src/pages/FlowEditor/lib/analytics/provider.tsx`.
+  `apps/api.planx.uk/modules/webhooks/service/analyzeSessions/operations.ts` and `editor.planx.uk/src/pages/FlowEditor/lib/analytics/provider.tsx`.
 
   Each file should have an array looking like the below:
 
@@ -93,7 +93,7 @@ In these docs I will run through the steps for adding a new variable to `ALLOW_L
 
   The values here are being pulled from the table `lowcal_sessions.allow_list_answers` or `analytics_logs.allow_list_answers`
 
-  Make your changes in SQL and uncheck 'This is a migration' so you can check that the query runs successfully before generating one. Once it works, run it again as a migration. This should generate new migration files in `hasura.planx.uk/migrations`.
+  Make your changes in SQL and uncheck 'This is a migration' so you can check that the query runs successfully before generating one. Once it works, run it again as a migration. This should generate new migration files in `apps/hasura.planx.uk/migrations`.
 
   > [!IMPORTANT] 
   > At the end of your SQL script after the view creation/replacement, it is important to add another line which ensures the new variable is read by Metabase

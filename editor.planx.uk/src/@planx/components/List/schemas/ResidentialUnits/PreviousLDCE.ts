@@ -4,19 +4,9 @@ export const ResidentialUnitsPreviousLDCE: Schema = {
   type: "Previously existing residential unit type",
   fields: [
     {
-      type: "number",
-      data: {
-        title: "Number of units of this type",
-        description:
-          "This is the number of units of this type that existed on the site before the changes.",
-        fn: "identicalUnits",
-        allowNegatives: false,
-      },
-    },
-    {
       type: "question",
       data: {
-        title: "What best describes this unit?",
+        title: "What type of residential unit was it?",
         fn: "type",
         options: [
           { id: "house", data: { text: "House", val: "house" } },
@@ -39,9 +29,17 @@ export const ResidentialUnitsPreviousLDCE: Schema = {
       },
     },
     {
+      type: "number",
+      data: {
+        title: "How many identical units of this type were there?",
+        fn: "identicalUnits",
+        allowNegatives: false,
+      },
+    },
+    {
       type: "question",
       data: {
-        title: "What best describes the tenure of this unit?",
+        title: "Select how the unit was owned or rented",
         fn: "tenure",
         options: [
           { id: "MH", data: { text: "Market housing", val: "MH" } },

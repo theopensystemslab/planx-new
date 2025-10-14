@@ -1,0 +1,6 @@
+export const InvalidLink: React.FC = () => (
+  <section className="styled-content">
+    <h2>Error: Invalid magic link</h2>
+    <p>Please <a href="/applications">try to log in again</a>.</p>
+  </section>
+);

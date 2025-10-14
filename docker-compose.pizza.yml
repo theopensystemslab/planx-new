@@ -23,7 +23,7 @@ services:
     container_name: localplanning
     image: pierrezemb/gostatic
     volumes:
-      - ./localplanning.services/dist:/srv/http
+      - ./apps/localplanning.services/dist:/srv/http
     entrypoint: "/goStatic -fallback /404.html"
 
   storybook:
@@ -34,9 +34,9 @@ services:
     entrypoint: "/goStatic -port 8044 -fallback /index.html"
 
   caddy:
-    # always pull image from private Vultr registry
     image: lhr.vultrcr.com/planx/caddy-vultr:latest
-    pull_policy: always
+    # default to pulling image from private Vultr registry (if not available)
+    pull_policy: missing
     container_name: caddy
     restart: unless-stopped
     volumes:

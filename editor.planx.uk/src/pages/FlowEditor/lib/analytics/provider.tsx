@@ -36,7 +36,7 @@ import {
 
 /**
  * ALLOW_LIST should stay in sync with
- *   api.planx.uk/modules/webhooks/service/analyzeSessions/operations.ts
+ *   apps/api.planx.uk/modules/webhooks/service/analyzeSessions/operations.ts
  *
  * If appending values to ALLOW_LIST please also update the
  *  `analytics_summary` & `submission_services_summary` views to extract the value into its own column

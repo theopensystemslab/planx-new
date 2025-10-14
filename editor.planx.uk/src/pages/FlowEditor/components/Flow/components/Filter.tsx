@@ -1,6 +1,7 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
 import classNames from "classnames";
+import { useContextMenu } from "hooks/useContextMenu";
 import React from "react";
 import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
@@ -16,11 +17,11 @@ type Props = {
 };
 
 const Filter: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes, copyNode] = useStore((state) => [
-    state.isClone,
-    state.childNodesOf(props.id),
-    state.copyNode,
-  ]);
+  const [isClone, childNodes] =
+    useStore((state) => [
+      state.isClone,
+      state.childNodesOf(props.id),
+    ]);
 
   const parent = getParentId(props.parent);
 
@@ -41,11 +42,14 @@ const Filter: React.FC<Props> = React.memo((props) => {
     href = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
   }
 
-  const handleContext = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    copyNode(props.id);
-  };
+  const handleContextMenu = useContextMenu({
+    source: "node",
+    relationships: {
+      parent,
+      before: props.id,
+      self: props.id,
+    }
+  });
 
   const Icon = ICONS[props.type];
 
@@ -63,7 +67,7 @@ const Filter: React.FC<Props> = React.memo((props) => {
         <Link
           href={href}
           prefetch={false}
-          onContextMenu={handleContext}
+          onContextMenu={handleContextMenu}
           ref={drag}
         >
           {Icon && <Icon />}

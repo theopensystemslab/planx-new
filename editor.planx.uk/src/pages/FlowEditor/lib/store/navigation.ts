@@ -1,4 +1,5 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { NodeTag } from "@opensystemslab/planx-core/types";
 import { Section } from "@planx/components/Section/model";
 import { sortIdsDepthFirst } from "@planx/graph";
 import { findLast, pick, sum } from "lodash";
@@ -27,6 +28,7 @@ export interface NavigationStore {
   initNavigationStore: () => void;
   updateSectionData: () => void;
   filterFlowByType: (type: TYPES) => Store.Flow;
+  filterFlowByTag: (tag: NodeTag) => Store.Flow;
   getSortedBreadcrumbsBySection: () => Store.Breadcrumbs[];
   getSectionForNode: (nodeId: string) => SectionNode;
   _calculateSectionProgress: (
@@ -130,6 +132,36 @@ export const navigationStore: StateCreator<
     const flow = get().flow;
     const filteredFlow = Object.fromEntries(
       Object.entries(flow).filter(([_key, value]) => value.type === type),
+    );
+
+    // Sort IDs-only depth-first
+    const filteredNodeIds = Object.entries(filteredFlow).map(
+      (entry) => entry[0],
+    );
+    const sortedFilteredNodeIds = sortIdsDepthFirst(flow)(
+      new Set(filteredNodeIds),
+    );
+
+    // Reconstruct the full node objects preserving depth-first sorted order
+    const sortedFilteredFlow: { [k: string]: Store.Node } = {};
+    sortedFilteredNodeIds.forEach(
+      (id) => (sortedFilteredFlow[id] = filteredFlow[id]),
+    );
+
+    return sortedFilteredFlow;
+  },
+
+  /**
+   * Get a subset of the full flow by tag
+   * Returned in depth-first order
+   */
+  filterFlowByTag: (tag) => {
+    // Filter the full flow
+    const flow = get().flow;
+    const filteredFlow = Object.fromEntries(
+      Object.entries(flow).filter(([_key, value]) =>
+        Boolean(value.data?.tags?.includes(tag)),
+      ),
     );
 
     // Sort IDs-only depth-first

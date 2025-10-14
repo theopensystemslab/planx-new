@@ -17,35 +17,36 @@ export type Contact = {
   email: string;
 };
 
-export const userDataSchema: SchemaOf<Contact> = object({
-  title: string(),
-  firstName: string().trim().required("Enter a first name"),
-  lastName: string().trim().required("Enter a last name"),
-  organisation: string(),
-  phone: string().trim().required("Enter a phone number"),
-  email: string()
-    .trim()
-    .email(
-      "Enter an email address in the correct format, like name@example.com",
-    )
-    .required("Enter an email address"),
-}).test({
-  name: "Test Test is not used for applications",
-  test: ({ firstName, lastName }, context) => {
-    const isValid =
-      [firstName, lastName]
-        .map((x) => String(x).toLowerCase().trim())
-        .join("|") !== "test|test";
+export const contactValidationSchema = (): SchemaOf<Contact> =>
+  object({
+    title: string(),
+    firstName: string().trim().required("Enter a first name"),
+    lastName: string().trim().required("Enter a last name"),
+    organisation: string(),
+    phone: string().trim().required("Enter a phone number"),
+    email: string()
+      .trim()
+      .email(
+        "Enter an email address in the correct format, like name@example.com",
+      )
+      .required("Enter an email address"),
+  }).test({
+    name: "Test Test is not used for applications",
+    test: ({ firstName, lastName }, context) => {
+      const isValid =
+        [firstName, lastName]
+          .map((x) => String(x).toLowerCase().trim())
+          .join("|") !== "test|test";
 
-    if (isValid) return true;
+      if (isValid) return true;
 
-    return context.createError({
-      path: "firstName",
-      message:
-        "'Test Test' is not a valid name - please submit test applications via the staging environment",
-    });
-  },
-});
+      return context.createError({
+        path: "firstName",
+        message:
+          "'Test Test' is not a valid name - please submit test applications via the staging environment",
+      });
+    },
+  });
 
 export interface ContactInput extends BaseNodeData {
   title: string;
@@ -62,11 +63,11 @@ export const parseContactInput = (
   ...parseBaseNodeData(data),
 });
 
-export const validationSchema: SchemaOf<ContactInput> =
+export const editorValidationSchema: SchemaOf<ContactInput> =
   baseNodeDataValidationSchema.concat(
     object({
       title: string().required(),
       description: richText(),
-      fn: string(),
+      fn: string().nullable().required(),
     }),
   );

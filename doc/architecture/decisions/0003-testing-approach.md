@@ -18,7 +18,7 @@ The intent of this document is to provide an overview of our testing terminology
 
   * **UI Interaction tests** are tests that expose the granular functionality of a UI for manual testing. We use Storybook to allow components to be individually viewed and interacted with. Storybook "stories" can be written to support this kind of testing. For example: `editor.planx.uk/src/ui/RichTextInput.stories.tsx`.
 
-  * **Service tests** simulate the use of a service with mocked dependencies. They interact with a service (usually an API) as an an external application/user would but use statically mocked data to ensure tests are deterministic and side-effect free. One example of a service test using supertest is `api.planx.uk/editor/findReplace.test.js`.
+  * **Service tests** simulate the use of a service with mocked dependencies. They interact with a service (usually an API) as an an external application/user would but use statically mocked data to ensure tests are deterministic and side-effect free. One example of a service test using supertest is `apps/api.planx.uk/editor/findReplace.test.js`.
   * **API Regression tests** are tests designed to catch implementation issues that would cause existing services to break or to introduce a breaking change to their public interface. An example of this kind of regression test are the introspection tests found in `hasura.planx.uk/tests`.
 
   * **End-to-end tests** cover a user journey through a system. These tests interact with the application from the outside, with dummy data but a full running test stack (Web UI, APIs, Database, etc). In this form of testing, only external services are mocked - the full application is under test. An example of Cypress end-to-end tests: `e2e/cypress/tests/retryGraphqlRequest.cy.js`
