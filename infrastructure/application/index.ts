@@ -619,7 +619,7 @@ export = async () => {
       const relativeFilePath = `../../editor.planx.uk/build/${path}`;
       const contentType = mime.getType(relativeFilePath) || "";
       const contentFile = new aws.s3.BucketObject(
-        relativeFilePath,
+        path,
         {
           key: path,
           acl: "public-read",
@@ -633,6 +633,8 @@ export = async () => {
         },
         {
           parent: frontendBucket,
+          // Temp transition alias
+          aliases: [{ name: `../../editor.planx.uk/build/${path}` }]
         }
       );
     });
