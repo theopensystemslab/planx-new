@@ -3,7 +3,7 @@
     "hasura-cli": "^2.36.1"
   },
   "scripts": {
-    "start": "hasura console --envfile ./../.env"
+    "start": "hasura console --envfile ./../../.env"
   },
   "packageManager": "pnpm@10.10.0",
   "pnpm": {
