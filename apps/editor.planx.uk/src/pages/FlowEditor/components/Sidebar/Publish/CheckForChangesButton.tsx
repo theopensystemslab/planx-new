@@ -1,6 +1,7 @@
 import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import { PublishFlowArgs } from "lib/api/publishFlow/types";
 import { FlowStatus } from "@opensystemslab/planx-core/types";
@@ -56,6 +57,7 @@ export const CheckForChangesToPublishButton: React.FC<{
   );
   const [isTemplatedFlowDueToPublish, setIsTemplatedFlowDueToPublish] =
     useState<boolean>(false);
+  const [isChecking, setIsChecking] = useState<boolean>(false);
   const [isPublishing, setIsPublishing] = useState<boolean>(false);
 
   const [validationChecks, setValidationChecks] = useState<ValidationCheck[]>(
@@ -68,7 +70,7 @@ export const CheckForChangesToPublishButton: React.FC<{
 
   const handleCheckForChangesToPublish = async () => {
     try {
-      setLastPublishedTitle("Checking for changes...");
+      setIsChecking(true);
       const alteredFlow = await validateAndDiffFlow(flowId);
       setAlteredNodes(
         alteredFlow?.data.alteredNodes ? alteredFlow.data.alteredNodes : [],
@@ -93,6 +95,8 @@ export const CheckForChangesToPublishButton: React.FC<{
           `Error checking for changes to publish. Confirm that your graph does not have any corrupted nodes and that all nested flows are valid. \n${error}`,
         );
       }
+    } finally {
+      setIsChecking(false);
     }
   };
 
@@ -179,10 +183,17 @@ export const CheckForChangesToPublishButton: React.FC<{
           sx={{ width: "100%" }}
           variant="contained"
           color="primary"
-          disabled={!useStore.getState().canUserEditTeam(teamSlug)}
+          disabled={
+            !useStore.getState().canUserEditTeam(teamSlug) || isChecking
+          }
           onClick={handleCheckForChangesToPublish}
+          startIcon={
+            isChecking ? <CircularProgress size={20} color="inherit" /> : null
+          }
         >
-          CHECK FOR CHANGES TO PUBLISH
+          {isChecking
+            ? "Checking for changes..."
+            : "Check for changes to publish"}
         </Button>
         {!alteredNodes || alteredNodes?.length === 0 ? (
           <NoChangesDialog
