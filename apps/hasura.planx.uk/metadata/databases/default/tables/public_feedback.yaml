@@ -13,7 +13,13 @@ object_relationships:
           schema: public
   - name: team
     using:
-      foreign_key_constraint_on: team_id
+      manual_configuration:
+        column_mapping:
+          team_id: id
+        insertion_order: null
+        remote_table:
+          name: teams
+          schema: public
 insert_permissions:
   - role: public
     permission:
