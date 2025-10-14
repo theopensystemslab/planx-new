@@ -86,7 +86,7 @@ function Component(props: Props) {
 
   // Use the address point to fetch the title boundary, Local Authority District(s), region & ward via Digital Land
   const options = new URLSearchParams({
-    entries: "all", // includes historic for pre-merger LADs (eg Wycombe etc for Uniform connector mappings)
+    entries: "current", // includes historic for pre-merger LADs (eg Wycombe etc for Uniform connector mappings)
     geometry: `POINT(${address?.longitude} ${address?.latitude})`,
     geometry_relation: "intersects",
     limit: "100",
