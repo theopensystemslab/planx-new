@@ -3,6 +3,7 @@ import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import React from "react";
+import { createPortal } from "react-dom";
 
 interface LoadingOverlayProps {
   open: boolean;
@@ -15,7 +16,7 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
   message = "Loading...",
   msDelayBeforeVisible = 300,
 }) => {
-  return (
+  return createPortal(
     <Backdrop
       sx={(theme) => ({
         zIndex: theme.zIndex.modal + 1,
@@ -50,7 +51,8 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
           />
         </Alert>
       </Box>
-    </Backdrop>
+    </Backdrop>,
+    document.body,
   );
 };
 
