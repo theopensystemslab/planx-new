@@ -1,6 +1,7 @@
 import Typography from "@mui/material/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { AdminPanelData } from "types";
 import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContainer";
 import SettingsSection from "ui/editor/SettingsSection";
@@ -114,7 +115,9 @@ export const PlatformAdminPanel = () => {
         </Typography>
         <Typography variant="body1">
           {`This is an overview of each team's integrations and settings for the `}
-          <strong>{import.meta.env.VITE_APP_ENV}</strong>
+          <Typography component="span" fontWeight={FONT_WEIGHT_SEMI_BOLD}>
+            {import.meta.env.VITE_APP_ENV}
+          </Typography>
           {` environment.`}
         </Typography>
       </SettingsSection>
