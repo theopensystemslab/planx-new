@@ -2,6 +2,12 @@ import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { toast } from "react-toastify";
 
+export interface APIError {
+  message: string;
+  statusCode?: number;
+  data?: unknown;
+}
+
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_APP_API_URL,
   headers: {
@@ -57,9 +63,11 @@ apiClient.interceptors.response.use(
       });
     }
 
-    const apiError = {
+    const apiError: APIError = {
       message:
-        error.message || error.response?.data || "An unexpected error occurred",
+        error.message ||
+        JSON.stringify(error.response?.data) ||
+        "An unexpected error occurred",
       statusCode: status,
       data: error.response?.data,
     };
