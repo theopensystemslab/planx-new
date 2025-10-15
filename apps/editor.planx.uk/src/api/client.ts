@@ -2,6 +2,12 @@ import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { toast } from "react-toastify";
 
+export interface APIError {
+  message: string;
+  statusCode?: number;
+  data?: unknown;
+}
+
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_APP_API_URL,
   headers: {
@@ -20,7 +26,7 @@ apiClient.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 /**
@@ -60,15 +66,18 @@ apiClient.interceptors.response.use(
       });
     }
 
-    const apiError = {
-      message: error.message || error.response?.data || "An unexpected error occurred",
+    const apiError: APIError = {
+      message:
+        error.message ||
+        JSON.stringify(error.response?.data) ||
+        "An unexpected error occurred",
       statusCode: status,
       data: error.response?.data,
     };
 
     console.error("[API Error]:", apiError);
     return Promise.reject(apiError);
-  }
+  },
 );
 
 export default apiClient;
