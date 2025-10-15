@@ -1,4 +1,4 @@
-import apiClient from '../client';
+import apiClient from "../client";
 import {
   CheckForChangesResponse,
   PublishFlowArgs,
@@ -7,7 +7,7 @@ import {
 
 export const checkForChanges = async (flowId: string) => {
   const { data } = await apiClient.post<CheckForChangesResponse>(
-    `/flows/${flowId}/diff`
+    `/flows/${flowId}/diff`,
   );
   return data;
 };
@@ -25,7 +25,7 @@ export const publishFlow = async ({
         summary,
         templatedFlowIds,
       },
-    }
+    },
   );
 
   return data;

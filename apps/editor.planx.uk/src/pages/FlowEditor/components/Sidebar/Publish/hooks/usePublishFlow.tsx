@@ -7,11 +7,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 
 export const usePublishFlow = () => {
-  const [
-    flowId,
-    lastPublished,
-    lastPublisher,
-  ] = useStore((state) => [
+  const [flowId, lastPublished, lastPublisher] = useStore((state) => [
     state.id,
     state.lastPublished,
     state.lastPublisher,
@@ -27,12 +23,12 @@ export const usePublishFlow = () => {
 
   const lastPublishedQuery = useQuery({
     queryKey: ["lastPublished", flowId],
-    queryFn: () => getLastPublished(flowId)
+    queryFn: () => getLastPublished(flowId),
   });
 
   const checkForChangesMutation = useMutation({
     mutationKey: ["checkForChanges", flowId],
-    mutationFn: () => checkForChanges(flowId,),
+    mutationFn: () => checkForChanges(flowId),
   });
 
   const publishMutation = useMutation({
@@ -47,8 +43,8 @@ export const usePublishFlow = () => {
       alert(
         `Error checking for changes to publish. Confirm that your graph does not have any corrupted nodes and that all nested flows are valid. \n${(error as Error).message}`,
       );
-    }
-  })
+    },
+  });
 
   /**
    * Calculate status based on publish queries and mutations
@@ -78,18 +74,25 @@ export const usePublishFlow = () => {
 
     if (lastPublished.isPending) return "Loading last publish information...";
     if (lastPublished.data) {
-      return formatLastPublishMessage(lastPublished.data.date, lastPublished.data.user);
+      return formatLastPublishMessage(
+        lastPublished.data.date,
+        lastPublished.data.user,
+      );
     }
 
     return "This flow is not published yet";
-  }
+  };
 
-  const status = getStatus(lastPublishedQuery, checkForChangesMutation, publishMutation);
+  const status = getStatus(
+    lastPublishedQuery,
+    checkForChangesMutation,
+    publishMutation,
+  );
 
-  return { 
-    lastPublishedQuery, 
-    checkForChangesMutation, 
-    publishMutation, 
+  return {
+    lastPublishedQuery,
+    checkForChangesMutation,
+    publishMutation,
     status,
   };
-}
+};
