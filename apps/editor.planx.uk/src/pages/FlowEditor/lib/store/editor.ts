@@ -357,6 +357,11 @@ export const editorStore: StateCreator<
         flowSlug: get().flowSlug,
         flowName: get().flowName,
       });
+
+      // Templated flows require access to an ordered flow
+      // Set this once upstream as it's an expensive operation
+      const { isTemplate, setOrderedFlow } = get();
+      if (isTemplate) setOrderedFlow();
     };
 
     // set state from initial load
