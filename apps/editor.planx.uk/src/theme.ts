@@ -840,6 +840,17 @@ const getThemeOptions = ({
       MuiTooltip: {
         defaultProps: {
           arrow: true,
+          PopperProps: {
+            modifiers: [
+              {
+                // Ensure tooltips are padded from viewport edge
+                name: "preventOverflow",
+                options: {
+                  padding: 10,
+                },
+              },
+            ],
+          },
         },
         styleOverrides: {
           arrow: {
