@@ -93,8 +93,12 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
       />
       <Box my={4}>
         {props.ratingQuestion && (
-          <Box sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
-            <InputLabel label={props.ratingQuestion} />
+          <Box
+            sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+            component="label"
+            htmlFor="feedbackButtonGroup"
+          >
+            <ReactMarkdownOrHtml source={props.ratingQuestion} />
           </Box>
         )}
         <ErrorWrapper error={formik.errors.feedbackScore}>
@@ -146,20 +150,26 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
           </StyledToggleButtonGroup>
         </ErrorWrapper>
         {props.freeformQuestion && (
-          <Box sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
-            <InputLabel label={props.freeformQuestion} />
+          <Box
+            sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+            component="label"
+            htmlFor="userComment"
+          >
+            <ReactMarkdownOrHtml source={props.freeformQuestion} />
           </Box>
         )}
         <Input
           multiline={true}
           rows={3}
           name="userComment"
+          id="userComment"
           value={formik.values.userComment}
           bordered
           onChange={formik.handleChange}
           aria-label="user comment"
           data-testid="user-comment"
           errorMessage={formik.errors.userComment}
+          sx={{ mt: 1 }}
         />
       </Box>
       <WarningContainer>
