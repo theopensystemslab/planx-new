@@ -43,9 +43,11 @@ array_relationships:
           schema: public
   - name: feedback
     using:
-      foreign_key_constraint_on:
-        column: flow_id
-        table:
+      manual_configuration:
+        column_mapping:
+          id: flow_id
+        insertion_order: null
+        remote_table:
           name: feedback
           schema: public
   - name: flow_status_histories
