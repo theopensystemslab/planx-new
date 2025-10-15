@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import React from "react";
-import { Link } from "react-navi";
+import { Link, useCurrentRoute } from "react-navi";
 import { rootFlowPath } from "routes/utils";
 
 import { useStore } from "../../lib/store";
@@ -16,18 +16,20 @@ export enum FlowLayout {
   LEFT_RIGHT = "left-right",
 }
 
-const Flow = ({
-  breadcrumbs = [],
-  lockedFlow,
-  showTemplatedNodeStatus,
-}: any) => {
+const Flow = ({ lockedFlow, showTemplatedNodeStatus }: any) => {
+  const { url } = useCurrentRoute();
+  const flowPath = url.pathname.split("/")[2];
+  const [_flow, ...breadcrumbIds] = flowPath.split(",");
+
   const [childNodes, getNode, flowLayout] = useStore((state) => [
-    state.childNodesOf(breadcrumbs[breadcrumbs.length - 1] || ROOT_NODE_KEY),
+    state.childNodesOf(
+      breadcrumbIds[breadcrumbIds.length - 1] || ROOT_NODE_KEY,
+    ),
     state.getNode,
     state.flowLayout,
   ]);
 
-  breadcrumbs = breadcrumbs.map((id: any) => ({
+  const breadcrumbs = breadcrumbIds.map((id: any) => ({
     id,
     ...getNode(id),
     href: `${window.location.pathname.split(id)[0]}${id}`,
