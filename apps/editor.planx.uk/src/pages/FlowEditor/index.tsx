@@ -5,8 +5,7 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import { styled } from "@mui/material/styles";
 import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
 import { parentNodeIsTemplatedInternalPortal } from "pages/FlowEditor/utils";
-import React, { useRef } from "react";
-import { rootFlowPath } from "routes/utils";
+import React, { useEffect, useRef } from "react";
 
 import Flow from "./components/Flow";
 import { getParentId } from "./components/Flow/lib/utils";
@@ -39,20 +38,40 @@ const EditorVisualControls = styled(ButtonGroup)(({ theme }) => ({
 }));
 
 const FlowEditor = () => {
-  const flowPath = rootFlowPath(true).split("/")[2];
-  const [flow, ...breadcrumbs] = flowPath.split(",");
+  const [
+    flowObject,
+    orderedFlow,
+    isTemplatedFrom,
+    teamSlug,
+    flowId,
+    connectToFlow,
+    disconnectFromFlow,
+    isTemplate,
+    setOrderedFlow,
+  ] = useStore((state) => [
+    state.flow,
+    state.orderedFlow,
+    state.isTemplatedFrom,
+    state.getTeam().slug,
+    state.id,
+    state.connectToFlow,
+    state.disconnectFromFlow,
+    state.isTemplatedFrom,
+    state.setOrderedFlow,
+  ]);
+
+  useEffect(() => {
+    if (!flowId) return;
+    connectToFlow(flowId);
+
+    return () => disconnectFromFlow();
+  }, [flowId, connectToFlow, disconnectFromFlow]);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   useScrollControlsAndRememberPosition(scrollContainerRef);
 
-  const [flowObject, orderedFlow, isTemplatedFrom, teamSlug] = useStore(
-    (state) => [
-      state.flow,
-      state.orderedFlow,
-      state.isTemplatedFrom,
-      state.getTeam().slug,
-    ],
-  );
+  // TODO: Nicer UI, queue up scroll?
+  if (!flowObject) return "Loading....";
 
   const parentId = getParentId(undefined);
 
@@ -86,8 +105,6 @@ const FlowEditor = () => {
           sx={{ position: "relative" }}
         >
           <Flow
-            flow={flow}
-            breadcrumbs={breadcrumbs}
             lockedFlow={lockedFlow}
             showTemplatedNodeStatus={showTemplatedNodeStatus}
           />

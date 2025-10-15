@@ -100,7 +100,6 @@ const routes = compose(
 
         useStore.getState().setFlowName(flow.name);
         useStore.getState().setFlowSlug(slug);
-        await useStore.getState().connectTo(flow.id);
       }
 
       return import("./flow");
