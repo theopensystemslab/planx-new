@@ -3,13 +3,13 @@ import path from "path";
 
 /**
  * 30mb to match limit set in frontend
- * See editor.planx.uk/src/@planx/components/shared/PrivateFileUpload/Dropzone.tsx
+ * See apps/editor.planx.uk/src/@planx/components/shared/PrivateFileUpload/Dropzone.tsx
  */
 const FILE_SIZE_LIMIT = 30 * 1024 * 1024;
 
 /**
  * Should match MIME type restrictions in frontend
- * See editor.planx.uk/src/@planx/components/shared/PrivateFileUpload/Dropzone.tsx
+ * See apps/editor.planx.uk/src/@planx/components/shared/PrivateFileUpload/Dropzone.tsx
  */
 const ALLOWED_MIME_TYPES = [
   "image/jpeg",
