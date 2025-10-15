@@ -46,8 +46,6 @@ const FlowEditor = () => {
     flowId,
     connectToFlow,
     disconnectFromFlow,
-    isTemplate,
-    setOrderedFlow,
   ] = useStore((state) => [
     state.flow,
     state.orderedFlow,
@@ -56,8 +54,6 @@ const FlowEditor = () => {
     state.id,
     state.connectToFlow,
     state.disconnectFromFlow,
-    state.isTemplatedFrom,
-    state.setOrderedFlow,
   ]);
 
   useEffect(() => {
