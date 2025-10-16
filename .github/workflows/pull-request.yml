@@ -63,113 +63,68 @@ jobs:
             localplanning:
               - 'apps/localplanning.services/**'
 
-  install-monorepo-deps:
-    name: Install monorepo dependencies
+  setup:
+    name: Setup environment and cache
     runs-on: ubuntu-22.04
-    needs: [changes]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ vars.PNPM_VERSION }}
-
-      - name: Setup Node and cache pnpm store
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
-          cache: "pnpm"
-          cache-dependency-path: "pnpm-lock.yaml"
-
-      - name: Install monorepo dependencies once
-        run: pnpm install --frozen-lockfile
+      - name: Setup environment
+        uses: ./.github/actions/setup-environment
   
   test-api:
-    name: Run API Tests
+    name: Run API tests
     runs-on: ubuntu-22.04
-    needs: [install-monorepo-deps, changes]
+    needs: [changes, setup]
     if: needs.changes.outputs.api == 'true'
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: ${{ vars.PNPM_VERSION }}
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
-          cache: "pnpm"
-          cache-dependency-path: "pnpm-lock.yaml"
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Install dependencies (from cache)
-        run: pnpm install --frozen-lockfile
+      - name: Setup environment
+        uses: ./.github/actions/setup-environment
 
-      - name: Run API Tests
+      - name: Run API tests
         run: pnpm --filter api.planx.uk test
 
   test-planx-frontend:
     name: Run PlanX frontend tests
     runs-on: ubuntu-22.04
-    needs: [install-monorepo-deps, changes]
+    needs: [changes, setup]
     if: needs.changes.outputs.editor == 'true'
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: ${{ vars.PNPM_VERSION }}
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
-          cache: "pnpm"
-          cache-dependency-path: "pnpm-lock.yaml"
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Install dependencies (from cache)
-        run: pnpm install --frozen-lockfile
+      - name: Setup environment
+        uses: ./.github/actions/setup-environment
 
-      - name: Run React Tests
+      - name: Run PlanX frontend tests
         run: pnpm --filter editor.planx.uk test:silent --retry=1
 
   integration_tests:
-    name: Run Integration tests
+    name: Run integration tests
     runs-on: ubuntu-22.04
-    needs: [changes]
+    needs: [changes, setup]
     if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.e2e == 'true' || needs.changes.outputs.editor == 'true' || needs.changes.outputs.sharedb == 'true' || needs.changes.outputs.hasura == 'true' }}
     steps:
-      - uses: actions/checkout@v4
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v5
-        with:
-          aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-2
-      - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
-        run: ./scripts/pull-secrets.sh
-      - name: Check if .env files exist
-        id: check_files
-        uses: andstor/file-existence-action@v2
-        with:
-          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, ${{ env.HASURA_DIRECTORY }}/.env.test"
-          fail: true
-      - name: Setup .gitconfig
-        run: mv .gitconfig ~/.gitconfig
-      - uses: pnpm/action-setup@v4.2.0
-        with:
-          version: ${{ vars.PNPM_VERSION }}
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
-          cache: "pnpm"
-          cache-dependency-path: "**/pnpm-lock.yaml"
-      - run: pnpm install --frozen-lockfile
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup environment
+        uses: ./.github/actions/setup-environment
+        
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
-      - name: Postgres Tests
+
+      - name: Postgres tests
         run: ./${{ env.HASURA_DIRECTORY }}/run-postgres-tests.sh
-      - run: pnpm i -g hasura-cli@2.36.1
-      - name: Hasura Tests
-        run: pnpm install --frozen-lockfile && pnpm test
+
+      - name: Hasura tests
+        run: |
+          pnpm i -g hasura-cli@2.36.1
+          pnpm install --frozen-lockfile && pnpm test
         working-directory: ${{ env.HASURA_DIRECTORY }}/tests
 
 
@@ -544,15 +499,15 @@ jobs:
       - name: Code checks
         run: pnpm check
         working-directory: e2e
-      - name: Install Playwright Dependencies
+      - name: Install Playwright dependencies
         run: pnpm playwright install --with-deps
         working-directory: e2e/tests/ui-driven
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
-      - name: End-to-end Tests
+      - name: End-to-end tests
         run: pnpm test
         working-directory: e2e
-      - name: Archive Playwright Test Results
+      - name: Archive Playwright test results
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
