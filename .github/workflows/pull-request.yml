@@ -201,19 +201,23 @@ jobs:
           node-version: ${{ vars.NODE_VERSION }}
 
       - name: Install e2e dependencies
-        run: pnpm install --frozen-lockfile --prefix e2e
+        run: pnpm install --frozen-lockfile
+        working-directory: e2e
 
       - name: Code checks
-        run: pnpm check --prefix e2e
+        run: pnpm check
+        working-directory: e2e
 
       - name: Install Playwright
-        run: pnpm playwright install --with-deps --prefix e2e/tests/ui-driven
+        run: pnpm playwright install --with-deps
+        working-directory: e2e/tests/ui-driven
 
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
 
       - name: End-to-end tests
-        run: pnpm test --prefix e2e
+        run: pnpm test
+        working-directory: e2e
 
       - name: Archive Playwright test results
         if: ${{ failure() }}
@@ -229,30 +233,31 @@ jobs:
     needs: [changes, setup]
     if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup environment
+        uses: ./.github/actions/setup-environment
+        with:
+          aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
+          pnpm-version: ${{ vars.PNPM_VERSION }}
+          node-version: ${{ vars.NODE_VERSION }}
+
       - name: Cache PlanX frontend build assets
         id: cache-planx-frontend-build-assets
         uses: actions/cache@v4
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles(format('{0}/**', env.EDITOR_DIRECTORY)) }}
-      - uses: pnpm/action-setup@v4.2.0
+          key: ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml', env.EDITOR_DIRECTORY)) }}-${{ hashFiles(format('{0}/src/**,{0}/public/**', env.EDITOR_DIRECTORY)) }}
+          restore-keys: |
+            ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml', env.EDITOR_DIRECTORY)) }}-
+            ${{ runner.os }}-
+
+      - name: Build frontend PlanX app
         if: steps.cache-planx-frontend-build-assets.outputs.cache-hit != 'true'
-        with:
-          version: ${{ vars.PNPM_VERSION }}
-      - uses: actions/setup-node@v4
-        if: steps.cache-planx-frontend-build-assets.outputs.cache-hit != 'true'
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
-          cache: "pnpm"
-          cache-dependency-path: "**/pnpm-lock.yaml"
-      - name: Setup .gitconfig
-        run: mv .gitconfig ~/.gitconfig
-      - run: pnpm install --frozen-lockfile
-        if: steps.cache-planx-frontend-build-assets.outputs.cache-hit != 'true'
+        run: pnpm --filter editor.planx.uk build
         working-directory: ${{ env.EDITOR_DIRECTORY }}
-      - run: pnpm build
-        if: steps.cache-planx-frontend-build-assets.outputs.cache-hit != 'true'
         env:
           VITE_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
           VITE_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
@@ -265,9 +270,10 @@ jobs:
           VITE_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
           VITE_APP_MICROSOFT_OAUTH_OVERRIDE: https://api.editor.planx.dev
           VITE_APP_ENV: pizza
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
-      - run: pnpm build-storybook
+
+      - name: Run Storybook build
         if: steps.cache-planx-frontend-build-assets.outputs.cache-hit != 'true'
+        run: pnpm --filter editor.planx.uk build-storybook
         working-directory: ${{ env.EDITOR_DIRECTORY }}
         env:
           # same env as above, if it's job.env it can't access existing env.[variable]
