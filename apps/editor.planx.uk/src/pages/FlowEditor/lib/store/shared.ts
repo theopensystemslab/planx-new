@@ -38,8 +38,6 @@ export interface SharedStore extends Store.Store {
   wasVisited: (id: NodeId) => boolean;
   previewEnvironment: PreviewEnvironment;
   setPreviewEnvironment: (previewEnvironment: PreviewEnvironment) => void;
-  setFlowSlug: (flowSlug: string) => void;
-  setFlowName: (flowName: string) => void;
   $public: (auth?: Auth) => CoreDomainClient;
   $client: CoreDomainClient;
 }
@@ -115,14 +113,6 @@ export const sharedStore: StateCreator<
         ...(answers || []),
       ]),
     ).has(id);
-  },
-
-  setFlowSlug(flowSlug) {
-    set({ flowSlug });
-  },
-
-  setFlowName(flowName) {
-    set({ flowName });
   },
 
   $public(auth: Auth | undefined): CoreDomainClient {

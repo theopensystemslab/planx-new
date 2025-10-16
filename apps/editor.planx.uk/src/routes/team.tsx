@@ -98,8 +98,11 @@ const routes = compose(
           });
         }
 
-        useStore.getState().setFlowName(flow.name);
-        useStore.getState().setFlowSlug(slug);
+        useStore.setState({
+          id: flow.id,
+          flowName: flow.name,
+          flowSlug: slug,
+        });
       }
 
       return import("./flow");
