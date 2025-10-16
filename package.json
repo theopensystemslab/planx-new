@@ -19,12 +19,39 @@
   },
   "packageManager": "pnpm@10.10.0",
   "pnpm": {
+    "onlyBuiltDependencies": [
+      "@opensystemslab/planx-core",
+      "@parcel/watcher",
+      "@swc/core",
+      "core-js",
+      "esbuild",
+      "hasura-cli",
+      "preact"
+    ],
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "nock": "13"
+      },
+      "ignoreMissing": [
+        "react",
+        "react-dom"
+      ]
+    },
+    "packageExtensions": {
+      "@opensystemslab/planx-core": {
+        "pnpm": {
+          "inject-workspace-packages": false
+        }
+      }
+    },
     "overrides": {
-      "@tiptap/extension-list": "3.0.7",
       "@tiptap/extension-bullet-list": "3.0.7",
-      "@tiptap/extension-ordered-list": "3.0.7",
       "@tiptap/extension-list-item": "3.0.7",
-      "@tiptap/extension-list-keymap": "3.0.7"
+      "@tiptap/extension-list-keymap": "3.0.7",
+      "@tiptap/extension-list": "3.0.7",
+      "@tiptap/extension-ordered-list": "3.0.7",
+      "linkifyjs@<4.3.2": ">=4.3.2",
+      "micromatch@<4.0.8": ">=4.0.8"
     }
   }
 }

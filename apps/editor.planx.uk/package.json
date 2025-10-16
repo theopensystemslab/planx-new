@@ -217,19 +217,5 @@
     "src/**/*.{ts,tsx}": [
       "scripts/tsc-lint.sh"
     ]
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@opensystemslab/planx-core",
-      "@parcel/watcher",
-      "@swc/core",
-      "core-js",
-      "esbuild",
-      "preact"
-    ],
-    "overrides": {
-      "micromatch@<4.0.8": ">=4.0.8",
-      "linkifyjs@<4.3.2": ">=4.3.2"
-    }
   }
 }

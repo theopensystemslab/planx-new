@@ -17,10 +17,9 @@ COPY apps/sharedb.planx.uk ./apps/sharedb.planx.uk
 # Install
 RUN pnpm install --recursive --prefer-offline
 
-# Use pnpm to "prune" a single app for production
-# Docs: https://pnpm.io/cli/deploy
+# Use pnpm deploy to create production output
 RUN mkdir pruned
-RUN pnpm --filter sharedb --prod deploy pruned
+RUN pnpm --filter sharedb.planx.uk --prod deploy --legacy pruned
 
 ## PRODUCTION ##
 FROM node:22.14.0-alpine AS production
@@ -35,4 +34,4 @@ CMD ["pnpm", "start"]
 FROM base AS development
 WORKDIR /planx-new/apps/sharedb.planx.uk
 ENV NODE_ENV=development
-CMD ["pnpm", "--filter", "sharedb", "dev"]
+CMD ["pnpm", "--filter", "sharedb.planx.uk", "dev"]

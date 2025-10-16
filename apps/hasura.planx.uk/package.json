@@ -1,14 +1,9 @@
 {
   "devDependencies": {
-    "hasura-cli": "^2.36.1"
+    "hasura-cli": "2.36.1"
   },
   "scripts": {
     "start": "hasura console --envfile ./../../.env"
   },
-  "packageManager": "pnpm@10.10.0",
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "hasura-cli"
-    ]
-  }
+  "packageManager": "pnpm@10.10.0"
 }

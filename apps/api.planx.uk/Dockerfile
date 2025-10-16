@@ -5,7 +5,7 @@ FROM node:22.14.0-alpine AS base
 
 # Setup Git - required for fetching git dependencies (planx-core)
 RUN apk add --no-cache git 
-COPY .gitconfig /planx-new/.gitconfig
+COPY apps/api.planx.uk/.gitconfig /root/.gitconfig
 
 WORKDIR /planx-new
 RUN npm install -g pnpm@10.10.0
@@ -20,24 +20,23 @@ COPY apps/api.planx.uk ./apps/api.planx.uk
 
 # Install and build
 RUN pnpm install --recursive --prefer-offline
-RUN pnpm --filter api build
+RUN pnpm --filter api.planx.uk build
 
-# Use pnpm to "prune" a single app for production
-# Docs: https://pnpm.io/cli/deploy
-RUN mkdir pruned
-RUN pnpm --filter api --prod deploy pruned
+# Use pnpm deploy to create production output
+RUN pnpm --filter api.planx.uk --prod deploy --legacy /pruned
 
 ## PRODUCTION ##
 FROM node:22.14.0-alpine AS production
 ENV NODE_ENV=production
 WORKDIR /app
 
-# Copy only the pruned app files from the base stage
-COPY --from=base /planx-new/pruned .
+# Copy the pruned deployment from base
+COPY --from=base /pruned ./
+
 CMD ["npm", "start"]
 
 ## DEVELOPMENT ##
 FROM base AS development
 WORKDIR /planx-new/apps/api.planx.uk
 ENV NODE_ENV=development
-CMD ["pnpm", "--filter", "api", "dev"]
+CMD ["pnpm", "--filter", "api.planx.uk", "dev"]

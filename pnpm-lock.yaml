@@ -5,11 +5,15 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@tiptap/extension-list': 3.0.7
   '@tiptap/extension-bullet-list': 3.0.7
-  '@tiptap/extension-ordered-list': 3.0.7
   '@tiptap/extension-list-item': 3.0.7
   '@tiptap/extension-list-keymap': 3.0.7
+  '@tiptap/extension-list': 3.0.7
+  '@tiptap/extension-ordered-list': 3.0.7
+  linkifyjs@<4.3.2: '>=4.3.2'
+  micromatch@<4.0.8: '>=4.0.8'
+
+packageExtensionsChecksum: sha256-SpzGkpVuiUs+lueUtE04n4t1jqpiHtEhAR+2rJxaRps=
 
 importers:
 
@@ -33,6 +37,9 @@ importers:
       '@opensystemslab/planx-core':
         specifier: git+https://github.com/theopensystemslab/planx-core#5c1f901
         version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/5c1f901(@types/react@19.2.2)
+      '@types/geojson':
+        specifier: ^7946.0.16
+        version: 7946.0.16
       '@types/isomorphic-fetch':
         specifier: ^0.0.36
         version: 0.0.36
@@ -762,8 +769,8 @@ importers:
   apps/hasura.planx.uk:
     devDependencies:
       hasura-cli:
-        specifier: ^2.36.1
-        version: 2.38.0
+        specifier: 2.36.1
+        version: 2.36.1
 
   apps/localplanning.services:
     dependencies:
@@ -5287,6 +5294,9 @@ packages:
     resolution: {integrity: sha512-ilYanEU8vxxBexpJd8cWM4ElSQq4QctCLKih0TSfjIfCQTeyH/6zVrmIJfLPrKTKJRbiG+cfnZbQIjAlJmF1jQ==}
     engines: {node: '>=4'}
 
+  axios@0.21.4:
+    resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
+
   axios@1.12.2:
     resolution: {integrity: sha512-vMJzPewAlRyOgxV2dU0Cuz2O8zzzx9VYtbJOaBgXFeLc4IV/Eg50n4LowmehOOR61S8ZMpc2K5Sa7g6A4jfkUw==}
 
@@ -5515,10 +5525,6 @@ packages:
   chai@5.3.3:
     resolution: {integrity: sha512-4zNhdJD/iOjSH0A05ea+Ke6MU5mmpQcbQsSOkgdaUMJ9zTlDTD/GYlwohmIE2u0gaxHYiVHEn1Fw9mZ/ktJWgw==}
     engines: {node: '>=18'}
-
-  chalk-template@1.1.2:
-    resolution: {integrity: sha512-2bxTP2yUH7AJj/VAXfcA+4IcWGdQ87HwBANLt5XxGTeomo8yG0y95N1um9i5StvhT/Bl0/2cARA5v1PpPXUxUA==}
-    engines: {node: '>=14.16'}
 
   chalk@2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}
@@ -7009,9 +7015,9 @@ packages:
   hastscript@9.0.1:
     resolution: {integrity: sha512-g7df9rMFX/SPi34tyGCyUBREQoKkapwdY/T04Qn9TDWfHhAYt4/I0gMVirzK5wEzeUqIjEB+LXC/ypb7Aqno5w==}
 
-  hasura-cli@2.38.0:
-    resolution: {integrity: sha512-TWi02pJJdZTqYtdG+vl+WhumiqlrysDMBkL4RDcfXpfG2aJbY0QML06oWH+x56G2DFfsT262gk09aJUeAhKdqg==}
-    engines: {node: '>=16'}
+  hasura-cli@2.36.1:
+    resolution: {integrity: sha512-h8MHlkkgjlnmFsjzJ+FYDecIB0zswtdvFszXLPsSsyOuCuIIGejAx3rSPFVIxyiZVXohbsJcgjJBe7r91BV3Wg==}
+    engines: {node: '>=8'}
     hasBin: true
 
   hat@0.0.3:
@@ -8356,10 +8362,6 @@ packages:
 
   micromark@4.0.2:
     resolution: {integrity: sha512-zpe98Q6kvavpCr1NPVSCMebCKfD7CA2NqZ+rykeNhONIJBpc1tFKt9hucLGwha3jNTNI8lHpctWJWoimVF4PfA==}
-
-  micromatch@4.0.5:
-    resolution: {integrity: sha512-DMy+ERcEW2q8Z2Po+WNXuw3c5YaUSFjAO5GsJqfEl7UjvtIuFKO6ZrKvcItdy98dwFI2N1tg3zNIdKaQT+aNdA==}
-    engines: {node: '>=8.6'}
 
   micromatch@4.0.8:
     resolution: {integrity: sha512-PXwfBhYu0hBCPw8Dn0E+WDYb7af3dSLVWKi3HGv84IdF4TyFoC0ysxFd0Goxw7nSv4T/PzEJQxsYsEiFCKo2BA==}
@@ -17371,6 +17373,12 @@ snapshots:
 
   axe-core@4.11.0: {}
 
+  axios@0.21.4:
+    dependencies:
+      follow-redirects: 1.15.11
+    transitivePeerDependencies:
+      - debug
+
   axios@1.12.2:
     dependencies:
       follow-redirects: 1.15.11
@@ -17678,10 +17686,6 @@ snapshots:
       deep-eql: 5.0.2
       loupe: 3.2.1
       pathval: 2.0.1
-
-  chalk-template@1.1.2:
-    dependencies:
-      chalk: 5.6.2
 
   chalk@2.4.2:
     dependencies:
@@ -19476,10 +19480,10 @@ snapshots:
       property-information: 7.1.0
       space-separated-tokens: 2.0.2
 
-  hasura-cli@2.38.0:
+  hasura-cli@2.36.1:
     dependencies:
-      axios: 1.12.2
-      chalk-template: 1.1.2
+      axios: 0.21.4
+      chalk: 2.4.2
     transitivePeerDependencies:
       - debug
 
@@ -20604,7 +20608,7 @@ snapshots:
       execa: 7.2.0
       lilconfig: 2.1.0
       listr2: 6.6.1
-      micromatch: 4.0.5
+      micromatch: 4.0.8
       pidtree: 0.6.0
       string-argv: 0.3.2
       yaml: 2.3.1
@@ -21332,11 +21336,6 @@ snapshots:
       micromark-util-types: 2.0.2
     transitivePeerDependencies:
       - supports-color
-
-  micromatch@4.0.5:
-    dependencies:
-      braces: 3.0.3
-      picomatch: 2.3.1
 
   micromatch@4.0.8:
     dependencies:
