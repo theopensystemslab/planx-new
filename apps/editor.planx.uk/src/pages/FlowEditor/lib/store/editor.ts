@@ -29,7 +29,10 @@ import debounce from "lodash/debounce";
 import isEmpty from "lodash/isEmpty";
 import omitBy from "lodash/omitBy";
 import { type } from "ot-json0";
-import { ContextMenuPosition, ContextMenuSource } from "pages/FlowEditor/components/Flow/components/ContextMenu";
+import {
+  ContextMenuPosition,
+  ContextMenuSource,
+} from "pages/FlowEditor/components/Flow/components/ContextMenu";
 import { NewFlow } from "pages/Team/components/AddFlow/types";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
@@ -174,7 +177,7 @@ export const editorUIStore: StateCreator<
       showDataFields: state.showDataFields,
       showHelpText: state.showHelpText,
     }),
-  }
+  },
 );
 
 interface PublishFlowResponse {
@@ -218,7 +221,14 @@ interface CopiedPayload {
   nodes: { originalId: string; nodeData: Store.Node }[];
 }
 
+interface CutPayload {
+  rootId: string;
+  parent: string;
+}
+
 export interface EditorStore extends Store.Store {
+  cutNode: (id: NodeId, parent: NodeId) => void;
+  getCutNode: () => CutPayload | null;
   addNode: (node: any, relationships?: Relationships) => void;
   archiveFlow: (
     flow: FlowSummary,
@@ -265,6 +275,7 @@ export interface EditorStore extends Store.Store {
     toParent?: NodeId,
   ) => void;
   pasteClonedNode: (toParent: NodeId, toBefore?: NodeId) => void;
+  pasteCutNode: (toParent: NodeId, toBefore?: NodeId) => void;
   /**
    * Paste a new node from the clipboard
    * Generates new IDs for all new nodes
@@ -387,8 +398,12 @@ export const editorStore: StateCreator<
   },
 
   cloneNode(id) {
-    localStorage.removeItem("copiedNode");
-    localStorage.setItem("clonedNodeId", id);
+    try {
+      localStorage.setItem("clonedNodeId", id);
+    } finally {
+      localStorage.removeItem("copiedNode");
+      localStorage.removeItem("cutNode");
+    }
   },
 
   getClonedNodeId: () => localStorage.getItem("clonedNodeId"),
@@ -422,20 +437,52 @@ export const editorStore: StateCreator<
       rootId: id,
       nodes: nodesToCopy,
     };
-    
+
     try {
       localStorage.setItem("copiedNode", JSON.stringify(payload));
     } catch (error) {
       if (error instanceof Error && error.name === "QuotaExceededError") {
-        alert("Failed to copy. Please try copying a smaller branch of the graph");
+        alert(
+          "Failed to copy. Please try copying a smaller branch of the graph",
+        );
       } else {
         alert(`Failed to copy - unknown error. Details: ${error}`);
       }
+    } finally {
+      localStorage.removeItem("clonedNodeId");
+      localStorage.removeItem("cutNode");
+    }
+  },
+
+  cutNode(id: string, parent: string) {
+    const { flow } = get();
+    const rootNode = flow[id];
+    if (!rootNode) return;
+
+    const payload: CutPayload = {
+      rootId: id,
+      parent,
+    };
+
+    try {
+      localStorage.setItem("cutNode", JSON.stringify(payload));
+    } catch (error) {
+      alert(`Failed to cut - unknown error. Details: ${error}`);
+    } finally {
+      localStorage.removeItem("copiedNode");
+      localStorage.removeItem("clonedNodeId");
     }
   },
 
   getCopiedNode: () => {
     const payload = localStorage.getItem("copiedNode");
+    if (!payload) return;
+
+    return JSON.parse(payload);
+  },
+
+  getCutNode: () => {
+    const payload = localStorage.getItem("cutNode");
     if (!payload) return;
 
     return JSON.parse(payload);
@@ -695,6 +742,27 @@ export const editorStore: StateCreator<
     }
   },
 
+  pasteCutNode(toParent, toBefore) {
+    const cutString = localStorage.getItem("cutNode");
+    if (!cutString) return;
+
+    try {
+      const { rootId, parent }: CutPayload = JSON.parse(cutString);
+      if (rootId === toBefore && parent === toParent) {
+        throw new Error("Cannot move before itself");
+      }
+      const [, ops] = move(rootId, parent, {
+        toParent,
+        toBefore,
+      })(get().flow);
+      send(ops);
+    } catch (err) {
+      alert((err as Error).message);
+    } finally {
+      localStorage.removeItem("cutNode");
+    }
+  },
+
   pasteNode(parent: string, before?: string) {
     const copiedString = localStorage.getItem("copiedNode");
     if (!copiedString) return;
@@ -736,14 +804,11 @@ export const editorStore: StateCreator<
       // 3. Rebuild the graph structure from our flat node list
       const { id, children, ...nodeData } = buildGraphFromNodes(
         newRootId,
-        newNodes
+        newNodes,
       );
 
       // 4. Finally, insert the original pasted node, and all its nested children
-      get().addNode(
-        { id, ...nodeData },
-        { parent, before, children }
-      );
+      get().addNode({ id, ...nodeData }, { parent, before, children });
     } catch (err) {
       alert((err as Error).message);
     }
