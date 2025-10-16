@@ -22,6 +22,7 @@ import { useStore } from "../FlowEditor/lib/store";
 import { FlowCardView, FlowSummary } from "../FlowEditor/lib/store/editor";
 import { AddFlow } from "./components/AddFlow";
 import FlowCard, { Card, CardContent } from "./components/FlowCard";
+import { FlowTable } from "./components/FlowTable";
 import { ShowingServicesHeader } from "./components/ShowingServicesHeader";
 import { filterOptions, sortOptions } from "./helpers/sortAndFilterOptions";
 
@@ -179,7 +180,7 @@ const Team: React.FC = () => {
 
   return (
     <Box bgcolor={"background.paper"} flexGrow={1}>
-      <Container maxWidth="lg">
+      <Container maxWidth="contentWide">
         <Box
           pb={1}
           sx={{
@@ -279,20 +280,33 @@ const Team: React.FC = () => {
               </ToggleButtonGroup>
             </Box>
             {sortedFlows && (
-              <DashboardList viewType={flowCardView}>
-                {sortedFlows.map((flow) => (
-                  <FlowCard
-                    flow={flow}
-                    flows={flows}
-                    key={flow.slug}
+              <>
+                {flowCardView === "grid" ? (
+                  <DashboardList viewType={flowCardView}>
+                    {sortedFlows.map((flow) => (
+                      <FlowCard
+                        flow={flow}
+                        flows={flows}
+                        key={flow.slug}
+                        teamId={teamId}
+                        teamSlug={slug}
+                        refreshFlows={() => {
+                          fetchFlows();
+                        }}
+                      />
+                    ))}
+                  </DashboardList>
+                ) : (
+                  <FlowTable
+                    flows={sortedFlows}
                     teamId={teamId}
                     teamSlug={slug}
                     refreshFlows={() => {
                       fetchFlows();
                     }}
                   />
-                ))}
-              </DashboardList>
+                )}
+              </>
             )}
           </>
         )}
