@@ -22,6 +22,7 @@ declare module "@mui/material/styles" {
     xl: true;
     formWrap: true;
     contentWrap: true;
+    contentWide: true;
   }
 }
 
@@ -46,6 +47,7 @@ declare module "@mui/material/styles/createPalette" {
     };
     template: {
       main: string;
+      light: string;
       dark: string;
     };
   }
@@ -74,6 +76,7 @@ declare module "@mui/material/styles/createPalette" {
     };
     template?: {
       main: string;
+      light: string;
       dark: string;
     };
   }
