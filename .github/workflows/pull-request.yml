@@ -72,6 +72,11 @@ jobs:
 
       - name: Setup environment
         uses: ./.github/actions/setup-environment
+        with:
+          aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
+          pnpm-version: ${{ vars.PNPM_VERSION }}
+          node-version: ${{ vars.NODE_VERSION }}
   
   test-api:
     name: Run API tests
@@ -84,6 +89,11 @@ jobs:
 
       - name: Setup environment
         uses: ./.github/actions/setup-environment
+        with:
+          aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
+          pnpm-version: ${{ vars.PNPM_VERSION }}
+          node-version: ${{ vars.NODE_VERSION }}
 
       - name: Run API tests
         run: pnpm --filter api.planx.uk test
@@ -99,6 +109,11 @@ jobs:
 
       - name: Setup environment
         uses: ./.github/actions/setup-environment
+        with:
+          aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
+          pnpm-version: ${{ vars.PNPM_VERSION }}
+          node-version: ${{ vars.NODE_VERSION }}
 
       - name: Run PlanX frontend tests
         run: pnpm --filter editor.planx.uk test:silent --retry=1
@@ -114,6 +129,11 @@ jobs:
 
       - name: Setup environment
         uses: ./.github/actions/setup-environment
+        with:
+          aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
+          pnpm-version: ${{ vars.PNPM_VERSION }}
+          node-version: ${{ vars.NODE_VERSION }}
         
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
