@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { styled } from "@mui/material/styles";
 import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
+import { isEmpty } from "lodash";
 import { parentNodeIsTemplatedInternalPortal } from "pages/FlowEditor/utils";
 import React, { useEffect, useRef } from "react";
 
@@ -64,10 +65,11 @@ const FlowEditor = () => {
   }, [flowId, connectToFlow, disconnectFromFlow]);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  useScrollControlsAndRememberPosition(scrollContainerRef);
+  const isLoading = isEmpty(flowObject);
+  useScrollControlsAndRememberPosition(isLoading ? null : scrollContainerRef);
 
-  // TODO: Nicer UI, queue up scroll?
-  if (!flowObject) return "Loading....";
+  // TODO: Nicer UI
+  if (isLoading) return "Loading....";
 
   const parentId = getParentId(undefined);
 
