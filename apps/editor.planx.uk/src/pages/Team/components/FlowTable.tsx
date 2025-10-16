@@ -9,20 +9,19 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import React from "react";
-import { Link, useCurrentRoute, useNavigation } from "react-navi";
+import { Link, useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType } from "ui/editor/FlowTag/types";
 import SimpleMenu from "ui/editor/SimpleMenu";
-import { getSortParams } from "ui/editor/SortControl/utils";
 
 import {
   formatLastEditMessage,
   formatLastPublishMessage,
 } from "../../FlowEditor/utils";
-import { sortOptions } from "../helpers/sortAndFilterOptions";
 import { FlowDialogs } from "./FlowDialogs";
 import { useFlowActions } from "./hooks/useFlowActions";
+import { useFlowSortDisplay } from "./hooks/useFlowSortDisplay";
 
 const StyledTable = styled(Table)(({ theme }) => ({
   marginTop: theme.spacing(2),
@@ -104,6 +103,8 @@ export const FlowTable: React.FC<FlowTableProps> = ({
   teamSlug,
   refreshFlows,
 }) => {
+  const { showPublished, headerText } = useFlowSortDisplay();
+
   return (
     <StyledTable>
       <StyledTableHead>
@@ -111,7 +112,7 @@ export const FlowTable: React.FC<FlowTableProps> = ({
           <FlowTitleCell>Flow title</FlowTitleCell>
           <FlowStatusCell>Online status</FlowStatusCell>
           <FlowStatusCell>Flow type</FlowStatusCell>
-          <TableCell>Last edited</TableCell>
+          <TableCell>{headerText}</TableCell>
           <FlowActionsCell align="center">Actions</FlowActionsCell>
         </TableRow>
       </StyledTableHead>
@@ -122,6 +123,7 @@ export const FlowTable: React.FC<FlowTableProps> = ({
             flow={flow}
             teamSlug={teamSlug}
             refreshFlows={refreshFlows}
+            showPublished={showPublished}
           />
         ))}
       </TableBody>
@@ -133,17 +135,17 @@ interface FlowTableRowProps {
   flow: FlowSummary;
   teamSlug: string;
   refreshFlows: () => void;
+  showPublished: boolean;
 }
 
 const FlowTableRow: React.FC<FlowTableRowProps> = ({
   flow,
   teamSlug,
   refreshFlows,
+  showPublished,
 }) => {
-  const route = useCurrentRoute();
   const navigation = useNavigation();
 
-  // All shared logic in one hook!
   const {
     isArchiveDialogOpen,
     setIsArchiveDialogOpen,
@@ -160,10 +162,6 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
     menuItems,
     canUserEditTeam,
   } = useFlowActions(flow, teamSlug, refreshFlows);
-
-  const {
-    sortObject: { displayName: sortDisplayName },
-  } = getSortParams<FlowSummary>(route.url.query, sortOptions);
 
   const handleRowClick = () => {
     navigation.navigate(`./${teamSlug}/${flow.slug}`);
@@ -186,9 +184,8 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
   const publishedTimeAgo = publishedDateParts[0];
   const publishedActor = publishedDateParts[1];
 
-  const isShowingPublished = sortDisplayName?.toLowerCase().includes("publish");
-  const displayTimeAgo = isShowingPublished ? publishedTimeAgo : editedTimeAgo;
-  const displayActor = isShowingPublished ? publishedActor : editedActor;
+  const displayTimeAgo = showPublished ? publishedTimeAgo : editedTimeAgo;
+  const displayActor = showPublished ? publishedActor : editedActor;
 
   let templateDisplay = "";
   if (isSourceTemplate) {

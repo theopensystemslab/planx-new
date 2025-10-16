@@ -5,20 +5,19 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import React from "react";
-import { Link, useCurrentRoute } from "react-navi";
+import { Link } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD, inputFocusStyle } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType } from "ui/editor/FlowTag/types";
 import SimpleMenu from "ui/editor/SimpleMenu";
-import { getSortParams } from "ui/editor/SortControl/utils";
 
 import {
   formatLastEditMessage,
   formatLastPublishMessage,
 } from "../../FlowEditor/utils";
-import { sortOptions } from "../helpers/sortAndFilterOptions";
 import { FlowDialogs } from "./FlowDialogs";
 import { useFlowActions } from "./hooks/useFlowActions";
+import { useFlowSortDisplay } from "./hooks/useFlowSortDisplay";
 
 export const Card = styled("li")(({ theme }) => ({
   listStyle: "none",
@@ -104,9 +103,8 @@ const FlowCard: React.FC<FlowCardProps> = ({
   teamSlug,
   refreshFlows,
 }) => {
-  const route = useCurrentRoute();
+  const { showPublished } = useFlowSortDisplay();
 
-  // All shared logic in one hook!
   const {
     isArchiveDialogOpen,
     setIsArchiveDialogOpen,
@@ -123,10 +121,6 @@ const FlowCard: React.FC<FlowCardProps> = ({
     menuItems,
     canUserEditTeam,
   } = useFlowActions(flow, teamSlug, refreshFlows);
-
-  const {
-    sortObject: { displayName: sortDisplayName },
-  } = getSortParams<FlowSummary>(route.url.query, sortOptions);
 
   const displayTags = [
     {
@@ -148,6 +142,8 @@ const FlowCard: React.FC<FlowCardProps> = ({
     flow.operations[0]?.createdAt,
     flow.operations[0]?.actor,
   );
+
+  const displayDate = showPublished ? publishedDate : editedDate;
 
   return (
     <>
@@ -190,11 +186,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
               <Typography variant="h3" component="h2">
                 {flow.name}
               </Typography>
-              <LinkSubText>
-                {sortDisplayName === "Last published"
-                  ? publishedDate
-                  : editedDate}
-              </LinkSubText>
+              <LinkSubText>{displayDate}</LinkSubText>
             </Box>
             <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
               {displayTags
