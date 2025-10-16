@@ -351,21 +351,16 @@ export const editorStore: StateCreator<
 
     const cloneStateFromShareDb = () => {
       const flow = JSON.parse(JSON.stringify(doc.data));
-      get().setFlow({
-        id,
-        flow,
-        flowSlug: get().flowSlug,
-        flowName: get().flowName,
-      });
-
-      // Templated flows require access to an ordered flow
-      // Set this once upstream as it's an expensive operation
-      const { isTemplate, setOrderedFlow } = get();
-      if (isTemplate) setOrderedFlow();
+      set({ flow });
     };
 
     // set state from initial load
     cloneStateFromShareDb();
+
+    // Templated flows require access to an ordered flow
+    // Set this once upstream as it's an expensive operation
+    const { isTemplatedFrom, setOrderedFlow } = get();
+    if (isTemplatedFrom) setOrderedFlow();
 
     // local operation so we can assume that multiple ops will arrive
     // almost instantaneously so wait for 100ms of 'silence' before running
