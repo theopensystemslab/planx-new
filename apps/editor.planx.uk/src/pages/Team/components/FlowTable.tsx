@@ -30,7 +30,6 @@ const StyledTable = styled(Table)(({ theme }) => ({
   position: "sticky",
   top: 0,
   border: `1px solid ${theme.palette.border.main}`,
-  borderRadius: theme.shape.borderRadius,
   "& .MuiTableCell-root": {
     padding: theme.spacing(1.5, 2),
     borderBottom: `1px solid ${theme.palette.border.main}`,
@@ -65,12 +64,17 @@ const StyledTableRow = styled(TableRow, {
 }));
 
 const FlowTitleCell = styled(TableCell)(() => ({
-  width: "30%",
-  minWidth: "200px",
+  width: "40%",
+  minWidth: "240px",
+}));
+
+const FlowStatusCell = styled(TableCell)(() => ({
+  width: "10%",
+  minWidth: "140px",
 }));
 
 const FlowActionsCell = styled(TableCell)(({ theme }) => ({
-  width: "100px",
+  width: "5%",
   maxWidth: "100px",
   backgroundColor: theme.palette.background.paper,
   borderLeft: `1px solid ${theme.palette.border.main}`,
@@ -102,9 +106,8 @@ export const FlowTable: React.FC<FlowTableProps> = ({
       <StyledTableHead>
         <TableRow>
           <FlowTitleCell>Flow title</FlowTitleCell>
-          <TableCell>Online status</TableCell>
-          <TableCell>Flow type</TableCell>
-          <TableCell>Template</TableCell>
+          <FlowStatusCell>Online status</FlowStatusCell>
+          <FlowStatusCell>Flow type</FlowStatusCell>
           <TableCell>Last edited</TableCell>
           <TableCell align="center">Actions</TableCell>
         </TableRow>
@@ -206,6 +209,21 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
       <StyledTableRow isTemplated={isAnyTemplate} onClick={handleRowClick}>
         <FlowTitleCell>
           <Box>
+            {templateDisplay && (
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 0.5,
+                  mb: 0.5,
+                }}
+              >
+                {!isSourceTemplate && (
+                  <StarIcon sx={{ fontSize: "0.9em", color: "#380F77" }} />
+                )}
+                <Typography variant="body2">{templateDisplay}</Typography>
+              </Box>
+            )}
             <FlowLink
               href={`./${flow.slug}`}
               prefetch={false}
@@ -221,33 +239,29 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
                 color="textSecondary"
                 sx={{ mt: 0.5 }}
               >
-                {`${flow.summary.split(" ").slice(0, 20).join(" ")}...`}
+                {(() => {
+                  const words = flow.summary.split(" ");
+                  const trimmed = words.slice(0, 16).join(" ");
+                  return words.length > 16 ? `${trimmed}...` : trimmed;
+                })()}
               </Typography>
             )}
           </Box>
         </FlowTitleCell>
-        <TableCell>
+        <FlowStatusCell>
           <Box sx={{ display: "inline-flex" }}>
             <FlowTag tagType={FlowTagType.Status} statusVariant={statusVariant}>
               {statusVariant}
             </FlowTag>
           </Box>
-        </TableCell>
-        <TableCell>
+        </FlowStatusCell>
+        <FlowStatusCell>
           {isSubmissionService && (
             <Box sx={{ display: "inline-flex" }}>
               <FlowTag tagType={FlowTagType.ServiceType}>Submission</FlowTag>
             </Box>
           )}
-        </TableCell>
-        <TableCell>
-          {templateDisplay && (
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-              <StarIcon sx={{ fontSize: "0.9em", color: "#380F77" }} />
-              <Typography variant="body2">{templateDisplay}</Typography>
-            </Box>
-          )}
-        </TableCell>
+        </FlowStatusCell>
         <TableCell>
           <Box>
             <Typography variant="body2">{displayTimeAgo}</Typography>
