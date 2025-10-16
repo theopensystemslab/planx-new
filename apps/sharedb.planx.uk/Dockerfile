@@ -1,23 +1,28 @@
 # 22.14.0 = LTS
 FROM node:22.14.0-alpine AS base
 
-WORKDIR /sharedb
+WORKDIR /planx-new
 RUN npm install -g pnpm@10.10.0
-COPY pnpm-lock.yaml .
 
-FROM base AS production
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
+RUN pnpm fetch
+
+COPY packages ./packages
+COPY apps/sharedb.planx.uk ./apps/sharedb.planx.uk
+
+RUN pnpm install --recursive --prefer-offline
+
+RUN pnpm --filter sharedb --prod deploy /pruned
+
+## PRODUCTION ##
+FROM node:22.14.0-alpine AS production
+
 ENV NODE_ENV=production
-# see https://pnpm.io/cli/fetch
-RUN pnpm fetch --prod
-ADD . .
-RUN pnpm install --recursive --offline --prod
-COPY . .
+COPY --from=base /pruned ./
 CMD ["pnpm", "start"]
 
+## DEVELOPMENT ##
 FROM base AS development
+WORKDIR /planx-new/apps/sharedb.planx.uk
 ENV NODE_ENV=development
-RUN pnpm fetch
-ADD . .
-RUN pnpm install --recursive --offline
-COPY . .
-CMD ["pnpm", "dev"]
+CMD ["pnpm", "--filter", "sharedb", "dev"]

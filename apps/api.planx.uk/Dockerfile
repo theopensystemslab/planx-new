@@ -6,33 +6,29 @@ FROM node:22.14.0-alpine AS base
 RUN apk add --no-cache git 
 COPY .gitconfig /root/.gitconfig
 
-WORKDIR /api
+WORKDIR /planx-new
 RUN npm install -g pnpm@10.10.0
 
-# update package cache using lockfile
-# see https://pnpm.io/cli/fetch
-COPY pnpm-lock.yaml ./
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
 RUN pnpm fetch
 
-# copy and install everything else using cache where possible
-COPY . ./
+COPY packages ./packages
+COPY apps/api.planx.uk ./apps/api.planx.uk
+
 RUN pnpm install --recursive --prefer-offline
 
-RUN pnpm build
-RUN pnpm prune --production
+RUN pnpm --filter api build
 
-FROM node:22.14.0-alpine AS production
-WORKDIR /api
+RUN pnpm --filter api --prod deploy /pruned
 
 ## PRODUCTION ##
+FROM node:22.14.0-alpine AS production
 ENV NODE_ENV=production
-COPY --from=base /api/package.json ./package.json
-COPY --from=base /api/dist ./dist
-COPY --from=base /api/node_modules ./node_modules
+COPY --from=base /pruned ./
 CMD ["npm", "start"]
 
 ## DEVELOPMENT ##
 FROM base AS development
+WORKDIR /planx-new/apps/api.planx.uk
 ENV NODE_ENV=development
-RUN pnpm install
-CMD ["pnpm", "dev"]
+CMD ["pnpm", "--filter", "api", "dev"]
