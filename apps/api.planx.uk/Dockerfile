@@ -4,12 +4,12 @@ FROM node:22.14.0-alpine AS base
 
 # Setup Git - required for fetching git dependencies (planx-core)
 RUN apk add --no-cache git 
-COPY .gitconfig /root/.gitconfig
+COPY .gitconfig /planx-new/.gitconfig
 
 WORKDIR /planx-new
 RUN npm install -g pnpm@10.10.0
 
-COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json .gitconfig ./
 RUN pnpm fetch
 
 COPY packages ./packages

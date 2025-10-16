@@ -147,7 +147,6 @@ jobs:
           pnpm install --frozen-lockfile && pnpm test
         working-directory: ${{ env.HASURA_DIRECTORY }}/tests
 
-
   build_localplanning_services:
     name: Build localplanning.services
     runs-on: ubuntu-22.04
@@ -184,6 +183,7 @@ jobs:
           ROOT_DOMAIN: ${{ env.FULL_DOMAIN }}
         if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
         working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
+  
   build_planx_frontend:
     name: Build PlanX frontend
     runs-on: ubuntu-22.04
