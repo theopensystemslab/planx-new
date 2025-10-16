@@ -21,32 +21,24 @@ import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { useStore } from "../FlowEditor/lib/store";
 import { FlowCardView, FlowSummary } from "../FlowEditor/lib/store/editor";
 import { AddFlow } from "./components/AddFlow";
-import FlowCard from "./components/FlowCard/";
-import { Card, CardContent } from "./components/FlowCard/styles";
+import FlowCard, { Card, CardContent } from "./components/FlowCard";
+import { FlowTable } from "./components/FlowTable";
 import { ShowingServicesHeader } from "./components/ShowingServicesHeader";
 import { filterOptions, sortOptions } from "./helpers/sortAndFilterOptions";
 
-const DashboardList = styled("ul", {
-  shouldForwardProp: (prop) => prop !== "viewType",
-})<{ viewType: FlowCardView }>(({ theme, viewType }) => ({
+const DashboardList = styled("ul")(({ theme }) => ({
   padding: theme.spacing(2, 0, 3),
   margin: 0,
   gap: theme.spacing(2),
-  ...(viewType === "grid" && {
-    display: "grid",
-    gridAutoRows: "1fr",
-    gridTemplateColumns: "repeat(1, 1fr)",
-    [theme.breakpoints.up("md")]: {
-      gridTemplateColumns: "repeat(2, 1fr)",
-    },
-    [theme.breakpoints.up("lg")]: {
-      gridTemplateColumns: "repeat(3, 1fr)",
-    },
-  }),
-  ...(viewType === "row" && {
-    display: "flex",
-    flexDirection: "column",
-  }),
+  display: "grid",
+  gridAutoRows: "1fr",
+  gridTemplateColumns: "repeat(1, 1fr)",
+  [theme.breakpoints.up("md")]: {
+    gridTemplateColumns: "repeat(2, 1fr)",
+  },
+  [theme.breakpoints.up("lg")]: {
+    gridTemplateColumns: "repeat(3, 1fr)",
+  },
 }));
 
 export const FiltersContainer = styled(Box)(({ theme }) => ({
@@ -84,7 +76,7 @@ export const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
 }));
 
 const GetStarted: React.FC = () => (
-  <DashboardList viewType="grid" sx={{ paddingTop: 2 }}>
+  <DashboardList sx={{ paddingTop: 2 }}>
     <Card>
       <CardContent>
         <Typography variant="h3">No services found</Typography>
@@ -180,7 +172,7 @@ const Team: React.FC = () => {
 
   return (
     <Box bgcolor={"background.paper"} flexGrow={1}>
-      <Container maxWidth="lg">
+      <Container maxWidth="contentWide">
         <Box
           pb={1}
           sx={{
@@ -280,16 +272,33 @@ const Team: React.FC = () => {
               </ToggleButtonGroup>
             </Box>
             {sortedFlows && (
-              <DashboardList viewType={flowCardView}>
-                {sortedFlows.map((flow) => (
-                  <FlowCard
-                    flow={flow}
-                    flows={flows}
-                    key={flow.slug}
-                    refreshFlows={fetchFlows}
+              <>
+                {flowCardView === "grid" ? (
+                  <DashboardList>
+                    {sortedFlows.map((flow) => (
+                      <FlowCard
+                        flow={flow}
+                        flows={flows}
+                        key={flow.slug}
+                        teamId={teamId}
+                        teamSlug={slug}
+                        refreshFlows={() => {
+                          fetchFlows();
+                        }}
+                      />
+                    ))}
+                  </DashboardList>
+                ) : (
+                  <FlowTable
+                    flows={sortedFlows}
+                    teamId={teamId}
+                    teamSlug={slug}
+                    refreshFlows={() => {
+                      fetchFlows();
+                    }}
                   />
-                ))}
-              </DashboardList>
+                )}
+              </>
             )}
           </>
         )}
