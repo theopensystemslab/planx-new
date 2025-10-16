@@ -381,13 +381,8 @@ export const editorStore: StateCreator<
 
   disconnectFromFlow: () => {
     console.debug("[ShareDB] Disconnecting from flow:", doc?.id);
-    // Clear local store cache
-    get().setFlow({
-      id: "",
-      flow: {},
-      flowSlug: "",
-      flowName: "",
-    });
+    // Clear local store cache of flow data
+    set({ flow: {} });
     doc.destroy();
   },
 
