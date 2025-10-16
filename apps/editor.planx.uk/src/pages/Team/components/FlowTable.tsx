@@ -7,26 +7,22 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
-import { useToast } from "hooks/useToast";
-import React, { useState } from "react";
+import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
+import React from "react";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
-import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
+import { FlowTagType } from "ui/editor/FlowTag/types";
+import SimpleMenu from "ui/editor/SimpleMenu";
 import { getSortParams } from "ui/editor/SortControl/utils";
-import { slugify } from "utils";
 
-import SimpleMenu from "../../../ui/editor/SimpleMenu";
-import { useStore } from "../../FlowEditor/lib/store";
-import { FlowSummary } from "../../FlowEditor/lib/store/editor";
 import {
   formatLastEditMessage,
   formatLastPublishMessage,
 } from "../../FlowEditor/utils";
 import { sortOptions } from "../helpers/sortAndFilterOptions";
-import { ArchiveDialog } from "./ArchiveDialog";
-import { CopyDialog } from "./CopyDialog";
-import { RenameDialog } from "./RenameDialog";
+import { FlowDialogs } from "./FlowDialogs";
+import { useFlowActions } from "./hooks/useFlowActions";
 
 const StyledTable = styled(Table)(({ theme }) => ({
   marginTop: theme.spacing(2),
@@ -138,19 +134,26 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
   teamSlug,
   refreshFlows,
 }) => {
-  const [isArchiveDialogOpen, setIsArchiveDialogOpen] = useState(false);
-  const [isCopyDialogOpen, setIsCopyDialogOpen] = useState(false);
-  const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
-
-  const [archiveFlow, moveFlow, canUserEditTeam] = useStore((state) => [
-    state.archiveFlow,
-    state.moveFlow,
-    state.canUserEditTeam,
-  ]);
-
   const route = useCurrentRoute();
   const navigation = useNavigation();
-  const toast = useToast();
+
+  // All shared logic in one hook!
+  const {
+    isArchiveDialogOpen,
+    setIsArchiveDialogOpen,
+    isCopyDialogOpen,
+    isRenameDialogOpen,
+    handleArchive,
+    handleCopyDialogClose,
+    handleRenameDialogClose,
+    isSubmissionService,
+    isTemplatedFlow,
+    isSourceTemplate,
+    isAnyTemplate,
+    statusVariant,
+    menuItems,
+    canUserEditTeam,
+  } = useFlowActions(flow, teamSlug, refreshFlows);
 
   const {
     sortObject: { displayName: sortDisplayName },
@@ -160,43 +163,6 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
     navigation.navigate(`./${teamSlug}/${flow.slug}`);
   };
 
-  const handleCopyDialogClose = () => {
-    setIsCopyDialogOpen(false);
-    refreshFlows();
-  };
-
-  const handleRenameDialogClose = () => {
-    setIsRenameDialogOpen(false);
-    refreshFlows();
-  };
-
-  const handleArchive = async () => {
-    try {
-      await archiveFlow(flow);
-      refreshFlows();
-      toast.success("Archived flow");
-    } catch (error) {
-      toast.error(
-        "We are unable to archive this flow, refesh and try again or contact an admin",
-      );
-    }
-  };
-
-  const handleMove = (newTeam: string) => {
-    moveFlow(flow.id, newTeam, flow.name).then(() => {
-      refreshFlows();
-    });
-  };
-
-  const isSubmissionService = flow.publishedFlows?.[0]?.hasSendComponent;
-  const isTemplatedFlow = Boolean(flow.templatedFrom);
-  const isSourceTemplate = flow.isTemplate;
-  const isAnyTemplate = isTemplatedFlow || isSourceTemplate;
-
-  const statusVariant =
-    flow.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
-
-  // After your existing date formatting:
   const editedDateMessage = formatLastEditMessage(
     flow.operations[0]?.createdAt,
     flow.operations[0]?.actor,
@@ -206,7 +172,6 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
     flow.publishedFlows[0]?.publishedAt,
   );
 
-  // Split both messages for two-line display
   const editedDateParts = editedDateMessage.split(" by ");
   const editedTimeAgo = editedDateParts[0];
   const editedActor = editedDateParts[1];
@@ -215,53 +180,29 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
   const publishedTimeAgo = publishedDateParts[0];
   const publishedActor = publishedDateParts[1];
 
-  // Determine which date to show based on sort option
   const isShowingPublished = sortDisplayName?.toLowerCase().includes("publish");
-
   const displayTimeAgo = isShowingPublished ? publishedTimeAgo : editedTimeAgo;
   const displayActor = isShowingPublished ? publishedActor : editedActor;
 
   let templateDisplay = "";
   if (isSourceTemplate) {
-    templateDisplay = "Open Systems Lab";
+    templateDisplay = "Source template";
   } else if (isTemplatedFlow) {
     templateDisplay = flow.template.team.name;
   }
 
   return (
     <>
-      {isArchiveDialogOpen && (
-        <ArchiveDialog
-          title={`Archive "${flow.name}"`}
-          open={isArchiveDialogOpen}
-          content={`Are you sure you want to archive "${flow.name}"? Once archived, a flow is no longer able to be viewed in the editor and can only be restored by a developer.`}
-          onClose={() => setIsArchiveDialogOpen(false)}
-          onConfirm={handleArchive}
-          submitLabel="Archive this flow"
-        />
-      )}
-      {isCopyDialogOpen && (
-        <CopyDialog
-          isDialogOpen={isCopyDialogOpen}
-          handleClose={handleCopyDialogClose}
-          sourceFlow={{
-            name: flow.name,
-            slug: flow.slug,
-            id: flow.id,
-          }}
-        />
-      )}
-      {isRenameDialogOpen && (
-        <RenameDialog
-          isDialogOpen={isRenameDialogOpen}
-          handleClose={handleRenameDialogClose}
-          flow={{
-            name: flow.name,
-            slug: flow.slug,
-            id: flow.id,
-          }}
-        />
-      )}
+      <FlowDialogs
+        flow={flow}
+        isArchiveDialogOpen={isArchiveDialogOpen}
+        setIsArchiveDialogOpen={setIsArchiveDialogOpen}
+        isCopyDialogOpen={isCopyDialogOpen}
+        isRenameDialogOpen={isRenameDialogOpen}
+        handleArchive={handleArchive}
+        handleCopyDialogClose={handleCopyDialogClose}
+        handleRenameDialogClose={handleRenameDialogClose}
+      />
       <StyledTableRow isTemplated={isAnyTemplate} onClick={handleRowClick}>
         <FlowTitleCell>
           <Box>
@@ -318,40 +259,7 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
           </Box>
         </TableCell>
         <FlowActionsCell align="center" onClick={(e) => e.stopPropagation()}>
-          {canUserEditTeam(teamSlug) && (
-            <SimpleMenu
-              items={[
-                {
-                  label: "Rename",
-                  onClick: () => setIsRenameDialogOpen(true),
-                },
-                {
-                  label: "Copy",
-                  onClick: () => setIsCopyDialogOpen(true),
-                  disabled: isAnyTemplate,
-                },
-                {
-                  label: "Move",
-                  onClick: () => {
-                    const newTeam = prompt("New team");
-                    if (newTeam) {
-                      if (slugify(newTeam) === teamSlug) {
-                        alert(
-                          `This flow already belongs to ${teamSlug}, skipping move`,
-                        );
-                      } else {
-                        handleMove(slugify(newTeam));
-                      }
-                    }
-                  },
-                },
-                {
-                  label: "Archive",
-                  onClick: () => setIsArchiveDialogOpen(true),
-                },
-              ]}
-            ></SimpleMenu>
-          )}
+          {canUserEditTeam && <SimpleMenu items={menuItems}></SimpleMenu>}
         </FlowActionsCell>
       </StyledTableRow>
     </>
