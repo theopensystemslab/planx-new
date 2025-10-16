@@ -772,6 +772,27 @@ importers:
         specifier: 2.36.1
         version: 2.36.1
 
+  apps/hasura.planx.uk/tests:
+    dependencies:
+      dotenv:
+        specifier: ^17.0.0
+        version: 17.2.3
+      isomorphic-fetch:
+        specifier: ^3.0.0
+        version: 3.0.0
+      jsonwebtoken:
+        specifier: ^9.0.1
+        version: 9.0.2
+      uuid:
+        specifier: ^13.0.0
+        version: 13.0.0
+      vite:
+        specifier: ^7.0.7
+        version: 7.1.10(@types/node@22.14.1)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(stylus@0.62.0)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
+      vitest:
+        specifier: ^3.1.2
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.14.1)(@vitest/ui@3.2.4)(jiti@2.6.1)(jsdom@27.0.0(postcss@8.5.6))(less@4.4.2)(lightningcss@1.30.1)(msw@2.11.5(@types/node@22.14.1)(typescript@5.9.3))(sass@1.93.2)(stylus@0.62.0)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
+
   apps/localplanning.services:
     dependencies:
       '@astrojs/check':
@@ -24184,7 +24205,7 @@ snapshots:
       debug: 4.4.3
       es-module-lexer: 1.7.0
       pathe: 2.0.3
-      vite: 6.4.0(@types/node@22.14.1)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(stylus@0.62.0)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
+      vite: 7.1.10(@types/node@22.14.1)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(stylus@0.62.0)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
     transitivePeerDependencies:
       - '@types/node'
       - jiti

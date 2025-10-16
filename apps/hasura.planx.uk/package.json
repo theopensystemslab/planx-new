@@ -1,4 +1,5 @@
 {
+  "name": "hasura.planx.uk",
   "devDependencies": {
     "hasura-cli": "2.36.1"
   },

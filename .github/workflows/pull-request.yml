@@ -144,8 +144,7 @@ jobs:
       - name: Hasura tests
         run: |
           pnpm i -g hasura-cli@2.36.1
-          pnpm install --frozen-lockfile && pnpm test
-        working-directory: ${{ env.HASURA_DIRECTORY }}/tests
+          pnpm --filter hasura-test test 
 
   build_localplanning_services:
     name: Build localplanning.services
