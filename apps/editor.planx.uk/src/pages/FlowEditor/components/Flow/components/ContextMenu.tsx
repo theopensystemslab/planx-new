@@ -10,6 +10,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import * as React from "react";
 import CloneIcon from "ui/icons/Clone";
 import CopyIcon from "ui/icons/Copy";
+import CutIcon from "ui/icons/Cut";
 
 export type ContextMenuSource = "node" | "hanger" | null;
 
@@ -38,6 +39,9 @@ export const ContextMenu: React.FC = () => {
     cloneNode,
     pasteNode,
     pasteClonedNode,
+    cutNode,
+    cutPayload,
+    pasteCutNode,
     getNode,
   ] = useStore((state) => [
     state.contextMenuSource,
@@ -50,6 +54,9 @@ export const ContextMenu: React.FC = () => {
     state.cloneNode,
     state.pasteNode,
     state.pasteClonedNode,
+    state.cutNode,
+    state.getCutNode(),
+    state.pasteCutNode,
     state.getNode,
   ]);
 
@@ -73,6 +80,16 @@ export const ContextMenu: React.FC = () => {
     closeMenu();
   };
 
+  const handleCut = () => {
+    if (!self)
+      return alert(
+        "Unable to cut, missing value for relationship 'self' (nodeId)",
+      );
+
+    cutNode(self, parent);
+    closeMenu();
+  };
+
   const handlePaste = () => {
     if (copiedNode) {
       pasteNode(parent, before);
@@ -81,6 +98,11 @@ export const ContextMenu: React.FC = () => {
 
     if (clonedNodeId) {
       pasteClonedNode(parent, before);
+      return closeMenu();
+    }
+
+    if (cutPayload) {
+      pasteCutNode(parent, before);
       return closeMenu();
     }
   };
@@ -93,7 +115,10 @@ export const ContextMenu: React.FC = () => {
   const getActions = (): ContextMenuAction[] => {
     const hasCopiedNode = Boolean(copiedNode);
     const hasClonedNode = Boolean(clonedNodeId && getNode(clonedNodeId));
-    const isPasteEnabled = hasCopiedNode || hasClonedNode;
+    const hasCutNode = Boolean(
+      cutPayload && getNode((cutPayload as any)?.rootId),
+    );
+    const isPasteEnabled = hasCopiedNode || hasClonedNode || hasCutNode;
 
     if (source === "node") {
       return [
@@ -110,6 +135,13 @@ export const ContextMenu: React.FC = () => {
           icon: <CloneIcon fontSize="small" />,
           disabled: false,
           onClick: handleClone,
+        },
+        {
+          id: "cut",
+          label: "Cut",
+          icon: <CutIcon fontSize="small" />,
+          disabled: false,
+          onClick: handleCut,
         },
       ];
     }
