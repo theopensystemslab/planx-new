@@ -47,7 +47,9 @@ const findSession = async (sessionId: string, email: string) => {
 export const generateHTML = async (sessionId: string, email: string) => {
   const session = await findSession(sessionId, email);
   const responses = await $api.export.csvData(sessionId);
-  const boundingBox = session.data?.passport.data?.["proposal.site.buffered"];
+  const boundingBox = session.data?.passport.data?.[
+    "proposal.site.buffered"
+  ] as unknown as GeoJSON.Feature;
   const userAction = session.data?.passport.data?.[
     "drawBoundary.action"
   ] as unknown as DrawBoundaryUserAction | undefined;

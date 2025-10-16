@@ -1,38 +1,42 @@
 ## BASE ##
+# "base" contains the full monorepo and dev dependencies
 # 22.14.0 = LTS
 FROM node:22.14.0-alpine AS base
 
 # Setup Git - required for fetching git dependencies (planx-core)
 RUN apk add --no-cache git 
-COPY .gitconfig /root/.gitconfig
+COPY apps/api.planx.uk/.gitconfig /root/.gitconfig
 
-WORKDIR /api
+WORKDIR /planx-new
 RUN npm install -g pnpm@10.10.0
 
-# update package cache using lockfile
-# see https://pnpm.io/cli/fetch
-COPY pnpm-lock.yaml ./
+# Install dependencies first
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
 RUN pnpm fetch
 
-# copy and install everything else using cache where possible
-COPY . ./
+# Copy the rest of the source code
+COPY packages ./packages
+COPY apps/api.planx.uk ./apps/api.planx.uk
+
+# Install and build
 RUN pnpm install --recursive --prefer-offline
+RUN pnpm --filter api.planx.uk build
 
-RUN pnpm build
-RUN pnpm prune --production
-
-FROM node:22.14.0-alpine AS production
-WORKDIR /api
+# Use pnpm deploy to create production output
+RUN pnpm --filter api.planx.uk --prod deploy --legacy /pruned
 
 ## PRODUCTION ##
+FROM node:22.14.0-alpine AS production
 ENV NODE_ENV=production
-COPY --from=base /api/package.json ./package.json
-COPY --from=base /api/dist ./dist
-COPY --from=base /api/node_modules ./node_modules
+WORKDIR /app
+
+# Copy the pruned deployment from base
+COPY --from=base /pruned ./
+
 CMD ["npm", "start"]
 
 ## DEVELOPMENT ##
 FROM base AS development
+WORKDIR /planx-new/apps/api.planx.uk
 ENV NODE_ENV=development
-RUN pnpm install
-CMD ["pnpm", "dev"]
+CMD ["pnpm", "--filter", "api.planx.uk", "dev"]

@@ -1,0 +1,50 @@
+name: Setup monorepo environment
+description: Checks out the repository, configures AWS, pulls secrets, sets up pnpm, and caches dependencies
+
+inputs:
+  aws-access-key-id:
+    description: AWS access key ID
+    required: true
+  aws-secret-access-key:
+    description: AWS secret access key
+    required: true
+  pnpm-version:
+    description: PNPM version
+    required: true
+  node-version:
+    description: Node.js version
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v5
+      with:
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        aws-region: eu-west-2
+
+    - name: Copy .env files from S3
+      shell: bash
+      run: ./scripts/pull-secrets.sh
+
+    - name: Setup .gitconfig
+      shell: bash
+      run: mv .gitconfig ~/.gitconfig
+
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: ${{ inputs.pnpm-version }}
+
+    - name: Setup Node.js and cache pnpm store
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: pnpm
+        cache-dependency-path: pnpm-lock.yaml
+
+    - name: Install dependencies (from cache)
+      shell: bash
+      run: pnpm install --frozen-lockfile
