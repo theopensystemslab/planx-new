@@ -61,16 +61,19 @@ const StyledTableRow = styled(TableRow, {
       textDecoration: "underline",
     },
   },
+  "&:has(.actions-cell:hover) a": {
+    textDecoration: "none",
+  },
 }));
 
 const FlowTitleCell = styled(TableCell)(() => ({
-  width: "40%",
+  width: "45%",
   minWidth: "240px",
 }));
 
 const FlowStatusCell = styled(TableCell)(() => ({
-  width: "10%",
-  minWidth: "140px",
+  width: "11%",
+  minWidth: "150px",
 }));
 
 const FlowActionsCell = styled(TableCell)(({ theme }) => ({
@@ -109,7 +112,7 @@ export const FlowTable: React.FC<FlowTableProps> = ({
           <FlowStatusCell>Online status</FlowStatusCell>
           <FlowStatusCell>Flow type</FlowStatusCell>
           <TableCell>Last edited</TableCell>
-          <TableCell align="center">Actions</TableCell>
+          <FlowActionsCell align="center">Actions</FlowActionsCell>
         </TableRow>
       </StyledTableHead>
       <TableBody>
@@ -272,7 +275,11 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
             )}
           </Box>
         </TableCell>
-        <FlowActionsCell align="center" onClick={(e) => e.stopPropagation()}>
+        <FlowActionsCell
+          className="actions-cell"
+          align="center"
+          onClick={(e) => e.stopPropagation()}
+        >
           {canUserEditTeam && <SimpleMenu items={menuItems}></SimpleMenu>}
         </FlowActionsCell>
       </StyledTableRow>

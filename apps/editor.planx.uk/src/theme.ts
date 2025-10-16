@@ -102,7 +102,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   },
   template: {
     main: "#E6D6FF",
-    light: "#EEE6FD",
+    light: "#EDE2FF",
     dark: "#C099FF",
   },
   tonalOffset: DEFAULT_TONAL_OFFSET,
