@@ -136,14 +136,11 @@ jobs:
         with:
           node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
-          cache-dependency-path: "**/pnpm-lock.yaml"
+          cache-dependency-path: "pnpm-lock.yaml"
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        working-directory: ${{ env.API_DIRECTORY }}
       - name: Run API Tests
-        run: pnpm install --frozen-lockfile && pnpm check && pnpm test
-        working-directory: ${{ env.API_DIRECTORY }}
-
+        run: pnpm --filter api.planx.uk check && pnpm --filter api.planx.uk test
   test_react:
     name: Run React Tests
     runs-on: ubuntu-22.04
@@ -172,15 +169,12 @@ jobs:
         with:
           node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
-          cache-dependency-path: "**/pnpm-lock.yaml"
+          cache-dependency-path: "pnpm-lock.yaml"
       - name: Setup .gitconfig
         run: mv .gitconfig ~/.gitconfig
       - run: pnpm install --frozen-lockfile
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
-      - run: pnpm build
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
-      - run: pnpm test:silent --retry=1
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
+      - run: pnpm --filter editor.planx.uk build
+      - run: pnpm --filter editor.planx.uk test:silent --retry=1
 
   build_localplanning_services:
     name: Build localplanning.services
