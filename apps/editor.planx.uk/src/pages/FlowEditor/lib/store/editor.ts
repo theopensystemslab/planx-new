@@ -27,18 +27,22 @@ import { client } from "lib/graphql";
 import navigation from "lib/navigation";
 import debounce from "lodash/debounce";
 import { type } from "ot-json0";
-import { ContextMenuPosition, ContextMenuSource } from "pages/FlowEditor/components/Flow/components/ContextMenu";
+import {
+  ContextMenuPosition,
+  ContextMenuSource,
+} from "pages/FlowEditor/components/Flow/components/ContextMenu";
 import { NewFlow } from "pages/Team/components/AddFlow/types";
+import { Doc } from "sharedb/lib/client";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 
 import { FlowLayout } from "../../components/Flow";
-import { connectToDB, getFlowConnection } from "../sharedb";
+import { getFlowDoc, subscribeToDoc } from "./../sharedb";
 import { type Store } from ".";
 import type { SharedStore } from "./shared";
 import { UserStore } from "./user";
 
-let doc: any;
+let doc: Doc;
 
 const send = (ops: Array<any>) => {
   if (ops.length > 0) {
@@ -172,7 +176,7 @@ export const editorUIStore: StateCreator<
       showDataFields: state.showDataFields,
       showHelpText: state.showHelpText,
     }),
-  }
+  },
 );
 
 
@@ -229,7 +233,8 @@ export interface EditorStore extends Store.Store {
     flow: FlowSummary,
   ) => Promise<{ id: string; name: string } | void>;
   connect: (src: NodeId, tgt: NodeId, object?: any) => void;
-  connectTo: (id: NodeId) => Promise<void>;
+  connectToFlow: (id: NodeId) => Promise<void>;
+  disconnectFromFlow: () => void;
   cloneNode: (id: NodeId) => void;
   getClonedNodeId: () => string | null;
   copyNode: (id: NodeId) => void;
@@ -343,26 +348,24 @@ export const editorStore: StateCreator<
     }
   },
 
-  connectTo: async (id) => {
-    console.log("connecting to", id, get().id);
-
-    doc = getFlowConnection(id);
+  connectToFlow: async (id) => {
+    doc = getFlowDoc(id);
     (window as any)["doc"] = doc;
 
-    await connectToDB(doc);
+    await subscribeToDoc(doc);
 
     const cloneStateFromShareDb = () => {
       const flow = JSON.parse(JSON.stringify(doc.data));
-      get().setFlow({
-        id,
-        flow,
-        flowSlug: get().flowSlug,
-        flowName: get().flowName,
-      });
+      set({ flow });
     };
 
     // set state from initial load
     cloneStateFromShareDb();
+
+    // Templated flows require access to an ordered flow
+    // Set this once upstream as it's an expensive operation
+    const { isTemplatedFrom, setOrderedFlow } = get();
+    if (isTemplatedFrom) setOrderedFlow();
 
     // local operation so we can assume that multiple ops will arrive
     // almost instantaneously so wait for 100ms of 'silence' before running
@@ -374,6 +377,13 @@ export const editorStore: StateCreator<
     doc.on("op", (_op: any, isLocalOp?: boolean) =>
       isLocalOp ? cloneStateFromLocalOps() : cloneStateFromRemoteOps(),
     );
+  },
+
+  disconnectFromFlow: () => {
+    console.debug("[ShareDB] Disconnecting from flow:", doc?.id);
+    // Clear local store cache of flow data
+    set({ flow: {} });
+    doc.destroy();
   },
 
   cloneNode(id) {
@@ -412,12 +422,14 @@ export const editorStore: StateCreator<
       rootId: id,
       nodes: nodesToCopy,
     };
-    
+
     try {
       localStorage.setItem("copiedNode", JSON.stringify(payload));
     } catch (error) {
       if (error instanceof Error && error.name === "QuotaExceededError") {
-        alert("Failed to copy. Please try copying a smaller branch of the graph");
+        alert(
+          "Failed to copy. Please try copying a smaller branch of the graph",
+        );
       } else {
         alert(`Failed to copy - unknown error. Details: ${error}`);
       }
@@ -712,14 +724,11 @@ export const editorStore: StateCreator<
       // 3. Rebuild the graph structure from our flat node list
       const { id, children, ...nodeData } = buildGraphFromNodes(
         newRootId,
-        newNodes
+        newNodes,
       );
 
       // 4. Finally, insert the original pasted node, and all its nested children
-      get().addNode(
-        { id, ...nodeData },
-        { parent, before, children }
-      );
+      get().addNode({ id, ...nodeData }, { parent, before, children });
     } catch (err) {
       alert((err as Error).message);
     }
