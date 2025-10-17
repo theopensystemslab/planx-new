@@ -4,11 +4,12 @@ import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
-import axios, { isAxiosError } from "axios";
+import { useMutation } from "@tanstack/react-query";
+import { downloadApplicationFiles } from "api/downloadApplicationFiles/requests";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import startCase from "lodash/startCase.js";
-import React, { useState } from "react";
+import React from "react";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
@@ -18,10 +19,6 @@ import { object, string } from "yup";
 import { downloadZipFile } from "./helpers/downloadZip";
 import { VerifySubmissionEmailProps } from "./types";
 
-export const DOWNLOAD_APPLICATION_FILE_URL = `${
-  import.meta.env.VITE_APP_API_URL
-}/download-application-files`;
-
 const verifySubmissionEmailSchema = object({
   email: string().email("Invalid email").required("Email address required"),
 });
@@ -29,52 +26,43 @@ export const VerifySubmissionEmail = ({
   params,
 }: VerifySubmissionEmailProps): JSX.Element => {
   const { sessionId, team, flow } = params;
-  const [downloadApplicationError, setDownloadApplicationError] = useState("");
-  const [loading, setLoading] = useState(false);
+
+  const {
+    mutate: getFiles,
+    isPending,
+    error,
+  } = useMutation({
+    mutationFn: downloadApplicationFiles,
+    onSuccess: (data) =>
+      downloadZipFile(data, { filename: `${flow}-${sessionId}.zip` }),
+  });
 
   const formik = useFormik({
     initialValues: {
       email: "",
     },
-    onSubmit: async (values, { resetForm }) => {
-      setDownloadApplicationError("");
-      setLoading(true);
-
-      // Make application files download magic link
-      const params = new URLSearchParams({
-        email: encodeURIComponent(values.email),
-        localAuthority: team,
-      });
-      const applicationFilesDownloadLink = `${DOWNLOAD_APPLICATION_FILE_URL}/${sessionId}?${params}`;
-
-      try {
-        const { data } = await axios.get(applicationFilesDownloadLink, {
-          responseType: "arraybuffer",
-        });
-        downloadZipFile(data, { filename: `${flow}-${sessionId}.zip` });
-        resetForm();
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-        if (isAxiosError(error)) {
-          setDownloadApplicationError(
-            "Sorry, something went wrong. Please try again.",
-          );
-          resetForm();
-        }
-        console.error(error);
-      }
-    },
+    onSubmit: async (values, { resetForm }) =>
+      getFiles(
+        {
+          sessionId,
+          localAuthority: team,
+          email: values.email,
+        },
+        {
+          onSettled: resetForm,
+        },
+      ),
     validateOnChange: false,
     validateOnBlur: false,
     validationSchema: verifySubmissionEmailSchema,
   });
+
   return (
     <Container maxWidth="contentWrap">
       <Typography maxWidth="formWrap" variant="h1" pt={5} gutterBottom>
         Download application
       </Typography>
-      {loading ? (
+      {isPending ? (
         <DelayedLoadingIndicator />
       ) : (
         <Box width="100%">
@@ -88,7 +76,13 @@ export const VerifySubmissionEmail = ({
               <Box component="dt">Local Authority</Box>
               <Box component="dd">{startCase(team)}</Box>
             </SummaryListTable>
-            <ErrorWrapper error={downloadApplicationError}>
+            <ErrorWrapper
+              error={
+                error
+                  ? "Sorry, something went wrong. Please try again"
+                  : undefined
+              }
+            >
               <>
                 <CardHeader
                   title="Verify your submission email address"
