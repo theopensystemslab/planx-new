@@ -27,9 +27,11 @@ object_relationships:
 array_relationships:
   - name: analytics
     using:
-      foreign_key_constraint_on:
-        column: flow_id
-        table:
+      manual_configuration:
+        column_mapping:
+          id: flow_id
+        insertion_order: null
+        remote_table:
           name: analytics
           schema: public
   - name: comments
@@ -75,9 +77,11 @@ array_relationships:
           schema: public
   - name: payment_statuses
     using:
-      foreign_key_constraint_on:
-        column: flow_id
-        table:
+      manual_configuration:
+        column_mapping:
+          id: flow_id
+        insertion_order: null
+        remote_table:
           name: payment_status
           schema: public
   - name: published_flows
