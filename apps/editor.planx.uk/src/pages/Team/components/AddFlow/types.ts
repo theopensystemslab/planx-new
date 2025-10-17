@@ -1,3 +1,4 @@
+import { NewFlow } from "api/flow/types";
 import { boolean, number, object, string } from "yup";
 
 export const validationSchema = object().shape({
@@ -14,14 +15,6 @@ export const validationSchema = object().shape({
     }),
   }).required(),
 });
-
-export type NewFlow = {
-  slug: string;
-  name: string;
-  teamId: number;
-  sourceId?: string;
-  isTemplate?: boolean;
-};
 
 export type CreateFlow = {
   mode: "new" | "copy" | "template";

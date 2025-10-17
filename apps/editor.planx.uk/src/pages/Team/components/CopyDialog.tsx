@@ -4,7 +4,6 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import Typography from "@mui/material/Typography";
 import { isAxiosError } from "axios";
 import { Form, Formik, FormikConfig } from "formik";
 import { useToast } from "hooks/useToast";
@@ -15,6 +14,7 @@ import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import { slugify } from "utils";
 
+import { useCreateFlow } from "./AddFlow/hooks/useCreateFlow";
 import { CreateFlow, validationSchema } from "./AddFlow/types";
 
 interface Props {
@@ -32,7 +32,7 @@ export const CopyDialog: React.FC<Props> = ({
   handleClose,
   sourceFlow,
 }) => {
-  const { teamId, createFlowFromCopy } = useStore();
+  const teamId = useStore((state) => state.teamId);
 
   const initialValues: CreateFlow = {
     mode: "copy",
@@ -45,25 +45,28 @@ export const CopyDialog: React.FC<Props> = ({
   };
 
   const toast = useToast();
+  const { mutate: createFlow } = useCreateFlow();
 
   const onSubmit: FormikConfig<CreateFlow>["onSubmit"] = async (
-    { flow },
+    values,
     { setFieldError },
   ) => {
-    try {
-      await createFlowFromCopy(flow);
-      handleClose();
-      toast.success(`Created new flow "${flow.name}"`);
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const message = error?.response?.data?.error;
-        if (message?.includes("Uniqueness violation")) {
-          setFieldError("flow.name", "Flow name must be unique");
+    createFlow(values, {
+      onSuccess: () => {
+        handleClose();
+        toast.success(`Created new flow "${values.flow.name}"`);
+      },
+      onError: (error) => {
+        if (isAxiosError(error)) {
+          const message = error?.response?.data?.error;
+          if (message?.includes("Uniqueness violation")) {
+            setFieldError("flow.name", "Flow name must be unique");
+          }
         }
-      }
 
-      throw error;
-    }
+        throw error;
+      },
+    });
   };
 
   return (
