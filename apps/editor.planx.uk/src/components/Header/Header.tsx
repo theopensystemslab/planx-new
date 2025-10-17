@@ -20,7 +20,8 @@ import { styled, Theme } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import axios from "axios";
+import { useMutation } from "@tanstack/react-query";
+import { logout } from "api/auth/requests";
 import { clearLocalFlowIdb } from "lib/local.idb";
 import { capitalize } from "lodash";
 import { Route } from "navi";
@@ -400,7 +401,7 @@ const EditorToolbar: React.FC<{
 }> = ({ headerRef }) => {
   const { navigate } = useNavigation();
   const [open, setOpen] = useState(false);
-  const [user, token] = useStore((state) => [state.getUser(), state.jwt]);
+  const user = useStore((state) => state.getUser());
 
   const handleClose = () => {
     setOpen(false);
@@ -410,13 +411,13 @@ const EditorToolbar: React.FC<{
     setOpen(!open);
   };
 
-  const logout = async () => {
-    const authRequestHeader = { Authorization: `Bearer ${token}` };
-    await axios.post(`${import.meta.env.VITE_APP_API_URL}/auth/logout`, null, {
-      headers: authRequestHeader,
-    });
-    navigate("/logout");
-  };
+  const logoutMutation = useMutation({
+    mutationKey: ["logout", user?.id],
+    mutationFn: logout,
+    onSuccess: () => navigate("/logout"),
+  });
+
+  const handleLogout = () => logoutMutation.mutate();
 
   return (
     <>
@@ -483,7 +484,7 @@ const EditorToolbar: React.FC<{
               </ListItemIcon>
               <ListItemText>{user.email}</ListItemText>
             </MenuItem>
-            <MenuItem onClick={logout}>Log out</MenuItem>
+            <MenuItem onClick={handleLogout}>Log out</MenuItem>
           </StyledPaper>
         </StyledPopover>
       )}
