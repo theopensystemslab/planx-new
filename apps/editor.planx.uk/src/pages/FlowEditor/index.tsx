@@ -15,6 +15,7 @@ import { ToggleHelpTextButton } from "./components/FlowEditor/ToggleHelpTextButt
 import { ToggleImagesButton } from "./components/FlowEditor/ToggleImagesButton";
 import { ToggleTagsButton } from "./components/FlowEditor/ToggleTagsButton";
 import Sidebar from "./components/Sidebar";
+import FlowSkeleton from "./FlowSkeleton";
 import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
 
@@ -68,9 +69,6 @@ const FlowEditor = () => {
   const isLoading = isEmpty(flowObject);
   useScrollControlsAndRememberPosition(isLoading ? null : scrollContainerRef);
 
-  // TODO: Nicer UI
-  if (isLoading) return "Loading....";
-
   const parentId = getParentId(undefined);
 
   const indexedParent = orderedFlow?.find(({ id }) => id === parentId);
@@ -102,10 +100,15 @@ const FlowEditor = () => {
           className={lockedFlow ? "flow-locked" : ""}
           sx={{ position: "relative" }}
         >
-          <Flow
-            lockedFlow={lockedFlow}
-            showTemplatedNodeStatus={showTemplatedNodeStatus}
-          />
+          {" "}
+          {isLoading ? (
+            <FlowSkeleton />
+          ) : (
+            <Flow
+              lockedFlow={lockedFlow}
+              showTemplatedNodeStatus={showTemplatedNodeStatus}
+            />
+          )}
           <EditorVisualControls
             orientation="vertical"
             aria-label="Toggle node attributes"
