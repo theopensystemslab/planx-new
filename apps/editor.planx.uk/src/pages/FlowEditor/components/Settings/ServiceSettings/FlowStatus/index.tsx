@@ -5,7 +5,6 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import type { FlowStatus } from "@opensystemslab/planx-core/types";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
-import axios from "axios";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
@@ -19,13 +18,13 @@ import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { useStore } from "../../../../lib/store";
+import { useSlackMessage } from "../../hooks/useSlackMessage";
 import { PublicLink } from "./PublicLink";
 
 const FlowStatus = () => {
   const [
     flowStatus,
     updateFlowStatus,
-    token,
     teamSlug,
     flowSlug,
     teamDomain,
@@ -36,7 +35,6 @@ const FlowStatus = () => {
   ] = useStore((state) => [
     state.flowStatus,
     state.updateFlowStatus,
-    state.jwt,
     state.teamSlug,
     state.flowSlug,
     state.teamDomain,
@@ -56,7 +54,6 @@ const FlowStatus = () => {
       if (!isSuccess) return toast.error("Failed to update settings");
 
       toast.success("Service settings updated successfully");
-      // Send a Slack notification to #planx-notifications
       sendFlowStatusSlackNotification(values.status);
       // Reset "dirty" status to disable Save & Reset buttons
       resetForm({ values });
@@ -79,19 +76,11 @@ const FlowStatus = () => {
 
   const subdomainLink = teamDomain && `https://${teamDomain}/${flowSlug}`;
 
-  // Currently Silvia
-  const slackMemberID = "U05KXM9DQ4B";
+  const { mutate: sendSlackMessage } = useSlackMessage();
 
   const sendFlowStatusSlackNotification = async (status: FlowStatus) => {
-    const skipTeamSlugs = [
-      "open-digital-planning",
-      "opensystemslab",
-      "planx-university",
-      "templates",
-      "testing",
-      "wikihouse",
-    ];
-    if (skipTeamSlugs.includes(teamSlug)) return;
+    // Currently Silvia
+    const slackMemberID = "U05KXM9DQ4B";
 
     const emoji = {
       online: ":large_green_circle:",
@@ -99,17 +88,7 @@ const FlowStatus = () => {
     };
     const message = `${emoji[status]} *${teamSlug}/${flowSlug}* is now ${status} (<@${slackMemberID}>)`;
 
-    return axios.post(
-      `${import.meta.env.VITE_APP_API_URL}/send-slack-notification`,
-      {
-        message: message,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
+    sendSlackMessage(message);
   };
 
   return (
