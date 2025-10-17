@@ -18,26 +18,35 @@ export const CheckForChangesToPublishButton: React.FC<{
     state.template,
   ]);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  const { lastPublishedQuery, checkForChangesMutation, publishMutation, status } = usePublishFlow();
+  const {
+    lastPublishedQuery,
+    checkForChangesMutation,
+    publishMutation,
+    status,
+  } = usePublishFlow();
 
-  const handleCheckForChangesToPublish = async () => checkForChangesMutation.mutate(undefined, { 
-    onSuccess: () => setDialogOpen(true)
-  });
+  const handleCheckForChangesToPublish = async () =>
+    checkForChangesMutation.mutate(undefined, {
+      onSuccess: () => setDialogOpen(true),
+    });
 
   const handlePublish = async (args: PublishFlowArgs) => {
     // Close modal immediately, user feedback handled via status text beneath to publish button
     setDialogOpen(false);
-    publishMutation.mutate(args)
+    publishMutation.mutate(args);
   };
 
-  const { 
-    alteredNodes = [], 
-    history = [], 
-    validationChecks = [], 
-    templatedFlows = [] 
-  } = checkForChangesMutation.data || {}
+  const {
+    alteredNodes = [],
+    history = [],
+    validationChecks = [],
+    templatedFlows = [],
+  } = checkForChangesMutation.data || {};
 
-  const isTemplateUpdateRequired = (template: Template | undefined, lastPublishedData: typeof lastPublishedQuery.data) => {
+  const isTemplateUpdateRequired = (
+    template: Template | undefined,
+    lastPublishedData: typeof lastPublishedQuery.data,
+  ) => {
     const lastPublishedDate = lastPublishedData?.date;
 
     if (!template || !lastPublishedDate) return false;
@@ -50,13 +59,16 @@ export const CheckForChangesToPublishButton: React.FC<{
 
   const isTemplatedFlowDueToPublish = isTemplateUpdateRequired(
     template,
-    lastPublishedQuery.data
+    lastPublishedQuery.data,
   );
 
   // useStore.getState().getTeam().slug undefined here, use window instead
   const teamSlug = window.location.pathname.split("/")[1];
 
-  const isDisabled = !useStore.getState().canUserEditTeam(teamSlug) || checkForChangesMutation.isPending
+  const isDisabled =
+    !useStore.getState().canUserEditTeam(teamSlug) ||
+    checkForChangesMutation.isPending ||
+    publishMutation.isPending;
 
   return (
     <Box width="100%" mt={2}>
