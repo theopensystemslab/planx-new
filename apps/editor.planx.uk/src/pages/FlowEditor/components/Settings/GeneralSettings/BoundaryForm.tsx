@@ -1,5 +1,7 @@
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
+import { TeamSettings } from "@opensystemslab/planx-core/types";
+import { useMutation } from "@tanstack/react-query";
 import { bbox } from "@turf/bbox";
 import { bboxPolygon } from "@turf/bbox-polygon";
 import axios, { isAxiosError } from "axios";
@@ -119,35 +121,38 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
   const formik = useFormik({
     ...formikConfig,
     validationSchema: formSchema,
-    onSubmit: async (values, { resetForm }) => {
-      try {
-        // Fetch boundary from Planning Data
-        const { data } = await axios.get<PlanningDataEntity>(
-          `${values.boundaryUrl}.geojson`,
+    onSubmit: (values) => updateBoundaryMutation.mutate(values),
+  });
+
+  const updateBoundaryMutation = useMutation({
+    mutationFn: async (values: TeamSettings) => {
+      const { data } = await axios.get<PlanningDataEntity>(
+        `${values.boundaryUrl}.geojson`,
+      );
+
+      const boundaryBBox = convertToBoundingBox(data);
+
+      // Update database
+      await useStore.getState().updateTeamSettings({
+        boundaryUrl: values.boundaryUrl,
+        boundaryBBox,
+      });
+
+      return { boundaryBBox, ...values };
+    },
+    onSuccess: (values) => {
+      formik.setFieldValue("boundaryBBox", values.boundaryBBox);
+      onSuccess();
+      formik.resetForm({ values });
+    },
+    onError: (error) => {
+      if (isAxiosError(error)) {
+        formik.setFieldError(
+          "boundaryUrl",
+          "We are unable to retrieve your boundary, check your boundary URL and try again",
         );
-
-        // Transform and update formik state
-        const boundaryBBox = convertToBoundingBox(data);
-        formik.setFieldValue("boundaryBBox", boundaryBBox);
-
-        // Update database
-        const isUpdateSuccess = await useStore.getState().updateTeamSettings({
-          boundaryUrl: values.boundaryUrl,
-          boundaryBBox,
-        });
-        if (isUpdateSuccess) {
-          onSuccess();
-          resetForm({ values });
-        }
-      } catch (error) {
-        if (isAxiosError(error)) {
-          formik.setFieldError(
-            "boundaryUrl",
-            "We are unable to retrieve your boundary, check your boundary URL and try again",
-          );
-        }
-        console.error(error);
       }
+      console.error(error);
     },
   });
 
@@ -156,7 +161,9 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
 
   // Cheltenham, Gloucester and Tewkesbury share a Strategic Local Plan
   //  This joint boundary is not hosted on PD, so we override the usual self-service input
-  const isSLPTeam = ["strategic-and-local-plan", "tewkesbury"].includes(teamSlug);
+  const isSLPTeam = ["strategic-and-local-plan", "tewkesbury"].includes(
+    teamSlug,
+  );
 
   if (isSLPTeam) return <SLPInfo geojsonData={formik.values.boundaryBBox} />;
 
@@ -184,6 +191,6 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
           />
         </>
       }
-    ></SettingsForm>
+    />
   );
 }
