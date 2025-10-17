@@ -10,9 +10,7 @@ export const generateCORSAllowList = (customDomains: CustomDomains, domain: stri
   const editorURL = `https://${domain}`;
   const apiURL = `https://api.${domain}`; // Required for requests from API docs
   const hasuraURL = `https://hasura.${domain}`; // Required for proxied auth requests
-
-  const lpsDomain = config.get("lps-domain")
-  const lpsURL = lpsDomain && `https://${lpsDomain}`;
+  const lpsURL = pulumi.interpolate`https://${config.require("lps-domain")}`;
 
   const microsoftLoginURLs = ["https://login.live.com, https://login.microsoftonline.com"];
   const corsAllowList = [
