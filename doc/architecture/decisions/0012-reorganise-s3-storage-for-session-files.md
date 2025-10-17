@@ -1,18 +1,18 @@
 # 11. Reorganise S3 storage for session files
 
-Date: 2025-10-07
+Date: 2025-10-17
 
 ## Status
 
-Proposed
+Approved
 
 ## Context
 
 ### Current State
 - All files are currently stored with flat structure: `/:nanoId/filename.jpg`
-  - This applies to files uploaded by users ("private") and files uploaded by editors ("public")
+  - This applies to files uploaded by users ("private"), files uploaded by editors ("public"), and generated submission files (e.g. for Power Automate)
 - Files are co-located regardless of team, service, or context
-- File grouping requires querying user passports to get list of files
+- File grouping requires querying user passports, submission audit logs, or flows, to get list of files
 - No ability to limit API access per-team
 - Generated files are recreated on each request (both slow and computationally expensive)
 - No lifecycle rules - we manually sanitise via data held in user's passport - leaving orphaned files
