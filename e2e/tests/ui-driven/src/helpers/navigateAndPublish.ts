@@ -24,6 +24,9 @@ export const publishService = async (page: Page) => {
   await expect(page.getByRole("heading", { name: "Publish" })).toBeVisible();
   await page.getByTestId("publish-summary-input").fill("lorem ipsum");
   await page.getByTestId("publish-button").click();
+
+  // Wait for confirmation of success
+  await expect(page.getByText("Successfully published changes")).toBeVisible();
 };
 
 export const turnServiceOnline = async (page: Page) => {

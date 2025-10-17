@@ -47,6 +47,9 @@ function Component(props: PublicProps<PropertyInformation>) {
       localAuthorityDistrict={
         passport.data?.["property.localAuthorityDistrict"]
       }
+      localPlanningAuthority={
+        passport.data?.["property.localPlanningAuthority"]
+      }
       titleBoundary={passport.data?.["property.boundary"]}
       blpuCodes={blpuCodes}
       overrideAnswer={overrideAnswer}
@@ -73,6 +76,7 @@ export interface PresentationalProps extends PropertyInformation {
   address?: SiteAddress;
   propertyType?: string[];
   localAuthorityDistrict?: string[];
+  localPlanningAuthority?: string[];
   titleBoundary?: Feature;
   blpuCodes?: any;
   overrideAnswer: (fn: string) => void;
@@ -91,15 +95,13 @@ export function Presentational(props: PresentationalProps) {
     address,
     propertyType,
     localAuthorityDistrict,
+    localPlanningAuthority,
     titleBoundary,
     blpuCodes,
     overrideAnswer,
     handleSubmit,
   } = props;
-  const [teamName, environment] = useStore((state) => [
-    state.teamName,
-    state.previewEnvironment,
-  ]);
+  const [environment] = useStore((state) => [state.previewEnvironment]);
 
   const propertyDetails: PropertyDetail[] = [
     {
@@ -111,8 +113,12 @@ export function Presentational(props: PresentationalProps) {
       detail: address?.postcode,
     },
     {
+      heading: "Local authority district",
+      detail: localAuthorityDistrict?.join(", ") || "Unknown",
+    },
+    {
       heading: "Local planning authority",
-      detail: localAuthorityDistrict?.join(", ") || teamName,
+      detail: localPlanningAuthority?.join(", ") || "Unknown",
     },
     {
       heading: "Property type",

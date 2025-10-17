@@ -6,6 +6,7 @@ import ListItemText from "@mui/material/ListItemText";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { AlteredNode, HistoryItem } from "api/publishFlow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { formatLastEditDate } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
@@ -13,7 +14,6 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import BlockQuote from "ui/editor/BlockQuote";
 import Caret from "ui/icons/Caret";
 
-import { HistoryItem } from "../EditHistory";
 import { isAutoComment } from "../utils";
 import {
   AlteredExternalPortalsSummary,
@@ -23,12 +23,6 @@ import {
   PublishModalAccordion,
   PublishModalAccordionSummary,
 } from "./ValidationChecks";
-
-export interface AlteredNode {
-  id: string;
-  type: TYPES;
-  data?: any;
-}
 
 const HistoryComment = styled(Box, {
   shouldForwardProp: (prop) => prop != "isTemplatedFlowUpdateComment",
@@ -91,10 +85,10 @@ interface AlteredNodesSummary {
 
 export const AlteredNodesSummaryContent = (props: {
   alteredNodes: AlteredNode[];
-  lastPublishedTitle: string;
+  title: string;
   history?: HistoryItem[];
 }) => {
-  const { alteredNodes, lastPublishedTitle, history } = props;
+  const { alteredNodes, title, history } = props;
   const [expanded, setExpanded] = useState(false);
   const comments = history?.filter((item) => item.type === "comment") || [];
   const operations = history?.filter((item) => item.type === "operation") || [];
@@ -102,7 +96,7 @@ export const AlteredNodesSummaryContent = (props: {
   const isPlatformAdmin = useStore.getState().user?.isPlatformAdmin;
 
   const changeSummary: AlteredNodesSummary = {
-    title: lastPublishedTitle,
+    title,
     portals: [],
     updated: 0,
     deleted: 0,
