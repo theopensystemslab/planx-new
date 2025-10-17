@@ -24,6 +24,7 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
         paddingTop: theme.spacing(2),
       })}
       open={open}
+      transitionDuration={300}
     >
       <Box>
         <Alert
