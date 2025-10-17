@@ -101,6 +101,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   },
   template: {
     main: "#E6D6FF",
+    light: "#EDE2FF",
     dark: "#C099FF",
   },
   tonalOffset: DEFAULT_TONAL_OFFSET,
@@ -242,6 +243,7 @@ const getThemeOptions = ({
         xl: 1920,
         formWrap: 690, // Max width for form content
         contentWrap: 1020, // Max width for page
+        contentWide: 1500, // Larger interface wrapper
       },
     },
     transitions: {
