@@ -1,6 +1,7 @@
 import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import { PublishFlowArgs } from "api/publishFlow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -23,6 +24,8 @@ export const CheckForChangesToPublishButton: React.FC<{
     checkForChangesMutation,
     publishMutation,
     status,
+    buttonText,
+    isCheckingForChanges,
   } = usePublishFlow();
 
   const handleCheckForChangesToPublish = async () =>
@@ -107,8 +110,13 @@ export const CheckForChangesToPublishButton: React.FC<{
           color="primary"
           disabled={isDisabled}
           onClick={handleCheckForChangesToPublish}
+          startIcon={
+            isCheckingForChanges ? (
+              <CircularProgress size={20} color="inherit" />
+            ) : null
+          }
         >
-          CHECK FOR CHANGES TO PUBLISH
+          {buttonText}
         </Button>
         {!alteredNodes || alteredNodes?.length === 0 ? (
           <NoChangesDialog
