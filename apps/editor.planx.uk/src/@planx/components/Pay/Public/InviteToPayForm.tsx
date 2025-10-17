@@ -83,7 +83,10 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   yourDetailsLabel,
   paymentStatus,
 }) => {
-  const sessionId = useStore((state) => state.sessionId);
+  const [sessionId, isTestEnvironment] = useStore((state) => [
+    state.sessionId,
+    state.hasAcknowledgedWarning,
+  ]);
   const navigation = useNavigation();
   const {
     data: { mountpath },
