@@ -26,7 +26,6 @@ const DashboardContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "row",
   width: "100%",
-  overflow: "hidden",
   position: "relative",
   [`& > .${containerClasses.root}, & > div:not(.fixed-height-container) > .${containerClasses.root}`]:
     {

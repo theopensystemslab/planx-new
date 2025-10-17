@@ -26,9 +26,10 @@ import { useFlowSortDisplay } from "./hooks/useFlowSortDisplay";
 const StyledTable = styled(Table)(({ theme }) => ({
   marginTop: theme.spacing(2),
   zIndex: 1,
-  position: "sticky",
-  top: 0,
+  position: "relative",
   border: `1px solid ${theme.palette.border.main}`,
+  borderBottom: 0,
+  borderCollapse: "separate",
   "& .MuiTableCell-root": {
     padding: theme.spacing(1.5, 2),
     borderBottom: `1px solid ${theme.palette.border.main}`,
@@ -39,6 +40,9 @@ const StyledTableHead = styled(TableHead)(({ theme }) => ({
   "& .MuiTableCell-head": {
     backgroundColor: theme.palette.background.default,
     borderBottom: `1px solid ${theme.palette.border.main}`,
+    position: "sticky",
+    top: 0,
+    zIndex: 2,
     "&:last-of-type": {
       borderLeft: `1px solid ${theme.palette.border.main}`,
     },
