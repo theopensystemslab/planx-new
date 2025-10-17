@@ -4,8 +4,8 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
-const MENU_WIDTH_COMPACT = "51px";
-const MENU_WIDTH_FULL = "164px";
+export const MENU_WIDTH_COMPACT = "51";
+export const MENU_WIDTH_FULL = "164";
 
 export const Root = styled(Box, {
   shouldForwardProp: (prop) => prop !== "compact",
