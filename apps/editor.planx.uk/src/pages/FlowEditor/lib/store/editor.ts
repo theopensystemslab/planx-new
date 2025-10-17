@@ -27,8 +27,10 @@ import { client } from "lib/graphql";
 import navigation from "lib/navigation";
 import debounce from "lodash/debounce";
 import { type } from "ot-json0";
-import { ContextMenuPosition, ContextMenuSource } from "pages/FlowEditor/components/Flow/components/ContextMenu";
-import { NewFlow } from "pages/Team/components/AddFlow/types";
+import {
+  ContextMenuPosition,
+  ContextMenuSource,
+} from "pages/FlowEditor/components/Flow/components/ContextMenu";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -172,9 +174,8 @@ export const editorUIStore: StateCreator<
       showDataFields: state.showDataFields,
       showHelpText: state.showHelpText,
     }),
-  }
+  },
 );
-
 
 export type PublishedFlowSummary = {
   publishedAt: string;
@@ -221,7 +222,7 @@ export interface Template {
     publishedAt: string;
     summary: string;
   }[];
-};
+}
 
 export interface EditorStore extends Store.Store {
   addNode: (node: any, relationships?: Relationships) => void;
@@ -234,9 +235,6 @@ export interface EditorStore extends Store.Store {
   getClonedNodeId: () => string | null;
   copyNode: (id: NodeId) => void;
   getCopiedNode: () => { node: Store.Node; children: Store.Node[] };
-  createFlow: (newFlow: NewFlow) => Promise<string>;
-  createFlowFromTemplate: (newFlow: NewFlow) => Promise<string>;
-  createFlowFromCopy: (newFlow: NewFlow) => Promise<string>;
   getFlows: (teamId: number) => Promise<FlowSummary[]>;
   isClone: (id: NodeId) => boolean;
   lastPublished: (flowId: string) => Promise<string>;
@@ -412,12 +410,14 @@ export const editorStore: StateCreator<
       rootId: id,
       nodes: nodesToCopy,
     };
-    
+
     try {
       localStorage.setItem("copiedNode", JSON.stringify(payload));
     } catch (error) {
       if (error instanceof Error && error.name === "QuotaExceededError") {
-        alert("Failed to copy. Please try copying a smaller branch of the graph");
+        alert(
+          "Failed to copy. Please try copying a smaller branch of the graph",
+        );
       } else {
         alert(`Failed to copy - unknown error. Details: ${error}`);
       }
@@ -429,67 +429,6 @@ export const editorStore: StateCreator<
     if (!payload) return;
 
     return JSON.parse(payload);
-  },
-
-  createFlow: async (newFlow) => {
-    const token = get().jwt;
-
-    const response = await axios.post<{ id: string }>(
-      `${import.meta.env.VITE_APP_API_URL}/flows/create`,
-      newFlow,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-
-    return response.data.id;
-  },
-
-  createFlowFromTemplate: async ({ name, slug, sourceId, teamId }) => {
-    const token = get().jwt;
-
-    const response = await axios.post<{ id: string }>(
-      `${
-        import.meta.env.VITE_APP_API_URL
-      }/flows/create-from-template/${sourceId}`,
-      {
-        teamId,
-        name,
-        slug,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-
-    set({ isTemplatedFrom: true });
-
-    return response.data.id;
-  },
-
-  createFlowFromCopy: async ({ name, slug, sourceId, teamId }) => {
-    const token = get().jwt;
-
-    const response = await axios.post<{ id: string }>(
-      `${import.meta.env.VITE_APP_API_URL}/flows/${sourceId}/copy/`,
-      {
-        teamId,
-        name,
-        slug,
-        insert: true,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-
-    return response.data.id;
   },
 
   getFlows: async (teamId) => {
@@ -574,7 +513,10 @@ export const editorStore: StateCreator<
       query: gql`
         query GetLastPublisher($id: uuid!) {
           flow: flows_by_pk(id: $id) {
-            publishedFlows: published_flows(order_by: { created_at: desc }, limit: 1) {
+            publishedFlows: published_flows(
+              order_by: { created_at: desc }
+              limit: 1
+            ) {
               user {
                 firstName: first_name
                 lastName: last_name
@@ -712,14 +654,11 @@ export const editorStore: StateCreator<
       // 3. Rebuild the graph structure from our flat node list
       const { id, children, ...nodeData } = buildGraphFromNodes(
         newRootId,
-        newNodes
+        newNodes,
       );
 
       // 4. Finally, insert the original pasted node, and all its nested children
-      get().addNode(
-        { id, ...nodeData },
-        { parent, before, children }
-      );
+      get().addNode({ id, ...nodeData }, { parent, before, children });
     } catch (err) {
       alert((err as Error).message);
     }
