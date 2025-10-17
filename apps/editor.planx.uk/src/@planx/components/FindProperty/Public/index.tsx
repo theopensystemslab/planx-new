@@ -80,6 +80,9 @@ function Component(props: Props) {
   const [localAuthorityDistricts, setLocalAuthorityDistricts] = useState<
     string[] | undefined
   >();
+  const [localPlanningAuthorities, setLocalPlanningAuthorities] = useState<
+    string[] | undefined
+  >();
   const [regions, setRegions] = useState<string[] | undefined>();
   const [wards, setWards] = useState<string[] | undefined>();
   const [titleBoundary, setTitleBoundary] = useState<Feature | undefined>();
@@ -92,6 +95,7 @@ function Component(props: Props) {
     limit: "100",
   });
   options.append("dataset", "local-authority-district");
+  options.append("dataset", "local-planning-authority");
   options.append("dataset", "region"); // proxy for Greater London Authority (GLA) boundary
   options.append("dataset", "ward");
   options.append("dataset", "title-boundary");
@@ -114,12 +118,16 @@ function Component(props: Props) {
   useEffect(() => {
     if (address && data?.features?.length > 0) {
       const lads: string[] = [];
+      const lpas: string[] = [];
       const regions: string[] = [];
       const wards: string[] = [];
       let title: Feature | undefined;
+
       data.features.forEach((feature: any) => {
         if (feature.properties.dataset === "local-authority-district") {
           lads.push(feature.properties.name);
+        } else if (feature.properties.dataset === "local-planning-authority") {
+          lpas.push(feature.properties.name);
         } else if (feature.properties.dataset === "region") {
           regions.push(feature.properties.name);
         } else if (feature.properties.dataset === "ward") {
@@ -128,7 +136,9 @@ function Component(props: Props) {
           title = feature;
         }
       });
+
       setLocalAuthorityDistricts([...new Set(lads)]);
+      setLocalPlanningAuthorities([...new Set(lpas)]);
       setRegions([...new Set(regions)]);
       setWards([...new Set(wards)]);
       setTitleBoundary(title);
@@ -155,6 +165,11 @@ function Component(props: Props) {
       if (localAuthorityDistricts) {
         newPassportData["property.localAuthorityDistrict"] =
           localAuthorityDistricts;
+      }
+
+      if (localPlanningAuthorities) {
+        newPassportData["property.localPlanningAuthority"] =
+          localPlanningAuthorities;
       }
 
       if (regions) {
