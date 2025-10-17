@@ -6,7 +6,6 @@
         Given I have the following teams in the database:
             | id        | name                      | slug                      |
             | 1         | Open Systems Lab          | open-systems-lab          |
-            | 29        | Templates                 | templates                 |
             | 30        | Open Digital Planning     | open-digital-planning     |
             | 32        | Demo                      | demo                      |
             | 45        | Other Team                | other-team                |
@@ -20,7 +19,6 @@
             | creator_id | name             | slug              | team_id |
             | 1          | Demo Flow        | demo-flow         | 32      |
             | 2          | Test OSL         | test-osl          | 1       |
-            | 2          | Test Templates   | test-templates    | 29      |
             | 2          | Test ODP         | test-odp          | 30      |
             | 2          | Other Flow       | other-flow        | 45      |
         And I am a demoUser
@@ -44,7 +42,6 @@
         Examples:
             | SLUG                      |
             | open-systems-lab          |
-            | templates                 |
             | open-digital-planning     |
             | demo                      |
 
@@ -56,7 +53,6 @@
 
         Examples: 
             | TEAM                  | 
-            | templates             |
             | open-systems-lab      |
             | open-digital-planning |
 
@@ -74,7 +70,6 @@
 
         Examples: 
             | TEAM                  | 
-            | templates             |
             | open-systems-lab      |
             | open-digital-planning |
 
@@ -85,6 +80,5 @@
 
         Examples: 
             | TEAM                  | 
-            | templates             |
             | open-systems-lab      |
             | open-digital-planning |
