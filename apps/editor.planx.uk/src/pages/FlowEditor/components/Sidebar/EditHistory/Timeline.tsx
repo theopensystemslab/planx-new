@@ -10,17 +10,17 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { OT } from "@planx/graph/types";
-import { useStore } from "pages/FlowEditor/lib/store";
-import { formatLastEditDate } from "pages/FlowEditor/utils";
-import React, { useState } from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
-
 import {
   CommentHistoryItem,
   HistoryItem,
   OperationHistoryItem,
   PublishHistoryItem,
-} from ".";
+} from "api/publishFlow/types";
+import { useStore } from "pages/FlowEditor/lib/store";
+import { formatLastEditDate } from "pages/FlowEditor/utils";
+import React, { useState } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+
 import {
   CommentTimelineItem,
   OperationTimelineItem,

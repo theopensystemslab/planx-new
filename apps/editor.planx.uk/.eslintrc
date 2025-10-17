@@ -6,7 +6,8 @@
     "simple-import-sort",
     "jsx-a11y",
     "testing-library",
-    "@vitest"
+    "@vitest",
+    "@tanstack/query"
   ],
   "extends": [
     "eslint:recommended",
@@ -14,7 +15,8 @@
     "plugin:@typescript-eslint/recommended",
     "prettier",
     "plugin:@vitest/legacy-recommended",
-    "plugin:jest-dom/recommended"
+    "plugin:jest-dom/recommended",
+    "plugin:@tanstack/eslint-plugin-query/recommended"
   ],
   "rules": {
     "react-hooks/rules-of-hooks": "error",
