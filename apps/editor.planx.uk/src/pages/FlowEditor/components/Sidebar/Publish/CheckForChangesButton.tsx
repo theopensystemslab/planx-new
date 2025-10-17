@@ -3,223 +3,156 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
-import { PublishFlowArgs } from "lib/api/publishFlow/types";
-import { FlowStatus } from "@opensystemslab/planx-core/types";
-import { logger } from "airbrake";
-import { AxiosError } from "axios";
 import LoadingOverlay from "components/LoadingOverlay";
 import { useToast } from "hooks/useToast";
+import { PublishFlowArgs } from "lib/api/publishFlow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { formatLastPublishMessage } from "pages/FlowEditor/utils";
+import { Template } from "pages/FlowEditor/lib/store/editor";
 import React, { useState } from "react";
-import { useAsync } from "react-use";
 
-import { HistoryItem } from "../EditHistory";
-import { AlteredNode } from "./AlteredNodes";
+import { usePublishFlow } from "./hooks/usePublishFlow";
 import { ChangesDialog, NoChangesDialog } from "./PublishDialog";
-import { ValidationCheck } from "./ValidationChecks";
-
-export type TemplatedFlows = {
-  id: string;
-  slug: string;
-  team: {
-    slug: string;
-  };
-  status: FlowStatus;
-}[];
 
 export const CheckForChangesToPublishButton: React.FC<{
   previewURL: string;
 }> = ({ previewURL }) => {
-  const toast = useToast();
-  const [
-    flowId,
-    publishFlow,
-    lastPublished,
-    lastPublisher,
-    validateAndDiffFlow,
-    isTemplate,
-    isTemplatedFrom,
-    template,
-  ] = useStore((state) => [
-    state.id,
-    state.publishFlow,
-    state.lastPublished,
-    state.lastPublisher,
-    state.validateAndDiffFlow,
-    state.isTemplate,
+  const [isTemplatedFrom, template] = useStore((state) => [
     state.isTemplatedFrom,
     state.template,
   ]);
-
-  const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
-    "This flow is not published yet",
-  );
-  const [isTemplatedFlowDueToPublish, setIsTemplatedFlowDueToPublish] =
-    useState<boolean>(false);
-  const [isChecking, setIsChecking] = useState<boolean>(false);
-  const [isPublishing, setIsPublishing] = useState<boolean>(false);
-
-  const [validationChecks, setValidationChecks] = useState<ValidationCheck[]>(
-    [],
-  );
-  const [alteredNodes, setAlteredNodes] = useState<AlteredNode[]>();
-  const [history, setHistory] = useState<HistoryItem[]>();
-  const [templatedFlows, setTemplatedFlows] = useState<TemplatedFlows>();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const toast = useToast();
+  const {
+    lastPublishedQuery,
+    checkForChangesMutation,
+    publishMutation,
+    status,
+    buttonText,
+    isCheckingForChanges,
+  } = usePublishFlow();
 
-  const handleCheckForChangesToPublish = async () => {
-    try {
-      setIsChecking(true);
-      const alteredFlow = await validateAndDiffFlow(flowId);
-      setAlteredNodes(
-        alteredFlow?.data.alteredNodes ? alteredFlow.data.alteredNodes : [],
-      );
-      setHistory(alteredFlow?.data?.history ? alteredFlow.data.history : []);
-      setLastPublishedTitle(
-        alteredFlow?.data.alteredNodes
-          ? `Found changes ready to publish`
-          : alteredFlow?.data.message,
-      );
-      setValidationChecks(alteredFlow?.data?.validationChecks);
-      setTemplatedFlows(alteredFlow?.data?.templatedFlows);
-      setDialogOpen(true);
-    } catch (error) {
-      setLastPublishedTitle("Error checking for changes to publish");
+  const handleCheckForChangesToPublish = async () =>
+    checkForChangesMutation.mutate(undefined, {
+      onSuccess: () => setDialogOpen(true),
+    });
 
-      if (error instanceof AxiosError) {
-        alert(error.response?.data?.error);
-        logger.notify(error);
-      } else {
-        alert(
-          `Error checking for changes to publish. Confirm that your graph does not have any corrupted nodes and that all nested flows are valid. \n${error}`,
-        );
-      }
-    } finally {
-      setIsChecking(false);
-    }
+  const handlePublish = async (args: PublishFlowArgs) => {
+    // Close modal immediately, user feedback handled via status text beneath to publish button
+    setDialogOpen(false);
+    publishMutation.mutate(args, {
+      onSuccess: () => {
+        toast.success("Flow published");
+      },
+    });
   };
 
-  const handlePublish = async (
-    summary: string,
-    templatedFlowIds?: string[],
+  const {
+    alteredNodes = [],
+    history = [],
+    validationChecks = [],
+    templatedFlows = [],
+  } = checkForChangesMutation.data || {};
+
+  const isTemplateUpdateRequired = (
+    template: Template | undefined,
+    lastPublishedData: typeof lastPublishedQuery.data,
   ) => {
-    try {
-      setDialogOpen(false);
-      setIsPublishing(true);
-      setLastPublishedTitle("Publishing changes...");
+    const lastPublishedDate = lastPublishedData?.date;
 
-      const { alteredNodes, message } = await publishFlow(
-        flowId,
-        summary,
-        templatedFlowIds,
-      );
+    if (!template || !lastPublishedDate) return false;
 
-      setLastPublishedTitle(
-        alteredNodes
-          ? `Successfully published changes`
-          : `${message}` || "No new changes to publish",
-      );
+    const sourceTemplateDate = template.publishedFlows?.[0]?.publishedAt;
+    if (!sourceTemplateDate) return false;
 
-      if (alteredNodes) {
-        toast?.success("Successfully published changes");
-      }
-    } catch (error) {
-      setLastPublishedTitle("Error trying to publish");
-      alert(error);
-    } finally {
-      setIsPublishing(false);
-    }
+    return new Date(sourceTemplateDate) > new Date(lastPublishedDate);
   };
 
-  const _lastPublishedRequest = useAsync(async () => {
-    const date = await lastPublished(flowId);
-    const user = await lastPublisher(flowId);
-    setLastPublishedTitle(formatLastPublishMessage(date, user));
-
-    if (template) {
-      const sourceTemplateDate = template.publishedFlows[0].publishedAt;
-      if (date) {
-        setIsTemplatedFlowDueToPublish(sourceTemplateDate > date);
-      }
-    }
-  }, [flowId, template]);
+  const isTemplatedFlowDueToPublish = isTemplateUpdateRequired(
+    template,
+    lastPublishedQuery.data,
+  );
 
   // useStore.getState().getTeam().slug undefined here, use window instead
   const teamSlug = window.location.pathname.split("/")[1];
 
+  const isDisabled =
+    !useStore.getState().canUserEditTeam(teamSlug) ||
+    checkForChangesMutation.isPending ||
+    publishMutation.isPending;
+
   return (
-    <Box width="100%" mt={2}>
-      <Box display="flex" flexDirection="column" alignItems="flex-end">
-        {isTemplatedFrom && template && (
-          <Box
-            sx={{
-              background: (theme) => theme.palette.template.main,
-              width: "100%",
-              padding: (theme) => theme.spacing(1),
-              marginBottom: (theme) => theme.spacing(2),
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "flex-start",
-            }}
-          >
-            <StarIcon sx={{ color: "#380F77", mr: 0.5 }} fontSize="small" />
-            <Box>
-              <Typography variant="body2">
-                {`Templated from ${template.team.name}`}
-              </Typography>
-              <Typography variant="body2">
-                <strong>
-                  {isTemplatedFlowDueToPublish
-                    ? "Due to review and publish"
-                    : "Up to date"}
-                </strong>
-              </Typography>
+    <>
+      <LoadingOverlay
+        open={publishMutation.isPending}
+        message="Publishing flow"
+      />
+      <Box width="100%" mt={2}>
+        <Box display="flex" flexDirection="column" alignItems="flex-end">
+          {isTemplatedFrom && template && (
+            <Box
+              sx={{
+                background: (theme) => theme.palette.template.main,
+                width: "100%",
+                padding: (theme) => theme.spacing(1),
+                marginBottom: (theme) => theme.spacing(2),
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "flex-start",
+              }}
+            >
+              <StarIcon sx={{ color: "#380F77", mr: 0.5 }} fontSize="small" />
+              <Box>
+                <Typography variant="body2">
+                  {`Templated from ${template.team.name}`}
+                </Typography>
+                <Typography variant="body2">
+                  <strong>
+                    {isTemplatedFlowDueToPublish
+                      ? "Due to review and publish"
+                      : "Up to date"}
+                  </strong>
+                </Typography>
+              </Box>
             </Box>
+          )}
+          <Button
+            data-testid="check-for-changes-to-publish-button"
+            sx={{ width: "100%" }}
+            variant="contained"
+            color="primary"
+            disabled={isDisabled}
+            onClick={handleCheckForChangesToPublish}
+            startIcon={
+              isCheckingForChanges ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : null
+            }
+          >
+            {buttonText}
+          </Button>
+          {!alteredNodes || alteredNodes?.length === 0 ? (
+            <NoChangesDialog
+              dialogOpen={dialogOpen}
+              setDialogOpen={setDialogOpen}
+            />
+          ) : (
+            <ChangesDialog
+              dialogOpen={dialogOpen}
+              setDialogOpen={setDialogOpen}
+              alteredNodes={alteredNodes}
+              history={history}
+              status={status}
+              validationChecks={validationChecks}
+              previewURL={previewURL}
+              handlePublish={handlePublish}
+              templatedFlows={templatedFlows}
+            />
+          )}
+          <Box mr={0}>
+            <Typography variant="caption">{status}</Typography>
           </Box>
-        )}
-        <Button
-          data-testid="check-for-changes-to-publish-button"
-          sx={{ width: "100%" }}
-          variant="contained"
-          color="primary"
-          disabled={
-            !useStore.getState().canUserEditTeam(teamSlug) || isChecking
-          }
-          onClick={handleCheckForChangesToPublish}
-          startIcon={
-            isChecking ? <CircularProgress size={20} color="inherit" /> : null
-          }
-        >
-          {isChecking
-            ? "Checking for changes..."
-            : "Check for changes to publish"}
-        </Button>
-        {!alteredNodes || alteredNodes?.length === 0 ? (
-          <NoChangesDialog
-            dialogOpen={dialogOpen}
-            setDialogOpen={setDialogOpen}
-          />
-        ) : (
-          <ChangesDialog
-            dialogOpen={dialogOpen}
-            setDialogOpen={setDialogOpen}
-            alteredNodes={alteredNodes}
-            history={history}
-            lastPublishedTitle={lastPublishedTitle}
-            validationChecks={validationChecks}
-            previewURL={previewURL}
-            handlePublish={handlePublish}
-            isTemplate={isTemplate}
-            templatedFlows={templatedFlows}
-          />
-        )}
-        <Box mr={0}>
-          <Typography variant="caption">{lastPublishedTitle}</Typography>
         </Box>
       </Box>
-
-      <LoadingOverlay open={isPublishing} message="Publishing changes..." />
-    </Box>
+    </>
   );
 };
