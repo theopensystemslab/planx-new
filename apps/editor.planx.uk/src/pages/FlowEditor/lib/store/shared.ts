@@ -105,7 +105,6 @@ export const sharedStore: StateCreator<
       orderedFlow: undefined,
       externalPortals: {},
     });
-    get().initNavigationStore();
   },
 
   wasVisited(id) {

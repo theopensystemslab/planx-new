@@ -5,6 +5,7 @@ import { publicClient } from "lib/graphql";
 import { NaviRequest, NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import PublicLayout from "pages/layout/PublicLayout";
+import FlowLoadingPage from "pages/Preview/FlowLoadingPage";
 import { TestWarningPage } from "pages/Preview/TestWarningPage";
 import React from "react";
 import { View } from "react-navi";
@@ -31,20 +32,28 @@ export const draftView = async (req: NaviRequest) => {
   const flow = data.flows[0];
   if (!flow) throw new NotFoundError();
 
-  const flowData = await fetchDraftFlattenedFlowData(flow.id);
+  // Start request for flow data, but do not wait
+  fetchDraftFlattenedFlowData(flow.id);
+
+  useStore.setState({ id: flow.id, flowSlug, flowName: flow.name });
 
   const state = useStore.getState();
-  state.setFlow({ id: flow.id, flow: flowData, flowSlug, flowName: flow.name });
   state.setGlobalSettings(data.globalSettings[0]);
   state.setFlowSettings(flow.settings);
   state.setTeam(flow.team);
 
   return (
     <PublicLayout>
-      <WatermarkBackground variant="dark" opacity={0.05} forceVisibility={true} />
-      <TestWarningPage>
-        <View />
-      </TestWarningPage>
+      <WatermarkBackground
+        variant="dark"
+        opacity={0.05}
+        forceVisibility={true}
+      />
+      <FlowLoadingPage message="Loading flow, flattening all nested flows...">
+        <TestWarningPage>
+          <View />
+        </TestWarningPage>
+      </FlowLoadingPage>
     </PublicLayout>
   );
 };
@@ -110,15 +119,14 @@ const fetchSettingsForDraftView = async (
   }
 };
 
-const fetchDraftFlattenedFlowData = async (
-  flowId: string,
-): Promise<FlowGraph> => {
+const fetchDraftFlattenedFlowData = async (flowId: string) => {
   const url = `${
     import.meta.env.VITE_APP_API_URL
   }/flows/${flowId}/flatten-data?draft=true`;
   try {
-    const { data } = await axios.get<FlowGraph>(url);
-    return data;
+    const { data: flow } = await axios.get<FlowGraph>(url);
+    useStore.setState({ flow });
+    useStore.getState().initNavigationStore();
   } catch (error) {
     console.log(error);
     throw new NotFoundError();
