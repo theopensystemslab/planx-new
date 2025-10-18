@@ -27,7 +27,10 @@ import { client } from "lib/graphql";
 import navigation from "lib/navigation";
 import debounce from "lodash/debounce";
 import { type } from "ot-json0";
-import { ContextMenuPosition, ContextMenuSource } from "pages/FlowEditor/components/Flow/components/ContextMenu";
+import {
+  ContextMenuPosition,
+  ContextMenuSource,
+} from "pages/FlowEditor/components/Flow/components/ContextMenu";
 import { NewFlow } from "pages/Team/components/AddFlow/types";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
@@ -172,9 +175,8 @@ export const editorUIStore: StateCreator<
       showDataFields: state.showDataFields,
       showHelpText: state.showHelpText,
     }),
-  }
+  },
 );
-
 
 export type PublishedFlowSummary = {
   publishedAt: string;
@@ -221,7 +223,7 @@ export interface Template {
     publishedAt: string;
     summary: string;
   }[];
-};
+}
 
 export interface EditorStore extends Store.Store {
   addNode: (node: any, relationships?: Relationships) => void;
@@ -248,11 +250,6 @@ export interface EditorStore extends Store.Store {
   isTemplatedFrom: boolean;
   template?: Template;
   makeUnique: (id: NodeId, parent?: NodeId) => void;
-  moveFlow: (
-    flowId: string,
-    teamSlug: string,
-    flowName: string,
-  ) => Promise<any>;
   moveNode: (
     id: NodeId,
     parent?: NodeId,
@@ -412,12 +409,14 @@ export const editorStore: StateCreator<
       rootId: id,
       nodes: nodesToCopy,
     };
-    
+
     try {
       localStorage.setItem("copiedNode", JSON.stringify(payload));
     } catch (error) {
       if (error instanceof Error && error.name === "QuotaExceededError") {
-        alert("Failed to copy. Please try copying a smaller branch of the graph");
+        alert(
+          "Failed to copy. Please try copying a smaller branch of the graph",
+        );
       } else {
         alert(`Failed to copy - unknown error. Details: ${error}`);
       }
@@ -574,7 +573,10 @@ export const editorStore: StateCreator<
       query: gql`
         query GetLastPublisher($id: uuid!) {
           flow: flows_by_pk(id: $id) {
-            publishedFlows: published_flows(order_by: { created_at: desc }, limit: 1) {
+            publishedFlows: published_flows(
+              order_by: { created_at: desc }
+              limit: 1
+            ) {
               user {
                 firstName: first_name
                 lastName: last_name
@@ -604,42 +606,6 @@ export const editorStore: StateCreator<
   makeUnique: (id, parent) => {
     const [, ops] = makeUnique(id, parent)(get().flow);
     send(ops);
-  },
-
-  moveFlow(flowId: string, teamSlug: string, flowName: string) {
-    const valid = get().canUserEditTeam(teamSlug);
-    if (!valid) {
-      alert(
-        `You do not have permission to move this flow into ${teamSlug}, try again`,
-      );
-      return Promise.resolve();
-    }
-
-    const token = get().jwt;
-
-    return axios
-      .post(
-        `${import.meta.env.VITE_APP_API_URL}/flows/${flowId}/move/${teamSlug}`,
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      )
-      .then((res) => alert(res?.data?.message))
-      .catch(({ response }) => {
-        const { data } = response;
-        if (data.error.toLowerCase().includes("uniqueness violation")) {
-          alert(
-            `Failed to move this flow. ${teamSlug} already has a flow with name '${flowName}'. Rename the flow and try again`,
-          );
-        } else {
-          alert(
-            "Failed to move this flow. Make sure you're entering a valid team name and try again",
-          );
-        }
-      });
   },
 
   moveNode(
@@ -712,14 +678,11 @@ export const editorStore: StateCreator<
       // 3. Rebuild the graph structure from our flat node list
       const { id, children, ...nodeData } = buildGraphFromNodes(
         newRootId,
-        newNodes
+        newNodes,
       );
 
       // 4. Finally, insert the original pasted node, and all its nested children
-      get().addNode(
-        { id, ...nodeData },
-        { parent, before, children }
-      );
+      get().addNode({ id, ...nodeData }, { parent, before, children });
     } catch (err) {
       alert((err as Error).message);
     }
