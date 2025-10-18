@@ -44,6 +44,18 @@ export const createFlowFromTemplate = async ({
       slug,
     },
   );
+  return data;
+};
 
+export const moveFlow = async ({
+  flowId,
+  teamSlug,
+}: {
+  flowId: string;
+  teamSlug: string;
+}) => {
+  const { data } = await apiClient.post<{ message: string; error?: string }>(
+    `/flows/${flowId}/move/${teamSlug}`,
+  );
   return data;
 };
