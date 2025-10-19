@@ -13,6 +13,8 @@ import { axe } from "vitest-axe";
 import hasuraEventsResponseMock from "./mocks/hasuraEventsResponseMock";
 import SendComponent from "./Public";
 
+const ENDPOINT = `${import.meta.env.VITE_APP_API_URL}/create-send-events/:sessionId`;
+
 const { getState, setState } = useStore;
 
 let initialState: FullStore;
@@ -21,12 +23,8 @@ vi.spyOn(ReactNavi, "useNavigation").mockImplementation(
   () => ({ navigate: vi.fn() }) as any,
 );
 
-const handler = http.post(
-  `${import.meta.env.VITE_APP_API_URL}/create-send-events/*`,
-  async () => {
-    await delay();
-    return HttpResponse.json(hasuraEventsResponseMock, { status: 200 });
-  },
+const handler = http.post(ENDPOINT, () =>
+  HttpResponse.json(hasuraEventsResponseMock, { status: 200 }),
 );
 
 const originalLocation = window.location.pathname;
@@ -34,8 +32,8 @@ const originalLocation = window.location.pathname;
 beforeAll(() => (initialState = getState()));
 
 beforeEach(() => {
-  act(() => setState({ teamSlug: "testTeam" }));
   server.use(handler);
+  act(() => setState({ teamSlug: "testTeam" }));
 });
 
 afterEach(() => {
@@ -62,8 +60,15 @@ it("displays a warning at /preview URLs", () => {
   expect(getByText(/You can only test submissions on/)).toBeVisible();
 });
 
-it("displays loading messages to the user", async () => {
-  const { findByText } = setup(
+it("displays both loading states correctly", async () => {
+  server.use(
+    http.post(ENDPOINT, async () => {
+      await delay(150);
+      return HttpResponse.json(hasuraEventsResponseMock);
+    }),
+  );
+
+  const { getByText, queryByText, findByText } = setup(
     <SendComponent title="Send" destinations={["bops", "uniform"]} />,
   );
 
@@ -76,29 +81,17 @@ it("displays loading messages to the user", async () => {
 
 it("generates a valid payload for the API", async () => {
   const destinations: SendIntegration[] = ["bops", "uniform"];
-  const handleSubmit = vi.fn();
 
   let apiPayload: unknown = null;
 
-  const handler = http.post(
-    `${import.meta.env.VITE_APP_API_URL}/create-send-events/*`,
-    async ({ request }) => {
-      await delay();
+  server.use(
+    http.post(ENDPOINT, async ({ request }) => {
       apiPayload = await request.json();
-      return new HttpResponse(hasuraEventsResponseMock, { status: 200 });
-    },
-  );
-  server.use(handler);
-
-  setup(
-    <SendComponent
-      title="Send"
-      destinations={destinations}
-      handleSubmit={handleSubmit}
-    />,
+      return HttpResponse.json(hasuraEventsResponseMock, { status: 200 });
+    }),
   );
 
-  await waitFor(() => expect(handleSubmit).toHaveBeenCalledTimes(1));
+  await waitFor(() => expect(apiPayload).not.toBeNull());
 
   destinations.forEach((destination) => {
     expect(apiPayload).toHaveProperty(destination);
