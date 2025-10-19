@@ -31,13 +31,14 @@ const sortFlows = (a: { text: string }, b: { text: string }) =>
 const getExternalPortals = async (currentTeam: string, currentFlow: string) => {
   const { data } = await client.query({
     query: gql`
-      query GetFlows {
+      query GetExternalPortals {
         flows(order_by: { slug: asc }) {
           id
           slug
           name
           isTemplate: is_template
           team {
+            id
             slug
             name
           }

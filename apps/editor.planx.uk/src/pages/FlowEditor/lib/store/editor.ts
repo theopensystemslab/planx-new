@@ -426,7 +426,6 @@ export const editorStore: StateCreator<
   },
 
   getFlows: async (teamId) => {
-    client.cache.reset();
     const {
       data: { flows },
     } = await client.query<{ flows: FlowSummary[] }>({
@@ -450,6 +449,7 @@ export const editorStore: StateCreator<
             isTemplate: is_template
             template {
               team {
+                id
                 name
               }
             }
@@ -466,6 +466,9 @@ export const editorStore: StateCreator<
       variables: {
         teamId,
       },
+      // Flows are modified via REST API requests, not via the Apollo client
+      // Always get an up to date list when showing the page
+      fetchPolicy: "network-only",
     });
 
     return flows;
