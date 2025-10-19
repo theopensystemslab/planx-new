@@ -1,9 +1,13 @@
+import { gql, useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import MenuItem from "@mui/material/MenuItem";
+import Skeleton from "@mui/material/Skeleton";
+import { Team } from "@opensystemslab/planx-core/types";
 import { useMutation } from "@tanstack/react-query";
 import { moveFlow } from "api/flow/requests";
 import { isAxiosError } from "axios";
@@ -11,17 +15,15 @@ import { Form, Formik, FormikConfig } from "formik";
 import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import InputLabel from "ui/public/InputLabel";
-import Input from "ui/shared/Input/Input";
-import { slugify } from "utils";
+import SelectInput from "ui/editor/SelectInput/SelectInput";
 import * as yup from "yup";
 
 interface MoveFlowForm {
-  newTeamName: string;
+  selectedTeam: string;
 }
 
 const validationSchema = yup.object({
-  newTeamName: yup.string().required("A team name is required"),
+  selectedTeam: yup.string().required("A team name is required"),
 });
 
 interface Props {
@@ -39,7 +41,10 @@ export const MoveDialog: React.FC<Props> = ({
   handleClose,
   sourceFlow,
 }) => {
-  const currentTeamSlug = useStore((state) => state.teamSlug);
+  const [currentTeamSlug, canUserEditTeam] = useStore((state) => [
+    state.teamSlug,
+    state.canUserEditTeam,
+  ]);
   const toast = useToast();
   const moveFlowMutation = useMutation({
     mutationFn: moveFlow,
@@ -63,32 +68,44 @@ export const MoveDialog: React.FC<Props> = ({
     },
   });
 
-  const onSubmit: FormikConfig<MoveFlowForm>["onSubmit"] = async (
-    { newTeamName },
-    { setFieldError },
-  ) => {
-    const newTeamSlug = slugify(newTeamName.trim());
-
-    if (newTeamSlug === currentTeamSlug) {
-      setFieldError("newTeamName", "This flow already belongs to this team.");
-      return;
-    }
-
+  const onSubmit: FormikConfig<MoveFlowForm>["onSubmit"] = async ({
+    selectedTeam,
+  }) => {
     moveFlowMutation.mutate({
       flowId: sourceFlow.id,
-      teamSlug: newTeamSlug,
+      teamSlug: selectedTeam,
     });
   };
 
+  const { data, loading, error } = useQuery<{
+    teams: Pick<Team, "id" | "name" | "slug">[];
+  }>(gql`
+    query GetTeams {
+      teams(order_by: { name: asc }) {
+        id
+        name
+        slug
+      }
+    }
+  `);
+
+  if (!loading && !data) throw new Error("Unable to find teams");
+  if (error) throw new Error("Error fetching teams for Move dialog");
+
+  const availableTeams =
+    data?.teams.filter(
+      ({ slug }) => slug !== currentTeamSlug && canUserEditTeam(slug),
+    ) || [];
+
   return (
     <Formik<MoveFlowForm>
-      initialValues={{ newTeamName: "" }}
+      initialValues={{ selectedTeam: "" }}
       onSubmit={onSubmit}
       validateOnBlur={false}
       validateOnChange={false}
       validationSchema={validationSchema}
     >
-      {({ resetForm, isSubmitting, getFieldProps, errors, values }) => (
+      {({ resetForm, isSubmitting, getFieldProps }) => (
         <Dialog
           open={isDialogOpen}
           onClose={() => {
@@ -108,15 +125,22 @@ export const MoveDialog: React.FC<Props> = ({
                 dividers
                 sx={{ gap: 2, display: "flex", flexDirection: "column" }}
               >
-                <InputLabel label="New Team Name" htmlFor="newTeamName">
-                  <Input
-                    {...getFieldProps("newTeamName")}
-                    id="newTeamName"
-                    type="text"
-                    errorMessage={errors.newTeamName}
-                    value={values.newTeamName}
-                  />
-                </InputLabel>
+                {loading && <Skeleton height="80px" />}
+                {data?.teams && (
+                  <SelectInput
+                    bordered
+                    required={true}
+                    title={"Select team"}
+                    labelId="move-team-select"
+                    {...getFieldProps("selectedTeam")}
+                  >
+                    {availableTeams.map(({ slug, name }) => (
+                      <MenuItem key={slug} value={slug}>
+                        {name}
+                      </MenuItem>
+                    ))}
+                  </SelectInput>
+                )}
               </DialogContent>
               <DialogActions>
                 <Button
