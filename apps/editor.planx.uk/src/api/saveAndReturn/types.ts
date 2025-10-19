@@ -12,3 +12,10 @@ export interface SendEmailPayload {
     sessionId: string;
   };
 }
+
+export interface SendResumeEmailPayload {
+  payload: {
+    email: string;
+    teamSlug: string;
+  };
+}

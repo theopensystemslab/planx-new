@@ -4,6 +4,8 @@ import Typography from "@mui/material/Typography";
 import { PaymentRequest } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
+import { useMutation } from "@tanstack/react-query";
+import { sendResumeEmail } from "api/saveAndReturn/requests";
 import { SendEmailPayload } from "api/saveAndReturn/types";
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
@@ -250,22 +252,11 @@ const ResumePage: React.FC = () => {
     });
   };
 
-  /**
-   * Send magic link to user, based on submitted email
-   * Sets page status based on validation of request by API
-   */
-  const sendResumeEmail = async () => {
-    const url = `${import.meta.env.VITE_APP_API_URL}/resume-application`;
-    const data = {
-      payload: { email, teamSlug },
-    };
-    try {
-      await axios.post(url, data);
-      setPageStatus(Status.Success);
-    } catch (error) {
-      setPageStatus(Status.Error);
-    }
-  };
+  const sendResumeEmailMutation = useMutation({
+    mutationFn: sendResumeEmail,
+    onSuccess: () => setPageStatus(Status.Success),
+    onError: () => setPageStatus(Status.Error),
+  });
 
   /**
    * Query DB to validate that sessionID & email match
@@ -312,7 +303,11 @@ const ResumePage: React.FC = () => {
    */
   const handleSubmit = () => {
     setPageStatus(Status.Validating);
-    sessionId ? validateSessionId() : sendResumeEmail();
+    sessionId
+      ? validateSessionId()
+      : sendResumeEmailMutation.mutate({
+          payload: { email, teamSlug },
+        });
   };
 
   /**
