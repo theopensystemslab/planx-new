@@ -65,13 +65,6 @@ export type Session = {
   progress?: Progress;
 };
 
-export interface ReconciliationResponse {
-  message: string;
-  changesFound: boolean | null;
-  alteredSectionIds?: string[];
-  reconciledSessionData: Omit<Session, "passport">;
-}
-
 // re-export store types
 export type Passport = Store.Passport;
 export type Breadcrumbs = Store.Breadcrumbs;

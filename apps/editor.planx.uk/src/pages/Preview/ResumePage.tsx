@@ -5,15 +5,14 @@ import { PaymentRequest } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { useMutation } from "@tanstack/react-query";
-import { sendResumeEmail } from "api/saveAndReturn/requests";
-import { SendEmailPayload } from "api/saveAndReturn/types";
-import axios from "axios";
+import { sendResumeEmail, validateSession } from "api/saveAndReturn/requests";
+import { ReconciliationResponse } from "api/saveAndReturn/types";
+import { isAxiosError } from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { Link as ReactNaviLink, useCurrentRoute } from "react-navi";
-import type { ReconciliationResponse } from "types";
 import { ApplicationPath } from "types";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
@@ -258,33 +257,23 @@ const ResumePage: React.FC = () => {
     onError: () => setPageStatus(Status.Error),
   });
 
-  /**
-   * Query DB to validate that sessionID & email match
-   */
-  const validateSessionId = async () => {
-    const url = `${import.meta.env.VITE_APP_API_URL}/validate-session`;
-    const data: SendEmailPayload = {
-      payload: { email, sessionId },
-    };
-    try {
-      // Find this session, if found then handle reconciliation
-      await axios.post(url, data).then((response) => {
-        if (response.data) {
-          const reconciledSessionData = response.data.reconciledSessionData;
-          setReconciliationResponse(response.data);
-          resumeSession(reconciledSessionData);
-          const shouldSkipReconciliation = response.data.message.match(
-            /Payment process initiated, skipping reconciliation/,
-          );
+  const validateSessionMutation = useMutation({
+    mutationFn: validateSession,
+    onSuccess: (data) => {
+      const reconciledSessionData = data.reconciledSessionData;
+      setReconciliationResponse(data);
+      resumeSession(reconciledSessionData);
+      const shouldSkipReconciliation = data.message.match(
+        /Payment process initiated, skipping reconciliation/,
+      );
 
-          // Skip reconciliation page if applicant has started payment
-          shouldSkipReconciliation
-            ? continueApplication()
-            : setPageStatus(Status.Validated);
-        }
-      });
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
+      // Skip reconciliation page if applicant has started payment
+      shouldSkipReconciliation
+        ? continueApplication()
+        : setPageStatus(Status.Validated);
+    },
+    onError: (error) => {
+      if (isAxiosError(error)) {
         if (error.response?.status === 403) {
           const lockedSessionResponse = error.response
             .data as LockedSessionResponse;
@@ -295,8 +284,8 @@ const ResumePage: React.FC = () => {
       }
       console.debug(error);
       setPageStatus(Status.InvalidSession);
-    }
-  };
+    },
+  });
 
   /**
    * Handle all submit "paths" that leads a user to this page
@@ -304,7 +293,9 @@ const ResumePage: React.FC = () => {
   const handleSubmit = () => {
     setPageStatus(Status.Validating);
     sessionId
-      ? validateSessionId()
+      ? validateSessionMutation.mutate({
+          payload: { email, sessionId },
+        })
       : sendResumeEmailMutation.mutate({
           payload: { email, teamSlug },
         });
