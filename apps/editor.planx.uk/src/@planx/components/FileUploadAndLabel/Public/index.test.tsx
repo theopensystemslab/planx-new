@@ -1,9 +1,10 @@
 import { act, screen, waitFor, within } from "@testing-library/react";
 // eslint-disable-next-line no-restricted-imports
 import type { UserEvent } from "@testing-library/user-event";
-import axios from "axios";
+import { delay, http, HttpHandler, HttpResponse } from "msw";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import server from "test/mockServer";
 import { setup } from "testUtils";
 import { Breadcrumbs } from "types";
 import { vi } from "vitest";
@@ -16,12 +17,25 @@ import FileUploadAndLabelComponent from ".";
 const { getState, setState } = useStore;
 let initialState: FullStore;
 
-vi.mock("axios");
-const mockedAxios = vi.mocked(axios, true);
-
-window.URL.createObjectURL = vi.fn();
-
+window.URL.createObjectURL = vi.fn(() => "blob:mock-url");
 Element.prototype.scrollIntoView = vi.fn();
+
+const fileUploadHandlers: Record<string, HttpHandler> = {
+  success: http.post("*/file/*", async ({ request }) => {
+    const formData = await request.formData();
+    const file = formData.get("file") as File;
+
+    delay();
+    return HttpResponse.json({
+      fileType: file.type,
+      fileUrl: `https://api.editor.planx.dev/file/private/gws7l5d1/${file.name}`,
+    });
+  }),
+
+  error: http.post("*/file/*", () => {
+    return HttpResponse.json({ error: "Upload failed" }, { status: 500 });
+  }),
+};
 
 describe("Basic state and setup", () => {
   test("renders correctly", async () => {
@@ -37,11 +51,7 @@ describe("Basic state and setup", () => {
     );
 
     expect(getAllByRole("heading")[0]).toHaveTextContent("Test title");
-
-    // Required file is listed
     expect(getByText("testKey")).toBeVisible();
-
-    // Drop zone is available
     expect(getByTestId("upload-input")).toBeInTheDocument();
   });
 
@@ -204,7 +214,7 @@ describe("Info-only mode with hidden drop zone", () => {
 });
 
 describe("Modal trigger", () => {
-  afterEach(() => vi.clearAllMocks());
+  beforeEach(() => server.use(fileUploadHandlers.success));
 
   test("Modal does not open on initial component render", async () => {
     setup(
@@ -236,17 +246,10 @@ describe("Modal trigger", () => {
         ]}
       />,
     );
-    const mockedPost = mockedAxios.post.mockResolvedValue({
-      data: {
-        fileType: "image/png",
-        fileUrl: "https://api.editor.planx.dev/file/private/gws7l5d1/test.jpg",
-      },
-    });
 
-    const file = new File(["test"], "test.png", { type: "image/png" });
+    const file = createMockFile("test.png", "image/png");
     const input = getByTestId("upload-input");
     await user.upload(input, file);
-    expect(mockedPost).toHaveBeenCalled();
 
     const fileTaggingModal = await within(document.body).findByTestId(
       "file-tagging-dialog",
@@ -270,27 +273,13 @@ describe("Modal trigger", () => {
       />,
     );
 
-    const mockedPost = mockedAxios.post
-      .mockResolvedValueOnce({
-        data: {
-          fileType: "image/png",
-          fileUrl:
-            "https://api.editor.planx.dev/file/private/gws7l5d1/test1.jpg",
-        },
-      })
-      .mockResolvedValueOnce({
-        data: {
-          fileType: "image/png",
-          fileUrl:
-            "https://api.editor.planx.dev/file/private/gws7l5d1/test2.jpg",
-        },
-      });
+    const files = [
+      createMockFile("test1.png", "image/png"),
+      createMockFile("test2.png", "image/png"),
+    ];
 
-    const file1 = new File(["test1"], "test1.png", { type: "image/png" });
-    const file2 = new File(["test2"], "test2.png", { type: "image/png" });
     const input = getByTestId("upload-input");
-    await user.upload(input, [file1, file2]);
-    expect(mockedPost).toHaveBeenCalledTimes(2);
+    await user.upload(input, files);
 
     const fileTaggingModal = await within(document.body).findByTestId(
       "file-tagging-dialog",
@@ -304,7 +293,7 @@ describe("Modal trigger", () => {
   });
 
   test("Modal does not open when a file is deleted", async () => {
-    const { getByTestId, getByLabelText, queryByText, getByText, user } = setup(
+    const { getByTestId, queryByText, user } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -316,26 +305,13 @@ describe("Modal trigger", () => {
     );
 
     // Upload two files
-    mockedAxios.post
-      .mockResolvedValueOnce({
-        data: {
-          fileType: "image/png",
-          fileUrl:
-            "https://api.editor.planx.dev/file/private/gws7l5d1/test1.jpg",
-        },
-      })
-      .mockResolvedValueOnce({
-        data: {
-          fileType: "image/png",
-          fileUrl:
-            "https://api.editor.planx.dev/file/private/gws7l5d1/test2.jpg",
-        },
-      });
+    const files = [
+      createMockFile("test1.png", "image/png"),
+      createMockFile("test2.png", "image/png"),
+    ];
 
-    const file1 = new File(["test1"], "test1.png", { type: "image/png" });
-    const file2 = new File(["test2"], "test2.png", { type: "image/png" });
     const input = getByTestId("upload-input");
-    await user.upload(input, [file1, file2]);
+    await user.upload(input, files);
 
     const fileTaggingModal = await within(document.body).findByTestId(
       "file-tagging-dialog",
@@ -350,7 +326,7 @@ describe("Modal trigger", () => {
     expect(getByTestId("test2.png")).toBeVisible();
 
     // Delete the second file
-    user.click(getByTestId("delete-test2.png"));
+    await user.click(getByTestId("delete-test2.png"));
 
     // Card removed from screen
     await waitFor(() =>
@@ -363,6 +339,8 @@ describe("Modal trigger", () => {
 });
 
 describe("Adding tags and syncing state", () => {
+  beforeEach(() => server.use(fileUploadHandlers.success));
+
   test("Can continue when all required file types are uploaded and tagged", async () => {
     const handleSubmit = vi.fn();
     const {
@@ -385,16 +363,9 @@ describe("Adding tags and syncing state", () => {
     expect(incompleteIcons).toHaveLength(2);
 
     // Upload one file
-    mockedAxios.post.mockResolvedValueOnce({
-      data: {
-        fileType: "image/png",
-        fileUrl: "https://api.editor.planx.dev/file/private/gws7l5d1/test1.jpg",
-      },
-    });
-
-    const file1 = new File(["test1"], "test1.png", { type: "image/png" });
+    const file = createMockFile("test1.png", "image/png");
     const input = getByTestId("upload-input");
-    await user.upload(input, [file1]);
+    await user.upload(input, file);
 
     // Modal opened automatically
     const fileTaggingModal = await within(document.body).findByTestId(
@@ -455,16 +426,9 @@ describe("Adding tags and syncing state", () => {
     expect(incompleteIcons).toHaveLength(2);
 
     // Upload one file
-    mockedAxios.post.mockResolvedValueOnce({
-      data: {
-        fileType: "image/png",
-        fileUrl: "https://api.editor.planx.dev/file/private/gws7l5d1/test1.jpg",
-      },
-    });
-
-    const file1 = new File(["test1"], "test1.png", { type: "image/png" });
+    const file = createMockFile("test1.png", "image/png");
     const input = getByTestId("upload-input");
-    await user.upload(input, [file1]);
+    await user.upload(input, file);
 
     // Modal opened automatically
     const fileTaggingModal = await within(document.body).findByTestId(
@@ -512,6 +476,8 @@ describe("Adding tags and syncing state", () => {
 });
 
 describe("Error handling", () => {
+  beforeEach(() => server.use(fileUploadHandlers.success));
+
   test("An error is thrown if a user does not upload any files", async () => {
     const handleSubmit = vi.fn();
 
@@ -527,14 +493,7 @@ describe("Error handling", () => {
       />,
     );
 
-    mockedAxios.post.mockResolvedValueOnce({
-      data: {
-        fileType: "image/png",
-        fileUrl: "https://api.editor.planx.dev/file/private/gws7l5d1/test.png",
-      },
-    });
-
-    const file = new File(["test"], "test.png", { type: "image/png" });
+    const file = createMockFile("test.png", "image/png");
     const input = getByTestId("upload-input");
 
     // User cannot submit without uploading a file
@@ -579,14 +538,7 @@ describe("Error handling", () => {
       />,
     );
 
-    mockedAxios.post.mockResolvedValue({
-      data: {
-        fileType: "image/png",
-        fileUrl: "https://api.editor.planx.dev/file/private/gws7l5d1/test.jpg",
-      },
-    });
-
-    const file = new File(["test"], "test.jpg", { type: "image/jpg" });
+    const file = createMockFile("test.jpg", "image/jpeg");
     const input = getByTestId("upload-input");
     await user.upload(input, file);
 
@@ -598,7 +550,6 @@ describe("Error handling", () => {
 
     // Attempt to close without tagging files
     await user.click(submitModalButton);
-    expect(true).toBeTruthy();
     const modalError = await within(fileTaggingModal).findByText(
       /File test.jpg is not labeled/,
     );
@@ -616,14 +567,7 @@ describe("Error handling", () => {
       />,
     );
 
-    mockedAxios.post.mockResolvedValue({
-      data: {
-        fileType: "image/png",
-        fileUrl: "https://api.editor.planx.dev/file/private/gws7l5d1/test.jpg",
-      },
-    });
-
-    const file = new File(["test"], "test.jpg", { type: "image/jpg" });
+    const file = createMockFile("test.jpg", "image/jpeg");
     const input = getByTestId("upload-input");
     await user.upload(input, file);
 
@@ -658,14 +602,34 @@ describe("Error handling", () => {
     // Error message is cleared, user can submit
     expect(fileListError).toBeEmptyDOMElement();
     await user.click(getByTestId("continue-button"));
-    expect(handleSubmit).not.toHaveBeenCalled();
+    expect(handleSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  test("Handles upload failure gracefully", async () => {
+    server.use(fileUploadHandlers.error);
+
+    const { getByTestId, user } = setup(
+      <FileUploadAndLabelComponent
+        title="Test title"
+        fileTypes={[mockFileTypes.AlwaysRequired]}
+      />,
+    );
+
+    const file = createMockFile("test.png", "image/png");
+    const input = getByTestId("upload-input");
+
+    await user.upload(input, file);
+
+    const errorMessage = await screen.findByText(/Failed to upload file/);
+    expect(errorMessage).toBeVisible();
   });
 });
 
 describe("Submitting data", () => {
   beforeAll(() => (initialState = getState()));
-
   afterEach(() => waitFor(() => setState(initialState)));
+
+  beforeEach(() => server.use(fileUploadHandlers.success));
 
   it("records the user uploaded files", async () => {
     const handleSubmit = vi.fn();
@@ -690,7 +654,7 @@ describe("Submitting data", () => {
     expect(uploadedFile[0]).toEqual(
       expect.objectContaining({
         filename: "test1.png",
-        url: "https://api.editor.planx.dev/file/private/gws7l5d1/test1.jpg",
+        url: "https://api.editor.planx.dev/file/private/gws7l5d1/test1.png",
       }),
     );
   });
@@ -794,21 +758,24 @@ describe("Submitting data", () => {
   });
 });
 
+function createMockFile(
+  filename: string,
+  type: string,
+  content = "test content",
+): File {
+  const file = new File([content], filename, { type });
+  return file;
+}
+
 /**
  * Test helper which steps through the process of uploading and labelling a file
  * Does not contain assertations - relies on these happening in other, more granular, passing tests
+ * Uses MSW for realistic network mocking
  */
-const uploadAndTagSingleFile = async (user: UserEvent) => {
-  mockedAxios.post.mockResolvedValueOnce({
-    data: {
-      fileType: "image/png",
-      fileUrl: "https://api.editor.planx.dev/file/private/gws7l5d1/test1.jpg",
-    },
-  });
-
-  const file1 = new File(["test1"], "test1.png", { type: "image/png" });
+async function uploadAndTagSingleFile(user: UserEvent): Promise<void> {
+  const file = createMockFile("test1.png", "image/png");
   const input = screen.getByTestId("upload-input");
-  await user.upload(input, [file1]);
+  await user.upload(input, file);
 
   const fileTaggingModal = await within(document.body).findByTestId(
     "file-tagging-dialog",
@@ -819,5 +786,13 @@ const uploadAndTagSingleFile = async (user: UserEvent) => {
   await user.click(roofPlanCheckbox);
 
   const submitModalButton = await within(fileTaggingModal).findByText("Done");
-  user.click(submitModalButton);
+  await user.click(submitModalButton);
+  await waitForUploadToComplete();
+}
+
+const waitForUploadToComplete = async () => {
+  await waitFor(() => {
+    const progressBar = screen.getByRole("progressbar");
+    expect(progressBar).toHaveAttribute("aria-valuenow", "100");
+  });
 };
