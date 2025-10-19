@@ -176,7 +176,7 @@ export const handleExpiredJWTErrors = () => {
 };
 
 const handleValidationErrors = (operation: Operation) => {
-  const user = useStore.getState().getUser();
+  const user = useStore.getState().user;
   logger.notify(
     `[Validation error]: User ${user?.id} cannot submit invalid HTML via ${operation.operationName} mutation`,
   );
@@ -189,7 +189,7 @@ const handleValidationErrors = (operation: Operation) => {
 };
 
 const handlePermissionErrors = (operation: Operation) => {
-  const user = useStore.getState().getUser();
+  const user = useStore.getState().user;
   const team = useStore.getState().teamName;
   logger.notify(
     `[Permission error]: User ${user?.id} cannot execute ${operation.operationName} for ${team}`,
