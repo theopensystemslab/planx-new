@@ -1,5 +1,6 @@
 import * as awsx from "@pulumi/awsx";
 import * as pulumi from "@pulumi/pulumi";
+import { CustomDomain } from "../common/teams";
 
 export interface CreateService {
   vpc: awsx.ec2.Vpc,
@@ -11,5 +12,5 @@ export interface CreateService {
     certificates: pulumi.StackReference,
     data: pulumi.StackReference,
   },
-  CUSTOM_DOMAINS: Record<string, string>[],
+  CUSTOM_DOMAINS: CustomDomain[],
 };
