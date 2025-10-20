@@ -53,7 +53,7 @@ export const AddFlow: React.FC = () => {
             );
             setStatus({
               error:
-                "Failed to create new flow due to a content issue with the source flow...",
+                "Failed to create new flow due to a content issue with the source flow, please contact PlanX support. This error has been logged.",
             });
             return;
           }
