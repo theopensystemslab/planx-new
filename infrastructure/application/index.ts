@@ -659,7 +659,7 @@ export = async () => {
 
       // Get certificates from AWS Secrets Manager
       if (certificateLocation === "secretsManager") {
-        const secretId = `/ssl/${name}`;
+        const secretId = `ssl/${name}`;
         const certSecret = pulumi.output(aws.secretsmanager.getSecretVersion({ secretId }));
         const certData = certSecret.apply(secretResult =>
           JSON.parse(secretResult.secretString)
