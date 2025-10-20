@@ -657,14 +657,34 @@ export = async () => {
       name: string;
     }) {
       if (env === "staging") {
-        const acmProvider = new aws.Provider("acm-provider", {
+        const acmProvider = new aws.Provider(`${name}-acm-provider`, {
           region: "us-east-1",
         });
 
-        const cert = new aws.acm.Certificate("council-cert", {
+        const cert = new aws.acm.Certificate(`${name}-cert`, {
           domainName: domain,
           validationMethod: "DNS",
         }, { provider: acmProvider });
+
+        const sslCertValidationRecord = new cloudflare.Record(
+        `${name}-sslCertValidationRecord`,
+          {
+            name: cert.domainValidationOptions[0].resourceRecordName,
+            ttl: 3600,
+            type: cert.domainValidationOptions[0].resourceRecordType,
+            value: cert.domainValidationOptions[0].resourceRecordValue,
+            zoneId: config.require("cloudflare-zone-id"),
+          }
+        );
+
+        const sslCertValidation = new aws.acm.CertificateValidation(
+          `fairhold-test-sslCertValidation`,
+          {
+            certificateArn: sslCert.arn,
+            validationRecordFqdns: [sslCertValidationRecord.name],
+          },
+          { provider: usEast1 }
+        );
 
         const oai = new aws.cloudfront.OriginAccessIdentity(`${domain}-OAI`, {
           comment: `OAI for ${domain} CloudFront distribution`,
@@ -672,7 +692,7 @@ export = async () => {
 
         const cdn = createCdn({
           domain,
-          acmCertificateArn: cert.arn,
+          acmCertificateArn: sslCertValidation.certificateArn,,
           bucket: frontendBucket,
           logsBucket,
           oai,
