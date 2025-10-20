@@ -692,7 +692,7 @@ export = async () => {
 
         const cdn = createCdn({
           domain,
-          acmCertificateArn: sslCertValidation.certificateArn,
+          acmCertificateArn: sslCertValidation.certificateArn,,
           bucket: frontendBucket,
           logsBucket,
           oai,
