@@ -44,9 +44,10 @@ export const teams: Team[] = [
   }
 ];
 
-export type CustomDomains = Array<{
+export interface CustomDomain {
   name: string,
-  domain: string
-}>;
+  domain: string,
+  certificateLocation?: "secretsManager" | "pulumiConfig"
+}
 
 export default { teams }
