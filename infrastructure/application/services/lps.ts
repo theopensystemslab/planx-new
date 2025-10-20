@@ -196,6 +196,7 @@ export const createLocalPlanningServices = (planXCert: aws.acm.Certificate) => {
     acmCertificateArn,
     oai,
     mode: "static",
+    includeWWW: true,
   });
 
   // We only require a CNAME record for staging
