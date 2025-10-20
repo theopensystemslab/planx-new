@@ -224,7 +224,7 @@ export const createLocalPlanningServices = (planXCert: aws.acm.Certificate) => {
     acmCertificateArn,
     oai,
     mode: "static",
-    includeWWW: true,
+    includeWWW: env === "production",
   });
 
   createCNAMERecords(domain, cdn);
