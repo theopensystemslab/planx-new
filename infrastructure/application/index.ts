@@ -680,7 +680,7 @@ export = async () => {
         const sslCertValidation = new aws.acm.CertificateValidation(
           `fairhold-test-sslCertValidation`,
           {
-            certificateArn: sslCert.arn,
+            certificateArn: cert.arn,
             validationRecordFqdns: [sslCertValidationRecord.name],
           },
           { provider: usEast1 }
