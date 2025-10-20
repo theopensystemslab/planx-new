@@ -1,11 +1,11 @@
 import * as awsx from "@pulumi/awsx";
 import * as pulumi from "@pulumi/pulumi";
 
-import { CustomDomains } from "../../common/teams";
+import { CustomDomain } from "../../common/teams";
 
 const config = new pulumi.Config();
 
-export const generateCORSAllowList = (customDomains: CustomDomains, domain: string): awsx.ecs.KeyValuePair => {
+export const generateCORSAllowList = (customDomains: CustomDomain[], domain: string): awsx.ecs.KeyValuePair => {
   const customDomainURLs = customDomains.map(team => `https://${team.domain}`);
   const editorURL = `https://${domain}`;
   const apiURL = `https://api.${domain}`; // Required for requests from API docs
