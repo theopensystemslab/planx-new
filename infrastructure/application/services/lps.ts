@@ -106,7 +106,7 @@ const uploadBuildSiteToBucket = (bucket: aws.s3.Bucket) => {
     });
 };
 
-export const createLPSCertificate = (
+export const createLPSCertificates = (
   domain: string,
   planXCert: aws.acm.Certificate
 ): aws.acm.Certificate["arn"] => {
@@ -132,7 +132,10 @@ export const createLPSCertificate = (
     {
       domainName: domain,
       validationMethod: "DNS",
-      subjectAlternativeNames: [domain],
+      subjectAlternativeNames: [
+        domain,
+        `www.${domain}`,
+      ],
     },
     {
       provider: usEast1,
@@ -151,11 +154,25 @@ export const createLPSCertificate = (
     }
   );
 
+  const sslCertValidationRecordWWW = new cloudflare.Record(
+    `lps-sslCertValidationRecord-www`,
+    {
+      name: sslCert.domainValidationOptions[1].resourceRecordName,
+      ttl: 3600,
+      type: sslCert.domainValidationOptions[1].resourceRecordType,
+      value: sslCert.domainValidationOptions[1].resourceRecordValue,
+      zoneId: config.require("lps-cloudflare-zone-id"),
+    }
+  );
+
   const sslCertValidation = new aws.acm.CertificateValidation(
     `lps-sslCertValidation`,
     {
       certificateArn: sslCert.arn,
-      validationRecordFqdns: [sslCertValidationRecord.name],
+      validationRecordFqdns: [
+        sslCertValidationRecord.name,
+        sslCertValidationRecordWWW.name,
+      ],
     },
     {
       provider: usEast1,
@@ -165,7 +182,7 @@ export const createLPSCertificate = (
   return sslCertValidation.certificateArn;
 };
 
-const createCNAMERecord = (domain: string, cdn: aws.cloudfront.Distribution) => {
+const createCNAMERecords = (domain: string, cdn: aws.cloudfront.Distribution) => {
   new cloudflare.Record("localplanningservices", {
     name: domain,
     type: "CNAME",
@@ -174,6 +191,17 @@ const createCNAMERecord = (domain: string, cdn: aws.cloudfront.Distribution) => 
     ttl: 1,
     proxied: false, // This was causing infinite HTTPS redirects, so let's just use CloudFront only
   });
+
+  if (env === "production") {
+    new cloudflare.Record("localplanningservices-www", {
+      name: `www.${domain}`,
+      type: "CNAME",
+      zoneId: config.require("cloudflare-zone-id"),
+      value: cdn.domainName,
+      ttl: 1,
+      proxied: false,
+    });
+  }
 }
 
 export const createLocalPlanningServices = (planXCert: aws.acm.Certificate) => {
@@ -187,7 +215,7 @@ export const createLocalPlanningServices = (planXCert: aws.acm.Certificate) => {
 
   uploadBuildSiteToBucket(lpsBucket);
 
-  const acmCertificateArn = createLPSCertificate(domain, planXCert);
+  const acmCertificateArn = createLPSCertificates(domain, planXCert);
 
   const cdn = createCdn({
     bucket: lpsBucket,
@@ -199,8 +227,7 @@ export const createLocalPlanningServices = (planXCert: aws.acm.Certificate) => {
     includeWWW: true,
   });
 
-  // We only require a CNAME record for staging
-  if (env === "staging") createCNAMERecord(domain, cdn);
+  createCNAMERecords(domain, cdn);
 
   return cdn;
 };
