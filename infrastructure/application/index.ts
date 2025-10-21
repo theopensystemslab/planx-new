@@ -101,6 +101,11 @@ const CUSTOM_DOMAINS: CustomDomain[] =
           name: "south-gloucestershire",
           certificateLocation: "secretsManager",
         },
+        {
+          domain: "planningservices.birmingham.gov.uk",
+          name: "birmingham",
+          certificateLocation: "secretsManager",
+        },
       ]
     : [];
 
