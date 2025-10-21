@@ -14,17 +14,12 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { useStore } from "../../../FlowEditor/lib/store";
 import { BaseFormSection } from "./BaseFormSection";
+import { useCreateFlow } from "./hooks/useCreateFlow";
 import { CreateFlow, validationSchema } from "./types";
 
 export const AddFlow: React.FC = () => {
   const { navigate } = useNavigation();
-  const {
-    teamId,
-    createFlow,
-    createFlowFromTemplate,
-    createFlowFromCopy,
-    teamSlug,
-  } = useStore();
+  const { teamId, teamSlug } = useStore();
 
   const initialValues: CreateFlow = {
     mode: "new",
@@ -37,43 +32,35 @@ export const AddFlow: React.FC = () => {
     },
   };
 
-  const onSubmit: FormikConfig<CreateFlow>["onSubmit"] = async (
-    { mode, flow },
+  const { mutate: createFlow } = useCreateFlow();
+
+  const handleSubmit: FormikConfig<CreateFlow>["onSubmit"] = async (
+    values,
     { setFieldError, setStatus },
   ) => {
-    try {
-      switch (mode) {
-        case "new":
-          await createFlow(flow);
-          break;
-        case "copy":
-          await createFlowFromCopy(flow);
-          break;
-        case "template":
-          await createFlowFromTemplate(flow);
-          break;
-      }
-
-      navigate(`/${teamSlug}/${flow.slug}`);
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const message = error?.response?.data?.error;
-        if (message?.includes("Uniqueness violation")) {
-          setFieldError("flow.name", "Flow name must be unique");
-          return;
+    createFlow(values, {
+      onSuccess: ({ flow }) => navigate(`/${teamSlug}/${flow.slug}`),
+      onError: (error) => {
+        if (isAxiosError(error)) {
+          const message = error?.response?.data?.error;
+          if (message?.includes("Uniqueness violation")) {
+            setFieldError("flow.name", "Flow name must be unique");
+            return;
+          }
+          if (message?.includes("Invalid HTML")) {
+            logger.notify(
+              `Invalid HTML content found in flow ${values.flow.sourceId}`,
+            );
+            setStatus({
+              error:
+                "Failed to create new flow due to a content issue with the source flow, please contact PlanX support. This error has been logged.",
+            });
+            return;
+          }
         }
-        if (message?.includes("Invalid HTML")) {
-          logger.notify(`Invalid HTML content found in flow ${flow.sourceId}`);
-          setStatus({
-            error:
-              "Failed to create new flow due to a content issue with the source flow, please contact PlanX support. This error has been logged.",
-          });
-          return;
-        }
-      }
-
-      setStatus({ error: "Failed to create flow, please try again." });
-    }
+        setStatus({ error: "Failed to create flow, please try again." });
+      },
+    });
   };
 
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
@@ -83,7 +70,7 @@ export const AddFlow: React.FC = () => {
       <AddButton onClick={() => setDialogOpen(true)}>Add a new flow</AddButton>
       <Formik<CreateFlow>
         initialValues={initialValues}
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit}
         validateOnBlur={false}
         validateOnChange={false}
         validationSchema={validationSchema}
