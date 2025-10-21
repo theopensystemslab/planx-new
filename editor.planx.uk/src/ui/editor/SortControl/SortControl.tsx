@@ -1,10 +1,10 @@
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import get from "lodash/get";
 import orderBy from "lodash/orderBy";
 import React, { useEffect, useMemo, useState } from "react";
-import { useCurrentRoute, useNavigation } from "react-navi";
 import { Paths } from "type-fest";
 import { slugify } from "utils";
 
@@ -50,17 +50,17 @@ export const SortControl = <T extends object>({
   setRecords: React.Dispatch<React.SetStateAction<T[] | null>>;
   sortOptions: SortableFields<T>[];
 }) => {
-  const route = useCurrentRoute();
+  const searchParams = useSearch({ from: "/_authenticated/$team/" });
 
   const { sortObject: initialSortObject, sortDirection: initialSortDirection } =
-    getSortParams(route.url.query, sortOptions);
+    getSortParams(searchParams || {}, sortOptions);
 
   const [selectedSort, setSelectedSort] =
     useState<SortableFields<T>>(initialSortObject);
   const [sortDirection, setSortDirection] =
     useState<SortDirection>(initialSortDirection);
 
-  const navigation = useNavigation();
+  const navigate = useNavigate();
   const selectedDisplaySlug = slugify(selectedSort.displayName);
 
   const sortOptionsMap = useMemo(() => {
@@ -71,22 +71,19 @@ export const SortControl = <T extends object>({
 
   useEffect(() => {
     const updateSortParam = (sortOption: string) => {
-      const searchParams = new URLSearchParams(route.url.search);
-      searchParams.set("sort", sortOption);
-      searchParams.set("sortDirection", sortDirection);
-      navigation.navigate(
-        {
-          pathname: window.location.pathname,
-          search: `?${searchParams.toString()}`,
-        },
-        {
-          replace: true,
-        },
-      );
+      navigate({
+        to: ".",
+        search: (prev) => ({
+          ...prev,
+          sort: sortOption as "name" | "last-edited" | "last-published",
+          sortDirection: sortDirection,
+        }),
+        replace: true,
+      });
     };
 
     updateSortParam(selectedDisplaySlug);
-  }, [navigation, route.url.search, selectedDisplaySlug, sortDirection]);
+  }, [navigate, selectedDisplaySlug, sortDirection]);
 
   useEffect(() => {
     const { fieldName } = selectedSort;
