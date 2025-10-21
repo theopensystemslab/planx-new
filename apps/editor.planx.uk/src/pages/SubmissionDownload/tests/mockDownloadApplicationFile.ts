@@ -1,5 +1,6 @@
 import { http, HttpResponse } from "msw";
-import { DOWNLOAD_APPLICATION_FILE_URL } from "pages/SubmissionDownload/VerifySubmissionEmail";
+
+const DOWNLOAD_APPLICATION_FILE_URL = `${import.meta.env.VITE_APP_API_URL}/download-application-files`;
 
 export const mockData = new ArrayBuffer(100); // a byte number is needed
 
