@@ -9,6 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { parseFormValues } from "@planx/components/shared";
+import { useNavigate } from "@tanstack/react-router";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { hasFeatureFlag } from "lib/featureFlags";
 import {
@@ -17,8 +18,6 @@ import {
 } from "pages/FlowEditor/utils";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { useNavigation } from "react-navi";
-import { rootFlowPath } from "routes-navi/utils";
 
 import { fromSlug, SLUGS } from "../../data/types";
 import { useStore } from "../../lib/store";
@@ -114,17 +113,29 @@ const NodeTypeSelect: React.FC<{
   );
 };
 
-const FormModal: React.FC<{
+interface FormModalProps {
   type: string;
   handleDelete?: () => void;
-  Component: any;
+  Component: React.ComponentType<any>;
   node?: any;
-  id?: any;
-  before?: any;
-  parent?: any;
+  id?: string;
+  before?: string;
+  parent?: string;
   extraProps?: any;
-}> = ({ type, handleDelete, Component, id, before, parent, extraProps }) => {
-  const { navigate } = useNavigation();
+  onTypeChange?: (newType: string) => void;
+}
+
+const FormModal: React.FC<FormModalProps> = ({
+  type,
+  handleDelete,
+  Component,
+  id,
+  before,
+  parent,
+  extraProps,
+  onTypeChange,
+}) => {
+  const navigate = useNavigate();
   const [
     addNode,
     updateNode,
@@ -132,6 +143,7 @@ const FormModal: React.FC<{
     makeUnique,
     connect,
     teamSlug,
+    flowSlug,
     isTemplatedFrom,
     orderedFlow,
   ] = useStore((store) => [
@@ -141,11 +153,21 @@ const FormModal: React.FC<{
     store.makeUnique,
     store.connect,
     store.getTeam().slug,
+    store.flowSlug,
     store.isTemplatedFrom,
     store.orderedFlow,
   ]);
-  const node = flow[id];
-  const handleClose = () => navigate(rootFlowPath(true));
+  const node = id ? flow[id] : undefined;
+
+  const handleClose = () => {
+    navigate({
+      to: "/$team/$flow",
+      params: {
+        team: teamSlug,
+        flow: flowSlug,
+      },
+    });
+  };
 
   // Nodes should be disabled when:
   //  1. The user doesn't have any edit access to this team
@@ -199,10 +221,10 @@ const FormModal: React.FC<{
         {!handleDelete && (
           <NodeTypeSelect
             value={type}
-            onChange={(type) => {
-              const url = new URL(window.location.href);
-              url.searchParams.set("type", SLUGS[Number(type) as TYPES]);
-              navigate([url.pathname, url.search].join(""));
+            onChange={(newType) => {
+              if (onTypeChange) {
+                onTypeChange(SLUGS[Number(newType) as TYPES]);
+              }
             }}
           />
         )}
@@ -225,7 +247,7 @@ const FormModal: React.FC<{
             ) => {
               // Handle internal portals
               if (typeof data === "string") {
-                connect(parent, data, { before });
+                if (parent) connect(parent, data, { before });
               } else {
                 const parsedData = parseFormValues(Object.entries(data));
                 const parsedChildren =
@@ -246,8 +268,7 @@ const FormModal: React.FC<{
                   });
                 }
               }
-
-              navigate(rootFlowPath(true));
+              handleClose();
             }}
           />
         </ErrorBoundary>
@@ -261,7 +282,7 @@ const FormModal: React.FC<{
                 size="medium"
                 onClick={() => {
                   handleDelete();
-                  navigate(rootFlowPath(true));
+                  handleClose();
                 }}
                 disabled={disabled}
               >
@@ -269,14 +290,14 @@ const FormModal: React.FC<{
               </Button>
             </Grid>
           )}
-          {handleDelete && !hideMakeUniqueDeleteButtons && (
+          {handleDelete && !hideMakeUniqueDeleteButtons && id && (
             <Grid item xs={6} sm={4} md={3}>
               <Button
                 fullWidth
                 size="medium"
                 onClick={() => {
                   makeUnique(id, parent);
-                  navigate(rootFlowPath(true));
+                  handleClose();
                 }}
                 disabled={disabled}
               >
