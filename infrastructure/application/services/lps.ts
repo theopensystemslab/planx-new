@@ -186,7 +186,7 @@ const createCNAMERecords = (domain: string, cdn: aws.cloudfront.Distribution) =>
   new cloudflare.Record("localplanningservices", {
     name: domain,
     type: "CNAME",
-    zoneId: config.require("cloudflare-zone-id"),
+    zoneId: config.require("lps-cloudflare-zone-id"),
     value: cdn.domainName,
     ttl: 1,
     proxied: false, // This was causing infinite HTTPS redirects, so let's just use CloudFront only
@@ -196,7 +196,7 @@ const createCNAMERecords = (domain: string, cdn: aws.cloudfront.Distribution) =>
     new cloudflare.Record("localplanningservices-www", {
       name: `www.${domain}`,
       type: "CNAME",
-      zoneId: config.require("cloudflare-zone-id"),
+      zoneId: config.require("lps-cloudflare-zone-id"),
       value: cdn.domainName,
       ttl: 1,
       proxied: false,
