@@ -10,21 +10,25 @@ export const generateCORSAllowList = (customDomains: CustomDomain[], domain: str
   const editorURL = `https://${domain}`;
   const apiURL = `https://api.${domain}`; // Required for requests from API docs
   const hasuraURL = `https://hasura.${domain}`; // Required for proxied auth requests
+  const microsoftLoginURLs = [
+    "https://login.live.com",
+    "https://login.microsoftonline.com",
+  ];
   const lpsURL = pulumi.interpolate`https://${config.require("lps-domain")}`;
 
-  const microsoftLoginURLs = ["https://login.live.com, https://login.microsoftonline.com"];
-  const corsAllowList = [
+  const staticURLs = [
     ...customDomainURLs,
     editorURL,
     apiURL,
     hasuraURL,
-    lpsURL,
     ...microsoftLoginURLs,
   ].filter(Boolean);
 
+  const staticURLsString = staticURLs.join(", ");
+
   const secret: awsx.ecs.KeyValuePair = {
     name: "CORS_ALLOWLIST",
-    value: corsAllowList.join(", "),
+    value: pulumi.interpolate`${staticURLsString}, ${lpsURL}`,
   };
 
   return secret;
