@@ -14,7 +14,7 @@
     "@astrojs/react": "^4.2.7",
     "@nanostores/react": "^1.0.0",
     "@opensystemslab/map": "1.0.0-alpha.10",
-    "@tailwindcss/vite": "^4.1.7",
+    "@tailwindcss/vite": "^4.1.15",
     "@tanstack/react-query": "^5.81.5",
     "@types/react": "^19.1.5",
     "@types/react-dom": "^19.1.5",
@@ -34,6 +34,6 @@
   "packageManager": "pnpm@10.10.0",
   "devDependencies": {
     "typescript-plugin-css-modules": "^5.2.0",
-    "vite": "^7.1.5"
+    "vite": "^7.1.11"
   }
 }
