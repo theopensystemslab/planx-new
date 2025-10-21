@@ -56,7 +56,6 @@ export const usePublishFlow = () => {
     publish: typeof publishMutation,
   ) => {
     if (publish.isPending) return "Publishing changes...";
-    if (checkForChanges.isPending) return "Checking for changes...";
 
     if (publish.isSuccess) {
       return publish.data.alteredNodes
@@ -70,7 +69,7 @@ export const usePublishFlow = () => {
 
     if (publish.isError) return "Error trying to publish";
     if (checkForChanges.isError) return "Error checking for changes";
-    if (lastPublished.isError) return "Error loading publish info";
+    if (lastPublished.isError) return " Error loading publish info";
 
     if (lastPublished.isPending) return "Loading last publish information...";
     if (lastPublished.data) {
@@ -89,10 +88,22 @@ export const usePublishFlow = () => {
     publishMutation,
   );
 
+  /**
+   * Update publish button text based on state
+   */
+  const getButtonText = (checkForChanges: typeof checkForChangesMutation) => {
+    if (checkForChanges.isPending) return "Checking for changes...";
+    return "Check for changes to publish";
+  };
+
+  const buttonText = getButtonText(checkForChangesMutation);
+
   return {
     lastPublishedQuery,
     checkForChangesMutation,
     publishMutation,
     status,
+    buttonText,
+    isCheckingForChanges: checkForChangesMutation.isPending,
   };
 };
