@@ -41,9 +41,12 @@ This guide will walk through the process of setting a custom domain for a new te
     - Using `<TEAM_NAME>.pfx` as `<FILENAME>`, run the following: 
 
     ```shell
-    openssl pkcs12 -nocerts -nodes -in <FILENAME> -out council.key [ -password 'pass:<PASSWORD>' ]
-    openssl pkcs12 -nokeys -in <FILENAME> -out council.cert [ -password 'pass:<PASSWORD>' ]
+    openssl pkcs12 -nocerts -nodes -in <FILENAME> -out council.key [ -password 'pass:<PASSWORD>' ] [ -legacy ]
+    openssl pkcs12 -nokeys -in <FILENAME> -out council.cert [ -password 'pass:<PASSWORD>' ] [ -legacy ]
     ```
+
+    > [!TIP]
+    > Try adding the `-legacy` flag to the above command if you get an "Error outputting keys and certificates" error
 
     If the certificate is provided as a PKCS #7 (`.p7b`) file, it can be decoded as follows - 
 
@@ -100,8 +103,8 @@ This guide will walk through the process of setting a custom domain for a new te
 
 10. **PlanX** - Point application to new custom domain
 
-  - Add subdomain to `PREVIEW_ONLY_DOMAINS` in the PlanX frontend. This is located in `editor.planx.uk/src/routes/utils.ts`
-  - Add subdomain to `getEnvForAllowedHosts()` in the PlanX frontend. This is located in `editor.planx.uk/src/airbrake.ts`
+  - Add subdomain to `PREVIEW_ONLY_DOMAINS` in the PlanX frontend. This is located in `apps/editor.planx.uk/src/routes/utils.ts`
+  - Add subdomain to `getEnvForAllowedHosts()` in the PlanX frontend. This is located in `apps/editor.planx.uk/src/airbrake.ts`
   - Add subdomain to `team.domain` column via Hasura
   
 11. **PlanX** - Add custom domain to UptimeRobot (create monitor & also select SSL reminders)

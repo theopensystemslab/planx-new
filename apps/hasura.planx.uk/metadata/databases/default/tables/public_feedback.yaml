@@ -4,10 +4,22 @@ table:
 object_relationships:
   - name: flow
     using:
-      foreign_key_constraint_on: flow_id
+      manual_configuration:
+        column_mapping:
+          flow_id: id
+        insertion_order: null
+        remote_table:
+          name: flows
+          schema: public
   - name: team
     using:
-      foreign_key_constraint_on: team_id
+      manual_configuration:
+        column_mapping:
+          team_id: id
+        insertion_order: null
+        remote_table:
+          name: teams
+          schema: public
 insert_permissions:
   - role: public
     permission:

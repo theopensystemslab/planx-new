@@ -17,7 +17,7 @@ Explore our component library and design system here: https://storybook.planx.uk
 planx-new is a monorepo containing our full application stack. Here's a quick summary of what you'll find here:
 
 - `apps/api.planx.uk` is a Node/Express server and REST endpoints
-- `editor.planx.uk` is our React frontend, which consists of two main environments: an "editor" for service designers and a "preview" for public applicants. Our components are written with Material UI and broadly follow GOV.UK design patterns
+- `apps/editor.planx.uk` is our React frontend, which consists of two main environments: an "editor" for service designers and a "preview" for public applicants. Our components are written with Material UI and broadly follow GOV.UK design patterns
 - `apps/hasura.planx.uk` is a [Hasura](https://hasura.io/) GraphQL engine for our PostgreSQL database
 - `apps/sharedb.planx.uk` is our implementation of [ShareDB](https://github.com/share/sharedb), a library for realtime document collaboration based on JSON Operational Transformation (OT) used in our "editor" environment
 - `infrastructure` is [Pulumi](https://www.pulumi.com/) infrastructure-as-code for configuring and managing our AWS environments
@@ -48,7 +48,7 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 
 6. Open [Hasura's](https://hasura.io/) web console (`cd apps/hasura.planx.uk` then `pnpm start`) and check that your Google email address is in the `users` table, if not then add it. This will eventually allow you to authenticate into the application as an admin.
 
-7. Move into the editor directory `cd ../editor.planx.uk` & install dependencies `pnpm i`.
+7. Move into the editor directory `cd ../apps/editor.planx.uk` & install dependencies `pnpm i`.
 
 8. Start the editor dev server, with `pnpm start`
 
@@ -103,7 +103,7 @@ For maximum visibility and discoverability, we recommend using the [GitHub discu
 
 ## Deployments
 
-Our `main` branch is deployed to AWS staging (editor.planx.dev) and `production` is deployed to our AWS production environment (i.e. editor.planx.uk and the custom subdomain like planningservices.{council}.gov.uk) using Github Actions.
+Our `main` branch is deployed to AWS staging (editor.planx.dev) and `production` is deployed to our AWS production environment (i.e. apps/editor.planx.uk and the custom subdomain like planningservices.{council}.gov.uk) using Github Actions.
 
 We work in feature branches and open pull requests against `main`. Pull requests will spin up a Vultr server running Docker to test the whole stack (eg database migrations, API changes, frontend changes, Storybook, etc) and generate unique links that can be shared for user-acceptance testing. Pull request environments use the domain pattern `<service>.<PR#>.planx.pizza` and are often simply referred to as "pizzas". The only changes which cannot be fully tested on a pizza are changes related to Pulumi infrastructure-as-code because this is only deployed in AWS environments, not via Docker.
 

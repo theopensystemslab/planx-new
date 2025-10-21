@@ -92,7 +92,7 @@ export async function buildSubmissionExportZip({
     for (const file of files) {
       // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
       // Uniform requires all uploaded files to be present in the zip, even if they are duplicates
-      // Must match unique filename in editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
+      // Must match unique filename in apps/editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
       const uniqueFilename = decodeURIComponent(
         file.url.split("/").slice(-2).join("-"),
       );

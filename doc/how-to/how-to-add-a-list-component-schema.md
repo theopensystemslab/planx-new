@@ -8,7 +8,7 @@ In order to support Minor Planning Permission service development quickly, we de
 The ideal maintainers of these schemas are still the services team though, rather than developers. This doc details the process for adding new schemas or editing existing ones.
 
 ## Process
-1. **GitHub** - Navigate to `editor.planx.uk/src/@planx/components/List/schemas`. Open an existing file, or add a `.ts` file directly to this folder or a subfolder within it. Folder organisation is flexible.
+1. **GitHub** - Navigate to `apps/editor.planx.uk/src/@planx/components/List/schemas`. Open an existing file, or add a `.ts` file directly to this folder or a subfolder within it. Folder organisation is flexible.
 
 2. **GitHub** - In the `.ts` file, ensure the schema has this basic structure: 
 ```ts
@@ -62,7 +62,7 @@ This is the possible shape of each varity of field:
 },
 ```
 
-3. **GitHub** - When your schema is finalised, you'll want to make it selectable from within the Editor modal. Add it to the `SCHEMAS` list in `editor.planx.uk/src/@planx/components/List/Editor.tsx` to do so.
+3. **GitHub** - When your schema is finalised, you'll want to make it selectable from within the Editor modal. Add it to the `SCHEMAS` list in `apps/editor.planx.uk/src/@planx/components/List/Editor.tsx` to do so.
 
 4. **Editor** - "Update" or delete/recreate your List component to reference the new schema
 
