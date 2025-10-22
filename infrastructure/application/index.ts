@@ -39,6 +39,7 @@ const CUSTOM_DOMAINS: CustomDomain[] =
         {
           domain: "planningservices.buckinghamshire.gov.uk",
           name: "bucks",
+          certificateLocation: "secretsManager",
         },
         {
           domain: "planningservices.southwark.gov.uk",
