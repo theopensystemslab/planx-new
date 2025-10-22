@@ -20,7 +20,7 @@ export const Route = createFileRoute("/_authenticated/$team/$flow")({
         "sortDirection",
         "templates",
         "online-status",
-        "type",
+        "flow-type",
       ]),
     ],
   },

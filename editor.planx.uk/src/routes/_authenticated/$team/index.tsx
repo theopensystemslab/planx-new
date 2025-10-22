@@ -14,7 +14,7 @@ export const teamSearchSchema = z.object({
   ).default("last-edited"),
   sortDirection: fallback(z.enum(["asc", "desc"]), "desc").default("desc"),
   "online-status": z.string().optional(),
-  type: z.string().optional(),
+  "flow-type": z.string().optional(),
   templates: z.string().optional(),
 });
 
