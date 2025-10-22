@@ -106,13 +106,6 @@ const FlowCard: React.FC<FlowCardProps> = ({
   const { showPublished } = useFlowSortDisplay();
 
   const {
-    isArchiveDialogOpen,
-    setIsArchiveDialogOpen,
-    isCopyDialogOpen,
-    isRenameDialogOpen,
-    handleArchive,
-    handleCopyDialogClose,
-    handleRenameDialogClose,
     isSubmissionService,
     isTemplatedFlow,
     isSourceTemplate,
@@ -149,13 +142,8 @@ const FlowCard: React.FC<FlowCardProps> = ({
     <>
       <FlowDialogs
         flow={flow}
-        isArchiveDialogOpen={isArchiveDialogOpen}
-        setIsArchiveDialogOpen={setIsArchiveDialogOpen}
-        isCopyDialogOpen={isCopyDialogOpen}
-        isRenameDialogOpen={isRenameDialogOpen}
-        handleArchive={handleArchive}
-        handleCopyDialogClose={handleCopyDialogClose}
-        handleRenameDialogClose={handleRenameDialogClose}
+        teamSlug={teamSlug}
+        refreshFlows={refreshFlows}
       />
       <Card>
         <Box
