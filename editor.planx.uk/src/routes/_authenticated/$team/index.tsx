@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import Team from "pages/Team";
 import React from "react";
@@ -7,7 +7,7 @@ import { z } from "zod";
 import { getTeamFromDomain } from "../../../lib/utils";
 import { useStore } from "../../../pages/FlowEditor/lib/store";
 
-const teamSearchSchema = z.object({
+export const teamSearchSchema = z.object({
   sort: fallback(
     z.enum(["last-edited", "last-published", "name"]),
     "last-edited",
@@ -28,7 +28,7 @@ export const Route = createFileRoute("/_authenticated/$team/")({
       params.team || (await getTeamFromDomain(window.location.hostname));
 
     if (!routeSlug) {
-      throw new Error("Team not found");
+      throw notFound();
     }
 
     if (currentSlug !== routeSlug) {
@@ -50,7 +50,7 @@ export const Route = createFileRoute("/_authenticated/$team/")({
         flows,
       };
     } catch (error) {
-      throw new Error(`Failed to load flows: ${error}`);
+      throw notFound();
     }
   },
   component: TeamComponent,

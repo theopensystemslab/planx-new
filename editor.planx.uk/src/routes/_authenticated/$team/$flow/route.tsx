@@ -3,24 +3,26 @@ import {
   Outlet,
   stripSearchParams,
 } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
 import FlowEditorLayout from "pages/layout/FlowEditorLayout";
 import React from "react";
-import { z } from "zod";
 
 import { useStore } from "../../../../pages/FlowEditor/lib/store";
+import { teamSearchSchema } from "..";
 import { getBasicFlowData, getFlowEditorData } from "./_utils";
 
-const flowSearchSchema = z.object({
-  type: z.string().optional(),
-  sort: z.enum(["last-edited", "last-published", "name"]).optional(),
-  sortDirection: z.enum(["asc", "desc"]).optional(),
-});
-
 export const Route = createFileRoute("/_authenticated/$team/$flow")({
-  validateSearch: flowSearchSchema,
+  validateSearch: zodValidator(teamSearchSchema),
   search: {
-    // Strip inherited team-level search params while preserving flow-level params
-    middlewares: [stripSearchParams(["sort", "sortDirection"])],
+    middlewares: [
+      stripSearchParams([
+        "sort",
+        "sortDirection",
+        "templates",
+        "online-status",
+        "type",
+      ]),
+    ],
   },
   beforeLoad: async ({ params }) => {
     const { team: teamSlug, flow: flowSlug } = params;
