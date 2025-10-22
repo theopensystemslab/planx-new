@@ -54,9 +54,9 @@ const amazonLinuxAmi = aws.ec2.getAmi({
   ],
 });
 
-// create the g4dn EC2 instance for ML training and experiment workloads
-const g4Instance = new aws.ec2.Instance("ml-training-instance-g4dn", {
-  instanceType: aws.ec2.InstanceType.G4dn_XLarge,
+// create the g6 EC2 instance for ML training and experiment workloads
+const g6Instance = new aws.ec2.Instance("ml-training-instance", {
+  instanceType: aws.ec2.InstanceType.G6_XLarge,
   ami: amazonLinuxAmi.then(ami => ami.id),
   keyName: devopsKeyPair.keyName,
   
@@ -73,7 +73,7 @@ const g4Instance = new aws.ec2.Instance("ml-training-instance-g4dn", {
   // persistent EBS volume configuration for ML workloads (survives instance stop/starts)
   rootBlockDevice: {
     volumeType: "gp3",
-    volumeSize: 128,
+    volumeSize: 256,
     deleteOnTermination: true,
     encrypted: true,
   },
@@ -82,6 +82,7 @@ const g4Instance = new aws.ec2.Instance("ml-training-instance-g4dn", {
   userData: fs.readFileSync(path.join(__dirname, "user_data.sh"), "utf8"),
 });
 
+// TODO: verify that this budget is tracking the appropriate resources
 // create a cost budget for ML resources (£200/month)
 const mlBudget = new aws.budgets.Budget("ml-infra-budget-monthly", {
   name: "ml-infra-budget-monthly",
@@ -121,10 +122,10 @@ const mlBudget = new aws.budgets.Budget("ml-infra-budget-monthly", {
 });
 
 // export important values
-export const g4InstanceId = g4Instance.id;
-export const g4InstancePublicIp = g4Instance.publicIp;
-export const g4InstancePublicDns = g4Instance.publicDns;
+export const g6InstanceId = g6Instance.id;
+export const g6InstancePublicIp = g6Instance.publicIp;
+export const g6InstancePublicDns = g6Instance.publicDns;
 export const mlSecurityGroupId = mlSecurityGroup.id;
 export const devopsKeyPairName = devopsKeyPair.keyName;
 export const mlBudgetName = mlBudget.name;
-export const sshCommand = pulumi.interpolate`ssh -i ~/.ssh/${devopsKeyPairName} ubuntu@${g4InstancePublicIp}`;
+export const sshCommand = pulumi.interpolate`ssh -i ~/.ssh/${devopsKeyPairName} ubuntu@${g6InstancePublicIp}`;

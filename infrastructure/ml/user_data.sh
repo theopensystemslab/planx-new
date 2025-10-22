@@ -10,27 +10,27 @@ apt-get update -y
 
 # Install basic tools
 echo "Installing basic tools..."
-apt-get install -y git htop nvtop tmux python3 python3-pip curl unzip
+apt-get install -y git gh htop nvtop tmux python3 python3-pip curl unzip
 
 # Install uv for the ubuntu user
 echo "Installing uv..."
 curl -LsSf https://astral.sh/uv/install.sh | sudo -u ubuntu sh
 echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> /home/ubuntu/.bashrc
 
-# TODO: need to confirm that this actually works as intended
-# Mount instance store (ephemeral) storage if available
-# g4dn.xlarge has 1x 125GB NVMe SSD at /dev/nvme1n1
-echo "Checking for instance store..."
-if [ -b /dev/nvme1n1 ]; then
-  echo "Found instance store, formatting and mounting..."
-  mkfs.ext4 /dev/nvme1n1
-  mkdir -p /mnt/instance-store
-  mount /dev/nvme1n1 /mnt/instance-store
-  chown ubuntu:ubuntu /mnt/instance-store
-  chmod 755 /mnt/instance-store
-  echo "Instance store mounted at /mnt/instance-store"
+# Check instance store status (already mounted by Deep Learning AMI)
+echo "Checking instance store status..."
+if [ -d /opt/dlami/nvme ]; then
+  echo "Instance store is available at /opt/dlami/nvme"
+  # Ensure ubuntu user has access to the instance store
+  sudo chown -R ubuntu:ubuntu /opt/dlami/nvme
+  chmod 755 /opt/dlami/nvme
+  echo "Instance store permissions updated for ubuntu user"
+  
+  # Create a convenience symlink in ubuntu's home directory
+  ln -sf /opt/dlami/nvme /home/ubuntu/nvme
+  echo "Created symlink at /home/ubuntu/nvme -> /opt/dlami/nvme"
 else
-  echo "No instance store found"
+  echo "Instance store not found at expected location"
 fi
 
 # Create a flag file to indicate completion
