@@ -4,7 +4,7 @@ import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
+import TableHead, { tableHeadClasses } from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
@@ -30,14 +30,14 @@ const StyledTable = styled(Table)(({ theme }) => ({
   border: `1px solid ${theme.palette.border.main}`,
   borderBottom: 0,
   borderCollapse: "separate",
-  [`& ${tableCellClasses.root}`]: {
+  [`& .${tableCellClasses.root}`]: {
     padding: theme.spacing(1.5, 2),
     borderBottom: `1px solid ${theme.palette.border.main}`,
   },
 }));
 
 const StyledTableHead = styled(TableHead)(({ theme }) => ({
-  [`& ${tableCellClasses.head}`]: {
+  [`& .${tableCellClasses.root}`]: {
     backgroundColor: theme.palette.background.default,
     borderBottom: `1px solid ${theme.palette.border.main}`,
     position: "sticky",
