@@ -9,7 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { parseFormValues } from "@planx/components/shared";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { hasFeatureFlag } from "lib/featureFlags";
 import {
@@ -115,27 +115,25 @@ const NodeTypeSelect: React.FC<{
 
 interface FormModalProps {
   type: string;
-  handleDelete?: () => void;
+
   Component: React.ComponentType<any>;
   node?: any;
   id?: string;
   before?: string;
   parent?: string;
   extraProps?: any;
-  onTypeChange?: (newType: string) => void;
 }
 
 const FormModal: React.FC<FormModalProps> = ({
   type,
-  handleDelete,
   Component,
   id,
   before,
   parent,
   extraProps,
-  onTypeChange,
 }) => {
   const navigate = useNavigate();
+  const router = useRouter();
   const [
     addNode,
     updateNode,
@@ -167,6 +165,22 @@ const FormModal: React.FC<FormModalProps> = ({
         flow: flowSlug,
       },
     });
+  };
+
+  const handleTypeChange = (newType: string) => {
+    navigate({
+      to: router.latestLocation.pathname,
+      search: { type: newType },
+    });
+  };
+
+  const handleDeleteNode = () => {
+    if (!id || !parent) {
+      console.error("Cannot delete node: id and parent are required");
+      return;
+    }
+    useStore.getState().removeNode(id, parent);
+    handleClose();
   };
 
   // Nodes should be disabled when:
@@ -218,13 +232,11 @@ const FormModal: React.FC<FormModalProps> = ({
           justifyContent: "space-between",
         }}
       >
-        {!handleDelete && (
+        {!id && (
           <NodeTypeSelect
             value={type}
             onChange={(newType) => {
-              if (onTypeChange) {
-                onTypeChange(SLUGS[Number(newType) as TYPES]);
-              }
+              handleTypeChange(SLUGS[Number(newType) as TYPES]);
             }}
           />
         )}
@@ -255,7 +267,7 @@ const FormModal: React.FC<FormModalProps> = ({
                     parseFormValues(Object.entries(o)),
                   ) || undefined;
 
-                if (handleDelete) {
+                if (id) {
                   updateNode(
                     { id, ...parsedData },
                     { children: parsedChildren },
@@ -275,22 +287,19 @@ const FormModal: React.FC<FormModalProps> = ({
       </DialogContent>
       <DialogActions sx={{ p: 0 }}>
         <Grid container justifyContent="flex-end">
-          {handleDelete && !hideMakeUniqueDeleteButtons && (
+          {id && !hideMakeUniqueDeleteButtons && (
             <Grid item xs={6} sm={4} md={3}>
               <Button
                 fullWidth
                 size="medium"
-                onClick={() => {
-                  handleDelete();
-                  handleClose();
-                }}
+                onClick={handleDeleteNode}
                 disabled={disabled}
               >
                 delete
               </Button>
             </Grid>
           )}
-          {handleDelete && !hideMakeUniqueDeleteButtons && id && (
+          {id && !hideMakeUniqueDeleteButtons && parent && (
             <Grid item xs={6} sm={4} md={3}>
               <Button
                 fullWidth
@@ -315,7 +324,7 @@ const FormModal: React.FC<FormModalProps> = ({
               form="modal"
               disabled={disabled}
             >
-              {handleDelete ? `Update ${type}` : `Create ${type}`}
+              {id ? `Update ${type}` : `Create ${type}`}
             </Button>
           </Grid>
         </Grid>
