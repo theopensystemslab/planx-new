@@ -5,19 +5,14 @@ import React from "react";
 export const Route = createFileRoute("/_authenticated/$team/$flow/submissions")(
   {
     loader: async ({ params }) => {
-      const { flow: flowSlug } = params;
-      const actualFlowSlug = flowSlug.split(",")[0];
-
-      return {
-        flowSlug: actualFlowSlug,
-      };
+      const { flow } = params;
+      return { flow };
     },
-    component: SubmissionsComponent,
+    component: RouteComponent,
   },
 );
 
-function SubmissionsComponent() {
-  const { flowSlug } = Route.useLoaderData();
-
-  return <Submissions flowSlug={flowSlug} />;
+function RouteComponent() {
+  const data = Route.useLoaderData();
+  return <Submissions flowSlug={data.flow} />;
 }
