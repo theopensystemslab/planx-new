@@ -29,7 +29,7 @@ export const Route = createFileRoute("/(auth)/logout")({
       console.warn("Failed to reset Apollo store:", error);
     }
 
-    throw redirect({ to: "/login" });
+    throw redirect({ to: "/login", search: {}, replace: true });
   },
   component: LogoutPage,
 });
