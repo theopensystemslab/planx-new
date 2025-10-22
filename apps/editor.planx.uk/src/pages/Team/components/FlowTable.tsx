@@ -225,7 +225,12 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
                 {!isSourceTemplate && (
                   <StarIcon sx={{ fontSize: "0.9em", color: "#380F77" }} />
                 )}
-                <Typography variant="body2">{templateDisplay}</Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+                >
+                  {templateDisplay}
+                </Typography>
               </Box>
             )}
             <FlowLink
