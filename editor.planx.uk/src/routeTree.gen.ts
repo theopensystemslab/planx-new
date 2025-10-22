@@ -31,6 +31,7 @@ import { Route as AuthenticatedTeamFlowSubmissionsRouteImport } from './routes/_
 import { Route as AuthenticatedTeamFlowSettingsRouteImport } from './routes/_authenticated/$team/$flow/settings'
 import { Route as AuthenticatedTeamFlowFeedbackRouteImport } from './routes/_authenticated/$team/$flow/feedback'
 import { Route as AuthenticatedTeamFlowAboutRouteImport } from './routes/_authenticated/$team/$flow/about'
+import { Route as AuthenticatedTeamFlowNodesRouteRouteImport } from './routes/_authenticated/$team/$flow/nodes/route'
 import { Route as AuthenticatedTeamFlowNodesParentNodesNewRouteImport } from './routes/_authenticated/$team/$flow/nodes/$parent.nodes.new'
 import { Route as AuthenticatedTeamFlowNodesParentNodesNewBeforeRouteImport } from './routes/_authenticated/$team/$flow/nodes/$parent.nodes.new.$before'
 import { Route as AuthenticatedTeamFlowNodesParentNodesIdEditRouteImport } from './routes/_authenticated/$team/$flow/nodes/$parent.nodes.$id.edit'
@@ -156,11 +157,17 @@ const AuthenticatedTeamFlowAboutRoute =
     path: '/about',
     getParentRoute: () => AuthenticatedTeamFlowRouteRoute,
   } as any)
+const AuthenticatedTeamFlowNodesRouteRoute =
+  AuthenticatedTeamFlowNodesRouteRouteImport.update({
+    id: '/nodes',
+    path: '/nodes',
+    getParentRoute: () => AuthenticatedTeamFlowRouteRoute,
+  } as any)
 const AuthenticatedTeamFlowNodesParentNodesNewRoute =
   AuthenticatedTeamFlowNodesParentNodesNewRouteImport.update({
-    id: '/nodes/$parent/nodes/new',
-    path: '/nodes/$parent/nodes/new',
-    getParentRoute: () => AuthenticatedTeamFlowRouteRoute,
+    id: '/$parent/nodes/new',
+    path: '/$parent/nodes/new',
+    getParentRoute: () => AuthenticatedTeamFlowNodesRouteRoute,
   } as any)
 const AuthenticatedTeamFlowNodesParentNodesNewBeforeRoute =
   AuthenticatedTeamFlowNodesParentNodesNewBeforeRouteImport.update({
@@ -170,9 +177,9 @@ const AuthenticatedTeamFlowNodesParentNodesNewBeforeRoute =
   } as any)
 const AuthenticatedTeamFlowNodesParentNodesIdEditRoute =
   AuthenticatedTeamFlowNodesParentNodesIdEditRouteImport.update({
-    id: '/nodes/$parent/nodes/$id/edit',
-    path: '/nodes/$parent/nodes/$id/edit',
-    getParentRoute: () => AuthenticatedTeamFlowRouteRoute,
+    id: '/$parent/nodes/$id/edit',
+    path: '/$parent/nodes/$id/edit',
+    getParentRoute: () => AuthenticatedTeamFlowNodesRouteRoute,
   } as any)
 const AuthenticatedTeamFlowNodesParentNodesIdEditBeforeRoute =
   AuthenticatedTeamFlowNodesParentNodesIdEditBeforeRouteImport.update({
@@ -199,6 +206,7 @@ export interface FileRoutesByFullPath {
   '/$team/submissions': typeof AuthenticatedTeamSubmissionsRoute
   '/$team/subscription': typeof AuthenticatedTeamSubscriptionRoute
   '/$team/': typeof AuthenticatedTeamIndexRoute
+  '/$team/$flow/nodes': typeof AuthenticatedTeamFlowNodesRouteRouteWithChildren
   '/$team/$flow/about': typeof AuthenticatedTeamFlowAboutRoute
   '/$team/$flow/feedback': typeof AuthenticatedTeamFlowFeedbackRoute
   '/$team/$flow/settings': typeof AuthenticatedTeamFlowSettingsRoute
@@ -225,6 +233,7 @@ export interface FileRoutesByTo {
   '/$team/submissions': typeof AuthenticatedTeamSubmissionsRoute
   '/$team/subscription': typeof AuthenticatedTeamSubscriptionRoute
   '/$team': typeof AuthenticatedTeamIndexRoute
+  '/$team/$flow/nodes': typeof AuthenticatedTeamFlowNodesRouteRouteWithChildren
   '/$team/$flow/about': typeof AuthenticatedTeamFlowAboutRoute
   '/$team/$flow/feedback': typeof AuthenticatedTeamFlowFeedbackRoute
   '/$team/$flow/settings': typeof AuthenticatedTeamFlowSettingsRoute
@@ -254,6 +263,7 @@ export interface FileRoutesById {
   '/_authenticated/$team/submissions': typeof AuthenticatedTeamSubmissionsRoute
   '/_authenticated/$team/subscription': typeof AuthenticatedTeamSubscriptionRoute
   '/_authenticated/$team/': typeof AuthenticatedTeamIndexRoute
+  '/_authenticated/$team/$flow/nodes': typeof AuthenticatedTeamFlowNodesRouteRouteWithChildren
   '/_authenticated/$team/$flow/about': typeof AuthenticatedTeamFlowAboutRoute
   '/_authenticated/$team/$flow/feedback': typeof AuthenticatedTeamFlowFeedbackRoute
   '/_authenticated/$team/$flow/settings': typeof AuthenticatedTeamFlowSettingsRoute
@@ -283,6 +293,7 @@ export interface FileRouteTypes {
     | '/$team/submissions'
     | '/$team/subscription'
     | '/$team/'
+    | '/$team/$flow/nodes'
     | '/$team/$flow/about'
     | '/$team/$flow/feedback'
     | '/$team/$flow/settings'
@@ -309,6 +320,7 @@ export interface FileRouteTypes {
     | '/$team/submissions'
     | '/$team/subscription'
     | '/$team'
+    | '/$team/$flow/nodes'
     | '/$team/$flow/about'
     | '/$team/$flow/feedback'
     | '/$team/$flow/settings'
@@ -337,6 +349,7 @@ export interface FileRouteTypes {
     | '/_authenticated/$team/submissions'
     | '/_authenticated/$team/subscription'
     | '/_authenticated/$team/'
+    | '/_authenticated/$team/$flow/nodes'
     | '/_authenticated/$team/$flow/about'
     | '/_authenticated/$team/$flow/feedback'
     | '/_authenticated/$team/$flow/settings'
@@ -509,12 +522,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTeamFlowAboutRouteImport
       parentRoute: typeof AuthenticatedTeamFlowRouteRoute
     }
+    '/_authenticated/$team/$flow/nodes': {
+      id: '/_authenticated/$team/$flow/nodes'
+      path: '/nodes'
+      fullPath: '/$team/$flow/nodes'
+      preLoaderRoute: typeof AuthenticatedTeamFlowNodesRouteRouteImport
+      parentRoute: typeof AuthenticatedTeamFlowRouteRoute
+    }
     '/_authenticated/$team/$flow/nodes/$parent/nodes/new': {
       id: '/_authenticated/$team/$flow/nodes/$parent/nodes/new'
-      path: '/nodes/$parent/nodes/new'
+      path: '/$parent/nodes/new'
       fullPath: '/$team/$flow/nodes/$parent/nodes/new'
       preLoaderRoute: typeof AuthenticatedTeamFlowNodesParentNodesNewRouteImport
-      parentRoute: typeof AuthenticatedTeamFlowRouteRoute
+      parentRoute: typeof AuthenticatedTeamFlowNodesRouteRoute
     }
     '/_authenticated/$team/$flow/nodes/$parent/nodes/new/$before': {
       id: '/_authenticated/$team/$flow/nodes/$parent/nodes/new/$before'
@@ -525,10 +545,10 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/$team/$flow/nodes/$parent/nodes/$id/edit': {
       id: '/_authenticated/$team/$flow/nodes/$parent/nodes/$id/edit'
-      path: '/nodes/$parent/nodes/$id/edit'
+      path: '/$parent/nodes/$id/edit'
       fullPath: '/$team/$flow/nodes/$parent/nodes/$id/edit'
       preLoaderRoute: typeof AuthenticatedTeamFlowNodesParentNodesIdEditRouteImport
-      parentRoute: typeof AuthenticatedTeamFlowRouteRoute
+      parentRoute: typeof AuthenticatedTeamFlowNodesRouteRoute
     }
     '/_authenticated/$team/$flow/nodes/$parent/nodes/$id/edit/$before': {
       id: '/_authenticated/$team/$flow/nodes/$parent/nodes/$id/edit/$before'
@@ -570,26 +590,41 @@ const AuthenticatedTeamFlowNodesParentNodesIdEditRouteWithChildren =
     AuthenticatedTeamFlowNodesParentNodesIdEditRouteChildren,
   )
 
-interface AuthenticatedTeamFlowRouteRouteChildren {
-  AuthenticatedTeamFlowAboutRoute: typeof AuthenticatedTeamFlowAboutRoute
-  AuthenticatedTeamFlowFeedbackRoute: typeof AuthenticatedTeamFlowFeedbackRoute
-  AuthenticatedTeamFlowSettingsRoute: typeof AuthenticatedTeamFlowSettingsRoute
-  AuthenticatedTeamFlowSubmissionsRoute: typeof AuthenticatedTeamFlowSubmissionsRoute
+interface AuthenticatedTeamFlowNodesRouteRouteChildren {
   AuthenticatedTeamFlowNodesParentNodesNewRoute: typeof AuthenticatedTeamFlowNodesParentNodesNewRouteWithChildren
   AuthenticatedTeamFlowNodesParentNodesIdEditRoute: typeof AuthenticatedTeamFlowNodesParentNodesIdEditRouteWithChildren
 }
 
+const AuthenticatedTeamFlowNodesRouteRouteChildren: AuthenticatedTeamFlowNodesRouteRouteChildren =
+  {
+    AuthenticatedTeamFlowNodesParentNodesNewRoute:
+      AuthenticatedTeamFlowNodesParentNodesNewRouteWithChildren,
+    AuthenticatedTeamFlowNodesParentNodesIdEditRoute:
+      AuthenticatedTeamFlowNodesParentNodesIdEditRouteWithChildren,
+  }
+
+const AuthenticatedTeamFlowNodesRouteRouteWithChildren =
+  AuthenticatedTeamFlowNodesRouteRoute._addFileChildren(
+    AuthenticatedTeamFlowNodesRouteRouteChildren,
+  )
+
+interface AuthenticatedTeamFlowRouteRouteChildren {
+  AuthenticatedTeamFlowNodesRouteRoute: typeof AuthenticatedTeamFlowNodesRouteRouteWithChildren
+  AuthenticatedTeamFlowAboutRoute: typeof AuthenticatedTeamFlowAboutRoute
+  AuthenticatedTeamFlowFeedbackRoute: typeof AuthenticatedTeamFlowFeedbackRoute
+  AuthenticatedTeamFlowSettingsRoute: typeof AuthenticatedTeamFlowSettingsRoute
+  AuthenticatedTeamFlowSubmissionsRoute: typeof AuthenticatedTeamFlowSubmissionsRoute
+}
+
 const AuthenticatedTeamFlowRouteRouteChildren: AuthenticatedTeamFlowRouteRouteChildren =
   {
+    AuthenticatedTeamFlowNodesRouteRoute:
+      AuthenticatedTeamFlowNodesRouteRouteWithChildren,
     AuthenticatedTeamFlowAboutRoute: AuthenticatedTeamFlowAboutRoute,
     AuthenticatedTeamFlowFeedbackRoute: AuthenticatedTeamFlowFeedbackRoute,
     AuthenticatedTeamFlowSettingsRoute: AuthenticatedTeamFlowSettingsRoute,
     AuthenticatedTeamFlowSubmissionsRoute:
       AuthenticatedTeamFlowSubmissionsRoute,
-    AuthenticatedTeamFlowNodesParentNodesNewRoute:
-      AuthenticatedTeamFlowNodesParentNodesNewRouteWithChildren,
-    AuthenticatedTeamFlowNodesParentNodesIdEditRoute:
-      AuthenticatedTeamFlowNodesParentNodesIdEditRouteWithChildren,
   }
 
 const AuthenticatedTeamFlowRouteRouteWithChildren =
