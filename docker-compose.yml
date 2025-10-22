@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     ports:
       - "${PG_PORT}:5432"
-    command: "postgres -c shared_preload_libraries=pg_cron -c cron.database_name=${PG_DATABASE}"
+    command: "postgres -c listen_addresses='*' -c shared_preload_libraries=pg_cron -c cron.database_name=${PG_DATABASE}"
     healthcheck:
       test: pg_isready --username=${PG_USERNAME} --dbname=${PG_DATABASE} --quiet
       interval: 15s
