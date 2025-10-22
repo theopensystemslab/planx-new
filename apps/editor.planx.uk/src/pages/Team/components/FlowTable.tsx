@@ -176,13 +176,6 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
     : editedDate.timeAgo;
   const displayActor = showPublished ? publishedDate.actor : editedDate.actor;
 
-  let templateDisplay = "";
-  if (isSourceTemplate) {
-    templateDisplay = "Source template";
-  } else if (isTemplatedFlow) {
-    templateDisplay = flow.template.team.name;
-  }
-
   return (
     <>
       <FlowDialogs
@@ -193,7 +186,7 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
       <StyledTableRow isTemplated={isAnyTemplate} onClick={handleRowClick}>
         <FlowTitleCell>
           <Box>
-            {templateDisplay && (
+            {(isTemplatedFlow || isSourceTemplate) && (
               <Box
                 sx={{
                   display: "flex",
@@ -209,7 +202,9 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
                   variant="body2"
                   sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
                 >
-                  {templateDisplay}
+                  {isSourceTemplate
+                    ? "Source template"
+                    : flow.template.team.name}
                 </Typography>
               </Box>
             )}
