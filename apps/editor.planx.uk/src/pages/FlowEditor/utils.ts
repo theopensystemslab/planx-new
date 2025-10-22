@@ -85,6 +85,11 @@ export const nodeIsTemplatedInternalPortal = (
   }
 };
 
+export const formatServiceLastUpdated = (date: string): string => {
+  const formattedDate = new Date(date).toLocaleDateString("en-gb");
+  return `Service last updated ${formattedDate}`;
+};
+
 export const parentNodeIsTemplatedInternalPortal = (
   flow: Store.Flow,
   parentNode?: IndexedNode,
