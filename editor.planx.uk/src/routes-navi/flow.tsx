@@ -165,9 +165,9 @@ const editNode = validateNodeRoute(
           extraProps={extraProps}
           node={node}
           id={id}
-          handleDelete={() => {
-            useStore.getState().removeNode(id, parent!);
-          }}
+          // handleDelete={() => {
+          //   useStore.getState().removeNode(id, parent!);
+          // }}
           before={before}
           parent={parent}
         />

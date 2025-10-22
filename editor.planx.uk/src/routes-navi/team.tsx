@@ -57,7 +57,7 @@ const routes = compose(
   mount({
     "/": route(() => ({
       title: makeTitle(useStore.getState().teamName),
-      view: <Team />,
+      view: <Team flows={[]} />,
     })),
 
     "/:flow": lazy(async (req) => {
