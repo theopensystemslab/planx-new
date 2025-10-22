@@ -26,27 +26,19 @@ import { FlowTable } from "./components/FlowTable";
 import { ShowingServicesHeader } from "./components/ShowingServicesHeader";
 import { filterOptions, sortOptions } from "./helpers/sortAndFilterOptions";
 
-const DashboardList = styled("ul", {
-  shouldForwardProp: (prop) => prop !== "viewType",
-})<{ viewType: FlowCardView }>(({ theme, viewType }) => ({
+const DashboardList = styled("ul")(({ theme }) => ({
   padding: theme.spacing(2, 0, 3),
   margin: 0,
   gap: theme.spacing(2),
-  ...(viewType === "grid" && {
-    display: "grid",
-    gridAutoRows: "1fr",
-    gridTemplateColumns: "repeat(1, 1fr)",
-    [theme.breakpoints.up("md")]: {
-      gridTemplateColumns: "repeat(2, 1fr)",
-    },
-    [theme.breakpoints.up("lg")]: {
-      gridTemplateColumns: "repeat(3, 1fr)",
-    },
-  }),
-  ...(viewType === "row" && {
-    display: "flex",
-    flexDirection: "column",
-  }),
+  display: "grid",
+  gridAutoRows: "1fr",
+  gridTemplateColumns: "repeat(1, 1fr)",
+  [theme.breakpoints.up("md")]: {
+    gridTemplateColumns: "repeat(2, 1fr)",
+  },
+  [theme.breakpoints.up("lg")]: {
+    gridTemplateColumns: "repeat(3, 1fr)",
+  },
 }));
 
 export const FiltersContainer = styled(Box)(({ theme }) => ({
@@ -84,7 +76,7 @@ export const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
 }));
 
 const GetStarted: React.FC = () => (
-  <DashboardList viewType="grid" sx={{ paddingTop: 2 }}>
+  <DashboardList sx={{ paddingTop: 2 }}>
     <Card>
       <CardContent>
         <Typography variant="h3">No services found</Typography>
@@ -282,7 +274,7 @@ const Team: React.FC = () => {
             {sortedFlows && (
               <>
                 {flowCardView === "grid" ? (
-                  <DashboardList viewType={flowCardView}>
+                  <DashboardList>
                     {sortedFlows.map((flow) => (
                       <FlowCard
                         flow={flow}
