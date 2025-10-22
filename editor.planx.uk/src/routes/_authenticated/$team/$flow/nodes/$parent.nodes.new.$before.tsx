@@ -1,21 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import components from "pages/FlowEditor/components/forms";
 import FormModal from "pages/FlowEditor/components/forms/FormModal";
 import React from "react";
-import { z } from "zod";
 
 import { calculateExtraProps } from "../_utils";
-
-const newNodeSearchSchema = z.object({
-  type: z.string().optional().default("question"),
-});
 
 export const Route = createFileRoute(
   "/_authenticated/$team/$flow/nodes/$parent/nodes/new/$before",
 )({
-  validateSearch: zodValidator(newNodeSearchSchema),
-
   loaderDeps: ({ search }) => ({ type: search.type }),
 
   loader: async ({ params, deps }) => {
