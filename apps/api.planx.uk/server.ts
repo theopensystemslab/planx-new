@@ -4,11 +4,10 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
 import express from "express";
-import pinoLogger from "express-pino-logger";
+import { pinoHttp } from "pino-http";
 import helmet from "helmet";
 import { Server, type IncomingMessage } from "http";
 import "isomorphic-fetch";
-import noir from "pino-noir";
 import { useSwaggerDocs } from "./docs/index.js";
 import { errorHandler, expiredJWTHandler } from "./errors/requestHandlers.js";
 import adminRoutes from "./modules/admin/routes.js";
@@ -49,8 +48,11 @@ app.use(cookieParser());
 
 if (process.env.NODE_ENV !== "test") {
   app.use(
-    pinoLogger({
-      serializers: noir(["req.headers.authorization"], "**REDACTED**"),
+    pinoHttp({
+      redact: {
+        paths: ["req.headers.authorization"],
+        censor: "**REDACTED**",
+      },
       autoLogging: {
         ignore: (req) => {
           const isAWSHealthchecker =
@@ -58,8 +60,11 @@ if (process.env.NODE_ENV !== "test") {
           const isLocalDockerHealthchecker =
             req.headers["user-agent"] === "Wget" &&
             req.headers.host === "localhost:7002";
+          const isJWTAuthRequest = req.url.startsWith("/auth/validate-jwt");
 
-          return isAWSHealthchecker || isLocalDockerHealthchecker;
+          return (
+            isAWSHealthchecker || isLocalDockerHealthchecker || isJWTAuthRequest
+          );
         },
       },
     }),
