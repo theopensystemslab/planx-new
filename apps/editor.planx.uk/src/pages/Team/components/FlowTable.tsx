@@ -164,7 +164,7 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
     navigation.navigate(`./${teamSlug}/${flow.slug}`);
   };
 
-  const editedDateMessage = formatLastEditMessage(
+  const editedDate = formatLastEditMessage(
     flow.operations[0]?.createdAt,
     flow.operations[0]?.actor,
   );
@@ -173,16 +173,10 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
     flow.publishedFlows[0]?.publishedAt,
   );
 
-  const editedDateParts = editedDateMessage.split(" by ");
-  const editedTimeAgo = editedDateParts[0];
-  const editedActor = editedDateParts[1];
-
-  const publishedDateParts = publishedDate?.split(" by ") || [];
-  const publishedTimeAgo = publishedDateParts[0];
-  const publishedActor = publishedDateParts[1];
-
-  const displayTimeAgo = showPublished ? publishedTimeAgo : editedTimeAgo;
-  const displayActor = showPublished ? publishedActor : editedActor;
+  const displayTimeAgo = showPublished
+    ? publishedDate.timeAgo
+    : editedDate.timeAgo;
+  const displayActor = showPublished ? publishedDate.actor : editedDate.actor;
 
   let templateDisplay = "";
   if (isSourceTemplate) {
