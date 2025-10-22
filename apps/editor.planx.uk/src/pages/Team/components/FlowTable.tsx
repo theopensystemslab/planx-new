@@ -127,7 +127,6 @@ export const FlowTable: React.FC<FlowTableProps> = ({
             flow={flow}
             teamSlug={teamSlug}
             refreshFlows={refreshFlows}
-            showPublished={showPublished}
           />
         ))}
       </TableBody>
@@ -139,16 +138,15 @@ interface FlowTableRowProps {
   flow: FlowSummary;
   teamSlug: string;
   refreshFlows: () => void;
-  showPublished: boolean;
 }
 
 const FlowTableRow: React.FC<FlowTableRowProps> = ({
   flow,
   teamSlug,
   refreshFlows,
-  showPublished,
 }) => {
   const navigation = useNavigation();
+  const { showPublished } = useFlowSortDisplay();
 
   const {
     isSubmissionService,
