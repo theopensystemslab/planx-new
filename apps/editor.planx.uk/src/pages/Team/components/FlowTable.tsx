@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
@@ -30,14 +30,14 @@ const StyledTable = styled(Table)(({ theme }) => ({
   border: `1px solid ${theme.palette.border.main}`,
   borderBottom: 0,
   borderCollapse: "separate",
-  "& .MuiTableCell-root": {
+  [`& ${tableCellClasses.root}`]: {
     padding: theme.spacing(1.5, 2),
     borderBottom: `1px solid ${theme.palette.border.main}`,
   },
 }));
 
 const StyledTableHead = styled(TableHead)(({ theme }) => ({
-  "& .MuiTableCell-head": {
+  [`& ${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.background.default,
     borderBottom: `1px solid ${theme.palette.border.main}`,
     position: "sticky",
