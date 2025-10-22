@@ -136,7 +136,9 @@ const FlowCard: React.FC<FlowCardProps> = ({
     flow.operations[0]?.actor,
   );
 
-  const displayDate = showPublished ? publishedDate : editedDate;
+  const displayDate = showPublished
+    ? publishedDate.formatted
+    : editedDate.formatted;
 
   return (
     <>
