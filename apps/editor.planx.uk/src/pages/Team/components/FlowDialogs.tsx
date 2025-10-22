@@ -3,29 +3,30 @@ import React from "react";
 import { FlowSummary } from "../../FlowEditor/lib/store/editor";
 import { ArchiveDialog } from "./ArchiveDialog";
 import { CopyDialog } from "./CopyDialog";
+import { useFlowActions } from "./hooks/useFlowActions";
 import { RenameDialog } from "./RenameDialog";
 
 interface FlowDialogsProps {
   flow: FlowSummary;
-  isArchiveDialogOpen: boolean;
-  setIsArchiveDialogOpen: (open: boolean) => void;
-  isCopyDialogOpen: boolean;
-  isRenameDialogOpen: boolean;
-  handleArchive: () => Promise<void>;
-  handleCopyDialogClose: () => void;
-  handleRenameDialogClose: () => void;
+  teamSlug: string;
+  refreshFlows: () => void;
 }
 
 export const FlowDialogs: React.FC<FlowDialogsProps> = ({
   flow,
-  isArchiveDialogOpen,
-  setIsArchiveDialogOpen,
-  isCopyDialogOpen,
-  isRenameDialogOpen,
-  handleArchive,
-  handleCopyDialogClose,
-  handleRenameDialogClose,
+  teamSlug,
+  refreshFlows,
 }) => {
+  const {
+    isArchiveDialogOpen,
+    setIsArchiveDialogOpen,
+    isCopyDialogOpen,
+    isRenameDialogOpen,
+    handleArchive,
+    handleCopyDialogClose,
+    handleRenameDialogClose,
+  } = useFlowActions(flow, teamSlug, refreshFlows);
+
   return (
     <>
       {isArchiveDialogOpen && (

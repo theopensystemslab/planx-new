@@ -151,13 +151,6 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
   const navigation = useNavigation();
 
   const {
-    isArchiveDialogOpen,
-    setIsArchiveDialogOpen,
-    isCopyDialogOpen,
-    isRenameDialogOpen,
-    handleArchive,
-    handleCopyDialogClose,
-    handleRenameDialogClose,
     isSubmissionService,
     isTemplatedFlow,
     isSourceTemplate,
@@ -202,13 +195,8 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
     <>
       <FlowDialogs
         flow={flow}
-        isArchiveDialogOpen={isArchiveDialogOpen}
-        setIsArchiveDialogOpen={setIsArchiveDialogOpen}
-        isCopyDialogOpen={isCopyDialogOpen}
-        isRenameDialogOpen={isRenameDialogOpen}
-        handleArchive={handleArchive}
-        handleCopyDialogClose={handleCopyDialogClose}
-        handleRenameDialogClose={handleRenameDialogClose}
+        teamSlug={teamSlug}
+        refreshFlows={refreshFlows}
       />
       <StyledTableRow isTemplated={isAnyTemplate} onClick={handleRowClick}>
         <FlowTitleCell>
