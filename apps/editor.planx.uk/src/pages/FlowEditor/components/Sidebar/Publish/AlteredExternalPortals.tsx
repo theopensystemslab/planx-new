@@ -31,7 +31,7 @@ const AlteredExternalPortalListItem = (props: ExternalPortal) => {
   const _externalPortalLastPublishedRequest = useAsync(async () => {
     const user = await lastPublisher(flowId);
     setNestedFlowLastPublishedTitle(
-      formatLastPublishMessage(publishedAt, user),
+      formatLastPublishMessage(publishedAt, user).formatted,
     );
   });
 

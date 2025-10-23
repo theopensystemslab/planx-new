@@ -3,26 +3,21 @@ import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { useToast } from "hooks/useToast";
-import React, { useState } from "react";
-import { Link, useCurrentRoute } from "react-navi";
+import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
+import React from "react";
+import { Link } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD, inputFocusStyle } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
-import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
-import { getSortParams } from "ui/editor/SortControl/utils";
-import { slugify } from "utils";
+import { FlowTagType } from "ui/editor/FlowTag/types";
+import SimpleMenu from "ui/editor/SimpleMenu";
 
-import SimpleMenu from "../../../ui/editor/SimpleMenu";
-import { useStore } from "../../FlowEditor/lib/store";
-import { FlowSummary } from "../../FlowEditor/lib/store/editor";
 import {
   formatLastEditMessage,
   formatLastPublishMessage,
 } from "../../FlowEditor/utils";
-import { sortOptions } from "../helpers/sortAndFilterOptions";
-import { ArchiveDialog } from "./ArchiveDialog";
-import { CopyDialog } from "./CopyDialog";
-import { RenameDialog } from "./RenameDialog";
+import { FlowDialogs } from "./FlowDialogs";
+import { useFlowActions } from "./hooks/useFlowActions";
+import { useFlowSortDisplay } from "./hooks/useFlowSortDisplay";
 
 export const Card = styled("li")(({ theme }) => ({
   listStyle: "none",
@@ -108,60 +103,17 @@ const FlowCard: React.FC<FlowCardProps> = ({
   teamSlug,
   refreshFlows,
 }) => {
-  const [isArchiveDialogOpen, setIsArchiveDialogOpen] =
-    useState<boolean>(false);
-  const [isCopyDialogOpen, setIsCopyDialogOpen] = useState<boolean>(false);
-  const [isRenameDialogOpen, setIsRenameDialogOpen] = useState<boolean>(false);
-
-  const [archiveFlow, moveFlow, canUserEditTeam] = useStore((state) => [
-    state.archiveFlow,
-    state.moveFlow,
-    state.canUserEditTeam,
-  ]);
-
-  const route = useCurrentRoute();
-  const toast = useToast();
-
-  const handleCopyDialogClose = () => {
-    setIsCopyDialogOpen(false);
-    refreshFlows();
-  };
-
-  const handleRenameDialogClose = () => {
-    setIsRenameDialogOpen(false);
-    refreshFlows();
-  };
+  const { showPublished } = useFlowSortDisplay();
 
   const {
-    sortObject: { displayName: sortDisplayName },
-  } = getSortParams<FlowSummary>(route.url.query, sortOptions);
-
-  const handleArchive = async () => {
-    try {
-      await archiveFlow(flow);
-      refreshFlows();
-      toast.success("Archived flow");
-    } catch (error) {
-      toast.error(
-        "We are unable to archive this flow, refesh and try again or contact an admin",
-      );
-    }
-  };
-
-  const handleMove = (newTeam: string) => {
-    moveFlow(flow.id, newTeam, flow.name).then(() => {
-      refreshFlows();
-    });
-  };
-
-  const isSubmissionService = flow.publishedFlows?.[0]?.hasSendComponent;
-
-  const isTemplatedFlow = Boolean(flow.templatedFrom);
-  const isSourceTemplate = flow.isTemplate;
-  const isAnyTemplate = isTemplatedFlow || isSourceTemplate;
-
-  const statusVariant =
-    flow.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
+    isSubmissionService,
+    isTemplatedFlow,
+    isSourceTemplate,
+    isAnyTemplate,
+    statusVariant,
+    menuItems,
+    canUserEditTeam,
+  } = useFlowActions(flow, teamSlug, refreshFlows);
 
   const displayTags = [
     {
@@ -174,16 +126,6 @@ const FlowCard: React.FC<FlowCardProps> = ({
       displayName: "Submission",
       shouldAddTag: isSubmissionService,
     },
-    {
-      type: FlowTagType.Templated,
-      displayName: "Templated",
-      shouldAddTag: isTemplatedFlow,
-    },
-    {
-      type: FlowTagType.SourceTemplate,
-      displayName: "Source template",
-      shouldAddTag: isSourceTemplate,
-    },
   ];
 
   const publishedDate = formatLastPublishMessage(
@@ -194,42 +136,17 @@ const FlowCard: React.FC<FlowCardProps> = ({
     flow.operations[0]?.actor,
   );
 
+  const displayDate = showPublished
+    ? publishedDate.formatted
+    : editedDate.formatted;
+
   return (
     <>
-      {isArchiveDialogOpen && (
-        <ArchiveDialog
-          title={`Archive "${flow.name}"`}
-          open={isArchiveDialogOpen}
-          content={`Are you sure you want to archive "${flow.name}"? Once archived, a flow is no longer able to be viewed in the editor and can only be restored by a developer.`}
-          onClose={() => {
-            setIsArchiveDialogOpen(false);
-          }}
-          onConfirm={handleArchive}
-          submitLabel="Archive this flow"
-        />
-      )}
-      {isCopyDialogOpen && (
-        <CopyDialog
-          isDialogOpen={isCopyDialogOpen}
-          handleClose={handleCopyDialogClose}
-          sourceFlow={{
-            name: flow.name,
-            slug: flow.slug,
-            id: flow.id,
-          }}
-        />
-      )}
-      {isRenameDialogOpen && (
-        <RenameDialog
-          isDialogOpen={isRenameDialogOpen}
-          handleClose={handleRenameDialogClose}
-          flow={{
-            name: flow.name,
-            slug: flow.slug,
-            id: flow.id,
-          }}
-        />
-      )}
+      <FlowDialogs
+        flow={flow}
+        teamSlug={teamSlug}
+        refreshFlows={refreshFlows}
+      />
       <Card>
         <Box
           sx={{
@@ -259,20 +176,11 @@ const FlowCard: React.FC<FlowCardProps> = ({
               <Typography variant="h3" component="h2">
                 {flow.name}
               </Typography>
-              <LinkSubText>
-                {sortDisplayName === "Last published"
-                  ? publishedDate
-                  : editedDate}
-              </LinkSubText>
+              <LinkSubText>{displayDate}</LinkSubText>
             </Box>
             <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
               {displayTags
-                .filter(
-                  (tag) =>
-                    tag.shouldAddTag &&
-                    tag.type !== FlowTagType.Templated &&
-                    tag.type !== FlowTagType.SourceTemplate,
-                )
+                .filter((tag) => tag.shouldAddTag)
                 .map((tag) => (
                   <FlowTag
                     key={`${tag.displayName}-flowtag`}
@@ -300,39 +208,8 @@ const FlowCard: React.FC<FlowCardProps> = ({
             />
           </CardContent>
         </Box>
-        {canUserEditTeam(teamSlug) && (
-          <StyledSimpleMenu
-            items={[
-              {
-                label: "Rename",
-                onClick: () => setIsRenameDialogOpen(true),
-              },
-              {
-                label: "Copy",
-                onClick: () => setIsCopyDialogOpen(true),
-                disabled: isAnyTemplate,
-              },
-              {
-                label: "Move",
-                onClick: () => {
-                  const newTeam = prompt("New team");
-                  if (newTeam) {
-                    if (slugify(newTeam) === teamSlug) {
-                      alert(
-                        `This flow already belongs to ${teamSlug}, skipping move`,
-                      );
-                    } else {
-                      handleMove(slugify(newTeam));
-                    }
-                  }
-                },
-              },
-              {
-                label: "Archive",
-                onClick: () => setIsArchiveDialogOpen(true),
-              },
-            ]}
-          >
+        {canUserEditTeam && (
+          <StyledSimpleMenu items={menuItems}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.2 }}>
               <MoreHoriz sx={{ fontSize: "1.4em" }} />
               <Typography variant="body2" fontSize="small">
