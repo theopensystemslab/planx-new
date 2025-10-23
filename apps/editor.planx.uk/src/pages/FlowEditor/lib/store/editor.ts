@@ -22,7 +22,6 @@ import {
   update,
 } from "@planx/graph";
 import { OT } from "@planx/graph/types";
-import axios from "axios";
 import { client } from "lib/graphql";
 import navigation from "lib/navigation";
 import debounce from "lodash/debounce";
@@ -246,11 +245,6 @@ export interface EditorStore extends Store.Store {
   isTemplatedFrom: boolean;
   template?: Template;
   makeUnique: (id: NodeId, parent?: NodeId) => void;
-  moveFlow: (
-    flowId: string,
-    teamSlug: string,
-    flowName: string,
-  ) => Promise<any>;
   moveNode: (
     id: NodeId,
     parent?: NodeId,
@@ -432,7 +426,6 @@ export const editorStore: StateCreator<
   },
 
   getFlows: async (teamId) => {
-    client.cache.reset();
     const {
       data: { flows },
     } = await client.query<{ flows: FlowSummary[] }>({
@@ -456,6 +449,7 @@ export const editorStore: StateCreator<
             isTemplate: is_template
             template {
               team {
+                id
                 name
               }
             }
@@ -472,6 +466,9 @@ export const editorStore: StateCreator<
       variables: {
         teamId,
       },
+      // Flows are modified via REST API requests, not via the Apollo client
+      // Always get an up to date list when showing the page
+      fetchPolicy: "network-only",
     });
 
     return flows;
@@ -546,42 +543,6 @@ export const editorStore: StateCreator<
   makeUnique: (id, parent) => {
     const [, ops] = makeUnique(id, parent)(get().flow);
     send(ops);
-  },
-
-  moveFlow(flowId: string, teamSlug: string, flowName: string) {
-    const valid = get().canUserEditTeam(teamSlug);
-    if (!valid) {
-      alert(
-        `You do not have permission to move this flow into ${teamSlug}, try again`,
-      );
-      return Promise.resolve();
-    }
-
-    const token = get().jwt;
-
-    return axios
-      .post(
-        `${import.meta.env.VITE_APP_API_URL}/flows/${flowId}/move/${teamSlug}`,
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      )
-      .then((res) => alert(res?.data?.message))
-      .catch(({ response }) => {
-        const { data } = response;
-        if (data.error.toLowerCase().includes("uniqueness violation")) {
-          alert(
-            `Failed to move this flow. ${teamSlug} already has a flow with name '${flowName}'. Rename the flow and try again`,
-          );
-        } else {
-          alert(
-            "Failed to move this flow. Make sure you're entering a valid team name and try again",
-          );
-        }
-      });
   },
 
   moveNode(

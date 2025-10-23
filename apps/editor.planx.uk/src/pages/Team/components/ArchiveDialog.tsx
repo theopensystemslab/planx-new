@@ -11,23 +11,18 @@ export const ArchiveDialog = ({
   content,
   submitLabel,
   open,
-  onClose,
+  handleClose,
   onConfirm,
 }: {
   title: string;
   content: string;
   submitLabel: string;
   open: boolean;
-  onClose: () => void;
+  handleClose: () => void;
   onConfirm: () => void;
 }) => {
   return (
-    <Dialog
-      open={open}
-      onClose={() => {
-        onClose();
-      }}
-    >
+    <Dialog open={open} onClose={handleClose}>
       <DialogTitle variant="h3" component="h1">
         {title}
       </DialogTitle>
@@ -36,7 +31,7 @@ export const ArchiveDialog = ({
       </DialogContent>
       <DialogActions>
         <Button
-          onClick={onClose}
+          onClick={handleClose}
           color="secondary"
           variant="contained"
           sx={{ backgroundColor: "background.default" }}
