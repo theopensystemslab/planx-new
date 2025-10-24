@@ -30,7 +30,6 @@ import {
   ContextMenuPosition,
   ContextMenuSource,
 } from "pages/FlowEditor/components/Flow/components/ContextMenu";
-import { NewFlow } from "pages/Team/components/AddFlow/types";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -216,6 +215,8 @@ interface CopiedPayload {
 interface CutPayload {
   rootId: string;
   parent: string;
+}
+
 export interface Template {
   id: string;
   team: {
@@ -464,81 +465,6 @@ export const editorStore: StateCreator<
     if (!payload) return;
 
     return JSON.parse(payload);
-  },
-
-  createFlow: async (newFlow) => {
-    const token = get().jwt;
-
-    const response = await axios.post<{ id: string }>(
-      `${import.meta.env.VITE_APP_API_URL}/flows/create`,
-      newFlow,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-
-    return response.data.id;
-  },
-
-  createFlowFromTemplate: async ({ name, slug, sourceId, teamId }) => {
-    const token = get().jwt;
-
-    const response = await axios.post<{ id: string }>(
-      `${
-        import.meta.env.VITE_APP_API_URL
-      }/flows/create-from-template/${sourceId}`,
-      {
-        teamId,
-        name,
-        slug,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-
-    set({ isTemplatedFrom: true });
-
-    return response.data.id;
-  },
-
-  createFlowFromCopy: async ({ name, slug, sourceId, teamId }) => {
-    const token = get().jwt;
-
-    const response = await axios.post<{ id: string }>(
-      `${import.meta.env.VITE_APP_API_URL}/flows/${sourceId}/copy/`,
-      {
-        teamId,
-        name,
-        slug,
-        insert: true,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-
-    return response.data.id;
-  },
-
-  validateAndDiffFlow(flowId: string) {
-    const token = get().jwt;
-
-    return axios.post(
-      `${import.meta.env.VITE_APP_API_URL}/flows/${flowId}/diff`,
-      null,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
   },
 
   getFlows: async (teamId) => {
