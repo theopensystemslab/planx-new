@@ -1,14 +1,13 @@
 import { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 
-import ResumePage, {
-  EmailError,
-  EmailRequired,
-  EmailSuccess,
+import ResumePage, { EmailRequired } from ".";
+import { EmailError, EmailSuccess } from "./SendResumeEmail";
+import {
   InvalidSession,
   LockedSession,
   ValidationSuccess,
-} from "./ResumePage";
+} from "./ValidateSession";
 
 const meta = {
   title: "Design System/Pages/Resume",
@@ -20,7 +19,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Basic = {
-  render: () => <EmailRequired setEmail={() => console.log("")} />,
+  render: () => (
+    <EmailRequired handleSubmit={() => console.log("Submitted!")} />
+  ),
 } satisfies Story;
 
 export const OnEmailSuccess = {
