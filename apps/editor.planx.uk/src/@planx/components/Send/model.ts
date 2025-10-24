@@ -1,21 +1,12 @@
 import { SendIntegration } from "@opensystemslab/planx-core/types";
+import { CombinedEventsPayload } from "api/send/types";
 import { array, mixed, object, SchemaOf, string } from "yup";
 
-import type { Store } from "../../../pages/FlowEditor/lib/store";
 import {
   BaseNodeData,
   baseNodeDataValidationSchema,
   parseBaseNodeData,
 } from "../shared";
-
-type CombinedEventsPayload = Partial<Record<SendIntegration, EventPayload>>;
-
-interface EventPayload {
-  localAuthority: string;
-  body: {
-    sessionId: string;
-  };
-}
 
 export interface Send extends BaseNodeData {
   title: string;
@@ -31,20 +22,13 @@ export const parseSend = (data: Record<string, any> | undefined): Send => ({
   destinations: data?.destinations || [DEFAULT_DESTINATION],
 });
 
-const isSendingToUniform = (
-  payload: CombinedEventsPayload,
-): payload is CombinedEventsPayload & { uniform: EventPayload } =>
-  "uniform" in payload;
-
 export function getCombinedEventsPayload({
   destinations,
   teamSlug,
-  passport,
   sessionId,
 }: {
   destinations: SendIntegration[];
   teamSlug: string;
-  passport: Store.Passport;
   sessionId: string;
 }) {
   const payload: CombinedEventsPayload = {};
