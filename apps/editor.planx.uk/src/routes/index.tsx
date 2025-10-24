@@ -1,4 +1,5 @@
 import { compose, lazy, map, mount, redirect, route, withView } from "navi";
+import { disconnectShareDB } from "pages/FlowEditor/lib/sharedb";
 import { loadingView } from "pages/layout/LoadingLayout";
 import * as React from "react";
 
@@ -32,6 +33,7 @@ const editorRoutes = mount({
 
   "/logout": map((): any => {
     try {
+      disconnectShareDB();
       client.resetStore();
     } catch (err) {
       console.error(err);

@@ -30,16 +30,18 @@ import {
   ContextMenuPosition,
   ContextMenuSource,
 } from "pages/FlowEditor/components/Flow/components/ContextMenu";
+import { Doc } from "sharedb/lib/client";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 
 import { FlowLayout } from "../../components/Flow";
-import { connectToDB, getFlowConnection } from "../sharedb";
+import { getFlowDoc, subscribeToDoc } from "./../sharedb";
 import { type Store } from ".";
+import { NavigationStore } from "./navigation";
 import type { SharedStore } from "./shared";
 import { UserStore } from "./user";
 
-let doc: any;
+let doc: Doc;
 
 const send = (ops: Array<any>) => {
   if (ops.length > 0) {
@@ -236,7 +238,8 @@ export interface EditorStore extends Store.Store {
     flow: FlowSummary,
   ) => Promise<{ id: string; name: string } | void>;
   connect: (src: NodeId, tgt: NodeId, object?: any) => void;
-  connectTo: (id: NodeId) => Promise<void>;
+  connectToFlow: (id: NodeId) => Promise<void>;
+  disconnectFromFlow: () => void;
   cloneNode: (id: NodeId) => void;
   getClonedNodeId: () => string | null;
   copyNode: (id: NodeId) => void;
@@ -288,7 +291,7 @@ export interface EditorStore extends Store.Store {
 }
 
 export const editorStore: StateCreator<
-  SharedStore & EditorStore & UserStore,
+  SharedStore & EditorStore & UserStore & NavigationStore,
   [],
   [],
   EditorStore
@@ -343,26 +346,25 @@ export const editorStore: StateCreator<
     }
   },
 
-  connectTo: async (id) => {
-    console.log("connecting to", id, get().id);
-
-    doc = getFlowConnection(id);
+  connectToFlow: async (id) => {
+    doc = getFlowDoc(id);
     (window as any)["doc"] = doc;
 
-    await connectToDB(doc);
+    await subscribeToDoc(doc);
 
     const cloneStateFromShareDb = () => {
       const flow = JSON.parse(JSON.stringify(doc.data));
-      get().setFlow({
-        id,
-        flow,
-        flowSlug: get().flowSlug,
-        flowName: get().flowName,
-      });
+      set({ flow });
+      get().initNavigationStore();
     };
 
     // set state from initial load
     cloneStateFromShareDb();
+
+    // Templated flows require access to an ordered flow
+    // Set this once upstream as it's an expensive operation
+    const { isTemplatedFrom, setOrderedFlow } = get();
+    if (isTemplatedFrom) setOrderedFlow();
 
     // local operation so we can assume that multiple ops will arrive
     // almost instantaneously so wait for 100ms of 'silence' before running
@@ -374,6 +376,13 @@ export const editorStore: StateCreator<
     doc.on("op", (_op: any, isLocalOp?: boolean) =>
       isLocalOp ? cloneStateFromLocalOps() : cloneStateFromRemoteOps(),
     );
+  },
+
+  disconnectFromFlow: () => {
+    console.debug("[ShareDB] Disconnecting from flow:", doc?.id);
+    // Clear local store cache of flow data
+    set({ flow: {} });
+    doc.destroy();
   },
 
   cloneNode(id) {
