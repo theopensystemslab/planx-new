@@ -23,9 +23,10 @@ const ResetToggle = styled(Button)(({ theme }) => ({
 }));
 
 export const PreviewBrowser: React.FC = () => {
-  const [resetPreview, flow] = useStore((state) => [
+  const [resetPreview, flow, currentCard] = useStore((state) => [
     state.resetPreview,
     state.flow,
+    state.currentCard,
   ]);
   const isLoading = isEmpty(flow);
 
@@ -62,7 +63,7 @@ export const PreviewBrowser: React.FC = () => {
           text="Loading flow data..."
         />
       ) : (
-        <Questions previewEnvironment="editor" />
+        <Questions previewEnvironment="editor" key={currentCard?.id} />
       )}
     </ThemeProvider>
   );

@@ -70,9 +70,12 @@ export const isLiveEnv = () =>
 
 export const removeSessionIdSearchParam = () => {
   const currentURL = new URL(window.location.href);
-  currentURL.searchParams.delete("sessionId");
-  window.history.pushState({}, document.title, currentURL);
-  window.location.reload();
+  // Only reload page on public interface of PlanX, not Editor interface
+  if (currentURL.searchParams.get("sessionId")) {
+    currentURL.searchParams.delete("sessionId");
+    window.history.pushState({}, document.title, currentURL);
+    window.location.reload();
+  }
 };
 
 export const exhaustiveCheck = (type: never): never => {

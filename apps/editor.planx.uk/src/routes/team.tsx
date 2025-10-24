@@ -41,9 +41,16 @@ const routes = compose(
   })),
 
   withContext(async (req) => {
-    const { initTeamStore, teamSlug: currentSlug } = useStore.getState();
+    const {
+      initTeamStore,
+      teamSlug: currentSlug,
+      resetPreview,
+    } = useStore.getState();
     const routeSlug =
       req.params.team || (await getTeamFromDomain(window.location.hostname));
+
+    // Clear any cached data from previous flows
+    resetPreview();
 
     if (currentSlug !== routeSlug) {
       try {
