@@ -1,10 +1,11 @@
 import { SendIntegration } from "@opensystemslab/planx-core/types";
 import { waitFor } from "@testing-library/react";
-import axios from "axios";
+import { delay, http, HttpResponse } from "msw";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { act } from "react-dom/test-utils";
+import { act } from "react";
 import * as ReactNavi from "react-navi";
+import server from "test/mockServer";
 import { setup } from "testUtils";
 import { it, vi } from "vitest";
 import { axe } from "vitest-axe";
@@ -20,16 +21,13 @@ vi.spyOn(ReactNavi, "useNavigation").mockImplementation(
   () => ({ navigate: vi.fn() }) as any,
 );
 
-/**
- * Adds a small tick to allow MUI to render (e.g. card transitions)
- */
-const tick = () =>
-  act(async () => {
-    await new Promise((resolve) => setTimeout(resolve, 0));
-  });
-
-vi.mock("axios");
-const mockAxios = vi.mocked(axios, true);
+const handler = http.post(
+  `${import.meta.env.VITE_APP_API_URL}/create-send-events/*`,
+  async () => {
+    await delay();
+    return HttpResponse.json(hasuraEventsResponseMock, { status: 200 });
+  },
+);
 
 const originalLocation = window.location.pathname;
 
@@ -37,12 +35,7 @@ beforeAll(() => (initialState = getState()));
 
 beforeEach(() => {
   act(() => setState({ teamSlug: "testTeam" }));
-  mockAxios.post.mockReset();
-  mockAxios.post.mockResolvedValue({
-    data: hasuraEventsResponseMock,
-    status: 200,
-    statusText: "OK",
-  });
+  server.use(handler);
 });
 
 afterEach(() => {
@@ -70,53 +63,42 @@ it("displays a warning at /preview URLs", () => {
 });
 
 it("displays loading messages to the user", async () => {
-  let resolvePromise: (value: any) => void;
-  const promise = new Promise((resolve) => {
-    resolvePromise = resolve;
-  });
-
-  mockAxios.post.mockImplementationOnce(() => promise);
-
-  const { getByText } = setup(
+  const { findByText } = setup(
     <SendComponent title="Send" destinations={["bops", "uniform"]} />,
   );
 
-  await tick();
-
   // Initial loading state
-  expect(getByText(/Submitting your application.../)).toBeVisible();
-
-  // Trigger mock API response
-  resolvePromise!({
-    data: hasuraEventsResponseMock,
-    status: 200,
-    statusText: "OK",
-  });
-
-  expect(mockAxios.post).toHaveBeenCalledTimes(1);
-
-  await tick();
+  expect(await findByText(/Submitting your application.../)).toBeVisible();
 
   // Final submission state
-  expect(getByText(/Finalising your submission.../)).toBeVisible();
-});
-
-it("calls the /create-send-event endpoint", async () => {
-  setup(<SendComponent title="Send" destinations={["bops", "uniform"]} />);
-
-  await waitFor(() => expect(mockAxios.post).toHaveBeenCalledTimes(1));
-
-  expect(mockAxios.post).toHaveBeenCalledTimes(1);
+  expect(await findByText(/Finalising your submission.../)).toBeVisible();
 });
 
 it("generates a valid payload for the API", async () => {
   const destinations: SendIntegration[] = ["bops", "uniform"];
+  const handleSubmit = vi.fn();
 
-  setup(<SendComponent title="Send" destinations={destinations} />);
+  let apiPayload: unknown = null;
 
-  await waitFor(() => expect(mockAxios.post).toHaveBeenCalledTimes(1));
+  const handler = http.post(
+    `${import.meta.env.VITE_APP_API_URL}/create-send-events/*`,
+    async ({ request }) => {
+      await delay();
+      apiPayload = await request.json();
+      return new HttpResponse(hasuraEventsResponseMock, { status: 200 });
+    },
+  );
+  server.use(handler);
 
-  const apiPayload = mockAxios.post.mock.calls[0][1];
+  setup(
+    <SendComponent
+      title="Send"
+      destinations={destinations}
+      handleSubmit={handleSubmit}
+    />,
+  );
+
+  await waitFor(() => expect(handleSubmit).toHaveBeenCalledTimes(1));
 
   destinations.forEach((destination) => {
     expect(apiPayload).toHaveProperty(destination);
@@ -138,8 +120,7 @@ it("generates a valid breadcrumb", { retry: 1 }, async () => {
     />,
   );
 
-  await waitFor(() => expect(mockAxios.post).toHaveBeenCalledTimes(1));
-  expect(handleSubmit).toHaveBeenCalledTimes(1);
+  await waitFor(() => expect(handleSubmit).toHaveBeenCalledTimes(1));
 
   const breadcrumb = handleSubmit.mock.calls[0][0];
 

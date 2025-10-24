@@ -14,9 +14,10 @@ concurrency: production_environment
 env:
   DEPLOYMENT_ENVIRONMENT: production
   EDITOR_DIRECTORY: apps/editor.planx.uk
+  LOCALPLANNING_SERVICES_DIRECTORY: apps/localplanning.services
 
 jobs:
-  build_react:
+  build_planx_frontend:
     name: Test and Build
     runs-on: ubuntu-22.04
     steps:
@@ -65,16 +66,65 @@ jobs:
           VITE_APP_HASURA_WEBSOCKET: wss://hasura.editor.planx.uk/v1/graphql
           VITE_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
           VITE_APP_SHAREDB_URL: wss://sharedb.editor.planx.uk
-      - name: Upload Build Artifact
+      - name: Upload PlanX frontend build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build
+          name: planx_frontend_build
           path: ./${{ env.EDITOR_DIRECTORY }}/build
+          if-no-files-found: error
+
+  build_localplanning_services:
+    name: Build localplanning.services
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+      # https://docs.github.com/en/free-pro-team@latest/actions/guides/caching-dependencies-to-speed-up-workflows#using-the-cache-action
+      - name: NPM cache
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-npm
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: PNPM cache
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-pnpm
+        with:
+          # pnpm cache files are stored in `~/.local/share/pnpm/store` on Linux
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - run: npm install -g pnpm@${{ vars.PNPM_VERSION }}
+      - name: Setup .gitconfig
+        run: mv .gitconfig ~/.gitconfig
+      - run: pnpm install --frozen-lockfile
+        working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
+      - run: pnpm build --site https://localplanning.services --mode production
+        working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
+      - name: Upload LocalPlanning.services build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: localplanning_services_build
+          path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
           if-no-files-found: error
 
   preview:
     name: Pulumi Up
-    needs: build_react
+    needs:
+      - build_planx_frontend
+      - build_localplanning_services
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -93,11 +143,17 @@ jobs:
         working-directory: infrastructure/application
       - run: pnpm install --frozen-lockfile
         working-directory: infrastructure/application
-      - name: Download Build Artifact
+      - name: Download PlanX frontend build artifact
         uses: actions/download-artifact@v4
         with:
-          name: build
+          name: planx_frontend_build
           path: ./${{ env.EDITOR_DIRECTORY }}/build
+
+      - name: Download LocalPlanning.services build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: localplanning_services_build
+          path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
       - uses: pulumi/actions@v5
         with:
           command: up

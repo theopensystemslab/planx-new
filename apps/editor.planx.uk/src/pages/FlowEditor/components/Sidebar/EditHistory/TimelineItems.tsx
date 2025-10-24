@@ -3,16 +3,12 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { formatOps } from "@planx/graph";
+import { CommentHistoryItem, OperationHistoryItem, PublishHistoryItem } from "api/publishFlow/types";
 import { Store } from "pages/FlowEditor/lib/store";
 import React from "react";
 import BlockQuote from "ui/editor/BlockQuote";
 
 import { isAutoComment } from "../utils";
-import type {
-  CommentHistoryItem,
-  OperationHistoryItem,
-  PublishHistoryItem,
-} from ".";
 
 /**
  * Timeline items are one of three event "types":

@@ -1,0 +1,1 @@
+SELECT cron.unschedule('daily-lps-magic-link-cleanup');

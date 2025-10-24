@@ -6,9 +6,11 @@ import { ApolloProvider } from "@apollo/client";
 import CssBaseline from "@mui/material/CssBaseline";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { MyMap } from "@opensystemslab/map";
+import { QueryClientProvider } from "@tanstack/react-query"
 import { ToastContextProvider } from "contexts/ToastContext";
 import { getCookie, setCookie } from "lib/cookie";
 import { initFeatureFlags } from "lib/featureFlags";
+import { queryClient } from "lib/queryClient";
 import ErrorPage from "pages/ErrorPage/ErrorPage";
 import { AnalyticsProvider } from "pages/FlowEditor/lib/analytics/provider";
 import React, { Suspense, useEffect } from "react";
@@ -98,20 +100,22 @@ const Layout: React.FC<{
 
 root.render(
   <ToastContextProvider>
-    <ApolloProvider client={client}>
-      <AnalyticsProvider>
-        <Router context={{ currentUser: hasJWT() }} navigation={navigation}>
-          <HelmetProvider>
-            <Layout>
-              <CssBaseline />
-              <Suspense fallback={null}>
-                <View />
-              </Suspense>
-            </Layout>
-          </HelmetProvider>
-        </Router>
-      </AnalyticsProvider>
-    </ApolloProvider>
+    <QueryClientProvider client={queryClient}>
+      <ApolloProvider client={client}>
+        <AnalyticsProvider>
+          <Router context={{ currentUser: hasJWT() }} navigation={navigation}>
+            <HelmetProvider>
+              <Layout>
+                <CssBaseline />
+                <Suspense fallback={null}>
+                  <View />
+                </Suspense>
+              </Layout>
+            </HelmetProvider>
+          </Router>
+        </AnalyticsProvider>
+      </ApolloProvider>
+    </QueryClientProvider>
     <ToastContainer icon={false} theme="colored" />
   </ToastContextProvider>,
 );

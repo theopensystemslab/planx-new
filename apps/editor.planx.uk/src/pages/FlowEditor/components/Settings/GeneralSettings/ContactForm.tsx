@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ChangeEvent } from "react";
@@ -6,11 +5,12 @@ import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input/Input";
 import * as Yup from "yup";
 
+import { useSlackMessage } from "../hooks/useSlackMessage";
 import { SettingsForm } from "../shared/SettingsForm";
 import { FormProps } from ".";
 
 export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
-  const [teamSlug, token, helpEmail] = useStore((state) => [
+  const [teamSlug, helpEmail] = useStore((state) => [
     state.teamSlug,
     state.jwt,
     state.teamSettings.helpEmail,
@@ -60,30 +60,11 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
   const onChangeFn = (type: string, event: ChangeEvent<HTMLInputElement>) =>
     formik.setFieldValue(type, event.target.value);
 
+  const { mutate: sendSlackMessage } = useSlackMessage();
+
   const sendEmailChangeSlackNotification = async (newEmail: string) => {
-    const skipTeamSlugs = [
-      "open-digital-planning",
-      "opensystemslab",
-      "planx-university",
-      "templates",
-      "testing",
-      "wikihouse",
-    ];
-    if (skipTeamSlugs.includes(teamSlug)) return;
-
     const message = `:e-mail: *${teamSlug}* updated their Gov UK Notify reply-to email to *${newEmail}*; ensure this is configured in Gov UK Notify dashboard.`;
-
-    return axios.post(
-      `${import.meta.env.VITE_APP_API_URL}/send-slack-notification`,
-      {
-        message: message,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
+    sendSlackMessage(message);
   };
 
   return (

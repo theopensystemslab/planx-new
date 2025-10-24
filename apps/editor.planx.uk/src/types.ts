@@ -54,16 +54,6 @@ export enum ApplicationPath {
   SaveAndReturn,
 }
 
-/**
- * Body of request posted to /send-email endpoint
- * XXX: Matches the body created by a Hasura scheduled event - see tables.yml
- */
-export interface SendEmailPayload {
-  payload: {
-    email: string | undefined;
-    sessionId: string;
-  };
-}
 export type Session = {
   passport: Store.Passport;
   breadcrumbs: Store.Breadcrumbs;
@@ -74,13 +64,6 @@ export type Session = {
   /** Only present on sessions for flow which utilise "Section" components */
   progress?: Progress;
 };
-
-export interface ReconciliationResponse {
-  message: string;
-  changesFound: boolean | null;
-  alteredSectionIds?: string[];
-  reconciledSessionData: Omit<Session, "passport">;
-}
 
 // re-export store types
 export type Passport = Store.Passport;
