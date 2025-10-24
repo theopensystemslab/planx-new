@@ -115,9 +115,7 @@ export const ContextMenu: React.FC = () => {
   const getActions = (): ContextMenuAction[] => {
     const hasCopiedNode = Boolean(copiedNode);
     const hasClonedNode = Boolean(clonedNodeId && getNode(clonedNodeId));
-    const hasCutNode = Boolean(
-      cutPayload && getNode((cutPayload as any)?.rootId),
-    );
+    const hasCutNode = Boolean(cutPayload && getNode(cutPayload.rootId));
     const isPasteEnabled = hasCopiedNode || hasClonedNode || hasCutNode;
 
     if (source === "node") {
