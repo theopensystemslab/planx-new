@@ -1,3 +1,4 @@
+import { FlowGraph } from "@opensystemslab/planx-core/types";
 import apiClient from "api/client";
 
 import { CreateFlowResponse, NewFlow } from "./types";
@@ -59,3 +60,11 @@ export const moveFlow = async ({
   );
   return data;
 };
+
+export const getFlattenedFlowData = async({ flowId, isDraft = false }: { flowId: string, isDraft?: boolean }) => {
+  const { data } = await apiClient.get<FlowGraph>(
+    `/flows/${flowId}/flatten-data`, 
+    { params: { draft: isDraft } }
+  );
+  return data;
+}
