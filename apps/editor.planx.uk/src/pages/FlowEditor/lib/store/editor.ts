@@ -38,6 +38,7 @@ import { persist } from "zustand/middleware";
 import { FlowLayout } from "../../components/Flow";
 import { getFlowDoc, subscribeToDoc } from "./../sharedb";
 import { type Store } from ".";
+import { NavigationStore } from "./navigation";
 import type { SharedStore } from "./shared";
 import { UserStore } from "./user";
 
@@ -288,7 +289,7 @@ export interface EditorStore extends Store.Store {
 }
 
 export const editorStore: StateCreator<
-  SharedStore & EditorStore & UserStore,
+  SharedStore & EditorStore & UserStore & NavigationStore,
   [],
   [],
   EditorStore
@@ -352,6 +353,7 @@ export const editorStore: StateCreator<
     const cloneStateFromShareDb = () => {
       const flow = JSON.parse(JSON.stringify(doc.data));
       set({ flow });
+      get().initNavigationStore();
     };
 
     // set state from initial load
