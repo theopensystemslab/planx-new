@@ -99,6 +99,7 @@
     "@babel/preset-env": "^7.22.6",
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.23.3",
+    "@mswjs/interceptors": "^0.40.0",
     "@react-theming/storybook-addon": "^1.1.10",
     "@storybook/addon-a11y": "^8.6.12",
     "@storybook/addon-actions": "^8.6.12",
