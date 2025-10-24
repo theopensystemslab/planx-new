@@ -1,3 +1,4 @@
+import ContentCutIcon from "@mui/icons-material/ContentCut";
 import ContentPaste from "@mui/icons-material/ContentPaste";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -10,7 +11,6 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import * as React from "react";
 import CloneIcon from "ui/icons/Clone";
 import CopyIcon from "ui/icons/Copy";
-import CutIcon from "ui/icons/Cut";
 
 export type ContextMenuSource = "node" | "hanger" | null;
 
@@ -139,7 +139,7 @@ export const ContextMenu: React.FC = () => {
         {
           id: "cut",
           label: "Cut",
-          icon: <CutIcon fontSize="small" />,
+          icon: <ContentCutIcon fontSize="small" />,
           disabled: false,
           onClick: handleCut,
         },
