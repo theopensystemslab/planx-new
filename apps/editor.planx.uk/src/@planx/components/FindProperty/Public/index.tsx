@@ -1,7 +1,6 @@
 import { gql } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
@@ -25,6 +24,7 @@ import {
 } from "../model";
 import PickOSAddress from "./Autocomplete";
 import PlotNewAddress from "./Map";
+import { AddressLoadingWrap } from "./styles";
 
 // This query is exported because tests require it
 export const FETCH_BLPU_CODES = gql`
@@ -38,26 +38,6 @@ export const FETCH_BLPU_CODES = gql`
 `;
 
 type Props = PublicProps<FindProperty>;
-
-const AddressLoadingWrap = styled(Box)(({ theme }) => ({
-  marginBottom: theme.spacing(-2.5),
-  minHeight: theme.spacing(3),
-  pointerEvents: "none",
-  [theme.breakpoints.up("md")]: {
-    position: "relative",
-    margin: 0,
-    height: 0,
-    minHeight: 0,
-    "& > div": {
-      position: "absolute",
-      top: theme.spacing(5.5),
-      justifyContent: "flex-start",
-      paddingLeft: theme.spacing(16),
-    },
-  },
-}));
-
-export default Component;
 
 function Component(props: Props) {
   const previouslySubmittedData = props.previouslySubmittedData?.data;
@@ -297,3 +277,5 @@ function Component(props: Props) {
     }
   }
 }
+
+export default Component;
