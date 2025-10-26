@@ -1,4 +1,4 @@
-import { uploadPrivateFile } from "api/fileUpload/requests";
+import { uploadPrivateFile } from "lib/api/upload";
 import React from "react";
 import { setup } from "testUtils";
 import { it, test, vi } from "vitest";

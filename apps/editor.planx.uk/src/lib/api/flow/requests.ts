@@ -1,5 +1,5 @@
 import { FlowGraph } from "@opensystemslab/planx-core/types";
-import apiClient from "api/client";
+import apiClient from "lib/api/client";
 
 import { CreateFlowResponse, NewFlow } from "./types";
 

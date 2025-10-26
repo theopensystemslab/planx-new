@@ -1,5 +1,5 @@
-import { getFlattenedFlowData } from "api/flow/requests";
 import gql from "graphql-tag";
+import { getFlattenedFlowData } from "lib/api/flow/requests";
 import { publicClient } from "lib/graphql";
 import { queryClient } from "lib/queryClient";
 import { NaviRequest, NotFoundError } from "navi";

@@ -1,4 +1,4 @@
-import { NewFlow } from "api/flow/types";
+import { NewFlow } from "lib/api/flow/types";
 import { boolean, number, object, string } from "yup";
 
 export const validationSchema = object().shape({

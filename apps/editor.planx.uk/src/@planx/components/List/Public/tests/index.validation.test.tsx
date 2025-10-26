@@ -1,5 +1,5 @@
 import { screen, waitFor } from "@testing-library/react";
-import { uploadPrivateFile } from "api/fileUpload/requests";
+import { uploadPrivateFile } from "lib/api/upload";
 import { cloneDeep, merge } from "lodash";
 import React from "react";
 import { setup } from "testUtils";

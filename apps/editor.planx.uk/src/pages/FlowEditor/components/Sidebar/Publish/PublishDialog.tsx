@@ -14,7 +14,7 @@ import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { AlteredNode, HistoryItem, PublishFlowArgs, TemplatedFlows, ValidationCheck } from "api/publishFlow/types";
+import { AlteredNode, HistoryItem, PublishFlowArgs, TemplatedFlows, ValidationCheck } from "lib/api/publishFlow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { FONT_WEIGHT_BOLD } from "theme";

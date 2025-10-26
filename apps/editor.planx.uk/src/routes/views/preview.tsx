@@ -1,4 +1,4 @@
-import { getFlattenedFlowData } from "api/flow/requests";
+import { getFlattenedFlowData } from "lib/api/flow/requests";
 import { queryClient } from "lib/queryClient";
 import { NaviRequest, NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";

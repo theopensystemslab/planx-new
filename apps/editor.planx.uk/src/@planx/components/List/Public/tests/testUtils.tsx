@@ -1,8 +1,8 @@
 import { screen, waitFor } from "@testing-library/react";
 // eslint-disable-next-line no-restricted-imports
 import type { UserEvent } from "@testing-library/user-event";
-import { uploadPrivateFile } from "api/fileUpload/requests";
-import { vi } from "vitest";
+import { uploadPrivateFile } from "lib/api/upload";
+import { Mock, vi } from "vitest";
 
 global.URL.createObjectURL = vi.fn();
 
