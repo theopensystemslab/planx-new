@@ -1,5 +1,5 @@
 import { screen, waitFor } from "@testing-library/react";
-import { uploadPrivateFile } from "api/upload";
+import { uploadPrivateFile } from "api/fileUpload/requests";
 import { cloneDeep, merge } from "lodash";
 import React from "react";
 import { setup } from "testUtils";
@@ -16,12 +16,12 @@ const mocks = vi.hoisted(() => {
   return {
     uploadPrivateFile: vi.fn((file, { onProgress }) => {
       onProgress?.({ progress: 100 });
-      return Promise.resolve(`https://mock-url/${file.name}`);
+      return Promise.resolve({ fileUrl: `https://mock-url/${file.name}` });
     }),
   };
 });
 
-vi.mock("api/upload", () => ({
+vi.mock("api/fileUpload/requests", () => ({
   uploadPrivateFile: mocks.uploadPrivateFile,
 }));
 

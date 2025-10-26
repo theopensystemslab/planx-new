@@ -1,7 +1,7 @@
 import { screen } from "@testing-library/react";
 // eslint-disable-next-line no-restricted-imports
 import type { UserEvent } from "@testing-library/user-event";
-import { uploadPrivateFile } from "api/upload";
+import { uploadPrivateFile } from "api/fileUpload/requests";
 import { Mock, vi } from "vitest";
 
 global.URL.createObjectURL = vi.fn();
