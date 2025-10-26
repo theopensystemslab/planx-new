@@ -1,6 +1,8 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { screen } from "@testing-library/react";
+import { http, HttpResponse } from "msw";
 import React from "react";
+import server from "test/mockServer";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
@@ -127,15 +129,14 @@ const proposedAddressProps = {
   "findProperty.action": "Proposed a new address",
 };
 
-vi.mock("swr", () => ({
-  default: vi.fn((url: any) => {
-    return {
-      data: url()?.startsWith("https://www.planning.data.gov.uk")
-        ? localAuthorityMock
-        : null,
-    };
-  }),
-}));
+const handler = http.get(
+  "https://www.planning.data.gov.uk/*",
+  async () => HttpResponse.json(localAuthorityMock, { status: 200 })
+);
+
+beforeEach(() => {
+  server.use(handler);
+});
 
 describe("render states", () => {
   it("renders correctly and defaults to the address autocomplete page", async () => {
