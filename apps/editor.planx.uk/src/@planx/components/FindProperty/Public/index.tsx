@@ -120,15 +120,21 @@ function Component(props: Props) {
     }
   };
 
+  const getValidStatus = () => {
+    // Continue button enabled unless actively fetching
+    if (page === "new-address") return !address || !isPending;
+
+    // Continue button enabled once we have an address and not actively fetching
+    if (page === "os-address") return Boolean(address) && !isPending;
+  }
+  
+  const isValid = getValidStatus();
+
   return (
     <Card
       sx={{ marginBottom: "220px" }}
       handleSubmit={validateAndSubmit}
-      isValid={
-        page === "new-address" && !isPending
-          ? true
-          : Boolean(address) && !isPending
-      }
+      isValid={isValid}
     >
       {getBody()}
     </Card>
