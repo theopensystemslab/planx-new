@@ -9,6 +9,7 @@ import { squareMetresToHectares } from "@planx/components/shared/utils";
 import area from "@turf/area";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { Feature } from "geojson";
+import { getFindPropertyData } from "lib/planningData/requests";
 import { Store } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
@@ -67,27 +68,15 @@ function Component(props: Props) {
   const [wards, setWards] = useState<string[] | undefined>();
   const [titleBoundary, setTitleBoundary] = useState<Feature | undefined>();
 
-  // Use the address point to fetch the title boundary, Local Authority District(s), region & ward via Digital Land
-  const options = new URLSearchParams({
-    entries: "all", // includes historic for pre-merger LADs (eg Wycombe etc for Uniform connector mappings)
-    geometry: `POINT(${address?.longitude} ${address?.latitude})`,
-    geometry_relation: "intersects",
-    limit: "100",
-  });
-  options.append("dataset", "local-authority-district");
-  options.append("dataset", "local-planning-authority");
-  options.append("dataset", "region"); // proxy for Greater London Authority (GLA) boundary
-  options.append("dataset", "ward");
-  options.append("dataset", "title-boundary");
-
-  // https://www.planning.data.gov.uk/docs#/Search%20entity
-  const root = `https://www.planning.data.gov.uk/entity.geojson?`;
-  const digitalLandEndpoint = root + options;
-  const fetcher = (url: string) => fetch(url).then((r) => r.json());
   const { data, isValidating } = useSWR(
     () =>
-      address?.latitude && address?.longitude ? digitalLandEndpoint : null,
-    fetcher,
+      address?.latitude && address?.longitude 
+      ? { 
+          latitude: address.latitude,
+          longitude: address.longitude,
+        } 
+      : null,
+    getFindPropertyData,
     {
       shouldRetryOnError: true,
       errorRetryInterval: 500,
