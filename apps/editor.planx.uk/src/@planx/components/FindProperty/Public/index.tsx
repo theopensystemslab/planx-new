@@ -9,10 +9,8 @@ import { squareMetresToHectares } from "@planx/components/shared/utils";
 import area from "@turf/area";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { Feature } from "geojson";
-import { getFindPropertyData } from "lib/planningData/requests";
 import { Store } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useState } from "react";
-import useSWR from "swr";
+import React, { useState } from "react";
 import ExternalPlanningSiteDialog, {
   DialogPurpose,
 } from "ui/public/ExternalPlanningSiteDialog";
@@ -24,6 +22,7 @@ import {
   SiteAddress,
 } from "../model";
 import PickOSAddress from "./Autocomplete";
+import { useFindPropertyData } from "./hooks/useFindPropertyData";
 import PlotNewAddress from "./Map";
 import { AddressLoadingWrap } from "./styles";
 
@@ -58,64 +57,18 @@ function Component(props: Props) {
   const [address, setAddress] = useState<SiteAddress | undefined>(
     previouslySubmittedData?._address,
   );
-  const [localAuthorityDistricts, setLocalAuthorityDistricts] = useState<
-    string[] | undefined
-  >();
-  const [localPlanningAuthorities, setLocalPlanningAuthorities] = useState<
-    string[] | undefined
-  >();
-  const [regions, setRegions] = useState<string[] | undefined>();
-  const [wards, setWards] = useState<string[] | undefined>();
-  const [titleBoundary, setTitleBoundary] = useState<Feature | undefined>();
 
-  const { data, isValidating } = useSWR(
-    () =>
-      address?.latitude && address?.longitude 
-      ? { 
-          latitude: address.latitude,
-          longitude: address.longitude,
-        } 
-      : null,
-    getFindPropertyData,
-    {
-      shouldRetryOnError: true,
-      errorRetryInterval: 500,
-      errorRetryCount: 1,
-    },
-  );
-
-  useEffect(() => {
-    if (address && data?.features?.length > 0) {
-      const lads: string[] = [];
-      const lpas: string[] = [];
-      const regions: string[] = [];
-      const wards: string[] = [];
-      let title: Feature | undefined;
-
-      data.features.forEach((feature: any) => {
-        if (feature.properties.dataset === "local-authority-district") {
-          lads.push(feature.properties.name);
-        } else if (feature.properties.dataset === "local-planning-authority") {
-          lpas.push(feature.properties.name);
-        } else if (feature.properties.dataset === "region") {
-          regions.push(feature.properties.name);
-        } else if (feature.properties.dataset === "ward") {
-          wards.push(feature.properties.name);
-        } else if (feature.properties.dataset === "title-boundary") {
-          title = feature;
-        }
-      });
-
-      setLocalAuthorityDistricts([...new Set(lads)]);
-      setLocalPlanningAuthorities([...new Set(lpas)]);
-      setRegions([...new Set(regions)]);
-      setWards([...new Set(wards)]);
-      setTitleBoundary(title);
-    }
-  }, [data, address]);
+  const { 
+    localAuthorityDistricts,
+    localPlanningAuthorities,
+    regions,
+    wards,
+    titleBoundary,
+    isPending,
+  } = useFindPropertyData(address);
 
   const validateAndSubmit = () => {
-    // TODO `if (isValidating)` on either page, wrap Continue button in error mesage?
+    // TODO `if (isPending)` on either page, wrap Continue button in error mesage?
 
     if (page === "new-address") {
       if (address?.x === undefined && address?.y === undefined)
@@ -172,9 +125,9 @@ function Component(props: Props) {
       sx={{ marginBottom: "220px" }}
       handleSubmit={validateAndSubmit}
       isValid={
-        page === "new-address" && !isValidating
+        page === "new-address" && !isPending
           ? true
-          : Boolean(address) && !isValidating
+          : Boolean(address) && !isPending
       }
     >
       {getBody()}
@@ -204,7 +157,7 @@ function Component(props: Props) {
             showSiteDescriptionError={showSiteDescriptionError}
             setShowSiteDescriptionError={setShowSiteDescriptionError}
           />
-          {Boolean(address) && isValidating && (
+          {Boolean(address) && isPending && (
             <DelayedLoadingIndicator
               msDelayBeforeVisible={50}
               text="Fetching data..."
@@ -253,7 +206,7 @@ function Component(props: Props) {
             </Box>
           )}
           <AddressLoadingWrap>
-            {Boolean(address) && isValidating && (
+            {Boolean(address) && isPending && (
               <DelayedLoadingIndicator
                 msDelayBeforeVisible={50}
                 text="Finding information about the property"
