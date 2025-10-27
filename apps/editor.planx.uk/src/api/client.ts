@@ -2,6 +2,12 @@ import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { toast } from "react-toastify";
 
+export interface APIError<T> {
+  message: string;
+  statusCode: number
+  data: T
+}
+
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_APP_API_URL,
   headers: {
@@ -41,7 +47,8 @@ apiClient.interceptors.response.use(
       return Promise.reject({
         message: "Unauthenticated",
         statusCode: 401,
-      });
+        data: error.response?.data,
+      } as APIError<unknown>);
     }
 
     if (status === 403) {
@@ -54,15 +61,15 @@ apiClient.interceptors.response.use(
       return Promise.reject({
         message: "Unauthorised",
         statusCode: 403,
-      });
+        data: error.response?.data,
+      } as APIError<unknown>);
     }
 
     const apiError = {
-      message:
-        error.message || error.response?.data || "An unexpected error occurred",
+      message: error.message || "An unexpected error occurred",
       statusCode: status,
       data: error.response?.data,
-    };
+    } as APIError<unknown>
 
     console.error("[API Error]:", apiError);
     return Promise.reject(apiError);
