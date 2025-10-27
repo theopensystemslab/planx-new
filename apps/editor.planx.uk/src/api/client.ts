@@ -20,7 +20,7 @@ apiClient.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 /**
@@ -36,9 +36,6 @@ apiClient.interceptors.response.use(
         toastId: "api_unauthenticated_error",
         hideProgressBar: false,
         autoClose: 4_000,
-        onClose: () => {
-          window.location.href = "/logout";
-        },
       });
 
       return Promise.reject({
@@ -61,14 +58,15 @@ apiClient.interceptors.response.use(
     }
 
     const apiError = {
-      message: error.message || error.response?.data || "An unexpected error occurred",
+      message:
+        error.message || error.response?.data || "An unexpected error occurred",
       statusCode: status,
       data: error.response?.data,
     };
 
     console.error("[API Error]:", apiError);
     return Promise.reject(apiError);
-  }
+  },
 );
 
 export default apiClient;

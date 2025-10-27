@@ -21,7 +21,8 @@ import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { useStore } from "../FlowEditor/lib/store";
 import { FlowCardView, FlowSummary } from "../FlowEditor/lib/store/editor";
 import { AddFlow } from "./components/AddFlow";
-import FlowCard, { Card, CardContent } from "./components/FlowCard";
+import FlowCard from "./components/FlowCard";
+import { Card, CardContent } from "./components/FlowCard/styles";
 import { ShowingServicesHeader } from "./components/ShowingServicesHeader";
 import { filterOptions, sortOptions } from "./helpers/sortAndFilterOptions";
 
@@ -285,11 +286,7 @@ const Team: React.FC = () => {
                     flow={flow}
                     flows={flows}
                     key={flow.slug}
-                    teamId={teamId}
-                    teamSlug={slug}
-                    refreshFlows={() => {
-                      fetchFlows();
-                    }}
+                    refreshFlows={fetchFlows}
                   />
                 ))}
               </DashboardList>

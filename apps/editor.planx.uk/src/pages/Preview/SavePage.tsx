@@ -1,20 +1,13 @@
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import axios from "axios";
+import { useMutation } from "@tanstack/react-query";
+import { sendSaveEmail } from "api/saveAndReturn/requests";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
-import { add } from "date-fns";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useState } from "react";
-import { SendEmailPayload } from "types";
+import React, { useEffect } from "react";
 import { removeSessionIdSearchParam } from "utils";
 
 import StatusPage from "./StatusPage";
-
-enum Status {
-  Sending,
-  Success,
-  Error,
-}
 
 export const SaveSuccess: React.FC<{
   saveToEmail?: string;
@@ -65,41 +58,35 @@ export const SaveError: React.FC = () => {
 };
 
 const SavePage: React.FC = () => {
-  const saveToEmail = useStore((state) => state.saveToEmail);
-  // Assume rolling 28 days - just a placeholder value in case of backend failure
-  const placeholderExpiryDate = add(new Date(), { days: 28 }).toDateString();
+  const [saveToEmail, sessionId] = useStore((state) => [
+    state.saveToEmail,
+    state.sessionId,
+  ]);
 
-  const [pageStatus, setPageStatus] = useState<Status>(Status.Sending);
-  const [expiryDate, setExpiryDate] = useState<string>(placeholderExpiryDate);
-
-  const sendNotifyEmail = async () => {
-    const url = `${import.meta.env.VITE_APP_API_URL}/send-email/save`;
-    const { sessionId } = useStore.getState();
-    const data: SendEmailPayload = {
-      payload: { email: saveToEmail, sessionId },
-    };
-    try {
-      const response = await axios.post(url, data);
-      setPageStatus(Status.Success);
-      setExpiryDate(response?.data?.expiryDate || placeholderExpiryDate);
-    } catch (error) {
-      console.error(error);
-      setPageStatus(Status.Error);
-      // TODO: Catch error details here
-    }
-  };
+  const {
+    mutate: sendNotifyEmail,
+    isSuccess,
+    isError,
+    data,
+  } = useMutation({
+    mutationFn: sendSaveEmail,
+    onError: (error) => console.error(error),
+  });
 
   useEffect(() => {
-    saveToEmail ? sendNotifyEmail() : setPageStatus(Status.Error);
-  }, []);
+    if (!saveToEmail) return;
 
-  return {
-    [Status.Sending]: <DelayedLoadingIndicator text={"Sending..."} />,
-    [Status.Success]: (
-      <SaveSuccess saveToEmail={saveToEmail} expiryDate={expiryDate} />
-    ),
-    [Status.Error]: <SaveError />,
-  }[pageStatus];
+    sendNotifyEmail({ payload: { sessionId, email: saveToEmail } });
+  }, [sendNotifyEmail, sessionId, saveToEmail]);
+
+  if (!saveToEmail || isError) return <SaveError />;
+  if (isSuccess) {
+    return (
+      <SaveSuccess saveToEmail={saveToEmail} expiryDate={data.expiryDate} />
+    );
+  }
+
+  return <DelayedLoadingIndicator text={"Saving..."} />;
 };
 
 export default SavePage;

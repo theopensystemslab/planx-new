@@ -183,23 +183,36 @@ export const createLPSCertificates = (
 };
 
 const createCNAMERecords = (domain: string, cdn: aws.cloudfront.Distribution) => {
-  new cloudflare.Record("localplanningservices", {
-    name: domain,
-    type: "CNAME",
-    zoneId: config.require("cloudflare-zone-id"),
-    value: cdn.domainName,
-    ttl: 1,
-    proxied: false, // This was causing infinite HTTPS redirects, so let's just use CloudFront only
-  });
-
-  if (env === "production") {
-    new cloudflare.Record("localplanningservices-www", {
-      name: `www.${domain}`,
+  // Create record on planx.dev
+  if (env === "staging") {
+    new cloudflare.Record("localplanningservices", {
+      name: domain,
       type: "CNAME",
       zoneId: config.require("cloudflare-zone-id"),
       value: cdn.domainName,
       ttl: 1,
       proxied: false,
+    });
+  }
+  
+  // Create records on localplanning.services
+  if (env === "production") {
+    new cloudflare.Record("localplanningservices", {
+      name: domain,
+      type: "CNAME",
+      zoneId: config.require("lps-cloudflare-zone-id"),
+      value: cdn.domainName,
+      ttl: 1,
+      proxied: true,
+    });
+
+    new cloudflare.Record("localplanningservices-www", {
+      name: `www.${domain}`,
+      type: "CNAME",
+      zoneId: config.require("lps-cloudflare-zone-id"),
+      value: cdn.domainName,
+      ttl: 1,
+      proxied: true,
     });
   }
 }

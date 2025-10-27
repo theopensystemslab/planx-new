@@ -125,7 +125,7 @@ export const createHasuraService = async ({
             {
               name: "HASURA_GRAPHQL_CORS_DOMAIN",
               value: pulumi
-                .all([CUSTOM_DOMAINS, DOMAIN, config.get("lps-domain")])
+                .all([CUSTOM_DOMAINS, DOMAIN, config.require("lps-domain")])
                 .apply(([customDomains, domain, lpsDomain]) => {
                   const corsUrls = [
                     // Wildcard and exact domains for custom domains
@@ -137,7 +137,7 @@ export const createHasuraService = async ({
                     `https://*.${domain}`,
                     `https://${domain}`,
                     // Additional domains
-                    lpsDomain ? `https://${lpsDomain}` : "",
+                    `https://${lpsDomain}`,
                     "https://planx-website.webflow.io",
                     "https://www.planx.uk",
                   ];
