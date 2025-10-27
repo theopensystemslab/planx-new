@@ -4,8 +4,8 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import {
-  ComponentType as TYPES,
   NodeId,
+  ComponentType as TYPES,
 } from "@opensystemslab/planx-core/types";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
@@ -25,7 +25,9 @@ export default SummaryListsBySections;
 
 /** These component types don't use their node title as the descriptive list title */
 const FIND_PROPERTY_DT = "Property address";
+const PROPERTY_INFORMATION_DT = "Property type";
 const DRAW_BOUNDARY_DT = "Location plan";
+const PLANNING_CONSTRAINTS_DT = "Planning constraints";
 
 export const SummaryListTable = styled("dl", {
   shouldForwardProp: (prop) =>
@@ -117,8 +119,8 @@ const presentationalComponents: {
   [TYPES.NumberInput]: NumberInput,
   [TYPES.Page]: Page,
   [TYPES.Pay]: undefined,
-  [TYPES.PlanningConstraints]: undefined,
-  [TYPES.PropertyInformation]: undefined,
+  [TYPES.PlanningConstraints]: PlanningConstraints,
+  [TYPES.PropertyInformation]: PropertyInformation,
   [TYPES.Answer]: Debug,
   [TYPES.ResponsiveChecklist]: undefined,
   [TYPES.ResponsiveQuestion]: undefined,
@@ -343,6 +345,30 @@ interface ComponentProps {
   nodeId: NodeId;
 }
 
+function PropertyInformation(props: ComponentProps) {
+  // TODO join to human-readable property type display name via blpu_codes (refactor to query hook)
+  return (
+    <>
+      <Box component="dt">{PROPERTY_INFORMATION_DT}</Box>
+      <Box component="dd">{props.passport.data?.["property.type"]?.[0] || `Unknown`}</Box>
+    </>
+  );
+}
+
+function PlanningConstraints(props: ComponentProps) {
+  const applicableConstraints = props.passport.data?.["property.constraints.planning"];
+  const summary = applicableConstraints?.length > 0
+    ? `Planning constraints apply to this property`
+    : `No applicable planning constraints found for this property`;
+
+  return (
+    <>
+      <Box component="dt">{PLANNING_CONSTRAINTS_DT}</Box>
+      <Box component="dd">{summary}</Box>
+    </>
+  );
+}
+
 function List(props: ComponentProps) {
   // `...total.units` is only set when the schema includes a field with fn = `identicalUnits`
   const totalUnits = props.passport.data?.[`${props.node.data.fn}.total.units`];
@@ -510,9 +536,8 @@ function DrawBoundary(props: ComponentProps) {
               geojsonColor="#ff0000"
               geojsonFill
               geojsonBuffer={20}
-              osProxyEndpoint={`${
-                import.meta.env.VITE_APP_API_URL
-              }/proxy/ordnance-survey`}
+              osProxyEndpoint={`${import.meta.env.VITE_APP_API_URL
+                }/proxy/ordnance-survey`}
               hideResetControl
               staticMode
               style={{ width: "100%", height: "30vh" }}
@@ -534,9 +559,8 @@ function NumberInput(props: ComponentProps) {
   return (
     <>
       <Box component="dt">{props.node.data.title}</Box>
-      <Box component="dd">{`${getAnswersByNode(props)} ${
-        props.node.data.units ?? ""
-      }`}</Box>
+      <Box component="dd">{`${getAnswersByNode(props)} ${props.node.data.units ?? ""
+        }`}</Box>
     </>
   );
 }
@@ -609,8 +633,8 @@ function FileUploadAndLabel(props: ComponentProps) {
         <ul>
           {uniqueFilenames.length
             ? uniqueFilenames.map((filename, index) => (
-                <li key={index}>{filename}</li>
-              ))
+              <li key={index}>{filename}</li>
+            ))
             : "No files uploaded"}
         </ul>
       </Box>
@@ -667,7 +691,7 @@ function getAnswers(props: ComponentProps): string[] {
   try {
     const array = props!.userData!.answers!;
     if (Array.isArray(array)) return array;
-  } catch (err) {}
+  } catch (err) { }
   return [];
 }
 
@@ -680,6 +704,6 @@ function getAnswersByNode(props: ComponentProps): any {
   try {
     const variableName: string = props.node!.data!.fn!;
     return props.userData?.data![variableName || props.nodeId];
-  } catch (err) {}
+  } catch (err) { }
   return "";
 }
