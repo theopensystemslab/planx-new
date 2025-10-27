@@ -4,7 +4,6 @@ import { cloneDeep, merge } from "lodash";
 import React from "react";
 import { setup } from "testUtils";
 import { test, vi } from "vitest";
-import { Mock } from "vitest";
 
 import { mockZooProps } from "../../schemas/mocks/Zoo/props";
 import ListComponent from "..";
@@ -12,24 +11,14 @@ import { fillInResponse } from "./testUtils";
 
 Element.prototype.scrollIntoView = vi.fn();
 
-const mocks = vi.hoisted(() => {
-  return {
-    uploadPrivateFile: vi.fn((file, { onProgress }) => {
-      onProgress?.({ progress: 100 });
-      return Promise.resolve({ fileUrl: `https://mock-url/${file.name}` });
-    }),
-  };
+vi.mock("api/fileUpload/requests");
+const mockedUploadPrivateFile = vi.mocked(uploadPrivateFile, true);
+
+beforeEach(() => {
+  mockedUploadPrivateFile.mockClear();
 });
 
-vi.mock("api/fileUpload/requests", () => ({
-  uploadPrivateFile: mocks.uploadPrivateFile,
-}));
-
-const mockUpload: Mock<typeof uploadPrivateFile> = mocks.uploadPrivateFile;
-
 describe("Form validation and error handling", () => {
-  afterEach(() => mockUpload.mockReset());
-
   test(
     "form validation is triggered when saving an item",
     { timeout: 35_000 },
@@ -239,7 +228,7 @@ describe("Form validation and error handling", () => {
       expect(minNumberOfItems).toEqual(2);
 
       // Fill in one response only
-      await fillInResponse(user, mockUpload);
+      await fillInResponse(user);
 
       await user.click(getByTestId("continue-button"));
 
@@ -263,11 +252,11 @@ describe("Form validation and error handling", () => {
       expect(maxNumberOfItems).toEqual(3);
 
       // Complete three items
-      await fillInResponse(user, mockUpload);
+      await fillInResponse(user);
       await user.click(addItemButton);
-      await fillInResponse(user, mockUpload);
+      await fillInResponse(user);
       await user.click(addItemButton);
-      await fillInResponse(user, mockUpload);
+      await fillInResponse(user);
 
       const cards = getAllByTestId(/list-card/);
       waitFor(() => expect(cards).toHaveLength(3));

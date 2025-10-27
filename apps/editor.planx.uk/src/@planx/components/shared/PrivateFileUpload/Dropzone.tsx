@@ -116,7 +116,7 @@ export const Dropzone: React.FC<Props> = ({
                 setSlots((_files) =>
                   _files.map((_file) =>
                     _file.file === file
-                      ? { ..._file, fileUrl, status: "success" }
+                      ? { ..._file, url: fileUrl, status: "success" }
                       : _file,
                   ),
                 );

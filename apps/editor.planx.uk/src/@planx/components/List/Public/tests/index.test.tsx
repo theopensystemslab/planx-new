@@ -2,7 +2,6 @@ import { uploadPrivateFile } from "api/fileUpload/requests";
 import React from "react";
 import { setup } from "testUtils";
 import { it, test, vi } from "vitest";
-import { Mock } from "vitest";
 import { axe } from "vitest-axe";
 
 import { mockZooPayload } from "../../schemas/mocks/Zoo/payload";
@@ -12,20 +11,12 @@ import { fillInResponse } from "./testUtils";
 
 Element.prototype.scrollIntoView = vi.fn();
 
-const mocks = vi.hoisted(() => {
-  return {
-    uploadPrivateFile: vi.fn((file, { onProgress }) => {
-      onProgress?.({ progress: 100 });
-      return Promise.resolve({ fileUrl: `https://mock-url/${file.name}` });
-    }),
-  };
+vi.mock("api/fileUpload/requests");
+const mockedUploadPrivateFile = vi.mocked(uploadPrivateFile, true);
+
+beforeEach(() => {
+  mockedUploadPrivateFile.mockClear();
 });
-
-vi.mock("api/fileUpload/requests", () => ({
-  uploadPrivateFile: mocks.uploadPrivateFile,
-}));
-
-const mockUpload: Mock<typeof uploadPrivateFile> = mocks.uploadPrivateFile;
 
 describe("Basic UI", () => {
   it("renders correctly", () => {
@@ -131,7 +122,7 @@ test(
   async () => {
     const { getByText, user } = setup(<ListComponent {...mockZooProps} />);
 
-    await fillInResponse(user, mockUpload);
+    await fillInResponse(user);
 
     // Text input
     expect(getByText("What's their name?", { selector: "td" })).toBeVisible();
