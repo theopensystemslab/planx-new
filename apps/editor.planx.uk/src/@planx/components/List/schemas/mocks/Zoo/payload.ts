@@ -27,9 +27,9 @@ export const mockZooPayload = {
             },
             // IDs are generated at runtime and cannot be pre-determined
             id: expect.any(String),
-            progress: 0,
+            progress: 1,
             status: "success",
-            url: "https://mock-url/test1.png",
+            url: "https://api.editor.planx.dev/file/private/mock-nanoid/test1.png",
           },
           {
             file: {
@@ -37,9 +37,9 @@ export const mockZooPayload = {
               relativePath: "./test2.png",
             },
             id: expect.any(String),
-            progress: 0,
+            progress: 1,
             status: "success",
-            url: "https://mock-url/test2.png",
+            url: "https://api.editor.planx.dev/file/private/mock-nanoid/test2.png",
           },
         ],
       },
@@ -66,9 +66,9 @@ export const mockZooPayload = {
               relativePath: "./test1.png",
             },
             id: expect.any(String),
-            progress: 0,
+            progress: 1,
             status: "success",
-            url: "https://mock-url/test1.png",
+            url: "https://api.editor.planx.dev/file/private/mock-nanoid/test1.png",
           },
           {
             file: {
@@ -76,9 +76,9 @@ export const mockZooPayload = {
               relativePath: "./test2.png",
             },
             id: expect.any(String),
-            progress: 0,
+            progress: 1,
             status: "success",
-            url: "https://mock-url/test2.png",
+            url: "https://api.editor.planx.dev/file/private/mock-nanoid/test2.png",
           },
         ],
       },
@@ -121,9 +121,9 @@ export const mockZooPayload = {
           relativePath: "./test1.png",
         },
         id: expect.any(String),
-        progress: 0,
+        progress: 1,
         status: "success",
-        url: "https://mock-url/test1.png",
+        url: "https://api.editor.planx.dev/file/private/mock-nanoid/test1.png",
       },
       {
         file: {
@@ -131,9 +131,9 @@ export const mockZooPayload = {
           relativePath: "./test2.png",
         },
         id: expect.any(String),
-        progress: 0,
+        progress: 1,
         status: "success",
-        url: "https://mock-url/test2.png",
+        url: "https://api.editor.planx.dev/file/private/mock-nanoid/test2.png",
       },
       {
         file: {
@@ -141,9 +141,9 @@ export const mockZooPayload = {
           relativePath: "./test1.png",
         },
         id: expect.any(String),
-        progress: 0,
+        progress: 1,
         status: "success",
-        url: "https://mock-url/test1.png",
+        url: "https://api.editor.planx.dev/file/private/mock-nanoid/test1.png",
       },
       {
         file: {
@@ -151,9 +151,9 @@ export const mockZooPayload = {
           relativePath: "./test2.png",
         },
         id: expect.any(String),
-        progress: 0,
+        progress: 1,
         status: "success",
-        url: "https://mock-url/test2.png",
+        url: "https://api.editor.planx.dev/file/private/mock-nanoid/test2.png",
       },
     ],
   },

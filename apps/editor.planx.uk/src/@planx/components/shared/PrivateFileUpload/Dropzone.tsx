@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import { FileUploadSlot } from "@planx/components/FileUpload/model";
 import { useOptionalListContext } from "@planx/components/List/Public/Context";
 import handleRejectedUpload from "@planx/components/shared/handleRejectedUpload";
-import { uploadPrivateFile } from "api/upload";
+import { uploadPrivateFile } from "api/fileUpload/requests";
 import { nanoid } from "nanoid";
 import React from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
@@ -104,20 +104,19 @@ export const Dropzone: React.FC<Props> = ({
           ...acceptedFiles.map((file) => {
             // XXX: This is a non-blocking promise chain
             //      If a file is removed while it's being uploaded, nothing should break because we're using map()
-            uploadPrivateFile(file, {
-              onProgress: (progress) => {
+            uploadPrivateFile(file, 
+              (progress) => {
                 setSlots((_files) =>
                   _files.map((_file) =>
                     _file.file === file ? { ..._file, progress } : _file,
                   ),
                 );
-              },
             })
-              .then((url: string) => {
+              .then(({ fileUrl }) => {
                 setSlots((_files) =>
                   _files.map((_file) =>
                     _file.file === file
-                      ? { ..._file, url, status: "success" }
+                      ? { ..._file, url: fileUrl, status: "success" }
                       : _file,
                   ),
                 );
