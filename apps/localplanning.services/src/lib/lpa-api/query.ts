@@ -52,6 +52,5 @@ export const GET_LPAS_QUERY = gql`
     name
     slug
     summary
-    description
   }
 `;

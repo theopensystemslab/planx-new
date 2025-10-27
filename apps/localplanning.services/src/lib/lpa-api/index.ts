@@ -5,7 +5,6 @@ import { print } from "graphql";
 export interface Service {
   name: string;
   slug: string;
-  description: string | null;
   summary: string | null;
 }
 
