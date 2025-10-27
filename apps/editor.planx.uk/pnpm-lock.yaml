@@ -58,8 +58,8 @@ importers:
         specifier: 1.0.0-alpha.6
         version: 1.0.0-alpha.6
       '@opensystemslab/planx-core':
-        specifier: git+https://github.com/theopensystemslab/planx-core#5c1f901
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/5c1f901(@types/react@18.3.26)
+        specifier: git+https://github.com/theopensystemslab/planx-core#e57d16d
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/e57d16d(@types/react@18.3.26)
       '@tanstack/react-query':
         specifier: ^5.90.2
         version: 5.90.2(react@18.3.1)
@@ -2274,8 +2274,8 @@ packages:
   '@opensystemslab/map@1.0.0-alpha.6':
     resolution: {integrity: sha512-EBOgrgBRFNg8p+7nDFvh+K7N4NFQ7+epBXjE9w7h0u87q4M+nOpBwXNc67+UdDs+j8Mi+vQ2R+uJBIKF25NQ7g==}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/5c1f901':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/5c1f901}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/e57d16d':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/e57d16d}
     version: 1.0.0
 
   '@parcel/watcher-android-arm64@2.5.1':
@@ -5926,8 +5926,8 @@ packages:
     resolution: {integrity: sha512-a54IwgWPaeBCAAsv13YgmALOF1elABB08FxO9i+r4VFk5Vl4pKokRPeX8u5TCgSsPi6ec1otfLjdOpVcgbpshg==}
     hasBin: true
 
-  marked@16.3.0:
-    resolution: {integrity: sha512-K3UxuKu6l6bmA5FUwYho8CfJBlsUWAooKtdGgMcERSpF7gcBUrCGsLH7wDaaNOzwq18JzSUDyoEb/YsrqMac3w==}
+  marked@16.4.1:
+    resolution: {integrity: sha512-ntROs7RaN3EvWfy3EZi14H4YxmT6A5YvywfhO+0pm+cH/dnSQRmdAmoFIc3B9aiwTehyk7pESH4ofyBY+V5hZg==}
     engines: {node: '>= 20'}
     hasBin: true
 
@@ -10280,7 +10280,7 @@ snapshots:
     transitivePeerDependencies:
       - preact
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/5c1f901(@types/react@18.3.26)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/e57d16d(@types/react@18.3.26)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@18.3.26)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@18.3.26)(react@18.3.1))(@types/react@18.3.26)(react@18.3.1)
@@ -10296,7 +10296,7 @@ snapshots:
       graphql-request: 6.1.0(graphql@16.11.0)
       json-schema-to-typescript: 15.0.4
       lodash-es: 4.17.21
-      marked: 16.3.0
+      marked: 16.4.1
       prettier: 3.6.2
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -14643,7 +14643,7 @@ snapshots:
       punycode.js: 2.3.1
       uc.micro: 2.1.0
 
-  marked@16.3.0: {}
+  marked@16.4.1: {}
 
   material-colors@1.2.6: {}
 
