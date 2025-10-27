@@ -38,6 +38,7 @@ const FlowCardMenu: React.FC<Props> = ({
   const handleArchive = async () => {
     try {
       await archiveFlow(flow);
+      setOpenDialog(null);
       toast.success("Archived flow");
     } catch (error) {
       toast.error(
