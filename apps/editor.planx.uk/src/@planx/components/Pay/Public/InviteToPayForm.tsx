@@ -104,9 +104,9 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
 
   const {
     mutate: sendITP,
-    error,
+    isError,
     isPending,
-  } = useMutation<PaymentRequest, APIError, CreatePaymentRequest>({
+  } = useMutation<PaymentRequest, APIError<unknown>, CreatePaymentRequest>({
     mutationKey: ["inviteToPay", sessionId],
     mutationFn: (createPaymentRequest) =>
       generateInviteToPayRequest({ sessionId, ...createPaymentRequest }),
@@ -230,7 +230,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
             no longer be able to make changes.
           </Typography>
         </WarningContainer>
-        {error ? (
+        {isError ? (
           <ErrorWrapper
             error={
               isTestEnvironment
