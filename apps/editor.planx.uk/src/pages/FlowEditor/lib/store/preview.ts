@@ -93,7 +93,7 @@ export interface PreviewStore extends Store.Store {
       [flagId: string]: { heading?: string; description?: string };
     },
   ) => ResultData;
-  resumeSession: (session: Session) => void;
+  resumeSession: (session: Omit<Session, "passport">) => void;
   sessionId: string;
   upcomingCardIds: () => NodeId[];
   isFinalCard: () => boolean;
@@ -472,7 +472,7 @@ export const previewStore: StateCreator<
     } as ResultData;
   },
 
-  resumeSession(session: Session) {
+  resumeSession(session) {
     // Hasura sorts JSONB data alphabetically by key value on insert/update
     // It is vital that we always re-sort breadcrumbs data (by flow depth) on resume
     // Without this, the user's passport will not generate correctly

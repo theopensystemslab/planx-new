@@ -7,7 +7,6 @@ import {
   Operation,
   split,
 } from "@apollo/client";
-import { GraphQLErrors } from "@apollo/client/errors";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { RetryLink } from "@apollo/client/link/retry";

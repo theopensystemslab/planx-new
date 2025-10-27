@@ -156,6 +156,9 @@ $fontMonospace: "Source Code Pro", monospace;
     &.template-card a {
       background: $black;
     }
+    .flow-locked & {
+      background: #555;
+    }
   }
 
   .card-title {
@@ -560,6 +563,13 @@ $fontMonospace: "Source Code Pro", monospace;
       left: -4px;
     }
   }
+
+  &.external-portal {
+    &[data-loading="true"] {
+      width: 260px;
+    }
+  }
+  
   .portalMenu {
     border-left: $nodeBorderWidth solid #aaa;
     display: flex;

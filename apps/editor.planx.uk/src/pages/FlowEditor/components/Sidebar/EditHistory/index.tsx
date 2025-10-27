@@ -2,44 +2,13 @@ import { gql, useSubscription } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
+import { HistoryItem } from "api/publishFlow/types";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { Operation } from "types";
 
 import { AddCommentDialog } from "./AddCommentDialog";
 import { EditHistoryTimeline } from "./Timeline";
-
-export type HistoryItem =
-  | OperationHistoryItem
-  | CommentHistoryItem
-  | PublishHistoryItem;
-
-interface BaseHistoryItem {
-  id: number;
-  createdAt: string;
-  actorId: number | undefined;
-  firstName: string;
-  lastName: string;
-}
-
-export interface OperationHistoryItem extends BaseHistoryItem {
-  type: "operation";
-  data: Operation["data"];
-  comment: null;
-}
-
-export interface CommentHistoryItem extends BaseHistoryItem {
-  type: "comment";
-  data: null;
-  comment: string;
-}
-
-export interface PublishHistoryItem extends BaseHistoryItem {
-  type: "publish";
-  data: null;
-  comment: string | null; // @todo require input in future publish modal changes
-}
 
 const EditHistory = () => {
   const [flowId, canUserEditTeam, teamSlug, user] = useStore((state) => [

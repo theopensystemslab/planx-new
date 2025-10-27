@@ -34,6 +34,7 @@ export const createCdn = ({
   logsBucket,
   oai,
   mode = "spa",
+  includeWWW = false,
 }: {
   domain: string;
   acmCertificateArn: pulumi.Input<string>;
@@ -41,11 +42,15 @@ export const createCdn = ({
   logsBucket: aws.s3.Bucket;
   oai: aws.cloudfront.OriginAccessIdentity,
   mode?: "static" | "spa"
+  includeWWW?: boolean;
 }) => {
+  const aliases = includeWWW 
+    ? [`www.${domain}`, domain]
+    : [domain]
+
   const cdn = new aws.cloudfront.Distribution(`${domain}-cdn`, {
     enabled: true,
-    // Could include `www.${domain}` here if the `www` subdomain is desired
-    aliases: [domain],
+    aliases,
     origins: [
       {
         originId: bucket.arn,

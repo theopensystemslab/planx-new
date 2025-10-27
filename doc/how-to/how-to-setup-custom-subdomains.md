@@ -41,9 +41,13 @@ This guide will walk through the process of setting a custom domain for a new te
     - Using `<TEAM_NAME>.pfx` as `<FILENAME>`, run the following: 
 
     ```shell
-    openssl pkcs12 -nocerts -nodes -in <FILENAME> -out council.key [ -password 'pass:<PASSWORD>' ]
-    openssl pkcs12 -nokeys -in <FILENAME> -out council.cert [ -password 'pass:<PASSWORD>' ]
+    openssl pkcs12 -nocerts -nodes -in <FILENAME> -out council.key [ -password 'pass:<PASSWORD>' ] [ -legacy ]
+    openssl pkcs12 -nokeys -in <FILENAME> -out council.cert [ -password 'pass:<PASSWORD>' ] [ -legacy ]
     ```
+
+    > 💡**Tip**
+    > 
+    > Try adding the `-legacy` flag to the above command if you get an "Error outputting keys and certificates" error
 
     If the certificate is provided as a PKCS #7 (`.p7b`) file, it can be decoded as follows - 
 
@@ -72,25 +76,20 @@ This guide will walk through the process of setting a custom domain for a new te
 
     Certificates and keys are added to our infrastructure as Pulumi secrets which are then read to generate an ACM record and CloudFront distribution for the custom domain when a deployment is made to Production.
 
-    1. Add the team to the `CUSTOM_DOMAINS` array in `infrastructure/application/index.ts`
+    1. Add the team to the `CUSTOM_DOMAINS` array in `infrastructure/application/index.ts`. Set `certificateLocation` to `secretsManager`.
 
-    2. Add secrets to Pulumi
+    2. Add secrets to AWS Secrets Manager
 
-        The following secrets need to be added to the Pulumi application layer - `ssl-{team}-key`, `ssl-{team}-cert` and `ssl-{team}-chain` (optional). These secrets are only required for the production stack.
-
-        The provided files, or output of step 4, can be piped directly into these variables.
+        The provided files, or output of step 4, can be read by the following script to write a secret to AWS SM.
 
         ```bash
-        cd infrastructure/application
-
-        cat council.key | pulumi config set ssl-{team}-key --stack production --secret
-
-        cat council.cert | pulumi config set ssl-{team}-cert --stack production --secret
-
-        cat chain.cert | pulumi config set ssl-{team}-chain --stack production --secret
+        cd scripts
+        bash add-certs-to-aws-secrets-manager.sh {team}
         ```
 
-        To validate that you have successfully added the secrets to Pulumi, check `infrastructure/application/Pulumi.production.yaml` which will list the above secrets for the team in an encrypted format.
+        You'll see a success or error message when this script runs, and you could additionally check the `ssl/{team}` secret in the AWS console to verify this step.
+        
+        Alternatively, you can do this manually via the AWS console. If you choose this option you'll need to ensure you preserve line breaks (`\n`).
 
 7. **PlanX** - Deploy to production in order to create ACM records and CloudFront CDN
 

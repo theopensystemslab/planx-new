@@ -13,17 +13,12 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { ValidationCheck } from "api/publishFlow/types";
 import countBy from "lodash/countBy";
 import React from "react";
 import { useState } from "react";
 import Caret from "ui/icons/Caret";
 import CheckCircleIcon from "ui/icons/CheckCircle";
-
-export interface ValidationCheck {
-  title: string;
-  status: "Pass" | "Fail" | "Warn" | "Not applicable";
-  message: string;
-}
 
 export const PublishModalAccordion = styled(Accordion)(({ theme }) => ({
   width: "100%",

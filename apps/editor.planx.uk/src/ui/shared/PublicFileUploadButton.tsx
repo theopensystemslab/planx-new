@@ -4,7 +4,7 @@ import ButtonBase, { ButtonBaseProps } from "@mui/material/ButtonBase";
 import CircularProgress from "@mui/material/CircularProgress";
 import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
-import { uploadPublicFile } from "api/upload";
+import { uploadPublicFile } from "api/fileUpload/requests";
 import React, { useCallback, useEffect, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
 
@@ -80,11 +80,11 @@ export default function PublicFileUploadButton(props: Props): FCReturn {
         type: "loading",
       });
       uploadPublicFile(file)
-        .then((res) => {
+        .then(({ fileUrl }) => {
           setStatus({
             type: "none",
           });
-          onChange && onChange(res);
+          onChange && onChange(fileUrl);
         })
         .catch(() => {
           setStatus({

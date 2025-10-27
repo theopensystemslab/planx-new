@@ -86,10 +86,12 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   yourDetailsLabel,
   paymentStatus,
 }) => {
-  const [sessionId, path] = useStore((state) => [state.sessionId, state.path]);
+  const [sessionId, isTestEnvironment] = useStore((state) => [
+    state.sessionId,
+    state.hasAcknowledgedWarning,
+  ]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
-  const isSaveReturn = path === ApplicationPath.SaveAndReturn;
   const navigation = useNavigation();
   const {
     data: { mountpath },
@@ -130,9 +132,8 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
       sessionPreviewKeys: SESSION_PREVIEW_KEYS,
     };
     try {
-      const paymentRequest: PaymentRequest = await postRequest(
-        createPaymentRequest,
-      );
+      const paymentRequest: PaymentRequest =
+        await postRequest(createPaymentRequest);
       if (paymentRequest.id) redirectToConfirmationPage(paymentRequest.id);
     } catch (error) {
       console.error(error);
@@ -259,7 +260,11 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
         </WarningContainer>
         {error ? (
           <ErrorWrapper
-            error={"Error generating payment request, please try again"}
+            error={
+              isTestEnvironment
+                ? "Cannot invite to pay within a test environment, please use published service"
+                : "Error generating payment request, please try again"
+            }
           >
             <SubmitButton />
           </ErrorWrapper>

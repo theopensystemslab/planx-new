@@ -17,10 +17,7 @@ export const publishFlowSchema = z.object({
   }),
   query: z.object({
     summary: z.string(),
-    templatedFlowIds: z
-      .string()
-      .optional()
-      .transform((z) => z?.split(",")),
+    templatedFlowIds: z.array(z.string()).optional(),
   }),
 });
 
