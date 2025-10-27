@@ -34,7 +34,7 @@ describe("Read Me Page component", () => {
 
     expect(getState().flowSummary).toBe("");
 
-    const serviceSummaryInput = screen.getByPlaceholderText("Description");
+    const serviceSummaryInput = screen.getByPlaceholderText("Summary");
 
     await user.type(serviceSummaryInput, "a summary");
 
@@ -48,7 +48,7 @@ describe("Read Me Page component", () => {
   });
 
   it(
-    "displays an error if the service description is longer than 120 characters",
+    "displays an error if the service summary is longer than 120 characters",
     { timeout: 9000 },
     async () => {
       const { user } = setup(
@@ -59,7 +59,7 @@ describe("Read Me Page component", () => {
 
       expect(getState().flowSummary).toBe("");
 
-      const serviceSummaryInput = screen.getByPlaceholderText("Description");
+      const serviceSummaryInput = screen.getByPlaceholderText("Summary");
 
       await user.type(serviceSummaryInput, longInput);
 
@@ -70,7 +70,7 @@ describe("Read Me Page component", () => {
       await user.click(screen.getByRole("button", { name: "Save" }));
 
       expect(
-        screen.getByText(/Service description must be 120 characters or less/),
+        screen.getByText(/Service summary must be 120 characters or less/),
       ).toBeInTheDocument();
 
       await user.click(screen.getByRole("button", { name: "Reset changes" })); // refreshes page and refetches data
@@ -123,7 +123,7 @@ describe("Read Me Page component", () => {
 
     expect(getState().flowSummary).toBe("");
 
-    const serviceSummaryInput = screen.getByPlaceholderText("Description");
+    const serviceSummaryInput = screen.getByPlaceholderText("Summary");
 
     expect(serviceSummaryInput).toBeDisabled();
     expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();

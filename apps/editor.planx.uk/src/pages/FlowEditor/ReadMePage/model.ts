@@ -10,7 +10,7 @@ export const validationSchema: SchemaOf<ReadMePageForm> = object({
   serviceSummary: string()
     .max(
       characterCountLimit,
-      `Service description must be ${characterCountLimit} characters or less`,
+      `Service summary must be ${characterCountLimit} characters or less`,
     )
     .required(),
   serviceDescription: richText(),
