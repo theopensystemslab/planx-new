@@ -89,7 +89,7 @@ export const Root = ({
     <CardHeader title={flowName} />
     <Box>
       <Typography variant="h3" component="h2" pb="0.25em">
-        Application incomplete.
+        Form incomplete.
       </Typography>
       <Typography variant="subtitle2" component="h3">
         {`You have completed ${
