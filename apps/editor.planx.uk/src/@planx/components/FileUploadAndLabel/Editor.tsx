@@ -43,7 +43,7 @@ type Props = EditorProps<TYPES.FileUploadAndLabel, FileUploadAndLabel>;
 
 const Operator = styled(Typography)(({ theme }) => ({
   alignSelf: "center",
-  padding: theme.spacing(0, 2),
+  padding: theme.spacing(0, 1),
 }));
 
 Operator.defaultProps = {
@@ -191,24 +191,22 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
       </InputRow>
       {isConditionalRule && (
         <InputRow>
-          <Input
-            required
-            name="fn"
+          <DataFieldAutocomplete
             value={props.value.rule.fn}
-            onChange={(e) =>
+            onChange={(value) =>
               props.onChange(
                 merge(props.value, {
                   rule: {
-                    fn: e.target.value,
+                    fn: value,
                   },
                 }),
               )
             }
-            placeholder="Data field"
             disabled={props.disabled}
           />
           <Operator>Equals</Operator>
           <Input
+            sx={{ height: "100%" }}
             required
             name="val"
             value={props.value.rule.val}
