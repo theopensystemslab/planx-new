@@ -2,8 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import components from "pages/FlowEditor/components/forms";
 import FormModal from "pages/FlowEditor/components/forms/FormModal";
 import React from "react";
-
-import { calculateExtraProps } from "../_utils";
+import { calculateExtraProps } from "utils/routeUtils/queryUtils";
 
 export const Route = createFileRoute(
   "/_authenticated/$team/$flow/nodes/$parent/nodes/new/$before",

@@ -4,8 +4,7 @@ import FormModal from "pages/FlowEditor/components/forms/FormModal";
 import { SLUGS } from "pages/FlowEditor/data/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-
-import { calculateExtraProps } from "../_utils";
+import { calculateExtraProps } from "utils/routeUtils/queryUtils";
 
 export const Route = createFileRoute(
   "/_authenticated/$team/$flow/nodes/$parent/nodes/$id/edit/$before",
