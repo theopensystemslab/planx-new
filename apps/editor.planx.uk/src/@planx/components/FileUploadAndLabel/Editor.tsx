@@ -207,6 +207,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
           <Operator>Equals</Operator>
           <Input
             sx={{ height: "100%" }}
+            format="data"
             required
             name="val"
             value={props.value.rule.val}
