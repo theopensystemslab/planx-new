@@ -2,12 +2,12 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { AdminPanelData } from "types";
-
-import { client } from "../../lib/graphql";
 import {
   PRODUCTION_ADMIN_PANEL_QUERY,
   STAGING_ADMIN_PANEL_QUERY,
-} from "../../lib/utils";
+} from "utils/routeUtils/utils";
+
+import { client } from "../../lib/graphql";
 import { PlatformAdminPanel } from "../../pages/PlatformAdminPanel/PlatformAdminPanel";
 
 const AdminPanelRoute = () => {

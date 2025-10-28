@@ -2,9 +2,9 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import Team from "pages/Team";
 import React from "react";
+import { getTeamFromDomain } from "utils/routeUtils/utils";
 import { z } from "zod";
 
-import { getTeamFromDomain } from "../../../lib/utils";
 import { useStore } from "../../../pages/FlowEditor/lib/store";
 
 export const teamSearchSchema = z.object({
