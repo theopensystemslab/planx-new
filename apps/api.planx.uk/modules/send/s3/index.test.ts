@@ -318,8 +318,7 @@ describe("uploading an application to S3", () => {
     it("marks a session as submitted", async () => {
       await callAPI();
 
-      expect(markSessionAsSubmitted).toHaveBeenCalledOnce();
-      expect(markSessionAsSubmitted).toHaveBeenCalledWith(sessionId);
+      expect(markSessionAsSubmitted).toHaveBeenCalledExactlyOnceWith(sessionId);
     });
 
     it("writes an audit record the the s3_applications table", async () => {
