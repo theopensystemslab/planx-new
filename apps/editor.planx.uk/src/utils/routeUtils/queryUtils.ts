@@ -7,8 +7,8 @@ import natsort from "natsort";
 import mapAccum from "ramda/src/mapAccum";
 import { Flow } from "types";
 
-import { client } from "../../../../lib/graphql";
-import { useStore } from "../../../../pages/FlowEditor/lib/store";
+import { client } from "../../lib/graphql";
+import { useStore } from "../../pages/FlowEditor/lib/store";
 
 export interface FlowEditorData {
   id: string;

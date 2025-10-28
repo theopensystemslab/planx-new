@@ -1,8 +1,8 @@
 import { createFileRoute, notFound, Outlet } from "@tanstack/react-router";
 import React from "react";
+import { getTeamFromDomain } from "utils/routeUtils/utils";
 
 import { useStore } from "../../../pages/FlowEditor/lib/store";
-import { getTeamFromDomain } from "../../../routes-navi/utils";
 
 export const Route = createFileRoute("/_authenticated/$team")({
   beforeLoad: async ({ params }) => {

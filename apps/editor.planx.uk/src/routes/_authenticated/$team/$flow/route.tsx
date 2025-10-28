@@ -6,10 +6,13 @@ import {
 import { zodValidator } from "@tanstack/zod-adapter";
 import FlowEditorLayout from "pages/layout/FlowEditorLayout";
 import React from "react";
+import {
+  getBasicFlowData,
+  getFlowEditorData,
+} from "utils/routeUtils/queryUtils";
 
 import { useStore } from "../../../../pages/FlowEditor/lib/store";
 import { teamSearchSchema } from "..";
-import { getBasicFlowData, getFlowEditorData } from "./_utils";
 
 export const Route = createFileRoute("/_authenticated/$team/$flow")({
   validateSearch: zodValidator(teamSearchSchema),
