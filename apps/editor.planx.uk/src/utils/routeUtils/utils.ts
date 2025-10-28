@@ -5,7 +5,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { Store } from "pages/FlowEditor/lib/store";
 import { ApplicationPath } from "types";
 
-import { publicClient } from "../lib/graphql";
+import { publicClient } from "../../lib/graphql";
 
 export const makeTitle = (str: string) =>
   [str, "PlanX"].filter(Boolean).join(" | ");

@@ -19,7 +19,7 @@ import {
 } from "pages/FlowEditor/utils";
 import React, { useMemo } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { rootFlowPath } from "routes/utils";
+import { rootFlowPath } from "utils/routeUtils/utils";
 
 import { fromSlug, SLUGS } from "../../data/types";
 import { useStore } from "../../lib/store";
