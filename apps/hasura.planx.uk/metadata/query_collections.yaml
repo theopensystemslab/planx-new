@@ -1,0 +1,12 @@
+- name: allowed-queries
+  definition:
+    queries:
+      - name: PlanX website stats
+        query: |
+          query GetPlanXWebsiteStats {
+            stats: planx_website_stats {
+              activeLPAs: active_lpas
+              submissionsLast30Days: submissions_last_30_days
+              usersLast30Days: users_last_30_days
+            }
+          }

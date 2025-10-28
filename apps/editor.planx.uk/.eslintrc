@@ -1,0 +1,135 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint",
+    "react-hooks",
+    "simple-import-sort",
+    "jsx-a11y",
+    "testing-library",
+    "@vitest",
+    "@tanstack/query"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+    "plugin:@vitest/legacy-recommended",
+    "plugin:jest-dom/recommended",
+    "plugin:@tanstack/eslint-plugin-query/recommended"
+  ],
+  "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "simple-import-sort/imports": "warn",
+    "simple-import-sort/exports": "warn",
+    "no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "@mui/material",
+            "message": "See https://github.com/theopensystemslab/planx-new/pull/140"
+          },
+          {
+            "name": "@mui/icons-material",
+            "message": "See https://github.com/theopensystemslab/planx-new/pull/140"
+          },
+          {
+            "name": "@mui/x-data-grid",
+            "importNames": ["DataGrid"],
+            "message": "Please import DataTable from ui/shared/DataTable instead"
+          },
+          {
+            "name": "jest-axe",
+            "message": "Please import axe-helper instead"
+          },
+          {
+            "name": "@testing-library/user-event",
+            "message": "Please import setup() from testUtils to get test user"
+          },
+          {
+            "name": "@testing-library/react",
+            "importNames": [
+              "render"
+            ],
+            "message": "Please import setup() from testUtils to render test component"
+          },
+          {
+            "name": "@mui/styles",
+            "importNames": [
+              "styled"
+            ],
+            "message": "Please import styled from '@mui/material/styles'. Reason: https://mui.com/system/styled/#what-problems-does-it-solve"
+          },
+          {
+            "name": "@mui/material/Switch",
+            "message": "Please import shared Switch component from 'ui/shared/Switch' instead of the MUI Switch component directly"
+          }
+        ],
+        "patterns": [
+          "@mui/*/*/*"
+        ]
+      }
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "varsIgnorePattern": "^_",
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "no-empty": "warn",
+    "no-unsafe-optional-chaining": "warn",
+    "@typescript-eslint/ban-types": "warn",
+    "@typescript-eslint/no-var-requires": "warn",
+    "@typescript-eslint/no-empty-function": "warn",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": "typeLike",
+        "format": [
+          "PascalCase"
+        ],
+        "custom": {
+          "regex": "^[A-Z]",
+          "match": true
+        }
+      }
+    ],
+    "no-nested-ternary": "error",
+    "@vitest/expect-expect": [
+      "error",
+      {
+        "assertFunctionNames": [
+          "expect"
+        ]
+      }
+    ],
+    "no-restricted-syntax": [
+      "error",
+        {
+          "selector": "MemberExpression[object.name='process'][property.name='env']",
+          "message": "Use import.meta.env instead of process.env in Vite applications"
+        }
+    ]
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)"
+      ],
+      "extends": [
+        "plugin:testing-library/react"
+      ]
+    },
+    {
+      "files": [ "*.stories.tsx" ],
+      "rules": {
+        "@typescript-eslint/no-empty-function": "off"
+      }
+    }
+  ]
+}

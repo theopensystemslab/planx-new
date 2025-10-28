@@ -70,7 +70,7 @@ export const createHasuraService = async ({
       }),
       containers: {
         hasuraProxy: {
-          image: repo.buildAndPushImage("../../hasura.planx.uk/proxy"),
+          image: repo.buildAndPushImage("../../apps/hasura.planx.uk/proxy"),
           cpu: config.requireNumber("hasura-proxy-cpu"),
           memory: config.requireNumber("hasura-proxy-memory"),
           portMappings: [hasuraListenerHttp],
@@ -102,7 +102,7 @@ export const createHasuraService = async ({
           // hasuraProxy dependency timeout should mirror migration timeout
           startTimeout: 180,
           stopTimeout: 30,
-          image: repo.buildAndPushImage("../../hasura.planx.uk"),
+          image: repo.buildAndPushImage("../../apps/hasura.planx.uk"),
           cpu: config.requireNumber("hasura-cpu"),
           memory: config.requireNumber("hasura-memory"),
           healthCheck: {
@@ -124,14 +124,26 @@ export const createHasuraService = async ({
             },
             {
               name: "HASURA_GRAPHQL_CORS_DOMAIN",
-              value: [...CUSTOM_DOMAINS.map((x: any) => x.domain), DOMAIN]
-                .map((x) => `https://*.${x}, https://${x}`)
-                .concat(
-                  "https://localplanning.services",
-                  "https://planx-website.webflow.io",
-                  "https://www.planx.uk",
-                )
-                .join(", "),
+              value: pulumi
+                .all([CUSTOM_DOMAINS, DOMAIN, config.require("lps-domain")])
+                .apply(([customDomains, domain, lpsDomain]) => {
+                  const corsUrls = [
+                    // Wildcard and exact domains for custom domains
+                    ...customDomains.flatMap((x: any) => [
+                      `https://*.${x.domain}`,
+                      `https://${x.domain}`,
+                    ]),
+                    // Wildcard and exact domains for main PlanX site
+                    `https://*.${domain}`,
+                    `https://${domain}`,
+                    // Additional domains
+                    `https://${lpsDomain}`,
+                    "https://planx-website.webflow.io",
+                    "https://www.planx.uk",
+                  ];
+
+                  return corsUrls.filter(Boolean).join(", ");
+                }),
             },
             {
               name: "HASURA_GRAPHQL_ENABLED_LOG_TYPES",

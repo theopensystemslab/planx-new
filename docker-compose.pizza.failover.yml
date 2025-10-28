@@ -1,0 +1,6 @@
+services:
+  caddy:
+    # build custom caddy from scratch when pull from registry fails
+    build:
+      context: ./ci/caddy
+    pull_policy: never

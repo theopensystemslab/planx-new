@@ -1,0 +1,72 @@
+import { Schema } from "@planx/components/shared/Schema/model";
+
+export const ResidentialUnitsExisting: Schema = {
+  type: "Existing residential unit type",
+  fields: [
+    {
+      type: "question",
+      data: {
+        title: "What best describes this unit?",
+        fn: "type",
+        options: [
+          { id: "house", data: { text: "House", val: "house" } },
+          {
+            id: "flat",
+            data: { text: "Flat, apartment or maisonette", val: "flat" },
+          },
+          {
+            id: "sheltered",
+            data: { text: "Sheltered housing", val: "sheltered" },
+          },
+          { id: "studio", data: { text: "Studio or bedsit", val: "studio" } },
+          { id: "cluster", data: { text: "Cluster flat", val: "cluster" } },
+          { id: "other", data: { text: "Other", val: "other" } },
+        ],
+      },
+    },
+    {
+      type: "number",
+      data: {
+        title: "How many identical units of this type are there?",
+        fn: "identicalUnits",
+        allowNegatives: false,
+      },
+    },
+    {
+      type: "question",
+      data: {
+        title: "Select how the unit is owned or rented",
+        fn: "tenure",
+        options: [
+          { id: "MH", data: { text: "Market housing", val: "MH" } },
+          {
+            id: "SAIR",
+            data: { text: "Social, affordable or interim rent", val: "SAIR" },
+          },
+          {
+            id: "AHO",
+            data: { text: "Affordable home ownership", val: "AHO" },
+          },
+          { id: "SH", data: { text: "Starter homes", val: "SH" } },
+          {
+            id: "selfCustomBuild",
+            data: {
+              text: "Self-build and custom build",
+              val: "selfCustomBuild",
+            },
+          },
+          { id: "other", data: { text: "Other", val: "other" } },
+        ],
+      },
+    },
+    {
+      type: "number",
+      data: {
+        title: "How many bedrooms does this unit have?",
+        fn: "bedrooms",
+        allowNegatives: false,
+      },
+    },
+  ],
+  min: 1,
+} as const;

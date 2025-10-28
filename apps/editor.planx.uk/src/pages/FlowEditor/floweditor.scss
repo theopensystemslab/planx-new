@@ -1,0 +1,809 @@
+$black: #0b0c0c;
+$nodeBorder: $black;
+$optionBorder: #b1b4b6;
+$hangerBackground: #f2f2f2;
+$focus: #ffdd00;
+$lockedFlowBackground: rgba(0, 0, 0, 0.07);
+$lockedNodeBackground: #eee;
+$lockedBorder: #b0b0b0;
+$dataBackground: #f0f0f0;
+$lockedDataBackground: #e2e2e2;
+
+$endpointWidth: 50px;
+$hangerWidth: 16px;
+$lineWidth: 2px;
+$nodeBorderWidth: 1px;
+$nodeMaxWidth: 240px;
+$padding: 10px;
+$editorPadding: 30px;
+$pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAADElEQVQImWO4cOECAATkAnFXdNPtAAAAAElFTkSuQmCC);
+
+$fontMonospace: "Source Code Pro", monospace;
+
+// Import custom typeface for data inputs
+@import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400&display=swap");
+
+@mixin circle($radius) {
+  user-select: none;
+  border-radius: $radius;
+  width: $radius;
+  height: $radius;
+  display: block;
+  flex: none;
+}
+
+@mixin disabledHanger {
+  pointer-events: none;
+  user-select: none;
+
+  > a {
+    visibility: hidden !important;
+    font-size: 0;
+  }
+}
+
+@mixin folderStyle($width) {
+  &::before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: 0;
+    width: $width;
+    height: 8px;
+    background-color: #666;
+    clip-path: polygon(0 0, 90% 0, 100% 100%, 0% 100%);
+    border-top-left-radius: 2px;
+    z-index: -1;
+  }
+}
+
+@mixin cloneStyle {
+  content: "";
+  position: absolute;
+  left: -5px;
+  bottom: -5px;
+  width: 100%;
+  height: 100%;
+  background: white;
+  border: $lineWidth dashed $nodeBorder;
+  z-index: -1;
+  .flow-locked & {
+    border-color: $lockedBorder;
+    background: transparent;
+  }
+}
+
+// ------------------------------------------------
+
+#editor {
+  flex: 1;
+  overflow: auto;
+  padding: $editorPadding;
+
+  &.flow-locked {
+    background: $lockedFlowBackground;
+  }
+
+  ol,
+  li {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    width: max-content;
+
+    a:focus,
+    a:active {
+      outline: 4px solid $focus;
+      outline-offset: 0;
+    }
+  }
+
+  ol:empty {
+    &,
+    & + .hanger {
+      display: none;
+    }
+  }
+}
+
+#flow {
+  align-items: center;
+  display: inline-flex;
+  font-size: 13px;
+  min-width: 100%;
+  text-rendering: optimizeLegibility;
+  // align-self: center;
+
+  &[data-layout="top-down"] {
+    flex-direction: column;
+    &,
+    ol,
+    li {
+      justify-content: flex-start;
+    }
+  }
+
+  &[data-layout="left-right"] {
+    flex-direction: row;
+    // justify-content: center;
+  }
+}
+
+// ------------------------------------------------
+
+.card {
+  position: relative;
+  z-index: 1;
+
+  .card-wrapper {
+    max-width: $nodeMaxWidth;
+    flex-direction: column;
+    & > a {
+      display: flex;
+      flex-direction: column;
+    }
+    &.template-card > a {
+      background: #fff;
+      border-color: $nodeBorder;
+    }
+  }
+
+  &.portal .card-wrapper {
+    max-width: 260px;
+    & > a {
+      flex-direction: row;
+    }
+    &.template-card a {
+      background: $black;
+    }
+    .flow-locked & {
+      background: #555;
+    }
+  }
+
+  .card-title {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+
+  &.isDragging {
+    opacity: 0.3;
+    & + .hanger {
+      @include disabledHanger();
+    }
+    > ol {
+      visibility: hidden;
+      [data-layout="left-right"] & {
+        width: 0;
+      }
+      [data-layout="top-down"] & {
+        height: 0;
+      }
+    }
+  }
+
+  &.wasVisited > div,
+  &.wasVisited > a {
+    span {
+      opacity: 1;
+    }
+    outline: 4px solid #8cc485;
+    outline-offset: 0;
+  }
+
+  &.isClone > div {
+    margin-bottom: 3px;
+    position: relative;
+    a::before {
+      @include cloneStyle;
+    }
+  }
+
+  // Increase offset of clone styling when visited or focused
+  &.isClone.wasVisited a::before,
+  &.isClone a:focus::before {
+    left: -8px;
+    bottom: -8px;
+  }
+
+  &.hasFailed {
+    border: $nodeBorderWidth dashed red;
+  }
+
+  // Allow nodes to expand to width of data when toggled
+  &:not(.type-Section):not(.portal):not(.type-Filter) > div > a {
+    max-width: 100%;
+  }
+
+  & a {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    color: $black;
+    border: $nodeBorderWidth solid $nodeBorder;
+    background: white;
+    user-select: none;
+    padding: 6px;
+    overflow-wrap: break-word;
+    word-break: break-word;
+
+    .flow-locked & {
+      background: $lockedNodeBackground;
+      border-color: $lockedBorder;
+    }
+
+    * {
+      pointer-events: none;
+    }
+
+    span {
+      min-width: 100px;
+      padding: 0 10px 0 5px;
+      max-width: $nodeMaxWidth;
+      overflow-wrap: break-word;
+    }
+
+    // Component icon
+    & svg {
+      margin-top: -2px;
+      width: 20px;
+      height: 20px;
+      opacity: 0.95;
+    }
+  }
+
+  & .card-data-field {
+    border-color: $optionBorder;
+    background: $dataBackground;
+    overflow-wrap: break-word;
+    word-break: break-word;
+
+    .flow-locked & {
+      border-color: $lockedBorder;
+      background: $lockedDataBackground;
+    }
+  }
+
+  & .card-tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    padding: 5px;
+    background: $dataBackground;
+    border: $nodeBorderWidth solid $optionBorder;
+    border-top: none;
+  }
+
+  & .card-tag {
+    &.automation {
+      width: 100%;
+    }
+    .flow-locked & {
+      opacity: 0.75;
+    }
+  }
+
+  &.type-SetValue > div > a {
+    background: $dataBackground;
+    font-family: $fontMonospace;
+  }
+
+  &.type-Section {
+    [data-layout="top-down"] & {
+      width: 100% !important;
+    }
+    [data-layout="left-right"] & {
+      height: 100% !important;
+    }
+  }
+
+  &.type-Section::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    height: $lineWidth;
+    margin-top: -1px;
+    width: calc(100% + ($editorPadding * 2));
+    z-index: -1;
+    background-image: linear-gradient(
+      90deg,
+      $optionBorder,
+      $optionBorder 40%,
+      transparent 40%,
+      transparent 100%
+    );
+    background-size: 12px $lineWidth;
+    border: none;
+    [data-layout="left-right"] & {
+      top: unset;
+      width: $lineWidth;
+      height: 100vh;
+      left: 50%;
+      background-image: linear-gradient(
+        0deg,
+        $optionBorder,
+        $optionBorder 50%,
+        transparent 50%,
+        transparent 100%
+      );
+      background-size: $lineWidth 12px;
+    }
+  }
+}
+
+// Dedicated clone styling for folders
+.folder {
+  position: relative;
+  &.isClone {
+    &::before {
+      @include cloneStyle;
+      z-index: 0;
+      left: -4px;
+      bottom: -4px;
+    }
+    &:focus-within::before {
+      left: -8px;
+      bottom: -8px;
+    }
+  }
+}
+
+.page {
+  border: 1px solid #aaa;
+  background: rgba(0, 0, 0, 0.07);
+  text-align: center;
+  > a {
+    border: none;
+    span {
+      max-width: none;
+    }
+  }
+}
+
+.endpoint > a {
+  @include circle($endpointWidth);
+  display: block;
+  line-height: $endpointWidth;
+  color: white;
+  background: $black;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.root-node-link {
+  background-image: $pixel;
+  background-position: top center;
+  background-size: $lineWidth;
+  background-repeat: repeat-y;
+  padding-top: ($padding * 2) !important;
+  &--end {
+    padding-bottom: ($padding * 2) !important;
+  }
+  > a {
+    display: block;
+    text-decoration: none;
+    cursor: pointer;
+    padding: $padding;
+    color: $black;
+    background: white;
+    border-radius: 3px;
+    border: 1px solid $optionBorder;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    font-weight: 600;
+    font-size: 14px;
+  }
+}
+
+.option {
+  > a {
+    border-color: $optionBorder;
+    flex-direction: column;
+    padding: 0;
+    min-width: 60px;
+    max-width: fit-content;
+  }
+  .text {
+    align-self: center;
+    margin: 0;
+    padding: 6px 12px;
+  }
+}
+
+.hanger {
+  align-self: center;
+  background-image: $pixel;
+  background-size: $lineWidth;
+  line-height: 0;
+
+  [data-layout="left-right"] & {
+    background-position: left center;
+    background-repeat: repeat-x;
+
+    &:last-child {
+      width: 100%;
+    }
+  }
+
+  [data-layout="top-down"] & {
+    background-position: top center;
+    background-repeat: repeat-y;
+
+    &:last-child {
+      height: 100%;
+    }
+  }
+
+  &.hidden {
+    @include disabledHanger();
+  }
+
+  > a {
+    $size: $hangerWidth;
+    display: inline-block;
+    // width: $size;
+    text-decoration: none;
+    border: $nodeBorderWidth solid $nodeBorder;
+    min-width: $size;
+    max-width: $nodeMaxWidth;
+    min-height: $size;
+    border-radius: $size;
+    color: $black;
+    padding: 5px;
+    background: $hangerBackground;
+    line-height: 1.5;
+
+    margin: $padding;
+
+    cursor: pointer;
+
+    transition: background-color 0.5s;
+    transition: transform 0.2s;
+
+    &:empty:hover {
+      background-color: $focus;
+      transform: scale(1.7);
+    }
+
+    &:empty {
+      padding: 0;
+    }
+  }
+}
+
+.flow-child-nodes {
+  width: 100%;
+  .nested-decisions & {
+    border: $lineWidth dashed $lockedBorder;
+    margin-top: -$lineWidth;
+    padding: 0 ($padding * 2);
+  }
+}
+
+.portal {
+  display: flex;
+  flex-direction: column;
+  background: $black;
+  > div {
+    display: flex;
+  }
+  > div a {
+    background: $black;
+    color: white;
+    border: none;
+
+    .flow-locked & {
+      background: #555;
+    }
+    // Smaller icon for portal nodes
+    svg {
+      margin-top: 0;
+      padding: 0.05em;
+    }
+  }
+  &.breadcrumb {
+    background-image: $pixel;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    min-width: 100%;
+    &--active {
+      min-width: 100%;
+    }
+    &:not(&--first) {
+      border: $lineWidth dashed $lockedBorder;
+      border-width: 0 $lineWidth 0 $lineWidth;
+    }
+    [data-layout="top-down"] & {
+      background-position: center top;
+      background-size: $lineWidth ($padding * 2);
+      > a {
+        margin: ($padding * 2) 0 0;
+        width: 100%;
+        color: #fff;
+        span {
+          max-width: 100%;
+        }
+      }
+    }
+    [data-layout="left-right"] & {
+      background-position: left center;
+      background-size: $padding $lineWidth;
+
+      > a {
+        margin: 0 0 0 $padding;
+      }
+    }
+    > a {
+      background: $black;
+      text-align: center;
+      @include folderStyle(60px);
+      &::before {
+        left: -1px;
+      }
+    }
+  }
+  &.internal-portal {
+    background: $black;
+    @include folderStyle(40px);
+  }
+
+  &.internal-portal.node-card {
+    align-items: flex-start;
+    @include folderStyle(75px);
+    &::before {
+      z-index: 1;
+      top: -10px;
+      height: 6px;
+      left: -4px;
+    }
+  }
+
+  &.external-portal {
+    &[data-loading="true"] {
+      width: 260px;
+    }
+  }
+
+  .portalMenu {
+    border-left: $nodeBorderWidth solid #aaa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px 6px;
+    margin-left: auto;
+    svg {
+      opacity: 1;
+      margin: 0;
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+.portal,
+.decision,
+.category {
+  display: flex;
+  flex-shrink: 1;
+  // https://github.com/philipwalton/flexbugs#flexbug-1
+  flex-shrink: 0;
+}
+
+.decision > ol.options > li.option:only-child .hanger {
+  display: none;
+}
+
+.category > span {
+  padding: 6px 12px;
+  background: #d0d0d0;
+}
+
+.decision,
+.category {
+  [data-layout="top-down"] & {
+    flex-direction: column;
+  }
+
+  [data-layout="left-right"] & {
+    flex-direction: row;
+  }
+
+  ol {
+    flex: 1;
+  }
+  align-items: center;
+
+  &.question.isNote {
+    a {
+      background: #fffdb0 !important;
+      position: relative;
+      padding-right: 20px;
+      .flow-locked & {
+        background: #f5f4d2 !important;
+      }
+    }
+    & .template-card > a {
+      .flow-locked & {
+        background: #fffdb0 !important;
+        border-color: $nodeBorder;
+      }
+    }
+    // Triangle shapes to simulate paper fold on sticky note
+    &:not(.isClone) a {
+      &::before {
+        content: "";
+        position: absolute;
+        right: -$nodeBorderWidth;
+        bottom: -$nodeBorderWidth;
+        width: 0;
+        height: 0;
+        border-bottom: 12px solid #fff;
+        border-left: 12px solid transparent;
+        .flow-locked & {
+          border-bottom-color: $lockedNodeBackground;
+        }
+      }
+      &::after {
+        content: "";
+        position: absolute;
+        right: -$nodeBorderWidth;
+        bottom: -$nodeBorderWidth;
+        width: 0;
+        height: 0;
+        border-top: 12px solid #555;
+        border-right: 12px solid transparent;
+      }
+    }
+  }
+
+  > ol.options,
+  > ol.categories {
+    display: inline-flex;
+
+    background-image: $pixel;
+    background-repeat: no-repeat;
+
+    [data-layout="top-down"] & {
+      flex-direction: row;
+      padding-top: $padding !important;
+
+      background-position: center top;
+      background-size: $lineWidth $padding;
+    }
+
+    [data-layout="left-right"] & {
+      flex-direction: column;
+      padding-left: $padding !important;
+
+      background-position: left center;
+      background-size: $padding $lineWidth;
+    }
+
+    &:empty {
+      display: none;
+    }
+
+    > li {
+      background-image: $pixel, $pixel, $pixel;
+      [data-layout="top-down"] & {
+        padding: $padding $padding 0 $padding !important;
+        flex-direction: column;
+
+        background-position:
+          top center,
+          top center,
+          bottom center;
+        background-size:
+          $lineWidth $padding,
+          $lineWidth,
+          $lineWidth;
+        background-repeat: no-repeat, repeat-x, repeat-x;
+
+        &:nth-of-type(1) {
+          background-position:
+            top center,
+            top right,
+            bottom right;
+          background-size:
+            $lineWidth $padding,
+            50% $lineWidth,
+            50% $lineWidth;
+          background-repeat: no-repeat, no-repeat, no-repeat;
+        }
+
+        &:last-child {
+          background-position:
+            top center,
+            top left,
+            bottom left;
+          background-size:
+            $lineWidth $padding,
+            50% $lineWidth,
+            50% $lineWidth;
+          background-repeat: no-repeat, no-repeat, no-repeat;
+        }
+      }
+      [data-layout="left-right"] & {
+        padding: $padding 0 $padding $padding !important;
+        flex-direction: row;
+
+        background-position:
+          left center,
+          left top,
+          right top;
+        background-repeat: no-repeat, no-repeat, no-repeat;
+
+        // BUG: 1px NOT VISIBLE IN CHROME
+        background-size:
+          $padding $lineWidth,
+          $lineWidth 100%,
+          2px 100%;
+
+        &:nth-of-type(1) {
+          background-position:
+            left center,
+            left bottom,
+            right bottom;
+          background-size:
+            $padding $lineWidth,
+            $lineWidth 50%,
+            $lineWidth 50%;
+        }
+
+        &:last-child {
+          background-position:
+            left center,
+            left top,
+            right top;
+          background-size:
+            $padding $lineWidth,
+            $lineWidth 50%,
+            $lineWidth 50%;
+        }
+      }
+    }
+
+    > li.option {
+      display: flex;
+      align-items: center;
+      > a {
+        pointer-events: none;
+      }
+
+      [data-layout="top-down"] & {
+        &:only-child {
+          padding-top: 0 !important;
+        }
+      }
+
+      [data-layout="left-right"] & {
+        &:only-child {
+          padding-left: 0 !important;
+        }
+      }
+
+      // (decisions)
+      > ol {
+        display: flex;
+        flex: 1;
+        [data-layout="top-down"] & {
+          flex-direction: column;
+        }
+        [data-layout="left-right"] & {
+          flex-direction: row;
+        }
+      }
+
+      &:only-child {
+        // padding-top: 0;
+        background: none;
+      }
+    }
+  }
+}

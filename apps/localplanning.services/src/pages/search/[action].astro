@@ -1,0 +1,17 @@
+---
+import { actions } from "@content/actions";
+import SearchLayout from "@layouts/SearchLayout.astro";
+import { ACTIONS } from "@stores/action";
+
+export async function getStaticPaths() {
+  return ACTIONS.map((action) => ({
+    params: { action },
+  }));
+}
+
+const { action } = Astro.params;
+
+const { title, description } = actions[action];
+---
+
+<SearchLayout title={title} description={description} />

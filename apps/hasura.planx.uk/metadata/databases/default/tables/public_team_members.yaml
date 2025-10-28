@@ -1,0 +1,69 @@
+table:
+  name: team_members
+  schema: public
+object_relationships:
+  - name: team
+    using:
+      foreign_key_constraint_on: team_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+insert_permissions:
+  - role: platformAdmin
+    permission:
+      check: {}
+      columns:
+        - team_id
+        - user_id
+        - role
+        - id
+select_permissions:
+  - role: api
+    permission:
+      columns:
+        - team_id
+        - user_id
+        - role
+        - id
+      filter: {}
+  - role: demoUser
+    permission:
+      columns:
+        - team_id
+        - user_id
+        - role
+        - id
+      filter:
+        user_id:
+          _eq: x-hasura-user-id
+    comment: ""
+  - role: platformAdmin
+    permission:
+      columns:
+        - team_id
+        - user_id
+        - role
+        - id
+      filter: {}
+  - role: teamEditor
+    permission:
+      columns:
+        - team_id
+        - user_id
+        - role
+        - id
+      filter: {}
+update_permissions:
+  - role: platformAdmin
+    permission:
+      columns:
+        - team_id
+        - user_id
+        - role
+        - id
+      filter: {}
+      check: {}
+delete_permissions:
+  - role: platformAdmin
+    permission:
+      filter: {}

@@ -1,0 +1,35 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    devDependencies:
+      '@kirillvakalov/hasura-cli':
+        specifier: ^2.48.1
+        version: 2.48.1
+
+packages:
+
+  '@kirillvakalov/hasura-cli@2.48.1':
+    resolution: {integrity: sha512-imcdv+ynHvHW7yQEX3UtlZyWIrRcacwOdvM5aMoEiXmV3glGgCPg7nx+knaQD+fl9Har1U4p0VTRvlDxXRv3hQ==}
+    engines: {node: '>=20.0.0'}
+    cpu: [arm64, x64]
+    os: [darwin, linux, win32]
+    hasBin: true
+
+  semver@7.7.3:
+    resolution: {integrity: sha512-SdsKMrI9TdgjdweUSR9MweHA4EJ8YxHn8DFaDisvhVlUOe4BF1tLD7GAj0lIqWVl+dPb/rExr0Btby5loQm20Q==}
+    engines: {node: '>=10'}
+    hasBin: true
+
+snapshots:
+
+  '@kirillvakalov/hasura-cli@2.48.1':
+    dependencies:
+      semver: 7.7.3
+
+  semver@7.7.3: {}

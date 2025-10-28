@@ -1,0 +1,47 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/Container.astro";
+import OptionCard from "@components/OptionCard.astro";
+import Masthead from "@components/Masthead.astro";
+import ApplicationsBanner from "@components/ApplicationsBanner.astro";
+import { ACTIONS } from "@stores/action";
+import { Image } from "astro:assets";
+import lpaMap from "/public/planx-lpa-map.svg";
+
+const title = "Find local planning services";
+---
+
+<Layout>
+  <Masthead title={title} size="large">
+    <p>
+      Modern digital services to send planning applications, reports and notices
+      directly to local planning authorities.
+    </p>
+    <p>
+      <a href="/about" class="paragraph-link">More about local planning services</a>
+    </p>
+    <p>
+      A project by <a
+        class="paragraph-link paragraph-link--external"
+        href="https://opendigitalplanning.org/">Open Digital Planning</a
+      >, powered by <a
+        class="paragraph-link paragraph-link--external"
+        href="https://www.planx.uk/">PlanX</a
+      >
+    </p>
+
+    <div class="max-w-2xl" slot="map">
+      <Image src={lpaMap} alt="Map of Local Planning Authorities in England" class="w-full h-auto" />
+    </div>
+  </Masthead>
+  <Container paddingY>
+    <div class="flex flex-col lg:flex-row justify-center clamp-[gap,4,6]">
+      {
+        ACTIONS.map((action) => (
+          <OptionCard action={action} />
+        ))
+      }
+    </div>
+  </Container>
+  <ApplicationsBanner />
+</Layout>

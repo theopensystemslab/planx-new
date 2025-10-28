@@ -1,11 +1,13 @@
 services:
   postgres:
     container_name: postgres
-    image: postgis/postgis:16-3.5-alpine
+    build:
+      context: ./apps/postgres
+      dockerfile: Dockerfile
     restart: unless-stopped
     ports:
       - "${PG_PORT}:5432"
-    command: "postgres -c listen_addresses='*'"
+    command: "postgres -c listen_addresses='*' -c shared_preload_libraries=pg_cron -c cron.database_name=${PG_DATABASE}"
     healthcheck:
       test: pg_isready --username=${PG_USERNAME} --dbname=${PG_DATABASE} --quiet
       interval: 15s
@@ -19,7 +21,7 @@ services:
   metabase:
     container_name: metabase
     # if changing, also check infrastructure/application/index.ts
-    image: metabase/metabase:v0.56.2
+    image: metabase/metabase:v0.56.6
     profiles: ["analytics"]
     ports:
       - "${METABASE_PORT}:${METABASE_PORT}"
@@ -47,7 +49,7 @@ services:
   hasura:
     container_name: hasura
     build:
-      context: ./hasura.planx.uk
+      context: ./apps/hasura.planx.uk
     depends_on:
       postgres:
         condition: service_healthy
@@ -64,12 +66,12 @@ services:
       timeout: 3s
       retries: 10
     volumes:
-      - "./hasura.planx.uk/metadata:/hasura-metadata"
-      - "./hasura.planx.uk/migrations:/hasura-migrations"
+      - "./apps/hasura.planx.uk/metadata:/hasura-metadata"
+      - "./apps/hasura.planx.uk/migrations:/hasura-migrations"
     restart: unless-stopped
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
-      HASURA_GRAPHQL_CORS_DOMAIN: ${HASURA_GRAPHQL_CORS_DOMAIN}
+      HASURA_GRAPHQL_CORS_DOMAIN: http://localhost:${API_PORT}, http://localhost:${HASURA_CONSOLE_PORT}, http://localhost:3000, http://api:${API_PORT}, http://localhost:${HASURA_PROXY_PORT}/v1/graphql, ${LPS_URL_EXT}, https://*.planx.uk, https://*.planx.dev, https://*.planx.pizza, https://*.gov.uk, https://planx-website.webflow.io
       HASURA_GRAPHQL_DATABASE_URL: postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE}
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
@@ -81,7 +83,7 @@ services:
   hasura-proxy:
     container_name: hasura-proxy
     build:
-      context: ./hasura.planx.uk/proxy
+      context: ./apps/hasura.planx.uk/proxy
     depends_on:
       hasura:
         condition: service_healthy
@@ -101,7 +103,7 @@ services:
     container_name: api
     restart: unless-stopped
     build:
-      context: ./api.planx.uk
+      context: ./apps/api.planx.uk
       target: production
     depends_on:
       hasura-proxy:
@@ -173,10 +175,10 @@ services:
     container_name: sharedb
     restart: unless-stopped
     build:
-      context: ./sharedb.planx.uk
+      context: ./apps/sharedb.planx.uk
       target: production
     volumes:
-      - "./sharedb.planx.uk:/sharedb"
+      - "./apps/sharedb.planx.uk:/sharedb"
       - "/sharedb/node_modules"
     depends_on:
       hasura-proxy:

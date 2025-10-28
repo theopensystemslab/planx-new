@@ -4,13 +4,13 @@
     "test": "playwright test --grep-invert @regression",
     "test:regression": "playwright test",
     "test:debug": "DEBUG_LOG=true pnpm test",
-    "ui": "serve ../../../editor.planx.uk/build --single --listen 3000",
+    "ui": "serve ../../../apps/editor.planx.uk/build --single --listen 3000",
     "postinstall": "./install-dependencies.sh"
   },
   "type": "module",
   "dependencies": {
-    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#666c83c",
-    "axios": "^1.11.0",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#e57d16d",
+    "axios": "^1.12.2",
     "dotenv": "^16.3.1",
     "eslint": "^8.56.0",
     "graphql": "^16.11.0",
@@ -22,7 +22,7 @@
   },
   "packageManager": "pnpm@10.10.0",
   "devDependencies": {
-    "@playwright/test": "^1.53.2",
+    "@playwright/test": "^1.56.1",
     "@types/geojson": "^7946.0.14",
     "@types/node": "22.14.1",
     "eslint-plugin-playwright": "^0.20.0"

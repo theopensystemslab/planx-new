@@ -1,0 +1,50 @@
+table:
+  name: lps_magic_links
+  schema: public
+array_relationships:
+  - name: lowcal_sessions
+    using:
+      manual_configuration:
+        column_mapping:
+          email: email
+        insertion_order: null
+        remote_table:
+          name: lowcal_sessions
+          schema: public
+insert_permissions:
+  - role: api
+    permission:
+      check: {}
+      columns:
+        - created_at
+        - email
+        - operation
+        - session_id
+        - token
+        - used_at
+    comment: ""
+select_permissions:
+  - role: api
+    permission:
+      columns:
+        - created_at
+        - email
+        - operation
+        - session_id
+        - token
+        - used_at
+      filter: {}
+    comment: ""
+update_permissions:
+  - role: api
+    permission:
+      columns:
+        - created_at
+        - email
+        - operation
+        - session_id
+        - token
+        - used_at
+      filter: {}
+      check: {}
+    comment: ""

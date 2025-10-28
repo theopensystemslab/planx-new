@@ -261,10 +261,10 @@ export class PlaywrightEditor {
     await createFilter(this.page, this.getNextNode());
     // select the branch filter and add some content
     const filteredBranch = this.page
-      .locator("li")
-      .filter({ hasText: /Material change of use$/ })
       .getByRole("listitem")
-      .getByRole("link");
+      .filter({ hasText: /^Material change of useflag\.mcou\.true$/ })
+      .getByRole("link")
+      .nth(1);
 
     await createContent(
       this.page,

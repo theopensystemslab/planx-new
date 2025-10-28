@@ -1,0 +1,623 @@
+table:
+  name: flows
+  schema: public
+object_relationships:
+  - name: creator
+    using:
+      foreign_key_constraint_on: creator_id
+  - name: team
+    using:
+      foreign_key_constraint_on: team_id
+  - name: template
+    using:
+      manual_configuration:
+        column_mapping:
+          templated_from: id
+        insertion_order: null
+        remote_table:
+          name: flows
+          schema: public
+  - name: templated_flow_edit
+    using:
+      foreign_key_constraint_on:
+        column: flow_id
+        table:
+          name: templated_flow_edits
+          schema: public
+array_relationships:
+  - name: analytics
+    using:
+      manual_configuration:
+        column_mapping:
+          id: flow_id
+        insertion_order: null
+        remote_table:
+          name: analytics
+          schema: public
+  - name: comments
+    using:
+      manual_configuration:
+        column_mapping:
+          id: flow_id
+        insertion_order: null
+        remote_table:
+          name: flow_comments
+          schema: public
+  - name: feedback
+    using:
+      manual_configuration:
+        column_mapping:
+          id: flow_id
+        insertion_order: null
+        remote_table:
+          name: feedback
+          schema: public
+  - name: flow_status_histories
+    using:
+      foreign_key_constraint_on:
+        column: flow_id
+        table:
+          name: flow_status_history
+          schema: public
+  - name: lowcal_sessions
+    using:
+      manual_configuration:
+        column_mapping:
+          id: flow_id
+        insertion_order: null
+        remote_table:
+          name: lowcal_sessions
+          schema: public
+  - name: operations
+    using:
+      foreign_key_constraint_on:
+        column: flow_id
+        table:
+          name: operations
+          schema: public
+  - name: payment_statuses
+    using:
+      manual_configuration:
+        column_mapping:
+          id: flow_id
+        insertion_order: null
+        remote_table:
+          name: payment_status
+          schema: public
+  - name: published_flows
+    using:
+      foreign_key_constraint_on:
+        column: flow_id
+        table:
+          name: published_flows
+          schema: public
+  - name: templated_flows
+    using:
+      manual_configuration:
+        column_mapping:
+          id: templated_from
+        insertion_order: null
+        remote_table:
+          name: flows
+          schema: public
+computed_fields:
+  - name: data_merged
+    definition:
+      function:
+        name: compile_flow_portals
+        schema: public
+    comment: Flow data with portals merged in
+insert_permissions:
+  - role: api
+    permission:
+      check: {}
+      set:
+        creator_id: x-hasura-user-id
+      columns:
+        - copied_from
+        - created_at
+        - creator_id
+        - data
+        - description
+        - id
+        - is_listed_on_lps
+        - is_template
+        - limitations
+        - name
+        - settings
+        - slug
+        - summary
+        - team_id
+        - templated_from
+        - updated_at
+        - version
+      validate_input:
+        definition:
+          forward_client_headers: false
+          headers:
+            - name: authorization
+              value: '{{HASURA_PLANX_API_KEY}}'
+          timeout: 10
+          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+        type: http
+  - role: demoUser
+    permission:
+      check:
+        team_id:
+          _eq: 32
+      set:
+        creator_id: x-hasura-user-id
+      columns:
+        - copied_from
+        - created_at
+        - creator_id
+        - data
+        - description
+        - id
+        - is_template
+        - limitations
+        - name
+        - settings
+        - slug
+        - summary
+        - team_id
+        - templated_from
+        - updated_at
+        - version
+      validate_input:
+        definition:
+          forward_client_headers: false
+          headers:
+            - name: authorization
+              value: '{{HASURA_PLANX_API_KEY}}'
+          timeout: 10
+          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+        type: http
+    comment: They can only insert into Demo team [id = 32]
+  - role: platformAdmin
+    permission:
+      check: {}
+      set:
+        creator_id: x-hasura-user-id
+      columns:
+        - copied_from
+        - created_at
+        - creator_id
+        - data
+        - description
+        - id
+        - is_listed_on_lps
+        - is_template
+        - limitations
+        - name
+        - settings
+        - slug
+        - summary
+        - team_id
+        - templated_from
+        - updated_at
+        - version
+      validate_input:
+        definition:
+          forward_client_headers: false
+          headers:
+            - name: authorization
+              value: '{{HASURA_PLANX_API_KEY}}'
+          timeout: 10
+          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+        type: http
+  - role: teamEditor
+    permission:
+      check:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: x-hasura-user-id
+              - role:
+                  _eq: teamEditor
+      set:
+        creator_id: x-hasura-user-id
+      columns:
+        - copied_from
+        - created_at
+        - creator_id
+        - data
+        - description
+        - id
+        - is_listed_on_lps
+        - is_template
+        - limitations
+        - name
+        - settings
+        - slug
+        - summary
+        - team_id
+        - templated_from
+        - updated_at
+        - version
+      validate_input:
+        definition:
+          forward_client_headers: false
+          headers:
+            - name: authorization
+              value: '{{HASURA_PLANX_API_KEY}}'
+          timeout: 10
+          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+        type: http
+select_permissions:
+  - role: api
+    permission:
+      columns:
+        - can_create_from_copy
+        - copied_from
+        - created_at
+        - creator_id
+        - data
+        - deleted_at
+        - description
+        - id
+        - is_listed_on_lps
+        - is_template
+        - limitations
+        - name
+        - settings
+        - slug
+        - status
+        - summary
+        - team_id
+        - templated_from
+        - updated_at
+        - version
+      computed_fields:
+        - data_merged
+      filter:
+        deleted_at:
+          _is_null: true
+      allow_aggregations: true
+  - role: demoUser
+    permission:
+      columns:
+        - can_create_from_copy
+        - created_at
+        - creator_id
+        - data
+        - deleted_at
+        - description
+        - id
+        - is_listed_on_lps
+        - is_template
+        - limitations
+        - name
+        - settings
+        - slug
+        - status
+        - summary
+        - team_id
+        - templated_from
+        - updated_at
+        - version
+      computed_fields:
+        - data_merged
+      filter:
+        _and:
+          - _or:
+              - _and:
+                  - creator_id:
+                      _eq: x-hasura-user-id
+                  - team:
+                      id:
+                        _eq: 32
+              - team:
+                  id:
+                    _in:
+                      - 1
+                      - 29
+                      - 30
+          - deleted_at:
+              _is_null: true
+    comment: 'For the demo user, we want to ensure they can only see their own flows, and flows from the Open Digital Planning [id = 30], Open Systems Lab [id = 1], and Templates [id = 29]  team '
+  - role: platformAdmin
+    permission:
+      columns:
+        - can_create_from_copy
+        - created_at
+        - creator_id
+        - data
+        - deleted_at
+        - description
+        - id
+        - is_listed_on_lps
+        - is_template
+        - limitations
+        - name
+        - settings
+        - slug
+        - status
+        - summary
+        - team_id
+        - templated_from
+        - updated_at
+        - version
+      computed_fields:
+        - data_merged
+      filter:
+        deleted_at:
+          _is_null: true
+      allow_aggregations: true
+  - role: public
+    permission:
+      columns:
+        - can_create_from_copy
+        - created_at
+        - creator_id
+        - data
+        - description
+        - id
+        - is_listed_on_lps
+        - is_template
+        - limitations
+        - name
+        - settings
+        - slug
+        - status
+        - summary
+        - team_id
+        - templated_from
+        - updated_at
+        - version
+      computed_fields:
+        - data_merged
+      filter:
+        deleted_at:
+          _is_null: true
+      allow_aggregations: true
+    comment: ""
+  - role: teamEditor
+    permission:
+      columns:
+        - can_create_from_copy
+        - created_at
+        - creator_id
+        - data
+        - deleted_at
+        - description
+        - id
+        - is_listed_on_lps
+        - is_template
+        - limitations
+        - name
+        - settings
+        - slug
+        - status
+        - summary
+        - team_id
+        - templated_from
+        - updated_at
+        - version
+      computed_fields:
+        - data_merged
+      filter:
+        deleted_at:
+          _is_null: true
+      allow_aggregations: true
+update_permissions:
+  - role: api
+    permission:
+      columns:
+        - can_create_from_copy
+        - copied_from
+        - created_at
+        - creator_id
+        - data
+        - description
+        - id
+        - is_listed_on_lps
+        - limitations
+        - name
+        - settings
+        - slug
+        - status
+        - summary
+        - team_id
+        - updated_at
+        - version
+      filter:
+        _and:
+          - is_template:
+              _eq: false
+          - deleted_at:
+              _is_null: true
+      check:
+        _not:
+          _and:
+            - status:
+                _eq: online
+            - team:
+                team_settings:
+                  is_trial:
+                    _eq: true
+      validate_input:
+        definition:
+          forward_client_headers: false
+          headers:
+            - name: authorization
+              value: '{{HASURA_PLANX_API_KEY}}'
+          timeout: 10
+          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+        type: http
+  - role: demoUser
+    permission:
+      columns:
+        - copied_from
+        - created_at
+        - creator_id
+        - data
+        - deleted_at
+        - description
+        - id
+        - limitations
+        - name
+        - settings
+        - slug
+        - summary
+        - team_id
+        - updated_at
+        - version
+      filter:
+        _and:
+          - team_id:
+              _eq: 32
+          - creator_id:
+              _eq: x-hasura-user-id
+          - deleted_at:
+              _is_null: true
+          - is_template:
+              _eq: false
+      check:
+        _and:
+          - team_id:
+              _eq: 32
+          - creator_id:
+              _eq: x-hasura-user-id
+          - _not:
+              _and:
+                - status:
+                    _eq: online
+                - team:
+                    team_settings:
+                      is_trial:
+                        _eq: true
+      validate_input:
+        definition:
+          forward_client_headers: false
+          headers:
+            - name: authorization
+              value: '{{HASURA_PLANX_API_KEY}}'
+          timeout: 10
+          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+        type: http
+    comment: ""
+  - role: platformAdmin
+    permission:
+      columns:
+        - can_create_from_copy
+        - data
+        - deleted_at
+        - description
+        - is_listed_on_lps
+        - is_template
+        - limitations
+        - name
+        - settings
+        - slug
+        - status
+        - summary
+        - team_id
+      filter:
+        deleted_at:
+          _is_null: true
+      check:
+        _not:
+          _and:
+            - status:
+                _eq: online
+            - team:
+                team_settings:
+                  is_trial:
+                    _eq: true
+      validate_input:
+        definition:
+          forward_client_headers: false
+          headers:
+            - name: authorization
+              value: '{{HASURA_PLANX_API_KEY}}'
+          timeout: 10
+          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+        type: http
+  - role: teamEditor
+    permission:
+      columns:
+        - can_create_from_copy
+        - data
+        - deleted_at
+        - description
+        - is_listed_on_lps
+        - limitations
+        - name
+        - settings
+        - slug
+        - status
+        - summary
+        - team_id
+      filter:
+        _and:
+          - team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamEditor
+          - deleted_at:
+              _is_null: true
+          - is_template:
+              _eq: false
+      check:
+        _and:
+          - team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamEditor
+          - _not:
+              _and:
+                - status:
+                    _eq: online
+                - team:
+                    team_settings:
+                      is_trial:
+                        _eq: true
+      validate_input:
+        definition:
+          forward_client_headers: false
+          headers:
+            - name: authorization
+              value: '{{HASURA_PLANX_API_KEY}}'
+          timeout: 10
+          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+        type: http
+event_triggers:
+  - name: update_templated_flow_edits
+    definition:
+      enable_manual: false
+      update:
+        columns:
+          - data
+    retry_conf:
+      interval_sec: 10
+      num_retries: 0
+      timeout_sec: 60
+    webhook: '{{HASURA_PLANX_API_URL}}'
+    headers:
+      - name: authorization
+        value_from_env: HASURA_PLANX_API_KEY
+    request_transform:
+      body:
+        action: transform
+        template: |-
+          {
+            "createdAt": {{$body.created_at}},
+            "payload": {
+              "flowId": {{$body.event.data.new.id}},
+              "templatedFrom": {{$body.event.data.new.templated_from}},
+              "data": {{$body.event.data.new.data}}
+            }
+          }
+      method: POST
+      query_params: {}
+      template_engine: Kriti
+      url: '{{$base_url}}/webhooks/hasura/update-templated-flow-edits'
+      version: 2

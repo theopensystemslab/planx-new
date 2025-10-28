@@ -4,9 +4,14 @@ permissions: read-all
 
 on:
   schedule:
-    # Runs nightly at 00:00 (https://crontab.guru/#0_0_*_*_*)
-    - cron: '0 0 * * *'
+    # Runs nightly at 04:00 (https://crontab.guru/#0_4_*_*_*)
+    - cron: '0 4 * * *'
   workflow_dispatch:
+
+env:
+  EDITOR_DIRECTORY: editor.planx.uk
+  API_DIRECTORY: apps/api.planx.uk
+  HASURA_DIRECTORY: apps/hasura.planx.uk
 
 jobs:
   build:
@@ -22,7 +27,7 @@ jobs:
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -33,7 +38,7 @@ jobs:
         id: check_files
         uses: andstor/file-existence-action@v2
         with:
-          files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
+          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, ${{ env.HASURA_DIRECTORY }}/.env.test"
           fail: true
       - name: Run sync script
         run: | 

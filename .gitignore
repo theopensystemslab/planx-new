@@ -1,6 +1,6 @@
 node_modules/
 /ignore/
-editor.planx.uk/.eslintcache
+apps/editor.planx.uk/.eslintcache
 /minio-data
 .pnpm-debug.log
 .DS_Store
@@ -10,9 +10,10 @@ editor.planx.uk/.eslintcache
 .envrc
 .env.prod
 .env.temp
-api.planx.uk/.env.test
-editor.planx.uk/.env
-hasura.planx.uk/.env.test
+apps/api.planx.uk/.env.test
+apps/editor.planx.uk/.env
+apps/hasura.planx.uk/.env.test
+apps/hasura.planx.uk/.env.test
 
 # IDE
 .vscode
@@ -20,7 +21,7 @@ hasura.planx.uk/.env.test
 /test-results/
 /playwright-report/
 /playwright/.cache/
-api.planx.uk/tmp/
+apps/api.planx.uk/tmp/
 
 # Python
 .python-version

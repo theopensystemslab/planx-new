@@ -177,6 +177,7 @@ const createBaseComponent = async (
   }
 
   await page.locator('button[form="modal"][type="submit"]').click();
+  await page.getByRole("dialog").waitFor({ state: "detached" });
 };
 
 export const createQuestionWithOptions = async (

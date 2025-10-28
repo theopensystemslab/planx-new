@@ -20,7 +20,7 @@ import {
 } from "./utils";
 import { createHasuraService } from "./services/hasura";
 import { createLocalPlanningServices } from "./services/lps";
-import { CustomDomains } from "../common/teams";
+import { CustomDomain } from "../common/teams";
 
 const config = new pulumi.Config();
 
@@ -33,68 +33,90 @@ const data = new pulumi.StackReference(`planx/data/${env}`);
 // You can generate tokens here: https://dash.cloudflare.com/profile/api-tokens
 new pulumi.Config("cloudflare").requireSecret("apiToken");
 
-const CUSTOM_DOMAINS: CustomDomains =
+const CUSTOM_DOMAINS: CustomDomain[] =
   env === "production"
     ? [
         {
           domain: "planningservices.buckinghamshire.gov.uk",
-          name: "bucks",
+          name: "buckinghamshire",
         },
         {
           domain: "planningservices.southwark.gov.uk",
           name: "southwark",
+          certificateLocation: "pulumiConfig",
         },
         {
           domain: "planningservices.lambeth.gov.uk",
           name: "lambeth",
+          certificateLocation: "pulumiConfig",
         },
         {
           domain: "planningservices.doncaster.gov.uk",
           name: "doncaster",
+          certificateLocation: "pulumiConfig",
         },
         {
           domain: "planningservices.medway.gov.uk",
           name: "medway",
+          certificateLocation: "pulumiConfig",
         },
         {
           domain: "planningservices.stalbans.gov.uk",
           name: "stalbans",
+          certificateLocation: "pulumiConfig",
         },
         {
           domain: "planningservices.camden.gov.uk",
           name: "camden",
+          certificateLocation: "pulumiConfig",
         },
         {
           domain: "planningservices.barnet.gov.uk",
           name: "barnet",
+          certificateLocation: "pulumiConfig",
         },
         {
           domain: "planningservices.tewkesbury.gov.uk",
           name: "tewkesbury",
+          certificateLocation: "pulumiConfig",
         },
         {
           domain: "planningservices.westberks.gov.uk",
           name: "westberks",
+          certificateLocation: "pulumiConfig",
         },
         {
           domain: "planningservices.gateshead.gov.uk",
           name: "gateshead",
+          certificateLocation: "pulumiConfig",
         },
         {
           domain: "planningservices.gloucester.gov.uk",
           name: "gloucester",
+          certificateLocation: "pulumiConfig",
         },
         {
           domain: "planningservices.epsom-ewell.gov.uk",
           name: "epsom-and-ewell",
+          certificateLocation: "pulumiConfig",
         },
         {
           domain: "planningservices.newcastle.gov.uk",
           name: "newcastle",
+          certificateLocation: "pulumiConfig",
         },
         {
           domain: "planningservices.lbbd.gov.uk",
           name: "barking-and-dagenham",
+          certificateLocation: "pulumiConfig",
+        },
+        {
+          domain: "planningservices.southglos.gov.uk",
+          name: "south-gloucestershire",
+        },
+        {
+          domain: "planningservices.birmingham.gov.uk",
+          name: "birmingham",
         },
       ]
     : [];
@@ -213,7 +235,7 @@ export = async () => {
       }),
       container: {
         // if changing, also check docker-compose.yml
-        image: "metabase/metabase:v0.56.2",
+        image: "metabase/metabase:v0.56.6",
         portMappings: [metabaseListenerHttp],
         // When changing `memory`, also update `JAVA_OPTS` below
         memory: 4096 /*MB*/,
@@ -348,7 +370,7 @@ export = async () => {
       }),
       container: {
         image: repo.buildAndPushImage({
-          context: "../../api.planx.uk",
+          context: "../../apps/api.planx.uk",
           target: "production",
         }),
         cpu: 2048,
@@ -512,6 +534,10 @@ export = async () => {
             name: "METABASE_URL_EXT",
             value: `https://metabase.${DOMAIN}`,
           },
+          {
+            name: "LPS_URL_EXT",
+            value: pulumi.interpolate`https://${config.require("lps-domain")}`,
+          },
           generateCORSAllowList(CUSTOM_DOMAINS, DOMAIN),
           ...generateTeamSecrets(config, env),
         ],
@@ -567,7 +593,7 @@ export = async () => {
         retentionInDays: 30,
       }),
       container: {
-        image: repo.buildAndPushImage("../../sharedb.planx.uk"),
+        image: repo.buildAndPushImage("../../apps/sharedb.planx.uk"),
         memory: 512 /*MB*/,
         portMappings: [sharedbListenerHttp],
         environment: [
@@ -604,15 +630,15 @@ export = async () => {
   });
 
   fsWalk
-    .walkSync("../../editor.planx.uk/build/", {
+    .walkSync("../../apps/editor.planx.uk/build/", {
       basePath: "",
       entryFilter: (e) => !e.dirent.isDirectory(),
     })
     .forEach(({ path }) => {
-      const relativeFilePath = `../../editor.planx.uk/build/${path}`;
+      const relativeFilePath = `../../apps/editor.planx.uk/build/${path}`;
       const contentType = mime.getType(relativeFilePath) || "";
       const contentFile = new aws.s3.BucketObject(
-        relativeFilePath,
+        path,
         {
           key: path,
           acl: "public-read",
@@ -626,6 +652,8 @@ export = async () => {
         },
         {
           parent: frontendBucket,
+          // Temp transition alias
+          aliases: [{ name: `../../editor.planx.uk/build/${path}` }]
         }
       );
     });
@@ -641,29 +669,65 @@ export = async () => {
     function createCustomDomain({
       domain,
       name,
-    }: {
-      domain: string;
-      name: string;
-    }) {
+      certificateLocation = "secretsManager"
+    }: CustomDomain) {
       // These certificates are created on the `application` stack (as opposed to the `certificates` stack) they're certificates generated by third-party. We're just importing into AWS ACM.
-      const certificate = new aws.acm.Certificate(
-        `sslCert-${name}`,
-        {
-          // File starting with `-----BEGIN PRIVATE KEY-----`
-          privateKey: config.requireSecret(`ssl-${name}-key`),
-          // File starting with `-----BEGIN CERTIFICATE-----`
-          certificateBody: config.requireSecret(`ssl-${name}-cert`),
-          // File starting with `-----BEGIN CERTIFICATE-----`
-          // AWS calls it "Chain" but it's usually called "intermediate"
-          // This is optional, not all teams will provide one
-          certificateChain: config.getSecret(`ssl-${name}-chain`),
-        },
-        {
-          provider: usEast1,
-          replaceOnChanges: ["privateKey"],
-        }
-      );
-      const cdn = createCdn({ domain, acmCertificateArn: certificate.arn, bucket: frontendBucket, logsBucket });
+      let acmCertificateArn: pulumi.Output<string>;
+
+      // Get certificates from AWS Secrets Manager
+      if (certificateLocation === "secretsManager") {
+        const secretId = `ssl/${name}`;
+        const certSecret = pulumi.output(aws.secretsmanager.getSecretVersion({ secretId }));
+        const certData = certSecret.apply(secretResult =>
+          JSON.parse(secretResult.secretString)
+        );
+        const certificate = new aws.acm.Certificate(
+          `sslCert-${name}`,
+          {
+            privateKey: certData.apply(data => data.key),
+            certificateBody: certData.apply(data => data.cert),
+            certificateChain: certData.apply(data => data?.chain),
+          },
+          { provider: usEast1 }
+        );
+
+        acmCertificateArn = certificate.arn;
+
+      } else {
+        // Get certificates from Pulumi config file
+        const certificate = new aws.acm.Certificate(
+          `sslCert-${name}`,
+          {
+            // File starting with `-----BEGIN PRIVATE KEY-----`
+            privateKey: config.requireSecret(`ssl-${name}-key`),
+            // File starting with `-----BEGIN CERTIFICATE-----`
+            certificateBody: config.requireSecret(`ssl-${name}-cert`),
+            // File starting with `-----BEGIN CERTIFICATE-----`
+            // AWS calls it "Chain" but it's usually called "intermediate"
+            // This is optional, not all teams will provide one
+            certificateChain: config.getSecret(`ssl-${name}-chain`),
+          },
+          {
+            provider: usEast1,
+            replaceOnChanges: ["privateKey"],
+          }
+        );
+
+        acmCertificateArn = certificate.arn;
+      }
+
+      const oai = new aws.cloudfront.OriginAccessIdentity(`${domain}-OAI`, {
+        comment: `OAI for ${domain} CloudFront distribution`,
+      });
+
+      const cdn = createCdn({ 
+        domain, 
+        acmCertificateArn,
+        bucket: frontendBucket, 
+        logsBucket,
+        oai,
+      });
+
       return { domain, cname: cdn.domainName };
     }
   })();
@@ -705,7 +769,18 @@ export = async () => {
     },
     { provider: usEast1 }
   );
-  const cdn = createCdn({ domain: DOMAIN, acmCertificateArn: sslCert.arn, bucket: frontendBucket, logsBucket });
+
+  const oai = new aws.cloudfront.OriginAccessIdentity(`${DOMAIN}-OAI`, {
+    comment: `OAI for ${DOMAIN} CloudFront distribution`,
+  });
+
+  const cdn = createCdn({
+    domain: DOMAIN,
+    acmCertificateArn: sslCert.arn,
+    bucket: frontendBucket,
+    logsBucket,
+    oai,
+  });
 
   const frontendDnsRecord = new cloudflare.Record("frontend", {
     name: tldjs.getSubdomain(DOMAIN) || "@",
@@ -716,13 +791,13 @@ export = async () => {
     proxied: false, // This was causing infinite HTTPS redirects, so let's just use CloudFront only
   });
 
+  // ------------------- LocalPlanning.services
+  createLocalPlanningServices(sslCert);
+
   return {
     customDomains,
   };
 };
-
-// ------------------- LocalPlanning.services
-// createLocalPlanningServices();
 
 new aws.budgets.Budget("general-budget", {
   budgetType: "COST",

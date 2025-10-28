@@ -1,0 +1,1 @@
+ALTER MATERIALIZED VIEW analytics_results RENAME TO analytics_journey_results;

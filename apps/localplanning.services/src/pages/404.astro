@@ -1,0 +1,17 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Masthead from "@components/Masthead.astro";
+import Container from "@components/Container.astro";
+
+const title = "Page not found";
+---
+
+<Layout title={title}>
+  <Masthead title={title} />
+  <Container paddingY>
+    <section class="styled-content">
+      <p>If you typed the web address, check it is correct.</p>
+      <p>If you pasted the web address, check you copied the entire address.</p>
+    </section>
+  </Container>
+</Layout>
