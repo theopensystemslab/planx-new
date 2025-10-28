@@ -17,7 +17,7 @@ const mlSecurityGroup = new aws.ec2.SecurityGroup("ml-ssh-sg", {
   vpcId: vpcId,
 });
 
-const allowSSH = new aws.vpc.SecurityGroupIngressRule("ml-allow-ssh-in", {
+new aws.vpc.SecurityGroupIngressRule("ml-allow-ssh-in", {
     securityGroupId: mlSecurityGroup.id,
     cidrIpv4: "0.0.0.0/0", // allow SSH from anywhere
     fromPort: 22,
@@ -25,7 +25,7 @@ const allowSSH = new aws.vpc.SecurityGroupIngressRule("ml-allow-ssh-in", {
     ipProtocol: "tcp",
 });
 
-const allowAllTrafficIpv4 = new aws.vpc.SecurityGroupEgressRule("ml-allow-ipv4-traffic-out", {
+new aws.vpc.SecurityGroupEgressRule("ml-allow-ipv4-traffic-out", {
     securityGroupId: mlSecurityGroup.id,
     cidrIpv4: "0.0.0.0/0",
     ipProtocol: "-1",
@@ -82,7 +82,6 @@ const g6Instance = new aws.ec2.Instance("ml-training-instance", {
   userData: fs.readFileSync(path.join(__dirname, "user_data.sh"), "utf8"),
 });
 
-// TODO: verify that this budget is tracking the appropriate resources
 // create a cost budget for ML resources (£200/month)
 const mlBudget = new aws.budgets.Budget("ml-infra-budget-monthly", {
   name: "ml-infra-budget-monthly",
@@ -92,13 +91,13 @@ const mlBudget = new aws.budgets.Budget("ml-infra-budget-monthly", {
   timeUnit: "MONTHLY",
   timePeriodStart: "2025-10-01_00:00",
   
-  // cost filters to track resources with project=ml tag (applied by default - see yaml config)
+  // cost filters to track resources with project=ml tag (applied by default via yaml config)
   costFilters: [{
     name: "TagKeyValue",
-    values: ["user:project$ml"],
+    values: ["project$ml"],
   }],
   
-  // XXX: could add SNS/Lambda combo to stop/terminate instances when budget exceeded
+  // XXX: could add SNS/Lambda combo to stop instances when budget exceeded
   notifications: [
     {
       comparisonOperator: "GREATER_THAN",
