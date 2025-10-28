@@ -401,7 +401,7 @@ const EditorToolbar: React.FC<{
 }> = ({ headerRef }) => {
   const { navigate } = useNavigation();
   const [open, setOpen] = useState(false);
-  const user = useStore((state) => state.getUser());
+  const user = useStore((state) => state.user);
 
   const handleClose = () => {
     setOpen(false);

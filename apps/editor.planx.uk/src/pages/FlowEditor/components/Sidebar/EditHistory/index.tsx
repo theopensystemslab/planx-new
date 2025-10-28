@@ -15,7 +15,7 @@ const EditHistory = () => {
     state.id,
     state.canUserEditTeam,
     state.teamSlug,
-    state.getUser(),
+    state.user,
   ]);
 
   const { data, loading, error } = useSubscription<{ history: HistoryItem[] }>(
