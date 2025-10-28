@@ -8,7 +8,7 @@ import server from "test/mockServer";
 import { vi } from "vitest";
 
 // Polyfill for ProgressEvent - missing from JSDOM
-if (typeof ProgressEvent === 'undefined') {
+if (typeof ProgressEvent === "undefined") {
   global.ProgressEvent = class ProgressEvent extends Event {
     lengthComputable: boolean;
     loaded: number;

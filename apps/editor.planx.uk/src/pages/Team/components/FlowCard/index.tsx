@@ -1,8 +1,8 @@
 import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { Link, useSearch } from "@tanstack/react-router";
 import React from "react";
-import { Link, useCurrentRoute } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
@@ -35,11 +35,11 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows }) => {
     state.canUserEditTeam,
     state.teamSlug,
   ]);
-  const route = useCurrentRoute();
+  const searchParams = useSearch({ from: "/_authenticated/$team/" });
 
   const {
     sortObject: { displayName: sortDisplayName },
-  } = getSortParams<FlowSummary>(route.url.query, sortOptions);
+  } = getSortParams<FlowSummary>(searchParams, sortOptions);
 
   const isSubmissionService = flow.publishedFlows?.[0]?.hasSendComponent;
   const isTemplatedFlow = Boolean(flow.templatedFrom);
@@ -141,7 +141,12 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows }) => {
               sx={{ "& > a": { position: "relative", zIndex: 2 } }}
             >
               {`${flow.summary.split(" ").slice(0, 12).join(" ")}... `}
-              <Link href={`./${flow.slug}/about`}>read more</Link>
+              <Link
+                to="/$team/$flow/about"
+                params={{ team: teamSlug, flow: flow.slug }}
+              >
+                read more
+              </Link>{" "}
             </Typography>
           )}
           <DashboardLink

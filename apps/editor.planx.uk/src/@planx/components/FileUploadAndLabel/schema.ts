@@ -1,4 +1,7 @@
-import { baseNodeDataValidationSchema, moreInformationSchema } from '@planx/components/shared';
+import {
+  baseNodeDataValidationSchema,
+  moreInformationSchema,
+} from "@planx/components/shared";
 import { richText } from "lib/yupExtensions";
 import {
   array,
@@ -50,13 +53,16 @@ export const fileTypeSchema: SchemaOf<FileType> = object({
   moreInformation: moreInformationSchema.optional(),
 });
 
-export const fileUploadAndLabelSchema: SchemaOf<FileUploadAndLabel> = baseNodeDataValidationSchema.concat(object({
-  title: string().required(),
-  description: richText(),
-  fn: string(),
-  fileTypes: array().of(fileTypeSchema).required().min(1),
-  hideDropZone: boolean(),
-}));
+export const fileUploadAndLabelSchema: SchemaOf<FileUploadAndLabel> =
+  baseNodeDataValidationSchema.concat(
+    object({
+      title: string().required(),
+      description: richText(),
+      fn: string(),
+      fileTypes: array().of(fileTypeSchema).required().min(1),
+      hideDropZone: boolean(),
+    }),
+  );
 
 interface SlotsSchemaTestContext extends TestContext {
   fileList: FileList;

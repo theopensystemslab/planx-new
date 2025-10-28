@@ -17,7 +17,7 @@ export interface PlanningConstraints extends BaseNodeData {
 }
 
 export const parseContent = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): PlanningConstraints => ({
   title: data?.title || "Planning constraints",
   description:
@@ -67,6 +67,9 @@ export const validationSchema: SchemaOf<PlanningConstraints> =
       description: richText().required(),
       fn: string().nullable().required(),
       disclaimer: richText().required(),
-      dataValues: array(string().required()).min(1, "Select at least one constraint"),
-    })
+      dataValues: array(string().required()).min(
+        1,
+        "Select at least one constraint",
+      ),
+    }),
   );

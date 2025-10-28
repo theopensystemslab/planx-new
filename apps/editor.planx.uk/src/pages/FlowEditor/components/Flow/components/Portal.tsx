@@ -13,7 +13,7 @@ import { Link } from "react-navi";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 import EditorIcon from "ui/icons/Editor";
 
-import { rootFlowPath } from "../../../../../routes/utils";
+import { rootFlowPath } from "../../../../../routes-navi/utils";
 import { getParentId } from "../lib/utils";
 import Hanger from "./Hanger";
 import Question from "./Question";
@@ -51,17 +51,14 @@ const ExternalPortal: React.FC<any> = (props) => {
   useEffect(() => {
     if (!data) return;
 
-    const href = [data.flows_by_pk.team.slug, data.flows_by_pk.slug].join(
-      "/",
-    );
+    const href = [data.flows_by_pk.team.slug, data.flows_by_pk.slug].join("/");
     setHref(href);
     addExternalPortal({
       id: props.data.flowId,
       name: data.flows_by_pk.name,
       href,
     });
-  }, [data, addExternalPortal, props.data.flowId])
-  
+  }, [data, addExternalPortal, props.data.flowId]);
 
   const parent = getParentId(props.parent);
 
@@ -103,7 +100,7 @@ const ExternalPortal: React.FC<any> = (props) => {
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li ref={ref}>
         <Box
-          data-loading={href==="Loading..."}
+          data-loading={href === "Loading..."}
           className={classNames("card", "portal", "external-portal", {
             isDragging,
           })}
@@ -167,11 +164,12 @@ const InternalPortal: React.FC<any> = (props) => {
   });
 
   const handleContextMenu = useContextMenu({
-    source: "node", relationships: {
+    source: "node",
+    relationships: {
       parent,
       before: props.id,
       self: props.id,
-    }
+    },
   });
 
   const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(props.id);
@@ -179,7 +177,7 @@ const InternalPortal: React.FC<any> = (props) => {
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
-      <li 
+      <li
         className={classNames("folder", {
           isClone: isClone(props.id),
         })}

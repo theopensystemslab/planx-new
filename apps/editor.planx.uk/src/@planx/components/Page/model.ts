@@ -38,5 +38,5 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
     title: string().required(),
     description: richText(),
     schemaName: string().required(),
-  })
+  }),
 );

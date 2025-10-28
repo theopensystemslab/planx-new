@@ -61,10 +61,16 @@ export const moveFlow = async ({
   return data;
 };
 
-export const getFlattenedFlowData = async({ flowId, isDraft = false }: { flowId: string, isDraft?: boolean }) => {
+export const getFlattenedFlowData = async ({
+  flowId,
+  isDraft = false,
+}: {
+  flowId: string;
+  isDraft?: boolean;
+}) => {
   const { data } = await apiClient.get<FlowGraph>(
-    `/flows/${flowId}/flatten-data`, 
-    { params: { draft: isDraft } }
+    `/flows/${flowId}/flatten-data`,
+    { params: { draft: isDraft } },
   );
   return data;
-}
+};

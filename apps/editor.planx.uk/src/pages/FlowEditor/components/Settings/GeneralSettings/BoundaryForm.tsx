@@ -2,6 +2,7 @@ import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import { TeamSettings } from "@opensystemslab/planx-core/types";
 import { useMutation } from "@tanstack/react-query";
+import { useParams } from "@tanstack/react-router";
 import { bbox } from "@turf/bbox";
 import { bboxPolygon } from "@turf/bbox-polygon";
 import axios, { isAxiosError } from "axios";
@@ -9,7 +10,6 @@ import { useFormik } from "formik";
 import type { Feature, GeoJsonObject, MultiPolygon, Polygon } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ChangeEvent } from "react";
-import { useCurrentRoute } from "react-navi";
 import InputLabel from "ui/editor/InputLabel";
 import InputLegend from "ui/editor/InputLegend";
 import SettingsDescription from "ui/editor/SettingsDescription";
@@ -156,8 +156,7 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
     },
   });
 
-  const route = useCurrentRoute();
-  const teamSlug = route.data.team;
+  const { team: teamSlug } = useParams({ from: "/_authenticated/$team" });
 
   // Cheltenham, Gloucester and Tewkesbury share a Strategic Local Plan
   //  This joint boundary is not hosted on PD, so we override the usual self-service input

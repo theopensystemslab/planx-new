@@ -27,7 +27,7 @@ import { insertAt, removeAt, setAt } from "../../../utils";
 
 export interface EditorProps<T> {
   index: number;
-  errors: string | string[] | FormikErrors<T> | undefined
+  errors: string | string[] | FormikErrors<T> | undefined;
   value: T;
   onChange: (newValue: T) => void;
   disabled?: boolean;
@@ -35,7 +35,7 @@ export interface EditorProps<T> {
 
 export interface Props<T, EditorExtraProps = {}> {
   values: Array<T>;
-  errors?: string | string[] | FormikErrors<T>[] | undefined
+  errors?: string | string[] | FormikErrors<T>[] | undefined;
   onChange: (newValues: Array<T>) => void;
   newValue: () => T;
   newValueLabel?: string;

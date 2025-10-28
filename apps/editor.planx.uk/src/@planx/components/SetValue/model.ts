@@ -1,6 +1,10 @@
 import { object, string } from "yup";
 
-import { BaseNodeData, baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
+import {
+  BaseNodeData,
+  baseNodeDataValidationSchema,
+  parseBaseNodeData,
+} from "../shared";
 
 export interface BaseSetValue extends BaseNodeData {
   fn: string;
@@ -27,6 +31,8 @@ export const parseSetValue = (
   ...parseBaseNodeData(data),
 });
 
-export const validationSchema = baseNodeDataValidationSchema.concat(object({
-  fn: string().nullable().required(),
-}));
+export const validationSchema = baseNodeDataValidationSchema.concat(
+  object({
+    fn: string().nullable().required(),
+  }),
+);

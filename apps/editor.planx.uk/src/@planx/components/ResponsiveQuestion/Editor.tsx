@@ -7,7 +7,11 @@ import ModalSectionContent from "ui/editor/ModalSectionContent";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { EditorProps } from "../shared/types";
-import { parseResponsiveQuestion, ResponsiveQuestion, validationSchema } from "./model";
+import {
+  parseResponsiveQuestion,
+  ResponsiveQuestion,
+  validationSchema,
+} from "./model";
 
 type Props = EditorProps<TYPES.ResponsiveQuestion, ResponsiveQuestion>;
 

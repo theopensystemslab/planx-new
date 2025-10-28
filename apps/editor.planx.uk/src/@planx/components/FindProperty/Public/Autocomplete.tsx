@@ -79,32 +79,30 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
           latitude: selectedAddress.LAT,
           longitude: selectedAddress.LNG,
           organisation: selectedAddress.ORGANISATION || null,
-          sao: [
-            selectedAddress.SAO_START_NUMBER,
-            selectedAddress.SAO_START_SUFFIX,
-            selectedAddress.SAO_TEXT, // populated in cases of building name only, no street number
-          ]
-            .filter(Boolean)
-            .join("") || undefined,
-          saoEnd: [
-            selectedAddress.SAO_END_NUMBER,
-            selectedAddress.SAO_END_SUFFIX,
-          ]
-            .filter(Boolean)
-            .join("") || undefined,
-          pao: [
-            selectedAddress.PAO_START_NUMBER,
-            selectedAddress.PAO_START_SUFFIX,
-            selectedAddress.PAO_TEXT, // populated in cases of building name only, no street number
-          ]
-            .filter(Boolean)
-            .join("") || undefined,
-          paoEnd: [
-            selectedAddress.PAO_END_NUMBER,
-            selectedAddress.PAO_END_SUFFIX,
-          ]
-            .filter(Boolean)
-            .join("") || undefined,
+          sao:
+            [
+              selectedAddress.SAO_START_NUMBER,
+              selectedAddress.SAO_START_SUFFIX,
+              selectedAddress.SAO_TEXT, // populated in cases of building name only, no street number
+            ]
+              .filter(Boolean)
+              .join("") || undefined,
+          saoEnd:
+            [selectedAddress.SAO_END_NUMBER, selectedAddress.SAO_END_SUFFIX]
+              .filter(Boolean)
+              .join("") || undefined,
+          pao:
+            [
+              selectedAddress.PAO_START_NUMBER,
+              selectedAddress.PAO_START_SUFFIX,
+              selectedAddress.PAO_TEXT, // populated in cases of building name only, no street number
+            ]
+              .filter(Boolean)
+              .join("") || undefined,
+          paoEnd:
+            [selectedAddress.PAO_END_NUMBER, selectedAddress.PAO_END_SUFFIX]
+              .filter(Boolean)
+              .join("") || undefined,
           street: selectedAddress.STREET_DESCRIPTION,
           town: selectedAddress.TOWN_NAME,
           postcode: selectedAddress.POSTCODE_LOCATOR,

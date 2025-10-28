@@ -1,6 +1,6 @@
 import { createBrowserNavigation } from "navi";
 
-import routes from "../routes";
+import routes from "../routes-navi";
 
 const navigation = createBrowserNavigation({
   routes,

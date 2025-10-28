@@ -23,11 +23,11 @@ import { ICONS } from "../shared/icons";
 import BasicRadio from "../shared/Radio/BasicRadio/BasicRadio";
 import { EditorProps } from "../shared/types";
 import { MapAndLabel, parseContent, validationSchema } from "./model";
+import { BreachLocations } from "./schemas/BreachLocations";
 import { SketchPlanCA } from "./schemas/SketchPlanCA";
 import { SketchPlanFullDescriptionCA } from "./schemas/SketchPlanFullDescriptionCA";
 import { SketchPlanFullDescriptionTPO } from "./schemas/SketchPlanFullDescriptionTPO";
 import { SketchPlanTPO } from "./schemas/SketchPlanTPO";
-import { BreachLocations } from "./schemas/BreachLocations";
 
 type Props = EditorProps<TYPES.MapAndLabel, MapAndLabel>;
 

@@ -200,7 +200,7 @@ test("captures output data in the correct format when uploading a file", async (
   const input = screen.getByTestId("upload-input");
   await user.upload(input, file);
   expect(mockedUploadPrivateFile).toHaveBeenCalled();
-  
+
   // Wait for upload to complete
   const progressBar = screen.getByRole("progressbar");
   await waitFor(() => {
@@ -213,7 +213,9 @@ test("captures output data in the correct format when uploading a file", async (
   // DrawBoundary passport variable set
   expect(submitted.data).toHaveProperty(PASSPORT_UPLOAD_KEY);
   expect(submitted.data.locationPlan).toHaveLength(1);
-  expect(submitted.data.locationPlan[0].url).toEqual("https://api.editor.planx.dev/file/private/mock-nanoid/test.png");
+  expect(submitted.data.locationPlan[0].url).toEqual(
+    "https://api.editor.planx.dev/file/private/mock-nanoid/test.png",
+  );
   expect(submitted.data.locationPlan[0].file.name).toEqual("test.png");
 
   // DrawBoundary action captured

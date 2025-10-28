@@ -11,7 +11,7 @@ export interface ResponsiveQuestion extends BaseNodeData {
 }
 
 export const parseResponsiveQuestion = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): ResponsiveQuestion => ({
   fn: data?.fn || "",
   ...parseBaseNodeData(data),
@@ -21,5 +21,5 @@ export const validationSchema: SchemaOf<ResponsiveQuestion> =
   baseNodeDataValidationSchema.concat(
     object({
       fn: string().nullable().required(),
-    })
+    }),
   );

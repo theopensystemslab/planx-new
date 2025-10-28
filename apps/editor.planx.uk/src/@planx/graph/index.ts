@@ -1,4 +1,7 @@
-import { ComponentType as TYPES, NodeId } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType as TYPES,
+  NodeId,
+} from "@opensystemslab/planx-core/types";
 import { enablePatches, produceWithPatches } from "immer";
 import { isEqual } from "lodash";
 import difference from "lodash/difference";
@@ -44,7 +47,7 @@ export const isClone = (id: string, graph: Graph): boolean => {
   }
 
   return false;
-}
+};
 
 const isSomething = (x: any): boolean =>
   x !== null && x !== undefined && x !== "";
@@ -485,11 +488,11 @@ export const makeUnique =
           node.edges.push(id);
         } else {
           const newId = idFn();
-          const relationships = { 
-            parent, 
+          const relationships = {
+            parent,
             // Only define a `before` value when adding the original node, not its edges
             ...(firstCall && { before: id }),
-          }
+          };
           _add(draft, { id: newId, ...nodeData }, relationships);
           edges.forEach((tgt: string) => {
             _makeUnique(tgt, newId, { idFn }, false);
@@ -696,7 +699,7 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
 
 /**
  * Convert flat list of nodes to a hierarchical graph
- * 
+ *
  * @description
  * Our graph is stored as a flat data structure (key:value pairs of nodeId:nodeData)
  * When we "copy" we also keep a flat structure on the clipboard
@@ -706,8 +709,8 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
 export const buildGraphFromNodes = (
   nodeId: string,
   allNodes: { [id: string]: Store.Node },
-  visited = new Set<string>()
-): { id: NodeId, children: Store.Node[] } => {
+  visited = new Set<string>(),
+): { id: NodeId; children: Store.Node[] } => {
   // Guard for cycles in the graph
   if (visited.has(nodeId)) {
     return { id: nodeId, ...allNodes[nodeId], children: [] };
@@ -716,9 +719,9 @@ export const buildGraphFromNodes = (
 
   const nodeData = allNodes[nodeId];
   const children = (nodeData.edges || []).map((childId: string) =>
-    buildGraphFromNodes(childId, allNodes, visited)
+    buildGraphFromNodes(childId, allNodes, visited),
   );
-  
+
   // Strip our the original edges property, these are captured as children when adding a new node
   const { edges: _edges, ...restOfNodeData } = nodeData;
 

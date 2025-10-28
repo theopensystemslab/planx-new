@@ -21,10 +21,11 @@ export const parseContent = (
 export const DEFAULT_REVIEW_DISCLAIMER =
   "<p>Changing this answer means you will need to confirm any other answers after it. This is because: </p><ul><li>a different answer might mean the service asks new questions</li><li>your planning officer needs the right information to assess your application</li></ul>";
 
-export const validationSchema: SchemaOf<Review> = baseNodeDataValidationSchema.concat(
-  object({
-    title: string().required(),
-    description: richText(),
-    disclaimer: richText(),
-  })
-);
+export const validationSchema: SchemaOf<Review> =
+  baseNodeDataValidationSchema.concat(
+    object({
+      title: string().required(),
+      description: richText(),
+      disclaimer: richText(),
+    }),
+  );

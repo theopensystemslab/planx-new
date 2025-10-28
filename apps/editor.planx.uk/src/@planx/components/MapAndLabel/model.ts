@@ -2,7 +2,11 @@ import { richText } from "lib/yupExtensions";
 import cloneDeep from "lodash/cloneDeep";
 import { object, string } from "yup";
 
-import { BaseNodeData, baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
+import {
+  BaseNodeData,
+  baseNodeDataValidationSchema,
+  parseBaseNodeData,
+} from "../shared";
 import { Schema } from "../shared/Schema/model";
 import { SCHEMAS } from "./Editor";
 
@@ -31,12 +35,16 @@ export const parseContent = (
   ...parseBaseNodeData(data),
 });
 
-export const validationSchema = baseNodeDataValidationSchema.concat(object({
-  fn: string().nullable().required(),
-  title: string().required(),
-  description: richText(),
-  basemap: string().oneOf(["OSVectorTile", "OSRaster", "MapboxSatellite", "OSM"]).required(),
-  drawColor: string().required(),
-  drawType: string().oneOf(["Polygon", "Point"]).required(),
-  schemaName: string().required(),
-}));
+export const validationSchema = baseNodeDataValidationSchema.concat(
+  object({
+    fn: string().nullable().required(),
+    title: string().required(),
+    description: richText(),
+    basemap: string()
+      .oneOf(["OSVectorTile", "OSRaster", "MapboxSatellite", "OSM"])
+      .required(),
+    drawColor: string().required(),
+    drawType: string().oneOf(["Polygon", "Point"]).required(),
+    schemaName: string().required(),
+  }),
+);

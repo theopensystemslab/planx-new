@@ -6,7 +6,7 @@ import { styled } from "@mui/material/styles";
 import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
 import { parentNodeIsTemplatedInternalPortal } from "pages/FlowEditor/utils";
 import React, { useRef } from "react";
-import { rootFlowPath } from "routes/utils";
+import { rootFlowPath } from "routes-navi/utils";
 
 import Flow from "./components/Flow";
 import { getParentId } from "./components/Flow/lib/utils";

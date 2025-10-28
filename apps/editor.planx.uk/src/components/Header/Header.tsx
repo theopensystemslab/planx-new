@@ -5,12 +5,10 @@ import Person from "@mui/icons-material/Person";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import { grey } from "@mui/material/colors";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
-import Link from "@mui/material/Link";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
@@ -21,17 +19,12 @@ import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useMutation } from "@tanstack/react-query";
+import { useLocation, useNavigate, useParams } from "@tanstack/react-router";
 import { logout } from "api/auth/requests";
 import { clearLocalFlowIdb } from "lib/local.idb";
 import { capitalize } from "lodash";
-import { Route } from "navi";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React, { RefObject, useRef, useState } from "react";
-import {
-  Link as ReactNaviLink,
-  useCurrentRoute,
-  useNavigation,
-} from "react-navi";
 import {
   borderedFocusStyle,
   FONT_WEIGHT_SEMI_BOLD,
@@ -41,9 +34,9 @@ import { ApplicationPath } from "types";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType } from "ui/editor/FlowTag/types";
 import Reset from "ui/icons/Reset";
+import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 import { useStore } from "../../pages/FlowEditor/lib/store";
-import { rootFlowPath } from "../../routes/utils";
 import AnalyticsDisabledBanner from "../AnalyticsDisabled/AnalyticsDisabledBanner";
 import { ConfirmationDialog } from "../ConfirmationDialog";
 import { SectionNavBar } from "./Sections/NavBar";
@@ -64,11 +57,11 @@ const BreadcrumbsRoot = styled(Box)(() => ({
   alignItems: "center",
 }));
 
-const BreadcrumbsLink = styled(Link)(({ theme }) => ({
+const BreadcrumbsLink = styled(CustomLink)(({ theme }) => ({
   color: theme.palette.common.white,
   textDecoration: "none",
   borderBottom: "1px solid rgba(255, 255, 255, 0.75)",
-})) as typeof Link;
+})) as typeof CustomLink;
 
 const PublicHeader = styled(MuiToolbar)(() => ({
   height: HEADER_HEIGHT_PUBLIC,
@@ -148,7 +141,7 @@ const Logo = styled("img")(() => ({
   },
 }));
 
-const LogoLink = styled(Link)(() => ({
+const LogoLink = styled(CustomLink)(() => ({
   display: "flex",
   alignItems: "center",
   "&:focus-visible": borderedFocusStyle,
@@ -182,30 +175,28 @@ const TeamLogo: React.FC = () => {
     : `${teamName} Logo`;
   const logo = <Logo alt={altText} src={teamTheme?.logo ?? undefined} />;
   return teamSettings?.homepage ? (
-    <LogoLink href={teamSettings?.homepage} target="_blank">
-      {logo}
-    </LogoLink>
+    <LogoLink to={teamSettings?.homepage}>{logo}</LogoLink>
   ) : (
     logo
   );
 };
 
 const Breadcrumbs: React.FC = () => {
-  const route = useCurrentRoute();
-  const [team, isStandalone] = useStore((state) => [
-    state.getTeam(),
-    state.previewEnvironment === "standalone",
-  ]);
-
+  const params = useParams({ strict: false });
+  const team = useStore((state) => state.getTeam());
+  const isStandalone = useStore(
+    (state) => state.previewEnvironment === "standalone",
+  );
+  const flowSlug = useStore((state) => state.flowSlug);
+  const flowName = useStore((state) => state.flowName);
   const flowStatus = useStore((state) => state.flowStatus);
+  const canUserEditTeam = useStore((state) => state.canUserEditTeam);
 
   return (
     <>
       <BreadcrumbsRoot>
         <BreadcrumbsLink
-          component={ReactNaviLink}
-          href={"/"}
-          prefetch={false}
+          to="/"
           {...(isStandalone && { target: "_blank" })}
           variant="body1"
         >
@@ -215,9 +206,10 @@ const Breadcrumbs: React.FC = () => {
           <>
             {" / "}
             <BreadcrumbsLink
-              component={ReactNaviLink}
-              href={`/${team.slug}`}
-              prefetch={false}
+              to="/$team"
+              params={{
+                team: team.slug,
+              }}
               {...(isStandalone && { target: "_blank" })}
               variant="body1"
             >
@@ -225,37 +217,39 @@ const Breadcrumbs: React.FC = () => {
             </BreadcrumbsLink>
           </>
         )}
-        {route.data.flow && (
+        {params.flow && (
           <>
             {" / "}
-            <Link
-              style={{
-                color: "#fff",
-                textDecoration: "none",
+            <BreadcrumbsLink
+              to="/$team/$flow"
+              params={{
+                team: team.slug,
+                flow: flowSlug,
               }}
-              component={ReactNaviLink}
-              href={rootFlowPath(false)}
-              prefetch={false}
+              {...(isStandalone && { target: "_blank" })}
               variant="body1"
             >
-              {route.data.flow}
-            </Link>
+              {flowName || flowSlug}
+            </BreadcrumbsLink>
           </>
         )}
       </BreadcrumbsRoot>
-      {route.data.flow && (
+      {params.flow && (
         <Box sx={(theme) => ({ color: theme.palette.text.primary })}>
-          {useStore.getState().canUserEditTeam(team.slug) ? (
-            <Button
-              variant="link"
-              href={`/${team.slug}/${route.data.flow}/settings`}
+          {canUserEditTeam(team.slug) ? (
+            <BreadcrumbsLink
+              to="/$team/$flow/settings"
+              params={{
+                team: team.slug,
+                flow: flowSlug,
+              }}
               title="Update service status"
               sx={{ textDecoration: "none" }}
             >
               <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
                 {flowStatus}
               </FlowTag>
-            </Button>
+            </BreadcrumbsLink>
           ) : (
             <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
               {flowStatus}
@@ -370,8 +364,8 @@ const PublicToolbar: React.FC<{
 
 const ServiceTitle: React.FC = () => {
   const flowName = useStore((state) => state.flowName);
-  const route = useCurrentRoute();
-  const path = route.url.pathname.split("/").slice(-1)[0];
+  const location = useLocation();
+  const path = location.pathname.split("/").slice(-1)[0];
 
   return (
     <ServiceTitleRoot data-testid="service-title">
@@ -397,9 +391,8 @@ const ServiceTitle: React.FC = () => {
 
 const EditorToolbar: React.FC<{
   headerRef: React.RefObject<HTMLElement>;
-  route: Route;
 }> = ({ headerRef }) => {
-  const { navigate } = useNavigation();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const user = useStore((state) => state.user);
 
@@ -414,7 +407,7 @@ const EditorToolbar: React.FC<{
   const logoutMutation = useMutation({
     mutationKey: ["logout", user?.id],
     mutationFn: logout,
-    onSuccess: () => navigate("/logout"),
+    onSuccess: () => navigate({ to: "/logout" }),
   });
 
   const handleLogout = () => logoutMutation.mutate();
@@ -497,8 +490,8 @@ interface ToolbarProps {
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
-  const route = useCurrentRoute();
-  const path = route.url.pathname.split("/").slice(-1)[0] || undefined;
+  const location = useLocation();
+  const path = location.pathname.split("/").slice(-1)[0] || undefined;
   const [flowSlug, previewEnvironment] = useStore((state) => [
     state.flowSlug,
     state.previewEnvironment,
@@ -510,7 +503,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
     path !== "draft" &&
     path !== "preview"
   ) {
-    return <EditorToolbar headerRef={headerRef} route={route}></EditorToolbar>;
+    return <EditorToolbar headerRef={headerRef}></EditorToolbar>;
   }
 
   switch (path) {
@@ -528,6 +521,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
 const Header: React.FC = () => {
   const headerRef = useRef<HTMLDivElement>(null);
   const teamTheme = useStore((state) => state.teamTheme);
+
   return (
     <Root
       position="static"

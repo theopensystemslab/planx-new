@@ -15,7 +15,9 @@ it("should not have any accessibility violations", async () => {
 it.todo("displays a planning fee");
 
 it.todo("displays a single total if VAT is not applicable");
-it.todo("displays VAT and total columns for each row if VAT is applicable to any row");
+it.todo(
+  "displays VAT and total columns for each row if VAT is applicable to any row",
+);
 
 it.todo("displays a service charge if applicable");
 it.todo("does not display a service charge if not applicable");

@@ -22,7 +22,7 @@ const ServiceSettings: React.FC = () => {
       <FlowStatus />
       {!isTemplatedFrom && !isTemplate && <FlowVisibility />}
       <FooterLinksAndLegalDisclaimer />
-      <LPSListing/>
+      <LPSListing />
       {isTemplatedFrom && <TemplatedFlowStatus />}
     </Container>
   );

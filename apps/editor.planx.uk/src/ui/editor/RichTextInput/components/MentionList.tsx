@@ -7,11 +7,7 @@ import React, {
 
 import { passportClassName } from "../tiptapExtensions";
 import { useVariablesStore } from "../utils";
-import {
-  MentionItems,
-  MentionItemsButton,
-  MentionItemsEmpty,
-} from "../styles";
+import { MentionItems, MentionItemsButton, MentionItemsEmpty } from "../styles";
 import { MentionListProps } from "../types";
 
 // Implemented based on the mention plugin example code snippets: https://tiptap.dev/api/nodes/mention

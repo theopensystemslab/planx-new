@@ -1,14 +1,14 @@
 import Typography from "@mui/material/Typography";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import { useFormik } from "formik";
 import { get, isEmpty, omit } from "lodash";
 import React, { useEffect, useState } from "react";
-import { useCurrentRoute, useNavigation } from "react-navi";
 import { Paths } from "type-fest";
 import { slugify } from "utils";
 
 import { FiltersColumn } from "./FiltersColumn";
 import { FiltersContent } from "./FilterStyles";
-import { addToSearchParams, clearSearchParams } from "./searchParamUtils";
+import { updateSearchParams } from "./searchParamUtils";
 
 export type FilterKey<T> = Paths<T>;
 export type FilterValues = string;
@@ -55,25 +55,19 @@ export const Filters = <T extends object>({
 }: FiltersProps<T>) => {
   const [optionsToFilter] = useState(filterOptions);
 
-  const navigation = useNavigation();
-  const route = useCurrentRoute();
+  const navigate = useNavigate();
+  const searchParams = useSearch({ from: "/_authenticated/$team/" });
 
   const { values, setFieldValue, submitForm, resetForm } = useFormik<{
     filters: Filters<T> | null;
   }>({
     initialValues: { filters: null },
     onSubmit: ({ filters }) => {
+      updateSearchParams<T>(filters, optionsToFilter, navigate);
+
       if (!filters && records) {
-        clearSearchParams<T>(route.url.search, optionsToFilter, navigation);
         setFilteredRecords(records);
-      }
-      if (filters) {
-        addToSearchParams<T>(
-          filters,
-          route.url.search,
-          optionsToFilter,
-          navigation,
-        );
+      } else if (filters) {
         const filteredRecords = records.filter((record: T) => {
           return optionsToFilter.every((value: FilterOptions<T>) => {
             const valueToFilter = get(filters, value.optionKey);
@@ -88,25 +82,24 @@ export const Filters = <T extends object>({
     },
   });
 
-  const findFiltersFromSearchParams = ([displayName, optionValue]: [
-    FilterKey<T>,
-    FilterValues,
-  ]) => {
-    const findOption = optionsToFilter.find(
-      (option) => slugify(`${option.displayName}`) === `${displayName}`,
-    );
-    return (
-      findOption &&
-      ({ [`${findOption.optionKey}`]: `${optionValue}` } as
-        | Filters<T>
-        | undefined)
-    );
-  };
-
   useEffect(() => {
+    const findFiltersFromSearchParams = ([displayName, optionValue]: [
+      FilterKey<T>,
+      FilterValues,
+    ]) => {
+      const findOption = optionsToFilter.find(
+        (option) => slugify(`${option.displayName}`) === `${displayName}`,
+      );
+      return (
+        findOption &&
+        ({ [`${findOption.optionKey}`]: `${optionValue}` } as
+          | Filters<T>
+          | undefined)
+      );
+    };
+
     const parseStateFromURL = () => {
-      const searchParams = new URLSearchParams(route.url.search);
-      const searchParamToMap = Array.from(searchParams.entries()) as [
+      const searchParamToMap = Object.entries(searchParams || {}) as [
         FilterKey<T>,
         FilterValues,
       ][];
@@ -131,7 +124,14 @@ export const Filters = <T extends object>({
       parseStateFromURL();
       setFilteredRecords(records);
     }
-  }, []);
+  }, [
+    searchParams,
+    records,
+    setFilteredRecords,
+    setFieldValue,
+    values.filters,
+    optionsToFilter,
+  ]);
 
   useEffect(() => {
     if (values.filters || records) {

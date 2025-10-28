@@ -201,7 +201,7 @@ export const settingsStore: StateCreator<
     const environment = import.meta.env.VITE_APP_ENV;
 
     // If a flow has ever been online, there will be analytics to show
-    const hasAnalytics = Boolean(onlineHistory?.length)
+    const hasAnalytics = Boolean(onlineHistory?.length);
 
     const dashboardId = hasAnalytics
       ? getAnalyticsDashboardId({

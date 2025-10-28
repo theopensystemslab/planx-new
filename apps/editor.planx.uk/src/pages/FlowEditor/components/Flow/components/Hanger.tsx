@@ -10,7 +10,7 @@ import React, { useEffect } from "react";
 import { useDrop } from "react-dnd";
 import { Link } from "react-navi";
 
-import { rootFlowPath } from "../../../../../routes/utils";
+import { rootFlowPath } from "../../../../../routes-navi/utils";
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
 
@@ -37,19 +37,14 @@ const buildHref = (before: any, parent: any) => {
 const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   parent = getParentId(parent);
 
-  const [
-    moveNode,
-    isTemplatedFrom,
-    flow,
-    orderedFlow,
-    setOrderedFlow,
-  ] = useStore((state) => [
-    state.moveNode,
-    state.isTemplatedFrom,
-    state.flow,
-    state.orderedFlow,
-    state.setOrderedFlow,
-  ]);
+  const [moveNode, isTemplatedFrom, flow, orderedFlow, setOrderedFlow] =
+    useStore((state) => [
+      state.moveNode,
+      state.isTemplatedFrom,
+      state.flow,
+      state.orderedFlow,
+      state.setOrderedFlow,
+    ]);
 
   useEffect(() => {
     // Flow might not be loaded via ShareDB (e.g. user has navigated directly to :flow/somePage)
@@ -93,7 +88,7 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
 
   const handleContextMenu = useContextMenu({
     source: "hanger",
-    relationships: { parent, before }
+    relationships: { parent, before },
   });
 
   return (

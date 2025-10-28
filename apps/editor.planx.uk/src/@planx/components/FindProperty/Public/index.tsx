@@ -58,7 +58,7 @@ function Component(props: Props) {
     previouslySubmittedData?._address,
   );
 
-  const { 
+  const {
     localAuthorityDistricts,
     localPlanningAuthorities,
     regions,
@@ -126,8 +126,8 @@ function Component(props: Props) {
 
     // Continue button enabled once we have an address and not actively fetching
     if (page === "os-address") return Boolean(address) && !isPending;
-  }
-  
+  };
+
   const isValid = getValidStatus();
 
   return (

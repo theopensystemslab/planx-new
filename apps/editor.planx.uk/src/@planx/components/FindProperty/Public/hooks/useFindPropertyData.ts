@@ -78,4 +78,4 @@ export const useFindPropertyData = (address?: SiteAddress) => {
     isPending,
     error,
   };
-}
+};
