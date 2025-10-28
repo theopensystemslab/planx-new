@@ -1,7 +1,7 @@
 import { Breadcrumbs } from "@opensystemslab/planx-core/types";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
 import { screen, waitFor } from "@testing-library/react";
-import { uploadPrivateFile } from "api/fileUpload/requests";
+import { uploadPrivateFile } from "lib/api/fileUpload/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react-dom/test-utils";
@@ -16,7 +16,7 @@ import {
 } from "../model";
 import DrawBoundary from ".";
 
-vi.mock("api/fileUpload/requests");
+vi.mock("lib/api/fileUpload/requests");
 const mockedUploadPrivateFile = vi.mocked(uploadPrivateFile);
 
 global.URL.createObjectURL = vi.fn();

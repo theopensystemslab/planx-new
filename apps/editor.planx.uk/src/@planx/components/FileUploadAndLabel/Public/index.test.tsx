@@ -1,7 +1,7 @@
 import { act, screen, waitFor, within } from "@testing-library/react";
 // eslint-disable-next-line no-restricted-imports
 import type { UserEvent } from "@testing-library/user-event";
-import { uploadPrivateFile } from "api/fileUpload/requests";
+import { uploadPrivateFile } from "lib/api/fileUpload/requests";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { setup } from "testUtils";
@@ -16,7 +16,7 @@ import FileUploadAndLabelComponent from ".";
 const { getState, setState } = useStore;
 let initialState: FullStore;
 
-vi.mock("api/fileUpload/requests");
+vi.mock("lib/api/fileUpload/requests");
 const mockedUploadPrivateFile = vi.mocked(uploadPrivateFile);
 
 window.URL.createObjectURL = vi.fn();

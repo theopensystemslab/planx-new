@@ -6,7 +6,7 @@ import { vi } from "vitest";
  * This approach allows us to maintain a single mock of the happy path for file upload
  * 
  * @example
- * vi.mock("api/fileUpload/requests");
+ * vi.mock("lib/api/fileUpload/requests");
  * const mockedUploadPrivateFile = vi.mocked(uploadPrivateFile);
  */
 const defaultMockUpload = async (

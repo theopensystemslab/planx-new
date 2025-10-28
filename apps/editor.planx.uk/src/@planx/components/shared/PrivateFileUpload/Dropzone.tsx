@@ -104,13 +104,14 @@ export const Dropzone: React.FC<Props> = ({
           ...acceptedFiles.map((file) => {
             // XXX: This is a non-blocking promise chain
             //      If a file is removed while it's being uploaded, nothing should break because we're using map()
-            uploadPrivateFile(file, 
-              (progress) => {
+            uploadPrivateFile(file, {
+              onProgress: (progress) => {
                 setSlots((_files) =>
                   _files.map((_file) =>
                     _file.file === file ? { ..._file, progress } : _file,
                   ),
                 );
+              }
             })
               .then(({ fileUrl }) => {
                 setSlots((_files) =>
