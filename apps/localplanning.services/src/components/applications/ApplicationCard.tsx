@@ -124,35 +124,22 @@ const ActionButtons: React.FC<Application> = (application) => {
   );
 };
 
-export const ApplicationCard: React.FC<Application> = (application) => {
-  const cardBgClass = (() => {
-    switch (application.status) {
-      case "awaitingPayment":
-        return "bg-red-100/30";
-      case "submitted":
-        return "bg-green-100/30";
-      default:
-        return "bg-bg-light";
-    }
-  })();
-  
+export const ApplicationCard: React.FC<Application> = (application) => {  
 
   return (
     <li className={`rounded overflow-hidden bg-bg-light`}>
-      <div className={`${cardBgClass}`}>
-        <ProgressText {...application} />
-        <div className="clamp-[px,4,6] clamp-[py,3,5]">
-          <h3 className="text-heading-sm">{application.address || "[Address not yet declared]"}</h3>
-          <div className="flex flex-col md:flex-row md:justify-start md:gap-2 md:items-center">
-            <span className="text-body-lg mb-0">{application.team.name}</span>
-            <span className="hidden md:inline">•</span>
-            <span className="text-body-lg mb-0">{application.service.name}</span>
-          </div>
+      <ProgressText {...application} />
+      <div className="clamp-[px,4,6] clamp-[py,3,5]">
+        <h3 className="text-heading-sm">{application.address || "[Address not yet declared]"}</h3>
+        <div className="flex flex-col md:flex-row md:justify-start md:gap-2 md:items-center">
+          <span className="text-body-lg mb-0">{application.team.name}</span>
+          <span className="hidden md:inline">•</span>
+          <span className="text-body-lg mb-0">{application.service.name}</span>
         </div>
-        <div className="bg-gray-400/15 py-3 clamp-[px,4,6] flex flex-col lg:flex-row clamp-[gap,2,4] justify-between lg:items-center">
-          <ActionText {...application} />
-          <ActionButtons {...application} />
-        </div>
+      </div>
+      <div className="bg-gray-200 py-3 clamp-[px,4,6] flex flex-col lg:flex-row clamp-[gap,2,4] justify-between lg:items-center">
+        <ActionText {...application} />
+        <ActionButtons {...application} />
       </div>
     </li>
   );
