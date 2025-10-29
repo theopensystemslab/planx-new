@@ -1,86 +1,78 @@
-import { toast, ToastOptions } from "react-toastify";
+import { toast } from "react-toastify";
 import ReconnectingWebSocket from "reconnecting-websocket";
-import type { Doc } from "sharedb";
 import sharedb from "sharedb/lib/client";
-import type { Socket } from "sharedb/lib/sharedb";
+import type { Doc, Socket } from "sharedb/lib/sharedb";
 
-// Please see apps/sharedb.planx.uk/server.js
-// Docs: https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent/code#value
+let socket: ReconnectingWebSocket | null = null;
+let connection: sharedb.Connection | null = null;
+
+const SHAREDB_URL: string = import.meta.env.VITE_APP_SHAREDB_URL!;
 const TOKEN_EXPIRY_CODE = 4001 as const;
 
-const createWSConnection = () => {
-  const socket = new ReconnectingWebSocket(
-    import.meta.env.VITE_APP_SHAREDB_URL || "",
-  );
+export function initializeShareDB() {
+  // Ensure we re-open connection when reloading in dev build
+  const isDevBuild =
+    connection &&
+    (connection.state === "stopped" || connection.state === "closed");
+  if (isDevBuild) {
+    console.debug("[ShareDB] Stale connection found, re-initialising");
+    disconnectShareDB();
+  }
 
-  const toastConfig: Partial<ToastOptions> = {
-    hideProgressBar: false,
-    progress: undefined,
-    autoClose: 4_000,
-    onClose: () => (window.location.href = "/logout"),
-  };
+  // Only allow one WS connection per authenticated user
+  if (connection) return;
 
-  /** Listen for expired tokens events and force logout */
+  console.debug("[ShareDB] Initialising websocket connection...");
+
+  socket = new ReconnectingWebSocket(SHAREDB_URL);
+  connection = new sharedb.Connection(socket as unknown as Socket);
+
+  connection.on("state", (newState, reason) => {
+    console.debug(
+      `[ShareDB] Connection state changed to: ${newState}. Reason: ${reason}`,
+    );
+  });
+
   socket.addEventListener("close", ({ code, reason }) => {
     if (code === TOKEN_EXPIRY_CODE && reason === "Token validation error") {
       toast.error(
         "[ShareDB error]: Session expired, redirecting to login page...",
-        {
-          toastId: "sharedb_jwt_expiry",
-          ...toastConfig,
-        },
       );
     }
   });
+}
 
-  /** Fallback for unhandled ShareDB errors */
-  socket.addEventListener("error", (errorEvent) => {
-    console.error("Unhandled ShareDB error: ", { errorEvent });
+export function disconnectShareDB() {
+  if (socket) {
+    console.log("[ShareDB] Closing websocket connection");
+    socket.close();
+  }
+  socket = null;
+  connection = null;
+}
 
-    // Only display a single toast at a time
-    if (toast.isActive("sharedb_jwt_expiry")) return;
+export const getFlowDoc = (id: string): Doc => {
+  initializeShareDB();
+  if (!connection) throw new Error("[ShareDB] Connection failed to initialise");
 
-    toast.error(
-      "[ShareDB error]: Unhandled error, redirecting to login page...",
-      {
-        toastId: "sharedb_error",
-        ...toastConfig,
-      },
-    );
-  });
-
-  return socket;
+  console.debug("[ShareDB] Getting flow ", id);
+  return connection.get("flows", id);
 };
 
-const getShareDBConnection = (): sharedb.Connection => {
-  const socket = createWSConnection();
-  return new sharedb.Connection(socket as unknown as Socket);
-};
+export const subscribeToDoc = (doc: Doc): Promise<void> => {
+  console.debug("[ShareDB] Connecting to", doc.id);
 
-export const getFlowConnection = (id: string) =>
-  getShareDBConnection().get("flows", id);
-
-export const createDoc = async (
-  doc: Doc,
-  initialData = { nodes: {}, edges: [] },
-) => {
-  return new Promise((res, rej) => {
-    doc.create(initialData, (err) => {
-      if (err) rej(err);
-      res({});
-    });
-  });
-};
-
-export const connectToDB = (doc: Doc) =>
-  new Promise((res, rej) => {
-    doc.subscribe(async (err) => {
-      console.log("subscribing to doc");
-      if (err) return rej(err);
+  return new Promise((resolve, reject) => {
+    doc.subscribe((err) => {
+      if (err) return reject(err);
       if (doc.type === null) {
-        console.log("creating doc");
-        await createDoc(doc);
+        doc.create({ nodes: {}, edges: [] }, (createErr) => {
+          if (createErr) return reject(createErr);
+        });
       }
-      return res({});
+
+      console.debug("[ShareDB] Connected to", doc.id);
+      resolve();
     });
   });
+};
