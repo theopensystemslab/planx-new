@@ -68,6 +68,7 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
     <InputRow>
       <ErrorWrapper error={props.errorMessage}>
         <AutocompleteInput
+          sx={{ background: "#f0f0f0" }}
           id="data-field-autocomplete"
           key="data-field-autocomplete"
           data-testid={props["data-testid"]}
