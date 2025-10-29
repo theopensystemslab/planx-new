@@ -25,8 +25,8 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, date }) => {
           icon: paymentIcon,
           label: "Awaiting payment",
           alt: "Awaiting payment status",
-          bgColor: "bg-orange-800",
-          textColor: "text-orange-50"
+          bgColor: "bg-amber-800",
+          textColor: "text-amber-50"
         };
       case "submitted":
         return {
