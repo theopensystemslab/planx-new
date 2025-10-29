@@ -22,6 +22,7 @@ import { CreateFlow, validationSchema } from "./types";
 export const AddFlow: React.FC = () => {
   const { navigate } = useNavigation();
   const { teamId, teamSlug } = useStore();
+  const toast = useToast();
 
   const initialValues: CreateFlow = {
     mode: "new",
@@ -34,35 +35,36 @@ export const AddFlow: React.FC = () => {
     },
   };
 
-  const { mutate: createFlow } = useCreateFlow();
+  const { mutateAsync: createFlow } = useCreateFlow();
 
   const handleSubmit: FormikConfig<CreateFlow>["onSubmit"] = async (
     values,
     { setFieldError, setStatus },
   ) => {
-    createFlow(values, {
-      onSuccess: ({ flow }) => navigate(`/${teamSlug}/${flow.slug}`),
-      onError: (error) => {
-        if (isAxiosError(error)) {
-          const message = error?.response?.data?.error;
-          if (message?.includes("Uniqueness violation")) {
-            setFieldError("flow.name", "Flow name must be unique");
-            return;
-          }
-          if (message?.includes("Invalid HTML")) {
-            logger.notify(
-              `Invalid HTML content found in flow ${values.flow.sourceId}`,
-            );
-            setStatus({
-              error:
-                "Failed to create new flow due to a content issue with the source flow, please contact PlanX support. This error has been logged.",
-            });
-            return;
-          }
+    try {
+      const result = await createFlow(values);
+      toast?.success("Flow created successfully");
+      navigate(`/${teamSlug}/${result.flow.slug}`);
+    } catch (error) {
+      if (isAxiosError(error)) {
+        const message = error?.response?.data?.error;
+        if (message?.includes("Uniqueness violation")) {
+          setFieldError("flow.name", "Flow name must be unique");
+          return;
         }
-        setStatus({ error: "Failed to create flow, please try again." });
-      },
-    });
+        if (message?.includes("Invalid HTML")) {
+          logger.notify(
+            `Invalid HTML content found in flow ${values.flow.sourceId}`,
+          );
+          setStatus({
+            error:
+              "Failed to create new flow due to a content issue with the source flow, please contact PlanX support. This error has been logged.",
+          });
+          return;
+        }
+      }
+      setStatus({ error: "Failed to create flow, please try again." });
+    }
   };
 
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
