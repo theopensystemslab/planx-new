@@ -1,5 +1,5 @@
-import { getFlattenedFlowData } from "api/flow/requests";
 import gql from "graphql-tag";
+import { getFlattenedFlowData } from "lib/api/flow/requests";
 import { publicClient } from "lib/graphql";
 import { queryClient } from "lib/queryClient";
 import { NaviRequest, NotFoundError } from "navi";
@@ -44,7 +44,11 @@ export const draftView = async (req: NaviRequest) => {
 
   return (
     <PublicLayout>
-      <WatermarkBackground variant="dark" opacity={0.05} forceVisibility={true} />
+      <WatermarkBackground
+        variant="dark"
+        opacity={0.05}
+        forceVisibility={true}
+      />
       <TestWarningPage>
         <View />
       </TestWarningPage>

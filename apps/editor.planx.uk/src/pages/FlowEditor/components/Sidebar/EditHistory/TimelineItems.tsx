@@ -3,7 +3,11 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { formatOps } from "@planx/graph";
-import { CommentHistoryItem, OperationHistoryItem, PublishHistoryItem } from "api/publishFlow/types";
+import {
+  CommentHistoryItem,
+  OperationHistoryItem,
+  PublishHistoryItem,
+} from "lib/api/publishFlow/types";
 import { Store } from "pages/FlowEditor/lib/store";
 import React from "react";
 import BlockQuote from "ui/editor/BlockQuote";
@@ -16,7 +20,7 @@ import { isAutoComment } from "../utils";
  *   2. Comments - manually created summary of operations, will be automatically removed if within scope of restore
  *   3. Publishes - snapshot of flattened flow data which becomes available to the public if "online", cannot be "restored" or "undone"
  *
- * Gray color scales are used to denote heirarchy of event types and their available actions
+ * Gray color scales are used to denote hierarchy of event types and their available actions
  */
 
 const TimeLineItem = styled(Box)(({ theme }) => ({

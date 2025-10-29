@@ -1,7 +1,7 @@
 import { screen, waitFor } from "@testing-library/react";
 // eslint-disable-next-line no-restricted-imports
 import type { UserEvent } from "@testing-library/user-event";
-import { uploadPrivateFile } from "api/fileUpload/requests";
+import { uploadPrivateFile } from "lib/api/fileUpload/requests";
 import { vi } from "vitest";
 
 global.URL.createObjectURL = vi.fn();
@@ -11,9 +11,7 @@ const mockedUploadPrivateFile = vi.mocked(uploadPrivateFile);
 /**
  * Helper function to fill out a list item form
  */
-export const fillInResponse = async (
-  user: UserEvent,
-) => {
+export const fillInResponse = async (user: UserEvent) => {
   const nameInput = screen.getByLabelText(/What's their name/);
   await user.type(nameInput, "Richard Parker");
 

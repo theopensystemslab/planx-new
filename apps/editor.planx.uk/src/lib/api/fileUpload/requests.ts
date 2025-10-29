@@ -1,5 +1,5 @@
-import apiClient from "api/client";
 import { AxiosProgressEvent } from "axios";
+import apiClient from "lib/api/client";
 
 import { UploadFileResponse, UploadFunction, UploadHandler } from "./types";
 
