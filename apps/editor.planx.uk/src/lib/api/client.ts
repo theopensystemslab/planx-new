@@ -4,8 +4,8 @@ import { toast } from "react-toastify";
 
 export interface APIError<T> {
   message: string;
-  statusCode: number
-  data: T
+  statusCode: number;
+  data: T;
 }
 
 const apiClient = axios.create({
@@ -69,7 +69,7 @@ apiClient.interceptors.response.use(
       message: error.message || "An unexpected error occurred",
       statusCode: status,
       data: error.response?.data,
-    } as APIError<unknown>
+    } as APIError<unknown>;
 
     console.error("[API Error]:", apiError);
     return Promise.reject(apiError);
