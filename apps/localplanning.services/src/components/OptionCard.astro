@@ -12,7 +12,7 @@ const { action } = Astro.props;
 const { title, description } = actions[action];
 ---
 
-<div class="w-full lg:w-1/3 bg-bg-light clamp-[py,5,8] clamp-[px,4,8] rounded">
+<div class="w-full lg:w-1/3 bg-bg-light clamp-[py,5,8] clamp-[px,4,8] rounded flex flex-col justify-start">
   <div class="clamp-[mb,4,6]">
     <h2 class="text-heading-sm">{title}</h2>
     <p class="text-text-secondary text-body-md">
@@ -24,6 +24,7 @@ const { title, description } = actions[action];
     variant="primary"
     data-action-button
     data-action={action}
+    class="m-0 mt-auto self-start"
   >
     Find local planning services
   </Button>
