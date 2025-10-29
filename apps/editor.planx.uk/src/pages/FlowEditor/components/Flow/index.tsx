@@ -16,7 +16,12 @@ export enum FlowLayout {
   LEFT_RIGHT = "left-right",
 }
 
-const Flow = ({ lockedFlow, showTemplatedNodeStatus }: any) => {
+interface Props {
+  lockedFlow: boolean;
+  showTemplatedNodeStatus: boolean;
+}
+
+const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
   const { url } = useCurrentRoute();
   const flowPath = url.pathname.split("/")[2];
   const [_flow, ...breadcrumbIds] = flowPath.split(",");
@@ -29,7 +34,7 @@ const Flow = ({ lockedFlow, showTemplatedNodeStatus }: any) => {
     state.flowLayout,
   ]);
 
-  const breadcrumbs = breadcrumbIds.map((id: any) => ({
+  const breadcrumbs = breadcrumbIds.map((id) => ({
     id,
     ...getNode(id),
     href: `${window.location.pathname.split(id)[0]}${id}`,
@@ -60,7 +65,7 @@ const Flow = ({ lockedFlow, showTemplatedNodeStatus }: any) => {
 
         {showGetStarted && <GetStarted />}
 
-        {breadcrumbs.map((bc: any, index: number) => {
+        {breadcrumbs.map((bc, index) => {
           let className = "";
 
           if (index === 0) {
