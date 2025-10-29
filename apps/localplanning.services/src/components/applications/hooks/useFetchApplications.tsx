@@ -17,10 +17,6 @@ interface BaseApplication {
   createdAt: string;
   updatedAt: string;
   expiresAt: string;
-  /** Only services which use Section components will have values for progress */
-  progress?: {
-    completed: number;
-  }
 }
 
 export type DraftApplication = BaseApplication & {
