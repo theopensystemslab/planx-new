@@ -1,5 +1,5 @@
 import { User } from "@opensystemslab/planx-core/types";
-import apiClient from "api/client";
+import apiClient from "lib/api/client";
 
 export const getUser = async () => {
   const { data } = await apiClient.get<User & { jwt: string }>("/user/me", {

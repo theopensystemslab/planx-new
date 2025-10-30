@@ -1,4 +1,4 @@
-import { uploadPrivateFile } from "api/fileUpload/requests";
+import { uploadPrivateFile } from "lib/api/fileUpload/requests";
 import React from "react";
 import { setup } from "testUtils";
 import { it, test, vi } from "vitest";
@@ -11,7 +11,7 @@ import { fillInResponse } from "./testUtils";
 
 Element.prototype.scrollIntoView = vi.fn();
 
-vi.mock("api/fileUpload/requests");
+vi.mock("lib/api/fileUpload/requests");
 const mockedUploadPrivateFile = vi.mocked(uploadPrivateFile, true);
 
 beforeEach(() => {

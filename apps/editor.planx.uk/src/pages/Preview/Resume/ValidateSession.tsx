@@ -2,10 +2,13 @@ import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { PaymentRequest } from "@opensystemslab/planx-core/types";
 import { useMutation } from "@tanstack/react-query";
-import { APIError } from "api/client";
-import { validateSession } from "api/saveAndReturn/requests";
-import { ReconciliationResponse, SessionAuthPayload } from "api/saveAndReturn/types";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import { APIError } from "lib/api/client";
+import { validateSession } from "lib/api/saveAndReturn/requests";
+import {
+  ReconciliationResponse,
+  SessionAuthPayload,
+} from "lib/api/saveAndReturn/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useCallback, useEffect } from "react";
 import { Link as ReactNaviLink } from "react-navi";
@@ -113,7 +116,11 @@ const ValidateSession: React.FC<{
     isError,
     error,
     variables,
-  } = useMutation<ReconciliationResponse, APIError<LockedSessionResponse>, SessionAuthPayload>({
+  } = useMutation<
+    ReconciliationResponse,
+    APIError<LockedSessionResponse>,
+    SessionAuthPayload
+  >({
     mutationFn: validateSession,
     onSuccess: (data) => resumeSession(data.reconciledSessionData),
     onError: console.debug,
@@ -137,9 +144,8 @@ const ValidateSession: React.FC<{
   if (isPending) return <DelayedLoadingIndicator text="Validating..." />;
 
   if (isError) {
-    if (error.statusCode === 403) return (
-      <LockedSession paymentRequest={error.data.paymentRequest} />
-    );
+    if (error.statusCode === 403)
+      return <LockedSession paymentRequest={error.data.paymentRequest} />;
 
     return <InvalidSession retry={retryWithNewEmailAddress} />;
   }
@@ -155,7 +161,12 @@ const ValidateSession: React.FC<{
       return null;
     }
 
-    return <ValidationSuccess reconciliationResponse={data} continueApplication={continueApplication}/>
+    return (
+      <ValidationSuccess
+        reconciliationResponse={data}
+        continueApplication={continueApplication}
+      />
+    );
   }
 
   return <EmailRequired handleSubmit={handleSubmit} />;

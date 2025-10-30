@@ -7,7 +7,7 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { SectionsOverviewList } from "@planx/components/Section/Public";
 import Card from "@planx/components/shared/Preview/Card";
 import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList";
-import { ReconciliationResponse } from "api/saveAndReturn/types";
+import { ReconciliationResponse } from "lib/api/saveAndReturn/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { sortBreadcrumbs } from "pages/FlowEditor/lib/store/preview";
 import React from "react";

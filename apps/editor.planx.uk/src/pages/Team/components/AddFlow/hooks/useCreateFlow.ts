@@ -3,7 +3,7 @@ import {
   createFlow,
   createFlowFromCopy,
   createFlowFromTemplate,
-} from "api/flow/requests";
+} from "lib/api/flow/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 import { CreateFlow } from "../types";

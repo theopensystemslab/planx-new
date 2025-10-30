@@ -8,13 +8,13 @@ import type {
 } from "@opensystemslab/planx-core/types";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useMutation } from "@tanstack/react-query";
-import { APIError } from "api/client";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import { useFormik } from "formik";
+import { APIError } from "lib/api/client";
 import {
   CreatePaymentRequest,
   generateInviteToPayRequest,
-} from "api/inviteToPay/requests";
-import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
-import { useFormik } from "formik";
+} from "lib/api/inviteToPay/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";

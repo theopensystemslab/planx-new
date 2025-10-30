@@ -1,7 +1,7 @@
 import { Breadcrumbs } from "@opensystemslab/planx-core/types";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
 import { screen, waitFor } from "@testing-library/react";
-import { uploadPrivateFile } from "api/fileUpload/requests";
+import { uploadPrivateFile } from "lib/api/fileUpload/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react-dom/test-utils";
@@ -16,7 +16,7 @@ import {
 } from "../model";
 import DrawBoundary from ".";
 
-vi.mock("api/fileUpload/requests");
+vi.mock("lib/api/fileUpload/requests");
 const mockedUploadPrivateFile = vi.mocked(uploadPrivateFile);
 
 global.URL.createObjectURL = vi.fn();
@@ -200,7 +200,7 @@ test("captures output data in the correct format when uploading a file", async (
   const input = screen.getByTestId("upload-input");
   await user.upload(input, file);
   expect(mockedUploadPrivateFile).toHaveBeenCalled();
-  
+
   // Wait for upload to complete
   const progressBar = screen.getByRole("progressbar");
   await waitFor(() => {
@@ -213,7 +213,9 @@ test("captures output data in the correct format when uploading a file", async (
   // DrawBoundary passport variable set
   expect(submitted.data).toHaveProperty(PASSPORT_UPLOAD_KEY);
   expect(submitted.data.locationPlan).toHaveLength(1);
-  expect(submitted.data.locationPlan[0].url).toEqual("https://api.editor.planx.dev/file/private/mock-nanoid/test.png");
+  expect(submitted.data.locationPlan[0].url).toEqual(
+    "https://api.editor.planx.dev/file/private/mock-nanoid/test.png",
+  );
   expect(submitted.data.locationPlan[0].file.name).toEqual("test.png");
 
   // DrawBoundary action captured

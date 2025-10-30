@@ -1,7 +1,7 @@
 import Typography from "@mui/material/Typography";
 import { useMutation } from "@tanstack/react-query";
-import { sendResumeEmail } from "api/saveAndReturn/requests";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import { sendResumeEmail } from "lib/api/saveAndReturn/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useCallback, useEffect } from "react";
 
