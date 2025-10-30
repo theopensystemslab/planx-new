@@ -1,12 +1,12 @@
-import type { 
+import type {
   RequiredCreateScheduledEventArgs,
   GetScheduledEventsArgs,
-  DeleteScheduledEventArgs 
+  DeleteScheduledEventArgs,
 } from "./types.js";
-import { 
+import {
   createScheduledEvent,
   getScheduledEvents,
-  deleteScheduledEvent 
+  deleteScheduledEvent,
 } from "./index.js";
 import axios from "axios";
 import type { Mocked } from "vitest";
@@ -16,13 +16,14 @@ describe("POST to Hasura Metadata API", () => {
 
   beforeEach(() => {
     vi.mock("axios", async (importOriginal) => {
-    const actualAxios = await importOriginal<typeof axios>();
-    return {
-      default: {
-        ...actualAxios,
-        post: vi.fn(),
-      },
-    }});
+      const actualAxios = await importOriginal<typeof axios>();
+      return {
+        default: {
+          ...actualAxios,
+          post: vi.fn(),
+        },
+      };
+    });
     mockAxios = axios as Mocked<typeof axios>;
   });
 
@@ -47,7 +48,7 @@ describe("POST to Hasura Metadata API", () => {
     test("returns response data on success", async () => {
       const mockResponseData = {
         message: "success",
-        eventId: "test-event-id"
+        eventId: "test-event-id",
       };
       mockAxios.post.mockResolvedValue({ data: mockResponseData });
       await expect(createScheduledEvent(mockScheduledEvent)).resolves.toBe(
@@ -66,12 +67,16 @@ describe("POST to Hasura Metadata API", () => {
 
     test("returns an error if request fails", async () => {
       mockAxios.post.mockRejectedValue(new Error());
-      await expect(getScheduledEvents(mockGetScheduledEventsArgs)).rejects.toThrow();
+      await expect(
+        getScheduledEvents(mockGetScheduledEventsArgs),
+      ).rejects.toThrow();
     });
 
     test("returns an error if axios errors", async () => {
       mockAxios.post.mockRejectedValue(new axios.AxiosError());
-      await expect(getScheduledEvents(mockGetScheduledEventsArgs)).rejects.toThrow();
+      await expect(
+        getScheduledEvents(mockGetScheduledEventsArgs),
+      ).rejects.toThrow();
     });
 
     test("returns response data on success", async () => {
@@ -91,14 +96,13 @@ describe("POST to Hasura Metadata API", () => {
         ],
       };
       mockAxios.post.mockResolvedValue({ data: mockResponseData });
-      await expect(getScheduledEvents(mockGetScheduledEventsArgs)).resolves.toBe(
-        mockResponseData,
-      );
+      await expect(
+        getScheduledEvents(mockGetScheduledEventsArgs),
+      ).resolves.toBe(mockResponseData);
     });
   });
 
   describe("Deleting scheduled event", () => {
-
     const mockDeleteScheduledEventArgs: DeleteScheduledEventArgs = {
       type: "one_off",
       event_id: "test-event-id",
@@ -106,20 +110,24 @@ describe("POST to Hasura Metadata API", () => {
 
     test("returns an error if request fails", async () => {
       mockAxios.post.mockRejectedValue(new Error());
-      await expect(deleteScheduledEvent(mockDeleteScheduledEventArgs)).rejects.toThrow();
+      await expect(
+        deleteScheduledEvent(mockDeleteScheduledEventArgs),
+      ).rejects.toThrow();
     });
 
     test("returns an error if axios errors", async () => {
       mockAxios.post.mockRejectedValue(new axios.AxiosError());
-      await expect(deleteScheduledEvent(mockDeleteScheduledEventArgs)).rejects.toThrow();
+      await expect(
+        deleteScheduledEvent(mockDeleteScheduledEventArgs),
+      ).rejects.toThrow();
     });
 
     test("returns response data on success", async () => {
       const mockResponseData = { message: "success" };
       mockAxios.post.mockResolvedValue({ data: mockResponseData });
-      await expect(deleteScheduledEvent(mockDeleteScheduledEventArgs)).resolves.toBe(
-        mockResponseData,
-      );
+      await expect(
+        deleteScheduledEvent(mockDeleteScheduledEventArgs),
+      ).resolves.toBe(mockResponseData);
     });
   });
 });

@@ -157,23 +157,26 @@ export const createSessionDeleteEventController: CreateSessionDeleteEventControl
     }
   };
 
-export const deleteSessionController: DeleteSessionController =
-  async (_req, res, next) => {
-    const { sessionId } = res.locals.parsedReq.body.payload;
-    try {
-      await softDeleteSession(sessionId);
-      return res
-        .status(200)
-        .send({ message: `Successfully marked session ${sessionId} as deleted` });
-    } catch (error) {
-      return next(
-        new ServerError({
-          message: "Failed to delete session",
-          cause: error,
-        }),
-      );
-    }
-  };
+export const deleteSessionController: DeleteSessionController = async (
+  _req,
+  res,
+  next,
+) => {
+  const { sessionId } = res.locals.parsedReq.body.payload;
+  try {
+    await softDeleteSession(sessionId);
+    return res
+      .status(200)
+      .send({ message: `Successfully marked session ${sessionId} as deleted` });
+  } catch (error) {
+    return next(
+      new ServerError({
+        message: "Failed to delete session",
+        cause: error,
+      }),
+    );
+  }
+};
 
 export const sanitiseApplicationDataController: SanitiseApplicationData =
   async (_req, res, next) => {
