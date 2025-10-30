@@ -1,15 +1,16 @@
 import Button from "@mui/material/Button";
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import { EditorProps, PublicProps } from "@planx/components/shared/types";
 import React, { useState } from "react";
 
 export default Wrapper;
 
-interface Props<Type, Data> {
+interface Props<Type extends ComponentType, Data> {
   Editor: React.FC<EditorProps<Type, Data>>;
   Public: React.FC<PublicProps<Data>>;
 }
 
-function Wrapper<Type, Data>(props: Props<Type, Data>) {
+function Wrapper<Type extends ComponentType, Data>(props: Props<Type, Data>) {
   const [data, setData] = useState<Data | null>(null);
   // const [userData, setUserData] = useState<UserData | null>(null);
 
