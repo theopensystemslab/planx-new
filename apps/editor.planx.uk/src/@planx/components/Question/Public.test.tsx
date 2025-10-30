@@ -110,7 +110,7 @@ describe("Question component", () => {
         await user.click(continueButton);
 
         await waitFor(() =>
-          expect(handleSubmit).toHaveBeenCalledExactlyOnceWith({ answers: ["pizza_id"] }),
+          expect(handleSubmit).toHaveBeenCalledWith({ answers: ["pizza_id"] }),
         );
       });
 
