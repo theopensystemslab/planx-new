@@ -19,6 +19,7 @@ import {
 } from "pages/FlowEditor/utils";
 import React, { useMemo } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { NodeSearchParams } from "routes/_authenticated/$team/$flow/nodes/route";
 import { rootFlowPath } from "utils/routeUtils/utils";
 
 import { fromSlug, SLUGS } from "../../data/types";
@@ -171,7 +172,7 @@ const FormModal: React.FC<FormModalProps> = ({
     });
   };
 
-  const handleTypeChange = (newType: string) => {
+  const handleTypeChange = (newType: NodeSearchParams["type"]) => {
     navigate({
       to: router.latestLocation.pathname,
       search: { type: newType },
@@ -241,7 +242,7 @@ const FormModal: React.FC<FormModalProps> = ({
           <NodeTypeSelect
             value={type}
             onChange={(newType) => {
-              handleTypeChange(SLUGS[Number(newType) as TYPES]);
+              handleTypeChange(SLUGS[Number(newType) as TYPES] as NodeSearchParams["type"]);
             }}
           />
         )}
