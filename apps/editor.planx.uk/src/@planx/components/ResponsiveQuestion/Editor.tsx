@@ -25,18 +25,30 @@ import {
 } from "./model";
 import ResponsiveQuestionEditor from "./ResponsiveQuestionEditor";
 
-type Props = EditorProps<TYPES.ResponsiveQuestion, ResponsiveQuestion>;
+type Props = EditorProps<
+  TYPES.ResponsiveQuestion,
+  Omit<ResponsiveQuestion, "options">
+>;
 
 function ResponsiveQuestionComponent(props: Props) {
   const type = TYPES.ResponsiveQuestion;
 
   const formik = useFormik<ResponsiveQuestion>({
     initialValues: parseResponsiveQuestion(props.node?.data),
-    onSubmit: (newValues) => {
-      props.handleSubmit?.({
-        type: TYPES.ResponsiveQuestion,
-        data: newValues,
-      });
+    onSubmit: ({ options, ...values }) => {
+      const children = options
+        .filter((o) => o.data.text)
+        .map((o) => ({
+          id: o.id || undefined,
+          type: TYPES.Answer as const,
+          data: o.data,
+        }));
+
+      if (props.handleSubmit) {
+        props.handleSubmit({ type, data: values }, children);
+      } else {
+        alert(JSON.stringify({ type, ...values, children }, null, 2));
+      }
     },
     validationSchema,
     validateOnBlur: false,
