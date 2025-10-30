@@ -1,10 +1,24 @@
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { HandleSubmit } from "pages/Preview/Node";
 import React from "react";
 
-export type EditorProps<Type, Data, ExtraProps extends Record<string, unknown> = Record<string, unknown>> = {
+import { Option } from ".";
+
+export type EditorProps<
+  Type extends ComponentType,
+  Data,
+  ExtraProps extends Record<string, unknown> = Record<string, unknown>,
+> = {
   id?: string;
-  handleSubmit?: (data: { type: Type; data: Data }) => void;
+  handleSubmit?: (
+    data: { type: Type; data: Data },
+    children?: {
+      type: ComponentType.Answer;
+      data: Option["data"];
+      id?: string;
+    }[],
+  ) => void;
   node?: any;
   disabled?: boolean;
 } & ExtraProps;
