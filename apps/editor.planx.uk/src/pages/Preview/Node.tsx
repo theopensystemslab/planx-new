@@ -61,6 +61,7 @@ import type { SetFee } from "@planx/components/SetFee/model";
 import SetFeeComponent from "@planx/components/SetFee/Public";
 import type { SetValue } from "@planx/components/SetValue/model";
 import SetValueComponent from "@planx/components/SetValue/Public";
+import { Option } from "@planx/components/shared";
 import type { TaskList } from "@planx/components/TaskList/model";
 import TaskListComponent from "@planx/components/TaskList/Public";
 import type { TextInput } from "@planx/components/TextInput/model";
@@ -133,34 +134,28 @@ const Node: React.FC<Props> = (props) => {
 
     case TYPES.Checklist: {
       const checklistProps = getComponentProps<Checklist>();
-      const childNodes = childNodesOf(
-        nodeId,
-      ) as (typeof checklistProps)["options"];
+      const childNodes = childNodesOf(nodeId) as Option[];
       const autoAnswers = nodeId ? autoAnswerableOptions(nodeId) : undefined;
+      const groupedOptions = !checklistProps.categories
+        ? undefined
+        : mapAccum(
+            (index: number, category: { title: string; count: number }) => [
+              index + category.count,
+              {
+                title: category.title,
+                children:
+                  childNodes?.slice(index, index + category.count) || [],
+              },
+            ],
+            0,
+            checklistProps.categories,
+          )[1];
 
       return (
         <ChecklistComponent
           {...checklistProps}
           options={checklistProps.categories ? undefined : childNodes}
-          groupedOptions={
-            !checklistProps.categories
-              ? undefined
-              : mapAccum(
-                  (
-                    index: number,
-                    category: { title: string; count: number },
-                  ) => [
-                    index + category.count,
-                    {
-                      title: category.title,
-                      children:
-                        childNodes?.slice(index, index + category.count) || [],
-                    },
-                  ],
-                  0,
-                  checklistProps.categories,
-                )[1]
-          }
+          groupedOptions={groupedOptions}
           autoAnswers={autoAnswers}
         />
       );
@@ -262,7 +257,7 @@ const Node: React.FC<Props> = (props) => {
         <QuestionComponent
           {...questionProps}
           responses={childNodesOf(nodeId).map((n, i) => ({
-            id: n.id,
+            id: n.id!,
             responseKey: i + 1,
             title: n.data?.text,
             ...n.data,
