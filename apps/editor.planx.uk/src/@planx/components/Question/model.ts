@@ -39,7 +39,7 @@ export const validationSchema = baseNodeDataValidationSchema
     object({
       text: string().required(),
       description: richText(),
-      img: string().required(),
+      img: string(),
       fn: string(),
       neverAutoAnswer: boolean(),
       alwaysAutoAnswerBlank: boolean(),
