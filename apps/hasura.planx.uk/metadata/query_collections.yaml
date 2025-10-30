@@ -10,3 +10,14 @@
               usersLast30Days: users_last_30_days
             }
           }
+      - name: GetServicesByTeamSlug
+        query: |
+          query GetServicesByTeamSlug ($teamSlug: String!) {
+            services: flows(where: {status:{_eq:online},team:{slug:{_eq:$teamSlug}}}, order_by: {name:asc}) {
+              name
+              url
+              summary
+              description
+              limitations
+            }
+          }

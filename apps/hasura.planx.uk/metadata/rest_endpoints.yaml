@@ -2,6 +2,15 @@
   definition:
     query:
       collection_name: allowed-queries
+      query_name: GetServicesByTeamSlug
+  methods:
+    - GET
+  name: GetServicesByTeamSlug
+  url: :teamSlug/services
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
       query_name: PlanX website stats
   methods:
     - GET
