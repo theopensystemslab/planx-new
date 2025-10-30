@@ -1,11 +1,12 @@
 import { richText } from "lib/yupExtensions";
-import { array, boolean, object, SchemaOf, string } from "yup";
+import { array, boolean, object, string } from "yup";
 
 import {
   BaseNodeData,
   baseNodeDataValidationSchema,
   Option,
   optionValidationSchema,
+  parseBaseNodeData,
   Response,
 } from "../shared";
 
@@ -61,3 +62,15 @@ export const validationSchema = baseNodeDataValidationSchema
       });
     },
   });
+
+export const parseQuestion = (
+  data: Record<string, any> | undefined,
+): EditorQuestion => ({
+  fn: data?.fn || "",
+  img: data?.img || "",
+  options: data?.options || [],
+  text: data?.text || "",
+  neverAutoAnswer: data?.neverAutoAnswer || false,
+  alwaysAutoAnswerBlank: data?.alwaysAutoAnswerBlank || false,
+  ...parseBaseNodeData(data),
+});

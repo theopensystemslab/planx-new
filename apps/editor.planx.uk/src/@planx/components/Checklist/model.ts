@@ -7,6 +7,7 @@ import {
   baseNodeDataValidationSchema,
   Option,
   optionValidationSchema,
+  parseBaseNodeData,
 } from "../shared";
 
 export enum ChecklistLayout {
@@ -202,6 +203,7 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
       name: "onlyOneExclusiveOption",
       test: function ({ options }) {
         const exclusiveOptions = options?.filter(({ data }) => data.exclusive);
+        console.log({ options, exclusiveOptions });
 
         if (!exclusiveOptions?.length) return true;
         if (exclusiveOptions.length === 1) return true;
@@ -340,3 +342,18 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
       },
     }),
 );
+
+export const parseChecklist = (
+  data: Record<string, any> | undefined,
+): Checklist => ({
+  allRequired: data?.allRequired || false,
+  neverAutoAnswer: data?.neverAutoAnswer || false,
+  alwaysAutoAnswerBlank: data?.alwaysAutoAnswerBlank || false,
+  description: data?.description || "",
+  fn: data?.fn || "",
+  groupedOptions: data?.groupedOptions,
+  img: data?.img || "",
+  options: data?.options,
+  text: data?.text || "",
+  ...parseBaseNodeData(data),
+});

@@ -15,9 +15,12 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
-import { parseBaseNodeData } from "../../shared";
 import { ICONS } from "../../shared/icons";
-import { toggleExpandableChecklist, validationSchema } from "../model";
+import {
+  parseChecklist,
+  toggleExpandableChecklist,
+  validationSchema,
+} from "../model";
 import { Checklist } from "../model";
 import { Options } from "./Options";
 
@@ -27,18 +30,7 @@ export const ChecklistEditor: React.FC<
   const type = TYPES.Checklist;
 
   const formik = useFormik<Checklist>({
-    initialValues: {
-      allRequired: props.node?.data?.allRequired || false,
-      neverAutoAnswer: props.node?.data?.neverAutoAnswer || false,
-      alwaysAutoAnswerBlank: props.node?.data?.alwaysAutoAnswerBlank || false,
-      description: props.node?.data?.description || "",
-      fn: props.node?.data?.fn || "",
-      groupedOptions: props.node?.data?.groupedOptions,
-      img: props.node?.data?.img || "",
-      options: props.node?.data?.options,
-      text: props.node?.data?.text || "",
-      ...parseBaseNodeData(props.node?.data),
-    },
+    initialValues: parseChecklist(props.node?.data),
     onSubmit: ({ options, groupedOptions, ...values }) => {
       const sourceOptions = options?.length
         ? options

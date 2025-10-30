@@ -23,7 +23,12 @@ import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
 import { getOptionsSchemaByFn } from "../shared/utils";
-import { EditorQuestion, Question, validationSchema } from "./model";
+import {
+  EditorQuestion,
+  parseQuestion,
+  Question,
+  validationSchema,
+} from "./model";
 import QuestionOptionsEditor from "./OptionsEditor";
 
 type Props = EditorProps<TYPES.Question, Question>;
@@ -32,16 +37,7 @@ export const QuestionComponent: React.FC<Props> = (props) => {
   const type = TYPES.Question;
 
   const formik = useFormik<EditorQuestion>({
-    initialValues: {
-      description: props.node?.data?.description || "",
-      fn: props.node?.data?.fn || "",
-      img: props.node?.data?.img || "",
-      options: props.node?.data?.options || [],
-      text: props.node?.data?.text || "",
-      neverAutoAnswer: props.node?.data?.neverAutoAnswer || false,
-      alwaysAutoAnswerBlank: props.node?.data?.alwaysAutoAnswerBlank || false,
-      ...parseBaseNodeData(props.node?.data),
-    },
+    initialValues: parseQuestion(props.node?.data),
     onSubmit: ({ options, ...values }) => {
       const children = options
         .filter((o) => o.data.text)
