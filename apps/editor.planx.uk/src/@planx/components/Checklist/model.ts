@@ -27,17 +27,27 @@ export interface Category {
   count: number;
 }
 
+/**
+ * Database representation of a Checklist component
+ */
 export interface Checklist extends BaseNodeData {
   fn?: string;
   description?: string;
   text?: string;
-  options?: Array<Option>;
-  groupedOptions?: Array<Group<Option>>;
   img?: string;
   allRequired?: boolean;
   categories?: Array<Category>;
   neverAutoAnswer?: boolean;
   alwaysAutoAnswerBlank?: boolean;
+}
+
+/**
+ * Public and Editor representation of a Checklist
+ * Contains options derived from child Answer nodes
+ */
+export interface ChecklistWithOptions extends Checklist {
+  options?: Array<Option>;
+  groupedOptions?: Array<Group<Option>>;
 }
 
 interface ChecklistExpandableProps {
@@ -103,8 +113,8 @@ export const getFlatOptions = ({
   options,
   groupedOptions,
 }: {
-  options: Checklist["options"];
-  groupedOptions: Checklist["groupedOptions"];
+  options: ChecklistWithOptions["options"];
+  groupedOptions: ChecklistWithOptions["groupedOptions"];
 }) => {
   if (options) {
     return options;
@@ -119,8 +129,8 @@ export const getLayout = ({
   options,
   groupedOptions,
 }: {
-  options: Checklist["options"];
-  groupedOptions: Checklist["groupedOptions"];
+  options: ChecklistWithOptions["options"];
+  groupedOptions: ChecklistWithOptions["groupedOptions"];
 }): ChecklistLayout => {
   const hasImages = options?.some((o) => o.data.img);
   if (hasImages) return ChecklistLayout.Images;
@@ -135,7 +145,7 @@ export const checklistInputValidationSchema = ({
   required,
 }: {
   // Cannot use type FieldValidationSchema<ChecklistInput> as this is a simplified representation (i.e. no groups)
-  data: Checklist;
+  data: ChecklistWithOptions;
   required: boolean;
 }) => {
   const flatOptions = getFlatOptions({ options, groupedOptions });
@@ -344,7 +354,7 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
 
 export const parseChecklist = (
   data: Record<string, any> | undefined,
-): Checklist => ({
+): ChecklistWithOptions => ({
   allRequired: data?.allRequired || false,
   neverAutoAnswer: data?.neverAutoAnswer || false,
   alwaysAutoAnswerBlank: data?.alwaysAutoAnswerBlank || false,

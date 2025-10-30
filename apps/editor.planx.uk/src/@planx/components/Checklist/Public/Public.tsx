@@ -1,11 +1,13 @@
 import { PublicProps } from "@planx/components/shared/types";
 import React from "react";
 
-import type { Checklist } from "../model";
+import type { ChecklistWithOptions } from "../model";
 import { FlatChecklist } from "./components/FlatChecklist";
 import { GroupedChecklist } from "./components/GroupedChecklist";
 
-const ChecklistComponent: React.FC<PublicProps<Checklist>> = (props) => {
+const ChecklistComponent: React.FC<PublicProps<ChecklistWithOptions>> = (
+  props,
+) => {
   const { groupedOptions, options } = props;
 
   return (

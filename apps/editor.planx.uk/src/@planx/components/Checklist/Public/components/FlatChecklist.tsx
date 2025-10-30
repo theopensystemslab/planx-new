@@ -1,9 +1,9 @@
 import Grid from "@mui/material/Grid";
 import { visuallyHidden } from "@mui/utils";
 import {
-  Checklist,
   checklistInputValidationSchema,
   ChecklistLayout,
+  ChecklistWithOptions,
 } from "@planx/components/Checklist/model";
 import { Option } from "@planx/components/shared";
 import Card from "@planx/components/shared/Preview/Card";
@@ -22,7 +22,9 @@ import { useSortedOptions } from "../hooks/useSortedOptions";
 import { ChecklistItems } from "./ChecklistItems";
 import { ExclusiveChecklistItem } from "./ExclusiveChecklistItem";
 
-export const FlatChecklist: React.FC<PublicProps<Checklist>> = (props) => {
+export const FlatChecklist: React.FC<PublicProps<ChecklistWithOptions>> = (
+  props,
+) => {
   const {
     description = "",
     groupedOptions,
