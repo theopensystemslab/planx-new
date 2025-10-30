@@ -54,7 +54,7 @@ export interface CreateScheduledEventResponse {
 
 export interface GetScheduledEventsResponse {
   count?: number;
-  events: {
+  events: readonly {
     id: string;
     comment: string;
     created_at: IsoDateString;

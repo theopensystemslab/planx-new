@@ -8,7 +8,7 @@ interface DeleteSessionResponse {
 export const deleteSessionSchema = z.object({
   body: z.object({
     payload: z.object({
-      sessionId: z.string(),
+      sessionId: z.string().uuid(),
     }),
   }),
 });
