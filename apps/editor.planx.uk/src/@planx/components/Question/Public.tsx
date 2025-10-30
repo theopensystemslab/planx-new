@@ -16,6 +16,7 @@ import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { mixed, object, string } from "yup";
 
+import { PublicProps } from "../shared/types";
 import { Question } from "./model";
 
 export enum QuestionLayout {
@@ -24,7 +25,7 @@ export enum QuestionLayout {
   Descriptions,
 }
 
-const QuestionComponent: React.FC<Question> = (props) => {
+const QuestionComponent: React.FC<PublicProps<Question>> = (props) => {
   // Questions without edges act like "sticky notes" in the graph for editors only & should be auto-answered
   const flow = useStore().flow;
   const edges = props.id ? flow[props.id]?.edges : undefined;

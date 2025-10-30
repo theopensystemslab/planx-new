@@ -286,6 +286,24 @@ const Node: React.FC<Props> = (props) => {
         />
       ) : null;
 
+    // case TYPES.ResponsiveQuestion: {
+    //   const props = getComponentProps<ResponsiveChecklist>();
+    //   const autoAnswers = nodeId ? autoAnswerableOptions(nodeId) : undefined;
+
+    //   return (
+    //     <ResponsiveQuestionComponent
+    //       {...props}
+    //       options={childNodesOf(nodeId).map((n, i) => ({
+    //         id: n.id,
+    //         responseKey: i + 1,
+    //         title: n.data?.text,
+    //         ...n.data,
+    //       }))}
+    //       autoAnswers={autoAnswers}
+    //     />
+    //   )
+    // }
+
     case TYPES.Result:
       return <ResultComponent {...getComponentProps<Result>()} />;
 
