@@ -5,7 +5,7 @@ import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import type { Question } from "./model";
+import type { PublicQuestion } from "./model";
 import QuestionComponent, { QuestionLayout } from "./Public";
 
 const { setState } = useStore;
@@ -13,7 +13,7 @@ const { setState } = useStore;
 // Setup a basic single component flow so that we're testing the "VisibleQuestion" throughout (eg wrapper checks `flow[props.id].edges`)
 const flow: Store.Flow = {
   _root: {
-    edges: ["qustion_id"],
+    edges: ["question_id"],
   },
   celery_id: {
     data: {
@@ -40,7 +40,7 @@ beforeEach(() => {
   act(() => setState({ flow }));
 });
 
-const responses: { [key in QuestionLayout]: Question["responses"] } = {
+const responses: { [key in QuestionLayout]: PublicQuestion["responses"] } = {
   [QuestionLayout.Basic]: [
     {
       id: "pizza_id",
@@ -110,7 +110,7 @@ describe("Question component", () => {
         await user.click(continueButton);
 
         await waitFor(() =>
-          expect(handleSubmit).toHaveBeenCalledWith({ answers: ["pizza_id"] }),
+          expect(handleSubmit).toHaveBeenCalledExactlyOnceWith({ answers: ["pizza_id"] }),
         );
       });
 
