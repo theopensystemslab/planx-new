@@ -255,34 +255,30 @@ describe("Checklist editor component", () => {
           allRequired: false,
           neverAutoAnswer: false,
           alwaysAutoAnswerBlank: false,
+          options: [
+            {
+              id: "AF4400H41Z",
+              data: {
+                text: "A regular option",
+              },
+            },
+            {
+              id: "0WeNTfghL4",
+              data: {
+                text: "First exclusive option",
+                exclusive: true,
+              },
+            },
+            {
+              id: "0WeNTfghL5",
+              data: {
+                text: "Second exclusive option",
+                exclusive: true,
+              },
+            },
+          ],
         },
       },
-      text: "Many exclusive options",
-      allRequired: false,
-      neverAutoAnswer: false,
-      alwaysAutoAnswerBlank: false,
-      options: [
-        {
-          id: "AF4400H41Z",
-          data: {
-            text: "A regular option",
-          },
-        },
-        {
-          id: "0WeNTfghL4",
-          data: {
-            text: "First exclusive option",
-            exclusive: true,
-          },
-        },
-        {
-          id: "0WeNTfghL5",
-          data: {
-            text: "Second exclusive option",
-            exclusive: true,
-          },
-        },
-      ],
       disabled: false,
     };
 

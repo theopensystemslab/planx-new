@@ -203,7 +203,6 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
       name: "onlyOneExclusiveOption",
       test: function ({ options }) {
         const exclusiveOptions = options?.filter(({ data }) => data.exclusive);
-        console.log({ options, exclusiveOptions });
 
         if (!exclusiveOptions?.length) return true;
         if (exclusiveOptions.length === 1) return true;
