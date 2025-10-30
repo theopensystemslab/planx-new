@@ -1,7 +1,8 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { DataFieldAutocomplete } from "@planx/components/shared/DataFieldAutocomplete";
+import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -16,12 +17,13 @@ import { Switch } from "ui/shared/Switch";
 
 import { parseBaseNodeData } from "../../shared";
 import { ICONS } from "../../shared/icons";
-import type { Checklist } from "../model";
 import { toggleExpandableChecklist, validationSchema } from "../model";
-import { ChecklistProps } from "../types";
+import { Checklist } from "../model";
 import { Options } from "./Options";
 
-export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
+export const ChecklistEditor: React.FC<
+  EditorProps<TYPES.Checklist, Checklist>
+> = (props) => {
   const type = TYPES.Checklist;
 
   const formik = useFormik<Checklist>({
@@ -31,9 +33,9 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
       alwaysAutoAnswerBlank: props.node?.data?.alwaysAutoAnswerBlank || false,
       description: props.node?.data?.description || "",
       fn: props.node?.data?.fn || "",
-      groupedOptions: props.groupedOptions,
+      groupedOptions: props.node?.data?.groupedOptions,
       img: props.node?.data?.img || "",
-      options: props.options,
+      options: props.node?.data?.options,
       text: props.node?.data?.text || "",
       ...parseBaseNodeData(props.node?.data),
     },
@@ -49,7 +51,7 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
       const processedOptions = filteredOptions.map((option) => ({
         ...option,
         id: option.id || undefined,
-        type: TYPES.Answer,
+        type: TYPES.Answer as const,
       }));
 
       if (props.handleSubmit) {

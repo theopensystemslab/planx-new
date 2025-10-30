@@ -1,3 +1,5 @@
+import { ComponentType } from "@opensystemslab/planx-core/types";
+import { EditorProps } from "@planx/components/shared/types";
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 // eslint-disable-next-line no-restricted-imports
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -7,7 +9,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 
-import { ChecklistProps } from "../types";
+import { Checklist } from "../model";
 import { ChecklistEditor } from "./Editor";
 
 const { getState } = useStore;
@@ -246,7 +248,7 @@ describe("Checklist editor component", () => {
    * Set up mock data to trigger this state and test the validation schema
    */
   it("shows an error if multiple exclusive options are configured", async () => {
-    const props: ChecklistProps = {
+    const props: EditorProps<ComponentType.Checklist, Checklist> = {
       node: {
         data: {
           text: "Many exclusive options",

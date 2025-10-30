@@ -1,8 +1,13 @@
 import { richText } from "lib/yupExtensions";
 import { partition } from "lodash";
-import { array, boolean, mixed, number, object, string } from "yup";
+import { array, boolean, number, object, string } from "yup";
 
-import { BaseNodeData, baseNodeDataValidationSchema, Option } from "../shared";
+import {
+  BaseNodeData,
+  baseNodeDataValidationSchema,
+  Option,
+  optionValidationSchema,
+} from "../shared";
 
 export enum ChecklistLayout {
   Basic,
@@ -32,7 +37,6 @@ export interface Checklist extends BaseNodeData {
   categories?: Array<Category>;
   neverAutoAnswer?: boolean;
   alwaysAutoAnswerBlank?: boolean;
-  autoAnswers?: string[] | undefined;
 }
 
 interface ChecklistExpandableProps {
@@ -153,18 +157,6 @@ export const checklistInputValidationSchema = ({
       },
     });
 };
-
-const optionValidationSchema = object({
-  id: string(),
-  data: object({
-    description: string(),
-    flags: array(string()),
-    img: string(),
-    text: string().required().trim(),
-    val: string(),
-    exclusive: mixed().oneOf([true, undefined]),
-  }),
-});
 
 export const validationSchema = baseNodeDataValidationSchema.concat(
   object({

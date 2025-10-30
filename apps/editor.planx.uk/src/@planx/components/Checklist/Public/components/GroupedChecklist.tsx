@@ -1,26 +1,24 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { visuallyHidden } from "@mui/utils";
-import {
-  checklistInputValidationSchema,
-  ChecklistLayout,
-} from "@planx/components/Checklist/model";
+import { checklistInputValidationSchema } from "@planx/components/Checklist/model";
+import { Checklist, ChecklistLayout } from "@planx/components/Checklist/types";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
+import { PublicProps } from "@planx/components/shared/types";
 import { getIn, useFormik } from "formik";
 import React, { useEffect } from "react";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { object } from "yup";
 
-import { PublicChecklistProps } from "../../types";
 import { changeCheckbox, partitionGroupedOptions } from "../helpers";
 import { useExclusiveOptionInGroupedChecklist } from "../hooks/useExclusiveOption";
 import { useSortedOptions } from "../hooks/useSortedOptions";
 import { ExclusiveChecklistItem } from "./ExclusiveChecklistItem";
 import { GroupedChecklistOptions } from "./GroupedChecklistOptions";
 
-export const GroupedChecklist: React.FC<PublicChecklistProps> = (props) => {
+export const GroupedChecklist: React.FC<PublicProps<Checklist>> = (props) => {
   const {
     description = "",
     groupedOptions,
