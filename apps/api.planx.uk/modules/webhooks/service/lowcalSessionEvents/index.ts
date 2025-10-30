@@ -17,7 +17,7 @@ import type {
 } from "./schema.js";
 
 const DELETE_EVENT_TOLERANCE_MINUTES = 5;
-const DELETE_EVENT_COMMENT_TEMPLATE = (sessionId: string) =>
+export const DELETE_EVENT_COMMENT_TEMPLATE = (sessionId: string) =>
   `delete_${sessionId}`;
 
 /**
