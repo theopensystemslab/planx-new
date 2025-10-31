@@ -19,12 +19,17 @@ const Operator = styled(Typography)(({ theme }) => ({
   marginLeft: -5,
 }));
 
+Operator.defaultProps = {
+  variant: "body2",
+};
+
 export interface Props {
   modalSubtitle?: string;
   rule: Rule;
   disabled?: boolean;
   onChange: (rule: Rule) => void;
   conditions?: Condition[];
+  dataSchema?: string[];
 }
 
 export const RuleBuilder: React.FC<Props> = ({
@@ -32,6 +37,7 @@ export const RuleBuilder: React.FC<Props> = ({
   rule,
   disabled,
   onChange,
+  dataSchema,
   conditions = Object.values(Condition),
 }) => {
   const isConditionalRule = checkIfConditionalRule(rule.condition);
