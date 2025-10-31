@@ -6,13 +6,14 @@ import ListManager from "ui/editor/ListManager/ListManager";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 
 import { Option } from "../../shared";
+import { ChecklistWithOptions } from "../model";
 import { useCurrentOptions } from "../Public/hooks/useInitialOptions";
 import { ExclusiveOrOptionManager } from "./components/ExclusiveOrOptionManager";
 import { GroupedOptions } from "./components/GroupedOptions";
 import ChecklistOptionsEditor from "./components/OptionsEditor";
 
 export const Options: React.FC<{
-  formik: FormikHookReturn;
+  formik: FormikHookReturn<ChecklistWithOptions>;
   disabled?: boolean;
   isTemplatedNode?: boolean;
 }> = ({ formik, disabled, isTemplatedNode }) => {

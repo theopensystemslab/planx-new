@@ -16,7 +16,8 @@ import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { mixed, object, string } from "yup";
 
-import { Question } from "./model";
+import { PublicProps } from "../shared/types";
+import { PublicQuestion } from "./model";
 
 export enum QuestionLayout {
   Basic,
@@ -24,7 +25,7 @@ export enum QuestionLayout {
   Descriptions,
 }
 
-const QuestionComponent: React.FC<Question> = (props) => {
+const QuestionComponent: React.FC<PublicProps<PublicQuestion>> = (props) => {
   // Questions without edges act like "sticky notes" in the graph for editors only & should be auto-answered
   const flow = useStore().flow;
   const edges = props.id ? flow[props.id]?.edges : undefined;
@@ -42,7 +43,9 @@ const QuestionComponent: React.FC<Question> = (props) => {
         a: previousResponseKey ?? undefined,
       },
     },
-    onSubmit: (values) => props.handleSubmit({ answers: [values.selected.id] }),
+    onSubmit: (values) =>
+      props.handleSubmit &&
+      props.handleSubmit({ answers: [values.selected.id] }),
     validateOnBlur: false,
     validateOnChange: false,
     validationSchema: object({

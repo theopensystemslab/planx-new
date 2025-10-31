@@ -3,10 +3,12 @@ import { visuallyHidden } from "@mui/utils";
 import {
   checklistInputValidationSchema,
   ChecklistLayout,
+  FlatChecklist,
 } from "@planx/components/Checklist/model";
 import { Option } from "@planx/components/shared";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
+import { PublicProps } from "@planx/components/shared/types";
 import { getIn, useFormik } from "formik";
 import { partition } from "lodash";
 import React, { useEffect } from "react";
@@ -14,14 +16,15 @@ import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { object } from "yup";
 
-import { PublicChecklistProps } from "../../types";
 import { changeCheckbox } from "../helpers";
 import { useExclusiveOption } from "../hooks/useExclusiveOption";
 import { useSortedOptions } from "../hooks/useSortedOptions";
 import { ChecklistItems } from "./ChecklistItems";
 import { ExclusiveChecklistItem } from "./ExclusiveChecklistItem";
 
-export const Checklist: React.FC<PublicChecklistProps> = (props) => {
+const FlatChecklistComponent: React.FC<PublicProps<FlatChecklist>> = (
+  props,
+) => {
   const {
     description = "",
     groupedOptions,
@@ -131,3 +134,5 @@ export const Checklist: React.FC<PublicChecklistProps> = (props) => {
     </Card>
   );
 };
+
+export default FlatChecklistComponent;
