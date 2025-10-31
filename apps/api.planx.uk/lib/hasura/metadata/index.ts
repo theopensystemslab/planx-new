@@ -8,24 +8,19 @@ import type {
   GetScheduledEventsArgs,
   GetScheduledEventsResponse,
   RequiredCreateScheduledEventArgs,
-  ScheduledEvent,
+  ScheduledEventRequestBody,
+  ScheduledEventResponse,
 } from "./types.js";
 
 /**
  * POST a request to the Hasura Metadata API
  * https://hasura.io/docs/latest/graphql/core/api-reference/metadata-api/index/
  */
-const postToMetadataAPI = async (
-  body: ScheduledEvent,
-): Promise<
-  AxiosResponse<
-    | CreateScheduledEventResponse
-    | GetScheduledEventsResponse
-    | DeleteScheduledEventResponse
-  >
-> => {
+const postToMetadataAPI = async <T extends ScheduledEventResponse>(
+  body: ScheduledEventRequestBody,
+): Promise<AxiosResponse<T>> => {
   try {
-    return await axios.post(
+    return await axios.post<T>(
       process.env.HASURA_METADATA_URL!,
       JSON.stringify(body),
       {
