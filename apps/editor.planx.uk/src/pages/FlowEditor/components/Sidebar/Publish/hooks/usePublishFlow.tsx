@@ -104,6 +104,5 @@ export const usePublishFlow = () => {
     publishMutation,
     status,
     buttonText,
-    isCheckingForChanges: checkForChangesMutation.isPending,
   };
 };

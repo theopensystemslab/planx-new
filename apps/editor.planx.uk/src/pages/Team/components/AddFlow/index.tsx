@@ -43,7 +43,7 @@ export const AddFlow: React.FC = () => {
   ) => {
     try {
       const result = await createFlow(values);
-      toast?.success("Flow created successfully");
+      toast.success("Flow created successfully");
       navigate(`/${teamSlug}/${result.flow.slug}`);
     } catch (error) {
       if (isAxiosError(error)) {

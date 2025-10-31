@@ -28,7 +28,6 @@ export const CheckForChangesToPublishButton: React.FC<{
     publishMutation,
     status,
     buttonText,
-    isCheckingForChanges,
   } = usePublishFlow();
 
   const handleCheckForChangesToPublish = async () =>
@@ -123,7 +122,7 @@ export const CheckForChangesToPublishButton: React.FC<{
             disabled={isDisabled}
             onClick={handleCheckForChangesToPublish}
             startIcon={
-              isCheckingForChanges ? (
+              checkForChangesMutation.isPending ? (
                 <CircularProgress size={20} color="inherit" />
               ) : null
             }
