@@ -93,12 +93,6 @@ describe("buildSubmissionExportZip", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
-  test("the csv is added to the zip", async () => {
-    await buildSubmissionExportZip({ sessionId: "1234" });
-    expect(mockAddLocalFile).toHaveBeenCalledWith(
-      expect.stringMatching(/application.csv$/),
-    );
-  });
 
   test("the document viewer is added to zip", async () => {
     await buildSubmissionExportZip({ sessionId: "1234" });

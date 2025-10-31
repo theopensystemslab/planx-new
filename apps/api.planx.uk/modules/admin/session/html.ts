@@ -29,14 +29,16 @@ export const getHTMLExport: HTMLExportHandler = async (req, res, next) => {
     const session = await $api.session.find(req.params.sessionId);
     if (!session) throw Error(`Unable to find session ${req.params.sessionId}`);
 
-    const responses = await $api.export.csvData(req.params.sessionId);
+    const responses = await $api.export.digitalPlanningDataPayload(
+      req.params.sessionId,
+    );
     const boundingBox = session.data.passport.data?.["proposal.site.buffered"];
     const userAction = session.data.passport.data?.[
       "drawBoundary.action"
     ] as unknown as DrawBoundaryUserAction | undefined;
 
     const html = generateApplicationHTML({
-      planXExportData: responses as PlanXExportData[],
+      planXExportData: responses,
       boundingBox,
       userAction,
     });

@@ -3,22 +3,14 @@ import app from "../../../server.js";
 import type * as planxCore from "@opensystemslab/planx-core";
 import { authHeader } from "../../../tests/mockJWT.js";
 import { queryMock } from "../../../tests/graphqlQueryMock.js";
+import { expectedPlanningPermissionPayload } from "../../../tests/mocks/digitalPlanningDataMocks.js";
 
 const endpoint = (strings: TemplateStringsArray) =>
   `/admin/session/${strings[0]}/html`;
 
-const mockGenerateHTMLData = vi.fn().mockResolvedValue([
-  {
-    question: "Planning Application Reference",
-    responses: "56841432-b654-4d64-ab54-5d23d007a034",
-  },
-  { question: "Property Address", responses: "" },
-  {
-    question: "application_type",
-    responses: "Request a building control quote",
-  },
-  { question: "result", responses: {} },
-]);
+const mockGenerateHTMLData = vi
+  .fn()
+  .mockResolvedValue(expectedPlanningPermissionPayload);
 
 vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
   const originalModule = await importOriginal<typeof planxCore>();
@@ -28,7 +20,7 @@ vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
     CoreDomainClient: class extends originalModule.CoreDomainClient {
       constructor() {
         super();
-        this.export.csvData = () => mockGenerateHTMLData();
+        this.export.digitalPlanningDataPayload = () => mockGenerateHTMLData();
       }
     },
   };
@@ -87,7 +79,7 @@ describe("HTML data admin endpoint", () => {
 
         // Expected HTML document
         expect(res.text).toMatch(/^<html>.*<\/html>$/s);
-        expect(res.text).toMatch(/PlanX Submission Overview/);
+        expect(res.text).toMatch(/Planning Permission/);
       });
   });
 });
