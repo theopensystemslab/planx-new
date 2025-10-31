@@ -20,7 +20,13 @@ import { CreateFlow, validationSchema } from "./types";
 
 export const AddFlow: React.FC = () => {
   const { navigate } = useNavigation();
-  const { teamId, teamSlug, showLoading, hideLoading } = useStore();
+  const {
+    teamId,
+    teamSlug,
+    showLoading,
+    hideLoading,
+    setLoadingCompleteCallback,
+  } = useStore();
   const toast = useToast();
 
   const initialValues: CreateFlow = {
@@ -40,13 +46,19 @@ export const AddFlow: React.FC = () => {
     values,
     { setFieldError, setStatus },
   ) => {
+    setLoadingCompleteCallback(() => {
+      toast.success("Flow created successfully");
+      setLoadingCompleteCallback(undefined);
+    });
+
     showLoading("Creating flow...");
     try {
       const result = await createFlow(values);
-      toast.success("Flow created successfully");
       await navigate(`/${teamSlug}/${result.flow.slug}`);
-      setTimeout(() => hideLoading(), 100);
+      hideLoading();
     } catch (error) {
+      setLoadingCompleteCallback(undefined);
+
       if (isAxiosError(error)) {
         const message = error?.response?.data?.error;
         if (message?.includes("Uniqueness violation")) {

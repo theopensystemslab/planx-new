@@ -15,14 +15,19 @@ import { ChangesDialog, NoChangesDialog } from "./PublishDialog";
 export const CheckForChangesToPublishButton: React.FC<{
   previewURL: string;
 }> = ({ previewURL }) => {
-  const [isTemplatedFrom, template, showLoading, hideLoading] = useStore(
-    (state) => [
-      state.isTemplatedFrom,
-      state.template,
-      state.showLoading,
-      state.hideLoading,
-    ],
-  );
+  const [
+    isTemplatedFrom,
+    template,
+    showLoading,
+    hideLoading,
+    setLoadingCompleteCallback,
+  ] = useStore((state) => [
+    state.isTemplatedFrom,
+    state.template,
+    state.showLoading,
+    state.hideLoading,
+    state.setLoadingCompleteCallback,
+  ]);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const toast = useToast();
   const {
@@ -41,13 +46,20 @@ export const CheckForChangesToPublishButton: React.FC<{
   const handlePublish = async (args: PublishFlowArgs) => {
     // Close modal immediately, user feedback handled via status text beneath to publish button
     setDialogOpen(false);
+
+    setLoadingCompleteCallback(() => {
+      toast.success("Successfully published changes");
+      setLoadingCompleteCallback(undefined);
+    });
+
     showLoading("Publishing flow");
+
     publishMutation.mutate(args, {
       onSuccess: () => {
-        toast.success("Flow published");
         hideLoading();
       },
       onError: () => {
+        setLoadingCompleteCallback(undefined);
         hideLoading();
       },
     });

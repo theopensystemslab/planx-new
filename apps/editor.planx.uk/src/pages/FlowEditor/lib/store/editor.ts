@@ -58,8 +58,10 @@ export interface EditorUIStore {
   toggleSidebar: () => void;
   isLoading: boolean;
   loadingMessage: string;
+  onLoadingComplete?: () => void;
   showLoading: (message?: string) => void;
   hideLoading: () => void;
+  setLoadingCompleteCallback: (callback: (() => void) | undefined) => void;
   flowCardView: FlowCardView;
   setFlowCardView: (view: FlowCardView) => void;
   showTags: boolean;
@@ -109,6 +111,9 @@ export const editorUIStore: StateCreator<
     hideLoading: () => {
       set({ isLoading: false });
     },
+
+    setLoadingCompleteCallback: (callback) =>
+      set({ onLoadingComplete: callback }),
 
     flowCardView: "grid",
 
