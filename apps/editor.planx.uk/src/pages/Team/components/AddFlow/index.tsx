@@ -44,12 +44,14 @@ export const AddFlow: React.FC = () => {
     try {
       const result = await createFlow(values);
       toast.success("Flow created successfully");
-      navigate(`/${teamSlug}/${result.flow.slug}`);
+      await navigate(`/${teamSlug}/${result.flow.slug}`);
+      setTimeout(() => hideLoading(), 100);
     } catch (error) {
       if (isAxiosError(error)) {
         const message = error?.response?.data?.error;
         if (message?.includes("Uniqueness violation")) {
           setFieldError("flow.name", "Flow name must be unique");
+          hideLoading();
           return;
         }
         if (message?.includes("Invalid HTML")) {
@@ -60,11 +62,11 @@ export const AddFlow: React.FC = () => {
             error:
               "Failed to create new flow due to a content issue with the source flow, please contact PlanX support. This error has been logged.",
           });
+          hideLoading();
           return;
         }
       }
       setStatus({ error: "Failed to create flow, please try again." });
-    } finally {
       hideLoading();
     }
   };
