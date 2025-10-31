@@ -8,7 +8,9 @@ import * as generateHTMLService from "./generateHTML.js";
 import type * as planxCore from "@opensystemslab/planx-core";
 import { expectedPlanningPermissionPayload } from "../../../tests/mocks/digitalPlanningDataMocks.js";
 
-const mockGenerateHTMLData = vi.fn().mockResolvedValue(expectedPlanningPermissionPayload)
+const mockGenerateHTMLData = vi
+  .fn()
+  .mockResolvedValue(expectedPlanningPermissionPayload);
 
 vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
   const originalModule = await importOriginal<typeof planxCore>();

@@ -8,7 +8,9 @@ import { expectedPlanningPermissionPayload } from "../../../tests/mocks/digitalP
 const endpoint = (strings: TemplateStringsArray) =>
   `/admin/session/${strings[0]}/html`;
 
-const mockGenerateHTMLData = vi.fn().mockResolvedValue(expectedPlanningPermissionPayload)
+const mockGenerateHTMLData = vi
+  .fn()
+  .mockResolvedValue(expectedPlanningPermissionPayload);
 
 vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
   const originalModule = await importOriginal<typeof planxCore>();
