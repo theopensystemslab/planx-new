@@ -2,8 +2,13 @@ import type { SendIntegration } from "@opensystemslab/planx-core/types";
 
 import type { IsoDateString } from "../../../types.js";
 
-export interface ScheduledEvent {
-  type: string;
+type ScheduledEventRequestType =
+  | "create_scheduled_event"
+  | "get_scheduled_events"
+  | "delete_scheduled_event";
+
+export interface ScheduledEventRequestBody {
+  type: ScheduledEventRequestType;
   args:
     | CreateScheduledEventArgs
     | GetScheduledEventsArgs
@@ -33,14 +38,26 @@ type ScheduledEventStatus =
   | "error"
   | "dead";
 
-export interface GetScheduledEventsArgs {
-  type: "one_off" | "cron";
-  trigger_name?: string; // only when type is cron
+type BaseGetScheduledEventsArgs = {
   limit?: number;
   offset?: number;
   get_rows_count?: boolean;
   status?: ScheduledEventStatus[];
-}
+};
+
+type GetOneOffScheduledEventsArgs = BaseGetScheduledEventsArgs & {
+  type: "one_off";
+};
+
+// if getting cron events, we need to additionally supply name of the cron trigger
+type GetCronScheduledEventsArgs = BaseGetScheduledEventsArgs & {
+  type: "cron";
+  trigger_name: string;
+};
+
+export type GetScheduledEventsArgs =
+  | GetOneOffScheduledEventsArgs
+  | GetCronScheduledEventsArgs;
 
 export interface DeleteScheduledEventArgs {
   type: "one_off" | "cron";
@@ -67,6 +84,11 @@ export interface GetScheduledEventsResponse {
 export interface DeleteScheduledEventResponse {
   message: "success";
 }
+
+export type ScheduledEventResponse =
+  | CreateScheduledEventResponse
+  | GetScheduledEventsResponse
+  | DeleteScheduledEventResponse;
 
 export type CombinedResponse = Partial<
   Record<SendIntegration, CreateScheduledEventResponse>
