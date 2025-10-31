@@ -18,7 +18,7 @@ importers:
         specifier: ^3.701.0
         version: 3.917.0
       '@opensystemslab/planx-core':
-        specifier: git+https://github.com/theopensystemslab/planx-core#jimmy/build-html-from-json
+        specifier: git+https://github.com/theopensystemslab/planx-core#789308f66f96ef5cd009d7fce894c6ea44c70241
         version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/789308f66f96ef5cd009d7fce894c6ea44c70241(@types/react@19.2.2)
       '@types/isomorphic-fetch':
         specifier: ^0.0.36
