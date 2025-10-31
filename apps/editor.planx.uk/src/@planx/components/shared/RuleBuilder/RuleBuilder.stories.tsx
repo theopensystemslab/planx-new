@@ -75,3 +75,18 @@ export const SubsetOfConditions = {
     },
   },
 } satisfies Story;
+
+export const WithDataSchema = {
+  name: "With data schema",
+  render: (args) => <RuleBuilderWithState {...args} />,
+  args: {
+    conditions: [Condition.AlwaysRequired, Condition.RequiredIf],
+    rule: {
+      fn: "someFn",
+      val: "someVal",
+      condition: Condition.RequiredIf,
+      operator: Operator.Equals,
+    },
+    dataSchema: ["recommended", "required"],
+  },
+} satisfies Story;

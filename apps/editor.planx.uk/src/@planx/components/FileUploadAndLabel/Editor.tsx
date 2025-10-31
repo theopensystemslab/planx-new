@@ -155,6 +155,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
         rule={props.value.rule}
         disabled={props.disabled}
         onChange={(rule) => props.onChange(merge(props.value, { rule }))}
+        dataSchema={["recommended", "required"]}
       />
       <ModalSubtitle title="Additional file information" />
       <InputRow>
