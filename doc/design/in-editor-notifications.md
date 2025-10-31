@@ -46,7 +46,7 @@ The editor uses MUI toast components with four severity levels:
 **Examples:** Cannot clone node to same parent, duplicate flow name exists
 
 ### Error
-**When to use:** Operation failed 
+**When to use:** Operation failed   
 **Examples:** Failed to archive flow
 
 [MUI Alert Severity Documentation](https://mui.com/material-ui/react-alert/#severity)
