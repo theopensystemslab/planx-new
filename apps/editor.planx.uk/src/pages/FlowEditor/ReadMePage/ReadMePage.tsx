@@ -140,17 +140,17 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
       <SettingsSection background>
         <form onSubmit={formik.handleSubmit}>
           <InputGroup flowSpacing>
-            <InputLegend id="serviceSummary-label">
-              Service description
-            </InputLegend>
+            <InputLegend id="serviceSummary-label">Service summary</InputLegend>
             <SettingsDescription id="serviceSummary-description-text">
-              A short blurb on what this service is.
+              A short blurb on what this service is. <br />
+              <br /> If the service is listed on localplanning.services, this is
+              displayed next to its name.
             </SettingsDescription>
             <Input
               multiline
               {...formik.getFieldProps("serviceSummary")}
               id="serviceSummary"
-              placeholder="Description"
+              placeholder="Summary"
               errorMessage={formik.errors.serviceSummary}
               disabled={!useStore.getState().canUserEditTeam(teamSlug)}
               inputProps={{
@@ -170,9 +170,9 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
             </InputLegend>
             <SettingsDescription id="serviceDescription-description-text">
               <>
-                A longer description of the service. <br />
-                <br /> How should the service be used? What does it include? Are
-                there are any dependencies related to this service?
+                How should the service be used? What does it include? Are there
+                any dependencies related to this service? This is not visible to
+                users.
               </>
             </SettingsDescription>
             <InputRow>
@@ -196,7 +196,10 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
               Limitations of the service
             </InputLegend>
             <SettingsDescription id="serviceLimitations-description-text">
-              <>What does this service not include?</>
+              <>
+                What does this service not include? This is not visible to
+                users.
+              </>
             </SettingsDescription>
             <InputRow>
               <RichTextInput

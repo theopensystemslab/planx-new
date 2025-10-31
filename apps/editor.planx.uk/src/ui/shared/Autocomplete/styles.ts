@@ -1,4 +1,4 @@
-import Autocomplete, { autocompleteClasses } from "@mui/material/Autocomplete";
+import Autocomplete from "@mui/material/Autocomplete";
 import { inputLabelClasses } from "@mui/material/InputLabel";
 import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import { styled } from "@mui/material/styles";
@@ -54,7 +54,7 @@ export const StyledDataField = styled(StyledTextField)(({ theme }) => ({
   [`& .${outlinedInputClasses.root}, input`]: {
     cursor: "pointer",
     // TODO extract as `format="data"` prop more like `Input` ?
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.background.data,
     fontFamily: theme.typography.data.fontFamily,
   },
 }));

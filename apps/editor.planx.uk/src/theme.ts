@@ -42,12 +42,13 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   background: {
     default: "#FFFFFF",
     paper: "#F9F8F8",
-    dark: "#2c2c2c",
+    dark: "#2C2C2C",
     disabled: "#EEEEEE",
+    data: "#F0F0F0",
   },
   secondary: {
     main: "#F3F2F1",
-    dark: "#e3e3e3",
+    dark: "#E3E3E3",
   },
   text: {
     primary: "#0B0C0C",

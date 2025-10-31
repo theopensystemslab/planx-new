@@ -1,7 +1,7 @@
 import { Breadcrumbs } from "@opensystemslab/planx-core/types";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
-import { screen } from "@testing-library/react";
-import axios from "axios";
+import { screen, waitFor } from "@testing-library/react";
+import { uploadPrivateFile } from "lib/api/fileUpload/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react-dom/test-utils";
@@ -16,12 +16,16 @@ import {
 } from "../model";
 import DrawBoundary from ".";
 
-vi.mock("axios");
-const mockedAxios = vi.mocked(axios, true);
+vi.mock("lib/api/fileUpload/requests");
+const mockedUploadPrivateFile = vi.mocked(uploadPrivateFile);
 
 global.URL.createObjectURL = vi.fn();
 
 const { getState, setState } = useStore;
+
+beforeEach(() => {
+  mockedUploadPrivateFile.mockClear();
+});
 
 test("recovers previously submitted files when clicking the back button", async () => {
   const handleSubmit = vi.fn();
@@ -174,19 +178,7 @@ test("hides the upload option and allows user to continue without drawing if edi
 });
 
 test("captures output data in the correct format when uploading a file", async () => {
-  // Setup file mock
-  const mockFileName = "test.png";
-  const mockFileURL =
-    "https://api.editor.planx.dev/file/private/gws7l5d1/test.png";
-
-  const file = new File(["test"], mockFileName, { type: "image/png" });
-
-  const mockedPost = mockedAxios.post.mockResolvedValueOnce({
-    data: {
-      fileType: "image/png",
-      fileUrl: mockFileURL,
-    },
-  });
+  const file = new File(["test"], "test.png", { type: "image/png" });
 
   const handleSubmit = vi.fn();
 
@@ -207,7 +199,13 @@ test("captures output data in the correct format when uploading a file", async (
   // Upload file
   const input = screen.getByTestId("upload-input");
   await user.upload(input, file);
-  expect(mockedPost).toHaveBeenCalled();
+  expect(mockedUploadPrivateFile).toHaveBeenCalled();
+
+  // Wait for upload to complete
+  const progressBar = screen.getByRole("progressbar");
+  await waitFor(() => {
+    expect(progressBar).toHaveAttribute("aria-valuenow", "100");
+  });
 
   await user.click(screen.getByTestId("continue-button"));
   const submitted = handleSubmit.mock.calls[0][0];
@@ -215,8 +213,10 @@ test("captures output data in the correct format when uploading a file", async (
   // DrawBoundary passport variable set
   expect(submitted.data).toHaveProperty(PASSPORT_UPLOAD_KEY);
   expect(submitted.data.locationPlan).toHaveLength(1);
-  expect(submitted.data.locationPlan[0].url).toEqual(mockFileURL);
-  expect(submitted.data.locationPlan[0].file.name).toEqual(mockFileName);
+  expect(submitted.data.locationPlan[0].url).toEqual(
+    "https://api.editor.planx.dev/file/private/mock-nanoid/test.png",
+  );
+  expect(submitted.data.locationPlan[0].file.name).toEqual("test.png");
 
   // DrawBoundary action captured
   expect(submitted.data[PASSPORT_COMPONENT_ACTION_KEY]).toEqual(
@@ -235,19 +235,7 @@ test("captures output data in the correct format when uploading a file", async (
 });
 
 test("appends to existing '_requestedFiles' value", async () => {
-  // Setup file mock
-  const mockFileName = "test.png";
-  const mockFileURL =
-    "https://api.editor.planx.dev/file/private/gws7l5d1/test.png";
-
-  const file = new File(["test"], mockFileName, { type: "image/png" });
-
-  mockedAxios.post.mockResolvedValueOnce({
-    data: {
-      fileType: "image/png",
-      fileUrl: mockFileURL,
-    },
-  });
+  const file = new File(["test"], "test.png", { type: "image/png" });
 
   const handleSubmit = vi.fn();
 
@@ -360,6 +348,13 @@ test("appends to existing '_requestedFiles' value", async () => {
   // Upload file and continue
   const input = screen.getByTestId("upload-input");
   await user.upload(input, file);
+
+  // Wait for upload to complete
+  const progressBar = screen.getByRole("progressbar");
+  await waitFor(() => {
+    expect(progressBar).toHaveAttribute("aria-valuenow", "100");
+  });
+
   await user.click(screen.getByTestId("continue-button"));
 
   const { required, recommended, optional } =
@@ -383,19 +378,7 @@ test("submits data based on the page you continue onwards from", async () => {
 
   const handleSubmit = vi.fn();
 
-  // Setup file mock
-  const mockFileName = "test.png";
-  const mockFileURL =
-    "https://api.editor.planx.dev/file/private/gws7l5d1/test.png";
-
-  const file = new File(["test"], mockFileName, { type: "image/png" });
-
-  const mockedPost = mockedAxios.post.mockResolvedValueOnce({
-    data: {
-      fileType: "image/png",
-      fileUrl: mockFileURL,
-    },
-  });
+  const file = new File(["test"], "test.png", { type: "image/png" });
 
   // Previously submitted data is a good proxy for having previously fetched a title boundary and arriving to Draw with geojson in passport !
   const previouslySubmittedData = {
@@ -437,7 +420,7 @@ test("submits data based on the page you continue onwards from", async () => {
   // Upload file
   const input = screen.getByTestId("upload-input");
   await user.upload(input, file);
-  expect(mockedPost).toHaveBeenCalled();
+  expect(mockedUploadPrivateFile).toHaveBeenCalled();
 
   // Toggle back to map view after uploading
   await user.click(screen.getByTestId("use-map-button"));

@@ -1,4 +1,4 @@
-import { getFlattenedFlowData } from "api/flow/requests";
+import { getFlattenedFlowData } from "lib/api/flow/requests";
 import { queryClient } from "lib/queryClient";
 import { NaviRequest, NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -44,7 +44,11 @@ export const previewView = async (req: NaviRequest) => {
 
   return (
     <PublicLayout>
-      <WatermarkBackground variant="dark" opacity={0.05} forceVisibility={true} />
+      <WatermarkBackground
+        variant="dark"
+        opacity={0.05}
+        forceVisibility={true}
+      />
       <TestWarningPage>
         <View />
       </TestWarningPage>

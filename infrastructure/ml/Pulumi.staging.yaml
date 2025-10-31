@@ -1,0 +1,7 @@
+config:
+  aws:region: eu-west-2
+  # apply tags to all taggable resources by default (for cost tracking)
+  aws:defaultTags:
+    tags:
+      project: ml
+  ml:ssh-devops-public-key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIib33oz+oCvapvEMqXoYGLdtrUGuxdaL3LMRHgd5rGm devops@opensystemslab.io

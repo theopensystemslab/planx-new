@@ -47,8 +47,18 @@ export default function AutocompleteInput<T>({
           },
           popper: {
             sx: {
-              boxShadow: 10,
+              boxShadow: 10, 
+              minWidth: 495,  // input-row width
             },
+            placement: "bottom-start",
+            modifiers: [
+              {
+                name: "offset",
+                options: {
+                  offset: [0, 4],
+                },
+              },
+            ],
           },
         }}
         {...restProps}

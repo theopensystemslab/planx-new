@@ -1,18 +1,17 @@
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 // eslint-disable-next-line no-restricted-imports
 import type { UserEvent } from "@testing-library/user-event";
-import { uploadPrivateFile } from "api/upload";
-import { Mock, vi } from "vitest";
+import { uploadPrivateFile } from "lib/api/fileUpload/requests";
+import { vi } from "vitest";
 
 global.URL.createObjectURL = vi.fn();
+
+const mockedUploadPrivateFile = vi.mocked(uploadPrivateFile);
 
 /**
  * Helper function to fill out a list item form
  */
-export const fillInResponse = async (
-  user: UserEvent,
-  mockUpload: Mock<typeof uploadPrivateFile>,
-) => {
+export const fillInResponse = async (user: UserEvent) => {
   const nameInput = screen.getByLabelText(/What's their name/);
   await user.type(nameInput, "Richard Parker");
 
@@ -58,13 +57,14 @@ export const fillInResponse = async (
   const file2 = new File(["test2"], "test2.png", { type: "image/png" });
   const input = screen.getByTestId("upload-input");
 
-  const previousUploadCount = mockUpload.mock.calls.length;
+  const previousUploadCount = mockedUploadPrivateFile.mock.calls.length;
 
   await user.upload(input, [file1, file2]);
 
-  const newUploadCount = mockUpload.mock.calls.length;
-
-  expect(newUploadCount).toEqual(previousUploadCount + 2);
+  await waitFor(() => {
+    const newUploadCount = mockedUploadPrivateFile.mock.calls.length;
+    expect(newUploadCount).toEqual(previousUploadCount + 2);
+  });
 
   const mockFile1 = screen.getByTestId("test1.png");
   const mockFile2 = screen.getByTestId("test2.png");

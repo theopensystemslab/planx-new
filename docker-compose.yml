@@ -1,5 +1,6 @@
 services:
   postgres:
+    platform: linux/amd64
     container_name: postgres
     build:
       context: ./apps/postgres

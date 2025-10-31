@@ -8,11 +8,11 @@ import ListManager from "ui/editor/ListManager/ListManager";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { Option } from "../../../shared";
-import { Group } from "../../model";
+import { ChecklistWithOptions, Group } from "../../model";
 import { useCurrentOptions } from "../../Public/hooks/useInitialOptions";
 
 interface Props {
-  formik: FormikHookReturn;
+  formik: FormikHookReturn<ChecklistWithOptions>;
   exclusiveOptions: Option[];
   nonExclusiveOptions: Option[] | Array<Group<Option>>;
   groupIndex?: number;

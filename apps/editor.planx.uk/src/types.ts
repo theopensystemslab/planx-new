@@ -6,7 +6,7 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { SectionLength } from "@planx/components/Section/model";
 import { OT } from "@planx/graph/types";
-import { useFormik } from "formik";
+import { FormikValues, useFormik } from "formik";
 import { Progress } from "pages/FlowEditor/lib/store/navigation";
 
 import { Store } from "./pages/FlowEditor/lib/store/index";
@@ -14,7 +14,8 @@ import { SharedStore } from "./pages/FlowEditor/lib/store/shared";
 
 export type Maybe<T> = T | undefined;
 
-export type FormikHookReturn = ReturnType<typeof useFormik>;
+export type FormikHookReturn<T extends FormikValues = FormikValues> =
+  ReturnType<typeof useFormik<T>>;
 
 export interface Flow {
   id: string;

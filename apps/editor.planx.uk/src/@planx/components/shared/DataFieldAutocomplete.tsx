@@ -18,6 +18,7 @@ interface Props {
   errorMessage?: string;
   allowCustomValues?: boolean;
   "data-testid"?: string;
+  placeholder?: string;
 }
 
 const renderOptions: AutocompleteProps<
@@ -46,6 +47,7 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
     value,
     schema: options = defaultSchema,
     allowCustomValues = true,
+    placeholder = "Data field",
   } = props;
 
   const handleChange = (_event: React.SyntheticEvent, value: string | null) => {
@@ -71,7 +73,7 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
           id="data-field-autocomplete"
           key="data-field-autocomplete"
           data-testid={props["data-testid"]}
-          placeholder="Data field"
+          placeholder={placeholder}
           required={Boolean(props.required)}
           onChange={handleChange}
           autoSelect

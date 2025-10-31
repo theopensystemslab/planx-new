@@ -2,7 +2,7 @@ import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { PublishFlowArgs } from "api/publishFlow/types";
+import { PublishFlowArgs } from "lib/api/publishFlow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { Template } from "pages/FlowEditor/lib/store/editor";
 import React, { useState } from "react";

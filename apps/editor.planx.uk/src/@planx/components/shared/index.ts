@@ -7,7 +7,7 @@ import {
 import { richText } from "lib/yupExtensions";
 import trim from "lodash/trim";
 import { Store } from "pages/FlowEditor/lib/store";
-import { array, boolean, object, SchemaOf, string } from "yup";
+import { array, boolean, mixed, object, SchemaOf, string } from "yup";
 
 /** Shared properties across all node types */
 export type BaseNodeData = NodeTags & TemplatedNodeData & MoreInformation;
@@ -76,6 +76,26 @@ export interface Option {
     val?: string;
     exclusive?: true;
   };
+}
+
+export const optionValidationSchema = object({
+  id: string(),
+  data: object({
+    description: string(),
+    flags: array(string()),
+    img: string(),
+    text: string().required().trim(),
+    val: string(),
+    exclusive: mixed().oneOf([true, undefined]),
+  }),
+});
+
+export interface Response {
+  id: string;
+  responseKey: string | number;
+  title: string;
+  description?: string;
+  img?: string;
 }
 
 export const parseFormValues = (ob: any, defaultValues = {}) =>

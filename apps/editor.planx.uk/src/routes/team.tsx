@@ -41,9 +41,16 @@ const routes = compose(
   })),
 
   withContext(async (req) => {
-    const { initTeamStore, teamSlug: currentSlug } = useStore.getState();
+    const {
+      initTeamStore,
+      teamSlug: currentSlug,
+      resetPreview,
+    } = useStore.getState();
     const routeSlug =
       req.params.team || (await getTeamFromDomain(window.location.hostname));
+
+    // Clear any cached data from previous flows
+    resetPreview();
 
     if (currentSlug !== routeSlug) {
       try {
@@ -98,9 +105,11 @@ const routes = compose(
           });
         }
 
-        useStore.getState().setFlowName(flow.name);
-        useStore.getState().setFlowSlug(slug);
-        await useStore.getState().connectTo(flow.id);
+        useStore.setState({
+          id: flow.id,
+          flowName: flow.name,
+          flowSlug: slug,
+        });
       }
 
       return import("./flow");

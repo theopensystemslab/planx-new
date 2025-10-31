@@ -43,7 +43,9 @@ type Props = EditorProps<TYPES.FileUploadAndLabel, FileUploadAndLabel>;
 
 const Operator = styled(Typography)(({ theme }) => ({
   alignSelf: "center",
-  padding: theme.spacing(0, 2),
+  padding: theme.spacing(0, 1),
+  // Counteract InputRow's default spacing
+  marginLeft: -5,
 }));
 
 Operator.defaultProps = {
@@ -191,32 +193,30 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
       </InputRow>
       {isConditionalRule && (
         <InputRow>
-          <Input
+          <DataFieldAutocomplete
             required
-            name="fn"
             value={props.value.rule.fn}
-            onChange={(e) =>
+            onChange={(value) =>
               props.onChange(
                 merge(props.value, {
                   rule: {
-                    fn: e.target.value,
+                    fn: value,
                   },
                 }),
               )
             }
-            placeholder="Data field"
             disabled={props.disabled}
           />
           <Operator>Equals</Operator>
-          <Input
+          <DataFieldAutocomplete
             required
-            name="val"
+            schema={["recommended", "required"]}
             value={props.value.rule.val}
-            onChange={(e) =>
+            onChange={(value) =>
               props.onChange(
                 merge(props.value, {
                   rule: {
-                    val: e.target.value,
+                    val: value,
                   },
                 }),
               )
@@ -275,7 +275,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
           disabled={props.disabled}
           errorMessage={getIn(props.errors, "moreInformation.howMeasured")}
         />
-        <InputRowItem width={50}>
+        <InputRowItem>
           <ImgInput
             img={props.value.moreInformation?.definitionImg}
             disabled={props.disabled}
