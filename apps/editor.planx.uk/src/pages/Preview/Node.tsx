@@ -3,7 +3,10 @@ import type { AddressInput } from "@planx/components/AddressInput/model";
 import AddressInputComponent from "@planx/components/AddressInput/Public";
 import type { Calculate } from "@planx/components/Calculate/model";
 import CalculateComponent from "@planx/components/Calculate/Public";
-import type { Checklist } from "@planx/components/Checklist/model";
+import type {
+  Checklist,
+  ChecklistWithOptions,
+} from "@planx/components/Checklist/model";
 import ChecklistComponent from "@planx/components/Checklist/Public/Public";
 import type { Confirmation } from "@planx/components/Confirmation/model";
 import ConfirmationComponent from "@planx/components/Confirmation/Public";
@@ -151,14 +154,20 @@ const Node: React.FC<Props> = (props) => {
             checklistProps.categories,
           )[1];
 
-      return (
-        <ChecklistComponent
-          {...checklistProps}
-          options={checklistProps.categories ? undefined : childNodes}
-          groupedOptions={groupedOptions}
-          autoAnswers={autoAnswers}
-        />
-      );
+      // Type narrow to either FlatChecklist or GroupedChecklist
+      const props: ChecklistWithOptions = checklistProps.categories
+        ? {
+            ...checklistProps,
+            groupedOptions: groupedOptions!,
+            options: undefined,
+          }
+        : {
+            ...checklistProps,
+            options: childNodes,
+            groupedOptions: undefined,
+          };
+
+      return <ChecklistComponent {...props} autoAnswers={autoAnswers} />;
     }
 
     case TYPES.Confirmation:

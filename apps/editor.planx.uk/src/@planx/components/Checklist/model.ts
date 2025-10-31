@@ -41,26 +41,27 @@ export interface Checklist extends BaseNodeData {
   alwaysAutoAnswerBlank?: boolean;
 }
 
+export interface FlatChecklist extends Checklist {
+  options: Array<Option>;
+  groupedOptions?: undefined;
+}
+
+export interface GroupedChecklist extends Checklist {
+  options?: undefined;
+  groupedOptions: Array<Group<Option>>;
+}
+
 /**
  * Public and Editor representation of a Checklist
  * Contains options derived from child Answer nodes
  */
-export interface ChecklistWithOptions extends Checklist {
-  options?: Array<Option>;
-  groupedOptions?: Array<Group<Option>>;
-}
-
-interface ChecklistExpandableProps {
-  options?: Array<Option>;
-  groupedOptions?: Array<Group<Option>>;
-}
+export type ChecklistWithOptions = FlatChecklist | GroupedChecklist;
 
 export const toggleExpandableChecklist = ({
   options,
   groupedOptions,
-}: ChecklistExpandableProps) => {
-  const checklist = [options, groupedOptions];
-
+  ...checklist
+}: ChecklistWithOptions): ChecklistWithOptions => {
   // toggle from unexpanded to expanded
   if (options !== undefined && options.length > 0) {
     const [exclusiveOptions, nonExclusiveOptions]: Option[][] = partition(
@@ -98,7 +99,7 @@ export const toggleExpandableChecklist = ({
   } else {
     return {
       ...checklist,
-      options: options || [],
+      options: undefined,
       groupedOptions: groupedOptions || [
         {
           title: "Section 1",
@@ -116,12 +117,8 @@ export const getFlatOptions = ({
   options: ChecklistWithOptions["options"];
   groupedOptions: ChecklistWithOptions["groupedOptions"];
 }) => {
-  if (options) {
-    return options;
-  }
-  if (groupedOptions) {
-    return groupedOptions.flatMap((group) => group.children);
-  }
+  if (options) return options;
+  if (groupedOptions) return groupedOptions.flatMap(({ children }) => children);
   return [];
 };
 

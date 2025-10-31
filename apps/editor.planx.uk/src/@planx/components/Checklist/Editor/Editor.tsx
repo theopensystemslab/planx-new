@@ -1,7 +1,7 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { DataFieldAutocomplete } from "@planx/components/shared/DataFieldAutocomplete";
 import { EditorProps } from "@planx/components/shared/types";
-import { useFormik } from "formik";
+import { getIn, useFormik } from "formik";
 import React, { useRef } from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
@@ -135,13 +135,7 @@ export const ChecklistEditor: React.FC<
               <Switch
                 checked={!!formik.values.groupedOptions}
                 onChange={() =>
-                  formik.setValues({
-                    ...formik.values,
-                    ...toggleExpandableChecklist({
-                      options: formik.values.options,
-                      groupedOptions: formik.values.groupedOptions,
-                    }),
-                  })
+                  formik.setValues(toggleExpandableChecklist(formik.values))
                 }
                 label="Expandable"
                 disabled={props.disabled}
@@ -190,7 +184,7 @@ export const ChecklistEditor: React.FC<
             </ErrorWrapper>
           </InputGroup>
         </ModalSectionContent>
-        <ErrorWrapper error={formik.errors.options}>
+        <ErrorWrapper error={getIn(formik.errors, "options")}>
           <Options
             formik={formik}
             disabled={props.disabled}

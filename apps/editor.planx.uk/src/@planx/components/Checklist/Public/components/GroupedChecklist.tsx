@@ -2,10 +2,9 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { visuallyHidden } from "@mui/utils";
 import {
-  Checklist,
   checklistInputValidationSchema,
   ChecklistLayout,
-  ChecklistWithOptions,
+  GroupedChecklist,
 } from "@planx/components/Checklist/model";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
@@ -22,7 +21,7 @@ import { useSortedOptions } from "../hooks/useSortedOptions";
 import { ExclusiveChecklistItem } from "./ExclusiveChecklistItem";
 import { GroupedChecklistOptions } from "./GroupedChecklistOptions";
 
-export const GroupedChecklist: React.FC<PublicProps<ChecklistWithOptions>> = (
+const GroupedChecklistComponent: React.FC<PublicProps<GroupedChecklist>> = (
   props,
 ) => {
   const {
@@ -136,3 +135,5 @@ export const GroupedChecklist: React.FC<PublicProps<ChecklistWithOptions>> = (
     </Card>
   );
 };
+
+export default GroupedChecklistComponent;

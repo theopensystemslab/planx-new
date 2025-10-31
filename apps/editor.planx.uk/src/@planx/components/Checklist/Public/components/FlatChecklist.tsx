@@ -3,7 +3,7 @@ import { visuallyHidden } from "@mui/utils";
 import {
   checklistInputValidationSchema,
   ChecklistLayout,
-  ChecklistWithOptions,
+  FlatChecklist,
 } from "@planx/components/Checklist/model";
 import { Option } from "@planx/components/shared";
 import Card from "@planx/components/shared/Preview/Card";
@@ -22,7 +22,7 @@ import { useSortedOptions } from "../hooks/useSortedOptions";
 import { ChecklistItems } from "./ChecklistItems";
 import { ExclusiveChecklistItem } from "./ExclusiveChecklistItem";
 
-export const FlatChecklist: React.FC<PublicProps<ChecklistWithOptions>> = (
+const FlatChecklistComponent: React.FC<PublicProps<FlatChecklist>> = (
   props,
 ) => {
   const {
@@ -134,3 +134,5 @@ export const FlatChecklist: React.FC<PublicProps<ChecklistWithOptions>> = (
     </Card>
   );
 };
+
+export default FlatChecklistComponent;
