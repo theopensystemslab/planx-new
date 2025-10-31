@@ -3,19 +3,19 @@ import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Portal from "@mui/material/Portal";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 interface LoadingOverlayProps {
-  open: boolean;
-  message?: string;
   msDelayBeforeVisible?: number;
 }
 
 const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
-  open,
-  message = "Loading...",
   msDelayBeforeVisible = 300,
 }) => {
+  const isLoading = useStore((state) => state.isLoading);
+  const loadingMessage = useStore((state) => state.loadingMessage);
+
   return (
     <Portal>
       <Backdrop
@@ -24,7 +24,7 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
           alignItems: "flex-start",
           paddingTop: theme.spacing(2),
         })}
-        open={open}
+        open={isLoading}
         transitionDuration={300}
       >
         <Box>
@@ -47,7 +47,7 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
           >
             <DelayedLoadingIndicator
               inline
-              text={message}
+              text={loadingMessage}
               msDelayBeforeVisible={msDelayBeforeVisible}
               variant="spinner"
             />
