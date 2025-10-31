@@ -19,11 +19,7 @@ const Operator = styled(Typography)(({ theme }) => ({
   marginLeft: -5,
 }));
 
-Operator.defaultProps = {
-  variant: "body2",
-};
-
-interface Props {
+export interface Props {
   modalSubtitle?: string;
   rule: Rule;
   disabled?: boolean;
@@ -74,7 +70,7 @@ export const RuleBuilder: React.FC<Props> = ({
             onChange={handleFnChange}
             disabled={disabled}
           />
-          <Operator>Equals</Operator>
+          <Operator variant="body2">Equals</Operator>
           <DataFieldAutocomplete
             required
             schema={["recommended", "required"]}
