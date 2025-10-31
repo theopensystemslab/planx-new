@@ -274,12 +274,23 @@ const Node: React.FC<Props> = (props) => {
         />
       ) : null;
 
-    case TYPES.ResponsiveQuestion:
-      return hasFeatureFlag("RESPONSIVE_QUESTIONS_CHECKLISTS") ? (
+    case TYPES.ResponsiveQuestion: {
+      const props = getComponentProps<ResponsiveQuestion>();
+      const autoAnswers = nodeId ? autoAnswerableOptions(nodeId) : undefined;
+
+      return (
         <ResponsiveQuestionComponent
-          {...getComponentProps<ResponsiveQuestion>()}
+          {...props}
+          responses={childNodesOf(nodeId).map((n, i) => ({
+            id: n.id!,
+            responseKey: i + 1,
+            title: n.data?.text,
+            ...n.data,
+          }))}
+          autoAnswers={autoAnswers}
         />
-      ) : null;
+      );
+    }
 
     case TYPES.Result:
       return <ResultComponent {...getComponentProps<Result>()} />;

@@ -2,9 +2,9 @@ import type { PublicProps } from "@planx/components/shared/types";
 import { makeData } from "@planx/components/shared/utils";
 import { useEffect } from "react";
 
-import type { ResponsiveQuestion } from "./model";
+import type { PublicResponsiveQuestion } from "./model";
 
-export type Props = PublicProps<ResponsiveQuestion>;
+export type Props = PublicProps<PublicResponsiveQuestion>;
 
 export default function Component(props: Props) {
   useEffect(() => {

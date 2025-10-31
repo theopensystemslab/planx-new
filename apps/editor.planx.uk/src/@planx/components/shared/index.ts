@@ -76,6 +76,8 @@ export interface Option {
     val?: string;
     exclusive?: true;
   };
+  // TODO?
+  // rule?: []
 }
 
 export const optionValidationSchema = object({
