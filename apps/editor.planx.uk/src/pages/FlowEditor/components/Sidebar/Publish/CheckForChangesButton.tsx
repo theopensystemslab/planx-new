@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
-import LoadingOverlay from "components/LoadingOverlay";
 import { useToast } from "hooks/useToast";
 import { PublishFlowArgs } from "lib/api/publishFlow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -16,10 +15,14 @@ import { ChangesDialog, NoChangesDialog } from "./PublishDialog";
 export const CheckForChangesToPublishButton: React.FC<{
   previewURL: string;
 }> = ({ previewURL }) => {
-  const [isTemplatedFrom, template] = useStore((state) => [
-    state.isTemplatedFrom,
-    state.template,
-  ]);
+  const [isTemplatedFrom, template, showLoading, hideLoading] = useStore(
+    (state) => [
+      state.isTemplatedFrom,
+      state.template,
+      state.showLoading,
+      state.hideLoading,
+    ],
+  );
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const toast = useToast();
   const {
@@ -38,9 +41,14 @@ export const CheckForChangesToPublishButton: React.FC<{
   const handlePublish = async (args: PublishFlowArgs) => {
     // Close modal immediately, user feedback handled via status text beneath to publish button
     setDialogOpen(false);
+    showLoading("Publishing flow");
     publishMutation.mutate(args, {
       onSuccess: () => {
         toast.success("Flow published");
+        hideLoading();
+      },
+      onError: () => {
+        hideLoading();
       },
     });
   };
@@ -81,10 +89,6 @@ export const CheckForChangesToPublishButton: React.FC<{
 
   return (
     <>
-      <LoadingOverlay
-        open={publishMutation.isPending}
-        message="Publishing flow"
-      />
       <Box width="100%" mt={2}>
         <Box display="flex" flexDirection="column" alignItems="flex-end">
           {isTemplatedFrom && template && (

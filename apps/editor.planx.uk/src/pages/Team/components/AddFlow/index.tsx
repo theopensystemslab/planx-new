@@ -6,7 +6,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { logger } from "airbrake";
 import { isAxiosError } from "axios";
-import LoadingOverlay from "components/LoadingOverlay";
 import { Form, Formik, FormikConfig } from "formik";
 import { useToast } from "hooks/useToast";
 import React, { useState } from "react";
@@ -21,7 +20,7 @@ import { CreateFlow, validationSchema } from "./types";
 
 export const AddFlow: React.FC = () => {
   const { navigate } = useNavigation();
-  const { teamId, teamSlug } = useStore();
+  const { teamId, teamSlug, showLoading, hideLoading } = useStore();
   const toast = useToast();
 
   const initialValues: CreateFlow = {
@@ -41,6 +40,7 @@ export const AddFlow: React.FC = () => {
     values,
     { setFieldError, setStatus },
   ) => {
+    showLoading("Creating flow...");
     try {
       const result = await createFlow(values);
       toast.success("Flow created successfully");
@@ -64,6 +64,8 @@ export const AddFlow: React.FC = () => {
         }
       }
       setStatus({ error: "Failed to create flow, please try again." });
+    } finally {
+      hideLoading();
     }
   };
 
@@ -80,60 +82,56 @@ export const AddFlow: React.FC = () => {
         validationSchema={validationSchema}
       >
         {({ resetForm, isSubmitting, status }) => (
-          <>
-            <Dialog
-              open={dialogOpen}
-              onClose={() => {
-                setDialogOpen(false);
-                resetForm();
-              }}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-              fullWidth
-            >
-              <DialogTitle variant="h3" component="h1" id="dialog-heading">
-                Add a new flow
-              </DialogTitle>
-              <Box>
-                <Form>
-                  <DialogContent dividers>
-                    <ErrorWrapper error={status?.error}>
-                      <Box
-                        sx={{
-                          gap: 2,
-                          display: "flex",
-                          flexDirection: "column",
-                        }}
-                      >
-                        <BaseFormSection />
-                      </Box>
-                    </ErrorWrapper>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button
-                      onClick={() => setDialogOpen(false)}
-                      disabled={isSubmitting}
-                      variant="contained"
-                      color="secondary"
-                      sx={{ backgroundColor: "background.default" }}
+          <Dialog
+            open={dialogOpen}
+            onClose={() => {
+              setDialogOpen(false);
+              resetForm();
+            }}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+            fullWidth
+          >
+            <DialogTitle variant="h3" component="h1" id="dialog-heading">
+              Add a new flow
+            </DialogTitle>
+            <Box>
+              <Form>
+                <DialogContent dividers>
+                  <ErrorWrapper error={status?.error}>
+                    <Box
+                      sx={{
+                        gap: 2,
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
                     >
-                      Back
-                    </Button>
-                    <Button
-                      type="submit"
-                      color="primary"
-                      variant="contained"
-                      disabled={isSubmitting}
-                    >
-                      Add flow
-                    </Button>
-                  </DialogActions>
-                </Form>
-              </Box>
-            </Dialog>
-
-            <LoadingOverlay open={isSubmitting} message="Creating flow..." />
-          </>
+                      <BaseFormSection />
+                    </Box>
+                  </ErrorWrapper>
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    onClick={() => setDialogOpen(false)}
+                    disabled={isSubmitting}
+                    variant="contained"
+                    color="secondary"
+                    sx={{ backgroundColor: "background.default" }}
+                  >
+                    Back
+                  </Button>
+                  <Button
+                    type="submit"
+                    color="primary"
+                    variant="contained"
+                    disabled={isSubmitting}
+                  >
+                    Add flow
+                  </Button>
+                </DialogActions>
+              </Form>
+            </Box>
+          </Dialog>
         )}
       </Formik>
     </Box>
