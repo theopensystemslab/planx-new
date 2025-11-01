@@ -21,6 +21,7 @@ describe("Update operations", () => {
         p: ["FW5G3EMBI3", "data", "info"],
         oi: "New help text",
         od: "Old help text",
+        formatOps,
       },
     ];
 
@@ -75,6 +76,28 @@ describe("Insert operations", () => {
 
     expect(formatOps(emptyFlow, ops)).toEqual([
       'Added Notice "This is a test"',
+    ]);
+  });
+
+  test("Adding a new portal node to the graph displays the user-facing name", () => {
+    const ops = [
+      {
+        p: ["_root", "edges", 0],
+        li: "ubCTG9OtFw",
+      },
+      {
+        p: ["ubCTG9OtFw"],
+        oi: {
+          type: 300, // InternalPortal => Folder
+          data: {
+            title: "This is a test folder",
+          },
+        },
+      },
+    ];
+
+    expect(formatOps(emptyFlow, ops)).toEqual([
+      'Added Folder "This is a test folder"',
     ]);
   });
 

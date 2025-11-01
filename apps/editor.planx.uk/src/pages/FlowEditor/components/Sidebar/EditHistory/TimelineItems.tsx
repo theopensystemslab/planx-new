@@ -66,6 +66,7 @@ export const OperationTimelineItem = ({
         color={inUndoScope(i) ? "GrayText" : "inherit"}
       >
         {[...new Set(formatOps(flow, event.data))]
+          .reverse()
           .slice(0, OPS_TO_DISPLAY)
           .map((formattedOp, i) => (
             <EditHistoryListItem key={i}>{formattedOp}</EditHistoryListItem>
@@ -91,6 +92,7 @@ export const OperationTimelineItem = ({
             style={{ paddingRight: "50px" }}
           >
             {[...new Set(formatOps(flow, event.data))]
+              .reverse()
               .slice(OPS_TO_DISPLAY)
               ?.map((formattedOp, i) => (
                 <EditHistoryListItem key={i}>{formattedOp}</EditHistoryListItem>
