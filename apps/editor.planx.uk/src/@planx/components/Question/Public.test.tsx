@@ -44,40 +44,40 @@ const responses: { [key in QuestionLayout]: PublicQuestion["responses"] } = {
   [QuestionLayout.Basic]: [
     {
       id: "pizza_id",
-      responseKey: "pizza",
-      title: "Pizza",
+      responseKey: 1,
+      text: "Pizza",
     },
     {
       id: "celery_id",
-      responseKey: "celery",
-      title: "Celery",
+      responseKey: 2,
+      text: "Celery",
     },
   ],
   [QuestionLayout.Images]: [
     {
       id: "pizza_id",
-      responseKey: "pizza",
-      title: "Pizza",
+      responseKey: 1,
+      text: "Pizza",
       img: "pizza.jpg",
     },
     {
       id: "celery_id",
-      responseKey: "celery",
-      title: "Celery",
+      responseKey: 2,
+      text: "Celery",
       img: "celery.jpg",
     },
   ],
   [QuestionLayout.Descriptions]: [
     {
       id: "pizza_id",
-      responseKey: "pizza",
-      title: "Pizza",
+      responseKey: 1,
+      text: "Pizza",
       description: "This is a pizza",
     },
     {
       id: "celery_id",
-      responseKey: "celery",
-      title: "Celery",
+      responseKey: 2,
+      text: "Celery",
       description: "This is celery",
     },
   ],

@@ -9,6 +9,8 @@ import trim from "lodash/trim";
 import { Store } from "pages/FlowEditor/lib/store";
 import { array, boolean, mixed, object, SchemaOf, string } from "yup";
 
+import { Condition, Rule } from "./RuleBuilder/types";
+
 /** Shared properties across all node types */
 export type BaseNodeData = NodeTags & TemplatedNodeData & MoreInformation;
 
@@ -75,6 +77,7 @@ export interface Option {
     text: string;
     val?: string;
     exclusive?: true;
+    rule?: Rule;
   };
 }
 
@@ -87,16 +90,18 @@ export const optionValidationSchema = object({
     text: string().required().trim(),
     val: string(),
     exclusive: mixed().oneOf([true, undefined]),
+    // TODO: rule validation?
   }),
 });
 
-export interface Response {
+export const DEFAULT_RULE: Rule = {
+  condition: Condition.AlwaysRequired,
+};
+
+export type Response = Option["data"] & {
   id: string;
-  responseKey: string | number;
-  title: string;
-  description?: string;
-  img?: string;
-}
+  responseKey: number;
+};
 
 export const parseFormValues = (ob: any, defaultValues = {}) =>
   ob.reduce((acc: any, [k, v]: any) => {
