@@ -1,4 +1,4 @@
-import Alert from "@mui/material/Alert";
+import Alert, { alertClasses } from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import { useToast } from "hooks/useToast";
 import React from "react";
@@ -17,8 +17,29 @@ const Toast = ({ message, type = "success", id }: ToastProps) => {
   };
 
   return (
-    <Snackbar onClose={handleCloseToast} autoHideDuration={6000} open={true}>
-      <Alert onClose={handleCloseToast} severity={type} sx={{ width: "100%" }}>
+    <Snackbar
+      anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      autoHideDuration={6000}
+      onClose={handleCloseToast}
+      open={true}
+    >
+      <Alert
+        onClose={handleCloseToast}
+        severity={type}
+        sx={(theme) => ({
+          width: "100%",
+          alignItems: "center",
+          border: "2px solid currentColor",
+          fontSize: "1rem",
+          padding: theme.spacing(1, 2),
+          [`& .${alertClasses.icon}`]: {
+            fontSize: "1.5rem",
+          },
+          [`& .${alertClasses.action}`]: {
+            paddingTop: 0,
+          },
+        })}
+      >
         {message}
       </Alert>
     </Snackbar>
