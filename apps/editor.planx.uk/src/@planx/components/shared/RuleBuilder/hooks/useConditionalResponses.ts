@@ -11,13 +11,13 @@ export const useConditionalResponses = (responses: Response[]): Response[] => {
   );
 
   if (!conditionalResponses.length) {
-    // TODO: Test this!
     logger.notify({
       message:
         "[QuestionComponent]: User was presented with no conditional options",
       passport,
       responses,
-      conditionalResponses,
+      flowId: useStore.getState().id,
+      nodeId: useStore.getState().currentCard?.id,
     });
   }
 
