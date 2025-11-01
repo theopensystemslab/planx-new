@@ -7,12 +7,9 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useLayoutEffect, useRef, useState } from "react";
 
-export interface Props {
-  id?: string;
-  title: string;
-  description?: string;
-  responseKey?: string | number;
-  img?: string;
+import { Response } from "../..";
+
+export interface Props extends Response {
   onChange: RadioProps["onChange"];
 }
 
@@ -89,7 +86,7 @@ const StyledFormLabel = styled(FormLabel, {
 }));
 
 const TextLabel = (props: Props): FCReturn => {
-  const { title, id, onChange, description } = props;
+  const { text, id, onChange, description } = props;
   const [multiline, setMultiline] = useState(false);
 
   const textContentEl = useRef<HTMLDivElement>(null);
@@ -113,7 +110,7 @@ const TextLabel = (props: Props): FCReturn => {
     >
       <TextLabelContainer>
         <Radio value={id} onChange={onChange} />
-        <Typography>{title}</Typography>
+        <Typography>{text}</Typography>
       </TextLabelContainer>
       <Typography variant="body2">{description}</Typography>
     </TextLabelRoot>

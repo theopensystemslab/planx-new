@@ -5,10 +5,9 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React from "react";
 
-export interface Props {
-  id?: string;
-  title: string;
-  description?: string;
+import { Response } from "../..";
+
+export interface Props extends Response {
   onChange: RadioProps["onChange"];
 }
 
@@ -19,7 +18,7 @@ const StyledFormLabel = styled(FormLabel)(({ theme }) => ({
 }));
 
 const DescriptionRadio: React.FC<Props> = ({
-  title,
+  text,
   description,
   onChange,
   id,
@@ -29,7 +28,7 @@ const DescriptionRadio: React.FC<Props> = ({
       <Radio value={id} onChange={onChange} />
       <Box>
         <Typography color="text.primary" variant="body1" pt={0.95}>
-          {title}
+          {text}
         </Typography>
         <Typography variant="body2" pt={0.5}>
           {description}
