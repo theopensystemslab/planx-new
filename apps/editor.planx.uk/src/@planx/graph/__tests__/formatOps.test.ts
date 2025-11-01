@@ -21,7 +21,6 @@ describe("Update operations", () => {
         p: ["FW5G3EMBI3", "data", "info"],
         oi: "New help text",
         od: "Old help text",
-        formatOps,
       },
     ];
 
