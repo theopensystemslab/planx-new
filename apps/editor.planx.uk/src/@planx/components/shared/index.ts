@@ -98,13 +98,10 @@ export const DEFAULT_RULE: Rule = {
   condition: Condition.AlwaysRequired,
 };
 
-export interface Response {
+export type Response = Option["data"] & {
   id: string;
-  responseKey: string | number;
-  title: string;
-  description?: string;
-  img?: string;
-}
+  responseKey: number;
+};
 
 export const parseFormValues = (ob: any, defaultValues = {}) =>
   ob.reduce((acc: any, [k, v]: any) => {

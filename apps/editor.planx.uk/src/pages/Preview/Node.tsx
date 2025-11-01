@@ -64,7 +64,7 @@ import type { SetFee } from "@planx/components/SetFee/model";
 import SetFeeComponent from "@planx/components/SetFee/Public";
 import type { SetValue } from "@planx/components/SetValue/model";
 import SetValueComponent from "@planx/components/SetValue/Public";
-import { Option } from "@planx/components/shared";
+import { Option, Response } from "@planx/components/shared";
 import type { TaskList } from "@planx/components/TaskList/model";
 import TaskListComponent from "@planx/components/TaskList/Public";
 import type { TextInput } from "@planx/components/TextInput/model";
@@ -261,16 +261,16 @@ const Node: React.FC<Props> = (props) => {
     case TYPES.Question: {
       const questionProps = getComponentProps<Question>();
       const autoAnswers = nodeId ? autoAnswerableOptions(nodeId) : undefined;
+      const responses = childNodesOf(nodeId).map((node, i) => ({
+        id: node.id,
+        responseKey: i + 1,
+        ...node.data,
+      })) as Response[];
 
       return (
         <QuestionComponent
           {...questionProps}
-          responses={childNodesOf(nodeId).map((n, i) => ({
-            id: n.id!,
-            responseKey: i + 1,
-            title: n.data?.text,
-            ...n.data,
-          }))}
+          responses={responses}
           autoAnswers={autoAnswers}
         />
       );
