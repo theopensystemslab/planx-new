@@ -4,9 +4,11 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
-import { Option } from ".";
+import { DEFAULT_RULE, Option } from ".";
 import { DataFieldAutocomplete } from "./DataFieldAutocomplete";
 import { FlagsSelect } from "./FlagsSelect";
+import { RuleBuilder } from "./RuleBuilder";
+import { Condition } from "./RuleBuilder/types";
 
 export interface BaseOptionsEditorProps {
   value: Option;
@@ -109,6 +111,20 @@ export const BaseOptionsEditor: React.FC<BaseOptionsEditorProps> = (props) => (
           },
         });
       }}
+    />
+    <RuleBuilder
+      conditions={[Condition.AlwaysRequired, Condition.RequiredIf]}
+      disabled={props.disabled}
+      rule={props.value.data.rule || DEFAULT_RULE}
+      onChange={(rule) =>
+        props.onChange({
+          ...props.value,
+          data: {
+            ...props.value.data,
+            rule,
+          },
+        })
+      }
     />
   </div>
 );
