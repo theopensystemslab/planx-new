@@ -54,6 +54,25 @@ export const handleSetFees: HandleSetFees = ({
     fees[`${CALCULATED_FN}.VAT`] = calculatedVAT;
     fees[payable] = fees[payable] + calculatedVAT;
     fees[payableVAT] = calculatedVAT;
+
+    // If calculated base application fee is VAT-able and has reductions or exemptions,
+    //   ensure that payable and payable VAT are correctly adjusted
+    const reductionOrExemptionFns = [
+      "application.fee.reduction.alternative",
+      "application.fee.reduction.parishCouncil",
+      "application.fee.reduction.sports",
+      "application.fee.exemption.disability",
+      "application.fee.exemption.resubmission",
+      "application.fee.exemption.demolition",
+    ];
+    const hasReductionOrExemption = reductionOrExemptionFns.some(
+      (fn) => passport.data?.[fn]?.[0] === "true",
+    );
+    if (hasReductionOrExemption) {
+      // TODO account for eg 50% reduction therefore -50% VAT, currently always -100%
+      fees[payable] = fees[payable] - calculatedVAT;
+      fees[payableVAT] = fees[payableVAT] - calculatedVAT;
+    }
   }
 
   const addFastTrack = fastTrackFeeAmount > 0;
