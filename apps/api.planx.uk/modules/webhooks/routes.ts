@@ -7,14 +7,20 @@ import {
   createPaymentExpiryEventsController,
   createPaymentInvitationEventsController,
   createPaymentReminderEventsController,
+  createSessionDeleteEventController,
   createSessionExpiryEventController,
   createSessionReminderEventController,
+  deleteSessionController,
   isCleanJSONBController,
   sanitiseApplicationDataController,
   sendSlackNotificationController,
   updateTemplatedFlowEditsController,
 } from "./controller.js";
-import { createSessionEventSchema } from "./service/lowcalSessionEvents/schema.js";
+import { deleteSessionSchema } from "./service/deleteSession/schema.js";
+import {
+  createSessionDeleteEventSchema,
+  createSessionEmailEventSchema,
+} from "./service/lowcalSessionEvents/schema.js";
 import { createPaymentEventSchema } from "./service/paymentRequestEvents/schema.js";
 import { sendSlackNotificationSchema } from "./service/sendNotification/schema.js";
 import { updateTemplatedFlowEditsEventSchema } from "./service/updateTemplatedFlowEdits/schema.js";
@@ -45,13 +51,23 @@ router.post(
 );
 router.post(
   "/webhooks/hasura/create-reminder-event",
-  validate(createSessionEventSchema),
+  validate(createSessionEmailEventSchema),
   createSessionReminderEventController,
 );
 router.post(
   "/webhooks/hasura/create-expiry-event",
-  validate(createSessionEventSchema),
+  validate(createSessionEmailEventSchema),
   createSessionExpiryEventController,
+);
+router.post(
+  "/webhooks/hasura/create-delete-event",
+  validate(createSessionDeleteEventSchema),
+  createSessionDeleteEventController,
+);
+router.post(
+  "/webhooks/hasura/delete-session",
+  validate(deleteSessionSchema),
+  deleteSessionController,
 );
 router.post(
   "/webhooks/hasura/sanitise-application-data",

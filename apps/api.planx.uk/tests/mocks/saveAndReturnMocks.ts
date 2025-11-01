@@ -193,19 +193,6 @@ export const mockValidateSingleSessionRequestMissingSession = {
   },
 };
 
-export const mockSoftDeleteLowcalSession = {
-  name: "SoftDeleteLowcalSession",
-  data: {
-    session: {
-      id: "123",
-    },
-  },
-  variables: {
-    sessionId: "123",
-  },
-  matchOnVariables: true,
-};
-
 export const mockSetupEmailNotifications = {
   name: "SetupEmailNotifications",
   data: {
