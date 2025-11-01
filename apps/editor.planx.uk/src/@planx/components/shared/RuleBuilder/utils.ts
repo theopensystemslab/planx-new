@@ -1,11 +1,13 @@
 import { Store } from "pages/FlowEditor/lib/store";
 
-import { Condition, ConditionalRule, Operator, Rule } from "./types";
+import { Condition, Operator, Rule } from "./types";
 
-export const isRuleMet = (
-  passport: Store.Passport,
-  rule: ConditionalRule<Condition.RequiredIf | Condition.RecommendedIf>,
-): boolean => {
+export const isRuleMet = (passport: Store.Passport, rule: Rule): boolean => {
+  // TODO: Tests
+  if (rule.condition === Condition.AlwaysRequired) return true;
+  if (rule.condition === Condition.AlwaysRecommended) return true;
+  if (rule.condition === Condition.NotRequired) return true;
+
   const passportVal = passport.data?.[rule.fn];
   if (!passportVal) return false;
 

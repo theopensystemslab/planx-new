@@ -16,6 +16,7 @@ import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { mixed, object, string } from "yup";
 
+import { useConditionalResponses } from "../shared/RuleBuilder/hooks/useConditionalResponses";
 import { PublicProps } from "../shared/types";
 import { PublicQuestion } from "./model";
 
@@ -35,6 +36,8 @@ const QuestionComponent: React.FC<PublicProps<PublicQuestion>> = (props) => {
   const previousResponseKey = props.responses.find(
     (response) => response.id === previousResponseId,
   )?.responseKey;
+
+  const responses = useConditionalResponses(props.responses);
 
   const formik = useFormik({
     initialValues: {
@@ -61,17 +64,15 @@ const QuestionComponent: React.FC<PublicProps<PublicQuestion>> = (props) => {
   });
 
   let layout = QuestionLayout.Basic;
-  if (props.responses.find((r) => r.img && r.img.length)) {
+  if (responses.find((r) => r.img && r.img.length)) {
     layout = QuestionLayout.Images;
-  } else if (
-    props.responses.find((r) => r.description && r.description.length)
-  ) {
+  } else if (responses.find((r) => r.description && r.description.length)) {
     layout = QuestionLayout.Descriptions;
   }
 
   // Auto-answered Questions still set a breadcrumb even though they render null
   useEffect(() => {
-    if (isStickyNote || props.autoAnswers) {
+    if (isStickyNote || props.autoAnswers || !responses.length) {
       props.handleSubmit?.({
         answers: props.autoAnswers,
         auto: true,
@@ -80,7 +81,7 @@ const QuestionComponent: React.FC<PublicProps<PublicQuestion>> = (props) => {
   }, [isStickyNote, props.autoAnswers]);
 
   // Auto-answered Questions are not publicly visible
-  if (isStickyNote || props.autoAnswers) {
+  if (isStickyNote || props.autoAnswers || !responses.length) {
     return null;
   }
 
@@ -115,7 +116,7 @@ const QuestionComponent: React.FC<PublicProps<PublicQuestion>> = (props) => {
                 spacing={layout === QuestionLayout.Images ? 2 : 0}
                 alignItems="stretch"
               >
-                {props.responses?.map((response) => {
+                {responses?.map((response) => {
                   const onChange = () => {
                     formik.setFieldValue("selected.id", response.id);
                     formik.setFieldValue("selected.a", response.responseKey);
