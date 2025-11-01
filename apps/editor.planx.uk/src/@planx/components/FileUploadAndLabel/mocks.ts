@@ -1,5 +1,6 @@
 import { FileUploadSlot } from "../FileUpload/model";
-import { Condition, FileList, FileType, Operator, Rule } from "./model";
+import { Condition, Operator, Rule } from "../shared/RuleBuilder/types";
+import { FileList, FileType } from "./model";
 
 const mockAlwaysRequiredRule: Rule = {
   condition: Condition.AlwaysRequired,

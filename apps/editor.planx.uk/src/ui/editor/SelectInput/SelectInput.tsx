@@ -41,11 +41,14 @@ const Root = styled(Select)(({ theme }) => ({
     alignItems: "center",
     justifyContent: "flex-start",
   },
-  [`&.${classes.icon}`]: {
-    right: theme.spacing(1),
-    color: "rgba(0,0,0,0.25)",
+  // Match caret in MultipleSelect component
+  [`& .${classes.icon}`]: {
+    right: theme.spacing(0.85),
+    bottom: theme.spacing(0.5),
+    color: theme.palette.primary.main,
+    fontSize: 35,
   },
-  [`&.${classes.menuPaper}`]: {
+  [`& .${classes.menuPaper}`]: {
     border: `2px solid ${theme.palette.primary.light}`,
     borderTop: 0,
     marginTop: -2,
@@ -66,7 +69,7 @@ const Root = styled(Select)(({ theme }) => ({
       height: "auto",
     },
   },
-  [`&.${classes.inputSelect}`]: {
+  [`& .${classes.inputSelect}`]: {
     backgroundColor: "transparent",
     fontSize: "1rem",
     "&:focus": {
@@ -108,7 +111,7 @@ export default function SelectInput({
         inputProps={{
           name,
           classes: {
-            select: classes.inputSelect,
+            input: classes.inputSelect,
           },
         }}
         MenuProps={{

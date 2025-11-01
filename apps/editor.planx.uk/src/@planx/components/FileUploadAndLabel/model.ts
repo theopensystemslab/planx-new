@@ -6,6 +6,8 @@ import { FileWithPath } from "react-dropzone";
 
 import { FileUploadSlot } from "../FileUpload/model";
 import { BaseNodeData, MoreInformation, parseBaseNodeData } from "../shared";
+import { Condition, Rule } from "../shared/RuleBuilder/types";
+import { isRuleMet } from "../shared/RuleBuilder/utils";
 
 export const PASSPORT_REQUESTED_FILES_KEY = "_requestedFiles" as const;
 
@@ -13,53 +15,6 @@ export interface RequestedFile {
   fn: string;
   condition: Condition;
 }
-
-/**
- * Conditions which can apply to a rule
- * Order is significant - these represent the hierarchy of these rules
- */
-export enum Condition {
-  AlwaysRequired = "AlwaysRequired",
-  AlwaysRecommended = "AlwaysRecommended",
-  RequiredIf = "RequiredIf",
-  RecommendedIf = "RecommendedIf",
-  NotRequired = "NotRequired",
-}
-
-export enum Operator {
-  Equals = "Equals",
-}
-
-interface SimpleRuleProperties {
-  val?: undefined;
-  fn?: undefined;
-  operator?: undefined;
-}
-
-interface ConditionalRuleProperties {
-  val: string;
-  fn: string;
-  operator: Operator;
-}
-
-// Mapping of additional rule properties to Condition
-type RuleProperties<T extends Condition> = {
-  [Condition.AlwaysRequired]: SimpleRuleProperties;
-  [Condition.AlwaysRecommended]: SimpleRuleProperties;
-  [Condition.RequiredIf]: ConditionalRuleProperties;
-  [Condition.RecommendedIf]: ConditionalRuleProperties;
-  [Condition.NotRequired]: SimpleRuleProperties;
-}[T];
-
-export type ConditionalRule<T extends Condition> = {
-  condition: T;
-} & RuleProperties<T>;
-
-// Union type of all possible ConditionalRule objects
-export type Rule = {
-  [T in Condition]: ConditionalRule<T>;
-}[Condition];
-
 export interface FileType {
   name: string;
   fn: string;
@@ -95,9 +50,6 @@ export const newFileType = (): FileType => ({
     condition: Condition.AlwaysRequired,
   },
 });
-
-export const checkIfConditionalRule = (condition: Condition) =>
-  [Condition.RecommendedIf, Condition.RequiredIf].includes(condition);
 
 export interface UserFile extends FileType {
   slots?: FileUploadSlot[];
@@ -189,23 +141,6 @@ const populateFileList = ({
       fileList.optional.push(fileType);
       return true;
   }
-};
-
-export const isRuleMet = (
-  passport: Store.Passport,
-  rule: ConditionalRule<Condition.RequiredIf | Condition.RecommendedIf>,
-): boolean => {
-  const passportVal = passport.data?.[rule.fn];
-  if (!passportVal) return false;
-
-  const isExactMatch = passportVal === rule.val;
-  const isArray = Array.isArray(passportVal);
-  const isExactMatchInArray = isArray && passportVal.includes(rule.val);
-  const re = new RegExp(`^${rule.val}(\\..+| $)`);
-  const isGranularMatchInArray =
-    isArray && passportVal.some((value: string) => re.test(value));
-
-  return isExactMatch || isExactMatchInArray || isGranularMatchInArray;
 };
 
 interface UserFileWithSlots extends UserFile {

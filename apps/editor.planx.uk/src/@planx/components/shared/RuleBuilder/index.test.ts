@@ -1,0 +1,83 @@
+import { Store } from "pages/FlowEditor/lib/store";
+
+import { Condition, ConditionalRule, Operator } from "./types";
+import { isRuleMet } from "./utils";
+
+describe("isRuleMet function", () => {
+  const mockRule: ConditionalRule<Condition.RecommendedIf> = {
+    condition: Condition.RecommendedIf,
+    val: "testValue",
+    fn: "testFn",
+    operator: Operator.Equals,
+  };
+
+  it("matches on an exact value", () => {
+    const mockPassport: Store.Passport = { data: { testFn: "testValue" } };
+    const result = isRuleMet(mockPassport, mockRule);
+
+    expect(result).toBe(true);
+  });
+
+  it("does not match if an exact value is not present", () => {
+    const mockPassport: Store.Passport = { data: { testFn: "missingValue" } };
+    const result = isRuleMet(mockPassport, mockRule);
+
+    expect(result).toBe(false);
+  });
+
+  it("does not match if the passport key is not present", () => {
+    const mockPassport: Store.Passport = {
+      data: { missingKey: "missingValue" },
+    };
+    const result = isRuleMet(mockPassport, mockRule);
+
+    expect(result).toBe(false);
+  });
+
+  it("matches on an exact value in an array", () => {
+    const mockPassport: Store.Passport = {
+      data: { testFn: ["value1", "value2", "testValue"] },
+    };
+    const result = isRuleMet(mockPassport, mockRule);
+
+    expect(result).toBe(true);
+  });
+
+  it("matches on an granular value", () => {
+    const mockPassport: Store.Passport = {
+      data: {
+        testFn: ["value1.more.value", "value2", "testValue.more.detail"],
+      },
+    };
+    const result = isRuleMet(mockPassport, mockRule);
+
+    expect(result).toBe(true);
+  });
+
+  it("does not match on a partial granular value (prefix)", () => {
+    const mockPassport: Store.Passport = {
+      data: { testFn: ["somethingtestValue.more.detail"] },
+    };
+    const result = isRuleMet(mockPassport, mockRule);
+
+    expect(result).toBe(false);
+  });
+
+  it("does not match on a partial granular value (suffix)", () => {
+    const mockPassport: Store.Passport = {
+      data: { testFn: ["testValueSomething.more.detail"] },
+    };
+    const result = isRuleMet(mockPassport, mockRule);
+
+    expect(result).toBe(false);
+  });
+
+  it("does not match on a granular which is not a 'parent'", () => {
+    const mockPassport: Store.Passport = {
+      data: { testFn: ["parent.child.testValue"] },
+    };
+    const result = isRuleMet(mockPassport, mockRule);
+
+    expect(result).toBe(false);
+  });
+});

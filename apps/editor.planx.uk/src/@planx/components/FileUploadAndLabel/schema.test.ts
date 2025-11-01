@@ -1,6 +1,7 @@
 import { FileUploadSlot } from "../FileUpload/model";
+import { Condition, Operator } from "../shared/RuleBuilder/types";
 import { mockFileList, mockFileTypes, mockRules } from "./mocks";
-import { Condition, FileType, Operator } from "./model";
+import { FileType } from "./model";
 import {
   fileLabelSchema,
   fileListSchema,

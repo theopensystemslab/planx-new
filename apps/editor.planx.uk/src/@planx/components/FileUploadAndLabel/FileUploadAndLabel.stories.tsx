@@ -2,8 +2,8 @@ import { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 
 import Wrapper from "../fixtures/Wrapper";
+import { Condition } from "../shared/RuleBuilder/types";
 import Editor from "./Editor";
-import { Condition } from "./model";
 import Public from "./Public";
 
 const meta = {
