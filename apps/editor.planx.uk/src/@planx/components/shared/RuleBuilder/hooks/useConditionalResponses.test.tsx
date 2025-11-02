@@ -52,7 +52,7 @@ describe("no rules", () => {
       {
         id: "response-3",
         responseKey: 3,
-        text: "Budgee",
+        text: "Budgie",
       },
       {
         id: "response-4",
@@ -90,7 +90,7 @@ describe("simple rules (Condition.AlwaysRequired)", () => {
       {
         id: "response-3",
         responseKey: 3,
-        text: "Budgee",
+        text: "Budgie",
         rule: { condition: Condition.NotRequired },
       },
     ];
@@ -128,7 +128,7 @@ describe("condition rules (Condition.RequiredIf)", () => {
     {
       id: "response-3",
       responseKey: 3,
-      text: "Budgee",
+      text: "Budgie",
       rule: {
         condition: Condition.RequiredIf,
         operator: Operator.Equals,
@@ -162,7 +162,7 @@ describe("condition rules (Condition.RequiredIf)", () => {
 
     // Only matching responses displayed
     expect(result.current).toHaveLength(1);
-    expect(result.current[0].text).toEqual("Budgee");
+    expect(result.current[0].text).toEqual("Budgie");
   });
 
   it("filters out responses if the rules are not met", () => {
