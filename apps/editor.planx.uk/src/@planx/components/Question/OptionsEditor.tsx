@@ -20,6 +20,7 @@ const QuestionOptionsEditor: React.FC<BaseOptionsEditorProps> = ({
       showValueField={showValueField}
       showDescriptionField
       index={index}
+      showRuleBuilder={true}
     />
   );
 };

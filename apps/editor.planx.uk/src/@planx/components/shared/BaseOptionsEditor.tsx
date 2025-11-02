@@ -20,6 +20,10 @@ export interface BaseOptionsEditorProps {
   children?: ReactNode;
   disabled?: boolean;
   index: number;
+  /**
+   * Temp prop to allow the RuleBuilder to be hidden on the Checklist component
+   */
+  showRuleBuilder?: boolean;
 }
 
 export const BaseOptionsEditor: React.FC<BaseOptionsEditorProps> = (props) => (
@@ -112,19 +116,21 @@ export const BaseOptionsEditor: React.FC<BaseOptionsEditorProps> = (props) => (
         });
       }}
     />
-    <RuleBuilder
-      conditions={[Condition.AlwaysRequired, Condition.RequiredIf]}
-      disabled={props.disabled}
-      rule={props.value.data.rule || DEFAULT_RULE}
-      onChange={(rule) =>
-        props.onChange({
-          ...props.value,
-          data: {
-            ...props.value.data,
-            rule,
-          },
-        })
-      }
-    />
+    {props.showRuleBuilder && (
+      <RuleBuilder
+        conditions={[Condition.AlwaysRequired, Condition.RequiredIf]}
+        disabled={props.disabled}
+        rule={props.value.data.rule || DEFAULT_RULE}
+        onChange={(rule) =>
+          props.onChange({
+            ...props.value,
+            data: {
+              ...props.value.data,
+              rule,
+            },
+          })
+        }
+      />
+    )}
   </div>
 );
