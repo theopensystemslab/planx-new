@@ -1,4 +1,7 @@
-import { ComponentType as TYPES, NodeId } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType as TYPES,
+  NodeId,
+} from "@opensystemslab/planx-core/types";
 import { enablePatches, produceWithPatches } from "immer";
 import { isEqual } from "lodash";
 import difference from "lodash/difference";
@@ -44,7 +47,7 @@ export const isClone = (id: string, graph: Graph): boolean => {
   }
 
   return false;
-}
+};
 
 const isSomething = (x: any): boolean =>
   x !== null && x !== undefined && x !== "";
@@ -485,11 +488,11 @@ export const makeUnique =
           node.edges.push(id);
         } else {
           const newId = idFn();
-          const relationships = { 
-            parent, 
+          const relationships = {
+            parent,
             // Only define a `before` value when adding the original node, not its edges
             ...(firstCall && { before: id }),
-          }
+          };
           _add(draft, { id: newId, ...nodeData }, relationships);
           edges.forEach((tgt: string) => {
             _makeUnique(tgt, newId, { idFn }, false);
@@ -557,18 +560,34 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
     definitionImg: `help text image`,
   };
 
+  const getComponentName = (defaultName: string, nodeType?: number): string => {
+    if (nodeType) {
+      // Map legacy portal node types to updated user-facing names
+      if (nodeType === TYPES.InternalPortal) {
+        return "Folder";
+      } else if (nodeType === TYPES.ExternalPortal) {
+        return "Flow";
+      } else {
+        return TYPES[nodeType];
+      }
+    } else {
+      // If node type is undefined, fallback to default name
+      return defaultName;
+    }
+  };
+
   // Updating a node or its properties (update = delete + insert)
   const handleUpdate = (node: Node, op: OT.Object.Replace) => {
     if (op.od?.type && op.oi?.type) {
       output.push(
-        `Replaced ${TYPES[op.od.type]} "${
+        `Replaced ${getComponentName("node", op.od.type)} "${
           op.od.data?.title ||
           op.od.data?.text ||
           op.od.data?.content ||
           op.od.data?.fn ||
           op.od.data?.val ||
           op.od.data?.flowId
-        }" with ${TYPES[op.oi.type]} "${
+        }" with ${getComponentName("node", op.oi.type)} "${
           op.oi.data?.title ||
           op.oi.data?.text ||
           op.oi.data?.content ||
@@ -581,20 +600,20 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
       const prop = op.p?.[2] as string;
       if (allowProps.includes(prop)) {
         output.push(
-          `Updated ${node?.type ? TYPES[node.type] : "node"} ${
+          `Updated ${getComponentName("node", node?.type)} ${
             propsMap[prop] || prop
           } from "${op.od}" to "${op.oi}"`,
         );
       } else {
         output.push(
-          `Updated ${node?.type ? TYPES[node.type] : "node"} ${
+          `Updated ${getComponentName("node", node?.type)} ${
             propsMap[prop] || prop
           }`,
         );
       }
     } else if (op.p.includes("edges")) {
       output.push(
-        `Updated order of ${node?.type ? TYPES[node.type] : "graph"} edges`,
+        `Updated order of ${getComponentName("graph", node?.type)} edges`,
       );
     }
   };
@@ -612,7 +631,7 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
   const handleAdd = (node: Node, op: OT.Object.Add) => {
     if (op.oi?.type) {
       output.push(
-        `Added ${TYPES[op.oi.type]} "${
+        `Added ${getComponentName("node", op.oi.type)} "${
           op.oi.data?.title ||
           op.oi.data?.text ||
           op.oi.data?.content ||
@@ -624,20 +643,20 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
       const prop = op.p?.[2] as string;
       if (allowProps.includes(prop)) {
         output.push(
-          `Added ${node?.type ? TYPES[node?.type] : "node"} ${
+          `Added ${getComponentName("node", node?.type)} ${
             propsMap[prop] || prop
           } "${op.oi}"`,
         );
       } else {
         output.push(
-          `Added ${node?.type ? TYPES[node?.type] : "node"} ${
+          `Added ${getComponentName("node", node?.type)} ${
             propsMap[prop] || prop
           }`,
         );
       }
     } else if (op.p.includes("edges")) {
       const node = graph[op.oi?.[0]];
-      output.push(`Added ${node?.type ? TYPES[node.type] : "node"} to branch`);
+      output.push(`Added ${getComponentName("node", node?.type)} to branch`);
     }
   };
 
@@ -645,7 +664,7 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
   const handleRemove = (node: Node, op: OT.Object.Remove) => {
     if (op.od?.type) {
       output.push(
-        `Removed ${TYPES[op.od.type]} "${
+        `Removed ${getComponentName("node", op.od.type)} "${
           op.od.data?.title ||
           op.od.data?.text ||
           op.od.data?.content ||
@@ -657,13 +676,13 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
       const prop = op.p?.[2] as string;
       if (allowProps.includes(prop)) {
         output.push(
-          `Removed ${node?.type ? TYPES[node.type] : "node"} ${
+          `Removed ${getComponentName("node", node?.type)} ${
             propsMap[prop] || prop
           } "${op.od}"`,
         );
       } else {
         output.push(
-          `Removed ${node?.type ? TYPES[node.type] : "node"} ${
+          `Removed ${getComponentName("node", node?.type)} ${
             propsMap[prop] || prop
           }`,
         );
@@ -671,7 +690,7 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
     } else if (op.p.includes("edges")) {
       const node = graph[op.od?.[0]];
       output.push(
-        `Removed ${node?.type ? TYPES[node.type] : "node"} from branch`,
+        `Removed ${getComponentName("node", node?.type)} from branch`,
       );
     }
   };
@@ -696,7 +715,7 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
 
 /**
  * Convert flat list of nodes to a hierarchical graph
- * 
+ *
  * @description
  * Our graph is stored as a flat data structure (key:value pairs of nodeId:nodeData)
  * When we "copy" we also keep a flat structure on the clipboard
@@ -706,8 +725,8 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
 export const buildGraphFromNodes = (
   nodeId: string,
   allNodes: { [id: string]: Store.Node },
-  visited = new Set<string>()
-): { id: NodeId, children: Store.Node[] } => {
+  visited = new Set<string>(),
+): { id: NodeId; children: Store.Node[] } => {
   // Guard for cycles in the graph
   if (visited.has(nodeId)) {
     return { id: nodeId, ...allNodes[nodeId], children: [] };
@@ -716,9 +735,9 @@ export const buildGraphFromNodes = (
 
   const nodeData = allNodes[nodeId];
   const children = (nodeData.edges || []).map((childId: string) =>
-    buildGraphFromNodes(childId, allNodes, visited)
+    buildGraphFromNodes(childId, allNodes, visited),
   );
-  
+
   // Strip our the original edges property, these are captured as children when adding a new node
   const { edges: _edges, ...restOfNodeData } = nodeData;
 

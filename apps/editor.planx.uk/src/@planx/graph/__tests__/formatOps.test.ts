@@ -78,6 +78,28 @@ describe("Insert operations", () => {
     ]);
   });
 
+  test("Adding a new portal node to the graph displays the user-facing name", () => {
+    const ops = [
+      {
+        p: ["_root", "edges", 0],
+        li: "ubCTG9OtFw",
+      },
+      {
+        p: ["ubCTG9OtFw"],
+        oi: {
+          type: 300, // InternalPortal => Folder
+          data: {
+            title: "This is a test folder",
+          },
+        },
+      },
+    ];
+
+    expect(formatOps(emptyFlow, ops)).toEqual([
+      'Added Folder "This is a test folder"',
+    ]);
+  });
+
   test("Adding a new node and its' children to the graph", () => {
     const ops = [
       {
