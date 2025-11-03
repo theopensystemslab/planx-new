@@ -58,7 +58,9 @@ export const OperationTimelineItem = ({
 
   let uniqueFormattedOps = [...new Set(formatOps(flow, event.data))];
   // When removing nodes (eg Folder and all containing nodes), display in reverse order so Folder is first rather than last
-  if (uniqueFormattedOps[0].startsWith("Removed")) {
+  if (
+    uniqueFormattedOps.every((formattedOp) => formattedOp.startsWith("Removed"))
+  ) {
     uniqueFormattedOps = uniqueFormattedOps.reverse();
   }
 
