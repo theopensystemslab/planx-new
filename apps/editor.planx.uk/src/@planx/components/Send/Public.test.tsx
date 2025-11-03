@@ -63,8 +63,13 @@ it("displays a warning at /preview URLs", () => {
 });
 
 it("displays loading messages to the user", async () => {
+  const handleSubmit = vi.fn();
   const { findByText } = setup(
-    <SendComponent title="Send" destinations={["bops", "uniform"]} />,
+    <SendComponent
+      title="Send"
+      destinations={["bops", "uniform"]}
+      handleSubmit={handleSubmit}
+    />,
   );
 
   // Initial loading state
@@ -72,6 +77,8 @@ it("displays loading messages to the user", async () => {
 
   // Final submission state
   expect(await findByText(/Finalising your submission.../)).toBeVisible();
+
+  await waitFor(() => expect(handleSubmit).toHaveBeenCalled());
 });
 
 it("generates a valid payload for the API", async () => {
@@ -133,11 +140,18 @@ it("generates a valid breadcrumb", { retry: 1 }, async () => {
 });
 
 it("should not have any accessibility violations", async () => {
+  const handleSubmit = vi.fn();
   const { container } = setup(
-    <SendComponent title="Send" destinations={["bops", "uniform"]} />,
+    <SendComponent
+      title="Send"
+      destinations={["bops", "uniform"]}
+      handleSubmit={handleSubmit}
+    />,
   );
   const results = await axe(container);
   expect(results).toHaveNoViolations();
+
+  await waitFor(() => expect(handleSubmit).toHaveBeenCalled());
 });
 
 describe("demo state", () => {
