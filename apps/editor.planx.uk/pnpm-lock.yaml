@@ -337,9 +337,6 @@ importers:
       '@testing-library/user-event':
         specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.1)
-      '@types/dompurify':
-        specifier: ^3.0.5
-        version: 3.2.0
       '@types/draft-js':
         specifier: ^0.11.12
         version: 0.11.18
@@ -374,8 +371,8 @@ importers:
         specifier: ^18.2.18
         version: 18.3.7(@types/react@18.3.26)
       '@types/sharedb':
-        specifier: ^3.3.8
-        version: 3.3.13
+        specifier: ^5.1.0
+        version: 5.1.0
       '@typescript-eslint/eslint-plugin':
         specifier: ^5.62.0
         version: 5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)
@@ -2912,10 +2909,6 @@ packages:
   '@types/doctrine@0.0.9':
     resolution: {integrity: sha512-eOIHzCUSH7SMfonMG1LsC2f8vxBFtho6NGBznK41R84YzPuvSBzrhEps33IsQiOW9+VL6NQ9DbjQJznk/S4uRA==}
 
-  '@types/dompurify@3.2.0':
-    resolution: {integrity: sha512-Fgg31wv9QbLDA0SpTOXO3MaxySc4DKGLi8sna4/Utjo4r3ZRPdCt4UQee8BWr+Q5z21yifghREPJGYaEOEIACg==}
-    deprecated: This is a stub types definition. dompurify provides its own type definitions, so you do not need this installed.
-
   '@types/draft-js@0.11.18':
     resolution: {integrity: sha512-lP6yJ+EKv5tcG1dflWgDKeezdwBa8wJ7KkiNrrHqXuXhl/VGes1SKjEfKHDZqOz19KQbrAhFvNhDPWwnQXYZGQ==}
 
@@ -3052,8 +3045,8 @@ packages:
   '@types/semver@7.7.1':
     resolution: {integrity: sha512-FmgJfu+MOcQ370SD0ev7EI8TlCAfKYU+B4m5T3yXc1CiRN94g/SZPtsCkk506aUDtlMnFZvasDwHHUcZUEaYuA==}
 
-  '@types/sharedb@3.3.13':
-    resolution: {integrity: sha512-NEDVX0FyE8yNL/rDDptY7ruqCaa51ICHkAokI9xpJXDCml0cvMcBtm/kYM6fUY71waE5h3oWQ6/VjD4mTnAnPQ==}
+  '@types/sharedb@5.1.0':
+    resolution: {integrity: sha512-vf/hxO31h+92S/HAVdIIwB/rSIF1vp/8ryjP/QWriJrwqvET5vgtp3hfVz4fGELSE3WKkcaXP1TtHFAui20utg==}
 
   '@types/stack-utils@2.0.3':
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
@@ -10379,10 +10372,6 @@ snapshots:
 
   '@types/doctrine@0.0.9': {}
 
-  '@types/dompurify@3.2.0':
-    dependencies:
-      dompurify: 3.3.0
-
   '@types/draft-js@0.11.18':
     dependencies:
       '@types/react': 18.3.26
@@ -10531,7 +10520,7 @@ snapshots:
 
   '@types/semver@7.7.1': {}
 
-  '@types/sharedb@3.3.13': {}
+  '@types/sharedb@5.1.0': {}
 
   '@types/stack-utils@2.0.3': {}
 
