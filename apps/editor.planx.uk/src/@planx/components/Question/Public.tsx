@@ -9,7 +9,6 @@ import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import DescriptionRadio from "@planx/components/shared/Radio/DescriptionRadio/DescriptionRadio";
 import ImageRadio from "@planx/components/shared/Radio/ImageRadio/ImageRadio";
 import { useFormik } from "formik";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 import FormWrapper from "ui/public/FormWrapper";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
@@ -27,9 +26,7 @@ export enum QuestionLayout {
 
 const QuestionComponent: React.FC<PublicProps<QuestionWithOptions>> = (props) => {
   // Questions without edges act like "sticky notes" in the graph for editors only & should be auto-answered
-  const flow = useStore().flow;
-  const edges = props.id ? flow[props.id]?.edges : undefined;
-  const isStickyNote = !edges || edges.length === 0;
+  const isStickyNote = !props.options.length;
 
   const previousResponseId = props?.previouslySubmittedData?.answers?.[0];
 

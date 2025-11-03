@@ -1,14 +1,17 @@
 import { Meta, StoryObj } from "@storybook/react";
+import React from "react";
 
-import Question from "./Public";
+import Wrapper from "../fixtures/Wrapper";
+import Editor from "./Editor";
+import Public from "./Public";
 
 const meta = {
   title: "PlanX Components/Question",
-  component: Question,
+  component: Public,
   argTypes: {
     handleSubmit: { action: true, control: { disable: true } },
   },
-} satisfies Meta<typeof Question>;
+} satisfies Meta<typeof Public>;
 
 export default meta;
 
@@ -117,5 +120,11 @@ export const WithImages = {
   },
 } satisfies Story;
 
-// Question's Editor is a bit of an atypical implementation requiring props, which throws a type error here and fails to render - need to revisit!
-// export const WithEditor = () => <Wrapper Editor={<Editor node={{ data: { text: "What do you want to ask?" } }} handleSubmit={() => {}}/>} Public={Question} />;
+export const WithEditor = () => {
+  return (
+    <Wrapper
+      Editor={Editor}
+      Public={Public}
+    />
+  );
+};

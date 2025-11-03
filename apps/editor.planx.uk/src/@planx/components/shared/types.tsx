@@ -5,11 +5,10 @@ import React from "react";
 
 import { Option } from "../Option/model";
 
-
 export type EditorProps<
   Type extends ComponentType,
   Data,
-  ExtraProps extends Record<string, unknown> = Record<string, unknown>,
+  ExtraProps extends object = Record<string, unknown>,
 > = {
   id?: string;
   handleSubmit?: (
