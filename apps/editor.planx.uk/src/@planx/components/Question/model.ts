@@ -1,13 +1,11 @@
 import { richText } from "lib/yupExtensions";
 import { array, boolean, object, string } from "yup";
 
+import { Option, optionValidationSchema } from "../Option/model";
 import {
   BaseNodeData,
   baseNodeDataValidationSchema,
-  Option,
-  optionValidationSchema,
   parseBaseNodeData,
-  Response,
 } from "../shared";
 
 /**
@@ -23,17 +21,10 @@ export interface Question extends BaseNodeData {
 }
 
 /**
- * Editor representation of a Question component
- * This is the model used by Formik within the Editor modal
+ * Public and Editor representation of a Question
  * Contains options derived from child Answer nodes
  */
-export type EditorQuestion = Question & { options: Option[] };
-
-/**
- * Public representation of a Question component
- * Contains responses derived from child Answer nodes
- */
-export type PublicQuestion = Question & { responses: Response[] };
+export type QuestionWithOptions = Question & { options: Option[] };
 
 export const validationSchema = baseNodeDataValidationSchema
   .concat(
@@ -65,7 +56,7 @@ export const validationSchema = baseNodeDataValidationSchema
 
 export const parseQuestion = (
   data: Record<string, any> | undefined,
-): EditorQuestion => ({
+): QuestionWithOptions => ({
   fn: data?.fn || "",
   img: data?.img || "",
   options: data?.options || [],

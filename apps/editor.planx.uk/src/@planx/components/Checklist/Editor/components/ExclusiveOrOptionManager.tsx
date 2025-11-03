@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import { Option } from "@planx/components/Option/model";
 import { BaseOptionsEditor } from "@planx/components/shared/BaseOptionsEditor";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { getIn } from "formik";
@@ -7,7 +8,6 @@ import { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
-import { Option } from "../../../shared";
 import { ChecklistWithOptions, Group } from "../../model";
 import { useCurrentOptions } from "../../Public/hooks/useInitialOptions";
 

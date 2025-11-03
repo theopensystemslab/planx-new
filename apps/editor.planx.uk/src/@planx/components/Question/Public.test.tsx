@@ -5,7 +5,7 @@ import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import type { PublicQuestion } from "./model";
+import { Option } from "../Option/model";
 import QuestionComponent, { QuestionLayout } from "./Public";
 
 const { setState } = useStore;
@@ -40,45 +40,51 @@ beforeEach(() => {
   act(() => setState({ flow }));
 });
 
-const responses: { [key in QuestionLayout]: PublicQuestion["responses"] } = {
+const options: { [key in QuestionLayout]: Option[] } = {
   [QuestionLayout.Basic]: [
     {
       id: "pizza_id",
-      responseKey: "pizza",
-      title: "Pizza",
+      data: {
+        text: "Pizza",
+      }
     },
     {
       id: "celery_id",
-      responseKey: "celery",
-      title: "Celery",
+      data: {
+        text: "Celery",
+      }
     },
   ],
   [QuestionLayout.Images]: [
     {
       id: "pizza_id",
-      responseKey: "pizza",
-      title: "Pizza",
-      img: "pizza.jpg",
+      data: {
+        text: "Pizza",
+        img: "pizza.jpg",
+      }
     },
     {
       id: "celery_id",
-      responseKey: "celery",
-      title: "Celery",
-      img: "celery.jpg",
+      data: {
+        text: "Celery",
+        img: "celery.jpg",
+      }
     },
   ],
   [QuestionLayout.Descriptions]: [
     {
       id: "pizza_id",
-      responseKey: "pizza",
-      title: "Pizza",
-      description: "This is a pizza",
+      data: {
+        text: "Pizza",
+        description: "This is a pizza",
+      }
     },
     {
       id: "celery_id",
-      responseKey: "celery",
-      title: "Celery",
-      description: "This is celery",
+      data: {
+        text: "Celery",
+        description: "This is celery",
+      }
     },
   ],
 };
@@ -96,7 +102,7 @@ describe("Question component", () => {
           <QuestionComponent
             id="question_id"
             text="Best food"
-            responses={responses[type]}
+            options={options[type]}
             handleSubmit={handleSubmit}
           />,
         );
@@ -120,7 +126,7 @@ describe("Question component", () => {
           <QuestionComponent
             id="question_id"
             text="Best food"
-            responses={responses[type]}
+            options={options[type]}
             previouslySubmittedData={{
               answers: ["celery_id"],
               auto: false,
@@ -151,7 +157,7 @@ describe("Question component", () => {
           <QuestionComponent
             id="question_id"
             text="Best food"
-            responses={responses[type]}
+            options={options[type]}
             handleSubmit={handleSubmit}
           />,
         );
@@ -167,7 +173,7 @@ describe("Question component", () => {
           <QuestionComponent
             id="question_id"
             text="Best food"
-            responses={responses[type]}
+            options={options[type]}
             handleSubmit={handleSubmit}
           />,
         );

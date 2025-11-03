@@ -2,11 +2,10 @@ import { richText } from "lib/yupExtensions";
 import { partition } from "lodash";
 import { array, boolean, number, object, string } from "yup";
 
+import { Option, optionValidationSchema } from "../Option/model";
 import {
   BaseNodeData,
   baseNodeDataValidationSchema,
-  Option,
-  optionValidationSchema,
   parseBaseNodeData,
 } from "../shared";
 

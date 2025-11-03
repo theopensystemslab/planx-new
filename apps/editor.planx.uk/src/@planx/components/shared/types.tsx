@@ -3,7 +3,8 @@ import { Store } from "pages/FlowEditor/lib/store";
 import type { HandleSubmit } from "pages/Preview/Node";
 import React from "react";
 
-import { Option } from ".";
+import { Option } from "../Option/model";
+
 
 export type EditorProps<
   Type extends ComponentType,

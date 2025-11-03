@@ -38,6 +38,7 @@ import type { Notice } from "@planx/components/Notice/model";
 import NoticeComponent from "@planx/components/Notice/Public";
 import type { NumberInput } from "@planx/components/NumberInput/model";
 import NumberInputComponent from "@planx/components/NumberInput/Public";
+import { Option } from "@planx/components/Option/model";
 import type { Page } from "@planx/components/Page/model";
 import PageComponent from "@planx/components/Page/Public";
 import type { Pay } from "@planx/components/Pay/model";
@@ -64,7 +65,6 @@ import type { SetFee } from "@planx/components/SetFee/model";
 import SetFeeComponent from "@planx/components/SetFee/Public";
 import type { SetValue } from "@planx/components/SetValue/model";
 import SetValueComponent from "@planx/components/SetValue/Public";
-import { Option } from "@planx/components/shared";
 import type { TaskList } from "@planx/components/TaskList/model";
 import TaskListComponent from "@planx/components/TaskList/Public";
 import type { TextInput } from "@planx/components/TextInput/model";
@@ -261,16 +261,12 @@ const Node: React.FC<Props> = (props) => {
     case TYPES.Question: {
       const questionProps = getComponentProps<Question>();
       const autoAnswers = nodeId ? autoAnswerableOptions(nodeId) : undefined;
+      const options = childNodesOf(nodeId) as Option[];
 
       return (
         <QuestionComponent
           {...questionProps}
-          responses={childNodesOf(nodeId).map((n, i) => ({
-            id: n.id!,
-            responseKey: i + 1,
-            title: n.data?.text,
-            ...n.data,
-          }))}
+          options={options}
           autoAnswers={autoAnswers}
         />
       );

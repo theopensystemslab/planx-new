@@ -10,7 +10,6 @@ import { Props as ButtonBaseProps } from "./ButtonBase";
 export interface Props extends ButtonBaseProps {
   title: string;
   description?: string;
-  responseKey?: string | number;
   img?: string;
   checkbox?: boolean;
   selected: boolean;

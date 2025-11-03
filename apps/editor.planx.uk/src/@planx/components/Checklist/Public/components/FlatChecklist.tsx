@@ -5,7 +5,7 @@ import {
   ChecklistLayout,
   FlatChecklist,
 } from "@planx/components/Checklist/model";
-import { Option } from "@planx/components/shared";
+import { Option } from "@planx/components/Option/model";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { PublicProps } from "@planx/components/shared/types";

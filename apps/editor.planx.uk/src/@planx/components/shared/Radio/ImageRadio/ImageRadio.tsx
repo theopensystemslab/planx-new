@@ -5,14 +5,10 @@ import Radio, { RadioProps } from "@mui/material/Radio";
 import { useRadioGroup } from "@mui/material/RadioGroup";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { Option } from "@planx/components/Option/model";
 import React, { useLayoutEffect, useRef, useState } from "react";
 
-export interface Props {
-  id?: string;
-  title: string;
-  description?: string;
-  responseKey?: string | number;
-  img?: string;
+export interface Props extends Option {
   onChange: RadioProps["onChange"];
 }
 
@@ -89,7 +85,7 @@ const StyledFormLabel = styled(FormLabel, {
 }));
 
 const TextLabel = (props: Props): FCReturn => {
-  const { title, id, onChange, description } = props;
+  const { id, onChange, data: { text: title, description } } = props;
   const [multiline, setMultiline] = useState(false);
 
   const textContentEl = useRef<HTMLDivElement>(null);
@@ -121,7 +117,7 @@ const TextLabel = (props: Props): FCReturn => {
 };
 
 const ImageLabel = (props: Props): FCReturn => {
-  const { img } = props;
+  const { img } = props.data;
   const [imgError, setImgError] = useState(!(img && img.length));
   const onError = () => {
     if (!imgError) {
