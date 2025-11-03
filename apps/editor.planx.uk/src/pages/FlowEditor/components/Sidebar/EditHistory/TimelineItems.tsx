@@ -56,6 +56,14 @@ export const OperationTimelineItem = ({
     return null;
   }
 
+  let uniqueFormattedOps = [...new Set(formatOps(flow, event.data))];
+  // When removing nodes (eg Folder and all containing nodes), display in reverse order so Folder is first rather than last
+  if (
+    uniqueFormattedOps.every((formattedOp) => formattedOp.startsWith("Removed"))
+  ) {
+    uniqueFormattedOps = uniqueFormattedOps.reverse();
+  }
+
   return (
     <TimeLineItem sx={{ bgcolor: (theme) => theme.palette.info.light }}>
       <Typography
@@ -65,20 +73,15 @@ export const OperationTimelineItem = ({
         paddingLeft={3}
         color={inUndoScope(i) ? "GrayText" : "inherit"}
       >
-        {[...new Set(formatOps(flow, event.data))]
-          .reverse()
-          .slice(0, OPS_TO_DISPLAY)
-          .map((formattedOp, i) => (
-            <EditHistoryListItem key={i}>{formattedOp}</EditHistoryListItem>
-          ))}
+        {uniqueFormattedOps.slice(0, OPS_TO_DISPLAY).map((formattedOp, i) => (
+          <EditHistoryListItem key={i}>{formattedOp}</EditHistoryListItem>
+        ))}
       </Typography>
-      {[...new Set(formatOps(flow, event.data))].length > OPS_TO_DISPLAY && (
+      {uniqueFormattedOps.length > OPS_TO_DISPLAY && (
         <SimpleExpand
           id="edits-overflow"
           buttonText={{
-            open: `Show ${
-              [...new Set(formatOps(flow, event.data))].length - OPS_TO_DISPLAY
-            } more`,
+            open: `Show ${uniqueFormattedOps.length - OPS_TO_DISPLAY} more`,
             closed: "Show less",
           }}
           lightFontStyle={true}
@@ -91,12 +94,9 @@ export const OperationTimelineItem = ({
             color={inUndoScope(i) ? "GrayText" : "inherit"}
             style={{ paddingRight: "50px" }}
           >
-            {[...new Set(formatOps(flow, event.data))]
-              .reverse()
-              .slice(OPS_TO_DISPLAY)
-              ?.map((formattedOp, i) => (
-                <EditHistoryListItem key={i}>{formattedOp}</EditHistoryListItem>
-              ))}
+            {uniqueFormattedOps.slice(OPS_TO_DISPLAY)?.map((formattedOp, i) => (
+              <EditHistoryListItem key={i}>{formattedOp}</EditHistoryListItem>
+            ))}
           </Typography>
         </SimpleExpand>
       )}
