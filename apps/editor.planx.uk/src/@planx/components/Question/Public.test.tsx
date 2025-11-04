@@ -46,13 +46,13 @@ const options: { [key in QuestionLayout]: Option[] } = {
       id: "pizza_id",
       data: {
         text: "Pizza",
-      }
+      },
     },
     {
       id: "celery_id",
       data: {
         text: "Celery",
-      }
+      },
     },
   ],
   [QuestionLayout.Images]: [
@@ -61,14 +61,14 @@ const options: { [key in QuestionLayout]: Option[] } = {
       data: {
         text: "Pizza",
         img: "pizza.jpg",
-      }
+      },
     },
     {
       id: "celery_id",
       data: {
         text: "Celery",
         img: "celery.jpg",
-      }
+      },
     },
   ],
   [QuestionLayout.Descriptions]: [
@@ -77,14 +77,14 @@ const options: { [key in QuestionLayout]: Option[] } = {
       data: {
         text: "Pizza",
         description: "This is a pizza",
-      }
+      },
     },
     {
       id: "celery_id",
       data: {
         text: "Celery",
         description: "This is celery",
-      }
+      },
     },
   ],
 };

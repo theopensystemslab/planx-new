@@ -30,9 +30,8 @@ describe("when a user presses 'remove' button", () => {
     const { user, container } = await setupTeamMembersScreen();
 
     const teamMembersTable = screen.getByTestId("team-members");
-    const removeRowButton = await within(teamMembersTable).findByTestId(
-      "remove-button-3",
-    );
+    const removeRowButton =
+      await within(teamMembersTable).findByTestId("remove-button-3");
     axeContainer = container;
     await user.click(removeRowButton);
     // Start each test with an open modal

@@ -24,13 +24,15 @@ export enum QuestionLayout {
   Descriptions,
 }
 
-const QuestionComponent: React.FC<PublicProps<QuestionWithOptions>> = (props) => {
+const QuestionComponent: React.FC<PublicProps<QuestionWithOptions>> = (
+  props,
+) => {
   // Questions without edges act like "sticky notes" in the graph for editors only & should be auto-answered
   const isStickyNote = !props.options.length;
 
   const previousResponseId = props?.previouslySubmittedData?.answers?.[0];
 
-  const formik = useFormik<{ selected: { id: string }}>({
+  const formik = useFormik<{ selected: { id: string } }>({
     initialValues: {
       selected: {
         id: previousResponseId ?? "",
@@ -43,7 +45,7 @@ const QuestionComponent: React.FC<PublicProps<QuestionWithOptions>> = (props) =>
     validateOnChange: false,
     validationSchema: object({
       selected: object({
-        id: string().required("Select your answer before continuing")
+        id: string().required("Select your answer before continuing"),
       }),
     }),
   });

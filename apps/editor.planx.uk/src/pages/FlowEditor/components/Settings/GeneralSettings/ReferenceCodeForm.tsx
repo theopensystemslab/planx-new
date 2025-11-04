@@ -45,8 +45,9 @@ export default function ReferenceCodeForm({
       description={
         <>
           <Typography variant="body2">
-            Your local authority reference code is required for submissions and GIS integrations.
-            This is a unique three to five-letter code per local authority.
+            Your local authority reference code is required for submissions and
+            GIS integrations. This is a unique three to five-letter code per
+            local authority.
           </Typography>
           <Typography variant="body2">
             Find your reference code on Planning Data at:{" "}

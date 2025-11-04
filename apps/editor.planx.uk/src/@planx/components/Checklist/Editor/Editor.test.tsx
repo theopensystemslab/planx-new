@@ -288,7 +288,11 @@ describe("Checklist editor component", () => {
 
     setup(
       <DndProvider backend={HTML5Backend}>
-        <ChecklistEditor handleSubmit={handleSubmit} options={options} {...props} />
+        <ChecklistEditor
+          handleSubmit={handleSubmit}
+          options={options}
+          {...props}
+        />
       </DndProvider>,
     );
 

@@ -38,18 +38,22 @@ export interface PresentationalProps {
   resetPreview?: () => void;
 }
 
-const overridesSchema = lazy(obj => 
+const overridesSchema = lazy((obj) =>
   object(
-    mapValues(obj, () => object({
-      heading: string(),
-      description: richText(),
-      resetButton: boolean().optional(),
-    }))
-  )
+    mapValues(obj, () =>
+      object({
+        heading: string(),
+        description: richText(),
+        resetButton: boolean().optional(),
+      }),
+    ),
+  ),
 );
 
-export const validationSchema = baseNodeDataValidationSchema.concat(object({
-  flagSet: mixed().oneOf([...FLAG_SETS]),
-  overrides: overridesSchema,
-  resetButton: boolean().optional(),
-}))
+export const validationSchema = baseNodeDataValidationSchema.concat(
+  object({
+    flagSet: mixed().oneOf([...FLAG_SETS]),
+    overrides: overridesSchema,
+    resetButton: boolean().optional(),
+  }),
+);

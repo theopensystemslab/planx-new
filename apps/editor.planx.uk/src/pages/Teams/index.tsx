@@ -7,7 +7,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-navi";
-import { TeamSummary } from "routes/authenticated";
+import { TeamSummary } from "routes/_authenticated/index";
 import { focusStyle } from "theme";
 import { InfoChip } from "ui/editor/InfoChip";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
@@ -46,7 +46,9 @@ const TeamColourBand = styled(Box)(({ theme }) => ({
 const Teams: React.FC<Props> = ({ teams }) => {
   const [canUserEditTeam] = useStore((state) => [state.canUserEditTeam]);
 
-  const [searchedTeams, setSearchedTeams] = useState<TeamSummary[] | null>(null);
+  const [searchedTeams, setSearchedTeams] = useState<TeamSummary[] | null>(
+    null,
+  );
   const [clearSearch, setClearSearch] = useState<boolean>(false);
 
   const viewOnlyTeams = useMemo(
@@ -75,7 +77,7 @@ const Teams: React.FC<Props> = ({ teams }) => {
                 {team.name}
               </Typography>
             </Box>
-            { team.settings.isTrial && <InfoChip label="Trial account"/> }
+            {team.settings.isTrial && <InfoChip label="Trial account" />}
           </TeamCard>
         </StyledLink>
       );

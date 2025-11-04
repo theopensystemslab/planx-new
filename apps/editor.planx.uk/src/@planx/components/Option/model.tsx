@@ -5,7 +5,7 @@ import { array, mixed, object, string } from "yup";
  * The Option node doesn't have a direct Editor or Public interface
  *  - Editor: Controlled and authored via the parent Question component
  *  - Public: Viewed and selected via the parent Question component
- * 
+ *
  * XXX: Maps to ComponentType.Answer
  */
 export interface Option {

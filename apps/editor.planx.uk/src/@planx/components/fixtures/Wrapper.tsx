@@ -8,12 +8,20 @@ import { Option } from "../Option/model";
 
 export default Wrapper;
 
-interface Props<Type extends ComponentType, Data, ExtraProps extends Record<string, unknown>> {
+interface Props<
+  Type extends ComponentType,
+  Data,
+  ExtraProps extends Record<string, unknown>,
+> {
   Editor: React.FC<EditorProps<Type, Data, ExtraProps>>;
   Public: React.FC<PublicProps<Data>>;
 }
 
-function Wrapper<Type extends ComponentType, Data, ExtraProps extends Record<string, unknown>>({ Editor, Public }: Props<Type, Data, ExtraProps>) {
+function Wrapper<
+  Type extends ComponentType,
+  Data,
+  ExtraProps extends Record<string, unknown>,
+>({ Editor, Public }: Props<Type, Data, ExtraProps>) {
   // Store node data locally, so that we can pass this into the generated public component
   const [data, setData] = useState<Data | null>(null);
   const [options, setOptions] = useState<Option[]>([]);
@@ -27,7 +35,8 @@ function Wrapper<Type extends ComponentType, Data, ExtraProps extends Record<str
   const editorProps: EditorProps<Type, Data, ExtraProps> = {
     handleSubmit: (newNode, children) => {
       setData(newNode.data);
-      children && setOptions(children.map((child) => ({ ...child, id: nanoid() })));
+      children &&
+        setOptions(children.map((child) => ({ ...child, id: nanoid() })));
     },
   } as EditorProps<Type, Data, ExtraProps>;
 
@@ -40,7 +49,7 @@ function Wrapper<Type extends ComponentType, Data, ExtraProps extends Record<str
           margin: "1em",
         }}
       >
-        <Editor {...editorProps}/>
+        <Editor {...editorProps} />
         <Button
           type="submit"
           variant="contained"

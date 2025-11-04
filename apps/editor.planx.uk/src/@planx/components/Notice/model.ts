@@ -1,7 +1,11 @@
 import { richText } from "lib/yupExtensions";
 import { boolean, object, SchemaOf, string } from "yup";
 
-import { BaseNodeData, baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
+import {
+  BaseNodeData,
+  baseNodeDataValidationSchema,
+  parseBaseNodeData,
+} from "../shared";
 
 export interface Notice extends BaseNodeData {
   title?: string;
@@ -18,9 +22,12 @@ export const parseNotice = (data: Record<string, any> | undefined) => ({
   ...parseBaseNodeData(data),
 });
 
-export const validationSchema: SchemaOf<Notice> = baseNodeDataValidationSchema.concat(object({
-  title: string(),
-  description: richText(),
-  color: string().required(),
-  resetButton: boolean(),
-}));
+export const validationSchema: SchemaOf<Notice> =
+  baseNodeDataValidationSchema.concat(
+    object({
+      title: string(),
+      description: richText(),
+      color: string().required(),
+      resetButton: boolean(),
+    }),
+  );

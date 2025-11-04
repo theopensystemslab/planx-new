@@ -3,7 +3,7 @@ import ContentPage from "pages/Preview/ContentPage";
 import Questions from "pages/Preview/Questions";
 import React from "react";
 
-import { draftView } from "./views/draft";
+import { previewView } from "./views/preview";
 
 const routes = compose(
   withData(async (req) => ({
@@ -12,10 +12,10 @@ const routes = compose(
 
   withHead([
     <meta name="robots" content="noindex, nofollow" key="meta-robots" />,
-    <meta name="googlebot" content="noindex, nofollow" key="meta-googlebot" />
+    <meta name="googlebot" content="noindex, nofollow" key="meta-googlebot" />,
   ]),
 
-  withView(async (req) => await draftView(req)),
+  withView(async (req) => await previewView(req)),
 
   mount({
     "/": route({

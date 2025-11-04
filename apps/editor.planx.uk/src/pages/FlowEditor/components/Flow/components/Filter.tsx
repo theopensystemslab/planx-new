@@ -17,11 +17,10 @@ type Props = {
 };
 
 const Filter: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes] =
-    useStore((state) => [
-      state.isClone,
-      state.childNodesOf(props.id),
-    ]);
+  const [isClone, childNodes] = useStore((state) => [
+    state.isClone,
+    state.childNodesOf(props.id),
+  ]);
 
   const parent = getParentId(props.parent);
 
@@ -48,7 +47,7 @@ const Filter: React.FC<Props> = React.memo((props) => {
       parent,
       before: props.id,
       self: props.id,
-    }
+    },
   });
 
   const Icon = ICONS[props.type];

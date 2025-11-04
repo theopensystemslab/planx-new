@@ -21,12 +21,12 @@ const validationSchema = object({
       heading: string().when("show", {
         is: true,
         then: string().required("Heading is required"),
-        otherwise: string().optional()
+        otherwise: string().optional(),
       }),
       content: string().when("show", {
         is: true,
         then: string().required("Content is required"),
-        otherwise: string().optional()
+        otherwise: string().optional(),
       }),
       show: boolean(),
     }).optional(),
@@ -34,12 +34,12 @@ const validationSchema = object({
       heading: string().when("show", {
         is: true,
         then: string().required("Heading is required"),
-        otherwise: string().optional()
+        otherwise: string().optional(),
       }),
       content: richText().when("show", {
         is: true,
         then: richText().required("Content is required"),
-        otherwise: richText().optional()
+        otherwise: richText().optional(),
       }),
       show: boolean(),
     }).optional(),
@@ -47,17 +47,17 @@ const validationSchema = object({
       heading: string().when("show", {
         is: true,
         then: string().required("Heading is required"),
-        otherwise: string().optional()
+        otherwise: string().optional(),
       }),
       content: richText().when("show", {
         is: true,
         then: richText().required("Content is required"),
-        otherwise: richText().optional()
+        otherwise: richText().optional(),
       }),
       show: boolean(),
     }).optional(),
-  }).optional()
-})
+  }).optional(),
+});
 
 export const FooterLinksAndLegalDisclaimer = () => {
   const [flowStatus, flowSettings, updateFlowSettings, setFlowSettings] =
@@ -123,13 +123,19 @@ export const FooterLinksAndLegalDisclaimer = () => {
             name: "elements.legalDisclaimer.heading",
             value: elementsForm.values.elements?.legalDisclaimer?.heading,
             onChange: elementsForm.handleChange,
-            errorMessage: getIn(elementsForm.errors, "elements.legalDisclaimer.heading")
+            errorMessage: getIn(
+              elementsForm.errors,
+              "elements.legalDisclaimer.heading",
+            ),
           }}
           contentInputProps={{
             name: "elements.legalDisclaimer.content",
             value: elementsForm.values.elements?.legalDisclaimer?.content,
             onChange: elementsForm.handleChange,
-            errorMessage: getIn(elementsForm.errors, "elements.legalDisclaimer.content")
+            errorMessage: getIn(
+              elementsForm.errors,
+              "elements.legalDisclaimer.content",
+            ),
           }}
         />
       </SettingsSection>
@@ -150,13 +156,19 @@ export const FooterLinksAndLegalDisclaimer = () => {
                 name: "elements.help.heading",
                 value: elementsForm.values.elements?.help?.heading,
                 onChange: elementsForm.handleChange,
-                errorMessage: getIn(elementsForm.errors, "elements.help.heading")
+                errorMessage: getIn(
+                  elementsForm.errors,
+                  "elements.help.heading",
+                ),
               }}
               contentInputProps={{
                 name: "elements.help.content",
                 value: elementsForm.values.elements?.help?.content,
                 onChange: elementsForm.handleChange,
-                errorMessage: getIn(elementsForm.errors, "elements.help.content")
+                errorMessage: getIn(
+                  elementsForm.errors,
+                  "elements.help.content",
+                ),
               }}
             />
           </InputRow>
@@ -185,13 +197,19 @@ export const FooterLinksAndLegalDisclaimer = () => {
                 name: "elements.privacy.heading",
                 value: elementsForm.values.elements?.privacy?.heading,
                 onChange: elementsForm.handleChange,
-                errorMessage: getIn(elementsForm.errors, "elements.privacy.heading")
+                errorMessage: getIn(
+                  elementsForm.errors,
+                  "elements.privacy.heading",
+                ),
               }}
               contentInputProps={{
                 name: "elements.privacy.content",
                 value: elementsForm.values.elements?.privacy?.content,
                 onChange: elementsForm.handleChange,
-                errorMessage: getIn(elementsForm.errors, "elements.privacy.content")
+                errorMessage: getIn(
+                  elementsForm.errors,
+                  "elements.privacy.content",
+                ),
               }}
             />
           </InputRow>

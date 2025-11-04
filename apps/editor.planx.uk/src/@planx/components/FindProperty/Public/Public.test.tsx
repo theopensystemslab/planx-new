@@ -129,9 +129,8 @@ const proposedAddressProps = {
   "findProperty.action": "Proposed a new address",
 };
 
-const handler = http.get(
-  "https://www.planning.data.gov.uk/*",
-  async () => HttpResponse.json(localAuthorityMock, { status: 200 })
+const handler = http.get("https://www.planning.data.gov.uk/*", async () =>
+  HttpResponse.json(localAuthorityMock, { status: 200 }),
 );
 
 beforeEach(() => {

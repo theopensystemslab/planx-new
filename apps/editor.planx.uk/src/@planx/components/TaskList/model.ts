@@ -22,7 +22,7 @@ export interface Task {
 }
 
 export const parseTaskList = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): TaskList => ({
   tasks: data?.taskList?.tasks || data?.tasks || [],
   title: data?.title || "",
@@ -35,14 +35,13 @@ const taskSchema = object({
   description: richText(),
 });
 
-export const validationSchema =
-  baseNodeDataValidationSchema.concat(
-    object({
-      title: string().required(),
-      description: richText(),
-      tasks: array(taskSchema).required().min(1),
-      taskList: object({
-        tasks: array(taskSchema).min(1),
-      }).optional(),
-    })
-  );
+export const validationSchema = baseNodeDataValidationSchema.concat(
+  object({
+    title: string().required(),
+    description: richText(),
+    tasks: array(taskSchema).required().min(1),
+    taskList: object({
+      tasks: array(taskSchema).min(1),
+    }).optional(),
+  }),
+);

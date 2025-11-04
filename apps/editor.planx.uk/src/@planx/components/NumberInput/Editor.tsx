@@ -1,6 +1,9 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { NumberInput } from "@planx/components/NumberInput/model";
-import { editorValidationSchema, parseNumberInput } from "@planx/components/NumberInput/model";
+import {
+  editorValidationSchema,
+  parseNumberInput,
+} from "@planx/components/NumberInput/model";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
 import React from "react";

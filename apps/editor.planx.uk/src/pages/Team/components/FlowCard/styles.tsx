@@ -1,9 +1,9 @@
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
-import { Link } from "react-navi";
 import { inputFocusStyle } from "theme";
 
 import SimpleMenu from "../../../../ui/editor/SimpleMenu";
+import { CustomLink } from "../../../../ui/shared/CustomLink/CustomLink";
 
 export const Card = styled("li")(({ theme }) => ({
   listStyle: "none",
@@ -40,7 +40,7 @@ export const CardContent = styled(Box)(({ theme }) => ({
   width: "100%",
 }));
 
-export const DashboardLink = styled(Link)(() => ({
+export const DashboardLink = styled(CustomLink)(() => ({
   position: "absolute",
   left: 0,
   top: 0,
@@ -50,7 +50,7 @@ export const DashboardLink = styled(Link)(() => ({
   "&:focus": {
     ...inputFocusStyle,
   },
-}));
+})) as typeof CustomLink;
 
 export const LinkSubText = styled(Box)(({ theme }) => ({
   color: theme.palette.text.secondary,

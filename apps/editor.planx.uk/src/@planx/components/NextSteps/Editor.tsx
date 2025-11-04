@@ -1,7 +1,10 @@
 import Box from "@mui/material/Box";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { NextSteps, Step } from "@planx/components/NextSteps/model";
-import { parseNextSteps, validationSchema } from "@planx/components/NextSteps/model";
+import {
+  parseNextSteps,
+  validationSchema,
+} from "@planx/components/NextSteps/model";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
 import React, { ChangeEvent } from "react";

@@ -6,7 +6,7 @@ import PublicLayout from "pages/layout/PublicLayout";
 import { TestWarningPage } from "pages/Preview/TestWarningPage";
 import React from "react";
 import { View } from "react-navi";
-import { getTeamFromDomain } from "routes/utils";
+import { getTeamFromDomain } from "routes-navi/utils";
 import WatermarkBackground from "ui/shared/WatermarkBackground";
 
 import { fetchSettingsForPublishedView } from "./published/queries";

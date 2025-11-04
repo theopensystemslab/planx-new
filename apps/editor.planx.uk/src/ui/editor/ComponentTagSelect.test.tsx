@@ -71,7 +71,7 @@ describe("Checklist Component for a non Platform Admin", () => {
   it("renders all tags with none selected", async () => {
     const { getByRole, user } = setup(
       <DndProvider backend={HTML5Backend}>
-        <ChecklistComponent options={[]}/>
+        <ChecklistComponent options={[]} />
       </DndProvider>,
     );
     const tagSelect = getByRole("combobox", { name: /tag this component/i });

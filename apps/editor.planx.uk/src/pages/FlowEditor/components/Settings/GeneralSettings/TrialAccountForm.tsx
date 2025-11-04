@@ -26,7 +26,6 @@ export default function TrialAccountForm({
 
   const toast = useToast();
 
-
   const formik = useFormik({
     ...formikConfig,
     validationSchema: formSchema,
@@ -41,7 +40,7 @@ export default function TrialAccountForm({
         onSuccess();
         resetForm({ values });
       } catch (error) {
-        console.error(error)
+        console.error(error);
         toast.error("Failed to update team's trial account status");
       }
     },
@@ -64,11 +63,12 @@ export default function TrialAccountForm({
           <SettingsDescription>
             <p>Toggle this team between "trial account" and "full access".</p>
             <p>
-              A trial account has limited access to PlanX features - they are not
-              able to turn services online.
+              A trial account has limited access to PlanX features - they are
+              not able to turn services online.
             </p>
             <p>
-              Toggling this to a trial account will turn this team's flows offline.
+              Toggling this to a trial account will turn this team's flows
+              offline.
             </p>
           </SettingsDescription>
 

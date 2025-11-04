@@ -22,7 +22,12 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { ICONS } from "../shared/icons";
-import { availableDatasets, parseContent, PlanningConstraints, validationSchema } from "./model";
+import {
+  availableDatasets,
+  parseContent,
+  PlanningConstraints,
+  validationSchema,
+} from "./model";
 
 type Props = EditorProps<TYPES.PlanningConstraints, PlanningConstraints>;
 

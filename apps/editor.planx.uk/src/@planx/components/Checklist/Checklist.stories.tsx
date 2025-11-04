@@ -1,6 +1,6 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { Meta, StoryObj } from "@storybook/react";
-import React from "react"
+import React from "react";
 
 import Wrapper from "../fixtures/Wrapper";
 import { EditorProps } from "../shared/types";
@@ -171,7 +171,13 @@ export const WithRepeatedOptions = {
   args: mockWithRepeatedOptions,
 } satisfies Story;
 
-const EditorWithFlatOptions = (props: EditorProps<ComponentType, ChecklistWithOptions, Record<string, unknown>>) => {
+const EditorWithFlatOptions = (
+  props: EditorProps<
+    ComponentType,
+    ChecklistWithOptions,
+    Record<string, unknown>
+  >,
+) => {
   const editorProps: ChecklistWithOptions = {
     ...props,
     groupedOptions: undefined,
@@ -182,10 +188,5 @@ const EditorWithFlatOptions = (props: EditorProps<ComponentType, ChecklistWithOp
 };
 
 export const WithEditor = () => {
-  return (
-    <Wrapper
-      Editor={EditorWithFlatOptions}
-      Public={Checklist}
-    />
-  );
+  return <Wrapper Editor={EditorWithFlatOptions} Public={Checklist} />;
 };

@@ -35,8 +35,8 @@ const subscriptionRoutes = compose(
                   fiscal_year_quarter: desc
                   paid_at: desc
                 }
-                where: { 
-                  team_slug: { _eq: $teamSlug }, 
+                where: {
+                  team_slug: { _eq: $teamSlug }
                   service_charge_amount: { _gt: 0 }
                 }
               ) {

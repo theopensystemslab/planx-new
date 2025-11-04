@@ -4,12 +4,12 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import { useNavigate } from "@tanstack/react-router";
 import { logger } from "airbrake";
 import { isAxiosError } from "axios";
 import { Form, Formik, FormikConfig } from "formik";
 import { useToast } from "hooks/useToast";
 import React, { useState } from "react";
-import { useNavigation } from "react-navi";
 import { AddButton } from "ui/editor/AddButton";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
@@ -19,7 +19,7 @@ import { useCreateFlow } from "./hooks/useCreateFlow";
 import { CreateFlow, validationSchema } from "./types";
 
 export const AddFlow: React.FC = () => {
-  const { navigate } = useNavigation();
+  const navigate = useNavigate();
   const {
     teamId,
     teamSlug,
@@ -54,7 +54,7 @@ export const AddFlow: React.FC = () => {
     showLoading("Creating flow...");
     try {
       const result = await createFlow(values);
-      await navigate(`/${teamSlug}/${result.flow.slug}`);
+      await navigate({ to: `/${teamSlug}/${result.flow.slug}` });
       hideLoading();
     } catch (error) {
       setLoadingCompleteCallback(undefined);

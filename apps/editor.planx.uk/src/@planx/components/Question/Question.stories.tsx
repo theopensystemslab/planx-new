@@ -34,9 +34,9 @@ export const Basic = {
         id: "HMO",
         data: {
           text: "A house in multiple occupation (HMO)",
-        }
+        },
       },
-      { id: "Other", data: { text: "Something else" }} ,
+      { id: "Other", data: { text: "Something else" } },
     ],
   },
 } satisfies Story;
@@ -52,7 +52,7 @@ export const WithDescriptions = {
         data: {
           text: "Detached",
           description: "A detached house is not joined to another property.",
-        }
+        },
       },
       {
         id: "Semi-detached",
@@ -60,7 +60,7 @@ export const WithDescriptions = {
           text: "Semi-detached",
           description:
             "A semi-detached house is joined to 1 other property which, in turn, is not attached to any other properties. So together, the 2 properties form a pair.",
-        }
+        },
       },
       {
         id: "Terrace",
@@ -68,7 +68,7 @@ export const WithDescriptions = {
           text: "Terrace",
           description:
             "A terrace is a building that forms part of a row of 3 or more adjoining properties.",
-        }
+        },
       },
       {
         id: "End terrace",
@@ -76,7 +76,7 @@ export const WithDescriptions = {
           text: "End terrace",
           description:
             "An end terrace is the building at the end of the row of a terrace.",
-        }
+        },
       },
     ],
   },
@@ -93,38 +93,33 @@ export const WithImages = {
         data: {
           text: "Detached",
           img: "https://api.editor.planx.uk/file/public/pk8f4g4h/housetypes_detached.png",
-        }
+        },
       },
       {
         id: "Semi-detached",
         data: {
           text: "Semi-detached",
           img: "https://api.editor.planx.uk/file/public/2jpkk6ei/housetypes_semiDetached.png",
-        }
+        },
       },
       {
         id: "Terrace",
         data: {
           text: "Terrace",
           img: "https://api.editor.planx.uk/file/public/btyxwr2j/housetypes_midterrace.png",
-        }
+        },
       },
       {
         id: "End terrace",
         data: {
           text: "End terrace",
           img: "https://api.editor.planx.uk/file/public/u0lwhiv2/housetypes_endterrace.png",
-        }
+        },
       },
     ],
   },
 } satisfies Story;
 
 export const WithEditor = () => {
-  return (
-    <Wrapper
-      Editor={Editor}
-      Public={Public}
-    />
-  );
+  return <Wrapper Editor={Editor} Public={Public} />;
 };

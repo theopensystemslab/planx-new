@@ -31,13 +31,16 @@ import {
 } from "./model";
 import QuestionOptionsEditor from "./OptionsEditor";
 
-type Props = EditorProps<TYPES.Question, Question, { options: Option[]}>;
+type Props = EditorProps<TYPES.Question, Question, { options: Option[] }>;
 
 export const QuestionComponent: React.FC<Props> = (props) => {
   const type = TYPES.Question;
 
   const formik = useFormik<QuestionWithOptions>({
-    initialValues: parseQuestion({...props.node?.data, options: props.options }),
+    initialValues: parseQuestion({
+      ...props.node?.data,
+      options: props.options,
+    }),
     onSubmit: ({ options, ...values }) => {
       const children = options
         .filter((o) => o.data.text)
