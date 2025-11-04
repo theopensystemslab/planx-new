@@ -9,9 +9,9 @@ import ToggleButtonGroup, {
   toggleButtonGroupClasses,
 } from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
-import { useSearch } from "@tanstack/react-router";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import { isEmpty, orderBy } from "lodash";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Filters from "ui/editor/Filter/Filter";
 import { InfoChip } from "ui/editor/InfoChip";
 import { SortControl } from "ui/editor/SortControl/SortControl";
@@ -116,21 +116,58 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
   ]);
 
   const [flows, setFlows] = useState<FlowSummary[] | null>(initialFlows);
-
-  const [filteredFlows, setFilteredFlows] = useState<FlowSummary[] | null>(
-    null,
-  );
   const [searchedFlows, setSearchedFlows] = useState<FlowSummary[] | null>(
     null,
   );
-  const [matchingFlows, setMatchingflows] = useState<FlowSummary[] | null>(
-    null,
-  );
-  const [sortedFlows, setSortedFlows] = useState<FlowSummary[] | null>(null);
-
-  const [shouldClearFilters, setShouldClearFilters] = useState<boolean>(false);
-
+  const [shouldClearSearch, setShouldClearSearch] = useState<boolean>(false);
   const searchParams = useSearch({ from: "/_authenticated/$team/" });
+  const navigate = useNavigate();
+
+  const sortedFlows = useMemo(() => {
+    // Use searchedFlows if available (from SearchBox), otherwise use all flows
+    const sourceFlows = searchedFlows || flows;
+    if (!sourceFlows) return null;
+
+    let result = [...sourceFlows];
+
+    // Apply filters based on search params
+    if (searchParams["online-status"]) {
+      result = result.filter(
+        (flow) => flow.status === searchParams["online-status"],
+      );
+    }
+
+    if (searchParams["flow-type"]) {
+      if (searchParams["flow-type"] === "service") {
+        result = result.filter(
+          (flow) => flow.publishedFlows[0]?.hasSendComponent,
+        );
+      }
+    }
+
+    if (searchParams.templates) {
+      if (searchParams.templates === "show") {
+        result = result.filter(
+          (flow) => Boolean(flow.templatedFrom) || Boolean(flow.isTemplate),
+        );
+      }
+    }
+
+    // Apply sorting
+    const sortObject =
+      sortOptions.find(
+        (option) =>
+          option.displayName
+            .toLowerCase()
+            .replace(/[^\w\s-]/g, "")
+            .replace(/[\s_-]+/g, "-")
+            .replace(/^-+|-+$/g, "") === searchParams.sort,
+      ) || sortOptions[0];
+
+    result = orderBy(result, sortObject.fieldName, searchParams.sortDirection);
+
+    return result;
+  }, [searchedFlows, flows, searchParams]);
 
   const handleViewChange = (
     _event: React.MouseEvent<HTMLElement>,
@@ -140,48 +177,6 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
       setFlowCardView(newView);
     }
   };
-
-  useEffect(() => {
-    const diffFlows =
-      searchedFlows?.filter((searchedFlow) =>
-        filteredFlows?.some(
-          (filteredFlow) => filteredFlow.id === searchedFlow.id,
-        ),
-      ) || null;
-
-    // Sort the array at the start using the query params
-    if (matchingFlows === null) {
-      const sortObject =
-        sortOptions.find(
-          (option) =>
-            option.displayName
-              .toLowerCase()
-              .replace(/[^\w\s-]/g, "")
-              .replace(/[\s_-]+/g, "-")
-              .replace(/^-+|-+$/g, "") === searchParams.sort,
-        ) || sortOptions[0];
-
-      const sortedFlows = orderBy(
-        diffFlows,
-        sortObject.fieldName,
-        searchParams.sortDirection,
-      );
-      setMatchingflows(sortedFlows);
-    }
-
-    setMatchingflows(diffFlows);
-
-    if (shouldClearFilters) {
-      setShouldClearFilters(false);
-    }
-  }, [
-    searchedFlows,
-    filteredFlows,
-    shouldClearFilters,
-    matchingFlows,
-    searchParams.sort,
-    searchParams.sortDirection,
-  ]);
 
   const fetchFlows = useCallback(() => {
     getFlows(teamId).then((flows) => {
@@ -196,9 +191,15 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
     }
   }, [initialFlows]);
 
+  useEffect(() => {
+    if (shouldClearSearch) {
+      setShouldClearSearch(false);
+    }
+  }, [shouldClearSearch]);
+
   const teamHasFlows = !isEmpty(flows) && flows;
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
-  const flowsHaveBeenFiltered = matchingFlows?.length !== flows?.length;
+  const flowsHaveBeenFiltered = sortedFlows?.length !== flows?.length;
 
   return (
     <Box bgcolor={"background.paper"} flexGrow={1}>
@@ -232,29 +233,20 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
               records={flows}
               setRecords={setSearchedFlows}
               searchKey={["name", "slug"]}
-              clearSearch={shouldClearFilters}
+              clearSearch={shouldClearSearch}
             />
           )}
         </Box>
         {teamHasFlows && (
           <>
             <FiltersContainer>
-              <Filters<FlowSummary>
-                records={flows}
-                setFilteredRecords={setFilteredFlows}
-                filterOptions={filterOptions}
-                clearFilters={shouldClearFilters}
-              />
-              {teamHasFlows && matchingFlows && (
+              <Filters<FlowSummary> filterOptions={filterOptions} />
+              {teamHasFlows && sortedFlows && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
                   <Typography variant="body2">
                     <strong>Sort by</strong>
                   </Typography>
-                  <SortControl<FlowSummary>
-                    records={matchingFlows}
-                    setRecords={setSortedFlows}
-                    sortOptions={sortOptions}
-                  />
+                  <SortControl<FlowSummary> sortOptions={sortOptions} />
                 </Box>
               )}
             </FiltersContainer>
@@ -276,11 +268,25 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
                 }}
               >
                 <ShowingServicesHeader
-                  matchedFlowsCount={matchingFlows?.length || 0}
+                  matchedFlowsCount={sortedFlows?.length || 0}
                 />
                 {flowsHaveBeenFiltered && (
                   <Button
-                    onClick={() => setShouldClearFilters(true)}
+                    onClick={() => {
+                      setSearchedFlows(null);
+                      setShouldClearSearch(true);
+                      navigate({
+                        to: ".",
+                        search: (prev) => ({
+                          ...prev,
+                          "online-status": undefined,
+                          "flow-type": undefined,
+                          templates: undefined,
+                          search: undefined,
+                        }),
+                        replace: true,
+                      });
+                    }}
                     variant="link"
                   >
                     Clear filters
