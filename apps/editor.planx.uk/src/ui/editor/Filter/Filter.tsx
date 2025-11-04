@@ -1,14 +1,11 @@
 import Typography from "@mui/material/Typography";
 import { useNavigate, useSearch } from "@tanstack/react-router";
-import { useFormik } from "formik";
-import { get, isEmpty, omit } from "lodash";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Paths } from "type-fest";
 import { slugify } from "utils";
 
 import { FiltersColumn } from "./FiltersColumn";
 import { FiltersContent } from "./FilterStyles";
-import { updateSearchParams } from "./searchParamUtils";
 
 export type FilterKey<T> = Paths<T>;
 export type FilterValues = string;
@@ -28,138 +25,64 @@ export interface FilterOptions<T> {
 }
 
 interface FiltersProps<T> {
-  /** an array of objects to filter */
-  records: T[];
-  /** A way to set the new filtered order of the array */
-  setFilteredRecords: React.Dispatch<React.SetStateAction<T[] | null>>;
   /** An array of objects to define how to filter the records - the FilterOptions type has more information */
   filterOptions: FilterOptions<T>[];
-  clearFilters?: boolean;
 }
 
 /**
  * Renders a drop-down accordion displaying lists of grouped checkboxes for filtering records
  * @example
  * <Filters<FlowSummary>
- *   records={flows}
- *   setFilteredRecords={setFilteredFlows}
  *   filterOptions={filterOptions}
  * />
  */
 
 export const Filters = <T extends object>({
-  records,
-  setFilteredRecords,
   filterOptions,
-  clearFilters = false,
 }: FiltersProps<T>) => {
-  const [optionsToFilter] = useState(filterOptions);
-
   const navigate = useNavigate();
   const searchParams = useSearch({ from: "/_authenticated/$team/" });
 
-  const { values, setFieldValue, submitForm, resetForm } = useFormik<{
-    filters: Filters<T> | null;
-  }>({
-    initialValues: { filters: null },
-    onSubmit: ({ filters }) => {
-      updateSearchParams<T>(filters, optionsToFilter, navigate);
+  // Get current filter values from URL
+  const getCurrentFilterValues = (): Filters<T> | null => {
+    const activeFilters: Partial<Record<FilterKey<T>, FilterValues>> = {};
+    let hasFilters = false;
 
-      if (!filters && records) {
-        setFilteredRecords(records);
-      } else if (filters) {
-        const filteredRecords = records.filter((record: T) => {
-          return optionsToFilter.every((value: FilterOptions<T>) => {
-            const valueToFilter = get(filters, value.optionKey);
+    filterOptions.forEach((option) => {
+      const paramKey = slugify(option.displayName);
+      const paramValue = searchParams[paramKey as keyof typeof searchParams];
 
-            return valueToFilter
-              ? value.validationFn(record, valueToFilter)
-              : true;
-          });
-        });
-        setFilteredRecords(filteredRecords);
+      if (paramValue && typeof paramValue === "string") {
+        activeFilters[option.optionKey] = paramValue;
+        hasFilters = true;
       }
-    },
-  });
+    });
 
-  useEffect(() => {
-    const findFiltersFromSearchParams = ([displayName, optionValue]: [
-      FilterKey<T>,
-      FilterValues,
-    ]) => {
-      const findOption = optionsToFilter.find(
-        (option) => slugify(`${option.displayName}`) === `${displayName}`,
-      );
-      return (
-        findOption &&
-        ({ [`${findOption.optionKey}`]: `${optionValue}` } as
-          | Filters<T>
-          | undefined)
-      );
-    };
-
-    const parseStateFromURL = () => {
-      const searchParamToMap = Object.entries(searchParams || {}) as [
-        FilterKey<T>,
-        FilterValues,
-      ][];
-
-      const searchParamFilters = searchParamToMap
-        .map(findFiltersFromSearchParams)
-        .filter((result) => result !== undefined);
-
-      let filtersToApply: Filters<T> | null = null;
-
-      searchParamFilters.forEach((param) => {
-        if (param) {
-          // map method above ensures we create an array of type Filters<T>
-          const filterParam = param;
-          filtersToApply = { ...filtersToApply, ...filterParam };
-        }
-      });
-      !isEmpty(filtersToApply) && setFieldValue("filters", filtersToApply);
-    };
-
-    if (!values.filters) {
-      parseStateFromURL();
-      setFilteredRecords(records);
-    }
-  }, [
-    searchParams,
-    records,
-    setFilteredRecords,
-    setFieldValue,
-    values.filters,
-    optionsToFilter,
-  ]);
-
-  useEffect(() => {
-    if (values.filters || records) {
-      submitForm();
-    }
-  }, [submitForm, values.filters, records]);
-
-  useEffect(() => {
-    if (clearFilters) {
-      resetForm();
-      submitForm();
-    }
-  }, [clearFilters, resetForm, submitForm]);
-
-  const handleChange = (filterKey: FilterKey<T>, filterValue: FilterValues) => {
-    const newObject = {
-      ...values.filters,
-      [filterKey]: filterValue,
-    } as Filters<T>;
-
-    get(values.filters, filterKey) === filterValue
-      ? removeFilter(filterKey)
-      : setFieldValue("filters", newObject);
+    return hasFilters ? (activeFilters as Filters<T>) : null;
   };
 
-  const removeFilter = (targetFilter: FilterKey<T>) => {
-    const newFilters = omit(values.filters, targetFilter) as Filters<T>;
-    setFieldValue("filters", newFilters);
+  const currentFilters = getCurrentFilterValues();
+
+  const handleChange = (filterKey: FilterKey<T>, filterValue: FilterValues) => {
+    const filterOption = filterOptions.find(
+      (opt) => opt.optionKey === filterKey,
+    );
+    if (!filterOption) return;
+
+    const paramKey = slugify(filterOption.displayName);
+    const currentValue = searchParams[paramKey as keyof typeof searchParams];
+
+    // Toggle filter: if same value, remove it; otherwise set it
+    const newValue = currentValue === filterValue ? undefined : filterValue;
+
+    navigate({
+      to: ".",
+      search: (prev) => ({
+        ...prev,
+        [paramKey]: newValue,
+      }),
+      replace: true,
+    });
   };
 
   return (
@@ -172,7 +95,7 @@ export const Filters = <T extends object>({
         <Typography variant="body2" sx={{ flexShrink: 0 }}>
           <strong>Filter by</strong>
         </Typography>
-        {optionsToFilter.map((option) => (
+        {filterOptions.map((option) => (
           <fieldset
             key={option.displayName}
             aria-describedby={`${option.displayName}-description`}
@@ -191,7 +114,7 @@ export const Filters = <T extends object>({
               title={option.displayName}
               optionKey={option.optionKey}
               optionValues={option.optionValue}
-              filters={values.filters}
+              filters={currentFilters}
               handleChange={handleChange}
               name={option.displayName}
             />
