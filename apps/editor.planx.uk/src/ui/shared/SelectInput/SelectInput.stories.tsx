@@ -1,7 +1,7 @@
 import MenuItem from "@mui/material/MenuItem";
 import { Meta, StoryObj } from "@storybook/react";
 import React from "react";
-import SelectInput from "ui/editor/SelectInput/SelectInput";
+import SelectInput from "ui/shared/SelectInput/SelectInput";
 
 const meta = {
   title: "Design System/Atoms/Form Elements/SelectInput",

@@ -5,8 +5,8 @@ import { visuallyHidden } from "@mui/utils";
 import { useFormik } from "formik";
 import { Feature } from "geojson";
 import React from "react";
-import SelectInput from "ui/editor/SelectInput/SelectInput";
 import InputLabel from "ui/public/InputLabel";
+import SelectInput from "ui/shared/SelectInput/SelectInput";
 
 import { useMapAndLabelContext } from "./Context";
 
@@ -47,6 +47,7 @@ export const CopyFeature: React.FC<Props> = ({
           <SelectInput
             disabled={isDisabled}
             name={`select-${destinationIndex}`}
+            size="small"
             aria-describedby="copy-feature-description"
             bordered
             required
@@ -55,7 +56,6 @@ export const CopyFeature: React.FC<Props> = ({
             onChange={(e) =>
               formik.setFieldValue("sourceLabel", e.target.value)
             }
-            sx={{ width: { xs: "150px", md: "200px" } }}
           >
             <span id="copy-feature-description" style={visuallyHidden}>
               Please add at least two features to the map in order to enable

@@ -1,22 +1,16 @@
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
-import { styled } from "@mui/material/styles";
 import get from "lodash/get";
 import orderBy from "lodash/orderBy";
 import React, { useEffect, useMemo, useState } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
 import { Paths } from "type-fest";
+import SelectInput from "ui/shared/SelectInput/SelectInput";
 import { slugify } from "utils";
 
-import SelectInput from "../SelectInput/SelectInput";
 import { getSortParams } from "./utils";
 
 type SortDirection = "asc" | "desc";
-
-const StyledSelectInput = styled(SelectInput)(() => ({
-  minWidth: "170px",
-  height: "40px",
-}));
 
 export interface SortableFields<T> {
   /** displayName is a string to use in the Select */
@@ -99,10 +93,11 @@ export const SortControl = <T extends object>({
   }, [selectedSort, sortDirection, records, setRecords]);
 
   return (
-    <Box display={"flex"} gap={1}>
-      <StyledSelectInput
+    <Box display={"flex"} gap={1} alignItems="center">
+      <SelectInput
         visuallyHiddenLabel
         value={selectedDisplaySlug}
+        size="small"
         onChange={(e) => {
           const targetKey = e.target.value as string;
           const matchingSortOption = sortOptionsMap[targetKey];
@@ -115,9 +110,10 @@ export const SortControl = <T extends object>({
             {displayName}
           </MenuItem>
         ))}
-      </StyledSelectInput>
-      <StyledSelectInput
+      </SelectInput>
+      <SelectInput
         value={sortDirection}
+        size="small"
         onChange={(e) => {
           const newDirection = e.target.value as SortDirection;
           setSortDirection(newDirection);
@@ -132,7 +128,7 @@ export const SortControl = <T extends object>({
         >
           {selectedSort.directionNames.desc}
         </MenuItem>
-      </StyledSelectInput>
+      </SelectInput>
     </Box>
   );
 };

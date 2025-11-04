@@ -5,8 +5,8 @@ import Typography from "@mui/material/Typography";
 import { lowerCase, merge, upperFirst } from "lodash";
 import React from "react";
 import { ModalSubtitle } from "ui/editor/ModalSubtitle";
-import SelectInput from "ui/editor/SelectInput/SelectInput";
 import InputRow from "ui/shared/InputRow";
+import SelectInput from "ui/shared/SelectInput/SelectInput";
 
 import { DataFieldAutocomplete } from "../DataFieldAutocomplete";
 import { Condition, Rule } from "./types";

@@ -3,8 +3,8 @@ import MenuItem from "@mui/material/MenuItem";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { useFormikContext } from "formik";
 import React from "react";
-import SelectInput from "ui/editor/SelectInput/SelectInput";
 import InputLabel from "ui/public/InputLabel";
+import SelectInput from "ui/shared/SelectInput/SelectInput";
 import { slugify } from "utils";
 
 import { CreateFlow } from "./types";
