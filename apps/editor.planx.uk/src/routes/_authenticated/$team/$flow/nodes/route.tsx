@@ -42,8 +42,7 @@ const nodeSearchSchema = z.object({
       "responsive-checklist",
       "responsive-question",
     ])
-    .optional()
-    .default("question"),
+    .optional(),
 });
 
 export type NodeSearchParams = z.infer<typeof nodeSearchSchema>;

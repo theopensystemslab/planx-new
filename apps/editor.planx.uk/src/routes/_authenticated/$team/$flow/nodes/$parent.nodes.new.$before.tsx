@@ -10,7 +10,7 @@ export const Route = createFileRoute(
   loaderDeps: ({ search }) => ({ type: search.type }),
 
   loader: async ({ params, deps }) => {
-    const { type } = deps;
+    const { type = "question" } = deps;
     const { team, flow, parent, before } = params;
 
     const extraProps = await calculateExtraProps(type, team, flow);
