@@ -13,9 +13,11 @@ export default meta;
 
 export const Basic = {
   args: {
-    title: "Prior approval",
-    description: "This option has a description underneath.",
-    onChange: () => console.log("Radio changed"),
     id: "1",
+    data: {
+      text: "Prior approval",
+      description: "This option has a description underneath.",
+    },
+    onChange: () => console.log("Radio changed"),
   },
 } satisfies Story;

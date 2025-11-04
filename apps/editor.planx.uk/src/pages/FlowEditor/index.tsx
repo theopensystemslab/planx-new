@@ -4,9 +4,9 @@ import Box from "@mui/material/Box";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { styled } from "@mui/material/styles";
 import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
+import { isEmpty } from "lodash";
 import { parentNodeIsTemplatedInternalPortal } from "pages/FlowEditor/utils";
-import React, { useRef } from "react";
-import { rootFlowPath } from "routes-navi/utils";
+import React, { useEffect, useRef } from "react";
 
 import Flow from "./components/Flow";
 import { getParentId } from "./components/Flow/lib/utils";
@@ -15,6 +15,7 @@ import { ToggleHelpTextButton } from "./components/FlowEditor/ToggleHelpTextButt
 import { ToggleImagesButton } from "./components/FlowEditor/ToggleImagesButton";
 import { ToggleTagsButton } from "./components/FlowEditor/ToggleTagsButton";
 import Sidebar from "./components/Sidebar";
+import FlowSkeleton from "./FlowSkeleton";
 import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
 
@@ -39,20 +40,34 @@ const EditorVisualControls = styled(ButtonGroup)(({ theme }) => ({
 }));
 
 const FlowEditor = () => {
-  const flowPath = rootFlowPath(true).split("/")[2];
-  const [flow, ...breadcrumbs] = flowPath.split(",");
+  const [
+    flowObject,
+    orderedFlow,
+    isTemplatedFrom,
+    teamSlug,
+    flowId,
+    connectToFlow,
+    disconnectFromFlow,
+  ] = useStore((state) => [
+    state.flow,
+    state.orderedFlow,
+    state.isTemplatedFrom,
+    state.getTeam().slug,
+    state.id,
+    state.connectToFlow,
+    state.disconnectFromFlow,
+  ]);
+
+  useEffect(() => {
+    if (!flowId) return;
+    connectToFlow(flowId);
+
+    return () => disconnectFromFlow();
+  }, [flowId, connectToFlow, disconnectFromFlow]);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  useScrollControlsAndRememberPosition(scrollContainerRef);
-
-  const [flowObject, orderedFlow, isTemplatedFrom, teamSlug] = useStore(
-    (state) => [
-      state.flow,
-      state.orderedFlow,
-      state.isTemplatedFrom,
-      state.getTeam().slug,
-    ],
-  );
+  const isLoading = isEmpty(flowObject);
+  useScrollControlsAndRememberPosition(isLoading ? null : scrollContainerRef);
 
   const parentId = getParentId(undefined);
 
@@ -85,12 +100,15 @@ const FlowEditor = () => {
           className={lockedFlow ? "flow-locked" : ""}
           sx={{ position: "relative" }}
         >
-          <Flow
-            flow={flow}
-            breadcrumbs={breadcrumbs}
-            lockedFlow={lockedFlow}
-            showTemplatedNodeStatus={showTemplatedNodeStatus}
-          />
+          {" "}
+          {isLoading ? (
+            <FlowSkeleton />
+          ) : (
+            <Flow
+              lockedFlow={lockedFlow}
+              showTemplatedNodeStatus={showTemplatedNodeStatus}
+            />
+          )}
           <EditorVisualControls
             orientation="vertical"
             aria-label="Toggle node attributes"

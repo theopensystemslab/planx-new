@@ -20,7 +20,7 @@ import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useMutation } from "@tanstack/react-query";
 import { useLocation, useNavigate, useParams } from "@tanstack/react-router";
-import { logout } from "api/auth/requests";
+import { logout } from "lib/api/auth/requests";
 import { clearLocalFlowIdb } from "lib/local.idb";
 import { capitalize } from "lodash";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";

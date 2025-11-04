@@ -1,8 +1,8 @@
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useMutation } from "@tanstack/react-query";
-import { sendSaveEmail } from "api/saveAndReturn/requests";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import { sendSaveEmail } from "lib/api/saveAndReturn/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 import { removeSessionIdSearchParam } from "utils";

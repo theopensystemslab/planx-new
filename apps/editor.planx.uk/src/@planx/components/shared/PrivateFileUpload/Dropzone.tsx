@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import { FileUploadSlot } from "@planx/components/FileUpload/model";
 import { useOptionalListContext } from "@planx/components/List/Public/Context";
 import handleRejectedUpload from "@planx/components/shared/handleRejectedUpload";
-import { uploadPrivateFile } from "api/fileUpload/requests";
+import { uploadPrivateFile } from "lib/api/fileUpload/requests";
 import { nanoid } from "nanoid";
 import React from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";

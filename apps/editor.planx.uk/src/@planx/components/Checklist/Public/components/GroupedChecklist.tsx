@@ -4,23 +4,26 @@ import { visuallyHidden } from "@mui/utils";
 import {
   checklistInputValidationSchema,
   ChecklistLayout,
+  GroupedChecklist,
 } from "@planx/components/Checklist/model";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
+import { PublicProps } from "@planx/components/shared/types";
 import { getIn, useFormik } from "formik";
 import React, { useEffect } from "react";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { object } from "yup";
 
-import { PublicChecklistProps } from "../../types";
 import { changeCheckbox, partitionGroupedOptions } from "../helpers";
 import { useExclusiveOptionInGroupedChecklist } from "../hooks/useExclusiveOption";
 import { useSortedOptions } from "../hooks/useSortedOptions";
 import { ExclusiveChecklistItem } from "./ExclusiveChecklistItem";
 import { GroupedChecklistOptions } from "./GroupedChecklistOptions";
 
-export const GroupedChecklist: React.FC<PublicChecklistProps> = (props) => {
+const GroupedChecklistComponent: React.FC<PublicProps<GroupedChecklist>> = (
+  props,
+) => {
   const {
     description = "",
     groupedOptions,
@@ -132,3 +135,5 @@ export const GroupedChecklist: React.FC<PublicChecklistProps> = (props) => {
     </Card>
   );
 };
+
+export default GroupedChecklistComponent;

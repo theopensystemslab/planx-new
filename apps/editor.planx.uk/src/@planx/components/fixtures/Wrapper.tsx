@@ -1,25 +1,44 @@
 import Button from "@mui/material/Button";
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import { EditorProps, PublicProps } from "@planx/components/shared/types";
+import { nanoid } from "nanoid";
 import React, { useState } from "react";
+
+import { Option } from "../Option/model";
 
 export default Wrapper;
 
-interface Props<Type, Data> {
-  Editor: React.FC<EditorProps<Type, Data>>;
+interface Props<
+  Type extends ComponentType,
+  Data,
+  ExtraProps extends Record<string, unknown>,
+> {
+  Editor: React.FC<EditorProps<Type, Data, ExtraProps>>;
   Public: React.FC<PublicProps<Data>>;
 }
 
-function Wrapper<Type, Data>(props: Props<Type, Data>) {
+function Wrapper<
+  Type extends ComponentType,
+  Data,
+  ExtraProps extends Record<string, unknown>,
+>({ Editor, Public }: Props<Type, Data, ExtraProps>) {
+  // Store node data locally, so that we can pass this into the generated public component
   const [data, setData] = useState<Data | null>(null);
-  // const [userData, setUserData] = useState<UserData | null>(null);
+  const [options, setOptions] = useState<Option[]>([]);
 
   const publicProps: PublicProps<Data> | null = data && {
     ...data,
+    options,
     autoFocus: true,
-    // handleSubmit: (newUserData?: UserData) => {
-    //   setUserData(newUserData || null);
-    // },
   };
+
+  const editorProps: EditorProps<Type, Data, ExtraProps> = {
+    handleSubmit: (newNode, children) => {
+      setData(newNode.data);
+      children &&
+        setOptions(children.map((child) => ({ ...child, id: nanoid() })));
+    },
+  } as EditorProps<Type, Data, ExtraProps>;
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
@@ -30,11 +49,7 @@ function Wrapper<Type, Data>(props: Props<Type, Data>) {
           margin: "1em",
         }}
       >
-        <props.Editor
-          handleSubmit={(newNode) => {
-            setData(newNode.data);
-          }}
-        />
+        <Editor {...editorProps} />
         <Button
           type="submit"
           variant="contained"
@@ -48,7 +63,7 @@ function Wrapper<Type, Data>(props: Props<Type, Data>) {
       {publicProps && (
         <div>
           <ErrorBoundary hasInitData={Boolean(data)}>
-            <props.Public {...publicProps} />
+            <Public {...publicProps} />
           </ErrorBoundary>
         </div>
       )}

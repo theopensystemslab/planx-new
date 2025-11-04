@@ -142,9 +142,12 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
           <InputGroup flowSpacing>
             <InputLegend id="serviceSummary-label">Service summary</InputLegend>
             <SettingsDescription id="serviceSummary-description-text">
-              A short blurb on what this service is. <br />
-              <br /> If the service is listed on localplanning.services, this is
-              displayed next to its name.
+              <>
+                Summarise what the service does. <br />
+                <br /> This wording is used on the Local Planning Services
+                website. It's publicly visible, and should be short, clear and
+                easy to understand.
+              </>
             </SettingsDescription>
             <Input
               multiline
@@ -166,13 +169,15 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
           </InputGroup>
           <InputGroup flowSpacing>
             <InputLegend id="serviceDescription-label">
-              What does this service do?
+              Service description
             </InputLegend>
             <SettingsDescription id="serviceDescription-description-text">
               <>
-                How should the service be used? What does it include? Are there
-                any dependencies related to this service? This is not visible to
-                users.
+                Describe the service in more detail.
+                <br />
+                <br /> Include who it's aimed at and what it does. This is not
+                shown to users on the Local Planning Services website, but it
+                may be publicly visible elsewhere.
               </>
             </SettingsDescription>
             <InputRow>
@@ -193,12 +198,13 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
           </InputGroup>
           <InputGroup flowSpacing>
             <InputLegend id="serviceLimitations-label">
-              Limitations of the service
+              Service limitations
             </InputLegend>
             <SettingsDescription id="serviceLimitations-description-text">
               <>
-                What does this service not include? This is not visible to
-                users.
+                Describe what the service does not cover. This is not shown to
+                users on the Local Planning Services website, but it may be
+                publicly visible elsewhere.
               </>
             </SettingsDescription>
             <InputRow>

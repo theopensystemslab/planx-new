@@ -42,7 +42,8 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 
 4. Run `pnpm run up` from the project root to set up docker containers for the application's backend (postgres, sharedb, api and hasura server processes) and to pull seed application data from production.
 
-***Please Note***: If using a Mac running Apple silicone (M1 -M4) chips and running into Docker image compatibility issues please see our [troubleshooting guide](https://github.com/theopensystemslab/planx-new/blob/main/doc/how-to/aws/how-to-setup-aws-sso-credentials.md)
+> [!TIP]
+> If using a Mac running Apple silicone (M1-M5) chips you'll need to uncomment `DOCKER_DEFAULT_PLATFORM=linux/arm64` in your `.env` file
 
 5. Move into the hasura directory `cd ../apps/hasura.planx.uk` and install dependencies `pnpm i`.
 

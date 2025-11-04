@@ -13,10 +13,12 @@ export default meta;
 
 export const Basic = {
   args: {
-    title: "Prior approval",
-    img: "https://planx-temp.s3.eu-west-2.amazonaws.com/production/mdc5c7eb/Terrace_wraparound.svg",
-    onChange: () => console.log("Radio changed"),
-    description: "This option has a description underneath.",
     id: "1",
+    data: {
+      text: "Prior approval",
+      img: "https://planx-temp.s3.eu-west-2.amazonaws.com/production/mdc5c7eb/Terrace_wraparound.svg",
+      description: "This option has a description underneath.",
+    },
+    onChange: () => console.log("Radio changed"),
   },
 } satisfies Story;

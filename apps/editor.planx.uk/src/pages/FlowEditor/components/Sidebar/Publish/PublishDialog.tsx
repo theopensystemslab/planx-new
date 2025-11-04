@@ -20,7 +20,7 @@ import {
   PublishFlowArgs,
   TemplatedFlows,
   ValidationCheck,
-} from "api/publishFlow/types";
+} from "lib/api/publishFlow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { FONT_WEIGHT_BOLD } from "theme";

@@ -2,13 +2,13 @@ import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { PaymentRequest } from "@opensystemslab/planx-core/types";
 import { useMutation } from "@tanstack/react-query";
-import { APIError } from "api/client";
-import { validateSession } from "api/saveAndReturn/requests";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import { APIError } from "lib/api/client";
+import { validateSession } from "lib/api/saveAndReturn/requests";
 import {
   ReconciliationResponse,
   SessionAuthPayload,
-} from "api/saveAndReturn/types";
-import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+} from "lib/api/saveAndReturn/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useCallback, useEffect } from "react";
 import { Link as ReactNaviLink } from "react-navi";

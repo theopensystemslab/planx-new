@@ -143,7 +143,11 @@ const getInviteToPayNotifyConfig = (
       serviceName: session.flow.name,
       serviceLink: getServiceLink(flow.team, flow.slug),
       expiryDate: calculateExpiryDate(paymentRequest.createdAt),
-      paymentLink: getPaymentLink(session, paymentRequest),
+      paymentLink: getPaymentLink({
+        flow: session.flow,
+        team: flow.team,
+        paymentRequest,
+      }),
     },
   };
 };
@@ -157,20 +161,28 @@ const getFee = (paymentRequest: PaymentRequest) => {
   return fee;
 };
 
-const getPaymentLink = (
-  session: SessionDetails,
-  paymentRequest: PaymentRequest,
-) => {
-  const {
-    flow: {
-      slug: flowSlug,
-      team: { domain, slug: teamSlug },
-    },
-  } = session;
+interface PaymentLinkArgs {
+  flow: {
+    slug: string;
+  };
+  team: {
+    domain?: string | null;
+    slug: string;
+  };
+  paymentRequest: {
+    id: string;
+  };
+}
+
+export const getPaymentLink = ({
+  flow,
+  team,
+  paymentRequest,
+}: PaymentLinkArgs) => {
   // Use custom domain if available or fall back to PlanX URL
-  const serviceURL = domain
-    ? `https://${domain}/${flowSlug}`
-    : `${process.env.EDITOR_URL_EXT}/${teamSlug}/${flowSlug}`;
+  const serviceURL = team.domain
+    ? `https://${team.domain}/${flow.slug}`
+    : `${process.env.EDITOR_URL_EXT}/${team.slug}/${flow.slug}`;
   return `${serviceURL}/pay?paymentRequestId=${paymentRequest.id}`;
 };
 

@@ -1,12 +1,11 @@
 import { NodeId } from "@opensystemslab/planx-core/types";
 import classnames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
-import isEmpty from "lodash/isEmpty";
 import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
 } from "pages/FlowEditor/utils";
-import React, { useEffect } from "react";
+import React from "react";
 import { useDrop } from "react-dnd";
 import { Link } from "react-navi";
 
@@ -45,13 +44,6 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
       state.orderedFlow,
       state.setOrderedFlow,
     ]);
-
-  useEffect(() => {
-    // Flow might not be loaded via ShareDB (e.g. user has navigated directly to :flow/somePage)
-    if (isEmpty(flow)) return;
-
-    if (!orderedFlow) setOrderedFlow();
-  }, [orderedFlow, setOrderedFlow, flow]);
 
   // useStore.getState().getTeam().slug undefined here, use window instead
   const teamSlug = window.location.pathname.split("/")[1];

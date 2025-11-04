@@ -1,5 +1,5 @@
 import { SendIntegration } from "@opensystemslab/planx-core/types";
-import { CombinedEventsPayload } from "api/send/types";
+import { CombinedEventsPayload } from "lib/api/send/types";
 import { array, mixed, object, SchemaOf, string } from "yup";
 
 import {

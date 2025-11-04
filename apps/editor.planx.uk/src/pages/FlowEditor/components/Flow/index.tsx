@@ -1,8 +1,8 @@
 import Box from "@mui/material/Box";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import React from "react";
-import { Link } from "react-navi";
-import { rootFlowPath } from "routes-navi/utils";
+import { Link, useCurrentRoute } from "react-navi";
+import { rootFlowPath } from "utils/routeUtils/utils";
 
 import { useStore } from "../../lib/store";
 import { ContextMenu } from "./components/ContextMenu";
@@ -16,18 +16,25 @@ export enum FlowLayout {
   LEFT_RIGHT = "left-right",
 }
 
-const Flow = ({
-  breadcrumbs = [],
-  lockedFlow,
-  showTemplatedNodeStatus,
-}: any) => {
+interface Props {
+  lockedFlow: boolean;
+  showTemplatedNodeStatus: boolean;
+}
+
+const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
+  const { url } = useCurrentRoute();
+  const flowPath = url.pathname.split("/")[2];
+  const [_flow, ...breadcrumbIds] = flowPath.split(",");
+
   const [childNodes, getNode, flowLayout] = useStore((state) => [
-    state.childNodesOf(breadcrumbs[breadcrumbs.length - 1] || ROOT_NODE_KEY),
+    state.childNodesOf(
+      breadcrumbIds[breadcrumbIds.length - 1] || ROOT_NODE_KEY,
+    ),
     state.getNode,
     state.flowLayout,
   ]);
 
-  breadcrumbs = breadcrumbs.map((id: any) => ({
+  const breadcrumbs = breadcrumbIds.map((id) => ({
     id,
     ...getNode(id),
     href: `${window.location.pathname.split(id)[0]}${id}`,
@@ -58,7 +65,7 @@ const Flow = ({
 
         {showGetStarted && <GetStarted />}
 
-        {breadcrumbs.map((bc: any, index: number) => {
+        {breadcrumbs.map((bc, index) => {
           let className = "";
 
           if (index === 0) {

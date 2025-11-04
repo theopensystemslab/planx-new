@@ -26,6 +26,7 @@ export type AwaitingPayment = BaseApplication & {
   status: "awaitingPayment";
   submittedAt: string;
   paymentRequest: {
+    id: string;
     createdAt: string;
   }[];
 };

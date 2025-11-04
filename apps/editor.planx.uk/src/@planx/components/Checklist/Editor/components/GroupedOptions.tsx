@@ -2,6 +2,7 @@ import Delete from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import { Option } from "@planx/components/Option/model";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { getIn } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -14,15 +15,14 @@ import ListManager from "ui/editor/ListManager/ListManager";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
-import { Option } from "../../../shared";
-import type { Group } from "../../model";
+import type { ChecklistWithOptions, Group } from "../../model";
 import { partitionGroupedOptions } from "../../Public/helpers";
 import { useCurrentOptions } from "../../Public/hooks/useInitialOptions";
 import { ExclusiveOrOptionManager } from "./ExclusiveOrOptionManager";
 import ChecklistOptionsEditor from "./OptionsEditor";
 
 interface Props {
-  formik: FormikHookReturn;
+  formik: FormikHookReturn<ChecklistWithOptions>;
   disabled?: boolean;
   isTemplatedNode?: boolean;
 }
@@ -33,6 +33,10 @@ export const GroupedOptions = ({
   isTemplatedNode,
 }: Props) => {
   const { schema, currentOptionVals } = useCurrentOptions(formik);
+
+  // Type-narrowing only - groupedOptions will be defined here
+  if (!formik.values.groupedOptions)
+    throw Error("Required grouped options missing from component");
 
   const [exclusiveOptions, nonExclusiveOptionGroups] = partitionGroupedOptions(
     formik.values.groupedOptions,
@@ -72,7 +76,7 @@ export const GroupedOptions = ({
                     onClick={() => {
                       formik.setFieldValue(
                         `groupedOptions`,
-                        remove(groupIndex, 1, formik.values.groupedOptions),
+                        remove(groupIndex, 1, formik.values.groupedOptions!),
                       );
                     }}
                     size="large"
@@ -124,7 +128,7 @@ export const GroupedOptions = ({
                           ...option,
                           children: remove(movedItemIndex, 1, option.children),
                         })),
-                      )(formik.values.groupedOptions),
+                      )(formik.values.groupedOptions!),
                     );
                   },
                   groups: nonExclusiveOptionGroups.map(

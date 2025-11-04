@@ -139,10 +139,6 @@ export const flowEditorView = async (req: NaviRequest) => {
     template,
   });
 
-  // Templated flows require access to an ordered flow
-  // Set this once upstream as it's an expensive operation
-  if (templatedFrom) useStore.getState().setOrderedFlow();
-
   return (
     <FlowEditorLayout>
       <View />

@@ -15,15 +15,13 @@ import {
 } from "yup";
 
 import { FileUploadSlot } from "../FileUpload/model";
+import { Condition, Operator, Rule } from "../shared/RuleBuilder/types";
+import { checkIfConditionalRule } from "../shared/RuleBuilder/utils";
 import {
-  checkIfConditionalRule,
-  Condition,
   FileList,
   FileType,
   FileUploadAndLabel,
   getTagsForSlot,
-  Operator,
-  Rule,
   UserFile,
 } from "./model";
 

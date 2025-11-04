@@ -13,15 +13,15 @@ import {
 import { rootFlowPath } from "../../../routes-navi/utils";
 
 const useScrollControlsAndRememberPosition = (
-  scrollContainerRef: React.RefObject<HTMLDivElement>,
+  scrollContainerRef: React.RefObject<HTMLDivElement> | null,
 ) => {
   const currentPath = rootFlowPath(true);
 
   useEffect(() => {
-    const storageKey = ["scrollPos", currentPath].join(":");
-
-    const container = scrollContainerRef.current;
+    const container = scrollContainerRef?.current;
     if (!container) return;
+
+    const storageKey = ["scrollPos", currentPath].join(":");
 
     const existingScrollPosition = sessionStorage.getItem(storageKey);
     if (existingScrollPosition) {

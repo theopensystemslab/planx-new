@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import { containerClasses } from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import EditorNavMenu from "components/EditorNavMenu/EditorNavMenu";
+import LoadingOverlay from "components/LoadingOverlay";
 import RouteLoadingIndicator from "components/RouteLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { PropsWithChildren } from "react";
@@ -43,6 +44,7 @@ const Layout: React.FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <>
+      <LoadingOverlay />
       <RouteLoadingIndicator />
       <Header />
       <DashboardWrap>
