@@ -26,7 +26,9 @@ export interface Option {
  * Implemented by ResponsiveQuestion and ResponsiveChecklist
  */
 export interface ConditionalOption extends Option {
-  rule: Rule;
+  data: Option["data"] & {
+    rule: Rule;
+  };
 }
 
 export const optionValidationSchema = object({
