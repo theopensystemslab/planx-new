@@ -98,10 +98,7 @@ const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
               showTemplatedNodeStatus={showTemplatedNodeStatus}
             />
           ))}
-
-          <div style={{ border: "1px solid red" }}>
-            <Hanger />
-          </div>
+          <Hanger />
         </Box>
         {breadcrumbs.length ? (
           <li className="root-node-link root-node-link--end">
