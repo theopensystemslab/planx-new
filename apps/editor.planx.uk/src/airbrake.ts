@@ -10,6 +10,7 @@ export const logger = getErrorLogger();
 function getEnvForAllowedHosts(host: string) {
   switch (host) {
     case "planningservices.barnet.gov.uk":
+    case "planningservices.birmingham.gov.uk":
     case "planningservices.buckinghamshire.gov.uk":
     case "planningservices.camden.gov.uk":
     case "planningservices.doncaster.gov.uk":
