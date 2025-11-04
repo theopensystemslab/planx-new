@@ -5,6 +5,12 @@ import React from "react";
 
 import { Option } from "../Option/model";
 
+export interface Child {
+  id?: string;
+  type: ComponentType.Answer;
+  data: Option["data"];
+}
+
 export type EditorProps<
   Type extends ComponentType,
   Data,
@@ -13,11 +19,7 @@ export type EditorProps<
   id?: string;
   handleSubmit?: (
     data: { type: Type; data: Data },
-    children?: {
-      id?: string;
-      type: ComponentType.Answer;
-      data: Option["data"];
-    }[],
+    children?: Child[],
   ) => void;
   node?: any;
   disabled?: boolean;
