@@ -10,6 +10,7 @@ import { useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
+import TruncatedText from "ui/editor/TruncatedText";
 
 import { useStore } from "../../../FlowEditor/lib/store";
 import {
@@ -146,17 +147,14 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
             </Typography>
           </FlowLink>
           {flow.summary && (
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              sx={{ mt: 0.5 }}
+            <TruncatedText 
+              variant="body2" 
+              color="textSecondary" 
+              lineClamp={2}
+              pt={0.5}
             >
-              {(() => {
-                const words = flow.summary.split(" ");
-                const trimmed = words.slice(0, 16).join(" ");
-                return words.length > 16 ? `${trimmed}...` : trimmed;
-              })()}
-            </Typography>
+              {flow.summary}
+            </TruncatedText>
           )}
         </Box>
       </FlowTitleCell>

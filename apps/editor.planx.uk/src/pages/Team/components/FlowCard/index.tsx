@@ -6,6 +6,7 @@ import { Link } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
+import TruncatedText from "ui/editor/TruncatedText";
 
 import { useStore } from "../../../FlowEditor/lib/store";
 import { FlowSummary } from "../../../FlowEditor/lib/store/editor";
@@ -116,14 +117,16 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows }) => {
               ))}
           </Box>
           {flow.summary && (
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              sx={{ "& > a": { position: "relative", zIndex: 2 } }}
-            >
-              {`${flow.summary.split(" ").slice(0, 12).join(" ")}... `}
-              <Link href={`./${flow.slug}/about`}>read more</Link>
-            </Typography>
+            <>
+              <TruncatedText 
+                variant="body2" 
+                color="textSecondary" 
+                lineClamp={2}
+                sx={{ "& > a": { position: "relative", zIndex: 2 } }}
+              >
+                {flow.summary}
+              </TruncatedText>
+            </>
           )}
           <DashboardLink
             aria-label={flow.name}
