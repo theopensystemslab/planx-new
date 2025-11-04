@@ -217,10 +217,10 @@ const FormModal: React.FC<FormModalProps> = ({
     (!parentIsTemplatedInternalPortal ||
       !parentIsChildOfTemplatedInternalPortal);
 
-  const showDeleteButton = handleDelete && !isDisabledTemplatedNode;
+  const showDeleteButton = id && !isDisabledTemplatedNode;
 
   const showMakeUniqueButton = useMemo(
-    () => isClone(id) && !isDisabledTemplatedNode,
+    () => id && isClone(id) && !isDisabledTemplatedNode,
     [isClone, id, isDisabledTemplatedNode],
   );
 
@@ -242,7 +242,9 @@ const FormModal: React.FC<FormModalProps> = ({
           <NodeTypeSelect
             value={type}
             onChange={(newType) => {
-              handleTypeChange(SLUGS[Number(newType) as TYPES] as NodeSearchParams["type"]);
+              handleTypeChange(
+                SLUGS[Number(newType) as TYPES] as NodeSearchParams["type"],
+              );
             }}
           />
         )}
@@ -318,7 +320,7 @@ const FormModal: React.FC<FormModalProps> = ({
               variant="contained"
               color="secondary"
               onClick={() => {
-                if (id) {
+                if (id && parent) {
                   makeUnique(id, parent);
                   navigate({ to: rootFlowPath(true) });
                 }
@@ -336,7 +338,7 @@ const FormModal: React.FC<FormModalProps> = ({
             form="modal"
             disabled={disabled}
           >
-            {handleDelete ? `Update` : `Create`}
+            {id ? `Update` : `Create`}
           </Button>
         </Box>
       </DialogActions>
