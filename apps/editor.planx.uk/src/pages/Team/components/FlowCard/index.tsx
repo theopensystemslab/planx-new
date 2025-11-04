@@ -2,11 +2,10 @@ import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import React from "react";
-import { Link, useCurrentRoute } from "react-navi";
+import { Link } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
-import { getSortParams } from "ui/editor/SortControl/utils";
 
 import { useStore } from "../../../FlowEditor/lib/store";
 import { FlowSummary } from "../../../FlowEditor/lib/store/editor";
@@ -14,8 +13,8 @@ import {
   formatLastEditMessage,
   formatLastPublishMessage,
 } from "../../../FlowEditor/utils";
-import { sortOptions } from "../../helpers/sortAndFilterOptions";
-import FlowCardMenu from "./Menu";
+import FlowMenu from "../FlowMenu";
+import { useFlowSortDisplay } from "../hooks/useFlowSortDisplay";
 import {
   Card,
   CardBanner,
@@ -35,11 +34,8 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows }) => {
     state.canUserEditTeam,
     state.teamSlug,
   ]);
-  const route = useCurrentRoute();
-
-  const {
-    sortObject: { displayName: sortDisplayName },
-  } = getSortParams<FlowSummary>(route.url.query, sortOptions);
+  
+  const { showPublished } = useFlowSortDisplay();
 
   const isSubmissionService = flow.publishedFlows?.[0]?.hasSendComponent;
   const isTemplatedFlow = Boolean(flow.templatedFrom);
@@ -60,16 +56,6 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows }) => {
       displayName: "Submission",
       shouldAddTag: isSubmissionService,
     },
-    {
-      type: FlowTagType.Templated,
-      displayName: "Templated",
-      shouldAddTag: isTemplatedFlow,
-    },
-    {
-      type: FlowTagType.SourceTemplate,
-      displayName: "Source template",
-      shouldAddTag: isSourceTemplate,
-    },
   ];
 
   const publishedDate = formatLastPublishMessage(
@@ -79,6 +65,10 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows }) => {
     flow.operations[0]?.createdAt,
     flow.operations[0]?.actor,
   );
+
+  const displayDate = showPublished
+    ? publishedDate.formatted
+    : editedDate.formatted;
 
   return (
     <Card>
@@ -110,20 +100,11 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows }) => {
             <Typography variant="h3" component="h2">
               {flow.name}
             </Typography>
-            <LinkSubText>
-              {sortDisplayName === "Last published"
-                ? publishedDate
-                : editedDate}
-            </LinkSubText>
+            <LinkSubText>{displayDate}</LinkSubText>
           </Box>
           <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
             {displayTags
-              .filter(
-                (tag) =>
-                  tag.shouldAddTag &&
-                  tag.type !== FlowTagType.Templated &&
-                  tag.type !== FlowTagType.SourceTemplate,
-              )
+              .filter((tag) => tag.shouldAddTag)
               .map((tag) => (
                 <FlowTag
                   key={`${tag.displayName}-flowtag`}
@@ -152,10 +133,11 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows }) => {
         </CardContent>
       </Box>
       {canUserEditTeam(teamSlug) && (
-        <FlowCardMenu
+        <FlowMenu
           flow={flow}
           refreshFlows={refreshFlows}
           isAnyTemplate={isAnyTemplate}
+          variant="card"
         />
       )}
     </Card>
