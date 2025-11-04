@@ -70,7 +70,6 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows }) => {
               isSourceTemplate={isSourceTemplate}
               isTemplatedFlow={isTemplatedFlow}
               teamName={flow.template?.team.name}
-              variant="banner"
             />
           </CardBanner>
         )}

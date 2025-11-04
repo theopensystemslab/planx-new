@@ -103,7 +103,6 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
                 isSourceTemplate={isSourceTemplate}
                 isTemplatedFlow={isTemplatedFlow}
                 teamName={flow.template?.team.name}
-                variant="inline"
               />
             </Box>
           )}
