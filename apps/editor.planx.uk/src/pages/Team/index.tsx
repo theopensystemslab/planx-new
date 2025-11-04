@@ -138,7 +138,7 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
     }
 
     if (searchParams["flow-type"]) {
-      if (searchParams["flow-type"] === "service") {
+      if (searchParams["flow-type"] === "submission") {
         result = result.filter(
           (flow) => flow.publishedFlows[0]?.hasSendComponent,
         );
@@ -146,10 +146,10 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
     }
 
     if (searchParams.templates) {
-      if (searchParams.templates === "show") {
-        result = result.filter(
-          (flow) => Boolean(flow.templatedFrom) || Boolean(flow.isTemplate),
-        );
+      if (searchParams.templates === "templated") {
+        result = result.filter((flow) => Boolean(flow.templatedFrom));
+      } else if (searchParams.templates === "source template") {
+        result = result.filter((flow) => Boolean(flow.isTemplate));
       }
     }
 

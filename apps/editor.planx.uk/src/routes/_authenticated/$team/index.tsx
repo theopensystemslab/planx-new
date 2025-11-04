@@ -13,9 +13,10 @@ export const teamSearchSchema = z.object({
     "last-edited",
   ).default("last-edited"),
   sortDirection: fallback(z.enum(["asc", "desc"]), "desc").default("desc"),
-  "online-status": z.string().optional(),
-  "flow-type": z.string().optional(),
-  templates: z.string().optional(),
+  search: z.string().optional(),
+  "online-status": z.enum(["online", "offline"]).optional(),
+  "flow-type": z.enum(["submission"]).optional(),
+  templates: z.enum(["templated", "source template"]).optional(),
 });
 
 export type TeamSearch = z.infer<typeof teamSearchSchema>;
