@@ -37,7 +37,7 @@ const Root = styled(Select)<{ size?: "small" | "default" }>(({ theme, size }) =>
   [`& .${classes.icon}`]: {
     padding: size === "small" ? theme.spacing(0.25) : theme.spacing(0.5),
     color: theme.palette.primary.main,
-    fontSize: size === "small" ? 32 : 40,
+    fontSize: size === "small" ? "2rem" : "2.5rem",
   },
 }));
 

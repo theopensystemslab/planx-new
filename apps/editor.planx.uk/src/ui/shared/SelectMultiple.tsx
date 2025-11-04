@@ -30,6 +30,11 @@ type WithPlaceholder<T> = {
 type Props<T> = WithLabel<T> | WithPlaceholder<T>;
 
 export const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
+  backgroundColor: theme.palette.background.default,
+  "& button > svg": {
+    padding: theme.spacing(0.5, 0),
+    fontSize: "2.5rem",
+  },
   "& > div > label": {
     paddingRight: theme.spacing(3),
   },
