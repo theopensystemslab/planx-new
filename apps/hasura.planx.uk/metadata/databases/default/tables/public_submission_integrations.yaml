@@ -72,9 +72,13 @@ update_permissions:
 delete_permissions:
   - role: platformAdmin
     permission:
-      filter: {}
+      filter:
+        default_email:
+          _eq: false
     comment: ""
   - role: teamEditor
     permission:
-      filter: {}
+      filter:
+        default_email:
+          _eq: false
     comment: ""
