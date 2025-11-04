@@ -1,12 +1,13 @@
 import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { Link, useSearch } from "@tanstack/react-router";
+import { useParams, useSearch } from "@tanstack/react-router";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
 import { getSortParams } from "ui/editor/SortControl/utils";
+import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 import { useStore } from "../../../FlowEditor/lib/store";
 import { FlowSummary } from "../../../FlowEditor/lib/store/editor";
@@ -31,10 +32,8 @@ interface Props {
 }
 
 const FlowCard: React.FC<Props> = ({ flow, refreshFlows }) => {
-  const [canUserEditTeam, teamSlug] = useStore((state) => [
-    state.canUserEditTeam,
-    state.teamSlug,
-  ]);
+  const [canUserEditTeam] = useStore((state) => [state.canUserEditTeam]);
+  const { team: teamSlug } = useParams({ from: "/_authenticated/$team" });
   const searchParams = useSearch({ from: "/_authenticated/$team/" });
 
   const {
@@ -141,18 +140,18 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows }) => {
               sx={{ "& > a": { position: "relative", zIndex: 2 } }}
             >
               {`${flow.summary.split(" ").slice(0, 12).join(" ")}... `}
-              <Link
+              <CustomLink
                 to="/$team/$flow/about"
                 params={{ team: teamSlug, flow: flow.slug }}
               >
                 read more
-              </Link>{" "}
+              </CustomLink>{" "}
             </Typography>
           )}
           <DashboardLink
+            to="/$team/$flow"
+            params={{ team: teamSlug, flow: flow.slug }}
             aria-label={flow.name}
-            href={`./${flow.slug}`}
-            prefetch={false}
           />
         </CardContent>
       </Box>
