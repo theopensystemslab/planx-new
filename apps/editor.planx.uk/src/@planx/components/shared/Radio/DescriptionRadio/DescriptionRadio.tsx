@@ -3,12 +3,10 @@ import FormLabel from "@mui/material/FormLabel";
 import Radio, { RadioProps } from "@mui/material/Radio";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { Option } from "@planx/components/Option/model";
 import React from "react";
 
-export interface Props {
-  id?: string;
-  title: string;
-  description?: string;
+export interface Props extends Option {
   onChange: RadioProps["onChange"];
 }
 
@@ -19,8 +17,7 @@ const StyledFormLabel = styled(FormLabel)(({ theme }) => ({
 }));
 
 const DescriptionRadio: React.FC<Props> = ({
-  title,
-  description,
+  data: { text: title, description },
   onChange,
   id,
 }) => {

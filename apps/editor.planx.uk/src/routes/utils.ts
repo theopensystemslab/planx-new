@@ -50,6 +50,7 @@ export const setPath = (flowData: Store.Flow, req: NaviRequest) => {
 //
 const PREVIEW_ONLY_DOMAINS = [
   "planningservices.barnet.gov.uk",
+  "planningservices.birmingham.gov.uk",
   "planningservices.buckinghamshire.gov.uk",
   "planningservices.camden.gov.uk",
   "planningservices.doncaster.gov.uk",

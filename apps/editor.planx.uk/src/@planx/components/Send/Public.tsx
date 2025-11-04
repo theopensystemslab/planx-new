@@ -2,9 +2,9 @@ import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Typography from "@mui/material/Typography";
 import { useMutation } from "@tanstack/react-query";
 import { logger } from "airbrake";
-import { createSendEvents } from "api/send/requests";
 import Bowser from "bowser";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import { createSendEvents } from "lib/api/send/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 

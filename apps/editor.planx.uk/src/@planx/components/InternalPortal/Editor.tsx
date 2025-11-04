@@ -8,11 +8,11 @@ import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import SelectInput from "ui/editor/SelectInput/SelectInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
+import SelectInput from "ui/shared/SelectInput/SelectInput";
 
 import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";

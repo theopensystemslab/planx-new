@@ -12,14 +12,16 @@ type Props<T> = WithLabel<T> | WithPlaceholder<T>;
 
 export default function AutocompleteInput<T>({
   useDataFieldInput,
+  value,
   ...restProps
 }: Props<T>) {
-  const isSelectEmpty = !restProps.value;
+  const isSelectEmpty = !value;
   const placeholder = isSelectEmpty ? restProps.placeholder : undefined;
 
   return (
     <FormControl sx={{ display: "flex", flexDirection: "column" }}>
       <StyledAutocomplete<T, false, false, boolean, "div">
+        value={value || null}
         role="status"
         aria-atomic={true}
         aria-live="polite"
@@ -48,7 +50,17 @@ export default function AutocompleteInput<T>({
           popper: {
             sx: {
               boxShadow: 10,
+              minWidth: 495, // input-row width
             },
+            placement: "bottom-start",
+            modifiers: [
+              {
+                name: "offset",
+                options: {
+                  offset: [0, 4],
+                },
+              },
+            ],
           },
         }}
         {...restProps}

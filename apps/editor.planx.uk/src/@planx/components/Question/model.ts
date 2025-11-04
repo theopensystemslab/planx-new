@@ -1,40 +1,41 @@
 import { richText } from "lib/yupExtensions";
-import { Store } from "pages/FlowEditor/lib/store";
-import { HandleSubmit } from "pages/Preview/Node";
-import { array, object, string } from "yup";
+import { array, boolean, object, string } from "yup";
 
-import { BaseNodeData, baseNodeDataValidationSchema } from "../shared";
+import { Option, optionValidationSchema } from "../Option/model";
+import {
+  BaseNodeData,
+  baseNodeDataValidationSchema,
+  parseBaseNodeData,
+} from "../shared";
 
+/**
+ * Database representation of a Question component
+ */
 export interface Question extends BaseNodeData {
-  id?: string;
+  fn?: string;
   text?: string;
   description?: string;
   img?: string;
   neverAutoAnswer?: boolean;
   alwaysAutoAnswerBlank?: boolean;
-  responses: {
-    id?: string;
-    responseKey: string | number;
-    title: string;
-    description?: string;
-    img?: string;
-  }[];
-  previouslySubmittedData?: Store.UserData;
-  handleSubmit: HandleSubmit;
-  autoAnswers?: string[] | undefined;
 }
+
+/**
+ * Public and Editor representation of a Question
+ * Contains options derived from child Answer nodes
+ */
+export type QuestionWithOptions = Question & { options: Option[] };
 
 export const validationSchema = baseNodeDataValidationSchema
   .concat(
     object({
+      text: string().required(),
       description: richText(),
-      options: array(
-        object({
-          data: object({
-            text: string().required().trim(),
-          }),
-        }),
-      ),
+      img: string(),
+      fn: string(),
+      neverAutoAnswer: boolean(),
+      alwaysAutoAnswerBlank: boolean(),
+      options: array(optionValidationSchema).required(),
     }),
   )
   .test({
@@ -52,3 +53,15 @@ export const validationSchema = baseNodeDataValidationSchema
       });
     },
   });
+
+export const parseQuestion = (
+  data: Record<string, any> | undefined,
+): QuestionWithOptions => ({
+  fn: data?.fn || "",
+  img: data?.img || "",
+  options: data?.options || [],
+  text: data?.text || "",
+  neverAutoAnswer: data?.neverAutoAnswer || false,
+  alwaysAutoAnswerBlank: data?.alwaysAutoAnswerBlank || false,
+  ...parseBaseNodeData(data),
+});

@@ -1,0 +1,3 @@
+table:
+  name: job_run_details
+  schema: cron

@@ -4,7 +4,7 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
-import { Option } from ".";
+import { Option } from "../Option/model";
 import { DataFieldAutocomplete } from "./DataFieldAutocomplete";
 import { FlagsSelect } from "./FlagsSelect";
 

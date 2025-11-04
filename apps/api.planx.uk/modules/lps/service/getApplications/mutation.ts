@@ -45,6 +45,7 @@ export const CONSUME_MAGIC_LINK_MUTATION = gql`
           submittedAt: submitted_at
           sanitisedAt: sanitised_at
           paymentRequest: payment_requests {
+            id
             createdAt: created_at
           }
           service: flow {

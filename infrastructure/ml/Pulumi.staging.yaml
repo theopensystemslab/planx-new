@@ -5,3 +5,4 @@ config:
     tags:
       project: ml
   ml:ssh-devops-public-key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIib33oz+oCvapvEMqXoYGLdtrUGuxdaL3LMRHgd5rGm devops@opensystemslab.io
+  ml:training-instance-type: g6.xlarge

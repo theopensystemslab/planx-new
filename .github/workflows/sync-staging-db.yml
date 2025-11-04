@@ -50,7 +50,7 @@ jobs:
               -v /tmp/.psqlrc:/root/.psqlrc \
               -v "$(pwd)/scripts/seed-database:/app" \
               --workdir="/app" \
-              postgis/postgis:16-3.5-alpine \
+              postgis/postgis:16-3.5 \
               "./container.sh" "${STAGING_PG_URL}" "${PRODUCTION_PG_URL_FOR_USER_GITHUB_ACTIONS}" "reset_flows"
           } || {
             echo "Database sync failed!"

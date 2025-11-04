@@ -15,7 +15,7 @@ import {
   HistoryItem,
   OperationHistoryItem,
   PublishHistoryItem,
-} from "api/publishFlow/types";
+} from "lib/api/publishFlow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { formatLastEditDate } from "pages/FlowEditor/utils";
 import React, { useState } from "react";

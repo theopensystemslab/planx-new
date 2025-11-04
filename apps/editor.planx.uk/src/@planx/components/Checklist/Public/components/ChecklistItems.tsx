@@ -1,5 +1,5 @@
 import Grid from "@mui/material/Grid";
-import { Option } from "@planx/components/shared";
+import { Option } from "@planx/components/Option/model";
 import ImageButton from "@planx/components/shared/Buttons/ImageButton";
 import { FormikProps } from "formik";
 import React from "react";

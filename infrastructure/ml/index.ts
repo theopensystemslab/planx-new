@@ -3,7 +3,7 @@ import * as aws from "@pulumi/aws";
 import * as fs from "fs";
 import * as path from "path";
 
-const config = new pulumi.Config();
+const config = new pulumi.Config("ml");
 
 // get the existing VPC from the networking stack
 const env = pulumi.getStack();
@@ -54,9 +54,23 @@ const amazonLinuxAmi = aws.ec2.getAmi({
   ],
 });
 
-// create the g6 EC2 instance for ML training and experiment workloads
-const g6Instance = new aws.ec2.Instance("ml-training-instance", {
-  instanceType: aws.ec2.InstanceType.G6_XLarge,
+const getInstanceType = (): pulumi.Output<string> => {
+  const trainingInstanceType = config.require("training-instance-type");
+  const validInstanceTypes = Object.values(aws.ec2.InstanceType);
+  
+  // apply a transformation to the config value to check if it's a valid instance type
+  return pulumi.output(trainingInstanceType).apply(instanceType => {
+    if (validInstanceTypes.includes(instanceType as aws.ec2.InstanceType)) {
+      return instanceType;
+    }
+    throw new Error(`Invalid instance type: ${instanceType}. Must be one of: ${validInstanceTypes.join(', ')}`);
+  });
+}
+
+// create the EC2 instance for ML training and experiment workloads
+const trainingInstance = new aws.ec2.Instance("ml-training-instance", {
+  // see https://www.pulumi.com/registry/packages/aws/api-docs/ec2/instance/#instancetype
+  instanceType: getInstanceType(),
   ami: amazonLinuxAmi.then(ami => ami.id),
   keyName: devopsKeyPair.keyName,
   
@@ -80,6 +94,12 @@ const g6Instance = new aws.ec2.Instance("ml-training-instance", {
 
   // script for basic setup/dependencies - runs only on first launch
   userData: fs.readFileSync(path.join(__dirname, "user_data.sh"), "utf8"),
+});
+
+// create a persistent IP for easy connection across sessions
+const trainingInstanceEip = new aws.ec2.Eip("ml-training-instance-eip", {
+  domain: "vpc",
+  instance: trainingInstance.id,
 });
 
 // create a cost budget for ML resources (£200/month)
@@ -121,10 +141,10 @@ const mlBudget = new aws.budgets.Budget("ml-infra-budget-monthly", {
 });
 
 // export important values
-export const g6InstanceId = g6Instance.id;
-export const g6InstancePublicIp = g6Instance.publicIp;
-export const g6InstancePublicDns = g6Instance.publicDns;
-export const mlSecurityGroupId = mlSecurityGroup.id;
 export const devopsKeyPairName = devopsKeyPair.keyName;
+export const mlSecurityGroupId = mlSecurityGroup.id;
 export const mlBudgetName = mlBudget.name;
-export const sshCommand = pulumi.interpolate`ssh -i ~/.ssh/${devopsKeyPairName} ubuntu@${g6InstancePublicIp}`;
+export const trainingInstanceId = trainingInstance.id;
+export const trainingInstancePublicDns = trainingInstance.publicDns;
+export const trainingInstancePublicIp = trainingInstanceEip.publicIp;
+export const sshCommand = pulumi.interpolate`ssh -i ~/.ssh/ssh_devops_private_key ubuntu@${trainingInstancePublicIp}`;

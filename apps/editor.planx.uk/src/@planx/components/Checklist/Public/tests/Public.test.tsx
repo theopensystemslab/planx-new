@@ -20,7 +20,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
           description=""
           text="home type?"
           handleSubmit={handleSubmit}
-          options={options[type]}
+          options={options[type]!}
         />,
       );
 
@@ -48,7 +48,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
           text="home type?"
           handleSubmit={handleSubmit}
           previouslySubmittedData={{ answers: ["flat_id", "house_id"] }}
-          options={options[type]}
+          options={options[type]!}
         />,
       );
 
@@ -65,7 +65,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
           allRequired={false}
           description=""
           text="home type?"
-          options={options[type]}
+          options={options[type]!}
         />,
       );
       const results = await axe(container);
@@ -81,7 +81,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
           description=""
           text="home type?"
           handleSubmit={handleSubmit}
-          options={options[type]}
+          options={options[type]!}
         />,
       );
 

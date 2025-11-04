@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { sendSlackMessage } from "api/slack/requests";
+import { sendSlackMessage } from "lib/api/slack/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 const SKIPPED_TEAMS = [

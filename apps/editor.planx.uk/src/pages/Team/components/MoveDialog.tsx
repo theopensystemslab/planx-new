@@ -9,13 +9,13 @@ import MenuItem from "@mui/material/MenuItem";
 import Skeleton from "@mui/material/Skeleton";
 import { Team } from "@opensystemslab/planx-core/types";
 import { useMutation } from "@tanstack/react-query";
-import { moveFlow } from "api/flow/requests";
 import { isAxiosError } from "axios";
 import { Form, Formik, FormikConfig } from "formik";
 import { useToast } from "hooks/useToast";
+import { moveFlow } from "lib/api/flow/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import SelectInput from "ui/editor/SelectInput/SelectInput";
+import SelectInput from "ui/shared/SelectInput/SelectInput";
 import * as yup from "yup";
 
 interface MoveFlowForm {

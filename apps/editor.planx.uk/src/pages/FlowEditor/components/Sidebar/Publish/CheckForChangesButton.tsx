@@ -1,8 +1,10 @@
 import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
-import { PublishFlowArgs } from "api/publishFlow/types";
+import { useToast } from "hooks/useToast";
+import { PublishFlowArgs } from "lib/api/publishFlow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { Template } from "pages/FlowEditor/lib/store/editor";
 import React, { useState } from "react";
@@ -13,16 +15,27 @@ import { ChangesDialog, NoChangesDialog } from "./PublishDialog";
 export const CheckForChangesToPublishButton: React.FC<{
   previewURL: string;
 }> = ({ previewURL }) => {
-  const [isTemplatedFrom, template] = useStore((state) => [
+  const [
+    isTemplatedFrom,
+    template,
+    showLoading,
+    hideLoading,
+    setLoadingCompleteCallback,
+  ] = useStore((state) => [
     state.isTemplatedFrom,
     state.template,
+    state.showLoading,
+    state.hideLoading,
+    state.setLoadingCompleteCallback,
   ]);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const toast = useToast();
   const {
     lastPublishedQuery,
     checkForChangesMutation,
     publishMutation,
     status,
+    buttonText,
   } = usePublishFlow();
 
   const handleCheckForChangesToPublish = async () =>
@@ -33,7 +46,23 @@ export const CheckForChangesToPublishButton: React.FC<{
   const handlePublish = async (args: PublishFlowArgs) => {
     // Close modal immediately, user feedback handled via status text beneath to publish button
     setDialogOpen(false);
-    publishMutation.mutate(args);
+
+    setLoadingCompleteCallback(() => {
+      toast.success("Successfully published changes");
+      setLoadingCompleteCallback(undefined);
+    });
+
+    showLoading("Publishing flow");
+
+    publishMutation.mutate(args, {
+      onSuccess: () => {
+        hideLoading();
+      },
+      onError: () => {
+        setLoadingCompleteCallback(undefined);
+        hideLoading();
+      },
+    });
   };
 
   const {
@@ -71,67 +100,74 @@ export const CheckForChangesToPublishButton: React.FC<{
     publishMutation.isPending;
 
   return (
-    <Box width="100%" mt={2}>
-      <Box display="flex" flexDirection="column" alignItems="flex-end">
-        {isTemplatedFrom && template && (
-          <Box
-            sx={{
-              background: (theme) => theme.palette.template.main,
-              width: "100%",
-              padding: (theme) => theme.spacing(1),
-              marginBottom: (theme) => theme.spacing(2),
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "flex-start",
-            }}
-          >
-            <StarIcon sx={{ color: "#380F77", mr: 0.5 }} fontSize="small" />
-            <Box>
-              <Typography variant="body2">
-                {`Templated from ${template.team.name}`}
-              </Typography>
-              <Typography variant="body2">
-                <strong>
-                  {isTemplatedFlowDueToPublish
-                    ? "Due to review and publish"
-                    : "Up to date"}
-                </strong>
-              </Typography>
+    <>
+      <Box width="100%" mt={2}>
+        <Box display="flex" flexDirection="column" alignItems="flex-end">
+          {isTemplatedFrom && template && (
+            <Box
+              sx={{
+                background: (theme) => theme.palette.template.main,
+                width: "100%",
+                padding: (theme) => theme.spacing(1),
+                marginBottom: (theme) => theme.spacing(2),
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "flex-start",
+              }}
+            >
+              <StarIcon sx={{ color: "#380F77", mr: 0.5 }} fontSize="small" />
+              <Box>
+                <Typography variant="body2">
+                  {`Templated from ${template.team.name}`}
+                </Typography>
+                <Typography variant="body2">
+                  <strong>
+                    {isTemplatedFlowDueToPublish
+                      ? "Due to review and publish"
+                      : "Up to date"}
+                  </strong>
+                </Typography>
+              </Box>
             </Box>
+          )}
+          <Button
+            data-testid="check-for-changes-to-publish-button"
+            sx={{ width: "100%" }}
+            variant="contained"
+            color="primary"
+            disabled={isDisabled}
+            onClick={handleCheckForChangesToPublish}
+            startIcon={
+              checkForChangesMutation.isPending ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : null
+            }
+          >
+            {buttonText}
+          </Button>
+          {!alteredNodes || alteredNodes?.length === 0 ? (
+            <NoChangesDialog
+              dialogOpen={dialogOpen}
+              setDialogOpen={setDialogOpen}
+            />
+          ) : (
+            <ChangesDialog
+              dialogOpen={dialogOpen}
+              setDialogOpen={setDialogOpen}
+              alteredNodes={alteredNodes}
+              history={history}
+              status={status}
+              validationChecks={validationChecks}
+              previewURL={previewURL}
+              handlePublish={handlePublish}
+              templatedFlows={templatedFlows}
+            />
+          )}
+          <Box mr={0}>
+            <Typography variant="caption">{status}</Typography>
           </Box>
-        )}
-        <Button
-          data-testid="check-for-changes-to-publish-button"
-          sx={{ width: "100%" }}
-          variant="contained"
-          color="primary"
-          disabled={isDisabled}
-          onClick={handleCheckForChangesToPublish}
-        >
-          CHECK FOR CHANGES TO PUBLISH
-        </Button>
-        {!alteredNodes || alteredNodes?.length === 0 ? (
-          <NoChangesDialog
-            dialogOpen={dialogOpen}
-            setDialogOpen={setDialogOpen}
-          />
-        ) : (
-          <ChangesDialog
-            dialogOpen={dialogOpen}
-            setDialogOpen={setDialogOpen}
-            alteredNodes={alteredNodes}
-            history={history}
-            status={status}
-            validationChecks={validationChecks}
-            previewURL={previewURL}
-            handlePublish={handlePublish}
-            templatedFlows={templatedFlows}
-          />
-        )}
-        <Box mr={0}>
-          <Typography variant="caption">{status}</Typography>
         </Box>
       </Box>
-    </Box>
+    </>
   );
 };
