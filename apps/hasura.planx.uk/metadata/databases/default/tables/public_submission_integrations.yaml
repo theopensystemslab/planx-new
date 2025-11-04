@@ -34,6 +34,13 @@ select_permissions:
         - team_id
       filter: {}
     comment: ""
+  - role: public
+    permission:
+      columns:
+        - email_id
+        - submission_email
+      filter: {}
+    comment: ""
   - role: teamEditor
     permission:
       columns:
