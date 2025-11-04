@@ -1,8 +1,7 @@
 import { useQuery } from "@apollo/client";
 import MoreVert from "@mui/icons-material/MoreVert";
 import Box from "@mui/material/Box";
-import { ComponentType, NodeTag } from "@opensystemslab/planx-core/types";
-import { ICONS } from "@planx/components/shared/icons";
+import { NodeTag } from "@opensystemslab/planx-core/types";
 import classNames from "classnames";
 import gql from "graphql-tag";
 import { useContextMenu } from "hooks/useContextMenu";
@@ -104,6 +103,7 @@ const ExternalPortal: React.FC<any> = (props) => {
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li ref={ref}>
         <Box
+          data-loading={href==="Loading..."}
           className={classNames("card", "portal", "external-portal", {
             isDragging,
           })}

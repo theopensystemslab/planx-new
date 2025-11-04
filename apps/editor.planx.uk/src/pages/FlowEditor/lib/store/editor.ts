@@ -30,16 +30,18 @@ import {
   ContextMenuPosition,
   ContextMenuSource,
 } from "pages/FlowEditor/components/Flow/components/ContextMenu";
+import { Doc } from "sharedb/lib/client";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 
 import { FlowLayout } from "../../components/Flow";
-import { connectToDB, getFlowConnection } from "../sharedb";
+import { getFlowDoc, subscribeToDoc } from "./../sharedb";
 import { type Store } from ".";
+import { NavigationStore } from "./navigation";
 import type { SharedStore } from "./shared";
 import { UserStore } from "./user";
 
-let doc: any;
+let doc: Doc;
 
 const send = (ops: Array<any>) => {
   if (ops.length > 0) {
@@ -54,6 +56,12 @@ export interface EditorUIStore {
   flowLayout: FlowLayout;
   showSidebar: boolean;
   toggleSidebar: () => void;
+  isLoading: boolean;
+  loadingMessage: string;
+  onLoadingComplete?: () => void;
+  showLoading: (message?: string) => void;
+  hideLoading: () => void;
+  setLoadingCompleteCallback: (callback: (() => void) | undefined) => void;
   flowCardView: FlowCardView;
   setFlowCardView: (view: FlowCardView) => void;
   showTags: boolean;
@@ -92,6 +100,20 @@ export const editorUIStore: StateCreator<
     toggleSidebar: () => {
       set({ showSidebar: !get().showSidebar });
     },
+
+    isLoading: false,
+    loadingMessage: "Loading...",
+
+    showLoading: (message = "Loading...") => {
+      set({ isLoading: true, loadingMessage: message });
+    },
+
+    hideLoading: () => {
+      set({ isLoading: false });
+    },
+
+    setLoadingCompleteCallback: (callback) =>
+      set({ onLoadingComplete: callback }),
 
     flowCardView: "grid",
 
@@ -213,6 +235,11 @@ interface CopiedPayload {
   isTemplate: boolean;
 }
 
+interface CutPayload {
+  rootId: string;
+  parent: string;
+}
+
 export interface Template {
   id: string;
   team: {
@@ -225,12 +252,15 @@ export interface Template {
 }
 
 export interface EditorStore extends Store.Store {
+  cutNode: (id: NodeId, parent: NodeId) => void;
+  getCutNode: () => CutPayload | null;
   addNode: (node: any, relationships?: Relationships) => void;
   archiveFlow: (
     flow: FlowSummary,
   ) => Promise<{ id: string; name: string } | void>;
   connect: (src: NodeId, tgt: NodeId, object?: any) => void;
-  connectTo: (id: NodeId) => Promise<void>;
+  connectToFlow: (id: NodeId) => Promise<void>;
+  disconnectFromFlow: () => void;
   cloneNode: (id: NodeId) => void;
   getClonedNodeId: () => string | null;
   copyNode: (id: NodeId) => void;
@@ -253,6 +283,7 @@ export interface EditorStore extends Store.Store {
     toParent?: NodeId,
   ) => void;
   pasteClonedNode: (toParent: NodeId, toBefore?: NodeId) => void;
+  pasteCutNode: (toParent: NodeId, toBefore?: NodeId) => void;
   /**
    * Paste a new node from the clipboard
    * Generates new IDs for all new nodes
@@ -281,7 +312,7 @@ export interface EditorStore extends Store.Store {
 }
 
 export const editorStore: StateCreator<
-  SharedStore & EditorStore & UserStore,
+  SharedStore & EditorStore & UserStore & NavigationStore,
   [],
   [],
   EditorStore
@@ -336,26 +367,25 @@ export const editorStore: StateCreator<
     }
   },
 
-  connectTo: async (id) => {
-    console.log("connecting to", id, get().id);
-
-    doc = getFlowConnection(id);
+  connectToFlow: async (id) => {
+    doc = getFlowDoc(id);
     (window as any)["doc"] = doc;
 
-    await connectToDB(doc);
+    await subscribeToDoc(doc);
 
     const cloneStateFromShareDb = () => {
       const flow = JSON.parse(JSON.stringify(doc.data));
-      get().setFlow({
-        id,
-        flow,
-        flowSlug: get().flowSlug,
-        flowName: get().flowName,
-      });
+      set({ flow });
+      get().initNavigationStore();
     };
 
     // set state from initial load
     cloneStateFromShareDb();
+
+    // Templated flows require access to an ordered flow
+    // Set this once upstream as it's an expensive operation
+    const { isTemplatedFrom, setOrderedFlow } = get();
+    if (isTemplatedFrom) setOrderedFlow();
 
     // local operation so we can assume that multiple ops will arrive
     // almost instantaneously so wait for 100ms of 'silence' before running
@@ -369,9 +399,20 @@ export const editorStore: StateCreator<
     );
   },
 
+  disconnectFromFlow: () => {
+    console.debug("[ShareDB] Disconnecting from flow:", doc?.id);
+    // Clear local store cache of flow data
+    set({ flow: {} });
+    doc.destroy();
+  },
+
   cloneNode(id) {
-    localStorage.removeItem("copiedNode");
-    localStorage.setItem("clonedNodeId", id);
+    try {
+      localStorage.setItem("clonedNodeId", id);
+    } finally {
+      localStorage.removeItem("copiedNode");
+      localStorage.removeItem("cutNode");
+    }
   },
 
   getClonedNodeId: () => localStorage.getItem("clonedNodeId"),
@@ -417,11 +458,41 @@ export const editorStore: StateCreator<
       } else {
         alert(`Failed to copy - unknown error. Details: ${error}`);
       }
+    } finally {
+      localStorage.removeItem("clonedNodeId");
+      localStorage.removeItem("cutNode");
+    }
+  },
+
+  cutNode(id: string, parent: string) {
+    const { flow } = get();
+    const rootNode = flow[id];
+    if (!rootNode) return;
+
+    const payload: CutPayload = {
+      rootId: id,
+      parent,
+    };
+
+    try {
+      localStorage.setItem("cutNode", JSON.stringify(payload));
+    } catch (error) {
+      alert(`Failed to cut - unknown error. Details: ${error}`);
+    } finally {
+      localStorage.removeItem("copiedNode");
+      localStorage.removeItem("clonedNodeId");
     }
   },
 
   getCopiedNode: () => {
     const payload = localStorage.getItem("copiedNode");
+    if (!payload) return;
+
+    return JSON.parse(payload);
+  },
+
+  getCutNode: () => {
+    const payload = localStorage.getItem("cutNode");
     if (!payload) return;
 
     return JSON.parse(payload);
@@ -573,6 +644,27 @@ export const editorStore: StateCreator<
       }
     } catch (err) {
       alert((err as Error).message);
+    }
+  },
+
+  pasteCutNode(toParent, toBefore) {
+    const cutString = localStorage.getItem("cutNode");
+    if (!cutString) return;
+
+    try {
+      const { rootId, parent }: CutPayload = JSON.parse(cutString);
+      if (rootId === toBefore && parent === toParent) {
+        throw new Error("Cannot move before itself");
+      }
+      const [, ops] = move(rootId, parent, {
+        toParent,
+        toBefore,
+      })(get().flow);
+      send(ops);
+    } catch (err) {
+      alert((err as Error).message);
+    } finally {
+      localStorage.removeItem("cutNode");
     }
   },
 

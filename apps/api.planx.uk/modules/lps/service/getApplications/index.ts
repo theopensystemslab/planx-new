@@ -18,6 +18,7 @@ import type {
 import { CONSUME_MAGIC_LINK_MUTATION } from "./mutation.js";
 import { URLSearchParams } from "url";
 import { RETENTION_PERIOD_MONTHS } from "../../../webhooks/service/sanitiseApplicationData/operations.js";
+import { getPaymentLink } from "../../../pay/service/inviteToPay/sendPaymentEmail.js";
 
 const MAGIC_LINK_EXPIRY_MINUTES =
   process.env.NODE_ENV === "test"
@@ -109,7 +110,11 @@ export const convertToAwaitingPaymentLPSApplication = (
   raw: AwaitingPayment,
 ): AwaitingPaymentLPSApplication => ({
   ...mapSharedFields(raw),
-  paymentUrl: "TODO",
+  paymentUrl: getPaymentLink({
+    flow: raw.service,
+    team: raw.service.team,
+    paymentRequest: raw.paymentRequest[0],
+  }),
   // The expiry date of a session awaiting payment is derived from the creation of the associated payment request
   expiresAt: addDays(
     Date.parse(raw.paymentRequest[0].createdAt),

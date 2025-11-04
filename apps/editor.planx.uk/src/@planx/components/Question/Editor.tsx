@@ -18,50 +18,32 @@ import { Switch } from "ui/shared/Switch";
 
 import { InternalNotes } from "../../../ui/editor/InternalNotes";
 import { MoreInformation } from "../../../ui/editor/MoreInformation/MoreInformation";
-import { BaseNodeData, Option, parseBaseNodeData } from "../shared";
+import { Option } from "../Option/model";
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
+import { EditorProps } from "../shared/types";
 import { getOptionsSchemaByFn } from "../shared/utils";
-import { validationSchema } from "./model";
+import {
+  parseQuestion,
+  Question,
+  QuestionWithOptions,
+  validationSchema,
+} from "./model";
 import QuestionOptionsEditor from "./OptionsEditor";
 
-interface Props {
-  node: {
-    data?: {
-      description?: string;
-      fn?: string;
-      img?: string;
-      text: string;
-      type?: string;
-      neverAutoAnswer?: boolean;
-      alwaysAutoAnswerBlank?: boolean;
-    } & BaseNodeData;
-  };
-  options?: Option[];
-  handleSubmit?: Function;
-  disabled?: boolean;
-}
+type Props = EditorProps<TYPES.Question, Question, { options: Option[]}>;
 
-export const Question: React.FC<Props> = (props) => {
+export const QuestionComponent: React.FC<Props> = (props) => {
   const type = TYPES.Question;
 
-  const formik = useFormik({
-    initialValues: {
-      description: props.node?.data?.description || "",
-      fn: props.node?.data?.fn || "",
-      img: props.node?.data?.img || "",
-      options: props.options || [],
-      text: props.node?.data?.text || "",
-      neverAutoAnswer: props.node?.data?.neverAutoAnswer || false,
-      alwaysAutoAnswerBlank: props.node?.data?.alwaysAutoAnswerBlank || false,
-      ...parseBaseNodeData(props.node?.data),
-    },
+  const formik = useFormik<QuestionWithOptions>({
+    initialValues: parseQuestion({...props.node?.data, options: props.options }),
     onSubmit: ({ options, ...values }) => {
       const children = options
         .filter((o) => o.data.text)
         .map((o) => ({
           id: o.id || undefined,
-          type: TYPES.Answer,
+          type: TYPES.Answer as const,
           data: o.data,
         }));
 
@@ -244,4 +226,4 @@ export const Question: React.FC<Props> = (props) => {
   );
 };
 
-export default Question;
+export default QuestionComponent;

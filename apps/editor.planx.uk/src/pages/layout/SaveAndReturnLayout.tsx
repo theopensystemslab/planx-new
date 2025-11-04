@@ -5,7 +5,7 @@ import { useCurrentRoute } from "react-navi";
 import Main from "ui/shared/Main";
 
 import { ApplicationPath as AppPath } from "../../types";
-import ResumePage from "../Preview/ResumePage";
+import ResumePage from "../Preview/Resume";
 import SaveAndReturn from "../Preview/SaveAndReturn";
 import SavePage from "../Preview/SavePage";
 

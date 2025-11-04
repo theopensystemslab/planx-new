@@ -1,8 +1,7 @@
 import { type Group } from "@planx/components/Checklist/model";
+import { Option } from "@planx/components/Option/model";
 import { partition } from "lodash";
 import { Store } from "pages/FlowEditor/lib/store";
-
-import { Option } from "../../shared";
 
 export function toggleInArray<T>(value: T, arr: Array<T>): Array<T> {
   return arr.includes(value)

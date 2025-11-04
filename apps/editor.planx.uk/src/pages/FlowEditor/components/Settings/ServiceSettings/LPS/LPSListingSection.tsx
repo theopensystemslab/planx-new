@@ -13,14 +13,11 @@ import { Switch } from "ui/shared/Switch";
 import { useStore } from "../../../../lib/store";
 
 export const LPSListing = () => {
-  const [isListedOnLPS, setIsListedOnLPS, description, summary] = useStore(
-    (state) => [
-      state.isFlowListedOnLPS,
-      state.setIsFlowListedOnLPS,
-      state.flowDescription,
-      state.flowSummary,
-    ],
-  );
+  const [isListedOnLPS, setIsListedOnLPS, summary] = useStore((state) => [
+    state.isFlowListedOnLPS,
+    state.setIsFlowListedOnLPS,
+    state.flowSummary,
+  ]);
 
   const toast = useToast();
 
@@ -29,11 +26,6 @@ export const LPSListing = () => {
       isListedOnLPS: isListedOnLPS ?? false,
     },
     validate: () => {
-      if (!description)
-        return {
-          isListedOnLPS:
-            "Service description required - please set via the 'About this flow' tab",
-        };
       if (!summary)
         return {
           isListedOnLPS:
@@ -84,8 +76,7 @@ export const LPSListing = () => {
             the services which you offer via PlanX.
           </p>
           <p>
-            Listing your service requires a description and summary. These can
-            be provided on{" "}
+            Listing your service requires a summary. This can be provided on{" "}
             <Link href="../about">the "About this flow" page</Link>.
           </p>
         </SettingsDescription>

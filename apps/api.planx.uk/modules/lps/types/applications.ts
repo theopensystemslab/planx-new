@@ -15,10 +15,6 @@ interface LPSApplication {
   address: string | null;
   createdAt: string;
   updatedAt: string;
-  /** Only services which use Section components will have values for progress */
-  progress?: {
-    completed: number;
-  };
   expiresAt: string;
 }
 

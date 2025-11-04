@@ -57,7 +57,7 @@ const StyledInputBase = styled(InputBase, {
     border: `2px solid ${theme.palette.border.input}`,
   }),
   ...(format === "data" && {
-    backgroundColor: "#f0f0f0",
+    backgroundColor: theme.palette.background.data,
     fontFamily: theme.typography.data.fontFamily,
     "& input": {
       fontSize: theme.typography.body2.fontSize,

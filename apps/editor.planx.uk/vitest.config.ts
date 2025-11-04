@@ -5,7 +5,15 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     globals: true,
-    setupFiles: ["./src/setupTests.tsx"],
+    setupFiles: [
+      "./src/test/mockServer.ts",
+      "./src/test/mui.tsx",
+    ],
+    environmentOptions: {
+      jsdom: {
+        resources: "usable",
+      },
+    },
   },
   plugins: [tsconfigPaths()],
 });

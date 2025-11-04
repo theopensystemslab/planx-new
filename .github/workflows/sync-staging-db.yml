@@ -4,8 +4,8 @@ permissions: read-all
 
 on:
   schedule:
-    # Runs nightly at 00:00 (https://crontab.guru/#0_0_*_*_*)
-    - cron: '0 0 * * *'
+    # Runs nightly at 04:00 (https://crontab.guru/#0_4_*_*_*)
+    - cron: '0 4 * * *'
   workflow_dispatch:
 
 env:
@@ -50,7 +50,7 @@ jobs:
               -v /tmp/.psqlrc:/root/.psqlrc \
               -v "$(pwd)/scripts/seed-database:/app" \
               --workdir="/app" \
-              postgis/postgis:16-3.5-alpine \
+              postgis/postgis:16-3.5 \
               "./container.sh" "${STAGING_PG_URL}" "${PRODUCTION_PG_URL_FOR_USER_GITHUB_ACTIONS}" "reset_flows"
           } || {
             echo "Database sync failed!"

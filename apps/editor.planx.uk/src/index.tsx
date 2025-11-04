@@ -6,13 +6,11 @@ import { ApolloProvider } from "@apollo/client";
 import CssBaseline from "@mui/material/CssBaseline";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { MyMap } from "@opensystemslab/map";
-import {
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query"
+import { QueryClientProvider } from "@tanstack/react-query"
 import { ToastContextProvider } from "contexts/ToastContext";
 import { getCookie, setCookie } from "lib/cookie";
 import { initFeatureFlags } from "lib/featureFlags";
+import { queryClient } from "lib/queryClient";
 import ErrorPage from "pages/ErrorPage/ErrorPage";
 import { AnalyticsProvider } from "pages/FlowEditor/lib/analytics/provider";
 import React, { Suspense, useEffect } from "react";
@@ -64,8 +62,6 @@ const hasJWT = (): boolean | void => {
   // TODO: observe any redirect in secure fashion
   window.location.href = "/";
 };
-
-const queryClient = new QueryClient()
 
 const Layout: React.FC<{
   children: React.ReactNode;

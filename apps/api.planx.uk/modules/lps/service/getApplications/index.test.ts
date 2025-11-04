@@ -168,10 +168,16 @@ describe("fetching applications", () => {
                 },
                 {
                   ...mockLowcalSession,
-                  status: "draft",
+                  status: "awaitingPayment",
                   id: "2",
                   addressLine: null,
                   addressTitle: "Bag End",
+                  paymentRequest: [
+                    {
+                      id: "mockPaymentRequestId",
+                      createdAt: "createdAtTime",
+                    },
+                  ],
                 },
                 {
                   ...mockLowcalSession,
@@ -232,6 +238,19 @@ describe("fetching applications", () => {
             },
             serviceUrl:
               "https://www.example.com/team-slug/service-slug/published?sessionId=1&email=simulate-delivered%40notifications.service.gov.uk",
+          });
+          expect(res.body[1]).toMatchObject({
+            id: "2",
+            status: "awaitingPayment",
+            createdAt: "createdAtTime",
+            service: {
+              name: "Service Name",
+            },
+            team: {
+              name: "Team Name",
+            },
+            paymentUrl:
+              "https://www.example.com/team-slug/service-slug/pay?paymentRequestId=mockPaymentRequestId",
           });
           expect(res.body[2]).toMatchObject({
             id: "3",

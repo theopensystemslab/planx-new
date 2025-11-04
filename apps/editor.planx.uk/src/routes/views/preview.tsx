@@ -1,5 +1,5 @@
-import { FlowGraph } from "@opensystemslab/planx-core/types";
-import axios, { AxiosError } from "axios";
+import { getFlattenedFlowData } from "lib/api/flow/requests";
+import { queryClient } from "lib/queryClient";
 import { NaviRequest, NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import PublicLayout from "pages/layout/PublicLayout";
@@ -26,8 +26,10 @@ export const previewView = async (req: NaviRequest) => {
   if (!flow)
     throw new NotFoundError(`Flow ${flowSlug} not found for ${teamSlug}`);
 
-  // /preview fetches draft data of this flow and the latest published version of each external portal
-  const flowData = await fetchFlattenedFlowData(flow.id);
+  const flowData = await queryClient.fetchQuery({
+    queryKey: ["flattenedFlowData", "preview", flow.id],
+    queryFn: () => getFlattenedFlowData({ flowId: flow.id }),
+  });
 
   const state = useStore.getState();
   state.setFlow({
@@ -42,28 +44,14 @@ export const previewView = async (req: NaviRequest) => {
 
   return (
     <PublicLayout>
-      <WatermarkBackground variant="dark" opacity={0.05} forceVisibility={true} />
+      <WatermarkBackground
+        variant="dark"
+        opacity={0.05}
+        forceVisibility={true}
+      />
       <TestWarningPage>
         <View />
       </TestWarningPage>
     </PublicLayout>
   );
-};
-
-const fetchFlattenedFlowData = async (flowId: string): Promise<FlowGraph> => {
-  const url = `${
-    import.meta.env.VITE_APP_API_URL
-  }/flows/${flowId}/flatten-data`;
-  try {
-    const { data } = await axios.get<FlowGraph>(url);
-    return data;
-  } catch (error) {
-    console.log(error);
-    if (error instanceof AxiosError) {
-      alert(
-        `Cannot open this view, navigate back to the graph to keep editing. \n\n${error.response?.data?.error}`,
-      );
-    }
-    throw new NotFoundError();
-  }
 };

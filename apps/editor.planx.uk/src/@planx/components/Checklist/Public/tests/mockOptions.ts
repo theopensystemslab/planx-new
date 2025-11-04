@@ -1,10 +1,10 @@
-import { Option } from "@planx/components/shared";
+import { Option } from "@planx/components/Option/model";
+import { PublicProps } from "@planx/components/shared/types";
 
-import { ChecklistLayout, Group } from "../../model";
-import { PublicChecklistProps } from "../../types";
+import { ChecklistLayout, ChecklistWithOptions, Group } from "../../model";
 
 export const options: {
-  [key in ChecklistLayout]?: Array<Option>;
+  [key in ChecklistLayout]?: Option[];
 } = {
   [ChecklistLayout.Basic]: [
     {
@@ -170,7 +170,7 @@ export const groupedOptionsWithExclusiveOption: Array<Group<Option>> = [
   },
 ];
 
-export const mockWithRepeatedOptions: PublicChecklistProps = {
+export const mockWithRepeatedOptions: PublicProps<ChecklistWithOptions> = {
   fn: "proposal.projectType",
   tags: [],
   text: "List the changes involved in the project",

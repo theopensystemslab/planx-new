@@ -13,7 +13,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { ValidationCheck } from "api/publishFlow/types";
+import { ValidationCheck } from "lib/api/publishFlow/types";
 import countBy from "lodash/countBy";
 import React from "react";
 import { useState } from "react";

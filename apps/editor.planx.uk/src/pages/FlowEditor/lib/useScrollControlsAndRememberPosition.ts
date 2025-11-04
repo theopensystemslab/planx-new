@@ -13,21 +13,21 @@ import {
 import { rootFlowPath } from "../../../routes/utils";
 
 const useScrollControlsAndRememberPosition = (
-  scrollContainerRef: React.RefObject<HTMLDivElement>,
+  scrollContainerRef: React.RefObject<HTMLDivElement> | null,
 ) => {
   const currentPath = rootFlowPath(true);
 
   useEffect(() => {
-    const storageKey = ["scrollPos", currentPath].join(":");
-
-    const container = scrollContainerRef.current;
+    const container = scrollContainerRef?.current;
     if (!container) return;
+
+    const storageKey = ["scrollPos", currentPath].join(":");
 
     const existingScrollPosition = sessionStorage.getItem(storageKey);
     if (existingScrollPosition) {
       const [x, y] = existingScrollPosition.split(",").map(Number);
       container.scrollTo(x, y);
-    };
+    }
 
     const mouseMove$ = fromEvent<MouseEvent>(container, "mousemove");
 
@@ -45,7 +45,7 @@ const useScrollControlsAndRememberPosition = (
 
     // instead of this variable, we could also reset scan after mouseUp$
     let accumulator = { scrollPos: [0, 0], initialPos: [0, 0], pos: [0, 0] };
-    mouseUp$.subscribe(() => (accumulator));
+    mouseUp$.subscribe(() => accumulator);
 
     const dragListener = wheelDown$
       // when mousewheel is pressed down
@@ -80,7 +80,7 @@ const useScrollControlsAndRememberPosition = (
         // pan the flow
         container.scrollTo(
           scrollPos[0] + initialPos[0] - pos[0],
-          scrollPos[1] + initialPos[1] - pos[1]
+          scrollPos[1] + initialPos[1] - pos[1],
         );
       });
 

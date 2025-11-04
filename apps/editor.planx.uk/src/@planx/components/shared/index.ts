@@ -1,5 +1,4 @@
 import {
-  Flag,
   NODE_TAGS,
   NodeTags,
   TemplatedNodeData,
@@ -65,18 +64,6 @@ const nodeTagsSchema: SchemaOf<NodeTags> = object({
  */
 export const baseNodeDataValidationSchema: SchemaOf<BaseNodeData> =
   nodeTagsSchema.concat(moreInformationSchema).concat(templatedNodeSchema);
-
-export interface Option {
-  id: string;
-  data: {
-    description?: string;
-    flags?: Array<Flag["value"]>;
-    img?: string;
-    text: string;
-    val?: string;
-    exclusive?: true;
-  };
-}
 
 export const parseFormValues = (ob: any, defaultValues = {}) =>
   ob.reduce((acc: any, [k, v]: any) => {

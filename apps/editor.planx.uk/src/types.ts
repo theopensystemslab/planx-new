@@ -6,7 +6,7 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { SectionLength } from "@planx/components/Section/model";
 import { OT } from "@planx/graph/types";
-import { useFormik } from "formik";
+import { FormikValues, useFormik } from "formik";
 import { Progress } from "pages/FlowEditor/lib/store/navigation";
 
 import { Store } from "./pages/FlowEditor/lib/store/index";
@@ -14,7 +14,8 @@ import { SharedStore } from "./pages/FlowEditor/lib/store/shared";
 
 export type Maybe<T> = T | undefined;
 
-export type FormikHookReturn = ReturnType<typeof useFormik>;
+export type FormikHookReturn<T extends FormikValues = FormikValues> =
+  ReturnType<typeof useFormik<T>>;
 
 export interface Flow {
   id: string;
@@ -54,16 +55,6 @@ export enum ApplicationPath {
   SaveAndReturn,
 }
 
-/**
- * Body of request posted to /send-email endpoint
- * XXX: Matches the body created by a Hasura scheduled event - see tables.yml
- */
-export interface SendEmailPayload {
-  payload: {
-    email: string | undefined;
-    sessionId: string;
-  };
-}
 export type Session = {
   passport: Store.Passport;
   breadcrumbs: Store.Breadcrumbs;
@@ -74,13 +65,6 @@ export type Session = {
   /** Only present on sessions for flow which utilise "Section" components */
   progress?: Progress;
 };
-
-export interface ReconciliationResponse {
-  message: string;
-  changesFound: boolean | null;
-  alteredSectionIds?: string[];
-  reconciledSessionData: Omit<Session, "passport">;
-}
 
 // re-export store types
 export type Passport = Store.Passport;

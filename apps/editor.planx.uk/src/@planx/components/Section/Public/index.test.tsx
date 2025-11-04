@@ -19,7 +19,7 @@ describe("Section component", () => {
       />,
     );
 
-    expect(screen.getByText("Application incomplete.")).toBeInTheDocument();
+    expect(screen.getByText("Form incomplete.")).toBeInTheDocument();
     expect(screen.getByText("Continue")).toBeInTheDocument();
     expect(handleSubmit).not.toHaveBeenCalled();
   });
