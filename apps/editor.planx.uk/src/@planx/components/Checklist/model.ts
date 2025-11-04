@@ -2,11 +2,10 @@ import { richText } from "lib/yupExtensions";
 import { partition } from "lodash";
 import { array, boolean, number, object, string } from "yup";
 
+import { Option, optionValidationSchema } from "../Option/model";
 import {
   BaseNodeData,
   baseNodeDataValidationSchema,
-  Option,
-  optionValidationSchema,
   parseBaseNodeData,
 } from "../shared";
 
@@ -41,15 +40,18 @@ export interface Checklist extends BaseNodeData {
   alwaysAutoAnswerBlank?: boolean;
 }
 
-export interface FlatChecklist extends Checklist {
+export interface FlatOptions {
   options: Array<Option>;
   groupedOptions?: undefined;
 }
 
-export interface GroupedChecklist extends Checklist {
+export interface GroupedOptions {
   options?: undefined;
   groupedOptions: Array<Group<Option>>;
 }
+
+export type FlatChecklist = Checklist & FlatOptions;
+export type GroupedChecklist = Checklist & GroupedOptions;
 
 /**
  * Public and Editor representation of a Checklist

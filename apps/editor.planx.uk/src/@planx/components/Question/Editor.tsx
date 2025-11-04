@@ -18,26 +18,26 @@ import { Switch } from "ui/shared/Switch";
 
 import { InternalNotes } from "../../../ui/editor/InternalNotes";
 import { MoreInformation } from "../../../ui/editor/MoreInformation/MoreInformation";
-import { parseBaseNodeData } from "../shared";
+import { Option } from "../Option/model";
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
 import { getOptionsSchemaByFn } from "../shared/utils";
 import {
-  EditorQuestion,
   parseQuestion,
   Question,
+  QuestionWithOptions,
   validationSchema,
 } from "./model";
 import QuestionOptionsEditor from "./OptionsEditor";
 
-type Props = EditorProps<TYPES.Question, Question>;
+type Props = EditorProps<TYPES.Question, Question, { options: Option[]}>;
 
 export const QuestionComponent: React.FC<Props> = (props) => {
   const type = TYPES.Question;
 
-  const formik = useFormik<EditorQuestion>({
-    initialValues: parseQuestion(props.node?.data),
+  const formik = useFormik<QuestionWithOptions>({
+    initialValues: parseQuestion({...props.node?.data, options: props.options }),
     onSubmit: ({ options, ...values }) => {
       const children = options
         .filter((o) => o.data.text)

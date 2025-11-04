@@ -9,15 +9,14 @@ import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import DescriptionRadio from "@planx/components/shared/Radio/DescriptionRadio/DescriptionRadio";
 import ImageRadio from "@planx/components/shared/Radio/ImageRadio/ImageRadio";
 import { useFormik } from "formik";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 import FormWrapper from "ui/public/FormWrapper";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
-import { mixed, object, string } from "yup";
+import { object, string } from "yup";
 
 import { PublicProps } from "../shared/types";
-import { PublicQuestion } from "./model";
+import { QuestionWithOptions } from "./model";
 
 export enum QuestionLayout {
   Basic,
@@ -25,22 +24,16 @@ export enum QuestionLayout {
   Descriptions,
 }
 
-const QuestionComponent: React.FC<PublicProps<PublicQuestion>> = (props) => {
+const QuestionComponent: React.FC<PublicProps<QuestionWithOptions>> = (props) => {
   // Questions without edges act like "sticky notes" in the graph for editors only & should be auto-answered
-  const flow = useStore().flow;
-  const edges = props.id ? flow[props.id]?.edges : undefined;
-  const isStickyNote = !edges || edges.length === 0;
+  const isStickyNote = !props.options.length;
 
   const previousResponseId = props?.previouslySubmittedData?.answers?.[0];
-  const previousResponseKey = props.responses.find(
-    (response) => response.id === previousResponseId,
-  )?.responseKey;
 
-  const formik = useFormik({
+  const formik = useFormik<{ selected: { id: string }}>({
     initialValues: {
       selected: {
         id: previousResponseId ?? "",
-        a: previousResponseKey ?? undefined,
       },
     },
     onSubmit: (values) =>
@@ -50,21 +43,16 @@ const QuestionComponent: React.FC<PublicProps<PublicQuestion>> = (props) => {
     validateOnChange: false,
     validationSchema: object({
       selected: object({
-        id: string().required("Select your answer before continuing"),
-        a: mixed()
-          .required()
-          .test(
-            (value) => typeof value === "number" || typeof value === "string",
-          ),
+        id: string().required("Select your answer before continuing")
       }),
     }),
   });
 
   let layout = QuestionLayout.Basic;
-  if (props.responses.find((r) => r.img && r.img.length)) {
+  if (props.options.find((r) => r.data.img && r.data.img.length)) {
     layout = QuestionLayout.Images;
   } else if (
-    props.responses.find((r) => r.description && r.description.length)
+    props.options.find((r) => r.data.description && r.data.description.length)
   ) {
     layout = QuestionLayout.Descriptions;
   }
@@ -115,10 +103,9 @@ const QuestionComponent: React.FC<PublicProps<PublicQuestion>> = (props) => {
                 spacing={layout === QuestionLayout.Images ? 2 : 0}
                 alignItems="stretch"
               >
-                {props.responses?.map((response) => {
+                {props.options?.map((response) => {
                   const onChange = () => {
                     formik.setFieldValue("selected.id", response.id);
-                    formik.setFieldValue("selected.a", response.responseKey);
                   };
                   const buttonProps = {
                     onChange,
@@ -132,7 +119,7 @@ const QuestionComponent: React.FC<PublicProps<PublicQuestion>> = (props) => {
                             <BasicRadio
                               {...buttonProps}
                               {...response}
-                              label={response.title}
+                              label={response.data.text}
                               data-testid="basic-radio"
                               key={`basic-radio-${response.id}`}
                             />

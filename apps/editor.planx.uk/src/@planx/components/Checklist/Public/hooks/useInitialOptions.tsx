@@ -1,8 +1,7 @@
 import { ChecklistWithOptions, Group } from "@planx/components/Checklist/model";
+import { Option } from "@planx/components/Option/model";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { FormikHookReturn } from "types";
-
-import { Option } from "../../../shared";
 
 export const useCurrentOptions = (
   formik: FormikHookReturn<ChecklistWithOptions>,

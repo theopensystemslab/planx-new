@@ -1,3 +1,4 @@
+import { Option } from "@planx/components/Option/model";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { partition } from "lodash";
 import React from "react";
@@ -5,7 +6,6 @@ import { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 
-import { Option } from "../../shared";
 import { ChecklistWithOptions } from "../model";
 import { useCurrentOptions } from "../Public/hooks/useInitialOptions";
 import { ExclusiveOrOptionManager } from "./components/ExclusiveOrOptionManager";

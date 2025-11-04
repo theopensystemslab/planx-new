@@ -141,7 +141,7 @@ const editNode = validateNodeRoute(
     if (type === "checklist" || type === "question") {
       const childNodes = useStore.getState().childNodesOf(id);
       if (node.data?.categories) {
-        node.data.groupedOptions = mapAccum(
+        extraProps.groupedOptions = mapAccum(
           (index: number, category: { title: string; count: number }) => [
             index + category.count,
             {
@@ -153,7 +153,7 @@ const editNode = validateNodeRoute(
           node.data.categories,
         )[1];
       } else {
-        node.data.options = childNodes;
+        extraProps.options = childNodes;
       }
     }
 
