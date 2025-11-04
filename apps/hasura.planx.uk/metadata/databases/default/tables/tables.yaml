@@ -18,6 +18,7 @@
 - "!include public_feedback_type_enum.yaml"
 - "!include public_flow_comments.yaml"
 - "!include public_flow_history.yaml"
+- "!include public_flow_integrations.yaml"
 - "!include public_flow_status_enum.yaml"
 - "!include public_flow_status_history.yaml"
 - "!include public_flows.yaml"
