@@ -8,7 +8,8 @@ import mapAccum from "ramda/src/mapAccum";
 import { Flow } from "types";
 
 import { client } from "../../lib/graphql";
-import { useStore } from "../../pages/FlowEditor/lib/store";
+import { Store, useStore } from "../../pages/FlowEditor/lib/store";
+import { NodeSearchParams } from "../../routes/_authenticated/$team/$flow/nodes/route";
 
 export interface FlowEditorData {
   id: string;
@@ -204,21 +205,47 @@ const sorter = natsort({ insensitive: true });
 export const sortFlows = (a: { text: string }, b: { text: string }) =>
   sorter(a.text.replace(/\W|\s/g, ""), b.text.replace(/\W|\s/g, ""));
 
+// Type definitions for calculateExtraProps function
+export interface ExternalPortalFlow {
+  id: string;
+  name: string;
+  slug: string;
+  team: string;
+}
+
+export interface InternalPortalFlow {
+  id: string;
+  text: string;
+}
+
+export interface GroupedOption {
+  title: string;
+  children: Store.Node[];
+}
+
+export interface CalculateExtraPropsOptions {
+  nodeId?: string;
+  node?: Store.Node;
+  isEdit?: boolean;
+}
+
+export interface ExtraProps {
+  flows?: ExternalPortalFlow[] | InternalPortalFlow[];
+  options?: Store.Node[];
+  groupedOptions?: GroupedOption[];
+}
+
 /**
  * Calculates extraProps for FormModal based on node type and context
  * Used by both new node creation and edit node routes
  */
 export const calculateExtraProps = async (
-  type: string,
+  type: NonNullable<NodeSearchParams["type"]>,
   team: string,
   flow: string,
-  options?: {
-    nodeId?: string;
-    node?: any;
-    isEdit?: boolean;
-  },
-): Promise<any> => {
-  const extraProps: any = {};
+  options?: CalculateExtraPropsOptions,
+): Promise<ExtraProps> => {
+  const extraProps: ExtraProps = {};
 
   // Handle external portals - both new nested-flow type and existing ExternalPortal nodes
   if (type === "nested-flow" || options?.node?.type === TYPES.ExternalPortal) {
@@ -229,12 +256,12 @@ export const calculateExtraProps = async (
   if (type === "folder") {
     extraProps.flows = Object.entries(useStore.getState().flow)
       .filter(
-        ([id, v]: any) =>
+        ([id, v]: [string, Store.Node]) =>
           v.type === TYPES.InternalPortal &&
           !window.location.pathname.includes(id) &&
           v.data?.text,
       )
-      .map(([id, { data }]: any) => ({ id, text: data.text }))
+      .map(([id, { data }]: [string, Store.Node]) => ({ id, text: data?.text }))
       .sort(sortFlows);
   }
 
@@ -256,7 +283,7 @@ export const calculateExtraProps = async (
         ],
         0,
         options.node.data.categories,
-      )[1];
+      )[1] as GroupedOption[];
     } else {
       extraProps.options = childNodes;
     }
