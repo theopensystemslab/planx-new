@@ -1,4 +1,3 @@
-import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -7,17 +6,15 @@ import Typography from "@mui/material/Typography";
 import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import React from "react";
 import { useNavigation } from "react-navi";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
-import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
+import { FlowTagType } from "ui/editor/FlowTag/types";
 import TruncatedText from "ui/editor/TruncatedText";
 
 import { useStore } from "../../../FlowEditor/lib/store";
-import {
-  formatLastEditMessage,
-  formatLastPublishMessage,
-} from "../../../FlowEditor/utils";
 import FlowMenu from "../FlowMenu";
+import { FlowTemplateIndicator } from "../FlowTemplateIndicator";
+import { useFlowDates } from "../hooks/useFlowDates";
+import { useFlowMetadata } from "../hooks/useFlowMetadata";
 import { useFlowSortDisplay } from "../hooks/useFlowSortDisplay";
 import {
   FlowActionsCell,
@@ -28,7 +25,6 @@ import {
   StyledTableHead,
   StyledTableRow,
 } from "./styles";
-
 
 interface FlowTableProps {
   flows: FlowSummary[];
@@ -81,60 +77,34 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
   refreshFlows,
 }) => {
   const navigation = useNavigation();
-  const { showPublished } = useFlowSortDisplay();
-
   const [canUserEditTeam] = useStore((state) => [state.canUserEditTeam]);
 
-  const isSubmissionService = flow.publishedFlows?.[0]?.hasSendComponent;
-  const isTemplatedFlow = Boolean(flow.templatedFrom);
-  const isSourceTemplate = flow.isTemplate;
-  const isAnyTemplate = isTemplatedFlow || isSourceTemplate;
-
-  const statusVariant =
-    flow.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
+  const { 
+    isSubmissionService, 
+    isAnyTemplate, 
+    isSourceTemplate, 
+    isTemplatedFlow, 
+    statusVariant 
+  } = useFlowMetadata(flow);
+  
+  const { displayTimeAgo, displayActor } = useFlowDates(flow);
 
   const handleRowClick = () => {
     navigation.navigate(`./${teamSlug}/${flow.slug}`);
   };
 
-  const editedDate = formatLastEditMessage(
-    flow.operations[0]?.createdAt,
-    flow.operations[0]?.actor,
-  );
-
-  const publishedDate = formatLastPublishMessage(
-    flow.publishedFlows[0]?.publishedAt,
-  );
-
-  const displayTimeAgo = showPublished
-    ? publishedDate.timeAgo
-    : editedDate.timeAgo;
-  const displayActor = showPublished ? publishedDate.actor : editedDate.actor;
-
   return (
     <StyledTableRow isTemplated={isAnyTemplate} onClick={handleRowClick}>
       <FlowTitleCell>
         <Box>
-          {(isTemplatedFlow || isSourceTemplate) && (
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 0.5,
-                mb: 0.5,
-              }}
-            >
-              {!isSourceTemplate && (
-                <StarIcon sx={{ fontSize: "0.9em", color: "#380F77" }} />
-              )}
-              <Typography
-                variant="body2"
-                sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
-              >
-                {isSourceTemplate
-                  ? "Source template"
-                  : flow.template.team.name}
-              </Typography>
+          {isAnyTemplate && (
+            <Box sx={{ mb: 0.5 }}>
+              <FlowTemplateIndicator
+                isSourceTemplate={isSourceTemplate}
+                isTemplatedFlow={isTemplatedFlow}
+                teamName={flow.template?.team.name}
+                variant="inline"
+              />
             </Box>
           )}
           <FlowLink

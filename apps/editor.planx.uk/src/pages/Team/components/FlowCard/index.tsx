@@ -1,21 +1,16 @@
-import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import React from "react";
-import { Link } from "react-navi";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
-import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
+import { FlowTagType } from "ui/editor/FlowTag/types";
 import TruncatedText from "ui/editor/TruncatedText";
 
 import { useStore } from "../../../FlowEditor/lib/store";
 import { FlowSummary } from "../../../FlowEditor/lib/store/editor";
-import {
-  formatLastEditMessage,
-  formatLastPublishMessage,
-} from "../../../FlowEditor/utils";
 import FlowMenu from "../FlowMenu";
-import { useFlowSortDisplay } from "../hooks/useFlowSortDisplay";
+import { FlowTemplateIndicator } from "../FlowTemplateIndicator";
+import { useFlowDates } from "../hooks/useFlowDates";
+import { useFlowMetadata } from "../hooks/useFlowMetadata";
 import {
   Card,
   CardBanner,
@@ -36,15 +31,15 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows }) => {
     state.teamSlug,
   ]);
   
-  const { showPublished } = useFlowSortDisplay();
-
-  const isSubmissionService = flow.publishedFlows?.[0]?.hasSendComponent;
-  const isTemplatedFlow = Boolean(flow.templatedFrom);
-  const isSourceTemplate = flow.isTemplate;
-  const isAnyTemplate = isTemplatedFlow || isSourceTemplate;
-
-  const statusVariant =
-    flow.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
+  const { 
+    isSubmissionService, 
+    isAnyTemplate, 
+    isSourceTemplate, 
+    isTemplatedFlow, 
+    statusVariant 
+  } = useFlowMetadata(flow);
+  
+  const { displayFormatted } = useFlowDates(flow);
 
   const displayTags = [
     {
@@ -59,18 +54,6 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows }) => {
     },
   ];
 
-  const publishedDate = formatLastPublishMessage(
-    flow.publishedFlows[0]?.publishedAt,
-  );
-  const editedDate = formatLastEditMessage(
-    flow.operations[0]?.createdAt,
-    flow.operations[0]?.actor,
-  );
-
-  const displayDate = showPublished
-    ? publishedDate.formatted
-    : editedDate.formatted;
-
   return (
     <Card>
       <Box
@@ -83,17 +66,12 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows }) => {
       >
         {isAnyTemplate && (
           <CardBanner>
-            {isTemplatedFlow && (
-              <StarIcon sx={{ color: "#380F77", fontSize: "0.8em" }} />
-            )}
-            <Typography
-              variant="body2"
-              sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
-            >
-              {isSourceTemplate
-                ? "Source template"
-                : `Templated from ${flow.template.team.name}`}
-            </Typography>
+            <FlowTemplateIndicator
+              isSourceTemplate={isSourceTemplate}
+              isTemplatedFlow={isTemplatedFlow}
+              teamName={flow.template?.team.name}
+              variant="banner"
+            />
           </CardBanner>
         )}
         <CardContent>
@@ -101,7 +79,7 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows }) => {
             <Typography variant="h3" component="h2">
               {flow.name}
             </Typography>
-            <LinkSubText>{displayDate}</LinkSubText>
+            <LinkSubText>{displayFormatted}</LinkSubText>
           </Box>
           <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
             {displayTags
@@ -117,16 +95,14 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows }) => {
               ))}
           </Box>
           {flow.summary && (
-            <>
-              <TruncatedText 
-                variant="body2" 
-                color="textSecondary" 
-                lineClamp={2}
-                sx={{ "& > a": { position: "relative", zIndex: 2 } }}
-              >
-                {flow.summary}
-              </TruncatedText>
-            </>
+            <TruncatedText 
+              variant="body2" 
+              color="textSecondary" 
+              lineClamp={2}
+              sx={{ "& > a": { position: "relative", zIndex: 2 } }}
+            >
+              {flow.summary}
+            </TruncatedText>
           )}
           <DashboardLink
             aria-label={flow.name}
