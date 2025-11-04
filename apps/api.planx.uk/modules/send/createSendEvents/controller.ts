@@ -1,4 +1,4 @@
-import type { CombinedResponse } from "../../../lib/hasura/metadata/index.js";
+import type { CombinedResponse } from "../../../lib/hasura/metadata/types.js";
 import { createScheduledEvent } from "../../../lib/hasura/metadata/index.js";
 import type { CreateSendEventsController } from "./types.js";
 
