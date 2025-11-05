@@ -1,6 +1,7 @@
 import { ConditionalOption } from "../Option/model";
 import { parseBaseNodeData} from "../shared";
 import { BaseQuestion } from "../shared/BaseQuestion/model";
+import { Condition, Rule } from "../shared/RuleBuilder/types";
 
 export type ResponsiveQuestion = BaseQuestion;
 
@@ -19,3 +20,7 @@ export const parseResponsiveQuestion = (
   text: data?.text || "",
   ...parseBaseNodeData(data),
 });
+
+export const DEFAULT_RULE: Rule = {
+  condition: Condition.AlwaysRequired,
+};

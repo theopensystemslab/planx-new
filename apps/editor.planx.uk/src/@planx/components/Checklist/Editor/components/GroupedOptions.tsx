@@ -2,6 +2,7 @@ import Delete from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import { Option } from "@planx/components/Option/model";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { getIn } from "formik";
@@ -109,6 +110,7 @@ export const GroupedOptions = ({
                 newValueLabel="add new option"
                 Editor={ChecklistOptionsEditor}
                 editorExtraProps={{
+                  type: ComponentType.Checklist,
                   groupIndex,
                   showValueField: !!formik.values.fn,
                   showDescriptionField: true,
