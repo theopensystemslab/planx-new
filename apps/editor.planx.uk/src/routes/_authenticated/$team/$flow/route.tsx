@@ -34,11 +34,13 @@ export const Route = createFileRoute("/_authenticated/$team/$flow")({
 
     try {
       const flow = await getBasicFlowData(actualFlowSlug, teamSlug);
-
       const store = useStore.getState();
-      store.setFlowName(flow.name);
-      store.setFlowSlug(actualFlowSlug);
-      await store.connectTo(flow.id);
+
+      await store.connectToFlow(flow.id);
+      useStore.setState({
+        flowName: flow.name,
+        flowSlug: actualFlowSlug,
+      });
 
       const flowEditorData = await getFlowEditorData(actualFlowSlug, teamSlug);
 
