@@ -1,4 +1,5 @@
 import { ComponentType, ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import QuestionOptionsEditor from "@planx/components/Question/OptionsEditor";
 import { getIn } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef } from "react";
@@ -16,7 +17,6 @@ import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
 import { InternalNotes } from "../../../../../ui/editor/InternalNotes";
-import QuestionOptionsEditor from "../../../Question/OptionsEditor";
 import { DataFieldAutocomplete } from "../../DataFieldAutocomplete";
 import { ICONS } from "../../icons";
 import { getOptionsSchemaByFn } from "../../utils";
@@ -150,10 +150,12 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
                   description: "",
                   val: "",
                   flags: [],
+                  // TODO: rule!
                 },
               })}
               Editor={QuestionOptionsEditor}
               editorExtraProps={{
+                type,
                 showValueField: !!formik.values.fn,
                 schema: getOptionsSchemaByFn(
                   formik.values.fn,

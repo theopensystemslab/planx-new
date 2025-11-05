@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import { Option } from "@planx/components/Option/model";
-import { BaseOptionsEditor } from "@planx/components/shared/BaseOptionsEditor";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { getIn } from "formik";
 import React from "react";
@@ -10,6 +10,7 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { ChecklistWithOptions, Group } from "../../model";
 import { useCurrentOptions } from "../../Public/hooks/useInitialOptions";
+import ChecklistOptionsEditor from "./OptionsEditor";
 
 interface Props {
   formik: FormikHookReturn<ChecklistWithOptions>;
@@ -78,9 +79,10 @@ export const ExclusiveOrOptionManager = ({
                 },
               }) satisfies Option
             }
-            Editor={BaseOptionsEditor}
+            Editor={ChecklistOptionsEditor}
             disabled={disabled}
             editorExtraProps={{
+              type: ComponentType.Checklist,
               showValueField: !!formik.values.fn,
               groupIndex,
               optionPlaceholder: "Exclusive 'or' option",
