@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import MoreVert from "@mui/icons-material/MoreVert";
 import Box from "@mui/material/Box";
 import { NodeTag } from "@opensystemslab/planx-core/types";
+import { Link } from "@tanstack/react-router";
 import classNames from "classnames";
 import gql from "graphql-tag";
 import { useContextMenu } from "hooks/useContextMenu";
@@ -9,7 +10,6 @@ import useScrollOnPreviousURLMatch from "hooks/useScrollOnPreviousURLMatch";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { useDrag } from "react-dnd";
-import { Link } from "react-navi";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 import EditorIcon from "ui/icons/Editor";
 
@@ -24,10 +24,14 @@ const ExternalPortal: React.FC<any> = (props) => {
 
   const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(href);
 
-  const { addExternalPortal, showTags } = useStore((state) => ({
-    addExternalPortal: state.addExternalPortal,
-    showTags: state.showTags,
-  }));
+  const { addExternalPortal, showTags, teamSlug, flowSlug } = useStore(
+    (state) => ({
+      addExternalPortal: state.addExternalPortal,
+      showTags: state.showTags,
+      teamSlug: state.teamSlug,
+      flowSlug: state.flowSlug,
+    }),
+  );
 
   const { data, loading } = useQuery(
     gql`
@@ -90,11 +94,6 @@ const ExternalPortal: React.FC<any> = (props) => {
     );
   }
 
-  let editHref = `${window.location.pathname}/nodes/${props.id}/edit`;
-  if (parent) {
-    editHref = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
-  }
-
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
@@ -113,11 +112,25 @@ const ExternalPortal: React.FC<any> = (props) => {
             showStatus={props.showTemplatedNodeStatus}
           >
             <Box sx={{ display: "flex", alignItems: "stretch" }}>
-              <Link href={`/${href}`} prefetch={false} ref={drag}>
+              <a href={`/${href}`} ref={drag}>
                 <EditorIcon />
                 <span>{href}</span>
-              </Link>
-              <Link href={editHref} prefetch={false} className="portalMenu">
+              </a>
+              <Link
+                to={
+                  parent
+                    ? "/$team/$flow/nodes/$parent/nodes/$id/edit"
+                    : "/$team/$flow/nodes/$id/edit"
+                }
+                params={{
+                  team: teamSlug,
+                  flow: flowSlug,
+                  id: props.id,
+                  ...(parent && { parent }),
+                }}
+                preload={false}
+                className="portalMenu"
+              >
                 <MoreVert titleAccess="Edit Portal" />
               </Link>
             </Box>
@@ -140,16 +153,12 @@ const InternalPortal: React.FC<any> = (props) => {
 
   const parent = getParentId(props.parent);
 
-  const { isClone, copyNode, showTags } = useStore((state) => ({
+  const { isClone, showTags, teamSlug, flowSlug } = useStore((state) => ({
     isClone: state.isClone,
-    copyNode: state.copyNode,
     showTags: state.showTags,
+    teamSlug: state.teamSlug,
+    flowSlug: state.flowSlug,
   }));
-
-  let editHref = `${window.location.pathname}/nodes/${props.id}/edit`;
-  if (parent) {
-    editHref = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
-  }
 
   const [{ isDragging }, drag] = useDrag({
     item: {
@@ -197,14 +206,28 @@ const InternalPortal: React.FC<any> = (props) => {
           >
             <Box sx={{ display: "flex", alignItems: "stretch" }}>
               <Link
-                href={href}
-                prefetch={false}
+                to={href}
+                preload={false}
                 ref={drag}
                 onContextMenu={handleContextMenu}
               >
                 <span>{props.data.text}</span>
               </Link>
-              <Link href={editHref} prefetch={false} className="portalMenu">
+              <Link
+                to={
+                  parent
+                    ? "/$team/$flow/nodes/$parent/nodes/$id/edit"
+                    : "/$team/$flow/nodes/$id/edit"
+                }
+                params={{
+                  team: teamSlug,
+                  flow: flowSlug,
+                  id: props.id,
+                  ...(parent && { parent }),
+                }}
+                preload={false}
+                className="portalMenu"
+              >
                 <MoreVert titleAccess="Edit Portal" />
               </Link>
             </Box>

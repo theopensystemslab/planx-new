@@ -1,7 +1,7 @@
 import { Flag, flatFlags } from "@opensystemslab/planx-core/types";
+import { Link } from "@tanstack/react-router";
 import classNames from "classnames";
 import React from "react";
-import { Link } from "react-navi";
 
 import { useStore } from "../../../lib/store";
 import { DataField } from "./DataField";
@@ -38,7 +38,7 @@ const Option: React.FC<any> = (props) => {
       className={classNames("card", "option", { wasVisited: props.wasVisited })}
       onContextMenu={(e) => e.preventDefault()}
     >
-      <Link href={href} prefetch={false} onClick={(e) => e.preventDefault()}>
+      <Link to="/" preload={false} onClick={(e) => e.preventDefault()}>
         {props.data?.img && (
           <Thumbnail
             imageSource={props.data?.img}

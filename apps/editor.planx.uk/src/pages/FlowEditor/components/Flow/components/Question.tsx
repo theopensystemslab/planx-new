@@ -6,11 +6,11 @@ import {
   NodeTag,
 } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
+import { Link } from "@tanstack/react-router";
 import classNames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
 import React from "react";
 import { useDrag } from "react-dnd";
-import { Link } from "react-navi";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 
 import { useStore } from "../../../lib/store";
@@ -50,10 +50,10 @@ const Question: React.FC<Props> = React.memo((props) => {
     }),
   });
 
-  let href = `${window.location.pathname}/nodes/${props.id}/edit`;
-  if (parent) {
-    href = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
-  }
+  const [teamSlug, flowSlug] = useStore((state) => [
+    state.teamSlug,
+    state.flowSlug,
+  ]);
 
   const handleContextMenu = useContextMenu({
     source: "node",
@@ -96,8 +96,18 @@ const Question: React.FC<Props> = React.memo((props) => {
           showStatus={props.showTemplatedNodeStatus}
         >
           <Link
-            href={href}
-            prefetch={false}
+            to={
+              parent
+                ? "/$team/$flow/nodes/$parent/nodes/$id/edit"
+                : "/$team/$flow/nodes/$id/edit"
+            }
+            params={{
+              team: teamSlug,
+              flow: flowSlug,
+              id: props.id,
+              ...(parent && { parent }),
+            }}
+            preload={false}
             onContextMenu={handleContextMenu}
             ref={drag}
           >

@@ -1,6 +1,5 @@
 import { Link, useRouter } from "@tanstack/react-router";
 import React, { useEffect, useRef } from "react";
-// import { Link, useLoadingRoute } from "react-navi";
 import scrollIntoView from "scroll-into-view-if-needed";
 import { rootFlowPath } from "utils/routeUtils/utils";
 
