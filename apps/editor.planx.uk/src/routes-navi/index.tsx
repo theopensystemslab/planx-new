@@ -1,16 +1,16 @@
-// import { compose, lazy, map, mount, redirect, route, withView } from "navi";
-// import { disconnectShareDB } from "pages/FlowEditor/lib/sharedb";
-// import { loadingView } from "pages/layout/LoadingLayout";
-// import * as React from "react";
+import { compose, lazy, map, mount, redirect, route, withView } from "navi";
+import { disconnectShareDB } from "pages/FlowEditor/lib/sharedb";
+import { loadingView } from "pages/layout/LoadingLayout";
+import * as React from "react";
 
-// import { client } from "../lib/graphql";
-// import ErrorPage from "../pages/ErrorPage/ErrorPage";
-// import Login from "../pages/Login/Login";
-// import { isPreviewOnlyDomain, makeTitle } from "./utils";
+import { client } from "../lib/graphql";
+import ErrorPage from "../pages/ErrorPage/ErrorPage";
+import Login from "../pages/Login/Login";
+import { isPreviewOnlyDomain, makeTitle } from "./utils";
 
-// // type RoutingContext = {
-// //   currentUser?: any;
-// // };
+// type RoutingContext = {
+//   currentUser?: any;
+// };
 
 // const editorRoutes = mount({
 //   "/network-error": route({
@@ -59,49 +59,49 @@
 //   ),
 // });
 
-// const loadSendToEmailRoutes = () =>
-//   compose(
-//     withView(loadingView),
-//     lazy(() => import("./sendToEmailSubmissions")),
-//   );
+const loadSendToEmailRoutes = () =>
+  compose(
+    withView(loadingView),
+    lazy(() => import("./sendToEmailSubmissions")),
+  );
 
-// const loadPayRoutes = () =>
-//   compose(
-//     withView(loadingView),
-//     lazy(() => import("./pay")),
-//   );
+const loadPayRoutes = () =>
+  compose(
+    withView(loadingView),
+    lazy(() => import("./pay")),
+  );
 
-// const loadPublishedRoutes = () =>
-//   compose(
-//     withView(loadingView),
-//     lazy(() => import("./published")),
-//   );
+const loadPublishedRoutes = () =>
+  compose(
+    withView(loadingView),
+    lazy(() => import("./published")),
+  );
 
-// const loadPreviewRoutes = () =>
-//   compose(
-//     withView(loadingView),
-//     lazy(() => import("./preview")),
-//   );
+const loadPreviewRoutes = () =>
+  compose(
+    withView(loadingView),
+    lazy(() => import("./preview")),
+  );
 
-// const loadDraftRoutes = () =>
-//   compose(
-//     withView(loadingView),
-//     lazy(() => import("./draft")),
-//   );
+const loadDraftRoutes = () =>
+  compose(
+    withView(loadingView),
+    lazy(() => import("./draft")),
+  );
 
-// export default isPreviewOnlyDomain
-//   ? mount({
-//       "/:team/:flow/published": loadPublishedRoutes(), // XXX: keeps old URL working, but only for the team listed in the domain.
-//       "/:flow": loadPublishedRoutes(),
-//       "/:flow/pay": loadPayRoutes(),
-//       // XXX: We're not sure where to redirect `/` to so for now we'll just return the default 404
-//       // "/": redirect("somewhere?"),
-//     })
-//   : mount({
-//       "/:team/:flow/published": loadPublishedRoutes(), // loads current published flow if exists, or throws Not Found if unpublished
-//       "/:team/:flow/preview": loadPreviewRoutes(), // loads current draft flow and latest published external portals, or throws Not Found if any external portal is unpublished
-//       "/:team/:flow/draft": loadDraftRoutes(), // loads current draft flow and draft external portals
-//       "/:team/:flow/pay": loadPayRoutes(),
-//       "/:team/:flow/:sessionId/download-application": loadSendToEmailRoutes(),
-//       "*": editorRoutes,
-//     });
+export default isPreviewOnlyDomain
+  ? mount({
+      "/:team/:flow/published": loadPublishedRoutes(), // XXX: keeps old URL working, but only for the team listed in the domain.
+      "/:flow": loadPublishedRoutes(),
+      "/:flow/pay": loadPayRoutes(),
+      // XXX: We're not sure where to redirect `/` to so for now we'll just return the default 404
+      // "/": redirect("somewhere?"),
+    })
+  : mount({
+      "/:team/:flow/published": loadPublishedRoutes(), // loads current published flow if exists, or throws Not Found if unpublished
+      "/:team/:flow/preview": loadPreviewRoutes(), // loads current draft flow and latest published external portals, or throws Not Found if any external portal is unpublished
+      "/:team/:flow/draft": loadDraftRoutes(), // loads current draft flow and draft external portals
+      "/:team/:flow/pay": loadPayRoutes(),
+      "/:team/:flow/:sessionId/download-application": loadSendToEmailRoutes(),
+      // "*": editorRoutes,
+    });
