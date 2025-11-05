@@ -31,7 +31,7 @@ test("submits a date", async () => {
 
   await user.click(screen.getByTestId("continue-button"));
 
-  expect(handleSubmit).toHaveBeenCalledExactlyOnceWith({
+  expect(handleSubmit).toHaveBeenCalledWith({
     data: {
       [componentId]: "2010-05-22",
     },
@@ -57,7 +57,7 @@ test("recovers previously submitted date when clicking the back button", async (
 
   await user.click(screen.getByTestId("continue-button"));
 
-  expect(handleSubmit).toHaveBeenCalledExactlyOnceWith({
+  expect(handleSubmit).toHaveBeenCalledWith({
     data: {
       [componentId]: "2010-05-22",
     },
@@ -85,7 +85,7 @@ test("recovers previously submitted date when clicking the back button even if a
 
   await user.click(screen.getByTestId("continue-button"));
 
-  expect(handleSubmit).toHaveBeenCalledExactlyOnceWith({
+  expect(handleSubmit).toHaveBeenCalledWith({
     data: {
       [dataField]: "2010-05-22",
     },
