@@ -2,11 +2,10 @@ import Box from "@mui/material/Box";
 import ListItemButton from "@mui/material/ListItemButton";
 import { alpha, styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { ComponentType } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
+import { useNavigate } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { PropsWithChildren } from "react";
-import { useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import { getDisplayDetailsForNodeCard } from "./getDisplayDetailsForNodeCard";
@@ -72,7 +71,7 @@ export const NodeCard: React.FC<Props> = ({
   children,
   backgroundColor,
 }) => {
-  const { navigate } = useNavigation();
+  const navigate = useNavigate();
   const [orderedFlow, getURLForNode] = useStore((state) => [
     state.orderedFlow,
     state.getURLForNode,
@@ -90,7 +89,7 @@ export const NodeCard: React.FC<Props> = ({
 
   const handleClick = () => {
     const url = getURLForNode(node.id);
-    navigate(url);
+    navigate({ to: url });
   };
 
   return (
