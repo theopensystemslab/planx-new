@@ -10,7 +10,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 
-import { Checklist } from "../model";
+import { Checklist, Group } from "../model";
 import { ChecklistEditor } from "./Editor";
 
 const { getState } = useStore;
@@ -348,4 +348,132 @@ describe("Checklist editor component", () => {
       ).toBeInTheDocument(),
     );
   }, 30_000);
+
+  it("populates existing options", async () => {
+    const props: EditorProps<ComponentType.Checklist, Checklist> = {
+      node: {
+        data: {
+          text: "mockText",
+          allRequired: false,
+          neverAutoAnswer: false,
+          alwaysAutoAnswerBlank: false,
+        },
+      },
+      disabled: false,
+    };
+
+    const options: Option[] = [
+      {
+        id: "AF4400H41Z",
+        data: {
+          text: "Apple",
+        },
+      },
+      {
+        id: "0WeNTfghL4",
+        data: {
+          text: "Banana",
+        },
+      },
+      {
+        id: "AF4400H41Y",
+        data: {
+          text: "Coconut",
+        },
+      },
+      {
+        id: "0WeNTfghL5",
+        data: {
+          text: "Date",
+        },
+      },
+    ];
+
+    const handleSubmit = vi.fn();
+
+    setup(
+      <DndProvider backend={HTML5Backend}>
+        <ChecklistEditor
+          handleSubmit={handleSubmit}
+          options={options}
+          {...props}
+        />
+      </DndProvider>,
+    );
+
+    expect(screen.getByDisplayValue("Apple")).toBeVisible();
+    expect(screen.getByDisplayValue("Banana")).toBeVisible();
+    expect(screen.getByDisplayValue("Coconut")).toBeVisible();
+    expect(screen.getByDisplayValue("Date")).toBeVisible();
+  });
+
+  it("populates existing grouped options", async () => {
+    const props: EditorProps<ComponentType.Checklist, Checklist> = {
+      node: {
+        data: {
+          text: "mockText",
+          allRequired: false,
+          neverAutoAnswer: false,
+          alwaysAutoAnswerBlank: false,
+        },
+      },
+      disabled: false,
+    };
+
+    const groupedOptions: Group<Option>[] = [
+      {
+        title: "First group",
+        children: [
+          {
+            id: "AF4400H41Z",
+            data: {
+              text: "Apple",
+            },
+          },
+          {
+            id: "0WeNTfghL4",
+            data: {
+              text: "Banana",
+            },
+          },
+        ],
+      },
+      {
+        title: "Second group",
+        children: [
+          {
+            id: "AF4400H41Y",
+            data: {
+              text: "Coconut",
+            },
+          },
+          {
+            id: "0WeNTfghL5",
+            data: {
+              text: "Date",
+            },
+          },
+        ],
+      },
+    ];
+
+    const handleSubmit = vi.fn();
+
+    setup(
+      <DndProvider backend={HTML5Backend}>
+        <ChecklistEditor
+          handleSubmit={handleSubmit}
+          groupedOptions={groupedOptions}
+          {...props}
+        />
+      </DndProvider>,
+    );
+
+    expect(screen.getByDisplayValue("First group")).toBeVisible();
+    expect(screen.getByDisplayValue("Second group")).toBeVisible();
+    expect(screen.getByDisplayValue("Apple")).toBeVisible();
+    expect(screen.getByDisplayValue("Banana")).toBeVisible();
+    expect(screen.getByDisplayValue("Coconut")).toBeVisible();
+    expect(screen.getByDisplayValue("Date")).toBeVisible();
+  });
 });
