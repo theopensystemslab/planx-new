@@ -140,7 +140,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           <ol className="categories">
             {groupedOptions.map(({ title, children }, i) => (
               <li key={i} className="card category">
-                <span>{title}</span>
+                <Link href={href + `#group-${i}`}>{title}</Link>
                 <ol className="options">
                   {children.map((child: any) => (
                     <Node

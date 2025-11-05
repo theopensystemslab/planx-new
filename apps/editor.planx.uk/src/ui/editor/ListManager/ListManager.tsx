@@ -12,7 +12,7 @@ import { arrayMoveImmutable } from "array-move";
 import { FormikErrors } from "formik";
 import { nanoid } from "nanoid";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   DragDropContext,
   Draggable,
@@ -22,10 +22,9 @@ import {
   DropResult,
 } from "react-beautiful-dnd";
 import { TransitionGroup } from "react-transition-group";
-import { useLocation } from "react-use";
 
 import { insertAt, removeAt, setAt } from "../../../utils";
-import { useScrollToOption } from "./useScrollToOption";
+import { useScrollToOptionOrGroup } from "./useScrollToOptionOrGroup";
 
 export interface EditorProps<T> {
   index: number;
@@ -122,7 +121,7 @@ export default function ListManager<T, EditorExtraProps>(
     state.user?.isPlatformAdmin,
   ]);
 
-  useScrollToOption();
+  useScrollToOptionOrGroup();
 
   // `isTemplatedNode` disables reordering, adding, and deleting options in the templated flow unless you're a platform admin or in the source template
   if (props.isTemplatedNode && !isPlatformAdmin && !isTemplate) {
