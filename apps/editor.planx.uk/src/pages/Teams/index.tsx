@@ -6,10 +6,10 @@ import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useEffect, useMemo, useState } from "react";
-import { Link } from "react-navi";
 import { TeamSummary } from "routes/_authenticated/index";
 import { focusStyle } from "theme";
 import { InfoChip } from "ui/editor/InfoChip";
+import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 
 import { useStore } from "../FlowEditor/lib/store";
@@ -18,11 +18,11 @@ interface Props {
   teams: Array<TeamSummary>;
 }
 
-const StyledLink = styled(Link)(() => ({
+const StyledLink = styled(CustomLink)(() => ({
   textDecoration: "none",
   display: "block",
   "&:focus, &:focus-within > div": focusStyle,
-}));
+})) as typeof CustomLink;
 
 const TeamCard = styled(Card)(({ theme }) => ({
   display: "flex",
@@ -69,7 +69,7 @@ const Teams: React.FC<Props> = ({ teams }) => {
   const renderTeams = (teamsToRender: Array<TeamSummary>) =>
     teamsToRender.map((team) => {
       return (
-        <StyledLink href={`/${team.slug}`} key={team.slug} prefetch={false}>
+        <StyledLink to="/$team" params={{ team: team.slug }} key={team.slug}>
           <TeamCard>
             <Box sx={{ display: "flex" }}>
               <TeamColourBand bgcolor={team.theme.primaryColour} />

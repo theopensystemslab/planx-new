@@ -2,8 +2,8 @@ import SchoolIcon from "@mui/icons-material/School";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { Link } from "@tanstack/react-router";
 import React from "react";
-import { Link } from "react-navi";
 
 const Root = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -34,8 +34,8 @@ export const GetStarted: React.FC = () => (
         <strong>Starting a new flow?</strong>
       </Typography>
       <Typography variant="body2">
-        Visit the <Link href="../../tutorials">guides and tutorials</Link> to
-        get started.
+        Visit the <Link to="/tutorials">guides and tutorials</Link> to get
+        started.
       </Typography>
     </Box>
   </Root>

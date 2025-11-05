@@ -1,10 +1,10 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { Link } from "@tanstack/react-router";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
 import React from "react";
-import { Link } from "react-navi";
 import SettingsDescription from "ui/editor/SettingsDescription";
 import SettingsSection from "ui/editor/SettingsSection";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -13,11 +13,14 @@ import { Switch } from "ui/shared/Switch";
 import { useStore } from "../../../../lib/store";
 
 export const LPSListing = () => {
-  const [isListedOnLPS, setIsListedOnLPS, summary] = useStore((state) => [
-    state.isFlowListedOnLPS,
-    state.setIsFlowListedOnLPS,
-    state.flowSummary,
-  ]);
+  const [isListedOnLPS, setIsListedOnLPS, summary, teamSlug, flowSlug] =
+    useStore((state) => [
+      state.isFlowListedOnLPS,
+      state.setIsFlowListedOnLPS,
+      state.flowSummary,
+      state.teamSlug,
+      state.flowSlug,
+    ]);
 
   const toast = useToast();
 
@@ -77,7 +80,13 @@ export const LPSListing = () => {
           </p>
           <p>
             Listing your service requires a summary. This can be provided on{" "}
-            <Link href="../about">the "About this flow" page</Link>.
+            <Link
+              to="/$team/$flow/about"
+              params={{ team: teamSlug, flow: flowSlug }}
+            >
+              the "About this flow" page
+            </Link>
+            .
           </p>
         </SettingsDescription>
         <ErrorWrapper
