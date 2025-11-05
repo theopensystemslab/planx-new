@@ -29,12 +29,7 @@ type Props = {
 };
 
 const Checklist: React.FC<Props> = React.memo((props) => {
-  const [
-    isClone,
-    childNodes,
-    showHelpText,
-    showTags,
-  ] = useStore((state) => [
+  const [isClone, childNodes, showHelpText, showTags] = useStore((state) => [
     state.isClone,
     state.childNodesOf(props.id),
     state.showHelpText,
@@ -48,16 +43,16 @@ const Checklist: React.FC<Props> = React.memo((props) => {
       !props.data?.categories
         ? undefined
         : mapAccum(
-          (index: number, category: { title: string; count: number }) => [
-            index + category.count,
-            {
-              title: category.title,
-              children: childNodes.slice(index, index + category.count),
-            },
-          ],
-          0,
-          props.data.categories,
-        )[1],
+            (index: number, category: { title: string; count: number }) => [
+              index + category.count,
+              {
+                title: category.title,
+                children: childNodes.slice(index, index + category.count),
+              },
+            ],
+            0,
+            props.data.categories,
+          )[1],
     [childNodes],
   );
 
@@ -79,11 +74,12 @@ const Checklist: React.FC<Props> = React.memo((props) => {
   }
 
   const handleContextMenu = useContextMenu({
-    source: "node", relationships: {
+    source: "node",
+    relationships: {
       parent,
       before: props.id,
       self: props.id,
-    }
+    },
   });
 
   const Icon = ICONS[props.type];
@@ -148,6 +144,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
                 <ol className="options">
                   {children.map((child: any) => (
                     <Node
+                      parent={props.id}
                       key={child.id}
                       {...child}
                       showTemplatedNodeStatus={props.showTemplatedNodeStatus}
@@ -161,6 +158,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           <ol className="options">
             {childNodes.map((child: any) => (
               <Node
+                parent={props.id}
                 key={child.id}
                 {...child}
                 showTemplatedNodeStatus={props.showTemplatedNodeStatus}

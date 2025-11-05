@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import React from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
@@ -15,7 +16,7 @@ import { Props } from "./types";
 export const BaseOptionsEditor: React.FC<Props> = (props) => {
   const updateSharedField = <K extends keyof Option["data"]>(
     key: K,
-    value: Option["data"][K]
+    value: Option["data"][K],
   ) => {
     switch (props.type) {
       // Option
@@ -36,14 +37,20 @@ export const BaseOptionsEditor: React.FC<Props> = (props) => {
         });
         break;
     }
-  }
+  };
 
   const showRuleBuilder =
     props.type === ComponentType.ResponsiveQuestion ||
     props.type === ComponentType.ResponsiveChecklist;
 
   return (
-    <div style={{ width: "100%" }}>
+    <Box
+      id={props.value.id}
+      sx={(theme) => ({
+        scrollMarginTop: theme.spacing(1),
+        width: "100%",
+      })}
+    >
       <InputRow>
         {props.value.id && (
           <input type="hidden" value={props.value.id} readOnly />
@@ -84,7 +91,9 @@ export const BaseOptionsEditor: React.FC<Props> = (props) => {
           schema={props.schema}
           value={props.value.data.val}
           disabled={props.disabled}
-          onChange={(targetValue) => updateSharedField("val", targetValue ?? "")}
+          onChange={(targetValue) =>
+            updateSharedField("val", targetValue ?? "")
+          }
         />
       )}
       <FlagsSelect
@@ -92,24 +101,22 @@ export const BaseOptionsEditor: React.FC<Props> = (props) => {
         disabled={props.disabled}
         onChange={(ev) => updateSharedField("flags", ev)}
       />
-      {
-        showRuleBuilder && (
-          <RuleBuilder
-            conditions={[Condition.AlwaysRequired, Condition.RequiredIf]}
-            disabled={props.disabled}
-            rule={props.value.data.rule}
-            onChange={(rule) =>
-              props.onChange({
-                ...props.value,
-                data: {
-                  ...props.value.data,
-                  rule,
-                },
-              })
-            }
-          />
-        )
-      }
-    </div>
-  )
+      {showRuleBuilder && (
+        <RuleBuilder
+          conditions={[Condition.AlwaysRequired, Condition.RequiredIf]}
+          disabled={props.disabled}
+          rule={props.value.data.rule}
+          onChange={(rule) =>
+            props.onChange({
+              ...props.value,
+              data: {
+                ...props.value.data,
+                rule,
+              },
+            })
+          }
+        />
+      )}
+    </Box>
+  );
 };

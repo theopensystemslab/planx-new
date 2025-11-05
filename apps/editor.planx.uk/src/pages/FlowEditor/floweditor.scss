@@ -569,7 +569,7 @@ $fontMonospace: "Source Code Pro", monospace;
       width: 260px;
     }
   }
-  
+
   .portalMenu {
     border-left: $nodeBorderWidth solid #aaa;
     display: flex;
@@ -772,9 +772,6 @@ $fontMonospace: "Source Code Pro", monospace;
     > li.option {
       display: flex;
       align-items: center;
-      > a {
-        pointer-events: none;
-      }
 
       [data-layout="top-down"] & {
         &:only-child {

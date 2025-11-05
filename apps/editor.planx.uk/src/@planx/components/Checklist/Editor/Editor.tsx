@@ -34,7 +34,11 @@ export const ChecklistEditor: React.FC<Props> = (props) => {
   const type = TYPES.Checklist;
 
   const formik = useFormik<ChecklistWithOptions>({
-    initialValues: parseChecklist({ ...props.node?.data, options: props?.options }),
+    initialValues: parseChecklist({
+      ...props.node?.data,
+      options: props?.options,
+      groupedOptions: props?.groupedOptions,
+    }),
     onSubmit: ({ options, groupedOptions, ...values }) => {
       const sourceOptions = options?.length
         ? options
