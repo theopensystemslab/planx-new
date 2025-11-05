@@ -38,7 +38,7 @@ import type { Notice } from "@planx/components/Notice/model";
 import NoticeComponent from "@planx/components/Notice/Public";
 import type { NumberInput } from "@planx/components/NumberInput/model";
 import NumberInputComponent from "@planx/components/NumberInput/Public";
-import { Option } from "@planx/components/Option/model";
+import { ConditionalOption, Option } from "@planx/components/Option/model";
 import type { Page } from "@planx/components/Page/model";
 import PageComponent from "@planx/components/Page/Public";
 import type { Pay } from "@planx/components/Pay/model";
@@ -273,18 +273,22 @@ const Node: React.FC<Props> = (props) => {
     }
 
     case TYPES.ResponsiveChecklist:
-      return hasFeatureFlag("RESPONSIVE_QUESTIONS_CHECKLISTS") ? (
+      if (!hasFeatureFlag("RESPONSIVE_QUESTIONS_CHECKLISTS")) return null;
+
+      return (
         <ResponsiveChecklistComponent
           {...getComponentProps<ResponsiveChecklist>()}
         />
-      ) : null;
+      );
 
-    case TYPES.ResponsiveQuestion:
-      return hasFeatureFlag("RESPONSIVE_QUESTIONS_CHECKLISTS") ? (
-        <ResponsiveQuestionComponent
-          {...getComponentProps<ResponsiveQuestion>()}
-        />
-      ) : null;
+    case TYPES.ResponsiveQuestion: {
+      if (!hasFeatureFlag("RESPONSIVE_QUESTIONS_CHECKLISTS")) return null;
+
+      const props = getComponentProps<ResponsiveChecklist>();
+      const options = childNodesOf(nodeId) as ConditionalOption[];
+
+      return <ResponsiveQuestionComponent {...props} options={options} />;
+    }
 
     case TYPES.Result:
       return <ResultComponent {...getComponentProps<Result>()} />;

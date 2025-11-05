@@ -1,18 +1,15 @@
 import type { PublicProps } from "@planx/components/shared/types";
-import { makeData } from "@planx/components/shared/utils";
-import { useEffect } from "react";
+import React from "react";
 
-import type { ResponsiveQuestion } from "./model";
+import BaseQuestionComponent from "../shared/BaseQuestion/Public";
+import type { ResponsiveQuestionWithOptions } from "./model";
 
-export type Props = PublicProps<ResponsiveQuestion>;
+export type Props = PublicProps<ResponsiveQuestionWithOptions>;
 
-export default function Component(props: Props) {
-  useEffect(() => {
-    props.handleSubmit?.({
-      ...makeData(props, ["todo"], props.fn),
-      auto: true,
-    });
-  }, []);
+const ResponsiveQuestion = (props: Props) => {
+  // TODO: hook
 
-  return null;
-}
+  return <BaseQuestionComponent {...props} options={filteredOptions} />;
+};
+
+export default ResponsiveQuestion;
