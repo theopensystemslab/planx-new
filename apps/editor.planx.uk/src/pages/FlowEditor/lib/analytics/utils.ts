@@ -232,6 +232,7 @@ const discretionaryDashboard = {
     "check-constraints-on-a-property",
     "check-whether-you-need-a-building-control-application",
     "check-your-planning-constraints",
+    "general-enquiries",
     "heritage-constraints",
     "notify-us-of-any-high-efficiency-alternative-energy-systems",
     "report-a-potential-dangerous-structure",
