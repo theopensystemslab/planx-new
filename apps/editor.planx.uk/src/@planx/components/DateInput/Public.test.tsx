@@ -31,7 +31,7 @@ test("submits a date", async () => {
 
   await user.click(screen.getByTestId("continue-button"));
 
-  expect(handleSubmit).toHaveBeenCalledWith({
+  expect(handleSubmit).toHaveBeenCalledExactlyOnceWith({
     data: {
       [componentId]: "2010-05-22",
     },
@@ -57,7 +57,7 @@ test("recovers previously submitted date when clicking the back button", async (
 
   await user.click(screen.getByTestId("continue-button"));
 
-  expect(handleSubmit).toHaveBeenCalledWith({
+  expect(handleSubmit).toHaveBeenCalledExactlyOnceWith({
     data: {
       [componentId]: "2010-05-22",
     },
@@ -85,7 +85,7 @@ test("recovers previously submitted date when clicking the back button even if a
 
   await user.click(screen.getByTestId("continue-button"));
 
-  expect(handleSubmit).toHaveBeenCalledWith({
+  expect(handleSubmit).toHaveBeenCalledExactlyOnceWith({
     data: {
       [dataField]: "2010-05-22",
     },
@@ -136,7 +136,7 @@ test("date fields have a max length set", async () => {
   const year = screen.getByLabelText("Year") as HTMLInputElement;
 
   expect(day.maxLength).toBe(2);
-  expect(month.maxLength).toBe(2);
+  expect(month.maxLength).toBe(9);
   expect(year.maxLength).toBe(4);
 });
 

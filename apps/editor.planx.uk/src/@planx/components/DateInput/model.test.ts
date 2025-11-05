@@ -1,4 +1,10 @@
-import { dateInputValidationSchema, dateSchema, paddedDate, parseDate } from "./model";
+import {
+  dateInputValidationSchema,
+  dateSchema,
+  normalizeDate,
+  paddedDate,
+  parseDate,
+} from "./model";
 
 describe("parseDate helper function", () => {
   it("returns a day value", () => {
@@ -34,7 +40,7 @@ describe("parseDate helper function", () => {
   });
 
   it("handles partial inputs", () => {
-    const result = parseDate("2024-MM-05");
+    const result = parseDate("2024--05");
     expect(result.day).toEqual(5);
     expect(result.month).not.toBeDefined();
     expect(result.year).toEqual(2024);
@@ -43,12 +49,8 @@ describe("parseDate helper function", () => {
 
 describe("dateSchema", () => {
   test("basic validation", async () => {
-    expect(await dateSchema().isValid("2021-03-23")).toBe(
-      true,
-    );
-    expect(await dateSchema().isValid("2021-23-03")).toBe(
-      false,
-    );
+    expect(await dateSchema().isValid("2021-03-23")).toBe(true);
+    expect(await dateSchema().isValid("2021-23-03")).toBe(false);
   });
 
   const validate = async (date?: string) =>
@@ -78,12 +80,17 @@ describe("dateSchema", () => {
 
   it("throws an error for an invalid day", async () => {
     const errors = await validate("2024-12-32");
-    expect(errors[0]).toMatch(/Day must be valid/);
+    expect(errors[0]).toMatch(/Day must be a real day/);
   });
 
   it("throws an error for an invalid month", async () => {
     const errors = await validate("2024-13-25");
-    expect(errors[0]).toMatch(/Month must be valid/);
+    expect(errors[0]).toMatch(/Month must be a real month/);
+  });
+
+  it("throws an error for an invalid month name", async () => {
+    const errors = await validate("2024-Novee-25");
+    expect(errors[0]).toMatch(/Month must be a real month/);
   });
 
   it("throws an error for an invalid date (30th Feb)", async () => {
@@ -107,7 +114,7 @@ describe("dateInputValidationSchema", () => {
           max: "1999-12-31",
         },
         required: true,
-      }).isValid("1995-06-15")
+      }).isValid("1995-06-15"),
     ).toBe(true);
     expect(
       await dateInputValidationSchema({
@@ -184,4 +191,21 @@ test("padding on blur", () => {
   // Leaves single 0 alone
   expect(paddedDate("2021-0-2", "blur")).toBe("2021-0-02");
   expect(paddedDate("2021-10-0", "blur")).toBe("2021-10-0");
+});
+
+test("normalizes month names", () => {
+  // Normalizes full month names
+  expect(normalizeDate("2021-November-15")).toBe("2021-11-15");
+  expect(normalizeDate("2021-January-01")).toBe("2021-01-01");
+  expect(normalizeDate("2021-December-25")).toBe("2021-12-25");
+
+  // Normalizes abbreviated month names
+  expect(normalizeDate("2021-Nov-15")).toBe("2021-11-15");
+  expect(normalizeDate("2021-Jan-01")).toBe("2021-01-01");
+  expect(normalizeDate("2021-Dec-25")).toBe("2021-12-25");
+
+  // Normalizes irrespective of case
+  expect(normalizeDate("2021-NOVEMBER-15")).toBe("2021-11-15");
+  expect(normalizeDate("2021-november-15")).toBe("2021-11-15");
+  expect(normalizeDate("2021-NoVeMbEr-15")).toBe("2021-11-15");
 });
