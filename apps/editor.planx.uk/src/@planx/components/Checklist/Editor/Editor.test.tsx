@@ -288,7 +288,11 @@ describe("Checklist editor component", () => {
 
     setup(
       <DndProvider backend={HTML5Backend}>
-        <ChecklistEditor handleSubmit={handleSubmit} options={options} {...props} />
+        <ChecklistEditor
+          handleSubmit={handleSubmit}
+          options={options}
+          {...props}
+        />
       </DndProvider>,
     );
 
@@ -308,7 +312,7 @@ describe("Checklist editor component", () => {
   it("shows an error if 'never put to user' is toggled on and more than one option has a blank data field", async () => {
     const { user } = setup(
       <DndProvider backend={HTML5Backend}>
-        <ChecklistEditor groupedOptions={[]} />
+        <ChecklistEditor options={[]} />
       </DndProvider>,
     );
 
