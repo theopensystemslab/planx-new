@@ -6,7 +6,6 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
 import { Option } from "../../Option/model";
-import { DEFAULT_RULE } from "../../ResponsiveQuestion/model";
 import { DataFieldAutocomplete } from "../DataFieldAutocomplete";
 import { FlagsSelect } from "../FlagsSelect";
 import { RuleBuilder } from "../RuleBuilder";
@@ -98,7 +97,7 @@ export const BaseOptionsEditor: React.FC<Props> = (props) => {
           <RuleBuilder
             conditions={[Condition.AlwaysRequired, Condition.RequiredIf]}
             disabled={props.disabled}
-            rule={props.value.data.rule || DEFAULT_RULE}
+            rule={props.value.data.rule}
             onChange={(rule) =>
               props.onChange({
                 ...props.value,

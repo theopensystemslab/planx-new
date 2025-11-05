@@ -1,10 +1,7 @@
 import { boolean, object } from "yup";
 
 import { Option } from "../Option/model";
-import {
-  parseBaseNodeData,
-} from "../shared";
-import { BaseQuestion, baseQuestionValidationSchema } from "../shared/BaseQuestion/model";
+import { BaseQuestion, baseQuestionValidationSchema, parseBaseQuestion } from "../shared/BaseQuestion/model";
 
 /**
  * Database representation of a Question component
@@ -31,11 +28,8 @@ export const validationSchema = baseQuestionValidationSchema
 export const parseQuestion = (
   data: Record<string, any> | undefined,
 ): QuestionWithOptions => ({
-  fn: data?.fn || "",
-  img: data?.img || "",
   options: data?.options || [],
-  text: data?.text || "",
   neverAutoAnswer: data?.neverAutoAnswer || false,
   alwaysAutoAnswerBlank: data?.alwaysAutoAnswerBlank || false,
-  ...parseBaseNodeData(data),
+  ...parseBaseQuestion(data),
 });

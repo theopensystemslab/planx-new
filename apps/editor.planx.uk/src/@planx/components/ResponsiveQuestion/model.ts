@@ -1,6 +1,5 @@
 import { ConditionalOption } from "../Option/model";
-import { parseBaseNodeData} from "../shared";
-import { BaseQuestion } from "../shared/BaseQuestion/model";
+import { BaseQuestion, parseBaseQuestion } from "../shared/BaseQuestion/model";
 import { Condition, Rule } from "../shared/RuleBuilder/types";
 
 export type ResponsiveQuestion = BaseQuestion;
@@ -14,11 +13,8 @@ export type ResponsiveQuestionWithOptions = ResponsiveQuestion & { options: Cond
 export const parseResponsiveQuestion = (
   data: Record<string, any> | undefined,
 ): ResponsiveQuestionWithOptions => ({
-  fn: data?.fn || "",
-  img: data?.img || "",
   options: data?.options || [],
-  text: data?.text || "",
-  ...parseBaseNodeData(data),
+  ...parseBaseQuestion(data),
 });
 
 export const DEFAULT_RULE: Rule = {

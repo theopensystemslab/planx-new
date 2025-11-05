@@ -3,7 +3,7 @@ import { Option, optionValidationSchema } from "@planx/components/Option/model";
 import { richText } from "lib/yupExtensions";
 import { array, object, SchemaOf, string } from "yup";
 
-import { BaseNodeData, baseNodeDataValidationSchema } from "..";
+import { BaseNodeData, baseNodeDataValidationSchema, parseBaseNodeData } from "..";
 import { Child } from "../types";
 
 /**
@@ -53,3 +53,13 @@ export const baseQuestionValidationSchema: SchemaOf<BaseQuestion> = baseNodeData
       type: ComponentType.Answer,
       data: o.data,
     }));
+
+export const parseBaseQuestion = (
+  data: Record<string, any> | undefined,
+): BaseQuestion => ({
+    fn: data?.fn || "",
+    text: data?.text || "",
+    description: data?.description || "",
+    img: data?.img || "",
+  ...parseBaseNodeData(data),
+});

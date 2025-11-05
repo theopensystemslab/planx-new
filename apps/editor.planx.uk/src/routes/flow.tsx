@@ -137,8 +137,9 @@ const editNode = validateNodeRoute(
       extraProps.flows = await getExternalPortals(team, flow);
 
     const type = SLUGS[node.type];
+    const nodesWithOptions = ["question", "responsive-question", "checklist", "responsive-checklist"]
 
-    if (type === "checklist" || type === "question") {
+    if (nodesWithOptions.includes(type)) {
       const childNodes = useStore.getState().childNodesOf(id);
       if (node.data?.categories) {
         extraProps.groupedOptions = mapAccum(
