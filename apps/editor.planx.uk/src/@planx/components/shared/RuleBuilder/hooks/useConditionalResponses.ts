@@ -4,6 +4,15 @@ import { useStore } from "pages/FlowEditor/lib/store";
 
 import { isRuleMet } from "../utils";
 
+/**
+ * Determines which options should be shown to the user
+ *
+ * Allow us to limit which options the user sees, based on their responses
+ * so far. Uses the passport to evaluate each option's rule.
+ *
+ * @param responses All possible options for the Question node
+ * @returns Subset of options which the user should see
+ */
 export const useConditionalResponses = (
   options: ConditionalOption[],
 ): ConditionalOption[] => {
@@ -13,13 +22,14 @@ export const useConditionalResponses = (
   );
 
   if (!conditionalResponses.length) {
-    // TODO: Test this!
     logger.notify({
       message:
         "[QuestionComponent]: User was presented with no conditional options",
       passport,
       options,
       conditionalResponses,
+      flowId: useStore.getState().id,
+      nodeId: useStore.getState().currentCard?.id,
     });
   }
 
