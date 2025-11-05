@@ -16,7 +16,7 @@ function ResponsiveQuestionComponent(props: Props) {
   const type = ComponentType.ResponsiveQuestion;
 
   const formik = useFormik<ResponsiveQuestionWithOptions>({
-    initialValues: parseResponsiveQuestion(props.node?.data),
+    initialValues: parseResponsiveQuestion({ ...props.node?.data, options: props.options }),
     onSubmit: ({ options, ...values }) => {
       const children = buildChildren(options);
 

@@ -1,3 +1,4 @@
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import { Option } from "@planx/components/Option/model";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { partition } from "lodash";
@@ -59,6 +60,7 @@ export const Options: React.FC<{
             })}
             Editor={ChecklistOptionsEditor}
             editorExtraProps={{
+              type: ComponentType.Checklist,
               showValueField: !!formik.values.fn,
               schema: getOptionsSchemaByFn(
                 formik.values.fn,
