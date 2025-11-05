@@ -18,7 +18,7 @@ import {
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
-import { isPreviewOnlyDomain } from "routes/utils";
+import { isPreviewOnlyDomain } from "routes-navi/utils";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
