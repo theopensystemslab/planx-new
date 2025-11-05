@@ -7,14 +7,13 @@ import React from "react";
 import { calculateExtraProps } from "utils/routeUtils/queryUtils";
 
 export const Route = createFileRoute(
-  "/_authenticated/$team/$flow/nodes/$parent/nodes/$id/edit/$before",
+  "/_authenticated/$team/$flow/nodes/$id/edit/$before",
 )({
   loaderDeps: ({ search }) => ({ type: search.type }),
   loader: async ({ params, deps }) => {
-    const { team, flow, parent, id, before } = params;
+    const { team, flow, id, before } = params;
     const { type } = deps;
 
-    // Validate that the node exists
     const node = useStore.getState().getNode(id);
     if (!node) {
       throw notFound();
@@ -36,7 +35,7 @@ export const Route = createFileRoute(
       extraProps,
       node,
       id,
-      parent,
+      parent: undefined,
       before,
     };
   },

@@ -20,7 +20,9 @@ export const Route = createFileRoute(
     }
 
     const nodeType = node.type ? SLUGS[node.type] : undefined;
-    const actualType = type || nodeType || "question";
+    const actualType = (type || nodeType || "question") as NonNullable<
+      typeof type
+    >;
 
     const extraProps = await calculateExtraProps(actualType, team, flow, {
       nodeId: id,
