@@ -33,9 +33,7 @@ select_permissions:
     comment: ""
   - role: public
     permission:
-      columns:
-        - email_id
-        - flow_id
+      columns: []
       filter: {}
     comment: ""
   - role: teamEditor
