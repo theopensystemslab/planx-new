@@ -12,8 +12,8 @@ importers:
         specifier: ^11.1.1
         version: 11.3.0
       '@opensystemslab/planx-core':
-        specifier: git+https://github.com/theopensystemslab/planx-core#551755e
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/551755e(@types/react@19.1.13)
+        specifier: git+https://github.com/theopensystemslab/planx-core#05fac77
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/05fac77(@types/react@19.1.13)
       axios:
         specifier: ^1.12.2
         version: 1.12.2
@@ -383,8 +383,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/551755e':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/551755e}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/05fac77':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/05fac77}
     version: 1.0.0
 
   '@pkgjs/parseargs@0.11.0':
@@ -793,8 +793,8 @@ packages:
   fast-uri@3.1.0:
     resolution: {integrity: sha512-iPeeDKJSWf4IEOasVVrknXpaBV0IApz/gp7S2bb7Z4Lljbl2MGJRqInZiUrQwV16cpzw/D3S5j5Julj/gT52AA==}
 
-  fast-xml-parser@5.2.5:
-    resolution: {integrity: sha512-pfX9uG9Ki0yekDHx2SiuRIyFdyAr1kMIMitPvb0YBo8SUfKvia7w7FIyd/l6av85pFYRhZscS75MwMnbvY+hcQ==}
+  fast-xml-parser@5.3.1:
+    resolution: {integrity: sha512-jbNkWiv2Ec1A7wuuxk0br0d0aTMUtQ4IkL+l/i1r9PRf6pLXjDgsBsWwO+UyczmQlnehi4Tbc8/KIvxGQe+I/A==}
     hasBin: true
 
   fastq@1.19.1:
@@ -2146,7 +2146,7 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/551755e(@types/react@19.1.13)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/05fac77(@types/react@19.1.13)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.1.13)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.13)(react@18.3.1))(@types/react@19.1.13)(react@18.3.1)
@@ -2157,7 +2157,7 @@ snapshots:
       cheerio: 1.1.2
       copyfiles: 2.4.1
       eslint: 8.57.1
-      fast-xml-parser: 5.2.5
+      fast-xml-parser: 5.3.1
       graphql: 16.11.0
       graphql-request: 6.1.0(graphql@16.11.0)
       json-schema-to-typescript: 15.0.4
@@ -2609,7 +2609,7 @@ snapshots:
 
   fast-uri@3.1.0: {}
 
-  fast-xml-parser@5.2.5:
+  fast-xml-parser@5.3.1:
     dependencies:
       strnum: 2.1.1
 
