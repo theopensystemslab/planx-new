@@ -1,7 +1,11 @@
 import Box from "@mui/material/Box";
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import type { AnyOption, AnyOptions } from "@planx/components/Option/model";
-import { useCurrentOptions } from "@planx/components/shared/BaseChecklist/Public/hooks/useInitialOptions";
+import { useCurrentOptions } from "@planx/components/Checklist/Public/hooks/useInitialOptions";
+import { AnyOption, AnyOptions } from "@planx/components/Option/model";
+import {
+  AnyChecklist,
+  OptionGroup,
+} from "@planx/components/shared/BaseChecklist/model";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { getIn } from "formik";
 import React from "react";
