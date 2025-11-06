@@ -5,6 +5,7 @@ import {
   map,
   mount,
   NotFoundError,
+  redirect,
   route,
   withContext,
   withData,
@@ -12,6 +13,11 @@ import {
 import DesignSettings from "pages/FlowEditor/components/Settings/DesignSettings";
 import GeneralSettings from "pages/FlowEditor/components/Settings/GeneralSettings";
 import Team from "pages/Team";
+import TeamAdvancedSettings from "pages/Team/TeamSettings/TeamAdvancedSettings";
+import TeamContactSettings from "pages/Team/TeamSettings/TeamContactSettings";
+import TeamGisDataSettings from "pages/Team/TeamSettings/TeamGisDataSettings";
+import TeamIntegrationsSettings from "pages/Team/TeamSettings/TeamIntegrationsSettings";
+import TeamSettingsLayout from "pages/Team/TeamSettings/TeamSettingsLayout";
 import React from "react";
 
 import { client } from "../lib/graphql";
@@ -148,6 +154,50 @@ const routes = compose(
         view: GeneralSettings,
       })),
     ),
+
+    "/new-settings": mount({
+      "/": redirect("./contact"),
+      "/contact": route((req) => ({
+        title: makeTitle(
+          [req.params.team, "new-settings", "contact"].join("/"),
+        ),
+        view: (
+          <TeamSettingsLayout>
+            <TeamContactSettings />
+          </TeamSettingsLayout>
+        ),
+      })),
+      "/integrations": route((req) => ({
+        title: makeTitle(
+          [req.params.team, "new-settings", "integrations"].join("/"),
+        ),
+        view: (
+          <TeamSettingsLayout>
+            <TeamIntegrationsSettings />
+          </TeamSettingsLayout>
+        ),
+      })),
+      "/gis-data": route((req) => ({
+        title: makeTitle(
+          [req.params.team, "new-settings", "gis-data"].join("/"),
+        ),
+        view: (
+          <TeamSettingsLayout>
+            <TeamGisDataSettings />
+          </TeamSettingsLayout>
+        ),
+      })),
+      "/advanced": route((req) => ({
+        title: makeTitle(
+          [req.params.team, "new-settings", "advanced"].join("/"),
+        ),
+        view: (
+          <TeamSettingsLayout>
+            <TeamAdvancedSettings />
+          </TeamSettingsLayout>
+        ),
+      })),
+    }),
 
     "/subscription": lazy(() => import("./subscription")),
   }),
