@@ -18,6 +18,8 @@ import { Switch } from "ui/shared/Switch";
 import { ICONS } from "../../shared/icons";
 import {
   ChecklistWithOptions,
+  FlatOptions,
+  GroupedOptions,
   parseChecklist,
   toggleExpandableChecklist,
   validationSchema,
@@ -25,13 +27,18 @@ import {
 import { Checklist } from "../model";
 import { Options } from "./Options";
 
-export const ChecklistEditor: React.FC<
-  EditorProps<TYPES.Checklist, Checklist>
-> = (props) => {
+type ExtraProps = FlatOptions | GroupedOptions;
+type Props = EditorProps<TYPES.Checklist, Checklist, ExtraProps>;
+
+export const ChecklistEditor: React.FC<Props> = (props) => {
   const type = TYPES.Checklist;
 
   const formik = useFormik<ChecklistWithOptions>({
-    initialValues: parseChecklist(props.node?.data),
+    initialValues: parseChecklist({
+      ...props.node?.data,
+      options: props?.options,
+      groupedOptions: props?.groupedOptions,
+    }),
     onSubmit: ({ options, groupedOptions, ...values }) => {
       const sourceOptions = options?.length
         ? options

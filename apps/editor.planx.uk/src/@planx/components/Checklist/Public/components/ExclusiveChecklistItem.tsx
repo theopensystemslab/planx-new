@@ -2,12 +2,11 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
+import { Option } from "@planx/components/Option/model";
 import { FormikProps } from "formik";
 import React from "react";
 import FormWrapper from "ui/public/FormWrapper";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
-
-import { Option } from "../../../shared";
 
 export const ExclusiveChecklistItem = ({
   exclusiveOrOption,

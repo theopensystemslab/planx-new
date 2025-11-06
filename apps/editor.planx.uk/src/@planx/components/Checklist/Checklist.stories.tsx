@@ -1,5 +1,11 @@
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import { Meta, StoryObj } from "@storybook/react";
+import React from "react"
 
+import Wrapper from "../fixtures/Wrapper";
+import { EditorProps } from "../shared/types";
+import Editor from "./Editor/Editor";
+import { ChecklistWithOptions } from "./model";
 import Checklist from "./Public/Public";
 import { mockWithRepeatedOptions } from "./Public/tests/mockOptions";
 
@@ -165,7 +171,21 @@ export const WithRepeatedOptions = {
   args: mockWithRepeatedOptions,
 } satisfies Story;
 
-// Similar to Question stories here, Checklist's editor atyipcally expects props so the Wrapper throws a type error - come back to!
-// export const WithEditor = () => {
-//   return <Wrapper Editor={<Editor handleSubmit={() => {}} />} Public={Checklist} />;
-// };
+const EditorWithFlatOptions = (props: EditorProps<ComponentType, ChecklistWithOptions, Record<string, unknown>>) => {
+  const editorProps: ChecklistWithOptions = {
+    ...props,
+    groupedOptions: undefined,
+    options: [],
+  };
+
+  return <Editor {...editorProps} />;
+};
+
+export const WithEditor = () => {
+  return (
+    <Wrapper
+      Editor={EditorWithFlatOptions}
+      Public={Checklist}
+    />
+  );
+};

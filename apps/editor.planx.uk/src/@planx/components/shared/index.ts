@@ -1,5 +1,4 @@
 import {
-  Flag,
   NODE_TAGS,
   NodeTags,
   TemplatedNodeData,
@@ -7,7 +6,7 @@ import {
 import { richText } from "lib/yupExtensions";
 import trim from "lodash/trim";
 import { Store } from "pages/FlowEditor/lib/store";
-import { array, boolean, mixed, object, SchemaOf, string } from "yup";
+import { array, boolean, object, SchemaOf, string } from "yup";
 
 /** Shared properties across all node types */
 export type BaseNodeData = NodeTags & TemplatedNodeData & MoreInformation;
@@ -65,38 +64,6 @@ const nodeTagsSchema: SchemaOf<NodeTags> = object({
  */
 export const baseNodeDataValidationSchema: SchemaOf<BaseNodeData> =
   nodeTagsSchema.concat(moreInformationSchema).concat(templatedNodeSchema);
-
-export interface Option {
-  id: string;
-  data: {
-    description?: string;
-    flags?: Array<Flag["value"]>;
-    img?: string;
-    text: string;
-    val?: string;
-    exclusive?: true;
-  };
-}
-
-export const optionValidationSchema = object({
-  id: string(),
-  data: object({
-    description: string(),
-    flags: array(string()),
-    img: string(),
-    text: string().required().trim(),
-    val: string(),
-    exclusive: mixed().oneOf([true, undefined]),
-  }),
-});
-
-export interface Response {
-  id: string;
-  responseKey: string | number;
-  title: string;
-  description?: string;
-  img?: string;
-}
 
 export const parseFormValues = (ob: any, defaultValues = {}) =>
   ob.reduce((acc: any, [k, v]: any) => {

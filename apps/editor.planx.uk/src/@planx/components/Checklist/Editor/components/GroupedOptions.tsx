@@ -2,6 +2,8 @@ import Delete from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import { ComponentType } from "@opensystemslab/planx-core/types";
+import { Option } from "@planx/components/Option/model";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { getIn } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -14,7 +16,6 @@ import ListManager from "ui/editor/ListManager/ListManager";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
-import { Option } from "../../../shared";
 import type { ChecklistWithOptions, Group } from "../../model";
 import { partitionGroupedOptions } from "../../Public/helpers";
 import { useCurrentOptions } from "../../Public/hooks/useInitialOptions";
@@ -52,7 +53,12 @@ export const GroupedOptions = ({
     <Box>
       {nonExclusiveOptionGroups.map(
         (groupedOption: Group<Option>, groupIndex: number) => (
-          <Box key={groupIndex} mt={groupIndex === 0 ? 0 : 4}>
+          <Box
+            key={groupIndex}
+            mt={groupIndex === 0 ? 0 : 4}
+            id={`group-${groupIndex}`}
+            sx={(theme) => ({ scrollMarginTop: theme.spacing(1) })}
+          >
             <Box display="flex" pb={1}>
               <InputRow>
                 <Input
@@ -109,6 +115,7 @@ export const GroupedOptions = ({
                 newValueLabel="add new option"
                 Editor={ChecklistOptionsEditor}
                 editorExtraProps={{
+                  type: ComponentType.Checklist,
                   groupIndex,
                   showValueField: !!formik.values.fn,
                   showDescriptionField: true,

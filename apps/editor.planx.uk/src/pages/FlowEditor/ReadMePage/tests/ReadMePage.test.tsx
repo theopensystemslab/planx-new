@@ -36,15 +36,15 @@ describe("Read Me Page component", () => {
 
     const serviceSummaryInput = screen.getByPlaceholderText("Summary");
 
-    await user.type(serviceSummaryInput, "a summary");
+    await user.type(serviceSummaryInput, "A summary.");
 
     await user.click(screen.getByRole("button", { name: "Save" }));
 
-    expect(screen.getByText("a summary")).toBeInTheDocument();
+    expect(screen.getByText("A summary.")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Reset changes" })); // refreshes page and refetches data
 
-    expect(getState().flowSummary).toEqual("a summary");
-    expect(screen.getByText("a summary")).toBeInTheDocument();
+    expect(getState().flowSummary).toEqual("A summary.");
+    expect(screen.getByText("A summary.")).toBeInTheDocument();
   });
 
   it(

@@ -1,10 +1,10 @@
-import { Option } from "@planx/components/shared";
+import { Option } from "@planx/components/Option/model";
 import { PublicProps } from "@planx/components/shared/types";
 
 import { ChecklistLayout, ChecklistWithOptions, Group } from "../../model";
 
 export const options: {
-  [key in ChecklistLayout]?: Array<Option>;
+  [key in ChecklistLayout]?: Option[];
 } = {
   [ChecklistLayout.Basic]: [
     {

@@ -12,6 +12,7 @@ export type Props = SelectProps & {
   onChange?: SelectProps["onChange"];
   bordered?: boolean;
   visuallyHiddenLabel?: boolean;
+  size?: "small" | "default";
 };
 
 const PREFIX = "SelectInput";
@@ -23,55 +24,20 @@ const classes = {
   inputSelect: `${PREFIX}-inputSelect`,
 };
 
-const Root = styled(Select)(({ theme }) => ({
+const Root = styled(Select)<{ size?: "small" | "default" }>(({ theme, size }) => ({
   width: "100%",
   padding: 0,
-  height: 50,
-  backgroundColor: "#fff",
+  height: size === "small" ? 40 : "unset",
+  minWidth: "175px",
   [`& .${selectClasses.select}`]: {
     width: "100%",
-    padding: theme.spacing(1, 1.5),
+    padding: size === "small" ? theme.spacing(1) : theme.spacing(1, 1.5),
   },
-  [`&.${classes.rootSelect}`]: {
-    paddingRight: theme.spacing(6),
-    boxSizing: "border-box",
-    backgroundColor: "#fff",
-    color: theme.palette.text.primary,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-start",
-  },
-  [`&.${classes.icon}`]: {
-    right: theme.spacing(1),
-    color: "rgba(0,0,0,0.25)",
-  },
-  [`&.${classes.menuPaper}`]: {
-    border: `2px solid ${theme.palette.primary.light}`,
-    borderTop: 0,
-    marginTop: -2,
-    boxShadow: "none",
-    backgroundColor: "#fff",
-    maxHeight: "30vh",
-    borderRadius: 0,
-    "& ul": {
-      padding: "0",
-    },
-    "& li": {
-      color: "currentColor",
-      whiteSpace: "normal",
-      backgroundColor: "transparent",
-      paddingTop: theme.spacing(1.5),
-      paddingBottom: theme.spacing(1.5),
-      lineHeight: 1.2,
-      height: "auto",
-    },
-  },
-  [`&.${classes.inputSelect}`]: {
-    backgroundColor: "transparent",
-    fontSize: "1rem",
-    "&:focus": {
-      backgroundColor: "transparent",
-    },
+  // Match caret in MultipleSelect component
+  [`& .${classes.icon}`]: {
+    padding: size === "small" ? theme.spacing(0.25) : theme.spacing(0.5),
+    color: theme.palette.primary.main,
+    fontSize: size === "small" ? "2rem" : "2.5rem",
   },
 }));
 
@@ -82,6 +48,7 @@ export default function SelectInput({
   onChange,
   bordered,
   visuallyHiddenLabel,
+  size,
   ...props
 }: Props): FCReturn {
   return (
@@ -96,6 +63,7 @@ export default function SelectInput({
       )}
       <Root
         variant="standard"
+        size={size}
         value={value}
         labelId={`${name?.replaceAll(" ", "-")}-label`}
         classes={{
@@ -108,7 +76,7 @@ export default function SelectInput({
         inputProps={{
           name,
           classes: {
-            select: classes.inputSelect,
+            input: classes.inputSelect,
           },
         }}
         MenuProps={{

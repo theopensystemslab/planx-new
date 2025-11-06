@@ -56,6 +56,12 @@ export interface EditorUIStore {
   flowLayout: FlowLayout;
   showSidebar: boolean;
   toggleSidebar: () => void;
+  isLoading: boolean;
+  loadingMessage: string;
+  onLoadingComplete?: () => void;
+  showLoading: (message?: string) => void;
+  hideLoading: () => void;
+  setLoadingCompleteCallback: (callback: (() => void) | undefined) => void;
   flowCardView: FlowCardView;
   setFlowCardView: (view: FlowCardView) => void;
   showTags: boolean;
@@ -94,6 +100,20 @@ export const editorUIStore: StateCreator<
     toggleSidebar: () => {
       set({ showSidebar: !get().showSidebar });
     },
+
+    isLoading: false,
+    loadingMessage: "Loading...",
+
+    showLoading: (message = "Loading...") => {
+      set({ isLoading: true, loadingMessage: message });
+    },
+
+    hideLoading: () => {
+      set({ isLoading: false });
+    },
+
+    setLoadingCompleteCallback: (callback) =>
+      set({ onLoadingComplete: callback }),
 
     flowCardView: "grid",
 
@@ -212,6 +232,7 @@ export interface FlowSummary {
 interface CopiedPayload {
   rootId: string;
   nodes: { originalId: string; nodeData: Store.Node }[];
+  isTemplate: boolean;
 }
 
 interface CutPayload {
@@ -397,7 +418,7 @@ export const editorStore: StateCreator<
   getClonedNodeId: () => localStorage.getItem("clonedNodeId"),
 
   copyNode(id: string) {
-    const { flow } = get();
+    const { flow, isTemplate } = get();
     const rootNode = flow[id];
     if (!rootNode) return;
 
@@ -424,6 +445,7 @@ export const editorStore: StateCreator<
     const payload: CopiedPayload = {
       rootId: id,
       nodes: nodesToCopy,
+      isTemplate: isTemplate,
     };
 
     try {
@@ -651,7 +673,7 @@ export const editorStore: StateCreator<
     if (!copiedString) return;
 
     try {
-      const { rootId, nodes: copiedNodes }: CopiedPayload =
+      const { rootId, nodes: copiedNodes, isTemplate: copiedFromTemplate }: CopiedPayload =
         JSON.parse(copiedString);
       if (!copiedNodes || copiedNodes.length === 0) return;
 
@@ -664,6 +686,15 @@ export const editorStore: StateCreator<
       copiedNodes.forEach(({ originalId, nodeData }) => {
         const newId = uniqueId();
         idMap.set(originalId, newId);
+
+        // If copied from a source template and now pasting to a non-source template, remove templated node props
+        const { isTemplate: pastingToTemplate } = get();
+        if (copiedFromTemplate && !pastingToTemplate) {
+          delete nodeData.data?.["isTemplatedNode"];
+          delete nodeData.data?.["templatedNodeInstructions"];
+          delete nodeData.data?.["areTemplatedNodeInstructionsRequired"];
+        }
+
         newNodes[newId] = structuredClone(nodeData);
 
         if (originalId === rootId) {

@@ -41,16 +41,9 @@ const routes = compose(
   })),
 
   withContext(async (req) => {
-    const {
-      initTeamStore,
-      teamSlug: currentSlug,
-      resetPreview,
-    } = useStore.getState();
+    const { initTeamStore, teamSlug: currentSlug } = useStore.getState();
     const routeSlug =
       req.params.team || (await getTeamFromDomain(window.location.hostname));
-
-    // Clear any cached data from previous flows
-    resetPreview();
 
     if (currentSlug !== routeSlug) {
       try {
@@ -62,10 +55,17 @@ const routes = compose(
   }),
 
   mount({
-    "/": route(() => ({
-      title: makeTitle(useStore.getState().teamName),
-      view: <Team />,
-    })),
+    "/": compose(
+      withContext(async () => {
+        // Clear any cached data from previous flows
+        useStore.getState().resetPreview();
+      }),
+
+      route(() => ({
+        title: makeTitle(useStore.getState().teamName),
+        view: <Team />,
+      })),
+    ),
 
     "/:flow": lazy(async (req) => {
       const [slug] = req.params.flow.split(",");

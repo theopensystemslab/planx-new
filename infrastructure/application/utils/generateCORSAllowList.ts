@@ -14,7 +14,9 @@ export const generateCORSAllowList = (customDomains: CustomDomain[], domain: str
     "https://login.live.com",
     "https://login.microsoftonline.com",
   ];
-  const lpsURL = pulumi.interpolate`https://${config.require("lps-domain")}`;
+
+  const lpsDomain = config.require("lps-domain");
+  const lpsURLs = pulumi.interpolate`https://${lpsDomain}, https://www.${lpsDomain}`;
 
   const staticURLs = [
     ...customDomainURLs,
@@ -28,7 +30,7 @@ export const generateCORSAllowList = (customDomains: CustomDomain[], domain: str
 
   const secret: awsx.ecs.KeyValuePair = {
     name: "CORS_ALLOWLIST",
-    value: pulumi.interpolate`${staticURLsString}, ${lpsURL}`,
+    value: pulumi.interpolate`${staticURLsString}, ${lpsURLs}`,
   };
 
   return secret;

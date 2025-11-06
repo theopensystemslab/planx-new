@@ -56,15 +56,15 @@ const NodeTypeSelect: React.FC<{
     >
       <optgroup label="Question">
         <option value={TYPES.Question}>Question</option>
+        {hasFeatureFlag("RESPONSIVE_QUESTIONS_CHECKLISTS") && (
+          <option value={TYPES.ResponsiveQuestion}>
+            Responsive question (testing only)
+          </option>
+        )}
         <option value={TYPES.Checklist}>Checklist</option>
         {hasFeatureFlag("RESPONSIVE_QUESTIONS_CHECKLISTS") && (
           <option value={TYPES.ResponsiveChecklist}>
             Responsive checklist (testing only)
-          </option>
-        )}
-        {hasFeatureFlag("RESPONSIVE_QUESTIONS_CHECKLISTS") && (
-          <option value={TYPES.ResponsiveQuestion}>
-            Responsive question (testing only)
           </option>
         )}
         <option value={TYPES.NextSteps}>Next steps</option>

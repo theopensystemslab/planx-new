@@ -6,7 +6,6 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: [
-      "./src/test/polyfill.ts",
       "./src/test/mockServer.ts",
       "./src/test/mui.tsx",
     ],
