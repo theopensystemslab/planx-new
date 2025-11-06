@@ -37,7 +37,7 @@ export const ConfirmEmail: React.FC<{
       <Card handleSubmit={formik.handleSubmit}>
         <CardHeader
           title="Enter your email address"
-          description="We will use this to save your application so you can come back to it later. We will also email you updates about your application."
+          description="We will use this to save your form so you can come back to it later. We will also use the address to email you updates about it."
         ></CardHeader>
         <InputRow>
           <InputLabel label={"Email address"} htmlFor={"email"}>
