@@ -100,7 +100,7 @@ const FlowCardMenu: React.FC<Props> = ({
             onClick: () => setOpenDialog("rename"),
           },
           {
-            label: "Copy",
+            label: "Make a copy",
             onClick: () => setOpenDialog("copy"),
             disabled: isAnyTemplate,
           },
