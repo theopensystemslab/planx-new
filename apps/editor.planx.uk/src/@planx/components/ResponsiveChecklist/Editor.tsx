@@ -5,11 +5,24 @@ import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 
+import { ConditionalOption } from "../Option/model";
+import {
+  baseChecklistValidationSchema,
+  FlatOptions,
+  GroupedOptions,
+} from "../shared/BaseChecklist/model";
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { EditorProps } from "../shared/types";
-import { parseResponsiveChecklist, ResponsiveChecklist, validationSchema } from "./model";
+import { parseResponsiveChecklist, ResponsiveChecklist } from "./model";
 
-type Props = EditorProps<TYPES.ResponsiveChecklist, ResponsiveChecklist>;
+type ExtraProps =
+  | FlatOptions<ConditionalOption>
+  | GroupedOptions<ConditionalOption>;
+export type Props = EditorProps<
+  TYPES.ResponsiveChecklist,
+  ResponsiveChecklist,
+  ExtraProps
+>;
 
 export default ResponsiveChecklistComponent;
 
@@ -22,7 +35,7 @@ function ResponsiveChecklistComponent(props: Props) {
         data: newValues,
       });
     },
-    validationSchema,
+    validationSchema: baseChecklistValidationSchema,
     validateOnBlur: false,
     validateOnChange: false,
   });

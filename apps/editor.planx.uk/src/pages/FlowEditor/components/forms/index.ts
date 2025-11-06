@@ -1,7 +1,7 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import AddressInput from "@planx/components/AddressInput/Editor";
 import Calculate from "@planx/components/Calculate/Editor";
-import Checklist from "@planx/components/Checklist/Editor/Editor";
+import Checklist from "@planx/components/Checklist/Editor";
 import Confirmation from "@planx/components/Confirmation/Editor";
 import ContactInput from "@planx/components/ContactInput/Editor";
 import Content from "@planx/components/Content/Editor";

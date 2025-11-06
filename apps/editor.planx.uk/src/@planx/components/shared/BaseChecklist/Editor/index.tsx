@@ -1,8 +1,8 @@
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { ComponentType } from "@opensystemslab/planx-core/types";
+import { Options } from "@planx/components/shared/BaseChecklist/Editor/components/Options";
 import { toggleExpandableChecklist } from "@planx/components/shared/BaseChecklist/model";
 import { DataFieldAutocomplete } from "@planx/components/shared/DataFieldAutocomplete";
-import { EditorProps } from "@planx/components/shared/types";
-import { getIn, useFormik } from "formik";
+import { getIn } from "formik";
 import React, { useRef } from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
@@ -16,72 +16,21 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
-import { ICONS } from "../../shared/icons";
-import {
-  ChecklistWithOptions,
-  FlatOptions,
-  GroupedOptions,
-  parseChecklist,
-  validationSchema,
-} from "../model";
-import { Checklist } from "../model";
-import { Options } from "./Options";
+import { ICONS } from "../../icons";
+import { Props } from "./types";
 
-type ExtraProps = FlatOptions | GroupedOptions;
-type Props = EditorProps<TYPES.Checklist, Checklist, ExtraProps>;
-
-export const ChecklistEditor: React.FC<Props> = (props) => {
-  const type = TYPES.Checklist;
-
-  const formik = useFormik<ChecklistWithOptions>({
-    initialValues: parseChecklist({
-      ...props.node?.data,
-      options: props?.options,
-      groupedOptions: props?.groupedOptions,
-    }),
-    onSubmit: ({ options, groupedOptions, ...values }) => {
-      const sourceOptions = options?.length
-        ? options
-        : groupedOptions?.flatMap((group) => group.children);
-
-      const filteredOptions = (sourceOptions || []).filter(
-        (option) => option.data.text,
-      );
-
-      const processedOptions = filteredOptions.map((option) => ({
-        ...option,
-        id: option.id || undefined,
-        type: TYPES.Answer as const,
-      }));
-
-      if (props.handleSubmit) {
-        props.handleSubmit(
-          {
-            type,
-            data: {
-              ...values,
-              ...(groupedOptions
-                ? {
-                    categories: groupedOptions.map((group) => ({
-                      title: group.title,
-                      count: group.children.length,
-                    })),
-                  }
-                : {
-                    categories: undefined,
-                  }),
-            },
-          },
-          processedOptions,
-        );
-      } else {
-        alert(JSON.stringify({ type, ...values, options }, null, 2));
-      }
-    },
-    validationSchema,
-    validateOnBlur: false,
-    validateOnChange: false,
-  });
+/**
+ * Shared editor component for Checklist and ResponsiveChecklist components
+ * Renders shared UI across both types, and conditionally renders unique fields
+ *
+ * Uses custom components (MoreInformation, TemplateNodeConfiguration) for
+ * type-narrowing. This passes either ChecklistProps or ResponsiveChecklistProps
+ * to children, not the ChecklistProps | ResponsiveChecklistProps union
+ */
+export const BaseChecklistComponent: React.FC<Props> = (props) => {
+  const { type, formik } = props;
+  const title =
+    type === ComponentType.Checklist ? "Checklist" : "Responsive checklist";
 
   const focusRef = useRef<HTMLInputElement | null>(null);
 
@@ -99,7 +48,7 @@ export const ChecklistEditor: React.FC<Props> = (props) => {
         }
       />
       <ModalSection>
-        <ModalSectionContent title="Checklist" Icon={ICONS[type]}>
+        <ModalSectionContent title={title} Icon={ICONS[type]}>
           <InputGroup>
             <InputRow>
               <Input
@@ -203,5 +152,3 @@ export const ChecklistEditor: React.FC<Props> = (props) => {
     </form>
   );
 };
-
-export default ChecklistEditor;

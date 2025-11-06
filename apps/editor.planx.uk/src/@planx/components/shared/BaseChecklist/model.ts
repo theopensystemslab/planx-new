@@ -1,5 +1,5 @@
 import { ChecklistWithOptions } from "@planx/components/Checklist/model";
-import { Option } from "@planx/components/Option/model";
+import { ConditionalOption, Option } from "@planx/components/Option/model";
 import { richText } from "lib/yupExtensions";
 import { partition } from "lodash";
 import { object, SchemaOf, string } from "yup";
@@ -14,6 +14,16 @@ export enum ChecklistLayout {
   Basic,
   Grouped,
   Images,
+}
+
+export interface FlatOptions<T extends Option | ConditionalOption> {
+  options: Array<T>;
+  groupedOptions?: undefined;
+}
+
+export interface GroupedOptions<T extends Option | ConditionalOption> {
+  options?: undefined;
+  groupedOptions: Array<Group<T>>;
 }
 
 export interface Group<T> {

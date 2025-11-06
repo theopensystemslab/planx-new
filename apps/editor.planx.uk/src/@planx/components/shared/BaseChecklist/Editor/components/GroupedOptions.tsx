@@ -17,9 +17,9 @@ import ListManager from "ui/editor/ListManager/ListManager";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
-import type { ChecklistWithOptions } from "../../model";
-import { partitionGroupedOptions } from "../../Public/helpers";
-import { useCurrentOptions } from "../../Public/hooks/useInitialOptions";
+import type { ChecklistWithOptions } from "../../../../Checklist/model";
+import { partitionGroupedOptions } from "../../../../Checklist/Public/helpers";
+import { useCurrentOptions } from "../../../../Checklist/Public/hooks/useInitialOptions";
 import { ExclusiveOrOptionManager } from "./ExclusiveOrOptionManager";
 import ChecklistOptionsEditor from "./OptionsEditor";
 

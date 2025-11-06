@@ -7,11 +7,11 @@ import { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 
-import { ChecklistWithOptions } from "../model";
-import { useCurrentOptions } from "../Public/hooks/useInitialOptions";
-import { ExclusiveOrOptionManager } from "./components/ExclusiveOrOptionManager";
-import { GroupedOptions } from "./components/GroupedOptions";
-import ChecklistOptionsEditor from "./components/OptionsEditor";
+import { ChecklistWithOptions } from "../../../../Checklist/model";
+import { useCurrentOptions } from "../../../../Checklist/Public/hooks/useInitialOptions";
+import { ExclusiveOrOptionManager } from "./ExclusiveOrOptionManager";
+import { GroupedOptions } from "./GroupedOptions";
+import ChecklistOptionsEditor from "./OptionsEditor";
 
 export const Options: React.FC<{
   formik: FormikHookReturn<ChecklistWithOptions>;

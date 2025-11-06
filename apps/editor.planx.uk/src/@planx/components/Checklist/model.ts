@@ -5,8 +5,9 @@ import {
   BaseChecklist,
   baseChecklistValidationSchema,
   Category,
+  FlatOptions,
   getFlatOptions,
-  Group,
+  GroupedOptions,
   parseBaseChecklist,
 } from "../shared/BaseChecklist/model";
 
@@ -21,18 +22,8 @@ export interface Checklist extends BaseChecklist {
   alwaysAutoAnswerBlank?: boolean;
 }
 
-export interface FlatOptions {
-  options: Array<Option>;
-  groupedOptions?: undefined;
-}
-
-export interface GroupedOptions {
-  options?: undefined;
-  groupedOptions: Array<Group<Option>>;
-}
-
-export type FlatChecklist = Checklist & FlatOptions;
-export type GroupedChecklist = Checklist & GroupedOptions;
+export type FlatChecklist = Checklist & FlatOptions<Option>;
+export type GroupedChecklist = Checklist & GroupedOptions<Option>;
 
 /**
  * Public and Editor representation of a Checklist

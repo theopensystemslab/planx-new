@@ -11,8 +11,8 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 
-import { Checklist } from "../model";
 import { ChecklistEditor } from "./Editor";
+import { Checklist } from "./model";
 
 const { getState } = useStore;
 

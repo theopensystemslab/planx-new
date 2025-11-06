@@ -9,8 +9,8 @@ import { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
-import { ChecklistWithOptions } from "../../model";
-import { useCurrentOptions } from "../../Public/hooks/useInitialOptions";
+import { ChecklistWithOptions } from "../../../../Checklist/model";
+import { useCurrentOptions } from "../../../../Checklist/Public/hooks/useInitialOptions";
 import ChecklistOptionsEditor from "./OptionsEditor";
 
 interface Props {

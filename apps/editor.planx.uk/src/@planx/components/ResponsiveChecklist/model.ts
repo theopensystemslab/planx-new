@@ -1,20 +1,27 @@
-import { object, SchemaOf, string } from "yup";
+import { ConditionalOption } from "../Option/model";
+import {
+  BaseChecklist,
+  parseBaseChecklist,
+} from "../shared/BaseChecklist/model";
+import { Condition, Rule } from "../shared/RuleBuilder/types";
 
-import { BaseNodeData, baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
+export type ResponsiveChecklist = BaseChecklist;
 
-export interface ResponsiveChecklist extends BaseNodeData {
-  fn: string;
-}
+/**
+ * Public and Editor representation of a ResponsiveChecklist
+ * Contains options derived from child Answer nodes
+ */
+export type ResponsiveChecklistWithOptions = ResponsiveChecklist & {
+  options: ConditionalOption[];
+};
 
 export const parseResponsiveChecklist = (
-  data: Record<string, any> | undefined
-): ResponsiveChecklist => ({
-  fn: data?.fn || "",
-  ...parseBaseNodeData(data),
+  data: Record<string, any> | undefined,
+): ResponsiveChecklistWithOptions => ({
+  options: data?.options || [],
+  ...parseBaseChecklist(data),
 });
 
-export const validationSchema: SchemaOf<ResponsiveChecklist> = baseNodeDataValidationSchema.concat(
-  object({
-    fn: string().nullable().required()
-  })
-);
+export const DEFAULT_RULE: Rule = {
+  condition: Condition.AlwaysRequired,
+};
