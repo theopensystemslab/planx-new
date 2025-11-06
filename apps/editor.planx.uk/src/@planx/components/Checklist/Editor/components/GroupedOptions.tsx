@@ -53,7 +53,12 @@ export const GroupedOptions = ({
     <Box>
       {nonExclusiveOptionGroups.map(
         (groupedOption: Group<Option>, groupIndex: number) => (
-          <Box key={groupIndex} mt={groupIndex === 0 ? 0 : 4}>
+          <Box
+            key={groupIndex}
+            mt={groupIndex === 0 ? 0 : 4}
+            id={`group-${groupIndex}`}
+            sx={(theme) => ({ scrollMarginTop: theme.spacing(1) })}
+          >
             <Box display="flex" pb={1}>
               <InputRow>
                 <Input
