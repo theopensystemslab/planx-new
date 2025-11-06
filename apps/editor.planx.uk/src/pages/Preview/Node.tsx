@@ -282,8 +282,6 @@ const Node: React.FC<Props> = (props) => {
       );
 
     case TYPES.ResponsiveQuestion: {
-      if (!hasFeatureFlag("RESPONSIVE_QUESTIONS_CHECKLISTS")) return null;
-
       const props = getComponentProps<ResponsiveChecklist>();
       const options = childNodesOf(nodeId) as ConditionalOption[];
 
