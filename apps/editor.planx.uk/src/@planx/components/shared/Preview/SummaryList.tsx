@@ -121,7 +121,7 @@ const presentationalComponents: {
   [TYPES.PropertyInformation]: undefined,
   [TYPES.Answer]: Debug,
   [TYPES.ResponsiveChecklist]: undefined,
-  [TYPES.ResponsiveQuestion]: undefined,
+  [TYPES.ResponsiveQuestion]: Question,
   [TYPES.Result]: undefined,
   [TYPES.Review]: undefined,
   [TYPES.Section]: undefined,
