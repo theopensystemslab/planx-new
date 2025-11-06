@@ -64,7 +64,7 @@ export const mockGetExpiredSessionIdsQuery = {
   name: "GetExpiredSessionIds",
   matchOnVariables: false,
   data: {
-    lowcal_sessions: [{ id: "id1" }, { id: "id2" }, { id: "id3" }],
+    lowcal_sessions: mockIds.map((id) => ({ id })),
   },
 };
 

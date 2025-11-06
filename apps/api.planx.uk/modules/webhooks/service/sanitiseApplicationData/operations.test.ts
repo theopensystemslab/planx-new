@@ -182,8 +182,11 @@ describe("Data sanitation operations", () => {
   });
 
   describe("deleteApplicationFiles", () => {
-    it("returns a QueryResult on success", async () => {
+    beforeEach(() => {
       queryMock.mockQuery(mockGetExpiredSessionIdsQuery);
+    });
+
+    it("returns a QueryResult on success", async () => {
       const mockSession = {
         data: {
           passport: {
@@ -206,9 +209,23 @@ describe("Data sanitation operations", () => {
     });
 
     it("handles missing sessions", async () => {
-      queryMock.mockQuery(mockGetExpiredSessionIdsQuery);
       mockFindSession.mockResolvedValue(null);
       await expect(deleteApplicationFiles()).rejects.toThrow();
+    });
+
+    // for below cases, no files should be deleted, but nor should the operation error out
+    it("skips over empty data fields", async () => {
+      mockFindSession.mockResolvedValue({ data: {} });
+      const deletedFiles = await deleteApplicationFiles();
+      expect(deletedFiles).toHaveLength(0);
+    });
+
+    it("skips over malformed passports", async () => {
+      mockFindSession.mockResolvedValue({
+        data: { passport: { not_data: {} } },
+      });
+      const deletedFiles = await deleteApplicationFiles();
+      expect(deletedFiles).toHaveLength(0);
     });
   });
 
