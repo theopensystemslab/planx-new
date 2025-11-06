@@ -1,5 +1,5 @@
-import { type Group } from "@planx/components/Checklist/model";
 import { Option } from "@planx/components/Option/model";
+import { type Group } from "@planx/components/shared/BaseChecklist/model";
 import { partition } from "lodash";
 import { Store } from "pages/FlowEditor/lib/store";
 

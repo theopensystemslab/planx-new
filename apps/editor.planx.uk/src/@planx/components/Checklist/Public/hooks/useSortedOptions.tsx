@@ -1,7 +1,10 @@
 import { Option } from "@planx/components/Option/model";
+import {
+  getFlatOptions,
+  getLayout,
+  Group,
+} from "@planx/components/shared/BaseChecklist/model";
 import { FormikProps } from "formik";
-
-import { getFlatOptions, getLayout, Group } from "../../model";
 
 export const useSortedOptions = (
   options: Option[] | undefined,

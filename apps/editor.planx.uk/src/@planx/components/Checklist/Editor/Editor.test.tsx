@@ -1,5 +1,6 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { Option } from "@planx/components/Option/model";
+import { Group } from "@planx/components/shared/BaseChecklist/model";
 import { EditorProps } from "@planx/components/shared/types";
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 // eslint-disable-next-line no-restricted-imports
@@ -10,7 +11,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 
-import { Checklist, Group } from "../model";
+import { Checklist } from "../model";
 import { ChecklistEditor } from "./Editor";
 
 const { getState } = useStore;

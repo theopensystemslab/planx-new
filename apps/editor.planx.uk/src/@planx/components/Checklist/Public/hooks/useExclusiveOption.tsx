@@ -1,7 +1,6 @@
 import { Option } from "@planx/components/Option/model";
+import { Group } from "@planx/components/shared/BaseChecklist/model";
 import { FormikProps } from "formik";
-
-import { Group } from "../../model";
 
 export const useExclusiveOption = (
   exclusiveOptions: Option[],

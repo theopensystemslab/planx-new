@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { Option } from "@planx/components/Option/model";
+import { Group } from "@planx/components/shared/BaseChecklist/model";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { getIn } from "formik";
 import React from "react";
@@ -8,7 +9,7 @@ import { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
-import { ChecklistWithOptions, Group } from "../../model";
+import { ChecklistWithOptions } from "../../model";
 import { useCurrentOptions } from "../../Public/hooks/useInitialOptions";
 import ChecklistOptionsEditor from "./OptionsEditor";
 

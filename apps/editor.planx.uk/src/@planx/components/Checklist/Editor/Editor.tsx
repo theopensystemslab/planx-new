@@ -1,4 +1,5 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { toggleExpandableChecklist } from "@planx/components/shared/BaseChecklist/model";
 import { DataFieldAutocomplete } from "@planx/components/shared/DataFieldAutocomplete";
 import { EditorProps } from "@planx/components/shared/types";
 import { getIn, useFormik } from "formik";
@@ -21,7 +22,6 @@ import {
   FlatOptions,
   GroupedOptions,
   parseChecklist,
-  toggleExpandableChecklist,
   validationSchema,
 } from "../model";
 import { Checklist } from "../model";

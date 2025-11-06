@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { Group } from "@planx/components/Checklist/model";
 import { Option } from "@planx/components/Option/model";
+import { Group } from "@planx/components/shared/BaseChecklist/model";
 import { FormikProps } from "formik";
 import { Store } from "pages/FlowEditor/lib/store";
 import React from "react";

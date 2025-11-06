@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { Option } from "@planx/components/Option/model";
+import type { Group } from "@planx/components/shared/BaseChecklist/model";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { getIn } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -16,7 +17,7 @@ import ListManager from "ui/editor/ListManager/ListManager";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
-import type { ChecklistWithOptions, Group } from "../../model";
+import type { ChecklistWithOptions } from "../../model";
 import { partitionGroupedOptions } from "../../Public/helpers";
 import { useCurrentOptions } from "../../Public/hooks/useInitialOptions";
 import { ExclusiveOrOptionManager } from "./ExclusiveOrOptionManager";
