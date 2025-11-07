@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import {
   DateInput,
   dateInputValidationSchema,
+  normalizeDate,
   paddedDate,
   UserData,
 } from "@planx/components/DateInput/model";
@@ -28,7 +29,8 @@ const DateInputPublic: React.FC<Props> = (props) => {
       date: getPreviouslySubmittedData(props) ?? "",
     },
     onSubmit: (values) => {
-      props.handleSubmit?.(makeData(props, values.date));
+      const normalizedDate = normalizeDate(values.date);
+      props.handleSubmit?.(makeData(props, normalizedDate));
     },
     validateOnBlur: false,
     validateOnChange: false,
