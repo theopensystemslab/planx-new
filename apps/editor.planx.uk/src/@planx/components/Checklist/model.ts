@@ -1,10 +1,9 @@
-import { array, boolean, number, object, string } from "yup";
+import { array, boolean, object, string } from "yup";
 
 import { Option, optionValidationSchema } from "../Option/model";
 import {
   BaseChecklist,
   baseChecklistValidationSchema,
-  Category,
   FlatOptions,
   getFlatOptions,
   GroupedOptions,
@@ -16,8 +15,6 @@ import {
  */
 export interface Checklist extends BaseChecklist {
   allRequired?: boolean;
-  // TODO: is this real or generated?
-  categories?: Array<Category>;
   neverAutoAnswer?: boolean;
   alwaysAutoAnswerBlank?: boolean;
 }
@@ -70,12 +67,6 @@ export const validationSchema = baseChecklistValidationSchema.concat(
     ).optional(),
     allRequired: boolean(),
     options: array(optionValidationSchema).optional(),
-    categories: array(
-      object({
-        title: string().trim(),
-        count: number(),
-      }),
-    ),
     neverAutoAnswer: boolean(),
     alwaysAutoAnswerBlank: boolean(),
     autoAnswers: array(string()),

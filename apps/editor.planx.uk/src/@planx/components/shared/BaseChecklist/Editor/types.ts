@@ -15,5 +15,4 @@ export type ResponsiveChecklistProps = {
   formik: ReturnType<typeof useFormik<ResponsiveChecklistWithOptions>>;
 } & EditorResponsiveChecklistProps;
 
-// export type Props = ChecklistProps | ResponsiveChecklistProps;
-export type Props = ChecklistProps;
+export type Props = ChecklistProps | ResponsiveChecklistProps;

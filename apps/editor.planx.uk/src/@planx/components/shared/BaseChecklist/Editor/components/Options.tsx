@@ -1,88 +1,32 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { Option } from "@planx/components/Option/model";
-import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
-import { partition } from "lodash";
+import { ChecklistWithOptions } from "@planx/components/Checklist/model";
+import { ResponsiveChecklistWithOptions } from "@planx/components/ResponsiveChecklist/model";
 import React from "react";
-import { FormikHookReturn } from "types";
-import ListManager from "ui/editor/ListManager/ListManager";
-import ModalSectionContent from "ui/editor/ModalSectionContent";
 
-import { ChecklistWithOptions } from "../../../../Checklist/model";
-import { useCurrentOptions } from "../../../../Checklist/Public/hooks/useInitialOptions";
-import { ExclusiveOrOptionManager } from "./ExclusiveOrOptionManager";
-import { GroupedOptions } from "./GroupedOptions";
-import ChecklistOptionsEditor from "./OptionsEditor";
+import { Props } from "../types";
+import { Options } from "./Options/index";
 
-export const Options: React.FC<{
-  formik: FormikHookReturn<ChecklistWithOptions>;
-  disabled?: boolean;
-  isTemplatedNode?: boolean;
-}> = ({ formik, disabled, isTemplatedNode }) => {
-  const [exclusiveOptions, nonExclusiveOptions]: Option[][] = partition(
-    formik.values.options,
-    (option) => option.data.exclusive,
-  );
+export const TypeNarrowedOptions: React.FC<Props> = ({
+  formik,
+  disabled,
+  type,
+  node,
+}) => {
+  if (type === ComponentType.Checklist)
+    return (
+      <Options<ChecklistWithOptions>
+        formik={formik}
+        disabled={disabled}
+        isTemplatedNode={node?.data?.isTemplatedNode}
+      />
+    );
 
-  const exclusiveOrOptionManagerShouldRender = nonExclusiveOptions.length > 0;
-
-  const { schema, currentOptionVals } = useCurrentOptions(formik);
-
-  return (
-    <ModalSectionContent subtitle="Options">
-      {formik.values.groupedOptions ? (
-        <GroupedOptions
-          formik={formik}
-          disabled={disabled}
-          isTemplatedNode={isTemplatedNode}
-        />
-      ) : (
-        <>
-          <ListManager
-            values={nonExclusiveOptions || []}
-            onChange={(newOptions) => {
-              const newCombinedOptions =
-                newOptions.length === 0
-                  ? []
-                  : [...newOptions, ...exclusiveOptions];
-
-              formik.setFieldValue("options", newCombinedOptions);
-            }}
-            disabled={disabled}
-            newValueLabel="add new option"
-            newValue={() => ({
-              id: "",
-              data: {
-                text: "",
-                description: "",
-                val: "",
-                flags: [],
-              },
-            })}
-            Editor={ChecklistOptionsEditor}
-            editorExtraProps={{
-              type: ComponentType.Checklist,
-              showValueField: !!formik.values.fn,
-              schema: getOptionsSchemaByFn(
-                formik.values.fn,
-                schema,
-                currentOptionVals,
-              ),
-            }}
-            isTemplatedNode={isTemplatedNode}
-          />
-          {exclusiveOrOptionManagerShouldRender ? (
-            <ExclusiveOrOptionManager
-              formik={formik}
-              exclusiveOptions={exclusiveOptions}
-              nonExclusiveOptions={nonExclusiveOptions}
-              disabled={disabled}
-              isTemplatedNode={isTemplatedNode}
-            />
-          ) : (
-            <></>
-          )}
-        </>
-      )}
-    </ModalSectionContent>
-  );
+  if (type === ComponentType.ResponsiveChecklist)
+    return (
+      <Options<ResponsiveChecklistWithOptions>
+        formik={formik}
+        disabled={disabled}
+        isTemplatedNode={node?.data?.isTemplatedNode}
+      />
+    );
 };

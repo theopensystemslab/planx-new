@@ -1,12 +1,9 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { Options } from "@planx/components/shared/BaseChecklist/Editor/components/Options";
-import { toggleExpandableChecklist } from "@planx/components/shared/BaseChecklist/model";
 import { DataFieldAutocomplete } from "@planx/components/shared/DataFieldAutocomplete";
 import { getIn } from "formik";
 import React, { useRef } from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
-import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
@@ -17,6 +14,9 @@ import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
 import { ICONS } from "../../icons";
+import { TypeNarrowedExpandableSwitch as ExpandableSwitch } from "./components/ExpandableSwitch";
+import { TypeNarrowedModalFooter as ModalFooter } from "./components/ModalFooter";
+import { TypeNarrowedOptions as Options } from "./components/Options";
 import { Props } from "./types";
 
 /**
@@ -88,67 +88,60 @@ export const BaseChecklistComponent: React.FC<Props> = (props) => {
               />
             </ErrorWrapper>
             <InputRow>
-              <Switch
-                checked={!!formik.values.groupedOptions}
-                onChange={() =>
-                  formik.setValues(toggleExpandableChecklist(formik.values))
-                }
-                label="Expandable"
-                disabled={props.disabled}
-              />
+              <ExpandableSwitch {...props} />
             </InputRow>
-            <InputRow>
-              <Switch
-                checked={formik.values.allRequired}
-                onChange={() =>
-                  formik.setFieldValue(
-                    "allRequired",
-                    !formik.values.allRequired,
-                  )
-                }
-                label="All required"
-                disabled={props.disabled}
-              />
-            </InputRow>
-            <InputRow>
-              <Switch
-                checked={formik.values.neverAutoAnswer}
-                onChange={() =>
-                  formik.setFieldValue(
-                    "neverAutoAnswer",
-                    !formik.values.neverAutoAnswer,
-                  )
-                }
-                label="Always put to user (forgo automation)"
-                disabled={props.disabled}
-              />
-            </InputRow>
-            <ErrorWrapper error={formik.errors.alwaysAutoAnswerBlank}>
-              <InputRow>
-                <Switch
-                  checked={formik.values.alwaysAutoAnswerBlank}
-                  onChange={() =>
-                    formik.setFieldValue(
-                      "alwaysAutoAnswerBlank",
-                      !formik.values.alwaysAutoAnswerBlank,
-                    )
-                  }
-                  label="Never put to user (default to blank automation)"
-                  disabled={props.disabled}
-                />
-              </InputRow>
-            </ErrorWrapper>
+            {type === ComponentType.Checklist && (
+              <>
+                <InputRow>
+                  <Switch
+                    checked={formik.values.allRequired}
+                    onChange={() =>
+                      formik.setFieldValue(
+                        "allRequired",
+                        !formik.values.allRequired,
+                      )
+                    }
+                    label="All required"
+                    disabled={props.disabled}
+                  />
+                </InputRow>
+                <InputRow>
+                  <Switch
+                    checked={formik.values.neverAutoAnswer}
+                    onChange={() =>
+                      formik.setFieldValue(
+                        "neverAutoAnswer",
+                        !formik.values.neverAutoAnswer,
+                      )
+                    }
+                    label="Always put to user (forgo automation)"
+                    disabled={props.disabled}
+                  />
+                </InputRow>
+                <ErrorWrapper error={formik.errors.alwaysAutoAnswerBlank}>
+                  <InputRow>
+                    <Switch
+                      checked={formik.values.alwaysAutoAnswerBlank}
+                      onChange={() =>
+                        formik.setFieldValue(
+                          "alwaysAutoAnswerBlank",
+                          !formik.values.alwaysAutoAnswerBlank,
+                        )
+                      }
+                      label="Never put to user (default to blank automation)"
+                      disabled={props.disabled}
+                    />
+                  </InputRow>
+                </ErrorWrapper>
+              </>
+            )}
           </InputGroup>
         </ModalSectionContent>
         <ErrorWrapper error={getIn(formik.errors, "options")}>
-          <Options
-            formik={formik}
-            disabled={props.disabled}
-            isTemplatedNode={props.node?.data?.isTemplatedNode}
-          />
+          <Options {...props} />
         </ErrorWrapper>
       </ModalSection>
-      <ModalFooter formik={formik} disabled={props.disabled} />
+      <ModalFooter {...props} />
     </form>
   );
 };

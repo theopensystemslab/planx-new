@@ -1,8 +1,9 @@
 import { ChecklistWithOptions } from "@planx/components/Checklist/model";
 import { ConditionalOption, Option } from "@planx/components/Option/model";
+import { ResponsiveChecklistWithOptions } from "@planx/components/ResponsiveChecklist/model";
 import { richText } from "lib/yupExtensions";
 import { partition } from "lodash";
-import { object, SchemaOf, string } from "yup";
+import { array, number, object, string } from "yup";
 
 import {
   BaseNodeData,
@@ -15,6 +16,13 @@ export enum ChecklistLayout {
   Grouped,
   Images,
 }
+
+/**
+ * Utility type for where checklist types are interchangeable
+ */
+export type AnyChecklist =
+  | ChecklistWithOptions
+  | ResponsiveChecklistWithOptions;
 
 export interface FlatOptions<T extends Option | ConditionalOption> {
   options: Array<T>;
@@ -32,6 +40,8 @@ export interface Group<T> {
   children: Array<T>;
 }
 
+export type OptionGroup = Group<Option> | Group<ConditionalOption>;
+
 export interface Category {
   title: string;
   count: number;
@@ -42,6 +52,7 @@ export interface BaseChecklist extends BaseNodeData {
   description?: string;
   text?: string;
   img?: string;
+  categories?: Array<Category>;
 }
 
 export const parseBaseChecklist = (
@@ -51,24 +62,33 @@ export const parseBaseChecklist = (
   description: data?.description || "",
   text: data?.text || "",
   img: data?.img || "",
+  categories: data?.categories || [],
   ...parseBaseNodeData(data),
 });
 
-export const baseChecklistValidationSchema: SchemaOf<BaseChecklist> =
+export const baseChecklistValidationSchema =
   baseNodeDataValidationSchema.concat(
     object({
       description: richText(),
       fn: string(),
       text: string(),
       img: string(),
+      categories: array(
+        object({
+          title: string().trim().required(),
+          count: number().required(),
+        }),
+      ),
     }),
   );
 
-export const toggleExpandableChecklist = ({
+export const toggleExpandableChecklist = <
+  T extends ChecklistWithOptions | ResponsiveChecklistWithOptions,
+>({
   options,
   groupedOptions,
   ...checklist
-}: ChecklistWithOptions): ChecklistWithOptions => {
+}: T): T => {
   // toggle from unexpanded to expanded
   if (options !== undefined && options.length > 0) {
     const [exclusiveOptions, nonExclusiveOptions]: Option[][] = partition(
@@ -94,7 +114,7 @@ export const toggleExpandableChecklist = ({
       ...checklist,
       groupedOptions: newGroupedOptions,
       options: undefined,
-    };
+    } as T;
 
     // toggle from expanded to unexpanded
   } else if (groupedOptions !== undefined && groupedOptions.length > 0) {
@@ -102,7 +122,7 @@ export const toggleExpandableChecklist = ({
       ...checklist,
       options: groupedOptions.flatMap((opt) => opt.children),
       groupedOptions: undefined,
-    };
+    } as T;
   } else {
     return {
       ...checklist,
@@ -113,18 +133,16 @@ export const toggleExpandableChecklist = ({
           children: [],
         },
       ],
-    };
+    } as T;
   }
 };
 
-export const getFlatOptions = ({
-  options,
-  groupedOptions,
-}: {
-  // TODO: Add ResponsiveChecklist types?
-  options: ChecklistWithOptions["options"];
-  groupedOptions: ChecklistWithOptions["groupedOptions"];
-}) => {
+interface ChecklistOpts {
+  options?: Option[] | ConditionalOption[];
+  groupedOptions?: Group<Option>[] | Group<ConditionalOption>[];
+}
+
+export const getFlatOptions = ({ options, groupedOptions }: ChecklistOpts) => {
   if (options) return options;
   if (groupedOptions) return groupedOptions.flatMap(({ children }) => children);
   return [];
@@ -133,11 +151,7 @@ export const getFlatOptions = ({
 export const getLayout = ({
   options,
   groupedOptions,
-}: {
-  // TODO: Add ResponsiveChecklist types?
-  options: ChecklistWithOptions["options"];
-  groupedOptions: ChecklistWithOptions["groupedOptions"];
-}): ChecklistLayout => {
+}: ChecklistOpts): ChecklistLayout => {
   const hasImages = options?.some((o) => o.data.img);
   if (hasImages) return ChecklistLayout.Images;
 

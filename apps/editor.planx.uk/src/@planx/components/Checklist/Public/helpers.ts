@@ -1,5 +1,5 @@
-import { Option } from "@planx/components/Option/model";
-import { type Group } from "@planx/components/shared/BaseChecklist/model";
+import { AnyOption, AnyOptions } from "@planx/components/Option/model";
+import { OptionGroup } from "@planx/components/shared/BaseChecklist/model";
 import { partition } from "lodash";
 import { Store } from "pages/FlowEditor/lib/store";
 
@@ -9,18 +9,15 @@ export function toggleInArray<T>(value: T, arr: Array<T>): Array<T> {
     : [...arr, value];
 }
 
-export function groupHasOptionSelected(
-  group: Group<Option>,
-  answers: string[],
-) {
+export function groupHasOptionSelected(group: OptionGroup, answers: string[]) {
   return group.children.some((child) => answers.some((id) => child.id === id));
 }
 
 export function getInitialExpandedGroups(
-  groupedOptions?: Array<Group<Option>>,
+  groupedOptions?: OptionGroup[],
   previouslySubmittedData?: Store.UserData,
 ) {
-  return (groupedOptions ?? ([] as Group<Option>[])).reduce(
+  return (groupedOptions ?? []).reduce(
     (acc, group, index) =>
       groupHasOptionSelected(group, previouslySubmittedData?.answers ?? [])
         ? [...acc, index]
@@ -32,7 +29,7 @@ export function getInitialExpandedGroups(
 export const toggleCheckbox = (
   thisCheckboxId: string,
   currentlyCheckedOptionIds: string[],
-  nonExclusiveOptions: Option[],
+  nonExclusiveOptions: AnyOptions,
 ) => {
   const matchById = (id: string) => id === thisCheckboxId;
 
@@ -97,8 +94,8 @@ export const toggleCheckbox = (
 export const toggleNonExclusiveCheckbox = (
   thisCheckboxId: string,
   currentlyCheckedOptionIds: string[],
-  exclusiveOrOption: Option,
-  nonExclusiveOptions: Option[],
+  exclusiveOrOption: AnyOption,
+  nonExclusiveOptions: AnyOptions,
 ) => {
   const newCheckedOptionIds = toggleCheckbox(
     thisCheckboxId,
@@ -114,11 +111,11 @@ export const toggleNonExclusiveCheckbox = (
 };
 
 export const partitionGroupedOptions = (
-  groupedOptions: Group<Option>[],
-): Group<Option>[][] => {
+  groupedOptions: OptionGroup[],
+): OptionGroup[][] => {
   const [exclusiveOptionGroup, nonExclusiveOptionGroups] = partition(
     groupedOptions,
-    (group: Group<Option>) =>
+    (group) =>
       group.exclusive ||
       group.children.some((child) => child.data.exclusive === true),
   );
@@ -137,9 +134,9 @@ export const changeCheckbox =
     id: string;
     setCheckedFieldValue: (optionIds: string[]) => void;
     currentCheckedIds: string[];
-    exclusiveOrOption: Option;
+    exclusiveOrOption: AnyOption;
     toggleExclusiveCheckbox: (checkboxId: string) => string[];
-    nonExclusiveOptions: Option[];
+    nonExclusiveOptions: AnyOptions;
   }) =>
   () => {
     const currentCheckboxIsExclusiveOption =

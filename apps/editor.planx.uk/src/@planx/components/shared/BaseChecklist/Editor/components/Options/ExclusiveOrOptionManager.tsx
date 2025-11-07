@@ -1,7 +1,13 @@
 import Box from "@mui/material/Box";
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { Option } from "@planx/components/Option/model";
-import { Group } from "@planx/components/shared/BaseChecklist/model";
+import { ChecklistWithOptions } from "@planx/components/Checklist/model";
+import { useCurrentOptions } from "@planx/components/Checklist/Public/hooks/useInitialOptions";
+import { AnyOption, AnyOptions, Option } from "@planx/components/Option/model";
+import { ResponsiveChecklistWithOptions } from "@planx/components/ResponsiveChecklist/model";
+import {
+  AnyChecklist,
+  OptionGroup,
+} from "@planx/components/shared/BaseChecklist/model";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { getIn } from "formik";
 import React from "react";
@@ -9,21 +15,19 @@ import { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
-import { ChecklistWithOptions } from "../../../../Checklist/model";
-import { useCurrentOptions } from "../../../../Checklist/Public/hooks/useInitialOptions";
 import ChecklistOptionsEditor from "./OptionsEditor";
 
-interface Props {
-  formik: FormikHookReturn<ChecklistWithOptions>;
-  exclusiveOptions: Option[];
-  nonExclusiveOptions: Option[] | Array<Group<Option>>;
+interface Props<T extends AnyChecklist> {
+  formik: FormikHookReturn<T>;
+  exclusiveOptions: AnyOptions;
+  nonExclusiveOptions: AnyOptions | OptionGroup[];
   groupIndex?: number;
   grouped?: true;
   disabled?: boolean;
   isTemplatedNode?: boolean;
 }
 
-export const ExclusiveOrOptionManager = ({
+export const ExclusiveOrOptionManager = <T extends AnyChecklist>({
   formik,
   exclusiveOptions,
   nonExclusiveOptions,
@@ -31,7 +35,7 @@ export const ExclusiveOrOptionManager = ({
   grouped,
   disabled,
   isTemplatedNode,
-}: Props) => {
+}: Props<T>) => {
   const { schema, currentOptionVals } = useCurrentOptions(formik);
 
   return (
@@ -77,8 +81,9 @@ export const ExclusiveOrOptionManager = ({
                   val: "",
                   flags: [],
                   exclusive: true,
+                  // TODO: Rule
                 },
-              }) satisfies Option
+              }) satisfies AnyOption
             }
             Editor={ChecklistOptionsEditor}
             disabled={disabled}

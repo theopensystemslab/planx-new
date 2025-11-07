@@ -1,20 +1,18 @@
-import { Option } from "@planx/components/Option/model";
-import { Group } from "@planx/components/shared/BaseChecklist/model";
+import { ChecklistWithOptions } from "@planx/components/Checklist/model";
+import { ResponsiveChecklistWithOptions } from "@planx/components/ResponsiveChecklist/model";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { FormikHookReturn } from "types";
 
-import { ChecklistWithOptions } from "../../model";
-
-export const useCurrentOptions = (
-  formik: FormikHookReturn<ChecklistWithOptions>,
+export const useCurrentOptions = <
+  T extends ChecklistWithOptions | ResponsiveChecklistWithOptions,
+>(
+  formik: FormikHookReturn<T>,
 ) => {
   const schema = useStore().getFlowSchema()?.options;
 
-  const currentOptions: Option[] | undefined =
+  const currentOptions =
     formik.values.options ||
-    formik.values.groupedOptions
-      ?.map((group: Group<Option>) => group.children)
-      ?.flat();
+    formik.values.groupedOptions?.map((group) => group.children)?.flat();
 
   const currentOptionVals = currentOptions?.map((option) => option.data?.val);
 
