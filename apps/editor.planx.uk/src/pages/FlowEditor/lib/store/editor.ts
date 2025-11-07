@@ -68,6 +68,8 @@ export interface EditorUIStore {
   toggleShowTags: () => void;
   showImages: boolean;
   toggleShowImages: () => void;
+  showNotes: boolean;
+  toggleShowNotes: () => void;
   showDataFields: boolean;
   toggleShowDataFields: () => void;
   showHelpText: boolean;
@@ -128,6 +130,10 @@ export const editorUIStore: StateCreator<
     showImages: false,
 
     toggleShowImages: () => set({ showImages: !get().showImages }),
+
+    showNotes: false,
+
+    toggleShowNotes: () => set({ showNotes: !get().showNotes }),
 
     showDataFields: true,
 
@@ -192,6 +198,7 @@ export const editorUIStore: StateCreator<
       flowCardView: state.flowCardView,
       showTags: state.showTags,
       showImages: state.showImages,
+      showNotes: state.showNotes,
       showDataFields: state.showDataFields,
       showHelpText: state.showHelpText,
     }),
@@ -673,8 +680,11 @@ export const editorStore: StateCreator<
     if (!copiedString) return;
 
     try {
-      const { rootId, nodes: copiedNodes, isTemplate: copiedFromTemplate }: CopiedPayload =
-        JSON.parse(copiedString);
+      const {
+        rootId,
+        nodes: copiedNodes,
+        isTemplate: copiedFromTemplate,
+      }: CopiedPayload = JSON.parse(copiedString);
       if (!copiedNodes || copiedNodes.length === 0) return;
 
       // Keep a map of originalId: newId allowing us to insert unique nodes and maintain our edge relationships
