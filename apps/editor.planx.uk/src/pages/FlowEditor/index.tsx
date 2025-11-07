@@ -13,6 +13,7 @@ import { getParentId } from "./components/Flow/lib/utils";
 import { ToggleDataFieldsButton } from "./components/FlowEditor/ToggleDataFieldsButton";
 import { ToggleHelpTextButton } from "./components/FlowEditor/ToggleHelpTextButton";
 import { ToggleImagesButton } from "./components/FlowEditor/ToggleImagesButton";
+import { ToggleNotesButton } from "./components/FlowEditor/ToggleNotesButton";
 import { ToggleTagsButton } from "./components/FlowEditor/ToggleTagsButton";
 import Sidebar from "./components/Sidebar";
 import FlowSkeleton from "./FlowSkeleton";
@@ -114,6 +115,7 @@ const FlowEditor = () => {
             aria-label="Toggle node attributes"
           >
             <ToggleImagesButton />
+            <ToggleNotesButton />
             <ToggleHelpTextButton />
             <ToggleDataFieldsButton />
             <ToggleTagsButton />
