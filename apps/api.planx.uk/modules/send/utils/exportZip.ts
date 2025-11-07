@@ -44,10 +44,12 @@ export async function buildSubmissionExportZip({
   // create empty zip
   const zip = new ExportZip(sessionId, flowSlug);
 
+  // check to see whether we should validate JSON
+  const doValidation = isApplicationTypeSupported(passport);
+
   // add ODP Schema JSON to the zip, skipping validation if an unsupported application type
   if (includeDigitalPlanningJSON || onlyDigitalPlanningJSON) {
     try {
-      const doValidation = isApplicationTypeSupported(passport);
       const schema = doValidation
         ? await $api.export.digitalPlanningDataPayload(sessionId)
         : await $api.export.digitalPlanningDataPayload(sessionId, true);
@@ -101,7 +103,9 @@ export async function buildSubmissionExportZip({
   }
 
   // generate json data
-  const responses = await $api.export.digitalPlanningDataPayload(sessionId);
+  const responses = doValidation
+    ? await $api.export.digitalPlanningDataPayload(sessionId)
+    : await $api.export.digitalPlanningDataPayload(sessionId, true);
 
   const boundingBox = passport.data["proposal.site.buffered"];
   const userAction = passport.data?.["drawBoundary.action"];
