@@ -131,7 +131,7 @@ export const editorUIStore: StateCreator<
 
     toggleShowImages: () => set({ showImages: !get().showImages }),
 
-    showNotes: false,
+    showNotes: true,
 
     toggleShowNotes: () => set({ showNotes: !get().showNotes }),
 
