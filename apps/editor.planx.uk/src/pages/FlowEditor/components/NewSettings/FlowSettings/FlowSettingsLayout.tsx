@@ -18,9 +18,10 @@ interface Props {
 const FlowSettingsLayout: React.FC<Props> = ({ children }) => {
   const { navigate } = useNavigation();
   const { url } = useCurrentRoute();
-  const [teamSlug, flowSlug, isTemplate] = useStore((state) => [
+  const [teamSlug, flowSlug, isTemplatedFrom] = useStore((state) => [
     state.teamSlug,
     state.flowSlug,
+    state.isTemplatedFrom,
     state.isTemplate,
   ]);
 
@@ -29,7 +30,7 @@ const FlowSettingsLayout: React.FC<Props> = ({ children }) => {
     { label: "Legal disclaimer", path: "/legal-disclaimer" },
     { label: "Help page", path: "/pages/help" },
     { label: "Privacy page", path: "/pages/privacy" },
-    { label: "Templates", path: "/templates", condition: isTemplate },
+    { label: "Templates", path: "/templates", condition: isTemplatedFrom },
   ].filter((link) => link.condition === undefined || link.condition);
 
   const isActive = (path: string) => {
