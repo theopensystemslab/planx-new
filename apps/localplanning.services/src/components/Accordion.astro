@@ -19,7 +19,7 @@ const { title, id } = Astro.props;
     {title}
     <Icon class="clamp-[w,8,10] h-auto group-open:rotate-180" name="expand" />
   </summary>
-  <section class="clamp-[p,3,4] flex flex-col gap-6 border-t border-gray-300">
+  <section class="clamp-[p,2,3] flex flex-col clamp-[gap,3,4] border-t border-gray-300">
     <slot />
   </section>
 </details>

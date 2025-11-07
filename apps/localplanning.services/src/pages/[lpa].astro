@@ -41,7 +41,7 @@ const getFallbackMessage = (serviceType: string) =>
     <div class="flex flex-col gap-4 clamp-[py,4,6]">
       <Accordion title="Start a planning application" id="apply-accordion">
         {lpaData.applyServices && lpaData.applyServices.length > 0 ? (
-          <ul class="flex flex-col gap-4">
+          <ul class="flex flex-col clamp-[gap,2,3]">
             {lpaData.applyServices.map((service) => (
               <ServiceCard
                 service={service}
@@ -58,7 +58,7 @@ const getFallbackMessage = (serviceType: string) =>
       
       <Accordion title="Notify your authority" id="notify-accordion">
         {lpaData.notifyServices && lpaData.notifyServices.length > 0 ? (
-          <ul class="flex flex-col gap-4">
+          <ul class="flex flex-col clamp-[gap,2,3]">
             {lpaData.notifyServices.map((service) => (
               <ServiceCard
                 service={service}
@@ -75,7 +75,7 @@ const getFallbackMessage = (serviceType: string) =>
       
       <Accordion title="Get planning guidance" id="guidance-accordion">
         {lpaData.guidanceServices && lpaData.guidanceServices.length > 0 ? (
-          <ul class="flex flex-col gap-4">
+          <ul class="flex flex-col clamp-[gap,2,3]">
             {lpaData.guidanceServices.map((service) => (
               <ServiceCard
                 service={service}
