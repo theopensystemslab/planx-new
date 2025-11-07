@@ -125,6 +125,10 @@ const routes = compose(
 
     "/:flow/settings": setFlowAndLazyLoad(() => import("./serviceSettings")),
 
+    "/:flow/new-settings": setFlowAndLazyLoad(
+      () => import("./serviceNewSettings"),
+    ),
+
     "/:flow/feedback": setFlowAndLazyLoad(() => import("./serviceFeedback")),
 
     "/:flow/submissions": setFlowAndLazyLoad(
