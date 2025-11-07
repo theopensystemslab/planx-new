@@ -10,14 +10,14 @@ import {
   withContext,
   withData,
 } from "navi";
+import TeamAdvancedSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/TeamAdvancedSettings";
+import TeamContactSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/TeamContactSettings";
+import TeamGisDataSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/TeamGisDataSettings";
+import TeamIntegrationsSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/TeamIntegrationsSettings";
+import TeamSettingsLayout from "pages/FlowEditor/components/NewSettings/TeamSettings/TeamSettingsLayout";
 import DesignSettings from "pages/FlowEditor/components/Settings/DesignSettings";
 import GeneralSettings from "pages/FlowEditor/components/Settings/GeneralSettings";
 import Team from "pages/Team";
-import TeamAdvancedSettings from "pages/Team/TeamSettings/TeamAdvancedSettings";
-import TeamContactSettings from "pages/Team/TeamSettings/TeamContactSettings";
-import TeamGisDataSettings from "pages/Team/TeamSettings/TeamGisDataSettings";
-import TeamIntegrationsSettings from "pages/Team/TeamSettings/TeamIntegrationsSettings";
-import TeamSettingsLayout from "pages/Team/TeamSettings/TeamSettingsLayout";
 import React from "react";
 
 import { client } from "../lib/graphql";

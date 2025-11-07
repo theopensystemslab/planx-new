@@ -4,7 +4,6 @@ import Typography from "@mui/material/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 interface SettingsLink {
   label: string;
