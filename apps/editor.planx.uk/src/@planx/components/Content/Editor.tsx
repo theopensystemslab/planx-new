@@ -14,6 +14,7 @@ import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import InputRow from "ui/shared/InputRow";
+import { Switch } from "ui/shared/Switch";
 
 import { ICONS } from "../shared/icons";
 
@@ -63,6 +64,15 @@ const ContentComponent: React.FC<Props> = (props) => {
             disabled={props.disabled}
             errorMessage={formik.errors.color}
           />
+          <InputRow>
+            <Switch
+              name="resetButton"
+              checked={Boolean(formik.values.resetButton)}
+              onChange={formik.handleChange}
+              label="Reset to start of service"
+              disabled={props.disabled}
+            />
+          </InputRow>
         </ModalSectionContent>
       </ModalSection>
       <ModalFooter formik={formik} disabled={props.disabled} />
