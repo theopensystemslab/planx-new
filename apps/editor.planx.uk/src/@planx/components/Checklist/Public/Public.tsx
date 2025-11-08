@@ -10,6 +10,11 @@ const ChecklistComponent: React.FC<PublicProps<ChecklistWithOptions>> = (
 ) => {
   const { groupedOptions, options } = props;
 
+  // Do not display component if there are no options
+  // It's being used as a "sticky note" in the graph by editors
+  const isStickyNote = !groupedOptions?.length && !options?.length;
+  if (isStickyNote) return null;
+
   return (
     <>
       {groupedOptions && <GroupedChecklist {...props} />}
