@@ -25,7 +25,9 @@ export default SummaryListsBySections;
 
 /** These component types don't use their node title as the descriptive list title */
 const FIND_PROPERTY_DT = "Property address";
+const PROPERTY_INFORMATION_DT = "Property type";
 const DRAW_BOUNDARY_DT = "Location plan";
+const PLANNING_CONSTRAINTS_DT = "Planning constraints";
 
 export const SummaryListTable = styled("dl", {
   shouldForwardProp: (prop) =>
@@ -117,8 +119,8 @@ const presentationalComponents: {
   [TYPES.NumberInput]: NumberInput,
   [TYPES.Page]: Page,
   [TYPES.Pay]: undefined,
-  [TYPES.PlanningConstraints]: undefined,
-  [TYPES.PropertyInformation]: undefined,
+  [TYPES.PlanningConstraints]: PlanningConstraints,
+  [TYPES.PropertyInformation]: PropertyInformation,
   [TYPES.Answer]: Debug,
   [TYPES.ResponsiveChecklist]: undefined,
   [TYPES.ResponsiveQuestion]: undefined,
@@ -341,6 +343,34 @@ interface ComponentProps {
   flow: Store.Flow;
   passport: Store.Passport;
   nodeId: NodeId;
+}
+
+function PropertyInformation(props: ComponentProps) {
+  // TODO join to human-readable property type display name via blpu_codes (refactor to query hook)
+  return (
+    <>
+      <Box component="dt">{PROPERTY_INFORMATION_DT}</Box>
+      <Box component="dd">
+        {props.passport.data?.["property.type"]?.[0] || `Unknown`}
+      </Box>
+    </>
+  );
+}
+
+function PlanningConstraints(props: ComponentProps) {
+  const applicableConstraints =
+    props.passport.data?.["property.constraints.planning"];
+  const summary =
+    applicableConstraints?.length > 0
+      ? `Planning constraints apply to this property`
+      : `No applicable planning constraints found for this property`;
+
+  return (
+    <>
+      <Box component="dt">{PLANNING_CONSTRAINTS_DT}</Box>
+      <Box component="dd">{summary}</Box>
+    </>
+  );
 }
 
 function List(props: ComponentProps) {
