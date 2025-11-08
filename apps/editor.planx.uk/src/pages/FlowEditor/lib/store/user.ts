@@ -1,6 +1,6 @@
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { Role, Team, User, UserTeams } from "@opensystemslab/planx-core/types";
-import axios from "axios";
+import { getUser } from "lib/api/auth/requests";
 import { handleExpiredJWTErrors } from "lib/graphql";
 import type { StateCreator } from "zustand";
 
@@ -12,7 +12,6 @@ export interface UserStore {
   jwt?: string;
 
   setUser: (user: User & { jwt: string }) => void;
-  getUser: () => User | undefined;
   canUserEditTeam: (teamSlug: Team["slug"]) => boolean;
   initUserStore: () => Promise<User>;
   getUserRoleForCurrentTeam: () => Role | undefined;
@@ -33,10 +32,8 @@ export const userStore: StateCreator<
     set({ jwt, user });
   },
 
-  getUser: () => get().user,
-
   canUserEditTeam(teamSlug) {
-    const user = get().getUser();
+    const user = get().user;
     if (!user) return false;
 
     const canEditTeam = (team: UserTeams) =>
@@ -46,14 +43,17 @@ export const userStore: StateCreator<
   },
 
   async initUserStore() {
-    const { getUser, setUser } = get();
-    const currentUser = getUser();
-    if (currentUser) return currentUser;
+    const { user, setUser } = get();
+    if (user) return user;
 
-    const user = await getLoggedInUser();
-    setUser(user);
-    
-    return user;
+    try {
+      const user = await getUser();
+      setUser(user);
+      return user;
+    } catch (error) {
+      handleExpiredJWTErrors();
+      throw Error("Failed to fetch user matching JWT cookie");
+    }
   },
 
   getUserRoleForCurrentTeam: () => {
@@ -71,16 +71,3 @@ export const userStore: StateCreator<
     return currentUserTeam.role;
   },
 });
-
-const getLoggedInUser = async () => {
-  const url = `${import.meta.env.VITE_APP_API_URL}/user/me`;
-  try {
-    const response = await axios.get<User & { jwt: string }>(url, {
-      withCredentials: true,
-    });
-    return response.data;
-  } catch (error) {
-    handleExpiredJWTErrors();
-    throw Error("Failed to fetch user matching JWT cookie");
-  }
-};

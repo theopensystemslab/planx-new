@@ -17,6 +17,7 @@ import {
   NumberInput,
   numberInputValidationSchema,
 } from "@planx/components/NumberInput/model";
+import { Option } from "@planx/components/Option/model";
 import {
   TextInput,
   textInputValidationSchema,
@@ -24,8 +25,6 @@ import {
 import { Feature } from "geojson";
 import { exhaustiveCheck } from "utils";
 import { array, BaseSchema, object, ObjectSchema, string } from "yup";
-
-import { Option } from "..";
 
 /**
  * Simplified custom QuestionInput

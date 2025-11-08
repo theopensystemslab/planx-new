@@ -87,7 +87,7 @@ export default function DateInput(props: Props): FCReturn {
           </Label>
           <Input
             value={month || ""}
-            inputProps={{ maxLength: "2" }}
+            inputProps={{ maxLength: "9" }}
             bordered={props.bordered}
             id={`${props.id}-month`}
             onInput={(ev: ChangeEvent<HTMLInputElement>) => {

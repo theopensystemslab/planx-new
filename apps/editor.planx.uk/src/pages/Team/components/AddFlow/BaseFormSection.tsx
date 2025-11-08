@@ -2,10 +2,10 @@ import MenuItem from "@mui/material/MenuItem";
 import { useFormikContext } from "formik";
 import React from "react";
 import Permission from "ui/editor/Permission";
-import SelectInput from "ui/editor/SelectInput/SelectInput";
 import { URLPrefix } from "ui/editor/URLPrefix";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
+import SelectInput from "ui/shared/SelectInput/SelectInput";
 import { Switch } from "ui/shared/Switch";
 import { slugify } from "utils";
 

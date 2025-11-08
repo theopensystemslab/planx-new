@@ -1,13 +1,10 @@
 import RuleIcon from "@mui/icons-material/Rule";
 import Box from "@mui/material/Box";
-import MenuItem from "@mui/material/MenuItem";
-import { styled } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
 import { getValidSchemaValues } from "@opensystemslab/planx-core";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
 import { getIn, useFormik } from "formik";
-import { lowerCase, merge, upperFirst } from "lodash";
+import { merge } from "lodash";
 import React from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
 import ListManager, {
@@ -18,7 +15,6 @@ import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import { ModalSubtitle } from "ui/editor/ModalSubtitle";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
-import SelectInput from "ui/editor/SelectInput/SelectInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
@@ -27,28 +23,17 @@ import { Switch } from "ui/shared/Switch";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
+import { RuleBuilder } from "../shared/RuleBuilder";
+import { Condition } from "../shared/RuleBuilder/types";
 import {
-  checkIfConditionalRule,
-  Condition,
   FileType,
   FileUploadAndLabel,
   newFileType,
-  Operator as OperatorEnum,
   parseContent,
-  Rule,
 } from "./model";
 import { fileUploadAndLabelSchema } from "./schema";
 
 type Props = EditorProps<TYPES.FileUploadAndLabel, FileUploadAndLabel>;
-
-const Operator = styled(Typography)(({ theme }) => ({
-  alignSelf: "center",
-  padding: theme.spacing(0, 2),
-}));
-
-Operator.defaultProps = {
-  variant: "body2",
-};
 
 function FileUploadAndLabelComponent(props: Props) {
   const formik = useFormik<FileUploadAndLabel>({
@@ -136,8 +121,6 @@ function FileUploadAndLabelComponent(props: Props) {
 }
 
 function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
-  const isConditionalRule = checkIfConditionalRule(props.value.rule.condition);
-
   // Rather than default to generic `useStore().getFlowSchema()`
   //   File Upload components can specifically suggest based on ODP Schema enum options
   const schema = getValidSchemaValues("FileType") || [];
@@ -168,64 +151,12 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
         onChange={(value) => props.onChange(merge(props.value, { fn: value }))}
         allowCustomValues={false}
       />
-      <ModalSubtitle title="Rule" />
-      <InputRow>
-        <SelectInput
-          value={props.value.rule.condition}
-          disabled={props.disabled}
-          onChange={(e) =>
-            props.onChange(
-              setCondition(
-                Condition[e.target.value as keyof typeof Condition],
-                props.value,
-              ),
-            )
-          }
-        >
-          {Object.entries(Condition).map(([key, value]) => (
-            <MenuItem key={key} value={value}>
-              {upperFirst(lowerCase(value))}
-            </MenuItem>
-          ))}
-        </SelectInput>
-      </InputRow>
-      {isConditionalRule && (
-        <InputRow>
-          <Input
-            required
-            name="fn"
-            value={props.value.rule.fn}
-            onChange={(e) =>
-              props.onChange(
-                merge(props.value, {
-                  rule: {
-                    fn: e.target.value,
-                  },
-                }),
-              )
-            }
-            placeholder="Data field"
-            disabled={props.disabled}
-          />
-          <Operator>Equals</Operator>
-          <Input
-            required
-            name="val"
-            value={props.value.rule.val}
-            onChange={(e) =>
-              props.onChange(
-                merge(props.value, {
-                  rule: {
-                    val: e.target.value,
-                  },
-                }),
-              )
-            }
-            placeholder="Value"
-            disabled={props.disabled}
-          />
-        </InputRow>
-      )}
+      <RuleBuilder
+        rule={props.value.rule}
+        disabled={props.disabled}
+        onChange={(rule) => props.onChange(merge(props.value, { rule }))}
+        dataSchema={["recommended", "required"]}
+      />
       <ModalSubtitle title="Additional file information" />
       <InputRow>
         <RichTextInput
@@ -275,7 +206,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
           disabled={props.disabled}
           errorMessage={getIn(props.errors, "moreInformation.howMeasured")}
         />
-        <InputRowItem width={50}>
+        <InputRowItem>
           <ImgInput
             img={props.value.moreInformation?.definitionImg}
             disabled={props.disabled}
@@ -292,24 +223,5 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
     </Box>
   );
 }
-
-const setCondition = (condition: Condition, fileType: FileType): FileType => {
-  const isConditionalRule = checkIfConditionalRule(condition);
-
-  // Drop fields which are only required for ConditionalRules
-  const updatedRule = {
-    condition: condition,
-    operator: isConditionalRule ? OperatorEnum.Equals : undefined,
-    fn: isConditionalRule ? fileType.rule.fn : undefined,
-    val: isConditionalRule ? fileType.rule.val : undefined,
-  } as Rule;
-
-  const updateFileType: FileType = {
-    ...fileType,
-    rule: updatedRule,
-  };
-
-  return updateFileType;
-};
 
 export default FileUploadAndLabelComponent;

@@ -31,13 +31,14 @@ const sortFlows = (a: { text: string }, b: { text: string }) =>
 const getExternalPortals = async (currentTeam: string, currentFlow: string) => {
   const { data } = await client.query({
     query: gql`
-      query GetFlows {
+      query GetExternalPortals {
         flows(order_by: { slug: asc }) {
           id
           slug
           name
           isTemplate: is_template
           team {
+            id
             slug
             name
           }
@@ -136,8 +137,14 @@ const editNode = validateNodeRoute(
       extraProps.flows = await getExternalPortals(team, flow);
 
     const type = SLUGS[node.type];
+    const nodesWithOptions = [
+      "question",
+      "responsive-question",
+      "checklist",
+      "responsive-checklist",
+    ];
 
-    if (type === "checklist" || type === "question") {
+    if (nodesWithOptions.includes(type)) {
       const childNodes = useStore.getState().childNodesOf(id);
       if (node.data?.categories) {
         extraProps.groupedOptions = mapAccum(

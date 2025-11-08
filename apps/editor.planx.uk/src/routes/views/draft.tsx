@@ -1,7 +1,7 @@
-import { FlowGraph } from "@opensystemslab/planx-core/types";
-import axios from "axios";
 import gql from "graphql-tag";
+import { getFlattenedFlowData } from "lib/api/flow/requests";
 import { publicClient } from "lib/graphql";
+import { queryClient } from "lib/queryClient";
 import { NaviRequest, NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import PublicLayout from "pages/layout/PublicLayout";
@@ -31,7 +31,10 @@ export const draftView = async (req: NaviRequest) => {
   const flow = data.flows[0];
   if (!flow) throw new NotFoundError();
 
-  const flowData = await fetchDraftFlattenedFlowData(flow.id);
+  const flowData = await queryClient.fetchQuery({
+    queryKey: ["flattenedFlowData", "preview", flow.id],
+    queryFn: () => getFlattenedFlowData({ flowId: flow.id, isDraft: true }),
+  });
 
   const state = useStore.getState();
   state.setFlow({ id: flow.id, flow: flowData, flowSlug, flowName: flow.name });
@@ -41,7 +44,11 @@ export const draftView = async (req: NaviRequest) => {
 
   return (
     <PublicLayout>
-      <WatermarkBackground variant="dark" opacity={0.05} forceVisibility={true} />
+      <WatermarkBackground
+        variant="dark"
+        opacity={0.05}
+        forceVisibility={true}
+      />
       <TestWarningPage>
         <View />
       </TestWarningPage>
@@ -106,21 +113,6 @@ const fetchSettingsForDraftView = async (
     return result.data;
   } catch (error) {
     console.error(error);
-    throw new NotFoundError();
-  }
-};
-
-const fetchDraftFlattenedFlowData = async (
-  flowId: string,
-): Promise<FlowGraph> => {
-  const url = `${
-    import.meta.env.VITE_APP_API_URL
-  }/flows/${flowId}/flatten-data?draft=true`;
-  try {
-    const { data } = await axios.get<FlowGraph>(url);
-    return data;
-  } catch (error) {
-    console.log(error);
     throw new NotFoundError();
   }
 };

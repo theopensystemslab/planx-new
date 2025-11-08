@@ -136,7 +136,7 @@ test("date fields have a max length set", async () => {
   const year = screen.getByLabelText("Year") as HTMLInputElement;
 
   expect(day.maxLength).toBe(2);
-  expect(month.maxLength).toBe(2);
+  expect(month.maxLength).toBe(9);
   expect(year.maxLength).toBe(4);
 });
 

@@ -86,7 +86,7 @@ export const teamStore: StateCreator<
   initTeamStore: async (slug) => {
     const { data } = await client.query({
       query: gql`
-        query GetTeams($slug: String!) {
+        query GetTeamBySlug($slug: String!) {
           teams(
             order_by: { name: asc }
             limit: 1

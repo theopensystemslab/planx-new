@@ -5,7 +5,6 @@ import { print } from "graphql";
 export interface Service {
   name: string;
   slug: string;
-  description: string | null;
   summary: string | null;
 }
 
@@ -52,6 +51,12 @@ const NOTIFY_SERVICE_SLUGS = [
   "camden-report-a-planning-breach",
 ];
 
+const GUIDANCE_SERVICE_SLUGS = [
+  "general-enquiries",
+  "find-out-if-you-need-planning-permission",
+  "find-out-if-you-need-planning-permission-energy-efficiency"
+];
+
 export async function fetchAllLPAs(): Promise<LPA[]> {
   try {
     const response = await fetch(PUBLIC_PLANX_BUILD_TIME_GRAPHQL_API_URL, {
@@ -62,6 +67,7 @@ export async function fetchAllLPAs(): Promise<LPA[]> {
         variables: {
           teamSlugs: TEAMS_ALLOW_LIST,
           notifyServiceSlugs: NOTIFY_SERVICE_SLUGS,
+          guidanceServiceSlugs: GUIDANCE_SERVICE_SLUGS,
         },
       }),
     });

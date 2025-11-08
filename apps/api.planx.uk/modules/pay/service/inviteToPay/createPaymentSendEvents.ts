@@ -2,7 +2,7 @@ import type { SendIntegration, Team } from "@opensystemslab/planx-core/types";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import type { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
-import type { CombinedResponse } from "../../../../lib/hasura/metadata/index.js";
+import type { CombinedResponse } from "../../../../lib/hasura/metadata/types.js";
 import { createScheduledEvent } from "../../../../lib/hasura/metadata/index.js";
 import { $api, $public } from "../../../../client/index.js";
 import { getMostRecentPublishedFlow } from "../../../../helpers.js";

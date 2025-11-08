@@ -1,7 +1,6 @@
 import { gql } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
@@ -11,8 +10,7 @@ import area from "@turf/area";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { Feature } from "geojson";
 import { Store } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useState } from "react";
-import useSWR from "swr";
+import React, { useState } from "react";
 import ExternalPlanningSiteDialog, {
   DialogPurpose,
 } from "ui/public/ExternalPlanningSiteDialog";
@@ -24,7 +22,9 @@ import {
   SiteAddress,
 } from "../model";
 import PickOSAddress from "./Autocomplete";
+import { useFindPropertyData } from "./hooks/useFindPropertyData";
 import PlotNewAddress from "./Map";
+import { AddressLoadingWrap } from "./styles";
 
 // This query is exported because tests require it
 export const FETCH_BLPU_CODES = gql`
@@ -38,26 +38,6 @@ export const FETCH_BLPU_CODES = gql`
 `;
 
 type Props = PublicProps<FindProperty>;
-
-const AddressLoadingWrap = styled(Box)(({ theme }) => ({
-  marginBottom: theme.spacing(-2.5),
-  minHeight: theme.spacing(3),
-  pointerEvents: "none",
-  [theme.breakpoints.up("md")]: {
-    position: "relative",
-    margin: 0,
-    height: 0,
-    minHeight: 0,
-    "& > div": {
-      position: "absolute",
-      top: theme.spacing(5.5),
-      justifyContent: "flex-start",
-      paddingLeft: theme.spacing(16),
-    },
-  },
-}));
-
-export default Component;
 
 function Component(props: Props) {
   const previouslySubmittedData = props.previouslySubmittedData?.data;
@@ -77,76 +57,18 @@ function Component(props: Props) {
   const [address, setAddress] = useState<SiteAddress | undefined>(
     previouslySubmittedData?._address,
   );
-  const [localAuthorityDistricts, setLocalAuthorityDistricts] = useState<
-    string[] | undefined
-  >();
-  const [localPlanningAuthorities, setLocalPlanningAuthorities] = useState<
-    string[] | undefined
-  >();
-  const [regions, setRegions] = useState<string[] | undefined>();
-  const [wards, setWards] = useState<string[] | undefined>();
-  const [titleBoundary, setTitleBoundary] = useState<Feature | undefined>();
 
-  // Use the address point to fetch the title boundary, Local Authority District(s), region & ward via Digital Land
-  const options = new URLSearchParams({
-    entries: "all", // includes historic for pre-merger LADs (eg Wycombe etc for Uniform connector mappings)
-    geometry: `POINT(${address?.longitude} ${address?.latitude})`,
-    geometry_relation: "intersects",
-    limit: "100",
-  });
-  options.append("dataset", "local-authority-district");
-  options.append("dataset", "local-planning-authority");
-  options.append("dataset", "region"); // proxy for Greater London Authority (GLA) boundary
-  options.append("dataset", "ward");
-  options.append("dataset", "title-boundary");
-
-  // https://www.planning.data.gov.uk/docs#/Search%20entity
-  const root = `https://www.planning.data.gov.uk/entity.geojson?`;
-  const digitalLandEndpoint = root + options;
-  const fetcher = (url: string) => fetch(url).then((r) => r.json());
-  const { data, isValidating } = useSWR(
-    () =>
-      address?.latitude && address?.longitude ? digitalLandEndpoint : null,
-    fetcher,
-    {
-      shouldRetryOnError: true,
-      errorRetryInterval: 500,
-      errorRetryCount: 1,
-    },
-  );
-
-  useEffect(() => {
-    if (address && data?.features?.length > 0) {
-      const lads: string[] = [];
-      const lpas: string[] = [];
-      const regions: string[] = [];
-      const wards: string[] = [];
-      let title: Feature | undefined;
-
-      data.features.forEach((feature: any) => {
-        if (feature.properties.dataset === "local-authority-district") {
-          lads.push(feature.properties.name);
-        } else if (feature.properties.dataset === "local-planning-authority") {
-          lpas.push(feature.properties.name);
-        } else if (feature.properties.dataset === "region") {
-          regions.push(feature.properties.name);
-        } else if (feature.properties.dataset === "ward") {
-          wards.push(feature.properties.name);
-        } else if (feature.properties.dataset === "title-boundary") {
-          title = feature;
-        }
-      });
-
-      setLocalAuthorityDistricts([...new Set(lads)]);
-      setLocalPlanningAuthorities([...new Set(lpas)]);
-      setRegions([...new Set(regions)]);
-      setWards([...new Set(wards)]);
-      setTitleBoundary(title);
-    }
-  }, [data, address]);
+  const {
+    localAuthorityDistricts,
+    localPlanningAuthorities,
+    regions,
+    wards,
+    titleBoundary,
+    isPending,
+  } = useFindPropertyData(address);
 
   const validateAndSubmit = () => {
-    // TODO `if (isValidating)` on either page, wrap Continue button in error mesage?
+    // TODO `if (isPending)` on either page, wrap Continue button in error mesage?
 
     if (page === "new-address") {
       if (address?.x === undefined && address?.y === undefined)
@@ -198,15 +120,21 @@ function Component(props: Props) {
     }
   };
 
+  const getValidStatus = () => {
+    // Continue button enabled unless actively fetching
+    if (page === "new-address") return !address || !isPending;
+
+    // Continue button enabled once we have an address and not actively fetching
+    if (page === "os-address") return Boolean(address) && !isPending;
+  };
+
+  const isValid = getValidStatus();
+
   return (
     <Card
       sx={{ marginBottom: "220px" }}
       handleSubmit={validateAndSubmit}
-      isValid={
-        page === "new-address" && !isValidating
-          ? true
-          : Boolean(address) && !isValidating
-      }
+      isValid={isValid}
     >
       {getBody()}
     </Card>
@@ -235,7 +163,7 @@ function Component(props: Props) {
             showSiteDescriptionError={showSiteDescriptionError}
             setShowSiteDescriptionError={setShowSiteDescriptionError}
           />
-          {Boolean(address) && isValidating && (
+          {Boolean(address) && isPending && (
             <DelayedLoadingIndicator
               msDelayBeforeVisible={50}
               text="Fetching data..."
@@ -284,7 +212,7 @@ function Component(props: Props) {
             </Box>
           )}
           <AddressLoadingWrap>
-            {Boolean(address) && isValidating && (
+            {Boolean(address) && isPending && (
               <DelayedLoadingIndicator
                 msDelayBeforeVisible={50}
                 text="Finding information about the property"
@@ -297,3 +225,5 @@ function Component(props: Props) {
     }
   }
 }
+
+export default Component;

@@ -1,6 +1,6 @@
+import { Option } from "@planx/components/Option/model";
 import { FormikProps } from "formik";
 
-import { Option } from "../../../shared";
 import { getFlatOptions, getLayout, Group } from "../../model";
 
 export const useSortedOptions = (

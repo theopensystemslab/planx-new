@@ -1,11 +1,14 @@
 services:
   postgres:
+    platform: linux/amd64
     container_name: postgres
-    image: postgis/postgis:16-3.5-alpine
+    build:
+      context: ./apps/postgres
+      dockerfile: Dockerfile
     restart: unless-stopped
     ports:
       - "${PG_PORT}:5432"
-    command: "postgres -c listen_addresses='*'"
+    command: "postgres -c listen_addresses='*' -c shared_preload_libraries=pg_cron -c cron.database_name=${PG_DATABASE}"
     healthcheck:
       test: pg_isready --username=${PG_USERNAME} --dbname=${PG_DATABASE} --quiet
       interval: 15s

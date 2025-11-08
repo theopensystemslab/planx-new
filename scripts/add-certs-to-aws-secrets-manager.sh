@@ -34,10 +34,20 @@ else
     '{cert: $cert, key: $key}')
 fi
 
-# Update secret
-aws secretsmanager update-secret \
+# Try to update existing secret (e.g. renewals)
+if aws secretsmanager put-secret-value \
   --secret-id "ssl/${TEAM_NAME}" \
   --secret-string "$SECRET_STRING" \
-  --no-cli-pager
+  --no-cli-pager > /dev/null; then
+  echo "Secret ssl/${TEAM_NAME} updated successfully!"
 
-echo "Secret ssl/${TEAM_NAME} updated successfully!"
+# Otherwise create the secret (e.g. setting up subdomains for the first time)
+else
+  echo "Secret not found, creating it..."
+  aws secretsmanager create-secret \
+    --name "ssl/${TEAM_NAME}" \
+    --secret-string "$SECRET_STRING" \
+    --no-cli-pager > /dev/null
+  
+  echo "Secret ssl/${TEAM_NAME} created successfully!"
+fi

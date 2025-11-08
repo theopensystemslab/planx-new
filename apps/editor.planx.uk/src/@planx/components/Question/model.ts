@@ -1,54 +1,38 @@
-import { richText } from "lib/yupExtensions";
-import { Store } from "pages/FlowEditor/lib/store";
-import { HandleSubmit } from "pages/Preview/Node";
-import { array, object, string } from "yup";
+import { boolean, object } from "yup";
 
-import { BaseNodeData, baseNodeDataValidationSchema } from "../shared";
+import { Option } from "../Option/model";
+import {
+  BaseQuestion,
+  baseQuestionValidationSchema,
+  parseBaseQuestion,
+} from "../shared/BaseQuestion/model";
 
-export interface Question extends BaseNodeData {
-  id?: string;
-  text?: string;
-  description?: string;
-  img?: string;
+/**
+ * Database representation of a Question component
+ */
+export interface Question extends BaseQuestion {
   neverAutoAnswer?: boolean;
   alwaysAutoAnswerBlank?: boolean;
-  responses: {
-    id?: string;
-    responseKey: string | number;
-    title: string;
-    description?: string;
-    img?: string;
-  }[];
-  previouslySubmittedData?: Store.UserData;
-  handleSubmit: HandleSubmit;
-  autoAnswers?: string[] | undefined;
 }
 
-export const validationSchema = baseNodeDataValidationSchema
-  .concat(
-    object({
-      description: richText(),
-      options: array(
-        object({
-          data: object({
-            text: string().required().trim(),
-          }),
-        }),
-      ),
-    }),
-  )
-  .test({
-    name: "uniqueLabels",
-    test: function ({ options }) {
-      if (!options?.length) return true;
+/**
+ * Public and Editor representation of a Question
+ * Contains options derived from child Answer nodes
+ */
+export type QuestionWithOptions = Question & { options: Option[] };
 
-      const uniqueLabels = new Set(options.map(({ data }) => data.text));
-      const areAllLabelsUnique = uniqueLabels.size === options.length;
-      if (areAllLabelsUnique) return true;
+export const validationSchema = baseQuestionValidationSchema.concat(
+  object({
+    neverAutoAnswer: boolean(),
+    alwaysAutoAnswerBlank: boolean(),
+  }),
+);
 
-      return this.createError({
-        path: "options",
-        message: "Options must have unique labels",
-      });
-    },
-  });
+export const parseQuestion = (
+  data: Record<string, any> | undefined,
+): QuestionWithOptions => ({
+  options: data?.options || [],
+  neverAutoAnswer: data?.neverAutoAnswer || false,
+  alwaysAutoAnswerBlank: data?.alwaysAutoAnswerBlank || false,
+  ...parseBaseQuestion(data),
+});

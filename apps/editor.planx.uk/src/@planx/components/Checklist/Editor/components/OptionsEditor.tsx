@@ -1,39 +1,27 @@
-import {
-  BaseOptionsEditor,
-  BaseOptionsEditorProps,
-} from "@planx/components/shared/BaseOptionsEditor";
+import { Option } from "@planx/components/Option/model";
+import { BaseOptionsEditor } from "@planx/components/shared/BaseOptionsEditor";
+import { OptionEditor } from "@planx/components/shared/BaseOptionsEditor/types";
 import React from "react";
+import { EditorProps } from "ui/editor/ListManager/ListManager";
 import SimpleMenu from "ui/editor/SimpleMenu";
 
-export type ChecklistOptionsEditorProps = BaseOptionsEditorProps & {
-  index: number;
+type ChecklistOptionsEditorProps = EditorProps<Option> | OptionEditor;
+
+export type Props = ChecklistOptionsEditorProps & {
   groupIndex?: number;
   groups?: Array<string>;
   onMoveToGroup?: (itemIndex: number, groupIndex: number) => void;
-  showValueField?: boolean;
-  disabled?: boolean;
 };
 
-const ChecklistOptionsEditor: React.FC<ChecklistOptionsEditorProps> = ({
-  value,
-  schema,
-  onChange,
-  showValueField = false,
-  groups,
-  onMoveToGroup,
-  index,
-  disabled,
-}) => {
+const ChecklistOptionsEditor: React.FC<Props> = (props) => {
+  const { groups, onMoveToGroup, index } = props;
+
+  // Type-narrowing only, type will always be present
+  if (!("type" in props))
+    throw Error("Type must be provide for BaseOptionsEditor");
+
   return (
-    <BaseOptionsEditor
-      value={value}
-      schema={schema}
-      onChange={onChange}
-      showValueField={showValueField}
-      showDescriptionField={true}
-      disabled={disabled}
-      index={index}
-    >
+    <BaseOptionsEditor {...props} showDescriptionField={true}>
       {typeof index !== "undefined" && groups && onMoveToGroup && (
         <SimpleMenu
           items={groups.map((group, groupIndex) => ({

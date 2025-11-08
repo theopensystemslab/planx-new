@@ -20,7 +20,51 @@ export interface DateInput extends BaseNodeData {
   max?: string;
 }
 
-const isDateValid = (date: string) => isValid(parseISO(date));
+// Normalizes month name to a numeric string (1-12)
+const normalizeMonth = (month: string): string => {
+  if (!month || /^\d+$/.test(month)) return month;
+
+  const normalized = month.trim().toLowerCase();
+
+  const monthNames = [
+    ["january", "jan"],
+    ["february", "feb"],
+    ["march", "mar"],
+    ["april", "apr"],
+    ["may", "may"],
+    ["june", "jun"],
+    ["july", "jul"],
+    ["august", "aug"],
+    ["september", "sep", "sept"],
+    ["october", "oct"],
+    ["november", "nov"],
+    ["december", "dec"],
+  ];
+
+  for (let i = 0; i < monthNames.length; i++) {
+    if (monthNames[i].includes(normalized)) {
+      return String(i + 1).padStart(2, "0");
+    }
+  }
+  // Return "0" for invalid month names
+  if (/[a-z]/.test(normalized)) {
+    return "0";
+  }
+
+  return normalized;
+};
+
+// Normalizes date on submission
+export const normalizeDate = (date: string): string => {
+  const [year, month, day] = date.split("-");
+  const normalizedMonth = normalizeMonth(month);
+  return [year, normalizedMonth, day].join("-");
+};
+
+const isDateValid = (date: string) => {
+  const normalizedDate = normalizeDate(date);
+  return isValid(parseISO(normalizedDate));
+};
 
 export const paddedDate = (
   date: string,
@@ -31,8 +75,15 @@ export const paddedDate = (
   // Do not parse if no values given (e.g. deleting a date)
   if (!year && !month && !day) return;
 
-  // If month and/or year is single-digit, pad it
-  const [paddedMonth, paddedDay] = [month, day].map((value) => {
+  // If month and/or day is single-digit, pad it
+  const [paddedMonth, paddedDay] = [month, day].map((value, index) => {
+    const isMonth = index === 0;
+
+    // only pad month if numeric
+    if (isMonth && value && !/^\d+$/.test(value)) {
+      return value;
+    }
+
     // Don't add padding if it's just a 0
     if (value === "0") {
       return value;
@@ -67,7 +118,10 @@ const displayDate = (date: string): string | undefined => {
 
 export const parseDate = (date?: string) => {
   const [year, month, day] =
-    date?.split("-").map((val) => parseInt(val) || undefined) || [];
+    date?.split("-").map((val, i) => {
+      const parsed = parseInt(i === 1 ? normalizeMonth(val) : val);
+      return isNaN(parsed) ? undefined : parsed;
+    }) || [];
   return { year, month, day };
 };
 
@@ -94,17 +148,17 @@ export const dateSchema = () => {
       const { year } = parseDate(date);
       return year !== undefined;
     })
-    .test("invalid day", "Day must be valid", (date?: string) => {
+    .test("invalid day", "Day must be a real day", (date?: string) => {
       if (!date) return true;
 
       const { day } = parseDate(date);
       return Boolean(day && day <= 31);
     })
-    .test("invalid month", "Month must be valid", (date?: string) => {
+    .test("invalid month", "Month must be a real month", (date?: string) => {
       if (!date) return true;
 
       const { month } = parseDate(date);
-      return Boolean(month && month <= 12);
+      return Boolean(month && month >= 1 && month <= 12);
     })
     .test(
       "valid",

@@ -2,8 +2,8 @@ import { gql, useSubscription } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
-import { HistoryItem } from "api/publishFlow/types";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import { HistoryItem } from "lib/api/publishFlow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
@@ -15,7 +15,7 @@ const EditHistory = () => {
     state.id,
     state.canUserEditTeam,
     state.teamSlug,
-    state.getUser(),
+    state.user,
   ]);
 
   const { data, loading, error } = useSubscription<{ history: HistoryItem[] }>(

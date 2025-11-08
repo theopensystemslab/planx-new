@@ -203,7 +203,7 @@ const createCNAMERecords = (domain: string, cdn: aws.cloudfront.Distribution) =>
       zoneId: config.require("lps-cloudflare-zone-id"),
       value: cdn.domainName,
       ttl: 1,
-      proxied: false,
+      proxied: true,
     });
 
     new cloudflare.Record("localplanningservices-www", {
@@ -212,7 +212,7 @@ const createCNAMERecords = (domain: string, cdn: aws.cloudfront.Distribution) =>
       zoneId: config.require("lps-cloudflare-zone-id"),
       value: cdn.domainName,
       ttl: 1,
-      proxied: false,
+      proxied: true,
     });
   }
 }

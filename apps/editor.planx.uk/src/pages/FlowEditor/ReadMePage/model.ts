@@ -10,9 +10,18 @@ export const validationSchema: SchemaOf<ReadMePageForm> = object({
   serviceSummary: string()
     .max(
       characterCountLimit,
-      `Service description must be ${characterCountLimit} characters or less`,
+      `Service summary must be ${characterCountLimit} characters or less`,
     )
-    .required(),
+    .required()
+    .test(
+      "formatting",
+      "The summary must start with a capital letter and end in a full stop.",
+      (value) => {
+        if (!value) return true;
+        const trimmed = value.trim();
+        return /^[A-Z]/.test(trimmed) && trimmed.endsWith(".");
+      },
+    ),
   serviceDescription: richText(),
   serviceLimitations: richText(),
 });

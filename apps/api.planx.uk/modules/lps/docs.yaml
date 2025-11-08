@@ -56,13 +56,6 @@ components:
         expiresAt:
           type: string
           format: date-time
-        progress:
-          type: object
-          required:
-            - completed
-          properties:
-            completed:
-              type: number
     DraftLPSApplication:
       allOf:
         - $ref: "#/components/schemas/LPSApplication"

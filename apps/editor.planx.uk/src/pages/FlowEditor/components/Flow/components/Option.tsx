@@ -13,7 +13,7 @@ import { Thumbnail } from "./Thumbnail";
 const Option: React.FC<any> = (props) => {
   const childNodes = useStore((state) => state.childNodesOf(props.id));
 
-  const href = "";
+  const href = `${window.location.pathname}/nodes/${props.parent}/edit#${props.id}`;
   let flags: Flag[] | undefined;
 
   try {
@@ -38,7 +38,7 @@ const Option: React.FC<any> = (props) => {
       className={classNames("card", "option", { wasVisited: props.wasVisited })}
       onContextMenu={(e) => e.preventDefault()}
     >
-      <Link href={href} prefetch={false} onClick={(e) => e.preventDefault()}>
+      <Link href={href} prefetch={false}>
         {props.data?.img && (
           <Thumbnail
             imageSource={props.data?.img}

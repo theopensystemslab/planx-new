@@ -1,3 +1,4 @@
+import AltRoute from "@mui/icons-material/AltRoute";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Article from "@mui/icons-material/Article";
 import CallSplit from "@mui/icons-material/CallSplit";
@@ -69,7 +70,7 @@ export const ICONS: {
   [TYPES.PropertyInformation]: LocationOnOutlined,
   [TYPES.Answer]: undefined,
   [TYPES.ResponsiveChecklist]: CheckBoxOutlined,
-  [TYPES.ResponsiveQuestion]: CallSplit,
+  [TYPES.ResponsiveQuestion]: AltRoute,
   [TYPES.Result]: PlaylistAddCheck,
   [TYPES.Review]: RateReviewOutlined,
   [TYPES.Section]: List,

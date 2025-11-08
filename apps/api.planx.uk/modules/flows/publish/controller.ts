@@ -3,12 +3,12 @@ import type { ValidatedRequestHandler } from "../../../shared/middleware/validat
 import { z } from "zod";
 import { publishFlow } from "./service.js";
 import { ServerError } from "../../../errors/index.js";
-import type { ScheduledEventResponse } from "../../../lib/hasura/metadata/index.js";
+import type { CreateScheduledEventResponse } from "../../../lib/hasura/metadata/types.js";
 
 interface PublishFlowResponse {
   message: string;
   alteredNodes?: Node[];
-  templatedFlowsScheduledEventsResponse?: ScheduledEventResponse[];
+  templatedFlowsScheduledEventsResponse?: CreateScheduledEventResponse[];
 }
 
 export const publishFlowSchema = z.object({
@@ -17,10 +17,7 @@ export const publishFlowSchema = z.object({
   }),
   query: z.object({
     summary: z.string(),
-    templatedFlowIds: z
-      .string()
-      .optional()
-      .transform((z) => z?.split(",")),
+    templatedFlowIds: z.array(z.string()).optional(),
   }),
 });
 

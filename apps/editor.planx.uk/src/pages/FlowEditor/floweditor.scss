@@ -156,6 +156,9 @@ $fontMonospace: "Source Code Pro", monospace;
     &.template-card a {
       background: $black;
     }
+    .flow-locked & {
+      background: #555;
+    }
   }
 
   .card-title {
@@ -560,6 +563,13 @@ $fontMonospace: "Source Code Pro", monospace;
       left: -4px;
     }
   }
+
+  &.external-portal {
+    &[data-loading="true"] {
+      width: 260px;
+    }
+  }
+
   .portalMenu {
     border-left: $nodeBorderWidth solid #aaa;
     display: flex;
@@ -589,7 +599,7 @@ $fontMonospace: "Source Code Pro", monospace;
   display: none;
 }
 
-.category > span {
+.category > a {
   padding: 6px 12px;
   background: #d0d0d0;
 }
@@ -762,9 +772,6 @@ $fontMonospace: "Source Code Pro", monospace;
     > li.option {
       display: flex;
       align-items: center;
-      > a {
-        pointer-events: none;
-      }
 
       [data-layout="top-down"] & {
         &:only-child {

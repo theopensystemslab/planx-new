@@ -140,17 +140,20 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
       <SettingsSection background>
         <form onSubmit={formik.handleSubmit}>
           <InputGroup flowSpacing>
-            <InputLegend id="serviceSummary-label">
-              Service description
-            </InputLegend>
+            <InputLegend id="serviceSummary-label">Service summary</InputLegend>
             <SettingsDescription id="serviceSummary-description-text">
-              A short blurb on what this service is.
+              <>
+                Summarise what the service does. <br />
+                <br /> This wording is used on the Local Planning Services
+                website. It's publicly visible, and should be short, clear and
+                easy to understand.
+              </>
             </SettingsDescription>
             <Input
               multiline
               {...formik.getFieldProps("serviceSummary")}
               id="serviceSummary"
-              placeholder="Description"
+              placeholder="Summary"
               errorMessage={formik.errors.serviceSummary}
               disabled={!useStore.getState().canUserEditTeam(teamSlug)}
               inputProps={{
@@ -166,13 +169,15 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
           </InputGroup>
           <InputGroup flowSpacing>
             <InputLegend id="serviceDescription-label">
-              What does this service do?
+              Service description
             </InputLegend>
             <SettingsDescription id="serviceDescription-description-text">
               <>
-                A longer description of the service. <br />
-                <br /> How should the service be used? What does it include? Are
-                there are any dependencies related to this service?
+                Describe the service in more detail.
+                <br />
+                <br /> Include who it's aimed at and what it does. This is not
+                shown to users on the Local Planning Services website, but it
+                may be publicly visible elsewhere.
               </>
             </SettingsDescription>
             <InputRow>
@@ -193,10 +198,14 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
           </InputGroup>
           <InputGroup flowSpacing>
             <InputLegend id="serviceLimitations-label">
-              Limitations of the service
+              Service limitations
             </InputLegend>
             <SettingsDescription id="serviceLimitations-description-text">
-              <>What does this service not include?</>
+              <>
+                Describe what the service does not cover. This is not shown to
+                users on the Local Planning Services website, but it may be
+                publicly visible elsewhere.
+              </>
             </SettingsDescription>
             <InputRow>
               <RichTextInput

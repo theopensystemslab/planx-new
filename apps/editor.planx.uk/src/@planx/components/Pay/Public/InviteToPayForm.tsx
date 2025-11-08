@@ -3,18 +3,22 @@ import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type {
-  KeyPath,
   PaymentRequest,
   PaymentStatus,
 } from "@opensystemslab/planx-core/types";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
+import { useMutation } from "@tanstack/react-query";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useFormik } from "formik";
+import { APIError } from "lib/api/client";
+import {
+  CreatePaymentRequest,
+  generateInviteToPayRequest,
+} from "lib/api/inviteToPay/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
 import { isPreviewOnlyDomain } from "routes/utils";
-import { ApplicationPath } from "types";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
@@ -35,13 +39,6 @@ export interface InviteToPayFormProps {
   yourDetailsLabel?: string;
   paymentStatus?: PaymentStatus;
 }
-
-type CreatePaymentRequest = {
-  payeeName: string;
-  payeeEmail: string;
-  applicantName: string;
-  sessionPreviewKeys: Array<KeyPath>;
-};
 
 type FormValues = Omit<CreatePaymentRequest, "sessionPreviewKeys">;
 
@@ -90,55 +87,12 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
     state.sessionId,
     state.hasAcknowledgedWarning,
   ]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
   const navigation = useNavigation();
   const {
     data: { mountpath },
   } = useCurrentRoute();
 
   const defaults = getDefaultContent();
-
-  // Scroll to top when loading component
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  const postRequest = async (createPaymentRequest: CreatePaymentRequest) => {
-    setIsLoading(true);
-    const url = `${
-      import.meta.env.VITE_APP_API_URL
-    }/invite-to-pay/${sessionId}`;
-    const response = await fetch(url, {
-      method: "POST",
-      body: JSON.stringify(createPaymentRequest),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    setIsLoading(false);
-    if (!response.ok) {
-      setError(true);
-      throw new Error(
-        `Error generating payment request for session ${sessionId}: ${response.body}`,
-      );
-    }
-    return response.json();
-  };
-
-  const onSubmit = async (values: FormValues) => {
-    const createPaymentRequest: CreatePaymentRequest = {
-      ...values,
-      sessionPreviewKeys: SESSION_PREVIEW_KEYS,
-    };
-    try {
-      const paymentRequest: PaymentRequest =
-        await postRequest(createPaymentRequest);
-      if (paymentRequest.id) redirectToConfirmationPage(paymentRequest.id);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const redirectToConfirmationPage = (paymentRequestId: string) => {
     const params = new URLSearchParams({ paymentRequestId }).toString();
@@ -148,19 +102,37 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
     navigation.navigate(inviteToPayURL);
   };
 
+  const {
+    mutate: sendITP,
+    isError,
+    isPending,
+  } = useMutation<PaymentRequest, APIError<unknown>, CreatePaymentRequest>({
+    mutationKey: ["inviteToPay", sessionId],
+    mutationFn: (createPaymentRequest) =>
+      generateInviteToPayRequest({ sessionId, ...createPaymentRequest }),
+    onSuccess: ({ id }) => redirectToConfirmationPage(id),
+  });
+
+  // Scroll to top when loading component
+  useEffect(() => window.scrollTo(0, 0), []);
+
   const formik = useFormik<FormValues>({
     initialValues: {
       payeeName: "",
       payeeEmail: "",
       applicantName: "",
     },
-    onSubmit: (values) => onSubmit(values),
+    onSubmit: (values) =>
+      sendITP({
+        ...values,
+        sessionPreviewKeys: SESSION_PREVIEW_KEYS,
+      }),
     validateOnChange: false,
     validateOnBlur: false,
     validationSchema,
   });
 
-  return isLoading ? (
+  return isPending ? (
     <DelayedLoadingIndicator />
   ) : (
     <>
@@ -258,7 +230,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
             no longer be able to make changes.
           </Typography>
         </WarningContainer>
-        {error ? (
+        {isError ? (
           <ErrorWrapper
             error={
               isTestEnvironment

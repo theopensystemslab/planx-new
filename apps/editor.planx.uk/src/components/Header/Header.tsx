@@ -21,7 +21,7 @@ import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useMutation } from "@tanstack/react-query";
-import { logout } from "api/auth/requests";
+import { logout } from "lib/api/auth/requests";
 import { clearLocalFlowIdb } from "lib/local.idb";
 import { capitalize } from "lodash";
 import { Route } from "navi";
@@ -401,7 +401,7 @@ const EditorToolbar: React.FC<{
 }> = ({ headerRef }) => {
   const { navigate } = useNavigation();
   const [open, setOpen] = useState(false);
-  const user = useStore((state) => state.getUser());
+  const user = useStore((state) => state.user);
 
   const handleClose = () => {
     setOpen(false);

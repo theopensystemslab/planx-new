@@ -1,7 +1,8 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { DataFieldAutocomplete } from "@planx/components/shared/DataFieldAutocomplete";
-import { useFormik } from "formik";
-import React, { useEffect, useRef } from "react";
+import { EditorProps } from "@planx/components/shared/types";
+import { getIn, useFormik } from "formik";
+import React, { useRef } from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -14,29 +15,30 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
-import { parseBaseNodeData } from "../../shared";
 import { ICONS } from "../../shared/icons";
-import type { Checklist } from "../model";
-import { toggleExpandableChecklist, validationSchema } from "../model";
-import { ChecklistProps } from "../types";
+import {
+  ChecklistWithOptions,
+  FlatOptions,
+  GroupedOptions,
+  parseChecklist,
+  toggleExpandableChecklist,
+  validationSchema,
+} from "../model";
+import { Checklist } from "../model";
 import { Options } from "./Options";
 
-export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
+type ExtraProps = FlatOptions | GroupedOptions;
+type Props = EditorProps<TYPES.Checklist, Checklist, ExtraProps>;
+
+export const ChecklistEditor: React.FC<Props> = (props) => {
   const type = TYPES.Checklist;
 
-  const formik = useFormik<Checklist>({
-    initialValues: {
-      allRequired: props.node?.data?.allRequired || false,
-      neverAutoAnswer: props.node?.data?.neverAutoAnswer || false,
-      alwaysAutoAnswerBlank: props.node?.data?.alwaysAutoAnswerBlank || false,
-      description: props.node?.data?.description || "",
-      fn: props.node?.data?.fn || "",
-      groupedOptions: props.groupedOptions,
-      img: props.node?.data?.img || "",
-      options: props.options,
-      text: props.node?.data?.text || "",
-      ...parseBaseNodeData(props.node?.data),
-    },
+  const formik = useFormik<ChecklistWithOptions>({
+    initialValues: parseChecklist({
+      ...props.node?.data,
+      options: props?.options,
+      groupedOptions: props?.groupedOptions,
+    }),
     onSubmit: ({ options, groupedOptions, ...values }) => {
       const sourceOptions = options?.length
         ? options
@@ -49,7 +51,7 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
       const processedOptions = filteredOptions.map((option) => ({
         ...option,
         id: option.id || undefined,
-        type: TYPES.Answer,
+        type: TYPES.Answer as const,
       }));
 
       if (props.handleSubmit) {
@@ -140,13 +142,7 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
               <Switch
                 checked={!!formik.values.groupedOptions}
                 onChange={() =>
-                  formik.setValues({
-                    ...formik.values,
-                    ...toggleExpandableChecklist({
-                      options: formik.values.options,
-                      groupedOptions: formik.values.groupedOptions,
-                    }),
-                  })
+                  formik.setValues(toggleExpandableChecklist(formik.values))
                 }
                 label="Expandable"
                 disabled={props.disabled}
@@ -195,7 +191,7 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
             </ErrorWrapper>
           </InputGroup>
         </ModalSectionContent>
-        <ErrorWrapper error={formik.errors.options}>
+        <ErrorWrapper error={getIn(formik.errors, "options")}>
           <Options
             formik={formik}
             disabled={props.disabled}
