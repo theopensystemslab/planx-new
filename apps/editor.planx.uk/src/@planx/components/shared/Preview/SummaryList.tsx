@@ -1,18 +1,23 @@
+import { useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import {
-  ComponentType as TYPES,
+  GISResponse,
   NodeId,
+  ComponentType as TYPES,
 } from "@opensystemslab/planx-core/types";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
+import { FETCH_BLPU_CODES } from "@planx/components/FindProperty/Public";
 import { formatSchemaDisplayValue } from "@planx/components/List/utils";
 import type { Page } from "@planx/components/Page/model";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import format from "date-fns/format";
+import { publicClient } from "lib/graphql";
+import find from "lodash/find";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
@@ -313,6 +318,8 @@ function SummaryList(props: SummaryListProps) {
                       {(node.type === TYPES.FindProperty && FIND_PROPERTY_DT) ||
                         (node.type === TYPES.DrawBoundary &&
                           DRAW_BOUNDARY_DT) ||
+                        (node.type === TYPES.PropertyInformation && PROPERTY_INFORMATION_DT) ||
+                        (node.type === TYPES.PlanningConstraints && PLANNING_CONSTRAINTS_DT) ||
                         node.data?.title ||
                         node.data?.text ||
                         "this answer"}
@@ -346,29 +353,60 @@ interface ComponentProps {
 }
 
 function PropertyInformation(props: ComponentProps) {
-  // TODO join to human-readable property type display name via blpu_codes (refactor to query hook)
+  const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES, {
+    client: publicClient,
+  });
+
+  const propertyTypeVal = props.passport.data?.["property.type"]?.[0];
+
   return (
     <>
       <Box component="dt">{PROPERTY_INFORMATION_DT}</Box>
       <Box component="dd">
-        {props.passport.data?.["property.type"]?.[0] || `Unknown`}
+        {find(blpuCodes?.blpu_codes, { value: propertyTypeVal })?.description || propertyTypeVal || "Unknown"}
       </Box>
     </>
   );
 }
 
 function PlanningConstraints(props: ComponentProps) {
-  const applicableConstraints =
-    props.passport.data?.["property.constraints.planning"];
-  const summary =
-    applicableConstraints?.length > 0
-      ? `Planning constraints apply to this property`
-      : `No applicable planning constraints found for this property`;
+  // If we weren't able to fetch external data, omit this component from Review
+  //   Any constraints will instead have been manually prompted (and already captured on Review) as questions or checklists
+  const fetchedConstraints = props.passport.data?.["_constraints"];
+  if (!fetchedConstraints) {
+    return undefined;
+  }
+
+  const applicableConstraints = props.passport.data?.["property.constraints.planning"];
+  if (!applicableConstraints?.length) {
+    return (
+      <>
+        <Box component="dt">{PLANNING_CONSTRAINTS_DT}</Box>
+        <Box component="dd">{`No applicable planning constraints found for this property`}</Box>
+      </>
+    );
+  }
+
+  const formattedApplicableConstraints: string[] = [];
+  (applicableConstraints as string[]).forEach((fn) => {
+    fetchedConstraints.forEach((constraintSource: GISResponse) => {
+      // `hasOwnProperty(fn)` will naturally omit/de-duplicate "granular" constraints to their parent
+      if (constraintSource["metadata"].hasOwnProperty(fn)) {
+        formattedApplicableConstraints.push(constraintSource.metadata[fn]["plural"]);
+      }
+    });
+  });
 
   return (
     <>
       <Box component="dt">{PLANNING_CONSTRAINTS_DT}</Box>
-      <Box component="dd">{summary}</Box>
+      <Box component="dd">
+        <ul>
+          {formattedApplicableConstraints.sort().map((title) => (
+            <li>{title}</li>
+          ))}
+        </ul>
+      </Box>
     </>
   );
 }
@@ -540,9 +578,8 @@ function DrawBoundary(props: ComponentProps) {
               geojsonColor="#ff0000"
               geojsonFill
               geojsonBuffer={20}
-              osProxyEndpoint={`${
-                import.meta.env.VITE_APP_API_URL
-              }/proxy/ordnance-survey`}
+              osProxyEndpoint={`${import.meta.env.VITE_APP_API_URL
+                }/proxy/ordnance-survey`}
               hideResetControl
               staticMode
               style={{ width: "100%", height: "30vh" }}
@@ -564,9 +601,8 @@ function NumberInput(props: ComponentProps) {
   return (
     <>
       <Box component="dt">{props.node.data.title}</Box>
-      <Box component="dd">{`${getAnswersByNode(props)} ${
-        props.node.data.units ?? ""
-      }`}</Box>
+      <Box component="dd">{`${getAnswersByNode(props)} ${props.node.data.units ?? ""
+        }`}</Box>
     </>
   );
 }
@@ -639,8 +675,8 @@ function FileUploadAndLabel(props: ComponentProps) {
         <ul>
           {uniqueFilenames.length
             ? uniqueFilenames.map((filename, index) => (
-                <li key={index}>{filename}</li>
-              ))
+              <li key={index}>{filename}</li>
+            ))
             : "No files uploaded"}
         </ul>
       </Box>
@@ -697,7 +733,7 @@ function getAnswers(props: ComponentProps): string[] {
   try {
     const array = props!.userData!.answers!;
     if (Array.isArray(array)) return array;
-  } catch (err) {}
+  } catch (err) { }
   return [];
 }
 
@@ -710,6 +746,6 @@ function getAnswersByNode(props: ComponentProps): any {
   try {
     const variableName: string = props.node!.data!.fn!;
     return props.userData?.data![variableName || props.nodeId];
-  } catch (err) {}
+  } catch (err) { }
   return "";
 }
