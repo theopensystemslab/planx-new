@@ -3,6 +3,7 @@ import { Option } from "@planx/components/Option/model";
 import { BaseChecklistComponent } from "@planx/components/shared/BaseChecklist/Editor";
 import {
   FlatOptions,
+  generatePayload,
   GroupedOptions,
 } from "@planx/components/shared/BaseChecklist/model";
 import { EditorProps } from "@planx/components/shared/types";
@@ -28,43 +29,13 @@ export const ChecklistEditor: React.FC<Props> = (props) => {
       options: props?.options,
       groupedOptions: props?.groupedOptions,
     }),
-    onSubmit: ({ options, groupedOptions, ...values }) => {
-      const sourceOptions = options?.length
-        ? options
-        : groupedOptions?.flatMap((group) => group.children);
-
-      const filteredOptions = (sourceOptions || []).filter(
-        (option) => option.data.text,
-      );
-
-      const processedOptions = filteredOptions.map((option) => ({
-        ...option,
-        id: option.id || undefined,
-        type: TYPES.Answer as const,
-      }));
+    onSubmit: (values) => {
+      const { data, children } = generatePayload(values);
 
       if (props.handleSubmit) {
-        props.handleSubmit(
-          {
-            type,
-            data: {
-              ...values,
-              ...(groupedOptions
-                ? {
-                    categories: groupedOptions.map((group) => ({
-                      title: group.title,
-                      count: group.children.length,
-                    })),
-                  }
-                : {
-                    categories: undefined,
-                  }),
-            },
-          },
-          processedOptions,
-        );
+        props.handleSubmit({ type, data }, children);
       } else {
-        alert(JSON.stringify({ type, ...values, options }, null, 2));
+        alert(JSON.stringify({ type, ...values, options: values.options }, null, 2));
       }
     },
     validationSchema,

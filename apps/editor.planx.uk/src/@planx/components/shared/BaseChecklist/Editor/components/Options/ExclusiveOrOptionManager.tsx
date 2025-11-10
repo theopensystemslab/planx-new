@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { useCurrentOptions } from "@planx/components/Checklist/Public/hooks/useInitialOptions";
 import { AnyOption, AnyOptions } from "@planx/components/Option/model";
+import { DEFAULT_RULE } from "@planx/components/ResponsiveChecklist/model";
 import {
   AnyChecklist,
   OptionGroup,
@@ -13,10 +13,11 @@ import { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
-import type { AnyChecklist, OptionGroup } from "../../../model";
+import { useCurrentOptions } from "../../../Public/hooks/useInitialOptions";
 import ChecklistOptionsEditor from "./OptionsEditor";
 
 interface Props<T extends AnyChecklist> {
+  type: ComponentType.Checklist | ComponentType.ResponsiveChecklist;
   formik: FormikHookReturn<T>;
   exclusiveOptions: AnyOptions;
   nonExclusiveOptions: AnyOptions | OptionGroup[];
@@ -27,6 +28,7 @@ interface Props<T extends AnyChecklist> {
 }
 
 export const ExclusiveOrOptionManager = <T extends AnyChecklist>({
+  type,
   formik,
   exclusiveOptions,
   nonExclusiveOptions,
@@ -80,14 +82,14 @@ export const ExclusiveOrOptionManager = <T extends AnyChecklist>({
                   val: "",
                   flags: [],
                   exclusive: true,
-                  // TODO: Rule
+                  ...(type === ComponentType.ResponsiveChecklist && { rule: DEFAULT_RULE })
                 },
               }) satisfies AnyOption
             }
             Editor={ChecklistOptionsEditor}
             disabled={disabled}
             editorExtraProps={{
-              type: ComponentType.Checklist,
+              type,
               showValueField: !!formik.values.fn,
               groupIndex,
               optionPlaceholder: "Exclusive 'or' option",
