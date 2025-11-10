@@ -37,6 +37,7 @@ const exemptionsReductionLookup: Record<string, string> = {
   parishCouncil: "Parish or community council",
   alternative: "Alternative proposal",
   sports: "Sports club",
+  local: "Local",
 };
 
 // FeeBreakdown table displays 2 or 4 columns depending if VAT-able line items
@@ -307,7 +308,7 @@ const Total: FeeBreakdownRow = ({ amount }) => (
           align="right"
           sx={(theme) => ({ color: theme.palette.text.secondary })}
         >
-          {amount.payableVAT > 0
+          {amount.payableVAT >= 0
             ? formattedPriceWithCurrencySymbol(amount.payableVAT)
             : undefined}
         </TableCell>

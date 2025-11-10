@@ -1,3 +1,4 @@
+import { getCalculatedReductionOrExemption } from "@opensystemslab/planx-core";
 import { PassportFeeFields } from "@opensystemslab/planx-core/types";
 import { Store } from "pages/FlowEditor/lib/store";
 import { ConditionalPick } from "type-fest";
@@ -55,23 +56,28 @@ export const handleSetFees: HandleSetFees = ({
     fees[payable] = fees[payable] + calculatedVAT;
     fees[payableVAT] = calculatedVAT;
 
-    // If calculated base application fee is VAT-able and has reductions or exemptions,
-    //   ensure that payable and payable VAT are correctly adjusted
-    const reductionOrExemptionFns = [
-      "application.fee.reduction.alternative",
-      "application.fee.reduction.parishCouncil",
-      "application.fee.reduction.sports",
-      "application.fee.exemption.disability",
-      "application.fee.exemption.resubmission",
-      "application.fee.exemption.demolition",
-    ];
-    const hasReductionOrExemption = reductionOrExemptionFns.some(
-      (fn) => passport.data?.[fn]?.[0] === "true",
-    );
-    if (hasReductionOrExemption) {
-      // TODO account for eg 50% reduction therefore -50% VAT, currently always -100%
+    // It's possible for discretionary services with a VAT-able base application fee
+    //   to apply exemptions or reductions which are then also VAT-able
+    const { reduction, reductionVAT, exemption, exemptionVAT } =
+      getCalculatedReductionOrExemption({
+        ...passport.data,
+        // Ensure any calculations so far overwrite original incoming passport
+        [CALCULATED_FN]: calculated,
+        [`${CALCULATED_FN}.VAT`]: calculatedVAT,
+        [PAY_FN]: fees[payable],
+        [`${PAY_FN}.VAT`]: fees[payableVAT],
+      });
+
+    // VAT-able exemptions are always 100%, so simply subtract all VAT
+    if (exemption !== 0 && exemptionVAT !== 0) {
       fees[payable] = fees[payable] - calculatedVAT;
       fees[payableVAT] = fees[payableVAT] - calculatedVAT;
+    }
+
+    // VAT-able reductions can be any percent of calculated VAT
+    if (reduction !== 0 && reductionVAT !== 0) {
+      fees[payable] = fees[payable] - (calculatedVAT + reductionVAT);
+      fees[payableVAT] = fees[payableVAT] - (calculatedVAT + reductionVAT);
     }
   }
 
