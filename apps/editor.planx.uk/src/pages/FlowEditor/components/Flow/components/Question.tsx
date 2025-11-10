@@ -29,17 +29,15 @@ type Props = {
 };
 
 const Question: React.FC<Props> = React.memo((props) => {
-  const [
-    isClone,
-    childNodes,
-    showHelpText,
-    showTags,
-  ] = useStore((state) => [
-    state.isClone,
-    state.childNodesOf(props.id),
-    state.showHelpText,
-    state.showTags,
-  ]);
+  const [isClone, childNodes, showHelpText, showTags, showNotes] = useStore(
+    (state) => [
+      state.isClone,
+      state.childNodesOf(props.id),
+      state.showHelpText,
+      state.showTags,
+      state.showNotes,
+    ],
+  );
 
   const parent = getParentId(props.parent);
 
@@ -61,12 +59,19 @@ const Question: React.FC<Props> = React.memo((props) => {
   }
 
   const handleContextMenu = useContextMenu({
-    source: "node", relationships: {
+    source: "node",
+    relationships: {
       parent,
       before: props.id,
       self: props.id,
-    }
+    },
   });
+
+  // Hide sticky notes when toggled off
+  const isStickyNote = childNodes.length === 0;
+  if (isStickyNote && !showNotes) {
+    return null;
+  }
 
   const Icon = props.type === "Error" ? ErrorIcon : ICONS[props.type];
   // If there is an error, the icon has a semantic meaning and needs a title
@@ -86,7 +91,7 @@ const Question: React.FC<Props> = React.memo((props) => {
           {
             isDragging,
             isClone: isClone(props.id),
-            isNote: childNodes.length === 0,
+            isNote: isStickyNote,
             wasVisited: props.wasVisited,
             hasFailed: props.hasFailed,
           },
