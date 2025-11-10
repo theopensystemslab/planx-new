@@ -177,6 +177,7 @@ export const GroupedOptions = <T extends AnyChecklist>({
       )}
       {exclusiveOrOptionManagerShouldRender ? (
         <ExclusiveOrOptionManager
+          type={type}
           formik={formik}
           grouped
           exclusiveOptions={exclusiveOptions[0]?.children}
