@@ -1,5 +1,5 @@
 import { richText } from "lib/yupExtensions";
-import { object, SchemaOf, string } from "yup";
+import { boolean, object, SchemaOf, string } from "yup";
 
 import {
   BaseNodeData,
@@ -10,6 +10,7 @@ import {
 export interface Content extends BaseNodeData {
   content: string;
   color?: string;
+  resetButton?: boolean;
 }
 
 export const parseContent = (
@@ -17,6 +18,7 @@ export const parseContent = (
 ): Content => ({
   content: data?.content || "",
   color: data?.color,
+  resetButton: data?.resetButton || false,
   ...parseBaseNodeData(data),
 });
 
@@ -25,5 +27,6 @@ export const validationSchema: SchemaOf<Content> =
     object({
       content: richText({ variant: "rootLevelContent" }).required(),
       color: string(),
+      resetButton: boolean(),
     }),
   );
