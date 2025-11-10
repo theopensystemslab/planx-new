@@ -3,14 +3,8 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { ChecklistWithOptions } from "@planx/components/Checklist/model";
-import { partitionGroupedOptions } from "@planx/components/Checklist/Public/helpers";
-import { useCurrentOptions } from "@planx/components/Checklist/Public/hooks/useInitialOptions";
-import { ConditionalOption, Option } from "@planx/components/Option/model";
-import { ResponsiveChecklistWithOptions } from "@planx/components/ResponsiveChecklist/model";
 import type {
   AnyChecklist,
-  Group,
   OptionGroup,
 } from "@planx/components/shared/BaseChecklist/model";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
@@ -25,6 +19,8 @@ import ListManager from "ui/editor/ListManager/ListManager";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
+import { partitionGroupedOptions } from "../../../Public/helpers";
+import { useCurrentOptions } from "../../../Public/hooks/useInitialOptions";
 import { ExclusiveOrOptionManager } from "./ExclusiveOrOptionManager";
 import ChecklistOptionsEditor from "./OptionsEditor";
 

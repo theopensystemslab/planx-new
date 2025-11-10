@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { visuallyHidden } from "@mui/utils";
+import { checklistInputValidationSchema, type GroupedChecklist } from "@planx/components/Checklist/model";
 import { ChecklistLayout } from "@planx/components/shared/BaseChecklist/model";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
@@ -11,7 +12,6 @@ import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { object } from "yup";
 
-import { checklistInputValidationSchema, GroupedChecklist } from "../../model";
 import { changeCheckbox, partitionGroupedOptions } from "../helpers";
 import { useExclusiveOptionInGroupedChecklist } from "../hooks/useExclusiveOption";
 import { useSortedOptions } from "../hooks/useSortedOptions";
