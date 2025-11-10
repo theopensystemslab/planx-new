@@ -1,143 +1,32 @@
-import { richText } from "lib/yupExtensions";
-import { partition } from "lodash";
-import { array, boolean, number, object, string } from "yup";
+import { array, boolean, object, string } from "yup";
 
 import { Option, optionValidationSchema } from "../Option/model";
 import {
-  BaseNodeData,
-  baseNodeDataValidationSchema,
-  parseBaseNodeData,
-} from "../shared";
-
-export enum ChecklistLayout {
-  Basic,
-  Grouped,
-  Images,
-}
-
-export interface Group<T> {
-  title: string;
-  exclusive?: true;
-  children: Array<T>;
-}
-
-export interface Category {
-  title: string;
-  count: number;
-}
+  BaseChecklist,
+  baseChecklistValidationSchema,
+  FlatOptions,
+  getFlatOptions,
+  GroupedOptions,
+  parseBaseChecklist,
+} from "../shared/BaseChecklist/model";
 
 /**
  * Database representation of a Checklist component
  */
-export interface Checklist extends BaseNodeData {
-  fn?: string;
-  description?: string;
-  text?: string;
-  img?: string;
+export interface Checklist extends BaseChecklist {
   allRequired?: boolean;
-  categories?: Array<Category>;
   neverAutoAnswer?: boolean;
   alwaysAutoAnswerBlank?: boolean;
 }
 
-export interface FlatOptions {
-  options: Array<Option>;
-  groupedOptions?: undefined;
-}
-
-export interface GroupedOptions {
-  options?: undefined;
-  groupedOptions: Array<Group<Option>>;
-}
-
-export type FlatChecklist = Checklist & FlatOptions;
-export type GroupedChecklist = Checklist & GroupedOptions;
+export type FlatChecklist = Checklist & FlatOptions<Option>;
+export type GroupedChecklist = Checklist & GroupedOptions<Option>;
 
 /**
  * Public and Editor representation of a Checklist
  * Contains options derived from child Answer nodes
  */
 export type ChecklistWithOptions = FlatChecklist | GroupedChecklist;
-
-export const toggleExpandableChecklist = ({
-  options,
-  groupedOptions,
-  ...checklist
-}: ChecklistWithOptions): ChecklistWithOptions => {
-  // toggle from unexpanded to expanded
-  if (options !== undefined && options.length > 0) {
-    const [exclusiveOptions, nonExclusiveOptions]: Option[][] = partition(
-      options,
-      (option) => option.data.exclusive,
-    );
-
-    const newGroupedOptions = [
-      {
-        title: "Section 1",
-        children: nonExclusiveOptions,
-      },
-    ];
-
-    if (exclusiveOptions.length > 0) {
-      newGroupedOptions.push({
-        title: "Or",
-        children: exclusiveOptions,
-      });
-    }
-
-    return {
-      ...checklist,
-      groupedOptions: newGroupedOptions,
-      options: undefined,
-    };
-
-    // toggle from expanded to unexpanded
-  } else if (groupedOptions !== undefined && groupedOptions.length > 0) {
-    return {
-      ...checklist,
-      options: groupedOptions.flatMap((opt) => opt.children),
-      groupedOptions: undefined,
-    };
-  } else {
-    return {
-      ...checklist,
-      options: undefined,
-      groupedOptions: groupedOptions || [
-        {
-          title: "Section 1",
-          children: [],
-        },
-      ],
-    };
-  }
-};
-
-export const getFlatOptions = ({
-  options,
-  groupedOptions,
-}: {
-  options: ChecklistWithOptions["options"];
-  groupedOptions: ChecklistWithOptions["groupedOptions"];
-}) => {
-  if (options) return options;
-  if (groupedOptions) return groupedOptions.flatMap(({ children }) => children);
-  return [];
-};
-
-export const getLayout = ({
-  options,
-  groupedOptions,
-}: {
-  options: ChecklistWithOptions["options"];
-  groupedOptions: ChecklistWithOptions["groupedOptions"];
-}): ChecklistLayout => {
-  const hasImages = options?.some((o) => o.data.img);
-  if (hasImages) return ChecklistLayout.Images;
-
-  if (groupedOptions) return ChecklistLayout.Grouped;
-
-  return ChecklistLayout.Basic;
-};
 
 export const checklistInputValidationSchema = ({
   data: { allRequired, options, groupedOptions },
@@ -168,9 +57,8 @@ export const checklistInputValidationSchema = ({
     });
 };
 
-export const validationSchema = baseNodeDataValidationSchema.concat(
+export const validationSchema = baseChecklistValidationSchema.concat(
   object({
-    description: richText(),
     groupedOptions: array(
       object({
         title: string().required("Section title is a required field").trim(),
@@ -179,15 +67,6 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
     ).optional(),
     allRequired: boolean(),
     options: array(optionValidationSchema).optional(),
-    fn: string().nullable(),
-    text: string(),
-    img: string(),
-    categories: array(
-      object({
-        title: string().trim(),
-        count: number(),
-      }),
-    ),
     neverAutoAnswer: boolean(),
     alwaysAutoAnswerBlank: boolean(),
     autoAnswers: array(string()),
@@ -225,7 +104,12 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
     })
     .test({
       name: "atLeastOneDataField",
-      test: function ({ fn, options = [], groupedOptions = [] }) {
+      test: function (value) {
+        const {
+          fn,
+          options = [],
+          groupedOptions = [],
+        } = value as ChecklistWithOptions;
         if (!fn) return true;
         const allOptions = [
           ...options,
@@ -248,7 +132,8 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
     })
     .test({
       name: "",
-      test: function ({ alwaysAutoAnswerBlank, fn }) {
+      test: function (value) {
+        const { alwaysAutoAnswerBlank, fn } = value as ChecklistWithOptions;
         if (!alwaysAutoAnswerBlank) return true;
         if (fn) return true;
 
@@ -261,12 +146,14 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
     })
     .test({
       name: "onlyOneBlank",
-      test: function ({
-        alwaysAutoAnswerBlank,
-        options = [],
-        groupedOptions = [],
-        fn,
-      }) {
+      test: function (value) {
+        const {
+          alwaysAutoAnswerBlank,
+          options = [],
+          groupedOptions = [],
+          fn,
+        } = value as ChecklistWithOptions;
+
         if (!alwaysAutoAnswerBlank || !fn) return true;
 
         const allOptions = [
@@ -357,11 +244,7 @@ export const parseChecklist = (
   allRequired: data?.allRequired || false,
   neverAutoAnswer: data?.neverAutoAnswer || false,
   alwaysAutoAnswerBlank: data?.alwaysAutoAnswerBlank || false,
-  description: data?.description || "",
-  fn: data?.fn || "",
   groupedOptions: data?.groupedOptions,
-  img: data?.img || "",
   options: data?.options,
-  text: data?.text || "",
-  ...parseBaseNodeData(data),
+  ...parseBaseChecklist(data),
 });

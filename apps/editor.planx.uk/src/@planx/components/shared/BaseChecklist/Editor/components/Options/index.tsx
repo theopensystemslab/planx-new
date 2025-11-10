@@ -1,5 +1,6 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { Option } from "@planx/components/Option/model";
+import { useCurrentOptions } from "@planx/components/Checklist/Public/hooks/useInitialOptions";
+import { AnyOption } from "@planx/components/Option/model";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { partition } from "lodash";
 import React from "react";
@@ -7,18 +8,21 @@ import { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 
-import { ChecklistWithOptions } from "../model";
-import { useCurrentOptions } from "../Public/hooks/useInitialOptions";
-import { ExclusiveOrOptionManager } from "./components/ExclusiveOrOptionManager";
-import { GroupedOptions } from "./components/GroupedOptions";
-import ChecklistOptionsEditor from "./components/OptionsEditor";
+import { AnyChecklist } from "../../../model";
+import { ExclusiveOrOptionManager } from "./ExclusiveOrOptionManager";
+import { GroupedOptions } from "./GroupedOptions";
+import ChecklistOptionsEditor from "./OptionsEditor";
 
-export const Options: React.FC<{
-  formik: FormikHookReturn<ChecklistWithOptions>;
+export const Options = <T extends AnyChecklist>({
+  formik,
+  disabled,
+  isTemplatedNode,
+}: {
+  formik: FormikHookReturn<T>;
   disabled?: boolean;
   isTemplatedNode?: boolean;
-}> = ({ formik, disabled, isTemplatedNode }) => {
-  const [exclusiveOptions, nonExclusiveOptions]: Option[][] = partition(
+}) => {
+  const [exclusiveOptions, nonExclusiveOptions] = partition<AnyOption>(
     formik.values.options,
     (option) => option.data.exclusive,
   );
@@ -30,7 +34,7 @@ export const Options: React.FC<{
   return (
     <ModalSectionContent subtitle="Options">
       {formik.values.groupedOptions ? (
-        <GroupedOptions
+        <GroupedOptions<T>
           formik={formik}
           disabled={disabled}
           isTemplatedNode={isTemplatedNode}
@@ -56,6 +60,7 @@ export const Options: React.FC<{
                 description: "",
                 val: "",
                 flags: [],
+                // TODO: Rule!
               },
             })}
             Editor={ChecklistOptionsEditor}

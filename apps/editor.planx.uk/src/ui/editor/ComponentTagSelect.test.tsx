@@ -1,5 +1,5 @@
 import { User } from "@opensystemslab/planx-core/types";
-import ChecklistComponent from "@planx/components/Checklist/Editor/Editor";
+import ChecklistComponent from "@planx/components/Checklist/Editor";
 import { within } from "@testing-library/react";
 import { TAG_DISPLAY_VALUES } from "pages/FlowEditor/components/Flow/components/Tag";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -71,7 +71,7 @@ describe("Checklist Component for a non Platform Admin", () => {
   it("renders all tags with none selected", async () => {
     const { getByRole, user } = setup(
       <DndProvider backend={HTML5Backend}>
-        <ChecklistComponent options={[]}/>
+        <ChecklistComponent options={[]} />
       </DndProvider>,
     );
     const tagSelect = getByRole("combobox", { name: /tag this component/i });

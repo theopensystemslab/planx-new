@@ -1,10 +1,10 @@
+import { ChecklistLayout } from "@planx/components/shared/BaseChecklist/model";
 import { screen } from "@testing-library/react";
 import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import { ChecklistLayout } from "../../model";
 import Checklist from "../Public";
 import { options } from "./mockOptions";
 import { pressContinue, pressOption } from "./testUtils";

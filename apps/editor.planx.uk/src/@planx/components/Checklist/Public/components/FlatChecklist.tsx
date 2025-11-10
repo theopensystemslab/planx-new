@@ -2,10 +2,10 @@ import Grid from "@mui/material/Grid";
 import { visuallyHidden } from "@mui/utils";
 import {
   checklistInputValidationSchema,
-  ChecklistLayout,
   FlatChecklist,
 } from "@planx/components/Checklist/model";
 import { Option } from "@planx/components/Option/model";
+import { ChecklistLayout } from "@planx/components/shared/BaseChecklist/model";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { PublicProps } from "@planx/components/shared/types";
