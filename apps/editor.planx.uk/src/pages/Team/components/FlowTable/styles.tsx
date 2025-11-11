@@ -47,6 +47,20 @@ export const StyledTableRow = styled(TableRow, {
       textDecoration: "underline",
     },
   },
+  "& .actions-cell": {
+    cursor: "default",
+    position: "relative",
+    // Min-height to compensate for padding
+    height: "80px",
+    // Make the entire cell clickable area for the menu button
+    "& > div, & button": {
+      position: "absolute",
+      left: 0,
+      top: 0,
+      width: "100%",
+      height: "100%",
+    },
+  },
   "&:has(.actions-cell:hover) a": {
     textDecoration: "none",
   },
