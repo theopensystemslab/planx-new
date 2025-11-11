@@ -5,14 +5,22 @@ import {
   map,
   mount,
   NotFoundError,
+  redirect,
   route,
   withContext,
   withData,
+  withView,
 } from "navi";
+import TeamAdvancedSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/TeamAdvancedSettings";
+import TeamContactSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/TeamContactSettings";
+import TeamGisDataSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/TeamGisDataSettings";
+import TeamIntegrationsSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/TeamIntegrationsSettings";
+import TeamSettingsLayout from "pages/FlowEditor/components/NewSettings/TeamSettings/TeamSettingsLayout";
 import DesignSettings from "pages/FlowEditor/components/Settings/DesignSettings";
 import GeneralSettings from "pages/FlowEditor/components/Settings/GeneralSettings";
 import Team from "pages/Team";
 import React from "react";
+import { View } from "react-navi";
 
 import { client } from "../lib/graphql";
 import { useStore } from "../pages/FlowEditor/lib/store";
@@ -30,7 +38,12 @@ const setFlowAndLazyLoad = (importComponent: Parameters<typeof lazy>[0]) => {
       request.params.flow,
       request.params.team,
     );
-    useStore.setState({ ...data, flowSlug: request.params.flow });
+    const { templatedFrom, ...rest } = data;
+    useStore.setState({
+      ...rest,
+      flowSlug: request.params.flow,
+      isTemplatedFrom: Boolean(templatedFrom),
+    });
     return lazy(importComponent);
   });
 };
@@ -119,6 +132,10 @@ const routes = compose(
 
     "/:flow/settings": setFlowAndLazyLoad(() => import("./serviceSettings")),
 
+    "/:flow/new-settings": setFlowAndLazyLoad(
+      () => import("./serviceNewSettings"),
+    ),
+
     "/:flow/feedback": setFlowAndLazyLoad(() => import("./serviceFeedback")),
 
     "/:flow/submissions": setFlowAndLazyLoad(
@@ -147,6 +164,41 @@ const routes = compose(
         ),
         view: GeneralSettings,
       })),
+    ),
+
+    "/new-settings": compose(
+      withView(() => (
+        <TeamSettingsLayout>
+          <View />
+        </TeamSettingsLayout>
+      )),
+      mount({
+        "/": redirect("./contact"),
+        "/contact": route((req) => ({
+          title: makeTitle(
+            [req.params.team, "new-settings", "contact"].join("/"),
+          ),
+          view: <TeamContactSettings />,
+        })),
+        "/integrations": route((req) => ({
+          title: makeTitle(
+            [req.params.team, "new-settings", "integrations"].join("/"),
+          ),
+          view: <TeamIntegrationsSettings />,
+        })),
+        "/gis-data": route((req) => ({
+          title: makeTitle(
+            [req.params.team, "new-settings", "gis-data"].join("/"),
+          ),
+          view: <TeamGisDataSettings />,
+        })),
+        "/advanced": route((req) => ({
+          title: makeTitle(
+            [req.params.team, "new-settings", "advanced"].join("/"),
+          ),
+          view: <TeamAdvancedSettings />,
+        })),
+      }),
     ),
 
     "/subscription": lazy(() => import("./subscription")),
