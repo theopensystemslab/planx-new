@@ -13,12 +13,12 @@ const { title, services, lpa } = Astro.props;
 if (!services.length) return;
 ---
 
-<section class="px-2 py-1">
-  <h3 class="text-heading-xs">{title}</h3>
+<section class="border-b clamp-[p,2,3] last:clamp-[pb,0,1] border-gray-300 last:border-0">
+  <h3 class="text-heading-sm">{title}</h3>
   <ul>
     {
       services.map((service) => (
-        <li class="py-1">
+        <li class="py-2">
           <a
             class="paragraph-link paragraph-link--external text-body-lg"
             href={getServiceURL({
@@ -31,6 +31,7 @@ if (!services.length) return;
           >
             {service.name}
           </a>
+          <p class="text-body-md m-0 py-2 text-text-secondary">{service.summary}</p>
         </li>
       ))
     }

@@ -1,5 +1,6 @@
 ---
 import Layout from "@layouts/Layout.astro";
+import Badge from "@components/Badge.astro";
 import Container from "@components/Container.astro";
 import Masthead from "@components/Masthead.astro";
 import Accordion from "@components/Accordion.astro";
@@ -19,32 +20,38 @@ const hasListedServices = (lpa: LPA) =>
 <Layout title={title}>
   <Masthead title={title} />
   <Container paddingY>
-    <section class="flex flex-col gap-4">
+    <section class="flex flex-col clamp-[gap,2,4]">
       {
-        lpas.map((lpa) => (
-          <Accordion title={lpa.name}>
-            <AccordionSection
-              title="Start a planning application"
-              services={lpa.applyServices}
-              lpa={lpa}
-            />
-            <AccordionSection
-              title="Notify your authority"
-              services={lpa.notifyServices}
-              lpa={lpa}
-            />
-            <AccordionSection
-              title="Get planning guidance"
-              services={lpa.guidanceServices}
-              lpa={lpa}
-            />
-            {!hasListedServices(lpa) && (
-              <p class="text-body-xl m-0 clamp-[px,1,2] py-4">
-                Currently {lpa.name} doesn't have any services listed.
-              </p>
-            )}
-          </Accordion>
-        ))
+        lpas.map((lpa) => {
+          const hasServices = hasListedServices(lpa);
+          
+          return hasServices ? (
+            <Accordion title={lpa.name}>
+              <AccordionSection
+                title="Start a planning application"
+                services={lpa.applyServices}
+                lpa={lpa}
+              />
+              <AccordionSection
+                title="Notify your authority"
+                services={lpa.notifyServices}
+                lpa={lpa}
+              />
+              <AccordionSection
+                title="Get planning guidance"
+                services={lpa.guidanceServices}
+                lpa={lpa}
+              />
+            </Accordion>
+          ) : (
+            <div class="w-full max-w-screen-lg bg-bg-light rounded overflow-hidden">
+              <div class="flex items-center justify-between gap-4 clamp-[py,3,4] clamp-[px,4,6] text-heading-sm text-left m-0">
+                <span>{lpa.name}</span>
+                <Badge>No services listed yet</Badge>
+              </div>
+            </div>
+          )
+        })
       }
     </section>
   </Container>
