@@ -343,8 +343,6 @@ test.describe("Flow creation, publish and preview", () => {
       page.locator("h1", { hasText: "Tell us what you think" }),
     ).toBeVisible();
     await clickContinue({ page });
-    await expect(
-      page.locator("h1", { hasText: "Form sent" }),
-    ).toBeVisible();
+    await expect(page.locator("h1", { hasText: "Form sent" })).toBeVisible();
   });
 });

@@ -55,9 +55,7 @@ test.describe("Agent journey @regression", async () => {
     });
     await expect(toggleInviteToPayButton).toBeVisible();
     await toggleInviteToPayButton.click();
-    const inviteToPayFormHeader = page.getByText(
-      "Invite someone else to pay",
-    );
+    const inviteToPayFormHeader = page.getByText("Invite someone else to pay");
     await expect(inviteToPayFormHeader).toBeVisible();
 
     await answerInviteToPayForm(page);
