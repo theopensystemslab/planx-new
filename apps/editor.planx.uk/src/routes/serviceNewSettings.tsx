@@ -1,4 +1,4 @@
-import { compose, mount, redirect, route, withData } from "navi";
+import { compose, mount, redirect, route, withData, withView } from "navi";
 import FlowHelpPageSettings from "pages/FlowEditor/components/NewSettings/FlowSettings/FlowHelpPageSettings";
 import FlowLegalDisclaimerSettings from "pages/FlowEditor/components/NewSettings/FlowSettings/FlowLegalDisclaimerSettings";
 import FlowPrivacyPageSettings from "pages/FlowEditor/components/NewSettings/FlowSettings/FlowPrivacyPageSettings";
@@ -6,6 +6,7 @@ import FlowSettingsLayout from "pages/FlowEditor/components/NewSettings/FlowSett
 import FlowTemplateSettings from "pages/FlowEditor/components/NewSettings/FlowSettings/FlowTemplateSettings";
 import FlowVisibilitySettings from "pages/FlowEditor/components/NewSettings/FlowSettings/FlowVisibilitySettings";
 import React from "react";
+import { View } from "react-navi";
 
 import { makeTitle } from "./utils";
 
@@ -15,6 +16,12 @@ const flowNewSettingsRoutes = compose(
     flow: req.params.flow.split(",")[0],
   })),
 
+  withView(() => (
+    <FlowSettingsLayout>
+      <View />
+    </FlowSettingsLayout>
+  )),
+
   mount({
     "/": redirect("./visibility"),
     "/visibility": route((req) => ({
@@ -23,11 +30,7 @@ const flowNewSettingsRoutes = compose(
           "/",
         ),
       ),
-      view: (
-        <FlowSettingsLayout>
-          <FlowVisibilitySettings />
-        </FlowSettingsLayout>
-      ),
+      view: <FlowVisibilitySettings />,
     })),
     "/legal-disclaimer": route((req) => ({
       title: makeTitle(
@@ -38,11 +41,7 @@ const flowNewSettingsRoutes = compose(
           "legal-disclaimer",
         ].join("/"),
       ),
-      view: (
-        <FlowSettingsLayout>
-          <FlowLegalDisclaimerSettings />
-        </FlowSettingsLayout>
-      ),
+      view: <FlowLegalDisclaimerSettings />,
     })),
     "/pages": mount({
       "/help": route((req) => ({
@@ -55,11 +54,7 @@ const flowNewSettingsRoutes = compose(
             "help",
           ].join("/"),
         ),
-        view: (
-          <FlowSettingsLayout>
-            <FlowHelpPageSettings />
-          </FlowSettingsLayout>
-        ),
+        view: <FlowHelpPageSettings />,
       })),
       "/privacy": route((req) => ({
         title: makeTitle(
@@ -71,11 +66,7 @@ const flowNewSettingsRoutes = compose(
             "privacy",
           ].join("/"),
         ),
-        view: (
-          <FlowSettingsLayout>
-            <FlowPrivacyPageSettings />
-          </FlowSettingsLayout>
-        ),
+        view: <FlowPrivacyPageSettings />,
       })),
     }),
     "/templates": route((req) => ({
@@ -84,11 +75,7 @@ const flowNewSettingsRoutes = compose(
           "/",
         ),
       ),
-      view: (
-        <FlowSettingsLayout>
-          <FlowTemplateSettings />
-        </FlowSettingsLayout>
-      ),
+      view: <FlowTemplateSettings />,
     })),
   }),
 );
