@@ -14,6 +14,19 @@ interface RouterContext {
   user?: User;
 }
 
+const isPublicRoute = (pathname: string): boolean => {
+  const publicRoutePatterns = [
+    "/preview",
+    "/published",
+    "/draft",
+    "/pages/",
+    "/pay",
+    "/download-application",
+  ];
+
+  return publicRoutePatterns.some((pattern) => pathname.includes(pattern));
+};
+
 export const Route = createRootRouteWithContext<RouterContext>()({
   beforeLoad: async ({ location, context }) => {
     // Allow login route without authentication
@@ -21,6 +34,12 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       return {};
     }
 
+    // Check if this is a public route that doesn't need authentication
+    if (isPublicRoute(location.pathname)) {
+      return { isPublicRoute: true };
+    }
+
+    // Apply authentication for all other routes
     if (!context.currentUser) {
       throw redirect({
         to: "/login",
@@ -43,7 +62,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
         });
       }
 
-      return { user };
+      return { user, isPublicRoute: false };
     } catch (error) {
       console.error("Failed to initialize user store:", error);
 
