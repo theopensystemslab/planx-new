@@ -80,85 +80,85 @@ const editorRoutes = compose(
       };
     }),
 
-    "/global-settings": map<Context>(async (req, { user }) => {
-      const isAuthorised = user.isPlatformAdmin;
-      if (!isAuthorised)
-        throw new NotFoundError(
-          `User does not have access to ${req.originalUrl}`,
-        );
+    // "/global-settings": map<Context>(async (req, { user }) => {
+    //   const isAuthorised = user.isPlatformAdmin;
+    //   if (!isAuthorised)
+    //     throw new NotFoundError(
+    //       `User does not have access to ${req.originalUrl}`,
+    //     );
 
-      return route(async () => {
-        const { data } = await client.query({
-          query: gql`
-            query {
-              globalSettings: global_settings {
-                footerContent: footer_content
-              }
-            }
-          `,
-        });
-        useStore.getState().setGlobalSettings(data.globalSettings[0]);
+    //   return route(async () => {
+    //     const { data } = await client.query({
+    //       query: gql`
+    //         query {
+    //           globalSettings: global_settings {
+    //             footerContent: footer_content
+    //           }
+    //         }
+    //       `,
+    //     });
+    //     useStore.getState().setGlobalSettings(data.globalSettings[0]);
 
-        return {
-          title: makeTitle("Global Settings"),
-          view: <GlobalSettingsView />,
-        };
-      });
-    }),
+    //     return {
+    //       title: makeTitle("Global Settings"),
+    //       view: <GlobalSettingsView />,
+    //     };
+    //   });
+    // }),
 
-    "/admin-panel": map<Context>(async (req, { user }) => {
-      const { isPlatformAdmin, isAnalyst } = user;
-      const isAuthorised = isPlatformAdmin || isAnalyst;
-      if (!isAuthorised)
-        throw new NotFoundError(
-          `User does not have access to ${req.originalUrl}`,
-        );
+    // "/admin-panel": map<Context>(async (req, { user }) => {
+    //   const { isPlatformAdmin, isAnalyst } = user;
+    //   const isAuthorised = isPlatformAdmin || isAnalyst;
+    //   if (!isAuthorised)
+    //     throw new NotFoundError(
+    //       `User does not have access to ${req.originalUrl}`,
+    //     );
 
-      const query =
-        import.meta.env.VITE_APP_ENV === "production"
-          ? PRODUCTION_ADMIN_PANEL_QUERY
-          : STAGING_ADMIN_PANEL_QUERY;
+    //   const query =
+    //     import.meta.env.VITE_APP_ENV === "production"
+    //       ? PRODUCTION_ADMIN_PANEL_QUERY
+    //       : STAGING_ADMIN_PANEL_QUERY;
 
-      return route(async () => {
-        const { data } = await client.query<{ adminPanel: AdminPanelData[] }>({
-          query,
-          context: {
-            headers: {
-              "x-hasura-role": isPlatformAdmin ? "platformAdmin" : "analyst",
-            },
-          },
-        });
-        useStore.getState().setAdminPanelData(data.adminPanel);
+    //   return route(async () => {
+    //     const { data } = await client.query<{ adminPanel: AdminPanelData[] }>({
+    //       query,
+    //       context: {
+    //         headers: {
+    //           "x-hasura-role": isPlatformAdmin ? "platformAdmin" : "analyst",
+    //         },
+    //       },
+    //     });
+    //     useStore.getState().setAdminPanelData(data.adminPanel);
 
-        return {
-          title: makeTitle("Platform admin panel"),
-          view: <PlatformAdminPanel />,
-        };
-      });
-    }),
+    //     return {
+    //       title: makeTitle("Platform admin panel"),
+    //       view: <PlatformAdminPanel />,
+    //     };
+    //   });
+    // }),
 
-    "/resources": route(() => {
-      return {
-        title: makeTitle("Resources"),
-        view: <NotionEmbed page="resources" title="Resources" />,
-      };
-    }),
+    // "/resources": route(() => {
+    //   return {
+    //     title: makeTitle("Resources"),
+    //     view: <NotionEmbed page="resources" title="Resources" />,
+    //   };
+    // }),
 
-    "/onboarding": route(() => {
-      return {
-        title: makeTitle("Onboarding"),
-        view: <NotionEmbed page="onboarding" title="Onboarding" />,
-      };
-    }),
+    // "/onboarding": route(() => {
+    //   return {
+    //     title: makeTitle("Onboarding"),
+    //     view: <NotionEmbed page="onboarding" title="Onboarding" />,
+    //   };
+    // }),
 
-    "/tutorials": route(() => {
-      return {
-        title: makeTitle("Tutorials"),
-        view: <NotionEmbed page="tutorials" title="Tutorials" />,
-      };
-    }),
+    // "/tutorials": route(() => {
+    //   return {
+    //     title: makeTitle("Tutorials"),
+    //     view: <NotionEmbed page="tutorials" title="Tutorials" />,
+    //   };
+    // }),
 
-    "/:team": lazy(() => import("./team")),
+    // "/:team": lazy(() => import("./team")),
   }),
 );
 
