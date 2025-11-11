@@ -52,10 +52,12 @@ const NOTIFY_SERVICE_SLUGS = [
 ];
 
 const GUIDANCE_SERVICE_SLUGS = [
-  "general-enquiries",
   "check-if-you-need-planning-permission",
+  "check-your-planning-constraints",
+  "find-out-if-you-need-planning-permission-energy-efficiency",
   "find-out-if-you-need-planning-permission",
-  "find-out-if-you-need-planning-permission-energy-efficiency"
+  "general-enquiries",
+  "heritage-constraints",
 ];
 
 export async function fetchAllLPAs(): Promise<LPA[]> {
