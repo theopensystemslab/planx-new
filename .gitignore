@@ -30,19 +30,19 @@ __pycache__
 .ruff_cache/
 
 # Ignore certificate files
-**/*.chain
-**/*.cert
-**/*.cer
-**/*.csr
-**/*.crt
-**/*.key
-**/*.pfx
-**/*.pfx.txt
-**/*.pkcs12
-**/*.p12
-**/*.p7b
-**/*.pem
-**/*.zip
+*.chain
+*.cert
+*.cer
+*.csr
+*.crt
+*.key
+*.pfx
+*.pfx.txt
+*.pkcs12
+*.p12
+*.p7b
+*.pem
+*.zip
 
 # Tooling
 .aider*
