@@ -3,7 +3,7 @@ import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 
-import Checklist from "../Public";
+import Checklist from "../../../../Checklist/Public";
 import { optionsWithExclusiveOption } from "./mockOptions";
 import { pressContinue, pressOption } from "./testUtils";
 

@@ -1,13 +1,7 @@
 import Box from "@mui/material/Box";
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { ChecklistWithOptions } from "@planx/components/Checklist/model";
-import { useCurrentOptions } from "@planx/components/Checklist/Public/hooks/useInitialOptions";
-import { AnyOption, AnyOptions, Option } from "@planx/components/Option/model";
-import { ResponsiveChecklistWithOptions } from "@planx/components/ResponsiveChecklist/model";
-import {
-  AnyChecklist,
-  OptionGroup,
-} from "@planx/components/shared/BaseChecklist/model";
+import type { AnyOption, AnyOptions } from "@planx/components/Option/model";
+import { useCurrentOptions } from "@planx/components/shared/BaseChecklist/Public/hooks/useInitialOptions";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { getIn } from "formik";
 import React from "react";
@@ -15,6 +9,7 @@ import { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
+import type { AnyChecklist, OptionGroup } from "../../../model";
 import ChecklistOptionsEditor from "./OptionsEditor";
 
 interface Props<T extends AnyChecklist> {

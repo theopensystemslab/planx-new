@@ -5,7 +5,7 @@ import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import Checklist from "../Public";
+import Checklist from "../../../../Checklist/Public";
 import { options } from "./mockOptions";
 import { pressContinue, pressOption } from "./testUtils";
 

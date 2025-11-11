@@ -3,11 +3,11 @@ import { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 
 import Wrapper from "../fixtures/Wrapper";
+import { mockWithRepeatedOptions } from "../shared/BaseChecklist/Public/tests/mockOptions";
 import { EditorProps } from "../shared/types";
 import Editor from "./Editor";
 import { ChecklistWithOptions } from "./model";
-import Checklist from "./Public/Public";
-import { mockWithRepeatedOptions } from "./Public/tests/mockOptions";
+import Checklist from "./Public";
 
 const meta = {
   title: "PlanX Components/Checklist",
