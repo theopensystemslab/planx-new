@@ -1,4 +1,5 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
 import ErrorPage from "pages/ErrorPage/ErrorPage";
 import { useStore } from "pages/FlowEditor/lib/store";
 import OfflineLayout from "pages/layout/OfflineLayout";
@@ -11,8 +12,16 @@ import {
   fetchSettingsForPublishedView,
   getLastPublishedAt,
 } from "utils/routeUtils/publishedQueries";
+import { z } from "zod";
+
+// Search params schema for published route
+const publishedSearchSchema = z.object({
+  analytics: z.boolean().optional(),
+});
 
 export const Route = createFileRoute("/$team/$flow/published")({
+  validateSearch: zodValidator(publishedSearchSchema),
+
   beforeLoad: async ({ params }) => {
     const { team: teamParam, flow: flowParam } = params;
     const flowSlug = flowParam.split(",")[0];
