@@ -79,13 +79,13 @@ export const mockFlowData: FlowGraph = {
   },
   ConfirmationNode: {
     data: {
-      heading: "Application sent",
+      heading: "Form sent",
       moreInfo:
         "<h2>You will be contacted</h2>\n<ul>\n<li>if there is anything missing from the information you have provided so far</li>\n<li>if any additional information is required</li>\n<li>to arrange a site visit, if required</li>\n<li>to inform you whether a certificate has been granted or not</li>\n</ul>\n",
       contactInfo:
         '<p>You can contact us at <a href="mailto:planning@lambeth.gov.uk" target="_self"><strong>planning@lambeth.gov.uk</strong></a></p>\n',
       description:
-        "A payment receipt has been emailed to you. You will also receive an email to confirm when your application has been received.",
+        "A payment receipt has been emailed to you. You will also receive an email to confirm when your form has been received.",
       feedbackCTA: "What did you think of this service? (takes 30 seconds)",
     },
     type: 725,

@@ -181,7 +181,7 @@ describe("Validate Session endpoint", () => {
     const expected = {
       reconciledSessionData: reconciledData,
       message:
-        "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
+        "This service has been updated since you last saved your progress. We will ask you to answer any updated questions again when you continue.",
       alteredSectionIds: [],
       changesFound: true,
     };
@@ -270,7 +270,7 @@ describe("Validate Session endpoint", () => {
         },
       },
       message:
-        "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
+        "This service has been updated since you last saved your progress. We will ask you to answer any updated questions again when you continue.",
       alteredSectionIds: [],
       changesFound: true,
     };
@@ -407,7 +407,7 @@ describe("Validate Session endpoint", () => {
         },
       },
       message:
-        "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
+        "This service has been updated since you last saved your progress. We will ask you to answer any updated questions again when you continue.",
       alteredSectionIds: ["section1"],
       changesFound: true,
     };
@@ -518,7 +518,7 @@ describe("Validate Session endpoint", () => {
         breadcrumbs,
       },
       message:
-        "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
+        "This service has been updated since you last saved your progress. We will ask you to answer any updated questions again when you continue.",
       alteredSectionIds: [],
       changesFound: true,
     };
@@ -607,7 +607,7 @@ describe("Validate Session endpoint", () => {
         breadcrumbs: {},
       },
       message:
-        "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
+        "This service has been updated since you last saved your progress. We will ask you to answer any updated questions again when you continue.",
       alteredSectionIds: [],
       changesFound: true,
     };

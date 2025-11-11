@@ -31,8 +31,8 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, date }) => {
       case "submitted":
         return {
           icon: successIcon,
-          label: "Application sent",
-          alt: "Application sent status",
+          label: "Form sent",
+          alt: "Form sent status",
           bgColor: "bg-green-800",
           textColor: "text-green-50"
         };

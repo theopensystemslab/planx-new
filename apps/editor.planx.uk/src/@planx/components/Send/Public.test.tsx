@@ -73,7 +73,7 @@ it("displays loading messages to the user", async () => {
   );
 
   // Initial loading state
-  expect(await findByText(/Submitting your application.../)).toBeVisible();
+  expect(await findByText(/Sending your form.../)).toBeVisible();
 
   // Final submission state
   expect(await findByText(/Finalising your submission.../)).toBeVisible();
@@ -172,7 +172,7 @@ describe("demo state", () => {
       "Send is not enabled for services created in the Demo team",
     );
     const errorGuidance = queryByText(
-      "Click continue to skip send and proceed with your application for testing.",
+      "Click continue to skip send and proceed with testing.",
     );
 
     expect(errorHeader).toBeInTheDocument();
