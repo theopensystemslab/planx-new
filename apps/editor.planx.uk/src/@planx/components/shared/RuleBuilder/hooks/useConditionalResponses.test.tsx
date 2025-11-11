@@ -1,10 +1,11 @@
+import type { Group } from "@planx/components/Checklist/model";
 import { ConditionalOption } from "@planx/components/Option/model";
 import { renderHook } from "@testing-library/react";
 import { logger } from "airbrake";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 
 import { Condition, Operator } from "../types";
-import { useConditionalResponses } from "./useConditionalResponses";
+import { useConditionalOptions } from "./useConditionalResponses";
 
 vi.mock("pages/FlowEditor/lib/store");
 
@@ -36,116 +37,343 @@ beforeEach(() => {
   vi.resetAllMocks();
 });
 
-describe("simple rules (Condition.AlwaysRequired)", () => {
-  it("returns all responses", () => {
-    const input: ConditionalOption[] = [
+describe("options", () => {
+  describe("simple rules (Condition.AlwaysRequired)", () => {
+    it("returns all responses", () => {
+      const input: ConditionalOption[] = [
+        {
+          id: "response-1",
+          data: {
+            text: "Dog",
+            rule: { condition: Condition.AlwaysRecommended },
+          },
+        },
+        {
+          id: "response-2",
+          data: {
+            text: "Cat",
+            rule: { condition: Condition.AlwaysRequired },
+          },
+        },
+        {
+          id: "response-3",
+          data: {
+            text: "Budgie",
+            rule: { condition: Condition.NotRequired },
+          },
+        },
+      ];
+
+      const { result } = renderHook(() => useConditionalOptions(input));
+
+      expect(result.current.conditionalOptions).toMatchObject(input);
+    });
+  });
+
+  describe("condition rules (Condition.RequiredIf)", () => {
+    const responsesWithConditions: ConditionalOption[] = [
       {
         id: "response-1",
         data: {
           text: "Dog",
-          rule: { condition: Condition.AlwaysRecommended },
+          rule: {
+            condition: Condition.RequiredIf,
+            operator: Operator.Equals,
+            fn: "pet",
+            val: "size.large",
+          },
         },
       },
       {
         id: "response-2",
         data: {
           text: "Cat",
-          rule: { condition: Condition.AlwaysRequired },
+          rule: {
+            condition: Condition.RequiredIf,
+            operator: Operator.Equals,
+            fn: "pet",
+            val: "size.medium",
+          },
         },
       },
       {
         id: "response-3",
         data: {
           text: "Budgie",
-          rule: { condition: Condition.NotRequired },
+          rule: {
+            condition: Condition.RequiredIf,
+            operator: Operator.Equals,
+            fn: "pet",
+            val: "size.small",
+          },
         },
       },
     ];
 
-    const { result } = renderHook(() => useConditionalResponses(input));
+    it("returns all responses if the all rules are met", () => {
+      // User has answered previous questions so that all responses should be displayed
+      mockUseStore({
+        data: { pet: ["size.small.cute", "size.medium", "size.large.cuddly"] },
+      });
 
-    expect(result.current).toMatchObject(input);
+      const { result } = renderHook(() =>
+        useConditionalOptions(responsesWithConditions),
+      );
+
+      // All responses displayed
+      expect(result.current.conditionalOptions).toMatchObject(
+        responsesWithConditions,
+      );
+    });
+
+    it("returns some responses if the some of the rules are met", () => {
+      // User has answered previous questions so that only some responses should be displayed
+      mockUseStore({ data: { pet: "size.small" } });
+
+      const { result } = renderHook(() =>
+        useConditionalOptions(responsesWithConditions),
+      );
+
+      // Only matching responses displayed
+      expect(result.current.conditionalOptions).toHaveLength(1);
+      expect(result.current.conditionalOptions?.[0].data.text).toEqual(
+        "Budgie",
+      );
+    });
+
+    it("filters out responses if the rules are not met", () => {
+      // User has answered previous questions so that no responses should be displayed
+      mockUseStore();
+      const loggerSpy = vi.spyOn(logger, "notify");
+
+      const { result } = renderHook(() =>
+        useConditionalOptions(responsesWithConditions),
+      );
+
+      // No responses displayed
+      expect(result.current.conditionalOptions).toHaveLength(0);
+      expect(loggerSpy).toHaveBeenCalled();
+    });
   });
 });
 
-describe("condition rules (Condition.RequiredIf)", () => {
-  const responsesWithConditions: ConditionalOption[] = [
-    {
-      id: "response-1",
-      data: {
-        text: "Dog",
-        rule: {
-          condition: Condition.RequiredIf,
-          operator: Operator.Equals,
-          fn: "pet",
-          val: "size.large",
+describe("grouped options", () => {
+  describe("simple rules (Condition.AlwaysRequired)", () => {
+    it("returns all responses, and all groups", () => {
+      const input: Group<ConditionalOption>[] = [
+        {
+          title: "Pets",
+          children: [
+            {
+              id: "response-1",
+              data: {
+                text: "Dog",
+                rule: { condition: Condition.AlwaysRecommended },
+              },
+            },
+            {
+              id: "response-2",
+              data: {
+                text: "Cat",
+                rule: { condition: Condition.AlwaysRequired },
+              },
+            },
+            {
+              id: "response-3",
+              data: {
+                text: "Budgie",
+                rule: { condition: Condition.NotRequired },
+              },
+            },
+          ],
         },
-      },
-    },
-    {
-      id: "response-2",
-      data: {
-        text: "Cat",
-        rule: {
-          condition: Condition.RequiredIf,
-          operator: Operator.Equals,
-          fn: "pet",
-          val: "size.medium",
+        {
+          title: "Zoo Animals",
+          children: [
+            {
+              id: "response-4",
+              data: {
+                text: "Panda",
+                rule: { condition: Condition.AlwaysRecommended },
+              },
+            },
+            {
+              id: "response-5",
+              data: {
+                text: "Elephant",
+                rule: { condition: Condition.AlwaysRequired },
+              },
+            },
+            {
+              id: "response-6",
+              data: {
+                text: "Giraffe",
+                rule: { condition: Condition.NotRequired },
+              },
+            },
+          ],
         },
-      },
-    },
-    {
-      id: "response-3",
-      data: {
-        text: "Budgie",
-        rule: {
-          condition: Condition.RequiredIf,
-          operator: Operator.Equals,
-          fn: "pet",
-          val: "size.small",
-        },
-      },
-    },
-  ];
+      ];
 
-  it("returns all responses if the all rules are met", () => {
-    // User has answered previous questions so that all responses should be displayed
-    mockUseStore({
-      data: { pet: ["size.small.cute", "size.medium", "size.large.cuddly"] },
+      const { result } = renderHook(() =>
+        useConditionalOptions(undefined, input),
+      );
+
+      expect(result.current.groupedConditionalOptions).toMatchObject(input);
+    });
+  });
+
+  describe("condition rules (Condition.RequiredIf)", () => {
+    const groupedResponsesWithConditions: Group<ConditionalOption>[] = [
+      {
+        title: "Pets",
+        children: [
+          {
+            id: "response-1",
+            data: {
+              text: "Dog",
+              rule: {
+                condition: Condition.RequiredIf,
+                operator: Operator.Equals,
+                fn: "pet",
+                val: "size.large",
+              },
+            },
+          },
+          {
+            id: "response-2",
+            data: {
+              text: "Cat",
+              rule: {
+                condition: Condition.RequiredIf,
+                operator: Operator.Equals,
+                fn: "pet",
+                val: "size.medium",
+              },
+            },
+          },
+          {
+            id: "response-3",
+            data: {
+              text: "Budgie",
+              rule: {
+                condition: Condition.RequiredIf,
+                operator: Operator.Equals,
+                fn: "pet",
+                val: "size.small",
+              },
+            },
+          },
+        ],
+      },
+      {
+        title: "Small Zoo Animals",
+        children: [
+          {
+            id: "response-4",
+            data: {
+              text: "Meerkat",
+              rule: {
+                condition: Condition.RequiredIf,
+                operator: Operator.Equals,
+                fn: "zoo",
+                val: "size.small",
+              },
+            },
+          },
+        ],
+      },
+      {
+        title: "Large Zoo Animals",
+        children: [
+          {
+            id: "response-5",
+            data: {
+              text: "Elephant",
+              rule: {
+                condition: Condition.RequiredIf,
+                operator: Operator.Equals,
+                fn: "zoo",
+                val: "size.xl",
+              },
+            },
+          },
+          {
+            id: "response-6",
+            data: {
+              text: "Giraffe",
+              rule: {
+                condition: Condition.RequiredIf,
+                operator: Operator.Equals,
+                fn: "zoo",
+                val: "size.xl",
+              },
+            },
+          },
+        ],
+      },
+    ];
+
+    it("returns all responses if the all rules are met", () => {
+      // User has answered previous questions so that all responses should be displayed
+      mockUseStore({
+        data: {
+          pet: ["size.small.cute", "size.medium", "size.large.cuddly"],
+          zoo: [
+            "size.small.photogenic",
+            "size.medium",
+            "size.large.curious",
+            "size.xl",
+          ],
+        },
+      });
+
+      const { result } = renderHook(() =>
+        useConditionalOptions(undefined, groupedResponsesWithConditions),
+      );
+
+      // All responses displayed
+      expect(result.current.groupedConditionalOptions).toMatchObject(
+        groupedResponsesWithConditions,
+      );
     });
 
-    const { result } = renderHook(() =>
-      useConditionalResponses(responsesWithConditions),
-    );
+    it("returns some responses if the some of the rules are met", () => {
+      // User has answered previous questions so that only some responses should be displayed
+      mockUseStore({
+        data: {
+          pet: "size.small",
+          zoo: "size.small",
+        },
+      });
 
-    // All responses displayed
-    expect(result.current).toMatchObject(responsesWithConditions);
-  });
+      const { result } = renderHook(() =>
+        useConditionalOptions(undefined, groupedResponsesWithConditions),
+      );
 
-  it("returns some responses if the some of the rules are met", () => {
-    // User has answered previous questions so that only some responses should be displayed
-    mockUseStore({ data: { pet: "size.small" } });
+      // Only matching responses displayed
+      // Empty groups filtered out
+      expect(result.current.groupedConditionalOptions).toHaveLength(2);
+      expect(
+        result.current.groupedConditionalOptions?.[0].children[0].data.text,
+      ).toEqual("Budgie");
+      expect(
+        result.current.groupedConditionalOptions?.[1].children[0].data.text,
+      ).toEqual("Meerkat");
+    });
 
-    const { result } = renderHook(() =>
-      useConditionalResponses(responsesWithConditions),
-    );
+    it("filters out responses if the rules are not met", () => {
+      // User has answered previous questions so that no responses should be displayed
+      mockUseStore();
+      const loggerSpy = vi.spyOn(logger, "notify");
 
-    // Only matching responses displayed
-    expect(result.current).toHaveLength(1);
-    expect(result.current[0].data.text).toEqual("Budgie");
-  });
+      const { result } = renderHook(() =>
+        useConditionalOptions(undefined, groupedResponsesWithConditions),
+      );
 
-  it("filters out responses if the rules are not met", () => {
-    // User has answered previous questions so that no responses should be displayed
-    mockUseStore();
-    const loggerSpy = vi.spyOn(logger, "notify");
-
-    const { result } = renderHook(() =>
-      useConditionalResponses(responsesWithConditions),
-    );
-
-    // No responses displayed
-    expect(result.current).toHaveLength(0);
-    expect(loggerSpy).toHaveBeenCalled();
+      // No responses displayed
+      expect(result.current.groupedConditionalOptions).toHaveLength(0);
+      expect(loggerSpy).toHaveBeenCalled();
+    });
   });
 });
