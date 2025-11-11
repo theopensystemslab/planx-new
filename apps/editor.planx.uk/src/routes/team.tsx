@@ -9,6 +9,7 @@ import {
   route,
   withContext,
   withData,
+  withView,
 } from "navi";
 import TeamAdvancedSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/TeamAdvancedSettings";
 import TeamContactSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/TeamContactSettings";
@@ -19,6 +20,7 @@ import DesignSettings from "pages/FlowEditor/components/Settings/DesignSettings"
 import GeneralSettings from "pages/FlowEditor/components/Settings/GeneralSettings";
 import Team from "pages/Team";
 import React from "react";
+import { View } from "react-navi";
 
 import { client } from "../lib/graphql";
 import { useStore } from "../pages/FlowEditor/lib/store";
@@ -164,49 +166,40 @@ const routes = compose(
       })),
     ),
 
-    "/new-settings": mount({
-      "/": redirect("./contact"),
-      "/contact": route((req) => ({
-        title: makeTitle(
-          [req.params.team, "new-settings", "contact"].join("/"),
-        ),
-        view: (
-          <TeamSettingsLayout>
-            <TeamContactSettings />
-          </TeamSettingsLayout>
-        ),
-      })),
-      "/integrations": route((req) => ({
-        title: makeTitle(
-          [req.params.team, "new-settings", "integrations"].join("/"),
-        ),
-        view: (
-          <TeamSettingsLayout>
-            <TeamIntegrationsSettings />
-          </TeamSettingsLayout>
-        ),
-      })),
-      "/gis-data": route((req) => ({
-        title: makeTitle(
-          [req.params.team, "new-settings", "gis-data"].join("/"),
-        ),
-        view: (
-          <TeamSettingsLayout>
-            <TeamGisDataSettings />
-          </TeamSettingsLayout>
-        ),
-      })),
-      "/advanced": route((req) => ({
-        title: makeTitle(
-          [req.params.team, "new-settings", "advanced"].join("/"),
-        ),
-        view: (
-          <TeamSettingsLayout>
-            <TeamAdvancedSettings />
-          </TeamSettingsLayout>
-        ),
-      })),
-    }),
+    "/new-settings": compose(
+      withView(() => (
+        <TeamSettingsLayout>
+          <View />
+        </TeamSettingsLayout>
+      )),
+      mount({
+        "/": redirect("./contact"),
+        "/contact": route((req) => ({
+          title: makeTitle(
+            [req.params.team, "new-settings", "contact"].join("/"),
+          ),
+          view: <TeamContactSettings />,
+        })),
+        "/integrations": route((req) => ({
+          title: makeTitle(
+            [req.params.team, "new-settings", "integrations"].join("/"),
+          ),
+          view: <TeamIntegrationsSettings />,
+        })),
+        "/gis-data": route((req) => ({
+          title: makeTitle(
+            [req.params.team, "new-settings", "gis-data"].join("/"),
+          ),
+          view: <TeamGisDataSettings />,
+        })),
+        "/advanced": route((req) => ({
+          title: makeTitle(
+            [req.params.team, "new-settings", "advanced"].join("/"),
+          ),
+          view: <TeamAdvancedSettings />,
+        })),
+      }),
+    ),
 
     "/subscription": lazy(() => import("./subscription")),
   }),

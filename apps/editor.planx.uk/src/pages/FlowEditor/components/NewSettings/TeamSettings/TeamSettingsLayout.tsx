@@ -1,13 +1,9 @@
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
+import React, { PropsWithChildren } from "react";
 
 import SettingsLayout from "../SettingsLayout";
 
-interface Props {
-  children: React.ReactNode;
-}
-
-const TeamSettingsLayout: React.FC<Props> = ({ children }) => {
+const TeamSettingsLayout: React.FC<PropsWithChildren> = ({ children }) => {
   const [teamSlug] = useStore((state) => [state.teamSlug]);
 
   const settingsLinks = [
