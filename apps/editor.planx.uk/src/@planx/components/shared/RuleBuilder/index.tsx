@@ -26,6 +26,10 @@ export interface Props {
   onChange: (rule: Rule) => void;
   conditions?: Condition[];
   dataSchema?: string[];
+  /**
+   * Override the default condition titles with custom labels
+   */
+  labels?: Partial<Record<Condition, string>>
 }
 
 export const RuleBuilder: React.FC<Props> = ({
@@ -34,6 +38,7 @@ export const RuleBuilder: React.FC<Props> = ({
   disabled,
   onChange,
   dataSchema,
+  labels,
   conditions = Object.values(Condition),
 }) => {
   const isConditionalRule = checkIfConditionalRule(rule.condition);
@@ -59,7 +64,7 @@ export const RuleBuilder: React.FC<Props> = ({
         >
           {conditions.map((condition) => (
             <MenuItem key={condition} value={condition}>
-              {upperFirst(lowerCase(condition))}
+              {labels?.[condition] || upperFirst(lowerCase(condition))}
             </MenuItem>
           ))}
         </SelectInput>
