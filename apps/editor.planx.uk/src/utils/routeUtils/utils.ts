@@ -1,6 +1,10 @@
 import { ComponentType as NodeTypes } from "@opensystemslab/planx-core/types";
+import { notFound } from "@tanstack/react-router";
 import gql from "graphql-tag";
-import { NaviRequest, NotFoundError } from "navi";
+
+interface RouteParams {
+  params: Record<string, string>;
+}
 import { useStore } from "pages/FlowEditor/lib/store";
 import { Store } from "pages/FlowEditor/lib/store";
 import { ApplicationPath } from "types";
@@ -21,7 +25,7 @@ export const rootTeamPath = () =>
 export const isSaveReturnFlow = (flowData: Store.Flow): boolean =>
   Boolean(Object.values(flowData).find((node) => node.type === NodeTypes.Send));
 
-export const setPath = (flowData: Store.Flow, req: NaviRequest) => {
+export const setPath = (flowData: Store.Flow, req: RouteParams) => {
   // XXX: store.path is SingleSession by default
   if (!isSaveReturnFlow(flowData)) return;
 
@@ -99,14 +103,14 @@ export const getTeamFromDomain = async (domain: string) => {
  * e.g. Custom domain is for Southwark but URL is looking for Lambeth
  * e.g. https://planningservices.southwark.gov.uk/lambeth/some-flow
  */
-export const validateTeamRoute = async (req: NaviRequest) => {
+export const validateTeamRoute = async (req: RouteParams) => {
   const externalTeamName = await getTeamFromDomain(window.location.hostname);
   if (
     req.params.team &&
     externalTeamName &&
     externalTeamName !== req.params.team
   )
-    throw new NotFoundError(req.originalUrl);
+    throw notFound();
 };
 
 export const STAGING_ADMIN_PANEL_QUERY = gql`
