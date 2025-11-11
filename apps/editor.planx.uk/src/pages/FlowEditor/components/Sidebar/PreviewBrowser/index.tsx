@@ -45,6 +45,7 @@ export const PreviewBrowser: React.FC = () => {
             xl: 9999,
             formWrap: 9999,
             contentWrap: 9999,
+            contentWide: 9999,
           },
         },
       }),
