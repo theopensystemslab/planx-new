@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SplatRouteImport } from './routes/$'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedTutorialsRouteImport } from './routes/_authenticated/tutorials'
@@ -18,6 +19,7 @@ import { Route as AuthenticatedGlobalSettingsRouteImport } from './routes/_authe
 import { Route as AuthenticatedAdminPanelRouteImport } from './routes/_authenticated/admin-panel'
 import { Route as authLogoutRouteImport } from './routes/(auth)/logout'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
+import { Route as FlowPayRouteImport } from './routes/$flow/pay'
 import { Route as AuthenticatedTeamRouteRouteImport } from './routes/_authenticated/$team/route'
 import { Route as AuthenticatedTeamIndexRouteImport } from './routes/_authenticated/$team/index'
 import { Route as AuthenticatedTeamSubscriptionRouteImport } from './routes/_authenticated/$team/subscription'
@@ -27,15 +29,24 @@ import { Route as AuthenticatedTeamGeneralSettingsRouteImport } from './routes/_
 import { Route as AuthenticatedTeamFeedbackRouteImport } from './routes/_authenticated/$team/feedback'
 import { Route as AuthenticatedTeamDesignRouteImport } from './routes/_authenticated/$team/design'
 import { Route as AuthenticatedTeamFlowRouteRouteImport } from './routes/_authenticated/$team/$flow/route'
+import { Route as TeamFlowPublishedRouteRouteImport } from './routes/$team/$flow/published/route'
 import { Route as TeamFlowPreviewRouteRouteImport } from './routes/$team/$flow/preview/route'
+import { Route as TeamFlowPayRouteRouteImport } from './routes/$team/$flow/pay/route'
+import { Route as TeamFlowDraftRouteRouteImport } from './routes/$team/$flow/draft/route'
+import { Route as TeamFlowPublishedIndexRouteImport } from './routes/$team/$flow/published/index'
 import { Route as TeamFlowPreviewIndexRouteImport } from './routes/$team/$flow/preview/index'
+import { Route as TeamFlowPayIndexRouteImport } from './routes/$team/$flow/pay/index'
+import { Route as TeamFlowDraftIndexRouteImport } from './routes/$team/$flow/draft/index'
 import { Route as AuthenticatedTeamFlowSubmissionsRouteImport } from './routes/_authenticated/$team/$flow/submissions'
 import { Route as AuthenticatedTeamFlowSettingsRouteImport } from './routes/_authenticated/$team/$flow/settings'
 import { Route as AuthenticatedTeamFlowFeedbackRouteImport } from './routes/_authenticated/$team/$flow/feedback'
 import { Route as AuthenticatedTeamFlowAboutRouteImport } from './routes/_authenticated/$team/$flow/about'
+import { Route as TeamFlowSessionIdDownloadApplicationRouteImport } from './routes/$team/$flow/$sessionId/download-application'
 import { Route as AuthenticatedTeamFlowNodesRouteRouteImport } from './routes/_authenticated/$team/$flow/nodes/route'
 import { Route as AuthenticatedTeamFlowNodesNewRouteImport } from './routes/_authenticated/$team/$flow/nodes/new'
+import { Route as TeamFlowPublishedPagesPageRouteImport } from './routes/$team/$flow/published/pages.$page'
 import { Route as TeamFlowPreviewPagesPageRouteImport } from './routes/$team/$flow/preview/pages.$page'
+import { Route as TeamFlowDraftPagesPageRouteImport } from './routes/$team/$flow/draft/pages.$page'
 import { Route as AuthenticatedTeamFlowNodesNewBeforeRouteImport } from './routes/_authenticated/$team/$flow/nodes/new.$before'
 import { Route as AuthenticatedTeamFlowNodesIdEditRouteImport } from './routes/_authenticated/$team/$flow/nodes/$id.edit'
 import { Route as AuthenticatedTeamFlowNodesParentNodesNewRouteImport } from './routes/_authenticated/$team/$flow/nodes/$parent.nodes.new'
@@ -44,6 +55,11 @@ import { Route as AuthenticatedTeamFlowNodesParentNodesNewBeforeRouteImport } fr
 import { Route as AuthenticatedTeamFlowNodesParentNodesIdEditRouteImport } from './routes/_authenticated/$team/$flow/nodes/$parent.nodes.$id.edit'
 import { Route as AuthenticatedTeamFlowNodesParentNodesIdEditBeforeRouteImport } from './routes/_authenticated/$team/$flow/nodes/$parent.nodes.$id.edit.$before'
 
+const SplatRoute = SplatRouteImport.update({
+  id: '/$',
+  path: '/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -87,6 +103,11 @@ const authLogoutRoute = authLogoutRouteImport.update({
 const authLoginRoute = authLoginRouteImport.update({
   id: '/(auth)/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FlowPayRoute = FlowPayRouteImport.update({
+  id: '/$flow/pay',
+  path: '/$flow/pay',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedTeamRouteRoute = AuthenticatedTeamRouteRouteImport.update({
@@ -140,15 +161,45 @@ const AuthenticatedTeamFlowRouteRoute =
     path: '/$flow',
     getParentRoute: () => AuthenticatedTeamRouteRoute,
   } as any)
+const TeamFlowPublishedRouteRoute = TeamFlowPublishedRouteRouteImport.update({
+  id: '/$team/$flow/published',
+  path: '/$team/$flow/published',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TeamFlowPreviewRouteRoute = TeamFlowPreviewRouteRouteImport.update({
   id: '/$team/$flow/preview',
   path: '/$team/$flow/preview',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TeamFlowPayRouteRoute = TeamFlowPayRouteRouteImport.update({
+  id: '/$team/$flow/pay',
+  path: '/$team/$flow/pay',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeamFlowDraftRouteRoute = TeamFlowDraftRouteRouteImport.update({
+  id: '/$team/$flow/draft',
+  path: '/$team/$flow/draft',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeamFlowPublishedIndexRoute = TeamFlowPublishedIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TeamFlowPublishedRouteRoute,
+} as any)
 const TeamFlowPreviewIndexRoute = TeamFlowPreviewIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => TeamFlowPreviewRouteRoute,
+} as any)
+const TeamFlowPayIndexRoute = TeamFlowPayIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TeamFlowPayRouteRoute,
+} as any)
+const TeamFlowDraftIndexRoute = TeamFlowDraftIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TeamFlowDraftRouteRoute,
 } as any)
 const AuthenticatedTeamFlowSubmissionsRoute =
   AuthenticatedTeamFlowSubmissionsRouteImport.update({
@@ -174,6 +225,12 @@ const AuthenticatedTeamFlowAboutRoute =
     path: '/about',
     getParentRoute: () => AuthenticatedTeamFlowRouteRoute,
   } as any)
+const TeamFlowSessionIdDownloadApplicationRoute =
+  TeamFlowSessionIdDownloadApplicationRouteImport.update({
+    id: '/$team/$flow/$sessionId/download-application',
+    path: '/$team/$flow/$sessionId/download-application',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedTeamFlowNodesRouteRoute =
   AuthenticatedTeamFlowNodesRouteRouteImport.update({
     id: '/nodes',
@@ -186,12 +243,23 @@ const AuthenticatedTeamFlowNodesNewRoute =
     path: '/new',
     getParentRoute: () => AuthenticatedTeamFlowNodesRouteRoute,
   } as any)
+const TeamFlowPublishedPagesPageRoute =
+  TeamFlowPublishedPagesPageRouteImport.update({
+    id: '/pages/$page',
+    path: '/pages/$page',
+    getParentRoute: () => TeamFlowPublishedRouteRoute,
+  } as any)
 const TeamFlowPreviewPagesPageRoute =
   TeamFlowPreviewPagesPageRouteImport.update({
     id: '/pages/$page',
     path: '/pages/$page',
     getParentRoute: () => TeamFlowPreviewRouteRoute,
   } as any)
+const TeamFlowDraftPagesPageRoute = TeamFlowDraftPagesPageRouteImport.update({
+  id: '/pages/$page',
+  path: '/pages/$page',
+  getParentRoute: () => TeamFlowDraftRouteRoute,
+} as any)
 const AuthenticatedTeamFlowNodesNewBeforeRoute =
   AuthenticatedTeamFlowNodesNewBeforeRouteImport.update({
     id: '/$before',
@@ -236,7 +304,9 @@ const AuthenticatedTeamFlowNodesParentNodesIdEditBeforeRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/$': typeof SplatRoute
   '/$team': typeof AuthenticatedTeamRouteRouteWithChildren
+  '/$flow/pay': typeof FlowPayRoute
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
   '/admin-panel': typeof AuthenticatedAdminPanelRoute
@@ -245,7 +315,10 @@ export interface FileRoutesByFullPath {
   '/resources': typeof AuthenticatedResourcesRoute
   '/tutorials': typeof AuthenticatedTutorialsRoute
   '/': typeof AuthenticatedIndexRoute
+  '/$team/$flow/draft': typeof TeamFlowDraftRouteRouteWithChildren
+  '/$team/$flow/pay': typeof TeamFlowPayRouteRouteWithChildren
   '/$team/$flow/preview': typeof TeamFlowPreviewRouteRouteWithChildren
+  '/$team/$flow/published': typeof TeamFlowPublishedRouteRouteWithChildren
   '/$team/$flow': typeof AuthenticatedTeamFlowRouteRouteWithChildren
   '/$team/design': typeof AuthenticatedTeamDesignRoute
   '/$team/feedback': typeof AuthenticatedTeamFeedbackRoute
@@ -255,12 +328,18 @@ export interface FileRoutesByFullPath {
   '/$team/subscription': typeof AuthenticatedTeamSubscriptionRoute
   '/$team/': typeof AuthenticatedTeamIndexRoute
   '/$team/$flow/nodes': typeof AuthenticatedTeamFlowNodesRouteRouteWithChildren
+  '/$team/$flow/$sessionId/download-application': typeof TeamFlowSessionIdDownloadApplicationRoute
   '/$team/$flow/about': typeof AuthenticatedTeamFlowAboutRoute
   '/$team/$flow/feedback': typeof AuthenticatedTeamFlowFeedbackRoute
   '/$team/$flow/settings': typeof AuthenticatedTeamFlowSettingsRoute
   '/$team/$flow/submissions': typeof AuthenticatedTeamFlowSubmissionsRoute
+  '/$team/$flow/draft/': typeof TeamFlowDraftIndexRoute
+  '/$team/$flow/pay/': typeof TeamFlowPayIndexRoute
   '/$team/$flow/preview/': typeof TeamFlowPreviewIndexRoute
+  '/$team/$flow/published/': typeof TeamFlowPublishedIndexRoute
+  '/$team/$flow/draft/pages/$page': typeof TeamFlowDraftPagesPageRoute
   '/$team/$flow/preview/pages/$page': typeof TeamFlowPreviewPagesPageRoute
+  '/$team/$flow/published/pages/$page': typeof TeamFlowPublishedPagesPageRoute
   '/$team/$flow/nodes/new': typeof AuthenticatedTeamFlowNodesNewRouteWithChildren
   '/$team/$flow/nodes/$id/edit': typeof AuthenticatedTeamFlowNodesIdEditRouteWithChildren
   '/$team/$flow/nodes/new/$before': typeof AuthenticatedTeamFlowNodesNewBeforeRoute
@@ -271,6 +350,8 @@ export interface FileRoutesByFullPath {
   '/$team/$flow/nodes/$parent/nodes/$id/edit/$before': typeof AuthenticatedTeamFlowNodesParentNodesIdEditBeforeRoute
 }
 export interface FileRoutesByTo {
+  '/$': typeof SplatRoute
+  '/$flow/pay': typeof FlowPayRoute
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
   '/admin-panel': typeof AuthenticatedAdminPanelRoute
@@ -288,12 +369,18 @@ export interface FileRoutesByTo {
   '/$team/subscription': typeof AuthenticatedTeamSubscriptionRoute
   '/$team': typeof AuthenticatedTeamIndexRoute
   '/$team/$flow/nodes': typeof AuthenticatedTeamFlowNodesRouteRouteWithChildren
+  '/$team/$flow/$sessionId/download-application': typeof TeamFlowSessionIdDownloadApplicationRoute
   '/$team/$flow/about': typeof AuthenticatedTeamFlowAboutRoute
   '/$team/$flow/feedback': typeof AuthenticatedTeamFlowFeedbackRoute
   '/$team/$flow/settings': typeof AuthenticatedTeamFlowSettingsRoute
   '/$team/$flow/submissions': typeof AuthenticatedTeamFlowSubmissionsRoute
+  '/$team/$flow/draft': typeof TeamFlowDraftIndexRoute
+  '/$team/$flow/pay': typeof TeamFlowPayIndexRoute
   '/$team/$flow/preview': typeof TeamFlowPreviewIndexRoute
+  '/$team/$flow/published': typeof TeamFlowPublishedIndexRoute
+  '/$team/$flow/draft/pages/$page': typeof TeamFlowDraftPagesPageRoute
   '/$team/$flow/preview/pages/$page': typeof TeamFlowPreviewPagesPageRoute
+  '/$team/$flow/published/pages/$page': typeof TeamFlowPublishedPagesPageRoute
   '/$team/$flow/nodes/new': typeof AuthenticatedTeamFlowNodesNewRouteWithChildren
   '/$team/$flow/nodes/$id/edit': typeof AuthenticatedTeamFlowNodesIdEditRouteWithChildren
   '/$team/$flow/nodes/new/$before': typeof AuthenticatedTeamFlowNodesNewBeforeRoute
@@ -306,7 +393,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/$': typeof SplatRoute
   '/_authenticated/$team': typeof AuthenticatedTeamRouteRouteWithChildren
+  '/$flow/pay': typeof FlowPayRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/logout': typeof authLogoutRoute
   '/_authenticated/admin-panel': typeof AuthenticatedAdminPanelRoute
@@ -315,7 +404,10 @@ export interface FileRoutesById {
   '/_authenticated/resources': typeof AuthenticatedResourcesRoute
   '/_authenticated/tutorials': typeof AuthenticatedTutorialsRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/$team/$flow/draft': typeof TeamFlowDraftRouteRouteWithChildren
+  '/$team/$flow/pay': typeof TeamFlowPayRouteRouteWithChildren
   '/$team/$flow/preview': typeof TeamFlowPreviewRouteRouteWithChildren
+  '/$team/$flow/published': typeof TeamFlowPublishedRouteRouteWithChildren
   '/_authenticated/$team/$flow': typeof AuthenticatedTeamFlowRouteRouteWithChildren
   '/_authenticated/$team/design': typeof AuthenticatedTeamDesignRoute
   '/_authenticated/$team/feedback': typeof AuthenticatedTeamFeedbackRoute
@@ -325,12 +417,18 @@ export interface FileRoutesById {
   '/_authenticated/$team/subscription': typeof AuthenticatedTeamSubscriptionRoute
   '/_authenticated/$team/': typeof AuthenticatedTeamIndexRoute
   '/_authenticated/$team/$flow/nodes': typeof AuthenticatedTeamFlowNodesRouteRouteWithChildren
+  '/$team/$flow/$sessionId/download-application': typeof TeamFlowSessionIdDownloadApplicationRoute
   '/_authenticated/$team/$flow/about': typeof AuthenticatedTeamFlowAboutRoute
   '/_authenticated/$team/$flow/feedback': typeof AuthenticatedTeamFlowFeedbackRoute
   '/_authenticated/$team/$flow/settings': typeof AuthenticatedTeamFlowSettingsRoute
   '/_authenticated/$team/$flow/submissions': typeof AuthenticatedTeamFlowSubmissionsRoute
+  '/$team/$flow/draft/': typeof TeamFlowDraftIndexRoute
+  '/$team/$flow/pay/': typeof TeamFlowPayIndexRoute
   '/$team/$flow/preview/': typeof TeamFlowPreviewIndexRoute
+  '/$team/$flow/published/': typeof TeamFlowPublishedIndexRoute
+  '/$team/$flow/draft/pages/$page': typeof TeamFlowDraftPagesPageRoute
   '/$team/$flow/preview/pages/$page': typeof TeamFlowPreviewPagesPageRoute
+  '/$team/$flow/published/pages/$page': typeof TeamFlowPublishedPagesPageRoute
   '/_authenticated/$team/$flow/nodes/new': typeof AuthenticatedTeamFlowNodesNewRouteWithChildren
   '/_authenticated/$team/$flow/nodes/$id/edit': typeof AuthenticatedTeamFlowNodesIdEditRouteWithChildren
   '/_authenticated/$team/$flow/nodes/new/$before': typeof AuthenticatedTeamFlowNodesNewBeforeRoute
@@ -343,7 +441,9 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/$'
     | '/$team'
+    | '/$flow/pay'
     | '/login'
     | '/logout'
     | '/admin-panel'
@@ -352,7 +452,10 @@ export interface FileRouteTypes {
     | '/resources'
     | '/tutorials'
     | '/'
+    | '/$team/$flow/draft'
+    | '/$team/$flow/pay'
     | '/$team/$flow/preview'
+    | '/$team/$flow/published'
     | '/$team/$flow'
     | '/$team/design'
     | '/$team/feedback'
@@ -362,12 +465,18 @@ export interface FileRouteTypes {
     | '/$team/subscription'
     | '/$team/'
     | '/$team/$flow/nodes'
+    | '/$team/$flow/$sessionId/download-application'
     | '/$team/$flow/about'
     | '/$team/$flow/feedback'
     | '/$team/$flow/settings'
     | '/$team/$flow/submissions'
+    | '/$team/$flow/draft/'
+    | '/$team/$flow/pay/'
     | '/$team/$flow/preview/'
+    | '/$team/$flow/published/'
+    | '/$team/$flow/draft/pages/$page'
     | '/$team/$flow/preview/pages/$page'
+    | '/$team/$flow/published/pages/$page'
     | '/$team/$flow/nodes/new'
     | '/$team/$flow/nodes/$id/edit'
     | '/$team/$flow/nodes/new/$before'
@@ -378,6 +487,8 @@ export interface FileRouteTypes {
     | '/$team/$flow/nodes/$parent/nodes/$id/edit/$before'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/$'
+    | '/$flow/pay'
     | '/login'
     | '/logout'
     | '/admin-panel'
@@ -395,12 +506,18 @@ export interface FileRouteTypes {
     | '/$team/subscription'
     | '/$team'
     | '/$team/$flow/nodes'
+    | '/$team/$flow/$sessionId/download-application'
     | '/$team/$flow/about'
     | '/$team/$flow/feedback'
     | '/$team/$flow/settings'
     | '/$team/$flow/submissions'
+    | '/$team/$flow/draft'
+    | '/$team/$flow/pay'
     | '/$team/$flow/preview'
+    | '/$team/$flow/published'
+    | '/$team/$flow/draft/pages/$page'
     | '/$team/$flow/preview/pages/$page'
+    | '/$team/$flow/published/pages/$page'
     | '/$team/$flow/nodes/new'
     | '/$team/$flow/nodes/$id/edit'
     | '/$team/$flow/nodes/new/$before'
@@ -412,7 +529,9 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_authenticated'
+    | '/$'
     | '/_authenticated/$team'
+    | '/$flow/pay'
     | '/(auth)/login'
     | '/(auth)/logout'
     | '/_authenticated/admin-panel'
@@ -421,7 +540,10 @@ export interface FileRouteTypes {
     | '/_authenticated/resources'
     | '/_authenticated/tutorials'
     | '/_authenticated/'
+    | '/$team/$flow/draft'
+    | '/$team/$flow/pay'
     | '/$team/$flow/preview'
+    | '/$team/$flow/published'
     | '/_authenticated/$team/$flow'
     | '/_authenticated/$team/design'
     | '/_authenticated/$team/feedback'
@@ -431,12 +553,18 @@ export interface FileRouteTypes {
     | '/_authenticated/$team/subscription'
     | '/_authenticated/$team/'
     | '/_authenticated/$team/$flow/nodes'
+    | '/$team/$flow/$sessionId/download-application'
     | '/_authenticated/$team/$flow/about'
     | '/_authenticated/$team/$flow/feedback'
     | '/_authenticated/$team/$flow/settings'
     | '/_authenticated/$team/$flow/submissions'
+    | '/$team/$flow/draft/'
+    | '/$team/$flow/pay/'
     | '/$team/$flow/preview/'
+    | '/$team/$flow/published/'
+    | '/$team/$flow/draft/pages/$page'
     | '/$team/$flow/preview/pages/$page'
+    | '/$team/$flow/published/pages/$page'
     | '/_authenticated/$team/$flow/nodes/new'
     | '/_authenticated/$team/$flow/nodes/$id/edit'
     | '/_authenticated/$team/$flow/nodes/new/$before'
@@ -449,13 +577,26 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  SplatRoute: typeof SplatRoute
+  FlowPayRoute: typeof FlowPayRoute
   authLoginRoute: typeof authLoginRoute
   authLogoutRoute: typeof authLogoutRoute
+  TeamFlowDraftRouteRoute: typeof TeamFlowDraftRouteRouteWithChildren
+  TeamFlowPayRouteRoute: typeof TeamFlowPayRouteRouteWithChildren
   TeamFlowPreviewRouteRoute: typeof TeamFlowPreviewRouteRouteWithChildren
+  TeamFlowPublishedRouteRoute: typeof TeamFlowPublishedRouteRouteWithChildren
+  TeamFlowSessionIdDownloadApplicationRoute: typeof TeamFlowSessionIdDownloadApplicationRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/$': {
+      id: '/$'
+      path: '/$'
+      fullPath: '/$'
+      preLoaderRoute: typeof SplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -517,6 +658,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof authLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$flow/pay': {
+      id: '/$flow/pay'
+      path: '/$flow/pay'
+      fullPath: '/$flow/pay'
+      preLoaderRoute: typeof FlowPayRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/$team': {
@@ -582,6 +730,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTeamFlowRouteRouteImport
       parentRoute: typeof AuthenticatedTeamRouteRoute
     }
+    '/$team/$flow/published': {
+      id: '/$team/$flow/published'
+      path: '/$team/$flow/published'
+      fullPath: '/$team/$flow/published'
+      preLoaderRoute: typeof TeamFlowPublishedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/$team/$flow/preview': {
       id: '/$team/$flow/preview'
       path: '/$team/$flow/preview'
@@ -589,12 +744,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeamFlowPreviewRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$team/$flow/pay': {
+      id: '/$team/$flow/pay'
+      path: '/$team/$flow/pay'
+      fullPath: '/$team/$flow/pay'
+      preLoaderRoute: typeof TeamFlowPayRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$team/$flow/draft': {
+      id: '/$team/$flow/draft'
+      path: '/$team/$flow/draft'
+      fullPath: '/$team/$flow/draft'
+      preLoaderRoute: typeof TeamFlowDraftRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$team/$flow/published/': {
+      id: '/$team/$flow/published/'
+      path: '/'
+      fullPath: '/$team/$flow/published/'
+      preLoaderRoute: typeof TeamFlowPublishedIndexRouteImport
+      parentRoute: typeof TeamFlowPublishedRouteRoute
+    }
     '/$team/$flow/preview/': {
       id: '/$team/$flow/preview/'
       path: '/'
       fullPath: '/$team/$flow/preview/'
       preLoaderRoute: typeof TeamFlowPreviewIndexRouteImport
       parentRoute: typeof TeamFlowPreviewRouteRoute
+    }
+    '/$team/$flow/pay/': {
+      id: '/$team/$flow/pay/'
+      path: '/'
+      fullPath: '/$team/$flow/pay/'
+      preLoaderRoute: typeof TeamFlowPayIndexRouteImport
+      parentRoute: typeof TeamFlowPayRouteRoute
+    }
+    '/$team/$flow/draft/': {
+      id: '/$team/$flow/draft/'
+      path: '/'
+      fullPath: '/$team/$flow/draft/'
+      preLoaderRoute: typeof TeamFlowDraftIndexRouteImport
+      parentRoute: typeof TeamFlowDraftRouteRoute
     }
     '/_authenticated/$team/$flow/submissions': {
       id: '/_authenticated/$team/$flow/submissions'
@@ -624,6 +814,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTeamFlowAboutRouteImport
       parentRoute: typeof AuthenticatedTeamFlowRouteRoute
     }
+    '/$team/$flow/$sessionId/download-application': {
+      id: '/$team/$flow/$sessionId/download-application'
+      path: '/$team/$flow/$sessionId/download-application'
+      fullPath: '/$team/$flow/$sessionId/download-application'
+      preLoaderRoute: typeof TeamFlowSessionIdDownloadApplicationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/$team/$flow/nodes': {
       id: '/_authenticated/$team/$flow/nodes'
       path: '/nodes'
@@ -638,12 +835,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTeamFlowNodesNewRouteImport
       parentRoute: typeof AuthenticatedTeamFlowNodesRouteRoute
     }
+    '/$team/$flow/published/pages/$page': {
+      id: '/$team/$flow/published/pages/$page'
+      path: '/pages/$page'
+      fullPath: '/$team/$flow/published/pages/$page'
+      preLoaderRoute: typeof TeamFlowPublishedPagesPageRouteImport
+      parentRoute: typeof TeamFlowPublishedRouteRoute
+    }
     '/$team/$flow/preview/pages/$page': {
       id: '/$team/$flow/preview/pages/$page'
       path: '/pages/$page'
       fullPath: '/$team/$flow/preview/pages/$page'
       preLoaderRoute: typeof TeamFlowPreviewPagesPageRouteImport
       parentRoute: typeof TeamFlowPreviewRouteRoute
+    }
+    '/$team/$flow/draft/pages/$page': {
+      id: '/$team/$flow/draft/pages/$page'
+      path: '/pages/$page'
+      fullPath: '/$team/$flow/draft/pages/$page'
+      preLoaderRoute: typeof TeamFlowDraftPagesPageRouteImport
+      parentRoute: typeof TeamFlowDraftRouteRoute
     }
     '/_authenticated/$team/$flow/nodes/new/$before': {
       id: '/_authenticated/$team/$flow/nodes/new/$before'
@@ -858,6 +1069,30 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface TeamFlowDraftRouteRouteChildren {
+  TeamFlowDraftIndexRoute: typeof TeamFlowDraftIndexRoute
+  TeamFlowDraftPagesPageRoute: typeof TeamFlowDraftPagesPageRoute
+}
+
+const TeamFlowDraftRouteRouteChildren: TeamFlowDraftRouteRouteChildren = {
+  TeamFlowDraftIndexRoute: TeamFlowDraftIndexRoute,
+  TeamFlowDraftPagesPageRoute: TeamFlowDraftPagesPageRoute,
+}
+
+const TeamFlowDraftRouteRouteWithChildren =
+  TeamFlowDraftRouteRoute._addFileChildren(TeamFlowDraftRouteRouteChildren)
+
+interface TeamFlowPayRouteRouteChildren {
+  TeamFlowPayIndexRoute: typeof TeamFlowPayIndexRoute
+}
+
+const TeamFlowPayRouteRouteChildren: TeamFlowPayRouteRouteChildren = {
+  TeamFlowPayIndexRoute: TeamFlowPayIndexRoute,
+}
+
+const TeamFlowPayRouteRouteWithChildren =
+  TeamFlowPayRouteRoute._addFileChildren(TeamFlowPayRouteRouteChildren)
+
 interface TeamFlowPreviewRouteRouteChildren {
   TeamFlowPreviewIndexRoute: typeof TeamFlowPreviewIndexRoute
   TeamFlowPreviewPagesPageRoute: typeof TeamFlowPreviewPagesPageRoute
@@ -871,11 +1106,34 @@ const TeamFlowPreviewRouteRouteChildren: TeamFlowPreviewRouteRouteChildren = {
 const TeamFlowPreviewRouteRouteWithChildren =
   TeamFlowPreviewRouteRoute._addFileChildren(TeamFlowPreviewRouteRouteChildren)
 
+interface TeamFlowPublishedRouteRouteChildren {
+  TeamFlowPublishedIndexRoute: typeof TeamFlowPublishedIndexRoute
+  TeamFlowPublishedPagesPageRoute: typeof TeamFlowPublishedPagesPageRoute
+}
+
+const TeamFlowPublishedRouteRouteChildren: TeamFlowPublishedRouteRouteChildren =
+  {
+    TeamFlowPublishedIndexRoute: TeamFlowPublishedIndexRoute,
+    TeamFlowPublishedPagesPageRoute: TeamFlowPublishedPagesPageRoute,
+  }
+
+const TeamFlowPublishedRouteRouteWithChildren =
+  TeamFlowPublishedRouteRoute._addFileChildren(
+    TeamFlowPublishedRouteRouteChildren,
+  )
+
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  SplatRoute: SplatRoute,
+  FlowPayRoute: FlowPayRoute,
   authLoginRoute: authLoginRoute,
   authLogoutRoute: authLogoutRoute,
+  TeamFlowDraftRouteRoute: TeamFlowDraftRouteRouteWithChildren,
+  TeamFlowPayRouteRoute: TeamFlowPayRouteRouteWithChildren,
   TeamFlowPreviewRouteRoute: TeamFlowPreviewRouteRouteWithChildren,
+  TeamFlowPublishedRouteRoute: TeamFlowPublishedRouteRouteWithChildren,
+  TeamFlowSessionIdDownloadApplicationRoute:
+    TeamFlowSessionIdDownloadApplicationRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
