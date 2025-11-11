@@ -6,12 +6,12 @@ import {
   ThemeProvider,
 } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { useLocation } from "@tanstack/react-router";
 import ErrorFallback from "components/Error/ErrorFallback";
 import Feedback from "components/Feedback";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { useCurrentRoute } from "react-navi";
 import { generateTeamTheme } from "theme";
 import Logo from "ui/images/OGLLogo.svg";
 
@@ -45,13 +45,14 @@ const OglLogo = styled("img")(({ theme }) => ({
 }));
 
 const PublicFooter: React.FC = () => {
-  const { data } = useCurrentRoute();
+  const location = useLocation();
   const [flowSettings, globalSettings] = useStore((state) => [
     state.flowSettings,
     state.globalSettings,
   ]);
 
-  const makeHref = (path: string) => [data.mountpath, "pages", path].join("/");
+  const basePath = location.pathname.replace(/\/pages\/.*$/, "");
+  const makeHref = (path: string) => `${basePath}/pages/${path}`;
 
   const flowSettingsContent = FOOTER_ITEMS.map((key) => {
     const setting = flowSettings?.elements && flowSettings?.elements[key];

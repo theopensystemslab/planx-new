@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import Questions from "pages/Preview/Questions";
 import React from "react";
 
 export const Route = createFileRoute("/$team/$flow/preview/")({
-  component: RouteComponent,
+  component: PreviewIndexComponent,
 });
 
-function RouteComponent() {
-  return <div>Hello "/$team/$flow/preview/"!</div>;
+function PreviewIndexComponent() {
+  return <Questions previewEnvironment="editor" />;
 }

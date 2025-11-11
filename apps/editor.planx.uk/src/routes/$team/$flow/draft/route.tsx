@@ -3,17 +3,15 @@ import { getFlattenedFlowData } from "lib/api/flow/requests";
 import { queryClient } from "lib/queryClient";
 import ErrorPage from "pages/ErrorPage/ErrorPage";
 import { useStore } from "pages/FlowEditor/lib/store";
+import OfflineLayout from "pages/layout/OfflineLayout";
 import PublicLayout from "pages/layout/PublicLayout";
-import { TestWarningPage } from "pages/Preview/TestWarningPage";
+import SaveAndReturnLayout from "pages/layout/SaveAndReturnLayout";
 import React from "react";
 import WatermarkBackground from "ui/shared/WatermarkBackground";
-import {
-  fetchSettingsForPublishedView,
-  getLastPublishedAt,
-} from "utils/routeUtils/publishedQueries";
+import { fetchSettingsForPublishedView } from "utils/routeUtils/publishedQueries";
 import { getTeamFromDomain } from "utils/routeUtils/utils";
 
-export const Route = createFileRoute("/$team/$flow/preview")({
+export const Route = createFileRoute("/$team/$flow/draft")({
   beforeLoad: async ({ params }) => {
     const { team: teamParam, flow: flowParam } = params;
     const flowSlug = flowParam.split(",")[0];
@@ -29,36 +27,32 @@ export const Route = createFileRoute("/$team/$flow/preview")({
         throw new Error(`Flow ${flowSlug} not found for ${teamSlug}`);
       }
 
-      // Get last published date
-      const lastPublishedDate = await getLastPublishedAt(flow.id);
-
-      // Fetch flattened flow data for preview
+      // Fetch current draft flow data (not published)
       const flowData = await queryClient.fetchQuery({
-        queryKey: ["flattenedFlowData", "preview", flow.id],
+        queryKey: ["flattenedFlowData", "draft", flow.id],
         queryFn: () => getFlattenedFlowData({ flowId: flow.id }),
       });
 
-      // Set up store with flow data
+      // Set up store with draft flow data
       const state = useStore.getState();
       state.setFlow({
         id: flow.id,
         flow: flowData,
         flowSlug,
+        flowStatus: flow.status,
         flowName: flow.name,
       });
       state.setGlobalSettings(data.globalSettings[0]);
       state.setFlowSettings(flow.settings);
       state.setTeam(flow.team);
-      useStore.setState({ lastPublishedDate });
 
       return {
         flow,
         flowData,
         settings: data,
-        lastPublishedDate,
       };
     } catch (error) {
-      console.error("Failed to load preview data:", error);
+      console.error("Failed to load draft data:", error);
       throw error;
     }
   },
@@ -79,34 +73,36 @@ export const Route = createFileRoute("/$team/$flow/preview")({
   errorComponent: ({ error }) => {
     if (error?.message?.includes("not found")) {
       return (
-        <ErrorPage title="Flow not found">
-          The preview you're looking for doesn't exist or you don't have
+        <ErrorPage title="Draft flow not found">
+          The draft flow you're looking for doesn't exist or you don't have
           permission to access it.
         </ErrorPage>
       );
     }
 
     return (
-      <ErrorPage title="Preview error">
-        There was an error loading the preview. Please try again later.
+      <ErrorPage title="Draft flow error">
+        There was an error loading the draft flow. Please try again later.
       </ErrorPage>
     );
   },
 
-  component: PreviewLayoutComponent,
+  component: DraftLayoutComponent,
 });
 
-function PreviewLayoutComponent() {
+function DraftLayoutComponent() {
   return (
     <PublicLayout>
       <WatermarkBackground
         variant="dark"
         opacity={0.05}
-        forceVisibility={true}
+        forceVisibility={false}
       />
-      <TestWarningPage>
-        <Outlet />
-      </TestWarningPage>
+      <OfflineLayout>
+        <SaveAndReturnLayout>
+          <Outlet />
+        </SaveAndReturnLayout>
+      </OfflineLayout>
     </PublicLayout>
   );
 }
