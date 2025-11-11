@@ -130,15 +130,12 @@ export const flowGraph: FlowGraph = {
       color: "#EFEFEF",
       title: "Pay",
       bannerTitle: "The fee is",
-      description:
-        "The fee covers the cost of processing your form",
+      description: "The fee covers the cost of processing your form",
       allowInviteToPay: true,
       inviteToPayTitle: "Details of your nominee",
       instructionsTitle: "How to pay",
-      inviteToPayDescription:
-        "You can invite someone else to pay.",
-      instructionsDescription:
-        "You can pay by using GOV.UK Pay.",
+      inviteToPayDescription: "You can invite someone else to pay.",
+      instructionsDescription: "You can pay by using GOV.UK Pay.",
     },
     type: 400,
   },
