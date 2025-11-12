@@ -456,6 +456,7 @@ describe("getRecoveredData function", () => {
       data: {
         requiredFileFn: [
           {
+            name: "firstFile",
             cachedSlot: mockCachedSlot,
           },
         ],
