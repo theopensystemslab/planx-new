@@ -687,7 +687,10 @@ export = async () => {
             certificateBody: certData.apply(data => data.cert),
             certificateChain: certData.apply(data => data?.chain),
           },
-          { provider: usEast1 }
+          { 
+            provider: usEast1,
+            replaceOnChanges: ["privateKey"],
+          }
         );
 
         acmCertificateArn = certificate.arn;
