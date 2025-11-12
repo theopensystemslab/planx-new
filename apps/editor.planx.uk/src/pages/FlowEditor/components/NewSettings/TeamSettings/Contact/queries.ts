@@ -26,6 +26,10 @@ export const UPDATE_TEAM_SETTINGS = gql`
     ) {
       returning {
         id
+        helpEmail: help_email
+        helpPhone: help_phone
+        helpOpeningHours: help_opening_hours
+        homepage: homepage
       }
     }
   }

@@ -76,13 +76,6 @@ const SettingsFormContainer = <
     unknown,
     TVariables
   >(mutation, {
-    refetchQueries: [
-      {
-        query,
-        variables: queryVariables,
-      },
-    ],
-    awaitRefetchQueries: true,
     onCompleted: () => {
       toast.success(successMessage);
       onSuccess && onSuccess(formik.values, data);
@@ -122,8 +115,6 @@ const SettingsFormContainer = <
       </SettingsSection>
     );
   }
-
-  if (!data) return null;
 
   return (
     <SettingsSection background>
