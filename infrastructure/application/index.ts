@@ -87,8 +87,7 @@ const CUSTOM_DOMAINS: CustomDomain[] =
         },
         {
           domain: "planningservices.gateshead.gov.uk",
-          name: "gateshead",
-          certificateLocation: "pulumiConfig",
+          name: "gateshead"
         },
         {
           domain: "planningservices.gloucester.gov.uk",
