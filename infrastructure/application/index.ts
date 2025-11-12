@@ -15,6 +15,7 @@ import {
   DEFAULT_POSTGRES_PORT,
   generateCORSAllowList,
   generateTeamSecrets,
+  getJavaOpts,
   getPostgresDbUrl,
   usEast1,
 } from "./utils";
@@ -221,10 +222,11 @@ export = async () => {
     domain: DOMAIN,
   });
   
-  // since our secrets here are of the type Output<string>, we have to use Pulumi methods to to access them as strings
+  // since our secrets here are of the type Output<string>, we have to use Pulumi methods to access them as strings
   const metabaseDbUrl = pulumi.all([dbHost, metabasePgPassword]).apply(([dbHost, metabasePgPassword]) => 
     getPostgresDbUrl("metabase", metabasePgPassword, dbHost, DEFAULT_POSTGRES_PORT, "metabase"))
-  const metabaseService = new awsx.ecs.FargateService("metabase", {
+  const metabaseMemoryMb = config.requireNumber("metabase-memory");
+  new awsx.ecs.FargateService("metabase", {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
     taskDefinitionArgs: {
@@ -237,10 +239,11 @@ export = async () => {
         image: "metabase/metabase:v0.56.6",
         portMappings: [metabaseListenerHttp],
         // When changing `memory`, also update `JAVA_OPTS` below
-        memory: 4096 /*MB*/,
+        cpu: config.requireNumber("metabase-cpu"),
+        memory: metabaseMemoryMb,
         environment: [
-          // https://www.metabase.com/docs/latest/troubleshooting-guide/running.html#heap-space-outofmemoryerrors
-          { name: "JAVA_OPTS", value: `-Xmx2g` },
+          // https://www.metabase.com/docs/latest/troubleshooting-guide/running.html#allocating-more-memory-to-the-jvm
+          { name: "JAVA_OPTS", value: getJavaOpts(metabaseMemoryMb) },
           { name: "MB_DB_TYPE", value: "postgres" },
           {
             name: "MB_DB_CONNECTION_URI",
