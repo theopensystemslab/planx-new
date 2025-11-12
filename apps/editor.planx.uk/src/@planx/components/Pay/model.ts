@@ -188,14 +188,17 @@ export const getDefaultContent = (): Pay => ({
     {
       key: "flow",
       value: useStore.getState().flowName,
+      type: "static",
     },
     {
       key: "source",
       value: "PlanX",
+      type: "static",
     },
     {
       key: "paidViaInviteToPay",
-      value: "@paidViaInviteToPay",
+      value: "paidViaInviteToPay",
+      type: "data",
     },
   ],
 });
@@ -204,4 +207,5 @@ export const parsePay = (data?: Record<string, any>): Pay => ({
   ...parseBaseNodeData(data),
   ...getDefaultContent(),
   ...data,
+  // TODO: think about data migration or existing values
 });
