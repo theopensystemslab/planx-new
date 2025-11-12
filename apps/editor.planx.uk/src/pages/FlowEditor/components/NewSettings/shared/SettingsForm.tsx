@@ -87,7 +87,9 @@ const SettingsFormContainer = <
   });
 
   const formik = useFormik<TFormValues>({
-    initialValues: data ? getInitialValues(data) : ({} as TFormValues),
+    initialValues: data
+      ? getInitialValues(data)
+      : (validationSchema.getDefault() as TFormValues),
     enableReinitialize: true,
     validationSchema,
     validateOnBlur: false,
