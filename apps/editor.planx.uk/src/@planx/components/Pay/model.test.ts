@@ -1,4 +1,4 @@
-import { govPayMetadataSchema } from "./model";
+import { govPayMetadataSchema, parsePay } from "./model";
 
 describe("GovPayMetadata Schema", () => {
   const validate = async (payload: unknown) =>
@@ -127,5 +127,73 @@ describe("GovPayMetadata Schema", () => {
 
     expect(errors).toHaveLength(1);
     expect(errors[0]).toMatch(/A maximum of 15 fields can be set as metadata/);
+  });
+});
+
+describe("parsePay() helper function", () => {
+  describe("govPayMetadata mapping", () => {
+    it("handles new nodes", () => {
+      const result = parsePay();
+
+      expect(result.govPayMetadata).toHaveLength(3);
+      expect(result.govPayMetadata[0]).toHaveProperty("type", "static");
+      expect(result.govPayMetadata[1]).toHaveProperty("type", "static");
+      expect(result.govPayMetadata[2]).toHaveProperty("type", "data");
+    });
+
+    it("handles existing nodes with legacy content", () => {
+      const result = parsePay({
+        govPayMetadata: [
+          {
+            key: "flow",
+            value: "flow name here",
+          },
+          {
+            key: "source",
+            value: "PlanX",
+          },
+          {
+            key: "paidViaInviteToPay",
+            value: "@paidViaInviteToPay",
+          },
+        ],
+      });
+
+      expect(result.govPayMetadata).toHaveLength(3);
+      expect(result.govPayMetadata[0]).toHaveProperty("type", "static");
+      expect(result.govPayMetadata[1]).toHaveProperty("type", "static");
+
+      // "@" stripped from value
+      expect(result.govPayMetadata[2].value).toEqual("paidViaInviteToPay");
+      expect(result.govPayMetadata[2]).toHaveProperty("type", "data");
+    });
+
+    it("handles existing nodes with current content (`type` property)", () => {
+      const result = parsePay({
+        govPayMetadata: [
+          {
+            key: "flow",
+            value: "flow name here",
+            type: "static",
+          },
+          {
+            key: "source",
+            value: "PlanX",
+            type: "static",
+          },
+          {
+            key: "paidViaInviteToPay",
+            value: "paidViaInviteToPay",
+            type: "data",
+          },
+        ],
+      });
+
+      expect(result.govPayMetadata).toHaveLength(3);
+      expect(result.govPayMetadata[0]).toHaveProperty("type", "static");
+      expect(result.govPayMetadata[1]).toHaveProperty("type", "static");
+      expect(result.govPayMetadata[2].value).toEqual("paidViaInviteToPay");
+      expect(result.govPayMetadata[2]).toHaveProperty("type", "data");
+    });
   });
 });
