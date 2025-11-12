@@ -13,6 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import React, { useState } from "react";
 import { rootFlowPath } from "routes/utils";
 import Permission from "ui/editor/Permission";
+import StyledTab from "ui/editor/StyledTab";
 
 import { useStore } from "../../lib/store";
 import Customisations from "./Customisations";
@@ -22,7 +23,6 @@ import { PreviewBrowser } from "./PreviewBrowser";
 import { CheckForChangesToPublishButton } from "./Publish/CheckForChangesButton";
 import Reviews from "./Review";
 import Search from "./Search";
-import StyledTab from "./StyledTab";
 
 type SidebarTabs =
   | "PreviewBrowser"
