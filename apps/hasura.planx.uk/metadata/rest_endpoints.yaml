@@ -6,7 +6,7 @@
   methods:
     - GET
   name: GetServicesByTeamSlug
-  url: :teamSlug/services
+  url: v1/:teamSlug/services
 - comment: ""
   definition:
     query:
