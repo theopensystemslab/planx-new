@@ -12,6 +12,7 @@ import { Flow } from "types";
 import WatermarkBackground from "ui/shared/WatermarkBackground";
 import { z } from "zod";
 
+import { LoadingLayout } from "../../pages/layout/LoadingLayout";
 import {
   fetchSettingsForPublishedView,
   getLastPublishedAt,
@@ -205,14 +206,16 @@ export const PublicRouteLayout: React.FC<{
   }
 
   return (
-    <PublicLayout>
-      <WatermarkBackground
-        variant="dark"
-        opacity={0.05}
-        forceVisibility={watermarkForceVisible}
-      />
-      {wrappedContent}
-    </PublicLayout>
+    <LoadingLayout>
+      <PublicLayout>
+        <WatermarkBackground
+          variant="dark"
+          opacity={0.05}
+          forceVisibility={watermarkForceVisible}
+        />
+        {wrappedContent}
+      </PublicLayout>
+    </LoadingLayout>
   );
 };
 
