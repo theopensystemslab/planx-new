@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
-import Tabs from "@mui/material/Tabs";
+import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
@@ -22,7 +22,7 @@ interface Props {
 
 const TabList = styled(Box)(() => ({
   position: "relative",
-  "& .MuiTabs-indicator": {
+  [`& .${tabsClasses.indicator}`]: {
     display: "none",
   },
 }));
