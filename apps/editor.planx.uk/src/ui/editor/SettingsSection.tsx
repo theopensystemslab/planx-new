@@ -10,13 +10,14 @@ const Root = styled(Box, {
 })<BoxProps & { background?: boolean }>(({ background, theme }) => ({
   display: "block",
   width: "100%",
-  marginTop: theme.spacing(2),
-  paddingBottom: theme.spacing(1),
+  padding: theme.spacing(6, 0),
   position: "relative",
-  zIndex: 1,
+  overflow: "hidden",
   background: theme.palette.background.paper,
+  borderTop: `1px solid ${theme.palette.border.main}`,
   "&:first-of-type": {
-    marginTop: 0,
+    paddingTop: 0,
+    borderTop: 0,
   },
   "& > * + *, & > form > * + *": {
     ...contentFlowSpacing(theme),

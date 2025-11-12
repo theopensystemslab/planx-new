@@ -6,7 +6,6 @@ import Grid from "@mui/material/Grid";
 import { type FormikValues, useFormik } from "formik";
 import { useToast } from "hooks/useToast";
 import React from "react";
-import InputGroup from "ui/editor/InputGroup";
 import InputLegend from "ui/editor/InputLegend";
 import SettingsDescription from "ui/editor/SettingsDescription";
 import SettingsSection from "ui/editor/SettingsSection";
@@ -129,11 +128,18 @@ const SettingsFormContainer = <
           </Grid>
 
           <Grid item xs={12} md={8}>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+                paddingTop: 0.25,
+              }}
+            >
               {children({ formik, data, loading })}
             </Box>
             {preview && <Box mt={2}>{preview(formik)}</Box>}
-            <Box mt={2}>
+            <Box mt={2} display="flex" gap={1.5}>
               <Button
                 type="submit"
                 variant="contained"
@@ -147,7 +153,6 @@ const SettingsFormContainer = <
                 variant="contained"
                 disabled={!formik.dirty}
                 color="secondary"
-                sx={{ ml: 1.5 }}
               >
                 Reset changes
               </Button>
