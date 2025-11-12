@@ -2,6 +2,7 @@ import { DocumentNode } from "@apollo/client";
 import { useMutation, useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
 import { type FormikValues, useFormik } from "formik";
 import { useToast } from "hooks/useToast";
 import React from "react";
@@ -119,33 +120,40 @@ const SettingsFormContainer = <
   }
 
   return (
-    <SettingsSection background>
+    <SettingsSection>
       <Box component="form" onSubmit={formik.handleSubmit}>
-        <InputGroup flowSpacing>
-          <InputLegend>{legend}</InputLegend>
-          <SettingsDescription>{description}</SettingsDescription>
-          {children({ formik, data, loading })}
-        </InputGroup>
-        {preview && <Box mt={2}>{preview(formik)}</Box>}
-        <Box mt={2}>
-          <Button
-            type="submit"
-            variant="contained"
-            disabled={!formik.dirty || updating}
-          >
-            Save
-          </Button>
-          <Button
-            onClick={() => formik.resetForm()}
-            type="reset"
-            variant="contained"
-            disabled={!formik.dirty}
-            color="secondary"
-            sx={{ ml: 1.5 }}
-          >
-            Reset changes
-          </Button>
-        </Box>
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={4}>
+            <InputLegend gutterBottom>{legend}</InputLegend>
+            <SettingsDescription>{description}</SettingsDescription>
+          </Grid>
+
+          <Grid item xs={12} md={8}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              {children({ formik, data, loading })}
+            </Box>
+            {preview && <Box mt={2}>{preview(formik)}</Box>}
+            <Box mt={2}>
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={!formik.dirty || updating}
+              >
+                Save
+              </Button>
+              <Button
+                onClick={() => formik.resetForm()}
+                type="reset"
+                variant="contained"
+                disabled={!formik.dirty}
+                color="secondary"
+                sx={{ ml: 1.5 }}
+              >
+                Reset changes
+              </Button>
+            </Box>
+          </Grid>
+        </Grid>
       </Box>
     </SettingsSection>
   );
