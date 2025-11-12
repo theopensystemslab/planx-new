@@ -11,8 +11,8 @@ import {
   withData,
   withView,
 } from "navi";
+import { TeamContactSettings } from "pages/FlowEditor/components/NewSettings/TeamSettings/Contact";
 import TeamAdvancedSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/TeamAdvancedSettings";
-import TeamContactSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/TeamContactSettings";
 import TeamGisDataSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/TeamGisDataSettings";
 import TeamIntegrationsSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/TeamIntegrationsSettings";
 import TeamSettingsLayout from "pages/FlowEditor/components/NewSettings/TeamSettings/TeamSettingsLayout";

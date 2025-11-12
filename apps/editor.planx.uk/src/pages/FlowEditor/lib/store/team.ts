@@ -110,6 +110,7 @@ export const teamStore: StateCreator<
               hasPlanningData: has_planning_data
             }
             settings: team_settings {
+              id
               boundaryUrl: boundary_url
               boundaryBBox: boundary_bbox
               referenceCode: reference_code
