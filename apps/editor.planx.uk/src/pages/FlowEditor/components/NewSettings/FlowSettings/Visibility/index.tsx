@@ -31,7 +31,6 @@ const FlowVisibilitySettings: React.FC = () => {
       })}
       queryVariables={{ flowId }}
       getMutationVariables={(values) => ({ flowId, ...values })}
-      newSettingsLayout
     >
       {({ formik }) => (
         <>
