@@ -39,41 +39,47 @@ const SettingsLayout: React.FC<Props> = ({
   };
 
   return (
-    <Container
-      maxWidth="contentWrap"
-      // TODO: refine layout
-    >
-      <Typography variant="h2" component="h1" gutterBottom>
-        {title}
-      </Typography>
-
-      <Box component="ul" sx={{ listStyle: "none", padding: 0, margin: 0 }}>
-        {filteredLinks.map(({ label, path }) => (
-          <Box component="li" key={path} sx={{ display: "inline", mr: 2 }}>
-            {isActive(path) ? (
-              <Typography component="span" variant="body1">
-                {label}
-              </Typography>
-            ) : (
-              <Typography
-                component="a"
-                variant="body1"
-                // Roughly style as a link for now. TODO: bring in tabs
-                sx={{
-                  textDecoration: "underline",
-                  cursor: "pointer",
-                }}
-                onClick={() => handleNavClick(path)}
-              >
-                {label}
-              </Typography>
-            )}
+    <Box width="100%" bgcolor="background.paper">
+      <Box
+        width="100%"
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        bgcolor="background.default"
+        pt={5}
+      >
+        <Container maxWidth="contentWrap" sx={{ pt: 4 }}>
+          <Typography variant="h2" component="h1" gutterBottom>
+            {title}
+          </Typography>
+          <Box component="ul" sx={{ listStyle: "none", padding: 0, margin: 0 }}>
+            {filteredLinks.map(({ label, path }) => (
+              <Box component="li" key={path} sx={{ display: "inline", mr: 2 }}>
+                {isActive(path) ? (
+                  <Typography component="span" variant="body1">
+                    {label}
+                  </Typography>
+                ) : (
+                  <Typography
+                    component="a"
+                    variant="body1"
+                    // Roughly style as a link for now. TODO: bring in tabs
+                    sx={{
+                      textDecoration: "underline",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => handleNavClick(path)}
+                  >
+                    {label}
+                  </Typography>
+                )}
+              </Box>
+            ))}
           </Box>
-        ))}
+        </Container>
       </Box>
-
-      <Box sx={{ py: 4 }}>{children}</Box>
-    </Container>
+      <Container maxWidth="contentWrap">{children}</Container>
+    </Box>
   );
 };
 
