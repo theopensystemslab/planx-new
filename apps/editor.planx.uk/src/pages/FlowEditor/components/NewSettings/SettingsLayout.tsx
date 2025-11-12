@@ -22,6 +22,7 @@ interface Props {
 
 const TabList = styled(Box)(() => ({
   position: "relative",
+  marginLeft: "-12px",
   [`& .${tabsClasses.indicator}`]: {
     display: "none",
   },
