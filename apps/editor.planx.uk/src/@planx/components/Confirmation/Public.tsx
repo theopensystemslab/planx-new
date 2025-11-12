@@ -9,6 +9,7 @@ import { PublicProps } from "@planx/components/shared/types";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
+import { useNavigation } from "react-navi";
 import Banner from "ui/public/Banner";
 import FileDownload from "ui/public/FileDownload";
 import NumberedList from "ui/public/NumberedList";
@@ -88,6 +89,8 @@ interface PresentationalProps extends Props {
 export function Presentational(props: PresentationalProps) {
   const isFinalCard = useStore().isFinalCard();
   const theme = useTheme();
+  const { navigate } = useNavigation();
+
   return (
     <Box width="100%">
       <Banner
@@ -118,6 +121,12 @@ export function Presentational(props: PresentationalProps) {
           data={props.data}
           filename={props.sessionId || "application"}
         />
+        <button
+          onClick={() => navigate("application")}
+        >
+          View your application
+        </button>
+        
         {props.nextSteps && Boolean(props.nextSteps?.length) && (
           <Box pt={3}>
             <Typography variant="h2" mb={2}>

@@ -33,3 +33,58 @@ export const validateSession = async (body: SessionAuthPayload) => {
   );
   return data;
 };
+
+/**
+ * Get download token for HTML export
+ */
+export const getDownloadToken = async (email: string, sessionId: string): Promise<string> => {
+  if (!email) {
+    throw new Error("Missing email value.");
+  }
+  if (!sessionId) {
+    throw new Error("Missing sessionId value.");
+  }
+
+  const response = await apiClient.post(
+    `/lps/download/token`,
+    {
+      email,
+      sessionId,
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(`Token request failed: ${response.status}`);
+  }
+  
+  return response.data.token;
+};
+
+/**
+ * Download application HTML using authorization token
+ */
+export const downloadApplicationHtml = async (
+  email: string,
+  sessionId: string,
+  token: string
+): Promise<string> => {
+  const response = await apiClient.post(
+    `/lps/download/html`,
+    {
+      email,
+      sessionId,
+    },
+    {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "content-type": "application/json",
+      },
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(`HTML request failed: ${response.status}`);
+  }
+
+  return response.data;
+};
