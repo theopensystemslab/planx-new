@@ -45,14 +45,10 @@ const OglLogo = styled("img")(({ theme }) => ({
 }));
 
 const PublicFooter: React.FC = () => {
-  const location = useLocation();
   const [flowSettings, globalSettings] = useStore((state) => [
     state.flowSettings,
     state.globalSettings,
   ]);
-
-  const basePath = location.pathname.replace(/\/pages\/.*$/, "");
-  const makeHref = (path: string) => `${basePath}/pages/${path}`;
 
   const flowSettingsContent = FOOTER_ITEMS.map((key) => {
     const setting = flowSettings?.elements && flowSettings?.elements[key];
@@ -60,22 +56,22 @@ const PublicFooter: React.FC = () => {
     if (setting?.show) {
       return {
         title: setting.heading,
-        href: makeHref(key),
+        param: key,
         bold: key === "help",
       };
     }
   });
 
   const globalFooterItems = globalSettings?.footerContent
-    ? Object.entries(globalSettings?.footerContent).map(([slug, item]) => ({
+    ? Object.entries(globalSettings?.footerContent).map(([key, item]) => ({
         title: item.heading,
         content: item.content,
-        href: makeHref(slug),
+        param: key,
       }))
     : [];
 
   const footerItems = [...flowSettingsContent, ...globalFooterItems].filter(
-    (item): item is { title: string; href: string; bold: boolean } =>
+    (item): item is { title: string; param: string; bold: boolean } =>
       Boolean(item),
   );
 
