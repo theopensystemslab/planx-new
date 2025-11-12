@@ -68,7 +68,7 @@ config:
   application:microsoft-client-id:
     secure: AAABAGm0SUnS8I54uBHI+Y0F1hMk8WSSKO1n+b52MCaYU8aGlbtsEuccJiQ8WXf7IFwWWgoBIeVPdk0eIGENHUet0HA=
   application:microsoft-client-secret:
-    secure: AAABAPPYmoB9WG1IcquEsIzJ7n8YtN/FPLsBzrCuULUfU1JC5oW/YV1oUu3bSE5Kd1/EpAdUVZG2tpVs2/n4H7YTq0r28wFL
+    secure: AAABADAL9YkrUfJaDga7MaVRD/dZaElsnFnnC+7IvqqlgBFywXFwVKnSMbVZ1SMFoitG8C6bKHhl2BPwOHcuvkzMKblwYzvu
   application:ordnance-survey-api-key:
     secure: AAABANmVR/iyxoja6JGBOBjhlijbMiqdqpNRwqS2p+ZusuwiYdKBACIi5y/vi2HMg7+ydXWR0SPVqtQuK5O/tA==
   application:session-secret:
