@@ -135,6 +135,7 @@ export const settingsStore: StateCreator<
       id: string;
       publishedFlows: [{ hasSendComponent: boolean }];
       onlineHistory: ["online"];
+      templatedFrom: string | null;
     };
 
     interface FlowInformationQuery {
@@ -155,6 +156,7 @@ export const settingsStore: StateCreator<
             publishedFlows,
             isListedOnLPS,
             onlineHistory,
+            templatedFrom,
           },
         ],
       },
@@ -172,6 +174,7 @@ export const settingsStore: StateCreator<
             status
             limitations
             canCreateFromCopy: can_create_from_copy
+            templatedFrom: templated_from
             publishedFlows: published_flows(
               limit: 1
               order_by: { created_at: desc }
@@ -201,7 +204,7 @@ export const settingsStore: StateCreator<
     const environment = import.meta.env.VITE_APP_ENV;
 
     // If a flow has ever been online, there will be analytics to show
-    const hasAnalytics = Boolean(onlineHistory?.length)
+    const hasAnalytics = Boolean(onlineHistory?.length);
 
     const dashboardId = hasAnalytics
       ? getAnalyticsDashboardId({
@@ -227,6 +230,7 @@ export const settingsStore: StateCreator<
       flowCanCreateFromCopy: canCreateFromCopy,
       flowAnalyticsLink: analyticsLink,
       isFlowListedOnLPS: isListedOnLPS,
+      isTemplatedFrom: Boolean(templatedFrom),
     });
 
     return {

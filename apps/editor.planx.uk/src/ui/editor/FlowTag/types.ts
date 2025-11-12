@@ -2,8 +2,6 @@ export const FlowTagType = {
   Status: "status",
   ApplicationType: "applicationType",
   ServiceType: "serviceType",
-  Templated: "templated",
-  SourceTemplate: "sourceTemplate",
 } as const;
 
 export const StatusVariant = {

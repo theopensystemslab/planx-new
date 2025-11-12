@@ -76,7 +76,7 @@ export const usePublishFlow = () => {
       return formatLastPublishMessage(
         lastPublished.data.date,
         lastPublished.data.user,
-      );
+      ).formatted;
     }
 
     return "This flow is not published yet";

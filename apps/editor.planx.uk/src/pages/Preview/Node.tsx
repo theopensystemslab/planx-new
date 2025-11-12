@@ -7,7 +7,7 @@ import type {
   Checklist,
   ChecklistWithOptions,
 } from "@planx/components/Checklist/model";
-import ChecklistComponent from "@planx/components/Checklist/Public/Public";
+import ChecklistComponent from "@planx/components/Checklist/Public";
 import type { Confirmation } from "@planx/components/Confirmation/model";
 import ConfirmationComponent from "@planx/components/Confirmation/Public";
 import type { ContactInput } from "@planx/components/ContactInput/model";

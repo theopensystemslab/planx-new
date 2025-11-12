@@ -1,0 +1,20 @@
+---
+interface Props {
+  variant?: "default";
+}
+
+const { variant = "default" } = Astro.props;
+
+const variantStyles = {
+  default: "border border-gray-400 text-text-secondary",
+};
+---
+
+<span
+  class:list={[
+    "inline-flex items-center clamp-[px,2,3] clamp-[py,1,1.5] rounded-full text-body-sm font-medium m-0 whitespace-nowrap",
+    variantStyles[variant],
+  ]}
+>
+  <slot />
+</span>
