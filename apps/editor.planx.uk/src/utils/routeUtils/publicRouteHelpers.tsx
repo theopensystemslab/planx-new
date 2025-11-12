@@ -21,7 +21,12 @@ import {
 import { getTeamFromDomain } from "./utils";
 
 // Types
-export type PublicRouteMode = "preview" | "published" | "draft" | "pay";
+export type PublicRouteMode =
+  | "preview"
+  | "published"
+  | "draft"
+  | "pay"
+  | "download";
 
 export interface PublicRouteData {
   flow: Flow;
@@ -41,6 +46,7 @@ export const publicRouteSearchSchemas = {
   preview: z.object({}),
   draft: z.object({}),
   pay: z.object({}),
+  download: z.object({}),
 };
 
 // Common data loading function
@@ -95,6 +101,12 @@ export const loadPublicRouteData = async (
       lastPublishedDate = await getLastPublishedAt(flow.id);
       flowData = publishedFlow;
       break;
+
+    case "download":
+      // For download mode, we don't need flow data, just team/flow existence validation
+      // Flow data will be empty object, store setup handled separately
+      flowData = {};
+      break;
   }
 
   return {
@@ -146,13 +158,14 @@ export const createPublicRouteBeforeLoad = (mode: PublicRouteMode) => {
 // Error component helpers
 export const createPublicRouteErrorComponent = (mode: PublicRouteMode) => {
   const modeDisplayNames = {
-    preview: "preview",
-    published: "published flow",
-    draft: "draft flow",
-    pay: "payment page",
+    preview: "Preview",
+    published: "Published flow",
+    draft: "Draft flow",
+    pay: "Payment page",
+    download: "Download page",
   };
 
-  const modeDisplayName = modeDisplayNames[mode];
+  const modeDisplayName: string = modeDisplayNames[mode];
 
   return ({ error }: { error: Error }) => {
     if (error?.message?.includes("not found")) {
