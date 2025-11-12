@@ -384,6 +384,7 @@ describe("generatePayload function", () => {
     // Value in passport matches expected shape
     expect(result.data?.requiredFileFn).toMatchObject([
       {
+        name: "firstFile",
         url: "http://localhost:7002/file/private/jjpmkz8g/PXL_20230511_093922923.jpg",
         filename: "PXL_20230511_093922923.jpg",
         rule: {
@@ -415,8 +416,59 @@ describe("generatePayload function", () => {
     expect(result.data).toHaveProperty("fileFn");
     expect(result.data?.fileFn).toHaveLength(3);
     expect(result.data?.fileFn?.[0].filename).toEqual("first.jpg");
+    expect(result.data?.fileFn?.[0].name).toEqual("firstFileType");
     expect(result.data?.fileFn?.[1].filename).toEqual("second.jpg");
+    expect(result.data?.fileFn?.[1].name).toEqual("firstFileType");
     expect(result.data?.fileFn?.[2].filename).toEqual("third.jpg");
+    expect(result.data?.fileFn?.[2].name).toEqual("firstFileType");
+  });
+
+  it("correctly generates payload when one file is tagged with multiple file types", () => {
+    const singleSlot = {
+      file: {
+        name: "single-file.pdf",
+        path: "./single-file.pdf",
+      } as FileWithPath,
+      status: "success",
+      progress: 1,
+      id: "slot-001",
+      url: "http://localhost:7002/file/private/xxx/single-file.pdf",
+    } as FileUploadSlot;
+
+    const fileListOneSlotMultipleTags: FileList = {
+      required: [
+        {
+          fn: "docTypeA",
+          name: "Document A",
+          rule: { condition: Condition.AlwaysRequired },
+          slots: [singleSlot],
+        },
+      ],
+      recommended: [
+        {
+          fn: "docTypeB",
+          name: "Document B",
+          rule: { condition: Condition.AlwaysRecommended },
+          slots: [singleSlot],
+        },
+      ],
+      optional: [],
+    };
+
+    const result = generatePayload(fileListOneSlotMultipleTags, [singleSlot]);
+
+    expect(result.data).toHaveProperty("docTypeA");
+
+    expect(result.data?.docTypeA).toHaveLength(1);
+    expect(result.data?.docTypeA[0].name).toEqual("Document A");
+    expect(result.data?.docTypeA[0].filename).toEqual("single-file.pdf");
+    expect(result.data?.docTypeA[0].cachedSlot.id).toEqual("slot-001");
+
+    expect(result.data).toHaveProperty("docTypeB");
+    expect(result.data?.docTypeB).toHaveLength(1);
+    expect(result.data?.docTypeB[0].name).toEqual("Document B");
+    expect(result.data?.docTypeB[0].filename).toEqual("single-file.pdf");
+    expect(result.data?.docTypeB[0].cachedSlot.id).toEqual("slot-001");
   });
 
   it("maps the most recent validated slot into the payload", () => {
@@ -456,6 +508,7 @@ describe("getRecoveredData function", () => {
       data: {
         requiredFileFn: [
           {
+            name: "firstFile",
             cachedSlot: mockCachedSlot,
           },
         ],
@@ -468,6 +521,82 @@ describe("getRecoveredData function", () => {
     );
     expect(result).toHaveLength(1);
     expect(result?.[0]).toMatchObject(mockCachedSlot);
+  });
+
+  it("recovers and matches data by name when multiple file types share the same 'fn'", () => {
+    const slot1 = {
+      id: "slot-001",
+      file: { path: "file1.pdf" },
+      status: "success",
+    };
+
+    const slot2 = {
+      id: "slot-002",
+      file: { path: "file2.pdf" },
+      status: "success",
+    };
+
+    const previouslySubmittedData: Store.UserData = {
+      data: {
+        otherDocument: [
+          {
+            name: "file1",
+            cachedSlot: slot1,
+            rule: { condition: Condition.AlwaysRequired },
+            url: "http://example.com/file1.pdf",
+            filename: "file1.pdf",
+          },
+          {
+            name: "file2",
+            cachedSlot: slot2,
+            rule: { condition: Condition.AlwaysRequired },
+            url: "http://example.com/file2.pdf",
+            filename: "file2.pdf",
+          },
+        ],
+      },
+    };
+
+    const fileListToRecover: FileList = {
+      required: [
+        {
+          fn: "otherDocument",
+          name: "file1",
+          rule: { condition: Condition.AlwaysRequired },
+        },
+        {
+          fn: "otherDocument",
+          name: "file2",
+          rule: { condition: Condition.AlwaysRequired },
+        },
+      ],
+      recommended: [],
+      optional: [],
+    };
+
+    const { slots, fileList } = getRecoveredData(
+      previouslySubmittedData,
+      fileListToRecover,
+    );
+
+    // Both slots were recovered
+    expect(slots).toHaveLength(2);
+    expect(slots.map((s) => s.id)).toContain("slot-001");
+    expect(slots.map((s) => s.id)).toContain("slot-002");
+
+    // FileList was correctly populated
+    const fileType1 = fileList.required.find((f) => f.name === "file1");
+    const fileType2 = fileList.required.find((f) => f.name === "file2");
+
+    // file1 should only have slot1
+    expect(fileType1).toHaveProperty("slots");
+    expect(fileType1?.slots).toHaveLength(1);
+    expect(fileType1?.slots?.[0].id).toEqual("slot-001");
+
+    // file2 should only have slot2
+    expect(fileType2).toHaveProperty("slots");
+    expect(fileType2?.slots).toHaveLength(1);
+    expect(fileType2?.slots?.[0].id).toEqual("slot-002");
   });
 });
 
