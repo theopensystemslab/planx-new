@@ -37,7 +37,7 @@ This guide will walk through the process of setting a custom domain for a new te
     openssl pkcs12 -inkey <TEAM_NAME>.key -in <FILENAME>.pem -export -out <TEAM_NAME>.pfx
     ```
 
-4. **PlanX** - Format certificates if provided with PKCS #12
+4. **PlanX** - Format certificates if provided with PKCS #12 (password protected `.p12` or `.pfx`)
     - Using `<TEAM_NAME>.pfx` as `<FILENAME>`, run the following: 
 
     ```shell
@@ -76,7 +76,7 @@ This guide will walk through the process of setting a custom domain for a new te
 
     Certificates and keys are added to our infrastructure as Pulumi secrets which are then read to generate an ACM record and CloudFront distribution for the custom domain when a deployment is made to Production.
 
-    1. Add the team to the `CUSTOM_DOMAINS` array in `infrastructure/application/index.ts`. Set `certificateLocation` to `secretsManager`.
+    1. Add the team to the `CUSTOM_DOMAINS` array in `infrastructure/application/index.ts`. Remove `certificateLocation` if present (we have already configured `secretsManager` elsewhere).
 
     2. Add secrets to AWS Secrets Manager
 
@@ -86,6 +86,8 @@ This guide will walk through the process of setting a custom domain for a new te
         cd scripts
         bash add-certs-to-aws-secrets-manager.sh {team}
         ```
+
+        If you encounter config errors while running this script, you may have to run `aws configure`. For the keys / IDs you need, go to the AWS Access Portal, go to `production` -> `access keys` -> `Get credentials for ssl-dev-tasks`.
 
         You'll see a success or error message when this script runs, and you could additionally check the `ssl/{team}` secret in the AWS console to verify this step.
         
@@ -110,4 +112,4 @@ This guide will walk through the process of setting a custom domain for a new te
 >
 > Therefore you might need to ask someone to do this step for you if you do not have access.
 
-12. **PlanX** - Add certificate expiry date to [PlanX CMS on Notion](https://www.notion.so/opensystemslab/Plan-Customers-dee2cdfb40c04b5fa88edc5a86989211)
+12. **PlanX** - Add certificate expiry date to [PlanX CMS on Notion](https://www.notion.so/opensystemslab/Plan-CRM-27c35d469ad1806c8f4dd95067ccf4ff)
