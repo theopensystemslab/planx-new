@@ -8,6 +8,7 @@ import type {
 } from "@opensystemslab/planx-core/types";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useMutation } from "@tanstack/react-query";
+import { useNavigate, useParams } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { APIError } from "lib/api/client";
@@ -17,8 +18,6 @@ import {
 } from "lib/api/inviteToPay/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
-import { useCurrentRoute, useNavigation } from "react-navi";
-import { isPreviewOnlyDomain } from "routes-navi/utils";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
@@ -87,19 +86,19 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
     state.sessionId,
     state.hasAcknowledgedWarning,
   ]);
-  const navigation = useNavigation();
-  const {
-    data: { mountpath },
-  } = useCurrentRoute();
-
+  const navigate = useNavigate();
+  const params = useParams({ from: "/$team/$flow/pay" });
   const defaults = getDefaultContent();
 
   const redirectToConfirmationPage = (paymentRequestId: string) => {
-    const params = new URLSearchParams({ paymentRequestId }).toString();
-    const inviteToPayURL = isPreviewOnlyDomain
-      ? `${mountpath}/pay/invite?${params}`
-      : `./pay/invite?${params}`;
-    navigation.navigate(inviteToPayURL);
+    navigate({
+      to: "/$team/$flow/pay/invite",
+      params: {
+        team: params.team,
+        flow: params.flow,
+      },
+      search: { paymentRequestId },
+    });
   };
 
   const {
