@@ -2,6 +2,7 @@ import { DocumentNode } from "@apollo/client";
 import { useMutation, useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
 import { type FormikValues, useFormik } from "formik";
 import { useToast } from "hooks/useToast";
 import React from "react";
@@ -37,6 +38,8 @@ interface SettingsFormContainerProps<
     data: TData | undefined;
     loading: boolean;
   }) => React.ReactNode;
+  /** Enable 2-column layout with title/description on left and form fields on right */
+  newSettingsLayout?: boolean;
 }
 
 /**
@@ -62,6 +65,7 @@ const SettingsFormContainer = <
   successMessage = "Settings updated successfully",
   children,
   preview,
+  newSettingsLayout = false,
 }: SettingsFormContainerProps<TData, TVariables, TFormValues>) => {
   const toast = useToast();
 
@@ -118,6 +122,50 @@ const SettingsFormContainer = <
     );
   }
 
+  // New 2-column layout
+  // TODO: Migrate all settings forms and remove old layout
+  if (newSettingsLayout) {
+    return (
+      <SettingsSection>
+        <Box component="form" onSubmit={formik.handleSubmit}>
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={4}>
+              <InputLegend gutterBottom>{legend}</InputLegend>
+              <SettingsDescription>{description}</SettingsDescription>
+            </Grid>
+
+            <Grid item xs={12} md={8}>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                {children({ formik, data, loading })}
+              </Box>
+              {preview && <Box mt={2}>{preview(formik)}</Box>}
+              <Box mt={2}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  disabled={!formik.dirty || updating}
+                >
+                  Save
+                </Button>
+                <Button
+                  onClick={() => formik.resetForm()}
+                  type="reset"
+                  variant="contained"
+                  disabled={!formik.dirty}
+                  color="secondary"
+                  sx={{ ml: 1.5 }}
+                >
+                  Reset changes
+                </Button>
+              </Box>
+            </Grid>
+          </Grid>
+        </Box>
+      </SettingsSection>
+    );
+  }
+
+  // Render original single-column layout for backwards compatibility until migration is complete
   return (
     <SettingsSection background>
       <Box component="form" onSubmit={formik.handleSubmit}>

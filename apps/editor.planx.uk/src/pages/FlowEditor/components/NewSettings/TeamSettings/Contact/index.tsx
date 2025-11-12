@@ -56,6 +56,7 @@ export const TeamContactSettings: React.FC = () => {
           sendSlackMessage(message);
         }
       }}
+      newSettingsLayout
     >
       {({ formik }) => (
         <>

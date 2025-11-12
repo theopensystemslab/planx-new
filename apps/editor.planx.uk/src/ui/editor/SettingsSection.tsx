@@ -12,6 +12,9 @@ const Root = styled(Box, {
   width: "100%",
   marginTop: theme.spacing(2),
   paddingBottom: theme.spacing(1),
+  position: "relative",
+  zIndex: 1,
+  background: theme.palette.background.paper,
   "&:first-of-type": {
     marginTop: 0,
   },
