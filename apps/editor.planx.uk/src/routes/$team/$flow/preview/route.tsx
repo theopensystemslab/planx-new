@@ -1,112 +1,23 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { getFlattenedFlowData } from "lib/api/flow/requests";
-import { queryClient } from "lib/queryClient";
-import ErrorPage from "pages/ErrorPage/ErrorPage";
-import { useStore } from "pages/FlowEditor/lib/store";
-import PublicLayout from "pages/layout/PublicLayout";
-import { TestWarningPage } from "pages/Preview/TestWarningPage";
 import React from "react";
-import WatermarkBackground from "ui/shared/WatermarkBackground";
 import {
-  fetchSettingsForPublishedView,
-  getLastPublishedAt,
-} from "utils/routeUtils/publishedQueries";
-import { getTeamFromDomain } from "utils/routeUtils/utils";
+  createPublicRouteBeforeLoad,
+  createPublicRouteErrorComponent,
+  createPublicRouteHead,
+  PublicRouteLayout,
+} from "utils/routeUtils/publicRouteHelpers";
 
 export const Route = createFileRoute("/$team/$flow/preview")({
-  beforeLoad: async ({ params }) => {
-    const { team: teamParam, flow: flowParam } = params;
-    const flowSlug = flowParam.split(",")[0];
-    const teamSlug =
-      teamParam || (await getTeamFromDomain(window.location.hostname));
-
-    try {
-      // Fetch settings using the same function as published routes
-      const data = await fetchSettingsForPublishedView(flowSlug, teamSlug);
-      const flow = data.flows[0];
-
-      if (!flow) {
-        throw new Error(`Flow ${flowSlug} not found for ${teamSlug}`);
-      }
-
-      // Get last published date
-      const lastPublishedDate = await getLastPublishedAt(flow.id);
-
-      // Fetch flattened flow data for preview
-      const flowData = await queryClient.fetchQuery({
-        queryKey: ["flattenedFlowData", "preview", flow.id],
-        queryFn: () => getFlattenedFlowData({ flowId: flow.id }),
-      });
-
-      // Set up store with flow data
-      const state = useStore.getState();
-      state.setFlow({
-        id: flow.id,
-        flow: flowData,
-        flowSlug,
-        flowName: flow.name,
-      });
-      state.setGlobalSettings(data.globalSettings[0]);
-      state.setFlowSettings(flow.settings);
-      state.setTeam(flow.team);
-      useStore.setState({ lastPublishedDate });
-
-      return {
-        flow,
-        flowData,
-        settings: data,
-        lastPublishedDate,
-      };
-    } catch (error) {
-      console.error("Failed to load preview data:", error);
-      throw error;
-    }
-  },
-
-  head: () => ({
-    meta: [
-      {
-        name: "robots",
-        content: "noindex, nofollow",
-      },
-      {
-        name: "googlebot",
-        content: "noindex, nofollow",
-      },
-    ],
-  }),
-
-  errorComponent: ({ error }) => {
-    if (error?.message?.includes("not found")) {
-      return (
-        <ErrorPage title="Flow not found">
-          The preview you're looking for doesn't exist or you don't have
-          permission to access it.
-        </ErrorPage>
-      );
-    }
-
-    return (
-      <ErrorPage title="Preview error">
-        There was an error loading the preview. Please try again later.
-      </ErrorPage>
-    );
-  },
-
+  beforeLoad: createPublicRouteBeforeLoad("preview"),
+  head: createPublicRouteHead("preview"),
+  errorComponent: createPublicRouteErrorComponent("preview"),
   component: PreviewLayoutComponent,
 });
 
 function PreviewLayoutComponent() {
   return (
-    <PublicLayout>
-      <WatermarkBackground
-        variant="dark"
-        opacity={0.05}
-        forceVisibility={true}
-      />
-      <TestWarningPage>
-        <Outlet />
-      </TestWarningPage>
-    </PublicLayout>
+    <PublicRouteLayout mode="preview">
+      <Outlet />
+    </PublicRouteLayout>
   );
 }

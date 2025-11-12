@@ -8,7 +8,7 @@ interface PublishedFlow extends Flow {
   publishedFlows: Record<"data", Store.Flow>[];
 }
 
-interface PublishedViewSettings {
+export interface PublishedViewSettings {
   flows: PublishedFlow[];
   globalSettings: GlobalSettings[];
 }
