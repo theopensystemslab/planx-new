@@ -7,12 +7,13 @@ import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
-import Tabs from "@mui/material/Tabs";
+import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import ToggleButton from "@mui/material/ToggleButton";
 import Tooltip from "@mui/material/Tooltip";
 import React, { useState } from "react";
 import { rootFlowPath } from "routes/utils";
 import Permission from "ui/editor/Permission";
+import StyledTab from "ui/editor/StyledTab";
 
 import { useStore } from "../../lib/store";
 import Customisations from "./Customisations";
@@ -22,7 +23,6 @@ import { PreviewBrowser } from "./PreviewBrowser";
 import { CheckForChangesToPublishButton } from "./Publish/CheckForChangesButton";
 import Reviews from "./Review";
 import Search from "./Search";
-import StyledTab from "./StyledTab";
 
 type SidebarTabs =
   | "PreviewBrowser"
@@ -119,11 +119,11 @@ const TabList = styled(Box)(({ theme }) => ({
     height: "1px",
     backgroundColor: theme.palette.border.main,
   },
-  "& .MuiTabs-root": {
+  [`& .${tabsClasses.root}`]: {
     minHeight: "0",
     padding: theme.spacing(0, 1.75),
   },
-  "& .MuiTabs-indicator": {
+  [`& .${tabsClasses.indicator}`]: {
     display: "none",
   },
 }));

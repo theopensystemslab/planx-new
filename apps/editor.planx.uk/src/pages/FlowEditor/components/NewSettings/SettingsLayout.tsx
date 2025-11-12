@@ -1,8 +1,11 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import { styled } from "@mui/material/styles";
+import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
+import StyledTab from "ui/editor/StyledTab";
 
 interface SettingsLink {
   label: string;
@@ -17,6 +20,13 @@ interface Props {
   children: React.ReactNode;
 }
 
+const TabList = styled(Box)(() => ({
+  position: "relative",
+  [`& .${tabsClasses.indicator}`]: {
+    display: "none",
+  },
+}));
+
 const SettingsLayout: React.FC<Props> = ({
   title,
   settingsLinks,
@@ -30,50 +40,43 @@ const SettingsLayout: React.FC<Props> = ({
     (link) => link.condition === undefined || link.condition,
   );
 
-  const isActive = (path: string) => {
-    return url.pathname.includes(`/new-settings${path}`);
-  };
+  const activeTab =
+    filteredLinks.find((link) =>
+      url.pathname.includes(`/new-settings${link.path}`),
+    )?.path || filteredLinks[0]?.path;
 
-  const handleNavClick = (path: string) => {
-    navigate(getNavigationPath(path));
+  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
+    navigate(getNavigationPath(newValue));
   };
 
   return (
-    <Container
-      maxWidth="contentWrap"
-      // TODO: refine layout
-    >
-      <Typography variant="h2" component="h1" gutterBottom>
-        {title}
-      </Typography>
-
-      <Box component="ul" sx={{ listStyle: "none", padding: 0, margin: 0 }}>
-        {filteredLinks.map(({ label, path }) => (
-          <Box component="li" key={path} sx={{ display: "inline", mr: 2 }}>
-            {isActive(path) ? (
-              <Typography component="span" variant="body1">
-                {label}
-              </Typography>
-            ) : (
-              <Typography
-                component="a"
-                variant="body1"
-                // Roughly style as a link for now. TODO: bring in tabs
-                sx={{
-                  textDecoration: "underline",
-                  cursor: "pointer",
-                }}
-                onClick={() => handleNavClick(path)}
-              >
-                {label}
-              </Typography>
-            )}
-          </Box>
-        ))}
+    <Box width="100%" bgcolor="background.paper">
+      <Box
+        width="100%"
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        bgcolor="background.default"
+        pt={5}
+        sx={{
+          borderBottom: (theme) => `1px solid ${theme.palette.border.light}`,
+        }}
+      >
+        <Container maxWidth="contentWrap">
+          <Typography variant="h2" component="h1" gutterBottom>
+            {title}
+          </Typography>
+          <TabList>
+            <Tabs onChange={handleChange} value={activeTab} aria-label={title}>
+              {filteredLinks.map(({ label, path }) => (
+                <StyledTab size="large" key={path} value={path} label={label} />
+              ))}
+            </Tabs>
+          </TabList>
+        </Container>
       </Box>
-
-      <Box sx={{ py: 4 }}>{children}</Box>
-    </Container>
+      <Container maxWidth="contentWrap">{children}</Container>
+    </Box>
   );
 };
 
