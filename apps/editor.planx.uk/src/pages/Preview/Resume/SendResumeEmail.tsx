@@ -19,8 +19,7 @@ export const EmailError: React.FC<{ retry: () => void }> = ({ retry }) => {
         We are having trouble sending emails at the moment.
         <br />
         <br />
-        We have saved your application. We will try to send the email again
-        later.
+        We have saved your progress. We will try to send the email again later.
       </Typography>
     </StatusPage>
   );
@@ -30,8 +29,8 @@ export const EmailSuccess: React.FC = () => {
   return (
     <StatusPage bannerHeading="Check your email">
       <Typography variant="body1">
-        If you have any draft applications we have sent you an email that
-        contains a link. Use this link to access your applications.
+        If you have any draft forms we have sent you an email that contains a
+        link. Use this link to access your forms.
         <br />
         <br />
         You may now close this tab.

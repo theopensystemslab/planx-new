@@ -27,7 +27,7 @@ export const fileUploadFlow = {
   },
   review: {
     data: {
-      title: "Check your answers before sending your application",
+      title: "Check your answers before sending your form",
     },
     type: 600,
   },
@@ -170,7 +170,7 @@ export const drawBoundaryFlow = {
   },
   ZNUl9Kr2ib: {
     data: {
-      title: "Check your answers before sending your application",
+      title: "Check your answers before sending your form",
     },
     type: 600,
   },

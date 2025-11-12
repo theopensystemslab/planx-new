@@ -160,8 +160,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
                 : undefined
             }
             inputProps={{
-              "aria-describedby":
-                "Invite someone else to pay for this application - full name",
+              "aria-describedby": "Invite someone else to pay - full name",
             }}
           />
         </InputLabel>
@@ -180,7 +179,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
             }
             inputProps={{
               "aria-describedby": [
-                "Invite someone else to pay for this application - email",
+                "Invite someone else to pay - email",
                 formik.touched.payeeEmail && formik.errors.payeeEmail
                   ? formik.errors.payeeEmail
                   : "",
@@ -226,8 +225,8 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
         <WarningContainer>
           <ErrorOutline />
           <Typography variant="body2" ml={2} fontWeight="bold">
-            Selecting "Send invitation to pay" locks your application and you'll
-            no longer be able to make changes.
+            Selecting "Send invitation to pay" locks your answers and you'll no
+            longer be able to make changes.
           </Typography>
         </WarningContainer>
         {isError ? (
@@ -252,7 +251,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
         onClick={changePage}
         disabled={Boolean(paymentStatus)}
       >
-        {"I want to pay for this application myself"}
+        {"I want to pay myself"}
       </Button>
     </>
   );

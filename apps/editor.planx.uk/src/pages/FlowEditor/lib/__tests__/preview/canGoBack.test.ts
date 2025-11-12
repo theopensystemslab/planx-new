@@ -41,14 +41,14 @@ const flow: Store.Flow = {
   Pay: {
     type: TYPES.Pay,
     data: {
-      title: "Pay for your application",
+      title: "Pay",
       fn: "fee",
     },
   },
   Confirmation: {
     type: TYPES.Confirmation,
     data: {
-      heading: "Application sent",
+      heading: "Form sent",
     },
   },
   Content: {

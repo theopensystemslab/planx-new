@@ -33,8 +33,8 @@ export const EmailRequired: React.FC<{
     <Box width="100%">
       <Card handleSubmit={formik.handleSubmit}>
         <CardHeader
-          title="Resume your application"
-          description="Enter your email to resume your application."
+          title="Resume your form"
+          description="Enter your email to resume your form."
         ></CardHeader>
         <InputRow>
           <InputLabel label={"Email address"} htmlFor={"email"}>

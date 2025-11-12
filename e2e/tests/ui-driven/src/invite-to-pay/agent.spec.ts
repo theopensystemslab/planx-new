@@ -51,13 +51,11 @@ test.describe("Agent journey @regression", async () => {
     const sessionId = await addSessionToContext(page, context);
 
     const toggleInviteToPayButton = page.getByRole("button", {
-      name: "Invite someone else to pay for this application",
+      name: "Invite someone else to pay",
     });
     await expect(toggleInviteToPayButton).toBeVisible();
     await toggleInviteToPayButton.click();
-    const inviteToPayFormHeader = page.getByText(
-      "Invite someone else to pay for this application",
-    );
+    const inviteToPayFormHeader = page.getByText("Invite someone else to pay");
     await expect(inviteToPayFormHeader).toBeVisible();
 
     await answerInviteToPayForm(page);
@@ -86,7 +84,7 @@ test.describe("Agent journey @regression", async () => {
     await navigateToPayComponent(page, context);
     await addSessionToContext(page, context);
     const toggleInviteToPayButton = page.getByRole("button", {
-      name: "Invite someone else to pay for this application",
+      name: "Invite someone else to pay",
     });
 
     await page.getByText("Pay now using GOV.UK Pay").click();
@@ -111,14 +109,14 @@ test.describe("Agent journey @regression", async () => {
     await secondPage.goto(resumeLink);
     await expect(
       secondPage.getByRole("heading", {
-        name: "Resume your application",
+        name: "Resume your form",
       }),
     ).toBeVisible();
     await secondPage.getByLabel("Email address").fill(context.user.email);
     await secondPage.getByTestId("continue-button").click();
 
     const errorHeader = secondPage.getByRole("heading", {
-      name: "Sorry, you can't make changes to this application",
+      name: "Sorry, you can't make changes to this form",
     });
 
     await expect(errorHeader).toBeVisible();
@@ -140,7 +138,7 @@ test.describe("Agent journey @regression", async () => {
     await secondPage.goto(resumeLink);
     await expect(
       secondPage.getByRole("heading", {
-        name: "Resume your application",
+        name: "Resume your form",
       }),
     ).toBeVisible();
     await secondPage.getByLabel("Email address").fill(context.user.email);
@@ -148,14 +146,14 @@ test.describe("Agent journey @regression", async () => {
 
     // Reconciliation ignored
     const reconciliationText = secondPage.getByText(
-      "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
+      "This service has been updated since you last saved your progress. We will ask you to answer any updated questions again when you continue.",
     );
     await expect(reconciliationText).toBeHidden();
 
     // Locked application message displayed
     await expect(
       secondPage.getByRole("heading", {
-        name: "Sorry, you can't make changes to this application",
+        name: "Sorry, you can't make changes to this form",
       }),
     ).toBeVisible();
     await expect(secondPage.getByTestId("continue-button")).toBeHidden();
@@ -246,10 +244,10 @@ const parallelITPJourneys = async ({
 
   // Land back on pay component
   const tab1ToggleITPButton = tab1.getByRole("button", {
-    name: "Invite someone else to pay for this application",
+    name: "Invite someone else to pay",
   });
   const tab2ToggleITPButton = tab2.getByRole("button", {
-    name: "Invite someone else to pay for this application",
+    name: "Invite someone else to pay",
   });
   await expect(tab1ToggleITPButton).toBeVisible();
   await expect(tab2ToggleITPButton).toBeVisible();

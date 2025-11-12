@@ -20,7 +20,7 @@ export const mockDraftParent: FlowGraph = {
   },
   IgXmnffRPH: {
     data: {
-      title: "Check your answers before sending your application",
+      title: "Check your answers before sending your form",
     },
     type: 600,
   },
@@ -73,7 +73,7 @@ export const mockPublishedParent: FlowGraph = {
   },
   IgXmnffRPH: {
     data: {
-      title: "Check your answers before sending your application",
+      title: "Check your answers before sending your form",
     },
     type: 600,
   },

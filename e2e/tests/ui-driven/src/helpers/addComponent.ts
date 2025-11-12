@@ -84,7 +84,7 @@ const createBaseComponent = async (
     case ComponentType.Review:
       // Don't need to change anything so dummy click
       await page
-        .getByPlaceholder("Check your answers before sending your application")
+        .getByPlaceholder("Check your answers before sending your form")
         .click();
       break;
     case ComponentType.FindProperty:

@@ -213,10 +213,10 @@ function Component(props: Props) {
           </Typography>
           <Typography variant="body2" ml={2}>
             Since we cannot automatically check constraints, you might be asked
-            additional questions about your project.
+            additional questions.
           </Typography>
           <Typography variant="body2" ml={2} mt={0.5}>
-            Click continue to proceed with your application.
+            Click continue to proceed with your form.
           </Typography>
         </ErrorSummaryContainer>
       </Card>

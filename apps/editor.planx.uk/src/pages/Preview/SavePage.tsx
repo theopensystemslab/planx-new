@@ -14,9 +14,9 @@ export const SaveSuccess: React.FC<{
   expiryDate?: string;
 }> = ({ saveToEmail, expiryDate }) => (
   <StatusPage
-    bannerHeading="Application saved"
+    bannerHeading="Form saved"
     showDownloadLink
-    buttonText="Start a new application"
+    buttonText="Start a new form"
     onButtonClick={removeSessionIdSearchParam}
   >
     <Stack spacing={1}>
@@ -34,9 +34,9 @@ export const SaveSuccess: React.FC<{
         {saveToEmail}.
       </Typography>
       <Typography variant="body2">
-        Use the link to continue your application. You have until {expiryDate}{" "}
-        to complete this application. Your application will be deleted if you do
-        not complete it by this date.
+        Use the link to continue your form. You have until {expiryDate} to
+        complete it. Your form will be deleted if you do not complete it by this
+        date.
       </Typography>
       <Typography variant="body2">You may now close this tab.</Typography>
     </Stack>
@@ -50,8 +50,7 @@ export const SaveError: React.FC = () => {
         We are having trouble sending emails at the moment.
         <br />
         <br />
-        We have saved your application. We will try to send the email again
-        later.
+        We have saved your progress. We will try to send the email again later.
       </Typography>
     </StatusPage>
   );

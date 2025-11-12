@@ -71,16 +71,16 @@ const flow: FlowGraph = {
   },
   zYQ1QCkElN: {
     data: {
-      title: "Pay for your application",
-      bannerTitle: "The planning fee for this application is",
+      title: "Pay",
+      bannerTitle: "The fee is",
       description:
-        '<p>The planning fee covers the cost of processing your application.         Find out more about how planning fees are calculated          <a href="https://www.gov.uk/guidance/fees-for-planning-applications" target="_self">here</a>.</p>',
+        '<p>The fee covers the cost of processing your form.         Find out more about how planning fees are calculated          <a href="https://www.gov.uk/guidance/fees-for-planning-applications" target="_self">here</a>.</p>',
       fn: "application.fee.payable",
       instructionsTitle: "How to pay",
       instructionsDescription:
-        "<p>You can pay for your application by using GOV.UK Pay.</p>         <p>Your application will be sent after you have paid the fee.          Wait until you see an application sent message before closing your browser.</p>",
+        "<p>You can pay by using GOV.UK Pay.</p>         <p>Your form will be sent after you have paid the fee.          Wait until you see a form sent message before closing your browser.</p>",
       allowInviteToPay: true,
-      secondaryPageTitle: "Invite someone else to pay for this application",
+      secondaryPageTitle: "Invite someone else to pay",
       nomineeTitle: "Details of the person paying",
       yourDetailsTitle: "Your details",
       yourDetailsLabel: "Your name or organisation name",
