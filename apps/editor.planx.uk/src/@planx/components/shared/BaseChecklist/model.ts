@@ -1,15 +1,17 @@
-import { ChecklistWithOptions } from "@planx/components/Checklist/model";
-import { ConditionalOption, Option } from "@planx/components/Option/model";
-import { ResponsiveChecklistWithOptions } from "@planx/components/ResponsiveChecklist/model";
+import { ComponentType } from "@opensystemslab/planx-core/types";
+import { type Checklist,ChecklistWithOptions } from "@planx/components/Checklist/model";
+import { type AnyOption,ConditionalOption, Option } from "@planx/components/Option/model";
+import { type ResponsiveChecklist,ResponsiveChecklistWithOptions } from "@planx/components/ResponsiveChecklist/model";
 import { richText } from "lib/yupExtensions";
 import { partition } from "lodash";
-import { array, number, object, string } from "yup";
+import { array, number, object, string, type TestConfig } from "yup";
 
 import {
   BaseNodeData,
   baseNodeDataValidationSchema,
   parseBaseNodeData,
 } from "..";
+import type { Child } from "../types";
 
 export enum ChecklistLayout {
   Basic,
@@ -65,22 +67,6 @@ export const parseBaseChecklist = (
   categories: data?.categories || [],
   ...parseBaseNodeData(data),
 });
-
-export const baseChecklistValidationSchema =
-  baseNodeDataValidationSchema.concat(
-    object({
-      description: richText(),
-      fn: string(),
-      text: string(),
-      img: string(),
-      categories: array(
-        object({
-          title: string().trim().required(),
-          count: number().required(),
-        }),
-      ),
-    }),
-  );
 
 export const toggleExpandableChecklist = <
   T extends ChecklistWithOptions | ResponsiveChecklistWithOptions,
@@ -159,3 +145,154 @@ export const getLayout = ({
 
   return ChecklistLayout.Basic;
 };
+
+export const generatePayload = ({ options, groupedOptions, ...values }: AnyChecklist): {
+  children: Child[], data: Checklist | ResponsiveChecklist
+} => {
+  const sourceOptions: AnyOption[] | undefined = options?.length
+    ? options
+    : groupedOptions?.flatMap((group) => group.children);
+
+  const filteredOptions = (sourceOptions || []).filter(
+    (option) => option.data.text,
+  );
+
+  const children: Child[] = filteredOptions.map((option) => ({
+    ...option,
+    id: option.id || undefined,
+    type: ComponentType.Answer as const,
+  }));
+
+  const categories: Category[] | undefined = groupedOptions?.map((group) => ({
+    title: group.title,
+    count: group.children.length,
+  }));
+
+  const data = {
+    ...values,
+    ...(groupedOptions && { categories })
+  };
+
+  return { data, children }
+}
+
+const onlyOneExclusiveOptionTest: TestConfig<ChecklistWithOptions> = {
+  name: "onlyOneExclusiveOption",
+  test: function ({ options }) {
+    const exclusiveOptions = options?.filter(({ data }) => data.exclusive);
+    if (!exclusiveOptions?.length) return true;
+    if (exclusiveOptions.length === 1) return true;
+    return this.createError({
+      path: "options",
+      message: "There should be a maximum of one exclusive option configured",
+    });
+  },
+};
+
+const atLeastOneDataFieldTest: TestConfig<AnyChecklist> = {
+  name: "atLeastOneDataField",
+  test: function ({
+    fn,
+    options = [],
+    groupedOptions = [],
+  }) {
+    if (!fn) return true;
+    const allOptions = [
+      ...options,
+      ...groupedOptions.flatMap((group) => group.children),
+    ];
+    if (!allOptions) return true;
+    const optionsWithDataValues = allOptions?.filter(
+      (option) => option?.data.val,
+    );
+    if (optionsWithDataValues?.length) return true;
+    return this.createError({
+      path: "fn",
+      message: "At least one option must also set a data field",
+    });
+  },
+};
+
+const uniqueLabelsTest: TestConfig<AnyChecklist> = {
+  name: "uniqueLabels",
+  test: function ({ options }) {
+    if (!options) return true;
+    const uniqueLabels = new Set(options.map(({ data: { text } }) => text));
+    const allUnique = uniqueLabels.size === options.length;
+    if (allUnique) return true;
+    return this.createError({
+      path: "options",
+      message: "Options must have unique labels",
+    });
+  },
+};
+
+const uniqueLabelsWithinGroupsTest: TestConfig<AnyChecklist> = {
+  name: "uniqueLabelsWithinGroups",
+  test: function ({ groupedOptions }) {
+    if (!groupedOptions) return true;
+
+    for (const group of groupedOptions) {
+      if (!group.children) continue;
+
+      const uniqueLabels = new Set(
+        group.children.map(({ data: { text } }) => text),
+      );
+      const allUnique = uniqueLabels.size === group.children.length;
+
+      if (!allUnique) {
+        return this.createError({
+          path: "options",
+          message: "Options within a single group must have unique labels",
+        });
+      }
+    }
+
+    return true;
+  }
+}
+
+const uniqueGroupTitlesTest: TestConfig<AnyChecklist> = {
+  name: "uniqueGroupTitles",
+  test: function ({ groupedOptions }) {
+    if (!groupedOptions) return true;
+
+    const uniqueGroupTitles = new Set(
+      groupedOptions.map(({ title }) => title),
+    );
+
+    const allUnique = uniqueGroupTitles.size === groupedOptions.length;
+
+    if (!allUnique) {
+      return this.createError({
+        path: "options",
+        message: "Groups must have unique titles",
+      });
+    }
+
+    return true;
+  }
+};
+
+export const baseChecklistValidationSchema =
+  baseNodeDataValidationSchema.concat(
+    object({
+      description: richText(),
+      fn: string(),
+      text: string(),
+      img: string(),
+      categories: array(
+        object({
+          title: string().trim().required(),
+          count: number().required(),
+        }),
+      ),
+    })
+    // Shared BaseChecklist tests
+    // Casting is required for Yup, tests themselves are correctly typed
+    .test(onlyOneExclusiveOptionTest as TestConfig<unknown>)
+    .test(atLeastOneDataFieldTest as TestConfig<unknown>)
+    .test(uniqueLabelsTest as TestConfig<unknown>)
+    .test(uniqueLabelsWithinGroupsTest as TestConfig<unknown>)
+    .test(uniqueGroupTitlesTest as TestConfig<unknown>)
+)
