@@ -151,7 +151,7 @@ describe("options", () => {
       );
 
       // No responses displayed
-      expect(result.current.conditionalOptions).toHaveLength(0);
+      expect(result.current.conditionalOptions).toBeUndefined();
       expect(loggerSpy).toHaveBeenCalled();
     });
   });
@@ -372,7 +372,7 @@ describe("grouped options", () => {
       );
 
       // No responses displayed
-      expect(result.current.groupedConditionalOptions).toHaveLength(0);
+      expect(result.current.groupedConditionalOptions).toBeUndefined();
       expect(loggerSpy).toHaveBeenCalled();
     });
   });
