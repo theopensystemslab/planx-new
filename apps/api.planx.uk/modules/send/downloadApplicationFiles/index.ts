@@ -1,10 +1,11 @@
 import type { NextFunction, Request, Response } from "express";
 import { buildSubmissionExportZip } from "../utils/exportZip.js";
-import { getSessionData, getTeamEmailSettings } from "../email/service.js";
+import { getFlowId, getSessionData, getTeamEmailSettings, getFlowSubmissionEmail } from "../email/service.js";
+import type { UUID } from "node:crypto";
 
 export async function downloadApplicationFiles(
   req: Request<
-    { sessionId?: string },
+    { sessionId?: UUID },
     unknown,
     unknown,
     { email?: string; localAuthority?: string }
@@ -40,6 +41,13 @@ export async function downloadApplicationFiles(
         message: "Failed to find session data for this sessionId",
       });
     }
+
+    // Get flow ID, in order to access flow submission email
+    const flowId = await getFlowId(sessionId);
+
+    // Get the flow submission email, which will run parallel to getTeamEmailSettings for now
+    const submissionEmail = await getFlowSubmissionEmail(flowId);
+    console.log(submissionEmail)
 
     // create the submission zip
     const zip = await buildSubmissionExportZip({

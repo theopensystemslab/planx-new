@@ -5,6 +5,7 @@ import type {
   TeamContactSettings,
 } from "@opensystemslab/planx-core/types";
 import type { TemplateRegistry } from "../../../lib/notify/templates/index.js";
+import type { UUID } from "node:crypto";
 
 interface GetTeamEmailSettings {
   teams: {
@@ -33,6 +34,56 @@ export async function getTeamEmailSettings(localAuthority: string) {
   );
 
   return response?.teams[0];
+}
+
+interface GetFlowId {
+  lowcal_sessions: {
+    flow_id: UUID;
+  }[];
+}
+
+export async function getFlowId(sessionId: UUID) {
+  const response = await $api.client.request<GetFlowId>(
+    gql`
+      query GetFlowId($session_id: uuid!) {
+        lowcal_sessions(where: {id: {_eq: $session_id}}) {
+          flow_id
+        }
+      }
+    `,
+    {
+      session_id: sessionId,
+    },
+  )
+  return response?.lowcal_sessions[0].flow_id;
+}
+
+interface GetFlowSubmissionEmail {
+  flow_integrations: {
+    email_id: UUID;
+    submission_integration: {
+      submission_email: string;
+    };
+  }[];
+}
+
+export async function getFlowSubmissionEmail(flowId: UUID) {
+  const response = await $api.client.request<GetFlowSubmissionEmail>(
+    gql`
+    query GetFlowSubmissionEmail($flowId: uuid!) {
+      flow_integrations(where: {flow_id: { _eq: $flowId }}) {
+        email_id
+        submission_integration {
+          submission_email
+        }
+      }
+    }`,
+    {
+      flowId,
+    },
+  );
+
+  return response?.flow_integrations[0]?.submission_integration
 }
 
 interface GetSessionData {
