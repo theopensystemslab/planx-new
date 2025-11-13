@@ -128,7 +128,7 @@ const presentationalComponents: {
   [TYPES.PlanningConstraints]: PlanningConstraints,
   [TYPES.PropertyInformation]: PropertyInformation,
   [TYPES.Answer]: Debug,
-  [TYPES.ResponsiveChecklist]: undefined,
+  [TYPES.ResponsiveChecklist]: Checklist,
   [TYPES.ResponsiveQuestion]: Question,
   [TYPES.Result]: undefined,
   [TYPES.Review]: undefined,
