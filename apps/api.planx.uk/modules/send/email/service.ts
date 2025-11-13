@@ -46,7 +46,7 @@ export async function getFlowId(sessionId: UUID) {
   const response = await $api.client.request<GetFlowId>(
     gql`
       query GetFlowId($session_id: uuid!) {
-        lowcal_sessions(where: {id: {_eq: $session_id}}) {
+        lowcal_sessions(where: { id: { _eq: $session_id } }) {
           flow_id
         }
       }
@@ -54,7 +54,7 @@ export async function getFlowId(sessionId: UUID) {
     {
       session_id: sessionId,
     },
-  )
+  );
   return response?.lowcal_sessions[0].flow_id;
 }
 
@@ -70,20 +70,21 @@ interface GetFlowSubmissionEmail {
 export async function getFlowSubmissionEmail(flowId: UUID) {
   const response = await $api.client.request<GetFlowSubmissionEmail>(
     gql`
-    query GetFlowSubmissionEmail($flowId: uuid!) {
-      flow_integrations(where: {flow_id: { _eq: $flowId }}) {
-        email_id
-        submission_integration {
-          submission_email
+      query GetFlowSubmissionEmail($flowId: uuid!) {
+        flow_integrations(where: { flow_id: { _eq: $flowId } }) {
+          email_id
+          submission_integration {
+            submission_email
+          }
         }
       }
-    }`,
+    `,
     {
       flowId,
     },
   );
 
-  return response?.flow_integrations[0]?.submission_integration
+  return response?.flow_integrations[0]?.submission_integration;
 }
 
 interface GetSessionData {

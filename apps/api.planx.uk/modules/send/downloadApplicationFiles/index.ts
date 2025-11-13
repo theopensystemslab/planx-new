@@ -1,6 +1,11 @@
 import type { NextFunction, Request, Response } from "express";
 import { buildSubmissionExportZip } from "../utils/exportZip.js";
-import { getFlowId, getSessionData, getTeamEmailSettings, getFlowSubmissionEmail } from "../email/service.js";
+import {
+  getFlowId,
+  getSessionData,
+  getTeamEmailSettings,
+  getFlowSubmissionEmail,
+} from "../email/service.js";
 import type { UUID } from "node:crypto";
 
 export async function downloadApplicationFiles(
@@ -47,7 +52,7 @@ export async function downloadApplicationFiles(
 
     // Get the flow submission email, which will run parallel to getTeamEmailSettings for now
     const submissionEmail = await getFlowSubmissionEmail(flowId);
-    console.log(submissionEmail)
+    console.log(submissionEmail);
 
     // create the submission zip
     const zip = await buildSubmissionExportZip({
