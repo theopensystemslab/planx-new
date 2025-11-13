@@ -26,8 +26,8 @@ vi.mock("lib/featureFlags", () => ({
   hasFeatureFlag: vi.fn().mockResolvedValue(true),
 }));
 
-const resumeButtonText = "Resume an application you have already started";
-const saveButtonText = "Save and return to this application later";
+const resumeButtonText = "Resume a form you have already started";
+const saveButtonText = "Save and return to this form later";
 
 const flowWithUndefinedFee: Store.Flow = {
   _root: {
