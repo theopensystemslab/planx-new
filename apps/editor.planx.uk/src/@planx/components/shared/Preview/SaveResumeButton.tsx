@@ -26,8 +26,8 @@ const SaveResumeButton: React.FC = () => {
     <Link component="button" onClick={handleClick}>
       <Typography variant="body1" textAlign="left">
         {saveToEmail
-          ? "Save and return to this application later"
-          : "Resume an application you have already started"}
+          ? "Save and return to this form later"
+          : "Resume a form you have already started"}
       </Typography>
     </Link>
   );

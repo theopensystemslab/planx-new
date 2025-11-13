@@ -6,12 +6,12 @@ export const OfflinePage: React.FC = () => (
   <StatusPage bannerHeading="Service offline">
     <Typography variant="body1">
       <p>
-        This service is not currently available to new applicants. Please check
-        back later.
+        This service is not currently available to new users. Please check back
+        later.
       </p>
       <p>
-        If you're resuming an application you previously started, please use the
-        link sent to you via email.
+        If you're resuming a form you previously started, please use the link
+        sent to you via email.
       </p>
     </Typography>
   </StatusPage>
