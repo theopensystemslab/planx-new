@@ -287,7 +287,7 @@ export const baseChecklistValidationSchema =
   baseNodeDataValidationSchema.concat(
     object({
       description: richText(),
-      fn: string(),
+      fn: string().nullable(),
       text: string(),
       img: string(),
       categories: array(
