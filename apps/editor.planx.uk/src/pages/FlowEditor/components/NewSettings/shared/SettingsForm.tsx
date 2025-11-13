@@ -22,12 +22,17 @@ interface SettingsFormContainerProps<
   /** Extract the initial values from query data */
   getInitialValues: (data: TData) => TFormValues;
   /** Transform form values to mutation variables */
-  getMutationVariables: (values: TFormValues) => TVariables;
+  getMutationVariables: (
+    values: TFormValues,
+  ) => TVariables | Promise<TVariables>;
   validationSchema: SchemaOf<TFormValues>;
   legend: string;
   description: React.ReactNode;
   /** Optional success handler for side-effects (e.g. Slack messages, store updates) */
-  onSuccess?: (values: TFormValues, data: TData | undefined) => void;
+  onSuccess?: (
+    formik: ReturnType<typeof useFormik<TFormValues>>,
+    data: TData | undefined,
+  ) => void;
   successMessage?: string;
   preview?: (
     formik: ReturnType<typeof useFormik<TFormValues>>,
@@ -78,7 +83,7 @@ const SettingsFormContainer = <
   >(mutation, {
     onCompleted: () => {
       toast.success(successMessage);
-      onSuccess && onSuccess(formik.values, data);
+      onSuccess && onSuccess(formik, data);
     },
     onError: (error) => {
       console.error("Settings update error:", error);
@@ -95,10 +100,14 @@ const SettingsFormContainer = <
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async (values, { resetForm }) => {
-      const variables = getMutationVariables(values);
-      await updateSettings({ variables });
-      // Reset dirty state after successful save
-      resetForm({ values });
+      try {
+        const variables = await getMutationVariables(values);
+        await updateSettings({ variables });
+        resetForm({ values });
+      } catch (error) {
+        console.error("Settings update error:", error);
+        toast.error("Failed to update settings");
+      }
     },
   });
 

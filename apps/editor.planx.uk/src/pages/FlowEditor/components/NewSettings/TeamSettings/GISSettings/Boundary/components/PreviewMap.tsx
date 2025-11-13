@@ -1,6 +1,6 @@
 import { visuallyHidden } from "@mui/utils";
 import type { GeoJsonObject } from "geojson";
-import React from "react";
+import React, { Fragment } from "react";
 
 export const PreviewMap: React.FC<{ geojsonData?: GeoJsonObject }> = ({
   geojsonData,
@@ -8,7 +8,7 @@ export const PreviewMap: React.FC<{ geojsonData?: GeoJsonObject }> = ({
   if (!geojsonData) return;
 
   return (
-    <>
+    <Fragment key={JSON.stringify(geojsonData)}>
       <p style={visuallyHidden}>
         A static map displaying your team's boundary.
       </p>
@@ -29,6 +29,6 @@ export const PreviewMap: React.FC<{ geojsonData?: GeoJsonObject }> = ({
         osCopyright={`© Crown copyright and database rights ${new Date().getFullYear()} OS AC0000812160`}
         collapseAttributions
       />
-    </>
+    </Fragment>
   );
 };

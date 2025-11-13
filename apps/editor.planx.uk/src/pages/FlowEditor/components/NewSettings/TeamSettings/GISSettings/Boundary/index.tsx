@@ -1,3 +1,5 @@
+import { convertToBoundingBox } from "lib/gis";
+import { getEntity } from "lib/planningData/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import InputLabel from "ui/editor/InputLabel";
@@ -36,13 +38,23 @@ const Boundary: React.FC = () => {
         boundaryBBox: team.settings.boundaryBBox || undefined,
       })}
       queryVariables={{ slug: teamSlug }}
-      getMutationVariables={(values) => ({
-        teamId,
-        settings: {
-          boundary_url: values.boundaryUrl,
-          boundary_bbox: values.boundaryBBox,
-        },
-      })}
+      getMutationVariables={async (values) => {
+        const entityId = values.boundaryUrl.split("/").at(-1)!;
+        const entity = await getEntity(entityId);
+        const boundaryBBox = convertToBoundingBox(entity);
+
+        return {
+          teamId,
+          settings: {
+            boundary_url: values.boundaryUrl,
+            boundary_bbox: boundaryBBox,
+          },
+        };
+      }}
+      onSuccess={({ setFieldValue }, data) => {
+        const boundaryBBox = data?.teams[0].settings.boundaryBBox;
+        setFieldValue("boundaryBBox", boundaryBBox);
+      }}
     >
       {({ formik }) => (
         <>
