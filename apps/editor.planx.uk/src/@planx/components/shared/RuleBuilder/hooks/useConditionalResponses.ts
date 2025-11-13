@@ -1,8 +1,8 @@
-import type { Group } from "@planx/components/Checklist/model";
 import { ConditionalOption } from "@planx/components/Option/model";
 import { logger } from "airbrake";
 import { useStore } from "pages/FlowEditor/lib/store";
 
+import type { Group } from "../../BaseChecklist/model";
 import { isRuleMet } from "../utils";
 
 /**
