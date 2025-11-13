@@ -49,7 +49,10 @@ import type { PropertyInformation } from "@planx/components/PropertyInformation/
 import PropertyInformationComponent from "@planx/components/PropertyInformation/Public";
 import type { Question } from "@planx/components/Question/model";
 import QuestionComponent from "@planx/components/Question/Public";
-import type { ResponsiveChecklist } from "@planx/components/ResponsiveChecklist/model";
+import type {
+  ResponsiveChecklist,
+  ResponsiveChecklistWithOptions,
+} from "@planx/components/ResponsiveChecklist/model";
 import ResponsiveChecklistComponent from "@planx/components/ResponsiveChecklist/Public";
 import type { ResponsiveQuestion } from "@planx/components/ResponsiveQuestion/model";
 import ResponsiveQuestionComponent from "@planx/components/ResponsiveQuestion/Public";
@@ -272,17 +275,42 @@ const Node: React.FC<Props> = (props) => {
       );
     }
 
-    case TYPES.ResponsiveChecklist:
-      if (!hasFeatureFlag("RESPONSIVE_QUESTIONS_CHECKLISTS")) return null;
+    case TYPES.ResponsiveChecklist: {
+      const baseProps = getComponentProps<ResponsiveChecklist>();
+      const childNodes = childNodesOf(nodeId) as ConditionalOption[];
+      const groupedOptions = !baseProps.categories
+        ? undefined
+        : mapAccum(
+            (index: number, category: { title: string; count: number }) => [
+              index + category.count,
+              {
+                title: category.title,
+                children:
+                  childNodes?.slice(index, index + category.count) || [],
+              },
+            ],
+            0,
+            baseProps.categories,
+          )[1];
 
-      return (
-        <ResponsiveChecklistComponent
-          {...getComponentProps<ResponsiveChecklist>()}
-        />
-      );
+      // Type narrow to either FlatChecklist or GroupedChecklist
+      const props: ResponsiveChecklistWithOptions = baseProps.categories
+        ? {
+            ...baseProps,
+            groupedOptions: groupedOptions!,
+            options: undefined,
+          }
+        : {
+            ...baseProps,
+            options: childNodes,
+            groupedOptions: undefined,
+          };
+
+      return <ResponsiveChecklistComponent {...props} />;
+    }
 
     case TYPES.ResponsiveQuestion: {
-      const props = getComponentProps<ResponsiveChecklist>();
+      const props = getComponentProps<ResponsiveQuestion>();
       const options = childNodesOf(nodeId) as ConditionalOption[];
 
       return <ResponsiveQuestionComponent {...props} options={options} />;
