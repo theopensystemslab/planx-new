@@ -1,11 +1,13 @@
 import { Store } from "pages/FlowEditor/lib/store";
 
-import { Condition, ConditionalRule, Operator, Rule } from "./types";
+import { Condition, Rule } from "./types";
 
-export const isRuleMet = (
-  passport: Store.Passport,
-  rule: ConditionalRule<Condition.RequiredIf | Condition.RecommendedIf>,
-): boolean => {
+export const isRuleMet = (passport: Store.Passport, rule: Rule): boolean => {
+  // Simple (non-conditional) rules always evaluate to true
+  if (rule.condition === Condition.AlwaysRequired) return true;
+  if (rule.condition === Condition.AlwaysRecommended) return true;
+  if (rule.condition === Condition.NotRequired) return true;
+
   const passportVal = passport.data?.[rule.fn];
   if (!passportVal) return false;
 
@@ -22,19 +24,10 @@ export const isRuleMet = (
 export const checkIfConditionalRule = (condition: Condition) =>
   [Condition.RecommendedIf, Condition.RequiredIf].includes(condition);
 
-export const formatRule = (
-  newCondition: Condition,
-  { fn, val }: Rule,
-): Rule => {
+export const formatRule = (newCondition: Condition, rule: Rule): Rule => {
   const isConditionalRule = checkIfConditionalRule(newCondition);
+  if (isConditionalRule) return { ...rule, condition: newCondition } as Rule;
 
   // Drop fields which are only required for ConditionalRules
-  const updatedRule = {
-    condition: newCondition,
-    operator: isConditionalRule ? Operator.Equals : undefined,
-    fn: isConditionalRule ? fn : undefined,
-    val: isConditionalRule ? val : undefined,
-  } as Rule;
-
-  return updatedRule;
+  return { condition: newCondition } as Rule;
 };
