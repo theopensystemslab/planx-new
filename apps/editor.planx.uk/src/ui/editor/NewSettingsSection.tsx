@@ -5,30 +5,24 @@ import ErrorFallback from "components/Error/ErrorFallback";
 import React, { ReactNode } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
-const Root = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "background",
-})<BoxProps & { background?: boolean }>(({ background, theme }) => ({
+const Root = styled(Box)(({ theme }) => ({
   display: "block",
   width: "100%",
-  marginTop: theme.spacing(2),
-  paddingBottom: theme.spacing(1),
+  padding: theme.spacing(6, 0),
   position: "relative",
-  zIndex: 1,
+  overflow: "hidden",
+  background: theme.palette.background.paper,
+  borderTop: `1px solid ${theme.palette.border.main}`,
   "&:first-of-type": {
-    marginTop: 0,
+    paddingTop: 0,
+    borderTop: 0,
   },
   "& > * + *, & > form > * + *": {
     ...contentFlowSpacing(theme),
   },
-  ...(background && {
-    background: theme.palette.background.paper,
-    marginTop: theme.spacing(2),
-    padding: theme.spacing(2.5),
-    border: `1px solid ${theme.palette.border.light}`,
-  }),
 }));
 
-export default function SettingsSection(
+export default function NewSettingsSection(
   props: { children: ReactNode; background?: boolean } & Partial<BoxProps>,
 ) {
   return (

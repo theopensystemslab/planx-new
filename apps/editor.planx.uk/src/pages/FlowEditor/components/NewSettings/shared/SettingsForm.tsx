@@ -7,8 +7,8 @@ import { type FormikValues, useFormik } from "formik";
 import { useToast } from "hooks/useToast";
 import React from "react";
 import InputLegend from "ui/editor/InputLegend";
+import NewSettingsSection from "ui/editor/NewSettingsSection";
 import SettingsDescription from "ui/editor/SettingsDescription";
-import SettingsSection from "ui/editor/SettingsSection";
 import type { SchemaOf } from "yup";
 
 interface SettingsFormContainerProps<
@@ -104,22 +104,22 @@ const SettingsFormContainer = <
 
   if (error) {
     return (
-      <SettingsSection background>
+      <NewSettingsSection>
         <p>Error loading settings: {error.message}</p>
-      </SettingsSection>
+      </NewSettingsSection>
     );
   }
 
   if (loading && !data) {
     return (
-      <SettingsSection background>
+      <NewSettingsSection>
         <p>Loading...</p>
-      </SettingsSection>
+      </NewSettingsSection>
     );
   }
 
   return (
-    <SettingsSection>
+    <NewSettingsSection>
       <Box component="form" onSubmit={formik.handleSubmit}>
         <Grid container spacing={4}>
           <Grid item xs={12} md={4}>
@@ -160,7 +160,7 @@ const SettingsFormContainer = <
           </Grid>
         </Grid>
       </Box>
-    </SettingsSection>
+    </NewSettingsSection>
   );
 };
 
