@@ -5,9 +5,9 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import {
+  ComponentType as TYPES,
   GISResponse,
   NodeId,
-  ComponentType as TYPES,
 } from "@opensystemslab/planx-core/types";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
@@ -127,7 +127,7 @@ const presentationalComponents: {
   [TYPES.PlanningConstraints]: PlanningConstraints,
   [TYPES.PropertyInformation]: PropertyInformation,
   [TYPES.Answer]: Debug,
-  [TYPES.ResponsiveChecklist]: undefined,
+  [TYPES.ResponsiveChecklist]: Checklist,
   [TYPES.ResponsiveQuestion]: Question,
   [TYPES.Result]: undefined,
   [TYPES.Review]: undefined,
@@ -318,8 +318,10 @@ function SummaryList(props: SummaryListProps) {
                       {(node.type === TYPES.FindProperty && FIND_PROPERTY_DT) ||
                         (node.type === TYPES.DrawBoundary &&
                           DRAW_BOUNDARY_DT) ||
-                        (node.type === TYPES.PropertyInformation && PROPERTY_INFORMATION_DT) ||
-                        (node.type === TYPES.PlanningConstraints && PLANNING_CONSTRAINTS_DT) ||
+                        (node.type === TYPES.PropertyInformation &&
+                          PROPERTY_INFORMATION_DT) ||
+                        (node.type === TYPES.PlanningConstraints &&
+                          PLANNING_CONSTRAINTS_DT) ||
                         node.data?.title ||
                         node.data?.text ||
                         "this answer"}
@@ -363,7 +365,9 @@ function PropertyInformation(props: ComponentProps) {
     <>
       <Box component="dt">{PROPERTY_INFORMATION_DT}</Box>
       <Box component="dd">
-        {find(blpuCodes?.blpu_codes, { value: propertyTypeVal })?.description || propertyTypeVal || "Unknown"}
+        {find(blpuCodes?.blpu_codes, { value: propertyTypeVal })?.description ||
+          propertyTypeVal ||
+          "Unknown"}
       </Box>
     </>
   );
@@ -377,7 +381,8 @@ function PlanningConstraints(props: ComponentProps) {
     return undefined;
   }
 
-  const applicableConstraints = props.passport.data?.["property.constraints.planning"];
+  const applicableConstraints =
+    props.passport.data?.["property.constraints.planning"];
   if (!applicableConstraints?.length) {
     return (
       <>
@@ -391,8 +396,10 @@ function PlanningConstraints(props: ComponentProps) {
   (applicableConstraints as string[]).forEach((fn) => {
     fetchedConstraints.forEach((constraintSource: GISResponse) => {
       // `hasOwnProperty(fn)` will naturally omit/de-duplicate "granular" constraints to their parent
-      if (constraintSource["metadata"].hasOwnProperty(fn)) {
-        formattedApplicableConstraints.push(constraintSource.metadata[fn]["plural"]);
+      if (fn in constraintSource["metadata"]) {
+        formattedApplicableConstraints.push(
+          constraintSource.metadata[fn]["plural"],
+        );
       }
     });
   });
@@ -578,8 +585,9 @@ function DrawBoundary(props: ComponentProps) {
               geojsonColor="#ff0000"
               geojsonFill
               geojsonBuffer={20}
-              osProxyEndpoint={`${import.meta.env.VITE_APP_API_URL
-                }/proxy/ordnance-survey`}
+              osProxyEndpoint={`${
+                import.meta.env.VITE_APP_API_URL
+              }/proxy/ordnance-survey`}
               hideResetControl
               staticMode
               style={{ width: "100%", height: "30vh" }}
@@ -601,8 +609,9 @@ function NumberInput(props: ComponentProps) {
   return (
     <>
       <Box component="dt">{props.node.data.title}</Box>
-      <Box component="dd">{`${getAnswersByNode(props)} ${props.node.data.units ?? ""
-        }`}</Box>
+      <Box component="dd">{`${getAnswersByNode(props)} ${
+        props.node.data.units ?? ""
+      }`}</Box>
     </>
   );
 }
@@ -675,8 +684,8 @@ function FileUploadAndLabel(props: ComponentProps) {
         <ul>
           {uniqueFilenames.length
             ? uniqueFilenames.map((filename, index) => (
-              <li key={index}>{filename}</li>
-            ))
+                <li key={index}>{filename}</li>
+              ))
             : "No files uploaded"}
         </ul>
       </Box>
@@ -733,7 +742,7 @@ function getAnswers(props: ComponentProps): string[] {
   try {
     const array = props!.userData!.answers!;
     if (Array.isArray(array)) return array;
-  } catch (err) { }
+  } catch (err) {}
   return [];
 }
 
@@ -746,6 +755,6 @@ function getAnswersByNode(props: ComponentProps): any {
   try {
     const variableName: string = props.node!.data!.fn!;
     return props.userData?.data![variableName || props.nodeId];
-  } catch (err) { }
+  } catch (err) {}
   return "";
 }
