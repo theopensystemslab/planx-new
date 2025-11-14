@@ -48,7 +48,7 @@ export const TeamContactSettings: React.FC = () => {
           information. Gov UK Notify templates apply to all submission services.
         </>
       }
-      onSuccess={(values, data) => {
+      onSuccess={({ values }, data) => {
         const oldEmail = data?.teams[0].settings.helpEmail;
         const hasEmailUpdated = oldEmail && values.helpEmail !== oldEmail;
         if (hasEmailUpdated) {
