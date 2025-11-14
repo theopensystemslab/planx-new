@@ -9,7 +9,12 @@ export type Props = PublicProps<ResponsiveQuestionWithOptions>;
 
 const ResponsiveQuestion = (props: Props) => {
   const { conditionalOptions } = useConditionalOptions(props.options);
-  if (!conditionalOptions) return null;
+
+  // Skip component if no options to show user
+  if (!conditionalOptions) {
+    props.handleSubmit?.({ auto: true });
+    return null;
+  }
 
   return <BaseQuestionComponent {...props} options={conditionalOptions} />;
 };
