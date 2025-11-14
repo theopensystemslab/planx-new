@@ -1,6 +1,5 @@
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import SettingsDescription from "ui/editor/SettingsDescription";
 import { Switch } from "ui/shared/Switch";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
@@ -24,8 +23,10 @@ const FlowCopySettings: React.FC = () => {
       query={GET_FLOW_VISIBILITY}
       mutation={UPDATE_FLOW_VISIBILITY}
       validationSchema={validationSchema}
-      legend={"Visibility"}
-      description={"Manage the visibility of your service."}
+      legend={"Flow copy permission"}
+      description={
+        "Control if this flow can be used to create new services in other teams. The flow can still be copied and modified within your team."
+      }
       getInitialValues={({ flows: [flow] }) => ({
         canCreateFromCopy: flow.canCreateFromCopy,
       })}
@@ -50,12 +51,6 @@ const FlowCopySettings: React.FC = () => {
               )
             }
           />
-          <SettingsDescription>
-            <p>
-              Control if this flow can be used to create new services in other
-              teams. The flow can still be copied and modified within your team.
-            </p>
-          </SettingsDescription>
         </>
       )}
     </SettingsFormContainer>
