@@ -1,7 +1,17 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { type Checklist,ChecklistWithOptions } from "@planx/components/Checklist/model";
-import { type AnyOption,ConditionalOption, Option } from "@planx/components/Option/model";
-import { type ResponsiveChecklist,ResponsiveChecklistWithOptions } from "@planx/components/ResponsiveChecklist/model";
+import {
+  type Checklist,
+  ChecklistWithOptions,
+} from "@planx/components/Checklist/model";
+import {
+  type AnyOption,
+  ConditionalOption,
+  Option,
+} from "@planx/components/Option/model";
+import {
+  type ResponsiveChecklist,
+  ResponsiveChecklistWithOptions,
+} from "@planx/components/ResponsiveChecklist/model";
 import { richText } from "lib/yupExtensions";
 import { partition } from "lodash";
 import { array, number, object, string, type TestConfig } from "yup";
@@ -146,8 +156,13 @@ export const getLayout = ({
   return ChecklistLayout.Basic;
 };
 
-export const generatePayload = ({ options, groupedOptions, ...values }: AnyChecklist): {
-  children: Child[], data: Checklist | ResponsiveChecklist
+export const generatePayload = ({
+  options,
+  groupedOptions,
+  ...values
+}: AnyChecklist): {
+  children: Child[];
+  data: Checklist | ResponsiveChecklist;
 } => {
   const sourceOptions: AnyOption[] | undefined = options?.length
     ? options
@@ -170,11 +185,11 @@ export const generatePayload = ({ options, groupedOptions, ...values }: AnyCheck
 
   const data = {
     ...values,
-    ...(groupedOptions && { categories })
+    ...(groupedOptions ? { categories } : { categories: undefined }),
   };
 
-  return { data, children }
-}
+  return { data, children };
+};
 
 const onlyOneExclusiveOptionTest: TestConfig<ChecklistWithOptions> = {
   name: "onlyOneExclusiveOption",
@@ -191,11 +206,7 @@ const onlyOneExclusiveOptionTest: TestConfig<ChecklistWithOptions> = {
 
 const atLeastOneDataFieldTest: TestConfig<AnyChecklist> = {
   name: "atLeastOneDataField",
-  test: function ({
-    fn,
-    options = [],
-    groupedOptions = [],
-  }) {
+  test: function ({ fn, options = [], groupedOptions = [] }) {
     if (!fn) return true;
     const allOptions = [
       ...options,
@@ -249,17 +260,15 @@ const uniqueLabelsWithinGroupsTest: TestConfig<AnyChecklist> = {
     }
 
     return true;
-  }
-}
+  },
+};
 
 const uniqueGroupTitlesTest: TestConfig<AnyChecklist> = {
   name: "uniqueGroupTitles",
   test: function ({ groupedOptions }) {
     if (!groupedOptions) return true;
 
-    const uniqueGroupTitles = new Set(
-      groupedOptions.map(({ title }) => title),
-    );
+    const uniqueGroupTitles = new Set(groupedOptions.map(({ title }) => title));
 
     const allUnique = uniqueGroupTitles.size === groupedOptions.length;
 
@@ -271,7 +280,7 @@ const uniqueGroupTitlesTest: TestConfig<AnyChecklist> = {
     }
 
     return true;
-  }
+  },
 };
 
 export const baseChecklistValidationSchema =
@@ -288,11 +297,11 @@ export const baseChecklistValidationSchema =
         }),
       ),
     })
-    // Shared BaseChecklist tests
-    // Casting is required for Yup, tests themselves are correctly typed
-    .test(onlyOneExclusiveOptionTest as TestConfig<unknown>)
-    .test(atLeastOneDataFieldTest as TestConfig<unknown>)
-    .test(uniqueLabelsTest as TestConfig<unknown>)
-    .test(uniqueLabelsWithinGroupsTest as TestConfig<unknown>)
-    .test(uniqueGroupTitlesTest as TestConfig<unknown>)
-)
+      // Shared BaseChecklist tests
+      // Casting is required for Yup, tests themselves are correctly typed
+      .test(onlyOneExclusiveOptionTest as TestConfig<unknown>)
+      .test(atLeastOneDataFieldTest as TestConfig<unknown>)
+      .test(uniqueLabelsTest as TestConfig<unknown>)
+      .test(uniqueLabelsWithinGroupsTest as TestConfig<unknown>)
+      .test(uniqueGroupTitlesTest as TestConfig<unknown>),
+  );
