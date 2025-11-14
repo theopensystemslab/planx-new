@@ -4,7 +4,7 @@ import React, { ChangeEvent } from "react";
 import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input/Input";
 
-import SettingsFormContainer from "../../shared/SettingsForm";
+import SettingsFormContainer from "../../../shared/SettingsForm";
 import { GET_TEAM_SETTINGS, UPDATE_TEAM_SETTINGS } from "./queries";
 import { validationSchema } from "./schema";
 import {
@@ -13,7 +13,7 @@ import {
   UpdateTeamSettingsVariables,
 } from "./types";
 
-export const TeamContactSettings: React.FC = () => {
+export const Contact: React.FC = () => {
   const [teamId, teamSlug] = useStore((state) => [
     state.teamId,
     state.teamSlug,
@@ -111,3 +111,5 @@ export const TeamContactSettings: React.FC = () => {
     </SettingsFormContainer>
   );
 };
+
+export default Contact;
