@@ -101,8 +101,8 @@ describe("flow_integrations", () => {
       i = await introspectAs("api");
     });
 
-    test("cannot query flow integrations", () => {
-      expect(i.queries).not.toContain("flow_integrations");
+    test("can query flow integrations", () => {
+      expect(i.queries).toContain("flow_integrations");
     });
 
     test("cannot update flow integrations", () => {

@@ -101,11 +101,11 @@ describe("submission_integrations", () => {
       i = await introspectAs("api");
     });
 
-    test("cannot query flow integrations", () => {
-      expect(i.queries).not.toContain("submission_integrations");
+    test("can query submission integrations", () => {
+      expect(i.queries).toContain("submission_integrations");
     });
 
-    test("cannot update flow integrations", () => {
+    test("cannot update submission integrations", () => {
       expect(i.mutations).not.toContain("update_submission_integrations");
       expect(i.mutations).not.toContain("update_submission_integrations_by_pk");
       expect(i.mutations).not.toContain("update_submission_integrations_many");
