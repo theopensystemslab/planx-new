@@ -20,7 +20,7 @@ const Root = styled(Box)(({ theme }) => ({
   // Ensure links break correctly in narrow container
   "& a": {
     overflowWrap: "break-word",
-    wordBreak: "break-all",
+    wordWrap: "break-word",
   },
   "& > * + *, & > form > * + *": {
     ...contentFlowSpacing(theme),
