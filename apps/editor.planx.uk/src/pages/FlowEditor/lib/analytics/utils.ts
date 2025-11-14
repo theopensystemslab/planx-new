@@ -6,7 +6,7 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { client } from "lib/graphql";
 import isEmpty from "lodash/isEmpty";
-import isObject from "lodash/isObject";
+import isPlainObject from "lodash/isObject";
 
 import { Store } from "../store";
 import { ALLOW_LIST } from "./provider";
@@ -139,7 +139,20 @@ const sanitiseAllowListValues = ([key, value]: [key: string, value: unknown]): [
   string,
   unknown,
 ] => {
-  if (!isObject(value)) return [key, value];
+  if (!isPlainObject(value)) return [key, value];
+
+  // If the object is array-like (numeric keys), convert to an array
+  const entries = Object.entries(value);
+  const isNumericKeys =
+    entries.length > 0 && entries.every(([k]) => /^\d+$/.test(k));
+  if (isNumericKeys) {
+    const arr = entries
+      .sort(([a], [b]) => Number(a) - Number(b))
+      .map(([, v]) => v)
+      .filter(Boolean);
+    if (arr.length === 0) return [key, undefined];
+    return [key, arr];
+  }
 
   // Strip out empty values - we do not need to store these as allow list answers
   const sanitisedObject = Object.fromEntries(
