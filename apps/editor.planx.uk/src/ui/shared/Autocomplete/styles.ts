@@ -6,6 +6,7 @@ import TextField from "@mui/material/TextField";
 import { borderedFocusStyle } from "theme";
 
 export const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
+  maxHeight: "50px",
   "& > div > label": {
     paddingRight: theme.spacing(3),
   },
@@ -31,6 +32,7 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
     borderColor: theme.palette.border.main,
   },
   [`& .${outlinedInputClasses.root}, input`]: {
+    padding: 4.5,
     cursor: "pointer",
     // TODO extract as `format="data"` prop more like `Input` ?
   },
