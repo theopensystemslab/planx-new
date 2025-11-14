@@ -12,9 +12,9 @@ import {
   withView,
 } from "navi";
 import AdvancedSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/AdvancedSettings";
-import { TeamContactSettings } from "pages/FlowEditor/components/NewSettings/TeamSettings/Contact";
+import ContactSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/ContactSettings";
 import GISSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/GISSettings";
-import { TeamIntegrationSettings } from "pages/FlowEditor/components/NewSettings/TeamSettings/SubmissionEmail";
+import IntegrationSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/IntegrationSettings";
 import TeamSettingsLayout from "pages/FlowEditor/components/NewSettings/TeamSettings/TeamSettingsLayout";
 import DesignSettings from "pages/FlowEditor/components/Settings/DesignSettings";
 import GeneralSettings from "pages/FlowEditor/components/Settings/GeneralSettings";
@@ -178,13 +178,13 @@ const routes = compose(
           title: makeTitle(
             [req.params.team, "new-settings", "contact"].join("/"),
           ),
-          view: <TeamContactSettings />,
+          view: <ContactSettings />,
         })),
         "/integrations": route((req) => ({
           title: makeTitle(
             [req.params.team, "new-settings", "integrations"].join("/"),
           ),
-          view: <TeamIntegrationSettings />,
+          view: <IntegrationSettings />,
         })),
         "/gis-data": route((req) => ({
           title: makeTitle(
