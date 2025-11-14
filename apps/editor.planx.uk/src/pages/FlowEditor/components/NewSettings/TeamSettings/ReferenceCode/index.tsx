@@ -68,7 +68,7 @@ export const TeamReferenceCodeSettings: React.FC = () => {
                 e.target.value.toUpperCase(),
               )
             }
-            value={formik.values.referenceCode ?? ""}
+            value={formik.values.referenceCode}
             errorMessage={
               typeof formik.errors.referenceCode === "string"
                 ? formik.errors.referenceCode
