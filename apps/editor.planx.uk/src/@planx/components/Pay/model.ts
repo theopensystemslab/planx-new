@@ -7,7 +7,7 @@ import {
 import { richText } from "lib/yupExtensions";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { ApplicationPath, Passport } from "types";
-import { array, boolean, object, string } from "yup";
+import { array, boolean, mixed, object, string } from "yup";
 
 import { type BaseNodeData, parseBaseNodeData } from "../shared";
 
@@ -95,14 +95,18 @@ export const govPayMetadataSchema = array(
       .test({
         name: "max-length",
         message: "Value length cannot exceed 100 characters",
-        test: (value) => {
+        test: (value, context) => {
           if (!value) return true;
           // No limit to dynamic passport variable length, this is checked and truncated at runtime
-          if (value.startsWith("@")) return true;
+          const type = context.parent.type;
+          if (type === "data") return true;
           // Static strings must be 100 characters or less
           return value.length <= 100;
         },
       }),
+    type: mixed()
+      .oneOf(["data", "static"])
+      .required("Type is a required field"),
   }),
 )
   .max(15, "A maximum of 15 fields can be set as metadata")
