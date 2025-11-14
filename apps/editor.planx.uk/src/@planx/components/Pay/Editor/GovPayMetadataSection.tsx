@@ -150,7 +150,7 @@ export const GovPayMetadataSection: React.FC<GovPayMetadataSectionProps> = ({
 
   const EditorComponent = useCallback(
     (editorProps: ListManagerEditorProps<GovPayMetadata>) => (
-      // @ts-expect-error TODO: explain or fix this!
+      // @ts-expect-error "variant" prop is passed in via editorProps, but type inference won't pick this up
       <GovPayMetadataEditor
         {...editorProps}
         isFieldDisabled={(key, index) =>
