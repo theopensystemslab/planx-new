@@ -15,7 +15,6 @@ import React, { useState } from "react";
 import { useLocation } from "react-use";
 
 export interface Environment {
-  id: string;
   name: string;
   description: string;
   url: string;
@@ -35,12 +34,14 @@ const StyledButtonBase = styled(ButtonBase)(() => ({
   height: "auto",
   width: "auto",
   textTransform: "capitalize",
+  "&:hover": {
+    backgroundColor: "transparent"
+  }
 }));
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   [`&. ${dialogClasses.paper}`]: {
     backgroundColor: theme.palette.background.dark,
-    color: "#ffffff",
   },
 }));
 
@@ -51,12 +52,10 @@ const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
   alignItems: "center",
   padding: theme.spacing(1),
   backgroundColor: theme.palette.background.dark,
-  color: "#ffffff",
+  color: theme.palette.common.white,
 }));
 
 const StyledCard = styled(Card)<{ selected?: boolean }>(() => ({
-  backgroundColor: "#ffffff",
-  color: "#000000",
   borderRadius: 5,
 }));
 
@@ -69,28 +68,24 @@ const CardContent = styled(Box)(({ theme }) => ({
 
 const environments: Environment[] = [
   {
-    id: "production",
-    name: "Production",
+    name: "production",
     description: "Used for editing content and publishing live flows",
     url: "https://editor.planx.uk",
   },
   {
-    id: "staging",
-    name: "Staging",
+    name: "staging",
     description: "Used for testing new features and content",
     url: "https://editor.planx.dev",
   },
   // Only show this on Pizzas
   ...(import.meta.env.VITE_APP_ENV === "pizza" ? [{
-    id: "pizza",
-    name: "Pizza",
+    name: "pizza",
     description: "Temporary environment used for testing new features and content",
     url: window.location.href
   }] : []),
   // Only show this locally
   ...(import.meta.env.VITE_APP_ENV === "development" ? [{
-    id: "development",
-    name: "Development",
+    name: "development",
     description: "Local development",
     url: "http:/localhost:3000",
   }] : []),
@@ -101,13 +96,12 @@ export const EnvironmentSelect: React.FC = () => {
   const currentEnv = import.meta.env.VITE_APP_ENV;
   const { pathname } = useLocation();
 
-  const navigateTo = (env: Environment) => window.location.href = env.url + pathname;
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   return (
     <>
-      <StyledButtonBase onClick={handleOpen} selected={false}>
+      <StyledButtonBase onClick={handleOpen} selected={false} disableRipple>
         {currentEnv}
         <UnfoldMoreIcon sx={{ ml: 0.5 }} />
       </StyledButtonBase>
@@ -145,27 +139,30 @@ export const EnvironmentSelect: React.FC = () => {
         <Stack p={1} bgcolor={(theme) => theme.palette.background.dark} gap={1}>
           {environments.map((env) => (
             <StyledCard
-              key={env.id}
-              selected={env.id === currentEnv}
+              key={env.name}
+              selected={env.name === currentEnv}
             >
               <CardActionArea 
-                onClick={() => navigateTo(env)} 
-                disabled={env.id === currentEnv}
+                LinkComponent={"a"}
+                href={env.url + pathname}
+                target="_blank"
+                rel="noopener noreferrer"
+                disabled={env.name === currentEnv}
               >
                 <CardContent>
                   <Box>
                     <Typography
                       variant="h6"
                       component="div"
-                      sx={{ fontWeight: 600, marginBottom: 1 }}
+                      sx={{ fontWeight: 600, textTransform: "capitalize" }}
                     >
                       {env.name}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body3" color="text.secondary">
                       {env.description}
                     </Typography>
                   </Box>
-                  {env.id === currentEnv && (
+                  {env.name === currentEnv && (
                     <CheckCircleIcon sx={(theme) => ({ color: theme.palette.info.main, fontSize: 20 })} />
                   )}
                 </CardContent>
