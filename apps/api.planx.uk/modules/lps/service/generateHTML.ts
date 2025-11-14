@@ -4,7 +4,6 @@ import { subMinutes } from "date-fns";
 import { $api, $public } from "../../../client/index.js";
 import type {
   DrawBoundaryUserAction,
-  PlanXExportData,
   Session,
 } from "@opensystemslab/planx-core/types";
 import { generateApplicationHTML } from "@opensystemslab/planx-core";
@@ -46,14 +45,14 @@ const findSession = async (sessionId: string, email: string) => {
 
 export const generateHTML = async (sessionId: string, email: string) => {
   const session = await findSession(sessionId, email);
-  const responses = await $api.export.csvData(sessionId);
+  const responses = await $api.export.digitalPlanningDataPayload(sessionId);
   const boundingBox = session.data?.passport.data?.["proposal.site.buffered"];
   const userAction = session.data?.passport.data?.[
     "drawBoundary.action"
   ] as unknown as DrawBoundaryUserAction | undefined;
 
   const html = generateApplicationHTML({
-    planXExportData: responses as PlanXExportData[],
+    planXExportData: responses,
     boundingBox,
     userAction,
   });
