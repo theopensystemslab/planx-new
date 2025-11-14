@@ -107,6 +107,11 @@ computed_fields:
         name: compile_flow_portals
         schema: public
     comment: Flow data with portals merged in
+  - name: url
+    definition:
+      function:
+        name: flow_url
+        schema: public
 insert_permissions:
   - role: api
     permission:
@@ -271,6 +276,7 @@ select_permissions:
         - version
       computed_fields:
         - data_merged
+        - url
       filter:
         deleted_at:
           _is_null: true
@@ -299,6 +305,7 @@ select_permissions:
         - version
       computed_fields:
         - data_merged
+        - url
       filter:
         _and:
           - _or:
@@ -341,6 +348,7 @@ select_permissions:
         - version
       computed_fields:
         - data_merged
+        - url
       filter:
         deleted_at:
           _is_null: true
@@ -368,6 +376,7 @@ select_permissions:
         - version
       computed_fields:
         - data_merged
+        - url
       filter:
         deleted_at:
           _is_null: true
@@ -397,6 +406,7 @@ select_permissions:
         - version
       computed_fields:
         - data_merged
+        - url
       filter:
         deleted_at:
           _is_null: true
