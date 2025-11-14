@@ -1,3 +1,4 @@
+import Link from "@mui/material/Link";
 import React from "react";
 
 export const BoundaryDescription: React.FC = () => (
@@ -13,13 +14,13 @@ export const BoundaryDescription: React.FC = () => (
     </p>
     <p>
       The boundary should be given as a link from:{" "}
-      <a
+      <Link
         href="https://www.planning.data.gov.uk/"
         target="_blank"
         rel="noopener noreferrer"
       >
         https://www.planning.data.gov.uk/entity/1234567
-      </a>
+      </Link>
     </p>
   </>
 );
