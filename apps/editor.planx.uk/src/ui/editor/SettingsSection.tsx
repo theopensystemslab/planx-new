@@ -17,6 +17,11 @@ const Root = styled(Box, {
   "&:first-of-type": {
     marginTop: 0,
   },
+  // Ensure links break correctly in narrow container
+  "& a": {
+    overflowWrap: "break-word",
+    wordBreak: "break-all",
+  },
   "& > * + *, & > form > * + *": {
     ...contentFlowSpacing(theme),
   },
