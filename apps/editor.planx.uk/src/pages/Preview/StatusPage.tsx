@@ -9,6 +9,7 @@ import Card, {
 } from "@planx/components/shared/Preview/Card";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
+import { useNavigation } from "react-navi";
 import Banner from "ui/public/Banner";
 import { removeSessionIdSearchParam } from "utils";
 
@@ -34,6 +35,7 @@ const StatusPage: React.FC<Props> = ({
   children,
 }) => {
   const theme = useTheme();
+  const { navigate } = useNavigation();
   const [data, setData] = useState<QuestionAndResponses[]>([]);
 
   const [sessionId, saveToEmail, $public] = useStore((state) => [
@@ -77,7 +79,14 @@ const StatusPage: React.FC<Props> = ({
       <Card>
         {children}
         {showDownloadLink && (
-          <FileDownload data={data} filename={sessionId || "application"} />
+          <>
+            <FileDownload data={data} filename={sessionId || "application"} />
+            <button
+              onClick={() => navigate("application")}
+            >
+              View your application
+            </button>
+          </>
         )}
         {buttonText && (
           <Button
