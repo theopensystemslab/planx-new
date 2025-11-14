@@ -1,0 +1,23 @@
+---
+import Container from "@components/Container.astro";
+
+const TALLY_SURVEY_URL = "https://tally.so/r/Gxx6lp";
+---
+
+<section class="bg-bg-light py-3 border-t border-gray-300">
+  <Container>
+    <div class="flex items-center gap-2.5">
+      <div
+        class="m-0 py-1.5 px-3 bg-bg-mid rounded text-body-md text-white tracking-wide"
+      >
+        Beta
+      </div>
+      <p class="text-body-md m-0">
+        This is a new website. Help us improve it and <a
+          class="paragraph-link paragraph-link--external whitespace-nowrap"
+          href={TALLY_SURVEY_URL}>give your feedback</a
+        >
+      </p>
+    </div>
+  </Container>
+</section>
