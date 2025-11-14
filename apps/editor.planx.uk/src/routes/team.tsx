@@ -12,7 +12,7 @@ import {
   withView,
 } from "navi";
 import { TeamContactSettings } from "pages/FlowEditor/components/NewSettings/TeamSettings/Contact";
-import { TeamSubmissionEmailSettings } from "pages/FlowEditor/components/NewSettings/TeamSettings/SubmissionEmail";
+import { TeamIntegrationSettings } from "pages/FlowEditor/components/NewSettings/TeamSettings/SubmissionEmail";
 import TeamAdvancedSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/TeamAdvancedSettings";
 import TeamGisDataSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/TeamGisDataSettings";
 import TeamSettingsLayout from "pages/FlowEditor/components/NewSettings/TeamSettings/TeamSettingsLayout";
@@ -184,7 +184,7 @@ const routes = compose(
           title: makeTitle(
             [req.params.team, "new-settings", "integrations"].join("/"),
           ),
-          view: <TeamSubmissionEmailSettings />,
+          view: <TeamIntegrationSettings />,
         })),
         "/gis-data": route((req) => ({
           title: makeTitle(

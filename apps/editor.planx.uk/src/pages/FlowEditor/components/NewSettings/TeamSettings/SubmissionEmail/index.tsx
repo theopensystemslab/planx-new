@@ -13,7 +13,7 @@ import {
   UpdateTeamSettingsVariables,
 } from "./types";
 
-export const TeamSubmissionEmailSettings: React.FC = () => {
+export const TeamIntegrationSettings: React.FC = () => {
   const [teamId, teamSlug] = useStore((state) => [
     state.teamId,
     state.teamSlug,
