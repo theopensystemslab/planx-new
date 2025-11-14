@@ -12,6 +12,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import ButtonBase from "@planx/components/shared/Buttons/ButtonBase";
 import React, { useState } from "react";
+import { useLocation } from "react-use";
 
 export interface Environment {
   id: string;
@@ -98,7 +99,9 @@ const environments: Environment[] = [
 export const EnvironmentSelect: React.FC = () => {
   const [open, setOpen] = useState(false);
   const currentEnv = import.meta.env.VITE_APP_ENV;
+  const { pathname } = useLocation();
 
+  const navigateTo = (env: Environment) => window.location.href = env.url + pathname;
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -146,7 +149,7 @@ export const EnvironmentSelect: React.FC = () => {
               selected={env.id === currentEnv}
             >
               <CardActionArea 
-                onClick={() => window.location.href = env.url} 
+                onClick={() => navigateTo(env)} 
                 disabled={env.id === currentEnv}
               >
                 <CardContent>
