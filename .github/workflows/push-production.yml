@@ -154,7 +154,7 @@ jobs:
         with:
           name: localplanning_services_build
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
-      - uses: pulumi/actions@v5
+      - uses: pulumi/actions@v6
         with:
           command: up
           stack-name: production

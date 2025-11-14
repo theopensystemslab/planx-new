@@ -9,7 +9,7 @@ import * as tldjs from "tldjs";
 import { CreateService } from './../types';
 import {
   addRedirectToCloudFlareListenerRule,
-  setupFailureNotificationForDeployments,
+  setupNotificationForDeploymentRollback,
 } from "../utils";
 
 export const createHasuraService = async ({
@@ -240,5 +240,5 @@ export const createHasuraService = async ({
     proxied: true,
   });
 
-  setupFailureNotificationForDeployments("hasura", cluster, hasuraService);
+  setupNotificationForDeploymentRollback("hasura", cluster, hasuraService);
 }

@@ -5,23 +5,21 @@ import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
 
 /**
- * Send a Slack notification when a Fargate service rolls back it's deployment
- * Any initial Pulumi errors already handle this via notifications from GHA
- * This will catch instances where the container has successfully deployed, but may be unhealthy and is caught by a circuit breaker
+ * Send a Slack notification when a Fargate service deployment is rolled back by the circuit breaker
  */
-export const setupFailureNotificationForDeployments = (
-  serviceName: string,
+export const setupNotificationForDeploymentRollback = (
+  simpleServiceName: string,
   cluster: awsx.ecs.Cluster,
   service: awsx.ecs.FargateService
 ) => {
   const config = new pulumi.Config();
 
-  const topic = new aws.sns.Topic(`${serviceName}-deployment-alerts`, {
-    name: `${serviceName}-deployment-alerts`,
+  const topic = new aws.sns.Topic(`${simpleServiceName}-rollback-alerts`, {
+    name: `${simpleServiceName}-rollback-alerts`,
   });
 
   new aws.sns.TopicSubscription(
-    `${serviceName}-slack-alert`,
+    `${simpleServiceName}-rollback-slack-alert`,
     {
       topic: topic.arn,
       protocol: "https",
@@ -29,22 +27,102 @@ export const setupFailureNotificationForDeployments = (
     }
   );
 
-  new aws.cloudwatch.MetricAlarm(
-    `${serviceName}-deployment-alarm-notification`,
+  // allow SNS topic to receive events from EventBridge
+  new aws.sns.TopicPolicy(`${simpleServiceName}-rollback-topic-policy`, {
+    arn: topic.arn,
+    policy: pulumi.jsonStringify({
+      Version: "2012-10-17",
+      Statement: [
+        {
+          Effect: "Allow",
+          Principal: {
+            Service: "events.amazonaws.com"
+          },
+          Action: "sns:Publish",
+          Resource: topic.arn
+        }
+      ]
+    })
+  });
+
+  // EventBridge rule to catch circuit breaker rollbacks
+  // https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs_service_deployment_events.html
+  const rollbackRule = new aws.cloudwatch.EventRule(
+    `${simpleServiceName}-rollback-detection-rule`,
     {
-      alarmActions: [topic.arn],
-      comparisonOperator: "GreaterThanThreshold",
-      evaluationPeriods: 1,
-      metricName: "UnhealthyTaskCount",
-      namespace: "AWS/ECS",
-      period: 300,
-      statistic: "Sum",
-      threshold: 0,
-      alarmDescription: `Alarm for ${serviceName} Fargate service deployment failures`,
-      dimensions: {
-        ClusterName: cluster.cluster.name,
-        ServiceName: service.service.name,
-      },
+      description: `Detect deployment rollbacks for ${simpleServiceName}`,
+      eventPattern: pulumi.jsonStringify({
+        source: ["aws.ecs"],
+        "detail-type": ["ECS Deployment State Change"],
+        detail: {
+          clusterArn: [cluster.cluster.arn],
+          serviceName: [service.service.name],
+          eventType: ["ERROR"],
+          eventName: ["SERVICE_DEPLOYMENT_FAILED"],
+        }
+      })
+    }
+  );
+
+  // XXX: this template may not be ingested by SNS/Slack as expected and can then be simplified
+  new aws.cloudwatch.EventTarget(
+    `${simpleServiceName}-rollback-target`,
+    {
+      rule: rollbackRule.name,
+      arn: topic.arn,
+      inputTransformer: {
+        inputPaths: {
+          eventType: "$.detail.eventType",
+          eventName: "$.detail.eventName",
+          deploymentId: "$.detail.deploymentId",
+          updatedAt: "$.detail.updatedAt",
+          reason: "$.detail.reason",
+        },
+        inputTemplate: pulumi.jsonStringify({
+          "text": `Circuit Breaker Rollback: ${simpleServiceName}`,
+          "blocks": [
+            {
+              "type": "header",
+              "text": {
+                "type": "plain_text",
+                "text": `Circuit Breaker Rollback: ${simpleServiceName}`
+              }
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "The ECS deployment circuit breaker has triggered a rollback due to deployment failure."
+              }
+            },
+            {
+              "type": "section",
+              "fields": [
+                {
+                  "type": "mrkdwn",
+                  "text": "*Event type:* <eventType>"
+                },
+                {
+                  "type": "mrkdwn",
+                  "text": "*Event name:* <eventName>"
+                },
+                {
+                  "type": "mrkdwn",
+                  "text": "*Deployment ID:* <deploymentId>"
+                },
+                {
+                  "type": "mrkdwn",
+                  "text": "*Updated at:* <updatedAt>"
+                },
+                {
+                  "type": "mrkdwn",
+                  "text": "*Reason:* <reason>"
+                }
+              ]
+            }
+          ]
+        })
+      }
     }
   );
 };
