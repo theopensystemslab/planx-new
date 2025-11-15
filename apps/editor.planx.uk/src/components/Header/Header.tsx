@@ -21,6 +21,7 @@ import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useMutation } from "@tanstack/react-query";
+import EnvironmentSelect from "components/EditorNavMenu/components/EnvironmentSelect";
 import { logout } from "lib/api/auth/requests";
 import { clearLocalFlowIdb } from "lib/local.idb";
 import { capitalize } from "lodash";
@@ -211,6 +212,7 @@ const Breadcrumbs: React.FC = () => {
         >
           Plan✕
         </BreadcrumbsLink>
+        <EnvironmentSelect />
         {team.slug && (
           <>
             {" / "}

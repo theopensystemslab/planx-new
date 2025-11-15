@@ -383,6 +383,9 @@ const getThemeOptions = ({
         },
       },
       MuiButtonBase: {
+        defaultProps: {
+          disableRipple: true,
+        },
         styleOverrides: {
           root: {
             fontFamily: "inherit",
