@@ -1,10 +1,12 @@
-import MuiButtonBase, { type ButtonBaseProps } from "@mui/material/ButtonBase";
+import MuiButtonBase from "@mui/material/ButtonBase";
 import { styled } from "@mui/material/styles";
-import React, { type PropsWithChildren } from "react";
+import React from "react";
 
-type Props = PropsWithChildren<ButtonBaseProps & { selected: boolean }>
+interface RootProps {
+  selected: boolean;
+}
 
-const Root = styled(MuiButtonBase)<Props>(({ theme, selected }) => ({
+const Root = styled(MuiButtonBase)<RootProps>(({ theme, selected }) => ({
   transition: theme.transitions.create(["background-color", "box-shadow"]),
   backgroundColor: selected
     ? theme.palette.primary.main
@@ -25,8 +27,16 @@ const Root = styled(MuiButtonBase)<Props>(({ theme, selected }) => ({
   },
 }));
 
-const ButtonBase: React.FC<Props> = ({ children, ...rootProps }) => (
-  <Root {...rootProps}>{children}</Root>
-)
+export interface Props {
+  selected: boolean;
+  children?: React.ReactNode;
+  className?: string;
+  id?: string;
+  onClick: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+}
 
-export default ButtonBase
+export default function ButtonBase(props: Props): FCReturn {
+  const { children, ...rootProps } = props;
+
+  return <Root {...rootProps}>{children}</Root>;
+}

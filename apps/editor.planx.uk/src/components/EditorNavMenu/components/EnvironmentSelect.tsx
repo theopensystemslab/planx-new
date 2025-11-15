@@ -35,8 +35,8 @@ const StyledButtonBase = styled(ButtonBase)(() => ({
   width: "auto",
   textTransform: "capitalize",
   "&:hover": {
-    backgroundColor: "transparent"
-  }
+    backgroundColor: "transparent",
+  },
 }));
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -78,17 +78,26 @@ const environments: Environment[] = [
     url: "https://editor.planx.dev",
   },
   // Only show this on Pizzas
-  ...(import.meta.env.VITE_APP_ENV === "pizza" ? [{
-    name: "pizza",
-    description: "Temporary environment used for testing new features and content",
-    url: window.location.href
-  }] : []),
+  ...(import.meta.env.VITE_APP_ENV === "pizza"
+    ? [
+        {
+          name: "pizza",
+          description:
+            "Temporary environment used for testing new features and content",
+          url: window.location.href,
+        },
+      ]
+    : []),
   // Only show this locally
-  ...(import.meta.env.VITE_APP_ENV === "development" ? [{
-    name: "development",
-    description: "Local development",
-    url: "http:/localhost:3000",
-  }] : []),
+  ...(import.meta.env.VITE_APP_ENV === "development"
+    ? [
+        {
+          name: "development",
+          description: "Local development",
+          url: "http:/localhost:3000",
+        },
+      ]
+    : []),
 ];
 
 export const EnvironmentSelect: React.FC = () => {
@@ -101,11 +110,14 @@ export const EnvironmentSelect: React.FC = () => {
 
   return (
     <>
-      <StyledButtonBase onClick={handleOpen} selected={false} disableRipple>
+      <StyledButtonBase onClick={handleOpen} selected={false}>
         {currentEnv}
         <UnfoldMoreIcon sx={{ ml: 0.5 }} />
       </StyledButtonBase>
-      <StyledDialog open={open} onClose={handleClose} maxWidth="xs"
+      <StyledDialog
+        open={open}
+        onClose={handleClose}
+        maxWidth="xs"
         PaperProps={{
           sx: {
             position: "absolute",
@@ -118,7 +130,8 @@ export const EnvironmentSelect: React.FC = () => {
             borderTop: "none",
             borderRadius: 3,
           },
-        }}>
+        }}
+      >
         <StyledDialogTitle>
           <Box>
             <Typography variant="body1" component="span" mr={1}>
@@ -138,11 +151,8 @@ export const EnvironmentSelect: React.FC = () => {
         </StyledDialogTitle>
         <Stack p={1} bgcolor={(theme) => theme.palette.background.dark} gap={1}>
           {environments.map((env) => (
-            <StyledCard
-              key={env.name}
-              selected={env.name === currentEnv}
-            >
-              <CardActionArea 
+            <StyledCard key={env.name} selected={env.name === currentEnv}>
+              <CardActionArea
                 LinkComponent={"a"}
                 href={env.url + pathname}
                 target="_blank"
@@ -163,7 +173,12 @@ export const EnvironmentSelect: React.FC = () => {
                     </Typography>
                   </Box>
                   {env.name === currentEnv && (
-                    <CheckCircleIcon sx={(theme) => ({ color: theme.palette.info.main, fontSize: 20 })} />
+                    <CheckCircleIcon
+                      sx={(theme) => ({
+                        color: theme.palette.info.main,
+                        fontSize: 20,
+                      })}
+                    />
                   )}
                 </CardContent>
               </CardActionArea>
