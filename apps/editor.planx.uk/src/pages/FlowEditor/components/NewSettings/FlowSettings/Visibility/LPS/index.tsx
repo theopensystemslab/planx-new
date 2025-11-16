@@ -71,7 +71,7 @@ const LPSListingSettings: React.FC = () => {
           <SettingsDescription>
             <p>
               Listing your service requires a summary. This can be provided on{" "}
-              <Link style={{ whiteSpace: "nowrap" }} href="../../about">
+              <Link style={{ whiteSpace: "nowrap" }} href="../about">
                 the "About this flow" page
               </Link>
               .
