@@ -26,3 +26,14 @@ export const getTeamGISData = async ({
   // Return full URL for auditing purposes
   return { ...data, url: request.responseURL };
 };
+
+export const getClassifiedRoads = async (
+  usrn?: string,
+): Promise<GISResponse & { url: string }> => {
+  const { data, request } = await apiClient.get("/roads", {
+    params: { usrn },
+  });
+
+  // Return full URL for auditing purposes
+  return { ...data, url: request.responseURL };
+};
