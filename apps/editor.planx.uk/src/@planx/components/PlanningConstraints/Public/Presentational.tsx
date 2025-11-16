@@ -6,12 +6,12 @@ import capitalize from "lodash/capitalize";
 import { HandleSubmit } from "pages/Preview/Node";
 import React from "react";
 
-import { Disclaimer } from "../shared/Disclaimer";
-import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
-import SimpleExpand from "../shared/Preview/SimpleExpand";
+import { Disclaimer } from "../../shared/Disclaimer";
+import { ErrorSummaryContainer } from "../../shared/Preview/ErrorSummaryContainer";
+import SimpleExpand from "../../shared/Preview/SimpleExpand";
+import { DEFAULT_PLANNING_CONDITIONS_DISCLAIMER } from "../model";
+import { InaccurateConstraints } from ".";
 import ConstraintsList from "./List";
-import { DEFAULT_PLANNING_CONDITIONS_DISCLAIMER } from "./model";
-import { InaccurateConstraints } from "./Public";
 
 export type PresentationalProps = {
   title: string;

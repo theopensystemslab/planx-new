@@ -15,13 +15,13 @@ import React, { useState } from "react";
 import useSWR, { Fetcher } from "swr";
 import { stringify } from "wkt";
 
-import { SiteAddress } from "../FindProperty/model";
-import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
+import { SiteAddress } from "../../FindProperty/model";
+import { ErrorSummaryContainer } from "../../shared/Preview/ErrorSummaryContainer";
 import {
   availableDatasets,
   type IntersectingConstraints,
   type PlanningConstraints,
-} from "./model";
+} from "../model";
 import { Presentational } from "./Presentational";
 import { handleOverrides } from "./utils";
 

@@ -9,15 +9,15 @@ import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import classifiedRoadsResponseMock from "./mocks/classifiedRoadsResponseMock";
-import digitalLandResponseMock from "./mocks/digitalLandResponseMock";
+import classifiedRoadsResponseMock from "../mocks/classifiedRoadsResponseMock";
+import digitalLandResponseMock from "../mocks/digitalLandResponseMock";
 import {
   breadcrumbsWithoutUSRN,
   simpleBreadcrumbs,
   simpleFlow,
-} from "./mocks/simpleFlow";
-import { availableDatasets } from "./model";
-import PlanningConstraints from "./Public";
+} from "../mocks/simpleFlow";
+import { availableDatasets } from "../model";
+import PlanningConstraints from ".";
 
 const { setState } = useStore;
 
