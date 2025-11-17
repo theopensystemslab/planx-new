@@ -4,9 +4,8 @@ import rateLimit from "express-rate-limit";
 const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
 const TEN_MINUTES_IN_MS = 10 * 60 * 1000;
 
-const isTestEnv = ["test", "development"].includes(
-  process.env.APP_ENVIRONMENT!,
-);
+const isTestEnv = () =>
+  ["test", "development"].includes(process.env.APP_ENVIRONMENT!);
 
 /**
  * Broad limiter to prevent egregious abuse
@@ -22,7 +21,7 @@ const apiLimiter = rateLimit({
   legacyHeaders: false,
   skip: (req: Request, _res: Response) => {
     // Don't rate limit tests which intentionally trigger a large number of requests
-    if (isTestEnv) return true;
+    if (isTestEnv()) return true;
 
     // add a mechanism (guarded by a secret) for skipping rate limit when load testing
     return (
@@ -48,10 +47,12 @@ const sendEmailLimiter = rateLimit({
   // Use email as key for limiter
   // Invalid emails will fail at validation
   keyGenerator: (req: Request, _res: Response) => req.body?.payload?.email,
-  // Only apply limiter to public requests - allow Hasura to make multiple requests without limit
-  // Any other S&R endpoints require authorisation
-  skip: (req: Request, _res: Response) =>
-    HASURA_ONLY_SEND_EMAIL_TEMPLATES.includes(req.params.template),
+  skip: (req: Request, _res: Response) => {
+    if (isTestEnv()) return true;
+    // Only apply limiter to public requests - allow Hasura to make multiple requests without limit
+    // Any other S&R endpoints require authorisation
+    return HASURA_ONLY_SEND_EMAIL_TEMPLATES.includes(req.params.template);
+  },
 });
 
 /**
@@ -64,7 +65,7 @@ const aiLimiter = rateLimit({
   },
   windowMs: TEN_MINUTES_IN_MS,
   // Higher limit in testing environments
-  max: isTestEnv ? 100 : 10,
+  max: isTestEnv() ? 100 : 10,
   standardHeaders: true,
   legacyHeaders: false,
 });
