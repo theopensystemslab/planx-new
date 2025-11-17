@@ -6,7 +6,7 @@ import Bowser from "bowser";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { createSendEvents } from "lib/api/send/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 import Card from "../shared/Preview/Card";
 import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
@@ -82,13 +82,19 @@ const CreateSendEvents: React.FC<Props> = ({
     mutationFn: createSendEvents,
   });
 
+  const hasSent = useRef(false);
+
   useEffect(() => {
+    if (hasSent.current) return;
+
     const payload = getCombinedEventsPayload({
       destinations,
       sessionId,
       teamSlug,
     });
     mutate({ sessionId, ...payload });
+
+    hasSent.current = true;
   }, [mutate, sessionId, destinations, teamSlug]);
 
   /**
