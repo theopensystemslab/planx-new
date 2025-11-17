@@ -31,7 +31,7 @@ export const draftView = async (req: NaviRequest) => {
   const flow = data.flows[0];
   if (!flow) throw new NotFoundError();
 
-  const flowData = await queryClient.fetchQuery({
+  const flowData = await queryClient.ensureQueryData({
     queryKey: ["flattenedFlowData", "preview", flow.id],
     queryFn: () => getFlattenedFlowData({ flowId: flow.id, isDraft: true }),
   });
