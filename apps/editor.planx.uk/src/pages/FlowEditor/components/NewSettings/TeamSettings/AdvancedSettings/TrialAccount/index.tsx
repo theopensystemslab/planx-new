@@ -5,7 +5,7 @@ import { Switch } from "ui/shared/Switch";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import { GET_TEAM_SETTINGS, UPDATE_TEAM_SETTINGS } from "./queries";
-import { validationSchema } from "./schema";
+import { defaultValues, validationSchema } from "./schema";
 import {
   GetTeamSettingsData,
   TrialAccountFormValues,
@@ -34,6 +34,7 @@ export const TrailAccount: React.FC = () => {
           is_trial: values.isTrial,
         },
       })}
+      defaultValues={defaultValues}
       validationSchema={validationSchema}
       legend="Trial account"
       description={

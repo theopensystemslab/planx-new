@@ -21,6 +21,7 @@ interface SettingsFormContainerProps<
   mutation: DocumentNode;
   /** Extract the initial values from query data */
   getInitialValues: (data: TData) => TFormValues;
+  defaultValues: TFormValues;
   /** Transform form values to mutation variables */
   getMutationVariables: (
     values: TFormValues,
@@ -60,6 +61,7 @@ const SettingsFormContainer = <
   queryVariables,
   mutation,
   getInitialValues,
+  defaultValues,
   getMutationVariables,
   validationSchema,
   legend,
@@ -93,9 +95,7 @@ const SettingsFormContainer = <
   });
 
   const formik = useFormik<TFormValues>({
-    initialValues: data
-      ? getInitialValues(data)
-      : (validationSchema.getDefault() as TFormValues),
+    initialValues: data ? getInitialValues(data) : defaultValues,
     enableReinitialize: true,
     validationSchema,
     validateOnBlur: false,

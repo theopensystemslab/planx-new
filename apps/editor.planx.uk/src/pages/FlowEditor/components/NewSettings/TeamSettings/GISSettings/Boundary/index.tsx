@@ -9,7 +9,7 @@ import SettingsFormContainer from "../../../shared/SettingsForm";
 import { BoundaryDescription } from "./components/BoundaryDescription";
 import { PreviewMap } from "./components/PreviewMap";
 import { GET_TEAM_SETTINGS, UPDATE_TEAM_SETTINGS } from "./queries";
-import { validationSchema } from "./schema";
+import { defaultValues, validationSchema } from "./schema";
 import type {
   BoundaryFormValues,
   GetTeamSettingsData,
@@ -37,6 +37,7 @@ const Boundary: React.FC = () => {
         boundaryUrl: team.settings.boundaryUrl || "",
         boundaryBBox: team.settings.boundaryBBox || undefined,
       })}
+      defaultValues={defaultValues}
       queryVariables={{ slug: teamSlug }}
       getMutationVariables={async (values) => {
         const entityId = values.boundaryUrl.split("/").at(-1)!;

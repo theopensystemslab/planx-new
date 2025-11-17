@@ -9,7 +9,7 @@ import type { TextContent } from "types";
 import SettingsFormContainer from "../../shared/SettingsForm";
 import { GET_FLOW_SETTINGS, UPDATE_FLOW_SETTINGS } from "../shared/queries";
 import type { GetFlowSettings, UpdateFlowSettings } from "../shared/types";
-import { validationSchema } from "./schema";
+import { defaultValues, validationSchema } from "./schema";
 
 const Privacy: React.FC = () => {
   const [flowId, flowStatus] = useStore((state) => [
@@ -27,6 +27,7 @@ const Privacy: React.FC = () => {
       description={
         "Your privacy policy. If you use the template notice, update the placeholders with your council's information."
       }
+      defaultValues={defaultValues}
       getInitialValues={({
         flow: {
           settings: { elements },
