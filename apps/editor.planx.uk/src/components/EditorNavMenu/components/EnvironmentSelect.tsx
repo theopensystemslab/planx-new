@@ -13,6 +13,7 @@ import Typography from "@mui/material/Typography";
 import ButtonBase from "@planx/components/shared/Buttons/ButtonBase";
 import React, { useState } from "react";
 import { useLocation } from "react-use";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export interface Environment {
   name: string;
@@ -110,9 +111,9 @@ export const EnvironmentSelect: React.FC = () => {
 
   return (
     <>
-      <StyledButtonBase onClick={handleOpen} selected={false}>
+      <StyledButtonBase onClick={handleOpen} selected={false} sx={{ ml: 0.5 }}>
         {currentEnv}
-        <UnfoldMoreIcon sx={{ ml: 0.5 }} />
+        <UnfoldMoreIcon />
       </StyledButtonBase>
       <StyledDialog
         open={open}
@@ -164,7 +165,10 @@ export const EnvironmentSelect: React.FC = () => {
                     <Typography
                       variant="h6"
                       component="div"
-                      sx={{ fontWeight: 600, textTransform: "capitalize" }}
+                      sx={{
+                        fontWeight: FONT_WEIGHT_SEMI_BOLD,
+                        textTransform: "capitalize",
+                      }}
                     >
                       {env.name}
                     </Typography>
