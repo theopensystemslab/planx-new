@@ -76,7 +76,6 @@ const SettingsFormContainer = <
   // Fetch current data
   const { data, loading, error } = useQuery<TData>(query, {
     variables: queryVariables,
-    fetchPolicy: "cache-and-network",
   });
 
   // Update data

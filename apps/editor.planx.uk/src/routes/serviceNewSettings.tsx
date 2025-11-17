@@ -1,8 +1,8 @@
 import { compose, mount, redirect, route, withData, withView } from "navi";
-import FlowLegalDisclaimerSettings from "pages/FlowEditor/components/NewSettings/FlowSettings/FlowLegalDisclaimerSettings";
 import FlowSettingsLayout from "pages/FlowEditor/components/NewSettings/FlowSettings/FlowSettingsLayout";
 import FlowTemplateSettings from "pages/FlowEditor/components/NewSettings/FlowSettings/FlowTemplateSettings";
 import Help from "pages/FlowEditor/components/NewSettings/FlowSettings/Help";
+import LegalDisclaimer from "pages/FlowEditor/components/NewSettings/FlowSettings/LegalDisclaimer";
 import Privacy from "pages/FlowEditor/components/NewSettings/FlowSettings/Privacy";
 import Visibility from "pages/FlowEditor/components/NewSettings/FlowSettings/Visibility";
 import React from "react";
@@ -41,7 +41,7 @@ const flowNewSettingsRoutes = compose(
           "legal-disclaimer",
         ].join("/"),
       ),
-      view: <FlowLegalDisclaimerSettings />,
+      view: <LegalDisclaimer />,
     })),
     "/pages": mount({
       "/help": route((req) => ({
