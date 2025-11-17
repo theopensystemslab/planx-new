@@ -514,6 +514,7 @@ update_permissions:
         - status
         - summary
         - team_id
+        - templated_from
       filter:
         deleted_at:
           _is_null: true
