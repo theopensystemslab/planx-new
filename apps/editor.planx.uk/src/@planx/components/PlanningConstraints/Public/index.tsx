@@ -73,14 +73,16 @@ function Component(props: Props) {
   const {
     data,
     refetch: refreshConstraints,
-    isError: isDataError,
-    isPending,
+    isError: isGISError,
+    isPending: isPendingGIS,
+    isFetching: isFetchingGIS,
   } = useTeamGISData(dataValues);
 
   const {
     data: roads,
     isError: isRoadsError,
     isPending: isPendingRoads,
+    isFetching: isFetchingRoads,
   } = useClassifiedRoads(dataValues);
 
   // Merge Planning Data and Roads responses for a unified list of constraints
@@ -97,7 +99,7 @@ function Component(props: Props) {
     // `_constraints` & `_overrides` are responsible for auditing
     const _constraints: Array<EnhancedGISResponse> = [];
     if (hasPlanningData) {
-      if (data && !isDataError)
+      if (data && !isGISError)
         _constraints.push({
           ...data,
           planxRequest: data.url,
@@ -180,7 +182,9 @@ function Component(props: Props) {
     );
   }
 
-  const isLoading = isPending || isPendingRoads;
+  const isLoading =
+    (isPendingGIS && isFetchingGIS) || (isPendingRoads && isFetchingRoads);
+
   if (isLoading)
     return (
       <Card handleSubmit={props.handleSubmit} isValid={false}>
