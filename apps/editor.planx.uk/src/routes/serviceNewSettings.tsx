@@ -1,9 +1,9 @@
 import { compose, mount, redirect, route, withData, withView } from "navi";
 import FlowSettingsLayout from "pages/FlowEditor/components/NewSettings/FlowSettings/FlowSettingsLayout";
-import FlowTemplateSettings from "pages/FlowEditor/components/NewSettings/FlowSettings/FlowTemplateSettings";
 import Help from "pages/FlowEditor/components/NewSettings/FlowSettings/Help";
 import LegalDisclaimer from "pages/FlowEditor/components/NewSettings/FlowSettings/LegalDisclaimer";
 import Privacy from "pages/FlowEditor/components/NewSettings/FlowSettings/Privacy";
+import Template from "pages/FlowEditor/components/NewSettings/FlowSettings/Template";
 import Visibility from "pages/FlowEditor/components/NewSettings/FlowSettings/Visibility";
 import React from "react";
 import { View } from "react-navi";
@@ -75,7 +75,7 @@ const flowNewSettingsRoutes = compose(
           "/",
         ),
       ),
-      view: <FlowTemplateSettings />,
+      view: <Template />,
     })),
   }),
 );
