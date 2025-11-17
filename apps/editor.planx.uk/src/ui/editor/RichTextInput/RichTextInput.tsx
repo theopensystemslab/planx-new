@@ -171,13 +171,7 @@ const RichTextInput: FC<Props> = (props) => {
         className={`rich-text-editor ${isRootLevel ? "allow-h1" : ""}`}
       >
         {editor && (
-          <StyledBubbleMenu
-            editor={editor}
-            options={{
-              strategy: "fixed",
-              placement: "top-start",
-            }}
-          >
+          <StyledBubbleMenu editor={editor}>
             {addingLink ? (
               <Input
                 sx={{ width: 300 }}
