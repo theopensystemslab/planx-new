@@ -1,8 +1,9 @@
 import gql from "graphql-tag";
 
 export const GET_FLOW_TEMPLATE_STATUS = gql`
-  query GetFlowTemplateSettings($flowId: uuid!) {
+  query GetFlowTemplateStatus($flowId: uuid!) {
     flow: flows_by_pk(id: $flowId) {
+      id
       templatedFrom: templated_from
       template {
         team {
