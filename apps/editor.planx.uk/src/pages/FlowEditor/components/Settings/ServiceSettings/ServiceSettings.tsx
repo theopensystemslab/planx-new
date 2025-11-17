@@ -6,7 +6,6 @@ import { FooterLinksAndLegalDisclaimer } from "./FlowElements/FooterLinksAndLega
 import FlowStatus from "./FlowStatus";
 import { FlowVisibility } from "./FlowVisibility/FlowVisibilitySection";
 import { LPSListing } from "./LPS/LPSListingSection";
-import { TemplatedFlowStatus } from "./TemplatedFlowStatus/TemplatedFlowStatusSection";
 
 const ServiceSettings: React.FC = () => {
   const [isTemplatedFrom, isTemplate] = useStore((state) => [
@@ -22,8 +21,7 @@ const ServiceSettings: React.FC = () => {
       <FlowStatus />
       {!isTemplatedFrom && !isTemplate && <FlowVisibility />}
       <FooterLinksAndLegalDisclaimer />
-      <LPSListing/>
-      {isTemplatedFrom && <TemplatedFlowStatus />}
+      <LPSListing />
     </Container>
   );
 };
