@@ -1,43 +1,43 @@
 import { act } from "@testing-library/react";
 import ErrorFallback from "components/Error/ErrorFallback";
+import { http, HttpResponse } from "msw";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import swr from "swr";
-import useSWR from "swr";
+import server from "test/mockServer";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import classifiedRoadsResponseMock from "./mocks/classifiedRoadsResponseMock";
-import digitalLandResponseMock from "./mocks/digitalLandResponseMock";
+import classifiedRoadsResponseMock from "../mocks/classifiedRoadsResponseMock";
+import digitalLandResponseMock from "../mocks/digitalLandResponseMock";
 import {
   breadcrumbsWithoutUSRN,
   simpleBreadcrumbs,
   simpleFlow,
-} from "./mocks/simpleFlow";
-import { availableDatasets } from "./model";
-import PlanningConstraints from "./Public";
+} from "../mocks/simpleFlow";
+import { availableDatasets } from "../model";
+import PlanningConstraints from ".";
 
 const { setState } = useStore;
 
-beforeEach(() => vi.clearAllMocks());
+const API_URL = import.meta.env.VITE_APP_API_URL;
 
-vi.mock("swr", () => ({
-  default: vi.fn((url: () => string) => {
-    const isGISRequest = url()?.startsWith(
-      `${import.meta.env.VITE_APP_API_URL}/gis`,
-    );
-    const isRoadsRequest = url()?.startsWith(
-      `${import.meta.env.VITE_APP_API_URL}/roads`,
-    );
-
-    if (isGISRequest) return { data: digitalLandResponseMock };
-    if (isRoadsRequest) return { data: classifiedRoadsResponseMock };
-
-    return { data: null };
+const handlers = [
+  // GIS requests
+  http.get(`${API_URL}/gis/*`, () => {
+    return HttpResponse.json(digitalLandResponseMock);
   }),
-}));
+  // Classified roads requests
+  http.get(`${API_URL}/roads`, () => {
+    return HttpResponse.json(classifiedRoadsResponseMock);
+  }),
+];
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  server.use(...handlers);
+});
 
 describe("error state", () => {
   it("renders an error if no address is present in the passport", async () => {
@@ -91,7 +91,7 @@ describe("following a FindProperty component", () => {
   it("renders correctly", async () => {
     const handleSubmit = vi.fn();
 
-    const { user, getByRole, getByTestId } = setup(
+    const { user, getByRole, getByTestId, findByRole } = setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
@@ -106,13 +106,17 @@ describe("following a FindProperty component", () => {
       getByRole("heading", { name: "Planning constraints" }),
     ).toBeInTheDocument();
 
+    expect(
+      await findByRole("button", { name: /Parks and gardens/ }),
+    ).toBeVisible();
+
     await user.click(getByTestId("continue-button"));
 
     expect(handleSubmit).toHaveBeenCalled();
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(
+    const { container, findByRole } = setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
@@ -121,12 +125,17 @@ describe("following a FindProperty component", () => {
         dataValues={["test1", "test2", "test3"]}
       />,
     );
+
+    expect(
+      await findByRole("button", { name: /Parks and gardens/ }),
+    ).toBeVisible();
+
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
 
   it("fetches planning constraints when we have lng, lat or siteBoundary", async () => {
-    setup(
+    const { findByRole } = setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
@@ -137,18 +146,13 @@ describe("following a FindProperty component", () => {
       />,
     );
 
-    expect(swr).toHaveBeenCalled();
-
-    // Planning data is called first
-    const swrURL = (vi.mocked(useSWR).mock.calls[0][0] as () => {})();
-    const swrResponse = vi.mocked(useSWR).mock.results[0].value;
-
-    expect(swrURL).toContain("/gis");
-    expect(swrResponse).toEqual({ data: digitalLandResponseMock });
+    expect(
+      await findByRole("button", { name: /Parks and gardens/ }),
+    ).toBeVisible();
   });
 
-  it("fetches classified roads when a USRN is provided", () => {
-    setup(
+  it("fetches classified roads when a USRN is provided", async () => {
+    const { findByRole } = setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
@@ -159,14 +163,13 @@ describe("following a FindProperty component", () => {
       />,
     );
 
-    expect(swr).toHaveBeenCalled();
+    expect(
+      await findByRole("button", { name: /Classified roads/ }),
+    ).toBeVisible();
 
-    // Classified roads are called second
-    const swrURL = (vi.mocked(useSWR).mock.calls[1][0] as () => {})();
-    const swrResponse = vi.mocked(useSWR).mock.results[1].value;
-
-    expect(swrURL).toContain("/roads");
-    expect(swrResponse).toEqual({ data: classifiedRoadsResponseMock });
+    expect(
+      await findByRole("button", { name: /Parks and gardens/ }),
+    ).toBeVisible();
   });
 
   it("does not fetch classified roads when a USRN is not provided", async () => {
@@ -180,40 +183,30 @@ describe("following a FindProperty component", () => {
       }),
     );
 
-    setup(
+    const { findByRole, queryByRole } = setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         handleSubmit={vi.fn()}
-        dataValues={["test1", "test2", "test3"]}
+        dataValues={["test1", "test2", "test3", "road.classified"]}
       />,
     );
 
-    expect(swr).toHaveBeenCalled();
+    // GIS data present
+    expect(
+      await findByRole("button", { name: /Parks and gardens/ }),
+    ).toBeVisible();
 
-    // Planning constraints API still called
-    const planingConstraintsURL = (
-      vi.mocked(useSWR).mock.calls[0][0] as () => {}
-    )();
-    const planingConstraintsResponse = vi.mocked(useSWR).mock.results[0].value;
-
-    expect(planingConstraintsURL).toContain("/gis");
-    expect(planingConstraintsResponse).toEqual({
-      data: digitalLandResponseMock,
-    });
-
-    // Classified roads API not called due to missing USRN
-    const swrURL = (vi.mocked(useSWR).mock.calls[1][0] as () => {})();
-    const swrResponse = vi.mocked(useSWR).mock.results[1].value;
-
-    expect(swrURL).toBeNull();
-    expect(swrResponse).toEqual({ data: null });
+    // Roads data not present
+    expect(
+      queryByRole("button", { name: /Classified roads/ }),
+    ).not.toBeInTheDocument();
   });
 
   test("basic layout and interactions", async () => {
-    const { user, getByRole, queryByRole, getByTestId } = setup(
+    const { user, getByRole, queryByRole, getByTestId, findByRole } = setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
@@ -223,12 +216,15 @@ describe("following a FindProperty component", () => {
         dataValues={["test1", "test2", "test3"]}
       />,
     );
+
+    expect(
+      await findByRole("button", { name: /Parks and gardens/ }),
+    ).toBeVisible();
 
     // Positive constraints visible by default
     expect(
       getByRole("heading", { name: /These are the planning constraints/ }),
     ).toBeVisible();
-    expect(getByRole("button", { name: /Parks and gardens/ })).toBeVisible();
 
     // Negative constraints hidden by default
     const showNegativeConstraintsButton = getByRole("button", {
@@ -251,7 +247,7 @@ describe("following a FindProperty component", () => {
   });
 
   test("default disclaimer text should render if none provided", async () => {
-    const { queryByText } = setup(
+    const { queryByText, findByRole } = setup(
       // @ts-ignore - we deliberately want to test the case where PlanningConstraints is missing the disclaimer prop
       <PlanningConstraints
         title="Planning constraints"
@@ -260,6 +256,11 @@ describe("following a FindProperty component", () => {
         handleSubmit={vi.fn()}
       />,
     );
+
+    expect(
+      await findByRole("button", { name: /Parks and gardens/ }),
+    ).toBeVisible();
+
     expect(
       queryByText(
         "This page does not include information about historic planning conditions that may apply to this property.",
@@ -282,7 +283,7 @@ describe("selectable datasets in editor", () => {
   });
 
   it("does not initiate `/roads` request when `road.classified` is not selected by an editor", async () => {
-    setup(
+    const { findByRole, queryByRole } = setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
@@ -295,29 +296,19 @@ describe("selectable datasets in editor", () => {
       />,
     );
 
-    expect(swr).toHaveBeenCalled();
+    // GIS data present
+    expect(
+      await findByRole("button", { name: /Parks and gardens/ }),
+    ).toBeVisible();
 
-    // Planning constraints API still called
-    const planingConstraintsURL = (
-      vi.mocked(useSWR).mock.calls[0][0] as () => {}
-    )();
-    const planingConstraintsResponse = vi.mocked(useSWR).mock.results[0].value;
-
-    expect(planingConstraintsURL).toContain("/gis");
-    expect(planingConstraintsResponse).toEqual({
-      data: digitalLandResponseMock,
-    });
-
-    // Roads API not called due to missing `road.classified` data value
-    const roadsURL = (vi.mocked(useSWR).mock.calls[1][0] as () => {})();
-    const roadsResponse = vi.mocked(useSWR).mock.results[1].value;
-
-    expect(roadsURL).toBeNull();
-    expect(roadsResponse).toEqual({ data: null });
+    // Roads data not present
+    expect(
+      queryByRole("button", { name: /Classified roads/ }),
+    ).not.toBeInTheDocument();
   });
 
   it("does not initiate `/gis/:localAuthority` request when only `road.classified` is selected by an editor", async () => {
-    setup(
+    const { queryByRole, findByRole } = setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
@@ -328,23 +319,19 @@ describe("selectable datasets in editor", () => {
       />,
     );
 
-    expect(swr).toHaveBeenCalled();
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
 
-    // Roads API is called
-    const roadsURL = (vi.mocked(useSWR).mock.calls[1][0] as () => {})();
-    const roadsResponse = vi.mocked(useSWR).mock.results[1].value;
+    // GIS data not present
+    expect(
+      queryByRole("button", { name: /Parks and gardens/ }),
+    ).not.toBeInTheDocument();
 
-    expect(roadsURL).toContain("/roads");
-    expect(roadsResponse).toEqual({ data: classifiedRoadsResponseMock });
-
-    // Planning constraints API not called due to missing data values
-    const planingConstraintsURL = (
-      vi.mocked(useSWR).mock.calls[0][0] as () => {}
-    )();
-    const planningConstraintsResponse = vi.mocked(useSWR).mock.results[0].value;
-
-    expect(planingConstraintsURL).toBeNull();
-    expect(planningConstraintsResponse).toEqual({ data: null });
+    // Roads data present
+    expect(
+      await findByRole("button", { name: /Classified roads/ }),
+    ).toBeVisible();
   });
 });
 
@@ -361,6 +348,7 @@ describe("demo state", () => {
       }),
     );
   });
+
   it("should render an error when teamSlug is demo", async () => {
     const handleSubmit = vi.fn();
     const { queryByText, queryByRole, user, getByTestId } = setup(

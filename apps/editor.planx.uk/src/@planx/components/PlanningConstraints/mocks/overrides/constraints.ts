@@ -1,6 +1,5 @@
 import { GISResponse } from "@opensystemslab/planx-core/types";
-
-import { DEFAULT_FN } from "../../model";
+import { DEFAULT_FN } from "@planx/components/PlanningConstraints/model";
 
 // Based on Lambeth address UNIT SB, 139A, 100, BLACK PRINCE ROAD, LONDON, SE1 7SJ (July 2024)
 export const mockConstraints: GISResponse["constraints"] = {
