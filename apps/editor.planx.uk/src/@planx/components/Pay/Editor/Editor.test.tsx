@@ -1,10 +1,9 @@
 import { User } from "@opensystemslab/planx-core/types";
-import { fireEvent, waitFor } from "@testing-library/react";
+import { act, fireEvent, waitFor } from "@testing-library/react";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { act } from "react-dom/test-utils";
 import { setup } from "testUtils";
 import { it, vi } from "vitest";
 import { axe } from "vitest-axe";

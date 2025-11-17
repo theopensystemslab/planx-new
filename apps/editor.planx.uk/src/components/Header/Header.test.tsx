@@ -1,8 +1,7 @@
 import { Team } from "@opensystemslab/planx-core/types";
-import { screen } from "@testing-library/react";
+import { act, screen } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { act } from "react-dom/test-utils";
 import * as ReactNavi from "react-navi";
 import { setup } from "testUtils";
 import { vi } from "vitest";
