@@ -65,6 +65,20 @@ apiClient.interceptors.response.use(
       } as APIError<unknown>);
     }
 
+    if (status === 429) {
+      toast.error("[API error]: Rate limit exceeded", {
+        toastId: "api_rate_limit_error",
+        hideProgressBar: false,
+        autoClose: 4_000,
+      });
+
+      return Promise.reject({
+        message: "Rate limit exceeded",
+        statusCode: 429,
+        data: error.response?.data,
+      } as APIError<unknown>);
+    }
+
     const apiError = {
       message: error.message || "An unexpected error occurred",
       statusCode: status,
