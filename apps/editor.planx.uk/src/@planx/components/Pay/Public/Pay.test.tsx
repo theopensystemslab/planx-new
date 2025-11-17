@@ -1,10 +1,9 @@
 import { PaymentStatus } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { screen } from "@testing-library/react";
+import { act, screen } from "@testing-library/react";
 import { logger } from "airbrake";
 import { FullStore, Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { act } from "react-dom/test-utils";
 import * as ReactNavi from "react-navi";
 import { setup } from "testUtils";
 import { ApplicationPath, Breadcrumbs } from "types";

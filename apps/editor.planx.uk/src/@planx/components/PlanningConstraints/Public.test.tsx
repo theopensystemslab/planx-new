@@ -1,7 +1,7 @@
+import { act } from "@testing-library/react";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { act } from "react-dom/test-utils";
 import { ErrorBoundary } from "react-error-boundary";
 import swr from "swr";
 import useSWR from "swr";
