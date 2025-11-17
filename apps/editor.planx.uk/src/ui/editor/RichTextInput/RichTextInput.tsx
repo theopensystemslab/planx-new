@@ -174,8 +174,8 @@ const RichTextInput: FC<Props> = (props) => {
           <StyledBubbleMenu
             editor={editor}
             options={{
+              strategy: "fixed",
               placement: "top-start",
-              offset: 50,
             }}
           >
             {addingLink ? (
