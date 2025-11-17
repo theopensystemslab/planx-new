@@ -1,5 +1,4 @@
 import { getIn } from "formik";
-import { useToast } from "hooks/useToast";
 import { merge } from "lodash";
 import { TextInput } from "pages/FlowEditor/components/Settings/ServiceSettings/FlowElements/components/TextInput";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -12,52 +11,38 @@ import { textContentValidationSchema } from "../shared/schema";
 import type { GetFlowSettings, UpdateFlowSettings } from "../shared/types";
 import { defaultValues } from "./schema";
 
-const Privacy: React.FC = () => {
-  const [flowId, flowStatus] = useStore((state) => [
-    state.id,
-    state.flowStatus,
-  ]);
-  const toast = useToast();
+const Help: React.FC = () => {
+  const flowId = useStore((state) => state.id);
 
   return (
     <SettingsFormContainer<GetFlowSettings, UpdateFlowSettings, TextContent>
       query={GET_FLOW_SETTINGS}
       mutation={UPDATE_FLOW_SETTINGS}
       validationSchema={textContentValidationSchema}
-      legend={"Privacy page"}
-      description={
-        "Your privacy policy. If you use the template notice, update the placeholders with your council's information."
-      }
+      legend="Help page"
+      description="A place to communicate FAQs, useful tips, or contact information"
       defaultValues={defaultValues}
       getInitialValues={({
         flow: {
           settings: { elements },
         },
-      }) => elements.privacy}
+      }) => elements.help}
       queryVariables={{ flowId }}
       getMutationVariables={(values, data) => ({
         flowId,
         settings: merge({}, data.flow.settings, {
-          elements: { privacy: values },
+          elements: { help: values },
         }),
       })}
     >
       {({ formik }) => (
         <TextInput
-          title="Privacy page"
+          title="Help page"
           richText
           switchProps={{
             name: "show",
             checked: formik.values.show,
-            onChange: (e) => {
-              if (flowStatus === "online" && formik.values.show) {
-                toast.error(
-                  "You cannot disable the privacy page for a service that is online",
-                );
-                return;
-              }
-              formik.handleChange(e);
-            },
+            onChange: formik.handleChange,
           }}
           headingInputProps={{
             name: "heading",
@@ -77,4 +62,4 @@ const Privacy: React.FC = () => {
   );
 };
 
-export default Privacy;
+export default Help;
