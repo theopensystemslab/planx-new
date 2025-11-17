@@ -24,6 +24,7 @@ interface SettingsFormContainerProps<
   /** Transform form values to mutation variables */
   getMutationVariables: (
     values: TFormValues,
+    data: TData,
   ) => TVariables | Promise<TVariables>;
   validationSchema: SchemaOf<TFormValues>;
   legend: string;
@@ -101,7 +102,9 @@ const SettingsFormContainer = <
     validateOnChange: false,
     onSubmit: async (values, { resetForm }) => {
       try {
-        const variables = await getMutationVariables(values);
+        if (!data) throw Error("Unable to mutate, missing initial data");
+
+        const variables = await getMutationVariables(values, data);
         await updateSettings({ variables });
         resetForm({ values });
       } catch (error) {

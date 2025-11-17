@@ -1,9 +1,9 @@
 import { compose, mount, redirect, route, withData, withView } from "navi";
 import FlowHelpPageSettings from "pages/FlowEditor/components/NewSettings/FlowSettings/FlowHelpPageSettings";
 import FlowLegalDisclaimerSettings from "pages/FlowEditor/components/NewSettings/FlowSettings/FlowLegalDisclaimerSettings";
-import FlowPrivacyPageSettings from "pages/FlowEditor/components/NewSettings/FlowSettings/FlowPrivacyPageSettings";
 import FlowSettingsLayout from "pages/FlowEditor/components/NewSettings/FlowSettings/FlowSettingsLayout";
 import FlowTemplateSettings from "pages/FlowEditor/components/NewSettings/FlowSettings/FlowTemplateSettings";
+import Privacy from "pages/FlowEditor/components/NewSettings/FlowSettings/Privacy";
 import Visibility from "pages/FlowEditor/components/NewSettings/FlowSettings/Visibility";
 import React from "react";
 import { View } from "react-navi";
@@ -66,7 +66,7 @@ const flowNewSettingsRoutes = compose(
             "privacy",
           ].join("/"),
         ),
-        view: <FlowPrivacyPageSettings />,
+        view: <Privacy />,
       })),
     }),
     "/templates": route((req) => ({
