@@ -26,7 +26,7 @@ export const previewView = async (req: NaviRequest) => {
   if (!flow)
     throw new NotFoundError(`Flow ${flowSlug} not found for ${teamSlug}`);
 
-  const flowData = await queryClient.fetchQuery({
+  const flowData = await queryClient.ensureQueryData({
     queryKey: ["flattenedFlowData", "preview", flow.id],
     queryFn: () => getFlattenedFlowData({ flowId: flow.id }),
   });
