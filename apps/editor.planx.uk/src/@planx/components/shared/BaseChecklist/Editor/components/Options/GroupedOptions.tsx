@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { ComponentType } from "@opensystemslab/planx-core/types";
+import { DEFAULT_RULE } from "@planx/components/ResponsiveChecklist/model";
 import type {
   AnyChecklist,
   OptionGroup,
@@ -25,12 +26,14 @@ import { ExclusiveOrOptionManager } from "./ExclusiveOrOptionManager";
 import ChecklistOptionsEditor from "./OptionsEditor";
 
 interface Props<T extends FormikValues> {
+  type: ComponentType.Checklist | ComponentType.ResponsiveChecklist,
   formik: FormikHookReturn<T>;
   disabled?: boolean;
   isTemplatedNode?: boolean;
 }
 
 export const GroupedOptions = <T extends AnyChecklist>({
+  type,
   formik,
   disabled,
   isTemplatedNode,
@@ -111,13 +114,13 @@ export const GroupedOptions = <T extends AnyChecklist>({
                   description: "",
                   val: "",
                   flags: [],
-                  // TODO: add rule
+                  ...(type === ComponentType.ResponsiveChecklist && { rule: DEFAULT_RULE })
                 },
               })}
               newValueLabel="add new option"
               Editor={ChecklistOptionsEditor}
               editorExtraProps={{
-                type: ComponentType.Checklist,
+                type,
                 groupIndex,
                 showValueField: !!formik.values.fn,
                 showDescriptionField: true,
@@ -174,6 +177,7 @@ export const GroupedOptions = <T extends AnyChecklist>({
       )}
       {exclusiveOrOptionManagerShouldRender ? (
         <ExclusiveOrOptionManager
+          type={type}
           formik={formik}
           grouped
           exclusiveOptions={exclusiveOptions[0]?.children}

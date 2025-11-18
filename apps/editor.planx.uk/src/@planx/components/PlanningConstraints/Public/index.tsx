@@ -12,16 +12,16 @@ import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedL
 import { GraphError } from "components/Error/GraphError";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
-import useSWR, { Fetcher } from "swr";
-import { stringify } from "wkt";
 
-import { SiteAddress } from "../FindProperty/model";
-import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
+import { SiteAddress } from "../../FindProperty/model";
+import { ErrorSummaryContainer } from "../../shared/Preview/ErrorSummaryContainer";
 import {
   availableDatasets,
   type IntersectingConstraints,
   type PlanningConstraints,
-} from "./model";
+} from "../model";
+import { useClassifiedRoads } from "./hooks/useClassifiedRoads";
+import { useTeamGISData } from "./hooks/useTeamGISData";
 import { Presentational } from "./Presentational";
 import { handleOverrides } from "./utils";
 
@@ -47,15 +47,13 @@ function Component(props: Props) {
     cachedBreadcrumbs,
     teamSlug,
     hasPlanningData,
-    siteBoundary,
     priorOverrides,
-    { longitude, latitude, usrn },
+    { longitude, latitude },
   ] = useStore((state) => [
     state.currentCard?.id,
     state.cachedBreadcrumbs,
     state.teamSlug,
     state.teamIntegrations?.hasPlanningData,
-    state.computePassport().data?.["proposal.site"],
     state.computePassport().data?.["_overrides"],
     (state.computePassport().data?.["_address"] as SiteAddress) || {},
   ]);
@@ -72,59 +70,20 @@ function Component(props: Props) {
   const [inaccurateConstraints, setInaccurateConstraints] =
     useState<InaccurateConstraints>(initialInaccurateConstraints);
 
-  // Get current query parameters (eg ?analytics=false&sessionId=XXX) to determine if we should audit this response
-  const urlSearchParams = new URLSearchParams(window.location.search);
-  const params = Object.fromEntries(urlSearchParams.entries());
-
-  const fetcher: Fetcher<GISResponse> = (url: string) =>
-    fetch(url).then((r) => r.json());
-
-  // Get the WKT representation of the site boundary drawing or address point to pass to Planning Data
-  const wktPoint = `POINT(${longitude} ${latitude})`;
-  const wktPolygon: string | undefined =
-    siteBoundary && stringify(siteBoundary);
-  const planningDataParams: Record<string, string> = {
-    geom: wktPolygon || wktPoint,
-    vals: dataValues.join(","),
-    ...params,
-  };
-
-  // Fetch planning constraints data for a given local authority if Planning Data & a geometry is available
-  const shouldFetchPlanningData =
-    hasPlanningData &&
-    latitude &&
-    longitude &&
-    dataValues.some((val) => val !== "road.classified");
-  const teamGisEndpoint: string =
-    `${import.meta.env.VITE_APP_API_URL}/gis/${teamSlug}?` +
-    new URLSearchParams(planningDataParams).toString();
   const {
     data,
-    mutate,
-    error: dataError,
-    isValidating,
-  } = useSWR(
-    () => (shouldFetchPlanningData ? teamGisEndpoint : null),
-    fetcher,
-    { revalidateOnFocus: false },
-  );
+    refetch: refreshConstraints,
+    isError: isGISError,
+    isPending: isPendingGIS,
+    isFetching: isFetchingGIS,
+  } = useTeamGISData(dataValues);
 
-  // If an OS address was selected, additionally fetch classified roads (available nationally) using the USRN identifier,
-  //   skip if the applicant plotted a new non-UPRN address on the map
-  const shouldFetchRoads =
-    hasPlanningData && usrn && dataValues.includes("road.classified");
-  const classifiedRoadsEndpoint: string =
-    `${import.meta.env.VITE_APP_API_URL}/roads?` +
-    new URLSearchParams(usrn ? { usrn } : undefined)?.toString();
   const {
     data: roads,
-    error: roadsError,
-    isValidating: isValidatingRoads,
-  } = useSWR(
-    () => (shouldFetchRoads ? classifiedRoadsEndpoint : null),
-    fetcher,
-    { revalidateOnFocus: false },
-  );
+    isError: isRoadsError,
+    isPending: isPendingRoads,
+    isFetching: isFetchingRoads,
+  } = useClassifiedRoads(dataValues);
 
   // Merge Planning Data and Roads responses for a unified list of constraints
   const constraints: GISResponse["constraints"] = {
@@ -140,15 +99,15 @@ function Component(props: Props) {
     // `_constraints` & `_overrides` are responsible for auditing
     const _constraints: Array<EnhancedGISResponse> = [];
     if (hasPlanningData) {
-      if (data && !dataError)
+      if (data && !isGISError)
         _constraints.push({
           ...data,
-          planxRequest: teamGisEndpoint,
+          planxRequest: data.url,
         });
-      if (roads && !roadsError)
+      if (roads && !isRoadsError)
         _constraints.push({
           ...roads,
-          planxRequest: classifiedRoadsEndpoint,
+          planxRequest: roads.url,
         });
     }
 
@@ -213,17 +172,19 @@ function Component(props: Props) {
           </Typography>
           <Typography variant="body2" ml={2}>
             Since we cannot automatically check constraints, you might be asked
-            additional questions about your project.
+            additional questions.
           </Typography>
           <Typography variant="body2" ml={2} mt={0.5}>
-            Click continue to proceed with your application.
+            Click continue to proceed with your form.
           </Typography>
         </ErrorSummaryContainer>
       </Card>
     );
   }
 
-  const isLoading = isValidating || isValidatingRoads;
+  const isLoading =
+    (isPendingGIS && isFetchingGIS) || (isPendingRoads && isFetchingRoads);
+
   if (isLoading)
     return (
       <Card handleSubmit={props.handleSubmit} isValid={false}>
@@ -270,7 +231,7 @@ function Component(props: Props) {
       constraints={constraints}
       metadata={metadata}
       handleSubmit={handleSubmit}
-      refreshConstraints={() => mutate()}
+      refreshConstraints={refreshConstraints}
       inaccurateConstraints={inaccurateConstraints}
       setInaccurateConstraints={setInaccurateConstraints}
     />

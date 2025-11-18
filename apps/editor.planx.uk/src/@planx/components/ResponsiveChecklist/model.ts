@@ -1,6 +1,9 @@
-import { ConditionalOption } from "../Option/model";
+import { array, object, string } from "yup";
+
+import { ConditionalOption, optionValidationSchema } from "../Option/model";
 import {
   BaseChecklist,
+  baseChecklistValidationSchema,
   FlatOptions,
   GroupedOptions,
   parseBaseChecklist,
@@ -25,10 +28,23 @@ export type ResponsiveChecklistWithOptions =
 export const parseResponsiveChecklist = (
   data: Record<string, any> | undefined,
 ): ResponsiveChecklistWithOptions => ({
-  options: data?.options || [],
+  options: data?.options || undefined,
+  groupedOptions: data?.groupedOptions || undefined,
   ...parseBaseChecklist(data),
 });
 
 export const DEFAULT_RULE: Rule = {
   condition: Condition.AlwaysRequired,
 };
+
+export const validationSchema = baseChecklistValidationSchema.concat(
+  object({
+    groupedOptions: array(
+      object({
+        title: string().required("Section title is a required field").trim(),
+        children: array(optionValidationSchema).required(),
+      }).required(),
+    ).optional(),
+    options: array(optionValidationSchema).optional(),
+  })
+);

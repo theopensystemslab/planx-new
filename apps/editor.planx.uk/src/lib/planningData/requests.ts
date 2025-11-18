@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { SearchEntityParams, SearchEntityResponse } from "./types";
+import { type Entity, SearchEntityParams, SearchEntityResponse } from "./types";
 
 const PLANNING_DATA_URL = "https://www.planning.data.gov.uk" as const;
 
@@ -17,29 +17,42 @@ export const searchEntity = async (params: SearchEntityParams) => {
       latitude: params.latitude,
       geometry_relation: params.geometryRelation,
       limit: params.limit || 100,
-      dataset: params.datasets
+      dataset: params.datasets,
     },
     paramsSerializer: {
-      indexes: null
-    }
+      indexes: null,
+    },
   });
 
   return data;
-}
+};
 
 /**
  * Query the "Search Entity" endpoint with the required parameters to get data for the FindProperty component
  */
-export const getFindPropertyData = async (params: Pick<SearchEntityParams, "latitude" | "longitude">) => searchEntity({
-  ...params,
-  // includes historic for pre-merger LADs (eg Wycombe etc for Uniform connector mappings)
-  entries: "all",
-  geometryRelation: "intersects",
-  datasets: [
-    "local-authority-district",
-    "local-planning-authority",
-    "region",
-    "ward",
-    "title-boundary"
-  ]
-});
+export const getFindPropertyData = async (
+  params: Pick<SearchEntityParams, "latitude" | "longitude">,
+) =>
+  searchEntity({
+    ...params,
+    // includes historic for pre-merger LADs (eg Wycombe etc for Uniform connector mappings)
+    entries: "all",
+    geometryRelation: "intersects",
+    datasets: [
+      "local-authority-district",
+      "local-planning-authority",
+      "region",
+      "ward",
+      "title-boundary",
+    ],
+  });
+
+export const getEntity = async (
+  entityId: string,
+  format: "geojson" = "geojson",
+) => {
+  const { data } = await axios.get<Entity>(`/entity/${entityId}.${format}`, {
+    baseURL: PLANNING_DATA_URL,
+  });
+  return data;
+};

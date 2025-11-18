@@ -79,7 +79,7 @@ export const flowWithSections = {
   review: {
     type: 600,
     data: {
-      title: "Check your answers before sending your application",
+      title: "Check your answers before sending your form",
     },
   },
   notice: {

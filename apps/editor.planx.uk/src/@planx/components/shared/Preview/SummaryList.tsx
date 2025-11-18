@@ -128,7 +128,7 @@ const presentationalComponents: {
   [TYPES.PropertyInformation]: PropertyInformation,
   [TYPES.Answer]: Debug,
   [TYPES.ResponsiveChecklist]: undefined,
-  [TYPES.ResponsiveQuestion]: undefined,
+  [TYPES.ResponsiveQuestion]: Question,
   [TYPES.Result]: undefined,
   [TYPES.Review]: undefined,
   [TYPES.Section]: undefined,

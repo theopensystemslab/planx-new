@@ -1,8 +1,7 @@
-import { screen } from "@testing-library/react";
+import { act, screen } from "@testing-library/react";
 // eslint-disable-next-line no-restricted-imports
 import type { UserEvent } from "@testing-library/user-event";
 import { Feature, Point, Polygon } from "geojson";
-import { act } from "react-dom/test-utils";
 
 import { mockTreeData } from "./mocks/GenericValues";
 

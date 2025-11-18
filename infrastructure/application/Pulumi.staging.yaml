@@ -62,10 +62,12 @@ config:
     secure: AAABAGmfVICD8sR+IE6mHC8BNUY1WQXGCbv5F3C1fSgA+1ADiRem3GNrwY0YRZociRYuPIo3MIRS0aIg44jt10SBCE0ik58wHamcKA==
   application:metabasePgPassword:
     secure: AAABADfCkSRtVTdU8wi1F+nwuHl8OeI3bm9ZzaNkIY4yOGB9dsOqS30tkD8W7GZlNoWDZT2ojoP3zOFPuTLWbQ==
+  application:metabase-cpu: "512"
+  application:metabase-memory: "2048"
   application:microsoft-client-id:
     secure: AAABAN/jlejEkv8Rf+u6nzbXy2yTIUNwWK7cw1Rz1P1DQTvvOYsPwhMYqo4Jjt9UAAx+b2FWPoUvrIOUm1dT+xpnqbU=
   application:microsoft-client-secret:
-    secure: AAABAJLeBiZ77GkBfHod1t/0zh2e7azba5b/YZ0O3lKYex25VZCI7YzuzuOaGk+SRmfNz7GZbuGYWgfAE/XrIUBiggs+7pnW
+    secure: AAABAGYZX5lmaa/axrVQODrnHmVIaoWpHP+yN/KsBt0RHnTNcPx63LJhHD0MB5d3WAjVF/Q3RLD+81tuq2ZC1sAYF18YwiZp
   application:ordnance-survey-api-key:
     secure: AAABAMqkRWGvu4THnzddRYpNddFfIFFKCqEE3gm9DkYuVJRCjZBCWpKogsT+X4j3R2f9V8OyeZxHK53yIpl8rQ==
   application:session-secret:

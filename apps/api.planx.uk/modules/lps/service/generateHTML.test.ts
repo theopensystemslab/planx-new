@@ -294,7 +294,7 @@ describe("requesting HTML for a session ID", () => {
         });
     });
 
-    it.skip("successfully downloads HTML when valid detail are provided", async () => {
+    it("successfully downloads HTML when valid detail are provided", async () => {
       await supertest(app)
         .post(ENDPOINT)
         .set({ authorization: `Bearer ${uuidV4()}` })

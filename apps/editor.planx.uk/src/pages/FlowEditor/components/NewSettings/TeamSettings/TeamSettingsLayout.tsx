@@ -4,13 +4,20 @@ import React, { PropsWithChildren } from "react";
 import SettingsLayout from "../SettingsLayout";
 
 const TeamSettingsLayout: React.FC<PropsWithChildren> = ({ children }) => {
-  const [teamSlug] = useStore((state) => [state.teamSlug]);
+  const [teamSlug, isPlatformAdmin] = useStore((state) => [
+    state.teamSlug,
+    state.user?.isPlatformAdmin,
+  ]);
 
-  const settingsLinks = [
+  const baseSettingsLinks = [
     { label: "Contact information", path: "/contact" },
     { label: "Integrations", path: "/integrations" },
     { label: "GIS data", path: "/gis-data" },
-    { label: "Advanced", path: "/advanced" },
+  ];
+
+  const settingsLinks = [
+    ...baseSettingsLinks,
+    ...(isPlatformAdmin ? [{ label: "Advanced", path: "/advanced" }] : []),
   ];
 
   return (

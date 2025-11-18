@@ -2,8 +2,8 @@ import {
   defaultIntersectingConstraints,
   defaultNots,
   mockConstraints,
-} from "./mocks/overrides/constraints";
-import { DEFAULT_FN } from "./model";
+} from "../mocks/overrides/constraints";
+import { DEFAULT_FN } from "../model";
 import { handleOverrides } from "./utils";
 
 describe("handleOverrides basic", () => {

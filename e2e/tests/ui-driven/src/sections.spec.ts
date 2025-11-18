@@ -153,7 +153,7 @@ test.describe("Section statuses", () => {
       // send
       await clickContinue({ page, waitForLogEvent: true });
 
-      await expectConfirmation({ page, text: "Application Sent" });
+      await expectConfirmation({ page, text: "Form sent" });
     });
 
     test("started and ready to continue", async ({ page }) => {

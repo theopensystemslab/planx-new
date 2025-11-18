@@ -88,49 +88,6 @@ export const validationSchema = baseChecklistValidationSchema.concat(
       },
     })
     .test({
-      name: "onlyOneExclusiveOption",
-      test: function ({ options }) {
-        const exclusiveOptions = options?.filter(({ data }) => data.exclusive);
-
-        if (!exclusiveOptions?.length) return true;
-        if (exclusiveOptions.length === 1) return true;
-
-        return this.createError({
-          path: "options",
-          message:
-            "There should be a maximum of one exclusive option configured",
-        });
-      },
-    })
-    .test({
-      name: "atLeastOneDataField",
-      test: function (value) {
-        const {
-          fn,
-          options = [],
-          groupedOptions = [],
-        } = value as ChecklistWithOptions;
-        if (!fn) return true;
-        const allOptions = [
-          ...options,
-          ...groupedOptions.flatMap((group) => group.children),
-        ];
-
-        if (!allOptions) return true;
-
-        const optionsWithDataValues = allOptions?.filter(
-          (option) => option?.data.val,
-        );
-
-        if (optionsWithDataValues?.length) return true;
-
-        return this.createError({
-          path: "fn",
-          message: "At least one option must also set a data field",
-        });
-      },
-    })
-    .test({
       name: "",
       test: function (value) {
         const { alwaysAutoAnswerBlank, fn } = value as ChecklistWithOptions;
@@ -176,67 +133,7 @@ export const validationSchema = baseChecklistValidationSchema.concat(
         });
       },
     })
-    .test({
-      name: "uniqueLabels",
-      test: function ({ options }) {
-        if (!options) return true;
-
-        const uniqueLabels = new Set(options.map(({ data: { text } }) => text));
-        const allUnique = uniqueLabels.size === options.length;
-        if (allUnique) return true;
-
-        return this.createError({
-          path: "options",
-          message: "Options must have unique labels",
-        });
-      },
-    })
-    .test({
-      name: "uniqueLabelsWithinGroups",
-      test: function ({ groupedOptions }) {
-        if (!groupedOptions) return true;
-
-        for (const group of groupedOptions) {
-          if (!group.children) continue;
-
-          const uniqueLabels = new Set(
-            group.children.map(({ data: { text } }) => text),
-          );
-          const allUnique = uniqueLabels.size === group.children.length;
-
-          if (!allUnique) {
-            return this.createError({
-              path: "options",
-              message: "Options within a single group must have unique labels",
-            });
-          }
-        }
-
-        return true;
-      },
-    })
-    .test({
-      name: "uniqueGroupTitles",
-      test: function ({ groupedOptions }) {
-        if (!groupedOptions) return true;
-
-        const uniqueGroupTitles = new Set(
-          groupedOptions.map(({ title }) => title),
-        );
-
-        const allUnique = uniqueGroupTitles.size === groupedOptions.length;
-
-        if (!allUnique) {
-          return this.createError({
-            path: "options",
-            message: "Groups must have unique titles",
-          });
-        }
-
-        return true;
-      },
-    }),
-);
+)
 
 export const parseChecklist = (
   data: Record<string, any> | undefined,

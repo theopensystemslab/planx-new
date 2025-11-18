@@ -57,8 +57,7 @@ const DemoTeamWarning: React.FC<Props> = (props) => (
         Send is not enabled for services created in the Demo team
       </Typography>
       <Typography variant="body2" ml={2}>
-        Click continue to skip send and proceed with your application for
-        testing.
+        Click continue to skip send and proceed with testing.
       </Typography>
     </ErrorSummaryContainer>
   </Card>
@@ -135,7 +134,7 @@ const CreateSendEvents: React.FC<Props> = ({
   if (isPending) {
     return (
       <Card>
-        <DelayedLoadingIndicator text={"Submitting your application..."} />
+        <DelayedLoadingIndicator text={"Sending your form..."} />
       </Card>
     );
   }

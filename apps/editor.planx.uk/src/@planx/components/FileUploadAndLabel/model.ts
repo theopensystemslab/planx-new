@@ -56,6 +56,7 @@ export interface UserFile extends FileType {
 }
 
 export interface FormattedUserFile {
+  name: string;
   rule: Rule;
   url: string | undefined;
   filename: string | undefined;
@@ -158,6 +159,7 @@ const formatUserFiles = (
     if (!slot) throw Error(`Unable to find matching slot ${userSlot.id}`);
 
     return {
+      name: userFile.name,
       rule: userFile.rule,
       url: slot.url,
       filename: slot.file.name,
@@ -184,14 +186,23 @@ const getUpdatedRequestedFiles = (fileList: FileList) => {
     .getState()
     .requestedFiles();
 
+  const uniqueRequired = [
+    ...new Set([...required, ...fileList.required.map(({ fn }) => fn)]),
+  ];
+
+  const uniqueRecommended = [
+    ...new Set([...recommended, ...fileList.recommended.map(({ fn }) => fn)]),
+  ];
+
+  const uniqueOptional = [
+    ...new Set([...optional, ...fileList.optional.map(({ fn }) => fn)]),
+  ];
+
   return {
     [PASSPORT_REQUESTED_FILES_KEY]: {
-      required: [...required, ...fileList.required.map(({ fn }) => fn)],
-      recommended: [
-        ...recommended,
-        ...fileList.recommended.map(({ fn }) => fn),
-      ],
-      optional: [...optional, ...fileList.optional.map(({ fn }) => fn)],
+      required: uniqueRequired,
+      recommended: uniqueRecommended,
+      optional: uniqueOptional,
     },
   };
 };
@@ -213,7 +224,13 @@ export const generatePayload = (
   ].filter(hasSlots);
 
   uploadedFiles.forEach((userFile) => {
-    newPassportData[userFile.fn] = formatUserFiles(userFile, slots);
+    const formattedFiles = formatUserFiles(userFile, slots);
+
+    if (newPassportData[userFile.fn]) {
+      newPassportData[userFile.fn].push(...formattedFiles);
+    } else {
+      newPassportData[userFile.fn] = formattedFiles;
+    }
   });
 
   const requestedFiles = getUpdatedRequestedFiles(fileList);
@@ -230,9 +247,9 @@ const getCachedSlotsFromPreviousData = (
   userFile: UserFile,
   previouslySubmittedData: Store.UserData | undefined,
 ): FileUploadSlot[] =>
-  previouslySubmittedData?.data?.[userFile.fn]?.map(
-    (file: FormattedUserFile) => file.cachedSlot,
-  );
+  previouslySubmittedData?.data?.[userFile.fn]
+    ?.filter((file: FormattedUserFile) => file.name === userFile.name)
+    .map((file: FormattedUserFile) => file.cachedSlot);
 
 const getRecoveredSlots = (
   previouslySubmittedData: Store.UserData | undefined,

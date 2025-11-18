@@ -15,8 +15,8 @@ import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 
+import { InaccurateConstraints } from ".";
 import { formatEntityName } from "./List";
-import { InaccurateConstraints } from "./Public";
 
 interface OverrideEntitiesModalProps {
   showModal: boolean;

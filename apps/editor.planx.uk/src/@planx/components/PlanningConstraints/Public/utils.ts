@@ -1,7 +1,7 @@
 import { Constraint } from "@opensystemslab/planx-core/types";
 
-import { IntersectingConstraints } from "./model";
-import { InaccurateConstraints } from "./Public";
+import { IntersectingConstraints } from "../model";
+import { InaccurateConstraints } from ".";
 
 export function handleOverrides(
   fn: string,
@@ -42,11 +42,11 @@ export function handleOverrides(
       }
 
       const gradeAndZoneLookup: Record<string, string> = {
-        "I": "One",
-        "II": "Two",
+        I: "One",
+        II: "Two",
         "II*": "TwoStar",
         "2": "Two",
-        "3": "Three"
+        "3": "Three",
       };
 
       // If less than all listed building or flood zone entities have been marked as inaccurate, ensure the granular children keys are correct

@@ -4,7 +4,7 @@ import FlowLegalDisclaimerSettings from "pages/FlowEditor/components/NewSettings
 import FlowPrivacyPageSettings from "pages/FlowEditor/components/NewSettings/FlowSettings/FlowPrivacyPageSettings";
 import FlowSettingsLayout from "pages/FlowEditor/components/NewSettings/FlowSettings/FlowSettingsLayout";
 import FlowTemplateSettings from "pages/FlowEditor/components/NewSettings/FlowSettings/FlowTemplateSettings";
-import FlowVisibilitySettings from "pages/FlowEditor/components/NewSettings/FlowSettings/FlowVisibilitySettings";
+import Visibility from "pages/FlowEditor/components/NewSettings/FlowSettings/Visibility";
 import React from "react";
 import { View } from "react-navi";
 
@@ -30,7 +30,7 @@ const flowNewSettingsRoutes = compose(
           "/",
         ),
       ),
-      view: <FlowVisibilitySettings />,
+      view: <Visibility />,
     })),
     "/legal-disclaimer": route((req) => ({
       title: makeTitle(

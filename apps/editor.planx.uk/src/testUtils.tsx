@@ -27,11 +27,15 @@ const testQueryClient = new QueryClient({
  */
 export const setup = (
   jsx: JSX.Element,
-): Record<"user", UserEvent> & RenderResult => ({
-  user: userEvent.setup(),
-  ...render(
-    <QueryClientProvider client={testQueryClient}>
-      <ThemeProvider theme={defaultTheme}>{jsx}</ThemeProvider>
-    </QueryClientProvider>,
-  ),
-});
+): Record<"user", UserEvent> & RenderResult => {
+  testQueryClient.clear();
+
+  return {
+    user: userEvent.setup(),
+    ...render(
+      <QueryClientProvider client={testQueryClient}>
+        <ThemeProvider theme={defaultTheme}>{jsx}</ThemeProvider>
+      </QueryClientProvider>,
+    ),
+  };
+};

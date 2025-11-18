@@ -1,8 +1,7 @@
-import { fireEvent, screen } from "@testing-library/react";
+import { act, fireEvent, screen } from "@testing-library/react";
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { act } from "react-dom/test-utils";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 

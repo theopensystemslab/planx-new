@@ -1,6 +1,6 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import type { AnyOption } from "@planx/components/Option/model";
-import { useCurrentOptions } from "@planx/components/shared/BaseChecklist/Public/hooks/useInitialOptions";
+import { AnyOption } from "@planx/components/Option/model";
+import { DEFAULT_RULE } from "@planx/components/ResponsiveChecklist/model";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { partition } from "lodash";
 import React from "react";
@@ -9,15 +9,18 @@ import ListManager from "ui/editor/ListManager/ListManager";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 
 import type { AnyChecklist } from "../../../model";
+import { useCurrentOptions } from "../../../Public/hooks/useInitialOptions";
 import { ExclusiveOrOptionManager } from "./ExclusiveOrOptionManager";
 import { GroupedOptions } from "./GroupedOptions";
 import ChecklistOptionsEditor from "./OptionsEditor";
 
 export const Options = <T extends AnyChecklist>({
+  type,
   formik,
   disabled,
   isTemplatedNode,
 }: {
+  type: ComponentType.Checklist | ComponentType.ResponsiveChecklist,
   formik: FormikHookReturn<T>;
   disabled?: boolean;
   isTemplatedNode?: boolean;
@@ -35,6 +38,7 @@ export const Options = <T extends AnyChecklist>({
     <ModalSectionContent subtitle="Options">
       {formik.values.groupedOptions ? (
         <GroupedOptions<T>
+          type={type}
           formik={formik}
           disabled={disabled}
           isTemplatedNode={isTemplatedNode}
@@ -60,12 +64,12 @@ export const Options = <T extends AnyChecklist>({
                 description: "",
                 val: "",
                 flags: [],
-                // TODO: Rule!
+                ...(type === ComponentType.ResponsiveChecklist && { rule: DEFAULT_RULE })
               },
             })}
             Editor={ChecklistOptionsEditor}
             editorExtraProps={{
-              type: ComponentType.Checklist,
+              type,
               showValueField: !!formik.values.fn,
               schema: getOptionsSchemaByFn(
                 formik.values.fn,
@@ -77,6 +81,7 @@ export const Options = <T extends AnyChecklist>({
           />
           {exclusiveOrOptionManagerShouldRender ? (
             <ExclusiveOrOptionManager
+              type={type}
               formik={formik}
               exclusiveOptions={exclusiveOptions}
               nonExclusiveOptions={nonExclusiveOptions}

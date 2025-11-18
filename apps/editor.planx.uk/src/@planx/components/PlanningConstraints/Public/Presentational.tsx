@@ -6,12 +6,12 @@ import capitalize from "lodash/capitalize";
 import { HandleSubmit } from "pages/Preview/Node";
 import React from "react";
 
-import { Disclaimer } from "../shared/Disclaimer";
-import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
-import SimpleExpand from "../shared/Preview/SimpleExpand";
+import { Disclaimer } from "../../shared/Disclaimer";
+import { ErrorSummaryContainer } from "../../shared/Preview/ErrorSummaryContainer";
+import SimpleExpand from "../../shared/Preview/SimpleExpand";
+import { DEFAULT_PLANNING_CONDITIONS_DISCLAIMER } from "../model";
+import { InaccurateConstraints } from ".";
 import ConstraintsList from "./List";
-import { DEFAULT_PLANNING_CONDITIONS_DISCLAIMER } from "./model";
-import { InaccurateConstraints } from "./Public";
 
 export type PresentationalProps = {
   title: string;
@@ -24,7 +24,7 @@ export type PresentationalProps = {
   refreshConstraints: () => void;
   inaccurateConstraints: InaccurateConstraints;
   setInaccurateConstraints: (
-    value: React.SetStateAction<InaccurateConstraints>
+    value: React.SetStateAction<InaccurateConstraints>,
   ) => void;
 };
 
@@ -44,10 +44,10 @@ export function Presentational(props: PresentationalProps) {
   if (showError) return <ConstraintsFetchError error={error} {...props} />;
 
   const positiveConstraints = Object.values(constraints).filter(
-    (v: Constraint) => v.text && v.value
+    (v: Constraint) => v.text && v.value,
   );
   const negativeConstraints = Object.values(constraints).filter(
-    (v: Constraint) => v.text && !v.value
+    (v: Constraint) => v.text && !v.value,
   );
 
   return (
@@ -96,9 +96,6 @@ export function Presentational(props: PresentationalProps) {
             planning constraints on your property that might limit what you can
             do.
           </Typography>
-          <Typography variant="body1" gutterBottom>
-            Continue with your application to tell us more about your project.
-          </Typography>
           <SimpleExpand
             id="negative-constraints-list"
             buttonText={{
@@ -145,9 +142,8 @@ const ConstraintsFetchError = (props: ConstraintsFetchErrorProps) => (
         <>
           <Typography variant="body2">
             We couldn't find any information about your property. Click search
-            again to try again. You can continue your application without this
-            information but it might mean we ask additional questions about your
-            project.
+            again to try again. You can continue without this information but it
+            might mean we ask additional questions.
           </Typography>
           <button onClick={props.refreshConstraints}>Search again</button>
         </>

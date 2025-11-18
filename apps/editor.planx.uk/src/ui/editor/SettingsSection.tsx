@@ -12,8 +12,15 @@ const Root = styled(Box, {
   width: "100%",
   marginTop: theme.spacing(2),
   paddingBottom: theme.spacing(1),
+  position: "relative",
+  zIndex: 1,
   "&:first-of-type": {
     marginTop: 0,
+  },
+  // Ensure links break correctly in narrow container
+  "& a": {
+    overflowWrap: "break-word",
+    wordBreak: "break-all",
   },
   "& > * + *, & > form > * + *": {
     ...contentFlowSpacing(theme),

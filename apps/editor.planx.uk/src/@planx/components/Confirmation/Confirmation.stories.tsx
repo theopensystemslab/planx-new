@@ -16,9 +16,9 @@ type Story = StoryObj<typeof meta>;
 
 export const Basic = {
   args: {
-    heading: "Application sent",
+    heading: "Form sent",
     description: `A payment receipt has been emailed to you. You will also 
-    receive an email to confirm when your application has been received.`,
+    receive an email to confirm when your form has been received.`,
     sessionId: "123-t3st-456",
     applicableDetails: {
       "Planning Application Reference": "LBL–LDCP-2138261",

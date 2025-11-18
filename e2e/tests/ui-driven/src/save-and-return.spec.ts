@@ -84,7 +84,7 @@ test.describe("Save and return", () => {
       });
 
       const reviewTitle = page.locator("h1", {
-        hasText: "Resume your application",
+        hasText: "Resume your form",
       });
       await expect(reviewTitle).toBeVisible();
     });

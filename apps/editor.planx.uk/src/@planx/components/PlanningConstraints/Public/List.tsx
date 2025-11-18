@@ -22,10 +22,10 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
-import { SiteAddress } from "../FindProperty/model";
+import { SiteAddress } from "../../FindProperty/model";
+import { availableDatasets } from "../model";
+import { InaccurateConstraints } from ".";
 import { OverrideEntitiesModal } from "./Modal";
-import { availableDatasets } from "./model";
-import { InaccurateConstraints } from "./Public";
 
 const CATEGORY_COLORS: Record<string, string> = {
   "General policy": "#99C1DE",

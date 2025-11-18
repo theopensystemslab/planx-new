@@ -163,7 +163,7 @@ export default function MakePayment({
     ) : (
       <Container maxWidth="contentWrap">
         <Typography maxWidth="formWrap" variant="h1" pt={5} gutterBottom>
-          Pay for your application
+          Pay
         </Typography>
       </Container>
     );

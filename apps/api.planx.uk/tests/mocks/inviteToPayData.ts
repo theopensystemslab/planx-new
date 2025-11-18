@@ -128,17 +128,14 @@ export const flowGraph: FlowGraph = {
     data: {
       fn: "application.fee.payable",
       color: "#EFEFEF",
-      title: "Pay for your application",
-      bannerTitle: "The planning fee for this application is",
-      description:
-        "The planning fee covers the cost of processing your application",
+      title: "Pay",
+      bannerTitle: "The fee is",
+      description: "The fee covers the cost of processing your form",
       allowInviteToPay: true,
       inviteToPayTitle: "Details of your nominee",
       instructionsTitle: "How to pay",
-      inviteToPayDescription:
-        "You can invite someone else to pay for your application.",
-      instructionsDescription:
-        "You can pay for your application by using GOV.UK Pay.",
+      inviteToPayDescription: "You can invite someone else to pay.",
+      instructionsDescription: "You can pay by using GOV.UK Pay.",
     },
     type: 400,
   },
@@ -151,18 +148,18 @@ export const flowWithInviteToPay: Flow["data"] = {
   Pay: {
     data: {
       fn: "application.fee.payable",
-      title: "Pay for your application",
-      bannerTitle: "The planning fee for this application is",
+      title: "Pay",
+      bannerTitle: "The fee is",
       description:
-        '<p>The planning fee covers the cost of processing your application.         Find out more about how planning fees are calculated          <a href="https://www.gov.uk/guidance/fees-for-planning-applications" target="_self">here</a>.</p>',
+        '<p>The fee covers the cost of processing your form.         Find out more about how planning fees are calculated          <a href="https://www.gov.uk/guidance/fees-for-planning-applications" target="_self">here</a>.</p>',
       nomineeTitle: "Details of the person paying",
       allowInviteToPay: true,
       yourDetailsLabel: "Your name or organisation name",
       yourDetailsTitle: "Your details",
       instructionsTitle: "How to pay",
-      secondaryPageTitle: "Invite someone else to pay for this application",
+      secondaryPageTitle: "Invite someone else to pay",
       instructionsDescription:
-        "<p>You can pay for your application by using GOV.UK Pay.</p>         <p>Your application will be sent after you have paid the fee.          Wait until you see an application sent message before closing your browser.</p>",
+        "<p>You can pay by using GOV.UK Pay.</p>         <p>Your form will be sent after you have paid the fee.          Wait until you see a form sent message before closing your browser.</p>",
     },
     type: ComponentType.Pay,
   },

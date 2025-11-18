@@ -36,19 +36,19 @@ export const flowWithEmptySections = {
   },
   mQeG6jHNoQ: {
     data: {
-      title: "Check your answers before sending your application",
+      title: "Check your answers before sending your form",
     },
     type: 600,
   },
   pVnEmZvHNa: {
     data: {
-      heading: "Application sent",
+      heading: "Form sent",
       moreInfo:
         "<h2>You will be contacted</h2>\n        <ul>\n        <li>if there is anything missing from the information you have provided so far</li>\n        <li>if any additional information is required</li>\n        <li>to arrange a site visit, if required</li>\n        <li>to inform you whether a certificate has been granted or not</li>\n        </ul>",
       contactInfo:
         "You can contact us at <em>planning@lambeth.gov.uk</em>\n          <br/><br/>\n          What did you think of this service? Please give us your feedback using the link in the footer below.",
       description:
-        "A payment receipt has been emailed to you. You will also receive an email to confirm when your application has been received.",
+        "A payment receipt has been emailed to you. You will also receive an email to confirm when your form has been received.",
     },
     type: 725,
   },
