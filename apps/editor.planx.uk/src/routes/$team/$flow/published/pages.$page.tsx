@@ -3,6 +3,9 @@ import ContentPage from "pages/Preview/ContentPage";
 import React from "react";
 
 export const Route = createFileRoute("/$team/$flow/published/pages/$page")({
+  beforeLoad: () => ({
+    isContentPage: true,
+  }),
   component: PublishedPageComponent,
 });
 
