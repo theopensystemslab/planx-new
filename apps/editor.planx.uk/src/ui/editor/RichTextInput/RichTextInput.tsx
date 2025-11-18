@@ -172,6 +172,15 @@ const RichTextInput: FC<Props> = (props) => {
       >
         {editor && (
           <StyledBubbleMenu
+            // Key change on adding link forces a re-calculation of the placement
+            // This keep the input within the viewport
+            key={addingLink ? "link-mode" : "default-mode"}
+            shouldShow={({ from, to }) => {
+              // Retain focus when adding link
+              if (addingLink) return true;
+              // Fallback to default
+              return from !== to;
+            }}
             editor={editor}
             options={{
               shift: {
