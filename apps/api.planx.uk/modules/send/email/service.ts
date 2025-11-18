@@ -70,7 +70,9 @@ export async function getFlowSubmissionEmail(flowId: string) {
   const response = await $api.client.request<GetFlowSubmissionEmail>(
     gql`
       query GetFlowSubmissionEmail($flowId: uuid!) {
-        flowIntegrations: flow_integrations(where: { flow_id: { _eq: $flowId } }) {
+        flowIntegrations: flow_integrations(
+          where: { flow_id: { _eq: $flowId } }
+        ) {
           emailId: email_id
           submissionIntegration: submission_integration {
             submissionEmail: submission_email

@@ -286,7 +286,7 @@ describe(`downloading application data received by email`, () => {
         lowcalSessions: [{ flowId: "91693304-fc37-4079-8ec3-e33a6164a27a" }],
       },
       variables: { session_id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
-    })
+    });
 
     queryMock.mockQuery({
       name: "GetFlowSubmissionEmail",
@@ -351,7 +351,7 @@ describe(`downloading application data received by email`, () => {
       });
   });
 
-    it("errors if flowId is missing in GetFlowId query response", async () => {
+  it("errors if flowId is missing in GetFlowId query response", async () => {
     queryMock.mockQuery({
       name: "GetFlowId",
       matchOnVariables: false,
@@ -367,7 +367,9 @@ describe(`downloading application data received by email`, () => {
       )
       .expect(400)
       .then((res) => {
-        expect(res.body.error).toMatch(/Failed to find flow ID for this sessionId/);
+        expect(res.body.error).toMatch(
+          /Failed to find flow ID for this sessionId/,
+        );
       });
   });
 
@@ -394,7 +396,9 @@ describe(`downloading application data received by email`, () => {
       )
       .expect(400)
       .then((res) => {
-        expect(res.body.error).toMatch(/Failed to retrieve submission email for this flow/);
+        expect(res.body.error).toMatch(
+          /Failed to retrieve submission email for this flow/,
+        );
       });
   });
 
@@ -406,7 +410,9 @@ describe(`downloading application data received by email`, () => {
       .expect(200)
       .then((res) => {
         expect(res.headers["content-type"]).toBe("application/octet-stream");
-        expect(res.headers["content-disposition"]).toMatch(/attachment; filename=/);
+        expect(res.headers["content-disposition"]).toMatch(
+          /attachment; filename=/,
+        );
         expect(res.body).toBeInstanceOf(Buffer); // Ensure the response is a buffer
       });
   });
