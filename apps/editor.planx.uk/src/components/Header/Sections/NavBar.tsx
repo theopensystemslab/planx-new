@@ -2,9 +2,9 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { useRouteContext } from "@tanstack/react-router";
 import { capitalize } from "lodash";
 import React from "react";
-import { useCurrentRoute } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { ApplicationPath } from "types";
 
@@ -29,7 +29,8 @@ export const SectionNavBar: React.FC = () => {
   );
   const isSaveAndReturnLandingPage =
     path !== ApplicationPath.SingleSession && !saveToEmail;
-  const isContentPage = useCurrentRoute()?.data?.isContentPage;
+  const routeContext = useRouteContext({ strict: false });
+  const isContentPage = routeContext?.isContentPage;
   const isVisible =
     hasSections && !isSaveAndReturnLandingPage && !isContentPage;
 
