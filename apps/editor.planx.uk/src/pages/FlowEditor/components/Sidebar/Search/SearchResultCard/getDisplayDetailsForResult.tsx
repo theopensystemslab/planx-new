@@ -192,6 +192,9 @@ const keyFormatters: KeyMap = {
   "data.freeformQuestion": {
     getDisplayKey: () => "Freeform question",
   },
+  "data.rule.fn": {
+    getDisplayKey: () => "Option (rule data)",
+  },
 };
 
 const componentFormatters: ComponentMap = {

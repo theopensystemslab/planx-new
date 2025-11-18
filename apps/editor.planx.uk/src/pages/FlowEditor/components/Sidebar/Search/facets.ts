@@ -8,6 +8,8 @@ const generalData: SearchFacets = ["data.fn", "data.val"];
 
 const fileUploadAndLabelData: SearchFacets = ["data.fileTypes.fn"];
 
+const optionData: SearchFacets = ["data.rule.fn"];
+
 const calculateData: SearchFacets = [
   {
     name: "formula",
@@ -26,6 +28,7 @@ export const DATA_FACETS: SearchFacets = [
   ...fileUploadAndLabelData,
   ...calculateData,
   ...listData,
+  ...optionData,
 ];
 
 const stripHTMLTags = (html = "") =>
