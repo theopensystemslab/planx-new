@@ -216,7 +216,7 @@ export const parsePay = (data?: Record<string, any>): Pay => ({
 
 const parseGovPayMetadata = (data?: Record<string, any>): GovPayMetadata[] => {
   // Handle new component creation
-  if (!data) return getDefaultContent().govPayMetadata;
+  if (!data?.govPayMetadata) return getDefaultContent().govPayMetadata;
 
   // Existing data with `type` property
   const hasMetadataType = (data: GovPayMetadata) => Boolean(data?.type);
