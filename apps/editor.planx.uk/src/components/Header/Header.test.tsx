@@ -1,9 +1,9 @@
 import { Team } from "@opensystemslab/planx-core/types";
+import * as TanStackRouter from "@tanstack/react-router";
 import { screen } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { act } from "react-dom/test-utils";
-import * as ReactNavi from "react-navi";
+import { act } from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
@@ -68,9 +68,26 @@ const mockTeam2: Team = {
   },
 };
 
-vi.spyOn(ReactNavi, "useNavigation").mockReturnValue({
-  navigate: vi.fn(),
-} as any);
+vi.mock("ui/shared/CustomLink/CustomLink", () => ({
+  CustomLink: ({
+    children,
+    ...props
+  }: {
+    children?: React.ReactNode;
+  } & React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
+    <a {...props}>{children}</a>
+  ),
+}));
+
+vi.mock("@tanstack/react-router", () => ({
+  useLocation: vi.fn(),
+  useNavigate: vi.fn(() => vi.fn()),
+  useParams: vi.fn(() => ({})),
+  useRouteContext: vi.fn(() => ({})),
+}));
+
+const mockUseLocation = vi.mocked(TanStackRouter.useLocation);
+const mockUseParams = vi.mocked(TanStackRouter.useParams);
 
 describe("Header Component - Editor Route", () => {
   beforeAll(() => {
@@ -81,6 +98,7 @@ describe("Header Component - Editor Route", () => {
         teamSettings: mockTeam1.settings,
         teamTheme: mockTeam1.theme,
         teamSlug: mockTeam1.slug,
+        flowName: "test-flow",
         user: {
           firstName: "Test",
           lastName: "User",
@@ -93,18 +111,19 @@ describe("Header Component - Editor Route", () => {
       }),
     );
 
-    vi.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
-      () =>
-        ({
-          url: {
-            href: "test",
-            pathname: "/team-name/flow-name",
-          },
-          data: {
-            flow: "test-flow",
-          },
-        }) as any,
-    );
+    mockUseLocation.mockReturnValue({
+      pathname: "/team-name/flow-name",
+      search: {},
+      hash: "",
+      href: "/team-name/flow-name",
+      state: { __TSR_index: 0 },
+      searchStr: "",
+    });
+
+    mockUseParams.mockReturnValue({
+      team: "team-name",
+      flow: "flow-name",
+    });
   });
 
   afterAll(() => {
@@ -134,18 +153,19 @@ describe("Header Component - Editor Route", () => {
 for (const route of ["/published", "/preview", "/draft", "/pay", "/invite"]) {
   describe(`Header Component - ${route} Routes`, () => {
     beforeAll(() => {
-      vi.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
-        () =>
-          ({
-            url: {
-              href: "test",
-              pathname: "/opensystemslab/test-flow" + route,
-            },
-            data: {
-              flow: "test-flow",
-            },
-          }) as any,
-      );
+      mockUseLocation.mockReturnValue({
+        pathname: "/opensystemslab/test-flow" + route,
+        search: {},
+        hash: "",
+        href: "/opensystemslab/test-flow" + route,
+        state: { __TSR_index: 0 },
+        searchStr: "",
+      });
+
+      mockUseParams.mockReturnValue({
+        team: "opensystemslab",
+        flow: "test-flow",
+      });
     });
 
     it("displays a logo when available", () => {
@@ -185,18 +205,19 @@ for (const route of ["/published", "/preview", "/draft", "/pay", "/invite"]) {
 
 describe("Section navigation bar", () => {
   beforeAll(() => {
-    vi.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
-      () =>
-        ({
-          url: {
-            href: "test",
-            pathname: "/team-name/flow-name/published",
-          },
-          data: {
-            flow: "test-flow",
-          },
-        }) as any,
-    );
+    mockUseLocation.mockReturnValue({
+      pathname: "/team-name/flow-name/published",
+      search: {},
+      hash: "",
+      href: "/team-name/flow-name/published",
+      state: { __TSR_index: 0 },
+      searchStr: "",
+    });
+
+    mockUseParams.mockReturnValue({
+      team: "team-name",
+      flow: "flow-name",
+    });
   });
 
   describe("Flow without sections", () => {

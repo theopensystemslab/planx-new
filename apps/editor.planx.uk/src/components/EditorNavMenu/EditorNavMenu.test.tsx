@@ -1,19 +1,18 @@
+import * as TanStackRouter from "@tanstack/react-router";
 import { within } from "@testing-library/react";
 import React from "react";
-import * as ReactNavi from "react-navi";
 import { setup } from "testUtils";
-import { Mocked, vi } from "vitest";
+import { vi } from "vitest";
 
 import EditorNavMenu from "./EditorNavMenu";
 
-vi.mock("react-navi", () => ({
-  useCurrentRoute: vi.fn(),
-  useNavigation: () => ({ navigate: vi.fn() }),
-  // Mock completed loading process
-  useLoadingRoute: () => undefined,
+vi.mock("@tanstack/react-router", () => ({
+  useLocation: vi.fn(),
+  useNavigate: vi.fn(() => vi.fn()),
+  useRouter: vi.fn(() => ({ state: { isLoading: false } })),
 }));
 
-const mockNavi = ReactNavi as Mocked<typeof ReactNavi>;
+const mockUseLocation = vi.mocked(TanStackRouter.useLocation);
 
 let mockTeamName: string | undefined = undefined;
 let mockFlowName: string | undefined = undefined;
@@ -22,20 +21,37 @@ const mockGetUserRoleForCurrentTeam = vi.fn();
 const mockGetTeam = vi.fn();
 
 vi.mock("pages/FlowEditor/lib/store", async () => ({
-  useStore: vi.fn(() => [
-    mockTeamName,
-    mockFlowName,
-    mockAnalyticsLink,
-    mockGetUserRoleForCurrentTeam(),
-    mockGetTeam(),
-  ]),
+  useStore: vi.fn((selector) => {
+    const state = {
+      teamSlug: mockTeamName,
+      flowSlug: mockFlowName,
+      flowAnalyticsLink: mockAnalyticsLink,
+      getUserRoleForCurrentTeam: mockGetUserRoleForCurrentTeam,
+      getTeam: mockGetTeam,
+    };
+
+    return selector
+      ? selector(state)
+      : [
+          mockTeamName,
+          mockFlowName,
+          mockAnalyticsLink,
+          mockGetUserRoleForCurrentTeam(),
+          mockGetTeam(),
+        ];
+  }),
 }));
 
 describe("globalLayoutRoutes", () => {
   beforeEach(() => {
-    mockNavi.useCurrentRoute.mockReturnValue({
-      url: { href: "/" },
-    } as ReturnType<typeof mockNavi.useCurrentRoute>);
+    mockUseLocation.mockReturnValue({
+      pathname: "/",
+      search: {},
+      hash: "",
+      href: "/",
+      state: { __TSR_index: 0 },
+      searchStr: "",
+    });
   });
 
   it("displays for teamEditors", () => {
@@ -58,9 +74,14 @@ describe("globalLayoutRoutes", () => {
 
 describe("teamLayoutRoutes", () => {
   beforeEach(() => {
-    mockNavi.useCurrentRoute.mockReturnValue({
-      url: { href: "/test-team" },
-    } as ReturnType<typeof mockNavi.useCurrentRoute>);
+    mockUseLocation.mockReturnValue({
+      pathname: "/test-team",
+      search: {},
+      hash: "",
+      href: "/test-team",
+      state: { __TSR_index: 0 },
+      searchStr: "",
+    });
     mockTeamName = "test-team";
     mockGetTeam.mockReturnValue({ settings: { referenceCode: null } });
   });
@@ -98,9 +119,14 @@ describe("teamLayoutRoutes", () => {
 
 describe("teamPlanningDataRoute", () => {
   beforeEach(() => {
-    mockNavi.useCurrentRoute.mockReturnValue({
-      url: { href: "/test-team" },
-    } as ReturnType<typeof mockNavi.useCurrentRoute>);
+    mockUseLocation.mockReturnValue({
+      pathname: "/test-team",
+      search: {},
+      hash: "",
+      href: "/test-team",
+      state: { __TSR_index: 0 },
+      searchStr: "",
+    });
     mockTeamName = "test-team";
   });
 
@@ -121,9 +147,14 @@ describe("teamPlanningDataRoute", () => {
 
 describe("flowLayoutRoutes", () => {
   beforeEach(() => {
-    mockNavi.useCurrentRoute.mockReturnValue({
-      url: { href: "/test-team/test-flow" },
-    } as ReturnType<typeof mockNavi.useCurrentRoute>);
+    mockUseLocation.mockReturnValue({
+      pathname: "/test-team/test-flow",
+      search: {},
+      hash: "",
+      href: "/test-team/test-flow",
+      state: { __TSR_index: 0 },
+      searchStr: "",
+    });
     mockTeamName = "test-team";
     mockFlowName = "test-flow";
   });
@@ -159,9 +190,14 @@ describe("flowLayoutRoutes", () => {
 
 describe("flowAnalyticsRoute", () => {
   beforeEach(() => {
-    mockNavi.useCurrentRoute.mockReturnValue({
-      url: { href: "/test-team/test-flow" },
-    } as ReturnType<typeof mockNavi.useCurrentRoute>);
+    mockUseLocation.mockReturnValue({
+      pathname: "/test-team/test-flow",
+      search: {},
+      hash: "",
+      href: "/test-team/test-flow",
+      state: { __TSR_index: 0 },
+      searchStr: "",
+    });
     mockTeamName = "test-team";
     mockFlowName = "test-flow";
     mockGetUserRoleForCurrentTeam.mockReturnValue("teamEditor");
@@ -182,9 +218,14 @@ describe("flowAnalyticsRoute", () => {
 
 describe("layout", () => {
   it("displays in a full mode on global routes", () => {
-    mockNavi.useCurrentRoute.mockReturnValue({
-      url: { href: "/" },
-    } as ReturnType<typeof mockNavi.useCurrentRoute>);
+    mockUseLocation.mockReturnValue({
+      pathname: "/",
+      search: {},
+      hash: "",
+      href: "/",
+      state: { __TSR_index: 0 },
+      searchStr: "",
+    });
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
 
     const { queryAllByRole, queryByLabelText } = setup(<EditorNavMenu />);
@@ -198,9 +239,14 @@ describe("layout", () => {
   });
 
   it("displays in a full mode on team routes", () => {
-    mockNavi.useCurrentRoute.mockReturnValue({
-      url: { href: "/test-team" },
-    } as ReturnType<typeof mockNavi.useCurrentRoute>);
+    mockUseLocation.mockReturnValue({
+      pathname: "/test-team",
+      search: {},
+      hash: "",
+      href: "/test-team",
+      state: { __TSR_index: 0 },
+      searchStr: "",
+    });
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
     mockTeamName = "test-team";
 
@@ -215,9 +261,14 @@ describe("layout", () => {
   });
 
   it("displays in a compact mode on flow routes", () => {
-    mockNavi.useCurrentRoute.mockReturnValue({
-      url: { href: "/test-team/test-flow" },
-    } as ReturnType<typeof mockNavi.useCurrentRoute>);
+    mockUseLocation.mockReturnValue({
+      pathname: "/test-team/test-flow",
+      search: {},
+      hash: "",
+      href: "/test-team/test-flow",
+      state: { __TSR_index: 0 },
+      searchStr: "",
+    });
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
     mockTeamName = "test-team";
     mockFlowName = "test-flow";

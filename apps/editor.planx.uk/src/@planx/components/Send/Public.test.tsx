@@ -4,7 +4,6 @@ import { delay, http, HttpResponse } from "msw";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react";
-import * as ReactNavi from "react-navi";
 import server from "test/mockServer";
 import { setup } from "testUtils";
 import { it, vi } from "vitest";
@@ -17,9 +16,10 @@ const { getState, setState } = useStore;
 
 let initialState: FullStore;
 
-vi.spyOn(ReactNavi, "useNavigation").mockImplementation(
-  () => ({ navigate: vi.fn() }) as any,
-);
+// Mock TanStack Router hooks
+vi.mock("@tanstack/react-router", () => ({
+  useNavigate: vi.fn(() => vi.fn()),
+}));
 
 const handler = http.post(
   `${import.meta.env.VITE_APP_API_URL}/create-send-events/*`,

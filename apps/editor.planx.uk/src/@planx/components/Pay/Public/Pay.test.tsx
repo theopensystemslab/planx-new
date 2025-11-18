@@ -5,7 +5,6 @@ import { logger } from "airbrake";
 import { FullStore, Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react-dom/test-utils";
-import * as ReactNavi from "react-navi";
 import { setup } from "testUtils";
 import { ApplicationPath, Breadcrumbs } from "types";
 import { vi } from "vitest";
@@ -14,17 +13,32 @@ import { axe } from "vitest-axe";
 import Confirm, { Props } from "./Confirm";
 import Pay from "./Pay";
 
-const { getState, setState } = useStore;
-
-let initialState: FullStore;
-
-vi.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
-  () => ({ data: { mountpath: "mountpath" } }) as any,
-);
+// Mock TanStack Router hooks
+vi.mock("@tanstack/react-router", () => ({
+  useRouteContext: vi.fn(() => ({
+    isContentPage: false,
+  })),
+  useNavigate: vi.fn(() => vi.fn()),
+  useParams: vi.fn(() => ({
+    team: "test-team",
+    flow: "test-flow",
+  })),
+  useLocation: vi.fn(() => ({
+    pathname: "/test-team/test-flow/pay",
+    search: {},
+    hash: "",
+    href: "/test-team/test-flow/pay",
+    state: {},
+  })),
+}));
 
 vi.mock("lib/featureFlags", () => ({
   hasFeatureFlag: vi.fn().mockResolvedValue(true),
 }));
+
+const { getState, setState } = useStore;
+
+let initialState: FullStore;
 
 const resumeButtonText = "Resume an application you have already started";
 const saveButtonText = "Save and return to this application later";

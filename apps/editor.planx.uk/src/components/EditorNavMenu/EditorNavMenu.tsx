@@ -212,7 +212,7 @@ function EditorNavMenu() {
     return result;
   };
 
-  const { routes, compact } = getRoutesForUrl(location.pathname);
+  const { routes, compact } = getRoutesForUrl(pathname);
 
   const isRouteAccessible = ({ accessibleBy }: Route) => {
     const accessibleByAll = accessibleBy === "*";
