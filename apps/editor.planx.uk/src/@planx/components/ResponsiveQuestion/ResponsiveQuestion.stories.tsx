@@ -3,15 +3,15 @@ import React from "react";
 
 import Wrapper from "../fixtures/Wrapper";
 import {
-  basicArgs,
-  withDescriptionsArgs,
-  withImagesArgs,
+  basicResponsiveArgs,
+  withDescriptionsResponsiveArgs,
+  withImagesResponsiveArgs,
 } from "../shared/BaseQuestion/BaseQuestion.stories.config";
 import Editor from "./Editor";
 import Public from "./Public";
 
 const meta = {
-  title: "PlanX Components/Question",
+  title: "PlanX Components/Responsive Question",
   component: Public,
   argTypes: {
     handleSubmit: { action: true, control: { disable: true } },
@@ -23,15 +23,15 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Basic = {
-  args: basicArgs,
+  args: basicResponsiveArgs,
 } satisfies Story;
 
 export const WithDescriptions = {
-  args: withDescriptionsArgs,
+  args: withDescriptionsResponsiveArgs,
 } satisfies Story;
 
 export const WithImages = {
-  args: withImagesArgs,
+  args: withImagesResponsiveArgs,
 } satisfies Story;
 
 export const WithEditor = () => {

@@ -4,34 +4,35 @@ import React from "react";
 
 import Wrapper from "../fixtures/Wrapper";
 import {
-  allRequiredArgs,
-  basicArgs,
-  exclusiveOrArgs,
+  allRequiredResponsiveArgs,
+  basicResponsiveArgs,
+  exclusiveOrResponsiveArgs,
   groupedArgs,
-  withDescriptionsArgs,
-  withImagesArgs,
-  withRepeatedOptionsArgs,
+  withRepeatedOptionsResponsiveArgs,
 } from "../shared/BaseChecklist/BaseChecklist.stories.config";
-import { mockWithRepeatedOptions } from "../shared/BaseChecklist/Public/tests/mockOptions";
+import {
+  withDescriptionsResponsiveArgs,
+  withImagesResponsiveArgs,
+} from "../shared/BaseQuestion/BaseQuestion.stories.config";
 import { EditorProps } from "../shared/types";
 import Editor from "./Editor";
-import { ChecklistWithOptions } from "./model";
-import Checklist from "./Public";
+import { ResponsiveChecklistWithOptions } from "./model";
+import ResponsiveChecklist from "./Public";
 
 const meta = {
-  title: "PlanX Components/Checklist",
-  component: Checklist,
+  title: "PlanX Components/Responsive Checklist",
+  component: ResponsiveChecklist,
   argTypes: {
     handleSubmit: { action: true, control: { disable: true } },
   },
-} satisfies Meta<typeof Checklist>;
+} satisfies Meta<typeof ResponsiveChecklist>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
 export const Basic = {
-  args: basicArgs,
+  args: basicResponsiveArgs,
 } satisfies Story;
 
 export const Grouped = {
@@ -39,33 +40,33 @@ export const Grouped = {
 } satisfies Story;
 
 export const WithDescriptions = {
-  args: withDescriptionsArgs,
+  args: withDescriptionsResponsiveArgs,
 } satisfies Story;
 
 export const WithImages = {
-  args: withImagesArgs,
+  args: withImagesResponsiveArgs,
 } satisfies Story;
 
 export const ExclusiveOr = {
-  args: exclusiveOrArgs,
+  args: exclusiveOrResponsiveArgs,
 } satisfies Story;
 
 export const AllRequired = {
-  args: allRequiredArgs,
+  args: allRequiredResponsiveArgs,
 } satisfies Story;
 
 export const WithRepeatedOptions = {
-  args: withRepeatedOptionsArgs,
+  args: withRepeatedOptionsResponsiveArgs,
 } satisfies Story;
 
 const EditorWithFlatOptions = (
   props: EditorProps<
     ComponentType,
-    ChecklistWithOptions,
+    ResponsiveChecklistWithOptions,
     Record<string, unknown>
   >,
 ) => {
-  const editorProps: ChecklistWithOptions = {
+  const editorProps: ResponsiveChecklistWithOptions = {
     ...props,
     groupedOptions: undefined,
     options: [],
@@ -75,5 +76,7 @@ const EditorWithFlatOptions = (
 };
 
 export const WithEditor = () => {
-  return <Wrapper Editor={EditorWithFlatOptions} Public={Checklist} />;
+  return (
+    <Wrapper Editor={EditorWithFlatOptions} Public={ResponsiveChecklist} />
+  );
 };
