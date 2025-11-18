@@ -28,3 +28,4 @@ services:
       UNIFORM_TOKEN_URL: http://mock-server:8080
       UNIFORM_CLIENT_E2E: e2e:123
       NODE_ENV: test
+      APP_ENVIRONMENT: test
