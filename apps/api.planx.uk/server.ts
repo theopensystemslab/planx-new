@@ -108,7 +108,7 @@ const authRoutes = await getAuthRoutes(passport);
 
 // Setup API routes
 app.use(adminRoutes);
-app.use(aiRoutes);
+app.use("/ai", aiRoutes);
 app.use(analyticsRoutes);
 app.use(authRoutes);
 app.use(fileRoutes);

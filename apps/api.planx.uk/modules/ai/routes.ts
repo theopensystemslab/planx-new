@@ -8,7 +8,7 @@ const router = Router();
 router.use(aiLimiter);
 
 router.post(
-  "/ai/project-description/enhance",
+  "/project-description/enhance",
   // TODO: Strict prompt validation / abuse / jailbreak checks
   validate(projectDescriptionSchema),
   projectDescriptionController,
