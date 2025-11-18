@@ -36,6 +36,7 @@ vi.mock("@opensystemslab/planx-core", async () => {
 const mockBuildSubmissionExportZip = vi.fn().mockImplementation(() => ({
   write: () => "zip",
   toBuffer: () => Buffer.from("test"),
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   remove: () => {},
 }));
 
