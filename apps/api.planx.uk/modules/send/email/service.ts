@@ -5,7 +5,6 @@ import type {
   TeamContactSettings,
 } from "@opensystemslab/planx-core/types";
 import type { TemplateRegistry } from "../../../lib/notify/templates/index.js";
-import type { UUID } from "node:crypto";
 
 interface GetTeamEmailSettings {
   teams: {
@@ -37,17 +36,17 @@ export async function getTeamEmailSettings(localAuthority: string) {
 }
 
 interface GetFlowId {
-  lowcal_sessions: {
-    flow_id: UUID;
+  lowcalSessions: {
+    flowId: string;
   }[];
 }
 
-export async function getFlowId(sessionId: UUID) {
+export async function getFlowId(sessionId: string) {
   const response = await $api.client.request<GetFlowId>(
     gql`
       query GetFlowId($session_id: uuid!) {
-        lowcal_sessions(where: { id: { _eq: $session_id } }) {
-          flow_id
+        lowcalSessions: lowcal_sessions(where: { id: { _eq: $session_id } }) {
+          flowId: flow_id
         }
       }
     `,
@@ -55,26 +54,26 @@ export async function getFlowId(sessionId: UUID) {
       session_id: sessionId,
     },
   );
-  return response?.lowcal_sessions[0].flow_id;
+  return response?.lowcalSessions[0]?.flowId;
 }
 
 interface GetFlowSubmissionEmail {
-  flow_integrations: {
-    email_id: UUID;
-    submission_integration: {
-      submission_email: string;
+  flowIntegrations: {
+    emailId: string;
+    submissionIntegration: {
+      submissionEmail: string;
     };
   }[];
 }
 
-export async function getFlowSubmissionEmail(flowId: UUID) {
+export async function getFlowSubmissionEmail(flowId: string) {
   const response = await $api.client.request<GetFlowSubmissionEmail>(
     gql`
       query GetFlowSubmissionEmail($flowId: uuid!) {
-        flow_integrations(where: { flow_id: { _eq: $flowId } }) {
-          email_id
-          submission_integration {
-            submission_email
+        flowIntegrations: flow_integrations(where: { flow_id: { _eq: $flowId } }) {
+          emailId: email_id
+          submissionIntegration: submission_integration {
+            submissionEmail: submission_email
           }
         }
       }
@@ -83,8 +82,7 @@ export async function getFlowSubmissionEmail(flowId: UUID) {
       flowId,
     },
   );
-
-  return response?.flow_integrations[0]?.submission_integration;
+  return response?.flowIntegrations[0]?.submissionIntegration;
 }
 
 interface GetSessionData {
