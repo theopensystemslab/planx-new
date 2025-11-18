@@ -1,7 +1,7 @@
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
-import { useDownloadApplication } from "./useDownloadApplication";
+import { useDownloadApplication } from "../../hooks/useDownloadApplication";
 
 export default function Application() {
   const [sessionId, saveToEmail] = useStore((state) => [
@@ -13,6 +13,8 @@ export default function Application() {
     email: saveToEmail,
     sessionId,
   });
+
+  console.log(saveToEmail, sessionId)
 
   if (isPending) {
     return (

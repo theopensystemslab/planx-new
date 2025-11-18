@@ -50,6 +50,11 @@ export const getDownloadToken = async (email: string, sessionId: string): Promis
     {
       email,
       sessionId,
+    },
+    {
+      headers: {
+        "content-type": "application/json"
+      }
     }
   );
 

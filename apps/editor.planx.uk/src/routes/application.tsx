@@ -1,7 +1,7 @@
 import { compose, mount, route, withData } from "navi";
 import React from "react";
 import { makeTitle } from "./utils";
-import Application from "../components/Application/Application";
+import Application from "../pages/Application/Application";
 
 const applicationRoutes = compose(
   withData((req) => ({
