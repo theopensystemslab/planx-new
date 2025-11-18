@@ -23,10 +23,7 @@ vi.spyOn(ReactNavi, "useNavigation").mockImplementation(
 
 const handler = http.post(
   `${import.meta.env.VITE_APP_API_URL}/create-send-events/*`,
-  async () => {
-    await delay();
-    return HttpResponse.json(hasuraEventsResponseMock, { status: 200 });
-  },
+  async () => HttpResponse.json(hasuraEventsResponseMock, { status: 200 }),
 );
 
 const originalLocation = window.location.pathname;
@@ -63,6 +60,16 @@ it("displays a warning at /preview URLs", () => {
 });
 
 it("displays loading messages to the user", async () => {
+  const handler = http.post(
+    `${import.meta.env.VITE_APP_API_URL}/create-send-events/*`,
+    async () => {
+      // Add delay to allow us to test loading states
+      await delay();
+      return new HttpResponse(hasuraEventsResponseMock, { status: 200 });
+    },
+  );
+  server.use(handler);
+
   const handleSubmit = vi.fn();
   const { findByText } = setup(
     <SendComponent
@@ -90,7 +97,6 @@ it("generates a valid payload for the API", async () => {
   const handler = http.post(
     `${import.meta.env.VITE_APP_API_URL}/create-send-events/*`,
     async ({ request }) => {
-      await delay();
       apiPayload = await request.json();
       return new HttpResponse(hasuraEventsResponseMock, { status: 200 });
     },
