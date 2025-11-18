@@ -49,9 +49,21 @@ export async function downloadApplicationFiles(
 
     // Get flow ID, in order to access flow submission email
     const flowId = await getFlowId(sessionId);
+    if (!flowId || flowId === undefined) {
+      return next({
+        status: 400,
+        message: "Failed to find flow ID for this sessionId",
+      });
+    }
 
     // Get the flow submission email, which will run parallel to getTeamEmailSettings for now
     const submissionEmail = await getFlowSubmissionEmail(flowId);
+    if (!submissionEmail.submissionEmail) {
+      return next({
+        status: 400,
+        message: "Failed to retrieve submission email for this flow",
+      });
+    }
     console.log(submissionEmail);
 
     // create the submission zip
