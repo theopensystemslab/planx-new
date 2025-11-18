@@ -1,9 +1,9 @@
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
+import { useRouteContext } from "@tanstack/react-router";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { useCurrentRoute } from "react-navi";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
@@ -87,7 +87,8 @@ const SaveAndReturn: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const isEmailCaptured = Boolean(useStore((state) => state.saveToEmail));
   const sessionId = useStore((state) => state.sessionId);
-  const isContentPage = useCurrentRoute()?.data?.isContentPage;
+  const routeContext = useRouteContext({ strict: false });
+  const isContentPage = routeContext?.isContentPage;
 
   // Setting the URL search param "sessionId" will route the user to ApplicationPath.Resume
   // Without this the user will need to click the magic link in their email after a refresh
