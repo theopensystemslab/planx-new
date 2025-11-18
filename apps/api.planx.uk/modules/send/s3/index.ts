@@ -1,4 +1,4 @@
-import type { AxiosRequestConfig } from "axios";
+import type { AxiosRequestConfig, AxiosResponse } from "axios";
 import axios from "axios";
 import { gql } from "graphql-request";
 
@@ -22,6 +22,9 @@ const sendToS3: SendIntegrationController = async (_req, res, next) => {
     payload: { sessionId },
   } = res.locals.parsedReq.body;
   const localAuthority = res.locals.parsedReq.params.localAuthority;
+  const sendPowerAutomateNotification =
+    res.locals.parsedReq.params.notify || true;
+
   const env =
     process.env.APP_ENVIRONMENT === "production" ? "production" : "staging";
 
@@ -34,7 +37,10 @@ const sendToS3: SendIntegrationController = async (_req, res, next) => {
         env,
       });
 
-    if (!powerAutomateWebhookURL || !powerAutomateAPIKey) {
+    if (
+      (!powerAutomateWebhookURL || !powerAutomateAPIKey) &&
+      sendPowerAutomateNotification
+    ) {
       return next({
         status: 400,
         message: `Upload to S3 is not enabled for this local authority (${localAuthority})`,
@@ -46,6 +52,7 @@ const sendToS3: SendIntegrationController = async (_req, res, next) => {
     if (lastSubmittedAppStatus === 202) {
       return next({
         status: 200,
+        // TODO decide how to better communicate this (eg "already uploaded" ??)
         message: `Skipping send, already successfully submitted`,
       });
     }
@@ -66,29 +73,44 @@ const sendToS3: SendIntegrationController = async (_req, res, next) => {
     const file = convertObjectToMulterJSONFile(exportData, filename);
     const { fileUrl } = await uploadPrivateFile(file, filename);
 
-    // Send a notification with the file URL to the Power Automate webhook
-    const webhookRequest: AxiosRequestConfig = {
-      method: "POST",
-      url: powerAutomateWebhookURL,
-      adapter: "http",
-      headers: {
-        "Content-Type": "application/json",
-        apiKey: powerAutomateAPIKey,
-      },
-      data: {
-        message: "New submission from PlanX",
-        service: flowName,
-        environment: env,
-        file: fileUrl,
-        payload: skipValidation ? "Discretionary" : "Validated ODP Schema",
-      },
-    };
+    let webhookRequest: AxiosRequestConfig | undefined;
+    let webhookResponse: AxiosResponse | undefined;
+    if (sendPowerAutomateNotification) {
+      // Send a notification with the file URL to the Power Automate webhook
+      webhookRequest = {
+        method: "POST",
+        url: powerAutomateWebhookURL,
+        adapter: "http",
+        headers: {
+          "Content-Type": "application/json",
+          apiKey: powerAutomateAPIKey,
+        },
+        data: {
+          message: "New submission from PlanX",
+          service: flowName,
+          environment: env,
+          file: fileUrl,
+          payload: skipValidation ? "Discretionary" : "Validated ODP Schema",
+        },
+      };
 
-    const webhookResponse = await axios(webhookRequest).catch((error) => {
-      throw new Error(
-        `Failed to send submission notification to ${localAuthority}'s Power Automate Webhook (${sessionId}): ${error}`,
-      );
-    });
+      webhookResponse = await axios(webhookRequest).catch((error) => {
+        throw new Error(
+          `Failed to send submission notification to ${localAuthority}'s Power Automate Webhook (${sessionId}): ${error}`,
+        );
+      });
+    } else {
+      // If not notifying, still audit details of S3 upload for FME retrieval
+      webhookRequest = {
+        data: {
+          message: "New submission from PlanX",
+          service: flowName,
+          environment: env,
+          file: fileUrl,
+          payload: skipValidation ? "Discretionary" : "Validated ODP Schema",
+        },
+      };
+    }
 
     // Mark session as submitted so that reminder and expiry emails are not triggered
     markSessionAsSubmitted(sessionId);
@@ -120,7 +142,7 @@ const sendToS3: SendIntegrationController = async (_req, res, next) => {
         session_id: sessionId,
         team_slug: localAuthority,
         webhook_request: webhookRequest,
-        webhook_response: {
+        webhook_response: webhookResponse && {
           status: webhookResponse.status,
           statusText: webhookResponse.statusText,
           headers: webhookResponse.headers,
@@ -133,7 +155,7 @@ const sendToS3: SendIntegrationController = async (_req, res, next) => {
     res.status(200).send({
       message: `Successfully uploaded submission to S3: ${fileUrl}`,
       payload: skipValidation ? "Discretionary" : "Validated ODP Schema",
-      webhookResponse: webhookResponse.status,
+      webhookResponse: webhookResponse ? webhookResponse.status : undefined,
       auditEntryId,
     });
   } catch (error) {
