@@ -23,7 +23,7 @@ describe("constructing URLs for nodes", () => {
   test("an answer node, of a question on the root", () => {
     const url = getURLForNode("beatlesAnswer");
     expect(url).toEqual(
-      "/testTeam/testFlow/nodes/_root/nodes/bandQuestion/edit",
+      "/testTeam/testFlow/nodes/_root/nodes/bandQuestion/edit#beatlesAnswer",
     );
   });
 
@@ -37,7 +37,7 @@ describe("constructing URLs for nodes", () => {
   test("an answer node, of a deeply branched question", () => {
     const url = getURLForNode("helterSkelterAnswer");
     expect(url).toEqual(
-      "/testTeam/testFlow/nodes/whiteAlbumAnswer/nodes/bestSongQuestion/edit",
+      "/testTeam/testFlow/nodes/whiteAlbumAnswer/nodes/bestSongQuestion/edit#helterSkelterAnswer",
     );
   });
 
@@ -51,7 +51,7 @@ describe("constructing URLs for nodes", () => {
   test("an answer node, within an internal portal", () => {
     const url = getURLForNode("tarantinoAnswer");
     expect(url).toEqual(
-      "/testTeam/testFlow,moviesPortal/nodes/moviesPortal/nodes/bestDirectorQuestion/edit",
+      "/testTeam/testFlow,moviesPortal/nodes/moviesPortal/nodes/bestDirectorQuestion/edit#tarantinoAnswer",
     );
   });
 
@@ -65,7 +65,7 @@ describe("constructing URLs for nodes", () => {
   test("an answer node, deeply within internal portals", () => {
     const url = getURLForNode("reservoirDogsAnswer");
     expect(url).toEqual(
-      "/testTeam/testFlow,moviesPortal,tarantinoPortal/nodes/tarantinoPortal/nodes/tarantinoMovieQuestion/edit",
+      "/testTeam/testFlow,moviesPortal,tarantinoPortal/nodes/tarantinoPortal/nodes/tarantinoMovieQuestion/edit#reservoirDogsAnswer",
     );
   });
 

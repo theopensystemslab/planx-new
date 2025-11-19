@@ -796,7 +796,7 @@ export const editorStore: StateCreator<
     // Determine node path based on the node type
     const nodePath =
       node.type === TYPES.Answer
-        ? `nodes/${grandparent.id}/nodes/${parent.id}/edit`
+        ? `nodes/${grandparent.id}/nodes/${parent.id}/edit#${node.id}`
         : `nodes/${parent.id}/nodes/${node.id}/edit`;
 
     const urlPath = `/${teamSlug}/${flowSlug}${portalPath}/${nodePath}`;

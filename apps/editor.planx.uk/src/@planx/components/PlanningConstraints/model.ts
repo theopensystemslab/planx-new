@@ -17,7 +17,7 @@ export interface PlanningConstraints extends BaseNodeData {
 }
 
 export const parseContent = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): PlanningConstraints => ({
   title: data?.title || "Planning constraints",
   description:
@@ -34,7 +34,7 @@ export type IntersectingConstraints = Record<string, string[]>;
 export const DEFAULT_FN = "property.constraints.planning";
 
 export const DEFAULT_PLANNING_CONDITIONS_DISCLAIMER =
-  "<p><strong>This page does not include information about historic planning conditions that may apply to this property.</strong></p>";
+  "<p>This page does not include information about historic planning conditions that may apply to this property.</p>";
 
 interface Dataset {
   text: string;
@@ -67,6 +67,9 @@ export const validationSchema: SchemaOf<PlanningConstraints> =
       description: richText().required(),
       fn: string().nullable().required(),
       disclaimer: richText().required(),
-      dataValues: array(string().required()).min(1, "Select at least one constraint"),
-    })
+      dataValues: array(string().required()).min(
+        1,
+        "Select at least one constraint",
+      ),
+    }),
   );

@@ -42,8 +42,8 @@ const SkipSendWarning: React.FC<Props> = (props) => (
     <WarningContainer>
       <ErrorOutline />
       <Typography variant="body1" ml={2}>
-        You can only test submissions on <strong>published routes</strong> where
-        Save & Return is enabled. Click "Continue" to finish reviewing content
+        You can only test submissions on published routes where Save & Return is
+        enabled. Select <strong>Continue</strong> to finish reviewing content
         and skip submission.
       </Typography>
     </WarningContainer>
