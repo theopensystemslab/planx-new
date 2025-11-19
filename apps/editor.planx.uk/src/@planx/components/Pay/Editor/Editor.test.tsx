@@ -1,5 +1,5 @@
 import { User } from "@opensystemslab/planx-core/types";
-import { act, fireEvent, waitFor } from "@testing-library/react";
+import { act, fireEvent, screen, waitFor } from "@testing-library/react";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { DndProvider } from "react-dnd";
@@ -59,14 +59,18 @@ describe("Pay component - Editor Modal", () => {
     });
 
     it("lists the default values", () => {
-      const { getByDisplayValue } = setup(
+      const { getByDisplayValue, getByRole } = setup(
         <DndProvider backend={HTML5Backend}>
           <PayComponent id="test" />
         </DndProvider>,
       );
       expect(getByDisplayValue("flow")).toBeInTheDocument();
       expect(getByDisplayValue("source")).toBeInTheDocument();
-      expect(getByDisplayValue("paidViaInviteToPay")).toBeInTheDocument();
+      const autocomplete = screen
+        .getAllByRole<HTMLInputElement>("combobox")
+        .find(({ value }) => value === "paidViaInviteToPay");
+      expect(autocomplete).toBeDefined();
+      expect(autocomplete).toHaveValue("paidViaInviteToPay");
     });
 
     it("does not allow default sections to be deleted", () => {
@@ -125,13 +129,13 @@ describe("Pay component - Editor Modal", () => {
       // Three default rows displayed
       expect(getAllByLabelText("Delete")).toHaveLength(3);
 
-      await user.click(getByRole("button", { name: "add new" }));
+      await user.click(getByRole("button", { name: "add new static field" }));
 
       // New row added
       expect(getAllByLabelText("Delete")).toHaveLength(4);
 
-      const keyInput = getAllByPlaceholderText("key")[3];
-      const valueInput = getAllByPlaceholderText("value")[3];
+      const keyInput = getAllByPlaceholderText("key")[2];
+      const valueInput = getAllByPlaceholderText("value")[2];
 
       await user.type(keyInput, "myNewKey");
       await user.type(valueInput, "myNewValue");
@@ -167,10 +171,10 @@ describe("Pay component - Editor Modal", () => {
       // Use delete buttons as proxy for rows
       const deleteButtons = getAllByLabelText("Delete");
       expect(deleteButtons).toHaveLength(4);
-      const finalDeleteButton = deleteButtons[3];
-      expect(finalDeleteButton).toBeInTheDocument();
+      const finalStaticDeleteButton = deleteButtons[2];
+      expect(finalStaticDeleteButton).toBeInTheDocument();
 
-      await user.click(finalDeleteButton);
+      await user.click(finalStaticDeleteButton);
       await waitFor(() => {
         expect(getAllByLabelText("Delete")).toHaveLength(3);
       });
@@ -181,9 +185,13 @@ describe("Pay component - Editor Modal", () => {
       await waitFor(() => expect(handleSubmit).toHaveBeenCalled());
 
       expect(handleSubmit.mock.lastCall?.[0].data.govPayMetadata).toEqual([
-        { key: "flow", value: "flowName" },
-        { key: "source", value: "PlanX" },
-        { key: "paidViaInviteToPay", value: "@paidViaInviteToPay" },
+        { key: "flow", value: "flowName", type: "static" },
+        { key: "source", value: "PlanX", type: "static" },
+        {
+          key: "paidViaInviteToPay",
+          value: "paidViaInviteToPay",
+          type: "data",
+        },
       ]);
     });
 
@@ -198,7 +206,7 @@ describe("Pay component - Editor Modal", () => {
         </DndProvider>,
       );
 
-      await user.click(getByRole("button", { name: "add new" }));
+      await user.click(getByRole("button", { name: "add new static field" }));
       fireEvent.submit(getByRole("form"));
 
       expect(handleSubmit).not.toHaveBeenCalled();
@@ -222,16 +230,16 @@ describe("Pay component - Editor Modal", () => {
       );
 
       // Add first duplicate key
-      await user.click(getByRole("button", { name: "add new" }));
-      const keyInput4 = getAllByPlaceholderText("key")[3];
-      const valueInput4 = getAllByPlaceholderText("value")[3];
+      await user.click(getByRole("button", { name: "add new static field" }));
+      const keyInput4 = getAllByPlaceholderText("key")[2];
+      const valueInput4 = getAllByPlaceholderText("value")[2];
       await user.type(keyInput4, "duplicatedKey");
       await user.type(valueInput4, "myNewValue");
 
       // Add second duplicate key
-      await user.click(getByRole("button", { name: "add new" }));
-      const keyInput5 = getAllByPlaceholderText("key")[4];
-      const valueInput5 = getAllByPlaceholderText("value")[4];
+      await user.click(getByRole("button", { name: "add new static field" }));
+      const keyInput5 = getAllByPlaceholderText("key")[3];
+      const valueInput5 = getAllByPlaceholderText("value")[3];
       await user.type(keyInput5, "duplicatedKey");
       await user.type(valueInput5, "myNewValue");
 
@@ -267,10 +275,10 @@ describe("Pay component - Editor Modal", () => {
         </DndProvider>,
       );
 
-      await user.click(getByRole("button", { name: "add new" }));
+      await user.click(getByRole("button", { name: "add new static field" }));
 
-      const keyInput = getAllByPlaceholderText("key")[3];
-      const valueInput = getAllByPlaceholderText("value")[3];
+      const keyInput = getAllByPlaceholderText("key")[2];
+      const valueInput = getAllByPlaceholderText("value")[2];
 
       await user.type(keyInput, "flow");
 
@@ -287,7 +295,7 @@ describe("Pay component - Editor Modal", () => {
         expect(getByText(/Keys must be unique/)).toBeVisible(),
       );
 
-      const duplicateKeyDeleteIcon = getAllByLabelText("Delete")[3];
+      const duplicateKeyDeleteIcon = getAllByLabelText("Delete")[2];
 
       // This tests that the user is able to fix their mistake
       expect(duplicateKeyDeleteIcon).toBeEnabled();
