@@ -18,7 +18,7 @@ import {
   getLastPublishedAt,
   PublishedViewSettings,
 } from "./publishedQueries";
-import { getTeamFromDomain } from "./utils";
+import { getTeamFromDomain, setPath } from "./utils";
 
 // Types
 export type PublicRouteMode =
@@ -52,6 +52,13 @@ export const publicRouteSearchSchemas = {
   draft: basePublicSearchSchema,
   pay: basePublicSearchSchema,
   download: basePublicSearchSchema,
+};
+
+// Inferred types from zod schemas
+type PublicRouteSearchParams = {
+  [K in keyof typeof publicRouteSearchSchemas]: z.infer<
+    (typeof publicRouteSearchSchemas)[K]
+  >;
 };
 
 // Common data loading function
@@ -147,11 +154,30 @@ export const updateStoreWithPublicRouteData = (data: PublicRouteData): void => {
 };
 
 // Complete beforeLoad helper
-export const createPublicRouteBeforeLoad = (mode: PublicRouteMode) => {
-  return async ({ params }: { params: Record<string, string> }) => {
+export const createPublicRouteBeforeLoad = <T extends PublicRouteMode>(
+  mode: T,
+) => {
+  return async ({
+    params,
+    search,
+  }: {
+    params: Record<string, string>;
+    search: PublicRouteSearchParams[T];
+  }) => {
     try {
       const data = await loadPublicRouteData(params, mode);
       updateStoreWithPublicRouteData(data);
+
+      // Set application path for save-and-return flows
+      if (mode === "published" || mode === "draft" || mode === "pay") {
+        setPath(data.flowData, {
+          params: {
+            ...params,
+            ...(search?.sessionId && { sessionId: search.sessionId }),
+          },
+        });
+      }
+
       return data;
     } catch (error) {
       console.error(`Failed to load ${mode} data:`, error);
