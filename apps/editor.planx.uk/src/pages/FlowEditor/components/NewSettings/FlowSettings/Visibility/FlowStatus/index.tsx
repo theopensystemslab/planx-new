@@ -5,7 +5,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
-import { PublicLink } from "pages/FlowEditor/components/Settings/ServiceSettings/FlowStatus/PublicLink";
+import { PublicLink } from "pages/FlowEditor/components/NewSettings/FlowSettings/Visibility/FlowStatus/components/PublicLink";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { useLocation } from "react-use";
@@ -16,41 +16,10 @@ import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
+import { Description } from "./components/Description";
 import { GET_FLOW_STATUS, UPDATE_FLOW_STATUS } from "./queries";
 import { validationSchema } from "./schema";
 import type { FlowStatusFormValues, GetFlowStatus, UpdateFlowStatus } from "./types";
-
-const Description = () => {
-  const isProduction = import.meta.env.VITE_APP_ENV === "production";
-  if (isProduction) {
-    return (
-      <>
-        <p>
-          Manage the status of your service.
-        </p>
-        <p>
-          A service must be online to be accessed by the public, and to
-          enable analytics gathering.
-        </p>
-        <p>
-          Offline services can still be edited and published as normal.
-        </p>
-      </>
-    )
-  }
-
-  return (
-    <>
-      <p>
-        Manage the status of your service.
-      </p>
-      <p>
-        A service must be online to test integrations on your public
-        link.
-      </p>
-    </>
-  )
-}
 
 const FlowStatus: React.FC = () => {
   const [
@@ -74,10 +43,11 @@ const FlowStatus: React.FC = () => {
     false,
   )}/published`;
 
+  console.log({publishedLink})
+
   const subdomainLink = teamDomain && `https://${teamDomain}/${flowSlug}`;
 
   const isProduction = import.meta.env.VITE_APP_ENV === "production";
-
 
   return (
     <SettingsFormContainer<
