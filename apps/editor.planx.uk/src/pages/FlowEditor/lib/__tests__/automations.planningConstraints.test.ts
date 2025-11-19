@@ -193,22 +193,49 @@ describe("Auto-answering based on planning constraints", () => {
       auto: false,
     });
 
-    expect(computePassport()?.data?.["property.constraints.planning"]).toEqual(["articleFour"]);
-    expect(computePassport()?.data?.["_nots"]?.["property.constraints.planning"]).toEqual(["designated.conservationArea", "flood.zoneTwo", "flood.zoneThree"]);
+    expect(computePassport()?.data?.["property.constraints.planning"]).toEqual([
+      "articleFour",
+    ]);
+    expect(
+      computePassport()?.data?.["_nots"]?.["property.constraints.planning"],
+    ).toEqual([
+      "designated.conservationArea",
+      "flood.zoneTwo",
+      "flood.zoneThree",
+    ]);
 
     // Proceed through auto-answerable questions
-    clickContinue("ConservationAreaQuestion", { answers: autoAnswerableOptions("ConservationAreaQuestion"), auto: true });
-    clickContinue("Article4Question", { answers: autoAnswerableOptions("Article4Question"), auto: true });
+    clickContinue("ConservationAreaQuestion", {
+      answers: autoAnswerableOptions("ConservationAreaQuestion"),
+      auto: true,
+    });
+    clickContinue("Article4Question", {
+      answers: autoAnswerableOptions("Article4Question"),
+      auto: true,
+    });
 
     // Confirm passport is in same state
-    expect(computePassport()?.data?.["property.constraints.planning"]).toEqual(["articleFour"]);
-    expect(computePassport()?.data?.["_nots"]?.["property.constraints.planning"]).toEqual(["designated.conservationArea", "flood.zoneTwo", "flood.zoneThree"]);
+    expect(computePassport()?.data?.["property.constraints.planning"]).toEqual([
+      "articleFour",
+    ]);
+    expect(
+      computePassport()?.data?.["_nots"]?.["property.constraints.planning"],
+    ).toEqual([
+      "designated.conservationArea",
+      "flood.zoneTwo",
+      "flood.zoneThree",
+    ]);
 
     // Manually proceed through the first Flood Zone 1 Question, and expect second occurance to be auto-answered because no longer unseen option
     expect(autoAnswerableOptions("FloodZone1Question")).toBeUndefined();
-    clickContinue("FloodZone1Question", { answers: ["FloodZone1No"], auto: false });
+    clickContinue("FloodZone1Question", {
+      answers: ["FloodZone1No"],
+      auto: false,
+    });
     expect(upcomingCardIds()).toEqual(["FloodZone1QuestionAgain"]);
-    expect(autoAnswerableOptions("FloodZone1QuestionAgain")).toEqual(["FloodZone1NoAgain"]);
+    expect(autoAnswerableOptions("FloodZone1QuestionAgain")).toEqual([
+      "FloodZone1NoAgain",
+    ]);
   });
 
   test("A less granular option is not auto-answered if the passport only has a more granular option (positive intersecting contraints)", () => {
@@ -257,7 +284,9 @@ describe("Auto-answering based on planning constraints", () => {
       auto: false,
     });
 
-    expect(computePassport()?.data?.["property.constraints.planning"]).toEqual(["designated.conservationArea"]);
+    expect(computePassport()?.data?.["property.constraints.planning"]).toEqual([
+      "designated.conservationArea",
+    ]);
 
     // Planning constraints should exact-match only, never `startsWith`, therefore put to user
     expect(autoAnswerableOptions("DesignatedLandQuestion")).toBeUndefined();
@@ -304,15 +333,19 @@ describe("Auto-answering based on planning constraints", () => {
     // Manually proceed forward through PlanningConstraints as if we've checked 1 dataset: Conservation Area
     clickContinue("PlanningConstraints", {
       data: {
-        "_nots": {
+        _nots: {
           "property.constraints.planning": ["designated.conservationArea"],
-        }
+        },
       },
       auto: false,
     });
 
-    expect(computePassport()?.data?.["_nots"]?.["property.constraints.planning"]).toEqual(["designated.conservationArea"]);
-    expect(computePassport()?.data?.["property.constraints.planning"]).toBeUndefined();
+    expect(
+      computePassport()?.data?.["_nots"]?.["property.constraints.planning"],
+    ).toEqual(["designated.conservationArea"]);
+    expect(
+      computePassport()?.data?.["property.constraints.planning"],
+    ).toBeUndefined();
 
     // Planning constraints should exact-match only, never `startsWith`, therefore put to user
     expect(autoAnswerableOptions("DesignatedLandQuestion")).toBeUndefined();
@@ -336,7 +369,7 @@ const flow: Store.Flow = {
         "Planning constraints might limit how you can develop or use the property",
       fn: "property.constraints.planning",
       disclaimer:
-        "<p><strong>This page does not include information about historic planning conditions that may apply to this property.</strong></p>",
+        "<p>This page does not include information about historic planning conditions that may apply to this property.</p>",
     },
   },
   ConservationAreaQuestion: {

@@ -37,7 +37,7 @@ export const parseConfirmation = (
     data?.contactInfo ||
     `You can contact us at <em>ADD YOUR COUNCIL CONTACT</em>
           <br><br>
-          <p><strong>What did you think of this service? Please give us your feedback on the next page.</strong></p>`,
+          <p>What did you think of this service? Please give us your feedback on the next page.</p>`,
   nextSteps: data?.nextSteps || [],
   ...parseBaseNodeData(data),
 });

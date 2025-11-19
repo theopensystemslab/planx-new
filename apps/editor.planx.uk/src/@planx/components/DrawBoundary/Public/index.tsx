@@ -272,13 +272,13 @@ export default function Component(props: Props) {
                   a red boundary that includes the entire property, using
                   information from the Land Registry. You can accept this
                   boundary as your location plan by continuing, you can amend it
-                  by clicking and dragging the points, or you can erase it by
-                  clicking the reset button and draw a new custom boundary.
+                  by selecting and dragging the points, or you can erase it by
+                  selecting the reset button and draw a new custom boundary.
                 </p>
                 {!props.hideFileUpload && (
                   <p style={visuallyHidden}>
                     If you prefer to upload a file instead of using the
-                    interactive map, please click "Upload a location plan
+                    interactive map, please select "Upload a location plan
                     instead" below to navigate to the file upload.
                   </p>
                 )}
