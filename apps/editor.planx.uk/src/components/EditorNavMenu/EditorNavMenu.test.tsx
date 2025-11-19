@@ -65,15 +65,18 @@ describe("teamLayoutRoutes", () => {
     mockGetTeam.mockReturnValue({ settings: { referenceCode: null } });
   });
 
-  it("only displays the 'planning data' route for teamViewers", () => {
+  it("only displays the external link routes for teamViewers", () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("teamViewer");
 
     const { queryAllByRole } = setup(<EditorNavMenu />);
     const menuItems = queryAllByRole("listitem");
-    expect(menuItems).toHaveLength(2);
+    expect(menuItems).toHaveLength(3);
     expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
     expect(
       within(menuItems[1]).getByText("Planning Data unavailable"),
+    ).toBeInTheDocument();
+    expect(
+      within(menuItems[2]).getByText("Local Planning Services unavailable"),
     ).toBeInTheDocument();
   });
 
@@ -82,7 +85,7 @@ describe("teamLayoutRoutes", () => {
 
     const { getAllByRole } = setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(8);
+    expect(menuItems).toHaveLength(9);
     expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
   });
 
@@ -91,7 +94,7 @@ describe("teamLayoutRoutes", () => {
 
     const { getAllByRole } = setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(8);
+    expect(menuItems).toHaveLength(9);
     expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
   });
 });
