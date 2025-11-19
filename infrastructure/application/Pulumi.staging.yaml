@@ -75,7 +75,7 @@ config:
   application:skip-rate-limit-secret:
     secure: AAABANwjBmGN73bwF6nqQP5i8tKMe3mi0NMBdae4uaLasG2VfPvC1D4mk7QWIFqVnzsD5jCN20Eqos/r2B+EAo2rAws3JeD/
   application:slack-internal-errors-webhook:
-    secure: AAABAPkO1mBzTkXVWjpzAeP9ZbkifOiBwxj+rL5OONBu6DY87Pw1FualS6jSmQ5yeoGovZowNy3iMsArq4lxSX2BnBAur4O4a90Qou5zGUFACSTfLkZOgsyImvbdwRRnFPBBskfQ+bqwX9OZjO5AAXkEa9bqu3ViFQ==
+    secure: AAABAA/QUOR2t9DKWtIGok1cSEmbVB5b56Wa9vdDK8tW9C/mgMB3cxOnqRpbY0Db2BfALGBiZbnx8tX6TwouZjtbrDJJT0ch/e2Put1Kw4LtsWprjGZbW0emt3gq/YDUst6KMJ5C37pEMjicStLPKy0vmBVLD9Y9ng==
   application:slack-webhook-url:
     secure: AAABALzK5KLP5po8giGePS/+ZpcWQHf8LfvCcdlY/oSv6NvC3y6D44CeIAiUdDXTB7VeUX5JFeaceDyZ9C1N5CAWFOLPCCKvuLjuDtk7QZe/rczqd2QnMDLh+Q9wPlQSb4PIoK8jWNEmvQC3QMgq
   application:uniform-client-buckinghamshire:
