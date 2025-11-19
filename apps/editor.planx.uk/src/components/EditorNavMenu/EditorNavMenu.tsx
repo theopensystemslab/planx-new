@@ -145,10 +145,13 @@ function EditorNavMenu() {
       disabled: !referenceCode,
     },
     {
-      title: "Local Planning Services (external link)",
+      title: referenceCode
+        ? `Local Planning Services (external link)`
+        : `Local Planning Services unavailable`,
       Icon: LocalPlanningServicesIcon,
-      route: `https://localplanning.services/${teamSlug}`,
+      route: referenceCode ? `https://localplanning.services/${teamSlug}` : `#`,
       accessibleBy: "*",
+      disabled: !referenceCode,
     },
   ];
 
