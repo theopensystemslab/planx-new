@@ -1,9 +1,9 @@
 import Box from "@mui/material/Box";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
+import { useSearch } from "@tanstack/react-router";
 import { useFormik } from "formik";
 import React, { useState } from "react";
-import { useCurrentRoute } from "react-navi";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
@@ -97,11 +97,13 @@ const getInitialEmailValue = (emailQueryParam?: string) => {
  * 4. Redirect from localplanning.services - sessionId and email come from query params
  */
 const ResumePage: React.FC = () => {
-  const sessionId = useCurrentRoute().url.query.sessionId;
-  const route = useCurrentRoute();
+  const search = useSearch({
+    strict: false,
+  });
+  const sessionId = "sessionId" in search ? search.sessionId : undefined;
 
   const [initialEmail] = useState(
-    getInitialEmailValue(decodeURIComponent(route.url.query.email)),
+    getInitialEmailValue(("email" in search ? search.email : "") || ""),
   );
 
   if (sessionId) {
