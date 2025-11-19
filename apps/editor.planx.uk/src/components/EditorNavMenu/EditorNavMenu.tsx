@@ -18,6 +18,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef } from "react";
 import { useCurrentRoute, useLoadingRoute, useNavigation } from "react-navi";
 import EditorIcon from "ui/icons/Editor";
+import LocalPlanningServicesIcon from "ui/icons/LocalPlanningServices";
 
 import { MenuButton, MenuItem, MenuTitle, MenuWrap, Root } from "./styles";
 import { Route, RoutesForURL } from "./types";
@@ -142,6 +143,12 @@ function EditorNavMenu() {
         : `#`,
       accessibleBy: "*",
       disabled: !referenceCode,
+    },
+    {
+      title: "Local Planning Services (external link)",
+      Icon: LocalPlanningServicesIcon,
+      route: `https://localplanning.services/${teamSlug}`,
+      accessibleBy: "*",
     },
   ];
 
