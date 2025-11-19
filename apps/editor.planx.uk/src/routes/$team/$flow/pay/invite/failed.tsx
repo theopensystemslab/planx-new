@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import ErrorPage from "pages/ErrorPage/ErrorPage";
 import React from "react";
 
 export const Route = createFileRoute("/$team/$flow/pay/invite/failed")({
@@ -6,5 +7,5 @@ export const Route = createFileRoute("/$team/$flow/pay/invite/failed")({
 });
 
 function RouteComponent() {
-  return <div>Hello "/$team/$flow/pay/invite/failed"!</div>;
+  return <ErrorPage title="Failed to generate payment request" />;
 }

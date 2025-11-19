@@ -41,6 +41,7 @@ import { Route as AuthenticatedTeamFlowSubmissionsRouteImport } from './routes/_
 import { Route as AuthenticatedTeamFlowSettingsRouteImport } from './routes/_authenticated/$team/$flow/settings'
 import { Route as AuthenticatedTeamFlowFeedbackRouteImport } from './routes/_authenticated/$team/$flow/feedback'
 import { Route as AuthenticatedTeamFlowAboutRouteImport } from './routes/_authenticated/$team/$flow/about'
+import { Route as TeamFlowPayNotFoundRouteImport } from './routes/$team/$flow/pay/not-found'
 import { Route as TeamFlowSessionIdDownloadApplicationRouteImport } from './routes/$team/$flow/$sessionId/download-application'
 import { Route as AuthenticatedTeamFlowNodesRouteRouteImport } from './routes/_authenticated/$team/$flow/nodes/route'
 import { Route as TeamFlowPayInviteIndexRouteImport } from './routes/$team/$flow/pay/invite/index'
@@ -229,6 +230,11 @@ const AuthenticatedTeamFlowAboutRoute =
     path: '/about',
     getParentRoute: () => AuthenticatedTeamFlowRouteRoute,
   } as any)
+const TeamFlowPayNotFoundRoute = TeamFlowPayNotFoundRouteImport.update({
+  id: '/not-found',
+  path: '/not-found',
+  getParentRoute: () => TeamFlowPayRouteRoute,
+} as any)
 const TeamFlowSessionIdDownloadApplicationRoute =
   TeamFlowSessionIdDownloadApplicationRouteImport.update({
     id: '/$team/$flow/$sessionId/download-application',
@@ -354,6 +360,7 @@ export interface FileRoutesByFullPath {
   '/$team/': typeof AuthenticatedTeamIndexRoute
   '/$team/$flow/nodes': typeof AuthenticatedTeamFlowNodesRouteRouteWithChildren
   '/$team/$flow/$sessionId/download-application': typeof TeamFlowSessionIdDownloadApplicationRoute
+  '/$team/$flow/pay/not-found': typeof TeamFlowPayNotFoundRoute
   '/$team/$flow/about': typeof AuthenticatedTeamFlowAboutRoute
   '/$team/$flow/feedback': typeof AuthenticatedTeamFlowFeedbackRoute
   '/$team/$flow/settings': typeof AuthenticatedTeamFlowSettingsRoute
@@ -399,6 +406,7 @@ export interface FileRoutesByTo {
   '/$team': typeof AuthenticatedTeamIndexRoute
   '/$team/$flow/nodes': typeof AuthenticatedTeamFlowNodesRouteRouteWithChildren
   '/$team/$flow/$sessionId/download-application': typeof TeamFlowSessionIdDownloadApplicationRoute
+  '/$team/$flow/pay/not-found': typeof TeamFlowPayNotFoundRoute
   '/$team/$flow/about': typeof AuthenticatedTeamFlowAboutRoute
   '/$team/$flow/feedback': typeof AuthenticatedTeamFlowFeedbackRoute
   '/$team/$flow/settings': typeof AuthenticatedTeamFlowSettingsRoute
@@ -451,6 +459,7 @@ export interface FileRoutesById {
   '/_authenticated/$team/': typeof AuthenticatedTeamIndexRoute
   '/_authenticated/$team/$flow/nodes': typeof AuthenticatedTeamFlowNodesRouteRouteWithChildren
   '/$team/$flow/$sessionId/download-application': typeof TeamFlowSessionIdDownloadApplicationRoute
+  '/$team/$flow/pay/not-found': typeof TeamFlowPayNotFoundRoute
   '/_authenticated/$team/$flow/about': typeof AuthenticatedTeamFlowAboutRoute
   '/_authenticated/$team/$flow/feedback': typeof AuthenticatedTeamFlowFeedbackRoute
   '/_authenticated/$team/$flow/settings': typeof AuthenticatedTeamFlowSettingsRoute
@@ -503,6 +512,7 @@ export interface FileRouteTypes {
     | '/$team/'
     | '/$team/$flow/nodes'
     | '/$team/$flow/$sessionId/download-application'
+    | '/$team/$flow/pay/not-found'
     | '/$team/$flow/about'
     | '/$team/$flow/feedback'
     | '/$team/$flow/settings'
@@ -548,6 +558,7 @@ export interface FileRouteTypes {
     | '/$team'
     | '/$team/$flow/nodes'
     | '/$team/$flow/$sessionId/download-application'
+    | '/$team/$flow/pay/not-found'
     | '/$team/$flow/about'
     | '/$team/$flow/feedback'
     | '/$team/$flow/settings'
@@ -599,6 +610,7 @@ export interface FileRouteTypes {
     | '/_authenticated/$team/'
     | '/_authenticated/$team/$flow/nodes'
     | '/$team/$flow/$sessionId/download-application'
+    | '/$team/$flow/pay/not-found'
     | '/_authenticated/$team/$flow/about'
     | '/_authenticated/$team/$flow/feedback'
     | '/_authenticated/$team/$flow/settings'
@@ -862,6 +874,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/$team/$flow/about'
       preLoaderRoute: typeof AuthenticatedTeamFlowAboutRouteImport
       parentRoute: typeof AuthenticatedTeamFlowRouteRoute
+    }
+    '/$team/$flow/pay/not-found': {
+      id: '/$team/$flow/pay/not-found'
+      path: '/not-found'
+      fullPath: '/$team/$flow/pay/not-found'
+      preLoaderRoute: typeof TeamFlowPayNotFoundRouteImport
+      parentRoute: typeof TeamFlowPayRouteRoute
     }
     '/$team/$flow/$sessionId/download-application': {
       id: '/$team/$flow/$sessionId/download-application'
@@ -1160,6 +1179,7 @@ const TeamFlowDraftRouteRouteWithChildren =
   TeamFlowDraftRouteRoute._addFileChildren(TeamFlowDraftRouteRouteChildren)
 
 interface TeamFlowPayRouteRouteChildren {
+  TeamFlowPayNotFoundRoute: typeof TeamFlowPayNotFoundRoute
   TeamFlowPayIndexRoute: typeof TeamFlowPayIndexRoute
   TeamFlowPayInviteFailedRoute: typeof TeamFlowPayInviteFailedRoute
   TeamFlowPayPagesPageRoute: typeof TeamFlowPayPagesPageRoute
@@ -1168,6 +1188,7 @@ interface TeamFlowPayRouteRouteChildren {
 }
 
 const TeamFlowPayRouteRouteChildren: TeamFlowPayRouteRouteChildren = {
+  TeamFlowPayNotFoundRoute: TeamFlowPayNotFoundRoute,
   TeamFlowPayIndexRoute: TeamFlowPayIndexRoute,
   TeamFlowPayInviteFailedRoute: TeamFlowPayInviteFailedRoute,
   TeamFlowPayPagesPageRoute: TeamFlowPayPagesPageRoute,

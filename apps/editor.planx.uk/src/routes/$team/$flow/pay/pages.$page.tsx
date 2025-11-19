@@ -1,10 +1,14 @@
-import { createFileRoute } from "@tanstack/react-router";
-import React from "react";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/$team/$flow/pay/pages/$page")({
-  component: RouteComponent,
+  beforeLoad: ({ params }) => {
+    throw redirect({
+      to: "/$team/$flow/published/pages/$page",
+      params: {
+        team: params.team,
+        flow: params.flow,
+        page: params.page,
+      },
+    });
+  },
 });
-
-function RouteComponent() {
-  return <div>Hello "/$team/$flow/pay/pages/$page"!</div>;
-}

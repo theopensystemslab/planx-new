@@ -1,5 +1,5 @@
 import type { PaymentRequest } from "@opensystemslab/planx-core/types";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import InviteToPay from "pages/Pay/InviteToPay";
 import React from "react";
@@ -19,7 +19,10 @@ export const Route = createFileRoute("/$team/$flow/pay/invite/")({
     const paymentRequest = await getPaymentRequest(paymentRequestId);
 
     if (!paymentRequest) {
-      throw new Error("Payment request not found or invalid");
+      throw redirect({
+        to: "/$team/$flow/pay/invite/failed",
+        params: { team: "", flow: "" },
+      });
     }
 
     return {
