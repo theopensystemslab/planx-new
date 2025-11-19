@@ -8,7 +8,7 @@ import type { TextContent } from "types";
 import SettingsFormContainer from "../../shared/SettingsForm";
 import { GET_FLOW_SETTINGS, UPDATE_FLOW_SETTINGS } from "../shared/queries";
 import { textContentValidationSchema } from "../shared/schema";
-import type { GetFlowSettings, UpdateFlowSettings } from "../shared/types";
+import { DEFAULT_TEXT_CONTENT, type GetFlowSettings, type UpdateFlowSettings } from "../shared/types";
 import { defaultValues } from "./schema";
 
 const Help: React.FC = () => {
@@ -22,11 +22,9 @@ const Help: React.FC = () => {
       legend="Help page"
       description="A place to communicate FAQs, useful tips, or contact information"
       defaultValues={defaultValues}
-      getInitialValues={({
-        flow: {
-          settings: { elements },
-        },
-      }) => elements.help}
+      getInitialValues={({ flow: { settings } }) => 
+        settings?.elements?.help || DEFAULT_TEXT_CONTENT
+      }
       queryVariables={{ flowId }}
       getMutationVariables={(values, data) => ({
         flowId,

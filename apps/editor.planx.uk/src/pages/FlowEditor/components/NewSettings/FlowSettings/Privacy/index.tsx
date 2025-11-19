@@ -9,7 +9,7 @@ import type { TextContent } from "types";
 import SettingsFormContainer from "../../shared/SettingsForm";
 import { GET_FLOW_SETTINGS, UPDATE_FLOW_SETTINGS } from "../shared/queries";
 import { textContentValidationSchema } from "../shared/schema";
-import type { GetFlowSettings, UpdateFlowSettings } from "../shared/types";
+import { DEFAULT_TEXT_CONTENT, type GetFlowSettings, type UpdateFlowSettings } from "../shared/types";
 import { defaultValues } from "./schema";
 
 const Privacy: React.FC = () => {
@@ -29,11 +29,9 @@ const Privacy: React.FC = () => {
         "Your privacy policy. If you use the template notice, update the placeholders with your council's information."
       }
       defaultValues={defaultValues}
-      getInitialValues={({
-        flow: {
-          settings: { elements },
-        },
-      }) => elements.privacy}
+      getInitialValues={({ flow: { settings } }) =>
+        settings?.elements?.privacy || DEFAULT_TEXT_CONTENT
+      }
       queryVariables={{ flowId }}
       getMutationVariables={(values, data) => ({
         flowId,

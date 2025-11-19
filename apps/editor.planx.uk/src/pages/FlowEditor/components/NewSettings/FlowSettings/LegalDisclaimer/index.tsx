@@ -1,5 +1,4 @@
 import { getIn } from "formik";
-import { useToast } from "hooks/useToast";
 import { merge } from "lodash";
 import { TextInput } from "pages/FlowEditor/components/Settings/ServiceSettings/FlowElements/components/TextInput";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -9,15 +8,11 @@ import type { TextContent } from "types";
 import SettingsFormContainer from "../../shared/SettingsForm";
 import { GET_FLOW_SETTINGS, UPDATE_FLOW_SETTINGS } from "../shared/queries";
 import { textContentValidationSchema } from "../shared/schema";
-import type { GetFlowSettings, UpdateFlowSettings } from "../shared/types";
+import { DEFAULT_TEXT_CONTENT, type GetFlowSettings, type UpdateFlowSettings } from "../shared/types";
 import { defaultValues } from "./schema";
 
 const LegalDisclaimer: React.FC = () => {
-  const [flowId, flowStatus] = useStore((state) => [
-    state.id,
-    state.flowStatus,
-  ]);
-  const toast = useToast();
+  const flowId = useStore((state) => state.id);
 
   return (
     <SettingsFormContainer<GetFlowSettings, UpdateFlowSettings, TextContent>
@@ -27,11 +22,9 @@ const LegalDisclaimer: React.FC = () => {
       legend="Legal disclaimer"
       description="Displayed on the 'Result' pages of the service (if it contains any)"
       defaultValues={defaultValues}
-      getInitialValues={({
-        flow: {
-          settings: { elements },
-        },
-      }) => elements.legalDisclaimer}
+      getInitialValues={({ flow: { settings } }) =>
+        settings?.elements?.legalDisclaimer || DEFAULT_TEXT_CONTENT
+      }
       queryVariables={{ flowId }}
       getMutationVariables={(values, data) => ({
         flowId,
