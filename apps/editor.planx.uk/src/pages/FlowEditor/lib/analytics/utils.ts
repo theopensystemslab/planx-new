@@ -141,25 +141,20 @@ const sanitiseAllowListValues = ([key, value]: [key: string, value: unknown]): [
 ] => {
   if (!isPlainObject(value)) return [key, value];
 
-  // If the object is array-like (numeric keys), convert to an array
-  const entries = Object.entries(value);
-  const isNumericKeys =
-    entries.length > 0 && entries.every(([k]) => /^\d+$/.test(k));
-  if (isNumericKeys) {
-    const arr = entries
-      .sort(([a], [b]) => Number(a) - Number(b))
-      .map(([, v]) => v)
-      .filter(Boolean);
-    if (arr.length === 0) return [key, undefined];
-    return [key, arr];
+  // If the value is an array, filter out empty values
+  if (Array.isArray(value)) {
+    const filteredArray = value.filter(
+      (item) => item !== undefined && item !== null,
+    );
+    if (filteredArray.length === 0) return [key, undefined];
+    return [key, filteredArray];
   }
 
-  // Strip out empty values - we do not need to store these as allow list answers
+  // For objects, also strip out empty values - we do not need to store these as allow list answers
   const sanitisedObject = Object.fromEntries(
     Object.entries(value).filter(([_key, value]) => Boolean(value)),
   );
   if (isEmpty(sanitisedObject)) return [key, undefined];
-
   return [key, sanitisedObject];
 };
 
