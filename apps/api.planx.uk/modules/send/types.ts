@@ -13,7 +13,6 @@ export const sendIntegrationSchema = z.object({
   }),
   params: z.object({
     localAuthority: z.string(),
-    notify: z.boolean().optional(),
   }),
 });
 
