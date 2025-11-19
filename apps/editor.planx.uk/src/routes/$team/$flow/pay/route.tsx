@@ -1,9 +1,9 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { LoadingLayout } from "pages/layout/LoadingLayout";
-import PublicLayout from "pages/layout/PublicLayout";
 import React from "react";
-import Main from "ui/shared/Main";
-import { createPublicRouteErrorComponent } from "utils/routeUtils/publicRouteHelpers";
+import {
+  createPublicRouteErrorComponent,
+  PublicRouteLayout,
+} from "utils/routeUtils/publicRouteHelpers";
 import {
   fetchDataForStandaloneView,
   setupStandaloneViewStore,
@@ -34,12 +34,8 @@ export const Route = createFileRoute("/$team/$flow/pay")({
 
 function PayLayoutComponent() {
   return (
-    <LoadingLayout>
-      <PublicLayout>
-        <Main>
-          <Outlet />
-        </Main>
-      </PublicLayout>
-    </LoadingLayout>
+    <PublicRouteLayout mode="pay">
+      <Outlet />
+    </PublicRouteLayout>
   );
 }
