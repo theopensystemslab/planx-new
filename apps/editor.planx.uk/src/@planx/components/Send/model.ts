@@ -49,7 +49,7 @@ export const validationSchema: SchemaOf<Send> =
     object({
       title: string().required(),
       destinations: array(
-        mixed().oneOf(["email", "bops", "uniform", "s3", "idox"]),
+        mixed().oneOf(["email", "bops", "uniform", "s3", "fme", "idox"]),
       ).min(1, "Select at least one destination"),
     }),
   );

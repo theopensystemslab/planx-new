@@ -123,6 +123,21 @@ describe("uploading an application to S3", () => {
         });
     });
 
+    it("does not an throw error if Power Automate details are missing but ?notify=false", async () => {
+      $api.team.getIntegrations = vi.fn().mockResolvedValueOnce({
+        powerAutomateWebhookURL: null,
+        powerAutomateAPIKey: null,
+      });
+
+      await supertest(app)
+        .post("/upload-submission/barnet?notify=false")
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+        .send({
+          payload: { sessionId },
+        })
+        .expect(200);
+    });
+
     it("throws an error if this session was already submitted", async () => {
       $api.team.getIntegrations = vi.fn().mockResolvedValueOnce({
         powerAutomateWebhookURL: mockPowerAutomateWebhookURL,
@@ -275,6 +290,14 @@ describe("uploading an application to S3", () => {
           payload: { sessionId },
         });
 
+    const callAPIWithoutNotification = async () =>
+      await supertest(app)
+        .post("/upload-submission/barnet?notify=false")
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+        .send({
+          payload: { sessionId },
+        });
+
     it("makes a request to the configured Power Automate webhook", async () => {
       await callAPI();
 
@@ -289,6 +312,12 @@ describe("uploading an application to S3", () => {
       expect(mockedAxios).toHaveBeenCalledOnce();
       const request = mockedAxios.mock.calls[0][0] as AxiosRequestConfig;
       expect(request.headers).toHaveProperty("apiKey", mockPowerAutomateAPIKey);
+    });
+
+    it("uploads to S3 but skips Power Automate notification when ?notify=false", async () => {
+      await callAPIWithoutNotification();
+
+      expect(mockedAxios).not.toHaveBeenCalled();
     });
 
     it("generates the expected body for the Power Automate webhook", async () => {
@@ -321,8 +350,28 @@ describe("uploading an application to S3", () => {
       expect(markSessionAsSubmitted).toHaveBeenCalledExactlyOnceWith(sessionId);
     });
 
-    it("writes an audit record the the s3_applications table", async () => {
+    it("marks a session as submitted when ?notify=false", async () => {
+      await callAPIWithoutNotification();
+
+      expect(markSessionAsSubmitted).toHaveBeenCalledExactlyOnceWith(sessionId);
+    });
+
+    it("writes an audit record to the s3_applications table", async () => {
       await callAPI();
+
+      const graphQLCalls = queryMock.getCalls();
+
+      expect(graphQLCalls).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            id: "CreateS3Application",
+          }),
+        ]),
+      );
+    });
+
+    it("writes an audit record to the s3_applications table when ?notify=false", async () => {
+      await callAPIWithoutNotification();
 
       const graphQLCalls = queryMock.getCalls();
 

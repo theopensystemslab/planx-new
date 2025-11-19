@@ -187,7 +187,11 @@ describe("Pay component - Editor Modal", () => {
       expect(handleSubmit.mock.lastCall?.[0].data.govPayMetadata).toEqual([
         { key: "flow", value: "flowName", type: "static" },
         { key: "source", value: "PlanX", type: "static" },
-        { key: "paidViaInviteToPay", value: "paidViaInviteToPay", type: "data" },
+        {
+          key: "paidViaInviteToPay",
+          value: "paidViaInviteToPay",
+          type: "data",
+        },
       ]);
     });
 

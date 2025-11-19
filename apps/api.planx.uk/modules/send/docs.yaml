@@ -121,6 +121,11 @@ paths:
         - send
       parameters:
         - $ref: "#/components/parameters/localAuthority"
+        - in: query
+          name: notify
+          type: boolean
+          required: false
+          description: Whether we should send a notification to a Power Automate Webhook after successful upload to S3. Defaults to true
       security:
         - hasuraAuth: []
       requestBody:
