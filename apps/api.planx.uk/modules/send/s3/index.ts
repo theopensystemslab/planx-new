@@ -17,13 +17,12 @@ interface CreateS3Application {
   };
 }
 
-const sendToS3: SendIntegrationController = async (req, res, next) => {
+const sendToS3: SendIntegrationController = async (_req, res, next) => {
   const {
     payload: { sessionId },
   } = res.locals.parsedReq.body;
   const localAuthority = res.locals.parsedReq.params.localAuthority;
-  const sendPowerAutomateNotification =
-    req.query?.notify === "false" ? false : true;
+  const sendPowerAutomateNotification = res.locals.parsedReq.query.notify;
 
   const env =
     process.env.APP_ENVIRONMENT === "production" ? "production" : "staging";
