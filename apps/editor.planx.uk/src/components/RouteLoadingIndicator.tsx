@@ -1,8 +1,8 @@
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 import { styled } from "@mui/material/styles";
+import { useRouter } from "@tanstack/react-router";
 import React, { useEffect, useState } from "react";
-import { useLoadingRoute } from "react-navi";
 
 const Root = styled(Box)({
   width: "100%",
@@ -14,7 +14,7 @@ const Root = styled(Box)({
 const RouteLoadingIndicator: React.FC<{
   msDelayBeforeVisible?: number;
 }> = ({ msDelayBeforeVisible = 50 }) => {
-  const isLoading = useLoadingRoute();
+  const isLoading = useRouter().state.isLoading;
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {

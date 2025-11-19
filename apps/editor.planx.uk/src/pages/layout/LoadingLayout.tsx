@@ -5,8 +5,8 @@ import React, { PropsWithChildren } from "react";
 export const loadingView = () => <LoadingLayout />;
 
 export const LoadingLayout: React.FC<PropsWithChildren> = ({ children }) => {
-  const routerState = useRouterState();
-  const isLoading = routerState.status === "pending";
+  const router = useRouterState();
+  const isLoading = router.isLoading;
 
   return isLoading ? <DelayedLoadingIndicator /> : <>{children}</>;
 };
