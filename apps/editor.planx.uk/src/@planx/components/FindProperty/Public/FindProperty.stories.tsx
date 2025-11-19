@@ -25,7 +25,7 @@ export default {
 
 export const EmptyForm: StoryObj = {
   render: () => (
-    <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
+    <MockedProvider mocks={findAddressReturnMock}>
       <FindProperty
         title="Find your property"
         description="For example, SE5 0HU"
@@ -37,7 +37,7 @@ export const EmptyForm: StoryObj = {
 
 export const AllowNewAddressesOnMap: StoryObj = {
   render: () => (
-    <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
+    <MockedProvider mocks={findAddressReturnMock}>
       <FindProperty
         title="Find your property"
         description="For example, SE5 0HU"
@@ -52,7 +52,7 @@ export const WithEditor = () => {
     <Wrapper
       Editor={Editor}
       Public={() => (
-        <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
+        <MockedProvider mocks={findAddressReturnMock}>
           <FindProperty
             title="Find your property"
             description="For example, SE5 0HU"

@@ -143,7 +143,7 @@ describe("render states", () => {
     const handleSubmit = vi.fn();
 
     const { user } = setup(
-      <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
+      <MockedProvider mocks={findAddressReturnMock}>
         <FindProperty
           description="Find your property"
           title="Type your postal code"
@@ -177,7 +177,7 @@ describe("render states", () => {
     const handleSubmit = vi.fn();
 
     const { user } = setup(
-      <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
+      <MockedProvider mocks={findAddressReturnMock}>
         <FindProperty
           description="Find your property"
           title="Type your postal code"
@@ -217,7 +217,7 @@ describe("render states", () => {
     const handleSubmit = vi.fn();
 
     const { user } = setup(
-      <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
+      <MockedProvider mocks={findAddressReturnMock}>
         <FindProperty
           description="Find your property"
           title="Type your postal code"
@@ -251,7 +251,7 @@ describe("render states", () => {
     const previousData = osAddressProps;
 
     const { user } = setup(
-      <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
+      <MockedProvider mocks={findAddressReturnMock}>
         <FindProperty
           description="Find your property"
           title="Type your postal code"
@@ -285,7 +285,7 @@ describe("render states", () => {
   it("should not have any accessibility violations", async () => {
     const handleSubmit = vi.fn();
     const { container, user } = setup(
-      <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
+      <MockedProvider mocks={findAddressReturnMock}>
         <FindProperty
           description="Find your property"
           title="Type your postal code"
@@ -311,7 +311,7 @@ describe("picking an OS address", () => {
     const handleSubmit = vi.fn();
 
     const { user } = setup(
-      <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
+      <MockedProvider mocks={findAddressReturnMock}>
         <FindProperty
           description="Find your property"
           title="Type your postal code"
@@ -326,7 +326,7 @@ describe("picking an OS address", () => {
 
   it("updates the address-autocomplete props when the postcode is changed", async () => {
     const { user } = setup(
-      <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
+      <MockedProvider mocks={findAddressReturnMock}>
         <FindProperty
           description="Find your property"
           title="Type your postal code"
@@ -364,7 +364,7 @@ describe("picking an OS address", () => {
     const previousData = osAddressProps;
 
     const { user } = setup(
-      <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
+      <MockedProvider mocks={findAddressReturnMock}>
         <FindProperty
           description="Find your property"
           title="Type your postal code"
@@ -392,7 +392,7 @@ describe("plotting a new address that does not have a uprn yet", () => {
     const handleSubmit = vi.fn();
 
     const { user } = setup(
-      <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
+      <MockedProvider mocks={findAddressReturnMock}>
         <FindProperty
           description="Find your property"
           title="Type your postal code"
@@ -438,7 +438,7 @@ describe("plotting a new address that does not have a uprn yet", () => {
     const previousData = proposedAddressProps;
 
     const { user } = setup(
-      <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
+      <MockedProvider mocks={findAddressReturnMock}>
         <FindProperty
           description="Find your property"
           title="Type your postal code"

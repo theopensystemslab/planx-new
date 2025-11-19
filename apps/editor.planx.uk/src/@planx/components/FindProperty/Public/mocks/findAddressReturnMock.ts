@@ -13,6 +13,7 @@ export default [
             code: "RH01",
             description: "HMO Parent",
             value: "residential.HMO.parent",
+            __typename: "blpu_codes"
           },
         ],
       },
