@@ -38,15 +38,20 @@ export interface PublicRouteData {
   flowSlug: string;
 }
 
+const basePublicSearchSchema = z.object({
+  sessionId: z.string().optional(),
+  email: z.string().optional(),
+});
+
 // Search schemas
 export const publicRouteSearchSchemas = {
-  published: z.object({
+  published: basePublicSearchSchema.extend({
     analytics: z.boolean().optional(),
   }),
-  preview: z.object({}),
-  draft: z.object({}),
-  pay: z.object({}),
-  download: z.object({}),
+  preview: basePublicSearchSchema,
+  draft: basePublicSearchSchema,
+  pay: basePublicSearchSchema,
+  download: basePublicSearchSchema,
 };
 
 // Common data loading function
