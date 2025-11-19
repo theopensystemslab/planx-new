@@ -14,7 +14,6 @@ export const Route = createFileRoute(
     const { team, flow, parent, id, before } = params;
     const { type } = deps;
 
-    // Validate that the node exists
     const node = useStore.getState().getNode(id);
     if (!node) {
       throw notFound();

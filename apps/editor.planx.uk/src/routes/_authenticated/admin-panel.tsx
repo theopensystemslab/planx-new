@@ -34,13 +34,11 @@ export const Route = createFileRoute("/_authenticated/admin-panel")({
     const { user } = context;
     const { isPlatformAdmin } = user;
 
-    // Select query based on environment
     const query =
       import.meta.env.VITE_APP_ENV === "production"
         ? PRODUCTION_ADMIN_PANEL_QUERY
         : STAGING_ADMIN_PANEL_QUERY;
 
-    // Fetch admin panel data
     const { data } = await client.query<{ adminPanel: AdminPanelData[] }>({
       query,
       context: {

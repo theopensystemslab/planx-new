@@ -13,7 +13,6 @@ export const Route = createFileRoute("/_authenticated/$team/$flow/feedback")({
     const { team: teamSlug, flow: flowSlug } = params;
     const actualFlowSlug = flowSlug.split(",")[0];
 
-    // Check if user is authorized to view feedback
     const isAuthorised = useStore.getState().canUserEditTeam(teamSlug);
     if (!isAuthorised) {
       throw notFound();

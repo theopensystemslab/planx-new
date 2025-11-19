@@ -15,7 +15,6 @@ import { ToastContextProvider } from "contexts/ToastContext";
 import { getCookie, setCookie } from "lib/cookie";
 import { initFeatureFlags } from "lib/featureFlags";
 import { queryClient } from "lib/queryClient";
-import ErrorPage from "pages/ErrorPage/ErrorPage";
 import { AnalyticsProvider } from "pages/FlowEditor/lib/analytics/provider";
 import React, { Suspense, useEffect } from "react";
 import { createRoot } from "react-dom/client";
@@ -120,27 +119,12 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <ApolloProvider client={client}>
         <AnalyticsProvider>
-          {/* Use only TanStack Router during initial migration */}
           <Layout>
             <CssBaseline />
             <Suspense fallback={null}>
               <TanStackRouterProvider router={tanstackRouter} />
             </Suspense>
           </Layout>
-
-          {/* React Navi temporarily disabled for testing TanStack Router
-        <Router context={{ currentUser: hasJWT() }} navigation={navigation}>
-          <HelmetProvider>
-            <Layout>
-              <CssBaseline />
-              <Suspense fallback={null}>
-                <View />
-              </Suspense>
-              import Typography from "@mui/material/Typography";
-            </Layout>
-          </HelmetProvider>
-        </Router>
-        */}
         </AnalyticsProvider>
       </ApolloProvider>
     </QueryClientProvider>

@@ -28,7 +28,6 @@ const isPublicRoute = (pathname: string): boolean => {
   // Public routes follow the pattern: /:team/:flow/[public-route-type]
   // or for custom domains: /:flow/[public-route-type]
 
-  // Match exact public route patterns, not just contains
   const publicRouteRegexes = [
     /^\/[^/]+\/[^/]+\/preview($|\/)/, // /:team/:flow/preview/*
     /^\/[^/]+\/[^/]+\/published($|\/)/, // /:team/:flow/published/*
@@ -48,17 +47,14 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   validateSearch: zodValidator(rootSearchSchema),
 
   beforeLoad: async ({ location, context }) => {
-    // Allow login route without authentication
     if (location.pathname === "/login") {
       return {};
     }
 
-    // Check if this is a public route that doesn't need authentication
     if (isPublicRoute(location.pathname)) {
       return { isPublicRoute: true };
     }
 
-    // Apply authentication for all other routes
     if (!context.currentUser) {
       throw redirect({
         to: "/login",

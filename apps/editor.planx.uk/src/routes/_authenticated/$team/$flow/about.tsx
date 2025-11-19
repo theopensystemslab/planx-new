@@ -9,7 +9,6 @@ export const Route = createFileRoute("/_authenticated/$team/$flow/about")({
     const { team: teamSlug, flow: flowSlug } = params;
     const actualFlowSlug = flowSlug.split(",")[0];
 
-    // Get flow information for ReadMePage
     const flowInformation = await useStore
       .getState()
       .getFlowInformation(actualFlowSlug, teamSlug);
