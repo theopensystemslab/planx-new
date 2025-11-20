@@ -10,7 +10,7 @@ export const getTeamGISData = async ({
   teamSlug: string;
   geom: string;
   dataValues: string[];
-}): Promise<GISResponse & { url: string }> => {
+}): Promise<GISResponse & { planxRequest: string }> => {
   // Get current query parameters (eg ?analytics=false&sessionId=XXX) to determine if we should audit this response
   const urlSearchParams = new URLSearchParams(window.location.search);
   const params = Object.fromEntries(urlSearchParams.entries());
@@ -24,16 +24,16 @@ export const getTeamGISData = async ({
   });
 
   // Return full URL for auditing purposes
-  return { ...data, url: request.responseURL };
+  return { ...data, planxRequest: request.responseURL };
 };
 
 export const getClassifiedRoads = async (
   usrn?: string,
-): Promise<GISResponse & { url: string }> => {
+): Promise<GISResponse & { planxRequest: string }> => {
   const { data, request } = await apiClient.get("/roads", {
     params: { usrn },
   });
 
   // Return full URL for auditing purposes
-  return { ...data, url: request.responseURL };
+  return { ...data, planxRequest: request.responseURL };
 };
