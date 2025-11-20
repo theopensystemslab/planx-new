@@ -2,20 +2,42 @@ import { screen } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { vi } from "vitest";
 
-import setupServiceSettingsScreen, {
+import { offlinePublished, offlineUnpublished, onlinePublished, onlineUnpublished } from "./test/mocks";
+import { activeLinkCheck, disabledCopyCheck, enabledCopyCheck, inactiveLinkCheck, setupFlowStatusScreen } from "./test/utils";
+
+export const mockWindowLocationObject = {
+  origin: "https://mocked-origin.com",
+  hash: "",
+  host: "dummy.com",
+  port: "80",
+  protocol: "http:",
+  hostname: "dummy.com",
+  href: "http://dummy.com?page=1&name=testing",
+  pathname: "/mockTeam/mock-planning-permish",
+  search: "",
+  assign: vi.fn(),
+  reload: vi.fn(),
+  replace: vi.fn(),
+  ancestorOrigins: {
+    length: 0,
+    contains: () => true,
+    item: () => null,
+    [Symbol.iterator]: vi.fn(),
+  },
+};
+
+vi.spyOn(window, "location", "get").mockReturnValue(
   mockWindowLocationObject,
-} from "./testUtils";
+);
 
 const { getState, setState } = useStore;
 
 const subdomainStateData = {
-  flowSettings: {},
   teamDomain: "mockedteamdomain.com",
   flowSlug: "mock-planning-permish",
 };
 
 const nonSubdomainStateData = {
-  flowSettings: {},
   teamDomain: undefined,
   teamName: "mockTeam",
   flowSlug: "mock-planning-permish",
@@ -23,38 +45,16 @@ const nonSubdomainStateData = {
 
 const publishedUrl = `${mockWindowLocationObject.origin}${mockWindowLocationObject.pathname}/published`;
 
-const disabledCopyCheck = () => {
-  const copyButton = screen.getByRole("button", { name: `copy` });
-  expect(copyButton).toBeDisabled();
-};
-
-const enabledCopyCheck = () => {
-  const copyButton = screen.getByRole("button", { name: `copy` });
-  expect(copyButton).toBeEnabled();
-};
-
-const inactiveLinkCheck = async (link: string) => {
-  const publicLink = await screen.findByText(link);
-  expect(publicLink.tagName).toBe("P");
-};
-
-const activeLinkCheck = async (link: string) => {
-  const publicLink = await screen.findByText(`${link}`);
-
-  expect(publicLink.tagName).toBe("A");
-};
-
 describe("A team with a subdomain has an offline, published service.", () => {
   beforeEach(async () => {
-    // setup state values that <ServiceSettings/> depends on
     setState({
       ...subdomainStateData,
+      id: "abc123",
       isFlowPublished: true,
       flowStatus: "offline",
     });
 
-    // render the <ServiceSettings/> comp
-    setupServiceSettingsScreen();
+    await setupFlowStatusScreen(offlinePublished);
   });
 
   // eslint-disable-next-line @vitest/expect-expect
@@ -70,15 +70,14 @@ describe("A team with a subdomain has an offline, published service.", () => {
 
 describe("A team with a subdomain has an online, unpublished service.", () => {
   beforeEach(async () => {
-    // setup state values that <ServiceSettings/> depends on
     setState({
       ...subdomainStateData,
+      id: "abc123",
       isFlowPublished: false,
       flowStatus: "online",
     });
 
-    // render the <ServiceSettings/> comp
-    setupServiceSettingsScreen();
+    await setupFlowStatusScreen(onlineUnpublished);
   });
 
   // eslint-disable-next-line @vitest/expect-expect
@@ -94,9 +93,9 @@ describe("A team with a subdomain has an online, unpublished service.", () => {
 
 describe("A team with a subdomain has an online, published service.", () => {
   beforeEach(async () => {
-    // setup state values that <ServiceSettings/> depends on
     setState({
       ...subdomainStateData,
+      id: "abc123",
       isFlowPublished: true,
       flowStatus: "online",
     });
@@ -108,24 +107,22 @@ describe("A team with a subdomain has an online, published service.", () => {
 
   // eslint-disable-next-line @vitest/expect-expect
   it("has a public link with the subdomain url in an <a> tag", async () => {
-    // render the <ServiceSettings/> comp
     const { flowSlug, teamDomain } = getState();
+    await setupFlowStatusScreen(onlinePublished);
 
-    await setupServiceSettingsScreen();
     await activeLinkCheck(`https://${teamDomain}/${flowSlug}`);
   });
 
   // eslint-disable-next-line @vitest/expect-expect
   it("has an enabled copy button", async () => {
-    // render the <ServiceSettings/> comp
-    await setupServiceSettingsScreen();
+    await setupFlowStatusScreen(onlinePublished);
+
     enabledCopyCheck();
   });
 
   it("can be copied to the clipboard", async () => {
     const { flowSlug, teamDomain } = getState();
-    // render the <ServiceSettings/> comp
-    const user = await setupServiceSettingsScreen();
+    const user = await setupFlowStatusScreen(onlinePublished);
 
     const copyButton = screen.getByRole("button", { name: `copy` });
 
@@ -140,15 +137,14 @@ describe("A team with a subdomain has an online, published service.", () => {
 
 describe("A team with a subdomain has an offline, unpublished service.", () => {
   beforeEach(async () => {
-    // setup state values that <ServiceSettings/> depends on
     setState({
       ...subdomainStateData,
+      id: "abc123",
       isFlowPublished: false,
       flowStatus: "offline",
     });
 
-    // render the <ServiceSettings/> comp
-    setupServiceSettingsScreen();
+    await setupFlowStatusScreen(offlineUnpublished);
   });
 
   // eslint-disable-next-line @vitest/expect-expect
@@ -164,20 +160,14 @@ describe("A team with a subdomain has an offline, unpublished service.", () => {
 
 describe("A team without a subdomain has an offline, published service.", () => {
   beforeEach(async () => {
-    // setup state values that <ServiceSettings/> depends on
     setState({
       ...nonSubdomainStateData,
+      id: "abc123",
       flowStatus: "offline",
       isFlowPublished: true,
     });
-
-    // Mocking window.location.origin
-    vi.spyOn(window, "location", "get").mockReturnValue(
-      mockWindowLocationObject,
-    );
-
-    // render the <ServiceSettings/> comp
-    setupServiceSettingsScreen();
+    
+    await setupFlowStatusScreen(offlinePublished);
   });
 
   // eslint-disable-next-line @vitest/expect-expect
@@ -191,20 +181,14 @@ describe("A team without a subdomain has an offline, published service.", () => 
 
 describe("A team without a subdomain has an online, unpublished service.", () => {
   beforeEach(async () => {
-    // setup state values that <ServiceSettings/> depends on
     setState({
       ...nonSubdomainStateData,
+      id: "abc123",
       flowStatus: "online",
       isFlowPublished: false,
     });
 
-    // Mocking window.location.origin
-    vi.spyOn(window, "location", "get").mockReturnValue(
-      mockWindowLocationObject,
-    );
-
-    // render the <ServiceSettings/> comp
-    setupServiceSettingsScreen();
+    await setupFlowStatusScreen(onlineUnpublished);
   });
 
   // eslint-disable-next-line @vitest/expect-expect
@@ -218,16 +202,12 @@ describe("A team without a subdomain has an online, unpublished service.", () =>
 
 describe("A team without a subdomain has an online, published service.", () => {
   beforeEach(async () => {
-    // setup state values that <ServiceSettings/> depends on
     setState({
       ...nonSubdomainStateData,
+      id: "abc123",
       flowStatus: "online",
       isFlowPublished: true,
     });
-    // Mocking window.location.origin
-    vi.spyOn(window, "location", "get").mockReturnValue(
-      mockWindowLocationObject,
-    );
 
     // mock navigator.clipboard fn
     vi.spyOn(navigator.clipboard, "writeText").mockImplementation(() =>
@@ -237,22 +217,19 @@ describe("A team without a subdomain has an online, published service.", () => {
 
   // eslint-disable-next-line @vitest/expect-expect
   it("has a public link with the subdomain url in an <a> tag", async () => {
-    // render the <ServiceSettings/> comp
-    setupServiceSettingsScreen();
+    await setupFlowStatusScreen(onlinePublished);
     await activeLinkCheck(publishedUrl);
   });
 
   // eslint-disable-next-line @vitest/expect-expect
-  it("has an enabled copy button", () => {
-    // render the <ServiceSettings/> comp
-    setupServiceSettingsScreen();
+  it("has an enabled copy button", async () => {
+    await setupFlowStatusScreen(onlinePublished);
     enabledCopyCheck();
   });
 
   it("can be copied to the clipboard", async () => {
-    // render the <ServiceSettings/> comp
-    const user = await setupServiceSettingsScreen();
-    const copyButton = screen.getByRole("button", { name: `copy` });
+    const user = await setupFlowStatusScreen(onlinePublished)
+    const copyButton = screen.getByRole("button", { name: "copy" });
 
     user.click(copyButton);
 
@@ -263,20 +240,14 @@ describe("A team without a subdomain has an online, published service.", () => {
 
 describe("A team without a subdomain has an offline, unpublished service.", () => {
   beforeEach(async () => {
-    // setup state values that <ServiceSettings/> depends on
     setState({
       ...nonSubdomainStateData,
+      id: "abc123",
       flowStatus: "offline",
       isFlowPublished: false,
     });
 
-    // Mocking window.location.origin
-    vi.spyOn(window, "location", "get").mockReturnValue(
-      mockWindowLocationObject,
-    );
-
-    // render the <ServiceSettings/> comp
-    setupServiceSettingsScreen();
+    await setupFlowStatusScreen(offlineUnpublished);
   });
 
   // eslint-disable-next-line @vitest/expect-expect

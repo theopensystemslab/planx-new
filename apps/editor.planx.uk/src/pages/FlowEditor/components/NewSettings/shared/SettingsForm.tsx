@@ -44,6 +44,11 @@ interface SettingsFormContainerProps<
     data: TData | undefined;
     loading: boolean;
   }) => React.ReactNode;
+  /**
+   * Allows manual submission via formik.submitForm(), for example
+   * if a confirmation dialog or other custom actions are required
+   */
+  showActionButtons?: boolean;
 }
 
 /**
@@ -70,6 +75,7 @@ const SettingsFormContainer = <
   successMessage = "Settings updated successfully",
   children,
   preview,
+  showActionButtons = true,
 }: SettingsFormContainerProps<TData, TVariables, TFormValues>) => {
   const toast = useToast();
 
@@ -150,24 +156,26 @@ const SettingsFormContainer = <
               {children({ formik, data, loading })}
             </Box>
             {preview && <Box mt={2}>{preview(formik)}</Box>}
-            <Box mt={2} display="flex" gap={1.5}>
-              <Button
-                type="submit"
-                variant="contained"
-                disabled={!formik.dirty || updating}
-              >
-                Save
-              </Button>
-              <Button
-                onClick={() => formik.resetForm()}
-                type="reset"
-                variant="contained"
-                disabled={!formik.dirty}
-                color="secondary"
-              >
-                Reset changes
-              </Button>
+            { showActionButtons && 
+              <Box mt={2} display="flex" gap={1.5}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  disabled={!formik.dirty || updating}
+                >
+                  Save
+                </Button>
+                <Button
+                  onClick={() => formik.resetForm()}
+                  type="reset"
+                  variant="contained"
+                  disabled={!formik.dirty}
+                  color="secondary"
+                >
+                  Reset changes
+                </Button>
             </Box>
+            }
           </Grid>
         </Grid>
       </Box>

@@ -18,8 +18,8 @@ import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { useStore } from "../../../../lib/store";
+import { PublicLink } from "../../../NewSettings/FlowSettings/Visibility/FlowStatus/components/PublicLink";
 import { useSlackMessage } from "../../hooks/useSlackMessage";
-import { PublicLink } from "./PublicLink";
 
 const FlowStatus = () => {
   const [
