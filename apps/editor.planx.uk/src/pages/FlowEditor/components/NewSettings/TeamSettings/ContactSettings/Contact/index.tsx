@@ -6,7 +6,7 @@ import Input from "ui/shared/Input/Input";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import { GET_TEAM_SETTINGS, UPDATE_TEAM_SETTINGS } from "./queries";
-import { validationSchema } from "./schema";
+import { defaultValues, validationSchema } from "./schema";
 import {
   ContactFormValues,
   GetTeamSettingsData,
@@ -28,6 +28,7 @@ export const Contact: React.FC = () => {
       ContactFormValues
     >
       query={GET_TEAM_SETTINGS}
+      defaultValues={defaultValues}
       queryVariables={{ slug: teamSlug }}
       mutation={UPDATE_TEAM_SETTINGS}
       getInitialValues={({ teams: [team] }) => team.settings}

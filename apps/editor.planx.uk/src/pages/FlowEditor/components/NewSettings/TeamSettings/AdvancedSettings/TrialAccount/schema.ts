@@ -1,5 +1,12 @@
-import { boolean, object } from "yup";
+import { boolean, object, type SchemaOf } from "yup";
 
-export const validationSchema = object().shape({
-  isTrial: boolean().required().default(false),
-});
+import type { TrialAccountFormValues } from "./types";
+
+export const validationSchema: SchemaOf<TrialAccountFormValues> =
+  object().shape({
+    isTrial: boolean().required(),
+  });
+
+export const defaultValues: TrialAccountFormValues = {
+  isTrial: false,
+};

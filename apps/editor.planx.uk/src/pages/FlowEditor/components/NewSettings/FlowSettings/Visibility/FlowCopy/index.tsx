@@ -4,7 +4,7 @@ import { Switch } from "ui/shared/Switch";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import { GET_FLOW_VISIBILITY, UPDATE_FLOW_VISIBILITY } from "./queries";
-import { validationSchema } from "./schema";
+import { defaultValues, validationSchema } from "./schema";
 import {
   GetFlowVisibilityData,
   UpdateFlowVisibilityVariables,
@@ -27,6 +27,7 @@ const FlowCopySettings: React.FC = () => {
       description={
         "Control if this flow can be used to create new services in other teams. The flow can still be copied and modified within your team."
       }
+      defaultValues={defaultValues}
       getInitialValues={({ flows: [flow] }) => ({
         canCreateFromCopy: flow.canCreateFromCopy,
       })}

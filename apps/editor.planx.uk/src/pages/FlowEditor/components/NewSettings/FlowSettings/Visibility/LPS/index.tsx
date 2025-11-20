@@ -6,7 +6,7 @@ import { Switch } from "ui/shared/Switch";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import { GET_LPS_LISTING, UPDATE_LPS_LISTING } from "./queries";
-import { validationSchema } from "./schema";
+import { defaultValues, validationSchema } from "./schema";
 import {
   GetLPSListingData,
   LPSListingFormValues,
@@ -40,6 +40,7 @@ const LPSListingSettings: React.FC = () => {
           the services which you offer via Plan✕.
         </>
       }
+      defaultValues={defaultValues}
       getInitialValues={({ flows: [flow] }) => ({
         isListedOnLPS: flow.isListedOnLPS ?? false,
         summary: flow.summary,

@@ -21,9 +21,11 @@ interface SettingsFormContainerProps<
   mutation: DocumentNode;
   /** Extract the initial values from query data */
   getInitialValues: (data: TData) => TFormValues;
+  defaultValues: TFormValues;
   /** Transform form values to mutation variables */
   getMutationVariables: (
     values: TFormValues,
+    data: TData,
   ) => TVariables | Promise<TVariables>;
   validationSchema: SchemaOf<TFormValues>;
   legend: string;
@@ -59,6 +61,7 @@ const SettingsFormContainer = <
   queryVariables,
   mutation,
   getInitialValues,
+  defaultValues,
   getMutationVariables,
   validationSchema,
   legend,
@@ -73,7 +76,6 @@ const SettingsFormContainer = <
   // Fetch current data
   const { data, loading, error } = useQuery<TData>(query, {
     variables: queryVariables,
-    fetchPolicy: "cache-and-network",
   });
 
   // Update data
@@ -92,16 +94,16 @@ const SettingsFormContainer = <
   });
 
   const formik = useFormik<TFormValues>({
-    initialValues: data
-      ? getInitialValues(data)
-      : (validationSchema.getDefault() as TFormValues),
+    initialValues: data ? getInitialValues(data) : defaultValues,
     enableReinitialize: true,
     validationSchema,
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async (values, { resetForm }) => {
       try {
-        const variables = await getMutationVariables(values);
+        if (!data) throw Error("Unable to mutate, missing initial data");
+
+        const variables = await getMutationVariables(values, data);
         await updateSettings({ variables });
         resetForm({ values });
       } catch (error) {

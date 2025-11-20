@@ -15,7 +15,11 @@ export const validationSchema: SchemaOf<LPSListingFormValues> = object({
         }
         return true;
       },
-    )
-    .default(false),
+    ),
   summary: string().nullable(),
 });
+
+export const defaultValues: LPSListingFormValues = {
+  isListedOnLPS: false,
+  summary: null,
+};
