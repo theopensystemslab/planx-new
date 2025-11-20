@@ -35,6 +35,7 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
     {
       variables: { team_id: teamId },
       skip: !teamId,
+      pollInterval: 10_000,
     },
   );
 
