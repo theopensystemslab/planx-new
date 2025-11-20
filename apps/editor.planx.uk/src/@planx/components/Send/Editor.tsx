@@ -111,7 +111,7 @@ const SendComponent: React.FC<Props> = (props) => {
               <Typography variant="body2">
                 Each team can set one submission email address in{" "}
                 <Link
-                  href={`/${teamSlug}/general-settings`}
+                  href={`/${teamSlug}/settings`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

@@ -102,7 +102,7 @@ function EditorNavMenu() {
     {
       title: "Settings",
       Icon: TuneIcon,
-      route: `/${teamSlug}/general-settings`,
+      route: `/${teamSlug}/settings`,
       accessibleBy: ["platformAdmin", "teamEditor"],
     },
     {
