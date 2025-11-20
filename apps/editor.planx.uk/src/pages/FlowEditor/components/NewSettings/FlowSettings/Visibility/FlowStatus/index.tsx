@@ -19,14 +19,14 @@ import SettingsFormContainer from "../../../shared/SettingsForm";
 import { Description } from "./components/Description";
 import { GET_FLOW_STATUS, UPDATE_FLOW_STATUS } from "./queries";
 import { validationSchema } from "./schema";
-import type { FlowStatusFormValues, GetFlowStatus, UpdateFlowStatus } from "./types";
+import type {
+  FlowStatusFormValues,
+  GetFlowStatus,
+  UpdateFlowStatus,
+} from "./types";
 
 const FlowStatus: React.FC = () => {
-  const [
-    flowId,
-    flowSlug,
-    teamDomain,
-  ] = useStore((state) => [
+  const [flowId, flowSlug, teamDomain] = useStore((state) => [
     state.id,
     state.flowSlug,
     state.teamDomain,
@@ -39,11 +39,7 @@ const FlowStatus: React.FC = () => {
 
   const { origin } = useLocation();
 
-  const publishedLink = `${origin}${rootFlowPath(
-    false,
-  )}/published`;
-
-  console.log({publishedLink})
+  const publishedLink = `${origin}${rootFlowPath(false)}/published`;
 
   const subdomainLink = teamDomain && `https://${teamDomain}/${flowSlug}`;
 
@@ -60,10 +56,11 @@ const FlowStatus: React.FC = () => {
       validationSchema={validationSchema}
       legend={"Flow status"}
       description={<Description />}
-      getInitialValues={({flow: { status }}) => ({ status })}
+      getInitialValues={({ flow: { status } }) => ({ status })}
       queryVariables={{ flowId }}
       getMutationVariables={(values) => ({ flowId, ...values })}
       showActionButtons={false}
+      defaultValues={{ status: "offline" }}
     >
       {({ formik, data }) => {
         const isTrial = data?.flow.team.settings.isTrial;
@@ -84,8 +81,8 @@ const FlowStatus: React.FC = () => {
               <WarningContainer>
                 <PendingActionsIcon sx={{ mr: 1 }} />
                 <Typography variant="body2">
-                  Source templates are discoverable from the "Add a new flow" modal
-                  when they are online.
+                  Source templates are discoverable from the "Add a new flow"
+                  modal when they are online.
                 </Typography>
               </WarningContainer>
             )}
@@ -126,11 +123,11 @@ const FlowStatus: React.FC = () => {
                         !data?.flow.hasPrivacyPage &&
                         formik.values.status !== "online"
                       ) {
-                        setPrivacyError(true)
+                        setPrivacyError(true);
                         return;
                       }
 
-                      setPrivacyError(false)
+                      setPrivacyError(false);
                       setDialogOpen(true);
                     }}
                   >
@@ -236,7 +233,7 @@ const FlowStatus: React.FC = () => {
               />
             )}
           </>
-        )
+        );
       }}
     </SettingsFormContainer>
   );
