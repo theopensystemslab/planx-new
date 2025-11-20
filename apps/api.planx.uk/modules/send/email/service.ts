@@ -35,6 +35,58 @@ export async function getTeamEmailSettings(localAuthority: string) {
   return response?.teams[0];
 }
 
+interface GetFlowId {
+  lowcalSessions: {
+    flowId: string;
+  }[];
+}
+
+export async function getFlowId(sessionId: string) {
+  const response = await $api.client.request<GetFlowId>(
+    gql`
+      query GetFlowId($session_id: uuid!) {
+        lowcalSessions: lowcal_sessions(where: { id: { _eq: $session_id } }) {
+          flowId: flow_id
+        }
+      }
+    `,
+    {
+      session_id: sessionId,
+    },
+  );
+  return response?.lowcalSessions[0]?.flowId;
+}
+
+interface GetFlowSubmissionEmail {
+  flowIntegrations: {
+    emailId: string;
+    submissionIntegration: {
+      submissionEmail: string;
+    };
+  }[];
+}
+
+export async function getFlowSubmissionEmail(flowId: string) {
+  const response = await $api.client.request<GetFlowSubmissionEmail>(
+    gql`
+      query GetFlowSubmissionEmail($flowId: uuid!) {
+        flowIntegrations: flow_integrations(
+          where: { flow_id: { _eq: $flowId } }
+        ) {
+          emailId: email_id
+          submissionIntegration: submission_integration {
+            submissionEmail: submission_email
+          }
+        }
+      }
+    `,
+    {
+      flowId,
+    },
+  );
+  return response?.flowIntegrations[0]?.submissionIntegration.submissionEmail;
+}
+
 interface GetSessionData {
   session: Partial<Pick<Session, "data">>;
 }
