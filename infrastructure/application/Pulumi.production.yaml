@@ -78,7 +78,7 @@ config:
   application:skip-rate-limit-secret:
     secure: AAABADPv0Fp55IK8xL0Kxx/Kq2sFeRIgbKn0sgHBFhTsWh09kV3/OyG0d/wkE3zm+15zbud0GR4TSl4z//MV5XgxLWDhJgGJ
   application:slack-internal-errors-webhook:
-    secure: AAABAD03UlWhbs3DiYA1+dWxlmNKA1kvgNT1Z4NsKFUpfUUtgsB8nEV5xbVHE7ZfPaJHF/G/BknTO7FqTZdxP0FIWJeKBxAL587+Bo47hBJQO0ETy0VMy02D5YovAlJ+wd33ctyQRB/t5J2v30smkoV25slDfMwQ5A==
+    secure: AAABAIdznmeJ53lLUde2j8a7FeSlBO7UpdQNRWWxErp7djbuAk3YdAIH2zK1qmz5nfFT8fRLh/RenS/bFHAW4/KsCjziio1JlDIy7YsnxOBsL6ZE+pUlzM6/SlMcZth/S/4FKVfv7FxwmK9boG8pCSoAbJx0GCCpXQ==
   application:slack-webhook-url:
     secure: AAABANpjl5NnZcSFTUB3iHS4qsQuSgHGkki0yYn/LEB9Oq6kqg/RFSvwl6toXoLjgKRwhcguba8Qyp/gA+nCSMyFu7i36QVFiTRjPFsoQ9esTEo/zGqyNf2tCL/AFd+oE2/WLo1TSq7/Qt7hVm49
   application:ssl-barking-and-dagenham-cert:

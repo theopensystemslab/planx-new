@@ -15,11 +15,11 @@ export const setupNotificationForDeploymentRollback = (
   const config = new pulumi.Config();
 
   const topic = new aws.sns.Topic(`${simpleServiceName}-rollback-alerts`, {
-    name: `${simpleServiceName}-rollback-alerts`,
+    name: `${simpleServiceName}-rollback-alerts-topic`,
   });
 
   new aws.sns.TopicSubscription(
-    `${simpleServiceName}-rollback-slack-alert`,
+    `${simpleServiceName}-rollback-alerts-subscription`,
     {
       topic: topic.arn,
       protocol: "https",
@@ -28,7 +28,7 @@ export const setupNotificationForDeploymentRollback = (
   );
 
   // allow SNS topic to receive events from EventBridge
-  new aws.sns.TopicPolicy(`${simpleServiceName}-rollback-topic-policy`, {
+  new aws.sns.TopicPolicy(`${simpleServiceName}-rollback-alerts-topic-policy`, {
     arn: topic.arn,
     policy: pulumi.jsonStringify({
       Version: "2012-10-17",
@@ -66,7 +66,7 @@ export const setupNotificationForDeploymentRollback = (
 
   // XXX: this template may not be ingested by SNS/Slack as expected and can then be simplified
   new aws.cloudwatch.EventTarget(
-    `${simpleServiceName}-rollback-target`,
+    `${simpleServiceName}-rollback-alerts-target`,
     {
       rule: rollbackRule.name,
       arn: topic.arn,
