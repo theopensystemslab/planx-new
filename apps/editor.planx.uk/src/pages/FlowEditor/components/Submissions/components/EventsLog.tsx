@@ -1,6 +1,7 @@
 import { GridFilterItem } from "@mui/x-data-grid";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import ErrorFallback from "components/Error/ErrorFallback";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import SettingsSection from "ui/editor/SettingsSection";
@@ -20,6 +21,7 @@ import {
 import { EventsLogProps, Submission } from "../types";
 import { DownloadSubmissionButton } from "./DownloadSubmissionButton";
 import { OpenResponseButton } from "./OpenResponseButton";
+import { ResubmitButton } from "./ResubmitButton";
 import { StatusChip } from "./StatusChip";
 import { SubmissionEvent } from "./SubmissionEvent";
 
@@ -29,6 +31,10 @@ const EventsLog: React.FC<EventsLogProps> = ({
   error,
   filterByFlow,
 }) => {
+  const isPlatformAdmin = useStore((state) =>
+    Boolean(state.user?.isPlatformAdmin),
+  );
+
   if (loading)
     return (
       <DelayedLoadingIndicator
@@ -143,6 +149,21 @@ const EventsLog: React.FC<EventsLogProps> = ({
       },
     },
   ];
+
+  if (isPlatformAdmin) {
+    columns.push({
+      field: "resubmit" as keyof Submission,
+      headerName: "Resubmit",
+      width: 100,
+      type: ColumnFilterType.CUSTOM,
+      customComponent: ResubmitButton,
+      columnOptions: {
+        cellClassName: "MuiDataGrid-cell--textCenter",
+        filterable: false,
+        sortable: false,
+      },
+    });
+  }
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>

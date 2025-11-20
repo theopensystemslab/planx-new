@@ -8,7 +8,7 @@ import React, { PropsWithChildren } from "react";
 export interface ConfirmationDialogProps {
   open: boolean;
   onClose: (isConfirmed: boolean) => void;
-  title: string;
+  title?: string;
   confirmText?: string;
   cancelText?: string;
 }
@@ -20,7 +20,7 @@ export const ConfirmationDialog: React.FC<
     onClose,
     open,
     children,
-    title,
+    title = "Confirm",
     confirmText = "Ok",
     cancelText = "Cancel ",
   } = props;
