@@ -6,11 +6,10 @@ import {
   getTeamEmailSettings,
   getFlowSubmissionEmail,
 } from "../email/service.js";
-import type { UUID } from "node:crypto";
 
 export async function downloadApplicationFiles(
   req: Request<
-    { sessionId?: UUID },
+    { sessionId?: string },
     unknown,
     unknown,
     { email?: string; localAuthority?: string }
@@ -49,7 +48,7 @@ export async function downloadApplicationFiles(
 
     // Get flow ID, in order to access flow submission email
     const flowId = await getFlowId(sessionId);
-    if (!flowId || flowId === undefined) {
+    if (!flowId) {
       return next({
         status: 400,
         message: "Failed to find flow ID for this sessionId",
@@ -58,7 +57,7 @@ export async function downloadApplicationFiles(
 
     // Get the flow submission email, which will run parallel to getTeamEmailSettings for now
     const submissionEmail = await getFlowSubmissionEmail(flowId);
-    if (!submissionEmail.submissionEmail) {
+    if (!submissionEmail) {
       return next({
         status: 400,
         message: "Failed to retrieve submission email for this flow",

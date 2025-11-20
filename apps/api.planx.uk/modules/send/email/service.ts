@@ -84,7 +84,7 @@ export async function getFlowSubmissionEmail(flowId: string) {
       flowId,
     },
   );
-  return response?.flowIntegrations[0]?.submissionIntegration;
+  return response?.flowIntegrations[0]?.submissionIntegration.submissionEmail;
 }
 
 interface GetSessionData {
