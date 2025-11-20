@@ -99,16 +99,8 @@ function Component(props: Props) {
     // `_constraints` & `_overrides` are responsible for auditing
     const _constraints: Array<EnhancedGISResponse> = [];
     if (hasPlanningData) {
-      if (data && !isGISError)
-        _constraints.push({
-          ...data,
-          planxRequest: data.url,
-        });
-      if (roads && !isRoadsError)
-        _constraints.push({
-          ...roads,
-          planxRequest: roads.url,
-        });
+      if (data && !isGISError) _constraints.push(data);
+      if (roads && !isRoadsError) _constraints.push(roads);
     }
 
     const hasInaccurateConstraints =
