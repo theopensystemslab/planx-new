@@ -5,6 +5,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { useSlackMessage } from "pages/FlowEditor/components/Settings/hooks/useSlackMessage";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { useNavigation } from "react-navi";
@@ -22,8 +23,29 @@ import {
 const Template: React.FC = () => {
   const flowId = useStore((state) => state.id);
   const { navigate } = useNavigation();
-
+  const { mutate: sendSlackMessage } = useSlackMessage();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const handleClose = () => setIsOpen(false);
+
+  const handleSuccess = (
+    _formik: unknown,
+    data: GetFlowTemplateStatus | undefined,
+  ) => {
+    // Navigate away from tab, as we're about to remove it
+    navigate(".");
+    setIsOpen(false);
+
+    // Type-narrowing only, should not happen!
+    if (!data)
+      throw Error("Failed to get query data for template ejection form");
+
+    const {
+      flow: { name, team, template },
+    } = data;
+    const message = `:eject: *${team.name}* have ejected their "${name}" service from the "${template.name} "template`;
+    sendSlackMessage(message);
+  };
 
   return (
     <SettingsFormContainer<
@@ -38,8 +60,13 @@ const Template: React.FC = () => {
       description="Manage how your templated flow receives updates."
       getInitialValues={({ flow: { templatedFrom } }) => ({ templatedFrom })}
       queryVariables={{ flowId }}
-      getMutationVariables={(values) => ({ flowId, ...values })}
+      getMutationVariables={(_values, data) => ({
+        flowId,
+        copiedFrom: data.flow.templatedFrom,
+      })}
       showActionButtons={false}
+      defaultValues={{ templatedFrom: "" }}
+      onSuccess={handleSuccess}
     >
       {({ formik, data }) =>
         data?.flow?.template && (
@@ -79,7 +106,7 @@ const Template: React.FC = () => {
               </Button>
             </Box>
             {isOpen && (
-              <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
+              <Dialog open={isOpen} onClose={handleClose}>
                 <DialogTitle component="h1" variant="h3">
                   Opt-out of templated flow updates
                 </DialogTitle>
@@ -91,7 +118,7 @@ const Template: React.FC = () => {
                 </DialogContent>
                 <DialogActions>
                   <Button
-                    onClick={() => setIsOpen(false)}
+                    onClick={handleClose}
                     color="secondary"
                     variant="contained"
                     sx={{ backgroundColor: "background.default" }}
@@ -99,11 +126,7 @@ const Template: React.FC = () => {
                     Cancel
                   </Button>
                   <Button
-                    onClick={async () => {
-                      await formik.submitForm();
-                      setIsOpen(false);
-                      navigate(".");
-                    }}
+                    onClick={formik.submitForm}
                     type="submit"
                     color="warning"
                     variant="contained"

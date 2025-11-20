@@ -1,8 +1,16 @@
 export interface GetFlowTemplateStatus {
   flow: {
+    name: string;
     templatedFrom: string;
+    team: {
+      id: number;
+      name: string;
+    };
     template: {
+      id: string;
+      name: string;
       team: {
+        id: number;
         name: string;
       };
     };
@@ -10,10 +18,10 @@ export interface GetFlowTemplateStatus {
 }
 
 export interface FormValues {
-  templatedFrom?: string | null;
+  templatedFrom: string | null;
 }
 
 export interface EjectFlowFromTemplate {
   flowId: string;
-  templatedFrom?: string | null;
+  copiedFrom: string;
 }
