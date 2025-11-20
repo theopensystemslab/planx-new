@@ -357,7 +357,6 @@ const PublicToolbar: React.FC<{
       <ConfirmationDialog
         open={isDialogOpen}
         onClose={handleRestart}
-        title="Confirm"
         confirmText="Yes"
         cancelText="No"
       >
