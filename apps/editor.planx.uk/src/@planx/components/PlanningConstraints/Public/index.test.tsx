@@ -1,5 +1,6 @@
 import { act } from "@testing-library/react";
 import ErrorFallback from "components/Error/ErrorFallback";
+import { not } from "mathjs";
 import { http, HttpResponse } from "msw";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -113,6 +114,17 @@ describe("following a FindProperty component", () => {
     await user.click(getByTestId("continue-button"));
 
     expect(handleSubmit).toHaveBeenCalled();
+
+    // planxRequest url is logged for auditing
+    expect(handleSubmit.mock.calls[0][0].data._constraints[0]).toHaveProperty(
+      "planxRequest",
+      expect.stringMatching(/http/),
+    );
+
+    // Plain `url` is not logged
+    expect(
+      handleSubmit.mock.calls[0][0].data._constraints[0],
+    ).not.toHaveProperty("url");
   });
 
   it("should not have any accessibility violations", async () => {
