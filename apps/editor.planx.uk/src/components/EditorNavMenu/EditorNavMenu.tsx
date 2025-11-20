@@ -20,6 +20,7 @@ import { useCurrentRoute, useLoadingRoute, useNavigation } from "react-navi";
 import EditorIcon from "ui/icons/Editor";
 import LocalPlanningServicesIcon from "ui/icons/LocalPlanningServices";
 
+import { useLPS } from "../../hooks/useLPS";
 import { MenuButton, MenuItem, MenuTitle, MenuWrap, Root } from "./styles";
 import { Route, RoutesForURL } from "./types";
 
@@ -37,6 +38,7 @@ function EditorNavMenu() {
     ],
   );
   const referenceCode = team?.settings?.referenceCode;
+  const { url: lpsBaseUrl } = useLPS();
 
   const isActive = (route: string) => url.href.endsWith(route);
 
@@ -149,7 +151,7 @@ function EditorNavMenu() {
         ? `Local Planning Services (external link)`
         : `Local Planning Services unavailable`,
       Icon: LocalPlanningServicesIcon,
-      route: referenceCode ? `https://localplanning.services/${teamSlug}` : `#`,
+      route: referenceCode ? `${lpsBaseUrl}/${teamSlug}` : `#`,
       accessibleBy: "*",
       disabled: !referenceCode,
     },
