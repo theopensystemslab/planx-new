@@ -11,13 +11,12 @@ import {
   withData,
   withView,
 } from "navi";
-import AdvancedSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/AdvancedSettings";
-import ContactSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/ContactSettings";
-import GISSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/GISSettings";
-import IntegrationSettings from "pages/FlowEditor/components/NewSettings/TeamSettings/IntegrationSettings";
-import TeamSettingsLayout from "pages/FlowEditor/components/NewSettings/TeamSettings/TeamSettingsLayout";
-import DesignSettings from "pages/FlowEditor/components/Settings/DesignSettings";
-import GeneralSettings from "pages/FlowEditor/components/Settings/GeneralSettings";
+import DesignSettings from "pages/FlowEditor/components/OldSettings/DesignSettings";
+import AdvancedSettings from "pages/FlowEditor/components/Settings/Team/Advanced";
+import ContactSettings from "pages/FlowEditor/components/Settings/Team/Contact";
+import GISSettings from "pages/FlowEditor/components/Settings/Team/GIS";
+import IntegrationSettings from "pages/FlowEditor/components/Settings/Team/Integrations";
+import TeamSettingsLayout from "pages/FlowEditor/components/Settings/Team/Layout";
 import Team from "pages/Team";
 import React from "react";
 import { View } from "react-navi";
@@ -132,10 +131,6 @@ const routes = compose(
 
     "/:flow/settings": setFlowAndLazyLoad(() => import("./serviceSettings")),
 
-    "/:flow/new-settings": setFlowAndLazyLoad(
-      () => import("./serviceNewSettings"),
-    ),
-
     "/:flow/feedback": setFlowAndLazyLoad(() => import("./serviceFeedback")),
 
     "/:flow/submissions": setFlowAndLazyLoad(
@@ -157,16 +152,7 @@ const routes = compose(
 
     "/feedback": lazy(() => import("./feedback")),
 
-    "/general-settings": compose(
-      route(async (req) => ({
-        title: makeTitle(
-          [req.params.team, req.params.flow, "settings"].join("/"),
-        ),
-        view: GeneralSettings,
-      })),
-    ),
-
-    "/new-settings": compose(
+    "/settings": compose(
       withView(() => (
         <TeamSettingsLayout>
           <View />
@@ -175,27 +161,21 @@ const routes = compose(
       mount({
         "/": redirect("./contact"),
         "/contact": route((req) => ({
-          title: makeTitle(
-            [req.params.team, "new-settings", "contact"].join("/"),
-          ),
+          title: makeTitle([req.params.team, "settings", "contact"].join("/")),
           view: <ContactSettings />,
         })),
         "/integrations": route((req) => ({
           title: makeTitle(
-            [req.params.team, "new-settings", "integrations"].join("/"),
+            [req.params.team, "settings", "integrations"].join("/"),
           ),
           view: <IntegrationSettings />,
         })),
         "/gis-data": route((req) => ({
-          title: makeTitle(
-            [req.params.team, "new-settings", "gis-data"].join("/"),
-          ),
+          title: makeTitle([req.params.team, "settings", "gis-data"].join("/")),
           view: <GISSettings />,
         })),
         "/advanced": route((req) => ({
-          title: makeTitle(
-            [req.params.team, "new-settings", "advanced"].join("/"),
-          ),
+          title: makeTitle([req.params.team, "settings", "advanced"].join("/")),
           view: <AdvancedSettings />,
         })),
       }),
