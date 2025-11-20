@@ -19,6 +19,7 @@ import {
 // Parallel feature to SubmissionEmail (singular)
 export const SubmissionEmails: React.FC = () => {
   const teamId = useStore((state) => state.teamId);
+  console.log({ teamId });
 
   return (
     <SettingsFormContainer<
