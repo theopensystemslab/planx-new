@@ -18,7 +18,9 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef } from "react";
 import { useCurrentRoute, useLoadingRoute, useNavigation } from "react-navi";
 import EditorIcon from "ui/icons/Editor";
+import LocalPlanningServicesIcon from "ui/icons/LocalPlanningServices";
 
+import { useLPS } from "../../hooks/useLPS";
 import { MenuButton, MenuItem, MenuTitle, MenuWrap, Root } from "./styles";
 import { Route, RoutesForURL } from "./types";
 
@@ -36,6 +38,7 @@ function EditorNavMenu() {
     ],
   );
   const referenceCode = team?.settings?.referenceCode;
+  const { url: lpsBaseUrl } = useLPS();
 
   const isActive = (route: string) => url.href.endsWith(route);
 
@@ -140,6 +143,15 @@ function EditorNavMenu() {
       route: referenceCode
         ? `https://submit.planning.data.gov.uk/organisations/local-authority:${referenceCode}`
         : `#`,
+      accessibleBy: "*",
+      disabled: !referenceCode,
+    },
+    {
+      title: referenceCode
+        ? `Local Planning Services (external link)`
+        : `Local Planning Services unavailable`,
+      Icon: LocalPlanningServicesIcon,
+      route: referenceCode ? `${lpsBaseUrl}/${teamSlug}` : `#`,
       accessibleBy: "*",
       disabled: !referenceCode,
     },
