@@ -45,6 +45,8 @@ interface SettingsFormContainerProps<
     loading: boolean;
   }) => React.ReactNode;
   /**
+   * Hide "Save" and "Reset form" buttons
+   *
    * Allows manual submission via formik.submitForm(), for example
    * if a confirmation dialog or other custom actions are required
    */
@@ -156,7 +158,7 @@ const SettingsFormContainer = <
               {children({ formik, data, loading })}
             </Box>
             {preview && <Box mt={2}>{preview(formik)}</Box>}
-            { showActionButtons && 
+            {showActionButtons &&
               <Box mt={2} display="flex" gap={1.5}>
                 <Button
                   type="submit"
@@ -174,7 +176,7 @@ const SettingsFormContainer = <
                 >
                   Reset changes
                 </Button>
-            </Box>
+              </Box>
             }
           </Grid>
         </Grid>

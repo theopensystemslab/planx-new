@@ -321,6 +321,7 @@ select_permissions:
     permission:
       columns:
         - can_create_from_copy
+        - copied_from
         - created_at
         - creator_id
         - data
@@ -377,6 +378,7 @@ select_permissions:
     permission:
       columns:
         - can_create_from_copy
+        - copied_from
         - created_at
         - creator_id
         - data
@@ -502,6 +504,7 @@ update_permissions:
     permission:
       columns:
         - can_create_from_copy
+        - copied_from
         - data
         - deleted_at
         - description
@@ -514,6 +517,7 @@ update_permissions:
         - status
         - summary
         - team_id
+        - templated_from
       filter:
         deleted_at:
           _is_null: true
@@ -539,6 +543,7 @@ update_permissions:
     permission:
       columns:
         - can_create_from_copy
+        - copied_from
         - data
         - deleted_at
         - description
@@ -550,6 +555,7 @@ update_permissions:
         - status
         - summary
         - team_id
+        - templated_from
       filter:
         _and:
           - team:

@@ -1,25 +1,36 @@
+import { useQuery } from "@apollo/client";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 import SettingsLayout from "../SettingsLayout";
+import { GET_FLOW_TEMPLATE_STATUS } from "./Template/queries";
+import type { GetFlowTemplateStatus } from "./Template/types";
 
 interface Props {
   children: React.ReactNode;
 }
 
 const FlowSettingsLayout: React.FC<Props> = ({ children }) => {
-  const [teamSlug, flowSlug, isTemplatedFrom] = useStore((state) => [
+  const [flowId, teamSlug, flowSlug] = useStore((state) => [
+    state.id,
     state.teamSlug,
     state.flowSlug,
-    state.isTemplatedFrom,
   ]);
+
+  const { data } = useQuery<GetFlowTemplateStatus>(GET_FLOW_TEMPLATE_STATUS, {
+    variables: { flowId },
+  });
 
   const settingsLinks = [
     { label: "Visibility", path: "/visibility" },
     { label: "Legal disclaimer", path: "/legal-disclaimer" },
     { label: "Help page", path: "/pages/help" },
     { label: "Privacy page", path: "/pages/privacy" },
-    { label: "Templates", path: "/templates", condition: isTemplatedFrom },
+    {
+      label: "Templates",
+      path: "/templates",
+      condition: Boolean(data?.flow.templatedFrom),
+    },
   ];
 
   return (
