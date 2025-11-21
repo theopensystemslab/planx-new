@@ -1,4 +1,9 @@
-import type { Team, TeamSettings, TeamTheme, User } from "@opensystemslab/planx-core/types";
+import type {
+  Team,
+  TeamSettings,
+  TeamTheme,
+  User,
+} from "@opensystemslab/planx-core/types";
 import gql from "graphql-tag";
 import {
   compose,
@@ -12,23 +17,21 @@ import {
 } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { AdminPanelData } from "types";
 import NotionEmbed from "ui/editor/NotionEmbed";
 
 import { client } from "../lib/graphql";
 import GlobalSettingsView from "../pages/GlobalSettings";
 import { PlatformAdminPanel } from "../pages/PlatformAdminPanel/PlatformAdminPanel";
 import Teams from "../pages/Teams";
-import { makeTitle, PRODUCTION_ADMIN_PANEL_QUERY, STAGING_ADMIN_PANEL_QUERY } from "./utils";
+import { makeTitle } from "./utils";
 import { authenticatedView } from "./views/authenticated";
 
-export type TeamSummary =
-  Pick<Team, "id" | "name" | "slug"> &
-  { settings: Pick<TeamSettings, "isTrial"> } &
-  { theme: Pick<TeamTheme, "primaryColour" | "logo"> }
+export type TeamSummary = Pick<Team, "id" | "name" | "slug"> & {
+  settings: Pick<TeamSettings, "isTrial">;
+} & { theme: Pick<TeamTheme, "primaryColour" | "logo"> };
 
 interface Context {
-  user: User
+  user: User;
 }
 
 const editorRoutes = compose(
@@ -40,7 +43,7 @@ const editorRoutes = compose(
    */
   withContext(async (): Promise<Context> => {
     const user = await useStore.getState().initUserStore();
-    return { user }
+    return { user };
   }),
 
   mount({
@@ -106,25 +109,9 @@ const editorRoutes = compose(
           `User does not have access to ${req.originalUrl}`,
         );
 
-      const query = import.meta.env.VITE_APP_ENV === "production"
-        ? PRODUCTION_ADMIN_PANEL_QUERY
-        : STAGING_ADMIN_PANEL_QUERY
-
-      return route(async () => {
-        const { data } = await client.query<{ adminPanel: AdminPanelData[] }>({
-          query,
-          context: {
-            headers: {
-              "x-hasura-role": isPlatformAdmin ? "platformAdmin" : "analyst",
-            },
-          },
-        });
-        useStore.getState().setAdminPanelData(data.adminPanel);
-
-        return {
-          title: makeTitle("Platform admin panel"),
-          view: <PlatformAdminPanel />,
-        };
+      return route({
+        title: makeTitle("Platform admin panel"),
+        view: <PlatformAdminPanel />,
       });
     }),
 
