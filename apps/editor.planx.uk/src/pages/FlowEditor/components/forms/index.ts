@@ -1,5 +1,6 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import AddressInput from "@planx/components/AddressInput/Editor";
+import Agent from "@planx/components/Agent/Editor";
 import Calculate from "@planx/components/Calculate/Editor";
 import Checklist from "@planx/components/Checklist/Editor";
 import Confirmation from "@planx/components/Confirmation/Editor";
@@ -44,6 +45,7 @@ const components: {
   [key in (typeof SLUGS)[TYPES]]: React.FC<any>;
 } = {
   "address-input": AddressInput,
+  agent: Agent,
   calculate: Calculate,
   checklist: Checklist,
   confirmation: Confirmation,

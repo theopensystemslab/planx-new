@@ -34,6 +34,9 @@ const Node: React.FC<any> = (props) => {
 
   const type = props.type as TYPES;
   switch (type) {
+    case TYPES.Agent:
+      // TODO: show formatted task title?
+      return <Question {...allProps} text={node?.data?.title ?? "Agent"} />;
     case TYPES.Calculate:
       return <Question {...allProps} text={node.data?.title || "Calculate"} />;
     case TYPES.Confirmation:
