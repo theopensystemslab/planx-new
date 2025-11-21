@@ -1,21 +1,16 @@
-import {
-  MockedProvider,
-  type MockedProviderProps,
-} from "@apollo/client/testing";
 import { screen, waitForElementToBeRemoved } from "@testing-library/react";
+import { graphql, HttpResponse } from "msw";
 import React from "react";
+import server from "test/mockServer";
 import { setup } from "testUtils";
 
 import FlowStatus from "../..";
+import type { GetFlowStatus } from "../../types";
 
-export const setupFlowStatusScreen = async (
-  mocks: MockedProviderProps["mocks"],
-) => {
-  const { user } = setup(
-    <MockedProvider mocks={mocks}>
-      <FlowStatus />
-    </MockedProvider>,
-  );
+export const setupFlowStatusScreen = async (data: GetFlowStatus) => {
+  server.use(graphql.query("GetFlowStatus", () => HttpResponse.json({ data })));
+
+  const { user } = setup(<FlowStatus />);
 
   await waitForElementToBeRemoved(() => screen.getByText("Loading..."));
   return user;
