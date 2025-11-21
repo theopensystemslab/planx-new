@@ -143,6 +143,7 @@
     "husky": "^8.0.3",
     "jsdom": "^26.1.0",
     "lint-staged": "^13.2.3",
+    "msw-storybook-addon": "^2.0.6",
     "postcss": "^8.4.32",
     "prettier": "^3.0.0",
     "react-refresh": "^0.14.0",
@@ -214,6 +215,11 @@
     },
     "ignoredBuiltDependencies": [
       "msw"
+    ]
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
     ]
   }
 }
