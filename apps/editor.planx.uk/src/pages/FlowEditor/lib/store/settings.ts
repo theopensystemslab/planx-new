@@ -3,12 +3,7 @@ import { FlowStatus } from "@opensystemslab/planx-core/types";
 import camelcaseKeys from "camelcase-keys";
 import { client } from "lib/graphql";
 import { FlowInformation } from "pages/FlowEditor/utils";
-import {
-  AdminPanelData,
-  FlowSettings,
-  GlobalSettings,
-  TextContent,
-} from "types";
+import { FlowSettings, GlobalSettings, TextContent } from "types";
 import type { StateCreator } from "zustand";
 
 import {
@@ -30,8 +25,6 @@ export interface SettingsStore {
   globalSettings?: GlobalSettings;
   setGlobalSettings: (globalSettings: GlobalSettings) => void;
   updateGlobalSettings: (newSettings: { [key: string]: TextContent }) => void;
-  adminPanelData?: AdminPanelData[];
-  setAdminPanelData: (adminPanelData: AdminPanelData[]) => void;
 }
 
 export const settingsStore: StateCreator<
@@ -183,8 +176,4 @@ export const settingsStore: StateCreator<
       },
     });
   },
-
-  adminPanelData: undefined,
-
-  setAdminPanelData: (adminPanelData) => set({ adminPanelData }),
 });
