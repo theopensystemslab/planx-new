@@ -110,7 +110,6 @@ function FileUploadAndLabelComponent(props: Props) {
             Editor={FileTypeEditor}
             newValue={newFileType}
             disabled={props.disabled}
-            isTemplatedNode={props.node?.data?.isTemplatedNode}
             errors={formik.errors.fileTypes}
           />
         </ModalSectionContent>
