@@ -1,4 +1,5 @@
 import Typography from "@mui/material/Typography";
+import { getIn } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ChangeEvent } from "react";
 import InputLabel from "ui/editor/InputLabel";
@@ -29,7 +30,7 @@ export const SubmissionEmails: React.FC = () => {
     >
       query={GET_TEAM_SUBMISSION_INTEGRATIONS}
       defaultValues={defaultValues}
-      queryVariables={{ team_id: teamId }}
+      queryVariables={{ teamId }}
       mutation={UPDATE_TEAM_SUBMISSION_INTEGRATIONS}
       getInitialValues={({ submissionIntegrations }) =>
         submissionIntegrations?.[0] || defaultValues
@@ -58,12 +59,8 @@ export const SubmissionEmails: React.FC = () => {
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               formik.setFieldValue("submissionEmail", e.target.value)
             }
-            value={formik.values.submissionEmail ?? ""}
-            errorMessage={
-              typeof formik.errors.submissionEmail === "string"
-                ? formik.errors.submissionEmail
-                : undefined
-            }
+            value={formik.values.submissionEmail}
+            errorMessage={getIn(formik.errors, "submissionEmail")}
             id="submissionEmail"
           />
         </InputLabel>
