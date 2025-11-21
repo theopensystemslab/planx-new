@@ -30,6 +30,15 @@ const checkFlowServiceType: FilterOptions<FlowSummary>["validationFn"] = (
   _value,
 ) => flow.publishedFlows[0]?.hasSendComponent;
 
+const checkFlowLPSListing: FilterOptions<FlowSummary>["validationFn"] = (
+  flow,
+  value,
+) => {
+  if (value === "listed") return flow.isListedOnLPS === true;
+  if (value === "not listed") return flow.isListedOnLPS === false;
+  return false;
+};
+
 const checkFlowTemplateType: FilterOptions<FlowSummary>["validationFn"] = (
   flow,
   value,
@@ -57,6 +66,12 @@ const baseFilterOptions: FilterOptions<FlowSummary>[] = [
     optionKey: "templatedFrom",
     optionValue: ["templated", "source template"],
     validationFn: checkFlowTemplateType,
+  },
+  {
+    displayName: "LPS listing",
+    optionKey: "isListedOnLPS",
+    optionValue: ["listed", "not listed"],
+    validationFn: checkFlowLPSListing,
   },
 ];
 

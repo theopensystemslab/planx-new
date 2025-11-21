@@ -229,6 +229,7 @@ export interface FlowSummary {
   publishedFlows: PublishedFlowSummary[];
   templatedFrom: string | null;
   isTemplate: boolean;
+  isListedOnLPS: boolean;
   template: {
     team: {
       name: string;
@@ -518,6 +519,7 @@ export const editorStore: StateCreator<
             status
             summary
             updatedAt: updated_at
+            isListedOnLPS: is_listed_on_lps
             operations(limit: 1, order_by: { created_at: desc }) {
               createdAt: created_at
               actor {
