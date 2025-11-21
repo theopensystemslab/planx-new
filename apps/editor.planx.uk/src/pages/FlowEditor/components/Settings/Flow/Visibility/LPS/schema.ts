@@ -1,4 +1,4 @@
-import { boolean, object, type SchemaOf, string } from "yup";
+import { boolean, mixed, object, type SchemaOf, string } from "yup";
 
 import { LPSListingFormValues } from "./types";
 
@@ -17,9 +17,11 @@ export const validationSchema: SchemaOf<LPSListingFormValues> = object({
       },
     ),
   summary: string().nullable(),
+  category: mixed().oneOf(["guidance", "notify", "apply"]),
 });
 
 export const defaultValues: LPSListingFormValues = {
   isListedOnLPS: false,
   summary: null,
+  category: null,
 };
