@@ -25,8 +25,15 @@ export const CREATE_TEAM_SUBMISSION_INTEGRATIONS = gql`
 `;
 
 export const UPDATE_TEAM_SUBMISSION_INTEGRATIONS = gql`
-  mutation UpdateSubmissionIntegration {
-    update_submission_integrations_by_pk(pk_columns: { id: $id }) {
+  mutation UpdateSubmissionIntegration(
+    $id: uuid!
+    $submissionEmail: String
+    $teamId: Int
+  ) {
+    update_submission_integrations_by_pk(
+      pk_columns: { id: $id }
+      _set: { submission_email: $submissionEmail, team_id: $teamId }
+    ) {
       id
       submissionEmail: submission_email
       teamId: team_id
