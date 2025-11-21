@@ -11,6 +11,7 @@ export interface GetTeamSubmissionIntegrationsData {
 }
 
 export interface UpdateTeamSubmissionIntegrationsVariables {
+  teamId: number;
   submissionEmail: string;
   defaultEmail: boolean;
 }

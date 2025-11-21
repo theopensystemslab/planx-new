@@ -25,8 +25,8 @@ export const SubmissionEmails: React.FC = () => {
   return (
     <SettingsFormContainer<
       GetTeamSubmissionIntegrationsData,
-      SubmissionEmailFormValues,
-      UpdateTeamSubmissionIntegrationsVariables
+      UpdateTeamSubmissionIntegrationsVariables,
+      SubmissionEmailFormValues
     >
       query={GET_TEAM_SUBMISSION_INTEGRATIONS}
       defaultValues={defaultValues}
