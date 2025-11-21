@@ -1,4 +1,3 @@
-import { MockedProvider } from "@apollo/client/testing";
 import Wrapper from "@planx/components/fixtures/Wrapper";
 import { Meta, StoryObj } from "@storybook/react";
 import React from "react";
@@ -19,21 +18,15 @@ const defaultPresentationalProps: PresentationalProps = {
 };
 
 export const Basic: StoryObj = {
-  render: () => (
-    <MockedProvider>
-      <Presentational {...defaultPresentationalProps} />
-    </MockedProvider>
-  ),
+  render: () => <Presentational {...defaultPresentationalProps} />,
 };
 
 export const WithPropertyTypeOverride: StoryObj = {
   render: () => (
-    <MockedProvider>
-      <Presentational
-        {...defaultPresentationalProps}
-        showPropertyTypeOverride={true}
-      />
-    </MockedProvider>
+    <Presentational
+      {...defaultPresentationalProps}
+      showPropertyTypeOverride={true}
+    />
   ),
 };
 
@@ -41,11 +34,7 @@ export const WithEditor = () => {
   return (
     <Wrapper
       Editor={Editor}
-      Public={() => (
-        <MockedProvider>
-          <Presentational {...defaultPresentationalProps} />
-        </MockedProvider>
-      )}
+      Public={() => <Presentational {...defaultPresentationalProps} />}
     />
   );
 };
