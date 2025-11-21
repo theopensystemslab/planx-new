@@ -11,7 +11,7 @@ describe("submission_integrations", () => {
       expect(i.queries).toContain("submission_integrations");
     });
 
-    test("cannot create, update, or delete flow integrations", () => {
+    test("cannot create, update, or delete submission integrations", () => {
       expect(i).toHaveNoMutationsFor("submission_integrations");
     });
   });
@@ -22,11 +22,11 @@ describe("submission_integrations", () => {
       i = await introspectAs("admin");
     });
 
-    test("can query flow integrations", () => {
+    test("can query submission integrations", () => {
       expect(i.queries).toContain("submission_integrations");
     });
 
-    test("has full access to query and mutate flow integrations", async () => {
+    test("has full access to query and mutate submission integrations", async () => {
       expect(i.queries).toContain("submission_integrations");
 
       expect(i.mutations).toContain("insert_submission_integrations");
@@ -40,18 +40,18 @@ describe("submission_integrations", () => {
       i = await introspectAs("platformAdmin");
     });
 
-    test("can query flow integrations", () => {
+    test("can query submission integrations", () => {
       expect(i.queries).toContain("submission_integrations");
     });
 
-    test("has full access to query and mutate flow integrations", async () => {
+    test("has full access to query and mutate submission integrations", async () => {
       expect(i.queries).toContain("submission_integrations");
 
       expect(i.mutations).toContain("insert_submission_integrations");
       expect(i.mutations).toContain("update_submission_integrations_by_pk");
     });
 
-    test("can delete flow integrations", async () => {
+    test("can delete submission integrations", async () => {
       expect(i.mutations).toContain("delete_submission_integrations");
     });
   });
@@ -62,20 +62,20 @@ describe("submission_integrations", () => {
       i = await introspectAs("teamEditor");
     });
 
-    test("can query flow integrations", () => {
+    test("can query submission integrations", () => {
       expect(i.queries).toContain("submission_integrations");
     });
 
-    test("can update flow integrations", () => {
+    test("can update submission integrations", () => {
       expect(i.mutations).toContain("update_submission_integrations");
       expect(i.mutations).toContain("update_submission_integrations_by_pk");
     });
 
-    test("can delete flow integrations", async () => {
+    test("can delete submission integrations", async () => {
       expect(i.mutations).toContain("delete_submission_integrations");
     });
 
-    test("can add flow integrations", async () => {
+    test("can add submission integrations", async () => {
       expect(i.mutations).toContain("insert_submission_integrations");
     });
   });
@@ -86,11 +86,11 @@ describe("submission_integrations", () => {
       i = await introspectAs("demoUser");
     });
 
-    test("cannot query flow integrations", () => {
+    test("cannot query submission integrations", () => {
       expect(i.queries).not.toContain("submission_integrations");
     });
 
-    test("cannot create, update, or delete flow integrations", () => {
+    test("cannot create, update, or delete submission integrations", () => {
       expect(i).toHaveNoMutationsFor("submission_integrations");
     });
   });
@@ -111,7 +111,7 @@ describe("submission_integrations", () => {
       expect(i.mutations).not.toContain("update_submission_integrations_many");
     });
 
-    test("cannot create or delete flow integrations", () => {
+    test("cannot create or delete submission integrations", () => {
       expect(i.mutations).not.toContain("insert_submission_integrations");
       expect(i.mutations).not.toContain("delete_submission_integrations");
     });
@@ -123,17 +123,17 @@ describe("submission_integrations", () => {
       i = await introspectAs("analyst");
     });
 
-    test("cannot query flow integrations", () => {
+    test("cannot query submission integrations", () => {
       expect(i.queries).not.toContain("submission_integrations");
     });
 
-    test("cannot update flow integrations", () => {
+    test("cannot update submission integrations", () => {
       expect(i.mutations).not.toContain("update_submission_integrations");
       expect(i.mutations).not.toContain("update_submission_integrations_by_pk");
       expect(i.mutations).not.toContain("update_submission_integrations_many");
     });
 
-    test("cannot create or delete flow integrations", () => {
+    test("cannot create or delete submission integrations", () => {
       expect(i.mutations).not.toContain("insert_submission_integrations");
       expect(i.mutations).not.toContain("delete_submission_integrations");
     });
