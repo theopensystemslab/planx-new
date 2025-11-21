@@ -16,6 +16,7 @@ insert_permissions:
         - created_at
         - data
         - flow_id
+        - has_pay_component
         - has_sections
         - has_send_component
         - id
@@ -36,6 +37,7 @@ insert_permissions:
         - created_at
         - data
         - flow_id
+        - has_pay_component
         - has_sections
         - has_send_component
         - id
@@ -49,6 +51,7 @@ insert_permissions:
         - created_at
         - data
         - flow_id
+        - has_pay_component
         - has_sections
         - has_send_component
         - id
@@ -69,6 +72,7 @@ insert_permissions:
         - created_at
         - data
         - flow_id
+        - has_pay_component
         - has_sections
         - has_send_component
         - id
@@ -81,6 +85,7 @@ select_permissions:
         - created_at
         - data
         - flow_id
+        - has_pay_component
         - has_sections
         - has_send_component
         - id
@@ -94,6 +99,7 @@ select_permissions:
         - created_at
         - data
         - flow_id
+        - has_pay_component
         - has_sections
         - has_send_component
         - id
@@ -107,6 +113,7 @@ select_permissions:
         - created_at
         - data
         - flow_id
+        - has_pay_component
         - has_sections
         - has_send_component
         - id
@@ -120,6 +127,7 @@ select_permissions:
         - created_at
         - data
         - flow_id
+        - has_pay_component
         - has_sections
         - has_send_component
         - id
@@ -133,6 +141,7 @@ select_permissions:
         - created_at
         - data
         - flow_id
+        - has_pay_component
         - has_sections
         - has_send_component
         - id
