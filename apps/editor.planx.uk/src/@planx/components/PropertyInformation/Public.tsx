@@ -1,4 +1,3 @@
-import { useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { visuallyHidden } from "@mui/utils";
@@ -8,7 +7,7 @@ import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
 import type { PublicProps } from "@planx/components/shared/types";
 import { GraphError } from "components/Error/GraphError";
 import { Feature } from "geojson";
-import { client } from "lib/graphql";
+import { type BLPUCode, useBLPUCodes } from "hooks/data/useBLPUCodes";
 import find from "lodash/find";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -16,7 +15,6 @@ import { HandleSubmit } from "pages/Preview/Node";
 import React from "react";
 
 import type { SiteAddress } from "../FindProperty/model";
-import { FETCH_BLPU_CODES } from "../FindProperty/Public";
 import { MapContainer } from "../shared/Preview/MapContainer";
 import type { PropertyInformation } from "./model";
 
@@ -27,9 +25,7 @@ function Component(props: PublicProps<PropertyInformation>) {
     state.computePassport(),
     state.overrideAnswer,
   ]);
-  const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES, {
-    context: { role: "public" },
-  });
+  const { data } = useBLPUCodes();
 
   if (!passport.data?._address)
     throw new GraphError("nodeMustFollowFindProperty");
@@ -51,7 +47,7 @@ function Component(props: PublicProps<PropertyInformation>) {
         passport.data?.["property.localPlanningAuthority"]
       }
       titleBoundary={passport.data?.["property.boundary"]}
-      blpuCodes={blpuCodes}
+      blpuCodes={data?.blpuCodes}
       overrideAnswer={overrideAnswer}
       handleSubmit={() => {
         // If the user changed their property type, they'll already have a previous PropertyInformation breadcrumb that set `_overrides`
@@ -78,7 +74,7 @@ export interface PresentationalProps extends PropertyInformation {
   localAuthorityDistrict?: string[];
   localPlanningAuthority?: string[];
   titleBoundary?: Feature;
-  blpuCodes?: any;
+  blpuCodes?: BLPUCode[];
   overrideAnswer: (fn: string) => void;
   handleSubmit?: HandleSubmit;
 }
@@ -123,8 +119,7 @@ export function Presentational(props: PresentationalProps) {
     {
       heading: "Property type",
       detail:
-        find(blpuCodes?.blpu_codes, { value: propertyType?.[0] })
-          ?.description ||
+        find(blpuCodes, { value: propertyType?.[0] })?.description ||
         propertyType?.[0] ||
         "Unknown",
       fn: "property.type",

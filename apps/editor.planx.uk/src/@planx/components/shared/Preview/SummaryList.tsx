@@ -1,6 +1,6 @@
-import { useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
+import Skeleton from "@mui/material/Skeleton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
@@ -11,11 +11,11 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
-import { FETCH_BLPU_CODES } from "@planx/components/FindProperty/Public";
 import { formatSchemaDisplayValue } from "@planx/components/List/utils";
 import type { Page } from "@planx/components/Page/model";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import format from "date-fns/format";
+import { useBLPUCodes } from "hooks/data/useBLPUCodes";
 import find from "lodash/find";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
@@ -355,19 +355,19 @@ interface ComponentProps {
 }
 
 function PropertyInformation(props: ComponentProps) {
-  const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES, {
-    context: { role: "public" },
-  });
+  const { data, loading } = useBLPUCodes();
 
   const propertyTypeVal = props.passport.data?.["property.type"]?.[0];
+  const value =
+    find(data?.blpuCodes, { value: propertyTypeVal })?.description ||
+    propertyTypeVal ||
+    "Unknown";
 
   return (
     <>
       <Box component="dt">{PROPERTY_INFORMATION_DT}</Box>
       <Box component="dd">
-        {find(blpuCodes?.blpu_codes, { value: propertyTypeVal })?.description ||
-          propertyTypeVal ||
-          "Unknown"}
+        {loading ? <Skeleton height={40} width={140} /> : value}
       </Box>
     </>
   );

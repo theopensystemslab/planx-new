@@ -1,4 +1,3 @@
-import { gql } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
@@ -26,17 +25,6 @@ import { useFindPropertyData } from "./hooks/useFindPropertyData";
 import PlotNewAddress from "./Map";
 import { AddressLoadingWrap } from "./styles";
 
-// This query is exported because tests require it
-export const FETCH_BLPU_CODES = gql`
-  {
-    blpu_codes {
-      code
-      description
-      value
-    }
-  }
-`;
-
 type Props = PublicProps<FindProperty>;
 
 function Component(props: Props) {
@@ -58,7 +46,7 @@ function Component(props: Props) {
     previouslySubmittedData?._address,
   );
 
-  const { 
+  const {
     localAuthorityDistricts,
     localPlanningAuthorities,
     regions,
@@ -126,8 +114,8 @@ function Component(props: Props) {
 
     // Continue button enabled once we have an address and not actively fetching
     if (page === "os-address") return Boolean(address) && !isPending;
-  }
-  
+  };
+
   const isValid = getValidStatus();
 
   return (
