@@ -28,10 +28,7 @@ const Template: React.FC = () => {
 
   const handleClose = () => setIsOpen(false);
 
-  const handleSuccess = (
-    _formik: unknown,
-    data: GetFlowTemplateStatus | undefined,
-  ) => {
+  const handleSuccess = (data: GetFlowTemplateStatus | undefined) => {
     // Navigate away from tab, as we're about to remove it
     navigate(".");
     setIsOpen(false);
