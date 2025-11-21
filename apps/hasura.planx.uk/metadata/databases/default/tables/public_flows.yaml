@@ -114,7 +114,6 @@ insert_permissions:
       set:
         creator_id: x-hasura-user-id
       columns:
-        - category
         - copied_from
         - created_at
         - creator_id
@@ -181,7 +180,6 @@ insert_permissions:
       set:
         creator_id: x-hasura-user-id
       columns:
-        - category
         - copied_from
         - created_at
         - creator_id
@@ -221,7 +219,6 @@ insert_permissions:
       set:
         creator_id: x-hasura-user-id
       columns:
-        - category
         - copied_from
         - created_at
         - creator_id
@@ -415,7 +412,6 @@ update_permissions:
     permission:
       columns:
         - can_create_from_copy
-        - category
         - copied_from
         - created_at
         - creator_id
