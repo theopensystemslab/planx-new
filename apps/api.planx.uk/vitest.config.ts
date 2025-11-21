@@ -2,6 +2,9 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
+    env: {
+      APP_ENVIRONMENT: "test",
+    },
     globals: true,
     environment: "node",
     // runs once on initial setup

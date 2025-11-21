@@ -11,6 +11,7 @@ import "isomorphic-fetch";
 import { useSwaggerDocs } from "./docs/index.js";
 import { errorHandler, expiredJWTHandler } from "./errors/requestHandlers.js";
 import adminRoutes from "./modules/admin/routes.js";
+import aiRoutes from "./modules/ai/routes.js";
 import analyticsRoutes from "./modules/analytics/routes.js";
 import getPassport from "./modules/auth/passport.js";
 import getAuthRoutes from "./modules/auth/routes.js";
@@ -107,6 +108,7 @@ const authRoutes = await getAuthRoutes(passport);
 
 // Setup API routes
 app.use(adminRoutes);
+app.use("/ai", aiRoutes);
 app.use(analyticsRoutes);
 app.use(authRoutes);
 app.use(fileRoutes);
