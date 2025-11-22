@@ -9,7 +9,6 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import SettingsSection from "ui/editor/SettingsSection";
 
-import { ButtonForm } from "./ButtonForm";
 import { FaviconForm } from "./FaviconForm";
 import { TextLinkForm } from "./TextLinkForm";
 
@@ -73,7 +72,6 @@ const DesignSettings: React.FC = () => {
       </SettingsSection>
       {formikConfig && (
         <>
-          <ButtonForm formikConfig={formikConfig} onSuccess={onSuccess} />
           <TextLinkForm formikConfig={formikConfig} onSuccess={onSuccess} />
           <FaviconForm formikConfig={formikConfig} onSuccess={onSuccess} />
         </>

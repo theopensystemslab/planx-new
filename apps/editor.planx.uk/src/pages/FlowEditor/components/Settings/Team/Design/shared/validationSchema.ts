@@ -9,6 +9,7 @@ export const defaultValues: TeamTheme = {
   actionColour: "#0010A4",
 };
 
+// TODO: delete!
 export const validationSchema = object({
   primaryColour: string().optional(),
   linkColour: string().optional(),
