@@ -11,9 +11,9 @@ import {
   withData,
   withView,
 } from "navi";
-import DesignSettings from "pages/FlowEditor/components/OldSettings/DesignSettings";
 import AdvancedSettings from "pages/FlowEditor/components/Settings/Team/Advanced";
 import ContactSettings from "pages/FlowEditor/components/Settings/Team/Contact";
+import DesignSettings from "pages/FlowEditor/components/Settings/Team/Design";
 import GISSettings from "pages/FlowEditor/components/Settings/Team/GIS";
 import IntegrationSettings from "pages/FlowEditor/components/Settings/Team/Integrations";
 import TeamSettingsLayout from "pages/FlowEditor/components/Settings/Team/Layout";
@@ -173,6 +173,10 @@ const routes = compose(
         "/gis-data": route((req) => ({
           title: makeTitle([req.params.team, "settings", "gis-data"].join("/")),
           view: <GISSettings />,
+        })),
+        "/design": route((req) => ({
+          title: makeTitle([req.params.team, "settings", "design"].join("/")),
+          view: <DesignSettings />,
         })),
         "/advanced": route((req) => ({
           title: makeTitle([req.params.team, "settings", "advanced"].join("/")),

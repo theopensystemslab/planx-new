@@ -27,6 +27,7 @@ import { getContrastTextColor } from "styleUtils";
 
 const DEFAULT_PRIMARY_COLOR = "#0010A4";
 const DEFAULT_TONAL_OFFSET = 0.1;
+export const DEFAULT_CONTRAST_THRESHOLD = 3;
 
 // Type styles
 export const FONT_WEIGHT_SEMI_BOLD = "600";
@@ -106,6 +107,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     dark: "#C099FF",
   },
   tonalOffset: DEFAULT_TONAL_OFFSET,
+  contrastThreshold: DEFAULT_CONTRAST_THRESHOLD,
 };
 
 // GOVUK Focus style

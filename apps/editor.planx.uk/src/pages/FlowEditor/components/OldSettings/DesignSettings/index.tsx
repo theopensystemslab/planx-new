@@ -12,8 +12,8 @@ import SettingsSection from "ui/editor/SettingsSection";
 import { ButtonForm } from "./ButtonForm";
 import { FaviconForm } from "./FaviconForm";
 import { TextLinkForm } from "./TextLinkForm";
-import { ThemeAndLogoForm } from "./ThemeAndLogoForm";
 
+// TODO: share this
 export const DesignPreview = styled(Box)(({ theme }) => ({
   border: `2px solid ${theme.palette.border.input}`,
   padding: theme.spacing(2),
@@ -73,7 +73,6 @@ const DesignSettings: React.FC = () => {
       </SettingsSection>
       {formikConfig && (
         <>
-          <ThemeAndLogoForm formikConfig={formikConfig} onSuccess={onSuccess} />
           <ButtonForm formikConfig={formikConfig} onSuccess={onSuccess} />
           <TextLinkForm formikConfig={formikConfig} onSuccess={onSuccess} />
           <FaviconForm formikConfig={formikConfig} onSuccess={onSuccess} />
