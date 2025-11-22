@@ -10,7 +10,6 @@ import React, { useEffect, useState } from "react";
 import SettingsSection from "ui/editor/SettingsSection";
 
 import { FaviconForm } from "./FaviconForm";
-import { TextLinkForm } from "./TextLinkForm";
 
 // TODO: share this
 export const DesignPreview = styled(Box)(({ theme }) => ({
@@ -72,7 +71,6 @@ const DesignSettings: React.FC = () => {
       </SettingsSection>
       {formikConfig && (
         <>
-          <TextLinkForm formikConfig={formikConfig} onSuccess={onSuccess} />
           <FaviconForm formikConfig={formikConfig} onSuccess={onSuccess} />
         </>
       )}
