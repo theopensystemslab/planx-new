@@ -141,15 +141,6 @@ const routes = compose(
 
     "/members": lazy(() => import("./teamMembers")),
 
-    "/design": compose(
-      route(async (req) => ({
-        title: makeTitle(
-          [req.params.team, req.params.flow, "design"].join("/"),
-        ),
-        view: DesignSettings,
-      })),
-    ),
-
     "/feedback": lazy(() => import("./feedback")),
 
     "/settings": compose(
