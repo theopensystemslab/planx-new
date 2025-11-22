@@ -1,5 +1,4 @@
 import Link from "@mui/material/Link";
-import { DesignPreview } from "pages/FlowEditor/components/OldSettings/DesignSettings";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import ColorPicker from "ui/editor/ColorPicker/ColorPicker";
@@ -8,6 +7,7 @@ import InputRowItem from "ui/shared/InputRowItem";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import { GET_TEAM_THEME, UPDATE_TEAM_THEME } from "../shared/queries";
+import { DesignPreview } from "../shared/styles";
 import type { GetTeamTheme } from "../shared/types";
 import { defaultValues } from "../shared/validationSchema";
 import type { FormValues, MutationVars } from "./types";
