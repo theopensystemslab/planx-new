@@ -1,4 +1,5 @@
 import { compose, mount, redirect, route, withData, withView } from "navi";
+import About from "pages/FlowEditor/components/Settings/Flow/About";
 import Help from "pages/FlowEditor/components/Settings/Flow/Help";
 import FlowSettingsLayout from "pages/FlowEditor/components/Settings/Flow/Layout";
 import LegalDisclaimer from "pages/FlowEditor/components/Settings/Flow/LegalDisclaimer";
@@ -23,7 +24,13 @@ const flowNewSettingsRoutes = compose(
   )),
 
   mount({
-    "/": redirect("./visibility"),
+    "/": redirect("./about"),
+    "/about": route((req) => ({
+      title: makeTitle(
+        [req.params.team, req.params.flow, "settings", "about"].join("/"),
+      ),
+      view: <About />,
+    })),
     "/visibility": route((req) => ({
       title: makeTitle(
         [req.params.team, req.params.flow, "settings", "visibility"].join("/"),
