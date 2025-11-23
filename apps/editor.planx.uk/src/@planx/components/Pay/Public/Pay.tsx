@@ -6,6 +6,7 @@ import {
 import { PublicProps } from "@planx/components/shared/types";
 import { logger } from "airbrake";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import type { APIError } from "lib/api/client";
 import { getPayment, initiatePayment } from "lib/api/pay/requests";
 import { saveSession } from "lib/local.new";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -182,8 +183,8 @@ function Component(props: Props) {
   const refetchPayment = async () => {
     try {
       const paymentId = govUkPayment?.payment_id;
-      // error?
       if (!paymentId) return;
+
       const { state } = await getPayment({
         teamSlug,
         sessionId,
@@ -263,17 +264,13 @@ function Component(props: Props) {
         if (payment._links.next_url?.href)
           window.location.replace(payment._links.next_url.href);
       })
-      .catch((error) => {
-        if (
-          error.response?.data?.error?.startsWith(
-            PAY_API_ERROR_UNSUPPORTED_TEAM,
-          )
-        ) {
+      .catch((error: APIError<{ error: string }>) => {
+        const apiErrorMessage = error.data.error;
+
+        if (apiErrorMessage.startsWith(PAY_API_ERROR_UNSUPPORTED_TEAM)) {
           // Show a custom message if this team isn't set up to use Pay yet
           dispatch(Action.StartNewPaymentError);
         } else {
-          const apiErrorMessage: string | undefined =
-            error.response?.data?.error;
           // Throw all other errors so they're caught by our ErrorBoundary
           handleError(apiErrorMessage ? { message: apiErrorMessage } : error);
         }
