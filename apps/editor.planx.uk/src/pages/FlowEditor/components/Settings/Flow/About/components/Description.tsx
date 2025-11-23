@@ -2,10 +2,10 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 
-import SettingsFormContainer from "../../shared/SettingsForm";
-import { GET_ABOUT_FLOW, UPDATE_ABOUT_FLOW } from "./queries";
-import type { GetAboutFlow, UpdateAboutFlow } from "./types";
-import { defaultValues, validationSchema } from "./validationSchema";
+import SettingsFormContainer from "../../../shared/SettingsForm";
+import { GET_ABOUT_FLOW, UPDATE_ABOUT_FLOW } from "../queries";
+import type { GetAboutFlow, UpdateAboutFlow } from "../types";
+import { defaultValues, validationSchema } from "../validationSchema";
 
 const Description: React.FC = () => {
   const [flowId, teamSlug, canUserEditTeam] = useStore((state) => [

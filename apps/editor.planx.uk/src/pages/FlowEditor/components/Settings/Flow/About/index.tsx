@@ -1,8 +1,8 @@
 import React from "react";
 
-import Description from "./Description";
-import Limitations from "./Limitations";
-import Summary from "./Summary";
+import Description from "./components/Description";
+import Limitations from "./components/Limitations";
+import Summary from "./components/Summary";
 
 const About: React.FC = () => (
   <>

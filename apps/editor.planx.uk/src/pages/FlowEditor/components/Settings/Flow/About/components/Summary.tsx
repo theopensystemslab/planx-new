@@ -5,14 +5,14 @@ import React from "react";
 import { CharacterCounter } from "ui/shared/CharacterCounter";
 import Input from "ui/shared/Input/Input";
 
-import SettingsFormContainer from "../../shared/SettingsForm";
-import { GET_ABOUT_FLOW, UPDATE_ABOUT_FLOW } from "./queries";
-import type { GetAboutFlow, UpdateAboutFlow } from "./types";
+import SettingsFormContainer from "../../../shared/SettingsForm";
+import { GET_ABOUT_FLOW, UPDATE_ABOUT_FLOW } from "../queries";
+import type { GetAboutFlow, UpdateAboutFlow } from "../types";
 import {
   characterCountLimit,
   defaultValues,
   validationSchema,
-} from "./validationSchema";
+} from "../validationSchema";
 
 const Summary: React.FC = () => {
   const [flowId, teamSlug, canUserEditTeam] = useStore((state) => [
