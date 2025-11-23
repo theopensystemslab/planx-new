@@ -26,12 +26,6 @@ export interface SettingsStore {
   flowSettings?: FlowSettings;
   setFlowSettings: (flowSettings?: FlowSettings) => void;
   flowStatus?: FlowStatus;
-  flowSummary?: string;
-  updateFlowSummary: (newSummary: string) => Promise<boolean>;
-  flowDescription?: string;
-  updateFlowDescription: (newDescription: string) => Promise<boolean>;
-  flowLimitations?: string;
-  updateFlowLimitations: (newLimitations: string) => Promise<boolean>;
   globalSettings?: GlobalSettings;
   setGlobalSettings: (globalSettings: GlobalSettings) => void;
   updateGlobalSettings: (newSettings: { [key: string]: TextContent }) => void;
@@ -44,48 +38,12 @@ export const settingsStore: StateCreator<
   [],
   [],
   SettingsStore
-> = (set, get) => ({
+> = (set, _get) => ({
   flowSettings: undefined,
 
   setFlowSettings: (flowSettings) => set({ flowSettings }),
 
   flowStatus: undefined,
-
-  flowSummary: "",
-
-  updateFlowSummary: async (newSummary: string) => {
-    const { id, $client } = get();
-    const result = await $client.flow.setSummary({
-      flow: { id },
-      summary: newSummary,
-    });
-    set({ flowSummary: newSummary });
-    return Boolean(result?.id);
-  },
-
-  flowDescription: "",
-
-  updateFlowDescription: async (newDescription: string) => {
-    const { id, $client } = get();
-    const result = await $client.flow.setDescription({
-      flow: { id },
-      description: newDescription,
-    });
-    set({ flowDescription: newDescription });
-    return Boolean(result?.id);
-  },
-
-  flowLimitations: "",
-
-  updateFlowLimitations: async (newLimitations: string) => {
-    const { id, $client } = get();
-    const result = await $client.flow.setLimitations({
-      flow: { id },
-      limitations: newLimitations,
-    });
-    set({ flowLimitations: newLimitations });
-    return Boolean(result?.id);
-  },
 
   getFlowInformation: async (flowSlug, teamSlug): Promise<FlowInformation> => {
     type DetailedFlowInformation = FlowInformation & {
@@ -106,9 +64,6 @@ export const settingsStore: StateCreator<
             id,
             settings,
             status,
-            description,
-            summary,
-            limitations,
             canCreateFromCopy,
             publishedFlows,
             isListedOnLPS,
@@ -126,10 +81,7 @@ export const settingsStore: StateCreator<
           ) {
             id
             settings
-            description
-            summary
             status
-            limitations
             canCreateFromCopy: can_create_from_copy
             templatedFrom: templated_from
             publishedFlows: published_flows(
@@ -181,9 +133,6 @@ export const settingsStore: StateCreator<
     set({
       flowSettings: settings,
       flowStatus: status,
-      flowDescription: description,
-      flowSummary: summary,
-      flowLimitations: limitations,
       flowCanCreateFromCopy: canCreateFromCopy,
       flowAnalyticsLink: analyticsLink,
       isFlowListedOnLPS: isListedOnLPS,
@@ -193,9 +142,6 @@ export const settingsStore: StateCreator<
     return {
       settings,
       status,
-      description,
-      summary,
-      limitations,
       analyticsLink,
       isListedOnLPS,
     };
