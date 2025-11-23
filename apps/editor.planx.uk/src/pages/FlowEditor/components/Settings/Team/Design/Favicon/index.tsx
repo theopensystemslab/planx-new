@@ -10,9 +10,8 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import { GET_TEAM_THEME, UPDATE_TEAM_THEME } from "../shared/queries";
 import type { GetTeamTheme } from "../shared/types";
-import { defaultValues } from "../shared/validationSchema";
+import { defaultValues, validationSchema } from "../shared/validationSchema";
 import type { FormValues, MutationVars } from "./types";
-import { validationSchema } from "./validationSchema";
 
 const Favicon: React.FC = () => {
   const teamId = useStore((state) => state.teamId);
@@ -30,7 +29,7 @@ const Favicon: React.FC = () => {
           favicon: theme.favicon,
         },
       })}
-      validationSchema={validationSchema}
+      validationSchema={validationSchema.pick(["favicon"])}
       legend="Favicon"
       description={
         <>

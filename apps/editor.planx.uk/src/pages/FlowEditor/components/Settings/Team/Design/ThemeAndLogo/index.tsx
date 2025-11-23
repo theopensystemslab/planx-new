@@ -13,9 +13,8 @@ import SettingsFormContainer from "../../../shared/SettingsForm";
 import { GET_TEAM_THEME, UPDATE_TEAM_THEME } from "../shared/queries";
 import { DesignPreview } from "../shared/styles";
 import type { GetTeamTheme } from "../shared/types";
-import { defaultValues } from "../shared/validationSchema";
+import { defaultValues, validationSchema } from "../shared/validationSchema";
 import type { FormValues, MutationVars } from "./types";
-import { validationSchema } from "./validationSchema";
 
 const ThemeAndLogo: React.FC = () => {
   const [teamId, teamSlug] = useStore((state) => [
@@ -38,7 +37,7 @@ const ThemeAndLogo: React.FC = () => {
           logo: theme.logo,
         },
       })}
-      validationSchema={validationSchema}
+      validationSchema={validationSchema.pick(["logo", "primaryColour"])}
       legend="Theme colour & logo"
       preview={(formik) => [
         <DesignPreview bgcolor={formik.values.primaryColour}>

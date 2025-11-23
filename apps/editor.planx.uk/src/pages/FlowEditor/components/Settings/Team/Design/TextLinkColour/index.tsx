@@ -9,9 +9,8 @@ import SettingsFormContainer from "../../../shared/SettingsForm";
 import { GET_TEAM_THEME, UPDATE_TEAM_THEME } from "../shared/queries";
 import { DesignPreview } from "../shared/styles";
 import type { GetTeamTheme } from "../shared/types";
-import { defaultValues } from "../shared/validationSchema";
+import { defaultValues, validationSchema } from "../shared/validationSchema";
 import type { FormValues, MutationVars } from "./types";
-import { validationSchema } from "./validationSchema";
 
 const TextLinkColour: React.FC = () => {
   const teamId = useStore((state) => state.teamId);
@@ -29,7 +28,7 @@ const TextLinkColour: React.FC = () => {
           link_colour: theme.linkColour,
         },
       })}
-      validationSchema={validationSchema}
+      validationSchema={validationSchema.pick(["linkColour"])}
       legend="Text link colour"
       preview={(formik) => [
         <DesignPreview bgcolor="white">
