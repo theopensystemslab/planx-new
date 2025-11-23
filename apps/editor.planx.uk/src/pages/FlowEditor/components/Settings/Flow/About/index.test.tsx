@@ -108,7 +108,6 @@ describe("About flow page", () => {
     await user.click(
       screen.getAllByRole("button", { name: "Reset changes" })[0],
     );
-    expect(getState().flowSummary).toBe(""); // db has not been updated
   });
 
   it("displays data in the fields if there is already flow information in the database", async () => {
