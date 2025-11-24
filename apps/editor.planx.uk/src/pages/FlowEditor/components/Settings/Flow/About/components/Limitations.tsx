@@ -1,5 +1,6 @@
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import InputLabel from "ui/editor/InputLabel";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
@@ -40,19 +41,21 @@ const Limitations: React.FC = () => {
       getMutationVariables={(flow) => ({ flowId, flow })}
     >
       {({ formik }) => (
-        <RichTextInput
-          disabled={isDisabled}
-          inputProps={{
-            "aria-describedby": "limitations-description-text",
-            "aria-labelledby": "limitations-label",
-          }}
-          {...formik.getFieldProps("limitations")}
-          id="limitations"
-          errorMessage={formik.errors.limitations}
-          placeholder="Limitations"
-          multiline
-          rows={6}
-        />
+        <InputLabel label="Limitations" htmlFor="limitations">
+          <RichTextInput
+            disabled={isDisabled}
+            inputProps={{
+              "aria-describedby": "limitations-description-text",
+              "aria-labelledby": "limitations-label",
+            }}
+            {...formik.getFieldProps("limitations")}
+            id="limitations"
+            errorMessage={formik.errors.limitations}
+            placeholder="Limitations"
+            multiline
+            rows={6}
+          />
+        </InputLabel>
       )}
     </SettingsFormContainer>
   );

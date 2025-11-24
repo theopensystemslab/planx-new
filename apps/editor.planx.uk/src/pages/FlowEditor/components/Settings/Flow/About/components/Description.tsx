@@ -1,5 +1,6 @@
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import InputLabel from "ui/editor/InputLabel";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
@@ -42,19 +43,21 @@ const Description: React.FC = () => {
       getMutationVariables={(flow) => ({ flowId, flow })}
     >
       {({ formik }) => (
-        <RichTextInput
-          {...formik.getFieldProps("description")}
-          disabled={isDisabled}
-          inputProps={{
-            "aria-describedby": "description-description-text",
-            "aria-labelledby": "description-label",
-          }}
-          id="description"
-          placeholder="The service..."
-          multiline
-          rows={6}
-          errorMessage={formik.errors.description}
-        />
+        <InputLabel label="Description" htmlFor="description">
+          <RichTextInput
+            {...formik.getFieldProps("description")}
+            disabled={isDisabled}
+            inputProps={{
+              "aria-describedby": "description-description-text",
+              "aria-labelledby": "description-label",
+            }}
+            id="description"
+            placeholder="The service..."
+            multiline
+            rows={6}
+            errorMessage={formik.errors.description}
+          />
+        </InputLabel>
       )}
     </SettingsFormContainer>
   );

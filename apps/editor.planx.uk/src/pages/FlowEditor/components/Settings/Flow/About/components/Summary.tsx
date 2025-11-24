@@ -2,6 +2,7 @@ import Link from "@mui/material/Link";
 import { useLPS } from "hooks/useLPS";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import InputLabel from "ui/editor/InputLabel";
 import { CharacterCounter } from "ui/shared/CharacterCounter";
 import Input from "ui/shared/Input/Input";
 
@@ -49,18 +50,20 @@ const Summary: React.FC = () => {
     >
       {({ formik }) => (
         <>
-          <Input
-            multiline
-            {...formik.getFieldProps("summary")}
-            id="summary"
-            placeholder="Summary"
-            errorMessage={formik.errors.summary}
-            disabled={isDisabled}
-            inputProps={{
-              "aria-describedby": "summary-description-text",
-              "aria-labelledby": "summary-label",
-            }}
-          />
+          <InputLabel label="Summary" htmlFor="summary">
+            <Input
+              multiline
+              {...formik.getFieldProps("summary")}
+              id="summary"
+              placeholder="Summary"
+              errorMessage={formik.errors.summary}
+              disabled={isDisabled}
+              inputProps={{
+                "aria-describedby": "summary-description-text",
+                "aria-labelledby": "summary-label",
+              }}
+            />
+          </InputLabel>
           <CharacterCounter
             count={formik.values.summary.length}
             limit={characterCountLimit}
