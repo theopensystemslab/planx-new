@@ -21,13 +21,18 @@ Migration details and a by-team, by-flow Googlesheet are found here: https://tre
 2. For a flow suitable for migration:
     - Nullify `flows.copied_from`
     - Populate `flows.templated_from` with the `id` of the source template `flow`
-    - Overwrite `flows.data` with the `data` of the source template `flow`
+    - Overwrite `flows.data` (**depends on customisation preference)
+      - If manually updating customistations, overwrite `flows.data` with the `data` of the source template `flow`
+      - If copying customisations from a "test" templated flow, overwrite `flows.data` with the `data` of the test templated `flow`
+
 
 3. At this point, the flow now appears as a templated flow to editors. Analytics, feedback, submissions, and other flow-level settings will be the same as before. The "Customise" sidebar will now display and all customisations will be incomplete; it will not be possible to publish until customisations are completed. The published version _has not been_ impacted by the migration process, as only council editors should publish their flows (never developers on their behalf).
 
-4. For some migrations, the content team may take over at this step and complete the outstanding customisations on the council's behalf (using staging as a comparison if same-day). They can "check for changes to publish" to confirm all validation checks pass, then flag to council service owners to review and publish. 
+4. For some migrations, the content team may take over at this step and manually complete the outstanding customisations on the council's behalf (using staging as a comparison if same-day). They can "check for changes to publish" to confirm all validation checks pass, then flag to council service owners to review and publish. 
 
-5. Alternatively, if the council editors have been advised to "start a new template" for testing-only prior to the migration, then we can additionally find the `templated_flow_edits` record for their "test" templated flow, and copy its' contents into a new `templated_flow_edits` record for the existing `flows.id`. Once inserted, the customisations should appear "complete" in the editor, with all nodes updated the same as the test flow. 
-    - Once they've reviewed and published their migraiton, council editors should be instructed to "archive" their "test" templated flow to both reduce future confusion and ensure that source template aren't unnecessarily pushing out duplicate updaes on every publish.
+5. Alternatively, if the council editors have been advised to "start a new template" for testing-only prior to the migration, then we can additionally find the `templated_flow_edits` record for their "test" templated flow, and copy its' contents into a NEW `templated_flow_edits` record for the existing `flows.id`. Once inserted, the customisations should appear "complete" in the editor, with all nodes updated the same as the test flow. 
+    - Once they've reviewed and published their migraiton, council editors should be instructed to "archive" their "test" templated flow to both reduce future confusion and ensure that source template aren't unnecessarily pushing out duplicate updates on every publish.
+
+6. Bonus! A member of the content team should "Add a comment" to the "History" of the migrated flow with a simple note like "Migrated to template" to capture the migration date and signify that updates to the source template will appear in History from this point forwards, but not before.
 
 **Note that this migration process only applies to _templated flows_. We've conciously chosen not to programmatically migrate existing flows to _source templates_. Instead, the content teams is building each source template fresh (in parallel) and using it as an opportunity to review and optimise content and graph structure through the process.
