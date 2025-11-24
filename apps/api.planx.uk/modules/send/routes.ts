@@ -6,7 +6,7 @@ import { createSendEvents } from "./createSendEvents/controller.js";
 import { combinedEventsPayloadSchema } from "./createSendEvents/types.js";
 import { downloadApplicationFiles } from "./downloadApplicationFiles/index.js";
 import { sendToEmail } from "./email/index.js";
-import { getSubmissionsController } from "./fme/index.js";
+import { getSubmissionsController, getSubmissionsSchema } from "./fme/index.js";
 import { sendToGOSSController } from "./goss/controller.js";
 import { sendToIdoxNexus } from "./idox/nexus.js";
 import { sendToS3 } from "./s3/index.js";
@@ -61,6 +61,7 @@ router.get("/download-application-files/:sessionId", downloadApplicationFiles);
 router.get(
   "/submissions/:localAuthority",
   useFilePermission,
+  validate(getSubmissionsSchema),
   getSubmissionsController,
 );
 

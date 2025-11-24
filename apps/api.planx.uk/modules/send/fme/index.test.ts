@@ -50,6 +50,13 @@ describe("Submissions endpoint", () => {
       );
   });
 
+  it("throws an error if a local authority param isn't present", async () => {
+    await supertest(app)
+      .get("/submissions")
+      .set({ "api-key": "test" })
+      .expect(404);
+  });
+
   it("returns submissions for a specified local authority with correct authorisation", async () => {
     await supertest(app)
       .get(`/submissions/camden`)
@@ -70,7 +77,7 @@ describe("Submissions endpoint", () => {
       );
   });
 
-  it("returns a not-foud error if no submissions found for this local authority", async () => {
+  it("returns a 204 not found if no submissions found for this local authority", async () => {
     queryMock.mockQuery({
       name: "GetS3Applications",
       variables: {
@@ -84,12 +91,7 @@ describe("Submissions endpoint", () => {
     await supertest(app)
       .get(`/submissions/doncaster`)
       .set({ "api-key": "test" })
-      .expect(400)
-      .then((res) =>
-        expect(res.body).toEqual({
-          error:
-            "Failed to find submissions within the last 28 days for this local authority",
-        }),
-      );
+      .expect(204)
+      .then((res) => expect(res.body).toEqual({}));
   });
 });

@@ -1,29 +1,32 @@
 import { subDays } from "date-fns";
-import type { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
+import { z } from "zod";
 import { $api } from "../../../client/index.js";
+import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 
-export async function getSubmissionsController(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  const localAuthority = req.params?.localAuthority;
-  if (!localAuthority) {
-    return next({
-      status: 400,
-      message: "Missing values required to access submissions",
-    });
-  }
+export const getSubmissionsSchema = z.object({
+  params: z.object({
+    localAuthority: z.string(),
+  }),
+});
+
+type GetSubmissionsController = ValidatedRequestHandler<
+  typeof getSubmissionsSchema,
+  unknown
+>;
+
+export const getSubmissionsController: GetSubmissionsController = async (
+  _req,
+  res,
+  next,
+) => {
+  const localAuthority = res.locals.parsedReq.params.localAuthority;
 
   try {
     const submissions = await getSubmissions(localAuthority);
     if (!submissions || submissions.length === 0) {
-      return next({
-        status: 400,
-        message:
-          "Failed to find submissions within the last 28 days for this local authority",
-      });
+      // No submissions found within the last 28 days for this local authority
+      res.status(204).json();
     }
 
     res.status(200).json(submissions);
@@ -33,7 +36,7 @@ export async function getSubmissionsController(
       message: `Failed to get submissions for ${localAuthority}. ${error}`,
     });
   }
-}
+};
 
 interface GetS3Applications {
   submissions: {
