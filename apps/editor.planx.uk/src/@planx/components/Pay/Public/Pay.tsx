@@ -5,8 +5,9 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { PublicProps } from "@planx/components/shared/types";
 import { logger } from "airbrake";
-import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import type { APIError } from "lib/api/client";
+import { getPayment, initiatePayment } from "lib/api/pay/requests";
 import { saveSession } from "lib/local.new";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useReducer } from "react";
@@ -15,7 +16,6 @@ import { useErrorHandler } from "react-error-boundary";
 import { makeData } from "../../shared/utils";
 import { createPayload, getDefaultContent, Pay } from "../model";
 import Confirm from "./Confirm";
-import { getGovUkPayUrlForTeam } from "./utils";
 
 export default Component;
 export type Props = PublicProps<Pay>;
@@ -182,16 +182,15 @@ function Component(props: Props) {
 
   const refetchPayment = async () => {
     try {
-      const {
-        data: { state },
-      } = await axios.get<Pick<GovUKPayment, "state">>(
-        getGovUkPayUrlForTeam({
-          sessionId,
-          flowId,
-          teamSlug,
-          paymentId: govUkPayment?.payment_id,
-        }),
-      );
+      const paymentId = govUkPayment?.payment_id;
+      if (!paymentId) return;
+
+      const { state } = await getPayment({
+        teamSlug,
+        sessionId,
+        flowId,
+        paymentId,
+      });
 
       // Update local state with the refetched payment state
       if (govUkPayment) {
@@ -252,27 +251,26 @@ function Component(props: Props) {
       handleSuccess();
       return;
     }
-    await axios
-      .post(
-        getGovUkPayUrlForTeam({ sessionId, flowId, teamSlug }),
-        createPayload(fee, sessionId, metadata, passport),
-      )
-      .then(async (res) => {
-        const payment = await resolvePaymentResponse(res.data);
+
+    const payload = createPayload(fee, sessionId, metadata, passport);
+    await initiatePayment({
+      teamSlug,
+      flowId,
+      sessionId,
+      payload,
+    })
+      .then(async (data) => {
+        const payment = await resolvePaymentResponse(data);
         if (payment._links.next_url?.href)
           window.location.replace(payment._links.next_url.href);
       })
-      .catch((error) => {
-        if (
-          error.response?.data?.error?.startsWith(
-            PAY_API_ERROR_UNSUPPORTED_TEAM,
-          )
-        ) {
+      .catch((error: APIError<{ error: string }>) => {
+        const apiErrorMessage = error.data.error;
+
+        if (apiErrorMessage.startsWith(PAY_API_ERROR_UNSUPPORTED_TEAM)) {
           // Show a custom message if this team isn't set up to use Pay yet
           dispatch(Action.StartNewPaymentError);
         } else {
-          const apiErrorMessage: string | undefined =
-            error.response?.data?.error;
           // Throw all other errors so they're caught by our ErrorBoundary
           handleError(apiErrorMessage ? { message: apiErrorMessage } : error);
         }
