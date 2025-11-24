@@ -1,14 +1,19 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import Checkbox from "@mui/material/Checkbox";
+import IconButton from "@mui/material/IconButton";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction";
+import ListItemText from "@mui/material/ListItemText";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { getIn } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { ChangeEvent } from "react";
-import InputLabel from "ui/editor/InputLabel";
-import Input from "ui/shared/Input/Input";
+import React from "react";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import {
   GET_TEAM_SUBMISSION_INTEGRATIONS,
-  UPDATE_TEAM_SUBMISSION_INTEGRATIONS,
+  UPSERT_TEAM_SUBMISSION_INTEGRATIONS,
 } from "./queries";
 import { defaultValues, validationSchema } from "./schema";
 import {
@@ -17,10 +22,8 @@ import {
   UpdateTeamSubmissionIntegrationsVariables,
 } from "./types";
 
-// Parallel feature to SubmissionEmail (singular)
 export const SubmissionEmails: React.FC = () => {
   const teamId = useStore((state) => state.teamId);
-  console.log({ teamId });
 
   return (
     <SettingsFormContainer<
@@ -31,10 +34,12 @@ export const SubmissionEmails: React.FC = () => {
       query={GET_TEAM_SUBMISSION_INTEGRATIONS}
       defaultValues={defaultValues}
       queryVariables={{ teamId }}
-      mutation={UPDATE_TEAM_SUBMISSION_INTEGRATIONS}
-      getInitialValues={({ submissionIntegrations }) =>
-        submissionIntegrations?.[0] || defaultValues
-      }
+      mutation={UPSERT_TEAM_SUBMISSION_INTEGRATIONS}
+      getInitialValues={({ submissionIntegrations }) => ({
+        submissionEmail: "",
+        defaultEmail: false,
+        existingEmails: submissionIntegrations || [],
+      })}
       getMutationVariables={(values) => ({
         teamId,
         submissionEmail: values.submissionEmail,
@@ -45,25 +50,69 @@ export const SubmissionEmails: React.FC = () => {
       description={
         <>
           <Typography variant="body2">
-            Enter multiple email addresses to receive applications. You can
-            assign one email address per service. A default address must be
-            selected, which will be used as a fallback for all applications.
+            Enter a single email address to add it to the list of submission
+            emails. You can assign one email address per service. A default
+            address must be selected, which will be used as a fallback for all
+            applications.
           </Typography>
         </>
       }
+      onSuccess={(formik, data) => {
+        formik.resetForm();
+        formik.setFieldValue(
+          "existingEmails",
+          data?.submissionIntegrations || [],
+        );
+      }}
     >
-      {({ formik }) => (
-        <InputLabel label="Submission email" htmlFor="submissionEmail">
-          <Input
-            name="submissionEmail"
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              formik.setFieldValue("submissionEmail", e.target.value)
-            }
-            value={formik.values.submissionEmail}
-            errorMessage={getIn(formik.errors, "submissionEmail")}
-            id="submissionEmail"
-          />
-        </InputLabel>
+      {({ formik, data }) => (
+        <>
+          <Typography variant="h6" style={{ marginBottom: "1rem" }}>
+            Submission Emails
+          </Typography>
+
+          {/* List of Existing Emails */}
+          <List>
+            {data?.submissionIntegrations?.map((emailObj, index) => (
+              <ListItem key={index}>
+                <ListItemText
+                  primary={emailObj.submissionEmail}
+                  secondary={emailObj.defaultEmail ? "Default Email" : ""}
+                />
+                <ListItemSecondaryAction>
+                  <IconButton edge="end" onClick={() => {}}>
+                    {/* TODO */}
+                    <DeleteIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+            ))}
+          </List>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "1rem",
+              marginTop: "1rem",
+            }}
+          >
+            <TextField
+              label="New Email"
+              name="submissionEmail"
+              value={formik.values.submissionEmail}
+              onChange={formik.handleChange}
+              placeholder="Enter email address"
+              fullWidth
+            />
+            <Checkbox
+              name="defaultEmail"
+              checked={formik.values.defaultEmail}
+              onChange={formik.handleChange}
+            />
+            <Typography>Default</Typography>
+          </div>
+        </>
       )}
     </SettingsFormContainer>
   );
