@@ -158,6 +158,8 @@ paths:
                   $ref: "#/components/schemas/EventSchema"
                 s3:
                   $ref: "#/components/schemas/EventSchema"
+                fme:
+                  $ref: "#/components/schemas/EventSchema"
                 idox:
                   $ref: "#/components/schemas/EventSchema"
               required:
@@ -200,3 +202,17 @@ paths:
           $ref: "#/components/responses/DownloadFile"
         "500":
           $ref: "#/components/responses/ErrorMessage"
+  /submissions/{localAuthority}:
+    get:
+      summary: Get a list of submissions
+      description: Get a list of submissions, including a downloadable link to each ODP Schema JSON payload, for a specified local authority from within the last 28 days
+      tags:
+        - send
+      parameters:
+        - in: path
+          name: localAuthority
+          required: true
+          schema:
+            type: string
+      security:
+        - fileAPIKeyAuth: []
