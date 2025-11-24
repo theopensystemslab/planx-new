@@ -31,6 +31,8 @@ export const formatSchemaDisplayValue = <T extends Field>(
   value: ResponseValue<T>,
   field: T,
 ) => {
+  if (!value && !field.required) return "Not provided";
+
   switch (field.type) {
     case "number":
       if (!isNumberFieldResponse(value)) return;
