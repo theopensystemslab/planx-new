@@ -85,7 +85,6 @@ export const SubmissionEmails: React.FC = () => {
             Submission Emails
           </Typography>
 
-          {/* List of Existing Emails */}
           <List>
             {data?.submissionIntegrations?.map((emailObj, index) => (
               <ListItem key={index}>
