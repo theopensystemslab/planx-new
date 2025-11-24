@@ -1,3 +1,4 @@
+import { useMutation } from "@apollo/client/react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
@@ -12,6 +13,7 @@ import React from "react";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import {
+  DELETE_TEAM_SUBMISSION_INTEGRATIONS,
   GET_TEAM_SUBMISSION_INTEGRATIONS,
   UPSERT_TEAM_SUBMISSION_INTEGRATIONS,
 } from "./queries";
@@ -24,6 +26,18 @@ import {
 
 export const SubmissionEmails: React.FC = () => {
   const teamId = useStore((state) => state.teamId);
+
+  const [
+    deleteSubmissionIntegration,
+    { loading: deleteLoading, error: deleteError },
+  ] = useMutation(DELETE_TEAM_SUBMISSION_INTEGRATIONS, {
+    refetchQueries: [
+      { query: GET_TEAM_SUBMISSION_INTEGRATIONS, variables: { teamId } },
+    ],
+    onError: (error) => {
+      console.error("Delete error:", error);
+    },
+  });
 
   return (
     <SettingsFormContainer<
@@ -80,8 +94,25 @@ export const SubmissionEmails: React.FC = () => {
                   secondary={emailObj.defaultEmail ? "Default Email" : ""}
                 />
                 <ListItemSecondaryAction>
-                  <IconButton edge="end" onClick={() => {}}>
-                    {/* TODO */}
+                  <IconButton
+                    edge="end"
+                    disabled={deleteLoading}
+                    onClick={async () => {
+                      try {
+                        await deleteSubmissionIntegration({
+                          variables: {
+                            submissionEmail: emailObj.submissionEmail,
+                            teamId,
+                          },
+                        });
+                      } catch (err) {
+                        console.error(
+                          "Failed to delete submission email:",
+                          err,
+                        );
+                      }
+                    }}
+                  >
                     <DeleteIcon />
                   </IconButton>
                 </ListItemSecondaryAction>
