@@ -212,7 +212,7 @@ const Breadcrumbs: React.FC = () => {
         >
           Plan✕
         </BreadcrumbsLink>
-        <EnvironmentSelect />
+        {!isStandalone && <EnvironmentSelect />}
         {team.slug && (
           <>
             {" / "}
