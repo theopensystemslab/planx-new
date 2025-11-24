@@ -9,7 +9,7 @@ object_relationships:
     using:
       manual_configuration:
         column_mapping:
-          email_id: email_id
+          email_id: id
         insertion_order: null
         remote_table:
           name: submission_integrations
