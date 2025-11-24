@@ -94,27 +94,29 @@ export const SubmissionEmails: React.FC = () => {
                   secondary={emailObj.defaultEmail ? "Default Email" : ""}
                 />
                 <ListItemSecondaryAction>
-                  <IconButton
-                    edge="end"
-                    disabled={deleteLoading}
-                    onClick={async () => {
-                      try {
-                        await deleteSubmissionIntegration({
-                          variables: {
-                            submissionEmail: emailObj.submissionEmail,
-                            teamId,
-                          },
-                        });
-                      } catch (err) {
-                        console.error(
-                          "Failed to delete submission email:",
-                          err,
-                        );
-                      }
-                    }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
+                  {!emailObj.defaultEmail && (
+                    <IconButton
+                      edge="end"
+                      disabled={deleteLoading}
+                      onClick={async () => {
+                        try {
+                          await deleteSubmissionIntegration({
+                            variables: {
+                              submissionEmail: emailObj.submissionEmail,
+                              teamId,
+                            },
+                          });
+                        } catch (err) {
+                          console.error(
+                            "Failed to delete submission email:",
+                            err,
+                          );
+                        }
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  )}
                 </ListItemSecondaryAction>
               </ListItem>
             ))}
