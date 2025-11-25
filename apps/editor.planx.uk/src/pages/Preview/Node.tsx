@@ -1,8 +1,8 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { AddressInput } from "@planx/components/AddressInput/model";
 import AddressInputComponent from "@planx/components/AddressInput/Public";
-import AgentComponent from "@planx/components/Agent/Editor";
-import type { Agent } from "@planx/components/Agent/model";
+import AgentComponent from "@planx/components/Agent/Public";
+import type { Agent } from "@planx/components/Agent/types";
 import type { Calculate } from "@planx/components/Calculate/model";
 import CalculateComponent from "@planx/components/Calculate/Public";
 import type {

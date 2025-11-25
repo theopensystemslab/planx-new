@@ -1,4 +1,5 @@
 import { BaseNodeData } from "../shared";
+import type { PublicProps } from "../shared/types";
 
 /**
  * Registry of all task, including their inputs (editorProps) and outputs (breadcrumbData)
@@ -59,4 +60,13 @@ export type AgentForTask<T extends Task> = BaseAgent & {
   task: T;
 } & TaskRegistry[T]["editorProps"];
 
+/** Default values used to populate initial form values */
 export type TaskDefaults = { [K in Task]: TaskRegistry[K]["editorProps"] };
+
+/**
+ * Map of tasks to public components
+ * Allows individual components to handle type-narrowed Tasks
+ */
+export type TaskComponentMap = {
+  [K in Task]: React.ComponentType<PublicProps<AgentForTask<K>>> | null;
+};
