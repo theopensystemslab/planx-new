@@ -28,11 +28,26 @@ const sorter = natsort({ insensitive: true });
 const sortFlows = (a: { text: string }, b: { text: string }) =>
   sorter(a.text.replace(/\W|\s/g, ""), b.text.replace(/\W|\s/g, ""));
 
+/**
+ * External portal (aka nested flow) selection should return:
+ *   - Flows in my team
+ *   - Flows set to copiable by others
+ *   - Not source templates
+ *   - Not the parent flow I am currently nesting within
+ */
 const getExternalPortals = async (currentTeam: string, currentFlow: string) => {
   const { data } = await client.query({
     query: gql`
-      query GetExternalPortals {
-        flows(order_by: { slug: asc }) {
+      query GetExternalPortals($teamSlug: String!) {
+        flows(
+          where: {
+            _or: [
+              { team: { slug: { _eq: $teamSlug } } }
+              { can_create_from_copy: { _eq: true } }
+            ]
+          }
+          order_by: { slug: asc }
+        ) {
           id
           slug
           name
@@ -45,6 +60,9 @@ const getExternalPortals = async (currentTeam: string, currentFlow: string) => {
         }
       }
     `,
+    variables: {
+      teamSlug: currentTeam,
+    },
   });
 
   const filteredFlows = data.flows
@@ -137,7 +155,12 @@ const editNode = validateNodeRoute(
       extraProps.flows = await getExternalPortals(team, flow);
 
     const type = SLUGS[node.type];
-    const nodesWithOptions = ["question", "responsive-question", "checklist", "responsive-checklist"]
+    const nodesWithOptions = [
+      "question",
+      "responsive-question",
+      "checklist",
+      "responsive-checklist",
+    ];
 
     if (nodesWithOptions.includes(type)) {
       const childNodes = useStore.getState().childNodesOf(id);

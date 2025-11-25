@@ -127,8 +127,6 @@ const routes = compose(
       return import("./flow");
     }),
 
-    "/:flow/about": setFlowAndLazyLoad(() => import("./readMePage")),
-
     "/:flow/settings": setFlowAndLazyLoad(() => import("./serviceSettings")),
 
     "/:flow/feedback": setFlowAndLazyLoad(() => import("./serviceFeedback")),

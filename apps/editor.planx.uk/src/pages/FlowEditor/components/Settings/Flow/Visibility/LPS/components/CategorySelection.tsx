@@ -6,6 +6,7 @@ import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { useFormikContext } from "formik";
 import React from "react";
 import SettingsDescription from "ui/editor/SettingsDescription";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import type { LPSCategory, LPSListingFormValues } from "../types";
 
@@ -14,7 +15,8 @@ const CATEGORIES: { value: LPSCategory; label: string; description: string }[] =
     {
       value: "apply",
       label: "Application service",
-      description: "Submits a planning application to your back office system",
+      description:
+        "Submits a planning application to your selected 'Send' destinations",
     },
     {
       value: "guidance",
@@ -43,8 +45,11 @@ const CategoryLabel: React.FC<(typeof CATEGORIES)[number]> = ({
 );
 
 const CategorySelection: React.FC = () => {
-  const { values, handleChange, setFieldValue } =
+  const { values, handleChange, setFieldValue, errors } =
     useFormikContext<LPSListingFormValues>();
+
+  // Only show if LPS is toggled on
+  if (!values.isListedOnLPS) return null;
 
   const handleRadioChange = (event: React.SyntheticEvent<Element, Event>) => {
     const target = event.target as HTMLInputElement;
@@ -57,27 +62,29 @@ const CategorySelection: React.FC = () => {
       <SettingsDescription mt={0}>
         Which of the following categories best describes your service?
       </SettingsDescription>
-      <RadioGroup
-        name="category"
-        value={values.category}
-        onChange={handleChange}
-        sx={{ gap: 2 }}
-      >
-        <FormControl component="fieldset">
-          <RadioGroup value={values.category} sx={{ gap: 1 }}>
-            {CATEGORIES.map((option) => (
-              <BasicRadio
-                key={option.value}
-                id={option.value}
-                label={<CategoryLabel {...option} />}
-                variant="compact"
-                value={option.value}
-                onChange={handleRadioChange}
-              />
-            ))}
-          </RadioGroup>
-        </FormControl>
-      </RadioGroup>
+      <ErrorWrapper error={errors.category}>
+        <RadioGroup
+          name="category"
+          value={values.category}
+          onChange={handleChange}
+          sx={{ gap: 2 }}
+        >
+          <FormControl component="fieldset">
+            <RadioGroup value={values.category} sx={{ gap: 1 }}>
+              {CATEGORIES.map((option) => (
+                <BasicRadio
+                  key={option.value}
+                  id={option.value}
+                  label={<CategoryLabel {...option} />}
+                  variant="compact"
+                  value={option.value}
+                  onChange={handleRadioChange}
+                />
+              ))}
+            </RadioGroup>
+          </FormControl>
+        </RadioGroup>
+      </ErrorWrapper>
     </Box>
   );
 };

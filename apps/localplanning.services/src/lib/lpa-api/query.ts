@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
 export const GET_LPAS_QUERY = gql`
-  query GetLPAs($teamSlugs: [String!], $notifyServiceSlugs: [String!], $guidanceServiceSlugs: [String!]) {
+  query GetLPAs($teamSlugs: [String!]) {
     lpas: teams(
       order_by: { name: asc }
       where: { slug: { _in: $teamSlugs } }
@@ -17,11 +17,7 @@ export const GET_LPAS_QUERY = gql`
         where: {
           status: { _eq: online }
           is_listed_on_lps: { _eq: true }
-          _and: [
-            { slug: { _nin: $notifyServiceSlugs } }
-            { slug: { _nin: $guidanceServiceSlugs } }
-          ]
-          published_flows: { has_send_component: { _eq: true } }
+          category: { _eq: "apply" }
         }
         order_by: { name: asc }
       ) {
@@ -31,10 +27,7 @@ export const GET_LPAS_QUERY = gql`
         where: {
           status: { _eq: online }
           is_listed_on_lps: { _eq: true }
-          _and: [
-            { slug: { _nin: $notifyServiceSlugs } }
-            { slug: { _in: $guidanceServiceSlugs } }
-          ]
+          category: { _eq: "guidance" }
         }
         order_by: { name: asc }
       ) {
@@ -44,11 +37,7 @@ export const GET_LPAS_QUERY = gql`
         where: {
           status: { _eq: online }
           is_listed_on_lps: { _eq: true }
-          _and: [
-            { slug: { _in: $notifyServiceSlugs } }
-            { slug: { _nin: $guidanceServiceSlugs } }
-          ]
-          published_flows: { has_send_component: { _eq: true } }
+          category: { _eq: "notify" }
         }
         order_by: { name: asc }
       ) {

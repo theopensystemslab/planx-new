@@ -24,7 +24,7 @@ const Help: React.FC = () => {
       mutation={UPDATE_FLOW_SETTINGS}
       validationSchema={textContentValidationSchema}
       legend="Help page"
-      description="A place to communicate FAQs, useful tips, or contact information"
+      description="A place to communicate FAQs, useful tips, or contact information."
       defaultValues={defaultValues}
       getInitialValues={({ flow: { settings } }) =>
         settings?.elements?.help || DEFAULT_TEXT_CONTENT

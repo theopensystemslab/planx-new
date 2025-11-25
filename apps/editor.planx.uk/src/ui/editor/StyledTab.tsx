@@ -46,6 +46,11 @@ const StyledTab = styled(
   margin: theme.spacing(0, size === "large" ? 1 : 0.5),
   padding: "0.75em",
   fontSize: size === "large" ? "1rem" : undefined,
+  "& svg": {
+    marginRight: "7px !important",
+    fontSize: 18,
+    opacity: 0.8,
+  },
   [`&.${tabClasses.selected}`]: {
     fontWeight: FONT_WEIGHT_SEMI_BOLD,
     color: theme.palette.text.primary,

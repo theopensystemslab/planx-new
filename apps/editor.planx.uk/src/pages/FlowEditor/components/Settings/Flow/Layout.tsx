@@ -1,4 +1,10 @@
 import { useQuery } from "@apollo/client";
+import GavelIcon from '@mui/icons-material/Gavel';
+import HelpIcon from '@mui/icons-material/Help';
+import InfoIcon from '@mui/icons-material/Info';
+import PrivacyTipIcon from '@mui/icons-material/PrivacyTip';
+import StarIcon from '@mui/icons-material/Star';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
@@ -22,13 +28,15 @@ const FlowSettingsLayout: React.FC<Props> = ({ children }) => {
   });
 
   const settingsLinks = [
-    { label: "Visibility", path: "/visibility" },
-    { label: "Legal disclaimer", path: "/legal-disclaimer" },
-    { label: "Help page", path: "/pages/help" },
-    { label: "Privacy page", path: "/pages/privacy" },
+    { label: "Visibility", path: "/visibility", icon: VisibilityIcon },
+    { label: "About", path: "/about", icon: InfoIcon },
+    { label: "Legal disclaimer", path: "/legal-disclaimer", icon: GavelIcon },
+    { label: "Help page", path: "/pages/help", icon: HelpIcon },
+    { label: "Privacy page", path: "/pages/privacy", icon: PrivacyTipIcon },
     {
       label: "Templates",
       path: "/templates",
+      icon: StarIcon,
       condition: Boolean(data?.flow.templatedFrom),
     },
   ];
