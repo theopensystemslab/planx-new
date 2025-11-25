@@ -14,7 +14,7 @@ import {
   withDescriptionsResponsiveArgs,
   withImagesResponsiveArgs,
 } from "../shared/BaseQuestion/BaseQuestion.stories.config";
-import { EditorProps } from "../shared/types";
+import { EditorProps, type PublicProps } from "../shared/types";
 import Editor from "./Editor";
 import { ResponsiveChecklistWithOptions } from "./model";
 import ResponsiveChecklist from "./Public";
@@ -36,7 +36,7 @@ export const Basic = {
 } satisfies Story;
 
 export const Grouped = {
-  args: groupedArgs,
+  args: groupedArgs as PublicProps<ResponsiveChecklistWithOptions>,
 } satisfies Story;
 
 export const WithDescriptions = {
