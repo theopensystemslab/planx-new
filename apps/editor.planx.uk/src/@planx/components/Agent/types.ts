@@ -7,7 +7,7 @@ import { BaseNodeData } from "../shared";
 export interface TaskRegistry {
   enhanceProjectDescription: {
     editorProps: {
-      abc: string;
+      abc?: string;
     };
     breadcrumbData: {
       original: string;
@@ -17,18 +17,15 @@ export interface TaskRegistry {
   };
   validateDrawings: {
     editorProps: {
-      def: string;
+      def?: string;
     };
     breadcrumbData: {
-      ghi: string;
+      ghi?: string;
     };
   };
 }
 
 export type Task = keyof TaskRegistry;
-
-/** Runtime list of tasks as strings */
-export const TASKS = Object.keys({} as TaskRegistry) as Task[];
 
 export interface BaseAgent extends BaseNodeData {
   fn?: string;

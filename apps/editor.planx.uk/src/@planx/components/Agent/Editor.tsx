@@ -1,3 +1,4 @@
+import MenuItem from "@mui/material/MenuItem";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { Form, Formik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -7,27 +8,35 @@ import { InternalNotes } from "ui/editor/InternalNotes";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import { MoreInformation } from "ui/editor/MoreInformation/MoreInformation";
+import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeConfiguration } from "ui/editor/TemplatedNodeConfiguration";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
+import Input from "ui/shared/Input/Input";
+import InputRow from "ui/shared/InputRow";
+import InputRowItem from "ui/shared/InputRowItem";
+import InputRowLabel from "ui/shared/InputRowLabel";
+import SelectInput from "ui/shared/SelectInput/SelectInput";
 
 import { ICONS } from "../shared/icons";
 import type { EditorProps } from "../shared/types";
-import { type Agent, parseAgent, validationSchema } from "./model";
+import { parseAgent, TASKS, validationSchema } from "./model";
+import { type Agent } from "./types";
 
 type Props = EditorProps<ComponentType.Agent, Agent>;
 
 const AgentComponent = (props: Props) => {
   const isTemplate = useStore((state) => state.isTemplate);
+  const initialValues = parseAgent(props.node?.data);
 
-  const onSubmit = (newValues: Agent) => {
+  const onSubmit = (data: Agent) => {
     if (props.handleSubmit) {
-      props.handleSubmit({ type: ComponentType.Agent, data: newValues });
+      props.handleSubmit({ type: ComponentType.Agent, data });
     }
   };
 
   return (
     <Formik<Agent>
-      initialValues={parseAgent(props.node?.data)}
+      initialValues={initialValues}
       onSubmit={onSubmit}
       validationSchema={validationSchema}
       validateOnChange={false}
@@ -47,7 +56,46 @@ const AgentComponent = (props: Props) => {
               title="Agent"
               Icon={ICONS[ComponentType.Agent]}
             >
-              <p>TODO!</p>
+              <InputRow>
+                <Input
+                  format="large"
+                  name="title"
+                  value={formik.values.title}
+                  placeholder="Title"
+                  onChange={formik.handleChange}
+                  disabled={props.disabled}
+                  errorMessage={formik.errors.title}
+                />
+              </InputRow>
+              <InputRow>
+                <RichTextInput
+                  placeholder="Description"
+                  name="description"
+                  value={formik.values.description}
+                  onChange={formik.handleChange}
+                  disabled={props.disabled}
+                  errorMessage={formik.errors.description}
+                />
+              </InputRow>
+              <InputRow>
+                <InputRowLabel>Task</InputRowLabel>
+                <InputRowItem>
+                  <SelectInput
+                    value={formik.values.task}
+                    disabled={props.disabled}
+                    onChange={(e) => {
+                      formik.setFieldValue("task", e.target.value);
+                      console.log({ errors: formik.errors });
+                    }}
+                  >
+                    {Object.entries(TASKS).map(([task, { label }]) => (
+                      <MenuItem key={task} value={task}>
+                        {label}
+                      </MenuItem>
+                    ))}
+                  </SelectInput>
+                </InputRowItem>
+              </InputRow>
             </ModalSectionContent>
           </ModalSection>
           <MoreInformation formik={formik} disabled={props.disabled} />

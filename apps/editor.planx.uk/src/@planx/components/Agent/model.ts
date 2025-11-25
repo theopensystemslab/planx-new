@@ -49,7 +49,7 @@ export const taskSchemas = {
       task: mixed()
         .oneOf(["enhanceProjectDescription"] as const)
         .required(),
-      abc: string().required(),
+      abc: string().optional(),
     }),
   ),
   validateDrawings: baseAgentSchema.concat(
@@ -57,7 +57,7 @@ export const taskSchemas = {
       task: mixed()
         .oneOf(["validateDrawings"] as const)
         .required(),
-      def: string().required(),
+      def: string().optional(),
     }),
   ),
 } satisfies Record<Task, SchemaOf<AgentForTask<Task>>>;
@@ -65,3 +65,14 @@ export const taskSchemas = {
 export const validationSchema = lazy(
   (breadcrumbData: BreadcrumbData) => taskSchemas[breadcrumbData.task],
 );
+
+export const TASKS: Record<Task, { label: string; description: string }> = {
+  enhanceProjectDescription: {
+    label: "Enhance project description",
+    description: "Lorem ispum....",
+  },
+  validateDrawings: {
+    label: "Validate drawings",
+    description: "Lorem ispum....",
+  },
+};
