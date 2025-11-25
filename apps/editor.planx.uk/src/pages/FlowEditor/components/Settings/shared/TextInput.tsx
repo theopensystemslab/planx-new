@@ -2,6 +2,8 @@ import Box from "@mui/material/Box";
 // eslint-disable-next-line no-restricted-imports
 import { SwitchProps } from "@mui/material/Switch";
 import React from "react";
+import InputGroup from "ui/editor/InputGroup";
+import InputLabel from "ui/editor/InputLabel";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import SettingsDescription from "ui/editor/SettingsDescription";
 import Input, { Props as InputProps } from "ui/shared/Input/Input";
@@ -40,13 +42,11 @@ export const TextInput: React.FC<{
           <SettingsDescription>{description}</SettingsDescription>
         )}
       </Box>
-      <InputRow>
-        <InputRowItem>
+      <InputGroup flowSpacing>
+        <InputLabel label="Heading" htmlFor={headingInputProps.id}>
           <Input placeholder="Heading" format="bold" {...headingInputProps} />
-        </InputRowItem>
-      </InputRow>
-      <InputRow>
-        <InputRowItem>
+        </InputLabel>
+        <InputLabel label="Text" htmlFor={contentInputProps.id}>
           {richText ? (
             <RichTextInput
               placeholder="Text"
@@ -63,8 +63,8 @@ export const TextInput: React.FC<{
               {...contentInputProps}
             />
           )}
-        </InputRowItem>
-      </InputRow>
+        </InputLabel>
+      </InputGroup>
     </Box>
   );
 };
