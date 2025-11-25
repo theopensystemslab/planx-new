@@ -52,7 +52,7 @@ const Boundary: React.FC = () => {
           },
         };
       }}
-      onSuccess={({ setFieldValue }, data) => {
+      onSuccess={(data, { setFieldValue }) => {
         const boundaryBBox = data?.teams[0].settings.boundaryBBox;
         setFieldValue("boundaryBBox", boundaryBBox);
       }}

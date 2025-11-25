@@ -7,6 +7,8 @@ import MuiSwitch, { SwitchProps as MuiSwitchProps } from "@mui/material/Switch";
 import React from "react";
 import { FONT_WEIGHT_BOLD } from "theme";
 
+import ErrorWrapper from "./ErrorWrapper";
+
 interface Props {
   checked?: boolean;
   onChange: MuiSwitchProps["onChange"];
@@ -15,6 +17,7 @@ interface Props {
   variant?: "editorPage" | "editorModal";
   capitalize?: boolean;
   disabled?: boolean;
+  error?: string;
 }
 
 export const Switch: React.FC<Props> = ({
@@ -25,8 +28,9 @@ export const Switch: React.FC<Props> = ({
   variant = "editorModal",
   capitalize = false,
   disabled,
+  error,
 }) => (
-  <Box>
+  <ErrorWrapper error={error}>
     <FormControlLabel
       control={
         <MuiSwitch
@@ -54,5 +58,5 @@ export const Switch: React.FC<Props> = ({
         },
       }}
     />
-  </Box>
+  </ErrorWrapper>
 );

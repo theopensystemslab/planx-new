@@ -1,9 +1,8 @@
-import { DocumentNode } from "@apollo/client";
-import { useMutation, useQuery } from "@apollo/client";
+import { DocumentNode, useMutation, useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import { type FormikValues, useFormik } from "formik";
+import { Form, Formik, FormikHelpers, FormikProps, FormikValues } from "formik";
 import { useToast } from "hooks/useToast";
 import React from "react";
 import InputLegend from "ui/editor/InputLegend";
@@ -32,15 +31,14 @@ interface SettingsFormContainerProps<
   description: React.ReactNode;
   /** Optional success handler for side-effects (e.g. Slack messages, store updates) */
   onSuccess?: (
-    formik: ReturnType<typeof useFormik<TFormValues>>,
     data: TData | undefined,
+    formikHelpers: FormikHelpers<TFormValues>,
+    values: TFormValues,
   ) => void;
   successMessage?: string;
-  preview?: (
-    formik: ReturnType<typeof useFormik<TFormValues>>,
-  ) => React.ReactNode;
+  preview?: (formik: FormikProps<TFormValues>) => React.ReactNode;
   children: (props: {
-    formik: ReturnType<typeof useFormik<TFormValues>>;
+    formik: FormikProps<TFormValues>;
     data: TData | undefined;
     loading: boolean;
   }) => React.ReactNode;
@@ -93,7 +91,6 @@ const SettingsFormContainer = <
   >(mutation, {
     onCompleted: () => {
       toast.success(successMessage);
-      onSuccess && onSuccess(formik, data);
     },
     onError: (error) => {
       console.error("Settings update error:", error);
@@ -101,25 +98,7 @@ const SettingsFormContainer = <
     },
   });
 
-  const formik = useFormik<TFormValues>({
-    initialValues: data ? getInitialValues(data) : defaultValues,
-    enableReinitialize: true,
-    validationSchema,
-    validateOnBlur: false,
-    validateOnChange: false,
-    onSubmit: async (values, { resetForm }) => {
-      try {
-        if (!data) throw Error("Unable to mutate, missing initial data");
-
-        const variables = await getMutationVariables(values, data);
-        await updateSettings({ variables });
-        resetForm({ values });
-      } catch (error) {
-        console.error("Settings update error:", error);
-        toast.error("Failed to update settings");
-      }
-    },
-  });
+  const initialValues = data ? getInitialValues(data) : defaultValues;
 
   if (error) {
     return (
@@ -137,50 +116,79 @@ const SettingsFormContainer = <
     );
   }
 
+  const handleSubmit = async (
+    values: TFormValues,
+    formikHelpers: FormikHelpers<TFormValues>,
+  ) => {
+    try {
+      if (!data) throw Error("Unable to mutate, missing initial data");
+
+      const variables = await getMutationVariables(values, data);
+      await updateSettings({ variables });
+
+      onSuccess && onSuccess(data, formikHelpers, values);
+      formikHelpers.resetForm({ values });
+    } catch (error) {
+      console.error("Settings update error:", error);
+      toast.error("Failed to update settings");
+    }
+  };
+
   return (
     <NewSettingsSection>
-      <Box component="form" onSubmit={formik.handleSubmit}>
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={4}>
-            <InputLegend gutterBottom>{legend}</InputLegend>
-            <SettingsDescription>{description}</SettingsDescription>
-          </Grid>
+      <Formik<TFormValues>
+        initialValues={initialValues}
+        enableReinitialize={true}
+        validationSchema={validationSchema}
+        validateOnBlur={false}
+        validateOnChange={false}
+        onSubmit={handleSubmit}
+      >
+        {(formik) => (
+          <Form>
+            <Grid container spacing={4}>
+              <Grid item xs={12} md={4}>
+                <InputLegend gutterBottom>{legend}</InputLegend>
+                <SettingsDescription>{description}</SettingsDescription>
+              </Grid>
 
-          <Grid item xs={12} md={8}>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 2,
-                paddingTop: 0.25,
-              }}
-            >
-              {children({ formik, data, loading })}
-            </Box>
-            {preview && <Box mt={2}>{preview(formik)}</Box>}
-            {showActionButtons && (
-              <Box mt={2} display="flex" gap={1.5}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  disabled={!formik.dirty || updating}
+              <Grid item xs={12} md={8}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 2,
+                    paddingTop: 0.25,
+                  }}
                 >
-                  Save
-                </Button>
-                <Button
-                  onClick={() => formik.resetForm()}
-                  type="reset"
-                  variant="contained"
-                  disabled={!formik.dirty}
-                  color="secondary"
-                >
-                  Reset changes
-                </Button>
-              </Box>
-            )}
-          </Grid>
-        </Grid>
-      </Box>
+                  {children({ formik, data, loading })}
+                </Box>
+                {preview && <Box mt={2}>{preview(formik)}</Box>}
+                {showActionButtons && (
+                  <Box mt={2} display="flex" gap={1.5}>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      disabled={!formik.dirty || updating}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      onClick={() => formik.resetForm()}
+                      type="reset"
+                      variant="contained"
+                      disabled={!formik.dirty}
+                      color="secondary"
+                    >
+                      Reset changes
+                    </Button>
+                  </Box>
+                )}
+              </Grid>
+            </Grid>
+          </Form>
+        )}
+      </Formik>
     </NewSettingsSection>
   );
 };
