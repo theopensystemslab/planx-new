@@ -25,6 +25,7 @@ export interface Flow {
   settings?: FlowSettings;
   status?: FlowStatus;
   isTemplate?: boolean;
+  canCreateFromCopy?: boolean;
 }
 export interface GlobalSettings {
   footerContent?: { [key: string]: TextContent };
