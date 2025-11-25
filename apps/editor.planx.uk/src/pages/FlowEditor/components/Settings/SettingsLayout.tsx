@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
+import { SvgIconProps } from "@mui/material/SvgIcon";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import React from "react";
@@ -10,6 +11,7 @@ import StyledTab from "ui/editor/StyledTab";
 interface SettingsLink {
   label: string;
   path: string;
+  icon: React.ComponentType<SvgIconProps>;
   condition?: boolean;
 }
 
@@ -68,8 +70,15 @@ const SettingsLayout: React.FC<Props> = ({
           </Typography>
           <TabList>
             <Tabs onChange={handleChange} value={activeTab} aria-label={title}>
-              {filteredLinks.map(({ label, path }) => (
-                <StyledTab size="large" key={path} value={path} label={label} />
+              {filteredLinks.map(({ label, path, icon: Icon }) => (
+                <StyledTab
+                  size="large"
+                  key={path}
+                  value={path}
+                  label={label}
+                  icon={Icon ? <Icon /> : undefined}
+                  iconPosition="start"
+                />
               ))}
             </Tabs>
           </TabList>
