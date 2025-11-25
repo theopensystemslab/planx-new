@@ -23,6 +23,7 @@ const FlowSettingsLayout: React.FC<Props> = ({ children }) => {
 
   const settingsLinks = [
     { label: "Visibility", path: "/visibility" },
+    { label: "About", path: "/about" },
     { label: "Legal disclaimer", path: "/legal-disclaimer" },
     { label: "Help page", path: "/pages/help" },
     { label: "Privacy page", path: "/pages/privacy" },

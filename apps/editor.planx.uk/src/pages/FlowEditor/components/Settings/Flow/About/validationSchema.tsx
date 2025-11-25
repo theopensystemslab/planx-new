@@ -1,13 +1,13 @@
 import { TEXT_LIMITS, TextInputType } from "@planx/components/TextInput/model";
 import { richText } from "lib/yupExtensions";
-import { object, SchemaOf, string } from "yup";
+import { object, type SchemaOf, string } from "yup";
 
-import { ReadMePageForm } from "./types";
+import type { AboutFlow } from "./types";
 
 export const characterCountLimit = TEXT_LIMITS[TextInputType.Short];
 
-export const validationSchema: SchemaOf<ReadMePageForm> = object({
-  serviceSummary: string()
+export const validationSchema: SchemaOf<AboutFlow> = object({
+  summary: string()
     .max(
       characterCountLimit,
       `Service summary must be ${characterCountLimit} characters or less`,
@@ -22,6 +22,12 @@ export const validationSchema: SchemaOf<ReadMePageForm> = object({
         return /^[A-Z]/.test(trimmed) && trimmed.endsWith(".");
       },
     ),
-  serviceDescription: richText(),
-  serviceLimitations: richText(),
+  description: richText(),
+  limitations: richText(),
 });
+
+export const defaultValues: AboutFlow = {
+  summary: "",
+  description: "",
+  limitations: "",
+};

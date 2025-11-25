@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { Form, Formik, FormikHelpers, FormikProps, FormikValues } from "formik";
 import { useToast } from "hooks/useToast";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import InputLegend from "ui/editor/InputLegend";
 import NewSettingsSection from "ui/editor/NewSettingsSection";
@@ -78,6 +79,11 @@ const SettingsFormContainer = <
   showActionButtons = true,
 }: SettingsFormContainerProps<TData, TVariables, TFormValues>) => {
   const toast = useToast();
+  const [teamSlug, canUserEditTeam] = useStore((state) => [
+    state.teamSlug,
+    state.canUserEditTeam,
+  ]);
+  const userPermissionError = !canUserEditTeam(teamSlug);
 
   // Fetch current data
   const { data, loading, error } = useQuery<TData>(query, {
@@ -151,7 +157,6 @@ const SettingsFormContainer = <
                 <InputLegend gutterBottom>{legend}</InputLegend>
                 <SettingsDescription>{description}</SettingsDescription>
               </Grid>
-
               <Grid item xs={12} md={8}>
                 <Box
                   sx={{
@@ -169,7 +174,9 @@ const SettingsFormContainer = <
                     <Button
                       type="submit"
                       variant="contained"
-                      disabled={!formik.dirty || updating}
+                      disabled={
+                        userPermissionError || !formik.dirty || updating
+                      }
                     >
                       Save
                     </Button>
@@ -177,7 +184,7 @@ const SettingsFormContainer = <
                       onClick={() => formik.resetForm()}
                       type="reset"
                       variant="contained"
-                      disabled={!formik.dirty}
+                      disabled={userPermissionError || !formik.dirty}
                       color="secondary"
                     >
                       Reset changes

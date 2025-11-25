@@ -11,9 +11,6 @@ import { Store } from "./lib/store";
 export interface FlowInformation {
   settings: FlowSettings;
   status: FlowStatus;
-  description?: string;
-  summary?: string;
-  limitations?: string;
   canCreateFromCopy?: boolean;
   analyticsLink?: string;
   isListedOnLPS: boolean;

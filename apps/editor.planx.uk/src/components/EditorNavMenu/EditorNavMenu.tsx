@@ -4,7 +4,6 @@ import CurrencyPoundIcon from "@mui/icons-material/CurrencyPound";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GroupIcon from "@mui/icons-material/Group";
-import Info from "@mui/icons-material/Info";
 import LayersIcon from "@mui/icons-material/Layers";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
@@ -155,12 +154,6 @@ function EditorNavMenu() {
       title: "Editor",
       Icon: EditorIcon,
       route: `/${teamSlug}/${flowSlug}`,
-      accessibleBy: "*",
-    },
-    {
-      title: "About this flow",
-      Icon: Info,
-      route: `/${teamSlug}/${flowSlug}/about`,
       accessibleBy: "*",
     },
     {
