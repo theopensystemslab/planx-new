@@ -1,9 +1,8 @@
 import Box from "@mui/material/Box";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Radio from "@mui/material/Radio";
+import FormControl from "@mui/material/FormControl";
 import RadioGroup from "@mui/material/RadioGroup";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { useFormikContext } from "formik";
 import React from "react";
 import SettingsDescription from "ui/editor/SettingsDescription";
@@ -29,29 +28,34 @@ const CATEGORIES: { value: LPSCategory; label: string; description: string }[] =
     },
   ];
 
-const StyledFormLabel = styled(FormControlLabel)(({ theme }) => ({
-  alignItems: "flex-start",
-  margin: 0,
-  padding: theme.spacing(1.5),
-  border: "1px solid",
-  width: "100%",
-  '&[data-selected="true"]': {
-    boxShadow: `inset 0 0 0 1px ${theme.palette.primary.main}`,
-    backgroundColor: theme.palette.background.default,
-  },
-  "&:hover": {
-    backgroundColor: theme.palette.background.default,
-  },
-}));
+const CategoryLabel: React.FC<(typeof CATEGORIES)[number]> = ({
+  label,
+  description,
+}) => (
+  <>
+    <Typography variant="body2" fontWeight="bold">
+      {label}
+    </Typography>
+    <Typography variant="body2" color="text.secondary">
+      {description}
+    </Typography>
+  </>
+);
 
 const CategorySelection: React.FC = () => {
-  const { values, handleChange } = useFormikContext<LPSListingFormValues>();
+  const { values, handleChange, setFieldValue } =
+    useFormikContext<LPSListingFormValues>();
+
+  const handleRadioChange = (event: React.SyntheticEvent<Element, Event>) => {
+    const target = event.target as HTMLInputElement;
+    setFieldValue("category", target.value);
+  };
 
   return (
     <Box>
       <Typography variant="h4">Category</Typography>
       <SettingsDescription mt={0}>
-        Select how your service will be categorised.
+        Which of the following categories best describes your service?
       </SettingsDescription>
       <RadioGroup
         name="category"
@@ -59,24 +63,20 @@ const CategorySelection: React.FC = () => {
         onChange={handleChange}
         sx={{ gap: 2 }}
       >
-        {CATEGORIES.map((option) => (
-          <StyledFormLabel
-            data-selected={values.category === option.value}
-            key={option.value}
-            value={option.value}
-            control={<Radio sx={{ alignSelf: "flex-start", mt: 0.5 }} />}
-            label={
-              <Box sx={{ display: "flex", flexDirection: "column", ml: 1 }}>
-                <Typography variant="body2" fontWeight="bold">
-                  {option.label}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {option.description}
-                </Typography>
-              </Box>
-            }
-          />
-        ))}
+        <FormControl component="fieldset">
+          <RadioGroup value={values.category} sx={{ gap: 1 }}>
+            {CATEGORIES.map((option) => (
+              <BasicRadio
+                key={option.value}
+                id={option.value}
+                label={<CategoryLabel {...option} />}
+                variant="compact"
+                value={option.value}
+                onChange={handleRadioChange}
+              />
+            ))}
+          </RadioGroup>
+        </FormControl>
       </RadioGroup>
     </Box>
   );
