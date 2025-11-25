@@ -1,15 +1,18 @@
 import { useMutation } from "@apollo/client/react";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction";
 import ListItemText from "@mui/material/ListItemText";
-import TextField from "@mui/material/TextField";
+import RadioGroup from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
+import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
+import { getIn } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
+import React, { ChangeEvent } from "react";
+import InputLabel from "ui/editor/InputLabel";
+import Input from "ui/shared/Input/Input";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import {
@@ -84,42 +87,75 @@ export const SubmissionEmails: React.FC = () => {
           <Typography variant="h6" style={{ marginBottom: "1rem" }}>
             Submission Emails
           </Typography>
-
-          <List>
-            {data?.submissionIntegrations?.map((emailObj, index) => (
-              <ListItem key={index}>
-                <ListItemText
-                  primary={emailObj.submissionEmail}
-                  secondary={emailObj.defaultEmail ? "Default Email" : ""}
-                />
-                <ListItemSecondaryAction>
-                  {!emailObj.defaultEmail && (
-                    <IconButton
-                      edge="end"
-                      disabled={deleteLoading}
-                      onClick={async () => {
-                        try {
-                          await deleteSubmissionIntegration({
-                            variables: {
-                              submissionEmail: emailObj.submissionEmail,
-                              teamId,
-                            },
-                          });
-                        } catch (err) {
-                          console.error(
-                            "Failed to delete submission email:",
-                            err,
-                          );
-                        }
+          <RadioGroup
+            value={
+              data?.submissionIntegrations.find(
+                (emailObj) => emailObj.defaultEmail,
+              )?.submissionEmail || ""
+            }
+            onChange={(e) => {
+              const selectedEmail = e.target.value;
+              formik.setFieldValue(
+                "existingEmails",
+                data?.submissionIntegrations.map((emailObj) => ({
+                  ...emailObj,
+                  defaultEmail: emailObj.submissionEmail === selectedEmail,
+                })),
+              );
+            }}
+          >
+            <List>
+              {data?.submissionIntegrations?.map((emailObj, index) => (
+                <ListItem key={index}>
+                  <ListItemText primary={emailObj.submissionEmail} />
+                  <ListItemSecondaryAction>
+                    {!emailObj.defaultEmail && (
+                      <IconButton
+                        edge="end"
+                        disabled={deleteLoading}
+                        onClick={async () => {
+                          try {
+                            await deleteSubmissionIntegration({
+                              variables: {
+                                submissionEmail: emailObj.submissionEmail,
+                                teamId,
+                              },
+                            });
+                          } catch (err) {
+                            console.error(
+                              "Failed to delete submission email:",
+                              err,
+                            );
+                          }
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    )}
+                    <BasicRadio
+                      id={emailObj.submissionEmail}
+                      value={emailObj.submissionEmail}
+                      onChange={(e) => {
+                        const selectedEmail = (e.target as HTMLInputElement)
+                          .value;
+                        formik.setFieldValue(
+                          "existingEmails",
+                          data?.submissionIntegrations.map((emailObj) => ({
+                            ...emailObj,
+                            defaultEmail:
+                              emailObj.submissionEmail === selectedEmail,
+                          })),
+                        );
                       }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  )}
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))}
-          </List>
+                      variant="compact"
+                      label={"Default"}
+                      disabled={deleteLoading}
+                    />
+                  </ListItemSecondaryAction>
+                </ListItem>
+              ))}
+            </List>
+          </RadioGroup>
 
           <div
             style={{
@@ -129,19 +165,17 @@ export const SubmissionEmails: React.FC = () => {
               marginTop: "1rem",
             }}
           >
-            <TextField
-              label="New Email"
-              name="submissionEmail"
-              value={formik.values.submissionEmail}
-              onChange={formik.handleChange}
-              placeholder="Enter email address"
-              fullWidth
-            />
-            <Checkbox
-              name="defaultEmail"
-              checked={formik.values.defaultEmail}
-              onChange={formik.handleChange}
-            />
+            <InputLabel label="Submission email" htmlFor="submissionEmail">
+              <Input
+                name="submissionEmail"
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  formik.setFieldValue("submissionEmail", e.target.value)
+                }
+                value={formik.values.submissionEmail}
+                errorMessage={getIn(formik.errors, "submissionEmail")}
+                id="submissionEmail"
+              />
+            </InputLabel>
             <Typography>Default</Typography>
           </div>
         </>
