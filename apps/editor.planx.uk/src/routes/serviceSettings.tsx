@@ -24,18 +24,18 @@ const flowNewSettingsRoutes = compose(
   )),
 
   mount({
-    "/": redirect("./about"),
-    "/about": route((req) => ({
-      title: makeTitle(
-        [req.params.team, req.params.flow, "settings", "about"].join("/"),
-      ),
-      view: <About />,
-    })),
+    "/": redirect("./visibility"),
     "/visibility": route((req) => ({
       title: makeTitle(
         [req.params.team, req.params.flow, "settings", "visibility"].join("/"),
       ),
       view: <Visibility />,
+    })),
+    "/about": route((req) => ({
+      title: makeTitle(
+        [req.params.team, req.params.flow, "settings", "about"].join("/"),
+      ),
+      view: <About />,
     })),
     "/legal-disclaimer": route((req) => ({
       title: makeTitle(

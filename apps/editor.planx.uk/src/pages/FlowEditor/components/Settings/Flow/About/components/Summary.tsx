@@ -36,7 +36,7 @@ const Summary: React.FC = () => {
           <br />
           <br />
           This wording is used on the{" "}
-          <Link href={lpsURL} data-testid="upload-file-button">
+          <Link href={lpsURL} target="_blank" rel="noopener noreferrer">
             Find Local Planning Services (opens in a new tab)
           </Link>{" "}
           website. It's publicly visible, and should be short, clear and easy to
