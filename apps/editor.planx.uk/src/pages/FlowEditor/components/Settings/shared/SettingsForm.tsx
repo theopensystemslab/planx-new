@@ -157,42 +157,45 @@ const SettingsFormContainer = <
                 <InputLegend gutterBottom>{legend}</InputLegend>
                 <SettingsDescription>{description}</SettingsDescription>
               </Grid>
-
-          <Grid item xs={12} md={8}>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 2,
-                paddingTop: 0.25,
-              }}
-            >
-              {children({ formik, data, loading })}
-            </Box>
-            {preview && <Box mt={2}>{preview(formik)}</Box>}
-            {showActionButtons && (
-              <Box mt={2} display="flex" gap={1.5}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  disabled={userPermissionError || !formik.dirty || updating}
+              <Grid item xs={12} md={8}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 2,
+                    paddingTop: 0.25,
+                  }}
                 >
-                  Save
-                </Button>
-                <Button
-                  onClick={() => formik.resetForm()}
-                  type="reset"
-                  variant="contained"
-                  disabled={userPermissionError || !formik.dirty}
-                  color="secondary"
-                >
-                  Reset changes
-                </Button>
-              </Box>
-            )}
-          </Grid>
-        </Grid>
-      </Box>
+                  {children({ formik, data, loading })}
+                </Box>
+                {preview && <Box mt={2}>{preview(formik)}</Box>}
+                {showActionButtons && (
+                  <Box mt={2} display="flex" gap={1.5}>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      disabled={
+                        userPermissionError || !formik.dirty || updating
+                      }
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      onClick={() => formik.resetForm()}
+                      type="reset"
+                      variant="contained"
+                      disabled={userPermissionError || !formik.dirty}
+                      color="secondary"
+                    >
+                      Reset changes
+                    </Button>
+                  </Box>
+                )}
+              </Grid>
+            </Grid>
+          </Form>
+        )}
+      </Formik>
     </NewSettingsSection>
   );
 };
