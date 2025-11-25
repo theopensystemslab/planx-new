@@ -74,7 +74,6 @@ const CUSTOM_DOMAINS: CustomDomain[] =
         {
           domain: "planningservices.barnet.gov.uk",
           name: "barnet",
-          certificateLocation: "pulumiConfig",
         },
         {
           domain: "planningservices.tewkesbury.gov.uk",
