@@ -138,6 +138,8 @@ const Node: React.FC<Props> = (props) => {
     }
 
     case TYPES.Agent:
+      if (!hasFeatureFlag("AGENT_COMPONENT")) return null;
+
       return <AgentComponent {...getComponentProps<Agent>()} />;
 
     case TYPES.Calculate:

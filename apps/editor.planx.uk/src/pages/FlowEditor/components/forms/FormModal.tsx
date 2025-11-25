@@ -88,9 +88,11 @@ const NodeTypeSelect: React.FC<{
         <option value={TYPES.DrawBoundary}>Draw boundary</option>
         <option value={TYPES.PlanningConstraints}>Planning constraints</option>
       </optgroup>
-      <optgroup label="Artificial Intelligence">
-        <option value={TYPES.Agent}>Agent</option>
-      </optgroup>
+      {hasFeatureFlag("AGENT_COMPONENT") && (
+        <optgroup label="Artificial Intelligence">
+          <option value={TYPES.Agent}>Agent</option>
+        </optgroup>
+      )}
       <optgroup label="Navigation">
         <option value={TYPES.Filter}>Filter</option>
         <option value={TYPES.ExternalPortal}>Flow</option>
