@@ -8,7 +8,6 @@ import Info from "@mui/icons-material/Info";
 import LayersIcon from "@mui/icons-material/Layers";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
-import PaletteIcon from "@mui/icons-material/Palette";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import SchoolIcon from "@mui/icons-material/School";
 import TuneIcon from "@mui/icons-material/Tune";
@@ -103,12 +102,6 @@ function EditorNavMenu() {
       title: "Settings",
       Icon: TuneIcon,
       route: `/${teamSlug}/settings`,
-      accessibleBy: ["platformAdmin", "teamEditor"],
-    },
-    {
-      title: "Design",
-      Icon: PaletteIcon,
-      route: `/${teamSlug}/design`,
       accessibleBy: ["platformAdmin", "teamEditor"],
     },
     {

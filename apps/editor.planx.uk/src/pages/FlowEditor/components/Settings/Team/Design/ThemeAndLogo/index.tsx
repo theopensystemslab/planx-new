@@ -1,8 +1,6 @@
 import Link from "@mui/material/Link";
-import { getContrastRatio, useTheme } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { TeamTheme } from "@opensystemslab/planx-core/types";
-import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import ColorPicker from "ui/editor/ColorPicker/ColorPicker";
@@ -11,52 +9,47 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
-import { DesignPreview, FormProps } from ".";
-import { SettingsForm } from "./SettingsForm";
+import SettingsFormContainer from "../../../shared/SettingsForm";
+import { GET_TEAM_THEME, UPDATE_TEAM_THEME } from "../shared/queries";
+import { DesignPreview } from "../shared/styles";
+import type { GetTeamTheme } from "../shared/types";
+import { defaultValues, validationSchema } from "../shared/validationSchema";
+import type { FormValues, MutationVars } from "./types";
 
-export const ThemeAndLogoForm: React.FC<FormProps> = ({
-  formikConfig,
-  onSuccess,
-}) => {
-  const theme = useTheme();
-  const teamSlug = useStore((state) => state.teamSlug);
-
-  const formik = useFormik<TeamTheme>({
-    ...formikConfig,
-    validate: ({ primaryColour }) => {
-      const isContrastThresholdMet =
-        getContrastRatio("#FFF", primaryColour) >
-        theme.palette.contrastThreshold;
-
-      if (!isContrastThresholdMet) {
-        return {
-          primaryColour:
-            "Theme colour does not meet accessibility contrast requirements (3:1)",
-        };
-      }
-    },
-    onSubmit: async (values, { resetForm }) => {
-      const isSuccess = await useStore.getState().updateTeamTheme({
-        primaryColour: values.primaryColour,
-        logo: values.logo,
-      });
-      if (isSuccess) {
-        onSuccess();
-        // Reset "dirty" status to disable Save & Reset buttons
-        resetForm({ values });
-      }
-    },
-  });
-
-  const updateLogo = (newFile: string | undefined) =>
-    newFile
-      ? formik.setFieldValue("logo", newFile)
-      : formik.setFieldValue("logo", null);
+const ThemeAndLogo: React.FC = () => {
+  const [teamId, teamSlug] = useStore((state) => [
+    state.teamId,
+    state.teamSlug,
+  ]);
+  const muiTheme = useTheme();
 
   return (
-    <SettingsForm<TeamTheme>
-      formik={formik}
+    <SettingsFormContainer<GetTeamTheme, MutationVars, FormValues>
+      query={GET_TEAM_THEME}
+      defaultValues={defaultValues}
+      queryVariables={{ teamId }}
+      mutation={UPDATE_TEAM_THEME}
+      getInitialValues={({ themes: [theme] }) => theme}
+      getMutationVariables={(theme) => ({
+        teamId,
+        theme: {
+          primary_colour: theme.primaryColour,
+          logo: theme.logo,
+        },
+      })}
+      validationSchema={validationSchema.pick(["logo", "primaryColour"])}
       legend="Theme colour & logo"
+      preview={(formik) => [
+        <DesignPreview bgcolor={formik.values.primaryColour}>
+          {formik.values.logo ? (
+            <img width="140" src={formik.values.logo} alt="council logo" />
+          ) : (
+            <Typography color={muiTheme.palette.primary.contrastText}>
+              Plan✕ / {teamSlug}
+            </Typography>
+          )}
+        </DesignPreview>,
+      ]}
       description={
         <>
           <p>
@@ -76,7 +69,8 @@ export const ThemeAndLogoForm: React.FC<FormProps> = ({
           </p>
         </>
       }
-      input={
+    >
+      {({ formik }) => (
         <>
           <InputRow>
             <InputRowItem>
@@ -97,7 +91,11 @@ export const ThemeAndLogoForm: React.FC<FormProps> = ({
               <ImgInput
                 backgroundColor={formik.values.primaryColour}
                 img={formik.values.logo || undefined}
-                onChange={updateLogo}
+                onChange={(newFile) =>
+                  newFile
+                    ? formik.setFieldValue("logo", newFile)
+                    : formik.setFieldValue("logo", null)
+                }
                 acceptedFileTypes={{
                   "image/png": [".png"],
                   "image/svg+xml": [".svg"],
@@ -114,18 +112,9 @@ export const ThemeAndLogoForm: React.FC<FormProps> = ({
             </Typography>
           </InputRow>
         </>
-      }
-      preview={
-        <DesignPreview bgcolor={formik.values.primaryColour}>
-          {formik.values.logo ? (
-            <img width="140" src={formik.values.logo} alt="council logo" />
-          ) : (
-            <Typography color={theme.palette.primary.contrastText}>
-              Plan✕ / {teamSlug}
-            </Typography>
-          )}
-        </DesignPreview>
-      }
-    />
+      )}
+    </SettingsFormContainer>
   );
 };
+
+export default ThemeAndLogo;

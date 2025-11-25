@@ -1,7 +1,5 @@
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import { TeamTheme } from "@opensystemslab/planx-core/types";
-import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
@@ -9,35 +7,29 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
-import { FormProps } from ".";
-import { SettingsForm } from "./SettingsForm";
+import SettingsFormContainer from "../../../shared/SettingsForm";
+import { GET_TEAM_THEME, UPDATE_TEAM_THEME } from "../shared/queries";
+import type { GetTeamTheme } from "../shared/types";
+import { defaultValues, validationSchema } from "../shared/validationSchema";
+import type { FormValues, MutationVars } from "./types";
 
-export const FaviconForm: React.FC<FormProps> = ({
-  formikConfig,
-  onSuccess,
-}) => {
-  const formik = useFormik<TeamTheme>({
-    ...formikConfig,
-    onSubmit: async (values, { resetForm }) => {
-      const isSuccess = await useStore.getState().updateTeamTheme({
-        favicon: values.favicon,
-      });
-      if (isSuccess) {
-        onSuccess();
-        // Reset "dirty" status to disable Save & Reset buttons
-        resetForm({ values });
-      }
-    },
-  });
-
-  const updateFavicon = (newFile: string | undefined) =>
-    newFile
-      ? formik.setFieldValue("favicon", newFile)
-      : formik.setFieldValue("favicon", null);
+const Favicon: React.FC = () => {
+  const teamId = useStore((state) => state.teamId);
 
   return (
-    <SettingsForm<TeamTheme>
-      formik={formik}
+    <SettingsFormContainer<GetTeamTheme, MutationVars, FormValues>
+      query={GET_TEAM_THEME}
+      defaultValues={defaultValues}
+      queryVariables={{ teamId }}
+      mutation={UPDATE_TEAM_THEME}
+      getInitialValues={({ themes: [theme] }) => theme}
+      getMutationVariables={(theme) => ({
+        teamId,
+        theme: {
+          favicon: theme.favicon,
+        },
+      })}
+      validationSchema={validationSchema.pick(["favicon"])}
       legend="Favicon"
       description={
         <>
@@ -56,13 +48,18 @@ export const FaviconForm: React.FC<FormProps> = ({
           </p>
         </>
       }
-      input={
+    >
+      {({ formik }) => (
         <InputRow>
           <InputRowLabel>Favicon:</InputRowLabel>
           <InputRowItem width={formik.values.favicon ? 90 : 50}>
             <ImgInput
               img={formik.values.favicon || undefined}
-              onChange={updateFavicon}
+              onChange={(newFile) =>
+                newFile
+                  ? formik.setFieldValue("favicon", newFile)
+                  : formik.setFieldValue("favicon", null)
+              }
               acceptedFileTypes={{
                 "image/png": [".png"],
                 "image/x-icon": [".ico"],
@@ -79,7 +76,9 @@ export const FaviconForm: React.FC<FormProps> = ({
             .ico or .png
           </Typography>
         </InputRow>
-      }
-    />
+      )}
+    </SettingsFormContainer>
   );
 };
+
+export default Favicon;

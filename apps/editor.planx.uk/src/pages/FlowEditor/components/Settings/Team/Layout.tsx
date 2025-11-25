@@ -13,6 +13,7 @@ const TeamSettingsLayout: React.FC<PropsWithChildren> = ({ children }) => {
     { label: "Contact information", path: "/contact" },
     { label: "Integrations", path: "/integrations" },
     { label: "GIS data", path: "/gis-data" },
+    { label: "Design", path: "/design" },
   ];
 
   const settingsLinks = [
