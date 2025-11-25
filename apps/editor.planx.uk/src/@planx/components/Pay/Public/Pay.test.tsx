@@ -14,23 +14,26 @@ import Confirm, { Props } from "./Confirm";
 import Pay from "./Pay";
 
 // Mock TanStack Router hooks
-vi.mock("@tanstack/react-router", () => ({
-  useRouteContext: vi.fn(() => ({
-    isContentPage: false,
-  })),
-  useNavigate: vi.fn(() => vi.fn()),
-  useParams: vi.fn(() => ({
-    team: "test-team",
-    flow: "test-flow",
-  })),
-  useLocation: vi.fn(() => ({
-    pathname: "/test-team/test-flow/pay",
-    search: {},
-    hash: "",
-    href: "/test-team/test-flow/pay",
-    state: {},
-  })),
-}));
+vi.mock("@tanstack/react-router", async () => {
+  const actual = await vi.importActual("@tanstack/react-router");
+  return {
+    ...actual,
+    useRouteContext: vi.fn(() => ({
+      isContentPage: false,
+    })),
+    useNavigate: vi.fn(() => vi.fn()),
+    useParams: vi.fn(() => ({
+      team: "test-team",
+      flow: "test-flow",
+    })),
+    useLocation: vi.fn(() => ({
+      pathname: "/test-team/test-flow/pay",
+      search: "",
+      hash: "",
+      state: {},
+    })),
+  };
+});
 
 vi.mock("lib/featureFlags", () => ({
   hasFeatureFlag: vi.fn().mockResolvedValue(true),

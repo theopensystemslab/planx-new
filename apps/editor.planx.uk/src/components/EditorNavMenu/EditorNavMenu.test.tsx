@@ -6,11 +6,15 @@ import { vi } from "vitest";
 
 import EditorNavMenu from "./EditorNavMenu";
 
-vi.mock("@tanstack/react-router", () => ({
-  useLocation: vi.fn(),
-  useNavigate: vi.fn(() => vi.fn()),
-  useRouter: vi.fn(() => ({ state: { isLoading: false } })),
-}));
+vi.mock("@tanstack/react-router", async () => {
+  const actual = await vi.importActual("@tanstack/react-router");
+  return {
+    ...actual,
+    useLocation: vi.fn(),
+    useNavigate: vi.fn(() => vi.fn()),
+    useRouter: vi.fn(() => ({ state: { isLoading: false } })),
+  };
+});
 
 const mockUseLocation = vi.mocked(TanStackRouter.useLocation);
 

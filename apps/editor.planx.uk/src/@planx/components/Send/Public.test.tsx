@@ -17,9 +17,13 @@ const { getState, setState } = useStore;
 let initialState: FullStore;
 
 // Mock TanStack Router hooks
-vi.mock("@tanstack/react-router", () => ({
-  useNavigate: vi.fn(() => vi.fn()),
-}));
+vi.mock("@tanstack/react-router", async () => {
+  const actual = await vi.importActual("@tanstack/react-router");
+  return {
+    ...actual,
+    useNavigate: vi.fn(() => vi.fn()),
+  };
+});
 
 const handler = http.post(
   `${import.meta.env.VITE_APP_API_URL}/create-send-events/*`,

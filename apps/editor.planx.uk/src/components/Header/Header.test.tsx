@@ -79,12 +79,16 @@ vi.mock("ui/shared/CustomLink/CustomLink", () => ({
   ),
 }));
 
-vi.mock("@tanstack/react-router", () => ({
-  useLocation: vi.fn(),
-  useNavigate: vi.fn(() => vi.fn()),
-  useParams: vi.fn(() => ({})),
-  useRouteContext: vi.fn(() => ({})),
-}));
+vi.mock("@tanstack/react-router", async () => {
+  const actual = await vi.importActual("@tanstack/react-router");
+  return {
+    ...actual,
+    useLocation: vi.fn(),
+    useNavigate: vi.fn(() => vi.fn()),
+    useParams: vi.fn(() => ({})),
+    useRouteContext: vi.fn(() => ({})),
+  };
+});
 
 const mockUseLocation = vi.mocked(TanStackRouter.useLocation);
 const mockUseParams = vi.mocked(TanStackRouter.useParams);
