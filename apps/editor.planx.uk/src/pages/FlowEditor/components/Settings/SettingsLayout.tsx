@@ -11,7 +11,7 @@ import StyledTab from "ui/editor/StyledTab";
 interface SettingsLink {
   label: string;
   path: string;
-  icon?: React.ComponentType<SvgIconProps>;
+  icon: React.ComponentType<SvgIconProps>;
   condition?: boolean;
 }
 
