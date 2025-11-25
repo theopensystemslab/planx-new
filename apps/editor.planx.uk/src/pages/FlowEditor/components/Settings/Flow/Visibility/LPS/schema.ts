@@ -17,7 +17,9 @@ export const validationSchema: SchemaOf<LPSListingFormValues> = object({
       },
     ),
   summary: string().nullable(),
-  category: mixed().oneOf(["guidance", "notify", "apply"]),
+  category: mixed()
+    .oneOf(["guidance", "notify", "apply"])
+    .required("Category is a required field"),
 });
 
 export const defaultValues: LPSListingFormValues = {
