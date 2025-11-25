@@ -16,7 +16,7 @@ beforeEach(() => {
 test("renders correctly", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <Presentational
       headingColor={{ text: "#000", background: "#fff" }}
       responses={[]}
@@ -31,7 +31,7 @@ test("renders correctly", async () => {
 });
 
 it("should not have any accessibility violations", async () => {
-  const { container } = setup(
+  const { container } = await setup(
     <Presentational
       headingColor={{ text: "#000", background: "#fff" }}
       responses={[
@@ -56,7 +56,7 @@ it("should not have any accessibility violations", async () => {
 });
 
 describe("showing and hiding change capabilities", () => {
-  it("hides the change button by default", () => {
+  it("hides the change button by default", async () => {
     setup(
       <Presentational
         responses={[

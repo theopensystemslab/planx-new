@@ -26,7 +26,7 @@ describe("Read Me Page component", () => {
   });
 
   it("renders and submits data without an error", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ReadMePage {...defaultProps} />
       </DndProvider>,
@@ -51,7 +51,7 @@ describe("Read Me Page component", () => {
     "displays an error if the service summary is longer than 120 characters",
     { timeout: 9000 },
     async () => {
-      const { user } = setup(
+      const { user } = await setup(
         <DndProvider backend={HTML5Backend}>
           <ReadMePage {...defaultProps} />
         </DndProvider>,
@@ -99,7 +99,7 @@ describe("Read Me Page component", () => {
   it.todo("displays an error toast if there is a server-side issue"); // waiting for PR 4019 to merge first so can use msw package
 
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(
+    const { container } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ReadMePage {...defaultProps} />
       </DndProvider>,

@@ -27,7 +27,7 @@ vi.mock("react-navi", () => ({
 }));
 
 const setupTestEnvironment = () => {
-  const filterEnvironment = setup(
+  const filterEnvironment = await setup(
     <DndProvider backend={HTML5Backend}>
       <Filters<MockRecordType>
         records={mockRecords}
@@ -47,7 +47,7 @@ describe("the UI interactions of the Filter component", () => {
     expect(results).toHaveNoViolations();
   });
 
-  it("displays the filter options by default", () => {
+  it("displays the filter options by default", async () => {
     setupTestEnvironment();
 
     expect(screen.getByLabelText("Online status")).toBeVisible();

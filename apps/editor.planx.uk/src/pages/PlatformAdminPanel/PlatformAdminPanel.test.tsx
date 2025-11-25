@@ -21,7 +21,7 @@ describe("Platform admin panel", () => {
     act(() => setState(initialState));
   });
 
-  it("renders expected headers and rows without an error", () => {
+  it("renders expected headers and rows without an error", async () => {
     setup(<PlatformAdminPanel />);
     const headers = [
       "Team",
@@ -52,8 +52,8 @@ describe("Platform admin panel", () => {
     ).toHaveLength(2); // Two teams in the mock data have an LDC flow
   }, 10_000);
 
-  it("renders a tick / cross for boolean values", () => {
-    const { container } = setup(<PlatformAdminPanel />);
+  it("renders a tick / cross for boolean values", async () => {
+    const { container } = await setup(<PlatformAdminPanel />);
 
     // get all cells in the 'Planning Constraints' column
     const planningConstraintCells = container.querySelectorAll(

@@ -7,7 +7,7 @@ import { setup } from "testUtils";
 import ContactInputComponent from "./Editor";
 
 describe("ContactInputComponent - Editor Modal", () => {
-  it("renders", () => {
+  it("renders", async () => {
     setup(
       <DndProvider backend={HTML5Backend}>
         <ContactInputComponent id="test" />
@@ -18,7 +18,7 @@ describe("ContactInputComponent - Editor Modal", () => {
 
   it("requires a title", async () => {
     const handleSubmit = vi.fn();
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ContactInputComponent id="test" handleSubmit={handleSubmit} />
       </DndProvider>,
@@ -33,7 +33,7 @@ describe("ContactInputComponent - Editor Modal", () => {
 
   it("requires a data field", async () => {
     const handleSubmit = vi.fn();
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ContactInputComponent id="test" handleSubmit={handleSubmit} />
       </DndProvider>,
@@ -54,7 +54,7 @@ describe("ContactInputComponent - Editor Modal", () => {
 
   it("can be submitted successfully", async () => {
     const handleSubmit = vi.fn();
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ContactInputComponent id="test" handleSubmit={handleSubmit} />
       </DndProvider>,

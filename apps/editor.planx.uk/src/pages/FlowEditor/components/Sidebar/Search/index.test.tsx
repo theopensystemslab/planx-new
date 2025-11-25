@@ -34,8 +34,8 @@ vi.mock("@opensystemslab/planx-core", async (originalModule) => {
   };
 });
 
-test("data field checkbox is unchecked and enabled by default", () => {
-  const { getByLabelText } = setup(
+test("data field checkbox is unchecked and enabled by default", async () => {
+  const { getByLabelText } = await setup(
     <VirtuosoWrapper>
       <Search />
     </VirtuosoWrapper>,
@@ -48,11 +48,12 @@ test("data field checkbox is unchecked and enabled by default", () => {
 });
 
 test("entering a search term displays a series of cards", async () => {
-  const { user, queryByRole, getByRole, getAllByRole, getByLabelText } = setup(
-    <VirtuosoWrapper>
-      <Search />
-    </VirtuosoWrapper>,
-  );
+  const { user, queryByRole, getByRole, getAllByRole, getByLabelText } =
+    await setup(
+      <VirtuosoWrapper>
+        <Search />
+      </VirtuosoWrapper>,
+    );
 
   expect(queryByRole("list")).toBeEmptyDOMElement();
 
@@ -64,7 +65,7 @@ test("entering a search term displays a series of cards", async () => {
 });
 
 test("cards link to their associated nodes", async () => {
-  const { user, getAllByRole, getByLabelText } = setup(
+  const { user, getAllByRole, getByLabelText } = await setup(
     <VirtuosoWrapper>
       <Search />
     </VirtuosoWrapper>,
@@ -107,7 +108,7 @@ test("setOrderedFlow is only called once on initial render", async () => {
   const sortFlowSpy = vi.spyOn(planxCore, "sortFlow");
   expect(sortFlowSpy).not.toHaveBeenCalled();
 
-  const { user, getAllByRole, getByLabelText } = setup(
+  const { user, getAllByRole, getByLabelText } = await setup(
     <VirtuosoWrapper>
       <Search />
     </VirtuosoWrapper>,
@@ -122,7 +123,7 @@ test("setOrderedFlow is only called once on initial render", async () => {
 });
 
 it("should not have any accessibility violations on initial load", async () => {
-  const { container } = setup(
+  const { container } = await setup(
     <VirtuosoWrapper>
       <Search />
     </VirtuosoWrapper>,

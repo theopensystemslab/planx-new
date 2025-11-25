@@ -134,21 +134,21 @@ describe("Header Component - Editor Route", () => {
     setState({ previewEnvironment: "standalone" });
   });
 
-  it("displays breadcrumbs", () => {
+  it("displays breadcrumbs", async () => {
     setup(<Header />);
     expect(screen.getByText("Plan✕")).toBeInTheDocument();
     expect(screen.getByText(mockTeam1.slug)).toBeInTheDocument();
     expect(screen.getByText("test-flow")).toBeInTheDocument();
   });
 
-  it("displays avatar and settings", () => {
+  it("displays avatar and settings", async () => {
     setup(<Header />);
     expect(screen.getByText("TU")).toBeInTheDocument();
     expect(screen.getByLabelText("Toggle Menu")).toBeInTheDocument();
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(<Header />);
+    const { container } = await setup(<Header />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
@@ -172,7 +172,7 @@ for (const route of ["/published", "/preview", "/draft", "/pay", "/invite"]) {
       });
     });
 
-    it("displays a logo when available", () => {
+    it("displays a logo when available", async () => {
       setup(<Header />);
       expect(screen.queryByText("Plan✕")).not.toBeInTheDocument();
       expect(screen.getByAltText(`${mockTeam1.name} Logo`)).toHaveAttribute(
@@ -181,7 +181,7 @@ for (const route of ["/published", "/preview", "/draft", "/pay", "/invite"]) {
       );
     });
 
-    it("falls back to the PlanX link when a logo is not present", () => {
+    it("falls back to the PlanX link when a logo is not present", async () => {
       act(() => setState({ teamTheme: mockTeam2.theme }));
       setup(<Header />);
       expect(
@@ -191,7 +191,7 @@ for (const route of ["/published", "/preview", "/draft", "/pay", "/invite"]) {
       act(() => setState({ teamTheme: mockTeam1.theme }));
     });
 
-    it("displays service title from the store", () => {
+    it("displays service title from the store", async () => {
       setup(<Header />);
       act(() => setState({ flowName: "test flow" }));
 
@@ -200,7 +200,7 @@ for (const route of ["/published", "/preview", "/draft", "/pay", "/invite"]) {
     });
 
     it("should not have any accessibility violations", async () => {
-      const { container } = setup(<Header />);
+      const { container } = await setup(<Header />);
       const results = await axe(container);
       expect(results).toHaveNoViolations();
     });
@@ -225,7 +225,7 @@ describe("Section navigation bar", () => {
   });
 
   describe("Flow without sections", () => {
-    it("does not display", () => {
+    it("does not display", async () => {
       setup(<Header />);
       act(() => setState({ flow: flowWithoutSections }));
       act(() => getState().initNavigationStore());
@@ -235,7 +235,7 @@ describe("Section navigation bar", () => {
   });
 
   describe("Flow with sections", () => {
-    it("displays as expected", () => {
+    it("displays as expected", async () => {
       act(() => setState({ flow: flowWithThreeSections }));
       act(() => getState().initNavigationStore());
       setup(<Header />);
@@ -243,7 +243,7 @@ describe("Section navigation bar", () => {
       expect(screen.getByTestId("navigation-bar")).toBeInTheDocument();
     });
 
-    it("display the correct information from the store", () => {
+    it("display the correct information from the store", async () => {
       act(() => setState({ flow: flowWithThreeSections }));
       act(() => getState().initNavigationStore());
       setup(<Header />);
@@ -255,7 +255,7 @@ describe("Section navigation bar", () => {
     it("should not have any accessibility violations", async () => {
       act(() => setState({ flow: flowWithThreeSections }));
       act(() => getState().initNavigationStore());
-      const { container } = setup(<Header />);
+      const { container } = await setup(<Header />);
 
       const results = await axe(container);
       expect(results).toHaveNoViolations();

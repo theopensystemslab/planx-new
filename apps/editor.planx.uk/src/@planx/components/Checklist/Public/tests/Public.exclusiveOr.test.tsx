@@ -49,7 +49,7 @@ describe.each([
   "when a user selects $optionType option",
   ({ oppositeOptionLabelText, optionLabelText }) => {
     it("deselects it when the opposite type of option is selected", async () => {
-      const { getByLabelText } = setup(
+      const { getByLabelText } = await setup(
         <Checklist
           allRequired={false}
           description=""

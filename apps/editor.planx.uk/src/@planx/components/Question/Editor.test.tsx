@@ -6,7 +6,7 @@ import { setup } from "testUtils";
 
 import Question from "./Editor";
 
-it("renders without error", () => {
+it("renders without error", async () => {
   setup(
     <DndProvider backend={HTML5Backend}>
       <Question node={{}} options={[]} />
@@ -17,7 +17,7 @@ it("renders without error", () => {
 });
 
 it("displays the options editor when the 'add new option' button is clicked", async () => {
-  const { user } = setup(
+  const { user } = await setup(
     <DndProvider backend={HTML5Backend}>
       <Question node={{}} options={[]} />
     </DndProvider>,
@@ -30,7 +30,7 @@ it("displays the options editor when the 'add new option' button is clicked", as
 
 describe("validation", () => {
   test("labels for options must be unique", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <Question node={{}} options={[]} />
       </DndProvider>,

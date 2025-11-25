@@ -5,7 +5,7 @@ import { axe } from "vitest-axe";
 import { FeeBreakdown } from "./FeeBreakdown";
 
 it("should not have any accessibility violations", async () => {
-  const { container } = setup(<FeeBreakdown />);
+  const { container } = await setup(<FeeBreakdown />);
   const results = await axe(container);
 
   expect(results).toHaveNoViolations();

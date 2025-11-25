@@ -29,7 +29,7 @@ describe("Checklist editor component", () => {
     });
   });
 
-  it("renders without error", () => {
+  it("renders without error", async () => {
     setup(
       <DndProvider backend={HTML5Backend}>
         <ChecklistEditor options={[]} />
@@ -40,7 +40,7 @@ describe("Checklist editor component", () => {
   });
 
   it("displays the grouped checklist inputs when the 'expandable' toggle is clicked", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ChecklistEditor options={[]} />
       </DndProvider>,
@@ -54,7 +54,7 @@ describe("Checklist editor component", () => {
   });
 
   it("displays the options editor when the 'add new option' button is clicked", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ChecklistEditor options={[]} />
       </DndProvider>,
@@ -67,7 +67,7 @@ describe("Checklist editor component", () => {
   });
 
   it("adds a new section when the 'add new group' button is clicked", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ChecklistEditor options={[]} />
       </DndProvider>,
@@ -85,7 +85,7 @@ describe("Checklist editor component", () => {
   });
 
   it("shows the 'add exclusive or' button only when an option has been added already", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ChecklistEditor options={[]} />
       </DndProvider>,
@@ -103,7 +103,7 @@ describe("Checklist editor component", () => {
   });
 
   it("shows an error if an exclusive 'or' option has been set alongside the 'all required' toggle", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ChecklistEditor options={[]} />
       </DndProvider>,
@@ -132,7 +132,7 @@ describe("Checklist editor component", () => {
   }, 10_000);
 
   it("shows an error if 'never put to user' is toggled on without a data field", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ChecklistEditor options={[]} />
       </DndProvider>,
@@ -154,7 +154,7 @@ describe("Checklist editor component", () => {
   });
 
   it("shows an error if no options set a data field, but one is set at the top level", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ChecklistEditor options={[]} />
       </DndProvider>,
@@ -186,7 +186,7 @@ describe("Checklist editor component", () => {
   it("does not show an error if at least one option sets a data field", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ChecklistEditor options={[]} handleSubmit={handleSubmit} />
       </DndProvider>,
@@ -225,7 +225,7 @@ describe("Checklist editor component", () => {
   }, 50_000);
 
   it("only allows a single exclusive option to be added", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ChecklistEditor options={[]} />
       </DndProvider>,
@@ -310,7 +310,7 @@ describe("Checklist editor component", () => {
   });
 
   it("shows an error if 'never put to user' is toggled on and more than one option has a blank data field", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ChecklistEditor groupedOptions={[]} />
       </DndProvider>,

@@ -13,7 +13,7 @@ test("submits contact data", async () => {
   const handleSubmit = vi.fn();
   const dataField = "applicant";
 
-  const { user } = setup(
+  const { user } = await setup(
     <ContactInput
       handleSubmit={handleSubmit}
       title="Enter your contact details"
@@ -60,7 +60,7 @@ test("recovers previously submitted text when clicking the back button", async (
   const componentId = uniqueId();
   const dataField = "applicant";
 
-  const { user } = setup(
+  const { user } = await setup(
     <ContactInput
       handleSubmit={handleSubmit}
       title="Enter your contact details"
@@ -122,7 +122,7 @@ test("recovers previously submitted text when clicking the back button when a pa
   const componentId = uniqueId();
   const dataField = "applicant.agent";
 
-  const { user } = setup(
+  const { user } = await setup(
     <ContactInput
       handleSubmit={handleSubmit}
       title=""
@@ -180,7 +180,7 @@ test("recovers previously submitted text when clicking the back button when a pa
 });
 
 it("should not have any accessibility violations on initial load", async () => {
-  const { container, user } = setup(<ContactInput title="title" />);
+  const { container, user } = await setup(<ContactInput title="title" />);
   await fillInFieldsUsingLabel(user, {
     "Title (optional)": "Mme",
     "First name": "Jane",
@@ -194,7 +194,7 @@ it("should not have any accessibility violations on initial load", async () => {
 });
 
 it("should not have any accessibility violations while in the error state", async () => {
-  const { container, user } = setup(
+  const { container, user } = await setup(
     <ContactInput title="Enter your contact details" id="testId" />,
   );
 
@@ -223,7 +223,7 @@ test("does not allow the name 'Test Test' to be used", async () => {
   const handleSubmit = vi.fn();
   const dataField = "applicant";
 
-  const { user } = setup(
+  const { user } = await setup(
     <ContactInput
       handleSubmit={handleSubmit}
       title="Enter your contact details"
@@ -251,7 +251,7 @@ test("does not allow the name 'Test Test' to be used", async () => {
 test("requires a non-empty string before being able to continue", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <ContactInput
       handleSubmit={handleSubmit}
       title="Enter your contact details"

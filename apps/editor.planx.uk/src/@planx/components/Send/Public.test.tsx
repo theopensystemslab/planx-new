@@ -48,18 +48,18 @@ afterEach(() => {
   act(() => setState(initialState));
 });
 
-it("displays a warning at /draft URLs", () => {
+it("displays a warning at /draft URLs", async () => {
   window.history.pushState({}, "", "/draft");
-  const { getByText } = setup(
+  const { getByText } = await setup(
     <SendComponent title="Send" destinations={["bops", "uniform"]} />,
   );
 
   expect(getByText(/You can only test submissions on/)).toBeVisible();
 });
 
-it("displays a warning at /preview URLs", () => {
+it("displays a warning at /preview URLs", async () => {
   window.history.pushState({}, "", "/preview");
-  const { getByText } = setup(
+  const { getByText } = await setup(
     <SendComponent title="Send" destinations={["bops", "uniform"]} />,
   );
 
@@ -68,7 +68,7 @@ it("displays a warning at /preview URLs", () => {
 
 it("displays loading messages to the user", async () => {
   const handleSubmit = vi.fn();
-  const { findByText } = setup(
+  const { findByText } = await setup(
     <SendComponent
       title="Send"
       destinations={["bops", "uniform"]}
@@ -145,7 +145,7 @@ it("generates a valid breadcrumb", { retry: 1 }, async () => {
 
 it("should not have any accessibility violations", async () => {
   const handleSubmit = vi.fn();
-  const { container } = setup(
+  const { container } = await setup(
     <SendComponent
       title="Send"
       destinations={["bops", "uniform"]}
@@ -168,7 +168,7 @@ describe("demo state", () => {
   });
 
   it("should render an error when teamSlug is demo", async () => {
-    const { queryByText } = setup(
+    const { queryByText } = await setup(
       <SendComponent title="Send" destinations={["bops", "uniform"]} />,
     );
 
@@ -186,7 +186,7 @@ describe("demo state", () => {
   it("should allow the user to continue with their application", async () => {
     const handleSubmit = vi.fn();
 
-    const { findByRole, user } = setup(
+    const { findByRole, user } = await setup(
       <SendComponent
         title="Send"
         destinations={["bops", "uniform"]}

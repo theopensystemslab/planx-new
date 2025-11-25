@@ -16,7 +16,7 @@ describe("Checklist Component - Grouped Layout", () => {
   it("answers are submitted in order they were supplied", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <Checklist
         allRequired={false}
         description=""
@@ -40,7 +40,7 @@ describe("Checklist Component - Grouped Layout", () => {
   it("displays descriptions when provided", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <Checklist
         allRequired={false}
         description=""
@@ -65,7 +65,7 @@ describe("Checklist Component - Grouped Layout", () => {
   it("recovers checkboxes state when clicking the back button", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <Checklist
         allRequired={false}
         description=""
@@ -90,7 +90,7 @@ describe("Checklist Component - Grouped Layout", () => {
   it("handles exclusive Or options correctly", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <Checklist
         allRequired={false}
         description=""
@@ -132,7 +132,7 @@ describe("Checklist Component - Grouped Layout", () => {
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(
+    const { container } = await setup(
       <Checklist
         allRequired={false}
         description=""
@@ -147,7 +147,7 @@ describe("Checklist Component - Grouped Layout", () => {
   it("should be navigable by keyboard", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <Checklist
         allRequired={false}
         description=""
@@ -201,7 +201,7 @@ describe("Checklist Component - Grouped Layout", () => {
 
 describe("toggling options by matching data values and labels", () => {
   it("toggles and and off options in another group when both the label and data value match", async () => {
-    const { user } = setup(<Checklist {...mockWithRepeatedOptions} />);
+    const { user } = await setup(<Checklist {...mockWithRepeatedOptions} />);
 
     await user.click(screen.getByText("Common projects for homes"));
     await user.click(screen.getByText("Extensions"));
@@ -248,7 +248,7 @@ describe("toggling options by matching data values and labels", () => {
       },
     });
 
-    const { user } = setup(<Checklist {...mockProps} />);
+    const { user } = await setup(<Checklist {...mockProps} />);
 
     await user.click(screen.getByText("Common projects for homes"));
     await user.click(screen.getByText("Extensions"));
@@ -297,7 +297,7 @@ describe("toggling options by matching data values and labels", () => {
       },
     });
 
-    const { user } = setup(<Checklist {...mockProps} />);
+    const { user } = await setup(<Checklist {...mockProps} />);
 
     await user.click(screen.getByText("Common projects for homes"));
     await user.click(screen.getByText("Extensions"));
@@ -351,7 +351,7 @@ describe("toggling options by matching data values and labels", () => {
       ],
     };
 
-    const { user } = setup(<Checklist {...mockProps} />);
+    const { user } = await setup(<Checklist {...mockProps} />);
 
     await user.click(screen.getByText("Electricals"));
 
@@ -389,7 +389,7 @@ describe("toggling options by matching data values and labels", () => {
   it("adds all checked options to the passport", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <Checklist {...mockWithRepeatedOptions} handleSubmit={handleSubmit} />,
     );
 

@@ -35,7 +35,7 @@ test("renders a warning for editors if address data is not in state", async () =
 test("renders correctly when property override is enabled", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <MockedProvider>
       <Presentational
         {...defaultPresentationalProps}
@@ -55,7 +55,7 @@ test("renders correctly when property override is enabled", async () => {
 test("renders correctly when property override is toggled off", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <MockedProvider>
       <Presentational
         {...defaultPresentationalProps}

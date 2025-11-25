@@ -41,7 +41,7 @@ vi.mock("swr", () => ({
 
 describe("error state", () => {
   it("renders an error if no address is present in the passport", async () => {
-    const { getByRole, getByTestId } = setup(
+    const { getByRole, getByTestId } = await setup(
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <PlanningConstraints
           title="Planning constraints"
@@ -59,7 +59,7 @@ describe("error state", () => {
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(
+    const { container } = await setup(
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <PlanningConstraints
           title="Planning constraints"
@@ -91,7 +91,7 @@ describe("following a FindProperty component", () => {
   it("renders correctly", async () => {
     const handleSubmit = vi.fn();
 
-    const { user, getByRole, getByTestId } = setup(
+    const { user, getByRole, getByTestId } = await setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
@@ -112,7 +112,7 @@ describe("following a FindProperty component", () => {
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(
+    const { container } = await setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
@@ -147,7 +147,7 @@ describe("following a FindProperty component", () => {
     expect(swrResponse).toEqual({ data: digitalLandResponseMock });
   });
 
-  it("fetches classified roads when a USRN is provided", () => {
+  it("fetches classified roads when a USRN is provided", async () => {
     setup(
       <PlanningConstraints
         title="Planning constraints"
@@ -213,7 +213,7 @@ describe("following a FindProperty component", () => {
   });
 
   test("basic layout and interactions", async () => {
-    const { user, getByRole, queryByRole, getByTestId } = setup(
+    const { user, getByRole, queryByRole, getByTestId } = await setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
@@ -251,7 +251,7 @@ describe("following a FindProperty component", () => {
   });
 
   test("default disclaimer text should render if none provided", async () => {
-    const { queryByText } = setup(
+    const { queryByText } = await setup(
       // @ts-ignore - we deliberately want to test the case where PlanningConstraints is missing the disclaimer prop
       <PlanningConstraints
         title="Planning constraints"
@@ -363,7 +363,7 @@ describe("demo state", () => {
   });
   it("should render an error when teamSlug is demo", async () => {
     const handleSubmit = vi.fn();
-    const { queryByText, queryByRole, user, getByTestId } = setup(
+    const { queryByText, queryByRole, user, getByTestId } = await setup(
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <PlanningConstraints
           title="Planning constraints"

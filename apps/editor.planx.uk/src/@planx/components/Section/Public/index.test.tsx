@@ -8,7 +8,7 @@ import { axe } from "vitest-axe";
 import Section, { SectionsOverviewList, SectionsOverviewListProps } from ".";
 
 describe("Section component", () => {
-  it("renders correctly", () => {
+  it("renders correctly", async () => {
     const handleSubmit = vi.fn();
     setup(
       <Section
@@ -27,7 +27,7 @@ describe("Section component", () => {
   it("should not have any accessibility violations", async () => {
     const handleSubmit = vi.fn();
 
-    const { container } = setup(
+    const { container } = await setup(
       <Section
         title="Section one"
         description="Description of section one"
@@ -96,7 +96,7 @@ describe("SectionsOverviewList component", () => {
     },
   };
 
-  it("renders correctly", () => {
+  it("renders correctly", async () => {
     setup(<SectionsOverviewList {...defaultProps} />);
 
     const sectionOneLink = screen.getByRole("link", {
@@ -114,7 +114,7 @@ describe("SectionsOverviewList component", () => {
     expect(screen.getByText(SectionStatus.NotStarted)).toBeInTheDocument();
   });
 
-  it("does not link section header text when showChange is false", () => {
+  it("does not link section header text when showChange is false", async () => {
     setup(<SectionsOverviewList {...defaultProps} showChange={false} />);
 
     expect(screen.getByText("Section one")).toBeInTheDocument();
@@ -126,7 +126,7 @@ describe("SectionsOverviewList component", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("creates clickable links for completed sections when showChange is true", () => {
+  it("creates clickable links for completed sections when showChange is true", async () => {
     const mockChangeAnswer = vi.fn();
     setup(
       <SectionsOverviewList
@@ -143,7 +143,7 @@ describe("SectionsOverviewList component", () => {
     expect(sectionOneLink).toHaveTextContent("Section one");
   });
 
-  it("creates clickable links for sections that are ready to start or continue", () => {
+  it("creates clickable links for sections that are ready to start or continue", async () => {
     const mockNextQuestion = vi.fn();
     setup(
       <SectionsOverviewList
@@ -158,7 +158,7 @@ describe("SectionsOverviewList component", () => {
     expect(sectionTwoLink).toHaveTextContent("Section two");
   });
 
-  it("does not create links for non-actionable sections", () => {
+  it("does not create links for non-actionable sections", async () => {
     setup(<SectionsOverviewList {...defaultProps} />);
 
     expect(screen.getByText("Section three")).toBeInTheDocument();
@@ -168,7 +168,9 @@ describe("SectionsOverviewList component", () => {
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(<SectionsOverviewList {...defaultProps} />);
+    const { container } = await setup(
+      <SectionsOverviewList {...defaultProps} />,
+    );
 
     const results = await axe(container);
     expect(results).toHaveNoViolations();

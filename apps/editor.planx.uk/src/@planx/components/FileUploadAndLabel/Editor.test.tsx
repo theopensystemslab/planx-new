@@ -24,7 +24,7 @@ describe("FileUploadAndLabel - Editor Modal", () => {
     });
   });
 
-  it("renders", () => {
+  it("renders", async () => {
     setup(
       <DndProvider backend={HTML5Backend}>
         <FileUploadAndLabelComponent id="test" />
@@ -33,7 +33,7 @@ describe("FileUploadAndLabel - Editor Modal", () => {
     expect(screen.getByText("Upload and label")).toBeInTheDocument();
   });
 
-  it("initialises with a single rule", () => {
+  it("initialises with a single rule", async () => {
     setup(
       <DndProvider backend={HTML5Backend}>
         <FileUploadAndLabelComponent id="test" />
@@ -43,7 +43,7 @@ describe("FileUploadAndLabel - Editor Modal", () => {
   });
 
   it("allows an Editor to add multiple rules", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <FileUploadAndLabelComponent id="test" />
       </DndProvider>,

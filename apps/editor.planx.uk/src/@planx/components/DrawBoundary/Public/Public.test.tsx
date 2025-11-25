@@ -44,7 +44,7 @@ test("recovers previously submitted files when clicking the back button", async 
     ],
   };
 
-  const { user } = setup(
+  const { user } = await setup(
     <DrawBoundary
       fn="proposal.site"
       description=""
@@ -86,7 +86,7 @@ test("recovers previously submitted drawing when clicking the back button", asyn
     },
   };
 
-  const { user } = setup(
+  const { user } = await setup(
     <DrawBoundary
       fn="proposal.site"
       description=""
@@ -108,7 +108,7 @@ test("recovers previously submitted drawing when clicking the back button", asyn
 });
 
 it("should not have any accessibility violations", async () => {
-  const { container } = setup(
+  const { container } = await setup(
     <DrawBoundary
       fn="proposal.site"
       description="description1"
@@ -124,7 +124,7 @@ it("should not have any accessibility violations", async () => {
 test("shows the file upload option by default and requires user data to continue from either page", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <DrawBoundary
       fn="proposal.site"
       description=""
@@ -159,7 +159,7 @@ test("shows the file upload option by default and requires user data to continue
 test("hides the upload option and allows user to continue without drawing if editor specifies", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <DrawBoundary
       fn="proposal.site"
       description=""
@@ -182,7 +182,7 @@ test("captures output data in the correct format when uploading a file", async (
 
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <DrawBoundary
       fn="proposal.site"
       description=""
@@ -323,7 +323,7 @@ test("appends to existing '_requestedFiles' value", async () => {
 
   act(() => setState({ flow, breadcrumbs }));
 
-  const { user } = setup(
+  const { user } = await setup(
     <DrawBoundary
       fn="proposal.site"
       description=""
@@ -400,7 +400,7 @@ test("submits data based on the page you continue onwards from", async () => {
     },
   };
 
-  const { user } = setup(
+  const { user } = await setup(
     <DrawBoundary
       fn="proposal.site"
       description=""
