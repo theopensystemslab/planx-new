@@ -54,9 +54,11 @@ export const setupNotificationForDeploymentRollback = (
       eventPattern: pulumi.jsonStringify({
         source: ["aws.ecs"],
         "detail-type": ["ECS Deployment State Change"],
+        // with awsx at 0.x, we can't get the service ARN directly, so we filter on service name
+        // see https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-create-pattern-operators.html
+        resources: [{ "suffix": { "equals-ignore-case": service.service.name }}],
         detail: {
           clusterArn: [cluster.cluster.arn],
-          serviceName: [service.service.name],
           eventType: ["ERROR"],
           eventName: ["SERVICE_DEPLOYMENT_FAILED"],
         }
