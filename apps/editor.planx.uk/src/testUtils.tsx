@@ -1,7 +1,15 @@
 /* eslint-disable no-restricted-imports */
 import { ThemeProvider } from "@mui/material";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, RenderResult } from "@testing-library/react";
+import {
+  createMemoryHistory,
+  createRootRoute,
+  createRoute,
+  createRouter,
+  Outlet,
+  RouterProvider,
+} from "@tanstack/react-router";
+import { render, RenderResult, waitFor } from "@testing-library/react";
 import type { UserEvent } from "@testing-library/user-event";
 import userEvent from "@testing-library/user-event";
 import React from "react";
@@ -22,16 +30,60 @@ const testQueryClient = new QueryClient({
 });
 
 /**
- * Setup @testing-library/react environment with userEvent
+ * Setup @testing-library/react environment with userEvent and TanStack Router
  * https://testing-library.com/docs/user-event/intro#writing-tests-with-userevent
+ *
+ * Note: This function is async to allow the router to finish rendering.
+ * Tests must await the setup() call.
  */
-export const setup = (
+export const setup = async (
   jsx: JSX.Element,
-): Record<"user", UserEvent> & RenderResult => ({
-  user: userEvent.setup(),
-  ...render(
-    <QueryClientProvider client={testQueryClient}>
-      <ThemeProvider theme={defaultTheme}>{jsx}</ThemeProvider>
-    </QueryClientProvider>,
-  ),
-});
+): Promise<Record<"user", UserEvent> & RenderResult> => {
+  testQueryClient.clear();
+
+  const rootRoute = createRootRoute({
+    component: () => (
+      <QueryClientProvider client={testQueryClient}>
+        <ThemeProvider theme={defaultTheme}>
+          <Outlet />
+        </ThemeProvider>
+      </QueryClientProvider>
+    ),
+  });
+
+  const indexRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: "/",
+    component: () => <>{jsx}</>,
+  });
+
+  const routeTree = rootRoute.addChildren([indexRoute]);
+
+  const history = createMemoryHistory({
+    initialEntries: ["/"],
+  });
+
+  const router = createRouter({
+    routeTree,
+    history,
+    defaultPendingMinMs: 0,
+  });
+
+  const renderResult = render(<RouterProvider router={router} />);
+
+  // Wait for router to finish initial render
+  // Check that router state is idle (not pending/loading)
+  await waitFor(
+    () => {
+      if (router.state.isLoading) {
+        throw new Error("Router still loading");
+      }
+    },
+    { timeout: 1000 },
+  );
+
+  return {
+    user: userEvent.setup(),
+    ...renderResult,
+  };
+};
