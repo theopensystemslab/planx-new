@@ -7,8 +7,6 @@ import InputLabel from "ui/editor/InputLabel";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import SettingsDescription from "ui/editor/SettingsDescription";
 import Input, { Props as InputProps } from "ui/shared/Input/Input";
-import InputRow from "ui/shared/InputRow";
-import InputRowItem from "ui/shared/InputRowItem";
 import { Switch } from "ui/shared/Switch";
 
 export const TextInput: React.FC<{
