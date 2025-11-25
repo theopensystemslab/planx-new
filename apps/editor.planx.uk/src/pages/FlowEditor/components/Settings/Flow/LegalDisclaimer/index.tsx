@@ -24,7 +24,7 @@ const LegalDisclaimer: React.FC = () => {
       mutation={UPDATE_FLOW_SETTINGS}
       validationSchema={textContentValidationSchema}
       legend="Legal disclaimer"
-      description="Displayed on the 'Result' pages of the service (if it contains any)"
+      description="Displayed on the 'Result' pages of the service (if it contains any)."
       defaultValues={defaultValues}
       getInitialValues={({ flow: { settings } }) =>
         settings?.elements?.legalDisclaimer || DEFAULT_TEXT_CONTENT

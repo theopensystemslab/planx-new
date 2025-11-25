@@ -14,7 +14,8 @@ const CATEGORIES: { value: LPSCategory; label: string; description: string }[] =
     {
       value: "apply",
       label: "Application service",
-      description: "Submits a planning application to your back office system",
+      description:
+        "Submits a planning application to your selected 'Send' destinations",
     },
     {
       value: "guidance",
