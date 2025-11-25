@@ -21,7 +21,7 @@ export const createHasuraService = async ({
   stacks: {
     networking, certificates, data,
   },
-}: CreateService) => {
+}: CreateService): Promise<awsx.ecs.FargateService> => {
 
   const config = new pulumi.Config();
   const DOMAIN: string = await certificates.requireOutputValue("domain");
@@ -241,4 +241,5 @@ export const createHasuraService = async ({
   });
 
   setupNotificationForDeploymentRollback("hasura", cluster, hasuraService);
+  return hasuraService;
 }
