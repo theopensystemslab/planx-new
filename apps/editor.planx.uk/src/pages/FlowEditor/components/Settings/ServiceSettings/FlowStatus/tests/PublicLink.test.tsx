@@ -125,7 +125,7 @@ describe("A team with a subdomain has an online, published service.", () => {
   it("can be copied to the clipboard", async () => {
     const { flowSlug, teamDomain } = getState();
     // render the <ServiceSettings/> comp
-    const user = await setupServiceSettingsScreen();
+    const { user } = await setupServiceSettingsScreen();
 
     const copyButton = screen.getByRole("button", { name: `copy` });
 
@@ -243,15 +243,15 @@ describe("A team without a subdomain has an online, published service.", () => {
   });
 
   // eslint-disable-next-line @vitest/expect-expect
-  it("has an enabled copy button", () => {
+  it("has an enabled copy button", async () => {
     // render the <ServiceSettings/> comp
-    setupServiceSettingsScreen();
+    await setupServiceSettingsScreen();
     enabledCopyCheck();
   });
 
   it("can be copied to the clipboard", async () => {
     // render the <ServiceSettings/> comp
-    const user = await setupServiceSettingsScreen();
+    const { user } = await setupServiceSettingsScreen();
     const copyButton = screen.getByRole("button", { name: `copy` });
 
     user.click(copyButton);

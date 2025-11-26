@@ -69,7 +69,7 @@ describe("Payload generation", () => {
     async () => {
       const handleSubmit = vi.fn();
       const { getByTestId, user, getByRole, getAllByRole, getByLabelText } =
-        setup(
+        await setup(
           <ListComponent {...mockUnitsProps} handleSubmit={handleSubmit} />,
         );
 

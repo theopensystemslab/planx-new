@@ -165,7 +165,7 @@ describe("Building a list", () => {
         user,
         getByLabelText,
         queryAllByTestId,
-      } = setup(<ListComponent {...mockZooProps} />);
+      } = await setup(<ListComponent {...mockZooProps} />);
 
       await fillInResponse(user);
 
@@ -275,7 +275,7 @@ describe("Building a list", () => {
     { timeout: 35_000 },
     async () => {
       const { getAllByTestId, getByText, user, queryAllByTestId, getByTestId } =
-        setup(<ListComponent {...mockZooProps} />);
+        await setup(<ListComponent {...mockZooProps} />);
 
       let cards = getAllByTestId(/list-card/);
       expect(cards).toHaveLength(1);
@@ -313,7 +313,7 @@ describe("Building a list", () => {
         getByTestId,
         getAllByTestId,
         getAllByText,
-      } = setup(<ListComponent {...mockZooProps} />);
+      } = await setup(<ListComponent {...mockZooProps} />);
 
       await fillInResponse(user);
 

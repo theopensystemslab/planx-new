@@ -1,8 +1,7 @@
 import * as planxCore from "@opensystemslab/planx-core";
 import { waitFor, within } from "@testing-library/react";
-import { FullStore, useStore } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { act } from "react-dom/test-utils";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
@@ -95,7 +94,7 @@ test("cards link to their associated nodes", async () => {
 it("orderedFlow is set in the store on render of Search", async () => {
   expect(getState().orderedFlow).toBeUndefined();
 
-  setup(
+  await setup(
     <VirtuosoWrapper>
       <Search />
     </VirtuosoWrapper>,
@@ -142,7 +141,7 @@ describe("rich text fields", () => {
       getByText,
       queryByText,
       getByLabelText,
-    } = setup(
+    } = await setup(
       <VirtuosoWrapper>
         <Search />
       </VirtuosoWrapper>,

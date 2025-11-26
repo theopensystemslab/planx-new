@@ -34,7 +34,7 @@ describe("Basic UI", () => {
       getByRole,
       queryAllByRole,
       queryByTestId,
-    } = setup(<ListComponent {...mockZooProps} />);
+    } = await setup(<ListComponent {...mockZooProps} />);
 
     // Text inputs are generated from schema...
     const textInput = getByLabelText(/What's their name?/) as HTMLInputElement;
