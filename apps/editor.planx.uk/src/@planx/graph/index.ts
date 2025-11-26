@@ -528,17 +528,22 @@ const memoizedNodesIdsByGraph = new WeakMap<Graph, string[]>();
 
 export const sortIdsDepthFirst =
   (graph: Graph) =>
-  (nodeIds: Set<string>): Array<string> => {
-    const allNodeIdsSorted = memoizedNodesIdsByGraph.has(graph)
-      ? memoizedNodesIdsByGraph.get(graph)!
-      : dfs(graph)(ROOT_NODE_KEY);
+    (nodeIds: Set<string>): Array<string> => {
+      const allNodeIdsSorted = memoizedNodesIdsByGraph.has(graph)
+        ? memoizedNodesIdsByGraph.get(graph)!
+        : dfs(graph)(ROOT_NODE_KEY);
 
-    memoizedNodesIdsByGraph.set(graph, allNodeIdsSorted);
+      memoizedNodesIdsByGraph.set(graph, allNodeIdsSorted);
 
-    return Array.from(nodeIds).sort(
-      (a, b) => allNodeIdsSorted.indexOf(a) - allNodeIdsSorted.indexOf(b),
-    );
-  };
+      const positionMap = new Map<string, number>();
+      allNodeIdsSorted.forEach((id, index) => positionMap.set(id, index));
+
+      return Array.from(nodeIds).sort((a, b) => {
+        const indexA = positionMap.get(a) ?? -1;
+        const indexB = positionMap.get(b) ?? -1;
+        return indexA - indexB;
+      });
+    };
 
 /**
  * Translates a list of ShareDB operations into a human-readable change summary.
