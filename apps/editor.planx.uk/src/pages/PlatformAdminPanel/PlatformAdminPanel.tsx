@@ -14,7 +14,7 @@ import {
   True as Configured,
 } from "../../ui/shared/DataTable/components/cellIcons";
 import { useAdminPanel } from "./useAdminPanel";
-import { getFlowNamesForFilter } from "./utils";
+import { formatDate, getFlowNamesForFilter } from "./utils";
 
 export const PlatformAdminPanel = () => {
   const { data, loading, error } = useAdminPanel();
