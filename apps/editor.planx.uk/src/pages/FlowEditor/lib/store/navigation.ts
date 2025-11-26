@@ -1,7 +1,7 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { NodeTag } from "@opensystemslab/planx-core/types";
 import { Section } from "@planx/components/Section/model";
-import { sortIdsDepthFirst } from "@planx/graph";
+import { ROOT_NODE_KEY, sortIdsDepthFirst } from "@planx/graph";
 import { findLast, pick, sum } from "lodash";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { StateCreator } from "zustand";
@@ -31,6 +31,7 @@ export interface NavigationStore {
   filterFlowByTag: (tag: NodeTag) => Store.Flow;
   getSortedBreadcrumbsBySection: () => Store.Breadcrumbs[];
   getSectionForNode: (nodeId: string) => SectionNode;
+  _getSortedSections: () => Record<string, SectionNode>;
   _calculateSectionProgress: (
     currentSectionIndex: number,
   ) => Progress | undefined;
@@ -58,15 +59,16 @@ export const navigationStore: StateCreator<
    * Called by setFlow() as we require a flow from the DB before proceeding
    */
   initNavigationStore: () => {
-    const sectionNodes = get().filterFlowByType(TYPES.Section) as Record<
-      string,
-      SectionNode
-    >;
+    const {
+      currentSectionIndex,
+      _calculateSectionProgress,
+      _getSortedSections,
+    } = get();
+
+    const sectionNodes = _getSortedSections();
     const sectionCount = Object.keys(sectionNodes).length;
     const hasSections = Boolean(sectionCount);
     const currentSectionTitle = Object.values(sectionNodes)[0]?.data.title;
-
-    const { currentSectionIndex, _calculateSectionProgress } = get();
     const sectionProgress = _calculateSectionProgress(currentSectionIndex);
 
     set({
@@ -246,5 +248,32 @@ export const navigationStore: StateCreator<
     const completedPercentage = (completedWeight / totalWeight) * 100;
 
     return { completed: completedPercentage, current: currentPercentage };
+  },
+
+  _getSortedSections: () => {
+    const { flow } = get();
+    const sortedSections: Record<string, SectionNode> = {};
+    const rootEdges = flow[ROOT_NODE_KEY]?.edges || [];
+
+    rootEdges.forEach((nodeId) => {
+      const node = flow[nodeId];
+      if (!node) return;
+
+      if (node.type === TYPES.Section) {
+        // Section directly on the root
+        sortedSections[nodeId] = node as SectionNode;
+      } else if (node.type === TYPES.InternalPortal) {
+        // Section is within a folder / internal portal
+        const folderEdges = node.edges || [];
+        folderEdges.forEach((childId) => {
+          const childNode = flow[childId];
+          if (childNode?.type === TYPES.Section) {
+            sortedSections[childId] = childNode as SectionNode;
+          }
+        });
+      }
+    });
+
+    return sortedSections;
   },
 });
