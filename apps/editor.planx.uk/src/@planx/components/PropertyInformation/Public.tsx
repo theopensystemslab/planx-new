@@ -54,14 +54,20 @@ function Component(props: PublicProps<PropertyInformation>) {
       blpuCodes={blpuCodes}
       overrideAnswer={overrideAnswer}
       handleSubmit={() => {
+        const passportData: Record<string, any> = {};
+
+        // If no property.type exists, set it to "unclassified" as a fallback
+        const existingPropertyType = passport.data?.["property.type"];
+        if (!existingPropertyType || existingPropertyType.length === 0) {
+          passportData["property.type"] = ["unclassified"];
+        }
+
         // If the user changed their property type, they'll already have a previous PropertyInformation breadcrumb that set `_overrides`
         const hasOverrodeAnswer =
           passport.data?.["_overrides"]?.["property.type"];
-        const passportData = {
-          "propertyInformation.action": hasOverrodeAnswer
-            ? "Changed the property type"
-            : "Accepted the property type",
-        };
+        passportData["propertyInformation.action"] = hasOverrodeAnswer
+          ? "Changed the property type"
+          : "Accepted the property type";
 
         props.handleSubmit?.({
           data: passportData,
