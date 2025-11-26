@@ -9,17 +9,17 @@ import Question from "./Editor";
 it("renders without error", () => {
   setup(
     <DndProvider backend={HTML5Backend}>
-      <Question node={{}} options={[]}/>
+      <Question node={{}} options={[]} />
     </DndProvider>,
   );
   expect(screen.getByText("Question")).toBeInTheDocument();
-  expect(screen.getByText("add new")).toBeInTheDocument();
+  expect(screen.getByText("add new option")).toBeInTheDocument();
 });
 
 it("displays the options editor when the 'add new option' button is clicked", async () => {
   const { user } = setup(
     <DndProvider backend={HTML5Backend}>
-      <Question node={{}} options={[]}/>
+      <Question node={{}} options={[]} />
     </DndProvider>,
   );
   await user.click(screen.getByRole("button", { name: /add new/i }));

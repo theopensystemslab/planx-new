@@ -15,7 +15,7 @@ it("renders without error", () => {
     </DndProvider>,
   );
   expect(screen.getByText("Responsive question")).toBeInTheDocument();
-  expect(screen.getByText("add new")).toBeInTheDocument();
+  expect(screen.getByText("add new option")).toBeInTheDocument();
 });
 
 it("displays the options editor when the 'add new option' button is clicked", async () => {
@@ -36,12 +36,30 @@ it("displays the options editor when the 'add new option' button is clicked", as
 it("populates the modal with existing data", async () => {
   setup(
     <DndProvider backend={HTML5Backend}>
-      <ResponsiveQuestion 
-        node={{ data: { text: "My title", description: "My description" } }} 
+      <ResponsiveQuestion
+        node={{ data: { text: "My title", description: "My description" } }}
         options={[
-          { id: "1", data: { text: "First option", rule: { condition: Condition.AlwaysRequired } }},
-          { id: "2", data: { text: "Second option", rule: { condition: Condition.RequiredIf, operator: Operator.Equals, fn: "mockFn", val: "mockVal" } }},
-      ]} />
+          {
+            id: "1",
+            data: {
+              text: "First option",
+              rule: { condition: Condition.AlwaysRequired },
+            },
+          },
+          {
+            id: "2",
+            data: {
+              text: "Second option",
+              rule: {
+                condition: Condition.RequiredIf,
+                operator: Operator.Equals,
+                fn: "mockFn",
+                val: "mockVal",
+              },
+            },
+          },
+        ]}
+      />
     </DndProvider>,
   );
 
@@ -77,48 +95,54 @@ it("can construct a valid payload", async () => {
   await user.click(ruleDropdowns[1]);
   await user.click(await screen.findByRole("option", { name: /required if/i }));
 
-  const conditionalField = (await screen.findAllByPlaceholderText("Data field")).at(-1);
+  const conditionalField = (
+    await screen.findAllByPlaceholderText("Data field")
+  ).at(-1);
   expect(conditionalField).toBeInTheDocument();
   await user.type(conditionalField!, "mockOptionFn");
 
-  const conditionalValue = (await screen.findAllByPlaceholderText("Value")).at(-1);
+  const conditionalValue = (await screen.findAllByPlaceholderText("Value")).at(
+    -1,
+  );
   expect(conditionalValue).toBeInTheDocument();
   await user.type(conditionalValue!, "mockOptionVal{enter}");
 
   // Submit form
   fireEvent.submit(screen.getByTestId("question-component-form"));
 
-  await waitFor(() => expect(handleSubmit).toHaveBeenCalledWith(
-    // ResponsiveQuestion node
-    expect.objectContaining({
-      type: ComponentType.ResponsiveQuestion,
-      data: expect.objectContaining({
-        text: "mockTitle",
-      })
-    }),
-    expect.arrayContaining([
-      // First Answer node
+  await waitFor(() =>
+    expect(handleSubmit).toHaveBeenCalledWith(
+      // ResponsiveQuestion node
       expect.objectContaining({
-        type: ComponentType.Answer,
+        type: ComponentType.ResponsiveQuestion,
         data: expect.objectContaining({
-          text: "First Option",
-          rule: expect.objectContaining({
-            condition: "AlwaysRequired",
-          })
+          text: "mockTitle",
         }),
       }),
-      // Second Answer node
-      expect.objectContaining({
-        type: ComponentType.Answer,
-        data: expect.objectContaining({
-          text: "Second Option",
-          rule: expect.objectContaining({
-            condition: "RequiredIf",
-            fn: "mockOptionFn",
-            val: "mockOptionVal"
+      expect.arrayContaining([
+        // First Answer node
+        expect.objectContaining({
+          type: ComponentType.Answer,
+          data: expect.objectContaining({
+            text: "First Option",
+            rule: expect.objectContaining({
+              condition: "AlwaysRequired",
+            }),
           }),
-        })
-      })
-    ])
-  ));
+        }),
+        // Second Answer node
+        expect.objectContaining({
+          type: ComponentType.Answer,
+          data: expect.objectContaining({
+            text: "Second Option",
+            rule: expect.objectContaining({
+              condition: "RequiredIf",
+              fn: "mockOptionFn",
+              val: "mockOptionVal",
+            }),
+          }),
+        }),
+      ]),
+    ),
+  );
 }, 20_000);
