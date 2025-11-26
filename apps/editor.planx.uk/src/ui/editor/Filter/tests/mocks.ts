@@ -1,34 +1,9 @@
-import { vi } from "vitest";
-
 import { FilterOptions } from "../Filter";
 
 export type MockRecordType = {
   name: string;
   status: "online" | "offline";
 };
-
-export const mockRecords: MockRecordType[] = [
-  {
-    name: "offline-mock",
-    status: "offline",
-  },
-  {
-    name: "online-mock",
-    status: "online",
-  },
-  {
-    name: "online-mock-2",
-    status: "online",
-  },
-  {
-    name: "offline-mock-2",
-    status: "online",
-  },
-];
-
-export const mockSetFilteredRecords = vi.fn() as React.Dispatch<
-  React.SetStateAction<MockRecordType[] | null>
->;
 
 export const mockFilterOptions: FilterOptions<MockRecordType>[] = [
   {
