@@ -8,7 +8,7 @@ import AddressInputComponent from "./Editor";
 
 describe("AddressInputComponent - Editor Modal", () => {
   it("renders", async () => {
-    setup(
+    await setup(
       <DndProvider backend={HTML5Backend}>
         <AddressInputComponent id="test" />
       </DndProvider>,

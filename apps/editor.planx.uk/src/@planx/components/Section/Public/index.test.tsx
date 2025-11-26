@@ -10,7 +10,7 @@ import Section, { SectionsOverviewList, SectionsOverviewListProps } from ".";
 describe("Section component", () => {
   it("renders correctly", async () => {
     const handleSubmit = vi.fn();
-    setup(
+    await setup(
       <Section
         title="Section one"
         description="Description of section one"
@@ -97,7 +97,7 @@ describe("SectionsOverviewList component", () => {
   };
 
   it("renders correctly", async () => {
-    setup(<SectionsOverviewList {...defaultProps} />);
+    await setup(<SectionsOverviewList {...defaultProps} />);
 
     const sectionOneLink = screen.getByRole("link", {
       name: "Change Section one",
@@ -115,7 +115,7 @@ describe("SectionsOverviewList component", () => {
   });
 
   it("does not link section header text when showChange is false", async () => {
-    setup(<SectionsOverviewList {...defaultProps} showChange={false} />);
+    await setup(<SectionsOverviewList {...defaultProps} showChange={false} />);
 
     expect(screen.getByText("Section one")).toBeInTheDocument();
     expect(
@@ -128,7 +128,7 @@ describe("SectionsOverviewList component", () => {
 
   it("creates clickable links for completed sections when showChange is true", async () => {
     const mockChangeAnswer = vi.fn();
-    setup(
+    await setup(
       <SectionsOverviewList
         {...defaultProps}
         changeAnswer={mockChangeAnswer}
@@ -145,7 +145,7 @@ describe("SectionsOverviewList component", () => {
 
   it("creates clickable links for sections that are ready to start or continue", async () => {
     const mockNextQuestion = vi.fn();
-    setup(
+    await setup(
       <SectionsOverviewList
         {...defaultProps}
         nextQuestion={mockNextQuestion}
@@ -159,7 +159,7 @@ describe("SectionsOverviewList component", () => {
   });
 
   it("does not create links for non-actionable sections", async () => {
-    setup(<SectionsOverviewList {...defaultProps} />);
+    await setup(<SectionsOverviewList {...defaultProps} />);
 
     expect(screen.getByText("Section three")).toBeInTheDocument();
     expect(

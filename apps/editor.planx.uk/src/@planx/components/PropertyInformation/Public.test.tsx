@@ -18,7 +18,7 @@ const defaultPresentationalProps: PresentationalProps = {
 };
 
 test("renders a warning for editors if address data is not in state", async () => {
-  setup(
+  await setup(
     <MockedProvider>
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <PropertyInformation

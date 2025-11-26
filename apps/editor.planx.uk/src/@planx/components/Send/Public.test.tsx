@@ -101,7 +101,7 @@ it("generates a valid payload for the API", async () => {
   );
   server.use(handler);
 
-  setup(
+  await setup(
     <SendComponent
       title="Send"
       destinations={destinations}
@@ -123,7 +123,7 @@ it("generates a valid payload for the API", async () => {
 it("generates a valid breadcrumb", { retry: 1 }, async () => {
   const handleSubmit = vi.fn();
 
-  setup(
+  await setup(
     <SendComponent
       title="Send"
       destinations={["bops", "uniform"]}

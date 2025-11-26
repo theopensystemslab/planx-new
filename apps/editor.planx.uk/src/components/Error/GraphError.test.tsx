@@ -61,7 +61,7 @@ it("renders if a child throws an error", async () => {
 it("does not call Airbrake", async () => {
   const loggerSpy = vi.spyOn(logger, "notify");
 
-  setup(
+  await setup(
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <ThrowGraphError />
     </ErrorBoundary>,

@@ -211,7 +211,7 @@ describe("Modal trigger", () => {
   afterEach(() => vi.clearAllMocks());
 
   test("Modal does not open on initial component render", async () => {
-    setup(
+    await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -337,7 +337,7 @@ describe("Adding tags and syncing state", () => {
       getByTestId,
       getByText,
       user,
-    } = setup(
+    } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         handleSubmit={handleSubmit}
@@ -399,7 +399,7 @@ describe("Adding tags and syncing state", () => {
   test("Cannot continue when only an optional file type is uploaded and tagged", async () => {
     const handleSubmit = vi.fn();
     const { getAllByRole, getAllByTestId, getByTestId, getByText, user } =
-      setup(
+      await setup(
         <FileUploadAndLabelComponent
           title="Test title"
           handleSubmit={handleSubmit}

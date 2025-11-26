@@ -113,7 +113,7 @@ describe("Pay component - Editor Modal", () => {
       const handleSubmit = vi.fn();
 
       const { getAllByPlaceholderText, getAllByLabelText, user, getByRole } =
-        setup(
+        await setup(
           <DndProvider backend={HTML5Backend}>
             <PayComponent
               id="test"

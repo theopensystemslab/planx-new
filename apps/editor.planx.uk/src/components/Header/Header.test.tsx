@@ -135,14 +135,14 @@ describe("Header Component - Editor Route", () => {
   });
 
   it("displays breadcrumbs", async () => {
-    setup(<Header />);
+    await setup(<Header />);
     expect(screen.getByText("Plan✕")).toBeInTheDocument();
     expect(screen.getByText(mockTeam1.slug)).toBeInTheDocument();
     expect(screen.getByText("test-flow")).toBeInTheDocument();
   });
 
   it("displays avatar and settings", async () => {
-    setup(<Header />);
+    await setup(<Header />);
     expect(screen.getByText("TU")).toBeInTheDocument();
     expect(screen.getByLabelText("Toggle Menu")).toBeInTheDocument();
   });
@@ -173,7 +173,7 @@ for (const route of ["/published", "/preview", "/draft", "/pay", "/invite"]) {
     });
 
     it("displays a logo when available", async () => {
-      setup(<Header />);
+      await setup(<Header />);
       expect(screen.queryByText("Plan✕")).not.toBeInTheDocument();
       expect(screen.getByAltText(`${mockTeam1.name} Logo`)).toHaveAttribute(
         "src",
@@ -183,7 +183,7 @@ for (const route of ["/published", "/preview", "/draft", "/pay", "/invite"]) {
 
     it("falls back to the PlanX link when a logo is not present", async () => {
       act(() => setState({ teamTheme: mockTeam2.theme }));
-      setup(<Header />);
+      await setup(<Header />);
       expect(
         screen.queryByAltText(`${mockTeam2.name} Logo`),
       ).not.toBeInTheDocument();
@@ -192,7 +192,7 @@ for (const route of ["/published", "/preview", "/draft", "/pay", "/invite"]) {
     });
 
     it("displays service title from the store", async () => {
-      setup(<Header />);
+      await setup(<Header />);
       act(() => setState({ flowName: "test flow" }));
 
       expect(screen.getByTestId("service-title")).toBeInTheDocument();
@@ -226,7 +226,7 @@ describe("Section navigation bar", () => {
 
   describe("Flow without sections", () => {
     it("does not display", async () => {
-      setup(<Header />);
+      await setup(<Header />);
       act(() => setState({ flow: flowWithoutSections }));
       act(() => getState().initNavigationStore());
 
@@ -238,7 +238,7 @@ describe("Section navigation bar", () => {
     it("displays as expected", async () => {
       act(() => setState({ flow: flowWithThreeSections }));
       act(() => getState().initNavigationStore());
-      setup(<Header />);
+      await setup(<Header />);
 
       expect(screen.getByTestId("navigation-bar")).toBeInTheDocument();
     });
@@ -246,7 +246,7 @@ describe("Section navigation bar", () => {
     it("display the correct information from the store", async () => {
       act(() => setState({ flow: flowWithThreeSections }));
       act(() => getState().initNavigationStore());
-      setup(<Header />);
+      await setup(<Header />);
 
       expect(screen.getByText("Section 1 of 3")).toBeInTheDocument();
       expect(screen.getByText("First section")).toBeInTheDocument();

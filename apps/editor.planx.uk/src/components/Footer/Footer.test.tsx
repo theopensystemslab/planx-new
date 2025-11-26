@@ -24,7 +24,7 @@ describe("Footer component", () => {
   });
 
   it("renders the last published date", async () => {
-    setup(<Footer />);
+    await setup(<Footer />);
 
     expect(
       screen.getByText("Service last updated 30/01/2025"),

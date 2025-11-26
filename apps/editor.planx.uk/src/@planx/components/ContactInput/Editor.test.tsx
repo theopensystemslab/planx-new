@@ -8,7 +8,7 @@ import ContactInputComponent from "./Editor";
 
 describe("ContactInputComponent - Editor Modal", () => {
   it("renders", async () => {
-    setup(
+    await setup(
       <DndProvider backend={HTML5Backend}>
         <ContactInputComponent id="test" />
       </DndProvider>,

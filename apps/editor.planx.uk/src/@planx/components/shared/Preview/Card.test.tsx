@@ -26,7 +26,7 @@ describe("Card component", () => {
   it("displays the Save/Resume option if the application path requires it", async () => {
     act(() => setState({ path: ApplicationPath.SaveAndReturn }));
     const children = <Button>Testing 123</Button>;
-    setup(<Card handleSubmit={handleSubmit} children={children}></Card>);
+    await setup(<Card handleSubmit={handleSubmit} children={children}></Card>);
 
     expect(screen.getByText(resumeButtonText)).toBeInTheDocument();
     act(() => setState({ saveToEmail: "test@test.com" }));
@@ -36,7 +36,7 @@ describe("Card component", () => {
   it("hides the Save/Resume option if the application path does not require it", async () => {
     act(() => setState({ path: ApplicationPath.SingleSession }));
     const children = <Button>Testing 123</Button>;
-    setup(<Card handleSubmit={handleSubmit} children={children}></Card>);
+    await setup(<Card handleSubmit={handleSubmit} children={children}></Card>);
 
     expect(screen.queryByText(resumeButtonText)).not.toBeInTheDocument();
     expect(screen.queryByText(saveButtonText)).not.toBeInTheDocument();
@@ -45,7 +45,7 @@ describe("Card component", () => {
   it("hides the Save/Resume option if the card does not have a 'Continue' button", async () => {
     act(() => setState({ path: ApplicationPath.SaveAndReturn }));
     const children = <h1>Confirmation Page</h1>;
-    setup(<Card children={children}></Card>);
+    await setup(<Card children={children}></Card>);
 
     expect(screen.queryByText(resumeButtonText)).not.toBeInTheDocument();
     expect(screen.queryByText(saveButtonText)).not.toBeInTheDocument();
@@ -66,7 +66,7 @@ describe("Card component", () => {
       }),
     );
     const children = <h1>Confirmation Page</h1>;
-    setup(<Card handleSubmit={handleSubmit} children={children}></Card>);
+    await setup(<Card handleSubmit={handleSubmit} children={children}></Card>);
 
     expect(screen.queryByText("Confirmation Page")).toBeInTheDocument();
     expect(screen.queryByText("Continue")).toBeInTheDocument();

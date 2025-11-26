@@ -7,7 +7,7 @@ import { setup } from "testUtils";
 import Question from "./Editor";
 
 it("renders without error", async () => {
-  setup(
+  await setup(
     <DndProvider backend={HTML5Backend}>
       <Question node={{}} options={[]} />
     </DndProvider>,

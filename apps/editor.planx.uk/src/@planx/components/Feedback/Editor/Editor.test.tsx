@@ -7,8 +7,8 @@ import { setup } from "testUtils";
 import { FeedbackEditor } from "./Editor";
 
 describe("When the Feedback editor modal is rendered", () => {
-  beforeEach(() => {
-    setup(
+  beforeEach(async () => {
+    await setup(
       <DndProvider backend={HTML5Backend}>
         <FeedbackEditor id="test-feedback-editor" />
       </DndProvider>,

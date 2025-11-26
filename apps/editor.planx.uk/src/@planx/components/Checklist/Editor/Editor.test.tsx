@@ -30,7 +30,7 @@ describe("Checklist editor component", () => {
   });
 
   it("renders without error", async () => {
-    setup(
+    await setup(
       <DndProvider backend={HTML5Backend}>
         <ChecklistEditor options={[]} />
       </DndProvider>,
@@ -286,7 +286,7 @@ describe("Checklist editor component", () => {
 
     const handleSubmit = vi.fn();
 
-    setup(
+    await setup(
       <DndProvider backend={HTML5Backend}>
         <ChecklistEditor
           handleSubmit={handleSubmit}

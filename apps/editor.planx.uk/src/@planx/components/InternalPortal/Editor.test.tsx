@@ -103,7 +103,7 @@ describe("adding an internal portal", () => {
 });
 
 test("do not display select field when there are no flows to select", async () => {
-  setup(<InternalPortalForm />);
+  await setup(<InternalPortalForm />);
   expect(screen.queryByTestId("flowId")).not.toBeInTheDocument();
 });
 
@@ -165,7 +165,7 @@ describe("validations", () => {
       test(`${scenario.action}`, async () => {
         const handleSubmit = vi.fn();
 
-        setup(
+        await setup(
           <InternalPortalForm
             id={scenario.id}
             flows={scenario.flows}

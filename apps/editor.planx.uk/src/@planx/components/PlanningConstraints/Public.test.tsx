@@ -126,7 +126,7 @@ describe("following a FindProperty component", () => {
   });
 
   it("fetches planning constraints when we have lng, lat or siteBoundary", async () => {
-    setup(
+    await setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
@@ -148,7 +148,7 @@ describe("following a FindProperty component", () => {
   });
 
   it("fetches classified roads when a USRN is provided", async () => {
-    setup(
+    await setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
@@ -180,7 +180,7 @@ describe("following a FindProperty component", () => {
       }),
     );
 
-    setup(
+    await setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
@@ -282,7 +282,7 @@ describe("selectable datasets in editor", () => {
   });
 
   it("does not initiate `/roads` request when `road.classified` is not selected by an editor", async () => {
-    setup(
+    await setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
@@ -317,7 +317,7 @@ describe("selectable datasets in editor", () => {
   });
 
   it("does not initiate `/gis/:localAuthority` request when only `road.classified` is selected by an editor", async () => {
-    setup(
+    await setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"

@@ -57,7 +57,7 @@ it("should not have any accessibility violations", async () => {
 
 describe("showing and hiding change capabilities", () => {
   it("hides the change button by default", async () => {
-    setup(
+    await setup(
       <Presentational
         responses={[
           {
@@ -158,8 +158,8 @@ describe("showing and hiding change capabilities", () => {
         shouldBeChangeable ? "shows" : "hides"
       } the change button when allowChanges is ${allowChanges} and question ${
         autoAnswered ? "was" : "wasn't"
-      } auto-answered`, () => {
-        setup(
+      } auto-answered`, async () => {
+        await setup(
           <Presentational
             {...{ allowChanges, responses }}
             handleSubmit={() => {}}

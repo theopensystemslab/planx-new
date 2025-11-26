@@ -25,7 +25,7 @@ describe("FileUploadAndLabel - Editor Modal", () => {
   });
 
   it("renders", async () => {
-    setup(
+    await setup(
       <DndProvider backend={HTML5Backend}>
         <FileUploadAndLabelComponent id="test" />
       </DndProvider>,
@@ -34,7 +34,7 @@ describe("FileUploadAndLabel - Editor Modal", () => {
   });
 
   it("initialises with a single rule", async () => {
-    setup(
+    await setup(
       <DndProvider backend={HTML5Backend}>
         <FileUploadAndLabelComponent id="test" />
       </DndProvider>,

@@ -11,7 +11,7 @@ import FileUpload from "./Public";
 test("renders correctly", async () => {
   const handleSubmit = vi.fn();
 
-  setup(
+  await setup(
     <FileUpload
       title="Please upload your files"
       fn="someKey"

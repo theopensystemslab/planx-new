@@ -93,7 +93,7 @@ test("recovers previously submitted date when clicking the back button even if a
 });
 
 test("renders", async () => {
-  setup(<DateInput title="Enter a date" />);
+  await setup(<DateInput title="Enter a date" />);
 
   expect(screen.getByRole("heading")).toHaveTextContent("Enter a date");
 });
@@ -129,7 +129,7 @@ test("allows user to type into input field and click continue", async () => {
 });
 
 test("date fields have a max length set", async () => {
-  setup(<DateInput title="Enter a date" />);
+  await setup(<DateInput title="Enter a date" />);
 
   const day = screen.getByLabelText("Day") as HTMLInputElement;
   const month = screen.getByLabelText("Month") as HTMLInputElement;

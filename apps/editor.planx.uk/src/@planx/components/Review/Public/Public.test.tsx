@@ -65,7 +65,7 @@ describe("Simple flow", () => {
     const handleSubmit = vi.fn();
     const changeAnswer = vi.fn();
 
-    setup(
+    await setup(
       <Review
         title="Review"
         description="Check your answers before submitting"
@@ -108,7 +108,7 @@ describe("Simple flow", () => {
     const handleSubmit = vi.fn();
     const changeAnswer = vi.fn();
 
-    setup(
+    await setup(
       <Review
         title="Review"
         description="Check your answers before submitting"
@@ -144,7 +144,7 @@ describe("Simple flow", () => {
     const handleSubmit = vi.fn();
     const changeAnswer = vi.fn();
 
-    setup(
+    await setup(
       <Review
         title="Review"
         description="Check your answers before submitting"
@@ -180,7 +180,7 @@ describe("Simple flow", () => {
     const handleSubmit = vi.fn();
     const changeAnswer = vi.fn();
 
-    setup(
+    await setup(
       <Review
         title="Review"
         description="Check your answers before submitting"
@@ -335,7 +335,7 @@ describe("Flow with empty sections", () => {
   afterEach(() => act(() => setState(initialState)));
 
   test("headers display as expected", async () => {
-    setup(
+    await setup(
       <Review
         title="Review with empty sections"
         description="Check your answers before submitting"

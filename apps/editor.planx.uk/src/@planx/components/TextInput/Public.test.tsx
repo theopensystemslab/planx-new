@@ -162,7 +162,7 @@ it("should not have any accessibility violations", async () => {
 });
 
 it("should always an empty error message element in the DOM", async () => {
-  setup(
+  await setup(
     <TextInput
       title="Short Text"
       type={TextInputType.Short}
@@ -194,14 +194,14 @@ it("should change the role of the ErrorText when an invalid input is given", asy
 });
 
 test("character limit counter should appear for long text inputs", async () => {
-  setup(<TextInput title="hello" type={TextInputType.Long} />);
+  await setup(<TextInput title="hello" type={TextInputType.Long} />);
 
   const characterCounter = await screen.findByTestId("screen-reader-count");
   expect(characterCounter).toBeInTheDocument();
 });
 
 test("character limit counter should not appear for short text inputs", async () => {
-  setup(<TextInput title="hello" type={TextInputType.Short} />);
+  await setup(<TextInput title="hello" type={TextInputType.Short} />);
   const characterCounter = screen.queryByTestId("screen-reader-count");
 
   expect(characterCounter).not.toBeInTheDocument();

@@ -14,7 +14,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
     it(`answers are submitted in order they were supplied (${ChecklistLayout[type]} layout)`, async () => {
       const handleSubmit = vi.fn();
 
-      setup(
+      await setup(
         <Checklist
           allRequired={false}
           description=""

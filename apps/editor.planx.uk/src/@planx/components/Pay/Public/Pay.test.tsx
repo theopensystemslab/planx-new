@@ -133,7 +133,7 @@ describe("Pay component when fee is undefined or £0", () => {
       data: { "application.fee.payable": undefined },
     });
 
-    setup(
+    await setup(
       <Pay
         title="Pay for your application"
         fn="application.fee.payable"
@@ -200,7 +200,7 @@ describe("Pay component when fee is undefined or £0", () => {
       data: { "application.fee.payable": ["-12"] },
     });
 
-    setup(
+    await setup(
       <Pay
         title="Pay for your application"
         fn="application.fee.payable"
@@ -226,7 +226,7 @@ describe("Confirm component without inviteToPay", () => {
   afterEach(() => act(() => setState(initialState)));
 
   it("renders correctly", async () => {
-    setup(<Confirm {...defaultProps} />);
+    await setup(<Confirm {...defaultProps} />);
 
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
       "Pay for your application",
@@ -240,12 +240,12 @@ describe("Confirm component without inviteToPay", () => {
   });
 
   it("formats the fee with a currency symbol and two decimal places", async () => {
-    setup(<Confirm {...defaultProps} />);
+    await setup(<Confirm {...defaultProps} />);
     expect(screen.getByText("£103.00")).toBeInTheDocument();
   });
 
   it("correctly adjusts the heading hierarchy when the fee banner is hidden", async () => {
-    setup(<Confirm {...{ ...defaultProps, hideFeeBanner: true }} />);
+    await setup(<Confirm {...{ ...defaultProps, hideFeeBanner: true }} />);
 
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
       "Pay for your application",
@@ -294,14 +294,14 @@ describe("Confirm component without inviteToPay", () => {
         saveToEmail: "test@opensystemsla.b.io",
       }),
     );
-    setup(<Confirm {...defaultProps} />);
+    await setup(<Confirm {...defaultProps} />);
 
     expect(screen.getByText(saveButtonText)).toBeInTheDocument();
     expect(screen.queryByText(resumeButtonText)).not.toBeInTheDocument();
   });
 
   it("hides the Save/Resume option if the application path does not require it", async () => {
-    setup(<Confirm {...defaultProps} />);
+    await setup(<Confirm {...defaultProps} />);
 
     expect(screen.queryByText(saveButtonText)).not.toBeInTheDocument();
     expect(screen.queryByText(resumeButtonText)).not.toBeInTheDocument();
@@ -398,7 +398,7 @@ describe("Confirm component with inviteToPay", () => {
   });
 
   it("disables the invite link if you already have an in-progress payment", async () => {
-    setup(
+    await setup(
       <Confirm
         {...inviteProps}
         buttonTitle={"Retry payment"}
@@ -445,14 +445,14 @@ describe("Confirm component with inviteToPay", () => {
         saveToEmail: "test@opensystemsla.b.io",
       }),
     );
-    setup(<Confirm {...inviteProps} />);
+    await setup(<Confirm {...inviteProps} />);
 
     expect(screen.getByText(saveButtonText)).toBeInTheDocument();
     expect(screen.queryByText(resumeButtonText)).not.toBeInTheDocument();
   });
 
   it("hides the Save/Resume option if the application path does not require it", async () => {
-    setup(<Confirm {...inviteProps} />);
+    await setup(<Confirm {...inviteProps} />);
 
     expect(screen.queryByText(saveButtonText)).not.toBeInTheDocument();
     expect(screen.queryByText(resumeButtonText)).not.toBeInTheDocument();

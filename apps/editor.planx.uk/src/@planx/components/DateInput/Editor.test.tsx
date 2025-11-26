@@ -14,7 +14,7 @@ const invalidError = /Enter a valid date in DD.MM.YYYY format/;
 
 describe("DateInputComponent - Editor Modal", () => {
   it("renders", async () => {
-    setup(
+    await setup(
       <DndProvider backend={HTML5Backend}>
         <DateInputComponent id="test" />
       </DndProvider>,
