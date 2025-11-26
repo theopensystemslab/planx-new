@@ -89,11 +89,11 @@ const getWsLink = () => {
 export const authWsLink = new ApolloLink((req) => getWsLink().request(req));
 
 /**
- * Split requests between HTTPS and WS, based on operation types
+ * Split authenticated requests between HTTPS and WS, based on operation types
  *  - Queries and mutations -> HTTPS
  *  - Subscriptions -> WS
  */
-export const splitLink = split(
+export const authSplitLink = split(
   ({ query }) => {
     const definition = getMainDefinition(query);
     return (

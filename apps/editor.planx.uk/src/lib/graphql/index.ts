@@ -7,7 +7,7 @@ import {
 } from "@apollo/client";
 
 import { errorLink } from "./errors";
-import { publicHttpLink, retryLink, splitLink } from "./links";
+import { authSplitLink, publicHttpLink, retryLink } from "./links";
 
 const isPublicOperation = (operation: Operation) => {
   const context = operation.getContext();
@@ -28,7 +28,7 @@ const trafficRouter = split(
   publicHttpLink,
 
   // Authenticated traffic
-  splitLink,
+  authSplitLink,
 );
 
 export const client = new ApolloClient({
