@@ -8,6 +8,7 @@ import * as awsx from "@pulumi/awsx";
  * Send a Slack notification when a Fargate service deployment is rolled back by the circuit breaker
  */
 export const setupNotificationForDeploymentRollback = (
+  env: string,
   simpleServiceName: string,
   cluster: awsx.ecs.Cluster,
   service: awsx.ecs.FargateService
@@ -81,6 +82,7 @@ export const setupNotificationForDeploymentRollback = (
         },
         inputTemplate: pulumi.jsonStringify({
           text: [
+            `-> Environment: ${env}`,
             `-> Affected service: ${simpleServiceName}`,
             "-> Event type: <eventType>",
             "-> Event name: <eventName>",

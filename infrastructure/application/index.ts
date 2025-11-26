@@ -284,6 +284,7 @@ export = async () => {
   const rootDbUrl = pulumi.all([dbHost, dbRootPassword]).apply(([dbHost, dbRootPassword]) => 
     getPostgresDbUrl(DB_ROOT_USERNAME, dbRootPassword, dbHost))
   const hasuraService = await createHasuraService({
+    env,
     vpc,
     cluster,
     repo,

@@ -13,6 +13,7 @@ import {
 } from "../utils";
 
 export const createHasuraService = async ({
+  env,
   vpc,
   cluster,
   repo,
@@ -240,6 +241,6 @@ export const createHasuraService = async ({
     proxied: true,
   });
 
-  setupNotificationForDeploymentRollback("hasura", cluster, hasuraService);
+  setupNotificationForDeploymentRollback(env, "hasura", cluster, hasuraService);
   return hasuraService;
 }
