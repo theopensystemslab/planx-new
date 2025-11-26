@@ -1,6 +1,8 @@
 import AddIcon from "@mui/icons-material/Add";
 import Delete from "@mui/icons-material/Delete";
 import DragHandle from "@mui/icons-material/DragHandle";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import ButtonBase from "@mui/material/ButtonBase";
@@ -24,6 +26,7 @@ import {
 import { TransitionGroup } from "react-transition-group";
 
 import { insertAt, removeAt, setAt } from "../../../utils";
+import { ListManagerHeader } from "./ListManagerHeader";
 import { useScrollToOptionOrGroup } from "./useScrollToOptionOrGroup";
 
 export interface EditorProps<T> {
@@ -32,6 +35,7 @@ export interface EditorProps<T> {
   value: T;
   onChange: (newValue: T) => void;
   disabled?: boolean;
+  isCollapsed?: boolean;
 }
 
 export interface Props<T, EditorExtraProps = {}> {
@@ -60,8 +64,8 @@ const Item = styled(Box)(() => ({
 
 const InsertButtonRoot = styled(ButtonBase)(({ theme }) => ({
   justifyContent: "space-between",
-  paddingLeft: theme.spacing(3),
-  paddingRight: theme.spacing(2),
+  paddingLeft: theme.spacing(1),
+  paddingRight: theme.spacing(5),
   width: "100%",
   height: theme.spacing(3),
   color: theme.palette.grey[600],
@@ -78,8 +82,9 @@ const InsertButtonRoot = styled(ButtonBase)(({ theme }) => ({
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
   border: `1px dashed ${theme.palette.primary.main}`,
-  width: "91%",
+  width: "100%",
   opacity: 0,
+  margin: 0,
   transition: "inherit",
 }));
 
@@ -100,7 +105,7 @@ const InsertButton: React.FC<{
       }}
     >
       <StyledDivider variant="middle" />
-      <AddIcon sx={{ transform: `translateX(-6px)` }} />
+      <AddIcon sx={{ width: "51px" }} />
     </InsertButtonRoot>
   );
 };
@@ -123,6 +128,9 @@ export default function ListManager<T, EditorExtraProps>(
     props.values.map(() => nanoid()),
   );
 
+  // Track collapsed state for each item using their keys
+  const [collapsedItems, setCollapsedItems] = useState<Set<string>>(new Set());
+
   const isMaxLength = props.values.length >= maxItems;
   const [isDragging, setIsDragging] = useState(false);
 
@@ -133,26 +141,83 @@ export default function ListManager<T, EditorExtraProps>(
 
   useScrollToOptionOrGroup();
 
+  const toggleCollapse = (key: string) => {
+    setCollapsedItems((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(key)) {
+        newSet.delete(key);
+      } else {
+        newSet.add(key);
+      }
+      return newSet;
+    });
+  };
+
+  const collapseAll = () => {
+    setCollapsedItems(new Set(itemKeys));
+  };
+
+  const expandAll = () => {
+    setCollapsedItems(new Set());
+  };
+
+  // Compute button states - account for filtered items
+  const visibleItemCount = props.values.filter(isFieldDisplayed).length;
+  const hasItems = visibleItemCount > 0;
+  const allCollapsed = hasItems && collapsedItems.size === itemKeys.length;
+  const allExpanded = hasItems && collapsedItems.size === 0;
+
   // `isTemplatedNode` disables reordering, adding, and deleting options in the templated flow unless you're a platform admin or in the source template
   if (props.isTemplatedNode && !isPlatformAdmin && !isTemplate) {
     return (
       <>
+        {hasItems && (
+          <ListManagerHeader
+            disabled={disabled}
+            hasItems={hasItems}
+            allCollapsed={allCollapsed}
+            allExpanded={allExpanded}
+            onCollapseAll={collapseAll}
+            onExpandAll={expandAll}
+          />
+        )}
         <Box>
           <TransitionGroup>
             {props.values.map((item, index) =>
               isFieldDisplayed(item) ? (
                 <Collapse key={itemKeys[index]} sx={{ marginBottom: 2 }}>
                   <Item>
-                    <Editor
-                      index={index}
-                      value={item}
-                      onChange={(newItem) => {
-                        props.onChange(setAt(index, newItem, props.values));
-                      }}
-                      {...(props.editorExtraProps || {})}
-                      disabled={disabled}
-                      errors={props.errors?.[index]}
-                    />
+                    <Box>
+                      <IconButton
+                        onClick={() => toggleCollapse(itemKeys[index])}
+                        aria-label={
+                          collapsedItems.has(itemKeys[index])
+                            ? "Expand"
+                            : "Collapse"
+                        }
+                        size="large"
+                        disabled={disabled}
+                      >
+                        {collapsedItems.has(itemKeys[index]) ? (
+                          <ExpandMore />
+                        ) : (
+                          <ExpandLess />
+                        )}
+                      </IconButton>
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <Editor
+                        index={index}
+                        value={item}
+                        onChange={(newItem) => {
+                          props.onChange(setAt(index, newItem, props.values));
+                        }}
+                        {...(props.editorExtraProps || {})}
+                        disabled={disabled}
+                        errors={props.errors?.[index]}
+                        isCollapsed={collapsedItems.has(itemKeys[index])}
+                      />
+                    </Box>
                   </Item>
                 </Collapse>
               ) : null,
@@ -167,22 +232,53 @@ export default function ListManager<T, EditorExtraProps>(
   if (props.noDragAndDrop) {
     return (
       <>
+        {hasItems && (
+          <ListManagerHeader
+            disabled={disabled}
+            hasItems={hasItems}
+            allCollapsed={allCollapsed}
+            allExpanded={allExpanded}
+            onCollapseAll={collapseAll}
+            onExpandAll={expandAll}
+          />
+        )}
         <Box>
           <TransitionGroup>
             {props.values.map((item, index) =>
               isFieldDisplayed(item) ? (
                 <Collapse key={itemKeys[index]}>
                   <Item>
-                    <Editor
-                      index={index}
-                      value={item}
-                      onChange={(newItem) => {
-                        props.onChange(setAt(index, newItem, props.values));
-                      }}
-                      {...(props.editorExtraProps || {})}
-                      disabled={disabled}
-                      errors={props.errors?.[index]}
-                    />
+                    <Box>
+                      <IconButton
+                        onClick={() => toggleCollapse(itemKeys[index])}
+                        aria-label={
+                          collapsedItems.has(itemKeys[index])
+                            ? "Expand"
+                            : "Collapse"
+                        }
+                        size="large"
+                        disabled={disabled}
+                      >
+                        {collapsedItems.has(itemKeys[index]) ? (
+                          <ExpandMore />
+                        ) : (
+                          <ExpandLess />
+                        )}
+                      </IconButton>
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <Editor
+                        index={index}
+                        value={item}
+                        onChange={(newItem) => {
+                          props.onChange(setAt(index, newItem, props.values));
+                        }}
+                        {...(props.editorExtraProps || {})}
+                        disabled={disabled}
+                        errors={props.errors?.[index]}
+                        isCollapsed={collapsedItems.has(itemKeys[index])}
+                      />
+                    </Box>
                     <Box sx={{ display: "flex", alignItems: "flex-start" }}>
                       <IconButton
                         onClick={() => {
@@ -223,130 +319,170 @@ export default function ListManager<T, EditorExtraProps>(
 
   // Default ListManager supports reordering, adding, and deleting options
   return (
-    <DragDropContext
-      onDragStart={() => setIsDragging(true)}
-      onDragEnd={(dropResult: DropResult) => {
-        setIsDragging(false);
-        if (!dropResult.source || !dropResult.destination) {
-          return;
-        }
-        props.onChange(
-          arrayMoveImmutable(
-            props.values,
-            dropResult.source.index,
-            dropResult.destination.index,
-          ),
-        );
+    <>
+      {hasItems && (
+        <ListManagerHeader
+          disabled={disabled}
+          hasItems={hasItems}
+          allCollapsed={allCollapsed}
+          allExpanded={allExpanded}
+          onCollapseAll={collapseAll}
+          onExpandAll={expandAll}
+        />
+      )}
+      <DragDropContext
+        onDragStart={() => setIsDragging(true)}
+        onDragEnd={(dropResult: DropResult) => {
+          setIsDragging(false);
+          if (!dropResult.source || !dropResult.destination) {
+            return;
+          }
+          props.onChange(
+            arrayMoveImmutable(
+              props.values,
+              dropResult.source.index,
+              dropResult.destination.index,
+            ),
+          );
 
-        // Adjust keys when dragging
-        setItemKeys((prev) => {
-          const newKeys = [...prev];
-          const [movedKey] = newKeys.splice(dropResult.source.index, 1);
-          newKeys.splice(dropResult!.destination!.index!, 0, movedKey);
-          return newKeys;
-        });
-      }}
-    >
-      <Droppable droppableId={randomId.current}>
-        {(provided: DroppableProvided) => (
-          <Box ref={provided.innerRef} {...provided.droppableProps}>
-            <TransitionGroup>
-              {props.values.map((item, index) =>
-                isFieldDisplayed(item) ? (
-                  <Collapse key={itemKeys[index]}>
-                    <Box>
-                      {Boolean(index) && (
-                        <InsertButton
-                          disabled={disabled || isMaxLength}
-                          handleClick={() => {
-                            props.onChange(
-                              insertAt(index, props.newValue(), props.values),
-                            );
-                            setItemKeys((prev) => {
-                              const newKeys = [...prev];
-                              newKeys.splice(index, 0, nanoid());
-                              return newKeys;
-                            });
-                          }}
-                          isDragging={isDragging}
-                        />
-                      )}
-                      <Draggable
-                        draggableId={String(index)}
-                        index={index}
-                        key={index}
-                      >
-                        {(provided: DraggableProvided) => (
-                          <Item
-                            {...provided.draggableProps}
-                            ref={provided.innerRef}
-                          >
-                            <Box>
-                              <IconButton
-                                disableRipple
-                                {...(props.noDragAndDrop
-                                  ? { disabled: true || disabled }
-                                  : provided.dragHandleProps)}
-                                aria-label="Drag"
-                                size="large"
-                                disabled={disabled}
-                              >
-                                <DragHandle />
-                              </IconButton>
-                            </Box>
-                            <Editor
-                              index={index}
-                              value={item}
-                              onChange={(newItem) => {
-                                props.onChange(
-                                  setAt(index, newItem, props.values),
-                                );
-                              }}
-                              {...(props.editorExtraProps || {})}
-                              disabled={disabled}
-                              errors={props.errors?.[index]}
-                            />
-                            <Box>
-                              <IconButton
-                                onClick={() => {
-                                  props.onChange(removeAt(index, props.values));
-                                  setItemKeys((prev) =>
-                                    prev.filter((_, i) => i !== index),
-                                  );
-                                }}
-                                aria-label="Delete"
-                                size="large"
-                                disabled={
-                                  disabled ||
-                                  props?.isFieldDisabled?.(item, index)
-                                }
-                              >
-                                <Delete />
-                              </IconButton>
-                            </Box>
-                          </Item>
-                        )}
-                      </Draggable>
-                    </Box>
-                  </Collapse>
-                ) : null,
-              )}
-              {provided.placeholder}
-            </TransitionGroup>
-          </Box>
-        )}
-      </Droppable>
-      <Button
-        size="medium"
-        sx={{ mt: 2 }}
-        onClick={() => {
-          props.onChange([...props.values, props.newValue()]);
-          setItemKeys((prev) => [...prev, nanoid()]);
+          // Adjust keys when dragging
+          setItemKeys((prev) => {
+            const newKeys = [...prev];
+            const [movedKey] = newKeys.splice(dropResult.source.index, 1);
+            newKeys.splice(dropResult!.destination!.index!, 0, movedKey);
+            return newKeys;
+          });
         }}
-        disabled={disabled || isMaxLength}
       >
-        {props.newValueLabel || "add new"}
-      </Button>
-    </DragDropContext>
+        <Droppable droppableId={randomId.current}>
+          {(provided: DroppableProvided) => (
+            <Box ref={provided.innerRef} {...provided.droppableProps}>
+              <TransitionGroup>
+                {props.values.map((item, index) =>
+                  isFieldDisplayed(item) ? (
+                    <Collapse key={itemKeys[index]}>
+                      <Box>
+                        {Boolean(index) && (
+                          <InsertButton
+                            disabled={disabled || isMaxLength}
+                            handleClick={() => {
+                              props.onChange(
+                                insertAt(index, props.newValue(), props.values),
+                              );
+                              setItemKeys((prev) => {
+                                const newKeys = [...prev];
+                                newKeys.splice(index, 0, nanoid());
+                                return newKeys;
+                              });
+                            }}
+                            isDragging={isDragging}
+                          />
+                        )}
+                        <Draggable
+                          draggableId={String(index)}
+                          index={index}
+                          key={index}
+                        >
+                          {(provided: DraggableProvided) => (
+                            <Item
+                              {...provided.draggableProps}
+                              ref={provided.innerRef}
+                              sx={{ ml: -5 }}
+                            >
+                              <Box>
+                                <IconButton
+                                  disableRipple
+                                  {...(props.noDragAndDrop
+                                    ? { disabled: true || disabled }
+                                    : provided.dragHandleProps)}
+                                  aria-label="Drag"
+                                  size="large"
+                                  disabled={disabled}
+                                >
+                                  <DragHandle />
+                                </IconButton>
+                              </Box>
+                              <Box>
+                                <IconButton
+                                  onClick={() =>
+                                    toggleCollapse(itemKeys[index])
+                                  }
+                                  aria-label={
+                                    collapsedItems.has(itemKeys[index])
+                                      ? "Expand"
+                                      : "Collapse"
+                                  }
+                                  size="large"
+                                  disabled={disabled}
+                                >
+                                  {collapsedItems.has(itemKeys[index]) ? (
+                                    <ExpandMore />
+                                  ) : (
+                                    <ExpandLess />
+                                  )}
+                                </IconButton>
+                              </Box>
+                              <Box sx={{ flex: 1 }}>
+                                <Editor
+                                  index={index}
+                                  value={item}
+                                  onChange={(newItem) => {
+                                    props.onChange(
+                                      setAt(index, newItem, props.values),
+                                    );
+                                  }}
+                                  {...(props.editorExtraProps || {})}
+                                  disabled={disabled}
+                                  errors={props.errors?.[index]}
+                                  isCollapsed={collapsedItems.has(
+                                    itemKeys[index],
+                                  )}
+                                />
+                              </Box>
+                              <Box>
+                                <IconButton
+                                  onClick={() => {
+                                    props.onChange(
+                                      removeAt(index, props.values),
+                                    );
+                                    setItemKeys((prev) =>
+                                      prev.filter((_, i) => i !== index),
+                                    );
+                                  }}
+                                  aria-label="Delete"
+                                  size="large"
+                                  disabled={
+                                    disabled ||
+                                    props?.isFieldDisabled?.(item, index)
+                                  }
+                                >
+                                  <Delete />
+                                </IconButton>
+                              </Box>
+                            </Item>
+                          )}
+                        </Draggable>
+                      </Box>
+                    </Collapse>
+                  ) : null,
+                )}
+                {provided.placeholder}
+              </TransitionGroup>
+            </Box>
+          )}
+        </Droppable>
+        <Button
+          size="medium"
+          sx={{ mt: 2 }}
+          onClick={() => {
+            props.onChange([...props.values, props.newValue()]);
+            setItemKeys((prev) => [...prev, nanoid()]);
+          }}
+          disabled={disabled || isMaxLength}
+        >
+          {props.newValueLabel || "add new option"}
+        </Button>
+      </DragDropContext>
+    </>
   );
 }

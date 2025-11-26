@@ -57,7 +57,7 @@ export function SelectMultiple<T>(props: Props<T>) {
   const placeholder = isSelectEmpty ? props.placeholder : undefined;
 
   return (
-    <FormControl sx={{ display: "flex", flexDirection: "column", mt: 2 }}>
+    <FormControl sx={{ display: "flex", flexDirection: "column" }}>
       <StyledAutocomplete<T, true, true, false, "div">
         sx={{ mt: props.label ? 2 : 0 }}
         disableClearable
