@@ -2,6 +2,8 @@ import {
   ComponentType as TYPES,
   DEFAULT_FLAG_CATEGORY,
 } from "@opensystemslab/planx-core/types";
+import { TASKS } from "@planx/components/Agent/model";
+import type { Task } from "@planx/components/Agent/types";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { exhaustiveCheck } from "utils";
@@ -34,9 +36,10 @@ const Node: React.FC<any> = (props) => {
 
   const type = props.type as TYPES;
   switch (type) {
-    case TYPES.Agent:
-      // TODO: show formatted task title?
-      return <Question {...allProps} text={node?.data?.title ?? "Agent"} />;
+    case TYPES.Agent: {
+      const taskLabel = TASKS[node.data!.task as Task].label;
+      return <Question {...allProps} text={taskLabel} />;
+    }
     case TYPES.Calculate:
       return <Question {...allProps} text={node.data?.title || "Calculate"} />;
     case TYPES.Confirmation:
