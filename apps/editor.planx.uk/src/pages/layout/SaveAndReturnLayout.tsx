@@ -8,6 +8,7 @@ import { ApplicationPath as AppPath } from "../../types";
 import ResumePage from "../Preview/Resume";
 import SaveAndReturn from "../Preview/SaveAndReturn";
 import SavePage from "../Preview/SavePage";
+import SingleSession from "../Preview/SingleSession";
 
 const SaveAndReturnLayout = ({ children }: PropsWithChildren) => {
   const path = useStore((state) => state.path);
@@ -22,7 +23,7 @@ const SaveAndReturnLayout = ({ children }: PropsWithChildren) => {
     <>
       {
         {
-          [AppPath.SingleSession]: children,
+          [AppPath.SingleSession]: <SingleSession>{children}</SingleSession>,
           [AppPath.Save]: (
             <Main>
               <SavePage />
