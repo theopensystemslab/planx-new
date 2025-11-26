@@ -8,14 +8,14 @@ import { vi } from "vitest";
 import ServiceSettings from "../../ServiceSettings";
 
 export default async function setupServiceSettingsScreen() {
-  const { user } = setup(
+  const setupResult = setup(
     <DndProvider backend={HTML5Backend}>
       <ServiceSettings />
     </DndProvider>,
   );
 
   await screen.findByText("Your public link");
-  return user;
+  return setupResult;
 }
 
 export const mockWindowLocationObject = {

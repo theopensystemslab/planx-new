@@ -66,7 +66,7 @@ it("handles PageSchema errors", async () => {
     getByTestId,
     queryByText,
     getAllByText,
-  } = setup(
+  } = await setup(
     <PageComponent
       handleSubmit={handleSubmit}
       schema={ProposedAdvertisements}
