@@ -1,11 +1,10 @@
-import { useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import {
   DESCRIPTION_TEXT,
   ERROR_MESSAGE,
 } from "@planx/components/shared/constants";
-import { publicClient } from "lib/graphql";
+import { useBLPUCodes } from "hooks/data/useBLPUCodes";
 import find from "lodash/find";
 import { parse, toNormalised } from "postcode";
 import React, { useEffect, useState } from "react";
@@ -13,7 +12,6 @@ import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 
 import type { SiteAddress } from "../model";
-import { FETCH_BLPU_CODES } from ".";
 
 interface Option extends SiteAddress {
   title: string;
@@ -58,11 +56,11 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
   const [showPostcodeError, setShowPostcodeError] = useState<boolean>(false);
 
   // Fetch blpu_codes records so that we can join address CLASSIFICATION_CODE to planx variable
-  const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES, {
-    client: publicClient,
-  });
+  const { data } = useBLPUCodes();
 
+  const { setAddress } = props;
   useEffect(() => {
+    if (!data?.blpuCodes) return;
     // Handles mapping the raw Ordnance Survey record to planx's address model
     const addressSelectionHandler = ({
       detail,
@@ -72,39 +70,37 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
       const selectedAddress: Record<string, any> | undefined =
         detail?.address?.LPI;
       if (selectedAddress) {
-        props.setAddress({
+        setAddress({
           uprn: selectedAddress.UPRN.padStart(12, "0"),
           usrn: selectedAddress.USRN, // padStart(8, "0") will break /roads API request
           blpu_code: selectedAddress.BLPU_STATE_CODE,
           latitude: selectedAddress.LAT,
           longitude: selectedAddress.LNG,
           organisation: selectedAddress.ORGANISATION || null,
-          sao: [
-            selectedAddress.SAO_START_NUMBER,
-            selectedAddress.SAO_START_SUFFIX,
-            selectedAddress.SAO_TEXT, // populated in cases of building name only, no street number
-          ]
-            .filter(Boolean)
-            .join("") || undefined,
-          saoEnd: [
-            selectedAddress.SAO_END_NUMBER,
-            selectedAddress.SAO_END_SUFFIX,
-          ]
-            .filter(Boolean)
-            .join("") || undefined,
-          pao: [
-            selectedAddress.PAO_START_NUMBER,
-            selectedAddress.PAO_START_SUFFIX,
-            selectedAddress.PAO_TEXT, // populated in cases of building name only, no street number
-          ]
-            .filter(Boolean)
-            .join("") || undefined,
-          paoEnd: [
-            selectedAddress.PAO_END_NUMBER,
-            selectedAddress.PAO_END_SUFFIX,
-          ]
-            .filter(Boolean)
-            .join("") || undefined,
+          sao:
+            [
+              selectedAddress.SAO_START_NUMBER,
+              selectedAddress.SAO_START_SUFFIX,
+              selectedAddress.SAO_TEXT, // populated in cases of building name only, no street number
+            ]
+              .filter(Boolean)
+              .join("") || undefined,
+          saoEnd:
+            [selectedAddress.SAO_END_NUMBER, selectedAddress.SAO_END_SUFFIX]
+              .filter(Boolean)
+              .join("") || undefined,
+          pao:
+            [
+              selectedAddress.PAO_START_NUMBER,
+              selectedAddress.PAO_START_SUFFIX,
+              selectedAddress.PAO_TEXT, // populated in cases of building name only, no street number
+            ]
+              .filter(Boolean)
+              .join("") || undefined,
+          paoEnd:
+            [selectedAddress.PAO_END_NUMBER, selectedAddress.PAO_END_SUFFIX]
+              .filter(Boolean)
+              .join("") || undefined,
           street: selectedAddress.STREET_DESCRIPTION,
           town: selectedAddress.TOWN_NAME,
           postcode: selectedAddress.POSTCODE_LOCATOR,
@@ -113,13 +109,13 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
           x: selectedAddress.X_COORDINATE,
           y: selectedAddress.Y_COORDINATE,
           planx_description:
-            find(blpuCodes?.blpu_codes, {
+            find(data.blpuCodes, {
               code: selectedAddress.CLASSIFICATION_CODE,
-            })?.description || null,
+            })?.description ?? undefined,
           planx_value:
-            find(blpuCodes?.blpu_codes, {
+            find(data.blpuCodes, {
               code: selectedAddress.CLASSIFICATION_CODE,
-            })?.value || null,
+            })?.value ?? undefined,
           single_line_address: selectedAddress.ADDRESS,
           title: selectedAddress.ADDRESS.slice(
             0,
@@ -141,7 +137,7 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
         addressSelectionHandler,
       );
     };
-  }, [sanitizedPostcode, selectedOption]);
+  }, [sanitizedPostcode, selectedOption, data?.blpuCodes, setAddress]);
 
   const handleCheckPostcode = () => {
     if (!sanitizedPostcode) setShowPostcodeError(true);
