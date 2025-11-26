@@ -16,7 +16,6 @@ import { formatSchemaDisplayValue } from "@planx/components/List/utils";
 import type { Page } from "@planx/components/Page/model";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import format from "date-fns/format";
-import { publicClient } from "lib/graphql";
 import find from "lodash/find";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
@@ -357,7 +356,7 @@ interface ComponentProps {
 
 function PropertyInformation(props: ComponentProps) {
   const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES, {
-    client: publicClient,
+    context: { role: "public" },
   });
 
   const propertyTypeVal = props.passport.data?.["property.type"]?.[0];

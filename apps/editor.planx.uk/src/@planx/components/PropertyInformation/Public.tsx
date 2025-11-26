@@ -8,7 +8,7 @@ import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
 import type { PublicProps } from "@planx/components/shared/types";
 import { GraphError } from "components/Error/GraphError";
 import { Feature } from "geojson";
-import { publicClient } from "lib/graphql";
+import { client } from "lib/graphql";
 import find from "lodash/find";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -28,7 +28,7 @@ function Component(props: PublicProps<PropertyInformation>) {
     state.overrideAnswer,
   ]);
   const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES, {
-    client: publicClient,
+    context: { role: "public" },
   });
 
   if (!passport.data?._address)
