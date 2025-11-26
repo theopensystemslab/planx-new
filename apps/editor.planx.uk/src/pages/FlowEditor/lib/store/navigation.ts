@@ -230,7 +230,7 @@ export const navigationStore: StateCreator<
     const { sectionNodes, isFinalCard, sectionCount } = get();
     if (!sectionCount) return;
 
-    if (isFinalCard()) return { completed: 100, current: 100 };
+    // if (isFinalCard()) return { completed: 100, current: 100 };
 
     // Account for offset index
     const index = currentSectionIndex - 1;
