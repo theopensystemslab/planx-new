@@ -1,6 +1,10 @@
 import { array, boolean, object, string } from "yup";
 
-import { Option, optionValidationSchema } from "../Option/model";
+import {
+  type ConditionalOption,
+  Option,
+  optionValidationSchema,
+} from "../Option/model";
 import {
   BaseChecklist,
   baseChecklistValidationSchema,
@@ -132,8 +136,8 @@ export const validationSchema = baseChecklistValidationSchema.concat(
             "Exactly one option should have a blank data field when never putting to user",
         });
       },
-    })
-)
+    }),
+);
 
 export const parseChecklist = (
   data: Record<string, any> | undefined,

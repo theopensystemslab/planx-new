@@ -57,7 +57,14 @@ export const useConditionalOptions = (
     });
   }
 
-  return { conditionalOptions, groupedConditionalOptions };
+  return {
+    conditionalOptions: conditionalOptions?.length
+      ? conditionalOptions
+      : undefined,
+    groupedConditionalOptions: groupedConditionalOptions?.length
+      ? groupedConditionalOptions
+      : undefined,
+  };
 };
 
 const logNoOptionsWarning = (

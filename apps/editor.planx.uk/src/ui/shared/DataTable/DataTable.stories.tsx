@@ -1,23 +1,37 @@
-// @ts-nocheck
+import Box from "@mui/material/Box";
 import { Meta, StoryObj } from "@storybook/react";
-import { getFlowNamesForFilter } from "pages/PlatformAdminPanel/utils";
+import {
+  formatDate,
+  getFlowNamesForFilter,
+} from "pages/PlatformAdminPanel/utils";
+import React from "react";
+import type { AdminPanelData, LiveFlow } from "types";
 
 import { DataTable } from "./DataTable";
 import { mockTeams } from "./mockTeams";
-import { ColumnFilterType } from "./types";
+import { ColumnFilterType, type DataGridProps } from "./types";
+
+type TableStoryProps = DataGridProps<AdminPanelData>;
 
 const meta = {
   title: "Design System/Atoms/Data table",
   component: DataTable,
-} satisfies Meta<typeof DataTable>;
-
-type Story = StoryObj<typeof meta>;
+  decorators: [
+    (Story) => (
+      <Box sx={{ height: "500px" }}>
+        <Story />
+      </Box>
+    ),
+  ],
+} satisfies Meta<TableStoryProps>;
 
 export default meta;
 
-const liveFlowValueOptions = getFlowNamesForFilter(mockTeams);
+type Story = StoryObj<TableStoryProps>;
 
-export const Basic = {
+const liveFlowNameValueOptions = getFlowNamesForFilter(mockTeams);
+
+export const Basic: Story = {
   args: {
     rows: mockTeams,
     columns: [
@@ -30,14 +44,28 @@ export const Basic = {
         headerName: "Reference code",
       },
       {
-        field: "liveFlows",
+        field: "liveFlowsNames" as keyof AdminPanelData,
         headerName: "Live services",
         width: 450,
         type: ColumnFilterType.ARRAY,
         columnOptions: {
-          valueOptions: liveFlowValueOptions,
+          valueGetter: (_value: LiveFlow[], row: AdminPanelData) =>
+            row.liveFlows?.map(({ name }) => name),
+          valueOptions: liveFlowNameValueOptions,
           sortable: false,
-          filterOperators: arrayFilterOperators(liveFlowValueOptions),
+        },
+      },
+      {
+        field: "liveFlowsDates" as keyof AdminPanelData,
+        headerName: "First online at",
+        type: ColumnFilterType.ARRAY,
+        columnOptions: {
+          valueGetter: (_value: LiveFlow[], row: AdminPanelData) =>
+            row.liveFlows?.map(({ firstOnlineAt }) =>
+              formatDate(firstOnlineAt),
+            ),
+          filterable: false,
+          sortable: false,
         },
       },
       {
@@ -57,4 +85,4 @@ export const Basic = {
       },
     ],
   },
-} satisfies Story;
+};

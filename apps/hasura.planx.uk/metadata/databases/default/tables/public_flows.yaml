@@ -107,6 +107,11 @@ computed_fields:
         name: compile_flow_portals
         schema: public
     comment: Flow data with portals merged in
+  - name: first_online_at
+    definition:
+      function:
+        name: flow_first_online_at
+        schema: public
 insert_permissions:
   - role: api
     permission:
@@ -300,6 +305,7 @@ select_permissions:
         - version
       computed_fields:
         - data_merged
+        - first_online_at
       filter:
         _and:
           - _or:
@@ -344,6 +350,7 @@ select_permissions:
         - version
       computed_fields:
         - data_merged
+        - first_online_at
       filter:
         deleted_at:
           _is_null: true
@@ -403,6 +410,7 @@ select_permissions:
         - version
       computed_fields:
         - data_merged
+        - first_online_at
       filter:
         deleted_at:
           _is_null: true

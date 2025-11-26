@@ -35,7 +35,7 @@ const Summary: React.FC = () => {
           Summarise what the service does.
           <br />
           <br />
-          This wording is used on the{" "}
+          This is used on the entry page of online, published services and the{" "}
           <Link href={lpsURL} target="_blank" rel="noopener noreferrer">
             Find Local Planning Services (opens in a new tab)
           </Link>{" "}
