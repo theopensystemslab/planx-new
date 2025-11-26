@@ -83,13 +83,17 @@ test("cards link to their associated nodes", async () => {
   const firstItemButton = within(first).getByRole("button");
   await user.click(firstItemButton);
   expect(mockNavigate).toHaveBeenCalledWith(
-    expect.stringContaining(urlToParentQuestion),
+    expect.objectContaining({
+      to: expect.stringContaining(urlToParentQuestion),
+    }),
   );
 
   const secondItemButton = within(second).getByRole("button");
   await user.click(secondItemButton);
   expect(mockNavigate).toHaveBeenCalledWith(
-    expect.stringContaining(urlToParentQuestion),
+    expect.objectContaining({
+      to: expect.stringContaining(urlToParentQuestion),
+    }),
   );
 });
 
