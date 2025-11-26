@@ -18,7 +18,7 @@ vi.mock("../helpers/downloadZip");
 
 describe("when the VerifySubmissionEmail component renders", () => {
   it("displays the email address input", async () => {
-    setup(<VerifySubmissionEmail params={{ sessionId: "1" }} />);
+    await setup(<VerifySubmissionEmail params={{ sessionId: "1" }} />);
 
     expect(
       screen.getByText("Verify your submission email address"),
@@ -29,7 +29,7 @@ describe("when the VerifySubmissionEmail component renders", () => {
   });
 
   it("should not display an error message", async () => {
-    setup(<VerifySubmissionEmail params={{ sessionId: "1" }} />);
+    await setup(<VerifySubmissionEmail params={{ sessionId: "1" }} />);
 
     expect(
       screen.queryByText("Sorry, something went wrong. Please try again."),
@@ -46,7 +46,7 @@ describe("when the VerifySubmissionEmail component renders", () => {
   });
 
   it("shows sessionId and local authority in the application details table", async () => {
-    setup(
+    await setup(
       <VerifySubmissionEmail
         params={{ sessionId: "a-session-id", team: "barking-and-dagenham" }}
       />,

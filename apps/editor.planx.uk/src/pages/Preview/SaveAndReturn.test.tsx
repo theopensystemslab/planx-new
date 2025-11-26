@@ -25,7 +25,7 @@ describe("Save and Return component", () => {
 
   it("displays the ConfirmEmail component if an email address is not captured", async () => {
     const children = <Button>Testing 123</Button>;
-    setup(<SaveAndReturn children={children}></SaveAndReturn>);
+    await setup(<SaveAndReturn children={children}></SaveAndReturn>);
 
     expect(screen.queryByText("Testing 123")).not.toBeInTheDocument();
     expect(screen.getByText("Enter your email address")).toBeInTheDocument();
@@ -34,7 +34,7 @@ describe("Save and Return component", () => {
   it("displays children if an email address is already captured", async () => {
     act(() => setState({ saveToEmail: "test@test.com" }));
     const children = <Button>Testing 123</Button>;
-    setup(<SaveAndReturn children={children}></SaveAndReturn>);
+    await setup(<SaveAndReturn children={children}></SaveAndReturn>);
 
     expect(screen.getByText("Testing 123")).toBeInTheDocument();
 

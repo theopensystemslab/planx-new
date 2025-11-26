@@ -7,8 +7,8 @@ import EventsLog from "./components/EventsLog";
 import { mockSubmissions } from "./mockSubmissions";
 
 describe("When the submissions log renders", () => {
-  it("shows the expected headers and rows without an error", () => {
-    setup(
+  it("shows the expected headers and rows without an error", async () => {
+    await setup(
       <EventsLog
         submissions={mockSubmissions}
         error={undefined}

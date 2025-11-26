@@ -85,7 +85,7 @@ describe("Read Me Page component", () => {
       }),
     );
 
-    setup(
+    await setup(
       <DndProvider backend={HTML5Backend}>
         <ReadMePage {...defaultProps} />
       </DndProvider>,
@@ -115,7 +115,7 @@ describe("Read Me Page component", () => {
 
     getState().setTeamMembers([{ ...teamViewerUser, role: "teamViewer" }]);
 
-    setup(
+    await setup(
       <DndProvider backend={HTML5Backend}>
         <ReadMePage {...defaultProps} />
       </DndProvider>,

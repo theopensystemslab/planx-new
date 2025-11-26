@@ -22,7 +22,7 @@ describe("Platform admin panel", () => {
   });
 
   it("renders expected headers and rows without an error", async () => {
-    setup(<PlatformAdminPanel />);
+    await setup(<PlatformAdminPanel />);
     const headers = [
       "Team",
       "Reference code",
