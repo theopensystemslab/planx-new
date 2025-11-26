@@ -21,7 +21,7 @@ import { ToastContainer } from "react-toastify";
 
 // init airbrake before everything else
 import * as airbrake from "./airbrake";
-import { client } from "./lib/graphql";
+import { publicClient } from "./lib/graphql";
 import navigation from "./lib/navigation";
 import { defaultTheme } from "./theme";
 
@@ -101,7 +101,7 @@ const Layout: React.FC<{
 root.render(
   <ToastContextProvider>
     <QueryClientProvider client={queryClient}>
-      <ApolloProvider client={client}>
+      <ApolloProvider client={publicClient}>
         <AnalyticsProvider>
           <Router context={{ currentUser: hasJWT() }} navigation={navigation}>
             <HelmetProvider>

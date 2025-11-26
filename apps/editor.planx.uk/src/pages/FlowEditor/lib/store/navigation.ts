@@ -128,21 +128,19 @@ export const navigationStore: StateCreator<
    * Returned in depth-first order
    */
   filterFlowByType: (type: TYPES): Store.Flow => {
-    // Filter the full flow
     const flow = get().flow;
+
+    // Filter and get IDs
     const filteredFlow = Object.fromEntries(
       Object.entries(flow).filter(([_key, value]) => value.type === type),
     );
 
-    // Sort IDs-only depth-first
-    const filteredNodeIds = Object.entries(filteredFlow).map(
-      (entry) => entry[0],
-    );
+    const filteredNodeIds = Object.keys(filteredFlow);
     const sortedFilteredNodeIds = sortIdsDepthFirst(flow)(
       new Set(filteredNodeIds),
     );
 
-    // Reconstruct the full node objects preserving depth-first sorted order
+    // Reconstruct in sorted order
     const sortedFilteredFlow: { [k: string]: Store.Node } = {};
     sortedFilteredNodeIds.forEach(
       (id) => (sortedFilteredFlow[id] = filteredFlow[id]),

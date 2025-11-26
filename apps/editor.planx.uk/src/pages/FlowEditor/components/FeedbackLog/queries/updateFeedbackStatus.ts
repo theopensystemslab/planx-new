@@ -1,6 +1,6 @@
 import { GridRowId } from "@mui/x-data-grid";
 import gql from "graphql-tag";
-import { client } from "lib/graphql";
+import { getClient } from "lib/graphql";
 
 import { FeedbackStatus } from "../types";
 
@@ -8,7 +8,7 @@ export const updateFeedbackStatus = async (
   selectedRowIds: readonly GridRowId[],
   status: FeedbackStatus,
 ) => {
-  await client.mutate<{ updatedFeedback: { id: number }[] }>({
+  await getClient().mutate<{ updatedFeedback: { id: number }[] }>({
     mutation: gql`
       mutation UpdateFeedbackStatus(
         $status: feedback_status_enum_enum

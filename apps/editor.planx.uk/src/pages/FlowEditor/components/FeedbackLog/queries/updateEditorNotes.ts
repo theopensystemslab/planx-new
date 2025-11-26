@@ -1,10 +1,10 @@
 import gql from "graphql-tag";
-import { client } from "lib/graphql";
+import { getClient } from "lib/graphql";
 
 import { Feedback } from "../types";
 
 export const updateEditorNotes = async (updatedRow: Feedback) => {
-  await client.mutate({
+  await getClient().mutate({
     mutation: gql`
       mutation UpdateEditorNotes($id: Int!, $editor_notes: String) {
         update_feedback_by_pk(

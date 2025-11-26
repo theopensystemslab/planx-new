@@ -21,7 +21,7 @@ import Team from "pages/Team";
 import React from "react";
 import { View } from "react-navi";
 
-import { client } from "../lib/graphql";
+import { publicClient } from "../lib/graphql";
 import { useStore } from "../pages/FlowEditor/lib/store";
 import { getTeamFromDomain, makeTitle } from "./utils";
 import { getFlowEditorData } from "./views/flowEditor";
@@ -90,7 +90,7 @@ const routes = compose(
       if (JSON.stringify(cached) !== JSON.stringify(variables)) {
         cached = variables;
 
-        const { data } = await client.query({
+        const { data } = await publicClient.query({
           query: gql`
             query GetFlow($flowSlug: String!, $teamSlug: String!) {
               flows(

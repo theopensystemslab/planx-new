@@ -19,7 +19,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import NotionEmbed from "ui/editor/NotionEmbed";
 
-import { client } from "../lib/graphql";
+import { getClient } from "../lib/graphql";
 import GlobalSettingsView from "../pages/GlobalSettings";
 import { PlatformAdminPanel } from "../pages/PlatformAdminPanel/PlatformAdminPanel";
 import Teams from "../pages/Teams";
@@ -48,7 +48,7 @@ const editorRoutes = compose(
 
   mount({
     "/": route(async () => {
-      const { data } = await client.query<{ teams: TeamSummary[] }>({
+      const { data } = await getClient().query<{ teams: TeamSummary[] }>({
         query: gql`
           query GetTeamSummaries {
             teams(order_by: { name: asc }) {
@@ -83,7 +83,7 @@ const editorRoutes = compose(
         );
 
       return route(async () => {
-        const { data } = await client.query({
+        const { data } = await getClient().query({
           query: gql`
             query {
               globalSettings: global_settings {

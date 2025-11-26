@@ -62,7 +62,7 @@ const authHttpLink = authMiddleware.concat(httpLink);
 /**
  * Authenticated web socket connection - used for GraphQL subscriptions
  */
-const authWsLink = new WebSocketLink({
+const getAuthWsLink = () => new WebSocketLink({
   uri: import.meta.env.VITE_APP_HASURA_WEBSOCKET!,
   options: {
     reconnect: true,
@@ -85,7 +85,7 @@ const authWsLink = new WebSocketLink({
  *  - Queries and mutations -> HTTPS
  *  - Subscriptions -> WS
  */
-const splitLink = split(
+const getSplitLink = () => split(
   ({ query }) => {
     const definition = getMainDefinition(query);
     return (
@@ -93,7 +93,7 @@ const splitLink = split(
       definition.operation === "subscription"
     );
   },
-  authWsLink,
+  getAuthWsLink(),
   authHttpLink,
 );
 
@@ -235,13 +235,21 @@ const waitForAuthentication = async () =>
     });
   });
 
+let client: ApolloClient<any> | null = null;
+
 /**
  * Client used to make all requests by authorised users
  */
-export const client = new ApolloClient({
-  link: from([retryLink, errorLink, splitLink]),
-  cache: new InMemoryCache(),
-});
+export const getClient = () => {
+  if (!client) {
+    client = new ApolloClient({
+      link: from([retryLink, errorLink, getSplitLink()]),
+      cache: new InMemoryCache(),
+    });
+  }
+
+  return client;
+};
 
 /**
  * Client used to make requests in all public interface

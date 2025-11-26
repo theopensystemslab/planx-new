@@ -1,10 +1,7 @@
-import { gql } from "@apollo/client";
 import {
   ComponentType as TYPES,
   DEFAULT_FLAG_CATEGORY,
-  FlowStatus,
 } from "@opensystemslab/planx-core/types";
-import { client } from "lib/graphql";
 import isEmpty from "lodash/isEmpty";
 import isPlainObject from "lodash/isObject";
 

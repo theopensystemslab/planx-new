@@ -6,7 +6,7 @@ import { TeamMember } from "pages/FlowEditor/components/Team/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
-import { client } from "../lib/graphql";
+import { getClient } from "../lib/graphql";
 import { makeTitle } from "./utils";
 
 export interface GetUsersForTeam {
@@ -53,7 +53,7 @@ const teamMembersRoutes = compose(
 
       const {
         data: { users },
-      } = await client.query<GetUsersForTeam>({
+      } = await getClient().query<GetUsersForTeam>({
         query: GET_USERS_FOR_TEAM_QUERY,
         variables: { teamSlug },
         fetchPolicy: "no-cache",

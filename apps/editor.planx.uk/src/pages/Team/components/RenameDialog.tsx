@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import { Form, Formik, FormikConfig } from "formik";
 import gql from "graphql-tag";
 import { useToast } from "hooks/useToast";
-import { client } from "lib/graphql";
+import { getClient } from "lib/graphql";
 import React from "react";
 import { URLPrefix } from "ui/editor/URLPrefix";
 import InputLabel from "ui/public/InputLabel";
@@ -49,7 +49,7 @@ export const RenameDialog: React.FC<Props> = ({
     { setFieldError, setSubmitting },
   ) => {
     try {
-      await client.mutate({
+      await getClient().mutate({
         mutation: gql`
           mutation UpdateFlowSlug(
             $flowId: uuid!

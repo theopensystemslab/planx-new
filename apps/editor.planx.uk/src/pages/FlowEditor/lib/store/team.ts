@@ -5,7 +5,7 @@ import {
   TeamTheme,
 } from "@opensystemslab/planx-core/types";
 import gql from "graphql-tag";
-import { client } from "lib/graphql";
+import { getClient } from "lib/graphql";
 import { TeamMember } from "pages/FlowEditor/components/Team/types";
 import { CreateTeam } from "pages/Teams/AddTeamButton";
 import type { StateCreator } from "zustand";
@@ -84,7 +84,7 @@ export const teamStore: StateCreator<
   },
 
   initTeamStore: async (slug) => {
-    const { data } = await client.query({
+    const { data } = await getClient().query({
       query: gql`
         query GetTeamBySlug($slug: String!) {
           teams(

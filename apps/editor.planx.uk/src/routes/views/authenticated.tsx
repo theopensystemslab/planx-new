@@ -1,4 +1,6 @@
+import { ApolloProvider } from "@apollo/client";
 import { getCookie } from "lib/cookie";
+import { getClient } from "lib/graphql";
 import { redirect } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -17,8 +19,10 @@ export const authenticatedView = async () => {
   useStore.getState().setPreviewEnvironment("editor");
 
   return (
-    <AuthenticatedLayout>
-      <View />
-    </AuthenticatedLayout>
+    <ApolloProvider client={getClient()}>
+      <AuthenticatedLayout>
+        <View />
+      </AuthenticatedLayout>
+    </ApolloProvider>
   );
 };

@@ -5,7 +5,7 @@ import FlowEditorLayout from "pages/layout/FlowEditorLayout";
 import React from "react";
 import { View } from "react-navi";
 
-import { client } from "../../lib/graphql";
+import { getClient } from "../../lib/graphql";
 import { useStore } from "../../pages/FlowEditor/lib/store";
 
 interface FlowEditorData {
@@ -58,7 +58,7 @@ export const getFlowEditorData = async (
 ): Promise<FlowEditorData> => {
   const {
     data: { flows },
-  } = await client.query<GetFlowEditorData>({
+  } = await getClient().query<GetFlowEditorData>({
     query: gql`
       query GetFlowMetadata($slug: String!, $team_slug: String!) {
         flows(

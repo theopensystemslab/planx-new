@@ -6,7 +6,7 @@ import { Feedback } from "pages/FlowEditor/components/FeedbackLog/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
-import { client } from "../lib/graphql";
+import { getClient } from "../lib/graphql";
 import { makeTitle } from "./utils";
 
 const feedbackRoutes = compose(
@@ -26,7 +26,7 @@ const feedbackRoutes = compose(
 
       const {
         data: { feedback },
-      } = await client.query<{ feedback: Feedback[] }>({
+      } = await getClient().query<{ feedback: Feedback[] }>({
         query: gql`
           query GetFeedbackForTeam($teamSlug: String!) {
             feedback: feedback_summary(

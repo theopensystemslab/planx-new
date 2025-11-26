@@ -1,7 +1,7 @@
 import { FetchResult, gql } from "@apollo/client";
 import { GET_USERS_FOR_TEAM_QUERY } from "routes/teamMembers";
 
-import { client } from "../../../../../lib/graphql";
+import { getClient } from "../../../../../lib/graphql";
 import { AddNewEditorFormValues } from "../types";
 
 type CreateAndAddUserResponse = FetchResult<{
@@ -17,7 +17,7 @@ export const createAndAddUserToTeam = async ({
   teamId: number;
   teamSlug: string;
 }) => {
-  const response: CreateAndAddUserResponse = await client.mutate({
+  const response: CreateAndAddUserResponse = await getClient().mutate({
     mutation: gql`
       mutation CreateAndAddUserToTeam(
         $email: String!

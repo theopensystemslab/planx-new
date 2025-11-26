@@ -15,7 +15,7 @@ import {
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 
-import { client } from "../lib/graphql";
+import { getClient } from "../lib/graphql";
 import components from "../pages/FlowEditor/components/forms";
 import FormModal from "../pages/FlowEditor/components/forms/FormModal";
 import { SLUGS } from "../pages/FlowEditor/data/types";
@@ -36,7 +36,7 @@ const sortFlows = (a: { text: string }, b: { text: string }) =>
  *   - Not the parent flow I am currently nesting within
  */
 const getExternalPortals = async (currentTeam: string, currentFlow: string) => {
-  const { data } = await client.query({
+  const { data } = await getClient().query({
     query: gql`
       query GetExternalPortals {
         flows(order_by: { slug: asc }) {

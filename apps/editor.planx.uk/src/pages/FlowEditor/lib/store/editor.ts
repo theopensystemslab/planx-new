@@ -22,7 +22,7 @@ import {
   update,
 } from "@planx/graph";
 import { OT } from "@planx/graph/types";
-import { client } from "lib/graphql";
+import { getClient } from "lib/graphql";
 import navigation from "lib/navigation";
 import debounce from "lodash/debounce";
 import { type } from "ot-json0";
@@ -338,7 +338,7 @@ export const editorStore: StateCreator<
 
   archiveFlow: async ({ id, slug }) => {
     try {
-      const { data } = await client.mutate<{
+      const { data } = await getClient().mutate<{
         flow: { id: string; name: string };
       }>({
         mutation: gql`
@@ -509,7 +509,7 @@ export const editorStore: StateCreator<
   getFlows: async (teamId) => {
     const {
       data: { flows },
-    } = await client.query<{ flows: FlowSummary[] }>({
+    } = await getClient().query<{ flows: FlowSummary[] }>({
       query: gql`
         query GetFlows($teamId: Int!) {
           flows(where: { team: { id: { _eq: $teamId } } }) {
@@ -561,7 +561,7 @@ export const editorStore: StateCreator<
   },
 
   lastPublished: async (flowId: string) => {
-    const { data } = await client.query({
+    const { data } = await getClient().query({
       query: gql`
         query GetLastPublishedFlow($id: uuid!) {
           flow: flows_by_pk(id: $id) {
@@ -588,7 +588,7 @@ export const editorStore: StateCreator<
   },
 
   lastPublisher: async (flowId: string) => {
-    const { data } = await client.query({
+    const { data } = await getClient().query({
       query: gql`
         query GetLastPublisher($id: uuid!) {
           flow: flows_by_pk(id: $id) {
@@ -832,7 +832,7 @@ export const editorStore: StateCreator<
   },
 
   addFlowComment: async (flowId, actorId, comment) => {
-    const response = await client.mutate({
+    const response = await getClient().mutate({
       mutation: gql`
         mutation InsertFlowComment(
           $flowId: uuid!
@@ -856,7 +856,7 @@ export const editorStore: StateCreator<
   },
 
   deleteFlowComment: async (commentId) => {
-    const response = await client.mutate({
+    const response = await getClient().mutate({
       mutation: gql`
         mutation DeleteFlowComment($id: Int!) {
           delete_flow_comments_by_pk(id: $id) {

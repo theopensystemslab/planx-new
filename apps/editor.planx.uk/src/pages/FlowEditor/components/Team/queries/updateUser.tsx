@@ -1,12 +1,13 @@
 import { gql } from "@apollo/client";
-import { client } from "../../../../../lib/graphql";
+
+import { getClient } from "../../../../../lib/graphql";
 import { AddNewEditorFormValues } from "../types";
 
 export const updateTeamMember = async (
   userId: number,
-  userValues: AddNewEditorFormValues
+  userValues: AddNewEditorFormValues,
 ) => {
-  const response = await client.mutate({
+  const response = await getClient().mutate({
     mutation: gql`
       mutation UpdateUser($userId: Int, $userValues: users_set_input) {
         update_users(where: { id: { _eq: $userId } }, _set: $userValues) {

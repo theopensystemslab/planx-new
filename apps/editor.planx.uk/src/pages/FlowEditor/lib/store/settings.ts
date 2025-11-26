@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 import { FlowStatus } from "@opensystemslab/planx-core/types";
 import camelcaseKeys from "camelcase-keys";
-import { client } from "lib/graphql";
+import { getClient } from "lib/graphql";
 import { FlowInformation } from "pages/FlowEditor/utils";
 import { FlowSettings, GlobalSettings, TextContent } from "types";
 import type { StateCreator } from "zustand";
@@ -69,7 +69,7 @@ export const settingsStore: StateCreator<
           },
         ],
       },
-    } = await client.query<FlowInformationQuery>({
+    } = await getClient().query<FlowInformationQuery>({
       query: gql`
         query GetFlow($slug: String!, $team_slug: String!) {
           flows(
@@ -157,7 +157,7 @@ export const settingsStore: StateCreator<
   },
 
   updateGlobalSettings: async (newSettings: { [key: string]: TextContent }) => {
-    await client.mutate({
+    await getClient().mutate({
       mutation: gql`
         mutation UpdateGlobalSettings($new_settings: jsonb) {
           insert_global_settings(

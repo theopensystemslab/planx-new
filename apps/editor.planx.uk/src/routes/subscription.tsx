@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { client } from "lib/graphql";
+import { getClient } from "lib/graphql";
 import { compose, mount, NotFoundError, route, withData } from "navi";
 import { Subscription } from "pages/FlowEditor/components/Subscription/Subscription";
 import { ServiceCharge } from "pages/FlowEditor/components/Subscription/types";
@@ -26,7 +26,7 @@ const subscriptionRoutes = compose(
 
         const {
           data: { serviceCharges },
-        } = await client.query<{ serviceCharges: ServiceCharge[] }>({
+        } = await getClient().query<{ serviceCharges: ServiceCharge[] }>({
           query: gql`
             query GetServiceChargesForTeam($teamSlug: String!) {
               serviceCharges: service_charges(
