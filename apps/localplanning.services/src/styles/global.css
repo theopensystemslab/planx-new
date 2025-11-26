@@ -134,12 +134,16 @@
     @apply my-8
   }
   .styled-content a:not(.button),
-  .paragraph-link {
+  .paragraph-link,
+  .button-link {
     @apply underline underline-offset-6;
   }
   .styled-content a.external::after,
   .paragraph-link--external::after {
     content: " ↗";
+  }
+  .button-link {
+    cursor: pointer;
   }
 
   /*
