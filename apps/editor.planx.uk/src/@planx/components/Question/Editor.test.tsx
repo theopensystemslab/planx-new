@@ -13,7 +13,7 @@ it("renders without error", () => {
     </DndProvider>,
   );
   expect(screen.getByText("Question")).toBeInTheDocument();
-  expect(screen.getByText("add new option")).toBeInTheDocument();
+  expect(screen.getByText("add new")).toBeInTheDocument();
 });
 
 it("displays the options editor when the 'add new option' button is clicked", async () => {

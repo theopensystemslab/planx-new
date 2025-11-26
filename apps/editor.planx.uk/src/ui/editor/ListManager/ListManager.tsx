@@ -480,7 +480,7 @@ export default function ListManager<T, EditorExtraProps>(
           }}
           disabled={disabled || isMaxLength}
         >
-          {props.newValueLabel || "add new option"}
+          {props.newValueLabel || "add new"}
         </Button>
       </DragDropContext>
     </>
