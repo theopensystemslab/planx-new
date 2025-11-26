@@ -1,4 +1,10 @@
 /* eslint-disable no-restricted-imports */
+import {
+  ApolloClient,
+  ApolloProvider,
+  HttpLink,
+  InMemoryCache,
+} from "@apollo/client";
 import { ThemeProvider } from "@mui/material";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
@@ -12,6 +18,7 @@ import {
 import { render, RenderResult, waitFor } from "@testing-library/react";
 import type { UserEvent } from "@testing-library/user-event";
 import userEvent from "@testing-library/user-event";
+import { ToastContextProvider } from "contexts/ToastContext";
 import React from "react";
 
 import { defaultTheme } from "./theme";
@@ -29,6 +36,17 @@ const testQueryClient = new QueryClient({
   },
 });
 
+const testApolloClient = new ApolloClient({
+  link: new HttpLink({
+    uri: "http://mock-api/graphql",
+  }),
+  cache: new InMemoryCache(),
+  defaultOptions: {
+    watchQuery: { fetchPolicy: "no-cache" },
+    query: { fetchPolicy: "no-cache" },
+  },
+});
+
 /**
  * Setup @testing-library/react environment with userEvent and TanStack Router
  * https://testing-library.com/docs/user-event/intro#writing-tests-with-userevent
@@ -43,11 +61,15 @@ export const setup = async (
 
   const rootRoute = createRootRoute({
     component: () => (
-      <QueryClientProvider client={testQueryClient}>
-        <ThemeProvider theme={defaultTheme}>
-          <Outlet />
-        </ThemeProvider>
-      </QueryClientProvider>
+      <ToastContextProvider>
+        <ApolloProvider client={testApolloClient}>
+          <QueryClientProvider client={testQueryClient}>
+            <ThemeProvider theme={defaultTheme}>
+              <Outlet />
+            </ThemeProvider>
+          </QueryClientProvider>
+        </ApolloProvider>
+      </ToastContextProvider>
     ),
   });
 
