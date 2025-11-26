@@ -51,6 +51,7 @@ export const publishedView = async (req: NaviRequest) => {
     flow: publishedFlow,
     flowSlug,
     flowStatus: flow.status,
+    flowSummary: flow.summary,
     flowName: flow.name,
   });
 
@@ -60,7 +61,11 @@ export const publishedView = async (req: NaviRequest) => {
 
   return (
     <PublicLayout>
-      <WatermarkBackground variant="dark" opacity={0.05} forceVisibility={false} />
+      <WatermarkBackground
+        variant="dark"
+        opacity={0.05}
+        forceVisibility={false}
+      />
       <OfflineLayout>
         <SaveAndReturnLayout>
           <View />

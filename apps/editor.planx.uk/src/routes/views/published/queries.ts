@@ -50,6 +50,7 @@ export const fetchSettingsForPublishedView = async (
             }
             settings
             status
+            summary
             publishedFlows: published_flows(
               limit: 1
               order_by: { created_at: desc }
