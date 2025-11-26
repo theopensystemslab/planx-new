@@ -88,6 +88,11 @@ export interface SectionNode extends Store.Node {
   };
 }
 
+export interface LiveFlow {
+  name: string;
+  firstOnlineAt: string;
+}
+
 export interface AdminPanelData {
   id: string;
   name: string;
@@ -107,7 +112,7 @@ export interface AdminPanelData {
   primaryColour?: string;
   linkColour?: string;
   actionColour?: string;
-  liveFlows: string[] | null;
+  liveFlows: LiveFlow[] | null;
   isTrial: boolean;
 }
 

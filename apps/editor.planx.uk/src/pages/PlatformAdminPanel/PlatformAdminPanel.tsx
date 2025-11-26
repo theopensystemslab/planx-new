@@ -2,7 +2,7 @@ import Typography from "@mui/material/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
-import { AdminPanelData } from "types";
+import { AdminPanelData, type LiveFlow } from "types";
 import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContainer";
 import SettingsSection from "ui/editor/SettingsSection";
 import { DataTable } from "ui/shared/DataTable/DataTable";
@@ -12,12 +12,12 @@ import {
   False as NotConfigured,
   True as Configured,
 } from "../../ui/shared/DataTable/components/cellIcons";
-import { getFlowNamesForFilter } from "./utils";
+import { formatDate, getFlowNamesForFilter } from "./utils";
 
 export const PlatformAdminPanel = () => {
   const adminPanelData = useStore((state) => state.adminPanelData);
 
-  const liveFlowValueOptions = adminPanelData
+  const liveFlowNameValueOptions = adminPanelData
     ? getFlowNamesForFilter(adminPanelData)
     : [];
 
@@ -36,14 +36,26 @@ export const PlatformAdminPanel = () => {
       field: "referenceCode",
       headerName: "Reference code",
     },
-
     {
-      field: "liveFlows",
+      field: "liveFlowsNames" as keyof AdminPanelData,
       headerName: "Live services",
       width: 450,
       type: ColumnFilterType.ARRAY,
       columnOptions: {
-        valueOptions: liveFlowValueOptions,
+        valueGetter: (_value: LiveFlow[], row: AdminPanelData) =>
+          row.liveFlows?.map(({ name }) => name),
+        valueOptions: liveFlowNameValueOptions,
+        sortable: false,
+      },
+    },
+    {
+      field: "liveFlowsDates" as keyof AdminPanelData,
+      headerName: "First online at",
+      type: ColumnFilterType.ARRAY,
+      columnOptions: {
+        valueGetter: (_value: LiveFlow[], row: AdminPanelData) =>
+          row.liveFlows?.map(({ firstOnlineAt }) => formatDate(firstOnlineAt)),
+        filterable: false,
         sortable: false,
       },
     },

@@ -7,9 +7,15 @@ export const mockTeams: AdminPanelData[] = [
     slug: "barking",
     referenceCode: "BDD",
     liveFlows: [
-      "Find out if you need planning permission",
-      "Apply for prior approval",
-      "Barking draft 2",
+      {
+        name: "Find out if you need planning permission",
+        firstOnlineAt: "2025-11-24T15:36:17Z",
+      },
+      {
+        name: "Apply for prior approval",
+        firstOnlineAt: "2025-11-24T15:36:17Z",
+      },
+      { name: "Barking draft 2", firstOnlineAt: "2025-11-24T15:36:17Z" },
     ],
     planningDataEnabled: false,
     govpayEnabled: true,
@@ -37,11 +43,23 @@ export const mockTeams: AdminPanelData[] = [
     name: "Doncaster",
     referenceCode: "DON",
     liveFlows: [
-      "Notify completion of planning application",
-      "Find out if you need planning permission",
-      "apply for prior approval ",
-      "Apply for service declarations",
-      "Article4",
+      {
+        name: "Notify completion of planning application",
+        firstOnlineAt: "2025-11-24T15:36:17Z",
+      },
+      {
+        name: "Find out if you need planning permission",
+        firstOnlineAt: "2025-11-24T15:36:17Z",
+      },
+      {
+        name: "apply for prior approval ",
+        firstOnlineAt: "2025-11-24T15:36:17Z",
+      },
+      {
+        name: "Apply for service declarations",
+        firstOnlineAt: "2025-11-24T15:36:17Z",
+      },
+      { name: "Article4", firstOnlineAt: "2025-11-24T15:36:17Z" },
     ],
     planningDataEnabled: true,
     govpayEnabled: true,
@@ -56,13 +74,28 @@ export const mockTeams: AdminPanelData[] = [
     name: "Newcastle",
     referenceCode: "NCL",
     liveFlows: [
-      "Confirmation pages",
-      "Find out if you need planning permission",
-      "Listed building pre application advice",
-      "Apply for prior approval",
-      "Apply for service declarations",
-      "Article4",
-      "Apply for a lawful development certificate",
+      { name: "Confirmation pages", firstOnlineAt: "2025-11-24T15:36:17Z" },
+      {
+        name: "Find out if you need planning permission",
+        firstOnlineAt: "2025-11-24T15:36:17Z",
+      },
+      {
+        name: "Listed building pre application advice",
+        firstOnlineAt: "2025-11-24T15:36:17Z",
+      },
+      {
+        name: "Apply for prior approval",
+        firstOnlineAt: "2025-11-24T15:36:17Z",
+      },
+      {
+        name: "Apply for service declarations",
+        firstOnlineAt: "2025-11-24T15:36:17Z",
+      },
+      { name: "Article4", firstOnlineAt: "2025-11-24T15:36:17Z" },
+      {
+        name: "Apply for a lawful development certificate",
+        firstOnlineAt: "2025-11-24T15:36:17Z",
+      },
     ],
     planningDataEnabled: false,
     govpayEnabled: false,
@@ -77,10 +110,19 @@ export const mockTeams: AdminPanelData[] = [
     name: "Tewkesbury",
     referenceCode: "TWK",
     liveFlows: [
-      "Listed building pre application advice",
-      "Apply for service declarations",
-      "Article4",
-      "Apply for a lawful development certificate",
+      {
+        name: "Listed building pre application advice",
+        firstOnlineAt: "2025-11-24T15:36:17Z",
+      },
+      {
+        name: "Apply for service declarations",
+        firstOnlineAt: "2025-11-24T15:36:17Z",
+      },
+      { name: "Article4", firstOnlineAt: "2025-11-24T15:36:17Z" },
+      {
+        name: "Apply for a lawful development certificate",
+        firstOnlineAt: "2025-11-24T15:36:17Z",
+      },
     ],
     planningDataEnabled: false,
     govpayEnabled: true,
