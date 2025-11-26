@@ -1,6 +1,15 @@
-export interface SubmissionEmailFormValues {
+export interface SubmissionEmailInputValues {
   submissionEmail: string;
   defaultEmail: boolean;
+}
+
+export interface SubmissionEmailSavedValues {
+  existingEmails: { submissionEmail: string; defaultEmail: boolean }[];
+}
+
+export interface SubmissionEmailFormValues {
+  input: SubmissionEmailInputValues;
+  saved: SubmissionEmailSavedValues;
 }
 
 export interface GetTeamSubmissionIntegrationsData {
@@ -11,6 +20,6 @@ export interface GetTeamSubmissionIntegrationsData {
 }
 
 export interface UpdateTeamSubmissionIntegrationsVariables {
-  submissionEmail: string;
-  defaultEmail: boolean;
+  teamId: number;
+  emails: { submissionEmail: string; defaultEmail: boolean }[];
 }

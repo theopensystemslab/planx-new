@@ -1,22 +1,20 @@
-import { useMutation } from "@apollo/client/react";
-import DeleteIcon from "@mui/icons-material/Delete";
-import IconButton from "@mui/material/IconButton";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction";
-import ListItemText from "@mui/material/ListItemText";
+// import DeleteIcon from "@mui/icons-material/Delete";
+// import IconButton from "@mui/material/IconButton";
+import { Box } from "@mui/material/Box";
 import RadioGroup from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
-import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
-import { getIn } from "formik";
+// import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
+import { getIn, useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { ChangeEvent } from "react";
-import InputLabel from "ui/editor/InputLabel";
+import React from "react";
+import ListManager from "ui/editor/ListManager/ListManager";
+// import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input/Input";
+import InputRow from "ui/shared/InputRow";
 
+import { EditorProps } from "../../../../../../../../src/ui/editor/ListManager/ListManager";
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import {
-  DELETE_TEAM_SUBMISSION_INTEGRATIONS,
   GET_TEAM_SUBMISSION_INTEGRATIONS,
   UPSERT_TEAM_SUBMISSION_INTEGRATIONS,
 } from "./queries";
@@ -24,44 +22,61 @@ import { defaultValues, validationSchema } from "./schema";
 import {
   GetTeamSubmissionIntegrationsData,
   SubmissionEmailFormValues,
+  SubmissionEmailInputValues,
+  SubmissionEmailSavedValues,
   UpdateTeamSubmissionIntegrationsVariables,
 } from "./types";
 
 export const SubmissionEmails: React.FC = () => {
   const teamId = useStore((state) => state.teamId);
 
-  const [
-    deleteSubmissionIntegration,
-    { loading: deleteLoading, error: deleteError },
-  ] = useMutation(DELETE_TEAM_SUBMISSION_INTEGRATIONS, {
-    refetchQueries: [
-      { query: GET_TEAM_SUBMISSION_INTEGRATIONS, variables: { teamId } },
-    ],
-    onError: (error) => {
-      console.error("Delete error:", error);
-    },
-  });
+  const addEmail = (
+    formik: ReturnType<typeof useFormik<SubmissionEmailFormValues>>,
+  ) => {
+    const newEmail = formik.values.input.submissionEmail.trim();
+    if (
+      newEmail &&
+      !formik.values.saved.existingEmails.some(
+        (emailObj) => emailObj.submissionEmail === newEmail,
+      )
+    ) {
+      formik.setFieldValue("saved.existingEmails", [
+        ...formik.values.saved.existingEmails,
+        { submissionEmail: newEmail, defaultEmail: false },
+      ]);
+      formik.setFieldValue("input.submissionEmail", "");
+    }
+  };
 
   return (
     <SettingsFormContainer<
       GetTeamSubmissionIntegrationsData,
-      SubmissionEmailFormValues,
-      UpdateTeamSubmissionIntegrationsVariables
+      UpdateTeamSubmissionIntegrationsVariables,
+      SubmissionEmailFormValues
     >
       query={GET_TEAM_SUBMISSION_INTEGRATIONS}
       defaultValues={defaultValues}
       queryVariables={{ teamId }}
       mutation={UPSERT_TEAM_SUBMISSION_INTEGRATIONS}
       getInitialValues={({ submissionIntegrations }) => ({
-        submissionEmail: "",
-        defaultEmail: false,
-        existingEmails: submissionIntegrations || [],
+        input: {
+          submissionEmail: "",
+          defaultEmail: false,
+        },
+        saved: {
+          existingEmails: submissionIntegrations || [],
+        },
       })}
-      getMutationVariables={(values) => ({
-        teamId,
-        submissionEmail: values.submissionEmail,
-        defaultEmail: values.defaultEmail,
-      })}
+      getMutationVariables={(values) => {
+        console.log("getMutationVariables called with values:", values);
+        return {
+          teamId,
+          emails: values.saved.existingEmails.map((emailObj) => ({
+            submissionEmail: emailObj.submissionEmail,
+            defaultEmail: emailObj.defaultEmail,
+          })),
+        };
+      }}
       validationSchema={validationSchema}
       legend="Submission information"
       description={
@@ -77,111 +92,69 @@ export const SubmissionEmails: React.FC = () => {
       onSuccess={(formik, data) => {
         formik.resetForm();
         formik.setFieldValue(
-          "existingEmails",
+          "saved.existingEmails",
           data?.submissionIntegrations || [],
         );
       }}
     >
-      {({ formik, data }) => (
+      {({ formik }) => (
         <>
           <Typography variant="h6" style={{ marginBottom: "1rem" }}>
             Submission Emails
           </Typography>
           <RadioGroup
             value={
-              data?.submissionIntegrations.find(
+              formik.values.saved.existingEmails.find(
                 (emailObj) => emailObj.defaultEmail,
               )?.submissionEmail || ""
             }
             onChange={(e) => {
-              const selectedEmail = e.target.value;
+              const selectedEmail = (e.target as HTMLInputElement).value;
               formik.setFieldValue(
                 "existingEmails",
-                data?.submissionIntegrations.map((emailObj) => ({
+                formik.values.saved.existingEmails.map((emailObj) => ({
                   ...emailObj,
                   defaultEmail: emailObj.submissionEmail === selectedEmail,
                 })),
               );
             }}
           >
-            <List>
-              {data?.submissionIntegrations?.map((emailObj, index) => (
-                <ListItem key={index}>
-                  <ListItemText primary={emailObj.submissionEmail} />
-                  <ListItemSecondaryAction>
-                    {!emailObj.defaultEmail && (
-                      <IconButton
-                        edge="end"
-                        disabled={deleteLoading}
-                        onClick={async () => {
-                          try {
-                            await deleteSubmissionIntegration({
-                              variables: {
-                                submissionEmail: emailObj.submissionEmail,
-                                teamId,
-                              },
-                            });
-                          } catch (err) {
-                            console.error(
-                              "Failed to delete submission email:",
-                              err,
-                            );
-                          }
-                        }}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    )}
-                    <BasicRadio
-                      id={emailObj.submissionEmail}
-                      value={emailObj.submissionEmail}
-                      onChange={(e) => {
-                        const selectedEmail = (e.target as HTMLInputElement)
-                          .value;
-                        formik.setFieldValue(
-                          "existingEmails",
-                          data?.submissionIntegrations.map((emailObj) => ({
-                            ...emailObj,
-                            defaultEmail:
-                              emailObj.submissionEmail === selectedEmail,
-                          })),
-                        );
-                      }}
-                      variant="compact"
-                      label={"Default"}
-                      disabled={deleteLoading}
-                    />
-                  </ListItemSecondaryAction>
-                </ListItem>
-              ))}
-            </List>
+            <ListManager
+              values={formik.values.saved.existingEmails}
+              onChange={(newValues) =>
+                formik.setFieldValue("saved.existingEmails", newValues)
+              }
+              newValue={() => ({ submissionEmail: "", defaultEmail: false })}
+              Editor={EmailsEditor}
+              maxItems={10} // TODO: Do we want to limit the number of emails?
+            />
           </RadioGroup>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "1rem",
-              marginTop: "1rem",
-            }}
-          >
-            <InputLabel label="Submission email" htmlFor="submissionEmail">
-              <Input
-                name="submissionEmail"
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  formik.setFieldValue("submissionEmail", e.target.value)
-                }
-                value={formik.values.submissionEmail}
-                errorMessage={getIn(formik.errors, "submissionEmail")}
-                id="submissionEmail"
-              />
-            </InputLabel>
-            <Typography>Default</Typography>
-          </div>
         </>
       )}
     </SettingsFormContainer>
   );
 };
 
+const EmailsEditor: React.FC<EditorProps<SubmissionEmailInputValues>> = (
+  props,
+) => {
+  return (
+    <Box width="100%">
+      <InputRow>
+        <Input
+          placeholder="Email"
+          format="bold"
+          value={props.value.submissionEmail}
+          onChange={(ev) => {
+            props.onChange({
+              ...props.value,
+              submissionEmail: ev.target.value,
+            });
+          }}
+          errorMessage={getIn(props.errors, "submissionEmail")}
+        />
+      </InputRow>
+    </Box>
+  );
+};
 export default SubmissionEmails;
