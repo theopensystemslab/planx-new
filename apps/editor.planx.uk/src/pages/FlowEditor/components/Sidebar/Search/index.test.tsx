@@ -8,11 +8,13 @@ import { axe } from "vitest-axe";
 
 const mockNavigate = vi.fn();
 
-vi.mock("react-navi", () => ({
-  useNavigation: () => ({
-    navigate: mockNavigate,
-  }),
-}));
+vi.mock("@tanstack/react-router", async () => {
+  const actual = await vi.importActual("@tanstack/react-router");
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
 
 import Search from ".";
 import { flow } from "./mocks/simple";
