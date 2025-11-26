@@ -259,7 +259,7 @@ describe("Pay component - Editor Modal", () => {
         user,
         getByRole,
         getByText,
-      } = setup(
+      } = await setup(
         <DndProvider backend={HTML5Backend}>
           <PayComponent
             id="test"
