@@ -16,8 +16,8 @@ import {
   mockSetRecords,
 } from "./mocks";
 
-const setupTestEnvironment = (searchKeys: string[]) =>
-  setup(
+const setupTestEnvironment = async (searchKeys: string[]) =>
+  await setup(
     <DndProvider backend={HTML5Backend}>
       <SearchBox<MockRecords>
         records={mockRecords}
@@ -28,14 +28,14 @@ const setupTestEnvironment = (searchKeys: string[]) =>
   );
 
 describe("the UI interactions of the SearchBox", () => {
-  it("Renders a search box", () => {
-    setupTestEnvironment(["slug"]);
+  it("Renders a search box", async () => {
+    await setupTestEnvironment(["slug"]);
     expect(screen.getByText("Search")).toBeVisible();
     expect(screen.getByRole("textbox")).toBeVisible();
   });
 
   it("shows a loading spinner when typing", async () => {
-    const { user } = setupTestEnvironment(["slug"]);
+    const { user } = await setupTestEnvironment(["slug"]);
     const searchBox = screen.getByRole("textbox");
 
     user.type(searchBox, mockFirstSearchTerm);
@@ -48,7 +48,7 @@ describe("the UI interactions of the SearchBox", () => {
   });
 
   it("shows a clear icon button when finished typing", async () => {
-    const { user } = setupTestEnvironment(["slug"]);
+    const { user } = await setupTestEnvironment(["slug"]);
     const searchBox = screen.getByRole("textbox");
 
     user.type(searchBox, mockFirstSearchTerm);
@@ -61,7 +61,7 @@ describe("the UI interactions of the SearchBox", () => {
   });
 
   it("removes the clear icon button when search term is cleared", async () => {
-    const { user } = setupTestEnvironment(["slug"]);
+    const { user } = await setupTestEnvironment(["slug"]);
     const searchBox = screen.getByRole("textbox");
 
     await user.type(searchBox, mockFirstSearchTerm);
@@ -79,7 +79,7 @@ describe("the UI interactions of the SearchBox", () => {
   });
 
   it("does not contain accessibility violations", async () => {
-    const { container } = setupTestEnvironment(["slug"]);
+    const { container } = await setupTestEnvironment(["slug"]);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
@@ -87,7 +87,7 @@ describe("the UI interactions of the SearchBox", () => {
 
 describe("the search functionality", () => {
   it("searchs records and returns the results when on a word is typed", async () => {
-    const { user } = setupTestEnvironment(["slug"]);
+    const { user } = await setupTestEnvironment(["slug"]);
     const searchBox = screen.getByRole("textbox");
 
     await user.type(searchBox, mockFirstSearchTerm);
@@ -106,7 +106,7 @@ describe("the search functionality", () => {
   });
 
   it("sets the results back to records when a search term is deleted", async () => {
-    const { user } = setupTestEnvironment(["slug", "name"]);
+    const { user } = await setupTestEnvironment(["slug", "name"]);
     const searchBox = screen.getByRole("textbox");
 
     await user.type(searchBox, mockFirstSearchTerm);
@@ -131,7 +131,7 @@ describe("the search functionality", () => {
   });
 
   it("refilters results when the search term is changed", async () => {
-    const { user } = setupTestEnvironment(["slug", "name"]);
+    const { user } = await setupTestEnvironment(["slug", "name"]);
     const searchBox = screen.getByRole("textbox");
 
     await user.type(searchBox, mockSecondSearchTerm);
