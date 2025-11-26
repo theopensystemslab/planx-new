@@ -66,7 +66,6 @@ export const setupNotificationForDeploymentRollback = (
     }
   );
 
-  // XXX: this template may not be ingested by SNS/Slack as expected and can then be simplified
   new aws.cloudwatch.EventTarget(
     `${simpleServiceName}-rollback-alerts-target`,
     {
@@ -81,50 +80,16 @@ export const setupNotificationForDeploymentRollback = (
           reason: "$.detail.reason",
         },
         inputTemplate: pulumi.jsonStringify({
-          "text": `Circuit Breaker Rollback: ${simpleServiceName}`,
-          "blocks": [
-            {
-              "type": "header",
-              "text": {
-                "type": "plain_text",
-                "text": `Circuit Breaker Rollback: ${simpleServiceName}`
-              }
-            },
-            {
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": "The ECS deployment circuit breaker has triggered a rollback due to deployment failure."
-              }
-            },
-            {
-              "type": "section",
-              "fields": [
-                {
-                  "type": "mrkdwn",
-                  "text": "*Event type:* <eventType>"
-                },
-                {
-                  "type": "mrkdwn",
-                  "text": "*Event name:* <eventName>"
-                },
-                {
-                  "type": "mrkdwn",
-                  "text": "*Deployment ID:* <deploymentId>"
-                },
-                {
-                  "type": "mrkdwn",
-                  "text": "*Updated at:* <updatedAt>"
-                },
-                {
-                  "type": "mrkdwn",
-                  "text": "*Reason:* <reason>"
-                }
-              ]
-            }
-          ]
-        })
-      }
+          text: [
+            `-> Affected service: ${simpleServiceName}`,
+            "-> Event type: <eventType>",
+            "-> Event name: <eventName>",
+            "-> Deployment ID: <deploymentId>",
+            "-> Updated at: <updatedAt>",
+            "-> Reason: <reason>",
+          ].join("\n"),
+        }),
+      },
     }
   );
 };
