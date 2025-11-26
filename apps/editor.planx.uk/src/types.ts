@@ -24,6 +24,7 @@ export interface Flow {
   team: Team;
   settings?: FlowSettings;
   status?: FlowStatus;
+  summary?: string;
   isTemplate?: boolean;
   canCreateFromCopy?: boolean;
 }

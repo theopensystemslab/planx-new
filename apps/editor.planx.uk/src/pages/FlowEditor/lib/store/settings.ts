@@ -26,6 +26,7 @@ export interface SettingsStore {
   flowSettings?: FlowSettings;
   setFlowSettings: (flowSettings?: FlowSettings) => void;
   flowStatus?: FlowStatus;
+  flowSummary?: string;
   globalSettings?: GlobalSettings;
   setGlobalSettings: (globalSettings: GlobalSettings) => void;
   updateGlobalSettings: (newSettings: { [key: string]: TextContent }) => void;
@@ -44,6 +45,8 @@ export const settingsStore: StateCreator<
   setFlowSettings: (flowSettings) => set({ flowSettings }),
 
   flowStatus: undefined,
+
+  flowSummary: undefined,
 
   getFlowInformation: async (flowSlug, teamSlug): Promise<FlowInformation> => {
     type DetailedFlowInformation = FlowInformation & {
@@ -64,6 +67,7 @@ export const settingsStore: StateCreator<
             id,
             settings,
             status,
+            summary,
             canCreateFromCopy,
             publishedFlows,
             isListedOnLPS,
@@ -82,6 +86,7 @@ export const settingsStore: StateCreator<
             id
             settings
             status
+            summary
             canCreateFromCopy: can_create_from_copy
             templatedFrom: templated_from
             publishedFlows: published_flows(
@@ -133,6 +138,7 @@ export const settingsStore: StateCreator<
     set({
       flowSettings: settings,
       flowStatus: status,
+      flowSummary: summary,
       flowCanCreateFromCopy: canCreateFromCopy,
       flowAnalyticsLink: analyticsLink,
       isFlowListedOnLPS: isListedOnLPS,
@@ -142,6 +148,7 @@ export const settingsStore: StateCreator<
     return {
       settings,
       status,
+      summary,
       analyticsLink,
       isListedOnLPS,
     };
