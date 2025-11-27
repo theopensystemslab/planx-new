@@ -1,4 +1,5 @@
 import { compose, mount, route, withData } from "navi";
+import SubmissionHTML from "pages/FlowEditor/components/Submissions/components/SubmissionHTML";
 import Submissions from "pages/FlowEditor/components/Submissions/Submissions";
 import React from "react";
 
@@ -29,7 +30,7 @@ const serviceSubmissionRoutes = compose(
 
         return {
           title: makeTitle([teamSlug, flowSlug, "submission"].join("/")),
-          view: `this is session ${sessionId}`,
+          view: <SubmissionHTML sessionId={sessionId} />,
         };
       }),
     ),
