@@ -85,7 +85,8 @@ const EditorHeaderContainer = styled(Box)(({ theme }) => ({
   width: "100%",
   padding: theme.spacing(0, 2),
   "@media print": {
-    display: "none",
+    background: theme.palette.background.dark,
+    color: theme.palette.common.white,
   },
 }));
 
@@ -119,6 +120,9 @@ const ProfileSection = styled(MuiToolbar)(({ theme }) => ({
   marginRight: theme.spacing(1),
   [theme.breakpoints.up("md")]: {
     minHeight: HEADER_HEIGHT_EDITOR,
+  },
+  "@media print": {
+    visibility: "hidden",
   },
 }));
 
