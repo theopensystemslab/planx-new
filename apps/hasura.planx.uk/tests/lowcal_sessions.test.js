@@ -538,8 +538,8 @@ describe("lowcal_sessions", () => {
       i = await introspectAs("platformAdmin");
     });
 
-    test("cannot query lowcal_sessions", () => {
-      expect(i.queries).not.toContain("lowcal_sessions");
+    test("can query lowcal_sessions", () => {
+      expect(i.queries).toContain("lowcal_sessions");
     });
 
     test("cannot create, update, or delete lowcal_sessions", () => {
@@ -553,8 +553,8 @@ describe("lowcal_sessions", () => {
       i = await introspectAs("teamEditor");
     });
 
-    test("cannot query lowcal_sessions", () => {
-      expect(i.queries).not.toContain("lowcal_sessions");
+    test("can query lowcal_sessions", () => {
+      expect(i.queries).toContain("lowcal_sessions");
     });
 
     test("cannot create, update, or delete lowcal_sessions", () => {
