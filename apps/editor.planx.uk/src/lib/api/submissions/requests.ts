@@ -1,10 +1,6 @@
 import apiClient from "lib/api/client";
 
-interface DownloadApplicationFiles {
-  sessionId: string;
-  email: string;
-  localAuthority: string;
-}
+import type { DownloadApplicationFiles } from "./types";
 
 export const downloadApplicationFiles = async ({
   email,
@@ -18,6 +14,12 @@ export const downloadApplicationFiles = async ({
       params: { email, localAuthority },
     },
   );
+
+  return data;
+};
+
+export const getSubmissionHTML = async (sessionId: string) => {
+  const { data } = await apiClient.get<string>(`/submission/${sessionId}/html`);
 
   return data;
 };

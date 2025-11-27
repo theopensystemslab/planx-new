@@ -1,6 +1,10 @@
 import { Router } from "express";
 import { validate } from "../../shared/middleware/validate.js";
-import { useFilePermission, useHasuraAuth } from "../auth/middleware.js";
+import {
+  useFilePermission,
+  useHasuraAuth,
+  useTeamEditorAuth,
+} from "../auth/middleware.js";
 import { sendToBOPS } from "./bops/bops.js";
 import { createSendEvents } from "./createSendEvents/controller.js";
 import { combinedEventsPayloadSchema } from "./createSendEvents/types.js";
@@ -12,6 +16,8 @@ import { sendToIdoxNexus } from "./idox/nexus.js";
 import { sendToS3 } from "./s3/index.js";
 import { sendIntegrationSchema } from "./types.js";
 import { sendToUniform } from "./uniform/uniform.js";
+import { submissionSchema } from "./submission/schema.js";
+import { submissionController } from "./submission/controller.js";
 
 const router = Router();
 
@@ -63,6 +69,13 @@ router.get(
   useFilePermission,
   validate(getSubmissionsSchema),
   getSubmissionsController,
+);
+
+router.get(
+  "/submission/:sessionId/html",
+  useTeamEditorAuth,
+  validate(submissionSchema),
+  submissionController,
 );
 
 export default router;

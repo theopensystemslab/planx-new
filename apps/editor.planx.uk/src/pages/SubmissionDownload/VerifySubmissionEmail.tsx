@@ -7,7 +7,7 @@ import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
 import { useMutation } from "@tanstack/react-query";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useFormik } from "formik";
-import { downloadApplicationFiles } from "lib/api/downloadApplicationFiles/requests";
+import { downloadApplicationFiles } from "lib/api/submissions/requests";
 import startCase from "lodash/startCase.js";
 import React from "react";
 import InputLabel from "ui/public/InputLabel";

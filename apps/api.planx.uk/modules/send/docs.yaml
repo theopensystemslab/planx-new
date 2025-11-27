@@ -216,3 +216,27 @@ paths:
             type: string
       security:
         - fileAPIKeyAuth: []
+  /submission/{sessionId}/html:
+    get:
+      summary: Get a submission
+      description: Get a submission by session ID, as HTML
+      tags:
+        - send
+      parameters:
+        - in: path
+          name: sessionId
+          required: true
+          schema:
+            format: uuid
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          content:
+            text/html:
+              schema:
+                type: string
+                format: HTML
+          "500":
+            $ref: "#/components/responses/ErrorMessage"
