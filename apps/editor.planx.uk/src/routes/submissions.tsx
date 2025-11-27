@@ -9,6 +9,7 @@ const submissionsLogRoutes = compose(
     mountpath: req.mountpath,
   })),
 
+  // TODO: checkout auth guard
   mount({
     "/": compose(
       route(async (req) => {
@@ -17,6 +18,17 @@ const submissionsLogRoutes = compose(
         return {
           title: makeTitle([teamSlug, "submissions"].join("/")),
           view: <Submissions />,
+        };
+      }),
+    ),
+
+    "/:sessionId": compose(
+      route(async (req) => {
+        const { team: teamSlug, flow: flowSlug, sessionId } = req.params;
+
+        return {
+          title: makeTitle([teamSlug, flowSlug, "submission"].join("/")),
+          view: `this is session ${sessionId}`,
         };
       }),
     ),

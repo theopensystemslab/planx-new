@@ -1,17 +1,17 @@
-import CloudDownload from "@mui/icons-material/CloudDownload";
+import PreviewIcon from "@mui/icons-material/Preview";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import { addDays, isBefore } from "date-fns";
 import { DAYS_UNTIL_EXPIRY } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { useNavigation } from "react-navi";
 import { RenderCellParams } from "ui/shared/DataTable/types";
 
-export const DownloadSubmissionButton = (params: RenderCellParams) => {
-  const [teamSlug, canUserEditTeam, submissionEmail] = useStore((state) => [
+export const ViewSubmissionButton = (params: RenderCellParams) => {
+  const [teamSlug, canUserEditTeam] = useStore((state) => [
     state.teamSlug,
     state.canUserEditTeam,
-    state.teamSettings?.submissionEmail,
   ]);
 
   const submissionDataExpirationDate = addDays(
@@ -19,27 +19,27 @@ export const DownloadSubmissionButton = (params: RenderCellParams) => {
     DAYS_UNTIL_EXPIRY,
   );
 
-  const showDownloadButton =
+  const sessionId = params.row.sessionId;
+
+  const showViewButton =
     teamSlug &&
     canUserEditTeam(teamSlug) &&
-    submissionEmail &&
     params.row.status === "Success" &&
     params.row.eventType !== "Pay" &&
     isBefore(new Date(), submissionDataExpirationDate);
 
-  if (!showDownloadButton) return;
+  const { navigate } = useNavigation();
 
-  const zipUrl = `${import.meta.env.VITE_APP_API_URL}/download-application-files/${
-    params.row.sessionId
-  }?localAuthority=${teamSlug}&email=${submissionEmail}`;
+  // TODO: only show successful
+  // if (!showViewButton) return;
 
   return (
-    <Tooltip title="Download application data">
+    <Tooltip title="View application data">
       <IconButton
-        aria-label="download application"
-        onClick={() => window.open(zipUrl, "_blank")}
+        aria-label="view application"
+        onClick={() => navigate(`./submissions/${sessionId}`)}
       >
-        <CloudDownload />
+        <PreviewIcon />
       </IconButton>
     </Tooltip>
   );
