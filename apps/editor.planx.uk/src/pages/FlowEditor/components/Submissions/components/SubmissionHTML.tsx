@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Skeleton from "@mui/material/Skeleton";
 import { useQuery } from "@tanstack/react-query";
+import { PrintButton } from "components/PrintButton";
 import { getSubmissionHTML } from "lib/api/submissions/requests";
 import React from "react";
 
@@ -18,7 +19,11 @@ const LoadingSkeleton = () => (
 );
 
 const SubmissionHTML: React.FC<{ sessionId: string }> = ({ sessionId }) => {
-  const { data, error, isPending } = useQuery({
+  const {
+    data: sanitisedHTML,
+    error,
+    isPending,
+  } = useQuery({
     queryKey: ["submission", "html", sessionId],
     queryFn: () => getSubmissionHTML(sessionId),
     enabled: !!sessionId,
@@ -31,7 +36,10 @@ const SubmissionHTML: React.FC<{ sessionId: string }> = ({ sessionId }) => {
       {isPending ? (
         <LoadingSkeleton />
       ) : (
-        <Box dangerouslySetInnerHTML={{ __html: data }} />
+        <>
+          <Box dangerouslySetInnerHTML={{ __html: sanitisedHTML }} mb={2} />
+          <PrintButton />
+        </>
       )}
     </Container>
   );

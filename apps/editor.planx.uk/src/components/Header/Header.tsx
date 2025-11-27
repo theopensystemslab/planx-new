@@ -84,6 +84,9 @@ const EditorHeader = styled(MuiToolbar)(({ theme }) => ({
 const EditorHeaderContainer = styled(Box)(({ theme }) => ({
   width: "100%",
   padding: theme.spacing(0, 2),
+  "@media print": {
+    display: "none",
+  },
 }));
 
 const InnerContainer = styled(Box)(() => ({
