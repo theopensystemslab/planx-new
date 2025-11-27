@@ -3,14 +3,15 @@ import SubmissionHTML from "pages/FlowEditor/components/Submissions/components/S
 import Submissions from "pages/FlowEditor/components/Submissions/Submissions";
 import React from "react";
 
-import { makeTitle } from "./utils";
+import { makeTitle, withTeamAuth } from "./utils";
 
 const submissionsLogRoutes = compose(
+  withTeamAuth,
+
   withData((req) => ({
     mountpath: req.mountpath,
   })),
 
-  // TODO: checkout auth guard
   mount({
     "/": compose(
       route(async (req) => {

@@ -1,6 +1,6 @@
 import { ComponentType as NodeTypes } from "@opensystemslab/planx-core/types";
 import gql from "graphql-tag";
-import { NaviRequest, NotFoundError } from "navi";
+import { NaviRequest, NotFoundError, withData } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { Store } from "pages/FlowEditor/lib/store";
 import { ApplicationPath } from "types";
@@ -109,3 +109,13 @@ export const validateTeamRoute = async (req: NaviRequest) => {
   )
     throw new NotFoundError(req.originalUrl);
 };
+
+/**
+ * Auth middleware for routes
+ * Prevents non-teamEditors from accessing pages
+ */
+export const withTeamAuth = withData((req) => {
+  const isAuthorised = useStore.getState().canUserEditTeam(req.params.team);
+  if (!isAuthorised)
+    throw new NotFoundError(`User does not have access to ${req.originalUrl}`);
+});
