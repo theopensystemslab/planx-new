@@ -434,6 +434,10 @@ export = async () => {
             value: config.requireSecret("file-api-key-tewkesbury"),
           },
           {
+            name: "FILE_API_KEY_CAMDEN",
+            value: config.requireSecret("file-api-key-camden"),
+          },
+          {
             name: "SKIP_RATE_LIMIT_SECRET",
             value: config.requireSecret("skip-rate-limit-secret"),
           },
