@@ -16,6 +16,8 @@ config:
     secure: AAABAGyTfLujGho+V0tEhFXQRET5FjYK6txyaFTB3gY/VaKzq8yNlocJTAM5nt8mBhF6T+AeQD2GxW63
   application:file-api-key-barnet:
     secure: AAABANMl+fVFsRVGXvJV/aLManXO+TldXVDhp5QH6KGWJoG7O9Ket63zIW1iOiinINWJ2I5OizI=
+  application:file-api-key-camden:
+    secure: AAABAIybI+9gcWmqd9c1Nn2eKK9zwTzZKI9Fh09crqt2mxPFoEeHccBzNmXt6iHQRPnPI2/kvVg=
   application:file-api-key-doncaster:
     secure: AAABANsIFFm3IsQKbZHe4lEZGsJv3bcK2XOVzd6IiKj+4i/eiILIc7BS0KDQxqLskQ6QCv1sDw04pie8cvAlKqVYWBGmomA2
   application:file-api-key-epsom-ewell:
@@ -55,18 +57,21 @@ config:
   application:idox-nexus-token-url: todo
   application:jwt-secret:
     secure: AAABAEGWTi+vTHnjkJfyJQneZIz1aDoplF4y3/sLFnAKuvDcP/80/7ReX3W4wiKWuHMygSxKY5y2PImYJjZ9YbSZMP9d7NtD
+  application:lps-cloudflare-zone-id:
+    secure: AAABAH+7QupNP8cRQRnFKSufAxT0Fd3BpC2rMnamjDNfPCJfJZ68AJ4CtE6Rc2ZNF9olgrF6zzsH2nzj2wNdzg==
+  application:lps-domain: localplanning.services
   application:mapbox-access-token:
     secure: AAABAGwrLOkFpIZ3u8XeKIsfk1ujqFYKdv4us+ia2EdCXU8sBj2LiXfn8K6UcOifzf3HlOA6CYL3WwalKLmtvuq90CInbipB3dtY4Mr2Vx7NcUA7zxbUtli+8WcShIiNq490GwlTlf7ChjnNSIr3FzCeK3D/Xiq25wT0398c5ZwHyg==
   application:mb-db-connection-uri:
     secure: AAABAFxCleouG7pLLASpxso/YVGiTOn23PdFvK3iSJ4ak9rc6ryCTWyNlnh1+jlR5NOPJ0TUhVZX6EpW0ufFGDtMXCA8KoqGnW4MujbyqJrEyoznoV0FObIzzGCIWiocww+VVpkACrOFHAurcotGeICxwXJpstg04U2s6x5/eoA7RwWuAIoV2dnrcBZklCIeRuXjuyAZ
   application:metabase-api-key:
     secure: AAABAAdkLyFGZJ50HENSAkvYZ9Y3Qj2oKysmBKNWbqgcCLYz+dDvgEBPTbzG6lNgOqUyySJDmquMilyiUtTLau7rpF4txEM/O4DHmAinVg==
+  application:metabase-cpu: "1024"
   application:metabase-encryption-secret-key:
     secure: AAABAKQ6L5aOwZWpj9YOsaW8bOOukjt1mZuTgdKjM/3nSmF/0nM/f9c9W9DXygUFj2wtq5/iugo1UTS0+bhEn8Dr9k1Qzr2EmuGpQw==
+  application:metabase-memory: "2048"
   application:metabasePgPassword:
     secure: AAABACVXNwP6Fo0v2/PoiWklNGRECTSYLRX/Ypk6APtvt9e4iOdqPVt5+tZULOxwqnfO+1bL4B6AAJxjt8gAbQ==
-  application:metabase-cpu: "1024"
-  application:metabase-memory: "2048"
   application:microsoft-client-id:
     secure: AAABAGm0SUnS8I54uBHI+Y0F1hMk8WSSKO1n+b52MCaYU8aGlbtsEuccJiQ8WXf7IFwWWgoBIeVPdk0eIGENHUet0HA=
   application:microsoft-client-secret:
@@ -158,6 +163,3 @@ config:
   aws:region: eu-west-2
   cloudflare:apiToken:
     secure: AAABAMbIBX9N21ModHyDYCQCGZXkRUP62NIUMhsxkK+/YUPRQr6PEqgZX9LRP2UuVwvVHd2RxvKGT8lpq8oAgyeDYP1eZSUl
-  application:lps-domain: localplanning.services
-  application:lps-cloudflare-zone-id:
-    secure: AAABAH+7QupNP8cRQRnFKSufAxT0Fd3BpC2rMnamjDNfPCJfJZ68AJ4CtE6Rc2ZNF9olgrF6zzsH2nzj2wNdzg==
