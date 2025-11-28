@@ -5,7 +5,6 @@ import {
   DESCRIPTION_TEXT,
   ERROR_MESSAGE,
 } from "@planx/components/shared/constants";
-import { publicClient } from "lib/graphql";
 import find from "lodash/find";
 import { parse, toNormalised } from "postcode";
 import React, { useEffect, useState } from "react";
@@ -59,7 +58,7 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
 
   // Fetch blpu_codes records so that we can join address CLASSIFICATION_CODE to planx variable
   const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES, {
-    client: publicClient,
+    context: { role: "public" },
   });
 
   useEffect(() => {
@@ -79,32 +78,30 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
           latitude: selectedAddress.LAT,
           longitude: selectedAddress.LNG,
           organisation: selectedAddress.ORGANISATION || null,
-          sao: [
-            selectedAddress.SAO_START_NUMBER,
-            selectedAddress.SAO_START_SUFFIX,
-            selectedAddress.SAO_TEXT, // populated in cases of building name only, no street number
-          ]
-            .filter(Boolean)
-            .join("") || undefined,
-          saoEnd: [
-            selectedAddress.SAO_END_NUMBER,
-            selectedAddress.SAO_END_SUFFIX,
-          ]
-            .filter(Boolean)
-            .join("") || undefined,
-          pao: [
-            selectedAddress.PAO_START_NUMBER,
-            selectedAddress.PAO_START_SUFFIX,
-            selectedAddress.PAO_TEXT, // populated in cases of building name only, no street number
-          ]
-            .filter(Boolean)
-            .join("") || undefined,
-          paoEnd: [
-            selectedAddress.PAO_END_NUMBER,
-            selectedAddress.PAO_END_SUFFIX,
-          ]
-            .filter(Boolean)
-            .join("") || undefined,
+          sao:
+            [
+              selectedAddress.SAO_START_NUMBER,
+              selectedAddress.SAO_START_SUFFIX,
+              selectedAddress.SAO_TEXT, // populated in cases of building name only, no street number
+            ]
+              .filter(Boolean)
+              .join("") || undefined,
+          saoEnd:
+            [selectedAddress.SAO_END_NUMBER, selectedAddress.SAO_END_SUFFIX]
+              .filter(Boolean)
+              .join("") || undefined,
+          pao:
+            [
+              selectedAddress.PAO_START_NUMBER,
+              selectedAddress.PAO_START_SUFFIX,
+              selectedAddress.PAO_TEXT, // populated in cases of building name only, no street number
+            ]
+              .filter(Boolean)
+              .join("") || undefined,
+          paoEnd:
+            [selectedAddress.PAO_END_NUMBER, selectedAddress.PAO_END_SUFFIX]
+              .filter(Boolean)
+              .join("") || undefined,
           street: selectedAddress.STREET_DESCRIPTION,
           town: selectedAddress.TOWN_NAME,
           postcode: selectedAddress.POSTCODE_LOCATOR,

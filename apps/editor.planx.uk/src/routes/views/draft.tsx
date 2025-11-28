@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 import { getFlattenedFlowData } from "lib/api/flow/requests";
-import { publicClient } from "lib/graphql";
+import { client } from "lib/graphql";
 import { queryClient } from "lib/queryClient";
 import { NaviRequest, NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -61,7 +61,7 @@ const fetchSettingsForDraftView = async (
   teamSlug: string,
 ): Promise<DraftSettings> => {
   try {
-    const result = await publicClient.query({
+    const result = await client.query({
       query: gql`
         query GetSettingsForDraftView($flowSlug: String!, $teamSlug: String!) {
           flows(
@@ -109,6 +109,7 @@ const fetchSettingsForDraftView = async (
         flowSlug,
         teamSlug,
       },
+      context: { role: "public" },
     });
     return result.data;
   } catch (error) {
