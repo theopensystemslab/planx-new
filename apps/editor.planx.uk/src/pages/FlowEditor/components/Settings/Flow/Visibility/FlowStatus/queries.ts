@@ -15,6 +15,7 @@ export const GET_FLOW_STATUS = gql`
       publishedFlows: published_flows(limit: 1) {
         id
       }
+      firstOnlineAt: first_online_at
     }
   }
 `;
@@ -26,6 +27,7 @@ export const UPDATE_FLOW_STATUS = gql`
     ) {
       id
       status
+      first_online_at
     }
   }
 `;
