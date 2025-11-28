@@ -8,8 +8,8 @@ $lockedNodeBackground: #eee;
 $lockedBorder: #888;
 $dataBackground: #f0f0f0;
 $lockedDataBackground: #e2e2e2;
-$folderBackground: #b8d9f4;
-$folderBorder: #2d598b;
+$folderBackground: #b5d1f7;
+$folderBorder: #2c4b88;
 
 $endpointWidth: 50px;
 $hangerWidth: 16px;
@@ -97,6 +97,8 @@ $fontMonospace: "Source Code Pro", monospace;
     a:active {
       outline: 4px solid $focus;
       outline-offset: 0;
+      // Make focussed link outline more visible
+      z-index: 1;
     }
   }
 
