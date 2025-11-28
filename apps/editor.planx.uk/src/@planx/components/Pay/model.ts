@@ -208,27 +208,7 @@ export const getDefaultContent = (): Pay => ({
 });
 
 export const parsePay = (data?: Record<string, any>): Pay => ({
-  ...parseBaseNodeData(data),
   ...getDefaultContent(),
+  ...parseBaseNodeData(data),
   ...data,
-  govPayMetadata: parseGovPayMetadata(data),
 });
-
-const parseGovPayMetadata = (data?: Record<string, any>): GovPayMetadata[] => {
-  // Handle new component creation
-  if (!data?.govPayMetadata) return getDefaultContent().govPayMetadata;
-
-  // Existing data with `type` property
-  const hasMetadataType = (data: GovPayMetadata) => Boolean(data?.type);
-  if (data.govPayMetadata.every(hasMetadataType)) return data.govPayMetadata;
-
-  // Legacy content (to be migrated) - append `type` property
-  const addTypeProperty = ({ key, value }: GovPayMetadata) => ({
-    key,
-    value: value.toString().startsWith("@")
-      ? value.toString().substring(1)
-      : value,
-    type: value.toString().startsWith("@") ? "data" : "static",
-  });
-  return data.govPayMetadata.map(addTypeProperty);
-};

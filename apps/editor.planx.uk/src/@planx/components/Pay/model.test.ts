@@ -86,7 +86,7 @@ describe("GovPayMetadata Schema", () => {
       {
         key: "myPassportVariable",
         value:
-          "@thisIsAVeryLongPassportVariable.itsUnlikelyToHappenButWeDontNeedToRestrict.theDynamicValueThisReadsWillBeTruncatedAtTimeOfSubmission",
+          "thisIsAVeryLongPassportVariable.itsUnlikelyToHappenButWeDontNeedToRestrict.theDynamicValueThisReadsWillBeTruncatedAtTimeOfSubmission",
         type: "data",
       },
     ];
@@ -151,34 +151,7 @@ describe("parsePay() helper function", () => {
       expect(result.govPayMetadata[2]).toHaveProperty("type", "data");
     });
 
-    it("handles existing nodes with legacy content", () => {
-      const result = parsePay({
-        govPayMetadata: [
-          {
-            key: "flow",
-            value: "flow name here",
-          },
-          {
-            key: "source",
-            value: "PlanX",
-          },
-          {
-            key: "paidViaInviteToPay",
-            value: "@paidViaInviteToPay",
-          },
-        ],
-      });
-
-      expect(result.govPayMetadata).toHaveLength(3);
-      expect(result.govPayMetadata[0]).toHaveProperty("type", "static");
-      expect(result.govPayMetadata[1]).toHaveProperty("type", "static");
-
-      // "@" stripped from value
-      expect(result.govPayMetadata[2].value).toEqual("paidViaInviteToPay");
-      expect(result.govPayMetadata[2]).toHaveProperty("type", "data");
-    });
-
-    it("handles existing nodes with current content (`type` property)", () => {
+    it("handles existing nodes", () => {
       const result = parsePay({
         govPayMetadata: [
           {
