@@ -17,6 +17,7 @@ export const UPDATE_FLOW_SETTINGS = gql`
     ) {
       id
       settings
+      hasPrivacyPage: settings(path: "elements.privacy.show")
     }
   }
 `;
