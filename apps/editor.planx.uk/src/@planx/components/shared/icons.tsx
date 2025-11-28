@@ -26,6 +26,7 @@ import ReportProblemOutlined from "@mui/icons-material/ReportProblemOutlined";
 import SearchOutlined from "@mui/icons-material/SearchOutlined";
 import Send from "@mui/icons-material/Send";
 import ShapeLine from "@mui/icons-material/ShapeLine";
+import SmartToyIcon from "@mui/icons-material/SmartToy";
 import SquareFoot from "@mui/icons-material/SquareFoot";
 import TextFields from "@mui/icons-material/TextFields";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
@@ -45,14 +46,17 @@ export const ICONS: {
   [key in TYPES]: Icon | undefined;
 } = {
   [TYPES.AddressInput]: Home,
+  [TYPES.Agent]: SmartToyIcon,
+  [TYPES.Answer]: undefined,
   [TYPES.Calculate]: FunctionsIcon,
   [TYPES.Checklist]: CheckBoxOutlined,
+  [TYPES.Confirmation]: TextFields,
   [TYPES.ContactInput]: ContactPage,
   [TYPES.Content]: TextFields,
-  [TYPES.Confirmation]: TextFields,
   [TYPES.DateInput]: Event,
   [TYPES.DrawBoundary]: SquareFoot,
   [TYPES.ExternalPortal]: EditorIcon,
+  [TYPES.Feedback]: RateReviewIcon,
   [TYPES.FileUpload]: CloudUpload,
   [TYPES.FileUploadAndLabel]: CloudUpload,
   [TYPES.Filter]: FilterAltOutlined,
@@ -61,14 +65,14 @@ export const ICONS: {
   [TYPES.InternalPortal]: Folder,
   [TYPES.List]: ListAlt,
   [TYPES.MapAndLabel]: ShapeLine,
-  [TYPES.Notice]: ReportProblemOutlined,
   [TYPES.NextSteps]: ArrowForwardIcon,
+  [TYPES.Notice]: ReportProblemOutlined,
   [TYPES.NumberInput]: Pin,
   [TYPES.Page]: Article,
   [TYPES.Pay]: PaymentOutlined,
   [TYPES.PlanningConstraints]: Map,
   [TYPES.PropertyInformation]: LocationOnOutlined,
-  [TYPES.Answer]: undefined,
+  [TYPES.Question]: CallSplit,
   [TYPES.ResponsiveChecklist]: CheckBoxOutlined,
   [TYPES.ResponsiveQuestion]: AltRoute,
   [TYPES.Result]: PlaylistAddCheck,
@@ -77,8 +81,6 @@ export const ICONS: {
   [TYPES.Send]: Send,
   [TYPES.SetFee]: CurrencyPound,
   [TYPES.SetValue]: PlaylistAdd,
-  [TYPES.Question]: CallSplit,
   [TYPES.TaskList]: List,
   [TYPES.TextInput]: Create,
-  [TYPES.Feedback]: RateReviewIcon,
 } as const;

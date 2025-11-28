@@ -1,6 +1,8 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { AddressInput } from "@planx/components/AddressInput/model";
 import AddressInputComponent from "@planx/components/AddressInput/Public";
+import AgentComponent from "@planx/components/Agent/Public";
+import type { Agent } from "@planx/components/Agent/types";
 import type { Calculate } from "@planx/components/Calculate/model";
 import CalculateComponent from "@planx/components/Calculate/Public";
 import type {
@@ -134,6 +136,11 @@ const Node: React.FC<Props> = (props) => {
         />
       );
     }
+
+    case TYPES.Agent:
+      if (!hasFeatureFlag("AGENT_COMPONENT")) return null;
+
+      return <AgentComponent {...getComponentProps<Agent>()} />;
 
     case TYPES.Calculate:
       return <CalculateComponent {...getComponentProps<Calculate>()} />;
