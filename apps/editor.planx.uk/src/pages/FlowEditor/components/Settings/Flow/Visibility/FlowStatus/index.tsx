@@ -5,6 +5,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
+import { format } from "date-fns";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { useLocation } from "react-use";
@@ -231,6 +232,12 @@ const FlowStatus: React.FC = () => {
                 subdomain={subdomainLink}
                 publishedLink={publishedLink}
               />
+            )}
+            {data?.flow.firstOnlineAt && (
+              <Typography variant="body2">
+                Your service first went online:{" "}
+                {format(new Date(data.flow.firstOnlineAt), "HH:mm dd/MM/yy")}
+              </Typography>
             )}
           </>
         );
