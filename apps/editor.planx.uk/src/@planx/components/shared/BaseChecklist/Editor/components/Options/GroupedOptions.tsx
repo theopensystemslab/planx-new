@@ -97,7 +97,7 @@ export const GroupedOptions = <T extends AnyChecklist>({
               </Box>
             )}
           </Box>
-          <Box pl={{ md: 2 }}>
+          <Box>
             <ListManager
               values={groupedOption.children}
               onChange={(newOptions) => {

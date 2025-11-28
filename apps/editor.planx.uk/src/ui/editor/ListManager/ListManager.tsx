@@ -69,8 +69,6 @@ const Item = styled(Box)(() => ({
 
 const InsertButtonRoot = styled(ButtonBase)(({ theme }) => ({
   justifyContent: "space-between",
-  paddingLeft: theme.spacing(1),
-  paddingRight: theme.spacing(5),
   width: "100%",
   height: theme.spacing(3),
   color: theme.palette.grey[600],
@@ -407,79 +405,108 @@ export default function ListManager<T, EditorExtraProps>(
                               ref={provided.innerRef}
                               sx={{ ml: -5 }}
                             >
-                              <Box>
+                              <Box
+                                {...(!props.noDragAndDrop
+                                  ? provided.dragHandleProps
+                                  : {})}
+                                sx={{
+                                  display: "inline-flex",
+                                  alignItems: "flex-start",
+                                  cursor: "grab",
+                                  "&:active": {
+                                    cursor: props.noDragAndDrop
+                                      ? "default"
+                                      : "grabbing",
+                                  },
+                                }}
+                              >
                                 <IconButton
                                   disableRipple
-                                  {...(props.noDragAndDrop
-                                    ? { disabled: true || disabled }
-                                    : provided.dragHandleProps)}
                                   aria-label="Drag"
                                   size="large"
-                                  disabled={disabled}
+                                  disabled={disabled || props.noDragAndDrop}
+                                  sx={{
+                                    mt: 1,
+                                    pointerEvents: "none",
+                                    "&:hover": {
+                                      backgroundColor: `rgba(0, 0, 0, 0.04)`,
+                                    },
+                                  }}
                                 >
                                   <DragHandle />
                                 </IconButton>
                               </Box>
-                              {collapsible && (
+                              <Box
+                                sx={(theme) => ({
+                                  backgroundColor:
+                                    theme.palette.background.data,
+                                  border: `1px solid ${theme.palette.border.light}`,
+                                  py: 1,
+                                  width: "100%",
+                                  display: "flex",
+                                })}
+                              >
+                                {collapsible && (
+                                  <Box>
+                                    <IconButton
+                                      onClick={() =>
+                                        toggleCollapse(itemKeys[index])
+                                      }
+                                      aria-label={
+                                        collapsedItems.has(itemKeys[index])
+                                          ? "Expand"
+                                          : "Collapse"
+                                      }
+                                      size="large"
+                                      disabled={disabled}
+                                    >
+                                      {collapsedItems.has(itemKeys[index]) ? (
+                                        <ExpandMore />
+                                      ) : (
+                                        <ExpandLess />
+                                      )}
+                                    </IconButton>
+                                  </Box>
+                                )}
+                                <Box sx={{ flex: 1 }}>
+                                  <Editor
+                                    index={index}
+                                    value={item}
+                                    onChange={(newItem) => {
+                                      props.onChange(
+                                        setAt(index, newItem, props.values),
+                                      );
+                                    }}
+                                    {...(props.editorExtraProps || {})}
+                                    disabled={disabled}
+                                    errors={props.errors?.[index]}
+                                    isCollapsed={
+                                      collapsible
+                                        ? collapsedItems.has(itemKeys[index])
+                                        : false
+                                    }
+                                  />
+                                </Box>
                                 <Box>
                                   <IconButton
-                                    onClick={() =>
-                                      toggleCollapse(itemKeys[index])
-                                    }
-                                    aria-label={
-                                      collapsedItems.has(itemKeys[index])
-                                        ? "Expand"
-                                        : "Collapse"
-                                    }
+                                    onClick={() => {
+                                      props.onChange(
+                                        removeAt(index, props.values),
+                                      );
+                                      setItemKeys((prev) =>
+                                        prev.filter((_, i) => i !== index),
+                                      );
+                                    }}
+                                    aria-label="Delete"
                                     size="large"
-                                    disabled={disabled}
+                                    disabled={
+                                      disabled ||
+                                      props?.isFieldDisabled?.(item, index)
+                                    }
                                   >
-                                    {collapsedItems.has(itemKeys[index]) ? (
-                                      <ExpandMore />
-                                    ) : (
-                                      <ExpandLess />
-                                    )}
+                                    <Delete />
                                   </IconButton>
                                 </Box>
-                              )}
-                              <Box sx={{ flex: 1 }}>
-                                <Editor
-                                  index={index}
-                                  value={item}
-                                  onChange={(newItem) => {
-                                    props.onChange(
-                                      setAt(index, newItem, props.values),
-                                    );
-                                  }}
-                                  {...(props.editorExtraProps || {})}
-                                  disabled={disabled}
-                                  errors={props.errors?.[index]}
-                                  isCollapsed={
-                                    collapsible
-                                      ? collapsedItems.has(itemKeys[index])
-                                      : false
-                                  }
-                                />
-                              </Box>
-                              <Box>
-                                <IconButton
-                                  onClick={() => {
-                                    props.onChange(
-                                      removeAt(index, props.values),
-                                    );
-                                    setItemKeys((prev) =>
-                                      prev.filter((_, i) => i !== index),
-                                    );
-                                  }}
-                                  aria-label="Delete"
-                                  size="large"
-                                  disabled={
-                                    disabled ||
-                                    props?.isFieldDisabled?.(item, index)
-                                  }
-                                >
-                                  <Delete />
-                                </IconButton>
                               </Box>
                             </Item>
                           )}
