@@ -441,7 +441,10 @@ export default function ListManager<T, EditorExtraProps>(
                                   backgroundColor:
                                     theme.palette.background.data,
                                   border: `1px solid ${theme.palette.border.light}`,
-                                  py: 1,
+                                  pt: 1,
+                                  pb: collapsedItems.has(itemKeys[index])
+                                    ? 0.5
+                                    : 1,
                                   width: "100%",
                                   display: "flex",
                                 })}
