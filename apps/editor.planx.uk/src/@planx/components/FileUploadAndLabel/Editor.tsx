@@ -131,7 +131,6 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
 
   return (
     <Box sx={{ flex: 1 }} data-testid="rule-list-manager">
-      <ModalSubtitle title="File" />
       <InputRow>
         <Input
           errorMessage={getIn(props.errors, "title")}
