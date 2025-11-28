@@ -39,7 +39,7 @@ describe("FileUploadAndLabel - Editor Modal", () => {
         <FileUploadAndLabelComponent id="test" />
       </DndProvider>,
     );
-    expect(screen.getAllByText("File")).toHaveLength(1);
+    expect(screen.getAllByPlaceholderText("File type")).toHaveLength(1);
   });
 
   it("allows an Editor to add multiple rules", async () => {
@@ -51,6 +51,6 @@ describe("FileUploadAndLabel - Editor Modal", () => {
     await user.click(screen.getByText("add new"));
     await user.click(screen.getByText("add new"));
 
-    expect(screen.getAllByText("File")).toHaveLength(3);
+    expect(screen.getAllByPlaceholderText("File type")).toHaveLength(3);
   });
 });

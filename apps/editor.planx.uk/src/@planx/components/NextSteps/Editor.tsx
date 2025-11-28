@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Collapse from "@mui/material/Collapse";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { NextSteps, Step } from "@planx/components/NextSteps/model";
 import {
@@ -48,36 +49,38 @@ const TaskEditor: React.FC<ListManagerEditorProps<Step>> = (props) => {
           disabled={props.disabled}
         />
       </InputRow>
-      <InputRow>
-        <Input
-          name="description"
-          value={props.value.description || ""}
-          multiline
-          onChange={(ev: ChangeEvent<HTMLInputElement>) => {
-            props.onChange({
-              ...props.value,
-              description: ev.target.value,
-            });
-          }}
-          placeholder="Description"
-          disabled={props.disabled}
-        />
-      </InputRow>
-      <InputRow>
-        <Input
-          name="url"
-          type="url"
-          value={props.value.url || ""}
-          onChange={(ev: ChangeEvent<HTMLInputElement>) => {
-            props.onChange({
-              ...props.value,
-              url: ev.target.value,
-            });
-          }}
-          placeholder="url"
-          disabled={props.disabled}
-        />
-      </InputRow>
+      <Collapse in={!props.isCollapsed} timeout="auto">
+        <InputRow>
+          <Input
+            name="description"
+            value={props.value.description || ""}
+            multiline
+            onChange={(ev: ChangeEvent<HTMLInputElement>) => {
+              props.onChange({
+                ...props.value,
+                description: ev.target.value,
+              });
+            }}
+            placeholder="Description"
+            disabled={props.disabled}
+          />
+        </InputRow>
+        <InputRow>
+          <Input
+            name="url"
+            type="url"
+            value={props.value.url || ""}
+            onChange={(ev: ChangeEvent<HTMLInputElement>) => {
+              props.onChange({
+                ...props.value,
+                url: ev.target.value,
+              });
+            }}
+            placeholder="url"
+            disabled={props.disabled}
+          />
+        </InputRow>
+      </Collapse>
     </Box>
   );
 };
@@ -137,6 +140,7 @@ const NextStepsComponent: React.FC<Props> = (props) => {
             Editor={TaskEditor}
             newValue={newStep}
             disabled={props.disabled}
+            collapsible={true}
           />
         </ModalSectionContent>
       </ModalSection>

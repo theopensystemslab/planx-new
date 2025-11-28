@@ -5,10 +5,10 @@ import { ConditionalOption, Option } from "../../Option/model";
 
 interface BaseOptionsEditorProps {
   type:
-  | ComponentType.Question
-  | ComponentType.Checklist
-  | ComponentType.ResponsiveQuestion
-  | ComponentType.ResponsiveChecklist;
+    | ComponentType.Question
+    | ComponentType.Checklist
+    | ComponentType.ResponsiveQuestion
+    | ComponentType.ResponsiveChecklist;
   schema?: string[];
   optionPlaceholder?: string;
   showValueField: boolean;
@@ -16,6 +16,7 @@ interface BaseOptionsEditorProps {
   children?: ReactNode;
   disabled?: boolean;
   index: number;
+  isCollapsed?: boolean;
 }
 
 export interface OptionEditor extends BaseOptionsEditorProps {
