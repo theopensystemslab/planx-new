@@ -42,6 +42,7 @@ export const publishFlow = async (
 
   const hasSendComponent = hasComponentType(flattenedFlow, ComponentType.Send);
   const hasSections = hasComponentType(flattenedFlow, ComponentType.Section);
+  const hasPayComponent = hasComponentType(flattenedFlow, ComponentType.Pay);
 
   const { client: $client } = getClient();
   const response = await $client.request<PublishFlow>(
@@ -53,6 +54,7 @@ export const publishFlow = async (
         $summary: String
         $has_send_component: Boolean
         $has_sections: Boolean
+        $has_pay_component: Boolean
       ) {
         publishedFlow: insert_published_flows_one(
           object: {
@@ -62,6 +64,7 @@ export const publishFlow = async (
             summary: $summary
             has_send_component: $has_send_component
             has_sections: $has_sections
+            has_pay_component: $has_pay_component
           }
         ) {
           id
@@ -79,6 +82,7 @@ export const publishFlow = async (
       summary: summary,
       has_send_component: hasSendComponent,
       has_sections: hasSections,
+      has_pay_component: hasPayComponent,
     },
   );
 
