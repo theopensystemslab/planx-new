@@ -21,7 +21,7 @@ export const DischargeConditions: Schema = {
         description:
           "This is the exact wording of the condition as shown on the decision notice.",
         fn: "description",
-        type: TextInputType.Long,
+        type: TextInputType.ExtraLong,
       },
     },
     {
