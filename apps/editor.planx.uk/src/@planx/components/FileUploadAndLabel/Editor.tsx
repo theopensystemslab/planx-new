@@ -112,6 +112,7 @@ function FileUploadAndLabelComponent(props: Props) {
             newValue={newFileType}
             disabled={props.disabled}
             errors={formik.errors.fileTypes}
+            collapsible={true}
           />
         </ModalSectionContent>
       </ModalSection>

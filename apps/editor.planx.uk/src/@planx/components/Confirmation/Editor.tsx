@@ -122,6 +122,7 @@ export default function ConfirmationEditor(props: Props) {
             Editor={NextStepEditor}
             newValue={() => ({ title: "", description: "" })}
             disabled={props.disabled}
+            collapsible={true}
           />
         </ModalSectionContent>
       </ModalSection>

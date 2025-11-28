@@ -20,7 +20,7 @@ export const Options = <T extends AnyChecklist>({
   disabled,
   isTemplatedNode,
 }: {
-  type: ComponentType.Checklist | ComponentType.ResponsiveChecklist,
+  type: ComponentType.Checklist | ComponentType.ResponsiveChecklist;
   formik: FormikHookReturn<T>;
   disabled?: boolean;
   isTemplatedNode?: boolean;
@@ -64,7 +64,9 @@ export const Options = <T extends AnyChecklist>({
                 description: "",
                 val: "",
                 flags: [],
-                ...(type === ComponentType.ResponsiveChecklist && { rule: DEFAULT_RULE })
+                ...(type === ComponentType.ResponsiveChecklist && {
+                  rule: DEFAULT_RULE,
+                }),
               },
             })}
             Editor={ChecklistOptionsEditor}
@@ -78,6 +80,7 @@ export const Options = <T extends AnyChecklist>({
               ),
             }}
             isTemplatedNode={isTemplatedNode}
+            collapsible={true}
           />
           {exclusiveOrOptionManagerShouldRender ? (
             <ExclusiveOrOptionManager
