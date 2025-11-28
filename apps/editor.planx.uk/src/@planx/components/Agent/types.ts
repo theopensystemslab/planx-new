@@ -1,11 +1,21 @@
 import { BaseNodeData } from "../shared";
 import type { PublicProps } from "../shared/types";
 
+export interface TaskDefinition {
+  editorProps: Record<string, unknown>;
+  breadcrumbData: Record<string, unknown>;
+}
+
+/**
+ * Type guard to ensure any new tasks added to the registry conform to the above type
+ */
+type ValidateRegistry<T extends Record<string, TaskDefinition>> = T;
+
 /**
  * Registry of all task, including their inputs (editorProps) and outputs (breadcrumbData)
  * Used as source of truth from which to derive other types
  */
-export interface TaskRegistry {
+export type TaskRegistry = ValidateRegistry<{
   enhanceProjectDescription: {
     editorProps: {
       abc?: string;
@@ -24,7 +34,7 @@ export interface TaskRegistry {
       ghi?: string;
     };
   };
-}
+}>
 
 export type Task = keyof TaskRegistry;
 
