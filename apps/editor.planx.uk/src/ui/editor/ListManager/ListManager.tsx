@@ -56,6 +56,11 @@ export interface Props<T, EditorExtraProps = {}> {
    * @example Presenting two filtered lists (e.g. GovPayMetadata)
    */
   isFieldDisplayed?: (item: T) => boolean;
+  /**
+   * Enable collapse/expand functionality for list items
+   * @default false
+   */
+  collapsible?: boolean;
 }
 
 const Item = styled(Box)(() => ({
@@ -118,6 +123,7 @@ export default function ListManager<T, EditorExtraProps>(
     maxItems = Infinity,
     disabled,
     isFieldDisplayed = () => true,
+    collapsible = false,
   } = props;
   // Initialize a random ID when the component mounts
   const randomId = useRef(nanoid());
@@ -171,7 +177,7 @@ export default function ListManager<T, EditorExtraProps>(
   if (props.isTemplatedNode && !isPlatformAdmin && !isTemplate) {
     return (
       <>
-        {hasItems && (
+        {collapsible && hasItems && (
           <ListManagerHeader
             disabled={disabled}
             hasItems={hasItems}
@@ -187,24 +193,26 @@ export default function ListManager<T, EditorExtraProps>(
               isFieldDisplayed(item) ? (
                 <Collapse key={itemKeys[index]} sx={{ marginBottom: 2 }}>
                   <Item>
-                    <Box>
-                      <IconButton
-                        onClick={() => toggleCollapse(itemKeys[index])}
-                        aria-label={
-                          collapsedItems.has(itemKeys[index])
-                            ? "Expand"
-                            : "Collapse"
-                        }
-                        size="large"
-                        disabled={disabled}
-                      >
-                        {collapsedItems.has(itemKeys[index]) ? (
-                          <ExpandMore />
-                        ) : (
-                          <ExpandLess />
-                        )}
-                      </IconButton>
-                    </Box>
+                    {collapsible && (
+                      <Box>
+                        <IconButton
+                          onClick={() => toggleCollapse(itemKeys[index])}
+                          aria-label={
+                            collapsedItems.has(itemKeys[index])
+                              ? "Expand"
+                              : "Collapse"
+                          }
+                          size="large"
+                          disabled={disabled}
+                        >
+                          {collapsedItems.has(itemKeys[index]) ? (
+                            <ExpandMore />
+                          ) : (
+                            <ExpandLess />
+                          )}
+                        </IconButton>
+                      </Box>
+                    )}
                     <Box sx={{ flex: 1 }}>
                       <Editor
                         index={index}
@@ -215,7 +223,11 @@ export default function ListManager<T, EditorExtraProps>(
                         {...(props.editorExtraProps || {})}
                         disabled={disabled}
                         errors={props.errors?.[index]}
-                        isCollapsed={collapsedItems.has(itemKeys[index])}
+                        isCollapsed={
+                          collapsible
+                            ? collapsedItems.has(itemKeys[index])
+                            : false
+                        }
                       />
                     </Box>
                   </Item>
@@ -232,7 +244,7 @@ export default function ListManager<T, EditorExtraProps>(
   if (props.noDragAndDrop) {
     return (
       <>
-        {hasItems && (
+        {collapsible && hasItems && (
           <ListManagerHeader
             disabled={disabled}
             hasItems={hasItems}
@@ -248,24 +260,26 @@ export default function ListManager<T, EditorExtraProps>(
               isFieldDisplayed(item) ? (
                 <Collapse key={itemKeys[index]}>
                   <Item>
-                    <Box>
-                      <IconButton
-                        onClick={() => toggleCollapse(itemKeys[index])}
-                        aria-label={
-                          collapsedItems.has(itemKeys[index])
-                            ? "Expand"
-                            : "Collapse"
-                        }
-                        size="large"
-                        disabled={disabled}
-                      >
-                        {collapsedItems.has(itemKeys[index]) ? (
-                          <ExpandMore />
-                        ) : (
-                          <ExpandLess />
-                        )}
-                      </IconButton>
-                    </Box>
+                    {collapsible && (
+                      <Box>
+                        <IconButton
+                          onClick={() => toggleCollapse(itemKeys[index])}
+                          aria-label={
+                            collapsedItems.has(itemKeys[index])
+                              ? "Expand"
+                              : "Collapse"
+                          }
+                          size="large"
+                          disabled={disabled}
+                        >
+                          {collapsedItems.has(itemKeys[index]) ? (
+                            <ExpandMore />
+                          ) : (
+                            <ExpandLess />
+                          )}
+                        </IconButton>
+                      </Box>
+                    )}
                     <Box sx={{ flex: 1 }}>
                       <Editor
                         index={index}
@@ -276,7 +290,11 @@ export default function ListManager<T, EditorExtraProps>(
                         {...(props.editorExtraProps || {})}
                         disabled={disabled}
                         errors={props.errors?.[index]}
-                        isCollapsed={collapsedItems.has(itemKeys[index])}
+                        isCollapsed={
+                          collapsible
+                            ? collapsedItems.has(itemKeys[index])
+                            : false
+                        }
                       />
                     </Box>
                     <Box sx={{ display: "flex", alignItems: "flex-start" }}>
@@ -320,7 +338,7 @@ export default function ListManager<T, EditorExtraProps>(
   // Default ListManager supports reordering, adding, and deleting options
   return (
     <>
-      {hasItems && (
+      {collapsible && hasItems && (
         <ListManagerHeader
           disabled={disabled}
           hasItems={hasItems}
@@ -402,26 +420,28 @@ export default function ListManager<T, EditorExtraProps>(
                                   <DragHandle />
                                 </IconButton>
                               </Box>
-                              <Box>
-                                <IconButton
-                                  onClick={() =>
-                                    toggleCollapse(itemKeys[index])
-                                  }
-                                  aria-label={
-                                    collapsedItems.has(itemKeys[index])
-                                      ? "Expand"
-                                      : "Collapse"
-                                  }
-                                  size="large"
-                                  disabled={disabled}
-                                >
-                                  {collapsedItems.has(itemKeys[index]) ? (
-                                    <ExpandMore />
-                                  ) : (
-                                    <ExpandLess />
-                                  )}
-                                </IconButton>
-                              </Box>
+                              {collapsible && (
+                                <Box>
+                                  <IconButton
+                                    onClick={() =>
+                                      toggleCollapse(itemKeys[index])
+                                    }
+                                    aria-label={
+                                      collapsedItems.has(itemKeys[index])
+                                        ? "Expand"
+                                        : "Collapse"
+                                    }
+                                    size="large"
+                                    disabled={disabled}
+                                  >
+                                    {collapsedItems.has(itemKeys[index]) ? (
+                                      <ExpandMore />
+                                    ) : (
+                                      <ExpandLess />
+                                    )}
+                                  </IconButton>
+                                </Box>
+                              )}
                               <Box sx={{ flex: 1 }}>
                                 <Editor
                                   index={index}
@@ -434,9 +454,11 @@ export default function ListManager<T, EditorExtraProps>(
                                   {...(props.editorExtraProps || {})}
                                   disabled={disabled}
                                   errors={props.errors?.[index]}
-                                  isCollapsed={collapsedItems.has(
-                                    itemKeys[index],
-                                  )}
+                                  isCollapsed={
+                                    collapsible
+                                      ? collapsedItems.has(itemKeys[index])
+                                      : false
+                                  }
                                 />
                               </Box>
                               <Box>

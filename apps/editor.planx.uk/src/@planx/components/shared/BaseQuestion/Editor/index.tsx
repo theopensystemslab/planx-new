@@ -1,4 +1,7 @@
-import { ComponentType, ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType,
+  ComponentType as TYPES,
+} from "@opensystemslab/planx-core/types";
 import QuestionOptionsEditor from "@planx/components/Question/OptionsEditor";
 import { DEFAULT_RULE } from "@planx/components/ResponsiveQuestion/model";
 import { getIn } from "formik";
@@ -25,11 +28,10 @@ import MoreInformation from "./MoreInformation";
 import TemplatedNodeConfiguration from "./TemplatedNodeConfiguration";
 import { Props } from "./types";
 
-
 /**
  * Shared editor component for Question and ResponsiveQuestion components
  * Renders shared UI across both types, and conditionally renders unique fields
- * 
+ *
  * Uses custom components (MoreInformation, TemplateNodeConfiguration) for
  * type-narrowing. This passes either QuestionProps or ResponsiveQuestionProps
  * to children, not the QuestionProps | ResponsiveQuestionProps union
@@ -46,9 +48,8 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
 
   const isTemplate = useStore.getState().isTemplate;
 
-  const title = type === ComponentType.Question
-   ? "Question"
-   : "Responsive question"
+  const title =
+    type === ComponentType.Question ? "Question" : "Responsive question";
 
   return (
     <form
@@ -102,7 +103,7 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
                 disabled={props.disabled}
               />
             </ErrorWrapper>
-            {type === TYPES.Question &&
+            {type === TYPES.Question && (
               <>
                 <InputRow>
                   <Switch
@@ -133,7 +134,7 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
                   </InputRow>
                 </ErrorWrapper>
               </>
-            }
+            )}
           </InputGroup>
         </ModalSectionContent>
         <ModalSectionContent subtitle="Options">
@@ -151,7 +152,9 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
                   description: "",
                   val: "",
                   flags: [],
-                  ...(type === ComponentType.ResponsiveQuestion && { rule: DEFAULT_RULE })
+                  ...(type === ComponentType.ResponsiveQuestion && {
+                    rule: DEFAULT_RULE,
+                  }),
                 },
               })}
               Editor={QuestionOptionsEditor}
@@ -165,6 +168,7 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
                 ),
               }}
               isTemplatedNode={props.node?.data?.isTemplatedNode}
+              collapsible={true}
             />
           </ErrorWrapper>
         </ModalSectionContent>
@@ -181,7 +185,7 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
         onChange={(value) => formik.setFieldValue("tags", value)}
         disabled={props.disabled}
       />
-      {isTemplate && <TemplatedNodeConfiguration {...props}/> }
+      {isTemplate && <TemplatedNodeConfiguration {...props} />}
     </form>
   );
 };

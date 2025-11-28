@@ -124,6 +124,7 @@ const TaskListComponent: React.FC<Props> = (props) => (
               Editor={TaskEditor}
               newValue={newTask}
               disabled={props.disabled}
+              collapsible={true}
             />
           </ModalSectionContent>
         </ModalSection>

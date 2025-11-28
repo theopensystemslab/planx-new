@@ -26,7 +26,7 @@ import { ExclusiveOrOptionManager } from "./ExclusiveOrOptionManager";
 import ChecklistOptionsEditor from "./OptionsEditor";
 
 interface Props<T extends FormikValues> {
-  type: ComponentType.Checklist | ComponentType.ResponsiveChecklist,
+  type: ComponentType.Checklist | ComponentType.ResponsiveChecklist;
   formik: FormikHookReturn<T>;
   disabled?: boolean;
   isTemplatedNode?: boolean;
@@ -114,7 +114,9 @@ export const GroupedOptions = <T extends AnyChecklist>({
                   description: "",
                   val: "",
                   flags: [],
-                  ...(type === ComponentType.ResponsiveChecklist && { rule: DEFAULT_RULE })
+                  ...(type === ComponentType.ResponsiveChecklist && {
+                    rule: DEFAULT_RULE,
+                  }),
                 },
               })}
               newValueLabel="add new option"
@@ -151,6 +153,7 @@ export const GroupedOptions = <T extends AnyChecklist>({
                 ),
               }}
               isTemplatedNode={isTemplatedNode}
+              collapsible={true}
             />
           </Box>
         </Box>
