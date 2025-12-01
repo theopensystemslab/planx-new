@@ -95,6 +95,7 @@ const proposedAddressProps = {
   "property.localAuthorityDistrict": ["Southwark"],
   "property.localPlanningAuthority": ["Southwark LPA"],
   "property.region": ["London"],
+  "property.type": ["unclassified"],
   "property.ward": ["Old Kent Road"],
   "property.boundary.area": 1232.22,
   "property.boundary.area.hectares": 0.123222,
