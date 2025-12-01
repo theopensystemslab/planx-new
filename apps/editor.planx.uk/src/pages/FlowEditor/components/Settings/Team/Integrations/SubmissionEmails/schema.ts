@@ -1,15 +1,32 @@
-import { boolean, object, string } from "yup";
+import { array,boolean, object, string } from "yup";
 
 import { SubmissionEmailFormValues } from "./types";
 
 export const validationSchema = object().shape({
-  submissionEmail: string()
-    .email("Enter a valid email address")
-    .required("Submission email is required"),
-  defaultEmail: boolean().required(),
+  input: object().shape({
+    submissionEmail: string()
+      .email("Enter a valid email address")
+      .required("Submission email is required"),
+    defaultEmail: boolean().required(),
+  }),
+  saved: object().shape({
+    existingEmails: array(
+      object().shape({
+        submissionEmail: string()
+          .email("Enter a valid email address")
+          .required("Submission email is required"),
+        defaultEmail: boolean().required(),
+      }),
+    ).required(),
+  }),
 });
 
 export const defaultValues: SubmissionEmailFormValues = {
-  submissionEmail: "",
-  defaultEmail: false,
+  input: {
+    submissionEmail: "",
+    defaultEmail: false,
+  },
+  saved: {
+    existingEmails: [],
+  },
 };
