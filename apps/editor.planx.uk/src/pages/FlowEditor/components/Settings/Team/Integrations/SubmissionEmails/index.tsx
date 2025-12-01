@@ -1,8 +1,9 @@
 // import DeleteIcon from "@mui/icons-material/Delete";
 // import IconButton from "@mui/material/IconButton";
-import { Box } from "@mui/material/Box";
+import Box from "@mui/material/Box";
 import RadioGroup from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
+import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 // import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { getIn, useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -103,18 +104,19 @@ export const SubmissionEmails: React.FC = () => {
             Submission Emails
           </Typography>
           <RadioGroup
-            value={
-              formik.values.saved.existingEmails.find(
-                (emailObj) => emailObj.defaultEmail,
-              )?.submissionEmail || ""
-            }
+            value={formik.values.saved.existingEmails.findIndex(
+              (emailObj) => emailObj.defaultEmail,
+            )}
             onChange={(e) => {
-              const selectedEmail = (e.target as HTMLInputElement).value;
+              const selectedIndex = parseInt(
+                (e.target as HTMLInputElement).value,
+                10,
+              );
               formik.setFieldValue(
-                "existingEmails",
-                formik.values.saved.existingEmails.map((emailObj) => ({
+                "saved.existingEmails",
+                formik.values.saved.existingEmails.map((emailObj, index) => ({
                   ...emailObj,
-                  defaultEmail: emailObj.submissionEmail === selectedEmail,
+                  defaultEmail: index === selectedIndex,
                 })),
               );
             }}
@@ -126,7 +128,7 @@ export const SubmissionEmails: React.FC = () => {
               }
               newValue={() => ({ submissionEmail: "", defaultEmail: false })}
               Editor={EmailsEditor}
-              maxItems={10} // TODO: Do we want to limit the number of emails?
+              maxItems={10}
             />
           </RadioGroup>
         </>
@@ -153,8 +155,21 @@ const EmailsEditor: React.FC<EditorProps<SubmissionEmailInputValues>> = (
           }}
           errorMessage={getIn(props.errors, "submissionEmail")}
         />
+        <BasicRadio
+          id={props.index.toString()}
+          onChange={(event, checked) => {
+            props.onChange({
+              ...props.value,
+              defaultEmail: checked,
+            });
+          }}
+          label="Default"
+          variant="compact"
+          disabled={props.disabled}
+        />
       </InputRow>
     </Box>
   );
 };
+
 export default SubmissionEmails;
