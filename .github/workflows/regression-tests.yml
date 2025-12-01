@@ -3,10 +3,10 @@ name: Regression Tests
 permissions: read-all
 
 on:
-  workflow_dispatch:
   schedule:
-    # Runs every morning at 06:00 (https://crontab.guru/#0_6_*_*_*)
-    - cron: '0 6 * * *'
+    # Runs every morning at 06:06 (https://crontab.guru/#06_6_*_*_*)
+    - cron: '06 6 * * *'
+  workflow_dispatch:
 
 env:
   EDITOR_DIRECTORY: apps/editor.planx.uk
