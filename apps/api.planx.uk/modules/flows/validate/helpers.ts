@@ -25,6 +25,16 @@ export const hasComponentType = (
   return Boolean(nodeIds.length);
 };
 
+export const buildNodeTypeSet = (flowGraph: FlowGraph): Set<ComponentType> => {
+  const types = new Set<ComponentType>();
+
+  Object.values(flowGraph).forEach((node: Node) => {
+    if (node?.type) types.add(node.type as ComponentType);
+  });
+
+  return types;
+};
+
 export const numberOfComponentType = (
   flowGraph: FlowGraph,
   type: ComponentType,
