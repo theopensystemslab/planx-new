@@ -24,6 +24,7 @@ import { OpenResponseButton } from "./OpenResponseButton";
 import { ResubmitButton } from "./ResubmitButton";
 import { StatusChip } from "./StatusChip";
 import { SubmissionEvent } from "./SubmissionEvent";
+import { ViewSubmissionButton } from "./ViewSubmissionButton";
 
 const EventsLog: React.FC<EventsLogProps> = ({
   submissions,
@@ -105,6 +106,30 @@ const EventsLog: React.FC<EventsLogProps> = ({
     },
     { field: "sessionId", headerName: "Session ID", width: 400 },
     {
+      field: "viewSubmissionLink" as keyof Submission,
+      headerName: "View Submission",
+      width: 100,
+      type: ColumnFilterType.CUSTOM,
+      customComponent: ViewSubmissionButton,
+      columnOptions: {
+        cellClassName: "MuiDataGrid-cell--textCenter",
+        filterable: false,
+        sortable: false,
+      },
+    },
+    {
+      field: "downloadSubmissionLink" as keyof Submission,
+      headerName: "Download",
+      width: 100,
+      type: ColumnFilterType.CUSTOM,
+      customComponent: DownloadSubmissionButton,
+      columnOptions: {
+        cellClassName: "MuiDataGrid-cell--textCenter",
+        filterable: false,
+        sortable: false,
+      },
+    },
+    {
       field: "response",
       headerName: "Response",
       width: 100,
@@ -134,18 +159,6 @@ const EventsLog: React.FC<EventsLogProps> = ({
               defaultStringFilterOperator?.InputComponentProps,
           },
         ],
-      },
-    },
-    {
-      field: "downloadSubmissionLink" as keyof Submission,
-      headerName: "Download",
-      width: 100,
-      type: ColumnFilterType.CUSTOM,
-      customComponent: DownloadSubmissionButton,
-      columnOptions: {
-        cellClassName: "MuiDataGrid-cell--textCenter",
-        filterable: false,
-        sortable: false,
       },
     },
   ];

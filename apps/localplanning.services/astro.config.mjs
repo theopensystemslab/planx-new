@@ -4,6 +4,8 @@ import tailwindcss from "@tailwindcss/vite";
 import { loadEnv } from "vite";
 import icon from "astro-icon";
 
+import sitemap from "@astrojs/sitemap";
+
 // Check args to access Astro mode
 // Env var is not available in Astro config files
 const mode = process.argv.at(-1).replaceAll("-", "")
@@ -11,7 +13,7 @@ const isCloudfrontBuild = ["staging", "production"].includes(mode);
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [react(), icon()],
+  integrations: [react(), icon(), sitemap()],
   env: {
     schema: {
       PUBLIC_PLANX_EDITOR_URL: envField.string({ context: "client", access: "public", optional: false }),

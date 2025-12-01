@@ -9,6 +9,7 @@ import type {
 import { generateApplicationHTML } from "@opensystemslab/planx-core";
 import { gql } from "graphql-request";
 import { MY_MAP_ATTRS } from "../../../lib/map.js";
+import { isApplicationTypeSupported } from "../../send/utils/helpers.js";
 
 const DOWNLOAD_TOKEN_EXPIRY_MINUTES =
   process.env.NODE_ENV === "test"
@@ -45,7 +46,16 @@ const findSession = async (sessionId: string, email: string) => {
 
 export const generateHTML = async (sessionId: string, email: string) => {
   const session = await findSession(sessionId, email);
-  const responses = await $api.export.digitalPlanningDataPayload(sessionId);
+  return generateHTMLForSession(session);
+};
+
+export const generateHTMLForSession = async (session: Session) => {
+  const doValidation = isApplicationTypeSupported(session.data.passport);
+
+  const responses = doValidation
+    ? await $api.export.digitalPlanningDataPayload(session.id)
+    : await $api.export.digitalPlanningDataPayload(session.id, true);
+
   const boundingBox = session.data?.passport.data?.["proposal.site.buffered"];
   const userAction = session.data?.passport.data?.[
     "drawBoundary.action"

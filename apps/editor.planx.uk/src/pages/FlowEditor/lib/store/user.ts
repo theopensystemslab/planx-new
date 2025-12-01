@@ -1,7 +1,7 @@
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { Role, Team, User, UserTeams } from "@opensystemslab/planx-core/types";
 import { getUser } from "lib/api/auth/requests";
-import { handleExpiredJWTErrors } from "lib/graphql";
+import { handleExpiredJWTErrors } from "lib/graphql/auth";
 import type { StateCreator } from "zustand";
 
 import { EditorStore } from "./editor";

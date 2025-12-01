@@ -30,6 +30,12 @@ export interface Props {
   title?: string;
 }
 
+const Root = styled(Box)(() => ({
+  "@media print": {
+    display: "none",
+  },
+}));
+
 const StyledButtonBase = styled(ButtonBase)(() => ({
   backgroundColor: "transparent",
   height: "auto",
@@ -110,7 +116,7 @@ export const EnvironmentSelect: React.FC = () => {
   const handleClose = () => setOpen(false);
 
   return (
-    <>
+    <Root>
       <StyledButtonBase onClick={handleOpen} selected={false} sx={{ ml: 0.5 }}>
         {currentEnv}
         <UnfoldMoreIcon />
@@ -190,7 +196,7 @@ export const EnvironmentSelect: React.FC = () => {
           ))}
         </Stack>
       </StyledDialog>
-    </>
+    </Root>
   );
 };
 

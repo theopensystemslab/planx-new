@@ -14,6 +14,7 @@ export interface FlowInformation {
   canCreateFromCopy?: boolean;
   analyticsLink?: string;
   isListedOnLPS: boolean;
+  summary?: string;
 }
 
 export interface GetFlowInformation {

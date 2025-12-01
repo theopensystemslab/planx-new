@@ -1,5 +1,5 @@
 import Typography from "@mui/material/Typography";
-import { useStore } from "pages/FlowEditor/lib/store";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { AdminPanelData, type LiveFlow } from "types";
@@ -7,15 +7,20 @@ import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContain
 import SettingsSection from "ui/editor/SettingsSection";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
+import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import {
   False as NotConfigured,
   True as Configured,
 } from "../../ui/shared/DataTable/components/cellIcons";
+import { useAdminPanel } from "./useAdminPanel";
 import { formatDate, getFlowNamesForFilter } from "./utils";
 
 export const PlatformAdminPanel = () => {
-  const adminPanelData = useStore((state) => state.adminPanelData);
+  const { data, loading, error } = useAdminPanel();
+  const adminPanelData = data?.adminPanel;
+
+  if (error) return <ErrorSummary message={error.message} />;
 
   const liveFlowNameValueOptions = adminPanelData
     ? getFlowNamesForFilter(adminPanelData)
@@ -133,7 +138,11 @@ export const PlatformAdminPanel = () => {
           {` environment.`}
         </Typography>
       </SettingsSection>
-      <DataTable rows={adminPanelData} columns={columns} />
+      {loading ? (
+        <DelayedLoadingIndicator />
+      ) : (
+        <DataTable rows={adminPanelData} columns={columns} />
+      )}
     </FixedHeightDashboardContainer>
   );
 };

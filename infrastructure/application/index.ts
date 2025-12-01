@@ -284,6 +284,7 @@ export = async () => {
   const rootDbUrl = pulumi.all([dbHost, dbRootPassword]).apply(([dbHost, dbRootPassword]) => 
     getPostgresDbUrl(DB_ROOT_USERNAME, dbRootPassword, dbHost))
   const hasuraService = await createHasuraService({
+    env,
     vpc,
     cluster,
     repo,
@@ -431,6 +432,10 @@ export = async () => {
           {
             name: "FILE_API_KEY_TEWKESBURY",
             value: config.requireSecret("file-api-key-tewkesbury"),
+          },
+          {
+            name: "FILE_API_KEY_CAMDEN",
+            value: config.requireSecret("file-api-key-camden"),
           },
           {
             name: "SKIP_RATE_LIMIT_SECRET",

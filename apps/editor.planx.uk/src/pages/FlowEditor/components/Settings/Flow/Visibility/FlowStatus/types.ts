@@ -14,6 +14,7 @@ export interface GetFlowStatus {
     publishedFlows: {
       id: string;
     }[];
+    firstOnlineAt: string | null;
   };
 }
 

@@ -18,7 +18,7 @@
     "@mui/x-charts": "8.9.0",
     "@mui/x-data-grid": "^7.25.0",
     "@opensystemslab/map": "1.0.0-alpha.6",
-    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#364a0f6",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#d8bbbbe",
     "@tanstack/react-query": "^5.90.6",
     "@tiptap/core": "3.0.7",
     "@tiptap/extension-emoji": "3.0.7",
@@ -143,6 +143,7 @@
     "husky": "^8.0.3",
     "jsdom": "^26.1.0",
     "lint-staged": "^13.2.3",
+    "msw-storybook-addon": "^2.0.6",
     "postcss": "^8.4.32",
     "prettier": "^3.0.0",
     "react-refresh": "^0.14.0",
@@ -214,6 +215,11 @@
     },
     "ignoredBuiltDependencies": [
       "msw"
+    ]
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
     ]
   }
 }

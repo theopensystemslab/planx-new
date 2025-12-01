@@ -95,6 +95,7 @@ describe("Pay component - Editor Modal", () => {
             {
               key: "myKey",
               value: "myValue",
+              type: "static",
             },
           ],
         },
@@ -152,10 +153,10 @@ describe("Pay component - Editor Modal", () => {
         data: {
           fn: "application.fee.payable",
           govPayMetadata: [
-            { key: "flow", value: "flowName" },
-            { key: "source", value: "PlanX" },
-            { key: "paidViaInviteToPay", value: "@paidViaInviteToPay" },
-            { key: "deleteMe", value: "abc123" },
+            { key: "flow", value: "flowName", type: "static" },
+            { key: "source", value: "PlanX", type: "static" },
+            { key: "paidViaInviteToPay", value: "paidViaInviteToPay", type: "data" },
+            { key: "deleteMe", value: "abc123", type: "static" },
           ],
         },
       };

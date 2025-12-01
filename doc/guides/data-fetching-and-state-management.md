@@ -241,7 +241,7 @@ Where possible, we try to prioritise integration tests over implementation detai
   * **Do not mock the Zustand store state** (unless strictly required, e.g. complex graph logic)
   * **Mock the network** using [MSW (Mock Service Worker)](https://mswjs.io/)
 
-### Example: Testing a component with data
+### Example: REST API calls
 ```tsx
 const handlers: HttpHandler[] = [
   // GIS requests
@@ -272,6 +272,35 @@ it("renders correctly", async () => {
   expect(
     await findByRole("button", { name: /Parks and gardens/ }),
   ).toBeVisible();
+});
+```
+
+### Example: GraphQL API calls
+```tsx
+import { graphql, HttpResponse } from "msw";
+import server from "test/mockServer";
+import { setup } from "testUtils";
+import { mockTeams } from "ui/shared/DataTable/mockTeams";
+
+import { PlatformAdminPanel } from "./PlatformAdminPanel";
+
+const handlers = [
+  // Use the msw graphql handler - matches on query name
+  graphql.query("GetAdminPanelData", () =>
+    HttpResponse.json({ data: { adminPanel: mockTeams } }),
+  ),
+];
+
+beforeEach(() => {
+  server.use(...handlers);
+});
+
+it("renders the admin panel", async () => {
+  setup(<PlatformAdminPanel />);
+
+  // Wait for the returned data, not the removal of a loading state
+  await screen.findByText("Barking and Dagenham");
+  ...
 });
 ```
 

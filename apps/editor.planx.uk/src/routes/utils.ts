@@ -1,11 +1,11 @@
 import { ComponentType as NodeTypes } from "@opensystemslab/planx-core/types";
 import gql from "graphql-tag";
-import { NaviRequest, NotFoundError } from "navi";
+import { NaviRequest, NotFoundError, withData } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { Store } from "pages/FlowEditor/lib/store";
 import { ApplicationPath } from "types";
 
-import { publicClient } from "../lib/graphql";
+import { client } from "../lib/graphql";
 
 export const makeTitle = (str: string) =>
   [str, "PlanX"].filter(Boolean).join(" | ");
@@ -85,11 +85,12 @@ const QUERY_GET_TEAM_BY_DOMAIN = gql`
 export const getTeamFromDomain = async (domain: string) => {
   const {
     data: { teams },
-  } = await publicClient.query({
+  } = await client.query({
     query: QUERY_GET_TEAM_BY_DOMAIN,
     variables: {
       domain,
     },
+    context: { role: "public" },
   });
 
   return teams?.[0]?.slug;
@@ -110,56 +111,12 @@ export const validateTeamRoute = async (req: NaviRequest) => {
     throw new NotFoundError(req.originalUrl);
 };
 
-export const STAGING_ADMIN_PANEL_QUERY = gql`
-  query {
-    adminPanel: teams_summary {
-      id
-      name
-      slug
-      referenceCode: reference_code
-      homepage
-      subdomain
-      planningDataEnabled: planning_data_enabled
-      article4sEnabled: article_4s_enabled
-      govnotifyPersonalisation: govnotify_personalisation
-      govpayEnabled: govpay_enabled_staging
-      powerAutomateEnabled: power_automate_enabled_staging
-      sendToEmailAddress: send_to_email_address
-      bopsSubmissionURL: bops_submission_url_staging
-      liveFlows: live_flows
-      logo
-      favicon
-      primaryColour: primary_colour
-      linkColour: link_colour
-      actionColour: action_colour
-      isTrial: is_trial
-    }
-  }
-`;
-
-export const PRODUCTION_ADMIN_PANEL_QUERY = gql`
-  query {
-    adminPanel: teams_summary {
-      id
-      name
-      slug
-      referenceCode: reference_code
-      homepage
-      subdomain
-      planningDataEnabled: planning_data_enabled
-      article4sEnabled: article_4s_enabled
-      govnotifyPersonalisation: govnotify_personalisation
-      govpayEnabled: govpay_enabled_production
-      powerAutomateEnabled: power_automate_enabled_production
-      sendToEmailAddress: send_to_email_address
-      bopsSubmissionURL: bops_submission_url_production
-      liveFlows: live_flows
-      logo
-      favicon
-      primaryColour: primary_colour
-      linkColour: link_colour
-      actionColour: action_colour
-      isTrial: is_trial
-    }
-  }
-`;
+/**
+ * Auth middleware for routes
+ * Prevents non-teamEditors from accessing pages
+ */
+export const withTeamAuth = withData((req) => {
+  const isAuthorised = useStore.getState().canUserEditTeam(req.params.team);
+  if (!isAuthorised)
+    throw new NotFoundError(`User does not have access to ${req.originalUrl}`);
+});

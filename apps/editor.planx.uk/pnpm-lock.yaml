@@ -58,8 +58,8 @@ importers:
         specifier: 1.0.0-alpha.6
         version: 1.0.0-alpha.6
       '@opensystemslab/planx-core':
-        specifier: git+https://github.com/theopensystemslab/planx-core#364a0f6
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/364a0f6(@types/react@18.3.27)
+        specifier: git+https://github.com/theopensystemslab/planx-core#d8bbbbe
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d8bbbbe(@types/react@18.3.27)
       '@tanstack/react-query':
         specifier: ^5.90.6
         version: 5.90.10(react@18.3.1)
@@ -427,6 +427,9 @@ importers:
       lint-staged:
         specifier: ^13.2.3
         version: 13.3.0
+      msw-storybook-addon:
+        specifier: ^2.0.6
+        version: 2.0.6(msw@2.12.2(@types/node@22.14.1)(typescript@5.9.3))
       postcss:
         specifier: ^8.4.32
         version: 8.5.6
@@ -1885,8 +1888,8 @@ packages:
   '@opensystemslab/map@1.0.0-alpha.6':
     resolution: {integrity: sha512-EBOgrgBRFNg8p+7nDFvh+K7N4NFQ7+epBXjE9w7h0u87q4M+nOpBwXNc67+UdDs+j8Mi+vQ2R+uJBIKF25NQ7g==}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/364a0f6':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/364a0f6}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d8bbbbe':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d8bbbbe}
     version: 1.0.0
 
   '@parcel/watcher-android-arm64@2.5.1':
@@ -4947,6 +4950,11 @@ packages:
 
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
+
+  msw-storybook-addon@2.0.6:
+    resolution: {integrity: sha512-ExCwDbcJoM2V3iQU+fZNp+axVfNc7DWMRh4lyTXebDO8IbpUNYKGFUrA8UqaeWiRGKVuS7+fU+KXEa9b0OP6uA==}
+    peerDependencies:
+      msw: ^2.0.0
 
   msw@2.12.2:
     resolution: {integrity: sha512-Fsr8AR5Yu6C0thoWa1Z8qGBFQLDvLsWlAn/v3CNLiUizoRqBYArK3Ex3thXpMWRr1Li5/MKLOEZ5mLygUmWi1A==}
@@ -8280,7 +8288,7 @@ snapshots:
     transitivePeerDependencies:
       - preact
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/364a0f6(@types/react@18.3.27)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d8bbbbe(@types/react@18.3.27)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@18.3.27)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1)
@@ -11789,6 +11797,11 @@ snapshots:
   ms@2.1.2: {}
 
   ms@2.1.3: {}
+
+  msw-storybook-addon@2.0.6(msw@2.12.2(@types/node@22.14.1)(typescript@5.9.3)):
+    dependencies:
+      is-node-process: 1.2.0
+      msw: 2.12.2(@types/node@22.14.1)(typescript@5.9.3)
 
   msw@2.12.2(@types/node@22.14.1)(typescript@5.9.3):
     dependencies:

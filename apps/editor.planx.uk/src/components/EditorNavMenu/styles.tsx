@@ -15,6 +15,9 @@ export const Root = styled(Box, {
   background: theme.palette.background.paper,
   borderRight: `1px solid ${theme.palette.border.light}`,
   zIndex: theme.zIndex.appBar,
+  "@media print": {
+    display: "none",
+  },
 }));
 
 export const MenuWrap = styled("ul")(({ theme }) => ({

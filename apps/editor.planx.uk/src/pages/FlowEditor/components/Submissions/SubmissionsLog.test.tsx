@@ -1,10 +1,15 @@
 import { screen } from "@testing-library/react";
 import React from "react";
+import * as ReactNavi from "react-navi";
 import { setup } from "testUtils";
 import { it } from "vitest";
 
 import EventsLog from "./components/EventsLog";
 import { mockSubmissions } from "./mockSubmissions";
+
+vi.spyOn(ReactNavi, "useNavigation").mockImplementation(
+  () => ({ navigate: vi.fn() }) as any,
+);
 
 describe("When the submissions log renders", () => {
   it("shows the expected headers and rows without an error", () => {
