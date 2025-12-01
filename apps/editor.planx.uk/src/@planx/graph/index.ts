@@ -512,15 +512,29 @@ export const makeUnique =
  * XXX: Clones will only appear in first graph position
  */
 const dfs = (graph: Graph) => (startId: string) => {
-  const visited = new Set([startId]);
-  const crawlFrom = (id: string) => {
-    if (!graph[id]) return;
+  const visited = new Set<string>();
+  const stack = [startId];
+
+  while (stack.length > 0) {
+    const id = stack.pop()!;
+
+    if (visited.has(id)) continue;
     visited.add(id);
-    graph[id].edges?.forEach((childId) => {
-      crawlFrom(childId);
-    });
-  };
-  crawlFrom(startId);
+
+    const node = graph[id];
+    if (!node?.edges) continue;
+
+    // Node edges are traversed left-to-right
+    // We process our stack in last-in, first-out order
+    // This means we need to iterate backwards over edges
+    for (let i = node.edges.length - 1; i >= 0; i--) {
+      const childId = node.edges[i];
+      if (!visited.has(childId)) {
+        stack.push(childId);
+      }
+    }
+  }
+
   return [...visited];
 };
 
