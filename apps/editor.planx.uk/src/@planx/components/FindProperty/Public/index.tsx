@@ -58,7 +58,7 @@ function Component(props: Props) {
     previouslySubmittedData?._address,
   );
 
-  const { 
+  const {
     localAuthorityDistricts,
     localPlanningAuthorities,
     regions,
@@ -82,6 +82,14 @@ function Component(props: Props) {
       newPassportData["_address"] = address;
       if (address?.planx_value) {
         newPassportData["property.type"] = [address.planx_value];
+      }
+
+      // Set unclassified as a fallback if we have no property.type value
+      if (
+        !newPassportData["property.type"] ||
+        newPassportData["property.type"].length === 0
+      ) {
+        newPassportData["property.type"] = ["unclassified"];
       }
 
       if (localAuthorityDistricts) {
@@ -126,8 +134,8 @@ function Component(props: Props) {
 
     // Continue button enabled once we have an address and not actively fetching
     if (page === "os-address") return Boolean(address) && !isPending;
-  }
-  
+  };
+
   const isValid = getValidStatus();
 
   return (

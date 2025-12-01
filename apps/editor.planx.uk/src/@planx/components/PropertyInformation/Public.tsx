@@ -56,18 +56,18 @@ function Component(props: PublicProps<PropertyInformation>) {
       handleSubmit={() => {
         const passportData: Record<string, any> = {};
 
-        // If no property.type exists, set it to "unclassified" as a fallback
-        const existingPropertyType = passport.data?.["property.type"];
-        if (!existingPropertyType || existingPropertyType.length === 0) {
-          passportData["property.type"] = ["unclassified"];
+        // If property types are not supported, overwrite does not apply
+        if (!props.showPropertyTypeOverride) {
+          passportData["propertyInformation.action"] =
+            "Property type not supported";
+        } else {
+          // If the user changed their property type, they'll already have a previous PropertyInformation breadcrumb that set `_overrides`
+          const hasOverrodeAnswer =
+            passport.data?.["_overrides"]?.["property.type"];
+          passportData["propertyInformation.action"] = hasOverrodeAnswer
+            ? "Changed the property type"
+            : "Accepted the property type";
         }
-
-        // If the user changed their property type, they'll already have a previous PropertyInformation breadcrumb that set `_overrides`
-        const hasOverrodeAnswer =
-          passport.data?.["_overrides"]?.["property.type"];
-        passportData["propertyInformation.action"] = hasOverrodeAnswer
-          ? "Changed the property type"
-          : "Accepted the property type";
 
         props.handleSubmit?.({
           data: passportData,
@@ -126,15 +126,19 @@ export function Presentational(props: PresentationalProps) {
       heading: "Local planning authority",
       detail: localPlanningAuthority?.join(", ") || "Unknown",
     },
-    {
-      heading: "Property type",
-      detail:
-        find(blpuCodes?.blpu_codes, { value: propertyType?.[0] })
-          ?.description ||
-        propertyType?.[0] ||
-        "Unknown",
-      fn: "property.type",
-    },
+    ...(showPropertyTypeOverride
+      ? [
+          {
+            heading: "Property type",
+            detail:
+              find(blpuCodes?.blpu_codes, { value: propertyType?.[0] })
+                ?.description ||
+              propertyType?.[0] ||
+              "Unknown",
+            fn: "property.type",
+          },
+        ]
+      : []),
   ];
 
   return (
