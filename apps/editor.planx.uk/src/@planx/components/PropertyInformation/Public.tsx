@@ -127,8 +127,7 @@ export function Presentational(props: PresentationalProps) {
           {
             heading: "Property type",
             detail:
-              find(blpuCodes?.blpu_codes, { value: propertyType?.[0] })
-                ?.description ||
+              find(blpuCodes, { value: propertyType?.[0] })?.description ||
               propertyType?.[0] ||
               "Unknown",
             fn: "property.type",
