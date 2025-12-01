@@ -21,7 +21,7 @@ jobs:
     name: Build PlanX frontend
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ vars.NODE_VERSION }}
@@ -77,7 +77,7 @@ jobs:
     name: Build localplanning.services
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ vars.NODE_VERSION }}
@@ -127,7 +127,7 @@ jobs:
       - build_localplanning_services
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ vars.NODE_VERSION }}
@@ -165,7 +165,7 @@ jobs:
     needs: preview
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       # Airbrake notification - https://airbrake.io/docs/features/deploy-tracking
       - name: Notify Airbrake of deploy
         id: airbrake-deploy
