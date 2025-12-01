@@ -1,131 +1,73 @@
-import { GET_FLOW_STATUS } from "../../queries";
+import type { GetFlowStatus } from "../../types";
 
-export const offlinePublished = [
-  {
-    request: {
-      query: GET_FLOW_STATUS,
-      variables: {
-        flowId: "abc123",
+export const offlinePublished: GetFlowStatus = {
+  flow: {
+    id: "abc123",
+    status: "offline",
+    hasPrivacyPage: true,
+    team: {
+      settings: {
+        isTrial: false,
       },
     },
-    result: {
-      data: {
-        flow: {
-          id: "abc123",
-          status: "offline",
-          hasPrivacyPage: true,
-          team: {
-            settings: {
-              isTrial: false,
-              __typename: "team_settings",
-            },
-            __typename: "teams",
-          },
-          templatedFrom: null,
-          publishedFlows: [
-            {
-              id: 4,
-              __typename: "published_flows",
-            },
-          ],
-          __typename: "flows",
-        },
+    templatedFrom: null,
+    publishedFlows: [
+      {
+        id: "4",
       },
-    },
+    ],
+    firstOnlineAt: null,
   },
-];
+};
 
-export const onlineUnpublished = [
-  {
-    request: {
-      query: GET_FLOW_STATUS,
-      variables: {
-        flowId: "abc123",
+export const onlineUnpublished: GetFlowStatus = {
+  flow: {
+    id: "abc123",
+    status: "online",
+    hasPrivacyPage: true,
+    team: {
+      settings: {
+        isTrial: false,
       },
     },
-    result: {
-      data: {
-        flow: {
-          id: "abc123",
-          status: "online",
-          hasPrivacyPage: true,
-          team: {
-            settings: {
-              isTrial: false,
-              __typename: "team_settings",
-            },
-            __typename: "teams",
-          },
-          templatedFrom: null,
-          publishedFlows: [],
-          __typename: "flows",
-        },
-      },
-    },
+    templatedFrom: null,
+    publishedFlows: [],
+    firstOnlineAt: null,
   },
-];
+};
 
-export const offlineUnpublished = [
-  {
-    request: {
-      query: GET_FLOW_STATUS,
-      variables: {
-        flowId: "abc123",
+export const offlineUnpublished: GetFlowStatus = {
+  flow: {
+    id: "abc123",
+    status: "offline",
+    hasPrivacyPage: true,
+    team: {
+      settings: {
+        isTrial: false,
       },
     },
-    result: {
-      data: {
-        flow: {
-          id: "abc123",
-          status: "offline",
-          hasPrivacyPage: true,
-          team: {
-            settings: {
-              isTrial: false,
-              __typename: "team_settings",
-            },
-            __typename: "teams",
-          },
-          templatedFrom: null,
-          publishedFlows: [],
-          __typename: "flows",
-        },
-      },
-    },
+    templatedFrom: null,
+    publishedFlows: [],
+    firstOnlineAt: null,
   },
-];
+};
 
-export const onlinePublished = [
-  {
-    request: {
-      query: GET_FLOW_STATUS,
-      variables: {
-        flowId: "abc123",
+export const onlinePublished: GetFlowStatus = {
+  flow: {
+    id: "abc123",
+    status: "online",
+    hasPrivacyPage: true,
+    team: {
+      settings: {
+        isTrial: false,
       },
     },
-    result: {
-      data: {
-        flow: {
-          id: "abc123",
-          status: "online",
-          hasPrivacyPage: true,
-          team: {
-            settings: {
-              isTrial: false,
-              __typename: "team_settings",
-            },
-            __typename: "teams",
-          },
-          templatedFrom: null,
-          publishedFlows: [
-            {
-              id: 4,
-              __typename: "published_flows",
-            },
-          ],
-          __typename: "flows",
-        },
+    templatedFrom: null,
+    publishedFlows: [
+      {
+        id: "4",
       },
-    },
+    ],
+    firstOnlineAt: null,
   },
-];
+};
