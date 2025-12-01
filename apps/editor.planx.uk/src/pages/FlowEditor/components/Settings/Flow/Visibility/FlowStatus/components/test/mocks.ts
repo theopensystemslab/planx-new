@@ -16,6 +16,7 @@ export const offlinePublished: GetFlowStatus = {
         id: "4",
       },
     ],
+    firstOnlineAt: null,
   },
 };
 
@@ -31,6 +32,7 @@ export const onlineUnpublished: GetFlowStatus = {
     },
     templatedFrom: null,
     publishedFlows: [],
+    firstOnlineAt: null,
   },
 };
 
@@ -46,6 +48,7 @@ export const offlineUnpublished: GetFlowStatus = {
     },
     templatedFrom: null,
     publishedFlows: [],
+    firstOnlineAt: null,
   },
 };
 
@@ -65,5 +68,6 @@ export const onlinePublished: GetFlowStatus = {
         id: "4",
       },
     ],
+    firstOnlineAt: null,
   },
 };
