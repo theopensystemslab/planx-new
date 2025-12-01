@@ -14,9 +14,9 @@ interface Props {
 }
 
 const siteName = "Find local planning services";
-const { 
+const {
   title,
-  description = "Modern digital services to send planning applications, reports and notices directly to local planning authorities"
+  description = "Modern digital services to send planning applications, reports and notices directly to local planning authorities",
 } = Astro.props;
 
 const fullTitle = title ? `${title} | ${siteName}` : siteName;
@@ -31,11 +31,9 @@ const fullTitle = title ? `${title} | ${siteName}` : siteName;
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <SEO
-      title={fullTitle}
-      description={description}
-    />
+    <SEO title={fullTitle} description={description} />
     <Analytics />
+    <link rel="sitemap" href="/sitemap-index.xml" />
     <script src="../scripts/registerWebcomponents.js"></script>
   </head>
   <body class="bg-black">
@@ -60,7 +58,7 @@ const fullTitle = title ? `${title} | ${siteName}` : siteName;
 
 <script>
   import { navigate } from "astro:transitions/client";
-  
+
   // Force ClientRouter navigation event on browser "back" event
   // When navigating from /applications/:lpa back to /applications, Astro doesn't always re-render
   window.addEventListener("popstate", () => navigate(window.location.pathname));
