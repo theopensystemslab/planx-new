@@ -18,7 +18,9 @@ INSERT INTO published_flows (
   summary,
   publisher_id,
   created_at,
-  has_send_component
+  has_send_component,
+  has_sections,
+  has_pay_component
 )
 SELECT
   id,
@@ -27,7 +29,9 @@ SELECT
   summary,
   publisher_id,
   created_at,
-  has_send_component
+  has_send_component,
+  has_sections,
+  has_pay_component
 FROM sync_published_flows
 ON CONFLICT (id) DO UPDATE
 SET
@@ -36,5 +40,7 @@ SET
   summary = EXCLUDED.summary,
   publisher_id = EXCLUDED.publisher_id,
   created_at = EXCLUDED.created_at,
-  has_send_component = EXCLUDED.has_send_component;
+  has_send_component = EXCLUDED.has_send_component,
+  has_sections = EXCLUDED.has_sections,
+  has_pay_component = EXCLUDED.has_pay_component;
   
