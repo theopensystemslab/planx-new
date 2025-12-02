@@ -33,3 +33,33 @@ export const validateSession = async (body: SessionAuthPayload) => {
   );
   return data;
 };
+
+
+/**
+ * Get download token for HTML export
+ */
+export const getDownloadToken = async (email: string, sessionId: string): Promise<{ token: string }> => {
+  const { data } = await apiClient.post(
+    `/lps/download/token`,
+    { email, sessionId },
+  );
+
+  return data
+};
+
+/**
+ * Download application HTML using authorization token
+ */
+export const downloadApplicationHtml = async (
+  email: string,
+  sessionId: string,
+  token: string
+): Promise<string> => {
+  const { data } = await apiClient.post(
+    `/lps/download/html`,
+    { email, sessionId },
+    { headers: { "Authorization": `Bearer ${token}`} }
+  );
+
+  return data;
+};

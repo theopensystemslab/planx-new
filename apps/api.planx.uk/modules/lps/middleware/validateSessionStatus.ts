@@ -27,7 +27,8 @@ export const validateSessionStatus: GenerateDownloadToken = async (
         lowcalSessions: lowcal_sessions(
           where: {
             system_status: { _eq: "active" }
-            user_status: { _eq: "submitted" }
+            # Maybe make this an argument? Needs to be toggled off for partial applications
+            # user_status: { _eq: "submitted" }
             id: { _eq: $sessionId }
             email: { _eq: $email }
           }
