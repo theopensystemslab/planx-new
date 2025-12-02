@@ -117,6 +117,8 @@ export interface PreviewStore extends Store.Store {
   autoAnswerableFlag: (filterId: NodeId) => NodeId | undefined;
   hasAcknowledgedWarning: boolean;
   setHasAcknowledgedWarning: () => void;
+  hasAcknowledgedSingleSessionEntry: boolean;
+  setHasAcknowledgedSingleSessionEntry: () => void;
 }
 
 export const previewStore: StateCreator<
@@ -859,6 +861,10 @@ export const previewStore: StateCreator<
 
   hasAcknowledgedWarning: false,
   setHasAcknowledgedWarning: () => set({ hasAcknowledgedWarning: true }),
+
+  hasAcknowledgedSingleSessionEntry: false,
+  setHasAcknowledgedSingleSessionEntry: () =>
+    set({ hasAcknowledgedSingleSessionEntry: true }),
 });
 
 interface RemoveOrphansFromBreadcrumbsProps {
