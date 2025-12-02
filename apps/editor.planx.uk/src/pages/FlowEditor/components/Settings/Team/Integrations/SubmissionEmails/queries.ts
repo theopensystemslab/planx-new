@@ -13,26 +13,22 @@ export const GET_TEAM_SUBMISSION_INTEGRATIONS = gql`
 `;
 
 export const UPSERT_TEAM_SUBMISSION_INTEGRATIONS = gql`
-  mutation UpsertSubmissionIntegration(
-    $submissionEmail: String!
+  mutation UpsertSubmissionIntegrations(
     $teamId: Int!
-    $defaultEmail: Boolean!
+    $emails: [submission_integrations_insert_input!]!
   ) {
     insert_submission_integrations(
-      objects: {
-        submission_email: $submissionEmail
-        team_id: $teamId
-        default_email: $defaultEmail
-      }
+      objects: $emails
       on_conflict: {
         constraint: submission_integrations_pkey
-        update_columns: [submission_email]
+        update_columns: [submission_email, default_email]
       }
     ) {
       returning {
         id
         submissionEmail: submission_email
         teamId: team_id
+        defaultEmail: default_email
       }
     }
   }
