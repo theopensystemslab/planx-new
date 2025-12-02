@@ -10,8 +10,8 @@ import { objectWithoutNullishValues } from "lib/objectHelpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import Banner from "ui/public/Banner";
-import FileDownload from "ui/public/FileDownload";
 import NumberedList from "ui/public/NumberedList";
+import ViewApplicationLink from "ui/public/ViewApplicationLink";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import type { Confirmation } from "./model";
@@ -114,10 +114,7 @@ export function Presentational(props: PresentationalProps) {
             </React.Fragment>
           ))}
         </SummaryListTable>
-        <FileDownload
-          data={props.data}
-          filename={props.sessionId || "application"}
-        />
+        <ViewApplicationLink />
         {props.nextSteps && Boolean(props.nextSteps?.length) && (
           <Box pt={3}>
             <Typography variant="h2" mb={2}>

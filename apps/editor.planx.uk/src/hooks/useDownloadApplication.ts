@@ -43,6 +43,7 @@ export const useDownloadApplication = () => {
     },
     enabled: !!tokenQuery.data,
     staleTime: Infinity,
+    retry: 0,
   });
 
   return {
