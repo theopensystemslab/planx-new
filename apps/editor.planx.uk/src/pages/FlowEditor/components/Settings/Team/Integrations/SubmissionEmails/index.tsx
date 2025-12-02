@@ -6,6 +6,8 @@ import Typography from "@mui/material/Typography";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 // import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { getIn, useFormik } from "formik";
+import { FormikHelpers } from "formik";
+import { FormikProps } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import ListManager from "ui/editor/ListManager/ListManager";
@@ -68,8 +70,9 @@ export const SubmissionEmails: React.FC = () => {
           existingEmails: submissionIntegrations || [],
         },
       })}
-      getMutationVariables={(values) => {
+      getMutationVariables={(values, data) => {
         console.log("getMutationVariables called with values:", values);
+        console.log("getMutationVariables called with data:", data);
         return {
           teamId,
           emails: values.saved.existingEmails.map((emailObj) => ({
@@ -90,15 +93,22 @@ export const SubmissionEmails: React.FC = () => {
           </Typography>
         </>
       }
-      onSuccess={(formik, data) => {
+      onSuccess={(
+        data: GetTeamSubmissionIntegrationsData | undefined,
+        formik: FormikHelpers<SubmissionEmailFormValues>,
+        values: SubmissionEmailFormValues,
+      ) => {
         formik.resetForm();
         formik.setFieldValue(
           "saved.existingEmails",
           data?.submissionIntegrations || [],
         );
       }}
-    >
-      {({ formik }) => (
+      children={({
+        formik,
+      }: {
+        formik: FormikProps<SubmissionEmailFormValues>;
+      }) => (
         <>
           <Typography variant="h6" style={{ marginBottom: "1rem" }}>
             Submission Emails
@@ -133,7 +143,7 @@ export const SubmissionEmails: React.FC = () => {
           </RadioGroup>
         </>
       )}
-    </SettingsFormContainer>
+    />
   );
 };
 
