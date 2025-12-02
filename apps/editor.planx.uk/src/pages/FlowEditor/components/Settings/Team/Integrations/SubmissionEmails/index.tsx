@@ -1,17 +1,13 @@
-// import DeleteIcon from "@mui/icons-material/Delete";
-// import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import RadioGroup from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
-// import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
-import { getIn, useFormik } from "formik";
+import { getIn } from "formik";
 import { FormikHelpers } from "formik";
 import { FormikProps } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import ListManager from "ui/editor/ListManager/ListManager";
-// import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
@@ -24,32 +20,13 @@ import {
 import { defaultValues, validationSchema } from "./schema";
 import {
   GetTeamSubmissionIntegrationsData,
+  SubmissionEmail,
   SubmissionEmailFormValues,
-  SubmissionEmailInputValues,
-  SubmissionEmailSavedValues,
   UpdateTeamSubmissionIntegrationsVariables,
 } from "./types";
 
 export const SubmissionEmails: React.FC = () => {
   const teamId = useStore((state) => state.teamId);
-
-  const addEmail = (
-    formik: ReturnType<typeof useFormik<SubmissionEmailFormValues>>,
-  ) => {
-    const newEmail = formik.values.input.submissionEmail.trim();
-    if (
-      newEmail &&
-      !formik.values.saved.existingEmails.some(
-        (emailObj) => emailObj.submissionEmail === newEmail,
-      )
-    ) {
-      formik.setFieldValue("saved.existingEmails", [
-        ...formik.values.saved.existingEmails,
-        { submissionEmail: newEmail, defaultEmail: false },
-      ]);
-      formik.setFieldValue("input.submissionEmail", "");
-    }
-  };
 
   return (
     <SettingsFormContainer<
@@ -62,48 +39,29 @@ export const SubmissionEmails: React.FC = () => {
       queryVariables={{ teamId }}
       mutation={UPSERT_TEAM_SUBMISSION_INTEGRATIONS}
       getInitialValues={({ submissionIntegrations }) => ({
-        input: {
-          submissionEmail: "",
-          defaultEmail: false,
-        },
-        saved: {
-          existingEmails: submissionIntegrations || [],
-        },
+        input: [],
+        saved: submissionIntegrations || [],
       })}
-      getMutationVariables={(values, data) => {
-        console.log("getMutationVariables called with values:", values);
-        console.log("getMutationVariables called with data:", data);
-        return {
-          teamId,
-          emails: values.saved.existingEmails.map((emailObj) => ({
-            submissionEmail: emailObj.submissionEmail,
-            defaultEmail: emailObj.defaultEmail,
-          })),
-        };
+      getMutationVariables={(values) => {
+        const emails: SubmissionEmail[] = values.input.map((email) => ({
+          submissionEmail: email.submissionEmail,
+          defaultEmail: email.defaultEmail,
+        }));
+
+        console.log("Mutation variables: ", { teamId, emails });
+
+        return { teamId, emails };
       }}
       validationSchema={validationSchema}
-      legend="Submission information"
+      legend="Submission Emails"
       description={
         <>
           <Typography variant="body2">
-            Enter a single email address to add it to the list of submission
-            emails. You can assign one email address per service. A default
-            address must be selected, which will be used as a fallback for all
-            applications.
+            Add submission emails to the list. You can assign one default email
+            per service. Newly added emails will be saved when you click "Save."
           </Typography>
         </>
       }
-      onSuccess={(
-        data: GetTeamSubmissionIntegrationsData | undefined,
-        formik: FormikHelpers<SubmissionEmailFormValues>,
-        values: SubmissionEmailFormValues,
-      ) => {
-        formik.resetForm();
-        formik.setFieldValue(
-          "saved.existingEmails",
-          data?.submissionIntegrations || [],
-        );
-      }}
       children={({
         formik,
       }: {
@@ -114,7 +72,7 @@ export const SubmissionEmails: React.FC = () => {
             Submission Emails
           </Typography>
           <RadioGroup
-            value={formik.values.saved.existingEmails.findIndex(
+            value={formik.values.saved.findIndex(
               (emailObj) => emailObj.defaultEmail,
             )}
             onChange={(e) => {
@@ -123,8 +81,8 @@ export const SubmissionEmails: React.FC = () => {
                 10,
               );
               formik.setFieldValue(
-                "saved.existingEmails",
-                formik.values.saved.existingEmails.map((emailObj, index) => ({
+                "saved",
+                formik.values.saved.map((emailObj, index) => ({
                   ...emailObj,
                   defaultEmail: index === selectedIndex,
                 })),
@@ -132,10 +90,24 @@ export const SubmissionEmails: React.FC = () => {
             }}
           >
             <ListManager
-              values={formik.values.saved.existingEmails}
-              onChange={(newValues) =>
-                formik.setFieldValue("saved.existingEmails", newValues)
-              }
+              values={[...formik.values.saved, ...formik.values.input]}
+              onChange={(newValues) => {
+                const savedEmails = newValues.filter((email) =>
+                  formik.values.saved.some(
+                    (saved) => saved.submissionEmail === email.submissionEmail,
+                  ),
+                );
+                const newEmails = newValues.filter(
+                  (email) =>
+                    !formik.values.saved.some(
+                      (saved) =>
+                        saved.submissionEmail === email.submissionEmail,
+                    ),
+                );
+
+                formik.setFieldValue("saved", savedEmails);
+                formik.setFieldValue("input", newEmails);
+              }}
               newValue={() => ({ submissionEmail: "", defaultEmail: false })}
               Editor={EmailsEditor}
               maxItems={10}
@@ -147,9 +119,7 @@ export const SubmissionEmails: React.FC = () => {
   );
 };
 
-const EmailsEditor: React.FC<EditorProps<SubmissionEmailInputValues>> = (
-  props,
-) => {
+const EmailsEditor: React.FC<EditorProps<SubmissionEmail>> = (props) => {
   return (
     <Box width="100%">
       <InputRow>
