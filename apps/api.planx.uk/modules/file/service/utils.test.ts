@@ -7,9 +7,9 @@ describe("s3 Factory", () => {
     const s3 = s3Factory();
 
     // Minio should be set up as a custom endpoint
-    if (!s3.config.endpoint) expect.fail();
+    expect(s3.config.endpoint).toBeDefined();
 
-    const endpoint = await s3.config.endpoint();
+    const endpoint = await s3.config.endpoint!();
 
     expect(endpoint.hostname).toBe("minio");
   });

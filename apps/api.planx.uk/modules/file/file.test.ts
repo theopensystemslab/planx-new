@@ -21,21 +21,18 @@ vi.mock("@aws-sdk/s3-request-presigner", () => ({
   }),
 }));
 
-const s3Mock = () => {
-  return {
-    putObject: mockPutObject,
-    getObject: mockGetObject,
-    deleteObjects: mockDeleteObjects,
-  };
-};
-
 vi.mock("@aws-sdk/client-s3", async (importOriginal) => {
   const actualS3Client = await importOriginal<typeof s3Client>();
+
+  class MockS3 {
+    putObject = mockPutObject;
+    getObject = mockGetObject;
+    deleteObjects = mockDeleteObjects;
+  }
+
   return {
     ...actualS3Client,
-    S3: vi.fn().mockImplementation(() => {
-      return s3Mock();
-    }),
+    S3: MockS3,
   };
 });
 

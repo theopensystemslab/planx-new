@@ -1,4 +1,4 @@
-import { defineConfig } from "vitest/config";
+import { configDefaults, defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
@@ -23,6 +23,7 @@ export default defineConfig({
         autoUpdate: true,
       },
     },
+    exclude: [...configDefaults.exclude, "dist/**"],
   },
   // remove .js from imports, which ts-with-esm requires but causes vitest to fail module resolution
   resolve: {
