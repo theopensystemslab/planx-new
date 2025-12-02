@@ -29,7 +29,7 @@ test("renders a warning for editors if address data is not in state", async () =
   expect(screen.getByTestId("error-summary-invalid-graph")).toBeInTheDocument();
 });
 
-test("renders correctly when property override is enabled", async () => {
+test("renders correctly when property type is supported", async () => {
   const handleSubmit = vi.fn();
 
   const { user } = setup(
@@ -42,12 +42,13 @@ test("renders correctly when property override is enabled", async () => {
 
   expect(screen.getByText("About the property")).toBeInTheDocument();
   expect(screen.getByText("Property type")).toBeInTheDocument();
+  expect(screen.getByText("Change")).toBeInTheDocument();
 
   await user.click(screen.getByTestId("continue-button"));
   expect(handleSubmit).toHaveBeenCalledTimes(1);
 });
 
-test("renders correctly when property override is toggled off", async () => {
+test("renders correctly when property type is not supported", async () => {
   const handleSubmit = vi.fn();
 
   const { user } = setup(
@@ -59,8 +60,7 @@ test("renders correctly when property override is toggled off", async () => {
   );
 
   expect(screen.getByText("About the property")).toBeInTheDocument();
-  expect(screen.getByText("Property type")).toBeInTheDocument();
-
+  expect(screen.queryByText("Property type")).not.toBeInTheDocument();
   expect(screen.queryByText("Change")).not.toBeInTheDocument();
 
   await user.click(screen.getByTestId("continue-button"));

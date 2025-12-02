@@ -70,6 +70,9 @@ function Component(props: Props) {
       newPassportData["_address"] = address;
       if (address?.planx_value) {
         newPassportData["property.type"] = [address.planx_value];
+      } else {
+        // Fallback to "unclassified" if OS did not return a value or user is proposing new address
+        newPassportData["property.type"] = ["unclassified"];
       }
 
       if (localAuthorityDistricts) {

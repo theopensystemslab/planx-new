@@ -50,14 +50,20 @@ function Component(props: PublicProps<PropertyInformation>) {
       blpuCodes={data?.blpuCodes}
       overrideAnswer={overrideAnswer}
       handleSubmit={() => {
-        // If the user changed their property type, they'll already have a previous PropertyInformation breadcrumb that set `_overrides`
-        const hasOverrodeAnswer =
-          passport.data?.["_overrides"]?.["property.type"];
-        const passportData = {
-          "propertyInformation.action": hasOverrodeAnswer
+        const passportData: Record<string, any> = {};
+
+        // If property types are not supported, overwrite does not apply
+        if (!props.showPropertyTypeOverride) {
+          passportData["propertyInformation.action"] =
+            "Property type not supported";
+        } else {
+          // If the user changed their property type, they'll already have a previous PropertyInformation breadcrumb that set `_overrides`
+          const hasOverrodeAnswer =
+            passport.data?.["_overrides"]?.["property.type"];
+          passportData["propertyInformation.action"] = hasOverrodeAnswer
             ? "Changed the property type"
-            : "Accepted the property type",
-        };
+            : "Accepted the property type";
+        }
 
         props.handleSubmit?.({
           data: passportData,
@@ -116,14 +122,18 @@ export function Presentational(props: PresentationalProps) {
       heading: "Local planning authority",
       detail: localPlanningAuthority?.join(", ") || "Unknown",
     },
-    {
-      heading: "Property type",
-      detail:
-        find(blpuCodes, { value: propertyType?.[0] })?.description ||
-        propertyType?.[0] ||
-        "Unknown",
-      fn: "property.type",
-    },
+    ...(showPropertyTypeOverride
+      ? [
+          {
+            heading: "Property type",
+            detail:
+              find(blpuCodes, { value: propertyType?.[0] })?.description ||
+              propertyType?.[0] ||
+              "Unknown",
+            fn: "property.type",
+          },
+        ]
+      : []),
   ];
 
   return (
