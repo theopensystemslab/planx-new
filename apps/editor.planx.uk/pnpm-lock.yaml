@@ -151,8 +151,8 @@ importers:
         specifier: ^8.0.3
         version: 8.0.3
       immer:
-        specifier: ^9.0.21
-        version: 9.0.21
+        specifier: ^10.0.0
+        version: 10.2.0
       js-cookie:
         specifier: ^3.0.5
         version: 3.0.5
@@ -269,7 +269,7 @@ importers:
         version: 3.25.76
       zustand:
         specifier: ^4.5.4
-        version: 4.5.7(@types/react@18.3.27)(immer@9.0.21)(react@18.3.1)
+        version: 4.5.7(@types/react@18.3.27)(immer@10.2.0)(react@18.3.1)
     devDependencies:
       '@babel/core':
         specifier: ^7.28.5
@@ -4315,8 +4315,8 @@ packages:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
     engines: {node: '>= 4'}
 
-  immer@9.0.21:
-    resolution: {integrity: sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA==}
+  immer@10.2.0:
+    resolution: {integrity: sha512-d/+XTN3zfODyjr89gM3mPq1WNX2B8pYsu7eORitdwyA2sBubnTl3laYlBk4sXY5FUa5qTZGBDPJICVbvqzjlbw==}
 
   immutable@3.7.6:
     resolution: {integrity: sha512-AizQPcaofEtO11RZhPPHBOJRdo/20MKQF9mBLnVkBoyHi1/zXK8fzVdnEpSV9gxqtnh6Qomfp3F0xT5qP/vThw==}
@@ -11055,7 +11055,7 @@ snapshots:
 
   ignore@5.3.2: {}
 
-  immer@9.0.21: {}
+  immer@10.2.0: {}
 
   immutable@3.7.6: {}
 
@@ -13713,10 +13713,10 @@ snapshots:
 
   zstddec@0.1.0: {}
 
-  zustand@4.5.7(@types/react@18.3.27)(immer@9.0.21)(react@18.3.1):
+  zustand@4.5.7(@types/react@18.3.27)(immer@10.2.0)(react@18.3.1):
     dependencies:
       use-sync-external-store: 1.6.0(react@18.3.1)
     optionalDependencies:
       '@types/react': 18.3.27
-      immer: 9.0.21
+      immer: 10.2.0
       react: 18.3.1
