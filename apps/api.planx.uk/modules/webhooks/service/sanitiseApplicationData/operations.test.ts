@@ -71,7 +71,7 @@ describe("'operationHandler' helper function", () => {
       .fn()
       .mockResolvedValue(["123", "abc", "456", "xyz"]);
     await expect(operationHandler(successOperation)).resolves.toEqual({
-      operationName: "spy",
+      operationName: "Mock",
       status: "success",
       count: 4,
     });
@@ -82,7 +82,7 @@ describe("'operationHandler' helper function", () => {
       .fn()
       .mockRejectedValue(new Error("Something went wrong"));
     await expect(operationHandler(failureOperation)).resolves.toEqual({
-      operationName: "spy",
+      operationName: "Mock",
       status: "failure",
       errorMessage: "Something went wrong",
     });
