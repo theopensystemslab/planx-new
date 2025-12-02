@@ -70,13 +70,8 @@ function Component(props: Props) {
       newPassportData["_address"] = address;
       if (address?.planx_value) {
         newPassportData["property.type"] = [address.planx_value];
-      }
-
-      // Set unclassified as a fallback if we have no property.type value
-      if (
-        !newPassportData["property.type"] ||
-        newPassportData["property.type"].length === 0
-      ) {
+      } else {
+        // Fallback to "unclassified" if OS did not return a value or user is proposing new address
         newPassportData["property.type"] = ["unclassified"];
       }
 
