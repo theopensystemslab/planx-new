@@ -89,6 +89,12 @@ const loadDraftRoutes = () =>
     lazy(() => import("./draft")),
   );
 
+const loadApplicationRoutes = () => 
+  compose(
+    withView(loadingView),
+    lazy(() => import("./application"))
+  )
+
 export default isPreviewOnlyDomain
   ? mount({
       "/:team/:flow/published": loadPublishedRoutes(), // XXX: keeps old URL working, but only for the team listed in the domain.
@@ -102,6 +108,7 @@ export default isPreviewOnlyDomain
       "/:team/:flow/preview": loadPreviewRoutes(), // loads current draft flow and latest published external portals, or throws Not Found if any external portal is unpublished
       "/:team/:flow/draft": loadDraftRoutes(), // loads current draft flow and draft external portals
       "/:team/:flow/pay": loadPayRoutes(),
+      "/:team/:flow/application": loadApplicationRoutes(),
       "/:team/:flow/:sessionId/download-application": loadSendToEmailRoutes(),
       "*": editorRoutes,
     });
