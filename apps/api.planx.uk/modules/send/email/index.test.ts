@@ -16,9 +16,9 @@ vi.mock("@opensystemslab/planx-core", async () => {
   const actualCore = await vi.importActual<typeof planxCore>(
     "@opensystemslab/planx-core",
   );
-  const mockPassport = vi.fn().mockImplementation(() => ({
-    files: vi.fn().mockImplementation(() => []),
-  }));
+  const mockPassport = class MockPassport {
+    files = vi.fn().mockImplementation(() => []);
+  };
   const mockCoreDomainClient = class extends actualCore.CoreDomainClient {
     constructor() {
       super();
