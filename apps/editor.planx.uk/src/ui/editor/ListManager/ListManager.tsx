@@ -70,8 +70,9 @@ const Item = styled(Box)(() => ({
 const InsertButtonRoot = styled(ButtonBase)(({ theme }) => ({
   justifyContent: "space-between",
   width: "100%",
+  paddingLeft: theme.spacing(4.8),
   height: theme.spacing(3),
-  color: theme.palette.grey[600],
+  color: "transparent",
   transition:
     "opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
   "&:hover": {
@@ -108,7 +109,7 @@ const InsertButton: React.FC<{
       }}
     >
       <StyledDivider variant="middle" />
-      <AddIcon sx={{ width: "51px" }} />
+      <AddIcon sx={{ width: "48px" }} />
     </InsertButtonRoot>
   );
 };
@@ -426,7 +427,6 @@ export default function ListManager<T, EditorExtraProps>(
                                   size="large"
                                   disabled={disabled || props.noDragAndDrop}
                                   sx={{
-                                    mt: 1,
                                     pointerEvents: "none",
                                     "&:hover": {
                                       backgroundColor: `rgba(0, 0, 0, 0.04)`,
@@ -437,17 +437,11 @@ export default function ListManager<T, EditorExtraProps>(
                                 </IconButton>
                               </Box>
                               <Box
-                                sx={(theme) => ({
-                                  backgroundColor:
-                                    theme.palette.background.data,
-                                  border: `1px solid ${theme.palette.border.light}`,
-                                  pt: 1,
-                                  pb: collapsedItems.has(itemKeys[index])
-                                    ? 0.5
-                                    : 1,
+                                sx={{
                                   width: "100%",
+                                  minWidth: "100%",
                                   display: "flex",
-                                })}
+                                }}
                               >
                                 {collapsible && (
                                   <Box>
