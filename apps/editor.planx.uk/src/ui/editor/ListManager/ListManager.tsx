@@ -1,4 +1,4 @@
-import AddIcon from "@mui/icons-material/Add";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import Delete from "@mui/icons-material/Delete";
 import DragHandle from "@mui/icons-material/DragHandle";
 import ExpandLess from "@mui/icons-material/ExpandLess";
@@ -109,7 +109,19 @@ const InsertButton: React.FC<{
       }}
     >
       <StyledDivider variant="middle" />
-      <AddIcon sx={{ width: "48px" }} />
+      <Box
+        sx={(theme) => ({
+          width: "32px",
+          position: "absolute",
+          left: "50%",
+          background: theme.palette.background.paper,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        })}
+      >
+        <AddCircleOutlineIcon />
+      </Box>
     </InsertButtonRoot>
   );
 };
