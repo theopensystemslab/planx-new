@@ -1,0 +1,2 @@
+overrides:
+  mdast-util-to-hast@>=13.0.0 <13.2.1: '>=13.2.1'
