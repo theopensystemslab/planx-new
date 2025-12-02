@@ -91,6 +91,7 @@ export const sharedStore: StateCreator<
       changedNode: undefined,
       saveToEmail: "",
       currentCard: null,
+      hasAcknowledgedSingleSessionEntry: false,
     });
 
     removeSessionIdSearchParam();
