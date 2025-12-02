@@ -52,19 +52,16 @@ vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
   };
 });
 
-const s3Mock = () => {
-  return {
-    deleteObjects: vi.fn(() => Promise.resolve()),
-  };
-};
-
 vi.mock("@aws-sdk/client-s3", async (importOriginal) => {
   const actualS3Client = await importOriginal<typeof s3Client>();
+
+  class MockS3 {
+    deleteObjects = vi.fn(() => Promise.resolve());
+  }
+
   return {
     ...actualS3Client,
-    S3: vi.fn().mockImplementation(() => {
-      return s3Mock();
-    }),
+    S3: MockS3,
   };
 });
 
