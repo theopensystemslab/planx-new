@@ -69,8 +69,8 @@ const Item = styled(Box)(() => ({
 
 const InsertButtonRoot = styled(ButtonBase)(({ theme }) => ({
   justifyContent: "space-between",
-  width: "100%",
-  paddingLeft: theme.spacing(4.8),
+  width: `calc(100% - ${theme.spacing(4.8)})`,
+  marginLeft: theme.spacing(4.8),
   height: theme.spacing(3),
   color: "transparent",
   transition:
@@ -111,8 +111,9 @@ const InsertButton: React.FC<{
       <StyledDivider variant="middle" />
       <Box
         sx={(theme) => ({
-          width: "32px",
+          width: "34px",
           position: "absolute",
+          transform: "translateX(-50%)",
           left: "50%",
           background: theme.palette.background.paper,
           display: "flex",
@@ -440,9 +441,6 @@ export default function ListManager<T, EditorExtraProps>(
                                   disabled={disabled || props.noDragAndDrop}
                                   sx={{
                                     pointerEvents: "none",
-                                    "&:hover": {
-                                      backgroundColor: `rgba(0, 0, 0, 0.04)`,
-                                    },
                                   }}
                                 >
                                   <DragHandle />
