@@ -3,16 +3,13 @@ import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { QuestionAndResponses } from "@opensystemslab/planx-core/types";
 import Card, {
   contentFlowSpacing,
 } from "@planx/components/shared/Preview/Card";
-import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Banner from "ui/public/Banner";
+import ViewApplicationLink from "ui/public/ViewApplicationLink";
 import { removeSessionIdSearchParam } from "utils";
-
-import FileDownload from "../../ui/public/FileDownload";
 
 interface Props {
   bannerHeading: string;
@@ -34,28 +31,6 @@ const StatusPage: React.FC<Props> = ({
   children,
 }) => {
   const theme = useTheme();
-  const [data, setData] = useState<QuestionAndResponses[]>([]);
-
-  const [sessionId, saveToEmail, $public] = useStore((state) => [
-    state.sessionId,
-    state.saveToEmail,
-    state.$public,
-  ]);
-
-  useEffect(() => {
-    const makeCsvData = async () => {
-      if (sessionId && saveToEmail) {
-        const csvData = await $public({
-          session: { sessionId: sessionId, email: saveToEmail },
-        }).export.csvData(sessionId);
-        setData(csvData);
-      }
-    };
-
-    if (data?.length < 1) {
-      makeCsvData();
-    }
-  });
 
   return (
     <>
@@ -76,9 +51,7 @@ const StatusPage: React.FC<Props> = ({
       </Box>
       <Card>
         {children}
-        {showDownloadLink && (
-          <FileDownload data={data} filename={sessionId || "application"} />
-        )}
+        {showDownloadLink && <ViewApplicationLink/> }
         {buttonText && (
           <Button
             variant="contained"
