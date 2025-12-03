@@ -11,6 +11,7 @@ import {
   map,
   mount,
   NotFoundError,
+  redirect,
   route,
   withContext,
   withView,
@@ -47,7 +48,7 @@ const editorRoutes = compose(
   }),
 
   mount({
-    "/": route(async () => {
+    "/": map<Context>(async (req, { user }) => {
       const { data } = await client.query<{ teams: TeamSummary[] }>({
         query: gql`
           query GetTeamSummaries {
@@ -67,12 +68,22 @@ const editorRoutes = compose(
         `,
       });
 
+      // If there's a defaultTeamId, find slug & redirect
+      if (user.defaultTeamId) {
+        const defaultTeam = data.teams.find(
+          (team) => team.id === user.defaultTeamId,
+        );
+        if (defaultTeam) {
+          return redirect(`/${defaultTeam.slug}`);
+        }
+      }
+
       useStore.getState().clearTeamStore();
 
-      return {
+      return route({
         title: makeTitle("Teams"),
         view: <Teams teams={data.teams} />,
-      };
+      });
     }),
 
     "/global-settings": map<Context>(async (req, { user }) => {
