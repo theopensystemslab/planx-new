@@ -1,6 +1,16 @@
 table:
   name: users
   schema: public
+object_relationships:
+  - name: default_team
+    using:
+      manual_configuration:
+        column_mapping:
+          default_team_id: id
+        insertion_order: null
+        remote_table:
+          name: teams
+          schema: public
 array_relationships:
   - name: created_flows
     using:
@@ -29,6 +39,7 @@ insert_permissions:
       check: {}
       columns:
         - created_at
+        - default_team_id
         - email
         - first_name
         - id
@@ -41,6 +52,7 @@ select_permissions:
     permission:
       columns:
         - created_at
+        - default_team_id
         - email
         - first_name
         - id
@@ -54,6 +66,7 @@ select_permissions:
     permission:
       columns:
         - created_at
+        - default_team_id
         - email
         - first_name
         - id
@@ -66,6 +79,7 @@ select_permissions:
     permission:
       columns:
         - created_at
+        - default_team_id
         - email
         - first_name
         - id
@@ -78,6 +92,7 @@ select_permissions:
     permission:
       columns:
         - created_at
+        - default_team_id
         - email
         - first_name
         - id
@@ -91,6 +106,7 @@ update_permissions:
   - role: platformAdmin
     permission:
       columns:
+        - default_team_id
         - email
         - first_name
         - last_name
