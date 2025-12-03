@@ -9,7 +9,7 @@ router.use(aiLimiter);
 
 router.post(
   "/project-description/enhance",
-  // TODO: Strict prompt validation / abuse / jailbreak checks
+  // TODO: implement prompt injection defence and sanitisation middleware
   validate(projectDescriptionSchema),
   projectDescriptionController,
 );

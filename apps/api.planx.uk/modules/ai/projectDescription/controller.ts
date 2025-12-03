@@ -1,6 +1,6 @@
 import { ServerError } from "../../../errors/serverError.js";
 import { enhanceProjectDescription } from "./service.js";
-import type { Controller } from "./types.js";
+import { type Controller, GatewayStatus } from "./types.js";
 
 export const projectDescriptionController: Controller = async (
   req,
@@ -10,21 +10,30 @@ export const projectDescriptionController: Controller = async (
   try {
     const { original } = res.locals.parsedReq.body;
     const result = await enhanceProjectDescription(original);
-
-    if (result.ok) return res.json({ original, suggested: result.value });
-
+    if (result.ok) {
+      if (result.value) {
+        return res.json({ original, enhanced: result.value });
+      } else {
+        console.error(
+          "Call to gateway succeeded but no enhanced description returned",
+        );
+        return res.status(500).json({
+          error: GatewayStatus.ERROR,
+          message: "Error with request to AI gateway",
+        });
+      }
+    }
     switch (result.error) {
-      case "INVALID_DESCRIPTION":
+      case GatewayStatus.INVALID:
         return res.status(400).json({
-          error: "INVALID_DESCRIPTION",
+          error: GatewayStatus.INVALID,
           message:
             "The description doesn't appear to be related to a planning application.",
         });
-
-      case "SERVICE_UNAVAILABLE":
-        return res.status(503).json({
-          error: "SERVICE_UNAVAILABLE",
-          message: "LLM service temporarily unavailable",
+      case GatewayStatus.ERROR:
+        return res.status(500).json({
+          error: GatewayStatus.ERROR,
+          message: "There was an error with the request to upstream AI gateway",
         });
     }
   } catch (error) {
