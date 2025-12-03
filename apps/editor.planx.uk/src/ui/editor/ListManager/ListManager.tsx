@@ -10,6 +10,7 @@ import Collapse from "@mui/material/Collapse";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
+import Tooltip from "@mui/material/Tooltip";
 import { arrayMoveImmutable } from "array-move";
 import { FormikErrors } from "formik";
 import { nanoid } from "nanoid";
@@ -98,32 +99,34 @@ const InsertButton: React.FC<{
   isDragging: boolean;
 }> = ({ handleClick, disabled, isDragging }) => {
   return (
-    <InsertButtonRoot
-      onClick={handleClick}
-      disabled={disabled}
-      disableRipple
-      tabIndex={-1}
-      sx={{
-        opacity: isDragging ? 0 : 1,
-        visibility: isDragging ? "hidden" : "visible",
-      }}
-    >
-      <StyledDivider variant="middle" />
-      <Box
-        sx={(theme) => ({
-          width: "34px",
-          position: "absolute",
-          transform: "translateX(-50%)",
-          left: "50%",
-          background: theme.palette.background.paper,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        })}
+    <Tooltip title="insert new" placement="bottom">
+      <InsertButtonRoot
+        onClick={handleClick}
+        disabled={disabled}
+        disableRipple
+        aria-label="insert new"
+        sx={{
+          opacity: isDragging ? 0 : 1,
+          visibility: isDragging ? "hidden" : "visible",
+        }}
       >
-        <AddCircleOutlineIcon />
-      </Box>
-    </InsertButtonRoot>
+        <StyledDivider variant="middle" />
+        <Box
+          sx={(theme) => ({
+            width: "34px",
+            position: "absolute",
+            transform: "translateX(-50%)",
+            left: "50%",
+            background: theme.palette.background.paper,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          })}
+        >
+          <AddCircleOutlineIcon />
+        </Box>
+      </InsertButtonRoot>
+    </Tooltip>
   );
 };
 
@@ -310,21 +313,23 @@ export default function ListManager<T, EditorExtraProps>(
                       />
                     </Box>
                     <Box sx={{ display: "flex", alignItems: "flex-start" }}>
-                      <IconButton
-                        onClick={() => {
-                          props.onChange(removeAt(index, props.values));
-                          setItemKeys((prev) =>
-                            prev.filter((_, i) => i !== index),
-                          );
-                        }}
-                        aria-label="Delete"
-                        size="large"
-                        disabled={
-                          disabled || props?.isFieldDisabled?.(item, index)
-                        }
-                      >
-                        <Delete />
-                      </IconButton>
+                      <Tooltip title="Delete" placement="bottom">
+                        <IconButton
+                          onClick={() => {
+                            props.onChange(removeAt(index, props.values));
+                            setItemKeys((prev) =>
+                              prev.filter((_, i) => i !== index),
+                            );
+                          }}
+                          aria-label="Delete"
+                          size="large"
+                          disabled={
+                            disabled || props?.isFieldDisabled?.(item, index)
+                          }
+                        >
+                          <Delete />
+                        </IconButton>
+                      </Tooltip>
                     </Box>
                   </Item>
                 </Collapse>
@@ -417,35 +422,37 @@ export default function ListManager<T, EditorExtraProps>(
                             <Item
                               {...provided.draggableProps}
                               ref={provided.innerRef}
-                              sx={{ ml: -5 }}
+                              sx={{ ml: -5, alignItems: "flex-start" }}
                             >
-                              <Box
-                                {...(!props.noDragAndDrop
-                                  ? provided.dragHandleProps
-                                  : {})}
-                                sx={{
-                                  display: "inline-flex",
-                                  alignItems: "flex-start",
-                                  cursor: "grab",
-                                  "&:active": {
-                                    cursor: props.noDragAndDrop
-                                      ? "default"
-                                      : "grabbing",
-                                  },
-                                }}
-                              >
-                                <IconButton
-                                  disableRipple
-                                  aria-label="Drag"
-                                  size="large"
-                                  disabled={disabled || props.noDragAndDrop}
+                              <Tooltip title="Drag to reorder" placement="left">
+                                <Box
+                                  {...(!props.noDragAndDrop
+                                    ? provided.dragHandleProps
+                                    : {})}
                                   sx={{
-                                    pointerEvents: "none",
+                                    display: "inline-flex",
+                                    alignItems: "flex-start",
+                                    cursor: "grab",
+                                    "&:active": {
+                                      cursor: props.noDragAndDrop
+                                        ? "default"
+                                        : "grabbing",
+                                    },
                                   }}
                                 >
-                                  <DragHandle />
-                                </IconButton>
-                              </Box>
+                                  <IconButton
+                                    disableRipple
+                                    aria-label="Drag"
+                                    size="large"
+                                    disabled={disabled || props.noDragAndDrop}
+                                    sx={{
+                                      pointerEvents: "none",
+                                    }}
+                                  >
+                                    <DragHandle />
+                                  </IconButton>
+                                </Box>
+                              </Tooltip>
                               <Box
                                 sx={{
                                   width: "100%",
@@ -455,24 +462,33 @@ export default function ListManager<T, EditorExtraProps>(
                               >
                                 {collapsible && (
                                   <Box>
-                                    <IconButton
-                                      onClick={() =>
-                                        toggleCollapse(itemKeys[index])
-                                      }
-                                      aria-label={
+                                    <Tooltip
+                                      title={
                                         collapsedItems.has(itemKeys[index])
                                           ? "Expand"
                                           : "Collapse"
                                       }
-                                      size="large"
-                                      disabled={disabled}
+                                      placement="bottom"
                                     >
-                                      {collapsedItems.has(itemKeys[index]) ? (
-                                        <ExpandMore />
-                                      ) : (
-                                        <ExpandLess />
-                                      )}
-                                    </IconButton>
+                                      <IconButton
+                                        onClick={() =>
+                                          toggleCollapse(itemKeys[index])
+                                        }
+                                        aria-label={
+                                          collapsedItems.has(itemKeys[index])
+                                            ? "Expand"
+                                            : "Collapse"
+                                        }
+                                        size="large"
+                                        disabled={disabled}
+                                      >
+                                        {collapsedItems.has(itemKeys[index]) ? (
+                                          <ExpandMore />
+                                        ) : (
+                                          <ExpandLess />
+                                        )}
+                                      </IconButton>
+                                    </Tooltip>
                                   </Box>
                                 )}
                                 <Box sx={{ flex: 1 }}>
@@ -495,24 +511,26 @@ export default function ListManager<T, EditorExtraProps>(
                                   />
                                 </Box>
                                 <Box>
-                                  <IconButton
-                                    onClick={() => {
-                                      props.onChange(
-                                        removeAt(index, props.values),
-                                      );
-                                      setItemKeys((prev) =>
-                                        prev.filter((_, i) => i !== index),
-                                      );
-                                    }}
-                                    aria-label="Delete"
-                                    size="large"
-                                    disabled={
-                                      disabled ||
-                                      props?.isFieldDisabled?.(item, index)
-                                    }
-                                  >
-                                    <Delete />
-                                  </IconButton>
+                                  <Tooltip title="Delete" placement="bottom">
+                                    <IconButton
+                                      onClick={() => {
+                                        props.onChange(
+                                          removeAt(index, props.values),
+                                        );
+                                        setItemKeys((prev) =>
+                                          prev.filter((_, i) => i !== index),
+                                        );
+                                      }}
+                                      aria-label="Delete"
+                                      size="large"
+                                      disabled={
+                                        disabled ||
+                                        props?.isFieldDisabled?.(item, index)
+                                      }
+                                    >
+                                      <Delete />
+                                    </IconButton>
+                                  </Tooltip>
                                 </Box>
                               </Box>
                             </Item>
