@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Collapse from "@mui/material/Collapse";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import React from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
@@ -73,50 +74,54 @@ export const BaseOptionsEditor: React.FC<Props> = (props) => {
         />
         {props.children}
       </InputRow>
-      {props.showDescriptionField && (
-        <InputRow>
-          <Input
-            value={props.value.data.description || ""}
-            placeholder="Description"
-            multiline
+      <Collapse in={!props.isCollapsed} timeout="auto">
+        {props.showDescriptionField && (
+          <InputRow>
+            <Input
+              value={props.value.data.description || ""}
+              placeholder="Description"
+              multiline
+              disabled={props.disabled}
+              onChange={(ev) =>
+                updateSharedField("description", ev.target.value)
+              }
+            />
+          </InputRow>
+        )}
+        {props.showValueField && (
+          <DataFieldAutocomplete
+            key={`${props.value.id}-data-field-autocomplete`}
+            data-testid={`data-field-autocomplete-option-${props.index}`}
+            schema={props.schema}
+            value={props.value.data.val}
             disabled={props.disabled}
-            onChange={(ev) => updateSharedField("description", ev.target.value)}
+            onChange={(targetValue) =>
+              updateSharedField("val", targetValue ?? "")
+            }
           />
-        </InputRow>
-      )}
-      {props.showValueField && (
-        <DataFieldAutocomplete
-          key={`${props.value.id}-data-field-autocomplete`}
-          data-testid={`data-field-autocomplete-option-${props.index}`}
-          schema={props.schema}
-          value={props.value.data.val}
+        )}
+        <FlagsSelect
+          value={props.value.data.flags}
           disabled={props.disabled}
-          onChange={(targetValue) =>
-            updateSharedField("val", targetValue ?? "")
-          }
+          onChange={(ev) => updateSharedField("flags", ev)}
         />
-      )}
-      <FlagsSelect
-        value={props.value.data.flags}
-        disabled={props.disabled}
-        onChange={(ev) => updateSharedField("flags", ev)}
-      />
-      {showRuleBuilder && (
-        <RuleBuilder
-          conditions={[Condition.AlwaysRequired, Condition.RequiredIf]}
-          disabled={props.disabled}
-          rule={props.value.data.rule}
-          onChange={(rule) =>
-            props.onChange({
-              ...props.value,
-              data: {
-                ...props.value.data,
-                rule,
-              },
-            })
-          }
-        />
-      )}
+        {showRuleBuilder && (
+          <RuleBuilder
+            conditions={[Condition.AlwaysRequired, Condition.RequiredIf]}
+            disabled={props.disabled}
+            rule={props.value.data.rule}
+            onChange={(rule) =>
+              props.onChange({
+                ...props.value,
+                data: {
+                  ...props.value.data,
+                  rule,
+                },
+              })
+            }
+          />
+        )}
+      </Collapse>
     </Box>
   );
 };

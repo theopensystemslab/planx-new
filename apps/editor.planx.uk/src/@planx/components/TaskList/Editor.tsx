@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Collapse from "@mui/material/Collapse";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
 import type { Task, TaskList } from "@planx/components/TaskList/model";
@@ -48,22 +49,24 @@ const TaskEditor: React.FC<ListManagerEditorProps<Task>> = (props) => {
           errorMessage={getIn(errors, `tasks[${props.index}].title`)}
         />
       </InputRow>
-      <InputRow>
-        <RichTextInput
-          required
-          name="description"
-          value={props.value.description}
-          onChange={(ev: ChangeEvent<HTMLInputElement>) => {
-            props.onChange({
-              ...props.value,
-              description: ev.target.value,
-            });
-          }}
-          placeholder="Description"
-          disabled={props.disabled}
-          errorMessage={getIn(errors, `tasks[${props.index}].description`)}
-        />
-      </InputRow>
+      <Collapse in={!props.isCollapsed} timeout="auto">
+        <InputRow>
+          <RichTextInput
+            required
+            name="description"
+            value={props.value.description}
+            onChange={(ev: ChangeEvent<HTMLInputElement>) => {
+              props.onChange({
+                ...props.value,
+                description: ev.target.value,
+              });
+            }}
+            placeholder="Description"
+            disabled={props.disabled}
+            errorMessage={getIn(errors, `tasks[${props.index}].description`)}
+          />
+        </InputRow>
+      </Collapse>
     </Box>
   );
 };
@@ -121,6 +124,7 @@ const TaskListComponent: React.FC<Props> = (props) => (
               Editor={TaskEditor}
               newValue={newTask}
               disabled={props.disabled}
+              collapsible={true}
             />
           </ModalSectionContent>
         </ModalSection>

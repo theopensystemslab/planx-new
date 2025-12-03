@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Collapse from "@mui/material/Collapse";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
@@ -42,21 +43,23 @@ function NextStepEditor(props: ListManagerEditorProps<Step>) {
           disabled={props.disabled}
         />
       </InputRow>
-      <InputRow>
-        <Input
-          required
-          name="description"
-          value={props.value.description}
-          onChange={(ev: ChangeEvent<HTMLInputElement>) => {
-            props.onChange({
-              ...props.value,
-              description: ev.target.value,
-            });
-          }}
-          placeholder="Description"
-          disabled={props.disabled}
-        />
-      </InputRow>
+      <Collapse in={!props.isCollapsed} timeout="auto">
+        <InputRow>
+          <Input
+            required
+            name="description"
+            value={props.value.description}
+            onChange={(ev: ChangeEvent<HTMLInputElement>) => {
+              props.onChange({
+                ...props.value,
+                description: ev.target.value,
+              });
+            }}
+            placeholder="Description"
+            disabled={props.disabled}
+          />
+        </InputRow>
+      </Collapse>
     </Box>
   );
 }
@@ -119,6 +122,7 @@ export default function ConfirmationEditor(props: Props) {
             Editor={NextStepEditor}
             newValue={() => ({ title: "", description: "" })}
             disabled={props.disabled}
+            collapsible={true}
           />
         </ModalSectionContent>
       </ModalSection>

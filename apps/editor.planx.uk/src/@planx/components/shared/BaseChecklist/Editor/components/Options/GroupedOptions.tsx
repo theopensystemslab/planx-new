@@ -26,7 +26,7 @@ import { ExclusiveOrOptionManager } from "./ExclusiveOrOptionManager";
 import ChecklistOptionsEditor from "./OptionsEditor";
 
 interface Props<T extends FormikValues> {
-  type: ComponentType.Checklist | ComponentType.ResponsiveChecklist,
+  type: ComponentType.Checklist | ComponentType.ResponsiveChecklist;
   formik: FormikHookReturn<T>;
   disabled?: boolean;
   isTemplatedNode?: boolean;
@@ -64,7 +64,7 @@ export const GroupedOptions = <T extends AnyChecklist>({
           sx={(theme) => ({ scrollMarginTop: theme.spacing(1) })}
         >
           <Box display="flex" pb={1}>
-            <InputRow>
+            <Box sx={{ minWidth: "100%" }}>
               <Input
                 errorMessage={getIn(
                   formik.errors,
@@ -77,7 +77,7 @@ export const GroupedOptions = <T extends AnyChecklist>({
                 onChange={formik.handleChange}
                 disabled={disabled}
               />
-            </InputRow>
+            </Box>
             {showAddDeleteButtons && (
               <Box flex={0}>
                 <IconButton
@@ -97,7 +97,7 @@ export const GroupedOptions = <T extends AnyChecklist>({
               </Box>
             )}
           </Box>
-          <Box pl={{ md: 2 }}>
+          <Box>
             <ListManager
               values={groupedOption.children}
               onChange={(newOptions) => {
@@ -114,7 +114,9 @@ export const GroupedOptions = <T extends AnyChecklist>({
                   description: "",
                   val: "",
                   flags: [],
-                  ...(type === ComponentType.ResponsiveChecklist && { rule: DEFAULT_RULE })
+                  ...(type === ComponentType.ResponsiveChecklist && {
+                    rule: DEFAULT_RULE,
+                  }),
                 },
               })}
               newValueLabel="add new option"
@@ -151,6 +153,7 @@ export const GroupedOptions = <T extends AnyChecklist>({
                 ),
               }}
               isTemplatedNode={isTemplatedNode}
+              collapsible={true}
             />
           </Box>
         </Box>
