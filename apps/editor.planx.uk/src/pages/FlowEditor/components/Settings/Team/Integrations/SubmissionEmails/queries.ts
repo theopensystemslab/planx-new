@@ -14,7 +14,6 @@ export const GET_TEAM_SUBMISSION_INTEGRATIONS = gql`
 
 export const UPSERT_TEAM_SUBMISSION_INTEGRATIONS = gql`
   mutation UpsertSubmissionIntegrations(
-    $teamId: Int!
     $emails: [submission_integrations_insert_input!]!
   ) {
     insert_submission_integrations(

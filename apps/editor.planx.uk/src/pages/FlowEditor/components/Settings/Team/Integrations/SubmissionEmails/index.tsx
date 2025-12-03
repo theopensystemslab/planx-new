@@ -22,6 +22,7 @@ import {
   GetTeamSubmissionIntegrationsData,
   SubmissionEmail,
   SubmissionEmailFormValues,
+  SubmissionEmailMutation,
   UpdateTeamSubmissionIntegrationsVariables,
 } from "./types";
 
@@ -43,14 +44,13 @@ export const SubmissionEmails: React.FC = () => {
         saved: submissionIntegrations || [],
       })}
       getMutationVariables={(values) => {
-        const emails: SubmissionEmail[] = values.input.map((email) => ({
-          submissionEmail: email.submissionEmail,
-          defaultEmail: email.defaultEmail,
+        const emails: SubmissionEmailMutation[] = values.input.map((email) => ({
+          submission_email: email.submissionEmail,
+          default_email: email.defaultEmail,
+          team_id: teamId,
         }));
 
-        console.log("Mutation variables: ", { teamId, emails });
-
-        return { teamId, emails };
+        return { emails };
       }}
       validationSchema={validationSchema}
       legend="Submission Emails"
@@ -108,7 +108,11 @@ export const SubmissionEmails: React.FC = () => {
                 formik.setFieldValue("saved", savedEmails);
                 formik.setFieldValue("input", newEmails);
               }}
-              newValue={() => ({ submissionEmail: "", defaultEmail: false })}
+              newValue={() => ({
+                submissionEmail: "",
+                defaultEmail: false,
+                teamId: teamId,
+              })}
               Editor={EmailsEditor}
               maxItems={10}
             />
