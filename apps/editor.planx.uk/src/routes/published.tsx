@@ -1,6 +1,7 @@
 import { compose, map, mount, route, withData, withView } from "navi";
 import ContentPage from "pages/Preview/ContentPage";
 import Questions from "pages/Preview/Questions";
+import ApplicationViewer from "pages/Preview/ViewApplication";
 import React from "react";
 
 import { getTeamFromDomain, validateTeamRoute } from "./utils";
@@ -32,6 +33,10 @@ const routes = compose(
         view: () => <ContentPage page={req.params.page} />,
         data: { isContentPage: true },
       });
+    }),
+    // TODO: add to draft & preview
+    "/view-application": route({
+      view: <ApplicationViewer />,
     }),
   }),
 );
