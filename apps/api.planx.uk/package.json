@@ -25,7 +25,7 @@
     "csv-stringify": "^6.5.0",
     "date-fns": "^4.1.0",
     "dompurify": "^3.2.5",
-    "express": "^4.22.0",
+    "express": "^4.22.1",
     "express-async-errors": "^3.1.1",
     "express-jwt": "^8.4.1",
     "express-rate-limit": "^8.0.1",

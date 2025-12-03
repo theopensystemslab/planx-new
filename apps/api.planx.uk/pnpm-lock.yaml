@@ -54,7 +54,7 @@ importers:
         specifier: ^3.2.5
         version: 3.3.0
       express:
-        specifier: ^4.22.0
+        specifier: ^4.22.1
         version: 4.22.1
       express-async-errors:
         specifier: ^3.1.1
