@@ -92,17 +92,9 @@ export const SubmissionEmails: React.FC = () => {
             <ListManager
               values={[...formik.values.saved, ...formik.values.input]}
               onChange={(newValues) => {
-                const savedEmails = newValues.filter((email) =>
-                  formik.values.saved.some(
-                    (saved) => saved.submissionEmail === email.submissionEmail,
-                  ),
-                );
-                const newEmails = newValues.filter(
-                  (email) =>
-                    !formik.values.saved.some(
-                      (saved) =>
-                        saved.submissionEmail === email.submissionEmail,
-                    ),
+                const { savedEmails, newEmails } = updateEmailLists(
+                  newValues,
+                  formik.values.saved,
                 );
 
                 formik.setFieldValue("saved", savedEmails);
@@ -121,6 +113,26 @@ export const SubmissionEmails: React.FC = () => {
       )}
     />
   );
+};
+
+const updateEmailLists = (
+  newValues: SubmissionEmail[],
+  savedEmails: SubmissionEmail[],
+): { savedEmails: SubmissionEmail[]; newEmails: SubmissionEmail[] } => {
+  const updatedSavedEmails = newValues.filter((email) =>
+    savedEmails.some(
+      (savedEmail) => savedEmail.submissionEmail === email.submissionEmail,
+    ),
+  );
+
+  const updatedNewEmails = newValues.filter(
+    (email) =>
+      !savedEmails.some(
+        (savedEmail) => savedEmail.submissionEmail === email.submissionEmail,
+      ),
+  );
+
+  return { savedEmails: updatedSavedEmails, newEmails: updatedNewEmails };
 };
 
 const EmailsEditor: React.FC<EditorProps<SubmissionEmail>> = (props) => {
