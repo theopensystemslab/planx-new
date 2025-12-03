@@ -357,6 +357,14 @@ interface ComponentProps {
 function PropertyInformation(props: ComponentProps) {
   const { data, loading } = useBLPUCodes();
 
+  // If we didn't show the user `Property type` on the original component,
+  //   then don't show them on Review either
+  const propertyTypeSupported =
+    props.flow[props.nodeId]?.data?.showPropertyTypeOverride;
+  if (!propertyTypeSupported) {
+    return undefined;
+  }
+
   const propertyTypeVal = props.passport.data?.["property.type"]?.[0];
   const value =
     find(data?.blpuCodes, { value: propertyTypeVal })?.description ||
