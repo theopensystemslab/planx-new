@@ -1,4 +1,6 @@
+import type { LanguageModel } from "ai";
 import { z } from "zod";
+
 import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 
 export const schema = z.object({
@@ -12,8 +14,6 @@ interface Success {
   enhanced: string;
 }
 
-export type ErrorStatus = "INVALID_DESCRIPTION" | "SERVICE_UNAVAILABLE";
-
 interface Failure {
   error: ErrorStatus;
   message: string;
@@ -23,3 +23,35 @@ export type Controller = ValidatedRequestHandler<
   typeof schema,
   Success | Failure
 >;
+
+export enum GatewayStatus {
+  ENHANCED = "ENHANCED",
+  NO_CHANGE = "NO_CHANGE",
+  INVALID = "INVALID_DESCRIPTION",
+  ERROR = "GATEWAY_ERROR",
+}
+
+export const SUCCESS_STATUSES = [
+  GatewayStatus.ENHANCED,
+  GatewayStatus.NO_CHANGE,
+] as const;
+export const ERROR_STATUSES = [
+  GatewayStatus.INVALID,
+  GatewayStatus.ERROR,
+] as const;
+
+export type SuccessStatus = (typeof SUCCESS_STATUSES)[number];
+export type ErrorStatus = (typeof ERROR_STATUSES)[number];
+
+type GatewaySuccess = {
+  ok: true;
+  value?: string;
+  model?: LanguageModel;
+};
+
+type GatewayFailure = {
+  ok: false;
+  error: ErrorStatus;
+};
+
+export type GatewayResult = GatewaySuccess | GatewayFailure;

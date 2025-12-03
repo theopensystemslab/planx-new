@@ -24,10 +24,25 @@ components:
           description: The original description that was submitted
         enhanced:
           type: string
-          description: The AI-enhanced suggestion
+          description: The AI-enhanced description
       required:
         - original
-        - suggested
+        - enhanced
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          enum:
+            - INVALID_DESCRIPTION
+            - TOO_MANY_REQUESTS
+            - GATEWAY_ERROR
+        message:
+          type: string
+      required:
+        - error
+        - message
+
 paths:
   /ai/project-description/enhance:
     post:
@@ -41,6 +56,7 @@ paths:
               $ref: "#/components/schemas/EnhanceRequest"
       responses:
         "200":
+          description: Successfully enhanced the project description
           content:
             application/json:
               schema:
@@ -50,34 +66,16 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    enum: INVALID_DESCRIPTION
-                  message:
-                    type: string
-                required:
-                  - error
-                  - message
+                $ref: "#/components/schemas/ErrorResponse"
         "429":
           description: Rate limit exceeded
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        "503":
-          description: The upstream AI service is temporarily unavailable
+        "500":
+          description: There was an error with the upstream AI gateway
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    enum: SERVICE_UNAVAILABLE
-                  message:
-                    type: string
-                required:
-                  - error
-                  - message
+                $ref: "#/components/schemas/ErrorResponse"
