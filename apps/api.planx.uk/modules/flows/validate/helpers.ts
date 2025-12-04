@@ -35,6 +35,25 @@ export const buildNodeTypeSet = (flowGraph: FlowGraph): Set<ComponentType> => {
   return types;
 };
 
+export const createFlowTypeMap = (
+  flowGraph: FlowGraph,
+): Map<ComponentType, Set<string>> => {
+  const map = new Map<ComponentType, Set<string>>();
+
+  Object.entries(flowGraph).forEach(([nodeId, node]: [string, Node | undefined]) => {
+    if (nodeId === "_root") return;
+    const type = node?.type as ComponentType | undefined;
+    if (!type) return;
+
+    if (!map.has(type)) {
+      map.set(type, new Set<string>());
+    }
+    map.get(type)!.add(nodeId);
+  });
+
+  return map;
+};
+
 export const numberOfComponentType = (
   flowGraph: FlowGraph,
   type: ComponentType,
