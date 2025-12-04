@@ -188,11 +188,16 @@ describe("Responsive Checklist editor component", () => {
     const addExclusiveOptionButton = screen.getByRole("button", {
       name: /Add "or" option/i,
     });
-    expect(addExclusiveOptionButton).toBeEnabled();
+    expect(addExclusiveOptionButton).toBeInTheDocument();
 
     await user.click(addExclusiveOptionButton);
     expect(screen.getByPlaceholderText("Exclusive 'or' option")).toBeVisible();
-    expect(addExclusiveOptionButton).toBeDisabled();
+
+    expect(
+      screen.queryByRole("button", {
+        name: /Add "or" option/i,
+      }),
+    ).not.toBeInTheDocument();
   });
 
   /**
