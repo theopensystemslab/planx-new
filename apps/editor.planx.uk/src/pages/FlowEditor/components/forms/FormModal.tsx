@@ -11,7 +11,6 @@ import { styled } from "@mui/material/styles";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { parseFormValues } from "@planx/components/shared";
 import ErrorFallback from "components/Error/ErrorFallback";
-import { hasFeatureFlag } from "lib/featureFlags";
 import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
@@ -183,7 +182,16 @@ const FormModal: React.FC<{
     : !canUserEditNode(teamSlug);
 
   return (
-    <StyledDialog open fullWidth maxWidth="md" disableScrollLock>
+    <StyledDialog
+      open
+      fullWidth
+      disableScrollLock
+      onClose={(_event, reason) => {
+        if (reason === "escapeKeyDown") {
+          handleClose();
+        }
+      }}
+    >
       <DialogTitle
         sx={{
           py: 1,
