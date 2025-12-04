@@ -43,10 +43,10 @@ export const publishFlow = async (
   const nodeTypeSet = buildNodeTypeSet(flattenedFlow);
   const hasSendComponent = nodeTypeSet.has(ComponentType.Send);
   const hasSections = nodeTypeSet.has(ComponentType.Section);
-  
+
   const flowTypeMap = createFlowTypeMap(flattenedFlow);
   const hasPayComponent = Array.from(
-    flowTypeMap.get(ComponentType.Pay) ?? new Set<string>()
+    flowTypeMap.get(ComponentType.Pay) ?? new Set<string>(),
   ).some((id) => !flattenedFlow[id]?.data?.hidePay);
 
   const { client: $client } = getClient();
