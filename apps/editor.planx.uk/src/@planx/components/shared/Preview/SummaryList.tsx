@@ -180,18 +180,38 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
     const Component = node.type && presentationalComponents[node.type];
     const isPresentationalComponent = Boolean(Component);
     const isAutoAnswered = userData.auto;
-    const isInfoOnlyMode =
-      node.type === TYPES.FileUploadAndLabel &&
-      props.flow[nodeId].data?.hideDropZone;
 
-    return !isAutoAnswered && isPresentationalComponent && !isInfoOnlyMode;
+    // If FileUploadAndLabel was presented for info-only without a dropzone,
+    //  then omit like Content and Notice component types
+    const isInfoOnlyMode =
+      node.type === TYPES.FileUploadAndLabel && node.data?.hideDropZone;
+
+    // If we didn't show `Property type` on the PropertyInformation card,
+    //   then don't show on Review page either (still in passport for schema validation)
+    const propertyTypeIsNotSupported =
+      node.type === TYPES.PropertyInformation &&
+      !node.data?.showPropertyTypeOverride;
+
+    // If we weren't able to fetch external data, omit PlanningConstraints component from Review
+    //   Any constraints will instead have been manually prompted (and already captured on Review) as questions or checklists
+    const failedTofetchConstraints =
+      node.type === TYPES.PlanningConstraints &&
+      !props.passport?.data?.["_constraints"];
+
+    return (
+      !isAutoAnswered &&
+      isPresentationalComponent &&
+      !isInfoOnlyMode &&
+      !propertyTypeIsNotSupported &&
+      !failedTofetchConstraints
+    );
   };
 
   const removeNonPresentationalNodes = (
-    section: Store.Breadcrumbs,
+    crumb: Store.Breadcrumbs,
   ): BreadcrumbEntry[] => {
     // Typecast to preserve Store.userData
-    const entries = Object.entries(section) as BreadcrumbEntry[];
+    const entries = Object.entries(crumb) as BreadcrumbEntry[];
     return entries.filter(isValidComponent);
   };
 
@@ -357,14 +377,6 @@ interface ComponentProps {
 function PropertyInformation(props: ComponentProps) {
   const { data, loading } = useBLPUCodes();
 
-  // If we didn't show the user `Property type` on the original component,
-  //   then don't show them on Review either
-  const propertyTypeSupported =
-    props.flow[props.nodeId]?.data?.showPropertyTypeOverride;
-  if (!propertyTypeSupported) {
-    return undefined;
-  }
-
   const propertyTypeVal = props.passport.data?.["property.type"]?.[0];
   const value =
     find(data?.blpuCodes, { value: propertyTypeVal })?.description ||
@@ -382,12 +394,7 @@ function PropertyInformation(props: ComponentProps) {
 }
 
 function PlanningConstraints(props: ComponentProps) {
-  // If we weren't able to fetch external data, omit this component from Review
-  //   Any constraints will instead have been manually prompted (and already captured on Review) as questions or checklists
   const fetchedConstraints = props.passport.data?.["_constraints"];
-  if (!fetchedConstraints) {
-    return undefined;
-  }
 
   const applicableConstraints =
     props.passport.data?.["property.constraints.planning"];
