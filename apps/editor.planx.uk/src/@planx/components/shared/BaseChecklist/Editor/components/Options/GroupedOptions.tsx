@@ -2,6 +2,7 @@ import Delete from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { DEFAULT_RULE } from "@planx/components/ResponsiveChecklist/model";
 import type {
@@ -18,7 +19,6 @@ import React from "react";
 import { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import Input from "ui/shared/Input/Input";
-import InputRow from "ui/shared/InputRow";
 
 import { partitionGroupedOptions } from "../../../Public/helpers";
 import { useCurrentOptions } from "../../../Public/hooks/useInitialOptions";
@@ -80,20 +80,21 @@ export const GroupedOptions = <T extends AnyChecklist>({
             </Box>
             {showAddDeleteButtons && (
               <Box flex={0}>
-                <IconButton
-                  title="Delete group"
-                  aria-label="Delete group"
-                  onClick={() => {
-                    formik.setFieldValue(
-                      `groupedOptions`,
-                      remove(groupIndex, 1, formik.values.groupedOptions!),
-                    );
-                  }}
-                  size="large"
-                  disabled={disabled}
-                >
-                  <Delete />
-                </IconButton>
+                <Tooltip title="Delete group" placement="bottom">
+                  <IconButton
+                    aria-label="Delete group"
+                    onClick={() => {
+                      formik.setFieldValue(
+                        `groupedOptions`,
+                        remove(groupIndex, 1, formik.values.groupedOptions!),
+                      );
+                    }}
+                    size="large"
+                    disabled={disabled}
+                  >
+                    <Delete />
+                  </IconButton>
+                </Tooltip>
               </Box>
             )}
           </Box>
@@ -119,7 +120,7 @@ export const GroupedOptions = <T extends AnyChecklist>({
                   }),
                 },
               })}
-              newValueLabel="add new option"
+              itemName="option"
               Editor={ChecklistOptionsEditor}
               editorExtraProps={{
                 type,
@@ -174,7 +175,7 @@ export const GroupedOptions = <T extends AnyChecklist>({
               ]);
             }}
           >
-            add new group
+            Add group
           </Button>
         </Box>
       )}

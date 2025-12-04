@@ -80,7 +80,7 @@ describe("Pay component - Editor Modal", () => {
         </DndProvider>,
       );
 
-      const deleteIcons = getAllByLabelText("Delete");
+      const deleteIcons = getAllByLabelText(/Delete/);
 
       expect(deleteIcons).toHaveLength(3);
       expect(deleteIcons[0]).toBeDisabled();
@@ -128,12 +128,12 @@ describe("Pay component - Editor Modal", () => {
         );
 
       // Three default rows displayed
-      expect(getAllByLabelText("Delete")).toHaveLength(3);
+      expect(getAllByLabelText(/Delete/)).toHaveLength(3);
 
-      await user.click(getByRole("button", { name: "add new static field" }));
+      await user.click(getByRole("button", { name: /Add static field/ }));
 
       // New row added
-      expect(getAllByLabelText("Delete")).toHaveLength(4);
+      expect(getAllByLabelText(/Delete/)).toHaveLength(4);
 
       const keyInput = getAllByPlaceholderText("key")[2];
       const valueInput = getAllByPlaceholderText("value")[2];
@@ -155,7 +155,11 @@ describe("Pay component - Editor Modal", () => {
           govPayMetadata: [
             { key: "flow", value: "flowName", type: "static" },
             { key: "source", value: "PlanX", type: "static" },
-            { key: "paidViaInviteToPay", value: "paidViaInviteToPay", type: "data" },
+            {
+              key: "paidViaInviteToPay",
+              value: "paidViaInviteToPay",
+              type: "data",
+            },
             { key: "deleteMe", value: "abc123", type: "static" },
           ],
         },
@@ -170,14 +174,14 @@ describe("Pay component - Editor Modal", () => {
       );
 
       // Use delete buttons as proxy for rows
-      const deleteButtons = getAllByLabelText("Delete");
-      expect(deleteButtons).toHaveLength(4);
+      const deleteButtons = getAllByLabelText("Delete static field");
+      expect(deleteButtons).toHaveLength(3);
       const finalStaticDeleteButton = deleteButtons[2];
       expect(finalStaticDeleteButton).toBeInTheDocument();
 
       await user.click(finalStaticDeleteButton);
       await waitFor(() => {
-        expect(getAllByLabelText("Delete")).toHaveLength(3);
+        expect(getAllByLabelText(/Delete/)).toHaveLength(3);
       });
 
       // Required to trigger submission outside the context of FormModal component
@@ -207,7 +211,7 @@ describe("Pay component - Editor Modal", () => {
         </DndProvider>,
       );
 
-      await user.click(getByRole("button", { name: "add new static field" }));
+      await user.click(getByRole("button", { name: /Add static field/ }));
       fireEvent.submit(getByRole("form"));
 
       expect(handleSubmit).not.toHaveBeenCalled();
@@ -231,14 +235,14 @@ describe("Pay component - Editor Modal", () => {
       );
 
       // Add first duplicate key
-      await user.click(getByRole("button", { name: "add new static field" }));
+      await user.click(getByRole("button", { name: /Add static field/ }));
       const keyInput4 = getAllByPlaceholderText("key")[2];
       const valueInput4 = getAllByPlaceholderText("value")[2];
       await user.type(keyInput4, "duplicatedKey");
       await user.type(valueInput4, "myNewValue");
 
       // Add second duplicate key
-      await user.click(getByRole("button", { name: "add new static field" }));
+      await user.click(getByRole("button", { name: /Add static field/ }));
       const keyInput5 = getAllByPlaceholderText("key")[3];
       const valueInput5 = getAllByPlaceholderText("value")[3];
       await user.type(keyInput5, "duplicatedKey");
@@ -276,7 +280,7 @@ describe("Pay component - Editor Modal", () => {
         </DndProvider>,
       );
 
-      await user.click(getByRole("button", { name: "add new static field" }));
+      await user.click(getByRole("button", { name: /Add static field/ }));
 
       const keyInput = getAllByPlaceholderText("key")[2];
       const valueInput = getAllByPlaceholderText("value")[2];
@@ -296,7 +300,9 @@ describe("Pay component - Editor Modal", () => {
         expect(getByText(/Keys must be unique/)).toBeVisible(),
       );
 
-      const duplicateKeyDeleteIcon = getAllByLabelText("Delete")[2];
+      const duplicateKeyDeleteIcon = getAllByLabelText(
+        "Delete static field",
+      )[2];
 
       // This tests that the user is able to fix their mistake
       expect(duplicateKeyDeleteIcon).toBeEnabled();

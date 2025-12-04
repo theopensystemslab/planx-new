@@ -15,16 +15,16 @@ it("renders without error", () => {
     </DndProvider>,
   );
   expect(screen.getByText("Responsive question")).toBeInTheDocument();
-  expect(screen.getByText("add new")).toBeInTheDocument();
+  expect(screen.getByText("Add option")).toBeInTheDocument();
 });
 
-it("displays the options editor when the 'add new option' button is clicked", async () => {
+it("displays the options editor when the 'Add option' button is clicked", async () => {
   const { user } = setup(
     <DndProvider backend={HTML5Backend}>
       <ResponsiveQuestion node={{}} options={[]} />
     </DndProvider>,
   );
-  await user.click(screen.getByRole("button", { name: /add new/i }));
+  await user.click(screen.getByRole("button", { name: /Add option/i }));
 
   const optionsEditor = await screen.findByPlaceholderText("Option");
   expect(optionsEditor).toBeInTheDocument();
@@ -81,12 +81,12 @@ it("can construct a valid payload", async () => {
   await user.type(screen.getByPlaceholderText("Text"), "mockTitle");
 
   // Add first option with default rule
-  await user.click(screen.getByRole("button", { name: /add new/i }));
+  await user.click(screen.getByRole("button", { name: /Add option/i }));
   await user.type(screen.getByPlaceholderText("Option"), "First Option");
   expect(screen.getByText("Always required")).toBeVisible();
 
   // Add second option with conditional rule
-  await user.click(screen.getByRole("button", { name: /add new/i }));
+  await user.click(screen.getByRole("button", { name: /Add option/i }));
   await user.type(screen.getAllByPlaceholderText("Option")[1], "Second Option");
 
   const ruleDropdowns = screen.getAllByText("Always required");

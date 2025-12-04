@@ -139,6 +139,7 @@ const NextStepsComponent: React.FC<Props> = (props) => {
             }}
             Editor={TaskEditor}
             newValue={newStep}
+            itemName="step"
             disabled={props.disabled}
             collapsible={true}
           />

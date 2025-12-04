@@ -37,7 +37,7 @@ describe("Checklist editor component", () => {
       </DndProvider>,
     );
     expect(screen.getByText("Checklist")).toBeInTheDocument();
-    expect(screen.getByText("add new option")).toBeInTheDocument();
+    expect(screen.getByText("Add option")).toBeInTheDocument();
   });
 
   it("displays the grouped checklist inputs when the 'expandable' toggle is clicked", async () => {
@@ -54,20 +54,20 @@ describe("Checklist editor component", () => {
     expect(groupedOptionsEditor).toBeInTheDocument();
   });
 
-  it("displays the options editor when the 'add new option' button is clicked", async () => {
+  it("displays the options editor when the 'Add option' button is clicked", async () => {
     const { user } = setup(
       <DndProvider backend={HTML5Backend}>
         <ChecklistEditor options={[]} />
       </DndProvider>,
     );
 
-    await user.click(screen.getByRole("button", { name: /add new option/i }));
+    await user.click(screen.getByRole("button", { name: /Add option/i }));
 
     const optionsEditor = await screen.findByPlaceholderText("Option");
     expect(optionsEditor).toBeInTheDocument();
   });
 
-  it("adds a new section when the 'add new group' button is clicked", async () => {
+  it("adds a new section when the 'add group' button is clicked", async () => {
     const { user } = setup(
       <DndProvider backend={HTML5Backend}>
         <ChecklistEditor options={[]} />
@@ -78,7 +78,7 @@ describe("Checklist editor component", () => {
 
     await screen.findByPlaceholderText("Section Title");
 
-    await user.click(screen.getByRole("button", { name: /add new group/i }));
+    await user.click(screen.getByRole("button", { name: /Add group/i }));
 
     expect(await screen.findAllByPlaceholderText("Section Title")).toHaveLength(
       2,
@@ -93,13 +93,13 @@ describe("Checklist editor component", () => {
     );
 
     expect(
-      screen.queryByRole("button", { name: /add "or" option/i }),
+      screen.queryByRole("button", { name: /Add "or" option/i }),
     ).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /add new option/i }));
+    await user.click(screen.getByRole("button", { name: /Add option/i }));
 
     expect(
-      screen.queryByRole("button", { name: /add "or" option/i }),
+      screen.queryByRole("button", { name: /Add "or" option/i }),
     ).toBeInTheDocument();
   });
 
@@ -110,10 +110,10 @@ describe("Checklist editor component", () => {
       </DndProvider>,
     );
 
-    await user.click(screen.getByRole("button", { name: /add new option/i }));
+    await user.click(screen.getByRole("button", { name: /Add option/i }));
     await user.type(screen.getByPlaceholderText("Option"), "First");
 
-    await user.click(screen.getByRole("button", { name: /add "or" option/i }));
+    await user.click(screen.getByRole("button", { name: /Add "or" option/i }));
     await user.type(
       screen.getByPlaceholderText("Exclusive 'or' option"),
       "Second",
@@ -172,7 +172,7 @@ describe("Checklist editor component", () => {
     await user.keyboard("{Enter}");
 
     // An an option without a data field
-    await user.click(screen.getByRole("button", { name: /add new option/i }));
+    await user.click(screen.getByRole("button", { name: /Add option/i }));
     await user.type(screen.getByPlaceholderText("Option"), "First");
 
     fireEvent.submit(screen.getByTestId("checklistEditorForm"));
@@ -204,11 +204,11 @@ describe("Checklist editor component", () => {
     await user.keyboard("{Enter}");
 
     // An an option without a data field
-    await user.click(screen.getByRole("button", { name: /add new option/i }));
+    await user.click(screen.getByRole("button", { name: /Add option/i }));
     await user.type(screen.getByPlaceholderText("Option"), "First");
 
     // An another option, this time with a data field
-    await user.click(screen.getByRole("button", { name: /add new option/i }));
+    await user.click(screen.getByRole("button", { name: /Add option/i }));
     await user.type(screen.getAllByPlaceholderText("Option")[1], "Second");
     const autocompleteComponentOption = screen.getByTestId(
       "data-field-autocomplete-option-1",
@@ -232,11 +232,11 @@ describe("Checklist editor component", () => {
       </DndProvider>,
     );
 
-    await user.click(screen.getByRole("button", { name: /add new option/i }));
+    await user.click(screen.getByRole("button", { name: /Add option/i }));
     await user.type(screen.getByPlaceholderText("Option"), "First");
 
     const addExclusiveOptionButton = screen.getByRole("button", {
-      name: /add "or" option/i,
+      name: /Add "or" option/i,
     });
     expect(addExclusiveOptionButton).toBeEnabled();
 
@@ -329,7 +329,7 @@ describe("Checklist editor component", () => {
     user.click(screen.getByLabelText(/Never put to user/));
 
     const addNewOptionButton = screen.getByRole("button", {
-      name: /add new option/i,
+      name: /Add option/i,
     });
     await user.click(addNewOptionButton);
     await user.click(addNewOptionButton);
