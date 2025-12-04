@@ -125,6 +125,7 @@ const TaskListComponent: React.FC<Props> = (props) => (
               newValue={newTask}
               disabled={props.disabled}
               collapsible={true}
+              itemName="task"
             />
           </ModalSectionContent>
         </ModalSection>

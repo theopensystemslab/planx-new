@@ -56,7 +56,7 @@ export const Options = <T extends AnyChecklist>({
               formik.setFieldValue("options", newCombinedOptions);
             }}
             disabled={disabled}
-            newValueLabel="add new option"
+            itemName="option"
             newValue={() => ({
               id: "",
               data: {

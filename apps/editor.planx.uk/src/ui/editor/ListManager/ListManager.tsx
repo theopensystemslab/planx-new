@@ -44,7 +44,7 @@ export interface Props<T, EditorExtraProps = {}> {
   errors?: string | string[] | FormikErrors<T>[] | undefined;
   onChange: (newValues: Array<T>) => void;
   newValue: () => T;
-  newValueLabel?: string;
+  itemName?: string;
   Editor: React.FC<EditorProps<T> & (EditorExtraProps | {})>;
   editorExtraProps?: EditorExtraProps;
   noDragAndDrop?: boolean;
@@ -97,14 +97,15 @@ const InsertButton: React.FC<{
   handleClick: () => void;
   disabled: boolean;
   isDragging: boolean;
-}> = ({ handleClick, disabled, isDragging }) => {
+  insertLabel: string;
+}> = ({ handleClick, disabled, isDragging, insertLabel }) => {
   return (
-    <Tooltip title="insert new" placement="bottom">
+    <Tooltip title={insertLabel} placement="bottom">
       <InsertButtonRoot
         onClick={handleClick}
         disabled={disabled}
         disableRipple
-        aria-label="insert new"
+        aria-label={insertLabel}
         sx={{
           opacity: isDragging ? 0 : 1,
           visibility: isDragging ? "hidden" : "visible",
@@ -139,9 +140,18 @@ export default function ListManager<T, EditorExtraProps>(
     disabled,
     isFieldDisplayed = () => true,
     collapsible = false,
+    itemName,
   } = props;
   // Initialize a random ID when the component mounts
   const randomId = useRef(nanoid());
+
+  // Generate labels based on itemName
+  const buildLabel = (action: string) =>
+    itemName ? `${action} ${itemName}` : action;
+
+  const addLabel = buildLabel("Add");
+  const insertLabel = buildLabel("Insert");
+  const deleteLabel = buildLabel("Delete");
 
   // Unique keys are required for transition group
   // Index is an unstable key because new items can be inserted into the list
@@ -313,7 +323,7 @@ export default function ListManager<T, EditorExtraProps>(
                       />
                     </Box>
                     <Box sx={{ display: "flex", alignItems: "flex-start" }}>
-                      <Tooltip title="Delete" placement="bottom">
+                      <Tooltip title={deleteLabel} placement="bottom">
                         <IconButton
                           onClick={() => {
                             props.onChange(removeAt(index, props.values));
@@ -321,7 +331,7 @@ export default function ListManager<T, EditorExtraProps>(
                               prev.filter((_, i) => i !== index),
                             );
                           }}
-                          aria-label="Delete"
+                          aria-label={deleteLabel}
                           size="large"
                           disabled={
                             disabled || props?.isFieldDisabled?.(item, index)
@@ -346,7 +356,7 @@ export default function ListManager<T, EditorExtraProps>(
           }}
           disabled={disabled || isMaxLength}
         >
-          {props.newValueLabel || "add new"}
+          {addLabel}
         </Button>
       </>
     );
@@ -411,6 +421,7 @@ export default function ListManager<T, EditorExtraProps>(
                               });
                             }}
                             isDragging={isDragging}
+                            insertLabel={insertLabel}
                           />
                         )}
                         <Draggable
@@ -511,7 +522,10 @@ export default function ListManager<T, EditorExtraProps>(
                                   />
                                 </Box>
                                 <Box>
-                                  <Tooltip title="Delete" placement="bottom">
+                                  <Tooltip
+                                    title={deleteLabel}
+                                    placement="bottom"
+                                  >
                                     <IconButton
                                       onClick={() => {
                                         props.onChange(
@@ -521,7 +535,7 @@ export default function ListManager<T, EditorExtraProps>(
                                           prev.filter((_, i) => i !== index),
                                         );
                                       }}
-                                      aria-label="Delete"
+                                      aria-label={deleteLabel}
                                       size="large"
                                       disabled={
                                         disabled ||
@@ -554,7 +568,7 @@ export default function ListManager<T, EditorExtraProps>(
           }}
           disabled={disabled || isMaxLength}
         >
-          {props.newValueLabel || "add new"}
+          {addLabel}
         </Button>
       </DragDropContext>
     </>

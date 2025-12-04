@@ -70,7 +70,7 @@ export const ExclusiveOrOptionManager = <T extends AnyChecklist>({
               ];
               formik.setFieldValue("options", newCombinedOptions);
             }}
-            newValueLabel='add "or" option'
+            itemName='"or" option'
             maxItems={1}
             noDragAndDrop
             newValue={() =>
@@ -82,7 +82,9 @@ export const ExclusiveOrOptionManager = <T extends AnyChecklist>({
                   val: "",
                   flags: [],
                   exclusive: true,
-                  ...(type === ComponentType.ResponsiveChecklist && { rule: DEFAULT_RULE })
+                  ...(type === ComponentType.ResponsiveChecklist && {
+                    rule: DEFAULT_RULE,
+                  }),
                 },
               }) satisfies AnyOption
             }

@@ -169,6 +169,7 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
               }}
               isTemplatedNode={props.node?.data?.isTemplatedNode}
               collapsible={true}
+              itemName="option"
             />
           </ErrorWrapper>
         </ModalSectionContent>
