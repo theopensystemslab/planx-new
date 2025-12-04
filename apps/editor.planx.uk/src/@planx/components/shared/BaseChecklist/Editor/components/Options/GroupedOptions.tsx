@@ -1,6 +1,5 @@
 import Delete from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import { ComponentType } from "@opensystemslab/planx-core/types";
