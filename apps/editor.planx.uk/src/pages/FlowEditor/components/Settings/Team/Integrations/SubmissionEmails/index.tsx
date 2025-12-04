@@ -106,7 +106,7 @@ export const SubmissionEmails: React.FC = () => {
                 teamId: teamId,
               })}
               Editor={EmailsEditor}
-              maxItems={10}
+              noDragAndDrop={true}
             />
           </RadioGroup>
         </>
