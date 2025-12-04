@@ -10,7 +10,7 @@ import { dataMerged, getMostRecentPublishedFlow } from "../../../helpers.js";
 import { createScheduledEvent } from "../../../lib/hasura/metadata/index.js";
 import type { CreateScheduledEventResponse } from "../../../lib/hasura/metadata/types.js";
 import { userContext } from "../../auth/middleware.js";
-import { buildNodeTypeSet } from "../validate/helpers.js";
+import { buildNodeTypeSet, createFlowTypeMap } from "../validate/helpers.js";
 
 interface PublishFlow {
   publishedFlow: {
@@ -43,7 +43,11 @@ export const publishFlow = async (
   const nodeTypeSet = buildNodeTypeSet(flattenedFlow);
   const hasSendComponent = nodeTypeSet.has(ComponentType.Send);
   const hasSections = nodeTypeSet.has(ComponentType.Section);
-  const hasPayComponent = nodeTypeSet.has(ComponentType.Pay);
+  
+  const flowTypeMap = createFlowTypeMap(flattenedFlow);
+  const hasPayComponent = Array.from(
+    flowTypeMap.get(ComponentType.Pay) ?? new Set<string>()
+  ).some((id) => !flattenedFlow[id]?.data?.hidePay);
 
   const { client: $client } = getClient();
   const response = await $client.request<PublishFlow>(
