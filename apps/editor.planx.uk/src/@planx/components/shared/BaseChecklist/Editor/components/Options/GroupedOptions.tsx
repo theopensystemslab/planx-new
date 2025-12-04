@@ -82,7 +82,6 @@ export const GroupedOptions = <T extends AnyChecklist>({
               <Box flex={0}>
                 <Tooltip title="Delete group" placement="bottom">
                   <IconButton
-                    title="Delete group"
                     aria-label="Delete group"
                     onClick={() => {
                       formik.setFieldValue(
@@ -176,7 +175,7 @@ export const GroupedOptions = <T extends AnyChecklist>({
               ]);
             }}
           >
-            Add new group
+            Add group
           </Button>
         </Box>
       )}
