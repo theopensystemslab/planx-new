@@ -67,7 +67,7 @@ export async function buildSubmissionExportZip({
       }
     } catch (error) {
       throw new Error(
-        `Failed to generate ODP Schema JSON for ${sessionId} zip. Error - ${error}`,
+        `Failed to add ODP Schema JSON to zip for ${sessionId} zip. Error - ${error}`,
       );
     }
   }
