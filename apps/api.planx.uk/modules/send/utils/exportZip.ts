@@ -17,6 +17,7 @@ import { $api } from "../../../client/index.js";
 import type { Passport as IPassport } from "../../../types.js";
 import { getFileFromS3 } from "../../file/service/getFile.js";
 import { isApplicationTypeSupported } from "./helpers.js";
+import { logDuration } from "../../../lib/performance.js";
 
 export async function buildSubmissionExportZip({
   sessionId,
@@ -30,7 +31,9 @@ export async function buildSubmissionExportZip({
   onlyDigitalPlanningJSON?: boolean;
 }): Promise<ExportZip> {
   // fetch session data
-  const sessionData = await $api.session.find(sessionId);
+  const sessionData = await logDuration(`findSession-${sessionId}`, () =>
+    $api.session.find(sessionId),
+  );
   if (!sessionData) {
     throw new Error(
       `session ${sessionId} not found so could not create submission zip`,
@@ -46,9 +49,13 @@ export async function buildSubmissionExportZip({
   // check to see whether we should validate JSON
   const doValidation = isApplicationTypeSupported(passport);
 
-  const schema = doValidation
-    ? await $api.export.digitalPlanningDataPayload(sessionId)
-    : await $api.export.digitalPlanningDataPayload(sessionId, true);
+  const schema = await logDuration(
+    `digitalPlanningDataPayload-${sessionId}`,
+    () =>
+      doValidation
+        ? $api.export.digitalPlanningDataPayload(sessionId)
+        : $api.export.digitalPlanningDataPayload(sessionId, true),
+  );
 
   // add ODP Schema JSON to the zip, skipping validation if an unsupported application type
   if (includeDigitalPlanningJSON || onlyDigitalPlanningJSON) {
@@ -91,93 +98,102 @@ export async function buildSubmissionExportZip({
   // add remote user-uploaded files on S3 to the zip
   const files = new Passport(passport).files;
   if (files.length) {
-    await Promise.all(
-      files.map(async (file) => {
-        // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
-        // Uniform requires all uploaded files to be present in the zip, even if they are duplicates
-        // Must match unique filename in apps/editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
-        const uniqueFilename = decodeURIComponent(
-          file.url.split("/").slice(-2).join("-"),
+    await logDuration(
+      `downloadS3Files-${sessionId}-count-${files.length}`,
+      async () => {
+        await Promise.all(
+          files.map(async (file) => {
+            // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
+            // Uniform requires all uploaded files to be present in the zip, even if they are duplicates
+            // Must match unique filename in apps/editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
+            const uniqueFilename = decodeURIComponent(
+              file.url.split("/").slice(-2).join("-"),
+            );
+            await zip.addRemoteFile({ url: file.url, name: uniqueFilename });
+          }),
         );
-        await zip.addRemoteFile({ url: file.url, name: uniqueFilename });
-      }),
+      },
     );
   }
 
-  const boundingBox = passport.data["proposal.site.buffered"];
-  const userAction = passport.data?.["drawBoundary.action"];
-
   // generate and add an HTML overview document for the submission to zip
-  const overviewHTML = generateApplicationHTML({
-    planXExportData: schema as PlanXExportData[],
-    boundingBox,
-    userAction,
-  });
-  zip.addFile({
-    name: "Overview.htm",
-    buffer: Buffer.from(overviewHTML),
-  });
+  await logDuration(`generateHTML-${sessionId}`, async () => {
+    const boundingBox = passport.data["proposal.site.buffered"];
+    const userAction = passport.data?.["drawBoundary.action"];
 
-  // add an optional GeoJSON file to zip
-  const geojson = passport?.data?.["proposal.site"];
-  if (geojson) {
-    if (userAction) {
-      geojson["properties"] ??= {};
-      geojson["properties"]["planx_user_action"] = userAction;
-    }
-    const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
-    zip.addFile({
-      name: "LocationPlanGeoJSON.geojson",
-      buffer: geoBuff,
-    });
-
-    const boundaryHTML = generateMapHTML({
-      geojson,
+    const overviewHTML = generateApplicationHTML({
+      planXExportData: schema as PlanXExportData[],
       boundingBox,
       userAction,
     });
-    zip.addFile({
-      name: "LocationPlan.htm",
-      buffer: Buffer.from(boundaryHTML),
-    });
-  }
+    zip.addFile({ name: "Overview.htm", buffer: Buffer.from(overviewHTML) });
+
+    // add an optional GeoJSON file to zip
+    const geojson = passport?.data?.["proposal.site"];
+    if (geojson) {
+      if (userAction) {
+        geojson["properties"] ??= {};
+        geojson["properties"]["planx_user_action"] = userAction;
+      }
+      const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
+      zip.addFile({
+        name: "LocationPlanGeoJSON.geojson",
+        buffer: geoBuff,
+      });
+
+      const boundaryHTML = generateMapHTML({
+        geojson,
+        boundingBox,
+        userAction,
+      });
+      zip.addFile({
+        name: "LocationPlan.htm",
+        buffer: Buffer.from(boundaryHTML),
+      });
+    }
+  });
 
   // If MapAndLabel(s), then add GeoJSON and HTML boundary files to zip for each
-  const mapAndLabelNodes = passport?.data?.["_mapAndLabelVisitedNodes"];
-  if (mapAndLabelNodes && mapAndLabelNodes?.length > 0) {
-    mapAndLabelNodes.forEach((nodeId: string) => {
-      const breadcrumbData: any =
-        breadcrumbs[nodeId]?.data?.["_mapAndLabelNodeData"];
-      const fn = breadcrumbData?.["fn"] as string;
-      const schemaName = breadcrumbData?.["schemaName"] as string;
+  await logDuration(`generateMapAndLabelHTML-${sessionId}`, async () => {
+    const mapAndLabelNodes = passport?.data?.["_mapAndLabelVisitedNodes"];
+    if (mapAndLabelNodes && mapAndLabelNodes?.length > 0) {
+      mapAndLabelNodes.forEach((nodeId: string) => {
+        const breadcrumbData: any =
+          breadcrumbs[nodeId]?.data?.["_mapAndLabelNodeData"];
+        const fn = breadcrumbData?.["fn"] as string;
+        const schemaName = breadcrumbData?.["schemaName"] as string;
 
-      const geojson = passport?.data?.[fn];
-      if (geojson && schemaName) {
-        const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
-        zip.addFile({
-          name: `${schemaName}.geojson`,
-          buffer: geoBuff,
-        });
+        const geojson = passport?.data?.[fn];
+        if (geojson && schemaName) {
+          const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
+          zip.addFile({
+            name: `${schemaName}.geojson`,
+            buffer: geoBuff,
+          });
 
-        const mapAndLabelHTML = generateMapAndLabelHTML({
-          geojson: geojson,
-          boundingBox: breadcrumbData?.["boundaryBBox"],
-          drawColor: breadcrumbData?.["drawColor"],
-          schemaFieldValues: breadcrumbData?.["schema"]?.["fields"]?.map(
-            (field: any) => field.data?.fn,
-          ),
-          schemaName: schemaName,
-        });
-        zip.addFile({
-          name: `${schemaName}.html`,
-          buffer: Buffer.from(mapAndLabelHTML),
-        });
-      }
-    });
-  }
+          const mapAndLabelHTML = generateMapAndLabelHTML({
+            geojson: geojson,
+            boundingBox: breadcrumbData?.["boundaryBBox"],
+            drawColor: breadcrumbData?.["drawColor"],
+            schemaFieldValues: breadcrumbData?.["schema"]?.["fields"]?.map(
+              (field: any) => field.data?.fn,
+            ),
+            schemaName: schemaName,
+          });
+          zip.addFile({
+            name: `${schemaName}.html`,
+            buffer: Buffer.from(mapAndLabelHTML),
+          });
+        }
+      });
+    }
+  });
 
-  // write the zip
-  zip.write();
+  await logDuration(`writeDisk-Final-${sessionId}`, () => {
+    zip.write();
+    return Promise.resolve();
+  });
+
   return zip;
 }
 
