@@ -93,6 +93,23 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
   transition: "inherit",
 }));
 
+export const StyledAddButton = styled(Button)(({ theme }) => ({
+  marginTop: theme.spacing(2),
+  [theme.breakpoints.up("md")]: {
+    width: "100%",
+  },
+  border: `2px dotted ${theme.palette.text.primary}`,
+  color: theme.palette.primary.main,
+  textDecoration: "none",
+  boxShadow: "none",
+  "&:hover": {
+    borderStyle: "dashed",
+    borderColor: theme.palette.primary.main,
+    textDecoration: "none",
+    boxShadow: "none",
+  },
+}));
+
 const InsertButton: React.FC<{
   handleClick: () => void;
   disabled: boolean;
@@ -347,17 +364,19 @@ export default function ListManager<T, EditorExtraProps>(
             )}
           </TransitionGroup>
         </Box>
-        <Button
-          sx={{ mt: 2 }}
-          size="large"
-          onClick={() => {
-            props.onChange([...props.values, props.newValue()]);
-            setItemKeys((prev) => [...prev, nanoid()]);
-          }}
-          disabled={disabled || isMaxLength}
-        >
-          {addLabel}
-        </Button>
+        {!isMaxLength && (
+          <StyledAddButton
+            size="large"
+            onClick={() => {
+              props.onChange([...props.values, props.newValue()]);
+              setItemKeys((prev) => [...prev, nanoid()]);
+            }}
+            disabled={disabled}
+            sx={{ mt: 0 }}
+          >
+            {addLabel}
+          </StyledAddButton>
+        )}
       </>
     );
   }
@@ -559,17 +578,20 @@ export default function ListManager<T, EditorExtraProps>(
             </Box>
           )}
         </Droppable>
-        <Button
-          size="medium"
-          sx={{ mt: 2 }}
-          onClick={() => {
-            props.onChange([...props.values, props.newValue()]);
-            setItemKeys((prev) => [...prev, nanoid()]);
-          }}
-          disabled={disabled || isMaxLength}
-        >
-          {addLabel}
-        </Button>
+        {!isMaxLength && (
+          <Box sx={{ display: "flex", justifyContent: "center", pl: "46px" }}>
+            <StyledAddButton
+              size="medium"
+              onClick={() => {
+                props.onChange([...props.values, props.newValue()]);
+                setItemKeys((prev) => [...prev, nanoid()]);
+              }}
+              disabled={disabled}
+            >
+              {addLabel}
+            </StyledAddButton>
+          </Box>
+        )}
       </DragDropContext>
     </>
   );

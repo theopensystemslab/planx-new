@@ -1,6 +1,5 @@
 import Delete from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import { ComponentType } from "@opensystemslab/planx-core/types";
@@ -18,6 +17,7 @@ import remove from "ramda/src/remove";
 import React from "react";
 import { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
+import { StyledAddButton } from "ui/editor/ListManager/ListManager";
 import Input from "ui/shared/Input/Input";
 
 import { partitionGroupedOptions } from "../../../Public/helpers";
@@ -160,8 +160,8 @@ export const GroupedOptions = <T extends AnyChecklist>({
         </Box>
       ))}
       {showAddDeleteButtons && (
-        <Box mt={1}>
-          <Button
+        <Box mt={1} display="flex" justifyContent="center">
+          <StyledAddButton
             size="large"
             disabled={disabled}
             onClick={() => {
@@ -176,7 +176,7 @@ export const GroupedOptions = <T extends AnyChecklist>({
             }}
           >
             Add group
-          </Button>
+          </StyledAddButton>
         </Box>
       )}
       {exclusiveOrOptionManagerShouldRender ? (
