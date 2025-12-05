@@ -30,6 +30,7 @@ const routes = compose(
     }),
     "/view-application": route({
       view: <ApplicationViewer />,
+      data: { isViewApplicationPage: true },
     }),
   }),
 );

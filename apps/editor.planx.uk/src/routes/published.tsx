@@ -34,9 +34,9 @@ const routes = compose(
         data: { isContentPage: true },
       });
     }),
-    // TODO: add to draft & preview
     "/view-application": route({
       view: <ApplicationViewer />,
+      data: { isViewApplicationPage: true },
     }),
   }),
 );
