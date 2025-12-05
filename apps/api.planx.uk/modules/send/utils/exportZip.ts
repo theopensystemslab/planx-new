@@ -6,7 +6,6 @@ import {
 } from "@opensystemslab/planx-core";
 import type { PlanXExportData } from "@opensystemslab/planx-core/types";
 import AdmZip from "adm-zip";
-import { stringify } from "csv-stringify";
 import fs from "fs";
 import type { Stream } from "node:stream";
 import os from "os";
@@ -47,12 +46,13 @@ export async function buildSubmissionExportZip({
   // check to see whether we should validate JSON
   const doValidation = isApplicationTypeSupported(passport);
 
+  const schema = doValidation
+    ? await $api.export.digitalPlanningDataPayload(sessionId)
+    : await $api.export.digitalPlanningDataPayload(sessionId, true);
+
   // add ODP Schema JSON to the zip, skipping validation if an unsupported application type
   if (includeDigitalPlanningJSON || onlyDigitalPlanningJSON) {
     try {
-      const schema = doValidation
-        ? await $api.export.digitalPlanningDataPayload(sessionId)
-        : await $api.export.digitalPlanningDataPayload(sessionId, true);
       const schemaBuff = Buffer.from(JSON.stringify(schema, null, 2));
 
       zip.addFile({
@@ -67,7 +67,7 @@ export async function buildSubmissionExportZip({
       }
     } catch (error) {
       throw new Error(
-        `Failed to generate ODP Schema JSON for ${sessionId} zip. Error - ${error}`,
+        `Failed to add ODP Schema JSON to zip for ${sessionId} zip. Error - ${error}`,
       );
     }
   }
@@ -91,28 +91,25 @@ export async function buildSubmissionExportZip({
   // add remote user-uploaded files on S3 to the zip
   const files = new Passport(passport).files;
   if (files.length) {
-    for (const file of files) {
-      // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
-      // Uniform requires all uploaded files to be present in the zip, even if they are duplicates
-      // Must match unique filename in apps/editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
-      const uniqueFilename = decodeURIComponent(
-        file.url.split("/").slice(-2).join("-"),
-      );
-      await zip.addRemoteFile({ url: file.url, name: uniqueFilename });
-    }
+    await Promise.all(
+      files.map(async (file) => {
+        // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
+        // Uniform requires all uploaded files to be present in the zip, even if they are duplicates
+        // Must match unique filename in apps/editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
+        const uniqueFilename = decodeURIComponent(
+          file.url.split("/").slice(-2).join("-"),
+        );
+        await zip.addRemoteFile({ url: file.url, name: uniqueFilename });
+      }),
+    );
   }
-
-  // generate json data
-  const responses = doValidation
-    ? await $api.export.digitalPlanningDataPayload(sessionId)
-    : await $api.export.digitalPlanningDataPayload(sessionId, true);
 
   const boundingBox = passport.data["proposal.site.buffered"];
   const userAction = passport.data?.["drawBoundary.action"];
 
   // generate and add an HTML overview document for the submission to zip
   const overviewHTML = generateApplicationHTML({
-    planXExportData: responses as PlanXExportData[],
+    planXExportData: schema as PlanXExportData[],
     boundingBox,
     userAction,
   });

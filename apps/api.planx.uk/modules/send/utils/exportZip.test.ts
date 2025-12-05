@@ -277,7 +277,7 @@ describe("buildSubmissionExportZip", () => {
           sessionId: "1234",
           includeDigitalPlanningJSON: true,
         }),
-      ).rejects.toThrow(/Failed to generate ODP Schema JSON/);
+      ).rejects.toThrow(/validation test error/);
     });
   });
 
@@ -312,7 +312,7 @@ describe("buildSubmissionExportZip", () => {
           sessionId: "1234",
           onlyDigitalPlanningJSON: true,
         }),
-      ).rejects.toThrow(/Failed to generate ODP Schema JSON/);
+      ).rejects.toThrow(/validation test error/);
     });
   });
 });
