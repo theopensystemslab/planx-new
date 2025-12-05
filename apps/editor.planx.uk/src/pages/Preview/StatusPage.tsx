@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Card, {
   contentFlowSpacing,
 } from "@planx/components/shared/Preview/Card";
-import React from "react";
+import React, { type PropsWithChildren } from "react";
 import Banner from "ui/public/Banner";
 import ViewApplicationLink from "ui/public/ViewApplicationLink";
 import { removeSessionIdSearchParam } from "utils";
@@ -18,10 +18,9 @@ interface Props {
   onButtonClick?: () => void;
   showDownloadLink?: boolean;
   additionalOption?: "startNewApplication";
-  children?: React.ReactNode;
 }
 
-const StatusPage: React.FC<Props> = ({
+const StatusPage: React.FC<PropsWithChildren<Props>> = ({
   bannerHeading,
   bannerText,
   buttonText,
