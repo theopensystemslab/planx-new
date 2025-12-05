@@ -5,6 +5,7 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
+import isEqual from "lodash/isEqual";
 import React, { useEffect } from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
@@ -19,7 +20,7 @@ import { ICONS } from "../shared/icons";
 import { editorValidationSchema, parseTextInput, TextInput } from "./model";
 
 export type Props = EditorProps<TYPES.TextInput, TextInput> & {
-  onFieldChange?: () => void;
+  onFieldChange?: (hasChanges: boolean) => void;
 };
 
 const TextInputComponent: React.FC<Props> = (props) => {
@@ -39,12 +40,11 @@ const TextInputComponent: React.FC<Props> = (props) => {
     validationSchema: editorValidationSchema,
   });
 
-  // Notify parent when form elements change
+  // Notify parent when form has changes against initial values
   useEffect(() => {
-    if (formik.dirty) {
-      onFieldChange?.();
-    }
-  }, [formik.dirty, onFieldChange]);
+    const hasActualChanges = !isEqual(formik.values, formik.initialValues);
+    onFieldChange?.(hasActualChanges);
+  }, [formik.values, formik.initialValues, onFieldChange]);
 
   const handleRadioChange = (event: React.SyntheticEvent<Element, Event>) => {
     const target = event.target as HTMLInputElement;

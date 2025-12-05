@@ -234,7 +234,9 @@ const FormModal: React.FC<{
             {...extraProps}
             id={id}
             disabled={disabled}
-            onFieldChange={() => setHasUnsavedChanges(true)}
+            onFieldChange={(hasChanges: boolean) =>
+              setHasUnsavedChanges(hasChanges)
+            }
             handleSubmit={(
               data: { data?: Record<string, unknown> },
               children: Array<any> | undefined = undefined,
