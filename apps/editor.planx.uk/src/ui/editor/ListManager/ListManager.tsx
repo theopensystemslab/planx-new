@@ -578,18 +578,20 @@ export default function ListManager<T, EditorExtraProps>(
             </Box>
           )}
         </Droppable>
-        <Box sx={{ display: "flex", justifyContent: "center", pl: "46px" }}>
-          <StyledAddButton
-            size="medium"
-            onClick={() => {
-              props.onChange([...props.values, props.newValue()]);
-              setItemKeys((prev) => [...prev, nanoid()]);
-            }}
-            disabled={disabled || isMaxLength}
-          >
-            {addLabel}
-          </StyledAddButton>
-        </Box>
+        {!isMaxLength && (
+          <Box sx={{ display: "flex", justifyContent: "center", pl: "46px" }}>
+            <StyledAddButton
+              size="medium"
+              onClick={() => {
+                props.onChange([...props.values, props.newValue()]);
+                setItemKeys((prev) => [...prev, nanoid()]);
+              }}
+              disabled={disabled}
+            >
+              {addLabel}
+            </StyledAddButton>
+          </Box>
+        )}
       </DragDropContext>
     </>
   );
