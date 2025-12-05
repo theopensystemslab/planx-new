@@ -6,6 +6,7 @@ import {
   getTeamEmailSettings,
   getFlowSubmissionEmail,
 } from "../email/service.js";
+import { logDuration } from "../../../lib/performance.js";
 
 export async function downloadApplicationFiles(
   req: Request<
@@ -66,10 +67,12 @@ export async function downloadApplicationFiles(
     console.log(submissionEmail);
 
     // create the submission zip
-    const zip = await buildSubmissionExportZip({
-      sessionId,
-      includeDigitalPlanningJSON: true,
-    });
+    const zip = await logDuration(`zipTotal-${sessionId}`, () =>
+      buildSubmissionExportZip({
+        sessionId,
+        includeDigitalPlanningJSON: true,
+      }),
+    );
 
     // Send it to the client
     const zipData = zip.toBuffer();
