@@ -154,38 +154,40 @@ export async function buildSubmissionExportZip({
   });
 
   // If MapAndLabel(s), then add GeoJSON and HTML boundary files to zip for each
-  const mapAndLabelNodes = passport?.data?.["_mapAndLabelVisitedNodes"];
-  if (mapAndLabelNodes && mapAndLabelNodes?.length > 0) {
-    mapAndLabelNodes.forEach((nodeId: string) => {
-      const breadcrumbData: any =
-        breadcrumbs[nodeId]?.data?.["_mapAndLabelNodeData"];
-      const fn = breadcrumbData?.["fn"] as string;
-      const schemaName = breadcrumbData?.["schemaName"] as string;
+  await logDuration(`generateMapAndLabelHTML-${sessionId}`, async () => {
+    const mapAndLabelNodes = passport?.data?.["_mapAndLabelVisitedNodes"];
+    if (mapAndLabelNodes && mapAndLabelNodes?.length > 0) {
+      mapAndLabelNodes.forEach((nodeId: string) => {
+        const breadcrumbData: any =
+          breadcrumbs[nodeId]?.data?.["_mapAndLabelNodeData"];
+        const fn = breadcrumbData?.["fn"] as string;
+        const schemaName = breadcrumbData?.["schemaName"] as string;
 
-      const geojson = passport?.data?.[fn];
-      if (geojson && schemaName) {
-        const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
-        zip.addFile({
-          name: `${schemaName}.geojson`,
-          buffer: geoBuff,
-        });
+        const geojson = passport?.data?.[fn];
+        if (geojson && schemaName) {
+          const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
+          zip.addFile({
+            name: `${schemaName}.geojson`,
+            buffer: geoBuff,
+          });
 
-        const mapAndLabelHTML = generateMapAndLabelHTML({
-          geojson: geojson,
-          boundingBox: breadcrumbData?.["boundaryBBox"],
-          drawColor: breadcrumbData?.["drawColor"],
-          schemaFieldValues: breadcrumbData?.["schema"]?.["fields"]?.map(
-            (field: any) => field.data?.fn,
-          ),
-          schemaName: schemaName,
-        });
-        zip.addFile({
-          name: `${schemaName}.html`,
-          buffer: Buffer.from(mapAndLabelHTML),
-        });
-      }
-    });
-  }
+          const mapAndLabelHTML = generateMapAndLabelHTML({
+            geojson: geojson,
+            boundingBox: breadcrumbData?.["boundaryBBox"],
+            drawColor: breadcrumbData?.["drawColor"],
+            schemaFieldValues: breadcrumbData?.["schema"]?.["fields"]?.map(
+              (field: any) => field.data?.fn,
+            ),
+            schemaName: schemaName,
+          });
+          zip.addFile({
+            name: `${schemaName}.html`,
+            buffer: Buffer.from(mapAndLabelHTML),
+          });
+        }
+      });
+    }
+  });
 
   await logDuration(`writeDisk-Final-${sessionId}`, () => {
     zip.write();
