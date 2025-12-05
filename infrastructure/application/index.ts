@@ -350,6 +350,10 @@ export = async () => {
     protocol: "HTTP",
     healthCheck: {
       path: "/",
+      interval: 30,
+      timeout: 5,
+      unhealthyThreshold: 5,  // More failures before marking unhealthy
+      healthyThreshold: 2,    // Faster recovery
     },
   });
   const apiListenerHttp = targetApi.createListener("api-http", {
