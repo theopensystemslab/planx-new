@@ -316,7 +316,7 @@ const getThemeOptions = ({
               fontWeight: "initial",
               fontSize: "inherit",
               textDecoration: "underline",
-              textUnderlineOffset: "0.1em",
+              textUnderlineOffset: "0.15em",
               gap: "10px",
               minHeight: "48px",
               "&:hover": {
@@ -328,6 +328,9 @@ const getThemeOptions = ({
               "&:focus": {
                 borderColor: palette.text.primary,
                 borderStyle: "solid",
+              },
+              "&:disabled": {
+                textDecoration: "none",
               },
             },
           },
