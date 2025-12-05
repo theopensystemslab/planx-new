@@ -5,7 +5,7 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -18,9 +18,13 @@ import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import { editorValidationSchema, parseTextInput, TextInput } from "./model";
 
-export type Props = EditorProps<TYPES.TextInput, TextInput>;
+export type Props = EditorProps<TYPES.TextInput, TextInput> & {
+  onFieldChange?: () => void;
+};
 
 const TextInputComponent: React.FC<Props> = (props) => {
+  const { onFieldChange } = props;
+
   const formik = useFormik<TextInput>({
     initialValues: parseTextInput(props.node?.data),
     onSubmit: (newValues) => {
@@ -34,6 +38,13 @@ const TextInputComponent: React.FC<Props> = (props) => {
     validateOnChange: false,
     validationSchema: editorValidationSchema,
   });
+
+  // Notify parent when form elements change
+  useEffect(() => {
+    if (formik.dirty) {
+      onFieldChange?.();
+    }
+  }, [formik.dirty, onFieldChange]);
 
   const handleRadioChange = (event: React.SyntheticEvent<Element, Event>) => {
     const target = event.target as HTMLInputElement;

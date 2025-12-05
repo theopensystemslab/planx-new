@@ -117,6 +117,8 @@ const FormModal: React.FC<{
   extraProps?: any;
 }> = ({ type, handleDelete, Component, id, before, parent, extraProps }) => {
   const { navigate } = useNavigation();
+  const [hasUnsavedChanges, setHasUnsavedChanges] = React.useState(false);
+
   const [
     addNode,
     updateNode,
@@ -139,7 +141,16 @@ const FormModal: React.FC<{
     store.isClone,
   ]);
   const node = flow[id];
-  const handleClose = () => navigate(rootFlowPath(true));
+
+  const handleClose = () => {
+    if (hasUnsavedChanges) {
+      const confirmed = window.confirm(
+        "You have unsaved changes. Are you sure you want to close?",
+      );
+      if (!confirmed) return;
+    }
+    navigate(rootFlowPath(true));
+  };
 
   // Nodes should be disabled when:
   //  1. The user doesn't have any edit access to this team
@@ -223,6 +234,7 @@ const FormModal: React.FC<{
             {...extraProps}
             id={id}
             disabled={disabled}
+            onFieldChange={() => setHasUnsavedChanges(true)}
             handleSubmit={(
               data: { data?: Record<string, unknown> },
               children: Array<any> | undefined = undefined,
@@ -251,6 +263,7 @@ const FormModal: React.FC<{
                 }
               }
 
+              setHasUnsavedChanges(false);
               navigate(rootFlowPath(true));
             }}
           />
