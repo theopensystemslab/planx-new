@@ -37,7 +37,7 @@ export const publishFlow = async (
   const mostRecent = await getMostRecentPublishedFlow(flowId);
   const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
 
-  // If no changes, then nothing to publish nor events to queue up!
+  // If no changes, then nothing to publish nor events to queue up
   if (!delta) return null;
 
   const nodeTypeSet = buildNodeTypeSet(flattenedFlow);
