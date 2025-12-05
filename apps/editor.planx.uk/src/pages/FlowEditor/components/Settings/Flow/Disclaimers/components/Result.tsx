@@ -5,17 +5,17 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import type { TextContent } from "types";
 
-import SettingsFormContainer from "../../shared/SettingsForm";
-import { GET_FLOW_SETTINGS, UPDATE_FLOW_SETTINGS } from "../shared/queries";
-import { textContentValidationSchema } from "../shared/schema";
+import SettingsFormContainer from "../../../shared/SettingsForm";
+import { GET_FLOW_SETTINGS, UPDATE_FLOW_SETTINGS } from "../../shared/queries";
+import { textContentValidationSchema } from "../../shared/schema";
 import {
   DEFAULT_TEXT_CONTENT,
   type GetFlowSettings,
   type UpdateFlowSettings,
-} from "../shared/types";
-import { defaultValues } from "./schema";
+} from "../../shared/types";
+import { defaultValues } from "./../schema";
 
-const LegalDisclaimer: React.FC = () => {
+const ResultDisclaimer: React.FC = () => {
   const flowId = useStore((state) => state.id);
 
   return (
@@ -23,7 +23,7 @@ const LegalDisclaimer: React.FC = () => {
       query={GET_FLOW_SETTINGS}
       mutation={UPDATE_FLOW_SETTINGS}
       validationSchema={textContentValidationSchema}
-      legend="Legal disclaimer"
+      legend="Result disclaimer"
       description="Displayed on the 'Result' pages of the service (if it contains any)."
       defaultValues={defaultValues}
       getInitialValues={({ flow: { settings } }) =>
@@ -39,7 +39,7 @@ const LegalDisclaimer: React.FC = () => {
     >
       {({ formik }) => (
         <TextInput
-          title="Legal disclaimer"
+          title="Result disclaimer"
           richText
           switchProps={{
             name: "show",
@@ -64,4 +64,4 @@ const LegalDisclaimer: React.FC = () => {
   );
 };
 
-export default LegalDisclaimer;
+export default ResultDisclaimer;

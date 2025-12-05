@@ -34,7 +34,11 @@ export interface GlobalSettings {
 
 export const FOOTER_ITEMS = ["privacy", "help"];
 
-const FLOW_SETTINGS = [...FOOTER_ITEMS, "legalDisclaimer"] as const;
+const FLOW_SETTINGS = [
+  ...FOOTER_ITEMS,
+  "legalDisclaimer",
+  "guidanceDisclaimer",
+] as const;
 export interface FlowSettings {
   elements?: {
     [key in (typeof FLOW_SETTINGS)[number]]?: TextContent;

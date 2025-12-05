@@ -1,8 +1,8 @@
 import { compose, mount, redirect, route, withData, withView } from "navi";
 import About from "pages/FlowEditor/components/Settings/Flow/About";
+import Disclaimers from "pages/FlowEditor/components/Settings/Flow/Disclaimers";
 import Help from "pages/FlowEditor/components/Settings/Flow/Help";
 import FlowSettingsLayout from "pages/FlowEditor/components/Settings/Flow/Layout";
-import LegalDisclaimer from "pages/FlowEditor/components/Settings/Flow/LegalDisclaimer";
 import Privacy from "pages/FlowEditor/components/Settings/Flow/Privacy";
 import Template from "pages/FlowEditor/components/Settings/Flow/Template";
 import Visibility from "pages/FlowEditor/components/Settings/Flow/Visibility";
@@ -37,13 +37,11 @@ const flowNewSettingsRoutes = compose(
       ),
       view: <About />,
     })),
-    "/legal-disclaimer": route((req) => ({
+    "/disclaimers": route((req) => ({
       title: makeTitle(
-        [req.params.team, req.params.flow, "settings", "legal-disclaimer"].join(
-          "/",
-        ),
+        [req.params.team, req.params.flow, "settings", "disclaimers"].join("/"),
       ),
-      view: <LegalDisclaimer />,
+      view: <Disclaimers />,
     })),
     "/pages": mount({
       "/help": route((req) => ({
