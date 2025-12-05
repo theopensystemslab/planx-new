@@ -193,14 +193,14 @@ it("should change the role of the ErrorText when an invalid input is given", asy
   expect(errorMessage).toHaveAttribute("role", "alert");
 });
 
-test("character limit counter should appear for long text inputs", async () => {
+test("character limit counter should appear when text limit is more than 120 characters", async () => {
   setup(<TextInput title="hello" type={TextInputType.Long} />);
 
   const characterCounter = await screen.findByTestId("screen-reader-count");
   expect(characterCounter).toBeInTheDocument();
 });
 
-test("character limit counter should not appear for short text inputs", async () => {
+test("character limit counter should not appear when text limit is 120 characters or less", async () => {
   setup(<TextInput title="hello" type={TextInputType.Short} />);
   const characterCounter = screen.queryByTestId("screen-reader-count");
 
