@@ -5,7 +5,8 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
-import React from "react";
+import isEqual from "lodash/isEqual";
+import React, { useEffect } from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -18,9 +19,13 @@ import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import { editorValidationSchema, parseTextInput, TextInput } from "./model";
 
-export type Props = EditorProps<TYPES.TextInput, TextInput>;
+export type Props = EditorProps<TYPES.TextInput, TextInput> & {
+  onFieldChange?: (hasChanges: boolean) => void;
+};
 
 const TextInputComponent: React.FC<Props> = (props) => {
+  const { onFieldChange } = props;
+
   const formik = useFormik<TextInput>({
     initialValues: parseTextInput(props.node?.data),
     onSubmit: (newValues) => {
@@ -34,6 +39,12 @@ const TextInputComponent: React.FC<Props> = (props) => {
     validateOnChange: false,
     validationSchema: editorValidationSchema,
   });
+
+  // Notify parent when form has changes against initial values
+  useEffect(() => {
+    const hasActualChanges = !isEqual(formik.values, formik.initialValues);
+    onFieldChange?.(hasActualChanges);
+  }, [formik.values, formik.initialValues, onFieldChange]);
 
   const handleRadioChange = (event: React.SyntheticEvent<Element, Event>) => {
     const target = event.target as HTMLInputElement;
