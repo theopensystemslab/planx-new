@@ -5,6 +5,7 @@ export interface FlowSettings {
     help: TextContent;
     privacy: TextContent;
     legalDisclaimer: TextContent;
+    guidanceDisclaimer: TextContent;
   };
 }
 
