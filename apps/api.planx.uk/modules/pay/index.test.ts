@@ -8,7 +8,7 @@ vi.mock("@opensystemslab/planx-core", () => {
   return {
     CoreDomainClient: class MockCoreDomainClient {
       session = {
-        findDetails: vi.fn().mockImplementation(() => ({ lockedAt: null })),
+        find: vi.fn().mockImplementation(() => ({ lockedAt: null })),
       };
       team = {
         getIntegrations: vi

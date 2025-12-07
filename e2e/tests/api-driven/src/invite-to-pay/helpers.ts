@@ -131,8 +131,8 @@ export async function waitForResponse({
 export async function getSessionSubmittedAt(
   sessionId: string,
 ): Promise<string | undefined> {
-  const detailedSession = await $admin.session.findDetails(sessionId);
-  return detailedSession?.submittedAt;
+  const session = await $admin.session.find(sessionId);
+  return session?.submittedAt;
 }
 
 export async function cleanup({
