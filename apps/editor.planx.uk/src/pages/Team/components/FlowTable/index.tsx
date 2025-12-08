@@ -79,17 +79,25 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
   const navigation = useNavigation();
   const [canUserEditTeam] = useStore((state) => [state.canUserEditTeam]);
 
-  const { 
-    isSubmissionService, 
-    isAnyTemplate, 
-    isSourceTemplate, 
-    isTemplatedFlow, 
-    statusVariant 
+  const {
+    isSubmissionService,
+    isAnyTemplate,
+    isSourceTemplate,
+    isTemplatedFlow,
+    statusVariant,
   } = useFlowMetadata(flow);
-  
+
   const { displayTimeAgo, displayActor } = useFlowDates(flow);
 
-  const handleRowClick = () => {
+  const handleRowClick = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest("a")) {
+      return;
+    }
+    // Allow links to be opened in new tabs
+    if (e.metaKey || e.ctrlKey) {
+      window.open(`./${teamSlug}/${flow.slug}`, "_blank");
+      return;
+    }
     navigation.navigate(`./${teamSlug}/${flow.slug}`);
   };
 
@@ -116,9 +124,9 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
             </Typography>
           </FlowLink>
           {flow.summary && (
-            <TruncatedText 
-              variant="body2" 
-              color="textSecondary" 
+            <TruncatedText
+              variant="body2"
+              color="textSecondary"
               lineClamp={2}
               pt={0.5}
             >

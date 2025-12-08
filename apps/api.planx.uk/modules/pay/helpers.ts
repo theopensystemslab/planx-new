@@ -1,5 +1,9 @@
 import { getFeeBreakdown } from "@opensystemslab/planx-core";
-import type { FeeBreakdown, Session } from "@opensystemslab/planx-core/types";
+import type {
+  FeeBreakdown,
+  GovPayMetadataValue,
+  Session,
+} from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 
 import airbrake from "../../airbrake.js";
@@ -31,6 +35,7 @@ export async function logPaymentStatus({
     state: {
       status: string;
     };
+    metadata?: Record<string, GovPayMetadataValue>;
   };
 }): Promise<void> {
   if (!flowId || !sessionId) {
@@ -61,6 +66,7 @@ export async function logPaymentStatus({
         status: govUkResponse.state?.status || "unknown",
         amount: govUkResponse.amount,
         feeBreakdown,
+        metadata: govUkResponse.metadata,
       });
     } catch (e) {
       reportError({
@@ -100,6 +106,7 @@ async function insertPaymentStatus({
   status,
   amount,
   feeBreakdown,
+  metadata,
 }: {
   flowId: string;
   sessionId: string;
@@ -108,6 +115,7 @@ async function insertPaymentStatus({
   status: string;
   amount: number;
   feeBreakdown: FeeBreakdown;
+  metadata?: Record<string, GovPayMetadataValue>;
 }): Promise<void> {
   const _response = await $api.client.request(
     gql`
@@ -119,6 +127,7 @@ async function insertPaymentStatus({
         $status: payment_status_enum_enum
         $amount: Int!
         $feeBreakdown: jsonb!
+        $metadata: jsonb
       ) {
         insert_payment_status(
           objects: {
@@ -129,6 +138,7 @@ async function insertPaymentStatus({
             status: $status
             amount: $amount
             fee_breakdown: $feeBreakdown
+            gov_pay_metadata: $metadata
           }
         ) {
           affected_rows
@@ -143,6 +153,7 @@ async function insertPaymentStatus({
       status,
       amount,
       feeBreakdown,
+      metadata,
     },
   );
 }

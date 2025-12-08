@@ -35,58 +35,55 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
-    const status = error.response?.status;
+    const statusCode = error.response?.status;
 
-    if (status === 401) {
-      toast.error("[API error]: Unauthenticated", {
-        toastId: "api_unauthenticated_error",
+    let message = error.message || "An unexpected error occurred";
+    let toastId: string | undefined;
+
+    switch (statusCode) {
+      case 401:
+        message = "Unauthenticated";
+        toastId = "api_unauthenticated_error";
+        break;
+
+      case 403:
+        message = "Unauthorised";
+        toastId = "api_unauthorised_error";
+        break;
+
+      case 429:
+        message = "Rate limit exceeded";
+        toastId = "api_rate_limit_error";
+        break;
+
+      case 502:
+      case 504:
+        message = "Timeout - operation did not complete";
+        toastId = "api_timeout_error";
+        break;
+
+      default:
+        console.error("[API Error]:", {
+          message,
+          statusCode,
+          data: error.response?.data,
+        });
+        break;
+    }
+
+    if (toastId) {
+      toast.error(`[API error]: ${message}`, {
+        toastId,
         hideProgressBar: false,
         autoClose: 4_000,
       });
+    };
 
-      return Promise.reject({
-        message: "Unauthenticated",
-        statusCode: 401,
-        data: error.response?.data,
-      } as APIError<unknown>);
-    }
-
-    if (status === 403) {
-      toast.error("[API error]: Unauthorised", {
-        toastId: "api_unauthorised_error",
-        hideProgressBar: false,
-        autoClose: 4_000,
-      });
-
-      return Promise.reject({
-        message: "Unauthorised",
-        statusCode: 403,
-        data: error.response?.data,
-      } as APIError<unknown>);
-    }
-
-    if (status === 429) {
-      toast.error("[API error]: Rate limit exceeded", {
-        toastId: "api_rate_limit_error",
-        hideProgressBar: false,
-        autoClose: 4_000,
-      });
-
-      return Promise.reject({
-        message: "Rate limit exceeded",
-        statusCode: 429,
-        data: error.response?.data,
-      } as APIError<unknown>);
-    }
-
-    const apiError = {
-      message: error.message || "An unexpected error occurred",
-      statusCode: status,
+    return Promise.reject({
+      message,
+      statusCode,
       data: error.response?.data,
-    } as APIError<unknown>;
-
-    console.error("[API Error]:", apiError);
-    return Promise.reject(apiError);
+    } as APIError<unknown>);
   },
 );
 

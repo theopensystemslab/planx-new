@@ -39,7 +39,7 @@
     "isomorphic-fetch": "^3.0.0",
     "jsdom": "^27.0.0",
     "jsondiffpatch": "^0.7.3",
-    "jsonwebtoken": "^9.0.2",
+    "jsonwebtoken": "^9.0.3",
     "lodash": "^4.17.21",
     "mime": "^4.0.4",
     "multer": "^2.0.2",

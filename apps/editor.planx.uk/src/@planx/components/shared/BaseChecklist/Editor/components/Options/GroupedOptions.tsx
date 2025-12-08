@@ -1,7 +1,7 @@
 import Delete from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { DEFAULT_RULE } from "@planx/components/ResponsiveChecklist/model";
 import type {
@@ -17,8 +17,8 @@ import remove from "ramda/src/remove";
 import React from "react";
 import { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
+import { StyledAddButton } from "ui/editor/ListManager/ListManager";
 import Input from "ui/shared/Input/Input";
-import InputRow from "ui/shared/InputRow";
 
 import { partitionGroupedOptions } from "../../../Public/helpers";
 import { useCurrentOptions } from "../../../Public/hooks/useInitialOptions";
@@ -26,7 +26,7 @@ import { ExclusiveOrOptionManager } from "./ExclusiveOrOptionManager";
 import ChecklistOptionsEditor from "./OptionsEditor";
 
 interface Props<T extends FormikValues> {
-  type: ComponentType.Checklist | ComponentType.ResponsiveChecklist,
+  type: ComponentType.Checklist | ComponentType.ResponsiveChecklist;
   formik: FormikHookReturn<T>;
   disabled?: boolean;
   isTemplatedNode?: boolean;
@@ -64,7 +64,7 @@ export const GroupedOptions = <T extends AnyChecklist>({
           sx={(theme) => ({ scrollMarginTop: theme.spacing(1) })}
         >
           <Box display="flex" pb={1}>
-            <InputRow>
+            <Box sx={{ minWidth: "100%" }}>
               <Input
                 errorMessage={getIn(
                   formik.errors,
@@ -77,27 +77,28 @@ export const GroupedOptions = <T extends AnyChecklist>({
                 onChange={formik.handleChange}
                 disabled={disabled}
               />
-            </InputRow>
+            </Box>
             {showAddDeleteButtons && (
               <Box flex={0}>
-                <IconButton
-                  title="Delete group"
-                  aria-label="Delete group"
-                  onClick={() => {
-                    formik.setFieldValue(
-                      `groupedOptions`,
-                      remove(groupIndex, 1, formik.values.groupedOptions!),
-                    );
-                  }}
-                  size="large"
-                  disabled={disabled}
-                >
-                  <Delete />
-                </IconButton>
+                <Tooltip title="Delete group" placement="bottom">
+                  <IconButton
+                    aria-label="Delete group"
+                    onClick={() => {
+                      formik.setFieldValue(
+                        `groupedOptions`,
+                        remove(groupIndex, 1, formik.values.groupedOptions!),
+                      );
+                    }}
+                    size="large"
+                    disabled={disabled}
+                  >
+                    <Delete />
+                  </IconButton>
+                </Tooltip>
               </Box>
             )}
           </Box>
-          <Box pl={{ md: 2 }}>
+          <Box>
             <ListManager
               values={groupedOption.children}
               onChange={(newOptions) => {
@@ -114,10 +115,12 @@ export const GroupedOptions = <T extends AnyChecklist>({
                   description: "",
                   val: "",
                   flags: [],
-                  ...(type === ComponentType.ResponsiveChecklist && { rule: DEFAULT_RULE })
+                  ...(type === ComponentType.ResponsiveChecklist && {
+                    rule: DEFAULT_RULE,
+                  }),
                 },
               })}
-              newValueLabel="add new option"
+              itemName="option"
               Editor={ChecklistOptionsEditor}
               editorExtraProps={{
                 type,
@@ -151,13 +154,14 @@ export const GroupedOptions = <T extends AnyChecklist>({
                 ),
               }}
               isTemplatedNode={isTemplatedNode}
+              collapsible={true}
             />
           </Box>
         </Box>
       ))}
       {showAddDeleteButtons && (
-        <Box mt={1}>
-          <Button
+        <Box mt={1} display="flex" justifyContent="center">
+          <StyledAddButton
             size="large"
             disabled={disabled}
             onClick={() => {
@@ -171,8 +175,8 @@ export const GroupedOptions = <T extends AnyChecklist>({
               ]);
             }}
           >
-            add new group
-          </Button>
+            Add group
+          </StyledAddButton>
         </Box>
       )}
       {exclusiveOrOptionManagerShouldRender ? (

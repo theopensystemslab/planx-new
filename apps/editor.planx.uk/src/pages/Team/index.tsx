@@ -8,6 +8,7 @@ import ToggleButton, { toggleButtonClasses } from "@mui/material/ToggleButton";
 import ToggleButtonGroup, {
   toggleButtonGroupClasses,
 } from "@mui/material/ToggleButtonGroup";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { isEmpty, orderBy } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
@@ -264,12 +265,16 @@ const Team: React.FC = () => {
                 onChange={handleViewChange}
                 size="small"
               >
-                <StyledToggleButton value="grid" disableRipple>
-                  <ViewModuleIcon />
-                </StyledToggleButton>
-                <StyledToggleButton value="row" disableRipple>
-                  <TableRowsIcon />
-                </StyledToggleButton>
+                <Tooltip title="Card view" placement="bottom">
+                  <StyledToggleButton value="grid" disableRipple>
+                    <ViewModuleIcon />
+                  </StyledToggleButton>
+                </Tooltip>
+                <Tooltip title="Table view" placement="bottom">
+                  <StyledToggleButton value="row" disableRipple>
+                    <TableRowsIcon />
+                  </StyledToggleButton>
+                </Tooltip>
               </ToggleButtonGroup>
             </Box>
             {sortedFlows && (

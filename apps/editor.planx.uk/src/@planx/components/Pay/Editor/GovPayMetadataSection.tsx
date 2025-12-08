@@ -202,7 +202,7 @@ export const GovPayMetadataSection: React.FC<GovPayMetadataSectionProps> = ({
                   type: "static",
                 } satisfies GovPayMetadata;
               }}
-              newValueLabel={"add new static field"}
+              itemName="static field"
               editorExtraProps={{ variant: "static" }}
               isFieldDisabled={({ key }, index) => isFieldDisabled(key, index)}
               isFieldDisplayed={({ type }) => type === "static"}
@@ -228,7 +228,7 @@ export const GovPayMetadataSection: React.FC<GovPayMetadataSectionProps> = ({
                   type: "data",
                 } satisfies GovPayMetadata;
               }}
-              newValueLabel={"add new data field"}
+              itemName="data field"
               editorExtraProps={{ variant: "data" }}
               isFieldDisabled={({ key }, index) => isFieldDisabled(key, index)}
               isFieldDisplayed={({ type }) => type === "data"}

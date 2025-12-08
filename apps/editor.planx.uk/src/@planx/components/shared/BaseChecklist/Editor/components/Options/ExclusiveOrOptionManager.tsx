@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { AnyOption, AnyOptions } from "@planx/components/Option/model";
 import { DEFAULT_RULE } from "@planx/components/ResponsiveChecklist/model";
@@ -40,9 +41,12 @@ export const ExclusiveOrOptionManager = <T extends AnyChecklist>({
   const { schema, currentOptionVals } = useCurrentOptions(formik);
 
   return (
-    <Box mt={2}>
+    <Box>
       <ErrorWrapper error={getIn(formik.errors, "allRequired")}>
         <Box mt={1}>
+          <Typography variant="h4" mt={4} mb={2}>
+            Exclusive "or" option
+          </Typography>
           <ListManager
             values={exclusiveOptions || []}
             onChange={(newExclusiveOptions) => {
@@ -70,7 +74,7 @@ export const ExclusiveOrOptionManager = <T extends AnyChecklist>({
               ];
               formik.setFieldValue("options", newCombinedOptions);
             }}
-            newValueLabel='add "or" option'
+            itemName='"or" option'
             maxItems={1}
             noDragAndDrop
             newValue={() =>
@@ -82,7 +86,9 @@ export const ExclusiveOrOptionManager = <T extends AnyChecklist>({
                   val: "",
                   flags: [],
                   exclusive: true,
-                  ...(type === ComponentType.ResponsiveChecklist && { rule: DEFAULT_RULE })
+                  ...(type === ComponentType.ResponsiveChecklist && {
+                    rule: DEFAULT_RULE,
+                  }),
                 },
               }) satisfies AnyOption
             }

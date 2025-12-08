@@ -1,0 +1,1 @@
+alter table "public"."payment_status" drop column "gov_pay_metadata";
