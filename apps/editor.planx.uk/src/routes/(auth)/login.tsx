@@ -33,14 +33,14 @@ export const Route = createFileRoute("/(auth)/login")({
       );
       if (defaultTeam) {
         throw redirect({
-          to: "/$team",
+          to: "/app/$team",
           params: { team: defaultTeam.team.slug },
         });
       }
     }
 
-    // If neither, redirect to `/`
-    throw redirect({ to: "/" });
+    // If neither, redirect to `/app`
+    throw redirect({ to: "/app" });
   },
 
   component: Login,
