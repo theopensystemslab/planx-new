@@ -10,6 +10,7 @@ const mockUser: User = {
   email: "test@example.com",
   isPlatformAdmin: false,
   isAnalyst: false,
+  defaultTeamId: null,
   teams: [],
 };
 
