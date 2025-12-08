@@ -34,7 +34,9 @@ const TextInputComponent: React.FC<Props> = (props) => {
 
   const characterCountLimit = getTextLimit(props.type, props.customLength);
   const displayCharacterCount =
-    characterCountLimit > 120 && props.type !== "email";
+    characterCountLimit > 120 &&
+    characterCountLimit <= 1500 &&
+    props.type !== "email";
 
   // Auto-answered TextInputs still set a breadcrumb even though they render null
   useEffect(() => {
