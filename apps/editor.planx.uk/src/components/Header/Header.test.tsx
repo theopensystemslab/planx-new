@@ -111,6 +111,7 @@ describe("Header Component - Editor Route", () => {
           teams: [],
           id: 123,
           email: "test@example.com",
+          defaultTeamId: mockTeam1.id,
         },
       }),
     );
