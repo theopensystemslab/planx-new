@@ -45,9 +45,13 @@ export const publishFlow = async (
   const hasSections = nodeTypeSet.has(ComponentType.Section);
 
   const flowTypeMap = createFlowTypeMap(flattenedFlow);
-  const hasPayComponent = Array.from(
+  const payNodeIds = Array.from(
     flowTypeMap.get(ComponentType.Pay) ?? new Set<string>(),
-  ).some((id) => !flattenedFlow[id]?.data?.hidePay);
+  );
+
+  const hasVisiblePayComponent = payNodeIds.some(
+    (id) => !flattenedFlow[id]?.data?.hidePay,
+  );
 
   const { client: $client } = getClient();
   const response = await $client.request<PublishFlow>(
@@ -87,7 +91,7 @@ export const publishFlow = async (
       summary: summary,
       has_send_component: hasSendComponent,
       has_sections: hasSections,
-      has_pay_component: hasPayComponent,
+      has_pay_component: hasVisiblePayComponent,
     },
   );
 

@@ -208,7 +208,7 @@ export const editorUIStore: StateCreator<
 export type PublishedFlowSummary = {
   publishedAt: string;
   hasSendComponent: boolean;
-  hasPayComponent: boolean;
+  hasVisiblePayComponent: boolean;
 };
 
 export type FlowSummaryOperations = {
@@ -542,7 +542,7 @@ export const editorStore: StateCreator<
             ) {
               publishedAt: created_at
               hasSendComponent: has_send_component
-              hasPayComponent: has_pay_component
+              hasVisiblePayComponent: has_pay_component
             }
           }
         }
