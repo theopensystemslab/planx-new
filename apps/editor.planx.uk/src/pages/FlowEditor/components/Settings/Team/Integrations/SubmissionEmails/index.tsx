@@ -45,6 +45,7 @@ export const SubmissionEmails: React.FC = () => {
       getMutationVariables={(values) => {
         const emails: SubmissionEmailMutation[] =
           values.submissionIntegrations.map((email) => ({
+            id: email?.id,
             submission_email: email.submissionEmail,
             default_email: email.defaultEmail,
             team_id: teamId,

@@ -4,15 +4,15 @@ export interface SubmissionEmailInput {
   submissionEmail: string;
   defaultEmail: boolean;
   teamId: number;
+  id?: string;
 }
 
 export interface GetSubmissionEmails {
-  submissionIntegrations: (SubmissionEmailInput & { id: number })[];
+  submissionIntegrations: (SubmissionEmailInput & { id: string })[];
 }
 
-export type SubmissionEmailMutation = SnakeCasedProperties<
-  Omit<SubmissionEmailInput, "id">
->;
+export type SubmissionEmailMutation =
+  SnakeCasedProperties<SubmissionEmailInput>;
 
 export interface SubmissionEmailValues {
   submissionIntegrations: SubmissionEmailInput[];
