@@ -31,6 +31,7 @@ export const createAndAddUserToTeam = async ({
             email: $email
             first_name: $firstName
             last_name: $lastName
+            default_team_id: $teamId
             teams: { data: { role: $role, team_id: $teamId } }
           }
         ) {
