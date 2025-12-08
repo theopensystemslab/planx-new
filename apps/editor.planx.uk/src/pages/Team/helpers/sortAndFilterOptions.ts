@@ -30,7 +30,8 @@ const checkFlowServiceType: FilterOptions<FlowSummary>["validationFn"] = (
   value,
 ) => {
   if (value === "submission") return flow.publishedFlows[0]?.hasSendComponent;
-  if (value === "fee carrying") return flow.publishedFlows[0]?.hasPayComponent;
+  if (value === "fee carrying")
+    return flow.publishedFlows[0]?.hasVisiblePayComponent;
   return false;
 };
 

@@ -82,7 +82,7 @@ function Component() {
                 content page.
               </p>
             </SettingsDescription>
-            <Box width="100%" mb={4} p={0}>
+            <Box width="100%" mb={4} p={4}>
               <ListManager
                 values={formik.values.footerContent}
                 onChange={(newOptions) => {
