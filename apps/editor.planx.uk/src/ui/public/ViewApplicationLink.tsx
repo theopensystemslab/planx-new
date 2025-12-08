@@ -11,7 +11,7 @@ const ViewApplicationLink: React.FC = () => (
     prefetch={false}
   >
     <Typography variant="body2">
-      View application
+      View form
     </Typography>
   </Link>
 )
