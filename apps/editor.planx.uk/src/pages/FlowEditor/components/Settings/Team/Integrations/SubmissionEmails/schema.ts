@@ -3,7 +3,7 @@ import { array, boolean, number, object, string } from "yup";
 import { SubmissionEmailFormValues } from "./types";
 
 export const validationSchema = object().shape({
-  input: array(
+  submissionIntegrations: array(
     object().shape({
       submissionEmail: string()
         .email("Enter a valid email address")
@@ -11,17 +11,9 @@ export const validationSchema = object().shape({
       defaultEmail: boolean().required(),
       teamId: number().required(),
     }),
-  ).required("At least one new email must be added."),
-  saved: array(
-    object().shape({
-      submissionEmail: string().email().required(),
-      defaultEmail: boolean().required(),
-      teamId: number().required(),
-    }),
-  ).optional(),
+  ).required("At least one change must be made."),
 });
 
 export const defaultValues: SubmissionEmailFormValues = {
-  input: [],
-  saved: [],
+  submissionIntegrations: [],
 };

@@ -6,6 +6,7 @@ export const GET_TEAM_SUBMISSION_INTEGRATIONS = gql`
       where: { team_id: { _eq: $teamId } }
     ) {
       teamId: team_id
+      id
       submissionEmail: submission_email
       defaultEmail: default_email
     }

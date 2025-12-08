@@ -19,10 +19,10 @@ import {
 } from "./queries";
 import { defaultValues, validationSchema } from "./schema";
 import {
-  GetTeamSubmissionIntegrationsData,
-  SubmissionEmail,
-  SubmissionEmailFormValues,
+  GetSubmissionEmails,
+  SubmissionEmailInput,
   SubmissionEmailMutation,
+  SubmissionEmailValues,
   UpdateTeamSubmissionIntegrationsVariables,
 } from "./types";
 
@@ -31,24 +31,24 @@ export const SubmissionEmails: React.FC = () => {
 
   return (
     <SettingsFormContainer<
-      GetTeamSubmissionIntegrationsData,
+      GetSubmissionEmails,
       UpdateTeamSubmissionIntegrationsVariables,
-      SubmissionEmailFormValues
+      SubmissionEmailValues
     >
       query={GET_TEAM_SUBMISSION_INTEGRATIONS}
       defaultValues={defaultValues}
       queryVariables={{ teamId }}
       mutation={UPSERT_TEAM_SUBMISSION_INTEGRATIONS}
       getInitialValues={({ submissionIntegrations }) => ({
-        input: [],
-        saved: submissionIntegrations || [],
+        submissionIntegrations: submissionIntegrations || [],
       })}
       getMutationVariables={(values) => {
-        const emails: SubmissionEmailMutation[] = values.input.map((email) => ({
-          submission_email: email.submissionEmail,
-          default_email: email.defaultEmail,
-          team_id: teamId,
-        }));
+        const emails: SubmissionEmailMutation[] =
+          values.submissionIntegrations.map((email) => ({
+            submission_email: email.submissionEmail,
+            default_email: email.defaultEmail,
+            team_id: teamId,
+          }));
 
         return { emails };
       }}
@@ -65,14 +65,14 @@ export const SubmissionEmails: React.FC = () => {
       children={({
         formik,
       }: {
-        formik: FormikProps<SubmissionEmailFormValues>;
+        formik: FormikProps<SubmissionEmailValues>;
       }) => (
         <>
           <Typography variant="h6" style={{ marginBottom: "1rem" }}>
             Submission Emails
           </Typography>
           <RadioGroup
-            value={formik.values.saved.findIndex(
+            value={formik.values.submissionIntegrations.findIndex(
               (emailObj) => emailObj.defaultEmail,
             )}
             onChange={(e) => {
@@ -81,8 +81,8 @@ export const SubmissionEmails: React.FC = () => {
                 10,
               );
               formik.setFieldValue(
-                "saved",
-                formik.values.saved.map((emailObj, index) => ({
+                "submissionIntegrations",
+                formik.values.submissionIntegrations.map((emailObj, index) => ({
                   ...emailObj,
                   defaultEmail: index === selectedIndex,
                 })),
@@ -90,15 +90,9 @@ export const SubmissionEmails: React.FC = () => {
             }}
           >
             <ListManager
-              values={[...formik.values.saved, ...formik.values.input]}
+              values={formik.values.submissionIntegrations}
               onChange={(newValues) => {
-                const { savedEmails, newEmails } = updateEmailLists(
-                  newValues,
-                  formik.values.saved,
-                );
-
-                formik.setFieldValue("saved", savedEmails);
-                formik.setFieldValue("input", newEmails);
+                formik.setFieldValue("submissionIntegrations", newValues);
               }}
               newValue={() => ({
                 submissionEmail: "",
@@ -115,27 +109,7 @@ export const SubmissionEmails: React.FC = () => {
   );
 };
 
-const updateEmailLists = (
-  newValues: SubmissionEmail[],
-  savedEmails: SubmissionEmail[],
-): { savedEmails: SubmissionEmail[]; newEmails: SubmissionEmail[] } => {
-  const updatedSavedEmails = newValues.filter((email) =>
-    savedEmails.some(
-      (savedEmail) => savedEmail.submissionEmail === email.submissionEmail,
-    ),
-  );
-
-  const updatedNewEmails = newValues.filter(
-    (email) =>
-      !savedEmails.some(
-        (savedEmail) => savedEmail.submissionEmail === email.submissionEmail,
-      ),
-  );
-
-  return { savedEmails: updatedSavedEmails, newEmails: updatedNewEmails };
-};
-
-const EmailsEditor: React.FC<EditorProps<SubmissionEmail>> = (props) => {
+const EmailsEditor: React.FC<EditorProps<SubmissionEmailInput>> = (props) => {
   return (
     <Box width="100%">
       <InputRow>
