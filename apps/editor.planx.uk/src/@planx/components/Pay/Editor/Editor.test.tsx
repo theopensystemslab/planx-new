@@ -42,6 +42,7 @@ describe("Pay component - Editor Modal", () => {
       firstName: "Bilbo",
       lastName: "Baggins",
       teams: [],
+      defaultTeamId: null,
     };
 
     let initialState: FullStore;
@@ -155,7 +156,11 @@ describe("Pay component - Editor Modal", () => {
           govPayMetadata: [
             { key: "flow", value: "flowName", type: "static" },
             { key: "source", value: "PlanX", type: "static" },
-            { key: "paidViaInviteToPay", value: "paidViaInviteToPay", type: "data" },
+            {
+              key: "paidViaInviteToPay",
+              value: "paidViaInviteToPay",
+              type: "data",
+            },
             { key: "deleteMe", value: "abc123", type: "static" },
           ],
         },

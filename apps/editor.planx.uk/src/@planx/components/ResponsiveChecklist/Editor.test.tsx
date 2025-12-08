@@ -28,6 +28,7 @@ describe("Responsive Checklist editor component", () => {
       email: "test@test.com",
       teams: [],
       jwt: "x.y.z",
+      defaultTeamId: null,
     });
   });
 
@@ -200,7 +201,10 @@ describe("Responsive Checklist editor component", () => {
    * Set up mock data to trigger this state and test the validation schema
    */
   it("shows an error if multiple exclusive options are configured", async () => {
-    const props: EditorProps<ComponentType.ResponsiveChecklist, ResponsiveChecklist> = {
+    const props: EditorProps<
+      ComponentType.ResponsiveChecklist,
+      ResponsiveChecklist
+    > = {
       node: {
         data: {
           text: "Many exclusive options",
@@ -214,7 +218,7 @@ describe("Responsive Checklist editor component", () => {
         id: "AF4400H41Z",
         data: {
           text: "A regular option",
-          rule: { condition: Condition.AlwaysRequired }
+          rule: { condition: Condition.AlwaysRequired },
         },
       },
       {
@@ -222,7 +226,7 @@ describe("Responsive Checklist editor component", () => {
         data: {
           text: "First exclusive option",
           exclusive: true,
-          rule: { condition: Condition.AlwaysRequired }
+          rule: { condition: Condition.AlwaysRequired },
         },
       },
       {
@@ -230,7 +234,7 @@ describe("Responsive Checklist editor component", () => {
         data: {
           text: "Second exclusive option",
           exclusive: true,
-          rule: { condition: Condition.AlwaysRequired }
+          rule: { condition: Condition.AlwaysRequired },
         },
       },
     ];
@@ -261,7 +265,10 @@ describe("Responsive Checklist editor component", () => {
   });
 
   it("populates existing options", async () => {
-    const props: EditorProps<ComponentType.ResponsiveChecklist, ResponsiveChecklist> = {
+    const props: EditorProps<
+      ComponentType.ResponsiveChecklist,
+      ResponsiveChecklist
+    > = {
       node: {
         data: {
           text: "mockText",
@@ -275,28 +282,28 @@ describe("Responsive Checklist editor component", () => {
         id: "AF4400H41Z",
         data: {
           text: "Apple",
-          rule: { condition: Condition.AlwaysRequired }
+          rule: { condition: Condition.AlwaysRequired },
         },
       },
       {
         id: "0WeNTfghL4",
         data: {
           text: "Banana",
-          rule: { condition: Condition.AlwaysRequired }
+          rule: { condition: Condition.AlwaysRequired },
         },
       },
       {
         id: "AF4400H41Y",
         data: {
           text: "Coconut",
-          rule: { condition: Condition.AlwaysRequired }
+          rule: { condition: Condition.AlwaysRequired },
         },
       },
       {
         id: "0WeNTfghL5",
         data: {
           text: "Date",
-          rule: { condition: Condition.AlwaysRequired }
+          rule: { condition: Condition.AlwaysRequired },
         },
       },
     ];
@@ -320,7 +327,10 @@ describe("Responsive Checklist editor component", () => {
   });
 
   it("populates existing grouped options", async () => {
-    const props: EditorProps<ComponentType.ResponsiveChecklist, ResponsiveChecklist> = {
+    const props: EditorProps<
+      ComponentType.ResponsiveChecklist,
+      ResponsiveChecklist
+    > = {
       node: {
         data: {
           text: "mockText",
@@ -337,14 +347,14 @@ describe("Responsive Checklist editor component", () => {
             id: "AF4400H41Z",
             data: {
               text: "Apple",
-              rule: { condition: Condition.AlwaysRequired }
+              rule: { condition: Condition.AlwaysRequired },
             },
           },
           {
             id: "0WeNTfghL4",
             data: {
               text: "Banana",
-              rule: { condition: Condition.AlwaysRequired }
+              rule: { condition: Condition.AlwaysRequired },
             },
           },
         ],
@@ -356,14 +366,14 @@ describe("Responsive Checklist editor component", () => {
             id: "AF4400H41Y",
             data: {
               text: "Coconut",
-              rule: { condition: Condition.AlwaysRequired }
+              rule: { condition: Condition.AlwaysRequired },
             },
           },
           {
             id: "0WeNTfghL5",
             data: {
               text: "Date",
-              rule: { condition: Condition.AlwaysRequired }
+              rule: { condition: Condition.AlwaysRequired },
             },
           },
         ],
@@ -394,7 +404,11 @@ describe("Responsive Checklist editor component", () => {
     const handleSubmit = vi.fn();
     const { user } = setup(
       <DndProvider backend={HTML5Backend}>
-        <ResponsiveChecklistEditor node={{}} options={[]} handleSubmit={handleSubmit} />
+        <ResponsiveChecklistEditor
+          node={{}}
+          options={[]}
+          handleSubmit={handleSubmit}
+        />
       </DndProvider>,
     );
 
@@ -408,57 +422,68 @@ describe("Responsive Checklist editor component", () => {
 
     // Add second option with conditional rule
     await user.click(screen.getByRole("button", { name: /add new/i }));
-    await user.type(screen.getAllByPlaceholderText("Option")[1], "Second Option");
+    await user.type(
+      screen.getAllByPlaceholderText("Option")[1],
+      "Second Option",
+    );
 
     const ruleDropdowns = screen.getAllByText("Always required");
     expect(ruleDropdowns).toHaveLength(2);
 
     await user.click(ruleDropdowns[1]);
-    await user.click(await screen.findByRole("option", { name: /required if/i }));
+    await user.click(
+      await screen.findByRole("option", { name: /required if/i }),
+    );
 
-    const conditionalField = (await screen.findAllByPlaceholderText("Data field")).at(-1);
+    const conditionalField = (
+      await screen.findAllByPlaceholderText("Data field")
+    ).at(-1);
     expect(conditionalField).toBeInTheDocument();
     await user.type(conditionalField!, "mockOptionFn");
 
-    const conditionalValue = (await screen.findAllByPlaceholderText("Value")).at(-1);
+    const conditionalValue = (
+      await screen.findAllByPlaceholderText("Value")
+    ).at(-1);
     expect(conditionalValue).toBeInTheDocument();
     await user.type(conditionalValue!, "mockOptionVal{enter}");
 
     // Submit form
     fireEvent.submit(screen.getByTestId("checklistEditorForm"));
 
-    await waitFor(() => expect(handleSubmit).toHaveBeenCalledWith(
-      // ResponsiveQuestion node
-      expect.objectContaining({
-        type: ComponentType.ResponsiveChecklist,
-        data: expect.objectContaining({
-          text: "mockTitle",
-        })
-      }),
-      expect.arrayContaining([
-        // First Answer node
+    await waitFor(() =>
+      expect(handleSubmit).toHaveBeenCalledWith(
+        // ResponsiveQuestion node
         expect.objectContaining({
-          type: ComponentType.Answer,
+          type: ComponentType.ResponsiveChecklist,
           data: expect.objectContaining({
-            text: "First Option",
-            rule: expect.objectContaining({
-              condition: "AlwaysRequired",
-            })
+            text: "mockTitle",
           }),
         }),
-        // Second Answer node
-        expect.objectContaining({
-          type: ComponentType.Answer,
-          data: expect.objectContaining({
-            text: "Second Option",
-            rule: expect.objectContaining({
-              condition: "RequiredIf",
-              fn: "mockOptionFn",
-              val: "mockOptionVal"
+        expect.arrayContaining([
+          // First Answer node
+          expect.objectContaining({
+            type: ComponentType.Answer,
+            data: expect.objectContaining({
+              text: "First Option",
+              rule: expect.objectContaining({
+                condition: "AlwaysRequired",
+              }),
             }),
-          })
-        })
-      ])
-    ));
+          }),
+          // Second Answer node
+          expect.objectContaining({
+            type: ComponentType.Answer,
+            data: expect.objectContaining({
+              text: "Second Option",
+              rule: expect.objectContaining({
+                condition: "RequiredIf",
+                fn: "mockOptionFn",
+                val: "mockOptionVal",
+              }),
+            }),
+          }),
+        ]),
+      ),
+    );
   }, 20_000);
 });

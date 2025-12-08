@@ -21,6 +21,7 @@ describe("FileUploadAndLabel - Editor Modal", () => {
       email: "test@test.com",
       teams: [],
       jwt: "x.y.z",
+      defaultTeamId: null,
     });
   });
 
