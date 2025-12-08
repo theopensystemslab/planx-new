@@ -79,6 +79,16 @@ with
         select id, 26 as team_id, 'barnet_email' as bucket from remainder
         where email like '%@barnet.gov.uk'  
     ),
+    tewkesbury_email as (
+      select id, 25 as team_id, 'tewkesbury_email' as bucket from remainder
+      where email like '%tewkesburybc%'
+    ),
+    doncaster_email as (
+      select id, 14 as team_id, 'doncaster_email' as bucket from remainder
+      where email = 'rumleyjenna@gmail.com'
+    ),
+
+
     
     -- union of all email assignments
     assigned_by_email as (
@@ -87,6 +97,10 @@ with
         select * from gloucester_email
         union all
         select * from barnet_email
+        union all
+        select * from tewkesbury_email
+        union all
+        select * from doncaster_email
     ),
 
     -- final list of updates
