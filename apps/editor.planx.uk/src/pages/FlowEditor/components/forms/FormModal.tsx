@@ -364,6 +364,7 @@ const FormModal: React.FC<{
         onClose={handleCancelClose}
         aria-labelledby="unsaved-changes-dialog-title"
         aria-describedby="unsaved-changes-dialog-description"
+        maxWidth="md"
       >
         <DialogTitle
           id="unsaved-changes-dialog-title"
