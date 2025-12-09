@@ -53,6 +53,7 @@ export const validationSchema: SchemaOf<SetValue> = baseNodeDataValidationSchema
 ```typescript
 import { baseNodeDataValidationSchema } from "../shared";
 import validationSchema, type { SetValue } from "./model.ts"
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 
 type Props = EditorProps<TYPES.SetValue, SetValue>;
 
@@ -71,6 +72,8 @@ function SetValueComponent(props: Props) {
       validateOnBlur: false,
     },
   });
+
+  useFormikWithRef(formik, props.formikRef);
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">

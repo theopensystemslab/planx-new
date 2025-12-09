@@ -4,6 +4,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { EditorProps } from "@planx/components/shared/types";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { useFormik } from "formik";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -34,6 +35,8 @@ const TextInputComponent: React.FC<Props> = (props) => {
     validateOnChange: false,
     validationSchema: editorValidationSchema,
   });
+
+  useFormikWithRef(formik, props.formikRef);
 
   const handleRadioChange = (event: React.SyntheticEvent<Element, Event>) => {
     const target = event.target as HTMLInputElement;

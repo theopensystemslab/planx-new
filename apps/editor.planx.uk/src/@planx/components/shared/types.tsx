@@ -1,7 +1,8 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
+import { FormikProps } from "formik";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { HandleSubmit } from "pages/Preview/Node";
-import React from "react";
+import React, { MutableRefObject } from "react";
 
 import { Option } from "../Option/model";
 
@@ -16,11 +17,9 @@ export type EditorProps<
   Data,
   ExtraProps extends object = Record<string, unknown>,
 > = {
+  formikRef?: MutableRefObject<FormikProps<Data> | null>;
   id?: string;
-  handleSubmit?: (
-    data: { type: Type; data: Data },
-    children?: Child[],
-  ) => void;
+  handleSubmit?: (data: { type: Type; data: Data }, children?: Child[]) => void;
   node?: any;
   disabled?: boolean;
 } & ExtraProps;
