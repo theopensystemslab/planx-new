@@ -12,6 +12,7 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { parseFormValues } from "@planx/components/shared";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { FormikProps } from "formik";
+import isEqual from "lodash/isEqual";
 import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
@@ -144,8 +145,39 @@ const FormModal: React.FC<{
   ]);
   const node = flow[id];
 
+  const normalizeFormValues = (obj: any): any => {
+    if (obj === null || obj === undefined || obj === "") {
+      return "";
+    }
+
+    if (Array.isArray(obj)) {
+      return obj.map(normalizeFormValues);
+    }
+
+    if (typeof obj === "object") {
+      const normalized: any = {};
+      for (const key in obj) {
+        normalized[key] = normalizeFormValues(obj[key]);
+      }
+      return normalized;
+    }
+
+    return obj;
+  };
+
+  const hasUnsavedChanges = () => {
+    if (!formikRef.current) return false;
+
+    const { values, initialValues } = formikRef.current;
+
+    const normalizedValues = normalizeFormValues(values);
+    const normalizedInitialValues = normalizeFormValues(initialValues);
+
+    return !isEqual(normalizedValues, normalizedInitialValues);
+  };
+
   const handleClose = () => {
-    if (formikRef.current?.dirty) {
+    if (hasUnsavedChanges()) {
       setShowUnsavedWarning(true);
     } else {
       navigate(rootFlowPath(true));
