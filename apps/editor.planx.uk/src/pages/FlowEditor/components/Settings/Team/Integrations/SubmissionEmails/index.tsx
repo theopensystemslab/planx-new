@@ -3,15 +3,13 @@ import RadioGroup from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { getIn } from "formik";
-import { FormikHelpers } from "formik";
 import { FormikProps } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import ListManager from "ui/editor/ListManager/ListManager";
+import ListManager, { EditorProps } from "ui/editor/ListManager/ListManager";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
-import { EditorProps } from "../../../../../../../../src/ui/editor/ListManager/ListManager";
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import {
   GET_TEAM_SUBMISSION_INTEGRATIONS,
