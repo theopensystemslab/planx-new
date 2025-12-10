@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { usePlatformAdminAuth } from "../auth/middleware.js";
 import { getFeedbackWithUserData } from "./feedback/feedback.js";
-import { getCSVData } from "./session/csv.js";
 import { getDigitalPlanningApplicationPayload } from "./session/digitalPlanningData.js";
 import { getHTMLExport } from "./session/html.js";
 import { getOneAppXML } from "./session/oneAppXML.js";
@@ -15,7 +14,6 @@ router.use("/admin/", usePlatformAdminAuth);
 // TODO: Split the routes below into controller and service components
 router.get("/admin/feedback/:feedbackId", getFeedbackWithUserData);
 router.get("/admin/session/:sessionId/xml", getOneAppXML);
-router.get("/admin/session/:sessionId/csv", getCSVData);
 router.get("/admin/session/:sessionId/html", getHTMLExport);
 router.get("/admin/session/:sessionId/zip", generateZip);
 router.get("/admin/session/:sessionId/summary", getSessionSummary);
