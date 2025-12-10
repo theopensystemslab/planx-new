@@ -127,9 +127,6 @@ export const flowEditorView = async (req: NaviRequest) => {
     template,
   } = await getFlowEditorData(flow, req.params.team);
 
-  // We need to call `getFlowInformation` here to ensure that the store updates and we have the correct analytics link showing
-  useStore.getState().getFlowInformation(flow, req.params.team);
-
   useStore.setState({
     id,
     flowStatus,
