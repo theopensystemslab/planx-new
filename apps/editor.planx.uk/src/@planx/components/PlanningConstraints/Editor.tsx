@@ -8,7 +8,8 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
-import { getIn, useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
+import { getIn } from "formik";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -22,25 +23,31 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { ICONS } from "../shared/icons";
-import { availableDatasets, parseContent, PlanningConstraints, validationSchema } from "./model";
+import {
+  availableDatasets,
+  parseContent,
+  PlanningConstraints,
+  validationSchema,
+} from "./model";
 
 type Props = EditorProps<TYPES.PlanningConstraints, PlanningConstraints>;
 
 export default PlanningConstraintsComponent;
 
 function PlanningConstraintsComponent(props: Props) {
-  const formik = useFormik({
-    initialValues: parseContent(props.node?.data),
-    onSubmit: (newValues) => {
-      props.handleSubmit?.({
-        type: TYPES.PlanningConstraints,
-        data: newValues,
-      });
+  const formik = useFormikWithRef<PlanningConstraints>(
+    {
+      initialValues: parseContent(props.node?.data),
+      onSubmit: (newValues) => {
+        props.handleSubmit?.({
+          type: TYPES.PlanningConstraints,
+          data: newValues,
+        });
+      },
+      validationSchema,
     },
-    validationSchema,
-    validateOnBlur: false,
-    validateOnChange: false,
-  });
+    props.formikRef,
+  );
 
   const changeSelectAll =
     (vals: string[] | undefined) =>
