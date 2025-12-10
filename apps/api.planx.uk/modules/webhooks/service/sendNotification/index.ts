@@ -87,10 +87,14 @@ const getMessageForEventType = (data: EventData, type: EventType) => {
     const { session_id, team_slug, webhook_request } = data as S3EventData;
 
     let endUserDestination = "Power Automate";
-    if (webhook_request.data.message.includes("without Power Automate notification")) {
-      endUserDestination = "FME Workbench"
+    if (
+      webhook_request.data.message.includes(
+        "without Power Automate notification",
+      )
+    ) {
+      endUserDestination = "FME Workbench";
     }
-    
+
     return `New S3 + ${endUserDestination} submission "${webhook_request.data.service}" *${session_id}* [${team_slug}]`;
   }
 };
