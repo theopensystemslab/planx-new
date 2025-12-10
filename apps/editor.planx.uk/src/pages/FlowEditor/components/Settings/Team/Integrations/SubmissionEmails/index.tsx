@@ -68,11 +68,7 @@ export const SubmissionEmails: React.FC = () => {
             Submission Emails
           </Typography>
           <RadioGroup
-            value={
-              formik.values.submissionIntegrations.findIndex(
-                (emailObj) => emailObj.defaultEmail,
-              ) || 0
-            }
+            value={getDefaultRadioIndex(formik.values.submissionIntegrations)}
             onChange={(e) => {
               const selectedIndex = parseInt(
                 (e.target as HTMLInputElement).value,
@@ -106,6 +102,15 @@ export const SubmissionEmails: React.FC = () => {
       )}
     </SettingsFormContainer>
   );
+};
+
+const getDefaultRadioIndex = (
+  submissionIntegrations: SubmissionEmailInput[],
+) => {
+  const defaultIndex = submissionIntegrations.findIndex(
+    (emailObj) => emailObj.defaultEmail,
+  );
+  return defaultIndex !== -1 ? defaultIndex : 0;
 };
 
 const EmailsEditor: React.FC<EditorProps<SubmissionEmailInput>> = (props) => {
