@@ -556,6 +556,9 @@ const getThemeOptions = ({
             background: theme.palette.background.paper,
             margin: theme.spacing(1),
           }),
+          paperWidthMd: {
+            maxWidth: "768px",
+          },
         },
       },
       MuiDialogContent: {
