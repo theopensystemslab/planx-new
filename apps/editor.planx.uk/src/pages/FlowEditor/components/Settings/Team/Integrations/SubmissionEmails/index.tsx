@@ -71,9 +71,11 @@ export const SubmissionEmails: React.FC = () => {
             Submission Emails
           </Typography>
           <RadioGroup
-            value={formik.values.submissionIntegrations.findIndex(
-              (emailObj) => emailObj.defaultEmail,
-            )}
+            value={
+              formik.values.submissionIntegrations.findIndex(
+                (emailObj) => emailObj.defaultEmail,
+              ) || 0
+            }
             onChange={(e) => {
               const selectedIndex = parseInt(
                 (e.target as HTMLInputElement).value,
@@ -110,7 +112,7 @@ export const SubmissionEmails: React.FC = () => {
 
 const EmailsEditor: React.FC<EditorProps<SubmissionEmailInput>> = (props) => {
   return (
-    <Box width="100%">
+    <Box width="100%" mb={2}>
       <InputRow>
         <Input
           placeholder="Email"
