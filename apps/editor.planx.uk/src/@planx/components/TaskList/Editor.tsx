@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { FormikRefSync } from "@planx/components/shared/FormikRefSync";
 import { EditorProps } from "@planx/components/shared/types";
 import type { Task, TaskList } from "@planx/components/TaskList/model";
 import {
@@ -73,7 +72,8 @@ const TaskEditor: React.FC<ListManagerEditorProps<Task>> = (props) => {
 };
 
 const TaskListComponent: React.FC<Props> = (props) => (
-  <Formik
+  <Formik<TaskList>
+    innerRef={props.formikRef}
     initialValues={parseTaskList(props.node?.data)}
     onSubmit={(newValues) => {
       if (props.handleSubmit) {
@@ -85,55 +85,53 @@ const TaskListComponent: React.FC<Props> = (props) => (
     validateOnBlur={false}
   >
     {(formik) => (
-      <FormikRefSync formik={formik} formikRef={props.formikRef}>
-        <Form id="modal">
-          <TemplatedNodeInstructions
-            isTemplatedNode={formik.values.isTemplatedNode}
-            templatedNodeInstructions={formik.values.templatedNodeInstructions}
-            areTemplatedNodeInstructionsRequired={
-              formik.values.areTemplatedNodeInstructionsRequired
-            }
-          />
-          <ModalSection>
-            <ModalSectionContent title="Task list" Icon={ICONS[TYPES.TaskList]}>
-              <Box mb="1rem">
-                <InputRow>
-                  <Input
-                    name="title"
-                    value={formik.values.title}
-                    onChange={formik.handleChange}
-                    placeholder="Main title"
-                    format="large"
-                    disabled={props.disabled}
-                  />
-                </InputRow>
-                <InputRow>
-                  <RichTextInput
-                    name="description"
-                    value={formik.values.description}
-                    onChange={formik.handleChange}
-                    placeholder="Main description"
-                    disabled={props.disabled}
-                    errorMessage={formik.errors.description}
-                  />
-                </InputRow>
-              </Box>
-              <ListManager
-                values={formik.values.tasks}
-                onChange={(tasks: Array<Task>) => {
-                  formik.setFieldValue("tasks", tasks);
-                }}
-                Editor={TaskEditor}
-                newValue={newTask}
-                disabled={props.disabled}
-                collapsible={true}
-                itemName="task"
-              />
-            </ModalSectionContent>
-          </ModalSection>
-          <ModalFooter formik={formik} disabled={props.disabled} />
-        </Form>
-      </FormikRefSync>
+      <Form id="modal">
+        <TemplatedNodeInstructions
+          isTemplatedNode={formik.values.isTemplatedNode}
+          templatedNodeInstructions={formik.values.templatedNodeInstructions}
+          areTemplatedNodeInstructionsRequired={
+            formik.values.areTemplatedNodeInstructionsRequired
+          }
+        />
+        <ModalSection>
+          <ModalSectionContent title="Task list" Icon={ICONS[TYPES.TaskList]}>
+            <Box mb="1rem">
+              <InputRow>
+                <Input
+                  name="title"
+                  value={formik.values.title}
+                  onChange={formik.handleChange}
+                  placeholder="Main title"
+                  format="large"
+                  disabled={props.disabled}
+                />
+              </InputRow>
+              <InputRow>
+                <RichTextInput
+                  name="description"
+                  value={formik.values.description}
+                  onChange={formik.handleChange}
+                  placeholder="Main description"
+                  disabled={props.disabled}
+                  errorMessage={formik.errors.description}
+                />
+              </InputRow>
+            </Box>
+            <ListManager
+              values={formik.values.tasks}
+              onChange={(tasks: Array<Task>) => {
+                formik.setFieldValue("tasks", tasks);
+              }}
+              Editor={TaskEditor}
+              newValue={newTask}
+              disabled={props.disabled}
+              collapsible={true}
+              itemName="task"
+            />
+          </ModalSectionContent>
+        </ModalSection>
+        <ModalFooter formik={formik} disabled={props.disabled} />
+      </Form>
     )}
   </Formik>
 );
