@@ -165,15 +165,18 @@ const FormModal: React.FC<{
     return obj;
   };
 
+  const isDirty = (formik: FormikProps<any>): boolean => {
+    return !isEqual(
+      normalizeFormValues(formik.values),
+      normalizeFormValues(formik.initialValues),
+    );
+  };
+
   const hasUnsavedChanges = () => {
-    if (!formikRef.current) return false;
+    const formik = formikRef.current;
+    if (!formik) return false;
 
-    const { values, initialValues } = formikRef.current;
-
-    const normalizedValues = normalizeFormValues(values);
-    const normalizedInitialValues = normalizeFormValues(initialValues);
-
-    return !isEqual(normalizedValues, normalizedInitialValues);
+    return isDirty(formik);
   };
 
   const handleClose = () => {
