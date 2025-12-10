@@ -61,11 +61,8 @@ export const SubmissionEmails: React.FC = () => {
           </Typography>
         </>
       }
-      children={({
-        formik,
-      }: {
-        formik: FormikProps<SubmissionEmailValues>;
-      }) => (
+    >
+      {({ formik }) => (
         <>
           <Typography variant="h6" style={{ marginBottom: "1rem" }}>
             Submission Emails
@@ -107,7 +104,7 @@ export const SubmissionEmails: React.FC = () => {
           </RadioGroup>
         </>
       )}
-    />
+    </SettingsFormContainer>
   );
 };
 
