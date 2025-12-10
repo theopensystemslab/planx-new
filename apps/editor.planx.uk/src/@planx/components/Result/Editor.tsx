@@ -7,6 +7,7 @@ import {
   flatFlags,
   getNoResultFlag,
 } from "@opensystemslab/planx-core/types";
+import { FormikRefSync } from "@planx/components/shared/FormikRefSync";
 import { Form, Formik, useFormikContext } from "formik";
 import groupBy from "lodash/groupBy";
 import React from "react";
@@ -104,87 +105,92 @@ const ResultComponent: React.FC<Props> = (props) => {
       validateOnChange={false}
     >
       {(formik) => (
-        <Form name="modal" id="modal">
-          <TemplatedNodeInstructions
-            isTemplatedNode={formik.values.isTemplatedNode}
-            templatedNodeInstructions={formik.values.templatedNodeInstructions}
-            areTemplatedNodeInstructionsRequired={
-              formik.values.areTemplatedNodeInstructionsRequired
-            }
-          />
-          <ModalSection>
-            <ModalSectionContent title="Result" Icon={ICONS[TYPES.Result]}>
-              <InputRow>
-                <Typography variant="h5" component="h6">
-                  <label htmlFor="result-flagSet">Flag set</label>
-                </Typography>
-                <select
-                  id="result-flagSet"
-                  name="flagSet"
-                  value={formik.values.flagSet}
-                  onChange={formik.handleChange}
-                  required
-                  disabled={props.disabled}
-                >
-                  {Object.keys(flags).map((flagSet) => (
-                    <option key={flagSet} value={flagSet}>
-                      {flagSet}
-                    </option>
-                  ))}
-                </select>
-              </InputRow>
+        <FormikRefSync formik={formik} formikRef={props.formikRef}>
+          <Form name="modal" id="modal">
+            <TemplatedNodeInstructions
+              isTemplatedNode={formik.values.isTemplatedNode}
+              templatedNodeInstructions={
+                formik.values.templatedNodeInstructions
+              }
+              areTemplatedNodeInstructionsRequired={
+                formik.values.areTemplatedNodeInstructionsRequired
+              }
+            />
+            <ModalSection>
+              <ModalSectionContent title="Result" Icon={ICONS[TYPES.Result]}>
+                <InputRow>
+                  <Typography variant="h5" component="h6">
+                    <label htmlFor="result-flagSet">Flag set</label>
+                  </Typography>
+                  <select
+                    id="result-flagSet"
+                    name="flagSet"
+                    value={formik.values.flagSet}
+                    onChange={formik.handleChange}
+                    required
+                    disabled={props.disabled}
+                  >
+                    {Object.keys(flags).map((flagSet) => (
+                      <option key={flagSet} value={flagSet}>
+                        {flagSet}
+                      </option>
+                    ))}
+                  </select>
+                </InputRow>
 
-              <Box mt={2}>
-                <Typography variant="h5" component="h6">
-                  Flag text overrides (optional)
-                </Typography>
-                <Typography variant="body2">
-                  The overrides you set here will change what is displayed to the
-                  user upon arriving at this result. If you provide no overrides,
-                  the flag title will be used.
-                </Typography>
                 <Box mt={2}>
-                  {allFlagsForSet(formik.values.flagSet).map((flag) => {
-                    const override = formik.values.overrides?.[flag.value] || {};
-                    return (
-                      <FlagEditor
-                        key={flag.value}
-                        flag={flag}
-                        existingOverrides={override}
-                        onChange={(newValues) => {
-                          formik.setFieldValue("overrides", {
-                            ...formik.values.overrides,
-                            [flag.value]: newValues,
-                          });
-                        }}
-                        disabled={props.disabled}
-                      >
-                        <Switch
-                          checked={Boolean(override.resetButton)}
-                          onChange={() =>
+                  <Typography variant="h5" component="h6">
+                    Flag text overrides (optional)
+                  </Typography>
+                  <Typography variant="body2">
+                    The overrides you set here will change what is displayed to
+                    the user upon arriving at this result. If you provide no
+                    overrides, the flag title will be used.
+                  </Typography>
+                  <Box mt={2}>
+                    {allFlagsForSet(formik.values.flagSet).map((flag) => {
+                      const override =
+                        formik.values.overrides?.[flag.value] || {};
+                      return (
+                        <FlagEditor
+                          key={flag.value}
+                          flag={flag}
+                          existingOverrides={override}
+                          onChange={(newValues) => {
                             formik.setFieldValue("overrides", {
                               ...formik.values.overrides,
-                              [flag.value]: {
-                                ...override,
-                                resetButton: !override.resetButton,
-                              },
-                            })
-                          }
-                          label="Reset to start of service"
-                        />
-                      </FlagEditor>
-                    );
-                  })}
+                              [flag.value]: newValues,
+                            });
+                          }}
+                          disabled={props.disabled}
+                        >
+                          <Switch
+                            checked={Boolean(override.resetButton)}
+                            onChange={() =>
+                              formik.setFieldValue("overrides", {
+                                ...formik.values.overrides,
+                                [flag.value]: {
+                                  ...override,
+                                  resetButton: !override.resetButton,
+                                },
+                              })
+                            }
+                            label="Reset to start of service"
+                          />
+                        </FlagEditor>
+                      );
+                    })}
+                  </Box>
                 </Box>
-              </Box>
-            </ModalSectionContent>
-          </ModalSection>
-          <ModalFooter
-            formik={formik}
-            showMoreInformation={false}
-            disabled={props.disabled}
-          />
-        </Form>
+              </ModalSectionContent>
+            </ModalSection>
+            <ModalFooter
+              formik={formik}
+              showMoreInformation={false}
+              disabled={props.disabled}
+            />
+          </Form>
+        </FormikRefSync>
       )}
     </Formik>
   );
