@@ -1,6 +1,6 @@
 import MenuItem from "@mui/material/MenuItem";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
@@ -35,7 +35,6 @@ import { ProtectedSpaceGLA } from "./schemas/GLA/ProtectedSpace";
 import { InterestInLandLDC } from "./schemas/InterestInLandLDC";
 import { MaterialDetails } from "./schemas/Materials";
 import { MaterialDetailsLBC } from "./schemas/MaterialsLBC";
-import { Zoo } from "./schemas/mocks/Zoo/schema";
 import { OwnershipCertificateOwners } from "./schemas/OwnershipCertificateOwners";
 import { Parking } from "./schemas/Parking";
 import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";
@@ -46,7 +45,6 @@ import { ResidentialUnitsPreviousLDCE } from "./schemas/ResidentialUnits/Previou
 import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
 import { TreeDescriptionCA } from "./schemas/TreeDescriptionCA";
 import { TreeDescriptionTPO } from "./schemas/TreeDescriptionTPO";
-import { Trees } from "./schemas/Trees";
 
 type Props = EditorProps<TYPES.List, List>;
 
@@ -99,17 +97,19 @@ export const SCHEMAS = [
 ];
 
 function ListComponent(props: Props) {
-  const formik = useFormik<List>({
-    initialValues: parseContent(props.node?.data),
-    onSubmit: (newValues) => {
-      props.handleSubmit?.({
-        type: TYPES.List,
-        data: newValues,
-      });
+  const formik = useFormikWithRef<List>(
+    {
+      initialValues: parseContent(props.node?.data),
+      onSubmit: (newValues) => {
+        props.handleSubmit?.({
+          type: TYPES.List,
+          data: newValues,
+        });
+      },
+      validationSchema,
     },
-    validationSchema,
-    validateOnChange: false,
-  });
+    props.formikRef,
+  );
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
