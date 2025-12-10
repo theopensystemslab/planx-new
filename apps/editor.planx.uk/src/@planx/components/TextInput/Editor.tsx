@@ -5,7 +5,6 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
-import { useFormik } from "formik";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
@@ -22,21 +21,21 @@ import { editorValidationSchema, parseTextInput, TextInput } from "./model";
 export type Props = EditorProps<TYPES.TextInput, TextInput>;
 
 const TextInputComponent: React.FC<Props> = (props) => {
-  const formik = useFormik<TextInput>({
-    initialValues: parseTextInput(props.node?.data),
-    onSubmit: (newValues) => {
-      if (props.handleSubmit) {
-        props.handleSubmit({
-          type: TYPES.TextInput,
-          data: newValues,
-        });
-      }
+  const formik = useFormikWithRef<TextInput>(
+    {
+      initialValues: parseTextInput(props.node?.data),
+      onSubmit: (newValues) => {
+        if (props.handleSubmit) {
+          props.handleSubmit({
+            type: TYPES.TextInput,
+            data: newValues,
+          });
+        }
+      },
+      validationSchema: editorValidationSchema,
     },
-    validateOnChange: false,
-    validationSchema: editorValidationSchema,
-  });
-
-  useFormikWithRef(formik, props.formikRef);
+    props.formikRef,
+  );
 
   const handleRadioChange = (event: React.SyntheticEvent<Element, Event>) => {
     const target = event.target as HTMLInputElement;

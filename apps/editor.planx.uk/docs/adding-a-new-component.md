@@ -60,20 +60,19 @@ type Props = EditorProps<TYPES.SetValue, SetValue>;
 export default SetValueComponent;
 
 function SetValueComponent(props: Props) {
-  const formik = useFormik({
-    initialValues: parseSetValue(props.node?.data),
-    onSubmit: (newValues) => {
-      props.handleSubmit?.({
-        type: TYPES.SetValue,
-        data: newValues,
-      });
+  const formik = useFormikWithRef(
+    {
+      initialValues: parseSetValue(props.node?.data),
+      onSubmit: (newValues) => {
+        props.handleSubmit?.({
+          type: TYPES.SetValue,
+          data: newValues,
+        });
+      },
       validationSchema,
-      validateOnChange: false,
-      validateOnBlur: false,
     },
-  });
-
-  useFormikWithRef(formik, props.formikRef);
+    props.formikRef,
+  );
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
