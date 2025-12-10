@@ -95,8 +95,6 @@ const NextStepsComponent: React.FC<Props> = (props) => {
         }
       },
       validationSchema,
-      validateOnBlur: false,
-      validateOnChange: false,
     },
     props.formikRef,
   );
