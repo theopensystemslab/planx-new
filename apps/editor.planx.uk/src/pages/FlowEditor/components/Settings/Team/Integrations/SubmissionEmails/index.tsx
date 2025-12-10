@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import RadioGroup from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
-import { getIn } from "formik";
+import { FormikErrors, getIn } from "formik";
 import { FormikProps } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -92,6 +92,7 @@ export const SubmissionEmails: React.FC = () => {
           >
             <ListManager
               values={formik.values.submissionIntegrations}
+              errors={formik.errors.submissionIntegrations}
               onChange={(newValues) => {
                 formik.setFieldValue("submissionIntegrations", newValues);
               }}
