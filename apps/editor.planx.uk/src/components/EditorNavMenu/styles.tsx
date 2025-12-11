@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Chip, { chipClasses } from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -43,7 +44,6 @@ export const MenuButton = styled(IconButton, {
   shouldForwardProp: (prop) => prop !== "isActive",
 })<{ isActive: boolean }>(({ theme, isActive, disabled }) => ({
   color: theme.palette.text.primary,
-  border: "1 solid transparent",
   width: "100%",
   justifyContent: "flex-start",
   gap: theme.spacing(0.65),
@@ -75,4 +75,16 @@ export const Subtitle = styled(Typography)(({ theme }) => ({
   padding: theme.spacing(1.5, 0.8, 0.5, 0.8),
   fontSize: "0.8rem",
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
+}));
+
+export const StyledChip = styled(Chip)(({ theme }) => ({
+  height: "16px",
+  fontSize: "0.625rem",
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+  borderRadius: "3px",
+  margin: theme.spacing(0.15, 0.2, 0, 0),
+  marginLeft: "auto",
+  [`& .${chipClasses.label}`]: {
+    padding: theme.spacing(0, 0.35),
+  },
 }));

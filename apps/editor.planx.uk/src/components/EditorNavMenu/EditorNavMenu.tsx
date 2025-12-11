@@ -12,7 +12,6 @@ import RateReviewIcon from "@mui/icons-material/RateReview";
 import SchoolIcon from "@mui/icons-material/School";
 import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
 import Tooltip from "@mui/material/Tooltip";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef } from "react";
@@ -27,6 +26,7 @@ import {
   MenuTitle,
   MenuWrap,
   Root,
+  StyledChip,
   Subtitle,
 } from "./styles";
 import { Route, RoutesForURL } from "./types";
@@ -309,25 +309,7 @@ function EditorNavMenu() {
         <MenuTitle variant="body3" pt={0.15}>
           {title}
         </MenuTitle>
-        {isNew && (
-          <Chip
-            label="new"
-            size="small"
-            sx={{
-              height: "16px",
-              fontSize: "0.625rem",
-              fontWeight: 600,
-              borderRadius: "3px",
-              ml: 0.2,
-              mt: 0.15,
-              "& .MuiChip-label": {
-                px: 0.35,
-                py: 0,
-              },
-            }}
-            color="success"
-          />
-        )}
+        {isNew && <StyledChip label="new" size="small" color="success" />}
         {showExternalIcon && (
           <NorthEastIcon sx={{ fontSize: "0.875rem", ml: "auto", mt: 0.2 }} />
         )}
