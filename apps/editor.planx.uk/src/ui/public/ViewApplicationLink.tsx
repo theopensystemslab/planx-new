@@ -9,7 +9,7 @@ const ViewApplicationLink: React.FC = () => (
     onContextMenu={(e) => e.preventDefault()}
     style={{ textDecoration: "none" }}
   >
-    <Button variant="contained" color="secondary">
+    <Button variant="contained" size="large" color="secondary">
       Print form
     </Button>
   </ReactNaviLink>

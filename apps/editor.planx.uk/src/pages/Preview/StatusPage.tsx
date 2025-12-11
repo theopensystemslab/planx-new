@@ -50,7 +50,11 @@ const StatusPage: React.FC<PropsWithChildren<Props>> = ({
       </Box>
       <Card>
         {children}
-        {showDownloadLink && <ViewApplicationLink/> }
+        {showDownloadLink && (
+          <Box width={"100%"}>
+            <ViewApplicationLink/>
+          </Box>
+        )}
         {buttonText && (
           <Button
             variant="contained"
