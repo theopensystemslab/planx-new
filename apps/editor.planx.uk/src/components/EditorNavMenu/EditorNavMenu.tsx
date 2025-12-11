@@ -133,7 +133,7 @@ function EditorNavMenu() {
         : `Planning Data unavailable`,
       Icon: LayersIcon,
       route: referenceCode
-        ? `https://submit.planning.data.gov.uk/organisations/local-authority:${referenceCode}`
+        ? `https://provide.planning.data.gov.uk/organisations/local-authority:${referenceCode}`
         : `#`,
       accessibleBy: "*",
       disabled: !referenceCode,
