@@ -102,6 +102,12 @@ const SettingsFormContainer = <
       console.error("Settings update error:", error);
       toast.error("Failed to update settings");
     },
+    refetchQueries: [
+      {
+        query,
+        variables: queryVariables,
+      },
+    ],
   });
 
   const initialValues = data ? getInitialValues(data) : defaultValues;

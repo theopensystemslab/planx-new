@@ -2,7 +2,7 @@ import Code from "@mui/icons-material/Code";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
-import { useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { FormattedResponse } from "pages/FlowEditor/components/Submissions/components/FormattedResponse";
 import { Store } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -39,18 +39,19 @@ const examplePassport: Store.Passport = {
 };
 
 function SetFeeComponent(props: Props) {
-  const formik = useFormik({
-    initialValues: parseSetFee(props.node?.data),
-    onSubmit: (newValues) => {
-      props.handleSubmit?.({
-        type: TYPES.SetFee,
-        data: newValues,
-      });
+  const formik = useFormikWithRef<SetFee>(
+    {
+      initialValues: parseSetFee(props.node?.data),
+      onSubmit: (newValues) => {
+        props.handleSubmit?.({
+          type: TYPES.SetFee,
+          data: newValues,
+        });
+      },
+      validationSchema,
     },
-    validationSchema,
-    validateOnBlur: false,
-    validateOnChange: true,
-  });
+    props.formikRef,
+  );
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">

@@ -2,7 +2,8 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
-import { FormikErrors, useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
+import { FormikErrors } from "formik";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -30,43 +31,46 @@ const ConditionLabel = styled("span")(() => ({
 const UNKNOWN = "unknown";
 
 export default function Component(props: Props) {
-  const formik = useFormik({
-    initialValues: parseCalculate(props.node?.data),
-    onSubmit: (newValues) => {
-      if (props.handleSubmit) {
-        props.handleSubmit({ type: TYPES.Calculate, data: newValues });
-      }
-    },
-    validate: (values) => {
-      const errors: FormikErrors<Calculate> = {};
-      try {
-        // can parse formula
-        getVariables(formik.values.formula);
-
-        // Validate formula
-        const result = evaluate(
-          values.formula,
-          values.samples,
-          values.defaults,
-        );
-
-        if (Number.isNaN(Number(result))) {
-          errors.formula = "Enter a formula which outputs a number";
+  const formik = useFormikWithRef<Calculate>(
+    {
+      initialValues: parseCalculate(props.node?.data),
+      onSubmit: (newValues) => {
+        if (props.handleSubmit) {
+          props.handleSubmit({ type: TYPES.Calculate, data: newValues });
         }
-        if (typeof result === "boolean" && !values.formatOutputForAutomations) {
-          errors.formula =
-            "For Boolean functions, toggle on 'Format the output to automate a future Question or Checklist only'";
-        }
-      } catch (error: any) {
-        errors.formula = error.message;
-      }
-      return errors;
-    },
+      },
+      validate: (values) => {
+        const errors: FormikErrors<Calculate> = {};
+        try {
+          // can parse formula
+          getVariables(formik.values.formula);
 
-    validateOnChange: false,
-    validateOnBlur: false,
-    validationSchema: baseNodeDataValidationSchema,
-  });
+          // Validate formula
+          const result = evaluate(
+            values.formula,
+            values.samples,
+            values.defaults,
+          );
+
+          if (Number.isNaN(Number(result))) {
+            errors.formula = "Enter a formula which outputs a number";
+          }
+          if (
+            typeof result === "boolean" &&
+            !values.formatOutputForAutomations
+          ) {
+            errors.formula =
+              "For Boolean functions, toggle on 'Format the output to automate a future Question or Checklist only'";
+          }
+        } catch (error: any) {
+          errors.formula = error.message;
+        }
+        return errors;
+      },
+      validationSchema: baseNodeDataValidationSchema,
+    },
+    props.formikRef,
+  );
 
   const sampleResult = React.useMemo(() => {
     try {
