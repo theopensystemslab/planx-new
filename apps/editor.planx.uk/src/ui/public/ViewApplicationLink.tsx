@@ -1,19 +1,18 @@
-import Link from "@mui/material/Link";
-import Typography from "@mui/material/Typography";
-import React, {  } from "react";
+import Button from "@mui/material/Button";
+import React from "react";
 import { Link as ReactNaviLink } from "react-navi";
 
 const ViewApplicationLink: React.FC = () => (
-  <Link
-    sx={{ display: "block", mt: 1, textAlign: "right" }}
-    component={ReactNaviLink}
+  <ReactNaviLink
     href="view-application"
     prefetch={false}
+    onContextMenu={(e) => e.preventDefault()}
+    style={{ textDecoration: "none" }}
   >
-    <Typography variant="body2">
+    <Button variant="contained" color="secondary">
       View form
-    </Typography>
-  </Link>
-)
+    </Button>
+  </ReactNaviLink>
+);
 
 export default ViewApplicationLink;
