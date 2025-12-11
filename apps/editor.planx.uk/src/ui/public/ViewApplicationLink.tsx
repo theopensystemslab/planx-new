@@ -10,7 +10,7 @@ const ViewApplicationLink: React.FC = () => (
     style={{ textDecoration: "none" }}
   >
     <Button variant="contained" color="secondary">
-      View form
+      Print form
     </Button>
   </ReactNaviLink>
 );
