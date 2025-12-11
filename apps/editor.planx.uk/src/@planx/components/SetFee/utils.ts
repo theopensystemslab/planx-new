@@ -76,8 +76,15 @@ export const handleSetFees: HandleSetFees = ({
 
     // VAT-able reductions can be any percent of calculated VAT
     if (reduction !== 0 && reductionVAT !== 0) {
-      fees[payable] = fees[payable] - (calculatedVAT + reductionVAT);
-      fees[payableVAT] = fees[payableVAT] - (calculatedVAT + reductionVAT);
+      if (reduction === -calculated && reductionVAT === -calculatedVAT) {
+        // If 100% reduction, handle same as exemption
+        fees[payable] = fees[payable] - calculatedVAT;
+        fees[payableVAT] = fees[payableVAT] - calculatedVAT;
+      } else {
+        // Else only subtract percentage of all calculated VAT
+        fees[payable] = fees[payable] - (calculatedVAT + reductionVAT);
+        fees[payableVAT] = fees[payableVAT] - (calculatedVAT + reductionVAT);
+      }
     }
   }
 
