@@ -15,14 +15,11 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { Response } from "pages/FlowEditor/lib/store/preview";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import { PresentationalProps, Result } from "../model";
 import ResultReason from "./ResultReason";
 import ResultSummary from "./ResultSummary";
-
-const DisclaimerContent = styled(Typography)(({ theme }) => ({
-  marginTop: theme.spacing(1),
-}));
 
 const TitleWrap = styled(Box)(() => ({
   display: "flex",
@@ -153,9 +150,11 @@ export const Presentational: React.FC<PresentationalProps> = ({
                 <Title variant="h3"> {disclaimer.heading}</Title>
               </TitleWrap>
               <Box mt={2}>
-                <DisclaimerContent variant="body2" color="text.primary">
-                  {disclaimer.content}
-                </DisclaimerContent>
+                <ReactMarkdownOrHtml
+                  source={disclaimer.content}
+                  openLinksOnNewTab
+                  manuallyIncrementHeaders
+                />
               </Box>
             </Box>
           </WarningContainer>

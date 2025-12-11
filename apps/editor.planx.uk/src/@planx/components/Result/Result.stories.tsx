@@ -134,7 +134,7 @@ export const WithDisclaimer = {
     allowChanges: true,
     disclaimer: {
       heading: "For guidance only",
-      content: "Proceed at your own risk!",
+      content: "<p><i>Proceed at your own risk!</i></p>",
       show: true,
     },
     responses: [
