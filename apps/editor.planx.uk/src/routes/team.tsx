@@ -20,6 +20,7 @@ import TeamSettingsLayout from "pages/FlowEditor/components/Settings/Team/Layout
 import Team from "pages/Team";
 import React from "react";
 import { View } from "react-navi";
+import NotionEmbed from "ui/editor/NotionEmbed";
 
 import { client } from "../lib/graphql";
 import { useStore } from "../pages/FlowEditor/lib/store";
@@ -140,6 +141,27 @@ const routes = compose(
     "/members": lazy(() => import("./teamMembers")),
 
     "/feedback": lazy(() => import("./feedback")),
+
+    "/resources": route(() => {
+      return {
+        title: makeTitle("Resources"),
+        view: <NotionEmbed page="resources" title="Resources" />,
+      };
+    }),
+
+    "/onboarding": route(() => {
+      return {
+        title: makeTitle("Onboarding"),
+        view: <NotionEmbed page="onboarding" title="Onboarding" />,
+      };
+    }),
+
+    "/tutorials": route(() => {
+      return {
+        title: makeTitle("Tutorials"),
+        view: <NotionEmbed page="tutorials" title="Tutorials" />,
+      };
+    }),
 
     "/settings": compose(
       withView(() => (
