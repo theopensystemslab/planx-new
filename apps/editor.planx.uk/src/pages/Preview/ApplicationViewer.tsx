@@ -5,6 +5,7 @@ import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList
 import { PrintButton } from "components/PrintButton";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import ApplicationSummary from "ui/public/ApplicationSummary";
 
 import StatusPage from "./StatusPage";
 
@@ -29,6 +30,9 @@ const ApplicationViewer: React.FC = () => {
 
   return (
     <StatusPage bannerHeading="Your form" bannerText="Review your answers">
+      <Typography variant="h2">Overview</Typography>
+      <ApplicationSummary/>
+      <Typography variant="h2">Your responses</Typography>
       <SummaryListsBySections
         changeAnswer={() => null}
         showChangeButton={false}
