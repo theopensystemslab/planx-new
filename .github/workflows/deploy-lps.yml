@@ -1,0 +1,66 @@
+name: Deploy LPS (staging)
+
+# TODO: Add schedule (or webhook?)
+on:
+  workflow_dispatch:
+
+# Queue job so the site will always remain in a stable state
+concurrency:
+  group: deploy-lps-staging
+  cancel-in-progress: false
+
+env:
+  BUCKET_NAME: localplanning.editor.planx.dev
+  BUILD_MODE: staging
+  SITE_URL: https://localplanning.editor.planx.dev
+  DIST_ID: ${{ secrets.LPS_STAGING_DIST_ID }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4.2.0
+        with:
+          version: ${{ vars.PNPM_VERSION }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
+          aws-region: eu-west-2
+          aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
+
+      - name: Run Deploy Script
+        id: deploy_script
+        run: ./scripts/deploy-lps.sh
+
+      
+      - name: Slack notification (success)
+        if: success()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_USERNAME: LPS Deploy
+          SLACK_COLOR: "#4F93E3"
+          SLACK_TITLE: LPS staging deploy
+          SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOYMENT_WEBHOOK }}
+  
+  failure_notification:
+      name: Slack notification (failure)
+      if: failure()
+      uses: ./.github/workflows/action-failure.yml
+      secrets: inherit
+      with:
+        environment: LPS staging
