@@ -1,5 +1,8 @@
 name: Deploy LPS (staging)
 
+permissions:
+  contents: read
+
 # TODO: Add schedule (or webhook?)
 on:
   workflow_dispatch:
