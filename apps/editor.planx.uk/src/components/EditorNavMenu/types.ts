@@ -9,8 +9,15 @@ export interface Route {
   route: string;
   accessibleBy: Role[] | AllUsers;
   disabled?: boolean;
+  isNew?: boolean;
 }
-export interface RoutesForURL {
+
+export interface MenuSection {
+  subtitle?: string;
   routes: Route[];
+}
+
+export interface RoutesForURL {
+  sections: MenuSection[];
   compact: boolean;
 }
