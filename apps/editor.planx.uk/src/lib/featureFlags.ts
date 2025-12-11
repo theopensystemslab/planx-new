@@ -1,5 +1,5 @@
 // add/edit/remove feature flags in array below
-const AVAILABLE_FEATURE_FLAGS = ["RESPONSIVE_QUESTIONS_CHECKLISTS"] as const;
+const AVAILABLE_FEATURE_FLAGS = ["TEAM_SUBMISSION_INTEGRATIONS"] as const;
 
 type FeatureFlag = (typeof AVAILABLE_FEATURE_FLAGS)[number];
 

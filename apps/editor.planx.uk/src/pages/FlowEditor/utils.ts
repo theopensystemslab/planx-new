@@ -11,12 +11,10 @@ import { Store } from "./lib/store";
 export interface FlowInformation {
   settings: FlowSettings;
   status: FlowStatus;
-  description?: string;
-  summary?: string;
-  limitations?: string;
   canCreateFromCopy?: boolean;
   analyticsLink?: string;
   isListedOnLPS: boolean;
+  summary?: string;
 }
 
 export interface GetFlowInformation {
@@ -31,32 +29,44 @@ export const formatLastEditDate = (date: string): string => {
   });
 };
 
+interface DateMessage {
+  timeAgo: string;
+  actor?: string;
+  formatted: string;
+}
+
 export const formatLastEditMessage = (
   date: string,
   actor?: { firstName: string; lastName: string },
-): string => {
-  if (!actor) {
-    return `Last edited ${formatLastEditDate(date)}`;
-  }
-
-  const name = `${actor.firstName} ${actor.lastName}`;
-  return `Last edited ${formatLastEditDate(date)} by ${name}`;
+): DateMessage => {
+  const timeAgo = `Last edited ${formatLastEditDate(date)}`;
+  const actorName = actor ? `${actor.firstName} ${actor.lastName}` : undefined;
+  const formatted = actorName ? `${timeAgo} by ${actorName}` : timeAgo;
+  return {
+    timeAgo,
+    actor: actorName,
+    formatted,
+  };
 };
 
 export const formatLastPublishMessage = (
   date?: string,
   user?: string,
-): string => {
-  if (!date) return "Not yet published";
-
-  if (!user) return `Last published ${formatLastEditDate(date)}`;
-
-  return `Last published ${formatLastEditDate(date)} by ${user}`;
-};
-
-export const formatServiceLastUpdated = (date: string): string => {
-  const formattedDate = new Date(date).toLocaleDateString("en-gb");
-  return `Service last updated ${formattedDate}`;
+): DateMessage => {
+  if (!date) {
+    return {
+      timeAgo: "Not yet published",
+      actor: undefined,
+      formatted: "Not yet published",
+    };
+  }
+  const timeAgo = `Last published ${formatLastEditDate(date)}`;
+  const formatted = user ? `${timeAgo} by ${user}` : timeAgo;
+  return {
+    timeAgo,
+    actor: user,
+    formatted,
+  };
 };
 
 export const nodeIsTemplatedInternalPortal = (
@@ -71,6 +81,11 @@ export const nodeIsTemplatedInternalPortal = (
   } else {
     return false;
   }
+};
+
+export const formatServiceLastUpdated = (date: string): string => {
+  const formattedDate = new Date(date).toLocaleDateString("en-gb");
+  return `Service last updated ${formattedDate}`;
 };
 
 export const parentNodeIsTemplatedInternalPortal = (

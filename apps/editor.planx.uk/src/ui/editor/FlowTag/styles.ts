@@ -38,9 +38,4 @@ export const Root = styled(Box, {
   ...(tagType === FlowTagType.ServiceType && {
     backgroundColor: theme.palette.flowTag.serviceType,
   }),
-  // TODO: Is there a colour to communicate "template"?
-  ...((tagType === FlowTagType.Templated ||
-    tagType === FlowTagType.SourceTemplate) && {
-    backgroundColor: theme.palette.flowTag.serviceType,
-  }),
 }));

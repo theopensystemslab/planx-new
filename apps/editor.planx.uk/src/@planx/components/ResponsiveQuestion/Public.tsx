@@ -1,18 +1,22 @@
 import type { PublicProps } from "@planx/components/shared/types";
-import { makeData } from "@planx/components/shared/utils";
-import { useEffect } from "react";
+import React from "react";
 
-import type { ResponsiveQuestion } from "./model";
+import BaseQuestionComponent from "../shared/BaseQuestion/Public";
+import { useConditionalOptions } from "../shared/RuleBuilder/hooks/useConditionalResponses";
+import type { ResponsiveQuestionWithOptions } from "./model";
 
-export type Props = PublicProps<ResponsiveQuestion>;
+export type Props = PublicProps<ResponsiveQuestionWithOptions>;
 
-export default function Component(props: Props) {
-  useEffect(() => {
-    props.handleSubmit?.({
-      ...makeData(props, ["todo"], props.fn),
-      auto: true,
-    });
-  }, []);
+const ResponsiveQuestion = (props: Props) => {
+  const { conditionalOptions } = useConditionalOptions(props.options);
 
-  return null;
-}
+  // Skip component if no options to show user
+  if (!conditionalOptions) {
+    props.handleSubmit?.({ auto: true });
+    return null;
+  }
+
+  return <BaseQuestionComponent {...props} options={conditionalOptions} />;
+};
+
+export default ResponsiveQuestion;

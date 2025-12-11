@@ -15,7 +15,7 @@ export async function saveSession({
     return response.url().includes("/send-email/save");
   });
   await page
-    .locator("button", { hasText: "Save and return to this application later" })
+    .locator("button", { hasText: "Save and return to this form later" })
     .click();
   await pageResponsePromise;
   const adminGQLClient = getGraphQLClient();

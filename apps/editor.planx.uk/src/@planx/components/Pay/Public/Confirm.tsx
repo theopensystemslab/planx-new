@@ -65,7 +65,7 @@ const Error: React.FC<Props> = ({ onConfirm, error }) => {
         <ErrorSummary
           format="error"
           heading={error}
-          message="Click continue to skip payment and proceed with your application for testing."
+          message="Click continue to skip payment and continue testing."
         />
       </Card>
     );
@@ -117,7 +117,7 @@ const PayBody: React.FC<PayBodyProps> = (props) => {
           disabled={Boolean(props?.paymentStatus)}
           data-testid="invite-page-link"
         >
-          {"Invite someone else to pay for this application"}
+          {"Invite someone else to pay"}
         </Button>
       )}
     </>

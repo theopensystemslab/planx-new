@@ -4,8 +4,8 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
-const MENU_WIDTH_COMPACT = "51px";
-const MENU_WIDTH_FULL = "164px";
+export const MENU_WIDTH_COMPACT = 51;
+export const MENU_WIDTH_FULL = 164;
 
 export const Root = styled(Box, {
   shouldForwardProp: (prop) => prop !== "compact",
@@ -15,6 +15,9 @@ export const Root = styled(Box, {
   background: theme.palette.background.paper,
   borderRight: `1px solid ${theme.palette.border.light}`,
   zIndex: theme.zIndex.appBar,
+  "@media print": {
+    display: "none",
+  },
 }));
 
 export const MenuWrap = styled("ul")(({ theme }) => ({

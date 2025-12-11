@@ -5,9 +5,11 @@ $hangerBackground: #f2f2f2;
 $focus: #ffdd00;
 $lockedFlowBackground: rgba(0, 0, 0, 0.07);
 $lockedNodeBackground: #eee;
-$lockedBorder: #b0b0b0;
+$lockedBorder: #888;
 $dataBackground: #f0f0f0;
 $lockedDataBackground: #e2e2e2;
+$folderBackground: #b5d1f7;
+$folderBorder: #2c4b88;
 
 $endpointWidth: 50px;
 $hangerWidth: 16px;
@@ -50,7 +52,7 @@ $fontMonospace: "Source Code Pro", monospace;
     left: 0;
     width: $width;
     height: 8px;
-    background-color: #666;
+    background-color: $folderBorder;
     clip-path: polygon(0 0, 90% 0, 100% 100%, 0% 100%);
     border-top-left-radius: 2px;
     z-index: -1;
@@ -95,6 +97,8 @@ $fontMonospace: "Source Code Pro", monospace;
     a:active {
       outline: 4px solid $focus;
       outline-offset: 0;
+      // Make focussed link outline more visible
+      z-index: 1;
     }
   }
 
@@ -160,6 +164,11 @@ $fontMonospace: "Source Code Pro", monospace;
       background: #555;
     }
   }
+  &.portal.internal-portal .card-wrapper.template-card a {
+    background: $folderBackground;
+    border-color: $folderBorder;
+    color: $black;
+  }
 
   .card-title {
     display: flex;
@@ -217,7 +226,6 @@ $fontMonospace: "Source Code Pro", monospace;
   }
 
   & a {
-    position: relative;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -523,9 +531,9 @@ $fontMonospace: "Source Code Pro", monospace;
       background-position: center top;
       background-size: $lineWidth ($padding * 2);
       > a {
+        position: relative;
         margin: ($padding * 2) 0 0;
         width: 100%;
-        color: #fff;
         span {
           max-width: 100%;
         }
@@ -534,31 +542,49 @@ $fontMonospace: "Source Code Pro", monospace;
     [data-layout="left-right"] & {
       background-position: left center;
       background-size: $padding $lineWidth;
-
       > a {
         margin: 0 0 0 $padding;
       }
     }
     > a {
-      background: $black;
+      background: $folderBackground;
+      color: $black;
       text-align: center;
-      @include folderStyle(60px);
+      @include folderStyle(40px);
       &::before {
         left: -1px;
       }
     }
   }
   &.internal-portal {
-    background: $black;
+    background: $folderBackground;
     @include folderStyle(40px);
+    > div a {
+      background: $folderBackground;
+      color: $black;
+      border: 1px solid $folderBorder;
+      &:first-of-type {
+        display: flex;
+        justify-content: flex-start;
+        flex-grow: 2;
+        border-right: 0;
+      }
+    }
+    .flow-locked & {
+      .card-wrapper:not(.template-card) div a {
+        background: #e2edf5;
+        border-color: $lockedBorder;
+      }
+    }
   }
 
   &.internal-portal.node-card {
     align-items: flex-start;
+    color: $black;
     @include folderStyle(75px);
     &::before {
       z-index: 1;
-      top: -10px;
+      top: -9px;
       height: 6px;
       left: -4px;
     }

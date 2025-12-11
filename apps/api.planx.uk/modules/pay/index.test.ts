@@ -6,16 +6,16 @@ import app from "../../server.js";
 
 vi.mock("@opensystemslab/planx-core", () => {
   return {
-    CoreDomainClient: vi.fn().mockImplementation(() => ({
-      session: {
+    CoreDomainClient: class MockCoreDomainClient {
+      session = {
         findDetails: vi.fn().mockImplementation(() => ({ lockedAt: null })),
-      },
-      team: {
+      };
+      team = {
         getIntegrations: vi
           .fn()
           .mockImplementation(() => ({ govPayToken: "abc123" })),
-      },
-    })),
+      };
+    },
   };
 });
 

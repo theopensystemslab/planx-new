@@ -15,20 +15,27 @@ const Console = styled(Box)(({ theme }) => ({
 }));
 
 export const DebugConsole = () => {
-  const [passport, flags, breadcrumbs, flowId, cachedBreadcrumbs] = useStore(
-    (state) => [
+  const [passport, flags, breadcrumbs, flowId, cachedBreadcrumbs, teamId] =
+    useStore((state) => [
       state.computePassport(),
       state.collectedFlags(),
       state.breadcrumbs,
       state.id,
       state.cachedBreadcrumbs,
-    ],
-  );
+      state.teamId,
+    ]);
   return (
     <Console>
       <div style={{ fontSize: "medium" }}>
         <ReactJson
-          src={{ passport, flags, breadcrumbs, cachedBreadcrumbs }}
+          src={{
+            teamId,
+            flowId,
+            passport,
+            flags,
+            breadcrumbs,
+            cachedBreadcrumbs,
+          }}
           theme="monokai"
           collapsed={2}
           displayDataTypes={false}

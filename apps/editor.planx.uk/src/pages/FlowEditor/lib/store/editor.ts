@@ -68,6 +68,8 @@ export interface EditorUIStore {
   toggleShowTags: () => void;
   showImages: boolean;
   toggleShowImages: () => void;
+  showNotes: boolean;
+  toggleShowNotes: () => void;
   showDataFields: boolean;
   toggleShowDataFields: () => void;
   showHelpText: boolean;
@@ -128,6 +130,10 @@ export const editorUIStore: StateCreator<
     showImages: false,
 
     toggleShowImages: () => set({ showImages: !get().showImages }),
+
+    showNotes: true,
+
+    toggleShowNotes: () => set({ showNotes: !get().showNotes }),
 
     showDataFields: true,
 
@@ -192,6 +198,7 @@ export const editorUIStore: StateCreator<
       flowCardView: state.flowCardView,
       showTags: state.showTags,
       showImages: state.showImages,
+      showNotes: state.showNotes,
       showDataFields: state.showDataFields,
       showHelpText: state.showHelpText,
     }),
@@ -201,6 +208,7 @@ export const editorUIStore: StateCreator<
 export type PublishedFlowSummary = {
   publishedAt: string;
   hasSendComponent: boolean;
+  hasVisiblePayComponent: boolean;
 };
 
 export type FlowSummaryOperations = {
@@ -222,6 +230,7 @@ export interface FlowSummary {
   publishedFlows: PublishedFlowSummary[];
   templatedFrom: string | null;
   isTemplate: boolean;
+  isListedOnLPS: boolean;
   template: {
     team: {
       name: string;
@@ -511,6 +520,7 @@ export const editorStore: StateCreator<
             status
             summary
             updatedAt: updated_at
+            isListedOnLPS: is_listed_on_lps
             operations(limit: 1, order_by: { created_at: desc }) {
               createdAt: created_at
               actor {
@@ -532,6 +542,7 @@ export const editorStore: StateCreator<
             ) {
               publishedAt: created_at
               hasSendComponent: has_send_component
+              hasVisiblePayComponent: has_pay_component
             }
           }
         }
@@ -673,8 +684,11 @@ export const editorStore: StateCreator<
     if (!copiedString) return;
 
     try {
-      const { rootId, nodes: copiedNodes, isTemplate: copiedFromTemplate }: CopiedPayload =
-        JSON.parse(copiedString);
+      const {
+        rootId,
+        nodes: copiedNodes,
+        isTemplate: copiedFromTemplate,
+      }: CopiedPayload = JSON.parse(copiedString);
       if (!copiedNodes || copiedNodes.length === 0) return;
 
       // Keep a map of originalId: newId allowing us to insert unique nodes and maintain our edge relationships
@@ -786,7 +800,7 @@ export const editorStore: StateCreator<
     // Determine node path based on the node type
     const nodePath =
       node.type === TYPES.Answer
-        ? `nodes/${grandparent.id}/nodes/${parent.id}/edit`
+        ? `nodes/${grandparent.id}/nodes/${parent.id}/edit#${node.id}`
         : `nodes/${parent.id}/nodes/${node.id}/edit`;
 
     const urlPath = `/${teamSlug}/${flowSlug}${portalPath}/${nodePath}`;

@@ -31,9 +31,8 @@ export const publishService = async (page: Page) => {
 
 export const turnServiceOnline = async (page: Page) => {
   page.locator('[aria-label="Flow settings"]').click();
+  page.getByRole("tab", { name: "Visibility" }).click();
   page.getByTestId("set-status-button").click();
 
-  await expect(
-    page.getByText("Service settings updated successfully"),
-  ).toBeVisible();
+  await expect(page.getByText("Settings updated successfully")).toBeVisible();
 };

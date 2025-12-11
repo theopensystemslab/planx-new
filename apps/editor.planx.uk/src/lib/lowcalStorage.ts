@@ -2,7 +2,7 @@ import { DefaultContext, gql } from "@apollo/client";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { Session } from "types";
 
-import { publicClient } from "./graphql";
+import { client } from "./graphql";
 
 let current: string | null;
 
@@ -11,7 +11,7 @@ class LowcalStorage {
     console.debug({ getItem: key });
     const id = getSessionId(key);
 
-    const { data } = await publicClient.query({
+    const { data } = await client.query({
       query: gql`
         query GetItem($id: uuid!) {
           lowcal_sessions_by_pk(id: $id) {
@@ -37,7 +37,7 @@ class LowcalStorage {
     console.debug({ removeItem: key });
     const id = getSessionId(key);
 
-    await publicClient.mutate({
+    await client.mutate({
       mutation: gql`
         mutation SoftDeleteLowcalSession($id: uuid!) {
           update_lowcal_sessions_by_pk(
@@ -64,7 +64,7 @@ class LowcalStorage {
 
     const id = getSessionId(key);
 
-    await publicClient.mutate({
+    await client.mutate({
       mutation: gql`
         mutation SetItem(
           $data: jsonb!
@@ -131,6 +131,7 @@ export const stringifyWithRootKeysSortedAlphabetically = (
  * Hasura "Public" role users need the sessionId and email for lowcal_sessions access
  */
 const getSessionContext = (sessionId: string): DefaultContext => ({
+  role: "public",
   headers: {
     "x-hasura-lowcal-session-id": sessionId,
     "x-hasura-lowcal-email":

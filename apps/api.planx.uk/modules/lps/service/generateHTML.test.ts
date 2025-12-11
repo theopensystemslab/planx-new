@@ -6,19 +6,11 @@ import { NOTIFY_TEST_EMAIL } from "../../../lib/notify/utils.js";
 import * as validateDownloadTokenMiddleware from "./../middleware/validateDownloadToken.js";
 import * as generateHTMLService from "./generateHTML.js";
 import type * as planxCore from "@opensystemslab/planx-core";
+import { expectedPlanningPermissionPayload } from "../../../tests/mocks/digitalPlanningDataMocks.js";
 
-const mockGenerateCSVData = vi.fn().mockResolvedValue([
-  {
-    question: "Planning Application Reference",
-    responses: "56841432-b654-4d64-ab54-5d23d007a034",
-  },
-  { question: "Property Address", responses: "" },
-  {
-    question: "application_type",
-    responses: "Request a building control quote",
-  },
-  { question: "result", responses: {} },
-]);
+const mockGenerateHTMLData = vi
+  .fn()
+  .mockResolvedValue(expectedPlanningPermissionPayload);
 
 vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
   const originalModule = await importOriginal<typeof planxCore>();
@@ -28,7 +20,7 @@ vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
     CoreDomainClient: class extends originalModule.CoreDomainClient {
       constructor() {
         super();
-        this.export.csvData = () => mockGenerateCSVData();
+        this.export.digitalPlanningDataPayload = () => mockGenerateHTMLData();
       }
     },
   };
@@ -302,7 +294,7 @@ describe("requesting HTML for a session ID", () => {
         });
     });
 
-    it.skip("successfully downloads HTML when valid detail are provided", async () => {
+    it("successfully downloads HTML when valid detail are provided", async () => {
       await supertest(app)
         .post(ENDPOINT)
         .set({ authorization: `Bearer ${uuidV4()}` })
@@ -325,7 +317,7 @@ describe("requesting HTML for a session ID", () => {
 
           // Expected HTML document
           expect(res.text).toMatch(/^<html>.*<\/html>$/s);
-          expect(res.text).toMatch(/PlanX Submission Overview/);
+          expect(res.text).toMatch(/Planning Permission/);
         });
     });
   });

@@ -9,10 +9,11 @@ import * as tldjs from "tldjs";
 import { CreateService } from './../types';
 import {
   addRedirectToCloudFlareListenerRule,
-  setupFailureNotificationForDeployments,
+  setupNotificationForDeploymentRollback,
 } from "../utils";
 
 export const createHasuraService = async ({
+  env,
   vpc,
   cluster,
   repo,
@@ -21,7 +22,7 @@ export const createHasuraService = async ({
   stacks: {
     networking, certificates, data,
   },
-}: CreateService) => {
+}: CreateService): Promise<awsx.ecs.FargateService> => {
 
   const config = new pulumi.Config();
   const DOMAIN: string = await certificates.requireOutputValue("domain");
@@ -240,5 +241,6 @@ export const createHasuraService = async ({
     proxied: true,
   });
 
-  setupFailureNotificationForDeployments("hasura", cluster, hasuraService);
+  setupNotificationForDeploymentRollback(env, "hasura", cluster, hasuraService);
+  return hasuraService;
 }

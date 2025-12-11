@@ -5,7 +5,7 @@ import { Sentiment } from "components/Feedback/MoreInfoFeedback/MoreInfoFeedback
 import { FeedbackView } from "components/Feedback/types";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 
-import { publicClient } from "./graphql";
+import { client } from "./graphql";
 
 type UserData = {
   breadcrumbs: Store.Breadcrumbs;
@@ -61,7 +61,7 @@ export async function insertFeedbackMutation(data: {
   feedbackType: FeedbackView | Sentiment;
   nodeData?: Store.Node["data"];
 }) {
-  const result = await publicClient.mutate({
+  const result = await client.mutate({
     mutation: gql`
       mutation InsertFeedback(
         $teamId: Int
@@ -100,6 +100,7 @@ export async function insertFeedbackMutation(data: {
       feedbackScore: data.feedbackScore || null,
       userComment: data.userComment || null,
     },
+    context: { role: "public" },
   });
 
   return result.data.insert_feedback.affected_rows;

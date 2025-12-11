@@ -24,7 +24,9 @@ export interface Flow {
   team: Team;
   settings?: FlowSettings;
   status?: FlowStatus;
+  summary?: string;
   isTemplate?: boolean;
+  canCreateFromCopy?: boolean;
 }
 export interface GlobalSettings {
   footerContent?: { [key: string]: TextContent };
@@ -87,6 +89,11 @@ export interface SectionNode extends Store.Node {
   };
 }
 
+export interface LiveFlow {
+  name: string;
+  firstOnlineAt: string;
+}
+
 export interface AdminPanelData {
   id: string;
   name: string;
@@ -106,7 +113,7 @@ export interface AdminPanelData {
   primaryColour?: string;
   linkColour?: string;
   actionColour?: string;
-  liveFlows: string[] | null;
+  liveFlows: LiveFlow[] | null;
   isTrial: boolean;
 }
 

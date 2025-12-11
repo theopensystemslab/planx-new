@@ -3,6 +3,7 @@ import * as pulumi from "@pulumi/pulumi";
 import { CustomDomain } from "../common/teams";
 
 export interface CreateService {
+  env: string,
   vpc: awsx.ec2.Vpc,
   cluster: awsx.ecs.Cluster, 
   repo: awsx.ecr.Repository, 

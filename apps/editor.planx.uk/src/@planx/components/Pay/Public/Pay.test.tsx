@@ -1,10 +1,9 @@
 import { PaymentStatus } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { screen } from "@testing-library/react";
+import { act, screen } from "@testing-library/react";
 import { logger } from "airbrake";
 import { FullStore, Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { act } from "react-dom/test-utils";
 import * as ReactNavi from "react-navi";
 import { setup } from "testUtils";
 import { ApplicationPath, Breadcrumbs } from "types";
@@ -26,8 +25,8 @@ vi.mock("lib/featureFlags", () => ({
   hasFeatureFlag: vi.fn().mockResolvedValue(true),
 }));
 
-const resumeButtonText = "Resume an application you have already started";
-const saveButtonText = "Save and return to this application later";
+const resumeButtonText = "Resume a form you have already started";
+const saveButtonText = "Save and return to this form later";
 
 const flowWithUndefinedFee: Store.Flow = {
   _root: {
@@ -92,9 +91,9 @@ const breadcrumbs: Breadcrumbs = {
 };
 
 const defaultProps = {
-  title: "Pay for your application",
+  title: "Pay",
   bannerTitle: "The fee is",
-  description: "The fee covers the cost of processing your application",
+  description: "The fee covers the cost of processing your form",
   fee: 103,
   instructionsTitle: "How to pay",
   instructionsDescription: "Pay via GOV.UK Pay",
@@ -118,7 +117,7 @@ describe("Pay component when fee is undefined or £0", () => {
 
     setup(
       <Pay
-        title="Pay for your application"
+        title="Pay"
         fn="application.fee.payable"
         handleSubmit={handleSubmit}
         govPayMetadata={[]}
@@ -143,7 +142,7 @@ describe("Pay component when fee is undefined or £0", () => {
 
     const { getByTestId, user, getByRole } = setup(
       <Pay
-        title="Pay for your application"
+        title="Pay"
         fn="application.fee.payable"
         handleSubmit={handleSubmit}
         govPayMetadata={[]}
@@ -185,7 +184,7 @@ describe("Pay component when fee is undefined or £0", () => {
 
     setup(
       <Pay
-        title="Pay for your application"
+        title="Pay"
         fn="application.fee.payable"
         handleSubmit={handleSubmit}
         govPayMetadata={[]}
@@ -211,9 +210,7 @@ describe("Confirm component without inviteToPay", () => {
   it("renders correctly", () => {
     setup(<Confirm {...defaultProps} />);
 
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Pay for your application",
-    );
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Pay");
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
       "The fee is",
     );
@@ -230,9 +227,7 @@ describe("Confirm component without inviteToPay", () => {
   it("correctly adjusts the heading hierarchy when the fee banner is hidden", async () => {
     setup(<Confirm {...{ ...defaultProps, hideFeeBanner: true }} />);
 
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Pay for your application",
-    );
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Pay");
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
       "How to pay",
     );
@@ -255,9 +250,7 @@ describe("Confirm component without inviteToPay", () => {
 
     expect(screen.getByTestId("error-summary")).toBeInTheDocument();
 
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Pay for your application",
-    );
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Pay");
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
       "The fee is",
     );
@@ -309,8 +302,8 @@ describe("Confirm component with inviteToPay", () => {
     paymentStatus: undefined,
   };
 
-  const invitePrompt = "Invite someone else to pay for this application";
-  const payPrompt = "I want to pay for this application myself";
+  const invitePrompt = "Invite someone else to pay";
+  const payPrompt = "I want to pay myself";
 
   it("switches pages when you click the invite link", async () => {
     const { user } = setup(<Confirm {...inviteProps} />);
@@ -458,9 +451,7 @@ describe("Confirm component in information-only mode", () => {
       <Confirm {...defaultProps} hidePay={true} onConfirm={handleSubmit} />,
     );
 
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Pay for your application",
-    );
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Pay");
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
       "The fee is",
     );
@@ -486,9 +477,7 @@ describe("Confirm component in information-only mode", () => {
       />,
     );
 
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Pay for your application",
-    );
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Pay");
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
       "The fee is",
     );
@@ -499,7 +488,7 @@ describe("Confirm component in information-only mode", () => {
     expect(screen.getByRole("button")).toHaveTextContent("Continue");
     expect(screen.getByRole("button")).not.toHaveTextContent("Pay");
     expect(screen.getByRole("button")).not.toHaveTextContent(
-      "Invite someone else to pay for this application",
+      "Invite someone else to pay",
     );
 
     await user.click(screen.getByText("Continue"));
@@ -541,7 +530,7 @@ describe("the demo user view", () => {
     );
     const errorHeader = queryByText("GOV.UK Pay is not enabled for demo users");
     const errorGuidance = queryByText(
-      "Click continue to skip payment and proceed with your application for testing.",
+      "Click continue to skip payment and continue testing.",
     );
 
     expect(errorGuidance).toBeInTheDocument();

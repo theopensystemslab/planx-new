@@ -2,19 +2,32 @@ import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import { ReviewCard } from "./ReviewCard";
 
 const Reviews = () => {
-  const [flow, filterFlowByTag] = useStore((state) => [state.flow, state.filterFlowByTag]);
+  const [flow, filterFlowByTag] = useStore((state) => [
+    state.flow,
+    state.filterFlowByTag,
+  ]);
 
- // Only re-run filter when flow changes
+  // Only re-run filter when flow changes
   const sortedReviewNodeIds = useMemo(
     () => Object.keys(filterFlowByTag("toReview")),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [flow],
   );
+
+  const [orderedFlow, setOrderedFlow] = useStore((state) => [
+    state.orderedFlow,
+    state.setOrderedFlow,
+  ]);
+
+  // ReviewCard relies on the data from indexed nodes
+  useEffect(() => {
+    if (!orderedFlow) setOrderedFlow();
+  }, [orderedFlow, setOrderedFlow]);
 
   return (
     <Box p={2} sx={{ backgroundColor: "background.paper", minHeight: "100%" }}>

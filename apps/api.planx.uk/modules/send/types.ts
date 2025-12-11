@@ -14,6 +14,12 @@ export const sendIntegrationSchema = z.object({
   params: z.object({
     localAuthority: z.string(),
   }),
+  query: z.object({
+    notify: z
+      .string()
+      .optional()
+      .transform((val) => (val?.toLowerCase() === "false" ? false : true)), // proxy for z.boolean()
+  }),
 });
 
 export type SendIntegrationController = ValidatedRequestHandler<

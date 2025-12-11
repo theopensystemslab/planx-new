@@ -8,6 +8,7 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
+import { formatTitle } from "@planx/components/shared/Schema/InputFields";
 import { isMapFieldResponse } from "@planx/components/shared/Schema/model";
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
 import { PublicProps } from "@planx/components/shared/types";
@@ -162,7 +163,7 @@ const InactiveListCard: React.FC<{
                         maxWidth: "160px",
                       }}
                     >
-                      {field.data.title}
+                      {formatTitle(field)}
                     </TableCell>
                     <TableCell>
                       {formatSchemaDisplayValue(

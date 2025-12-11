@@ -1,7 +1,10 @@
-import { defineConfig } from "vitest/config";
+import { configDefaults, defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
+    env: {
+      APP_ENVIRONMENT: "test",
+    },
     globals: true,
     environment: "node",
     // runs once on initial setup
@@ -13,13 +16,14 @@ export default defineConfig({
       // html reporter required to inspect coverage in Vitest UI dashboard
       reporter: ["lcov", "html", "text-summary"],
       thresholds: {
-        statements: 76.29,
-        branches: 59.52,
-        functions: 76.72,
-        lines: 76.68,
+        statements: 76.63,
+        branches: 59.73,
+        functions: 76.75,
+        lines: 77.03,
         autoUpdate: true,
       },
     },
+    exclude: [...configDefaults.exclude, "dist/**"],
   },
   // remove .js from imports, which ts-with-esm requires but causes vitest to fail module resolution
   resolve: {

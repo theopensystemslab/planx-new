@@ -15,6 +15,8 @@ config:
     secure: AAABAN0LjLOgxCkr5ZqQLn6FkZPcrPlvNG4fbNZ02W2qC1VVYVee/3aToZQuXuokVwnIPNbbe2w=
   application:file-api-key-barnet:
     secure: AAABAFpZq81zy3CKFXUgi9oEGIGp7LDVD3TNlYkZD4liX0bxOrmMJYdDpMmyGt4aGARF63nEUmo=
+  application:file-api-key-camden:
+    secure: AAABAHx4hapASoCZRwDDTmCkk+QFyQ7NCa92PSFt0HJHgQgmeku6OYTePoNjtUDdMVA/tXF15Lk=
   application:file-api-key-doncaster:
     secure: AAABAIZjfr4tVG+HG9+83bPYQjgD1hmK5P+SbYpq4qGue07rHA02kciAkTMCyxD5Lzb0WX0K6fm5cvH2tof5mmX7gJGTkMVc
   application:file-api-key-epsom-ewell:
@@ -54,18 +56,21 @@ config:
   application:idox-nexus-token-url: https://dev.identity.idoxgroup.com/uaa/oauth/token
   application:jwt-secret:
     secure: AAABAOo4AlDxNYjUfyS2yp8VjbhmziWGQvA54PfnGYOyi5i6o3Lt9GLwAeUCrQYnr663MFjWw49+0wXVdeumyvtRF49cdFEb
+  application:lps-domain: localplanning.editor.planx.dev
   application:mapbox-access-token:
     secure: AAABAMWf2zVq5/mKCLynpgzAidNsnbUEBpb47n7MRWp2xzRgwaf3kzOvnZax9N04ZScQqU6I5/tEKTBAbSb8MIBJ8mU2iTZbPg8FD6wYsetRyftm1K39KBsIl9aS7fXvZFOG7BsC4qMDEhlDkH8gbV2HTev3VvvRUe3lzVhjNGNHqQ==
   application:metabase-api-key:
     secure: AAABAFf+hW09AWupsY6adrPAJHCkrTMeRX7/gaUHLYXi3QS77MVelPp9K0L4zyUL8u7zDanjuE9G/bfIlcVXLwiLLKAJkt5to9knKJqTXg==
+  application:metabase-cpu: "512"
   application:metabase-encryption-secret-key:
     secure: AAABAGmfVICD8sR+IE6mHC8BNUY1WQXGCbv5F3C1fSgA+1ADiRem3GNrwY0YRZociRYuPIo3MIRS0aIg44jt10SBCE0ik58wHamcKA==
+  application:metabase-memory: "2048"
   application:metabasePgPassword:
     secure: AAABADfCkSRtVTdU8wi1F+nwuHl8OeI3bm9ZzaNkIY4yOGB9dsOqS30tkD8W7GZlNoWDZT2ojoP3zOFPuTLWbQ==
   application:microsoft-client-id:
     secure: AAABAN/jlejEkv8Rf+u6nzbXy2yTIUNwWK7cw1Rz1P1DQTvvOYsPwhMYqo4Jjt9UAAx+b2FWPoUvrIOUm1dT+xpnqbU=
   application:microsoft-client-secret:
-    secure: AAABAJLeBiZ77GkBfHod1t/0zh2e7azba5b/YZ0O3lKYex25VZCI7YzuzuOaGk+SRmfNz7GZbuGYWgfAE/XrIUBiggs+7pnW
+    secure: AAABAGYZX5lmaa/axrVQODrnHmVIaoWpHP+yN/KsBt0RHnTNcPx63LJhHD0MB5d3WAjVF/Q3RLD+81tuq2ZC1sAYF18YwiZp
   application:ordnance-survey-api-key:
     secure: AAABAMqkRWGvu4THnzddRYpNddFfIFFKCqEE3gm9DkYuVJRCjZBCWpKogsT+X4j3R2f9V8OyeZxHK53yIpl8rQ==
   application:session-secret:
@@ -73,7 +78,7 @@ config:
   application:skip-rate-limit-secret:
     secure: AAABANwjBmGN73bwF6nqQP5i8tKMe3mi0NMBdae4uaLasG2VfPvC1D4mk7QWIFqVnzsD5jCN20Eqos/r2B+EAo2rAws3JeD/
   application:slack-internal-errors-webhook:
-    secure: AAABAPkO1mBzTkXVWjpzAeP9ZbkifOiBwxj+rL5OONBu6DY87Pw1FualS6jSmQ5yeoGovZowNy3iMsArq4lxSX2BnBAur4O4a90Qou5zGUFACSTfLkZOgsyImvbdwRRnFPBBskfQ+bqwX9OZjO5AAXkEa9bqu3ViFQ==
+    secure: AAABAA/QUOR2t9DKWtIGok1cSEmbVB5b56Wa9vdDK8tW9C/mgMB3cxOnqRpbY0Db2BfALGBiZbnx8tX6TwouZjtbrDJJT0ch/e2Put1Kw4LtsWprjGZbW0emt3gq/YDUst6KMJ5C37pEMjicStLPKy0vmBVLD9Y9ng==
   application:slack-webhook-url:
     secure: AAABALzK5KLP5po8giGePS/+ZpcWQHf8LfvCcdlY/oSv6NvC3y6D44CeIAiUdDXTB7VeUX5JFeaceDyZ9C1N5CAWFOLPCCKvuLjuDtk7QZe/rczqd2QnMDLh+Q9wPlQSb4PIoK8jWNEmvQC3QMgq
   application:uniform-client-buckinghamshire:
@@ -88,4 +93,3 @@ config:
   certificates:cloudflare-zone-id: dc27ac531ff8862559ed9ab5016c4953
   cloudflare:apiToken:
     secure: AAABABWhDm+7RstbxLXd1D8CcxkylHS6UKMqk4kOaY7Y0E7FJS4bZfvyGs0nks80hl3vjENH4eDuFbUgA82/sA4SmDlfpNXr
-  application:lps-domain: localplanning.editor.planx.dev

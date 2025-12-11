@@ -93,7 +93,7 @@ export const flow: FlowGraph = {
   Section3: { data: { title: "Section Three" }, type: ComponentType.Section },
   Confirmation: {
     data: {
-      heading: "Application sent",
+      heading: "Form sent",
       moreInfo: "<h2>You will be contacted</h2>",
       contactInfo: "You can contact us at <em>planning@abc.gov.uk</em>",
     },

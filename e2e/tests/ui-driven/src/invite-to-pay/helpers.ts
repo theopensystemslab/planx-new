@@ -95,7 +95,7 @@ export async function makePaymentRequest({
   await navigateToPayComponent(page, context);
   const sessionId = await addSessionToContext(page, context);
   const toggleInviteToPayButton = page.getByRole("button", {
-    name: "Invite someone else to pay for this application",
+    name: "Invite someone else to pay",
   });
   await toggleInviteToPayButton.click();
   await answerInviteToPayForm(page);

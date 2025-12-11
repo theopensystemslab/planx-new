@@ -1,6 +1,12 @@
 import type { NextFunction, Request, Response } from "express";
 import { buildSubmissionExportZip } from "../utils/exportZip.js";
-import { getSessionData, getTeamEmailSettings } from "../email/service.js";
+import {
+  getFlowId,
+  getSessionData,
+  getTeamEmailSettings,
+  getFlowSubmissionEmail,
+} from "../email/service.js";
+import { logDuration } from "../../../lib/performance.js";
 
 export async function downloadApplicationFiles(
   req: Request<
@@ -41,11 +47,32 @@ export async function downloadApplicationFiles(
       });
     }
 
+    // Get flow ID, in order to access flow submission email
+    const flowId = await getFlowId(sessionId);
+    if (!flowId) {
+      return next({
+        status: 400,
+        message: "Failed to find flow ID for this sessionId",
+      });
+    }
+
+    // Get the flow submission email, which will run parallel to getTeamEmailSettings for now
+    const submissionEmail = await getFlowSubmissionEmail(flowId);
+    if (!submissionEmail) {
+      return next({
+        status: 400,
+        message: "Failed to retrieve submission email for this flow",
+      });
+    }
+    console.log(submissionEmail);
+
     // create the submission zip
-    const zip = await buildSubmissionExportZip({
-      sessionId,
-      includeDigitalPlanningJSON: true,
-    });
+    const zip = await logDuration(`zipTotal-${sessionId}`, () =>
+      buildSubmissionExportZip({
+        sessionId,
+        includeDigitalPlanningJSON: true,
+      }),
+    );
 
     // Send it to the client
     const zipData = zip.toBuffer();

@@ -2,7 +2,6 @@ import Box from "@mui/material/Box";
 import ListItemButton from "@mui/material/ListItemButton";
 import { alpha, styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { ComponentType } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { PropsWithChildren } from "react";

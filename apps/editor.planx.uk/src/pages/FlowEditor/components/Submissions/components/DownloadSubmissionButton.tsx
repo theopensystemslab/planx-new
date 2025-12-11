@@ -27,12 +27,13 @@ export const DownloadSubmissionButton = (params: RenderCellParams) => {
     params.row.eventType !== "Pay" &&
     isBefore(new Date(), submissionDataExpirationDate);
 
-  const zipUrl =
-    showDownloadButton &&
-    `${import.meta.env.VITE_APP_API_URL}/download-application-files/${
-      params.row.sessionId
-    }?localAuthority=${teamSlug}&email=${submissionEmail}`;
-  return zipUrl ? (
+  if (!showDownloadButton) return;
+
+  const zipUrl = `${import.meta.env.VITE_APP_API_URL}/download-application-files/${
+    params.row.sessionId
+  }?localAuthority=${teamSlug}&email=${submissionEmail}`;
+
+  return (
     <Tooltip title="Download application data">
       <IconButton
         aria-label="download application"
@@ -41,7 +42,5 @@ export const DownloadSubmissionButton = (params: RenderCellParams) => {
         <CloudDownload />
       </IconButton>
     </Tooltip>
-  ) : (
-    <></>
   );
 };

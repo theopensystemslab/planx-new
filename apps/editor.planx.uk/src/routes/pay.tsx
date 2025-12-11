@@ -1,6 +1,6 @@
 import type { PaymentRequest } from "@opensystemslab/planx-core/types";
 import gql from "graphql-tag";
-import { publicClient } from "lib/graphql";
+import { client } from "lib/graphql";
 import { getRetentionPeriod } from "lib/pay";
 import {
   compose,
@@ -97,7 +97,7 @@ const fetchPaymentRequest = async (paymentRequestId: string) => {
       data: {
         paymentRequests: [paymentRequest],
       },
-    } = await publicClient.query<{
+    } = await client.query<{
       paymentRequests: PaymentRequest[];
     }>({
       query: gql`
@@ -125,6 +125,7 @@ const fetchPaymentRequest = async (paymentRequestId: string) => {
         retentionPeriod: getRetentionPeriod(),
       },
       context: {
+        role: "public",
         headers: {
           "x-hasura-payment-request-id": paymentRequestId,
         },

@@ -29,7 +29,7 @@ import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 
-import { CopyButton } from "../../Settings/ServiceSettings/FlowStatus/PublicLink";
+import { CopyButton } from "../../Settings/Flow/Visibility/FlowStatus/components/PublicLink";
 import { AlteredNodesSummaryContent } from "./AlteredNodes";
 import { ValidationChecks } from "./ValidationChecks";
 
@@ -56,7 +56,6 @@ export const NoChangesDialog = ({
     onClose={() => setDialogOpen(false)}
     aria-labelledby="alert-dialog-title"
     aria-describedby="alert-dialog-description"
-    maxWidth="md"
   >
     <DialogTitle variant="h3" component="h1" sx={{ px: 3, py: 2 }}>
       {`Check for changes to publish`}
@@ -344,7 +343,6 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
     <Dialog
       open={dialogOpen}
       fullWidth
-      maxWidth="md"
       onClose={() => {
         setDialogOpen(false);
         setActiveStep(0);

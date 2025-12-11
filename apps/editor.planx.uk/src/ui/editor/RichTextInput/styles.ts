@@ -6,7 +6,6 @@ import { BubbleMenu } from "@tiptap/react/menus";
 import { inputFocusStyle } from "theme";
 
 export const RichContentContainer = styled(Box)(({ theme }) => ({
-  position: "relative",
   "& .ProseMirror": {
     padding: "12px 15px",
     backgroundColor: theme.palette.common.white,
@@ -51,6 +50,7 @@ export const RichContentContainer = styled(Box)(({ theme }) => ({
     // Focus styles
     "&.ProseMirror-focused": {
       ...inputFocusStyle,
+      zIndex: 0,
     },
     // Styles for injected passport/mention
     "& .passport": {
@@ -81,7 +81,6 @@ export const StyledBubbleMenu = styled(BubbleMenu)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   padding: theme.spacing(0.25),
-  position: "absolute",
   zIndex: theme.zIndex.tooltip,
 }));
 

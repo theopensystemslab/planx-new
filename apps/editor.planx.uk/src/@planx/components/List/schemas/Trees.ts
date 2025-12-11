@@ -8,7 +8,7 @@ export const Trees: Schema = {
       type: "map",
       data: {
         title:
-          "Click the map to mark the position of a tree. Multiple trees can be added if they are of the same species, proposed work and reason. Markers can be removed by clicking the delete icon.",
+          "Click or tap the map to mark the position of a tree. Multiple trees can be added if they are of the same species, proposed work and reason. Markers can be removed by selecting the delete icon.",
         fn: "features",
         mapOptions: {
           basemap: "MapboxSatellite",

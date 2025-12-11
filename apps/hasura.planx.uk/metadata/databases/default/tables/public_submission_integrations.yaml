@@ -11,7 +11,7 @@ insert_permissions:
       check: {}
       columns:
         - default_email
-        - email_id
+        - id
         - submission_email
         - team_id
     comment: ""
@@ -20,16 +20,24 @@ insert_permissions:
       check: {}
       columns:
         - default_email
-        - email_id
+        - id
         - submission_email
         - team_id
     comment: ""
 select_permissions:
+  - role: api
+    permission:
+      columns:
+        - default_email
+        - id
+        - submission_email
+      filter: {}
+    comment: ""
   - role: platformAdmin
     permission:
       columns:
         - default_email
-        - email_id
+        - id
         - submission_email
         - team_id
       filter: {}
@@ -43,7 +51,7 @@ select_permissions:
     permission:
       columns:
         - default_email
-        - email_id
+        - id
         - submission_email
         - team_id
       filter: {}
@@ -53,7 +61,7 @@ update_permissions:
     permission:
       columns:
         - default_email
-        - email_id
+        - id
         - submission_email
       filter: {}
       check: null
@@ -62,7 +70,7 @@ update_permissions:
     permission:
       columns:
         - default_email
-        - email_id
+        - id
         - submission_email
       filter: {}
       check: null

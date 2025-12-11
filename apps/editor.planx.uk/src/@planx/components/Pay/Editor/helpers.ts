@@ -22,6 +22,7 @@ export const parseError = (
   // Specific field-level error
   return errors[index].key || errors[index].value;
 };
+
 /**
  * Helper method to handle Formik "touched" in arrays
  * Please see parseError() for additional context
@@ -42,6 +43,7 @@ export const parseTouched = (
   // Specific field-level error
   return touched[index].key && touched[index].value;
 };
+
 /**
  * Disable required fields so they cannot be edited
  * Only disable first instance, otherwise any field beginning with a required field will be disabled, and user will not be able to fix their mistake as the delete icon is also disabled

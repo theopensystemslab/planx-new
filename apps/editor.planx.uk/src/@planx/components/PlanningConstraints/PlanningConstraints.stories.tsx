@@ -7,8 +7,8 @@ import classifiedRoadsNegativeResponseMock from "./mocks/classifiedRoadsNegative
 import classifiedRoadsResponseMock from "./mocks/classifiedRoadsResponseMock";
 import digitalLandNegativeResponseMock from "./mocks/digitalLandNegativeResponseMock";
 import digitalLandResponseMock from "./mocks/digitalLandResponseMock";
-import { Presentational, PresentationalProps } from "./Presentational";
 import Public from "./Public";
+import { Presentational, PresentationalProps } from "./Public/Presentational";
 
 /**
  * PlanningConstraints fetches data about constraints from DLUHC's planning.data.gov.uk & data about classified roads from the Ordnance Survey Features API.

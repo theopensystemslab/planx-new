@@ -21,17 +21,17 @@ const mockGetUserByEmail = vi.fn().mockResolvedValue(mockUser);
 
 vi.mock("@opensystemslab/planx-core", () => {
   return {
-    CoreDomainClient: vi.fn().mockImplementation(() => ({
-      team: {
+    CoreDomainClient: class MockCoreDomainClient {
+      team = {
         getBySlug: () => mockGetTeamBySlug(),
         addMember: () => mockAddMember(),
         removeMember: () => mockRemoveMember(),
         changeMemberRole: () => mockChangeMemberRole(),
-      },
-      user: {
+      };
+      user = {
         getByEmail: () => mockGetUserByEmail(),
-      },
-    })),
+      };
+    },
   };
 });
 

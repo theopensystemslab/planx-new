@@ -29,12 +29,7 @@ type Props = {
 };
 
 const Question: React.FC<Props> = React.memo((props) => {
-  const [
-    isClone,
-    childNodes,
-    showHelpText,
-    showTags,
-  ] = useStore((state) => [
+  const [isClone, childNodes, showHelpText, showTags] = useStore((state) => [
     state.isClone,
     state.childNodesOf(props.id),
     state.showHelpText,
@@ -61,11 +56,12 @@ const Question: React.FC<Props> = React.memo((props) => {
   }
 
   const handleContextMenu = useContextMenu({
-    source: "node", relationships: {
+    source: "node",
+    relationships: {
       parent,
       before: props.id,
       self: props.id,
-    }
+    },
   });
 
   const Icon = props.type === "Error" ? ErrorIcon : ICONS[props.type];
@@ -86,7 +82,6 @@ const Question: React.FC<Props> = React.memo((props) => {
           {
             isDragging,
             isClone: isClone(props.id),
-            isNote: childNodes.length === 0,
             wasVisited: props.wasVisited,
             hasFailed: props.hasFailed,
           },

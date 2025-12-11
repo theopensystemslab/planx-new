@@ -16,9 +16,9 @@ type Story = StoryObj<typeof meta>;
 
 export const Basic = {
   args: {
-    heading: "Application sent",
+    heading: "Form sent",
     description: `A payment receipt has been emailed to you. You will also 
-    receive an email to confirm when your application has been received.`,
+    receive an email to confirm when your form has been received.`,
     sessionId: "123-t3st-456",
     applicableDetails: {
       "Planning Application Reference": "LBL–LDCP-2138261",
@@ -45,7 +45,7 @@ export const Basic = {
     contactInfo: `
       You can contact us at <em>ADD YOUR COUNCIL CONTACT</em>
       <br><br>
-      <p><strong>What did you think of this service? Please give us your feedback on the next page.</strong></p>
+      <p>What did you think of this service? Please give us your feedback on the next page.</p>
     `,
     data: [],
   },

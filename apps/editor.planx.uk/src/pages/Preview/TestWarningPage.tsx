@@ -15,7 +15,7 @@ export const TestWarningPage = ({ children }: PropsWithChildren) => {
           <Card handleSubmit={() => setHasAcknowledgedWarning()}>
             <CardHeader
               title="This is a test environment"
-              description='This version of the service is unpublished and for testing only. Do not use it to submit real applications. Some features (such as "save & return" and "invite to pay") will be unavailable.'
+              description='This version of the service is unpublished and for testing only. Do not use it to submit real applications or forms. Some features (such as "save & return" and "invite to pay") will be unavailable.'
             ></CardHeader>
           </Card>
         </Box>

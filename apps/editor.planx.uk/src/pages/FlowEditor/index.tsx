@@ -3,6 +3,7 @@ import "./floweditor.scss";
 import Box from "@mui/material/Box";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { styled } from "@mui/material/styles";
+import { MENU_WIDTH_COMPACT } from "components/EditorNavMenu/styles";
 import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
 import { isEmpty } from "lodash";
 import { parentNodeIsTemplatedInternalPortal } from "pages/FlowEditor/utils";
@@ -13,6 +14,7 @@ import { getParentId } from "./components/Flow/lib/utils";
 import { ToggleDataFieldsButton } from "./components/FlowEditor/ToggleDataFieldsButton";
 import { ToggleHelpTextButton } from "./components/FlowEditor/ToggleHelpTextButton";
 import { ToggleImagesButton } from "./components/FlowEditor/ToggleImagesButton";
+import { ToggleNotesButton } from "./components/FlowEditor/ToggleNotesButton";
 import { ToggleTagsButton } from "./components/FlowEditor/ToggleTagsButton";
 import Sidebar from "./components/Sidebar";
 import FlowSkeleton from "./FlowSkeleton";
@@ -25,6 +27,7 @@ const EditorContainer = styled(Box)(() => ({
   overflow: "hidden",
   flexGrow: 1,
   maxHeight: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
+  maxWidth: `calc(100vw - ${MENU_WIDTH_COMPACT}px)`,
 }));
 
 const EditorVisualControls = styled(ButtonGroup)(({ theme }) => ({
@@ -114,6 +117,7 @@ const FlowEditor = () => {
             aria-label="Toggle node attributes"
           >
             <ToggleImagesButton />
+            <ToggleNotesButton />
             <ToggleHelpTextButton />
             <ToggleDataFieldsButton />
             <ToggleTagsButton />

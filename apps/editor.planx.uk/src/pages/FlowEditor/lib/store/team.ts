@@ -27,9 +27,6 @@ export interface TeamStore {
   initTeamStore: (slug: string) => Promise<void>;
   clearTeamStore: () => void;
   fetchCurrentTeam: () => Promise<Team>;
-  fetchCurrentTeamSettings: () => Promise<TeamSettings>;
-  updateTeamTheme: (theme: Partial<TeamTheme>) => Promise<boolean>;
-  updateTeamSettings: (teamSettings: Partial<TeamSettings>) => Promise<boolean>;
   createTeam: (newTeam: CreateTeam) => Promise<number>;
   setTeamMembers: (teamMembers: TeamMember[]) => Promise<void>;
   deleteUser: (userId: number) => Promise<boolean>;
@@ -110,6 +107,7 @@ export const teamStore: StateCreator<
               hasPlanningData: has_planning_data
             }
             settings: team_settings {
+              id
               boundaryUrl: boundary_url
               boundaryBBox: boundary_bbox
               referenceCode: reference_code
@@ -153,28 +151,6 @@ export const teamStore: StateCreator<
   fetchCurrentTeam: async () => {
     const { teamSlug, $client } = get();
     return await $client.team.getBySlug(teamSlug);
-  },
-
-  fetchCurrentTeamSettings: async () => {
-    const { teamSlug, $client } = get();
-    return await $client.team.getTeamSettings(teamSlug);
-  },
-
-  updateTeamTheme: async (theme: Partial<TeamTheme>) => {
-    const { teamId, $client } = get();
-    return await $client.team.updateTheme(teamId, theme);
-  },
-
-  updateTeamSettings: async (updatedTeamSettings: Partial<TeamSettings>) => {
-    const { teamId, $client, teamSettings: currentTeamSettings } = get();
-    const isSuccess = await $client.team.updateTeamSettings(
-      teamId,
-      updatedTeamSettings,
-    );
-    if (isSuccess)
-      set({ teamSettings: { ...currentTeamSettings, ...updatedTeamSettings } });
-
-    return isSuccess;
   },
 
   setTeamMembers: async (teamMembers: TeamMember[]) => {

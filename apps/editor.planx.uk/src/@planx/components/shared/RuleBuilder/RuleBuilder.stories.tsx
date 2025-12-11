@@ -76,6 +76,24 @@ export const SubsetOfConditions = {
   },
 } satisfies Story;
 
+export const WithCustomLabels = {
+  name: "With custom labels",
+  render: (args) => <RuleBuilderWithState {...args} />,
+  args: {
+    labels: {
+      [Condition.AlwaysRequired]: "Always display",
+      [Condition.RequiredIf]: "Display if",
+    },
+    conditions: [Condition.AlwaysRequired, Condition.RequiredIf],
+    rule: {
+      fn: "someFn",
+      val: "someVal",
+      condition: Condition.RequiredIf,
+      operator: Operator.Equals,
+    },
+  },
+} satisfies Story;
+
 export const WithDataSchema = {
   name: "With data schema",
   render: (args) => <RuleBuilderWithState {...args} />,

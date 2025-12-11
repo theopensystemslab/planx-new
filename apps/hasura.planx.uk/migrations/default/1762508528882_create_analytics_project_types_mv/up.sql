@@ -1,4 +1,4 @@
-CREATE MATERIALIZED VIEW analytics_project_types AS
+CREATE MATERIALIZED VIEW "public"."analytics_project_types" AS
 -- Arrays
 SELECT 
   analytics_id,
@@ -18,4 +18,4 @@ FROM analytics_logs,
      LATERAL jsonb_each_text((allow_list_answers ->> 'proposal.projectType')::jsonb) AS e
 WHERE jsonb_typeof((allow_list_answers ->> 'proposal.projectType')::jsonb) = 'object';
 
-GRANT SELECT ON public.analytics_project_types TO metabase_read_only;
+GRANT SELECT ON "public"."analytics_project_types" TO metabase_read_only;

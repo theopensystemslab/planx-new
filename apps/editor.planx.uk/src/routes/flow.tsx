@@ -28,6 +28,13 @@ const sorter = natsort({ insensitive: true });
 const sortFlows = (a: { text: string }, b: { text: string }) =>
   sorter(a.text.replace(/\W|\s/g, ""), b.text.replace(/\W|\s/g, ""));
 
+/**
+ * For non admins, external portal (aka nested flow) selection should return:
+ *   - Flows in my team
+ *   - Flows set to copiable by others
+ *   - Not source templates
+ *   - Not the parent flow I am currently nesting within
+ */
 const getExternalPortals = async (currentTeam: string, currentFlow: string) => {
   const { data } = await client.query({
     query: gql`
@@ -37,6 +44,7 @@ const getExternalPortals = async (currentTeam: string, currentFlow: string) => {
           slug
           name
           isTemplate: is_template
+          canCreateFromCopy: can_create_from_copy
           team {
             id
             slug
@@ -47,19 +55,29 @@ const getExternalPortals = async (currentTeam: string, currentFlow: string) => {
     `,
   });
 
-  const filteredFlows = data.flows
-    .filter(
+  // Always filter out the parent flow I am currently nesting within
+  let filteredFlows = data.flows.filter(
+    (flow: Flow) =>
+      flow.team &&
+      `${currentTeam}/${currentFlow}` !== `${flow.team.slug}/${flow.slug}`,
+  );
+
+  // For non admins, also filter out source templates, flows not copiable by others, and flows not in my team for a less-overwhelming selection
+  const isPlatformAdmin = useStore.getState().user?.isPlatformAdmin;
+  if (!isPlatformAdmin) {
+    filteredFlows = filteredFlows.filter(
       (flow: Flow) =>
-        flow.team &&
-        `${currentTeam}/${currentFlow}` !== `${flow.team.slug}/${flow.slug}` &&
-        !flow.isTemplate,
-    )
-    .map(({ id, team, slug, name }: Flow) => ({
-      id,
-      name,
-      slug,
-      team: team.name,
-    }));
+        !flow.isTemplate &&
+        (flow.canCreateFromCopy || flow.team.slug === currentTeam),
+    );
+  }
+
+  filteredFlows = filteredFlows.map(({ id, team, slug, name }: Flow) => ({
+    id,
+    name,
+    slug,
+    team: team.name,
+  }));
 
   const flowsSortedByTeam = sortBy(filteredFlows, [(flow: Flow) => flow.team]);
 
@@ -137,7 +155,12 @@ const editNode = validateNodeRoute(
       extraProps.flows = await getExternalPortals(team, flow);
 
     const type = SLUGS[node.type];
-    const nodesWithOptions = ["question", "responsive-question", "checklist", "responsive-checklist"]
+    const nodesWithOptions = [
+      "question",
+      "responsive-question",
+      "checklist",
+      "responsive-checklist",
+    ];
 
     if (nodesWithOptions.includes(type)) {
       const childNodes = useStore.getState().childNodesOf(id);

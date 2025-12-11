@@ -1,0 +1,13 @@
+table:
+  name: analytics_rab
+  schema: public
+configuration:
+  column_config:
+    project.reportType.multiple:
+      custom_name: project_reportType_multiple
+    report.projectType:
+      custom_name: report_projectType
+  custom_column_names:
+    project.reportType.multiple: project_reportType_multiple
+    report.projectType: report_projectType
+  custom_root_fields: {}

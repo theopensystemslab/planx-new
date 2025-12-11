@@ -14,7 +14,7 @@ const mockFlow = {
   },
   G59w5rVEYA: {
     data: {
-      heading: "Application sent",
+      heading: "Form sent",
       moreInfo: "More info",
       contactInfo: "Contact info",
       description: "Description",
@@ -48,7 +48,7 @@ const mockSendFlow = {
   },
   G59w5rVEYA: {
     data: {
-      heading: "Application sent",
+      heading: "Form sent",
       moreInfo: "More info",
       contactInfo: "Contact info",
       description: "Description",

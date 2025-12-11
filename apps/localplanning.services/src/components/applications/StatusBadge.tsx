@@ -18,7 +18,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, date }) => {
           label: "Draft started",
           alt: "Draft status",
           bgColor: "bg-gray-200",
-          textColor: "text-gray-900"
+          textColor: "text-gray-900",
         };
       case "awaitingPayment":
         return {
@@ -26,15 +26,15 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, date }) => {
           label: "Awaiting payment",
           alt: "Awaiting payment status",
           bgColor: "bg-amber-800",
-          textColor: "text-amber-50"
+          textColor: "text-amber-50",
         };
       case "submitted":
         return {
           icon: successIcon,
-          label: "Application sent",
-          alt: "Application sent status",
+          label: "Form sent",
+          alt: "Form sent status",
           bgColor: "bg-green-800",
-          textColor: "text-green-50"
+          textColor: "text-green-50",
         };
     }
   })();
@@ -44,25 +44,25 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, date }) => {
       case "awaitingPayment":
         return (
           <>
-            Application completed <strong className="font-semibold">{date}</strong>, awaiting payment
+            Application completed{" "}
+            <strong className="font-semibold">{date}</strong>, awaiting payment
           </>
         );
       default:
         return (
           <>
-            {badgeConfig.label} <strong className="font-semibold">{date}</strong>
+            {badgeConfig.label}{" "}
+            <strong className="font-semibold">{date}</strong>
           </>
         );
     }
   })();
 
   return (
-    <div className={`inline-flex items-center gap-2 clamp-[px,4,6] py-2.5 w-full ${badgeConfig.bgColor}`}>
-      <img
-        src={badgeConfig.icon}
-        alt={badgeConfig.alt}
-        className="w-6 h-6"
-      />
+    <div
+      className={`inline-flex items-center gap-2 clamp-[px,4,6] py-2.5 w-full ${badgeConfig.bgColor}`}
+    >
+      <img src={badgeConfig.icon} alt={badgeConfig.alt} className="w-6 h-6" />
       <span className={`text-body-md m-0 ${badgeConfig.textColor}`}>
         {badgeText}
       </span>

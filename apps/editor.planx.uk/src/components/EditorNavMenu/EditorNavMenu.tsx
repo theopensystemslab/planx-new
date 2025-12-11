@@ -4,11 +4,9 @@ import CurrencyPoundIcon from "@mui/icons-material/CurrencyPound";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GroupIcon from "@mui/icons-material/Group";
-import Info from "@mui/icons-material/Info";
 import LayersIcon from "@mui/icons-material/Layers";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
-import PaletteIcon from "@mui/icons-material/Palette";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import SchoolIcon from "@mui/icons-material/School";
 import TuneIcon from "@mui/icons-material/Tune";
@@ -18,7 +16,9 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef } from "react";
 import { useCurrentRoute, useLoadingRoute, useNavigation } from "react-navi";
 import EditorIcon from "ui/icons/Editor";
+import LocalPlanningServicesIcon from "ui/icons/LocalPlanningServices";
 
+import { useLPS } from "../../hooks/useLPS";
 import { MenuButton, MenuItem, MenuTitle, MenuWrap, Root } from "./styles";
 import { Route, RoutesForURL } from "./types";
 
@@ -36,6 +36,7 @@ function EditorNavMenu() {
     ],
   );
   const referenceCode = team?.settings?.referenceCode;
+  const { url: lpsBaseUrl } = useLPS();
 
   const isActive = (route: string) => url.href.endsWith(route);
 
@@ -99,13 +100,7 @@ function EditorNavMenu() {
     {
       title: "Settings",
       Icon: TuneIcon,
-      route: `/${teamSlug}/general-settings`,
-      accessibleBy: ["platformAdmin", "teamEditor"],
-    },
-    {
-      title: "Design",
-      Icon: PaletteIcon,
-      route: `/${teamSlug}/design`,
+      route: `/${teamSlug}/settings`,
       accessibleBy: ["platformAdmin", "teamEditor"],
     },
     {
@@ -143,6 +138,15 @@ function EditorNavMenu() {
       accessibleBy: "*",
       disabled: !referenceCode,
     },
+    {
+      title: referenceCode
+        ? `Local Planning Services (external link)`
+        : `Local Planning Services unavailable`,
+      Icon: LocalPlanningServicesIcon,
+      route: referenceCode ? `${lpsBaseUrl}/${teamSlug}` : `#`,
+      accessibleBy: "*",
+      disabled: !referenceCode,
+    },
   ];
 
   const flowLayoutRoutes: Route[] = [
@@ -150,12 +154,6 @@ function EditorNavMenu() {
       title: "Editor",
       Icon: EditorIcon,
       route: `/${teamSlug}/${flowSlug}`,
-      accessibleBy: "*",
-    },
-    {
-      title: "About this flow",
-      Icon: Info,
-      route: `/${teamSlug}/${flowSlug}/about`,
       accessibleBy: "*",
     },
     {

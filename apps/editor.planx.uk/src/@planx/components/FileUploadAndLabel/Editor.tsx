@@ -1,5 +1,6 @@
 import RuleIcon from "@mui/icons-material/Rule";
 import Box from "@mui/material/Box";
+import Collapse from "@mui/material/Collapse";
 import { getValidSchemaValues } from "@opensystemslab/planx-core";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
@@ -110,8 +111,9 @@ function FileUploadAndLabelComponent(props: Props) {
             Editor={FileTypeEditor}
             newValue={newFileType}
             disabled={props.disabled}
-            isTemplatedNode={props.node?.data?.isTemplatedNode}
             errors={formik.errors.fileTypes}
+            collapsible={true}
+            itemName="file type"
           />
         </ModalSectionContent>
       </ModalSection>
@@ -129,8 +131,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
     schema.push(props.value.fn);
 
   return (
-    <Box sx={{ flex: 1, mb: 2 }} data-testid="rule-list-manager">
-      <ModalSubtitle title="File" />
+    <Box sx={{ flex: 1 }} data-testid="rule-list-manager">
       <InputRow>
         <Input
           errorMessage={getIn(props.errors, "title")}
@@ -143,83 +144,89 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
           disabled={props.disabled}
         />
       </InputRow>
-      <DataFieldAutocomplete
-        errorMessage={getIn(props.errors, "fn")}
-        schema={schema}
-        value={props.value.fn}
-        disabled={props.disabled}
-        onChange={(value) => props.onChange(merge(props.value, { fn: value }))}
-        allowCustomValues={false}
-      />
-      <RuleBuilder
-        rule={props.value.rule}
-        disabled={props.disabled}
-        onChange={(rule) => props.onChange(merge(props.value, { rule }))}
-        dataSchema={["recommended", "required"]}
-      />
-      <ModalSubtitle title="Additional file information" />
-      <InputRow>
-        <RichTextInput
-          multiline
-          name="info"
-          value={props.value.moreInformation?.info}
-          onChange={(e) => {
-            props.onChange(
-              merge(props.value, { moreInformation: { info: e.target.value } }),
-            );
-          }}
-          placeholder="Why it matters"
+      <Collapse in={!props.isCollapsed} timeout="auto">
+        <DataFieldAutocomplete
+          errorMessage={getIn(props.errors, "fn")}
+          schema={schema}
+          value={props.value.fn}
           disabled={props.disabled}
-          errorMessage={getIn(props.errors, "moreInformation.info")}
+          onChange={(value) =>
+            props.onChange(merge(props.value, { fn: value }))
+          }
+          allowCustomValues={false}
         />
-      </InputRow>
-      <InputRow>
-        <RichTextInput
-          multiline
-          name="policyRef"
-          value={props.value.moreInformation?.policyRef}
-          onChange={(e) => {
-            props.onChange(
-              merge(props.value, {
-                moreInformation: { policyRef: e.target.value },
-              }),
-            );
-          }}
-          placeholder="Policy source"
+        <RuleBuilder
+          rule={props.value.rule}
           disabled={props.disabled}
-          errorMessage={getIn(props.errors, "moreInformation.policyRef")}
+          onChange={(rule) => props.onChange(merge(props.value, { rule }))}
+          dataSchema={["recommended", "required"]}
         />
-      </InputRow>
-      <InputRow>
-        <RichTextInput
-          multiline
-          name="howMeasured"
-          value={props.value.moreInformation?.howMeasured}
-          onChange={(e) => {
-            props.onChange(
-              merge(props.value, {
-                moreInformation: { howMeasured: e.target.value },
-              }),
-            );
-          }}
-          placeholder="How is it defined?"
-          disabled={props.disabled}
-          errorMessage={getIn(props.errors, "moreInformation.howMeasured")}
-        />
-        <InputRowItem>
-          <ImgInput
-            img={props.value.moreInformation?.definitionImg}
-            disabled={props.disabled}
-            onChange={(newUrl) => {
+        <ModalSubtitle title="Additional file information" />
+        <InputRow>
+          <RichTextInput
+            multiline
+            name="info"
+            value={props.value.moreInformation?.info}
+            onChange={(e) => {
               props.onChange(
                 merge(props.value, {
-                  moreInformation: { definitionImg: newUrl ?? "" },
+                  moreInformation: { info: e.target.value },
                 }),
               );
             }}
+            placeholder="Why it matters"
+            disabled={props.disabled}
+            errorMessage={getIn(props.errors, "moreInformation.info")}
           />
-        </InputRowItem>
-      </InputRow>
+        </InputRow>
+        <InputRow>
+          <RichTextInput
+            multiline
+            name="policyRef"
+            value={props.value.moreInformation?.policyRef}
+            onChange={(e) => {
+              props.onChange(
+                merge(props.value, {
+                  moreInformation: { policyRef: e.target.value },
+                }),
+              );
+            }}
+            placeholder="Policy source"
+            disabled={props.disabled}
+            errorMessage={getIn(props.errors, "moreInformation.policyRef")}
+          />
+        </InputRow>
+        <InputRow>
+          <RichTextInput
+            multiline
+            name="howMeasured"
+            value={props.value.moreInformation?.howMeasured}
+            onChange={(e) => {
+              props.onChange(
+                merge(props.value, {
+                  moreInformation: { howMeasured: e.target.value },
+                }),
+              );
+            }}
+            placeholder="How is it defined?"
+            disabled={props.disabled}
+            errorMessage={getIn(props.errors, "moreInformation.howMeasured")}
+          />
+          <InputRowItem>
+            <ImgInput
+              img={props.value.moreInformation?.definitionImg}
+              disabled={props.disabled}
+              onChange={(newUrl) => {
+                props.onChange(
+                  merge(props.value, {
+                    moreInformation: { definitionImg: newUrl ?? "" },
+                  }),
+                );
+              }}
+            />
+          </InputRowItem>
+        </InputRow>
+      </Collapse>
     </Box>
   );
 }

@@ -34,7 +34,7 @@ export const InvalidSession: React.FC<{
   retry: () => void;
 }> = ({ retry }) => (
   <StatusPage
-    bannerHeading="We can't find your application"
+    bannerHeading="We can't find your form"
     buttonText="Try again"
     onButtonClick={retry}
     additionalOption="startNewApplication"
@@ -44,8 +44,8 @@ export const InvalidSession: React.FC<{
     </Typography>
     <Typography variant="body1">
       <br />
-      This may be because your application has expired or there was a mistake in
-      your email address.
+      This may be because it has expired or there was a mistake in your email
+      address.
       <br />
       <br />
       Try entering your email address again.
@@ -57,7 +57,7 @@ export const LockedSession: React.FC<{
   paymentRequest?: MinPaymentRequest;
 }> = ({ paymentRequest }) => (
   <StatusPage
-    bannerHeading="Sorry, you can't make changes to this application"
+    bannerHeading="Sorry, you can't make changes to this form"
     additionalOption="startNewApplication"
   >
     <Typography variant="body1">
@@ -65,7 +65,7 @@ export const LockedSession: React.FC<{
       <Link href={`mailto:${paymentRequest?.payeeEmail}`}>
         {paymentRequest?.payeeEmail}
       </Link>
-      ) to pay for this application and changes might affect the fee.
+      ) to pay and changes might affect the fee.
       <br />
       <br />
       You can{" "}
@@ -73,7 +73,7 @@ export const LockedSession: React.FC<{
         component={ReactNaviLink}
         href={`../pay?paymentRequestId=${paymentRequest?.id}`}
       >
-        pay for this application yourself on the payment page
+        pay yourself on the payment page
       </Link>
     </Typography>
   </StatusPage>
@@ -85,7 +85,7 @@ export const ValidationSuccess: React.FC<{
 }> = ({ reconciliationResponse, continueApplication }) => {
   return (
     <ReconciliationPage
-      bannerHeading="Resume your application"
+      bannerHeading="Resume your form"
       reconciliationResponse={reconciliationResponse}
       buttonText="Continue"
       onButtonClick={continueApplication}

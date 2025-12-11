@@ -1,5 +1,9 @@
-import { Feature } from "geojson";
+import bbox from "@turf/bbox";
+import bboxPolygon from "@turf/bbox-polygon";
+import { Feature, type Polygon } from "geojson";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
+
+import type { Entity } from "./planningData/types";
 
 type Projection = "EPSG:3857" | "EPSG:27700";
 
@@ -39,3 +43,9 @@ export const useGeoJSONChange: UseGeoJSONChange = (mapId, callback) => {
 
   return [features, setFeatures];
 };
+
+/**
+ * Convert a complex local authority boundary to a simplified bounding box
+ */
+export const convertToBoundingBox = (feature: Entity): Feature<Polygon> =>
+  bboxPolygon(bbox(feature));

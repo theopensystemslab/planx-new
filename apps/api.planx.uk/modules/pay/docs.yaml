@@ -15,6 +15,20 @@ components:
       type: string
       format: uuid
       required: true
+    flowId:
+      in: query
+      name: flowId
+      schema:
+      type: string
+      format: uuid
+      required: true
+    sessionId:
+      in: query
+      name: sessionId
+      schema:
+      type: string
+      format: uuid
+      required: true
     paymentRequest:
       in: path
       name: paymentId
@@ -300,6 +314,8 @@ paths:
         - pay
       parameters:
         - $ref: "#/components/parameters/localAuthority"
+        - $ref: "#/components/parameters/flowId"
+        - $ref: "#/components/parameters/sessionId"
       requestBody:
         $ref: "#/components/schemas/CreatePaymentRequest"
       responses:
@@ -317,6 +333,8 @@ paths:
       parameters:
         - $ref: "#/components/parameters/localAuthority"
         - $ref: "#/components/parameters/paymentId"
+        - $ref: "#/components/parameters/flowId"
+        - $ref: "#/components/parameters/sessionId"
       responses:
         "200":
           $ref: "#/components/responses/FetchPaymentResponse"

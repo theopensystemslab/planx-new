@@ -92,6 +92,16 @@ const createPaymentSendEvents = async (
       combinedResponse["s3"] = s3Event;
     }
 
+    if (destinations.includes("fme")) {
+      const fmeEvent = await createScheduledEvent({
+        webhook: `{{HASURA_PLANX_API_URL}}/upload-submission/${teamSlug}?notify=false`,
+        schedule_at: new Date(now.getTime() + 15 * 1000),
+        payload: eventPayload,
+        comment: `upload_submission_without_notification_${payload.sessionId}`,
+      });
+      combinedResponse["fme"] = fmeEvent;
+    }
+
     return res.json(combinedResponse);
   } catch (error) {
     return next({

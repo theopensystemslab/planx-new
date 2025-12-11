@@ -15,6 +15,7 @@ import {
   DEFAULT_POSTGRES_PORT,
   generateCORSAllowList,
   generateTeamSecrets,
+  getJavaOpts,
   getPostgresDbUrl,
   usEast1,
 } from "./utils";
@@ -73,7 +74,6 @@ const CUSTOM_DOMAINS: CustomDomain[] =
         {
           domain: "planningservices.barnet.gov.uk",
           name: "barnet",
-          certificateLocation: "pulumiConfig",
         },
         {
           domain: "planningservices.tewkesbury.gov.uk",
@@ -87,8 +87,7 @@ const CUSTOM_DOMAINS: CustomDomain[] =
         },
         {
           domain: "planningservices.gateshead.gov.uk",
-          name: "gateshead",
-          certificateLocation: "pulumiConfig",
+          name: "gateshead"
         },
         {
           domain: "planningservices.gloucester.gov.uk",
@@ -222,10 +221,11 @@ export = async () => {
     domain: DOMAIN,
   });
   
-  // since our secrets here are of the type Output<string>, we have to use Pulumi methods to to access them as strings
+  // since our secrets here are of the type Output<string>, we have to use Pulumi methods to access them as strings
   const metabaseDbUrl = pulumi.all([dbHost, metabasePgPassword]).apply(([dbHost, metabasePgPassword]) => 
     getPostgresDbUrl("metabase", metabasePgPassword, dbHost, DEFAULT_POSTGRES_PORT, "metabase"))
-  const metabaseService = new awsx.ecs.FargateService("metabase", {
+  const metabaseMemoryMb = config.requireNumber("metabase-memory");
+  new awsx.ecs.FargateService("metabase", {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
     taskDefinitionArgs: {
@@ -238,10 +238,11 @@ export = async () => {
         image: "metabase/metabase:v0.56.6",
         portMappings: [metabaseListenerHttp],
         // When changing `memory`, also update `JAVA_OPTS` below
-        memory: 4096 /*MB*/,
+        cpu: config.requireNumber("metabase-cpu"),
+        memory: metabaseMemoryMb,
         environment: [
-          // https://www.metabase.com/docs/latest/troubleshooting-guide/running.html#heap-space-outofmemoryerrors
-          { name: "JAVA_OPTS", value: `-Xmx2g` },
+          // https://www.metabase.com/docs/latest/troubleshooting-guide/running.html#allocating-more-memory-to-the-jvm
+          { name: "JAVA_OPTS", value: getJavaOpts(metabaseMemoryMb) },
           { name: "MB_DB_TYPE", value: "postgres" },
           {
             name: "MB_DB_CONNECTION_URI",
@@ -282,7 +283,8 @@ export = async () => {
 
   const rootDbUrl = pulumi.all([dbHost, dbRootPassword]).apply(([dbHost, dbRootPassword]) => 
     getPostgresDbUrl(DB_ROOT_USERNAME, dbRootPassword, dbHost))
-  createHasuraService({
+  const hasuraService = await createHasuraService({
+    env,
     vpc,
     cluster,
     repo,
@@ -430,6 +432,10 @@ export = async () => {
           {
             name: "FILE_API_KEY_TEWKESBURY",
             value: config.requireSecret("file-api-key-tewkesbury"),
+          },
+          {
+            name: "FILE_API_KEY_CAMDEN",
+            value: config.requireSecret("file-api-key-camden"),
           },
           {
             name: "SKIP_RATE_LIMIT_SECRET",
@@ -688,7 +694,10 @@ export = async () => {
             certificateBody: certData.apply(data => data.cert),
             certificateChain: certData.apply(data => data?.chain),
           },
-          { provider: usEast1 }
+          { 
+            provider: usEast1,
+            replaceOnChanges: ["privateKey"],
+          }
         );
 
         acmCertificateArn = certificate.arn;
@@ -796,6 +805,7 @@ export = async () => {
 
   return {
     customDomains,
+    hasuraServiceName: hasuraService.service.name,
   };
 };
 

@@ -11,12 +11,13 @@ import { styled } from "@mui/material/styles";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { parseFormValues } from "@planx/components/shared";
 import ErrorFallback from "components/Error/ErrorFallback";
-import { hasFeatureFlag } from "lib/featureFlags";
+import { FormikProps } from "formik";
+import isEqual from "lodash/isEqual";
 import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
 } from "pages/FlowEditor/utils";
-import React, { useMemo } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useNavigation } from "react-navi";
 import { rootFlowPath } from "routes/utils";
@@ -56,17 +57,9 @@ const NodeTypeSelect: React.FC<{
     >
       <optgroup label="Question">
         <option value={TYPES.Question}>Question</option>
-        {hasFeatureFlag("RESPONSIVE_QUESTIONS_CHECKLISTS") && (
-          <option value={TYPES.ResponsiveQuestion}>
-            Responsive question (testing only)
-          </option>
-        )}
+        <option value={TYPES.ResponsiveQuestion}>Responsive question</option>
         <option value={TYPES.Checklist}>Checklist</option>
-        {hasFeatureFlag("RESPONSIVE_QUESTIONS_CHECKLISTS") && (
-          <option value={TYPES.ResponsiveChecklist}>
-            Responsive checklist (testing only)
-          </option>
-        )}
+        <option value={TYPES.ResponsiveChecklist}>Responsive checklist</option>
         <option value={TYPES.NextSteps}>Next steps</option>
       </optgroup>
       <optgroup label="Inputs">
@@ -126,6 +119,9 @@ const FormModal: React.FC<{
   extraProps?: any;
 }> = ({ type, handleDelete, Component, id, before, parent, extraProps }) => {
   const { navigate } = useNavigation();
+  const formikRef = useRef<FormikProps<any> | null>(null);
+  const [showUnsavedWarning, setShowUnsavedWarning] = useState(false);
+
   const [
     addNode,
     updateNode,
@@ -148,7 +144,57 @@ const FormModal: React.FC<{
     store.isClone,
   ]);
   const node = flow[id];
-  const handleClose = () => navigate(rootFlowPath(true));
+
+  const normalizeFormValues = (obj: any): any => {
+    if (obj === null || obj === undefined || obj === "") {
+      return "";
+    }
+
+    if (Array.isArray(obj)) {
+      return obj.map(normalizeFormValues);
+    }
+
+    if (typeof obj === "object") {
+      const normalized: any = {};
+      for (const key in obj) {
+        normalized[key] = normalizeFormValues(obj[key]);
+      }
+      return normalized;
+    }
+
+    return obj;
+  };
+
+  const isDirty = (formik: FormikProps<any>): boolean => {
+    return !isEqual(
+      normalizeFormValues(formik.values),
+      normalizeFormValues(formik.initialValues),
+    );
+  };
+
+  const hasUnsavedChanges = () => {
+    const formik = formikRef.current;
+    if (!formik) return false;
+
+    return isDirty(formik);
+  };
+
+  const handleClose = () => {
+    if (hasUnsavedChanges()) {
+      setShowUnsavedWarning(true);
+    } else {
+      navigate(rootFlowPath(true));
+    }
+  };
+
+  const handleConfirmClose = () => {
+    setShowUnsavedWarning(false);
+    navigate(rootFlowPath(true));
+  };
+
+  const handleCancelClose = () => {
+    setShowUnsavedWarning(false);
+  };
 
   // Nodes should be disabled when:
   //  1. The user doesn't have any edit access to this team
@@ -191,125 +237,170 @@ const FormModal: React.FC<{
     : !canUserEditNode(teamSlug);
 
   return (
-    <StyledDialog
-      open
-      fullWidth
-      maxWidth="md"
-      disableScrollLock
-    >
-      <DialogTitle
-        sx={{
-          py: 1,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
+    <>
+      <StyledDialog
+        open
+        fullWidth
+        disableScrollLock
+        onClose={(_event, reason) => {
+          if (reason === "escapeKeyDown") {
+            handleClose();
+          }
         }}
       >
-        {!handleDelete && (
-          <NodeTypeSelect
-            value={type}
-            onChange={(type) => {
-              const url = new URL(window.location.href);
-              url.searchParams.set("type", SLUGS[Number(type) as TYPES]);
-              navigate([url.pathname, url.search].join(""));
-            }}
-          />
-        )}
-
-        <CloseButton aria-label="close" onClick={handleClose} size="large">
-          <Close />
-        </CloseButton>
-      </DialogTitle>
-      <DialogContent dividers sx={{ p: 0 }}>
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <Component
-            node={node}
-            {...node?.data}
-            {...extraProps}
-            id={id}
-            disabled={disabled}
-            handleSubmit={(
-              data: { data?: Record<string, unknown> },
-              children: Array<any> | undefined = undefined,
-            ) => {
-              // Handle internal portals
-              if (typeof data === "string") {
-                connect(parent, data, { before });
-              } else {
-                const parsedData = parseFormValues(Object.entries(data));
-                const parsedChildren =
-                  children?.map((o: any) =>
-                    parseFormValues(Object.entries(o)),
-                  ) || undefined;
-
-                if (handleDelete) {
-                  updateNode(
-                    { id, ...parsedData },
-                    { children: parsedChildren },
-                  );
-                } else {
-                  addNode(parsedData, {
-                    children: parsedChildren,
-                    parent,
-                    before,
-                  });
-                }
-              }
-
-              navigate(rootFlowPath(true));
-            }}
-          />
-        </ErrorBoundary>
-      </DialogContent>
-      <DialogActions
-        disableSpacing
-        sx={{ justifyContent: "flex-start", alignItems: "stretch" }}
-      >
-        {showDeleteButton && (
-          <Button
-            color="secondary"
-            variant="contained"
-            onClick={() => {
-              handleDelete();
-              navigate(rootFlowPath(true));
-            }}
-            disabled={disabled}
-            sx={{ backgroundColor: "background.default", gap: 1 }}
-          >
-            <DeleteIcon color="warning" fontSize="medium" />
-            Delete
-          </Button>
-        )}
-        <Box
-          sx={{ display: "flex", alignItems: "stretch", marginLeft: "auto" }}
-          gap={1}
+        <DialogTitle
+          sx={{
+            py: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
         >
-          {showMakeUniqueButton && (
+          {!handleDelete && (
+            <NodeTypeSelect
+              value={type}
+              onChange={(type) => {
+                const url = new URL(window.location.href);
+                url.searchParams.set("type", SLUGS[Number(type) as TYPES]);
+                navigate([url.pathname, url.search].join(""));
+              }}
+            />
+          )}
+
+          <CloseButton aria-label="close" onClick={handleClose} size="large">
+            <Close />
+          </CloseButton>
+        </DialogTitle>
+        <DialogContent dividers sx={{ p: 0 }}>
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <Component
+              formikRef={formikRef}
+              node={node}
+              {...node?.data}
+              {...extraProps}
+              id={id}
+              disabled={disabled}
+              handleSubmit={(
+                data: { data?: Record<string, unknown> },
+                children: Array<any> | undefined = undefined,
+              ) => {
+                // Handle internal portals
+                if (typeof data === "string") {
+                  connect(parent, data, { before });
+                } else {
+                  const parsedData = parseFormValues(Object.entries(data));
+                  const parsedChildren =
+                    children?.map((o: any) =>
+                      parseFormValues(Object.entries(o)),
+                    ) || undefined;
+
+                  if (handleDelete) {
+                    updateNode(
+                      { id, ...parsedData },
+                      { children: parsedChildren },
+                    );
+                  } else {
+                    addNode(parsedData, {
+                      children: parsedChildren,
+                      parent,
+                      before,
+                    });
+                  }
+                }
+
+                navigate(rootFlowPath(true));
+              }}
+            />
+          </ErrorBoundary>
+        </DialogContent>
+        <DialogActions
+          disableSpacing
+          sx={{ justifyContent: "flex-start", alignItems: "stretch" }}
+        >
+          {showDeleteButton && (
             <Button
-              variant="contained"
               color="secondary"
+              variant="contained"
               onClick={() => {
-                makeUnique(id, parent);
+                handleDelete();
                 navigate(rootFlowPath(true));
               }}
               disabled={disabled}
-              sx={{ backgroundColor: "background.default" }}
+              sx={{ backgroundColor: "background.default", gap: 1 }}
             >
-              Make unique
+              <DeleteIcon color="warning" fontSize="medium" />
+              Delete
             </Button>
           )}
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            form="modal"
-            disabled={disabled}
+          <Box
+            sx={{ display: "flex", alignItems: "stretch", marginLeft: "auto" }}
+            gap={1}
           >
-            {handleDelete ? `Update` : `Create`}
+            {showMakeUniqueButton && (
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => {
+                  makeUnique(id, parent);
+                  navigate(rootFlowPath(true));
+                }}
+                disabled={disabled}
+                sx={{ backgroundColor: "background.default" }}
+              >
+                Make unique
+              </Button>
+            )}
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              form="modal"
+              disabled={disabled}
+            >
+              {handleDelete ? `Update` : `Create`}
+            </Button>
+          </Box>
+        </DialogActions>
+      </StyledDialog>
+      <Dialog
+        open={showUnsavedWarning}
+        onClose={handleCancelClose}
+        aria-labelledby="unsaved-changes-dialog-title"
+        aria-describedby="unsaved-changes-dialog-description"
+        maxWidth="md"
+      >
+        <DialogTitle
+          id="unsaved-changes-dialog-title"
+          variant="h3"
+          component="h1"
+        >
+          Unsaved changes
+        </DialogTitle>
+        <DialogContent dividers>
+          <Box id="unsaved-changes-dialog-description">
+            You have unsaved changes. Are you sure you want to close without
+            saving?
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleCancelClose}
+            variant="contained"
+            color="secondary"
+            sx={{ backgroundColor: "background.default" }}
+          >
+            Continue editing
           </Button>
-        </Box>
-      </DialogActions>
-    </StyledDialog>
+          <Button
+            onClick={handleConfirmClose}
+            variant="contained"
+            color="warning"
+          >
+            Discard changes
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 

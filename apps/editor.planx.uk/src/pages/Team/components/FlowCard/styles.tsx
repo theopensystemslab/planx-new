@@ -3,8 +3,6 @@ import { styled } from "@mui/material/styles";
 import { Link } from "react-navi";
 import { inputFocusStyle } from "theme";
 
-import SimpleMenu from "../../../../ui/editor/SimpleMenu";
-
 export const Card = styled("li")(({ theme }) => ({
   listStyle: "none",
   position: "relative",
@@ -56,22 +54,4 @@ export const LinkSubText = styled(Box)(({ theme }) => ({
   color: theme.palette.text.secondary,
   fontWeight: "normal",
   paddingTop: theme.spacing(0.75),
-}));
-
-export const StyledSimpleMenu = styled(SimpleMenu)(({ theme }) => ({
-  display: "flex",
-  marginTop: "auto",
-  borderTop: `1px solid ${theme.palette.border.light}`,
-  backgroundColor: theme.palette.background.paper,
-  overflow: "hidden",
-  borderRadius: "0px 0px 4px 4px",
-  maxHeight: "35px",
-  "& > button": {
-    padding: theme.spacing(0.25, 1),
-    width: "100%",
-    justifyContent: "flex-start",
-    "& > svg": {
-      display: "none",
-    },
-  },
 }));

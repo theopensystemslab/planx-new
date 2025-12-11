@@ -7,7 +7,7 @@ import type {
   Checklist,
   ChecklistWithOptions,
 } from "@planx/components/Checklist/model";
-import ChecklistComponent from "@planx/components/Checklist/Public/Public";
+import ChecklistComponent from "@planx/components/Checklist/Public";
 import type { Confirmation } from "@planx/components/Confirmation/model";
 import ConfirmationComponent from "@planx/components/Confirmation/Public";
 import type { ContactInput } from "@planx/components/ContactInput/model";
@@ -38,7 +38,7 @@ import type { Notice } from "@planx/components/Notice/model";
 import NoticeComponent from "@planx/components/Notice/Public";
 import type { NumberInput } from "@planx/components/NumberInput/model";
 import NumberInputComponent from "@planx/components/NumberInput/Public";
-import { Option } from "@planx/components/Option/model";
+import { ConditionalOption, Option } from "@planx/components/Option/model";
 import type { Page } from "@planx/components/Page/model";
 import PageComponent from "@planx/components/Page/Public";
 import type { Pay } from "@planx/components/Pay/model";
@@ -49,7 +49,10 @@ import type { PropertyInformation } from "@planx/components/PropertyInformation/
 import PropertyInformationComponent from "@planx/components/PropertyInformation/Public";
 import type { Question } from "@planx/components/Question/model";
 import QuestionComponent from "@planx/components/Question/Public";
-import type { ResponsiveChecklist } from "@planx/components/ResponsiveChecklist/model";
+import type {
+  ResponsiveChecklist,
+  ResponsiveChecklistWithOptions,
+} from "@planx/components/ResponsiveChecklist/model";
 import ResponsiveChecklistComponent from "@planx/components/ResponsiveChecklist/Public";
 import type { ResponsiveQuestion } from "@planx/components/ResponsiveQuestion/model";
 import ResponsiveQuestionComponent from "@planx/components/ResponsiveQuestion/Public";
@@ -272,19 +275,46 @@ const Node: React.FC<Props> = (props) => {
       );
     }
 
-    case TYPES.ResponsiveChecklist:
-      return hasFeatureFlag("RESPONSIVE_QUESTIONS_CHECKLISTS") ? (
-        <ResponsiveChecklistComponent
-          {...getComponentProps<ResponsiveChecklist>()}
-        />
-      ) : null;
+    case TYPES.ResponsiveChecklist: {
+      const baseProps = getComponentProps<ResponsiveChecklist>();
+      const childNodes = childNodesOf(nodeId) as ConditionalOption[];
+      const groupedOptions = !baseProps.categories
+        ? undefined
+        : mapAccum(
+            (index: number, category: { title: string; count: number }) => [
+              index + category.count,
+              {
+                title: category.title,
+                children:
+                  childNodes?.slice(index, index + category.count) || [],
+              },
+            ],
+            0,
+            baseProps.categories,
+          )[1];
 
-    case TYPES.ResponsiveQuestion:
-      return hasFeatureFlag("RESPONSIVE_QUESTIONS_CHECKLISTS") ? (
-        <ResponsiveQuestionComponent
-          {...getComponentProps<ResponsiveQuestion>()}
-        />
-      ) : null;
+      // Type narrow to either FlatChecklist or GroupedChecklist
+      const props: ResponsiveChecklistWithOptions = baseProps.categories
+        ? {
+            ...baseProps,
+            groupedOptions: groupedOptions!,
+            options: undefined,
+          }
+        : {
+            ...baseProps,
+            options: childNodes,
+            groupedOptions: undefined,
+          };
+
+      return <ResponsiveChecklistComponent {...props} />;
+    }
+
+    case TYPES.ResponsiveQuestion: {
+      const props = getComponentProps<ResponsiveQuestion>();
+      const options = childNodesOf(nodeId) as ConditionalOption[];
+
+      return <ResponsiveQuestionComponent {...props} options={options} />;
+    }
 
     case TYPES.Result:
       return <ResultComponent {...getComponentProps<Result>()} />;

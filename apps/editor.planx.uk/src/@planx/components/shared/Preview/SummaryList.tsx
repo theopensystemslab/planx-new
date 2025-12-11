@@ -1,10 +1,12 @@
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
+import Skeleton from "@mui/material/Skeleton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import {
   ComponentType as TYPES,
+  GISResponse,
   NodeId,
 } from "@opensystemslab/planx-core/types";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
@@ -13,19 +15,24 @@ import { formatSchemaDisplayValue } from "@planx/components/List/utils";
 import type { Page } from "@planx/components/Page/model";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import format from "date-fns/format";
+import { useBLPUCodes } from "hooks/data/useBLPUCodes";
+import find from "lodash/find";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
+import { formatTitle } from "../Schema/InputFields";
 import { SchemaUserResponse } from "../Schema/model";
 
 export default SummaryListsBySections;
 
 /** These component types don't use their node title as the descriptive list title */
 const FIND_PROPERTY_DT = "Property address";
+const PROPERTY_INFORMATION_DT = "Property type";
 const DRAW_BOUNDARY_DT = "Location plan";
+const PLANNING_CONSTRAINTS_DT = "Planning constraints";
 
 export const SummaryListTable = styled("dl", {
   shouldForwardProp: (prop) =>
@@ -117,11 +124,11 @@ const presentationalComponents: {
   [TYPES.NumberInput]: NumberInput,
   [TYPES.Page]: Page,
   [TYPES.Pay]: undefined,
-  [TYPES.PlanningConstraints]: undefined,
-  [TYPES.PropertyInformation]: undefined,
+  [TYPES.PlanningConstraints]: PlanningConstraints,
+  [TYPES.PropertyInformation]: PropertyInformation,
   [TYPES.Answer]: Debug,
-  [TYPES.ResponsiveChecklist]: undefined,
-  [TYPES.ResponsiveQuestion]: undefined,
+  [TYPES.ResponsiveChecklist]: Checklist,
+  [TYPES.ResponsiveQuestion]: Question,
   [TYPES.Result]: undefined,
   [TYPES.Review]: undefined,
   [TYPES.Section]: undefined,
@@ -173,18 +180,38 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
     const Component = node.type && presentationalComponents[node.type];
     const isPresentationalComponent = Boolean(Component);
     const isAutoAnswered = userData.auto;
-    const isInfoOnlyMode =
-      node.type === TYPES.FileUploadAndLabel &&
-      props.flow[nodeId].data?.hideDropZone;
 
-    return !isAutoAnswered && isPresentationalComponent && !isInfoOnlyMode;
+    // If FileUploadAndLabel was presented for info-only without a dropzone,
+    //  then omit like Content and Notice component types
+    const isInfoOnlyMode =
+      node.type === TYPES.FileUploadAndLabel && node.data?.hideDropZone;
+
+    // If we didn't show `Property type` on the PropertyInformation card,
+    //   then don't show on Review page either (still in passport for schema validation)
+    const propertyTypeIsNotSupported =
+      node.type === TYPES.PropertyInformation &&
+      !node.data?.showPropertyTypeOverride;
+
+    // If we weren't able to fetch external data, omit PlanningConstraints component from Review
+    //   Any constraints will instead have been manually prompted (and already captured on Review) as questions or checklists
+    const failedTofetchConstraints =
+      node.type === TYPES.PlanningConstraints &&
+      !props.passport?.data?.["_constraints"];
+
+    return (
+      !isAutoAnswered &&
+      isPresentationalComponent &&
+      !isInfoOnlyMode &&
+      !propertyTypeIsNotSupported &&
+      !failedTofetchConstraints
+    );
   };
 
   const removeNonPresentationalNodes = (
-    section: Store.Breadcrumbs,
+    crumb: Store.Breadcrumbs,
   ): BreadcrumbEntry[] => {
     // Typecast to preserve Store.userData
-    const entries = Object.entries(section) as BreadcrumbEntry[];
+    const entries = Object.entries(crumb) as BreadcrumbEntry[];
     return entries.filter(isValidComponent);
   };
 
@@ -311,6 +338,10 @@ function SummaryList(props: SummaryListProps) {
                       {(node.type === TYPES.FindProperty && FIND_PROPERTY_DT) ||
                         (node.type === TYPES.DrawBoundary &&
                           DRAW_BOUNDARY_DT) ||
+                        (node.type === TYPES.PropertyInformation &&
+                          PROPERTY_INFORMATION_DT) ||
+                        (node.type === TYPES.PlanningConstraints &&
+                          PLANNING_CONSTRAINTS_DT) ||
                         node.data?.title ||
                         node.data?.text ||
                         "this answer"}
@@ -341,6 +372,67 @@ interface ComponentProps {
   flow: Store.Flow;
   passport: Store.Passport;
   nodeId: NodeId;
+}
+
+function PropertyInformation(props: ComponentProps) {
+  const { data, loading } = useBLPUCodes();
+
+  const propertyTypeVal = props.passport.data?.["property.type"]?.[0];
+  const value =
+    find(data?.blpuCodes, { value: propertyTypeVal })?.description ||
+    propertyTypeVal ||
+    "Unknown";
+
+  return (
+    <>
+      <Box component="dt">{PROPERTY_INFORMATION_DT}</Box>
+      <Box component="dd">
+        {loading ? <Skeleton height={40} width={140} /> : value}
+      </Box>
+    </>
+  );
+}
+
+function PlanningConstraints(props: ComponentProps) {
+  const fetchedConstraints = props.passport.data?.["_constraints"];
+
+  const applicableConstraints =
+    props.passport.data?.["property.constraints.planning"];
+  if (!applicableConstraints?.length) {
+    return (
+      <>
+        <Box component="dt">{PLANNING_CONSTRAINTS_DT}</Box>
+        <Box component="dd">{`No applicable planning constraints found for this property`}</Box>
+      </>
+    );
+  }
+
+  const formattedApplicableConstraints: string[] = [];
+  (applicableConstraints as string[]).forEach((fn) => {
+    fetchedConstraints.forEach((constraintSource: GISResponse) => {
+      // `hasOwnProperty(fn)` will naturally omit/de-duplicate "granular" constraints to their parent
+      if (
+        Object.prototype.hasOwnProperty.call(constraintSource["metadata"], fn)
+      ) {
+        formattedApplicableConstraints.push(
+          constraintSource.metadata[fn]["plural"],
+        );
+      }
+    });
+  });
+
+  return (
+    <>
+      <Box component="dt">{PLANNING_CONSTRAINTS_DT}</Box>
+      <Box component="dd">
+        <ul>
+          {formattedApplicableConstraints.sort().map((title) => (
+            <li>{title}</li>
+          ))}
+        </ul>
+      </Box>
+    </>
+  );
 }
 
 function List(props: ComponentProps) {
@@ -638,7 +730,7 @@ function Page(props: ComponentProps) {
         {fieldsWithAnswers.map((field) => (
           <Box key={field.data.fn}>
             <Typography fontWeight={FONT_WEIGHT_SEMI_BOLD}>
-              {field.data.title}
+              {formatTitle(field)}
             </Typography>
             <Typography>
               {formatSchemaDisplayValue(answers[0][field.data.fn], field)}

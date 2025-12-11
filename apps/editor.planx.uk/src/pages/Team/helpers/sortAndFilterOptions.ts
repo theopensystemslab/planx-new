@@ -27,8 +27,22 @@ const checkFlowStatus: FilterOptions<FlowSummary>["validationFn"] = (
 
 const checkFlowServiceType: FilterOptions<FlowSummary>["validationFn"] = (
   flow,
-  _value,
-) => flow.publishedFlows[0]?.hasSendComponent;
+  value,
+) => {
+  if (value === "submission") return flow.publishedFlows[0]?.hasSendComponent;
+  if (value === "fee carrying")
+    return flow.publishedFlows[0]?.hasVisiblePayComponent;
+  return false;
+};
+
+const checkFlowLPSListing: FilterOptions<FlowSummary>["validationFn"] = (
+  flow,
+  value,
+) => {
+  if (value === "listed") return flow.isListedOnLPS === true;
+  if (value === "not listed") return flow.isListedOnLPS === false;
+  return false;
+};
 
 const checkFlowTemplateType: FilterOptions<FlowSummary>["validationFn"] = (
   flow,
@@ -49,7 +63,7 @@ const baseFilterOptions: FilterOptions<FlowSummary>[] = [
   {
     displayName: "Type",
     optionKey: `publishedFlows.0.hasSendComponent`,
-    optionValue: ["submission"],
+    optionValue: ["submission", "fee carrying"],
     validationFn: checkFlowServiceType,
   },
   {
@@ -57,6 +71,12 @@ const baseFilterOptions: FilterOptions<FlowSummary>[] = [
     optionKey: "templatedFrom",
     optionValue: ["templated", "source template"],
     validationFn: checkFlowTemplateType,
+  },
+  {
+    displayName: "LPS listing",
+    optionKey: "isListedOnLPS",
+    optionValue: ["listed", "not listed"],
+    validationFn: checkFlowLPSListing,
   },
 ];
 

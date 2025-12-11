@@ -1,6 +1,11 @@
-import { MockedProvider } from "@apollo/client/testing";
 import { screen } from "@testing-library/react";
-import { http, HttpResponse } from "msw";
+import {
+  graphql,
+  type GraphQLHandler,
+  http,
+  type HttpHandler,
+  HttpResponse,
+} from "msw";
 import React from "react";
 import server from "test/mockServer";
 import { setup } from "testUtils";
@@ -90,6 +95,7 @@ const proposedAddressProps = {
   "property.localAuthorityDistrict": ["Southwark"],
   "property.localPlanningAuthority": ["Southwark LPA"],
   "property.region": ["London"],
+  "property.type": ["unclassified"],
   "property.ward": ["Old Kent Road"],
   "property.boundary.area": 1232.22,
   "property.boundary.area.hectares": 0.123222,
@@ -129,13 +135,17 @@ const proposedAddressProps = {
   "findProperty.action": "Proposed a new address",
 };
 
-const handler = http.get(
-  "https://www.planning.data.gov.uk/*",
-  async () => HttpResponse.json(localAuthorityMock, { status: 200 })
-);
+const handlers: Array<HttpHandler | GraphQLHandler> = [
+  http.get("https://www.planning.data.gov.uk/*", async () =>
+    HttpResponse.json(localAuthorityMock, { status: 200 }),
+  ),
+  graphql.query("FetchBLPUCodes", () =>
+    HttpResponse.json({ data: findAddressReturnMock }),
+  ),
+];
 
 beforeEach(() => {
-  server.use(handler);
+  server.use(...handlers);
 });
 
 describe("render states", () => {
@@ -143,13 +153,11 @@ describe("render states", () => {
     const handleSubmit = vi.fn();
 
     const { user } = setup(
-      <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
-        <FindProperty
-          description="Find your property"
-          title="Type your postal code"
-          handleSubmit={handleSubmit}
-        />
-      </MockedProvider>,
+      <FindProperty
+        description="Find your property"
+        title="Type your postal code"
+        handleSubmit={handleSubmit}
+      />,
     );
 
     // autocomplete does not exist in the DOM on initial render
@@ -177,15 +185,13 @@ describe("render states", () => {
     const handleSubmit = vi.fn();
 
     const { user } = setup(
-      <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
-        <FindProperty
-          description="Find your property"
-          title="Type your postal code"
-          allowNewAddresses={true}
-          newAddressTitle="Plot a new address"
-          handleSubmit={handleSubmit}
-        />
-      </MockedProvider>,
+      <FindProperty
+        description="Find your property"
+        title="Type your postal code"
+        allowNewAddresses={true}
+        newAddressTitle="Plot a new address"
+        handleSubmit={handleSubmit}
+      />,
     );
 
     // starts on address-autocomplete page
@@ -217,14 +223,12 @@ describe("render states", () => {
     const handleSubmit = vi.fn();
 
     const { user } = setup(
-      <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
-        <FindProperty
-          description="Find your property"
-          title="Type your postal code"
-          allowNewAddresses={false}
-          handleSubmit={handleSubmit}
-        />
-      </MockedProvider>,
+      <FindProperty
+        description="Find your property"
+        title="Type your postal code"
+        allowNewAddresses={false}
+        handleSubmit={handleSubmit}
+      />,
     );
 
     await user.click(
@@ -251,17 +255,15 @@ describe("render states", () => {
     const previousData = osAddressProps;
 
     const { user } = setup(
-      <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
-        <FindProperty
-          description="Find your property"
-          title="Type your postal code"
-          allowNewAddresses
-          handleSubmit={handleSubmit}
-          previouslySubmittedData={{
-            data: previousData,
-          }}
-        />
-      </MockedProvider>,
+      <FindProperty
+        description="Find your property"
+        title="Type your postal code"
+        allowNewAddresses
+        handleSubmit={handleSubmit}
+        previouslySubmittedData={{
+          data: previousData,
+        }}
+      />,
     );
 
     // confirm that we've landed on the autocomplete page because our address source is "os"
@@ -285,13 +287,11 @@ describe("render states", () => {
   it("should not have any accessibility violations", async () => {
     const handleSubmit = vi.fn();
     const { container, user } = setup(
-      <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
-        <FindProperty
-          description="Find your property"
-          title="Type your postal code"
-          handleSubmit={handleSubmit}
-        />
-      </MockedProvider>,
+      <FindProperty
+        description="Find your property"
+        title="Type your postal code"
+        handleSubmit={handleSubmit}
+      />,
     );
 
     await user.type(await screen.findByLabelText("Postcode"), "SE5 0HU");
@@ -311,13 +311,11 @@ describe("picking an OS address", () => {
     const handleSubmit = vi.fn();
 
     const { user } = setup(
-      <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
-        <FindProperty
-          description="Find your property"
-          title="Type your postal code"
-          handleSubmit={handleSubmit}
-        />
-      </MockedProvider>,
+      <FindProperty
+        description="Find your property"
+        title="Type your postal code"
+        handleSubmit={handleSubmit}
+      />,
     );
 
     await user.type(await screen.findByLabelText("Postcode"), "SE5{enter}");
@@ -326,12 +324,10 @@ describe("picking an OS address", () => {
 
   it("updates the address-autocomplete props when the postcode is changed", async () => {
     const { user } = setup(
-      <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
-        <FindProperty
-          description="Find your property"
-          title="Type your postal code"
-        />
-      </MockedProvider>,
+      <FindProperty
+        description="Find your property"
+        title="Type your postal code"
+      />,
     );
 
     // Enter a postcode...
@@ -364,17 +360,15 @@ describe("picking an OS address", () => {
     const previousData = osAddressProps;
 
     const { user } = setup(
-      <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
-        <FindProperty
-          description="Find your property"
-          title="Type your postal code"
-          allowNewAddresses
-          handleSubmit={handleSubmit}
-          previouslySubmittedData={{
-            data: previousData,
-          }}
-        />
-      </MockedProvider>,
+      <FindProperty
+        description="Find your property"
+        title="Type your postal code"
+        allowNewAddresses
+        handleSubmit={handleSubmit}
+        previouslySubmittedData={{
+          data: previousData,
+        }}
+      />,
     );
 
     // confirm that we've immediately landed on the autocomplete page because our address source is "os"
@@ -392,15 +386,13 @@ describe("plotting a new address that does not have a uprn yet", () => {
     const handleSubmit = vi.fn();
 
     const { user } = setup(
-      <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
-        <FindProperty
-          description="Find your property"
-          title="Type your postal code"
-          allowNewAddresses={true}
-          newAddressTitle="Plot a new address"
-          handleSubmit={handleSubmit}
-        />
-      </MockedProvider>,
+      <FindProperty
+        description="Find your property"
+        title="Type your postal code"
+        allowNewAddresses={true}
+        newAddressTitle="Plot a new address"
+        handleSubmit={handleSubmit}
+      />,
     );
 
     // starts on address-autocomplete page
@@ -438,18 +430,16 @@ describe("plotting a new address that does not have a uprn yet", () => {
     const previousData = proposedAddressProps;
 
     const { user } = setup(
-      <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
-        <FindProperty
-          description="Find your property"
-          title="Type your postal code"
-          allowNewAddresses
-          newAddressTitle="Plot a new address"
-          handleSubmit={handleSubmit}
-          previouslySubmittedData={{
-            data: previousData,
-          }}
-        />
-      </MockedProvider>,
+      <FindProperty
+        description="Find your property"
+        title="Type your postal code"
+        allowNewAddresses
+        newAddressTitle="Plot a new address"
+        handleSubmit={handleSubmit}
+        previouslySubmittedData={{
+          data: previousData,
+        }}
+      />,
     );
 
     // confirm that we've immediately landed on the map page because our address source is "proposed"

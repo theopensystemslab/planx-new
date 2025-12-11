@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  EDITOR_DIRECTORY: editor.planx.uk
+  EDITOR_DIRECTORY: apps/editor.planx.uk
   API_DIRECTORY: apps/api.planx.uk
   HASURA_DIRECTORY: apps/hasura.planx.uk
 
@@ -18,7 +18,7 @@ jobs:
     name: Seed Database
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install pulumi
         uses: pulumi/setup-pulumi@v2
       - run: |
