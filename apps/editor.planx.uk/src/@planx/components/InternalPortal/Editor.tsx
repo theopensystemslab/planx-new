@@ -3,7 +3,7 @@ import {
   ComponentType as TYPES,
   NodeId,
 } from "@opensystemslab/planx-core/types";
-import { useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
@@ -41,32 +41,33 @@ export type Props = EditorProps<
 };
 
 const InternalPortalForm: React.FC<Props> = (props) => {
-  const formik = useFormik<InternalPortal>({
-    initialValues: parseInternalPortal(props.node?.data),
-    validate: (values) => {
-      const errors: Record<string, string> = {};
-      if (!values.flowId && !values.text) {
-        errors.text =
-          props.flows?.length && props.flows?.length > 0
-            ? "Enter a folder name or select an existing folder"
-            : "Enter a folder name";
-      }
-      return errors;
+  const formik = useFormikWithRef<InternalPortal>(
+    {
+      initialValues: parseInternalPortal(props.node?.data),
+      validate: (values) => {
+        const errors: Record<string, string> = {};
+        if (!values.flowId && !values.text) {
+          errors.text =
+            props.flows?.length && props.flows?.length > 0
+              ? "Enter a folder name or select an existing folder"
+              : "Enter a folder name";
+        }
+        return errors;
+      },
+      onSubmit: (values) => {
+        const payload = values.flowId
+          ? values.flowId
+          : { type: TYPES.InternalPortal, data: values };
+        if (props.handleSubmit) {
+          props.handleSubmit(payload);
+        } else {
+          alert(JSON.stringify(payload, null, 2));
+        }
+      },
+      validationSchema,
     },
-    onSubmit: (values) => {
-      const payload = values.flowId
-        ? values.flowId
-        : { type: TYPES.InternalPortal, data: values };
-      if (props.handleSubmit) {
-        props.handleSubmit(payload);
-      } else {
-        alert(JSON.stringify(payload, null, 2));
-      }
-    },
-    validationSchema,
-    validateOnBlur: false,
-    validateOnChange: false,
-  });
+    props.formikRef,
+  );
 
   return (
     <form id="modal" onSubmit={formik.handleSubmit} data-testid="form">

@@ -6,7 +6,8 @@ import {
   ComponentType as TYPES,
   SendIntegration,
 } from "@opensystemslab/planx-core/types";
-import { getIn, useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
+import { getIn } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -26,17 +27,18 @@ import { parseSend, Send, validationSchema } from "./model";
 export type Props = EditorProps<TYPES.Send, Send>;
 
 const SendComponent: React.FC<Props> = (props) => {
-  const formik = useFormik<Send>({
-    initialValues: parseSend(props.node?.data),
-    onSubmit: (newValues) => {
-      if (props.handleSubmit) {
-        props.handleSubmit({ type: TYPES.Send, data: newValues });
-      }
+  const formik = useFormikWithRef<Send>(
+    {
+      initialValues: parseSend(props.node?.data),
+      onSubmit: (newValues) => {
+        if (props.handleSubmit) {
+          props.handleSubmit({ type: TYPES.Send, data: newValues });
+        }
+      },
+      validationSchema,
     },
-    validateOnBlur: false,
-    validateOnChange: true,
-    validationSchema,
-  });
+    props.formikRef,
+  );
 
   const [teamSlug, flowSlug, submissionEmail] = useStore((state) => [
     state.teamSlug,

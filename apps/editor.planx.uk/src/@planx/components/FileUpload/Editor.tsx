@@ -1,6 +1,6 @@
 import { getValidSchemaValues } from "@opensystemslab/planx-core";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
@@ -18,17 +18,18 @@ import { FileUpload, parseFileUpload, validationSchema } from "./model";
 type Props = EditorProps<TYPES.FileUpload, FileUpload>;
 
 function Component(props: Props) {
-  const formik = useFormik<FileUpload>({
-    initialValues: parseFileUpload(props.node?.data),
-    onSubmit: (newValues) => {
-      if (props.handleSubmit) {
-        props.handleSubmit({ type: TYPES.FileUpload, data: newValues });
-      }
+  const formik = useFormikWithRef<FileUpload>(
+    {
+      initialValues: parseFileUpload(props.node?.data),
+      onSubmit: (newValues) => {
+        if (props.handleSubmit) {
+          props.handleSubmit({ type: TYPES.FileUpload, data: newValues });
+        }
+      },
+      validationSchema,
     },
-    validationSchema,
-    validateOnBlur: false,
-    validateOnChange: false,
-  });
+    props.formikRef,
+  );
 
   // Rather than default to generic `useStore().getFlowSchema()`
   //   File Upload components can specifically suggest based on ODP Schema enum options

@@ -4,7 +4,8 @@ import Collapse from "@mui/material/Collapse";
 import { getValidSchemaValues } from "@opensystemslab/planx-core";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
-import { getIn, useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
+import { getIn } from "formik";
 import { merge } from "lodash";
 import React from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
@@ -25,7 +26,6 @@ import { Switch } from "ui/shared/Switch";
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import { RuleBuilder } from "../shared/RuleBuilder";
-import { Condition } from "../shared/RuleBuilder/types";
 import {
   FileType,
   FileUploadAndLabel,
@@ -37,18 +37,19 @@ import { fileUploadAndLabelSchema } from "./schema";
 type Props = EditorProps<TYPES.FileUploadAndLabel, FileUploadAndLabel>;
 
 function FileUploadAndLabelComponent(props: Props) {
-  const formik = useFormik<FileUploadAndLabel>({
-    initialValues: parseContent(props.node?.data),
-    validationSchema: fileUploadAndLabelSchema,
-    validateOnBlur: true,
-    validateOnChange: false,
-    onSubmit: (newValues) => {
-      props.handleSubmit?.({
-        type: TYPES.FileUploadAndLabel,
-        data: newValues,
-      });
+  const formik = useFormikWithRef<FileUploadAndLabel>(
+    {
+      initialValues: parseContent(props.node?.data),
+      validationSchema: fileUploadAndLabelSchema,
+      onSubmit: (newValues) => {
+        props.handleSubmit?.({
+          type: TYPES.FileUploadAndLabel,
+          data: newValues,
+        });
+      },
     },
-  });
+    props.formikRef,
+  );
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
