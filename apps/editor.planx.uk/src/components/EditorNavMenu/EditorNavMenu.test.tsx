@@ -49,12 +49,12 @@ describe("globalLayoutRoutes", () => {
     mockCurrentRoute("/");
   });
 
-  it("displays for teamEditors", () => {
+  it("hides menu for teamEditors (only 1 accessible route)", () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("teamEditor");
 
     const { queryAllByRole } = setup(<EditorNavMenu />);
     const menuItems = queryAllByRole("listitem");
-    expect(menuItems).toHaveLength(4);
+    expect(menuItems).toHaveLength(0);
   });
 
   it("displays for platformAdmins", () => {
@@ -62,7 +62,7 @@ describe("globalLayoutRoutes", () => {
 
     const { getAllByRole } = setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(6);
+    expect(menuItems).toHaveLength(3);
     expect(within(menuItems[0]).getByText("Select a team")).toBeInTheDocument();
   });
 });
@@ -79,13 +79,11 @@ describe("teamLayoutRoutes", () => {
 
     const { queryAllByRole } = setup(<EditorNavMenu />);
     const menuItems = queryAllByRole("listitem");
-    expect(menuItems).toHaveLength(3);
+    expect(menuItems).toHaveLength(6);
     expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
+    expect(within(menuItems[1]).getByText("Planning Data")).toBeInTheDocument();
     expect(
-      within(menuItems[1]).getByText("Planning Data unavailable"),
-    ).toBeInTheDocument();
-    expect(
-      within(menuItems[2]).getByText("Local Planning Services unavailable"),
+      within(menuItems[2]).getByText("Local Planning Services"),
     ).toBeInTheDocument();
   });
 
@@ -94,7 +92,7 @@ describe("teamLayoutRoutes", () => {
 
     const { getAllByRole } = setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(8);
+    expect(menuItems).toHaveLength(11);
     expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
   });
 
@@ -103,8 +101,18 @@ describe("teamLayoutRoutes", () => {
 
     const { getAllByRole } = setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(8);
+    expect(menuItems).toHaveLength(11);
     expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
+    expect(within(menuItems[1]).getByText("Team settings")).toBeInTheDocument();
+  });
+
+  it("displays subtitles for sections", () => {
+    mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
+
+    const { getByText } = setup(<EditorNavMenu />);
+    expect(getByText("Settings")).toBeInTheDocument();
+    expect(getByText("Data")).toBeInTheDocument();
+    expect(getByText("Documentation")).toBeInTheDocument();
   });
 });
 
@@ -197,6 +205,7 @@ describe("layout", () => {
     mockCurrentRoute("/test-team");
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
     mockTeamName = "test-team";
+    mockGetTeam.mockReturnValue({ settings: { referenceCode: null } });
 
     const { queryAllByRole, queryByLabelText } = setup(<EditorNavMenu />);
     const menuItems = queryAllByRole("listitem");
