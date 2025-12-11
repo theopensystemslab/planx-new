@@ -112,6 +112,11 @@ computed_fields:
       function:
         name: flow_first_online_at
         schema: public
+  - name: production_url
+    definition:
+      function:
+        name: flow_production_url
+        schema: public
 insert_permissions:
   - role: api
     permission:
@@ -277,6 +282,8 @@ select_permissions:
         - version
       computed_fields:
         - data_merged
+        - first_online_at
+        - production_url
       filter:
         deleted_at:
           _is_null: true
@@ -306,6 +313,7 @@ select_permissions:
       computed_fields:
         - data_merged
         - first_online_at
+        - production_url
       filter:
         _and:
           - _or:
@@ -351,6 +359,7 @@ select_permissions:
       computed_fields:
         - data_merged
         - first_online_at
+        - production_url
       filter:
         deleted_at:
           _is_null: true
@@ -379,6 +388,8 @@ select_permissions:
         - version
       computed_fields:
         - data_merged
+        - first_online_at
+        - production_url
       filter:
         deleted_at:
           _is_null: true
@@ -411,6 +422,7 @@ select_permissions:
       computed_fields:
         - data_merged
         - first_online_at
+        - production_url
       filter:
         deleted_at:
           _is_null: true
