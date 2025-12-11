@@ -1,0 +1,90 @@
+table:
+  name: submission_integrations
+  schema: public
+object_relationships:
+  - name: team_setting
+    using:
+      foreign_key_constraint_on: team_id
+insert_permissions:
+  - role: platformAdmin
+    permission:
+      check: {}
+      columns:
+        - default_email
+        - id
+        - submission_email
+        - team_id
+    comment: ""
+  - role: teamEditor
+    permission:
+      check: {}
+      columns:
+        - default_email
+        - id
+        - submission_email
+        - team_id
+    comment: ""
+select_permissions:
+  - role: api
+    permission:
+      columns:
+        - default_email
+        - id
+        - submission_email
+      filter: {}
+    comment: ""
+  - role: platformAdmin
+    permission:
+      columns:
+        - default_email
+        - id
+        - submission_email
+        - team_id
+      filter: {}
+    comment: ""
+  - role: public
+    permission:
+      columns: []
+      filter: {}
+    comment: ""
+  - role: teamEditor
+    permission:
+      columns:
+        - default_email
+        - id
+        - submission_email
+        - team_id
+      filter: {}
+    comment: ""
+update_permissions:
+  - role: platformAdmin
+    permission:
+      columns:
+        - default_email
+        - id
+        - submission_email
+      filter: {}
+      check: null
+    comment: ""
+  - role: teamEditor
+    permission:
+      columns:
+        - default_email
+        - id
+        - submission_email
+      filter: {}
+      check: null
+    comment: ""
+delete_permissions:
+  - role: platformAdmin
+    permission:
+      filter:
+        default_email:
+          _eq: false
+    comment: ""
+  - role: teamEditor
+    permission:
+      filter:
+        default_email:
+          _eq: false
+    comment: ""

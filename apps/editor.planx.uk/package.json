@@ -18,7 +18,7 @@
     "@mui/x-charts": "^7.22.2",
     "@mui/x-data-grid": "^7.25.0",
     "@opensystemslab/map": "1.0.0-alpha.6",
-    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#666c83c",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#59b0fbb",
     "@tanstack/react-router": "^1.131.28",
     "@tanstack/react-router-devtools": "^1.131.28",
     "@tanstack/zod-adapter": "^1.132.47",
@@ -84,7 +84,6 @@
     "scroll-into-view-if-needed": "^3.1.0",
     "sharedb": "^5.2.2",
     "subscriptions-transport-ws": "^0.11.0",
-    "swr": "^2.2.4",
     "tippy.js": "^6.3.7",
     "type-fest": "^4.32.0",
     "uuid": "^13.0.0",
@@ -141,18 +140,18 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-jest-dom": "^5.5.0",
     "eslint-plugin-jsx-a11y": "^6.7.1",
-    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-simple-import-sort": "^12.1.0",
     "eslint-plugin-testing-library": "^7.13.3",
     "fake-indexeddb": "^6.2.4",
     "husky": "^8.0.3",
     "jsdom": "^26.1.0",
     "lint-staged": "^13.2.3",
+    "msw-storybook-addon": "^2.0.6",
     "postcss": "^8.4.32",
     "prettier": "^3.0.0",
     "react-refresh": "^0.14.0",
     "sass": "^1.93.3",
-    "sass-loader": "^13.3.2",
     "storybook": "^8.6.12",
     "stream-browserify": "^3.0.0",
     "tsconfig-paths-webpack-plugin": "^4.0.1",
@@ -219,6 +218,11 @@
     },
     "ignoredBuiltDependencies": [
       "msw"
+    ]
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
     ]
   }
 }

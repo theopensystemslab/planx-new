@@ -52,19 +52,16 @@ vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
   };
 });
 
-const s3Mock = () => {
-  return {
-    deleteObjects: vi.fn(() => Promise.resolve()),
-  };
-};
-
 vi.mock("@aws-sdk/client-s3", async (importOriginal) => {
   const actualS3Client = await importOriginal<typeof s3Client>();
+
+  class MockS3 {
+    deleteObjects = vi.fn(() => Promise.resolve());
+  }
+
   return {
     ...actualS3Client,
-    S3: vi.fn().mockImplementation(() => {
-      return s3Mock();
-    }),
+    S3: MockS3,
   };
 });
 
@@ -74,7 +71,7 @@ describe("'operationHandler' helper function", () => {
       .fn()
       .mockResolvedValue(["123", "abc", "456", "xyz"]);
     await expect(operationHandler(successOperation)).resolves.toEqual({
-      operationName: "spy",
+      operationName: "Mock",
       status: "success",
       count: 4,
     });
@@ -85,7 +82,7 @@ describe("'operationHandler' helper function", () => {
       .fn()
       .mockRejectedValue(new Error("Something went wrong"));
     await expect(operationHandler(failureOperation)).resolves.toEqual({
-      operationName: "spy",
+      operationName: "Mock",
       status: "failure",
       errorMessage: "Something went wrong",
     });
@@ -182,8 +179,11 @@ describe("Data sanitation operations", () => {
   });
 
   describe("deleteApplicationFiles", () => {
-    it("returns a QueryResult on success", async () => {
+    beforeEach(() => {
       queryMock.mockQuery(mockGetExpiredSessionIdsQuery);
+    });
+
+    it("returns a QueryResult on success", async () => {
       const mockSession = {
         data: {
           passport: {
@@ -206,9 +206,23 @@ describe("Data sanitation operations", () => {
     });
 
     it("handles missing sessions", async () => {
-      queryMock.mockQuery(mockGetExpiredSessionIdsQuery);
       mockFindSession.mockResolvedValue(null);
       await expect(deleteApplicationFiles()).rejects.toThrow();
+    });
+
+    // for below cases, no files should be deleted, but nor should the operation error out
+    it("skips over empty data fields", async () => {
+      mockFindSession.mockResolvedValue({ data: {} });
+      const deletedFiles = await deleteApplicationFiles();
+      expect(deletedFiles).toHaveLength(0);
+    });
+
+    it("skips over malformed passports", async () => {
+      mockFindSession.mockResolvedValue({
+        data: { passport: { not_data: {} } },
+      });
+      const deletedFiles = await deleteApplicationFiles();
+      expect(deletedFiles).toHaveLength(0);
     });
   });
 

@@ -70,6 +70,26 @@ select_permissions:
         - user_status
         - system_status
       filter: {}
+  - role: platformAdmin
+    permission:
+      columns:
+        - data
+        - email
+        - created_at
+        - deleted_at
+        - locked_at
+        - submitted_at
+        - updated_at
+        - flow_id
+        - id
+        - allow_list_answers
+        - has_user_saved
+        - sanitised_at
+      computed_fields:
+        - system_status
+        - user_status
+      filter: {}
+    comment: ""
   - role: public
     permission:
       columns:
@@ -93,6 +113,31 @@ select_permissions:
               _neq: ""
           - deleted_at:
               _is_null: true
+  - role: teamEditor
+    permission:
+      columns:
+        - data
+        - email
+        - created_at
+        - deleted_at
+        - locked_at
+        - submitted_at
+        - updated_at
+        - flow_id
+        - id
+        - allow_list_answers
+        - has_user_saved
+        - sanitised_at
+      computed_fields:
+        - system_status
+        - user_status
+      filter:
+        flow:
+          team:
+            members:
+              user_id:
+                _eq: x-hasura-user-id
+    comment: TeamEditor can select sessions from teams they're a member of. Required to view submissions.
 update_permissions:
   - role: api
     permission:
@@ -158,7 +203,7 @@ event_triggers:
       method: POST
       query_params: {}
       template_engine: Kriti
-      url: "{{$base_url}}/send-email/confirmation"
+      url: '{{$base_url}}/send-email/confirmation'
       version: 2
   - name: reset_lowcal_delete_events
     definition:
@@ -170,7 +215,7 @@ event_triggers:
       interval_sec: 10
       num_retries: 3
       timeout_sec: 60
-    webhook: "{{HASURA_PLANX_API_URL}}"
+    webhook: '{{HASURA_PLANX_API_URL}}'
     headers:
       - name: Authorization
         value_from_env: HASURA_PLANX_API_KEY
@@ -188,18 +233,18 @@ event_triggers:
       method: POST
       query_params: {}
       template_engine: Kriti
-      url: "{{$base_url}}/webhooks/hasura/create-delete-event"
+      url: '{{$base_url}}/webhooks/hasura/create-delete-event'
       version: 2
   - name: setup_lowcal_delete_events
     definition:
       enable_manual: false
       insert:
-        columns: "*"
+        columns: '*'
     retry_conf:
       interval_sec: 10
       num_retries: 3
       timeout_sec: 60
-    webhook: "{{HASURA_PLANX_API_URL}}"
+    webhook: '{{HASURA_PLANX_API_URL}}'
     headers:
       - name: Authorization
         value_from_env: HASURA_PLANX_API_KEY
@@ -217,7 +262,7 @@ event_triggers:
       method: POST
       query_params: {}
       template_engine: Kriti
-      url: "{{$base_url}}/webhooks/hasura/create-delete-event"
+      url: '{{$base_url}}/webhooks/hasura/create-delete-event'
       version: 2
   - name: setup_lowcal_expiry_events
     definition:
@@ -247,7 +292,7 @@ event_triggers:
       method: POST
       query_params: {}
       template_engine: Kriti
-      url: "{{$base_url}}/webhooks/hasura/create-expiry-event"
+      url: '{{$base_url}}/webhooks/hasura/create-expiry-event'
       version: 2
   - name: setup_lowcal_reminder_events
     definition:
@@ -277,5 +322,5 @@ event_triggers:
       method: POST
       query_params: {}
       template_engine: Kriti
-      url: "{{$base_url}}/webhooks/hasura/create-reminder-event"
+      url: '{{$base_url}}/webhooks/hasura/create-reminder-event'
       version: 2

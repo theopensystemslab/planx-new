@@ -1,0 +1,3 @@
+table:
+  name: analytics_project_types
+  schema: public

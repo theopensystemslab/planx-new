@@ -107,7 +107,7 @@ test.describe("Flow creation, publish and preview", () => {
       ...filterFlags,
       "Planning permission", // default result flag
       "Next steps",
-      "Check your answers before sending your application",
+      "Check your answers before sending your form",
       "Tell us what you think",
       "Confirmation",
     ]);
@@ -334,7 +334,7 @@ test.describe("Flow creation, publish and preview", () => {
 
     await expect(
       page.locator("h1", {
-        hasText: "Check your answers before sending your application",
+        hasText: "Check your answers before sending your form",
       }),
     ).toBeVisible();
     await clickContinue({ page });
@@ -343,8 +343,6 @@ test.describe("Flow creation, publish and preview", () => {
       page.locator("h1", { hasText: "Tell us what you think" }),
     ).toBeVisible();
     await clickContinue({ page });
-    await expect(
-      page.locator("h1", { hasText: "Application sent" }),
-    ).toBeVisible();
+    await expect(page.locator("h1", { hasText: "Form sent" })).toBeVisible();
   });
 });

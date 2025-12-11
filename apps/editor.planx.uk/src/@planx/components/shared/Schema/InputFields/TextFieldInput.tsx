@@ -14,10 +14,18 @@ export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
   const { data, formik } = props;
   const { id, errorMessage, required, title } = fieldProps;
 
-  const characterCountLimit = data.type && getTextLimit(data.type);
+  const characterCountLimit =
+    data.type &&
+    getTextLimit(
+      data.type,
+      "customLength" in data ? data.customLength : undefined,
+    );
 
   const displayCharacterCount = Boolean(
-    data.type !== TextInputType.Short && characterCountLimit,
+    characterCountLimit &&
+      characterCountLimit > 120 &&
+      characterCountLimit <= 1500 &&
+      data.type !== TextInputType.Email,
   );
 
   return (
@@ -33,10 +41,18 @@ export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
           else if (type === "phone") return "tel";
           return "text";
         })(data.type)}
-        multiline={data.type && ["long", "extraLong"].includes(data.type)}
+        multiline={Boolean(
+          characterCountLimit &&
+            characterCountLimit > 120 &&
+            data.type !== TextInputType.Email,
+        )}
         bordered
         rows={
-          data.type && ["long", "extraLong"].includes(data.type) ? 5 : undefined
+          characterCountLimit &&
+          characterCountLimit > 120 &&
+          data.type !== TextInputType.Email
+            ? 5
+            : undefined
         }
         required={required}
         inputProps={{

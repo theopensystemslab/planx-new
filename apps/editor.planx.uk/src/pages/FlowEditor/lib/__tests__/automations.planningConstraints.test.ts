@@ -369,7 +369,7 @@ const flow: Store.Flow = {
         "Planning constraints might limit how you can develop or use the property",
       fn: "property.constraints.planning",
       disclaimer:
-        "<p><strong>This page does not include information about historic planning conditions that may apply to this property.</strong></p>",
+        "<p>This page does not include information about historic planning conditions that may apply to this property.</p>",
     },
   },
   ConservationAreaQuestion: {

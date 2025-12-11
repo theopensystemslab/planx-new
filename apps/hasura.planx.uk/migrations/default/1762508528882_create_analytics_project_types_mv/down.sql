@@ -1,0 +1,1 @@
+DROP MATERIALIZED VIEW analytics_project_types;

@@ -29,14 +29,19 @@ type Props = {
 };
 
 const Checklist: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes, showHelpText, showTags] = useStore((state) => [
-    state.isClone,
-    state.childNodesOf(props.id),
-    state.showHelpText,
-    state.showTags,
-  ]);
+  const [isClone, childNodes, showHelpText, showTags, showNotes] = useStore(
+    (state) => [
+      state.isClone,
+      state.childNodesOf(props.id),
+      state.showHelpText,
+      state.showTags,
+      state.showNotes,
+    ],
+  );
 
   const parent = getParentId(props.parent);
+
+  const isStickyNote = childNodes.length === 0;
 
   const groupedOptions = useMemo(
     () =>
@@ -87,6 +92,11 @@ const Checklist: React.FC<Props> = React.memo((props) => {
   const hasHelpText =
     props.data?.policyRef || props.data?.info || props.data?.howMeasured;
 
+  // Hide sticky notes when toggled off
+  if (isStickyNote && !showNotes) {
+    return null;
+  }
+
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
@@ -94,7 +104,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
         className={classNames("card", "decision", "question", {
           isDragging,
           isClone: isClone(props.id),
-          isNote: childNodes.length === 0,
+          isNote: isStickyNote,
           wasVisited: props.wasVisited,
         })}
       >
@@ -150,10 +160,11 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           <ol className="categories">
             {groupedOptions.map(({ title, children }, i) => (
               <li key={i} className="card category">
-                <span>{title}</span>
+                <Link href={href + `#group-${i}`}>{title}</Link>
                 <ol className="options">
                   {children.map((child: any) => (
                     <Node
+                      parent={props.id}
                       key={child.id}
                       {...child}
                       showTemplatedNodeStatus={props.showTemplatedNodeStatus}
@@ -167,6 +178,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           <ol className="options">
             {childNodes.map((child: any) => (
               <Node
+                parent={props.id}
                 key={child.id}
                 {...child}
                 showTemplatedNodeStatus={props.showTemplatedNodeStatus}

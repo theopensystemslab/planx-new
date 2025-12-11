@@ -1,4 +1,3 @@
-import { gql } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
@@ -25,17 +24,6 @@ import PickOSAddress from "./Autocomplete";
 import { useFindPropertyData } from "./hooks/useFindPropertyData";
 import PlotNewAddress from "./Map";
 import { AddressLoadingWrap } from "./styles";
-
-// This query is exported because tests require it
-export const FETCH_BLPU_CODES = gql`
-  {
-    blpu_codes {
-      code
-      description
-      value
-    }
-  }
-`;
 
 type Props = PublicProps<FindProperty>;
 
@@ -82,6 +70,9 @@ function Component(props: Props) {
       newPassportData["_address"] = address;
       if (address?.planx_value) {
         newPassportData["property.type"] = [address.planx_value];
+      } else {
+        // Fallback to "unclassified" if OS did not return a value or user is proposing new address
+        newPassportData["property.type"] = ["unclassified"];
       }
 
       if (localAuthorityDistricts) {

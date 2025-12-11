@@ -25,9 +25,9 @@ export default meta;
 
 export const Basic = {
   args: {
-    title: "Pay for your application",
+    title: "Pay",
     bannerTitle: "The fee is",
-    description: "The fee covers the cost of processing your application",
+    description: "The fee covers the cost of processing your form",
     fee: 103,
     instructionsTitle: "How to pay",
     instructionsDescription: "Pay via GOV.UK Pay",
@@ -40,9 +40,9 @@ export const Basic = {
 
 export const WithInviteToPay = {
   args: {
-    title: "Pay for your application",
+    title: "Pay",
     bannerTitle: "The fee is",
-    description: "The fee covers the cost of processing your application",
+    description: "The fee covers the cost of processing your form",
     fee: 103,
     instructionsTitle: "How to pay",
     instructionsDescription: "Pay via GOV.UK Pay",
@@ -59,13 +59,13 @@ export const WithInviteToPay = {
 
 export const ForInformationOnly = {
   args: {
-    title: "What you can expect to pay for your application",
+    title: "What you can expect to pay",
     bannerTitle: "The calculated fee is",
     description:
-      "Based on your answers so far, this is the fee that we've calculated. The fee will cover the cost of processing your application.",
+      "Based on your answers so far, this is the fee that we've calculated. The fee will cover the cost of processing your form.",
     instructionsTitle: "How to pay",
     instructionsDescription:
-      "Payments will be accepted for your future application via GOV.UK Pay. You will have the option to pay yourself or invite someone else to pay.",
+      "Payments will be accepted via GOV.UK Pay. You will have the option to pay yourself or invite someone else to pay.",
     fee: 103,
     hidePay: true,
     onConfirm: () => {},
@@ -75,9 +75,9 @@ export const ForInformationOnly = {
 // // TODO: Setup fee breakdown amounts
 // export const WithFeeBreakdown = {
 //   args: {
-//     title: "Pay for your application",
+//     title: "Pay",
 //     bannerTitle: "The fee is",
-//     description: "The fee covers the cost of processing your application",
+//     description: "The fee covers the cost of processing your form",
 //     fee: 103,
 //     instructionsTitle: "How to pay",
 //     instructionsDescription: "Pay via GOV.UK Pay",

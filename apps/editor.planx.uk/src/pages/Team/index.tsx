@@ -8,6 +8,7 @@ import ToggleButton, { toggleButtonClasses } from "@mui/material/ToggleButton";
 import ToggleButtonGroup, {
   toggleButtonGroupClasses,
 } from "@mui/material/ToggleButtonGroup";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { isEmpty, orderBy } from "lodash";
@@ -22,30 +23,23 @@ import { FlowCardView, FlowSummary } from "../FlowEditor/lib/store/editor";
 import { AddFlow } from "./components/AddFlow";
 import FlowCard from "./components/FlowCard/";
 import { Card, CardContent } from "./components/FlowCard/styles";
+import { FlowTable } from "./components/FlowTable";
 import { ShowingServicesHeader } from "./components/ShowingServicesHeader";
 import { filterOptions, sortOptions } from "./helpers/sortAndFilterOptions";
 
-const DashboardList = styled("ul", {
-  shouldForwardProp: (prop) => prop !== "viewType",
-})<{ viewType: FlowCardView }>(({ theme, viewType }) => ({
+const DashboardList = styled("ul")(({ theme }) => ({
   padding: theme.spacing(2, 0, 3),
   margin: 0,
   gap: theme.spacing(2),
-  ...(viewType === "grid" && {
-    display: "grid",
-    gridAutoRows: "1fr",
-    gridTemplateColumns: "repeat(1, 1fr)",
-    [theme.breakpoints.up("md")]: {
-      gridTemplateColumns: "repeat(2, 1fr)",
-    },
-    [theme.breakpoints.up("lg")]: {
-      gridTemplateColumns: "repeat(3, 1fr)",
-    },
-  }),
-  ...(viewType === "row" && {
-    display: "flex",
-    flexDirection: "column",
-  }),
+  display: "grid",
+  gridAutoRows: "1fr",
+  gridTemplateColumns: "repeat(1, 1fr)",
+  [theme.breakpoints.up("md")]: {
+    gridTemplateColumns: "repeat(2, 1fr)",
+  },
+  [theme.breakpoints.up("lg")]: {
+    gridTemplateColumns: "repeat(3, 1fr)",
+  },
 }));
 
 export const FiltersContainer = styled(Box)(({ theme }) => ({
@@ -83,7 +77,7 @@ export const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
 }));
 
 const GetStarted: React.FC = () => (
-  <DashboardList viewType="grid" sx={{ paddingTop: 2 }}>
+  <DashboardList sx={{ paddingTop: 2 }}>
     <Card>
       <CardContent>
         <Typography variant="h3">No services found</Typography>
@@ -203,7 +197,7 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
 
   return (
     <Box bgcolor={"background.paper"} flexGrow={1}>
-      <Container maxWidth="lg">
+      <Container maxWidth="contentWide">
         <Box
           pb={1}
           sx={{
@@ -299,25 +293,40 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
                 onChange={handleViewChange}
                 size="small"
               >
-                <StyledToggleButton value="grid" disableRipple>
-                  <ViewModuleIcon />
-                </StyledToggleButton>
-                <StyledToggleButton value="row" disableRipple>
-                  <TableRowsIcon />
-                </StyledToggleButton>
+                <Tooltip title="Card view" placement="bottom">
+                  <StyledToggleButton value="grid" disableRipple>
+                    <ViewModuleIcon />
+                  </StyledToggleButton>
+                </Tooltip>
+                <Tooltip title="Table view" placement="bottom">
+                  <StyledToggleButton value="row" disableRipple>
+                    <TableRowsIcon />
+                  </StyledToggleButton>
+                </Tooltip>
               </ToggleButtonGroup>
             </Box>
             {sortedFlows && (
-              <DashboardList viewType={flowCardView}>
-                {sortedFlows.map((flow) => (
-                  <FlowCard
-                    flow={flow}
-                    flows={flows}
-                    key={flow.slug}
+              <>
+                {flowCardView === "grid" ? (
+                  <DashboardList>
+                    {sortedFlows.map((flow) => (
+                      <FlowCard
+                        flow={flow}
+                        flows={flows}
+                        key={flow.slug}
+                        refreshFlows={fetchFlows}
+                      />
+                    ))}
+                  </DashboardList>
+                ) : (
+                  <FlowTable
+                    flows={sortedFlows}
+                    teamId={teamId}
+                    teamSlug={slug}
                     refreshFlows={fetchFlows}
                   />
-                ))}
-              </DashboardList>
+                )}
+              </>
             )}
           </>
         )}

@@ -1,12 +1,11 @@
 import { User } from "@opensystemslab/planx-core/types";
-import ChecklistComponent from "@planx/components/Checklist/Editor/Editor";
-import { within } from "@testing-library/react";
+import ChecklistComponent from "@planx/components/Checklist/Editor";
+import { act, within } from "@testing-library/react";
 import { TAG_DISPLAY_VALUES } from "pages/FlowEditor/components/Flow/components/Tag";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { act } from "react-dom/test-utils";
 import { setup } from "testUtils";
 import { it } from "vitest";
 

@@ -58,6 +58,12 @@ beforeAll(() => {
 
 afterEach(() => server.resetHandlers());
 
-afterAll(() => server.close());
+afterAll(async () => {
+  server.close();
+  // Wait for the next tick to allow pending MSW promises to resolve
+  // (e.g. bypasses / unhandled requests) before the environment
+  // (window/URL) is destroyed
+  await new Promise((resolve) => setImmediate(resolve));
+});
 
 export default server;

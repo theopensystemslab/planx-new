@@ -96,7 +96,7 @@ export const CopyDialog: React.FC<Props> = ({
           fullWidth
         >
           <DialogTitle variant="h3" component="h1" id="dialog-heading">
-            Copy "{sourceFlow.name}"
+            Make a copy of "{sourceFlow.name}"
           </DialogTitle>
           <Box>
             <Form>

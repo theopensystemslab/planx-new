@@ -5,8 +5,8 @@ import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import { capitalize, get } from "lodash";
 import React from "react";
+import SelectInput from "ui/shared/SelectInput/SelectInput";
 
-import SelectInput from "../SelectInput/SelectInput";
 import Filters, { FilterKey, FilterValues } from "./Filter";
 import { StyledChip } from "./FilterStyles";
 
@@ -47,6 +47,7 @@ export const FiltersColumn = <T extends object>(
           visuallyHiddenLabel
           value={selectedValue}
           name={props.name}
+          size="small"
           onChange={(event) =>
             props.handleChange(
               props.optionKey,
@@ -55,7 +56,6 @@ export const FiltersColumn = <T extends object>(
           }
           fullWidth
           displayEmpty
-          sx={{ height: 40, maxWidth: "200px" }}
         >
           <MenuItem value="" disabled style={visuallyHidden}>
             {props.title}

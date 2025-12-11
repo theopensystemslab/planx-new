@@ -75,7 +75,7 @@ export async function validateSession(
 
   const responseData: ValidationResponse = {
     message:
-      "This service has been updated since you last saved your application." +
+      "This service has been updated since you last saved your progress." +
       " We will ask you to answer any updated questions again when you continue.",
     changesFound: true,
     alteredSectionIds,

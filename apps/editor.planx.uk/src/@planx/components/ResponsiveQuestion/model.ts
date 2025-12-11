@@ -1,25 +1,24 @@
-import { object, SchemaOf, string } from "yup";
+import { ConditionalOption } from "../Option/model";
+import { BaseQuestion, parseBaseQuestion } from "../shared/BaseQuestion/model";
+import { Condition, Rule } from "../shared/RuleBuilder/types";
 
-import {
-  BaseNodeData,
-  baseNodeDataValidationSchema,
-  parseBaseNodeData,
-} from "../shared";
+export type ResponsiveQuestion = BaseQuestion;
 
-export interface ResponsiveQuestion extends BaseNodeData {
-  fn: string;
-}
+/**
+ * Public and Editor representation of a ResponsiveQuestion
+ * Contains options derived from child Answer nodes
+ */
+export type ResponsiveQuestionWithOptions = ResponsiveQuestion & {
+  options: ConditionalOption[];
+};
 
 export const parseResponsiveQuestion = (
   data: Record<string, any> | undefined,
-): ResponsiveQuestion => ({
-  fn: data?.fn || "",
-  ...parseBaseNodeData(data),
+): ResponsiveQuestionWithOptions => ({
+  options: data?.options || [],
+  ...parseBaseQuestion(data),
 });
 
-export const validationSchema: SchemaOf<ResponsiveQuestion> =
-  baseNodeDataValidationSchema.concat(
-    object({
-      fn: string().nullable().required(),
-    }),
-  );
+export const DEFAULT_RULE: Rule = {
+  condition: Condition.AlwaysRequired,
+};

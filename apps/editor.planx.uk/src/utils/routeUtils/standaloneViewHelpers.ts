@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { publicClient } from "lib/graphql";
+import { client } from "lib/graphql";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { Flow, GlobalSettings } from "types";
 
@@ -19,7 +19,7 @@ export const fetchDataForStandaloneView = async (
     teamParam || (await getTeamFromDomain(window.location.hostname));
 
   try {
-    const result = await publicClient.query({
+    const result = await client.query({
       query: gql`
         query GetStandaloneData($flowSlug: String!, $teamSlug: String!) {
           flows(

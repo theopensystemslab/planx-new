@@ -27,10 +27,7 @@ vi.mock("@tanstack/react-router", async () => {
 
 const handler = http.post(
   `${import.meta.env.VITE_APP_API_URL}/create-send-events/*`,
-  async () => {
-    await delay();
-    return HttpResponse.json(hasuraEventsResponseMock, { status: 200 });
-  },
+  async () => HttpResponse.json(hasuraEventsResponseMock, { status: 200 }),
 );
 
 const originalLocation = window.location.pathname;
@@ -67,6 +64,16 @@ it("displays a warning at /preview URLs", async () => {
 });
 
 it("displays loading messages to the user", async () => {
+  const handler = http.post(
+    `${import.meta.env.VITE_APP_API_URL}/create-send-events/*`,
+    async () => {
+      // Add delay to allow us to test loading states
+      await delay();
+      return new HttpResponse(hasuraEventsResponseMock, { status: 200 });
+    },
+  );
+  server.use(handler);
+
   const handleSubmit = vi.fn();
   const { findByText } = await setup(
     <SendComponent
@@ -77,7 +84,7 @@ it("displays loading messages to the user", async () => {
   );
 
   // Initial loading state
-  expect(await findByText(/Submitting your application.../)).toBeVisible();
+  expect(await findByText(/Sending your form.../)).toBeVisible();
 
   // Final submission state
   expect(await findByText(/Finalising your submission.../)).toBeVisible();
@@ -94,7 +101,6 @@ it("generates a valid payload for the API", async () => {
   const handler = http.post(
     `${import.meta.env.VITE_APP_API_URL}/create-send-events/*`,
     async ({ request }) => {
-      await delay();
       apiPayload = await request.json();
       return new HttpResponse(hasuraEventsResponseMock, { status: 200 });
     },
@@ -176,7 +182,7 @@ describe("demo state", () => {
       "Send is not enabled for services created in the Demo team",
     );
     const errorGuidance = queryByText(
-      "Click continue to skip send and proceed with your application for testing.",
+      "Click continue to skip send and proceed with testing.",
     );
 
     expect(errorHeader).toBeInTheDocument();

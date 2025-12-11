@@ -1,21 +1,16 @@
-import { richText } from "lib/yupExtensions";
-import { array, boolean, object, string } from "yup";
+import { boolean, object } from "yup";
 
-import { Option, optionValidationSchema } from "../Option/model";
+import { Option } from "../Option/model";
 import {
-  BaseNodeData,
-  baseNodeDataValidationSchema,
-  parseBaseNodeData,
-} from "../shared";
+  BaseQuestion,
+  baseQuestionValidationSchema,
+  parseBaseQuestion,
+} from "../shared/BaseQuestion/model";
 
 /**
  * Database representation of a Question component
  */
-export interface Question extends BaseNodeData {
-  fn?: string;
-  text?: string;
-  description?: string;
-  img?: string;
+export interface Question extends BaseQuestion {
   neverAutoAnswer?: boolean;
   alwaysAutoAnswerBlank?: boolean;
 }
@@ -26,42 +21,18 @@ export interface Question extends BaseNodeData {
  */
 export type QuestionWithOptions = Question & { options: Option[] };
 
-export const validationSchema = baseNodeDataValidationSchema
-  .concat(
-    object({
-      text: string().required(),
-      description: richText(),
-      img: string(),
-      fn: string(),
-      neverAutoAnswer: boolean(),
-      alwaysAutoAnswerBlank: boolean(),
-      options: array(optionValidationSchema).required(),
-    }),
-  )
-  .test({
-    name: "uniqueLabels",
-    test: function ({ options }) {
-      if (!options?.length) return true;
-
-      const uniqueLabels = new Set(options.map(({ data }) => data.text));
-      const areAllLabelsUnique = uniqueLabels.size === options.length;
-      if (areAllLabelsUnique) return true;
-
-      return this.createError({
-        path: "options",
-        message: "Options must have unique labels",
-      });
-    },
-  });
+export const validationSchema = baseQuestionValidationSchema.concat(
+  object({
+    neverAutoAnswer: boolean(),
+    alwaysAutoAnswerBlank: boolean(),
+  }),
+);
 
 export const parseQuestion = (
   data: Record<string, any> | undefined,
 ): QuestionWithOptions => ({
-  fn: data?.fn || "",
-  img: data?.img || "",
   options: data?.options || [],
-  text: data?.text || "",
   neverAutoAnswer: data?.neverAutoAnswer || false,
   alwaysAutoAnswerBlank: data?.alwaysAutoAnswerBlank || false,
-  ...parseBaseNodeData(data),
+  ...parseBaseQuestion(data),
 });

@@ -1,9 +1,11 @@
 import DataObjectIcon from "@mui/icons-material/DataObject";
 import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { GovPayMetadata } from "@opensystemslab/planx-core/types";
 import { Pay } from "@planx/components/Pay/model";
+import { DataFieldAutocomplete } from "@planx/components/shared/DataFieldAutocomplete";
 import { useFormikContext } from "formik";
 import React from "react";
 import { useCallback } from "react";
@@ -34,6 +36,7 @@ function GovPayMetadataEditor(
   props: ListManagerEditorProps<GovPayMetadata> & {
     isFieldDisabled: (key: string, index: number) => boolean;
     disabled?: boolean;
+    variant: "data" | "static";
   },
 ) {
   const { key: currKey, value: currVal } = props.value;
@@ -49,7 +52,7 @@ function GovPayMetadataEditor(
   );
 
   return (
-    <Box sx={{ flex: 1 }} data-testid="rule-list-manager">
+    <Box sx={{ flex: 1, mb: "5px" }} data-testid="rule-list-manager">
       <ErrorWrapper error={isTouched ? error : undefined}>
         <InputRow>
           <Input
@@ -59,27 +62,85 @@ function GovPayMetadataEditor(
             }
             value={currKey}
             onChange={({ target: { value: newKey } }) =>
-              props.onChange({ key: newKey, value: currVal })
+              props.onChange({
+                key: newKey,
+                value: currVal,
+                type: props.variant,
+              })
             }
             placeholder="key"
           />
-          <Input
-            format={currVal.toString().startsWith("@") ? "data" : undefined}
-            aria-labelledby="value-label"
-            disabled={
-              props.disabled || props.isFieldDisabled(currKey, props.index)
-            }
-            value={currVal}
-            onChange={({ target: { value: newVal } }) =>
-              props.onChange({ key: currKey, value: newVal })
-            }
-            placeholder="value"
-          />
+          {props.variant === "static" && (
+            <Input
+              aria-labelledby="value-label"
+              disabled={
+                props.disabled || props.isFieldDisabled(currKey, props.index)
+              }
+              value={currVal}
+              onChange={({ target: { value: newVal } }) =>
+                props.onChange({
+                  key: currKey,
+                  value: newVal,
+                  type: props.variant,
+                })
+              }
+              placeholder="value"
+            />
+          )}
+
+          {props.variant === "data" && (
+            <DataFieldAutocomplete
+              value={currVal.toString()}
+              disabled={
+                props.disabled || props.isFieldDisabled(currKey, props.index)
+              }
+              onChange={(newVal) =>
+                props.onChange({
+                  key: currKey,
+                  value: newVal || "",
+                  type: props.variant,
+                })
+              }
+            />
+          )}
         </InputRow>
       </ErrorWrapper>
     </Box>
   );
 }
+
+const Headers: React.FC<{ title: string }> = ({ title }) => (
+  <>
+    <Typography variant="h4" mb={2}>
+      {title}
+    </Typography>
+    <Box
+      sx={{
+        width: "100%",
+        mb: 1,
+        display: "flex",
+        justifyContent: "space-evenly",
+      }}
+    >
+      <Typography
+        sx={{ width: "100%", mr: -4 }}
+        variant="subtitle2"
+        component="label"
+        id="key-label"
+      >
+        Key
+      </Typography>
+      <Typography
+        sx={{ width: "100%" }}
+        variant="subtitle2"
+        component="label"
+        id="value-label"
+      >
+        Value
+      </Typography>
+    </Box>
+  </>
+);
 
 export const GovPayMetadataSection: React.FC<GovPayMetadataSectionProps> = ({
   disabled,
@@ -89,6 +150,7 @@ export const GovPayMetadataSection: React.FC<GovPayMetadataSectionProps> = ({
 
   const EditorComponent = useCallback(
     (editorProps: ListManagerEditorProps<GovPayMetadata>) => (
+      // @ts-expect-error "variant" prop is passed in via editorProps, but type inference won't pick this up
       <GovPayMetadataEditor
         {...editorProps}
         isFieldDisabled={(key, index) =>
@@ -115,10 +177,6 @@ export const GovPayMetadataSection: React.FC<GovPayMetadataSectionProps> = ({
           </Link>{" "}
           for more details.
         </Typography>
-        <Typography variant="subtitle2" sx={{ mb: 2 }}>
-          Any values beginning with @ will be dynamically read from data values
-          set throughout the flow.
-        </Typography>
         <ErrorWrapper
           error={
             typeof errors.govPayMetadata === "string" && touched.govPayMetadata
@@ -127,44 +185,53 @@ export const GovPayMetadataSection: React.FC<GovPayMetadataSectionProps> = ({
           }
         >
           <>
-            <Box
-              sx={{
-                width: "100%",
-                mb: 1,
-                display: "flex",
-                justifyContent: "space-evenly",
-              }}
-            >
-              <Typography
-                sx={{ width: "100%", mr: -4 }}
-                variant="subtitle2"
-                component="label"
-                id="key-label"
-              >
-                Key
-              </Typography>
-              <Typography
-                sx={{ width: "100%" }}
-                variant="subtitle2"
-                component="label"
-                id="value-label"
-              >
-                Value
-              </Typography>
-            </Box>
+            <Headers title="Static values" />
             <ListManager
               maxItems={15}
               noDragAndDrop
-              values={values.govPayMetadata || []}
+              values={values.govPayMetadata}
               onChange={(metadata) => {
                 setFieldValue("govPayMetadata", metadata);
               }}
               Editor={EditorComponent}
               newValue={() => {
                 setTouched({});
-                return { key: "", value: "" };
+                return {
+                  key: "",
+                  value: "",
+                  type: "static",
+                } satisfies GovPayMetadata;
               }}
+              itemName="static field"
+              editorExtraProps={{ variant: "static" }}
               isFieldDisabled={({ key }, index) => isFieldDisabled(key, index)}
+              isFieldDisplayed={({ type }) => type === "static"}
+              disabled={disabled}
+            />
+
+            <Divider sx={{ pt: 4, mb: 4 }} />
+
+            <Headers title="Data values" />
+            <ListManager
+              maxItems={15}
+              noDragAndDrop
+              values={values.govPayMetadata}
+              onChange={(metadata) => {
+                setFieldValue("govPayMetadata", metadata);
+              }}
+              Editor={EditorComponent}
+              newValue={() => {
+                setTouched({});
+                return {
+                  key: "",
+                  value: "",
+                  type: "data",
+                } satisfies GovPayMetadata;
+              }}
+              itemName="data field"
+              editorExtraProps={{ variant: "data" }}
+              isFieldDisabled={({ key }, index) => isFieldDisabled(key, index)}
+              isFieldDisplayed={({ type }) => type === "data"}
               disabled={disabled}
             />
           </>

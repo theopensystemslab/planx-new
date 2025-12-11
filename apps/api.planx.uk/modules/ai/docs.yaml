@@ -1,0 +1,83 @@
+openapi: 3.1.0
+info:
+  title: Plan✕ API
+  version: 0.1.0
+tags:
+  - name: ai
+    description: AI-powered endpoints
+components:
+  schemas:
+    EnhanceRequest:
+      type: object
+      properties:
+        original:
+          type: string
+          description: The original project description
+          maxLength: 250
+      required:
+        - original
+    EnhanceSuccess:
+      type: object
+      properties:
+        original:
+          type: string
+          description: The original description that was submitted
+        suggested:
+          type: string
+          description: The AI-enhanced suggestion
+      required:
+        - original
+        - suggested
+paths:
+  /ai/project-description/enhance:
+    post:
+      tags: ["ai"]
+      summary: Enhance a project description
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EnhanceRequest"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EnhanceSuccess"
+        "400":
+          description: Invalid input - we were not able to generate an enhanced description
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum: INVALID_DESCRIPTION
+                  message:
+                    type: string
+                required:
+                  - error
+                  - message
+        "429":
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "503":
+          description: The upstream AI service is temporarily unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum: SERVICE_UNAVAILABLE
+                  message:
+                    type: string
+                required:
+                  - error
+                  - message

@@ -65,9 +65,7 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
             Contact us
           </Typography>
           <List>
-            <li>
-              if you have any questions about your application or this service
-            </li>
+            <li>if you have any questions</li>
           </List>
           <Box>
             <Typography variant="body2">
@@ -87,7 +85,7 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
           <Divider sx={{ mt: 4 }} />
           <Box>
             <Link href="../published" variant="body2">
-              Start a new application
+              Start a new form
             </Link>
           </Box>
         </FormInner>

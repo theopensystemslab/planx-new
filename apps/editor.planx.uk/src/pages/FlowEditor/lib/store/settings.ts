@@ -3,12 +3,7 @@ import { FlowStatus } from "@opensystemslab/planx-core/types";
 import camelcaseKeys from "camelcase-keys";
 import { client } from "lib/graphql";
 import { FlowInformation } from "pages/FlowEditor/utils";
-import {
-  AdminPanelData,
-  FlowSettings,
-  GlobalSettings,
-  TextContent,
-} from "types";
+import { FlowSettings, GlobalSettings, TextContent } from "types";
 import type { StateCreator } from "zustand";
 
 import {
@@ -26,26 +21,10 @@ export interface SettingsStore {
   flowSettings?: FlowSettings;
   setFlowSettings: (flowSettings?: FlowSettings) => void;
   flowStatus?: FlowStatus;
-  setFlowStatus: (flowStatus: FlowStatus) => void;
-  flowCanCreateFromCopy?: boolean;
-  setFlowCanCreateFromCopy: (canCreateFromCopy: boolean) => void;
-  updateFlowCanCreateFromCopy: (canCreateFromCopy: boolean) => Promise<boolean>;
-  updateFlowStatus: (newStatus: FlowStatus) => Promise<boolean>;
   flowSummary?: string;
-  updateFlowSummary: (newSummary: string) => Promise<boolean>;
-  flowDescription?: string;
-  updateFlowDescription: (newDescription: string) => Promise<boolean>;
-  flowLimitations?: string;
-  updateFlowLimitations: (newLimitations: string) => Promise<boolean>;
   globalSettings?: GlobalSettings;
-  isSubmissionService?: boolean;
   setGlobalSettings: (globalSettings: GlobalSettings) => void;
-  updateFlowSettings: (newSettings: FlowSettings) => Promise<number>;
   updateGlobalSettings: (newSettings: { [key: string]: TextContent }) => void;
-  adminPanelData?: AdminPanelData[];
-  setAdminPanelData: (adminPanelData: AdminPanelData[]) => void;
-  isFlowListedOnLPS?: boolean;
-  setIsFlowListedOnLPS: (isAvailable: boolean) => Promise<boolean>;
 }
 
 export const settingsStore: StateCreator<
@@ -53,88 +32,21 @@ export const settingsStore: StateCreator<
   [],
   [],
   SettingsStore
-> = (set, get) => ({
+> = (set, _get) => ({
   flowSettings: undefined,
 
   setFlowSettings: (flowSettings) => set({ flowSettings }),
 
   flowStatus: undefined,
 
-  setFlowStatus: (flowStatus) => set({ flowStatus }),
-
-  updateFlowStatus: async (newStatus) => {
-    const { id, $client } = get();
-    try {
-      const result = await $client.flow.setStatus({
-        flow: { id },
-        status: newStatus,
-      });
-      if (!result?.id) throw Error("Failed to update flow status");
-
-      set({ flowStatus: newStatus });
-      return Boolean(result.id);
-    } catch (error) {
-      console.error(error);
-      return false;
-    }
-  },
-
-  flowCanCreateFromCopy: undefined,
-
-  setFlowCanCreateFromCopy: (canCreateFromCopy) =>
-    set({ flowCanCreateFromCopy: canCreateFromCopy }),
-
-  updateFlowCanCreateFromCopy: async (canCreateFromCopy) => {
-    const { id, $client } = get();
-    const result = await $client.flow.setFlowVisibility({
-      flow: { id },
-      canCreateFromCopy,
-    });
-    set({ flowCanCreateFromCopy: canCreateFromCopy });
-    return Boolean(result?.id);
-  },
-
-  flowSummary: "",
-
-  updateFlowSummary: async (newSummary: string) => {
-    const { id, $client } = get();
-    const result = await $client.flow.setSummary({
-      flow: { id },
-      summary: newSummary,
-    });
-    set({ flowSummary: newSummary });
-    return Boolean(result?.id);
-  },
-
-  flowDescription: "",
-
-  updateFlowDescription: async (newDescription: string) => {
-    const { id, $client } = get();
-    const result = await $client.flow.setDescription({
-      flow: { id },
-      description: newDescription,
-    });
-    set({ flowDescription: newDescription });
-    return Boolean(result?.id);
-  },
-
-  flowLimitations: "",
-
-  updateFlowLimitations: async (newLimitations: string) => {
-    const { id, $client } = get();
-    const result = await $client.flow.setLimitations({
-      flow: { id },
-      limitations: newLimitations,
-    });
-    set({ flowLimitations: newLimitations });
-    return Boolean(result?.id);
-  },
+  flowSummary: undefined,
 
   getFlowInformation: async (flowSlug, teamSlug): Promise<FlowInformation> => {
     type DetailedFlowInformation = FlowInformation & {
       id: string;
       publishedFlows: [{ hasSendComponent: boolean }];
       onlineHistory: ["online"];
+      templatedFrom: string | null;
     };
 
     interface FlowInformationQuery {
@@ -148,13 +60,12 @@ export const settingsStore: StateCreator<
             id,
             settings,
             status,
-            description,
             summary,
-            limitations,
             canCreateFromCopy,
             publishedFlows,
             isListedOnLPS,
             onlineHistory,
+            templatedFrom,
           },
         ],
       },
@@ -167,11 +78,10 @@ export const settingsStore: StateCreator<
           ) {
             id
             settings
-            description
-            summary
             status
-            limitations
+            summary
             canCreateFromCopy: can_create_from_copy
+            templatedFrom: templated_from
             publishedFlows: published_flows(
               limit: 1
               order_by: { created_at: desc }
@@ -221,20 +131,17 @@ export const settingsStore: StateCreator<
     set({
       flowSettings: settings,
       flowStatus: status,
-      flowDescription: description,
       flowSummary: summary,
-      flowLimitations: limitations,
       flowCanCreateFromCopy: canCreateFromCopy,
       flowAnalyticsLink: analyticsLink,
       isFlowListedOnLPS: isListedOnLPS,
+      isTemplatedFrom: Boolean(templatedFrom),
     });
 
     return {
       settings,
       status,
-      description,
       summary,
-      limitations,
       analyticsLink,
       isListedOnLPS,
     };
@@ -247,42 +154,6 @@ export const settingsStore: StateCreator<
       globalSettings as Record<string, unknown>,
     ) as GlobalSettings;
     set({ globalSettings: fixedKeys });
-  },
-
-  updateFlowSettings: async (newSettings) => {
-    const { teamSlug, flowSlug } = get();
-
-    const response = await client.mutate({
-      mutation: gql`
-        mutation UpdateFlowSettings(
-          $team_slug: String!
-          $flow_slug: String!
-          $settings: jsonb
-        ) {
-          update_flows(
-            where: {
-              team: { slug: { _eq: $team_slug } }
-              slug: { _eq: $flow_slug }
-            }
-            _set: { settings: $settings }
-          ) {
-            affected_rows
-            returning {
-              id
-              slug
-              settings
-            }
-          }
-        }
-      `,
-      variables: {
-        team_slug: teamSlug,
-        flow_slug: flowSlug,
-        settings: newSettings,
-      },
-    });
-
-    return response.data.update_flows.affected_rows;
   },
 
   updateGlobalSettings: async (newSettings: { [key: string]: TextContent }) => {
@@ -304,45 +175,5 @@ export const settingsStore: StateCreator<
         new_settings: newSettings,
       },
     });
-  },
-
-  adminPanelData: undefined,
-
-  setAdminPanelData: (adminPanelData) => set({ adminPanelData }),
-
-  isFlowListedOnLPS: undefined,
-
-  setIsFlowListedOnLPS: async (isListed) => {
-    const { id } = get();
-
-    try {
-      const { data } = await client.mutate<{ flow: { id: string } }>({
-        mutation: gql`
-          mutation UpdateIsFlowListedOnLPS(
-            $id: uuid!
-            $is_listed_on_lps: Boolean!
-          ) {
-            flow: update_flows_by_pk(
-              pk_columns: { id: $id }
-              _set: { is_listed_on_lps: $is_listed_on_lps }
-            ) {
-              id
-            }
-          }
-        `,
-        variables: {
-          id,
-          is_listed_on_lps: isListed,
-        },
-      });
-
-      if (!data?.flow?.id)
-        throw Error("Failed to update flow listing for localplanning.services");
-      set({ isFlowListedOnLPS: isListed });
-      return Boolean(data.flow.id);
-    } catch (error) {
-      console.error(error);
-      return false;
-    }
   },
 });

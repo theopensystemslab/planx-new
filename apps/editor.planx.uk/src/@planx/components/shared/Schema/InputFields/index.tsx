@@ -29,7 +29,7 @@ export type Props<T extends Field> = {
 export const formatTitle = ({
   required = true,
   data: { title },
-}: Props<Field>): string => (required ? title : (title += " (optional)"));
+}: Field): string => (required ? title : (title += " (optional)"));
 
 /**
  * Helper function to get shared props derived from `Field` and `props.formik`

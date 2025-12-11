@@ -1,7 +1,11 @@
 import type { FlowGraph } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 
-import { hasComponentType, numberOfComponentType } from "./helpers.js";
+import {
+  buildNodeTypeSet,
+  hasComponentType,
+  numberOfComponentType,
+} from "./helpers.js";
 
 describe("hasComponentType", () => {
   test("it returns true for a component type that is present", () => {
@@ -28,6 +32,18 @@ describe("hasComponentType", () => {
     expect(hasComponentType(flow, TYPES.Question, "application.type")).toEqual(
       false,
     );
+  });
+});
+
+describe("buildNodeTypeSet", () => {
+  const nodeTypeSet = buildNodeTypeSet(flow);
+
+  test("it returns true for a component type that is present", () => {
+    expect(nodeTypeSet.has(TYPES.Question)).toEqual(true);
+  });
+
+  test("it returns false for a component type that is not present", () => {
+    expect(nodeTypeSet.has(TYPES.DrawBoundary)).toEqual(false);
   });
 });
 

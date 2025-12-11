@@ -20,6 +20,7 @@ insert_permissions:
         - created_at
         - fee_breakdown
         - flow_id
+        - gov_pay_metadata
         - payment_id
         - session_id
         - status
@@ -28,12 +29,13 @@ select_permissions:
   - role: api
     permission:
       columns:
+        - amount
+        - created_at
         - fee_breakdown
+        - flow_id
+        - gov_pay_metadata
         - payment_id
+        - session_id
         - status
         - team_slug
-        - created_at
-        - flow_id
-        - session_id
-        - amount
       filter: {}

@@ -27,6 +27,7 @@ import { getContrastTextColor } from "styleUtils";
 
 const DEFAULT_PRIMARY_COLOR = "#0010A4";
 const DEFAULT_TONAL_OFFSET = 0.1;
+export const DEFAULT_CONTRAST_THRESHOLD = 3;
 
 // Type styles
 export const FONT_WEIGHT_SEMI_BOLD = "600";
@@ -102,9 +103,11 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   },
   template: {
     main: "#E6D6FF",
+    light: "#EDE2FF",
     dark: "#C099FF",
   },
   tonalOffset: DEFAULT_TONAL_OFFSET,
+  contrastThreshold: DEFAULT_CONTRAST_THRESHOLD,
 };
 
 // GOVUK Focus style
@@ -243,6 +246,7 @@ const getThemeOptions = ({
         xl: 1920,
         formWrap: 690, // Max width for form content
         contentWrap: 1020, // Max width for page
+        contentWide: 1500, // Larger interface wrapper
       },
     },
     transitions: {
@@ -381,6 +385,9 @@ const getThemeOptions = ({
         },
       },
       MuiButtonBase: {
+        defaultProps: {
+          disableRipple: true,
+        },
         styleOverrides: {
           root: {
             fontFamily: "inherit",
@@ -540,7 +547,7 @@ const getThemeOptions = ({
         styleOverrides: {
           paper: ({ theme }) => ({
             width: "100%",
-            maxWidth: theme.breakpoints.values.md,
+            maxWidth: "860px",
             borderRadius: 0,
             borderTop: `10px solid ${palette.primary.main}`,
             background: theme.palette.background.paper,

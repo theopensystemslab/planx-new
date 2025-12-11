@@ -111,7 +111,7 @@ const SendComponent: React.FC<Props> = (props) => {
               <Typography variant="body2">
                 Each team can set one submission email address in{" "}
                 <Link
-                  href={`/${teamSlug}/general-settings`}
+                  href={`/${teamSlug}/settings`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -134,7 +134,9 @@ const SendComponent: React.FC<Props> = (props) => {
               </InputRow>
               <Typography variant="body2">
                 Receive submissions in MS SharePoint via a Power Automate
-                workflow. Learn more about this option in our{" "}
+                workflow. This option requires you to host a Power Automate
+                webhook that can receive notifications of new submissions in
+                real-time. Learn more about this option in our{" "}
                 <Link
                   href="https://opensystemslab.notion.site/How-you-can-receive-process-PlanX-applications-using-Microsoft-365-tools-like-Power-Automate-13197a4bbd24421eaf7b5021ddd07741?pvs=74"
                   target="_blank"
@@ -143,6 +145,22 @@ const SendComponent: React.FC<Props> = (props) => {
                   resources
                 </Link>
                 .
+              </Typography>
+            </ModalSectionContent>
+            <Divider />
+            <ModalSectionContent title={"FME Workbench"}>
+              <InputRow>
+                <Switch
+                  checked={formik.values.destinations.includes("fme")}
+                  onChange={() => toggleSwitch("fme")}
+                  label="Retrieve using FME Workbench"
+                  disabled={props.disabled}
+                />
+              </InputRow>
+              <Typography variant="body2">
+                Retrieve submissions using FME Workbench to download to your
+                local network. This option requires you to setup a workflow
+                which polls for new submissions on a schedule of your choice.
               </Typography>
             </ModalSectionContent>
             <Divider />

@@ -1,10 +1,13 @@
 import { mostReadable } from "@ctrl/tinycolor";
 import HelpIcon from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { Content } from "@planx/components/Content/model";
-import Card from "@planx/components/shared/Preview/Card";
+import Card, {
+  contentFlowSpacing,
+} from "@planx/components/shared/Preview/Card";
 import { PublicProps } from "@planx/components/shared/types";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React from "react";
@@ -41,13 +44,13 @@ Content.defaultProps = {
 
 const ContentComponent: React.FC<Props> = (props) => {
   const {
-    handleSubmit,
     color,
     content,
     info,
     policyRef,
     howMeasured,
     definitionImg,
+    resetButton,
   } = props;
 
   const [open, setOpen] = React.useState(false);
@@ -56,6 +59,19 @@ const ContentComponent: React.FC<Props> = (props) => {
   const handleHelpClick = () => {
     setOpen(true);
     trackEvent({ event: "helpClick", metadata: {} }); // This returns a promise but we don't need to await for it
+  };
+
+  const handleSubmit = !props.resetButton
+    ? () => props.handleSubmit?.()
+    : undefined;
+
+  const handleContentResetClick = () => {
+    trackEvent({
+      event: "flowDirectionChange",
+      metadata: null,
+      flowDirection: "reset",
+    });
+    props.resetPreview && props.resetPreview();
   };
 
   return (
@@ -115,6 +131,17 @@ const ContentComponent: React.FC<Props> = (props) => {
           </MoreInfoSection>
         ) : undefined}
       </MoreInfo>
+      {resetButton && (
+        <Button
+          variant="contained"
+          size="large"
+          type="submit"
+          onClick={handleContentResetClick}
+          sx={contentFlowSpacing}
+        >
+          Back to start
+        </Button>
+      )}
     </Card>
   );
 };

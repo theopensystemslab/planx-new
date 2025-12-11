@@ -5,20 +5,19 @@ import React from "react";
 
 import { Option } from "../Option/model";
 
+export interface Child {
+  id?: string;
+  type: ComponentType.Answer;
+  data: Option["data"];
+}
+
 export type EditorProps<
   Type extends ComponentType,
   Data,
   ExtraProps extends object = Record<string, unknown>,
 > = {
   id?: string;
-  handleSubmit?: (
-    data: { type: Type; data: Data },
-    children?: {
-      id?: string;
-      type: ComponentType.Answer;
-      data: Option["data"];
-    }[],
-  ) => void;
+  handleSubmit?: (data: { type: Type; data: Data }, children?: Child[]) => void;
   node?: any;
   disabled?: boolean;
 } & ExtraProps;

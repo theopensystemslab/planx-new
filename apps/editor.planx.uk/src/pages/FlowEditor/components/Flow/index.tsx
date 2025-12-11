@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import { ROOT_NODE_KEY } from "@planx/graph";
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link, useParams } from "@tanstack/react-router";
 import React from "react";
 import { rootFlowPath } from "utils/routeUtils/utils";
 
@@ -22,9 +22,8 @@ interface Props {
 }
 
 const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
-  const { pathname } = useLocation();
-  const flowPath = pathname.split("/")[2];
-  const [_flow, ...breadcrumbIds] = flowPath.split(",");
+  const { flow } = useParams({ from: "/_authenticated/$team/$flow" });
+  const [_flow, ...breadcrumbIds] = flow.split(",");
 
   const [childNodes, getNode, flowLayout] = useStore((state) => [
     state.childNodesOf(

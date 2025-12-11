@@ -2,6 +2,7 @@ import Check from "@mui/icons-material/Check";
 import Close from "@mui/icons-material/Close";
 import Delete from "@mui/icons-material/Delete";
 import LinkIcon from "@mui/icons-material/Link";
+import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import { type Editor, EditorOptions } from "@tiptap/core";
 import Mention from "@tiptap/extension-mention";
@@ -171,14 +172,13 @@ const RichTextInput: FC<Props> = (props) => {
         className={`rich-text-editor ${isRootLevel ? "allow-h1" : ""}`}
       >
         {editor && (
-          <StyledBubbleMenu
-            editor={editor}
-            options={{
-              placement: "top-start",
-              offset: 50,
-            }}
-          >
-            {addingLink ? (
+          <StyledBubbleMenu editor={editor}>
+            <Box
+              sx={{
+                display: isAddingLink ? "flex" : "none",
+                alignItems: "center",
+              }}
+            >
               <Input
                 sx={{ width: 300 }}
                 ref={urlInputRef}
@@ -188,13 +188,13 @@ const RichTextInput: FC<Props> = (props) => {
                       .chain()
                       .focus()
                       .toggleLink({
-                        href: addingLink.draft,
+                        href: addingLink?.draft || "",
                       })
                       .run();
                     setAddingLink(null);
                   }
                 }}
-                value={addingLink.draft}
+                value={addingLink?.draft || ""}
                 onChange={(ev) => {
                   setAddingLink(
                     (prev) =>
@@ -205,69 +205,68 @@ const RichTextInput: FC<Props> = (props) => {
                   );
                 }}
               />
-            ) : (
-              <>
-                {!isParagraph && (
-                  <>
-                    <H1Button
-                      editor={editor}
-                      label={<strong>{isRootLevel ? "H1" : "H2"}</strong>}
-                    />
-                    <H2Button
-                      editor={editor}
-                      label={<strong>{isRootLevel ? "H2" : "H3"}</strong>}
-                    />
-                  </>
-                )}
-                <BoldButton editor={editor} />
-                <ItalicButton editor={editor} />
-                <BulletListButton editor={editor} />
-                <OrderedListButton editor={editor} />
-                <PublicFileUploadButton
-                  variant="tooltip"
-                  onChange={(src) =>
-                    editor?.chain().focus().setImage({ src }).run()
-                  }
-                />
-              </>
-            )}
-            {addingLink ? (
-              <>
-                <IconButton
-                  size="small"
-                  onClick={() => {
-                    editor
-                      .chain()
-                      .focus()
-                      .toggleLink({
-                        href: addingLink.draft,
-                      })
-                      .run();
-                    setAddingLink(null);
-                  }}
-                >
-                  <Check />
-                </IconButton>
-                <IconButton
-                  size="small"
-                  disabled={!editor.isActive("link")}
-                  onClick={() => {
-                    editor.chain().focus().unsetLink().run();
-                    setAddingLink(null);
-                  }}
-                >
-                  <Delete />
-                </IconButton>
-                <IconButton
-                  size="small"
-                  onClick={() => {
-                    setAddingLink(null);
-                  }}
-                >
-                  <Close />
-                </IconButton>
-              </>
-            ) : (
+              <IconButton
+                size="small"
+                onClick={() => {
+                  editor
+                    .chain()
+                    .focus()
+                    .toggleLink({
+                      href: addingLink?.draft || "",
+                    })
+                    .run();
+                  setAddingLink(null);
+                }}
+              >
+                <Check />
+              </IconButton>
+              <IconButton
+                size="small"
+                disabled={!editor.isActive("link")}
+                onClick={() => {
+                  editor.chain().focus().unsetLink().run();
+                  setAddingLink(null);
+                }}
+              >
+                <Delete />
+              </IconButton>
+              <IconButton
+                size="small"
+                onClick={() => {
+                  setAddingLink(null);
+                }}
+              >
+                <Close />
+              </IconButton>
+            </Box>
+            <Box
+              sx={{
+                display: isAddingLink ? "none" : "flex",
+                alignItems: "center",
+              }}
+            >
+              {!isParagraph && (
+                <>
+                  <H1Button
+                    editor={editor}
+                    label={<strong>{isRootLevel ? "H1" : "H2"}</strong>}
+                  />
+                  <H2Button
+                    editor={editor}
+                    label={<strong>{isRootLevel ? "H2" : "H3"}</strong>}
+                  />
+                </>
+              )}
+              <BoldButton editor={editor} />
+              <ItalicButton editor={editor} />
+              <BulletListButton editor={editor} />
+              <OrderedListButton editor={editor} />
+              <PublicFileUploadButton
+                variant="tooltip"
+                onChange={(src) =>
+                  editor?.chain().focus().setImage({ src }).run()
+                }
+              />
               <IconButton
                 size="small"
                 color={editor.isActive("link") ? "primary" : undefined}
@@ -289,7 +288,7 @@ const RichTextInput: FC<Props> = (props) => {
               >
                 <LinkIcon />
               </IconButton>
-            )}
+            </Box>
           </StyledBubbleMenu>
         )}
         <EditorContent editor={editor} />

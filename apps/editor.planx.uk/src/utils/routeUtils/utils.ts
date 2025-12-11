@@ -9,7 +9,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { Store } from "pages/FlowEditor/lib/store";
 import { ApplicationPath } from "types";
 
-import { publicClient } from "../../lib/graphql";
+import { client } from "../../lib/graphql";
 
 export const makeTitle = (str: string) =>
   [str, "PlanX"].filter(Boolean).join(" | ");
@@ -88,7 +88,7 @@ const QUERY_GET_TEAM_BY_DOMAIN = gql`
 export const getTeamFromDomain = async (domain: string) => {
   const {
     data: { teams },
-  } = await publicClient.query({
+  } = await client.query({
     query: QUERY_GET_TEAM_BY_DOMAIN,
     variables: {
       domain,

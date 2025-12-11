@@ -1,28 +1,27 @@
-import { act, screen, within } from "@testing-library/react";
-import { FullStore, useStore } from "pages/FlowEditor/lib/store";
+import { screen, within } from "@testing-library/react";
+import { graphql, HttpResponse } from "msw";
 import React from "react";
+import server from "test/mockServer";
 import { setup } from "testUtils";
 import { mockTeams } from "ui/shared/DataTable/mockTeams";
 import { it } from "vitest";
 
 import { PlatformAdminPanel } from "./PlatformAdminPanel";
 
-const { getState, setState } = useStore;
+const handlers = [
+  graphql.query("GetAdminPanelData", () =>
+    HttpResponse.json({ data: { adminPanel: mockTeams } }),
+  ),
+];
 
-let initialState: FullStore;
+beforeEach(() => {
+  server.use(...handlers);
+});
 
 describe("Platform admin panel", () => {
-  beforeAll(() => (initialState = getState()));
-
-  beforeEach(() => {
-    getState().setAdminPanelData(mockTeams);
-  });
-  afterEach(() => {
-    act(() => setState(initialState));
-  });
-
   it("renders expected headers and rows without an error", async () => {
     await setup(<PlatformAdminPanel />);
+
     const headers = [
       "Team",
       "Reference code",
@@ -38,7 +37,10 @@ describe("Platform admin panel", () => {
       "Logo",
       "Favicon",
     ];
-    headers.map((header) => expect(screen.getByText(header)).toBeVisible());
+
+    for (const header of headers) {
+      expect(await screen.findByText(header)).toBeVisible();
+    }
 
     // test for a selection of row values
     expect(
@@ -55,6 +57,9 @@ describe("Platform admin panel", () => {
   it("renders a tick / cross for boolean values", async () => {
     const { container } = await setup(<PlatformAdminPanel />);
 
+    // Wait for data to load
+    await screen.findByText("Barking and Dagenham");
+
     // get all cells in the 'Planning Constraints' column
     const planningConstraintCells = container.querySelectorAll(
       '[data-field="planningDataEnabled"]',
@@ -63,7 +68,7 @@ describe("Platform admin panel", () => {
     const firstRow = planningConstraintCells[1]; // first non-header row
 
     expect(
-      within(firstRow as HTMLElement).getByTestId("CloseIcon"), // cross icon
+      await within(firstRow as HTMLElement).findByTestId("CloseIcon"), // cross icon
     ).toBeVisible();
 
     const secondRow = planningConstraintCells[2];

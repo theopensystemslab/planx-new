@@ -63,7 +63,7 @@ export const simpleSendFlow = {
   },
   plQLwrR898: {
     data: {
-      title: "Check your answers before sending your application",
+      title: "Check your answers before sending your form",
     },
     type: 600,
   },

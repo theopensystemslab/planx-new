@@ -13,7 +13,7 @@ import { Thumbnail } from "./Thumbnail";
 const Option: React.FC<any> = (props) => {
   const childNodes = useStore((state) => state.childNodesOf(props.id));
 
-  const href = "";
+  // const href = `${window.location.pathname}/nodes/${props.parent}/edit#${props.id}`;
   let flags: Flag[] | undefined;
 
   try {

@@ -1,21 +1,13 @@
-import { FETCH_BLPU_CODES } from "..";
+import type { BLPUCode } from "hooks/data/useBLPUCodes";
 
-export default [
-  {
-    request: {
-      query: FETCH_BLPU_CODES,
-      variables: {},
+const fetchBLPUCodesMock: { blpuCodes: BLPUCode[] } = {
+  blpuCodes: [
+    {
+      code: "RH01",
+      description: "HMO Parent",
+      value: "residential.HMO.parent",
     },
-    result: {
-      data: {
-        blpu_codes: [
-          {
-            code: "RH01",
-            description: "HMO Parent",
-            value: "residential.HMO.parent",
-          },
-        ],
-      },
-    },
-  },
-];
+  ],
+};
+
+export default fetchBLPUCodesMock;

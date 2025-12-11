@@ -1,5 +1,8 @@
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
+import { TitleWrapper } from "@planx/components/shared/Preview/CardHeader/styled";
 import { useRouteContext } from "@tanstack/react-router";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -32,13 +35,28 @@ export const ConfirmEmail: React.FC<{
     validationSchema: confirmEmailSchema,
   });
 
+  const [flowName, flowSummary] = useStore((state) => [
+    state.flowName,
+    state.flowSummary,
+  ]);
+
   return (
     <Main>
       <Card handleSubmit={formik.handleSubmit}>
-        <CardHeader
-          title="Enter your email address"
-          description="We will use this to save your application so you can come back to it later. We will also email you updates about your application."
-        ></CardHeader>
+        <CardHeader title={flowName} description={flowSummary}></CardHeader>
+        <TitleWrapper>
+          <Typography variant="h3" component="h2" role="heading" aria-level={2}>
+            {`Enter your email address`}
+          </Typography>
+        </TitleWrapper>
+        <Box
+          mb={(theme) => theme.spacing(1)}
+          mt={(theme) => theme.spacing(0.75)}
+        >
+          <Typography variant="subtitle1" component="div">
+            {`We will use this to save your form so you can come back to it later. We may also email you updates about it.`}
+          </Typography>
+        </Box>
         <InputRow>
           <InputLabel label={"Email address"} htmlFor={"email"}>
             <Input

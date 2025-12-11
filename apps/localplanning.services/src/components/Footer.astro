@@ -6,49 +6,68 @@ import odpLogo from "/public//odp-logo.svg";
 import { getCollection } from "astro:content";
 
 const legalPages = await getCollection("legal");
+
+const buildDateTime = Date.now();
+const lastUpdatedAt = new Date(buildDateTime).toLocaleString("en-GB", {
+  day: "2-digit",
+  month: "2-digit",
+  year: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+});
 ---
 
 <footer class="bg-bg-dark text-white pb-20">
   <Container paddingY>
     <div class="flex flex-col gap-8">
-      <div class="flex flex-col gap-1">
-        <p class="text-body-md">Supported by:</p>
-        <div class="flex flex-row items-center gap-8">
-          <Image
-            src={mhclgLogo}
-            alt="Ministry of Housing, Communities and Local Government logo"
-            class="clamp-[w,30,36]"
-          />
-          <Image
-            src={odpLogo}
-            alt="Open Digital Planning logo"
-            class="clamp-[w,30,36]"
-          />
+      <div
+        class="flex flex-col lg:flex-row lg:justify-between items-start flex-wrap gap-8"
+      >
+        <div class="flex flex-col gap-1">
+          <p class="text-body-md">Supported by:</p>
+          <div class="flex flex-row items-center gap-8">
+            <Image
+              src={mhclgLogo}
+              alt="Ministry of Housing, Communities and Local Government logo"
+              class="clamp-[w,30,36]"
+            />
+            <Image
+              src={odpLogo}
+              alt="Open Digital Planning logo"
+              class="clamp-[w,30,36]"
+            />
+          </div>
+        </div>
+        <div class="flex gap-8">
+          <a class="paragraph-link text-body-md" href="/directory">
+            Directory of local planning authorities
+          </a>
+          {
+            legalPages.map((page) => (
+              <a
+                class="paragraph-link capitalize text-body-md"
+                href={`/${page.slug}`}
+              >
+                {page.slug}
+              </a>
+            ))
+          }
         </div>
       </div>
-      <div class="flex gap-8">
-        <a class="paragraph-link text-body-md" href="/directory">
-          Directory of local planning authorities
-        </a>
-        {
-          legalPages.map((page) => (
-            <a
-              class="paragraph-link capitalize text-body-md"
-              href={`/${page.slug}`}
-            >
-              {page.slug}
-            </a>
-          ))
-        }
+      <div class="flex flex-col sm:flex-row justify-between gap-8">
+        <p class="text-body-md">
+          All content is available under the <a
+            class="paragraph-link paragraph-link--external"
+            href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+            target="_blank"
+            rel="noopener noreferrer nofollow">Open Government License v3</a
+          >, except where otherwise stated
+        </p>
+        <p class="text-body-sm">
+          Last updated: {lastUpdatedAt}
+        </p>
       </div>
-      <p class="text-body-md">
-        All content is available under the <a
-          class="paragraph-link paragraph-link--external"
-          href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
-          target="_blank"
-          rel="noopener noreferrer nofollow">Open Government License v3</a
-        >, except where otherwise stated
-      </p>
     </div>
   </Container>
 </footer>

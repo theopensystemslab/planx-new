@@ -7,7 +7,7 @@ import {
 import { richText } from "lib/yupExtensions";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { ApplicationPath, Passport } from "types";
-import { array, boolean, object, string } from "yup";
+import { array, boolean, mixed, object, string } from "yup";
 
 import { type BaseNodeData, parseBaseNodeData } from "../shared";
 
@@ -95,14 +95,18 @@ export const govPayMetadataSchema = array(
       .test({
         name: "max-length",
         message: "Value length cannot exceed 100 characters",
-        test: (value) => {
+        test: (value, context) => {
           if (!value) return true;
           // No limit to dynamic passport variable length, this is checked and truncated at runtime
-          if (value.startsWith("@")) return true;
+          const type = context.parent.type;
+          if (type === "data") return true;
           // Static strings must be 100 characters or less
           return value.length <= 100;
         },
       }),
+    type: mixed()
+      .oneOf(["data", "static"])
+      .required("Type is a required field"),
   }),
 )
   .max(15, "A maximum of 15 fields can be set as metadata")
@@ -169,18 +173,18 @@ export const validationSchema = object({
 });
 
 export const getDefaultContent = (): Pay => ({
-  title: "Pay for your application",
-  bannerTitle: "The planning fee for this application is",
+  title: "Pay",
+  bannerTitle: "The fee is",
   fn: PAY_FN,
-  description: `<p>The planning fee covers the cost of processing your application.\
+  description: `<p>The fee covers the cost of processing your form.\
     <a href="https://www.gov.uk/guidance/fees-for-planning-applications" target="_self">Find out more about how planning fees are calculated</a> (opens in new tab).</p>`,
   instructionsTitle: "How to pay",
-  instructionsDescription: `<p>You can pay for your application by using GOV.UK Pay.</p>\
-    <p>Your application will be sent after you have paid the fee. \
-    Wait until you see an application sent message before closing your browser.</p>`,
+  instructionsDescription: `<p>You can pay by using GOV.UK Pay.</p>\
+    <p>Your form will be sent after you have paid the fee. \
+    Wait until you see a form sent message before closing your browser.</p>`,
   hidePay: false,
   allowInviteToPay: true,
-  secondaryPageTitle: "Invite someone else to pay for this application",
+  secondaryPageTitle: "Invite someone else to pay",
   nomineeTitle: "Details of the person paying",
   yourDetailsTitle: "Your details",
   yourDetailsLabel: "Your name or organisation name",
@@ -188,20 +192,23 @@ export const getDefaultContent = (): Pay => ({
     {
       key: "flow",
       value: useStore.getState().flowName,
+      type: "static",
     },
     {
       key: "source",
       value: "PlanX",
+      type: "static",
     },
     {
       key: "paidViaInviteToPay",
-      value: "@paidViaInviteToPay",
+      value: "paidViaInviteToPay",
+      type: "data",
     },
   ],
 });
 
 export const parsePay = (data?: Record<string, any>): Pay => ({
-  ...parseBaseNodeData(data),
   ...getDefaultContent(),
+  ...parseBaseNodeData(data),
   ...data,
 });

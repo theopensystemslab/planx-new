@@ -30,6 +30,11 @@ type WithPlaceholder<T> = {
 type Props<T> = WithLabel<T> | WithPlaceholder<T>;
 
 export const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
+  backgroundColor: theme.palette.background.default,
+  "& button > svg": {
+    padding: theme.spacing(0.5, 0),
+    fontSize: "2.5rem",
+  },
   "& > div > label": {
     paddingRight: theme.spacing(3),
   },
@@ -52,7 +57,7 @@ export function SelectMultiple<T>(props: Props<T>) {
   const placeholder = isSelectEmpty ? props.placeholder : undefined;
 
   return (
-    <FormControl sx={{ display: "flex", flexDirection: "column", mt: 2 }}>
+    <FormControl sx={{ display: "flex", flexDirection: "column" }}>
       <StyledAutocomplete<T, true, true, false, "div">
         sx={{ mt: props.label ? 2 : 0 }}
         disableClearable

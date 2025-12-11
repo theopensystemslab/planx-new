@@ -16,13 +16,15 @@ vi.mock("fs", () => ({
 const mockAddFile = vi.fn();
 const mockAddLocalFile = vi.fn();
 
-vi.mock("adm-zip", () => ({
-  default: vi.fn().mockImplementation(() => ({
-    addFile: mockAddFile,
-    addLocalFile: mockAddLocalFile,
-    writeZip: vi.fn(),
-  })),
-}));
+vi.mock("adm-zip", () => {
+  class MockAdmZip {
+    addFile = mockAddFile;
+    addLocalFile = mockAddLocalFile;
+    writeZip = vi.fn();
+  }
+
+  return { default: MockAdmZip };
+});
 
 const mockPipe = {
   pipe: vi.fn().mockImplementation(() => ({
@@ -46,9 +48,9 @@ const mockGetSessionById = vi.fn().mockResolvedValue(mockLowcalSession);
 
 vi.mock("@opensystemslab/planx-core", () => {
   return {
-    Passport: vi.fn().mockImplementation(() => ({
-      files: vi.fn().mockImplementation(() => []),
-    })),
+    Passport: class MockPassport {
+      files = vi.fn().mockImplementation(() => []);
+    },
     generateApplicationHTML: vi
       .fn()
       .mockImplementation(() => "<p>application</p>"),
@@ -92,12 +94,6 @@ vi.mock("../../../client", () => {
 describe("buildSubmissionExportZip", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-  });
-  test("the csv is added to the zip", async () => {
-    await buildSubmissionExportZip({ sessionId: "1234" });
-    expect(mockAddLocalFile).toHaveBeenCalledWith(
-      expect.stringMatching(/application.csv$/),
-    );
   });
 
   test("the document viewer is added to zip", async () => {
@@ -281,7 +277,7 @@ describe("buildSubmissionExportZip", () => {
           sessionId: "1234",
           includeDigitalPlanningJSON: true,
         }),
-      ).rejects.toThrow(/Failed to generate ODP Schema JSON/);
+      ).rejects.toThrow(/validation test error/);
     });
   });
 
@@ -316,7 +312,7 @@ describe("buildSubmissionExportZip", () => {
           sessionId: "1234",
           onlyDigitalPlanningJSON: true,
         }),
-      ).rejects.toThrow(/Failed to generate ODP Schema JSON/);
+      ).rejects.toThrow(/validation test error/);
     });
   });
 });

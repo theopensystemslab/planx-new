@@ -9,14 +9,14 @@
   },
   "type": "module",
   "dependencies": {
-    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#551755e",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#59b0fbb",
     "axios": "^1.12.2",
     "dotenv": "^16.3.1",
     "eslint": "^8.56.0",
     "graphql": "^16.11.0",
     "graphql-request": "^6.1.0",
     "isomorphic-fetch": "^3.0.0",
-    "jsonwebtoken": "^9.0.2",
+    "jsonwebtoken": "^9.0.3",
     "serve": "^14.2.4",
     "uuid": "^11.1.0"
   },

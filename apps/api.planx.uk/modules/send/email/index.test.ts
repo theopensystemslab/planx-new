@@ -16,9 +16,9 @@ vi.mock("@opensystemslab/planx-core", async () => {
   const actualCore = await vi.importActual<typeof planxCore>(
     "@opensystemslab/planx-core",
   );
-  const mockPassport = vi.fn().mockImplementation(() => ({
-    files: vi.fn().mockImplementation(() => []),
-  }));
+  const mockPassport = class MockPassport {
+    files = vi.fn().mockImplementation(() => []);
+  };
   const mockCoreDomainClient = class extends actualCore.CoreDomainClient {
     constructor() {
       super();
@@ -36,6 +36,8 @@ vi.mock("@opensystemslab/planx-core", async () => {
 const mockBuildSubmissionExportZip = vi.fn().mockImplementation(() => ({
   write: () => "zip",
   toBuffer: () => Buffer.from("test"),
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  remove: () => {},
 }));
 
 vi.mock("../utils/exportZip", () => {
@@ -276,6 +278,31 @@ describe(`downloading application data received by email`, () => {
       },
       variables: { id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
     });
+
+    queryMock.mockQuery({
+      name: "GetFlowId",
+      matchOnVariables: true,
+      data: {
+        lowcalSessions: [{ flowId: "91693304-fc37-4079-8ec3-e33a6164a27a" }],
+      },
+      variables: { session_id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
+    });
+
+    queryMock.mockQuery({
+      name: "GetFlowSubmissionEmail",
+      matchOnVariables: true,
+      data: {
+        flowIntegrations: [
+          {
+            emailId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
+            submissionIntegration: {
+              submissionEmail: "planning.office.example@council.gov.uk",
+            },
+          },
+        ],
+      },
+      variables: { flowId: "91693304-fc37-4079-8ec3-e33a6164a27a" },
+    });
   });
 
   it("errors if required query params are missing", async () => {
@@ -321,6 +348,72 @@ describe(`downloading application data received by email`, () => {
         expect(res.body.error).toMatch(
           /Failed to find session data for this sessionId/,
         );
+      });
+  });
+
+  it("errors if flowId is missing in GetFlowId query response", async () => {
+    queryMock.mockQuery({
+      name: "GetFlowId",
+      matchOnVariables: false,
+      data: {
+        lowcalSessions: [], // No flowId returned
+      },
+      variables: { session_id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
+    });
+
+    await supertest(app)
+      .get(
+        "/download-application-files/33d373d4-fff2-4ef7-a5f2-2a36e39ccc49?email=planning.office.example@council.gov.uk&localAuthority=southwark",
+      )
+      .expect(400)
+      .then((res) => {
+        expect(res.body.error).toMatch(
+          /Failed to find flow ID for this sessionId/,
+        );
+      });
+  });
+
+  it("errors if submissionEmail is missing in GetFlowSubmissionEmail query response", async () => {
+    queryMock.mockQuery({
+      name: "GetFlowSubmissionEmail",
+      matchOnVariables: false,
+      data: {
+        flowIntegrations: [
+          {
+            emailId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
+            submissionIntegration: {
+              submissionEmail: null, // Missing submissionEmail
+            },
+          },
+        ],
+      },
+      variables: { flowId: "91693304-fc37-4079-8ec3-e33a6164a27a" },
+    });
+
+    await supertest(app)
+      .get(
+        "/download-application-files/33d373d4-fff2-4ef7-a5f2-2a36e39ccc49?email=planning.office.example@council.gov.uk&localAuthority=southwark",
+      )
+      .expect(400)
+      .then((res) => {
+        expect(res.body.error).toMatch(
+          /Failed to retrieve submission email for this flow/,
+        );
+      });
+  });
+
+  it("successfully downloads application files when all data is valid", async () => {
+    await supertest(app)
+      .get(
+        "/download-application-files/33d373d4-fff2-4ef7-a5f2-2a36e39ccc49?email=planning.office.example@council.gov.uk&localAuthority=southwark",
+      )
+      .expect(200)
+      .then((res) => {
+        expect(res.headers["content-type"]).toBe("application/octet-stream");
+        expect(res.headers["content-disposition"]).toMatch(
+          /attachment; filename=/,
+        );
+        expect(res.body).toBeInstanceOf(Buffer); // Ensure the response is a buffer
       });
   });
 });

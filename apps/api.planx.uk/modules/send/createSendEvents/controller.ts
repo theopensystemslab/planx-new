@@ -9,7 +9,7 @@ const createSendEvents: CreateSendEventsController = async (
   res,
   next,
 ) => {
-  const { email, uniform, bops, s3, idox } = res.locals.parsedReq.body;
+  const { email, uniform, bops, s3, fme, idox } = res.locals.parsedReq.body;
   const { sessionId } = res.locals.parsedReq.params;
 
   try {
@@ -64,6 +64,16 @@ const createSendEvents: CreateSendEventsController = async (
         comment: `upload_submission_${sessionId}`,
       });
       combinedResponse["s3"] = s3Event;
+    }
+
+    if (fme) {
+      const fmeEvent = await createScheduledEvent({
+        webhook: `{{HASURA_PLANX_API_URL}}/upload-submission/${fme.localAuthority}?notify=false`,
+        schedule_at: now,
+        payload: fme.body,
+        comment: `upload_submission_without_notification_${sessionId}`,
+      });
+      combinedResponse["fme"] = fmeEvent;
     }
 
     return res.json(combinedResponse);

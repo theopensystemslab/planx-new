@@ -8,6 +8,10 @@ import MenuList from "@mui/material/MenuList";
 import Paper from "@mui/material/Paper";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import { useStore } from "pages/FlowEditor/lib/store";
+import {
+  nodeIsChildOfTemplatedInternalPortal,
+  nodeIsTemplatedInternalPortal,
+} from "pages/FlowEditor/utils";
 import * as React from "react";
 import CloneIcon from "ui/icons/Clone";
 import CopyIcon from "ui/icons/Copy";
@@ -43,6 +47,9 @@ export const ContextMenu: React.FC = () => {
     cutPayload,
     pasteCutNode,
     getNode,
+    isTemplatedFrom,
+    flow,
+    orderedFlow,
   ] = useStore((state) => [
     state.contextMenuSource,
     state.contextMenuPosition,
@@ -58,6 +65,9 @@ export const ContextMenu: React.FC = () => {
     state.getCutNode(),
     state.pasteCutNode,
     state.getNode,
+    state.isTemplatedFrom,
+    state.flow,
+    state.orderedFlow,
   ]);
 
   const handleCopy = () => {
@@ -118,27 +128,46 @@ export const ContextMenu: React.FC = () => {
     const hasCutNode = Boolean(cutPayload && getNode(cutPayload.rootId));
     const isPasteEnabled = hasCopiedNode || hasClonedNode || hasCutNode;
 
+    // In templated flows, disable the copy/clone/cut context menus unless within a templated folder
+    //   Since "hangers" are hidden in templated flows, isPasteEnabled doesn't need to be aware of isTemplatedFrom
+    const indexedParent = orderedFlow?.find(({ id }) => id === parent);
+    const parentIsTemplatedInternalPortal = nodeIsTemplatedInternalPortal(
+      flow,
+      indexedParent,
+    );
+    const parentIsChildOfTemplatedInternalPortal =
+      nodeIsChildOfTemplatedInternalPortal(flow, indexedParent);
+
+    const isTemplatedNodeContextMenuEnabled =
+      parentIsTemplatedInternalPortal || parentIsChildOfTemplatedInternalPortal;
+
     if (source === "node") {
       return [
         {
           id: "copy",
           label: "Copy",
           icon: <CopyIcon fontSize="small" />,
-          disabled: false,
+          disabled: isTemplatedFrom
+            ? !isTemplatedNodeContextMenuEnabled
+            : false,
           onClick: handleCopy,
         },
         {
           id: "clone",
           label: "Clone",
           icon: <CloneIcon fontSize="small" />,
-          disabled: false,
+          disabled: isTemplatedFrom
+            ? !isTemplatedNodeContextMenuEnabled
+            : false,
           onClick: handleClone,
         },
         {
           id: "cut",
           label: "Cut",
           icon: <ContentCutIcon fontSize="small" />,
-          disabled: false,
+          disabled: isTemplatedFrom
+            ? !isTemplatedNodeContextMenuEnabled
+            : false,
           onClick: handleCut,
         },
       ];

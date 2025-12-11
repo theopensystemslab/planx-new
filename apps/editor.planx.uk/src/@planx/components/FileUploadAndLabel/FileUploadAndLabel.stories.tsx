@@ -19,7 +19,7 @@ export const Basic = {
   args: {
     title: "Upload and label",
     description:
-      "Based on your answers so far, these are the documents and drawings needed for your application.",
+      "Based on your answers so far, these are the documents and drawings you need to submit.",
     handleSubmit: () => {},
     hideDropZone: false,
     fileTypes: [
@@ -76,7 +76,7 @@ export const OptionalFilesOnly = {
   args: {
     title: "Upload and label",
     description:
-      "Based on your answers so far, these are the documents and drawings needed for your application.",
+      "Based on your answers so far, these are the documents and drawings you need to submit.",
     handleSubmit: () => {},
     hideDropZone: false,
     fileTypes: [
@@ -102,7 +102,7 @@ export const WithHiddenDropzone = {
   args: {
     title: "Upload and label",
     description:
-      "Based on your answers so far, these are the documents and drawings needed for your application.",
+      "Based on your answers so far, these are the documents and drawings you need to submit.",
     handleSubmit: () => {},
     hideDropZone: true,
     fileTypes: [

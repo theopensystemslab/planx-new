@@ -1,3 +1,4 @@
+import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
@@ -76,10 +77,16 @@ function PropertyInformationComponent(props: Props) {
                   !formik.values.showPropertyTypeOverride,
                 )
               }
-              label="Show users a 'change' link to override the property type"
+              label="Support property type"
               disabled={props.disabled}
             />
           </InputRow>
+          <Typography variant="body2" sx={{ mt: 1 }}>
+            When enabled, this component will display the property type with a
+            'change' link to overwrite it. To support the property type, the{" "}
+            <strong>Open Systems Lab - Property types</strong> flow must be
+            nested immediately before this component.
+          </Typography>
         </ModalSectionContent>
       </ModalSection>
       <ModalFooter formik={formik} disabled={props.disabled} />

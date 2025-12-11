@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { publicClient } from "lib/graphql";
+import { client } from "lib/graphql";
 import { getRetentionPeriod } from "lib/pay";
 
 export const getPaymentRequest = async (
@@ -10,7 +10,7 @@ export const getPaymentRequest = async (
       data: {
         paymentRequests: [paymentRequest],
       },
-    } = await publicClient.query<{
+    } = await client.query<{
       paymentRequests: PaymentRequest[];
     }>({
       query: gql`

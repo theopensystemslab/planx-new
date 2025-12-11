@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { SearchEntityParams, SearchEntityResponse } from "./types";
+import { type Entity, SearchEntityParams, SearchEntityResponse } from "./types";
 
 const PLANNING_DATA_URL = "https://www.planning.data.gov.uk" as const;
 
@@ -46,3 +46,13 @@ export const getFindPropertyData = async (
       "title-boundary",
     ],
   });
+
+export const getEntity = async (
+  entityId: string,
+  format: "geojson" = "geojson",
+) => {
+  const { data } = await axios.get<Entity>(`/entity/${entityId}.${format}`, {
+    baseURL: PLANNING_DATA_URL,
+  });
+  return data;
+};

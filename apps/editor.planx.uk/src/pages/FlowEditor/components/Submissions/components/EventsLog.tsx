@@ -1,6 +1,7 @@
 import { GridFilterItem } from "@mui/x-data-grid";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import ErrorFallback from "components/Error/ErrorFallback";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import SettingsSection from "ui/editor/SettingsSection";
@@ -20,8 +21,10 @@ import {
 import { EventsLogProps, Submission } from "../types";
 import { DownloadSubmissionButton } from "./DownloadSubmissionButton";
 import { OpenResponseButton } from "./OpenResponseButton";
+import { ResubmitButton } from "./ResubmitButton";
 import { StatusChip } from "./StatusChip";
 import { SubmissionEvent } from "./SubmissionEvent";
+import { ViewSubmissionButton } from "./ViewSubmissionButton";
 
 const EventsLog: React.FC<EventsLogProps> = ({
   submissions,
@@ -29,6 +32,10 @@ const EventsLog: React.FC<EventsLogProps> = ({
   error,
   filterByFlow,
 }) => {
+  const isPlatformAdmin = useStore((state) =>
+    Boolean(state.user?.isPlatformAdmin),
+  );
+
   if (loading)
     return (
       <DelayedLoadingIndicator
@@ -99,6 +106,30 @@ const EventsLog: React.FC<EventsLogProps> = ({
     },
     { field: "sessionId", headerName: "Session ID", width: 400 },
     {
+      field: "viewSubmissionLink" as keyof Submission,
+      headerName: "View Submission",
+      width: 100,
+      type: ColumnFilterType.CUSTOM,
+      customComponent: ViewSubmissionButton,
+      columnOptions: {
+        cellClassName: "MuiDataGrid-cell--textCenter",
+        filterable: false,
+        sortable: false,
+      },
+    },
+    {
+      field: "downloadSubmissionLink" as keyof Submission,
+      headerName: "Download",
+      width: 100,
+      type: ColumnFilterType.CUSTOM,
+      customComponent: DownloadSubmissionButton,
+      columnOptions: {
+        cellClassName: "MuiDataGrid-cell--textCenter",
+        filterable: false,
+        sortable: false,
+      },
+    },
+    {
       field: "response",
       headerName: "Response",
       width: 100,
@@ -130,19 +161,22 @@ const EventsLog: React.FC<EventsLogProps> = ({
         ],
       },
     },
-    {
-      field: "downloadSubmissionLink" as keyof Submission,
-      headerName: "Download",
+  ];
+
+  if (isPlatformAdmin) {
+    columns.push({
+      field: "resubmit" as keyof Submission,
+      headerName: "Resubmit",
       width: 100,
       type: ColumnFilterType.CUSTOM,
-      customComponent: DownloadSubmissionButton,
+      customComponent: ResubmitButton,
       columnOptions: {
         cellClassName: "MuiDataGrid-cell--textCenter",
         filterable: false,
         sortable: false,
       },
-    },
-  ];
+    });
+  }
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>

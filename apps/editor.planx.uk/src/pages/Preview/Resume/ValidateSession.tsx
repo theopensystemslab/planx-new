@@ -34,7 +34,7 @@ export const InvalidSession: React.FC<{
   retry: () => void;
 }> = ({ retry }) => (
   <StatusPage
-    bannerHeading="We can't find your application"
+    bannerHeading="We can't find your form"
     buttonText="Try again"
     onButtonClick={retry}
     additionalOption="startNewApplication"
@@ -44,8 +44,8 @@ export const InvalidSession: React.FC<{
     </Typography>
     <Typography variant="body1">
       <br />
-      This may be because your application has expired or there was a mistake in
-      your email address.
+      This may be because it has expired or there was a mistake in your email
+      address.
       <br />
       <br />
       Try entering your email address again.
@@ -93,7 +93,7 @@ export const ValidationSuccess: React.FC<{
 }> = ({ reconciliationResponse, continueApplication }) => {
   return (
     <ReconciliationPage
-      bannerHeading="Resume your application"
+      bannerHeading="Resume your form"
       reconciliationResponse={reconciliationResponse}
       buttonText="Continue"
       onButtonClick={continueApplication}

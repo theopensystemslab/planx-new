@@ -1,20 +1,14 @@
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
-import { styled } from "@mui/material/styles";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import React from "react";
 import { Paths } from "type-fest";
+import SelectInput from "ui/shared/SelectInput/SelectInput";
 import { slugify } from "utils";
 
-import SelectInput from "../SelectInput/SelectInput";
 import { getSortParams } from "./utils";
 
 type SortDirection = "asc" | "desc";
-
-const StyledSelectInput = styled(SelectInput)(() => ({
-  minWidth: "170px",
-  height: "40px",
-}));
 
 export interface SortableFields<T> {
   /** displayName is a string to use in the Select */
@@ -71,10 +65,11 @@ export const SortControl = <T extends object>({
   };
 
   return (
-    <Box display={"flex"} gap={1}>
-      <StyledSelectInput
+    <Box display={"flex"} gap={1} alignItems="center">
+      <SelectInput
         visuallyHiddenLabel
         value={selectedDisplaySlug}
+        size="small"
         onChange={(e) => {
           handleSortChange(e.target.value as string);
         }}
@@ -84,9 +79,10 @@ export const SortControl = <T extends object>({
             {displayName}
           </MenuItem>
         ))}
-      </StyledSelectInput>
-      <StyledSelectInput
+      </SelectInput>
+      <SelectInput
         value={currentSortDirection}
+        size="small"
         onChange={(e) => {
           handleDirectionChange(e.target.value as SortDirection);
         }}
@@ -103,7 +99,7 @@ export const SortControl = <T extends object>({
         >
           {currentSortObject.directionNames.desc}
         </MenuItem>
-      </StyledSelectInput>
+      </SelectInput>
     </Box>
   );
 };

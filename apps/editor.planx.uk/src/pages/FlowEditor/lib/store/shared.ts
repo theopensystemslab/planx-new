@@ -28,12 +28,14 @@ export interface SharedStore extends Store.Store {
     flowSlug,
     flowName,
     flowStatus,
+    flowSummary,
   }: {
     id?: string;
     flow?: Store.Flow;
     flowSlug?: string;
     flowName?: string;
     flowStatus?: FlowStatus;
+    flowSummary?: string;
   }) => void;
   wasVisited: (id: NodeId) => boolean;
   previewEnvironment: PreviewEnvironment;
@@ -94,13 +96,14 @@ export const sharedStore: StateCreator<
     removeSessionIdSearchParam();
   },
 
-  setFlow({ id, flow, flowSlug, flowName, flowStatus }) {
+  setFlow({ id, flow, flowSlug, flowName, flowStatus, flowSummary }) {
     set({
       id,
       flow,
       flowSlug,
       flowName,
       flowStatus,
+      flowSummary,
       orderedFlow: undefined,
       externalPortals: {},
     });

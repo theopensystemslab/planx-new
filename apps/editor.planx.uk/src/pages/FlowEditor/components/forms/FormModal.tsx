@@ -12,7 +12,6 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { parseFormValues } from "@planx/components/shared";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import ErrorFallback from "components/Error/ErrorFallback";
-import { hasFeatureFlag } from "lib/featureFlags";
 import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
@@ -57,17 +56,9 @@ const NodeTypeSelect: React.FC<{
     >
       <optgroup label="Question">
         <option value={TYPES.Question}>Question</option>
+        <option value={TYPES.ResponsiveQuestion}>Responsive question</option>
         <option value={TYPES.Checklist}>Checklist</option>
-        {hasFeatureFlag("RESPONSIVE_QUESTIONS_CHECKLISTS") && (
-          <option value={TYPES.ResponsiveChecklist}>
-            Responsive checklist (testing only)
-          </option>
-        )}
-        {hasFeatureFlag("RESPONSIVE_QUESTIONS_CHECKLISTS") && (
-          <option value={TYPES.ResponsiveQuestion}>
-            Responsive question (testing only)
-          </option>
-        )}
+        <option value={TYPES.ResponsiveChecklist}>Responsive checklist</option>
         <option value={TYPES.NextSteps}>Next steps</option>
       </optgroup>
       <optgroup label="Inputs">
@@ -229,7 +220,16 @@ const FormModal: React.FC<FormModalProps> = ({
     : !canUserEditNode(teamSlug);
 
   return (
-    <StyledDialog open fullWidth maxWidth="md" disableScrollLock>
+    <StyledDialog
+      open
+      fullWidth
+      disableScrollLock
+      onClose={(_event, reason) => {
+        if (reason === "escapeKeyDown") {
+          handleClose();
+        }
+      }}
+    >
       <DialogTitle
         sx={{
           py: 1,

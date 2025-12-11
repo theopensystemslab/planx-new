@@ -1,7 +1,7 @@
 import { DocumentNode } from "@apollo/client";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import Bowser from "bowser";
-import { publicClient } from "lib/graphql";
+import { client } from "lib/graphql";
 import React, { createContext, useContext, useEffect } from "react";
 import { usePrevious } from "react-use";
 
@@ -55,13 +55,16 @@ export const ALLOW_LIST = [
   "_feedback",
   "findProperty.action",
   "_overrides",
+  "permittedDevelopmentCheck",
   "planningConstraints.action",
+  "project.reportType.multiple",
   "property.constraints.planning",
   "property.type",
   "propertyInformation.action",
   "proposal.description",
   "proposal.projectType",
   "rab.exitReason",
+  "report.projectType",
   "send.analytics.userAgent",
   "send.analytics.referrer",
   "service.type",
@@ -231,7 +234,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     nodeTitle: string,
     nodeId: string | null,
   ) {
-    const result = await publicClient.mutate({
+    const result = await client.mutate({
       mutation: INSERT_NEW_ANALYTICS_LOG,
       variables: {
         flow_direction: direction,
@@ -241,6 +244,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         node_title: nodeTitle,
         node_id: nodeId,
       },
+      context: { role: "public" },
     });
     return result;
   }
@@ -249,12 +253,13 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     lastVisibleNodeAnalyticsLogId: number,
     newLogCreatedAt: Date,
   ) {
-    await publicClient.mutate({
+    await client.mutate({
       mutation: UPDATE_NEXT_LOG_CREATED_AT,
       variables: {
         id: lastVisibleNodeAnalyticsLogId,
         next_log_created_at: newLogCreatedAt,
       },
+      context: { role: "public" },
     });
   }
 
@@ -263,12 +268,13 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   async function updateMetadata(mutation: DocumentNode, metadata?: Metadata) {
-    await publicClient.mutate({
+    await client.mutate({
       mutation: mutation,
       variables: {
         id: lastVisibleNodeAnalyticsLogId,
         metadata,
       },
+      context: { role: "public" },
     });
   }
 
@@ -312,12 +318,13 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   async function handleFlowDirectionChange(
     flowDirection: AnalyticsLogDirection,
   ) {
-    await publicClient.mutate({
+    await client.mutate({
       mutation: UPDATE_FLOW_DIRECTION,
       variables: {
         id: lastVisibleNodeAnalyticsLogId,
         flow_direction: flowDirection,
       },
+      context: { role: "public" },
     });
   }
 
@@ -326,7 +333,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     const userAgent = Bowser.parse(window.navigator.userAgent);
     const referrer = document.referrer || null;
 
-    const response = await publicClient.mutate({
+    const response = await client.mutate({
       mutation: INSERT_NEW_ANALYTICS,
       variables: {
         type,
@@ -334,6 +341,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         user_agent: userAgent,
         referrer,
       },
+      context: { role: "public" },
     });
     const id = response.data.insert_analytics_one.id;
     setAnalyticsId(id);
@@ -355,13 +363,14 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     );
     if (!allowListAnswers) return;
 
-    await publicClient.mutate({
+    await client.mutate({
       mutation: UPDATE_ALLOW_LIST_ANSWERS,
       variables: {
         id: lastVisibleNodeAnalyticsLogId,
         allow_list_answers: allowListAnswers,
         node_id: nodeId,
       },
+      context: { role: "public" },
     });
   }
 
@@ -389,13 +398,14 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
 
     // We can't rely on lastVisibleNodeAnalyticsLogId variable here to mutate a single record because we have an auto-answered node (not visible), so instead we update entire session using analyticsId
     //   But this shouldn't matter in the case of SetValues because very nodeId has same data value (this would not hold for Questions and Checklists with different option paths)
-    await publicClient.mutate({
+    await client.mutate({
       mutation: UPDATE_AUTO_ANSWERED_ALLOW_LIST_ANSWERS,
       variables: {
         analytics_id: analyticsId,
         allow_list_answers: allowListAnswers,
         node_id: nodeId,
       },
+      context: { role: "public" },
     });
   }
 
@@ -405,12 +415,13 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   async function handleInputErrors(error: string) {
     if (shouldSkipTracking()) return;
 
-    await publicClient.mutate({
+    await client.mutate({
       mutation: TRACK_INPUT_ERRORS,
       variables: {
         id: lastVisibleNodeAnalyticsLogId,
         error,
       },
+      context: { role: "public" },
     });
   }
 

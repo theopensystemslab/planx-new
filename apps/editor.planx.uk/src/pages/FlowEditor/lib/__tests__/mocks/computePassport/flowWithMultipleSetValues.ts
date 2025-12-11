@@ -8,11 +8,11 @@ export const flowWithMultipleSetValues: Store.Flow = {
     data: {
       fn: "application.fee.payable",
       tags: [],
-      title: "Pay for your application",
+      title: "Pay",
       hidePay: false,
-      bannerTitle: "The planning fee for this application is",
+      bannerTitle: "The fee is",
       description:
-        '<p>The planning fee covers the cost of processing your application.    <a target="_self" href="https://www.gov.uk/guidance/fees-for-planning-applications">Find out more about how planning fees are calculated</a> (opens in new tab).</p>',
+        '<p>The fee covers the cost of processing your form.    <a target="_self" href="https://www.gov.uk/guidance/fees-for-planning-applications">Find out more about how planning fees are calculated</a> (opens in new tab).</p>',
       nomineeTitle: "Details of the person paying",
       govPayMetadata: [
         {
@@ -32,9 +32,9 @@ export const flowWithMultipleSetValues: Store.Flow = {
       yourDetailsLabel: "Your name or organisation name",
       yourDetailsTitle: "Your details",
       instructionsTitle: "How to pay",
-      secondaryPageTitle: "Invite someone else to pay for this application",
+      secondaryPageTitle: "Invite someone else to pay",
       instructionsDescription:
-        "<p>You can pay for your application by using GOV.UK Pay.</p>    <p>Your application will be sent after you have paid the fee.     Wait until you see an application sent message before closing your browser.</p>",
+        "<p>You can pay by using GOV.UK Pay.</p>    <p>Your form will be sent after you have paid the fee.     Wait until you see a form sent message before closing your browser.</p>",
     },
     type: 400,
   },

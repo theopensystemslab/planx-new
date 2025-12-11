@@ -1,6 +1,6 @@
 import { notFound } from "@tanstack/react-router";
 import gql from "graphql-tag";
-import { publicClient } from "lib/graphql";
+import { client } from "lib/graphql";
 import { Store } from "pages/FlowEditor/lib/store";
 import { Flow, GlobalSettings } from "types";
 
@@ -17,7 +17,7 @@ export const fetchSettingsForPublishedView = async (
   teamSlug: string,
 ): Promise<PublishedViewSettings> => {
   try {
-    const result = await publicClient.query({
+    const result = await client.query({
       query: gql`
         query GetSettingsForPublishedView(
           $flowSlug: String!
@@ -58,6 +58,7 @@ export const fetchSettingsForPublishedView = async (
             }
             settings
             status
+            summary
             publishedFlows: published_flows(
               limit: 1
               order_by: { created_at: desc }
@@ -74,6 +75,7 @@ export const fetchSettingsForPublishedView = async (
         flowSlug,
         teamSlug,
       },
+      context: { role: "public" },
     });
     return result.data;
   } catch (error) {
@@ -84,7 +86,7 @@ export const fetchSettingsForPublishedView = async (
 
 export const getLastPublishedAt = async (flowId: string): Promise<string> => {
   try {
-    const { data } = await publicClient.query({
+    const { data } = await client.query({
       query: gql`
         query GetLastPublishedFlow($id: uuid) {
           flows(limit: 1, where: { id: { _eq: $id } }) {
@@ -97,6 +99,7 @@ export const getLastPublishedAt = async (flowId: string): Promise<string> => {
       variables: {
         id: flowId,
       },
+      context: { role: "public" },
     });
     return data.flows[0].published_flows[0].created_at;
   } catch (error) {

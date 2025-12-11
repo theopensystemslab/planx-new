@@ -1,25 +1,22 @@
 import React from "react";
+import { EditorProps } from "ui/editor/ListManager/ListManager";
 
-import {
-  BaseOptionsEditor,
-  BaseOptionsEditorProps,
-} from "../shared/BaseOptionsEditor";
+import { ConditionalOption, Option } from "../Option/model";
+import { BaseOptionsEditor } from "../shared/BaseOptionsEditor";
+import { OptionEditor } from "../shared/BaseOptionsEditor/types";
 
-const QuestionOptionsEditor: React.FC<BaseOptionsEditorProps> = ({
-  value,
-  schema,
-  onChange,
-  showValueField = false,
-  index,
-}) => {
+const QuestionOptionsEditor: React.FC<
+  EditorProps<Option | ConditionalOption> | OptionEditor
+> = (props) => {
+  // Type-narrowing only, type will always be present
+  if (!("type" in props))
+    throw Error("Type must be provide for BaseOptionsEditor");
+
   return (
     <BaseOptionsEditor
-      value={value}
-      schema={schema}
-      onChange={onChange}
-      showValueField={showValueField}
+      {...props}
+      showValueField={Boolean(props.showValueField)}
       showDescriptionField
-      index={index}
     />
   );
 };

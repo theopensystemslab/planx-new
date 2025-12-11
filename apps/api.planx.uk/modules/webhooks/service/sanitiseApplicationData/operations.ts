@@ -101,12 +101,22 @@ export const getExpiredSessionIds = async (): Promise<string[]> => {
  */
 export const deleteApplicationFiles: Operation = async () => {
   const deletedFiles: string[] = [];
-
   const sessionIds = await getExpiredSessionIds();
   for (const sessionId of sessionIds) {
     const session = await $api.session.find(sessionId);
     if (!session) {
       throw Error(`Unable to find session matching id ${sessionId}`);
+    }
+    // check session data and passport exist (none of these cases should occur, but there may be aberrations)
+    if (
+      !session.data ||
+      !session.data.passport ||
+      !session.data.passport.data
+    ) {
+      console.debug(
+        `Session ${sessionId} has no passport data, so there are no associated files to delete`,
+      );
+      continue;
     }
     const files = new Passport(session.data.passport)?.files;
     if (files?.length) {

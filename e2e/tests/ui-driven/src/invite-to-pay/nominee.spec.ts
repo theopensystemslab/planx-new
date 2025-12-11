@@ -49,7 +49,7 @@ test.describe("Nominee journey @regression", async () => {
     await navigateToPaymentRequestPage(paymentRequest, page);
 
     await expect(
-      page.getByRole("heading", { name: "Pay for your application" }),
+      page.getByRole("heading", { name: "Pay", exact: true }),
     ).toBeVisible();
     await expect(
       page.locator("#main-content").getByText("Invite to pay test"),

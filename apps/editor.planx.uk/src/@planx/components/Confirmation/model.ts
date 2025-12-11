@@ -21,10 +21,10 @@ export interface Confirmation extends BaseNodeData {
 export const parseConfirmation = (
   data: Record<string, any> | undefined,
 ): Confirmation => ({
-  heading: data?.heading || "Application sent",
+  heading: data?.heading || "Form sent",
   description:
     data?.description ||
-    `<p>A payment receipt has been emailed to you. You will also receive an email to confirm when your application has been received.</p>`,
+    `<p>A payment receipt has been emailed to you. You will also receive an email to confirm when your form has been received.</p>`,
   moreInfo:
     data?.moreInfo ||
     `<h2>You will be contacted</h2>
@@ -37,7 +37,7 @@ export const parseConfirmation = (
     data?.contactInfo ||
     `You can contact us at <em>ADD YOUR COUNCIL CONTACT</em>
           <br><br>
-          <p><strong>What did you think of this service? Please give us your feedback on the next page.</strong></p>`,
+          <p>What did you think of this service? Please give us your feedback on the next page.</p>`,
   nextSteps: data?.nextSteps || [],
   ...parseBaseNodeData(data),
 });

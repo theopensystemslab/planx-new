@@ -29,7 +29,7 @@ import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 
-import { CopyButton } from "../../Settings/ServiceSettings/FlowStatus/PublicLink";
+import { CopyButton } from "../../Settings/Flow/Visibility/FlowStatus/components/PublicLink";
 import { AlteredNodesSummaryContent } from "./AlteredNodes";
 import { ValidationChecks } from "./ValidationChecks";
 

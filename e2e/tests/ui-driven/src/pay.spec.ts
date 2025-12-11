@@ -84,7 +84,7 @@ test.describe("Gov Pay integration @regression", async () => {
     });
     expect(session?.data?.govUkPayment?.payment_id).toEqual(paymentId);
 
-    await expect(page.getByText("Application sent")).toBeVisible();
+    await expect(page.getByText("Form sent")).toBeVisible();
     await expect(page.getByText(paymentId!)).toBeVisible();
   });
 
@@ -145,7 +145,7 @@ test.describe("Gov Pay integration @regression", async () => {
     });
     expect(session?.data?.govUkPayment?.payment_id).toEqual(paymentId);
 
-    await expect(page.getByText("Application sent")).toBeVisible();
+    await expect(page.getByText("Form sent")).toBeVisible();
     await expect(page.getByText(paymentId)).toBeVisible();
   });
 
@@ -198,7 +198,7 @@ test.describe("Gov Pay integration @regression", async () => {
     });
     expect(session?.data?.govUkPayment?.payment_id).toEqual(paymentId);
 
-    await expect(page.getByText("Application sent")).toBeVisible();
+    await expect(page.getByText("Form sent")).toBeVisible();
     await expect(page.getByText(paymentId!)).toBeVisible();
   });
 
@@ -261,7 +261,7 @@ test.describe("Gov Pay integration @regression", async () => {
     });
     expect(updatedSession?.data?.govUkPayment?.payment_id).toEqual(paymentId);
 
-    await expect(page.getByText("Application sent")).toBeVisible();
+    await expect(page.getByText("Form sent")).toBeVisible();
     await expect(page.getByText(paymentId!)).toBeVisible();
   });
 
@@ -310,7 +310,7 @@ test.describe("Gov Pay integration @regression", async () => {
     expect(session?.data?.govUkPayment?.payment_id).toEqual(actualPaymentId);
 
     // ensure the user moves to the next page
-    await expect(page.getByText("Application sent")).toBeVisible();
+    await expect(page.getByText("Form sent")).toBeVisible();
   });
 
   test("navigating back to the pay component after a successful payment", async ({
@@ -332,7 +332,7 @@ test.describe("Gov Pay integration @regression", async () => {
       page,
       context,
     );
-    await expect(page.getByText("Application sent")).toBeVisible();
+    await expect(page.getByText("Form sent")).toBeVisible();
     await expect(page.getByText(actualPaymentId)).toBeVisible();
 
     // Try going back to the GovPay payment page
@@ -343,7 +343,7 @@ test.describe("Gov Pay integration @regression", async () => {
     ).toBeVisible();
     // ...with a link back to PlanX
     await page.locator("a").getByText("View your payment summary").click();
-    await expect(page.getByText("Application sent")).toBeVisible();
+    await expect(page.getByText("Form sent")).toBeVisible();
   });
 });
 

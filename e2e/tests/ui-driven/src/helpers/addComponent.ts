@@ -21,7 +21,7 @@ const createBaseComponent = async (
     case ComponentType.Question:
       await page.getByPlaceholder("Text").fill(title || "");
       if (options) {
-        await createComponentOptions(options, "add new", page);
+        await createComponentOptions(options, "Add option", page);
       }
       break;
     case ComponentType.Notice:
@@ -30,7 +30,7 @@ const createBaseComponent = async (
     case ComponentType.Checklist:
       await page.getByPlaceholder("Text").fill(title || "");
       if (options) {
-        await createComponentOptions(options, "add new option", page);
+        await createComponentOptions(options, "Add option", page);
       }
       break;
     case ComponentType.TextInput:
@@ -72,7 +72,7 @@ const createBaseComponent = async (
       if (options) {
         let index = 0;
         for (const option of options) {
-          await page.locator("button").filter({ hasText: "add new" }).click();
+          await page.locator("button").filter({ hasText: "Add task" }).click();
           await page
             .getByPlaceholder("Title")
             .nth(index + 1) // ignore the main title field
@@ -84,7 +84,7 @@ const createBaseComponent = async (
     case ComponentType.Review:
       // Don't need to change anything so dummy click
       await page
-        .getByPlaceholder("Check your answers before sending your application")
+        .getByPlaceholder("Check your answers before sending your form")
         .click();
       break;
     case ComponentType.FindProperty:
@@ -105,7 +105,7 @@ const createBaseComponent = async (
       if (options) {
         let index = 0;
         for (const option of options) {
-          await page.locator("button").filter({ hasText: "add new" }).click();
+          await page.locator("button").filter({ hasText: "Add step" }).click();
           await page
             .getByPlaceholder("Title")
             .nth(index + 1) // ignore the main title field
@@ -409,7 +409,7 @@ async function createComponentOptionsWithDataValues(
   options: OptionWithDataValues[],
 ) {
   for (const option of options) {
-    await page.locator("button").filter({ hasText: "add new" }).click();
+    await page.locator("button").filter({ hasText: "Add option" }).click();
     await page.getByPlaceholder("Option").last().fill(option.optionText);
     await page.getByRole("combobox", { name: "Data field" }).last().click();
     await page

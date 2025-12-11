@@ -1,9 +1,8 @@
 import { Team } from "@opensystemslab/planx-core/types";
 import * as TanStackRouter from "@tanstack/react-router";
-import { screen } from "@testing-library/react";
+import { act, screen } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { act } from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";

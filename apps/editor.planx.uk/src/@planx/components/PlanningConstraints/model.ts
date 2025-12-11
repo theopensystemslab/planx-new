@@ -34,7 +34,7 @@ export type IntersectingConstraints = Record<string, string[]>;
 export const DEFAULT_FN = "property.constraints.planning";
 
 export const DEFAULT_PLANNING_CONDITIONS_DISCLAIMER =
-  "<p><strong>This page does not include information about historic planning conditions that may apply to this property.</strong></p>";
+  "<p>This page does not include information about historic planning conditions that may apply to this property.</p>";
 
 interface Dataset {
   text: string;

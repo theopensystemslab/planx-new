@@ -20,6 +20,7 @@ import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useMutation } from "@tanstack/react-query";
 import { useLocation, useNavigate, useParams } from "@tanstack/react-router";
+import EnvironmentSelect from "components/EditorNavMenu/components/EnvironmentSelect";
 import { logout } from "lib/api/auth/requests";
 import { clearLocalFlowIdb } from "lib/local.idb";
 import { capitalize } from "lodash";
@@ -76,6 +77,10 @@ const EditorHeader = styled(MuiToolbar)(({ theme }) => ({
 const EditorHeaderContainer = styled(Box)(({ theme }) => ({
   width: "100%",
   padding: theme.spacing(0, 2),
+  "@media print": {
+    background: theme.palette.background.dark,
+    color: theme.palette.common.white,
+  },
 }));
 
 const InnerContainer = styled(Box)(() => ({
@@ -108,6 +113,9 @@ const ProfileSection = styled(MuiToolbar)(({ theme }) => ({
   marginRight: theme.spacing(1),
   [theme.breakpoints.up("md")]: {
     minHeight: HEADER_HEIGHT_EDITOR,
+  },
+  "@media print": {
+    visibility: "hidden",
   },
 }));
 
@@ -202,6 +210,7 @@ const Breadcrumbs: React.FC = () => {
         >
           Plan✕
         </BreadcrumbsLink>
+        {!isStandalone && <EnvironmentSelect />}
         {team.slug && (
           <>
             {" / "}
@@ -349,7 +358,6 @@ const PublicToolbar: React.FC<{
       <ConfirmationDialog
         open={isDialogOpen}
         onClose={handleRestart}
-        title="Confirm"
         confirmText="Yes"
         cancelText="No"
       >

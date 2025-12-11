@@ -68,6 +68,8 @@ export interface EditorUIStore {
   toggleShowTags: () => void;
   showImages: boolean;
   toggleShowImages: () => void;
+  showNotes: boolean;
+  toggleShowNotes: () => void;
   showDataFields: boolean;
   toggleShowDataFields: () => void;
   showHelpText: boolean;
@@ -128,6 +130,10 @@ export const editorUIStore: StateCreator<
     showImages: false,
 
     toggleShowImages: () => set({ showImages: !get().showImages }),
+
+    showNotes: true,
+
+    toggleShowNotes: () => set({ showNotes: !get().showNotes }),
 
     showDataFields: true,
 
@@ -192,6 +198,7 @@ export const editorUIStore: StateCreator<
       flowCardView: state.flowCardView,
       showTags: state.showTags,
       showImages: state.showImages,
+      showNotes: state.showNotes,
       showDataFields: state.showDataFields,
       showHelpText: state.showHelpText,
     }),
@@ -201,6 +208,7 @@ export const editorUIStore: StateCreator<
 export type PublishedFlowSummary = {
   publishedAt: string;
   hasSendComponent: boolean;
+  hasVisiblePayComponent: boolean;
 };
 
 export type FlowSummaryOperations = {
@@ -222,6 +230,7 @@ export interface FlowSummary {
   publishedFlows: PublishedFlowSummary[];
   templatedFrom: string | null;
   isTemplate: boolean;
+  isListedOnLPS: boolean;
   template: {
     team: {
       name: string;
@@ -232,6 +241,7 @@ export interface FlowSummary {
 interface CopiedPayload {
   rootId: string;
   nodes: { originalId: string; nodeData: Store.Node }[];
+  isTemplate: boolean;
 }
 
 interface CutPayload {
@@ -417,7 +427,7 @@ export const editorStore: StateCreator<
   getClonedNodeId: () => localStorage.getItem("clonedNodeId"),
 
   copyNode(id: string) {
-    const { flow } = get();
+    const { flow, isTemplate } = get();
     const rootNode = flow[id];
     if (!rootNode) return;
 
@@ -444,6 +454,7 @@ export const editorStore: StateCreator<
     const payload: CopiedPayload = {
       rootId: id,
       nodes: nodesToCopy,
+      isTemplate: isTemplate,
     };
 
     try {
@@ -509,6 +520,7 @@ export const editorStore: StateCreator<
             status
             summary
             updatedAt: updated_at
+            isListedOnLPS: is_listed_on_lps
             operations(limit: 1, order_by: { created_at: desc }) {
               createdAt: created_at
               actor {
@@ -530,6 +542,7 @@ export const editorStore: StateCreator<
             ) {
               publishedAt: created_at
               hasSendComponent: has_send_component
+              hasVisiblePayComponent: has_pay_component
             }
           }
         }
@@ -671,8 +684,11 @@ export const editorStore: StateCreator<
     if (!copiedString) return;
 
     try {
-      const { rootId, nodes: copiedNodes }: CopiedPayload =
-        JSON.parse(copiedString);
+      const {
+        rootId,
+        nodes: copiedNodes,
+        isTemplate: copiedFromTemplate,
+      }: CopiedPayload = JSON.parse(copiedString);
       if (!copiedNodes || copiedNodes.length === 0) return;
 
       // Keep a map of originalId: newId allowing us to insert unique nodes and maintain our edge relationships
@@ -684,6 +700,15 @@ export const editorStore: StateCreator<
       copiedNodes.forEach(({ originalId, nodeData }) => {
         const newId = uniqueId();
         idMap.set(originalId, newId);
+
+        // If copied from a source template and now pasting to a non-source template, remove templated node props
+        const { isTemplate: pastingToTemplate } = get();
+        if (copiedFromTemplate && !pastingToTemplate) {
+          delete nodeData.data?.["isTemplatedNode"];
+          delete nodeData.data?.["templatedNodeInstructions"];
+          delete nodeData.data?.["areTemplatedNodeInstructionsRequired"];
+        }
+
         newNodes[newId] = structuredClone(nodeData);
 
         if (originalId === rootId) {
@@ -775,7 +800,7 @@ export const editorStore: StateCreator<
     // Determine node path based on the node type
     const nodePath =
       node.type === TYPES.Answer
-        ? `nodes/${grandparent.id}/nodes/${parent.id}/edit`
+        ? `nodes/${grandparent.id}/nodes/${parent.id}/edit#${node.id}`
         : `nodes/${parent.id}/nodes/${node.id}/edit`;
 
     const urlPath = `/${teamSlug}/${flowSlug}${portalPath}/${nodePath}`;

@@ -1,0 +1,86 @@
+table:
+  name: flow_integrations
+  schema: public
+object_relationships:
+  - name: flow
+    using:
+      foreign_key_constraint_on: flow_id
+  - name: submission_integration
+    using:
+      manual_configuration:
+        column_mapping:
+          email_id: id
+        insertion_order: null
+        remote_table:
+          name: submission_integrations
+          schema: public
+insert_permissions:
+  - role: platformAdmin
+    permission:
+      check: {}
+      columns:
+        - email_id
+        - flow_id
+        - team_id
+    comment: ""
+  - role: teamEditor
+    permission:
+      check: {}
+      columns:
+        - email_id
+        - flow_id
+        - team_id
+    comment: ""
+select_permissions:
+  - role: api
+    permission:
+      columns:
+        - email_id
+        - flow_id
+      filter: {}
+    comment: ""
+  - role: platformAdmin
+    permission:
+      columns:
+        - email_id
+        - flow_id
+        - team_id
+      filter: {}
+    comment: ""
+  - role: public
+    permission:
+      columns: []
+      filter: {}
+    comment: ""
+  - role: teamEditor
+    permission:
+      columns:
+        - email_id
+        - flow_id
+        - team_id
+      filter: {}
+    comment: ""
+update_permissions:
+  - role: platformAdmin
+    permission:
+      columns:
+        - email_id
+      filter: {}
+      check: null
+    comment: ""
+  - role: teamEditor
+    permission:
+      columns:
+        - email_id
+      filter: {}
+      check: null
+    comment: ""
+delete_permissions:
+  - role: platformAdmin
+    permission:
+      filter: {}
+    comment: ""
+  - role: teamEditor
+    permission:
+      filter: {}
+    comment: ""

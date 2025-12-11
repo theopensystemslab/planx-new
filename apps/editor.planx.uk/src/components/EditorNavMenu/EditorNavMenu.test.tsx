@@ -90,15 +90,18 @@ describe("teamLayoutRoutes", () => {
     mockGetTeam.mockReturnValue({ settings: { referenceCode: null } });
   });
 
-  it("only displays the 'planning data' route for teamViewers", async () => {
+  it("only displays the external link routes for teamViewers", async () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("teamViewer");
 
     const { queryAllByRole } = await setup(<EditorNavMenu />);
     const menuItems = queryAllByRole("listitem");
-    expect(menuItems).toHaveLength(2);
+    expect(menuItems).toHaveLength(3);
     expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
     expect(
       within(menuItems[1]).getByText("Planning Data unavailable"),
+    ).toBeInTheDocument();
+    expect(
+      within(menuItems[2]).getByText("Local Planning Services unavailable"),
     ).toBeInTheDocument();
   });
 
@@ -163,20 +166,12 @@ describe("flowLayoutRoutes", () => {
     mockFlowName = "test-flow";
   });
 
-  it("only displays the 'about this service' route for teamViewers", async () => {
-    mockGetUserRoleForCurrentTeam.mockReturnValue("teamViewer");
-
-    const { queryAllByRole } = await setup(<EditorNavMenu />);
-    const menuItems = queryAllByRole("listitem");
-    expect(menuItems).toHaveLength(2); // Flow and About this flow
-  });
-
   it("displays for teamEditors", async () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("teamEditor");
 
     const { getAllByRole, getByLabelText } = await setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(6);
+    expect(menuItems).toHaveLength(5);
     expect(getByLabelText("Submissions")).toBeInTheDocument();
     expect(getByLabelText("Feedback")).toBeInTheDocument();
   });
@@ -186,7 +181,7 @@ describe("flowLayoutRoutes", () => {
 
     const { getAllByRole, getByLabelText } = await setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(6);
+    expect(menuItems).toHaveLength(5);
     expect(getByLabelText("Submissions")).toBeInTheDocument();
     expect(getByLabelText("Feedback")).toBeInTheDocument();
   });

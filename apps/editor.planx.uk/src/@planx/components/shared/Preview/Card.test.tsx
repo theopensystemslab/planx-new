@@ -15,8 +15,8 @@ const { getState, setState } = useStore;
 let initialState: FullStore;
 
 describe("Card component", () => {
-  const resumeButtonText = "Resume an application you have already started";
-  const saveButtonText = "Save and return to this application later";
+  const resumeButtonText = "Resume a form you have already started";
+  const saveButtonText = "Save and return to this form later";
   const handleSubmit = vi.fn();
 
   beforeAll(() => (initialState = getState()));

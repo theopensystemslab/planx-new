@@ -1,6 +1,8 @@
 import { Flag } from "@opensystemslab/planx-core/types";
 import { array, mixed, object, string } from "yup";
 
+import { Rule } from "../shared/RuleBuilder/types";
+
 /**
  * The Option node doesn't have a direct Editor or Public interface
  *  - Editor: Controlled and authored via the parent Question component
@@ -20,6 +22,18 @@ export interface Option {
   };
 }
 
+/**
+ * Implemented by ResponsiveQuestion and ResponsiveChecklist
+ */
+export interface ConditionalOption extends Option {
+  data: Option["data"] & {
+    rule: Rule;
+  };
+}
+
+export type AnyOption = Option | ConditionalOption;
+export type AnyOptions = Option[] | ConditionalOption[];
+
 export const optionValidationSchema = object({
   id: string(),
   data: object({
@@ -29,5 +43,6 @@ export const optionValidationSchema = object({
     text: string().required().trim(),
     val: string(),
     exclusive: mixed().oneOf([true, undefined]),
+    // TODO: Validate rules?
   }),
 });

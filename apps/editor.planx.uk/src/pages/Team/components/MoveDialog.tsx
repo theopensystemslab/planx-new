@@ -15,7 +15,7 @@ import { useToast } from "hooks/useToast";
 import { moveFlow } from "lib/api/flow/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import SelectInput from "ui/editor/SelectInput/SelectInput";
+import SelectInput from "ui/shared/SelectInput/SelectInput";
 import * as yup from "yup";
 
 interface MoveFlowForm {

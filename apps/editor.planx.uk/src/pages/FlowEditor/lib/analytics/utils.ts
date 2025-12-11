@@ -6,7 +6,7 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { client } from "lib/graphql";
 import isEmpty from "lodash/isEmpty";
-import isObject from "lodash/isObject";
+import isPlainObject from "lodash/isObject";
 
 import { Store } from "../store";
 import { ALLOW_LIST } from "./provider";
@@ -139,14 +139,22 @@ const sanitiseAllowListValues = ([key, value]: [key: string, value: unknown]): [
   string,
   unknown,
 ] => {
-  if (!isObject(value)) return [key, value];
+  if (!isPlainObject(value)) return [key, value];
 
-  // Strip out empty values - we do not need to store these as allow list answers
+  // If the value is an array, filter out empty values
+  if (Array.isArray(value)) {
+    const filteredArray = value.filter(
+      (item) => item !== undefined && item !== null,
+    );
+    if (filteredArray.length === 0) return [key, undefined];
+    return [key, filteredArray];
+  }
+
+  // For objects, also strip out empty values - we do not need to store these as allow list answers
   const sanitisedObject = Object.fromEntries(
     Object.entries(value).filter(([_key, value]) => Boolean(value)),
   );
   if (isEmpty(sanitisedObject)) return [key, undefined];
-
   return [key, sanitisedObject];
 };
 
@@ -232,6 +240,7 @@ const discretionaryDashboard = {
     "check-constraints-on-a-property",
     "check-whether-you-need-a-building-control-application",
     "check-your-planning-constraints",
+    "general-enquiries",
     "heritage-constraints",
     "notify-us-of-any-high-efficiency-alternative-energy-systems",
     "report-a-potential-dangerous-structure",

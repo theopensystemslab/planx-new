@@ -1,0 +1,67 @@
+import { getIn } from "formik";
+import { merge } from "lodash";
+import { TextInput } from "pages/FlowEditor/components/Settings/shared/TextInput";
+import { useStore } from "pages/FlowEditor/lib/store";
+import React from "react";
+import type { TextContent } from "types";
+
+import SettingsFormContainer from "../../shared/SettingsForm";
+import { GET_FLOW_SETTINGS, UPDATE_FLOW_SETTINGS } from "../shared/queries";
+import { textContentValidationSchema } from "../shared/schema";
+import {
+  DEFAULT_TEXT_CONTENT,
+  type GetFlowSettings,
+  type UpdateFlowSettings,
+} from "../shared/types";
+import { defaultValues } from "./schema";
+
+const Help: React.FC = () => {
+  const flowId = useStore((state) => state.id);
+
+  return (
+    <SettingsFormContainer<GetFlowSettings, UpdateFlowSettings, TextContent>
+      query={GET_FLOW_SETTINGS}
+      mutation={UPDATE_FLOW_SETTINGS}
+      validationSchema={textContentValidationSchema}
+      legend="Help page"
+      description="A place to communicate FAQs, useful tips, or contact information."
+      defaultValues={defaultValues}
+      getInitialValues={({ flow: { settings } }) =>
+        settings?.elements?.help || DEFAULT_TEXT_CONTENT
+      }
+      queryVariables={{ flowId }}
+      getMutationVariables={(values, data) => ({
+        flowId,
+        settings: merge({}, data.flow.settings, {
+          elements: { help: values },
+        }),
+      })}
+    >
+      {({ formik }) => (
+        <TextInput
+          title="Help page"
+          richText
+          switchProps={{
+            name: "show",
+            checked: formik.values.show,
+            onChange: formik.handleChange,
+          }}
+          headingInputProps={{
+            name: "heading",
+            value: formik.values.heading,
+            onChange: formik.handleChange,
+            errorMessage: getIn(formik.errors, "heading"),
+          }}
+          contentInputProps={{
+            name: "content",
+            value: formik.values.content,
+            onChange: formik.handleChange,
+            errorMessage: getIn(formik.errors, "content"),
+          }}
+        />
+      )}
+    </SettingsFormContainer>
+  );
+};
+
+export default Help;
