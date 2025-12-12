@@ -13,7 +13,7 @@
     "@airbrake/node": "^2.1.9",
     "@aws-sdk/client-s3": "^3.696.0",
     "@aws-sdk/s3-request-presigner": "^3.701.0",
-    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#46f24a3",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#3857fb7",
     "@types/isomorphic-fetch": "^0.0.36",
     "adm-zip": "^0.5.10",
     "axios": "^1.12.2",
