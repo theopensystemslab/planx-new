@@ -10,20 +10,20 @@ import { Child } from "../types";
  * Base fields shared between Question and ResponsiveQuestion components
  */
 export interface BaseQuestion extends BaseNodeData {
-  fn?: string;
+  fn?: string,
   text?: string;
   description?: string;
   img?: string;
 }
 
-export const baseQuestionValidationSchema: SchemaOf<BaseQuestion> =
+export const baseQuestionValidationSchema =
   baseNodeDataValidationSchema
     .concat(
       object({
         text: string().required(),
         description: richText(),
         img: string(),
-        fn: string(),
+        fn: string().nullable(),
         options: array(optionValidationSchema).required(),
       }),
     )
