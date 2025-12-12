@@ -15,6 +15,7 @@ import {
 import ErrorPage from "pages/ErrorPage/ErrorPage";
 import InviteToPay from "pages/Pay/InviteToPay";
 import MakePayment from "pages/Pay/MakePayment";
+import ApplicationViewer from "pages/Preview/ApplicationViewer";
 import React from "react";
 
 import { getTeamFromDomain, makeTitle, validateTeamRoute } from "./utils";
@@ -67,6 +68,10 @@ const payRoutes = compose(
         title: makeTitle("Invite to pay"),
         view: <InviteToPay {...paymentRequest} />,
       });
+    }),
+    "/invite/view-application": route({
+      view: <ApplicationViewer />,
+      data: { isViewApplicationPage: true },
     }),
     "/invite/failed": route({
       title: makeTitle("Failed to generate payment request"),
