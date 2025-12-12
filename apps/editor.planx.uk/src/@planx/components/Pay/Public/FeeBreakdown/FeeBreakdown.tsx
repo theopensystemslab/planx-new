@@ -37,11 +37,12 @@ const exemptionsReductionLookup: Record<string, string> = {
   parishCouncil: "Parish or community council",
   alternative: "Alternative proposal",
   sports: "Sports club",
+  local: "Local",
 };
 
 // FeeBreakdown table displays 2 or 4 columns depending if VAT-able line items
 function showAdditionalVATColumns(amount: IFeeBreakdown["amount"]): boolean {
-  return amount.payableVAT > 0 ? true : false;
+  return amount.payableVAT > 0 || amount.calculatedVAT ? true : false;
 }
 
 const Header: FeeBreakdownRow = ({ amount }) => (
@@ -112,10 +113,21 @@ const Reductions: FeeBreakdownRow = ({ amount, reductions }) => {
         </TableCell>
         {showAdditionalVATColumns(amount) && (
           <>
-            <TableCell></TableCell>
+            <TableCell
+              align="right"
+              sx={(theme) => ({ color: theme.palette.text.secondary })}
+            >
+              {amount.reductionVAT !== 0
+                ? formattedPriceWithCurrencySymbol(amount.reductionVAT)
+                : ``}
+            </TableCell>
             <TableCell align="right">
               <strong>
-                {formattedPriceWithCurrencySymbol(amount.reduction)}
+                {amount.reductionVAT !== 0
+                  ? formattedPriceWithCurrencySymbol(
+                      amount.reduction + amount.reductionVAT,
+                    )
+                  : formattedPriceWithCurrencySymbol(amount.reduction)}
               </strong>
             </TableCell>
           </>
@@ -157,10 +169,21 @@ const Exemptions: FeeBreakdownRow = ({ exemptions, amount }) => {
         </TableCell>
         {showAdditionalVATColumns(amount) && (
           <>
-            <TableCell></TableCell>
+            <TableCell
+              align="right"
+              sx={(theme) => ({ color: theme.palette.text.secondary })}
+            >
+              {amount.exemptionVAT !== 0
+                ? formattedPriceWithCurrencySymbol(amount.exemptionVAT)
+                : ``}
+            </TableCell>
             <TableCell align="right">
               <strong>
-                {formattedPriceWithCurrencySymbol(amount.exemption)}
+                {amount.exemptionVAT !== 0
+                  ? formattedPriceWithCurrencySymbol(
+                      amount.exemption + amount.exemptionVAT,
+                    )
+                  : formattedPriceWithCurrencySymbol(amount.exemption)}
               </strong>
             </TableCell>
           </>
@@ -281,8 +304,11 @@ const Total: FeeBreakdownRow = ({ amount }) => (
     </TableCell>
     {showAdditionalVATColumns(amount) && (
       <>
-        <TableCell align="right">
-          {amount.payableVAT > 0
+        <TableCell
+          align="right"
+          sx={(theme) => ({ color: theme.palette.text.secondary })}
+        >
+          {amount.payableVAT >= 0
             ? formattedPriceWithCurrencySymbol(amount.payableVAT)
             : undefined}
         </TableCell>
