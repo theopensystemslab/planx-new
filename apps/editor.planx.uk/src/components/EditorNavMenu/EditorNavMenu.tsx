@@ -38,7 +38,16 @@ function EditorNavMenu() {
   const referenceCode = team?.settings?.referenceCode;
   const { url: lpsBaseUrl } = useLPS();
 
-  const isActive = (route: string) => url.href.endsWith(route);
+  const isActive = (route: string) => {
+    const currentPath = url.pathname;
+
+    // Factor in nested routes when determining active state
+    if (route.includes("/settings")) {
+      return currentPath.startsWith(route);
+    }
+
+    return currentPath.endsWith(route);
+  };
 
   const handleClick = (route: string, disabled?: boolean) => {
     if (isActive(route) || disabled) return;
