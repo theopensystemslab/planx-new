@@ -226,7 +226,8 @@ export const createLocalPlanningServices = (planXCert: aws.acm.Certificate) => {
   const lpsBucket = createLPSBucket(domain, oai);
   const logsBucket = createLogsBucket(domain);
 
-  uploadBuildSiteToBucket(lpsBucket);
+  // TODO: Retire and only deploy built site via GHA
+  if (env === "production") uploadBuildSiteToBucket(lpsBucket);
 
   const acmCertificateArn = createLPSCertificates(domain, planXCert);
 
