@@ -117,6 +117,10 @@ const CUSTOM_DOMAINS: CustomDomain[] =
           domain: "planningservices.birmingham.gov.uk",
           name: "birmingham",
         },
+        {
+          domain: "planningservices.horsham.gov.uk",
+          name: "horsham",
+        },
       ]
     : [];
 
