@@ -118,6 +118,7 @@ services:
       timeout: 3s
       retries: 5
     environment:
+      AI_GATEWAY_API_KEY: ${AI_GATEWAY_API_KEY}
       AIRBRAKE_PROJECT_ID: ${AIRBRAKE_PROJECT_ID}
       AIRBRAKE_PROJECT_KEY: ${AIRBRAKE_PROJECT_KEY}
       API_URL_EXT: ${API_URL_EXT}
