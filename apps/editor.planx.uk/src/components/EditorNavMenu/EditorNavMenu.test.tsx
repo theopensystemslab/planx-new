@@ -20,15 +20,19 @@ let mockFlowName: string | undefined = undefined;
 let mockAnalyticsLink: string | undefined = undefined;
 const mockGetUserRoleForCurrentTeam = vi.fn();
 const mockGetTeam = vi.fn();
+const mockSetIsNavMenuVisible = vi.fn();
 
 vi.mock("pages/FlowEditor/lib/store", async () => ({
-  useStore: vi.fn(() => [
-    mockTeamName,
-    mockFlowName,
-    mockAnalyticsLink,
-    mockGetUserRoleForCurrentTeam(),
-    mockGetTeam(),
-  ]),
+  useStore: vi.fn((selector) =>
+    selector({
+      teamSlug: mockTeamName,
+      flowSlug: mockFlowName,
+      flowAnalyticsLink: mockAnalyticsLink,
+      getUserRoleForCurrentTeam: mockGetUserRoleForCurrentTeam,
+      getTeam: mockGetTeam,
+      setIsNavMenuVisible: mockSetIsNavMenuVisible,
+    }),
+  ),
 }));
 
 describe("globalLayoutRoutes", () => {
