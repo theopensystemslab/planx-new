@@ -1,3 +1,4 @@
+import type { Session } from "@opensystemslab/planx-core/types";
 import {
   notFoundSession,
   validSession,
@@ -15,13 +16,24 @@ export const validSessionQueryMock = {
   data: {
     lowcal_sessions_by_pk: {
       id: validSession.id,
+      createdAt: validSession.createdAt,
+      updatedAt: validSession.updatedAt,
+      lockedAt: new Date("28 May 2023 12:00 UTC+1").toISOString(),
+      submittedAt: undefined,
       data: validSession.data,
       flow: {
         id: validSession.flow.id,
         slug: validSession.flow.slug,
         name: validSession.flow.name,
+        team: {
+          slug: validSession.flow.team.slug,
+          name: validSession.flow.team.name,
+          settings: {
+            referenceCode: validSession.flow.team.settings.referenceCode,
+          },
+        },
       },
-    },
+    } as Session,
   },
   variables: {
     id: validSession.id,
@@ -33,14 +45,24 @@ export const detailedValidSessionQueryMock = {
   data: {
     lowcal_sessions_by_pk: {
       id: validSession.id,
+      createdAt: validSession.createdAt,
+      updatedAt: validSession.updatedAt,
       lockedAt: new Date("28 May 2023 12:00 UTC+1").toISOString(),
+      submittedAt: undefined,
       data: validSession.data,
       flow: {
         id: validSession.flow.id,
         slug: validSession.flow.slug,
         name: validSession.flow.name,
+        team: {
+          slug: validSession.flow.team.slug,
+          name: validSession.flow.team.name,
+          settings: {
+            referenceCode: validSession.flow.team.settings.referenceCode,
+          },
+        },
       },
-    },
+    } as Session,
   },
   variables: {
     id: validSession.id,

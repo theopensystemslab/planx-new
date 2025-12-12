@@ -18,15 +18,17 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import { slugify } from "utils";
-import { array, boolean,object, string } from "yup";
+import { array, boolean, object, string } from "yup";
 
 const validationSchema = object({
-  footerContent: array(object({
-    heading: string().required("Page title is required"),
-    content: richText().required("Page content is required"),
-    show: boolean().required()
-  }))
-})
+  footerContent: array(
+    object({
+      heading: string().required("Page title is required"),
+      content: richText().required("Page content is required"),
+      show: boolean().required(),
+    }),
+  ),
+});
 
 function Component() {
   const [globalSettings, updateGlobalSettings] = useStore((state) => [
@@ -147,6 +149,6 @@ const ContentEditor: React.FC<EditorProps<TextContent>> = (props) => {
       </InputRow>
     </Box>
   );
-}
+};
 
 export default Component;
