@@ -21,14 +21,16 @@ import FlowSkeleton from "./FlowSkeleton";
 import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
 
-const EditorContainer = styled(Box)(() => ({
-  display: "flex",
-  alignItems: "stretch",
-  overflow: "hidden",
-  flexGrow: 1,
-  maxHeight: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
-  maxWidth: `calc(100vw - ${MENU_WIDTH_COMPACT}px)`,
-}));
+const EditorContainer = styled(Box)<{ hasNavMenu?: boolean }>(
+  ({ hasNavMenu = true }) => ({
+    display: "flex",
+    alignItems: "stretch",
+    overflow: "hidden",
+    flexGrow: 1,
+    maxHeight: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
+    minWidth: hasNavMenu ? `calc(100vw - ${MENU_WIDTH_COMPACT}px)` : "100vw",
+  }),
+);
 
 const EditorVisualControls = styled(ButtonGroup)(({ theme }) => ({
   position: "fixed",
@@ -51,6 +53,7 @@ const FlowEditor = () => {
     flowId,
     connectToFlow,
     disconnectFromFlow,
+    isNavMenuVisible,
   ] = useStore((state) => [
     state.flow,
     state.orderedFlow,
@@ -59,6 +62,7 @@ const FlowEditor = () => {
     state.id,
     state.connectToFlow,
     state.disconnectFromFlow,
+    state.isNavMenuVisible,
   ]);
 
   useEffect(() => {
@@ -88,7 +92,7 @@ const FlowEditor = () => {
     !lockedFlow && !parentIsTemplatedInternalPortal;
 
   return (
-    <EditorContainer id="editor-container">
+    <EditorContainer id="editor-container" hasNavMenu={isNavMenuVisible}>
       <Box
         sx={{
           display: "flex",

@@ -229,7 +229,13 @@ function EditorNavMenu() {
     return accessibleByCurrentUserRole;
   };
 
+  const setIsNavMenuVisible = useStore((state) => state.setIsNavMenuVisible);
+
   const visibleRoutes = routes.filter(isRouteAccessible);
+
+  React.useEffect(() => {
+    setIsNavMenuVisible(visibleRoutes.length >= 2);
+  }, [visibleRoutes.length, setIsNavMenuVisible]);
 
   // Hide menu if the user does not have a selection of items
   if (visibleRoutes.length < 2) return null;
