@@ -1,7 +1,6 @@
 name: Deploy LPS (staging)
 
-permissions:
-  contents: read
+permissions: read-all
 
 # TODO: Add schedule (or webhook?)
 on:
