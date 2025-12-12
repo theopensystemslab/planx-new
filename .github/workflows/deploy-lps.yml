@@ -37,6 +37,7 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+        working-directory: apps/localplanning.services
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
@@ -60,9 +61,9 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOYMENT_WEBHOOK }}
   
   failure_notification:
-      name: Slack notification (failure)
-      if: failure()
-      uses: ./.github/workflows/action-failure.yml
-      secrets: inherit
-      with:
-        environment: LPS staging
+    name: Slack notification (failure)
+    if: failure()
+    uses: ./.github/workflows/action-failure.yml
+    secrets: inherit
+    with:
+      environment: LPS staging
