@@ -9,7 +9,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#3857fb7",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#ddb58b0",
     "axios": "^1.12.2",
     "dotenv": "^16.3.1",
     "eslint": "^8.56.0",
