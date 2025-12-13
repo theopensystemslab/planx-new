@@ -1,6 +1,7 @@
 import AltRoute from "@mui/icons-material/AltRoute";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Article from "@mui/icons-material/Article";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import CallSplit from "@mui/icons-material/CallSplit";
 import CheckBoxOutlined from "@mui/icons-material/CheckBoxOutlined";
 import CloudUpload from "@mui/icons-material/CloudUpload";
@@ -45,14 +46,17 @@ export const ICONS: {
   [key in TYPES]: Icon | undefined;
 } = {
   [TYPES.AddressInput]: Home,
+  [TYPES.Answer]: undefined,
   [TYPES.Calculate]: FunctionsIcon,
   [TYPES.Checklist]: CheckBoxOutlined,
+  [TYPES.Confirmation]: TextFields,
   [TYPES.ContactInput]: ContactPage,
   [TYPES.Content]: TextFields,
-  [TYPES.Confirmation]: TextFields,
   [TYPES.DateInput]: Event,
   [TYPES.DrawBoundary]: SquareFoot,
+  [TYPES.EnhancedTextInput]: AutoAwesomeIcon,
   [TYPES.ExternalPortal]: EditorIcon,
+  [TYPES.Feedback]: RateReviewIcon,
   [TYPES.FileUpload]: CloudUpload,
   [TYPES.FileUploadAndLabel]: CloudUpload,
   [TYPES.Filter]: FilterAltOutlined,
@@ -61,14 +65,14 @@ export const ICONS: {
   [TYPES.InternalPortal]: Folder,
   [TYPES.List]: ListAlt,
   [TYPES.MapAndLabel]: ShapeLine,
-  [TYPES.Notice]: ReportProblemOutlined,
   [TYPES.NextSteps]: ArrowForwardIcon,
+  [TYPES.Notice]: ReportProblemOutlined,
   [TYPES.NumberInput]: Pin,
   [TYPES.Page]: Article,
   [TYPES.Pay]: PaymentOutlined,
   [TYPES.PlanningConstraints]: Map,
   [TYPES.PropertyInformation]: LocationOnOutlined,
-  [TYPES.Answer]: undefined,
+  [TYPES.Question]: CallSplit,
   [TYPES.ResponsiveChecklist]: CheckBoxOutlined,
   [TYPES.ResponsiveQuestion]: AltRoute,
   [TYPES.Result]: PlaylistAddCheck,
@@ -77,8 +81,6 @@ export const ICONS: {
   [TYPES.Send]: Send,
   [TYPES.SetFee]: CurrencyPound,
   [TYPES.SetValue]: PlaylistAdd,
-  [TYPES.Question]: CallSplit,
   [TYPES.TaskList]: List,
   [TYPES.TextInput]: Create,
-  [TYPES.Feedback]: RateReviewIcon,
 } as const;

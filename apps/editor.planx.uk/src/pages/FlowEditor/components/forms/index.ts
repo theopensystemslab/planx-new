@@ -7,6 +7,7 @@ import ContactInput from "@planx/components/ContactInput/Editor";
 import Content from "@planx/components/Content/Editor";
 import DateInput from "@planx/components/DateInput/Editor";
 import DrawBoundary from "@planx/components/DrawBoundary/Editor";
+import EnhancedTextInput from "@planx/components/EnhancedTextInput/Editor";
 import ExternalPortal from "@planx/components/ExternalPortal/Editor";
 import { FeedbackEditor } from "@planx/components/Feedback/Editor/Editor";
 import FileUpload from "@planx/components/FileUpload/Editor";
@@ -52,6 +53,7 @@ const components: {
   "date-input": DateInput,
   "draw-boundary": DrawBoundary,
   "nested-flow": ExternalPortal,
+  "enhanced-text-input": EnhancedTextInput,
   feedback: FeedbackEditor,
   "file-upload": FileUpload,
   filter: Filter,
