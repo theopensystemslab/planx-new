@@ -2,6 +2,8 @@ import {
   ComponentType as TYPES,
   DEFAULT_FLAG_CATEGORY,
 } from "@opensystemslab/planx-core/types";
+import { TASKS } from "@planx/components/EnhancedTextInput/model";
+import type { Task } from "@planx/components/EnhancedTextInput/types";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { exhaustiveCheck } from "utils";
@@ -51,6 +53,10 @@ const Node: React.FC<any> = (props) => {
       return (
         <Question {...allProps} text={node?.data?.title ?? "Draw boundary"} />
       );
+    case TYPES.EnhancedTextInput: {
+      const taskLabel = TASKS[node.data!.task as Task].label;
+      return <Question {...allProps} text={taskLabel} />;
+    }
     case TYPES.ExternalPortal:
       return <Portal {...allProps} />;
     case TYPES.InternalPortal:
