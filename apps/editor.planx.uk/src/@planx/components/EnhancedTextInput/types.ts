@@ -16,7 +16,7 @@ type ValidateRegistry<T extends Record<string, TaskDefinition>> = T;
  * Used as source of truth from which to derive other types
  */
 export type TaskRegistry = ValidateRegistry<{
-  enhanceProjectDescription: {
+  projectDescription: {
     editorProps: {
       // TODO: Based on UI, decide on props
       abc?: string;

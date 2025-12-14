@@ -10,19 +10,17 @@ import React from "react";
 
 import { validationSchema } from "../model";
 import type { BreadcrumbData, EnhancedTextInput, TaskComponentMap } from "../types";
-import EnhanceProjectDescriptions from "./Tasks/EnhanceProjectDescription";
+import ProjectDescription from "./Tasks/ProjectDescription";
 
 type Props = PublicProps<EnhancedTextInput>;
 
 const taskComponents: TaskComponentMap = {
-  enhanceProjectDescription: EnhanceProjectDescriptions,
+  projectDescription: ProjectDescription,
 };
 
 const EnhancedTextInputComponent = (props: Props) => {
   const initialValues = getPreviouslySubmittedData(props);
-  const TaskComponent = taskComponents[
-    props.task
-  ] as React.ComponentType<Props> | null;
+  const TaskComponent = taskComponents[props.task];
 
   if (!TaskComponent) return null;
 

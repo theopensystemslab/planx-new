@@ -12,13 +12,13 @@ import {
 } from "./types";
 
 const taskDefaults: TaskDefaults = {
-  enhanceProjectDescription: {
+  projectDescription: {
     abc: "",
   },
 };
 
 export const parseEnhancedTextInput = (data: Partial<EnhancedTextInput> | undefined): EnhancedTextInput => {
-  const task = data?.task || "enhanceProjectDescription";
+  const task = data?.task || "projectDescription";
 
   return {
     task,
@@ -41,10 +41,10 @@ const baseEnhancedTextInputSchema: SchemaOf<BaseEnhancedTextInput> =
   );
 
 export const taskSchemas = {
-  enhanceProjectDescription: baseEnhancedTextInputSchema.concat(
+  projectDescription: baseEnhancedTextInputSchema.concat(
     object({
       task: mixed()
-        .oneOf(["enhanceProjectDescription"] as const)
+        .oneOf(["projectDescription"] as const)
         .required(),
       abc: string().optional(),
     }),
@@ -56,8 +56,8 @@ export const validationSchema = lazy(
 );
 
 export const TASKS: Record<Task, { label: string; description: string }> = {
-  enhanceProjectDescription: {
-    label: "Enhance project description",
+  projectDescription: {
+    label: "Project description",
     description: "Lorem ispum....",
   },
 };
