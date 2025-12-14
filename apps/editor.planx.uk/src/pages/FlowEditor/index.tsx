@@ -31,9 +31,9 @@ const EditorContainer = styled(Box)(() => ({
 }));
 
 const EditorVisualControls = styled(ButtonGroup)(({ theme }) => ({
-  position: "fixed",
+  position: "absolute",
   bottom: theme.spacing(2.5),
-  left: theme.spacing(7.5),
+  left: theme.spacing(2.5),
   zIndex: theme.zIndex.appBar,
   border: `1px solid ${theme.palette.border.main}`,
   borderRadius: "3px",
