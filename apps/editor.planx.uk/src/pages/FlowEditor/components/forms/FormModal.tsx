@@ -1,3 +1,4 @@
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import Close from "@mui/icons-material/CloseOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
@@ -138,7 +139,11 @@ const TextInputToggle: React.FC<{ type: string }> = ({ type }) => {
 
   return (
     <Box sx={{ position: "absolute", right: 82, top: 38, zIndex: 1 }}>
-      <Switch label="AI Enhanced" onChange={toggleTextInput} checked={checked}/>
+      <Switch 
+        label={<><AutoAwesomeIcon sx={{ mr: 1 }}/>AI Enhanced</>}
+        onChange={toggleTextInput} 
+        checked={checked}
+      />
     </Box>
   )
 }
