@@ -19,7 +19,8 @@ export type TaskRegistry = ValidateRegistry<{
   projectDescription: {
     editorProps: {
       // TODO: Based on UI, decide on props
-      abc?: string;
+      revisionTitle: string;
+      revisionDescription: string;
     };
     breadcrumbData: {
       original: string;

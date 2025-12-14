@@ -1,5 +1,7 @@
-import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import RadioGroup from "@mui/material/RadioGroup";
 import { ComponentType } from "@opensystemslab/planx-core/types";
+import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { Form, Formik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -13,10 +15,8 @@ import { TemplatedNodeConfiguration } from "ui/editor/TemplatedNodeConfiguration
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
-import InputRowItem from "ui/shared/InputRowItem";
-import InputRowLabel from "ui/shared/InputRowLabel";
-import SelectInput from "ui/shared/SelectInput/SelectInput";
 
+import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import type { EditorProps } from "../shared/types";
 import { parseEnhancedTextInput, TASKS, validationSchema } from "./model";
@@ -41,6 +41,7 @@ const EnhancedTextInputComponent = (props: Props) => {
       validationSchema={validationSchema}
       validateOnChange={false}
       validateOnBlur={false}
+      innerRef={props.formikRef}
     >
       {(formik) => (
         <Form id="modal" name="modal">
@@ -78,26 +79,64 @@ const EnhancedTextInputComponent = (props: Props) => {
                 />
               </InputRow>
               <InputRow>
-                <InputRowLabel>Task</InputRowLabel>
-                <InputRowItem>
-                  <SelectInput
-                    value={formik.values.task}
-                    disabled={props.disabled}
-                    onChange={(e) => {
-                      formik.setFieldValue("task", e.target.value);
-                      console.log({ errors: formik.errors });
-                    }}
-                  >
-                    {Object.entries(TASKS).map(([task, { label }]) => (
-                      <MenuItem key={task} value={task}>
-                        {label}
-                      </MenuItem>
-                    ))}
-                  </SelectInput>
-                </InputRowItem>
+                <DataFieldAutocomplete
+                  required
+                  value={formik.values.fn}
+                  onChange={(value) => formik.setFieldValue("fn", value)}
+                  disabled={props.disabled}
+                  errorMessage={formik.errors.fn}
+                />
               </InputRow>
             </ModalSectionContent>
           </ModalSection>
+          <ModalSection>
+            <ModalSectionContent title="Enhancement">
+              <InputRow>
+                <FormControl component="fieldset">
+                  <RadioGroup defaultValue="short" value={formik.values.task}>
+                    {Object.entries(TASKS).map(([task, { label }]) =>
+                      <BasicRadio
+                        key={task}
+                        id={task}
+                        label={label}
+                        variant="compact"
+                        value={task}
+                        onChange={(e) => formik.setFieldValue("task", e.target)}
+                        disabled={props.disabled}
+                      />
+                    )}
+                  </RadioGroup>
+                </FormControl>
+              </InputRow>
+            </ModalSectionContent>
+          </ModalSection>
+          {formik.values.task === "projectDescription" && (
+            <ModalSection>
+              <ModalSectionContent title="Project description">
+                <InputRow>
+                  <Input
+                    format="large"
+                    name="revisionTitle"
+                    value={formik.values.revisionTitle}
+                    placeholder="Revision title"
+                    onChange={formik.handleChange}
+                    disabled={props.disabled}
+                    errorMessage={formik.errors.revisionTitle}
+                  />
+                </InputRow>
+                <InputRow>
+                  <RichTextInput
+                    placeholder="Revision description"
+                    name="revisionDescription"
+                    value={formik.values.revisionDescription}
+                    onChange={formik.handleChange}
+                    disabled={props.disabled}
+                    errorMessage={formik.errors.revisionDescription}
+                  />
+                </InputRow>
+              </ModalSectionContent>
+            </ModalSection>
+          )}
           <MoreInformation formik={formik} disabled={props.disabled} />
           <InternalNotes
             name="notes"

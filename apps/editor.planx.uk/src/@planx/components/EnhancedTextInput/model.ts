@@ -13,7 +13,8 @@ import {
 
 const taskDefaults: TaskDefaults = {
   projectDescription: {
-    abc: "",
+    revisionTitle: "We suggest revising your project description",
+    revisionDescription: "The suggested description uses planning terminology that planning officers expect, increasing your chances of approval.",
   },
 };
 
@@ -46,7 +47,8 @@ export const taskSchemas = {
       task: mixed()
         .oneOf(["projectDescription"] as const)
         .required(),
-      abc: string().optional(),
+      revisionTitle: string().required(),
+      revisionDescription: richText().required(),
     }),
   ),
 } satisfies Record<Task, SchemaOf<EnhancedTextInputForTask<Task>>>;
