@@ -1,3 +1,4 @@
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import Close from "@mui/icons-material/CloseOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
@@ -9,9 +10,10 @@ import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { parseFormValues } from "@planx/components/shared";
+import { type BaseNodeData, parseFormValues } from "@planx/components/shared";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { FormikProps } from "formik";
+import { hasFeatureFlag } from "lib/featureFlags";
 import isEqual from "lodash/isEqual";
 import {
   nodeIsChildOfTemplatedInternalPortal,
@@ -21,6 +23,7 @@ import React, { useMemo, useRef, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useNavigation } from "react-navi";
 import { rootFlowPath } from "routes/utils";
+import { Switch } from "ui/shared/Switch";
 
 import { fromSlug, SLUGS } from "../../data/types";
 import { useStore } from "../../lib/store";
@@ -45,14 +48,14 @@ const TypeSelect = styled("select")(() => ({
 
 const NodeTypeSelect: React.FC<{
   value: string;
-  onChange: (newValue: string) => void;
+  onChange: (newValue: TYPES) => void;
 }> = (props) => {
   return (
     <TypeSelect
       value={fromSlug(props.value)}
       data-testid="header-select"
       onChange={(ev) => {
-        props.onChange(ev.target.value);
+        props.onChange(ev.target.value as unknown as TYPES);
       }}
     >
       <optgroup label="Question">
@@ -108,6 +111,43 @@ const NodeTypeSelect: React.FC<{
   );
 };
 
+/**
+ * TextInput and EnhancedTextInput are uniquely controlled via a toggle, 
+ * and not the standard Select component
+ * 
+ * Component is styled to appears as an element within the child component
+ */
+const TextInputToggle: React.FC<{ type: string }> = ({ type }) => {
+  const { navigate } = useNavigation();
+  const [checked, setChecked] = useState(type === "enhanced-text-input")
+
+  if (!["text-input", "enhanced-text-input"].includes(type)) return null;
+  if (!hasFeatureFlag("ENHANCED_TEXTINPUT")) return null;
+
+  const toggleTextInput = () => {
+    // Toggle visual state immediately without waiting for route change
+    setChecked(!checked);
+
+    const url = new URL(window.location.href);
+    const destinationType = type === "text-input"
+      ? TYPES.EnhancedTextInput
+      : TYPES.TextInput
+
+    url.searchParams.set("type", SLUGS[destinationType]);
+    navigate([url.pathname, url.search].join(""));
+  };
+
+  return (
+    <Box sx={{ position: "absolute", right: 82, top: 38, zIndex: 1 }}>
+      <Switch 
+        label={<><AutoAwesomeIcon sx={{ mr: 1 }}/>AI Enhanced</>}
+        onChange={toggleTextInput} 
+        checked={checked}
+      />
+    </Box>
+  )
+}
+
 const FormModal: React.FC<{
   type: string;
   handleDelete?: () => void;
@@ -119,7 +159,7 @@ const FormModal: React.FC<{
   extraProps?: any;
 }> = ({ type, handleDelete, Component, id, before, parent, extraProps }) => {
   const { navigate } = useNavigation();
-  const formikRef = useRef<FormikProps<any> | null>(null);
+  const formikRef = useRef<FormikProps<BaseNodeData & unknown> | null>(null);
   const [showUnsavedWarning, setShowUnsavedWarning] = useState(false);
 
   const [
@@ -165,7 +205,7 @@ const FormModal: React.FC<{
     return obj;
   };
 
-  const isDirty = (formik: FormikProps<any>): boolean => {
+  const isDirty = (formik: FormikProps<BaseNodeData & unknown>): boolean => {
     return !isEqual(
       normalizeFormValues(formik.values),
       normalizeFormValues(formik.initialValues),
@@ -236,6 +276,12 @@ const FormModal: React.FC<{
     ? !canUserEditTemplatedNode
     : !canUserEditNode(teamSlug);
 
+  const changeNodeType = (type: TYPES) => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("type", SLUGS[type]);
+    navigate([url.pathname, url.search].join(""));
+  };
+
   return (
     <>
       <StyledDialog
@@ -259,11 +305,7 @@ const FormModal: React.FC<{
           {!handleDelete && (
             <NodeTypeSelect
               value={type}
-              onChange={(type) => {
-                const url = new URL(window.location.href);
-                url.searchParams.set("type", SLUGS[Number(type) as TYPES]);
-                navigate([url.pathname, url.search].join(""));
-              }}
+              onChange={changeNodeType}
             />
           )}
 
@@ -271,7 +313,10 @@ const FormModal: React.FC<{
             <Close />
           </CloseButton>
         </DialogTitle>
-        <DialogContent dividers sx={{ p: 0 }}>
+        <DialogContent dividers sx={{ p: 0, position: "relative" }}>
+          {!handleDelete &&
+            <TextInputToggle type={type} />
+          }
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             <Component
               formikRef={formikRef}
