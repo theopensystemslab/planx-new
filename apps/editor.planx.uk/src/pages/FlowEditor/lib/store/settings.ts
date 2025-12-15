@@ -121,7 +121,7 @@ export const settingsStore: StateCreator<
       : undefined;
 
     const analyticsLink =
-      environment === "production" && dashboardId
+      environment === "production" && dashboardId // change to "development" for local testing (we don't have analytics in staging)
         ? generateAnalyticsLink({
             flowId: id,
             dashboardId,

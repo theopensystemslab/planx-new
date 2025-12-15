@@ -35,6 +35,10 @@ function EditorNavMenu() {
       state.getTeam(),
     ],
   );
+
+  useStore.getState().getFlowInformation(flowSlug, teamSlug);
+  console.log("EditorNavMenu: ", flowAnalyticsLink);
+
   const referenceCode = team?.settings?.referenceCode;
   const { url: lpsBaseUrl } = useLPS();
 
