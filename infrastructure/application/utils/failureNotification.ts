@@ -80,8 +80,7 @@ export const setupNotificationForDeploymentRollback = (
           updatedAt: "$.detail.updatedAt",
           reason: "$.detail.reason",
         },
-        inputTemplate: pulumi.jsonStringify({
-          text: [
+        inputTemplate: pulumi.jsonStringify([
             `-> Environment: ${env}`,
             `-> Affected service: ${simpleServiceName}`,
             "-> Event type: <eventType>",
@@ -89,8 +88,7 @@ export const setupNotificationForDeploymentRollback = (
             "-> Deployment ID: <deploymentId>",
             "-> Updated at: <updatedAt>",
             "-> Reason: <reason>",
-          ].join("\n"),
-        }),
+          ].join("\n")),
       },
     }
   );
