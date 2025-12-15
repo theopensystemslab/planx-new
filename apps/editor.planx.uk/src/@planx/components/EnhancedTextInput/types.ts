@@ -73,5 +73,5 @@ export type TaskDefaults = { [K in Task]: TaskRegistry[K]["editorProps"] };
  * Allows individual components to handle type-narrowed Tasks
  */
 export type TaskComponentMap = {
-  [K in Task]: React.ComponentType<PublicProps<EnhancedTextInputForTask<K>>> | null;
+  [K in Task]: React.ComponentType<PublicProps<EnhancedTextInputForTask<K> & { userInput: string }>> | null;
 };
