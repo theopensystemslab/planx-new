@@ -40,7 +40,7 @@ export interface BaseEnhancedTextInput extends BaseNodeData {
 }
 
 /**
- * Database representation of an BaseEnhancedTextInput component
+ * Database representation of an EnhancedTextInput component
  * BaseBaseEnhancedTextInput + Task
  */
 export type EnhancedTextInput = BaseEnhancedTextInput &
