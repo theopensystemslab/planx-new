@@ -1,0 +1,3 @@
+table:
+  name: analytics_planx_flows
+  schema: public
