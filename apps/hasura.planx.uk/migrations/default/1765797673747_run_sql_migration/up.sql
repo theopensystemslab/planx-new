@@ -10,11 +10,7 @@ SELECT
     ti.has_planning_data AS planning_constraints_enabled_in_planx,
     ts.reference_code AS planning_data_reference_code,
     ts.is_trial,
-    CASE 
-        WHEN ts.reference_code IS NOT NULL
-        THEN FORMAT('https://provide.planning.data.gov.uk/organisations/local-authority:%s', ts.reference_code)
-        ELSE NULL
-    END AS planning_data_link
+    FORMAT('https://provide.planning.data.gov.uk/organisations/local-authority:%s', ts.reference_code) AS planning_data_link
 FROM teams t
     JOIN team_settings ts ON ts.team_id = t.id
     JOIN team_integrations ti ON ti.team_id = t.id

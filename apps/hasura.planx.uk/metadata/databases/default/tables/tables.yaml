@@ -5,7 +5,7 @@
 - "!include public_analytics_exits.yaml"
 - "!include public_analytics_journeys_aggregated.yaml"
 - "!include public_analytics_logs.yaml"
-- "!include public_analytics_planning_data_flows.yaml"
+- "!include public_analytics_planx_flows.yaml"
 - "!include public_analytics_planning_data_teams.yaml"
 - "!include public_analytics_project_types.yaml"
 - "!include public_analytics_rab.yaml"

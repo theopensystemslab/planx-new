@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW analytics_planning_data_flows AS (
+CREATE OR REPLACE VIEW analytics_planx_flows AS (
 SELECT
     f.id AS flow_id,
     f.name AS flow_name,
@@ -14,4 +14,4 @@ FROM flows f
 
 GRANT EXECUTE ON FUNCTION public.flow_first_online_at(flows) TO metabase_read_only;
 GRANT EXECUTE ON FUNCTION public.flow_production_url(flows) TO metabase_read_only;
-GRANT SELECT ON public.analytics_planning_data_flows TO metabase_read_only;
+GRANT SELECT ON public.analytics_planx_flows TO metabase_read_only;
