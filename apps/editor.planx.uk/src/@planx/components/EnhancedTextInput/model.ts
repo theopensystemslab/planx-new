@@ -11,8 +11,9 @@ import {
   type TaskDefaults,
 } from "./types";
 
-const taskDefaults: TaskDefaults = {
+export const taskDefaults: TaskDefaults = {
   projectDescription: {
+    fn: "project.description",
     revisionTitle: "We suggest revising your project description",
     revisionDescription: "The suggested description uses planning terminology that planning officers expect, increasing your chances of approval.",
   },
@@ -25,7 +26,6 @@ export const parseEnhancedTextInput = (data: Partial<EnhancedTextInput> | undefi
     task,
     title: data?.title || "",
     description: data?.description,
-    fn: data?.fn || "",
     ...parseBaseNodeData(data),
     ...taskDefaults[task],
     ...(data || {}),
@@ -35,7 +35,6 @@ export const parseEnhancedTextInput = (data: Partial<EnhancedTextInput> | undefi
 const baseEnhancedTextInputSchema: SchemaOf<BaseEnhancedTextInput> =
   baseNodeDataValidationSchema.concat(
     object({
-      fn: string(),
       title: string().required(),
       description: richText(),
     }),
@@ -44,6 +43,9 @@ const baseEnhancedTextInputSchema: SchemaOf<BaseEnhancedTextInput> =
 export const taskSchemas = {
   projectDescription: baseEnhancedTextInputSchema.concat(
     object({
+      fn: mixed()
+        .oneOf(["project.description"] as const)
+        .required(),
       task: mixed()
         .oneOf(["projectDescription"] as const)
         .required(),

@@ -2,7 +2,7 @@ import { BaseNodeData } from "../shared";
 import type { PublicProps } from "../shared/types";
 
 export interface TaskDefinition {
-  editorProps: Record<string, unknown>;
+  editorProps: { fn: string } & Record<string, unknown>;
   breadcrumbData: Record<string, unknown>;
 }
 
@@ -18,6 +18,7 @@ type ValidateRegistry<T extends Record<string, TaskDefinition>> = T;
 export type TaskRegistry = ValidateRegistry<{
   projectDescription: {
     editorProps: {
+      fn: "project.description";
       // TODO: Based on UI, decide on props
       revisionTitle: string;
       revisionDescription: string;
@@ -34,7 +35,6 @@ export type TaskRegistry = ValidateRegistry<{
 export type Task = keyof TaskRegistry;
 
 export interface BaseEnhancedTextInput extends BaseNodeData {
-  fn?: string;
   title: string;
   description?: string;
 }

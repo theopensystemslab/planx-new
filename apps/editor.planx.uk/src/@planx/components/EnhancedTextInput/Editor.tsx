@@ -19,8 +19,8 @@ import InputRow from "ui/shared/InputRow";
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import type { EditorProps } from "../shared/types";
-import { parseEnhancedTextInput, TASKS, validationSchema } from "./model";
-import { type EnhancedTextInput } from "./types";
+import { parseEnhancedTextInput, taskDefaults, TASKS, validationSchema } from "./model";
+import { type EnhancedTextInput, type Task } from "./types";
 
 type Props = EditorProps<ComponentType.EnhancedTextInput, EnhancedTextInput>;
 
@@ -83,7 +83,7 @@ const EnhancedTextInputComponent = (props: Props) => {
                   required
                   value={formik.values.fn}
                   onChange={(value) => formik.setFieldValue("fn", value)}
-                  disabled={props.disabled}
+                  disabled
                   errorMessage={formik.errors.fn}
                 />
               </InputRow>
@@ -101,7 +101,10 @@ const EnhancedTextInputComponent = (props: Props) => {
                         label={label}
                         variant="compact"
                         value={task}
-                        onChange={(e) => formik.setFieldValue("task", e.target)}
+                        onChange={(e) => {
+                          formik.setFieldValue("task", e.target);
+                          formik.setFieldValue("fn", taskDefaults[task as Task].fn);
+                        }}
                         disabled={props.disabled}
                       />
                     )}
