@@ -1,0 +1,3 @@
+table:
+  name: analytics_planning_data_flows
+  schema: public
