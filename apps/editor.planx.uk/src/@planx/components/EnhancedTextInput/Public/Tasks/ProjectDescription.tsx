@@ -1,50 +1,71 @@
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import type { PublicProps } from "@planx/components/shared/types";
-import { getPreviouslySubmittedData, makeData } from "@planx/components/shared/utils";
-import { Formik } from "formik";
+import { makeData } from "@planx/components/shared/utils";
+import { useQuery } from "@tanstack/react-query";
+import { enhanceProjectDescription } from "lib/api/ai/requests";
+import type { EnhanceError, EnhanceResponse } from "lib/api/ai/types";
+import type { APIError } from "lib/api/client";
 import React from "react";
 
-import type { BreadcrumbDataForTask, EnhancedTextInputForTask } from "../../types";
+import type { EnhancedTextInputForTask } from "../../types";
 
-type Props = PublicProps<EnhancedTextInputForTask<"projectDescription">>;
-type Data = BreadcrumbDataForTask<"projectDescription">;
+type Props = PublicProps<EnhancedTextInputForTask<"projectDescription"> & { userInput: string }>;
 
-/**
- * TODO:
- *  - Hit API
- *  - Allow use to select suggested or original
- */
 const ProjectDescription: React.FC<Props> = (props) => {
-  const initialValues: Data = getPreviouslySubmittedData(props) ?? {
-    task: "projectDescription",
-    original: "",
-    // suggested: "",
-    // userAction: "retainedOriginal",
-  };
+  const handleSubmit = () => props.handleSubmit?.(makeData(props, {}));
+  const { isPending, data, error } = useQuery<EnhanceResponse, APIError<EnhanceError>>({
+    queryFn: () => enhanceProjectDescription(props.userInput),
+    queryKey: ["projectDescription", props.userInput],
+    retry: 0,
+  });
+
+  if (isPending) return (
+    <Card>
+      <CardHeader
+        title={"Loading..."}
+        description={"Enhancing project description"}
+      />
+    </Card>
+  )
+
+  if (error) {
+    switch (error.data.error) {
+      case "INVALID_DESCRIPTION":
+        return (
+          <Card handleSubmit={handleSubmit}>
+            <CardHeader
+              title={"Invalid project description"}
+              description={error.data.message}
+            />
+          </Card>
+        )
+
+      case "SERVICE_UNAVAILABLE":
+        return (
+          <Card handleSubmit={handleSubmit}>
+            <CardHeader
+              title={"Service unavailable"}
+              description={error.data.message}
+            />
+          </Card>
+        )
+    }
+  }
 
   return (
-    <Formik<Data>
-      initialValues={initialValues}
-      onSubmit={(values) => props.handleSubmit?.(makeData(props, values))}
-      validateOnBlur={false}
-      validateOnChange={false}
-      // TODO: Breadcrumb validation
-      // validationSchema={validationSchema}
-      >{(formik) => (
-        <Card handleSubmit={formik.handleSubmit}>
-          <CardHeader
-            title={props.revisionTitle}
-            description={props.revisionDescription}
-            info={props.info}
-            policyRef={props.policyRef}
-            howMeasured={props.howMeasured}
-          />
-          Enhanced!
+    <Card handleSubmit={handleSubmit}>
+      <CardHeader
+        title={props.revisionTitle}
+        description={props.revisionDescription}
+        info={props.info}
+        policyRef={props.policyRef}
+        howMeasured={props.howMeasured}
+      />
+      Original: { data.original }
+      Enhanced: { data.enhanced }
 
-        </Card>
-      )}
-    </Formik>
+    </Card>
   )
 };
 

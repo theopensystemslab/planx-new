@@ -16,6 +16,8 @@ const EnhancedTextInputComponent = (props: Props) => {
   const TaskComponent = taskComponents[props.task];
   if (!TaskComponent) return null;
 
+  // TODO: handle "back" navigation
+
   return (
     <>
       {!userInput && <InitialUserInput {...props} setUserInput={setUserInput} /> }

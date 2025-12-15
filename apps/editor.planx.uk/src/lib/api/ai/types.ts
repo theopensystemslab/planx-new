@@ -1,6 +1,6 @@
 export interface EnhanceResponse {
   original: string;
-  suggested: string;
+  enhanced: string;
 }
 
 export interface EnhanceError {
