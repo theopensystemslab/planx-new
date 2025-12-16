@@ -1,3 +1,5 @@
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "@planx/components/shared/constants";
 import type { PublicProps } from "@planx/components/shared/types";
 import { TEXT_LIMITS, TextInputType } from "@planx/components/TextInput/model";
@@ -7,6 +9,7 @@ import { enhanceProjectDescription } from "lib/api/ai/requests";
 import type { EnhanceError, EnhanceResponse } from "lib/api/ai/types";
 import type { APIError } from "lib/api/client";
 import React, { useEffect } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import InputLabel from "ui/public/InputLabel";
 import { CharacterCounter } from "ui/shared/CharacterCounter";
 import Input from "ui/shared/Input/Input";
@@ -51,6 +54,10 @@ const ProjectDescription: React.FC<Props> = (props) => {
 
   return (
     <>
+      <Box my={2}>
+        <Typography variant="h3" fontWeight={FONT_WEIGHT_SEMI_BOLD} mb={1}>{props.revisionTitle}</Typography>
+        <Typography variant="body2">{props.revisionDescription}</Typography>
+      </Box>
       Original: {data.original}
       Enhanced: {data.enhanced}
       <InputRow>
