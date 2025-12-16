@@ -77,12 +77,12 @@ const ProjectDescription: React.FC<Props> = (props) => {
          <Card>
           <Typography variant="h4">Suggested description:</Typography>
           <Typography variant="body2">{data.enhanced}</Typography>
-          <Button variant="contained" color="secondary" sx={{ mt: "auto", backgroundColor: "common.white" }} onClick={() => setFieldValue("userInput", data.enhanced)}>Use suggested description</Button>
+          <Button variant="contained" color="secondary" sx={{ mt: "auto", backgroundColor: "common.white" }}>Use suggested description</Button>
         </Card>
         <Card>
           <Typography variant="h4">Your description:</Typography>
           <Typography variant="body2">{data.original}</Typography>
-          <Button variant="contained" color="secondary" sx={{ mt: "auto", backgroundColor: "common.white" }} onClick={() => setFieldValue("userInput", data.original)}>Revert to original description</Button>
+          <Button variant="contained" color="secondary" sx={{ mt: "auto", backgroundColor: "common.white" }}>Revert to original description</Button>
         </Card>
       </Box>
       <InputRow>
