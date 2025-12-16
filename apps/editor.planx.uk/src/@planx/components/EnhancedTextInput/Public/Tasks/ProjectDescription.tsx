@@ -1,5 +1,7 @@
 import HelpIcon from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "@planx/components/shared/constants";
 import { HelpButton } from "@planx/components/shared/Preview/CardHeader/styled";
@@ -24,6 +26,19 @@ import { HOW_DOES_THIS_WORK } from "../../content";
 import type { EnhancedTextInputForTask } from "../../types";
 
 type Props = PublicProps<EnhancedTextInputForTask<"projectDescription">>
+
+const Card = styled(Box)(({ theme }) => ({
+  display: "flex", 
+  flexDirection: "column", 
+  alignItems: "flex-start",
+  flexBasis: "100%",
+  gap: theme.spacing(1.5),
+  padding: theme.spacing(2),
+  backgroundColor: theme.palette.background.paper,
+  [`theme.breakpoints.up('contentWrap')`]: {
+    flexBasis: "50%",
+  },
+}));
 
 const ProjectDescription: React.FC<Props> = (props) => {
   const { values, handleChange, errors, setFieldValue } = useFormikContext<{ userInput: string }>()
@@ -77,8 +92,18 @@ const ProjectDescription: React.FC<Props> = (props) => {
           </HelpButton>
         </Typography>
       </Box>
-      Original: {data.original}
-      Enhanced: {data.enhanced}
+      <Box sx={{ display: "flex", flexDirection: { xs: "column", contentWrap: "row" }, maxWidth: "100%" }} gap={2} mb={2}>
+         <Card>
+          <Typography variant="h4">Suggested description:</Typography>
+          <Typography variant="body2">{data.enhanced}</Typography>
+          <Button variant="contained" color="secondary" sx={{ mt: "auto", backgroundColor: "common.white" }}>Use suggested description</Button>
+        </Card>
+        <Card>
+          <Typography variant="h4">Your description:</Typography>
+          <Typography variant="body2">{data.original}</Typography>
+          <Button variant="contained" color="secondary" sx={{ mt: "auto", backgroundColor: "common.white" }}>Revert to original description</Button>
+        </Card>
+      </Box>
       <InputRow>
         <InputLabel label={props.title} hidden htmlFor={props.id}>
           <Input
