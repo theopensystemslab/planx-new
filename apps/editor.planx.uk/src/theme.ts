@@ -27,7 +27,7 @@ import { getContrastTextColor } from "styleUtils";
 
 const DEFAULT_PRIMARY_COLOR = "#0010A4";
 const DEFAULT_TONAL_OFFSET = 0.1;
-export const DEFAULT_CONTRAST_THRESHOLD = 3;
+export const DEFAULT_CONTRAST_THRESHOLD = 4.5;
 
 // Type styles
 export const FONT_WEIGHT_SEMI_BOLD = "600";
