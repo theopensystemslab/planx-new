@@ -267,7 +267,6 @@ function EditorNavMenu() {
 
   const setIsNavMenuVisible = useStore((state) => state.setIsNavMenuVisible);
 
-  const visibleRoutes = routes.filter(isRouteAccessible);
   // Filter accessible routes within each section
   const visibleSections = sections
     .map((section) => ({
@@ -283,8 +282,8 @@ function EditorNavMenu() {
   );
 
   React.useEffect(() => {
-    setIsNavMenuVisible(visibleRoutes.length >= 2);
-  }, [visibleRoutes.length, setIsNavMenuVisible]);
+    setIsNavMenuVisible(totalVisibleRoutes >= 2);
+  }, [totalVisibleRoutes, setIsNavMenuVisible]);
 
   // Hide menu if the user does not have a selection of items
   if (totalVisibleRoutes < 2) return null;
