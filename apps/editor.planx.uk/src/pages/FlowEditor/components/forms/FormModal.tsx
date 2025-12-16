@@ -122,7 +122,6 @@ const TextInputToggle: React.FC<{ type: string }> = ({ type }) => {
   const [checked, setChecked] = useState(type === "enhanced-text-input")
 
   if (!["text-input", "enhanced-text-input"].includes(type)) return null;
-  if (!hasFeatureFlag("ENHANCED_TEXTINPUT")) return null;
 
   const toggleTextInput = () => {
     // Toggle visual state immediately without waiting for route change
