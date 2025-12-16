@@ -51,9 +51,11 @@ const EnhancedTextInputComponent = (props: Props) => {
         <CardHeader
           title={props.title}
           description={props.description}
-          info={props.info}
-          policyRef={props.policyRef}
-          howMeasured={props.howMeasured}
+          {...(step === "input" && {
+            info: props.info,
+            policyRef: props.policyRef,
+            howMeasured: props.howMeasured,
+          })}
         />
         {step === "input" && <InitialUserInput {...props} />}
         {step === "task" && <TaskComponent {...props} />}
