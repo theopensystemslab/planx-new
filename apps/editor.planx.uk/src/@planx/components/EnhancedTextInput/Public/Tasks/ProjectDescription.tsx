@@ -14,7 +14,7 @@ import { useFormikContext } from "formik";
 import { enhanceProjectDescription } from "lib/api/ai/requests";
 import type { EnhanceError, EnhanceResponse } from "lib/api/ai/types";
 import type { APIError } from "lib/api/client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import InputLabel from "ui/public/InputLabel";
 import { CharacterCounter } from "ui/shared/CharacterCounter";
@@ -43,17 +43,23 @@ const Card = styled(Box)(({ theme }) => ({
 const ProjectDescription: React.FC<Props> = (props) => {
   const { values, handleChange, errors, setFieldValue } = useFormikContext<{ userInput: string }>()
   const [open, setOpen] = useState(false);
+  
+  const initialValueRef = useRef(values.userInput);
+  const [shouldEnhance, setShouldEnhance] = React.useState(true);
 
   const { isPending, data, error, isSuccess } = useQuery<EnhanceResponse, APIError<EnhanceError>>({
-    queryFn: () => enhanceProjectDescription(values.userInput),
-    queryKey: ["projectDescription", values.userInput],
+    queryFn: () => enhanceProjectDescription(initialValueRef.current),
+    queryKey: ["projectDescription", initialValueRef.current], // Use initial value, not changing value
     retry: 0,
-    enabled: !!values.userInput,
+    enabled: shouldEnhance && !!initialValueRef.current,
   });
 
   // Populate text field with "enhanced" value
   useEffect(() => {
-    if (isSuccess) setFieldValue("userInput", data.enhanced);
+    if (isSuccess && data) {
+      setFieldValue("userInput", data.enhanced);
+      setShouldEnhance(false);
+    }
   }, [isSuccess, data, setFieldValue]);
 
   if (isPending) return (
@@ -92,18 +98,36 @@ const ProjectDescription: React.FC<Props> = (props) => {
           </HelpButton>
         </Typography>
       </Box>
-      <Box sx={{ display: "flex", flexDirection: { xs: "column", contentWrap: "row" }, maxWidth: "100%" }} gap={2} mb={2}>
-         <Card>
-          <Typography variant="h4">Suggested description:</Typography>
-          <Typography variant="body2">{data.enhanced}</Typography>
-          <Button variant="contained" color="secondary" sx={{ mt: "auto", backgroundColor: "common.white" }}>Use suggested description</Button>
-        </Card>
-        <Card>
-          <Typography variant="h4">Your description:</Typography>
-          <Typography variant="body2">{data.original}</Typography>
-          <Button variant="contained" color="secondary" sx={{ mt: "auto", backgroundColor: "common.white" }}>Revert to original description</Button>
-        </Card>
-      </Box>
+      
+      {data && (
+        <Box sx={{ display: "flex", flexDirection: { xs: "column", contentWrap: "row" }, maxWidth: "100%" }} gap={2} mb={2}>
+          <Card>
+            <Typography variant="h4">Suggested description:</Typography>
+            <Typography variant="body2">{data.enhanced}</Typography>
+            <Button 
+              variant="contained" 
+              color="secondary" 
+              sx={{ mt: "auto", backgroundColor: "common.white" }} 
+              onClick={() => setFieldValue("userInput", data.enhanced)}
+            >
+              Use suggested description
+            </Button>
+          </Card>
+          <Card>
+            <Typography variant="h4">Your description:</Typography>
+            <Typography variant="body2">{data.original}</Typography>
+            <Button 
+              variant="contained" 
+              color="secondary" 
+              sx={{ mt: "auto", backgroundColor: "common.white" }} 
+              onClick={() => setFieldValue("userInput", data.original)}
+            >
+              Revert to original description
+            </Button>
+          </Card>
+        </Box>
+      )}
+      
       <InputRow>
         <InputLabel label={props.title} hidden htmlFor={props.id}>
           <Input
