@@ -2,6 +2,7 @@ import HelpIcon from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
+import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "@planx/components/shared/constants";
 import { HelpButton } from "@planx/components/shared/Preview/CardHeader/styled";
@@ -26,7 +27,9 @@ import { HOW_DOES_THIS_WORK } from "../../content";
 import type { EnhancedTextInputForTask } from "../../types";
 import ErrorCard from "./ErrorCard";
 
-type Props = PublicProps<EnhancedTextInputForTask<"projectDescription">>
+type Props = PublicProps<EnhancedTextInputForTask<"projectDescription">> & {
+  onLoadingChange?: (isLoading: boolean) => void;
+}
 
 const Card = styled(Box)(({ theme }) => ({
   display: "flex", 
@@ -55,6 +58,11 @@ const ProjectDescription: React.FC<Props> = (props) => {
     enabled: shouldEnhance && !!initialValueRef.current,
   });
 
+  // Notify parent about loading state changes
+  useEffect(() => {
+    props.onLoadingChange?.(isPending);
+  }, [isPending]);
+
   // Populate text field with "enhanced" value
   useEffect(() => {
     if (isSuccess && data) {
@@ -63,9 +71,54 @@ const ProjectDescription: React.FC<Props> = (props) => {
     }
   }, [isSuccess, data, setFieldValue]);
 
-  if (isPending) return (
-    <p>Loading...</p>
-  )
+  if (isPending) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          mt: 2,
+          maxWidth: "100%",
+          "& span": {
+            maxWidth: "100%",
+          },
+        }}
+      >
+        <Typography variant="h4" component="h2">Analysing your project description...</Typography>
+        <Box maxWidth="formWrap">
+          <Skeleton
+            variant="rectangular"
+            width={900}
+            height={130}
+            aria-hidden="true"
+          />
+        </Box>
+        <Box sx={{ display: 'flex', gap: 2, maxWidth: '100%' }}>
+          <Skeleton
+            variant="rectangular"
+            width={900}
+            height={180}
+            aria-hidden="true"
+          />
+          <Skeleton
+            variant="rectangular"
+            width={900}
+            height={180}
+            aria-hidden="true"
+          />
+        </Box>
+        <Box maxWidth="formWrap">
+          <Skeleton
+            variant="rectangular"
+            width={900}
+            height={200}
+            aria-hidden="true"
+          />
+        </Box>
+      </Box>
+    );
+  }
 
   if (error) {
     switch (error.data.error) {

@@ -19,6 +19,7 @@ const taskComponents: TaskComponentMap = {
 
 const EnhancedTextInputComponent = (props: Props) => {
   const [step, setStep] = useState<"input" | "task">("input");
+  const [isLoading, setIsLoading] = useState(false);
 
   const nextStep = () => {
     if (step === "input") return setStep("task")
@@ -45,8 +46,7 @@ const EnhancedTextInputComponent = (props: Props) => {
       validateOnChange={false}
       validationSchema={validationSchema}
     >
-      {/* TODO: Handle isValid status whilst request is pending */}
-      <Card handleSubmit={nextStep}>
+      <Card handleSubmit={nextStep} isValid={!isLoading}>
         <CardHeader
           title={props.title}
           description={props.description}
@@ -55,7 +55,12 @@ const EnhancedTextInputComponent = (props: Props) => {
           howMeasured={props.howMeasured}
         />
         {step === "input" && <InitialUserInput {...props} />}
-        {step === "task" && <TaskComponent {...props} />}
+        {step === "task" && (
+          <TaskComponent 
+            {...props} 
+            {...({ onLoadingChange: setIsLoading } as any)}
+          />
+        )}
       </Card>
     </Formik>
   );
