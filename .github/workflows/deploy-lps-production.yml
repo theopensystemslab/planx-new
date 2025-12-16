@@ -15,7 +15,7 @@ env:
   BUCKET_NAME: localplanning.services
   BUILD_MODE: production
   SITE_URL: https://localplanning.services
-  DIST_ID: ${{ secrets.LPS_PRODUCTION_DIST_ID }}
+  DIST_ID: ${{ secrets.LPS_PROD_DIST_ID }}
 
 jobs:
   deploy:
