@@ -1,17 +1,17 @@
 import HelpIcon from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { styled } from "@mui/material/styles";
 import Skeleton from "@mui/material/Skeleton";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "@planx/components/shared/constants";
-import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { HelpButton } from "@planx/components/shared/Preview/CardHeader/styled";
 import MoreInfo from "@planx/components/shared/Preview/MoreInfo";
 import MoreInfoSection from "@planx/components/shared/Preview/MoreInfoSection";
 import type { PublicProps } from "@planx/components/shared/types";
 import { TEXT_LIMITS, TextInputType } from "@planx/components/TextInput/model";
 import { useQuery } from "@tanstack/react-query";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useFormikContext } from "formik";
 import { enhanceProjectDescription } from "lib/api/ai/requests";
 import type { EnhanceError, EnhanceResponse } from "lib/api/ai/types";
@@ -28,9 +28,7 @@ import { HOW_DOES_THIS_WORK } from "../../content";
 import type { EnhancedTextInputForTask } from "../../types";
 import ErrorCard from "./ErrorCard";
 
-type Props = PublicProps<EnhancedTextInputForTask<"projectDescription">> & {
-  onLoadingChange?: (isLoading: boolean) => void;
-}
+type Props = PublicProps<EnhancedTextInputForTask<"projectDescription">>
 
 const Card = styled(Box)(({ theme }) => ({
   display: "flex", 
@@ -58,11 +56,6 @@ const ProjectDescription: React.FC<Props> = (props) => {
     retry: 0,
     enabled: shouldEnhance && !!initialValueRef.current,
   });
-
-  // Notify parent about loading state changes
-  useEffect(() => {
-    props.onLoadingChange?.(isPending);
-  }, [isPending]);
 
   // Populate text field with "enhanced" value
   useEffect(() => {
