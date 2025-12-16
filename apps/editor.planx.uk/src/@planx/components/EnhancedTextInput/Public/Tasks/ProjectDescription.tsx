@@ -62,7 +62,7 @@ const ProjectDescription: React.FC<Props> = (props) => {
   return (
     <>
       <Box my={2}>
-        <Typography variant="h3" fontWeight={FONT_WEIGHT_SEMI_BOLD} mb={1}>{props.revisionTitle}</Typography>
+        <Typography variant="h3" component="h2" fontWeight={FONT_WEIGHT_SEMI_BOLD} mb={1}>{props.revisionTitle}</Typography>
         <Typography variant="body2">{props.revisionDescription}</Typography>
         <Typography variant="subtitle1" component="div">
           <HelpButton
