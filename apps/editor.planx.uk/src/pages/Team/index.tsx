@@ -218,8 +218,8 @@ const Team: React.FC = () => {
                 clearFilters={shouldClearFilters}
               />
               {teamHasFlows && matchingFlows && (
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-                  <Typography variant="body2">
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <Typography variant="body2" sx={{ width: "70px" }}>
                     <strong>Sort by</strong>
                   </Typography>
                   <SortControl<FlowSummary>
