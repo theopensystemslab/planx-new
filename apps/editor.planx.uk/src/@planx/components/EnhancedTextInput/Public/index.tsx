@@ -3,6 +3,7 @@ import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHead
 import type { PublicProps } from "@planx/components/shared/types";
 import { makeData } from "@planx/components/shared/utils";
 import { TextInputType, textInputValidationSchema } from "@planx/components/TextInput/model";
+import { useIsFetching } from "@tanstack/react-query";
 import { Formik } from "formik";
 import React, { useState } from "react";
 import { object } from "yup";
@@ -19,6 +20,7 @@ const taskComponents: TaskComponentMap = {
 
 const EnhancedTextInputComponent = (props: Props) => {
   const [step, setStep] = useState<"input" | "task">("input");
+  const isRunningTask = useIsFetching({ queryKey: [props.task] });
 
   const nextStep = () => {
     if (step === "input") return setStep("task")
@@ -45,8 +47,7 @@ const EnhancedTextInputComponent = (props: Props) => {
       validateOnChange={false}
       validationSchema={validationSchema}
     >
-      {/* TODO: Handle isValid status whilst request is pending */}
-      <Card handleSubmit={nextStep}>
+      <Card handleSubmit={nextStep} isValid={!isRunningTask}>
         <CardHeader
           title={props.title}
           description={props.description}
