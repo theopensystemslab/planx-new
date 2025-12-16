@@ -12,16 +12,31 @@ const taskComponents: TaskComponentMap = {
 };
 
 const EnhancedTextInputComponent = (props: Props) => {
-  const [userInput, setUserInput] = useState("");
+  const [step, setStep] = useState<"input" | "task">("input");
+  const [submittedInput, setSubmittedInput] = useState("");
+
   const TaskComponent = taskComponents[props.task];
   if (!TaskComponent) return null;
 
-  // TODO: handle "back" navigation
-
   return (
     <>
-      {!userInput && <InitialUserInput {...props} setUserInput={setUserInput} /> }
-      {userInput && <TaskComponent {...props} userInput={userInput}/> }
+      {step === "input" && (
+        <InitialUserInput
+          {...props}
+          initialValue={submittedInput}
+          onSubmit={(value) => {
+            setSubmittedInput(value);
+            setStep("task");
+          }}
+        />
+      )}
+      {step === "task" && (
+        <TaskComponent
+          {...props}
+          userInput={submittedInput}
+          // onBack={() => setStep("input")}
+        />
+      )}
     </>
   );
 };
