@@ -5,6 +5,7 @@ import { styled } from "@mui/material/styles";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "@planx/components/shared/constants";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { HelpButton } from "@planx/components/shared/Preview/CardHeader/styled";
 import MoreInfo from "@planx/components/shared/Preview/MoreInfo";
 import MoreInfoSection from "@planx/components/shared/Preview/MoreInfoSection";
@@ -85,37 +86,41 @@ const ProjectDescription: React.FC<Props> = (props) => {
           },
         }}
       >
-        <Typography variant="h4" component="h2">Analysing your project description...</Typography>
-        <Box maxWidth="formWrap">
-          <Skeleton
-            variant="rectangular"
-            width={900}
-            height={130}
-            aria-hidden="true"
-          />
-        </Box>
-        <Box sx={{ display: 'flex', gap: 2, maxWidth: '100%' }}>
-          <Skeleton
-            variant="rectangular"
-            width={900}
-            height={180}
-            aria-hidden="true"
-          />
-          <Skeleton
-            variant="rectangular"
-            width={900}
-            height={180}
-            aria-hidden="true"
-          />
-        </Box>
-        <Box maxWidth="formWrap">
-          <Skeleton
-            variant="rectangular"
-            width={900}
-            height={200}
-            aria-hidden="true"
-          />
-        </Box>
+        <DelayedLoadingIndicator
+          variant="ellipses"
+          text="Analysing your project description"
+          msDelayBeforeVisible={0}
+        />
+          <Box maxWidth="formWrap">
+            <Skeleton
+              variant="rectangular"
+              width={900}
+              height={130}
+              aria-hidden="true"
+            />
+          </Box>
+          <Box sx={{ display: 'flex', gap: 2, maxWidth: '100%' }}>
+            <Skeleton
+              variant="rectangular"
+              width={900}
+              height={180}
+              aria-hidden="true"
+            />
+            <Skeleton
+              variant="rectangular"
+              width={900}
+              height={180}
+              aria-hidden="true"
+            />
+          </Box>
+          <Box maxWidth="formWrap">
+            <Skeleton
+              variant="rectangular"
+              width={900}
+              height={200}
+              aria-hidden="true"
+            />
+          </Box>
       </Box>
     );
   }
