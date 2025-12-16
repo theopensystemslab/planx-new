@@ -210,7 +210,7 @@ const ProjectDescription: React.FC<Props> = (props) => {
           />
           <CharacterCounter
             limit={TEXT_LIMITS[TextInputType.Long]}
-            count={values.userInput.length}
+            count={values.userInput?.length || 0}
             error={Boolean(errors.userInput)}
           />
         </InputLabel>
