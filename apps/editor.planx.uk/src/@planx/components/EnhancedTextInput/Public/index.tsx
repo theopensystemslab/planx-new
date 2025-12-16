@@ -20,10 +20,15 @@ const taskComponents: TaskComponentMap = {
 
 const EnhancedTextInputComponent = (props: Props) => {
   const [step, setStep] = useState<"input" | "task">("input");
+  const [hasSubmittedInput, setHasSubmittedInput] = useState(false);
   const isRunningTask = useIsFetching({ queryKey: [props.task] });
 
   const nextStep = () => {
-    if (step === "input") return setStep("task")
+    if (step === "input") {
+      setStep("task");
+      setHasSubmittedInput(true);
+      return;
+    }
     if (step === "task") props.handleSubmit?.(makeData(props, {}));
   }
 
@@ -51,9 +56,11 @@ const EnhancedTextInputComponent = (props: Props) => {
         <CardHeader
           title={props.title}
           description={props.description}
-          info={props.info}
-          policyRef={props.policyRef}
-          howMeasured={props.howMeasured}
+          {...(!hasSubmittedInput && {
+            info: props.info,
+            policyRef: props.policyRef,
+            howMeasured: props.howMeasured,
+          })}
         />
         {step === "input" && <InitialUserInput {...props} />}
         {step === "task" && <TaskComponent {...props} />}
