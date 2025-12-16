@@ -28,7 +28,7 @@ const EditorContainer = styled(Box)<{ hasNavMenu?: boolean }>(
     overflow: "hidden",
     flexGrow: 1,
     maxHeight: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
-    minWidth: hasNavMenu ? `calc(100vw - ${MENU_WIDTH_COMPACT}px)` : "100vw",
+    maxWidth: hasNavMenu ? `calc(100vw - ${MENU_WIDTH_COMPACT}px)` : "100vw",
   }),
 );
 
@@ -99,13 +99,13 @@ const FlowEditor = () => {
           flexDirection: "column",
           width: "100%",
           overflowX: "auto",
+          position: "relative",
         }}
       >
         <Box
           id="editor"
           ref={scrollContainerRef}
           className={lockedFlow ? "flow-locked" : ""}
-          sx={{ position: "relative" }}
         >
           {" "}
           {isLoading ? (
