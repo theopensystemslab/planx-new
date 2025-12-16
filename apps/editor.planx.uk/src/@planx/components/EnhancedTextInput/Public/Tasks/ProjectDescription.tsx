@@ -22,6 +22,7 @@ import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHt
 
 import { HOW_DOES_THIS_WORK } from "../../content";
 import type { EnhancedTextInputForTask } from "../../types";
+import ErrorCard from "./ErrorCard";
 
 type Props = PublicProps<EnhancedTextInputForTask<"projectDescription">>
 
@@ -49,12 +50,18 @@ const ProjectDescription: React.FC<Props> = (props) => {
     switch (error.data.error) {
       case "INVALID_DESCRIPTION":
         return (
-          <p>invalid description</p>
+          <ErrorCard
+            title="Invalid description"
+            description="We weren't able to generate a description based on your input. The description doesn't appear to be related to a planning application."
+          />
         )
 
       case "SERVICE_UNAVAILABLE":
         return (
-          <p>service unavailable</p>
+          <ErrorCard
+            title="Service unavailable"
+            description="We weren't able to generate a description based on your input. We'll use your original project description."
+          />
         )
     }
   }
