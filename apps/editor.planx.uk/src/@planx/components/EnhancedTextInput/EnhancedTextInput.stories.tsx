@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
+import { userEvent, within } from "@storybook/test";
 import { delay, http, HttpResponse } from "msw";
 import React from "react";
 
@@ -46,7 +47,20 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Basic = {} satisfies Story;
+export const Basic: StoryObj = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    const input = canvas.getByRole("textbox")
+
+    await userEvent.type(input, ORIGINAL, {
+      delay: 50,
+    });
+
+    const submitButton = canvas.getByRole("button", { name: "Continue"});
+    await userEvent.click(submitButton);
+  },
+};
 
 export const Invalid = {
   parameters: {
