@@ -2,9 +2,14 @@ name: Deploy LPS (production)
 
 permissions: read-all
 
-# TODO: Add schedule (or webhook?)
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - production
+  schedule:
+    # Runs at 08:30, 12:30 and 16:30, Monday through Friday
+    - cron: 30 8,12,16 * * 1-5
 
 # Queue job so the site will always remain in a stable state
 concurrency:

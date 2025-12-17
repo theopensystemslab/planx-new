@@ -72,40 +72,6 @@ const createLogsBucket = (domain: string) => {
   return logsBucket;
 };
 
-const uploadBuildSiteToBucket = (bucket: aws.s3.Bucket) => {
-  fsWalk
-    .walkSync("../../apps/localplanning.services/dist/", {
-      basePath: "",
-      entryFilter: (e) => !e.dirent.isDirectory(),
-    })
-    .forEach(({ path }) => {
-      const relativeFilePath = `../../apps/localplanning.services/dist/${path}`;
-      const contentType = mime.getType(relativeFilePath) || "";
-
-      // Strip .html extension from the S3 key, but keep index.html as is
-      let s3Key = path;
-      if (path.endsWith(".html")) {
-        s3Key = path.replace(/\.html$/, "");
-      }
-
-      new aws.s3.BucketObject(
-        relativeFilePath,
-        {
-          key: s3Key,
-          bucket,
-          contentType,
-          source: new pulumi.asset.FileAsset(relativeFilePath),
-          cacheControl: contentType.includes("html")
-            ? "no-cache"
-            : `max-age=${60 * 60 * 24}, stale-while-revalidate=${60 * 60 * 24}`,
-        },
-        {
-          parent: bucket,
-        }
-      );
-    });
-};
-
 export const createLPSCertificates = (
   domain: string,
   planXCert: aws.acm.Certificate
@@ -225,9 +191,6 @@ export const createLocalPlanningServices = (planXCert: aws.acm.Certificate) => {
 
   const lpsBucket = createLPSBucket(domain, oai);
   const logsBucket = createLogsBucket(domain);
-
-  // TODO: Retire and only deploy built site via GHA
-  if (env === "production") uploadBuildSiteToBucket(lpsBucket);
 
   const acmCertificateArn = createLPSCertificates(domain, planXCert);
 

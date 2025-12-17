@@ -5,6 +5,9 @@ permissions: read-all
 # TODO: Add schedule (or webhook?)
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 # Queue job so the site will always remain in a stable state
 concurrency:
