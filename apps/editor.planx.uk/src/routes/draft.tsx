@@ -1,4 +1,5 @@
 import { compose, map, mount, route, withData, withHead, withView } from "navi";
+import ApplicationViewer from "pages/Preview/ApplicationViewer";
 import ContentPage from "pages/Preview/ContentPage";
 import Questions from "pages/Preview/Questions";
 import React from "react";
@@ -26,6 +27,10 @@ const routes = compose(
         view: () => <ContentPage page={req.params.page} />,
         data: { isContentPage: true },
       });
+    }),
+    "/view-application": route({
+      view: <ApplicationViewer />,
+      data: { isViewApplicationPage: true },
     }),
   }),
 );

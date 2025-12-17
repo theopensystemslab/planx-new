@@ -318,6 +318,7 @@ function SummaryList(props: SummaryListProps) {
   return (
     <>
       <SummaryListTable showChangeButton={props.showChangeButton}>
+        {!props.summaryBreadcrumbs.length && <Typography variant="body2">No responses to display</Typography>}
         {props.summaryBreadcrumbs.map(
           ({ component: Component, nodeId, node, userData }, i) => (
             <React.Fragment key={i}>
@@ -604,9 +605,8 @@ function DrawBoundary(props: ComponentProps) {
               geojsonColor="#ff0000"
               geojsonFill
               geojsonBuffer={20}
-              osProxyEndpoint={`${
-                import.meta.env.VITE_APP_API_URL
-              }/proxy/ordnance-survey`}
+              osProxyEndpoint={`${import.meta.env.VITE_APP_API_URL
+                }/proxy/ordnance-survey`}
               hideResetControl
               staticMode
               style={{ width: "100%", height: "30vh" }}
@@ -628,9 +628,8 @@ function NumberInput(props: ComponentProps) {
   return (
     <>
       <Box component="dt">{props.node.data.title}</Box>
-      <Box component="dd">{`${getAnswersByNode(props)} ${
-        props.node.data.units ?? ""
-      }`}</Box>
+      <Box component="dd">{`${getAnswersByNode(props)} ${props.node.data.units ?? ""
+        }`}</Box>
     </>
   );
 }
@@ -703,8 +702,8 @@ function FileUploadAndLabel(props: ComponentProps) {
         <ul>
           {uniqueFilenames.length
             ? uniqueFilenames.map((filename, index) => (
-                <li key={index}>{filename}</li>
-              ))
+              <li key={index}>{filename}</li>
+            ))
             : "No files uploaded"}
         </ul>
       </Box>
