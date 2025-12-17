@@ -76,4 +76,29 @@ Submission can also be driven by an invite to pay event (not triggered by an app
 
 1. **Update views**
    - Update `submission_services_log` view
+
+```sql
+-- Generate display name
+CREATE OR REPLACE VIEW "public"."submission_services_log" AS 
+   ...
+   CASE
+      -- Event display names
+      WHEN ((se.webhook_conf)::text ~~ '%my-new-destination%'::text) THEN 'Submit to My New Destination'::text
+      ...
+   END AS event_type,
+   ...
+```
+
+```sql
+-- Add to allow list of events
+CREATE OR REPLACE VIEW "public"."submission_services_log" AS 
+   ...
+   WHERE seil.created_at >= '2024-01-01 00:00:00+00'::timestamp with time zone
+   AND (
+      -- Allow listed events
+      (se.webhook_conf)::text ~~ '%my-new-destination%'::text OR
+      ...
+   )
+   ...
+```
    - Update `submission_services_summary` view
