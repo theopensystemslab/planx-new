@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import { get, isEmpty, omit } from "lodash";
@@ -164,12 +165,13 @@ export const Filters = <T extends object>({
 
   return (
     <FiltersContent>
-      <form
+      <Box
+        component="form"
         name="filters"
         aria-label="Filter options"
-        style={{ display: "flex", alignItems: "center", gap: "10px" }}
+        sx={{ display: "flex", alignItems: "center", gap: 1 }}
       >
-        <Typography variant="body2" sx={{ flexShrink: 0 }}>
+        <Typography variant="body2" sx={{ width: "70px" }}>
           <strong>Filter by</strong>
         </Typography>
         {optionsToFilter.map((option) => (
@@ -197,7 +199,7 @@ export const Filters = <T extends object>({
             />
           </fieldset>
         ))}
-      </form>
+      </Box>
     </FiltersContent>
   );
 };
