@@ -1,7 +1,6 @@
 import HelpIcon from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Skeleton from "@mui/material/Skeleton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "@planx/components/shared/constants";
@@ -11,7 +10,6 @@ import MoreInfoSection from "@planx/components/shared/Preview/MoreInfoSection";
 import type { PublicProps } from "@planx/components/shared/types";
 import { TEXT_LIMITS, TextInputType } from "@planx/components/TextInput/model";
 import { useQuery } from "@tanstack/react-query";
-import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useFormikContext } from "formik";
 import { enhanceProjectDescription } from "lib/api/ai/requests";
 import type { EnhanceError, EnhanceResponse } from "lib/api/ai/types";
@@ -27,6 +25,7 @@ import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHt
 import { HOW_DOES_THIS_WORK } from "../../content";
 import type { EnhancedTextInputForTask } from "../../types";
 import ErrorCard from "./ErrorCard";
+import LoadingSkeleton from "./LoadingSkeleton";
 
 type Props = PublicProps<EnhancedTextInputForTask<"projectDescription">>
 
@@ -65,58 +64,7 @@ const ProjectDescription: React.FC<Props> = (props) => {
     }
   }, [isSuccess, data, setFieldValue]);
 
-  if (isPending) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-          mt: 2,
-          maxWidth: "100%",
-          "& span": {
-            maxWidth: "100%",
-          },
-        }}
-      >
-        <DelayedLoadingIndicator
-          variant="ellipses"
-          text="Analysing your project description"
-          msDelayBeforeVisible={0}
-        />
-          <Box maxWidth="formWrap">
-            <Skeleton
-              variant="rectangular"
-              width={900}
-              height={130}
-              aria-hidden="true"
-            />
-          </Box>
-          <Box sx={{ display: 'flex', gap: 2, maxWidth: '100%' }}>
-            <Skeleton
-              variant="rectangular"
-              width={900}
-              height={180}
-              aria-hidden="true"
-            />
-            <Skeleton
-              variant="rectangular"
-              width={900}
-              height={180}
-              aria-hidden="true"
-            />
-          </Box>
-          <Box maxWidth="formWrap">
-            <Skeleton
-              variant="rectangular"
-              width={900}
-              height={200}
-              aria-hidden="true"
-            />
-          </Box>
-      </Box>
-    );
-  }
+  if (isPending) return <LoadingSkeleton/>;
 
   if (error) {
     switch (error.data.error) {
