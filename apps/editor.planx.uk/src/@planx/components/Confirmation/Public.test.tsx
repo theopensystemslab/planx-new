@@ -1,3 +1,4 @@
+import type * as planxCore from "@opensystemslab/planx-core";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { act, screen, waitFor } from "@testing-library/react";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
@@ -12,8 +13,10 @@ const { getState, setState } = useStore;
 
 let initialState: FullStore;
 
-vi.mock("@opensystemslab/planx-core", () => {
+vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
+  const actual = await importOriginal<typeof planxCore>();
   return {
+    ...actual,
     CoreDomainClient: vi.fn().mockImplementation(() => ({
       export: {
         csvData: () => vi.fn(),

@@ -1,19 +1,16 @@
 import Box from "@mui/material/Box";
+import { getValidSchemaDictionary } from "@opensystemslab/planx-core";
 import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
 import { type Store,useStore } from "pages/FlowEditor/lib/store";
 import { Fragment } from "react";
 import React from "react";
 
+const getApplicationTypeDescriptionFromPassportValue = (passport: Store.Passport): string | undefined => {
+  const schema = getValidSchemaDictionary("ApplicationType");
+  const description = schema?.[passport?.data?.["application.type"]];
 
-// TODO - Retire in favour of ODP Schema application type descriptions or fallback to flowName
-function getWorkStatus(passport: Store.Passport): string | undefined {
-  switch (passport?.data?.["application.type"]?.toString()) {
-    case "ldc.existing":
-      return "existing";
-    case "ldc.proposed":
-      return "proposed";
-  }
+  return description;
 }
 
 const ApplicationSummary: React.FC = () => {
@@ -30,7 +27,7 @@ const ApplicationSummary: React.FC = () => {
     "Property address": passport.data?._address?.title,
     "Application type": [
       flowName.replace("Apply", "Application"),
-      getWorkStatus(passport),
+      getApplicationTypeDescriptionFromPassportValue(passport),
     ]
       .filter(Boolean)
       .join(" - "),
