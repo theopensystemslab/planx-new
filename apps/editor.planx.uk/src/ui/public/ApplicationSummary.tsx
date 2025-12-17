@@ -6,7 +6,7 @@ import { type Store,useStore } from "pages/FlowEditor/lib/store";
 import { Fragment } from "react";
 import React from "react";
 
-const getWorkStatus = (passport: Store.Passport): string | undefined => {
+const getApplicationTypeDescriptionFromPassportValue = (passport: Store.Passport): string | undefined => {
   const schema = getValidSchemaDictionary("ApplicationType");
   const description = schema?.[passport?.data?.["application.type"]];
 
@@ -27,7 +27,7 @@ const ApplicationSummary: React.FC = () => {
     "Property address": passport.data?._address?.title,
     "Application type": [
       flowName.replace("Apply", "Application"),
-      getWorkStatus(passport),
+      getApplicationTypeDescriptionFromPassportValue(passport),
     ]
       .filter(Boolean)
       .join(" - "),
