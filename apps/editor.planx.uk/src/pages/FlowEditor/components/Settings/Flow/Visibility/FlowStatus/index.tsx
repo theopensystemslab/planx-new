@@ -15,6 +15,7 @@ import FlowTag from "ui/editor/FlowTag/FlowTag";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
+import { useSlackMessage } from "../../../hooks/useSlackMessage";
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import { Description } from "./components/Description";
 import { PublicLink } from "./components/PublicLink";
@@ -27,16 +28,19 @@ import type {
 } from "./types";
 
 const FlowStatus: React.FC = () => {
-  const [flowId, flowSlug, teamDomain] = useStore((state) => [
+  const [flowId, flowSlug, teamDomain, teamSlug] = useStore((state) => [
     state.id,
     state.flowSlug,
     state.teamDomain,
+    state.teamSlug,
   ]);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [confirmationError, setConfirmationError] = useState(false);
   const [privacyError, setPrivacyError] = useState(false);
+
+  const { mutate: sendSlackMessage } = useSlackMessage();
 
   const { origin } = useLocation();
 
@@ -62,6 +66,18 @@ const FlowStatus: React.FC = () => {
       getMutationVariables={(values) => ({ flowId, ...values })}
       showActionButtons={false}
       defaultValues={{ status: "offline" }}
+      onSuccess={(data, _formikHelpers, values) => {
+        const oldStatus = data?.flow.status;
+        const hasStatusUpdated = oldStatus && values.status !== oldStatus;
+        if (hasStatusUpdated) {
+          const emoji = {
+            online: ":large_green_circle:",
+            offline: ":no_entry:",
+          };
+          const message = `${emoji[values.status]} *${teamSlug}/${flowSlug}* is now ${values.status}`;
+          sendSlackMessage(message);
+        }
+      }}
     >
       {({ formik, data }) => {
         const isTrial = data?.flow.team.settings.isTrial;
