@@ -209,6 +209,7 @@ export type PublishedFlowSummary = {
   publishedAt: string;
   hasSendComponent: boolean;
   hasVisiblePayComponent: boolean;
+  hasEnabledServiceCharge: boolean;
 };
 
 export type FlowSummaryOperations = {
@@ -543,6 +544,7 @@ export const editorStore: StateCreator<
               publishedAt: created_at
               hasSendComponent: has_send_component
               hasVisiblePayComponent: has_pay_component
+              hasEnabledServiceCharge: service_charge_enabled
             }
           }
         }

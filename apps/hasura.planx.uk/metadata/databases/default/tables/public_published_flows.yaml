@@ -13,15 +13,16 @@ insert_permissions:
     permission:
       check: {}
       columns:
-        - created_at
-        - data
-        - flow_id
         - has_pay_component
         - has_sections
         - has_send_component
+        - service_charge_enabled
         - id
         - publisher_id
         - summary
+        - created_at
+        - flow_id
+        - data
   - role: demoUser
     permission:
       check:
@@ -34,29 +35,31 @@ insert_permissions:
                 id:
                   _eq: 32
       columns:
-        - created_at
-        - data
-        - flow_id
         - has_pay_component
         - has_sections
         - has_send_component
+        - service_charge_enabled
         - id
         - publisher_id
         - summary
+        - created_at
+        - flow_id
+        - data
     comment: A demoUser can only insert a published flow for their own flows and for flows inside the Demo team [id = 32]
   - role: platformAdmin
     permission:
       check: {}
       columns:
-        - created_at
-        - data
-        - flow_id
         - has_pay_component
         - has_sections
         - has_send_component
+        - service_charge_enabled
         - id
         - publisher_id
         - summary
+        - created_at
+        - flow_id
+        - data
   - role: teamEditor
     permission:
       check:
@@ -69,56 +72,60 @@ insert_permissions:
                 - role:
                     _eq: teamEditor
       columns:
-        - created_at
-        - data
-        - flow_id
         - has_pay_component
         - has_sections
         - has_send_component
+        - service_charge_enabled
         - id
         - publisher_id
         - summary
+        - created_at
+        - flow_id
+        - data
 select_permissions:
   - role: api
     permission:
       columns:
-        - created_at
-        - data
-        - flow_id
         - has_pay_component
         - has_sections
         - has_send_component
+        - service_charge_enabled
         - id
         - publisher_id
         - summary
+        - created_at
+        - flow_id
+        - data
       filter: {}
       allow_aggregations: true
   - role: demoUser
     permission:
       columns:
-        - created_at
-        - data
-        - flow_id
         - has_pay_component
         - has_sections
         - has_send_component
+        - service_charge_enabled
         - id
         - publisher_id
         - summary
+        - created_at
+        - flow_id
+        - data
       filter: {}
       allow_aggregations: true
   - role: platformAdmin
     permission:
       columns:
-        - created_at
-        - data
-        - flow_id
         - has_pay_component
         - has_sections
         - has_send_component
+        - service_charge_enabled
         - id
         - publisher_id
         - summary
+        - created_at
+        - flow_id
+        - data
       filter: {}
       allow_aggregations: true
   - role: public
@@ -132,20 +139,22 @@ select_permissions:
         - has_send_component
         - id
         - publisher_id
+        - service_charge_enabled
         - summary
       filter: {}
       allow_aggregations: true
   - role: teamEditor
     permission:
       columns:
-        - created_at
-        - data
-        - flow_id
         - has_pay_component
         - has_sections
         - has_send_component
+        - service_charge_enabled
         - id
         - publisher_id
         - summary
+        - created_at
+        - flow_id
+        - data
       filter: {}
       allow_aggregations: true
