@@ -1,4 +1,1 @@
--- Could not auto-generate a down migration.
--- Please write an appropriate down migration for the SQL below:
--- alter table "public"."published_flows" add column "service_charge_enabled" boolean
---  null;
+alter table "public"."published_flows" drop column if exists "service_charge_enabled";
