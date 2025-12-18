@@ -334,6 +334,7 @@ export const previewStore: StateCreator<
       const breadcrumb: Store.UserData = { 
         auto: Boolean(auto), 
         createdAt: new Date().toISOString(),
+        seq: Object.keys(breadcrumbs).length + 1,
       };
       if (answers?.length > 0) breadcrumb.answers = answers;
 
