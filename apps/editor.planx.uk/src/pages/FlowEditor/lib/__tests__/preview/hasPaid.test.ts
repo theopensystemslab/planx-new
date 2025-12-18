@@ -32,8 +32,17 @@ test("hasPaid is updated if a Pay component has been recorded", () => {
 
   record("c", {});
   expect(getState().breadcrumbs).toEqual({
-    a: { answers: ["c"], auto: false },
-    c: { auto: false },
+    a: {
+      answers: ["c"], 
+      auto: false, 
+      createdAt: expect.any(String),
+      seq: expect.any(Number)
+    },
+    c: {
+      auto: false, 
+      createdAt: expect.any(String),
+      seq: expect.any(Number)
+    },
   });
 
   expect(hasPaid()).toBe(true);
