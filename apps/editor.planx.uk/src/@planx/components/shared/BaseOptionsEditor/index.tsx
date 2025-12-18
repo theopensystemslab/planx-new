@@ -107,6 +107,10 @@ export const BaseOptionsEditor: React.FC<Props> = (props) => {
         />
         {showRuleBuilder && (
           <RuleBuilder
+            labels={{ 
+              [Condition.AlwaysRequired]: "Always show", 
+              [Condition.RequiredIf]: "Show if", 
+            }}
             conditions={[Condition.AlwaysRequired, Condition.RequiredIf]}
             disabled={props.disabled}
             rule={props.value.data.rule}
