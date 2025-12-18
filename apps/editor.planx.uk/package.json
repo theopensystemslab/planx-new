@@ -148,7 +148,7 @@
     "prettier": "^3.0.0",
     "react-refresh": "^0.14.0",
     "sass": "^1.93.3",
-    "storybook": "^8.6.12",
+    "storybook": "^8.6.15",
     "stream-browserify": "^3.0.0",
     "tsconfig-paths-webpack-plugin": "^4.0.1",
     "typescript": "^5.6.2",
