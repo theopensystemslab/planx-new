@@ -422,7 +422,7 @@ describe("Responsive Checklist editor component", () => {
     // Add first option with default rule
     await user.click(screen.getByRole("button", { name: /Add option/i }));
     await user.type(screen.getByPlaceholderText("Option"), "First Option");
-    expect(screen.getByText("Always required")).toBeVisible();
+    expect(screen.getByText("Always show")).toBeVisible();
 
     // Add second option with conditional rule
     await user.click(screen.getByRole("button", { name: /Add option/i }));
@@ -431,12 +431,12 @@ describe("Responsive Checklist editor component", () => {
       "Second Option",
     );
 
-    const ruleDropdowns = screen.getAllByText("Always required");
+    const ruleDropdowns = screen.getAllByText("Always show");
     expect(ruleDropdowns).toHaveLength(2);
 
     await user.click(ruleDropdowns[1]);
     await user.click(
-      await screen.findByRole("option", { name: /required if/i }),
+      await screen.findByRole("option", { name: /show if/i }),
     );
 
     const conditionalField = (
