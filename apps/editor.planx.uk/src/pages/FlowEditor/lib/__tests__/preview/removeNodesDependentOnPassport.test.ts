@@ -1,5 +1,6 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import cloneDeep from "lodash/cloneDeep";
+import { expect } from "vitest";
 
 import { Store, useStore } from "../../store";
 import { removeNodesDependentOnPassport } from "../../store/preview";
@@ -99,6 +100,8 @@ describe("nodesDependentOnPassport with record", () => {
         "property.type": ["residential.dwelling.house.terrace"],
       },
       auto: false,
+      createdAt: expect.any(String),
+      seq: expect.any(Number),
     };
 
     setState({
@@ -145,6 +148,8 @@ describe("nodesDependentOnPassport with record", () => {
         "proposal.site.area": 76.27,
       },
       auto: false,
+      createdAt: expect.any(String),
+      seq: expect.any(Number),
     };
 
     setState({
