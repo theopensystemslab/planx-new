@@ -16,27 +16,6 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input/Input";
 
-export interface Environment {
-  name: string;
-  description: string;
-  url: string;
-}
-
-export interface Props {
-  open: boolean;
-  onClose: () => void;
-  environments: Environment[];
-  selectedEnvironmentId: string;
-  onEnvironmentSelect: (environmentId: string) => void;
-  title?: string;
-}
-
-const Root = styled(Box)(() => ({
-  "@media print": {
-    display: "none",
-  },
-}));
-
 const StyledButtonBase = styled(ButtonBase)(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
   width: "100%",
@@ -77,7 +56,7 @@ export const TeamSelect: React.FC = () => {
   const handleClose = () => setOpen(false);
 
   return (
-    <Root>
+    <>
       <StyledButtonBase onClick={handleOpen} selected={false} sx={{ ml: 0.5 }}>
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <Typography variant="body3" component="span" color="text.secondary">
@@ -196,7 +175,7 @@ export const TeamSelect: React.FC = () => {
           </Stack>
         </Box>
       </Dialog>
-    </Root>
+    </>
   );
 };
 
