@@ -55,7 +55,7 @@ done
 psql --quiet ${REMOTE_PG} --command="\\copy (SELECT id, team_id, staging_bops_submission_url, staging_bops_secret, has_planning_data, staging_govpay_secret, staging_file_api_key, staging_power_automate_api_key FROM team_integrations) TO '/tmp/team_integrations.csv' (FORMAT csv, DELIMITER ';');"
 echo team_integrations downloaded
 
-psql --quiet ${REMOTE_PG} --command="\\copy (SELECT DISTINCT ON (flow_id) id, data, flow_id, summary, publisher_id, created_at, has_send_component, has_sections, has_pay_component FROM published_flows ORDER BY flow_id, created_at DESC) TO '/tmp/published_flows.csv' (FORMAT csv, DELIMITER ';');"
+psql --quiet ${REMOTE_PG} --command="\\copy (SELECT DISTINCT ON (flow_id) id, data, flow_id, summary, publisher_id, created_at, has_send_component, has_sections, has_pay_component, service_charge_enabled FROM published_flows ORDER BY flow_id, created_at DESC) TO '/tmp/published_flows.csv' (FORMAT csv, DELIMITER ';');"
 echo published_flows downloaded
 
 if [[ ${RESET} == "reset_flows" ]]; then
