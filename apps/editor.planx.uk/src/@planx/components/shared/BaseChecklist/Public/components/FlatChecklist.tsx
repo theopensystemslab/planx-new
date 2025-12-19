@@ -81,6 +81,8 @@ const FlatChecklistComponent: React.FC<PublicProps<FlatChecklist>> = (
       nonExclusiveOptions,
     });
 
+  const hasImages = layout === ChecklistLayout.Images;
+
   // Auto-answered Checklists still set a breadcrumb even though they render null
   useEffect(() => {
     if (autoAnswers) {
@@ -108,11 +110,7 @@ const FlatChecklistComponent: React.FC<PublicProps<FlatChecklist>> = (
       />
       <FullWidthWrapper>
         <ErrorWrapper error={getIn(formik.errors, "checked")} id={id}>
-          <Grid
-            container
-            spacing={layout === ChecklistLayout.Images ? 2 : 0}
-            component="fieldset"
-          >
+          <Grid container spacing={hasImages ? 2 : 0} component="fieldset">
             <legend style={visuallyHidden}>{text}</legend>
             <ChecklistItems
               nonExclusiveOptions={nonExclusiveOptions}
@@ -126,6 +124,7 @@ const FlatChecklistComponent: React.FC<PublicProps<FlatChecklist>> = (
                 exclusiveOrOption={exclusiveOrOption}
                 changeCheckbox={toggleCheckbox}
                 formik={formik}
+                hasImages={hasImages}
               />
             )}
           </Grid>
