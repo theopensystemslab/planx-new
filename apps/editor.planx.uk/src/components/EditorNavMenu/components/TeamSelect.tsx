@@ -13,7 +13,7 @@ import ButtonBase from "@planx/components/shared/Buttons/ButtonBase";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useMemo, useState } from "react";
 import { TeamSummary } from "routes/authenticated";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { focusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 
 const StyledButtonBase = styled(ButtonBase)<{ teamcolor?: string }>(
@@ -24,7 +24,7 @@ const StyledButtonBase = styled(ButtonBase)<{ teamcolor?: string }>(
     borderRadius: 3,
     padding: theme.spacing(1, 1.25),
     justifyContent: "space-between",
-    // Todo: standardise box shadow across nav menu items
+    // TODO: standardise box shadow across nav menu items
     boxShadow: "0 1px 1.5px 0 rgba(0, 0, 0, 0.2)",
     "&:hover": {
       backgroundColor: theme.palette.background.paper,
@@ -54,6 +54,7 @@ const StyledCard = styled(Card)<{ selected?: boolean; teamcolor?: string }>(
     "&:hover": {
       backgroundColor: theme.palette.background.paper,
     },
+    "&:focus": focusStyle,
   }),
 );
 
@@ -74,10 +75,6 @@ export const TeamSelect: React.FC<Props> = ({
     null,
   );
   const [clearSearch, setClearSearch] = useState<boolean>(false);
-
-  // TODO: add GraphQL query
-  // const { data } = useQuery(YOUR_TEAMS_QUERY);
-  // const teams: TeamSummary[] = data?.teams || [];
 
   const teams: TeamSummary[] = teamsProp || [];
 
@@ -115,6 +112,13 @@ export const TeamSelect: React.FC<Props> = ({
   const handleTeamClick = (teamSlug: string) => {
     onTeamSelect(teamSlug);
     handleClose();
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent, teamSlug: string) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      handleTeamClick(teamSlug);
+    }
   };
 
   const displayEditableTeams = searchedTeams
@@ -195,7 +199,11 @@ export const TeamSelect: React.FC<Props> = ({
                       key={team.slug}
                       selected={team.slug === currentTeamSlug}
                       onClick={() => handleTeamClick(team.slug)}
+                      onKeyDown={(e) => handleKeyDown(e, team.slug)}
                       teamcolor={team.theme.primaryColour}
+                      tabIndex={0}
+                      role="button"
+                      aria-label={`Select ${team.name}`}
                     >
                       <Typography
                         variant="body3"
@@ -226,7 +234,11 @@ export const TeamSelect: React.FC<Props> = ({
                     <StyledCard
                       key={team.slug}
                       onClick={() => handleTeamClick(team.slug)}
+                      onKeyDown={(e) => handleKeyDown(e, team.slug)}
                       teamcolor={team.theme.primaryColour}
+                      tabIndex={0}
+                      role="button"
+                      aria-label={`Select ${team.name}`}
                     >
                       <Typography
                         variant="body3"
