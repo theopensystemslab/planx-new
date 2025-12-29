@@ -33,8 +33,13 @@ function EditorNavMenu() {
       state.flowAnalyticsLink,
       state.getUserRoleForCurrentTeam(),
       state.getTeam(),
-      state.teamAnalyticsLink,
-    ]);
+    ],
+  );
+
+  useStore.getState().getTeamFlowInformation(teamSlug);
+
+  const [teamAnalyticsLink] = useStore((state) => [state.teamAnalyticsLink]);
+
   const referenceCode = team?.settings?.referenceCode;
   const { url: lpsBaseUrl } = useLPS();
 
@@ -157,7 +162,9 @@ function EditorNavMenu() {
       disabled: !referenceCode,
     },
     {
-      title: "Analytics",
+      title: teamAnalyticsLink
+        ? `Analytics (external link)`
+        : `Analytics page unavailable`,
       Icon: LeaderboardIcon,
       route: teamAnalyticsLink ? teamAnalyticsLink : `#`,
       accessibleBy: ["platformAdmin", "teamEditor", "analyst"],
