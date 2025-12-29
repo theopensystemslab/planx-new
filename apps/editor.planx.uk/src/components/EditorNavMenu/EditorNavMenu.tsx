@@ -26,15 +26,21 @@ function EditorNavMenu() {
   const { navigate } = useNavigation();
   const { url } = useCurrentRoute();
   const isRouteLoading = useLoadingRoute();
-  const [teamSlug, flowSlug, flowAnalyticsLink, role, team, teamAnalyticsLink] =
-    useStore((state) => [
+
+  const [teamSlug, flowSlug, flowAnalyticsLink, role, team] = useStore(
+    (state) => [
       state.teamSlug,
       state.flowSlug,
       state.flowAnalyticsLink,
       state.getUserRoleForCurrentTeam(),
       state.getTeam(),
-      state.teamAnalyticsLink,
-    ]);
+    ],
+  );
+
+  useStore.getState().getTeamFlowInformation(teamSlug);
+
+  const [teamAnalyticsLink] = useStore((state) => [state.teamAnalyticsLink]);
+
   const referenceCode = team?.settings?.referenceCode;
   const { url: lpsBaseUrl } = useLPS();
 
@@ -157,7 +163,9 @@ function EditorNavMenu() {
       disabled: !referenceCode,
     },
     {
-      title: "Analytics",
+      title: teamAnalyticsLink
+        ? `Analytics (external link)`
+        : `Analytics page unavailable`,
       Icon: LeaderboardIcon,
       route: teamAnalyticsLink ? teamAnalyticsLink : `#`,
       accessibleBy: ["platformAdmin", "teamEditor", "analyst"],
