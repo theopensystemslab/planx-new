@@ -28,7 +28,6 @@ export interface SettingsStore {
   globalSettings?: GlobalSettings;
   setGlobalSettings: (globalSettings: GlobalSettings) => void;
   updateGlobalSettings: (newSettings: { [key: string]: TextContent }) => void;
-  hasOnlineServices?: boolean;
   teamAnalyticsLink?: string;
 }
 
