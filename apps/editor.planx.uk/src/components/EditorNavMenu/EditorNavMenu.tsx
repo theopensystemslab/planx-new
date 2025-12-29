@@ -33,8 +33,8 @@ function EditorNavMenu() {
       state.flowAnalyticsLink,
       state.getUserRoleForCurrentTeam(),
       state.getTeam(),
-    ],
-  );
+      state.teamAnalyticsLink,
+    ]);
   const referenceCode = team?.settings?.referenceCode;
   const { url: lpsBaseUrl } = useLPS();
 
@@ -159,9 +159,9 @@ function EditorNavMenu() {
     {
       title: "Analytics",
       Icon: LeaderboardIcon,
-      route: `https://metabase.editor.planx.uk/public/dashboard/74337c9d-389d-4cb1-a65a-ad7e16428abf?date=&tab=641-key-figures&team_slug=${teamSlug}`,
+      route: teamAnalyticsLink ? teamAnalyticsLink : `#`,
       accessibleBy: ["platformAdmin", "teamEditor", "analyst"],
-      // disabled: !liveServices // TODO
+      disabled: !teamAnalyticsLink,
     },
   ];
 
