@@ -7,7 +7,7 @@ import { FlowSettings, GlobalSettings, TextContent } from "types";
 import type { StateCreator } from "zustand";
 
 import {
-  generateAnalyticsLink,
+  generateFlowAnalyticsLink,
   getAnalyticsDashboardId,
 } from "../analytics/utils";
 import { SharedStore } from "./shared";
@@ -18,6 +18,9 @@ export interface SettingsStore {
     flowSlug: string,
     teamSlug: string,
   ) => Promise<FlowInformation>;
+  getTeamFlowInformation: (
+    teamSlug: string,
+  ) => Promise<{ teamAnalyticsLink?: string }>;
   flowSettings?: FlowSettings;
   setFlowSettings: (flowSettings?: FlowSettings) => void;
   flowStatus?: FlowStatus;
@@ -25,6 +28,7 @@ export interface SettingsStore {
   globalSettings?: GlobalSettings;
   setGlobalSettings: (globalSettings: GlobalSettings) => void;
   updateGlobalSettings: (newSettings: { [key: string]: TextContent }) => void;
+  teamAnalyticsLink?: string;
 }
 
 export const settingsStore: StateCreator<
@@ -122,7 +126,7 @@ export const settingsStore: StateCreator<
 
     const analyticsLink =
       environment === "production" && dashboardId
-        ? generateAnalyticsLink({
+        ? generateFlowAnalyticsLink({
             flowId: id,
             dashboardId,
           })
@@ -144,6 +148,44 @@ export const settingsStore: StateCreator<
       summary,
       analyticsLink,
       isListedOnLPS,
+    };
+  },
+
+  getTeamFlowInformation: async (
+    teamSlug: string,
+  ): Promise<{ teamAnalyticsLink?: string }> => {
+    const {
+      data: { teams },
+    } = await client.query({
+      query: gql`
+        query GetTeamFlows($team_slug: String!) {
+          teams(where: { slug: { _eq: $team_slug } }) {
+            flows {
+              status
+            }
+          }
+        }
+      `,
+      variables: { team_slug: teamSlug },
+      fetchPolicy: "no-cache",
+    });
+
+    const flows = teams[0]?.flows || [];
+    const hasOnlineServices = flows.some(
+      (flow: { status: string }) => flow.status === "online",
+    );
+
+    const environment = import.meta.env.VITE_APP_ENV;
+
+    const teamAnalyticsLink =
+      environment === "production" && hasOnlineServices
+        ? `https://metabase.editor.planx.uk/public/dashboard/74337c9d-389d-4cb1-a65a-ad7e16428abf?date=&tab=641-key-figures&team_slug=${teamSlug}`
+        : undefined;
+
+    set({ teamAnalyticsLink });
+
+    return {
+      teamAnalyticsLink,
     };
   },
 

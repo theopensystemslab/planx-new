@@ -26,6 +26,7 @@ function EditorNavMenu() {
   const { navigate } = useNavigation();
   const { url } = useCurrentRoute();
   const isRouteLoading = useLoadingRoute();
+
   const [teamSlug, flowSlug, flowAnalyticsLink, role, team] = useStore(
     (state) => [
       state.teamSlug,
@@ -35,6 +36,11 @@ function EditorNavMenu() {
       state.getTeam(),
     ],
   );
+
+  useStore.getState().getTeamFlowInformation(teamSlug);
+
+  const [teamAnalyticsLink] = useStore((state) => [state.teamAnalyticsLink]);
+
   const referenceCode = team?.settings?.referenceCode;
   const { url: lpsBaseUrl } = useLPS();
 
@@ -155,6 +161,15 @@ function EditorNavMenu() {
       route: referenceCode ? `${lpsBaseUrl}/${teamSlug}` : `#`,
       accessibleBy: "*",
       disabled: !referenceCode,
+    },
+    {
+      title: teamAnalyticsLink
+        ? `Analytics (external link)`
+        : `Analytics page unavailable`,
+      Icon: LeaderboardIcon,
+      route: teamAnalyticsLink ? teamAnalyticsLink : `#`,
+      accessibleBy: ["platformAdmin", "teamEditor", "analyst"],
+      disabled: !teamAnalyticsLink,
     },
   ];
 
