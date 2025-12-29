@@ -7,7 +7,7 @@ import { FlowSettings, GlobalSettings, TextContent } from "types";
 import type { StateCreator } from "zustand";
 
 import {
-  generateAnalyticsLink,
+  generateFlowAnalyticsLink,
   getAnalyticsDashboardId,
 } from "../analytics/utils";
 import { SharedStore } from "./shared";
@@ -127,7 +127,7 @@ export const settingsStore: StateCreator<
 
     const analyticsLink =
       environment === "production" && dashboardId
-        ? generateAnalyticsLink({
+        ? generateFlowAnalyticsLink({
             flowId: id,
             dashboardId,
           })
