@@ -35,7 +35,7 @@
     "@turf/buffer": "^7.0.0",
     "@turf/helpers": "^7.0.0",
     "@types/react-transition-group": "^4.4.12",
-    "@vitejs/plugin-react-swc": "^3.9.0",
+    "@vitejs/plugin-react-swc": "^4.2.2",
     "array-move": "^4.0.0",
     "axios": "^1.13.1",
     "bowser": "^2.11.0",
