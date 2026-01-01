@@ -99,7 +99,7 @@
     "@babel/preset-react": "^7.28.5",
     "@babel/preset-typescript": "^7.28.5",
     "@storybook/addon-a11y": "^8.6.12",
-    "@storybook/addon-actions": "^8.6.12",
+    "@storybook/addon-actions": "^9.0.8",
     "@storybook/addon-essentials": "^8.6.12",
     "@storybook/addon-links": "^8.6.12",
     "@storybook/manager-api": "^8.6.12",
