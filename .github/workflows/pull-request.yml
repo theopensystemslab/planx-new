@@ -191,7 +191,7 @@ jobs:
       - uses: actions/checkout@v6
       - name: Cache localplanning build assets
         id: cache-localplanning-build-assets
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
           key: ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
@@ -227,7 +227,7 @@ jobs:
       - uses: actions/checkout@v6
       - name: Cache PlanX frontend build assets
         id: cache-planx-frontend-build-assets
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
           key: ${{ runner.os }}-${{ hashFiles(format('{0}/**', env.EDITOR_DIRECTORY)) }}
@@ -302,13 +302,13 @@ jobs:
         working-directory: infrastructure/application
       - name: Download PlanX frontend build assets
         id: cache-planx-frontend-build-assets
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
           key: ${{ runner.os }}-${{ hashFiles(format('{0}/**', '!{0}/build/**', env.EDITOR_DIRECTORY)) }}
       - name: Download LPS build assets
         id: cache-localplanning-build-assets
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
           key: ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
@@ -449,7 +449,7 @@ jobs:
       - uses: actions/checkout@v6
       - name: Download React build assets
         id: cache-react-build-assets
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
           key: ${{ runner.os }}-${{ hashFiles(format('{0}/**', '!{0}/build/**', env.EDITOR_DIRECTORY)) }}
@@ -465,7 +465,7 @@ jobs:
 
       - name: Download localplanning.services build assets
         id: cache-localplanning-build-assets-restore
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
           key: ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
