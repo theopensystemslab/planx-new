@@ -68,7 +68,7 @@
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
-    "react-error-boundary": "^3.1.4",
+    "react-error-boundary": "^6.0.1",
     "react-markdown": "^8.0.7",
     "react-navi": "^0.15.0",
     "react-navi-helmet-async": "^0.15.0",
