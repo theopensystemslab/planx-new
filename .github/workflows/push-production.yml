@@ -67,7 +67,7 @@ jobs:
           VITE_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
           VITE_APP_SHAREDB_URL: wss://sharedb.editor.planx.uk
       - name: Upload PlanX frontend build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: planx_frontend_build
           path: ./${{ env.EDITOR_DIRECTORY }}/build
@@ -114,7 +114,7 @@ jobs:
       - run: pnpm build --site https://localplanning.services --mode production
         working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
       - name: Upload LocalPlanning.services build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: localplanning_services_build
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
