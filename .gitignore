@@ -4,7 +4,7 @@ apps/editor.planx.uk/.eslintcache
 /minio-data
 .pnpm-debug.log
 .DS_Store
-logs/
+docker_compose_logs.txt
 
 # Secrets
 .env

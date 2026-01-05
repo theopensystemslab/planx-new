@@ -1,1 +1,1 @@
-DROP VIEW IF EXISTS analytics_planning_data_health;
+DROP VIEW IF EXISTS "public"."analytics_planning_data_health";

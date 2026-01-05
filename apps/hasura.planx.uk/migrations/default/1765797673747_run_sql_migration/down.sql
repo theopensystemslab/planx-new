@@ -1,8 +1,8 @@
-REVOKE SELECT ON public.analytics_planning_data_teams FROM metabase_read_only;
+REVOKE SELECT ON "public"."analytics_planning_data_teams" FROM metabase_read_only;
 
-DROP VIEW IF EXISTS analytics_planning_data_teams;
+DROP VIEW IF EXISTS "public"."analytics_planning_data_teams";
 
-CREATE OR REPLACE VIEW analytics_planning_data_health AS (
+CREATE OR REPLACE VIEW "public"."analytics_planning_data_health" AS (
 SELECT
     t.id AS team_id,
     t.name AS team_name,
@@ -19,4 +19,4 @@ FROM teams t
     JOIN team_integrations ti ON ti.team_id = t.id
 );
 
-GRANT SELECT ON public.analytics_planning_data_health TO metabase_read_only;
+GRANT SELECT ON "public"."analytics_planning_data_health" TO metabase_read_only;

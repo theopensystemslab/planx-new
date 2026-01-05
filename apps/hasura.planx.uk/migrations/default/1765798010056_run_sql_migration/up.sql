@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW analytics_planx_flows AS (
+CREATE OR REPLACE VIEW public.analytics_planx_flows AS (
 SELECT
     f.id AS flow_id,
     f.name AS flow_name,

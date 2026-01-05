@@ -5,8 +5,8 @@ set -o errexit -o errtrace
 cd "$(dirname $0)/.."
 
 trap 'echo "Error detected! Saving logs..."; \
-      docker compose logs > logs/docker_compose.txt; \
-      echo "Logs saved to logs/docker_compose.txt"; \
+      docker compose logs > docker_compose_logs.txt; \
+      echo "Logs saved to docker_compose_logs.txt"; \
       docker compose down --volumes --remove-orphans' ERR
 
 function setupContainers(){
