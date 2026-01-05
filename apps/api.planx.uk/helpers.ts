@@ -538,6 +538,8 @@ const getFormattedEnvironment = (): string => {
   return capitalize(environment);
 };
 
+const test = () => console.log("test");
+
 export {
   getFlowData,
   getMostRecentPublishedFlow,
