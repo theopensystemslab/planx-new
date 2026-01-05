@@ -4,7 +4,10 @@ set -o errexit -o errtrace
 # run from project root
 cd "$(dirname $0)/.."
 
-trap 'echo "Cleaning up…" ; docker compose logs api; docker compose down --volumes --remove-orphans' ERR
+trap 'echo "Error detected! Saving logs..."; \
+      docker compose logs > logs/docker_compose.txt; \
+      echo "Logs saved to logs/docker_compose.txt"; \
+      docker compose down --volumes --remove-orphans' ERR
 
 function setupContainers(){
   # Destroy all previous containers and data (just in case)
