@@ -14,10 +14,14 @@ export interface GetSubmissionEmails {
 export type SubmissionEmailMutation =
   SnakeCasedProperties<SubmissionEmailInput>;
 
-export interface SubmissionEmailValues {
+export interface SubmissionEmailFormValues {
   submissionIntegrations: SubmissionEmailInput[];
 }
 
 export interface UpdateTeamSubmissionIntegrationsVariables {
   emails: SubmissionEmailMutation[];
+}
+
+export interface DeleteSubmissionIntegrationsVariables {
+  emailIds: string[];
 }

@@ -1,3 +1,4 @@
+import { useMutation } from "@apollo/client";
 import Box from "@mui/material/Box";
 import RadioGroup from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
@@ -12,26 +13,51 @@ import InputRow from "ui/shared/InputRow";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import {
+  DELETE_TEAM_SUBMISSION_INTEGRATIONS,
   GET_TEAM_SUBMISSION_INTEGRATIONS,
   UPSERT_TEAM_SUBMISSION_INTEGRATIONS,
 } from "./queries";
 import { defaultValues, validationSchema } from "./schema";
 import {
+  DeleteSubmissionIntegrationsVariables,
   GetSubmissionEmails,
+  SubmissionEmailFormValues,
   SubmissionEmailInput,
   SubmissionEmailMutation,
-  SubmissionEmailValues,
   UpdateTeamSubmissionIntegrationsVariables,
 } from "./types";
 
 export const SubmissionEmails: React.FC = () => {
   const teamId = useStore((state) => state.teamId);
 
+  const [deleteSubmissionIntegrationsMutation] = useMutation(
+    DELETE_TEAM_SUBMISSION_INTEGRATIONS,
+  );
+
+  const handleDelete = async (
+    values: SubmissionEmailFormValues,
+    data: GetSubmissionEmails,
+  ) => {
+    const deletedItems = data.submissionIntegrations.filter(
+      (item) => !values.submissionIntegrations.some((v) => v.id === item.id),
+    );
+
+    const emailIds = deletedItems
+      .map((item) => item.id)
+      .filter((id): id is string => Boolean(id));
+
+    try {
+      await deleteSubmissionIntegrationsMutation({ variables: { emailIds } });
+    } catch (error) {
+      console.error("Delete error:", error);
+    }
+  };
+
   return (
     <SettingsFormContainer<
       GetSubmissionEmails,
       UpdateTeamSubmissionIntegrationsVariables,
-      SubmissionEmailValues
+      SubmissionEmailFormValues
     >
       query={GET_TEAM_SUBMISSION_INTEGRATIONS}
       defaultValues={defaultValues}
@@ -61,45 +87,50 @@ export const SubmissionEmails: React.FC = () => {
           </Typography>
         </>
       }
+      onDelete={handleDelete}
     >
-      {({ formik }) => (
-        <>
-          <Typography variant="h6" style={{ marginBottom: "1rem" }}>
-            Submission Emails
-          </Typography>
-          <RadioGroup
-            value={getDefaultRadioIndex(formik.values.submissionIntegrations)}
-            onChange={(e) => {
-              const selectedIndex = parseInt(
-                (e.target as HTMLInputElement).value,
-                10,
-              );
-              formik.setFieldValue(
-                "submissionIntegrations",
-                formik.values.submissionIntegrations.map((emailObj, index) => ({
-                  ...emailObj,
-                  defaultEmail: index === selectedIndex,
-                })),
-              );
-            }}
-          >
-            <ListManager
-              values={formik.values.submissionIntegrations}
-              errors={formik.errors.submissionIntegrations}
-              onChange={(newValues) => {
-                formik.setFieldValue("submissionIntegrations", newValues);
+      {({ formik }) => {
+        return (
+          <>
+            <Typography variant="h6" style={{ marginBottom: "1rem" }}>
+              Submission Emails
+            </Typography>
+            <RadioGroup
+              value={getDefaultRadioIndex(formik.values.submissionIntegrations)}
+              onChange={(e) => {
+                const selectedIndex = parseInt(
+                  (e.target as HTMLInputElement).value,
+                  10,
+                );
+                formik.setFieldValue(
+                  "submissionIntegrations",
+                  formik.values.submissionIntegrations.map(
+                    (emailObj, index) => ({
+                      ...emailObj,
+                      defaultEmail: index === selectedIndex,
+                    }),
+                  ),
+                );
               }}
-              newValue={() => ({
-                submissionEmail: "",
-                defaultEmail: false,
-                teamId: teamId,
-              })}
-              Editor={EmailsEditor}
-              noDragAndDrop={true}
-            />
-          </RadioGroup>
-        </>
-      )}
+            >
+              <ListManager<SubmissionEmailInput, {}>
+                values={formik.values.submissionIntegrations}
+                errors={formik.errors.submissionIntegrations}
+                onChange={(newValues) => {
+                  formik.setFieldValue("submissionIntegrations", newValues);
+                }}
+                newValue={() => ({
+                  submissionEmail: "",
+                  defaultEmail: false,
+                  teamId: teamId,
+                })}
+                Editor={EmailsEditor}
+                noDragAndDrop={true}
+              />
+            </RadioGroup>
+          </>
+        );
+      }}
     </SettingsFormContainer>
   );
 };
@@ -121,7 +152,7 @@ const EmailsEditor: React.FC<EditorProps<SubmissionEmailInput>> = (props) => {
           placeholder="Email"
           format="bold"
           value={props.value.submissionEmail}
-          onChange={(ev) => {
+          onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
             props.onChange({
               ...props.value,
               submissionEmail: ev.target.value,

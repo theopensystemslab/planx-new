@@ -15,7 +15,7 @@ import { arrayMoveImmutable } from "array-move";
 import { FormikErrors } from "formik";
 import { nanoid } from "nanoid";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   DragDropContext,
   Draggable,
@@ -62,6 +62,7 @@ export interface Props<T, EditorExtraProps = {}> {
    * @default false
    */
   collapsible?: boolean;
+  handleDelete?: (item: T) => void;
 }
 
 const Item = styled(Box)(() => ({
@@ -158,9 +159,13 @@ export default function ListManager<T, EditorExtraProps>(
     isFieldDisplayed = () => true,
     collapsible = false,
     itemName,
+    handleDelete,
   } = props;
   // Initialize a random ID when the component mounts
   const randomId = useRef(nanoid());
+
+  const vals = props.values;
+  console.log({ vals });
 
   // Generate labels based on itemName
   const buildLabel = (action: string) =>
@@ -343,7 +348,11 @@ export default function ListManager<T, EditorExtraProps>(
                       <Tooltip title={deleteLabel} placement="bottom">
                         <IconButton
                           onClick={() => {
-                            props.onChange(removeAt(index, props.values));
+                            console.log(
+                              "Delete button clicked for index:",
+                              index,
+                            );
+                            props.onChange(removeAt(index, props.values)); // Only update Formik values
                             setItemKeys((prev) =>
                               prev.filter((_, i) => i !== index),
                             );
@@ -547,12 +556,19 @@ export default function ListManager<T, EditorExtraProps>(
                                   >
                                     <IconButton
                                       onClick={() => {
+                                        console.log(
+                                          "Delete button clicked for index:",
+                                          index,
+                                        );
                                         props.onChange(
                                           removeAt(index, props.values),
                                         );
                                         setItemKeys((prev) =>
                                           prev.filter((_, i) => i !== index),
                                         );
+                                        // if (handleDelete) {
+                                        //   handleDelete(item);
+                                        // }
                                       }}
                                       aria-label={deleteLabel}
                                       size="large"

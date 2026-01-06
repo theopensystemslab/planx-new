@@ -36,6 +36,8 @@ interface SettingsFormContainerProps<
     formikHelpers: FormikHelpers<TFormValues>,
     values: TFormValues,
   ) => void;
+  /** Callback to handle deletions, passed from the parent */
+  onDelete?: (values: TFormValues, data: TData) => Promise<void>;
   successMessage?: string;
   preview?: (formik: FormikProps<TFormValues>) => React.ReactNode;
   children: (props: {
@@ -73,6 +75,7 @@ const SettingsFormContainer = <
   legend,
   description,
   onSuccess,
+  onDelete,
   successMessage = "Settings updated successfully",
   children,
   preview,
@@ -138,6 +141,10 @@ const SettingsFormContainer = <
       const variables = await getMutationVariables(values, data);
       await updateSettings({ variables });
 
+      if (onDelete) {
+        await onDelete(values, data);
+      }
+
       onSuccess && onSuccess(data, formikHelpers, values);
       formikHelpers.resetForm({ values });
     } catch (error) {
@@ -172,7 +179,11 @@ const SettingsFormContainer = <
                     paddingTop: 0.25,
                   }}
                 >
-                  {children({ formik, data, loading })}
+                  {children({
+                    formik,
+                    data,
+                    loading,
+                  })}
                 </Box>
                 {preview && <Box mt={2}>{preview(formik)}</Box>}
                 {showActionButtons && (
