@@ -55,7 +55,7 @@ const GroupedChecklistComponent: React.FC<PublicProps<GroupedChecklist>> = (
     }),
   });
 
-  const { setCheckedFieldValue } = useSortedOptions(
+  const { setCheckedFieldValue, layout } = useSortedOptions(
     options,
     groupedOptions,
     formik,
@@ -124,7 +124,7 @@ const GroupedChecklistComponent: React.FC<PublicProps<GroupedChecklist>> = (
                 previouslySubmittedData={previouslySubmittedData}
                 changeCheckbox={toggleCheckbox}
                 formik={formik}
-                hasImages={hasImages}
+                layout={layout}
               />
             )}
           </Box>

@@ -124,7 +124,7 @@ const FlatChecklistComponent: React.FC<PublicProps<FlatChecklist>> = (
                 exclusiveOrOption={exclusiveOrOption}
                 changeCheckbox={toggleCheckbox}
                 formik={formik}
-                hasImages={hasImages}
+                layout={layout}
               />
             )}
           </Grid>

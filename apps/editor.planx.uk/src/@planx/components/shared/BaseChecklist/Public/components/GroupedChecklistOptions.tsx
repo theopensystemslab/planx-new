@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { Option } from "@planx/components/Option/model";
 import { Group } from "@planx/components/shared/BaseChecklist/model";
+import { ChecklistLayout } from "@planx/components/shared/BaseChecklist/model";
 import ImageButton from "@planx/components/shared/Buttons/ImageButton";
 import { FormikProps } from "formik";
 import { Store } from "pages/FlowEditor/lib/store";
@@ -17,7 +18,7 @@ interface GroupedChecklistOptionsProps {
   previouslySubmittedData: Store.UserData | undefined;
   changeCheckbox: (id: string) => () => void;
   formik: FormikProps<{ checked: Array<string> }>;
-  hasImages?: boolean;
+  layout: ChecklistLayout;
 }
 
 export const GroupedChecklistOptions = ({
@@ -25,8 +26,9 @@ export const GroupedChecklistOptions = ({
   previouslySubmittedData,
   changeCheckbox,
   formik,
-  hasImages = false,
+  layout,
 }: GroupedChecklistOptionsProps) => {
+  const hasImages = layout === ChecklistLayout.GroupedImages;
   const { expandedGroups, toggleGroup } = useExpandedGroups(
     groupedOptions,
     previouslySubmittedData,
