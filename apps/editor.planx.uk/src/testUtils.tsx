@@ -39,6 +39,10 @@ const testQueryClient = new QueryClient({
 const testApolloClient = new ApolloClient({
   link: new HttpLink({
     uri: "http://mock-api/graphql",
+    fetch: (uri, options) => {
+      const { signal, ...fetchOptions } = options || {};
+      return fetch(uri, fetchOptions);
+    },
   }),
   cache: new InMemoryCache(),
   defaultOptions: {
