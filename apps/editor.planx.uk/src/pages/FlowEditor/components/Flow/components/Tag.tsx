@@ -11,10 +11,6 @@ export const TAG_DISPLAY_VALUES: Record<
   NodeTag,
   { color: keyof Palette["nodeTag"]; displayName: string; editableBy?: Role[] }
 > = {
-  customisation: {
-    color: "information",
-    displayName: "Customisation",
-  },
   toReview: {
     color: "nonBlocking",
     displayName: "To review",
