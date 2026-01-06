@@ -8,7 +8,12 @@ import FlowStatus from "../..";
 import type { GetFlowStatus } from "../../types";
 
 export const setupFlowStatusScreen = async (data: GetFlowStatus) => {
-  server.use(graphql.query("GetFlowStatus", () => HttpResponse.json({ data })));
+  server.use(
+    graphql.query("GetFlowStatus", async () => {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      return HttpResponse.json({ data });
+    }),
+  );
 
   const { user } = await setup(<FlowStatus />);
 

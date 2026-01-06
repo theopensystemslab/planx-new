@@ -26,7 +26,11 @@ import type {
   UpdateFlowStatus,
 } from "./types";
 
-const FlowStatus: React.FC = () => {
+interface FlowStatusProps {
+  preloadedData?: GetFlowStatus;
+}
+
+const FlowStatus: React.FC<FlowStatusProps> = ({ preloadedData }) => {
   const [flowId, flowSlug, teamDomain] = useStore((state) => [
     state.id,
     state.flowSlug,
@@ -54,6 +58,7 @@ const FlowStatus: React.FC = () => {
     >
       query={GET_FLOW_STATUS}
       mutation={UPDATE_FLOW_STATUS}
+      preloadedData={preloadedData}
       validationSchema={validationSchema}
       legend={"Flow status"}
       description={<Description />}
