@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
+import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { NextSteps, Step } from "@planx/components/NextSteps/model";
 import {
@@ -110,6 +111,10 @@ const NextStepsComponent: React.FC<Props> = (props) => {
       />
       <ModalSection>
         <ModalSectionContent title="Next steps" Icon={ICONS[TYPES.NextSteps]}>
+          <Typography variant="body2" sx={{ mb: 2 }}>
+            If you want users to continue to the next step in the service from a
+            given step, leave that URL section empty.
+          </Typography>
           <Box mb="1rem">
             <InputRow>
               <Input
