@@ -31,12 +31,12 @@ vi.mock("pages/FlowEditor/lib/store", async () => ({
       getUserRoleForCurrentTeam: mockGetUserRoleForCurrentTeam,
       getTeam: mockGetTeam,
       setIsNavMenuVisible: mockSetIsNavMenuVisible,
-      getState: () => ({
-        teamSlug: mockTeamName,
-        teamAnalyticsLink: mockAnalyticsLink,
-      }),
     }),
   ),
+  getState: () => ({
+    teamSlug: mockTeamName,
+    teamAnalyticsLink: mockAnalyticsLink,
+  }),
 }));
 
 const mockCurrentRoute = (path: string) => {
