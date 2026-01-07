@@ -11,6 +11,7 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
+import { EmailsTable } from "./EmailsTable";
 import {
   GET_TEAM_SUBMISSION_INTEGRATIONS,
   UPSERT_TEAM_SUBMISSION_INTEGRATIONS,
@@ -61,59 +62,22 @@ export const SubmissionEmails: React.FC = () => {
           </Typography>
         </>
       }
+      showActionButtons={false}
     >
       {({ formik }) => (
         <>
           <Typography variant="h6" style={{ marginBottom: "1rem" }}>
             Submission Emails
           </Typography>
-          <RadioGroup
-            value={getDefaultRadioIndex(formik.values.submissionIntegrations)}
-            onChange={(e) => {
-              const selectedIndex = parseInt(
-                (e.target as HTMLInputElement).value,
-                10,
-              );
-              formik.setFieldValue(
-                "submissionIntegrations",
-                formik.values.submissionIntegrations.map((emailObj, index) => ({
-                  ...emailObj,
-                  defaultEmail: index === selectedIndex,
-                })),
-              );
-            }}
-          >
-            <ListManager
-              values={formik.values.submissionIntegrations}
-              errors={formik.errors.submissionIntegrations}
-              onChange={(newValues) => {
-                formik.setFieldValue("submissionIntegrations", newValues);
-              }}
-              newValue={() => ({
-                submissionEmail: "",
-                defaultEmail: false,
-                teamId: teamId,
-              })}
-              Editor={EmailsEditor}
-              noDragAndDrop={true}
-            />
-          </RadioGroup>
+          <EmailsTable />
         </>
       )}
     </SettingsFormContainer>
   );
 };
 
-const getDefaultRadioIndex = (
-  submissionIntegrations: SubmissionEmailInput[],
-) => {
-  const defaultIndex = submissionIntegrations.findIndex(
-    (emailObj) => emailObj.defaultEmail,
-  );
-  return defaultIndex !== -1 ? defaultIndex : 0;
-};
-
-const EmailsEditor: React.FC<EditorProps<SubmissionEmailInput>> = (props) => {
+{
+  /* const EmailsEditor: React.FC<EditorProps<SubmissionEmailInput>> = (props) => {
   return (
     <Box width="100%" mb={2}>
       <InputRow>
@@ -144,6 +108,7 @@ const EmailsEditor: React.FC<EditorProps<SubmissionEmailInput>> = (props) => {
       </InputRow>
     </Box>
   );
-};
+}; */
+}
 
 export default SubmissionEmails;
