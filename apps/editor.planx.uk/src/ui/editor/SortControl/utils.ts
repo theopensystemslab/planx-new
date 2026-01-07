@@ -1,5 +1,4 @@
 import { slugify } from "utils";
-import { RouteParams } from "utils/routeUtils/utils";
 import { z } from "zod";
 
 import { SortableFields } from "./SortControl";
@@ -10,7 +9,7 @@ const routeQuerySchema = z.object({
 });
 
 export const getSortParams = <T extends object>(
-  routeQueryParams: RouteParams,
+  routeQueryParams: Record<string, unknown>,
   sortOptions: SortableFields<T>[],
 ): {
   sortObject: SortableFields<T>;
