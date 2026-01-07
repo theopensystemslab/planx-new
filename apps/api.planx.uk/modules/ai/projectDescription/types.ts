@@ -24,6 +24,7 @@ export type Controller = ValidatedRequestHandler<
   Success | Failure
 >;
 
+// TODO: replace enum as per Matt Pocock (https://www.youtube.com/watch?v=jjMbPt_H3RQ)
 export enum GatewayStatus {
   ENHANCED = "ENHANCED",
   NO_CHANGE = "NO_CHANGE",
