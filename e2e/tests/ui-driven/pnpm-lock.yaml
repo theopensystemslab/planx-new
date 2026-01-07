@@ -12,8 +12,8 @@ importers:
   .:
     dependencies:
       '@opensystemslab/planx-core':
-        specifier: git+https://github.com/theopensystemslab/planx-core#ddb58b0
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ddb58b0(@types/react@19.2.6)
+        specifier: git+https://github.com/theopensystemslab/planx-core#040102d
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/040102d(@types/react@19.2.6)
       axios:
         specifier: ^1.12.2
         version: 1.13.2
@@ -178,17 +178,17 @@ packages:
     resolution: {integrity: sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  '@formatjs/ecma402-abstract@2.3.6':
-    resolution: {integrity: sha512-HJnTFeRM2kVFVr5gr5kH1XP6K0JcJtE7Lzvtr3FS/so5f1kpsqqqxy5JF+FRaO6H2qmcMfAUIox7AJteieRtVw==}
+  '@formatjs/ecma402-abstract@3.0.8':
+    resolution: {integrity: sha512-NRiqvxAvhbARZRFSRFPjN0y8txxmVutv2vMYvW2HSdCVf58w9l4osLj6Ujif643vImwZBcbKqhiKE0IOhY+DvA==}
 
-  '@formatjs/fast-memoize@2.2.7':
-    resolution: {integrity: sha512-Yabmi9nSvyOMrlSeGGWDiH7rf3a7sIwplbvo/dlz9WCIjzIQAfy1RMf4S0X3yG724n5Ghu2GmEl5NJIV6O9sZQ==}
+  '@formatjs/fast-memoize@3.0.3':
+    resolution: {integrity: sha512-CArYtQKGLAOruCMeq5/RxCg6vUXFx3OuKBdTm30Wn/+gCefehmZ8Y2xSMxMrO2iel7hRyE3HKfV56t3vAU6D4Q==}
 
-  '@formatjs/intl-listformat@7.7.13':
-    resolution: {integrity: sha512-e1jk2w1H6VLy4kKoYyfBjvkw6IXE48AczF+7FIzWr5zB7VjdWQyrvs858t2WeQzHD8dRIxvIyX+qmeGql4jvng==}
+  '@formatjs/intl-listformat@8.1.2':
+    resolution: {integrity: sha512-c0Yu1yFFQbSgjGtUav3QlXYkVXN/Y2SVO2zFgL31EmPCZLhHPibRP0tzUmMKqMtCWPphdlQaHVzYAgN9Mh1JqA==}
 
-  '@formatjs/intl-localematcher@0.6.2':
-    resolution: {integrity: sha512-XOMO2Hupl0wdd172Y06h6kLpBz6Dv+J4okPLl4LPtzbr8f66WbIoy4ev98EBuZ6ZK4h5ydTN6XneT4QVpD7cdA==}
+  '@formatjs/intl-localematcher@0.7.5':
+    resolution: {integrity: sha512-7/nd90cn5CT7SVF71/ybUKAcnvBlr9nZlJJp8O8xIZHXFgYOC4SXExZlSdgHv2l6utjw1byidL06QzChvQMHwA==}
 
   '@graphql-typed-document-node/core@3.2.0':
     resolution: {integrity: sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==}
@@ -313,8 +313,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ddb58b0':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ddb58b0}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/040102d':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/040102d}
     version: 1.0.0
 
   '@playwright/test@1.56.1':
@@ -717,8 +717,8 @@ packages:
   fast-uri@3.1.0:
     resolution: {integrity: sha512-iPeeDKJSWf4IEOasVVrknXpaBV0IApz/gp7S2bb7Z4Lljbl2MGJRqInZiUrQwV16cpzw/D3S5j5Julj/gT52AA==}
 
-  fast-xml-parser@5.3.2:
-    resolution: {integrity: sha512-n8v8b6p4Z1sMgqRmqLJm3awW4NX7NkaKPfb3uJIBTSH7Pdvufi3PQ3/lJLQrvxcMYl7JI2jnDO90siPEpD8JBA==}
+  fast-xml-parser@5.3.3:
+    resolution: {integrity: sha512-2O3dkPAAC6JavuMm8+4+pgTk+5hoAs+CjZ+sWcQLkX9+/tHRuTkQh/Oaifr8qDmZ8iEHb771Ea6G8CdwkrgvYA==}
     hasBin: true
 
   fastq@1.19.1:
@@ -1432,6 +1432,7 @@ packages:
   whatwg-encoding@3.1.1:
     resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
     engines: {node: '>=18'}
+    deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
 
   whatwg-fetch@3.6.20:
     resolution: {integrity: sha512-EqhiFU6daOA8kpjOWTL0olhVOF3i7OrFzSYiGsEMB8GcXS+RrzauAERX65xMeNWVqxA6HXH2m69Z9LaKKdisfg==}
@@ -1664,25 +1665,26 @@ snapshots:
 
   '@eslint/js@8.57.1': {}
 
-  '@formatjs/ecma402-abstract@2.3.6':
+  '@formatjs/ecma402-abstract@3.0.8':
     dependencies:
-      '@formatjs/fast-memoize': 2.2.7
-      '@formatjs/intl-localematcher': 0.6.2
+      '@formatjs/fast-memoize': 3.0.3
+      '@formatjs/intl-localematcher': 0.7.5
       decimal.js: 10.6.0
       tslib: 2.8.1
 
-  '@formatjs/fast-memoize@2.2.7':
+  '@formatjs/fast-memoize@3.0.3':
     dependencies:
       tslib: 2.8.1
 
-  '@formatjs/intl-listformat@7.7.13':
+  '@formatjs/intl-listformat@8.1.2':
     dependencies:
-      '@formatjs/ecma402-abstract': 2.3.6
-      '@formatjs/intl-localematcher': 0.6.2
+      '@formatjs/ecma402-abstract': 3.0.8
+      '@formatjs/intl-localematcher': 0.7.5
       tslib: 2.8.1
 
-  '@formatjs/intl-localematcher@0.6.2':
+  '@formatjs/intl-localematcher@0.7.5':
     dependencies:
+      '@formatjs/fast-memoize': 3.0.3
       tslib: 2.8.1
 
   '@graphql-typed-document-node/core@3.2.0(graphql@16.12.0)':
@@ -1805,18 +1807,18 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ddb58b0(@types/react@19.2.6)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/040102d(@types/react@19.2.6)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.6)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.6)(react@18.3.1))(@types/react@19.2.6)(react@18.3.1)
-      '@formatjs/intl-listformat': 7.7.13
+      '@formatjs/intl-listformat': 8.1.2
       '@mui/material': 5.18.0(@emotion/react@11.14.0(@types/react@19.2.6)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.6)(react@18.3.1))(@types/react@19.2.6)(react@18.3.1))(@types/react@19.2.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       ajv: 8.17.1
       ajv-formats: 2.1.1(ajv@8.17.1)
       cheerio: 1.1.2
       copyfiles: 2.4.1
       eslint: 8.57.1
-      fast-xml-parser: 5.3.2
+      fast-xml-parser: 5.3.3
       graphql: 16.12.0
       graphql-request: 6.1.0(graphql@16.12.0)
       json-schema-to-typescript: 15.0.4
@@ -2279,7 +2281,7 @@ snapshots:
 
   fast-uri@3.1.0: {}
 
-  fast-xml-parser@5.3.2:
+  fast-xml-parser@5.3.3:
     dependencies:
       strnum: 2.1.1
 

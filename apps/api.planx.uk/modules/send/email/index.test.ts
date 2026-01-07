@@ -1,16 +1,7 @@
 import supertest from "supertest";
 import type * as planxCore from "@opensystemslab/planx-core";
-import type { ExportClient } from "@opensystemslab/planx-core";
 import { queryMock } from "../../../tests/graphqlQueryMock.js";
 import app from "../../../server.js";
-
-const mockGenerateCSVData = vi.fn().mockResolvedValue([
-  {
-    question: "Is this a test?",
-    responses: [{ value: "Yes" }],
-    metadata: {},
-  },
-]);
 
 vi.mock("@opensystemslab/planx-core", async () => {
   const actualCore = await vi.importActual<typeof planxCore>(
@@ -19,17 +10,10 @@ vi.mock("@opensystemslab/planx-core", async () => {
   const mockPassport = class MockPassport {
     files = vi.fn().mockImplementation(() => []);
   };
-  const mockCoreDomainClient = class extends actualCore.CoreDomainClient {
-    constructor() {
-      super();
-      this.export.csvData = () => mockGenerateCSVData();
-    }
-  };
 
   return {
     ...actualCore,
     Passport: mockPassport,
-    CoreDomainClient: mockCoreDomainClient,
   };
 });
 
