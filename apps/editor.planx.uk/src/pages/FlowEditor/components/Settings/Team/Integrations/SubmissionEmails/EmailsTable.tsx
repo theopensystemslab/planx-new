@@ -76,12 +76,22 @@ export const EmailsTable = () => {
   const addEmail = () => {
     setActionType("add");
     setShowModal(true);
-    setInitialValues(undefined);
+
+    // We want defaultEmail to be true for the very first email
+    if (!data || data.submissionIntegrations.length === 0) {
+      setInitialValues({ defaultEmail: true } as SubmissionEmailInput);
+    } else {
+      setInitialValues(undefined);
+    }
   };
 
   const handleAddEmail = () => {
     setActionType("add");
-    setInitialValues(undefined);
+    if (!data || data.submissionIntegrations.length === 0) {
+      setInitialValues({ defaultEmail: true } as SubmissionEmailInput);
+    } else {
+      setInitialValues(undefined);
+    }
     setShowModal(true);
   };
 
