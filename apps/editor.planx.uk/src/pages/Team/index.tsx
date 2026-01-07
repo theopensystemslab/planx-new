@@ -136,6 +136,14 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
         result = result.filter(
           (flow) => flow.publishedFlows[0]?.hasSendComponent,
         );
+      } else if (searchParams["flow-type"] === "fee carrying") {
+        result = result.filter(
+          (flow) => flow.publishedFlows[0]?.hasVisiblePayComponent,
+        );
+      } else if (searchParams["flow-type"] === "service charge enabled") {
+        result = result.filter(
+          (flow) => flow.publishedFlows[0]?.hasEnabledServiceCharge,
+        );
       }
     }
 
@@ -144,6 +152,14 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
         result = result.filter((flow) => Boolean(flow.templatedFrom));
       } else if (searchParams.templates === "source template") {
         result = result.filter((flow) => Boolean(flow.isTemplate));
+      }
+    }
+
+    if (searchParams["lps-listing"]) {
+      if (searchParams["lps-listing"] === "listed") {
+        result = result.filter((flow) => flow.isListedOnLPS === true);
+      } else if (searchParams["lps-listing"] === "not listed") {
+        result = result.filter((flow) => flow.isListedOnLPS === false);
       }
     }
 
@@ -276,6 +292,7 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
                           "online-status": undefined,
                           "flow-type": undefined,
                           templates: undefined,
+                          "lps-listing": undefined,
                           search: undefined,
                         }),
                         replace: true,

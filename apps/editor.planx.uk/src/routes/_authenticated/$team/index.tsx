@@ -15,8 +15,11 @@ export const teamSearchSchema = z.object({
   sortDirection: fallback(z.enum(["asc", "desc"]), "desc").default("desc"),
   search: z.string().optional(),
   "online-status": z.enum(["online", "offline"]).optional(),
-  "flow-type": z.enum(["submission"]).optional(),
+  "flow-type": z
+    .enum(["submission", "fee carrying", "service charge enabled"])
+    .optional(),
   templates: z.enum(["templated", "source template"]).optional(),
+  "lps-listing": z.enum(["listed", "not listed"]).optional(),
 });
 
 export type TeamSearch = z.infer<typeof teamSearchSchema>;

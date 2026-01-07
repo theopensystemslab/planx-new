@@ -32,6 +32,8 @@ const checkFlowServiceType: FilterOptions<FlowSummary>["validationFn"] = (
   if (value === "submission") return flow.publishedFlows[0]?.hasSendComponent;
   if (value === "fee carrying")
     return flow.publishedFlows[0]?.hasVisiblePayComponent;
+  if (value === "service charge enabled")
+    return flow.publishedFlows[0]?.hasEnabledServiceCharge;
   return false;
 };
 
@@ -61,9 +63,9 @@ const baseFilterOptions: FilterOptions<FlowSummary>[] = [
     validationFn: checkFlowStatus,
   },
   {
-    displayName: "Flow Type",
+    displayName: "Type",
     optionKey: `publishedFlows.0.hasSendComponent`,
-    optionValue: ["submission", "fee carrying"],
+    optionValue: ["submission", "fee carrying", "service charge enabled"],
     validationFn: checkFlowServiceType,
   },
   {
