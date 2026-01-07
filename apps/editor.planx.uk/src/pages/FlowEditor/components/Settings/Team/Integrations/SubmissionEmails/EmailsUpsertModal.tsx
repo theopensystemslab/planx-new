@@ -45,6 +45,7 @@ export const EmailsUpsertModal = ({
       teamId: teamId,
     },
     validationSchema: upsertEmailSchema,
+    validateOnMount: true,
     onSubmit: async (values) => {
       const variables = {
         emails: [
@@ -87,7 +88,11 @@ export const EmailsUpsertModal = ({
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setShowModal(false)}>Cancel</Button>
-          <Button type="submit" disabled={!formik.isValid}>
+          <Button
+            variant="contained"
+            type="submit"
+            disabled={!formik.isValid || !formik.dirty}
+          >
             {actionType === "add" ? "Add" : "Update"}
           </Button>
         </DialogActions>
