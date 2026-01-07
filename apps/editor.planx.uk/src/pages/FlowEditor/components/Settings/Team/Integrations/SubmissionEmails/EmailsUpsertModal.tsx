@@ -84,9 +84,6 @@ export const EmailsUpsertModal = ({
           <InputLabel label="Email">
             <Input {...formik.getFieldProps("submissionEmail")} />
           </InputLabel>
-          <InputLabel label="Default">
-            <Input {...formik.getFieldProps("defaultEmail")} type="checkbox" />
-          </InputLabel>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setShowModal(false)}>Cancel</Button>

@@ -2,6 +2,8 @@ import { useMutation, useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -71,6 +73,12 @@ export const EmailsTable = () => {
 
   const [upsertEmail] = useMutation(UPSERT_TEAM_SUBMISSION_INTEGRATIONS);
   const [deleteEmail] = useMutation(DELETE_TEAM_SUBMISSION_INTEGRATIONS);
+  const [selectedDefault, setSelectedDefault] = useState<string | null>(null);
+
+  // Track the current default email from the database
+  const currentDefault = data?.submissionIntegrations.find(
+    (email: SubmissionEmailInput) => email.defaultEmail,
+  )?.id;
 
   const [showModal, setShowModal] = useState(false);
   const [actionType, setActionType] = useState<"add" | "edit" | "remove">(
@@ -96,6 +104,38 @@ export const EmailsTable = () => {
     setActionType("edit");
     setInitialValues(email);
     setShowModal(true);
+  };
+
+  // Update the selected default email when data loads
+  React.useEffect(() => {
+    if (currentDefault) {
+      setSelectedDefault(currentDefault);
+    }
+  }, [currentDefault]);
+
+  const handleDefaultChange = (emailId: string) => {
+    setSelectedDefault(emailId);
+  };
+
+  const handleUpdateDefault = async () => {
+    if (!selectedDefault) return;
+
+    const updatedEmails: SubmissionEmailMutation[] =
+      data.submissionIntegrations.map((email: SubmissionEmailInput) => ({
+        id: email.id,
+        submission_email: email.submissionEmail,
+        default_email: email.id === selectedDefault,
+        team_id: email.teamId,
+      }));
+
+    await upsertEmail({
+      variables: { emails: updatedEmails },
+      optimisticResponse: {
+        upsert_submission_integrations: {
+          returning: updatedEmails,
+        },
+      },
+    });
   };
 
   const handleRemoveEmail = async (email: SubmissionEmailInput) => {
@@ -184,7 +224,13 @@ export const EmailsTable = () => {
             {data.submissionIntegrations.map((email: SubmissionEmailInput) => (
               <StyledTableRow key={email.id}>
                 <TableCell>{email.submissionEmail}</TableCell>
-                <TableCell>{email.defaultEmail ? "Yes" : "No"}</TableCell>
+                <TableCell>
+                  <Radio
+                    checked={selectedDefault === email.id}
+                    onChange={() => handleDefaultChange(email.id!)}
+                    size="small"
+                  />
+                </TableCell>
                 <TableCell>
                   <EditEmailButton onClick={() => handleEditEmail(email)}>
                     Edit
@@ -205,6 +251,16 @@ export const EmailsTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Box mt={2}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleUpdateDefault}
+          disabled={selectedDefault === currentDefault}
+        >
+          Update default email
+        </Button>
+      </Box>
       {showModal && (
         <EmailsUpsertModal
           showModal={showModal}
