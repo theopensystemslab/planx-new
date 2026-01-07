@@ -22,8 +22,8 @@ import {
   update,
 } from "@planx/graph";
 import { OT } from "@planx/graph/types";
+import type { RegisteredRouter } from "@tanstack/react-router";
 import { client } from "lib/graphql";
-import navigation from "lib/navigation";
 import debounce from "lodash/debounce";
 import { type } from "ot-json0";
 import {
@@ -76,7 +76,7 @@ export interface EditorUIStore {
   toggleShowHelpText: () => void;
   previousURL?: string;
   currentURL: string;
-  initURLTracking: () => void;
+  initURLTracking: (router: RegisteredRouter) => () => void;
   openContextMenu: (
     position: ContextMenuPosition,
     relationships: Relationships,
@@ -147,16 +147,19 @@ export const editorUIStore: StateCreator<
 
     currentURL: window.location.pathname,
 
-    initURLTracking: () => {
-      navigation.subscribe((route) => {
+    initURLTracking: (router: RegisteredRouter) => {
+      const unsubscribe = router.subscribe("onResolved", () => {
         const { currentURL } = get();
-        if (route.url.pathname === currentURL) return;
+        const newURL = window.location.pathname;
+        if (newURL === currentURL) return;
 
         set((state) => ({
           previousURL: state.currentURL,
-          currentURL: route.url.pathname,
+          currentURL: newURL,
         }));
       });
+
+      return unsubscribe;
     },
 
     contextMenuPosition: null,
@@ -209,6 +212,7 @@ export type PublishedFlowSummary = {
   publishedAt: string;
   hasSendComponent: boolean;
   hasVisiblePayComponent: boolean;
+  hasEnabledServiceCharge: boolean;
 };
 
 export type FlowSummaryOperations = {
