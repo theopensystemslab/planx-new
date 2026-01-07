@@ -1,29 +1,19 @@
 import { MutationFunction } from "@apollo/client/react/types/types";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import Typography from "@mui/material/Typography";
-import { FormikHelpers, useFormik } from "formik";
+import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useState } from "react";
-import InputGroup from "ui/editor/InputGroup";
+import React from "react";
 import InputLabel from "ui/editor/InputLabel";
-import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 
-import {
-  AddNewEditorFormValues,
-  EditorModalProps,
-} from "../../../../Team/types";
 import { upsertEmailSchema } from "./formSchema";
-import {
-  GET_TEAM_SUBMISSION_INTEGRATIONS,
-  UPSERT_TEAM_SUBMISSION_INTEGRATIONS,
-} from "./queries";
+import { GET_TEAM_SUBMISSION_INTEGRATIONS } from "./queries";
+import { EditorModalProps } from "./types";
 import { SubmissionEmailInput } from "./types";
 
 export const DEMO_TEAM_ID = 32;

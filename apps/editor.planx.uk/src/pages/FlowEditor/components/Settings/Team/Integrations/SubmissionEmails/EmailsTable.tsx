@@ -1,9 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
 import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -11,21 +9,11 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { Role } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { AddButton } from "ui/editor/AddButton";
-import Permission from "ui/editor/Permission";
 
-import { RemoveUserModal } from "../../../../Team/components/RemoveUserModal";
-import { UserUpsertModal } from "../../../../Team/components/UserUpsertModal";
-import { StyledAvatar, StyledTableRow } from "../../../../Team/styles";
-import {
-  ActionType,
-  MembersTableProps,
-  TeamMember,
-} from "../../../../Team/types";
-import SubmissionEmails from ".";
+import { StyledTableRow } from "../../../../Team/styles";
 import { EmailsUpsertModal } from "./EmailsUpsertModal";
 import {
   DELETE_TEAM_SUBMISSION_INTEGRATIONS,
@@ -36,8 +24,6 @@ import {
   GetSubmissionEmails,
   SubmissionEmailInput,
   SubmissionEmailMutation,
-  SubmissionEmailValues,
-  UpdateTeamSubmissionIntegrationsVariables,
 } from "./types";
 
 const TableRowButton = styled(Button)(({ theme }) => ({
@@ -75,7 +61,6 @@ export const EmailsTable = () => {
   const [deleteEmail] = useMutation(DELETE_TEAM_SUBMISSION_INTEGRATIONS);
   const [selectedDefault, setSelectedDefault] = useState<string | null>(null);
 
-  // Track the current default email from the database
   const currentDefault = data?.submissionIntegrations.find(
     (email: SubmissionEmailInput) => email.defaultEmail,
   )?.id;
@@ -106,7 +91,6 @@ export const EmailsTable = () => {
     setShowModal(true);
   };
 
-  // Update the selected default email when data loads
   React.useEffect(() => {
     if (currentDefault) {
       setSelectedDefault(currentDefault);

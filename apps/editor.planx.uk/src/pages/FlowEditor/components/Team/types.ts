@@ -1,14 +1,6 @@
 import { Role, TeamRole, User } from "@opensystemslab/planx-core/types";
 import React, { SetStateAction } from "react";
 
-// TODO: DELETE
-interface SubmissionEmailInput {
-  submissionEmail: string;
-  defaultEmail: boolean;
-  teamId: number;
-  id?: string;
-}
-
 export type TeamMember = ActiveTeamMember | ArchivedTeamMember;
 
 type ArchivedTeamMember = Omit<
@@ -52,7 +44,7 @@ export type ActionType = "add" | "edit" | "remove";
 export interface EditorModalProps {
   showModal?: boolean;
   setShowModal: React.Dispatch<SetStateAction<boolean>>;
-  initialValues?: SubmissionEmailInput; // TODO: RE-ADD TeamMember
+  initialValues?: TeamMember;
   userId?: number;
   actionType?: ActionType;
 }

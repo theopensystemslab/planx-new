@@ -64,51 +64,9 @@ export const SubmissionEmails: React.FC = () => {
       }
       showActionButtons={false}
     >
-      {({ formik }) => (
-        <>
-          <Typography variant="h6" style={{ marginBottom: "1rem" }}>
-            Submission Emails
-          </Typography>
-          <EmailsTable />
-        </>
-      )}
+      {({ formik }) => <EmailsTable />}
     </SettingsFormContainer>
   );
 };
-
-{
-  /* const EmailsEditor: React.FC<EditorProps<SubmissionEmailInput>> = (props) => {
-  return (
-    <Box width="100%" mb={2}>
-      <InputRow>
-        <Input
-          placeholder="Email"
-          format="bold"
-          value={props.value.submissionEmail}
-          onChange={(ev) => {
-            props.onChange({
-              ...props.value,
-              submissionEmail: ev.target.value,
-            });
-          }}
-          errorMessage={getIn(props.errors, "submissionEmail")}
-        />
-        <BasicRadio
-          id={props.index.toString()}
-          onChange={(event, checked) => {
-            props.onChange({
-              ...props.value,
-              defaultEmail: checked,
-            });
-          }}
-          label="Default"
-          variant="compact"
-          disabled={props.disabled}
-        />
-      </InputRow>
-    </Box>
-  );
-}; */
-}
 
 export default SubmissionEmails;

@@ -1,3 +1,4 @@
+import { SetStateAction } from "react";
 import type { SnakeCasedProperties } from "type-fest";
 
 export interface SubmissionEmailInput {
@@ -20,4 +21,14 @@ export interface SubmissionEmailValues {
 
 export interface UpdateTeamSubmissionIntegrationsVariables {
   emails: SubmissionEmailMutation[];
+}
+
+export type ActionType = "add" | "edit" | "remove"; // TODO: refactor, this is a duplicate from "apps/editor.planx.uk/src/pages/FlowEditor/components/Team/types.ts"
+
+export interface EditorModalProps {
+  showModal?: boolean;
+  setShowModal: React.Dispatch<SetStateAction<boolean>>;
+  initialValues?: SubmissionEmailInput;
+  userId?: number;
+  actionType?: ActionType;
 }
