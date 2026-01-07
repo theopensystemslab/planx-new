@@ -38,6 +38,7 @@ import { Route as TeamFlowPublishedIndexRouteImport } from './routes/$team/$flow
 import { Route as TeamFlowPreviewIndexRouteImport } from './routes/$team/$flow/preview/index'
 import { Route as TeamFlowPayIndexRouteImport } from './routes/$team/$flow/pay/index'
 import { Route as TeamFlowDraftIndexRouteImport } from './routes/$team/$flow/draft/index'
+import { Route as AuthenticatedTeamSubmissionSessionIdRouteImport } from './routes/_authenticated/$team/submission.$sessionId'
 import { Route as AuthenticatedTeamSettingsIntegrationsRouteImport } from './routes/_authenticated/$team/settings/integrations'
 import { Route as AuthenticatedTeamSettingsGisDataRouteImport } from './routes/_authenticated/$team/settings/gis-data'
 import { Route as AuthenticatedTeamSettingsDesignRouteImport } from './routes/_authenticated/$team/settings/design'
@@ -224,6 +225,12 @@ const TeamFlowDraftIndexRoute = TeamFlowDraftIndexRouteImport.update({
   path: '/',
   getParentRoute: () => TeamFlowDraftRouteRoute,
 } as any)
+const AuthenticatedTeamSubmissionSessionIdRoute =
+  AuthenticatedTeamSubmissionSessionIdRouteImport.update({
+    id: '/submission/$sessionId',
+    path: '/submission/$sessionId',
+    getParentRoute: () => AuthenticatedTeamRouteRoute,
+  } as any)
 const AuthenticatedTeamSettingsIntegrationsRoute =
   AuthenticatedTeamSettingsIntegrationsRouteImport.update({
     id: '/integrations',
@@ -454,6 +461,7 @@ export interface FileRoutesByFullPath {
   '/$team/settings/design': typeof AuthenticatedTeamSettingsDesignRoute
   '/$team/settings/gis-data': typeof AuthenticatedTeamSettingsGisDataRoute
   '/$team/settings/integrations': typeof AuthenticatedTeamSettingsIntegrationsRoute
+  '/$team/submission/$sessionId': typeof AuthenticatedTeamSubmissionSessionIdRoute
   '/$team/$flow/draft/': typeof TeamFlowDraftIndexRoute
   '/$team/$flow/pay/': typeof TeamFlowPayIndexRoute
   '/$team/$flow/preview/': typeof TeamFlowPreviewIndexRoute
@@ -510,6 +518,7 @@ export interface FileRoutesByTo {
   '/$team/settings/design': typeof AuthenticatedTeamSettingsDesignRoute
   '/$team/settings/gis-data': typeof AuthenticatedTeamSettingsGisDataRoute
   '/$team/settings/integrations': typeof AuthenticatedTeamSettingsIntegrationsRoute
+  '/$team/submission/$sessionId': typeof AuthenticatedTeamSubmissionSessionIdRoute
   '/$team/$flow/draft': typeof TeamFlowDraftIndexRoute
   '/$team/$flow/pay': typeof TeamFlowPayIndexRoute
   '/$team/$flow/preview': typeof TeamFlowPreviewIndexRoute
@@ -575,6 +584,7 @@ export interface FileRoutesById {
   '/_authenticated/$team/settings/design': typeof AuthenticatedTeamSettingsDesignRoute
   '/_authenticated/$team/settings/gis-data': typeof AuthenticatedTeamSettingsGisDataRoute
   '/_authenticated/$team/settings/integrations': typeof AuthenticatedTeamSettingsIntegrationsRoute
+  '/_authenticated/$team/submission/$sessionId': typeof AuthenticatedTeamSubmissionSessionIdRoute
   '/$team/$flow/draft/': typeof TeamFlowDraftIndexRoute
   '/$team/$flow/pay/': typeof TeamFlowPayIndexRoute
   '/$team/$flow/preview/': typeof TeamFlowPreviewIndexRoute
@@ -640,6 +650,7 @@ export interface FileRouteTypes {
     | '/$team/settings/design'
     | '/$team/settings/gis-data'
     | '/$team/settings/integrations'
+    | '/$team/submission/$sessionId'
     | '/$team/$flow/draft/'
     | '/$team/$flow/pay/'
     | '/$team/$flow/preview/'
@@ -696,6 +707,7 @@ export interface FileRouteTypes {
     | '/$team/settings/design'
     | '/$team/settings/gis-data'
     | '/$team/settings/integrations'
+    | '/$team/submission/$sessionId'
     | '/$team/$flow/draft'
     | '/$team/$flow/pay'
     | '/$team/$flow/preview'
@@ -760,6 +772,7 @@ export interface FileRouteTypes {
     | '/_authenticated/$team/settings/design'
     | '/_authenticated/$team/settings/gis-data'
     | '/_authenticated/$team/settings/integrations'
+    | '/_authenticated/$team/submission/$sessionId'
     | '/$team/$flow/draft/'
     | '/$team/$flow/pay/'
     | '/$team/$flow/preview/'
@@ -1005,6 +1018,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/$team/$flow/draft/'
       preLoaderRoute: typeof TeamFlowDraftIndexRouteImport
       parentRoute: typeof TeamFlowDraftRouteRoute
+    }
+    '/_authenticated/$team/submission/$sessionId': {
+      id: '/_authenticated/$team/submission/$sessionId'
+      path: '/submission/$sessionId'
+      fullPath: '/$team/submission/$sessionId'
+      preLoaderRoute: typeof AuthenticatedTeamSubmissionSessionIdRouteImport
+      parentRoute: typeof AuthenticatedTeamRouteRoute
     }
     '/_authenticated/$team/settings/integrations': {
       id: '/_authenticated/$team/settings/integrations'
@@ -1416,6 +1436,7 @@ interface AuthenticatedTeamRouteRouteChildren {
   AuthenticatedTeamSubmissionsRoute: typeof AuthenticatedTeamSubmissionsRoute
   AuthenticatedTeamSubscriptionRoute: typeof AuthenticatedTeamSubscriptionRoute
   AuthenticatedTeamIndexRoute: typeof AuthenticatedTeamIndexRoute
+  AuthenticatedTeamSubmissionSessionIdRoute: typeof AuthenticatedTeamSubmissionSessionIdRoute
 }
 
 const AuthenticatedTeamRouteRouteChildren: AuthenticatedTeamRouteRouteChildren =
@@ -1430,6 +1451,8 @@ const AuthenticatedTeamRouteRouteChildren: AuthenticatedTeamRouteRouteChildren =
     AuthenticatedTeamSubmissionsRoute: AuthenticatedTeamSubmissionsRoute,
     AuthenticatedTeamSubscriptionRoute: AuthenticatedTeamSubscriptionRoute,
     AuthenticatedTeamIndexRoute: AuthenticatedTeamIndexRoute,
+    AuthenticatedTeamSubmissionSessionIdRoute:
+      AuthenticatedTeamSubmissionSessionIdRoute,
   }
 
 const AuthenticatedTeamRouteRouteWithChildren =
