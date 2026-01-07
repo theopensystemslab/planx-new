@@ -5,9 +5,9 @@ import OfflineLayout from "pages/layout/OfflineLayout";
 import PublicLayout from "pages/layout/PublicLayout";
 import SaveAndReturnLayout from "pages/layout/SaveAndReturnLayout";
 import React from "react";
-import { getTeamFromDomain } from "routes-navi/utils";
 import WatermarkBackground from "ui/shared/WatermarkBackground";
 import { fetchSettingsForPublishedView } from "utils/routeUtils/publishedQueries";
+import { getTeamFromDomain } from "utils/routeUtils/utils";
 
 export const Route = createFileRoute("/$flow/pay")({
   beforeLoad: async ({ params }) => {
