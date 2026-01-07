@@ -64,7 +64,7 @@ export const SubmissionEmails: React.FC = () => {
       }
       showActionButtons={false}
     >
-      {({ formik }) => <EmailsTable />}
+      {() => <EmailsTable />}
     </SettingsFormContainer>
   );
 };
