@@ -1,8 +1,10 @@
-import { SiteAddress } from "@opensystemslab/planx-core/types";
+import { usePrefetchClassifiedRoads } from "@planx/components/PlanningConstraints/Public/hooks/useClassifiedRoads";
 import { useQuery } from "@tanstack/react-query";
 import { Feature } from "geojson";
 import { getFindPropertyData } from "lib/planningData/requests";
 import { useMemo } from "react";
+
+import type { SiteAddress } from "../../model";
 
 interface FindPropertyData {
   localAuthorityDistricts?: string[];
@@ -73,9 +75,14 @@ export const useFindPropertyData = (address?: SiteAddress) => {
     };
   }, [data]);
 
+  // Side effect - As soon as we have a USR, pre-fetch classified roads data.
+  // This is a long-running request, so prefetching in the background allows
+  // us to reduce the overall wait time for the user
+  usePrefetchClassifiedRoads(address?.usrn);
+
   return {
     ...findPropertyData,
     isPending,
     error,
   };
-}
+};
