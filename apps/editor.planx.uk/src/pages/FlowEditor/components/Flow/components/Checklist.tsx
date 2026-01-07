@@ -160,7 +160,22 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           <ol className="categories">
             {groupedOptions.map(({ title, children }, i) => (
               <li key={i} className="card category">
-                <Link href={href + `#group-${i}`}>{title}</Link>
+                <Link
+                  to={
+                    parent
+                      ? "/$team/$flow/nodes/$parent/nodes/$id/edit"
+                      : "/$team/$flow/nodes/$id/edit"
+                  }
+                  params={{
+                    team: teamSlug,
+                    flow: flowSlug,
+                    id: props.id,
+                    ...(parent && { parent }),
+                  }}
+                  hash={`group-${i}`}
+                >
+                  {title}
+                </Link>
                 <ol className="options">
                   {children.map((child: any) => (
                     <Node
