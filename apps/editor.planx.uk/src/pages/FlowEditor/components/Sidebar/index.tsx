@@ -11,9 +11,9 @@ import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import ToggleButton from "@mui/material/ToggleButton";
 import Tooltip from "@mui/material/Tooltip";
 import React, { useState } from "react";
-import { rootFlowPath } from "routes-navi/utils";
 import Permission from "ui/editor/Permission";
 import StyledTab from "ui/editor/StyledTab";
+import { rootFlowPath } from "utils/routeUtils/utils";
 
 import { useStore } from "../../lib/store";
 import Customisations from "./Customisations";

@@ -3,8 +3,6 @@ import Table from "@mui/material/Table";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { Link } from "react-navi";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export const StyledTable = styled(Table)(({ theme }) => ({
   marginTop: theme.spacing(2),
@@ -81,13 +79,4 @@ export const FlowActionsCell = styled(TableCell)(({ theme }) => ({
   maxWidth: "100px",
   backgroundColor: theme.palette.background.paper,
   borderLeft: `1px solid ${theme.palette.border.main}`,
-}));
-
-export const FlowLink = styled(Link)(({ theme }) => ({
-  textDecoration: "none",
-  color: theme.palette.text.primary,
-  fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  "&:hover": {
-    textDecoration: "underline",
-  },
 }));

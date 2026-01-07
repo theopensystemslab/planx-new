@@ -5,8 +5,8 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
+import { useNavigate } from "@tanstack/react-router";
 import { Form, Formik, FormikConfig } from "formik";
-import navigation from "lib/navigation";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { AddButton } from "ui/editor/AddButton";
@@ -36,6 +36,7 @@ const validationSchema: SchemaOf<CreateTeam> = object({
 
 export const AddTeamButton: React.FC = () => {
   const [createTeam] = useStore((state) => [state.createTeam]);
+  const navigate = useNavigate();
 
   const initialValues: CreateTeam = {
     name: "",
@@ -47,7 +48,7 @@ export const AddTeamButton: React.FC = () => {
 
   const onSubmit: FormikConfig<CreateTeam>["onSubmit"] = async (values) => {
     await createTeam(values);
-    navigation.navigate(`/${values.slug}`);
+    navigate({ to: `/${values.slug}` });
   };
 
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);

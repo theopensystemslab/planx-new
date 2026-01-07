@@ -4,8 +4,7 @@ import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { useNavigate } from "@tanstack/react-router";
-import { NotFoundError } from "navi";
+import { notFound, useNavigate } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { FOOTER_ITEMS } from "types";
@@ -69,7 +68,7 @@ function ContentPage(props: { page: string }) {
     }
   })();
 
-  if (!content) throw new NotFoundError();
+  if (!content) throw notFound();
 
   return (
     <Layout

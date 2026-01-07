@@ -1,8 +1,8 @@
 import { waitFor } from "@testing-library/react";
-import { NaviRequest } from "navi";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import { ApplicationPath } from "types";
 
+import { RouteParams } from "./utils";
 import { isSaveReturnFlow, setPath } from "./utils";
 
 const { getState, setState } = useStore;
@@ -99,32 +99,32 @@ describe("setPath helper function", () => {
   afterEach(() => waitFor(() => setState(initialState)));
 
   it("correctly sets the path for a 'Save/Return' user journey", () => {
-    const mockNaviRequest = { params: {} } as unknown as NaviRequest;
-    setPath(mockSendFlow, mockNaviRequest);
+    const mockRouteParams = { params: {} } as RouteParams;
+    setPath(mockSendFlow, mockRouteParams);
     // No sessionId in URL, and "Send" flow shows Confirm Email x2 prompt
     expect(getState().path).toEqual(ApplicationPath.SaveAndReturn);
   });
 
   it("correctly sets the path for a 'Single session' user journey", () => {
-    const mockNaviRequest = { params: {} } as unknown as NaviRequest;
-    setPath(mockFlow, mockNaviRequest);
+    const mockRouteParams = { params: {} } as RouteParams;
+    setPath(mockFlow, mockRouteParams);
     // Flow without "Send" does not trigger any Save & Return UI
     expect(getState().path).toEqual(ApplicationPath.SingleSession);
   });
 
   it("correctly sets the path for a 'Single session' user journey, even with sessionId in the URL", () => {
-    const mockNaviRequest = {
+    const mockRouteParams = {
       params: { sessionId: "123" },
-    } as unknown as NaviRequest;
-    setPath(mockFlow, mockNaviRequest);
+    } as RouteParams;
+    setPath(mockFlow, mockRouteParams);
     expect(getState().path).toEqual(ApplicationPath.SingleSession);
   });
 
   it("correctly sets the path for a 'Resume' user journey", () => {
-    const mockNaviRequest = {
+    const mockRouteParams = {
       params: { sessionId: "123" },
-    } as unknown as NaviRequest;
-    setPath(mockSendFlow, mockNaviRequest);
+    } as RouteParams;
+    setPath(mockSendFlow, mockRouteParams);
     // "Send" component in flow, and sessionId in URL means that the user is resuming an existing session
     expect(getState().path).toEqual(ApplicationPath.Resume);
   });

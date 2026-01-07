@@ -12,8 +12,8 @@ import React, { useEffect, useState } from "react";
 import { useDrag } from "react-dnd";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 import EditorIcon from "ui/icons/Editor";
+import { rootFlowPath } from "utils/routeUtils/utils";
 
-import { rootFlowPath } from "../../../../../routes-navi/utils";
 import { getParentId } from "../lib/utils";
 import Hanger from "./Hanger";
 import Question from "./Question";

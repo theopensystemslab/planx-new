@@ -2,7 +2,7 @@ import { ComponentType as NodeTypes } from "@opensystemslab/planx-core/types";
 import { notFound } from "@tanstack/react-router";
 import gql from "graphql-tag";
 
-interface RouteParams {
+export interface RouteParams {
   params: Record<string, string>;
 }
 import { useStore } from "pages/FlowEditor/lib/store";
