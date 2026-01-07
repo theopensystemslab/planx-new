@@ -237,9 +237,11 @@ export const EmailsTable = () => {
                   </EditEmailButton>
                 </TableCell>
                 <TableCell>
-                  <RemoveEmailButton onClick={() => handleRemoveEmail(email)}>
-                    Remove
-                  </RemoveEmailButton>
+                  {currentDefault !== email.id && (
+                    <RemoveEmailButton onClick={() => handleRemoveEmail(email)}>
+                      Remove
+                    </RemoveEmailButton>
+                  )}
                 </TableCell>
               </StyledTableRow>
             ))}
@@ -254,7 +256,6 @@ export const EmailsTable = () => {
       <Box mt={2}>
         <Button
           variant="contained"
-          color="primary"
           onClick={handleUpdateDefault}
           disabled={selectedDefault === currentDefault}
         >
