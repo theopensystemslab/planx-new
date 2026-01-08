@@ -4,6 +4,7 @@ import FactCheckIcon from "@mui/icons-material/FactCheck";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import MenuItem from "@mui/material/MenuItem";
+import { SelectChangeEvent } from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import {
   ComponentType as TYPES,
@@ -13,6 +14,7 @@ import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { getIn } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { useEffect } from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -42,14 +44,15 @@ const GET_FLOW_EMAIL_ID = gql`
 const INSERT_FLOW_INTEGRATION = gql`
   mutation InsertFlowIntegration(
     $flowId: uuid!
-    $teamId: int!
+    $teamId: Int!
     $emailId: uuid!
   ) {
     insert_flow_integrations_one(
-      object: { flow_id: $flowId, email_id: $emailId }
+      object: { flow_id: $flowId, email_id: $emailId, team_id: $teamId }
     ) {
       flow_id
       email_id
+      team_id
     }
   }
 `;
@@ -97,7 +100,6 @@ const SendComponent: React.FC<Props> = (props) => {
   } = useQuery(GET_FLOW_EMAIL_ID, {
     variables: { flowId: id },
   });
-  console.log({ flowData });
 
   const emailId = flowData?.flowIntegrations?.[0]?.emailId;
 
@@ -105,13 +107,37 @@ const SendComponent: React.FC<Props> = (props) => {
   const { data, loading, error } = useQuery(GET_TEAM_SUBMISSION_INTEGRATIONS, {
     variables: { teamId: teamId },
   });
-  console.log({ data });
 
   const emailOptions = data?.submissionIntegrations || [];
   const defaultEmail = emailOptions.find((email: any) => email.defaultEmail);
 
   // Mutations
   const [insertFlowIntegration] = useMutation(INSERT_FLOW_INTEGRATION);
+
+  // Automatically populate the default email for new flows
+  useEffect(() => {
+    const populateDefaultEmail = async () => {
+      if (!emailId && defaultEmail) {
+        // Insert a new record with the default email
+        await insertFlowIntegration({
+          variables: {
+            flowId: id,
+            emailId: defaultEmail.id,
+            teamId: teamId,
+          },
+        });
+      }
+    };
+
+    populateDefaultEmail();
+  }, [emailId, defaultEmail, id, teamId, insertFlowIntegration]);
+
+  useEffect(() => {
+    if (!formik.values.submissionEmail && defaultEmail) {
+      formik.setFieldValue("submissionEmail", defaultEmail.id);
+    }
+  }, [formik, defaultEmail]);
+
   const [updateFlowIntegration] = useMutation(UPDATE_FLOW_INTEGRATION);
 
   // Handle enabling "Send to Email"
@@ -122,6 +148,7 @@ const SendComponent: React.FC<Props> = (props) => {
         variables: {
           flowId: id,
           emailId: defaultEmail.id,
+          teamId: teamId,
         },
       });
     }
@@ -138,6 +165,12 @@ const SendComponent: React.FC<Props> = (props) => {
         },
       });
     }
+  };
+
+  const handleSelectChange = (event: SelectChangeEvent<unknown>) => {
+    const selectedValue = event.target.value as string;
+    formik.setFieldValue("submissionEmail", selectedValue);
+    handleChangeEmail(selectedValue);
   };
 
   // Find the currently selected email based on emailId
@@ -210,60 +243,40 @@ const SendComponent: React.FC<Props> = (props) => {
               <InputRow>
                 {formik.values.destinations.includes("email") && (
                   <>
-                    {loading ||
-                      (flowLoading && (
-                        <Typography variant="body2">
-                          Loading email options...
-                        </Typography>
-                      ))}
-                    {!loading && !flowLoading && (error || flowError) && (
-                      <Typography variant="body2" color="error">
-                        Failed to load email options.
+                    {loading || flowLoading ? (
+                      <Typography variant="body2">
+                        Loading email options...
                       </Typography>
-                    )}
-                    {!loading && !flowLoading && !error && !flowError && (
-                      <SelectInput
-                        name="submissionEmail"
-                        value={
-                          formik.values.submissionEmail ||
-                          currentEmail?.submissionEmail ||
-                          ""
-                        }
-                        onChange={(e) =>
-                          formik.setFieldValue(
-                            "submissionEmail",
-                            e.target.value,
-                          )
-                        }
-                        bordered
-                        disabled={props.disabled}
-                      >
-                        {emailOptions.map((email: any) => (
-                          <MenuItem
-                            key={email.id}
-                            value={email.submissionEmail}
+                    ) : (
+                      <>
+                        {error || flowError ? (
+                          <Typography variant="body2" color="error">
+                            Failed to load email options.
+                          </Typography>
+                        ) : (
+                          <SelectInput
+                            name="submissionEmail"
+                            value={
+                              formik.values.submissionEmail ||
+                              currentEmail?.submissionEmail ||
+                              ""
+                            }
+                            onChange={handleSelectChange}
+                            bordered
+                            disabled={props.disabled}
                           >
-                            {email.submissionEmail}
-                          </MenuItem>
-                        ))}
-                      </SelectInput>
+                            {emailOptions.map((email: any) => (
+                              <MenuItem key={email.id} value={email.id}>
+                                {email.submissionEmail}
+                              </MenuItem>
+                            ))}
+                          </SelectInput>
+                        )}
+                      </>
                     )}
                   </>
                 )}
               </InputRow>
-              <Typography variant="body2">
-                Each team can set one submission email address in{" "}
-                <Link
-                  href={`/${teamSlug}/settings`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Team Settings
-                </Link>
-                . You should set up redirect or filtering rules in your inbox if
-                you require submissions to go to different email addresses for
-                different services.
-              </Typography>
             </ModalSectionContent>
             <Divider />
             <ModalSectionContent title={"Microsoft SharePoint"}>
