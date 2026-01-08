@@ -58,6 +58,11 @@ export const EmailsTable = () => {
     variables: { teamId },
   });
 
+  const currentDefaultEmail =
+    data.submissionIntegrations.find(
+      (integration: SubmissionEmailInput) => integration.defaultEmail === true,
+    ) ?? null;
+
   const [upsertEmail] = useMutation(UPSERT_TEAM_SUBMISSION_INTEGRATIONS);
   const [deleteEmail] = useMutation(DELETE_TEAM_SUBMISSION_INTEGRATIONS);
   const [selectedDefault, setSelectedDefault] = useState<string | null>(null);
@@ -202,7 +207,6 @@ export const EmailsTable = () => {
       </>
     );
   }
-
   return (
     <>
       <TableContainer>
@@ -251,6 +255,7 @@ export const EmailsTable = () => {
           initialValues={initialValues}
           actionType={actionType}
           upsertEmail={upsertEmail}
+          previousDefaultEmail={currentDefaultEmail}
         />
       )}
     </>

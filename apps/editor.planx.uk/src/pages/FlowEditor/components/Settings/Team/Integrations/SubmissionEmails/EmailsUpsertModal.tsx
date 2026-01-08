@@ -25,6 +25,7 @@ export const EmailsUpsertModal = ({
   initialValues,
   actionType,
   upsertEmail,
+  previousDefaultEmail,
 }: EditorModalProps & { upsertEmail: MutationFunction }) => {
   const teamId = useStore((state) => state.teamId);
   const toast = useToast();
@@ -58,6 +59,30 @@ export const EmailsUpsertModal = ({
           },
         ],
       });
+
+      if (
+        previousDefaultEmail &&
+        previousDefaultEmail.id !== initialValues?.id
+      ) {
+        await upsertEmail({
+          variables: {
+            emails: [
+              {
+                id: previousDefaultEmail.id,
+                submission_email: previousDefaultEmail.submissionEmail,
+                default_email: false,
+                team_id: teamId,
+              },
+            ],
+          },
+          refetchQueries: [
+            {
+              query: GET_TEAM_SUBMISSION_INTEGRATIONS,
+              variables: { teamId },
+            },
+          ],
+        });
+      }
 
       toast.success(
         `Successfully ${actionType === "add" ? "added" : "updated"} email`,
