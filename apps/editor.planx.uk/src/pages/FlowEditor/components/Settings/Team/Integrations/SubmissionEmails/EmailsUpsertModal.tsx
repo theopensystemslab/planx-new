@@ -60,6 +60,7 @@ export const EmailsUpsertModal = ({
       });
 
       if (
+        values.defaultEmail &&
         previousDefaultEmail &&
         previousDefaultEmail.id !== initialValues?.id
       ) {
