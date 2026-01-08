@@ -198,7 +198,9 @@ const TeamLogo: React.FC = () => {
   );
 };
 
-const Breadcrumbs: React.FC = () => {
+const Breadcrumbs: React.FC<{ showEnvironmentSelect?: boolean }> = ({
+  showEnvironmentSelect = false,
+}) => {
   const route = useCurrentRoute();
   const [team, isStandalone] = useStore((state) => [
     state.getTeam(),
@@ -219,7 +221,7 @@ const Breadcrumbs: React.FC = () => {
         >
           Plan✕
         </BreadcrumbsLink>
-        {!isStandalone && <EnvironmentSelect />}
+        {showEnvironmentSelect && <EnvironmentSelect />}
         {team.slug && (
           <>
             {" / "}
@@ -433,7 +435,7 @@ const EditorToolbar: React.FC<{
         <EditorHeaderContainer>
           <InnerContainer>
             <LeftBox>
-              <Breadcrumbs />
+              <Breadcrumbs showEnvironmentSelect />
             </LeftBox>
             <RightBox>
               {user && (
