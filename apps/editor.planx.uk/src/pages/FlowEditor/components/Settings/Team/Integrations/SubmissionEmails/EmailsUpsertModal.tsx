@@ -1,5 +1,6 @@
 import { MutationFunction } from "@apollo/client/react/types/types";
 import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -74,6 +75,14 @@ export const EmailsUpsertModal = ({
         <DialogContent>
           <InputLabel label="Email">
             <Input {...formik.getFieldProps("submissionEmail")} />
+          </InputLabel>
+          <InputLabel label="Set as Default">
+            <Checkbox
+              checked={formik.values.defaultEmail}
+              onChange={(e) =>
+                formik.setFieldValue("defaultEmail", e.target.checked)
+              }
+            />
           </InputLabel>
         </DialogContent>
         <DialogActions>

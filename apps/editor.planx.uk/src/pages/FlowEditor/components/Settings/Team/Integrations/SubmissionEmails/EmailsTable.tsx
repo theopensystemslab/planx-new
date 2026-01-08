@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
+import CheckIcon from "@mui/icons-material/Check";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Radio from "@mui/material/Radio";
@@ -219,11 +220,7 @@ export const EmailsTable = () => {
               <StyledTableRow key={email.id}>
                 <TableCell>{email.submissionEmail}</TableCell>
                 <TableCell>
-                  <Radio
-                    checked={selectedDefault === email.id}
-                    onChange={() => handleDefaultChange(email.id!)}
-                    size="small"
-                  />
+                  {email.defaultEmail && <CheckIcon color="primary" />}
                 </TableCell>
                 <TableCell>
                   <EditEmailButton onClick={() => handleEditEmail(email)}>
@@ -231,7 +228,7 @@ export const EmailsTable = () => {
                   </EditEmailButton>
                 </TableCell>
                 <TableCell>
-                  {currentDefault !== email.id && (
+                  {!email.defaultEmail && (
                     <RemoveEmailButton onClick={() => handleRemoveEmail(email)}>
                       Remove
                     </RemoveEmailButton>
@@ -241,21 +238,12 @@ export const EmailsTable = () => {
             ))}
             <TableRow>
               <TableCell colSpan={4}>
-                <AddButton onClick={handleAddEmail}>Add a new email</AddButton>
+                <AddButton onClick={addEmail}>Add a new email</AddButton>
               </TableCell>
             </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
-      <Box mt={2}>
-        <Button
-          variant="contained"
-          onClick={handleUpdateDefault}
-          disabled={selectedDefault === currentDefault}
-        >
-          Update default email
-        </Button>
-      </Box>
       {showModal && (
         <EmailsUpsertModal
           showModal={showModal}
