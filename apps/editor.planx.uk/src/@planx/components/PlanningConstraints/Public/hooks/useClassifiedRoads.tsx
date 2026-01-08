@@ -48,18 +48,18 @@ export const usePrefetchClassifiedRoads = (usrn?: string) => {
 
   const dataValues = planningConstraintsNode?.dataValues;
 
-  useEffect(() => {
-    const shouldPrefetch =
-      hasPlanningData &&
-      Boolean(usrn) &&
-      dataValues?.includes("road.classified");
+  const shouldPrefetch =
+    hasPlanningData &&
+    Boolean(usrn) &&
+    dataValues?.includes("road.classified");
 
+  useEffect(() => {
     if (shouldPrefetch) {
       queryClient.prefetchQuery({
         queryKey: ["classifiedRoads", usrn],
-        queryFn: () => getClassifiedRoads(usrn),
+        queryFn: () => getClassifiedRoads(usrn!),
         staleTime: Infinity,
       });
     }
-  }, [usrn, queryClient, dataValues, planningConstraintsNode, hasPlanningData]);
+  }, [usrn, queryClient, shouldPrefetch]);
 };
