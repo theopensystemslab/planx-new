@@ -7,10 +7,12 @@ import {
   baseNodeDataValidationSchema,
   parseBaseNodeData,
 } from "../shared";
+import { emailRegex } from "../TextInput/model";
 
 export interface Send extends BaseNodeData {
   title: string;
   destinations: SendIntegration[];
+  submissionEmail?: string;
 }
 
 export const DEFAULT_TITLE = "Send";
@@ -20,6 +22,7 @@ export const parseSend = (data: Record<string, any> | undefined): Send => ({
   ...parseBaseNodeData(data),
   title: data?.title || DEFAULT_TITLE,
   destinations: data?.destinations || [DEFAULT_DESTINATION],
+  submissionEmail: data?.submissionEmail || "",
 });
 
 export function getCombinedEventsPayload({
@@ -51,5 +54,6 @@ export const validationSchema: SchemaOf<Send> =
       destinations: array(
         mixed().oneOf(["email", "bops", "uniform", "s3", "fme", "idox"]),
       ).min(1, "Select at least one destination"),
+      submissionEmail: string().email().optional(),
     }),
   );
