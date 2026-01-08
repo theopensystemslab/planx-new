@@ -228,7 +228,14 @@ export const EmailsTable = () => {
           <TableBody>
             {data.submissionIntegrations.map((email: SubmissionEmailInput) => (
               <StyledTableRow key={email.id}>
-                <TableCell>{email.submissionEmail}</TableCell>
+                <TableCell
+                  sx={{
+                    wordWrap: "break-word",
+                    maxWidth: "280px",
+                  }}
+                >
+                  {email.submissionEmail}
+                </TableCell>
                 <TableCell>
                   {email.defaultEmail && <CheckIcon color="primary" />}
                 </TableCell>
