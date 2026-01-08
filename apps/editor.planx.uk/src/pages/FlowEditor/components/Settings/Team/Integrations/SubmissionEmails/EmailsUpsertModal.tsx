@@ -1,15 +1,16 @@
 import { MutationFunction } from "@apollo/client/react/types/types";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input/Input";
 
 import { upsertEmailSchema } from "./formSchema";
@@ -98,17 +99,21 @@ export const EmailsUpsertModal = ({
           {actionType === "add" ? "Add Email" : "Edit Email"}
         </DialogTitle>
         <DialogContent>
-          <InputLabel label="Email">
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Typography>Email</Typography>
             <Input {...formik.getFieldProps("submissionEmail")} />
-          </InputLabel>
-          <InputLabel label="Set as Default">
+          </Box>
+          <Box
+            sx={{ display: "flex", marginTop: 2, alignItems: "center", gap: 1 }}
+          >
+            <Typography>Set as Default</Typography>
             <Checkbox
               checked={formik.values.defaultEmail}
               onChange={(e) =>
                 formik.setFieldValue("defaultEmail", e.target.checked)
               }
             />
-          </InputLabel>
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setShowModal(false)}>Cancel</Button>
