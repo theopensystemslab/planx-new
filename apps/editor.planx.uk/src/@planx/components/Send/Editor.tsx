@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client/react/hooks/useQuery";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
+import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import {
   ComponentType as TYPES,
@@ -181,9 +182,12 @@ const SendComponent: React.FC<Props> = (props) => {
                         disabled={props.disabled}
                       >
                         {emailOptions.map((email: any) => (
-                          <option key={email.id} value={email.submissionEmail}>
+                          <MenuItem
+                            key={email.id}
+                            value={email.submissionEmail}
+                          >
                             {email.submissionEmail}
-                          </option>
+                          </MenuItem>
                         ))}
                       </SelectInput>
                     )}
