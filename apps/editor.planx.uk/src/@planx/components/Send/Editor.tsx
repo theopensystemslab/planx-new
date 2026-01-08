@@ -1,3 +1,5 @@
+import { gql } from "@apollo/client";
+import { useQuery } from "@apollo/client/react/hooks/useQuery";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
@@ -17,14 +19,24 @@ import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
+import SelectInput from "ui/shared/SelectInput/SelectInput";
 import { Switch } from "ui/shared/Switch";
 
+import { GET_TEAM_SUBMISSION_INTEGRATIONS } from "../../../pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/queries";
 import { ICONS } from "../shared/icons";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
 import { EditorProps } from "../shared/types";
 import { parseSend, Send, validationSchema } from "./model";
 
 export type Props = EditorProps<TYPES.Send, Send>;
+
+const GET_FLOW_EMAIL_ID = gql`
+  query GetFlowEmailId($flowId: uuid!) {
+    flowIntegrations: flow_integrations(where: { flow_id: { _eq: $flowId } }) {
+      emailId: email_id
+    }
+  }
+`;
 
 const SendComponent: React.FC<Props> = (props) => {
   const formik = useFormikWithRef<Send>(
@@ -40,11 +52,38 @@ const SendComponent: React.FC<Props> = (props) => {
     props.formikRef,
   );
 
-  const [teamSlug, flowSlug, submissionEmail] = useStore((state) => [
-    state.teamSlug,
-    state.flowSlug,
-    state.teamSettings.submissionEmail,
-  ]);
+  const [teamSlug, teamId, flowSlug, id, submissionEmail] = useStore(
+    (state) => [
+      state.teamSlug,
+      state.teamId,
+      state.flowSlug,
+      state.id,
+      state.teamSettings.submissionEmail,
+    ],
+  );
+
+  // Fetch the email_id from the flow_integrations table
+  const {
+    data: flowData,
+    loading: flowLoading,
+    error: flowError,
+  } = useQuery(GET_FLOW_EMAIL_ID, {
+    variables: { flowId: id },
+  });
+  console.log({ flowData });
+
+  const emailId = flowData?.flowIntegrations?.[0]?.emailId;
+
+  // Fetch available email addresses
+  const { data, loading, error } = useQuery(GET_TEAM_SUBMISSION_INTEGRATIONS, {
+    variables: { teamId: teamId },
+  });
+  console.log({ data });
+
+  const emailOptions = data?.submissionIntegrations || [];
+
+  // Find the currently selected email based on emailId
+  const currentEmail = emailOptions.find((email: any) => email.id === emailId);
 
   const toggleSwitch = (value: SendIntegration) => {
     let newCheckedValues: SendIntegration[];
@@ -109,6 +148,47 @@ const SendComponent: React.FC<Props> = (props) => {
                   label={`Send to ${submissionEmail || "your inbox"}`}
                   disabled={props.disabled}
                 />
+              </InputRow>
+              <InputRow>
+                {formik.values.destinations.includes("email") && (
+                  <>
+                    {loading ||
+                      (flowLoading && (
+                        <Typography variant="body2">
+                          Loading email options...
+                        </Typography>
+                      ))}
+                    {!loading && !flowLoading && (error || flowError) && (
+                      <Typography variant="body2" color="error">
+                        Failed to load email options.
+                      </Typography>
+                    )}
+                    {!loading && !flowLoading && !error && !flowError && (
+                      <SelectInput
+                        name="submissionEmail"
+                        value={
+                          formik.values.submissionEmail ||
+                          currentEmail?.submissionEmail ||
+                          ""
+                        }
+                        onChange={(e) =>
+                          formik.setFieldValue(
+                            "submissionEmail",
+                            e.target.value,
+                          )
+                        }
+                        bordered
+                        disabled={props.disabled}
+                      >
+                        {emailOptions.map((email: any) => (
+                          <option key={email.id} value={email.submissionEmail}>
+                            {email.submissionEmail}
+                          </option>
+                        ))}
+                      </SelectInput>
+                    )}
+                  </>
+                )}
               </InputRow>
               <Typography variant="body2">
                 Each team can set one submission email address in{" "}
