@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 import { useQuery } from "@apollo/client/react/hooks/useQuery";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import Divider from "@mui/material/Divider";
@@ -35,6 +35,32 @@ const GET_FLOW_EMAIL_ID = gql`
   query GetFlowEmailId($flowId: uuid!) {
     flowIntegrations: flow_integrations(where: { flow_id: { _eq: $flowId } }) {
       emailId: email_id
+    }
+  }
+`;
+
+const INSERT_FLOW_INTEGRATION = gql`
+  mutation InsertFlowIntegration(
+    $flowId: uuid!
+    $teamId: int!
+    $emailId: uuid!
+  ) {
+    insert_flow_integrations_one(
+      object: { flow_id: $flowId, email_id: $emailId }
+    ) {
+      flow_id
+      email_id
+    }
+  }
+`;
+
+const UPDATE_FLOW_INTEGRATION = gql`
+  mutation UpdateFlowIntegration($flowId: uuid!, $emailId: uuid!) {
+    update_flow_integrations(
+      where: { flow_id: { _eq: $flowId } }
+      _set: { email_id: $emailId }
+    ) {
+      affected_rows
     }
   }
 `;
@@ -82,6 +108,37 @@ const SendComponent: React.FC<Props> = (props) => {
   console.log({ data });
 
   const emailOptions = data?.submissionIntegrations || [];
+  const defaultEmail = emailOptions.find((email: any) => email.defaultEmail);
+
+  // Mutations
+  const [insertFlowIntegration] = useMutation(INSERT_FLOW_INTEGRATION);
+  const [updateFlowIntegration] = useMutation(UPDATE_FLOW_INTEGRATION);
+
+  // Handle enabling "Send to Email"
+  const handleEnableEmail = async () => {
+    if (!emailId && defaultEmail) {
+      // Insert a new record with the default email
+      await insertFlowIntegration({
+        variables: {
+          flowId: id,
+          emailId: defaultEmail.id,
+        },
+      });
+    }
+  };
+
+  // Handle changing the selected email
+  const handleChangeEmail = async (newEmailId: string) => {
+    if (emailId) {
+      // Update the existing record
+      await updateFlowIntegration({
+        variables: {
+          flowId: id,
+          emailId: newEmailId,
+        },
+      });
+    }
+  };
 
   // Find the currently selected email based on emailId
   const currentEmail = emailOptions.find((email: any) => email.id === emailId);
