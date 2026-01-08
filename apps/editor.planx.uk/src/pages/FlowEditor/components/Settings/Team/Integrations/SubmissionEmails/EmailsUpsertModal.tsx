@@ -18,8 +18,6 @@ import { GET_TEAM_SUBMISSION_INTEGRATIONS } from "./queries";
 import { EditorModalProps } from "./types";
 import { SubmissionEmailInput } from "./types";
 
-export const DEMO_TEAM_ID = 32;
-
 export const EmailsUpsertModal = ({
   setShowModal,
   showModal,
@@ -92,6 +90,10 @@ export const EmailsUpsertModal = ({
     },
   });
 
+  const isUpdateDisabled =
+    previousDefaultEmail?.id === initialValues?.id &&
+    !formik.values.defaultEmail;
+
   return (
     <Dialog open={showModal || false} onClose={() => setShowModal(false)}>
       <form onSubmit={formik.handleSubmit}>
@@ -120,7 +122,7 @@ export const EmailsUpsertModal = ({
           <Button
             variant="contained"
             type="submit"
-            disabled={!formik.isValid || !formik.dirty}
+            disabled={!formik.isValid || !formik.dirty || isUpdateDisabled}
           >
             {actionType === "add" ? "Add" : "Update"}
           </Button>
