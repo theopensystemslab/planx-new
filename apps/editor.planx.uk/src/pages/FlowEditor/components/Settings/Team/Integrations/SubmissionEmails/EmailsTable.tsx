@@ -51,6 +51,12 @@ const RemoveEmailButton = styled(TableRowButton)(({ theme }) => ({
   },
 }));
 
+const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
+  border: `1px solid ${theme.palette.border.light}`, // Apply the border color
+  borderRadius: theme.shape.borderRadius, // Optional: Add rounded corners
+  overflow: "hidden", // Optional: Prevent content overflow
+}));
+
 export const EmailsTable = () => {
   const teamId = useStore((state) => state.teamId);
 
@@ -209,7 +215,7 @@ export const EmailsTable = () => {
   }
   return (
     <>
-      <TableContainer>
+      <StyledTableContainer>
         <Table>
           <TableHead>
             <StyledTableRow>
@@ -247,7 +253,7 @@ export const EmailsTable = () => {
             </TableRow>
           </TableBody>
         </Table>
-      </TableContainer>
+      </StyledTableContainer>
       {showModal && (
         <EmailsUpsertModal
           showModal={showModal}
