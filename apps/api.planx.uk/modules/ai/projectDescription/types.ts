@@ -24,21 +24,24 @@ export type Controller = ValidatedRequestHandler<
   Success | Failure
 >;
 
-// TODO: replace enum as per Matt Pocock (https://www.youtube.com/watch?v=jjMbPt_H3RQ)
-export enum GatewayStatus {
-  ENHANCED = "ENHANCED",
-  NO_CHANGE = "NO_CHANGE",
-  INVALID = "INVALID_DESCRIPTION",
-  ERROR = "GATEWAY_ERROR",
-}
+// we use a plain object w/ const assertion in place of problematic TS enum (as per Total Typescript)
+export const GATEWAY_STATUS = {
+  ENHANCED: "ENHANCED",
+  NO_CHANGE: "NO_CHANGE",
+  INVALID: "INVALID",
+  ERROR: "ERROR",
+} as const;
+
+export type GatewayStatus = keyof typeof GATEWAY_STATUS;
 
 export const SUCCESS_STATUSES = [
-  GatewayStatus.ENHANCED,
-  GatewayStatus.NO_CHANGE,
+  GATEWAY_STATUS.ENHANCED,
+  GATEWAY_STATUS.NO_CHANGE,
 ] as const;
+
 export const ERROR_STATUSES = [
-  GatewayStatus.INVALID,
-  GatewayStatus.ERROR,
+  GATEWAY_STATUS.INVALID,
+  GATEWAY_STATUS.ERROR,
 ] as const;
 
 export type SuccessStatus = (typeof SUCCESS_STATUSES)[number];

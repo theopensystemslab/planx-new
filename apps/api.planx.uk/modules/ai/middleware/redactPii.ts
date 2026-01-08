@@ -11,7 +11,7 @@ const PII_PATTERNS = {
 
   // UK National Insurance Number
   // see: https://owasp.org/www-community/OWASP_Validation_Regex_Repository
-  nino: /\b[A-Z]{2}\d{6}[A-Z]\b/gi,
+  nino: /\b[A-Z]{2}\s?(?:\d\d\s?){3}\s?[A-Z]\b/gi,
 
   // UK house number with street name
   address:
@@ -22,29 +22,31 @@ const PII_PATTERNS = {
   postcode: /\b[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}\b/gi,
 };
 
-export const redactPII =
+export const redactPii =
   (key: string) => (req: Request, res: Response, next: NextFunction) => {
     try {
-      const input = res.locals.parsedReq.body[key];
-      let redacted: string | undefined;
+      let input = res.locals.parsedReq.body[key];
+      let piiDetected = false;
       const detectedTypes: string[] = [];
 
       for (const [type, pattern] of Object.entries(PII_PATTERNS)) {
         if (pattern.test(input)) {
-          redacted = input.replace(pattern, `[${type.toUpperCase()}]`);
-          detectedTypes.push(type);
+          const redactionRef = type.toUpperCase();
+          input = input.replace(pattern, `[${redactionRef}]`);
+          detectedTypes.push(redactionRef);
+          piiDetected = true;
           pattern.lastIndex = 0; // reset regex state
         }
       }
 
-      if (redacted) {
+      if (piiDetected) {
         console.warn(
           `The following types of PII were detected and redacted: ${detectedTypes.join(", ")}`,
         );
         // store original and redacted versions, but send only the latter to the LLM
-        res.locals.redactedInput = redacted;
+        res.locals.redactedInput = input;
         res.locals.originalInput = res.locals.parsedReq.body[key];
-        res.locals.parsedReq.body[key] = redacted;
+        res.locals.parsedReq.body[key] = input;
       }
 
       next();

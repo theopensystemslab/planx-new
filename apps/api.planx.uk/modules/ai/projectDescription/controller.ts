@@ -1,6 +1,6 @@
 import { ServerError } from "../../../errors/serverError.js";
 import { enhanceProjectDescription } from "./service.js";
-import { type Controller, GatewayStatus } from "./types.js";
+import { type Controller, GATEWAY_STATUS } from "./types.js";
 
 export const projectDescriptionController: Controller = async (
   _req,
@@ -18,21 +18,21 @@ export const projectDescriptionController: Controller = async (
           "Call to gateway succeeded but no enhanced description returned",
         );
         return res.status(500).json({
-          error: GatewayStatus.ERROR,
+          error: GATEWAY_STATUS.ERROR,
           message: "Error with request to AI gateway",
         });
       }
     }
     switch (result.error) {
-      case GatewayStatus.INVALID:
+      case GATEWAY_STATUS.INVALID:
         return res.status(400).json({
-          error: GatewayStatus.INVALID,
+          error: GATEWAY_STATUS.INVALID,
           message:
             "The description doesn't appear to be related to a planning application.",
         });
-      case GatewayStatus.ERROR:
+      case GATEWAY_STATUS.ERROR:
         return res.status(500).json({
-          error: GatewayStatus.ERROR,
+          error: GATEWAY_STATUS.ERROR,
           message: "There was an error with the request to upstream AI gateway",
         });
     }

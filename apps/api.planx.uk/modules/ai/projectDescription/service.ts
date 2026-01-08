@@ -1,3 +1,7 @@
+import { readFileSync } from "fs";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
+
 import {
   createGateway,
   generateObject,
@@ -6,14 +10,11 @@ import {
   NoObjectGeneratedError,
   NoSuchModelError,
 } from "ai";
-import { readFileSync } from "fs";
-import { dirname, join } from "path";
-import { fileURLToPath } from "url";
 import { z } from "zod";
 
 import {
   type GatewayResult,
-  GatewayStatus,
+  GATEWAY_STATUS,
   SUCCESS_STATUSES,
 } from "./types.js";
 
@@ -27,9 +28,9 @@ const loadSystemPrompt = (): string => {
   let prompt = readFileSync(promptPath, "utf-8");
 
   // replace status placeholders with actual values
-  prompt = prompt.replace(/`INVALID`/g, GatewayStatus.INVALID);
-  prompt = prompt.replace(/`NO_CHANGE`/g, GatewayStatus.NO_CHANGE);
-  prompt = prompt.replace(/`ENHANCED`/g, GatewayStatus.ENHANCED);
+  prompt = prompt.replace(/`INVALID`/g, GATEWAY_STATUS.INVALID);
+  prompt = prompt.replace(/`NO_CHANGE`/g, GATEWAY_STATUS.NO_CHANGE);
+  prompt = prompt.replace(/`ENHANCED`/g, GATEWAY_STATUS.ENHANCED);
 
   return prompt;
 };
@@ -44,7 +45,7 @@ export const enhanceProjectDescription = async (
       return { ok: false, error: result.error };
     }
     if (!result.model) {
-      return { ok: false, error: GatewayStatus.ERROR };
+      return { ok: false, error: GATEWAY_STATUS.ERROR };
     }
     const model = result.model;
 
@@ -53,7 +54,7 @@ export const enhanceProjectDescription = async (
       output: "object",
       schema: z.object({
         enhancedDescription: z.string().trim().max(250),
-        status: z.enum([...SUCCESS_STATUSES, GatewayStatus.INVALID]),
+        status: z.enum([...SUCCESS_STATUSES, GATEWAY_STATUS.INVALID]),
       }),
       system: loadSystemPrompt(),
       prompt: `<user_input>${original_description}</user_input>`,
@@ -64,7 +65,7 @@ export const enhanceProjectDescription = async (
 
     const object = res.object;
     console.debug(`Model returned status: ${object.status}`);
-    return object.status === GatewayStatus.INVALID
+    return object.status === GATEWAY_STATUS.INVALID
       ? { ok: false, error: object.status }
       : { ok: true, value: object.enhancedDescription };
   } catch (error) {
@@ -86,14 +87,15 @@ export const enhanceProjectDescription = async (
         error,
       );
     }
-    return { ok: false, error: GatewayStatus.ERROR };
+    return { ok: false, error: GATEWAY_STATUS.ERROR };
   }
 };
 
-export const getModel = (model: string): GatewayResult => {
+const getModel = (model: string): GatewayResult => {
   try {
+    console.assert(process.env.AI_GATEWAY_API_KEY);
     const gateway = createGateway({
-      apiKey: process.env.AI_GATEWAY_API_KEY!,
+      apiKey: process.env.AI_GATEWAY_API_KEY,
     });
     return { ok: true, model: gateway(model) };
   } catch (error) {
@@ -105,6 +107,6 @@ export const getModel = (model: string): GatewayResult => {
     } else {
       console.error(`Failed to instantiate model '${model}'`, error);
     }
-    return { ok: false, error: GatewayStatus.ERROR };
+    return { ok: false, error: GATEWAY_STATUS.ERROR };
   }
 };
