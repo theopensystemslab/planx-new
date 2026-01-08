@@ -4,15 +4,18 @@ import React from "react";
 
 export interface Props {
   children: JSX.Element[] | JSX.Element;
+  variant?: "default" | "fullWidth";
 }
 
-const Root = styled(Box)(({ theme }) => ({
-  width: theme.breakpoints.values.formWrap,
+const Root = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "variant",
+})<{ variant?: "default" | "fullWidth" }>(({ theme, variant }) => ({
+  width: variant === "fullWidth" ? "100%" : theme.breakpoints.values.formWrap,
   maxWidth: "100%",
 }));
 
-function FormWrapper(props: Props) {
-  return <Root>{props.children || null}</Root>;
+function FormWrapper({ children, variant = "default" }: Props) {
+  return <Root variant={variant}>{children || null}</Root>;
 }
 
 export default FormWrapper;
