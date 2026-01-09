@@ -1,12 +1,16 @@
 import * as Yup from "yup";
 
-import SubmissionEmail from "../SubmissionEmail";
-
-export const upsertEmailSchema = Yup.object({
-  submissionEmail: Yup.string()
-    .required("Enter an email address")
-    .email(
-      "Enter an email address in the correct format, like example@email.com",
-    ),
-  defaultEmail: Yup.boolean(),
-});
+export const upsertEmailSchema = (
+  existingEmails: string[],
+  currentEmail?: string,
+) =>
+  Yup.object().shape({
+    submissionEmail: Yup.string()
+      .email("Invalid email")
+      .required("Email is required")
+      .test("unique-email", "Please enter a unique email address", (value) => {
+        if (value === currentEmail) return true;
+        return !existingEmails.includes(value || "");
+      }),
+    defaultEmail: Yup.boolean(),
+  });

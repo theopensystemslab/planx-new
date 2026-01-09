@@ -227,6 +227,9 @@ export const EmailsTable = () => {
           actionType={actionType}
           upsertEmail={upsertEmail}
           previousDefaultEmail={selectedDefault}
+          currentEmails={data.submissionIntegrations.map(
+            (email) => email.submissionEmail,
+          )}
         />
       )}
     </>

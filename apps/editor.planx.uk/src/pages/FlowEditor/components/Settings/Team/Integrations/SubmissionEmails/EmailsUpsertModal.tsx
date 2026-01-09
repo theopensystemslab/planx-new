@@ -25,6 +25,7 @@ export const EmailsUpsertModal = ({
   actionType,
   upsertEmail,
   previousDefaultEmail,
+  currentEmails,
 }: EditorModalProps & { upsertEmail: MutationFunction }) => {
   const teamId = useStore((state) => state.teamId);
   const toast = useToast();
@@ -35,7 +36,10 @@ export const EmailsUpsertModal = ({
       defaultEmail: initialValues?.defaultEmail || false,
       teamId: teamId,
     },
-    validationSchema: upsertEmailSchema,
+    validationSchema: upsertEmailSchema(
+      currentEmails || [],
+      initialValues?.submissionEmail,
+    ),
     validateOnMount: true,
     onSubmit: async (values) => {
       const variables = {
