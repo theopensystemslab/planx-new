@@ -7,7 +7,6 @@ import {
   baseNodeDataValidationSchema,
   parseBaseNodeData,
 } from "../shared";
-import { emailRegex } from "../TextInput/model";
 
 export interface Send extends BaseNodeData {
   title: string;
