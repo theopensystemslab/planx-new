@@ -92,7 +92,6 @@ const SendComponent: React.FC<Props> = (props) => {
     ],
   );
 
-  // Fetch the email_id from the flow_integrations table
   const {
     data: flowData,
     loading: flowLoading,
@@ -103,7 +102,6 @@ const SendComponent: React.FC<Props> = (props) => {
 
   const emailId = flowData?.flowIntegrations?.[0]?.emailId;
 
-  // Fetch available email addresses
   const { data, loading, error } = useQuery(GET_TEAM_SUBMISSION_INTEGRATIONS, {
     variables: { teamId: teamId },
   });
@@ -111,14 +109,11 @@ const SendComponent: React.FC<Props> = (props) => {
   const emailOptions = data?.submissionIntegrations || [];
   const defaultEmail = emailOptions.find((email: any) => email.defaultEmail);
 
-  // Mutations
   const [insertFlowIntegration] = useMutation(INSERT_FLOW_INTEGRATION);
 
-  // Automatically populate the default email for new flows
   useEffect(() => {
     const populateDefaultEmail = async () => {
       if (!emailId && defaultEmail) {
-        // Insert a new record with the default email
         await insertFlowIntegration({
           variables: {
             flowId: id,
@@ -140,10 +135,8 @@ const SendComponent: React.FC<Props> = (props) => {
 
   const [updateFlowIntegration] = useMutation(UPDATE_FLOW_INTEGRATION);
 
-  // Handle enabling "Send to Email"
   const handleEnableEmail = async () => {
     if (!emailId && defaultEmail) {
-      // Insert a new record with the default email
       await insertFlowIntegration({
         variables: {
           flowId: id,
@@ -154,10 +147,8 @@ const SendComponent: React.FC<Props> = (props) => {
     }
   };
 
-  // Handle changing the selected email
   const handleChangeEmail = async (newEmailId: string) => {
     if (emailId) {
-      // Update the existing record
       await updateFlowIntegration({
         variables: {
           flowId: id,
@@ -173,13 +164,11 @@ const SendComponent: React.FC<Props> = (props) => {
     handleChangeEmail(selectedValue);
   };
 
-  // Find the currently selected email based on emailId
   const currentEmail = emailOptions.find((email: any) => email.id === emailId);
 
   const toggleSwitch = (value: SendIntegration) => {
     let newCheckedValues: SendIntegration[];
 
-    // Remove or append this value from the existing array of destinations
     if (formik.values.destinations.includes(value)) {
       newCheckedValues = formik.values.destinations.filter((x) => x !== value);
     } else {
@@ -258,7 +247,7 @@ const SendComponent: React.FC<Props> = (props) => {
                             name="submissionEmail"
                             value={
                               formik.values.submissionEmail ||
-                              currentEmail?.submissionEmail ||
+                              currentEmail?.id ||
                               ""
                             }
                             onChange={handleSelectChange}
