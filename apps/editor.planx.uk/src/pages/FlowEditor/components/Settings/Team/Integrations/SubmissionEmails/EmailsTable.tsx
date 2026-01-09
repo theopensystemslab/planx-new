@@ -144,6 +144,10 @@ export const EmailsTable = () => {
     return <div>Error loading emails: {error.message}</div>;
   }
 
+  const sortedEmails = [...(data?.submissionIntegrations || [])].sort((a, b) =>
+    a.submissionEmail.localeCompare(b.submissionEmail),
+  );
+
   if (!data || data.submissionIntegrations.length === 0) {
     return (
       <>
@@ -189,7 +193,7 @@ export const EmailsTable = () => {
             </StyledTableRow>
           </TableHead>
           <TableBody>
-            {data.submissionIntegrations.map((email: SubmissionEmailInput) => (
+            {sortedEmails.map((email: SubmissionEmailInput) => (
               <StyledTableRow key={email.id}>
                 <TableCell sx={{ wordWrap: "break-word", maxWidth: "280px" }}>
                   {email.submissionEmail}
