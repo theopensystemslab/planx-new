@@ -25,6 +25,7 @@ import InputRow from "ui/shared/InputRow";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 import { Switch } from "ui/shared/Switch";
 
+import { hasFeatureFlag } from "../../../lib/featureFlags";
 import { GET_TEAM_SUBMISSION_INTEGRATIONS } from "../../../pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/queries";
 import { ICONS } from "../shared/icons";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
@@ -229,43 +230,49 @@ const SendComponent: React.FC<Props> = (props) => {
                   disabled={props.disabled}
                 />
               </InputRow>
-              <InputRow>
-                {formik.values.destinations.includes("email") && (
-                  <>
-                    {loading || flowLoading ? (
-                      <Typography variant="body2">
-                        Loading email options...
-                      </Typography>
-                    ) : (
+              {hasFeatureFlag("MULTIPLE_SUBMISSION_SEND_COMPONENT") ? (
+                <>
+                  <InputRow>
+                    {formik.values.destinations.includes("email") && (
                       <>
-                        {error || flowError ? (
-                          <Typography variant="body2" color="error">
-                            Failed to load email options.
+                        {loading || flowLoading ? (
+                          <Typography variant="body2">
+                            Loading email options...
                           </Typography>
                         ) : (
-                          <SelectInput
-                            name="submissionEmail"
-                            value={
-                              formik.values.submissionEmail ||
-                              currentEmail?.id ||
-                              ""
-                            }
-                            onChange={handleSelectChange}
-                            bordered
-                            disabled={props.disabled}
-                          >
-                            {emailOptions.map((email: any) => (
-                              <MenuItem key={email.id} value={email.id}>
-                                {email.submissionEmail}
-                              </MenuItem>
-                            ))}
-                          </SelectInput>
+                          <>
+                            {error || flowError ? (
+                              <Typography variant="body2" color="error">
+                                Failed to load email options.
+                              </Typography>
+                            ) : (
+                              <SelectInput
+                                name="submissionEmail"
+                                value={
+                                  formik.values.submissionEmail ||
+                                  currentEmail?.id ||
+                                  ""
+                                }
+                                onChange={handleSelectChange}
+                                bordered
+                                disabled={props.disabled}
+                              >
+                                {emailOptions.map((email: any) => (
+                                  <MenuItem key={email.id} value={email.id}>
+                                    {email.submissionEmail}
+                                  </MenuItem>
+                                ))}
+                              </SelectInput>
+                            )}
+                          </>
                         )}
                       </>
                     )}
-                  </>
-                )}
-              </InputRow>
+                  </InputRow>
+                </>
+              ) : (
+                <></>
+              )}
             </ModalSectionContent>
             <Divider />
             <ModalSectionContent title={"Microsoft SharePoint"}>
