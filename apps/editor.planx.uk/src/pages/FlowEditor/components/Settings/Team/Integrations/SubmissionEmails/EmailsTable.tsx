@@ -1,8 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import CheckIcon from "@mui/icons-material/Check";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Radio from "@mui/material/Radio";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -10,8 +8,9 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AddButton } from "ui/editor/AddButton";
 
 import { StyledTableRow } from "../../../../Team/styles";
@@ -21,11 +20,7 @@ import {
   GET_TEAM_SUBMISSION_INTEGRATIONS,
   UPSERT_TEAM_SUBMISSION_INTEGRATIONS,
 } from "./queries";
-import {
-  GetSubmissionEmails,
-  SubmissionEmailInput,
-  SubmissionEmailMutation,
-} from "./types";
+import { GetSubmissionEmails, SubmissionEmailInput } from "./types";
 
 const TableRowButton = styled(Button)(({ theme }) => ({
   textDecoration: "underline",
@@ -52,31 +47,28 @@ const RemoveEmailButton = styled(TableRowButton)(({ theme }) => ({
 }));
 
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
-  border: `1px solid ${theme.palette.border.light}`, // Apply the border color
-  borderRadius: theme.shape.borderRadius, // Optional: Add rounded corners
-  overflow: "hidden", // Optional: Prevent content overflow
+  border: `1px solid ${theme.palette.border.light}`,
+  borderRadius: theme.shape.borderRadius,
+  overflow: "hidden",
 }));
 
 export const EmailsTable = () => {
+  const toast = useToast();
   const teamId = useStore((state) => state.teamId);
 
-  const { data, loading, error } = useQuery(GET_TEAM_SUBMISSION_INTEGRATIONS, {
-    variables: { teamId },
-  });
-
-  const currentDefaultEmail =
-    data.submissionIntegrations.find(
-      (integration: SubmissionEmailInput) => integration.defaultEmail === true,
-    ) ?? null;
+  const { data, loading, error, refetch } = useQuery<GetSubmissionEmails>(
+    GET_TEAM_SUBMISSION_INTEGRATIONS,
+    {
+      variables: { teamId },
+    },
+  );
 
   const [upsertEmail] = useMutation(UPSERT_TEAM_SUBMISSION_INTEGRATIONS);
   const [deleteEmail] = useMutation(DELETE_TEAM_SUBMISSION_INTEGRATIONS);
-  const [selectedDefault, setSelectedDefault] = useState<string | null>(null);
 
-  const currentDefault = data?.submissionIntegrations.find(
-    (email: SubmissionEmailInput) => email.defaultEmail,
-  )?.id;
-
+  const [selectedDefault, setSelectedDefault] = useState<
+    SubmissionEmailInput | undefined
+  >(undefined);
   const [showModal, setShowModal] = useState(false);
   const [actionType, setActionType] = useState<"add" | "edit" | "remove">(
     "add",
@@ -85,26 +77,24 @@ export const EmailsTable = () => {
     SubmissionEmailInput | undefined
   >();
 
+  useEffect(() => {
+    if (data?.submissionIntegrations) {
+      const currentDefault = data.submissionIntegrations.find(
+        (email: SubmissionEmailInput) => email.defaultEmail === true,
+      );
+      setSelectedDefault(currentDefault || undefined);
+    }
+  }, [data]);
+
   const addEmail = () => {
     setActionType("add");
     setShowModal(true);
 
-    // We want defaultEmail to be true for the very first email
     if (!data || data.submissionIntegrations.length === 0) {
       setInitialValues({ defaultEmail: true } as SubmissionEmailInput);
     } else {
       setInitialValues(undefined);
     }
-  };
-
-  const handleAddEmail = () => {
-    setActionType("add");
-    if (!data || data.submissionIntegrations.length === 0) {
-      setInitialValues({ defaultEmail: true } as SubmissionEmailInput);
-    } else {
-      setInitialValues(undefined);
-    }
-    setShowModal(true);
   };
 
   const handleEditEmail = (email: SubmissionEmailInput) => {
@@ -113,70 +103,48 @@ export const EmailsTable = () => {
     setShowModal(true);
   };
 
-  React.useEffect(() => {
-    if (currentDefault) {
-      setSelectedDefault(currentDefault);
-    }
-  }, [currentDefault]);
-
-  const handleDefaultChange = (emailId: string) => {
-    setSelectedDefault(emailId);
-  };
-
-  const handleUpdateDefault = async () => {
-    if (!selectedDefault) return;
-
-    const updatedEmails: SubmissionEmailMutation[] =
-      data.submissionIntegrations.map((email: SubmissionEmailInput) => ({
-        id: email.id,
-        submission_email: email.submissionEmail,
-        default_email: email.id === selectedDefault,
-        team_id: email.teamId,
-      }));
-
-    await upsertEmail({
-      variables: { emails: updatedEmails },
-      optimisticResponse: {
-        upsert_submission_integrations: {
-          returning: updatedEmails,
-        },
-      },
-    });
-  };
-
   const handleRemoveEmail = async (email: SubmissionEmailInput) => {
-    await deleteEmail({
-      variables: { submissionEmail: email.submissionEmail, teamId },
-      optimisticResponse: {
-        delete_submission_integrations: {
-          returning: [{ ...email }],
+    try {
+      await deleteEmail({
+        variables: { submissionEmail: email.submissionEmail, teamId },
+        optimisticResponse: {
+          delete_submission_integrations: {
+            returning: [{ ...email }],
+          },
         },
-      },
-      update: (cache) => {
-        const existingData = cache.readQuery<GetSubmissionEmails>({
-          query: GET_TEAM_SUBMISSION_INTEGRATIONS,
-          variables: { teamId },
-        });
+        update: (cache) => {
+          const existingData = cache.readQuery<GetSubmissionEmails>({
+            query: GET_TEAM_SUBMISSION_INTEGRATIONS,
+            variables: { teamId },
+          });
 
-        if (!existingData) {
-          return;
-        }
-        const updatedEmails = existingData.submissionIntegrations.filter(
-          (e: SubmissionEmailInput) => e.id !== email.id,
-        );
-        cache.writeQuery({
-          query: GET_TEAM_SUBMISSION_INTEGRATIONS,
-          variables: { teamId },
-          data: { submissionIntegrations: updatedEmails },
-        });
-      },
-    });
+          if (existingData) {
+            const updatedEmails = existingData.submissionIntegrations.filter(
+              (e: SubmissionEmailInput) => e.id !== email.id,
+            );
+            cache.writeQuery({
+              query: GET_TEAM_SUBMISSION_INTEGRATIONS,
+              variables: { teamId },
+              data: { submissionIntegrations: updatedEmails },
+            });
+          }
+        },
+      });
+      toast.success("Email removed successfully");
+      refetch();
+    } catch (error) {
+      console.error("Error deleting email:", error);
+      toast.error("Failed to remove email");
+    }
   };
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error loading emails</div>;
+  if (error) {
+    console.error("Error loading emails:", error);
+    return <div>Error loading emails: {error.message}</div>;
+  }
 
-  if (data.submissionIntegrations.length === 0) {
+  if (!data || data.submissionIntegrations.length === 0) {
     return (
       <>
         <Table>
@@ -190,13 +158,7 @@ export const EmailsTable = () => {
           <TableBody>
             <TableRow>
               <TableCell colSpan={3}>
-                <AddButton
-                  onClick={() => {
-                    addEmail();
-                  }}
-                >
-                  Add a new email
-                </AddButton>
+                <AddButton onClick={addEmail}>Add a new email</AddButton>
               </TableCell>
             </TableRow>
           </TableBody>
@@ -213,6 +175,7 @@ export const EmailsTable = () => {
       </>
     );
   }
+
   return (
     <>
       <StyledTableContainer>
@@ -228,12 +191,7 @@ export const EmailsTable = () => {
           <TableBody>
             {data.submissionIntegrations.map((email: SubmissionEmailInput) => (
               <StyledTableRow key={email.id}>
-                <TableCell
-                  sx={{
-                    wordWrap: "break-word",
-                    maxWidth: "280px",
-                  }}
-                >
+                <TableCell sx={{ wordWrap: "break-word", maxWidth: "280px" }}>
                   {email.submissionEmail}
                 </TableCell>
                 <TableCell>
@@ -268,7 +226,7 @@ export const EmailsTable = () => {
           initialValues={initialValues}
           actionType={actionType}
           upsertEmail={upsertEmail}
-          previousDefaultEmail={currentDefaultEmail}
+          previousDefaultEmail={selectedDefault}
         />
       )}
     </>
