@@ -187,7 +187,7 @@ export const EmailsTable = () => {
           <TableHead>
             <StyledTableRow>
               <TableCell>Email</TableCell>
-              <TableCell>Default</TableCell>
+              <TableCell align="center">Default</TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
             </StyledTableRow>
@@ -198,7 +198,7 @@ export const EmailsTable = () => {
                 <TableCell sx={{ wordWrap: "break-word", maxWidth: "280px" }}>
                   {email.submissionEmail}
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   {email.defaultEmail && <CheckIcon color="primary" />}
                 </TableCell>
                 <TableCell>
