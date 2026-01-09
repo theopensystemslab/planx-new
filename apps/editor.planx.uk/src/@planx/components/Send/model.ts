@@ -54,6 +54,11 @@ export const validationSchema: SchemaOf<Send> =
       destinations: array(
         mixed().oneOf(["email", "bops", "uniform", "s3", "fme", "idox"]),
       ).min(1, "Select at least one destination"),
-      submissionEmail: string().email().optional(),
+      submissionEmail: string().when("destinations", {
+        is: (destinations: SendIntegration[]) => destinations.includes("email"),
+        then: string().required(
+          "Submission email is required when 'email' is selected.",
+        ),
+      }),
     }),
   );
