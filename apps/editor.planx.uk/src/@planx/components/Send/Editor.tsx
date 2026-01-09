@@ -1,5 +1,4 @@
-import { gql, useMutation } from "@apollo/client";
-import { useQuery } from "@apollo/client/react/hooks/useQuery";
+import { useMutation } from "@apollo/client";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
@@ -12,6 +11,7 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { getIn } from "formik";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { useEffect } from "react";
@@ -25,49 +25,16 @@ import InputRow from "ui/shared/InputRow";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 import { Switch } from "ui/shared/Switch";
 
-import { hasFeatureFlag } from "../../../lib/featureFlags";
-import { GET_TEAM_SUBMISSION_INTEGRATIONS } from "../../../pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/queries";
 import { ICONS } from "../shared/icons";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
 import { EditorProps } from "../shared/types";
+import { useFlowEmailId } from "./hooks/useFlowEmailId";
+import { useTeamSubmissionIntegrations } from "./hooks/useGetTeamSubmissionIntegrations";
+import { useInsertFlowIntegration } from "./hooks/useInsertFlowIntegrations";
+import { useUpdateFlowIntegration } from "./hooks/useUpdateFlowIntegration";
 import { parseSend, Send, validationSchema } from "./model";
 
 export type Props = EditorProps<TYPES.Send, Send>;
-
-const GET_FLOW_EMAIL_ID = gql`
-  query GetFlowEmailId($flowId: uuid!) {
-    flowIntegrations: flow_integrations(where: { flow_id: { _eq: $flowId } }) {
-      emailId: email_id
-    }
-  }
-`;
-
-const INSERT_FLOW_INTEGRATION = gql`
-  mutation InsertFlowIntegration(
-    $flowId: uuid!
-    $teamId: Int!
-    $emailId: uuid!
-  ) {
-    insert_flow_integrations_one(
-      object: { flow_id: $flowId, email_id: $emailId, team_id: $teamId }
-    ) {
-      flow_id
-      email_id
-      team_id
-    }
-  }
-`;
-
-const UPDATE_FLOW_INTEGRATION = gql`
-  mutation UpdateFlowIntegration($flowId: uuid!, $emailId: uuid!) {
-    update_flow_integrations(
-      where: { flow_id: { _eq: $flowId } }
-      _set: { email_id: $emailId }
-    ) {
-      affected_rows
-    }
-  }
-`;
 
 const SendComponent: React.FC<Props> = (props) => {
   const formik = useFormikWithRef<Send>(
@@ -93,24 +60,14 @@ const SendComponent: React.FC<Props> = (props) => {
     ],
   );
 
-  const {
-    data: flowData,
-    loading: flowLoading,
-    error: flowError,
-  } = useQuery(GET_FLOW_EMAIL_ID, {
-    variables: { flowId: id },
-  });
-
+  const { flowData, flowLoading, flowError } = useFlowEmailId(id);
   const emailId = flowData?.flowIntegrations?.[0]?.emailId;
 
-  const { data, loading, error } = useQuery(GET_TEAM_SUBMISSION_INTEGRATIONS, {
-    variables: { teamId: teamId },
-  });
-
+  const { data, loading, error } = useTeamSubmissionIntegrations(teamId);
   const emailOptions = data?.submissionIntegrations || [];
   const defaultEmail = emailOptions.find((email: any) => email.defaultEmail);
 
-  const [insertFlowIntegration] = useMutation(INSERT_FLOW_INTEGRATION);
+  const { insertFlowIntegration } = useInsertFlowIntegration();
 
   useEffect(() => {
     const populateDefaultEmail = async () => {
@@ -134,19 +91,7 @@ const SendComponent: React.FC<Props> = (props) => {
     }
   }, [formik, defaultEmail]);
 
-  const [updateFlowIntegration] = useMutation(UPDATE_FLOW_INTEGRATION);
-
-  const handleEnableEmail = async () => {
-    if (!emailId && defaultEmail) {
-      await insertFlowIntegration({
-        variables: {
-          flowId: id,
-          emailId: defaultEmail.id,
-          teamId: teamId,
-        },
-      });
-    }
-  };
+  const { updateFlowIntegration } = useUpdateFlowIntegration();
 
   const handleChangeEmail = async (newEmailId: string) => {
     if (emailId) {
@@ -170,6 +115,7 @@ const SendComponent: React.FC<Props> = (props) => {
   const toggleSwitch = (value: SendIntegration) => {
     let newCheckedValues: SendIntegration[];
 
+    // Remove or append this value from the existing array of destinations
     if (formik.values.destinations.includes(value)) {
       newCheckedValues = formik.values.destinations.filter((x) => x !== value);
     } else {
