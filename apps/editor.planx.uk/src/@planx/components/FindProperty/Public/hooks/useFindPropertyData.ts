@@ -11,6 +11,7 @@ interface FindPropertyData {
   localPlanningAuthorities?: string[];
   regions?: string[];
   wards?: string[];
+  developmentCorporations?: string[];
   titleBoundary?: Feature;
 }
 
@@ -34,6 +35,7 @@ export const useFindPropertyData = (address?: SiteAddress) => {
         localPlanningAuthorities: undefined,
         regions: undefined,
         wards: undefined,
+        developmentCorporations: undefined,
         titleBoundary: undefined,
       };
     }
@@ -42,6 +44,7 @@ export const useFindPropertyData = (address?: SiteAddress) => {
     const localPlanningAuthorities = new Set<string>();
     const regions = new Set<string>();
     const wards = new Set<string>();
+    const developmentCorporations = new Set<string>();
     let titleBoundary: Feature | undefined;
 
     data.features.forEach((feature) => {
@@ -60,6 +63,9 @@ export const useFindPropertyData = (address?: SiteAddress) => {
         case "ward":
           wards.add(name);
           break;
+        case "development-corporation-boundary":
+          developmentCorporations.add(name);
+          break;
         case "title-boundary":
           titleBoundary = feature;
           break;
@@ -71,6 +77,7 @@ export const useFindPropertyData = (address?: SiteAddress) => {
       localPlanningAuthorities: Array.from(localPlanningAuthorities),
       regions: Array.from(regions),
       wards: Array.from(wards),
+      developmentCorporations: Array.from(developmentCorporations),
       titleBoundary,
     };
   }, [data]);
