@@ -18,7 +18,7 @@ const handlers = [
     return HttpResponse.json(
       {
         original: ORIGINAL,
-        suggested: ENHANCED,
+        enhanced: ENHANCED,
       },
       { status: 200 },
     );

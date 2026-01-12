@@ -68,10 +68,10 @@ const ProjectDescription: React.FC<Props> = (props) => {
   useEffect(() => {
     if (isSuccess && data) {
       setValues({
-        userInput: (data as any).suggested as string,
+        userInput: data.enhanced,
         status: "success",
         original: data.original,
-        enhanced: (data as any).suggested as string,
+        enhanced: data.enhanced,
         error: null,
       });
       setShouldEnhance(false);
@@ -142,15 +142,12 @@ const ProjectDescription: React.FC<Props> = (props) => {
         >
           <Card>
             <Typography variant="h4">Suggested description:</Typography>
-            <Typography variant="body2">{(data as any).suggested}</Typography>
-            {/* <Typography variant="body2">{data.enhanced}</Typography> */}
+            <Typography variant="body2">{data.enhanced}</Typography>
             <Button
               variant="contained"
               color="secondary"
               sx={{ mt: "auto", backgroundColor: "common.white" }}
-              onClick={() =>
-                setFieldValue("userInput", (data as any).suggested)
-              }
+              onClick={() => setFieldValue("userInput", data.enhanced)}
             >
               Use suggested description
             </Button>
