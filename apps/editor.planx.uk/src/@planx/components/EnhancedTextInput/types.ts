@@ -1,36 +1,52 @@
 import { BaseNodeData } from "../shared";
 import type { PublicProps } from "../shared/types";
 
-export interface TaskDefinition {
-  editorProps: { fn: string } & Record<string, unknown>;
-  breadcrumbData: Record<string, unknown>;
+/**
+ * Common structure for enhancement metadata
+ */
+export interface EnhancementData {
+  original: string;
+  enhanced: string;
 }
 
 /**
- * Type guard to ensure any new tasks added to the registry conform to the above type
+ * Standard action types for tasks with enhancements
  */
-type ValidateRegistry<T extends Record<string, TaskDefinition>> = T;
+export type TaskAction = "retainedOriginal" | "acceptedEnhanced" | "hybrid";
 
 /**
- * Registry of all task, including their inputs (editorProps) and outputs (breadcrumbData)
- * Used as source of truth from which to derive other types
+ * Helper to create a properly typed task definition
  */
-export type TaskRegistry = ValidateRegistry<{
-  projectDescription: {
-    editorProps: {
-      fn: "project.description";
-      // TODO: Based on UI, decide on props
-      revisionTitle: string;
-      revisionDescription: string;
-    };
-    breadcrumbData: {
-      original: string;
-      suggested?: string;
-      userAction: "retainedOriginal" | "acceptedSuggested" | "hybrid";
+type CreateTask<
+  TFn extends string,
+  TEditorProps extends Record<string, unknown>,
+> = {
+  editorProps: { fn: TFn } & TEditorProps;
+  breadcrumbData: {
+    [K in TFn]: string;
+  } & {
+    [K in `${TFn}.action`]: TaskAction;
+  } & {
+    _enhancements: {
+      [K in TFn]: EnhancementData;
     };
   };
+};
+
+/**
+ * Registry of all tasks, including their inputs (editorProps) and outputs (breadcrumbData)
+ * Used as source of truth from which to derive other types
+ */
+export type TaskRegistry = {
+  projectDescription: CreateTask<
+    "project.description",
+    {
+      revisionTitle: string;
+      revisionDescription: string;
+    }
+  >;
   // TODO: other tasks here!
-}>
+};
 
 export type Task = keyof TaskRegistry;
 
@@ -52,7 +68,7 @@ export type EnhancedTextInput = BaseEnhancedTextInput &
  * Output of an EnhancedTextInput component
  */
 export type BreadcrumbData = {
-  [K in Task]: { task: K } & TaskRegistry[K]["breadcrumbData"];
+  [K in Task]: TaskRegistry[K]["breadcrumbData"];
 }[Task];
 
 /** Helper to type-narrow a breadcrumb */
@@ -73,5 +89,7 @@ export type TaskDefaults = { [K in Task]: TaskRegistry[K]["editorProps"] };
  * Allows individual components to handle type-narrowed Tasks
  */
 export type TaskComponentMap = {
-  [K in Task]: React.ComponentType<PublicProps<EnhancedTextInputForTask<K>>> | null;
+  [K in Task]: React.ComponentType<
+    PublicProps<EnhancedTextInputForTask<K>>
+  > | null;
 };
