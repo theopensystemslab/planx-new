@@ -1,4 +1,7 @@
-import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "@planx/components/shared/constants";
+import {
+  DESCRIPTION_TEXT,
+  ERROR_MESSAGE,
+} from "@planx/components/shared/constants";
 import type { PublicProps } from "@planx/components/shared/types";
 import { TEXT_LIMITS, TextInputType } from "@planx/components/TextInput/model";
 import { useFormikContext } from "formik";
@@ -9,9 +12,10 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import type { EnhancedTextInput } from "../types";
+import type { FormValues } from "./types";
 
 const InitialUserInput: React.FC<PublicProps<EnhancedTextInput>> = (props) => {
-  const { values, handleChange, errors } = useFormikContext<{ userInput: string }>();
+  const { values, handleChange, errors } = useFormikContext<FormValues>();
 
   return (
     <InputRow>
@@ -43,7 +47,7 @@ const InitialUserInput: React.FC<PublicProps<EnhancedTextInput>> = (props) => {
         />
       </InputLabel>
     </InputRow>
-  )
-}
+  );
+};
 
 export default InitialUserInput;

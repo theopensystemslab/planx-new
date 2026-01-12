@@ -3,7 +3,10 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "@planx/components/shared/constants";
+import {
+  DESCRIPTION_TEXT,
+  ERROR_MESSAGE,
+} from "@planx/components/shared/constants";
 import { HelpButton } from "@planx/components/shared/Preview/CardHeader/styled";
 import MoreInfo from "@planx/components/shared/Preview/MoreInfo";
 import MoreInfoSection from "@planx/components/shared/Preview/MoreInfoSection";
@@ -24,14 +27,15 @@ import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHt
 
 import { HOW_DOES_THIS_WORK } from "../../content";
 import type { EnhancedTextInputForTask } from "../../types";
+import type { FormValues } from "../types";
 import ErrorCard from "./ErrorCard";
 import LoadingSkeleton from "./LoadingSkeleton";
 
-type Props = PublicProps<EnhancedTextInputForTask<"projectDescription">>
+type Props = PublicProps<EnhancedTextInputForTask<"projectDescription">>;
 
 const Card = styled(Box)(({ theme }) => ({
-  display: "flex", 
-  flexDirection: "column", 
+  display: "flex",
+  flexDirection: "column",
   alignItems: "flex-start",
   flexBasis: "100%",
   gap: theme.spacing(1.5),
@@ -43,13 +47,17 @@ const Card = styled(Box)(({ theme }) => ({
 }));
 
 const ProjectDescription: React.FC<Props> = (props) => {
-  const { values, handleChange, errors, setFieldValue } = useFormikContext<{ userInput: string }>()
+  const { values, handleChange, errors, setFieldValue, setValues } =
+    useFormikContext<FormValues>();
   const [open, setOpen] = useState(false);
-  
+
   const initialValueRef = useRef(values.userInput);
   const [shouldEnhance, setShouldEnhance] = React.useState(true);
 
-  const { isPending, data, error, isSuccess } = useQuery<EnhanceResponse, APIError<EnhanceError>>({
+  const { isPending, data, error, isSuccess } = useQuery<
+    EnhanceResponse,
+    APIError<EnhanceError>
+  >({
     queryFn: () => enhanceProjectDescription(initialValueRef.current),
     queryKey: ["projectDescription", initialValueRef.current], // Use initial value, not changing value
     retry: 0,
@@ -59,14 +67,23 @@ const ProjectDescription: React.FC<Props> = (props) => {
   // Populate text field with "enhanced" value
   useEffect(() => {
     if (isSuccess && data) {
-      setFieldValue("userInput", data.enhanced);
+      setValues({
+        userInput: (data as any).suggested as string,
+        status: "success",
+        original: data.original,
+        enhanced: (data as any).suggested as string,
+        error: null,
+      });
       setShouldEnhance(false);
     }
-  }, [isSuccess, data, setFieldValue]);
+  }, [isSuccess, data, setValues]);
 
-  if (isPending) return <LoadingSkeleton/>;
+  if (isPending) return <LoadingSkeleton />;
 
   if (error) {
+    setFieldValue("status", "error");
+    setFieldValue("error", error.data.error);
+
     switch (error.data.error) {
       case "INVALID_DESCRIPTION":
         return (
@@ -74,7 +91,7 @@ const ProjectDescription: React.FC<Props> = (props) => {
             title="Invalid description"
             description="We weren't able to generate a description based on your input. The description doesn't appear to be related to a planning application."
           />
-        )
+        );
 
       case "SERVICE_UNAVAILABLE":
         return (
@@ -82,14 +99,21 @@ const ProjectDescription: React.FC<Props> = (props) => {
             title="Service unavailable"
             description="We weren't able to generate a description based on your input. We'll use your original project description."
           />
-        )
+        );
     }
   }
 
   return (
     <>
       <Box my={2}>
-        <Typography variant="h3" component="h2" fontWeight={FONT_WEIGHT_SEMI_BOLD} mb={1}>{props.revisionTitle}</Typography>
+        <Typography
+          variant="h3"
+          component="h2"
+          fontWeight={FONT_WEIGHT_SEMI_BOLD}
+          mb={1}
+        >
+          {props.revisionTitle}
+        </Typography>
         <Typography variant="body2">{props.revisionDescription}</Typography>
         <Typography variant="subtitle1" component="div">
           <HelpButton
@@ -100,21 +124,33 @@ const ProjectDescription: React.FC<Props> = (props) => {
             aria-haspopup="dialog"
             data-testid="more-info-button"
           >
-            <HelpIcon />How does this work?
+            <HelpIcon />
+            How does this work?
           </HelpButton>
         </Typography>
       </Box>
-      
+
       {data && (
-        <Box sx={{ display: "flex", flexDirection: { xs: "column", contentWrap: "row" }, maxWidth: "100%" }} gap={2} mb={2}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", contentWrap: "row" },
+            maxWidth: "100%",
+          }}
+          gap={2}
+          mb={2}
+        >
           <Card>
             <Typography variant="h4">Suggested description:</Typography>
-            <Typography variant="body2">{data.enhanced}</Typography>
-            <Button 
-              variant="contained" 
-              color="secondary" 
-              sx={{ mt: "auto", backgroundColor: "common.white" }} 
-              onClick={() => setFieldValue("userInput", data.enhanced)}
+            <Typography variant="body2">{(data as any).suggested}</Typography>
+            {/* <Typography variant="body2">{data.enhanced}</Typography> */}
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{ mt: "auto", backgroundColor: "common.white" }}
+              onClick={() =>
+                setFieldValue("userInput", (data as any).suggested)
+              }
             >
               Use suggested description
             </Button>
@@ -122,10 +158,10 @@ const ProjectDescription: React.FC<Props> = (props) => {
           <Card>
             <Typography variant="h4">Your description:</Typography>
             <Typography variant="body2">{data.original}</Typography>
-            <Button 
-              variant="contained" 
-              color="secondary" 
-              sx={{ mt: "auto", backgroundColor: "common.white" }} 
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{ mt: "auto", backgroundColor: "common.white" }}
               onClick={() => setFieldValue("userInput", data.original)}
             >
               Revert to original description
@@ -133,7 +169,7 @@ const ProjectDescription: React.FC<Props> = (props) => {
           </Card>
         </Box>
       )}
-      
+
       <InputRow>
         <InputLabel label={props.title} hidden htmlFor={props.id}>
           <Input
@@ -158,7 +194,7 @@ const ProjectDescription: React.FC<Props> = (props) => {
           />
           <CharacterCounter
             limit={TEXT_LIMITS[TextInputType.Long]}
-            count={values.userInput.length}
+            count={values.userInput?.length || 0}
             error={Boolean(errors.userInput)}
           />
         </InputLabel>
@@ -169,7 +205,7 @@ const ProjectDescription: React.FC<Props> = (props) => {
         </MoreInfoSection>
       </MoreInfo>
     </>
-  )
+  );
 };
 
 export default ProjectDescription;
