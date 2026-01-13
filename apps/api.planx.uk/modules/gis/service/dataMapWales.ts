@@ -23,7 +23,6 @@ async function queryWFSLayer(
   geometry: string,
   geometryField: string,
 ): Promise<{ features: any[] }> {
-
   // parse WKT
   const isPoint = geometry.startsWith("POINT");
 
@@ -53,10 +52,13 @@ async function queryWFSLayer(
     if (!coords) throw new Error(`Invalid POLYGON geometry: ${geometry}`);
 
     // Convert "lon1 lat1, lon2 lat2, ..." to GML posList format
-    const posList = coords[1].split(',').map((pair: string) => {
-      const [lon, lat] = pair.trim().split(/\s+/);
-      return `${lon} ${lat}`;
-    }).join(' ');
+    const posList = coords[1]
+      .split(",")
+      .map((pair: string) => {
+        const [lon, lat] = pair.trim().split(/\s+/);
+        return `${lon} ${lat}`;
+      })
+      .join(" ");
 
     filterXml = `
       <fes:Filter xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:gml="http://www.opengis.net/gml/3.2">
@@ -170,7 +172,6 @@ async function go(
   let formattedResult: Record<string, Constraint> = {};
   queryResults.forEach(({ key, constraint, result }) => {
     if (result?.features?.length > 0) {
-
       // ASNW: filter on category_name
       let features = result.features;
       if (key === "nature.ASNW") {
@@ -246,8 +247,12 @@ async function go(
 
         // flooding; split by zone
         if (key === "flood") {
-          const zoneTwoEntities = entities.filter((e) => e.risk === "Flood Zone 2");
-          const zoneThreeEntities = entities.filter((e) => e.risk === "Flood Zone 3");
+          const zoneTwoEntities = entities.filter(
+            (e) => e.risk === "Flood Zone 2",
+          );
+          const zoneThreeEntities = entities.filter(
+            (e) => e.risk === "Flood Zone 3",
+          );
 
           if (zoneTwoEntities.length > 0) {
             formattedResult["flood.zoneTwo"] = {
