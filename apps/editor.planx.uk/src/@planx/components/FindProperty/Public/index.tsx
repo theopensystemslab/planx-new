@@ -30,10 +30,10 @@ type Props = PublicProps<FindProperty>;
 function Component(props: Props) {
   const previouslySubmittedData = props.previouslySubmittedData?.data;
   const previouslySubmittedAddressSource =
-    props.previouslySubmittedData?.data?._address?.source;
+    previouslySubmittedData?._address?.source;
 
   const startPage =
-    previouslySubmittedAddressSource === "proposed"
+    Boolean(props.newAddressFirstPage) || previouslySubmittedAddressSource === "proposed"
       ? "new-address"
       : "os-address";
   const [page, setPage] = useState<"os-address" | "new-address">(startPage);
