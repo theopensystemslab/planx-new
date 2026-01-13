@@ -118,7 +118,7 @@ const SendComponent: React.FC<Props> = (props) => {
     handleChangeEmail(selectedValue);
   };
 
-  const currentEmail = emailOptions.find((email: any) => email.id === emailId);
+  const currentEmail = emailOptions.find((email) => email.id === emailId);
 
   const toggleSwitch = (value: SendIntegration) => {
     let newCheckedValues: SendIntegration[];
