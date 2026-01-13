@@ -1,4 +1,3 @@
-import { useMutation } from "@apollo/client";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
@@ -30,6 +29,7 @@ import { WarningContainer } from "../shared/Preview/WarningContainer";
 import { EditorProps } from "../shared/types";
 import { useFlowEmailId } from "./hooks/useFlowEmailId";
 import { useTeamSubmissionIntegrations } from "./hooks/useGetTeamSubmissionIntegrations";
+import { useInitializeFlowIntegration } from "./hooks/useInitializeFlowIntegration";
 import { useInsertFlowIntegration } from "./hooks/useInsertFlowIntegrations";
 import { useUpdateFlowIntegration } from "./hooks/useUpdateFlowIntegration";
 import { parseSend, Send, validationSchema } from "./model";
@@ -75,23 +75,12 @@ const SendComponent: React.FC<Props> = (props) => {
   const defaultEmail = emailOptions.find((email: any) => email.defaultEmail);
 
   const insertFlowIntegrationObject = useInsertFlowIntegration();
-  const [insertFlowIntegration] = insertFlowIntegrationObject;
-  useEffect(() => {
-    const populateDefaultEmail = async () => {
-      if (!emailId && defaultEmail) {
-        await insertFlowIntegration({
-          variables: {
-            flowId: id,
-            emailId: defaultEmail.id,
-            teamId: teamId,
-          },
-        });
-      }
-    };
-
-    populateDefaultEmail();
-  }, [emailId, defaultEmail, id, teamId, insertFlowIntegration]);
-
+  useInitializeFlowIntegration({
+    emailId,
+    defaultEmail,
+    flowId: id,
+    teamId,
+  });
   useEffect(() => {
     if (!formik.values.submissionEmail && defaultEmail) {
       formik.setFieldValue("submissionEmail", defaultEmail.id);
