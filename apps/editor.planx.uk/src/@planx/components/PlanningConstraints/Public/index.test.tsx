@@ -17,7 +17,7 @@ import {
   simpleBreadcrumbs,
   simpleFlow,
 } from "../mocks/simpleFlow";
-import { availableDatasets } from "../model";
+import { getAvailableDatasets } from "../model";
 import PlanningConstraints from ".";
 
 const { setState } = useStore;
@@ -302,7 +302,7 @@ describe("selectable datasets in editor", () => {
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         handleSubmit={vi.fn()}
-        dataValues={availableDatasets
+        dataValues={getAvailableDatasets(undefined)
           .filter((d) => d.val !== "road.classified")
           .map((d) => d.val)}
       />,

@@ -23,7 +23,7 @@ import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import { SiteAddress } from "../../FindProperty/model";
-import { availableDatasets } from "../model";
+import { getAvailableDatasets } from "../model";
 import { InaccurateConstraints } from ".";
 import { OverrideEntitiesModal } from "./Modal";
 
@@ -167,10 +167,15 @@ interface ConstraintListItemProps {
 function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
   const [showModal, setShowModal] = useState<boolean>(false);
 
-  const [{ longitude, latitude, usrn }, hasPlanningData] = useStore((state) => [
-    (state.computePassport().data?.["_address"] as SiteAddress) || {},
-    state.teamIntegrations?.hasPlanningData,
-  ]);
+  const [{ longitude, latitude, usrn }, hasPlanningData, teamSlug] = useStore(
+    (state) => [
+      (state.computePassport().data?.["_address"] as SiteAddress) || {},
+      state.teamIntegrations?.hasPlanningData,
+      state.teamSlug,
+    ],
+  );
+
+  const availableDatasets = getAvailableDatasets(teamSlug);
 
   // Whether a particular constraint list item is sourced from Planning Data
   const isSourcedFromPlanningData =

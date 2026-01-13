@@ -16,7 +16,7 @@ import React, { useState } from "react";
 import { SiteAddress } from "../../FindProperty/model";
 import { ErrorSummaryContainer } from "../../shared/Preview/ErrorSummaryContainer";
 import {
-  availableDatasets,
+  getAvailableDatasets,
   type IntersectingConstraints,
   type PlanningConstraints,
 } from "../model";
@@ -39,9 +39,6 @@ export type InaccurateConstraints =
 export default Component;
 
 function Component(props: Props) {
-  // Existing components will not have dataValues prop so should default to all available datasets
-  const dataValues = props.dataValues || availableDatasets.map((d) => d.val);
-
   const [
     currentCardId,
     cachedBreadcrumbs,
@@ -57,6 +54,10 @@ function Component(props: Props) {
     state.computePassport().data?.["_overrides"],
     (state.computePassport().data?.["_address"] as SiteAddress) || {},
   ]);
+
+  // Existing components will not have dataValues prop so should default to all available datasets
+  const dataValues =
+    props.dataValues || getAvailableDatasets(teamSlug).map((d) => d.val);
 
   // PlanningConstraints must come after at least a FindProperty in the graph
   const showGraphError = !longitude || !latitude;
