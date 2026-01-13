@@ -17,7 +17,7 @@
     "@mui/utils": "^5.15.11",
     "@mui/x-charts": "8.9.0",
     "@mui/x-data-grid": "^7.25.0",
-    "@opensystemslab/map": "1.0.0-alpha.6",
+    "@opensystemslab/map": "1.0.0-alpha.11",
     "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#e594e98c524736472ce0a1cf5919ce6db452172c",
     "@tanstack/react-query": "^5.90.6",
     "@tiptap/core": "3.0.7",
