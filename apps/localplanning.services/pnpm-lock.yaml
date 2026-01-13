@@ -24,8 +24,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0(nanostores@1.0.1)(react@19.2.0)
       '@opensystemslab/map':
-        specifier: 1.0.0-alpha.10
-        version: 1.0.0-alpha.10
+        specifier: 1.0.0-alpha.11
+        version: 1.0.0-alpha.11
       '@tailwindcss/vite':
         specifier: ^4.1.15
         version: 4.1.17(vite@7.2.2(@types/node@24.10.1)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.2)(sass@1.93.2)(stylus@0.62.0)(yaml@2.8.1))
@@ -804,8 +804,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@opensystemslab/map@1.0.0-alpha.10':
-    resolution: {integrity: sha512-h4IDgQp3VbzWdmaPnMlI5e2Qersy2M6zMqLq/f5CJj4vRI6mBC/nyOCi8AhPhTuIUNsyt1PMZlokPmprhPFqVA==}
+  '@opensystemslab/map@1.0.0-alpha.11':
+    resolution: {integrity: sha512-ETACPCk5Coef1L2kNT3MhIzLxVPDpyopxsTNcgeRyEqL71HBfTklGyC5+t7HgEgxRkX5wlUXqmKPNL9DdpVj8g==}
 
   '@oslojs/encoding@1.1.0':
     resolution: {integrity: sha512-70wQhgYmndg4GCPxPPxPGevRKqTIJ2Nh4OkiMWmDAVYsTQ+Ta7Sq+rPevXyXGdzr30/qZBnyOalCszoMxlyldQ==}
@@ -2176,8 +2176,8 @@ packages:
   jsonc-parser@3.3.1:
     resolution: {integrity: sha512-HUgH65KyejrUFPvHFPbqOY0rsFip3Bo5wb4ngvdi1EpCYWUQDC5V+Y7mZws+DLkr4M//zQJoanu1SP+87Dv1oQ==}
 
-  jspdf@3.0.3:
-    resolution: {integrity: sha512-eURjAyz5iX1H8BOYAfzvdPfIKK53V7mCpBTe7Kb16PaM8JSXEcUQNBQaiWMI8wY5RvNOPj4GccMjTlfwRBd+oQ==}
+  jspdf@4.0.0:
+    resolution: {integrity: sha512-w12U97Z6edKd2tXDn3LzTLg7C7QLJlx0BPfM3ecjK2BckUl9/81vZ+r5gK4/3KQdhAcEZhENUxRhtgYBj75MqQ==}
 
   kleur@3.0.3:
     resolution: {integrity: sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==}
@@ -4282,7 +4282,7 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
 
-  '@opensystemslab/map@1.0.0-alpha.10':
+  '@opensystemslab/map@1.0.0-alpha.11':
     dependencies:
       '@turf/helpers': 7.2.0
       '@turf/union': 7.2.0
@@ -4290,7 +4290,7 @@ snapshots:
       accessible-autocomplete: 3.0.1
       file-saver: 2.0.5
       govuk-frontend: 5.13.0
-      jspdf: 3.0.3
+      jspdf: 4.0.0
       lit: 3.3.1
       ol: 10.6.1
       ol-ext: 4.0.36(ol@10.6.1)
@@ -5796,7 +5796,7 @@ snapshots:
 
   jsonc-parser@3.3.1: {}
 
-  jspdf@3.0.3:
+  jspdf@4.0.0:
     dependencies:
       '@babel/runtime': 7.28.4
       fast-png: 6.4.0
