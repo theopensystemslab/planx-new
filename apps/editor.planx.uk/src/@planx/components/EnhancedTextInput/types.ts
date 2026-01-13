@@ -25,7 +25,7 @@ type CreateTask<
   breadcrumbData: {
     [K in TFn]: string;
   } & {
-    [K in `${TFn}.action`]: TaskAction;
+    [K in `enhancedTextInput.${TFn}.action`]: TaskAction;
   } & {
     _enhancements: {
       [K in TFn]: EnhancementData;

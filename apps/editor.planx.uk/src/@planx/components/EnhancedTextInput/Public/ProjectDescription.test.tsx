@@ -59,7 +59,7 @@ describe("Passport generation", () => {
       expect.objectContaining({
         data: {
           "project.description": ENHANCED,
-          "project.description.action": "acceptedEnhanced",
+          "enhancedTextInput.project.description.action": "acceptedEnhanced",
           _enhancements: {
             "project.description": {
               original: ORIGINAL,
@@ -103,7 +103,7 @@ describe("Passport generation", () => {
       expect.objectContaining({
         data: {
           "project.description": ORIGINAL,
-          "project.description.action": "retainedOriginal",
+          "enhancedTextInput.project.description.action": "retainedOriginal",
           _enhancements: {
             "project.description": {
               original: ORIGINAL,
@@ -152,7 +152,7 @@ describe("Passport generation", () => {
       expect.objectContaining({
         data: {
           "project.description": "a new description",
-          "project.description.action": "hybrid",
+          "enhancedTextInput.project.description.action": "hybrid",
           _enhancements: {
             "project.description": {
               original: ORIGINAL,

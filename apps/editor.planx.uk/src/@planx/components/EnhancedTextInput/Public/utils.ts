@@ -38,7 +38,7 @@ export const makeBreadcrumb = (
 
   return {
     [fn]: userInput,
-    [`${fn}.action`]: getAction(values),
+    [`enhancedTextInput.${fn}.action`]: getAction(values),
     // TODO: Ensure we deep merge this
     _enhancements: {
       [fn]: enhancement,
