@@ -85,6 +85,20 @@ function FindPropertyComponent(props: Props) {
           {formik.values.allowNewAddresses ? (
             <>
               <InputRow>
+                <Switch
+                  checked={formik.values.newAddressFirstPage}
+                  onChange={() => 
+                    formik.setFieldValue(
+                      "newAddressFirstPage",
+                      !formik.values.newAddressFirstPage,
+                    )
+                  }
+                  label="Show the new address map as the primary journey, and existing postcode/address inputs page secondary"
+                  disabled={props.disabled}
+                />
+              </InputRow>
+              <br />
+              <InputRow>
                 <Input
                   format="large"
                   placeholder="Title"
