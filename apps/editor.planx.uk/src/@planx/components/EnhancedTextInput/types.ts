@@ -12,7 +12,7 @@ export interface EnhancementData {
 export const TaskActionMap = {
   retainedOriginal: "Retained their original description",
   acceptedEnhanced: "Accepted the AI-enhanced description",
-  hybrid: "Re-wrote their description follow AI feedback",
+  hybrid: "Re-wrote their description after AI feedback",
 } as const;
 
 /**

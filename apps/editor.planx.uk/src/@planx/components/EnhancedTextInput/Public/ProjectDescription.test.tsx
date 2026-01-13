@@ -155,7 +155,7 @@ describe("Passport generation", () => {
         data: {
           "project.description": "a new description",
           "enhancedTextInput.project.description.action":
-            "Re-wrote their description follow AI feedback",
+            "Re-wrote their description after AI feedback",
           _enhancements: {
             "project.description": {
               original: ORIGINAL,
