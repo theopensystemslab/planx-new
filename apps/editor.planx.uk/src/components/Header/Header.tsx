@@ -10,17 +10,14 @@ import { styled, Theme } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useMutation } from "@tanstack/react-query";
 import AccountMenu from "components/AccountMenu";
-import EnvironmentSelect from "components/EditorNavMenu/components/EnvironmentSelect";
 import Breadcrumbs from "components/Breadcrumbs";
-import { logout } from "lib/api/auth/requests";
 import { clearLocalFlowIdb } from "lib/local.idb";
 import { capitalize } from "lodash";
 import { Route } from "navi";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React, { RefObject, useRef, useState } from "react";
-import { useCurrentRoute, useNavigation } from "react-navi";
+import { useCurrentRoute } from "react-navi";
 import {
   borderedFocusStyle,
   FONT_WEIGHT_SEMI_BOLD,
