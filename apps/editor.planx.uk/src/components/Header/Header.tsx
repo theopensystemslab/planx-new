@@ -2,7 +2,6 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
@@ -14,29 +13,23 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useMutation } from "@tanstack/react-query";
 import AccountMenu from "components/AccountMenu";
 import EnvironmentSelect from "components/EditorNavMenu/components/EnvironmentSelect";
+import Breadcrumbs from "components/Breadcrumbs";
 import { logout } from "lib/api/auth/requests";
 import { clearLocalFlowIdb } from "lib/local.idb";
 import { capitalize } from "lodash";
 import { Route } from "navi";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React, { RefObject, useRef, useState } from "react";
-import {
-  Link as ReactNaviLink,
-  useCurrentRoute,
-  useNavigation,
-} from "react-navi";
+import { useCurrentRoute, useNavigation } from "react-navi";
 import {
   borderedFocusStyle,
   FONT_WEIGHT_SEMI_BOLD,
   LINE_HEIGHT_BASE,
 } from "theme";
 import { ApplicationPath } from "types";
-import FlowTag from "ui/editor/FlowTag/FlowTag";
-import { FlowTagType } from "ui/editor/FlowTag/types";
 import Reset from "ui/icons/Reset";
 
 import { useStore } from "../../pages/FlowEditor/lib/store";
-import { rootFlowPath } from "../../routes/utils";
 import AnalyticsDisabledBanner from "../AnalyticsDisabled/AnalyticsDisabledBanner";
 import { ConfirmationDialog } from "../ConfirmationDialog";
 import { SectionNavBar } from "./Sections/NavBar";
@@ -48,20 +41,6 @@ export const HEADER_HEIGHT_EDITOR = 56;
 const Root = styled(AppBar)(({ theme }) => ({
   color: theme.palette.common.white,
 }));
-
-const BreadcrumbsRoot = styled(Box)(() => ({
-  cursor: "pointer",
-  fontSize: 20,
-  display: "flex",
-  columnGap: 10,
-  alignItems: "center",
-}));
-
-const BreadcrumbsLink = styled(Link)(({ theme }) => ({
-  color: theme.palette.common.white,
-  textDecoration: "none",
-  borderBottom: "1px solid rgba(255, 255, 255, 0.75)",
-})) as typeof Link;
 
 const PublicHeader = styled(MuiToolbar)(() => ({
   height: HEADER_HEIGHT_PUBLIC,
@@ -155,86 +134,6 @@ const TeamLogo: React.FC = () => {
     </LogoLink>
   ) : (
     logo
-  );
-};
-
-const Breadcrumbs: React.FC<{ showEnvironmentSelect?: boolean }> = ({
-  showEnvironmentSelect = false,
-}) => {
-  const route = useCurrentRoute();
-  const [team, isStandalone] = useStore((state) => [
-    state.getTeam(),
-    state.previewEnvironment === "standalone",
-  ]);
-
-  const flowStatus = useStore((state) => state.flowStatus);
-
-  return (
-    <>
-      <BreadcrumbsRoot>
-        <BreadcrumbsLink
-          component={ReactNaviLink}
-          href={"/"}
-          prefetch={false}
-          {...(isStandalone && { target: "_blank" })}
-          variant="body1"
-        >
-          Plan✕
-        </BreadcrumbsLink>
-        {showEnvironmentSelect && <EnvironmentSelect />}
-        {team.slug && (
-          <>
-            {" / "}
-            <BreadcrumbsLink
-              component={ReactNaviLink}
-              href={`/${team.slug}`}
-              prefetch={false}
-              {...(isStandalone && { target: "_blank" })}
-              variant="body1"
-            >
-              {team.slug}
-            </BreadcrumbsLink>
-          </>
-        )}
-        {route.data.flow && (
-          <>
-            {" / "}
-            <Link
-              style={{
-                color: "#fff",
-                textDecoration: "none",
-              }}
-              component={ReactNaviLink}
-              href={rootFlowPath(false)}
-              prefetch={false}
-              variant="body1"
-            >
-              {route.data.flow}
-            </Link>
-          </>
-        )}
-      </BreadcrumbsRoot>
-      {route.data.flow && (
-        <Box sx={(theme) => ({ color: theme.palette.text.primary })}>
-          {useStore.getState().canUserEditTeam(team.slug) ? (
-            <Button
-              variant="link"
-              href={`/${team.slug}/${route.data.flow}/settings`}
-              title="Update service status"
-              sx={{ textDecoration: "none" }}
-            >
-              <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
-                {flowStatus}
-              </FlowTag>
-            </Button>
-          ) : (
-            <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
-              {flowStatus}
-            </FlowTag>
-          )}
-        </Box>
-      )}
-    </>
   );
 };
 
