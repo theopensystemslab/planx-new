@@ -175,7 +175,8 @@ describe("navigating back to the EnhancedTextInput component", () => {
     seq: 1,
     data: {
       "project.description": "My hybrid response",
-      "project.description.action": "hybrid",
+      "enhancedTextInput.project.description.action":
+        "Re-wrote their description after AI feedback",
       _enhancements: {
         "project.description": {
           original: "my first attempt",
@@ -288,7 +289,8 @@ describe("navigating back to the EnhancedTextInput component", () => {
       expect.objectContaining({
         data: {
           "project.description": ENHANCED,
-          "project.description.action": "acceptedEnhanced",
+          "enhancedTextInput.project.description.action":
+            "Accepted the AI-enhanced description",
           _enhancements: {
             "project.description": {
               original: ORIGINAL,
