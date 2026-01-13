@@ -4,7 +4,6 @@ import { lazy, mixed, object, type SchemaOf, string } from "yup";
 import { baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
 import {
   type BaseEnhancedTextInput,
-  type BreadcrumbData,
   type EnhancedTextInput,
   type EnhancedTextInputForTask,
   type Task,
@@ -15,11 +14,14 @@ export const taskDefaults: TaskDefaults = {
   projectDescription: {
     fn: "project.description",
     revisionTitle: "We suggest revising your project description",
-    revisionDescription: "The suggested description uses planning terminology that planning officers expect, reducing the chance of a delay to your application.",
+    revisionDescription:
+      "The suggested description uses planning terminology that planning officers expect, reducing the chance of a delay to your application.",
   },
 };
 
-export const parseEnhancedTextInput = (data: Partial<EnhancedTextInput> | undefined): EnhancedTextInput => {
+export const parseEnhancedTextInput = (
+  data: Partial<EnhancedTextInput> | undefined,
+): EnhancedTextInput => {
   const task = data?.task || "projectDescription";
 
   return {
@@ -56,7 +58,7 @@ export const taskSchemas = {
 } satisfies Record<Task, SchemaOf<EnhancedTextInputForTask<Task>>>;
 
 export const validationSchema = lazy(
-  (breadcrumbData: BreadcrumbData) => taskSchemas[breadcrumbData.task],
+  (component: EnhancedTextInput) => taskSchemas[component.task],
 );
 
 export const TASKS: Record<Task, { label: string; description: string }> = {

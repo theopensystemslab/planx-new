@@ -22,7 +22,7 @@ components:
         original:
           type: string
           description: The original description that was submitted
-        suggested:
+        enhanced:
           type: string
           description: The AI-enhanced suggestion
       required:

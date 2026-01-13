@@ -3,7 +3,7 @@ import { enhanceProjectDescription } from "./service.js";
 import type { Controller } from "./types.js";
 
 export const projectDescriptionController: Controller = async (
-  req,
+  _req,
   res,
   next,
 ) => {
@@ -11,7 +11,7 @@ export const projectDescriptionController: Controller = async (
     const { original } = res.locals.parsedReq.body;
     const result = await enhanceProjectDescription(original);
 
-    if (result.ok) return res.json({ original, suggested: result.value });
+    if (result.ok) return res.json({ original, enhanced: result.value });
 
     switch (result.error) {
       case "INVALID_DESCRIPTION":
