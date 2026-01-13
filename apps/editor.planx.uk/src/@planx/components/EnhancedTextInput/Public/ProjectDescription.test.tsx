@@ -59,7 +59,8 @@ describe("Passport generation", () => {
       expect.objectContaining({
         data: {
           "project.description": ENHANCED,
-          "enhancedTextInput.project.description.action": "acceptedEnhanced",
+          "enhancedTextInput.project.description.action":
+            "Accepted the AI-enhanced description",
           _enhancements: {
             "project.description": {
               original: ORIGINAL,
@@ -103,7 +104,8 @@ describe("Passport generation", () => {
       expect.objectContaining({
         data: {
           "project.description": ORIGINAL,
-          "enhancedTextInput.project.description.action": "retainedOriginal",
+          "enhancedTextInput.project.description.action":
+            "Retained their original description",
           _enhancements: {
             "project.description": {
               original: ORIGINAL,
@@ -152,7 +154,8 @@ describe("Passport generation", () => {
       expect.objectContaining({
         data: {
           "project.description": "a new description",
-          "enhancedTextInput.project.description.action": "hybrid",
+          "enhancedTextInput.project.description.action":
+            "Re-wrote their description follow AI feedback",
           _enhancements: {
             "project.description": {
               original: ORIGINAL,

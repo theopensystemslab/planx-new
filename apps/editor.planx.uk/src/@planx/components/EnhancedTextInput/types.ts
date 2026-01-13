@@ -9,10 +9,21 @@ export interface EnhancementData {
   enhanced: string;
 }
 
+export const TaskActionMap = {
+  retainedOriginal: "Retained their original description",
+  acceptedEnhanced: "Accepted the AI-enhanced description",
+  hybrid: "Re-wrote their description follow AI feedback",
+} as const;
+
 /**
  * Standard action types for tasks with enhancements
  */
-export type TaskAction = "retainedOriginal" | "acceptedEnhanced" | "hybrid";
+export type TaskAction = keyof typeof TaskActionMap;
+
+/**
+ * Human-readable descriptions of TaskActions (used for analytics)
+ */
+export type TaskActionDescription = (typeof TaskActionMap)[TaskAction];
 
 /**
  * Helper to create a properly typed task definition
@@ -25,7 +36,7 @@ type CreateTask<
   breadcrumbData: {
     [K in TFn]: string;
   } & {
-    [K in `enhancedTextInput.${TFn}.action`]: TaskAction;
+    [K in `enhancedTextInput.${TFn}.action`]: TaskActionDescription;
   } & {
     _enhancements: {
       [K in TFn]: EnhancementData;

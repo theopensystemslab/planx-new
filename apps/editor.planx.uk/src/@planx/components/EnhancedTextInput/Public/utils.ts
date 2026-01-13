@@ -4,10 +4,11 @@ import {
 } from "@planx/components/TextInput/model";
 import { object, string } from "yup";
 
-import type { BreadcrumbData, TaskAction } from "../types";
+import type { BreadcrumbData, TaskActionDescription } from "../types";
+import { TaskActionMap } from "./../types";
 import type { FormValues, Props } from "./types";
 
-export const getAction = (values: FormValues): TaskAction => {
+export const getAction = (values: FormValues): TaskActionDescription => {
   if (values.status === "idle")
     throw Error(
       "Unable to create EnhancedTextInput breadcrumb while in 'idle' status",
@@ -15,9 +16,9 @@ export const getAction = (values: FormValues): TaskAction => {
 
   const { original, userInput, enhanced } = values;
 
-  if (userInput === original) return "retainedOriginal";
-  if (userInput === enhanced) return "acceptedEnhanced";
-  return "hybrid";
+  if (userInput === original) return TaskActionMap.retainedOriginal;
+  if (userInput === enhanced) return TaskActionMap.acceptedEnhanced;
+  return TaskActionMap.hybrid;
 };
 
 export const makeBreadcrumb = (
