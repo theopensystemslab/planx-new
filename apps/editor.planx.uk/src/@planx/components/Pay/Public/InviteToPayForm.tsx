@@ -87,7 +87,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
     state.hasAcknowledgedWarning,
   ]);
   const navigate = useNavigate();
-  const params = useParams({ from: "/$team/$flow/pay" });
+  const params = useParams({ from: "/_public/$team/$flow/pay" });
   const defaults = getDefaultContent();
 
   const redirectToConfirmationPage = (paymentRequestId: string) => {
