@@ -40,8 +40,14 @@ const SendComponent: React.FC<Props> = (props) => {
   const formik = useFormikWithRef<Send>(
     {
       initialValues: parseSend(props.node?.data),
-      onSubmit: (newValues) => {
+      onSubmit: async (newValues) => {
         if (props.handleSubmit) {
+          if (
+            newValues.submissionEmailId &&
+            newValues.submissionEmailId !== emailId
+          ) {
+            await handleChangeEmail(newValues.submissionEmailId);
+          }
           props.handleSubmit({ type: TYPES.Send, data: newValues });
         }
       },
@@ -81,11 +87,12 @@ const SendComponent: React.FC<Props> = (props) => {
     flowId: id,
     teamId,
   });
+
   useEffect(() => {
-    if (!formik.values.submissionEmail && defaultEmail) {
+    if (!formik.values.submissionEmailId && defaultEmail) {
       formik.setFieldValue("submissionEmail", defaultEmail.id);
     }
-  }, [formik, defaultEmail]);
+  }, [formik.values.submissionEmailId, defaultEmail, formik]);
 
   const updateFlowIntegrationObject = useUpdateFlowIntegration();
   const [updateFlowIntegration] = updateFlowIntegrationObject;
@@ -104,7 +111,6 @@ const SendComponent: React.FC<Props> = (props) => {
   const handleSelectChange = (event: SelectChangeEvent<unknown>) => {
     const selectedValue = event.target.value as string;
     formik.setFieldValue("submissionEmail", selectedValue);
-    handleChangeEmail(selectedValue);
   };
 
   const currentEmail = emailOptions.find((email) => email.id === emailId);
@@ -192,7 +198,7 @@ const SendComponent: React.FC<Props> = (props) => {
                               <SelectInput
                                 name="submissionEmail"
                                 value={
-                                  formik.values.submissionEmail ||
+                                  formik.values.submissionEmailId ||
                                   currentEmail?.id ||
                                   ""
                                 }
