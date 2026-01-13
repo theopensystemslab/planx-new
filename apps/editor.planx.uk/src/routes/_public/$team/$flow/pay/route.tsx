@@ -10,7 +10,7 @@ import {
 } from "utils/routeUtils/standaloneViewHelpers";
 import { getTeamFromDomain, validateTeamRoute } from "utils/routeUtils/utils";
 
-export const Route = createFileRoute("/$team/$flow/pay")({
+export const Route = createFileRoute("/_public/$team/$flow/pay")({
   beforeLoad: async ({ params }) => {
     const { team: teamParam, flow: flowParam } = params;
 

@@ -2,14 +2,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import ContentPage from "pages/Preview/ContentPage";
 import React from "react";
 
-export const Route = createFileRoute("/$team/$flow/preview/pages/$page")({
+export const Route = createFileRoute("/_public/$team/$flow/draft/pages/$page")({
   beforeLoad: () => ({
     isContentPage: true,
   }),
-  component: PreviewPageComponent,
+  component: DraftPageComponent,
 });
 
-function PreviewPageComponent() {
+function DraftPageComponent() {
   const { page } = Route.useParams();
   return <ContentPage page={page} />;
 }

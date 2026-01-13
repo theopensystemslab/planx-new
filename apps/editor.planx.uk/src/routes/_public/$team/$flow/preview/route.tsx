@@ -9,17 +9,17 @@ import {
   publicRouteSearchSchemas,
 } from "utils/routeUtils/publicRouteHelpers";
 
-export const Route = createFileRoute("/$team/$flow/draft")({
-  validateSearch: zodValidator(publicRouteSearchSchemas.draft),
-  beforeLoad: createPublicRouteBeforeLoad("draft"),
-  head: createPublicRouteHead("draft"),
-  errorComponent: createPublicRouteErrorComponent("draft"),
-  component: DraftLayoutComponent,
+export const Route = createFileRoute("/_public/$team/$flow/preview")({
+  validateSearch: zodValidator(publicRouteSearchSchemas.preview),
+  beforeLoad: createPublicRouteBeforeLoad("preview"),
+  head: createPublicRouteHead("preview"),
+  errorComponent: createPublicRouteErrorComponent("preview"),
+  component: PreviewLayoutComponent,
 });
 
-function DraftLayoutComponent() {
+function PreviewLayoutComponent() {
   return (
-    <PublicRouteLayout mode="draft">
+    <PublicRouteLayout mode="preview">
       <Outlet />
     </PublicRouteLayout>
   );

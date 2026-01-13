@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import ErrorPage from "pages/ErrorPage/ErrorPage";
 import React from "react";
 
-export const Route = createFileRoute("/$team/$flow/pay/not-found")({
+export const Route = createFileRoute("/_public/$team/$flow/pay/not-found")({
   component: PaymentNotFoundComponent,
 });
 

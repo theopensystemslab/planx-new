@@ -9,7 +9,7 @@ import {
   publicRouteSearchSchemas,
 } from "utils/routeUtils/publicRouteHelpers";
 
-export const Route = createFileRoute("/$team/$flow/published")({
+export const Route = createFileRoute("/_public/$team/$flow/published")({
   validateSearch: zodValidator(publicRouteSearchSchemas.published),
   beforeLoad: createPublicRouteBeforeLoad("published"),
   head: createPublicRouteHead("published"),
