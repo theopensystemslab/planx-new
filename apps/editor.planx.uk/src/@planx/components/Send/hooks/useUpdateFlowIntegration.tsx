@@ -7,10 +7,10 @@ import {
 } from "../types";
 
 export const useUpdateFlowIntegration = () => {
-  const [updateFlowIntegration, { data, loading, error }] = useMutation<
+  const mutation = useMutation<
     UpdateFlowIntegrationMutation,
     UpdateFlowIntegrationMutationVariables
   >(UPDATE_FLOW_INTEGRATION);
 
-  return { updateFlowIntegration, data, loading, error };
+  return mutation;
 };

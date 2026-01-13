@@ -60,15 +60,22 @@ const SendComponent: React.FC<Props> = (props) => {
     ],
   );
 
-  const { flowData, flowLoading, flowError } = useFlowEmailId(id);
+  const flowEmailIdObject = useFlowEmailId(id);
+  const {
+    data: flowData,
+    loading: flowLoading,
+    error: flowError,
+  } = flowEmailIdObject;
   const emailId = flowData?.flowIntegrations?.[0]?.emailId;
 
-  const { data, loading, error } = useTeamSubmissionIntegrations(teamId);
+  const teamSubmissionIntegrationsObject =
+    useTeamSubmissionIntegrations(teamId);
+  const { data, loading, error } = teamSubmissionIntegrationsObject;
   const emailOptions = data?.submissionIntegrations || [];
   const defaultEmail = emailOptions.find((email: any) => email.defaultEmail);
 
-  const { insertFlowIntegration } = useInsertFlowIntegration();
-
+  const insertFlowIntegrationObject = useInsertFlowIntegration();
+  const [insertFlowIntegration] = insertFlowIntegrationObject;
   useEffect(() => {
     const populateDefaultEmail = async () => {
       if (!emailId && defaultEmail) {
@@ -91,7 +98,8 @@ const SendComponent: React.FC<Props> = (props) => {
     }
   }, [formik, defaultEmail]);
 
-  const { updateFlowIntegration } = useUpdateFlowIntegration();
+  const updateFlowIntegrationObject = useUpdateFlowIntegration();
+  const [updateFlowIntegration] = updateFlowIntegrationObject;
 
   const handleChangeEmail = async (newEmailId: string) => {
     if (emailId) {
