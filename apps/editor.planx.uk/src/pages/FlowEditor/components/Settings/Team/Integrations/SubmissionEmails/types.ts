@@ -1,16 +1,23 @@
-export interface SubmissionEmailFormValues {
+import type { SnakeCasedProperties } from "type-fest";
+
+export interface SubmissionEmailInput {
   submissionEmail: string;
   defaultEmail: boolean;
+  teamId: number;
+  id?: string;
 }
 
-export interface GetTeamSubmissionIntegrationsData {
-  submissionIntegrations: {
-    submissionEmail: string;
-    defaultEmail: boolean;
-  }[];
+export interface GetSubmissionEmails {
+  submissionIntegrations: (SubmissionEmailInput & { id: string })[];
+}
+
+export type SubmissionEmailMutation =
+  SnakeCasedProperties<SubmissionEmailInput>;
+
+export interface SubmissionEmailValues {
+  submissionIntegrations: SubmissionEmailInput[];
 }
 
 export interface UpdateTeamSubmissionIntegrationsVariables {
-  submissionEmail: string;
-  defaultEmail: boolean;
+  emails: SubmissionEmailMutation[];
 }

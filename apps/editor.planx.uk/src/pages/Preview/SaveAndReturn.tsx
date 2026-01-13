@@ -107,6 +107,12 @@ const SaveAndReturn: React.FC<{ children: React.ReactNode }> = ({
   const sessionId = useStore((state) => state.sessionId);
   const routeContext = useRouteContext({ strict: false });
   const isContentPage = routeContext?.isContentPage;
+  const isViewApplicationPage = routeContext?.isViewApplicationPage;
+
+  // Navigating directly to View Application page
+  if (!isEmailCaptured && isViewApplicationPage) {
+    throw new NotFoundError("No application data - please log in first");
+  }
 
   // Setting the URL search param "sessionId" will route the user to ApplicationPath.Resume
   // Without this the user will need to click the magic link in their email after a refresh
@@ -123,7 +129,7 @@ const SaveAndReturn: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <>
-      {isEmailCaptured || isContentPage ? (
+      {isEmailCaptured || isContentPage || isViewApplicationPage ? (
         children
       ) : (
         <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>

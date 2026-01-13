@@ -60,6 +60,7 @@ const PREVIEW_ONLY_DOMAINS = [
   "planningservices.epsom-ewell.gov.uk",
   "planningservices.gateshead.gov.uk",
   "planningservices.gloucester.gov.uk",
+  "planningservices.horsham.gov.uk",
   "planningservices.lambeth.gov.uk",
   "planningservices.lbbd.gov.uk",
   "planningservices.medway.gov.uk",
@@ -93,6 +94,7 @@ export const getTeamFromDomain = async (domain: string) => {
     variables: {
       domain,
     },
+    context: { role: "public" },
   });
 
   return teams?.[0]?.slug;
@@ -113,56 +115,12 @@ export const validateTeamRoute = async (req: RouteParams) => {
     throw notFound();
 };
 
-export const STAGING_ADMIN_PANEL_QUERY = gql`
-  query {
-    adminPanel: teams_summary {
-      id
-      name
-      slug
-      referenceCode: reference_code
-      homepage
-      subdomain
-      planningDataEnabled: planning_data_enabled
-      article4sEnabled: article_4s_enabled
-      govnotifyPersonalisation: govnotify_personalisation
-      govpayEnabled: govpay_enabled_staging
-      powerAutomateEnabled: power_automate_enabled_staging
-      sendToEmailAddress: send_to_email_address
-      bopsSubmissionURL: bops_submission_url_staging
-      liveFlows: live_flows
-      logo
-      favicon
-      primaryColour: primary_colour
-      linkColour: link_colour
-      actionColour: action_colour
-      isTrial: is_trial
-    }
-  }
-`;
-
-export const PRODUCTION_ADMIN_PANEL_QUERY = gql`
-  query {
-    adminPanel: teams_summary {
-      id
-      name
-      slug
-      referenceCode: reference_code
-      homepage
-      subdomain
-      planningDataEnabled: planning_data_enabled
-      article4sEnabled: article_4s_enabled
-      govnotifyPersonalisation: govnotify_personalisation
-      govpayEnabled: govpay_enabled_production
-      powerAutomateEnabled: power_automate_enabled_production
-      sendToEmailAddress: send_to_email_address
-      bopsSubmissionURL: bops_submission_url_production
-      liveFlows: live_flows
-      logo
-      favicon
-      primaryColour: primary_colour
-      linkColour: link_colour
-      actionColour: action_colour
-      isTrial: is_trial
-    }
-  }
-`;
+// /**
+//  * Auth middleware for routes
+//  * Prevents non-teamEditors from accessing pages
+//  */
+// export const withTeamAuth = withData((req) => {
+//   const isAuthorised = useStore.getState().canUserEditTeam(req.params.team);
+//   if (!isAuthorised)
+//     throw new NotFoundError(`User does not have access to ${req.originalUrl}`);
+// });

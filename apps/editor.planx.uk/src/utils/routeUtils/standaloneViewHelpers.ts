@@ -67,6 +67,7 @@ export const fetchDataForStandaloneView = async (
         flowSlug,
         teamSlug,
       },
+      context: { role: "public" },
     });
 
     if (!result.data.flows.length) {

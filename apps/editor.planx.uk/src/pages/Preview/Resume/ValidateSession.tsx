@@ -71,7 +71,7 @@ export const LockedSession: React.FC<{
         <Link href={`mailto:${paymentRequest?.payeeEmail}`}>
           {paymentRequest?.payeeEmail}
         </Link>
-        ) to pay for this application and changes might affect the fee.
+        ) to pay and changes might affect the fee.
         <br />
         <br />
         You can{" "}
@@ -80,7 +80,7 @@ export const LockedSession: React.FC<{
           params={{ team: teamSlug, flow: flowSlug }}
           search={{ paymentRequestId: paymentRequest?.id }}
         >
-          pay for this application yourself on the payment page
+          pay yourself on the payment page
         </CustomLink>
       </Typography>
     </StatusPage>

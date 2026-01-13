@@ -1,3 +1,4 @@
+import { getCalculatedReductionOrExemption } from "@opensystemslab/planx-core";
 import { PassportFeeFields } from "@opensystemslab/planx-core/types";
 import { Store } from "pages/FlowEditor/lib/store";
 import { ConditionalPick } from "type-fest";
@@ -54,6 +55,37 @@ export const handleSetFees: HandleSetFees = ({
     fees[`${CALCULATED_FN}.VAT`] = calculatedVAT;
     fees[payable] = fees[payable] + calculatedVAT;
     fees[payableVAT] = calculatedVAT;
+
+    // It's possible for discretionary services with a VAT-able base application fee
+    //   to apply exemptions or reductions which are then also VAT-able
+    const { reduction, reductionVAT, exemption, exemptionVAT } =
+      getCalculatedReductionOrExemption({
+        ...passport.data,
+        // Ensure any calculations so far overwrite original incoming passport
+        [CALCULATED_FN]: calculated,
+        [`${CALCULATED_FN}.VAT`]: calculatedVAT,
+        [PAY_FN]: fees[payable],
+        [`${PAY_FN}.VAT`]: fees[payableVAT],
+      });
+
+    // VAT-able exemptions are always 100%, so simply subtract all VAT
+    if (exemption !== 0 && exemptionVAT !== 0) {
+      fees[payable] = fees[payable] - calculatedVAT;
+      fees[payableVAT] = fees[payableVAT] - calculatedVAT;
+    }
+
+    // VAT-able reductions can be any percent of calculated VAT
+    if (reduction !== 0 && reductionVAT !== 0) {
+      if (reduction === -calculated && reductionVAT === -calculatedVAT) {
+        // If 100% reduction, handle same as exemption
+        fees[payable] = fees[payable] - calculatedVAT;
+        fees[payableVAT] = fees[payableVAT] - calculatedVAT;
+      } else {
+        // Else only subtract percentage of all calculated VAT
+        fees[payable] = fees[payable] - (calculatedVAT + reductionVAT);
+        fees[payableVAT] = fees[payableVAT] - (calculatedVAT + reductionVAT);
+      }
+    }
   }
 
   const addFastTrack = fastTrackFeeAmount > 0;

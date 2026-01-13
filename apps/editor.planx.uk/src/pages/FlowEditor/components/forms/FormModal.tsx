@@ -1,3 +1,4 @@
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import Close from "@mui/icons-material/CloseOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
@@ -9,16 +10,19 @@ import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { parseFormValues } from "@planx/components/shared";
-import { useNavigate, useRouter } from "@tanstack/react-router";
+import { type BaseNodeData, parseFormValues } from "@planx/components/shared";
+import { useNavigate, useParams } from "@tanstack/react-router";
 import ErrorFallback from "components/Error/ErrorFallback";
+import { FormikProps } from "formik";
+import { hasFeatureFlag } from "lib/featureFlags";
+import isEqual from "lodash/isEqual";
 import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
 } from "pages/FlowEditor/utils";
-import React, { useMemo } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { NodeSearchParams } from "routes/_authenticated/$team/$flow/nodes/route";
+import { Switch } from "ui/shared/Switch";
 import { rootFlowPath } from "utils/routeUtils/utils";
 
 import { fromSlug, SLUGS } from "../../data/types";
@@ -44,14 +48,14 @@ const TypeSelect = styled("select")(() => ({
 
 const NodeTypeSelect: React.FC<{
   value: string;
-  onChange: (newValue: string) => void;
+  onChange: (newValue: TYPES) => void;
 }> = (props) => {
   return (
     <TypeSelect
       value={fromSlug(props.value)}
       data-testid="header-select"
       onChange={(ev) => {
-        props.onChange(ev.target.value);
+        props.onChange(ev.target.value as unknown as TYPES);
       }}
     >
       <optgroup label="Question">
@@ -107,9 +111,59 @@ const NodeTypeSelect: React.FC<{
   );
 };
 
+/**
+ * TextInput and EnhancedTextInput are uniquely controlled via a toggle,
+ * and not the standard Select component
+ *
+ * Component is styled to appears as an element within the child component
+ */
+const TextInputToggle: React.FC<{ type: string }> = ({ type }) => {
+  const navigate = useNavigate();
+  const params = useParams({
+    from: "/_authenticated/$team/$flow/nodes/$parent/nodes/new/$before",
+  });
+  const [checked, setChecked] = useState(type === "enhanced-text-input");
+
+  if (!["text-input", "enhanced-text-input"].includes(type)) return null;
+  if (!hasFeatureFlag("ENHANCED_TEXTINPUT")) return null;
+
+  const toggleTextInput = () => {
+    // Toggle visual state immediately without waiting for route change
+    setChecked(!checked);
+
+    const destinationType =
+      type === "text-input" ? TYPES.EnhancedTextInput : TYPES.TextInput;
+
+    navigate({
+      to: "/$team/$flow/nodes/$parent/nodes/new/$before",
+      params: {
+        ...params,
+      },
+      search: {
+        "flow-type": SLUGS[destinationType],
+      } as any, //TODO: find a way to match search type to TYPES
+    });
+  };
+
+  return (
+    <Box sx={{ position: "absolute", right: 82, top: 38, zIndex: 1 }}>
+      <Switch
+        label={
+          <>
+            <AutoAwesomeIcon sx={{ mr: 1 }} />
+            AI Enhanced
+          </>
+        }
+        onChange={toggleTextInput}
+        checked={checked}
+      />
+    </Box>
+  );
+};
+
 interface FormModalProps {
   type: string;
-
+  handleDelete?: () => void;
   Component: React.ComponentType<any>;
   node?: any;
   id?: string;
@@ -121,13 +175,16 @@ interface FormModalProps {
 const FormModal: React.FC<FormModalProps> = ({
   type,
   Component,
+  handleDelete,
   id,
   before,
   parent,
   extraProps,
 }) => {
   const navigate = useNavigate();
-  const router = useRouter();
+  const formikRef = useRef<FormikProps<BaseNodeData & unknown> | null>(null);
+  const [showUnsavedWarning, setShowUnsavedWarning] = useState(false);
+
   const [
     addNode,
     updateNode,
@@ -151,32 +208,70 @@ const FormModal: React.FC<FormModalProps> = ({
     store.orderedFlow,
     store.isClone,
   ]);
+  const params = useParams({
+    from: "/_authenticated/$team/$flow/nodes/$parent/nodes/new/$before",
+  });
   const node = id ? flow[id] : undefined;
 
-  const handleClose = () => {
-    navigate({
-      to: "/$team/$flow",
-      params: {
-        team: teamSlug,
-        flow: flowSlug,
-      },
-    });
-  };
-
-  const handleTypeChange = (newType: NodeSearchParams["type"]) => {
-    navigate({
-      to: router.latestLocation.pathname,
-      search: { type: newType },
-    });
-  };
-
-  const handleDelete = () => {
-    if (!id || !parent) {
-      console.error("Cannot delete node: id and parent are required");
-      return;
+  const normalizeFormValues = (obj: any): any => {
+    if (obj === null || obj === undefined || obj === "") {
+      return "";
     }
-    useStore.getState().removeNode(id, parent);
-    handleClose();
+
+    if (Array.isArray(obj)) {
+      return obj.map(normalizeFormValues);
+    }
+
+    if (typeof obj === "object") {
+      const normalized: any = {};
+      for (const key in obj) {
+        normalized[key] = normalizeFormValues(obj[key]);
+      }
+      return normalized;
+    }
+
+    return obj;
+  };
+
+  const isDirty = (formik: FormikProps<BaseNodeData & unknown>): boolean => {
+    return !isEqual(
+      normalizeFormValues(formik.values),
+      normalizeFormValues(formik.initialValues),
+    );
+  };
+
+  const hasUnsavedChanges = () => {
+    const formik = formikRef.current;
+    if (!formik) return false;
+
+    return isDirty(formik);
+  };
+
+  const handleClose = () => {
+    if (hasUnsavedChanges()) {
+      setShowUnsavedWarning(true);
+    } else {
+      navigate({
+        to: "/$team/$flow",
+        params: {
+          team: teamSlug,
+          flow: flowSlug,
+        },
+      });
+    }
+  };
+
+  const handleConfirmClose = () => setShowUnsavedWarning(false);
+  navigate({
+    to: "/$team/$flow",
+    params: {
+      team: teamSlug,
+      flow: flowSlug,
+    },
+  });
+
+  const handleCancelClose = () => {
+    setShowUnsavedWarning(false);
   };
 
   // Nodes should be disabled when:
@@ -219,131 +314,193 @@ const FormModal: React.FC<FormModalProps> = ({
     ? !canUserEditTemplatedNode
     : !canUserEditNode(teamSlug);
 
+  const changeNodeType = (type: TYPES) => {
+    navigate({
+      to: "/$team/$flow/nodes/$parent/nodes/new/$before",
+      params: {
+        ...params,
+      },
+      search: {
+        "flow-type": SLUGS[type],
+      } as any, //TODO: find a way to match search type to TYPES
+    });
+  };
+
   return (
-    <StyledDialog
-      open
-      fullWidth
-      disableScrollLock
-      onClose={(_event, reason) => {
-        if (reason === "escapeKeyDown") {
-          handleClose();
-        }
-      }}
-    >
-      <DialogTitle
-        sx={{
-          py: 1,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
+    <>
+      <StyledDialog
+        open
+        fullWidth
+        disableScrollLock
+        onClose={(_event, reason) => {
+          if (reason === "escapeKeyDown") {
+            handleClose();
+          }
         }}
       >
-        {!id && (
-          <NodeTypeSelect
-            value={type}
-            onChange={(newType) => {
-              handleTypeChange(
-                SLUGS[Number(newType) as TYPES] as NodeSearchParams["type"],
-              );
-            }}
-          />
-        )}
-
-        <CloseButton aria-label="close" onClick={handleClose} size="large">
-          <Close />
-        </CloseButton>
-      </DialogTitle>
-      <DialogContent dividers sx={{ p: 0 }}>
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <Component
-            node={node}
-            {...node?.data}
-            {...extraProps}
-            id={id}
-            disabled={disabled}
-            handleSubmit={(
-              data: { data?: Record<string, unknown> },
-              children: Array<any> | undefined = undefined,
-            ) => {
-              // Handle internal portals
-              if (typeof data === "string") {
-                if (parent) connect(parent, data, { before });
-              } else {
-                const parsedData = parseFormValues(Object.entries(data));
-                const parsedChildren =
-                  children?.map((o: any) =>
-                    parseFormValues(Object.entries(o)),
-                  ) || undefined;
-
-                if (id) {
-                  updateNode(
-                    { id, ...parsedData },
-                    { children: parsedChildren },
-                  );
-                } else {
-                  addNode(parsedData, {
-                    children: parsedChildren,
-                    parent,
-                    before,
-                  });
-                }
-              }
-              handleClose();
-            }}
-          />
-        </ErrorBoundary>
-      </DialogContent>
-      <DialogActions
-        disableSpacing
-        sx={{ justifyContent: "flex-start", alignItems: "stretch" }}
-      >
-        {showDeleteButton && (
-          <Button
-            color="secondary"
-            variant="contained"
-            onClick={() => {
-              handleDelete();
-            }}
-            disabled={disabled}
-            sx={{ backgroundColor: "background.default", gap: 1 }}
-          >
-            <DeleteIcon color="warning" fontSize="medium" />
-            Delete
-          </Button>
-        )}
-        <Box
-          sx={{ display: "flex", alignItems: "stretch", marginLeft: "auto" }}
-          gap={1}
+        <DialogTitle
+          sx={{
+            py: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
         >
-          {showMakeUniqueButton && (
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                if (id && parent) {
-                  makeUnique(id, parent);
-                  navigate({ to: rootFlowPath(true) });
+          {!handleDelete && (
+            <NodeTypeSelect value={type} onChange={changeNodeType} />
+          )}
+
+          <CloseButton aria-label="close" onClick={handleClose} size="large">
+            <Close />
+          </CloseButton>
+        </DialogTitle>
+        <DialogContent dividers sx={{ p: 0, position: "relative" }}>
+          {!handleDelete && <TextInputToggle type={type} />}
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <Component
+              formikRef={formikRef}
+              node={node}
+              {...node?.data}
+              {...extraProps}
+              id={id}
+              disabled={disabled}
+              handleSubmit={(
+                data: { data?: Record<string, unknown> },
+                children: Array<any> | undefined = undefined,
+              ) => {
+                // Handle internal portals
+                if (typeof data === "string" && parent) {
+                  connect(parent, data, { before });
+                } else {
+                  const parsedData = parseFormValues(Object.entries(data));
+                  const parsedChildren =
+                    children?.map((o: any) =>
+                      parseFormValues(Object.entries(o)),
+                    ) || undefined;
+
+                  if (handleDelete) {
+                    updateNode(
+                      { id, ...parsedData },
+                      { children: parsedChildren },
+                    );
+                  } else {
+                    addNode(parsedData, {
+                      children: parsedChildren,
+                      parent,
+                      before,
+                    });
+                  }
                 }
+
+                navigate({ to: rootFlowPath(true) });
+              }}
+            />
+          </ErrorBoundary>
+        </DialogContent>
+        <DialogActions
+          disableSpacing
+          sx={{ justifyContent: "flex-start", alignItems: "stretch" }}
+        >
+          {showDeleteButton && (
+            <Button
+              color="secondary"
+              variant="contained"
+              onClick={() => {
+                handleDelete && handleDelete();
+                navigate({
+                  to: "/$team/$flow",
+                  params: {
+                    team: teamSlug,
+                    flow: flowSlug,
+                  },
+                });
               }}
               disabled={disabled}
-              sx={{ backgroundColor: "background.default" }}
+              sx={{ backgroundColor: "background.default", gap: 1 }}
             >
-              Make unique
+              <DeleteIcon color="warning" fontSize="medium" />
+              Delete
             </Button>
           )}
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            form="modal"
-            disabled={disabled}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "stretch",
+              marginLeft: "auto",
+            }}
+            gap={1}
           >
-            {id ? `Update` : `Create`}
+            {showMakeUniqueButton && (
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => {
+                  if (id) makeUnique(id, parent);
+                  navigate({
+                    to: "/$team/$flow",
+                    params: {
+                      team: teamSlug,
+                      flow: flowSlug,
+                    },
+                  });
+                }}
+                disabled={disabled}
+                sx={{ backgroundColor: "background.default" }}
+              >
+                Make unique
+              </Button>
+            )}
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              form="modal"
+              disabled={disabled}
+            >
+              {handleDelete ? `Update` : `Create`}
+            </Button>
+          </Box>
+        </DialogActions>
+      </StyledDialog>
+      <Dialog
+        open={showUnsavedWarning}
+        onClose={handleCancelClose}
+        aria-labelledby="unsaved-changes-dialog-title"
+        aria-describedby="unsaved-changes-dialog-description"
+        maxWidth="md"
+      >
+        <DialogTitle
+          id="unsaved-changes-dialog-title"
+          variant="h3"
+          component="h1"
+        >
+          Unsaved changes
+        </DialogTitle>
+        <DialogContent dividers>
+          <Box id="unsaved-changes-dialog-description">
+            You have unsaved changes. Are you sure you want to close without
+            saving?
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleCancelClose}
+            variant="contained"
+            color="secondary"
+            sx={{ backgroundColor: "background.default" }}
+          >
+            Continue editing
           </Button>
-        </Box>
-      </DialogActions>
-    </StyledDialog>
+          <Button
+            onClick={handleConfirmClose}
+            variant="contained"
+            color="warning"
+          >
+            Discard changes
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
-
 export default FormModal;

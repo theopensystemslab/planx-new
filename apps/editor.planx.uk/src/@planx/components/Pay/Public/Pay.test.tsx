@@ -2,8 +2,10 @@ import { PaymentStatus } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { act, screen } from "@testing-library/react";
 import { logger } from "airbrake";
+import ErrorFallback from "components/Error/ErrorFallback";
 import { FullStore, Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { setup } from "testUtils";
 import { ApplicationPath, Breadcrumbs } from "types";
 import { vi } from "vitest";
@@ -42,7 +44,7 @@ const { getState, setState } = useStore;
 
 let initialState: FullStore;
 
-const resumeButtonText = "Resume an application you have already started";
+const resumeButtonText = "Resume a form you have already started";
 const saveButtonText = "Save and return to this form later";
 
 const flowWithUndefinedFee: Store.Flow = {
@@ -133,12 +135,14 @@ describe("Pay component when fee is undefined or £0", () => {
     });
 
     await setup(
-      <Pay
-        title="Pay"
-        fn="application.fee.payable"
-        handleSubmit={handleSubmit}
-        govPayMetadata={[]}
-      />,
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <Pay
+          title="Pay"
+          fn="application.fee.payable"
+          handleSubmit={handleSubmit}
+          govPayMetadata={[]}
+        />
+      </ErrorBoundary>,
     );
 
     // handleSubmit has NOT been called (not skipped), Pay shows error instead
@@ -158,12 +162,14 @@ describe("Pay component when fee is undefined or £0", () => {
     });
 
     const { getByTestId, user, getByRole } = await setup(
-      <Pay
-        title="Pay"
-        fn="application.fee.payable"
-        handleSubmit={handleSubmit}
-        govPayMetadata={[]}
-      />,
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <Pay
+          title="Pay"
+          fn="application.fee.payable"
+          handleSubmit={handleSubmit}
+          govPayMetadata={[]}
+        />
+      </ErrorBoundary>,
     );
 
     // Node is not auto-answered
@@ -200,12 +206,14 @@ describe("Pay component when fee is undefined or £0", () => {
     });
 
     await setup(
-      <Pay
-        title="Pay"
-        fn="application.fee.payable"
-        handleSubmit={handleSubmit}
-        govPayMetadata={[]}
-      />,
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <Pay
+          title="Pay"
+          fn="application.fee.payable"
+          handleSubmit={handleSubmit}
+          govPayMetadata={[]}
+        />
+      </ErrorBoundary>,
     );
 
     expect(handleSubmit).not.toHaveBeenCalled();
@@ -538,12 +546,14 @@ describe("the demo user view", () => {
   it("should render an error when teamSlug is demo", async () => {
     const handleSubmit = vi.fn();
     const { queryByText } = await setup(
-      <Pay
-        fn="application.fee.payable"
-        handleSubmit={handleSubmit}
-        govPayMetadata={[]}
-        {...defaultProps}
-      />,
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <Pay
+          fn="application.fee.payable"
+          handleSubmit={handleSubmit}
+          govPayMetadata={[]}
+          {...defaultProps}
+        />
+      </ErrorBoundary>,
     );
     const errorHeader = queryByText("GOV.UK Pay is not enabled for demo users");
     const errorGuidance = queryByText(

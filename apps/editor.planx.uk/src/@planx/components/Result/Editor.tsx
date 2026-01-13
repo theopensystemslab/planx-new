@@ -90,6 +90,7 @@ const ResultComponent: React.FC<Props> = (props) => {
 
   return (
     <Formik<Result>
+      innerRef={props.formikRef}
       initialValues={{
         flagSet: props.node?.data?.flagSet || Object.keys(flags)[0],
         overrides: props.node?.data?.overrides || {},

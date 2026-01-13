@@ -59,7 +59,7 @@ describe("Pay component - Editor Modal", () => {
     });
 
     it("lists the default values", async () => {
-      const { getByDisplayValue } = await setup(
+      const { getByDisplayValue, getByRole } = await setup(
         <DndProvider backend={HTML5Backend}>
           <PayComponent id="test" />
         </DndProvider>,

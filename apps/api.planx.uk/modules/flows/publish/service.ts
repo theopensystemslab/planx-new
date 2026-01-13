@@ -53,6 +53,13 @@ export const publishFlow = async (
     (id) => !flattenedFlow[id]?.data?.hidePay,
   );
 
+  const setFeeNodeIds = Array.from(
+    flowTypeMap.get(ComponentType.SetFee) ?? new Set<string>(),
+  );
+  const hasEnabledServiceCharge = setFeeNodeIds.some(
+    (id) => flattenedFlow[id]?.data?.applyServiceCharge,
+  );
+
   const { client: $client } = getClient();
   const response = await $client.request<PublishFlow>(
     gql`
@@ -64,6 +71,7 @@ export const publishFlow = async (
         $has_send_component: Boolean
         $has_sections: Boolean
         $has_pay_component: Boolean
+        $service_charge_enabled: Boolean
       ) {
         publishedFlow: insert_published_flows_one(
           object: {
@@ -74,6 +82,7 @@ export const publishFlow = async (
             has_send_component: $has_send_component
             has_sections: $has_sections
             has_pay_component: $has_pay_component
+            service_charge_enabled: $service_charge_enabled
           }
         ) {
           id
@@ -92,6 +101,7 @@ export const publishFlow = async (
       has_send_component: hasSendComponent,
       has_sections: hasSections,
       has_pay_component: hasVisiblePayComponent,
+      service_charge_enabled: hasEnabledServiceCharge,
     },
   );
 

@@ -21,19 +21,21 @@ import FlowSkeleton from "./FlowSkeleton";
 import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
 
-const EditorContainer = styled(Box)(() => ({
-  display: "flex",
-  alignItems: "stretch",
-  overflow: "hidden",
-  flexGrow: 1,
-  maxHeight: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
-  maxWidth: `calc(100vw - ${MENU_WIDTH_COMPACT}px)`,
-}));
+const EditorContainer = styled(Box)<{ hasNavMenu?: boolean }>(
+  ({ hasNavMenu = true }) => ({
+    display: "flex",
+    alignItems: "stretch",
+    overflow: "hidden",
+    flexGrow: 1,
+    maxHeight: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
+    maxWidth: hasNavMenu ? `calc(100vw - ${MENU_WIDTH_COMPACT}px)` : "100vw",
+  }),
+);
 
 const EditorVisualControls = styled(ButtonGroup)(({ theme }) => ({
-  position: "fixed",
+  position: "absolute",
   bottom: theme.spacing(2.5),
-  left: theme.spacing(7.5),
+  left: theme.spacing(2.5),
   zIndex: theme.zIndex.appBar,
   border: `1px solid ${theme.palette.border.main}`,
   borderRadius: "3px",
@@ -51,6 +53,7 @@ const FlowEditor = () => {
     flowId,
     connectToFlow,
     disconnectFromFlow,
+    isNavMenuVisible,
   ] = useStore((state) => [
     state.flow,
     state.orderedFlow,
@@ -59,6 +62,7 @@ const FlowEditor = () => {
     state.id,
     state.connectToFlow,
     state.disconnectFromFlow,
+    state.isNavMenuVisible,
   ]);
 
   useEffect(() => {
@@ -88,20 +92,20 @@ const FlowEditor = () => {
     !lockedFlow && !parentIsTemplatedInternalPortal;
 
   return (
-    <EditorContainer id="editor-container">
+    <EditorContainer id="editor-container" hasNavMenu={isNavMenuVisible}>
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           width: "100%",
           overflowX: "auto",
+          position: "relative",
         }}
       >
         <Box
           id="editor"
           ref={scrollContainerRef}
           className={lockedFlow ? "flow-locked" : ""}
-          sx={{ position: "relative" }}
         >
           {" "}
           {isLoading ? (

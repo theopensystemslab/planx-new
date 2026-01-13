@@ -38,7 +38,16 @@ function EditorNavMenu() {
   const referenceCode = team?.settings?.referenceCode;
   const { url: lpsBaseUrl } = useLPS();
 
-  const isActive = (route: string) => pathname.endsWith(route);
+  const isActive = (route: string) => {
+    const currentPath = pathname;
+
+    // Factor in nested routes when determining active state
+    if (route.includes("/settings")) {
+      return currentPath.startsWith(route);
+    }
+
+    return currentPath.endsWith(route);
+  };
 
   const handleClick = (route: string, disabled?: boolean) => {
     if (isActive(route) || disabled) return;
@@ -133,7 +142,7 @@ function EditorNavMenu() {
         : `Planning Data unavailable`,
       Icon: LayersIcon,
       route: referenceCode
-        ? `https://submit.planning.data.gov.uk/organisations/local-authority:${referenceCode}`
+        ? `https://provide.planning.data.gov.uk/organisations/local-authority:${referenceCode}`
         : `#`,
       accessibleBy: "*",
       disabled: !referenceCode,
@@ -220,7 +229,13 @@ function EditorNavMenu() {
     return accessibleByCurrentUserRole;
   };
 
+  const setIsNavMenuVisible = useStore((state) => state.setIsNavMenuVisible);
+
   const visibleRoutes = routes.filter(isRouteAccessible);
+
+  React.useEffect(() => {
+    setIsNavMenuVisible(visibleRoutes.length >= 2);
+  }, [visibleRoutes.length, setIsNavMenuVisible]);
 
   // Hide menu if the user does not have a selection of items
   if (visibleRoutes.length < 2) return null;

@@ -20,32 +20,31 @@ export interface BaseQuestion extends BaseNodeData {
   img?: string;
 }
 
-export const baseQuestionValidationSchema: SchemaOf<BaseQuestion> =
-  baseNodeDataValidationSchema
-    .concat(
-      object({
-        text: string().required(),
-        description: richText(),
-        img: string(),
-        fn: string(),
-        options: array(optionValidationSchema).required(),
-      }),
-    )
-    .test({
-      name: "uniqueLabels",
-      test: function ({ options }) {
-        if (!options?.length) return true;
+export const baseQuestionValidationSchema = baseNodeDataValidationSchema
+  .concat(
+    object({
+      text: string().required(),
+      description: richText(),
+      img: string(),
+      fn: string().nullable(),
+      options: array(optionValidationSchema).required(),
+    }),
+  )
+  .test({
+    name: "uniqueLabels",
+    test: function ({ options }) {
+      if (!options?.length) return true;
 
-        const uniqueLabels = new Set(options.map(({ data }) => data.text));
-        const areAllLabelsUnique = uniqueLabels.size === options.length;
-        if (areAllLabelsUnique) return true;
+      const uniqueLabels = new Set(options.map(({ data }) => data.text));
+      const areAllLabelsUnique = uniqueLabels.size === options.length;
+      if (areAllLabelsUnique) return true;
 
-        return this.createError({
-          path: "options",
-          message: "Options must have unique labels",
-        });
-      },
-    });
+      return this.createError({
+        path: "options",
+        message: "Options must have unique labels",
+      });
+    },
+  });
 
 /**
  * Build child nodes from generated options

@@ -56,7 +56,6 @@ export const NoChangesDialog = ({
     onClose={() => setDialogOpen(false)}
     aria-labelledby="alert-dialog-title"
     aria-describedby="alert-dialog-description"
-    maxWidth="md"
   >
     <DialogTitle variant="h3" component="h1" sx={{ px: 3, py: 2 }}>
       {`Check for changes to publish`}
@@ -344,7 +343,6 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
     <Dialog
       open={dialogOpen}
       fullWidth
-      maxWidth="md"
       onClose={() => {
         setDialogOpen(false);
         setActiveStep(0);

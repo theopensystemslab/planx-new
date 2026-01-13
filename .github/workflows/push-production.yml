@@ -27,7 +27,7 @@ jobs:
           node-version: ${{ vars.NODE_VERSION }}
       # https://docs.github.com/en/free-pro-team@latest/actions/guides/caching-dependencies-to-speed-up-workflows#using-the-cache-action
       - name: NPM cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         env:
           cache-name: cache-npm
         with:
@@ -39,7 +39,7 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: PNPM cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         env:
           cache-name: cache-pnpm
         with:
@@ -67,7 +67,7 @@ jobs:
           VITE_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
           VITE_APP_SHAREDB_URL: wss://sharedb.editor.planx.uk
       - name: Upload PlanX frontend build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: planx_frontend_build
           path: ./${{ env.EDITOR_DIRECTORY }}/build
@@ -83,7 +83,7 @@ jobs:
           node-version: ${{ vars.NODE_VERSION }}
       # https://docs.github.com/en/free-pro-team@latest/actions/guides/caching-dependencies-to-speed-up-workflows#using-the-cache-action
       - name: NPM cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         env:
           cache-name: cache-npm
         with:
@@ -95,7 +95,7 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: PNPM cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         env:
           cache-name: cache-pnpm
         with:
@@ -114,7 +114,7 @@ jobs:
       - run: pnpm build --site https://localplanning.services --mode production
         working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
       - name: Upload LocalPlanning.services build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: localplanning_services_build
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
@@ -144,13 +144,13 @@ jobs:
       - run: pnpm install --frozen-lockfile
         working-directory: infrastructure/application
       - name: Download PlanX frontend build artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: planx_frontend_build
           path: ./${{ env.EDITOR_DIRECTORY }}/build
 
       - name: Download LocalPlanning.services build artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: localplanning_services_build
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist

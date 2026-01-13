@@ -30,7 +30,10 @@ export declare namespace Store {
     data?: Record<string, any>;
     auto?: boolean;
     override?: Record<string, any>;
+    createdAt?: string;
+    seq?: number;
   };
+  // TODO: Wrap UserData in Required<T>
   export type Breadcrumbs = Record<NodeId, UserData>;
   export type CachedBreadcrumbs = Record<NodeId, UserData> | undefined;
   /**

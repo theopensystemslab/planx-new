@@ -1,6 +1,7 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { Notice } from "@planx/components/Notice/model";
 import { parseNotice, validationSchema } from "@planx/components/Notice/model";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -111,17 +112,18 @@ const NoticeEditor: React.FC<NoticeEditorProps> = ({ formik, disabled }) => {
 };
 
 const NoticeComponent: React.FC<Props> = (props) => {
-  const formik = useFormik<Notice>({
-    initialValues: parseNotice(props.node?.data),
-    onSubmit: (newValues) => {
-      if (props.handleSubmit) {
-        props.handleSubmit({ type: TYPES.Notice, data: newValues });
-      }
+  const formik = useFormikWithRef<Notice>(
+    {
+      initialValues: parseNotice(props.node?.data),
+      onSubmit: (newValues) => {
+        if (props.handleSubmit) {
+          props.handleSubmit({ type: TYPES.Notice, data: newValues });
+        }
+      },
+      validationSchema,
     },
-    validationSchema,
-    validateOnBlur: false,
-    validateOnChange: false,
-  });
+    props.formikRef,
+  );
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">

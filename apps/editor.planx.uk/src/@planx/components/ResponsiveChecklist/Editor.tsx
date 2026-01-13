@@ -2,7 +2,7 @@ import {
   ComponentType,
   ComponentType as TYPES,
 } from "@opensystemslab/planx-core/types";
-import { useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 
 import { ConditionalOption } from "../Option/model";
@@ -34,27 +34,32 @@ export default ResponsiveChecklistComponent;
 function ResponsiveChecklistComponent(props: Props) {
   const type = ComponentType.ResponsiveChecklist;
 
-  const formik = useFormik<ResponsiveChecklistWithOptions>({
-    initialValues: parseResponsiveChecklist({
-      ...props.node?.data,
-      options: props?.options,
-      groupedOptions: props?.groupedOptions,
-    }),
-    onSubmit: (values) => {
-      const { data, children } = generatePayload(values);
+  const formik = useFormikWithRef<ResponsiveChecklistWithOptions>(
+    {
+      initialValues: parseResponsiveChecklist({
+        ...props.node?.data,
+        options: props?.options,
+        groupedOptions: props?.groupedOptions,
+      }),
+      onSubmit: (values) => {
+        const { data, children } = generatePayload(values);
 
-      if (props.handleSubmit) {
-        props.handleSubmit({ type, data }, children);
-      } else {
-        alert(
-          JSON.stringify({ type, ...values, options: values.options }, null, 2),
-        );
-      }
+        if (props.handleSubmit) {
+          props.handleSubmit({ type, data }, children);
+        } else {
+          alert(
+            JSON.stringify(
+              { type, ...values, options: values.options },
+              null,
+              2,
+            ),
+          );
+        }
+      },
+      validationSchema,
     },
-    validationSchema,
-    validateOnBlur: false,
-    validateOnChange: false,
-  });
+    props.formikRef,
+  );
 
   return <BaseChecklistComponent formik={formik} type={type} {...props} />;
 }

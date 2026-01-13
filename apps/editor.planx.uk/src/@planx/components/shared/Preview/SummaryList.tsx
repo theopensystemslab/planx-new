@@ -102,6 +102,7 @@ const presentationalComponents: {
   [key in TYPES]: React.FC<ComponentProps> | undefined;
 } = {
   [TYPES.AddressInput]: AddressInput,
+  [TYPES.Answer]: Debug,
   [TYPES.Calculate]: undefined,
   [TYPES.Checklist]: Checklist,
   [TYPES.Confirmation]: undefined,
@@ -109,24 +110,26 @@ const presentationalComponents: {
   [TYPES.Content]: undefined,
   [TYPES.DateInput]: DateInput,
   [TYPES.DrawBoundary]: DrawBoundary,
+  // TODO: This component will have an output
+  [TYPES.EnhancedTextInput]: undefined,
   [TYPES.ExternalPortal]: undefined,
   [TYPES.Feedback]: undefined,
   [TYPES.FileUpload]: FileUpload,
+  [TYPES.FileUploadAndLabel]: FileUploadAndLabel,
   [TYPES.Filter]: undefined,
   [TYPES.FindProperty]: FindProperty,
   [TYPES.Flow]: undefined,
   [TYPES.InternalPortal]: undefined,
-  [TYPES.FileUploadAndLabel]: FileUploadAndLabel,
   [TYPES.List]: List,
   [TYPES.MapAndLabel]: MapAndLabel,
-  [TYPES.Notice]: undefined,
   [TYPES.NextSteps]: undefined,
+  [TYPES.Notice]: undefined,
   [TYPES.NumberInput]: NumberInput,
   [TYPES.Page]: Page,
   [TYPES.Pay]: undefined,
   [TYPES.PlanningConstraints]: PlanningConstraints,
   [TYPES.PropertyInformation]: PropertyInformation,
-  [TYPES.Answer]: Debug,
+  [TYPES.Question]: Question,
   [TYPES.ResponsiveChecklist]: Checklist,
   [TYPES.ResponsiveQuestion]: Question,
   [TYPES.Result]: undefined,
@@ -135,7 +138,6 @@ const presentationalComponents: {
   [TYPES.Send]: undefined,
   [TYPES.SetFee]: undefined,
   [TYPES.SetValue]: undefined,
-  [TYPES.Question]: Question,
   [TYPES.TaskList]: undefined,
   [TYPES.TextInput]: TextInput,
 } as const;
@@ -316,6 +318,9 @@ function SummaryList(props: SummaryListProps) {
   return (
     <>
       <SummaryListTable showChangeButton={props.showChangeButton}>
+        {!props.summaryBreadcrumbs.length && (
+          <Typography variant="body2">No responses to display</Typography>
+        )}
         {props.summaryBreadcrumbs.map(
           ({ component: Component, nodeId, node, userData }, i) => (
             <React.Fragment key={i}>

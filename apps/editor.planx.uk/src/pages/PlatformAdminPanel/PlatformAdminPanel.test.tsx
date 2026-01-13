@@ -60,6 +60,9 @@ describe("Platform admin panel", () => {
     // Wait for data to load
     await screen.findByText("Barking and Dagenham");
 
+    // Wait for data to load
+    await screen.findByText("Barking and Dagenham");
+
     // get all cells in the 'Planning Constraints' column
     const planningConstraintCells = container.querySelectorAll(
       '[data-field="planningDataEnabled"]',

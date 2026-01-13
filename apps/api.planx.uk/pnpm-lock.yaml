@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  qs@<6.14.1: '>=6.14.1'
+
 importers:
 
   .:
@@ -18,8 +21,8 @@ importers:
         specifier: ^3.701.0
         version: 3.940.0
       '@opensystemslab/planx-core':
-        specifier: git+https://github.com/theopensystemslab/planx-core#59b0fbb
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/59b0fbb(@types/react@19.2.6)
+        specifier: git+https://github.com/theopensystemslab/planx-core#040102d
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/040102d(@types/react@19.2.6)
       '@types/isomorphic-fetch':
         specifier: ^0.0.36
         version: 0.0.36
@@ -253,7 +256,7 @@ importers:
         specifier: ^6.0.1
         version: 6.1.2
       supertest:
-        specifier: ^7.1.3
+        specifier: ^7.1.4
         version: 7.1.4
       tsx:
         specifier: ^4.19.3
@@ -1030,17 +1033,17 @@ packages:
     resolution: {integrity: sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  '@formatjs/ecma402-abstract@2.3.6':
-    resolution: {integrity: sha512-HJnTFeRM2kVFVr5gr5kH1XP6K0JcJtE7Lzvtr3FS/so5f1kpsqqqxy5JF+FRaO6H2qmcMfAUIox7AJteieRtVw==}
+  '@formatjs/ecma402-abstract@3.0.8':
+    resolution: {integrity: sha512-NRiqvxAvhbARZRFSRFPjN0y8txxmVutv2vMYvW2HSdCVf58w9l4osLj6Ujif643vImwZBcbKqhiKE0IOhY+DvA==}
 
-  '@formatjs/fast-memoize@2.2.7':
-    resolution: {integrity: sha512-Yabmi9nSvyOMrlSeGGWDiH7rf3a7sIwplbvo/dlz9WCIjzIQAfy1RMf4S0X3yG724n5Ghu2GmEl5NJIV6O9sZQ==}
+  '@formatjs/fast-memoize@3.0.3':
+    resolution: {integrity: sha512-CArYtQKGLAOruCMeq5/RxCg6vUXFx3OuKBdTm30Wn/+gCefehmZ8Y2xSMxMrO2iel7hRyE3HKfV56t3vAU6D4Q==}
 
-  '@formatjs/intl-listformat@7.7.13':
-    resolution: {integrity: sha512-e1jk2w1H6VLy4kKoYyfBjvkw6IXE48AczF+7FIzWr5zB7VjdWQyrvs858t2WeQzHD8dRIxvIyX+qmeGql4jvng==}
+  '@formatjs/intl-listformat@8.1.2':
+    resolution: {integrity: sha512-c0Yu1yFFQbSgjGtUav3QlXYkVXN/Y2SVO2zFgL31EmPCZLhHPibRP0tzUmMKqMtCWPphdlQaHVzYAgN9Mh1JqA==}
 
-  '@formatjs/intl-localematcher@0.6.2':
-    resolution: {integrity: sha512-XOMO2Hupl0wdd172Y06h6kLpBz6Dv+J4okPLl4LPtzbr8f66WbIoy4ev98EBuZ6ZK4h5ydTN6XneT4QVpD7cdA==}
+  '@formatjs/intl-localematcher@0.7.5':
+    resolution: {integrity: sha512-7/nd90cn5CT7SVF71/ybUKAcnvBlr9nZlJJp8O8xIZHXFgYOC4SXExZlSdgHv2l6utjw1byidL06QzChvQMHwA==}
 
   '@graphql-typed-document-node/core@3.2.0':
     resolution: {integrity: sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==}
@@ -1184,8 +1187,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/59b0fbb':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/59b0fbb}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/040102d':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/040102d}
     version: 1.0.0
 
   '@paralleldrive/cuid2@2.3.1':
@@ -2519,8 +2522,8 @@ packages:
     resolution: {integrity: sha512-pfX9uG9Ki0yekDHx2SiuRIyFdyAr1kMIMitPvb0YBo8SUfKvia7w7FIyd/l6av85pFYRhZscS75MwMnbvY+hcQ==}
     hasBin: true
 
-  fast-xml-parser@5.3.2:
-    resolution: {integrity: sha512-n8v8b6p4Z1sMgqRmqLJm3awW4NX7NkaKPfb3uJIBTSH7Pdvufi3PQ3/lJLQrvxcMYl7JI2jnDO90siPEpD8JBA==}
+  fast-xml-parser@5.3.3:
+    resolution: {integrity: sha512-2O3dkPAAC6JavuMm8+4+pgTk+5hoAs+CjZ+sWcQLkX9+/tHRuTkQh/Oaifr8qDmZ8iEHb771Ea6G8CdwkrgvYA==}
     hasBin: true
 
   fastq@1.19.1:
@@ -3493,12 +3496,8 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  qs@6.13.0:
-    resolution: {integrity: sha512-+38qI9SOr8tfZ4QmJNplMUxqjbe7LKvvZgWdExBOmd+egZTtjLB67Gu0HRX3u/XOq7UU2Nx6nsjvS16Z9uwfpg==}
-    engines: {node: '>=0.6'}
-
-  qs@6.14.0:
-    resolution: {integrity: sha512-YWWTjgABSKcvs/nWBi9PycY/JiPJqOD4JA6o9Sej2AtvSGarXxKC3OQSk4pAarbdQlKAh5D4FCQkJNkW+GAn3w==}
+  qs@6.14.1:
+    resolution: {integrity: sha512-4EK3+xJl8Ts67nLYNwqw/dsFVnCf+qR7RgXSK9jEEm9unao3njwMDdmsdvoKBKHzxd7tCYz5e5M+SnMjdtXGQQ==}
     engines: {node: '>=0.6'}
 
   queue-microtask@1.2.3:
@@ -5242,25 +5241,26 @@ snapshots:
 
   '@eslint/js@8.57.1': {}
 
-  '@formatjs/ecma402-abstract@2.3.6':
+  '@formatjs/ecma402-abstract@3.0.8':
     dependencies:
-      '@formatjs/fast-memoize': 2.2.7
-      '@formatjs/intl-localematcher': 0.6.2
+      '@formatjs/fast-memoize': 3.0.3
+      '@formatjs/intl-localematcher': 0.7.5
       decimal.js: 10.6.0
       tslib: 2.8.1
 
-  '@formatjs/fast-memoize@2.2.7':
+  '@formatjs/fast-memoize@3.0.3':
     dependencies:
       tslib: 2.8.1
 
-  '@formatjs/intl-listformat@7.7.13':
+  '@formatjs/intl-listformat@8.1.2':
     dependencies:
-      '@formatjs/ecma402-abstract': 2.3.6
-      '@formatjs/intl-localematcher': 0.6.2
+      '@formatjs/ecma402-abstract': 3.0.8
+      '@formatjs/intl-localematcher': 0.7.5
       tslib: 2.8.1
 
-  '@formatjs/intl-localematcher@0.6.2':
+  '@formatjs/intl-localematcher@0.7.5':
     dependencies:
+      '@formatjs/fast-memoize': 3.0.3
       tslib: 2.8.1
 
   '@graphql-typed-document-node/core@3.2.0(graphql@16.12.0)':
@@ -5398,18 +5398,18 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/59b0fbb(@types/react@19.2.6)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/040102d(@types/react@19.2.6)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.6)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.6)(react@18.3.1))(@types/react@19.2.6)(react@18.3.1)
-      '@formatjs/intl-listformat': 7.7.13
+      '@formatjs/intl-listformat': 8.1.2
       '@mui/material': 5.18.0(@emotion/react@11.14.0(@types/react@19.2.6)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.6)(react@18.3.1))(@types/react@19.2.6)(react@18.3.1))(@types/react@19.2.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       ajv: 8.17.1
       ajv-formats: 2.1.1(ajv@8.17.1)
       cheerio: 1.1.2
       copyfiles: 2.4.1
       eslint: 8.57.1
-      fast-xml-parser: 5.3.2
+      fast-xml-parser: 5.3.3
       graphql: 16.12.0
       graphql-request: 6.1.0(graphql@16.12.0)
       json-schema-to-typescript: 15.0.4
@@ -6376,7 +6376,7 @@ snapshots:
       http-errors: 2.0.0
       iconv-lite: 0.4.24
       on-finished: 2.4.1
-      qs: 6.13.0
+      qs: 6.14.1
       raw-body: 2.5.2
       type-is: 1.6.18
       unpipe: 1.0.0
@@ -6391,7 +6391,7 @@ snapshots:
       http-errors: 2.0.0
       iconv-lite: 0.7.0
       on-finished: 2.4.1
-      qs: 6.14.0
+      qs: 6.14.1
       raw-body: 3.0.1
       type-is: 2.0.1
     transitivePeerDependencies:
@@ -7012,7 +7012,7 @@ snapshots:
       parseurl: 1.3.3
       path-to-regexp: 0.1.12
       proxy-addr: 2.0.7
-      qs: 6.14.0
+      qs: 6.14.1
       range-parser: 1.2.1
       safe-buffer: 5.2.1
       send: 0.19.0
@@ -7051,7 +7051,7 @@ snapshots:
     dependencies:
       strnum: 2.1.1
 
-  fast-xml-parser@5.3.2:
+  fast-xml-parser@5.3.3:
     dependencies:
       strnum: 2.1.1
 
@@ -8042,11 +8042,7 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  qs@6.13.0:
-    dependencies:
-      side-channel: 1.1.0
-
-  qs@6.14.0:
+  qs@6.14.1:
     dependencies:
       side-channel: 1.1.0
 
@@ -8402,7 +8398,7 @@ snapshots:
       formidable: 3.5.4
       methods: 1.1.2
       mime: 2.6.0
-      qs: 6.14.0
+      qs: 6.14.1
     transitivePeerDependencies:
       - supports-color
 

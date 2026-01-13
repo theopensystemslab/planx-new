@@ -11,7 +11,7 @@ import Editor from "./Editor";
 import Public from "./Public";
 
 const meta = {
-  title: "PlanX Components/Responsive Question",
+  title: "PlanX Components/ResponsiveQuestion",
   component: Public,
   argTypes: {
     handleSubmit: { action: true, control: { disable: true } },

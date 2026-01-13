@@ -1,14 +1,16 @@
+import type { GovUKPayment } from "@opensystemslab/planx-core/types";
 import { Meta, StoryObj } from "@storybook/react";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 import Wrapper from "../fixtures/Wrapper";
 import Editor from "./Editor";
-import Confirmation, { Presentational } from "./Public";
+import Confirmation from "./Public";
 
 const meta = {
   title: "PlanX Components/Confirmation",
-  component: Presentational,
-} satisfies Meta<typeof Presentational>;
+  component: Confirmation,
+} satisfies Meta<typeof Confirmation>;
 
 export default meta;
 
@@ -17,21 +19,8 @@ type Story = StoryObj<typeof meta>;
 export const Basic = {
   args: {
     heading: "Form sent",
-    description: `A payment receipt has been emailed to you. You will also 
+    description: `A payment receipt has been emailed to you. You will also
     receive an email to confirm when your form has been received.`,
-    sessionId: "123-t3st-456",
-    applicableDetails: {
-      "Planning Application Reference": "LBL–LDCP-2138261",
-      "Property Address": "45, Greenfield Road, London SE22 7FF",
-      "Application type":
-        "Application for a Certificate of Lawfulness – Proposed",
-      Submitted: new Date().toLocaleDateString("en-gb", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      }),
-      "GOV.UK Payment reference": "qe817o3kds9474rfkfldfHSK874JB",
-    },
     nextSteps: [
       { title: "Validation", description: "Something will be validated" },
       { title: "Site visit", description: "Someone will visit" },
@@ -47,8 +36,29 @@ export const Basic = {
       <br><br>
       <p>What did you think of this service? Please give us your feedback on the next page.</p>
     `,
-    data: [],
   },
+  decorators: [
+    (Story) => {
+      useStore.setState({
+        sessionId: "123-t3st-456",
+        flowName: "Apply for a Certificate of Lawfulness",
+        govUkPayment: {
+          payment_id: "qe817o3kds9474rfkfldfHSK874JB",
+          created_date: new Date("2024-01-15").toISOString(),
+        } as GovUKPayment,
+        computePassport: () => ({
+          data: {
+            _address: {
+              title: "45, Greenfield Road, London SE22 7FF",
+            },
+            "application.type": "ldc.proposed",
+          },
+        }),
+      });
+
+      return <Story />;
+    },
+  ],
 } satisfies Story;
 
 export const WithEditor = () => (

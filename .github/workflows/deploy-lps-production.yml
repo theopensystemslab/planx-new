@@ -1,0 +1,74 @@
+name: Deploy LPS (production)
+
+permissions: read-all
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - production
+  schedule:
+    # Runs at 08:30, 12:30 and 16:30, Monday through Friday
+    - cron: 30 8,12,16 * * 1-5
+
+# Queue job so the site will always remain in a stable state
+concurrency:
+  group: deploy-lps-production
+  cancel-in-progress: false
+
+env:
+  BUCKET_NAME: localplanning.services
+  BUILD_MODE: production
+  SITE_URL: https://localplanning.services
+  DIST_ID: ${{ secrets.LPS_PROD_DIST_ID }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4.2.0
+        with:
+          version: ${{ vars.PNPM_VERSION }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: apps/localplanning.services
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          aws-access-key-id: ${{ secrets.PRODUCTION_AWS_ACCESS_KEY_ID }}
+          aws-region: eu-west-2
+          aws-secret-access-key: ${{ secrets.PRODUCTION_AWS_SECRET_ACCESS_KEY }}
+
+      - name: Run Deploy Script
+        id: deploy_script
+        run: ./scripts/deploy-lps.sh
+
+      
+      - name: Slack notification (success)
+        if: success()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_USERNAME: LPS Deploy
+          SLACK_COLOR: "#4F93E3"
+          SLACK_TITLE: LPS production deploy
+          SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOYMENT_WEBHOOK }}
+  
+  failure_notification:
+    name: Slack notification (failure)
+    if: failure()
+    uses: ./.github/workflows/action-failure.yml
+    secrets: inherit
+    with:
+      environment: LPS production

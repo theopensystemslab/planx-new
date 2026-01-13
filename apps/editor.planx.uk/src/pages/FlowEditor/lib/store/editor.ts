@@ -547,6 +547,7 @@ export const editorStore: StateCreator<
               publishedAt: created_at
               hasSendComponent: has_send_component
               hasVisiblePayComponent: has_pay_component
+              hasEnabledServiceCharge: service_charge_enabled
             }
           }
         }

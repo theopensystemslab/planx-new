@@ -63,14 +63,17 @@ services:
           "-c",
           "exec 5<>/dev/tcp/127.0.0.1/8080 && echo -e 'GET /healthz HTTP/1.1\n\n' >&5 && cat <&5 | head -n 1 | grep 200",
         ]
-      interval: 15s
-      timeout: 3s
-      retries: 10
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 60s
     volumes:
       - "./apps/hasura.planx.uk/metadata:/hasura-metadata"
       - "./apps/hasura.planx.uk/migrations:/hasura-migrations"
     restart: unless-stopped
     environment:
+      HASURA_GRAPHQL_MIGRATIONS_SERVER_TIMEOUT: 90
+      HASURA_GRAPHQL_NO_OF_RETRIES: 15
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_CORS_DOMAIN: http://localhost:${API_PORT}, http://localhost:${HASURA_CONSOLE_PORT}, http://localhost:3000, http://api:${API_PORT}, http://localhost:${HASURA_PROXY_PORT}/v1/graphql, ${LPS_URL_EXT}, https://*.planx.uk, https://*.planx.dev, https://*.planx.pizza, https://*.gov.uk, https://planx-website.webflow.io
       HASURA_GRAPHQL_DATABASE_URL: postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE}

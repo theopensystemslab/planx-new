@@ -31,8 +31,12 @@ export const SectionNavBar: React.FC = () => {
     path !== ApplicationPath.SingleSession && !saveToEmail;
   const routeContext = useRouteContext({ strict: false });
   const isContentPage = routeContext?.isContentPage;
+  const isViewApplicationPage = routeContext?.isViewApplicationPage;
   const isVisible =
-    hasSections && !isSaveAndReturnLandingPage && !isContentPage;
+    hasSections &&
+    !isSaveAndReturnLandingPage &&
+    !isContentPage &&
+    !isViewApplicationPage;
 
   if (!isVisible) return null;
 

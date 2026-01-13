@@ -107,7 +107,6 @@ const CUSTOM_DOMAINS: CustomDomain[] =
         {
           domain: "planningservices.lbbd.gov.uk",
           name: "barking-and-dagenham",
-          certificateLocation: "pulumiConfig",
         },
         {
           domain: "planningservices.southglos.gov.uk",
@@ -116,6 +115,10 @@ const CUSTOM_DOMAINS: CustomDomain[] =
         {
           domain: "planningservices.birmingham.gov.uk",
           name: "birmingham",
+        },
+        {
+          domain: "planningservices.horsham.gov.uk",
+          name: "horsham",
         },
       ]
     : [];

@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
-import { useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React, { ChangeEvent } from "react";
 import ListManager, {
   EditorProps as ListManagerEditorProps,
@@ -66,17 +66,18 @@ function NextStepEditor(props: ListManagerEditorProps<Step>) {
 
 export default function ConfirmationEditor(props: Props) {
   const type = TYPES.Confirmation;
-  const formik = useFormik<Confirmation>({
-    initialValues: parseConfirmation(props.node?.data),
-    onSubmit: (values) => {
-      if (props.handleSubmit) {
-        props.handleSubmit({ type, data: values });
-      }
+  const formik = useFormikWithRef<Confirmation>(
+    {
+      initialValues: parseConfirmation(props.node?.data),
+      onSubmit: (values) => {
+        if (props.handleSubmit) {
+          props.handleSubmit({ type, data: values });
+        }
+      },
+      validationSchema,
     },
-    validationSchema,
-    validateOnChange: false,
-    validateOnBlur: false,
-  });
+    props.formikRef,
+  );
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">

@@ -7,7 +7,7 @@ import {
   GroupedOptions,
 } from "@planx/components/shared/BaseChecklist/model";
 import { EditorProps } from "@planx/components/shared/types";
-import { useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 
 import {
@@ -23,27 +23,32 @@ export type Props = EditorProps<TYPES.Checklist, Checklist, ExtraProps>;
 export const ChecklistEditor: React.FC<Props> = (props) => {
   const type = TYPES.Checklist;
 
-  const formik = useFormik<ChecklistWithOptions>({
-    initialValues: parseChecklist({
-      ...props.node?.data,
-      options: props?.options,
-      groupedOptions: props?.groupedOptions,
-    }),
-    onSubmit: (values) => {
-      const { data, children } = generatePayload(values);
+  const formik = useFormikWithRef<ChecklistWithOptions>(
+    {
+      initialValues: parseChecklist({
+        ...props.node?.data,
+        options: props?.options,
+        groupedOptions: props?.groupedOptions,
+      }),
+      onSubmit: (values) => {
+        const { data, children } = generatePayload(values);
 
-      if (props.handleSubmit) {
-        props.handleSubmit({ type, data }, children);
-      } else {
-        alert(
-          JSON.stringify({ type, ...values, options: values.options }, null, 2),
-        );
-      }
+        if (props.handleSubmit) {
+          props.handleSubmit({ type, data }, children);
+        } else {
+          alert(
+            JSON.stringify(
+              { type, ...values, options: values.options },
+              null,
+              2,
+            ),
+          );
+        }
+      },
+      validationSchema,
     },
-    validationSchema,
-    validateOnBlur: false,
-    validateOnChange: false,
-  });
+    props.formikRef,
+  );
 
   return <BaseChecklistComponent formik={formik} type={type} {...props} />;
 };

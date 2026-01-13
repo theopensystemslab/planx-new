@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
+import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { NextSteps, Step } from "@planx/components/NextSteps/model";
 import {
@@ -7,7 +8,7 @@ import {
   validationSchema,
 } from "@planx/components/NextSteps/model";
 import { EditorProps } from "@planx/components/shared/types";
-import { useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React, { ChangeEvent } from "react";
 import ListManager, {
   EditorProps as ListManagerEditorProps,
@@ -86,17 +87,18 @@ const TaskEditor: React.FC<ListManagerEditorProps<Step>> = (props) => {
 };
 
 const NextStepsComponent: React.FC<Props> = (props) => {
-  const formik = useFormik({
-    initialValues: parseNextSteps(props.node?.data),
-    onSubmit: (newValues) => {
-      if (props.handleSubmit) {
-        props.handleSubmit({ type: TYPES.NextSteps, data: newValues });
-      }
+  const formik = useFormikWithRef<NextSteps>(
+    {
+      initialValues: parseNextSteps(props.node?.data),
+      onSubmit: (newValues) => {
+        if (props.handleSubmit) {
+          props.handleSubmit({ type: TYPES.NextSteps, data: newValues });
+        }
+      },
+      validationSchema,
     },
-    validationSchema,
-    validateOnBlur: false,
-    validateOnChange: false,
-  });
+    props.formikRef,
+  );
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
@@ -109,6 +111,10 @@ const NextStepsComponent: React.FC<Props> = (props) => {
       />
       <ModalSection>
         <ModalSectionContent title="Next steps" Icon={ICONS[TYPES.NextSteps]}>
+          <Typography variant="body2" sx={{ mb: 2 }}>
+            If you want users to continue to the next step in the service from a
+            given step, leave that URL section empty.
+          </Typography>
           <Box mb="1rem">
             <InputRow>
               <Input

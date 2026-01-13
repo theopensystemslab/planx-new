@@ -11,6 +11,7 @@ export const SLUGS: {
   [TYPES.Calculate]: "calculate",
   [TYPES.DateInput]: "date-input",
   [TYPES.DrawBoundary]: "draw-boundary",
+  [TYPES.EnhancedTextInput]: "enhanced-text-input",
   [TYPES.ExternalPortal]: "nested-flow",
   [TYPES.Feedback]: "feedback",
   [TYPES.FileUpload]: "file-upload",
@@ -46,5 +47,10 @@ export const fromSlug = (slug: string): TYPES | undefined => {
   const entry = Object.entries(SLUGS).find(
     ([_typeString, currentSlug]) => currentSlug === slug,
   );
+
+  // TextInput and EnhancedTextInput share a value in order to keep
+  // the Select component consistent
+  if (entry?.[1] === "enhanced-text-input") return TYPES.TextInput;
+
   return entry && Number(entry[0]);
 };
