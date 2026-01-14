@@ -1,3 +1,4 @@
+import { ApolloQueryResult } from "@apollo/client/core/types";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
@@ -24,15 +25,16 @@ import InputRow from "ui/shared/InputRow";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 import { Switch } from "ui/shared/Switch";
 
+import { SubmissionEmailInput } from "../../../../src/pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 import { ICONS } from "../shared/icons";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
 import { EditorProps } from "../shared/types";
 import { useFlowEmailId } from "./hooks/useFlowEmailId";
 import { useTeamSubmissionIntegrations } from "./hooks/useGetTeamSubmissionIntegrations";
-import { useInitializeFlowIntegration } from "./hooks/useInitializeFlowIntegration";
 import { useInsertFlowIntegration } from "./hooks/useInsertFlowIntegrations";
 import { useUpdateFlowIntegration } from "./hooks/useUpdateFlowIntegration";
 import { parseSend, Send, validationSchema } from "./model";
+import { GetFlowEmailIdQuery } from "./types";
 
 export type Props = EditorProps<TYPES.Send, Send>;
 
@@ -42,12 +44,14 @@ const SendComponent: React.FC<Props> = (props) => {
       initialValues: parseSend(props.node?.data),
       onSubmit: async (newValues) => {
         if (props.handleSubmit) {
-          if (
-            newValues.submissionEmailId &&
-            newValues.submissionEmailId !== emailId
-          ) {
-            await handleChangeEmail(newValues.submissionEmailId);
-          }
+          await handleInsertOrUpdate(
+            teamId,
+            newValues,
+            existingEmailId,
+            defaultEmail,
+            id,
+            refetchFlowData,
+          );
           props.handleSubmit({ type: TYPES.Send, data: newValues });
         }
       },
@@ -66,54 +70,77 @@ const SendComponent: React.FC<Props> = (props) => {
     ],
   );
 
-  const flowEmailIdObject = useFlowEmailId(id);
   const {
     data: flowData,
     loading: flowLoading,
     error: flowError,
-  } = flowEmailIdObject;
-  const emailId = flowData?.flowIntegrations?.[0]?.emailId;
+    refetch: refetchFlowData,
+  } = useFlowEmailId(id);
+  const existingEmailId = flowData?.flowIntegrations?.[0]?.emailId;
 
-  const teamSubmissionIntegrationsObject =
-    useTeamSubmissionIntegrations(teamId);
-  const { data, loading, error } = teamSubmissionIntegrationsObject;
+  const { data, loading, error } = useTeamSubmissionIntegrations(teamId);
   const emailOptions = data?.submissionIntegrations || [];
-  const defaultEmail = emailOptions.find((email: any) => email.defaultEmail);
+  const defaultEmail = emailOptions.find(
+    (email: any) => email.defaultEmail === true,
+  );
 
-  const insertFlowIntegrationObject = useInsertFlowIntegration();
-  useInitializeFlowIntegration({
-    emailId,
-    defaultEmail,
-    flowId: id,
-    teamId,
-  });
+  const [insertFlowIntegration] = useInsertFlowIntegration();
+  const [updateFlowIntegration] = useUpdateFlowIntegration();
 
-  useEffect(() => {
-    if (!formik.values.submissionEmailId && defaultEmail) {
-      formik.setFieldValue("submissionEmail", defaultEmail.id);
+  const handleInsertOrUpdate = async (
+    teamId: number,
+    newValues: Send,
+    existingEmailId: string | undefined,
+    defaultEmail: SubmissionEmailInput | undefined,
+    id: string,
+    refetchFlowData: () => Promise<ApolloQueryResult<GetFlowEmailIdQuery>>,
+  ) => {
+    const selectedEmailId = newValues.submissionEmailId || defaultEmail?.id;
+
+    if (!existingEmailId && selectedEmailId) {
+      await insertFlowIntegration({
+        variables: {
+          flowId: id,
+          emailId: selectedEmailId,
+          teamId: teamId,
+        },
+      });
+
+      await refetchFlowData();
+      return;
     }
-  }, [formik.values.submissionEmailId, defaultEmail, formik]);
 
-  const updateFlowIntegrationObject = useUpdateFlowIntegration();
-  const [updateFlowIntegration] = updateFlowIntegrationObject;
-
-  const handleChangeEmail = async (newEmailId: string) => {
-    if (emailId) {
+    if (
+      existingEmailId &&
+      newValues.submissionEmailId &&
+      existingEmailId !== newValues.submissionEmailId
+    ) {
       await updateFlowIntegration({
         variables: {
           flowId: id,
-          emailId: newEmailId,
+          emailId: newValues.submissionEmailId,
         },
       });
+
+      await refetchFlowData();
+      return;
     }
   };
 
+  useEffect(() => {
+    if (!formik.values.submissionEmailId && defaultEmail?.id) {
+      formik.setFieldValue("submissionEmailId", defaultEmail.id);
+    }
+  }, [defaultEmail?.id, formik]);
+
   const handleSelectChange = (event: SelectChangeEvent<unknown>) => {
     const selectedValue = event.target.value as string;
-    formik.setFieldValue("submissionEmail", selectedValue);
+    formik.setFieldValue("submissionEmailId", selectedValue);
   };
 
-  const currentEmail = emailOptions.find((email) => email.id === emailId);
+  const currentEmail = emailOptions.find(
+    (email) => email.id === existingEmailId,
+  );
 
   const toggleSwitch = (value: SendIntegration) => {
     let newCheckedValues: SendIntegration[];
