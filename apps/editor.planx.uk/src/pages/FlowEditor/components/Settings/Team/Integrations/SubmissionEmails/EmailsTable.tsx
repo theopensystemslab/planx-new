@@ -63,6 +63,8 @@ export const EmailsTable = () => {
     },
   );
 
+  const emails = data?.submissionIntegrations;
+
   const [upsertEmail] = useMutation(UPSERT_TEAM_SUBMISSION_INTEGRATIONS);
   const [deleteEmail] = useMutation(DELETE_TEAM_SUBMISSION_INTEGRATIONS);
 
@@ -78,19 +80,19 @@ export const EmailsTable = () => {
   >();
 
   useEffect(() => {
-    if (data?.submissionIntegrations) {
-      const currentDefault = data.submissionIntegrations.find(
+    if (emails) {
+      const currentDefault = emails.find(
         (email: SubmissionEmailInput) => email.defaultEmail === true,
       );
       setSelectedDefault(currentDefault || undefined);
     }
-  }, [data]);
+  }, [emails]);
 
   const addEmail = () => {
     setActionType("add");
     setShowModal(true);
 
-    if (!data || data.submissionIntegrations.length === 0) {
+    if (!emails || emails.length === 0) {
       setInitialValues({ defaultEmail: true } as SubmissionEmailInput);
     } else {
       setInitialValues(undefined);
@@ -144,11 +146,7 @@ export const EmailsTable = () => {
     return <div>Error loading emails: {error.message}</div>;
   }
 
-  const sortedEmails = [...(data?.submissionIntegrations || [])].sort((a, b) =>
-    a.submissionEmail.localeCompare(b.submissionEmail),
-  );
-
-  if (!data || data.submissionIntegrations.length === 0) {
+  if (!emails || emails.length === 0) {
     return (
       <>
         <Table>
@@ -193,7 +191,7 @@ export const EmailsTable = () => {
             </StyledTableRow>
           </TableHead>
           <TableBody>
-            {sortedEmails.map((email: SubmissionEmailInput) => (
+            {emails.map((email: SubmissionEmailInput) => (
               <StyledTableRow key={email.id}>
                 <TableCell sx={{ wordWrap: "break-word", maxWidth: "280px" }}>
                   {email.submissionEmail}
