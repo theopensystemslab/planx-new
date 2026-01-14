@@ -92,12 +92,6 @@ const Logo = styled("img")(() => ({
   },
 }));
 
-const LogoLink = styled(Link)(() => ({
-  display: "flex",
-  alignItems: "center",
-  "&:focus-visible": borderedFocusStyle,
-}));
-
 const ServiceTitleRoot = styled("span")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
@@ -114,34 +108,73 @@ const ServiceTitleRoot = styled("span")(({ theme }) => ({
   },
 }));
 
-const TeamLogo: React.FC = () => {
+const TeamBrand: React.FC = () => {
   const [teamSettings, teamName, teamTheme] = useStore((state) => [
     state.teamSettings,
     state.teamName,
     state.teamTheme,
   ]);
 
-  const altText = teamSettings?.homepage
-    ? `${teamName} Homepage (opens in a new tab)`
-    : `${teamName} Logo`;
-  const logo = <Logo alt={altText} src={teamTheme?.logo ?? undefined} />;
+  if (teamTheme?.logo) {
+    const altText = teamSettings?.homepage
+      ? `${teamName} Homepage (opens in a new tab)`
+      : `${teamName} Logo`;
+
+    const logo = <Logo alt={altText} src={teamTheme.logo} />;
+
+    return teamSettings?.homepage ? (
+      <Link
+        href={teamSettings.homepage}
+        target="_blank"
+        rel="noopener noreferrer"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          textDecoration: "none",
+          "&:focus-visible": borderedFocusStyle,
+        }}
+      >
+        {logo}
+      </Link>
+    ) : (
+      <Box sx={{ display: "flex", alignItems: "center" }}>{logo}</Box>
+    );
+  }
+
+  const teamDisplayName = (
+    <Typography
+      variant="h4"
+      component="span"
+      fontWeight={FONT_WEIGHT_SEMI_BOLD}
+      sx={{ whiteSpace: "nowrap" }}
+    >
+      {teamName}
+    </Typography>
+  );
+
   return teamSettings?.homepage ? (
-    <LogoLink href={teamSettings?.homepage} target="_blank">
-      {logo}
-    </LogoLink>
+    <Link
+      href={teamSettings.homepage}
+      target="_blank"
+      rel="noopener noreferrer"
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        textDecoration: "none",
+        color: "#FFF",
+      }}
+    >
+      {teamDisplayName}
+    </Link>
   ) : (
-    logo
+    teamDisplayName
   );
 };
 
 const PublicToolbar: React.FC<{
   showResetButton?: boolean;
 }> = ({ showResetButton = true }) => {
-  const [path, id, teamTheme] = useStore((state) => [
-    state.path,
-    state.id,
-    state.teamTheme,
-  ]);
+  const [path, id] = useStore((state) => [state.path, state.id]);
 
   // Center the service title on desktop layouts, or drop it to second line on mobile
   // ref https://design-system.service.gov.uk/styles/page-template/
@@ -183,7 +216,7 @@ const PublicToolbar: React.FC<{
         <Container maxWidth="contentWrap">
           <InnerContainer>
             <LeftBox>
-              {teamTheme?.logo ? <TeamLogo /> : <Breadcrumbs />}
+              <TeamBrand />
             </LeftBox>
             {showCentredServiceTitle && <ServiceTitle />}
             <RightBox>
