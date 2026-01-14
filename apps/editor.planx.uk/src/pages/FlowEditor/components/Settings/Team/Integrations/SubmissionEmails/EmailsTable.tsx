@@ -66,9 +66,6 @@ export const EmailsTable = () => {
 
   const [deleteEmail] = useMutation(DELETE_TEAM_SUBMISSION_INTEGRATIONS);
 
-  const [selectedDefault, setSelectedDefault] = useState<
-    SubmissionEmailInput | undefined
-  >(undefined);
   const [showModal, setShowModal] = useState(false);
   const [actionType, setActionType] = useState<"add" | "edit" | "remove">(
     "add",
@@ -77,14 +74,9 @@ export const EmailsTable = () => {
     SubmissionEmailInput | undefined
   >();
 
-  useEffect(() => {
-    if (emails) {
-      const currentDefault = emails.find(
-        (email: SubmissionEmailInput) => email.defaultEmail === true,
-      );
-      setSelectedDefault(currentDefault || undefined);
-    }
-  }, [emails]);
+  const currentDefault = emails?.find(
+    (email: SubmissionEmailInput) => email.defaultEmail === true,
+  );
 
   const addEmail = () => {
     setActionType("add");
@@ -224,7 +216,7 @@ export const EmailsTable = () => {
           setShowModal={setShowModal}
           initialValues={initialValues}
           actionType={actionType}
-          previousDefaultEmail={selectedDefault}
+          previousDefaultEmail={currentDefault}
           currentEmails={data.submissionIntegrations.map(
             (email) => email.submissionEmail,
           )}
