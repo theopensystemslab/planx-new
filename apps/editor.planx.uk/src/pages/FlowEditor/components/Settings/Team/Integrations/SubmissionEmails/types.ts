@@ -29,7 +29,6 @@ export interface EditorModalProps {
   showModal?: boolean;
   setShowModal: React.Dispatch<SetStateAction<boolean>>;
   initialValues?: SubmissionEmailInput;
-  userId?: number;
   actionType?: ActionType;
   previousDefaultEmail?: SubmissionEmailInput;
   currentEmails?: string[];
