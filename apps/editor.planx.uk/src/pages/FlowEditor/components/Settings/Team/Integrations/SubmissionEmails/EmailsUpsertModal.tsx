@@ -1,18 +1,17 @@
 import { useMutation } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import Typography from "@mui/material/Typography";
 import { Formik } from "formik";
 import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
+import { Switch } from "ui/shared/Switch";
 
 import { upsertEmailSchema } from "./formSchema";
 import {
@@ -123,7 +122,6 @@ export const EmailsUpsertModal = ({
                   }
                 >
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Typography>Email</Typography>
                     <Input {...getFieldProps("submissionEmail")} />
                   </Box>
                 </ErrorWrapper>
@@ -136,12 +134,13 @@ export const EmailsUpsertModal = ({
                   gap: 1,
                 }}
               >
-                <Typography>Set as Default</Typography>
-                <Checkbox
+                <Switch
+                  name="isDefault"
                   checked={values.defaultEmail}
                   onChange={(e) =>
                     setFieldValue("defaultEmail", e.target.checked)
                   }
+                  label={"Default email"}
                 />
               </Box>
             </DialogContent>
