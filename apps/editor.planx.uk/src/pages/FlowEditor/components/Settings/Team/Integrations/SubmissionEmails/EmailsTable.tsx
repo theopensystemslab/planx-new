@@ -106,23 +106,6 @@ const EmailsTableContent = () => {
             returning: [{ ...email }],
           },
         },
-        update: (cache) => {
-          const existingData = cache.readQuery<GetSubmissionEmails>({
-            query: GET_TEAM_SUBMISSION_INTEGRATIONS,
-            variables: { teamId },
-          });
-
-          if (existingData) {
-            const updatedEmails = existingData.submissionIntegrations.filter(
-              (e: SubmissionEmailInput) => e.id !== email.id,
-            );
-            cache.writeQuery({
-              query: GET_TEAM_SUBMISSION_INTEGRATIONS,
-              variables: { teamId },
-              data: { submissionIntegrations: updatedEmails },
-            });
-          }
-        },
       });
       toast.success("Email removed successfully");
       refetch();
