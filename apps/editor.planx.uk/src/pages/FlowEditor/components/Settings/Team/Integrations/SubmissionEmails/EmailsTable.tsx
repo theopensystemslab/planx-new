@@ -8,9 +8,11 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import ErrorFallback from "components/Error/ErrorFallback";
 import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { AddButton } from "ui/editor/AddButton";
 
 import { StyledTableRow } from "../../../../Team/styles";
@@ -51,7 +53,7 @@ const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
   overflow: "hidden",
 }));
 
-export const EmailsTable = () => {
+const EmailsTableContent = () => {
   const toast = useToast();
   const teamId = useStore((state) => state.teamId);
 
@@ -131,10 +133,6 @@ export const EmailsTable = () => {
   };
 
   if (loading) return <div>Loading...</div>;
-  if (error) {
-    console.error("Error loading emails:", error);
-    return <div>Error loading emails: {error.message}</div>;
-  }
 
   if (!emails || emails.length === 0) {
     return (
@@ -225,3 +223,9 @@ export const EmailsTable = () => {
     </>
   );
 };
+
+export const EmailsTable = () => (
+  <ErrorBoundary FallbackComponent={ErrorFallback}>
+    <EmailsTableContent />
+  </ErrorBoundary>
+);
