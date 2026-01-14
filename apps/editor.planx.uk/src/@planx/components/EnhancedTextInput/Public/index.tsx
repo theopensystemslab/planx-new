@@ -1,5 +1,6 @@
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
+import { getPreviouslySubmittedData } from "@planx/components/shared/utils";
 import { useIsFetching } from "@tanstack/react-query";
 import { Formik } from "formik";
 import React, { useState } from "react";
@@ -15,11 +16,36 @@ const taskComponents: TaskComponentMap = {
 };
 
 const EnhancedTextInputComponent = (props: Props) => {
+  const previous = getPreviouslySubmittedData(props);
   const [step, setStep] = useState<"input" | "task">("input");
   const isRunningTask = useIsFetching({ queryKey: [props.task] });
 
+  const initialValues: FormValues = previous
+    ? {
+        userInput: previous,
+        status: "success",
+        original:
+          props.previouslySubmittedData?.data?._enhancements[props.fn].original,
+        enhanced:
+          props.previouslySubmittedData?.data?._enhancements[props.fn].enhanced,
+        error: null,
+      }
+    : {
+        userInput: "",
+        status: "idle",
+        enhanced: null,
+        error: null,
+      };
+
   const nextStep = (values: FormValues) => {
+    // If re-submitting the same value (e.g. as part of "back" navigation),
+    // just submit and do not re-query the API
+    if (values.userInput === previous) {
+      return props.handleSubmit?.({ data: makeBreadcrumb(props.fn, values) });
+    }
+
     if (step === "input") return setStep("task");
+
     if (step === "task")
       props.handleSubmit?.({ data: makeBreadcrumb(props.fn, values) });
   };
@@ -31,12 +57,7 @@ const EnhancedTextInputComponent = (props: Props) => {
 
   return (
     <Formik<FormValues>
-      initialValues={{
-        userInput: "",
-        status: "idle",
-        enhanced: null,
-        error: null,
-      }}
+      initialValues={initialValues}
       onSubmit={nextStep}
       enableReinitialize
       validateOnBlur={false}
