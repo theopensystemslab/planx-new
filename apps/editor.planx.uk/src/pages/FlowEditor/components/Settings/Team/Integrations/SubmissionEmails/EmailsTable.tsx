@@ -11,7 +11,7 @@ import TableRow from "@mui/material/TableRow";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { AddButton } from "ui/editor/AddButton";
 
