@@ -1,4 +1,4 @@
-import { MutationFunction } from "@apollo/client/react/types/types";
+import { useMutation } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
@@ -14,7 +14,10 @@ import React from "react";
 import Input from "ui/shared/Input/Input";
 
 import { upsertEmailSchema } from "./formSchema";
-import { GET_TEAM_SUBMISSION_INTEGRATIONS } from "./queries";
+import {
+  GET_TEAM_SUBMISSION_INTEGRATIONS,
+  UPSERT_TEAM_SUBMISSION_INTEGRATIONS,
+} from "./queries";
 import { EditorModalProps } from "./types";
 import { SubmissionEmailInput } from "./types";
 
@@ -23,12 +26,13 @@ export const EmailsUpsertModal = ({
   showModal,
   initialValues,
   actionType,
-  upsertEmail,
   previousDefaultEmail,
   currentEmails,
-}: EditorModalProps & { upsertEmail: MutationFunction }) => {
+}: EditorModalProps) => {
   const teamId = useStore((state) => state.teamId);
   const toast = useToast();
+
+  const [upsertEmail] = useMutation(UPSERT_TEAM_SUBMISSION_INTEGRATIONS);
 
   const formik = useFormik<SubmissionEmailInput>({
     initialValues: {

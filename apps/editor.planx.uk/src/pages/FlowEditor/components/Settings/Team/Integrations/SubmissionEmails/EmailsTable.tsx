@@ -18,7 +18,6 @@ import { EmailsUpsertModal } from "./EmailsUpsertModal";
 import {
   DELETE_TEAM_SUBMISSION_INTEGRATIONS,
   GET_TEAM_SUBMISSION_INTEGRATIONS,
-  UPSERT_TEAM_SUBMISSION_INTEGRATIONS,
 } from "./queries";
 import { GetSubmissionEmails, SubmissionEmailInput } from "./types";
 
@@ -65,7 +64,6 @@ export const EmailsTable = () => {
 
   const emails = data?.submissionIntegrations;
 
-  const [upsertEmail] = useMutation(UPSERT_TEAM_SUBMISSION_INTEGRATIONS);
   const [deleteEmail] = useMutation(DELETE_TEAM_SUBMISSION_INTEGRATIONS);
 
   const [selectedDefault, setSelectedDefault] = useState<
@@ -171,7 +169,6 @@ export const EmailsTable = () => {
             setShowModal={setShowModal}
             initialValues={initialValues}
             actionType={actionType}
-            upsertEmail={upsertEmail}
           />
         )}
       </>
@@ -227,7 +224,6 @@ export const EmailsTable = () => {
           setShowModal={setShowModal}
           initialValues={initialValues}
           actionType={actionType}
-          upsertEmail={upsertEmail}
           previousDefaultEmail={selectedDefault}
           currentEmails={data.submissionIntegrations.map(
             (email) => email.submissionEmail,
