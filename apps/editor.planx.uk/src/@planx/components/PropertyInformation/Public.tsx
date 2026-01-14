@@ -37,6 +37,7 @@ function Component(props: PublicProps<PropertyInformation>) {
       info={props.info}
       policyRef={props.policyRef}
       howMeasured={props.howMeasured}
+      definitionImg={props.definitionImg}
       showPropertyTypeOverride={props.showPropertyTypeOverride}
       address={passport.data?._address}
       propertyType={passport.data?.["property.type"]}
@@ -93,6 +94,7 @@ export function Presentational(props: PresentationalProps) {
     info,
     policyRef,
     howMeasured,
+    definitionImg,
     showPropertyTypeOverride,
     address,
     propertyType,
@@ -144,6 +146,7 @@ export function Presentational(props: PresentationalProps) {
         info={info}
         policyRef={policyRef}
         howMeasured={howMeasured}
+        definitionImg={definitionImg}
       />
       <MapContainer environment={environment}>
         <p style={visuallyHidden}>
