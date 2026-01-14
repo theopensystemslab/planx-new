@@ -11,6 +11,7 @@ import { Formik } from "formik";
 import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 
 import { upsertEmailSchema } from "./formSchema";
@@ -32,10 +33,6 @@ export const EmailsUpsertModal = ({
   const toast = useToast();
 
   const [upsertEmail] = useMutation(UPSERT_TEAM_SUBMISSION_INTEGRATIONS);
-
-  const isUpdateDisabled =
-    previousDefaultEmail?.id === initialValues?.id &&
-    !initialValues?.defaultEmail;
 
   return (
     <Formik
@@ -106,8 +103,9 @@ export const EmailsUpsertModal = ({
         getFieldProps,
         values,
         setFieldValue,
-        isValid,
         dirty,
+        errors,
+        touched,
       }) => (
         <Dialog open={showModal || false} onClose={() => setShowModal(false)}>
           <form onSubmit={handleSubmit}>
@@ -116,8 +114,19 @@ export const EmailsUpsertModal = ({
             </DialogTitle>
             <DialogContent>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Typography>Email</Typography>
-                <Input {...getFieldProps("submissionEmail")} />
+                <ErrorWrapper
+                  id="submissionEmail"
+                  error={
+                    touched.submissionEmail && errors.submissionEmail
+                      ? errors.submissionEmail
+                      : undefined
+                  }
+                >
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <Typography>Email</Typography>
+                    <Input {...getFieldProps("submissionEmail")} />
+                  </Box>
+                </ErrorWrapper>
               </Box>
               <Box
                 sx={{
@@ -141,7 +150,10 @@ export const EmailsUpsertModal = ({
               <Button
                 variant="contained"
                 type="submit"
-                disabled={!isValid || !dirty || isUpdateDisabled}
+                disabled={
+                  !dirty ||
+                  (touched.submissionEmail && !!errors.submissionEmail)
+                }
               >
                 {actionType === "add" ? "Add" : "Update"}
               </Button>

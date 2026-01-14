@@ -6,7 +6,7 @@ export const upsertEmailSchema = (
 ) =>
   Yup.object().shape({
     submissionEmail: Yup.string()
-      .email("Invalid email")
+      .email("Please enter a valid email")
       .required("Email is required")
       .test("unique-email", "Please enter a unique email address", (value) => {
         if (value === currentEmail) return true;
