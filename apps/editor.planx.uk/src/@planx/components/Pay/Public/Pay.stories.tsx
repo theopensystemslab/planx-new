@@ -6,15 +6,16 @@ const meta = {
   title: "PlanX Components/Pay",
   component: Confirm,
   parameters: {
-    reactNavi: {
-      useCurrentRoute: () => ({
-        data: {
-          mountpath: "test mountpath",
-        },
-      }),
-      useNavigation: () => ({
-        navigate: () => console.log("called navigate()"),
-      }),
+    tanstackRouter: {
+      params: {},
+      location: {
+        pathname: "/test-mountpath",
+        search: "",
+        hash: "",
+      },
+      context: {
+        mountpath: "test mountpath",
+      },
     },
   },
 } satisfies Meta<typeof Confirm>;
