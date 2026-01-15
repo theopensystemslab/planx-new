@@ -15,6 +15,7 @@ export interface UserStore {
   canUserEditTeam: (teamSlug: Team["slug"]) => boolean;
   initUserStore: () => Promise<User>;
   getUserRoleForCurrentTeam: () => Role | undefined;
+  getUserRole: () => string | undefined;
 }
 
 export const userStore: StateCreator<
@@ -69,5 +70,13 @@ export const userStore: StateCreator<
     if (!currentUserTeam) return;
 
     return currentUserTeam.role;
+  },
+
+  getUserRole: () => {
+    const user = get().user;
+    if (!user) return;
+    if (user.isPlatformAdmin) return "Platform Admin";
+    if (user.isAnalyst) return "Analyst";
+    return "Editor";
   },
 });

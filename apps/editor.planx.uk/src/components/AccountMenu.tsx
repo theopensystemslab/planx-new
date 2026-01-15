@@ -1,7 +1,6 @@
-import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import Person from "@mui/icons-material/Person";
+import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
 import { grey } from "@mui/material/colors";
 import IconButton from "@mui/material/IconButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -9,6 +8,7 @@ import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Popover, { popoverClasses } from "@mui/material/Popover";
+import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -22,13 +22,12 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 export const HEADER_HEIGHT_EDITOR = 56;
 
 const ProfileSection = styled(MuiToolbar)(({ theme }) => ({
+  marginTop: "auto",
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  marginRight: theme.spacing(1),
-  [theme.breakpoints.up("md")]: {
-    minHeight: HEADER_HEIGHT_EDITOR,
-  },
+  padding: theme.spacing(1, 0.5),
+  width: "100%",
   "@media print": {
     visibility: "hidden",
   },
@@ -53,11 +52,16 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   },
 }));
 
-const AccountMenu: React.FC = () => {
+export interface AccountMenuProps {
+  compact?: boolean;
+}
+
+const AccountMenu: React.FC<AccountMenuProps> = ({ compact = false }) => {
   const { navigate } = useNavigation();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
   const user = useStore((state) => state.user);
+  const userRole = useStore((state) => state.getUserRole());
 
   const handleClose = () => {
     setOpen(false);
@@ -80,7 +84,6 @@ const AccountMenu: React.FC = () => {
   return (
     <>
       <ProfileSection disableGutters>
-        <Box mr={1} />
         <IconButton
           ref={anchorRef}
           edge="end"
@@ -88,27 +91,49 @@ const AccountMenu: React.FC = () => {
           aria-label="Toggle Menu"
           onClick={handleMenuToggle}
           size="large"
-          sx={{ padding: "0.25em" }}
+          sx={{
+            padding: "0.25em",
+            width: "100%",
+            justifyContent: compact ? "center" : "flex-start",
+          }}
         >
           <Avatar
             component="span"
             sx={{
-              bgcolor: grey[200],
-              color: "text.primary",
+              bgcolor: grey[900],
+              color: "#fff",
               fontSize: "1rem",
               fontWeight: FONT_WEIGHT_SEMI_BOLD,
               width: 33,
               height: 33,
-              marginRight: "0.5rem",
+              marginRight: compact ? 0 : "0.5rem",
             }}
           >
             {user.firstName[0]}
             {user.lastName[0]}
           </Avatar>
-          <Typography variant="body3">Account</Typography>
-          <KeyboardArrowDown />
+
+          {!compact && (
+            <>
+              <Stack
+                spacing={0.25}
+                sx={{ alignItems: "flex-start", textAlign: "left" }}
+              >
+                <Typography
+                  variant="body3"
+                  sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+                >
+                  {user.firstName} {user.lastName}
+                </Typography>
+                <Typography variant="body3">{userRole}</Typography>
+              </Stack>
+
+              <UnfoldMoreIcon fontSize="small" sx={{ marginLeft: "auto" }} />
+            </>
+          )}
         </IconButton>
       </ProfileSection>
+
       <StyledPopover
         open={open}
         anchorEl={anchorRef.current}

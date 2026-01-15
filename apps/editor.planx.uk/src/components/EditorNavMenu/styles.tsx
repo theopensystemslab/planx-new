@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export const MENU_WIDTH_COMPACT = 51;
-export const MENU_WIDTH_FULL = 180;
+export const MENU_WIDTH_FULL = 210;
 
 export const Root = styled(Box, {
   shouldForwardProp: (prop) => prop !== "compact",
@@ -21,12 +21,21 @@ export const Root = styled(Box, {
   },
 }));
 
-export const MenuWrap = styled("ul")(({ theme }) => ({
+export const NavBarContainer = styled(Box)(() => ({
+  display: "flex",
+  flexDirection: "column",
+  height: "100%",
+  position: "fixed",
+  width: "inherit",
+  top: 0,
+}));
+
+export const MenuWrap = styled("ul", {
+  shouldForwardProp: (prop) => prop !== "compact",
+})<{ compact?: boolean }>(({ theme, compact }) => ({
   listStyle: "none",
   margin: 0,
-  padding: theme.spacing(1, 0.5, 0, 0.5),
-  position: "sticky",
-  top: 0,
+  padding: compact ? theme.spacing(1, 0.5) : theme.spacing(1, 0.75),
 }));
 
 export const MenuItem = styled("li")(({ theme }) => ({

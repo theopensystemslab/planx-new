@@ -36,11 +36,12 @@ const Root = styled(Box)(() => ({
   },
 }));
 
-const StyledButtonBase = styled(ButtonBase)(() => ({
+const StyledButtonBase = styled(ButtonBase)(({ theme }) => ({
   backgroundColor: "transparent",
   height: "auto",
   width: "auto",
   textTransform: "capitalize",
+  color: theme.palette.common.white,
   "&:hover": {
     backgroundColor: "transparent",
   },
@@ -117,9 +118,12 @@ export const EnvironmentSelect: React.FC = () => {
 
   return (
     <Root>
-      <StyledButtonBase onClick={handleOpen} selected={false} sx={{ ml: 0.5 }}>
+      <StyledButtonBase onClick={handleOpen} selected={false}>
         {currentEnv}
-        <UnfoldMoreIcon />
+        <UnfoldMoreIcon
+          fontSize="small"
+          sx={(theme) => ({ color: theme.palette.secondary.dark, ml: 0.25 })}
+        />
       </StyledButtonBase>
       <StyledDialog
         open={open}
@@ -128,8 +132,8 @@ export const EnvironmentSelect: React.FC = () => {
         PaperProps={{
           sx: {
             position: "absolute",
-            top: 5,
-            left: 10,
+            top: 0,
+            left: 0,
             m: 0,
             width: "300px",
             maxWidth: "300px",
@@ -141,10 +145,15 @@ export const EnvironmentSelect: React.FC = () => {
       >
         <StyledDialogTitle>
           <Box>
-            <Typography variant="body1" component="span" mr={1}>
+            <Typography
+              variant="subtitle1"
+              component="span"
+              mr={1}
+              color="white"
+            >
               Plan✕
             </Typography>
-            <Typography variant="body1" component="span">
+            <Typography variant="body2" component="span">
               environments
             </Typography>
           </Box>
