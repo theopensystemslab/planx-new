@@ -6,12 +6,13 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { Link as ReactNaviLink, useCurrentRoute } from "react-navi";
 import { rootFlowPath } from "routes/utils";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType } from "ui/editor/FlowTag/types";
 
 const BreadcrumbsContainer = styled(Box)(({ theme }) => ({
   display: "flex",
-  gap: 10,
+  gap: theme.spacing(1.5),
   alignItems: "center",
   position: "fixed",
   top: 0,
@@ -23,18 +24,20 @@ const BreadcrumbsContainer = styled(Box)(({ theme }) => ({
   backdropFilter: "blur(10px)",
 }));
 
-const BreadcrumbsRoot = styled(Box)(() => ({
+const BreadcrumbsRoot = styled(Box)(({ theme }) => ({
   cursor: "pointer",
   fontSize: 20,
   display: "flex",
-  columnGap: 10,
+  gap: theme.spacing(0.5),
   alignItems: "center",
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
 }));
 
 const BreadcrumbsLink = styled(Link)(({ theme }) => ({
   color: theme.palette.text.primary,
   textDecoration: "none",
-  borderBottom: `1px solid ${theme.palette.text.secondary}`,
+  borderBottom: `1px solid ${theme.palette.text.primary}`,
+  fontWeight: "inherit",
 })) as typeof Link;
 
 const Breadcrumbs: React.FC = () => {
@@ -67,6 +70,8 @@ const Breadcrumbs: React.FC = () => {
               sx={{
                 color: (theme) => theme.palette.text.primary,
                 textDecoration: "none",
+                fontWeight: "inherit",
+                borderBottom: `1px solid transparent`,
               }}
               component={ReactNaviLink}
               href={rootFlowPath(false)}
