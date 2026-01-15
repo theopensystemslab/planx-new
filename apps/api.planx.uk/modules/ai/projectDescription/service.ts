@@ -3,25 +3,22 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
 import {
-  createGateway,
   generateObject,
   InvalidPromptError,
   NoContentGeneratedError,
   NoObjectGeneratedError,
-  NoSuchModelError,
 } from "ai";
 import { z } from "zod";
 
+import { logAiGatewayExchange } from "../logs.js";
+import { getModel } from "../utils.js";
 import {
   type GatewayResult,
   GATEWAY_STATUS,
   SUCCESS_STATUSES,
-} from "./types.js";
+} from "../types.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const DEFAULT_MODEL = "google/gemini-2.5-pro";
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const loadSystemPrompt = (): string => {
   const promptPath = join(__dirname, "system.md");
@@ -37,31 +34,54 @@ const loadSystemPrompt = (): string => {
 
 export const enhanceProjectDescription = async (
   original_description: string,
-  modelName: string = DEFAULT_MODEL,
+  endpoint: string,
+  modelId: string,
+  sessionId?: string,
+  flowId?: string,
 ): Promise<GatewayResult> => {
   try {
-    const result = getModel(modelName);
+    const startTime = Date.now();
+    const result = getModel(modelId);
     if (!result.ok) {
       return { ok: false, error: result.error };
     }
     if (!result.model) {
       return { ok: false, error: GATEWAY_STATUS.ERROR };
     }
-    const model = result.model;
 
+    const prompt = `<user_input>${original_description}</user_input>`;
     const res = await generateObject({
-      model: model,
+      model: result.model,
       output: "object",
       schema: z.object({
         enhancedDescription: z.string().trim().max(250),
         status: z.enum([...SUCCESS_STATUSES, GATEWAY_STATUS.INVALID]),
       }),
       system: loadSystemPrompt(),
-      prompt: `<user_input>${original_description}</user_input>`,
+      prompt,
     });
 
-    // TODO: log audit trail of input/output and other important metadata to db (e.g. usage.totalTokens)
+    const responseTimeMs = Date.now() - startTime;
     console.debug("Full response from gateway:", res);
+
+    // log the exchange w/ Vercel AI Gateway to the audit table in db
+    // TODO: also pass in flowId and sessionId where possible
+    await logAiGatewayExchange({
+      endpoint,
+      modelId: res.response?.modelId || modelId,
+      prompt,
+      response: res.object.enhancedDescription ?? undefined,
+      gatewayStatus: res.object.status || undefined,
+      tokenUsage: res.usage?.totalTokens,
+      costUsd: res.providerMetadata?.gateway?.cost
+        ? parseFloat(res.providerMetadata.gateway.cost as string)
+        : undefined,
+      vercelGenerationId:
+        (res.providerMetadata?.gateway?.generationId as string) || undefined,
+      responseTimeMs,
+      sessionId,
+      flowId,
+    });
 
     const object = res.object;
     console.debug(`Model returned status: ${object.status}`);
@@ -86,26 +106,6 @@ export const enhanceProjectDescription = async (
         "Unexpected error with request to Vercel AI Gateway",
         error,
       );
-    }
-    return { ok: false, error: GATEWAY_STATUS.ERROR };
-  }
-};
-
-const getModel = (model: string): GatewayResult => {
-  try {
-    console.assert(process.env.AI_GATEWAY_API_KEY);
-    const gateway = createGateway({
-      apiKey: process.env.AI_GATEWAY_API_KEY,
-    });
-    return { ok: true, model: gateway(model) };
-  } catch (error) {
-    if (NoSuchModelError.isInstance(error)) {
-      console.error(
-        `Model '${model}' not available in gateway. Please check the model name.`,
-        error,
-      );
-    } else {
-      console.error(`Failed to instantiate model '${model}'`, error);
     }
     return { ok: false, error: GATEWAY_STATUS.ERROR };
   }

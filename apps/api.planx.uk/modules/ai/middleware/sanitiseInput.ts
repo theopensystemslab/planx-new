@@ -27,9 +27,7 @@ export const sanitiseInput =
 
       next();
     } catch (error) {
-      return res.status(500).json({
-        error: "SANITISATION_ERROR",
-        message: "Failed to sanitise input",
-      });
+      console.error("Error sanitising input:", error);
+      return res.status(500).send("Failed to sanitise input");
     }
   };

@@ -40,7 +40,7 @@ export const redactPii =
       }
 
       if (piiDetected) {
-        console.warn(
+        console.debug(
           `The following types of PII were detected and redacted: ${detectedTypes.join(", ")}`,
         );
         // store original and redacted versions, but send only the latter to the LLM
@@ -52,10 +52,10 @@ export const redactPii =
       next();
     } catch (error) {
       console.error("Error in PII detection middleware:", error);
-      return res.status(500).json({
-        error: "SANITISATION_ERROR",
-        message:
-          "Failed to sanitise any personally identifiable information found in input",
-      });
+      return res
+        .status(500)
+        .send(
+          "Failed to redact any personally identifiable information found in input",
+        );
     }
   };

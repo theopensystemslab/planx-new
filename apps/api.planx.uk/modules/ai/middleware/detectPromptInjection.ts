@@ -1,5 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
 
+import { GUARDRAIL_REJECTION_REASON } from "../types.js";
+import { logAiGuardrailRejection } from "../logs.js";
+
 // NB. we don't attempt to catch prompt injection attacks based on natural language with regex
 const INJECTION_PATTERNS = [
   // control tokens/delimiters
@@ -10,7 +13,7 @@ const INJECTION_PATTERNS = [
   /<\|im_end\|>/i,
 
   // delimiter breaking
-  /<\/user_input>/,
+  /<\/user_input>/i,
   /```/,
 
   // excessive repetition
@@ -22,18 +25,25 @@ export const detectPromptInjection =
   (key: string) => (req: Request, res: Response, next: NextFunction) => {
     try {
       const input = res.locals.parsedReq.body[key];
+      const modelId = res.locals.parsedReq.body.modelId;
+      const endpoint = req.route.path;
 
       // check for one of our known injection patterns
       for (const pattern of INJECTION_PATTERNS) {
         if (pattern.test(input)) {
-          console.warn(
-            `Suspicious input detected - common prompt injection pattern: ${pattern}`,
-          );
-          return res.status(400).json({
-            error: "INVALID_INPUT",
-            message:
-              "The input contains patterns that do not seem appropriate.",
+          const msg = `Suspicious input detected - common prompt injection pattern: ${pattern}`;
+          console.warn(msg);
+          // log the rejection of the request due to guardrail tripping to audit table in db
+          logAiGuardrailRejection({
+            endpoint,
+            modelId,
+            prompt: input,
+            guardrailReason: GUARDRAIL_REJECTION_REASON.PROMPT_INJECTION,
+            guardrailMessage: msg,
           });
+          return res
+            .status(400)
+            .send("The input contains patterns that do not seem appropriate.");
         }
       }
 
@@ -45,21 +55,25 @@ export const detectPromptInjection =
         totalLength > 0 &&
         specialCharCount / totalLength > SPECIAL_CHAR_RATIO_THRESHOLD
       ) {
-        console.warn(
-          `Suspicious input detected - high ratio of special characters: (${specialCharCount}/${totalLength})`,
-        );
-        return res.status(400).json({
-          error: "INVALID_INPUT",
-          message:
-            "The input contains an unusually high ratio of special characters.",
+        const msg = `Suspicious input detected - high ratio of special characters: (${specialCharCount}/${totalLength})`;
+        console.warn(msg);
+        logAiGuardrailRejection({
+          endpoint,
+          modelId,
+          prompt: input,
+          guardrailReason: GUARDRAIL_REJECTION_REASON.PROMPT_INJECTION,
+          guardrailMessage: msg,
         });
+        return res
+          .status(400)
+          .send(
+            "The input contains an unusually high ratio of special characters.",
+          );
       }
 
       next();
     } catch (error) {
-      return res.status(500).json({
-        error: "VALIDATION_ERROR",
-        message: "Failed to validate input",
-      });
+      console.error("Error in prompt injection detection middleware:", error);
+      return res.status(500).send("Failed to validate input");
     }
   };
