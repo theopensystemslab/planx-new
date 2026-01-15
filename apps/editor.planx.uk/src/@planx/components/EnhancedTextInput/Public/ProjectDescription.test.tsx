@@ -1,8 +1,10 @@
 import { screen } from "@testing-library/react";
+import type _ from "lodash";
 import { http, HttpResponse } from "msw";
 import React from "react";
 import server from "test/mockServer";
 import { setup } from "testUtils";
+import { axe } from "vitest-axe";
 
 import { taskDefaults } from "../model";
 import EnhancedTextInputComponent from ".";
@@ -303,8 +305,216 @@ describe("navigating back to the EnhancedTextInput component", () => {
   });
 });
 
-it.todo("basic layout and behaviour");
-it.todo("should not have any accessibility violations on initial load");
+describe("basic layout and behaviour", () => {
+  it("loads the 'input' step first", async () => {
+    setup(
+      <EnhancedTextInputComponent
+        id="testId"
+        title="Describe the project"
+        task={"projectDescription"}
+        {...taskDefaults.projectDescription}
+      />,
+    );
+
+    expect(
+      screen.getByRole("heading", { name: "Describe the project", level: 1 }),
+    ).toBeVisible();
+    expect(
+      screen.queryByText("We suggest revising your project description"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("should not have any accessibility violations on the 'input' step", async () => {
+    const { container } = setup(
+      <EnhancedTextInputComponent
+        id="testId"
+        title="test"
+        task={"projectDescription"}
+        {...taskDefaults.projectDescription}
+      />,
+    );
+
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+
+  it("enforces a character limit", async () => {
+    const handleSubmit = vi.fn();
+
+    const { user } = setup(
+      <EnhancedTextInputComponent
+        id="testId"
+        title="test"
+        task={"projectDescription"}
+        handleSubmit={handleSubmit}
+        {...taskDefaults.projectDescription}
+      />,
+    );
+
+    expect(screen.getByText("You have 250 characters remaining")).toBeVisible();
+
+    await user.type(
+      screen.getByRole("textbox", { name: /test/i }),
+      ORIGINAL + ORIGINAL,
+    );
+    expect(screen.getByText("You have 182 characters too many")).toBeVisible();
+
+    await user.click(screen.getByTestId("continue-button"));
+
+    expect(
+      screen.getByText("Error: Your answer must be 250 characters or fewer"),
+    ).toBeVisible();
+    expect(handleSubmit).not.toHaveBeenCalled();
+  }, 10_000);
+
+  it("loads the 'task' step and displays the API result to the user", async () => {
+    const { user } = setup(
+      <EnhancedTextInputComponent
+        id="testId"
+        title="test"
+        task={"projectDescription"}
+        {...taskDefaults.projectDescription}
+      />,
+    );
+
+    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByTestId("continue-button"));
+
+    // Wait for next screen
+    expect(
+      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+    ).toBeVisible();
+
+    // API results displayed to user
+    expect(screen.getAllByText(ENHANCED)[0]).toBeVisible();
+  });
+
+  it("should not have any accessibility violations on the 'task' step", async () => {
+    const { container, user } = setup(
+      <EnhancedTextInputComponent
+        id="testId"
+        title="test"
+        task={"projectDescription"}
+        {...taskDefaults.projectDescription}
+      />,
+    );
+
+    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByTestId("continue-button"));
+
+    // Wait for next screen
+    expect(
+      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+    ).toBeVisible();
+
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+
+  it("allows the user to toggle between the enhanced or original description, or enter a hybrid response", async () => {
+    const { user } = setup(
+      <EnhancedTextInputComponent
+        id="testId"
+        title="test"
+        task={"projectDescription"}
+        {...taskDefaults.projectDescription}
+      />,
+    );
+
+    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByTestId("continue-button"));
+
+    // Wait for next screen
+    expect(
+      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+    ).toBeVisible();
+
+    const textarea = screen.getByRole("textbox", { name: /test/i });
+
+    // Enhanced value is populated by default
+    expect(textarea).toHaveValue(ENHANCED);
+
+    // User can toggle back to original
+    await user.click(
+      screen.getByRole("button", { name: "Revert to original description" }),
+    );
+    expect(textarea).toHaveValue(ORIGINAL);
+
+    // User can toggle back to enhanced
+    await user.click(
+      screen.getByRole("button", { name: "Use suggested description" }),
+    );
+    expect(textarea).toHaveValue(ENHANCED);
+
+    // User can type their own hybrid result
+    await user.type(textarea, "Something unique", {
+      initialSelectionStart: 0,
+      initialSelectionEnd: ENHANCED.length,
+    });
+    expect(textarea).toHaveValue("Something unique");
+  });
+
+  it("displays additional information to the user on the 'task' step", async () => {
+    const { user } = setup(
+      <EnhancedTextInputComponent
+        id="testId"
+        title="test"
+        task={"projectDescription"}
+        howMeasured="Lorem ipsum dolor sit amet"
+        policyRef="Lorem ipsum dolor sit amet"
+        info="Lorem ipsum dolor sit amet"
+        {...taskDefaults.projectDescription}
+      />,
+    );
+
+    // More information sidebar is present
+    const moreInfoButton = screen.getByTestId("more-info-button");
+    expect(moreInfoButton).toBeVisible();
+
+    await user.click(moreInfoButton);
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Why does it matter?" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Source" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "How is it defined?" }),
+    ).toBeVisible();
+
+    // Exit sidebar
+    await user.keyboard("{Esc}");
+
+    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByTestId("continue-button"));
+
+    // Wait for next screen
+    expect(
+      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+    ).toBeVisible();
+
+    // More information sidebar is not present
+    expect(
+      screen.queryByRole("button", { name: "More information" }),
+    ).not.toBeInTheDocument();
+
+    // "How does this work?" button is present
+    const howDoesThisWorkButton = screen.getByTestId("more-info-button");
+    expect(howDoesThisWorkButton).toBeVisible();
+
+    // Sidebar opens to display unique help text
+    await user.click(howDoesThisWorkButton);
+    expect(
+      screen.getByRole("heading", { level: 2, name: "How does this work?" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Our AI principles" }),
+    ).toBeVisible();
+
+    // Exit sidebar
+    await user.keyboard("{Esc}");
+  });
+});
+
 it.todo("error states");
 it.todo("loading states");
-it.todo("navigating 'back'");
