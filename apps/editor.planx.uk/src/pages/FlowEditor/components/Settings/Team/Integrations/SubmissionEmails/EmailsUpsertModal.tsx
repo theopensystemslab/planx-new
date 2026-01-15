@@ -25,7 +25,6 @@ export const EmailsUpsertModal = ({
   showModal,
   initialValues,
   actionType,
-  previousDefaultEmail,
   currentEmails,
 }: EditorModalProps) => {
   const teamId = useStore((state) => state.teamId);

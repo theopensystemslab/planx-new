@@ -57,7 +57,7 @@ const EmailsTableContent = () => {
   const toast = useToast();
   const teamId = useStore((state) => state.teamId);
 
-  const { data, loading, error, refetch } = useQuery<GetSubmissionEmails>(
+  const { data, loading, refetch } = useQuery<GetSubmissionEmails>(
     GET_TEAM_SUBMISSION_INTEGRATIONS,
     {
       variables: { teamId },
@@ -197,7 +197,6 @@ const EmailsTableContent = () => {
           setShowModal={setShowModal}
           initialValues={initialValues}
           actionType={actionType}
-          previousDefaultEmail={currentDefault}
           currentEmails={data.submissionIntegrations.map(
             (email) => email.submissionEmail,
           )}
