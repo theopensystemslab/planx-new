@@ -1,0 +1,1 @@
+DROP MATERIALIZED VIEW IF EXISTS "public"."analytics_service_overview";
