@@ -141,7 +141,9 @@ const ProjectDescription: React.FC<Props> = (props) => {
           mb={2}
         >
           <Card>
-            <Typography variant="h4">Suggested description:</Typography>
+            <Typography variant="h4" component="h3">
+              Suggested description:
+            </Typography>
             <Typography variant="body2">{data.enhanced}</Typography>
             <Button
               variant="contained"
@@ -153,7 +155,9 @@ const ProjectDescription: React.FC<Props> = (props) => {
             </Button>
           </Card>
           <Card>
-            <Typography variant="h4">Your description:</Typography>
+            <Typography variant="h4" component="h3">
+              Your description:
+            </Typography>
             <Typography variant="body2">{data.original}</Typography>
             <Button
               variant="contained"
