@@ -1,0 +1,1 @@
+SELECT cron.unschedule('refresh_analytics_service_overview');
