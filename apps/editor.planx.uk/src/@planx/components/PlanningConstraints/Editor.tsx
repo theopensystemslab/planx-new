@@ -10,6 +10,7 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { getIn } from "formik";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -24,7 +25,7 @@ import InputRow from "ui/shared/InputRow";
 
 import { ICONS } from "../shared/icons";
 import {
-  availableDatasets,
+  getAvailableDatasets,
   parseContent,
   PlanningConstraints,
   validationSchema,
@@ -35,9 +36,12 @@ type Props = EditorProps<TYPES.PlanningConstraints, PlanningConstraints>;
 export default PlanningConstraintsComponent;
 
 function PlanningConstraintsComponent(props: Props) {
+  const teamSlug = useStore((state) => state.teamSlug);
+  const availableDatasets = getAvailableDatasets(teamSlug);
+
   const formik = useFormikWithRef<PlanningConstraints>(
     {
-      initialValues: parseContent(props.node?.data),
+      initialValues: parseContent(props.node?.data, teamSlug),
       onSubmit: (newValues) => {
         props.handleSubmit?.({
           type: TYPES.PlanningConstraints,

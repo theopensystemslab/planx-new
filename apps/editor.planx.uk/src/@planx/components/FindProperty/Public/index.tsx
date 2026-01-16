@@ -8,7 +8,7 @@ import { squareMetresToHectares } from "@planx/components/shared/utils";
 import area from "@turf/area";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { Feature } from "geojson";
-import { Store } from "pages/FlowEditor/lib/store";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import ExternalPlanningSiteDialog, {
   DialogPurpose,
@@ -28,6 +28,8 @@ import { AddressLoadingWrap } from "./styles";
 type Props = PublicProps<FindProperty>;
 
 function Component(props: Props) {
+  const teamSlug = useStore((state) => state.teamSlug);
+
   const previouslySubmittedData = props.previouslySubmittedData?.data;
   const previouslySubmittedAddressSource =
     previouslySubmittedData?._address?.source;
@@ -54,7 +56,7 @@ function Component(props: Props) {
     developmentCorporations,
     titleBoundary,
     isPending,
-  } = useFindPropertyData(address);
+  } = useFindPropertyData(address, teamSlug);
 
   const validateAndSubmit = () => {
     // TODO `if (isPending)` on either page, wrap Continue button in error mesage?
