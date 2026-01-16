@@ -311,6 +311,17 @@ async function go(
     }
   });
 
+  // Copy metadata to child constraints with specific names
+  if (metadata["flood"]) {
+    metadata["flood.zoneTwo"] = { ...metadata["flood"], name: "Flood Zone 2", plural: "Flood Zone 2" };
+    metadata["flood.zoneThree"] = { ...metadata["flood"], name: "Flood Zone 3", plural: "Flood Zone 3" };
+  }
+  if (metadata["listed"]) {
+    metadata["listed.gradeOne"] = { ...metadata["listed"], name: "Grade I Listed Building", plural: "Grade I Listed Buildings" };
+    metadata["listed.gradeTwo"] = { ...metadata["listed"], name: "Grade II Listed Building", plural: "Grade II Listed Buildings" };
+    metadata["listed.gradeTwoStar"] = { ...metadata["listed"], name: "Grade II* Listed Building", plural: "Grade II* Listed Buildings" };
+  }
+
   // If analytics are "on", store an audit record of the raw response
   if (extras?.analytics !== "false") {
     await $api.client.request(
