@@ -58,8 +58,8 @@ importers:
         specifier: 1.0.0-alpha.11
         version: 1.0.0-alpha.11
       '@opensystemslab/planx-core':
-        specifier: git+https://github.com/theopensystemslab/planx-core#e594e98c524736472ce0a1cf5919ce6db452172c
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/e594e98c524736472ce0a1cf5919ce6db452172c(@types/react@18.3.27)
+        specifier: git+https://github.com/theopensystemslab/planx-core#24296b221c6f7ad81732368db93b303f61291c60
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/24296b221c6f7ad81732368db93b303f61291c60(@types/react@18.3.27)
       '@tanstack/react-query':
         specifier: ^5.90.6
         version: 5.90.12(react@18.3.1)
@@ -1903,8 +1903,8 @@ packages:
   '@opensystemslab/map@1.0.0-alpha.11':
     resolution: {integrity: sha512-ETACPCk5Coef1L2kNT3MhIzLxVPDpyopxsTNcgeRyEqL71HBfTklGyC5+t7HgEgxRkX5wlUXqmKPNL9DdpVj8g==}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/e594e98c524736472ce0a1cf5919ce6db452172c':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/e594e98c524736472ce0a1cf5919ce6db452172c}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/24296b221c6f7ad81732368db93b303f61291c60':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/24296b221c6f7ad81732368db93b303f61291c60}
     version: 1.0.0
 
   '@parcel/watcher-android-arm64@2.5.1':
@@ -8387,7 +8387,7 @@ snapshots:
     transitivePeerDependencies:
       - preact
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/e594e98c524736472ce0a1cf5919ce6db452172c(@types/react@18.3.27)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/24296b221c6f7ad81732368db93b303f61291c60(@types/react@18.3.27)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@18.3.27)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1)

@@ -21,8 +21,8 @@ importers:
         specifier: ^3.701.0
         version: 3.962.0
       '@opensystemslab/planx-core':
-        specifier: git+https://github.com/theopensystemslab/planx-core#e594e98c524736472ce0a1cf5919ce6db452172c
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/e594e98c524736472ce0a1cf5919ce6db452172c(@types/react@19.2.7)
+        specifier: git+https://github.com/theopensystemslab/planx-core#24296b221c6f7ad81732368db93b303f61291c60
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/24296b221c6f7ad81732368db93b303f61291c60(@types/react@19.2.7)
       '@types/isomorphic-fetch':
         specifier: ^0.0.36
         version: 0.0.36
@@ -1200,8 +1200,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/e594e98c524736472ce0a1cf5919ce6db452172c':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/e594e98c524736472ce0a1cf5919ce6db452172c}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/24296b221c6f7ad81732368db93b303f61291c60':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/24296b221c6f7ad81732368db93b303f61291c60}
     version: 1.0.0
 
   '@paralleldrive/cuid2@2.3.1':
@@ -5423,7 +5423,7 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.20.1
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/e594e98c524736472ce0a1cf5919ce6db452172c(@types/react@19.2.7)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/24296b221c6f7ad81732368db93b303f61291c60(@types/react@19.2.7)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.7)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@18.3.1))(@types/react@19.2.7)(react@18.3.1)
