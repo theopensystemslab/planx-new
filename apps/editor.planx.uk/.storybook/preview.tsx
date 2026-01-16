@@ -13,6 +13,8 @@ import {
   InMemoryCache,
 } from "@apollo/client";
 
+import React from "react";
+
 import { reactNaviDecorator } from "./__mocks__/react-navi";
 
 if (!window.customElements.get("my-map")) {
