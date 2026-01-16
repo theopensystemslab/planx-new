@@ -4,6 +4,7 @@ export const GET_TEAM_SUBMISSION_INTEGRATIONS = gql`
   query GetTeamSubmissionIntegrations($teamId: Int!) {
     submissionIntegrations: submission_integrations(
       where: { team_id: { _eq: $teamId } }
+      order_by: { submission_email: asc }
     ) {
       teamId: team_id
       id
