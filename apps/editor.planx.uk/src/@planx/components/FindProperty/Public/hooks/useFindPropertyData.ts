@@ -109,6 +109,7 @@ export const useFindPropertyData = (
       localPlanningAuthorities: undefined,
       regions: undefined,
       wards: undefined,
+      developmentCorporations: undefined,
       titleBoundary: undefined,
       isPending: false,
       error: undefined,
