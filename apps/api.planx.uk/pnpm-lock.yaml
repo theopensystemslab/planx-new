@@ -21,8 +21,8 @@ importers:
         specifier: ^3.701.0
         version: 3.962.0
       '@opensystemslab/planx-core':
-        specifier: git+https://github.com/theopensystemslab/planx-core#158e767
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/158e767(@types/react@19.2.7)
+        specifier: git+https://github.com/theopensystemslab/planx-core#89795f7
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/89795f7(@types/react@19.2.7)
       '@types/isomorphic-fetch':
         specifier: ^0.0.36
         version: 0.0.36
@@ -1046,17 +1046,17 @@ packages:
       '@exodus/crypto':
         optional: true
 
-  '@formatjs/ecma402-abstract@3.0.8':
-    resolution: {integrity: sha512-NRiqvxAvhbARZRFSRFPjN0y8txxmVutv2vMYvW2HSdCVf58w9l4osLj6Ujif643vImwZBcbKqhiKE0IOhY+DvA==}
+  '@formatjs/ecma402-abstract@3.1.0':
+    resolution: {integrity: sha512-CjP1sUzM7XiQW6YluDreN+dMvcKZysO/J4ikvuDjDyd6nSOoSqAK9gvD1s75ZFaJVXtYOsz+y3CUXPZ1sKxcxw==}
 
-  '@formatjs/fast-memoize@3.0.3':
-    resolution: {integrity: sha512-CArYtQKGLAOruCMeq5/RxCg6vUXFx3OuKBdTm30Wn/+gCefehmZ8Y2xSMxMrO2iel7hRyE3HKfV56t3vAU6D4Q==}
+  '@formatjs/fast-memoize@3.1.0':
+    resolution: {integrity: sha512-b5mvSWCI+XVKiz5WhnBCY3RJ4ZwfjAidU0yVlKa3d3MSgKmH1hC3tBGEAtYyN5mqL7N0G5x0BOUYyO8CEupWgg==}
 
-  '@formatjs/intl-listformat@8.1.2':
-    resolution: {integrity: sha512-c0Yu1yFFQbSgjGtUav3QlXYkVXN/Y2SVO2zFgL31EmPCZLhHPibRP0tzUmMKqMtCWPphdlQaHVzYAgN9Mh1JqA==}
+  '@formatjs/intl-listformat@8.2.0':
+    resolution: {integrity: sha512-TM1jGf7Pd5tIHlD+DkTXuc24NMpa6nRqAWHmi/WwDLU9X83NZi+mANTvvd7iAKNd4ZyWsPm2EhdccRPheYTmig==}
 
-  '@formatjs/intl-localematcher@0.7.5':
-    resolution: {integrity: sha512-7/nd90cn5CT7SVF71/ybUKAcnvBlr9nZlJJp8O8xIZHXFgYOC4SXExZlSdgHv2l6utjw1byidL06QzChvQMHwA==}
+  '@formatjs/intl-localematcher@0.8.0':
+    resolution: {integrity: sha512-zgMYWdUlmEZpX2Io+v3LHrfq9xZ6khpQVf9UAw2xYWhGerGgI9XgH1HvL/A34jWiruUJpYlP5pk4g8nIcaDrXQ==}
 
   '@graphql-typed-document-node/core@3.2.0':
     resolution: {integrity: sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==}
@@ -1200,8 +1200,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/158e767':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/158e767}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/89795f7':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/89795f7}
     version: 1.0.0
 
   '@paralleldrive/cuid2@2.3.1':
@@ -5266,26 +5266,26 @@ snapshots:
 
   '@exodus/bytes@1.8.0': {}
 
-  '@formatjs/ecma402-abstract@3.0.8':
+  '@formatjs/ecma402-abstract@3.1.0':
     dependencies:
-      '@formatjs/fast-memoize': 3.0.3
-      '@formatjs/intl-localematcher': 0.7.5
+      '@formatjs/fast-memoize': 3.1.0
+      '@formatjs/intl-localematcher': 0.8.0
       decimal.js: 10.6.0
       tslib: 2.8.1
 
-  '@formatjs/fast-memoize@3.0.3':
+  '@formatjs/fast-memoize@3.1.0':
     dependencies:
       tslib: 2.8.1
 
-  '@formatjs/intl-listformat@8.1.2':
+  '@formatjs/intl-listformat@8.2.0':
     dependencies:
-      '@formatjs/ecma402-abstract': 3.0.8
-      '@formatjs/intl-localematcher': 0.7.5
+      '@formatjs/ecma402-abstract': 3.1.0
+      '@formatjs/intl-localematcher': 0.8.0
       tslib: 2.8.1
 
-  '@formatjs/intl-localematcher@0.7.5':
+  '@formatjs/intl-localematcher@0.8.0':
     dependencies:
-      '@formatjs/fast-memoize': 3.0.3
+      '@formatjs/fast-memoize': 3.1.0
       tslib: 2.8.1
 
   '@graphql-typed-document-node/core@3.2.0(graphql@16.12.0)':
@@ -5423,11 +5423,11 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.20.1
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/158e767(@types/react@19.2.7)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/89795f7(@types/react@19.2.7)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.7)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@18.3.1))(@types/react@19.2.7)(react@18.3.1)
-      '@formatjs/intl-listformat': 8.1.2
+      '@formatjs/intl-listformat': 8.2.0
       '@mui/material': 5.18.0(@emotion/react@11.14.0(@types/react@19.2.7)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@18.3.1))(@types/react@19.2.7)(react@18.3.1))(@types/react@19.2.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       ajv: 8.17.1
       ajv-formats: 2.1.1(ajv@8.17.1)
