@@ -37,7 +37,7 @@ const styles = (theme: Theme) => ({
 
 const HTMLRoot = styled(Box)(({ theme }) => styles(theme));
 
-const MarkdownRoot = styled(ReactMarkdown)(({ theme }) => styles(theme));
+const MarkdownRoot = styled(Box)(({ theme }) => styles(theme));
 
 // Increment H1 and H2 elements to meet a11y requirements in user submitted rich text
 export const incrementHeaderElements = (source: string): string => {
@@ -81,8 +81,8 @@ export default function ReactMarkdownOrHtml(props: {
     );
   }
   return (
-    <div id={props.id} color={props.textColor}>
-      <MarkdownRoot>{props.source}</MarkdownRoot>
-    </div>
+    <MarkdownRoot id={props.id} color={props.textColor}>
+      <ReactMarkdown>{props.source}</ReactMarkdown>
+    </MarkdownRoot>
   );
 }
