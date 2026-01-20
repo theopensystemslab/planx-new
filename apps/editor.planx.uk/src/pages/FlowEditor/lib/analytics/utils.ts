@@ -226,6 +226,7 @@ const foiynppDashboard = {
   slugs: [
     "check-if-you-need-planning-permission",
     "find-out-if-you-need-planning-permission",
+    "find-out-if-you-need-planning-permission-advice-service",
   ],
 };
 
