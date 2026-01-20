@@ -5,10 +5,11 @@ import React from "react";
 import { calculateExtraProps } from "utils/routeUtils/queryUtils";
 
 export const Route = createFileRoute(
-  "/_authenticated/$team/$flow/nodes/$parent/nodes/new",
+  "/_authenticated/$team/$flow/nodes/$parent/nodes/new/",
 )({
   loaderDeps: ({ search }) => ({ type: search.type }),
   loader: async ({ params, deps }) => {
+    console.log("Index route (no $before) - params:", params);
     const { type = "question" } = deps;
     const { team, flow, parent } = params;
 

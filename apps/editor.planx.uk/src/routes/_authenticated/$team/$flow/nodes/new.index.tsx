@@ -4,7 +4,7 @@ import FormModal from "pages/FlowEditor/components/forms/FormModal";
 import React from "react";
 import { calculateExtraProps } from "utils/routeUtils/queryUtils";
 
-export const Route = createFileRoute("/_authenticated/$team/$flow/nodes/new")({
+export const Route = createFileRoute("/_authenticated/$team/$flow/nodes/new/")({
   loaderDeps: ({ search }) => ({ type: search.type }),
   loader: async ({ params, deps }) => {
     const { type = "question" } = deps;
