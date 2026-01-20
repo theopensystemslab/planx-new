@@ -18,7 +18,6 @@ const RouteLoadingIndicator: React.FC<{
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    console.log("Loading state", isLoading);
     if (!isLoading) return setIsVisible(false);
 
     const timer = setTimeout(() => setIsVisible(true), msDelayBeforeVisible);
