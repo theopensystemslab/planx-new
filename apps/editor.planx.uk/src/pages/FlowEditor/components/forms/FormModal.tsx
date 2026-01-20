@@ -22,6 +22,7 @@ import {
 } from "pages/FlowEditor/utils";
 import React, { useMemo, useRef, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import type { NodeSearchParams } from "routes/_authenticated/$team/$flow/nodes/route";
 import { Switch } from "ui/shared/Switch";
 import { rootFlowPath } from "utils/routeUtils/utils";
 
@@ -120,7 +121,7 @@ const NodeTypeSelect: React.FC<{
 const TextInputToggle: React.FC<{ type: string }> = ({ type }) => {
   const navigate = useNavigate();
   const params = useParams({
-    from: "/_authenticated/$team/$flow/nodes/$parent/nodes/new/$before",
+    strict: false,
   });
   const [checked, setChecked] = useState(type === "enhanced-text-input");
 
@@ -138,10 +139,11 @@ const TextInputToggle: React.FC<{ type: string }> = ({ type }) => {
       to: "/$team/$flow/nodes/$parent/nodes/new/$before",
       params: {
         ...params,
-      },
-      search: {
-        "flow-type": SLUGS[destinationType],
-      } as any, //TODO: find a way to match search type to TYPES
+      } as any,
+      search: (prev) => ({
+        ...prev,
+        type: SLUGS[destinationType] as NodeSearchParams["type"],
+      }),
     });
   };
 
@@ -209,7 +211,7 @@ const FormModal: React.FC<FormModalProps> = ({
     store.isClone,
   ]);
   const params = useParams({
-    from: "/_authenticated/$team/$flow/nodes/$parent/nodes/new/$before",
+    strict: false,
   });
   const node = id ? flow[id] : undefined;
 
@@ -261,14 +263,16 @@ const FormModal: React.FC<FormModalProps> = ({
     }
   };
 
-  const handleConfirmClose = () => setShowUnsavedWarning(false);
-  navigate({
-    to: "/$team/$flow",
-    params: {
-      team: teamSlug,
-      flow: flowSlug,
-    },
-  });
+  const handleConfirmClose = () => {
+    setShowUnsavedWarning(false);
+    navigate({
+      to: "/$team/$flow",
+      params: {
+        team: teamSlug,
+        flow: flowSlug,
+      },
+    });
+  };
 
   const handleCancelClose = () => {
     setShowUnsavedWarning(false);
@@ -319,10 +323,11 @@ const FormModal: React.FC<FormModalProps> = ({
       to: "/$team/$flow/nodes/$parent/nodes/new/$before",
       params: {
         ...params,
-      },
-      search: {
-        "flow-type": SLUGS[type],
-      } as any, //TODO: find a way to match search type to TYPES
+      } as any,
+      search: (prev) => ({
+        ...prev,
+        type: SLUGS[type] as NodeSearchParams["type"],
+      }),
     });
   };
 
