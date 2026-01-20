@@ -15,7 +15,7 @@ const FixedHeightDashboardContainer: React.FC<
     <Box
       sx={(theme) => ({
         width: "100%",
-        height: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
+        height: "100vh",
         display: "flex",
         flexDirection: "column",
         backgroundColor: bgColor,
