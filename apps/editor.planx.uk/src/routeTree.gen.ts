@@ -58,8 +58,8 @@ import { Route as PublicTeamFlowSessionIdDownloadApplicationRouteImport } from '
 import { Route as AuthenticatedTeamFlowSettingsVisibilityRouteImport } from './routes/_authenticated/$team/$flow/settings/visibility'
 import { Route as AuthenticatedTeamFlowSettingsLegalDisclaimerRouteImport } from './routes/_authenticated/$team/$flow/settings/legal-disclaimer'
 import { Route as AuthenticatedTeamFlowSettingsAboutRouteImport } from './routes/_authenticated/$team/$flow/settings/about'
-import { Route as AuthenticatedTeamFlowNodesNewRouteImport } from './routes/_authenticated/$team/$flow/nodes/new'
 import { Route as PublicTeamFlowPayInviteIndexRouteImport } from './routes/_public/$team/$flow/pay/invite/index'
+import { Route as AuthenticatedTeamFlowNodesNewIndexRouteImport } from './routes/_authenticated/$team/$flow/nodes/new.index'
 import { Route as PublicTeamFlowPublishedPagesPageRouteImport } from './routes/_public/$team/$flow/published/pages.$page'
 import { Route as PublicTeamFlowPreviewPagesPageRouteImport } from './routes/_public/$team/$flow/preview/pages.$page'
 import { Route as PublicTeamFlowPayPagesPageRouteImport } from './routes/_public/$team/$flow/pay/pages.$page'
@@ -70,8 +70,8 @@ import { Route as AuthenticatedTeamFlowSettingsPagesHelpRouteImport } from './ro
 import { Route as AuthenticatedTeamFlowNodesNewBeforeRouteImport } from './routes/_authenticated/$team/$flow/nodes/new.$before'
 import { Route as AuthenticatedTeamFlowNodesIdEditRouteImport } from './routes/_authenticated/$team/$flow/nodes/$id.edit'
 import { Route as PublicTeamFlowPayInvitePagesPageRouteImport } from './routes/_public/$team/$flow/pay/invite/pages.$page'
-import { Route as AuthenticatedTeamFlowNodesParentNodesNewRouteImport } from './routes/_authenticated/$team/$flow/nodes/$parent.nodes.new'
 import { Route as AuthenticatedTeamFlowNodesIdEditBeforeRouteImport } from './routes/_authenticated/$team/$flow/nodes/$id.edit.$before'
+import { Route as AuthenticatedTeamFlowNodesParentNodesNewIndexRouteImport } from './routes/_authenticated/$team/$flow/nodes/$parent.nodes.new.index'
 import { Route as AuthenticatedTeamFlowNodesParentNodesNewBeforeRouteImport } from './routes/_authenticated/$team/$flow/nodes/$parent.nodes.new.$before'
 import { Route as AuthenticatedTeamFlowNodesParentNodesIdEditRouteImport } from './routes/_authenticated/$team/$flow/nodes/$parent.nodes.$id.edit'
 import { Route as AuthenticatedTeamFlowNodesParentNodesIdEditBeforeRouteImport } from './routes/_authenticated/$team/$flow/nodes/$parent.nodes.$id.edit.$before'
@@ -355,17 +355,17 @@ const AuthenticatedTeamFlowSettingsAboutRoute =
     path: '/about',
     getParentRoute: () => AuthenticatedTeamFlowSettingsRouteRoute,
   } as any)
-const AuthenticatedTeamFlowNodesNewRoute =
-  AuthenticatedTeamFlowNodesNewRouteImport.update({
-    id: '/new',
-    path: '/new',
-    getParentRoute: () => AuthenticatedTeamFlowNodesRouteRoute,
-  } as any)
 const PublicTeamFlowPayInviteIndexRoute =
   PublicTeamFlowPayInviteIndexRouteImport.update({
     id: '/invite/',
     path: '/invite/',
     getParentRoute: () => PublicTeamFlowPayRouteRoute,
+  } as any)
+const AuthenticatedTeamFlowNodesNewIndexRoute =
+  AuthenticatedTeamFlowNodesNewIndexRouteImport.update({
+    id: '/new/',
+    path: '/new/',
+    getParentRoute: () => AuthenticatedTeamFlowNodesRouteRoute,
   } as any)
 const PublicTeamFlowPublishedPagesPageRoute =
   PublicTeamFlowPublishedPagesPageRouteImport.update({
@@ -411,9 +411,9 @@ const AuthenticatedTeamFlowSettingsPagesHelpRoute =
   } as any)
 const AuthenticatedTeamFlowNodesNewBeforeRoute =
   AuthenticatedTeamFlowNodesNewBeforeRouteImport.update({
-    id: '/$before',
-    path: '/$before',
-    getParentRoute: () => AuthenticatedTeamFlowNodesNewRoute,
+    id: '/new/$before',
+    path: '/new/$before',
+    getParentRoute: () => AuthenticatedTeamFlowNodesRouteRoute,
   } as any)
 const AuthenticatedTeamFlowNodesIdEditRoute =
   AuthenticatedTeamFlowNodesIdEditRouteImport.update({
@@ -427,23 +427,23 @@ const PublicTeamFlowPayInvitePagesPageRoute =
     path: '/invite/pages/$page',
     getParentRoute: () => PublicTeamFlowPayRouteRoute,
   } as any)
-const AuthenticatedTeamFlowNodesParentNodesNewRoute =
-  AuthenticatedTeamFlowNodesParentNodesNewRouteImport.update({
-    id: '/$parent/nodes/new',
-    path: '/$parent/nodes/new',
-    getParentRoute: () => AuthenticatedTeamFlowNodesRouteRoute,
-  } as any)
 const AuthenticatedTeamFlowNodesIdEditBeforeRoute =
   AuthenticatedTeamFlowNodesIdEditBeforeRouteImport.update({
     id: '/$before',
     path: '/$before',
     getParentRoute: () => AuthenticatedTeamFlowNodesIdEditRoute,
   } as any)
+const AuthenticatedTeamFlowNodesParentNodesNewIndexRoute =
+  AuthenticatedTeamFlowNodesParentNodesNewIndexRouteImport.update({
+    id: '/$parent/nodes/new/',
+    path: '/$parent/nodes/new/',
+    getParentRoute: () => AuthenticatedTeamFlowNodesRouteRoute,
+  } as any)
 const AuthenticatedTeamFlowNodesParentNodesNewBeforeRoute =
   AuthenticatedTeamFlowNodesParentNodesNewBeforeRouteImport.update({
-    id: '/$before',
-    path: '/$before',
-    getParentRoute: () => AuthenticatedTeamFlowNodesParentNodesNewRoute,
+    id: '/$parent/nodes/new/$before',
+    path: '/$parent/nodes/new/$before',
+    getParentRoute: () => AuthenticatedTeamFlowNodesRouteRoute,
   } as any)
 const AuthenticatedTeamFlowNodesParentNodesIdEditRoute =
   AuthenticatedTeamFlowNodesParentNodesIdEditRouteImport.update({
@@ -493,7 +493,6 @@ export interface FileRoutesByFullPath {
   '/$team/settings/integrations': typeof AuthenticatedTeamSettingsIntegrationsRoute
   '/$team/submission/$sessionId': typeof AuthenticatedTeamSubmissionSessionIdRoute
   '/$team/settings/': typeof AuthenticatedTeamSettingsIndexRoute
-  '/$team/$flow/nodes/new': typeof AuthenticatedTeamFlowNodesNewRouteWithChildren
   '/$team/$flow/settings/about': typeof AuthenticatedTeamFlowSettingsAboutRoute
   '/$team/$flow/settings/legal-disclaimer': typeof AuthenticatedTeamFlowSettingsLegalDisclaimerRoute
   '/$team/$flow/settings/visibility': typeof AuthenticatedTeamFlowSettingsVisibilityRoute
@@ -517,12 +516,13 @@ export interface FileRoutesByFullPath {
   '/$team/$flow/pay/pages/$page': typeof PublicTeamFlowPayPagesPageRoute
   '/$team/$flow/preview/pages/$page': typeof PublicTeamFlowPreviewPagesPageRoute
   '/$team/$flow/published/pages/$page': typeof PublicTeamFlowPublishedPagesPageRoute
+  '/$team/$flow/nodes/new': typeof AuthenticatedTeamFlowNodesNewIndexRoute
   '/$team/$flow/pay/invite': typeof PublicTeamFlowPayInviteIndexRoute
   '/$team/$flow/nodes/$id/edit/$before': typeof AuthenticatedTeamFlowNodesIdEditBeforeRoute
-  '/$team/$flow/nodes/$parent/nodes/new': typeof AuthenticatedTeamFlowNodesParentNodesNewRouteWithChildren
   '/$team/$flow/pay/invite/pages/$page': typeof PublicTeamFlowPayInvitePagesPageRoute
   '/$team/$flow/nodes/$parent/nodes/$id/edit': typeof AuthenticatedTeamFlowNodesParentNodesIdEditRouteWithChildren
   '/$team/$flow/nodes/$parent/nodes/new/$before': typeof AuthenticatedTeamFlowNodesParentNodesNewBeforeRoute
+  '/$team/$flow/nodes/$parent/nodes/new': typeof AuthenticatedTeamFlowNodesParentNodesNewIndexRoute
   '/$team/$flow/nodes/$parent/nodes/$id/edit/$before': typeof AuthenticatedTeamFlowNodesParentNodesIdEditBeforeRoute
 }
 export interface FileRoutesByTo {
@@ -553,7 +553,6 @@ export interface FileRoutesByTo {
   '/$team/settings/integrations': typeof AuthenticatedTeamSettingsIntegrationsRoute
   '/$team/submission/$sessionId': typeof AuthenticatedTeamSubmissionSessionIdRoute
   '/$team/settings': typeof AuthenticatedTeamSettingsIndexRoute
-  '/$team/$flow/nodes/new': typeof AuthenticatedTeamFlowNodesNewRouteWithChildren
   '/$team/$flow/settings/about': typeof AuthenticatedTeamFlowSettingsAboutRoute
   '/$team/$flow/settings/legal-disclaimer': typeof AuthenticatedTeamFlowSettingsLegalDisclaimerRoute
   '/$team/$flow/settings/visibility': typeof AuthenticatedTeamFlowSettingsVisibilityRoute
@@ -577,12 +576,13 @@ export interface FileRoutesByTo {
   '/$team/$flow/pay/pages/$page': typeof PublicTeamFlowPayPagesPageRoute
   '/$team/$flow/preview/pages/$page': typeof PublicTeamFlowPreviewPagesPageRoute
   '/$team/$flow/published/pages/$page': typeof PublicTeamFlowPublishedPagesPageRoute
+  '/$team/$flow/nodes/new': typeof AuthenticatedTeamFlowNodesNewIndexRoute
   '/$team/$flow/pay/invite': typeof PublicTeamFlowPayInviteIndexRoute
   '/$team/$flow/nodes/$id/edit/$before': typeof AuthenticatedTeamFlowNodesIdEditBeforeRoute
-  '/$team/$flow/nodes/$parent/nodes/new': typeof AuthenticatedTeamFlowNodesParentNodesNewRouteWithChildren
   '/$team/$flow/pay/invite/pages/$page': typeof PublicTeamFlowPayInvitePagesPageRoute
   '/$team/$flow/nodes/$parent/nodes/$id/edit': typeof AuthenticatedTeamFlowNodesParentNodesIdEditRouteWithChildren
   '/$team/$flow/nodes/$parent/nodes/new/$before': typeof AuthenticatedTeamFlowNodesParentNodesNewBeforeRoute
+  '/$team/$flow/nodes/$parent/nodes/new': typeof AuthenticatedTeamFlowNodesParentNodesNewIndexRoute
   '/$team/$flow/nodes/$parent/nodes/$id/edit/$before': typeof AuthenticatedTeamFlowNodesParentNodesIdEditBeforeRoute
 }
 export interface FileRoutesById {
@@ -622,7 +622,6 @@ export interface FileRoutesById {
   '/_authenticated/$team/settings/integrations': typeof AuthenticatedTeamSettingsIntegrationsRoute
   '/_authenticated/$team/submission/$sessionId': typeof AuthenticatedTeamSubmissionSessionIdRoute
   '/_authenticated/$team/settings/': typeof AuthenticatedTeamSettingsIndexRoute
-  '/_authenticated/$team/$flow/nodes/new': typeof AuthenticatedTeamFlowNodesNewRouteWithChildren
   '/_authenticated/$team/$flow/settings/about': typeof AuthenticatedTeamFlowSettingsAboutRoute
   '/_authenticated/$team/$flow/settings/legal-disclaimer': typeof AuthenticatedTeamFlowSettingsLegalDisclaimerRoute
   '/_authenticated/$team/$flow/settings/visibility': typeof AuthenticatedTeamFlowSettingsVisibilityRoute
@@ -646,12 +645,13 @@ export interface FileRoutesById {
   '/_public/$team/$flow/pay/pages/$page': typeof PublicTeamFlowPayPagesPageRoute
   '/_public/$team/$flow/preview/pages/$page': typeof PublicTeamFlowPreviewPagesPageRoute
   '/_public/$team/$flow/published/pages/$page': typeof PublicTeamFlowPublishedPagesPageRoute
+  '/_authenticated/$team/$flow/nodes/new/': typeof AuthenticatedTeamFlowNodesNewIndexRoute
   '/_public/$team/$flow/pay/invite/': typeof PublicTeamFlowPayInviteIndexRoute
   '/_authenticated/$team/$flow/nodes/$id/edit/$before': typeof AuthenticatedTeamFlowNodesIdEditBeforeRoute
-  '/_authenticated/$team/$flow/nodes/$parent/nodes/new': typeof AuthenticatedTeamFlowNodesParentNodesNewRouteWithChildren
   '/_public/$team/$flow/pay/invite/pages/$page': typeof PublicTeamFlowPayInvitePagesPageRoute
   '/_authenticated/$team/$flow/nodes/$parent/nodes/$id/edit': typeof AuthenticatedTeamFlowNodesParentNodesIdEditRouteWithChildren
   '/_authenticated/$team/$flow/nodes/$parent/nodes/new/$before': typeof AuthenticatedTeamFlowNodesParentNodesNewBeforeRoute
+  '/_authenticated/$team/$flow/nodes/$parent/nodes/new/': typeof AuthenticatedTeamFlowNodesParentNodesNewIndexRoute
   '/_authenticated/$team/$flow/nodes/$parent/nodes/$id/edit/$before': typeof AuthenticatedTeamFlowNodesParentNodesIdEditBeforeRoute
 }
 export interface FileRouteTypes {
@@ -691,7 +691,6 @@ export interface FileRouteTypes {
     | '/$team/settings/integrations'
     | '/$team/submission/$sessionId'
     | '/$team/settings/'
-    | '/$team/$flow/nodes/new'
     | '/$team/$flow/settings/about'
     | '/$team/$flow/settings/legal-disclaimer'
     | '/$team/$flow/settings/visibility'
@@ -715,12 +714,13 @@ export interface FileRouteTypes {
     | '/$team/$flow/pay/pages/$page'
     | '/$team/$flow/preview/pages/$page'
     | '/$team/$flow/published/pages/$page'
+    | '/$team/$flow/nodes/new'
     | '/$team/$flow/pay/invite'
     | '/$team/$flow/nodes/$id/edit/$before'
-    | '/$team/$flow/nodes/$parent/nodes/new'
     | '/$team/$flow/pay/invite/pages/$page'
     | '/$team/$flow/nodes/$parent/nodes/$id/edit'
     | '/$team/$flow/nodes/$parent/nodes/new/$before'
+    | '/$team/$flow/nodes/$parent/nodes/new'
     | '/$team/$flow/nodes/$parent/nodes/$id/edit/$before'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -751,7 +751,6 @@ export interface FileRouteTypes {
     | '/$team/settings/integrations'
     | '/$team/submission/$sessionId'
     | '/$team/settings'
-    | '/$team/$flow/nodes/new'
     | '/$team/$flow/settings/about'
     | '/$team/$flow/settings/legal-disclaimer'
     | '/$team/$flow/settings/visibility'
@@ -775,12 +774,13 @@ export interface FileRouteTypes {
     | '/$team/$flow/pay/pages/$page'
     | '/$team/$flow/preview/pages/$page'
     | '/$team/$flow/published/pages/$page'
+    | '/$team/$flow/nodes/new'
     | '/$team/$flow/pay/invite'
     | '/$team/$flow/nodes/$id/edit/$before'
-    | '/$team/$flow/nodes/$parent/nodes/new'
     | '/$team/$flow/pay/invite/pages/$page'
     | '/$team/$flow/nodes/$parent/nodes/$id/edit'
     | '/$team/$flow/nodes/$parent/nodes/new/$before'
+    | '/$team/$flow/nodes/$parent/nodes/new'
     | '/$team/$flow/nodes/$parent/nodes/$id/edit/$before'
   id:
     | '__root__'
@@ -819,7 +819,6 @@ export interface FileRouteTypes {
     | '/_authenticated/$team/settings/integrations'
     | '/_authenticated/$team/submission/$sessionId'
     | '/_authenticated/$team/settings/'
-    | '/_authenticated/$team/$flow/nodes/new'
     | '/_authenticated/$team/$flow/settings/about'
     | '/_authenticated/$team/$flow/settings/legal-disclaimer'
     | '/_authenticated/$team/$flow/settings/visibility'
@@ -843,12 +842,13 @@ export interface FileRouteTypes {
     | '/_public/$team/$flow/pay/pages/$page'
     | '/_public/$team/$flow/preview/pages/$page'
     | '/_public/$team/$flow/published/pages/$page'
+    | '/_authenticated/$team/$flow/nodes/new/'
     | '/_public/$team/$flow/pay/invite/'
     | '/_authenticated/$team/$flow/nodes/$id/edit/$before'
-    | '/_authenticated/$team/$flow/nodes/$parent/nodes/new'
     | '/_public/$team/$flow/pay/invite/pages/$page'
     | '/_authenticated/$team/$flow/nodes/$parent/nodes/$id/edit'
     | '/_authenticated/$team/$flow/nodes/$parent/nodes/new/$before'
+    | '/_authenticated/$team/$flow/nodes/$parent/nodes/new/'
     | '/_authenticated/$team/$flow/nodes/$parent/nodes/$id/edit/$before'
   fileRoutesById: FileRoutesById
 }
@@ -1209,19 +1209,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTeamFlowSettingsAboutRouteImport
       parentRoute: typeof AuthenticatedTeamFlowSettingsRouteRoute
     }
-    '/_authenticated/$team/$flow/nodes/new': {
-      id: '/_authenticated/$team/$flow/nodes/new'
-      path: '/new'
-      fullPath: '/$team/$flow/nodes/new'
-      preLoaderRoute: typeof AuthenticatedTeamFlowNodesNewRouteImport
-      parentRoute: typeof AuthenticatedTeamFlowNodesRouteRoute
-    }
     '/_public/$team/$flow/pay/invite/': {
       id: '/_public/$team/$flow/pay/invite/'
       path: '/invite'
       fullPath: '/$team/$flow/pay/invite'
       preLoaderRoute: typeof PublicTeamFlowPayInviteIndexRouteImport
       parentRoute: typeof PublicTeamFlowPayRouteRoute
+    }
+    '/_authenticated/$team/$flow/nodes/new/': {
+      id: '/_authenticated/$team/$flow/nodes/new/'
+      path: '/new'
+      fullPath: '/$team/$flow/nodes/new'
+      preLoaderRoute: typeof AuthenticatedTeamFlowNodesNewIndexRouteImport
+      parentRoute: typeof AuthenticatedTeamFlowNodesRouteRoute
     }
     '/_public/$team/$flow/published/pages/$page': {
       id: '/_public/$team/$flow/published/pages/$page'
@@ -1274,10 +1274,10 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/$team/$flow/nodes/new/$before': {
       id: '/_authenticated/$team/$flow/nodes/new/$before'
-      path: '/$before'
+      path: '/new/$before'
       fullPath: '/$team/$flow/nodes/new/$before'
       preLoaderRoute: typeof AuthenticatedTeamFlowNodesNewBeforeRouteImport
-      parentRoute: typeof AuthenticatedTeamFlowNodesNewRoute
+      parentRoute: typeof AuthenticatedTeamFlowNodesRouteRoute
     }
     '/_authenticated/$team/$flow/nodes/$id/edit': {
       id: '/_authenticated/$team/$flow/nodes/$id/edit'
@@ -1293,13 +1293,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicTeamFlowPayInvitePagesPageRouteImport
       parentRoute: typeof PublicTeamFlowPayRouteRoute
     }
-    '/_authenticated/$team/$flow/nodes/$parent/nodes/new': {
-      id: '/_authenticated/$team/$flow/nodes/$parent/nodes/new'
-      path: '/$parent/nodes/new'
-      fullPath: '/$team/$flow/nodes/$parent/nodes/new'
-      preLoaderRoute: typeof AuthenticatedTeamFlowNodesParentNodesNewRouteImport
-      parentRoute: typeof AuthenticatedTeamFlowNodesRouteRoute
-    }
     '/_authenticated/$team/$flow/nodes/$id/edit/$before': {
       id: '/_authenticated/$team/$flow/nodes/$id/edit/$before'
       path: '/$before'
@@ -1307,12 +1300,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTeamFlowNodesIdEditBeforeRouteImport
       parentRoute: typeof AuthenticatedTeamFlowNodesIdEditRoute
     }
+    '/_authenticated/$team/$flow/nodes/$parent/nodes/new/': {
+      id: '/_authenticated/$team/$flow/nodes/$parent/nodes/new/'
+      path: '/$parent/nodes/new'
+      fullPath: '/$team/$flow/nodes/$parent/nodes/new'
+      preLoaderRoute: typeof AuthenticatedTeamFlowNodesParentNodesNewIndexRouteImport
+      parentRoute: typeof AuthenticatedTeamFlowNodesRouteRoute
+    }
     '/_authenticated/$team/$flow/nodes/$parent/nodes/new/$before': {
       id: '/_authenticated/$team/$flow/nodes/$parent/nodes/new/$before'
-      path: '/$before'
+      path: '/$parent/nodes/new/$before'
       fullPath: '/$team/$flow/nodes/$parent/nodes/new/$before'
       preLoaderRoute: typeof AuthenticatedTeamFlowNodesParentNodesNewBeforeRouteImport
-      parentRoute: typeof AuthenticatedTeamFlowNodesParentNodesNewRoute
+      parentRoute: typeof AuthenticatedTeamFlowNodesRouteRoute
     }
     '/_authenticated/$team/$flow/nodes/$parent/nodes/$id/edit': {
       id: '/_authenticated/$team/$flow/nodes/$parent/nodes/$id/edit'
@@ -1331,21 +1331,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AuthenticatedTeamFlowNodesNewRouteChildren {
-  AuthenticatedTeamFlowNodesNewBeforeRoute: typeof AuthenticatedTeamFlowNodesNewBeforeRoute
-}
-
-const AuthenticatedTeamFlowNodesNewRouteChildren: AuthenticatedTeamFlowNodesNewRouteChildren =
-  {
-    AuthenticatedTeamFlowNodesNewBeforeRoute:
-      AuthenticatedTeamFlowNodesNewBeforeRoute,
-  }
-
-const AuthenticatedTeamFlowNodesNewRouteWithChildren =
-  AuthenticatedTeamFlowNodesNewRoute._addFileChildren(
-    AuthenticatedTeamFlowNodesNewRouteChildren,
-  )
-
 interface AuthenticatedTeamFlowNodesIdEditRouteChildren {
   AuthenticatedTeamFlowNodesIdEditBeforeRoute: typeof AuthenticatedTeamFlowNodesIdEditBeforeRoute
 }
@@ -1359,21 +1344,6 @@ const AuthenticatedTeamFlowNodesIdEditRouteChildren: AuthenticatedTeamFlowNodesI
 const AuthenticatedTeamFlowNodesIdEditRouteWithChildren =
   AuthenticatedTeamFlowNodesIdEditRoute._addFileChildren(
     AuthenticatedTeamFlowNodesIdEditRouteChildren,
-  )
-
-interface AuthenticatedTeamFlowNodesParentNodesNewRouteChildren {
-  AuthenticatedTeamFlowNodesParentNodesNewBeforeRoute: typeof AuthenticatedTeamFlowNodesParentNodesNewBeforeRoute
-}
-
-const AuthenticatedTeamFlowNodesParentNodesNewRouteChildren: AuthenticatedTeamFlowNodesParentNodesNewRouteChildren =
-  {
-    AuthenticatedTeamFlowNodesParentNodesNewBeforeRoute:
-      AuthenticatedTeamFlowNodesParentNodesNewBeforeRoute,
-  }
-
-const AuthenticatedTeamFlowNodesParentNodesNewRouteWithChildren =
-  AuthenticatedTeamFlowNodesParentNodesNewRoute._addFileChildren(
-    AuthenticatedTeamFlowNodesParentNodesNewRouteChildren,
   )
 
 interface AuthenticatedTeamFlowNodesParentNodesIdEditRouteChildren {
@@ -1392,22 +1362,28 @@ const AuthenticatedTeamFlowNodesParentNodesIdEditRouteWithChildren =
   )
 
 interface AuthenticatedTeamFlowNodesRouteRouteChildren {
-  AuthenticatedTeamFlowNodesNewRoute: typeof AuthenticatedTeamFlowNodesNewRouteWithChildren
   AuthenticatedTeamFlowNodesIdEditRoute: typeof AuthenticatedTeamFlowNodesIdEditRouteWithChildren
-  AuthenticatedTeamFlowNodesParentNodesNewRoute: typeof AuthenticatedTeamFlowNodesParentNodesNewRouteWithChildren
+  AuthenticatedTeamFlowNodesNewBeforeRoute: typeof AuthenticatedTeamFlowNodesNewBeforeRoute
+  AuthenticatedTeamFlowNodesNewIndexRoute: typeof AuthenticatedTeamFlowNodesNewIndexRoute
   AuthenticatedTeamFlowNodesParentNodesIdEditRoute: typeof AuthenticatedTeamFlowNodesParentNodesIdEditRouteWithChildren
+  AuthenticatedTeamFlowNodesParentNodesNewBeforeRoute: typeof AuthenticatedTeamFlowNodesParentNodesNewBeforeRoute
+  AuthenticatedTeamFlowNodesParentNodesNewIndexRoute: typeof AuthenticatedTeamFlowNodesParentNodesNewIndexRoute
 }
 
 const AuthenticatedTeamFlowNodesRouteRouteChildren: AuthenticatedTeamFlowNodesRouteRouteChildren =
   {
-    AuthenticatedTeamFlowNodesNewRoute:
-      AuthenticatedTeamFlowNodesNewRouteWithChildren,
     AuthenticatedTeamFlowNodesIdEditRoute:
       AuthenticatedTeamFlowNodesIdEditRouteWithChildren,
-    AuthenticatedTeamFlowNodesParentNodesNewRoute:
-      AuthenticatedTeamFlowNodesParentNodesNewRouteWithChildren,
+    AuthenticatedTeamFlowNodesNewBeforeRoute:
+      AuthenticatedTeamFlowNodesNewBeforeRoute,
+    AuthenticatedTeamFlowNodesNewIndexRoute:
+      AuthenticatedTeamFlowNodesNewIndexRoute,
     AuthenticatedTeamFlowNodesParentNodesIdEditRoute:
       AuthenticatedTeamFlowNodesParentNodesIdEditRouteWithChildren,
+    AuthenticatedTeamFlowNodesParentNodesNewBeforeRoute:
+      AuthenticatedTeamFlowNodesParentNodesNewBeforeRoute,
+    AuthenticatedTeamFlowNodesParentNodesNewIndexRoute:
+      AuthenticatedTeamFlowNodesParentNodesNewIndexRoute,
   }
 
 const AuthenticatedTeamFlowNodesRouteRouteWithChildren =
