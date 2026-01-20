@@ -56,15 +56,16 @@ export async function downloadApplicationFiles(
       });
     }
 
+    // TODO: Toggle this back on once record automatically created and all values populated
+
     // Get the flow submission email, which will run parallel to getTeamEmailSettings for now
-    const submissionEmail = await getFlowSubmissionEmail(flowId);
-    if (!submissionEmail) {
-      return next({
-        status: 400,
-        message: "Failed to retrieve submission email for this flow",
-      });
-    }
-    console.log(submissionEmail);
+    // const submissionEmail = await getFlowSubmissionEmail(flowId);
+    // if (!submissionEmail) {
+    //   return next({
+    //     status: 400,
+    //     message: "Failed to retrieve submission email for this flow",
+    //   });
+    // }
 
     // create the submission zip
     const zip = await logDuration(`zipTotal-${sessionId}`, () =>
