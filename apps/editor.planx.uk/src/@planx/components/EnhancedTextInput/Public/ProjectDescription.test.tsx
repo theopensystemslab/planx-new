@@ -1,5 +1,4 @@
 import { screen } from "@testing-library/react";
-import type _ from "lodash";
 import { http, HttpResponse } from "msw";
 import React from "react";
 import server from "test/mockServer";
@@ -516,5 +515,4 @@ describe("basic layout and behaviour", () => {
   });
 });
 
-it.todo("error states");
 it.todo("loading states");
