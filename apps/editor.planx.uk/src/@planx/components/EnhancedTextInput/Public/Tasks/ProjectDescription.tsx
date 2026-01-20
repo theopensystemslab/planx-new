@@ -78,12 +78,16 @@ const ProjectDescription: React.FC<Props> = (props) => {
     }
   }, [isSuccess, data, setValues]);
 
+  useEffect(() => {
+    if (error) {
+      setFieldValue("status", "error");
+      setFieldValue("error", error.data.error);
+    }
+  }, [error, setFieldValue]);
+
   if (isPending) return <LoadingSkeleton />;
 
   if (error) {
-    setFieldValue("status", "error");
-    setFieldValue("error", error.data.error);
-
     switch (error.data.error) {
       case "INVALID_DESCRIPTION":
         return (
