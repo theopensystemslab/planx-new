@@ -11,7 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { type BaseNodeData, parseFormValues } from "@planx/components/shared";
-import { useNavigate, useParams } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { FormikProps } from "formik";
 import { hasFeatureFlag } from "lib/featureFlags";
@@ -24,7 +24,7 @@ import React, { useMemo, useRef, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import type { NodeSearchParams } from "routes/_authenticated/$team/$flow/nodes/route";
 import { Switch } from "ui/shared/Switch";
-import { rootFlowPath } from "utils/routeUtils/utils";
+import { getNodeRoute, rootFlowPath } from "utils/routeUtils/utils";
 
 import { fromSlug, SLUGS } from "../../data/types";
 import { useStore } from "../../lib/store";
@@ -118,11 +118,14 @@ const NodeTypeSelect: React.FC<{
  *
  * Component is styled to appears as an element within the child component
  */
-const TextInputToggle: React.FC<{ type: string }> = ({ type }) => {
+const TextInputToggle: React.FC<{
+  type: string;
+  parent?: string;
+  before?: string;
+  teamSlug: string;
+  flowSlug: string;
+}> = ({ type, parent, before, teamSlug, flowSlug }) => {
   const navigate = useNavigate();
-  const params = useParams({
-    strict: false,
-  });
   const [checked, setChecked] = useState(type === "enhanced-text-input");
 
   if (!["text-input", "enhanced-text-input"].includes(type)) return null;
@@ -136,9 +139,12 @@ const TextInputToggle: React.FC<{ type: string }> = ({ type }) => {
       type === "text-input" ? TYPES.EnhancedTextInput : TYPES.TextInput;
 
     navigate({
-      to: "/$team/$flow/nodes/$parent/nodes/new/$before",
+      to: getNodeRoute(parent, before),
       params: {
-        ...params,
+        team: teamSlug,
+        flow: flowSlug,
+        ...(parent && { parent }),
+        ...(before && { before }),
       } as any,
       search: (prev) => ({
         ...prev,
@@ -210,9 +216,6 @@ const FormModal: React.FC<FormModalProps> = ({
     store.orderedFlow,
     store.isClone,
   ]);
-  const params = useParams({
-    strict: false,
-  });
   const node = id ? flow[id] : undefined;
 
   const normalizeFormValues = (obj: any): any => {
@@ -320,9 +323,12 @@ const FormModal: React.FC<FormModalProps> = ({
 
   const changeNodeType = (type: TYPES) => {
     navigate({
-      to: "/$team/$flow/nodes/$parent/nodes/new/$before",
+      to: getNodeRoute(parent, before),
       params: {
-        ...params,
+        team: teamSlug,
+        flow: flowSlug,
+        ...(parent && { parent }),
+        ...(before && { before }),
       } as any,
       search: (prev) => ({
         ...prev,
@@ -360,7 +366,15 @@ const FormModal: React.FC<FormModalProps> = ({
           </CloseButton>
         </DialogTitle>
         <DialogContent dividers sx={{ p: 0, position: "relative" }}>
-          {!handleDelete && <TextInputToggle type={type} />}
+          {!handleDelete && (
+            <TextInputToggle
+              type={type}
+              parent={parent}
+              before={before}
+              teamSlug={teamSlug}
+              flowSlug={flowSlug}
+            />
+          )}
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             <Component
               formikRef={formikRef}
