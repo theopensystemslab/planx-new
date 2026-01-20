@@ -245,7 +245,7 @@ const Breadcrumbs: React.FC = () => {
       </BreadcrumbsRoot>
       {params.flow && (
         <Box sx={(theme) => ({ color: theme.palette.text.primary })}>
-          {canUserEditTeam(team.slug) ? (
+          {canUserEditTeam && canUserEditTeam(team.slug) ? (
             <BreadcrumbsLink
               to="/$team/$flow/settings"
               params={{
