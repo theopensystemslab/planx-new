@@ -138,7 +138,14 @@ const SendComponent: React.FC<Props> = (props) => {
 
   const handleSelectChange = (event: SelectChangeEvent<unknown>) => {
     const selectedValue = event.target.value as string;
-    formik.setFieldValue("submissionEmailId", selectedValue);
+
+    if (selectedValue === "new-email") {
+      setIsNewEmailSelected(true);
+      formik.setFieldValue("submissionEmailId", "");
+    } else {
+      setIsNewEmailSelected(false);
+      formik.setFieldValue("submissionEmailId", selectedValue);
+    }
   };
 
   const currentEmail = emailOptions.find(
