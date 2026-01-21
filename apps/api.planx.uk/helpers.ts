@@ -151,6 +151,55 @@ const createFlow = async ({
       },
     );
 
+    // Fetch the default email id from submission_integrations table
+    const { submission_integrations } = await $client.request<{
+      submission_integrations: { id: string }[];
+    }>(
+      gql`
+        query GetDefaultEmail($team_id: Int!) {
+          submission_integrations(
+            where: { team_id: { _eq: $team_id }, default_email: { _eq: true } }
+            limit: 1
+          ) {
+            id
+          }
+        }
+      `,
+      {
+        team_id: teamId,
+      },
+    );
+
+    const emailId = submission_integrations.length
+      ? submission_integrations[0].id
+      : null;
+
+    // Insert a new record into the flow_integrations table
+    await $client.request(
+      gql`
+        mutation InsertFlowIntegration(
+          $flow_id: uuid!
+          $team_id: Int!
+          $email_id: uuid
+        ) {
+          insert_flow_integrations_one(
+            object: {
+              flow_id: $flow_id
+              team_id: $team_id
+              email_id: $email_id
+            }
+          ) {
+            flow_id
+          }
+        }
+      `,
+      {
+        flow_id: id,
+        team_id: teamId,
+        email_id: emailId,
+      },
+    );
+
     await createAssociatedOperation(id);
     await publishFlow(id, "Created flow");
 
