@@ -32,8 +32,7 @@ export const EmailsUpsertModal = ({
 
   const [upsertEmail] = useMutation(UPSERT_TEAM_SUBMISSION_INTEGRATIONS);
 
-  const isFirstEmail =
-    !currentEmails || currentEmails.length === 0 ? true : false;
+  const isFirstEmail = !currentEmails || currentEmails.length === 0;
 
   return (
     <Formik
