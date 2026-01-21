@@ -33,7 +33,8 @@ function Component(props: Props) {
     previouslySubmittedData?._address?.source;
 
   const startPage =
-    Boolean(props.newAddressFirstPage) || previouslySubmittedAddressSource === "proposed"
+    Boolean(props.newAddressFirstPage) ||
+    previouslySubmittedAddressSource === "proposed"
       ? "new-address"
       : "os-address";
   const [page, setPage] = useState<"os-address" | "new-address">(startPage);
@@ -97,7 +98,8 @@ function Component(props: Props) {
       // Unlike above datasets, `development-corporation-boundary` is not yet available for all of England via planning.data
       //  So, we want to avoid writing `[]` to passport
       if (developmentCorporations?.length) {
-        newPassportData["property.developmentCorporation"] = developmentCorporations;
+        newPassportData["property.developmentCorporation"] =
+          developmentCorporations;
       }
 
       if (titleBoundary) {

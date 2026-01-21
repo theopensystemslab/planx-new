@@ -3,8 +3,7 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { Store, useStore } from "../../store";
 
 const { getState, setState } = useStore;
-const { resetPreview, record, changeAnswer } =
-  getState();
+const { resetPreview, record, changeAnswer } = getState();
 
 const flow: Store.Flow = {
   _root: {
@@ -22,7 +21,7 @@ const flow: Store.Flow = {
     data: {
       text: "One Branch",
     },
-    edges: ["Content"]
+    edges: ["Content"],
   },
   AnotherBranch: {
     type: TYPES.Answer,
@@ -91,8 +90,8 @@ describe("going back", () => {
     // Go back
     record("Content");
     expect(Object.keys(getState().breadcrumbs)).toHaveLength(1);
-  })
-  
+  });
+
   it("retains a breadcrumb in cached breadcrumbs", () => {
     record("Question", {
       auto: false,
@@ -104,7 +103,7 @@ describe("going back", () => {
     // Nothing currently cached
     let cached = getState().cachedBreadcrumbs;
     expect(Object.keys(cached!)).toHaveLength(0);
-    
+
     // Go back
     record("Content");
 
@@ -120,17 +119,17 @@ describe("going back", () => {
       auto: false,
       answers: ["OneBranch"],
     });
-    
+
     record("Content", { auto: false });
     const originalSequence = getState().breadcrumbs["Content"].seq!;
-    
+
     // Go back
     record("Content");
     const cachedSequence = getState().cachedBreadcrumbs!["Content"].seq!;
 
     // Cache holds original value
     expect(originalSequence).toEqual(cachedSequence);
-    
+
     // Re-answer question
     record("Content", { auto: false });
     const newSequence = getState().breadcrumbs["Content"].seq!;
@@ -154,7 +153,7 @@ describe("changing an answer", () => {
 
     // Breadcrumbs match the number of nodes visited
     expect(Object.keys(getState().breadcrumbs)).toHaveLength(2);
-  
+
     // Go back to first node
     changeAnswer("Question");
 
@@ -169,7 +168,7 @@ describe("changing an answer", () => {
     });
 
     record("Content", { auto: false });
-    
+
     // Go back to first node
     changeAnswer("Question");
 
@@ -189,11 +188,12 @@ describe("changing an answer", () => {
 
     // Go back to first question
     record("Question");
-    
+
     // Cache retains original values
     const cache = getState().cachedBreadcrumbs!;
     expect(Object.keys(cache)).toHaveLength(2);
-    const cachedQuestionSequence = getState().cachedBreadcrumbs!["Question"].seq!;
+    const cachedQuestionSequence =
+      getState().cachedBreadcrumbs!["Question"].seq!;
     const cachedContentSequence = getState().cachedBreadcrumbs!["Content"].seq!;
 
     expect(cachedQuestionSequence).toEqual(originalQuestionSequence);

@@ -77,7 +77,7 @@ apiClient.interceptors.response.use(
         hideProgressBar: false,
         autoClose: 4_000,
       });
-    };
+    }
 
     return Promise.reject({
       message,

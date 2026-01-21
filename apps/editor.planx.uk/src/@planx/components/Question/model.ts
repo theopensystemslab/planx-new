@@ -1,7 +1,11 @@
 import { boolean, object } from "yup";
 
 import { Option } from "../Option/model";
-import { BaseQuestion, baseQuestionValidationSchema, parseBaseQuestion } from "../shared/BaseQuestion/model";
+import {
+  BaseQuestion,
+  baseQuestionValidationSchema,
+  parseBaseQuestion,
+} from "../shared/BaseQuestion/model";
 
 /**
  * Database representation of a Question component
@@ -17,13 +21,12 @@ export interface Question extends BaseQuestion {
  */
 export type QuestionWithOptions = Question & { options: Option[] };
 
-export const validationSchema = baseQuestionValidationSchema
-  .concat(
-    object({
-      neverAutoAnswer: boolean(),
-      alwaysAutoAnswerBlank: boolean(),
-    }),
-  )
+export const validationSchema = baseQuestionValidationSchema.concat(
+  object({
+    neverAutoAnswer: boolean(),
+    alwaysAutoAnswerBlank: boolean(),
+  }),
+);
 
 export const parseQuestion = (
   data: Record<string, any> | undefined,

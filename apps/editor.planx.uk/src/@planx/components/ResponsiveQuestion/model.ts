@@ -8,7 +8,9 @@ export type ResponsiveQuestion = BaseQuestion;
  * Public and Editor representation of a ResponsiveQuestion
  * Contains options derived from child Answer nodes
  */
-export type ResponsiveQuestionWithOptions = ResponsiveQuestion & { options: ConditionalOption[] };
+export type ResponsiveQuestionWithOptions = ResponsiveQuestion & {
+  options: ConditionalOption[];
+};
 
 export const parseResponsiveQuestion = (
   data: Record<string, any> | undefined,

@@ -52,13 +52,14 @@ const RichTextInput: FC<Props> = (props) => {
     contenteditable: "false",
     role: "textbox",
     translate: "no",
-    ...(props.multiline && props.rows && {
-      style: `
+    ...(props.multiline &&
+      props.rows && {
+        style: `
         min-height: ${(props.rows as number) * LINE_HEIGHT_REM}rem; 
         display: flex;
         justify-content: flex-start;
       `,
-    }),
+      }),
   } as unknown as EditorOptions["editorProps"]["attributes"];
 
   const editor = useEditor({

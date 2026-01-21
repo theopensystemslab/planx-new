@@ -17,10 +17,7 @@ const StyledFormLabel = styled(FormLabel)(({ theme }) => ({
 }));
 
 const DescriptionRadio: React.FC<Props> = ({
-  data: {
-    text: title,
-    description,
-  },
+  data: { text: title, description },
   onChange,
   id,
 }) => {

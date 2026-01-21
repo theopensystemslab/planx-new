@@ -1,4 +1,4 @@
-import { boolean,object, string } from "yup";
+import { boolean, object, string } from "yup";
 
 export const upsertEmailSchema = (
   existingEmails: string[],

@@ -37,7 +37,7 @@ export default function ConfirmationComponent(props: Props) {
         )}
       </Banner>
       <Card handleSubmit={isFinalCard ? undefined : props.handleSubmit}>
-        <ApplicationSummary/>
+        <ApplicationSummary />
         <ViewApplicationLink />
         {props.nextSteps && Boolean(props.nextSteps?.length) && (
           <Box pt={3}>

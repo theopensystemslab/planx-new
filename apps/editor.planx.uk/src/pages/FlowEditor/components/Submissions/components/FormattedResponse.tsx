@@ -29,7 +29,7 @@ export const FormattedResponse: React.FC<FormattedResponseProps> = ({
   let parsedResponse;
   try {
     parsedResponse =
-      typeof response === "string" ? JSON.parse(response) : response ?? {};
+      typeof response === "string" ? JSON.parse(response) : (response ?? {});
   } catch (error) {
     parsedResponse = { error: "Invalid JSON format", raw: response };
   }

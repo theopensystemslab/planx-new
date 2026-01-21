@@ -87,7 +87,7 @@ function FindPropertyComponent(props: Props) {
               <InputRow>
                 <Switch
                   checked={formik.values.newAddressFirstPage}
-                  onChange={() => 
+                  onChange={() =>
                     formik.setFieldValue(
                       "newAddressFirstPage",
                       !formik.values.newAddressFirstPage,

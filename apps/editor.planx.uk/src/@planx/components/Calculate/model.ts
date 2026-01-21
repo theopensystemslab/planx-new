@@ -82,7 +82,10 @@ export function evaluate(input: string, scope = {}, defaults = {}): number {
     const keys = new Set([...Object.keys(object), ...Object.keys(defaults)]);
     return Object.fromEntries(
       // Ensure that value === 0 isn't incorrectly falling back to default
-      [...keys].map((key) => [key, object[key] === 0 ? object[key] : (object[key] || defaults[key])]),
+      [...keys].map((key) => [
+        key,
+        object[key] === 0 ? object[key] : object[key] || defaults[key],
+      ]),
     );
   }
 }

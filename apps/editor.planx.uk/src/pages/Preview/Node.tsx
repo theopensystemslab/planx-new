@@ -202,8 +202,12 @@ const Node: React.FC<Props> = (props) => {
 
     case TYPES.EnhancedTextInput:
       if (!hasFeatureFlag("ENHANCED_TEXTINPUT")) return null;
-      
-      return <EnhancedTextInputComponent {...getComponentProps<EnhancedTextInput>()} />;
+
+      return (
+        <EnhancedTextInputComponent
+          {...getComponentProps<EnhancedTextInput>()}
+        />
+      );
 
     case TYPES.Feedback:
       return <FeedbackComponent {...getComponentProps<Feedback>()} />;
