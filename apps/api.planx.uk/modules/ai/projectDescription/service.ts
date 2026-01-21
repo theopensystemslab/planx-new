@@ -15,7 +15,7 @@ import { getModel } from "../utils.js";
 import {
   type GatewayResult,
   GATEWAY_STATUS,
-  SUCCESS_STATUSES,
+  GATEWAY_SUCCESS_STATUSES,
 } from "../types.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -55,7 +55,7 @@ export const enhanceProjectDescription = async (
       output: "object",
       schema: z.object({
         enhancedDescription: z.string().trim().max(250),
-        status: z.enum([...SUCCESS_STATUSES, GATEWAY_STATUS.INVALID]),
+        status: z.enum([...GATEWAY_SUCCESS_STATUSES, GATEWAY_STATUS.INVALID]),
       }),
       system: loadSystemPrompt(),
       prompt,

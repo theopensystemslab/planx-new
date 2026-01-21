@@ -1,5 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 
+import { API_ERROR_STATUS } from "../types.js";
+
 export const sanitiseInput =
   (key: string) => (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -28,6 +30,9 @@ export const sanitiseInput =
       next();
     } catch (error) {
       console.error("Error sanitising input:", error);
-      return res.status(500).send("Failed to sanitise input");
+      return res.status(500).json({
+        error: API_ERROR_STATUS.ERROR,
+        message: "Failed to sanitise input",
+      });
     }
   };

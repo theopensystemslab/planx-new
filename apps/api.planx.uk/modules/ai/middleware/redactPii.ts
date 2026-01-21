@@ -1,5 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 
+import { API_ERROR_STATUS } from "../types.js";
+
 // patterns for UK-specific personally identifiable information (PII) we might see in user inputs
 // we lean towards permissive patterns to reduce misses, possibly at the cost of a few false positives
 // we don't currently attempt to redact names and phone numbers because the patterns are too broad
@@ -52,10 +54,10 @@ export const redactPii =
       next();
     } catch (error) {
       console.error("Error in PII detection middleware:", error);
-      return res
-        .status(500)
-        .send(
+      return res.status(500).json({
+        error: API_ERROR_STATUS.ERROR,
+        message:
           "Failed to redact any personally identifiable information found in input",
-        );
+      });
     }
   };

@@ -33,10 +33,13 @@ components:
       properties:
         error:
           type: string
+          # error codes could point to the AI Gateway or an internal API/server error (see ./types.ts)
           enum:
-            - INVALID_DESCRIPTION
-            - TOO_MANY_REQUESTS
+            - INVALID_INPUT
             - GATEWAY_ERROR
+            - SERVER_ERROR
+            - TOO_MANY_REQUESTS
+            - GUARDRAIL_TRIPPED
         message:
           type: string
       required:
@@ -56,7 +59,7 @@ paths:
               $ref: "#/components/schemas/EnhanceRequest"
       responses:
         "200":
-          description: Successfully enhanced the project description
+          description: Successfully enhanced the project description (or no change was deemed necessary)
           content:
             application/json:
               schema:
@@ -74,7 +77,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "500":
-          description: There was an error with the upstream AI gateway
+          description: Server error - either in the API or the upstream AI gateway
           content:
             application/json:
               schema:

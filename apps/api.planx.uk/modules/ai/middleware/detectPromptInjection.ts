@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 
-import { GUARDRAIL_REJECTION_REASON } from "../types.js";
+import { GUARDRAIL_REJECTION_REASON, API_ERROR_STATUS } from "../types.js";
 import { logAiGuardrailRejection } from "../logs.js";
 
 // NB. we don't attempt to catch prompt injection attacks based on natural language with regex
@@ -41,9 +41,11 @@ export const detectPromptInjection =
             guardrailReason: GUARDRAIL_REJECTION_REASON.PROMPT_INJECTION,
             guardrailMessage: msg,
           });
-          return res
-            .status(400)
-            .send("The input contains patterns that do not seem appropriate.");
+          return res.status(400).json({
+            error: API_ERROR_STATUS.GUARDRAIL_TRIPPED,
+            message:
+              "The input contains patterns that do not seem appropriate.",
+          });
         }
       }
 
@@ -64,16 +66,19 @@ export const detectPromptInjection =
           guardrailReason: GUARDRAIL_REJECTION_REASON.PROMPT_INJECTION,
           guardrailMessage: msg,
         });
-        return res
-          .status(400)
-          .send(
+        return res.status(400).json({
+          error: API_ERROR_STATUS.GUARDRAIL_TRIPPED,
+          message:
             "The input contains an unusually high ratio of special characters.",
-          );
+        });
       }
 
       next();
     } catch (error) {
       console.error("Error in prompt injection detection middleware:", error);
-      return res.status(500).send("Failed to validate input");
+      return res.status(500).json({
+        error: API_ERROR_STATUS.ERROR,
+        message: "Failed to validate input",
+      });
     }
   };
