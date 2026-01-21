@@ -13,6 +13,7 @@ import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { getIn } from "formik";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { useState } from "react";
 import React from "react";
 import { useEffect } from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -39,6 +40,9 @@ import { GetFlowEmailIdQuery } from "./types";
 export type Props = EditorProps<TYPES.Send, Send>;
 
 const SendComponent: React.FC<Props> = (props) => {
+  const [isNewEmailSelected, setIsNewEmailSelected] = useState(false);
+  const [newEmail, setNewEmail] = useState("");
+
   const formik = useFormikWithRef<Send>(
     {
       initialValues: parseSend(props.node?.data),
@@ -135,7 +139,14 @@ const SendComponent: React.FC<Props> = (props) => {
 
   const handleSelectChange = (event: SelectChangeEvent<unknown>) => {
     const selectedValue = event.target.value as string;
-    formik.setFieldValue("submissionEmailId", selectedValue);
+
+    if (selectedValue === "new-email") {
+      setIsNewEmailSelected(true);
+      formik.setFieldValue("submissionEmailId", "");
+    } else {
+      setIsNewEmailSelected(false);
+      formik.setFieldValue("submissionEmailId", selectedValue);
+    }
   };
 
   const currentEmail = emailOptions.find(
@@ -225,9 +236,11 @@ const SendComponent: React.FC<Props> = (props) => {
                               <SelectInput
                                 name="submissionEmail"
                                 value={
-                                  formik.values.submissionEmailId ||
-                                  currentEmail?.id ||
-                                  ""
+                                  isNewEmailSelected
+                                    ? "new-email"
+                                    : formik.values.submissionEmailId ||
+                                      currentEmail?.id ||
+                                      ""
                                 }
                                 onChange={handleSelectChange}
                                 bordered
@@ -238,6 +251,9 @@ const SendComponent: React.FC<Props> = (props) => {
                                     {email.submissionEmail}
                                   </MenuItem>
                                 ))}
+                                <MenuItem value="new-email">
+                                  New email...
+                                </MenuItem>
                               </SelectInput>
                             )}
                           </>
@@ -245,6 +261,19 @@ const SendComponent: React.FC<Props> = (props) => {
                       </>
                     )}
                   </InputRow>
+                  {isNewEmailSelected && (
+                    <Input
+                      name="newEmail"
+                      value={newEmail}
+                      placeholder="Enter new email"
+                      onChange={(e) => {
+                        setNewEmail(e.target.value);
+                        formik.setFieldValue("newEmail", e.target.value);
+                      }}
+                      disabled={props.disabled}
+                      errorMessage={formik.errors.newEmail}
+                    />
+                  )}
                 </>
               ) : (
                 <></>

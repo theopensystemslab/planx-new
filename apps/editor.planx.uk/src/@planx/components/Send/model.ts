@@ -12,6 +12,7 @@ export interface Send extends BaseNodeData {
   title: string;
   destinations: SendIntegration[];
   submissionEmailId?: string;
+  newEmail?: string;
 }
 
 export const DEFAULT_TITLE = "Send";
@@ -59,5 +60,12 @@ export const validationSchema: SchemaOf<Send> =
           "Submission email is required when 'email' is selected.",
         ),
       }),
+      newEmail: string()
+        .notRequired()
+        .email("Enter a valid email address")
+        .when("isNewEmailSelected", {
+          is: true,
+          then: string().required("Email address is required"),
+        }),
     }),
   );
