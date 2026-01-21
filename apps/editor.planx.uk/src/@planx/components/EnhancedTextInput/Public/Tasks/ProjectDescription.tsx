@@ -94,7 +94,7 @@ const ProjectDescription: React.FC<Props> = (props) => {
 
   if (error) {
     switch (error.data.error) {
-      case "INVALID":
+      case "INVALID_INPUT":
         return (
           <ErrorCard
             title="Invalid description"
