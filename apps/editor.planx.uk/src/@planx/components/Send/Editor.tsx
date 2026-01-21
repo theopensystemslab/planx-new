@@ -1,6 +1,9 @@
+import { ApolloQueryResult } from "@apollo/client/core/types";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
+import MenuItem from "@mui/material/MenuItem";
+import { SelectChangeEvent } from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import {
   ComponentType as TYPES,
@@ -8,8 +11,10 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { getIn } from "formik";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { useEffect } from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -17,12 +22,19 @@ import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
+import SelectInput from "ui/shared/SelectInput/SelectInput";
 import { Switch } from "ui/shared/Switch";
 
+import { SubmissionEmailInput } from "../../../../src/pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 import { ICONS } from "../shared/icons";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
 import { EditorProps } from "../shared/types";
+import { useFlowEmailId } from "./hooks/useFlowEmailId";
+import { useTeamSubmissionIntegrations } from "./hooks/useGetTeamSubmissionIntegrations";
+import { useInsertFlowIntegration } from "./hooks/useInsertFlowIntegrations";
+import { useUpdateFlowIntegration } from "./hooks/useUpdateFlowIntegration";
 import { parseSend, Send, validationSchema } from "./model";
+import { GetFlowEmailIdQuery } from "./types";
 
 export type Props = EditorProps<TYPES.Send, Send>;
 
@@ -30,8 +42,16 @@ const SendComponent: React.FC<Props> = (props) => {
   const formik = useFormikWithRef<Send>(
     {
       initialValues: parseSend(props.node?.data),
-      onSubmit: (newValues) => {
+      onSubmit: async (newValues) => {
         if (props.handleSubmit) {
+          await handleInsertOrUpdate(
+            teamId,
+            newValues,
+            existingEmailId,
+            defaultEmail,
+            id,
+            refetchFlowData,
+          );
           props.handleSubmit({ type: TYPES.Send, data: newValues });
         }
       },
@@ -40,11 +60,87 @@ const SendComponent: React.FC<Props> = (props) => {
     props.formikRef,
   );
 
-  const [teamSlug, flowSlug, submissionEmail] = useStore((state) => [
-    state.teamSlug,
-    state.flowSlug,
-    state.teamSettings.submissionEmail,
-  ]);
+  const [teamSlug, teamId, flowSlug, id, submissionEmail] = useStore(
+    (state) => [
+      state.teamSlug,
+      state.teamId,
+      state.flowSlug,
+      state.id,
+      state.teamSettings.submissionEmail,
+    ],
+  );
+
+  const {
+    data: flowData,
+    loading: flowLoading,
+    error: flowError,
+    refetch: refetchFlowData,
+  } = useFlowEmailId(id);
+  const existingEmailId = flowData?.flowIntegrations?.[0]?.emailId;
+
+  const { data, loading, error } = useTeamSubmissionIntegrations(teamId);
+  const emailOptions = data?.submissionIntegrations || [];
+  const defaultEmail = emailOptions.find(
+    (email: any) => email.defaultEmail === true,
+  );
+
+  const [insertFlowIntegration] = useInsertFlowIntegration();
+  const [updateFlowIntegration] = useUpdateFlowIntegration();
+
+  const handleInsertOrUpdate = async (
+    teamId: number,
+    newValues: Send,
+    existingEmailId: string | undefined,
+    defaultEmail: SubmissionEmailInput | undefined,
+    id: string,
+    refetchFlowData: () => Promise<ApolloQueryResult<GetFlowEmailIdQuery>>,
+  ) => {
+    const selectedEmailId = newValues.submissionEmailId || defaultEmail?.id;
+
+    if (!existingEmailId && selectedEmailId) {
+      await insertFlowIntegration({
+        variables: {
+          flowId: id,
+          emailId: selectedEmailId,
+          teamId: teamId,
+        },
+      });
+
+      await refetchFlowData();
+      return;
+    }
+
+    if (
+      existingEmailId &&
+      newValues.submissionEmailId &&
+      existingEmailId !== newValues.submissionEmailId
+    ) {
+      await updateFlowIntegration({
+        variables: {
+          flowId: id,
+          emailId: newValues.submissionEmailId,
+        },
+      });
+
+      await refetchFlowData();
+      return;
+    }
+  };
+
+  useEffect(() => {
+    if (!formik.values.submissionEmailId && defaultEmail?.id) {
+      formik.setFieldValue("submissionEmailId", defaultEmail.id);
+    }
+  }, [defaultEmail?.id, formik]);
+
+  const handleSelectChange = (event: SelectChangeEvent<unknown>) => {
+    const selectedValue = event.target.value as string;
+    formik.setFieldValue("submissionEmailId", selectedValue);
+  };
+
+  const currentEmail = emailOptions.find(
+    (email) => email.id === existingEmailId,
+  );
 
   const toggleSwitch = (value: SendIntegration) => {
     let newCheckedValues: SendIntegration[];
@@ -110,19 +206,49 @@ const SendComponent: React.FC<Props> = (props) => {
                   disabled={props.disabled}
                 />
               </InputRow>
-              <Typography variant="body2">
-                Each team can set one submission email address in{" "}
-                <Link
-                  href={`/${teamSlug}/settings`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Team Settings
-                </Link>
-                . You should set up redirect or filtering rules in your inbox if
-                you require submissions to go to different email addresses for
-                different services.
-              </Typography>
+              {hasFeatureFlag("MULTIPLE_SUBMISSION_SEND_COMPONENT") ? (
+                <>
+                  <InputRow>
+                    {formik.values.destinations.includes("email") && (
+                      <>
+                        {loading || flowLoading ? (
+                          <Typography variant="body2">
+                            Loading email options...
+                          </Typography>
+                        ) : (
+                          <>
+                            {error || flowError ? (
+                              <Typography variant="body2" color="error">
+                                Failed to load email options.
+                              </Typography>
+                            ) : (
+                              <SelectInput
+                                name="submissionEmail"
+                                value={
+                                  formik.values.submissionEmailId ||
+                                  currentEmail?.id ||
+                                  ""
+                                }
+                                onChange={handleSelectChange}
+                                bordered
+                                disabled={props.disabled}
+                              >
+                                {emailOptions.map((email: any) => (
+                                  <MenuItem key={email.id} value={email.id}>
+                                    {email.submissionEmail}
+                                  </MenuItem>
+                                ))}
+                              </SelectInput>
+                            )}
+                          </>
+                        )}
+                      </>
+                    )}
+                  </InputRow>
+                </>
+              ) : (
+                <></>
+              )}
             </ModalSectionContent>
             <Divider />
             <ModalSectionContent title={"Microsoft SharePoint"}>
