@@ -98,7 +98,7 @@ export const ServiceUnavailable = {
           await delay(3_000);
           return HttpResponse.json(
             {
-              error: "ERROR",
+              error: "GATEWAY_ERROR",
               message:
                 "There was an error with the request to upstream AI gateway",
             },
