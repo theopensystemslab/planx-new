@@ -142,7 +142,7 @@ describe("success", () => {
         },
       },
     });
-    
+
     queryMock.mockQuery({
       name: "GetDefaultEmail",
       variables: {
@@ -157,7 +157,7 @@ describe("success", () => {
         ],
       },
     });
-  
+
     queryMock.mockQuery({
       name: "InsertFlowIntegration",
       matchOnVariables: false,
