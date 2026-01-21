@@ -26,7 +26,7 @@ const serviceUnavailableError: HttpHandler = http.post(
       {
         error: "SERVER_ERROR",
       },
-      { status: 400 },
+      { status: 500 },
     );
   },
 );
