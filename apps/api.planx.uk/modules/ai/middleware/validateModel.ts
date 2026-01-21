@@ -3,13 +3,13 @@ import type { NextFunction, Request, Response } from "express";
 import { API_ERROR_STATUS } from "../types.js";
 
 // currently we just accept a fixed list of recent Google Gemini models
-const ACCEPTED_MODEL_IDS = [
+export const ACCEPTED_MODEL_IDS = [
   "google/gemini-2.5-pro",
   "google/gemini-2.5-flash",
   "google/gemini-3-pro-preview",
   "google/gemini-3-flash",
 ];
-const DEFAULT_MODEL_ID = "google/gemini-2.5-pro";
+export const DEFAULT_MODEL_ID = "google/gemini-2.5-pro";
 
 export const validateModel = (
   req: Request,
