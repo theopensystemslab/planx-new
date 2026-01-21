@@ -222,7 +222,7 @@ describe("render states", () => {
   it("renders correctly when non-UPRN address map is set as first page", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <FindProperty
         description="Find your property"
         title="Type your postal code"

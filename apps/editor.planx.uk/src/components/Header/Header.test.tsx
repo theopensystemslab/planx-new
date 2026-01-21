@@ -136,7 +136,7 @@ describe("Header Component - Editor Route", () => {
   it("displays breadcrumbs", async () => {
     await setup(<Header />);
     expect(screen.getByText("Plan✕")).toBeInTheDocument();
-    expect(screen.getByText(mockTeam1.slug)).toBeInTheDocument();
+    expect(screen.getByText("team-name")).toBeInTheDocument();
     expect(screen.getByText("test-flow")).toBeInTheDocument();
   });
 

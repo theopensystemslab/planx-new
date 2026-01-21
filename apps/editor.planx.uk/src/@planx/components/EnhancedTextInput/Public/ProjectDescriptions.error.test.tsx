@@ -35,7 +35,7 @@ describe("error handling", () => {
   it("handles invalid descriptions", async () => {
     server.use(invalidDescriptionError);
 
-    const { user } = setup(
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -67,7 +67,7 @@ describe("error handling", () => {
   it("handles service errors", async () => {
     server.use(serviceUnavailableError);
 
-    const { user } = setup(
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
