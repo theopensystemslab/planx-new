@@ -38,7 +38,7 @@ const rateLimitError: HttpHandler = http.post(
       {
         error: "TOO_MANY_REQUESTS",
       },
-      { status: 400 },
+      { status: 429 },
     );
   },
 );
