@@ -116,6 +116,28 @@ describe("success", () => {
         },
       },
     });
+
+    queryMock.mockQuery({
+        name: "GetDefaultEmail",
+        matchOnVariables: false,
+        data: {
+          submission_integrations: [
+            {
+              id: "default-email-id",
+            },
+          ],
+        },
+      });
+    
+      queryMock.mockQuery({
+        name: "InsertFlowIntegration",
+        matchOnVariables: false,
+        data: {
+          insert_flow_integrations_one: {
+            flow_id: 2,
+          },
+        },
+      });
   });
 
   it("successfully creates a new flow from a template", async () => {
