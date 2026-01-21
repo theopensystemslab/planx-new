@@ -24,7 +24,7 @@ const serviceUnavailableError: HttpHandler = http.post(
   async () => {
     return HttpResponse.json(
       {
-        error: "ERROR",
+        error: "SERVER_ERROR",
       },
       { status: 400 },
     );
