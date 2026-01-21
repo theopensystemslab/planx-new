@@ -12,7 +12,7 @@ const invalidDescriptionError: HttpHandler = http.post(
   async () => {
     return HttpResponse.json(
       {
-        error: "INVALID",
+        error: "INVALID_INPUT",
       },
       { status: 400 },
     );
