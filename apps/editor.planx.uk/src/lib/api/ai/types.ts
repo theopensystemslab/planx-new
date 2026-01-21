@@ -4,6 +4,6 @@ export interface EnhanceResponse {
 }
 
 export interface EnhanceError {
-  error: "INVALID_DESCRIPTION" | "SERVICE_UNAVAILABLE";
+  error: "INVALID" | "ERROR" | "TOO_MANY_REQUESTS";
   message: string;
 }

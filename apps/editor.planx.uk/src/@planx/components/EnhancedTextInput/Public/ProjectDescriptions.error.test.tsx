@@ -12,7 +12,7 @@ const invalidDescriptionError: HttpHandler = http.post(
   async () => {
     return HttpResponse.json(
       {
-        error: "INVALID_DESCRIPTION",
+        error: "INVALID",
       },
       { status: 400 },
     );
@@ -24,7 +24,19 @@ const serviceUnavailableError: HttpHandler = http.post(
   async () => {
     return HttpResponse.json(
       {
-        error: "SERVICE_UNAVAILABLE",
+        error: "ERROR",
+      },
+      { status: 400 },
+    );
+  },
+);
+
+const rateLimitError: HttpHandler = http.post(
+  "*/ai/project-description/enhance",
+  async () => {
+    return HttpResponse.json(
+      {
+        error: "TOO_MANY_REQUESTS",
       },
       { status: 400 },
     );
@@ -91,7 +103,39 @@ describe("error handling", () => {
     ).toBeVisible();
     expect(
       await screen.findByText(
-        /We weren't able to generate a description based on your input. We'll use your original project description./,
+        /Unable to generate enhanced project description. We'll use your original project description./,
+      ),
+    ).toBeVisible();
+  });
+
+  it("handles rate limiting", async () => {
+    server.use(rateLimitError);
+
+    const { user } = setup(
+      <EnhancedTextInputComponent
+        id="testId"
+        title="test"
+        task={"projectDescription"}
+        {...taskDefaults.projectDescription}
+      />,
+    );
+
+    await user.type(
+      screen.getByRole("textbox", { name: /test/i }),
+      "This is a valid description, but there will be a backend error",
+    );
+    await user.click(screen.getByTestId("continue-button"));
+
+    // Error status displayed to user
+    expect(
+      await screen.findByRole("heading", {
+        level: 2,
+        name: /Rate limit exceeded/,
+      }),
+    ).toBeVisible();
+    expect(
+      await screen.findByText(
+        /You've sent too many requests to our AI service. We'll use your original project description./,
       ),
     ).toBeVisible();
   });
