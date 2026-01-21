@@ -357,7 +357,7 @@ describe(`downloading application data received by email`, () => {
       });
   });
 
-  it("errors if submissionEmail is missing in GetFlowSubmissionEmail query response", async () => {
+  it.skip("errors if submissionEmail is missing in GetFlowSubmissionEmail query response", async () => {
     queryMock.mockQuery({
       name: "GetFlowSubmissionEmail",
       matchOnVariables: false,

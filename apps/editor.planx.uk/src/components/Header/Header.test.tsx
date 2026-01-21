@@ -172,6 +172,14 @@ for (const route of ["/published", "/preview", "/draft", "/pay", "/invite"]) {
     });
 
     it("displays a logo when available", async () => {
+      act(() => {
+        setState({
+          previewEnvironment: "standalone",
+          teamTheme: mockTeam1.theme,
+          teamName: mockTeam1.name,
+          teamSlug: mockTeam1.slug,
+        });
+      });
       await setup(<Header />);
       expect(screen.queryByText("Plan✕")).not.toBeInTheDocument();
       expect(screen.getByAltText(`${mockTeam1.name} Logo`)).toHaveAttribute(
@@ -180,13 +188,18 @@ for (const route of ["/published", "/preview", "/draft", "/pay", "/invite"]) {
       );
     });
 
-    it("falls back to the PlanX link when a logo is not present", async () => {
-      act(() => setState({ teamTheme: mockTeam2.theme }));
+    it("falls back to the team name when a logo is not present", async () => {
+      act(() => {
+        setState({
+          previewEnvironment: "standalone",
+          teamTheme: mockTeam2.theme,
+          teamName: mockTeam2.name,
+          teamSlug: mockTeam2.slug,
+        });
+      });
       await setup(<Header />);
-      expect(
-        screen.queryByAltText(`${mockTeam2.name} Logo`),
-      ).not.toBeInTheDocument();
-      expect(screen.getByText("Plan✕")).toBeInTheDocument();
+      expect(screen.getByText(mockTeam2.name)).toBeInTheDocument();
+      expect(screen.queryByText("Plan✕")).not.toBeInTheDocument();
       act(() => setState({ teamTheme: mockTeam1.theme }));
     });
 

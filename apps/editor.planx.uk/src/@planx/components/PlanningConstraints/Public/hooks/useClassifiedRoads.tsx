@@ -44,23 +44,20 @@ export const usePrefetchClassifiedRoads = (usrn?: string) => {
   // Validation rules enforce that each graph can only contain a single PlanningConstraints node
   const planningConstraintsNode = Object.values(flow).find(
     ({ type }) => type === ComponentType.PlanningConstraints,
-  );
+  )?.data as PlanningConstraints | undefined;
 
-  const dataValues = (planningConstraintsNode?.data as PlanningConstraints)
-    ?.dataValues;
+  const dataValues = planningConstraintsNode?.dataValues;
+
+  const shouldPrefetch =
+    hasPlanningData && Boolean(usrn) && dataValues?.includes("road.classified");
 
   useEffect(() => {
-    const shouldPrefetch =
-      hasPlanningData &&
-      Boolean(usrn) &&
-      dataValues.includes("road.classified");
-
     if (shouldPrefetch) {
       queryClient.prefetchQuery({
         queryKey: ["classifiedRoads", usrn],
-        queryFn: () => getClassifiedRoads(usrn),
+        queryFn: () => getClassifiedRoads(usrn!),
         staleTime: Infinity,
       });
     }
-  }, [usrn, queryClient]);
+  }, [usrn, queryClient, shouldPrefetch]);
 };

@@ -4,7 +4,6 @@ import { lazy, mixed, object, type SchemaOf, string } from "yup";
 import { baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
 import {
   type BaseEnhancedTextInput,
-  type BreadcrumbData,
   type EnhancedTextInput,
   type EnhancedTextInputForTask,
   type Task,
@@ -59,7 +58,7 @@ export const taskSchemas = {
 } satisfies Record<Task, SchemaOf<EnhancedTextInputForTask<Task>>>;
 
 export const validationSchema = lazy(
-  (breadcrumbData: BreadcrumbData) => taskSchemas[breadcrumbData.task],
+  (component: EnhancedTextInput) => taskSchemas[component.task],
 );
 
 export const TASKS: Record<Task, { label: string; description: string }> = {

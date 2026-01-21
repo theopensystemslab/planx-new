@@ -110,8 +110,7 @@ const presentationalComponents: {
   [TYPES.Content]: undefined,
   [TYPES.DateInput]: DateInput,
   [TYPES.DrawBoundary]: DrawBoundary,
-  // TODO: This component will have an output
-  [TYPES.EnhancedTextInput]: undefined,
+  [TYPES.EnhancedTextInput]: TextInput,
   [TYPES.ExternalPortal]: undefined,
   [TYPES.Feedback]: undefined,
   [TYPES.FileUpload]: FileUpload,

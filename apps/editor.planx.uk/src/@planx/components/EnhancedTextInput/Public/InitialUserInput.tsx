@@ -12,11 +12,10 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import type { EnhancedTextInput } from "../types";
+import type { FormValues } from "./types";
 
 const InitialUserInput: React.FC<PublicProps<EnhancedTextInput>> = (props) => {
-  const { values, handleChange, errors } = useFormikContext<{
-    userInput: string;
-  }>();
+  const { values, handleChange, errors } = useFormikContext<FormValues>();
 
   return (
     <InputRow>

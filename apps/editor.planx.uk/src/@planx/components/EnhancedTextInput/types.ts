@@ -1,36 +1,63 @@
 import { BaseNodeData } from "../shared";
 import type { PublicProps } from "../shared/types";
 
-export interface TaskDefinition {
-  editorProps: { fn: string } & Record<string, unknown>;
-  breadcrumbData: Record<string, unknown>;
+/**
+ * Common structure for enhancement metadata
+ */
+export interface EnhancementData {
+  original: string;
+  enhanced: string;
 }
 
-/**
- * Type guard to ensure any new tasks added to the registry conform to the above type
- */
-type ValidateRegistry<T extends Record<string, TaskDefinition>> = T;
+export const TaskActionMap = {
+  retainedOriginal: "Retained their original description",
+  acceptedEnhanced: "Accepted the AI-enhanced description",
+  hybrid: "Re-wrote their description after AI feedback",
+} as const;
 
 /**
- * Registry of all task, including their inputs (editorProps) and outputs (breadcrumbData)
- * Used as source of truth from which to derive other types
+ * Standard action types for tasks with enhancements
  */
-export type TaskRegistry = ValidateRegistry<{
-  projectDescription: {
-    editorProps: {
-      fn: "project.description";
-      // TODO: Based on UI, decide on props
-      revisionTitle: string;
-      revisionDescription: string;
-    };
-    breadcrumbData: {
-      original: string;
-      suggested?: string;
-      userAction: "retainedOriginal" | "acceptedSuggested" | "hybrid";
+export type TaskAction = keyof typeof TaskActionMap;
+
+/**
+ * Human-readable descriptions of TaskActions (used for analytics)
+ */
+export type TaskActionDescription = (typeof TaskActionMap)[TaskAction];
+
+/**
+ * Helper to create a properly typed task definition
+ */
+type CreateTask<
+  TFn extends string,
+  TEditorProps extends Record<string, unknown>,
+> = {
+  editorProps: { fn: TFn } & TEditorProps;
+  breadcrumbData: {
+    [K in TFn]: string;
+  } & {
+    [K in `enhancedTextInput.${TFn}.action`]: TaskActionDescription;
+  } & {
+    _enhancements: {
+      [K in TFn]: EnhancementData;
     };
   };
+};
+
+/**
+ * Registry of all tasks, including their inputs (editorProps) and outputs (breadcrumbData)
+ * Used as source of truth from which to derive other types
+ */
+export type TaskRegistry = {
+  projectDescription: CreateTask<
+    "project.description",
+    {
+      revisionTitle: string;
+      revisionDescription: string;
+    }
+  >;
   // TODO: other tasks here!
-}>;
+};
 
 export type Task = keyof TaskRegistry;
 
@@ -52,7 +79,7 @@ export type EnhancedTextInput = BaseEnhancedTextInput &
  * Output of an EnhancedTextInput component
  */
 export type BreadcrumbData = {
-  [K in Task]: { task: K } & TaskRegistry[K]["breadcrumbData"];
+  [K in Task]: TaskRegistry[K]["breadcrumbData"];
 }[Task];
 
 /** Helper to type-narrow a breadcrumb */

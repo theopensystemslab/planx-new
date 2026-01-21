@@ -219,6 +219,39 @@ describe("render states", () => {
     expect(handleSubmit).not.toHaveBeenCalled();
   });
 
+  it("renders correctly when non-UPRN address map is set as first page", async () => {
+    const handleSubmit = vi.fn();
+
+    const { user } = setup(
+      <FindProperty
+        description="Find your property"
+        title="Type your postal code"
+        allowNewAddresses={true}
+        newAddressFirstPage={true}
+        newAddressTitle="Plot a new address"
+        handleSubmit={handleSubmit}
+      />,
+    );
+
+    // starts on propose new address page
+    expect(await screen.findByText("Plot a new address")).toBeInTheDocument();
+
+    const map = screen.getByTestId("map-web-component");
+    expect(map).toBeInTheDocument();
+
+    const descriptionInput = screen.getByTestId("new-address-input");
+    expect(descriptionInput).toBeInTheDocument();
+
+    expect(
+      await screen.findByText("I want to select an existing address"),
+    ).toBeInTheDocument();
+
+    // Continue button is always enabled, but validation prevents submit until we have complete address details
+    expect(screen.getByTestId("continue-button")).toBeEnabled();
+    await user.click(screen.getByTestId("continue-button"));
+    expect(handleSubmit).not.toHaveBeenCalled();
+  });
+
   it("opens the external planning site dialog by default if allowNewAddresses is toggled off", async () => {
     const handleSubmit = vi.fn();
 

@@ -9,7 +9,7 @@ export const schema = z.object({
 
 interface Success {
   original: string;
-  suggested: string;
+  enhanced: string;
 }
 
 export type ErrorStatus = "INVALID_DESCRIPTION" | "SERVICE_UNAVAILABLE";

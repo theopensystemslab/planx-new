@@ -27,6 +27,7 @@ export enum ChecklistLayout {
   Basic,
   Grouped,
   Images,
+  GroupedImages,
 }
 
 /**
@@ -148,10 +149,15 @@ export const getLayout = ({
   options,
   groupedOptions,
 }: ChecklistOpts): ChecklistLayout => {
+  if (groupedOptions?.length) {
+    const hasImages = groupedOptions.some((group) =>
+      group.children.some((option) => option.data?.img),
+    );
+    return hasImages ? ChecklistLayout.GroupedImages : ChecklistLayout.Grouped;
+  }
+
   const hasImages = options?.some((o) => o.data.img);
   if (hasImages) return ChecklistLayout.Images;
-
-  if (groupedOptions) return ChecklistLayout.Grouped;
 
   return ChecklistLayout.Basic;
 };

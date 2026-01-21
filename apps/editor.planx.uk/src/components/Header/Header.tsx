@@ -1,27 +1,17 @@
-import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
-import Person from "@mui/icons-material/Person";
 import AppBar from "@mui/material/AppBar";
-import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import { grey } from "@mui/material/colors";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import MenuItem from "@mui/material/MenuItem";
-import Paper from "@mui/material/Paper";
-import Popover, { popoverClasses } from "@mui/material/Popover";
 import { styled, Theme } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useMutation } from "@tanstack/react-query";
-import { useLocation, useNavigate, useParams } from "@tanstack/react-router";
-import EnvironmentSelect from "components/EditorNavMenu/components/EnvironmentSelect";
-import { logout } from "lib/api/auth/requests";
+import { useLocation } from "@tanstack/react-router";
+import AccountMenu from "components/AccountMenu";
+import Breadcrumbs from "components/Breadcrumbs";
 import { clearLocalFlowIdb } from "lib/local.idb";
 import { capitalize } from "lodash";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
@@ -32,8 +22,6 @@ import {
   LINE_HEIGHT_BASE,
 } from "theme";
 import { ApplicationPath } from "types";
-import FlowTag from "ui/editor/FlowTag/FlowTag";
-import { FlowTagType } from "ui/editor/FlowTag/types";
 import Reset from "ui/icons/Reset";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
@@ -49,20 +37,6 @@ export const HEADER_HEIGHT_EDITOR = 56;
 const Root = styled(AppBar)(({ theme }) => ({
   color: theme.palette.common.white,
 }));
-
-const BreadcrumbsRoot = styled(Box)(() => ({
-  cursor: "pointer",
-  fontSize: 20,
-  display: "flex",
-  columnGap: 10,
-  alignItems: "center",
-}));
-
-const BreadcrumbsLink = styled(CustomLink)(({ theme }) => ({
-  color: theme.palette.common.white,
-  textDecoration: "none",
-  borderBottom: "1px solid rgba(255, 255, 255, 0.75)",
-})) as typeof CustomLink;
 
 const PublicHeader = styled(MuiToolbar)(() => ({
   height: HEADER_HEIGHT_PUBLIC,
@@ -106,38 +80,6 @@ const RightBox = styled(Box)(() => ({
   justifyContent: "end",
 }));
 
-const ProfileSection = styled(MuiToolbar)(({ theme }) => ({
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  marginRight: theme.spacing(1),
-  [theme.breakpoints.up("md")]: {
-    minHeight: HEADER_HEIGHT_EDITOR,
-  },
-  "@media print": {
-    visibility: "hidden",
-  },
-}));
-
-const StyledPopover = styled(Popover)(({ theme }) => ({
-  [`& .${popoverClasses.paper}`]: {
-    boxShadow: "4px 4px 0px rgba(150, 150, 150, 0.5)",
-    backgroundColor: theme.palette.background.dark,
-    borderRadius: 0,
-  },
-}));
-
-const StyledPaper = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.background.dark,
-  color: theme.palette.common.white,
-  borderRadius: 0,
-  boxShadow: "none",
-  minWidth: 180,
-  "& li": {
-    padding: theme.spacing(1.5, 2),
-  },
-}));
-
 const Logo = styled("img")(() => ({
   height: HEADER_HEIGHT_PUBLIC - 5,
   width: "100%",
@@ -147,12 +89,6 @@ const Logo = styled("img")(() => ({
   "@media print": {
     filter: "invert(1)",
   },
-}));
-
-const LogoLink = styled(CustomLink)(() => ({
-  display: "flex",
-  alignItems: "center",
-  "&:focus-visible": borderedFocusStyle,
 }));
 
 const ServiceTitleRoot = styled("span")(({ theme }) => ({
@@ -171,113 +107,73 @@ const ServiceTitleRoot = styled("span")(({ theme }) => ({
   },
 }));
 
-const TeamLogo: React.FC = () => {
+const TeamBrand: React.FC = () => {
   const [teamSettings, teamName, teamTheme] = useStore((state) => [
     state.teamSettings,
     state.teamName,
     state.teamTheme,
   ]);
 
-  const altText = teamSettings?.homepage
-    ? `${teamName} Homepage (opens in a new tab)`
-    : `${teamName} Logo`;
-  const logo = <Logo alt={altText} src={teamTheme?.logo ?? undefined} />;
+  if (teamTheme?.logo) {
+    const altText = teamSettings?.homepage
+      ? `${teamName} Homepage (opens in a new tab)`
+      : `${teamName} Logo`;
+
+    const logo = <Logo alt={altText} src={teamTheme.logo} />;
+
+    return teamSettings?.homepage ? (
+      <CustomLink
+        to={teamSettings.homepage}
+        target="_blank"
+        rel="noopener noreferrer"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          textDecoration: "none",
+          "&:focus-visible": borderedFocusStyle,
+        }}
+      >
+        {logo}
+      </CustomLink>
+    ) : (
+      <Box sx={{ display: "flex", alignItems: "center" }}>{logo}</Box>
+    );
+  }
+
+  const teamDisplayName = (
+    <Typography
+      variant="h4"
+      component="span"
+      fontWeight={FONT_WEIGHT_SEMI_BOLD}
+      sx={{ whiteSpace: "nowrap" }}
+    >
+      {teamName}
+    </Typography>
+  );
+
   return teamSettings?.homepage ? (
-    <LogoLink to={teamSettings?.homepage}>{logo}</LogoLink>
+    <CustomLink
+      to={teamSettings.homepage}
+      target="_blank"
+      rel="noopener noreferrer"
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        textDecoration: "none",
+        color: "#FFF",
+      }}
+    >
+      {teamDisplayName}
+    </CustomLink>
   ) : (
-    logo
-  );
-};
-
-const Breadcrumbs: React.FC = () => {
-  const params = useParams({ strict: false });
-  const team = useStore((state) => state.getTeam());
-  const isStandalone = useStore(
-    (state) => state.previewEnvironment === "standalone",
-  );
-  const flowSlug = useStore((state) => state.flowSlug);
-  const flowName = useStore((state) => state.flowName);
-  const flowStatus = useStore((state) => state.flowStatus);
-  const canUserEditTeam = useStore((state) => state.canUserEditTeam);
-
-  return (
-    <>
-      <BreadcrumbsRoot>
-        <BreadcrumbsLink
-          to="/"
-          {...(isStandalone && { target: "_blank" })}
-          variant="body1"
-        >
-          Plan✕
-        </BreadcrumbsLink>
-        {!isStandalone && <EnvironmentSelect />}
-        {team.slug && (
-          <>
-            {" / "}
-            <BreadcrumbsLink
-              to="/$team"
-              params={{
-                team: team.slug,
-              }}
-              {...(isStandalone && { target: "_blank" })}
-              variant="body1"
-            >
-              {team.slug}
-            </BreadcrumbsLink>
-          </>
-        )}
-        {params.flow && (
-          <>
-            {" / "}
-            <BreadcrumbsLink
-              to="/$team/$flow"
-              params={{
-                team: team.slug,
-                flow: flowSlug,
-              }}
-              {...(isStandalone && { target: "_blank" })}
-              variant="body1"
-            >
-              {flowName || flowSlug}
-            </BreadcrumbsLink>
-          </>
-        )}
-      </BreadcrumbsRoot>
-      {params.flow && (
-        <Box sx={(theme) => ({ color: theme.palette.text.primary })}>
-          {canUserEditTeam && canUserEditTeam(team.slug) ? (
-            <BreadcrumbsLink
-              to="/$team/$flow/settings"
-              params={{
-                team: team.slug,
-                flow: flowSlug,
-              }}
-              title="Update service status"
-              sx={{ textDecoration: "none" }}
-            >
-              <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
-                {flowStatus}
-              </FlowTag>
-            </BreadcrumbsLink>
-          ) : (
-            <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
-              {flowStatus}
-            </FlowTag>
-          )}
-        </Box>
-      )}
-    </>
+    teamDisplayName
   );
 };
 
 const PublicToolbar: React.FC<{
   showResetButton?: boolean;
 }> = ({ showResetButton = true }) => {
-  const [path, id, teamTheme] = useStore((state) => [
-    state.path,
-    state.id,
-    state.teamTheme,
-  ]);
+  const [path, id] = useStore((state) => [state.path, state.id]);
 
   // Center the service title on desktop layouts, or drop it to second line on mobile
   // ref https://design-system.service.gov.uk/styles/page-template/
@@ -319,7 +215,7 @@ const PublicToolbar: React.FC<{
         <Container maxWidth="contentWrap">
           <InnerContainer>
             <LeftBox>
-              {teamTheme?.logo ? <TeamLogo /> : <Breadcrumbs />}
+              <TeamBrand />
             </LeftBox>
             {showCentredServiceTitle && <ServiceTitle />}
             <RightBox>
@@ -399,96 +295,21 @@ const ServiceTitle: React.FC = () => {
 
 const EditorToolbar: React.FC<{
   headerRef: React.RefObject<HTMLElement>;
-}> = ({ headerRef }) => {
-  const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
-  const user = useStore((state) => state.user);
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleMenuToggle = () => {
-    setOpen(!open);
-  };
-
-  const logoutMutation = useMutation({
-    mutationKey: ["logout", user?.id],
-    mutationFn: logout,
-    onSuccess: () => navigate({ to: "/logout" }),
-  });
-
-  const handleLogout = () => logoutMutation.mutate();
-
+}> = () => {
   return (
     <>
       <EditorHeader disableGutters>
         <EditorHeaderContainer>
           <InnerContainer>
             <LeftBox>
-              <Breadcrumbs />
+              <Breadcrumbs showEnvironmentSelect />
             </LeftBox>
             <RightBox>
-              {user && (
-                <ProfileSection disableGutters>
-                  <Box mr={1} />
-                  <IconButton
-                    edge="end"
-                    color="inherit"
-                    aria-label="Toggle Menu"
-                    onClick={handleMenuToggle}
-                    size="large"
-                    sx={{ padding: "0.25em" }}
-                  >
-                    <Avatar
-                      component="span"
-                      sx={{
-                        bgcolor: grey[200],
-                        color: "text.primary",
-                        fontSize: "1rem",
-                        fontWeight: FONT_WEIGHT_SEMI_BOLD,
-                        width: 33,
-                        height: 33,
-                        marginRight: "0.5rem",
-                      }}
-                    >
-                      {user.firstName[0]}
-                      {user.lastName[0]}
-                    </Avatar>
-                    <Typography variant="body3">Account</Typography>
-                    <KeyboardArrowDown />
-                  </IconButton>
-                </ProfileSection>
-              )}
+              <AccountMenu />
             </RightBox>
           </InnerContainer>
         </EditorHeaderContainer>
       </EditorHeader>
-      {user && (
-        <StyledPopover
-          open={open}
-          anchorEl={headerRef.current}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-        >
-          <StyledPaper>
-            <MenuItem disabled>
-              <ListItemIcon>
-                <Person fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>{user.email}</ListItemText>
-            </MenuItem>
-            <MenuItem onClick={handleLogout}>Log out</MenuItem>
-          </StyledPaper>
-        </StyledPopover>
-      )}
     </>
   );
 };

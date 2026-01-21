@@ -27,6 +27,7 @@ import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHt
 
 import { HOW_DOES_THIS_WORK } from "../../content";
 import type { EnhancedTextInputForTask } from "../../types";
+import type { FormValues } from "../types";
 import ErrorCard from "./ErrorCard";
 import LoadingSkeleton from "./LoadingSkeleton";
 
@@ -46,9 +47,8 @@ const Card = styled(Box)(({ theme }) => ({
 }));
 
 const ProjectDescription: React.FC<Props> = (props) => {
-  const { values, handleChange, errors, setFieldValue } = useFormikContext<{
-    userInput: string;
-  }>();
+  const { values, handleChange, errors, setFieldValue, setValues } =
+    useFormikContext<FormValues>();
   const [open, setOpen] = useState(false);
 
   const initialValueRef = useRef(values.userInput);
@@ -67,10 +67,23 @@ const ProjectDescription: React.FC<Props> = (props) => {
   // Populate text field with "enhanced" value
   useEffect(() => {
     if (isSuccess && data) {
-      setFieldValue("userInput", data.enhanced);
+      setValues({
+        userInput: data.enhanced,
+        status: "success",
+        original: data.original,
+        enhanced: data.enhanced,
+        error: null,
+      });
       setShouldEnhance(false);
     }
-  }, [isSuccess, data, setFieldValue]);
+  }, [isSuccess, data, setValues]);
+
+  useEffect(() => {
+    if (error) {
+      setFieldValue("status", "error");
+      setFieldValue("error", error.data.error);
+    }
+  }, [error, setFieldValue]);
 
   if (isPending) return <LoadingSkeleton />;
 
@@ -132,7 +145,9 @@ const ProjectDescription: React.FC<Props> = (props) => {
           mb={2}
         >
           <Card>
-            <Typography variant="h4">Suggested description:</Typography>
+            <Typography variant="h4" component="h3">
+              Suggested description:
+            </Typography>
             <Typography variant="body2">{data.enhanced}</Typography>
             <Button
               variant="contained"
@@ -144,7 +159,9 @@ const ProjectDescription: React.FC<Props> = (props) => {
             </Button>
           </Card>
           <Card>
-            <Typography variant="h4">Your description:</Typography>
+            <Typography variant="h4" component="h3">
+              Your description:
+            </Typography>
             <Typography variant="body2">{data.original}</Typography>
             <Button
               variant="contained"
@@ -182,7 +199,7 @@ const ProjectDescription: React.FC<Props> = (props) => {
           />
           <CharacterCounter
             limit={TEXT_LIMITS[TextInputType.Long]}
-            count={values.userInput.length}
+            count={values.userInput?.length || 0}
             error={Boolean(errors.userInput)}
           />
         </InputLabel>
