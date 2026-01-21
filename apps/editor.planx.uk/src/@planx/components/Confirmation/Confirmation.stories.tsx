@@ -19,7 +19,7 @@ type Story = StoryObj<typeof meta>;
 export const Basic = {
   args: {
     heading: "Form sent",
-    description: `A payment receipt has been emailed to you. You will also 
+    description: `A payment receipt has been emailed to you. You will also
     receive an email to confirm when your form has been received.`,
     nextSteps: [
       { title: "Validation", description: "Something will be validated" },
@@ -40,18 +40,18 @@ export const Basic = {
   decorators: [
     (Story) => {
       useStore.setState({
-        sessionId: '123-t3st-456',
-        flowName: 'Apply for a Certificate of Lawfulness',
+        sessionId: "123-t3st-456",
+        flowName: "Apply for a Certificate of Lawfulness",
         govUkPayment: {
-          payment_id: 'qe817o3kds9474rfkfldfHSK874JB',
-          created_date: new Date('2024-01-15').toISOString(),
+          payment_id: "qe817o3kds9474rfkfldfHSK874JB",
+          created_date: new Date("2024-01-15").toISOString(),
         } as GovUKPayment,
         computePassport: () => ({
           data: {
             _address: {
-              title: '45, Greenfield Road, London SE22 7FF',
+              title: "45, Greenfield Road, London SE22 7FF",
             },
-            'application.type': 'ldc.proposed',
+            "application.type": "ldc.proposed",
           },
         }),
       });

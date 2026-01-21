@@ -43,7 +43,11 @@ const Description: React.FC = () => {
       getMutationVariables={(flow) => ({ flowId, flow })}
     >
       {({ formik }) => (
-        <InputLabel label="Description" htmlFor="description">
+        <InputLabel
+          label="Description"
+          htmlFor="description"
+          id="description-label"
+        >
           <RichTextInput
             {...formik.getFieldProps("description")}
             disabled={isDisabled}

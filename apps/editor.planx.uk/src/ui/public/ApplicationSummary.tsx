@@ -2,25 +2,26 @@ import Box from "@mui/material/Box";
 import { getValidSchemaDictionary } from "@opensystemslab/planx-core";
 import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
-import { type Store,useStore } from "pages/FlowEditor/lib/store";
+import { type Store, useStore } from "pages/FlowEditor/lib/store";
 import { Fragment } from "react";
 import React from "react";
 
-const getApplicationTypeDescriptionFromPassportValue = (passport: Store.Passport): string | undefined => {
+const getApplicationTypeDescriptionFromPassportValue = (
+  passport: Store.Passport,
+): string | undefined => {
   const schema = getValidSchemaDictionary("ApplicationType");
   const description = schema?.[passport?.data?.["application.type"]];
 
   return description;
-}
+};
 
 const ApplicationSummary: React.FC = () => {
-  const [sessionId, passport, govUkPayment, flowName] =
-    useStore((state) => [
-      state.sessionId,
-      state.computePassport(),
-      state.govUkPayment,
-      state.flowName,
-    ]);
+  const [sessionId, passport, govUkPayment, flowName] = useStore((state) => [
+    state.sessionId,
+    state.computePassport(),
+    state.govUkPayment,
+    state.flowName,
+  ]);
 
   const details = {
     "Application reference": sessionId,
@@ -55,7 +56,7 @@ const ApplicationSummary: React.FC = () => {
         </Fragment>
       ))}
     </SummaryListTable>
-  )
-}
+  );
+};
 
 export default ApplicationSummary;

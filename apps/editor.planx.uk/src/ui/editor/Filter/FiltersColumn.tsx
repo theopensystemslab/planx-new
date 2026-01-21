@@ -15,7 +15,7 @@ interface FiltersColumnProps<T> {
   optionKey: FilterKey<T>;
   optionValues: FilterValues[];
   filters?: Filters<T> | null;
-  handleChange: (key: FilterKey<T>, value: FilterValues | "") => void;
+  handleChange: (key: FilterKey<T>, value: FilterValues) => void;
   name: string;
 }
 
@@ -37,7 +37,9 @@ export const FiltersColumn = <T extends object>(
       {selectedValue ? (
         <StyledChip
           label={capitalize(`${selectedValue}`)}
-          onClick={() => props.handleChange(props.optionKey, "")}
+          onClick={() =>
+            props.handleChange(props.optionKey, selectedValue as FilterValues)
+          }
           icon={<CancelIcon fontSize="small" />}
         />
       ) : (

@@ -40,22 +40,19 @@ export const SaveSuccess: React.FC<{
         </Typography>
         <Typography variant="body2">
           Use the link to continue your form. You have until {expiryDate} to
-          complete it. Your form will be deleted if you do not complete it by this
-          date.
+          complete it. Your form will be deleted if you do not complete it by
+          this date.
         </Typography>
         <Typography variant="body2">
           Your can also continue this form via{" "}
-          <Link
-            href={lpsURL}
-            data-testid="upload-file-button"
-          >
+          <Link href={lpsURL} data-testid="upload-file-button">
             Find Local Planning Services (opens in a new tab)
           </Link>
         </Typography>
         <Typography variant="body2">You may now close this tab.</Typography>
       </Stack>
     </StatusPage>
-  )
+  );
 };
 
 export const SaveError: React.FC = () => {

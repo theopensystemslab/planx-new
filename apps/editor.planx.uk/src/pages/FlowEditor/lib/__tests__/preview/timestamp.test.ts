@@ -4,8 +4,7 @@ import { isAfter, isEqual } from "date-fns";
 import { Store, useStore } from "../../store";
 
 const { getState, setState } = useStore;
-const { resetPreview, record, changeAnswer } =
-  getState();
+const { resetPreview, record, changeAnswer } = getState();
 
 const flow: Store.Flow = {
   _root: {
@@ -23,7 +22,7 @@ const flow: Store.Flow = {
     data: {
       text: "One Branch",
     },
-    edges: ["Content"]
+    edges: ["Content"],
   },
   AnotherBranch: {
     type: TYPES.Answer,
@@ -46,7 +45,7 @@ const flow: Store.Flow = {
 };
 
 beforeEach(() => {
-  vi.useFakeTimers()
+  vi.useFakeTimers();
 
   resetPreview();
   setState({
@@ -55,8 +54,8 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  vi.useRealTimers()
-})
+  vi.useRealTimers();
+});
 
 test("a timestamp is added to all breadcrumbs on creation", () => {
   expect(Object.keys(getState().breadcrumbs)).toHaveLength(0);
@@ -76,7 +75,7 @@ test("timestamps are correctly ordered", () => {
     answers: ["OneBranch"],
   });
 
-  vi.advanceTimersByTime(5_000)
+  vi.advanceTimersByTime(5_000);
   record("Content", { auto: false });
 
   const first = new Date(getState().breadcrumbs["Question"].createdAt!);
@@ -92,7 +91,7 @@ describe("going back", () => {
       answers: ["OneBranch"],
     });
 
-    vi.advanceTimersByTime(5_000)
+    vi.advanceTimersByTime(5_000);
     record("Content", { auto: false });
 
     expect(Object.keys(getState().breadcrumbs)).toHaveLength(2);
@@ -100,23 +99,23 @@ describe("going back", () => {
     // Go back
     record("Content");
     expect(Object.keys(getState().breadcrumbs)).toHaveLength(1);
-  })
-  
+  });
+
   it("retains a breadcrumb in cached breadcrumbs", () => {
     record("Question", {
       auto: false,
       answers: ["OneBranch"],
     });
 
-    vi.advanceTimersByTime(5_000)
+    vi.advanceTimersByTime(5_000);
     record("Content", { auto: false });
 
     // Nothing currently cached
     let cached = getState().cachedBreadcrumbs;
     expect(Object.keys(cached!)).toHaveLength(0);
-    
+
     // Go back
-    vi.advanceTimersByTime(5_000)
+    vi.advanceTimersByTime(5_000);
     record("Content");
 
     // Cache now holds removed breadcrumb
@@ -131,19 +130,23 @@ describe("going back", () => {
       auto: false,
       answers: ["OneBranch"],
     });
-    
-    vi.advanceTimersByTime(5_000)
+
+    vi.advanceTimersByTime(5_000);
     record("Content", { auto: false });
-    const originalTimestamp = new Date(getState().breadcrumbs["Content"].createdAt!);
-    
+    const originalTimestamp = new Date(
+      getState().breadcrumbs["Content"].createdAt!,
+    );
+
     // Go back
     vi.advanceTimersByTime(5_000);
     record("Content");
-    const cachedTimestamp = new Date(getState().cachedBreadcrumbs!["Content"].createdAt!);
+    const cachedTimestamp = new Date(
+      getState().cachedBreadcrumbs!["Content"].createdAt!,
+    );
 
     // Cache holds original value
     expect(isEqual(originalTimestamp, cachedTimestamp)).toBe(true);
-    
+
     // Re-answer question
     vi.advanceTimersByTime(5_000);
     record("Content", { auto: false });
@@ -164,14 +167,14 @@ describe("changing an answer", () => {
       answers: ["OneBranch"],
     });
 
-    vi.advanceTimersByTime(5_000)
+    vi.advanceTimersByTime(5_000);
     record("Content", { auto: false });
 
     // Breadcrumbs match the number of nodes visited
     expect(Object.keys(getState().breadcrumbs)).toHaveLength(2);
-  
+
     // Go back to first node
-    vi.advanceTimersByTime(5_000)
+    vi.advanceTimersByTime(5_000);
     changeAnswer("Question");
 
     // Breadcrumbs cleared
@@ -184,11 +187,11 @@ describe("changing an answer", () => {
       answers: ["OneBranch"],
     });
 
-    vi.advanceTimersByTime(5_000)
+    vi.advanceTimersByTime(5_000);
     record("Content", { auto: false });
 
     // Go back to first node
-    vi.advanceTimersByTime(5_000)
+    vi.advanceTimersByTime(5_000);
     changeAnswer("Question");
 
     // Breadcrumbs cleared
@@ -200,24 +203,36 @@ describe("changing an answer", () => {
       auto: false,
       answers: ["OneBranch"],
     });
-    const originalQuestionTimestamp = new Date(getState().breadcrumbs["Question"].createdAt!);
+    const originalQuestionTimestamp = new Date(
+      getState().breadcrumbs["Question"].createdAt!,
+    );
 
-    vi.advanceTimersByTime(5_000)
+    vi.advanceTimersByTime(5_000);
     record("Content", { auto: true });
-    const originalContentTimestamp = new Date(getState().breadcrumbs["Content"].createdAt!);
+    const originalContentTimestamp = new Date(
+      getState().breadcrumbs["Content"].createdAt!,
+    );
 
     // Go back to first question
     vi.advanceTimersByTime(5_000);
     record("Question");
-    
+
     // Cache retains original values
     const cache = getState().cachedBreadcrumbs!;
     expect(Object.keys(cache)).toHaveLength(2);
-    const cachedQuestionTimestamp = new Date(getState().cachedBreadcrumbs!["Question"].createdAt!);
-    const cachedContentTimestamp = new Date(getState().cachedBreadcrumbs!["Content"].createdAt!);
+    const cachedQuestionTimestamp = new Date(
+      getState().cachedBreadcrumbs!["Question"].createdAt!,
+    );
+    const cachedContentTimestamp = new Date(
+      getState().cachedBreadcrumbs!["Content"].createdAt!,
+    );
 
-    expect(isEqual(cachedQuestionTimestamp, originalQuestionTimestamp)).toBe(true);
-    expect(isEqual(cachedContentTimestamp, originalContentTimestamp)).toBe(true);
+    expect(isEqual(cachedQuestionTimestamp, originalQuestionTimestamp)).toBe(
+      true,
+    );
+    expect(isEqual(cachedContentTimestamp, originalContentTimestamp)).toBe(
+      true,
+    );
 
     // Re-answer question, with different branch
     vi.advanceTimersByTime(5_000);
@@ -227,7 +242,9 @@ describe("changing an answer", () => {
     });
 
     // New breadcrumb created, with new timestamp
-    const newQuestionTimestamp = new Date(getState().breadcrumbs["Question"].createdAt!);
+    const newQuestionTimestamp = new Date(
+      getState().breadcrumbs["Question"].createdAt!,
+    );
 
     expect(isAfter(newQuestionTimestamp, originalQuestionTimestamp)).toBe(true);
   });

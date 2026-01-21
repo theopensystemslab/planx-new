@@ -46,7 +46,7 @@ describe("MapField - validation", () => {
 
     it("validates optional fields with a value", async () => {
       await expect(() =>
-        validationSchema.validate(["not a valid feature"])
+        validationSchema.validate(["not a valid feature"]),
       ).rejects.toThrow(/Input must be valid GeoJSON/);
     });
   });
