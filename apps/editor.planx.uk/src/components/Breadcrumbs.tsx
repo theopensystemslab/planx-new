@@ -1,14 +1,12 @@
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
+import { useParams } from "@tanstack/react-router";
 import EnvironmentSelect from "components/EditorNavMenu/components/EnvironmentSelect";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { Link as ReactNaviLink, useCurrentRoute } from "react-navi";
-import { rootFlowPath } from "routes/utils";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType } from "ui/editor/FlowTag/types";
+import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 const BreadcrumbsRoot = styled(Box)(() => ({
   cursor: "pointer",
@@ -18,11 +16,11 @@ const BreadcrumbsRoot = styled(Box)(() => ({
   alignItems: "center",
 }));
 
-const BreadcrumbsLink = styled(Link)(({ theme }) => ({
+const BreadcrumbsLink = styled(CustomLink)(({ theme }) => ({
   color: theme.palette.common.white,
   textDecoration: "none",
   borderBottom: "1px solid rgba(255, 255, 255, 0.75)",
-})) as typeof Link;
+})) as typeof CustomLink;
 
 export interface BreadcrumbsProps {
   showEnvironmentSelect?: boolean;
@@ -31,72 +29,75 @@ export interface BreadcrumbsProps {
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
   showEnvironmentSelect = false,
 }) => {
-  const route = useCurrentRoute();
-  const [team, isStandalone] = useStore((state) => [
-    state.getTeam(),
-    state.previewEnvironment === "standalone",
-  ]);
-
+  const params = useParams({ strict: false });
+  const team = useStore((state) => state.getTeam());
+  const isStandalone = useStore(
+    (state) => state.previewEnvironment === "standalone",
+  );
+  const flowSlug = useStore((state) => state.flowSlug);
+  const flowName = useStore((state) => state.flowName);
   const flowStatus = useStore((state) => state.flowStatus);
+  const canUserEditTeam = useStore((state) => state.canUserEditTeam);
 
   return (
     <>
       <BreadcrumbsRoot>
         <BreadcrumbsLink
-          component={ReactNaviLink}
-          href={"/"}
-          prefetch={false}
+          to="/"
           {...(isStandalone && { target: "_blank" })}
           variant="body1"
         >
           Plan✕
         </BreadcrumbsLink>
         {showEnvironmentSelect && <EnvironmentSelect />}
-        {team.slug && (
+        {params.team && (
           <>
             {" / "}
             <BreadcrumbsLink
-              component={ReactNaviLink}
-              href={`/${team.slug}`}
-              prefetch={false}
+              to="/$team"
+              params={{
+                team: params.team,
+              }}
               {...(isStandalone && { target: "_blank" })}
               variant="body1"
             >
-              {team.slug}
+              {params.team}
             </BreadcrumbsLink>
           </>
         )}
-        {route.data.flow && (
+        {params.flow && (
           <>
             {" / "}
-            <Link
-              style={{
-                color: "#fff",
-                textDecoration: "none",
+            <BreadcrumbsLink
+              to="/$team/$flow"
+              params={{
+                team: team.slug,
+                flow: flowSlug,
               }}
-              component={ReactNaviLink}
-              href={rootFlowPath(false)}
-              prefetch={false}
+              {...(isStandalone && { target: "_blank" })}
               variant="body1"
             >
-              {route.data.flow}
-            </Link>
+              {flowName || flowSlug}
+            </BreadcrumbsLink>
           </>
         )}
       </BreadcrumbsRoot>
-      {route.data.flow && (
+      {params.flow && (
         <Box sx={(theme) => ({ color: theme.palette.text.primary })}>
-          {useStore.getState().canUserEditTeam(team.slug) ? (
-            <Button
-              variant="link"
-              href={`/${team.slug}/${route.data.flow}/settings`}
+          {canUserEditTeam && canUserEditTeam(team.slug) ? (
+            <BreadcrumbsLink
+              to="/$team/$flow/settings"
+              params={{
+                team: team.slug,
+                flow: flowSlug,
+              }}
               title="Update service status"
               sx={{ textDecoration: "none" }}
             >
               <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
                 {flowStatus}
               </FlowTag>
-            </Button>
+            </BreadcrumbsLink>
           ) : (
             <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
               {flowStatus}
