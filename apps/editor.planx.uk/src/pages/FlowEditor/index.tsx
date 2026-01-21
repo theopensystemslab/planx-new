@@ -3,8 +3,8 @@ import "./floweditor.scss";
 import Box from "@mui/material/Box";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { styled } from "@mui/material/styles";
+import Breadcrumbs from "components/Breadcrumbs";
 import { MENU_WIDTH_COMPACT } from "components/EditorNavMenu/styles";
-import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
 import { isEmpty } from "lodash";
 import { parentNodeIsTemplatedInternalPortal } from "pages/FlowEditor/utils";
 import React, { useEffect, useRef } from "react";
@@ -27,8 +27,7 @@ const EditorContainer = styled(Box)<{ hasNavMenu?: boolean }>(
     alignItems: "stretch",
     overflow: "hidden",
     flexGrow: 1,
-    maxHeight: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
-    maxWidth: hasNavMenu ? `calc(100vw - ${MENU_WIDTH_COMPACT}px)` : "100vw",
+    maxHeight: "100vh",
   }),
 );
 
@@ -102,6 +101,7 @@ const FlowEditor = () => {
           position: "relative",
         }}
       >
+        <Breadcrumbs />
         <Box
           id="editor"
           ref={scrollContainerRef}

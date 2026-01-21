@@ -2,35 +2,45 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
-import EnvironmentSelect from "components/EditorNavMenu/components/EnvironmentSelect";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { Link as ReactNaviLink, useCurrentRoute } from "react-navi";
 import { rootFlowPath } from "routes/utils";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType } from "ui/editor/FlowTag/types";
 
-const BreadcrumbsRoot = styled(Box)(() => ({
+const BreadcrumbsContainer = styled(Box)(({ theme }) => ({
+  display: "flex",
+  gap: theme.spacing(1.5),
+  alignItems: "center",
+  position: "fixed",
+  top: 0,
+  left: 60,
+  zIndex: 1200,
+  backgroundColor: `rgba(255, 255, 255, 0.2)`,
+  padding: theme.spacing(0, 1.75),
+  borderRadius: 50,
+  backdropFilter: "blur(10px)",
+}));
+
+const BreadcrumbsRoot = styled(Box)(({ theme }) => ({
   cursor: "pointer",
   fontSize: 20,
   display: "flex",
-  columnGap: 10,
+  gap: theme.spacing(0.5),
   alignItems: "center",
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
 }));
 
 const BreadcrumbsLink = styled(Link)(({ theme }) => ({
-  color: theme.palette.common.white,
+  color: theme.palette.text.primary,
   textDecoration: "none",
-  borderBottom: "1px solid rgba(255, 255, 255, 0.75)",
+  borderBottom: `1px solid ${theme.palette.text.primary}`,
+  fontWeight: "inherit",
 })) as typeof Link;
 
-export interface BreadcrumbsProps {
-  showEnvironmentSelect?: boolean;
-}
-
-const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
-  showEnvironmentSelect = false,
-}) => {
+const Breadcrumbs: React.FC = () => {
   const route = useCurrentRoute();
   const [team, isStandalone] = useStore((state) => [
     state.getTeam(),
@@ -40,39 +50,28 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
   const flowStatus = useStore((state) => state.flowStatus);
 
   return (
-    <>
+    <BreadcrumbsContainer>
       <BreadcrumbsRoot>
-        <BreadcrumbsLink
-          component={ReactNaviLink}
-          href={"/"}
-          prefetch={false}
-          {...(isStandalone && { target: "_blank" })}
-          variant="body1"
-        >
-          Plan✕
-        </BreadcrumbsLink>
-        {showEnvironmentSelect && <EnvironmentSelect />}
         {team.slug && (
-          <>
-            {" / "}
-            <BreadcrumbsLink
-              component={ReactNaviLink}
-              href={`/${team.slug}`}
-              prefetch={false}
-              {...(isStandalone && { target: "_blank" })}
-              variant="body1"
-            >
-              {team.slug}
-            </BreadcrumbsLink>
-          </>
+          <BreadcrumbsLink
+            component={ReactNaviLink}
+            href={`/${team.slug}`}
+            prefetch={false}
+            {...(isStandalone && { target: "_blank" })}
+            variant="body1"
+          >
+            {team.slug}
+          </BreadcrumbsLink>
         )}
         {route.data.flow && (
           <>
             {" / "}
             <Link
-              style={{
-                color: "#fff",
+              sx={{
+                color: (theme) => theme.palette.text.primary,
                 textDecoration: "none",
+                fontWeight: "inherit",
+                borderBottom: `1px solid transparent`,
               }}
               component={ReactNaviLink}
               href={rootFlowPath(false)}
@@ -104,7 +103,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
           )}
         </Box>
       )}
-    </>
+    </BreadcrumbsContainer>
   );
 };
 

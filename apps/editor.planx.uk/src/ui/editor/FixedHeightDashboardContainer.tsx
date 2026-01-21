@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
 import React, { ReactNode } from "react";
 
 interface FixedHeightDashboardContainerProps {
@@ -15,7 +14,7 @@ const FixedHeightDashboardContainer: React.FC<
     <Box
       sx={(theme) => ({
         width: "100%",
-        height: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
+        height: "100vh",
         display: "flex",
         flexDirection: "column",
         backgroundColor: bgColor,

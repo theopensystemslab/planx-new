@@ -12,24 +12,46 @@ import RateReviewIcon from "@mui/icons-material/RateReview";
 import SchoolIcon from "@mui/icons-material/School";
 import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import ButtonBase from "@planx/components/shared/Buttons/ButtonBase";
+import AccountMenu from "components/AccountMenu";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef } from "react";
 import { useCurrentRoute, useLoadingRoute, useNavigation } from "react-navi";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import EditorIcon from "ui/icons/Editor";
 import LocalPlanningServicesIcon from "ui/icons/LocalPlanningServices";
 
 import { useLPS } from "../../hooks/useLPS";
+import NavMenuHeader from "./components/NavMenuHeader";
 import {
   MenuButton,
   MenuItem,
   MenuTitle,
   MenuWrap,
+  NavBarContainer,
   Root,
   StyledChip,
   Subtitle,
 } from "./styles";
 import { Route, RoutesForURL } from "./types";
+
+const StyledButtonBase = styled(ButtonBase)<{ teamcolor?: string }>(
+  ({ theme, teamcolor }) => ({
+    backgroundColor: theme.palette.background.default,
+    width: "100%",
+    borderLeft: `8px solid ${teamcolor || "OliveDrab"}`,
+    borderRadius: 3,
+    padding: theme.spacing(1, 1.25),
+    justifyContent: "space-between",
+    boxShadow: "0 1px 1.5px 0 rgba(0, 0, 0, 0.2)",
+    "&:hover": {
+      backgroundColor: theme.palette.background.paper,
+    },
+  }),
+);
 
 interface MenuSection {
   subtitle?: string;
@@ -356,20 +378,51 @@ function EditorNavMenu() {
 
   return (
     <Root compact={compact}>
-      <MenuWrap>
-        {visibleSections.map((section, sectionIndex) => (
-          <React.Fragment key={sectionIndex}>
-            {section.subtitle && (
-              <Subtitle variant="body3">{section.subtitle}</Subtitle>
-            )}
-            {section.routes.map(({ title, Icon, route, disabled, isNew }) => (
-              <MenuItem key={title}>
-                {renderMenuItem(title, Icon, route, disabled, isNew)}
-              </MenuItem>
-            ))}
-          </React.Fragment>
-        ))}
-      </MenuWrap>
+      <NavBarContainer>
+        <NavMenuHeader compact={compact} />
+        {!compact && teamSlug && team && (
+          <Box sx={{ p: 0.75, mt: 1 }}>
+            <StyledButtonBase
+              onClick={() => navigate("/")}
+              selected={false}
+              teamcolor={team.theme?.primaryColour}
+            >
+              <Box sx={{ display: "flex", flexDirection: "column" }}>
+                <Typography
+                  variant="body3"
+                  component="span"
+                  color="text.secondary"
+                >
+                  Team
+                </Typography>
+                <Typography
+                  variant="body2"
+                  component="span"
+                  color="text.primary"
+                  sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+                >
+                  {team.name}
+                </Typography>
+              </Box>
+            </StyledButtonBase>
+          </Box>
+        )}
+        <MenuWrap compact={compact}>
+          {visibleSections.map((section, sectionIndex) => (
+            <React.Fragment key={sectionIndex}>
+              {section.subtitle && (
+                <Subtitle variant="body3">{section.subtitle}</Subtitle>
+              )}
+              {section.routes.map(({ title, Icon, route, disabled, isNew }) => (
+                <MenuItem key={title}>
+                  {renderMenuItem(title, Icon, route, disabled, isNew)}
+                </MenuItem>
+              ))}
+            </React.Fragment>
+          ))}
+        </MenuWrap>
+        <AccountMenu compact={compact} />
+      </NavBarContainer>
     </Root>
   );
 }

@@ -93,6 +93,10 @@ export const teamStore: StateCreator<
             name
             slug
             domain
+            theme {
+              primaryColour: primary_colour
+              logo
+            }
             flows(order_by: { updated_at: desc }) {
               slug
               updated_at

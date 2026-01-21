@@ -300,18 +300,15 @@ const EditorToolbar: React.FC<{
 }> = () => {
   return (
     <>
-      <EditorHeader disableGutters>
+      {/* <EditorHeader disableGutters>
         <EditorHeaderContainer>
           <InnerContainer>
             <LeftBox>
               <Breadcrumbs showEnvironmentSelect />
             </LeftBox>
-            <RightBox>
-              <AccountMenu />
-            </RightBox>
           </InnerContainer>
         </EditorHeaderContainer>
-      </EditorHeader>
+      </EditorHeader> */}
     </>
   );
 };

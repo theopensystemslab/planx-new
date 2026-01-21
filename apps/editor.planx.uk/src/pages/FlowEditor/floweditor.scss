@@ -80,7 +80,7 @@ $fontMonospace: "Source Code Pro", monospace;
 #editor {
   flex: 1;
   overflow: auto;
-  padding: $editorPadding;
+  padding: 60px $editorPadding;
 
   &.flow-locked {
     background: $lockedFlowBackground;
