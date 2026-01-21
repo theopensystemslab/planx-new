@@ -3,7 +3,7 @@ import type { NextFunction, Request, Response } from "express";
 import { API_ERROR_STATUS } from "../types.js";
 
 export const sanitiseInput =
-  (key: string) => (req: Request, res: Response, next: NextFunction) => {
+  (key: string) => (_req: Request, res: Response, next: NextFunction) => {
     try {
       const input = res.locals.parsedReq.body[key];
 

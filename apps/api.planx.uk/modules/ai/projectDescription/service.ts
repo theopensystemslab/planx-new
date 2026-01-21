@@ -65,7 +65,6 @@ export const enhanceProjectDescription = async (
     console.debug("Full response from gateway:", res);
 
     // log the exchange w/ Vercel AI Gateway to the audit table in db
-    // TODO: also pass in flowId and sessionId where possible
     await logAiGatewayExchange({
       endpoint,
       modelId: res.response?.modelId || modelId,

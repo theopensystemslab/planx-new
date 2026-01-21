@@ -28,52 +28,54 @@ export const detectPromptInjection =
       const modelId = res.locals.parsedReq.body.modelId;
       const endpoint = req.route.path;
 
+      let internalMsg;
+      let responseMsg;
+
       // check for one of our known injection patterns
       for (const pattern of INJECTION_PATTERNS) {
         if (pattern.test(input)) {
-          const msg = `Suspicious input detected - common prompt injection pattern: ${pattern}`;
-          console.warn(msg);
-          // log the rejection of the request due to guardrail tripping to audit table in db
-          logAiGuardrailRejection({
-            endpoint,
-            modelId,
-            prompt: input,
-            guardrailReason: GUARDRAIL_REJECTION_REASON.PROMPT_INJECTION,
-            guardrailMessage: msg,
-          });
-          return res.status(400).json({
-            error: API_ERROR_STATUS.GUARDRAIL_TRIPPED,
-            message:
-              "The input contains patterns that do not seem appropriate.",
-          });
+          internalMsg = `Suspicious input detected - common prompt injection pattern: ${pattern}`;
+          responseMsg =
+            "The input contains patterns that do not seem appropriate.";
+          break;
         }
       }
 
       // check for an unusually high ratio of special characters
-      const specialCharCount = (input.match(/[^a-zA-Z0-9\s.,'-]/g) || [])
-        .length;
-      const totalLength = input.length;
-      if (
-        totalLength > 0 &&
-        specialCharCount / totalLength > SPECIAL_CHAR_RATIO_THRESHOLD
-      ) {
-        const msg = `Suspicious input detected - high ratio of special characters: (${specialCharCount}/${totalLength})`;
-        console.warn(msg);
-        logAiGuardrailRejection({
-          endpoint,
-          modelId,
-          prompt: input,
-          guardrailReason: GUARDRAIL_REJECTION_REASON.PROMPT_INJECTION,
-          guardrailMessage: msg,
-        });
-        return res.status(400).json({
-          error: API_ERROR_STATUS.GUARDRAIL_TRIPPED,
-          message:
-            "The input contains an unusually high ratio of special characters.",
-        });
+      if (!internalMsg) {
+        const specialCharCount = (input.match(/[^a-zA-Z0-9\s.,'-]/g) || [])
+          .length;
+        const totalLength = input.length;
+        if (
+          totalLength > 0 &&
+          specialCharCount / totalLength > SPECIAL_CHAR_RATIO_THRESHOLD
+        ) {
+          internalMsg = `Suspicious input detected - high ratio of special characters: (${specialCharCount}/${totalLength})`;
+          responseMsg =
+            "The input contains an unusually high ratio of special characters.";
+        }
       }
 
-      next();
+      // if no issues detected, proceed
+      if (!internalMsg) {
+        return next();
+      }
+
+      // log the rejection of the request due to guardrail tripping on server and in db audit table
+      console.warn(internalMsg);
+      logAiGuardrailRejection({
+        endpoint,
+        modelId,
+        prompt: input,
+        guardrailReason: GUARDRAIL_REJECTION_REASON.PROMPT_INJECTION,
+        guardrailMessage: internalMsg,
+        sessionId: res.locals.parsedReq.body.sessionId,
+        flowId: res.locals.parsedReq.body.flowId,
+      });
+      return res.status(400).json({
+        error: API_ERROR_STATUS.GUARDRAIL_TRIPPED,
+        message: responseMsg,
+      });
     } catch (error) {
       console.error("Error in prompt injection detection middleware:", error);
       return res.status(500).json({

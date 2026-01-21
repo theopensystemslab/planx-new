@@ -6,7 +6,9 @@ import type { GatewayErrorStatus, ApiErrorStatus } from "../types.js";
 export const projectDescriptionSchema = z.object({
   body: z.object({
     original: z.string().trim().max(250),
-    modelId: z.string().trim().min(3),
+    modelId: z.string().trim(),
+    flowId: z.string().uuid().optional(),
+    sessionId: z.string().uuid().optional(),
   }),
 });
 

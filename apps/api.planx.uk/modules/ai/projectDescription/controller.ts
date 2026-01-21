@@ -6,13 +6,16 @@ import type { ProjectDescriptionController } from "./types.js";
 export const projectDescriptionController: ProjectDescriptionController =
   async (req, res, next) => {
     try {
-      const { original, modelId } = res.locals.parsedReq.body;
+      const { original, modelId, sessionId, flowId } =
+        res.locals.parsedReq.body;
       const endpoint = req.route.path;
 
       const result = await enhanceProjectDescription(
         original,
         endpoint,
         modelId,
+        sessionId,
+        flowId,
       );
       if (result.ok) {
         if (result.value) {

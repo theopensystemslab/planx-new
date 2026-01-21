@@ -25,7 +25,7 @@ const PII_PATTERNS = {
 };
 
 export const redactPii =
-  (key: string) => (req: Request, res: Response, next: NextFunction) => {
+  (key: string) => (_req: Request, res: Response, next: NextFunction) => {
     try {
       let input = res.locals.parsedReq.body[key];
       let piiDetected = false;
