@@ -120,7 +120,7 @@ export const RateLimitExceeded = {
             {
               error: "TOO_MANY_REQUESTS",
             },
-            { status: 400 },
+            { status: 429 },
           );
         }),
       ],
