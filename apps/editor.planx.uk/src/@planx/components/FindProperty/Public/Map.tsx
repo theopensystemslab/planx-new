@@ -47,15 +47,43 @@ export const DescriptionInput = styled(Box)(({ theme }) => ({
   paddingBottom: theme.spacing(2),
 }));
 
+interface Address {
+  LPI: {
+    LAT: number;
+    LNG: number;
+  };
+}
+
+interface AddressSelectionEventDetail {
+  address: Address;
+}
+
+// @ts-expect-error
+interface AddressSearchElement extends HTMLElement {
+  addEventListener(
+    type: "addressSelection",
+    listener: (event: CustomEvent<AddressSelectionEventDetail>) => void
+  ): void;
+  removeEventListener(
+    type: "addressSelection",
+    listener: (event: CustomEvent<AddressSelectionEventDetail>) => void
+  ): void;
+}
+
 export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
+  // `addressCenterPoint` is optionally used to position the map only (you shouldn't propose an existing address)
+  const addressSearchRef = useRef<AddressSearchElement>(null);
+  const [addressCenterPoint, setAddressCenterPoint] = useState<Address | undefined>(undefined);
+
+  // `coordinates` refer to the point proposed/plotted by the user
   const [coordinates, setCoordinates] = useState<Coordinates | undefined>(
     props.initialProposedAddress
       ? {
-          longitude: props.initialProposedAddress.longitude,
-          latitude: props.initialProposedAddress.latitude,
-          x: props.initialProposedAddress.x,
-          y: props.initialProposedAddress.y,
-        }
+        longitude: props.initialProposedAddress.longitude,
+        latitude: props.initialProposedAddress.latitude,
+        x: props.initialProposedAddress.x,
+        y: props.initialProposedAddress.y,
+      }
       : undefined,
   );
   const [siteDescription, setSiteDescription] = useState<string | null>(
@@ -66,6 +94,35 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
     state.previewEnvironment,
     state.teamSettings.boundaryBBox,
   ]);
+
+  useEffect(() => {
+    const inputElement = addressSearchRef.current;
+
+    if (!inputElement) {
+      console.warn(
+        "<geocode-autocomplete> element not found for event listener."
+      );
+      return;
+    }
+
+    const handleAddressSelection = (
+      event: CustomEvent<AddressSelectionEventDetail>
+    ) => {
+      const { detail } = event;
+      console.debug("Address selected:", detail);
+      // TODO validate address within clip before setting state, if not error
+      setAddressCenterPoint(detail.address);
+    };
+
+    inputElement.addEventListener("addressSelection", handleAddressSelection);
+
+    return () => {
+      inputElement.removeEventListener(
+        "addressSelection",
+        handleAddressSelection
+      );
+    };
+  }, []);
 
   useEffect(() => {
     const geojsonChangeHandler = ({ detail: geojson }: any) => {
@@ -126,6 +183,18 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
 
   return (
     <>
+      <ErrorWrapper
+        /** TODO handle error via props */
+        error={"Searched address is outside of map bounds, please try again"}
+        id="address-search"
+      >
+        {/* @ts-ignore */}
+        <geocode-autocomplete
+          id="address-search"
+          label="Search for an address to position the map"
+          osProxyEndpoint={`${import.meta.env.VITE_APP_API_URL}/proxy/ordnance-survey`}
+        />
+      </ErrorWrapper>
       <FullWidthWrapper>
         <ErrorWrapper
           error={props.mapValidationError}
@@ -143,6 +212,8 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
               ariaLabelOlFixedOverlay="An interactive map for providing your site location"
               data-testid="map-web-component"
               zoom={10}
+              latitude={addressCenterPoint && addressCenterPoint.LPI.LAT}
+              longitude={addressCenterPoint && addressCenterPoint.LPI.LNG}
               drawMode
               drawType="Point"
               drawGeojsonData={
@@ -162,9 +233,8 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
               resetControlImage="trash"
               showScale
               showNorthArrow
-              osProxyEndpoint={`${
-                import.meta.env.VITE_APP_API_URL
-              }/proxy/ordnance-survey`}
+              osProxyEndpoint={`${import.meta.env.VITE_APP_API_URL
+                }/proxy/ordnance-survey`}
               clipGeojsonData={JSON.stringify(boundaryBBox)}
               osCopyright={`© Crown copyright and database rights ${new Date().getFullYear()} OS AC0000812160`}
               collapseAttributions={window.innerWidth < 500 ? true : undefined}
@@ -175,11 +245,9 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
           <Typography variant="body2">
             The coordinate location of your address point is:{" "}
             <strong>
-              {`${
-                (coordinates?.x && Math.round(coordinates.x)) || 0
-              } Easting (X), ${
-                (coordinates?.y && Math.round(coordinates.y)) || 0
-              } Northing (Y)`}
+              {`${(coordinates?.x && Math.round(coordinates.x)) || 0
+                } Easting (X), ${(coordinates?.y && Math.round(coordinates.y)) || 0
+                } Northing (Y)`}
             </strong>
           </Typography>
           <Link
