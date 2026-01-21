@@ -78,7 +78,7 @@ export const Invalid = {
           await delay(3_000);
           return HttpResponse.json(
             {
-              error: "INVALID",
+              error: "INVALID_INPUT",
               message:
                 "The description doesn't appear to be related to a planning application.",
             },
