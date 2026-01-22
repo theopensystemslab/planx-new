@@ -26,7 +26,7 @@ const RecentFlowContainer = styled(Box)(({ theme }) => ({
   alignItems: "stretch",
   backgroundColor: "#1a1a1a",
   borderRadius: theme.spacing(0.5),
-  padding: theme.spacing(0.75, 1),
+  padding: theme.spacing(0.75, 0),
   maxWidth: "100%",
   "& svg": {
     color: theme.palette.secondary.dark,
@@ -38,7 +38,6 @@ const RecentFlowList = styled(Box)(({ theme }) => ({
   flexDirection: "column",
   flex: 1,
   minWidth: 0,
-  paddingRight: theme.spacing(1),
   paddingLeft: theme.spacing(0.25),
 }));
 
@@ -46,9 +45,10 @@ const RecentFlowItem = styled(Box)<{ indent?: number }>(
   ({ indent = 0, theme }) => ({
     display: "flex",
     alignItems: "center",
-    gap: theme.spacing(0.25),
+    gap: theme.spacing(0.5),
     whiteSpace: "nowrap",
-    paddingLeft: indent * 20,
+    marginLeft: indent * 8,
+    padding: theme.spacing(0, 2, 0, 1),
     color: "#ffffff",
     height: RECENT_ROW_HEIGHT,
   }),
@@ -59,13 +59,13 @@ const RecentFlowLink = styled(Link)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   flexWrap: "nowrap",
-  gap: theme.spacing(0.5),
+  gap: theme.spacing(0.15),
   textDecoration: "none",
   "& span": {
     textDecoration: "underline",
   },
   "&:hover span": {
-    textDecorationWeight: "4px",
+    textDecorationThickness: "2px",
   },
 }));
 
@@ -77,8 +77,7 @@ const ToggleWrap = styled(Box)(() => ({
 
 const ToggleButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.common.white,
-  marginLeft: theme.spacing(0.5),
-  padding: theme.spacing(0.4, 0.25, 0.4, 1),
+  padding: theme.spacing(0.4, 1),
   borderLeft: `1px solid ${theme.palette.border.main}`,
   alignSelf: "stretch",
   alignItems: "flex-start",
@@ -101,8 +100,8 @@ const RecentFlows: React.FC<RecentFlowsProps> = ({ flows }) => {
             key={`${flow.team}-${flow.flow}-${index}`}
             indent={index}
           >
-            <TurnSharpLeftIcon fontSize="small" color="inherit" />
             <RecentFlowLink variant="body3" href={flow.href}>
+              <TurnSharpLeftIcon sx={{ mr: 0.25 }} fontSize="small" />
               {flow.team}
               <ChevronRightIcon fontSize="small" />
               <span>{flow.flow}</span>
@@ -122,7 +121,7 @@ const RecentFlows: React.FC<RecentFlowsProps> = ({ flows }) => {
             }
           >
             {isExpanded ? (
-              <Close fontSize="small" />
+              <Close sx={{ pt: 0.25 }} />
             ) : (
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Typography variant="body3">+{flows.length - 1}</Typography>
