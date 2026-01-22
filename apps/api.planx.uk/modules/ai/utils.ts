@@ -4,7 +4,6 @@ import { GATEWAY_STATUS, type GatewayResult } from "./types.js";
 
 export const getModel = (modelId: string): GatewayResult => {
   try {
-    console.assert(process.env.AI_GATEWAY_API_KEY);
     const gateway = createGateway({
       apiKey: process.env.AI_GATEWAY_API_KEY,
     });

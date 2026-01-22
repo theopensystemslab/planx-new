@@ -50,11 +50,9 @@ components:
       properties:
         error:
           type: string
-          # error codes could point to the AI Gateway or an internal API/server error (see ./types.ts)
+          # see ./types.ts for source of these values
           enum:
             - INVALID_INPUT
-            - GATEWAY_ERROR
-            - SERVER_ERROR
             - TOO_MANY_REQUESTS
             - GUARDRAIL_TRIPPED
         message:

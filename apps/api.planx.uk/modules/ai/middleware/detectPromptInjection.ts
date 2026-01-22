@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 
+import { ServerError } from "../../../errors/index.js";
 import { GUARDRAIL_REJECTION_REASON, API_ERROR_STATUS } from "../types.js";
 import { logAiGuardrailRejection } from "../logs.js";
 
@@ -73,14 +74,15 @@ export const detectPromptInjection =
         flowId: res.locals.parsedReq.body.flowId,
       });
       return res.status(400).json({
-        error: API_ERROR_STATUS.GUARDRAIL_TRIPPED,
+        error: API_ERROR_STATUS.GUARDRAIL,
         message: responseMsg,
       });
     } catch (error) {
       console.error("Error in prompt injection detection middleware:", error);
-      return res.status(500).json({
-        error: API_ERROR_STATUS.ERROR,
-        message: "Failed to validate input",
-      });
+      next(
+        new ServerError({
+          message: `Failed to validate input`,
+        }),
+      );
     }
   };

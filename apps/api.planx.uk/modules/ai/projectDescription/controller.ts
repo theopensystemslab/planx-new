@@ -6,10 +6,16 @@ import type { ProjectDescriptionController } from "./types.js";
 export const projectDescriptionController: ProjectDescriptionController =
   async (req, res, next) => {
     try {
+      // check we have the API key and exit early if not
+      if (!process.env.AI_GATEWAY_API_KEY) {
+        return next(
+          new ServerError({ message: "AI_GATEWAY_API_KEY is not set" }),
+        );
+      }
+
       const { original, modelId, sessionId, flowId } =
         res.locals.parsedReq.body;
       const endpoint = req.route.path;
-
       const result = await enhanceProjectDescription(
         original,
         endpoint,
@@ -21,13 +27,12 @@ export const projectDescriptionController: ProjectDescriptionController =
         if (result.value) {
           return res.json({ original, enhanced: result.value });
         } else {
-          console.error(
-            "Call to gateway succeeded but no enhanced description returned",
+          return next(
+            new ServerError({
+              message:
+                "Call to gateway succeeded but no enhanced description returned",
+            }),
           );
-          return res.status(500).json({
-            error: GATEWAY_STATUS.ERROR,
-            message: "Error with request to AI gateway",
-          });
         }
       }
       switch (result.error) {
@@ -38,11 +43,11 @@ export const projectDescriptionController: ProjectDescriptionController =
               "The description doesn't appear to be related to a planning application.",
           });
         case GATEWAY_STATUS.ERROR:
-          return res.status(500).json({
-            error: GATEWAY_STATUS.ERROR,
-            message:
-              "There was an error with the request to upstream AI gateway",
-          });
+          return next(
+            new ServerError({
+              message: "Error with the request to upstream AI gateway",
+            }),
+          );
       }
     } catch (error) {
       return next(

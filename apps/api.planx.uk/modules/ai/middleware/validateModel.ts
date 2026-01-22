@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 
+import { ServerError } from "../../../errors/index.js";
 import { API_ERROR_STATUS } from "../types.js";
 
 // currently we just accept a fixed list of recent Google Gemini models
@@ -28,7 +29,7 @@ export const validateModel = (
     } else if (!ACCEPTED_MODEL_IDS.includes(modelId)) {
       console.warn(`Invalid model ID specified: ${modelId}`);
       return res.status(400).json({
-        error: API_ERROR_STATUS.GUARDRAIL_TRIPPED,
+        error: API_ERROR_STATUS.GUARDRAIL,
         message: `Invalid model ID specified: ${modelId}. Please choose one of the following: ${ACCEPTED_MODEL_IDS.join(", ")}`,
       });
     } else {
@@ -36,9 +37,10 @@ export const validateModel = (
     }
   } catch (error) {
     console.error("Error validating model in request:", error);
-    return res.status(500).json({
-      error: API_ERROR_STATUS.ERROR,
-      message: "Failed to validate model in request",
-    });
+    next(
+      new ServerError({
+        message: `Failed to validate model in request`,
+      }),
+    );
   }
 };

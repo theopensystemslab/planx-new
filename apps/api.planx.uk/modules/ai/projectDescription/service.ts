@@ -93,6 +93,7 @@ export const enhanceProjectDescription = async (
         "Prompt provided to model was determined to be invalid",
         error,
       );
+      return { ok: false, error: GATEWAY_STATUS.INVALID };
     } else if (NoContentGeneratedError.isInstance(error)) {
       console.error("Model failed to generate any content", error);
     } else if (NoObjectGeneratedError.isInstance(error)) {

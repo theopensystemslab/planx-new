@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
-import type { GatewayErrorStatus, ApiErrorStatus } from "../types.js";
+import type { ApiErrorStatus, GatewayFailureStatus } from "../types.js";
 
 export const projectDescriptionSchema = z.object({
   body: z.object({
@@ -18,7 +18,7 @@ interface ProjectDescriptionSuccess {
 }
 
 interface ProjectDescriptionFailure {
-  error: ApiErrorStatus | GatewayErrorStatus;
+  error: ApiErrorStatus | Omit<GatewayFailureStatus, "GATEWAY_ERROR">;
   message: string;
 }
 
