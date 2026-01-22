@@ -11,6 +11,8 @@ import {
   MapContainer,
   MapFooter,
 } from "@planx/components/shared/Preview/MapContainer";
+import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
+import { multiPolygon, point } from "@turf/helpers";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
@@ -47,34 +49,14 @@ export const DescriptionInput = styled(Box)(({ theme }) => ({
   paddingBottom: theme.spacing(2),
 }));
 
-interface Address {
+export interface GeocodeAutocompleteAddress {
   LPI: {
     LAT: number;
     LNG: number;
   };
 }
 
-interface AddressSelectionEventDetail {
-  address: Address;
-}
-
-// @ts-expect-error
-interface AddressSearchElement extends HTMLElement {
-  addEventListener(
-    type: "addressSelection",
-    listener: (event: CustomEvent<AddressSelectionEventDetail>) => void
-  ): void;
-  removeEventListener(
-    type: "addressSelection",
-    listener: (event: CustomEvent<AddressSelectionEventDetail>) => void
-  ): void;
-}
-
 export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
-  // `addressCenterPoint` is optionally used to position the map only (you shouldn't propose an existing address)
-  const addressSearchRef = useRef<AddressSearchElement>(null);
-  const [addressCenterPoint, setAddressCenterPoint] = useState<Address | undefined>(undefined);
-
   // `coordinates` refer to the point proposed/plotted by the user
   const [coordinates, setCoordinates] = useState<Coordinates | undefined>(
     props.initialProposedAddress
@@ -90,39 +72,49 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
     props.initialProposedAddress?.title ?? null,
   );
 
+  // `searchedPoint` is optionally used to position the map only (you shouldn't propose an existing address point)
+  const [searchedPoint, setSearchedPoint] = useState<GeocodeAutocompleteAddress | undefined>(undefined);
+  const [searchValidationError, setSearchValidationError] = useState<string | undefined>(undefined);
+
   const [environment, boundaryBBox] = useStore((state) => [
     state.previewEnvironment,
-    state.teamSettings.boundaryBBox,
+    state.teamSettings.boundaryBBox as unknown as any,
   ]);
 
   useEffect(() => {
-    const inputElement = addressSearchRef.current;
+    const geocodeAutocompleteSearchHandler = ({
+      detail,
+    }: {
+      detail: Record<"address", GeocodeAutocompleteAddress>;
+    }) => {
+      const selectedAddress = detail?.address;
+      if (selectedAddress) {
+        if (boundaryBBox) {
+          const searchedAddressIsWithinClip = booleanPointInPolygon(
+            point([selectedAddress.LPI.LNG, selectedAddress.LPI.LAT]),
+            multiPolygon(boundaryBBox?.geometry)
+          );
 
-    if (!inputElement) {
-      console.warn(
-        "<geocode-autocomplete> element not found for event listener."
-      );
-      return;
-    }
-
-    const handleAddressSelection = (
-      event: CustomEvent<AddressSelectionEventDetail>
-    ) => {
-      const { detail } = event;
-      console.debug("Address selected:", detail);
-      // TODO validate address within clip before setting state, if not error
-      setAddressCenterPoint(detail.address);
+          if (!searchedAddressIsWithinClip) {
+            setSearchValidationError("Searched address is outside of map bounds, try another address");
+            setSearchedPoint(undefined);
+          } else {
+            setSearchedPoint(selectedAddress)
+          }
+        }
+      }
     };
 
-    inputElement.addEventListener("addressSelection", handleAddressSelection);
+    const geocodeAutocomplete: any = document.getElementById("geocode-autocomplete");
+    geocodeAutocomplete?.addEventListener("addressSelection", geocodeAutocompleteSearchHandler);
 
-    return () => {
-      inputElement.removeEventListener(
+    return function cleanup() {
+      geocodeAutocomplete?.removeEventListener(
         "addressSelection",
-        handleAddressSelection
+        geocodeAutocompleteSearchHandler,
       );
     };
-  }, []);
+  }, [setSearchedPoint]);
 
   useEffect(() => {
     const geojsonChangeHandler = ({ detail: geojson }: any) => {
@@ -157,6 +149,18 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
     }
   }, [coordinates]);
 
+  const searchValidationErrorRef = useRef(searchValidationError);
+  useEffect(() => {
+    searchValidationErrorRef.current = searchValidationError;
+  }, [searchValidationError]);
+
+
+  useEffect(() => {
+    if (searchValidationErrorRef.current) {
+      setSearchValidationError(undefined);
+    }
+  }, [searchedPoint]);
+
   useEffect(() => {
     // when we have all required address parts, call setAddress to enable the "Continue" button
     if (siteDescription && coordinates) {
@@ -184,13 +188,12 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
   return (
     <>
       <ErrorWrapper
-        /** TODO handle error via props */
-        error={"Searched address is outside of map bounds, please try again"}
-        id="address-search"
+        error={searchValidationError}
+        id="geocode-autocomplete"
       >
         {/* @ts-ignore */}
         <geocode-autocomplete
-          id="address-search"
+          id="geocode-autocomplete"
           label="Search for an address to position the map"
           osProxyEndpoint={`${import.meta.env.VITE_APP_API_URL}/proxy/ordnance-survey`}
         />
@@ -211,9 +214,9 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
               id="plot-new-address-map"
               ariaLabelOlFixedOverlay="An interactive map for providing your site location"
               data-testid="map-web-component"
-              zoom={10}
-              latitude={addressCenterPoint && addressCenterPoint.LPI.LAT}
-              longitude={addressCenterPoint && addressCenterPoint.LPI.LNG}
+              zoom={searchedPoint ? 18 : 10}
+              latitude={searchedPoint && searchedPoint.LPI.LAT}
+              longitude={searchedPoint && searchedPoint.LPI.LNG}
               drawMode
               drawType="Point"
               drawGeojsonData={
