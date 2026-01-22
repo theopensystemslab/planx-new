@@ -24,7 +24,7 @@ const RECENT_ROW_HEIGHT = "32px";
 const RecentFlowContainer = styled(Box)(({ theme }) => ({
   display: "inline-flex",
   alignItems: "stretch",
-  backgroundColor: "#1a1a1a",
+  backgroundColor: theme.palette.text.primary,
   borderRadius: theme.spacing(0.5),
   padding: theme.spacing(0.75, 0),
   maxWidth: "100%",
@@ -49,7 +49,7 @@ const RecentFlowItem = styled(Box)<{ indent?: number }>(
     whiteSpace: "nowrap",
     marginLeft: indent * 8,
     padding: theme.spacing(0, 2, 0, 1),
-    color: "#ffffff",
+    color: theme.palette.common.white,
     height: RECENT_ROW_HEIGHT,
   }),
 );
