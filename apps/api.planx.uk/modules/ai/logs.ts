@@ -2,7 +2,7 @@ import { gql } from "graphql-request";
 
 import { $api } from "../../client/index.js";
 
-interface InsertAiAuditLog {
+interface InsertAiAuditLogResult {
   insertAiAuditLog: {
     id: string;
   };
@@ -36,7 +36,7 @@ export const logAiGatewayExchange = async (
   try {
     const {
       insertAiAuditLog: { id: auditLogId },
-    } = await $api.client.request<InsertAiAuditLog>(
+    } = await $api.client.request<InsertAiAuditLogResult>(
       gql`
         mutation InsertAiAuditLog(
           $planx_api_endpoint: String!
@@ -100,7 +100,7 @@ export const logAiGuardrailRejection = async (
   try {
     const {
       insertAiAuditLog: { id: auditLogId },
-    } = await $api.client.request<InsertAiAuditLog>(
+    } = await $api.client.request<InsertAiAuditLogResult>(
       gql`
         mutation InsertAiAuditLog(
           $planx_api_endpoint: String!
