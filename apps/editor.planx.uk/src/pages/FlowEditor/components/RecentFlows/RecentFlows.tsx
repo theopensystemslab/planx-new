@@ -19,7 +19,7 @@ export interface RecentFlowsProps {
   flows: RecentFlow[];
 }
 
-const RECENT_ROW_HEIGHT = "32px";
+const RECENT_ROW_HEIGHT = "26px";
 
 const RecentFlowContainer = styled(Box)(({ theme }) => ({
   display: "inline-flex",
@@ -36,7 +36,7 @@ const RecentFlowContainer = styled(Box)(({ theme }) => ({
 const RecentFlowList = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
-  flex: 1,
+  gap: theme.spacing(0.25),
   minWidth: 0,
   paddingLeft: theme.spacing(0.25),
 }));
@@ -77,7 +77,7 @@ const ToggleWrap = styled(Box)(() => ({
 
 const ToggleButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.common.white,
-  padding: theme.spacing(0.4, 1),
+  padding: theme.spacing(0.1, 1),
   borderLeft: `1px solid ${theme.palette.border.main}`,
   alignSelf: "stretch",
   alignItems: "flex-start",
