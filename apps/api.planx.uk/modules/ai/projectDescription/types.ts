@@ -1,13 +1,19 @@
 import { z } from "zod";
 
 import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
-import type { ApiErrorStatus, GatewayFailureStatus } from "../types.js";
+import { ACCEPTED_MODEL_IDS } from "../constants.js";
+import {
+  GATEWAY_STATUS,
+  GATEWAY_SUCCESS_STATUSES,
+  type ApiErrorStatus,
+  type GatewayFailureStatus,
+} from "../types.js";
 
 export const projectDescriptionSchema = z.object({
   body: z.object({
     original: z.string().trim().max(250),
-    modelId: z.string().trim(),
-    flowId: z.string().uuid().optional(),
+    flowId: z.string().uuid(),
+    modelId: z.enum(ACCEPTED_MODEL_IDS).default("google/gemini-2.5-pro"),
     sessionId: z.string().uuid().optional(),
   }),
 });
@@ -26,3 +32,8 @@ export type ProjectDescriptionController = ValidatedRequestHandler<
   typeof projectDescriptionSchema,
   ProjectDescriptionSuccess | ProjectDescriptionFailure
 >;
+
+export const projectDescriptionObjectResultSchema = z.object({
+  enhancedDescription: z.string().trim().max(250),
+  status: z.enum([...GATEWAY_SUCCESS_STATUSES, GATEWAY_STATUS.INVALID]),
+});

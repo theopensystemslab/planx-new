@@ -8,15 +8,11 @@ import {
   NoContentGeneratedError,
   NoObjectGeneratedError,
 } from "ai";
-import { z } from "zod";
 
 import { logAiGatewayExchange } from "../logs.js";
 import { getModel } from "../utils.js";
-import {
-  type GatewayResult,
-  GATEWAY_STATUS,
-  GATEWAY_SUCCESS_STATUSES,
-} from "../types.js";
+import { type GatewayResult, GATEWAY_STATUS } from "../types.js";
+import { projectDescriptionObjectResultSchema } from "./types.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -36,8 +32,8 @@ export const enhanceProjectDescription = async (
   original_description: string,
   endpoint: string,
   modelId: string,
+  flowId: string,
   sessionId?: string,
-  flowId?: string,
 ): Promise<GatewayResult> => {
   try {
     const startTime = Date.now();
@@ -48,21 +44,15 @@ export const enhanceProjectDescription = async (
     if (!result.model) {
       return { ok: false, error: GATEWAY_STATUS.ERROR };
     }
-
     const prompt = `<user_input>${original_description}</user_input>`;
     const res = await generateObject({
       model: result.model,
       output: "object",
-      schema: z.object({
-        enhancedDescription: z.string().trim().max(250),
-        status: z.enum([...GATEWAY_SUCCESS_STATUSES, GATEWAY_STATUS.INVALID]),
-      }),
+      schema: projectDescriptionObjectResultSchema,
       system: loadSystemPrompt(),
       prompt,
     });
-
     const responseTimeMs = Date.now() - startTime;
-    console.debug("Full response from gateway:", res);
 
     // log the exchange w/ Vercel AI Gateway to the audit table in db
     await logAiGatewayExchange({
@@ -78,8 +68,8 @@ export const enhanceProjectDescription = async (
       vercelGenerationId:
         (res.providerMetadata?.gateway?.generationId as string) || undefined,
       responseTimeMs,
-      sessionId,
       flowId,
+      sessionId,
     });
 
     const object = res.object;

@@ -20,8 +20,8 @@ export const projectDescriptionController: ProjectDescriptionController =
         original,
         endpoint,
         modelId,
-        sessionId,
         flowId,
+        sessionId,
       );
       if (result.ok) {
         if (result.value) {

@@ -31,7 +31,6 @@ export const detectPromptInjection =
 
       let internalMsg;
       let responseMsg;
-
       // check for one of our known injection patterns
       for (const pattern of INJECTION_PATTERNS) {
         if (pattern.test(input)) {
@@ -61,7 +60,6 @@ export const detectPromptInjection =
       if (!internalMsg) {
         return next();
       }
-
       // log the rejection of the request due to guardrail tripping on server and in db audit table
       console.warn(internalMsg);
       logAiGuardrailRejection({
@@ -70,8 +68,8 @@ export const detectPromptInjection =
         prompt: input,
         guardrailReason: GUARDRAIL_REJECTION_REASON.PROMPT_INJECTION,
         guardrailMessage: internalMsg,
-        sessionId: res.locals.parsedReq.body.sessionId,
         flowId: res.locals.parsedReq.body.flowId,
+        sessionId: res.locals.parsedReq.body.sessionId,
       });
       return res.status(400).json({
         error: API_ERROR_STATUS.GUARDRAIL,

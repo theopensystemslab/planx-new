@@ -12,8 +12,8 @@ interface aiAuditLogArgsCommon {
   endpoint: string;
   modelId: string;
   prompt: string;
+  flowId: string;
   sessionId?: string;
-  flowId?: string;
 }
 
 interface aiGatewayExchangeLogArgs extends aiAuditLogArgsCommon {
@@ -48,8 +48,8 @@ export const logAiGatewayExchange = async (
           $cost_usd: float8
           $vercel_generation_id: String
           $response_time_ms: Int
+          $flow_id: uuid!
           $session_id: uuid
-          $flow_id: uuid
         ) {
           insertAiAuditLog: insert_ai_gateway_audit_log_one(
             object: {
@@ -62,8 +62,8 @@ export const logAiGatewayExchange = async (
               cost_usd: $cost_usd
               vercel_generation_id: $vercel_generation_id
               response_time_ms: $response_time_ms
-              session_id: $session_id
               flow_id: $flow_id
+              session_id: $session_id
             }
           ) {
             id
@@ -80,8 +80,8 @@ export const logAiGatewayExchange = async (
         cost_usd: args.costUsd,
         vercel_generation_id: args.vercelGenerationId,
         response_time_ms: args.responseTimeMs,
-        session_id: args.sessionId,
         flow_id: args.flowId,
+        session_id: args.sessionId,
       },
     );
 
@@ -109,8 +109,8 @@ export const logAiGuardrailRejection = async (
           $guardrail_tripped: Boolean!
           $guardrail_reason: String
           $guardrail_message: String
+          $flow_id: uuid!
           $session_id: uuid
-          $flow_id: uuid
         ) {
           insertAiAuditLog: insert_ai_gateway_audit_log_one(
             object: {
@@ -120,8 +120,8 @@ export const logAiGuardrailRejection = async (
               guardrail_tripped: $guardrail_tripped
               guardrail_reason: $guardrail_reason
               guardrail_message: $guardrail_message
-              session_id: $session_id
               flow_id: $flow_id
+              session_id: $session_id
             }
           ) {
             id
@@ -135,8 +135,8 @@ export const logAiGuardrailRejection = async (
         guardrail_tripped: true,
         guardrail_reason: args.guardrailReason,
         guardrail_message: args.guardrailMessage,
-        session_id: args.sessionId,
         flow_id: args.flowId,
+        session_id: args.sessionId,
       },
     );
 

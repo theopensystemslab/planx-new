@@ -14,25 +14,26 @@ components:
           type: string
           description: The original project description
           maxLength: 250
+        flowId:
+          type: string
+          format: uuid
+          description: Flow ID for logging and audit purposes
         modelId:
           type: string
           description: Optional ID of the AI model to prompt via AI Gateway
-          # this list should be kept in sync with ACCEPTED_MODEL_IDS in ./middleware/validateModel.ts
+          # this list should be kept in sync with ACCEPTED_MODEL_IDS in ./constants.ts
           enum:
             - google/gemini-2.5-pro
             - google/gemini-2.5-flash
             - google/gemini-3-pro-preview
             - google/gemini-3-flash
-        flowId:
-          type: string
-          format: uuid
-          description: Optional flow ID for logging and audit purposes
         sessionId:
           type: string
           format: uuid
           description: Optional session ID for logging and audit purposes
       required:
         - original
+        - flowId
     EnhanceSuccess:
       type: object
       properties:
@@ -92,8 +93,4 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "500":
-          description: Server error - either in the API or the upstream AI gateway
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
+          $ref: "#/components/responses/ErrorMessage"
