@@ -44,10 +44,9 @@ const RecentFlowItem = styled(Box)<{ indent?: number }>(
   ({ indent = 0, theme }) => ({
     display: "flex",
     alignItems: "center",
-    gap: theme.spacing(0.5),
     whiteSpace: "nowrap",
-    marginLeft: indent * 8,
-    padding: theme.spacing(0, 1.5, 0, 1),
+    paddingLeft: indent > 0 ? theme.spacing(5.5 + indent) : theme.spacing(1),
+    paddingRight: theme.spacing(1.5),
     color: theme.palette.common.white,
     height: RECENT_ROW_HEIGHT,
   }),
@@ -58,13 +57,13 @@ const RecentFlowLink = styled(Link)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   flexWrap: "nowrap",
-  gap: theme.spacing(0.5),
+  gap: theme.spacing(0.25),
   textDecoration: "none",
-  "& span": {
+  "& .flow-name": {
     textDecoration: "underline",
     color: theme.palette.common.white,
   },
-  "&:hover span": {
+  "&:hover .flow-name": {
     textDecorationThickness: "2px",
   },
 }));
@@ -102,11 +101,15 @@ const RecentFlows: React.FC<RecentFlowsProps> = ({ flows }) => {
           >
             <RecentFlowLink variant="body3" href={flow.href}>
               {index === 0 ? (
-                "back to "
+                <Box component="span" sx={{ mr: 0.25 }}>
+                  back to
+                </Box>
               ) : (
                 <TurnSharpLeftIcon sx={{ mr: 0.25 }} fontSize="small" />
               )}
-              <span>{flow.flow}</span>
+              <Box component="span" className="flow-name">
+                {flow.flow}
+              </Box>
             </RecentFlowLink>
           </RecentFlowItem>
         ))}
