@@ -1,4 +1,3 @@
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Close from "@mui/icons-material/Close";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import TurnSharpLeftIcon from "@mui/icons-material/TurnSharpLeft";
@@ -48,21 +47,22 @@ const RecentFlowItem = styled(Box)<{ indent?: number }>(
     gap: theme.spacing(0.5),
     whiteSpace: "nowrap",
     marginLeft: indent * 8,
-    padding: theme.spacing(0, 2, 0, 1),
+    padding: theme.spacing(0, 1.5, 0, 1),
     color: theme.palette.common.white,
     height: RECENT_ROW_HEIGHT,
   }),
 );
 
 const RecentFlowLink = styled(Link)(({ theme }) => ({
-  color: theme.palette.common.white,
+  color: theme.palette.secondary.dark,
   display: "flex",
   alignItems: "center",
   flexWrap: "nowrap",
-  gap: theme.spacing(0.15),
+  gap: theme.spacing(0.5),
   textDecoration: "none",
   "& span": {
     textDecoration: "underline",
+    color: theme.palette.common.white,
   },
   "&:hover span": {
     textDecorationThickness: "2px",
@@ -90,7 +90,7 @@ const RecentFlows: React.FC<RecentFlowsProps> = ({ flows }) => {
     setIsExpanded((prev) => !prev);
   };
 
-  const visibleFlows = isExpanded ? flows : flows.slice(0, 1);
+  const visibleFlows = isExpanded ? [...flows].reverse() : flows.slice(0, 1);
 
   return (
     <RecentFlowContainer>
@@ -101,9 +101,11 @@ const RecentFlows: React.FC<RecentFlowsProps> = ({ flows }) => {
             indent={index}
           >
             <RecentFlowLink variant="body3" href={flow.href}>
-              <TurnSharpLeftIcon sx={{ mr: 0.25 }} fontSize="small" />
-              {flow.team}
-              <ChevronRightIcon fontSize="small" />
+              {index === 0 ? (
+                "back to "
+              ) : (
+                <TurnSharpLeftIcon sx={{ mr: 0.25 }} fontSize="small" />
+              )}
               <span>{flow.flow}</span>
             </RecentFlowLink>
           </RecentFlowItem>
