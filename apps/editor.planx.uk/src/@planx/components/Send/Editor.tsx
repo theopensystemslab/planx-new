@@ -31,7 +31,7 @@ import { WarningContainer } from "../shared/Preview/WarningContainer";
 import { EditorProps } from "../shared/types";
 import { useFlowEmailId } from "./hooks/useFlowEmailId";
 import { useTeamSubmissionIntegrations } from "./hooks/useGetTeamSubmissionIntegrations";
-import { useInsertFlowIntegration } from "./hooks/useInsertFlowIntegrations";
+import { useInsertSubmissionIntegration } from "./hooks/useInsertSubmissionIntegration";
 import { useUpdateFlowIntegration } from "./hooks/useUpdateFlowIntegration";
 import { parseSend, Send, validationSchema } from "./model";
 import { GetFlowEmailIdQuery } from "./types";
@@ -46,12 +46,12 @@ const SendComponent: React.FC<Props> = (props) => {
     {
       initialValues: parseSend(props.node?.data),
       onSubmit: async (newValues) => {
+        console.log("onSubmit running");
         if (props.handleSubmit) {
-          await handleInsertOrUpdate(
+          await handleUpdate(
             teamId,
             newValues,
             existingEmailId,
-            defaultEmail,
             id,
             refetchFlowData,
           );
@@ -83,33 +83,77 @@ const SendComponent: React.FC<Props> = (props) => {
 
   const { data, loading, error } = useTeamSubmissionIntegrations(teamId);
   const emailOptions = data?.submissionIntegrations || [];
-  const defaultEmail = emailOptions.find(
-    (email: any) => email.defaultEmail === true,
-  );
 
-  const [insertFlowIntegration] = useInsertFlowIntegration();
+  useEffect(() => {
+    formik.setFieldValue("submissionEmailId", existingEmailId);
+  }, [existingEmailId]);
+
+  const [insertSubmissionIntegration] = useInsertSubmissionIntegration();
   const [updateFlowIntegration] = useUpdateFlowIntegration();
 
-  const handleInsertOrUpdate = async (
+  const handleUpdate = async (
     teamId: number,
     newValues: Send,
     existingEmailId: string | undefined,
-    defaultEmail: SubmissionEmailInput | undefined,
     id: string,
     refetchFlowData: () => Promise<ApolloQueryResult<GetFlowEmailIdQuery>>,
   ) => {
-    const selectedEmailId = newValues.submissionEmailId || defaultEmail?.id;
+    console.log("handleUpdate called");
+    console.log({ newEmail });
+    console.log({ newValues });
 
-    if (!existingEmailId && selectedEmailId) {
-      await insertFlowIntegration({
-        variables: {
-          flowId: id,
-          emailId: selectedEmailId,
-          teamId: teamId,
-        },
-      });
+    if (
+      typeof formik.values.newEmail === "string" &&
+      formik.values.newEmail !== ""
+    ) {
+      const { data: insertData, errors: insertErrors } =
+        await insertSubmissionIntegration({
+          variables: {
+            teamId: teamId,
+            submissionEmail: formik.values.newEmail,
+            defaultEmail: false,
+          },
+        });
+      console.log({ insertData });
 
-      await refetchFlowData();
+      if (insertErrors || !insertData?.insert_submission_integrations_one?.id) {
+        throw new Error("Failed to insert new submission integration.");
+      }
+
+      const newEmailId = insertData.insert_submission_integrations_one.id;
+      console.log({ id, newEmailId });
+
+      try {
+        const { data: updateData, errors: updateErrors } =
+          await updateFlowIntegration({
+            variables: {
+              flowId: id,
+              emailId: newEmailId,
+            },
+          });
+
+        if (
+          updateErrors ||
+          updateData?.update_flow_integrations?.affected_rows === 0
+        ) {
+          console.error("Failed to update flow integration:", updateErrors);
+          throw new Error("Failed to update flow integration.");
+        }
+
+        console.log("Flow integration updated successfully:", updateData);
+        const refetchedData = await refetchFlowData();
+        console.log({ refetchedData });
+        if (refetchedData?.data?.flowIntegrations?.[0]?.emailId) {
+          formik.setFieldValue(
+            "submissionEmailId",
+            refetchedData.data.flowIntegrations[0].emailId,
+          );
+        }
+      } catch (error) {
+        console.error("Error during updateFlowIntegration mutation:", error);
+        throw error;
+      }
+
       return;
     }
 
@@ -118,30 +162,40 @@ const SendComponent: React.FC<Props> = (props) => {
       newValues.submissionEmailId &&
       existingEmailId !== newValues.submissionEmailId
     ) {
-      await updateFlowIntegration({
-        variables: {
-          flowId: id,
-          emailId: newValues.submissionEmailId,
-        },
-      });
+      try {
+        const { data: updateData, errors: updateErrors } =
+          await updateFlowIntegration({
+            variables: {
+              flowId: id,
+              emailId: newValues.submissionEmailId,
+            },
+          });
 
-      await refetchFlowData();
+        if (
+          updateErrors ||
+          updateData?.update_flow_integrations?.affected_rows === 0
+        ) {
+          console.error("Failed to update flow integration:", updateErrors);
+          throw new Error("Failed to update flow integration.");
+        }
+
+        console.log("Flow integration updated successfully:", updateData);
+        const refetchedData = await refetchFlowData();
+      } catch (error) {
+        console.error("Error during updateFlowIntegration mutation:", error);
+        throw error;
+      }
+
       return;
     }
   };
-
-  useEffect(() => {
-    if (!formik.values.submissionEmailId && defaultEmail?.id) {
-      formik.setFieldValue("submissionEmailId", defaultEmail.id);
-    }
-  }, [defaultEmail?.id, formik]);
 
   const handleSelectChange = (event: SelectChangeEvent<unknown>) => {
     const selectedValue = event.target.value as string;
 
     if (selectedValue === "new-email") {
       setIsNewEmailSelected(true);
-      formik.setFieldValue("submissionEmailId", "");
+      formik.setFieldValue("submissionEmailId", "new-email");
     } else {
       setIsNewEmailSelected(false);
       formik.setFieldValue("submissionEmailId", selectedValue);
