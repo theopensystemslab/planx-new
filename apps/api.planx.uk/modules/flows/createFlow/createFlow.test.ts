@@ -149,7 +149,7 @@ describe("success", () => {
         team_id: 1,
       },
       data: {
-        submission_integrations: [
+        submissionIntegrations: [
           {
             id: "default-email-id",
             team_id: 1,

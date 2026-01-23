@@ -65,7 +65,7 @@ beforeEach(() => {
     name: "GetDefaultEmail",
     matchOnVariables: false,
     data: {
-      submission_integrations: [
+      submissionIntegrations: [
         {
           id: "default-email-id",
         },
