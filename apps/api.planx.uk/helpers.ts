@@ -152,12 +152,12 @@ const createFlow = async ({
     );
 
     // Fetch the default email id from submission_integrations table
-    const { submission_integrations } = await $client.request<{
-      submission_integrations: { id: string }[];
+    const { submissionIntegrations } = await $client.request<{
+      submissionIntegrations: { id: string }[];
     }>(
       gql`
         query GetDefaultEmail($team_id: Int!) {
-          submission_integrations(
+          submissionIntegrations: submission_integrations(
             where: { team_id: { _eq: $team_id }, default_email: { _eq: true } }
             limit: 1
           ) {
@@ -170,8 +170,8 @@ const createFlow = async ({
       },
     );
 
-    const emailId = submission_integrations.length
-      ? submission_integrations[0].id
+    const emailId = submissionIntegrations.length
+      ? submissionIntegrations[0].id
       : null;
 
     // Insert a new record into the flow_integrations table
