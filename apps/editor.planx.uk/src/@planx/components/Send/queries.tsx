@@ -8,18 +8,23 @@ export const GET_FLOW_EMAIL_ID = gql`
   }
 `;
 
-export const INSERT_FLOW_INTEGRATION = gql`
-  mutation InsertFlowIntegration(
-    $flowId: uuid!
+export const INSERT_SUBMISSION_INTEGRATION = gql`
+  mutation InsertSubmissionIntegration(
     $teamId: Int!
-    $emailId: uuid!
+    $submissionEmail: String!
+    $defaultEmail: Boolean!
   ) {
-    insert_flow_integrations_one(
-      object: { flow_id: $flowId, email_id: $emailId, team_id: $teamId }
+    insert_submission_integrations_one(
+      object: {
+        team_id: $teamId
+        submission_email: $submissionEmail
+        default_email: $defaultEmail
+      }
     ) {
-      flow_id
-      email_id
       team_id
+      id
+      submission_email
+      default_email
     }
   }
 `;
