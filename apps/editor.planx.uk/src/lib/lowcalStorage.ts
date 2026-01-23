@@ -90,7 +90,12 @@ class LowcalStorage {
         email: useStore.getState().saveToEmail || "",
         flowId: useStore.getState().id,
       },
-      context: getSessionContext(id),
+      context: {
+        ...getSessionContext(id),
+        // Do not retry failed requests (e.g. due to network connectivity or timeouts)
+        // This prevents older, failed, updates from overwriting the most recent requests
+        skipRetry: true,
+      },
     });
   });
 }
