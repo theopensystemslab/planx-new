@@ -37,7 +37,7 @@ const meta = {
     msw: {
       handlers: [
         http.post("*/ai/project-description/enhance", async () => {
-          await delay(3_000);
+          await delay(6_000);
           return HttpResponse.json(
             {
               original: ORIGINAL,
