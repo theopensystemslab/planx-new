@@ -63,12 +63,12 @@ export const publishFlow = async (
   const { client: $client } = getClient();
 
   // Fetch submissionEmailId from flow_integrations table
-  const { flow_integrations } = await $client.request<{
-    flow_integrations: { email_id: string }[];
+  const { flowIntegrations } = await $client.request<{
+    flowIntegrations: { email_id: string }[];
   }>(
     gql`
       query GetSubmissionEmail($flow_id: uuid!) {
-        flow_integrations(
+        flowIntegrations: flow_integrations(
           where: { flow_id: { _eq: $flow_id } }
           limit: 1
         ) {
@@ -81,8 +81,8 @@ export const publishFlow = async (
     },
   );
 
-  const submissionEmailId = flow_integrations.length
-    ? flow_integrations[0].email_id
+  const submissionEmailId = flowIntegrations.length
+    ? flowIntegrations[0].email_id
     : null;
 
   const response = await $client.request<PublishFlow>(
@@ -128,7 +128,7 @@ export const publishFlow = async (
       has_sections: hasSections,
       has_pay_component: hasVisiblePayComponent,
       service_charge_enabled: hasEnabledServiceCharge,
-      submission_email_id: submissionEmailId
+      submission_email_id: submissionEmailId,
     },
   );
 
