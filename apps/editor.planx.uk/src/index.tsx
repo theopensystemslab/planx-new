@@ -5,7 +5,7 @@ import "./app.css";
 import { ApolloProvider } from "@apollo/client";
 import CssBaseline from "@mui/material/CssBaseline";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
-import { MyMap } from "@opensystemslab/map";
+import { MyMap, GeocodeAutocomplete } from "@opensystemslab/map";
 import { QueryClientProvider } from "@tanstack/react-query"
 import { ToastContextProvider } from "contexts/ToastContext";
 import { getCookie, setCookie } from "lib/cookie";
@@ -34,6 +34,10 @@ const root = createRoot(container);
 
 if (!window.customElements.get("my-map")) {
   window.customElements.define("my-map", MyMap);
+}
+
+if (!window.customElements.get("geocode-autocomplete")) {
+  window.customElements.define("geocode-autocomplete", GeocodeAutocomplete);
 }
 
 // Refresh window if user hits "Failed to fetch dynamically imported module" due to renamed assets following re-build after deploy
