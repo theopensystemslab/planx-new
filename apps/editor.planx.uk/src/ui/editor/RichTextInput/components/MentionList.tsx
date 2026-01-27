@@ -5,10 +5,10 @@ import React, {
   useState,
 } from "react";
 
-import { passportClassName } from "../tiptapExtensions";
-import { useVariablesStore } from "../utils";
 import { MentionItems, MentionItemsButton, MentionItemsEmpty } from "../styles";
+import { passportClassName } from "../tiptapExtensions";
 import { MentionListProps } from "../types";
+import { useVariablesStore } from "../utils";
 
 // Implemented based on the mention plugin example code snippets: https://tiptap.dev/api/nodes/mention
 export const MentionList = forwardRef((props: MentionListProps, ref) => {

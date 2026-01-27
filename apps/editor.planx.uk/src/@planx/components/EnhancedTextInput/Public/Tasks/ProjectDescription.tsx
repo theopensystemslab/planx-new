@@ -80,16 +80,21 @@ const ProjectDescription: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (error) {
-      setFieldValue("status", "error");
-      setFieldValue("error", error.data.error);
+      setValues({
+        status: "error",
+        original: initialValueRef.current,
+        enhanced: null,
+        error: error.data.error,
+        userInput: initialValueRef.current,
+      });
     }
-  }, [error, setFieldValue]);
+  }, [error, setValues]);
 
   if (isPending) return <LoadingSkeleton />;
 
   if (error) {
     switch (error.data.error) {
-      case "INVALID_DESCRIPTION":
+      case "INVALID_INPUT":
         return (
           <ErrorCard
             title="Invalid description"
@@ -97,11 +102,19 @@ const ProjectDescription: React.FC<Props> = (props) => {
           />
         );
 
-      case "SERVICE_UNAVAILABLE":
+      case "TOO_MANY_REQUESTS":
+        return (
+          <ErrorCard
+            title="Rate limit exceeded"
+            description="You've sent too many requests to our AI service. We'll use your original project description."
+          />
+        );
+
+      default:
         return (
           <ErrorCard
             title="Service unavailable"
-            description="We weren't able to generate a description based on your input. We'll use your original project description."
+            description="Unable to generate enhanced project description. We'll use your original project description."
           />
         );
     }

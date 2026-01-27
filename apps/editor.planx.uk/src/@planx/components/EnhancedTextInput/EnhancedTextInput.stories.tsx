@@ -78,7 +78,7 @@ export const Invalid = {
           await delay(3_000);
           return HttpResponse.json(
             {
-              error: "INVALID_DESCRIPTION",
+              error: "INVALID_INPUT",
               message:
                 "The description doesn't appear to be related to a planning application.",
             },
@@ -98,11 +98,29 @@ export const ServiceUnavailable = {
           await delay(3_000);
           return HttpResponse.json(
             {
-              error: "SERVICE_UNAVAILABLE",
+              error: "GATEWAY_ERROR",
               message:
                 "There was an error with the request to upstream AI gateway",
             },
             { status: 400 },
+          );
+        }),
+      ],
+    },
+  },
+} satisfies Story;
+
+export const RateLimitExceeded = {
+  parameters: {
+    msw: {
+      handlers: [
+        http.post("*/ai/project-description/enhance", async () => {
+          await delay(3_000);
+          return HttpResponse.json(
+            {
+              error: "TOO_MANY_REQUESTS",
+            },
+            { status: 429 },
           );
         }),
       ],
