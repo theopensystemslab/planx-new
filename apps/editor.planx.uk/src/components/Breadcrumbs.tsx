@@ -35,7 +35,6 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
     (state) => state.previewEnvironment === "standalone",
   );
   const flowSlug = useStore((state) => state.flowSlug);
-  const flowName = useStore((state) => state.flowName);
   const flowStatus = useStore((state) => state.flowStatus);
   const canUserEditTeam = useStore((state) => state.canUserEditTeam);
 
@@ -77,7 +76,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
               {...(isStandalone && { target: "_blank" })}
               variant="body1"
             >
-              {flowName || flowSlug}
+              {flowSlug}
             </BreadcrumbsLink>
           </>
         )}
