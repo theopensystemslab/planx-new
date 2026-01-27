@@ -102,6 +102,7 @@ describe("Header Component - Editor Route", () => {
         teamTheme: mockTeam1.theme,
         teamSlug: mockTeam1.slug,
         flowName: "test-flow",
+        flowSlug: "test-flow",
         user: {
           firstName: "Test",
           lastName: "User",
