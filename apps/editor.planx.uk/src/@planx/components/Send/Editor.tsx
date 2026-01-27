@@ -272,6 +272,19 @@ const SendComponent: React.FC<Props> = (props) => {
               </InputRow>
               {hasFeatureFlag("MULTIPLE_SUBMISSION_SEND_COMPONENT") ? (
                 <>
+                  <Typography variant="body2" mb={2}>
+                    You can only change or add submission emails from the Send
+                    component. To manage, delete or update submission emails,
+                    please visit your{" "}
+                    <Link
+                      href="#" // TODO: update link after routing work merged
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      team settings
+                    </Link>{" "}
+                    section.
+                  </Typography>
                   <InputRow>
                     {formik.values.destinations.includes("email") && (
                       <>
