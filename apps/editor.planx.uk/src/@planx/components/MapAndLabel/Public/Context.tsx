@@ -11,7 +11,7 @@ import {
 import { FormikProps, useFormik } from "formik";
 import { Feature, FeatureCollection } from "geojson";
 import { GeoJSONChange, GeoJSONChangeEvent, useGeoJSONChange } from "lib/gis";
-import { get } from "lodash";
+import { get, omit } from "lodash";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, {
   createContext,
@@ -107,7 +107,10 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
 
       // This key will only be referenced at the individual breadcrumb level,
       //   it's okay if multiple MapAndLabels overwrite eachother when the passport is computed
-      extraPassportData["_mapAndLabelNodeData"] = props;
+      // Do not save redundant `previouslySubmittedData` key
+      extraPassportData["_mapAndLabelNodeData"] = omit(props, [
+        "previouslySubmittedData",
+      ]);
 
       handleSubmit?.({
         data: {
