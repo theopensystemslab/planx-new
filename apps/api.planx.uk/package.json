@@ -16,6 +16,7 @@
     "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#06aa962",
     "@types/isomorphic-fetch": "^0.0.36",
     "adm-zip": "^0.5.10",
+    "ai": "^5.0.106",
     "axios": "^1.12.2",
     "body-parser": "^2.2.1",
     "cookie-parser": "^1.4.7",
@@ -66,9 +67,10 @@
     "test": "TZ=Europe/London vitest run",
     "test:coverage": "TZ=Europe/London vitest run --coverage && open coverage/lcov-report/index.html",
     "test:watch": "TZ=Europe/London vitest --ui --coverage",
-    "build": "rimraf ./dist && npx tsc && pnpm copy-swagger-files",
+    "build": "rimraf ./dist && npx tsc && pnpm copy-swagger-files && pnpm copy-prompt-files",
     "prepare": "cd ../.. && husky install apps/api.planx.uk/.husky",
-    "copy-swagger-files": "copyfiles '**/docs.yaml' dist"
+    "copy-swagger-files": "copyfiles '**/docs.yaml' dist",
+    "copy-prompt-files": "copyfiles 'modules/ai/**/*.md' dist"
   },
   "lint-staged": {
     "**/*.{js,ts}": [
