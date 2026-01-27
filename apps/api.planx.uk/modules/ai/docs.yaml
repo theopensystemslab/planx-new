@@ -14,8 +14,26 @@ components:
           type: string
           description: The original project description
           maxLength: 250
+        flowId:
+          type: string
+          format: uuid
+          description: Flow ID for logging and audit purposes
+        modelId:
+          type: string
+          description: Optional ID of the AI model to prompt via AI Gateway
+          # this list should be kept in sync with ACCEPTED_MODEL_IDS in ./constants.ts
+          enum:
+            - google/gemini-2.5-pro
+            - google/gemini-2.5-flash
+            - google/gemini-3-pro-preview
+            - google/gemini-3-flash
+        sessionId:
+          type: string
+          format: uuid
+          description: Optional session ID for logging and audit purposes
       required:
         - original
+        - flowId
     EnhanceSuccess:
       type: object
       properties:
@@ -24,10 +42,26 @@ components:
           description: The original description that was submitted
         enhanced:
           type: string
-          description: The AI-enhanced suggestion
+          description: The AI-enhanced description
       required:
         - original
-        - suggested
+        - enhanced
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          # see ./types.ts for source of these values
+          enum:
+            - INVALID_INPUT
+            - TOO_MANY_REQUESTS
+            - GUARDRAIL_TRIPPED
+        message:
+          type: string
+      required:
+        - error
+        - message
+
 paths:
   /ai/project-description/enhance:
     post:
@@ -41,6 +75,7 @@ paths:
               $ref: "#/components/schemas/EnhanceRequest"
       responses:
         "200":
+          description: Successfully enhanced the project description
           content:
             application/json:
               schema:
@@ -50,34 +85,12 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    enum: INVALID_DESCRIPTION
-                  message:
-                    type: string
-                required:
-                  - error
-                  - message
+                $ref: "#/components/schemas/ErrorResponse"
         "429":
           description: Rate limit exceeded
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        "503":
-          description: The upstream AI service is temporarily unavailable
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    enum: SERVICE_UNAVAILABLE
-                  message:
-                    type: string
-                required:
-                  - error
-                  - message
+        "500":
+          $ref: "#/components/responses/ErrorMessage"

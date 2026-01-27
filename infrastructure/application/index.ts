@@ -393,6 +393,10 @@ export = async () => {
             value: pulumi.interpolate`${apiBucket.bucket}`,
           },
           {
+            name: "AI_GATEWAY_API_KEY",
+            value: config.requireSecret("ai-gateway-api-key"),
+          },
+          {
             name: "FILE_API_KEY",
             value: config.requireSecret("file-api-key"),
           },
