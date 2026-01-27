@@ -56,6 +56,7 @@ import { Route as PublicTeamFlowPayNotFoundRouteImport } from './routes/_public/
 import { Route as PublicTeamFlowDraftViewApplicationRouteImport } from './routes/_public/$team/$flow/draft/view-application'
 import { Route as PublicTeamFlowSessionIdDownloadApplicationRouteImport } from './routes/_public/$team/$flow/$sessionId/download-application'
 import { Route as AuthenticatedTeamFlowSettingsVisibilityRouteImport } from './routes/_authenticated/$team/$flow/settings/visibility'
+import { Route as AuthenticatedTeamFlowSettingsTemplatesRouteImport } from './routes/_authenticated/$team/$flow/settings/templates'
 import { Route as AuthenticatedTeamFlowSettingsLegalDisclaimerRouteImport } from './routes/_authenticated/$team/$flow/settings/legal-disclaimer'
 import { Route as AuthenticatedTeamFlowSettingsAboutRouteImport } from './routes/_authenticated/$team/$flow/settings/about'
 import { Route as PublicTeamFlowPayInviteIndexRouteImport } from './routes/_public/$team/$flow/pay/invite/index'
@@ -343,6 +344,12 @@ const AuthenticatedTeamFlowSettingsVisibilityRoute =
     path: '/visibility',
     getParentRoute: () => AuthenticatedTeamFlowSettingsRouteRoute,
   } as any)
+const AuthenticatedTeamFlowSettingsTemplatesRoute =
+  AuthenticatedTeamFlowSettingsTemplatesRouteImport.update({
+    id: '/templates',
+    path: '/templates',
+    getParentRoute: () => AuthenticatedTeamFlowSettingsRouteRoute,
+  } as any)
 const AuthenticatedTeamFlowSettingsLegalDisclaimerRoute =
   AuthenticatedTeamFlowSettingsLegalDisclaimerRouteImport.update({
     id: '/legal-disclaimer',
@@ -495,6 +502,7 @@ export interface FileRoutesByFullPath {
   '/$team/settings/': typeof AuthenticatedTeamSettingsIndexRoute
   '/$team/$flow/settings/about': typeof AuthenticatedTeamFlowSettingsAboutRoute
   '/$team/$flow/settings/legal-disclaimer': typeof AuthenticatedTeamFlowSettingsLegalDisclaimerRoute
+  '/$team/$flow/settings/templates': typeof AuthenticatedTeamFlowSettingsTemplatesRoute
   '/$team/$flow/settings/visibility': typeof AuthenticatedTeamFlowSettingsVisibilityRoute
   '/$team/$flow/$sessionId/download-application': typeof PublicTeamFlowSessionIdDownloadApplicationRoute
   '/$team/$flow/draft/view-application': typeof PublicTeamFlowDraftViewApplicationRoute
@@ -555,6 +563,7 @@ export interface FileRoutesByTo {
   '/$team/settings': typeof AuthenticatedTeamSettingsIndexRoute
   '/$team/$flow/settings/about': typeof AuthenticatedTeamFlowSettingsAboutRoute
   '/$team/$flow/settings/legal-disclaimer': typeof AuthenticatedTeamFlowSettingsLegalDisclaimerRoute
+  '/$team/$flow/settings/templates': typeof AuthenticatedTeamFlowSettingsTemplatesRoute
   '/$team/$flow/settings/visibility': typeof AuthenticatedTeamFlowSettingsVisibilityRoute
   '/$team/$flow/$sessionId/download-application': typeof PublicTeamFlowSessionIdDownloadApplicationRoute
   '/$team/$flow/draft/view-application': typeof PublicTeamFlowDraftViewApplicationRoute
@@ -624,6 +633,7 @@ export interface FileRoutesById {
   '/_authenticated/$team/settings/': typeof AuthenticatedTeamSettingsIndexRoute
   '/_authenticated/$team/$flow/settings/about': typeof AuthenticatedTeamFlowSettingsAboutRoute
   '/_authenticated/$team/$flow/settings/legal-disclaimer': typeof AuthenticatedTeamFlowSettingsLegalDisclaimerRoute
+  '/_authenticated/$team/$flow/settings/templates': typeof AuthenticatedTeamFlowSettingsTemplatesRoute
   '/_authenticated/$team/$flow/settings/visibility': typeof AuthenticatedTeamFlowSettingsVisibilityRoute
   '/_public/$team/$flow/$sessionId/download-application': typeof PublicTeamFlowSessionIdDownloadApplicationRoute
   '/_public/$team/$flow/draft/view-application': typeof PublicTeamFlowDraftViewApplicationRoute
@@ -693,6 +703,7 @@ export interface FileRouteTypes {
     | '/$team/settings/'
     | '/$team/$flow/settings/about'
     | '/$team/$flow/settings/legal-disclaimer'
+    | '/$team/$flow/settings/templates'
     | '/$team/$flow/settings/visibility'
     | '/$team/$flow/$sessionId/download-application'
     | '/$team/$flow/draft/view-application'
@@ -753,6 +764,7 @@ export interface FileRouteTypes {
     | '/$team/settings'
     | '/$team/$flow/settings/about'
     | '/$team/$flow/settings/legal-disclaimer'
+    | '/$team/$flow/settings/templates'
     | '/$team/$flow/settings/visibility'
     | '/$team/$flow/$sessionId/download-application'
     | '/$team/$flow/draft/view-application'
@@ -821,6 +833,7 @@ export interface FileRouteTypes {
     | '/_authenticated/$team/settings/'
     | '/_authenticated/$team/$flow/settings/about'
     | '/_authenticated/$team/$flow/settings/legal-disclaimer'
+    | '/_authenticated/$team/$flow/settings/templates'
     | '/_authenticated/$team/$flow/settings/visibility'
     | '/_public/$team/$flow/$sessionId/download-application'
     | '/_public/$team/$flow/draft/view-application'
@@ -1195,6 +1208,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTeamFlowSettingsVisibilityRouteImport
       parentRoute: typeof AuthenticatedTeamFlowSettingsRouteRoute
     }
+    '/_authenticated/$team/$flow/settings/templates': {
+      id: '/_authenticated/$team/$flow/settings/templates'
+      path: '/templates'
+      fullPath: '/$team/$flow/settings/templates'
+      preLoaderRoute: typeof AuthenticatedTeamFlowSettingsTemplatesRouteImport
+      parentRoute: typeof AuthenticatedTeamFlowSettingsRouteRoute
+    }
     '/_authenticated/$team/$flow/settings/legal-disclaimer': {
       id: '/_authenticated/$team/$flow/settings/legal-disclaimer'
       path: '/legal-disclaimer'
@@ -1394,6 +1414,7 @@ const AuthenticatedTeamFlowNodesRouteRouteWithChildren =
 interface AuthenticatedTeamFlowSettingsRouteRouteChildren {
   AuthenticatedTeamFlowSettingsAboutRoute: typeof AuthenticatedTeamFlowSettingsAboutRoute
   AuthenticatedTeamFlowSettingsLegalDisclaimerRoute: typeof AuthenticatedTeamFlowSettingsLegalDisclaimerRoute
+  AuthenticatedTeamFlowSettingsTemplatesRoute: typeof AuthenticatedTeamFlowSettingsTemplatesRoute
   AuthenticatedTeamFlowSettingsVisibilityRoute: typeof AuthenticatedTeamFlowSettingsVisibilityRoute
   AuthenticatedTeamFlowSettingsIndexRoute: typeof AuthenticatedTeamFlowSettingsIndexRoute
   AuthenticatedTeamFlowSettingsPagesHelpRoute: typeof AuthenticatedTeamFlowSettingsPagesHelpRoute
@@ -1406,6 +1427,8 @@ const AuthenticatedTeamFlowSettingsRouteRouteChildren: AuthenticatedTeamFlowSett
       AuthenticatedTeamFlowSettingsAboutRoute,
     AuthenticatedTeamFlowSettingsLegalDisclaimerRoute:
       AuthenticatedTeamFlowSettingsLegalDisclaimerRoute,
+    AuthenticatedTeamFlowSettingsTemplatesRoute:
+      AuthenticatedTeamFlowSettingsTemplatesRoute,
     AuthenticatedTeamFlowSettingsVisibilityRoute:
       AuthenticatedTeamFlowSettingsVisibilityRoute,
     AuthenticatedTeamFlowSettingsIndexRoute:
