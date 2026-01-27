@@ -111,7 +111,7 @@ describe("error handling", () => {
   it("handles rate limiting", async () => {
     server.use(rateLimitError);
 
-    const { user } = setup(
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
