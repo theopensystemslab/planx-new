@@ -8,7 +8,7 @@ import type {
 } from "@opensystemslab/planx-core/types";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate, useParams } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { APIError } from "lib/api/client";
@@ -82,20 +82,23 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   yourDetailsLabel,
   paymentStatus,
 }) => {
-  const [sessionId, isTestEnvironment] = useStore((state) => [
-    state.sessionId,
-    state.hasAcknowledgedWarning,
-  ]);
+  const [sessionId, isTestEnvironment, teamSlug, flowSlug] = useStore(
+    (state) => [
+      state.sessionId,
+      state.hasAcknowledgedWarning,
+      state.teamSlug,
+      state.flowSlug,
+    ],
+  );
   const navigate = useNavigate();
-  const params = useParams({ from: "/_public/$team/$flow/pay" });
   const defaults = getDefaultContent();
 
   const redirectToConfirmationPage = (paymentRequestId: string) => {
     navigate({
       to: "/$team/$flow/pay/invite",
       params: {
-        team: params.team,
-        flow: params.flow,
+        team: teamSlug,
+        flow: flowSlug,
       },
       search: { paymentRequestId },
     });
