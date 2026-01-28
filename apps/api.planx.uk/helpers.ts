@@ -119,11 +119,13 @@ const createFlow = async ({
         team_id: teamId,
       },
     );
+    console.log({submissionIntegrations})
 
     const emailId = submissionIntegrations.length
       ? submissionIntegrations[0].id
       : null;
-
+    console.log({emailId})
+    
     const response = await $client.request<{
       insertFlowWithIntegration: {
         flow: { id: Flow["id"] };

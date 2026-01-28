@@ -23,6 +23,7 @@ export interface GetFlowInformation {
 }
 
 export const formatLastEditDate = (date: string): string => {
+  console.log({ date });
   return formatDistanceToNow(new Date(date), {
     includeSeconds: true,
     addSuffix: true,
