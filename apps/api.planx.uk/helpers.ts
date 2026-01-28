@@ -68,12 +68,6 @@ const getFlowData = async (id: string): Promise<GetFlowDataResponse> => {
   return flow;
 };
 
-interface CreateFlowResponse {
-  flow: {
-    id: Flow["id"];
-  };
-}
-
 const getDefaultEmail = async (teamId: number): Promise<string | null> => {
   const { client: $client } = getClient();
 
