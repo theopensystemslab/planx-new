@@ -24,6 +24,7 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 import { Switch } from "ui/shared/Switch";
+import { ValidationError } from "yup";
 
 import { SubmissionEmailInput } from "../../../../src/pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 import { ICONS } from "../shared/icons";
@@ -58,7 +59,21 @@ const SendComponent: React.FC<Props> = (props) => {
           props.handleSubmit({ type: TYPES.Send, data: newValues });
         }
       },
-      validationSchema,
+      validate: async (values) => {
+        try {
+          await validationSchema.validate(values, {
+            context: {
+              existingEmails: emailOptions.map(
+                (email: SubmissionEmailInput) => email.submissionEmail,
+              ),
+            },
+          });
+        } catch (error) {
+          if (error instanceof ValidationError) {
+            return { [error.path || "unknown"]: error.message };
+          }
+        }
+      },
     },
     props.formikRef,
   );
