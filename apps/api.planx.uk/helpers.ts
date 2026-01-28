@@ -127,7 +127,7 @@ const createFlow = async ({
 
   try {
     const emailId = await getDefaultEmail(teamId);
-    
+
     const response = await $client.request<{
       insertFlowWithIntegration: {
         id: Flow["id"];
@@ -161,10 +161,7 @@ const createFlow = async ({
               description: $description
               limitations: $limitations
               flow_integration: {
-                data: {
-                  team_id: $team_id
-                  email_id: $email_id
-                }
+                data: { team_id: $team_id, email_id: $email_id }
               }
             }
           ) {
