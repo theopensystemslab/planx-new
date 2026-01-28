@@ -33,6 +33,10 @@ vi.mock("pages/FlowEditor/lib/store", async () => ({
       setIsNavMenuVisible: mockSetIsNavMenuVisible,
     }),
   ),
+  getState: () => ({
+    teamSlug: mockTeamName,
+    teamAnalyticsLink: mockAnalyticsLink,
+  }),
 }));
 
 const mockCurrentRoute = (path: string) => {

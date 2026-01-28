@@ -271,7 +271,7 @@ export const getAnalyticsDashboardId = ({
   return undefined;
 };
 
-export const generateAnalyticsLink = ({
+export const generateFlowAnalyticsLink = ({
   flowId,
   dashboardId,
 }: {

@@ -26,6 +26,7 @@ function EditorNavMenu() {
   const { navigate } = useNavigation();
   const { url } = useCurrentRoute();
   const isRouteLoading = useLoadingRoute();
+
   const [teamSlug, flowSlug, flowAnalyticsLink, role, team] = useStore(
     (state) => [
       state.teamSlug,
@@ -35,6 +36,14 @@ function EditorNavMenu() {
       state.getTeam(),
     ],
   );
+
+  const environment = import.meta.env.VITE_APP_ENV;
+
+  const teamAnalyticsLink =
+    environment === "development" // TODO: SWAP BACK
+      ? `https://metabase.editor.planx.uk/public/dashboard/74337c9d-389d-4cb1-a65a-ad7e16428abf?date=&tab=641-key-figures&team_slug=${teamSlug}`
+      : undefined;
+
   const referenceCode = team?.settings?.referenceCode;
   const { url: lpsBaseUrl } = useLPS();
 
@@ -155,6 +164,15 @@ function EditorNavMenu() {
       route: referenceCode ? `${lpsBaseUrl}/${teamSlug}` : `#`,
       accessibleBy: "*",
       disabled: !referenceCode,
+    },
+    {
+      title: teamAnalyticsLink
+        ? `Analytics (external link)`
+        : `Analytics page unavailable`,
+      Icon: LeaderboardIcon,
+      route: teamAnalyticsLink ? teamAnalyticsLink : `#`,
+      accessibleBy: ["platformAdmin", "teamEditor", "analyst"],
+      disabled: !teamAnalyticsLink,
     },
   ];
 
