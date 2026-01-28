@@ -1,10 +1,12 @@
+import { useRouterState } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
-import React from "react";
-import { useLoadingRoute, View } from "react-navi";
+import React, { PropsWithChildren } from "react";
 
 export const loadingView = () => <LoadingLayout />;
 
-export const LoadingLayout = () => {
-  const isLoading = useLoadingRoute();
-  return isLoading ? <DelayedLoadingIndicator /> : <View />;
+export const LoadingLayout: React.FC<PropsWithChildren> = ({ children }) => {
+  const router = useRouterState();
+  const isLoading = router.isLoading;
+
+  return isLoading ? <DelayedLoadingIndicator /> : <>{children}</>;
 };

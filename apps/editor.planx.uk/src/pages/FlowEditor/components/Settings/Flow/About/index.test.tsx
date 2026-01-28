@@ -69,7 +69,7 @@ describe("About flow page", () => {
   });
 
   it("renders and submits data without an error", async () => {
-    const { user } = setup(<About />);
+    const { user } = await setup(<About />);
     const serviceSummaryInput = await screen.findByPlaceholderText("Summary");
     expect(screen.getAllByRole("button", { name: "Save" })[0]).toBeDisabled();
 
@@ -89,7 +89,7 @@ describe("About flow page", () => {
   });
 
   it("displays an error if the service summary is longer than 120 characters", async () => {
-    const { user } = setup(<About />);
+    const { user } = await setup(<About />);
 
     const serviceSummaryInput = await screen.findByPlaceholderText("Summary");
 
@@ -111,7 +111,7 @@ describe("About flow page", () => {
   });
 
   it("displays data in the fields if there is already flow information in the database", async () => {
-    setup(<About />);
+    await setup(<About />);
 
     expect(
       await screen.findByText("This flow description is in the db already"),
@@ -131,7 +131,7 @@ describe("About flow page", () => {
       }),
     );
 
-    const { user } = setup(<About />);
+    const { user } = await setup(<About />);
     const serviceSummaryInput = await screen.findByPlaceholderText("Summary");
 
     await user.type(serviceSummaryInput, "A summary.");
@@ -143,7 +143,7 @@ describe("About flow page", () => {
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(<About />);
+    const { container } = await setup(<About />);
 
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -155,7 +155,7 @@ describe("About flow page", () => {
 
     getState().setTeamMembers([{ ...teamViewerUser, role: "teamViewer" }]);
 
-    setup(<About />);
+    await setup(<About />);
 
     const serviceSummaryInput = await screen.findByPlaceholderText("Summary");
 

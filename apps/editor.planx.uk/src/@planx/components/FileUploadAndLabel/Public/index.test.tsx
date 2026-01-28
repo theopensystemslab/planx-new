@@ -29,7 +29,7 @@ beforeEach(() => {
 
 describe("Basic state and setup", () => {
   test("renders correctly", async () => {
-    const { getAllByRole, getByTestId, getByText } = setup(
+    const { getAllByRole, getByTestId, getByText } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -50,7 +50,7 @@ describe("Basic state and setup", () => {
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(
+    const { container } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -67,7 +67,7 @@ describe("Basic state and setup", () => {
   });
 
   it("does not show a print button if hideDropZone is false", async () => {
-    const { queryByText } = setup(
+    const { queryByText } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[mockFileTypes.AlwaysRequired, mockFileTypes.NotRequired]}
@@ -79,7 +79,7 @@ describe("Basic state and setup", () => {
   });
 
   test("shows help buttons for header and applicable file", async () => {
-    const { getAllByTestId } = setup(
+    const { getAllByTestId } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={mockFileTypesUniqueKeys}
@@ -91,8 +91,8 @@ describe("Basic state and setup", () => {
     expect(helpButtons).toHaveLength(1);
   });
 
-  it("does not show optional files if there are other types", () => {
-    const { queryByRole } = setup(
+  it("does not show optional files if there are other types", async () => {
+    const { queryByRole } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -108,8 +108,8 @@ describe("Basic state and setup", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("shows optional files if there are no other types", () => {
-    const { getByRole } = setup(
+  it("shows optional files if there are no other types", async () => {
+    const { getByRole } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[mockFileTypes.NotRequired]}
@@ -124,7 +124,7 @@ describe("Basic state and setup", () => {
 
 describe("Info-only mode with hidden drop zone", () => {
   test("renders correctly", async () => {
-    const { getAllByRole, queryByTestId, getByText } = setup(
+    const { getAllByRole, queryByTestId, getByText } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -146,7 +146,7 @@ describe("Info-only mode with hidden drop zone", () => {
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(
+    const { container } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -164,7 +164,7 @@ describe("Info-only mode with hidden drop zone", () => {
   });
 
   it("shows a print button", async () => {
-    const { getByText } = setup(
+    const { getByText } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[mockFileTypes.AlwaysRequired, mockFileTypes.NotRequired]}
@@ -175,7 +175,7 @@ describe("Info-only mode with hidden drop zone", () => {
   });
 
   test("shows help buttons for header and applicable file", async () => {
-    const { getAllByTestId } = setup(
+    const { getAllByTestId } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={mockFileTypesUniqueKeys}
@@ -188,8 +188,8 @@ describe("Info-only mode with hidden drop zone", () => {
     expect(helpButtons).toHaveLength(1);
   });
 
-  it("shows optional files by default", () => {
-    const { queryByRole } = setup(
+  it("shows optional files by default", async () => {
+    const { queryByRole } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -211,7 +211,7 @@ describe("Modal trigger", () => {
   afterEach(() => vi.clearAllMocks());
 
   test("Modal does not open on initial component render", async () => {
-    setup(
+    await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -230,7 +230,7 @@ describe("Modal trigger", () => {
   });
 
   test("Modal opens when a single file is uploaded", async () => {
-    const { getByTestId, user } = setup(
+    const { getByTestId, user } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -257,7 +257,7 @@ describe("Modal trigger", () => {
   });
 
   test("Modal opens when multiple files are uploaded", async () => {
-    const { getByTestId, user } = setup(
+    const { getByTestId, user } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -286,7 +286,7 @@ describe("Modal trigger", () => {
   });
 
   test("Modal does not open when a file is deleted", async () => {
-    const { getByTestId, queryByText, user } = setup(
+    const { getByTestId, queryByText, user } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -337,7 +337,7 @@ describe("Adding tags and syncing state", () => {
       getByTestId,
       getByText,
       user,
-    } = setup(
+    } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         handleSubmit={handleSubmit}
@@ -399,7 +399,7 @@ describe("Adding tags and syncing state", () => {
   test("Cannot continue when only an optional file type is uploaded and tagged", async () => {
     const handleSubmit = vi.fn();
     const { getAllByRole, getAllByTestId, getByTestId, getByText, user } =
-      setup(
+      await setup(
         <FileUploadAndLabelComponent
           title="Test title"
           handleSubmit={handleSubmit}
@@ -464,7 +464,7 @@ describe("Error handling", () => {
   test("An error is thrown if a user does not upload any files", async () => {
     const handleSubmit = vi.fn();
 
-    const { getByTestId, getByRole, findByText, user } = setup(
+    const { getByTestId, getByRole, findByText, user } = await setup(
       <FileUploadAndLabelComponent
         handleSubmit={handleSubmit}
         title="Test title"
@@ -510,7 +510,7 @@ describe("Error handling", () => {
   });
 
   test("An error is thrown in the modal if a user does not tag all files", async () => {
-    const { getByTestId, user } = setup(
+    const { getByTestId, user } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -543,13 +543,14 @@ describe("Error handling", () => {
   test("An error is thrown in the main component if a user does not tag all files", async () => {
     const handleSubmit = vi.fn();
 
-    const { getByTestId, getByRole, getAllByRole, findByText, user } = setup(
-      <FileUploadAndLabelComponent
-        handleSubmit={handleSubmit}
-        title="Test title"
-        fileTypes={mockFileTypesUniqueKeys}
-      />,
-    );
+    const { getByTestId, getByRole, getAllByRole, findByText, user } =
+      await setup(
+        <FileUploadAndLabelComponent
+          handleSubmit={handleSubmit}
+          title="Test title"
+          fileTypes={mockFileTypesUniqueKeys}
+        />,
+      );
 
     const file = new File(["test"], "test.jpg", { type: "image/jpg" });
     const input = getByTestId("upload-input");
@@ -597,7 +598,7 @@ describe("Submitting data", () => {
 
   it("records the user uploaded files", async () => {
     const handleSubmit = vi.fn();
-    const { getByText, user } = setup(
+    const { getByText, user } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         handleSubmit={handleSubmit}
@@ -625,7 +626,7 @@ describe("Submitting data", () => {
 
   it("records the full file type list presented to the user", async () => {
     const handleSubmit = vi.fn();
-    const { getByText, user } = setup(
+    const { getByText, user } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         handleSubmit={handleSubmit}
@@ -698,7 +699,7 @@ describe("Submitting data", () => {
     act(() => setState({ flow, breadcrumbs }));
 
     const handleSubmit = vi.fn();
-    const { getByText, user } = setup(
+    const { getByText, user } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         handleSubmit={handleSubmit}

@@ -6,7 +6,6 @@ import ErrorFallback from "components/Error/ErrorFallback";
 import { FullStore, Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import * as ReactNavi from "react-navi";
 import { setup } from "testUtils";
 import { ApplicationPath, Breadcrumbs } from "types";
 import { vi } from "vitest";
@@ -15,17 +14,35 @@ import { axe } from "vitest-axe";
 import Confirm, { Props } from "./Confirm";
 import Pay from "./Pay";
 
-const { getState, setState } = useStore;
-
-let initialState: FullStore;
-
-vi.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
-  () => ({ data: { mountpath: "mountpath" } }) as any,
-);
+// Mock TanStack Router hooks
+vi.mock("@tanstack/react-router", async () => {
+  const actual = await vi.importActual("@tanstack/react-router");
+  return {
+    ...actual,
+    useRouteContext: vi.fn(() => ({
+      isContentPage: false,
+    })),
+    useNavigate: vi.fn(() => vi.fn()),
+    useParams: vi.fn(() => ({
+      team: "test-team",
+      flow: "test-flow",
+    })),
+    useLocation: vi.fn(() => ({
+      pathname: "/test-team/test-flow/pay",
+      search: "",
+      hash: "",
+      state: {},
+    })),
+  };
+});
 
 vi.mock("lib/featureFlags", () => ({
   hasFeatureFlag: vi.fn().mockResolvedValue(true),
 }));
+
+const { getState, setState } = useStore;
+
+let initialState: FullStore;
 
 const resumeButtonText = "Resume a form you have already started";
 const saveButtonText = "Save and return to this form later";
@@ -109,7 +126,7 @@ describe("Pay component when fee is undefined or £0", () => {
   beforeAll(() => (initialState = getState()));
   afterEach(() => act(() => setState(initialState)));
 
-  it("Shows an error if fee is undefined", () => {
+  it("Shows an error if fee is undefined", async () => {
     const handleSubmit = vi.fn();
 
     setState({ flow: flowWithUndefinedFee, breadcrumbs: {} });
@@ -117,7 +134,7 @@ describe("Pay component when fee is undefined or £0", () => {
       data: { "application.fee.payable": undefined },
     });
 
-    setup(
+    await setup(
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Pay
           title="Pay"
@@ -125,7 +142,7 @@ describe("Pay component when fee is undefined or £0", () => {
           handleSubmit={handleSubmit}
           govPayMetadata={[]}
         />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
 
     // handleSubmit has NOT been called (not skipped), Pay shows error instead
@@ -144,7 +161,7 @@ describe("Pay component when fee is undefined or £0", () => {
       data: { "application.fee.payable": ["0"] },
     });
 
-    const { getByTestId, user, getByRole } = setup(
+    const { getByTestId, user, getByRole } = await setup(
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Pay
           title="Pay"
@@ -166,7 +183,7 @@ describe("Pay component when fee is undefined or £0", () => {
     expect(handleSubmit).toHaveBeenCalled();
   });
 
-  it("Displays an error if fee is negative", () => {
+  it("Displays an error if fee is negative", async () => {
     const handleSubmit = vi.fn();
     const loggerSpy = vi.spyOn(logger, "notify");
 
@@ -188,7 +205,7 @@ describe("Pay component when fee is undefined or £0", () => {
       data: { "application.fee.payable": ["-12"] },
     });
 
-    setup(
+    await setup(
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Pay
           title="Pay"
@@ -215,8 +232,8 @@ describe("Confirm component without inviteToPay", () => {
   beforeAll(() => (initialState = getState()));
   afterEach(() => act(() => setState(initialState)));
 
-  it("renders correctly", () => {
-    setup(<Confirm {...defaultProps} />);
+  it("renders correctly", async () => {
+    await setup(<Confirm {...defaultProps} />);
 
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Pay");
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
@@ -227,13 +244,13 @@ describe("Confirm component without inviteToPay", () => {
     );
   });
 
-  it("formats the fee with a currency symbol and two decimal places", () => {
-    setup(<Confirm {...defaultProps} />);
+  it("formats the fee with a currency symbol and two decimal places", async () => {
+    await setup(<Confirm {...defaultProps} />);
     expect(screen.getByText("£103.00")).toBeInTheDocument();
   });
 
   it("correctly adjusts the heading hierarchy when the fee banner is hidden", async () => {
-    setup(<Confirm {...{ ...defaultProps, hideFeeBanner: true }} />);
+    await setup(<Confirm {...{ ...defaultProps, hideFeeBanner: true }} />);
 
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Pay");
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
@@ -248,7 +265,7 @@ describe("Confirm component without inviteToPay", () => {
     const errorMessage =
       "GOV.UK Pay is not enabled for this local authority (testing)";
 
-    const { user } = setup(
+    const { user } = await setup(
       <Confirm
         {...defaultProps}
         error={errorMessage}
@@ -271,28 +288,28 @@ describe("Confirm component without inviteToPay", () => {
     expect(handleSubmit).toHaveBeenCalled();
   });
 
-  it("displays the Save/Resume option if the application path requires it", () => {
+  it("displays the Save/Resume option if the application path requires it", async () => {
     act(() =>
       setState({
         path: ApplicationPath.SaveAndReturn,
         saveToEmail: "test@opensystemsla.b.io",
       }),
     );
-    setup(<Confirm {...defaultProps} />);
+    await setup(<Confirm {...defaultProps} />);
 
     expect(screen.getByText(saveButtonText)).toBeInTheDocument();
     expect(screen.queryByText(resumeButtonText)).not.toBeInTheDocument();
   });
 
-  it("hides the Save/Resume option if the application path does not require it", () => {
-    setup(<Confirm {...defaultProps} />);
+  it("hides the Save/Resume option if the application path does not require it", async () => {
+    await setup(<Confirm {...defaultProps} />);
 
     expect(screen.queryByText(saveButtonText)).not.toBeInTheDocument();
     expect(screen.queryByText(resumeButtonText)).not.toBeInTheDocument();
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(<Confirm {...defaultProps} />);
+    const { container } = await setup(<Confirm {...defaultProps} />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
@@ -314,7 +331,7 @@ describe("Confirm component with inviteToPay", () => {
   const payPrompt = "I want to pay myself";
 
   it("switches pages when you click the invite link", async () => {
-    const { user } = setup(<Confirm {...inviteProps} />);
+    const { user } = await setup(<Confirm {...inviteProps} />);
 
     // Land on "Pay" page by default
     expect(screen.getByText("How to pay")).toBeInTheDocument();
@@ -331,7 +348,7 @@ describe("Confirm component with inviteToPay", () => {
   });
 
   it("displays an error if you submit an invalid email address", async () => {
-    const { user } = setup(<Confirm {...inviteProps} />);
+    const { user } = await setup(<Confirm {...inviteProps} />);
 
     // Switch to "InviteToPay" page
     await user.click(screen.getByText(invitePrompt));
@@ -346,7 +363,7 @@ describe("Confirm component with inviteToPay", () => {
   });
 
   it("displays an error if do not submit a nominee name", async () => {
-    const { user } = setup(<Confirm {...inviteProps} />);
+    const { user } = await setup(<Confirm {...inviteProps} />);
 
     // Switch to "InviteToPay" page
     await user.click(screen.getByText(invitePrompt));
@@ -362,7 +379,7 @@ describe("Confirm component with inviteToPay", () => {
   });
 
   it("displays an error if do not submit an applicant display name", async () => {
-    const { user } = setup(<Confirm {...inviteProps} />);
+    const { user } = await setup(<Confirm {...inviteProps} />);
 
     // Switch to "InviteToPay" page
     await user.click(screen.getByText(invitePrompt));
@@ -382,7 +399,7 @@ describe("Confirm component with inviteToPay", () => {
   });
 
   it("disables the invite link if you already have an in-progress payment", async () => {
-    setup(
+    await setup(
       <Confirm
         {...inviteProps}
         buttonTitle={"Retry payment"}
@@ -396,7 +413,7 @@ describe("Confirm component with inviteToPay", () => {
   });
 
   it("always hides fee banner on the 'InviteToPay' page", async () => {
-    const { user } = setup(<Confirm {...inviteProps} />);
+    const { user } = await setup(<Confirm {...inviteProps} />);
 
     // Land on "Pay" page by default
     expect(screen.getByText("The fee is")).toBeInTheDocument();
@@ -408,7 +425,7 @@ describe("Confirm component with inviteToPay", () => {
   });
 
   it("hides the fee banner on both pages when 'hideFeeBanner' prop is provided", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <Confirm {...{ ...inviteProps, hideFeeBanner: true }} />,
     );
 
@@ -422,28 +439,28 @@ describe("Confirm component with inviteToPay", () => {
     expect(screen.queryByText("The fee is")).not.toBeInTheDocument();
   });
 
-  it("displays the Save/Resume option if the application path requires it", () => {
+  it("displays the Save/Resume option if the application path requires it", async () => {
     act(() =>
       setState({
         path: ApplicationPath.SaveAndReturn,
         saveToEmail: "test@opensystemsla.b.io",
       }),
     );
-    setup(<Confirm {...inviteProps} />);
+    await setup(<Confirm {...inviteProps} />);
 
     expect(screen.getByText(saveButtonText)).toBeInTheDocument();
     expect(screen.queryByText(resumeButtonText)).not.toBeInTheDocument();
   });
 
-  it("hides the Save/Resume option if the application path does not require it", () => {
-    setup(<Confirm {...inviteProps} />);
+  it("hides the Save/Resume option if the application path does not require it", async () => {
+    await setup(<Confirm {...inviteProps} />);
 
     expect(screen.queryByText(saveButtonText)).not.toBeInTheDocument();
     expect(screen.queryByText(resumeButtonText)).not.toBeInTheDocument();
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(<Confirm {...inviteProps} />);
+    const { container } = await setup(<Confirm {...inviteProps} />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
@@ -455,7 +472,7 @@ describe("Confirm component in information-only mode", () => {
 
   it("renders correctly", async () => {
     const handleSubmit = vi.fn();
-    const { user } = setup(
+    const { user } = await setup(
       <Confirm {...defaultProps} hidePay={true} onConfirm={handleSubmit} />,
     );
 
@@ -476,7 +493,7 @@ describe("Confirm component in information-only mode", () => {
 
   it("renders correctly when inviteToPay is also toggled on by an editor", async () => {
     const handleSubmit = vi.fn();
-    const { user } = setup(
+    const { user } = await setup(
       <Confirm
         {...defaultProps}
         hidePay={true}
@@ -505,7 +522,7 @@ describe("Confirm component in information-only mode", () => {
 
   it("should not have any accessibility violations", async () => {
     const handleSubmit = vi.fn();
-    const { container } = setup(
+    const { container } = await setup(
       <Confirm {...defaultProps} hidePay={true} onConfirm={handleSubmit} />,
     );
     const results = await axe(container);
@@ -528,7 +545,7 @@ describe("the demo user view", () => {
 
   it("should render an error when teamSlug is demo", async () => {
     const handleSubmit = vi.fn();
-    const { queryByText } = setup(
+    const { queryByText } = await setup(
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Pay
           fn="application.fee.payable"

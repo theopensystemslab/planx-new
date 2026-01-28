@@ -4,7 +4,6 @@ import { delay, http, HttpResponse } from "msw";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react";
-import * as ReactNavi from "react-navi";
 import server from "test/mockServer";
 import { setup } from "testUtils";
 import { it, vi } from "vitest";
@@ -17,9 +16,14 @@ const { getState, setState } = useStore;
 
 let initialState: FullStore;
 
-vi.spyOn(ReactNavi, "useNavigation").mockImplementation(
-  () => ({ navigate: vi.fn() }) as any,
-);
+// Mock TanStack Router hooks
+vi.mock("@tanstack/react-router", async () => {
+  const actual = await vi.importActual("@tanstack/react-router");
+  return {
+    ...actual,
+    useNavigate: vi.fn(() => vi.fn()),
+  };
+});
 
 const handler = http.post(
   `${import.meta.env.VITE_APP_API_URL}/create-send-events/*`,
@@ -41,18 +45,18 @@ afterEach(() => {
   act(() => setState(initialState));
 });
 
-it("displays a warning at /draft URLs", () => {
+it("displays a warning at /draft URLs", async () => {
   window.history.pushState({}, "", "/draft");
-  const { getByText } = setup(
+  const { getByText } = await setup(
     <SendComponent title="Send" destinations={["bops", "uniform"]} />,
   );
 
   expect(getByText(/You can only test submissions on/)).toBeVisible();
 });
 
-it("displays a warning at /preview URLs", () => {
+it("displays a warning at /preview URLs", async () => {
   window.history.pushState({}, "", "/preview");
-  const { getByText } = setup(
+  const { getByText } = await setup(
     <SendComponent title="Send" destinations={["bops", "uniform"]} />,
   );
 
@@ -71,7 +75,7 @@ it("displays loading messages to the user", async () => {
   server.use(handler);
 
   const handleSubmit = vi.fn();
-  const { findByText } = setup(
+  const { findByText } = await setup(
     <SendComponent
       title="Send"
       destinations={["bops", "uniform"]}
@@ -103,7 +107,7 @@ it("generates a valid payload for the API", async () => {
   );
   server.use(handler);
 
-  setup(
+  await setup(
     <SendComponent
       title="Send"
       destinations={destinations}
@@ -125,7 +129,7 @@ it("generates a valid payload for the API", async () => {
 it("generates a valid breadcrumb", { retry: 1 }, async () => {
   const handleSubmit = vi.fn();
 
-  setup(
+  await setup(
     <SendComponent
       title="Send"
       destinations={["bops", "uniform"]}
@@ -147,7 +151,7 @@ it("generates a valid breadcrumb", { retry: 1 }, async () => {
 
 it("should not have any accessibility violations", async () => {
   const handleSubmit = vi.fn();
-  const { container } = setup(
+  const { container } = await setup(
     <SendComponent
       title="Send"
       destinations={["bops", "uniform"]}
@@ -170,7 +174,7 @@ describe("demo state", () => {
   });
 
   it("should render an error when teamSlug is demo", async () => {
-    const { queryByText } = setup(
+    const { queryByText } = await setup(
       <SendComponent title="Send" destinations={["bops", "uniform"]} />,
     );
 
@@ -188,7 +192,7 @@ describe("demo state", () => {
   it("should allow the user to continue with their application", async () => {
     const handleSubmit = vi.fn();
 
-    const { findByRole, user } = setup(
+    const { findByRole, user } = await setup(
       <SendComponent
         title="Send"
         destinations={["bops", "uniform"]}

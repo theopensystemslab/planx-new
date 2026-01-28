@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import MoreVert from "@mui/icons-material/MoreVert";
 import Box from "@mui/material/Box";
 import { NodeTag } from "@opensystemslab/planx-core/types";
+import { Link } from "@tanstack/react-router";
 import classNames from "classnames";
 import gql from "graphql-tag";
 import { useContextMenu } from "hooks/useContextMenu";
@@ -9,11 +10,10 @@ import useScrollOnPreviousURLMatch from "hooks/useScrollOnPreviousURLMatch";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { useDrag } from "react-dnd";
-import { Link } from "react-navi";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 import EditorIcon from "ui/icons/Editor";
+import { rootFlowPath } from "utils/routeUtils/utils";
 
-import { rootFlowPath } from "../../../../../routes/utils";
 import { getParentId } from "../lib/utils";
 import Hanger from "./Hanger";
 import Question from "./Question";
@@ -24,10 +24,14 @@ const ExternalPortal: React.FC<any> = (props) => {
 
   const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(href);
 
-  const { addExternalPortal, showTags } = useStore((state) => ({
-    addExternalPortal: state.addExternalPortal,
-    showTags: state.showTags,
-  }));
+  const { addExternalPortal, showTags, teamSlug, flowSlug } = useStore(
+    (state) => ({
+      addExternalPortal: state.addExternalPortal,
+      showTags: state.showTags,
+      teamSlug: state.teamSlug,
+      flowSlug: state.flowSlug,
+    }),
+  );
 
   const { data, loading } = useQuery(
     gql`
@@ -51,17 +55,14 @@ const ExternalPortal: React.FC<any> = (props) => {
   useEffect(() => {
     if (!data) return;
 
-    const href = [data.flows_by_pk.team.slug, data.flows_by_pk.slug].join(
-      "/",
-    );
+    const href = [data.flows_by_pk.team.slug, data.flows_by_pk.slug].join("/");
     setHref(href);
     addExternalPortal({
       id: props.data.flowId,
       name: data.flows_by_pk.name,
       href,
     });
-  }, [data, addExternalPortal, props.data.flowId])
-  
+  }, [data, addExternalPortal, props.data.flowId]);
 
   const parent = getParentId(props.parent);
 
@@ -93,17 +94,15 @@ const ExternalPortal: React.FC<any> = (props) => {
     );
   }
 
-  let editHref = `${window.location.pathname}/nodes/${props.id}/edit`;
-  if (parent) {
-    editHref = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
-  }
+  const internalTeamSlug = data?.flows_by_pk?.team?.slug;
+  const internalFlowSlug = data?.flows_by_pk?.slug;
 
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li ref={ref}>
         <Box
-          data-loading={href==="Loading..."}
+          data-loading={href === "Loading..."}
           className={classNames("card", "portal", "external-portal", {
             isDragging,
           })}
@@ -116,11 +115,40 @@ const ExternalPortal: React.FC<any> = (props) => {
             showStatus={props.showTemplatedNodeStatus}
           >
             <Box sx={{ display: "flex", alignItems: "stretch" }}>
-              <Link href={`/${href}`} prefetch={false} ref={drag}>
-                <EditorIcon />
-                <span>{href}</span>
-              </Link>
-              <Link href={editHref} prefetch={false} className="portalMenu">
+              {internalTeamSlug && internalFlowSlug ? (
+                <Link
+                  to="/$team/$flow"
+                  params={{
+                    team: internalTeamSlug,
+                    flow: internalFlowSlug,
+                  }}
+                  preload={false}
+                  ref={drag}
+                >
+                  <EditorIcon />
+                  <span>{href}</span>
+                </Link>
+              ) : (
+                <span ref={drag}>
+                  <EditorIcon />
+                  <span>{href}</span>
+                </span>
+              )}
+              <Link
+                to={
+                  parent
+                    ? "/$team/$flow/nodes/$parent/nodes/$id/edit"
+                    : "/$team/$flow/nodes/$id/edit"
+                }
+                params={{
+                  team: teamSlug,
+                  flow: flowSlug,
+                  id: props.id,
+                  ...(parent && { parent }),
+                }}
+                preload={false}
+                className="portalMenu"
+              >
                 <MoreVert titleAccess="Edit Portal" />
               </Link>
             </Box>
@@ -143,16 +171,12 @@ const InternalPortal: React.FC<any> = (props) => {
 
   const parent = getParentId(props.parent);
 
-  const { isClone, copyNode, showTags } = useStore((state) => ({
+  const { isClone, showTags, teamSlug, flowSlug } = useStore((state) => ({
     isClone: state.isClone,
-    copyNode: state.copyNode,
     showTags: state.showTags,
+    teamSlug: state.teamSlug,
+    flowSlug: state.flowSlug,
   }));
-
-  let editHref = `${window.location.pathname}/nodes/${props.id}/edit`;
-  if (parent) {
-    editHref = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
-  }
 
   const [{ isDragging }, drag] = useDrag({
     item: {
@@ -167,11 +191,12 @@ const InternalPortal: React.FC<any> = (props) => {
   });
 
   const handleContextMenu = useContextMenu({
-    source: "node", relationships: {
+    source: "node",
+    relationships: {
       parent,
       before: props.id,
       self: props.id,
-    }
+    },
   });
 
   const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(props.id);
@@ -179,7 +204,7 @@ const InternalPortal: React.FC<any> = (props) => {
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
-      <li 
+      <li
         className={classNames("folder", {
           isClone: isClone(props.id),
         })}
@@ -199,14 +224,28 @@ const InternalPortal: React.FC<any> = (props) => {
           >
             <Box sx={{ display: "flex", alignItems: "stretch" }}>
               <Link
-                href={href}
-                prefetch={false}
+                to={href}
+                preload={false}
                 ref={drag}
                 onContextMenu={handleContextMenu}
               >
                 <span>{props.data.text}</span>
               </Link>
-              <Link href={editHref} prefetch={false} className="portalMenu">
+              <Link
+                to={
+                  parent
+                    ? "/$team/$flow/nodes/$parent/nodes/$id/edit"
+                    : "/$team/$flow/nodes/$id/edit"
+                }
+                params={{
+                  team: teamSlug,
+                  flow: flowSlug,
+                  id: props.id,
+                  ...(parent && { parent }),
+                }}
+                preload={false}
+                className="portalMenu"
+              >
                 <MoreVert titleAccess="Edit Portal" />
               </Link>
             </Box>

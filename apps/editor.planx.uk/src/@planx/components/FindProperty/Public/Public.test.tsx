@@ -152,7 +152,7 @@ describe("render states", () => {
   it("renders correctly and defaults to the address autocomplete page", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <FindProperty
         description="Find your property"
         title="Type your postal code"
@@ -184,7 +184,7 @@ describe("render states", () => {
   it("renders correctly when allowing non-UPRN addresses", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <FindProperty
         description="Find your property"
         title="Type your postal code"
@@ -222,7 +222,7 @@ describe("render states", () => {
   it("renders correctly when non-UPRN address map is set as first page", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <FindProperty
         description="Find your property"
         title="Type your postal code"
@@ -234,9 +234,7 @@ describe("render states", () => {
     );
 
     // starts on propose new address page
-    expect(
-      await screen.findByText("Plot a new address"),
-    ).toBeInTheDocument();
+    expect(await screen.findByText("Plot a new address")).toBeInTheDocument();
 
     const map = screen.getByTestId("map-web-component");
     expect(map).toBeInTheDocument();
@@ -257,7 +255,7 @@ describe("render states", () => {
   it("opens the external planning site dialog by default if allowNewAddresses is toggled off", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <FindProperty
         description="Find your property"
         title="Type your postal code"
@@ -289,7 +287,7 @@ describe("render states", () => {
     const handleSubmit = vi.fn();
     const previousData = osAddressProps;
 
-    const { user } = setup(
+    const { user } = await setup(
       <FindProperty
         description="Find your property"
         title="Type your postal code"
@@ -321,7 +319,7 @@ describe("render states", () => {
 
   it("should not have any accessibility violations", async () => {
     const handleSubmit = vi.fn();
-    const { container, user } = setup(
+    const { container, user } = await setup(
       <FindProperty
         description="Find your property"
         title="Type your postal code"
@@ -345,7 +343,7 @@ describe("picking an OS address", () => {
   it("displays an error if you submit an invalid postcode", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <FindProperty
         description="Find your property"
         title="Type your postal code"
@@ -358,7 +356,7 @@ describe("picking an OS address", () => {
   });
 
   it("updates the address-autocomplete props when the postcode is changed", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <FindProperty
         description="Find your property"
         title="Type your postal code"
@@ -394,7 +392,7 @@ describe("picking an OS address", () => {
     const handleSubmit = vi.fn();
     const previousData = osAddressProps;
 
-    const { user } = setup(
+    const { user } = await setup(
       <FindProperty
         description="Find your property"
         title="Type your postal code"
@@ -420,7 +418,7 @@ describe("plotting a new address that does not have a uprn yet", () => {
   it("displays an error if you haven't entered a site address", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <FindProperty
         description="Find your property"
         title="Type your postal code"
@@ -464,7 +462,7 @@ describe("plotting a new address that does not have a uprn yet", () => {
     const handleSubmit = vi.fn();
     const previousData = proposedAddressProps;
 
-    const { user } = setup(
+    const { user } = await setup(
       <FindProperty
         description="Find your property"
         title="Type your postal code"

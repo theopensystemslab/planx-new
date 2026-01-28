@@ -34,7 +34,7 @@ describe("Passport generation", () => {
   test("accepting the enhancement", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -76,7 +76,7 @@ describe("Passport generation", () => {
   test("retaining the original description", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -121,7 +121,7 @@ describe("Passport generation", () => {
   test("using a hybrid value", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -188,7 +188,7 @@ describe("navigating back to the EnhancedTextInput component", () => {
   };
 
   it("returns the user to the original input screen", async () => {
-    setup(
+    await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -212,8 +212,8 @@ describe("navigating back to the EnhancedTextInput component", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("pre-populates their previous answer", () => {
-    setup(
+  it("pre-populates their previous answer", async () => {
+    await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -231,7 +231,7 @@ describe("navigating back to the EnhancedTextInput component", () => {
   test("proceeding forwards again, without making a change", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -258,7 +258,7 @@ describe("navigating back to the EnhancedTextInput component", () => {
   test("proceeding forwards again, with a change", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -306,7 +306,7 @@ describe("navigating back to the EnhancedTextInput component", () => {
 
 describe("basic layout and behaviour", () => {
   it("loads the 'input' step first", async () => {
-    setup(
+    await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="Describe the project"
@@ -324,7 +324,7 @@ describe("basic layout and behaviour", () => {
   });
 
   it("should not have any accessibility violations on the 'input' step", async () => {
-    const { container } = setup(
+    const { container } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -340,7 +340,7 @@ describe("basic layout and behaviour", () => {
   it("enforces a character limit", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -367,7 +367,7 @@ describe("basic layout and behaviour", () => {
   }, 10_000);
 
   it("loads the 'task' step and displays the API result to the user", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -389,7 +389,7 @@ describe("basic layout and behaviour", () => {
   });
 
   it("should not have any accessibility violations on the 'task' step", async () => {
-    const { container, user } = setup(
+    const { container, user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -411,7 +411,7 @@ describe("basic layout and behaviour", () => {
   });
 
   it("allows the user to toggle between the enhanced or original description, or enter a hybrid response", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -454,7 +454,7 @@ describe("basic layout and behaviour", () => {
   });
 
   it("displays additional information to the user on the 'task' step", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"

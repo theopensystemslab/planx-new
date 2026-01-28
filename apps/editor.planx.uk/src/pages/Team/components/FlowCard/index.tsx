@@ -30,15 +30,15 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows }) => {
     state.canUserEditTeam,
     state.teamSlug,
   ]);
-  
-  const { 
-    isSubmissionService, 
-    isAnyTemplate, 
-    isSourceTemplate, 
-    isTemplatedFlow, 
-    statusVariant 
+
+  const {
+    isSubmissionService,
+    isAnyTemplate,
+    isSourceTemplate,
+    isTemplatedFlow,
+    statusVariant,
   } = useFlowMetadata(flow);
-  
+
   const { displayFormatted } = useFlowDates(flow);
 
   const displayTags = [
@@ -94,9 +94,9 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows }) => {
               ))}
           </Box>
           {flow.summary && (
-            <TruncatedText 
-              variant="body2" 
-              color="textSecondary" 
+            <TruncatedText
+              variant="body2"
+              color="textSecondary"
               lineClamp={2}
               sx={{ "& > a": { position: "relative", zIndex: 2 } }}
             >
@@ -104,9 +104,9 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows }) => {
             </TruncatedText>
           )}
           <DashboardLink
+            to="/$team/$flow"
+            params={{ team: teamSlug, flow: flow.slug }}
             aria-label={flow.name}
-            href={`./${flow.slug}`}
-            prefetch={false}
           />
         </CardContent>
       </Box>

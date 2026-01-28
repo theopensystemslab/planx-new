@@ -3,12 +3,14 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
+import { useNavigate } from "@tanstack/react-router";
 import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import React from "react";
-import { useNavigation } from "react-navi";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType } from "ui/editor/FlowTag/types";
 import TruncatedText from "ui/editor/TruncatedText";
+import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 import { useStore } from "../../../FlowEditor/lib/store";
 import FlowMenu from "../FlowMenu";
@@ -18,7 +20,6 @@ import { useFlowMetadata } from "../hooks/useFlowMetadata";
 import { useFlowSortDisplay } from "../hooks/useFlowSortDisplay";
 import {
   FlowActionsCell,
-  FlowLink,
   FlowStatusCell,
   FlowTitleCell,
   StyledTable,
@@ -76,7 +77,7 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
   teamSlug,
   refreshFlows,
 }) => {
-  const navigation = useNavigation();
+  const navigate = useNavigate();
   const [canUserEditTeam] = useStore((state) => [state.canUserEditTeam]);
 
   const {
@@ -98,7 +99,10 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
       window.open(`./${teamSlug}/${flow.slug}`, "_blank");
       return;
     }
-    navigation.navigate(`./${teamSlug}/${flow.slug}`);
+    navigate({
+      to: "/$team/$flow",
+      params: { team: teamSlug, flow: flow.slug },
+    });
   };
 
   return (
@@ -114,15 +118,24 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
               />
             </Box>
           )}
-          <FlowLink
-            href={`./${flow.slug}`}
-            prefetch={false}
+          <CustomLink
+            to="/$team/$flow"
+            params={{ team: teamSlug, flow: flow.slug }}
+            preload={false}
             onClick={(e) => e.stopPropagation()}
+            sx={(theme) => ({
+              textDecoration: "none",
+              color: theme.palette.text.primary,
+              fontWeight: FONT_WEIGHT_SEMI_BOLD,
+              "&:hover": {
+                textDecoration: "underline",
+              },
+            })}
           >
             <Typography variant="h4" component="span">
               {flow.name}
             </Typography>
-          </FlowLink>
+          </CustomLink>
           {flow.summary && (
             <TruncatedText
               variant="body2"

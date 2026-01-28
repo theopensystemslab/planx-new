@@ -34,20 +34,22 @@ beforeAll(() => {
 });
 
 describe("Basic UI", () => {
-  it("renders correctly", () => {
-    const { getByText } = setup(<MapAndLabel {...props} />);
+  it("renders correctly", async () => {
+    const { getByText } = await setup(<MapAndLabel {...props} />);
 
     expect(getByText(/Mock title/)).toBeInTheDocument();
     expect(getByText(/Mock description/)).toBeInTheDocument();
   });
 
   it("shows the user a prompt to begin the plotting interaction", async () => {
-    const { getByText } = setup(<MapAndLabel {...props} />);
+    const { getByText } = await setup(<MapAndLabel {...props} />);
     expect(getByText("Plot a feature on the map to begin")).toBeInTheDocument();
   });
 
   it("removes the prompt once a feature is added", async () => {
-    const { queryByText, getByTestId } = setup(<MapAndLabel {...props} />);
+    const { queryByText, getByTestId } = await setup(
+      <MapAndLabel {...props} />,
+    );
     const map = getByTestId("map-and-label-map");
 
     addFeaturesToMap(map, [point1]);
@@ -60,7 +62,7 @@ describe("Basic UI", () => {
   });
 
   it("renders the schema name as the tab title", async () => {
-    const { queryByText, getByRole, getByTestId } = setup(
+    const { queryByText, getByRole, getByTestId } = await setup(
       <MapAndLabel {...props} />,
     );
     expect(queryByText(/Tree 1/)).not.toBeInTheDocument();
@@ -74,7 +76,7 @@ describe("Basic UI", () => {
   });
 
   it("should not have any accessibility violations", async () => {
-    const { queryByText, getByTestId, container } = setup(
+    const { queryByText, getByTestId, container } = await setup(
       <MapAndLabel {...props} />,
     );
     expect(queryByText(/Tree 1/)).not.toBeInTheDocument();
@@ -91,7 +93,7 @@ describe("Basic UI", () => {
 // Schema and field validation is handled in both List and Schema folders - here we're only testing the MapAndLabel specific error handling
 describe("validation and error handling", () => {
   it("shows errors for all required fields", async () => {
-    const { getByTestId, user, queryByRole } = setup(
+    const { getByTestId, user, queryByRole } = await setup(
       <MapAndLabel {...props} />,
     );
     const map = getByTestId("map-and-label-map");
@@ -113,7 +115,9 @@ describe("validation and error handling", () => {
   });
 
   it("should show all fields are required, for all feature tabs", async () => {
-    const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
+    const { getByTestId, getByRole, user } = await setup(
+      <MapAndLabel {...props} />,
+    );
 
     addMultipleFeatures([point1, point2]);
 
@@ -146,7 +150,7 @@ describe("validation and error handling", () => {
   });
 
   it("should show an error if the minimum number of items is not met", async () => {
-    const { getByTestId, user } = setup(<MapAndLabel {...props} />);
+    const { getByTestId, user } = await setup(<MapAndLabel {...props} />);
 
     await clickContinue(user);
 
@@ -157,7 +161,7 @@ describe("validation and error handling", () => {
   });
 
   it("an error state is applied to a tabpanel button, when it's associated feature is invalid", async () => {
-    const { getByTestId, user, queryByRole } = setup(
+    const { getByTestId, user, queryByRole } = await setup(
       <MapAndLabel {...props} />,
     );
     const map = getByTestId("map-and-label-map");
@@ -176,7 +180,7 @@ describe("validation and error handling", () => {
 
 it("does not trigger handleSubmit when errors exist", async () => {
   const handleSubmit = vi.fn();
-  const { getByTestId, user } = setup(
+  const { getByTestId, user } = await setup(
     <MapAndLabel {...props} handleSubmit={handleSubmit} />,
   );
   const map = getByTestId("map-and-label-map");
@@ -194,7 +198,7 @@ test.todo("an error displays if the maximum number of items is exceeded");
 
 describe("basic interactions - happy path", () => {
   it("adding an item to the map adds a feature tab", async () => {
-    const { getByTestId } = setup(<MapAndLabel {...props} />);
+    const { getByTestId } = await setup(<MapAndLabel {...props} />);
 
     let map = getByTestId("map-and-label-map");
     addFeaturesToMap(map, [point1]);
@@ -208,7 +212,7 @@ describe("basic interactions - happy path", () => {
   });
 
   it("a user can input details on a single feature and submit", async () => {
-    const { getByTestId, user } = setup(<MapAndLabel {...props} />);
+    const { getByTestId, user } = await setup(<MapAndLabel {...props} />);
 
     const map = getByTestId("map-and-label-map");
 
@@ -226,7 +230,7 @@ describe("basic interactions - happy path", () => {
   });
 
   it("adding multiple features to the map adds multiple feature tabs", async () => {
-    const { queryByRole } = setup(<MapAndLabel {...props} />);
+    const { queryByRole } = await setup(<MapAndLabel {...props} />);
 
     addMultipleFeatures([point1, point2, point3]);
 
@@ -248,7 +252,9 @@ describe("basic interactions - happy path", () => {
   });
 
   it("a user can input details on multiple features and submit", async () => {
-    const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
+    const { getByTestId, getByRole, user } = await setup(
+      <MapAndLabel {...props} />,
+    );
     getByTestId("map-and-label-map");
 
     addMultipleFeatures([point1, point2]);
@@ -278,7 +284,9 @@ describe("basic interactions - happy path", () => {
   });
 
   it("a user can input details on feature tabs in any order", async () => {
-    const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
+    const { getByTestId, getByRole, user } = await setup(
+      <MapAndLabel {...props} />,
+    );
 
     addMultipleFeatures([point1, point2]);
 
@@ -323,7 +331,7 @@ describe("basic interactions - happy path", () => {
 
 describe("copy feature select", () => {
   it("is disabled if only a single feature is present", async () => {
-    const { getByTestId, getByTitle } = setup(<MapAndLabel {...props} />);
+    const { getByTestId, getByTitle } = await setup(<MapAndLabel {...props} />);
     const map = getByTestId("map-and-label-map");
 
     addFeaturesToMap(map, [point1]);
@@ -336,7 +344,7 @@ describe("copy feature select", () => {
   });
 
   it("is enabled once multiple features are present", async () => {
-    const { getByTitle } = setup(<MapAndLabel {...props} />);
+    const { getByTitle } = await setup(<MapAndLabel {...props} />);
 
     addMultipleFeatures([point1, point2]);
 
@@ -348,7 +356,7 @@ describe("copy feature select", () => {
   });
 
   it("lists all other features as options (the current feature is not listed)", async () => {
-    const { getByTitle, user, queryByRole, getByRole } = setup(
+    const { getByTitle, user, queryByRole, getByRole } = await setup(
       <MapAndLabel {...props} />,
     );
     addMultipleFeatures([point1, point2]);
@@ -368,9 +376,8 @@ describe("copy feature select", () => {
   });
 
   it("copies all data from one feature to another", async () => {
-    const { getByTitle, user, getByLabelText, getByRole, getByTestId } = setup(
-      <MapAndLabel {...props} />,
-    );
+    const { getByTitle, user, getByLabelText, getByRole, getByTestId } =
+      await setup(<MapAndLabel {...props} />);
     addMultipleFeatures([point1, point2, point3]);
     const tabTwo = getByRole("tab", { name: /Tree 2/ });
 
@@ -395,7 +402,9 @@ describe("copy feature select", () => {
   });
 
   it("should not have any accessibility violations", async () => {
-    const { getByTitle, user, container } = setup(<MapAndLabel {...props} />);
+    const { getByTitle, user, container } = await setup(
+      <MapAndLabel {...props} />,
+    );
     addMultipleFeatures([point1, point2]);
 
     const copyTitle = getByTitle("Copy from");
@@ -411,7 +420,9 @@ describe("copy feature select", () => {
 
 describe("remove feature button", () => {
   it("removes a feature from the form - single feature", async () => {
-    const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
+    const { getByTestId, getByRole, user } = await setup(
+      <MapAndLabel {...props} />,
+    );
     const map = getByTestId("map-and-label-map");
 
     addFeaturesToMap(map, [point1]);
@@ -428,7 +439,7 @@ describe("remove feature button", () => {
   });
 
   it("removes a feature from the form - multiple features", async () => {
-    const { getByRole, user } = setup(<MapAndLabel {...props} />);
+    const { getByRole, user } = await setup(<MapAndLabel {...props} />);
 
     addMultipleFeatures([point1, point2]);
 
@@ -451,7 +462,9 @@ describe("remove feature button", () => {
   });
 
   it("removes a feature from the map", async () => {
-    const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
+    const { getByTestId, getByRole, user } = await setup(
+      <MapAndLabel {...props} />,
+    );
     let map = getByTestId("map-and-label-map");
 
     addFeaturesToMap(map, [point1]);
@@ -472,7 +485,7 @@ describe("remove feature button", () => {
 describe("payload generation", () => {
   it("a submitted payload contains a GeoJSON feature collection", async () => {
     const handleSubmit = vi.fn();
-    const { getByTestId, user } = setup(
+    const { getByTestId, user } = await setup(
       <MapAndLabel {...props} handleSubmit={handleSubmit} />,
     );
 
@@ -497,7 +510,7 @@ describe("payload generation", () => {
 
   it("the feature collection contains all geospatial data inputted by the user", async () => {
     const handleSubmit = vi.fn();
-    const { getByTestId, user } = setup(
+    const { getByTestId, user } = await setup(
       <MapAndLabel {...props} handleSubmit={handleSubmit} />,
     );
 
@@ -525,7 +538,7 @@ describe("payload generation", () => {
 
   it("each feature's properties correspond with the details entered for that feature", async () => {
     const handleSubmit = vi.fn();
-    const { getByTestId, user } = setup(
+    const { getByTestId, user } = await setup(
       <MapAndLabel {...props} handleSubmit={handleSubmit} />,
     );
 
@@ -588,7 +601,7 @@ describe("back navigation", () => {
     };
 
     // `previouslySubmittedData` is set when coming "back" or via Review "change"
-    const { getByTestId } = setup(
+    const { getByTestId } = await setup(
       <MapAndLabel
         {...props}
         fn="trees"

@@ -18,8 +18,8 @@ describe("FeedbackForm functionality", () => {
     vi.clearAllMocks();
   });
 
-  test("renders inputs correctly", () => {
-    const { getByLabelText } = setup(
+  test("renders inputs correctly", async () => {
+    const { getByLabelText } = await setup(
       <FeedbackForm
         inputs={mockLabelledInputs}
         handleSubmit={mockHandleSubmit}
@@ -32,7 +32,7 @@ describe("FeedbackForm functionality", () => {
   });
 
   test("can submit inputs", async () => {
-    const { getByLabelText, getByText, user } = setup(
+    const { getByLabelText, getByText, user } = await setup(
       <FeedbackForm
         inputs={mockLabelledInputs}
         handleSubmit={mockHandleSubmit}
@@ -59,7 +59,7 @@ describe("FeedbackForm accessibility tests", () => {
   });
 
   test("renders inputs with no accessibility violations", async () => {
-    const { container } = setup(
+    const { container } = await setup(
       <FeedbackForm
         inputs={mockLabelledInputs}
         handleSubmit={mockHandleSubmit}

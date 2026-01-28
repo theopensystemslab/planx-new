@@ -23,18 +23,18 @@ describe("Save and Return component", () => {
     window.history.replaceState({}, "", decodeURIComponent(originalHref));
   });
 
-  it("displays the ConfirmEmail component if an email address is not captured", () => {
+  it("displays the ConfirmEmail component if an email address is not captured", async () => {
     const children = <Button>Testing 123</Button>;
-    setup(<SaveAndReturn children={children}></SaveAndReturn>);
+    await setup(<SaveAndReturn children={children}></SaveAndReturn>);
 
     expect(screen.queryByText("Testing 123")).not.toBeInTheDocument();
     expect(screen.getByText("Enter your email address")).toBeInTheDocument();
   });
 
-  it("displays children if an email address is already captured", () => {
+  it("displays children if an email address is already captured", async () => {
     act(() => setState({ saveToEmail: "test@test.com" }));
     const children = <Button>Testing 123</Button>;
-    setup(<SaveAndReturn children={children}></SaveAndReturn>);
+    await setup(<SaveAndReturn children={children}></SaveAndReturn>);
 
     expect(screen.getByText("Testing 123")).toBeInTheDocument();
 
@@ -45,7 +45,9 @@ describe("Save and Return component", () => {
 
   it("will save matching emails to state", async () => {
     const children = <Button>Testing 123</Button>;
-    const { user } = setup(<SaveAndReturn children={children}></SaveAndReturn>);
+    const { user } = await setup(
+      <SaveAndReturn children={children}></SaveAndReturn>,
+    );
     expect(getState().saveToEmail).toBeUndefined();
 
     await user.type(screen.getByLabelText("Email address"), "test@test.com");
@@ -61,7 +63,7 @@ describe("Save and Return component", () => {
 
   it("should not have any accessibility violations", async () => {
     const children = <Button>Testing 123</Button>;
-    const { container } = setup(
+    const { container } = await setup(
       <SaveAndReturn children={children}></SaveAndReturn>,
     );
 
@@ -71,7 +73,9 @@ describe("Save and Return component", () => {
 
   it("stores the sessionId as part of the URL once an email has been submitted", async () => {
     const children = <Button>Testing 123</Button>;
-    const { user } = setup(<SaveAndReturn children={children}></SaveAndReturn>);
+    const { user } = await setup(
+      <SaveAndReturn children={children}></SaveAndReturn>,
+    );
 
     const sessionId = getState().sessionId;
     expect(sessionId).toBeDefined();
@@ -99,7 +103,7 @@ describe("ConfirmEmail component", () => {
   it("will not submit if form fields are empty", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>,
     );
 
@@ -118,7 +122,7 @@ describe("ConfirmEmail component", () => {
   it("will not submit if form fields do not match", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>,
     );
 
@@ -140,7 +144,7 @@ describe("ConfirmEmail component", () => {
   it("will display an error for an invalid email address", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>,
     );
 
@@ -159,7 +163,7 @@ describe("ConfirmEmail component", () => {
   it("will display an error if a field is left empty", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>,
     );
 
@@ -181,7 +185,7 @@ describe("ConfirmEmail component", () => {
   it("should not have any accessibility violations upon load", async () => {
     const handleSubmit = vi.fn();
 
-    const { container } = setup(
+    const { container } = await setup(
       <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>,
     );
 
@@ -191,7 +195,7 @@ describe("ConfirmEmail component", () => {
 
   it("should not have any accessibility violations in the error state", async () => {
     const handleSubmit = vi.fn();
-    const { container, user } = setup(
+    const { container, user } = await setup(
       <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>,
     );
 
@@ -207,7 +211,7 @@ describe("ConfirmEmail component", () => {
   it("submits matching emails", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>,
     );
 

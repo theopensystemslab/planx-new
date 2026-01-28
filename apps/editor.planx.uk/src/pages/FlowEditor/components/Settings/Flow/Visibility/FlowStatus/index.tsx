@@ -9,11 +9,11 @@ import { format } from "date-fns";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { useLocation } from "react-use";
-import { rootFlowPath } from "routes/utils";
 import { FONT_WEIGHT_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
+import { rootFlowPath } from "utils/routeUtils/utils";
 
 import { useSlackMessage } from "../../../hooks/useSlackMessage";
 import SettingsFormContainer from "../../../shared/SettingsForm";

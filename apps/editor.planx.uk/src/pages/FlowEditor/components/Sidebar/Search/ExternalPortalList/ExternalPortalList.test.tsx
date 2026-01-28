@@ -24,8 +24,8 @@ const externalPortals: FullStore["externalPortals"] = {
   def: { name: "Portal 2", href: "myTeam/portalTwo" },
 };
 
-it("does not display if there are no external portals in the flow", () => {
-  const { queryByTestId } = setup(
+it("does not display if there are no external portals in the flow", async () => {
+  const { queryByTestId } = await setup(
     <VirtuosoWrapper>
       <Search />
     </VirtuosoWrapper>,
@@ -34,10 +34,10 @@ it("does not display if there are no external portals in the flow", () => {
   expect(queryByTestId("searchExternalPortalList")).not.toBeInTheDocument();
 });
 
-it("does not display if there is no search term provided", () => {
+it("does not display if there is no search term provided", async () => {
   act(() => setState({ externalPortals }));
 
-  const { queryByTestId } = setup(
+  const { queryByTestId } = await setup(
     <VirtuosoWrapper>
       <Search />
     </VirtuosoWrapper>,
@@ -49,7 +49,7 @@ it("does not display if there is no search term provided", () => {
 it("displays a list of external portals if present in the flow, and a search term is provided", async () => {
   act(() => setState({ externalPortals }));
 
-  const { findByTestId, getByText, getByLabelText, user } = setup(
+  const { findByTestId, getByText, getByLabelText, user } = await setup(
     <VirtuosoWrapper>
       <Search />
     </VirtuosoWrapper>,
@@ -70,7 +70,7 @@ it("displays a list of external portals if present in the flow, and a search ter
 it("allows users to navigate to the external portals", async () => {
   act(() => setState({ externalPortals }));
 
-  const { getAllByRole, getByLabelText, user } = setup(
+  const { getAllByRole, getByLabelText, user } = await setup(
     <VirtuosoWrapper>
       <Search />
     </VirtuosoWrapper>,
@@ -89,7 +89,7 @@ it("allows users to navigate to the external portals", async () => {
 it("should not have any accessibility violations on initial load", async () => {
   act(() => setState({ externalPortals }));
 
-  const { container, getByLabelText, user, getByTestId } = setup(
+  const { container, getByLabelText, user, getByTestId } = await setup(
     <VirtuosoWrapper>
       <Search />
     </VirtuosoWrapper>,

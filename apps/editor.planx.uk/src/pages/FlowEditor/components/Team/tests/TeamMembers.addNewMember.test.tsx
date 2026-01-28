@@ -98,7 +98,7 @@ describe("when the addNewMember modal is rendered", () => {
   });
 
   it("should not have any accessibility issues", async () => {
-    const { container } = setup(
+    const { container } = await setup(
       <DndProvider backend={HTML5Backend}>
         <UserUpsertModal
           showModal={true}

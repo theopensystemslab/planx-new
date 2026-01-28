@@ -1,7 +1,6 @@
 import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
@@ -14,15 +13,15 @@ import {
   getInternalFeedbackMetadata,
   insertFeedbackMutation,
 } from "lib/feedback";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { Link as ReactNaviLink } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import TerribleFace from "ui/images/feedback_filled-01.svg";
 import PoorFace from "ui/images/feedback_filled-02.svg";
 import NeutralFace from "ui/images/feedback_filled-03.svg";
 import GoodFace from "ui/images/feedback_filled-04.svg";
 import ExcellentFace from "ui/images/feedback_filled-05.svg";
-import InputLabel from "ui/public/InputLabel";
+import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
@@ -35,6 +34,10 @@ import { StyledToggleButtonGroup } from "../styled";
 export const PASSPORT_FEEDBACK_KEY = "_feedback";
 
 const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
+  const [teamSlug, flowSlug] = useStore((state) => [
+    state.teamSlug,
+    state.flowSlug,
+  ]);
   const feedbackDataSchema = createFeedbackSchema(props.feedbackRequired);
 
   const logFeedback = async (values: FormProps) => {
@@ -182,14 +185,13 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
         >
           Please do not include any personal data such as your name, email or
           address. All feedback is processed according to our{" "}
-          <Link
-            component={ReactNaviLink}
-            href="pages/privacy"
-            prefetch={false}
+          <CustomLink
+            to="/$team/$flow/published/pages/$page"
+            params={{ team: teamSlug, flow: flowSlug, page: "privacy" }}
             color="primary"
           >
             privacy notice
-          </Link>
+          </CustomLink>
           .
         </Typography>
       </WarningContainer>

@@ -1,5 +1,5 @@
+import { useSearch } from "@tanstack/react-router";
 import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
-import { useCurrentRoute } from "react-navi";
 import { getSortParams } from "ui/editor/SortControl/utils";
 
 import { sortOptions } from "../../helpers/sortAndFilterOptions";
@@ -9,11 +9,11 @@ import { sortOptions } from "../../helpers/sortAndFilterOptions";
  * based on the current sort parameters
  */
 export const useFlowSortDisplay = () => {
-  const route = useCurrentRoute();
+  const searchParams = useSearch({ from: "/_authenticated/$team/" });
 
   const {
     sortObject: { displayName: sortDisplayName },
-  } = getSortParams<FlowSummary>(route.url.query, sortOptions);
+  } = getSortParams<FlowSummary>(searchParams, sortOptions);
 
   const showPublished = sortDisplayName?.toLowerCase().includes("publish");
   const headerText = showPublished ? "Last published" : "Last edited";

@@ -1,12 +1,13 @@
 import Box from "@mui/material/Box";
 import { containerClasses } from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
+import { useRouter } from "@tanstack/react-router";
 import EditorNavMenu from "components/EditorNavMenu/EditorNavMenu";
 import ErrorFallback from "components/Error/ErrorFallback";
 import LoadingOverlay from "components/LoadingOverlay";
 import RouteLoadingIndicator from "components/RouteLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { ErrorBoundary } from "react-error-boundary";
@@ -41,7 +42,14 @@ const DashboardContainer = styled(Box)(({ theme }) => ({
 }));
 
 const Layout: React.FC<PropsWithChildren> = ({ children }) => {
-  useStore((state) => state.initURLTracking());
+  const router = useRouter();
+  const initURLTracking = useStore((state) => state.initURLTracking);
+
+  useEffect(() => {
+    const cleanup = initURLTracking(router);
+    return cleanup;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty deps - run once on mount
 
   return (
     <>

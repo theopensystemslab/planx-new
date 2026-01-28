@@ -11,7 +11,7 @@ describe("when a user selects the exclusive 'or' option and nothing else", () =>
   it("does not throw an error on submit", async () => {
     const handleSubmit = vi.fn();
 
-    setup(
+    await setup(
       <Checklist
         allRequired={false}
         description=""
@@ -49,7 +49,7 @@ describe.each([
   "when a user selects $optionType option",
   ({ oppositeOptionLabelText, optionLabelText }) => {
     it("deselects it when the opposite type of option is selected", async () => {
-      const { getByLabelText } = setup(
+      const { getByLabelText } = await setup(
         <Checklist
           allRequired={false}
           description=""
@@ -76,7 +76,7 @@ describe("when an exclusiveOr option is configured", () => {
   it("does not affect the user's ability to select multiple other options", async () => {
     const handleSubmit = vi.fn();
 
-    setup(
+    await setup(
       <Checklist
         allRequired={false}
         description=""

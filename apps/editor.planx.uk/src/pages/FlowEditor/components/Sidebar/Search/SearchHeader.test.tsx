@@ -17,7 +17,7 @@ vi.mock("react-navi", () => ({
 beforeAll(() => useStore.setState({ flow }));
 
 it("Displays a warning if no results are returned", async () => {
-  const { getByLabelText, getByText, getByRole, user } = setup(
+  const { getByLabelText, getByText, getByRole, user } = await setup(
     <VirtuosoWrapper>
       <Search />
     </VirtuosoWrapper>,
@@ -33,11 +33,12 @@ it("Displays a warning if no results are returned", async () => {
 });
 
 it("Displays the count for a single result", async () => {
-  const { getByLabelText, getByText, getAllByRole, getByRole, user } = setup(
-    <VirtuosoWrapper>
-      <Search />
-    </VirtuosoWrapper>,
-  );
+  const { getByLabelText, getByText, getAllByRole, getByRole, user } =
+    await setup(
+      <VirtuosoWrapper>
+        <Search />
+      </VirtuosoWrapper>,
+    );
 
   const searchInput = getByLabelText("Search this flow");
   user.type(searchInput, "Spain");
@@ -48,11 +49,12 @@ it("Displays the count for a single result", async () => {
 });
 
 it("Displays the count for multiple results", async () => {
-  const { getByText, getByRole, getAllByRole, getByLabelText, user } = setup(
-    <VirtuosoWrapper>
-      <Search />
-    </VirtuosoWrapper>,
-  );
+  const { getByText, getByRole, getAllByRole, getByLabelText, user } =
+    await setup(
+      <VirtuosoWrapper>
+        <Search />
+      </VirtuosoWrapper>,
+    );
 
   const searchInput = getByLabelText("Search this flow");
   // Matches "India" and "Indonesia"

@@ -11,7 +11,7 @@ describe("adding an internal portal", () => {
   test("creating a new internal portal", async () => {
     const handleSubmit = vi.fn();
 
-    const { user, getByTestId } = setup(
+    const { user, getByTestId } = await setup(
       <InternalPortalForm
         flows={[{ id: "ignore", text: "ignore" }]}
         handleSubmit={handleSubmit}
@@ -47,7 +47,7 @@ describe("adding an internal portal", () => {
   test("selecting an existing internal portal", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <InternalPortalForm
         flows={[{ id: "portal", text: "portal" }]}
         handleSubmit={handleSubmit}
@@ -76,7 +76,7 @@ describe("adding an internal portal", () => {
   test("if text and flowId are set, only flowId should be submitted", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <InternalPortalForm
         flows={[{ id: "portal", text: "portal text" }]}
         handleSubmit={handleSubmit}
@@ -102,15 +102,15 @@ describe("adding an internal portal", () => {
   });
 });
 
-test("do not display select field when there are no flows to select", () => {
-  setup(<InternalPortalForm />);
+test("do not display select field when there are no flows to select", async () => {
+  await setup(<InternalPortalForm />);
   expect(screen.queryByTestId("flowId")).not.toBeInTheDocument();
 });
 
 test("updating an internal portal", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <InternalPortalForm
       id="test"
       node={{ data: { text: "val" } }}
@@ -165,7 +165,7 @@ describe("validations", () => {
       test(`${scenario.action}`, async () => {
         const handleSubmit = vi.fn();
 
-        setup(
+        await setup(
           <InternalPortalForm
             id={scenario.id}
             flows={scenario.flows}
@@ -185,7 +185,7 @@ describe("validations", () => {
 it("should not have any accessibility violations", async () => {
   const handleSubmit = vi.fn();
 
-  const { container } = setup(
+  const { container } = await setup(
     <InternalPortalForm
       flows={[{ id: "portal", text: "portal" }]}
       handleSubmit={handleSubmit}

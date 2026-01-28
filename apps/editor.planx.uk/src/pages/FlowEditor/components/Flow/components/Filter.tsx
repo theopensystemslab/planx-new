@@ -1,10 +1,10 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
+import { Link } from "@tanstack/react-router";
 import classNames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
 import React from "react";
 import { useDrag } from "react-dnd";
-import { Link } from "react-navi";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
@@ -17,11 +17,10 @@ type Props = {
 };
 
 const Filter: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes] =
-    useStore((state) => [
-      state.isClone,
-      state.childNodesOf(props.id),
-    ]);
+  const [isClone, childNodes] = useStore((state) => [
+    state.isClone,
+    state.childNodesOf(props.id),
+  ]);
 
   const parent = getParentId(props.parent);
 
@@ -37,10 +36,10 @@ const Filter: React.FC<Props> = React.memo((props) => {
     }),
   });
 
-  let href = `${window.location.pathname}/nodes/${props.id}/edit`;
-  if (parent) {
-    href = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
-  }
+  const [teamSlug, flowSlug] = useStore((state) => [
+    state.teamSlug,
+    state.flowSlug,
+  ]);
 
   const handleContextMenu = useContextMenu({
     source: "node",
@@ -48,7 +47,7 @@ const Filter: React.FC<Props> = React.memo((props) => {
       parent,
       before: props.id,
       self: props.id,
-    }
+    },
   });
 
   const Icon = ICONS[props.type];
@@ -65,8 +64,18 @@ const Filter: React.FC<Props> = React.memo((props) => {
         })}
       >
         <Link
-          href={href}
-          prefetch={false}
+          to={
+            parent
+              ? "/$team/$flow/nodes/$parent/nodes/$id/edit"
+              : "/$team/$flow/nodes/$id/edit"
+          }
+          params={{
+            team: teamSlug,
+            flow: flowSlug,
+            id: props.id,
+            ...(parent && { parent }),
+          }}
+          preload={false}
           onContextMenu={handleContextMenu}
           ref={drag}
         >

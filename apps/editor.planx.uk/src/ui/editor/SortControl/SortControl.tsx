@@ -1,9 +1,7 @@
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
-import get from "lodash/get";
-import orderBy from "lodash/orderBy";
-import React, { useEffect, useMemo, useState } from "react";
-import { useCurrentRoute, useNavigation } from "react-navi";
+import { useNavigate, useSearch } from "@tanstack/react-router";
+import React from "react";
 import { Paths } from "type-fest";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 import { slugify } from "utils";
@@ -22,75 +20,49 @@ export interface SortableFields<T> {
 }
 /**
  * @component
- * @description Sorts a list of objects
- * @param {Type} T - a type to define the shape of the data in the records array
- * @param {Array} props.records - an array of objects to sort
- * @param {Function} props.setRecords - A way to set the new sorted order of the array
+ * @description URL-controlled sort component that updates search params
+ * @param {Type} T - a type to define the shape of the data
  * @param {Array} props.sortOptions - An array of objects to define displayName, fieldName, and directionNames
  * @returns {JSX.Element} Two select components to switch between fieldName and directionNames
  * @example
  *  <SortControl<FlowSummary>
- *        records={flows}
- *        setRecords={setFlows}
  *       sortOptions={sortOptions}
  *     />
  */
 export const SortControl = <T extends object>({
-  records,
-  setRecords,
   sortOptions,
 }: {
-  records: T[];
-  setRecords: React.Dispatch<React.SetStateAction<T[] | null>>;
   sortOptions: SortableFields<T>[];
 }) => {
-  const route = useCurrentRoute();
+  const searchParams = useSearch({ from: "/_authenticated/$team/" });
+  const navigate = useNavigate();
 
-  const { sortObject: initialSortObject, sortDirection: initialSortDirection } =
-    getSortParams(route.url.query, sortOptions);
+  const { sortObject: currentSortObject, sortDirection: currentSortDirection } =
+    getSortParams(searchParams || {}, sortOptions);
 
-  const [selectedSort, setSelectedSort] =
-    useState<SortableFields<T>>(initialSortObject);
-  const [sortDirection, setSortDirection] =
-    useState<SortDirection>(initialSortDirection);
+  const selectedDisplaySlug = slugify(currentSortObject.displayName);
 
-  const navigation = useNavigation();
-  const selectedDisplaySlug = slugify(selectedSort.displayName);
+  const handleSortChange = (newSortSlug: string) => {
+    navigate({
+      to: ".",
+      search: (prev) => ({
+        ...prev,
+        sort: newSortSlug as "name" | "last-edited" | "last-published",
+      }),
+      replace: true,
+    });
+  };
 
-  const sortOptionsMap = useMemo(() => {
-    return Object.groupBy(sortOptions, ({ displayName }) =>
-      slugify(displayName),
-    );
-  }, [sortOptions]);
-
-  useEffect(() => {
-    const updateSortParam = (sortOption: string) => {
-      const searchParams = new URLSearchParams(route.url.search);
-      searchParams.set("sort", sortOption);
-      searchParams.set("sortDirection", sortDirection);
-      navigation.navigate(
-        {
-          pathname: window.location.pathname,
-          search: `?${searchParams.toString()}`,
-        },
-        {
-          replace: true,
-        },
-      );
-    };
-
-    updateSortParam(selectedDisplaySlug);
-  }, [navigation, route.url.search, selectedDisplaySlug, sortDirection]);
-
-  useEffect(() => {
-    const { fieldName } = selectedSort;
-    const sortedFlowsNullsLast = orderBy(
-      records,
-      [(flow) => get(flow, fieldName) || ""],
-      sortDirection,
-    );
-    setRecords(sortedFlowsNullsLast);
-  }, [selectedSort, sortDirection, records, setRecords]);
+  const handleDirectionChange = (newDirection: SortDirection) => {
+    navigate({
+      to: ".",
+      search: (prev) => ({
+        ...prev,
+        sortDirection: newDirection,
+      }),
+      replace: true,
+    });
+  };
 
   return (
     <Box display={"flex"} gap={1} alignItems="center">
@@ -99,10 +71,7 @@ export const SortControl = <T extends object>({
         value={selectedDisplaySlug}
         size="small"
         onChange={(e) => {
-          const targetKey = e.target.value as string;
-          const matchingSortOption = sortOptionsMap[targetKey];
-          if (!matchingSortOption) return;
-          setSelectedSort(matchingSortOption?.[0]);
+          handleSortChange(e.target.value as string);
         }}
       >
         {sortOptions.map(({ displayName }) => (
@@ -112,21 +81,23 @@ export const SortControl = <T extends object>({
         ))}
       </SelectInput>
       <SelectInput
-        value={sortDirection}
+        value={currentSortDirection}
         size="small"
         onChange={(e) => {
-          const newDirection = e.target.value as SortDirection;
-          setSortDirection(newDirection);
+          handleDirectionChange(e.target.value as SortDirection);
         }}
       >
-        <MenuItem key={slugify(selectedSort.directionNames.asc)} value={"asc"}>
-          {selectedSort.directionNames.asc}
+        <MenuItem
+          key={slugify(currentSortObject.directionNames.asc)}
+          value={"asc"}
+        >
+          {currentSortObject.directionNames.asc}
         </MenuItem>
         <MenuItem
-          key={slugify(selectedSort.directionNames.desc)}
+          key={slugify(currentSortObject.directionNames.desc)}
           value={"desc"}
         >
-          {selectedSort.directionNames.desc}
+          {currentSortObject.directionNames.desc}
         </MenuItem>
       </SelectInput>
     </Box>

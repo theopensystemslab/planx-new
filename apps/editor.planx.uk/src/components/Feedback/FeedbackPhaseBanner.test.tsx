@@ -13,8 +13,8 @@ describe("FeedbackPhaseBanner presentation and functionality", () => {
     vi.clearAllMocks();
   });
 
-  test("renders PUBLIC BETA flag and buttons correctly", () => {
-    const { getByText } = setup(
+  test("renders PUBLIC BETA flag and buttons correctly", async () => {
+    const { getByText } = await setup(
       <FeedbackPhaseBanner
         handleFeedbackClick={handleFeedbackClick}
         handleReportAnIssueClick={handleReportAnIssueClick}
@@ -27,7 +27,7 @@ describe("FeedbackPhaseBanner presentation and functionality", () => {
   });
 
   test("clicking on feedback link calls handleFeedbackClick", async () => {
-    const { getByText, user } = setup(
+    const { getByText, user } = await setup(
       <FeedbackPhaseBanner
         handleFeedbackClick={handleFeedbackClick}
         handleReportAnIssueClick={handleReportAnIssueClick}
@@ -39,7 +39,7 @@ describe("FeedbackPhaseBanner presentation and functionality", () => {
   });
 
   test("clicking on 'Report an issue with this page' button calls handleReportAnIssueClick", async () => {
-    const { getByText, user } = setup(
+    const { getByText, user } = await setup(
       <FeedbackPhaseBanner
         handleFeedbackClick={handleFeedbackClick}
         handleReportAnIssueClick={handleReportAnIssueClick}
@@ -53,7 +53,7 @@ describe("FeedbackPhaseBanner presentation and functionality", () => {
 
 describe("FeedbackPhaseBanner accessibility", () => {
   test("should have no accessibility violations", async () => {
-    const { container } = setup(
+    const { container } = await setup(
       <FeedbackPhaseBanner
         handleFeedbackClick={vi.fn()}
         handleReportAnIssueClick={vi.fn()}

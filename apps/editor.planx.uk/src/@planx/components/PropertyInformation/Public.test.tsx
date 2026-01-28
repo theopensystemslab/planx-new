@@ -17,7 +17,7 @@ const defaultPresentationalProps: PresentationalProps = {
 };
 
 test("renders a warning for editors if address data is not in state", async () => {
-  setup(
+  await setup(
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <PropertyInformation
         title="About the property"
@@ -32,7 +32,7 @@ test("renders a warning for editors if address data is not in state", async () =
 test("renders correctly when property type is supported", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <Presentational
       {...defaultPresentationalProps}
       showPropertyTypeOverride={true}
@@ -51,7 +51,7 @@ test("renders correctly when property type is supported", async () => {
 test("renders correctly when property type is not supported", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <Presentational
       {...defaultPresentationalProps}
       showPropertyTypeOverride={false}

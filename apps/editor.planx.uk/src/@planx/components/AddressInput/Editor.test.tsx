@@ -7,8 +7,8 @@ import { setup } from "testUtils";
 import AddressInputComponent from "./Editor";
 
 describe("AddressInputComponent - Editor Modal", () => {
-  it("renders", () => {
-    setup(
+  it("renders", async () => {
+    await setup(
       <DndProvider backend={HTML5Backend}>
         <AddressInputComponent id="test" />
       </DndProvider>,
@@ -18,7 +18,7 @@ describe("AddressInputComponent - Editor Modal", () => {
 
   it("requires a title", async () => {
     const handleSubmit = vi.fn();
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <AddressInputComponent id="test" handleSubmit={handleSubmit} />
       </DndProvider>,
@@ -33,7 +33,7 @@ describe("AddressInputComponent - Editor Modal", () => {
 
   it("requires a data field", async () => {
     const handleSubmit = vi.fn();
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <AddressInputComponent id="test" handleSubmit={handleSubmit} />
       </DndProvider>,
@@ -54,7 +54,7 @@ describe("AddressInputComponent - Editor Modal", () => {
 
   it("can be submitted successfully", async () => {
     const handleSubmit = vi.fn();
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <AddressInputComponent id="test" handleSubmit={handleSubmit} />
       </DndProvider>,

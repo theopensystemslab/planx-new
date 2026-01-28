@@ -4,10 +4,9 @@ import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { NotFoundError } from "navi";
+import { notFound, useNavigate } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { useNavigation } from "react-navi";
 import { FOOTER_ITEMS } from "types";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
@@ -50,7 +49,7 @@ function Layout(props: {
 }
 
 function ContentPage(props: { page: string }) {
-  const navigation = useNavigation();
+  const navigate = useNavigate();
   const { flowSettings, globalSettings } = useStore();
   const isFooterItem = FOOTER_ITEMS.includes(props.page);
   // Determine if the content is a flow setting or a global setting, and only show it if it isn't hidden
@@ -69,12 +68,12 @@ function ContentPage(props: { page: string }) {
     }
   })();
 
-  if (!content) throw new NotFoundError();
+  if (!content) throw notFound();
 
   return (
     <Layout
       {...content}
-      onClose={() => navigation.goBack()}
+      onClose={() => navigate({ to: ".." })}
       openLinksOnNewTab={!isFooterItem}
     />
   );

@@ -4,7 +4,7 @@ import {
   NodeTags,
   TemplatedNodeData,
 } from "@opensystemslab/planx-core/types";
-import { isPreviewOnlyDomain } from "routes/utils";
+import { isPreviewOnlyDomain } from "utils/routeUtils/utils";
 import { create, StoreApi, UseBoundStore } from "zustand";
 
 import type { EditorStore, EditorUIStore } from "./editor";

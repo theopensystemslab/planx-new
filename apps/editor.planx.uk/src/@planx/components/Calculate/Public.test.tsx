@@ -5,9 +5,9 @@ import { vi } from "vitest";
 import Calculate from "./Public";
 
 describe("Calculate component", () => {
-  it("renders correctly", () => {
+  it("renders correctly", async () => {
     const handleSubmit = vi.fn();
-    setup(
+    await setup(
       <Calculate
         fn="testGroup"
         formula="pickRandom([1,2])"
