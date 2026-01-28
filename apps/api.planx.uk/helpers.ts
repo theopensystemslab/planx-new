@@ -102,56 +102,6 @@ const createFlow = async ({
   const userId = userContext.getStore()?.user?.sub;
 
   try {
-    const {
-      flow: { id },
-    } = await $client.request<CreateFlowResponse>(
-      gql`
-        mutation InsertFlow(
-          $team_id: Int!
-          $slug: String!
-          $name: String!
-          $data: jsonb = {}
-          $copied_from: uuid
-          $templated_from: uuid
-          $is_template: Boolean
-          $summary: String
-          $description: String
-          $limitations: String
-        ) {
-          flow: insert_flows_one(
-            object: {
-              team_id: $team_id
-              slug: $slug
-              name: $name
-              data: $data
-              version: 1
-              copied_from: $copied_from
-              templated_from: $templated_from
-              is_template: $is_template
-              summary: $summary
-              description: $description
-              limitations: $limitations
-            }
-          ) {
-            id
-          }
-        }
-      `,
-      {
-        team_id: teamId,
-        slug: slug,
-        name: name,
-        data: flowData,
-        copied_from: copiedFrom,
-        templated_from: templatedFrom,
-        is_template: isTemplate,
-        summary: summary,
-        description: description,
-        limitations: limitations,
-      },
-    );
-
-    // Fetch the default email id from submission_integrations table
     const { submissionIntegrations } = await $client.request<{
       submissionIntegrations: { id: string }[];
     }>(
@@ -174,36 +124,71 @@ const createFlow = async ({
       ? submissionIntegrations[0].id
       : null;
 
-    // Insert a new record into the flow_integrations table
-    await $client.request(
+    const response = await $client.request<{
+      insertFlowWithIntegration: {
+        flow: { id: Flow["id"] };
+      };
+    }>(
       gql`
-        mutation InsertFlowIntegration(
-          $flow_id: uuid!
+        mutation InsertFlowWithIntegration(
           $team_id: Int!
+          $slug: String!
+          $name: String!
+          $data: jsonb = {}
+          $copied_from: uuid
+          $templated_from: uuid
+          $is_template: Boolean
+          $summary: String
+          $description: String
+          $limitations: String
           $email_id: uuid
         ) {
-          insert_flow_integrations_one(
+          insertFlowWithIntegration: insert_flows_one(
             object: {
-              flow_id: $flow_id
               team_id: $team_id
-              email_id: $email_id
+              slug: $slug
+              name: $name
+              data: $data
+              version: 1
+              copied_from: $copied_from
+              templated_from: $templated_from
+              is_template: $is_template
+              summary: $summary
+              description: $description
+              limitations: $limitations
+              flow_integration: {
+                data: {
+                  team_id: $team_id
+                  email_id: $email_id
+                }
+              }
             }
           ) {
-            flow_id
+            id
           }
         }
       `,
       {
-        flow_id: id,
         team_id: teamId,
+        slug: slug,
+        name: name,
+        data: flowData,
+        copied_from: copiedFrom,
+        templated_from: templatedFrom,
+        is_template: isTemplate,
+        summary: summary,
+        description: description,
+        limitations: limitations,
         email_id: emailId,
       },
     );
 
-    await createAssociatedOperation(id);
-    await publishFlow(id, "Created flow");
+    const flowId = response.insertFlowWithIntegration.flow.id;
 
-    return { id };
+    await createAssociatedOperation(flowId);
+    await publishFlow(flowId, "Created flow");
+
+    return { id: flowId };
   } catch (error) {
     throw Error(
       `User ${userId} failed to insert flow to teamId ${teamId}. Please check permissions. Error: ${error}`,
