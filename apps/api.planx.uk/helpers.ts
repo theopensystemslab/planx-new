@@ -74,6 +74,30 @@ interface CreateFlowResponse {
   };
 }
 
+const getDefaultEmail = async (teamId: number): Promise<string | null> => {
+  const { client: $client } = getClient();
+
+  const { submissionIntegrations } = await $client.request<{
+    submissionIntegrations: { id: string }[];
+  }>(
+    gql`
+      query GetDefaultEmail($team_id: Int!) {
+        submissionIntegrations: submission_integrations(
+          where: { team_id: { _eq: $team_id }, default_email: { _eq: true } }
+          limit: 1
+        ) {
+          id
+        }
+      }
+    `,
+    {
+      team_id: teamId,
+    },
+  );
+
+  return submissionIntegrations.length ? submissionIntegrations[0].id : null;
+};
+
 // Insert a new flow into the `flows` table
 const createFlow = async ({
   teamId,
@@ -102,27 +126,7 @@ const createFlow = async ({
   const userId = userContext.getStore()?.user?.sub;
 
   try {
-    const { submissionIntegrations } = await $client.request<{
-      submissionIntegrations: { id: string }[];
-    }>(
-      gql`
-        query GetDefaultEmail($team_id: Int!) {
-          submissionIntegrations: submission_integrations(
-            where: { team_id: { _eq: $team_id }, default_email: { _eq: true } }
-            limit: 1
-          ) {
-            id
-          }
-        }
-      `,
-      {
-        team_id: teamId,
-      },
-    );
-
-    const emailId = submissionIntegrations.length
-      ? submissionIntegrations[0].id
-      : null;
+    const emailId = await getDefaultEmail(teamId);
     
     const response = await $client.request<{
       insertFlowWithIntegration: {
