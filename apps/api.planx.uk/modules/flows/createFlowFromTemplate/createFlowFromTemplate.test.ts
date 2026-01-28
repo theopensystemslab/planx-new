@@ -74,11 +74,24 @@ describe("success", () => {
     });
 
     queryMock.mockQuery({
-      name: "InsertFlow",
+      name: "InsertFlowWithIntegration",
       matchOnVariables: false,
       data: {
-        flow: {
+        insertFlowWithIntegration: {
           id: "2",
+        },
+      },
+      variables: {
+        team_id: 1,
+        slug: "my-new-flow",
+        name: "My New Flow",
+        data: mockSourceTemplateFlowData,
+        email_id: "default-email-id",
+        flow_integration: {
+          data: {
+            team_id: 1,
+            email_id: "default-email-id",
+          },
         },
       },
     });
@@ -119,23 +132,15 @@ describe("success", () => {
 
     queryMock.mockQuery({
       name: "GetDefaultEmail",
-      matchOnVariables: false,
+      variables: {
+        team_id: 1,
+      },
       data: {
         submissionIntegrations: [
           {
             id: "default-email-id",
           },
         ],
-      },
-    });
-
-    queryMock.mockQuery({
-      name: "InsertFlowIntegration",
-      matchOnVariables: false,
-      data: {
-        insert_flow_integrations_one: {
-          flow_id: 2,
-        },
       },
     });
   });

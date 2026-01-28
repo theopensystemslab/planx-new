@@ -26,19 +26,26 @@ const auth = authHeader({ role: "teamEditor" });
 describe("authentication and error handling", () => {
   beforeAll(() => {
     queryMock.mockQuery({
-      name: "InsertFlow",
+      name: "InsertFlowWithIntegration",
+      matchOnVariables: false,
+      data: {
+        insertFlowWithIntegration: {
+          id: "2",
+        },
+      },
       variables: {
         team_id: 1,
         slug: "my-new-flow",
         name: "My new flow",
         data: mockNewFlowData,
-      },
-      data: {},
-      graphqlErrors: [
-        {
-          message: "Something went wrong",
+        email_id: "default-email-id",
+        flow_integration: {
+          data: {
+            team_id: 1,
+            email_id: "default-email-id",
+          },
         },
-      ],
+      },
     });
   });
 
@@ -99,12 +106,19 @@ describe("success", () => {
     });
 
     queryMock.mockQuery({
-      name: "InsertFlow",
+      name: "InsertFlowWithIntegration",
       matchOnVariables: false,
       data: {
-        flow: {
+        insertFlowWithIntegration: {
           id: "2",
         },
+      },
+      variables: {
+        team_id: 1,
+        slug: "my-new-flow",
+        name: "My new flow",
+        data: mockNewFlowData,
+        email_id: "default-email-id",
       },
     });
 
@@ -155,16 +169,6 @@ describe("success", () => {
             team_id: 1,
           },
         ],
-      },
-    });
-
-    queryMock.mockQuery({
-      name: "InsertFlowIntegration",
-      matchOnVariables: false,
-      data: {
-        insert_flow_integrations_one: {
-          flow_id: 2,
-        },
       },
     });
   });

@@ -18,10 +18,10 @@ beforeEach(() => {
   });
 
   queryMock.mockQuery({
-    name: "InsertFlow",
+    name: "InsertFlowWithIntegration",
     matchOnVariables: false,
     data: {
-      flow: {
+      insertFlowWithIntegration: {
         id: 2,
       },
     },
@@ -159,7 +159,7 @@ describe("authentication and error handling", () => {
     });
 
     queryMock.mockQuery({
-      name: "InsertFlow",
+      name: "InsertFlowWithIntegration",
       matchOnVariables: false,
       data: {
         flow: {
