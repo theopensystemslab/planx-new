@@ -252,8 +252,8 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
             <FiltersContainer>
               <Filters<FlowSummary> filterOptions={filterOptions} />
               {teamHasFlows && sortedFlows && (
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-                  <Typography variant="body2">
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <Typography variant="body2" sx={{ width: "70px" }}>
                     <strong>Sort by</strong>
                   </Typography>
                   <SortControl<FlowSummary> sortOptions={sortOptions} />
