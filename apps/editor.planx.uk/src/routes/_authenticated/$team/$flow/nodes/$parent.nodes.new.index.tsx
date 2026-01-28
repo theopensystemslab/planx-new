@@ -9,7 +9,6 @@ export const Route = createFileRoute(
 )({
   loaderDeps: ({ search }) => ({ type: search.type }),
   loader: async ({ params, deps }) => {
-    console.log("Index route (no $before) - params:", params);
     const { type = "question" } = deps;
     const { team, flow, parent } = params;
 
