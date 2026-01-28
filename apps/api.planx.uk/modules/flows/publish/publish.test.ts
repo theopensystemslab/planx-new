@@ -102,6 +102,20 @@ describe("publish", () => {
       },
     });
 
+    queryMock.mockQuery({
+      name: "GetSubmissionEmail",
+      variables: {
+        flow_id: "1",
+      },
+      data: {
+        flowIntegrations: [
+          {
+            email_id: "mock-email-id",
+          },
+        ],
+      },
+    });
+
     await supertest(app).post(mockEndpoint).set(auth).expect(200);
   });
 
@@ -146,6 +160,20 @@ describe("publish", () => {
           },
           publishedFlows: [{ data: alteredFlow }],
         },
+      },
+    });
+
+    queryMock.mockQuery({
+      name: "GetSubmissionEmail",
+      variables: {
+        flow_id: "1",
+      },
+      data: {
+        flowIntegrations: [
+          {
+            email_id: "mock-email-id",
+          },
+        ],
       },
     });
 
