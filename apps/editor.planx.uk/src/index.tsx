@@ -23,7 +23,6 @@ import { ToastContainer } from "react-toastify";
 // init airbrake before everything else
 import * as airbrake from "./airbrake";
 import { client } from "./lib/graphql";
-// Import the generated route tree
 import { routeTree } from "./routeTree.gen";
 import { defaultTheme } from "./theme";
 
