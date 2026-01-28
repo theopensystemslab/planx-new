@@ -54,6 +54,7 @@ export const setPath = (flowData: Store.Flow, req: RouteParams) => {
 //
 const PREVIEW_ONLY_DOMAINS = [
   "planningservices.barnet.gov.uk",
+  "planningservices.birmingham.gov.uk",
   "planningservices.buckinghamshire.gov.uk",
   "planningservices.camden.gov.uk",
   "planningservices.doncaster.gov.uk",
@@ -127,13 +128,3 @@ export const validateTeamRoute = async (req: RouteParams) => {
   )
     throw notFound();
 };
-
-// /**
-//  * Auth middleware for routes
-//  * Prevents non-teamEditors from accessing pages
-//  */
-// export const withTeamAuth = withData((req) => {
-//   const isAuthorised = useStore.getState().canUserEditTeam(req.params.team);
-//   if (!isAuthorised)
-//     throw new NotFoundError(`User does not have access to ${req.originalUrl}`);
-// });
