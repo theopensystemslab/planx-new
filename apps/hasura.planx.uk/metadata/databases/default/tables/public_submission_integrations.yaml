@@ -31,6 +31,7 @@ select_permissions:
         - default_email
         - id
         - submission_email
+        - team_id
       filter: {}
     comment: ""
   - role: platformAdmin

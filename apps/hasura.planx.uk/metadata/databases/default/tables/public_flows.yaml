@@ -52,6 +52,13 @@ array_relationships:
         remote_table:
           name: feedback
           schema: public
+  - name: flow_integration
+    using:
+      foreign_key_constraint_on:
+        column: flow_id
+        table:
+          name: flow_integrations
+          schema: public
   - name: flow_status_histories
     using:
       foreign_key_constraint_on:
