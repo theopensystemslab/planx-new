@@ -94,6 +94,9 @@ const ExternalPortal: React.FC<any> = (props) => {
     );
   }
 
+  const internalTeamSlug = data?.flows_by_pk?.team?.slug;
+  const internalFlowSlug = data?.flows_by_pk?.slug;
+
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
@@ -112,10 +115,25 @@ const ExternalPortal: React.FC<any> = (props) => {
             showStatus={props.showTemplatedNodeStatus}
           >
             <Box sx={{ display: "flex", alignItems: "stretch" }}>
-              <a href={`/${href}`} ref={drag}>
-                <EditorIcon />
-                <span>{href}</span>
-              </a>
+              {internalTeamSlug && internalFlowSlug ? (
+                <Link
+                  to="/$team/$flow"
+                  params={{
+                    team: internalTeamSlug,
+                    flow: internalFlowSlug,
+                  }}
+                  preload={false}
+                  ref={drag}
+                >
+                  <EditorIcon />
+                  <span>{href}</span>
+                </Link>
+              ) : (
+                <span ref={drag}>
+                  <EditorIcon />
+                  <span>{href}</span>
+                </span>
+              )}
               <Link
                 to={
                   parent
