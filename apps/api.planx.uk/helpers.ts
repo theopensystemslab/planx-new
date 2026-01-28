@@ -119,16 +119,14 @@ const createFlow = async ({
         team_id: teamId,
       },
     );
-    console.log({submissionIntegrations})
 
     const emailId = submissionIntegrations.length
       ? submissionIntegrations[0].id
       : null;
-    console.log({emailId})
     
     const response = await $client.request<{
       insertFlowWithIntegration: {
-        flow: { id: Flow["id"] };
+        id: Flow["id"];
       };
     }>(
       gql`
@@ -185,7 +183,7 @@ const createFlow = async ({
       },
     );
 
-    const flowId = response.insertFlowWithIntegration.flow.id;
+    const flowId = response.insertFlowWithIntegration.id;
 
     await createAssociatedOperation(flowId);
     await publishFlow(flowId, "Created flow");
