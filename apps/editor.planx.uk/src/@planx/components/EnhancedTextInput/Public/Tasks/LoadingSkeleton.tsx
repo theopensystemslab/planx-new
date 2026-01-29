@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import Skeleton from "@mui/material/Skeleton";
 import { keyframes, styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useEffect, useState } from "react";
@@ -86,7 +85,7 @@ const LoadingSkeleton: React.FC = () => {
         maxWidth: "100%",
       }}
     >
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
         {LOADING_STAGES.map((stage, index) => {
           const isVisible = index < visibleStages;
           return (
@@ -100,27 +99,10 @@ const LoadingSkeleton: React.FC = () => {
                 aria-hidden="true"
                 sx={{ visibility: isVisible ? "visible" : "hidden" }}
               />
-              <Typography variant="body2">{stage}</Typography>
+              <Typography variant="body1">{stage}</Typography>
             </LoadingStage>
           );
         })}
-      </Box>
-      <Box maxWidth="formWrap" mt={1}>
-        <Skeleton variant="text" width={240} height={50} />
-      </Box>
-      <Box sx={{ display: "flex", gap: 2, mt: 1, maxWidth: "contentWrap" }}>
-        <Skeleton
-          variant="rectangular"
-          width={900}
-          height={250}
-          aria-hidden="true"
-        />
-        <Skeleton
-          variant="rectangular"
-          width={900}
-          height={250}
-          aria-hidden="true"
-        />
       </Box>
     </Box>
   );
