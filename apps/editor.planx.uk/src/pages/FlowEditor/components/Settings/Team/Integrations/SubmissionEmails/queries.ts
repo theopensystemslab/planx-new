@@ -14,6 +14,20 @@ export const GET_TEAM_SUBMISSION_INTEGRATIONS = gql`
   }
 `;
 
+export const GET_FLOWS_WITH_SUBMISSION_INTEGRATION = gql`
+  query GetFlowsWithSubmissionIntegration($emailId: uuid!) {
+    flowIntegrations: flow_integrations(
+      where: { email_id: { _eq: $emailId } }
+    ) {
+      flowId: flow_id
+      submissionEmailId: email_id
+      flow {
+        name
+      }
+    }
+  }
+`;
+
 export const UPSERT_TEAM_SUBMISSION_INTEGRATIONS = gql`
   mutation UpsertSubmissionIntegrations(
     $emails: [submission_integrations_insert_input!]!

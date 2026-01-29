@@ -19,6 +19,17 @@ export interface SubmissionEmailValues {
   submissionIntegrations: SubmissionEmailInput[];
 }
 
+export type GetFlowsWithSubmissionIntegration = {
+  flowIntegrations: {
+    flowId: number;
+    id: string;
+    submissionEmailId: string;
+    flow: {
+      name: string;
+    };
+  }[];
+};
+
 export interface UpdateTeamSubmissionIntegrationsVariables {
   emails: SubmissionEmailMutation[];
 }
