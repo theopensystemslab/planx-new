@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import CheckIcon from "@mui/icons-material/Check";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
@@ -9,7 +9,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import ErrorFallback from "components/Error/ErrorFallback";
-import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -17,10 +16,8 @@ import { AddButton } from "ui/editor/AddButton";
 
 import { StyledTableRow } from "../../../../Team/styles";
 import { EmailsUpsertModal } from "./EmailsUpsertModal";
-import {
-  DELETE_TEAM_SUBMISSION_INTEGRATIONS,
-  GET_TEAM_SUBMISSION_INTEGRATIONS,
-} from "./queries";
+import { GET_TEAM_SUBMISSION_INTEGRATIONS } from "./queries";
+import { RemoveEmailModal } from "./RemoveEmailModal";
 import { GetSubmissionEmails, SubmissionEmailInput } from "./types";
 
 const TableRowButton = styled(Button)(({ theme }) => ({
@@ -54,7 +51,6 @@ const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
 }));
 
 const EmailsTableContent = () => {
-  const toast = useToast();
   const teamId = useStore((state) => state.teamId);
 
   const { data, loading, refetch } = useQuery<GetSubmissionEmails>(
@@ -66,9 +62,8 @@ const EmailsTableContent = () => {
 
   const emails = data?.submissionIntegrations;
 
-  const [deleteEmail] = useMutation(DELETE_TEAM_SUBMISSION_INTEGRATIONS);
-
-  const [showModal, setShowModal] = useState(false);
+  const [showUpsertModal, setShowUpsertModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [actionType, setActionType] = useState<"add" | "edit" | "remove">(
     "add",
   );
@@ -82,7 +77,7 @@ const EmailsTableContent = () => {
 
   const addEmail = () => {
     setActionType("add");
-    setShowModal(true);
+    setShowUpsertModal(true);
 
     if (!emails || emails.length === 0) {
       setInitialValues({ defaultEmail: true } as SubmissionEmailInput);
@@ -94,25 +89,13 @@ const EmailsTableContent = () => {
   const handleEditEmail = (email: SubmissionEmailInput) => {
     setActionType("edit");
     setInitialValues(email);
-    setShowModal(true);
+    setShowUpsertModal(true);
   };
 
-  const handleRemoveEmail = async (email: SubmissionEmailInput) => {
-    try {
-      await deleteEmail({
-        variables: { submissionEmail: email.submissionEmail, teamId },
-        optimisticResponse: {
-          delete_submission_integrations: {
-            returning: [{ ...email }],
-          },
-        },
-      });
-      toast.success("Email removed successfully");
-      refetch();
-    } catch (error) {
-      console.error("Error deleting email:", error);
-      toast.error("Failed to remove email");
-    }
+  const deleteEmail = (email: SubmissionEmailInput) => {
+    setActionType("remove");
+    setShowDeleteModal(true);
+    setInitialValues(email);
   };
 
   if (loading) return <div>Loading...</div>;
@@ -136,10 +119,18 @@ const EmailsTableContent = () => {
             </TableRow>
           </TableBody>
         </Table>
-        {showModal && (
+        {showUpsertModal && (
           <EmailsUpsertModal
-            showModal={showModal}
-            setShowModal={setShowModal}
+            showModal={showUpsertModal}
+            setShowModal={setShowUpsertModal}
+            initialValues={initialValues}
+            actionType={actionType}
+          />
+        )}
+        {showDeleteModal && (
+          <RemoveEmailModal
+            showModal={showDeleteModal}
+            setShowModal={setShowDeleteModal}
             initialValues={initialValues}
             actionType={actionType}
           />
@@ -176,7 +167,7 @@ const EmailsTableContent = () => {
                 </TableCell>
                 <TableCell>
                   {!email.defaultEmail && (
-                    <RemoveEmailButton onClick={() => handleRemoveEmail(email)}>
+                    <RemoveEmailButton onClick={() => deleteEmail(email)}>
                       Remove
                     </RemoveEmailButton>
                   )}
@@ -191,15 +182,24 @@ const EmailsTableContent = () => {
           </TableBody>
         </Table>
       </StyledTableContainer>
-      {showModal && (
+      {showUpsertModal && (
         <EmailsUpsertModal
-          showModal={showModal}
-          setShowModal={setShowModal}
+          showModal={showUpsertModal}
+          setShowModal={setShowUpsertModal}
           initialValues={initialValues}
           actionType={actionType}
           currentEmails={data.submissionIntegrations.map(
             (email) => email.submissionEmail,
           )}
+        />
+      )}
+      {showDeleteModal && (
+        <RemoveEmailModal
+          showModal={showDeleteModal}
+          setShowModal={setShowDeleteModal}
+          initialValues={initialValues}
+          actionType={actionType}
+          teamId={teamId}
         />
       )}
     </>

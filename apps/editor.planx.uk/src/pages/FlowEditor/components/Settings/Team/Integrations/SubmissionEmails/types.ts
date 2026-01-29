@@ -32,4 +32,5 @@ export interface EditorModalProps {
   actionType?: ActionType;
   previousDefaultEmail?: SubmissionEmailInput;
   currentEmails?: string[];
+  teamId?: number;
 }
