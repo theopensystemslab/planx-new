@@ -61,7 +61,7 @@ const LoadingStage = styled(Box)(({ theme }) => ({
 
 const LOADING_STAGES = [
   "Analysing your project description",
-  "Considering local planning requirements",
+  "Comparing it to valid project descriptions",
   "Generating suggested improvements",
 ];
 
