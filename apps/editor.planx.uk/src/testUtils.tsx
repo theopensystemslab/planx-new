@@ -40,6 +40,8 @@ const testApolloClient = new ApolloClient({
   link: new HttpLink({
     uri: "http://mock-api/graphql",
     fetch: (uri, options) => {
+      //Known workaround for test environments where AbortSignal
+      // instances from different contexts don't pass instanceof checks.
       //eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { signal, ...fetchOptions } = options || {};
       return fetch(uri, fetchOptions);
