@@ -19,6 +19,7 @@ import type { EnhanceError, EnhanceResponse } from "lib/api/ai/types";
 import type { APIError } from "lib/api/client";
 import React, { useEffect, useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import CheckCircleIcon from "ui/icons/CheckCircle";
 import InputLabel from "ui/public/InputLabel";
 import { CharacterCounter } from "ui/shared/CharacterCounter";
 import Input from "ui/shared/Input/Input";
@@ -159,30 +160,42 @@ const ProjectDescription: React.FC<Props> = (props) => {
         >
           <Card>
             <Typography variant="h4" component="h3">
-              Suggested description:
-            </Typography>
-            <Typography variant="body2">{data.enhanced}</Typography>
-            <Button
-              variant="contained"
-              color="secondary"
-              sx={{ mt: "auto", backgroundColor: "common.white" }}
-              onClick={() => setFieldValue("userInput", data.enhanced)}
-            >
-              Use suggested description
-            </Button>
-          </Card>
-          <Card>
-            <Typography variant="h4" component="h3">
               Your description:
             </Typography>
             <Typography variant="body2">{data.original}</Typography>
             <Button
-              variant="contained"
-              color="secondary"
-              sx={{ mt: "auto", backgroundColor: "common.white" }}
+              variant="outlined"
+              color="primary"
+              sx={{ mt: "auto" }}
               onClick={() => setFieldValue("userInput", data.original)}
+              disabled={values.userInput === data.original}
+              startIcon={
+                values.userInput === data.original ? (
+                  <CheckCircleIcon color="success" />
+                ) : null
+              }
             >
               Revert to original description
+            </Button>
+          </Card>
+          <Card>
+            <Typography variant="h3" component="h3">
+              Suggested description:
+            </Typography>
+            <Typography variant="body2">{data.enhanced}</Typography>
+            <Button
+              variant="outlined"
+              color="primary"
+              sx={{ mt: "auto" }}
+              onClick={() => setFieldValue("userInput", data.enhanced)}
+              disabled={values.userInput === data.enhanced}
+              startIcon={
+                values.userInput === data.enhanced ? (
+                  <CheckCircleIcon color="success" />
+                ) : null
+              }
+            >
+              Continue with suggested description
             </Button>
           </Card>
         </Box>

@@ -441,7 +441,9 @@ describe("basic layout and behaviour", () => {
 
     // User can toggle back to enhanced
     await user.click(
-      screen.getByRole("button", { name: "Use suggested description" }),
+      screen.getByRole("button", {
+        name: "Continue with suggested description",
+      }),
     );
     expect(textarea).toHaveValue(ENHANCED);
 

@@ -375,14 +375,18 @@ const getThemeOptions = ({
             },
           },
           outlined: {
-            borderWidth: "2px 2px 3px",
-            borderColor: palette.primary.main,
+            borderWidth: "2px",
+            borderColor: palette.prompt.main,
             color: palette.text.primary,
             backgroundColor: palette.common.white,
+            boxShadow: "none",
             "&:hover": {
-              borderWidth: "2px 2px 3px",
-              backgroundColor: palette.primary.dark,
-              color: palette.common.white,
+              borderWidth: "2px",
+              backgroundColor: palette.prompt.dark,
+              color: palette.prompt.contrastText,
+            },
+            "&:disabled": {
+              borderWidth: "2px",
             },
           },
         },
