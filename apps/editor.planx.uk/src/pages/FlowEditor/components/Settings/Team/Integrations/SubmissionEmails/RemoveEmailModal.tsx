@@ -1,4 +1,4 @@
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -9,8 +9,15 @@ import Typography from "@mui/material/Typography";
 import { useToast } from "hooks/useToast";
 import React from "react";
 
-import { DELETE_TEAM_SUBMISSION_INTEGRATIONS } from "./queries";
-import { EditorModalProps, SubmissionEmailInput } from "./types";
+import {
+  DELETE_TEAM_SUBMISSION_INTEGRATIONS,
+  GET_FLOWS_WITH_SUBMISSION_INTEGRATION,
+} from "./queries";
+import {
+  EditorModalProps,
+  GetFlowsWithSubmissionIntegration,
+  SubmissionEmailInput,
+} from "./types";
 
 export const RemoveEmailModal = ({
   setShowModal,
@@ -21,6 +28,19 @@ export const RemoveEmailModal = ({
 }: EditorModalProps) => {
   const toast = useToast();
   const [deleteEmail] = useMutation(DELETE_TEAM_SUBMISSION_INTEGRATIONS);
+  const emailId = initialValues?.id || null;
+  console.log({ emailId });
+  const { data } = useQuery<GetFlowsWithSubmissionIntegration>(
+    GET_FLOWS_WITH_SUBMISSION_INTEGRATION,
+    {
+      variables: { emailId },
+    },
+  );
+  console.log({ data });
+  const usedFlows = data?.flowIntegrations || [];
+  console.log({ usedFlows });
+  const deletable = usedFlows.length === 0 ? true : false;
+  console.log({ deletable });
 
   const handleRemoveEmail = async (email: SubmissionEmailInput) => {
     if (!email?.id) {
@@ -56,15 +76,18 @@ export const RemoveEmailModal = ({
       </DialogTitle>
       <DialogContent>
         <Box mt={2}>
-          <Typography mb={2}>
-            Are you sure you want to remove the email address "
-            {initialValues?.submissionEmail}" from receiving submissions?
-          </Typography>
-          <Typography>
-            It will be removed from live services. Any services sending
-            applications to this destination will fall back to your default
-            email.
-          </Typography>
+          {deletable ? (
+            <Typography mb={2}>
+              Are you sure you want to remove the email address "
+              {initialValues?.submissionEmail}" from receiving submissions?
+            </Typography>
+          ) : (
+            <Typography mb={2} color="error">
+              This email address cannot be removed as it is currently in use by
+              one or more flows. Please update the flow settings to use a
+              different email before removing this one.
+            </Typography>
+          )}
         </Box>
       </DialogContent>
       <DialogActions>
@@ -76,6 +99,7 @@ export const RemoveEmailModal = ({
           color="warning"
           onClick={() => initialValues && handleRemoveEmail(initialValues)}
           data-testid="confirm-remove-email-button"
+          disabled={!deletable}
         >
           Remove Email
         </Button>
