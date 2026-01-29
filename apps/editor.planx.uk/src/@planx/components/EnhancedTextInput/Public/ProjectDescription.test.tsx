@@ -52,7 +52,10 @@ describe("Passport generation", () => {
       screen.getByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
-    // Accept suggestion
+    // Select suggested description and submit
+    await user.click(
+      screen.getByRole("radio", { name: /Use suggested description/i }),
+    );
     await user.click(screen.getByTestId("continue-button"));
 
     // Breadcrumb formatted as expected
@@ -94,9 +97,9 @@ describe("Passport generation", () => {
       screen.getByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
-    // Switch back to original
-    user.click(
-      screen.getByRole("button", { name: "Revert to original description" }),
+    // Select original description and submit
+    await user.click(
+      screen.getByRole("radio", { name: /Use your original description/i }),
     );
     await user.click(screen.getByTestId("continue-button"));
 
@@ -139,14 +142,15 @@ describe("Passport generation", () => {
       screen.getByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
-    // Enter a value which is neither original or enhanced, overwriting previous value
+    // Select "Write a new description" to reveal the text input
+    await user.click(
+      screen.getByRole("radio", { name: /Write a new description/i }),
+    );
+
+    // Enter a custom description
     await user.type(
-      screen.getByRole("textbox", { name: /test/i }),
+      screen.getByRole("textbox", { name: /Enter your project description/i }),
       "a new description",
-      {
-        initialSelectionStart: 0,
-        initialSelectionEnd: ORIGINAL.length,
-      },
     );
     await user.click(screen.getByTestId("continue-button"));
 
@@ -282,7 +286,10 @@ describe("navigating back to the EnhancedTextInput component", () => {
       screen.getByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
-    // Proceed with new AI-enhanced description
+    // Select suggested description and submit
+    await user.click(
+      screen.getByRole("radio", { name: /Use suggested description/i }),
+    );
     await user.click(screen.getByTestId("continue-button"));
 
     // Breadcrumb formatted as expected - action and values updated
@@ -384,8 +391,18 @@ describe("basic layout and behaviour", () => {
       screen.getByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
-    // API results displayed to user
-    expect(screen.getAllByText(ENHANCED)[0]).toBeVisible();
+    // API results displayed to user as radio options
+    expect(
+      screen.getByRole("radio", { name: /Use suggested description/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("radio", { name: /Use your original description/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("radio", { name: /Write a new description/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(ENHANCED)).toBeVisible();
+    expect(screen.getByText(ORIGINAL)).toBeVisible();
   });
 
   it("should not have any accessibility violations on the 'task' step", async () => {
@@ -410,7 +427,7 @@ describe("basic layout and behaviour", () => {
     expect(results).toHaveNoViolations();
   });
 
-  it("allows the user to toggle between the enhanced or original description, or enter a hybrid response", async () => {
+  it("allows the user to select between the enhanced, original, or custom description", async () => {
     const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
@@ -428,31 +445,44 @@ describe("basic layout and behaviour", () => {
       screen.getByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
-    const textarea = screen.getByRole("textbox", { name: /test/i });
+    // No option selected by default, custom textarea not visible
+    expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
 
-    // Enhanced value is populated by default
-    expect(textarea).toHaveValue(ENHANCED);
-
-    // User can toggle back to original
+    // User can select suggested description
     await user.click(
-      screen.getByRole("button", { name: "Revert to original description" }),
+      screen.getByRole("radio", { name: /Use suggested description/i }),
     );
-    expect(textarea).toHaveValue(ORIGINAL);
+    expect(
+      screen.getByRole("radio", { name: /Use suggested description/i }),
+    ).toBeChecked();
 
-    // User can toggle back to enhanced
+    // User can select original description
     await user.click(
-      screen.getByRole("button", {
-        name: "Continue with suggested description",
-      }),
+      screen.getByRole("radio", { name: /Use your original description/i }),
     );
-    expect(textarea).toHaveValue(ENHANCED);
+    expect(
+      screen.getByRole("radio", { name: /Use your original description/i }),
+    ).toBeChecked();
 
-    // User can type their own hybrid result
-    await user.type(textarea, "Something unique", {
-      initialSelectionStart: 0,
-      initialSelectionEnd: ENHANCED.length,
-    });
-    expect(textarea).toHaveValue("Something unique");
+    // User can select to write a new description - textarea appears
+    await user.click(
+      screen.getByRole("radio", { name: /Write a new description/i }),
+    );
+    expect(
+      screen.getByRole("radio", { name: /Write a new description/i }),
+    ).toBeChecked();
+    expect(
+      screen.getByRole("textbox", { name: /Enter your project description/i }),
+    ).toBeVisible();
+
+    // User can type their own custom description
+    await user.type(
+      screen.getByRole("textbox", { name: /Enter your project description/i }),
+      "Something unique",
+    );
+    expect(
+      screen.getByRole("textbox", { name: /Enter your project description/i }),
+    ).toHaveValue("Something unique");
   });
 
   it("displays additional information to the user on the 'task' step", async () => {
