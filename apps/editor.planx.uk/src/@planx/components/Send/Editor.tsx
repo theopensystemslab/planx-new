@@ -47,7 +47,6 @@ const SendComponent: React.FC<Props> = (props) => {
     {
       initialValues: parseSend(props.node?.data),
       onSubmit: async (newValues) => {
-        console.log("onSubmit running");
         if (props.handleSubmit) {
           await handleUpdate(
             teamId,
@@ -113,10 +112,6 @@ const SendComponent: React.FC<Props> = (props) => {
     id: string,
     refetchFlowData: () => Promise<ApolloQueryResult<GetFlowEmailIdQuery>>,
   ) => {
-    console.log("handleUpdate called");
-    console.log({ newEmail });
-    console.log({ newValues });
-
     if (
       typeof formik.values.newEmail === "string" &&
       formik.values.newEmail !== ""
@@ -129,14 +124,12 @@ const SendComponent: React.FC<Props> = (props) => {
             defaultEmail: false,
           },
         });
-      console.log({ insertData });
 
       if (insertErrors || !insertData?.insert_submission_integrations_one?.id) {
         throw new Error("Failed to insert new submission integration.");
       }
 
       const newEmailId = insertData.insert_submission_integrations_one.id;
-      console.log({ id, newEmailId });
 
       try {
         const { data: updateData, errors: updateErrors } =
@@ -155,9 +148,7 @@ const SendComponent: React.FC<Props> = (props) => {
           throw new Error("Failed to update flow integration.");
         }
 
-        console.log("Flow integration updated successfully:", updateData);
         const refetchedData = await refetchFlowData();
-        console.log({ refetchedData });
         if (refetchedData?.data?.flowIntegrations?.[0]?.emailId) {
           formik.setFieldValue(
             "submissionEmailId",
@@ -194,7 +185,6 @@ const SendComponent: React.FC<Props> = (props) => {
           throw new Error("Failed to update flow integration.");
         }
 
-        console.log("Flow integration updated successfully:", updateData);
         const refetchedData = await refetchFlowData();
       } catch (error) {
         console.error("Error during updateFlowIntegration mutation:", error);
