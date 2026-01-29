@@ -64,6 +64,7 @@ const baseFilterOptions: FilterOptions<FlowSummary>[] = [
   },
   {
     displayName: "Type",
+    paramKey: "flow-type",
     optionKey: `publishedFlows.0.hasSendComponent`,
     optionValue: ["submission", "fee carrying", "service charge enabled"],
     validationFn: checkFlowServiceType,

@@ -23,6 +23,8 @@ export interface FilterOptions<T> {
   optionValue: FilterValues[];
   /** the function passed into the filter to determine if it should be included or excluded */
   validationFn: (option: T, value?: FilterValues) => boolean;
+  /** optional override for the URL search param key (defaults to slugified displayName) */
+  paramKey?: string;
 }
 
 interface FiltersProps<T> {
@@ -50,7 +52,7 @@ export const Filters = <T extends object>({
     let hasFilters = false;
 
     filterOptions.forEach((option) => {
-      const paramKey = slugify(option.displayName);
+      const paramKey = option.paramKey || slugify(option.displayName);
       const paramValue = searchParams[paramKey as keyof typeof searchParams];
 
       if (paramValue && typeof paramValue === "string") {
@@ -70,7 +72,7 @@ export const Filters = <T extends object>({
     );
     if (!filterOption) return;
 
-    const paramKey = slugify(filterOption.displayName);
+    const paramKey = filterOption.paramKey || slugify(filterOption.displayName);
     const currentValue = searchParams[paramKey as keyof typeof searchParams];
 
     // Toggle filter: if same value, remove it; otherwise set it
