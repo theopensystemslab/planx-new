@@ -12,7 +12,7 @@
     "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#06aa962",
     "axios": "^1.12.2",
     "dotenv": "^16.3.1",
-    "eslint": "^8.56.0",
+    "eslint": "^9.26.0",
     "graphql": "^16.11.0",
     "graphql-request": "^6.1.0",
     "isomorphic-fetch": "^3.0.0",
