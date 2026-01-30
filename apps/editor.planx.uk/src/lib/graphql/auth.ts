@@ -1,6 +1,6 @@
-import { router } from "index";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { toast } from "react-toastify";
+import { router } from "router";
 
 /**
  * Get the JWT from the store, and wait if not available
