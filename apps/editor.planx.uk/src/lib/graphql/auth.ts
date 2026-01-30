@@ -1,3 +1,4 @@
+import { router } from "index";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { toast } from "react-toastify";
 
@@ -32,14 +33,9 @@ export const handleExpiredJWTErrors = () => {
       hideProgressBar: false,
       progress: undefined,
       autoClose: 4_000,
-      onClose: () => (window.location.href = "/logout"),
+      onClose: () => router.navigate({ to: "/logout" }),
     },
   );
-
-  // Fallback if case of toast not firing
-  setTimeout(() => {
-    window.location.href = "/logout";
-  }, 2_500);
 };
 
 /**

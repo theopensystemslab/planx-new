@@ -81,12 +81,9 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     } catch (error) {
       console.error("Failed to initialize user store:", error);
 
-      throw redirect({
-        to: "/login",
-        search: {
-          redirectTo: location.pathname !== "/" ? location.pathname : undefined,
-        },
-      });
+      // handleExpiredJWTErrors() has already been called and will redirect
+      // Return empty context to prevent error boundary from triggering
+      return { authError: true };
     }
   },
 

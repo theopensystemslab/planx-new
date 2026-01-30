@@ -69,7 +69,7 @@ const hasJWT = (): boolean | void => {
   return true;
 };
 
-const tanstackRouter = createRouter({
+export const router = createRouter({
   routeTree,
   context: { currentUser: hasJWT() },
   scrollRestoration: true,
@@ -77,7 +77,7 @@ const tanstackRouter = createRouter({
 
 declare module "@tanstack/react-router" {
   interface Register {
-    router: typeof tanstackRouter;
+    router: typeof router;
   }
 }
 
@@ -120,7 +120,7 @@ root.render(
           <Layout>
             <CssBaseline />
             <Suspense fallback={null}>
-              <TanStackRouterProvider router={tanstackRouter} />
+              <TanStackRouterProvider router={router} />
             </Suspense>
           </Layout>
         </AnalyticsProvider>

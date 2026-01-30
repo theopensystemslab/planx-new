@@ -1,25 +1,16 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import axios from "axios";
+import { logout } from "lib/api/auth/requests";
+import { clearCookie } from "lib/cookie";
 import { disconnectShareDB } from "pages/FlowEditor/lib/sharedb";
 
 import { client } from "../../lib/graphql";
 
 export const Route = createFileRoute("/(auth)/logout")({
   beforeLoad: async () => {
-    // Call backend logout endpoint if token exists
     try {
-      const token = localStorage.getItem("jwt");
-      if (token) {
-        const authRequestHeader = { Authorization: `Bearer ${token}` };
-        await axios.post(
-          `${import.meta.env.VITE_APP_API_URL}/auth/logout`,
-          null,
-          {
-            headers: authRequestHeader,
-          },
-        );
-      }
+      await logout();
     } catch (error) {
+      // Non-blocking - API may fail due to expired tokens, still need to proceed to local cleanup
       console.warn("Logout API call failed:", error);
     }
 
@@ -32,11 +23,8 @@ export const Route = createFileRoute("/(auth)/logout")({
     }
 
     // Clear cookies
-    const cookieString = `auth=; jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-    // remove jwt cookie for non planx domains (netlify preview urls)
-    document.cookie = cookieString;
-    // remove jwt cookie for planx domains (staging and production)
-    document.cookie = cookieString.concat(` domain=.${window.location.host};`);
+    clearCookie("auth");
+    clearCookie("jwt");
 
     // Clear localStorage
     localStorage.removeItem("jwt");

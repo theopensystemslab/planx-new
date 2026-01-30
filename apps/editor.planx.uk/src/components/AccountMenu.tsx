@@ -12,9 +12,7 @@ import Popover, { popoverClasses } from "@mui/material/Popover";
 import { styled } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { logout } from "lib/api/auth/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -67,13 +65,7 @@ const AccountMenu: React.FC = () => {
     setOpen(!open);
   };
 
-  const logoutMutation = useMutation({
-    mutationKey: ["logout", user?.id],
-    mutationFn: logout,
-    onSuccess: () => navigate({ to: "/logout" }),
-  });
-
-  const handleLogout = () => logoutMutation.mutate();
+  const handleLogout = () => navigate({ to: "/logout" });
 
   if (!user) return null;
 
