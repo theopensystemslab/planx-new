@@ -82,7 +82,7 @@
     "sharedb": "^5.2.2",
     "subscriptions-transport-ws": "^0.11.0",
     "tippy.js": "^6.3.7",
-    "type-fest": "^4.32.0",
+    "type-fest": "^5.4.3",
     "uuid": "^13.0.0",
     "vite": "^6.4.1",
     "wkt": "^0.1.1",
