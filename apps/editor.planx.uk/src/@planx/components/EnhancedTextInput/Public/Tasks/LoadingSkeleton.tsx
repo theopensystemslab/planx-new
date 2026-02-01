@@ -17,15 +17,6 @@ const animloader = keyframes`
   }
 `;
 
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-`;
-
 const Loader = styled("span")(({ theme }) => ({
   width: 24,
   height: 24,
@@ -60,7 +51,7 @@ const LoadingStage = styled(Box)(({ theme }) => ({
 
 const LOADING_STAGES = [
   "Analysing your project description",
-  "Comparing it to valid project descriptions",
+  "Reviewing structure and tone",
   "Generating suggested improvements",
 ];
 
