@@ -3,7 +3,7 @@ import { ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { defaultTheme } from "../src/theme";
-import { MyMap } from "@opensystemslab/map";
+import { MyMap, GeocodeAutocomplete } from "@opensystemslab/map";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { initialize, mswLoader } from "msw-storybook-addon";
 import {
@@ -19,6 +19,10 @@ import { reactNaviDecorator } from "./__mocks__/react-navi";
 
 if (!window.customElements.get("my-map")) {
   window.customElements.define("my-map", MyMap);
+}
+
+if (!window.customElements.get("geocode-autocomplete")) {
+  window.customElements.define("geocode-autocomplete", GeocodeAutocomplete);
 }
 
 const testQueryClient = new QueryClient({
