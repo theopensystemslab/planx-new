@@ -32,14 +32,13 @@ export const RemoveEmailModal = ({
   const toast = useToast();
   const [deleteEmail] = useMutation(DELETE_TEAM_SUBMISSION_INTEGRATIONS);
   const emailId = initialValues?.id || null;
-  console.log({ emailId });
+  console.log({ emailId }); // TODO: eventually delete, keeping for local testing for now
   const { data, error } = useQuery<GetFlowsWithSubmissionIntegration>(
     GET_FLOWS_WITH_SUBMISSION_INTEGRATION,
     {
       variables: { emailId },
     }
   );
-  console.log({ data });
 
   // The GET query returns deleted flows, so filter for existing flows here
   const usedFlows = data?.flowIntegrations
@@ -48,9 +47,7 @@ export const RemoveEmailModal = ({
       slug: integration.flow?.slug,
       name: integration.flow?.name,
     })) || [];  
-  console.log({ usedFlows });
   const deletable = usedFlows.length === 0 ? true : false;
-  console.log({ deletable });
 
   const handleRemoveEmail = async (email: SubmissionEmailInput) => {
     if (!email?.id) {

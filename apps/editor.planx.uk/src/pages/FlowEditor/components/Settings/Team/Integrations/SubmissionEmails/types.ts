@@ -46,5 +46,5 @@ export interface EditorModalProps {
   previousDefaultEmail?: SubmissionEmailInput;
   currentEmails?: string[];
   teamId?: number;
-  refetch: (variables?: Partial<Record<string, any>>) => Promise<ApolloQueryResult<GetSubmissionEmails>>; // Update this line
+  refetch: (variables?: Partial<Record<string, any>>) => Promise<ApolloQueryResult<GetSubmissionEmails>>;
 }
