@@ -31,14 +31,21 @@ export const RemoveEmailModal = ({
   const [deleteEmail] = useMutation(DELETE_TEAM_SUBMISSION_INTEGRATIONS);
   const emailId = initialValues?.id || null;
   console.log({ emailId });
-  const { data } = useQuery<GetFlowsWithSubmissionIntegration>(
+  const { data, error } = useQuery<GetFlowsWithSubmissionIntegration>(
     GET_FLOWS_WITH_SUBMISSION_INTEGRATION,
     {
       variables: { emailId },
-    },
+    }
   );
   console.log({ data });
-  const usedFlows = data?.flowIntegrations || [];
+
+  // The GET query returns deleted flows, so filter for existing flows here
+  const usedFlows = data?.flowIntegrations
+    .filter((integration) => integration.flow)
+    .map((integration) => ({
+      slug: integration.flow?.slug,
+      name: integration.flow?.name,
+    })) || [];  
   console.log({ usedFlows });
   const deletable = usedFlows.length === 0 ? true : false;
   console.log({ deletable });

@@ -23,6 +23,8 @@ export const GET_FLOWS_WITH_SUBMISSION_INTEGRATION = gql`
       submissionEmailId: email_id
       flow {
         name
+        slug
+        deleted_at
       }
     }
   }
