@@ -1,0 +1,17 @@
+packages:
+  - application
+  - certificates
+  - data
+  - ml
+  - networking
+minimumReleaseAge: 1440
+onlyBuiltDependencies:
+  - "@pulumi/aws"
+  - "@pulumi/cloudflare"
+  - "@pulumi/docker"
+  - "@pulumi/docker-build"
+  - aws-sdk
+  - protobufjs
+  - tldjs
+savePrefix: "~"
+strictPeerDependencies: true
