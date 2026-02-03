@@ -21,7 +21,7 @@ export interface SubmissionEmailValues {
 }
 
 export type GetFlowsWithSubmissionIntegration = {
-  flowIntegrations: {
+  publishedFlows: {
     flowId: number;
     id: string;
     submissionEmailId: string;
