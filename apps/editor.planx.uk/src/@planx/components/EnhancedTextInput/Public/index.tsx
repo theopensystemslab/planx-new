@@ -59,6 +59,8 @@ const EnhancedTextInputComponent = (props: Props) => {
 
   const validationSchema = getValidationSchema(props);
 
+  const handleBack = step === "task" ? () => setStep("input") : undefined;
+
   return (
     <Formik<FormValues>
       initialValues={initialValues}
@@ -69,7 +71,11 @@ const EnhancedTextInputComponent = (props: Props) => {
       validationSchema={validationSchema}
     >
       {({ submitForm }) => (
-        <Card handleSubmit={submitForm} isValid={!isRunningTask}>
+        <Card
+          handleSubmit={submitForm}
+          isValid={!isRunningTask}
+          handleBack={handleBack}
+        >
           <CardHeader
             title={props.title}
             description={props.description}
