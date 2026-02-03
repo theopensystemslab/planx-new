@@ -13,7 +13,7 @@ import Link from "@mui/material/Link";
 
 import {
   DELETE_TEAM_SUBMISSION_INTEGRATIONS,
-  GET_FLOWS_WITH_SUBMISSION_INTEGRATION,
+  GET_PUBLISHED_FLOWS_WITH_SUBMISSION_INTEGRATION,
 } from "./queries";
 import {
   EditorModalProps,
@@ -34,19 +34,19 @@ export const RemoveEmailModal = ({
   const emailId = initialValues?.id || null;
   console.log({ emailId }); // TODO: eventually delete, keeping for local testing for now
   const { data, error } = useQuery<GetFlowsWithSubmissionIntegration>(
-    GET_FLOWS_WITH_SUBMISSION_INTEGRATION,
+    GET_PUBLISHED_FLOWS_WITH_SUBMISSION_INTEGRATION,
     {
       variables: { emailId },
     }
   );
 
   // The GET query returns deleted flows, so filter for existing flows here
-  const usedFlows = data?.flowIntegrations
-    .filter((integration) => integration.flow)
-    .map((integration) => ({
-      slug: integration.flow?.slug,
-      name: integration.flow?.name,
-    })) || [];  
+  const usedFlows = data?.publishedFlows
+    .map((publishedFlow) => ({
+      slug: publishedFlow.flow?.slug,
+      name: publishedFlow.flow?.name,
+    })) || []; 
+  console.log({usedFlows}) 
   const deletable = usedFlows.length === 0 ? true : false;
 
   const handleRemoveEmail = async (email: SubmissionEmailInput) => {
@@ -105,7 +105,7 @@ export const RemoveEmailModal = ({
                 </ListItem>
               ))}
             <Typography mt={2}>
-            Please update the flow settings to use a
+            Please <strong>update and republish</strong> the flow settings to use a
               different email address before removing this one.
             </Typography>
             </>

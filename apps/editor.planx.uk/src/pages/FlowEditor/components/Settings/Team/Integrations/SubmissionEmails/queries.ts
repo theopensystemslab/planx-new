@@ -14,17 +14,18 @@ export const GET_TEAM_SUBMISSION_INTEGRATIONS = gql`
   }
 `;
 
-export const GET_FLOWS_WITH_SUBMISSION_INTEGRATION = gql`
+export const GET_PUBLISHED_FLOWS_WITH_SUBMISSION_INTEGRATION = gql`
   query GetFlowsWithSubmissionIntegration($emailId: uuid!) {
-    flowIntegrations: flow_integrations(
-      where: { email_id: { _eq: $emailId } }
+    publishedFlows: published_flows(
+      where: { submission_email_id: { _eq: $emailId } }
+      distinct_on: flow_id
+      order_by: [{ flow_id: asc }, { created_at: desc }]
     ) {
       flowId: flow_id
-      submissionEmailId: email_id
-      flow {
+      submissionEmailId: submission_email_id
+      flow(where: { deleted_at: { _is_null: true } }) {
         name
         slug
-        deleted_at
       }
     }
   }
