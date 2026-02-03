@@ -27,7 +27,8 @@ export type GetFlowsWithSubmissionIntegration = {
     submissionEmailId: string;
     flow: {
       name: string;
-    };
+      slug: string;
+    } | null;
   }[];
 };
 
