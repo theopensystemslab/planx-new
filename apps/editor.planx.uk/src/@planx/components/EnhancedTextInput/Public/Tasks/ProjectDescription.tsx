@@ -19,8 +19,10 @@ import { useFormikContext } from "formik";
 import { enhanceProjectDescription } from "lib/api/ai/requests";
 import type { EnhanceError, EnhanceResponse } from "lib/api/ai/types";
 import type { APIError } from "lib/api/client";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { ApplicationPath } from "types";
 import InputLabel from "ui/public/InputLabel";
 import { CharacterCounter } from "ui/shared/CharacterCounter";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -135,6 +137,11 @@ const DescriptionRadio: React.FC<DescriptionRadioProps> = ({
 };
 
 const ProjectDescription: React.FC<Props> = (props) => {
+  const [flowId, sessionId, path] = useStore((state) => [
+    state.id,
+    state.sessionId,
+    state.path,
+  ]);
   const { values, errors, setFieldValue, setValues } =
     useFormikContext<FormValues>();
   const [open, setOpen] = useState(false);
@@ -149,8 +156,20 @@ const ProjectDescription: React.FC<Props> = (props) => {
     EnhanceResponse,
     APIError<EnhanceError>
   >({
-    queryFn: () => enhanceProjectDescription(initialValueRef.current),
-    queryKey: ["projectDescription", initialValueRef.current],
+    queryFn: () =>
+      enhanceProjectDescription({
+        original: initialValueRef.current,
+        sessionId:
+          path === ApplicationPath.SaveAndReturn ? sessionId : undefined,
+        flowId,
+      }),
+    queryKey: [
+      "projectDescription",
+      flowId,
+      path,
+      sessionId,
+      initialValueRef.current,
+    ],
     retry: 0,
     enabled: shouldEnhance && !!initialValueRef.current,
   });
