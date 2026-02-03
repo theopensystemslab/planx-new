@@ -125,6 +125,7 @@ const EmailsTableContent = () => {
             setShowModal={setShowUpsertModal}
             initialValues={initialValues}
             actionType={actionType}
+            refetch={refetch}
           />
         )}
         {showDeleteModal && (
@@ -133,6 +134,7 @@ const EmailsTableContent = () => {
             setShowModal={setShowDeleteModal}
             initialValues={initialValues}
             actionType={actionType}
+            refetch={refetch}
           />
         )}
       </>
@@ -191,6 +193,7 @@ const EmailsTableContent = () => {
           currentEmails={data.submissionIntegrations.map(
             (email) => email.submissionEmail,
           )}
+          refetch={refetch}
         />
       )}
       {showDeleteModal && (
@@ -200,6 +203,7 @@ const EmailsTableContent = () => {
           initialValues={initialValues}
           actionType={actionType}
           teamId={teamId}
+          refetch={refetch}
         />
       )}
     </>

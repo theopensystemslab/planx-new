@@ -25,6 +25,7 @@ export const RemoveEmailModal = ({
   actionType,
   initialValues,
   teamId,
+  refetch
 }: EditorModalProps) => {
   const toast = useToast();
   const [deleteEmail] = useMutation(DELETE_TEAM_SUBMISSION_INTEGRATIONS);
@@ -57,6 +58,7 @@ export const RemoveEmailModal = ({
       });
       setShowModal(false);
       toast.success("Email removed successfully");
+      refetch();
     } catch (error) {
       console.error("Error deleting email:", error);
       toast.error("Failed to remove email");
@@ -82,11 +84,15 @@ export const RemoveEmailModal = ({
               {initialValues?.submissionEmail}" from receiving submissions?
             </Typography>
           ) : (
+            <>
             <Typography mb={2} color="error">
-              This email address cannot be removed as it is currently in use by
-              one or more flows. Please update the flow settings to use a
+              This email address cannot be removed as it is currently used in: 
+            </Typography>
+            <Typography mb={2} color="error">
+            Please update the flow settings to use a
               different email before removing this one.
             </Typography>
+            </>
           )}
         </Box>
       </DialogContent>
