@@ -1,29 +1,15 @@
 {
-  "devDependencies": {
-    "@types/node": "22.14.1",
-    "@types/tldjs": "^2.3.1"
-  },
+  "name": "@planx/infrastructure-certificates",
   "dependencies": {
-    "@pulumi/aws": "^4.0.0",
-    "@pulumi/awsx": "^0.30.0",
-    "@pulumi/cloudflare": "^3.0.0",
-    "@pulumi/pulumi": "^3.0.0",
-    "tldjs": "^2.3.1"
+    "@pulumi/aws": "~4.0.0",
+    "@pulumi/awsx": "~0.30.0",
+    "@pulumi/cloudflare": "~3.0.0",
+    "@pulumi/pulumi": "~3.0.0",
+    "tldjs": "~2.3.2"
   },
-  "packageManager": "pnpm@10.10.0",
-  "pnpm": {
-    "overrides": {
-      "protobufjs": ">=7.2.4",
-      "protobufjs@>=7.0.0 <7.2.5": ">=7.2.5",
-      "@grpc/grpc-js@>=1.10.0 <1.10.9": ">=1.10.9"
-    },
-    "onlyBuiltDependencies": [
-      "@pulumi/aws",
-      "@pulumi/cloudflare",
-      "@pulumi/docker",
-      "aws-sdk",
-      "protobufjs",
-      "tldjs"
-    ]
-  }
+  "devDependencies": {
+    "@types/node": "~22.14.1",
+    "@types/tldjs": "~2.3.4"
+  },
+  "private": true
 }

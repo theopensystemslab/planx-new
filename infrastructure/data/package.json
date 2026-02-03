@@ -1,23 +1,12 @@
 {
-  "devDependencies": {
-    "@types/node": "22.14.1"
-  },
+  "name": "@planx/infrastructure-data",
   "dependencies": {
-    "@pulumi/aws": "^4.0.0",
-    "@pulumi/awsx": "^0.30.0",
-    "@pulumi/pulumi": "^3.74.0"
+    "@pulumi/aws": "~4.0.0",
+    "@pulumi/awsx": "~0.30.0",
+    "@pulumi/pulumi": "~3.74.0"
   },
-  "packageManager": "pnpm@10.10.0",
-  "pnpm": {
-    "overrides": {
-      "protobufjs@>=7.0.0 <7.2.5": ">=7.2.5",
-      "@grpc/grpc-js@>=1.10.0 <1.10.9": ">=1.10.9"
-    },
-    "onlyBuiltDependencies": [
-      "@pulumi/aws",
-      "@pulumi/docker",
-      "aws-sdk",
-      "protobufjs"
-    ]
-  }
+  "devDependencies": {
+    "@types/node": "~22.14.1"
+  },
+  "private": true
 }
