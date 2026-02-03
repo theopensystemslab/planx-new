@@ -8,6 +8,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
 import { useToast } from "hooks/useToast";
 import React from "react";
+import ListItem from "@mui/material/ListItem";
+import Link from "@mui/material/Link";
 
 import {
   DELETE_TEAM_SUBMISSION_INTEGRATIONS,
@@ -80,7 +82,7 @@ export const RemoveEmailModal = ({
       onClose={() => setShowModal(false)}
       fullWidth
     >
-      <DialogTitle variant="h3" component="h1" id="dialog-heading">
+      <DialogTitle variant="h3" component="h1">
         Remove an email
       </DialogTitle>
       <DialogContent>
@@ -92,19 +94,33 @@ export const RemoveEmailModal = ({
             </Typography>
           ) : (
             <>
-            <Typography mb={2} color="error">
-              This email address cannot be removed as it is currently used in: 
+            <Typography mb={2}>
+              This email address cannot be removed as it is currently used in the following flows: 
             </Typography>
-            <Typography mb={2} color="error">
+              {usedFlows.map((flow) => (
+                <ListItem key={flow.name}>
+                  <Link
+                      href="#" // TODO: update link after routing work merged; /{team}/{slug}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >{flow.name}
+                  </Link>
+                </ListItem>
+              ))}
+            <Typography mt={2}>
             Please update the flow settings to use a
-              different email before removing this one.
+              different email address before removing this one.
             </Typography>
             </>
           )}
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button variant="outlined" onClick={() => setShowModal(false)}>
+        <Button 
+          color="secondary"
+          variant="contained" 
+          onClick={() => setShowModal(false)}
+          >
           Cancel
         </Button>
         <Button
