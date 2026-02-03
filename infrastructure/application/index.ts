@@ -59,7 +59,6 @@ const CUSTOM_DOMAINS: CustomDomain[] =
         {
           domain: "planningservices.medway.gov.uk",
           name: "medway",
-          certificateLocation: "pulumiConfig",
         },
         {
           domain: "planningservices.stalbans.gov.uk",
@@ -391,6 +390,10 @@ export = async () => {
           {
             name: "AWS_S3_BUCKET",
             value: pulumi.interpolate`${apiBucket.bucket}`,
+          },
+          {
+            name: "AI_GATEWAY_API_KEY",
+            value: config.requireSecret("ai-gateway-api-key"),
           },
           {
             name: "FILE_API_KEY",

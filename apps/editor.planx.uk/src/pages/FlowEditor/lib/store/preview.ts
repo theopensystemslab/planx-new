@@ -331,8 +331,8 @@ export const previewStore: StateCreator<
       // add breadcrumb
       const { answers = [], data = {}, auto = false, override } = userData;
 
-      const breadcrumb: Store.UserData = { 
-        auto: Boolean(auto), 
+      const breadcrumb: Store.UserData = {
+        auto: Boolean(auto),
         createdAt: new Date().toISOString(),
         seq: Object.keys(breadcrumbs).length + 1,
       };

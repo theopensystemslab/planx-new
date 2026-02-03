@@ -49,9 +49,7 @@ export const usePrefetchClassifiedRoads = (usrn?: string) => {
   const dataValues = planningConstraintsNode?.dataValues;
 
   const shouldPrefetch =
-    hasPlanningData &&
-    Boolean(usrn) &&
-    dataValues?.includes("road.classified");
+    hasPlanningData && Boolean(usrn) && dataValues?.includes("road.classified");
 
   useEffect(() => {
     if (shouldPrefetch) {

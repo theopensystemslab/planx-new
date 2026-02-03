@@ -85,7 +85,11 @@ const StyledFormLabel = styled(FormLabel, {
 }));
 
 const TextLabel = (props: Props): FCReturn => {
-  const { id, onChange, data: { text: title, description } } = props;
+  const {
+    id,
+    onChange,
+    data: { text: title, description },
+  } = props;
   const [multiline, setMultiline] = useState(false);
 
   const textContentEl = useRef<HTMLDivElement>(null);

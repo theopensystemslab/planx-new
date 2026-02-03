@@ -48,7 +48,7 @@ export const fromSlug = (slug: string): TYPES | undefined => {
     ([_typeString, currentSlug]) => currentSlug === slug,
   );
 
-  // TextInput and EnhancedTextInput share a value in order to keep 
+  // TextInput and EnhancedTextInput share a value in order to keep
   // the Select component consistent
   if (entry?.[1] === "enhanced-text-input") return TYPES.TextInput;
 

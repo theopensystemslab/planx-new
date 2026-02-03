@@ -31,7 +31,8 @@ const Wrapper = styled(Box)(() => ({
 }));
 
 const Background = styled(Box, {
-  shouldForwardProp: (prop) => !["variant", "opacity", "forceVisibility"].includes(prop as string),
+  shouldForwardProp: (prop) =>
+    !["variant", "opacity", "forceVisibility"].includes(prop as string),
 })<Required<WatermarkBackgroundProps>>(({ theme, variant, opacity }) => ({
   position: "absolute",
   top: "-50%",
@@ -58,7 +59,7 @@ const WatermarkBackground: React.FC<WatermarkBackgroundProps> = ({
 }) => {
   // Only display watermark on Staging, Pizza and Local environments
   const isTestEnvironment = import.meta.env.VITE_APP_ENV !== "production";
-  
+
   if (!isTestEnvironment && !forceVisibility) return null;
 
   return (
@@ -68,7 +69,11 @@ const WatermarkBackground: React.FC<WatermarkBackgroundProps> = ({
         permanent content changes.
       </Box>
       <Wrapper>
-        <Background variant={variant} opacity={opacity} forceVisibility={forceVisibility} />
+        <Background
+          variant={variant}
+          opacity={opacity}
+          forceVisibility={forceVisibility}
+        />
       </Wrapper>
     </Root>
   );

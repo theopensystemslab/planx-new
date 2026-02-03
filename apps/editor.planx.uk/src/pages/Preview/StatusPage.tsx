@@ -52,7 +52,7 @@ const StatusPage: React.FC<PropsWithChildren<Props>> = ({
         {children}
         {showDownloadLink && (
           <Box width={"100%"}>
-            <ViewApplicationLink/>
+            <ViewApplicationLink />
           </Box>
         )}
         {buttonText && (

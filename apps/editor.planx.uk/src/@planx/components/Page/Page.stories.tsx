@@ -3,7 +3,7 @@ import React from "react";
 
 import Wrapper from "../fixtures/Wrapper";
 import Editor, { PAGE_SCHEMAS } from "./Editor";
-import Public  from "./Public";
+import Public from "./Public";
 
 const meta = {
   title: "PlanX Components/Page",
@@ -24,8 +24,7 @@ const schemaFinder = (name: SchemaNames) => {
 
 export const Basic: Story = {
   args: {
-    title:
-      "Tell us about your proposed advertisements",
+    title: "Tell us about your proposed advertisements",
     description: "Please add your details below",
     schemaName: "Advert consent",
     fn: "MockFn",

@@ -1,10 +1,10 @@
 import { useQuery } from "@apollo/client";
-import GavelIcon from '@mui/icons-material/Gavel';
-import HelpIcon from '@mui/icons-material/Help';
-import InfoIcon from '@mui/icons-material/Info';
-import PrivacyTipIcon from '@mui/icons-material/PrivacyTip';
-import StarIcon from '@mui/icons-material/Star';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import GavelIcon from "@mui/icons-material/Gavel";
+import HelpIcon from "@mui/icons-material/Help";
+import InfoIcon from "@mui/icons-material/Info";
+import PrivacyTipIcon from "@mui/icons-material/PrivacyTip";
+import StarIcon from "@mui/icons-material/Star";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 

@@ -21,16 +21,16 @@ import FlowSkeleton from "./FlowSkeleton";
 import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
 
-const EditorContainer = styled(Box)<{ hasNavMenu?: boolean }>(
-  ({ hasNavMenu = true }) => ({
-    display: "flex",
-    alignItems: "stretch",
-    overflow: "hidden",
-    flexGrow: 1,
-    maxHeight: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
-    maxWidth: hasNavMenu ? `calc(100vw - ${MENU_WIDTH_COMPACT}px)` : "100vw",
-  }),
-);
+const EditorContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "hasNavMenu",
+})<{ hasNavMenu?: boolean }>(({ hasNavMenu = true }) => ({
+  display: "flex",
+  alignItems: "stretch",
+  overflow: "hidden",
+  flexGrow: 1,
+  maxHeight: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
+  maxWidth: hasNavMenu ? `calc(100vw - ${MENU_WIDTH_COMPACT}px)` : "100vw",
+}));
 
 const EditorVisualControls = styled(ButtonGroup)(({ theme }) => ({
   position: "absolute",

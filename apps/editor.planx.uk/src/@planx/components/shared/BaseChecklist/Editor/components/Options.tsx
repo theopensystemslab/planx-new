@@ -4,7 +4,7 @@ import { ResponsiveChecklistWithOptions } from "@planx/components/ResponsiveChec
 import React from "react";
 
 import { Props } from "../types";
-import { Options } from "./Options/index"
+import { Options } from "./Options/index";
 
 export const TypeNarrowedOptions: React.FC<Props> = ({
   formik,

@@ -13,9 +13,10 @@
     "@airbrake/node": "^2.1.9",
     "@aws-sdk/client-s3": "^3.696.0",
     "@aws-sdk/s3-request-presigner": "^3.701.0",
-    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#89795f7",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#06aa962",
     "@types/isomorphic-fetch": "^0.0.36",
     "adm-zip": "^0.5.10",
+    "ai": "^6.0.67",
     "axios": "^1.12.2",
     "body-parser": "^2.2.1",
     "cookie-parser": "^1.4.7",
@@ -40,7 +41,7 @@
     "jsdom": "^27.0.0",
     "jsondiffpatch": "^0.7.3",
     "jsonwebtoken": "^9.0.3",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "mime": "^4.0.4",
     "multer": "^2.0.2",
     "nanoid": "^5.0.9",
@@ -66,9 +67,10 @@
     "test": "TZ=Europe/London vitest run",
     "test:coverage": "TZ=Europe/London vitest run --coverage && open coverage/lcov-report/index.html",
     "test:watch": "TZ=Europe/London vitest --ui --coverage",
-    "build": "rimraf ./dist && npx tsc && pnpm copy-swagger-files",
+    "build": "rimraf ./dist && npx tsc && pnpm copy-swagger-files && pnpm copy-prompt-files",
     "prepare": "cd ../.. && husky install apps/api.planx.uk/.husky",
-    "copy-swagger-files": "copyfiles '**/docs.yaml' dist"
+    "copy-swagger-files": "copyfiles '**/docs.yaml' dist",
+    "copy-prompt-files": "copyfiles 'modules/ai/**/*.md' dist"
   },
   "lint-staged": {
     "**/*.{js,ts}": [

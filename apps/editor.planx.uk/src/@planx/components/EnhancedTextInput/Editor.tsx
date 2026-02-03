@@ -19,7 +19,12 @@ import InputRow from "ui/shared/InputRow";
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import type { EditorProps } from "../shared/types";
-import { parseEnhancedTextInput, taskDefaults, TASKS, validationSchema } from "./model";
+import {
+  parseEnhancedTextInput,
+  taskDefaults,
+  TASKS,
+  validationSchema,
+} from "./model";
 import { type EnhancedTextInput, type Task } from "./types";
 
 type Props = EditorProps<ComponentType.EnhancedTextInput, EnhancedTextInput>;
@@ -94,7 +99,7 @@ const EnhancedTextInputComponent = (props: Props) => {
               <InputRow>
                 <FormControl component="fieldset">
                   <RadioGroup defaultValue="short" value={formik.values.task}>
-                    {Object.entries(TASKS).map(([task, { label }]) =>
+                    {Object.entries(TASKS).map(([task, { label }]) => (
                       <BasicRadio
                         key={task}
                         id={task}
@@ -103,11 +108,14 @@ const EnhancedTextInputComponent = (props: Props) => {
                         value={task}
                         onChange={(e) => {
                           formik.setFieldValue("task", e.target);
-                          formik.setFieldValue("fn", taskDefaults[task as Task].fn);
+                          formik.setFieldValue(
+                            "fn",
+                            taskDefaults[task as Task].fn,
+                          );
                         }}
                         disabled={props.disabled}
                       />
-                    )}
+                    ))}
                   </RadioGroup>
                 </FormControl>
               </InputRow>

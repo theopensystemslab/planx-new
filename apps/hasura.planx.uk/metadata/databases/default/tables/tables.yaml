@@ -1,5 +1,6 @@
 - "!include cron_job.yaml"
 - "!include cron_job_run_details.yaml"
+- "!include public_ai_gateway_audit_log.yaml"
 - "!include public_analytics.yaml"
 - "!include public_analytics_action_nodes.yaml"
 - "!include public_analytics_exits.yaml"

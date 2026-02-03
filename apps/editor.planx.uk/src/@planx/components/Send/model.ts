@@ -11,6 +11,7 @@ import {
 export interface Send extends BaseNodeData {
   title: string;
   destinations: SendIntegration[];
+  submissionEmailId?: string;
 }
 
 export const DEFAULT_TITLE = "Send";
@@ -20,6 +21,7 @@ export const parseSend = (data: Record<string, any> | undefined): Send => ({
   ...parseBaseNodeData(data),
   title: data?.title || DEFAULT_TITLE,
   destinations: data?.destinations || [DEFAULT_DESTINATION],
+  submissionEmailId: data?.submissionEmailId || "",
 });
 
 export function getCombinedEventsPayload({
@@ -51,5 +53,11 @@ export const validationSchema: SchemaOf<Send> =
       destinations: array(
         mixed().oneOf(["email", "bops", "uniform", "s3", "fme", "idox"]),
       ).min(1, "Select at least one destination"),
+      submissionEmailId: string().when("destinations", {
+        is: (destinations: SendIntegration[]) => destinations.includes("email"),
+        then: string().required(
+          "Submission email is required when 'email' is selected.",
+        ),
+      }),
     }),
   );

@@ -4,8 +4,8 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { MouseEventHandler } from "react";
 
 interface Props {
-  relationships: Relationships,
-  source: NonNullable<ContextMenuSource>
+  relationships: Relationships;
+  source: NonNullable<ContextMenuSource>;
 }
 
 /**

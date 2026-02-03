@@ -50,6 +50,6 @@ const LoadingSkeleton: React.FC = () => (
       />
     </Box>
   </Box>
-)
+);
 
 export default LoadingSkeleton;
