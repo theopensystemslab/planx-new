@@ -17,7 +17,16 @@ import { teamSearchSchema } from "..";
 export const Route = createFileRoute("/_authenticated/$team/$flow")({
   validateSearch: zodValidator(teamSearchSchema),
   search: {
-    middlewares: [stripSearchParams(true)],
+    middlewares: [
+      stripSearchParams([
+        "sort",
+        "sortDirection",
+        "templates",
+        "online-status",
+        "flow-type",
+        "lps-listing",
+      ]),
+    ],
   },
   beforeLoad: async ({ params }) => {
     const { team: teamSlug, flow: flowSlug } = params;
