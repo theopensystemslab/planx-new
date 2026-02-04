@@ -5,7 +5,6 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import { styled } from "@mui/material/styles";
 import { MENU_WIDTH_COMPACT } from "components/EditorNavMenu/styles";
 import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
-import { isEmpty } from "lodash";
 import { parentNodeIsTemplatedInternalPortal } from "pages/FlowEditor/utils";
 import React, { useEffect, useRef } from "react";
 
@@ -17,7 +16,6 @@ import { ToggleImagesButton } from "./components/FlowEditor/ToggleImagesButton";
 import { ToggleNotesButton } from "./components/FlowEditor/ToggleNotesButton";
 import { ToggleTagsButton } from "./components/FlowEditor/ToggleTagsButton";
 import Sidebar from "./components/Sidebar";
-import FlowSkeleton from "./FlowSkeleton";
 import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
 
@@ -73,8 +71,7 @@ const FlowEditor = () => {
   }, [flowId, connectToFlow, disconnectFromFlow]);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const isLoading = isEmpty(flowObject);
-  useScrollControlsAndRememberPosition(isLoading ? null : scrollContainerRef);
+  useScrollControlsAndRememberPosition(scrollContainerRef);
 
   const parentId = getParentId(undefined);
 
@@ -107,15 +104,10 @@ const FlowEditor = () => {
           ref={scrollContainerRef}
           className={lockedFlow ? "flow-locked" : ""}
         >
-          {" "}
-          {isLoading ? (
-            <FlowSkeleton />
-          ) : (
-            <Flow
-              lockedFlow={lockedFlow}
-              showTemplatedNodeStatus={showTemplatedNodeStatus}
-            />
-          )}
+          <Flow
+            lockedFlow={lockedFlow}
+            showTemplatedNodeStatus={showTemplatedNodeStatus}
+          />
           <EditorVisualControls
             orientation="vertical"
             aria-label="Toggle node attributes"
