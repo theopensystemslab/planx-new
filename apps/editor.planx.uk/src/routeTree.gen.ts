@@ -19,6 +19,7 @@ import { Route as AuthenticatedGlobalSettingsRouteImport } from './routes/_authe
 import { Route as AuthenticatedAdminPanelRouteImport } from './routes/_authenticated/admin-panel'
 import { Route as authLogoutRouteImport } from './routes/(auth)/logout'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
+import { Route as PublicCustomDomainRouteRouteImport } from './routes/_public/_customDomain/route'
 import { Route as AuthenticatedTeamRouteRouteImport } from './routes/_authenticated/$team/route'
 import { Route as AuthenticatedTeamIndexRouteImport } from './routes/_authenticated/$team/index'
 import { Route as AuthenticatedTeamSubscriptionRouteImport } from './routes/_authenticated/$team/subscription'
@@ -26,9 +27,12 @@ import { Route as AuthenticatedTeamSubmissionsRouteImport } from './routes/_auth
 import { Route as AuthenticatedTeamMembersRouteImport } from './routes/_authenticated/$team/members'
 import { Route as AuthenticatedTeamFeedbackRouteImport } from './routes/_authenticated/$team/feedback'
 import { Route as AuthenticatedTeamDesignRouteImport } from './routes/_authenticated/$team/design'
+import { Route as PublicCustomDomainFlowRouteRouteImport } from './routes/_public/_customDomain/$flow/route'
 import { Route as AuthenticatedTeamSettingsRouteRouteImport } from './routes/_authenticated/$team/settings/route'
 import { Route as AuthenticatedTeamFlowRouteRouteImport } from './routes/_authenticated/$team/$flow/route'
+import { Route as PublicCustomDomainFlowIndexRouteImport } from './routes/_public/_customDomain/$flow/index'
 import { Route as AuthenticatedTeamSettingsIndexRouteImport } from './routes/_authenticated/$team/settings/index'
+import { Route as PublicCustomDomainFlowViewApplicationRouteImport } from './routes/_public/_customDomain/$flow/view-application'
 import { Route as AuthenticatedTeamSubmissionSessionIdRouteImport } from './routes/_authenticated/$team/submission.$sessionId'
 import { Route as AuthenticatedTeamSettingsIntegrationsRouteImport } from './routes/_authenticated/$team/settings/integrations'
 import { Route as AuthenticatedTeamSettingsGisDataRouteImport } from './routes/_authenticated/$team/settings/gis-data'
@@ -42,6 +46,7 @@ import { Route as PublicPlanXDomainTeamFlowRouteRouteImport } from './routes/_pu
 import { Route as AuthenticatedTeamFlowSettingsRouteRouteImport } from './routes/_authenticated/$team/$flow/settings/route'
 import { Route as AuthenticatedTeamFlowNodesRouteRouteImport } from './routes/_authenticated/$team/$flow/nodes/route'
 import { Route as AuthenticatedTeamFlowSettingsIndexRouteImport } from './routes/_authenticated/$team/$flow/settings/index'
+import { Route as PublicCustomDomainFlowPagesPageRouteImport } from './routes/_public/_customDomain/$flow/pages.$page'
 import { Route as AuthenticatedTeamFlowSettingsVisibilityRouteImport } from './routes/_authenticated/$team/$flow/settings/visibility'
 import { Route as AuthenticatedTeamFlowSettingsTemplatesRouteImport } from './routes/_authenticated/$team/$flow/settings/templates'
 import { Route as AuthenticatedTeamFlowSettingsLegalDisclaimerRouteImport } from './routes/_authenticated/$team/$flow/settings/legal-disclaimer'
@@ -128,6 +133,10 @@ const authLoginRoute = authLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PublicCustomDomainRouteRoute = PublicCustomDomainRouteRouteImport.update({
+  id: '/_public/_customDomain',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedTeamRouteRoute = AuthenticatedTeamRouteRouteImport.update({
   id: '/$team',
   path: '/$team',
@@ -167,6 +176,12 @@ const AuthenticatedTeamDesignRoute = AuthenticatedTeamDesignRouteImport.update({
   path: '/design',
   getParentRoute: () => AuthenticatedTeamRouteRoute,
 } as any)
+const PublicCustomDomainFlowRouteRoute =
+  PublicCustomDomainFlowRouteRouteImport.update({
+    id: '/$flow',
+    path: '/$flow',
+    getParentRoute: () => PublicCustomDomainRouteRoute,
+  } as any)
 const AuthenticatedTeamSettingsRouteRoute =
   AuthenticatedTeamSettingsRouteRouteImport.update({
     id: '/settings',
@@ -179,11 +194,23 @@ const AuthenticatedTeamFlowRouteRoute =
     path: '/$flow',
     getParentRoute: () => AuthenticatedTeamRouteRoute,
   } as any)
+const PublicCustomDomainFlowIndexRoute =
+  PublicCustomDomainFlowIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => PublicCustomDomainFlowRouteRoute,
+  } as any)
 const AuthenticatedTeamSettingsIndexRoute =
   AuthenticatedTeamSettingsIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedTeamSettingsRouteRoute,
+  } as any)
+const PublicCustomDomainFlowViewApplicationRoute =
+  PublicCustomDomainFlowViewApplicationRouteImport.update({
+    id: '/view-application',
+    path: '/view-application',
+    getParentRoute: () => PublicCustomDomainFlowRouteRoute,
   } as any)
 const AuthenticatedTeamSubmissionSessionIdRoute =
   AuthenticatedTeamSubmissionSessionIdRouteImport.update({
@@ -262,6 +289,12 @@ const AuthenticatedTeamFlowSettingsIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedTeamFlowSettingsRouteRoute,
+  } as any)
+const PublicCustomDomainFlowPagesPageRoute =
+  PublicCustomDomainFlowPagesPageRouteImport.update({
+    id: '/pages/$page',
+    path: '/pages/$page',
+    getParentRoute: () => PublicCustomDomainFlowRouteRoute,
   } as any)
 const AuthenticatedTeamFlowSettingsVisibilityRoute =
   AuthenticatedTeamFlowSettingsVisibilityRouteImport.update({
@@ -487,6 +520,7 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/$team/$flow': typeof PublicPlanXDomainTeamFlowRouteRouteWithChildren
   '/$team/settings': typeof AuthenticatedTeamSettingsRouteRouteWithChildren
+  '/$flow': typeof PublicCustomDomainFlowRouteRouteWithChildren
   '/$team/design': typeof AuthenticatedTeamDesignRoute
   '/$team/feedback': typeof AuthenticatedTeamFeedbackRoute
   '/$team/members': typeof AuthenticatedTeamMembersRoute
@@ -504,7 +538,9 @@ export interface FileRoutesByFullPath {
   '/$team/settings/gis-data': typeof AuthenticatedTeamSettingsGisDataRoute
   '/$team/settings/integrations': typeof AuthenticatedTeamSettingsIntegrationsRoute
   '/$team/submission/$sessionId': typeof AuthenticatedTeamSubmissionSessionIdRoute
+  '/$flow/view-application': typeof PublicCustomDomainFlowViewApplicationRoute
   '/$team/settings/': typeof AuthenticatedTeamSettingsIndexRoute
+  '/$flow/': typeof PublicCustomDomainFlowIndexRoute
   '/$team/$flow/draft': typeof PublicPlanXDomainTeamFlowDraftRouteRouteWithChildren
   '/$team/$flow/pay': typeof PublicPlanXDomainTeamFlowPayRouteRouteWithChildren
   '/$team/$flow/preview': typeof PublicPlanXDomainTeamFlowPreviewRouteRouteWithChildren
@@ -513,6 +549,7 @@ export interface FileRoutesByFullPath {
   '/$team/$flow/settings/legal-disclaimer': typeof AuthenticatedTeamFlowSettingsLegalDisclaimerRoute
   '/$team/$flow/settings/templates': typeof AuthenticatedTeamFlowSettingsTemplatesRoute
   '/$team/$flow/settings/visibility': typeof AuthenticatedTeamFlowSettingsVisibilityRoute
+  '/$flow/pages/$page': typeof PublicCustomDomainFlowPagesPageRoute
   '/$team/$flow/settings/': typeof AuthenticatedTeamFlowSettingsIndexRoute
   '/$team/$flow/nodes/$id/edit': typeof AuthenticatedTeamFlowNodesIdEditRouteWithChildren
   '/$team/$flow/nodes/new/$before': typeof AuthenticatedTeamFlowNodesNewBeforeRoute
@@ -569,11 +606,14 @@ export interface FileRoutesByTo {
   '/$team/settings/gis-data': typeof AuthenticatedTeamSettingsGisDataRoute
   '/$team/settings/integrations': typeof AuthenticatedTeamSettingsIntegrationsRoute
   '/$team/submission/$sessionId': typeof AuthenticatedTeamSubmissionSessionIdRoute
+  '/$flow/view-application': typeof PublicCustomDomainFlowViewApplicationRoute
   '/$team/settings': typeof AuthenticatedTeamSettingsIndexRoute
+  '/$flow': typeof PublicCustomDomainFlowIndexRoute
   '/$team/$flow/settings/about': typeof AuthenticatedTeamFlowSettingsAboutRoute
   '/$team/$flow/settings/legal-disclaimer': typeof AuthenticatedTeamFlowSettingsLegalDisclaimerRoute
   '/$team/$flow/settings/templates': typeof AuthenticatedTeamFlowSettingsTemplatesRoute
   '/$team/$flow/settings/visibility': typeof AuthenticatedTeamFlowSettingsVisibilityRoute
+  '/$flow/pages/$page': typeof PublicCustomDomainFlowPagesPageRoute
   '/$team/$flow/settings': typeof AuthenticatedTeamFlowSettingsIndexRoute
   '/$team/$flow/nodes/$id/edit': typeof AuthenticatedTeamFlowNodesIdEditRouteWithChildren
   '/$team/$flow/nodes/new/$before': typeof AuthenticatedTeamFlowNodesNewBeforeRoute
@@ -608,6 +648,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/$': typeof SplatRoute
   '/_authenticated/$team': typeof AuthenticatedTeamRouteRouteWithChildren
+  '/_public/_customDomain': typeof PublicCustomDomainRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/logout': typeof authLogoutRoute
   '/_authenticated/admin-panel': typeof AuthenticatedAdminPanelRoute
@@ -618,6 +659,7 @@ export interface FileRoutesById {
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/$team/$flow': typeof AuthenticatedTeamFlowRouteRouteWithChildren
   '/_authenticated/$team/settings': typeof AuthenticatedTeamSettingsRouteRouteWithChildren
+  '/_public/_customDomain/$flow': typeof PublicCustomDomainFlowRouteRouteWithChildren
   '/_authenticated/$team/design': typeof AuthenticatedTeamDesignRoute
   '/_authenticated/$team/feedback': typeof AuthenticatedTeamFeedbackRoute
   '/_authenticated/$team/members': typeof AuthenticatedTeamMembersRoute
@@ -636,7 +678,9 @@ export interface FileRoutesById {
   '/_authenticated/$team/settings/gis-data': typeof AuthenticatedTeamSettingsGisDataRoute
   '/_authenticated/$team/settings/integrations': typeof AuthenticatedTeamSettingsIntegrationsRoute
   '/_authenticated/$team/submission/$sessionId': typeof AuthenticatedTeamSubmissionSessionIdRoute
+  '/_public/_customDomain/$flow/view-application': typeof PublicCustomDomainFlowViewApplicationRoute
   '/_authenticated/$team/settings/': typeof AuthenticatedTeamSettingsIndexRoute
+  '/_public/_customDomain/$flow/': typeof PublicCustomDomainFlowIndexRoute
   '/_public/_planXDomain/$team/$flow/draft': typeof PublicPlanXDomainTeamFlowDraftRouteRouteWithChildren
   '/_public/_planXDomain/$team/$flow/pay': typeof PublicPlanXDomainTeamFlowPayRouteRouteWithChildren
   '/_public/_planXDomain/$team/$flow/preview': typeof PublicPlanXDomainTeamFlowPreviewRouteRouteWithChildren
@@ -645,6 +689,7 @@ export interface FileRoutesById {
   '/_authenticated/$team/$flow/settings/legal-disclaimer': typeof AuthenticatedTeamFlowSettingsLegalDisclaimerRoute
   '/_authenticated/$team/$flow/settings/templates': typeof AuthenticatedTeamFlowSettingsTemplatesRoute
   '/_authenticated/$team/$flow/settings/visibility': typeof AuthenticatedTeamFlowSettingsVisibilityRoute
+  '/_public/_customDomain/$flow/pages/$page': typeof PublicCustomDomainFlowPagesPageRoute
   '/_authenticated/$team/$flow/settings/': typeof AuthenticatedTeamFlowSettingsIndexRoute
   '/_authenticated/$team/$flow/nodes/$id/edit': typeof AuthenticatedTeamFlowNodesIdEditRouteWithChildren
   '/_authenticated/$team/$flow/nodes/new/$before': typeof AuthenticatedTeamFlowNodesNewBeforeRoute
@@ -689,6 +734,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$team/$flow'
     | '/$team/settings'
+    | '/$flow'
     | '/$team/design'
     | '/$team/feedback'
     | '/$team/members'
@@ -706,7 +752,9 @@ export interface FileRouteTypes {
     | '/$team/settings/gis-data'
     | '/$team/settings/integrations'
     | '/$team/submission/$sessionId'
+    | '/$flow/view-application'
     | '/$team/settings/'
+    | '/$flow/'
     | '/$team/$flow/draft'
     | '/$team/$flow/pay'
     | '/$team/$flow/preview'
@@ -715,6 +763,7 @@ export interface FileRouteTypes {
     | '/$team/$flow/settings/legal-disclaimer'
     | '/$team/$flow/settings/templates'
     | '/$team/$flow/settings/visibility'
+    | '/$flow/pages/$page'
     | '/$team/$flow/settings/'
     | '/$team/$flow/nodes/$id/edit'
     | '/$team/$flow/nodes/new/$before'
@@ -771,11 +820,14 @@ export interface FileRouteTypes {
     | '/$team/settings/gis-data'
     | '/$team/settings/integrations'
     | '/$team/submission/$sessionId'
+    | '/$flow/view-application'
     | '/$team/settings'
+    | '/$flow'
     | '/$team/$flow/settings/about'
     | '/$team/$flow/settings/legal-disclaimer'
     | '/$team/$flow/settings/templates'
     | '/$team/$flow/settings/visibility'
+    | '/$flow/pages/$page'
     | '/$team/$flow/settings'
     | '/$team/$flow/nodes/$id/edit'
     | '/$team/$flow/nodes/new/$before'
@@ -809,6 +861,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/$'
     | '/_authenticated/$team'
+    | '/_public/_customDomain'
     | '/(auth)/login'
     | '/(auth)/logout'
     | '/_authenticated/admin-panel'
@@ -819,6 +872,7 @@ export interface FileRouteTypes {
     | '/_authenticated/'
     | '/_authenticated/$team/$flow'
     | '/_authenticated/$team/settings'
+    | '/_public/_customDomain/$flow'
     | '/_authenticated/$team/design'
     | '/_authenticated/$team/feedback'
     | '/_authenticated/$team/members'
@@ -837,7 +891,9 @@ export interface FileRouteTypes {
     | '/_authenticated/$team/settings/gis-data'
     | '/_authenticated/$team/settings/integrations'
     | '/_authenticated/$team/submission/$sessionId'
+    | '/_public/_customDomain/$flow/view-application'
     | '/_authenticated/$team/settings/'
+    | '/_public/_customDomain/$flow/'
     | '/_public/_planXDomain/$team/$flow/draft'
     | '/_public/_planXDomain/$team/$flow/pay'
     | '/_public/_planXDomain/$team/$flow/preview'
@@ -846,6 +902,7 @@ export interface FileRouteTypes {
     | '/_authenticated/$team/$flow/settings/legal-disclaimer'
     | '/_authenticated/$team/$flow/settings/templates'
     | '/_authenticated/$team/$flow/settings/visibility'
+    | '/_public/_customDomain/$flow/pages/$page'
     | '/_authenticated/$team/$flow/settings/'
     | '/_authenticated/$team/$flow/nodes/$id/edit'
     | '/_authenticated/$team/$flow/nodes/new/$before'
@@ -879,6 +936,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   SplatRoute: typeof SplatRoute
+  PublicCustomDomainRouteRoute: typeof PublicCustomDomainRouteRouteWithChildren
   authLoginRoute: typeof authLoginRoute
   authLogoutRoute: typeof authLogoutRoute
   PublicPlanXDomainTeamFlowRouteRoute: typeof PublicPlanXDomainTeamFlowRouteRouteWithChildren
@@ -956,6 +1014,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_public/_customDomain': {
+      id: '/_public/_customDomain'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PublicCustomDomainRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/$team': {
       id: '/_authenticated/$team'
       path: '/$team'
@@ -1005,6 +1070,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTeamDesignRouteImport
       parentRoute: typeof AuthenticatedTeamRouteRoute
     }
+    '/_public/_customDomain/$flow': {
+      id: '/_public/_customDomain/$flow'
+      path: '/$flow'
+      fullPath: '/$flow'
+      preLoaderRoute: typeof PublicCustomDomainFlowRouteRouteImport
+      parentRoute: typeof PublicCustomDomainRouteRoute
+    }
     '/_authenticated/$team/settings': {
       id: '/_authenticated/$team/settings'
       path: '/settings'
@@ -1019,12 +1091,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTeamFlowRouteRouteImport
       parentRoute: typeof AuthenticatedTeamRouteRoute
     }
+    '/_public/_customDomain/$flow/': {
+      id: '/_public/_customDomain/$flow/'
+      path: '/'
+      fullPath: '/$flow/'
+      preLoaderRoute: typeof PublicCustomDomainFlowIndexRouteImport
+      parentRoute: typeof PublicCustomDomainFlowRouteRoute
+    }
     '/_authenticated/$team/settings/': {
       id: '/_authenticated/$team/settings/'
       path: '/'
       fullPath: '/$team/settings/'
       preLoaderRoute: typeof AuthenticatedTeamSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedTeamSettingsRouteRoute
+    }
+    '/_public/_customDomain/$flow/view-application': {
+      id: '/_public/_customDomain/$flow/view-application'
+      path: '/view-application'
+      fullPath: '/$flow/view-application'
+      preLoaderRoute: typeof PublicCustomDomainFlowViewApplicationRouteImport
+      parentRoute: typeof PublicCustomDomainFlowRouteRoute
     }
     '/_authenticated/$team/submission/$sessionId': {
       id: '/_authenticated/$team/submission/$sessionId'
@@ -1116,6 +1202,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/$team/$flow/settings/'
       preLoaderRoute: typeof AuthenticatedTeamFlowSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedTeamFlowSettingsRouteRoute
+    }
+    '/_public/_customDomain/$flow/pages/$page': {
+      id: '/_public/_customDomain/$flow/pages/$page'
+      path: '/pages/$page'
+      fullPath: '/$flow/pages/$page'
+      preLoaderRoute: typeof PublicCustomDomainFlowPagesPageRouteImport
+      parentRoute: typeof PublicCustomDomainFlowRouteRoute
     }
     '/_authenticated/$team/$flow/settings/visibility': {
       id: '/_authenticated/$team/$flow/settings/visibility'
@@ -1567,6 +1660,40 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface PublicCustomDomainFlowRouteRouteChildren {
+  PublicCustomDomainFlowViewApplicationRoute: typeof PublicCustomDomainFlowViewApplicationRoute
+  PublicCustomDomainFlowIndexRoute: typeof PublicCustomDomainFlowIndexRoute
+  PublicCustomDomainFlowPagesPageRoute: typeof PublicCustomDomainFlowPagesPageRoute
+}
+
+const PublicCustomDomainFlowRouteRouteChildren: PublicCustomDomainFlowRouteRouteChildren =
+  {
+    PublicCustomDomainFlowViewApplicationRoute:
+      PublicCustomDomainFlowViewApplicationRoute,
+    PublicCustomDomainFlowIndexRoute: PublicCustomDomainFlowIndexRoute,
+    PublicCustomDomainFlowPagesPageRoute: PublicCustomDomainFlowPagesPageRoute,
+  }
+
+const PublicCustomDomainFlowRouteRouteWithChildren =
+  PublicCustomDomainFlowRouteRoute._addFileChildren(
+    PublicCustomDomainFlowRouteRouteChildren,
+  )
+
+interface PublicCustomDomainRouteRouteChildren {
+  PublicCustomDomainFlowRouteRoute: typeof PublicCustomDomainFlowRouteRouteWithChildren
+}
+
+const PublicCustomDomainRouteRouteChildren: PublicCustomDomainRouteRouteChildren =
+  {
+    PublicCustomDomainFlowRouteRoute:
+      PublicCustomDomainFlowRouteRouteWithChildren,
+  }
+
+const PublicCustomDomainRouteRouteWithChildren =
+  PublicCustomDomainRouteRoute._addFileChildren(
+    PublicCustomDomainRouteRouteChildren,
+  )
+
 interface PublicPlanXDomainTeamFlowDraftRouteRouteChildren {
   PublicPlanXDomainTeamFlowDraftViewApplicationRoute: typeof PublicPlanXDomainTeamFlowDraftViewApplicationRoute
   PublicPlanXDomainTeamFlowDraftIndexRoute: typeof PublicPlanXDomainTeamFlowDraftIndexRoute
@@ -1693,6 +1820,7 @@ const PublicPlanXDomainTeamFlowRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   SplatRoute: SplatRoute,
+  PublicCustomDomainRouteRoute: PublicCustomDomainRouteRouteWithChildren,
   authLoginRoute: authLoginRoute,
   authLogoutRoute: authLogoutRoute,
   PublicPlanXDomainTeamFlowRouteRoute:
