@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import components from "pages/FlowEditor/components/forms";
 import FormModal from "pages/FlowEditor/components/forms/FormModal";
 import React from "react";
-import { calculateExtraProps } from "utils/routeUtils/queryUtils";
+
+import { sharedNodeLoader } from "./sharedNodeLoader";
 
 export const Route = createFileRoute("/_authenticated/$team/$flow/nodes/new/")({
   loaderDeps: ({ search }) => ({ type: search.type }),
@@ -10,14 +11,13 @@ export const Route = createFileRoute("/_authenticated/$team/$flow/nodes/new/")({
     const { type = "question" } = deps;
     const { team, flow } = params;
 
-    const extraProps = await calculateExtraProps(type, team, flow);
-
-    return {
+    return sharedNodeLoader({
+      team,
+      flow,
       type,
-      extraProps,
-      parent: undefined,
-      before: undefined,
-    };
+      includeExtraProps: true,
+      includeHandleDelete: false,
+    });
   },
 
   component: NewNodeModal,
