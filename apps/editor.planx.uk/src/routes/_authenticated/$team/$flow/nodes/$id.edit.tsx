@@ -52,6 +52,10 @@ function EditNodeModal() {
     before,
   } = Route.useLoaderData();
 
+  const handleDelete = () => {
+    useStore.getState().removeNode(id, parent!);
+  };
+
   return (
     <FormModal
       type={actualType}
@@ -61,6 +65,7 @@ function EditNodeModal() {
       id={id}
       parent={parent}
       before={before}
+      handleDelete={handleDelete}
     />
   );
 }
