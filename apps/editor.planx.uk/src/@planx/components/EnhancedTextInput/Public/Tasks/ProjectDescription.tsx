@@ -34,11 +34,10 @@ import { HOW_DOES_THIS_WORK } from "../../content";
 import type { EnhancedTextInputForTask } from "../../types";
 import type { FormValues } from "../types";
 import ErrorCard from "./ErrorCard";
-import LoadingSkeleton from "./LoadingSkeleton";
+import ProgressiveLoading from "ui/shared/ProgressiveLoading";
+import type { TaskAction } from "../../types"; 
 
 type Props = PublicProps<EnhancedTextInputForTask<"projectDescription">>;
-
-type DescriptionOption = "suggested" | "original" | "custom";
 
 interface StyledFormLabelProps {
   isSelected: boolean;
@@ -145,9 +144,6 @@ const ProjectDescription: React.FC<Props> = (props) => {
   const { values, errors, setFieldValue, setValues } =
     useFormikContext<FormValues>();
   const [open, setOpen] = useState(false);
-  const [selectedOption, setSelectedOption] =
-    useState<DescriptionOption | null>(null);
-  const [customDescription, setCustomDescription] = useState("");
 
   const initialValueRef = useRef(values.userInput);
   const [shouldEnhance, setShouldEnhance] = React.useState(true);
@@ -182,6 +178,8 @@ const ProjectDescription: React.FC<Props> = (props) => {
         original: data.original,
         enhanced: data.enhanced,
         error: null,
+        selectedOption: null,
+        customDescription: "",
       });
       setShouldEnhance(false);
     }
@@ -195,24 +193,26 @@ const ProjectDescription: React.FC<Props> = (props) => {
         enhanced: null,
         error: error.data.error,
         userInput: initialValueRef.current,
+        selectedOption: null,
+        customDescription: "",
       });
     }
   }, [error, setValues]);
 
   const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const option = event.target.value as DescriptionOption;
-    setSelectedOption(option);
+    const option = event.target.value as TaskAction;
+    setFieldValue("selectedOption", option);
 
     if (data) {
       switch (option) {
-        case "suggested":
+        case "acceptedEnhanced":
           setFieldValue("userInput", data.enhanced);
           break;
-        case "original":
+        case "retainedOriginal":
           setFieldValue("userInput", data.original);
           break;
-        case "custom":
-          setFieldValue("userInput", customDescription);
+        case "hybrid":
+          setFieldValue("userInput", values.customDescription);
           break;
       }
     }
@@ -222,15 +222,21 @@ const ProjectDescription: React.FC<Props> = (props) => {
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const value = event.target.value;
-    setCustomDescription(value);
+    setFieldValue("customDescription", value);
     setFieldValue("userInput", value);
   };
 
-  const showRadioError = !selectedOption && Boolean(errors.userInput);
+  const showRadioError = !values.selectedOption && Boolean(errors.userInput);
   const showCustomInputError =
-    selectedOption === "custom" && Boolean(errors.userInput);
+    values.selectedOption === "hybrid" && Boolean(errors.userInput);
 
-  if (isPending) return <LoadingSkeleton />;
+  const LOADING_STAGES = [
+    "Analysing your project description",
+    "Reviewing structure and tone",
+    "Generating suggested improvements",
+  ];
+
+  if (isPending) return <ProgressiveLoading stages={LOADING_STAGES} />;
 
   if (error) {
     switch (error.data.error) {
@@ -291,19 +297,19 @@ const ProjectDescription: React.FC<Props> = (props) => {
         <Box mb={2}>
           <ErrorWrapper error={showRadioError ? "Select an option" : undefined}>
             <RadioGroup
-              value={selectedOption ?? ""}
+              value={values.selectedOption ?? ""}
               onChange={handleOptionChange}
               aria-label="Choose project description"
             >
               <DescriptionRadio
-                id="suggested"
+                id="acceptedEnhanced"
                 onChange={handleOptionChange}
                 title="Use suggested description"
                 description={data.enhanced}
                 recommended
               />
               <DescriptionRadio
-                id="original"
+                id="retainedOriginal"
                 onChange={handleOptionChange}
                 title="Use your original description"
                 description={data.original}
@@ -314,18 +320,18 @@ const ProjectDescription: React.FC<Props> = (props) => {
               </Box>
 
               <DescriptionRadio
-                id="custom"
+                id="hybrid"
                 onChange={handleOptionChange}
                 title="Write a new description"
               />
             </RadioGroup>
           </ErrorWrapper>
 
-          {selectedOption === "custom" && (
+          {values.selectedOption === "hybrid" && (
             <RevealedContent>
               <InputRow>
                 <InputLabel
-                  label="Enter your project description. This will not be checked for suggested improvements"
+                  label="Enter your project description. This will not be checked for suggested improvements."
                   htmlFor={props.id}
                 >
                   <Input
@@ -333,7 +339,7 @@ const ProjectDescription: React.FC<Props> = (props) => {
                     multiline
                     rows={5}
                     name="userInput"
-                    value={customDescription}
+                    value={values.customDescription}
                     bordered
                     onChange={handleCustomDescriptionChange}
                     errorMessage={
@@ -356,7 +362,7 @@ const ProjectDescription: React.FC<Props> = (props) => {
                   />
                   <CharacterCounter
                     limit={TEXT_LIMITS[TextInputType.Long]}
-                    count={customDescription.length}
+                    count={values.customDescription.length}
                     error={showCustomInputError}
                   />
                 </InputLabel>

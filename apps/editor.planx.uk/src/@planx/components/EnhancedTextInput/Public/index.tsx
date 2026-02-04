@@ -21,21 +21,25 @@ const EnhancedTextInputComponent = (props: Props) => {
   const isRunningTask = useIsFetching({ queryKey: [props.task] });
 
   const initialValues: FormValues = previous
-    ? {
-        userInput: previous,
-        status: "success",
-        original:
-          props.previouslySubmittedData?.data?._enhancements[props.fn].original,
-        enhanced:
-          props.previouslySubmittedData?.data?._enhancements[props.fn].enhanced,
-        error: null,
-      }
-    : {
-        userInput: "",
-        status: "idle",
-        enhanced: null,
-        error: null,
-      };
+  ? {
+      userInput: previous,
+      status: "success",
+      original:
+        props.previouslySubmittedData?.data?._enhancements[props.fn].original,
+      enhanced:
+        props.previouslySubmittedData?.data?._enhancements[props.fn].enhanced,
+      error: null,
+      selectedOption: null,
+      customDescription: "",
+    }
+  : {
+      userInput: "",
+      status: "idle",
+      enhanced: null,
+      error: null,
+      selectedOption: null,
+      customDescription: "",
+    };
 
   const nextStep = (values: FormValues) => {
     // If re-submitting the same value (e.g. as part of "back" navigation),

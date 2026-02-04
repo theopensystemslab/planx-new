@@ -3,7 +3,7 @@ import { keyframes, styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useEffect, useState } from "react";
 
-const animloader = keyframes`
+const pulseAnimation = keyframes`
   0% {
     transform: scale(0);
     opacity: 0;
@@ -34,7 +34,7 @@ const Loader = styled("span")(({ theme }) => ({
     top: 0,
     opacity: 0,
     transform: "scale(0)",
-    animation: `${animloader} 2s linear infinite`,
+    animation: `${pulseAnimation} 2s linear infinite`,
   },
   "&::after": {
     animationDelay: "1s",
@@ -49,23 +49,25 @@ const LoadingStage = styled(Box)(({ theme }) => ({
   transition: "opacity 0.5s ease-in",
 }));
 
-const LOADING_STAGES = [
-  "Analysing your project description",
-  "Reviewing structure and tone",
-  "Generating suggested improvements",
-];
+export interface ProgressiveLoadingProps {
+  stages: string[];
+  interval?: number;
+}
 
-const LoadingSkeleton: React.FC = () => {
-  const [visibleStages, setVisibleStages] = useState(1);
+const ProgressiveLoading: React.FC<ProgressiveLoadingProps> = ({
+  stages,
+  interval = 1000,
+}) => {
+  const [visibleStages, setVisibleStages] = useState(0);
 
   useEffect(() => {
-    if (visibleStages < LOADING_STAGES.length) {
+    if (visibleStages < stages.length - 1) {
       const timer = setTimeout(() => {
         setVisibleStages((prev) => prev + 1);
-      }, 1000);
+      }, interval);
       return () => clearTimeout(timer);
     }
-  }, [visibleStages]);
+  }, [visibleStages, stages.length, interval]);
 
   return (
     <Box
@@ -77,8 +79,8 @@ const LoadingSkeleton: React.FC = () => {
       }}
     >
       <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-        {LOADING_STAGES.map((stage, index) => {
-          const isVisible = index < visibleStages;
+        {stages.map((stage, index) => {
+          const isVisible = index <= visibleStages;
           return (
             <LoadingStage
               key={stage}
@@ -99,4 +101,4 @@ const LoadingSkeleton: React.FC = () => {
   );
 };
 
-export default LoadingSkeleton;
+export default ProgressiveLoading;
