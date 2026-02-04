@@ -161,6 +161,13 @@ export const getBasicFlowData = async (
   return flow;
 };
 
+/**
+ * For non admins, external portal (aka nested flow) selection should return:
+ *   - Flows in my team
+ *   - Flows set to copiable by others
+ *   - Not source templates
+ *   - Not the parent flow I am currently nesting within
+ */
 export const getExternalPortals = async (
   currentTeam: string,
   currentFlow: string,
@@ -173,6 +180,7 @@ export const getExternalPortals = async (
           slug
           name
           isTemplate: is_template
+          canCreateFromCopy: can_create_from_copy
           team {
             slug
             name
@@ -182,19 +190,29 @@ export const getExternalPortals = async (
     `,
   });
 
-  const filteredFlows = data.flows
-    .filter(
+  // Always filter out the parent flow I am currently nesting within
+  let filteredFlows = data.flows.filter(
+    (flow: Flow) =>
+      flow.team &&
+      `${currentTeam}/${currentFlow}` !== `${flow.team.slug}/${flow.slug}`,
+  );
+
+  // For non admins, also filter out source templates, flows not copiable by others, and flows not in my team for a less-overwhelming selection
+  const isPlatformAdmin = useStore.getState().user?.isPlatformAdmin;
+  if (!isPlatformAdmin) {
+    filteredFlows = filteredFlows.filter(
       (flow: Flow) =>
-        flow.team &&
-        `${currentTeam}/${currentFlow}` !== `${flow.team.slug}/${flow.slug}` &&
-        !flow.isTemplate,
-    )
-    .map(({ id, team, slug, name }: Flow) => ({
-      id,
-      name,
-      slug,
-      team: team.name,
-    }));
+        !flow.isTemplate &&
+        (flow.canCreateFromCopy || flow.team.slug === currentTeam),
+    );
+  }
+
+  filteredFlows = filteredFlows.map(({ id, team, slug, name }: Flow) => ({
+    id,
+    name,
+    slug,
+    team: team.name,
+  }));
 
   const flowsSortedByTeam = sortBy(filteredFlows, [(flow: Flow) => flow.team]);
 
