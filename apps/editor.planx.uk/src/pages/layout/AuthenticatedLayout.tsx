@@ -5,7 +5,6 @@ import { useRouter } from "@tanstack/react-router";
 import EditorNavMenu from "components/EditorNavMenu/EditorNavMenu";
 import ErrorFallback from "components/Error/ErrorFallback";
 import LoadingOverlay from "components/LoadingOverlay";
-import RouteLoadingIndicator from "components/RouteLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { PropsWithChildren, useEffect } from "react";
 import { DndProvider } from "react-dnd";

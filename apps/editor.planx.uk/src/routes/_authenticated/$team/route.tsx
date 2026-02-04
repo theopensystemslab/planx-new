@@ -1,5 +1,4 @@
 import { createFileRoute, notFound, Outlet } from "@tanstack/react-router";
-import RouteLoadingIndicator from "components/RouteLoadingIndicator";
 import React from "react";
 import { CatchAllComponent } from "routes/$";
 import { getTeamFromDomain } from "utils/routeUtils/utils";
