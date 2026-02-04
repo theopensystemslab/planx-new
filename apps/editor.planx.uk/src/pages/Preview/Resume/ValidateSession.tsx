@@ -66,23 +66,25 @@ export const LockedSession: React.FC<{
       bannerHeading="Sorry, you can't make changes to this application"
       additionalOption="startNewApplication"
     >
-      <Typography variant="body1">
-        This is because you've invited {paymentRequest?.payeeName} (
-        <Link href={`mailto:${paymentRequest?.payeeEmail}`}>
-          {paymentRequest?.payeeEmail}
-        </Link>
-        ) to pay and changes might affect the fee.
-        <br />
-        <br />
-        You can{" "}
-        <CustomLink
-          to="/$team/$flow/pay"
-          params={{ team: teamSlug, flow: flowSlug }}
-          search={{ paymentRequestId: paymentRequest?.id }}
-        >
-          pay yourself on the payment page
-        </CustomLink>
-      </Typography>
+      {paymentRequest && (
+        <Typography variant="body1">
+          This is because you've invited {paymentRequest?.payeeName} (
+          <Link href={`mailto:${paymentRequest?.payeeEmail}`}>
+            {paymentRequest?.payeeEmail}
+          </Link>
+          ) to pay and changes might affect the fee.
+          <br />
+          <br />
+          You can{" "}
+          <CustomLink
+            to="/$team/$flow/pay"
+            params={{ team: teamSlug, flow: flowSlug }}
+            search={{ paymentRequestId: paymentRequest.id }}
+          >
+            pay yourself on the payment page
+          </CustomLink>
+        </Typography>
+      )}
     </StatusPage>
   );
 };
