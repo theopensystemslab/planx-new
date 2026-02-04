@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import React from "react";
 import {
   createPublicRouteBeforeLoad,
@@ -11,6 +12,7 @@ import {
 
 export const Route = createFileRoute("/_public/$team/$flow/draft")({
   validateSearch: zodValidator(publicRouteSearchSchemas.draft),
+  pendingComponent: DelayedLoadingIndicator,
   beforeLoad: createPublicRouteBeforeLoad("draft"),
   head: createPublicRouteHead("draft"),
   errorComponent: createPublicRouteErrorComponent("draft"),
