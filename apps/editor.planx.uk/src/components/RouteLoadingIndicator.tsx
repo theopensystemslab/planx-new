@@ -10,9 +10,7 @@ const Root = styled(Box)({
   left: 0,
 });
 
-const RouteLoadingIndicator: React.FC<{
-  msDelayBeforeVisible?: number;
-}> = ({ msDelayBeforeVisible = 50 }) => {
+const RouteLoadingIndicator: React.FC = () => {
   return (
     <Root role="alert" aria-busy="true" aria-live="assertive">
       <LinearProgress />
