@@ -30,6 +30,7 @@ export const router = createRouter({
   routeTree,
   context: { currentUser: hasJWT() },
   scrollRestoration: true,
+  defaultPendingMs: 0,
 });
 
 declare module "@tanstack/react-router" {
