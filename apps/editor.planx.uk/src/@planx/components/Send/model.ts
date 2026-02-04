@@ -12,6 +12,7 @@ export interface Send extends BaseNodeData {
   title: string;
   destinations: SendIntegration[];
   submissionEmailId?: string;
+  newEmail?: string;
 }
 
 export const DEFAULT_TITLE = "Send";
@@ -59,5 +60,26 @@ export const validationSchema: SchemaOf<Send> =
           "Submission email is required when 'email' is selected.",
         ),
       }),
+      newEmail: string()
+        .email("Please enter a valid email address.")
+        .when("submissionEmailId", {
+          is: (submissionEmailId: string) => submissionEmailId === "new-email",
+          then: string()
+            .required("Please enter a new submission email.")
+            .test(
+              "is-unique",
+              "Please enter a unique email address.",
+              async function (value) {
+                if (!value) return true;
+                const { existingEmails } = this.options.context || {};
+                if (!existingEmails || !Array.isArray(existingEmails)) {
+                  throw new Error(
+                    "Validation context is missing existing emails.",
+                  );
+                }
+                return !existingEmails.includes(value);
+              },
+            ),
+        }),
     }),
   );
