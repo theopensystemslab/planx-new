@@ -5,7 +5,7 @@ import { calculateExtraProps } from "utils/routeUtils/queryUtils";
 
 import { NodeSearchParams } from "./route";
 
-export async function sharedNodeLoader({
+export async function loader({
   team,
   flow,
   id,

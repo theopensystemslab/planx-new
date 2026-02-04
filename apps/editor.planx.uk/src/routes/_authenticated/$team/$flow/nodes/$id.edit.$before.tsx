@@ -1,9 +1,9 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import components from "pages/FlowEditor/components/forms";
 import FormModal from "pages/FlowEditor/components/forms/FormModal";
 import React from "react";
 
-import { sharedNodeLoader } from "./sharedNodeLoader";
+import { loader } from "./loader";
 
 export const Route = createFileRoute(
   "/_authenticated/$team/$flow/nodes/$id/edit/$before",
@@ -13,7 +13,7 @@ export const Route = createFileRoute(
     const { team, flow, id, before } = params;
     const { type } = deps;
 
-    return sharedNodeLoader({
+    return loader({
       team,
       flow,
       id,

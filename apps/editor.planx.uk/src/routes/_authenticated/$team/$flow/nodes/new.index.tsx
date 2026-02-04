@@ -3,7 +3,7 @@ import components from "pages/FlowEditor/components/forms";
 import FormModal from "pages/FlowEditor/components/forms/FormModal";
 import React from "react";
 
-import { sharedNodeLoader } from "./sharedNodeLoader";
+import { loader } from "./loader";
 
 export const Route = createFileRoute("/_authenticated/$team/$flow/nodes/new/")({
   loaderDeps: ({ search }) => ({ type: search.type }),
@@ -11,7 +11,7 @@ export const Route = createFileRoute("/_authenticated/$team/$flow/nodes/new/")({
     const { type = "question" } = deps;
     const { team, flow } = params;
 
-    return sharedNodeLoader({
+    return loader({
       team,
       flow,
       type,
