@@ -7,7 +7,6 @@ import { getTeamFromDomain } from "utils/routeUtils/utils";
 import { useStore } from "../../../pages/FlowEditor/lib/store";
 
 export const Route = createFileRoute("/_authenticated/$team")({
-  pendingComponent: RouteLoadingIndicator,
   beforeLoad: async ({ params }) => {
     const { initTeamStore, teamSlug: currentSlug } = useStore.getState();
     const routeSlug =

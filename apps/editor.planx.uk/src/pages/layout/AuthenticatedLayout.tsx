@@ -54,7 +54,6 @@ const Layout: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <>
       <LoadingOverlay />
-      <RouteLoadingIndicator />
       <Header />
       <DashboardWrap>
         <EditorNavMenu />
