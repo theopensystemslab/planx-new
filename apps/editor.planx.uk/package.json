@@ -15,7 +15,7 @@
     "@mui/lab": "5.0.0-alpha.170",
     "@mui/material": "^5.15.10",
     "@mui/utils": "^5.15.11",
-    "@mui/x-charts": "^7.22.2",
+    "@mui/x-charts": "8.9.0",
     "@mui/x-data-grid": "^7.25.0",
     "@tanstack/react-router": "^1.131.28",
     "@tanstack/react-router-devtools": "^1.131.28",
