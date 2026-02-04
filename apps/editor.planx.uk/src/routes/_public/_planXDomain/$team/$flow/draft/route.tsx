@@ -10,14 +10,16 @@ import {
   publicRouteSearchSchemas,
 } from "utils/routeUtils/publicRouteHelpers";
 
-export const Route = createFileRoute("/_public/$team/$flow/draft")({
-  validateSearch: zodValidator(publicRouteSearchSchemas.draft),
-  pendingComponent: DelayedLoadingIndicator,
-  beforeLoad: createPublicRouteBeforeLoad("draft"),
-  head: createPublicRouteHead("draft"),
-  errorComponent: createPublicRouteErrorComponent("draft"),
-  component: DraftLayoutComponent,
-});
+export const Route = createFileRoute("/_public/_planXDomain/$team/$flow/draft")(
+  {
+    validateSearch: zodValidator(publicRouteSearchSchemas.draft),
+    pendingComponent: DelayedLoadingIndicator,
+    beforeLoad: createPublicRouteBeforeLoad("draft"),
+    head: createPublicRouteHead("draft"),
+    errorComponent: createPublicRouteErrorComponent("draft"),
+    component: DraftLayoutComponent,
+  },
+);
 
 function DraftLayoutComponent() {
   return (

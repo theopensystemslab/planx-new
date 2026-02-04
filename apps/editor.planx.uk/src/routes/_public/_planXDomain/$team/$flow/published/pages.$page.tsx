@@ -3,15 +3,15 @@ import ContentPage from "pages/Preview/ContentPage";
 import React from "react";
 
 export const Route = createFileRoute(
-  "/_public/$team/$flow/preview/pages/$page",
+  "/_public/_planXDomain/$team/$flow/published/pages/$page",
 )({
   beforeLoad: () => ({
     isContentPage: true,
   }),
-  component: PreviewPageComponent,
+  component: PublishedPageComponent,
 });
 
-function PreviewPageComponent() {
+function PublishedPageComponent() {
   const { page } = Route.useParams();
   return <ContentPage page={page} />;
 }

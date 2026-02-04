@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute(
-  "/_public/$team/$flow/pay/invite/pages/$page",
+  "/_public/_planXDomain/$team/$flow/pay/invite/pages/$page",
 )({
   beforeLoad: ({ params }) => {
     throw redirect({

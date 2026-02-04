@@ -10,7 +10,9 @@ import {
   publicRouteSearchSchemas,
 } from "utils/routeUtils/publicRouteHelpers";
 
-export const Route = createFileRoute("/_public/$team/$flow/published")({
+export const Route = createFileRoute(
+  "/_public/_planXDomain/$team/$flow/published",
+)({
   validateSearch: zodValidator(publicRouteSearchSchemas.published),
   pendingComponent: DelayedLoadingIndicator,
   beforeLoad: createPublicRouteBeforeLoad("published"),

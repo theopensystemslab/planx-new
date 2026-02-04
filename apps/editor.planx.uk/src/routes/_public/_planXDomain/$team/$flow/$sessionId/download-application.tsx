@@ -14,7 +14,7 @@ import {
 import { validateTeamRoute } from "utils/routeUtils/utils";
 
 export const Route = createFileRoute(
-  "/_public/$team/$flow/$sessionId/download-application",
+  "/_public/_planXDomain/$team/$flow/$sessionId/download-application",
 )({
   head: createPublicRouteHead("download"),
   beforeLoad: async ({ params }) => {

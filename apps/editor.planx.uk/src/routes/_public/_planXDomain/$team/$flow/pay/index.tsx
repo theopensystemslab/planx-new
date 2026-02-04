@@ -1,18 +1,17 @@
 import type { PaymentRequest } from "@opensystemslab/planx-core/types";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
-import InviteToPay from "pages/Pay/InviteToPay";
+import MakePayment from "pages/Pay/MakePayment";
 import React from "react";
 import { getPaymentRequest } from "utils/routeUtils/payQueries";
 import { z } from "zod";
 
-// Search schema for invite route
-const inviteSearchSchema = z.object({
+const paymentSearchSchema = z.object({
   paymentRequestId: z.string().uuid(),
 });
 
-export const Route = createFileRoute("/_public/$team/$flow/pay/invite/")({
-  validateSearch: zodValidator(inviteSearchSchema),
+export const Route = createFileRoute("/_public/_planXDomain/$team/$flow/pay/")({
+  validateSearch: zodValidator(paymentSearchSchema),
   beforeLoad: async ({ search }) => {
     const { paymentRequestId } = search;
 
@@ -20,7 +19,7 @@ export const Route = createFileRoute("/_public/$team/$flow/pay/invite/")({
 
     if (!paymentRequest) {
       throw redirect({
-        to: "/$team/$flow/pay/invite/failed",
+        to: "/$team/$flow/pay/not-found",
         params: { team: "", flow: "" },
       });
     }
@@ -29,11 +28,11 @@ export const Route = createFileRoute("/_public/$team/$flow/pay/invite/")({
       paymentRequest,
     };
   },
-  component: InviteToPayComponent,
+  component: PayIndexComponent,
 });
 
-function InviteToPayComponent() {
+function PayIndexComponent() {
   const data = Route.useLoaderData() as { paymentRequest: PaymentRequest };
 
-  return <InviteToPay {...data.paymentRequest} />;
+  return <MakePayment {...data.paymentRequest} />;
 }
