@@ -185,7 +185,7 @@ const SendComponent: React.FC<Props> = (props) => {
                     component. To manage, delete or update submission emails,
                     please visit your{" "}
                     <Link
-                      href="#" // TODO: update link after routing work merged
+                      href={`/${teamSlug}/settings/integrations`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
