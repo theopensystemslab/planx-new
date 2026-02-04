@@ -43,9 +43,13 @@ import { Route as AuthenticatedTeamFlowSubmissionsRouteImport } from './routes/_
 import { Route as AuthenticatedTeamFlowFeedbackRouteImport } from './routes/_authenticated/$team/$flow/feedback'
 import { Route as AuthenticatedTeamFlowAboutRouteImport } from './routes/_authenticated/$team/$flow/about'
 import { Route as PublicPlanXDomainTeamFlowRouteRouteImport } from './routes/_public/_planXDomain/$team/$flow/route'
+import { Route as PublicCustomDomainFlowPayRouteRouteImport } from './routes/_public/_customDomain/$flow/pay/route'
 import { Route as AuthenticatedTeamFlowSettingsRouteRouteImport } from './routes/_authenticated/$team/$flow/settings/route'
 import { Route as AuthenticatedTeamFlowNodesRouteRouteImport } from './routes/_authenticated/$team/$flow/nodes/route'
+import { Route as PublicCustomDomainFlowPayIndexRouteImport } from './routes/_public/_customDomain/$flow/pay/index'
 import { Route as AuthenticatedTeamFlowSettingsIndexRouteImport } from './routes/_authenticated/$team/$flow/settings/index'
+import { Route as PublicCustomDomainFlowPayViewApplicationRouteImport } from './routes/_public/_customDomain/$flow/pay/view-application'
+import { Route as PublicCustomDomainFlowPayNotFoundRouteImport } from './routes/_public/_customDomain/$flow/pay/not-found'
 import { Route as PublicCustomDomainFlowPagesPageRouteImport } from './routes/_public/_customDomain/$flow/pages.$page'
 import { Route as AuthenticatedTeamFlowSettingsVisibilityRouteImport } from './routes/_authenticated/$team/$flow/settings/visibility'
 import { Route as AuthenticatedTeamFlowSettingsTemplatesRouteImport } from './routes/_authenticated/$team/$flow/settings/templates'
@@ -59,6 +63,7 @@ import { Route as PublicPlanXDomainTeamFlowPublishedIndexRouteImport } from './r
 import { Route as PublicPlanXDomainTeamFlowPreviewIndexRouteImport } from './routes/_public/_planXDomain/$team/$flow/preview/index'
 import { Route as PublicPlanXDomainTeamFlowPayIndexRouteImport } from './routes/_public/_planXDomain/$team/$flow/pay/index'
 import { Route as PublicPlanXDomainTeamFlowDraftIndexRouteImport } from './routes/_public/_planXDomain/$team/$flow/draft/index'
+import { Route as PublicCustomDomainFlowPayInviteIndexRouteImport } from './routes/_public/_customDomain/$flow/pay/invite/index'
 import { Route as AuthenticatedTeamFlowNodesNewIndexRouteImport } from './routes/_authenticated/$team/$flow/nodes/new.index'
 import { Route as PublicPlanXDomainTeamFlowPublishedViewApplicationRouteImport } from './routes/_public/_planXDomain/$team/$flow/published/view-application'
 import { Route as PublicPlanXDomainTeamFlowPreviewViewApplicationRouteImport } from './routes/_public/_planXDomain/$team/$flow/preview/view-application'
@@ -66,6 +71,8 @@ import { Route as PublicPlanXDomainTeamFlowPayViewApplicationRouteImport } from 
 import { Route as PublicPlanXDomainTeamFlowPayNotFoundRouteImport } from './routes/_public/_planXDomain/$team/$flow/pay/not-found'
 import { Route as PublicPlanXDomainTeamFlowDraftViewApplicationRouteImport } from './routes/_public/_planXDomain/$team/$flow/draft/view-application'
 import { Route as PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRouteImport } from './routes/_public/_planXDomain/$team/$flow/$sessionId/download-application'
+import { Route as PublicCustomDomainFlowPayPagesPageRouteImport } from './routes/_public/_customDomain/$flow/pay/pages.$page'
+import { Route as PublicCustomDomainFlowPayInviteFailedRouteImport } from './routes/_public/_customDomain/$flow/pay/invite/failed'
 import { Route as AuthenticatedTeamFlowSettingsPagesPrivacyRouteImport } from './routes/_authenticated/$team/$flow/settings/pages.privacy'
 import { Route as AuthenticatedTeamFlowSettingsPagesHelpRouteImport } from './routes/_authenticated/$team/$flow/settings/pages.help'
 import { Route as AuthenticatedTeamFlowNodesNewBeforeRouteImport } from './routes/_authenticated/$team/$flow/nodes/new.$before'
@@ -76,6 +83,7 @@ import { Route as PublicPlanXDomainTeamFlowPreviewPagesPageRouteImport } from '.
 import { Route as PublicPlanXDomainTeamFlowPayPagesPageRouteImport } from './routes/_public/_planXDomain/$team/$flow/pay/pages.$page'
 import { Route as PublicPlanXDomainTeamFlowPayInviteFailedRouteImport } from './routes/_public/_planXDomain/$team/$flow/pay/invite/failed'
 import { Route as PublicPlanXDomainTeamFlowDraftPagesPageRouteImport } from './routes/_public/_planXDomain/$team/$flow/draft/pages.$page'
+import { Route as PublicCustomDomainFlowPayInvitePagesPageRouteImport } from './routes/_public/_customDomain/$flow/pay/invite/pages.$page'
 import { Route as AuthenticatedTeamFlowNodesIdEditBeforeRouteImport } from './routes/_authenticated/$team/$flow/nodes/$id.edit.$before'
 import { Route as AuthenticatedTeamFlowNodesParentNodesNewIndexRouteImport } from './routes/_authenticated/$team/$flow/nodes/$parent.nodes.new.index'
 import { Route as PublicPlanXDomainTeamFlowPayInvitePagesPageRouteImport } from './routes/_public/_planXDomain/$team/$flow/pay/invite/pages.$page'
@@ -272,6 +280,12 @@ const PublicPlanXDomainTeamFlowRouteRoute =
     path: '/$team/$flow',
     getParentRoute: () => rootRouteImport,
   } as any)
+const PublicCustomDomainFlowPayRouteRoute =
+  PublicCustomDomainFlowPayRouteRouteImport.update({
+    id: '/pay',
+    path: '/pay',
+    getParentRoute: () => PublicCustomDomainFlowRouteRoute,
+  } as any)
 const AuthenticatedTeamFlowSettingsRouteRoute =
   AuthenticatedTeamFlowSettingsRouteRouteImport.update({
     id: '/settings',
@@ -284,11 +298,29 @@ const AuthenticatedTeamFlowNodesRouteRoute =
     path: '/nodes',
     getParentRoute: () => AuthenticatedTeamFlowRouteRoute,
   } as any)
+const PublicCustomDomainFlowPayIndexRoute =
+  PublicCustomDomainFlowPayIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => PublicCustomDomainFlowPayRouteRoute,
+  } as any)
 const AuthenticatedTeamFlowSettingsIndexRoute =
   AuthenticatedTeamFlowSettingsIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedTeamFlowSettingsRouteRoute,
+  } as any)
+const PublicCustomDomainFlowPayViewApplicationRoute =
+  PublicCustomDomainFlowPayViewApplicationRouteImport.update({
+    id: '/view-application',
+    path: '/view-application',
+    getParentRoute: () => PublicCustomDomainFlowPayRouteRoute,
+  } as any)
+const PublicCustomDomainFlowPayNotFoundRoute =
+  PublicCustomDomainFlowPayNotFoundRouteImport.update({
+    id: '/not-found',
+    path: '/not-found',
+    getParentRoute: () => PublicCustomDomainFlowPayRouteRoute,
   } as any)
 const PublicCustomDomainFlowPagesPageRoute =
   PublicCustomDomainFlowPagesPageRouteImport.update({
@@ -368,6 +400,12 @@ const PublicPlanXDomainTeamFlowDraftIndexRoute =
     path: '/',
     getParentRoute: () => PublicPlanXDomainTeamFlowDraftRouteRoute,
   } as any)
+const PublicCustomDomainFlowPayInviteIndexRoute =
+  PublicCustomDomainFlowPayInviteIndexRouteImport.update({
+    id: '/invite/',
+    path: '/invite/',
+    getParentRoute: () => PublicCustomDomainFlowPayRouteRoute,
+  } as any)
 const AuthenticatedTeamFlowNodesNewIndexRoute =
   AuthenticatedTeamFlowNodesNewIndexRouteImport.update({
     id: '/new/',
@@ -409,6 +447,18 @@ const PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute =
     id: '/$sessionId/download-application',
     path: '/$sessionId/download-application',
     getParentRoute: () => PublicPlanXDomainTeamFlowRouteRoute,
+  } as any)
+const PublicCustomDomainFlowPayPagesPageRoute =
+  PublicCustomDomainFlowPayPagesPageRouteImport.update({
+    id: '/pages/$page',
+    path: '/pages/$page',
+    getParentRoute: () => PublicCustomDomainFlowPayRouteRoute,
+  } as any)
+const PublicCustomDomainFlowPayInviteFailedRoute =
+  PublicCustomDomainFlowPayInviteFailedRouteImport.update({
+    id: '/invite/failed',
+    path: '/invite/failed',
+    getParentRoute: () => PublicCustomDomainFlowPayRouteRoute,
   } as any)
 const AuthenticatedTeamFlowSettingsPagesPrivacyRoute =
   AuthenticatedTeamFlowSettingsPagesPrivacyRouteImport.update({
@@ -470,6 +520,12 @@ const PublicPlanXDomainTeamFlowDraftPagesPageRoute =
     path: '/pages/$page',
     getParentRoute: () => PublicPlanXDomainTeamFlowDraftRouteRoute,
   } as any)
+const PublicCustomDomainFlowPayInvitePagesPageRoute =
+  PublicCustomDomainFlowPayInvitePagesPageRouteImport.update({
+    id: '/invite/pages/$page',
+    path: '/invite/pages/$page',
+    getParentRoute: () => PublicCustomDomainFlowPayRouteRoute,
+  } as any)
 const AuthenticatedTeamFlowNodesIdEditBeforeRoute =
   AuthenticatedTeamFlowNodesIdEditBeforeRouteImport.update({
     id: '/$before',
@@ -529,6 +585,7 @@ export interface FileRoutesByFullPath {
   '/$team/': typeof AuthenticatedTeamIndexRoute
   '/$team/$flow/nodes': typeof AuthenticatedTeamFlowNodesRouteRouteWithChildren
   '/$team/$flow/settings': typeof AuthenticatedTeamFlowSettingsRouteRouteWithChildren
+  '/$flow/pay': typeof PublicCustomDomainFlowPayRouteRouteWithChildren
   '/$team/$flow/about': typeof AuthenticatedTeamFlowAboutRoute
   '/$team/$flow/feedback': typeof AuthenticatedTeamFlowFeedbackRoute
   '/$team/$flow/submissions': typeof AuthenticatedTeamFlowSubmissionsRoute
@@ -550,11 +607,16 @@ export interface FileRoutesByFullPath {
   '/$team/$flow/settings/templates': typeof AuthenticatedTeamFlowSettingsTemplatesRoute
   '/$team/$flow/settings/visibility': typeof AuthenticatedTeamFlowSettingsVisibilityRoute
   '/$flow/pages/$page': typeof PublicCustomDomainFlowPagesPageRoute
+  '/$flow/pay/not-found': typeof PublicCustomDomainFlowPayNotFoundRoute
+  '/$flow/pay/view-application': typeof PublicCustomDomainFlowPayViewApplicationRoute
   '/$team/$flow/settings/': typeof AuthenticatedTeamFlowSettingsIndexRoute
+  '/$flow/pay/': typeof PublicCustomDomainFlowPayIndexRoute
   '/$team/$flow/nodes/$id/edit': typeof AuthenticatedTeamFlowNodesIdEditRouteWithChildren
   '/$team/$flow/nodes/new/$before': typeof AuthenticatedTeamFlowNodesNewBeforeRoute
   '/$team/$flow/settings/pages/help': typeof AuthenticatedTeamFlowSettingsPagesHelpRoute
   '/$team/$flow/settings/pages/privacy': typeof AuthenticatedTeamFlowSettingsPagesPrivacyRoute
+  '/$flow/pay/invite/failed': typeof PublicCustomDomainFlowPayInviteFailedRoute
+  '/$flow/pay/pages/$page': typeof PublicCustomDomainFlowPayPagesPageRoute
   '/$team/$flow/$sessionId/download-application': typeof PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute
   '/$team/$flow/draft/view-application': typeof PublicPlanXDomainTeamFlowDraftViewApplicationRoute
   '/$team/$flow/pay/not-found': typeof PublicPlanXDomainTeamFlowPayNotFoundRoute
@@ -562,11 +624,13 @@ export interface FileRoutesByFullPath {
   '/$team/$flow/preview/view-application': typeof PublicPlanXDomainTeamFlowPreviewViewApplicationRoute
   '/$team/$flow/published/view-application': typeof PublicPlanXDomainTeamFlowPublishedViewApplicationRoute
   '/$team/$flow/nodes/new': typeof AuthenticatedTeamFlowNodesNewIndexRoute
+  '/$flow/pay/invite': typeof PublicCustomDomainFlowPayInviteIndexRoute
   '/$team/$flow/draft/': typeof PublicPlanXDomainTeamFlowDraftIndexRoute
   '/$team/$flow/pay/': typeof PublicPlanXDomainTeamFlowPayIndexRoute
   '/$team/$flow/preview/': typeof PublicPlanXDomainTeamFlowPreviewIndexRoute
   '/$team/$flow/published/': typeof PublicPlanXDomainTeamFlowPublishedIndexRoute
   '/$team/$flow/nodes/$id/edit/$before': typeof AuthenticatedTeamFlowNodesIdEditBeforeRoute
+  '/$flow/pay/invite/pages/$page': typeof PublicCustomDomainFlowPayInvitePagesPageRoute
   '/$team/$flow/draft/pages/$page': typeof PublicPlanXDomainTeamFlowDraftPagesPageRoute
   '/$team/$flow/pay/invite/failed': typeof PublicPlanXDomainTeamFlowPayInviteFailedRoute
   '/$team/$flow/pay/pages/$page': typeof PublicPlanXDomainTeamFlowPayPagesPageRoute
@@ -614,11 +678,16 @@ export interface FileRoutesByTo {
   '/$team/$flow/settings/templates': typeof AuthenticatedTeamFlowSettingsTemplatesRoute
   '/$team/$flow/settings/visibility': typeof AuthenticatedTeamFlowSettingsVisibilityRoute
   '/$flow/pages/$page': typeof PublicCustomDomainFlowPagesPageRoute
+  '/$flow/pay/not-found': typeof PublicCustomDomainFlowPayNotFoundRoute
+  '/$flow/pay/view-application': typeof PublicCustomDomainFlowPayViewApplicationRoute
   '/$team/$flow/settings': typeof AuthenticatedTeamFlowSettingsIndexRoute
+  '/$flow/pay': typeof PublicCustomDomainFlowPayIndexRoute
   '/$team/$flow/nodes/$id/edit': typeof AuthenticatedTeamFlowNodesIdEditRouteWithChildren
   '/$team/$flow/nodes/new/$before': typeof AuthenticatedTeamFlowNodesNewBeforeRoute
   '/$team/$flow/settings/pages/help': typeof AuthenticatedTeamFlowSettingsPagesHelpRoute
   '/$team/$flow/settings/pages/privacy': typeof AuthenticatedTeamFlowSettingsPagesPrivacyRoute
+  '/$flow/pay/invite/failed': typeof PublicCustomDomainFlowPayInviteFailedRoute
+  '/$flow/pay/pages/$page': typeof PublicCustomDomainFlowPayPagesPageRoute
   '/$team/$flow/$sessionId/download-application': typeof PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute
   '/$team/$flow/draft/view-application': typeof PublicPlanXDomainTeamFlowDraftViewApplicationRoute
   '/$team/$flow/pay/not-found': typeof PublicPlanXDomainTeamFlowPayNotFoundRoute
@@ -626,11 +695,13 @@ export interface FileRoutesByTo {
   '/$team/$flow/preview/view-application': typeof PublicPlanXDomainTeamFlowPreviewViewApplicationRoute
   '/$team/$flow/published/view-application': typeof PublicPlanXDomainTeamFlowPublishedViewApplicationRoute
   '/$team/$flow/nodes/new': typeof AuthenticatedTeamFlowNodesNewIndexRoute
+  '/$flow/pay/invite': typeof PublicCustomDomainFlowPayInviteIndexRoute
   '/$team/$flow/draft': typeof PublicPlanXDomainTeamFlowDraftIndexRoute
   '/$team/$flow/pay': typeof PublicPlanXDomainTeamFlowPayIndexRoute
   '/$team/$flow/preview': typeof PublicPlanXDomainTeamFlowPreviewIndexRoute
   '/$team/$flow/published': typeof PublicPlanXDomainTeamFlowPublishedIndexRoute
   '/$team/$flow/nodes/$id/edit/$before': typeof AuthenticatedTeamFlowNodesIdEditBeforeRoute
+  '/$flow/pay/invite/pages/$page': typeof PublicCustomDomainFlowPayInvitePagesPageRoute
   '/$team/$flow/draft/pages/$page': typeof PublicPlanXDomainTeamFlowDraftPagesPageRoute
   '/$team/$flow/pay/invite/failed': typeof PublicPlanXDomainTeamFlowPayInviteFailedRoute
   '/$team/$flow/pay/pages/$page': typeof PublicPlanXDomainTeamFlowPayPagesPageRoute
@@ -668,6 +739,7 @@ export interface FileRoutesById {
   '/_authenticated/$team/': typeof AuthenticatedTeamIndexRoute
   '/_authenticated/$team/$flow/nodes': typeof AuthenticatedTeamFlowNodesRouteRouteWithChildren
   '/_authenticated/$team/$flow/settings': typeof AuthenticatedTeamFlowSettingsRouteRouteWithChildren
+  '/_public/_customDomain/$flow/pay': typeof PublicCustomDomainFlowPayRouteRouteWithChildren
   '/_public/_planXDomain/$team/$flow': typeof PublicPlanXDomainTeamFlowRouteRouteWithChildren
   '/_authenticated/$team/$flow/about': typeof AuthenticatedTeamFlowAboutRoute
   '/_authenticated/$team/$flow/feedback': typeof AuthenticatedTeamFlowFeedbackRoute
@@ -690,11 +762,16 @@ export interface FileRoutesById {
   '/_authenticated/$team/$flow/settings/templates': typeof AuthenticatedTeamFlowSettingsTemplatesRoute
   '/_authenticated/$team/$flow/settings/visibility': typeof AuthenticatedTeamFlowSettingsVisibilityRoute
   '/_public/_customDomain/$flow/pages/$page': typeof PublicCustomDomainFlowPagesPageRoute
+  '/_public/_customDomain/$flow/pay/not-found': typeof PublicCustomDomainFlowPayNotFoundRoute
+  '/_public/_customDomain/$flow/pay/view-application': typeof PublicCustomDomainFlowPayViewApplicationRoute
   '/_authenticated/$team/$flow/settings/': typeof AuthenticatedTeamFlowSettingsIndexRoute
+  '/_public/_customDomain/$flow/pay/': typeof PublicCustomDomainFlowPayIndexRoute
   '/_authenticated/$team/$flow/nodes/$id/edit': typeof AuthenticatedTeamFlowNodesIdEditRouteWithChildren
   '/_authenticated/$team/$flow/nodes/new/$before': typeof AuthenticatedTeamFlowNodesNewBeforeRoute
   '/_authenticated/$team/$flow/settings/pages/help': typeof AuthenticatedTeamFlowSettingsPagesHelpRoute
   '/_authenticated/$team/$flow/settings/pages/privacy': typeof AuthenticatedTeamFlowSettingsPagesPrivacyRoute
+  '/_public/_customDomain/$flow/pay/invite/failed': typeof PublicCustomDomainFlowPayInviteFailedRoute
+  '/_public/_customDomain/$flow/pay/pages/$page': typeof PublicCustomDomainFlowPayPagesPageRoute
   '/_public/_planXDomain/$team/$flow/$sessionId/download-application': typeof PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute
   '/_public/_planXDomain/$team/$flow/draft/view-application': typeof PublicPlanXDomainTeamFlowDraftViewApplicationRoute
   '/_public/_planXDomain/$team/$flow/pay/not-found': typeof PublicPlanXDomainTeamFlowPayNotFoundRoute
@@ -702,11 +779,13 @@ export interface FileRoutesById {
   '/_public/_planXDomain/$team/$flow/preview/view-application': typeof PublicPlanXDomainTeamFlowPreviewViewApplicationRoute
   '/_public/_planXDomain/$team/$flow/published/view-application': typeof PublicPlanXDomainTeamFlowPublishedViewApplicationRoute
   '/_authenticated/$team/$flow/nodes/new/': typeof AuthenticatedTeamFlowNodesNewIndexRoute
+  '/_public/_customDomain/$flow/pay/invite/': typeof PublicCustomDomainFlowPayInviteIndexRoute
   '/_public/_planXDomain/$team/$flow/draft/': typeof PublicPlanXDomainTeamFlowDraftIndexRoute
   '/_public/_planXDomain/$team/$flow/pay/': typeof PublicPlanXDomainTeamFlowPayIndexRoute
   '/_public/_planXDomain/$team/$flow/preview/': typeof PublicPlanXDomainTeamFlowPreviewIndexRoute
   '/_public/_planXDomain/$team/$flow/published/': typeof PublicPlanXDomainTeamFlowPublishedIndexRoute
   '/_authenticated/$team/$flow/nodes/$id/edit/$before': typeof AuthenticatedTeamFlowNodesIdEditBeforeRoute
+  '/_public/_customDomain/$flow/pay/invite/pages/$page': typeof PublicCustomDomainFlowPayInvitePagesPageRoute
   '/_public/_planXDomain/$team/$flow/draft/pages/$page': typeof PublicPlanXDomainTeamFlowDraftPagesPageRoute
   '/_public/_planXDomain/$team/$flow/pay/invite/failed': typeof PublicPlanXDomainTeamFlowPayInviteFailedRoute
   '/_public/_planXDomain/$team/$flow/pay/pages/$page': typeof PublicPlanXDomainTeamFlowPayPagesPageRoute
@@ -743,6 +822,7 @@ export interface FileRouteTypes {
     | '/$team/'
     | '/$team/$flow/nodes'
     | '/$team/$flow/settings'
+    | '/$flow/pay'
     | '/$team/$flow/about'
     | '/$team/$flow/feedback'
     | '/$team/$flow/submissions'
@@ -764,11 +844,16 @@ export interface FileRouteTypes {
     | '/$team/$flow/settings/templates'
     | '/$team/$flow/settings/visibility'
     | '/$flow/pages/$page'
+    | '/$flow/pay/not-found'
+    | '/$flow/pay/view-application'
     | '/$team/$flow/settings/'
+    | '/$flow/pay/'
     | '/$team/$flow/nodes/$id/edit'
     | '/$team/$flow/nodes/new/$before'
     | '/$team/$flow/settings/pages/help'
     | '/$team/$flow/settings/pages/privacy'
+    | '/$flow/pay/invite/failed'
+    | '/$flow/pay/pages/$page'
     | '/$team/$flow/$sessionId/download-application'
     | '/$team/$flow/draft/view-application'
     | '/$team/$flow/pay/not-found'
@@ -776,11 +861,13 @@ export interface FileRouteTypes {
     | '/$team/$flow/preview/view-application'
     | '/$team/$flow/published/view-application'
     | '/$team/$flow/nodes/new'
+    | '/$flow/pay/invite'
     | '/$team/$flow/draft/'
     | '/$team/$flow/pay/'
     | '/$team/$flow/preview/'
     | '/$team/$flow/published/'
     | '/$team/$flow/nodes/$id/edit/$before'
+    | '/$flow/pay/invite/pages/$page'
     | '/$team/$flow/draft/pages/$page'
     | '/$team/$flow/pay/invite/failed'
     | '/$team/$flow/pay/pages/$page'
@@ -828,11 +915,16 @@ export interface FileRouteTypes {
     | '/$team/$flow/settings/templates'
     | '/$team/$flow/settings/visibility'
     | '/$flow/pages/$page'
+    | '/$flow/pay/not-found'
+    | '/$flow/pay/view-application'
     | '/$team/$flow/settings'
+    | '/$flow/pay'
     | '/$team/$flow/nodes/$id/edit'
     | '/$team/$flow/nodes/new/$before'
     | '/$team/$flow/settings/pages/help'
     | '/$team/$flow/settings/pages/privacy'
+    | '/$flow/pay/invite/failed'
+    | '/$flow/pay/pages/$page'
     | '/$team/$flow/$sessionId/download-application'
     | '/$team/$flow/draft/view-application'
     | '/$team/$flow/pay/not-found'
@@ -840,11 +932,13 @@ export interface FileRouteTypes {
     | '/$team/$flow/preview/view-application'
     | '/$team/$flow/published/view-application'
     | '/$team/$flow/nodes/new'
+    | '/$flow/pay/invite'
     | '/$team/$flow/draft'
     | '/$team/$flow/pay'
     | '/$team/$flow/preview'
     | '/$team/$flow/published'
     | '/$team/$flow/nodes/$id/edit/$before'
+    | '/$flow/pay/invite/pages/$page'
     | '/$team/$flow/draft/pages/$page'
     | '/$team/$flow/pay/invite/failed'
     | '/$team/$flow/pay/pages/$page'
@@ -881,6 +975,7 @@ export interface FileRouteTypes {
     | '/_authenticated/$team/'
     | '/_authenticated/$team/$flow/nodes'
     | '/_authenticated/$team/$flow/settings'
+    | '/_public/_customDomain/$flow/pay'
     | '/_public/_planXDomain/$team/$flow'
     | '/_authenticated/$team/$flow/about'
     | '/_authenticated/$team/$flow/feedback'
@@ -903,11 +998,16 @@ export interface FileRouteTypes {
     | '/_authenticated/$team/$flow/settings/templates'
     | '/_authenticated/$team/$flow/settings/visibility'
     | '/_public/_customDomain/$flow/pages/$page'
+    | '/_public/_customDomain/$flow/pay/not-found'
+    | '/_public/_customDomain/$flow/pay/view-application'
     | '/_authenticated/$team/$flow/settings/'
+    | '/_public/_customDomain/$flow/pay/'
     | '/_authenticated/$team/$flow/nodes/$id/edit'
     | '/_authenticated/$team/$flow/nodes/new/$before'
     | '/_authenticated/$team/$flow/settings/pages/help'
     | '/_authenticated/$team/$flow/settings/pages/privacy'
+    | '/_public/_customDomain/$flow/pay/invite/failed'
+    | '/_public/_customDomain/$flow/pay/pages/$page'
     | '/_public/_planXDomain/$team/$flow/$sessionId/download-application'
     | '/_public/_planXDomain/$team/$flow/draft/view-application'
     | '/_public/_planXDomain/$team/$flow/pay/not-found'
@@ -915,11 +1015,13 @@ export interface FileRouteTypes {
     | '/_public/_planXDomain/$team/$flow/preview/view-application'
     | '/_public/_planXDomain/$team/$flow/published/view-application'
     | '/_authenticated/$team/$flow/nodes/new/'
+    | '/_public/_customDomain/$flow/pay/invite/'
     | '/_public/_planXDomain/$team/$flow/draft/'
     | '/_public/_planXDomain/$team/$flow/pay/'
     | '/_public/_planXDomain/$team/$flow/preview/'
     | '/_public/_planXDomain/$team/$flow/published/'
     | '/_authenticated/$team/$flow/nodes/$id/edit/$before'
+    | '/_public/_customDomain/$flow/pay/invite/pages/$page'
     | '/_public/_planXDomain/$team/$flow/draft/pages/$page'
     | '/_public/_planXDomain/$team/$flow/pay/invite/failed'
     | '/_public/_planXDomain/$team/$flow/pay/pages/$page'
@@ -1182,6 +1284,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicPlanXDomainTeamFlowRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_public/_customDomain/$flow/pay': {
+      id: '/_public/_customDomain/$flow/pay'
+      path: '/pay'
+      fullPath: '/$flow/pay'
+      preLoaderRoute: typeof PublicCustomDomainFlowPayRouteRouteImport
+      parentRoute: typeof PublicCustomDomainFlowRouteRoute
+    }
     '/_authenticated/$team/$flow/settings': {
       id: '/_authenticated/$team/$flow/settings'
       path: '/settings'
@@ -1196,12 +1305,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTeamFlowNodesRouteRouteImport
       parentRoute: typeof AuthenticatedTeamFlowRouteRoute
     }
+    '/_public/_customDomain/$flow/pay/': {
+      id: '/_public/_customDomain/$flow/pay/'
+      path: '/'
+      fullPath: '/$flow/pay/'
+      preLoaderRoute: typeof PublicCustomDomainFlowPayIndexRouteImport
+      parentRoute: typeof PublicCustomDomainFlowPayRouteRoute
+    }
     '/_authenticated/$team/$flow/settings/': {
       id: '/_authenticated/$team/$flow/settings/'
       path: '/'
       fullPath: '/$team/$flow/settings/'
       preLoaderRoute: typeof AuthenticatedTeamFlowSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedTeamFlowSettingsRouteRoute
+    }
+    '/_public/_customDomain/$flow/pay/view-application': {
+      id: '/_public/_customDomain/$flow/pay/view-application'
+      path: '/view-application'
+      fullPath: '/$flow/pay/view-application'
+      preLoaderRoute: typeof PublicCustomDomainFlowPayViewApplicationRouteImport
+      parentRoute: typeof PublicCustomDomainFlowPayRouteRoute
+    }
+    '/_public/_customDomain/$flow/pay/not-found': {
+      id: '/_public/_customDomain/$flow/pay/not-found'
+      path: '/not-found'
+      fullPath: '/$flow/pay/not-found'
+      preLoaderRoute: typeof PublicCustomDomainFlowPayNotFoundRouteImport
+      parentRoute: typeof PublicCustomDomainFlowPayRouteRoute
     }
     '/_public/_customDomain/$flow/pages/$page': {
       id: '/_public/_customDomain/$flow/pages/$page'
@@ -1294,6 +1424,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicPlanXDomainTeamFlowDraftIndexRouteImport
       parentRoute: typeof PublicPlanXDomainTeamFlowDraftRouteRoute
     }
+    '/_public/_customDomain/$flow/pay/invite/': {
+      id: '/_public/_customDomain/$flow/pay/invite/'
+      path: '/invite'
+      fullPath: '/$flow/pay/invite'
+      preLoaderRoute: typeof PublicCustomDomainFlowPayInviteIndexRouteImport
+      parentRoute: typeof PublicCustomDomainFlowPayRouteRoute
+    }
     '/_authenticated/$team/$flow/nodes/new/': {
       id: '/_authenticated/$team/$flow/nodes/new/'
       path: '/new'
@@ -1342,6 +1479,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/$team/$flow/$sessionId/download-application'
       preLoaderRoute: typeof PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRouteImport
       parentRoute: typeof PublicPlanXDomainTeamFlowRouteRoute
+    }
+    '/_public/_customDomain/$flow/pay/pages/$page': {
+      id: '/_public/_customDomain/$flow/pay/pages/$page'
+      path: '/pages/$page'
+      fullPath: '/$flow/pay/pages/$page'
+      preLoaderRoute: typeof PublicCustomDomainFlowPayPagesPageRouteImport
+      parentRoute: typeof PublicCustomDomainFlowPayRouteRoute
+    }
+    '/_public/_customDomain/$flow/pay/invite/failed': {
+      id: '/_public/_customDomain/$flow/pay/invite/failed'
+      path: '/invite/failed'
+      fullPath: '/$flow/pay/invite/failed'
+      preLoaderRoute: typeof PublicCustomDomainFlowPayInviteFailedRouteImport
+      parentRoute: typeof PublicCustomDomainFlowPayRouteRoute
     }
     '/_authenticated/$team/$flow/settings/pages/privacy': {
       id: '/_authenticated/$team/$flow/settings/pages/privacy'
@@ -1412,6 +1563,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/$team/$flow/draft/pages/$page'
       preLoaderRoute: typeof PublicPlanXDomainTeamFlowDraftPagesPageRouteImport
       parentRoute: typeof PublicPlanXDomainTeamFlowDraftRouteRoute
+    }
+    '/_public/_customDomain/$flow/pay/invite/pages/$page': {
+      id: '/_public/_customDomain/$flow/pay/invite/pages/$page'
+      path: '/invite/pages/$page'
+      fullPath: '/$flow/pay/invite/pages/$page'
+      preLoaderRoute: typeof PublicCustomDomainFlowPayInvitePagesPageRouteImport
+      parentRoute: typeof PublicCustomDomainFlowPayRouteRoute
     }
     '/_authenticated/$team/$flow/nodes/$id/edit/$before': {
       id: '/_authenticated/$team/$flow/nodes/$id/edit/$before'
@@ -1660,7 +1818,40 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface PublicCustomDomainFlowPayRouteRouteChildren {
+  PublicCustomDomainFlowPayNotFoundRoute: typeof PublicCustomDomainFlowPayNotFoundRoute
+  PublicCustomDomainFlowPayViewApplicationRoute: typeof PublicCustomDomainFlowPayViewApplicationRoute
+  PublicCustomDomainFlowPayIndexRoute: typeof PublicCustomDomainFlowPayIndexRoute
+  PublicCustomDomainFlowPayInviteFailedRoute: typeof PublicCustomDomainFlowPayInviteFailedRoute
+  PublicCustomDomainFlowPayPagesPageRoute: typeof PublicCustomDomainFlowPayPagesPageRoute
+  PublicCustomDomainFlowPayInviteIndexRoute: typeof PublicCustomDomainFlowPayInviteIndexRoute
+  PublicCustomDomainFlowPayInvitePagesPageRoute: typeof PublicCustomDomainFlowPayInvitePagesPageRoute
+}
+
+const PublicCustomDomainFlowPayRouteRouteChildren: PublicCustomDomainFlowPayRouteRouteChildren =
+  {
+    PublicCustomDomainFlowPayNotFoundRoute:
+      PublicCustomDomainFlowPayNotFoundRoute,
+    PublicCustomDomainFlowPayViewApplicationRoute:
+      PublicCustomDomainFlowPayViewApplicationRoute,
+    PublicCustomDomainFlowPayIndexRoute: PublicCustomDomainFlowPayIndexRoute,
+    PublicCustomDomainFlowPayInviteFailedRoute:
+      PublicCustomDomainFlowPayInviteFailedRoute,
+    PublicCustomDomainFlowPayPagesPageRoute:
+      PublicCustomDomainFlowPayPagesPageRoute,
+    PublicCustomDomainFlowPayInviteIndexRoute:
+      PublicCustomDomainFlowPayInviteIndexRoute,
+    PublicCustomDomainFlowPayInvitePagesPageRoute:
+      PublicCustomDomainFlowPayInvitePagesPageRoute,
+  }
+
+const PublicCustomDomainFlowPayRouteRouteWithChildren =
+  PublicCustomDomainFlowPayRouteRoute._addFileChildren(
+    PublicCustomDomainFlowPayRouteRouteChildren,
+  )
+
 interface PublicCustomDomainFlowRouteRouteChildren {
+  PublicCustomDomainFlowPayRouteRoute: typeof PublicCustomDomainFlowPayRouteRouteWithChildren
   PublicCustomDomainFlowViewApplicationRoute: typeof PublicCustomDomainFlowViewApplicationRoute
   PublicCustomDomainFlowIndexRoute: typeof PublicCustomDomainFlowIndexRoute
   PublicCustomDomainFlowPagesPageRoute: typeof PublicCustomDomainFlowPagesPageRoute
@@ -1668,6 +1859,8 @@ interface PublicCustomDomainFlowRouteRouteChildren {
 
 const PublicCustomDomainFlowRouteRouteChildren: PublicCustomDomainFlowRouteRouteChildren =
   {
+    PublicCustomDomainFlowPayRouteRoute:
+      PublicCustomDomainFlowPayRouteRouteWithChildren,
     PublicCustomDomainFlowViewApplicationRoute:
       PublicCustomDomainFlowViewApplicationRoute,
     PublicCustomDomainFlowIndexRoute: PublicCustomDomainFlowIndexRoute,

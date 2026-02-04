@@ -147,6 +147,7 @@ const Sidebar: React.FC = React.memo(() => {
     setActiveTab(newValue);
   };
 
+  // TODO: This pattern is possibly why modal loading is slow
   const baseUrl = `${window.location.origin}${rootFlowPath(false)}`;
 
   const urls = {
