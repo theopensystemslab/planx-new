@@ -1,21 +1,22 @@
+import { Link, useRouter } from "@tanstack/react-router";
 import React, { useEffect, useRef } from "react";
-import { Link, useLoadingRoute } from "react-navi";
 import scrollIntoView from "scroll-into-view-if-needed";
+import { rootFlowPath } from "utils/routeUtils/utils";
 
-import { rootFlowPath } from "../../../../../routes/utils";
 import { useStore } from "../../../lib/store";
 import { FlowLayout } from "..";
 
 const EndPoint: React.FC<{ text: string }> = ({ text }) => {
   const el = useRef<HTMLLIElement>(null);
   const flowLayout = useStore((state) => state.flowLayout);
+  const router = useRouter();
 
   const isStart = text === "start";
 
   const href = rootFlowPath(false);
 
   const currentPath = rootFlowPath(true);
-  const isLoading = useLoadingRoute();
+  const isLoading = router.state.isLoading;
 
   useEffect(() => {
     if (isStart && el.current) {
@@ -49,7 +50,7 @@ const EndPoint: React.FC<{ text: string }> = ({ text }) => {
       ref={el}
       style={{ pointerEvents: isStart ? "auto" : "none" }}
     >
-      <Link href={href} prefetch={false}>
+      <Link to={href} preload={false}>
         {text}
       </Link>
     </li>

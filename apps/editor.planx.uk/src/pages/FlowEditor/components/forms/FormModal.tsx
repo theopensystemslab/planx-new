@@ -11,6 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { type BaseNodeData, parseFormValues } from "@planx/components/shared";
+import { useNavigate } from "@tanstack/react-router";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { FormikProps } from "formik";
 import { hasFeatureFlag } from "lib/featureFlags";
@@ -21,9 +22,9 @@ import {
 } from "pages/FlowEditor/utils";
 import React, { useMemo, useRef, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { useNavigation } from "react-navi";
-import { rootFlowPath } from "routes/utils";
+import type { NodeSearchParams } from "routes/_authenticated/$team/$flow/nodes/route";
 import { Switch } from "ui/shared/Switch";
+import { getNodeRoute, rootFlowPath } from "utils/routeUtils/utils";
 
 import { fromSlug, SLUGS } from "../../data/types";
 import { useStore } from "../../lib/store";
@@ -112,14 +113,20 @@ const NodeTypeSelect: React.FC<{
 };
 
 /**
- * TextInput and EnhancedTextInput are uniquely controlled via a toggle, 
+ * TextInput and EnhancedTextInput are uniquely controlled via a toggle,
  * and not the standard Select component
- * 
+ *
  * Component is styled to appears as an element within the child component
  */
-const TextInputToggle: React.FC<{ type: string }> = ({ type }) => {
-  const { navigate } = useNavigation();
-  const [checked, setChecked] = useState(type === "enhanced-text-input")
+const TextInputToggle: React.FC<{
+  type: string;
+  parent?: string;
+  before?: string;
+  teamSlug: string;
+  flowSlug: string;
+}> = ({ type, parent, before, teamSlug, flowSlug }) => {
+  const navigate = useNavigate();
+  const [checked, setChecked] = useState(type === "enhanced-text-input");
 
   if (!["text-input", "enhanced-text-input"].includes(type)) return null;
   if (!hasFeatureFlag("ENHANCED_TEXTINPUT")) return null;
@@ -128,37 +135,61 @@ const TextInputToggle: React.FC<{ type: string }> = ({ type }) => {
     // Toggle visual state immediately without waiting for route change
     setChecked(!checked);
 
-    const url = new URL(window.location.href);
-    const destinationType = type === "text-input"
-      ? TYPES.EnhancedTextInput
-      : TYPES.TextInput
+    const destinationType =
+      type === "text-input" ? TYPES.EnhancedTextInput : TYPES.TextInput;
 
-    url.searchParams.set("type", SLUGS[destinationType]);
-    navigate([url.pathname, url.search].join(""));
+    navigate({
+      to: getNodeRoute(parent, before),
+      params: {
+        team: teamSlug,
+        flow: flowSlug,
+        ...(parent && { parent }),
+        ...(before && { before }),
+      } as any,
+      search: (prev) => ({
+        ...prev,
+        type: SLUGS[destinationType] as NodeSearchParams["type"],
+      }),
+    });
   };
 
   return (
     <Box sx={{ position: "absolute", right: 82, top: 38, zIndex: 1 }}>
-      <Switch 
-        label={<><AutoAwesomeIcon sx={{ mr: 1 }}/>AI Enhanced</>}
-        onChange={toggleTextInput} 
+      <Switch
+        label={
+          <>
+            <AutoAwesomeIcon sx={{ mr: 1 }} />
+            AI Enhanced
+          </>
+        }
+        onChange={toggleTextInput}
         checked={checked}
       />
     </Box>
-  )
-}
+  );
+};
 
-const FormModal: React.FC<{
+interface FormModalProps {
   type: string;
   handleDelete?: () => void;
-  Component: any;
+  Component: React.ComponentType<any>;
   node?: any;
-  id?: any;
-  before?: any;
-  parent?: any;
+  id?: string;
+  before?: string;
+  parent?: string;
   extraProps?: any;
-}> = ({ type, handleDelete, Component, id, before, parent, extraProps }) => {
-  const { navigate } = useNavigation();
+}
+
+const FormModal: React.FC<FormModalProps> = ({
+  type,
+  Component,
+  handleDelete,
+  id,
+  before,
+  parent,
+  extraProps,
+}) => {
+  const navigate = useNavigate();
   const formikRef = useRef<FormikProps<BaseNodeData & unknown> | null>(null);
   const [showUnsavedWarning, setShowUnsavedWarning] = useState(false);
 
@@ -169,6 +200,7 @@ const FormModal: React.FC<{
     makeUnique,
     connect,
     teamSlug,
+    flowSlug,
     isTemplatedFrom,
     orderedFlow,
     isClone,
@@ -179,11 +211,12 @@ const FormModal: React.FC<{
     store.makeUnique,
     store.connect,
     store.getTeam().slug,
+    store.flowSlug,
     store.isTemplatedFrom,
     store.orderedFlow,
     store.isClone,
   ]);
-  const node = flow[id];
+  const node = id ? flow[id] : undefined;
 
   const normalizeFormValues = (obj: any): any => {
     if (obj === null || obj === undefined || obj === "") {
@@ -223,13 +256,25 @@ const FormModal: React.FC<{
     if (hasUnsavedChanges()) {
       setShowUnsavedWarning(true);
     } else {
-      navigate(rootFlowPath(true));
+      navigate({
+        to: "/$team/$flow",
+        params: {
+          team: teamSlug,
+          flow: flowSlug,
+        },
+      });
     }
   };
 
   const handleConfirmClose = () => {
     setShowUnsavedWarning(false);
-    navigate(rootFlowPath(true));
+    navigate({
+      to: "/$team/$flow",
+      params: {
+        team: teamSlug,
+        flow: flowSlug,
+      },
+    });
   };
 
   const handleCancelClose = () => {
@@ -265,10 +310,10 @@ const FormModal: React.FC<{
     (!parentIsTemplatedInternalPortal ||
       !parentIsChildOfTemplatedInternalPortal);
 
-  const showDeleteButton = handleDelete && !isDisabledTemplatedNode;
+  const showDeleteButton = id && !isDisabledTemplatedNode;
 
   const showMakeUniqueButton = useMemo(
-    () => isClone(id) && !isDisabledTemplatedNode,
+    () => id && isClone(id) && !isDisabledTemplatedNode,
     [isClone, id, isDisabledTemplatedNode],
   );
 
@@ -277,9 +322,19 @@ const FormModal: React.FC<{
     : !canUserEditNode(teamSlug);
 
   const changeNodeType = (type: TYPES) => {
-    const url = new URL(window.location.href);
-    url.searchParams.set("type", SLUGS[type]);
-    navigate([url.pathname, url.search].join(""));
+    navigate({
+      to: getNodeRoute(parent, before),
+      params: {
+        team: teamSlug,
+        flow: flowSlug,
+        ...(parent && { parent }),
+        ...(before && { before }),
+      } as any,
+      search: (prev) => ({
+        ...prev,
+        type: SLUGS[type] as NodeSearchParams["type"],
+      }),
+    });
   };
 
   return (
@@ -303,10 +358,7 @@ const FormModal: React.FC<{
           }}
         >
           {!handleDelete && (
-            <NodeTypeSelect
-              value={type}
-              onChange={changeNodeType}
-            />
+            <NodeTypeSelect value={type} onChange={changeNodeType} />
           )}
 
           <CloseButton aria-label="close" onClick={handleClose} size="large">
@@ -314,9 +366,15 @@ const FormModal: React.FC<{
           </CloseButton>
         </DialogTitle>
         <DialogContent dividers sx={{ p: 0, position: "relative" }}>
-          {!handleDelete &&
-            <TextInputToggle type={type} />
-          }
+          {!handleDelete && (
+            <TextInputToggle
+              type={type}
+              parent={parent}
+              before={before}
+              teamSlug={teamSlug}
+              flowSlug={flowSlug}
+            />
+          )}
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             <Component
               formikRef={formikRef}
@@ -330,7 +388,7 @@ const FormModal: React.FC<{
                 children: Array<any> | undefined = undefined,
               ) => {
                 // Handle internal portals
-                if (typeof data === "string") {
+                if (typeof data === "string" && parent) {
                   connect(parent, data, { before });
                 } else {
                   const parsedData = parseFormValues(Object.entries(data));
@@ -353,7 +411,7 @@ const FormModal: React.FC<{
                   }
                 }
 
-                navigate(rootFlowPath(true));
+                navigate({ to: rootFlowPath(true) });
               }}
             />
           </ErrorBoundary>
@@ -367,8 +425,14 @@ const FormModal: React.FC<{
               color="secondary"
               variant="contained"
               onClick={() => {
-                handleDelete();
-                navigate(rootFlowPath(true));
+                handleDelete && handleDelete();
+                navigate({
+                  to: "/$team/$flow",
+                  params: {
+                    team: teamSlug,
+                    flow: flowSlug,
+                  },
+                });
               }}
               disabled={disabled}
               sx={{ backgroundColor: "background.default", gap: 1 }}
@@ -378,7 +442,11 @@ const FormModal: React.FC<{
             </Button>
           )}
           <Box
-            sx={{ display: "flex", alignItems: "stretch", marginLeft: "auto" }}
+            sx={{
+              display: "flex",
+              alignItems: "stretch",
+              marginLeft: "auto",
+            }}
             gap={1}
           >
             {showMakeUniqueButton && (
@@ -386,8 +454,14 @@ const FormModal: React.FC<{
                 variant="contained"
                 color="secondary"
                 onClick={() => {
-                  makeUnique(id, parent);
-                  navigate(rootFlowPath(true));
+                  if (id) makeUnique(id, parent);
+                  navigate({
+                    to: "/$team/$flow",
+                    params: {
+                      team: teamSlug,
+                      flow: flowSlug,
+                    },
+                  });
                 }}
                 disabled={disabled}
                 sx={{ backgroundColor: "background.default" }}
@@ -448,5 +522,4 @@ const FormModal: React.FC<{
     </>
   );
 };
-
 export default FormModal;

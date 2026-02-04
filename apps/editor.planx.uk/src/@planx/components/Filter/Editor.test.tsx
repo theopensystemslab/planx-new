@@ -13,7 +13,7 @@ import Filter from "./Editor";
 test("Adding a filter without explicit props uses the default flagset", async () => {
   const handleSubmit = vi.fn();
 
-  setup(<Filter handleSubmit={handleSubmit} />);
+  await setup(<Filter handleSubmit={handleSubmit} />);
 
   expect(screen.getByTestId("flagset-category-select")).toHaveValue(
     DEFAULT_FLAG_CATEGORY,
@@ -38,7 +38,7 @@ test("Adding a filter without explicit props uses the default flagset", async ()
 test("Adding a filter and selecting a flagset category", async () => {
   const handleSubmit = vi.fn();
 
-  setup(<Filter handleSubmit={handleSubmit} />);
+  await setup(<Filter handleSubmit={handleSubmit} />);
 
   expect(screen.getByTestId("flagset-category-select")).toHaveValue(
     DEFAULT_FLAG_CATEGORY,
@@ -67,7 +67,7 @@ test("Adding a filter and selecting a flagset category", async () => {
 test("Updating an existing filter to another category", async () => {
   const handleSubmit = vi.fn();
 
-  setup(
+  await setup(
     <Filter
       id="filterNodeId"
       node={mockExistingFilterNode}

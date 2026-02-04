@@ -1,8 +1,8 @@
 import Box from "@mui/material/Box";
 import { ROOT_NODE_KEY } from "@planx/graph";
+import { Link, useParams } from "@tanstack/react-router";
 import React from "react";
-import { Link, useCurrentRoute } from "react-navi";
-import { rootFlowPath } from "routes/utils";
+import { rootFlowPath } from "utils/routeUtils/utils";
 
 import { useStore } from "../../lib/store";
 import { ContextMenu } from "./components/ContextMenu";
@@ -22,9 +22,8 @@ interface Props {
 }
 
 const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
-  const { url } = useCurrentRoute();
-  const flowPath = url.pathname.split("/")[2];
-  const [_flow, ...breadcrumbIds] = flowPath.split(",");
+  const { flow } = useParams({ from: "/_authenticated/$team/$flow" });
+  const [_flow, ...breadcrumbIds] = flow.split(",");
 
   const [childNodes, getNode, flowLayout] = useStore((state) => [
     state.childNodesOf(
@@ -57,7 +56,7 @@ const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
 
         {breadcrumbs.length ? (
           <li className="root-node-link">
-            <Link href={rootFlowPath(false)} prefetch={false}>
+            <Link to={rootFlowPath(false)} preload={false}>
               {flowName}
             </Link>
           </li>
@@ -98,12 +97,11 @@ const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
               showTemplatedNodeStatus={showTemplatedNodeStatus}
             />
           ))}
-
           <Hanger />
         </Box>
         {breadcrumbs.length ? (
           <li className="root-node-link root-node-link--end">
-            <Link href={rootFlowPath(false)} prefetch={false}>
+            <Link to={rootFlowPath(false)} preload={false}>
               {flowName}
             </Link>
           </li>

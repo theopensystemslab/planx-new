@@ -27,7 +27,7 @@ beforeAll(() => {
 
 describe("navigating back after adding single feature", () => {
   it("shows previously submitted features", async () => {
-    const { getByTestId, queryByRole } = setup(
+    const { getByTestId, queryByRole } = await setup(
       <MapAndLabel {...previouslySubmittedSingleFeatureProps} />,
     );
     const map = getByTestId("map-and-label-map");
@@ -53,7 +53,7 @@ describe("navigating back after adding single feature", () => {
 
 describe("navigating back after adding two features", () => {
   it("shows previously submitted features", async () => {
-    const { getByTestId, queryByRole } = setup(
+    const { getByTestId, queryByRole } = await setup(
       <MapAndLabel {...previouslySubmittedDoubleFeatureProps} />,
     );
     const map = getByTestId("map-and-label-map");
@@ -79,7 +79,7 @@ describe("navigating back after adding two features", () => {
   });
   it("should maintain labelling when removing a feature", async () => {
     const handleSubmit = vi.fn();
-    const { getByRole, user } = setup(
+    const { getByRole, user } = await setup(
       <MapAndLabel
         {...previouslySubmittedDoubleFeatureProps}
         handleSubmit={handleSubmit}

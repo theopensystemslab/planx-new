@@ -1,19 +1,22 @@
+import * as TanStackRouter from "@tanstack/react-router";
 import { within } from "@testing-library/react";
 import React from "react";
-import * as ReactNavi from "react-navi";
 import { setup } from "testUtils";
-import { Mocked, vi } from "vitest";
+import { vi } from "vitest";
 
 import EditorNavMenu from "./EditorNavMenu";
 
-vi.mock("react-navi", () => ({
-  useCurrentRoute: vi.fn(),
-  useNavigation: () => ({ navigate: vi.fn() }),
-  // Mock completed loading process
-  useLoadingRoute: () => undefined,
-}));
+vi.mock("@tanstack/react-router", async () => {
+  const actual = await vi.importActual("@tanstack/react-router");
+  return {
+    ...actual,
+    useLocation: vi.fn(),
+    useNavigate: vi.fn(() => vi.fn()),
+    useRouter: vi.fn(() => ({ state: { isLoading: false } })),
+  };
+});
 
-const mockNavi = ReactNavi as Mocked<typeof ReactNavi>;
+const mockUseLocation = vi.mocked(TanStackRouter.useLocation);
 
 let mockTeamName: string | undefined = undefined;
 let mockFlowName: string | undefined = undefined;
@@ -35,32 +38,30 @@ vi.mock("pages/FlowEditor/lib/store", async () => ({
   ),
 }));
 
-const mockCurrentRoute = (path: string) => {
-  mockNavi.useCurrentRoute.mockReturnValue({
-    url: {
-      href: path,
-      pathname: path,
-    },
-  } as ReturnType<typeof mockNavi.useCurrentRoute>);
-};
-
 describe("globalLayoutRoutes", () => {
   beforeEach(() => {
-    mockCurrentRoute("/");
+    mockUseLocation.mockReturnValue({
+      pathname: "/",
+      search: {},
+      hash: "",
+      href: "/",
+      state: { __TSR_index: 0 },
+      searchStr: "",
+    });
   });
 
-  it("displays for teamEditors", () => {
+  it("displays for teamEditors", async () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("teamEditor");
 
-    const { queryAllByRole } = setup(<EditorNavMenu />);
+    const { queryAllByRole } = await setup(<EditorNavMenu />);
     const menuItems = queryAllByRole("listitem");
     expect(menuItems).toHaveLength(4);
   });
 
-  it("displays for platformAdmins", () => {
+  it("displays for platformAdmins", async () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
 
-    const { getAllByRole } = setup(<EditorNavMenu />);
+    const { getAllByRole } = await setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
     expect(menuItems).toHaveLength(6);
     expect(within(menuItems[0]).getByText("Select a team")).toBeInTheDocument();
@@ -69,15 +70,22 @@ describe("globalLayoutRoutes", () => {
 
 describe("teamLayoutRoutes", () => {
   beforeEach(() => {
-    mockCurrentRoute("/test-team");
+    mockUseLocation.mockReturnValue({
+      pathname: "/test-team",
+      search: {},
+      hash: "",
+      href: "/test-team",
+      state: { __TSR_index: 0 },
+      searchStr: "",
+    });
     mockTeamName = "test-team";
     mockGetTeam.mockReturnValue({ settings: { referenceCode: null } });
   });
 
-  it("only displays the external link routes for teamViewers", () => {
+  it("only displays the external link routes for teamViewers", async () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("teamViewer");
 
-    const { queryAllByRole } = setup(<EditorNavMenu />);
+    const { queryAllByRole } = await setup(<EditorNavMenu />);
     const menuItems = queryAllByRole("listitem");
     expect(menuItems).toHaveLength(3);
     expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
@@ -89,19 +97,19 @@ describe("teamLayoutRoutes", () => {
     ).toBeInTheDocument();
   });
 
-  it("displays for teamEditors", () => {
+  it("displays for teamEditors", async () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("teamEditor");
 
-    const { getAllByRole } = setup(<EditorNavMenu />);
+    const { getAllByRole } = await setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
     expect(menuItems).toHaveLength(8);
     expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
   });
 
-  it("displays for platformAdmins", () => {
+  it("displays for platformAdmins", async () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
 
-    const { getAllByRole } = setup(<EditorNavMenu />);
+    const { getAllByRole } = await setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
     expect(menuItems).toHaveLength(8);
     expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
@@ -110,46 +118,60 @@ describe("teamLayoutRoutes", () => {
 
 describe("teamPlanningDataRoute", () => {
   beforeEach(() => {
-    mockCurrentRoute("/test-team");
+    mockUseLocation.mockReturnValue({
+      pathname: "/test-team",
+      search: {},
+      hash: "",
+      href: "/test-team",
+      state: { __TSR_index: 0 },
+      searchStr: "",
+    });
     mockTeamName = "test-team";
   });
 
-  it("is disabled without a reference code", () => {
+  it("is disabled without a reference code", async () => {
     mockGetTeam.mockReturnValue({ settings: { referenceCode: null } });
 
-    const { getByRole } = setup(<EditorNavMenu />);
+    const { getByRole } = await setup(<EditorNavMenu />);
     expect(getByRole("button", { name: /Planning Data/ })).toBeDisabled();
   });
 
-  it("is enabled with a reference code", () => {
+  it("is enabled with a reference code", async () => {
     mockGetTeam.mockReturnValue({ settings: { referenceCode: "TEST" } });
 
-    const { getByRole } = setup(<EditorNavMenu />);
+    const { getByRole } = await setup(<EditorNavMenu />);
     expect(getByRole("button", { name: /Planning Data/ })).toBeEnabled();
   });
 });
 
 describe("flowLayoutRoutes", () => {
   beforeEach(() => {
-    mockCurrentRoute("/test-team/test-flow");
+    mockUseLocation.mockReturnValue({
+      pathname: "/test-team/test-flow",
+      search: {},
+      hash: "",
+      href: "/test-team/test-flow",
+      state: { __TSR_index: 0 },
+      searchStr: "",
+    });
     mockTeamName = "test-team";
     mockFlowName = "test-flow";
   });
 
-  it("displays for teamEditors", () => {
+  it("displays for teamEditors", async () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("teamEditor");
 
-    const { getAllByRole, getByLabelText } = setup(<EditorNavMenu />);
+    const { getAllByRole, getByLabelText } = await setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
     expect(menuItems).toHaveLength(5);
     expect(getByLabelText("Submissions")).toBeInTheDocument();
     expect(getByLabelText("Feedback")).toBeInTheDocument();
   });
 
-  it("displays for platformAdmins", () => {
+  it("displays for platformAdmins", async () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
 
-    const { getAllByRole, getByLabelText } = setup(<EditorNavMenu />);
+    const { getAllByRole, getByLabelText } = await setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
     expect(menuItems).toHaveLength(5);
     expect(getByLabelText("Submissions")).toBeInTheDocument();
@@ -159,31 +181,45 @@ describe("flowLayoutRoutes", () => {
 
 describe("flowAnalyticsRoute", () => {
   beforeEach(() => {
-    mockCurrentRoute("/test-team/test-flow");
+    mockUseLocation.mockReturnValue({
+      pathname: "/test-team/test-flow",
+      search: {},
+      hash: "",
+      href: "/test-team/test-flow",
+      state: { __TSR_index: 0 },
+      searchStr: "",
+    });
     mockTeamName = "test-team";
     mockFlowName = "test-flow";
     mockGetUserRoleForCurrentTeam.mockReturnValue("teamEditor");
   });
 
-  it("is disabled without an analytics link", () => {
-    const { getByRole } = setup(<EditorNavMenu />);
+  it("is disabled without an analytics link", async () => {
+    const { getByRole } = await setup(<EditorNavMenu />);
     expect(getByRole("button", { name: /Analytics/ })).toBeDisabled();
   });
 
-  it("is enabled with an analytics link", () => {
+  it("is enabled with an analytics link", async () => {
     mockAnalyticsLink = "https://link-to-metabase";
 
-    const { getByRole } = setup(<EditorNavMenu />);
+    const { getByRole } = await setup(<EditorNavMenu />);
     expect(getByRole("button", { name: /Analytics/ })).toBeEnabled();
   });
 });
 
 describe("layout", () => {
-  it("displays in a full mode on global routes", () => {
-    mockCurrentRoute("/");
+  it("displays in a full mode on global routes", async () => {
+    mockUseLocation.mockReturnValue({
+      pathname: "/",
+      search: {},
+      hash: "",
+      href: "/",
+      state: { __TSR_index: 0 },
+      searchStr: "",
+    });
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
 
-    const { queryAllByRole, queryByLabelText } = setup(<EditorNavMenu />);
+    const { queryAllByRole, queryByLabelText } = await setup(<EditorNavMenu />);
     const menuItems = queryAllByRole("listitem");
 
     // Tooltip not present
@@ -193,12 +229,19 @@ describe("layout", () => {
     expect(within(menuItems[0]).getByText("Select a team")).toBeInTheDocument();
   });
 
-  it("displays in a full mode on team routes", () => {
-    mockCurrentRoute("/test-team");
+  it("displays in a full mode on team routes", async () => {
+    mockUseLocation.mockReturnValue({
+      pathname: "/test-team",
+      search: {},
+      hash: "",
+      href: "/test-team",
+      state: { __TSR_index: 0 },
+      searchStr: "",
+    });
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
     mockTeamName = "test-team";
 
-    const { queryAllByRole, queryByLabelText } = setup(<EditorNavMenu />);
+    const { queryAllByRole, queryByLabelText } = await setup(<EditorNavMenu />);
     const menuItems = queryAllByRole("listitem");
 
     // Tooltip not present
@@ -208,13 +251,20 @@ describe("layout", () => {
     expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
   });
 
-  it("displays in a compact mode on flow routes", () => {
-    mockCurrentRoute("/test-team/test-flow");
+  it("displays in a compact mode on flow routes", async () => {
+    mockUseLocation.mockReturnValue({
+      pathname: "/test-team/test-flow",
+      search: {},
+      hash: "",
+      href: "/test-team/test-flow",
+      state: { __TSR_index: 0 },
+      searchStr: "",
+    });
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
     mockTeamName = "test-team";
     mockFlowName = "test-flow";
 
-    const { queryAllByRole, getByLabelText } = setup(<EditorNavMenu />);
+    const { queryAllByRole, getByLabelText } = await setup(<EditorNavMenu />);
     const menuItems = queryAllByRole("listitem");
 
     // Tooltip  present

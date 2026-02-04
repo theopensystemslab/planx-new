@@ -22,8 +22,8 @@ const ThrowGraphError: React.FC = () => {
   throw new GraphError("nodeMustFollowFindProperty");
 };
 
-it("does not render if a child does not throw an error", () => {
-  const { queryByRole } = setup(
+it("does not render if a child does not throw an error", async () => {
+  const { queryByRole } = await setup(
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <h1>No error</h1>
     </ErrorBoundary>,
@@ -33,8 +33,8 @@ it("does not render if a child does not throw an error", () => {
   ).not.toBeInTheDocument();
 });
 
-it("does not render if a child throws a non-Graph error", () => {
-  const { queryByRole, getByText } = setup(
+it("does not render if a child throws a non-Graph error", async () => {
+  const { queryByRole, getByText } = await setup(
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <ThrowError />
     </ErrorBoundary>,
@@ -47,8 +47,8 @@ it("does not render if a child throws a non-Graph error", () => {
   ).not.toBeInTheDocument();
 });
 
-it("renders if a child throws an error", () => {
-  const { queryByText, getByRole } = setup(
+it("renders if a child throws an error", async () => {
+  const { queryByText, getByRole } = await setup(
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <ThrowGraphError />
     </ErrorBoundary>,
@@ -58,10 +58,10 @@ it("renders if a child throws an error", () => {
   expect(getByRole("heading", { name: /Invalid graph/ })).toBeInTheDocument();
 });
 
-it("does not call Airbrake", () => {
+it("does not call Airbrake", async () => {
   const loggerSpy = vi.spyOn(logger, "notify");
 
-  setup(
+  await setup(
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <ThrowGraphError />
     </ErrorBoundary>,
@@ -71,7 +71,7 @@ it("does not call Airbrake", () => {
 });
 
 it("should not have accessability violations", async () => {
-  const { container } = setup(
+  const { container } = await setup(
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <ThrowGraphError />
     </ErrorBoundary>,

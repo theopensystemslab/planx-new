@@ -23,35 +23,35 @@ describe("Card component", () => {
 
   afterEach(() => waitFor(() => setState(initialState)));
 
-  it("displays the Save/Resume option if the application path requires it", () => {
+  it("displays the Save/Resume option if the application path requires it", async () => {
     act(() => setState({ path: ApplicationPath.SaveAndReturn }));
     const children = <Button>Testing 123</Button>;
-    setup(<Card handleSubmit={handleSubmit} children={children}></Card>);
+    await setup(<Card handleSubmit={handleSubmit} children={children}></Card>);
 
     expect(screen.getByText(resumeButtonText)).toBeInTheDocument();
     act(() => setState({ saveToEmail: "test@test.com" }));
     expect(screen.getByText(saveButtonText)).toBeInTheDocument();
   });
 
-  it("hides the Save/Resume option if the application path does not require it", () => {
+  it("hides the Save/Resume option if the application path does not require it", async () => {
     act(() => setState({ path: ApplicationPath.SingleSession }));
     const children = <Button>Testing 123</Button>;
-    setup(<Card handleSubmit={handleSubmit} children={children}></Card>);
+    await setup(<Card handleSubmit={handleSubmit} children={children}></Card>);
 
     expect(screen.queryByText(resumeButtonText)).not.toBeInTheDocument();
     expect(screen.queryByText(saveButtonText)).not.toBeInTheDocument();
   });
 
-  it("hides the Save/Resume option if the card does not have a 'Continue' button", () => {
+  it("hides the Save/Resume option if the card does not have a 'Continue' button", async () => {
     act(() => setState({ path: ApplicationPath.SaveAndReturn }));
     const children = <h1>Confirmation Page</h1>;
-    setup(<Card children={children}></Card>);
+    await setup(<Card children={children}></Card>);
 
     expect(screen.queryByText(resumeButtonText)).not.toBeInTheDocument();
     expect(screen.queryByText(saveButtonText)).not.toBeInTheDocument();
   });
 
-  it("hides the Save/Resume option if the user has already passed Send", () => {
+  it("hides the Save/Resume option if the user has already passed Send", async () => {
     act(() =>
       setState({
         path: ApplicationPath.SaveAndReturn,
@@ -66,7 +66,7 @@ describe("Card component", () => {
       }),
     );
     const children = <h1>Confirmation Page</h1>;
-    setup(<Card handleSubmit={handleSubmit} children={children}></Card>);
+    await setup(<Card handleSubmit={handleSubmit} children={children}></Card>);
 
     expect(screen.queryByText("Confirmation Page")).toBeInTheDocument();
     expect(screen.queryByText("Continue")).toBeInTheDocument();
@@ -77,7 +77,7 @@ describe("Card component", () => {
   it("updates state to navigate to the 'Resume' page if the 'Resume' button is clicked", async () => {
     act(() => setState({ path: ApplicationPath.SaveAndReturn }));
     const children = <Button>Testing 123</Button>;
-    const { user } = setup(
+    const { user } = await setup(
       <Card handleSubmit={handleSubmit} children={children}></Card>,
     );
 
@@ -89,7 +89,7 @@ describe("Card component", () => {
     act(() => setState({ path: ApplicationPath.SaveAndReturn }));
     act(() => setState({ saveToEmail: "test@test.com" }));
     const children = <Button>Testing 123</Button>;
-    const { user } = setup(
+    const { user } = await setup(
       <Card handleSubmit={handleSubmit} children={children}></Card>,
     );
 
@@ -100,7 +100,7 @@ describe("Card component", () => {
   it("should not have any accessibility violations", async () => {
     setState({ path: ApplicationPath.SaveAndReturn });
     const children = <Button>Testing 123</Button>;
-    const { container } = setup(
+    const { container } = await setup(
       <Card handleSubmit={handleSubmit} children={children}></Card>,
     );
 

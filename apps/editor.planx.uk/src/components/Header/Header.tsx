@@ -5,19 +5,17 @@ import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
-import Link from "@mui/material/Link";
 import { styled, Theme } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useLocation } from "@tanstack/react-router";
 import AccountMenu from "components/AccountMenu";
 import Breadcrumbs from "components/Breadcrumbs";
 import { clearLocalFlowIdb } from "lib/local.idb";
 import { capitalize } from "lodash";
-import { Route } from "navi";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React, { RefObject, useRef, useState } from "react";
-import { useCurrentRoute } from "react-navi";
 import {
   borderedFocusStyle,
   FONT_WEIGHT_SEMI_BOLD,
@@ -25,6 +23,7 @@ import {
 } from "theme";
 import { ApplicationPath } from "types";
 import Reset from "ui/icons/Reset";
+import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 import { useStore } from "../../pages/FlowEditor/lib/store";
 import AnalyticsDisabledBanner from "../AnalyticsDisabled/AnalyticsDisabledBanner";
@@ -123,8 +122,8 @@ const TeamBrand: React.FC = () => {
     const logo = <Logo alt={altText} src={teamTheme.logo} />;
 
     return teamSettings?.homepage ? (
-      <Link
-        href={teamSettings.homepage}
+      <CustomLink
+        to={teamSettings.homepage}
         target="_blank"
         rel="noopener noreferrer"
         sx={{
@@ -135,7 +134,7 @@ const TeamBrand: React.FC = () => {
         }}
       >
         {logo}
-      </Link>
+      </CustomLink>
     ) : (
       <Box sx={{ display: "flex", alignItems: "center" }}>{logo}</Box>
     );
@@ -153,8 +152,8 @@ const TeamBrand: React.FC = () => {
   );
 
   return teamSettings?.homepage ? (
-    <Link
-      href={teamSettings.homepage}
+    <CustomLink
+      to={teamSettings.homepage}
       target="_blank"
       rel="noopener noreferrer"
       sx={{
@@ -165,7 +164,7 @@ const TeamBrand: React.FC = () => {
       }}
     >
       {teamDisplayName}
-    </Link>
+    </CustomLink>
   ) : (
     teamDisplayName
   );
@@ -269,8 +268,8 @@ const PublicToolbar: React.FC<{
 
 const ServiceTitle: React.FC = () => {
   const flowName = useStore((state) => state.flowName);
-  const route = useCurrentRoute();
-  const path = route.url.pathname.split("/").slice(-1)[0];
+  const location = useLocation();
+  const path = location.pathname.split("/").slice(-1)[0];
 
   return (
     <ServiceTitleRoot data-testid="service-title">
@@ -296,7 +295,6 @@ const ServiceTitle: React.FC = () => {
 
 const EditorToolbar: React.FC<{
   headerRef: React.RefObject<HTMLElement>;
-  route: Route;
 }> = () => {
   return (
     <>
@@ -321,8 +319,8 @@ interface ToolbarProps {
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
-  const route = useCurrentRoute();
-  const path = route.url.pathname.split("/").slice(-1)[0] || undefined;
+  const location = useLocation();
+  const path = location.pathname.split("/").slice(-1)[0] || undefined;
   const [flowSlug, previewEnvironment] = useStore((state) => [
     state.flowSlug,
     state.previewEnvironment,
@@ -334,7 +332,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
     path !== "draft" &&
     path !== "preview"
   ) {
-    return <EditorToolbar headerRef={headerRef} route={route}></EditorToolbar>;
+    return <EditorToolbar headerRef={headerRef}></EditorToolbar>;
   }
 
   switch (path) {
@@ -352,6 +350,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
 const Header: React.FC = () => {
   const headerRef = useRef<HTMLDivElement>(null);
   const teamTheme = useStore((state) => state.teamTheme);
+
   return (
     <Root
       position="static"

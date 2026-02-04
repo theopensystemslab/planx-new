@@ -5,10 +5,10 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { useNavigate } from "@tanstack/react-router";
 import { useSlackMessage } from "pages/FlowEditor/components/Settings/hooks/useSlackMessage";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
-import { useNavigation } from "react-navi";
 import SettingsDescription from "ui/editor/SettingsDescription";
 
 import SettingsFormContainer from "../../shared/SettingsForm";
@@ -22,7 +22,7 @@ import {
 
 const Template: React.FC = () => {
   const flowId = useStore((state) => state.id);
-  const { navigate } = useNavigation();
+  const navigate = useNavigate();
   const { mutate: sendSlackMessage } = useSlackMessage();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -30,7 +30,7 @@ const Template: React.FC = () => {
 
   const handleSuccess = (data: GetFlowTemplateStatus | undefined) => {
     // Navigate away from tab, as we're about to remove it
-    navigate(".");
+    navigate({ to: "." });
     setIsOpen(false);
 
     // Type-narrowing only, should not happen!

@@ -11,7 +11,7 @@ const content = () => screen.getByTestId("content");
 test("const { user } = setups correctly", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <Content content="hello" color="#fff" handleSubmit={handleSubmit} />,
   );
 
@@ -27,8 +27,8 @@ test("const { user } = setups correctly", async () => {
   expect(handleSubmit).toHaveBeenCalled();
 });
 
-test("use light text color if color param is dark", () => {
-  setup(<Content content="dark" color="#000" />);
+test("use light text color if color param is dark", async () => {
+  await setup(<Content content="dark" color="#000" />);
   expect(content()).toHaveStyle({
     background: "#000",
     color: "#fff",
@@ -36,7 +36,7 @@ test("use light text color if color param is dark", () => {
 });
 
 it("should not have any accessibility violations", async () => {
-  const { container } = setup(<Content content="dark" color="#000" />);
+  const { container } = await setup(<Content content="dark" color="#000" />);
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });
@@ -44,7 +44,7 @@ it("should not have any accessibility violations", async () => {
 test("should display and open more information link if help text is provided", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <Content
       content="This is a warning about doors"
       handleSubmit={handleSubmit}

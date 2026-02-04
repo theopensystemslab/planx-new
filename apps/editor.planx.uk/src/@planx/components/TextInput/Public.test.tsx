@@ -14,7 +14,7 @@ const twentyFiveCharacterTest = "25 characters for me.....";
 test("requires a value before being able to continue", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <TextInput title="hello" handleSubmit={handleSubmit} />,
   );
 
@@ -29,7 +29,7 @@ test("requires a value before being able to continue", async () => {
 test("requires a non-empty string before being able to continue", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <TextInput
       title="hello"
       type={TextInputType.Short}
@@ -53,7 +53,7 @@ test("requires a non-empty string before being able to continue", async () => {
 test("requires a valid email before being able to continue", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <TextInput
       title="hello"
       type={TextInputType.Email}
@@ -73,7 +73,7 @@ test("recovers previously submitted text when clicking the back button", async (
   const handleSubmit = vi.fn();
   const nodeId = uniqueId();
 
-  const { user } = setup(
+  const { user } = await setup(
     <TextInput
       id={nodeId}
       title="Submit text"
@@ -99,7 +99,7 @@ test("recovers previously submitted text when clicking the back button even if a
   const handleSubmit = vi.fn();
   const nodeId = uniqueId();
 
-  const { user } = setup(
+  const { user } = await setup(
     <TextInput
       fn="text-input-key"
       id={nodeId}
@@ -135,7 +135,7 @@ examplePhoneNumbers.forEach((number) => {
   test(`continues for valid phone number example ${number}`, async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <TextInput
         title="phone"
         type={TextInputType.Phone}
@@ -154,15 +154,15 @@ examplePhoneNumbers.forEach((number) => {
 });
 
 it("should not have any accessibility violations", async () => {
-  const { container } = setup(
+  const { container } = await setup(
     <TextInput title="phone" type={TextInputType.Phone} />,
   );
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });
 
-it("should always an empty error message element in the DOM", () => {
-  setup(
+it("should always an empty error message element in the DOM", async () => {
+  await setup(
     <TextInput
       title="Short Text"
       type={TextInputType.Short}
@@ -176,7 +176,7 @@ it("should always an empty error message element in the DOM", () => {
 it("should change the role of the ErrorText when an invalid input is given", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <TextInput
       title="Short Text"
       type={TextInputType.Short}
@@ -194,21 +194,23 @@ it("should change the role of the ErrorText when an invalid input is given", asy
 });
 
 test("character limit counter should appear for long text inputs", async () => {
-  setup(<TextInput title="hello" type={TextInputType.Long} />);
+  await setup(<TextInput title="hello" type={TextInputType.Long} />);
 
   const characterCounter = await screen.findByTestId("screen-reader-count");
   expect(characterCounter).toBeInTheDocument();
 });
 
 test("character limit counter should not appear for short text inputs", async () => {
-  setup(<TextInput title="hello" type={TextInputType.Short} />);
+  await setup(<TextInput title="hello" type={TextInputType.Short} />);
   const characterCounter = screen.queryByTestId("screen-reader-count");
 
   expect(characterCounter).not.toBeInTheDocument();
 });
 
 test("character limit counter should change when typed", async () => {
-  const { user } = setup(<TextInput title="hello" type={TextInputType.Long} />);
+  const { user } = await setup(
+    <TextInput title="hello" type={TextInputType.Long} />,
+  );
 
   const textArea = screen.getByRole("textbox", {
     name: /hello/i,
@@ -224,7 +226,9 @@ test("character limit counter should change when typed", async () => {
 });
 
 test("character limit counter shows error state when over limit", async () => {
-  const { user } = setup(<TextInput title="hello" type={TextInputType.Long} />);
+  const { user } = await setup(
+    <TextInput title="hello" type={TextInputType.Long} />,
+  );
   const textArea = screen.getByRole("textbox", {
     name: /hello/i,
   });
@@ -240,7 +244,7 @@ test("character limit counter shows error state when over limit", async () => {
 });
 
 test("character limit counter should meet accessibility requirements", async () => {
-  const { user, container } = setup(
+  const { user, container } = await setup(
     <TextInput title="hello" type={TextInputType.Long} />,
   );
   const textArea = screen.getByRole("textbox", {

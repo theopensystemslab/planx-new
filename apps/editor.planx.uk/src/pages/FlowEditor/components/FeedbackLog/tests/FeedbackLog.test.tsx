@@ -7,8 +7,8 @@ import { FeedbackLog } from "../FeedbackLog";
 import { mockFeedback } from "../mocks/mockFeedback";
 
 describe("When the feedback log renders", () => {
-  it("shows the expected headers and rows without an error", () => {
-    setup(<FeedbackLog feedback={mockFeedback} />);
+  it("shows the expected headers and rows without an error", async () => {
+    await setup(<FeedbackLog feedback={mockFeedback} />);
     const headers = [
       "Type",
       "Date",

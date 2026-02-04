@@ -12,9 +12,9 @@ import SchoolIcon from "@mui/icons-material/School";
 import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
+import { useLocation, useNavigate, useRouter } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef } from "react";
-import { useCurrentRoute, useLoadingRoute, useNavigation } from "react-navi";
 import EditorIcon from "ui/icons/Editor";
 import LocalPlanningServicesIcon from "ui/icons/LocalPlanningServices";
 
@@ -23,9 +23,9 @@ import { MenuButton, MenuItem, MenuTitle, MenuWrap, Root } from "./styles";
 import { Route, RoutesForURL } from "./types";
 
 function EditorNavMenu() {
-  const { navigate } = useNavigation();
-  const { url } = useCurrentRoute();
-  const isRouteLoading = useLoadingRoute();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const router = useRouter();
   const [teamSlug, flowSlug, flowAnalyticsLink, role, team] = useStore(
     (state) => [
       state.teamSlug,
@@ -39,7 +39,7 @@ function EditorNavMenu() {
   const { url: lpsBaseUrl } = useLPS();
 
   const isActive = (route: string) => {
-    const currentPath = url.pathname;
+    const currentPath = pathname;
 
     // Factor in nested routes when determining active state
     if (route.includes("/settings")) {
@@ -56,7 +56,7 @@ function EditorNavMenu() {
     if (isExternalLink) {
       window.open(route, "_blank");
     } else {
-      navigate(route);
+      navigate({ to: route });
     }
   };
 
@@ -70,31 +70,31 @@ function EditorNavMenu() {
     {
       title: "Global settings",
       Icon: TuneIcon,
-      route: "global-settings",
+      route: "/global-settings",
       accessibleBy: ["platformAdmin"],
     },
     {
       title: "Admin panel",
       Icon: AdminPanelSettingsIcon,
-      route: "admin-panel",
+      route: "/admin-panel",
       accessibleBy: ["platformAdmin", "analyst"],
     },
     {
       title: "Resources",
       Icon: MenuBookIcon,
-      route: "resources",
+      route: "/resources",
       accessibleBy: "*",
     },
     {
       title: "Onboarding",
       Icon: AssignmentTurnedInIcon,
-      route: "onboarding",
+      route: "/onboarding",
       accessibleBy: "*",
     },
     {
       title: "Tutorials",
       Icon: SchoolIcon,
-      route: "tutorials",
+      route: "/tutorials",
       accessibleBy: "*",
     },
   ];
@@ -202,7 +202,7 @@ function EditorNavMenu() {
 
   const getRoutesForUrl = (url: string): RoutesForURL => {
     // Return the previous value when route is loading to avoid flash of incorrect version
-    if (isRouteLoading) return previousRoutes.current;
+    if (router.state.isLoading) return previousRoutes.current;
 
     let result: RoutesForURL;
 
@@ -219,7 +219,7 @@ function EditorNavMenu() {
     return result;
   };
 
-  const { routes, compact } = getRoutesForUrl(url.href);
+  const { routes, compact } = getRoutesForUrl(pathname);
 
   const isRouteAccessible = ({ accessibleBy }: Route) => {
     const accessibleByAll = accessibleBy === "*";

@@ -17,8 +17,8 @@ import {
 vi.mock("../helpers/downloadZip");
 
 describe("when the VerifySubmissionEmail component renders", () => {
-  it("displays the email address input", () => {
-    setup(<VerifySubmissionEmail params={{ sessionId: "1" }} />);
+  it("displays the email address input", async () => {
+    await setup(<VerifySubmissionEmail params={{ sessionId: "1" }} />);
 
     expect(
       screen.getByText("Verify your submission email address"),
@@ -28,8 +28,8 @@ describe("when the VerifySubmissionEmail component renders", () => {
     ).toBeInTheDocument();
   });
 
-  it("should not display an error message", () => {
-    setup(<VerifySubmissionEmail params={{ sessionId: "1" }} />);
+  it("should not display an error message", async () => {
+    await setup(<VerifySubmissionEmail params={{ sessionId: "1" }} />);
 
     expect(
       screen.queryByText("Sorry, something went wrong. Please try again."),
@@ -37,7 +37,7 @@ describe("when the VerifySubmissionEmail component renders", () => {
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(
+    const { container } = await setup(
       <VerifySubmissionEmail params={{ sessionId: "1" }} />,
     );
 
@@ -46,7 +46,7 @@ describe("when the VerifySubmissionEmail component renders", () => {
   });
 
   it("shows sessionId and local authority in the application details table", async () => {
-    setup(
+    await setup(
       <VerifySubmissionEmail
         params={{ sessionId: "a-session-id", team: "barking-and-dagenham" }}
       />,
@@ -63,7 +63,7 @@ describe("when the VerifySubmissionEmail component renders", () => {
 describe("when the user submits a correct email address", () => {
   it("downloads the application file", async () => {
     server.use(getWithData);
-    const { user } = setup(
+    const { user } = await setup(
       <VerifySubmissionEmail
         params={{ sessionId: "a-session-id", team: "barking-and-dagenham" }}
       />,
@@ -85,7 +85,7 @@ describe("when the user submits a correct email address", () => {
 describe("when the user submits an incorrect email address", () => {
   it("displays a suitable error message", async () => {
     server.use(getWith403);
-    const { user } = setup(
+    const { user } = await setup(
       <VerifySubmissionEmail
         params={{ sessionId: "a-session-id", team: "barking-and-dagenham" }}
       />,
@@ -105,7 +105,7 @@ describe("when the user submits an incorrect email address", () => {
 describe("when user submits a correct email address but there is a server-side issue", () => {
   it("displays a suitable error message", async () => {
     server.use(getWithServerSideError);
-    const { user } = setup(
+    const { user } = await setup(
       <VerifySubmissionEmail
         params={{ sessionId: "a-session-id", team: "barking-and-dagenham" }}
       />,

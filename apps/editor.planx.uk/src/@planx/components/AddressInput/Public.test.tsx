@@ -12,7 +12,7 @@ import AddressInput from "./Public";
 test("submits an address", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <AddressInput handleSubmit={handleSubmit} title="" fn="foo" />,
   );
 
@@ -44,7 +44,7 @@ test("submits an address", async () => {
 test("requires a non-empty string before being able to continue", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <AddressInput handleSubmit={handleSubmit} title="" fn="foo" />,
   );
 
@@ -67,7 +67,7 @@ test("recovers previously submitted text when clicking the back button", async (
   const handleSubmit = vi.fn();
   const componentId = uniqueId();
 
-  const { user } = setup(
+  const { user } = await setup(
     <AddressInput
       handleSubmit={handleSubmit}
       title=""
@@ -110,7 +110,7 @@ test("recovers previously submitted text when clicking the back button even if a
   const componentId = uniqueId();
   const dataField = "data-field";
 
-  const { user } = setup(
+  const { user } = await setup(
     <AddressInput
       handleSubmit={handleSubmit}
       title=""
@@ -150,7 +150,7 @@ test("recovers previously submitted text when clicking the back button even if a
 });
 
 it("should not have any accessibility violations on initial load", async () => {
-  const { container, user } = setup(<AddressInput title="title" />);
+  const { container, user } = await setup(<AddressInput title="title" />);
   await fillInFieldsUsingLabel(user, {
     "Address line 1": "Flat 1",
     "Address line 2 (optional)": "221b Baker St",
@@ -164,7 +164,9 @@ it("should not have any accessibility violations on initial load", async () => {
 });
 
 it("should not have any accessibility violations whilst in the error state", async () => {
-  const { container, user } = setup(<AddressInput title="title" id="testId" />);
+  const { container, user } = await setup(
+    <AddressInput title="title" id="testId" />,
+  );
 
   const requiredAddressElements = ["line1", "town", "postcode"];
 

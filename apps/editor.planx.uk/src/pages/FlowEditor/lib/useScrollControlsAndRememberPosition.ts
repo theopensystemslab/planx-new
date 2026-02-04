@@ -9,8 +9,7 @@ import {
   takeUntil,
   throttleTime,
 } from "rxjs/operators";
-
-import { rootFlowPath } from "../../../routes/utils";
+import { rootFlowPath } from "utils/routeUtils/utils";
 
 const useScrollControlsAndRememberPosition = (
   scrollContainerRef: React.RefObject<HTMLDivElement> | null,

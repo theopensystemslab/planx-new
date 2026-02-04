@@ -12,8 +12,8 @@ const maxError = /Max must be greater than min/;
 const invalidError = /Enter a valid date in DD.MM.YYYY format/;
 
 describe("DateInputComponent - Editor Modal", () => {
-  it("renders", () => {
-    setup(
+  it("renders", async () => {
+    await setup(
       <DndProvider backend={HTML5Backend}>
         <DateInputComponent id="test" />
       </DndProvider>,
@@ -23,7 +23,7 @@ describe("DateInputComponent - Editor Modal", () => {
 
   it("throws an error for incompatible date values", async () => {
     const handleSubmit = vi.fn();
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <DateInputComponent id="test" handleSubmit={handleSubmit} />
       </DndProvider>,
@@ -55,7 +55,7 @@ describe("DateInputComponent - Editor Modal", () => {
   it("does not show errors if min is less than max", async () => {
     const promise = Promise.resolve();
     const handleSubmit = vi.fn(() => promise);
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <DateInputComponent id="test" handleSubmit={handleSubmit} />
       </DndProvider>,
@@ -87,7 +87,7 @@ describe("DateInputComponent - Editor Modal", () => {
     const promise = Promise.resolve();
     const handleSubmit = vi.fn(() => promise);
     const node = { data: { min: "1900-02-13", max: "2000-12-14" } };
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <DateInputComponent id="test" handleSubmit={handleSubmit} node={node} />
       </DndProvider>,

@@ -26,7 +26,7 @@ vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
 });
 
 it("should not have any accessibility violations", async () => {
-  const { container } = setup(
+  const { container } = await setup(
     <ConfirmationComponent
       heading="heading"
       description="description"
@@ -50,7 +50,7 @@ describe("Confirmation component", () => {
 
   afterEach(() => waitFor(() => setState(initialState)));
 
-  it("hides the 'Continue' button if it's the final card in the flow", () => {
+  it("hides the 'Continue' button if it's the final card in the flow", async () => {
     act(() =>
       setState({
         flow: {
@@ -65,7 +65,7 @@ describe("Confirmation component", () => {
     expect(getState().upcomingCardIds()).toEqual(["Confirmation"]);
     expect(getState().isFinalCard()).toEqual(true);
 
-    const { user } = setup(
+    const { user } = await setup(
       <ConfirmationComponent
         heading="heading"
         description="description"
@@ -83,7 +83,7 @@ describe("Confirmation component", () => {
     expect(screen.queryByText("Continue")).not.toBeInTheDocument();
   });
 
-  it("shows the 'Continue' button if there are nodes following it", () => {
+  it("shows the 'Continue' button if there are nodes following it", async () => {
     act(() =>
       setState({
         flow: {
@@ -104,7 +104,7 @@ describe("Confirmation component", () => {
     ]);
     expect(getState().isFinalCard()).toEqual(false);
 
-    const { user } = setup(
+    const { user } = await setup(
       <ConfirmationComponent
         heading="heading"
         description="description"

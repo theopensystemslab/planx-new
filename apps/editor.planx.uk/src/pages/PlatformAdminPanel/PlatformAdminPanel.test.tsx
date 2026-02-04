@@ -20,7 +20,7 @@ beforeEach(() => {
 
 describe("Platform admin panel", () => {
   it("renders expected headers and rows without an error", async () => {
-    setup(<PlatformAdminPanel />);
+    await setup(<PlatformAdminPanel />);
 
     const headers = [
       "Team",
@@ -55,7 +55,10 @@ describe("Platform admin panel", () => {
   }, 10_000);
 
   it("renders a tick / cross for boolean values", async () => {
-    const { container } = setup(<PlatformAdminPanel />);
+    const { container } = await setup(<PlatformAdminPanel />);
+
+    // Wait for data to load
+    await screen.findByText("Barking and Dagenham");
 
     // Wait for data to load
     await screen.findByText("Barking and Dagenham");

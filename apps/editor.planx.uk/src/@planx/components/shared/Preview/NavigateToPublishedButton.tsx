@@ -1,17 +1,28 @@
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
+import { useNavigate } from "@tanstack/react-router";
 import { clearLocalFlow } from "lib/local";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { useNavigation } from "react-navi";
 
 const NavigateToPublishedButton: React.FC = () => {
-  const { navigate } = useNavigation();
+  const navigate = useNavigate();
   const id = useStore().id;
+  const teamSlug = useStore((state) => state.teamSlug);
+  const flowSlug = useStore((state) => state.flowSlug);
 
   const handleClick = () => {
     clearLocalFlow(id);
-    navigate("published?analytics=false");
+    navigate({
+      to: "/$team/$flow/published",
+      params: {
+        team: teamSlug,
+        flow: flowSlug,
+      },
+      search: {
+        analytics: false,
+      },
+    });
     window.location.reload();
   };
 

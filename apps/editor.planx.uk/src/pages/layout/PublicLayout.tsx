@@ -6,12 +6,12 @@ import {
   ThemeProvider,
 } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { useLocation } from "@tanstack/react-router";
 import ErrorFallback from "components/Error/ErrorFallback";
 import Feedback from "components/Feedback";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { useCurrentRoute } from "react-navi";
 import { generateTeamTheme } from "theme";
 import Logo from "ui/images/OGLLogo.svg";
 
@@ -45,13 +45,10 @@ const OglLogo = styled("img")(({ theme }) => ({
 }));
 
 const PublicFooter: React.FC = () => {
-  const { data } = useCurrentRoute();
   const [flowSettings, globalSettings] = useStore((state) => [
     state.flowSettings,
     state.globalSettings,
   ]);
-
-  const makeHref = (path: string) => [data.mountpath, "pages", path].join("/");
 
   const flowSettingsContent = FOOTER_ITEMS.map((key) => {
     const setting = flowSettings?.elements && flowSettings?.elements[key];
@@ -59,22 +56,22 @@ const PublicFooter: React.FC = () => {
     if (setting?.show) {
       return {
         title: setting.heading,
-        href: makeHref(key),
+        param: key,
         bold: key === "help",
       };
     }
   });
 
   const globalFooterItems = globalSettings?.footerContent
-    ? Object.entries(globalSettings?.footerContent).map(([slug, item]) => ({
+    ? Object.entries(globalSettings?.footerContent).map(([key, item]) => ({
         title: item.heading,
         content: item.content,
-        href: makeHref(slug),
+        param: key,
       }))
     : [];
 
   const footerItems = [...flowSettingsContent, ...globalFooterItems].filter(
-    (item): item is { title: string; href: string; bold: boolean } =>
+    (item): item is { title: string; param: string; bold: boolean } =>
       Boolean(item),
   );
 

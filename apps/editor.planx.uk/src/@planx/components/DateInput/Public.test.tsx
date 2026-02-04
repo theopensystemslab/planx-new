@@ -13,7 +13,7 @@ test("submits a date", async () => {
   const handleSubmit = vi.fn();
   const componentId = uniqueId();
 
-  const { user } = setup(
+  const { user } = await setup(
     <DateInput
       id={componentId}
       title="Pizza Day"
@@ -42,7 +42,7 @@ test("recovers previously submitted date when clicking the back button", async (
   const handleSubmit = vi.fn();
   const componentId = uniqueId();
 
-  const { user } = setup(
+  const { user } = await setup(
     <DateInput
       id={componentId}
       title="Pizza Day"
@@ -69,7 +69,7 @@ test("recovers previously submitted date when clicking the back button even if a
   const componentId = uniqueId();
   const dataField = "data-field";
 
-  const { user } = setup(
+  const { user } = await setup(
     <DateInput
       fn={dataField}
       id={componentId}
@@ -93,7 +93,7 @@ test("recovers previously submitted date when clicking the back button even if a
 });
 
 test("renders", async () => {
-  setup(<DateInput title="Enter a date" />);
+  await setup(<DateInput title="Enter a date" />);
 
   expect(screen.getByRole("heading")).toHaveTextContent("Enter a date");
 });
@@ -101,7 +101,7 @@ test("renders", async () => {
 test("allows user to type into input field and click continue", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <DateInput title="Enter a date" handleSubmit={handleSubmit} />,
   );
 
@@ -129,7 +129,7 @@ test("allows user to type into input field and click continue", async () => {
 });
 
 test("date fields have a max length set", async () => {
-  setup(<DateInput title="Enter a date" />);
+  await setup(<DateInput title="Enter a date" />);
 
   const day = screen.getByLabelText("Day") as HTMLInputElement;
   const month = screen.getByLabelText("Month") as HTMLInputElement;
@@ -141,7 +141,7 @@ test("date fields have a max length set", async () => {
 });
 
 it("should not have any accessibility violations upon initial load", async () => {
-  const { container } = setup(
+  const { container } = await setup(
     <DateInput id="123" title="Test title" description="description" />,
   );
   const results = await axe(container);
@@ -149,7 +149,7 @@ it("should not have any accessibility violations upon initial load", async () =>
 });
 
 it("should not have any accessibility violations whilst in the error state", async () => {
-  const { container, user } = setup(
+  const { container, user } = await setup(
     <DateInput id="testId" title="Test title" description="description" />,
   );
 

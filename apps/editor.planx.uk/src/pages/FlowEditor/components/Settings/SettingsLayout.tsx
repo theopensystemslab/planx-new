@@ -4,8 +4,9 @@ import { styled } from "@mui/material/styles";
 import { SvgIconProps } from "@mui/material/SvgIcon";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
+import { useNavigate } from "@tanstack/react-router";
 import React from "react";
-import { useCurrentRoute, useNavigation } from "react-navi";
+import { useLocation } from "react-use";
 import StyledTab from "ui/editor/StyledTab";
 
 interface SettingsLink {
@@ -36,19 +37,20 @@ const SettingsLayout: React.FC<Props> = ({
   getNavigationPath,
   children,
 }) => {
-  const { navigate } = useNavigation();
-  const { url } = useCurrentRoute();
+  const navigate = useNavigate();
+  const pathname = useLocation();
 
   const filteredLinks = settingsLinks.filter(
     (link) => link.condition === undefined || link.condition,
   );
 
   const activeTab =
-    filteredLinks.find((link) => url.pathname.includes(`/settings${link.path}`))
-      ?.path || filteredLinks[0]?.path;
+    filteredLinks.find((link) =>
+      pathname.href?.includes(`/settings${link.path}`),
+    )?.path || filteredLinks[0]?.path;
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-    navigate(getNavigationPath(newValue));
+    navigate({ to: getNavigationPath(newValue) });
   };
 
   return (

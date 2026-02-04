@@ -9,7 +9,7 @@ import Notice from "./Public";
 test("renders correctly", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <Notice
       title="hello"
       description="world"
@@ -24,7 +24,7 @@ test("renders correctly", async () => {
 });
 
 it("should not have any accessibility violations", async () => {
-  const { container } = setup(
+  const { container } = await setup(
     <Notice title="hello" description="world" color="red" />,
   );
   const results = await axe(container);

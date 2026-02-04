@@ -17,12 +17,16 @@ vi.mock("lib/feedback", () => ({
 
 describe("when the Feedback component is rendered", async () => {
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(<FeedbackComponent feedbackRequired={false} />);
+    const { container } = await setup(
+      <FeedbackComponent feedbackRequired={false} />,
+    );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
   it("should be navigable by keyboard", async () => {
-    const { user } = setup(<FeedbackComponent feedbackRequired={false} />);
+    const { user } = await setup(
+      <FeedbackComponent feedbackRequired={false} />,
+    );
 
     const ratingButtons = screen.getAllByRole("button");
 

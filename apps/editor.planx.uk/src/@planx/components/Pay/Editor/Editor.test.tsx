@@ -11,8 +11,8 @@ import { axe } from "vitest-axe";
 import PayComponent from "./Editor";
 
 describe("Pay component - Editor Modal", () => {
-  it("renders", () => {
-    const { getByText } = setup(
+  it("renders", async () => {
+    const { getByText } = await setup(
       <DndProvider backend={HTML5Backend}>
         <PayComponent id="test" />
       </DndProvider>,
@@ -22,7 +22,7 @@ describe("Pay component - Editor Modal", () => {
 
   // Currently failing, Editor not a11y compliant
   it.skip("should not have any accessibility violations upon initial load", async () => {
-    const { container } = setup(
+    const { container } = await setup(
       <DndProvider backend={HTML5Backend}>
         <PayComponent id="test" />
       </DndProvider>,
@@ -49,8 +49,8 @@ describe("Pay component - Editor Modal", () => {
     beforeAll(() => (initialState = getState()));
     afterEach(() => act(() => setState(initialState)));
 
-    it("renders the section", () => {
-      const { getByText } = setup(
+    it("renders the section", async () => {
+      const { getByText } = await setup(
         <DndProvider backend={HTML5Backend}>
           <PayComponent id="test" />
         </DndProvider>,
@@ -58,8 +58,8 @@ describe("Pay component - Editor Modal", () => {
       expect(getByText("GOV.UK Pay metadata")).toBeInTheDocument();
     });
 
-    it("lists the default values", () => {
-      const { getByDisplayValue, getByRole } = setup(
+    it("lists the default values", async () => {
+      const { getByDisplayValue, getByRole } = await setup(
         <DndProvider backend={HTML5Backend}>
           <PayComponent id="test" />
         </DndProvider>,
@@ -73,8 +73,8 @@ describe("Pay component - Editor Modal", () => {
       expect(autocomplete).toHaveValue("paidViaInviteToPay");
     });
 
-    it("does not allow default sections to be deleted", () => {
-      const { getAllByLabelText } = setup(
+    it("does not allow default sections to be deleted", async () => {
+      const { getAllByLabelText } = await setup(
         <DndProvider backend={HTML5Backend}>
           <PayComponent id="test" />
         </DndProvider>,
@@ -88,7 +88,7 @@ describe("Pay component - Editor Modal", () => {
       expect(deleteIcons[2]).toBeDisabled();
     });
 
-    it("pre-populates existing values", () => {
+    it("pre-populates existing values", async () => {
       const node = {
         data: {
           govPayMetadata: [
@@ -101,7 +101,7 @@ describe("Pay component - Editor Modal", () => {
         },
       };
 
-      const { getByDisplayValue } = setup(
+      const { getByDisplayValue } = await setup(
         <DndProvider backend={HTML5Backend}>
           <PayComponent id="test" node={node} />
         </DndProvider>,
@@ -117,7 +117,7 @@ describe("Pay component - Editor Modal", () => {
       const handleSubmit = vi.fn();
 
       const { getAllByPlaceholderText, getAllByLabelText, user, getByRole } =
-        setup(
+        await setup(
           <DndProvider backend={HTML5Backend}>
             <PayComponent
               id="test"
@@ -167,7 +167,7 @@ describe("Pay component - Editor Modal", () => {
 
       const handleSubmit = vi.fn();
 
-      const { getAllByLabelText, user, getByRole } = setup(
+      const { getAllByLabelText, user, getByRole } = await setup(
         <DndProvider backend={HTML5Backend}>
           <PayComponent id="test" handleSubmit={handleSubmit} node={mockNode} />
         </DndProvider>,
@@ -205,7 +205,7 @@ describe("Pay component - Editor Modal", () => {
 
       const handleSubmit = vi.fn();
 
-      const { getByText, user, getByRole } = setup(
+      const { getByText, user, getByRole } = await setup(
         <DndProvider backend={HTML5Backend}>
           <PayComponent id="test" handleSubmit={handleSubmit} />
         </DndProvider>,
@@ -228,11 +228,12 @@ describe("Pay component - Editor Modal", () => {
 
       const handleSubmit = vi.fn();
 
-      const { getByText, user, getByRole, getAllByPlaceholderText } = setup(
-        <DndProvider backend={HTML5Backend}>
-          <PayComponent id="test" handleSubmit={handleSubmit} />
-        </DndProvider>,
-      );
+      const { getByText, user, getByRole, getAllByPlaceholderText } =
+        await setup(
+          <DndProvider backend={HTML5Backend}>
+            <PayComponent id="test" handleSubmit={handleSubmit} />
+          </DndProvider>,
+        );
 
       // Add first duplicate key
       await user.click(getByRole("button", { name: /Add static field/ }));
@@ -270,7 +271,7 @@ describe("Pay component - Editor Modal", () => {
         user,
         getByRole,
         getByText,
-      } = setup(
+      } = await setup(
         <DndProvider backend={HTML5Backend}>
           <PayComponent
             id="test"

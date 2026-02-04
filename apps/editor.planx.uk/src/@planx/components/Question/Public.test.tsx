@@ -99,7 +99,7 @@ describe("Question component", () => {
       it(`renders the layout correctly`, async () => {
         const handleSubmit = vi.fn();
 
-        const { user, getByTestId, getByRole, getByText } = setup(
+        const { user, getByTestId, getByRole, getByText } = await setup(
           <QuestionComponent
             id="question_id"
             text="Best food"
@@ -123,7 +123,7 @@ describe("Question component", () => {
 
       it(`should display previously selected answer on back or change`, async () => {
         const handleSubmit = vi.fn();
-        const { user, getByRole, getByTestId } = setup(
+        const { user, getByRole, getByTestId } = await setup(
           <QuestionComponent
             id="question_id"
             text="Best food"
@@ -154,7 +154,7 @@ describe("Question component", () => {
 
       it(`should not have any accessibility violations`, async () => {
         const handleSubmit = vi.fn();
-        const { container } = setup(
+        const { container } = await setup(
           <QuestionComponent
             id="question_id"
             text="Best food"
@@ -170,7 +170,7 @@ describe("Question component", () => {
         const handleSubmit = vi.fn();
         const errorMessage = /Select your answer before continuing/;
 
-        const { user, getByTestId, getByText, queryByText } = setup(
+        const { user, getByTestId, getByText, queryByText } = await setup(
           <QuestionComponent
             id="question_id"
             text="Best food"

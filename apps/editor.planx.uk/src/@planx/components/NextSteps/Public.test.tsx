@@ -5,7 +5,7 @@ import { axe } from "vitest-axe";
 import NextStepsComponent from "./Public";
 
 it("should not have any accessibility violations", async () => {
-  const { container } = setup(
+  const { container } = await setup(
     <NextStepsComponent
       title="title"
       description="description"

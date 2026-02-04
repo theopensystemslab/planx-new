@@ -11,8 +11,8 @@ import {
 } from "lib/api/saveAndReturn/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useCallback, useEffect } from "react";
-import { Link as ReactNaviLink } from "react-navi";
 import { ApplicationPath } from "types";
+import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 import ReconciliationPage from "../ReconciliationPage";
 import StatusPage from "../StatusPage";
@@ -55,29 +55,37 @@ export const InvalidSession: React.FC<{
 
 export const LockedSession: React.FC<{
   paymentRequest?: MinPaymentRequest;
-}> = ({ paymentRequest }) => (
-  <StatusPage
-    bannerHeading="Sorry, you can't make changes to this form"
-    additionalOption="startNewApplication"
-  >
-    <Typography variant="body1">
-      This is because you've invited {paymentRequest?.payeeName} (
-      <Link href={`mailto:${paymentRequest?.payeeEmail}`}>
-        {paymentRequest?.payeeEmail}
-      </Link>
-      ) to pay and changes might affect the fee.
-      <br />
-      <br />
-      You can{" "}
-      <Link
-        component={ReactNaviLink}
-        href={`../pay?paymentRequestId=${paymentRequest?.id}`}
-      >
-        pay yourself on the payment page
-      </Link>
-    </Typography>
-  </StatusPage>
-);
+}> = ({ paymentRequest }) => {
+  const [teamSlug, flowSlug] = useStore((state) => [
+    state.teamSlug,
+    state.flowSlug,
+  ]);
+
+  return (
+    <StatusPage
+      bannerHeading="Sorry, you can't make changes to this application"
+      additionalOption="startNewApplication"
+    >
+      <Typography variant="body1">
+        This is because you've invited {paymentRequest?.payeeName} (
+        <Link href={`mailto:${paymentRequest?.payeeEmail}`}>
+          {paymentRequest?.payeeEmail}
+        </Link>
+        ) to pay and changes might affect the fee.
+        <br />
+        <br />
+        You can{" "}
+        <CustomLink
+          to="/$team/$flow/pay"
+          params={{ team: teamSlug, flow: flowSlug }}
+          search={{ paymentRequestId: paymentRequest?.id }}
+        >
+          pay yourself on the payment page
+        </CustomLink>
+      </Typography>
+    </StatusPage>
+  );
+};
 
 export const ValidationSuccess: React.FC<{
   reconciliationResponse: ReconciliationResponse;

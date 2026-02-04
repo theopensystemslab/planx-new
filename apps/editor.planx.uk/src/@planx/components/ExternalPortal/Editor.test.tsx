@@ -9,7 +9,7 @@ import ExternalPortalForm from "./Editor";
 test("adding an external portal", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <ExternalPortalForm
       flows={[
         { id: "a", name: "flow a", slug: "flow-a", team: "team" },
@@ -50,7 +50,7 @@ test("adding an external portal", async () => {
 test("changing an external portal", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <ExternalPortalForm
       flowId="b"
       flows={[
