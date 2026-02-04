@@ -38,6 +38,7 @@ import { Route as AuthenticatedTeamSettingsAdvancedRouteImport } from './routes/
 import { Route as AuthenticatedTeamFlowSubmissionsRouteImport } from './routes/_authenticated/$team/$flow/submissions'
 import { Route as AuthenticatedTeamFlowFeedbackRouteImport } from './routes/_authenticated/$team/$flow/feedback'
 import { Route as AuthenticatedTeamFlowAboutRouteImport } from './routes/_authenticated/$team/$flow/about'
+import { Route as PublicPlanXDomainTeamFlowRouteRouteImport } from './routes/_public/_planXDomain/$team/$flow/route'
 import { Route as AuthenticatedTeamFlowSettingsRouteRouteImport } from './routes/_authenticated/$team/$flow/settings/route'
 import { Route as AuthenticatedTeamFlowNodesRouteRouteImport } from './routes/_authenticated/$team/$flow/nodes/route'
 import { Route as AuthenticatedTeamFlowSettingsIndexRouteImport } from './routes/_authenticated/$team/$flow/settings/index'
@@ -238,6 +239,12 @@ const AuthenticatedTeamFlowAboutRoute =
     path: '/about',
     getParentRoute: () => AuthenticatedTeamFlowRouteRoute,
   } as any)
+const PublicPlanXDomainTeamFlowRouteRoute =
+  PublicPlanXDomainTeamFlowRouteRouteImport.update({
+    id: '/_public/_planXDomain/$team/$flow',
+    path: '/$team/$flow',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedTeamFlowSettingsRouteRoute =
   AuthenticatedTeamFlowSettingsRouteRouteImport.update({
     id: '/settings',
@@ -282,27 +289,27 @@ const AuthenticatedTeamFlowSettingsAboutRoute =
   } as any)
 const PublicPlanXDomainTeamFlowPublishedRouteRoute =
   PublicPlanXDomainTeamFlowPublishedRouteRouteImport.update({
-    id: '/_public/_planXDomain/$team/$flow/published',
-    path: '/$team/$flow/published',
-    getParentRoute: () => rootRouteImport,
+    id: '/published',
+    path: '/published',
+    getParentRoute: () => PublicPlanXDomainTeamFlowRouteRoute,
   } as any)
 const PublicPlanXDomainTeamFlowPreviewRouteRoute =
   PublicPlanXDomainTeamFlowPreviewRouteRouteImport.update({
-    id: '/_public/_planXDomain/$team/$flow/preview',
-    path: '/$team/$flow/preview',
-    getParentRoute: () => rootRouteImport,
+    id: '/preview',
+    path: '/preview',
+    getParentRoute: () => PublicPlanXDomainTeamFlowRouteRoute,
   } as any)
 const PublicPlanXDomainTeamFlowPayRouteRoute =
   PublicPlanXDomainTeamFlowPayRouteRouteImport.update({
-    id: '/_public/_planXDomain/$team/$flow/pay',
-    path: '/$team/$flow/pay',
-    getParentRoute: () => rootRouteImport,
+    id: '/pay',
+    path: '/pay',
+    getParentRoute: () => PublicPlanXDomainTeamFlowRouteRoute,
   } as any)
 const PublicPlanXDomainTeamFlowDraftRouteRoute =
   PublicPlanXDomainTeamFlowDraftRouteRouteImport.update({
-    id: '/_public/_planXDomain/$team/$flow/draft',
-    path: '/$team/$flow/draft',
-    getParentRoute: () => rootRouteImport,
+    id: '/draft',
+    path: '/draft',
+    getParentRoute: () => PublicPlanXDomainTeamFlowRouteRoute,
   } as any)
 const PublicPlanXDomainTeamFlowPublishedIndexRoute =
   PublicPlanXDomainTeamFlowPublishedIndexRouteImport.update({
@@ -366,9 +373,9 @@ const PublicPlanXDomainTeamFlowDraftViewApplicationRoute =
   } as any)
 const PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute =
   PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRouteImport.update({
-    id: '/_public/_planXDomain/$team/$flow/$sessionId/download-application',
-    path: '/$team/$flow/$sessionId/download-application',
-    getParentRoute: () => rootRouteImport,
+    id: '/$sessionId/download-application',
+    path: '/$sessionId/download-application',
+    getParentRoute: () => PublicPlanXDomainTeamFlowRouteRoute,
   } as any)
 const AuthenticatedTeamFlowSettingsPagesPrivacyRoute =
   AuthenticatedTeamFlowSettingsPagesPrivacyRouteImport.update({
@@ -478,7 +485,7 @@ export interface FileRoutesByFullPath {
   '/resources': typeof AuthenticatedResourcesRoute
   '/tutorials': typeof AuthenticatedTutorialsRoute
   '/': typeof AuthenticatedIndexRoute
-  '/$team/$flow': typeof AuthenticatedTeamFlowRouteRouteWithChildren
+  '/$team/$flow': typeof PublicPlanXDomainTeamFlowRouteRouteWithChildren
   '/$team/settings': typeof AuthenticatedTeamSettingsRouteRouteWithChildren
   '/$team/design': typeof AuthenticatedTeamDesignRoute
   '/$team/feedback': typeof AuthenticatedTeamFeedbackRoute
@@ -545,7 +552,7 @@ export interface FileRoutesByTo {
   '/resources': typeof AuthenticatedResourcesRoute
   '/tutorials': typeof AuthenticatedTutorialsRoute
   '/': typeof AuthenticatedIndexRoute
-  '/$team/$flow': typeof AuthenticatedTeamFlowRouteRouteWithChildren
+  '/$team/$flow': typeof PublicPlanXDomainTeamFlowRouteRouteWithChildren
   '/$team/design': typeof AuthenticatedTeamDesignRoute
   '/$team/feedback': typeof AuthenticatedTeamFeedbackRoute
   '/$team/members': typeof AuthenticatedTeamMembersRoute
@@ -619,6 +626,7 @@ export interface FileRoutesById {
   '/_authenticated/$team/': typeof AuthenticatedTeamIndexRoute
   '/_authenticated/$team/$flow/nodes': typeof AuthenticatedTeamFlowNodesRouteRouteWithChildren
   '/_authenticated/$team/$flow/settings': typeof AuthenticatedTeamFlowSettingsRouteRouteWithChildren
+  '/_public/_planXDomain/$team/$flow': typeof PublicPlanXDomainTeamFlowRouteRouteWithChildren
   '/_authenticated/$team/$flow/about': typeof AuthenticatedTeamFlowAboutRoute
   '/_authenticated/$team/$flow/feedback': typeof AuthenticatedTeamFlowFeedbackRoute
   '/_authenticated/$team/$flow/submissions': typeof AuthenticatedTeamFlowSubmissionsRoute
@@ -819,6 +827,7 @@ export interface FileRouteTypes {
     | '/_authenticated/$team/'
     | '/_authenticated/$team/$flow/nodes'
     | '/_authenticated/$team/$flow/settings'
+    | '/_public/_planXDomain/$team/$flow'
     | '/_authenticated/$team/$flow/about'
     | '/_authenticated/$team/$flow/feedback'
     | '/_authenticated/$team/$flow/submissions'
@@ -872,11 +881,7 @@ export interface RootRouteChildren {
   SplatRoute: typeof SplatRoute
   authLoginRoute: typeof authLoginRoute
   authLogoutRoute: typeof authLogoutRoute
-  PublicPlanXDomainTeamFlowDraftRouteRoute: typeof PublicPlanXDomainTeamFlowDraftRouteRouteWithChildren
-  PublicPlanXDomainTeamFlowPayRouteRoute: typeof PublicPlanXDomainTeamFlowPayRouteRouteWithChildren
-  PublicPlanXDomainTeamFlowPreviewRouteRoute: typeof PublicPlanXDomainTeamFlowPreviewRouteRouteWithChildren
-  PublicPlanXDomainTeamFlowPublishedRouteRoute: typeof PublicPlanXDomainTeamFlowPublishedRouteRouteWithChildren
-  PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute: typeof PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute
+  PublicPlanXDomainTeamFlowRouteRoute: typeof PublicPlanXDomainTeamFlowRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -1084,6 +1089,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTeamFlowAboutRouteImport
       parentRoute: typeof AuthenticatedTeamFlowRouteRoute
     }
+    '/_public/_planXDomain/$team/$flow': {
+      id: '/_public/_planXDomain/$team/$flow'
+      path: '/$team/$flow'
+      fullPath: '/$team/$flow'
+      preLoaderRoute: typeof PublicPlanXDomainTeamFlowRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/$team/$flow/settings': {
       id: '/_authenticated/$team/$flow/settings'
       path: '/settings'
@@ -1135,31 +1147,31 @@ declare module '@tanstack/react-router' {
     }
     '/_public/_planXDomain/$team/$flow/published': {
       id: '/_public/_planXDomain/$team/$flow/published'
-      path: '/$team/$flow/published'
+      path: '/published'
       fullPath: '/$team/$flow/published'
       preLoaderRoute: typeof PublicPlanXDomainTeamFlowPublishedRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof PublicPlanXDomainTeamFlowRouteRoute
     }
     '/_public/_planXDomain/$team/$flow/preview': {
       id: '/_public/_planXDomain/$team/$flow/preview'
-      path: '/$team/$flow/preview'
+      path: '/preview'
       fullPath: '/$team/$flow/preview'
       preLoaderRoute: typeof PublicPlanXDomainTeamFlowPreviewRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof PublicPlanXDomainTeamFlowRouteRoute
     }
     '/_public/_planXDomain/$team/$flow/pay': {
       id: '/_public/_planXDomain/$team/$flow/pay'
-      path: '/$team/$flow/pay'
+      path: '/pay'
       fullPath: '/$team/$flow/pay'
       preLoaderRoute: typeof PublicPlanXDomainTeamFlowPayRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof PublicPlanXDomainTeamFlowRouteRoute
     }
     '/_public/_planXDomain/$team/$flow/draft': {
       id: '/_public/_planXDomain/$team/$flow/draft'
-      path: '/$team/$flow/draft'
+      path: '/draft'
       fullPath: '/$team/$flow/draft'
       preLoaderRoute: typeof PublicPlanXDomainTeamFlowDraftRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof PublicPlanXDomainTeamFlowRouteRoute
     }
     '/_public/_planXDomain/$team/$flow/published/': {
       id: '/_public/_planXDomain/$team/$flow/published/'
@@ -1233,10 +1245,10 @@ declare module '@tanstack/react-router' {
     }
     '/_public/_planXDomain/$team/$flow/$sessionId/download-application': {
       id: '/_public/_planXDomain/$team/$flow/$sessionId/download-application'
-      path: '/$team/$flow/$sessionId/download-application'
+      path: '/$sessionId/download-application'
       fullPath: '/$team/$flow/$sessionId/download-application'
       preLoaderRoute: typeof PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof PublicPlanXDomainTeamFlowRouteRoute
     }
     '/_authenticated/$team/$flow/settings/pages/privacy': {
       id: '/_authenticated/$team/$flow/settings/pages/privacy'
@@ -1651,21 +1663,40 @@ const PublicPlanXDomainTeamFlowPublishedRouteRouteWithChildren =
     PublicPlanXDomainTeamFlowPublishedRouteRouteChildren,
   )
 
+interface PublicPlanXDomainTeamFlowRouteRouteChildren {
+  PublicPlanXDomainTeamFlowDraftRouteRoute: typeof PublicPlanXDomainTeamFlowDraftRouteRouteWithChildren
+  PublicPlanXDomainTeamFlowPayRouteRoute: typeof PublicPlanXDomainTeamFlowPayRouteRouteWithChildren
+  PublicPlanXDomainTeamFlowPreviewRouteRoute: typeof PublicPlanXDomainTeamFlowPreviewRouteRouteWithChildren
+  PublicPlanXDomainTeamFlowPublishedRouteRoute: typeof PublicPlanXDomainTeamFlowPublishedRouteRouteWithChildren
+  PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute: typeof PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute
+}
+
+const PublicPlanXDomainTeamFlowRouteRouteChildren: PublicPlanXDomainTeamFlowRouteRouteChildren =
+  {
+    PublicPlanXDomainTeamFlowDraftRouteRoute:
+      PublicPlanXDomainTeamFlowDraftRouteRouteWithChildren,
+    PublicPlanXDomainTeamFlowPayRouteRoute:
+      PublicPlanXDomainTeamFlowPayRouteRouteWithChildren,
+    PublicPlanXDomainTeamFlowPreviewRouteRoute:
+      PublicPlanXDomainTeamFlowPreviewRouteRouteWithChildren,
+    PublicPlanXDomainTeamFlowPublishedRouteRoute:
+      PublicPlanXDomainTeamFlowPublishedRouteRouteWithChildren,
+    PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute:
+      PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute,
+  }
+
+const PublicPlanXDomainTeamFlowRouteRouteWithChildren =
+  PublicPlanXDomainTeamFlowRouteRoute._addFileChildren(
+    PublicPlanXDomainTeamFlowRouteRouteChildren,
+  )
+
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   SplatRoute: SplatRoute,
   authLoginRoute: authLoginRoute,
   authLogoutRoute: authLogoutRoute,
-  PublicPlanXDomainTeamFlowDraftRouteRoute:
-    PublicPlanXDomainTeamFlowDraftRouteRouteWithChildren,
-  PublicPlanXDomainTeamFlowPayRouteRoute:
-    PublicPlanXDomainTeamFlowPayRouteRouteWithChildren,
-  PublicPlanXDomainTeamFlowPreviewRouteRoute:
-    PublicPlanXDomainTeamFlowPreviewRouteRouteWithChildren,
-  PublicPlanXDomainTeamFlowPublishedRouteRoute:
-    PublicPlanXDomainTeamFlowPublishedRouteRouteWithChildren,
-  PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute:
-    PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute,
+  PublicPlanXDomainTeamFlowRouteRoute:
+    PublicPlanXDomainTeamFlowRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

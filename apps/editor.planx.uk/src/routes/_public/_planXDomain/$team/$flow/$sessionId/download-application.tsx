@@ -11,29 +11,23 @@ import {
   fetchDataForStandaloneView,
   setupStandaloneViewStore,
 } from "utils/routeUtils/standaloneViewHelpers";
-import { validateTeamRoute } from "utils/routeUtils/utils";
 
 export const Route = createFileRoute(
   "/_public/_planXDomain/$team/$flow/$sessionId/download-application",
 )({
   head: createPublicRouteHead("download"),
-  beforeLoad: async ({ params }) => {
-    const { team: teamParam, flow: flowParam, sessionId } = params;
-
-    if (!sessionId) {
-      throw new Error("Session ID is required for download application");
-    }
+  loader: async ({ params, context }) => {
+    const { team, flow } = context;
+    const { sessionId } = params;
 
     try {
-      await validateTeamRoute({ params });
-
-      const data = await fetchDataForStandaloneView(flowParam, teamParam);
+      const data = await fetchDataForStandaloneView(flow, team);
       setupStandaloneViewStore(data);
 
       return {
         sessionId,
-        team: teamParam,
-        flow: flowParam.split(",")[0],
+        team,
+        flow: flow.split(",")[0],
         standaloneData: data,
       };
     } catch (error) {
@@ -46,10 +40,7 @@ export const Route = createFileRoute(
 });
 
 function DownloadApplicationComponent() {
-  const params = Route.useParams();
-
-  const { sessionId, team } = params;
-  const flow = params.flow.split(",")[0];
+  const { sessionId, team, flow } = Route.useLoaderData();
 
   return (
     <PublicRouteLayout mode="download">
