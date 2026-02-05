@@ -6,14 +6,10 @@ export const Route = createFileRoute("/$")({
   component: CatchAllComponent,
 });
 
-function CatchAllComponent() {
-  const params = Route.useParams();
-  const splat = params._splat || "";
-  const pathname = `/${splat}`;
-
+export function CatchAllComponent() {
   return (
     <ErrorPage title="Page not found">
-      The page "{pathname}" could not be found. Please check the URL or go back
+      The page you're looking for doesn't exist. Please check the URL or go back
       to the homepage.
     </ErrorPage>
   );
