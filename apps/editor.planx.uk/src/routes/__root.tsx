@@ -13,6 +13,8 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { z } from "zod";
 
+import { CatchAllComponent } from "./$";
+
 interface RouterContext {
   currentUser?: boolean | void;
   user?: User;
@@ -115,14 +117,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     return <ErrorFallback error={error} />;
   },
 
-  notFoundComponent: () => {
-    return (
-      <ErrorPage title="Page not found">
-        The page you're looking for doesn't exist. Please check the URL or go
-        back to the homepage.
-      </ErrorPage>
-    );
-  },
+  notFoundComponent: CatchAllComponent,
 
   component: RootComponent,
 });

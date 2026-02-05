@@ -33,6 +33,7 @@ export const tanstackRouterDecorator: Decorator = (Story, context) => {
     history: memoryHistory,
     context: mockContext,
     defaultPreload: false,
+    notFoundMode: 'root',
   });
 
   return <RouterProvider router={router} />;

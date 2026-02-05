@@ -1,11 +1,14 @@
 import {
   createFileRoute,
+  notFound,
   Outlet,
   stripSearchParams,
 } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
+import RouteLoadingIndicator from "components/RouteLoadingIndicator";
 import FlowEditorLayout from "pages/layout/FlowEditorLayout";
 import React from "react";
+import { CatchAllComponent } from "routes/$";
 import {
   getBasicFlowData,
   getFlowEditorData,
@@ -15,6 +18,7 @@ import { useStore } from "../../../../pages/FlowEditor/lib/store";
 import { teamSearchSchema } from "..";
 
 export const Route = createFileRoute("/_authenticated/$team/$flow")({
+  pendingComponent: RouteLoadingIndicator,
   validateSearch: zodValidator(teamSearchSchema),
   search: {
     middlewares: [
@@ -60,12 +64,11 @@ export const Route = createFileRoute("/_authenticated/$team/$flow")({
 
       store.getFlowInformation(actualFlowSlug, teamSlug);
     } catch (error) {
-      throw new Error(
-        `Failed to load flow: ${error instanceof Error ? error.message : "Unknown error"}`,
-      );
+      throw notFound();
     }
   },
   component: RouteComponent,
+  notFoundComponent: CatchAllComponent,
 });
 
 function RouteComponent() {

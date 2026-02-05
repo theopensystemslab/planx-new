@@ -20,6 +20,7 @@ import type { UserEvent } from "@testing-library/user-event";
 import userEvent from "@testing-library/user-event";
 import { ToastContextProvider } from "contexts/ToastContext";
 import React from "react";
+import { CatchAllComponent } from "routes/$";
 
 import { defaultTheme } from "./theme";
 
@@ -78,6 +79,7 @@ export const setup = async (
         </ApolloProvider>
       </ToastContextProvider>
     ),
+    notFoundComponent: CatchAllComponent,
   });
 
   const indexRoute = createRoute({
@@ -96,6 +98,7 @@ export const setup = async (
     routeTree,
     history,
     defaultPendingMinMs: 0,
+    notFoundMode: "root",
   });
 
   const renderResult = render(<RouterProvider router={router} />);
