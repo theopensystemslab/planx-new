@@ -137,8 +137,8 @@ const ExternalPortal: React.FC<any> = (props) => {
               <Link
                 to={
                   parent
-                    ? "/$team/$flow/nodes/$parent/nodes/$id/edit"
-                    : "/$team/$flow/nodes/$id/edit"
+                    ? "/team/$team/$flow/nodes/$parent/nodes/$id/edit"
+                    : "/team/$team/$flow/nodes/$id/edit"
                 }
                 params={{
                   team: teamSlug,
@@ -234,8 +234,8 @@ const InternalPortal: React.FC<any> = (props) => {
               <Link
                 to={
                   parent
-                    ? "/$team/$flow/nodes/$parent/nodes/$id/edit"
-                    : "/$team/$flow/nodes/$id/edit"
+                    ? "/team/$team/$flow/nodes/$parent/nodes/$id/edit"
+                    : "/team/$team/$flow/nodes/$id/edit"
                 }
                 params={{
                   team: teamSlug,

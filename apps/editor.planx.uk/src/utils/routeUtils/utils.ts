@@ -80,15 +80,15 @@ export const isPreviewOnlyDomain = PREVIEW_ONLY_DOMAINS.some((domain) =>
 
 export const getNodeRoute = (parent?: string, before?: string) => {
   if (parent && before) {
-    return "/$team/$flow/nodes/$parent/nodes/new/$before" as const;
+    return "/team/$team/$flow/nodes/$parent/nodes/new/$before" as const;
   }
   if (parent) {
-    return "/$team/$flow/nodes/$parent/nodes/new" as const;
+    return "/team/$team/$flow/nodes/$parent/nodes/new" as const;
   }
   if (before) {
-    return "/$team/$flow/nodes/new/$before" as const;
+    return "/team/$team/$flow/nodes/new/$before" as const;
   }
-  return "/$team/$flow/nodes/new" as const;
+  return "/team/$team/$flow/nodes/new" as const;
 };
 
 const QUERY_GET_TEAM_BY_DOMAIN = gql`

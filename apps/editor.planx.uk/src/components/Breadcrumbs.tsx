@@ -53,7 +53,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
           <>
             {" / "}
             <BreadcrumbsLink
-              to="/$team"
+              to="/team/$team"
               params={{
                 team: params.team,
               }}
@@ -85,7 +85,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
         <Box sx={(theme) => ({ color: theme.palette.text.primary })}>
           {canUserEditTeam && canUserEditTeam(team.slug) ? (
             <BreadcrumbsLink
-              to="/$team/$flow/settings"
+              to="/team/$team/$flow/settings"
               params={{
                 team: team.slug,
                 flow: flowSlug,

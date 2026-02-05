@@ -34,7 +34,7 @@ export const SortControl = <T extends object>({
 }: {
   sortOptions: SortableFields<T>[];
 }) => {
-  const searchParams = useSearch({ from: "/_authenticated/$team/" });
+  const searchParams = useSearch({ from: "/_authenticated/team/$team/" });
   const navigate = useNavigate();
 
   const { sortObject: currentSortObject, sortDirection: currentSortDirection } =

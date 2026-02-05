@@ -9,7 +9,7 @@ import { sortOptions } from "../../helpers/sortAndFilterOptions";
  * based on the current sort parameters
  */
 export const useFlowSortDisplay = () => {
-  const searchParams = useSearch({ from: "/_authenticated/$team/" });
+  const searchParams = useSearch({ from: "/_authenticated/team/$team/" });
 
   const {
     sortObject: { displayName: sortDisplayName },

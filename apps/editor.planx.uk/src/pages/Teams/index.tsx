@@ -69,7 +69,11 @@ const Teams: React.FC<Props> = ({ teams }) => {
   const renderTeams = (teamsToRender: Array<TeamSummary>) =>
     teamsToRender.map((team) => {
       return (
-        <StyledLink to="/$team" params={{ team: team.slug }} key={team.slug}>
+        <StyledLink
+          to="/team/$team"
+          params={{ team: team.slug }}
+          key={team.slug}
+        >
           <TeamCard>
             <Box sx={{ display: "flex" }}>
               <TeamColourBand bgcolor={team.theme.primaryColour} />

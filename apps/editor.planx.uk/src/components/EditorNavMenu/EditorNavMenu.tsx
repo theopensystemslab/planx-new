@@ -68,6 +68,7 @@ function EditorNavMenu() {
     }
   };
 
+  // TODO: How can we make this component type-safe?
   const globalLayoutRoutes: Route[] = [
     {
       title: "Select a team",
@@ -111,37 +112,37 @@ function EditorNavMenu() {
     {
       title: "Flows",
       Icon: FormatListBulletedIcon,
-      route: `/${teamSlug}`,
+      route: `/team/${teamSlug}`,
       accessibleBy: "*",
     },
     {
       title: "Settings",
       Icon: TuneIcon,
-      route: `/${teamSlug}/settings`,
+      route: `/team/${teamSlug}/settings`,
       accessibleBy: ["platformAdmin", "teamEditor"],
     },
     {
       title: "Team members",
       Icon: GroupIcon,
-      route: `/${teamSlug}/members`,
+      route: `/team/${teamSlug}/members`,
       accessibleBy: ["platformAdmin", "teamEditor"],
     },
     {
       title: "Subscription",
       Icon: CurrencyPoundIcon,
-      route: `/${teamSlug}/subscription`,
+      route: `/team/${teamSlug}/subscription`,
       accessibleBy: ["platformAdmin", "teamEditor"],
     },
     {
       title: "Feedback",
       Icon: RateReviewIcon,
-      route: `/${teamSlug}/feedback`,
+      route: `/team/${teamSlug}/feedback`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
     {
       title: "Submissions",
       Icon: FactCheckIcon,
-      route: `/${teamSlug}/submissions`,
+      route: `/team/${teamSlug}/submissions`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
     {
@@ -179,25 +180,25 @@ function EditorNavMenu() {
     {
       title: "Editor",
       Icon: EditorIcon,
-      route: `/${teamSlug}/${flowSlug}`,
+      route: `/team/${teamSlug}/${flowSlug}`,
       accessibleBy: "*",
     },
     {
       title: "Flow settings",
       Icon: TuneIcon,
-      route: `/${teamSlug}/${flowSlug}/settings`,
+      route: `/team/${teamSlug}/${flowSlug}/settings`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
     {
       title: "Feedback",
       Icon: RateReviewIcon,
-      route: `/${teamSlug}/${flowSlug}/feedback`,
+      route: `/team/${teamSlug}/${flowSlug}/feedback`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
     {
       title: "Submissions",
       Icon: FactCheckIcon,
-      route: `/${teamSlug}/${flowSlug}/submissions`,
+      route: `/team/${teamSlug}/${flowSlug}/submissions`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
     {
