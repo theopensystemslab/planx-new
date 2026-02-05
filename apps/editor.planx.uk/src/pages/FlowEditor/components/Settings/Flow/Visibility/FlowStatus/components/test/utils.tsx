@@ -1,5 +1,5 @@
 import { screen, waitForElementToBeRemoved } from "@testing-library/react";
-import { graphql, HttpResponse } from "msw";
+import { delay, graphql, HttpResponse } from "msw";
 import React from "react";
 import server from "test/mockServer";
 import { setup } from "testUtils";
@@ -10,7 +10,7 @@ import type { GetFlowStatus } from "../../types";
 export const setupFlowStatusScreen = async (data: GetFlowStatus) => {
   server.use(
     graphql.query("GetFlowStatus", async () => {
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await delay(100);
       return HttpResponse.json({ data });
     }),
   );
