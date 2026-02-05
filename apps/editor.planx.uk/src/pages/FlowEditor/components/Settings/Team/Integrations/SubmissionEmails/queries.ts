@@ -14,6 +14,23 @@ export const GET_TEAM_SUBMISSION_INTEGRATIONS = gql`
   }
 `;
 
+export const GET_PUBLISHED_FLOWS_WITH_SUBMISSION_INTEGRATION = gql`
+  query GetFlowsWithSubmissionIntegration($emailId: uuid!) {
+    publishedFlows: published_flows(
+      where: { submission_email_id: { _eq: $emailId } }
+      distinct_on: flow_id
+      order_by: [{ flow_id: asc }, { created_at: desc }]
+    ) {
+      flowId: flow_id
+      submissionEmailId: submission_email_id
+      flow(where: { deleted_at: { _is_null: true } }) {
+        name
+        slug
+      }
+    }
+  }
+`;
+
 export const UPSERT_TEAM_SUBMISSION_INTEGRATIONS = gql`
   mutation UpsertSubmissionIntegrations(
     $emails: [submission_integrations_insert_input!]!
