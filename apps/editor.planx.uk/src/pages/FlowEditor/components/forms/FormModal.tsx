@@ -257,7 +257,7 @@ const FormModal: React.FC<FormModalProps> = ({
       setShowUnsavedWarning(true);
     } else {
       navigate({
-        to: "/$team/$flow",
+        to: "/app/$team/$flow",
         params: {
           team: teamSlug,
           flow: flowSlug,
@@ -269,7 +269,7 @@ const FormModal: React.FC<FormModalProps> = ({
   const handleConfirmClose = () => {
     setShowUnsavedWarning(false);
     navigate({
-      to: "/$team/$flow",
+      to: "/app/$team/$flow",
       params: {
         team: teamSlug,
         flow: flowSlug,
@@ -427,7 +427,7 @@ const FormModal: React.FC<FormModalProps> = ({
               onClick={() => {
                 handleDelete && handleDelete();
                 navigate({
-                  to: "/$team/$flow",
+                  to: "/app/$team/$flow",
                   params: {
                     team: teamSlug,
                     flow: flowSlug,
@@ -456,7 +456,7 @@ const FormModal: React.FC<FormModalProps> = ({
                 onClick={() => {
                   if (id) makeUnique(id, parent);
                   navigate({
-                    to: "/$team/$flow",
+                    to: "/app/$team/$flow",
                     params: {
                       team: teamSlug,
                       flow: flowSlug,
