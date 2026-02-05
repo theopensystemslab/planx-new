@@ -98,7 +98,6 @@ export const setup = async (
     routeTree,
     history,
     defaultPendingMinMs: 0,
-    notFoundMode: "root",
   });
 
   const renderResult = render(<RouterProvider router={router} />);
