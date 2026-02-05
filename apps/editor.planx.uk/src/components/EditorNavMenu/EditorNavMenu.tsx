@@ -39,7 +39,7 @@ function EditorNavMenu() {
   const environment = import.meta.env.VITE_APP_ENV;
 
   const teamAnalyticsLink =
-    environment === "development" // TODO: SWAP BACK
+    environment === "production"
       ? `https://metabase.editor.planx.uk/public/dashboard/74337c9d-389d-4cb1-a65a-ad7e16428abf?date=&tab=641-key-figures&team_slug=${teamSlug}`
       : undefined;
 
