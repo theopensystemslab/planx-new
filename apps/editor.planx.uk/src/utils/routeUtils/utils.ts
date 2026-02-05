@@ -52,6 +52,7 @@ export const setPath = (flowData: Store.Flow, req: RouteParams) => {
 //
 //      So I've hard-coded these domain names until a better solution comes along.
 //
+// TODO: Retire this, update docs
 const PREVIEW_ONLY_DOMAINS = [
   "planningservices.barnet.gov.uk",
   "planningservices.birmingham.gov.uk",
@@ -80,15 +81,15 @@ export const isPreviewOnlyDomain = PREVIEW_ONLY_DOMAINS.some((domain) =>
 
 export const getNodeRoute = (parent?: string, before?: string) => {
   if (parent && before) {
-    return "/team/$team/$flow/nodes/$parent/nodes/new/$before" as const;
+    return "/app/$team/$flow/nodes/$parent/nodes/new/$before" as const;
   }
   if (parent) {
-    return "/team/$team/$flow/nodes/$parent/nodes/new" as const;
+    return "/app/$team/$flow/nodes/$parent/nodes/new" as const;
   }
   if (before) {
-    return "/team/$team/$flow/nodes/new/$before" as const;
+    return "/app/$team/$flow/nodes/new/$before" as const;
   }
-  return "/team/$team/$flow/nodes/new" as const;
+  return "/app/$team/$flow/nodes/new" as const;
 };
 
 const QUERY_GET_TEAM_BY_DOMAIN = gql`

@@ -22,7 +22,7 @@ interface Props {
 }
 
 const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
-  const { flow } = useParams({ from: "/_authenticated/team/$team/$flow" });
+  const { flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
   const [_flow, ...breadcrumbIds] = flow.split(",");
 
   const [childNodes, getNode, flowLayout] = useStore((state) => [

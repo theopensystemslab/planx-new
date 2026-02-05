@@ -1,5 +1,5 @@
 import { FetchResult, gql } from "@apollo/client";
-import { GET_USERS_FOR_TEAM_QUERY } from "routes/_authenticated/team.$team/members";
+import { GET_USERS_FOR_TEAM_QUERY } from "routes/_authenticated/app/$team/members";
 
 import { client } from "../../../../../lib/graphql";
 import { AddNewEditorFormValues } from "../types";

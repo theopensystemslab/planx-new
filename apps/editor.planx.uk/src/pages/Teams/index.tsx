@@ -6,7 +6,7 @@ import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useEffect, useMemo, useState } from "react";
-import { TeamSummary } from "routes/_authenticated/index";
+import { TeamSummary } from "routes/_authenticated/app/index";
 import { focusStyle } from "theme";
 import { InfoChip } from "ui/editor/InfoChip";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";
@@ -70,7 +70,7 @@ const Teams: React.FC<Props> = ({ teams }) => {
     teamsToRender.map((team) => {
       return (
         <StyledLink
-          to="/team/$team"
+          to="/app/$team"
           params={{ team: team.slug }}
           key={team.slug}
         >

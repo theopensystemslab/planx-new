@@ -10,56 +10,56 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SplatRouteImport } from './routes/$'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
-import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
-import { Route as AuthenticatedTutorialsRouteImport } from './routes/_authenticated/tutorials'
-import { Route as AuthenticatedResourcesRouteImport } from './routes/_authenticated/resources'
-import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
-import { Route as AuthenticatedGlobalSettingsRouteImport } from './routes/_authenticated/global-settings'
-import { Route as AuthenticatedAdminPanelRouteImport } from './routes/_authenticated/admin-panel'
 import { Route as authLogoutRouteImport } from './routes/(auth)/logout'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as PublicCustomDomainRouteRouteImport } from './routes/_public/_customDomain/route'
+import { Route as AuthenticatedAppRouteRouteImport } from './routes/_authenticated/app/route'
+import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app/index'
+import { Route as AuthenticatedAppTutorialsRouteImport } from './routes/_authenticated/app/tutorials'
+import { Route as AuthenticatedAppResourcesRouteImport } from './routes/_authenticated/app/resources'
+import { Route as AuthenticatedAppOnboardingRouteImport } from './routes/_authenticated/app/onboarding'
+import { Route as AuthenticatedAppGlobalSettingsRouteImport } from './routes/_authenticated/app/global-settings'
+import { Route as AuthenticatedAppAdminPanelRouteImport } from './routes/_authenticated/app/admin-panel'
 import { Route as PublicCustomDomainFlowRouteRouteImport } from './routes/_public/_customDomain/$flow/route'
-import { Route as AuthenticatedTeamTeamRouteRouteImport } from './routes/_authenticated/team.$team/route'
+import { Route as AuthenticatedAppTeamRouteRouteImport } from './routes/_authenticated/app/$team/route'
 import { Route as PublicCustomDomainFlowIndexRouteImport } from './routes/_public/_customDomain/$flow/index'
-import { Route as AuthenticatedTeamTeamIndexRouteImport } from './routes/_authenticated/team.$team/index'
+import { Route as AuthenticatedAppTeamIndexRouteImport } from './routes/_authenticated/app/$team/index'
 import { Route as PublicCustomDomainFlowViewApplicationRouteImport } from './routes/_public/_customDomain/$flow/view-application'
-import { Route as AuthenticatedTeamTeamSubscriptionRouteImport } from './routes/_authenticated/team.$team/subscription'
-import { Route as AuthenticatedTeamTeamSubmissionsRouteImport } from './routes/_authenticated/team.$team/submissions'
-import { Route as AuthenticatedTeamTeamMembersRouteImport } from './routes/_authenticated/team.$team/members'
-import { Route as AuthenticatedTeamTeamFeedbackRouteImport } from './routes/_authenticated/team.$team/feedback'
-import { Route as AuthenticatedTeamTeamDesignRouteImport } from './routes/_authenticated/team.$team/design'
+import { Route as AuthenticatedAppTeamSubscriptionRouteImport } from './routes/_authenticated/app/$team/subscription'
+import { Route as AuthenticatedAppTeamSubmissionsRouteImport } from './routes/_authenticated/app/$team/submissions'
+import { Route as AuthenticatedAppTeamMembersRouteImport } from './routes/_authenticated/app/$team/members'
+import { Route as AuthenticatedAppTeamFeedbackRouteImport } from './routes/_authenticated/app/$team/feedback'
+import { Route as AuthenticatedAppTeamDesignRouteImport } from './routes/_authenticated/app/$team/design'
 import { Route as PublicPlanXDomainTeamFlowRouteRouteImport } from './routes/_public/_planXDomain/$team/$flow/route'
 import { Route as PublicCustomDomainFlowPayRouteRouteImport } from './routes/_public/_customDomain/$flow/pay/route'
-import { Route as AuthenticatedTeamTeamSettingsRouteRouteImport } from './routes/_authenticated/team.$team/settings/route'
-import { Route as AuthenticatedTeamTeamFlowRouteRouteImport } from './routes/_authenticated/team.$team/$flow/route'
+import { Route as AuthenticatedAppTeamSettingsRouteRouteImport } from './routes/_authenticated/app/$team/settings/route'
+import { Route as AuthenticatedAppTeamFlowRouteRouteImport } from './routes/_authenticated/app/$team/$flow/route'
 import { Route as PublicCustomDomainFlowPayIndexRouteImport } from './routes/_public/_customDomain/$flow/pay/index'
-import { Route as AuthenticatedTeamTeamSettingsIndexRouteImport } from './routes/_authenticated/team.$team/settings/index'
+import { Route as AuthenticatedAppTeamSettingsIndexRouteImport } from './routes/_authenticated/app/$team/settings/index'
 import { Route as PublicCustomDomainFlowPayViewApplicationRouteImport } from './routes/_public/_customDomain/$flow/pay/view-application'
 import { Route as PublicCustomDomainFlowPayNotFoundRouteImport } from './routes/_public/_customDomain/$flow/pay/not-found'
 import { Route as PublicCustomDomainFlowPagesPageRouteImport } from './routes/_public/_customDomain/$flow/pages.$page'
-import { Route as AuthenticatedTeamTeamSubmissionSessionIdRouteImport } from './routes/_authenticated/team.$team/submission.$sessionId'
-import { Route as AuthenticatedTeamTeamSettingsIntegrationsRouteImport } from './routes/_authenticated/team.$team/settings/integrations'
-import { Route as AuthenticatedTeamTeamSettingsGisDataRouteImport } from './routes/_authenticated/team.$team/settings/gis-data'
-import { Route as AuthenticatedTeamTeamSettingsDesignRouteImport } from './routes/_authenticated/team.$team/settings/design'
-import { Route as AuthenticatedTeamTeamSettingsContactRouteImport } from './routes/_authenticated/team.$team/settings/contact'
-import { Route as AuthenticatedTeamTeamSettingsAdvancedRouteImport } from './routes/_authenticated/team.$team/settings/advanced'
-import { Route as AuthenticatedTeamTeamFlowSubmissionsRouteImport } from './routes/_authenticated/team.$team/$flow/submissions'
-import { Route as AuthenticatedTeamTeamFlowFeedbackRouteImport } from './routes/_authenticated/team.$team/$flow/feedback'
-import { Route as AuthenticatedTeamTeamFlowAboutRouteImport } from './routes/_authenticated/team.$team/$flow/about'
+import { Route as AuthenticatedAppTeamSubmissionSessionIdRouteImport } from './routes/_authenticated/app/$team/submission.$sessionId'
+import { Route as AuthenticatedAppTeamSettingsIntegrationsRouteImport } from './routes/_authenticated/app/$team/settings/integrations'
+import { Route as AuthenticatedAppTeamSettingsGisDataRouteImport } from './routes/_authenticated/app/$team/settings/gis-data'
+import { Route as AuthenticatedAppTeamSettingsDesignRouteImport } from './routes/_authenticated/app/$team/settings/design'
+import { Route as AuthenticatedAppTeamSettingsContactRouteImport } from './routes/_authenticated/app/$team/settings/contact'
+import { Route as AuthenticatedAppTeamSettingsAdvancedRouteImport } from './routes/_authenticated/app/$team/settings/advanced'
+import { Route as AuthenticatedAppTeamFlowSubmissionsRouteImport } from './routes/_authenticated/app/$team/$flow/submissions'
+import { Route as AuthenticatedAppTeamFlowFeedbackRouteImport } from './routes/_authenticated/app/$team/$flow/feedback'
+import { Route as AuthenticatedAppTeamFlowAboutRouteImport } from './routes/_authenticated/app/$team/$flow/about'
 import { Route as PublicPlanXDomainTeamFlowPublishedRouteRouteImport } from './routes/_public/_planXDomain/$team/$flow/published/route'
 import { Route as PublicPlanXDomainTeamFlowPreviewRouteRouteImport } from './routes/_public/_planXDomain/$team/$flow/preview/route'
 import { Route as PublicPlanXDomainTeamFlowPayRouteRouteImport } from './routes/_public/_planXDomain/$team/$flow/pay/route'
 import { Route as PublicPlanXDomainTeamFlowDraftRouteRouteImport } from './routes/_public/_planXDomain/$team/$flow/draft/route'
-import { Route as AuthenticatedTeamTeamFlowSettingsRouteRouteImport } from './routes/_authenticated/team.$team/$flow/settings/route'
-import { Route as AuthenticatedTeamTeamFlowNodesRouteRouteImport } from './routes/_authenticated/team.$team/$flow/nodes/route'
+import { Route as AuthenticatedAppTeamFlowSettingsRouteRouteImport } from './routes/_authenticated/app/$team/$flow/settings/route'
+import { Route as AuthenticatedAppTeamFlowNodesRouteRouteImport } from './routes/_authenticated/app/$team/$flow/nodes/route'
 import { Route as PublicPlanXDomainTeamFlowPublishedIndexRouteImport } from './routes/_public/_planXDomain/$team/$flow/published/index'
 import { Route as PublicPlanXDomainTeamFlowPreviewIndexRouteImport } from './routes/_public/_planXDomain/$team/$flow/preview/index'
 import { Route as PublicPlanXDomainTeamFlowPayIndexRouteImport } from './routes/_public/_planXDomain/$team/$flow/pay/index'
 import { Route as PublicPlanXDomainTeamFlowDraftIndexRouteImport } from './routes/_public/_planXDomain/$team/$flow/draft/index'
 import { Route as PublicCustomDomainFlowPayInviteIndexRouteImport } from './routes/_public/_customDomain/$flow/pay/invite/index'
-import { Route as AuthenticatedTeamTeamFlowSettingsIndexRouteImport } from './routes/_authenticated/team.$team/$flow/settings/index'
+import { Route as AuthenticatedAppTeamFlowSettingsIndexRouteImport } from './routes/_authenticated/app/$team/$flow/settings/index'
 import { Route as PublicPlanXDomainTeamFlowPublishedViewApplicationRouteImport } from './routes/_public/_planXDomain/$team/$flow/published/view-application'
 import { Route as PublicPlanXDomainTeamFlowPreviewViewApplicationRouteImport } from './routes/_public/_planXDomain/$team/$flow/preview/view-application'
 import { Route as PublicPlanXDomainTeamFlowPayViewApplicationRouteImport } from './routes/_public/_planXDomain/$team/$flow/pay/view-application'
@@ -68,68 +68,33 @@ import { Route as PublicPlanXDomainTeamFlowDraftViewApplicationRouteImport } fro
 import { Route as PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRouteImport } from './routes/_public/_planXDomain/$team/$flow/$sessionId/download-application'
 import { Route as PublicCustomDomainFlowPayPagesPageRouteImport } from './routes/_public/_customDomain/$flow/pay/pages.$page'
 import { Route as PublicCustomDomainFlowPayInviteFailedRouteImport } from './routes/_public/_customDomain/$flow/pay/invite/failed'
-import { Route as AuthenticatedTeamTeamFlowSettingsVisibilityRouteImport } from './routes/_authenticated/team.$team/$flow/settings/visibility'
-import { Route as AuthenticatedTeamTeamFlowSettingsTemplatesRouteImport } from './routes/_authenticated/team.$team/$flow/settings/templates'
-import { Route as AuthenticatedTeamTeamFlowSettingsLegalDisclaimerRouteImport } from './routes/_authenticated/team.$team/$flow/settings/legal-disclaimer'
-import { Route as AuthenticatedTeamTeamFlowSettingsAboutRouteImport } from './routes/_authenticated/team.$team/$flow/settings/about'
+import { Route as AuthenticatedAppTeamFlowSettingsVisibilityRouteImport } from './routes/_authenticated/app/$team/$flow/settings/visibility'
+import { Route as AuthenticatedAppTeamFlowSettingsTemplatesRouteImport } from './routes/_authenticated/app/$team/$flow/settings/templates'
+import { Route as AuthenticatedAppTeamFlowSettingsLegalDisclaimerRouteImport } from './routes/_authenticated/app/$team/$flow/settings/legal-disclaimer'
+import { Route as AuthenticatedAppTeamFlowSettingsAboutRouteImport } from './routes/_authenticated/app/$team/$flow/settings/about'
 import { Route as PublicPlanXDomainTeamFlowPayInviteIndexRouteImport } from './routes/_public/_planXDomain/$team/$flow/pay/invite/index'
-import { Route as AuthenticatedTeamTeamFlowNodesNewIndexRouteImport } from './routes/_authenticated/team.$team/$flow/nodes/new.index'
+import { Route as AuthenticatedAppTeamFlowNodesNewIndexRouteImport } from './routes/_authenticated/app/$team/$flow/nodes/new.index'
 import { Route as PublicPlanXDomainTeamFlowPublishedPagesPageRouteImport } from './routes/_public/_planXDomain/$team/$flow/published/pages.$page'
 import { Route as PublicPlanXDomainTeamFlowPreviewPagesPageRouteImport } from './routes/_public/_planXDomain/$team/$flow/preview/pages.$page'
 import { Route as PublicPlanXDomainTeamFlowPayPagesPageRouteImport } from './routes/_public/_planXDomain/$team/$flow/pay/pages.$page'
 import { Route as PublicPlanXDomainTeamFlowPayInviteFailedRouteImport } from './routes/_public/_planXDomain/$team/$flow/pay/invite/failed'
 import { Route as PublicPlanXDomainTeamFlowDraftPagesPageRouteImport } from './routes/_public/_planXDomain/$team/$flow/draft/pages.$page'
 import { Route as PublicCustomDomainFlowPayInvitePagesPageRouteImport } from './routes/_public/_customDomain/$flow/pay/invite/pages.$page'
-import { Route as AuthenticatedTeamTeamFlowSettingsPagesPrivacyRouteImport } from './routes/_authenticated/team.$team/$flow/settings/pages.privacy'
-import { Route as AuthenticatedTeamTeamFlowSettingsPagesHelpRouteImport } from './routes/_authenticated/team.$team/$flow/settings/pages.help'
-import { Route as AuthenticatedTeamTeamFlowNodesNewBeforeRouteImport } from './routes/_authenticated/team.$team/$flow/nodes/new.$before'
-import { Route as AuthenticatedTeamTeamFlowNodesIdEditRouteImport } from './routes/_authenticated/team.$team/$flow/nodes/$id.edit'
+import { Route as AuthenticatedAppTeamFlowSettingsPagesPrivacyRouteImport } from './routes/_authenticated/app/$team/$flow/settings/pages.privacy'
+import { Route as AuthenticatedAppTeamFlowSettingsPagesHelpRouteImport } from './routes/_authenticated/app/$team/$flow/settings/pages.help'
+import { Route as AuthenticatedAppTeamFlowNodesNewBeforeRouteImport } from './routes/_authenticated/app/$team/$flow/nodes/new.$before'
+import { Route as AuthenticatedAppTeamFlowNodesIdEditRouteImport } from './routes/_authenticated/app/$team/$flow/nodes/$id.edit'
 import { Route as PublicPlanXDomainTeamFlowPayInvitePagesPageRouteImport } from './routes/_public/_planXDomain/$team/$flow/pay/invite/pages.$page'
-import { Route as AuthenticatedTeamTeamFlowNodesIdEditBeforeRouteImport } from './routes/_authenticated/team.$team/$flow/nodes/$id.edit.$before'
-import { Route as AuthenticatedTeamTeamFlowNodesParentNodesNewIndexRouteImport } from './routes/_authenticated/team.$team/$flow/nodes/$parent.nodes.new.index'
-import { Route as AuthenticatedTeamTeamFlowNodesParentNodesNewBeforeRouteImport } from './routes/_authenticated/team.$team/$flow/nodes/$parent.nodes.new.$before'
-import { Route as AuthenticatedTeamTeamFlowNodesParentNodesIdEditRouteImport } from './routes/_authenticated/team.$team/$flow/nodes/$parent.nodes.$id.edit'
-import { Route as AuthenticatedTeamTeamFlowNodesParentNodesIdEditBeforeRouteImport } from './routes/_authenticated/team.$team/$flow/nodes/$parent.nodes.$id.edit.$before'
+import { Route as AuthenticatedAppTeamFlowNodesIdEditBeforeRouteImport } from './routes/_authenticated/app/$team/$flow/nodes/$id.edit.$before'
+import { Route as AuthenticatedAppTeamFlowNodesParentNodesNewIndexRouteImport } from './routes/_authenticated/app/$team/$flow/nodes/$parent.nodes.new.index'
+import { Route as AuthenticatedAppTeamFlowNodesParentNodesNewBeforeRouteImport } from './routes/_authenticated/app/$team/$flow/nodes/$parent.nodes.new.$before'
+import { Route as AuthenticatedAppTeamFlowNodesParentNodesIdEditRouteImport } from './routes/_authenticated/app/$team/$flow/nodes/$parent.nodes.$id.edit'
+import { Route as AuthenticatedAppTeamFlowNodesParentNodesIdEditBeforeRouteImport } from './routes/_authenticated/app/$team/$flow/nodes/$parent.nodes.$id.edit.$before'
 
 const SplatRoute = SplatRouteImport.update({
   id: '/$',
   path: '/$',
   getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedTutorialsRoute = AuthenticatedTutorialsRouteImport.update({
-  id: '/tutorials',
-  path: '/tutorials',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedResourcesRoute = AuthenticatedResourcesRouteImport.update({
-  id: '/resources',
-  path: '/resources',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
-  id: '/onboarding',
-  path: '/onboarding',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedGlobalSettingsRoute =
-  AuthenticatedGlobalSettingsRouteImport.update({
-    id: '/global-settings',
-    path: '/global-settings',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedAdminPanelRoute = AuthenticatedAdminPanelRouteImport.update({
-  id: '/admin-panel',
-  path: '/admin-panel',
-  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const authLogoutRoute = authLogoutRouteImport.update({
   id: '/(auth)/logout',
@@ -145,17 +110,57 @@ const PublicCustomDomainRouteRoute = PublicCustomDomainRouteRouteImport.update({
   id: '/_public/_customDomain',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAppRouteRoute = AuthenticatedAppRouteRouteImport.update({
+  id: '/_authenticated/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAppIndexRoute = AuthenticatedAppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAppRouteRoute,
+} as any)
+const AuthenticatedAppTutorialsRoute =
+  AuthenticatedAppTutorialsRouteImport.update({
+    id: '/tutorials',
+    path: '/tutorials',
+    getParentRoute: () => AuthenticatedAppRouteRoute,
+  } as any)
+const AuthenticatedAppResourcesRoute =
+  AuthenticatedAppResourcesRouteImport.update({
+    id: '/resources',
+    path: '/resources',
+    getParentRoute: () => AuthenticatedAppRouteRoute,
+  } as any)
+const AuthenticatedAppOnboardingRoute =
+  AuthenticatedAppOnboardingRouteImport.update({
+    id: '/onboarding',
+    path: '/onboarding',
+    getParentRoute: () => AuthenticatedAppRouteRoute,
+  } as any)
+const AuthenticatedAppGlobalSettingsRoute =
+  AuthenticatedAppGlobalSettingsRouteImport.update({
+    id: '/global-settings',
+    path: '/global-settings',
+    getParentRoute: () => AuthenticatedAppRouteRoute,
+  } as any)
+const AuthenticatedAppAdminPanelRoute =
+  AuthenticatedAppAdminPanelRouteImport.update({
+    id: '/admin-panel',
+    path: '/admin-panel',
+    getParentRoute: () => AuthenticatedAppRouteRoute,
+  } as any)
 const PublicCustomDomainFlowRouteRoute =
   PublicCustomDomainFlowRouteRouteImport.update({
     id: '/$flow',
     path: '/$flow',
     getParentRoute: () => PublicCustomDomainRouteRoute,
   } as any)
-const AuthenticatedTeamTeamRouteRoute =
-  AuthenticatedTeamTeamRouteRouteImport.update({
-    id: '/team/$team',
-    path: '/team/$team',
-    getParentRoute: () => AuthenticatedRouteRoute,
+const AuthenticatedAppTeamRouteRoute =
+  AuthenticatedAppTeamRouteRouteImport.update({
+    id: '/$team',
+    path: '/$team',
+    getParentRoute: () => AuthenticatedAppRouteRoute,
   } as any)
 const PublicCustomDomainFlowIndexRoute =
   PublicCustomDomainFlowIndexRouteImport.update({
@@ -163,11 +168,11 @@ const PublicCustomDomainFlowIndexRoute =
     path: '/',
     getParentRoute: () => PublicCustomDomainFlowRouteRoute,
   } as any)
-const AuthenticatedTeamTeamIndexRoute =
-  AuthenticatedTeamTeamIndexRouteImport.update({
+const AuthenticatedAppTeamIndexRoute =
+  AuthenticatedAppTeamIndexRouteImport.update({
     id: '/',
     path: '/',
-    getParentRoute: () => AuthenticatedTeamTeamRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamRouteRoute,
   } as any)
 const PublicCustomDomainFlowViewApplicationRoute =
   PublicCustomDomainFlowViewApplicationRouteImport.update({
@@ -175,35 +180,35 @@ const PublicCustomDomainFlowViewApplicationRoute =
     path: '/view-application',
     getParentRoute: () => PublicCustomDomainFlowRouteRoute,
   } as any)
-const AuthenticatedTeamTeamSubscriptionRoute =
-  AuthenticatedTeamTeamSubscriptionRouteImport.update({
+const AuthenticatedAppTeamSubscriptionRoute =
+  AuthenticatedAppTeamSubscriptionRouteImport.update({
     id: '/subscription',
     path: '/subscription',
-    getParentRoute: () => AuthenticatedTeamTeamRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamRouteRoute,
   } as any)
-const AuthenticatedTeamTeamSubmissionsRoute =
-  AuthenticatedTeamTeamSubmissionsRouteImport.update({
+const AuthenticatedAppTeamSubmissionsRoute =
+  AuthenticatedAppTeamSubmissionsRouteImport.update({
     id: '/submissions',
     path: '/submissions',
-    getParentRoute: () => AuthenticatedTeamTeamRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamRouteRoute,
   } as any)
-const AuthenticatedTeamTeamMembersRoute =
-  AuthenticatedTeamTeamMembersRouteImport.update({
+const AuthenticatedAppTeamMembersRoute =
+  AuthenticatedAppTeamMembersRouteImport.update({
     id: '/members',
     path: '/members',
-    getParentRoute: () => AuthenticatedTeamTeamRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamRouteRoute,
   } as any)
-const AuthenticatedTeamTeamFeedbackRoute =
-  AuthenticatedTeamTeamFeedbackRouteImport.update({
+const AuthenticatedAppTeamFeedbackRoute =
+  AuthenticatedAppTeamFeedbackRouteImport.update({
     id: '/feedback',
     path: '/feedback',
-    getParentRoute: () => AuthenticatedTeamTeamRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamRouteRoute,
   } as any)
-const AuthenticatedTeamTeamDesignRoute =
-  AuthenticatedTeamTeamDesignRouteImport.update({
+const AuthenticatedAppTeamDesignRoute =
+  AuthenticatedAppTeamDesignRouteImport.update({
     id: '/design',
     path: '/design',
-    getParentRoute: () => AuthenticatedTeamTeamRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamRouteRoute,
   } as any)
 const PublicPlanXDomainTeamFlowRouteRoute =
   PublicPlanXDomainTeamFlowRouteRouteImport.update({
@@ -217,17 +222,17 @@ const PublicCustomDomainFlowPayRouteRoute =
     path: '/pay',
     getParentRoute: () => PublicCustomDomainFlowRouteRoute,
   } as any)
-const AuthenticatedTeamTeamSettingsRouteRoute =
-  AuthenticatedTeamTeamSettingsRouteRouteImport.update({
+const AuthenticatedAppTeamSettingsRouteRoute =
+  AuthenticatedAppTeamSettingsRouteRouteImport.update({
     id: '/settings',
     path: '/settings',
-    getParentRoute: () => AuthenticatedTeamTeamRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamRouteRoute,
   } as any)
-const AuthenticatedTeamTeamFlowRouteRoute =
-  AuthenticatedTeamTeamFlowRouteRouteImport.update({
+const AuthenticatedAppTeamFlowRouteRoute =
+  AuthenticatedAppTeamFlowRouteRouteImport.update({
     id: '/$flow',
     path: '/$flow',
-    getParentRoute: () => AuthenticatedTeamTeamRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamRouteRoute,
   } as any)
 const PublicCustomDomainFlowPayIndexRoute =
   PublicCustomDomainFlowPayIndexRouteImport.update({
@@ -235,11 +240,11 @@ const PublicCustomDomainFlowPayIndexRoute =
     path: '/',
     getParentRoute: () => PublicCustomDomainFlowPayRouteRoute,
   } as any)
-const AuthenticatedTeamTeamSettingsIndexRoute =
-  AuthenticatedTeamTeamSettingsIndexRouteImport.update({
+const AuthenticatedAppTeamSettingsIndexRoute =
+  AuthenticatedAppTeamSettingsIndexRouteImport.update({
     id: '/',
     path: '/',
-    getParentRoute: () => AuthenticatedTeamTeamSettingsRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamSettingsRouteRoute,
   } as any)
 const PublicCustomDomainFlowPayViewApplicationRoute =
   PublicCustomDomainFlowPayViewApplicationRouteImport.update({
@@ -259,59 +264,59 @@ const PublicCustomDomainFlowPagesPageRoute =
     path: '/pages/$page',
     getParentRoute: () => PublicCustomDomainFlowRouteRoute,
   } as any)
-const AuthenticatedTeamTeamSubmissionSessionIdRoute =
-  AuthenticatedTeamTeamSubmissionSessionIdRouteImport.update({
+const AuthenticatedAppTeamSubmissionSessionIdRoute =
+  AuthenticatedAppTeamSubmissionSessionIdRouteImport.update({
     id: '/submission/$sessionId',
     path: '/submission/$sessionId',
-    getParentRoute: () => AuthenticatedTeamTeamRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamRouteRoute,
   } as any)
-const AuthenticatedTeamTeamSettingsIntegrationsRoute =
-  AuthenticatedTeamTeamSettingsIntegrationsRouteImport.update({
+const AuthenticatedAppTeamSettingsIntegrationsRoute =
+  AuthenticatedAppTeamSettingsIntegrationsRouteImport.update({
     id: '/integrations',
     path: '/integrations',
-    getParentRoute: () => AuthenticatedTeamTeamSettingsRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamSettingsRouteRoute,
   } as any)
-const AuthenticatedTeamTeamSettingsGisDataRoute =
-  AuthenticatedTeamTeamSettingsGisDataRouteImport.update({
+const AuthenticatedAppTeamSettingsGisDataRoute =
+  AuthenticatedAppTeamSettingsGisDataRouteImport.update({
     id: '/gis-data',
     path: '/gis-data',
-    getParentRoute: () => AuthenticatedTeamTeamSettingsRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamSettingsRouteRoute,
   } as any)
-const AuthenticatedTeamTeamSettingsDesignRoute =
-  AuthenticatedTeamTeamSettingsDesignRouteImport.update({
+const AuthenticatedAppTeamSettingsDesignRoute =
+  AuthenticatedAppTeamSettingsDesignRouteImport.update({
     id: '/design',
     path: '/design',
-    getParentRoute: () => AuthenticatedTeamTeamSettingsRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamSettingsRouteRoute,
   } as any)
-const AuthenticatedTeamTeamSettingsContactRoute =
-  AuthenticatedTeamTeamSettingsContactRouteImport.update({
+const AuthenticatedAppTeamSettingsContactRoute =
+  AuthenticatedAppTeamSettingsContactRouteImport.update({
     id: '/contact',
     path: '/contact',
-    getParentRoute: () => AuthenticatedTeamTeamSettingsRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamSettingsRouteRoute,
   } as any)
-const AuthenticatedTeamTeamSettingsAdvancedRoute =
-  AuthenticatedTeamTeamSettingsAdvancedRouteImport.update({
+const AuthenticatedAppTeamSettingsAdvancedRoute =
+  AuthenticatedAppTeamSettingsAdvancedRouteImport.update({
     id: '/advanced',
     path: '/advanced',
-    getParentRoute: () => AuthenticatedTeamTeamSettingsRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamSettingsRouteRoute,
   } as any)
-const AuthenticatedTeamTeamFlowSubmissionsRoute =
-  AuthenticatedTeamTeamFlowSubmissionsRouteImport.update({
+const AuthenticatedAppTeamFlowSubmissionsRoute =
+  AuthenticatedAppTeamFlowSubmissionsRouteImport.update({
     id: '/submissions',
     path: '/submissions',
-    getParentRoute: () => AuthenticatedTeamTeamFlowRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamFlowRouteRoute,
   } as any)
-const AuthenticatedTeamTeamFlowFeedbackRoute =
-  AuthenticatedTeamTeamFlowFeedbackRouteImport.update({
+const AuthenticatedAppTeamFlowFeedbackRoute =
+  AuthenticatedAppTeamFlowFeedbackRouteImport.update({
     id: '/feedback',
     path: '/feedback',
-    getParentRoute: () => AuthenticatedTeamTeamFlowRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamFlowRouteRoute,
   } as any)
-const AuthenticatedTeamTeamFlowAboutRoute =
-  AuthenticatedTeamTeamFlowAboutRouteImport.update({
+const AuthenticatedAppTeamFlowAboutRoute =
+  AuthenticatedAppTeamFlowAboutRouteImport.update({
     id: '/about',
     path: '/about',
-    getParentRoute: () => AuthenticatedTeamTeamFlowRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamFlowRouteRoute,
   } as any)
 const PublicPlanXDomainTeamFlowPublishedRouteRoute =
   PublicPlanXDomainTeamFlowPublishedRouteRouteImport.update({
@@ -337,17 +342,17 @@ const PublicPlanXDomainTeamFlowDraftRouteRoute =
     path: '/draft',
     getParentRoute: () => PublicPlanXDomainTeamFlowRouteRoute,
   } as any)
-const AuthenticatedTeamTeamFlowSettingsRouteRoute =
-  AuthenticatedTeamTeamFlowSettingsRouteRouteImport.update({
+const AuthenticatedAppTeamFlowSettingsRouteRoute =
+  AuthenticatedAppTeamFlowSettingsRouteRouteImport.update({
     id: '/settings',
     path: '/settings',
-    getParentRoute: () => AuthenticatedTeamTeamFlowRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamFlowRouteRoute,
   } as any)
-const AuthenticatedTeamTeamFlowNodesRouteRoute =
-  AuthenticatedTeamTeamFlowNodesRouteRouteImport.update({
+const AuthenticatedAppTeamFlowNodesRouteRoute =
+  AuthenticatedAppTeamFlowNodesRouteRouteImport.update({
     id: '/nodes',
     path: '/nodes',
-    getParentRoute: () => AuthenticatedTeamTeamFlowRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamFlowRouteRoute,
   } as any)
 const PublicPlanXDomainTeamFlowPublishedIndexRoute =
   PublicPlanXDomainTeamFlowPublishedIndexRouteImport.update({
@@ -379,11 +384,11 @@ const PublicCustomDomainFlowPayInviteIndexRoute =
     path: '/invite/',
     getParentRoute: () => PublicCustomDomainFlowPayRouteRoute,
   } as any)
-const AuthenticatedTeamTeamFlowSettingsIndexRoute =
-  AuthenticatedTeamTeamFlowSettingsIndexRouteImport.update({
+const AuthenticatedAppTeamFlowSettingsIndexRoute =
+  AuthenticatedAppTeamFlowSettingsIndexRouteImport.update({
     id: '/',
     path: '/',
-    getParentRoute: () => AuthenticatedTeamTeamFlowSettingsRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamFlowSettingsRouteRoute,
   } as any)
 const PublicPlanXDomainTeamFlowPublishedViewApplicationRoute =
   PublicPlanXDomainTeamFlowPublishedViewApplicationRouteImport.update({
@@ -433,29 +438,29 @@ const PublicCustomDomainFlowPayInviteFailedRoute =
     path: '/invite/failed',
     getParentRoute: () => PublicCustomDomainFlowPayRouteRoute,
   } as any)
-const AuthenticatedTeamTeamFlowSettingsVisibilityRoute =
-  AuthenticatedTeamTeamFlowSettingsVisibilityRouteImport.update({
+const AuthenticatedAppTeamFlowSettingsVisibilityRoute =
+  AuthenticatedAppTeamFlowSettingsVisibilityRouteImport.update({
     id: '/visibility',
     path: '/visibility',
-    getParentRoute: () => AuthenticatedTeamTeamFlowSettingsRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamFlowSettingsRouteRoute,
   } as any)
-const AuthenticatedTeamTeamFlowSettingsTemplatesRoute =
-  AuthenticatedTeamTeamFlowSettingsTemplatesRouteImport.update({
+const AuthenticatedAppTeamFlowSettingsTemplatesRoute =
+  AuthenticatedAppTeamFlowSettingsTemplatesRouteImport.update({
     id: '/templates',
     path: '/templates',
-    getParentRoute: () => AuthenticatedTeamTeamFlowSettingsRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamFlowSettingsRouteRoute,
   } as any)
-const AuthenticatedTeamTeamFlowSettingsLegalDisclaimerRoute =
-  AuthenticatedTeamTeamFlowSettingsLegalDisclaimerRouteImport.update({
+const AuthenticatedAppTeamFlowSettingsLegalDisclaimerRoute =
+  AuthenticatedAppTeamFlowSettingsLegalDisclaimerRouteImport.update({
     id: '/legal-disclaimer',
     path: '/legal-disclaimer',
-    getParentRoute: () => AuthenticatedTeamTeamFlowSettingsRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamFlowSettingsRouteRoute,
   } as any)
-const AuthenticatedTeamTeamFlowSettingsAboutRoute =
-  AuthenticatedTeamTeamFlowSettingsAboutRouteImport.update({
+const AuthenticatedAppTeamFlowSettingsAboutRoute =
+  AuthenticatedAppTeamFlowSettingsAboutRouteImport.update({
     id: '/about',
     path: '/about',
-    getParentRoute: () => AuthenticatedTeamTeamFlowSettingsRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamFlowSettingsRouteRoute,
   } as any)
 const PublicPlanXDomainTeamFlowPayInviteIndexRoute =
   PublicPlanXDomainTeamFlowPayInviteIndexRouteImport.update({
@@ -463,11 +468,11 @@ const PublicPlanXDomainTeamFlowPayInviteIndexRoute =
     path: '/invite/',
     getParentRoute: () => PublicPlanXDomainTeamFlowPayRouteRoute,
   } as any)
-const AuthenticatedTeamTeamFlowNodesNewIndexRoute =
-  AuthenticatedTeamTeamFlowNodesNewIndexRouteImport.update({
+const AuthenticatedAppTeamFlowNodesNewIndexRoute =
+  AuthenticatedAppTeamFlowNodesNewIndexRouteImport.update({
     id: '/new/',
     path: '/new/',
-    getParentRoute: () => AuthenticatedTeamTeamFlowNodesRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamFlowNodesRouteRoute,
   } as any)
 const PublicPlanXDomainTeamFlowPublishedPagesPageRoute =
   PublicPlanXDomainTeamFlowPublishedPagesPageRouteImport.update({
@@ -505,29 +510,29 @@ const PublicCustomDomainFlowPayInvitePagesPageRoute =
     path: '/invite/pages/$page',
     getParentRoute: () => PublicCustomDomainFlowPayRouteRoute,
   } as any)
-const AuthenticatedTeamTeamFlowSettingsPagesPrivacyRoute =
-  AuthenticatedTeamTeamFlowSettingsPagesPrivacyRouteImport.update({
+const AuthenticatedAppTeamFlowSettingsPagesPrivacyRoute =
+  AuthenticatedAppTeamFlowSettingsPagesPrivacyRouteImport.update({
     id: '/pages/privacy',
     path: '/pages/privacy',
-    getParentRoute: () => AuthenticatedTeamTeamFlowSettingsRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamFlowSettingsRouteRoute,
   } as any)
-const AuthenticatedTeamTeamFlowSettingsPagesHelpRoute =
-  AuthenticatedTeamTeamFlowSettingsPagesHelpRouteImport.update({
+const AuthenticatedAppTeamFlowSettingsPagesHelpRoute =
+  AuthenticatedAppTeamFlowSettingsPagesHelpRouteImport.update({
     id: '/pages/help',
     path: '/pages/help',
-    getParentRoute: () => AuthenticatedTeamTeamFlowSettingsRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamFlowSettingsRouteRoute,
   } as any)
-const AuthenticatedTeamTeamFlowNodesNewBeforeRoute =
-  AuthenticatedTeamTeamFlowNodesNewBeforeRouteImport.update({
+const AuthenticatedAppTeamFlowNodesNewBeforeRoute =
+  AuthenticatedAppTeamFlowNodesNewBeforeRouteImport.update({
     id: '/new/$before',
     path: '/new/$before',
-    getParentRoute: () => AuthenticatedTeamTeamFlowNodesRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamFlowNodesRouteRoute,
   } as any)
-const AuthenticatedTeamTeamFlowNodesIdEditRoute =
-  AuthenticatedTeamTeamFlowNodesIdEditRouteImport.update({
+const AuthenticatedAppTeamFlowNodesIdEditRoute =
+  AuthenticatedAppTeamFlowNodesIdEditRouteImport.update({
     id: '/$id/edit',
     path: '/$id/edit',
-    getParentRoute: () => AuthenticatedTeamTeamFlowNodesRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamFlowNodesRouteRoute,
   } as any)
 const PublicPlanXDomainTeamFlowPayInvitePagesPageRoute =
   PublicPlanXDomainTeamFlowPayInvitePagesPageRouteImport.update({
@@ -535,85 +540,86 @@ const PublicPlanXDomainTeamFlowPayInvitePagesPageRoute =
     path: '/invite/pages/$page',
     getParentRoute: () => PublicPlanXDomainTeamFlowPayRouteRoute,
   } as any)
-const AuthenticatedTeamTeamFlowNodesIdEditBeforeRoute =
-  AuthenticatedTeamTeamFlowNodesIdEditBeforeRouteImport.update({
+const AuthenticatedAppTeamFlowNodesIdEditBeforeRoute =
+  AuthenticatedAppTeamFlowNodesIdEditBeforeRouteImport.update({
     id: '/$before',
     path: '/$before',
-    getParentRoute: () => AuthenticatedTeamTeamFlowNodesIdEditRoute,
+    getParentRoute: () => AuthenticatedAppTeamFlowNodesIdEditRoute,
   } as any)
-const AuthenticatedTeamTeamFlowNodesParentNodesNewIndexRoute =
-  AuthenticatedTeamTeamFlowNodesParentNodesNewIndexRouteImport.update({
+const AuthenticatedAppTeamFlowNodesParentNodesNewIndexRoute =
+  AuthenticatedAppTeamFlowNodesParentNodesNewIndexRouteImport.update({
     id: '/$parent/nodes/new/',
     path: '/$parent/nodes/new/',
-    getParentRoute: () => AuthenticatedTeamTeamFlowNodesRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamFlowNodesRouteRoute,
   } as any)
-const AuthenticatedTeamTeamFlowNodesParentNodesNewBeforeRoute =
-  AuthenticatedTeamTeamFlowNodesParentNodesNewBeforeRouteImport.update({
+const AuthenticatedAppTeamFlowNodesParentNodesNewBeforeRoute =
+  AuthenticatedAppTeamFlowNodesParentNodesNewBeforeRouteImport.update({
     id: '/$parent/nodes/new/$before',
     path: '/$parent/nodes/new/$before',
-    getParentRoute: () => AuthenticatedTeamTeamFlowNodesRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamFlowNodesRouteRoute,
   } as any)
-const AuthenticatedTeamTeamFlowNodesParentNodesIdEditRoute =
-  AuthenticatedTeamTeamFlowNodesParentNodesIdEditRouteImport.update({
+const AuthenticatedAppTeamFlowNodesParentNodesIdEditRoute =
+  AuthenticatedAppTeamFlowNodesParentNodesIdEditRouteImport.update({
     id: '/$parent/nodes/$id/edit',
     path: '/$parent/nodes/$id/edit',
-    getParentRoute: () => AuthenticatedTeamTeamFlowNodesRouteRoute,
+    getParentRoute: () => AuthenticatedAppTeamFlowNodesRouteRoute,
   } as any)
-const AuthenticatedTeamTeamFlowNodesParentNodesIdEditBeforeRoute =
-  AuthenticatedTeamTeamFlowNodesParentNodesIdEditBeforeRouteImport.update({
+const AuthenticatedAppTeamFlowNodesParentNodesIdEditBeforeRoute =
+  AuthenticatedAppTeamFlowNodesParentNodesIdEditBeforeRouteImport.update({
     id: '/$before',
     path: '/$before',
-    getParentRoute: () => AuthenticatedTeamTeamFlowNodesParentNodesIdEditRoute,
+    getParentRoute: () => AuthenticatedAppTeamFlowNodesParentNodesIdEditRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/$': typeof SplatRoute
+  '/app': typeof AuthenticatedAppRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
-  '/admin-panel': typeof AuthenticatedAdminPanelRoute
-  '/global-settings': typeof AuthenticatedGlobalSettingsRoute
-  '/onboarding': typeof AuthenticatedOnboardingRoute
-  '/resources': typeof AuthenticatedResourcesRoute
-  '/tutorials': typeof AuthenticatedTutorialsRoute
-  '/': typeof AuthenticatedIndexRoute
-  '/team/$team': typeof AuthenticatedTeamTeamRouteRouteWithChildren
+  '/app/$team': typeof AuthenticatedAppTeamRouteRouteWithChildren
   '/$flow': typeof PublicCustomDomainFlowRouteRouteWithChildren
-  '/team/$team/$flow': typeof AuthenticatedTeamTeamFlowRouteRouteWithChildren
-  '/team/$team/settings': typeof AuthenticatedTeamTeamSettingsRouteRouteWithChildren
+  '/app/admin-panel': typeof AuthenticatedAppAdminPanelRoute
+  '/app/global-settings': typeof AuthenticatedAppGlobalSettingsRoute
+  '/app/onboarding': typeof AuthenticatedAppOnboardingRoute
+  '/app/resources': typeof AuthenticatedAppResourcesRoute
+  '/app/tutorials': typeof AuthenticatedAppTutorialsRoute
+  '/app/': typeof AuthenticatedAppIndexRoute
+  '/app/$team/$flow': typeof AuthenticatedAppTeamFlowRouteRouteWithChildren
+  '/app/$team/settings': typeof AuthenticatedAppTeamSettingsRouteRouteWithChildren
   '/$flow/pay': typeof PublicCustomDomainFlowPayRouteRouteWithChildren
   '/$team/$flow': typeof PublicPlanXDomainTeamFlowRouteRouteWithChildren
-  '/team/$team/design': typeof AuthenticatedTeamTeamDesignRoute
-  '/team/$team/feedback': typeof AuthenticatedTeamTeamFeedbackRoute
-  '/team/$team/members': typeof AuthenticatedTeamTeamMembersRoute
-  '/team/$team/submissions': typeof AuthenticatedTeamTeamSubmissionsRoute
-  '/team/$team/subscription': typeof AuthenticatedTeamTeamSubscriptionRoute
+  '/app/$team/design': typeof AuthenticatedAppTeamDesignRoute
+  '/app/$team/feedback': typeof AuthenticatedAppTeamFeedbackRoute
+  '/app/$team/members': typeof AuthenticatedAppTeamMembersRoute
+  '/app/$team/submissions': typeof AuthenticatedAppTeamSubmissionsRoute
+  '/app/$team/subscription': typeof AuthenticatedAppTeamSubscriptionRoute
   '/$flow/view-application': typeof PublicCustomDomainFlowViewApplicationRoute
-  '/team/$team/': typeof AuthenticatedTeamTeamIndexRoute
+  '/app/$team/': typeof AuthenticatedAppTeamIndexRoute
   '/$flow/': typeof PublicCustomDomainFlowIndexRoute
-  '/team/$team/$flow/nodes': typeof AuthenticatedTeamTeamFlowNodesRouteRouteWithChildren
-  '/team/$team/$flow/settings': typeof AuthenticatedTeamTeamFlowSettingsRouteRouteWithChildren
+  '/app/$team/$flow/nodes': typeof AuthenticatedAppTeamFlowNodesRouteRouteWithChildren
+  '/app/$team/$flow/settings': typeof AuthenticatedAppTeamFlowSettingsRouteRouteWithChildren
   '/$team/$flow/draft': typeof PublicPlanXDomainTeamFlowDraftRouteRouteWithChildren
   '/$team/$flow/pay': typeof PublicPlanXDomainTeamFlowPayRouteRouteWithChildren
   '/$team/$flow/preview': typeof PublicPlanXDomainTeamFlowPreviewRouteRouteWithChildren
   '/$team/$flow/published': typeof PublicPlanXDomainTeamFlowPublishedRouteRouteWithChildren
-  '/team/$team/$flow/about': typeof AuthenticatedTeamTeamFlowAboutRoute
-  '/team/$team/$flow/feedback': typeof AuthenticatedTeamTeamFlowFeedbackRoute
-  '/team/$team/$flow/submissions': typeof AuthenticatedTeamTeamFlowSubmissionsRoute
-  '/team/$team/settings/advanced': typeof AuthenticatedTeamTeamSettingsAdvancedRoute
-  '/team/$team/settings/contact': typeof AuthenticatedTeamTeamSettingsContactRoute
-  '/team/$team/settings/design': typeof AuthenticatedTeamTeamSettingsDesignRoute
-  '/team/$team/settings/gis-data': typeof AuthenticatedTeamTeamSettingsGisDataRoute
-  '/team/$team/settings/integrations': typeof AuthenticatedTeamTeamSettingsIntegrationsRoute
-  '/team/$team/submission/$sessionId': typeof AuthenticatedTeamTeamSubmissionSessionIdRoute
+  '/app/$team/$flow/about': typeof AuthenticatedAppTeamFlowAboutRoute
+  '/app/$team/$flow/feedback': typeof AuthenticatedAppTeamFlowFeedbackRoute
+  '/app/$team/$flow/submissions': typeof AuthenticatedAppTeamFlowSubmissionsRoute
+  '/app/$team/settings/advanced': typeof AuthenticatedAppTeamSettingsAdvancedRoute
+  '/app/$team/settings/contact': typeof AuthenticatedAppTeamSettingsContactRoute
+  '/app/$team/settings/design': typeof AuthenticatedAppTeamSettingsDesignRoute
+  '/app/$team/settings/gis-data': typeof AuthenticatedAppTeamSettingsGisDataRoute
+  '/app/$team/settings/integrations': typeof AuthenticatedAppTeamSettingsIntegrationsRoute
+  '/app/$team/submission/$sessionId': typeof AuthenticatedAppTeamSubmissionSessionIdRoute
   '/$flow/pages/$page': typeof PublicCustomDomainFlowPagesPageRoute
   '/$flow/pay/not-found': typeof PublicCustomDomainFlowPayNotFoundRoute
   '/$flow/pay/view-application': typeof PublicCustomDomainFlowPayViewApplicationRoute
-  '/team/$team/settings/': typeof AuthenticatedTeamTeamSettingsIndexRoute
+  '/app/$team/settings/': typeof AuthenticatedAppTeamSettingsIndexRoute
   '/$flow/pay/': typeof PublicCustomDomainFlowPayIndexRoute
-  '/team/$team/$flow/settings/about': typeof AuthenticatedTeamTeamFlowSettingsAboutRoute
-  '/team/$team/$flow/settings/legal-disclaimer': typeof AuthenticatedTeamTeamFlowSettingsLegalDisclaimerRoute
-  '/team/$team/$flow/settings/templates': typeof AuthenticatedTeamTeamFlowSettingsTemplatesRoute
-  '/team/$team/$flow/settings/visibility': typeof AuthenticatedTeamTeamFlowSettingsVisibilityRoute
+  '/app/$team/$flow/settings/about': typeof AuthenticatedAppTeamFlowSettingsAboutRoute
+  '/app/$team/$flow/settings/legal-disclaimer': typeof AuthenticatedAppTeamFlowSettingsLegalDisclaimerRoute
+  '/app/$team/$flow/settings/templates': typeof AuthenticatedAppTeamFlowSettingsTemplatesRoute
+  '/app/$team/$flow/settings/visibility': typeof AuthenticatedAppTeamFlowSettingsVisibilityRoute
   '/$flow/pay/invite/failed': typeof PublicCustomDomainFlowPayInviteFailedRoute
   '/$flow/pay/pages/$page': typeof PublicCustomDomainFlowPayPagesPageRoute
   '/$team/$flow/$sessionId/download-application': typeof PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute
@@ -622,70 +628,70 @@ export interface FileRoutesByFullPath {
   '/$team/$flow/pay/view-application': typeof PublicPlanXDomainTeamFlowPayViewApplicationRoute
   '/$team/$flow/preview/view-application': typeof PublicPlanXDomainTeamFlowPreviewViewApplicationRoute
   '/$team/$flow/published/view-application': typeof PublicPlanXDomainTeamFlowPublishedViewApplicationRoute
-  '/team/$team/$flow/settings/': typeof AuthenticatedTeamTeamFlowSettingsIndexRoute
+  '/app/$team/$flow/settings/': typeof AuthenticatedAppTeamFlowSettingsIndexRoute
   '/$flow/pay/invite': typeof PublicCustomDomainFlowPayInviteIndexRoute
   '/$team/$flow/draft/': typeof PublicPlanXDomainTeamFlowDraftIndexRoute
   '/$team/$flow/pay/': typeof PublicPlanXDomainTeamFlowPayIndexRoute
   '/$team/$flow/preview/': typeof PublicPlanXDomainTeamFlowPreviewIndexRoute
   '/$team/$flow/published/': typeof PublicPlanXDomainTeamFlowPublishedIndexRoute
-  '/team/$team/$flow/nodes/$id/edit': typeof AuthenticatedTeamTeamFlowNodesIdEditRouteWithChildren
-  '/team/$team/$flow/nodes/new/$before': typeof AuthenticatedTeamTeamFlowNodesNewBeforeRoute
-  '/team/$team/$flow/settings/pages/help': typeof AuthenticatedTeamTeamFlowSettingsPagesHelpRoute
-  '/team/$team/$flow/settings/pages/privacy': typeof AuthenticatedTeamTeamFlowSettingsPagesPrivacyRoute
+  '/app/$team/$flow/nodes/$id/edit': typeof AuthenticatedAppTeamFlowNodesIdEditRouteWithChildren
+  '/app/$team/$flow/nodes/new/$before': typeof AuthenticatedAppTeamFlowNodesNewBeforeRoute
+  '/app/$team/$flow/settings/pages/help': typeof AuthenticatedAppTeamFlowSettingsPagesHelpRoute
+  '/app/$team/$flow/settings/pages/privacy': typeof AuthenticatedAppTeamFlowSettingsPagesPrivacyRoute
   '/$flow/pay/invite/pages/$page': typeof PublicCustomDomainFlowPayInvitePagesPageRoute
   '/$team/$flow/draft/pages/$page': typeof PublicPlanXDomainTeamFlowDraftPagesPageRoute
   '/$team/$flow/pay/invite/failed': typeof PublicPlanXDomainTeamFlowPayInviteFailedRoute
   '/$team/$flow/pay/pages/$page': typeof PublicPlanXDomainTeamFlowPayPagesPageRoute
   '/$team/$flow/preview/pages/$page': typeof PublicPlanXDomainTeamFlowPreviewPagesPageRoute
   '/$team/$flow/published/pages/$page': typeof PublicPlanXDomainTeamFlowPublishedPagesPageRoute
-  '/team/$team/$flow/nodes/new': typeof AuthenticatedTeamTeamFlowNodesNewIndexRoute
+  '/app/$team/$flow/nodes/new': typeof AuthenticatedAppTeamFlowNodesNewIndexRoute
   '/$team/$flow/pay/invite': typeof PublicPlanXDomainTeamFlowPayInviteIndexRoute
-  '/team/$team/$flow/nodes/$id/edit/$before': typeof AuthenticatedTeamTeamFlowNodesIdEditBeforeRoute
+  '/app/$team/$flow/nodes/$id/edit/$before': typeof AuthenticatedAppTeamFlowNodesIdEditBeforeRoute
   '/$team/$flow/pay/invite/pages/$page': typeof PublicPlanXDomainTeamFlowPayInvitePagesPageRoute
-  '/team/$team/$flow/nodes/$parent/nodes/$id/edit': typeof AuthenticatedTeamTeamFlowNodesParentNodesIdEditRouteWithChildren
-  '/team/$team/$flow/nodes/$parent/nodes/new/$before': typeof AuthenticatedTeamTeamFlowNodesParentNodesNewBeforeRoute
-  '/team/$team/$flow/nodes/$parent/nodes/new': typeof AuthenticatedTeamTeamFlowNodesParentNodesNewIndexRoute
-  '/team/$team/$flow/nodes/$parent/nodes/$id/edit/$before': typeof AuthenticatedTeamTeamFlowNodesParentNodesIdEditBeforeRoute
+  '/app/$team/$flow/nodes/$parent/nodes/$id/edit': typeof AuthenticatedAppTeamFlowNodesParentNodesIdEditRouteWithChildren
+  '/app/$team/$flow/nodes/$parent/nodes/new/$before': typeof AuthenticatedAppTeamFlowNodesParentNodesNewBeforeRoute
+  '/app/$team/$flow/nodes/$parent/nodes/new': typeof AuthenticatedAppTeamFlowNodesParentNodesNewIndexRoute
+  '/app/$team/$flow/nodes/$parent/nodes/$id/edit/$before': typeof AuthenticatedAppTeamFlowNodesParentNodesIdEditBeforeRoute
 }
 export interface FileRoutesByTo {
   '/$': typeof SplatRoute
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
-  '/admin-panel': typeof AuthenticatedAdminPanelRoute
-  '/global-settings': typeof AuthenticatedGlobalSettingsRoute
-  '/onboarding': typeof AuthenticatedOnboardingRoute
-  '/resources': typeof AuthenticatedResourcesRoute
-  '/tutorials': typeof AuthenticatedTutorialsRoute
-  '/': typeof AuthenticatedIndexRoute
-  '/team/$team/$flow': typeof AuthenticatedTeamTeamFlowRouteRouteWithChildren
+  '/app/admin-panel': typeof AuthenticatedAppAdminPanelRoute
+  '/app/global-settings': typeof AuthenticatedAppGlobalSettingsRoute
+  '/app/onboarding': typeof AuthenticatedAppOnboardingRoute
+  '/app/resources': typeof AuthenticatedAppResourcesRoute
+  '/app/tutorials': typeof AuthenticatedAppTutorialsRoute
+  '/app': typeof AuthenticatedAppIndexRoute
+  '/app/$team/$flow': typeof AuthenticatedAppTeamFlowRouteRouteWithChildren
   '/$team/$flow': typeof PublicPlanXDomainTeamFlowRouteRouteWithChildren
-  '/team/$team/design': typeof AuthenticatedTeamTeamDesignRoute
-  '/team/$team/feedback': typeof AuthenticatedTeamTeamFeedbackRoute
-  '/team/$team/members': typeof AuthenticatedTeamTeamMembersRoute
-  '/team/$team/submissions': typeof AuthenticatedTeamTeamSubmissionsRoute
-  '/team/$team/subscription': typeof AuthenticatedTeamTeamSubscriptionRoute
+  '/app/$team/design': typeof AuthenticatedAppTeamDesignRoute
+  '/app/$team/feedback': typeof AuthenticatedAppTeamFeedbackRoute
+  '/app/$team/members': typeof AuthenticatedAppTeamMembersRoute
+  '/app/$team/submissions': typeof AuthenticatedAppTeamSubmissionsRoute
+  '/app/$team/subscription': typeof AuthenticatedAppTeamSubscriptionRoute
   '/$flow/view-application': typeof PublicCustomDomainFlowViewApplicationRoute
-  '/team/$team': typeof AuthenticatedTeamTeamIndexRoute
+  '/app/$team': typeof AuthenticatedAppTeamIndexRoute
   '/$flow': typeof PublicCustomDomainFlowIndexRoute
-  '/team/$team/$flow/nodes': typeof AuthenticatedTeamTeamFlowNodesRouteRouteWithChildren
-  '/team/$team/$flow/about': typeof AuthenticatedTeamTeamFlowAboutRoute
-  '/team/$team/$flow/feedback': typeof AuthenticatedTeamTeamFlowFeedbackRoute
-  '/team/$team/$flow/submissions': typeof AuthenticatedTeamTeamFlowSubmissionsRoute
-  '/team/$team/settings/advanced': typeof AuthenticatedTeamTeamSettingsAdvancedRoute
-  '/team/$team/settings/contact': typeof AuthenticatedTeamTeamSettingsContactRoute
-  '/team/$team/settings/design': typeof AuthenticatedTeamTeamSettingsDesignRoute
-  '/team/$team/settings/gis-data': typeof AuthenticatedTeamTeamSettingsGisDataRoute
-  '/team/$team/settings/integrations': typeof AuthenticatedTeamTeamSettingsIntegrationsRoute
-  '/team/$team/submission/$sessionId': typeof AuthenticatedTeamTeamSubmissionSessionIdRoute
+  '/app/$team/$flow/nodes': typeof AuthenticatedAppTeamFlowNodesRouteRouteWithChildren
+  '/app/$team/$flow/about': typeof AuthenticatedAppTeamFlowAboutRoute
+  '/app/$team/$flow/feedback': typeof AuthenticatedAppTeamFlowFeedbackRoute
+  '/app/$team/$flow/submissions': typeof AuthenticatedAppTeamFlowSubmissionsRoute
+  '/app/$team/settings/advanced': typeof AuthenticatedAppTeamSettingsAdvancedRoute
+  '/app/$team/settings/contact': typeof AuthenticatedAppTeamSettingsContactRoute
+  '/app/$team/settings/design': typeof AuthenticatedAppTeamSettingsDesignRoute
+  '/app/$team/settings/gis-data': typeof AuthenticatedAppTeamSettingsGisDataRoute
+  '/app/$team/settings/integrations': typeof AuthenticatedAppTeamSettingsIntegrationsRoute
+  '/app/$team/submission/$sessionId': typeof AuthenticatedAppTeamSubmissionSessionIdRoute
   '/$flow/pages/$page': typeof PublicCustomDomainFlowPagesPageRoute
   '/$flow/pay/not-found': typeof PublicCustomDomainFlowPayNotFoundRoute
   '/$flow/pay/view-application': typeof PublicCustomDomainFlowPayViewApplicationRoute
-  '/team/$team/settings': typeof AuthenticatedTeamTeamSettingsIndexRoute
+  '/app/$team/settings': typeof AuthenticatedAppTeamSettingsIndexRoute
   '/$flow/pay': typeof PublicCustomDomainFlowPayIndexRoute
-  '/team/$team/$flow/settings/about': typeof AuthenticatedTeamTeamFlowSettingsAboutRoute
-  '/team/$team/$flow/settings/legal-disclaimer': typeof AuthenticatedTeamTeamFlowSettingsLegalDisclaimerRoute
-  '/team/$team/$flow/settings/templates': typeof AuthenticatedTeamTeamFlowSettingsTemplatesRoute
-  '/team/$team/$flow/settings/visibility': typeof AuthenticatedTeamTeamFlowSettingsVisibilityRoute
+  '/app/$team/$flow/settings/about': typeof AuthenticatedAppTeamFlowSettingsAboutRoute
+  '/app/$team/$flow/settings/legal-disclaimer': typeof AuthenticatedAppTeamFlowSettingsLegalDisclaimerRoute
+  '/app/$team/$flow/settings/templates': typeof AuthenticatedAppTeamFlowSettingsTemplatesRoute
+  '/app/$team/$flow/settings/visibility': typeof AuthenticatedAppTeamFlowSettingsVisibilityRoute
   '/$flow/pay/invite/failed': typeof PublicCustomDomainFlowPayInviteFailedRoute
   '/$flow/pay/pages/$page': typeof PublicCustomDomainFlowPayPagesPageRoute
   '/$team/$flow/$sessionId/download-application': typeof PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute
@@ -694,82 +700,82 @@ export interface FileRoutesByTo {
   '/$team/$flow/pay/view-application': typeof PublicPlanXDomainTeamFlowPayViewApplicationRoute
   '/$team/$flow/preview/view-application': typeof PublicPlanXDomainTeamFlowPreviewViewApplicationRoute
   '/$team/$flow/published/view-application': typeof PublicPlanXDomainTeamFlowPublishedViewApplicationRoute
-  '/team/$team/$flow/settings': typeof AuthenticatedTeamTeamFlowSettingsIndexRoute
+  '/app/$team/$flow/settings': typeof AuthenticatedAppTeamFlowSettingsIndexRoute
   '/$flow/pay/invite': typeof PublicCustomDomainFlowPayInviteIndexRoute
   '/$team/$flow/draft': typeof PublicPlanXDomainTeamFlowDraftIndexRoute
   '/$team/$flow/pay': typeof PublicPlanXDomainTeamFlowPayIndexRoute
   '/$team/$flow/preview': typeof PublicPlanXDomainTeamFlowPreviewIndexRoute
   '/$team/$flow/published': typeof PublicPlanXDomainTeamFlowPublishedIndexRoute
-  '/team/$team/$flow/nodes/$id/edit': typeof AuthenticatedTeamTeamFlowNodesIdEditRouteWithChildren
-  '/team/$team/$flow/nodes/new/$before': typeof AuthenticatedTeamTeamFlowNodesNewBeforeRoute
-  '/team/$team/$flow/settings/pages/help': typeof AuthenticatedTeamTeamFlowSettingsPagesHelpRoute
-  '/team/$team/$flow/settings/pages/privacy': typeof AuthenticatedTeamTeamFlowSettingsPagesPrivacyRoute
+  '/app/$team/$flow/nodes/$id/edit': typeof AuthenticatedAppTeamFlowNodesIdEditRouteWithChildren
+  '/app/$team/$flow/nodes/new/$before': typeof AuthenticatedAppTeamFlowNodesNewBeforeRoute
+  '/app/$team/$flow/settings/pages/help': typeof AuthenticatedAppTeamFlowSettingsPagesHelpRoute
+  '/app/$team/$flow/settings/pages/privacy': typeof AuthenticatedAppTeamFlowSettingsPagesPrivacyRoute
   '/$flow/pay/invite/pages/$page': typeof PublicCustomDomainFlowPayInvitePagesPageRoute
   '/$team/$flow/draft/pages/$page': typeof PublicPlanXDomainTeamFlowDraftPagesPageRoute
   '/$team/$flow/pay/invite/failed': typeof PublicPlanXDomainTeamFlowPayInviteFailedRoute
   '/$team/$flow/pay/pages/$page': typeof PublicPlanXDomainTeamFlowPayPagesPageRoute
   '/$team/$flow/preview/pages/$page': typeof PublicPlanXDomainTeamFlowPreviewPagesPageRoute
   '/$team/$flow/published/pages/$page': typeof PublicPlanXDomainTeamFlowPublishedPagesPageRoute
-  '/team/$team/$flow/nodes/new': typeof AuthenticatedTeamTeamFlowNodesNewIndexRoute
+  '/app/$team/$flow/nodes/new': typeof AuthenticatedAppTeamFlowNodesNewIndexRoute
   '/$team/$flow/pay/invite': typeof PublicPlanXDomainTeamFlowPayInviteIndexRoute
-  '/team/$team/$flow/nodes/$id/edit/$before': typeof AuthenticatedTeamTeamFlowNodesIdEditBeforeRoute
+  '/app/$team/$flow/nodes/$id/edit/$before': typeof AuthenticatedAppTeamFlowNodesIdEditBeforeRoute
   '/$team/$flow/pay/invite/pages/$page': typeof PublicPlanXDomainTeamFlowPayInvitePagesPageRoute
-  '/team/$team/$flow/nodes/$parent/nodes/$id/edit': typeof AuthenticatedTeamTeamFlowNodesParentNodesIdEditRouteWithChildren
-  '/team/$team/$flow/nodes/$parent/nodes/new/$before': typeof AuthenticatedTeamTeamFlowNodesParentNodesNewBeforeRoute
-  '/team/$team/$flow/nodes/$parent/nodes/new': typeof AuthenticatedTeamTeamFlowNodesParentNodesNewIndexRoute
-  '/team/$team/$flow/nodes/$parent/nodes/$id/edit/$before': typeof AuthenticatedTeamTeamFlowNodesParentNodesIdEditBeforeRoute
+  '/app/$team/$flow/nodes/$parent/nodes/$id/edit': typeof AuthenticatedAppTeamFlowNodesParentNodesIdEditRouteWithChildren
+  '/app/$team/$flow/nodes/$parent/nodes/new/$before': typeof AuthenticatedAppTeamFlowNodesParentNodesNewBeforeRoute
+  '/app/$team/$flow/nodes/$parent/nodes/new': typeof AuthenticatedAppTeamFlowNodesParentNodesNewIndexRoute
+  '/app/$team/$flow/nodes/$parent/nodes/$id/edit/$before': typeof AuthenticatedAppTeamFlowNodesParentNodesIdEditBeforeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/$': typeof SplatRoute
+  '/_authenticated/app': typeof AuthenticatedAppRouteRouteWithChildren
   '/_public/_customDomain': typeof PublicCustomDomainRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/logout': typeof authLogoutRoute
-  '/_authenticated/admin-panel': typeof AuthenticatedAdminPanelRoute
-  '/_authenticated/global-settings': typeof AuthenticatedGlobalSettingsRoute
-  '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
-  '/_authenticated/resources': typeof AuthenticatedResourcesRoute
-  '/_authenticated/tutorials': typeof AuthenticatedTutorialsRoute
-  '/_authenticated/': typeof AuthenticatedIndexRoute
-  '/_authenticated/team/$team': typeof AuthenticatedTeamTeamRouteRouteWithChildren
+  '/_authenticated/app/$team': typeof AuthenticatedAppTeamRouteRouteWithChildren
   '/_public/_customDomain/$flow': typeof PublicCustomDomainFlowRouteRouteWithChildren
-  '/_authenticated/team/$team/$flow': typeof AuthenticatedTeamTeamFlowRouteRouteWithChildren
-  '/_authenticated/team/$team/settings': typeof AuthenticatedTeamTeamSettingsRouteRouteWithChildren
+  '/_authenticated/app/admin-panel': typeof AuthenticatedAppAdminPanelRoute
+  '/_authenticated/app/global-settings': typeof AuthenticatedAppGlobalSettingsRoute
+  '/_authenticated/app/onboarding': typeof AuthenticatedAppOnboardingRoute
+  '/_authenticated/app/resources': typeof AuthenticatedAppResourcesRoute
+  '/_authenticated/app/tutorials': typeof AuthenticatedAppTutorialsRoute
+  '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
+  '/_authenticated/app/$team/$flow': typeof AuthenticatedAppTeamFlowRouteRouteWithChildren
+  '/_authenticated/app/$team/settings': typeof AuthenticatedAppTeamSettingsRouteRouteWithChildren
   '/_public/_customDomain/$flow/pay': typeof PublicCustomDomainFlowPayRouteRouteWithChildren
   '/_public/_planXDomain/$team/$flow': typeof PublicPlanXDomainTeamFlowRouteRouteWithChildren
-  '/_authenticated/team/$team/design': typeof AuthenticatedTeamTeamDesignRoute
-  '/_authenticated/team/$team/feedback': typeof AuthenticatedTeamTeamFeedbackRoute
-  '/_authenticated/team/$team/members': typeof AuthenticatedTeamTeamMembersRoute
-  '/_authenticated/team/$team/submissions': typeof AuthenticatedTeamTeamSubmissionsRoute
-  '/_authenticated/team/$team/subscription': typeof AuthenticatedTeamTeamSubscriptionRoute
+  '/_authenticated/app/$team/design': typeof AuthenticatedAppTeamDesignRoute
+  '/_authenticated/app/$team/feedback': typeof AuthenticatedAppTeamFeedbackRoute
+  '/_authenticated/app/$team/members': typeof AuthenticatedAppTeamMembersRoute
+  '/_authenticated/app/$team/submissions': typeof AuthenticatedAppTeamSubmissionsRoute
+  '/_authenticated/app/$team/subscription': typeof AuthenticatedAppTeamSubscriptionRoute
   '/_public/_customDomain/$flow/view-application': typeof PublicCustomDomainFlowViewApplicationRoute
-  '/_authenticated/team/$team/': typeof AuthenticatedTeamTeamIndexRoute
+  '/_authenticated/app/$team/': typeof AuthenticatedAppTeamIndexRoute
   '/_public/_customDomain/$flow/': typeof PublicCustomDomainFlowIndexRoute
-  '/_authenticated/team/$team/$flow/nodes': typeof AuthenticatedTeamTeamFlowNodesRouteRouteWithChildren
-  '/_authenticated/team/$team/$flow/settings': typeof AuthenticatedTeamTeamFlowSettingsRouteRouteWithChildren
+  '/_authenticated/app/$team/$flow/nodes': typeof AuthenticatedAppTeamFlowNodesRouteRouteWithChildren
+  '/_authenticated/app/$team/$flow/settings': typeof AuthenticatedAppTeamFlowSettingsRouteRouteWithChildren
   '/_public/_planXDomain/$team/$flow/draft': typeof PublicPlanXDomainTeamFlowDraftRouteRouteWithChildren
   '/_public/_planXDomain/$team/$flow/pay': typeof PublicPlanXDomainTeamFlowPayRouteRouteWithChildren
   '/_public/_planXDomain/$team/$flow/preview': typeof PublicPlanXDomainTeamFlowPreviewRouteRouteWithChildren
   '/_public/_planXDomain/$team/$flow/published': typeof PublicPlanXDomainTeamFlowPublishedRouteRouteWithChildren
-  '/_authenticated/team/$team/$flow/about': typeof AuthenticatedTeamTeamFlowAboutRoute
-  '/_authenticated/team/$team/$flow/feedback': typeof AuthenticatedTeamTeamFlowFeedbackRoute
-  '/_authenticated/team/$team/$flow/submissions': typeof AuthenticatedTeamTeamFlowSubmissionsRoute
-  '/_authenticated/team/$team/settings/advanced': typeof AuthenticatedTeamTeamSettingsAdvancedRoute
-  '/_authenticated/team/$team/settings/contact': typeof AuthenticatedTeamTeamSettingsContactRoute
-  '/_authenticated/team/$team/settings/design': typeof AuthenticatedTeamTeamSettingsDesignRoute
-  '/_authenticated/team/$team/settings/gis-data': typeof AuthenticatedTeamTeamSettingsGisDataRoute
-  '/_authenticated/team/$team/settings/integrations': typeof AuthenticatedTeamTeamSettingsIntegrationsRoute
-  '/_authenticated/team/$team/submission/$sessionId': typeof AuthenticatedTeamTeamSubmissionSessionIdRoute
+  '/_authenticated/app/$team/$flow/about': typeof AuthenticatedAppTeamFlowAboutRoute
+  '/_authenticated/app/$team/$flow/feedback': typeof AuthenticatedAppTeamFlowFeedbackRoute
+  '/_authenticated/app/$team/$flow/submissions': typeof AuthenticatedAppTeamFlowSubmissionsRoute
+  '/_authenticated/app/$team/settings/advanced': typeof AuthenticatedAppTeamSettingsAdvancedRoute
+  '/_authenticated/app/$team/settings/contact': typeof AuthenticatedAppTeamSettingsContactRoute
+  '/_authenticated/app/$team/settings/design': typeof AuthenticatedAppTeamSettingsDesignRoute
+  '/_authenticated/app/$team/settings/gis-data': typeof AuthenticatedAppTeamSettingsGisDataRoute
+  '/_authenticated/app/$team/settings/integrations': typeof AuthenticatedAppTeamSettingsIntegrationsRoute
+  '/_authenticated/app/$team/submission/$sessionId': typeof AuthenticatedAppTeamSubmissionSessionIdRoute
   '/_public/_customDomain/$flow/pages/$page': typeof PublicCustomDomainFlowPagesPageRoute
   '/_public/_customDomain/$flow/pay/not-found': typeof PublicCustomDomainFlowPayNotFoundRoute
   '/_public/_customDomain/$flow/pay/view-application': typeof PublicCustomDomainFlowPayViewApplicationRoute
-  '/_authenticated/team/$team/settings/': typeof AuthenticatedTeamTeamSettingsIndexRoute
+  '/_authenticated/app/$team/settings/': typeof AuthenticatedAppTeamSettingsIndexRoute
   '/_public/_customDomain/$flow/pay/': typeof PublicCustomDomainFlowPayIndexRoute
-  '/_authenticated/team/$team/$flow/settings/about': typeof AuthenticatedTeamTeamFlowSettingsAboutRoute
-  '/_authenticated/team/$team/$flow/settings/legal-disclaimer': typeof AuthenticatedTeamTeamFlowSettingsLegalDisclaimerRoute
-  '/_authenticated/team/$team/$flow/settings/templates': typeof AuthenticatedTeamTeamFlowSettingsTemplatesRoute
-  '/_authenticated/team/$team/$flow/settings/visibility': typeof AuthenticatedTeamTeamFlowSettingsVisibilityRoute
+  '/_authenticated/app/$team/$flow/settings/about': typeof AuthenticatedAppTeamFlowSettingsAboutRoute
+  '/_authenticated/app/$team/$flow/settings/legal-disclaimer': typeof AuthenticatedAppTeamFlowSettingsLegalDisclaimerRoute
+  '/_authenticated/app/$team/$flow/settings/templates': typeof AuthenticatedAppTeamFlowSettingsTemplatesRoute
+  '/_authenticated/app/$team/$flow/settings/visibility': typeof AuthenticatedAppTeamFlowSettingsVisibilityRoute
   '/_public/_customDomain/$flow/pay/invite/failed': typeof PublicCustomDomainFlowPayInviteFailedRoute
   '/_public/_customDomain/$flow/pay/pages/$page': typeof PublicCustomDomainFlowPayPagesPageRoute
   '/_public/_planXDomain/$team/$flow/$sessionId/download-application': typeof PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute
@@ -778,81 +784,82 @@ export interface FileRoutesById {
   '/_public/_planXDomain/$team/$flow/pay/view-application': typeof PublicPlanXDomainTeamFlowPayViewApplicationRoute
   '/_public/_planXDomain/$team/$flow/preview/view-application': typeof PublicPlanXDomainTeamFlowPreviewViewApplicationRoute
   '/_public/_planXDomain/$team/$flow/published/view-application': typeof PublicPlanXDomainTeamFlowPublishedViewApplicationRoute
-  '/_authenticated/team/$team/$flow/settings/': typeof AuthenticatedTeamTeamFlowSettingsIndexRoute
+  '/_authenticated/app/$team/$flow/settings/': typeof AuthenticatedAppTeamFlowSettingsIndexRoute
   '/_public/_customDomain/$flow/pay/invite/': typeof PublicCustomDomainFlowPayInviteIndexRoute
   '/_public/_planXDomain/$team/$flow/draft/': typeof PublicPlanXDomainTeamFlowDraftIndexRoute
   '/_public/_planXDomain/$team/$flow/pay/': typeof PublicPlanXDomainTeamFlowPayIndexRoute
   '/_public/_planXDomain/$team/$flow/preview/': typeof PublicPlanXDomainTeamFlowPreviewIndexRoute
   '/_public/_planXDomain/$team/$flow/published/': typeof PublicPlanXDomainTeamFlowPublishedIndexRoute
-  '/_authenticated/team/$team/$flow/nodes/$id/edit': typeof AuthenticatedTeamTeamFlowNodesIdEditRouteWithChildren
-  '/_authenticated/team/$team/$flow/nodes/new/$before': typeof AuthenticatedTeamTeamFlowNodesNewBeforeRoute
-  '/_authenticated/team/$team/$flow/settings/pages/help': typeof AuthenticatedTeamTeamFlowSettingsPagesHelpRoute
-  '/_authenticated/team/$team/$flow/settings/pages/privacy': typeof AuthenticatedTeamTeamFlowSettingsPagesPrivacyRoute
+  '/_authenticated/app/$team/$flow/nodes/$id/edit': typeof AuthenticatedAppTeamFlowNodesIdEditRouteWithChildren
+  '/_authenticated/app/$team/$flow/nodes/new/$before': typeof AuthenticatedAppTeamFlowNodesNewBeforeRoute
+  '/_authenticated/app/$team/$flow/settings/pages/help': typeof AuthenticatedAppTeamFlowSettingsPagesHelpRoute
+  '/_authenticated/app/$team/$flow/settings/pages/privacy': typeof AuthenticatedAppTeamFlowSettingsPagesPrivacyRoute
   '/_public/_customDomain/$flow/pay/invite/pages/$page': typeof PublicCustomDomainFlowPayInvitePagesPageRoute
   '/_public/_planXDomain/$team/$flow/draft/pages/$page': typeof PublicPlanXDomainTeamFlowDraftPagesPageRoute
   '/_public/_planXDomain/$team/$flow/pay/invite/failed': typeof PublicPlanXDomainTeamFlowPayInviteFailedRoute
   '/_public/_planXDomain/$team/$flow/pay/pages/$page': typeof PublicPlanXDomainTeamFlowPayPagesPageRoute
   '/_public/_planXDomain/$team/$flow/preview/pages/$page': typeof PublicPlanXDomainTeamFlowPreviewPagesPageRoute
   '/_public/_planXDomain/$team/$flow/published/pages/$page': typeof PublicPlanXDomainTeamFlowPublishedPagesPageRoute
-  '/_authenticated/team/$team/$flow/nodes/new/': typeof AuthenticatedTeamTeamFlowNodesNewIndexRoute
+  '/_authenticated/app/$team/$flow/nodes/new/': typeof AuthenticatedAppTeamFlowNodesNewIndexRoute
   '/_public/_planXDomain/$team/$flow/pay/invite/': typeof PublicPlanXDomainTeamFlowPayInviteIndexRoute
-  '/_authenticated/team/$team/$flow/nodes/$id/edit/$before': typeof AuthenticatedTeamTeamFlowNodesIdEditBeforeRoute
+  '/_authenticated/app/$team/$flow/nodes/$id/edit/$before': typeof AuthenticatedAppTeamFlowNodesIdEditBeforeRoute
   '/_public/_planXDomain/$team/$flow/pay/invite/pages/$page': typeof PublicPlanXDomainTeamFlowPayInvitePagesPageRoute
-  '/_authenticated/team/$team/$flow/nodes/$parent/nodes/$id/edit': typeof AuthenticatedTeamTeamFlowNodesParentNodesIdEditRouteWithChildren
-  '/_authenticated/team/$team/$flow/nodes/$parent/nodes/new/$before': typeof AuthenticatedTeamTeamFlowNodesParentNodesNewBeforeRoute
-  '/_authenticated/team/$team/$flow/nodes/$parent/nodes/new/': typeof AuthenticatedTeamTeamFlowNodesParentNodesNewIndexRoute
-  '/_authenticated/team/$team/$flow/nodes/$parent/nodes/$id/edit/$before': typeof AuthenticatedTeamTeamFlowNodesParentNodesIdEditBeforeRoute
+  '/_authenticated/app/$team/$flow/nodes/$parent/nodes/$id/edit': typeof AuthenticatedAppTeamFlowNodesParentNodesIdEditRouteWithChildren
+  '/_authenticated/app/$team/$flow/nodes/$parent/nodes/new/$before': typeof AuthenticatedAppTeamFlowNodesParentNodesNewBeforeRoute
+  '/_authenticated/app/$team/$flow/nodes/$parent/nodes/new/': typeof AuthenticatedAppTeamFlowNodesParentNodesNewIndexRoute
+  '/_authenticated/app/$team/$flow/nodes/$parent/nodes/$id/edit/$before': typeof AuthenticatedAppTeamFlowNodesParentNodesIdEditBeforeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/$'
+    | '/app'
     | '/login'
     | '/logout'
-    | '/admin-panel'
-    | '/global-settings'
-    | '/onboarding'
-    | '/resources'
-    | '/tutorials'
-    | '/'
-    | '/team/$team'
+    | '/app/$team'
     | '/$flow'
-    | '/team/$team/$flow'
-    | '/team/$team/settings'
+    | '/app/admin-panel'
+    | '/app/global-settings'
+    | '/app/onboarding'
+    | '/app/resources'
+    | '/app/tutorials'
+    | '/app/'
+    | '/app/$team/$flow'
+    | '/app/$team/settings'
     | '/$flow/pay'
     | '/$team/$flow'
-    | '/team/$team/design'
-    | '/team/$team/feedback'
-    | '/team/$team/members'
-    | '/team/$team/submissions'
-    | '/team/$team/subscription'
+    | '/app/$team/design'
+    | '/app/$team/feedback'
+    | '/app/$team/members'
+    | '/app/$team/submissions'
+    | '/app/$team/subscription'
     | '/$flow/view-application'
-    | '/team/$team/'
+    | '/app/$team/'
     | '/$flow/'
-    | '/team/$team/$flow/nodes'
-    | '/team/$team/$flow/settings'
+    | '/app/$team/$flow/nodes'
+    | '/app/$team/$flow/settings'
     | '/$team/$flow/draft'
     | '/$team/$flow/pay'
     | '/$team/$flow/preview'
     | '/$team/$flow/published'
-    | '/team/$team/$flow/about'
-    | '/team/$team/$flow/feedback'
-    | '/team/$team/$flow/submissions'
-    | '/team/$team/settings/advanced'
-    | '/team/$team/settings/contact'
-    | '/team/$team/settings/design'
-    | '/team/$team/settings/gis-data'
-    | '/team/$team/settings/integrations'
-    | '/team/$team/submission/$sessionId'
+    | '/app/$team/$flow/about'
+    | '/app/$team/$flow/feedback'
+    | '/app/$team/$flow/submissions'
+    | '/app/$team/settings/advanced'
+    | '/app/$team/settings/contact'
+    | '/app/$team/settings/design'
+    | '/app/$team/settings/gis-data'
+    | '/app/$team/settings/integrations'
+    | '/app/$team/submission/$sessionId'
     | '/$flow/pages/$page'
     | '/$flow/pay/not-found'
     | '/$flow/pay/view-application'
-    | '/team/$team/settings/'
+    | '/app/$team/settings/'
     | '/$flow/pay/'
-    | '/team/$team/$flow/settings/about'
-    | '/team/$team/$flow/settings/legal-disclaimer'
-    | '/team/$team/$flow/settings/templates'
-    | '/team/$team/$flow/settings/visibility'
+    | '/app/$team/$flow/settings/about'
+    | '/app/$team/$flow/settings/legal-disclaimer'
+    | '/app/$team/$flow/settings/templates'
+    | '/app/$team/$flow/settings/visibility'
     | '/$flow/pay/invite/failed'
     | '/$flow/pay/pages/$page'
     | '/$team/$flow/$sessionId/download-application'
@@ -861,70 +868,70 @@ export interface FileRouteTypes {
     | '/$team/$flow/pay/view-application'
     | '/$team/$flow/preview/view-application'
     | '/$team/$flow/published/view-application'
-    | '/team/$team/$flow/settings/'
+    | '/app/$team/$flow/settings/'
     | '/$flow/pay/invite'
     | '/$team/$flow/draft/'
     | '/$team/$flow/pay/'
     | '/$team/$flow/preview/'
     | '/$team/$flow/published/'
-    | '/team/$team/$flow/nodes/$id/edit'
-    | '/team/$team/$flow/nodes/new/$before'
-    | '/team/$team/$flow/settings/pages/help'
-    | '/team/$team/$flow/settings/pages/privacy'
+    | '/app/$team/$flow/nodes/$id/edit'
+    | '/app/$team/$flow/nodes/new/$before'
+    | '/app/$team/$flow/settings/pages/help'
+    | '/app/$team/$flow/settings/pages/privacy'
     | '/$flow/pay/invite/pages/$page'
     | '/$team/$flow/draft/pages/$page'
     | '/$team/$flow/pay/invite/failed'
     | '/$team/$flow/pay/pages/$page'
     | '/$team/$flow/preview/pages/$page'
     | '/$team/$flow/published/pages/$page'
-    | '/team/$team/$flow/nodes/new'
+    | '/app/$team/$flow/nodes/new'
     | '/$team/$flow/pay/invite'
-    | '/team/$team/$flow/nodes/$id/edit/$before'
+    | '/app/$team/$flow/nodes/$id/edit/$before'
     | '/$team/$flow/pay/invite/pages/$page'
-    | '/team/$team/$flow/nodes/$parent/nodes/$id/edit'
-    | '/team/$team/$flow/nodes/$parent/nodes/new/$before'
-    | '/team/$team/$flow/nodes/$parent/nodes/new'
-    | '/team/$team/$flow/nodes/$parent/nodes/$id/edit/$before'
+    | '/app/$team/$flow/nodes/$parent/nodes/$id/edit'
+    | '/app/$team/$flow/nodes/$parent/nodes/new/$before'
+    | '/app/$team/$flow/nodes/$parent/nodes/new'
+    | '/app/$team/$flow/nodes/$parent/nodes/$id/edit/$before'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/$'
     | '/login'
     | '/logout'
-    | '/admin-panel'
-    | '/global-settings'
-    | '/onboarding'
-    | '/resources'
-    | '/tutorials'
-    | '/'
-    | '/team/$team/$flow'
+    | '/app/admin-panel'
+    | '/app/global-settings'
+    | '/app/onboarding'
+    | '/app/resources'
+    | '/app/tutorials'
+    | '/app'
+    | '/app/$team/$flow'
     | '/$team/$flow'
-    | '/team/$team/design'
-    | '/team/$team/feedback'
-    | '/team/$team/members'
-    | '/team/$team/submissions'
-    | '/team/$team/subscription'
+    | '/app/$team/design'
+    | '/app/$team/feedback'
+    | '/app/$team/members'
+    | '/app/$team/submissions'
+    | '/app/$team/subscription'
     | '/$flow/view-application'
-    | '/team/$team'
+    | '/app/$team'
     | '/$flow'
-    | '/team/$team/$flow/nodes'
-    | '/team/$team/$flow/about'
-    | '/team/$team/$flow/feedback'
-    | '/team/$team/$flow/submissions'
-    | '/team/$team/settings/advanced'
-    | '/team/$team/settings/contact'
-    | '/team/$team/settings/design'
-    | '/team/$team/settings/gis-data'
-    | '/team/$team/settings/integrations'
-    | '/team/$team/submission/$sessionId'
+    | '/app/$team/$flow/nodes'
+    | '/app/$team/$flow/about'
+    | '/app/$team/$flow/feedback'
+    | '/app/$team/$flow/submissions'
+    | '/app/$team/settings/advanced'
+    | '/app/$team/settings/contact'
+    | '/app/$team/settings/design'
+    | '/app/$team/settings/gis-data'
+    | '/app/$team/settings/integrations'
+    | '/app/$team/submission/$sessionId'
     | '/$flow/pages/$page'
     | '/$flow/pay/not-found'
     | '/$flow/pay/view-application'
-    | '/team/$team/settings'
+    | '/app/$team/settings'
     | '/$flow/pay'
-    | '/team/$team/$flow/settings/about'
-    | '/team/$team/$flow/settings/legal-disclaimer'
-    | '/team/$team/$flow/settings/templates'
-    | '/team/$team/$flow/settings/visibility'
+    | '/app/$team/$flow/settings/about'
+    | '/app/$team/$flow/settings/legal-disclaimer'
+    | '/app/$team/$flow/settings/templates'
+    | '/app/$team/$flow/settings/visibility'
     | '/$flow/pay/invite/failed'
     | '/$flow/pay/pages/$page'
     | '/$team/$flow/$sessionId/download-application'
@@ -933,81 +940,81 @@ export interface FileRouteTypes {
     | '/$team/$flow/pay/view-application'
     | '/$team/$flow/preview/view-application'
     | '/$team/$flow/published/view-application'
-    | '/team/$team/$flow/settings'
+    | '/app/$team/$flow/settings'
     | '/$flow/pay/invite'
     | '/$team/$flow/draft'
     | '/$team/$flow/pay'
     | '/$team/$flow/preview'
     | '/$team/$flow/published'
-    | '/team/$team/$flow/nodes/$id/edit'
-    | '/team/$team/$flow/nodes/new/$before'
-    | '/team/$team/$flow/settings/pages/help'
-    | '/team/$team/$flow/settings/pages/privacy'
+    | '/app/$team/$flow/nodes/$id/edit'
+    | '/app/$team/$flow/nodes/new/$before'
+    | '/app/$team/$flow/settings/pages/help'
+    | '/app/$team/$flow/settings/pages/privacy'
     | '/$flow/pay/invite/pages/$page'
     | '/$team/$flow/draft/pages/$page'
     | '/$team/$flow/pay/invite/failed'
     | '/$team/$flow/pay/pages/$page'
     | '/$team/$flow/preview/pages/$page'
     | '/$team/$flow/published/pages/$page'
-    | '/team/$team/$flow/nodes/new'
+    | '/app/$team/$flow/nodes/new'
     | '/$team/$flow/pay/invite'
-    | '/team/$team/$flow/nodes/$id/edit/$before'
+    | '/app/$team/$flow/nodes/$id/edit/$before'
     | '/$team/$flow/pay/invite/pages/$page'
-    | '/team/$team/$flow/nodes/$parent/nodes/$id/edit'
-    | '/team/$team/$flow/nodes/$parent/nodes/new/$before'
-    | '/team/$team/$flow/nodes/$parent/nodes/new'
-    | '/team/$team/$flow/nodes/$parent/nodes/$id/edit/$before'
+    | '/app/$team/$flow/nodes/$parent/nodes/$id/edit'
+    | '/app/$team/$flow/nodes/$parent/nodes/new/$before'
+    | '/app/$team/$flow/nodes/$parent/nodes/new'
+    | '/app/$team/$flow/nodes/$parent/nodes/$id/edit/$before'
   id:
     | '__root__'
-    | '/_authenticated'
     | '/$'
+    | '/_authenticated/app'
     | '/_public/_customDomain'
     | '/(auth)/login'
     | '/(auth)/logout'
-    | '/_authenticated/admin-panel'
-    | '/_authenticated/global-settings'
-    | '/_authenticated/onboarding'
-    | '/_authenticated/resources'
-    | '/_authenticated/tutorials'
-    | '/_authenticated/'
-    | '/_authenticated/team/$team'
+    | '/_authenticated/app/$team'
     | '/_public/_customDomain/$flow'
-    | '/_authenticated/team/$team/$flow'
-    | '/_authenticated/team/$team/settings'
+    | '/_authenticated/app/admin-panel'
+    | '/_authenticated/app/global-settings'
+    | '/_authenticated/app/onboarding'
+    | '/_authenticated/app/resources'
+    | '/_authenticated/app/tutorials'
+    | '/_authenticated/app/'
+    | '/_authenticated/app/$team/$flow'
+    | '/_authenticated/app/$team/settings'
     | '/_public/_customDomain/$flow/pay'
     | '/_public/_planXDomain/$team/$flow'
-    | '/_authenticated/team/$team/design'
-    | '/_authenticated/team/$team/feedback'
-    | '/_authenticated/team/$team/members'
-    | '/_authenticated/team/$team/submissions'
-    | '/_authenticated/team/$team/subscription'
+    | '/_authenticated/app/$team/design'
+    | '/_authenticated/app/$team/feedback'
+    | '/_authenticated/app/$team/members'
+    | '/_authenticated/app/$team/submissions'
+    | '/_authenticated/app/$team/subscription'
     | '/_public/_customDomain/$flow/view-application'
-    | '/_authenticated/team/$team/'
+    | '/_authenticated/app/$team/'
     | '/_public/_customDomain/$flow/'
-    | '/_authenticated/team/$team/$flow/nodes'
-    | '/_authenticated/team/$team/$flow/settings'
+    | '/_authenticated/app/$team/$flow/nodes'
+    | '/_authenticated/app/$team/$flow/settings'
     | '/_public/_planXDomain/$team/$flow/draft'
     | '/_public/_planXDomain/$team/$flow/pay'
     | '/_public/_planXDomain/$team/$flow/preview'
     | '/_public/_planXDomain/$team/$flow/published'
-    | '/_authenticated/team/$team/$flow/about'
-    | '/_authenticated/team/$team/$flow/feedback'
-    | '/_authenticated/team/$team/$flow/submissions'
-    | '/_authenticated/team/$team/settings/advanced'
-    | '/_authenticated/team/$team/settings/contact'
-    | '/_authenticated/team/$team/settings/design'
-    | '/_authenticated/team/$team/settings/gis-data'
-    | '/_authenticated/team/$team/settings/integrations'
-    | '/_authenticated/team/$team/submission/$sessionId'
+    | '/_authenticated/app/$team/$flow/about'
+    | '/_authenticated/app/$team/$flow/feedback'
+    | '/_authenticated/app/$team/$flow/submissions'
+    | '/_authenticated/app/$team/settings/advanced'
+    | '/_authenticated/app/$team/settings/contact'
+    | '/_authenticated/app/$team/settings/design'
+    | '/_authenticated/app/$team/settings/gis-data'
+    | '/_authenticated/app/$team/settings/integrations'
+    | '/_authenticated/app/$team/submission/$sessionId'
     | '/_public/_customDomain/$flow/pages/$page'
     | '/_public/_customDomain/$flow/pay/not-found'
     | '/_public/_customDomain/$flow/pay/view-application'
-    | '/_authenticated/team/$team/settings/'
+    | '/_authenticated/app/$team/settings/'
     | '/_public/_customDomain/$flow/pay/'
-    | '/_authenticated/team/$team/$flow/settings/about'
-    | '/_authenticated/team/$team/$flow/settings/legal-disclaimer'
-    | '/_authenticated/team/$team/$flow/settings/templates'
-    | '/_authenticated/team/$team/$flow/settings/visibility'
+    | '/_authenticated/app/$team/$flow/settings/about'
+    | '/_authenticated/app/$team/$flow/settings/legal-disclaimer'
+    | '/_authenticated/app/$team/$flow/settings/templates'
+    | '/_authenticated/app/$team/$flow/settings/visibility'
     | '/_public/_customDomain/$flow/pay/invite/failed'
     | '/_public/_customDomain/$flow/pay/pages/$page'
     | '/_public/_planXDomain/$team/$flow/$sessionId/download-application'
@@ -1016,35 +1023,35 @@ export interface FileRouteTypes {
     | '/_public/_planXDomain/$team/$flow/pay/view-application'
     | '/_public/_planXDomain/$team/$flow/preview/view-application'
     | '/_public/_planXDomain/$team/$flow/published/view-application'
-    | '/_authenticated/team/$team/$flow/settings/'
+    | '/_authenticated/app/$team/$flow/settings/'
     | '/_public/_customDomain/$flow/pay/invite/'
     | '/_public/_planXDomain/$team/$flow/draft/'
     | '/_public/_planXDomain/$team/$flow/pay/'
     | '/_public/_planXDomain/$team/$flow/preview/'
     | '/_public/_planXDomain/$team/$flow/published/'
-    | '/_authenticated/team/$team/$flow/nodes/$id/edit'
-    | '/_authenticated/team/$team/$flow/nodes/new/$before'
-    | '/_authenticated/team/$team/$flow/settings/pages/help'
-    | '/_authenticated/team/$team/$flow/settings/pages/privacy'
+    | '/_authenticated/app/$team/$flow/nodes/$id/edit'
+    | '/_authenticated/app/$team/$flow/nodes/new/$before'
+    | '/_authenticated/app/$team/$flow/settings/pages/help'
+    | '/_authenticated/app/$team/$flow/settings/pages/privacy'
     | '/_public/_customDomain/$flow/pay/invite/pages/$page'
     | '/_public/_planXDomain/$team/$flow/draft/pages/$page'
     | '/_public/_planXDomain/$team/$flow/pay/invite/failed'
     | '/_public/_planXDomain/$team/$flow/pay/pages/$page'
     | '/_public/_planXDomain/$team/$flow/preview/pages/$page'
     | '/_public/_planXDomain/$team/$flow/published/pages/$page'
-    | '/_authenticated/team/$team/$flow/nodes/new/'
+    | '/_authenticated/app/$team/$flow/nodes/new/'
     | '/_public/_planXDomain/$team/$flow/pay/invite/'
-    | '/_authenticated/team/$team/$flow/nodes/$id/edit/$before'
+    | '/_authenticated/app/$team/$flow/nodes/$id/edit/$before'
     | '/_public/_planXDomain/$team/$flow/pay/invite/pages/$page'
-    | '/_authenticated/team/$team/$flow/nodes/$parent/nodes/$id/edit'
-    | '/_authenticated/team/$team/$flow/nodes/$parent/nodes/new/$before'
-    | '/_authenticated/team/$team/$flow/nodes/$parent/nodes/new/'
-    | '/_authenticated/team/$team/$flow/nodes/$parent/nodes/$id/edit/$before'
+    | '/_authenticated/app/$team/$flow/nodes/$parent/nodes/$id/edit'
+    | '/_authenticated/app/$team/$flow/nodes/$parent/nodes/new/$before'
+    | '/_authenticated/app/$team/$flow/nodes/$parent/nodes/new/'
+    | '/_authenticated/app/$team/$flow/nodes/$parent/nodes/$id/edit/$before'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   SplatRoute: typeof SplatRoute
+  AuthenticatedAppRouteRoute: typeof AuthenticatedAppRouteRouteWithChildren
   PublicCustomDomainRouteRoute: typeof PublicCustomDomainRouteRouteWithChildren
   authLoginRoute: typeof authLoginRoute
   authLogoutRoute: typeof authLogoutRoute
@@ -1059,55 +1066,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/$'
       preLoaderRoute: typeof SplatRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated': {
-      id: '/_authenticated'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthenticatedRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/': {
-      id: '/_authenticated/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/tutorials': {
-      id: '/_authenticated/tutorials'
-      path: '/tutorials'
-      fullPath: '/tutorials'
-      preLoaderRoute: typeof AuthenticatedTutorialsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/resources': {
-      id: '/_authenticated/resources'
-      path: '/resources'
-      fullPath: '/resources'
-      preLoaderRoute: typeof AuthenticatedResourcesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/onboarding': {
-      id: '/_authenticated/onboarding'
-      path: '/onboarding'
-      fullPath: '/onboarding'
-      preLoaderRoute: typeof AuthenticatedOnboardingRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/global-settings': {
-      id: '/_authenticated/global-settings'
-      path: '/global-settings'
-      fullPath: '/global-settings'
-      preLoaderRoute: typeof AuthenticatedGlobalSettingsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/admin-panel': {
-      id: '/_authenticated/admin-panel'
-      path: '/admin-panel'
-      fullPath: '/admin-panel'
-      preLoaderRoute: typeof AuthenticatedAdminPanelRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/(auth)/logout': {
       id: '/(auth)/logout'
@@ -1130,6 +1088,55 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicCustomDomainRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/app': {
+      id: '/_authenticated/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AuthenticatedAppRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/app/': {
+      id: '/_authenticated/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AuthenticatedAppIndexRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
+    '/_authenticated/app/tutorials': {
+      id: '/_authenticated/app/tutorials'
+      path: '/tutorials'
+      fullPath: '/app/tutorials'
+      preLoaderRoute: typeof AuthenticatedAppTutorialsRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
+    '/_authenticated/app/resources': {
+      id: '/_authenticated/app/resources'
+      path: '/resources'
+      fullPath: '/app/resources'
+      preLoaderRoute: typeof AuthenticatedAppResourcesRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
+    '/_authenticated/app/onboarding': {
+      id: '/_authenticated/app/onboarding'
+      path: '/onboarding'
+      fullPath: '/app/onboarding'
+      preLoaderRoute: typeof AuthenticatedAppOnboardingRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
+    '/_authenticated/app/global-settings': {
+      id: '/_authenticated/app/global-settings'
+      path: '/global-settings'
+      fullPath: '/app/global-settings'
+      preLoaderRoute: typeof AuthenticatedAppGlobalSettingsRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
+    '/_authenticated/app/admin-panel': {
+      id: '/_authenticated/app/admin-panel'
+      path: '/admin-panel'
+      fullPath: '/app/admin-panel'
+      preLoaderRoute: typeof AuthenticatedAppAdminPanelRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
     '/_public/_customDomain/$flow': {
       id: '/_public/_customDomain/$flow'
       path: '/$flow'
@@ -1137,12 +1144,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicCustomDomainFlowRouteRouteImport
       parentRoute: typeof PublicCustomDomainRouteRoute
     }
-    '/_authenticated/team/$team': {
-      id: '/_authenticated/team/$team'
-      path: '/team/$team'
-      fullPath: '/team/$team'
-      preLoaderRoute: typeof AuthenticatedTeamTeamRouteRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/_authenticated/app/$team': {
+      id: '/_authenticated/app/$team'
+      path: '/$team'
+      fullPath: '/app/$team'
+      preLoaderRoute: typeof AuthenticatedAppTeamRouteRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
     }
     '/_public/_customDomain/$flow/': {
       id: '/_public/_customDomain/$flow/'
@@ -1151,12 +1158,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicCustomDomainFlowIndexRouteImport
       parentRoute: typeof PublicCustomDomainFlowRouteRoute
     }
-    '/_authenticated/team/$team/': {
-      id: '/_authenticated/team/$team/'
+    '/_authenticated/app/$team/': {
+      id: '/_authenticated/app/$team/'
       path: '/'
-      fullPath: '/team/$team/'
-      preLoaderRoute: typeof AuthenticatedTeamTeamIndexRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamRouteRoute
+      fullPath: '/app/$team/'
+      preLoaderRoute: typeof AuthenticatedAppTeamIndexRouteImport
+      parentRoute: typeof AuthenticatedAppTeamRouteRoute
     }
     '/_public/_customDomain/$flow/view-application': {
       id: '/_public/_customDomain/$flow/view-application'
@@ -1165,40 +1172,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicCustomDomainFlowViewApplicationRouteImport
       parentRoute: typeof PublicCustomDomainFlowRouteRoute
     }
-    '/_authenticated/team/$team/subscription': {
-      id: '/_authenticated/team/$team/subscription'
+    '/_authenticated/app/$team/subscription': {
+      id: '/_authenticated/app/$team/subscription'
       path: '/subscription'
-      fullPath: '/team/$team/subscription'
-      preLoaderRoute: typeof AuthenticatedTeamTeamSubscriptionRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamRouteRoute
+      fullPath: '/app/$team/subscription'
+      preLoaderRoute: typeof AuthenticatedAppTeamSubscriptionRouteImport
+      parentRoute: typeof AuthenticatedAppTeamRouteRoute
     }
-    '/_authenticated/team/$team/submissions': {
-      id: '/_authenticated/team/$team/submissions'
+    '/_authenticated/app/$team/submissions': {
+      id: '/_authenticated/app/$team/submissions'
       path: '/submissions'
-      fullPath: '/team/$team/submissions'
-      preLoaderRoute: typeof AuthenticatedTeamTeamSubmissionsRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamRouteRoute
+      fullPath: '/app/$team/submissions'
+      preLoaderRoute: typeof AuthenticatedAppTeamSubmissionsRouteImport
+      parentRoute: typeof AuthenticatedAppTeamRouteRoute
     }
-    '/_authenticated/team/$team/members': {
-      id: '/_authenticated/team/$team/members'
+    '/_authenticated/app/$team/members': {
+      id: '/_authenticated/app/$team/members'
       path: '/members'
-      fullPath: '/team/$team/members'
-      preLoaderRoute: typeof AuthenticatedTeamTeamMembersRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamRouteRoute
+      fullPath: '/app/$team/members'
+      preLoaderRoute: typeof AuthenticatedAppTeamMembersRouteImport
+      parentRoute: typeof AuthenticatedAppTeamRouteRoute
     }
-    '/_authenticated/team/$team/feedback': {
-      id: '/_authenticated/team/$team/feedback'
+    '/_authenticated/app/$team/feedback': {
+      id: '/_authenticated/app/$team/feedback'
       path: '/feedback'
-      fullPath: '/team/$team/feedback'
-      preLoaderRoute: typeof AuthenticatedTeamTeamFeedbackRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamRouteRoute
+      fullPath: '/app/$team/feedback'
+      preLoaderRoute: typeof AuthenticatedAppTeamFeedbackRouteImport
+      parentRoute: typeof AuthenticatedAppTeamRouteRoute
     }
-    '/_authenticated/team/$team/design': {
-      id: '/_authenticated/team/$team/design'
+    '/_authenticated/app/$team/design': {
+      id: '/_authenticated/app/$team/design'
       path: '/design'
-      fullPath: '/team/$team/design'
-      preLoaderRoute: typeof AuthenticatedTeamTeamDesignRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamRouteRoute
+      fullPath: '/app/$team/design'
+      preLoaderRoute: typeof AuthenticatedAppTeamDesignRouteImport
+      parentRoute: typeof AuthenticatedAppTeamRouteRoute
     }
     '/_public/_planXDomain/$team/$flow': {
       id: '/_public/_planXDomain/$team/$flow'
@@ -1214,19 +1221,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicCustomDomainFlowPayRouteRouteImport
       parentRoute: typeof PublicCustomDomainFlowRouteRoute
     }
-    '/_authenticated/team/$team/settings': {
-      id: '/_authenticated/team/$team/settings'
+    '/_authenticated/app/$team/settings': {
+      id: '/_authenticated/app/$team/settings'
       path: '/settings'
-      fullPath: '/team/$team/settings'
-      preLoaderRoute: typeof AuthenticatedTeamTeamSettingsRouteRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamRouteRoute
+      fullPath: '/app/$team/settings'
+      preLoaderRoute: typeof AuthenticatedAppTeamSettingsRouteRouteImport
+      parentRoute: typeof AuthenticatedAppTeamRouteRoute
     }
-    '/_authenticated/team/$team/$flow': {
-      id: '/_authenticated/team/$team/$flow'
+    '/_authenticated/app/$team/$flow': {
+      id: '/_authenticated/app/$team/$flow'
       path: '/$flow'
-      fullPath: '/team/$team/$flow'
-      preLoaderRoute: typeof AuthenticatedTeamTeamFlowRouteRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamRouteRoute
+      fullPath: '/app/$team/$flow'
+      preLoaderRoute: typeof AuthenticatedAppTeamFlowRouteRouteImport
+      parentRoute: typeof AuthenticatedAppTeamRouteRoute
     }
     '/_public/_customDomain/$flow/pay/': {
       id: '/_public/_customDomain/$flow/pay/'
@@ -1235,12 +1242,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicCustomDomainFlowPayIndexRouteImport
       parentRoute: typeof PublicCustomDomainFlowPayRouteRoute
     }
-    '/_authenticated/team/$team/settings/': {
-      id: '/_authenticated/team/$team/settings/'
+    '/_authenticated/app/$team/settings/': {
+      id: '/_authenticated/app/$team/settings/'
       path: '/'
-      fullPath: '/team/$team/settings/'
-      preLoaderRoute: typeof AuthenticatedTeamTeamSettingsIndexRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamSettingsRouteRoute
+      fullPath: '/app/$team/settings/'
+      preLoaderRoute: typeof AuthenticatedAppTeamSettingsIndexRouteImport
+      parentRoute: typeof AuthenticatedAppTeamSettingsRouteRoute
     }
     '/_public/_customDomain/$flow/pay/view-application': {
       id: '/_public/_customDomain/$flow/pay/view-application'
@@ -1263,68 +1270,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicCustomDomainFlowPagesPageRouteImport
       parentRoute: typeof PublicCustomDomainFlowRouteRoute
     }
-    '/_authenticated/team/$team/submission/$sessionId': {
-      id: '/_authenticated/team/$team/submission/$sessionId'
+    '/_authenticated/app/$team/submission/$sessionId': {
+      id: '/_authenticated/app/$team/submission/$sessionId'
       path: '/submission/$sessionId'
-      fullPath: '/team/$team/submission/$sessionId'
-      preLoaderRoute: typeof AuthenticatedTeamTeamSubmissionSessionIdRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamRouteRoute
+      fullPath: '/app/$team/submission/$sessionId'
+      preLoaderRoute: typeof AuthenticatedAppTeamSubmissionSessionIdRouteImport
+      parentRoute: typeof AuthenticatedAppTeamRouteRoute
     }
-    '/_authenticated/team/$team/settings/integrations': {
-      id: '/_authenticated/team/$team/settings/integrations'
+    '/_authenticated/app/$team/settings/integrations': {
+      id: '/_authenticated/app/$team/settings/integrations'
       path: '/integrations'
-      fullPath: '/team/$team/settings/integrations'
-      preLoaderRoute: typeof AuthenticatedTeamTeamSettingsIntegrationsRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamSettingsRouteRoute
+      fullPath: '/app/$team/settings/integrations'
+      preLoaderRoute: typeof AuthenticatedAppTeamSettingsIntegrationsRouteImport
+      parentRoute: typeof AuthenticatedAppTeamSettingsRouteRoute
     }
-    '/_authenticated/team/$team/settings/gis-data': {
-      id: '/_authenticated/team/$team/settings/gis-data'
+    '/_authenticated/app/$team/settings/gis-data': {
+      id: '/_authenticated/app/$team/settings/gis-data'
       path: '/gis-data'
-      fullPath: '/team/$team/settings/gis-data'
-      preLoaderRoute: typeof AuthenticatedTeamTeamSettingsGisDataRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamSettingsRouteRoute
+      fullPath: '/app/$team/settings/gis-data'
+      preLoaderRoute: typeof AuthenticatedAppTeamSettingsGisDataRouteImport
+      parentRoute: typeof AuthenticatedAppTeamSettingsRouteRoute
     }
-    '/_authenticated/team/$team/settings/design': {
-      id: '/_authenticated/team/$team/settings/design'
+    '/_authenticated/app/$team/settings/design': {
+      id: '/_authenticated/app/$team/settings/design'
       path: '/design'
-      fullPath: '/team/$team/settings/design'
-      preLoaderRoute: typeof AuthenticatedTeamTeamSettingsDesignRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamSettingsRouteRoute
+      fullPath: '/app/$team/settings/design'
+      preLoaderRoute: typeof AuthenticatedAppTeamSettingsDesignRouteImport
+      parentRoute: typeof AuthenticatedAppTeamSettingsRouteRoute
     }
-    '/_authenticated/team/$team/settings/contact': {
-      id: '/_authenticated/team/$team/settings/contact'
+    '/_authenticated/app/$team/settings/contact': {
+      id: '/_authenticated/app/$team/settings/contact'
       path: '/contact'
-      fullPath: '/team/$team/settings/contact'
-      preLoaderRoute: typeof AuthenticatedTeamTeamSettingsContactRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamSettingsRouteRoute
+      fullPath: '/app/$team/settings/contact'
+      preLoaderRoute: typeof AuthenticatedAppTeamSettingsContactRouteImport
+      parentRoute: typeof AuthenticatedAppTeamSettingsRouteRoute
     }
-    '/_authenticated/team/$team/settings/advanced': {
-      id: '/_authenticated/team/$team/settings/advanced'
+    '/_authenticated/app/$team/settings/advanced': {
+      id: '/_authenticated/app/$team/settings/advanced'
       path: '/advanced'
-      fullPath: '/team/$team/settings/advanced'
-      preLoaderRoute: typeof AuthenticatedTeamTeamSettingsAdvancedRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamSettingsRouteRoute
+      fullPath: '/app/$team/settings/advanced'
+      preLoaderRoute: typeof AuthenticatedAppTeamSettingsAdvancedRouteImport
+      parentRoute: typeof AuthenticatedAppTeamSettingsRouteRoute
     }
-    '/_authenticated/team/$team/$flow/submissions': {
-      id: '/_authenticated/team/$team/$flow/submissions'
+    '/_authenticated/app/$team/$flow/submissions': {
+      id: '/_authenticated/app/$team/$flow/submissions'
       path: '/submissions'
-      fullPath: '/team/$team/$flow/submissions'
-      preLoaderRoute: typeof AuthenticatedTeamTeamFlowSubmissionsRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamFlowRouteRoute
+      fullPath: '/app/$team/$flow/submissions'
+      preLoaderRoute: typeof AuthenticatedAppTeamFlowSubmissionsRouteImport
+      parentRoute: typeof AuthenticatedAppTeamFlowRouteRoute
     }
-    '/_authenticated/team/$team/$flow/feedback': {
-      id: '/_authenticated/team/$team/$flow/feedback'
+    '/_authenticated/app/$team/$flow/feedback': {
+      id: '/_authenticated/app/$team/$flow/feedback'
       path: '/feedback'
-      fullPath: '/team/$team/$flow/feedback'
-      preLoaderRoute: typeof AuthenticatedTeamTeamFlowFeedbackRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamFlowRouteRoute
+      fullPath: '/app/$team/$flow/feedback'
+      preLoaderRoute: typeof AuthenticatedAppTeamFlowFeedbackRouteImport
+      parentRoute: typeof AuthenticatedAppTeamFlowRouteRoute
     }
-    '/_authenticated/team/$team/$flow/about': {
-      id: '/_authenticated/team/$team/$flow/about'
+    '/_authenticated/app/$team/$flow/about': {
+      id: '/_authenticated/app/$team/$flow/about'
       path: '/about'
-      fullPath: '/team/$team/$flow/about'
-      preLoaderRoute: typeof AuthenticatedTeamTeamFlowAboutRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamFlowRouteRoute
+      fullPath: '/app/$team/$flow/about'
+      preLoaderRoute: typeof AuthenticatedAppTeamFlowAboutRouteImport
+      parentRoute: typeof AuthenticatedAppTeamFlowRouteRoute
     }
     '/_public/_planXDomain/$team/$flow/published': {
       id: '/_public/_planXDomain/$team/$flow/published'
@@ -1354,19 +1361,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicPlanXDomainTeamFlowDraftRouteRouteImport
       parentRoute: typeof PublicPlanXDomainTeamFlowRouteRoute
     }
-    '/_authenticated/team/$team/$flow/settings': {
-      id: '/_authenticated/team/$team/$flow/settings'
+    '/_authenticated/app/$team/$flow/settings': {
+      id: '/_authenticated/app/$team/$flow/settings'
       path: '/settings'
-      fullPath: '/team/$team/$flow/settings'
-      preLoaderRoute: typeof AuthenticatedTeamTeamFlowSettingsRouteRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamFlowRouteRoute
+      fullPath: '/app/$team/$flow/settings'
+      preLoaderRoute: typeof AuthenticatedAppTeamFlowSettingsRouteRouteImport
+      parentRoute: typeof AuthenticatedAppTeamFlowRouteRoute
     }
-    '/_authenticated/team/$team/$flow/nodes': {
-      id: '/_authenticated/team/$team/$flow/nodes'
+    '/_authenticated/app/$team/$flow/nodes': {
+      id: '/_authenticated/app/$team/$flow/nodes'
       path: '/nodes'
-      fullPath: '/team/$team/$flow/nodes'
-      preLoaderRoute: typeof AuthenticatedTeamTeamFlowNodesRouteRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamFlowRouteRoute
+      fullPath: '/app/$team/$flow/nodes'
+      preLoaderRoute: typeof AuthenticatedAppTeamFlowNodesRouteRouteImport
+      parentRoute: typeof AuthenticatedAppTeamFlowRouteRoute
     }
     '/_public/_planXDomain/$team/$flow/published/': {
       id: '/_public/_planXDomain/$team/$flow/published/'
@@ -1403,12 +1410,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicCustomDomainFlowPayInviteIndexRouteImport
       parentRoute: typeof PublicCustomDomainFlowPayRouteRoute
     }
-    '/_authenticated/team/$team/$flow/settings/': {
-      id: '/_authenticated/team/$team/$flow/settings/'
+    '/_authenticated/app/$team/$flow/settings/': {
+      id: '/_authenticated/app/$team/$flow/settings/'
       path: '/'
-      fullPath: '/team/$team/$flow/settings/'
-      preLoaderRoute: typeof AuthenticatedTeamTeamFlowSettingsIndexRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamFlowSettingsRouteRoute
+      fullPath: '/app/$team/$flow/settings/'
+      preLoaderRoute: typeof AuthenticatedAppTeamFlowSettingsIndexRouteImport
+      parentRoute: typeof AuthenticatedAppTeamFlowSettingsRouteRoute
     }
     '/_public/_planXDomain/$team/$flow/published/view-application': {
       id: '/_public/_planXDomain/$team/$flow/published/view-application'
@@ -1466,33 +1473,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicCustomDomainFlowPayInviteFailedRouteImport
       parentRoute: typeof PublicCustomDomainFlowPayRouteRoute
     }
-    '/_authenticated/team/$team/$flow/settings/visibility': {
-      id: '/_authenticated/team/$team/$flow/settings/visibility'
+    '/_authenticated/app/$team/$flow/settings/visibility': {
+      id: '/_authenticated/app/$team/$flow/settings/visibility'
       path: '/visibility'
-      fullPath: '/team/$team/$flow/settings/visibility'
-      preLoaderRoute: typeof AuthenticatedTeamTeamFlowSettingsVisibilityRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamFlowSettingsRouteRoute
+      fullPath: '/app/$team/$flow/settings/visibility'
+      preLoaderRoute: typeof AuthenticatedAppTeamFlowSettingsVisibilityRouteImport
+      parentRoute: typeof AuthenticatedAppTeamFlowSettingsRouteRoute
     }
-    '/_authenticated/team/$team/$flow/settings/templates': {
-      id: '/_authenticated/team/$team/$flow/settings/templates'
+    '/_authenticated/app/$team/$flow/settings/templates': {
+      id: '/_authenticated/app/$team/$flow/settings/templates'
       path: '/templates'
-      fullPath: '/team/$team/$flow/settings/templates'
-      preLoaderRoute: typeof AuthenticatedTeamTeamFlowSettingsTemplatesRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamFlowSettingsRouteRoute
+      fullPath: '/app/$team/$flow/settings/templates'
+      preLoaderRoute: typeof AuthenticatedAppTeamFlowSettingsTemplatesRouteImport
+      parentRoute: typeof AuthenticatedAppTeamFlowSettingsRouteRoute
     }
-    '/_authenticated/team/$team/$flow/settings/legal-disclaimer': {
-      id: '/_authenticated/team/$team/$flow/settings/legal-disclaimer'
+    '/_authenticated/app/$team/$flow/settings/legal-disclaimer': {
+      id: '/_authenticated/app/$team/$flow/settings/legal-disclaimer'
       path: '/legal-disclaimer'
-      fullPath: '/team/$team/$flow/settings/legal-disclaimer'
-      preLoaderRoute: typeof AuthenticatedTeamTeamFlowSettingsLegalDisclaimerRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamFlowSettingsRouteRoute
+      fullPath: '/app/$team/$flow/settings/legal-disclaimer'
+      preLoaderRoute: typeof AuthenticatedAppTeamFlowSettingsLegalDisclaimerRouteImport
+      parentRoute: typeof AuthenticatedAppTeamFlowSettingsRouteRoute
     }
-    '/_authenticated/team/$team/$flow/settings/about': {
-      id: '/_authenticated/team/$team/$flow/settings/about'
+    '/_authenticated/app/$team/$flow/settings/about': {
+      id: '/_authenticated/app/$team/$flow/settings/about'
       path: '/about'
-      fullPath: '/team/$team/$flow/settings/about'
-      preLoaderRoute: typeof AuthenticatedTeamTeamFlowSettingsAboutRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamFlowSettingsRouteRoute
+      fullPath: '/app/$team/$flow/settings/about'
+      preLoaderRoute: typeof AuthenticatedAppTeamFlowSettingsAboutRouteImport
+      parentRoute: typeof AuthenticatedAppTeamFlowSettingsRouteRoute
     }
     '/_public/_planXDomain/$team/$flow/pay/invite/': {
       id: '/_public/_planXDomain/$team/$flow/pay/invite/'
@@ -1501,12 +1508,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicPlanXDomainTeamFlowPayInviteIndexRouteImport
       parentRoute: typeof PublicPlanXDomainTeamFlowPayRouteRoute
     }
-    '/_authenticated/team/$team/$flow/nodes/new/': {
-      id: '/_authenticated/team/$team/$flow/nodes/new/'
+    '/_authenticated/app/$team/$flow/nodes/new/': {
+      id: '/_authenticated/app/$team/$flow/nodes/new/'
       path: '/new'
-      fullPath: '/team/$team/$flow/nodes/new'
-      preLoaderRoute: typeof AuthenticatedTeamTeamFlowNodesNewIndexRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamFlowNodesRouteRoute
+      fullPath: '/app/$team/$flow/nodes/new'
+      preLoaderRoute: typeof AuthenticatedAppTeamFlowNodesNewIndexRouteImport
+      parentRoute: typeof AuthenticatedAppTeamFlowNodesRouteRoute
     }
     '/_public/_planXDomain/$team/$flow/published/pages/$page': {
       id: '/_public/_planXDomain/$team/$flow/published/pages/$page'
@@ -1550,33 +1557,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicCustomDomainFlowPayInvitePagesPageRouteImport
       parentRoute: typeof PublicCustomDomainFlowPayRouteRoute
     }
-    '/_authenticated/team/$team/$flow/settings/pages/privacy': {
-      id: '/_authenticated/team/$team/$flow/settings/pages/privacy'
+    '/_authenticated/app/$team/$flow/settings/pages/privacy': {
+      id: '/_authenticated/app/$team/$flow/settings/pages/privacy'
       path: '/pages/privacy'
-      fullPath: '/team/$team/$flow/settings/pages/privacy'
-      preLoaderRoute: typeof AuthenticatedTeamTeamFlowSettingsPagesPrivacyRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamFlowSettingsRouteRoute
+      fullPath: '/app/$team/$flow/settings/pages/privacy'
+      preLoaderRoute: typeof AuthenticatedAppTeamFlowSettingsPagesPrivacyRouteImport
+      parentRoute: typeof AuthenticatedAppTeamFlowSettingsRouteRoute
     }
-    '/_authenticated/team/$team/$flow/settings/pages/help': {
-      id: '/_authenticated/team/$team/$flow/settings/pages/help'
+    '/_authenticated/app/$team/$flow/settings/pages/help': {
+      id: '/_authenticated/app/$team/$flow/settings/pages/help'
       path: '/pages/help'
-      fullPath: '/team/$team/$flow/settings/pages/help'
-      preLoaderRoute: typeof AuthenticatedTeamTeamFlowSettingsPagesHelpRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamFlowSettingsRouteRoute
+      fullPath: '/app/$team/$flow/settings/pages/help'
+      preLoaderRoute: typeof AuthenticatedAppTeamFlowSettingsPagesHelpRouteImport
+      parentRoute: typeof AuthenticatedAppTeamFlowSettingsRouteRoute
     }
-    '/_authenticated/team/$team/$flow/nodes/new/$before': {
-      id: '/_authenticated/team/$team/$flow/nodes/new/$before'
+    '/_authenticated/app/$team/$flow/nodes/new/$before': {
+      id: '/_authenticated/app/$team/$flow/nodes/new/$before'
       path: '/new/$before'
-      fullPath: '/team/$team/$flow/nodes/new/$before'
-      preLoaderRoute: typeof AuthenticatedTeamTeamFlowNodesNewBeforeRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamFlowNodesRouteRoute
+      fullPath: '/app/$team/$flow/nodes/new/$before'
+      preLoaderRoute: typeof AuthenticatedAppTeamFlowNodesNewBeforeRouteImport
+      parentRoute: typeof AuthenticatedAppTeamFlowNodesRouteRoute
     }
-    '/_authenticated/team/$team/$flow/nodes/$id/edit': {
-      id: '/_authenticated/team/$team/$flow/nodes/$id/edit'
+    '/_authenticated/app/$team/$flow/nodes/$id/edit': {
+      id: '/_authenticated/app/$team/$flow/nodes/$id/edit'
       path: '/$id/edit'
-      fullPath: '/team/$team/$flow/nodes/$id/edit'
-      preLoaderRoute: typeof AuthenticatedTeamTeamFlowNodesIdEditRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamFlowNodesRouteRoute
+      fullPath: '/app/$team/$flow/nodes/$id/edit'
+      preLoaderRoute: typeof AuthenticatedAppTeamFlowNodesIdEditRouteImport
+      parentRoute: typeof AuthenticatedAppTeamFlowNodesRouteRoute
     }
     '/_public/_planXDomain/$team/$flow/pay/invite/pages/$page': {
       id: '/_public/_planXDomain/$team/$flow/pay/invite/pages/$page'
@@ -1585,250 +1592,251 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicPlanXDomainTeamFlowPayInvitePagesPageRouteImport
       parentRoute: typeof PublicPlanXDomainTeamFlowPayRouteRoute
     }
-    '/_authenticated/team/$team/$flow/nodes/$id/edit/$before': {
-      id: '/_authenticated/team/$team/$flow/nodes/$id/edit/$before'
+    '/_authenticated/app/$team/$flow/nodes/$id/edit/$before': {
+      id: '/_authenticated/app/$team/$flow/nodes/$id/edit/$before'
       path: '/$before'
-      fullPath: '/team/$team/$flow/nodes/$id/edit/$before'
-      preLoaderRoute: typeof AuthenticatedTeamTeamFlowNodesIdEditBeforeRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamFlowNodesIdEditRoute
+      fullPath: '/app/$team/$flow/nodes/$id/edit/$before'
+      preLoaderRoute: typeof AuthenticatedAppTeamFlowNodesIdEditBeforeRouteImport
+      parentRoute: typeof AuthenticatedAppTeamFlowNodesIdEditRoute
     }
-    '/_authenticated/team/$team/$flow/nodes/$parent/nodes/new/': {
-      id: '/_authenticated/team/$team/$flow/nodes/$parent/nodes/new/'
+    '/_authenticated/app/$team/$flow/nodes/$parent/nodes/new/': {
+      id: '/_authenticated/app/$team/$flow/nodes/$parent/nodes/new/'
       path: '/$parent/nodes/new'
-      fullPath: '/team/$team/$flow/nodes/$parent/nodes/new'
-      preLoaderRoute: typeof AuthenticatedTeamTeamFlowNodesParentNodesNewIndexRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamFlowNodesRouteRoute
+      fullPath: '/app/$team/$flow/nodes/$parent/nodes/new'
+      preLoaderRoute: typeof AuthenticatedAppTeamFlowNodesParentNodesNewIndexRouteImport
+      parentRoute: typeof AuthenticatedAppTeamFlowNodesRouteRoute
     }
-    '/_authenticated/team/$team/$flow/nodes/$parent/nodes/new/$before': {
-      id: '/_authenticated/team/$team/$flow/nodes/$parent/nodes/new/$before'
+    '/_authenticated/app/$team/$flow/nodes/$parent/nodes/new/$before': {
+      id: '/_authenticated/app/$team/$flow/nodes/$parent/nodes/new/$before'
       path: '/$parent/nodes/new/$before'
-      fullPath: '/team/$team/$flow/nodes/$parent/nodes/new/$before'
-      preLoaderRoute: typeof AuthenticatedTeamTeamFlowNodesParentNodesNewBeforeRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamFlowNodesRouteRoute
+      fullPath: '/app/$team/$flow/nodes/$parent/nodes/new/$before'
+      preLoaderRoute: typeof AuthenticatedAppTeamFlowNodesParentNodesNewBeforeRouteImport
+      parentRoute: typeof AuthenticatedAppTeamFlowNodesRouteRoute
     }
-    '/_authenticated/team/$team/$flow/nodes/$parent/nodes/$id/edit': {
-      id: '/_authenticated/team/$team/$flow/nodes/$parent/nodes/$id/edit'
+    '/_authenticated/app/$team/$flow/nodes/$parent/nodes/$id/edit': {
+      id: '/_authenticated/app/$team/$flow/nodes/$parent/nodes/$id/edit'
       path: '/$parent/nodes/$id/edit'
-      fullPath: '/team/$team/$flow/nodes/$parent/nodes/$id/edit'
-      preLoaderRoute: typeof AuthenticatedTeamTeamFlowNodesParentNodesIdEditRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamFlowNodesRouteRoute
+      fullPath: '/app/$team/$flow/nodes/$parent/nodes/$id/edit'
+      preLoaderRoute: typeof AuthenticatedAppTeamFlowNodesParentNodesIdEditRouteImport
+      parentRoute: typeof AuthenticatedAppTeamFlowNodesRouteRoute
     }
-    '/_authenticated/team/$team/$flow/nodes/$parent/nodes/$id/edit/$before': {
-      id: '/_authenticated/team/$team/$flow/nodes/$parent/nodes/$id/edit/$before'
+    '/_authenticated/app/$team/$flow/nodes/$parent/nodes/$id/edit/$before': {
+      id: '/_authenticated/app/$team/$flow/nodes/$parent/nodes/$id/edit/$before'
       path: '/$before'
-      fullPath: '/team/$team/$flow/nodes/$parent/nodes/$id/edit/$before'
-      preLoaderRoute: typeof AuthenticatedTeamTeamFlowNodesParentNodesIdEditBeforeRouteImport
-      parentRoute: typeof AuthenticatedTeamTeamFlowNodesParentNodesIdEditRoute
+      fullPath: '/app/$team/$flow/nodes/$parent/nodes/$id/edit/$before'
+      preLoaderRoute: typeof AuthenticatedAppTeamFlowNodesParentNodesIdEditBeforeRouteImport
+      parentRoute: typeof AuthenticatedAppTeamFlowNodesParentNodesIdEditRoute
     }
   }
 }
 
-interface AuthenticatedTeamTeamFlowNodesIdEditRouteChildren {
-  AuthenticatedTeamTeamFlowNodesIdEditBeforeRoute: typeof AuthenticatedTeamTeamFlowNodesIdEditBeforeRoute
+interface AuthenticatedAppTeamFlowNodesIdEditRouteChildren {
+  AuthenticatedAppTeamFlowNodesIdEditBeforeRoute: typeof AuthenticatedAppTeamFlowNodesIdEditBeforeRoute
 }
 
-const AuthenticatedTeamTeamFlowNodesIdEditRouteChildren: AuthenticatedTeamTeamFlowNodesIdEditRouteChildren =
+const AuthenticatedAppTeamFlowNodesIdEditRouteChildren: AuthenticatedAppTeamFlowNodesIdEditRouteChildren =
   {
-    AuthenticatedTeamTeamFlowNodesIdEditBeforeRoute:
-      AuthenticatedTeamTeamFlowNodesIdEditBeforeRoute,
+    AuthenticatedAppTeamFlowNodesIdEditBeforeRoute:
+      AuthenticatedAppTeamFlowNodesIdEditBeforeRoute,
   }
 
-const AuthenticatedTeamTeamFlowNodesIdEditRouteWithChildren =
-  AuthenticatedTeamTeamFlowNodesIdEditRoute._addFileChildren(
-    AuthenticatedTeamTeamFlowNodesIdEditRouteChildren,
+const AuthenticatedAppTeamFlowNodesIdEditRouteWithChildren =
+  AuthenticatedAppTeamFlowNodesIdEditRoute._addFileChildren(
+    AuthenticatedAppTeamFlowNodesIdEditRouteChildren,
   )
 
-interface AuthenticatedTeamTeamFlowNodesParentNodesIdEditRouteChildren {
-  AuthenticatedTeamTeamFlowNodesParentNodesIdEditBeforeRoute: typeof AuthenticatedTeamTeamFlowNodesParentNodesIdEditBeforeRoute
+interface AuthenticatedAppTeamFlowNodesParentNodesIdEditRouteChildren {
+  AuthenticatedAppTeamFlowNodesParentNodesIdEditBeforeRoute: typeof AuthenticatedAppTeamFlowNodesParentNodesIdEditBeforeRoute
 }
 
-const AuthenticatedTeamTeamFlowNodesParentNodesIdEditRouteChildren: AuthenticatedTeamTeamFlowNodesParentNodesIdEditRouteChildren =
+const AuthenticatedAppTeamFlowNodesParentNodesIdEditRouteChildren: AuthenticatedAppTeamFlowNodesParentNodesIdEditRouteChildren =
   {
-    AuthenticatedTeamTeamFlowNodesParentNodesIdEditBeforeRoute:
-      AuthenticatedTeamTeamFlowNodesParentNodesIdEditBeforeRoute,
+    AuthenticatedAppTeamFlowNodesParentNodesIdEditBeforeRoute:
+      AuthenticatedAppTeamFlowNodesParentNodesIdEditBeforeRoute,
   }
 
-const AuthenticatedTeamTeamFlowNodesParentNodesIdEditRouteWithChildren =
-  AuthenticatedTeamTeamFlowNodesParentNodesIdEditRoute._addFileChildren(
-    AuthenticatedTeamTeamFlowNodesParentNodesIdEditRouteChildren,
+const AuthenticatedAppTeamFlowNodesParentNodesIdEditRouteWithChildren =
+  AuthenticatedAppTeamFlowNodesParentNodesIdEditRoute._addFileChildren(
+    AuthenticatedAppTeamFlowNodesParentNodesIdEditRouteChildren,
   )
 
-interface AuthenticatedTeamTeamFlowNodesRouteRouteChildren {
-  AuthenticatedTeamTeamFlowNodesIdEditRoute: typeof AuthenticatedTeamTeamFlowNodesIdEditRouteWithChildren
-  AuthenticatedTeamTeamFlowNodesNewBeforeRoute: typeof AuthenticatedTeamTeamFlowNodesNewBeforeRoute
-  AuthenticatedTeamTeamFlowNodesNewIndexRoute: typeof AuthenticatedTeamTeamFlowNodesNewIndexRoute
-  AuthenticatedTeamTeamFlowNodesParentNodesIdEditRoute: typeof AuthenticatedTeamTeamFlowNodesParentNodesIdEditRouteWithChildren
-  AuthenticatedTeamTeamFlowNodesParentNodesNewBeforeRoute: typeof AuthenticatedTeamTeamFlowNodesParentNodesNewBeforeRoute
-  AuthenticatedTeamTeamFlowNodesParentNodesNewIndexRoute: typeof AuthenticatedTeamTeamFlowNodesParentNodesNewIndexRoute
+interface AuthenticatedAppTeamFlowNodesRouteRouteChildren {
+  AuthenticatedAppTeamFlowNodesIdEditRoute: typeof AuthenticatedAppTeamFlowNodesIdEditRouteWithChildren
+  AuthenticatedAppTeamFlowNodesNewBeforeRoute: typeof AuthenticatedAppTeamFlowNodesNewBeforeRoute
+  AuthenticatedAppTeamFlowNodesNewIndexRoute: typeof AuthenticatedAppTeamFlowNodesNewIndexRoute
+  AuthenticatedAppTeamFlowNodesParentNodesIdEditRoute: typeof AuthenticatedAppTeamFlowNodesParentNodesIdEditRouteWithChildren
+  AuthenticatedAppTeamFlowNodesParentNodesNewBeforeRoute: typeof AuthenticatedAppTeamFlowNodesParentNodesNewBeforeRoute
+  AuthenticatedAppTeamFlowNodesParentNodesNewIndexRoute: typeof AuthenticatedAppTeamFlowNodesParentNodesNewIndexRoute
 }
 
-const AuthenticatedTeamTeamFlowNodesRouteRouteChildren: AuthenticatedTeamTeamFlowNodesRouteRouteChildren =
+const AuthenticatedAppTeamFlowNodesRouteRouteChildren: AuthenticatedAppTeamFlowNodesRouteRouteChildren =
   {
-    AuthenticatedTeamTeamFlowNodesIdEditRoute:
-      AuthenticatedTeamTeamFlowNodesIdEditRouteWithChildren,
-    AuthenticatedTeamTeamFlowNodesNewBeforeRoute:
-      AuthenticatedTeamTeamFlowNodesNewBeforeRoute,
-    AuthenticatedTeamTeamFlowNodesNewIndexRoute:
-      AuthenticatedTeamTeamFlowNodesNewIndexRoute,
-    AuthenticatedTeamTeamFlowNodesParentNodesIdEditRoute:
-      AuthenticatedTeamTeamFlowNodesParentNodesIdEditRouteWithChildren,
-    AuthenticatedTeamTeamFlowNodesParentNodesNewBeforeRoute:
-      AuthenticatedTeamTeamFlowNodesParentNodesNewBeforeRoute,
-    AuthenticatedTeamTeamFlowNodesParentNodesNewIndexRoute:
-      AuthenticatedTeamTeamFlowNodesParentNodesNewIndexRoute,
+    AuthenticatedAppTeamFlowNodesIdEditRoute:
+      AuthenticatedAppTeamFlowNodesIdEditRouteWithChildren,
+    AuthenticatedAppTeamFlowNodesNewBeforeRoute:
+      AuthenticatedAppTeamFlowNodesNewBeforeRoute,
+    AuthenticatedAppTeamFlowNodesNewIndexRoute:
+      AuthenticatedAppTeamFlowNodesNewIndexRoute,
+    AuthenticatedAppTeamFlowNodesParentNodesIdEditRoute:
+      AuthenticatedAppTeamFlowNodesParentNodesIdEditRouteWithChildren,
+    AuthenticatedAppTeamFlowNodesParentNodesNewBeforeRoute:
+      AuthenticatedAppTeamFlowNodesParentNodesNewBeforeRoute,
+    AuthenticatedAppTeamFlowNodesParentNodesNewIndexRoute:
+      AuthenticatedAppTeamFlowNodesParentNodesNewIndexRoute,
   }
 
-const AuthenticatedTeamTeamFlowNodesRouteRouteWithChildren =
-  AuthenticatedTeamTeamFlowNodesRouteRoute._addFileChildren(
-    AuthenticatedTeamTeamFlowNodesRouteRouteChildren,
+const AuthenticatedAppTeamFlowNodesRouteRouteWithChildren =
+  AuthenticatedAppTeamFlowNodesRouteRoute._addFileChildren(
+    AuthenticatedAppTeamFlowNodesRouteRouteChildren,
   )
 
-interface AuthenticatedTeamTeamFlowSettingsRouteRouteChildren {
-  AuthenticatedTeamTeamFlowSettingsAboutRoute: typeof AuthenticatedTeamTeamFlowSettingsAboutRoute
-  AuthenticatedTeamTeamFlowSettingsLegalDisclaimerRoute: typeof AuthenticatedTeamTeamFlowSettingsLegalDisclaimerRoute
-  AuthenticatedTeamTeamFlowSettingsTemplatesRoute: typeof AuthenticatedTeamTeamFlowSettingsTemplatesRoute
-  AuthenticatedTeamTeamFlowSettingsVisibilityRoute: typeof AuthenticatedTeamTeamFlowSettingsVisibilityRoute
-  AuthenticatedTeamTeamFlowSettingsIndexRoute: typeof AuthenticatedTeamTeamFlowSettingsIndexRoute
-  AuthenticatedTeamTeamFlowSettingsPagesHelpRoute: typeof AuthenticatedTeamTeamFlowSettingsPagesHelpRoute
-  AuthenticatedTeamTeamFlowSettingsPagesPrivacyRoute: typeof AuthenticatedTeamTeamFlowSettingsPagesPrivacyRoute
+interface AuthenticatedAppTeamFlowSettingsRouteRouteChildren {
+  AuthenticatedAppTeamFlowSettingsAboutRoute: typeof AuthenticatedAppTeamFlowSettingsAboutRoute
+  AuthenticatedAppTeamFlowSettingsLegalDisclaimerRoute: typeof AuthenticatedAppTeamFlowSettingsLegalDisclaimerRoute
+  AuthenticatedAppTeamFlowSettingsTemplatesRoute: typeof AuthenticatedAppTeamFlowSettingsTemplatesRoute
+  AuthenticatedAppTeamFlowSettingsVisibilityRoute: typeof AuthenticatedAppTeamFlowSettingsVisibilityRoute
+  AuthenticatedAppTeamFlowSettingsIndexRoute: typeof AuthenticatedAppTeamFlowSettingsIndexRoute
+  AuthenticatedAppTeamFlowSettingsPagesHelpRoute: typeof AuthenticatedAppTeamFlowSettingsPagesHelpRoute
+  AuthenticatedAppTeamFlowSettingsPagesPrivacyRoute: typeof AuthenticatedAppTeamFlowSettingsPagesPrivacyRoute
 }
 
-const AuthenticatedTeamTeamFlowSettingsRouteRouteChildren: AuthenticatedTeamTeamFlowSettingsRouteRouteChildren =
+const AuthenticatedAppTeamFlowSettingsRouteRouteChildren: AuthenticatedAppTeamFlowSettingsRouteRouteChildren =
   {
-    AuthenticatedTeamTeamFlowSettingsAboutRoute:
-      AuthenticatedTeamTeamFlowSettingsAboutRoute,
-    AuthenticatedTeamTeamFlowSettingsLegalDisclaimerRoute:
-      AuthenticatedTeamTeamFlowSettingsLegalDisclaimerRoute,
-    AuthenticatedTeamTeamFlowSettingsTemplatesRoute:
-      AuthenticatedTeamTeamFlowSettingsTemplatesRoute,
-    AuthenticatedTeamTeamFlowSettingsVisibilityRoute:
-      AuthenticatedTeamTeamFlowSettingsVisibilityRoute,
-    AuthenticatedTeamTeamFlowSettingsIndexRoute:
-      AuthenticatedTeamTeamFlowSettingsIndexRoute,
-    AuthenticatedTeamTeamFlowSettingsPagesHelpRoute:
-      AuthenticatedTeamTeamFlowSettingsPagesHelpRoute,
-    AuthenticatedTeamTeamFlowSettingsPagesPrivacyRoute:
-      AuthenticatedTeamTeamFlowSettingsPagesPrivacyRoute,
+    AuthenticatedAppTeamFlowSettingsAboutRoute:
+      AuthenticatedAppTeamFlowSettingsAboutRoute,
+    AuthenticatedAppTeamFlowSettingsLegalDisclaimerRoute:
+      AuthenticatedAppTeamFlowSettingsLegalDisclaimerRoute,
+    AuthenticatedAppTeamFlowSettingsTemplatesRoute:
+      AuthenticatedAppTeamFlowSettingsTemplatesRoute,
+    AuthenticatedAppTeamFlowSettingsVisibilityRoute:
+      AuthenticatedAppTeamFlowSettingsVisibilityRoute,
+    AuthenticatedAppTeamFlowSettingsIndexRoute:
+      AuthenticatedAppTeamFlowSettingsIndexRoute,
+    AuthenticatedAppTeamFlowSettingsPagesHelpRoute:
+      AuthenticatedAppTeamFlowSettingsPagesHelpRoute,
+    AuthenticatedAppTeamFlowSettingsPagesPrivacyRoute:
+      AuthenticatedAppTeamFlowSettingsPagesPrivacyRoute,
   }
 
-const AuthenticatedTeamTeamFlowSettingsRouteRouteWithChildren =
-  AuthenticatedTeamTeamFlowSettingsRouteRoute._addFileChildren(
-    AuthenticatedTeamTeamFlowSettingsRouteRouteChildren,
+const AuthenticatedAppTeamFlowSettingsRouteRouteWithChildren =
+  AuthenticatedAppTeamFlowSettingsRouteRoute._addFileChildren(
+    AuthenticatedAppTeamFlowSettingsRouteRouteChildren,
   )
 
-interface AuthenticatedTeamTeamFlowRouteRouteChildren {
-  AuthenticatedTeamTeamFlowNodesRouteRoute: typeof AuthenticatedTeamTeamFlowNodesRouteRouteWithChildren
-  AuthenticatedTeamTeamFlowSettingsRouteRoute: typeof AuthenticatedTeamTeamFlowSettingsRouteRouteWithChildren
-  AuthenticatedTeamTeamFlowAboutRoute: typeof AuthenticatedTeamTeamFlowAboutRoute
-  AuthenticatedTeamTeamFlowFeedbackRoute: typeof AuthenticatedTeamTeamFlowFeedbackRoute
-  AuthenticatedTeamTeamFlowSubmissionsRoute: typeof AuthenticatedTeamTeamFlowSubmissionsRoute
+interface AuthenticatedAppTeamFlowRouteRouteChildren {
+  AuthenticatedAppTeamFlowNodesRouteRoute: typeof AuthenticatedAppTeamFlowNodesRouteRouteWithChildren
+  AuthenticatedAppTeamFlowSettingsRouteRoute: typeof AuthenticatedAppTeamFlowSettingsRouteRouteWithChildren
+  AuthenticatedAppTeamFlowAboutRoute: typeof AuthenticatedAppTeamFlowAboutRoute
+  AuthenticatedAppTeamFlowFeedbackRoute: typeof AuthenticatedAppTeamFlowFeedbackRoute
+  AuthenticatedAppTeamFlowSubmissionsRoute: typeof AuthenticatedAppTeamFlowSubmissionsRoute
 }
 
-const AuthenticatedTeamTeamFlowRouteRouteChildren: AuthenticatedTeamTeamFlowRouteRouteChildren =
+const AuthenticatedAppTeamFlowRouteRouteChildren: AuthenticatedAppTeamFlowRouteRouteChildren =
   {
-    AuthenticatedTeamTeamFlowNodesRouteRoute:
-      AuthenticatedTeamTeamFlowNodesRouteRouteWithChildren,
-    AuthenticatedTeamTeamFlowSettingsRouteRoute:
-      AuthenticatedTeamTeamFlowSettingsRouteRouteWithChildren,
-    AuthenticatedTeamTeamFlowAboutRoute: AuthenticatedTeamTeamFlowAboutRoute,
-    AuthenticatedTeamTeamFlowFeedbackRoute:
-      AuthenticatedTeamTeamFlowFeedbackRoute,
-    AuthenticatedTeamTeamFlowSubmissionsRoute:
-      AuthenticatedTeamTeamFlowSubmissionsRoute,
+    AuthenticatedAppTeamFlowNodesRouteRoute:
+      AuthenticatedAppTeamFlowNodesRouteRouteWithChildren,
+    AuthenticatedAppTeamFlowSettingsRouteRoute:
+      AuthenticatedAppTeamFlowSettingsRouteRouteWithChildren,
+    AuthenticatedAppTeamFlowAboutRoute: AuthenticatedAppTeamFlowAboutRoute,
+    AuthenticatedAppTeamFlowFeedbackRoute:
+      AuthenticatedAppTeamFlowFeedbackRoute,
+    AuthenticatedAppTeamFlowSubmissionsRoute:
+      AuthenticatedAppTeamFlowSubmissionsRoute,
   }
 
-const AuthenticatedTeamTeamFlowRouteRouteWithChildren =
-  AuthenticatedTeamTeamFlowRouteRoute._addFileChildren(
-    AuthenticatedTeamTeamFlowRouteRouteChildren,
+const AuthenticatedAppTeamFlowRouteRouteWithChildren =
+  AuthenticatedAppTeamFlowRouteRoute._addFileChildren(
+    AuthenticatedAppTeamFlowRouteRouteChildren,
   )
 
-interface AuthenticatedTeamTeamSettingsRouteRouteChildren {
-  AuthenticatedTeamTeamSettingsAdvancedRoute: typeof AuthenticatedTeamTeamSettingsAdvancedRoute
-  AuthenticatedTeamTeamSettingsContactRoute: typeof AuthenticatedTeamTeamSettingsContactRoute
-  AuthenticatedTeamTeamSettingsDesignRoute: typeof AuthenticatedTeamTeamSettingsDesignRoute
-  AuthenticatedTeamTeamSettingsGisDataRoute: typeof AuthenticatedTeamTeamSettingsGisDataRoute
-  AuthenticatedTeamTeamSettingsIntegrationsRoute: typeof AuthenticatedTeamTeamSettingsIntegrationsRoute
-  AuthenticatedTeamTeamSettingsIndexRoute: typeof AuthenticatedTeamTeamSettingsIndexRoute
+interface AuthenticatedAppTeamSettingsRouteRouteChildren {
+  AuthenticatedAppTeamSettingsAdvancedRoute: typeof AuthenticatedAppTeamSettingsAdvancedRoute
+  AuthenticatedAppTeamSettingsContactRoute: typeof AuthenticatedAppTeamSettingsContactRoute
+  AuthenticatedAppTeamSettingsDesignRoute: typeof AuthenticatedAppTeamSettingsDesignRoute
+  AuthenticatedAppTeamSettingsGisDataRoute: typeof AuthenticatedAppTeamSettingsGisDataRoute
+  AuthenticatedAppTeamSettingsIntegrationsRoute: typeof AuthenticatedAppTeamSettingsIntegrationsRoute
+  AuthenticatedAppTeamSettingsIndexRoute: typeof AuthenticatedAppTeamSettingsIndexRoute
 }
 
-const AuthenticatedTeamTeamSettingsRouteRouteChildren: AuthenticatedTeamTeamSettingsRouteRouteChildren =
+const AuthenticatedAppTeamSettingsRouteRouteChildren: AuthenticatedAppTeamSettingsRouteRouteChildren =
   {
-    AuthenticatedTeamTeamSettingsAdvancedRoute:
-      AuthenticatedTeamTeamSettingsAdvancedRoute,
-    AuthenticatedTeamTeamSettingsContactRoute:
-      AuthenticatedTeamTeamSettingsContactRoute,
-    AuthenticatedTeamTeamSettingsDesignRoute:
-      AuthenticatedTeamTeamSettingsDesignRoute,
-    AuthenticatedTeamTeamSettingsGisDataRoute:
-      AuthenticatedTeamTeamSettingsGisDataRoute,
-    AuthenticatedTeamTeamSettingsIntegrationsRoute:
-      AuthenticatedTeamTeamSettingsIntegrationsRoute,
-    AuthenticatedTeamTeamSettingsIndexRoute:
-      AuthenticatedTeamTeamSettingsIndexRoute,
+    AuthenticatedAppTeamSettingsAdvancedRoute:
+      AuthenticatedAppTeamSettingsAdvancedRoute,
+    AuthenticatedAppTeamSettingsContactRoute:
+      AuthenticatedAppTeamSettingsContactRoute,
+    AuthenticatedAppTeamSettingsDesignRoute:
+      AuthenticatedAppTeamSettingsDesignRoute,
+    AuthenticatedAppTeamSettingsGisDataRoute:
+      AuthenticatedAppTeamSettingsGisDataRoute,
+    AuthenticatedAppTeamSettingsIntegrationsRoute:
+      AuthenticatedAppTeamSettingsIntegrationsRoute,
+    AuthenticatedAppTeamSettingsIndexRoute:
+      AuthenticatedAppTeamSettingsIndexRoute,
   }
 
-const AuthenticatedTeamTeamSettingsRouteRouteWithChildren =
-  AuthenticatedTeamTeamSettingsRouteRoute._addFileChildren(
-    AuthenticatedTeamTeamSettingsRouteRouteChildren,
+const AuthenticatedAppTeamSettingsRouteRouteWithChildren =
+  AuthenticatedAppTeamSettingsRouteRoute._addFileChildren(
+    AuthenticatedAppTeamSettingsRouteRouteChildren,
   )
 
-interface AuthenticatedTeamTeamRouteRouteChildren {
-  AuthenticatedTeamTeamFlowRouteRoute: typeof AuthenticatedTeamTeamFlowRouteRouteWithChildren
-  AuthenticatedTeamTeamSettingsRouteRoute: typeof AuthenticatedTeamTeamSettingsRouteRouteWithChildren
-  AuthenticatedTeamTeamDesignRoute: typeof AuthenticatedTeamTeamDesignRoute
-  AuthenticatedTeamTeamFeedbackRoute: typeof AuthenticatedTeamTeamFeedbackRoute
-  AuthenticatedTeamTeamMembersRoute: typeof AuthenticatedTeamTeamMembersRoute
-  AuthenticatedTeamTeamSubmissionsRoute: typeof AuthenticatedTeamTeamSubmissionsRoute
-  AuthenticatedTeamTeamSubscriptionRoute: typeof AuthenticatedTeamTeamSubscriptionRoute
-  AuthenticatedTeamTeamIndexRoute: typeof AuthenticatedTeamTeamIndexRoute
-  AuthenticatedTeamTeamSubmissionSessionIdRoute: typeof AuthenticatedTeamTeamSubmissionSessionIdRoute
+interface AuthenticatedAppTeamRouteRouteChildren {
+  AuthenticatedAppTeamFlowRouteRoute: typeof AuthenticatedAppTeamFlowRouteRouteWithChildren
+  AuthenticatedAppTeamSettingsRouteRoute: typeof AuthenticatedAppTeamSettingsRouteRouteWithChildren
+  AuthenticatedAppTeamDesignRoute: typeof AuthenticatedAppTeamDesignRoute
+  AuthenticatedAppTeamFeedbackRoute: typeof AuthenticatedAppTeamFeedbackRoute
+  AuthenticatedAppTeamMembersRoute: typeof AuthenticatedAppTeamMembersRoute
+  AuthenticatedAppTeamSubmissionsRoute: typeof AuthenticatedAppTeamSubmissionsRoute
+  AuthenticatedAppTeamSubscriptionRoute: typeof AuthenticatedAppTeamSubscriptionRoute
+  AuthenticatedAppTeamIndexRoute: typeof AuthenticatedAppTeamIndexRoute
+  AuthenticatedAppTeamSubmissionSessionIdRoute: typeof AuthenticatedAppTeamSubmissionSessionIdRoute
 }
 
-const AuthenticatedTeamTeamRouteRouteChildren: AuthenticatedTeamTeamRouteRouteChildren =
+const AuthenticatedAppTeamRouteRouteChildren: AuthenticatedAppTeamRouteRouteChildren =
   {
-    AuthenticatedTeamTeamFlowRouteRoute:
-      AuthenticatedTeamTeamFlowRouteRouteWithChildren,
-    AuthenticatedTeamTeamSettingsRouteRoute:
-      AuthenticatedTeamTeamSettingsRouteRouteWithChildren,
-    AuthenticatedTeamTeamDesignRoute: AuthenticatedTeamTeamDesignRoute,
-    AuthenticatedTeamTeamFeedbackRoute: AuthenticatedTeamTeamFeedbackRoute,
-    AuthenticatedTeamTeamMembersRoute: AuthenticatedTeamTeamMembersRoute,
-    AuthenticatedTeamTeamSubmissionsRoute:
-      AuthenticatedTeamTeamSubmissionsRoute,
-    AuthenticatedTeamTeamSubscriptionRoute:
-      AuthenticatedTeamTeamSubscriptionRoute,
-    AuthenticatedTeamTeamIndexRoute: AuthenticatedTeamTeamIndexRoute,
-    AuthenticatedTeamTeamSubmissionSessionIdRoute:
-      AuthenticatedTeamTeamSubmissionSessionIdRoute,
+    AuthenticatedAppTeamFlowRouteRoute:
+      AuthenticatedAppTeamFlowRouteRouteWithChildren,
+    AuthenticatedAppTeamSettingsRouteRoute:
+      AuthenticatedAppTeamSettingsRouteRouteWithChildren,
+    AuthenticatedAppTeamDesignRoute: AuthenticatedAppTeamDesignRoute,
+    AuthenticatedAppTeamFeedbackRoute: AuthenticatedAppTeamFeedbackRoute,
+    AuthenticatedAppTeamMembersRoute: AuthenticatedAppTeamMembersRoute,
+    AuthenticatedAppTeamSubmissionsRoute: AuthenticatedAppTeamSubmissionsRoute,
+    AuthenticatedAppTeamSubscriptionRoute:
+      AuthenticatedAppTeamSubscriptionRoute,
+    AuthenticatedAppTeamIndexRoute: AuthenticatedAppTeamIndexRoute,
+    AuthenticatedAppTeamSubmissionSessionIdRoute:
+      AuthenticatedAppTeamSubmissionSessionIdRoute,
   }
 
-const AuthenticatedTeamTeamRouteRouteWithChildren =
-  AuthenticatedTeamTeamRouteRoute._addFileChildren(
-    AuthenticatedTeamTeamRouteRouteChildren,
+const AuthenticatedAppTeamRouteRouteWithChildren =
+  AuthenticatedAppTeamRouteRoute._addFileChildren(
+    AuthenticatedAppTeamRouteRouteChildren,
   )
 
-interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAdminPanelRoute: typeof AuthenticatedAdminPanelRoute
-  AuthenticatedGlobalSettingsRoute: typeof AuthenticatedGlobalSettingsRoute
-  AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
-  AuthenticatedResourcesRoute: typeof AuthenticatedResourcesRoute
-  AuthenticatedTutorialsRoute: typeof AuthenticatedTutorialsRoute
-  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
-  AuthenticatedTeamTeamRouteRoute: typeof AuthenticatedTeamTeamRouteRouteWithChildren
+interface AuthenticatedAppRouteRouteChildren {
+  AuthenticatedAppTeamRouteRoute: typeof AuthenticatedAppTeamRouteRouteWithChildren
+  AuthenticatedAppAdminPanelRoute: typeof AuthenticatedAppAdminPanelRoute
+  AuthenticatedAppGlobalSettingsRoute: typeof AuthenticatedAppGlobalSettingsRoute
+  AuthenticatedAppOnboardingRoute: typeof AuthenticatedAppOnboardingRoute
+  AuthenticatedAppResourcesRoute: typeof AuthenticatedAppResourcesRoute
+  AuthenticatedAppTutorialsRoute: typeof AuthenticatedAppTutorialsRoute
+  AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
 }
 
-const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAdminPanelRoute: AuthenticatedAdminPanelRoute,
-  AuthenticatedGlobalSettingsRoute: AuthenticatedGlobalSettingsRoute,
-  AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
-  AuthenticatedResourcesRoute: AuthenticatedResourcesRoute,
-  AuthenticatedTutorialsRoute: AuthenticatedTutorialsRoute,
-  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-  AuthenticatedTeamTeamRouteRoute: AuthenticatedTeamTeamRouteRouteWithChildren,
+const AuthenticatedAppRouteRouteChildren: AuthenticatedAppRouteRouteChildren = {
+  AuthenticatedAppTeamRouteRoute: AuthenticatedAppTeamRouteRouteWithChildren,
+  AuthenticatedAppAdminPanelRoute: AuthenticatedAppAdminPanelRoute,
+  AuthenticatedAppGlobalSettingsRoute: AuthenticatedAppGlobalSettingsRoute,
+  AuthenticatedAppOnboardingRoute: AuthenticatedAppOnboardingRoute,
+  AuthenticatedAppResourcesRoute: AuthenticatedAppResourcesRoute,
+  AuthenticatedAppTutorialsRoute: AuthenticatedAppTutorialsRoute,
+  AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
 }
 
-const AuthenticatedRouteRouteWithChildren =
-  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+const AuthenticatedAppRouteRouteWithChildren =
+  AuthenticatedAppRouteRoute._addFileChildren(
+    AuthenticatedAppRouteRouteChildren,
+  )
 
 interface PublicCustomDomainFlowPayRouteRouteChildren {
   PublicCustomDomainFlowPayNotFoundRoute: typeof PublicCustomDomainFlowPayNotFoundRoute
@@ -2023,8 +2031,8 @@ const PublicPlanXDomainTeamFlowRouteRouteWithChildren =
   )
 
 const rootRouteChildren: RootRouteChildren = {
-  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   SplatRoute: SplatRoute,
+  AuthenticatedAppRouteRoute: AuthenticatedAppRouteRouteWithChildren,
   PublicCustomDomainRouteRoute: PublicCustomDomainRouteRouteWithChildren,
   authLoginRoute: authLoginRoute,
   authLogoutRoute: authLogoutRoute,

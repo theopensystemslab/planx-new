@@ -22,7 +22,7 @@ import {
 } from "pages/FlowEditor/utils";
 import React, { useMemo, useRef, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import type { NodeSearchParams } from "routes/_authenticated/team.$team/$flow/nodes/route";
+import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/nodes/route";
 import { Switch } from "ui/shared/Switch";
 import { getNodeRoute, rootFlowPath } from "utils/routeUtils/utils";
 

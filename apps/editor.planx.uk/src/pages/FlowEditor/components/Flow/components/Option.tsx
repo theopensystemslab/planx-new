@@ -42,7 +42,7 @@ const Option: React.FC<any> = (props) => {
       onContextMenu={(e) => e.preventDefault()}
     >
       <Link
-        to="/team/$team/$flow/nodes/$id/edit"
+        to="/app/$team/$flow/nodes/$id/edit"
         params={{
           team: teamSlug,
           flow: flowSlug,

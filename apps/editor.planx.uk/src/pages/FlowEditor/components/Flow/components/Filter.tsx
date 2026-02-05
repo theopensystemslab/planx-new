@@ -66,8 +66,8 @@ const Filter: React.FC<Props> = React.memo((props) => {
         <Link
           to={
             parent
-              ? "/team/$team/$flow/nodes/$parent/nodes/$id/edit"
-              : "/team/$team/$flow/nodes/$id/edit"
+              ? "/app/$team/$flow/nodes/$parent/nodes/$id/edit"
+              : "/app/$team/$flow/nodes/$id/edit"
           }
           params={{
             team: teamSlug,

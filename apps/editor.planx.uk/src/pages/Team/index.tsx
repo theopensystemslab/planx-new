@@ -114,7 +114,7 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
     null,
   );
   const [shouldClearSearch, setShouldClearSearch] = useState<boolean>(false);
-  const searchParams = useSearch({ from: "/_authenticated/team/$team/" });
+  const searchParams = useSearch({ from: "/_authenticated/app/$team/" });
   const navigate = useNavigate();
 
   const sortedFlows = useMemo(() => {

@@ -42,7 +42,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
     <>
       <BreadcrumbsRoot>
         <BreadcrumbsLink
-          to="/"
+          to="/app"
           {...(isStandalone && { target: "_blank" })}
           variant="body1"
         >
@@ -53,7 +53,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
           <>
             {" / "}
             <BreadcrumbsLink
-              to="/team/$team"
+              to="/app/$team"
               params={{
                 team: params.team,
               }}
@@ -85,7 +85,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
         <Box sx={(theme) => ({ color: theme.palette.text.primary })}>
           {canUserEditTeam && canUserEditTeam(team.slug) ? (
             <BreadcrumbsLink
-              to="/team/$team/$flow/settings"
+              to="/app/$team/$flow/settings"
               params={{
                 team: team.slug,
                 flow: flowSlug,

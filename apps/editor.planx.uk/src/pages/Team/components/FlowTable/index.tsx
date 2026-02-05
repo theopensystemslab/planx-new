@@ -96,7 +96,7 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
     if ((e.target as HTMLElement).closest("a")) return;
 
     const destination: LinkOptions = {
-      to: "/team/$team/$flow",
+      to: "/app/$team/$flow",
       params: { team: teamSlug, flow: flow.slug },
     };
 
@@ -124,7 +124,7 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
             </Box>
           )}
           <CustomLink
-            to="/team/$team/$flow"
+            to="/app/$team/$flow"
             params={{ team: teamSlug, flow: flow.slug }}
             onClick={(e) => e.stopPropagation()}
             sx={(theme) => ({
