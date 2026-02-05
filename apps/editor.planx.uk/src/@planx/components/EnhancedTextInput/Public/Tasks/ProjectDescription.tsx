@@ -26,28 +26,22 @@ import { CharacterCounter } from "ui/shared/CharacterCounter";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
+import ProgressiveLoading from "ui/shared/ProgressiveLoading";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import { HOW_DOES_THIS_WORK } from "../../content";
 import type { EnhancedTextInputForTask } from "../../types";
+import type { TaskAction } from "../../types";
 import type { FormValues } from "../types";
 import ErrorCard from "./ErrorCard";
-import ProgressiveLoading from "ui/shared/ProgressiveLoading";
-import type { TaskAction } from "../../types"; 
-
 import {
-  StyledFormLabel,
-  RecommendedTag,
   QuoteDescription,
+  RecommendedTag,
   RevealedContent,
+  StyledFormLabel,
 } from "./styles";
 
 type Props = PublicProps<EnhancedTextInputForTask<"projectDescription">>;
-
-interface StyledFormLabelProps {
-  isSelected: boolean;
-  showBorder: boolean;
-}
 
 interface DescriptionRadioProps {
   id: string;
