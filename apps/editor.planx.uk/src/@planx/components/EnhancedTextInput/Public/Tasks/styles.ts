@@ -38,19 +38,9 @@ export const RecommendedTag = styled(Box)(({ theme }) => ({
 }));
 
 export const QuoteDescription = styled(Typography)(({ theme }) => ({
-  marginTop: theme.spacing(2),
+  marginTop: theme.spacing(1),
   color: theme.palette.text.primary,
   position: "relative",
-  "&::before": {
-    content: '""',
-    display: "block",
-    width: "4px",
-    height: "100%",
-    position: "absolute",
-    left: "-37px",
-    top: 0,
-    backgroundColor: theme.palette.border.main,
-  },
 })) as typeof Typography;
 
 export const RevealedContent = styled(Box)(({ theme }) => ({
