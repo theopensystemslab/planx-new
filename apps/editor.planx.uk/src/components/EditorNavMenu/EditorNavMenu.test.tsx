@@ -36,6 +36,10 @@ vi.mock("pages/FlowEditor/lib/store", async () => ({
       setIsNavMenuVisible: mockSetIsNavMenuVisible,
     }),
   ),
+  getState: () => ({
+    teamSlug: mockTeamName,
+    teamAnalyticsLink: mockAnalyticsLink,
+  }),
 }));
 
 describe("globalLayoutRoutes", () => {
@@ -102,7 +106,7 @@ describe("teamLayoutRoutes", () => {
 
     const { getAllByRole } = await setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(8);
+    expect(menuItems).toHaveLength(9);
     expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
   });
 
@@ -111,7 +115,7 @@ describe("teamLayoutRoutes", () => {
 
     const { getAllByRole } = await setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(8);
+    expect(menuItems).toHaveLength(9);
     expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
   });
 });
