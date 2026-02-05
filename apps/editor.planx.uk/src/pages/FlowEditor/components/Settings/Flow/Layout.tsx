@@ -5,6 +5,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import PrivacyTipIcon from "@mui/icons-material/PrivacyTip";
 import StarIcon from "@mui/icons-material/Star";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { useParams } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
@@ -17,16 +18,15 @@ interface Props {
 }
 
 const FlowSettingsLayout: React.FC<Props> = ({ children }) => {
-  const [flowId, teamSlug, flowSlug] = useStore((state) => [
-    state.id,
-    state.teamSlug,
-    state.flowSlug,
-  ]);
+  const [flowId, flowSlug] = useStore((state) => [state.id, state.flowSlug]);
+
+  const { team } = useParams({ from: "/_authenticated/app/$team" });
 
   const { data } = useQuery<GetFlowTemplateStatus>(GET_FLOW_TEMPLATE_STATUS, {
     variables: { flowId },
   });
 
+  // TODO: Make type-safe!
   const settingsLinks = [
     { label: "Visibility", path: "/visibility", icon: VisibilityIcon },
     { label: "About", path: "/about", icon: InfoIcon },
@@ -45,7 +45,7 @@ const FlowSettingsLayout: React.FC<Props> = ({ children }) => {
     <SettingsLayout
       title="Flow settings"
       settingsLinks={settingsLinks}
-      getNavigationPath={(path) => `/${teamSlug}/${flowSlug}/settings${path}`}
+      getNavigationPath={(path) => `/app/${team}/${flowSlug}/settings${path}`}
     >
       {children}
     </SettingsLayout>
