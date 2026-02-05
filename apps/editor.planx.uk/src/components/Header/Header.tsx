@@ -9,7 +9,7 @@ import { styled, Theme } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useLocation } from "@tanstack/react-router";
+import { useLocation, useNavigate } from "@tanstack/react-router";
 import AccountMenu from "components/AccountMenu";
 import Breadcrumbs from "components/Breadcrumbs";
 import { clearLocalFlowIdb } from "lib/local.idb";
@@ -174,6 +174,7 @@ const PublicToolbar: React.FC<{
   showResetButton?: boolean;
 }> = ({ showResetButton = true }) => {
   const [path, id] = useStore((state) => [state.path, state.id]);
+  const navigate = useNavigate();
 
   // Center the service title on desktop layouts, or drop it to second line on mobile
   // ref https://design-system.service.gov.uk/styles/page-template/
@@ -201,9 +202,14 @@ const PublicToolbar: React.FC<{
         // Save & Return flow
         // don't delete old flow for now
         // await NEW_LOCAL.clearLocalFlow(sessionId)
-        const url = new URL(window.location.href);
-        url.searchParams.delete("sessionId");
-        window.location.href = url.href;
+        navigate({
+          to: ".",
+          search: (prev) => ({
+            ...prev,
+            sessionId: undefined,
+          }),
+          reloadDocument: true,
+        });
       }
     }
   };
