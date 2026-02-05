@@ -3,7 +3,7 @@ import components from "pages/FlowEditor/components/forms";
 import FormModal from "pages/FlowEditor/components/forms/FormModal";
 import React from "react";
 
-import { loader } from "./loader";
+import { loader } from "./-loader";
 
 export const Route = createFileRoute(
   "/_authenticated/$team/$flow/nodes/$parent/nodes/$id/edit/$before",
