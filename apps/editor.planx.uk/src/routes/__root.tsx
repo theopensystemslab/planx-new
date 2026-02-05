@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { zodValidator } from "@tanstack/zod-adapter";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import ErrorFallback from "components/Error/ErrorFallback";
 import ErrorPage from "pages/ErrorPage/ErrorPage";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -47,6 +48,7 @@ const isPublicRoute = (pathname: string): boolean => {
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   validateSearch: zodValidator(rootSearchSchema),
+  pendingComponent: DelayedLoadingIndicator,
 
   beforeLoad: async ({ location, context }) => {
     if (location.pathname === "/login") {

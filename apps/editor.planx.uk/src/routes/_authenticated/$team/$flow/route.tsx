@@ -5,7 +5,7 @@ import {
   stripSearchParams,
 } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
-import RouteLoadingIndicator from "components/RouteLoadingIndicator";
+import FlowSkeleton from "pages/FlowEditor/FlowSkeleton";
 import FlowEditorLayout from "pages/layout/FlowEditorLayout";
 import React from "react";
 import { CatchAllComponent } from "routes/$";
@@ -18,7 +18,7 @@ import { useStore } from "../../../../pages/FlowEditor/lib/store";
 import { teamSearchSchema } from "..";
 
 export const Route = createFileRoute("/_authenticated/$team/$flow")({
-  pendingComponent: RouteLoadingIndicator,
+  pendingComponent: FlowSkeleton,
   validateSearch: zodValidator(teamSearchSchema),
   search: {
     middlewares: [

@@ -1,5 +1,6 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { fallback, zodValidator } from "@tanstack/zod-adapter";
+import RouteLoadingIndicator from "components/RouteLoadingIndicator";
 import Team from "pages/Team";
 import React from "react";
 import { getTeamFromDomain } from "utils/routeUtils/utils";
@@ -26,6 +27,7 @@ export type TeamSearch = z.infer<typeof teamSearchSchema>;
 
 export const Route = createFileRoute("/_authenticated/$team/")({
   validateSearch: zodValidator(teamSearchSchema),
+  pendingComponent: RouteLoadingIndicator,
   beforeLoad: async ({ params }) => {
     const { initTeamStore, teamSlug: currentSlug } = useStore.getState();
     const routeSlug =
