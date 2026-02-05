@@ -102,9 +102,7 @@ const ResumePage: React.FC = () => {
   });
   const sessionId = "sessionId" in search ? search.sessionId : undefined;
 
-  const [initialEmail] = useState(
-    getInitialEmailValue(("email" in search ? search.email : "") || ""),
-  );
+  const [initialEmail] = useState(getInitialEmailValue(search.email));
 
   if (sessionId) {
     return (
