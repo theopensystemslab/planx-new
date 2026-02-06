@@ -1,10 +1,9 @@
-import { useLoadableQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { useLocation } from "@tanstack/react-router";
+import { usePublicRouteContext } from "hooks/usePublicRouteContext";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { formatServiceLastUpdated } from "pages/FlowEditor/utils";
 import React from "react";
@@ -86,21 +85,7 @@ function FooterItem(props: {
   bold?: boolean;
   newTab?: boolean;
 }) {
-  const [teamSlug, flowSlug] = useStore((state) => [
-    state.teamSlug,
-    state.flowSlug,
-  ]);
-  const location = useLocation();
-
-  const getCurrentContext = () => {
-    const pathname = location.pathname;
-    if (pathname.includes("/preview")) return "preview";
-    if (pathname.includes("/draft")) return "draft";
-    if (pathname.includes("/pay")) return "published";
-    return "published";
-  };
-
-  const context = getCurrentContext();
+  const from = usePublicRouteContext();
 
   const title = (
     <Typography
@@ -113,8 +98,9 @@ function FooterItem(props: {
   return props.param ? (
     <CustomLink
       color="inherit"
-      to={`/$team/$flow/${context}/pages/$page`}
-      params={{ team: teamSlug, flow: flowSlug, page: props.param }}
+      to="pages/$page"
+      params={{ page: props.param }}
+      from={from}
       preload={false}
       target={props.newTab ? "_blank" : ""}
       rel={props.newTab ? "noopener" : ""}

@@ -5,6 +5,7 @@ import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { notFound, useNavigate } from "@tanstack/react-router";
+import { usePublicRouteContext } from "hooks/usePublicRouteContext";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { FOOTER_ITEMS } from "types";
@@ -70,10 +71,13 @@ function ContentPage(props: { page: string }) {
 
   if (!content) throw notFound();
 
+  const context = usePublicRouteContext();
+  const from = `${context}/pages/$page` as const;
+
   return (
     <Layout
       {...content}
-      onClose={() => navigate({ to: ".." })}
+      onClose={() => navigate({ to: "../..", from })}
       openLinksOnNewTab={!isFooterItem}
     />
   );
