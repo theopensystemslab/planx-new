@@ -61,7 +61,7 @@ export const LockedSession: React.FC<{
 
   return (
     <StatusPage
-      bannerHeading="Sorry, you can't make changes to this application"
+      bannerHeading="Sorry, you can't make changes to this form"
       additionalOption="startNewApplication"
     >
       {paymentRequest && (
@@ -73,7 +73,7 @@ export const LockedSession: React.FC<{
           ) to pay and changes might affect the fee.
           <br />
           <br />
-          You can{" "}
+          You can {/* TODO: Check / fix this link */}
           <CustomLink
             to="pay"
             from={from}
@@ -131,7 +131,6 @@ const ValidateSession: React.FC<{
   >({
     mutationFn: validateSession,
     onSuccess: (data) => resumeSession(data.reconciledSessionData),
-    onError: console.debug,
   });
 
   const handleSubmit = useCallback(

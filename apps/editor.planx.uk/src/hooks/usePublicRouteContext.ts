@@ -5,6 +5,7 @@ type PublicRoutePattern =
   | "/$team/$flow/preview"
   | "/$team/$flow/draft"
   | "/$team/$flow/published"
+  | "/$team/$flow"
   | "/$flow";
 
 /**
@@ -32,6 +33,7 @@ export const usePublicRouteContext = (): PublicRoutePattern => {
       if (routeId.includes("/preview")) return "/$team/$flow/preview";
       if (routeId.includes("/draft")) return "/$team/$flow/draft";
       if (routeId.includes("/published")) return "/$team/$flow/published";
+      if (routeId.includes("/pay")) return "/$team/$flow";
     }
 
     throw notFound();

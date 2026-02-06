@@ -92,8 +92,9 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   const from = usePublicRouteContext();
 
   const redirectToConfirmationPage = (paymentRequestId: string) => {
+    // TODO: variable on custom subdomains?
     navigate({
-      to: "pay/invite",
+      to: "../pay/invite",
       from,
       search: { paymentRequestId },
     });
