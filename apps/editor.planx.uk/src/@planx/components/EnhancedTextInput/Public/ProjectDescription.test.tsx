@@ -553,7 +553,7 @@ describe("basic layout and behaviour", () => {
   });
 
   test("users can navigate 'back' to the input step", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -584,7 +584,7 @@ describe("basic layout and behaviour", () => {
   });
 
   test("navigating 'back' allows the user to re-trigger the API when given a new input", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -623,7 +623,7 @@ describe("basic layout and behaviour", () => {
 
   // Revisit this with new UI which doesn't contain a textinput natively on the second step
   test.skip("navigating 'back' does not re-trigger the API when the input does not change", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
