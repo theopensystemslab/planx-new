@@ -8,6 +8,8 @@ import { axe } from "vitest-axe";
 import { taskDefaults } from "../model";
 import EnhancedTextInputComponent from ".";
 
+const requestSpy = vi.fn();
+
 const ORIGINAL =
   "The Proposal is for a sympathetic mansard roof to replace the flat roof to the ground and fist floor side extension at the property under planning consent 2018/5913/P. See Planning Statement in Support Attached (PDF)";
 
@@ -15,7 +17,10 @@ const ENHANCED =
   "Erection of a mansard roof extension to the flat roof of the side extension.";
 
 const handlers = [
-  http.post("*/ai/project-description/enhance", async () => {
+  http.post("*/ai/project-description/enhance", async ({ request }) => {
+    const payload = await request.json();
+    requestSpy(payload);
+
     return HttpResponse.json(
       {
         original: ORIGINAL,
@@ -27,6 +32,7 @@ const handlers = [
 ];
 
 beforeEach(() => {
+  requestSpy.mockClear();
   server.use(...handlers);
 });
 
@@ -544,6 +550,105 @@ describe("basic layout and behaviour", () => {
 
     // Exit sidebar
     await user.keyboard("{Esc}");
+  });
+
+  test("users can navigate 'back' to the input step", async () => {
+    const { user } = await setup(
+      <EnhancedTextInputComponent
+        id="testId"
+        title="test"
+        task={"projectDescription"}
+        {...taskDefaults.projectDescription}
+      />,
+    );
+
+    // "Back" button not visible on the "input" step
+    expect(
+      screen.queryByRole("button", { name: "Back" }),
+    ).not.toBeInTheDocument();
+
+    // Proceed to "task" step
+    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByTestId("continue-button"));
+    expect(
+      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+    ).toBeVisible();
+
+    // "Back" button present...
+    const backButton = screen.getByRole("button", { name: "Back" });
+    expect(backButton).toBeVisible();
+
+    // ...and clicking it returns the user to the "input step"
+    await user.click(backButton);
+    expect(screen.getByRole("textbox", { name: /test/i })).toBeVisible();
+  });
+
+  test("navigating 'back' allows the user to re-trigger the API when given a new input", async () => {
+    const { user } = await setup(
+      <EnhancedTextInputComponent
+        id="testId"
+        title="test"
+        task={"projectDescription"}
+        {...taskDefaults.projectDescription}
+      />,
+    );
+
+    // Proceed to "task" step
+    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByTestId("continue-button"));
+    expect(
+      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+    ).toBeVisible();
+
+    // Navigate 'back'
+    await user.click(screen.getByRole("button", { name: "Back" }));
+    expect(screen.getByRole("textbox", { name: /test/i })).toBeVisible();
+
+    const NEW_INPUT = "A new description because I've changed my mind";
+
+    // Enter new description, triggering a new API request
+    await user.type(screen.getByRole("textbox", { name: /test/i }), NEW_INPUT, {
+      initialSelectionStart: 0,
+      initialSelectionEnd: ENHANCED.length,
+    });
+    await user.click(screen.getByTestId("continue-button"));
+
+    expect(requestSpy).toHaveBeenCalledTimes(2);
+    expect(requestSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        original: expect.stringMatching(NEW_INPUT),
+      }),
+    );
+  });
+
+  // Revisit this with new UI which doesn't contain a textinput natively on the second step
+  test.skip("navigating 'back' does not re-trigger the API when the input does not change", async () => {
+    const { user } = await setup(
+      <EnhancedTextInputComponent
+        id="testId"
+        title="test"
+        task={"projectDescription"}
+        {...taskDefaults.projectDescription}
+      />,
+    );
+
+    // Proceed to "task" step
+    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByTestId("continue-button"));
+    expect(
+      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+    ).toBeVisible();
+    expect(requestSpy).toHaveBeenCalledTimes(1);
+
+    // Navigate 'back'
+    await user.click(screen.getByRole("button", { name: "Back" }));
+    expect(screen.getByRole("textbox", { name: /test/i })).toBeVisible();
+
+    // Retain original descriptions, avoiding re-triggering of the API
+    await user.click(screen.getByTestId("continue-button"));
+
+    // API not re-hit, we retain value from cache
+    expect(requestSpy).toHaveBeenCalledTimes(1);
   });
 });
 

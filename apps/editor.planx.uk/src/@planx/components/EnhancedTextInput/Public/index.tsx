@@ -21,25 +21,25 @@ const EnhancedTextInputComponent = (props: Props) => {
   const isRunningTask = useIsFetching({ queryKey: [props.task] });
 
   const initialValues: FormValues = previous
-  ? {
-      userInput: previous,
-      status: "success",
-      original:
-        props.previouslySubmittedData?.data?._enhancements[props.fn].original,
-      enhanced:
-        props.previouslySubmittedData?.data?._enhancements[props.fn].enhanced,
-      error: null,
-      selectedOption: null,
-      customDescription: "",
-    }
-  : {
-      userInput: "",
-      status: "idle",
-      enhanced: null,
-      error: null,
-      selectedOption: null,
-      customDescription: "",
-    };
+    ? {
+        userInput: previous,
+        status: "success",
+        original:
+          props.previouslySubmittedData?.data?._enhancements[props.fn].original,
+        enhanced:
+          props.previouslySubmittedData?.data?._enhancements[props.fn].enhanced,
+        error: null,
+        selectedOption: null,
+        customDescription: "",
+      }
+    : {
+        userInput: "",
+        status: "idle",
+        enhanced: null,
+        error: null,
+        selectedOption: null,
+        customDescription: "",
+      };
 
   const nextStep = (values: FormValues) => {
     // If re-submitting the same value (e.g. as part of "back" navigation),
@@ -59,6 +59,8 @@ const EnhancedTextInputComponent = (props: Props) => {
 
   const validationSchema = getValidationSchema(props);
 
+  const handleBack = step === "task" ? () => setStep("input") : undefined;
+
   return (
     <Formik<FormValues>
       initialValues={initialValues}
@@ -69,7 +71,11 @@ const EnhancedTextInputComponent = (props: Props) => {
       validationSchema={validationSchema}
     >
       {({ submitForm }) => (
-        <Card handleSubmit={submitForm} isValid={!isRunningTask}>
+        <Card
+          handleSubmit={submitForm}
+          isValid={!isRunningTask}
+          handleBack={handleBack}
+        >
           <CardHeader
             title={props.title}
             description={props.description}

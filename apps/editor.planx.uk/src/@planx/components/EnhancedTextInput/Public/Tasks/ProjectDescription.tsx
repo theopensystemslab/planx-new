@@ -10,7 +10,6 @@ import {
 import { HelpButton } from "@planx/components/shared/Preview/CardHeader/styled";
 import MoreInfo from "@planx/components/shared/Preview/MoreInfo";
 import MoreInfoSection from "@planx/components/shared/Preview/MoreInfoSection";
-import type { PublicProps } from "@planx/components/shared/types";
 import { TEXT_LIMITS, TextInputType } from "@planx/components/TextInput/model";
 import { useQuery } from "@tanstack/react-query";
 import { useFormikContext } from "formik";
@@ -18,7 +17,7 @@ import { enhanceProjectDescription } from "lib/api/ai/requests";
 import type { EnhanceError, EnhanceResponse } from "lib/api/ai/types";
 import type { APIError } from "lib/api/client";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useRef, useState } from "react";
+import React, { type ComponentProps, useEffect, useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { ApplicationPath } from "types";
 import InputLabel from "ui/public/InputLabel";
@@ -30,8 +29,8 @@ import ProgressiveLoading from "ui/shared/ProgressiveLoading";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import { HOW_DOES_THIS_WORK } from "../../content";
-import type { EnhancedTextInputForTask } from "../../types";
 import type { TaskAction } from "../../types";
+import type { TaskComponentMap } from "../../types";
 import type { FormValues } from "../types";
 import ErrorCard from "./ErrorCard";
 import {
@@ -41,7 +40,9 @@ import {
   StyledFormLabel,
 } from "./styles";
 
-type Props = PublicProps<EnhancedTextInputForTask<"projectDescription">>;
+type Props = ComponentProps<
+  NonNullable<TaskComponentMap["projectDescription"]>
+>;
 
 interface DescriptionRadioProps {
   id: string;
@@ -94,7 +95,6 @@ const ProjectDescription: React.FC<Props> = (props) => {
   const [open, setOpen] = useState(false);
 
   const initialValueRef = useRef(values.userInput);
-  const [shouldEnhance, setShouldEnhance] = React.useState(true);
 
   const { isPending, data, error, isSuccess } = useQuery<
     EnhanceResponse,
@@ -115,7 +115,6 @@ const ProjectDescription: React.FC<Props> = (props) => {
       initialValueRef.current,
     ],
     retry: 0,
-    enabled: shouldEnhance && !!initialValueRef.current,
   });
 
   useEffect(() => {
@@ -129,7 +128,6 @@ const ProjectDescription: React.FC<Props> = (props) => {
         selectedOption: null,
         customDescription: "",
       });
-      setShouldEnhance(false);
     }
   }, [isSuccess, data, setValues]);
 
