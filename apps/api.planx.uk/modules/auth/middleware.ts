@@ -164,7 +164,9 @@ export const getGoogleAuthHandler = (
   return (req, res, next) => {
     // Always redirect to /login so frontend can handle default team redirect
     const referrer = req.get("Referrer");
-    const baseUrl = referrer ? new URL(referrer).origin : process.env.EDITOR_URL_EXT;
+    const baseUrl = referrer
+      ? new URL(referrer).origin
+      : process.env.EDITOR_URL_EXT;
     req.session!.returnTo = `${baseUrl}/login`;
     return passport.authenticate("google", {
       scope: ["profile", "email"],
@@ -188,7 +190,9 @@ export const getMicrosoftAuthHandler = (
   return (req, res, next) => {
     // Always redirect to /login so frontend can handle default team redirect
     const referrer = req.get("Referrer");
-    const baseUrl = referrer ? new URL(referrer).origin : process.env.EDITOR_URL_EXT;
+    const baseUrl = referrer
+      ? new URL(referrer).origin
+      : process.env.EDITOR_URL_EXT;
     req.session!.returnTo = `${baseUrl}/login`;
 
     // generate a nonce to enable us to validate the response from OP (mitigates against CSRF attacks)
