@@ -23,7 +23,6 @@ export const usePublicRouteContext = (): PublicRoutePattern => {
 
     const { routeId } = currentRoute;
 
-    // Check domain type
     const isCustomDomain = routeId.includes("_customDomain");
     const isPlanXDomain = routeId.includes("_planXDomain");
 

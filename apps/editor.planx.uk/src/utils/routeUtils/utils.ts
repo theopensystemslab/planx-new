@@ -1,5 +1,4 @@
 import { ComponentType as NodeTypes } from "@opensystemslab/planx-core/types";
-import { notFound } from "@tanstack/react-router";
 import gql from "graphql-tag";
 
 export interface RouteParams {
@@ -11,17 +10,11 @@ import { ApplicationPath } from "types";
 
 import { client } from "../../lib/graphql";
 
-export const makeTitle = (str: string) =>
-  [str, "PlanX"].filter(Boolean).join(" | ");
-
 // TODO: Replace with type-safe version
 export const rootFlowPath = (includePortals = false) => {
   const path = window.location.pathname.split("/").slice(0, 4).join("/");
   return includePortals ? path : path.split(",")[0];
 };
-
-export const rootTeamPath = () =>
-  window.location.pathname.split("/").slice(0, 2).join("/");
 
 export const isSaveReturnFlow = (flowData: Store.Flow): boolean =>
   Boolean(Object.values(flowData).find((node) => node.type === NodeTypes.Send));
@@ -114,19 +107,4 @@ export const getTeamFromDomain = async (domain: string) => {
   });
 
   return teams?.[0]?.slug;
-};
-
-/**
- * Prevents accessing a different team than the one associated with the custom domain.
- * e.g. Custom domain is for Southwark but URL is looking for Lambeth
- * e.g. https://planningservices.southwark.gov.uk/lambeth/some-flow
- */
-export const validateTeamRoute = async (req: RouteParams) => {
-  const externalTeamName = await getTeamFromDomain(window.location.hostname);
-  if (
-    req.params.team &&
-    externalTeamName &&
-    externalTeamName !== req.params.team
-  )
-    throw notFound();
 };

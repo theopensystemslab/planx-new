@@ -3,7 +3,6 @@ import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import RouteLoadingIndicator from "components/RouteLoadingIndicator";
 import Team from "pages/Team";
 import React from "react";
-import { getTeamFromDomain } from "utils/routeUtils/utils";
 import { z } from "zod";
 
 import { useStore } from "../../../../pages/FlowEditor/lib/store";
@@ -28,23 +27,6 @@ export type TeamSearch = z.infer<typeof teamSearchSchema>;
 export const Route = createFileRoute("/_authenticated/app/$team/")({
   validateSearch: zodValidator(teamSearchSchema),
   pendingComponent: RouteLoadingIndicator,
-  beforeLoad: async ({ params }) => {
-    const { initTeamStore, teamSlug: currentSlug } = useStore.getState();
-    const routeSlug =
-      params.team || (await getTeamFromDomain(window.location.hostname));
-
-    if (!routeSlug) {
-      throw notFound();
-    }
-
-    if (currentSlug !== routeSlug) {
-      try {
-        await initTeamStore(routeSlug);
-      } catch (error) {
-        throw new Error(`Team not found: ${error}`);
-      }
-    }
-  },
   loader: async () => {
     const { getTeam, getFlows } = useStore.getState();
     const team = getTeam();
