@@ -117,7 +117,7 @@ const ExternalPortal: React.FC<any> = (props) => {
             <Box sx={{ display: "flex", alignItems: "stretch" }}>
               {internalTeamSlug && internalFlowSlug ? (
                 <Link
-                  to="/$team/$flow"
+                  to="/app/$team/$flow"
                   params={{
                     team: internalTeamSlug,
                     flow: internalFlowSlug,

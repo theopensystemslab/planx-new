@@ -4,8 +4,7 @@ import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { notFound, useNavigate } from "@tanstack/react-router";
-import { usePublicRouteContext } from "hooks/usePublicRouteContext";
+import { notFound, useNavigate, useRouter } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { FOOTER_ITEMS } from "types";
@@ -71,13 +70,18 @@ function ContentPage(props: { page: string }) {
 
   if (!content) throw notFound();
 
-  const context = usePublicRouteContext();
-  const from = `${context}/pages/$page` as const;
+  const router = useRouter();
+
+  /**
+   * As the footer is present in all public routes (_customDomain, _planXDomain, /pay),
+   * always navigate "back" on page close, not "up" the router tree due to how redirects are handled
+   */
+  const handleBack = () => router.history.back();
 
   return (
     <Layout
       {...content}
-      onClose={() => navigate({ to: "../..", from })}
+      onClose={handleBack}
       openLinksOnNewTab={!isFooterItem}
     />
   );

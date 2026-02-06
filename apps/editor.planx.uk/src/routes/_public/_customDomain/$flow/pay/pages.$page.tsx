@@ -3,12 +3,10 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 export const Route = createFileRoute(
   "/_public/_customDomain/$flow/pay/pages/$page",
 )({
-  loader: ({ params, context }) => {
+  loader: ({ params }) => {
     throw redirect({
-      to: "/$team/$flow/published/pages/$page",
+      to: "/$flow/pages/$page",
       params: {
-        team: context.team,
-        flow: params.flow,
         page: params.page,
       },
     });

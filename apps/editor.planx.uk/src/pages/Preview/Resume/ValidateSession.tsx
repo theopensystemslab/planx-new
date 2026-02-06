@@ -3,6 +3,7 @@ import Typography from "@mui/material/Typography";
 import { PaymentRequest } from "@opensystemslab/planx-core/types";
 import { useMutation } from "@tanstack/react-query";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import { usePublicRouteContext } from "hooks/usePublicRouteContext";
 import { APIError } from "lib/api/client";
 import { validateSession } from "lib/api/saveAndReturn/requests";
 import {
@@ -56,10 +57,7 @@ export const InvalidSession: React.FC<{
 export const LockedSession: React.FC<{
   paymentRequest?: MinPaymentRequest;
 }> = ({ paymentRequest }) => {
-  const [teamSlug, flowSlug] = useStore((state) => [
-    state.teamSlug,
-    state.flowSlug,
-  ]);
+  const from = usePublicRouteContext();
 
   return (
     <StatusPage
@@ -77,8 +75,8 @@ export const LockedSession: React.FC<{
           <br />
           You can{" "}
           <CustomLink
-            to="/$team/$flow/pay"
-            params={{ team: teamSlug, flow: flowSlug }}
+            to="pay"
+            from={from}
             search={{ paymentRequestId: paymentRequest.id }}
           >
             pay yourself on the payment page

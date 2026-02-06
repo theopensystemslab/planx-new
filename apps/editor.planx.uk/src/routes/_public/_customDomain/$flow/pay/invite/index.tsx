@@ -6,7 +6,6 @@ import React from "react";
 import { getPaymentRequest } from "utils/routeUtils/payQueries";
 import { z } from "zod";
 
-// Search schema for invite route
 const inviteSearchSchema = z.object({
   paymentRequestId: z.string().uuid(),
 });
@@ -22,8 +21,7 @@ export const Route = createFileRoute(
 
     if (!paymentRequest) {
       throw redirect({
-        to: "/$team/$flow/pay/invite/failed",
-        params: { team: "", flow: "" },
+        to: "/$flow/pay/invite/failed",
       });
     }
 

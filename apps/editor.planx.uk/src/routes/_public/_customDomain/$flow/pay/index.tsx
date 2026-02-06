@@ -7,7 +7,7 @@ import { getPaymentRequest } from "utils/routeUtils/payQueries";
 import { z } from "zod";
 
 const paymentSearchSchema = z.object({
-  paymentRequestId: z.string().uuid().optional(),
+  paymentRequestId: z.string().uuid(),
 });
 
 export const Route = createFileRoute("/_public/_customDomain/$flow/pay/")({
@@ -15,16 +15,11 @@ export const Route = createFileRoute("/_public/_customDomain/$flow/pay/")({
   beforeLoad: async ({ search }) => {
     const { paymentRequestId } = search;
 
-    if (!paymentRequestId) {
-      throw new Error("Payment request ID is required");
-    }
-
     const paymentRequest = await getPaymentRequest(paymentRequestId);
 
     if (!paymentRequest) {
       throw redirect({
-        to: "/$team/$flow/pay/not-found",
-        params: { team: "", flow: "" },
+        to: "/$flow/pay/not-found",
       });
     }
 
