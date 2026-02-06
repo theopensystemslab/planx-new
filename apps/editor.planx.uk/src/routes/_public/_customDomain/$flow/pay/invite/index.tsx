@@ -14,9 +14,8 @@ export const Route = createFileRoute(
   "/_public/_customDomain/$flow/pay/invite/",
 )({
   validateSearch: zodValidator(inviteSearchSchema),
-  beforeLoad: async ({ search }) => {
-    const { paymentRequestId } = search;
-
+  loaderDeps: ({ search: { paymentRequestId } }) => ({ paymentRequestId }),
+  loader: async ({ deps: { paymentRequestId } }) => {
     const paymentRequest = await getPaymentRequest(paymentRequestId);
 
     if (!paymentRequest) {

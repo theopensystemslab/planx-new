@@ -12,9 +12,8 @@ const paymentSearchSchema = z.object({
 
 export const Route = createFileRoute("/_public/_customDomain/$flow/pay/")({
   validateSearch: zodValidator(paymentSearchSchema),
-  beforeLoad: async ({ search }) => {
-    const { paymentRequestId } = search;
-
+  loaderDeps: ({ search: { paymentRequestId } }) => ({ paymentRequestId }),
+  loader: async ({ deps: { paymentRequestId } }) => {
     const paymentRequest = await getPaymentRequest(paymentRequestId);
 
     if (!paymentRequest) {

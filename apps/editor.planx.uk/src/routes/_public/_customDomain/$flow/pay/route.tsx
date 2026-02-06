@@ -10,7 +10,7 @@ import {
 } from "utils/routeUtils/standaloneViewHelpers";
 
 export const Route = createFileRoute("/_public/_customDomain/$flow/pay")({
-  loader: async ({ context }) => {
+  beforeLoad: async ({ context }) => {
     const { team, flowSlug } = context;
     const data = await fetchDataForStandaloneView(flowSlug, team);
     setupStandaloneViewStore(data);

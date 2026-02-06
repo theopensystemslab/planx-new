@@ -10,7 +10,7 @@ import {
 } from "utils/routeUtils/standaloneViewHelpers";
 
 export const Route = createFileRoute("/_public/_planXDomain/$team/$flow/pay")({
-  loader: async ({ context }) => {
+  beforeLoad: async ({ context }) => {
     const { team, flow } = context;
     const data = await fetchDataForStandaloneView(flow, team);
     setupStandaloneViewStore(data);
