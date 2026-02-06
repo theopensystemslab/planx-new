@@ -160,7 +160,7 @@ test.describe("Flow creation, publish and preview", () => {
       userId: context.user!.id!,
     });
 
-    await page.goto(`/${context.team.slug}`);
+    await page.goto(`/app/${context.team.slug}`);
 
     const editor = new PlaywrightEditor(page);
 
