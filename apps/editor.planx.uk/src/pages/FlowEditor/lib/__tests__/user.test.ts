@@ -30,6 +30,7 @@ const redUser: User = {
       },
     },
   ],
+  defaultTeamId: null,
 };
 
 const blueUser: User = {
@@ -49,6 +50,7 @@ const blueUser: User = {
       },
     },
   ],
+  defaultTeamId: null,
 };
 
 const readOnlyUser: User = {
@@ -59,6 +61,7 @@ const readOnlyUser: User = {
   lastName: "Only",
   email: "readonly@no-team.com",
   teams: [],
+  defaultTeamId: null,
 };
 
 const adminUser: User = {
@@ -69,6 +72,7 @@ const adminUser: User = {
   lastName: "Admin",
   email: "admin@opensystemslab.io",
   teams: [],
+  defaultTeamId: null,
 };
 
 let initialState: FullStore;

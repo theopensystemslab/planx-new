@@ -18,6 +18,7 @@ const mockUser: Omit<User, "isPlatformAdmin"> = {
   email: "test@email.com",
   teams: [],
   isAnalyst: false,
+  defaultTeamId: null,
 };
 
 describe("Checklist Component for a Platform Admin", () => {
