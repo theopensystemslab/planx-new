@@ -26,6 +26,10 @@ vi.mock("lib/feedback", () => ({
   insertFeedbackMutation: vi.fn(),
 }));
 
+vi.mock("hooks/usePublicRouteContext", () => ({
+  usePublicRouteContext: vi.fn(() => "/$flow"),
+}));
+
 describe("Feedback component triage journey", () => {
   beforeEach(() => {
     vi.clearAllMocks();

@@ -5,15 +5,17 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
-import Link from "@mui/material/Link";
+import MuiLink from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import ToggleButton from "@mui/material/ToggleButton";
 import Tooltip from "@mui/material/Tooltip";
+import { useRouter } from "@tanstack/react-router";
 import React, { useState } from "react";
+import { useLocation } from "react-use";
 import Permission from "ui/editor/Permission";
 import StyledTab from "ui/editor/StyledTab";
-import { rootFlowPath } from "utils/routeUtils/utils";
+import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 import { useStore } from "../../lib/store";
 import Customisations from "./Customisations";
@@ -147,13 +149,14 @@ const Sidebar: React.FC = React.memo(() => {
     setActiveTab(newValue);
   };
 
-  const baseUrl = `${window.location.origin}${rootFlowPath(false)}`;
+  const router = useRouter();
+  const { origin } = useLocation();
 
-  const urls = {
-    preview: baseUrl + "/preview",
-    draft: baseUrl + "/draft",
-    analytics: baseUrl + "/published" + "?analytics=false",
-  };
+  const previewPath = router.buildLocation({
+    to: "/$team/$flow/preview",
+  }).href;
+
+  const previewURL = `${origin}${previewPath}`;
 
   return (
     <Root>
@@ -171,54 +174,61 @@ const Sidebar: React.FC = React.memo(() => {
           </StyledToggleButton>
           <Header>
             <Icons>
-              <input type="text" disabled value={urls.preview} />
+              <input type="text" disabled value={previewURL} />
 
               <Permission.IsPlatformAdmin>
                 <Tooltip title="Open draft flow">
-                  <Link
-                    href={urls.draft}
+                  <CustomLink
+                    to="/$team/$flow/draft"
                     target="_blank"
                     rel="noopener noreferrer"
                     color="inherit"
+                    preload={false}
                   >
                     <OpenInNewOffIcon />
-                  </Link>
+                  </CustomLink>
                 </Tooltip>
               </Permission.IsPlatformAdmin>
 
               <Tooltip title="Open preview of changes to publish">
-                <Link
-                  href={urls.preview}
+                <CustomLink
+                  to="/$team/$flow/preview"
                   target="_blank"
                   rel="noopener noreferrer"
                   color="inherit"
+                  preload={false}
                 >
                   <OpenInNewIcon />
-                </Link>
+                </CustomLink>
               </Tooltip>
 
               {isFlowPublished ? (
+                // TODO: Tooltip + CustomLink doesn't work
                 <Tooltip title="Open published flow">
-                  <Link
-                    href={urls.analytics}
+                  <CustomLink
+                    to="/$team/$flow/published"
+                    search={{
+                      analytics: false,
+                    }}
                     target="_blank"
                     rel="noopener noreferrer"
                     color="inherit"
+                    preload={false}
                   >
                     <LanguageIcon />
-                  </Link>
+                  </CustomLink>
                 </Tooltip>
               ) : (
                 <Tooltip title="Flow not yet published">
                   <Box>
-                    <Link component={"button"} disabled aria-disabled={true}>
+                    <MuiLink component={"button"} disabled aria-disabled={true}>
                       <LanguageIcon />
-                    </Link>
+                    </MuiLink>
                   </Box>
                 </Tooltip>
               )}
             </Icons>
-            <CheckForChangesToPublishButton previewURL={urls.preview} />
+            <CheckForChangesToPublishButton previewURL={previewURL} />
           </Header>
           <TabList>
             <Tabs onChange={handleChange} value={activeTab} aria-label="">

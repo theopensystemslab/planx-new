@@ -9,7 +9,7 @@ import React from "react";
 import { useLocation } from "react-use";
 import StyledTab from "ui/editor/StyledTab";
 
-interface SettingsLink {
+export interface SettingsLink {
   label: string;
   path: string;
   icon: React.ComponentType<SvgIconProps>;

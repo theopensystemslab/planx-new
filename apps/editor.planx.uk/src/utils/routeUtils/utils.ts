@@ -1,5 +1,4 @@
 import { ComponentType as NodeTypes } from "@opensystemslab/planx-core/types";
-import { notFound } from "@tanstack/react-router";
 import gql from "graphql-tag";
 
 export interface RouteParams {
@@ -11,16 +10,11 @@ import { ApplicationPath } from "types";
 
 import { client } from "../../lib/graphql";
 
-export const makeTitle = (str: string) =>
-  [str, "PlanX"].filter(Boolean).join(" | ");
-
+// TODO: Replace with type-safe version
 export const rootFlowPath = (includePortals = false) => {
-  const path = window.location.pathname.split("/").slice(0, 3).join("/");
+  const path = window.location.pathname.split("/").slice(0, 4).join("/");
   return includePortals ? path : path.split(",")[0];
 };
-
-export const rootTeamPath = () =>
-  window.location.pathname.split("/").slice(0, 2).join("/");
 
 export const isSaveReturnFlow = (flowData: Store.Flow): boolean =>
   Boolean(Object.values(flowData).find((node) => node.type === NodeTypes.Send));
@@ -52,6 +46,7 @@ export const setPath = (flowData: Store.Flow, req: RouteParams) => {
 //
 //      So I've hard-coded these domain names until a better solution comes along.
 //
+// TODO: Retire this, update docs
 const PREVIEW_ONLY_DOMAINS = [
   "planningservices.barnet.gov.uk",
   "planningservices.birmingham.gov.uk",
@@ -80,15 +75,15 @@ export const isPreviewOnlyDomain = PREVIEW_ONLY_DOMAINS.some((domain) =>
 
 export const getNodeRoute = (parent?: string, before?: string) => {
   if (parent && before) {
-    return "/$team/$flow/nodes/$parent/nodes/new/$before" as const;
+    return "/app/$team/$flow/nodes/$parent/nodes/new/$before" as const;
   }
   if (parent) {
-    return "/$team/$flow/nodes/$parent/nodes/new" as const;
+    return "/app/$team/$flow/nodes/$parent/nodes/new" as const;
   }
   if (before) {
-    return "/$team/$flow/nodes/new/$before" as const;
+    return "/app/$team/$flow/nodes/new/$before" as const;
   }
-  return "/$team/$flow/nodes/new" as const;
+  return "/app/$team/$flow/nodes/new" as const;
 };
 
 const QUERY_GET_TEAM_BY_DOMAIN = gql`
@@ -112,19 +107,4 @@ export const getTeamFromDomain = async (domain: string) => {
   });
 
   return teams?.[0]?.slug;
-};
-
-/**
- * Prevents accessing a different team than the one associated with the custom domain.
- * e.g. Custom domain is for Southwark but URL is looking for Lambeth
- * e.g. https://planningservices.southwark.gov.uk/lambeth/some-flow
- */
-export const validateTeamRoute = async (req: RouteParams) => {
-  const externalTeamName = await getTeamFromDomain(window.location.hostname);
-  if (
-    req.params.team &&
-    externalTeamName &&
-    externalTeamName !== req.params.team
-  )
-    throw notFound();
 };

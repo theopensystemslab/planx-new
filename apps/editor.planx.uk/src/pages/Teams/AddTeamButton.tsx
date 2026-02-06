@@ -48,7 +48,7 @@ export const AddTeamButton: React.FC = () => {
 
   const onSubmit: FormikConfig<CreateTeam>["onSubmit"] = async (values) => {
     await createTeam(values);
-    navigate({ to: `/${values.slug}` });
+    navigate({ to: `/app/$team`, params: { team: values.slug } });
   };
 
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);

@@ -13,6 +13,10 @@ const mockLabelledInputs: FeedbackFormInput[] = [
   { name: "userComment", id: "userComment", label: "User Comment" },
 ];
 
+vi.mock("hooks/usePublicRouteContext", () => ({
+  usePublicRouteContext: vi.fn(() => "/$flow"),
+}));
+
 describe("FeedbackForm functionality", () => {
   beforeEach(() => {
     vi.clearAllMocks();

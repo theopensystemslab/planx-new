@@ -3,21 +3,15 @@ import { client } from "lib/graphql";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { Flow, GlobalSettings } from "types";
 
-import { getTeamFromDomain } from "./utils";
-
 interface StandaloneViewData {
   flows: Pick<Flow, "name" | "team" | "settings">[];
   globalSettings: GlobalSettings[];
 }
 
 export const fetchDataForStandaloneView = async (
-  flowParam: string,
-  teamParam?: string,
+  flowSlug: string,
+  teamSlug: string,
 ): Promise<StandaloneViewData> => {
-  const flowSlug = flowParam.split(",")[0];
-  const teamSlug =
-    teamParam || (await getTeamFromDomain(window.location.hostname));
-
   try {
     const result = await client.query({
       query: gql`

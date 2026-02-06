@@ -68,6 +68,13 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       });
     }
 
+    // Redirect authenticated users to the /app base route
+    if (location.pathname === "/") {
+      throw redirect({
+        to: "/app",
+      });
+    }
+
     try {
       const user = await useStore.getState().initUserStore();
 
@@ -76,7 +83,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
           to: "/login",
           search: {
             redirectTo:
-              location.pathname !== "/" ? location.pathname : undefined,
+              location.pathname !== "/app" ? location.pathname : undefined,
           },
         });
       }

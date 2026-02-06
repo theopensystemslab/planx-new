@@ -2,7 +2,7 @@ import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import { Form, Formik, useFormikContext } from "formik";
-import { useStore } from "pages/FlowEditor/lib/store";
+import { usePublicRouteContext } from "hooks/usePublicRouteContext";
 import React from "react";
 import FeedbackDisclaimer from "ui/public/FeedbackDisclaimer";
 import InputLabel from "ui/public/InputLabel";
@@ -46,15 +46,12 @@ function FormInputs({ inputs }: { inputs: FeedbackFormInput[] }): FCReturn {
 }
 
 const FeedbackForm: React.FC<FormProps> = ({ inputs, handleSubmit }) => {
-  const [teamSlug, flowSlug] = useStore((state) => [
-    state.teamSlug,
-    state.flowSlug,
-  ]);
-
   const initialValues: UserFeedback = {
     userContext: undefined,
     userComment: "",
   };
+
+  const from = usePublicRouteContext();
 
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
@@ -63,8 +60,9 @@ const FeedbackForm: React.FC<FormProps> = ({ inputs, handleSubmit }) => {
           Please do not include any personal data such as your name, email or
           address. All feedback is processed according to our{" "}
           <CustomLink
-            to="/$team/$flow/published/pages/$page"
-            params={{ team: teamSlug, flow: flowSlug, page: "privacy" }}
+            to="pages/$page"
+            params={{ page: "privacy" }}
+            from={from}
             color="primary"
           >
             privacy notice

@@ -44,7 +44,7 @@ export const Filters = <T extends object>({
   filterOptions,
 }: FiltersProps<T>) => {
   const navigate = useNavigate();
-  const searchParams = useSearch({ from: "/_authenticated/$team/" });
+  const searchParams = useSearch({ from: "/_authenticated/app/$team/" });
 
   // Get current filter values from URL
   const getCurrentFilterValues = (): Filters<T> | null => {

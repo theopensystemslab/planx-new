@@ -51,6 +51,7 @@ test.describe("Nominee journey @regression", async () => {
     await expect(
       page.getByRole("heading", { name: "Pay", exact: true }),
     ).toBeVisible();
+    // TODO(a11y): Have we lost the `<main/>` structure?
     await expect(
       page.locator("#main-content").getByText("Invite to pay test"),
     ).toBeVisible();
@@ -84,9 +85,11 @@ test.describe("Nominee journey @regression", async () => {
   });
 
   test("navigating to a URL with an invalid ID", async ({ page }) => {
+    const mockUUID = uuidV4();
+
     const invalidPaymentRequestURL = `/${context.team!.slug!}/${
       context.flow?.slug
-    }/pay?analytics=false&paymentRequestId=INVALID-ID`;
+    }/pay?analytics=false&paymentRequestId=${mockUUID}`;
     await page.goto(invalidPaymentRequestURL);
     await page.waitForLoadState("networkidle");
 

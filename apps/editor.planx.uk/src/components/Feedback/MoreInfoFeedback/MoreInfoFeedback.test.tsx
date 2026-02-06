@@ -17,6 +17,10 @@ vi.mock("lib/feedback", () => {
   };
 });
 
+vi.mock("hooks/usePublicRouteContext", () => ({
+  usePublicRouteContext: vi.fn(() => "/$flow"),
+}));
+
 const scrollIntoView = vi.fn();
 window.Element.prototype.scrollIntoView = scrollIntoView;
 

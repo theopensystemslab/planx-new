@@ -3,6 +3,7 @@ import Typography from "@mui/material/Typography";
 import { PaymentRequest } from "@opensystemslab/planx-core/types";
 import { useMutation } from "@tanstack/react-query";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import { usePublicRouteContext } from "hooks/usePublicRouteContext";
 import { APIError } from "lib/api/client";
 import { validateSession } from "lib/api/saveAndReturn/requests";
 import {
@@ -56,14 +57,11 @@ export const InvalidSession: React.FC<{
 export const LockedSession: React.FC<{
   paymentRequest?: MinPaymentRequest;
 }> = ({ paymentRequest }) => {
-  const [teamSlug, flowSlug] = useStore((state) => [
-    state.teamSlug,
-    state.flowSlug,
-  ]);
+  const from = usePublicRouteContext();
 
   return (
     <StatusPage
-      bannerHeading="Sorry, you can't make changes to this application"
+      bannerHeading="Sorry, you can't make changes to this form"
       additionalOption="startNewApplication"
     >
       {paymentRequest && (
@@ -75,10 +73,10 @@ export const LockedSession: React.FC<{
           ) to pay and changes might affect the fee.
           <br />
           <br />
-          You can{" "}
+          You can {/* TODO: Check / fix this link */}
           <CustomLink
-            to="/$team/$flow/pay"
-            params={{ team: teamSlug, flow: flowSlug }}
+            to="pay"
+            from={from}
             search={{ paymentRequestId: paymentRequest.id }}
           >
             pay yourself on the payment page
@@ -133,7 +131,6 @@ const ValidateSession: React.FC<{
   >({
     mutationFn: validateSession,
     onSuccess: (data) => resumeSession(data.reconciledSessionData),
-    onError: console.debug,
   });
 
   const handleSubmit = useCallback(

@@ -38,6 +38,7 @@ export const getPaymentRequest = async (
         retentionPeriod: getRetentionPeriod(),
       },
       context: {
+        role: "public",
         headers: {
           "x-hasura-payment-request-id": paymentRequestId,
         },

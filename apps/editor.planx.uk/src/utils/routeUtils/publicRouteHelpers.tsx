@@ -18,7 +18,7 @@ import {
   getLastPublishedAt,
   PublishedViewSettings,
 } from "./publishedQueries";
-import { getTeamFromDomain, setPath } from "./utils";
+import { setPath } from "./utils";
 
 // Types
 export type PublicRouteMode =
@@ -66,10 +66,7 @@ export const loadPublicRouteData = async (
   params: Record<string, string>,
   mode: PublicRouteMode,
 ): Promise<PublicRouteData> => {
-  const { team: teamParam, flow: flowParam } = params;
-  const flowSlug = flowParam.split(",")[0];
-  const teamSlug =
-    teamParam || (await getTeamFromDomain(window.location.hostname));
+  const { team: teamSlug, flow: flowSlug } = params;
 
   // Fetch settings (common for all modes)
   const data = await fetchSettingsForPublishedView(flowSlug, teamSlug);

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { TeamSummary } from "routes/_authenticated";
+import { TeamSummary } from "routes/_authenticated/app";
 
 import TeamSelect from "./TeamSelect";
 

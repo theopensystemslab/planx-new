@@ -118,8 +118,8 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           <Link
             to={
               parent
-                ? "/$team/$flow/nodes/$parent/nodes/$id/edit"
-                : "/$team/$flow/nodes/$id/edit"
+                ? "/app/$team/$flow/nodes/$parent/nodes/$id/edit"
+                : "/app/$team/$flow/nodes/$id/edit"
             }
             params={{
               team: teamSlug,
@@ -163,8 +163,8 @@ const Checklist: React.FC<Props> = React.memo((props) => {
                 <Link
                   to={
                     parent
-                      ? "/$team/$flow/nodes/$parent/nodes/$id/edit"
-                      : "/$team/$flow/nodes/$id/edit"
+                      ? "/app/$team/$flow/nodes/$parent/nodes/$id/edit"
+                      : "/app/$team/$flow/nodes/$id/edit"
                   }
                   params={{
                     team: teamSlug,

@@ -117,7 +117,7 @@ const ExternalPortal: React.FC<any> = (props) => {
             <Box sx={{ display: "flex", alignItems: "stretch" }}>
               {internalTeamSlug && internalFlowSlug ? (
                 <Link
-                  to="/$team/$flow"
+                  to="/app/$team/$flow"
                   params={{
                     team: internalTeamSlug,
                     flow: internalFlowSlug,
@@ -137,8 +137,8 @@ const ExternalPortal: React.FC<any> = (props) => {
               <Link
                 to={
                   parent
-                    ? "/$team/$flow/nodes/$parent/nodes/$id/edit"
-                    : "/$team/$flow/nodes/$id/edit"
+                    ? "/app/$team/$flow/nodes/$parent/nodes/$id/edit"
+                    : "/app/$team/$flow/nodes/$id/edit"
                 }
                 params={{
                   team: teamSlug,
@@ -234,8 +234,8 @@ const InternalPortal: React.FC<any> = (props) => {
               <Link
                 to={
                   parent
-                    ? "/$team/$flow/nodes/$parent/nodes/$id/edit"
-                    : "/$team/$flow/nodes/$id/edit"
+                    ? "/app/$team/$flow/nodes/$parent/nodes/$id/edit"
+                    : "/app/$team/$flow/nodes/$id/edit"
                 }
                 params={{
                   team: teamSlug,

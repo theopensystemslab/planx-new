@@ -2,7 +2,7 @@ import { expect, Page } from "@playwright/test";
 import { contextDefaults } from "./context.js";
 
 export const navigateToService = async (page: Page, slug: string) => {
-  await page.goto(`/${contextDefaults.team.slug}/${slug}`);
+  await page.goto(`/app/${contextDefaults.team.slug}/${slug}`);
 
   await expect(page.getByRole("link", { name: slug })).toBeVisible();
 };

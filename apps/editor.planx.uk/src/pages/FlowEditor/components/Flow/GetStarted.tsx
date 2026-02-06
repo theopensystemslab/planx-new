@@ -34,7 +34,7 @@ export const GetStarted: React.FC = () => (
         <strong>Starting a new flow?</strong>
       </Typography>
       <Typography variant="body2">
-        Visit the <Link to="/tutorials">guides and tutorials</Link> to get
+        Visit the <Link to="/app/tutorials">guides and tutorials</Link> to get
         started.
       </Typography>
     </Box>
