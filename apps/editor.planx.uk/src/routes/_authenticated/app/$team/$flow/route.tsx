@@ -17,7 +17,6 @@ import {
 import { useStore } from "../../../../../pages/FlowEditor/lib/store";
 import { teamSearchSchema } from "..";
 
-
 export const Route = createFileRoute("/_authenticated/app/$team/$flow")({
   pendingComponent: FlowSkeleton,
   validateSearch: zodValidator(teamSearchSchema),
