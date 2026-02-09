@@ -166,7 +166,7 @@ export const createPublicRouteBeforeLoad = <T extends PublicRouteMode>(
       updateStoreWithPublicRouteData(data);
 
       // Set application path for save-and-return flows
-      if (mode === "published" || mode === "draft" || mode === "pay") {
+      if (mode === "published" || mode === "pay") {
         setPath(data.flowData, {
           params: {
             ...params,
@@ -229,8 +229,7 @@ export const PublicRouteLayout: React.FC<{
   children: React.ReactNode;
 }> = ({ mode, children }) => {
   const shouldShowTestWarning = mode === "preview";
-  const shouldShowSaveReturn =
-    mode === "published" || mode === "draft" || mode === "pay";
+  const shouldShowSaveReturn = mode === "published" || mode === "pay";
   const watermarkForceVisible = mode === "preview" || mode === "draft";
 
   let wrappedContent;
