@@ -51,7 +51,6 @@ test.describe("Nominee journey @regression", async () => {
     await expect(
       page.getByRole("heading", { name: "Pay", exact: true }),
     ).toBeVisible();
-    // TODO(a11y): Have we lost the `<main/>` structure?
     await expect(
       page.locator("#main-content").getByText("Invite to pay test"),
     ).toBeVisible();
