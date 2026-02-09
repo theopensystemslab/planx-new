@@ -5,12 +5,13 @@ import {
 } from "@planx/components/shared";
 import { richText } from "lib/yupExtensions";
 import { FileWithPath } from "react-dropzone";
-import { array, object, SchemaOf, string } from "yup";
+import { array, number, object, SchemaOf, string } from "yup";
 
 export interface FileUpload extends BaseNodeData {
   title: string;
   fn: string;
   description?: string;
+  maxFiles?: number;
 }
 
 export interface FileUploadSlot {
@@ -33,6 +34,7 @@ export const parseFileUpload = (
   notes: data?.notes || "",
   policyRef: data?.policyRef,
   title: data?.title || "",
+  maxFiles: data?.maxFiles,
   ...parseBaseNodeData(data),
 });
 
@@ -75,6 +77,7 @@ export const validationSchema: SchemaOf<FileUpload> =
       description: richText(),
       title: string().required(),
       fn: string().nullable().required(),
+      maxFiles: number().optional(),
     }),
   );
 

@@ -169,7 +169,10 @@ export const Dropzone: React.FC<Props> = ({
           ) : (
             <>
               Drop {maxFiles === 1 ? "file" : "files"} here or{" "}
-              <FauxLink component="span">choose files</FauxLink> to upload
+              <FauxLink component="span">
+                {maxFiles === 1 ? "choose a file" : "choose files"}
+              </FauxLink>{" "}
+              to upload
             </>
           )}
         </Typography>

@@ -95,7 +95,11 @@ const FileUploadComponent: React.FC<Props> = (props) => {
         policyRef={props.policyRef}
       />
       <ErrorWrapper error={validationError} id={props.id}>
-        <PrivateFileUpload slots={slots} setSlots={setSlots} />
+        <PrivateFileUpload
+          slots={slots}
+          setSlots={setSlots}
+          maxFiles={props.maxFiles}
+        />
       </ErrorWrapper>
     </Card>
   );
