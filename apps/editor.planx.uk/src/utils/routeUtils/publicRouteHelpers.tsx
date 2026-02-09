@@ -44,6 +44,7 @@ const basePublicSearchSchema = z.object({
 });
 
 // Search schemas
+//  TODO reflect more accurate types here! eg preview/draft will never have sessionId or email, pay can have paymentRequestId, etc
 export const publicRouteSearchSchemas = {
   published: basePublicSearchSchema.extend({
     analytics: z.boolean().optional(),
