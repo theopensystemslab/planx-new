@@ -9,6 +9,7 @@ import type { PublicProps } from "@planx/components/shared/types";
 import { logger } from "airbrake";
 import { FeedbackView } from "components/Feedback/types";
 import { useFormik } from "formik";
+import { usePublicRouteContext } from "hooks/usePublicRouteContext";
 import {
   getInternalFeedbackMetadata,
   insertFeedbackMutation,
@@ -80,6 +81,8 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
       formik.setFieldValue("feedbackScore", newValue);
     }
   };
+
+  const from = usePublicRouteContext();
 
   return (
     <Card handleSubmit={formik.handleSubmit}>
@@ -186,8 +189,9 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
           Please do not include any personal data such as your name, email or
           address. All feedback is processed according to our{" "}
           <CustomLink
-            to="/$team/$flow/published/pages/$page"
-            params={{ team: teamSlug, flow: flowSlug, page: "privacy" }}
+            to="pages/$page"
+            from={from}
+            params={{ page: "privacy" }}
             color="primary"
           >
             privacy notice

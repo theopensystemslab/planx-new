@@ -7,23 +7,16 @@ import React from "react";
 
 const NavigateToPublishedButton: React.FC = () => {
   const navigate = useNavigate();
-  const id = useStore().id;
-  const teamSlug = useStore((state) => state.teamSlug);
-  const flowSlug = useStore((state) => state.flowSlug);
+  const id = useStore((state) => state.id);
 
   const handleClick = () => {
     clearLocalFlow(id);
     navigate({
       to: "/$team/$flow/published",
-      params: {
-        team: teamSlug,
-        flow: flowSlug,
-      },
       search: {
         analytics: false,
       },
     });
-    window.location.reload();
   };
 
   return (

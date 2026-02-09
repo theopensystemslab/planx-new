@@ -15,6 +15,10 @@ vi.mock("lib/feedback", () => ({
   insertFeedbackMutation: vi.fn(),
 }));
 
+vi.mock("hooks/usePublicRouteContext", () => ({
+  usePublicRouteContext: vi.fn(() => "/$flow"),
+}));
+
 describe("when the Feedback component is rendered", async () => {
   it("should not have any accessibility violations", async () => {
     const { container } = await setup(

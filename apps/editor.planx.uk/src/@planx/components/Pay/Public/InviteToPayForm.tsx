@@ -11,6 +11,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useFormik } from "formik";
+import { usePublicRouteContext } from "hooks/usePublicRouteContext";
 import { APIError } from "lib/api/client";
 import {
   CreatePaymentRequest,
@@ -82,24 +83,19 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   yourDetailsLabel,
   paymentStatus,
 }) => {
-  const [sessionId, isTestEnvironment, teamSlug, flowSlug] = useStore(
-    (state) => [
-      state.sessionId,
-      state.hasAcknowledgedWarning,
-      state.teamSlug,
-      state.flowSlug,
-    ],
-  );
+  const [sessionId, isTestEnvironment] = useStore((state) => [
+    state.sessionId,
+    state.hasAcknowledgedWarning,
+  ]);
   const navigate = useNavigate();
   const defaults = getDefaultContent();
+  const from = usePublicRouteContext();
 
   const redirectToConfirmationPage = (paymentRequestId: string) => {
+    // TODO: variable on custom subdomains?
     navigate({
-      to: "/$team/$flow/pay/invite",
-      params: {
-        team: teamSlug,
-        flow: flowSlug,
-      },
+      to: "../pay/invite",
+      from,
       search: { paymentRequestId },
     });
   };

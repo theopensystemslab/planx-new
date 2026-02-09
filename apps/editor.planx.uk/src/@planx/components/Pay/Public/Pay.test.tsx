@@ -33,12 +33,9 @@ vi.mock("@tanstack/react-router", async () => {
       hash: "",
       state: {},
     })),
+    useMatches: vi.fn(() => [{ routeId: "_customDomain/$flow" }]),
   };
 });
-
-vi.mock("lib/featureFlags", () => ({
-  hasFeatureFlag: vi.fn().mockResolvedValue(true),
-}));
 
 const { getState, setState } = useStore;
 

@@ -25,6 +25,10 @@ vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
   };
 });
 
+vi.mock("hooks/usePublicRouteContext", () => ({
+  usePublicRouteContext: vi.fn(() => "/$flow"),
+}));
+
 it("should not have any accessibility violations", async () => {
   const { container } = await setup(
     <ConfirmationComponent

@@ -22,7 +22,7 @@ import {
 } from "pages/FlowEditor/utils";
 import React, { useMemo, useRef, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import type { NodeSearchParams } from "routes/_authenticated/$team/$flow/nodes/route";
+import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/nodes/route";
 import { Switch } from "ui/shared/Switch";
 import { getNodeRoute, rootFlowPath } from "utils/routeUtils/utils";
 
@@ -256,7 +256,7 @@ const FormModal: React.FC<FormModalProps> = ({
       setShowUnsavedWarning(true);
     } else {
       navigate({
-        to: "/$team/$flow",
+        to: "/app/$team/$flow",
         params: {
           team: teamSlug,
           flow: flowSlug,
@@ -268,7 +268,7 @@ const FormModal: React.FC<FormModalProps> = ({
   const handleConfirmClose = () => {
     setShowUnsavedWarning(false);
     navigate({
-      to: "/$team/$flow",
+      to: "/app/$team/$flow",
       params: {
         team: teamSlug,
         flow: flowSlug,
@@ -426,7 +426,7 @@ const FormModal: React.FC<FormModalProps> = ({
               onClick={() => {
                 handleDelete && handleDelete();
                 navigate({
-                  to: "/$team/$flow",
+                  to: "/app/$team/$flow",
                   params: {
                     team: teamSlug,
                     flow: flowSlug,
@@ -455,7 +455,7 @@ const FormModal: React.FC<FormModalProps> = ({
                 onClick={() => {
                   if (id) makeUnique(id, parent);
                   navigate({
-                    to: "/$team/$flow",
+                    to: "/app/$team/$flow",
                     params: {
                       team: teamSlug,
                       flow: flowSlug,

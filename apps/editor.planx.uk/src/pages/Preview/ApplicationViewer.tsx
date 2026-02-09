@@ -26,6 +26,7 @@ const ApplicationViewer: React.FC = () => {
   const { pathname } = useLocation();
 
   const hasPaid = Boolean(govUkPayment);
+  // TODO: check this logic
   const hasSentInviteToPay = pathname?.match("pay/invite");
   const showFeeBreakdown = hasPaid || hasSentInviteToPay;
 

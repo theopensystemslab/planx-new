@@ -3,7 +3,8 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
-import { useNavigate } from "@tanstack/react-router";
+import { type LinkOptions, useNavigate } from "@tanstack/react-router";
+import { useRouter } from "@tanstack/react-router";
 import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -77,6 +78,7 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
   teamSlug,
   refreshFlows,
 }) => {
+  const router = useRouter();
   const navigate = useNavigate();
   const [canUserEditTeam] = useStore((state) => [state.canUserEditTeam]);
 
@@ -91,18 +93,21 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
   const { displayTimeAgo, displayActor } = useFlowDates(flow);
 
   const handleRowClick = (e: React.MouseEvent) => {
-    if ((e.target as HTMLElement).closest("a")) {
-      return;
-    }
+    if ((e.target as HTMLElement).closest("a")) return;
+
+    const destination: LinkOptions = {
+      to: "/app/$team/$flow",
+      params: { team: teamSlug, flow: flow.slug },
+    };
+
     // Allow links to be opened in new tabs
     if (e.metaKey || e.ctrlKey) {
-      window.open(`./${teamSlug}/${flow.slug}`, "_blank");
+      const { href } = router.buildLocation(destination);
+      window.open(href, "_blank");
       return;
     }
-    navigate({
-      to: "/$team/$flow",
-      params: { team: teamSlug, flow: flow.slug },
-    });
+
+    navigate(destination);
   };
 
   return (
@@ -119,9 +124,8 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
             </Box>
           )}
           <CustomLink
-            to="/$team/$flow"
+            to="/app/$team/$flow"
             params={{ team: teamSlug, flow: flow.slug }}
-            preload={false}
             onClick={(e) => e.stopPropagation()}
             sx={(theme) => ({
               textDecoration: "none",

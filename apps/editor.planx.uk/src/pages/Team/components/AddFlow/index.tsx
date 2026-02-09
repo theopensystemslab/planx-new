@@ -54,7 +54,10 @@ export const AddFlow: React.FC = () => {
     showLoading("Creating flow...");
     try {
       const result = await createFlow(values);
-      await navigate({ to: `/${teamSlug}/${result.flow.slug}` });
+      await navigate({
+        to: "/app/$team/$flow",
+        params: { team: teamSlug, flow: result.flow.slug },
+      });
       hideLoading();
     } catch (error) {
       setLoadingCompleteCallback(undefined);

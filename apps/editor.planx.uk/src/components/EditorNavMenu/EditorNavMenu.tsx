@@ -68,41 +68,42 @@ function EditorNavMenu() {
     }
   };
 
+  // TODO: How can we make this component type-safe?
   const globalLayoutRoutes: Route[] = [
     {
       title: "Select a team",
       Icon: FormatListBulletedIcon,
-      route: "/",
+      route: "/app",
       accessibleBy: "*",
     },
     {
       title: "Global settings",
       Icon: TuneIcon,
-      route: "/global-settings",
+      route: "/app/global-settings",
       accessibleBy: ["platformAdmin"],
     },
     {
       title: "Admin panel",
       Icon: AdminPanelSettingsIcon,
-      route: "/admin-panel",
+      route: "/app/admin-panel",
       accessibleBy: ["platformAdmin", "analyst"],
     },
     {
       title: "Resources",
       Icon: MenuBookIcon,
-      route: "/resources",
+      route: "/app/resources",
       accessibleBy: "*",
     },
     {
       title: "Onboarding",
       Icon: AssignmentTurnedInIcon,
-      route: "/onboarding",
+      route: "/app/onboarding",
       accessibleBy: "*",
     },
     {
       title: "Tutorials",
       Icon: SchoolIcon,
-      route: "/tutorials",
+      route: "/app/tutorials",
       accessibleBy: "*",
     },
   ];
@@ -111,37 +112,37 @@ function EditorNavMenu() {
     {
       title: "Flows",
       Icon: FormatListBulletedIcon,
-      route: `/${teamSlug}`,
+      route: `/app/${teamSlug}`,
       accessibleBy: "*",
     },
     {
       title: "Settings",
       Icon: TuneIcon,
-      route: `/${teamSlug}/settings`,
+      route: `/app/${teamSlug}/settings`,
       accessibleBy: ["platformAdmin", "teamEditor"],
     },
     {
       title: "Team members",
       Icon: GroupIcon,
-      route: `/${teamSlug}/members`,
+      route: `/app/${teamSlug}/members`,
       accessibleBy: ["platformAdmin", "teamEditor"],
     },
     {
       title: "Subscription",
       Icon: CurrencyPoundIcon,
-      route: `/${teamSlug}/subscription`,
+      route: `/app/${teamSlug}/subscription`,
       accessibleBy: ["platformAdmin", "teamEditor"],
     },
     {
       title: "Feedback",
       Icon: RateReviewIcon,
-      route: `/${teamSlug}/feedback`,
+      route: `/app/${teamSlug}/feedback`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
     {
       title: "Submissions",
       Icon: FactCheckIcon,
-      route: `/${teamSlug}/submissions`,
+      route: `/app/${teamSlug}/submissions`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
     {
@@ -179,25 +180,25 @@ function EditorNavMenu() {
     {
       title: "Editor",
       Icon: EditorIcon,
-      route: `/${teamSlug}/${flowSlug}`,
+      route: `/app/${teamSlug}/${flowSlug}`,
       accessibleBy: "*",
     },
     {
       title: "Flow settings",
       Icon: TuneIcon,
-      route: `/${teamSlug}/${flowSlug}/settings`,
+      route: `/app/${teamSlug}/${flowSlug}/settings`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
     {
       title: "Feedback",
       Icon: RateReviewIcon,
-      route: `/${teamSlug}/${flowSlug}/feedback`,
+      route: `/app/${teamSlug}/${flowSlug}/feedback`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
     {
       title: "Submissions",
       Icon: FactCheckIcon,
-      route: `/${teamSlug}/${flowSlug}/submissions`,
+      route: `/app/${teamSlug}/${flowSlug}/submissions`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
     {
