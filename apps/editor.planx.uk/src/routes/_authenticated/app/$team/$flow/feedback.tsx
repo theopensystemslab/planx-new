@@ -1,4 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import gql from "graphql-tag";
 import { FEEDBACK_SUMMARY_FIELDS } from "lib/feedback";
 import { FeedbackLog } from "pages/FlowEditor/components/FeedbackLog/FeedbackLog";
@@ -11,6 +12,7 @@ import { useStore } from "../../../../../pages/FlowEditor/lib/store";
 export const Route = createFileRoute(
   "/_authenticated/app/$team/$flow/feedback",
 )({
+  pendingComponent: DelayedLoadingIndicator,
   loader: async ({ params }) => {
     const { team: teamSlug, flow: flowSlug } = params;
     const actualFlowSlug = flowSlug.split(",")[0];
