@@ -1,5 +1,5 @@
 config:
-  aws:region: eu-west-2
+  aws:profile: planx-staging-pulumi
   # apply tags to all taggable resources by default (for cost tracking)
   aws:defaultTags:
     tags:
