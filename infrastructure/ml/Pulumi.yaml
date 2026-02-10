@@ -1,10 +1,11 @@
 name: ml
-description: Machine learning infra
+description: Machine learning layer
 runtime:
   name: nodejs
   options:
     packagemanager: pnpm
 config:
+  aws:region: eu-west-2
   pulumi:tags:
     value:
       pulumi:template: aws-typescript

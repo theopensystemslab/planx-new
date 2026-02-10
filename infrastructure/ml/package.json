@@ -1,9 +1,8 @@
 {
   "name": "@planx/infrastructure-ml",
   "dependencies": {
-    "@pulumi/aws": "~7.8.0",
-    "@pulumi/awsx": "~3.0.1",
-    "@pulumi/pulumi": "~3.201.0"
+    "@pulumi/aws": "~7.16.0",
+    "@pulumi/pulumi": "~3.219.0"
   },
   "devDependencies": {
     "@types/node": "~22.14.1",
