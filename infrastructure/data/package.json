@@ -1,12 +1,13 @@
 {
   "name": "@planx/infrastructure-data",
   "dependencies": {
-    "@pulumi/aws": "~4.0.0",
-    "@pulumi/awsx": "~0.30.0",
-    "@pulumi/pulumi": "~3.74.0"
+    "@pulumi/aws": "~7.16.0",
+    "@pulumi/pulumi": "~3.219.0"
   },
   "devDependencies": {
-    "@types/node": "~22.14.1"
+    "@types/node": "~22.14.1",
+    "typescript": "~5.9.3"
   },
+  "main": "index.ts",
   "private": true
 }

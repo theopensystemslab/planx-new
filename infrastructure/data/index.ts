@@ -10,6 +10,36 @@ const DB_ROOT_USERNAME = "dbuser";
 const env = pulumi.getStack();
 const networking = new pulumi.StackReference(`planx/networking/${env}`);
 
+const vpcId = networking.requireOutput("vpcId") as pulumi.Output<string>;
+
+// create dedicated security group and ingress/egress rules for the RDS instance
+const dbSecurityGroup = new aws.ec2.SecurityGroup("db-sg", {
+  description: "Security group for RDS instance",
+  vpcId: vpcId,
+});
+
+new aws.vpc.SecurityGroupIngressRule("db-allow-ssh-in", {
+    securityGroupId: dbSecurityGroup.id,
+    cidrIpv4: "0.0.0.0/0", // allow SSH from anywhere
+    fromPort: 22,
+    toPort: 22,
+    ipProtocol: "tcp",
+});
+
+new aws.vpc.SecurityGroupIngressRule("db-allow-tcp-in", {
+    securityGroupId: dbSecurityGroup.id,
+    cidrIpv4: "0.0.0.0/0", // allow TCP from anywhere
+    fromPort: 5432,
+    toPort: 5432,
+    ipProtocol: "tcp",
+});
+
+new aws.vpc.SecurityGroupEgressRule("db-allow-ipv4-traffic-out", {
+    securityGroupId: dbSecurityGroup.id,
+    cidrIpv4: "0.0.0.0/0",
+    ipProtocol: "-1",
+});
+
 // ShareDB does not use SSL - from Postgres 16 onwards this is forced on my default
 // Create a parameter group which turns this setting off
 const parameterGroup = new aws.rds.ParameterGroup("parameterGroup", {
@@ -33,9 +63,8 @@ const db = new aws.rds.Instance("app", {
   instanceClass: env === "production" ? "db.t3.medium" : "db.t3.small",
   allocatedStorage: env === "production" ? 100 : 20,
   allowMajorVersionUpgrade: true,
-  dbSubnetGroupName: networking.requireOutput("subnetId"),
-  vpcSecurityGroupIds: networking.requireOutput("vpcSecurityGroupIds"),
-  name: "app",
+  dbSubnetGroupName: networking.requireOutput("dbSubnetGroupId"),
+  vpcSecurityGroupIds: [dbSecurityGroup.id],
   username: DB_ROOT_USERNAME,
   password: config.require("db-password"),
   // we should keep a snapshot in case of (potentially mistaken) deletion
