@@ -1,5 +1,8 @@
 name: data
-runtime: nodejs
 description: Data layer
+runtime:
+  name: nodejs
+  options:
+    packagemanager: pnpm
 config:
   aws:region: eu-west-2
