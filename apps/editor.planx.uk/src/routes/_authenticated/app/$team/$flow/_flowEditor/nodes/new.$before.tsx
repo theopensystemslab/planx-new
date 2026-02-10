@@ -6,48 +6,37 @@ import React from "react";
 import { loader } from "./-loader";
 
 export const Route = createFileRoute(
-  "/_authenticated/app/$team/$flow/nodes/$id/edit",
+  "/_authenticated/app/$team/$flow/_flowEditor/nodes/new/$before",
 )({
   loaderDeps: ({ search }) => ({ type: search.type }),
   loader: async ({ params, deps }) => {
-    const { team, flow, id } = params;
-    const { type } = deps;
+    const { type = "question" } = deps;
+    const { team, flow, before } = params;
 
     return loader({
       team,
       flow,
-      id,
       type,
       parent: undefined,
-      before: undefined,
+      before,
       includeExtraProps: true,
-      includeHandleDelete: true,
+      includeHandleDelete: false,
     });
   },
-  component: EditNodeModal,
+
+  component: NewNodeModal,
 });
 
-function EditNodeModal() {
-  const {
-    type: actualType,
-    extraProps,
-    node,
-    id,
-    parent,
-    before,
-    handleDelete,
-  } = Route.useLoaderData();
+function NewNodeModal() {
+  const { type, extraProps, parent, before } = Route.useLoaderData();
 
   return (
     <FormModal
-      type={actualType}
-      Component={components[actualType]}
+      type={type}
+      Component={components[type]}
       extraProps={extraProps}
-      node={node}
-      id={id}
       parent={parent}
       before={before}
-      handleDelete={handleDelete}
     />
   );
 }

@@ -125,6 +125,7 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
           )}
           <CustomLink
             to="/app/$team/$flow"
+            preload={false}
             params={{ team: teamSlug, flow: flow.slug }}
             onClick={(e) => e.stopPropagation()}
             sx={(theme) => ({

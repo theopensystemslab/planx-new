@@ -3,6 +3,7 @@ import MoreVert from "@mui/icons-material/MoreVert";
 import Box from "@mui/material/Box";
 import { NodeTag } from "@opensystemslab/planx-core/types";
 import { Link } from "@tanstack/react-router";
+import { useParams } from "@tanstack/react-router";
 import classNames from "classnames";
 import gql from "graphql-tag";
 import { useContextMenu } from "hooks/useContextMenu";
@@ -24,14 +25,12 @@ const ExternalPortal: React.FC<any> = (props) => {
 
   const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(href);
 
-  const { addExternalPortal, showTags, teamSlug, flowSlug } = useStore(
-    (state) => ({
-      addExternalPortal: state.addExternalPortal,
-      showTags: state.showTags,
-      teamSlug: state.teamSlug,
-      flowSlug: state.flowSlug,
-    }),
-  );
+  const { addExternalPortal, showTags } = useStore((state) => ({
+    addExternalPortal: state.addExternalPortal,
+    showTags: state.showTags,
+  }));
+
+  const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
   const { data, loading } = useQuery(
     gql`
@@ -141,8 +140,8 @@ const ExternalPortal: React.FC<any> = (props) => {
                     : "/app/$team/$flow/nodes/$id/edit"
                 }
                 params={{
-                  team: teamSlug,
-                  flow: flowSlug,
+                  team,
+                  flow,
                   id: props.id,
                   ...(parent && { parent }),
                 }}
@@ -171,12 +170,12 @@ const InternalPortal: React.FC<any> = (props) => {
 
   const parent = getParentId(props.parent);
 
-  const { isClone, showTags, teamSlug, flowSlug } = useStore((state) => ({
+  const { isClone, showTags } = useStore((state) => ({
     isClone: state.isClone,
     showTags: state.showTags,
-    teamSlug: state.teamSlug,
-    flowSlug: state.flowSlug,
   }));
+
+  const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
   const [{ isDragging }, drag] = useDrag({
     item: {
@@ -238,8 +237,8 @@ const InternalPortal: React.FC<any> = (props) => {
                     : "/app/$team/$flow/nodes/$id/edit"
                 }
                 params={{
-                  team: teamSlug,
-                  flow: flowSlug,
+                  team,
+                  flow,
                   id: props.id,
                   ...(parent && { parent }),
                 }}

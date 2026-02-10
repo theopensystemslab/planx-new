@@ -6,7 +6,7 @@ import {
   NodeTag,
 } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
-import { Link } from "@tanstack/react-router";
+import { Link, useParams } from "@tanstack/react-router";
 import classNames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
 import React from "react";
@@ -36,6 +36,8 @@ const Question: React.FC<Props> = React.memo((props) => {
     state.showTags,
   ]);
 
+  const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
+
   const parent = getParentId(props.parent);
 
   const [{ isDragging }, drag] = useDrag({
@@ -49,11 +51,6 @@ const Question: React.FC<Props> = React.memo((props) => {
       isDragging: monitor.isDragging(),
     }),
   });
-
-  const [teamSlug, flowSlug] = useStore((state) => [
-    state.teamSlug,
-    state.flowSlug,
-  ]);
 
   const handleContextMenu = useContextMenu({
     source: "node",
@@ -101,8 +98,8 @@ const Question: React.FC<Props> = React.memo((props) => {
                 : "/app/$team/$flow/nodes/$id/edit"
             }
             params={{
-              team: teamSlug,
-              flow: flowSlug,
+              team,
+              flow,
               id: props.id,
               ...(parent && { parent }),
             }}

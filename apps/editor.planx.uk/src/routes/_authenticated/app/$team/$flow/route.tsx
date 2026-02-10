@@ -5,9 +5,10 @@ import {
   stripSearchParams,
 } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
+import ErrorFallback from "components/Error/ErrorFallback";
 import FlowSkeleton from "pages/FlowEditor/FlowSkeleton";
-import FlowEditorLayout from "pages/layout/FlowEditorLayout";
 import React from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { CatchAllComponent } from "routes/$";
 import {
   getBasicFlowData,
@@ -34,13 +35,18 @@ export const Route = createFileRoute("/_authenticated/app/$team/$flow")({
   },
   beforeLoad: async ({ params }) => {
     const { team: teamSlug, flow: flowSlug } = params;
+    const store = useStore.getState();
 
     const actualFlowSlug = flowSlug.split(",")[0];
 
-    try {
-      const flow = await getBasicFlowData(actualFlowSlug, teamSlug);
-      const store = useStore.getState();
+    // Don't re-connect to document when navigating to nested flows
+    if (store.flowSlug === actualFlowSlug) return;
 
+    try {
+      // Ensure we only have a single active connection
+      store.disconnectFromFlow();
+
+      const flow = await getBasicFlowData(actualFlowSlug, teamSlug);
       await store.connectToFlow(flow.id);
       useStore.setState({
         flowName: flow.name,
@@ -73,8 +79,8 @@ export const Route = createFileRoute("/_authenticated/app/$team/$flow")({
 
 function RouteComponent() {
   return (
-    <FlowEditorLayout>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
       <Outlet />
-    </FlowEditorLayout>
+    </ErrorBoundary>
   );
 }

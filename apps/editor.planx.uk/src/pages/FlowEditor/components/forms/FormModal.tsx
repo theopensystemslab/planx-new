@@ -12,9 +12,9 @@ import { styled } from "@mui/material/styles";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { type BaseNodeData, parseFormValues } from "@planx/components/shared";
 import { useNavigate } from "@tanstack/react-router";
+import { useParams } from "@tanstack/react-router";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { FormikProps } from "formik";
-import { hasFeatureFlag } from "lib/featureFlags";
 import isEqual from "lodash/isEqual";
 import {
   nodeIsChildOfTemplatedInternalPortal,
@@ -22,7 +22,7 @@ import {
 } from "pages/FlowEditor/utils";
 import React, { useMemo, useRef, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/nodes/route";
+import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
 import { Switch } from "ui/shared/Switch";
 import { getNodeRoute, rootFlowPath } from "utils/routeUtils/utils";
 
@@ -122,11 +122,10 @@ const TextInputToggle: React.FC<{
   type: string;
   parent?: string;
   before?: string;
-  teamSlug: string;
-  flowSlug: string;
-}> = ({ type, parent, before, teamSlug, flowSlug }) => {
+}> = ({ type, parent, before }) => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(type === "enhanced-text-input");
+  const { flow, team } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
   if (!["text-input", "enhanced-text-input"].includes(type)) return null;
 
@@ -140,11 +139,11 @@ const TextInputToggle: React.FC<{
     navigate({
       to: getNodeRoute(parent, before),
       params: {
-        team: teamSlug,
-        flow: flowSlug,
+        team,
+        flow,
         ...(parent && { parent }),
         ...(before && { before }),
-      } as any,
+      },
       search: (prev) => ({
         ...prev,
         type: SLUGS[destinationType] as NodeSearchParams["type"],
@@ -191,6 +190,9 @@ const FormModal: React.FC<FormModalProps> = ({
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<BaseNodeData & unknown> | null>(null);
   const [showUnsavedWarning, setShowUnsavedWarning] = useState(false);
+  const { team: teamSlug, flow: flowSlug } = useParams({
+    from: "/_authenticated/app/$team/$flow",
+  });
 
   const [
     addNode,
@@ -198,8 +200,6 @@ const FormModal: React.FC<FormModalProps> = ({
     flow,
     makeUnique,
     connect,
-    teamSlug,
-    flowSlug,
     isTemplatedFrom,
     orderedFlow,
     isClone,
@@ -209,8 +209,6 @@ const FormModal: React.FC<FormModalProps> = ({
     store.flow,
     store.makeUnique,
     store.connect,
-    store.getTeam().slug,
-    store.flowSlug,
     store.isTemplatedFrom,
     store.orderedFlow,
     store.isClone,
@@ -328,7 +326,7 @@ const FormModal: React.FC<FormModalProps> = ({
         flow: flowSlug,
         ...(parent && { parent }),
         ...(before && { before }),
-      } as any,
+      },
       search: (prev) => ({
         ...prev,
         type: SLUGS[type] as NodeSearchParams["type"],
@@ -366,13 +364,7 @@ const FormModal: React.FC<FormModalProps> = ({
         </DialogTitle>
         <DialogContent dividers sx={{ p: 0, position: "relative" }}>
           {!handleDelete && (
-            <TextInputToggle
-              type={type}
-              parent={parent}
-              before={before}
-              teamSlug={teamSlug}
-              flowSlug={flowSlug}
-            />
+            <TextInputToggle type={type} parent={parent} before={before} />
           )}
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             <Component
@@ -384,7 +376,9 @@ const FormModal: React.FC<FormModalProps> = ({
               disabled={disabled}
               handleSubmit={(
                 data: { data?: Record<string, unknown> },
-                children: Array<any> | undefined = undefined,
+                children:
+                  | Array<Record<string, unknown>>
+                  | undefined = undefined,
               ) => {
                 // Handle internal portals
                 if (typeof data === "string" && parent) {
@@ -392,9 +386,8 @@ const FormModal: React.FC<FormModalProps> = ({
                 } else {
                   const parsedData = parseFormValues(Object.entries(data));
                   const parsedChildren =
-                    children?.map((o: any) =>
-                      parseFormValues(Object.entries(o)),
-                    ) || undefined;
+                    children?.map((o) => parseFormValues(Object.entries(o))) ||
+                    undefined;
 
                   if (handleDelete) {
                     updateNode(

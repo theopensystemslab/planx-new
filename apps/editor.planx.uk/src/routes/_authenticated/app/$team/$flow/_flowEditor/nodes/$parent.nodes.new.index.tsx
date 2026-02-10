@@ -6,17 +6,18 @@ import React from "react";
 import { loader } from "./-loader";
 
 export const Route = createFileRoute(
-  "/_authenticated/app/$team/$flow/nodes/new/",
+  "/_authenticated/app/$team/$flow/_flowEditor/nodes/$parent/nodes/new/",
 )({
   loaderDeps: ({ search }) => ({ type: search.type }),
   loader: async ({ params, deps }) => {
     const { type = "question" } = deps;
-    const { team, flow } = params;
+    const { team, flow, parent } = params;
 
     return loader({
       team,
       flow,
       type,
+      parent,
       includeExtraProps: true,
       includeHandleDelete: false,
     });

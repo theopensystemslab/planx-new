@@ -6,16 +6,17 @@ import React from "react";
 import { loader } from "./-loader";
 
 export const Route = createFileRoute(
-  "/_authenticated/app/$team/$flow/nodes/new/$before",
+  "/_authenticated/app/$team/$flow/_flowEditor/nodes/$id/edit/$before",
 )({
   loaderDeps: ({ search }) => ({ type: search.type }),
   loader: async ({ params, deps }) => {
-    const { type = "question" } = deps;
-    const { team, flow, before } = params;
+    const { team, flow, id, before } = params;
+    const { type } = deps;
 
     return loader({
       team,
       flow,
+      id,
       type,
       parent: undefined,
       before,
@@ -23,18 +24,26 @@ export const Route = createFileRoute(
       includeHandleDelete: false,
     });
   },
-
-  component: NewNodeModal,
+  component: EditNodeWithBeforeModal,
 });
 
-function NewNodeModal() {
-  const { type, extraProps, parent, before } = Route.useLoaderData();
+function EditNodeWithBeforeModal() {
+  const {
+    type: actualType,
+    extraProps,
+    node,
+    id,
+    parent,
+    before,
+  } = Route.useLoaderData();
 
   return (
     <FormModal
-      type={type}
-      Component={components[type]}
+      type={actualType}
+      Component={components[actualType]}
       extraProps={extraProps}
+      node={node}
+      id={id}
       parent={parent}
       before={before}
     />
