@@ -6,6 +6,7 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
 import { Link } from "@tanstack/react-router";
+import { useParams } from "@tanstack/react-router";
 import classNames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
 import mapAccum from "ramda/src/mapAccum";
@@ -38,6 +39,8 @@ const Checklist: React.FC<Props> = React.memo((props) => {
       state.showNotes,
     ],
   );
+
+  const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
   const parent = getParentId(props.parent);
 
@@ -72,11 +75,6 @@ const Checklist: React.FC<Props> = React.memo((props) => {
       isDragging: monitor.isDragging(),
     }),
   });
-
-  const [teamSlug, flowSlug] = useStore((state) => [
-    state.teamSlug,
-    state.flowSlug,
-  ]);
 
   const handleContextMenu = useContextMenu({
     source: "node",
@@ -122,8 +120,8 @@ const Checklist: React.FC<Props> = React.memo((props) => {
                 : "/app/$team/$flow/nodes/$id/edit"
             }
             params={{
-              team: teamSlug,
-              flow: flowSlug,
+              team,
+              flow,
               id: props.id,
               ...(parent && { parent }),
             }}
@@ -167,8 +165,8 @@ const Checklist: React.FC<Props> = React.memo((props) => {
                       : "/app/$team/$flow/nodes/$id/edit"
                   }
                   params={{
-                    team: teamSlug,
-                    flow: flowSlug,
+                    team,
+                    flow,
                     id: props.id,
                     ...(parent && { parent }),
                   }}
@@ -177,7 +175,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
                   {title}
                 </Link>
                 <ol className="options">
-                  {children.map((child: any) => (
+                  {children.map((child) => (
                     <Node
                       parent={props.id}
                       key={child.id}
@@ -191,7 +189,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           </ol>
         ) : (
           <ol className="options">
-            {childNodes.map((child: any) => (
+            {childNodes.map((child) => (
               <Node
                 parent={props.id}
                 key={child.id}

@@ -1,5 +1,6 @@
 import { Flag, flatFlags } from "@opensystemslab/planx-core/types";
 import { Link } from "@tanstack/react-router";
+import { useParams } from "@tanstack/react-router";
 import classNames from "classnames";
 import React from "react";
 
@@ -11,10 +12,7 @@ import Node from "./Node";
 import { Thumbnail } from "./Thumbnail";
 
 const Option: React.FC<any> = (props) => {
-  const { teamSlug, flowSlug } = useStore((state) => ({
-    teamSlug: state.teamSlug,
-    flowSlug: state.flowSlug,
-  }));
+  const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
   const childNodes = useStore((state) => state.childNodesOf(props.id));
 
   let flags: Flag[] | undefined;
@@ -44,8 +42,8 @@ const Option: React.FC<any> = (props) => {
       <Link
         to="/app/$team/$flow/nodes/$id/edit"
         params={{
-          team: teamSlug,
-          flow: flowSlug,
+          team,
+          flow,
           id: props.parent,
         }}
         hash={props.id}
@@ -70,7 +68,7 @@ const Option: React.FC<any> = (props) => {
         )}
       </Link>
       <ol className="decisions">
-        {childNodes.map((child: any) => (
+        {childNodes.map((child) => (
           <Node
             key={child.id}
             parent={props.id}
