@@ -231,7 +231,7 @@ const MODE_CONFIG: Record<
   }
 > = {
   preview: {
-    wrappers: [TestWarningPage, OfflineLayout, SaveAndReturnLayout],
+    wrappers: [TestWarningPage, SaveAndReturnLayout],
     watermarkVisible: true,
   },
   published: {
@@ -239,7 +239,7 @@ const MODE_CONFIG: Record<
     watermarkVisible: false,
   },
   draft: {
-    wrappers: [OfflineLayout, SaveAndReturnLayout],
+    wrappers: [SaveAndReturnLayout],
     watermarkVisible: true,
   },
   pay: {
