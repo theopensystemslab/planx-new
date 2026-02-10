@@ -9,6 +9,7 @@ export const AmendDocuments: Schema = {
       data: {
         title: "Upload a document",
         fn: "otherDocument",
+        maxFiles: 1,
       },
     },
     {
