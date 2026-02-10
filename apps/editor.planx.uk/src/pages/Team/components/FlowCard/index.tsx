@@ -107,6 +107,7 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows }) => {
             to="/app/$team/$flow"
             params={{ team: teamSlug, flow: flow.slug }}
             aria-label={flow.name}
+            preload={false}
           />
         </CardContent>
       </Box>

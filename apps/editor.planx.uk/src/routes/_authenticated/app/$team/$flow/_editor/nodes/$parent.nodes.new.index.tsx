@@ -6,7 +6,7 @@ import React from "react";
 import { loader } from "./-loader";
 
 export const Route = createFileRoute(
-  "/_authenticated/app/$team/$flow/nodes/$parent/nodes/new/",
+  "/_authenticated/app/$team/$flow/_editor/nodes/$parent/nodes/new/",
 )({
   loaderDeps: ({ search }) => ({ type: search.type }),
   loader: async ({ params, deps }) => {

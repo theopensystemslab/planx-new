@@ -6,7 +6,7 @@ import { styled } from "@mui/material/styles";
 import { MENU_WIDTH_COMPACT } from "components/EditorNavMenu/styles";
 import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
 import { parentNodeIsTemplatedInternalPortal } from "pages/FlowEditor/utils";
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 
 import Flow from "./components/Flow";
 import { getParentId } from "./components/Flow/lib/utils";
@@ -43,32 +43,14 @@ const EditorVisualControls = styled(ButtonGroup)(({ theme }) => ({
 }));
 
 const FlowEditor = () => {
-  const [
-    flowObject,
-    orderedFlow,
-    isTemplatedFrom,
-    teamSlug,
-    flowId,
-    connectToFlow,
-    disconnectFromFlow,
-    isNavMenuVisible,
-  ] = useStore((state) => [
-    state.flow,
-    state.orderedFlow,
-    state.isTemplatedFrom,
-    state.getTeam().slug,
-    state.id,
-    state.connectToFlow,
-    state.disconnectFromFlow,
-    state.isNavMenuVisible,
-  ]);
-
-  useEffect(() => {
-    if (!flowId) return;
-    connectToFlow(flowId);
-
-    return () => disconnectFromFlow();
-  }, [flowId, connectToFlow, disconnectFromFlow]);
+  const [flowObject, orderedFlow, isTemplatedFrom, teamSlug, isNavMenuVisible] =
+    useStore((state) => [
+      state.flow,
+      state.orderedFlow,
+      state.isTemplatedFrom,
+      state.getTeam().slug,
+      state.isNavMenuVisible,
+    ]);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   useScrollControlsAndRememberPosition(scrollContainerRef);
