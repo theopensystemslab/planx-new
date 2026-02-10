@@ -9,7 +9,7 @@ import { Flow } from "types";
 
 import { client } from "../../lib/graphql";
 import { Store, useStore } from "../../pages/FlowEditor/lib/store";
-import { NodeSearchParams } from "../../routes/_authenticated/app/$team/$flow/_editor/nodes/route";
+import { NodeSearchParams } from "../../routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
 
 export interface FlowEditorData {
   id: string;

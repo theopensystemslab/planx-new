@@ -6,11 +6,11 @@ import React from "react";
 import { loader } from "./-loader";
 
 export const Route = createFileRoute(
-  "/_authenticated/app/$team/$flow/_editor/nodes/$id/edit",
+  "/_authenticated/app/$team/$flow/_flowEditor/nodes/$parent/nodes/$id/edit/$before",
 )({
   loaderDeps: ({ search }) => ({ type: search.type }),
   loader: async ({ params, deps }) => {
-    const { team, flow, id } = params;
+    const { team, flow, parent, id, before } = params;
     const { type } = deps;
 
     return loader({
@@ -18,16 +18,17 @@ export const Route = createFileRoute(
       flow,
       id,
       type,
-      parent: undefined,
-      before: undefined,
-      includeExtraProps: true,
-      includeHandleDelete: true,
+      parent,
+      before,
+      includeExtraProps: false,
+      includeHandleDelete: false,
     });
   },
-  component: EditNodeModal,
+
+  component: EditNodeWithBeforeModal,
 });
 
-function EditNodeModal() {
+function EditNodeWithBeforeModal() {
   const {
     type: actualType,
     extraProps,
@@ -35,7 +36,6 @@ function EditNodeModal() {
     id,
     parent,
     before,
-    handleDelete,
   } = Route.useLoaderData();
 
   return (
@@ -47,7 +47,6 @@ function EditNodeModal() {
       id={id}
       parent={parent}
       before={before}
-      handleDelete={handleDelete}
     />
   );
 }

@@ -49,7 +49,7 @@ const nodeSearchSchema = z.object({
 export type NodeSearchParams = z.infer<typeof nodeSearchSchema>;
 
 export const Route = createFileRoute(
-  "/_authenticated/app/$team/$flow/_editor/nodes",
+  "/_authenticated/app/$team/$flow/_flowEditor/nodes",
 )({
   validateSearch: zodValidator(nodeSearchSchema),
   component: () => <Outlet />,

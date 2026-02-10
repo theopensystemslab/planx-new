@@ -6,27 +6,28 @@ import React from "react";
 import { loader } from "./-loader";
 
 export const Route = createFileRoute(
-  "/_authenticated/app/$team/$flow/_editor/nodes/$parent/nodes/new/",
+  "/_authenticated/app/$team/$flow/_flowEditor/nodes/$parent/nodes/new/$before",
 )({
   loaderDeps: ({ search }) => ({ type: search.type }),
   loader: async ({ params, deps }) => {
     const { type = "question" } = deps;
-    const { team, flow, parent } = params;
+    const { team, flow, parent, before } = params;
 
     return loader({
       team,
       flow,
       type,
       parent,
+      before,
       includeExtraProps: true,
       includeHandleDelete: false,
     });
   },
 
-  component: NewNodeModal,
+  component: NewNodeWithBeforeModal,
 });
 
-function NewNodeModal() {
+function NewNodeWithBeforeModal() {
   const { type, extraProps, parent, before } = Route.useLoaderData();
 
   return (
