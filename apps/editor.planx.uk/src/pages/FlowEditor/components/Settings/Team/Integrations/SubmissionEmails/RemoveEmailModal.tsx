@@ -113,7 +113,7 @@ export const RemoveEmailModal = ({
               {usedFlows.map((flow) => (
                 <ListItem key={flow.name}>
                   <Link
-                    href="#" // TODO: update link after routing work merged; /{team}/{slug}
+                    href={`/app/${teamSlug}/${flow.slug}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
