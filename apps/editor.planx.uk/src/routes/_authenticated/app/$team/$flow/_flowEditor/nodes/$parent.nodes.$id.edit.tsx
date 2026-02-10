@@ -19,6 +19,7 @@ export const Route = createFileRoute(
       id,
       type,
       parent,
+      isEdit: true,
       includeHandleDelete: true,
     });
   },

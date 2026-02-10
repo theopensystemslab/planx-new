@@ -20,7 +20,7 @@ export const Route = createFileRoute(
       type,
       parent: undefined,
       before: undefined,
-      includeExtraProps: true,
+      isEdit: true,
       includeHandleDelete: true,
     });
   },

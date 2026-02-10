@@ -18,7 +18,6 @@ export const Route = createFileRoute(
       flow,
       type,
       parent,
-      includeExtraProps: true,
       includeHandleDelete: false,
     });
   },
