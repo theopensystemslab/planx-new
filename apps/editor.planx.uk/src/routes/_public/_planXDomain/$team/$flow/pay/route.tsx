@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import React from "react";
+import Main from "ui/shared/Main";
 import {
   createPublicRouteErrorComponent,
   PublicRouteLayout,
@@ -22,7 +23,9 @@ export const Route = createFileRoute("/_public/_planXDomain/$team/$flow/pay")({
 function PayLayoutComponent() {
   return (
     <PublicRouteLayout mode="pay">
-      <Outlet />
+      <Main>
+        <Outlet />
+      </Main>
     </PublicRouteLayout>
   );
 }

@@ -223,28 +223,46 @@ export const createPublicRouteErrorComponent = (mode: PublicRouteMode) => {
   };
 };
 
+const MODE_CONFIG: Record<
+  PublicRouteMode,
+  {
+    wrappers: Array<React.ComponentType<{ children: React.ReactNode }>>;
+    watermarkVisible: boolean;
+  }
+> = {
+  preview: {
+    wrappers: [TestWarningPage, SaveAndReturnLayout],
+    watermarkVisible: true,
+  },
+  published: {
+    wrappers: [OfflineLayout, SaveAndReturnLayout],
+    watermarkVisible: false,
+  },
+  draft: {
+    wrappers: [SaveAndReturnLayout],
+    watermarkVisible: true,
+  },
+  pay: {
+    wrappers: [SaveAndReturnLayout],
+    watermarkVisible: false,
+  },
+  download: {
+    wrappers: [],
+    watermarkVisible: false,
+  },
+};
+
 // Layout wrapper components
 export const PublicRouteLayout: React.FC<{
   mode: PublicRouteMode;
   children: React.ReactNode;
 }> = ({ mode, children }) => {
-  const shouldShowTestWarning = mode === "preview";
-  const shouldShowSaveReturn =
-    mode === "published" || mode === "draft" || mode === "pay";
-  const watermarkForceVisible = mode === "preview" || mode === "draft";
+  const config = MODE_CONFIG[mode];
 
-  let wrappedContent;
-  if (shouldShowTestWarning) {
-    wrappedContent = <TestWarningPage>{children}</TestWarningPage>;
-  } else if (shouldShowSaveReturn) {
-    wrappedContent = (
-      <OfflineLayout>
-        <SaveAndReturnLayout>{children}</SaveAndReturnLayout>
-      </OfflineLayout>
-    );
-  } else {
-    wrappedContent = children;
-  }
+  const wrappedContent = config.wrappers.reduceRight(
+    (content, Wrapper) => <Wrapper>{content}</Wrapper>,
+    children,
+  );
 
   return (
     <LoadingLayout>
@@ -252,7 +270,7 @@ export const PublicRouteLayout: React.FC<{
         <WatermarkBackground
           variant="dark"
           opacity={0.05}
-          forceVisibility={watermarkForceVisible}
+          forceVisibility={config.watermarkVisible}
         />
         {wrappedContent}
       </PublicLayout>
