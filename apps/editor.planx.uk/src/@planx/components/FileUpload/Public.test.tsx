@@ -108,3 +108,21 @@ it("should not have any accessibility violations", async () => {
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });
+
+test("shows singular 'Drop file here' text when maxFiles is 1", async () => {
+  const handleSubmit = vi.fn();
+  const componentId = uniqueId();
+
+  await setup(
+    <FileUpload
+      title="Upload single file"
+      fn="singleFile"
+      id={componentId}
+      handleSubmit={handleSubmit}
+      maxFiles={1}
+    />,
+  );
+
+  expect(screen.getByText(/Drop file here/)).toBeInTheDocument();
+  expect(screen.queryByText(/Drop files here/)).not.toBeInTheDocument();
+});
