@@ -43,13 +43,20 @@ const basePublicSearchSchema = z.object({
   email: z.string().optional(),
 });
 
+// In practice, `/preview` and `/draft` routes are public but only accessed by editors or testers
+//   they do not support Save & Return nor integrations like Pay (therefore no sessionId nor email param)
+const nonSaveAndReturnSearchSchema = z.object({
+  sessionId: z.undefined(),
+  email: z.undefined(),
+});
+
 // Search schemas
 export const publicRouteSearchSchemas = {
   published: basePublicSearchSchema.extend({
     analytics: z.boolean().optional(),
   }),
-  preview: basePublicSearchSchema,
-  draft: basePublicSearchSchema,
+  preview: nonSaveAndReturnSearchSchema,
+  draft: nonSaveAndReturnSearchSchema,
   pay: basePublicSearchSchema,
   download: basePublicSearchSchema,
 };
@@ -166,7 +173,7 @@ export const createPublicRouteBeforeLoad = <T extends PublicRouteMode>(
       updateStoreWithPublicRouteData(data);
 
       // Set application path for save-and-return flows
-      if (mode === "published" || mode === "draft" || mode === "pay") {
+      if (mode === "published" || mode === "pay") {
         setPath(data.flowData, {
           params: {
             ...params,
