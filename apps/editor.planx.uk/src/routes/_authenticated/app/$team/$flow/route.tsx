@@ -33,8 +33,6 @@ export const Route = createFileRoute("/_authenticated/app/$team/$flow")({
       ]),
     ],
   },
-  // Do not re-load when child routes mount (e.g. /settings or /nodes)
-  shouldReload: false,
   loader: async ({ params }) => {
     const { team: teamSlug, flow: flowSlug } = params;
     const store = useStore.getState();
@@ -45,8 +43,10 @@ export const Route = createFileRoute("/_authenticated/app/$team/$flow")({
     if (store.flowSlug === actualFlowSlug) return;
 
     try {
-      const flow = await getBasicFlowData(actualFlowSlug, teamSlug);
+      // Ensure we only have a single active connection
+      store.disconnectFromFlow();
 
+      const flow = await getBasicFlowData(actualFlowSlug, teamSlug);
       await store.connectToFlow(flow.id);
       useStore.setState({
         flowName: flow.name,
