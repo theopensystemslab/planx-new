@@ -14,16 +14,29 @@ export const GET_TEAM_SUBMISSION_INTEGRATIONS = gql`
   }
 `;
 
-export const GET_PUBLISHED_FLOWS_WITH_SUBMISSION_INTEGRATION = gql`
-  query GetFlowsWithSubmissionIntegration($emailId: uuid!) {
-    publishedFlows: published_flows(
+export const GET_FLOW_IDS_BY_SUBMISSION_INTEGRATION = gql`
+  query GetFlowIdsBySubmissionIntegration($emailId: uuid!) {
+    flowIds: published_flows(
       where: { submission_email_id: { _eq: $emailId } }
       distinct_on: flow_id
+    ) {
+      flowId: flow_id
+    }
+  }
+`;
+
+export const GET_LATEST_PUBLISHED_FLOWS = gql`
+  query GetLatestPublishedFlows($emailId: uuid!, $flowIds: [uuid!]!) {
+    publishedFlows: published_flows(
+      where: {
+        submission_email_id: { _eq: $emailId }
+        flow_id: { _in: $flowIds }
+      }
       order_by: [{ flow_id: asc }, { created_at: desc }]
     ) {
       flowId: flow_id
       submissionEmailId: submission_email_id
-      flow(where: { deleted_at: { _is_null: true } }) {
+      flow {
         name
         slug
       }

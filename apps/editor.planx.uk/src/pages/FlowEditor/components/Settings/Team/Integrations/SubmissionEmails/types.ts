@@ -20,17 +20,24 @@ export interface SubmissionEmailValues {
   submissionIntegrations: SubmissionEmailInput[];
 }
 
-export type GetFlowsWithSubmissionIntegration = {
-  publishedFlows: {
-    flowId: number;
-    id: string;
-    submissionEmailId: string;
-    flow: {
-      name: string;
-      slug: string;
-    } | null;
-  }[];
-};
+export interface Flow {
+  name: string;
+  slug: string;
+}
+
+export interface PublishedFlow {
+  flowId: string;
+  submissionEmailId: string;
+  flow: Flow | null;
+}
+
+export interface GetFlowIdsBySubmissionIntegration {
+  flowIds: { flowId: string }[];
+}
+
+export interface GetLatestPublishedFlows {
+  publishedFlows: PublishedFlow[];
+}
 
 export interface UpdateTeamSubmissionIntegrationsVariables {
   emails: SubmissionEmailMutation[];
@@ -46,5 +53,7 @@ export interface EditorModalProps {
   previousDefaultEmail?: SubmissionEmailInput;
   currentEmails?: string[];
   teamId?: number;
-  refetch: (variables?: Partial<Record<string, any>>) => Promise<ApolloQueryResult<GetSubmissionEmails>>;
+  refetch: (
+    variables?: Partial<Record<string, any>>,
+  ) => Promise<ApolloQueryResult<GetSubmissionEmails>>;
 }

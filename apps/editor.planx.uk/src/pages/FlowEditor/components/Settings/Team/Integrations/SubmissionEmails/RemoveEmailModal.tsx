@@ -5,19 +5,22 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import Link from "@mui/material/Link";
+import ListItem from "@mui/material/ListItem";
 import Typography from "@mui/material/Typography";
 import { useToast } from "hooks/useToast";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import ListItem from "@mui/material/ListItem";
-import Link from "@mui/material/Link";
 
 import {
   DELETE_TEAM_SUBMISSION_INTEGRATIONS,
-  GET_PUBLISHED_FLOWS_WITH_SUBMISSION_INTEGRATION,
+  GET_FLOW_IDS_BY_SUBMISSION_INTEGRATION,
+  GET_LATEST_PUBLISHED_FLOWS,
 } from "./queries";
 import {
   EditorModalProps,
-  GetFlowsWithSubmissionIntegration,
+  GetFlowIdsBySubmissionIntegration,
+  GetLatestPublishedFlows,
   SubmissionEmailInput,
 } from "./types";
 
@@ -27,27 +30,39 @@ export const RemoveEmailModal = ({
   actionType,
   initialValues,
   teamId,
-  refetch
+  refetch,
 }: EditorModalProps) => {
   const toast = useToast();
   const [deleteEmail] = useMutation(DELETE_TEAM_SUBMISSION_INTEGRATIONS);
   const emailId = initialValues?.id || null;
   console.log({ emailId }); // TODO: eventually delete, keeping for local testing for now
-  const { data, error } = useQuery<GetFlowsWithSubmissionIntegration>(
-    GET_PUBLISHED_FLOWS_WITH_SUBMISSION_INTEGRATION,
-    {
-      variables: { emailId },
-    }
-  );
+  const { data: flowIdsData, error: flowIdsError } =
+    useQuery<GetFlowIdsBySubmissionIntegration>(
+      GET_FLOW_IDS_BY_SUBMISSION_INTEGRATION,
+      {
+        variables: { emailId },
+      },
+    );
+  console.log({ flowIdsData });
 
-  // The GET query returns deleted flows, so filter for existing flows here
-  const usedFlows = data?.publishedFlows
-    .map((publishedFlow) => ({
+  const flowIds = flowIdsData?.flowIds.map((flow) => flow.flowId) || [];
+
+  const { data: latestFlowsData, error: latestFlowsError } =
+    useQuery<GetLatestPublishedFlows>(GET_LATEST_PUBLISHED_FLOWS, {
+      variables: { emailId, flowIds },
+    });
+  console.log({ latestFlowsData });
+
+  const { slug: teamSlug } = useStore((state) => state.getTeam());
+  console.log({ teamSlug });
+
+  const usedFlows =
+    latestFlowsData?.publishedFlows.map((publishedFlow) => ({
       slug: publishedFlow.flow?.slug,
       name: publishedFlow.flow?.name,
-    })) || []; 
-  console.log({usedFlows}) 
-  const deletable = usedFlows.length === 0 ? true : false;
+    })) || [];
+
+  const deletable = usedFlows.length === 0;
 
   const handleRemoveEmail = async (email: SubmissionEmailInput) => {
     if (!email?.id) {
@@ -91,33 +106,35 @@ export const RemoveEmailModal = ({
             </Typography>
           ) : (
             <>
-            <Typography mb={2}>
-              This email address cannot be removed as it is currently used in the following flows: 
-            </Typography>
+              <Typography mb={2}>
+                This email address cannot be removed as it is currently used in
+                the following flows:
+              </Typography>
               {usedFlows.map((flow) => (
                 <ListItem key={flow.name}>
                   <Link
-                      href="#" // TODO: update link after routing work merged; /{team}/{slug}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >{flow.name}
+                    href="#" // TODO: update link after routing work merged; /{team}/{slug}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {flow.name}
                   </Link>
                 </ListItem>
               ))}
-            <Typography mt={2}>
-            Please <strong>update and republish</strong> the flow settings to use a
-              different email address before removing this one.
-            </Typography>
+              <Typography mt={2}>
+                Please <strong>update and republish</strong> the flow settings
+                to use a different email address before removing this one.
+              </Typography>
             </>
           )}
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button 
+        <Button
           color="secondary"
-          variant="contained" 
+          variant="contained"
           onClick={() => setShowModal(false)}
-          >
+        >
           Cancel
         </Button>
         <Button
