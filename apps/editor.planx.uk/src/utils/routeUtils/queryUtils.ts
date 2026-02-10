@@ -163,7 +163,7 @@ export const getBasicFlowData = async (
 
 /**
  * For non admins, external portal (aka nested flow) selection should return:
- *   - Flows in my team
+ *   - All flows in my team or `opensystemslab`
  *   - Flows set to copiable by others
  *   - Not source templates
  *   - Not the parent flow I am currently nesting within
@@ -197,13 +197,15 @@ export const getExternalPortals = async (
       `${currentTeam}/${currentFlow}` !== `${flow.team.slug}/${flow.slug}`,
   );
 
-  // For non admins, also filter out source templates, flows not copiable by others, and flows not in my team for a less-overwhelming selection
+  // For non admins, also filter out: source templates, flows not copiable by others, and flows not in my team (excl OSL) for a less-overwhelming selection
   const isPlatformAdmin = useStore.getState().user?.isPlatformAdmin;
   if (!isPlatformAdmin) {
     filteredFlows = filteredFlows.filter(
       (flow: Flow) =>
         !flow.isTemplate &&
-        (flow.canCreateFromCopy || flow.team.slug === currentTeam),
+        (flow.canCreateFromCopy ||
+          flow.team.slug === currentTeam ||
+          flow.team.slug === "opensystemslab"),
     );
   }
 
