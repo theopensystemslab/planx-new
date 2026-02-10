@@ -33,7 +33,7 @@ export const Route = createFileRoute("/_authenticated/app/$team/$flow")({
       ]),
     ],
   },
-  loader: async ({ params }) => {
+  beforeLoad: async ({ params }) => {
     const { team: teamSlug, flow: flowSlug } = params;
     const store = useStore.getState();
 
