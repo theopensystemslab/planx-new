@@ -20,7 +20,7 @@ const StyledTimestamp = styled(Typography)(() => ({
 const PrintedAt = () => {
   return (
     <StyledTimestamp>
-      Printed at {new Date().toLocaleString("en-GB")}
+      Printed at {new Date().toLocaleString("en-GB")}.
     </StyledTimestamp>
   );
 };
