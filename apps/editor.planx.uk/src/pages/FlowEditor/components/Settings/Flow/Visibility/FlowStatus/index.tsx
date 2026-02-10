@@ -13,7 +13,6 @@ import { FONT_WEIGHT_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
-import { rootFlowPath } from "utils/routeUtils/utils";
 
 import { useSlackMessage } from "../../../hooks/useSlackMessage";
 import SettingsFormContainer from "../../../shared/SettingsForm";
@@ -44,7 +43,7 @@ const FlowStatus: React.FC = () => {
 
   const { origin } = useLocation();
 
-  const publishedLink = `${origin}${rootFlowPath(false)}/published`;
+  const publishedLink = `${origin}/${teamSlug}/${flowSlug}/published`;
 
   const subdomainLink = teamDomain && `https://${teamDomain}/${flowSlug}`;
 
