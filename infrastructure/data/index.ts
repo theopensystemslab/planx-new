@@ -3,6 +3,8 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
+import { createAllIpv4EgressRule, createIpv4IngressRule } from "../common/utils";
+
 const config = new pulumi.Config();
 
 const DB_ROOT_USERNAME = "dbuser";
@@ -18,27 +20,10 @@ const dbSecurityGroup = new aws.ec2.SecurityGroup("db-sg", {
   vpcId: vpcId,
 });
 
-new aws.vpc.SecurityGroupIngressRule("db-allow-ssh-in", {
-    securityGroupId: dbSecurityGroup.id,
-    cidrIpv4: "0.0.0.0/0", // allow SSH from anywhere
-    fromPort: 22,
-    toPort: 22,
-    ipProtocol: "tcp",
-});
-
-new aws.vpc.SecurityGroupIngressRule("db-allow-tcp-in", {
-    securityGroupId: dbSecurityGroup.id,
-    cidrIpv4: "0.0.0.0/0", // allow TCP from anywhere
-    fromPort: 5432,
-    toPort: 5432,
-    ipProtocol: "tcp",
-});
-
-new aws.vpc.SecurityGroupEgressRule("db-allow-ipv4-traffic-out", {
-    securityGroupId: dbSecurityGroup.id,
-    cidrIpv4: "0.0.0.0/0",
-    ipProtocol: "-1",
-});
+// current best practice would have us create ingress/egress rules separately, as below (rather than inline in SecurityGroup defn)
+createIpv4IngressRule(dbSecurityGroup.id, "db", [22]);
+createIpv4IngressRule(dbSecurityGroup.id, "db", [5432]);
+createAllIpv4EgressRule(dbSecurityGroup.id, "db-allow-ipv4-out");
 
 // ShareDB does not use SSL - from Postgres 16 onwards this is forced on my default
 // Create a parameter group which turns this setting off

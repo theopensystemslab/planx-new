@@ -2,19 +2,18 @@
   "name": "@planx/infrastructure-application",
   "dependencies": {
     "@nodelib/fs.walk": "~1.2.8",
-    "@pulumi/aws": "~5.43.0",
-    "@pulumi/awsx": "~0.40.1",
-    "@pulumi/cloudflare": "~4.16.0",
-    "@pulumi/docker": "~3.6.1",
-    "@pulumi/postgresql": "~3.16.1",
-    "@pulumi/pulumi": "~3.207.0",
-    "@pulumi/random": "~4.18.5",
+    "@pulumi/aws": "~7.16.0",
+    "@pulumi/awsx": "~3.1.0",
+    "@pulumi/cloudflare": "~6.13.0",
+    "@pulumi/postgresql": "~3.16.2",
+    "@pulumi/pulumi": "~3.219.0",
     "tldjs": "~2.3.2"
   },
   "devDependencies": {
     "@types/node": "~22.14.1",
     "@types/tldjs": "~2.3.4",
-    "mime": "~3.0.0"
+    "mime": "~4.1.0",
+    "typescript": "~5.9.3"
   },
   "private": true
 }

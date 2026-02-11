@@ -1,7 +1,7 @@
 {
   "name": "@planx/infrastructure",
   "devDependencies": {
-    "syncpack": "14.0.0-alpha.40"
+    "syncpack": "14.0.0-alpha.41"
   },
   "packageManager": "pnpm@10.10.0",
   "private": true

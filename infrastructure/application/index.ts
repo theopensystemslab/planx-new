@@ -6,13 +6,19 @@ import * as awsx from "@pulumi/awsx";
 import * as cloudflare from "@pulumi/cloudflare";
 import * as pulumi from "@pulumi/pulumi";
 import * as postgres from "@pulumi/postgresql";
-import * as mime from "mime";
 import * as tldjs from "tldjs";
+import mime from "mime";
+
+import {
+  createAllIpv4EgressRule,
+  createAllIpv4IngressRule,
+  createSourceSgEgressRule,
+  createSourceSgIngressRule,
+} from "../common/utils";
 
 import {
   addRedirectToCloudFlareListenerRule,
   createCdn,
-  DEFAULT_POSTGRES_PORT,
   generateCORSAllowList,
   generateTeamSecrets,
   getJavaOpts,
@@ -126,33 +132,40 @@ export = async () => {
   const DOMAIN: string = await certificates.requireOutputValue("domain");
 
   const repo = new awsx.ecr.Repository("repo", {
-    lifeCyclePolicyArgs: {
+    lifecyclePolicy: {
       rules: [
         {
           description: "Keep last 100 images",
           maximumNumberOfImages: 100,
-          selection: "any",
+          tagStatus: "any",
         },
       ],
     },
   });
 
-  const vpc = awsx.ec2.Vpc.fromExistingIds("vpc", {
-    vpcId: networking.requireOutput("vpcId"),
-  });
-  const cluster = new awsx.ecs.Cluster("cluster", {
-    cluster: networking.requireOutput("clusterName"),
-    vpc,
+  // TODO: can we remove these casts?
+  const vpcId = networking.requireOutput("vpcId") as pulumi.Output<string>;
+  const publicSubnetIds = networking.requireOutput("publicSubnetIds") as pulumi.Output<string[]>;
+  // define ECS cluster to host all Fargate containers
+  const cluster = new aws.ecs.Cluster("cluster", {
+    settings: [
+      {
+        name: "containerInsights",
+        value: "enabled",
+      },
+    ],
   });
 
-  const DB_ROOT_USERNAME = "dbuser";
+  // prepare DB credentials for Metabase and Hasura
+  const dbUser = config.require("db-user")
   const dbHost = config.requireSecret("db-host")
   const dbRootPassword = config.requireSecret("db-password");
+
   // ----------------------- Metabase
   const provider = new postgres.Provider("metabase", {
     host: dbHost,
     port: 5432,
-    username: DB_ROOT_USERNAME,
+    username: dbUser,
     password: dbRootPassword,
     database: "postgres",
     superuser: false,
@@ -171,7 +184,7 @@ export = async () => {
     },
     { provider }
   );
-  const metabasePgDatabase = new postgres.Database(
+  new postgres.Database(
     "metabase",
     {
       name: role.name,
@@ -183,27 +196,35 @@ export = async () => {
   );
 
   const METABASE_PORT = 3000;
-  const lbMetabase = new awsx.lb.ApplicationLoadBalancer("metabase", {
-    external: true,
-    vpc,
-    subnets: networking.requireOutput("publicSubnetIds"),
-    securityGroups: [
-      new awsx.ec2.SecurityGroup("metabase-custom-port", {
-        vpc,
-        egress: [
-          {
-            protocol: "tcp",
-            cidrBlocks: ["0.0.0.0/0"],
-            fromPort: METABASE_PORT,
-            toPort: METABASE_PORT,
-          },
-        ],
-      }),
-    ],
+  // prepare security groups as per AWS docs, with SG for load balancer and Fargate service serving as source/destination for each other
+  // see: https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-update-security-groups.html
+  const metabaseLbSecurityGroup = new aws.ec2.SecurityGroup("metabase-lb-sg", {
+    description: "Security group for Metabase load balancer",
+    vpcId: vpcId,
   });
-  const targetMetabase = lbMetabase.createTargetGroup("metabase", {
+  const metabaseServiceSecurityGroup = new aws.ec2.SecurityGroup("metabase-service-sg", {
+    description: "Security group for Metabase Fargate service",
+    vpcId: vpcId,
+  });
+  // LB SG accepts traffic from open internet, and allows outbound traffic only to Fargate service SG
+  createAllIpv4IngressRule(metabaseLbSecurityGroup.id, "metabase-lb");
+  createSourceSgEgressRule(metabaseLbSecurityGroup.id, "metabase-lb", [METABASE_PORT], metabaseServiceSecurityGroup.id);
+  // SG for the Fargate service accepts inbound traffic only from the LB SG, and allows outbound traffic to open internet
+  createSourceSgIngressRule(metabaseServiceSecurityGroup.id, "metabase-service", [METABASE_PORT], metabaseLbSecurityGroup.id);
+  createAllIpv4EgressRule(metabaseServiceSecurityGroup.id, "metabase-service");
+
+  const metabaseLb = new awsx.lb.ApplicationLoadBalancer("metabase-lb", {
+    internal: false,
+    subnetIds: publicSubnetIds,
+    // NB. VPC to be which the ALB belongs is conveyed by the security group
+    securityGroups: [metabaseLbSecurityGroup.id],
+  });
+  
+  // tag on a listener with metabase container as target
+  const metabaseTargetGroup = new aws.lb.TargetGroup("metabase", {
     port: METABASE_PORT,
     protocol: "HTTP",
+    vpcId: vpcId,
     healthCheck: {
       path: "/api/health",
       // XXX: Attempt to fix "504 Gateway Time-out"
@@ -213,10 +234,17 @@ export = async () => {
       unhealthyThreshold: 10,
     },
   });
-  const metabaseListenerHttp = targetMetabase.createListener(
-    "metabase-http", { protocol: "HTTP" }
-  );
+  const metabaseListenerHttp = new aws.lb.Listener("metabase-http", {
+    defaultActions: [{
+      type: "forward",
+      targetGroupArn: metabaseTargetGroup.arn,
+    }],
+    loadBalancerArn: metabaseLb.loadBalancer.arn,
+    port: 80,
+    protocol: "HTTP",
+  });
 
+  // TODO: ensure cloudflare logic makes sense with rewrite
   addRedirectToCloudFlareListenerRule({
     serviceName: "metabase",
     listener: metabaseListenerHttp,
@@ -225,20 +253,18 @@ export = async () => {
   
   // since our secrets here are of the type Output<string>, we have to use Pulumi methods to access them as strings
   const metabaseDbUrl = pulumi.all([dbHost, metabasePgPassword]).apply(([dbHost, metabasePgPassword]) => 
-    getPostgresDbUrl("metabase", metabasePgPassword, dbHost, DEFAULT_POSTGRES_PORT, "metabase"))
+    getPostgresDbUrl("metabase", metabasePgPassword, dbHost, "metabase"))
   const metabaseMemoryMb = config.requireNumber("metabase-memory");
-  new awsx.ecs.FargateService("metabase", {
-    cluster,
-    subnets: networking.requireOutput("publicSubnetIds"),
-    taskDefinitionArgs: {
-      logGroup: new aws.cloudwatch.LogGroup("metabase", {
-        namePrefix: "metabase",
-        retentionInDays: 30,
-      }),
-      container: {
+
+
+
+  const metabaseTask = new awsx.ecs.FargateTaskDefinition("metabase", {
+    container: {
         // if changing, also check docker-compose.yml
         image: "metabase/metabase:v0.56.6",
-        portMappings: [metabaseListenerHttp],
+        name: "metabase",
+        essential: true,
+        portMappings: [{ targetGroup: metabaseTargetGroup }],
         // When changing `memory`, also update `JAVA_OPTS` below
         cpu: config.requireNumber("metabase-cpu"),
         memory: metabaseMemoryMb,
@@ -262,20 +288,35 @@ export = async () => {
             value: config.requireSecret("metabase-encryption-secret-key"),
           },
         ],
-      },
-    },
-    desiredCount: 1,
-    // Metabase takes a while to boot up
-    healthCheckGracePeriodSeconds: 60 * 15,
-  });
+      }
+    });
 
-  new cloudflare.Record("metabase", {
+  new awsx.ecs.FargateService("metabase", {
+      cluster: cluster.arn,
+      taskDefinition: metabaseTask.taskDefinition.arn,
+      // we get the LB config as an output of the task defn, as computed from the target group passed into port mappings
+      loadBalancers: metabaseTask.loadBalancers,
+      networkConfiguration: {
+        subnets: publicSubnetIds,
+        assignPublicIp: true,
+        securityGroups: [metabaseServiceSecurityGroup.id],
+      },
+      desiredCount: 1,
+      // Metabase takes a while to boot up
+      healthCheckGracePeriodSeconds: 60 * 15,
+    },
+    {
+      dependsOn: [metabaseLb],
+    }
+  );
+
+  new cloudflare.DnsRecord("metabase", {
     name: tldjs.getSubdomain(DOMAIN)
       ? `metabase.${tldjs.getSubdomain(DOMAIN)}`
       : "metabase",
     type: "CNAME",
-    zoneId: config.require("cloudflare-zone-id"),
-    value: metabaseListenerHttp.endpoint.hostname,
+    zoneId: config.requireSecret("cloudflare-zone-id"),
+    content: metabaseLb.loadBalancer.dnsName,
     ttl: 1,
     proxied: true,
   });
@@ -449,7 +490,7 @@ export = async () => {
           },
           {
             name: "GOOGLE_CLIENT_ID",
-            value: config.require("google-client-id"),
+            value: config.requireSecret("google-client-id"),
           },
           {
             name: "GOOGLE_CLIENT_SECRET",
@@ -457,7 +498,7 @@ export = async () => {
           },
           {
             name: "MICROSOFT_CLIENT_ID",
-            value: config.require("microsoft-client-id"),
+            value: config.requireSecret("microsoft-client-id"),
           },
           {
             name: "MICROSOFT_CLIENT_SECRET",
@@ -773,7 +814,7 @@ export = async () => {
       ttl: 3600,
       type: sslCert.domainValidationOptions[0].resourceRecordType,
       value: sslCert.domainValidationOptions[0].resourceRecordValue,
-      zoneId: config.require("cloudflare-zone-id"),
+      zoneId: config.requireSecret("cloudflare-zone-id"),
     }
   );
   const sslCertValidation = new aws.acm.CertificateValidation(
@@ -800,7 +841,7 @@ export = async () => {
   const frontendDnsRecord = new cloudflare.Record("frontend", {
     name: tldjs.getSubdomain(DOMAIN) || "@",
     type: "CNAME",
-    zoneId: config.require("cloudflare-zone-id"),
+    zoneId: config.requireSecret("cloudflare-zone-id"),
     value: cdn.domainName,
     ttl: 1,
     proxied: false, // This was causing infinite HTTPS redirects, so let's just use CloudFront only
