@@ -19,7 +19,6 @@ export const Route = createFileRoute(
       type,
       parent,
       before,
-      includeExtraProps: true,
       includeHandleDelete: false,
     });
   },

@@ -17,7 +17,6 @@ export const Route = createFileRoute(
       team,
       flow,
       type,
-      includeExtraProps: true,
       includeHandleDelete: false,
     });
   },

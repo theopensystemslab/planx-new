@@ -13,7 +13,6 @@ export async function loader({
   before,
   type,
   isEdit,
-  includeExtraProps,
   includeHandleDelete,
 }: {
   team: string;
@@ -23,7 +22,6 @@ export async function loader({
   before?: string;
   type?: NodeSearchParams["type"];
   isEdit?: boolean;
-  includeExtraProps?: boolean;
   includeHandleDelete: boolean;
 }) {
   const node = id ? useStore.getState().getNode(id) : undefined;
@@ -37,13 +35,11 @@ export async function loader({
     NodeSearchParams["type"]
   >;
 
-  const extraProps = includeExtraProps
-    ? await calculateExtraProps(actualType, team, flow, {
-        nodeId: id,
-        node,
-        isEdit,
-      })
-    : undefined;
+  const extraProps = await calculateExtraProps(actualType, team, flow, {
+    nodeId: id,
+    node,
+    isEdit,
+  });
 
   const handleDelete = includeHandleDelete
     ? () => {
