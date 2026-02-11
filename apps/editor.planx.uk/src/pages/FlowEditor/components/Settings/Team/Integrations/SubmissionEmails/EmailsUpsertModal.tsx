@@ -84,10 +84,13 @@ export const EmailsUpsertModal = ({
       }) => (
         <Dialog open={showModal || false} onClose={() => setShowModal(false)}>
           <form onSubmit={handleSubmit}>
-            <DialogTitle>
+            <DialogTitle 
+              variant="h3"
+              component="h1"
+            >
               {actionType === "add" ? "Add Email" : "Edit Email"}
             </DialogTitle>
-            <DialogContent>
+            <DialogContent dividers>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <ErrorWrapper
                   id="submissionEmail"
@@ -122,7 +125,14 @@ export const EmailsUpsertModal = ({
               </Box>
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => setShowModal(false)}>Cancel</Button>
+              <Button 
+                onClick={() => setShowModal(false)}
+                color="secondary"
+                variant="contained"
+                sx={{ backgroundColor: "background.default" }}
+                >
+                  Cancel
+                </Button>
               <Button
                 variant="contained"
                 type="submit"
