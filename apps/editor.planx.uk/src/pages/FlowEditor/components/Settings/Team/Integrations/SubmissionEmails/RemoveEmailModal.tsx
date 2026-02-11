@@ -35,7 +35,6 @@ export const RemoveEmailModal = ({
   const toast = useToast();
   const [deleteEmail] = useMutation(DELETE_TEAM_SUBMISSION_INTEGRATIONS);
   const emailId = initialValues?.id || null;
-  console.log({ emailId }); // TODO: eventually delete, keeping for local testing for now
   const { data: flowIdsData, error: flowIdsError } =
     useQuery<GetFlowIdsBySubmissionIntegration>(
       GET_FLOW_IDS_BY_SUBMISSION_INTEGRATION,
@@ -43,7 +42,6 @@ export const RemoveEmailModal = ({
         variables: { emailId },
       },
     );
-  console.log({ flowIdsData });
 
   const flowIds = flowIdsData?.flowIds.map((flow) => flow.flowId) || [];
 
@@ -51,18 +49,30 @@ export const RemoveEmailModal = ({
     useQuery<GetLatestPublishedFlows>(GET_LATEST_PUBLISHED_FLOWS, {
       variables: { emailId, flowIds },
     });
-  console.log({ latestFlowsData });
 
   const { slug: teamSlug } = useStore((state) => state.getTeam());
-  console.log({ teamSlug });
 
   const usedFlows =
     latestFlowsData?.publishedFlows.map((publishedFlow) => ({
       slug: publishedFlow.flow?.slug,
       name: publishedFlow.flow?.name,
+      flowId: publishedFlow.flowId,
     })) || [];
 
-  const deletable = usedFlows.length === 0;
+  // Query will return duplicates of flows that have been published multiple times, hence filtering by first entry (query includes `order by created_at desc`)
+  // TODO: Decide if it's ok to filter client-side or if another Hasura view would be more appropriate? (using `limit` in the Hasura query would limit the query to one flow returned, as opposed to one flow per ID)
+  const uniqueFlows = Array.from(
+    usedFlows
+      .reduce((map, flow) => {
+        if (!map.has(flow.flowId)) {
+          map.set(flow.flowId, flow);
+        }
+        return map;
+      }, new Map())
+      .values(),
+  );
+
+  const deletable = uniqueFlows.length === 0;
 
   const handleRemoveEmail = async (email: SubmissionEmailInput) => {
     if (!email?.id) {
@@ -110,7 +120,7 @@ export const RemoveEmailModal = ({
                 This email address cannot be removed as it is currently used in
                 the following flows:
               </Typography>
-              {usedFlows.map((flow) => (
+              {uniqueFlows.map((flow) => (
                 <ListItem key={flow.name}>
                   <Link
                     href={`/app/${teamSlug}/${flow.slug}`}

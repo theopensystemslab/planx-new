@@ -39,6 +39,7 @@ export const GET_LATEST_PUBLISHED_FLOWS = gql`
       flow {
         name
         slug
+        createdAt: created_at
       }
     }
   }
