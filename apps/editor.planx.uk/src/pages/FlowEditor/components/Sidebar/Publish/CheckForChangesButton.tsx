@@ -21,12 +21,14 @@ export const CheckForChangesToPublishButton: React.FC<{
     showLoading,
     hideLoading,
     setLoadingCompleteCallback,
+    teamSlug,
   ] = useStore((state) => [
     state.isTemplatedFrom,
     state.template,
     state.showLoading,
     state.hideLoading,
     state.setLoadingCompleteCallback,
+    state.getTeam().slug,
   ]);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const toast = useToast();
@@ -90,9 +92,6 @@ export const CheckForChangesToPublishButton: React.FC<{
     template,
     lastPublishedQuery.data,
   );
-
-  // useStore.getState().getTeam().slug undefined here, use window instead
-  const teamSlug = window.location.pathname.split("/")[1];
 
   const isDisabled =
     !useStore.getState().canUserEditTeam(teamSlug) ||
