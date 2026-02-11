@@ -41,8 +41,6 @@ export async function loader({
     isEdit,
   });
 
-  console.log({ extraProps });
-
   const handleDelete = includeHandleDelete
     ? () => {
         if (id && parent) {
