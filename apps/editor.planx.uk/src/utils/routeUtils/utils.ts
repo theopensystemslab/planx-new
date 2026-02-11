@@ -10,12 +10,6 @@ import { ApplicationPath } from "types";
 
 import { client } from "../../lib/graphql";
 
-// TODO: Replace with type-safe version
-export const rootFlowPath = (includePortals = false) => {
-  const path = window.location.pathname.split("/").slice(0, 4).join("/");
-  return includePortals ? path : path.split(",")[0];
-};
-
 export const isSaveReturnFlow = (flowData: Store.Flow): boolean =>
   Boolean(Object.values(flowData).find((node) => node.type === NodeTypes.Send));
 

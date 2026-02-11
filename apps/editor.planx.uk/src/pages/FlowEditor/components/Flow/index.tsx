@@ -1,8 +1,7 @@
 import Box from "@mui/material/Box";
 import { ROOT_NODE_KEY } from "@planx/graph";
-import { Link, useParams } from "@tanstack/react-router";
+import { Link, useParams, useRouteContext } from "@tanstack/react-router";
 import React from "react";
-import { rootFlowPath } from "utils/routeUtils/utils";
 
 import { useStore } from "../../lib/store";
 import { ContextMenu } from "./components/ContextMenu";
@@ -22,25 +21,24 @@ interface Props {
 }
 
 const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
-  const { flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
-  const [_flow, ...breadcrumbIds] = flow.split(",");
+  const { rootFlow, folderIds } = useRouteContext({
+    from: "/_authenticated/app/$team/$flow",
+  });
+  const { flow, team } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
   const [childNodes, getNode, flowLayout] = useStore((state) => [
-    state.childNodesOf(
-      breadcrumbIds[breadcrumbIds.length - 1] || ROOT_NODE_KEY,
-    ),
+    state.childNodesOf(folderIds[folderIds.length - 1] || ROOT_NODE_KEY),
     state.getNode,
     state.flowLayout,
   ]);
 
-  const breadcrumbs = breadcrumbIds.map((id) => ({
+  const breadcrumbs = folderIds.map((id) => ({
     id,
     ...getNode(id),
-    href: `${window.location.pathname.split(id)[0]}${id}`,
+    href: `/app/$team/${flow.split(id)[0]}${id}`,
   }));
 
-  const [_rootPath, ...portals] = rootFlowPath(true).split(",");
-  const isFlowRoot = !portals.length;
+  const isFlowRoot = flow === rootFlow;
   const showGetStarted = isFlowRoot && !childNodes.length;
 
   const flowName = useStore((state) => state.flowName);
@@ -56,7 +54,7 @@ const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
 
         {breadcrumbs.length ? (
           <li className="root-node-link">
-            <Link to={rootFlowPath(false)} preload={false}>
+            <Link to={flow} preload={false}>
               {flowName}
             </Link>
           </li>
@@ -101,7 +99,11 @@ const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
         </Box>
         {breadcrumbs.length ? (
           <li className="root-node-link root-node-link--end">
-            <Link to={rootFlowPath(false)} preload={false}>
+            <Link
+              to="/app/$team/$flow"
+              params={{ team, flow: rootFlow }}
+              preload={false}
+            >
               {flowName}
             </Link>
           </li>

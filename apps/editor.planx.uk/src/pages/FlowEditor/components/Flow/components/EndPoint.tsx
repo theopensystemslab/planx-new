@@ -1,7 +1,7 @@
-import { Link, useRouter } from "@tanstack/react-router";
+import { Link, useRouteContext, useRouter } from "@tanstack/react-router";
+import { useParams } from "@tanstack/react-router";
 import React, { useEffect, useRef } from "react";
 import scrollIntoView from "scroll-into-view-if-needed";
-import { rootFlowPath } from "utils/routeUtils/utils";
 
 import { useStore } from "../../../lib/store";
 import { FlowLayout } from "..";
@@ -13,9 +13,13 @@ const EndPoint: React.FC<{ text: string }> = ({ text }) => {
 
   const isStart = text === "start";
 
-  const href = rootFlowPath(false);
+  const { rootFlow: href } = useRouteContext({
+    from: "/_authenticated/app/$team/$flow",
+  });
 
-  const currentPath = rootFlowPath(true);
+  const { flow: currentPath } = useParams({
+    from: "/_authenticated/app/$team/$flow",
+  });
   const isLoading = router.state.isLoading;
 
   useEffect(() => {
