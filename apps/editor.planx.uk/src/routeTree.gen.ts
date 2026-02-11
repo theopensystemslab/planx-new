@@ -34,6 +34,7 @@ import { Route as PublicPlanXDomainTeamFlowRouteRouteImport } from './routes/_pu
 import { Route as PublicCustomDomainFlowPayRouteRouteImport } from './routes/_public/_customDomain/$flow/pay/route'
 import { Route as AuthenticatedAppTeamSettingsRouteRouteImport } from './routes/_authenticated/app/$team/settings/route'
 import { Route as AuthenticatedAppTeamFlowRouteRouteImport } from './routes/_authenticated/app/$team/$flow/route'
+import { Route as PublicPlanXDomainTeamFlowIndexRouteImport } from './routes/_public/_planXDomain/$team/$flow/index'
 import { Route as PublicCustomDomainFlowPayIndexRouteImport } from './routes/_public/_customDomain/$flow/pay/index'
 import { Route as AuthenticatedAppTeamSettingsIndexRouteImport } from './routes/_authenticated/app/$team/settings/index'
 import { Route as PublicCustomDomainFlowPayViewApplicationRouteImport } from './routes/_public/_customDomain/$flow/pay/view-application'
@@ -235,6 +236,12 @@ const AuthenticatedAppTeamFlowRouteRoute =
     id: '/$flow',
     path: '/$flow',
     getParentRoute: () => AuthenticatedAppTeamRouteRoute,
+  } as any)
+const PublicPlanXDomainTeamFlowIndexRoute =
+  PublicPlanXDomainTeamFlowIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => PublicPlanXDomainTeamFlowRouteRoute,
   } as any)
 const PublicCustomDomainFlowPayIndexRoute =
   PublicCustomDomainFlowPayIndexRouteImport.update({
@@ -633,6 +640,7 @@ export interface FileRoutesByFullPath {
   '/$flow/pay/view-application': typeof PublicCustomDomainFlowPayViewApplicationRoute
   '/app/$team/settings/': typeof AuthenticatedAppTeamSettingsIndexRoute
   '/$flow/pay/': typeof PublicCustomDomainFlowPayIndexRoute
+  '/$team/$flow/': typeof PublicPlanXDomainTeamFlowIndexRoute
   '/app/$team/$flow/nodes': typeof AuthenticatedAppTeamFlowFlowEditorNodesRouteRouteWithChildren
   '/app/$team/$flow/settings/about': typeof AuthenticatedAppTeamFlowSettingsAboutRoute
   '/app/$team/$flow/settings/legal-disclaimer': typeof AuthenticatedAppTeamFlowSettingsLegalDisclaimerRoute
@@ -683,7 +691,6 @@ export interface FileRoutesByTo {
   '/app/tutorials': typeof AuthenticatedAppTutorialsRoute
   '/app': typeof AuthenticatedAppIndexRoute
   '/app/$team/$flow': typeof AuthenticatedAppTeamFlowFlowEditorIndexRoute
-  '/$team/$flow': typeof PublicPlanXDomainTeamFlowRouteRouteWithChildren
   '/app/$team/design': typeof AuthenticatedAppTeamDesignRoute
   '/app/$team/feedback': typeof AuthenticatedAppTeamFeedbackRoute
   '/app/$team/members': typeof AuthenticatedAppTeamMembersRoute
@@ -706,6 +713,7 @@ export interface FileRoutesByTo {
   '/$flow/pay/view-application': typeof PublicCustomDomainFlowPayViewApplicationRoute
   '/app/$team/settings': typeof AuthenticatedAppTeamSettingsIndexRoute
   '/$flow/pay': typeof PublicCustomDomainFlowPayIndexRoute
+  '/$team/$flow': typeof PublicPlanXDomainTeamFlowIndexRoute
   '/app/$team/$flow/nodes': typeof AuthenticatedAppTeamFlowFlowEditorNodesRouteRouteWithChildren
   '/app/$team/$flow/settings/about': typeof AuthenticatedAppTeamFlowSettingsAboutRoute
   '/app/$team/$flow/settings/legal-disclaimer': typeof AuthenticatedAppTeamFlowSettingsLegalDisclaimerRoute
@@ -791,6 +799,7 @@ export interface FileRoutesById {
   '/_public/_customDomain/$flow/pay/view-application': typeof PublicCustomDomainFlowPayViewApplicationRoute
   '/_authenticated/app/$team/settings/': typeof AuthenticatedAppTeamSettingsIndexRoute
   '/_public/_customDomain/$flow/pay/': typeof PublicCustomDomainFlowPayIndexRoute
+  '/_public/_planXDomain/$team/$flow/': typeof PublicPlanXDomainTeamFlowIndexRoute
   '/_authenticated/app/$team/$flow/_flowEditor/nodes': typeof AuthenticatedAppTeamFlowFlowEditorNodesRouteRouteWithChildren
   '/_authenticated/app/$team/$flow/settings/about': typeof AuthenticatedAppTeamFlowSettingsAboutRoute
   '/_authenticated/app/$team/$flow/settings/legal-disclaimer': typeof AuthenticatedAppTeamFlowSettingsLegalDisclaimerRoute
@@ -876,6 +885,7 @@ export interface FileRouteTypes {
     | '/$flow/pay/view-application'
     | '/app/$team/settings/'
     | '/$flow/pay/'
+    | '/$team/$flow/'
     | '/app/$team/$flow/nodes'
     | '/app/$team/$flow/settings/about'
     | '/app/$team/$flow/settings/legal-disclaimer'
@@ -926,7 +936,6 @@ export interface FileRouteTypes {
     | '/app/tutorials'
     | '/app'
     | '/app/$team/$flow'
-    | '/$team/$flow'
     | '/app/$team/design'
     | '/app/$team/feedback'
     | '/app/$team/members'
@@ -949,6 +958,7 @@ export interface FileRouteTypes {
     | '/$flow/pay/view-application'
     | '/app/$team/settings'
     | '/$flow/pay'
+    | '/$team/$flow'
     | '/app/$team/$flow/nodes'
     | '/app/$team/$flow/settings/about'
     | '/app/$team/$flow/settings/legal-disclaimer'
@@ -1033,6 +1043,7 @@ export interface FileRouteTypes {
     | '/_public/_customDomain/$flow/pay/view-application'
     | '/_authenticated/app/$team/settings/'
     | '/_public/_customDomain/$flow/pay/'
+    | '/_public/_planXDomain/$team/$flow/'
     | '/_authenticated/app/$team/$flow/_flowEditor/nodes'
     | '/_authenticated/app/$team/$flow/settings/about'
     | '/_authenticated/app/$team/$flow/settings/legal-disclaimer'
@@ -1258,6 +1269,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/$team/$flow'
       preLoaderRoute: typeof AuthenticatedAppTeamFlowRouteRouteImport
       parentRoute: typeof AuthenticatedAppTeamRouteRoute
+    }
+    '/_public/_planXDomain/$team/$flow/': {
+      id: '/_public/_planXDomain/$team/$flow/'
+      path: '/'
+      fullPath: '/$team/$flow/'
+      preLoaderRoute: typeof PublicPlanXDomainTeamFlowIndexRouteImport
+      parentRoute: typeof PublicPlanXDomainTeamFlowRouteRoute
     }
     '/_public/_customDomain/$flow/pay/': {
       id: '/_public/_customDomain/$flow/pay/'
@@ -2064,6 +2082,7 @@ interface PublicPlanXDomainTeamFlowRouteRouteChildren {
   PublicPlanXDomainTeamFlowPayRouteRoute: typeof PublicPlanXDomainTeamFlowPayRouteRouteWithChildren
   PublicPlanXDomainTeamFlowPreviewRouteRoute: typeof PublicPlanXDomainTeamFlowPreviewRouteRouteWithChildren
   PublicPlanXDomainTeamFlowPublishedRouteRoute: typeof PublicPlanXDomainTeamFlowPublishedRouteRouteWithChildren
+  PublicPlanXDomainTeamFlowIndexRoute: typeof PublicPlanXDomainTeamFlowIndexRoute
   PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute: typeof PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute
 }
 
@@ -2077,6 +2096,7 @@ const PublicPlanXDomainTeamFlowRouteRouteChildren: PublicPlanXDomainTeamFlowRout
       PublicPlanXDomainTeamFlowPreviewRouteRouteWithChildren,
     PublicPlanXDomainTeamFlowPublishedRouteRoute:
       PublicPlanXDomainTeamFlowPublishedRouteRouteWithChildren,
+    PublicPlanXDomainTeamFlowIndexRoute: PublicPlanXDomainTeamFlowIndexRoute,
     PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute:
       PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute,
   }

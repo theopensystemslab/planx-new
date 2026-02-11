@@ -15,7 +15,8 @@ export const Route = createFileRoute(
 )({
   validateSearch: zodValidator(publicRouteSearchSchemas.preview),
   pendingComponent: DelayedLoadingIndicator,
-  beforeLoad: createPublicRouteBeforeLoad("preview"),
+  beforeLoad: (args) =>
+    createPublicRouteBeforeLoad("preview", args.context)(args),
   head: createPublicRouteHead("preview"),
   errorComponent: createPublicRouteErrorComponent("preview"),
   component: PreviewLayoutComponent,

@@ -8,6 +8,7 @@ export const Route = createFileRoute(
       to: "/$flow/pages/$page",
       params: {
         page: params.page,
+        flow: params.flow,
       },
     });
   },

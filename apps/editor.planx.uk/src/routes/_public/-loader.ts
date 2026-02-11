@@ -1,4 +1,4 @@
-import { notFound } from "@tanstack/react-router";
+import { notFound, redirect } from "@tanstack/react-router";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
 
@@ -27,7 +27,7 @@ export type PublicContext = {
 export const validateTeamRoute = async (teamParam?: string) => {
   const externalTeamName = await getTeamFromDomain(window.location.hostname);
   if (teamParam && externalTeamName && externalTeamName !== teamParam) {
-    throw notFound();
+    throw redirect({ to: "/$" });
   }
 
   return externalTeamName;

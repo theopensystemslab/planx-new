@@ -1,14 +1,11 @@
 import { ComponentType as NodeTypes } from "@opensystemslab/planx-core/types";
-import gql from "graphql-tag";
-
-export interface RouteParams {
-  params: Record<string, string>;
-}
 import { useStore } from "pages/FlowEditor/lib/store";
 import { Store } from "pages/FlowEditor/lib/store";
 import { ApplicationPath } from "types";
 
-import { client } from "../../lib/graphql";
+export interface RouteParams {
+  params: Record<string, string>;
+}
 
 // TODO: Replace with type-safe version
 export const rootFlowPath = (includePortals = false) => {
@@ -84,27 +81,4 @@ export const getNodeRoute = (parent?: string, before?: string) => {
     return "/app/$team/$flow/nodes/new/$before" as const;
   }
   return "/app/$team/$flow/nodes/new" as const;
-};
-
-const QUERY_GET_TEAM_BY_DOMAIN = gql`
-  query GetTeamByDomain($domain: String!) {
-    teams(limit: 1, where: { domain: { _eq: $domain } }) {
-      slug
-      id
-    }
-  }
-`;
-
-export const getTeamFromDomain = async (domain: string) => {
-  const {
-    data: { teams },
-  } = await client.query({
-    query: QUERY_GET_TEAM_BY_DOMAIN,
-    variables: {
-      domain,
-    },
-    context: { role: "public" },
-  });
-
-  return teams?.[0]?.slug;
 };

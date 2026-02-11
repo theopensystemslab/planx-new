@@ -14,7 +14,8 @@ export const Route = createFileRoute("/_public/_planXDomain/$team/$flow/draft")(
   {
     validateSearch: zodValidator(publicRouteSearchSchemas.draft),
     pendingComponent: DelayedLoadingIndicator,
-    beforeLoad: createPublicRouteBeforeLoad("draft"),
+    beforeLoad: (args) =>
+      createPublicRouteBeforeLoad("draft", args.context)(args),
     head: createPublicRouteHead("draft"),
     errorComponent: createPublicRouteErrorComponent("draft"),
     component: DraftLayoutComponent,
