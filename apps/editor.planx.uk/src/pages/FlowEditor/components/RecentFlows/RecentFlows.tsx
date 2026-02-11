@@ -2,6 +2,7 @@ import Close from "@mui/icons-material/Close";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import TurnSharpLeftIcon from "@mui/icons-material/TurnSharpLeft";
 import Box from "@mui/material/Box";
+import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
@@ -85,34 +86,42 @@ const ToggleButton = styled(IconButton)(({ theme }) => ({
 const RecentFlows: React.FC<RecentFlowsProps> = ({ flows }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const handleToggle = () => {
-    setIsExpanded((prev) => !prev);
-  };
+  const handleToggle = () => setIsExpanded((prev) => !prev);
 
-  const visibleFlows = isExpanded ? [...flows].reverse() : flows.slice(0, 1);
+  const [firstFlow, ...rest] = flows;
+  const remainingFlows = [...rest].reverse();
 
   return (
     <RecentFlowContainer>
       <RecentFlowList>
-        {visibleFlows.map((flow, index) => (
-          <RecentFlowItem
-            key={`${flow.team}-${flow.flow}-${index}`}
-            indent={index}
-          >
-            <RecentFlowLink variant="body3" href={flow.href}>
-              {index === 0 ? (
-                <Box component="span" sx={{ mr: 0.25 }}>
-                  back to
-                </Box>
-              ) : (
-                <TurnSharpLeftIcon sx={{ mr: 0.25 }} fontSize="small" />
-              )}
+        {firstFlow && (
+          <RecentFlowItem indent={0}>
+            <RecentFlowLink variant="body3" href={firstFlow.href}>
+              <Box component="span" sx={{ mr: 0.25 }}>
+                back to
+              </Box>
               <Box component="span" className="flow-name">
-                {flow.flow}
+                {firstFlow.flow}
               </Box>
             </RecentFlowLink>
           </RecentFlowItem>
-        ))}
+        )}
+
+        <Collapse in={isExpanded}>
+          {remainingFlows.map((flow, index) => (
+            <RecentFlowItem
+              key={`${flow.team}-${flow.flow}-${index}`}
+              indent={index + 1}
+            >
+              <RecentFlowLink variant="body3" href={flow.href}>
+                <TurnSharpLeftIcon sx={{ mr: 0.25 }} fontSize="small" />
+                <Box component="span" className="flow-name">
+                  {flow.flow}
+                </Box>
+              </RecentFlowLink>
+            </RecentFlowItem>
+          ))}
+        </Collapse>
       </RecentFlowList>
       {flows.length > 1 && (
         <ToggleWrap>
