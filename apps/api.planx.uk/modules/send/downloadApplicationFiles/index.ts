@@ -4,7 +4,7 @@ import {
   getFlowId,
   getSessionData,
   getTeamEmailSettings,
-  getFlowSubmissionEmail,
+  getSubmissionEmail,
 } from "../email/service.js";
 import { logDuration } from "../../../lib/performance.js";
 
@@ -29,7 +29,8 @@ export async function downloadApplicationFiles(
 
   try {
     // Confirm that the provided email matches the stored team settings for the provided localAuthority
-    const { teamSettings } = await getTeamEmailSettings(localAuthority);
+    const { id: teamId, teamSettings } =
+      await getTeamEmailSettings(localAuthority);
     if (teamSettings.submissionEmail !== decodeURIComponent(email)) {
       return next({
         status: 403,
@@ -59,13 +60,13 @@ export async function downloadApplicationFiles(
     // TODO: Toggle this back on once record automatically created and all values populated
 
     // Get the flow submission email, which will run parallel to getTeamEmailSettings for now
-    // const submissionEmail = await getFlowSubmissionEmail(flowId);
-    // if (!submissionEmail) {
-    //   return next({
-    //     status: 400,
-    //     message: "Failed to retrieve submission email for this flow",
-    //   });
-    // }
+    const submissionEmail = await getSubmissionEmail(flowId, teamId);
+    if (!submissionEmail) {
+      return next({
+        status: 400,
+        message: "Failed to retrieve submission email for this flow",
+      });
+    }
 
     // create the submission zip
     const zip = await logDuration(`zipTotal-${sessionId}`, () =>
