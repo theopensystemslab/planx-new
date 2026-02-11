@@ -1,4 +1,5 @@
 config:
+  aws:profile: planx-production-pulumi
   application:ai-gateway-api-key:
     secure: AAABAOo++Y1y8yUvYCFbMuROIimycuheH4oSRpRfj3wTCIKEgOlbPLjXKU4suUiiw4kOzWnJ4TkfNPG0sW8/a37lK4kJMMX9oVM5/4xCcI/9JdxS2dVnMOARzKQ=
   application:airbrake-project-id:
@@ -150,6 +151,5 @@ config:
     secure: AAABAPU5mofUcMemIN579HhHs8LVwH/ikqLTUinpj1qNmmesfZUBKRrPUUtTuqJ7B0YDnxNB8uZb8UkGy5y8
   application:uniform-submission-url: https://identity.idoxgroup.com/agw/submission-api
   application:uniform-token-url: https://identity.idoxgroup.com/uaa/oauth/token
-  aws:region: eu-west-2
   cloudflare:apiToken:
     secure: AAABAMbIBX9N21ModHyDYCQCGZXkRUP62NIUMhsxkK+/YUPRQr6PEqgZX9LRP2UuVwvVHd2RxvKGT8lpq8oAgyeDYP1eZSUl

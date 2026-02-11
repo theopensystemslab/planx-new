@@ -1,0 +1,12 @@
+{
+  "name": "@planx/infrastructure-common",
+  "dependencies": {
+    "@pulumi/aws": "~7.16.0",
+    "@pulumi/pulumi": "~3.219.0"
+  },
+  "devDependencies": {
+    "@types/node": "~22.14.1",
+    "typescript": "~5.9.3"
+  },
+  "private": true
+}
