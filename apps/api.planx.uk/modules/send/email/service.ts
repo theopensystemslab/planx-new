@@ -61,11 +61,13 @@ export async function getFlowId(sessionId: string) {
 
 interface GetPublishedFlowIntegration {
   publishedFlows: {
-    submissionEmailId: string;
+    submissionIntegration: {
+      submissionEmail: string;
+    };
   }[];
 }
 
-async function getPublishedFlowIntegrationId(flowId: string) {
+async function getPublishedFlowIntegration(flowId: string) {
   const response = await $api.client.request<GetPublishedFlowIntegration>(
     gql`
       query getPublishedFlowIntegration($flowId: uuid!) {
@@ -74,7 +76,9 @@ async function getPublishedFlowIntegrationId(flowId: string) {
           order_by: [{ flow_id: asc }, { created_at: desc }]
           limit: 1
         ) {
-          submissionEmailId: submission_email_id
+          submissionIntegration: submission_integration {
+            submissionEmail: submission_email
+          }
         }
       }
     `,
@@ -82,31 +86,7 @@ async function getPublishedFlowIntegrationId(flowId: string) {
       flowId,
     },
   );
-  return response?.publishedFlows[0]?.submissionEmailId;
-}
-
-interface GetPublishedFlowSubmissionEmail {
-  submissionIntegrations: {
-    submissionEmail: string;
-  }[];
-}
-
-async function getPublishedFlowSubmissionEmail(emailId: string) {
-  const response = await $api.client.request<GetPublishedFlowSubmissionEmail>(
-    gql`
-      query getPublishedFlowSubmissionEmail($emailId: uuid!) {
-        submissionIntegrations: submission_integrations(
-          where: { email_id: { _eq: $emailId } }
-        ) {
-          submissionEmail: submission_email
-        }
-      }
-    `,
-    {
-      emailId,
-    },
-  );
-  return response?.submissionIntegrations[0]?.submissionEmail;
+  return response?.publishedFlows[0]?.submissionIntegration?.submissionEmail;
 }
 
 interface GetDefaultSubmissionIntegration {
@@ -135,9 +115,7 @@ async function getDefaultSubmissionIntegration(teamId: number) {
 
 export async function getSubmissionEmail(flowId: string, teamId: number) {
   // First get the ID to so we can fetch the relevant email; there is no relationship between `published_flows` and `submission_integrations` currently
-  const emailId = await getPublishedFlowIntegrationId(flowId);
-  // Then get the actual submission email
-  let submissionEmail = await getPublishedFlowSubmissionEmail(emailId);
+  let submissionEmail = await getPublishedFlowIntegration(flowId);
 
   // If there is no submission email found for this flow, get the default submission integration for this team
   if (!submissionEmail) {
