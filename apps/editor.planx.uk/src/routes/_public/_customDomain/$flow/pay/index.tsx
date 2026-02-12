@@ -19,12 +19,13 @@ export const Route = createFileRoute("/_public/_customDomain/$flow/pay/")({
     });
   },
   loaderDeps: ({ search: { paymentRequestId } }) => ({ paymentRequestId }),
-  loader: async ({ deps: { paymentRequestId } }) => {
+  loader: async ({ deps: { paymentRequestId }, params }) => {
     const paymentRequest = await getPaymentRequest(paymentRequestId);
 
     if (!paymentRequest) {
       throw redirect({
         to: "/$flow/pay/not-found",
+        params,
       });
     }
 

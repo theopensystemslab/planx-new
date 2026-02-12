@@ -21,12 +21,13 @@ export const Route = createFileRoute(
     });
   },
   loaderDeps: ({ search: { paymentRequestId } }) => ({ paymentRequestId }),
-  loader: async ({ deps: { paymentRequestId } }) => {
+  loader: async ({ deps: { paymentRequestId }, params }) => {
     const paymentRequest = await getPaymentRequest(paymentRequestId);
 
     if (!paymentRequest) {
       throw redirect({
         to: "/$flow/pay/invite/failed",
+        params,
       });
     }
 

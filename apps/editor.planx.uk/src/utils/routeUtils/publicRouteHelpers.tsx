@@ -8,6 +8,7 @@ import PublicLayout from "pages/layout/PublicLayout";
 import SaveAndReturnLayout from "pages/layout/SaveAndReturnLayout";
 import { TestWarningPage } from "pages/Preview/TestWarningPage";
 import React from "react";
+import type { PublicContext } from "routes/_public/-loader";
 import { Flow } from "types";
 import WatermarkBackground from "ui/shared/WatermarkBackground";
 import { z } from "zod";
@@ -70,11 +71,9 @@ type PublicRouteSearchParams = {
 
 // Common data loading function
 export const loadPublicRouteData = async (
-  params: Record<string, string>,
   mode: PublicRouteMode,
+  { flow: flowSlug, team: teamSlug }: PublicContext,
 ): Promise<PublicRouteData> => {
-  const { team: teamSlug, flow: flowSlug } = params;
-
   // Fetch settings (common for all modes)
   const data = await fetchSettingsForPublishedView(flowSlug, teamSlug);
   const flow = data.flows[0];
@@ -160,6 +159,7 @@ export const updateStoreWithPublicRouteData = (data: PublicRouteData): void => {
 // Complete beforeLoad helper
 export const createPublicRouteBeforeLoad = <T extends PublicRouteMode>(
   mode: T,
+  context: PublicContext,
 ) => {
   return async ({
     params,
@@ -169,7 +169,7 @@ export const createPublicRouteBeforeLoad = <T extends PublicRouteMode>(
     search: PublicRouteSearchParams[T];
   }) => {
     try {
-      const data = await loadPublicRouteData(params, mode);
+      const data = await loadPublicRouteData(mode, context);
       updateStoreWithPublicRouteData(data);
 
       // Set application path for save-and-return flows
