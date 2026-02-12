@@ -2,7 +2,7 @@ import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
 export const createAllIpv4IngressRule = (
-  securityGroupId: pulumi.Input<string>,
+  securityGroupId: pulumi.Output<string>,
   sgName: string,
 ) => {
     return new aws.vpc.SecurityGroupIngressRule(`${sgName}-allow-ipv4-in`, {
@@ -13,7 +13,7 @@ export const createAllIpv4IngressRule = (
 }
 
 export const createAllIpv4EgressRule = (
-  securityGroupId: pulumi.Input<string>,
+  securityGroupId: pulumi.Output<string>,
   sgName: string,
 ) => {
     return new aws.vpc.SecurityGroupEgressRule(`${sgName}-allow-ipv4-out`, {
@@ -24,7 +24,7 @@ export const createAllIpv4EgressRule = (
 }
 
 export const createIpv4EgressRule = (
-  securityGroupId: pulumi.Input<string>,
+  securityGroupId: pulumi.Output<string>,
   sgName: string,
   ports: number[],
   protocol: string = "tcp",
@@ -41,7 +41,7 @@ export const createIpv4EgressRule = (
 }
 
 export const createIpv4IngressRule = (
-  securityGroupId: pulumi.Input<string>,
+  securityGroupId: pulumi.Output<string>,
   sgName: string,
   ports: number[],
   protocol: string = "tcp",
@@ -58,19 +58,37 @@ export const createIpv4IngressRule = (
 }
 
 export const createSourceSgIngressRule = (
-  securityGroupId: pulumi.Input<string>,
+  securityGroupId: pulumi.Output<string>,
   sgName: string,
   ports: number[],
-  sourceSecurityGroupId: pulumi.Input<string>,
+  sourceSecurityGroupId: pulumi.Output<string>,
   protocol: string = "tcp",
 ) => {
   for (const port of ports) {
-    new aws.vpc.SecurityGroupIngressRule(`${sgName}-allow-${protocol}-ipv4-in-${port}`, {
+    new aws.vpc.SecurityGroupIngressRule(`${sgName}-allow-${protocol}-ipv4-in-${port}-from-sg`, {
         securityGroupId: securityGroupId,
         fromPort: port,
         toPort: port,
         ipProtocol: protocol,
         referencedSecurityGroupId: sourceSecurityGroupId,
+    });
+  }
+}
+
+export const createDestinationSgEgressRule = (
+  securityGroupId: pulumi.Output<string>,
+  sgName: string,
+  ports: number[],
+  destinationSecurityGroupId: pulumi.Output<string>,
+  protocol: string = "tcp",
+) => {
+  for (const port of ports) {
+    new aws.vpc.SecurityGroupEgressRule(`${sgName}-allow-${protocol}-ipv4-out-${port}-to-sg`, {
+        securityGroupId: securityGroupId,
+        fromPort: port,
+        toPort: port,
+        ipProtocol: protocol,
+        referencedSecurityGroupId: destinationSecurityGroupId,
     });
   }
 }

@@ -12,7 +12,7 @@ import mime from "mime";
 import {
   createAllIpv4EgressRule,
   createAllIpv4IngressRule,
-  createSourceSgEgressRule,
+  createDestinationSgEgressRule,
   createSourceSgIngressRule,
 } from "../common/utils";
 
@@ -196,6 +196,7 @@ export = async () => {
   );
 
   const METABASE_PORT = 3000;
+  // TODO: abstract ideal setup pattern for all services (main differenciation is in task definition and service config)
   // prepare security groups as per AWS docs, with SG for load balancer and Fargate service serving as source/destination for each other
   // see: https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-update-security-groups.html
   const metabaseLbSecurityGroup = new aws.ec2.SecurityGroup("metabase-lb-sg", {
@@ -208,7 +209,7 @@ export = async () => {
   });
   // LB SG accepts traffic from open internet, and allows outbound traffic only to Fargate service SG
   createAllIpv4IngressRule(metabaseLbSecurityGroup.id, "metabase-lb");
-  createSourceSgEgressRule(metabaseLbSecurityGroup.id, "metabase-lb", [METABASE_PORT], metabaseServiceSecurityGroup.id);
+  createDestinationSgEgressRule(metabaseLbSecurityGroup.id, "metabase-lb", [METABASE_PORT], metabaseServiceSecurityGroup.id);
   // SG for the Fargate service accepts inbound traffic only from the LB SG, and allows outbound traffic to open internet
   createSourceSgIngressRule(metabaseServiceSecurityGroup.id, "metabase-service", [METABASE_PORT], metabaseLbSecurityGroup.id);
   createAllIpv4EgressRule(metabaseServiceSecurityGroup.id, "metabase-service");
@@ -236,14 +237,14 @@ export = async () => {
   });
   // TODO: understand why we don't need to listen on 443 (i.e. can't receive https connections??)
   const metabaseListenerHttp = new aws.lb.Listener("metabase-http", {
+    loadBalancerArn: metabaseLb.loadBalancer.arn,
+    port: 80,
+    protocol: "HTTP",
     // NB. default action is always evaluated last (i.e. if no other rule/action is triggered)
     defaultActions: [{
       type: "forward",
       targetGroupArn: metabaseTargetGroup.arn,
     }],
-    loadBalancerArn: metabaseLb.loadBalancer.arn,
-    port: 80,
-    protocol: "HTTP",
   });
 
   addRedirectToCloudFlareListenerRule({
@@ -256,19 +257,22 @@ export = async () => {
   const metabaseDbUrl = pulumi.all([dbHost, metabasePgPassword]).apply(([dbHost, metabasePgPassword]) => 
     getPostgresDbUrl("metabase", metabasePgPassword, dbHost, "metabase"))
   const metabaseMemoryMb = config.requireNumber("metabase-memory");
-
-
-
+  const metabaseLogGroup = new aws.cloudwatch.LogGroup("metabase", {
+    name: "/ecs/metabase",
+    retentionInDays: 30,
+  });
+  // see: https://github.com/pulumi/pulumi-awsx/blob/master/examples/ecs/nodejs/index.ts
   const metabaseTask = new awsx.ecs.FargateTaskDefinition("metabase", {
+    logGroup: { existing: metabaseLogGroup },
     container: {
+        name: "metabase",
         // if changing, also check docker-compose.yml
         image: "metabase/metabase:v0.56.6",
-        name: "metabase",
         essential: true,
-        portMappings: [{ targetGroup: metabaseTargetGroup }],
-        // When changing `memory`, also update `JAVA_OPTS` below
         cpu: config.requireNumber("metabase-cpu"),
+        // when changing `memory`, also update `JAVA_OPTS` below
         memory: metabaseMemoryMb,
+        portMappings: [{ targetGroup: metabaseTargetGroup }],
         environment: [
           // https://www.metabase.com/docs/latest/troubleshooting-guide/running.html#allocating-more-memory-to-the-jvm
           { name: "JAVA_OPTS", value: getJavaOpts(metabaseMemoryMb) },
@@ -292,6 +296,7 @@ export = async () => {
       }
     });
 
+  // TODO: implement rollback/circuit break for services other than Hasura?
   new awsx.ecs.FargateService("metabase", {
       cluster: cluster.arn,
       taskDefinition: metabaseTask.taskDefinition.arn,
@@ -326,10 +331,11 @@ export = async () => {
   // we'll also pass this database URI to sharedb later on
 
   const rootDbUrl = pulumi.all([dbHost, dbRootPassword]).apply(([dbHost, dbRootPassword]) => 
-    getPostgresDbUrl(DB_ROOT_USERNAME, dbRootPassword, dbHost))
+    getPostgresDbUrl(dbUser, dbRootPassword, dbHost))
   const hasuraService = await createHasuraService({
     env,
-    vpc,
+    vpcId,
+    publicSubnetIds,
     cluster,
     repo,
     dbUrl: rootDbUrl,
@@ -381,23 +387,42 @@ export = async () => {
     },
   });
 
-  const lbApi = new awsx.lb.ApplicationLoadBalancer("api", {
-    external: true,
-    vpc,
-    subnets: networking.requireOutput("publicSubnetIds"),
+  const API_PORT = 80;
+  const apiLbSecurityGroup = new aws.ec2.SecurityGroup("api-lb-sg", {
+    description: "Security group for API load balancer",
+    vpcId: vpcId,
+  });
+  const apiServiceSecurityGroup = new aws.ec2.SecurityGroup("api-service-sg", {
+    description: "Security group for API Fargate service",
+    vpcId: vpcId,
+  });
+  createAllIpv4IngressRule(apiLbSecurityGroup.id, "api-lb");
+  createDestinationSgEgressRule(apiLbSecurityGroup.id, "api-lb", [API_PORT], apiServiceSecurityGroup.id);
+  createSourceSgIngressRule(apiServiceSecurityGroup.id, "api-service", [API_PORT], apiLbSecurityGroup.id);
+  createAllIpv4EgressRule(apiServiceSecurityGroup.id, "api-service");
+
+  const apiLb = new awsx.lb.ApplicationLoadBalancer("api-lb", {
+    internal: false,
+    subnetIds: publicSubnetIds,
+    securityGroups: [apiLbSecurityGroup.id],
     idleTimeout: 120,
   });
-  // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
-  const API_PORT = 80;
-  const targetApi = lbApi.createTargetGroup("api", {
+  const targetApi = new aws.lb.TargetGroup("api", {
     port: API_PORT,
     protocol: "HTTP",
+    vpcId: vpcId,
     healthCheck: {
       path: "/",
     },
   });
-  const apiListenerHttp = targetApi.createListener("api-http", {
+  const apiListenerHttp = new aws.lb.Listener("api-http", {
+    loadBalancerArn: apiLb.loadBalancer.arn,
+    port: 80,
     protocol: "HTTP",
+    defaultActions: [{
+      type: "forward",
+      targetGroupArn: targetApi.arn,
+    }],
   });
 
   addRedirectToCloudFlareListenerRule({
@@ -406,23 +431,27 @@ export = async () => {
     domain: DOMAIN,
   });
 
-  const apiService = new awsx.ecs.FargateService("api", {
-    cluster,
-    subnets: networking.requireOutput("publicSubnetIds"),
-    taskDefinitionArgs: {
-      logGroup: new aws.cloudwatch.LogGroup("api", {
-        namePrefix: "api",
-        retentionInDays: 30,
-      }),
-      container: {
-        image: repo.buildAndPushImage({
-          context: "../../apps/api.planx.uk",
-          target: "production",
-        }),
-        cpu: 2048,
-        memory: 4096 /*MB*/,
-        portMappings: [apiListenerHttp],
-        environment: [
+  const apiImage = new awsx.ecr.Image("api-image", {
+    repositoryUrl: repo.url,
+    context: "../../apps/api.planx.uk",
+    args: {
+      target: "production",
+    },
+  });
+  const apiLogGroup = new aws.cloudwatch.LogGroup("api", {
+    name: "/ecs/api",
+    retentionInDays: 30,
+  });
+  const apiTask = new awsx.ecs.FargateTaskDefinition("api", {
+    logGroup: { existing: apiLogGroup },
+    container: {
+      name: "api",
+      image: apiImage.imageUri,
+      essential: true,
+      cpu: 2048,
+      memory: 4096 /*MB*/,
+      portMappings: [{ targetGroup: targetApi }],
+      environment: [
           { name: "NODE_ENV", value: env },
           { name: "APP_ENVIRONMENT", value: env },
           { name: "EDITOR_URL_EXT", value: `https://${DOMAIN}` },
@@ -596,41 +625,76 @@ export = async () => {
           ...generateTeamSecrets(config, env),
         ],
       },
+    });
+
+  const apiService = new awsx.ecs.FargateService("api", {
+    cluster: cluster.arn,
+    taskDefinition: apiTask.taskDefinition.arn,
+    loadBalancers: apiTask.loadBalancers,
+    networkConfiguration: {
+      subnets: publicSubnetIds,
+      assignPublicIp: true,
+      securityGroups: [apiServiceSecurityGroup.id],
     },
     desiredCount: 1,
+  },
+  {
+    dependsOn: [apiLb],
   });
-  new cloudflare.Record("api", {
+
+  new cloudflare.DnsRecord("api", {
     name: tldjs.getSubdomain(DOMAIN)
       ? `api.${tldjs.getSubdomain(DOMAIN)}`
       : "api",
     type: "CNAME",
     zoneId: config.requireSecret("cloudflare-zone-id"),
-    value: apiListenerHttp.endpoint.hostname,
+    content: apiLb.loadBalancer.dnsName,
     ttl: 1,
     proxied: true,
   });
 
   // ----------------------- ShareDB
-  const lbSharedb = new awsx.lb.ApplicationLoadBalancer("sharedb", {
-    external: true,
-    vpc,
-    subnets: networking.requireOutput("publicSubnetIds"),
-  });
-  // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
   const SHAREDB_PORT = 80;
-  const targetSharedb = lbSharedb.createTargetGroup("sharedb", {
+  const sharedbLbSecurityGroup = new aws.ec2.SecurityGroup("sharedb-lb-sg", {
+    description: "Security group for ShareDB load balancer",
+    vpcId: vpcId,
+  });
+  const sharedbServiceSecurityGroup = new aws.ec2.SecurityGroup("sharedb-service-sg", {
+    description: "Security group for ShareDB Fargate service",
+    vpcId: vpcId,
+  });
+  createAllIpv4IngressRule(sharedbLbSecurityGroup.id, "sharedb-lb");
+  createDestinationSgEgressRule(sharedbLbSecurityGroup.id, "sharedb-lb", [SHAREDB_PORT], sharedbServiceSecurityGroup.id);
+  createSourceSgIngressRule(sharedbServiceSecurityGroup.id, "sharedb-service", [SHAREDB_PORT], sharedbLbSecurityGroup.id);
+  createAllIpv4EgressRule(sharedbServiceSecurityGroup.id, "sharedb-service");
+
+  const sharedbLb = new awsx.lb.ApplicationLoadBalancer("sharedb-lb", {
+    internal: false,
+    subnetIds: publicSubnetIds,
+    securityGroups: [sharedbLbSecurityGroup.id],
+  });
+  const targetSharedb = new aws.lb.TargetGroup("sharedb", {
     port: SHAREDB_PORT,
     protocol: "HTTP",
+    vpcId: vpcId,
     healthCheck: {
       path: "/",
       matcher: "426", // "HTTP 426 Upgrade Required"
     },
     stickiness: {
       enabled: true,
-      type: "lb_cookie",
+      type: "lb_cookie", // default duration will be 1 day (86400s)
     },
   });
-  const sharedbListenerHttp = targetSharedb.createListener("sharedb-http", { protocol: "HTTP" });
+  const sharedbListenerHttp = new aws.lb.Listener("sharedb-http", {
+    loadBalancerArn: sharedbLb.loadBalancer.arn,
+    port: 80,
+    protocol: "HTTP",
+    defaultActions: [{
+      type: "forward",
+      targetGroupArn: targetSharedb.arn,
+    }],
+  });
 
   addRedirectToCloudFlareListenerRule({
     serviceName: "sharedb",
@@ -638,38 +702,52 @@ export = async () => {
     domain: DOMAIN,
   });
 
-  const sharedbService = new awsx.ecs.FargateService("sharedb", {
-    cluster,
-    subnets: networking.requireOutput("publicSubnetIds"),
-    taskDefinitionArgs: {
-      logGroup: new aws.cloudwatch.LogGroup("sharedb", {
-        namePrefix: "sharedb",
-        retentionInDays: 30,
-      }),
-      container: {
-        image: repo.buildAndPushImage("../../apps/sharedb.planx.uk"),
-        memory: 512 /*MB*/,
-        portMappings: [sharedbListenerHttp],
-        environment: [
-          { name: "PORT", value: String(SHAREDB_PORT) },
-          { name: "API_URL_EXT", value: `https://api.${DOMAIN}` },
-          {
-            name: "PG_URL",
-            value: rootDbUrl,
-          },
-        ],
-      },
+  const sharedbImage = new awsx.ecr.Image("sharedb-image", {
+    repositoryUrl: repo.repository.repositoryUrl,
+    context: "../../apps/sharedb.planx.uk",
+  });
+  const sharedbLogGroup = new aws.cloudwatch.LogGroup("sharedb", {
+    name: "/ecs/sharedb",
+    retentionInDays: 30,
+  });
+  const sharedbTask = new awsx.ecs.FargateTaskDefinition("sharedb", {
+    logGroup: { existing: sharedbLogGroup },
+    container: {
+      name: "sharedb",
+      image: sharedbImage.imageUri,
+      essential: true,
+      memory: 512 /*MB*/,
+      portMappings: [{ targetGroup: targetSharedb }],
+      environment: [
+        { name: "PORT", value: String(SHAREDB_PORT) },
+        { name: "API_URL_EXT", value: `https://api.${DOMAIN}` },
+        { name: "PG_URL", value: rootDbUrl },
+      ],
     },
-    desiredCount: 1,
   });
 
-  const sharedbDnsRecord = new cloudflare.Record("sharedb", {
+  const sharedbService = new awsx.ecs.FargateService("sharedb", {
+    cluster: cluster.arn,
+    taskDefinition: sharedbTask.taskDefinition.arn,
+    loadBalancers: sharedbTask.loadBalancers,
+    networkConfiguration: {
+      subnets: publicSubnetIds,
+      assignPublicIp: true,
+      securityGroups: [sharedbServiceSecurityGroup.id],
+    },
+    desiredCount: 1,
+  },
+  {
+    dependsOn: [sharedbLb],
+  });
+
+  const sharedbDnsRecord = new cloudflare.DnsRecord("sharedb", {
     name: tldjs.getSubdomain(DOMAIN)
       ? `sharedb.${tldjs.getSubdomain(DOMAIN)}`
       : "sharedb",
     type: "CNAME",
-    zoneId: config.require("cloudflare-zone-id"),
-    value: sharedbListenerHttp.endpoint.hostname,
+    zoneId: config.requireSecret("cloudflare-zone-id"),
+    content: sharedbLb.loadBalancer.dnsName,
     ttl: 1,
     proxied: true,
   });
@@ -808,13 +886,13 @@ export = async () => {
       //   dependsOn: [caaRecordRoot, caaRecordWildcard],
     }
   );
-  const sslCertValidationRecord = new cloudflare.Record(
+  const sslCertValidationRecord = new cloudflare.DnsRecord(
     `sslCertValidationRecord`,
     {
       name: sslCert.domainValidationOptions[0].resourceRecordName,
       ttl: 3600,
       type: sslCert.domainValidationOptions[0].resourceRecordType,
-      value: sslCert.domainValidationOptions[0].resourceRecordValue,
+      content: sslCert.domainValidationOptions[0].resourceRecordValue,
       zoneId: config.requireSecret("cloudflare-zone-id"),
     }
   );
@@ -839,11 +917,11 @@ export = async () => {
     oai,
   });
 
-  const frontendDnsRecord = new cloudflare.Record("frontend", {
+  const frontendDnsRecord = new cloudflare.DnsRecord("frontend", {
     name: tldjs.getSubdomain(DOMAIN) || "@",
     type: "CNAME",
     zoneId: config.requireSecret("cloudflare-zone-id"),
-    value: cdn.domainName,
+    content: cdn.domainName,
     ttl: 1,
     proxied: false, // This was causing infinite HTTPS redirects, so let's just use CloudFront only
   });
@@ -853,7 +931,7 @@ export = async () => {
 
   return {
     customDomains,
-    hasuraServiceName: hasuraService.service.name,
+    hasuraServiceName: hasuraService.serviceName,
   };
 };
 

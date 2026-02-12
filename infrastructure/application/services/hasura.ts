@@ -11,10 +11,17 @@ import {
   addRedirectToCloudFlareListenerRule,
   setupNotificationForDeploymentRollback,
 } from "../utils";
+import {
+  createAllIpv4IngressRule,
+  createAllIpv4EgressRule,
+  createSourceSgIngressRule,
+  createDestinationSgEgressRule,
+} from "../../common/utils";
 
 export const createHasuraService = async ({
   env,
-  vpc,
+  vpcId,
+  publicSubnetIds,
   cluster,
   repo,
   dbUrl,
@@ -22,26 +29,49 @@ export const createHasuraService = async ({
   stacks: {
     networking, certificates, data,
   },
-}: CreateService): Promise<awsx.ecs.FargateService> => {
+}: CreateService) => {
 
   const config = new pulumi.Config();
   const DOMAIN: string = await certificates.requireOutputValue("domain");
 
-  const lbHasura = new awsx.lb.ApplicationLoadBalancer("hasura", {
-    external: true,
-    vpc,
-    subnets: networking.requireOutput("publicSubnetIds"),
-  });
   // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
   const HASURA_PROXY_PORT = 80;
-  const targetHasura = lbHasura.createTargetGroup("hasura", {
+  const hasuraLbSecurityGroup = new aws.ec2.SecurityGroup("hasura-lb-sg", {
+    description: "Security group for Hasura load balancer",
+    vpcId: vpcId,
+  });
+  const hasuraServiceSecurityGroup = new aws.ec2.SecurityGroup("hasura-service-sg", {
+    description: "Security group for Hasura Fargate service",
+    vpcId: vpcId,
+  });
+  createAllIpv4IngressRule(hasuraLbSecurityGroup.id, "hasura-lb");
+  createDestinationSgEgressRule(hasuraLbSecurityGroup.id, "hasura-lb", [HASURA_PROXY_PORT], hasuraServiceSecurityGroup.id);
+  createSourceSgIngressRule(hasuraServiceSecurityGroup.id, "hasura-service", [HASURA_PROXY_PORT], hasuraLbSecurityGroup.id);
+  createAllIpv4EgressRule(hasuraServiceSecurityGroup.id, "hasura-service");
+
+  const hasuraLb = new awsx.lb.ApplicationLoadBalancer("hasura-lb", {
+    internal: false,
+    subnetIds: publicSubnetIds,
+    securityGroups: [hasuraLbSecurityGroup.id],
+  });
+
+  const hasuraTargetGroup = new aws.lb.TargetGroup("hasura", {
     port: HASURA_PROXY_PORT,
     protocol: "HTTP",
+    vpcId: vpcId,
     healthCheck: {
       path: "/healthz",
     },
-  });  
-  const hasuraListenerHttp = targetHasura.createListener("hasura-http", { protocol: "HTTP" });
+  });
+  const hasuraListenerHttp = new aws.lb.Listener("hasura-http", {
+    loadBalancerArn: hasuraLb.loadBalancer.arn,
+    port: 80,
+    protocol: "HTTP",
+    defaultActions: [{
+      type: "forward",
+      targetGroupArn: hasuraTargetGroup.arn,
+    }],
+  });
 
   addRedirectToCloudFlareListenerRule({
     serviceName: "hasura",
@@ -51,10 +81,153 @@ export const createHasuraService = async ({
 
   // hasuraService is composed of two tightly coupled containers
   // hasuraProxy is publicly exposed (behind the load balancer) and reverse proxies requests to hasura
-  // hasura has no externally exposed ports, and can only be accessed by hasuraService
+  // hasura has no externally exposed ports, and can only be accessed via hasuraProxy
+  const hasuraProxyImage = new awsx.ecr.Image("hasura-proxy-image", {
+    repositoryUrl: repo.url,
+    context: "../../apps/hasura.planx.uk/proxy",
+  });
+  const hasuraImage = new awsx.ecr.Image("hasura-image", {
+    repositoryUrl: repo.url,
+    context: "../../apps/hasura.planx.uk",
+  });
+
+  const hasuraLogGroup = new aws.cloudwatch.LogGroup("hasura", {
+    name: "/ecs/hasura",
+    retentionInDays: 30,
+  });
+  const hasuraTask = new awsx.ecs.FargateTaskDefinition("hasura", {
+    logGroup: { existing: hasuraLogGroup },
+    containers: {
+          hasuraProxy: {
+            name: "hasuraProxy",
+            image: hasuraProxyImage.imageUri,
+            essential: true,
+            cpu: config.requireNumber("hasura-proxy-cpu"),
+            memory: config.requireNumber("hasura-proxy-memory"),
+            portMappings: [{ targetGroup: hasuraTargetGroup }],
+            // hasuraProxy should wait for the hasura container to spin up before starting
+            dependsOn: [
+              {
+                containerName: "hasura",
+                condition: "HEALTHY",
+              },
+            ],
+            healthCheck: {
+              // hasuraProxy health depends on hasura health
+              // use wget since busybox applet is included in Alpine base image (curl is not)
+              command: [
+                "CMD-SHELL",
+                `wget --spider --quiet http://localhost:${HASURA_PROXY_PORT}/healthz || exit 1`,
+              ],
+              // generous config; if hasura is saturated/blocking, we give service a chance to scale out before whole task is replaced
+              interval: 30,
+              timeout: 15,
+              retries: 3,
+            },
+            environment: [
+              { name: "HASURA_PROXY_PORT", value: String(HASURA_PROXY_PORT) },
+              { name: "HASURA_NETWORK_LOCATION", value: "localhost" },
+            ],
+          },
+          hasura: {
+            name: "hasura",
+            image: hasuraImage.imageUri,
+            essential: true,
+            cpu: config.requireNumber("hasura-cpu"),
+            memory: config.requireNumber("hasura-memory"),
+            // hasuraProxy dependency timeout should mirror migration timeout
+            startTimeout: 180,
+            stopTimeout: 30,
+            healthCheck: {
+              command: [
+                "CMD-SHELL",
+                "curl --head http://localhost:8080/healthz || exit 1",
+              ],
+              // wait 15s before running container-level health check, using same params as docker-compose
+              startPeriod: 15,
+              interval: 15,
+              timeout: 3,
+              retries: 10,
+            },
+            environment: [
+              { name: "HASURA_GRAPHQL_ENABLE_CONSOLE", value: "true" },
+              {
+                name: "HASURA_GRAPHQL_ADMIN_SECRET",
+                value: config.require("hasura-admin-secret"),
+              },
+              {
+                name: "HASURA_GRAPHQL_CORS_DOMAIN",
+                value: pulumi
+                  .all([CUSTOM_DOMAINS, DOMAIN, config.require("lps-domain")])
+                  .apply(([customDomains, domain, lpsDomain]) => {
+                    const corsUrls = [
+                      // Wildcard and exact domains for custom domains
+                      ...customDomains.flatMap((x: any) => [
+                        `https://*.${x.domain}`,
+                        `https://${x.domain}`,
+                      ]),
+                      // Wildcard and exact domains for main PlanX site
+                      `https://*.${domain}`,
+                      `https://${domain}`,
+                      // Additional domains
+                      `https://${lpsDomain}`,
+                      "https://planx-website.webflow.io",
+                      "https://www.planx.uk",
+                    ];
+
+                    return corsUrls.filter(Boolean).join(", ");
+                  }),
+              },
+              {
+                name: "HASURA_GRAPHQL_ENABLED_LOG_TYPES",
+                value: "startup, http-log, webhook-log, websocket-log, query-log",
+              },
+              {
+                name: "HASURA_GRAPHQL_JWT_SECRET",
+                value: pulumi.interpolate`{ "type": "HS256", "key": "${config.require(
+                  "jwt-secret"
+                )}" }`,
+              },
+              { name: "HASURA_GRAPHQL_UNAUTHORIZED_ROLE", value: "public" },
+              { name: "HASURA_GRAPHQL_DATABASE_URL", value: dbUrl },
+              {
+                name: "HASURA_PLANX_API_URL",
+                value: `https://api.${DOMAIN}`,
+              },
+              {
+                name: "HASURA_PLANX_API_KEY",
+                value: config.require("hasura-planx-api-key"),
+              },
+              // extend timeout for migrations during setup to 3 mins (default is 30s)
+              {
+                name: "HASURA_GRAPHQL_MIGRATIONS_SERVER_TIMEOUT",
+                value: "180",
+              },
+              // ensure migrations run sequentially (to manage CPU load)
+              {
+                name: "HASURA_GRAPHQL_MIGRATIONS_CONCURRENCY",
+                value: "1",
+              },
+              // get more detailed logs during migration (in case of failure)
+              {
+                name: "HASURA_GRAPHQL_MIGRATIONS_LOG_LEVEL",
+                value: "debug",
+              },
+            ],
+          },
+        }
+    });
+
+
   const hasuraService = new awsx.ecs.FargateService("hasura", {
-    cluster,
-    subnets: networking.requireOutput("publicSubnetIds"),
+    cluster: cluster.arn,
+    taskDefinition: hasuraTask.taskDefinition.arn,
+    loadBalancers: hasuraTask.loadBalancers,
+    networkConfiguration: {
+      subnets: publicSubnetIds,
+      assignPublicIp: true,
+      securityGroups: [hasuraServiceSecurityGroup.id],
+    },
     desiredCount: 1,
     deploymentMinimumHealthyPercent: 50,
     deploymentMaximumPercent: 200,
@@ -64,137 +237,19 @@ export const createHasuraService = async ({
       enable: true,
       rollback: true,
     },
-    taskDefinitionArgs: {
-      logGroup: new aws.cloudwatch.LogGroup("hasura", {
-        namePrefix: "hasura",
-        retentionInDays: 30,
-      }),
-      containers: {
-        hasuraProxy: {
-          image: repo.buildAndPushImage("../../apps/hasura.planx.uk/proxy"),
-          cpu: config.requireNumber("hasura-proxy-cpu"),
-          memory: config.requireNumber("hasura-proxy-memory"),
-          portMappings: [hasuraListenerHttp],
-          // hasuraProxy should wait for the hasura container to spin up before starting
-          dependsOn: [
-            {
-              containerName: "hasura",
-              condition: "HEALTHY",
-            },
-          ],
-          healthCheck: {
-            // hasuraProxy health depends on hasura health
-            // use wget since busybox applet is included in Alpine base image (curl is not)
-            command: [
-              "CMD-SHELL",
-              `wget --spider --quiet http://localhost:${HASURA_PROXY_PORT}/healthz || exit 1`,
-            ],
-            // generous config; if hasura is saturated/blocking, we give service a chance to scale out before whole task is replaced
-            interval: 30,
-            timeout: 15,
-            retries: 3,
-          },
-          environment: [
-            { name: "HASURA_PROXY_PORT", value: String(HASURA_PROXY_PORT) },
-            { name: "HASURA_NETWORK_LOCATION", value: "localhost" },
-          ],
-        },
-        hasura: {
-          // hasuraProxy dependency timeout should mirror migration timeout
-          startTimeout: 180,
-          stopTimeout: 30,
-          image: repo.buildAndPushImage("../../apps/hasura.planx.uk"),
-          cpu: config.requireNumber("hasura-cpu"),
-          memory: config.requireNumber("hasura-memory"),
-          healthCheck: {
-            command: [
-              "CMD-SHELL",
-              "curl --head http://localhost:8080/healthz || exit 1",
-            ],
-            // wait 15s before running container-level health check, using same params as docker-compose
-            startPeriod: 15,
-            interval: 15,
-            timeout: 3,
-            retries: 10,
-          },
-          environment: [
-            { name: "HASURA_GRAPHQL_ENABLE_CONSOLE", value: "true" },
-            {
-              name: "HASURA_GRAPHQL_ADMIN_SECRET",
-              value: config.require("hasura-admin-secret"),
-            },
-            {
-              name: "HASURA_GRAPHQL_CORS_DOMAIN",
-              value: pulumi
-                .all([CUSTOM_DOMAINS, DOMAIN, config.require("lps-domain")])
-                .apply(([customDomains, domain, lpsDomain]) => {
-                  const corsUrls = [
-                    // Wildcard and exact domains for custom domains
-                    ...customDomains.flatMap((x: any) => [
-                      `https://*.${x.domain}`,
-                      `https://${x.domain}`,
-                    ]),
-                    // Wildcard and exact domains for main PlanX site
-                    `https://*.${domain}`,
-                    `https://${domain}`,
-                    // Additional domains
-                    `https://${lpsDomain}`,
-                    "https://planx-website.webflow.io",
-                    "https://www.planx.uk",
-                  ];
-
-                  return corsUrls.filter(Boolean).join(", ");
-                }),
-            },
-            {
-              name: "HASURA_GRAPHQL_ENABLED_LOG_TYPES",
-              value: "startup, http-log, webhook-log, websocket-log, query-log",
-            },
-            {
-              name: "HASURA_GRAPHQL_JWT_SECRET",
-              value: pulumi.interpolate`{ "type": "HS256", "key": "${config.require(
-                "jwt-secret"
-              )}" }`,
-            },
-            { name: "HASURA_GRAPHQL_UNAUTHORIZED_ROLE", value: "public" },
-            { name: "HASURA_GRAPHQL_DATABASE_URL", value: dbUrl },
-            {
-              name: "HASURA_PLANX_API_URL",
-              value: `https://api.${DOMAIN}`,
-            },
-            {
-              name: "HASURA_PLANX_API_KEY",
-              value: config.require("hasura-planx-api-key"),
-            },
-            // extend timeout for migrations during setup to 3 mins (default is 30s)
-            {
-              name: "HASURA_GRAPHQL_MIGRATIONS_SERVER_TIMEOUT",
-              value: "180",
-            },
-            // ensure migrations run sequentially (to manage CPU load)
-            {
-              name: "HASURA_GRAPHQL_MIGRATIONS_CONCURRENCY",
-              value: "1",
-            },
-            // get more detailed logs during migration (in case of failure)
-            {
-              name: "HASURA_GRAPHQL_MIGRATIONS_LOG_LEVEL",
-              value: "debug",
-            },
-          ],
-        },
-      },
-    },
+  },
+  {
+    dependsOn: [hasuraLb],
   });
 
-  // TODO: bump awsx to 1.x to use the FargateService scaleConfig option to replace more verbose config below
+  // TODO: use the FargateService scaleConfig option to replace more verbose config below
   const hasuraScalingTarget = new aws.appautoscaling.Target("hasura-scaling-target", {
     // maxCapacity should consider compute power of the RDS instance which Hasura relies on
     maxCapacity: parseInt(config.require("hasura-service-scaling-maximum")),
     // minCapacity should reflect the baseline load expected
     // see: https://hasura.io/docs/2.0/deployment/performance-tuning/#scalability
     minCapacity: parseInt(config.require("hasura-service-scaling-minimum")),
-    resourceId: pulumi.interpolate`service/${cluster.cluster.name}/${hasuraService.service.name}`,
+    resourceId: pulumi.interpolate`service/${cluster.name}/${hasuraService.service.name}`,
     scalableDimension: "ecs:service:DesiredCount",
     serviceNamespace: "ecs",
   });
@@ -230,17 +285,19 @@ export const createHasuraService = async ({
     },
   });
 
-  new cloudflare.Record("hasura", {
+  new cloudflare.DnsRecord("hasura", {
     name: tldjs.getSubdomain(DOMAIN)
       ? `hasura.${tldjs.getSubdomain(DOMAIN)}`
       : "hasura",
     type: "CNAME",
     zoneId: config.require("cloudflare-zone-id"),
-    value: hasuraListenerHttp.endpoint.hostname,
+    content: hasuraLb.loadBalancer.dnsName,
     ttl: 1,
     proxied: true,
   });
 
   setupNotificationForDeploymentRollback(env, "hasura", cluster, hasuraService);
-  return hasuraService;
+  return {
+    serviceName: hasuraService.service.name,
+  };
 }
