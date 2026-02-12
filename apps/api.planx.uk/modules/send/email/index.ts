@@ -10,7 +10,9 @@ import type { SendIntegrationController } from "../types.js";
 import {
   checkEmailAuditTable,
   getSessionEmailDetailsById,
+  // getFlowId,
   getTeamEmailSettings,
+  // getSubmissionEmail,
   insertAuditEntry,
 } from "./service.js";
 import type {
@@ -32,13 +34,19 @@ export const sendToEmail: SendIntegrationController = async (
 
   try {
     // Confirm this local authority (aka team) has an email configured in teams.submission_email
-    const { teamSettings } = await getTeamEmailSettings(localAuthority);
+    // MULTIPLE SUBMISSION TODO change check
+    const { id: teamId, teamSettings } =
+      await getTeamEmailSettings(localAuthority);
     if (!teamSettings.submissionEmail) {
       return next({
         status: 400,
         message: `Send to email is not enabled for this local authority (${localAuthority})`,
       });
     }
+
+    // MULTIPLE SUBMISSION TODO (uncomment)
+    // const flowId = await getFlowId(sessionId);
+    // const submissionEmail = await getSubmissionEmail(flowId, teamId);
 
     // Confirm that this session has not already been successfully submitted before proceeding
     const lastSubmittedAppStatus = await checkEmailAuditTable(sessionId);
@@ -58,7 +66,7 @@ export const sendToEmail: SendIntegrationController = async (
     // Send the email
     const response = await sendEmail(
       "submit",
-      teamSettings.submissionEmail,
+      teamSettings.submissionEmail, // MULTIPLE SUBMISSION TODO use submissionEmail or
       config,
     );
 
@@ -69,14 +77,14 @@ export const sendToEmail: SendIntegrationController = async (
     insertAuditEntry(
       sessionId,
       localAuthority,
-      teamSettings.submissionEmail,
+      teamSettings.submissionEmail, // MULTIPLE SUBMISSION TODO use submissionEmail
       config,
       response,
     );
 
     return res.status(200).send({
       message: `Successfully sent to email`,
-      inbox: teamSettings.submissionEmail,
+      inbox: teamSettings.submissionEmail, // MULTIPLE SUBMISSION TODO use submissionEmail
       govuk_notify_template: "Submit",
     });
   } catch (error) {
@@ -104,7 +112,7 @@ const getSubmitEmailConfig = async ({
       await getSessionEmailDetailsById(sessionId);
 
     // Type narrowing
-    if (!teamSettings.submissionEmail) throw Error("Submission email missing!");
+    if (!teamSettings.submissionEmail) throw Error("Submission email missing!"); // MULTIPLE SUBMISSION TODO
 
     const projectTypes = passportData["proposal.projectType"] as
       | string[]

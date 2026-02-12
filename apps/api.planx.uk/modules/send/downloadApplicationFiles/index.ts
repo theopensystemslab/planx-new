@@ -4,7 +4,7 @@ import {
   getFlowId,
   getSessionData,
   getTeamEmailSettings,
-  getSubmissionEmail,
+  // getSubmissionEmail,
 } from "../email/service.js";
 import { logDuration } from "../../../lib/performance.js";
 
@@ -31,7 +31,30 @@ export async function downloadApplicationFiles(
     // Confirm that the provided email matches the stored team settings for the provided localAuthority
     const { id: teamId, teamSettings } =
       await getTeamEmailSettings(localAuthority);
+
+    // Get flow ID, in order to access flow submission email
+    const flowId = await getFlowId(sessionId);
+    console.log({ flowId });
+    if (!flowId) {
+      return next({
+        status: 400,
+        message: "Failed to find flow ID for this sessionId",
+      });
+    }
+
+    // MULTIPLE SUBMISSION TODO: Toggle this back on once record automatically created and all values populated
+    // Get the flow submission email, which will run parallel to getTeamEmailSettings for now
+    // const submissionEmail = await getSubmissionEmail(flowId, teamId);
+    // if (!submissionEmail) {
+    //   return next({
+    //     status: 400,
+    //     message: "Failed to retrieve submission email for this flow",
+    //   });
+    // }
+
     if (teamSettings.submissionEmail !== decodeURIComponent(email)) {
+      // MULTIPLE SUBMISSION TODO: use submissionEmail
+
       return next({
         status: 403,
         message:
@@ -45,26 +68,6 @@ export async function downloadApplicationFiles(
       return next({
         status: 400,
         message: "Failed to find session data for this sessionId",
-      });
-    }
-
-    // Get flow ID, in order to access flow submission email
-    const flowId = await getFlowId(sessionId);
-    if (!flowId) {
-      return next({
-        status: 400,
-        message: "Failed to find flow ID for this sessionId",
-      });
-    }
-
-    // TODO: Toggle this back on once record automatically created and all values populated
-
-    // Get the flow submission email, which will run parallel to getTeamEmailSettings for now
-    const submissionEmail = await getSubmissionEmail(flowId, teamId);
-    if (!submissionEmail) {
-      return next({
-        status: 400,
-        message: "Failed to retrieve submission email for this flow",
       });
     }
 
