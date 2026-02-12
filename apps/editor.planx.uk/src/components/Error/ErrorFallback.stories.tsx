@@ -17,5 +17,6 @@ export const Basic = {
       name: "Storybook test",
       message: "Failed to fetch data",
     },
+    resetErrorBoundary: () => null,
   },
 } satisfies Story;

@@ -313,7 +313,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
                       disablePadding
                       sx={{
                         display: "list-item",
-                        fontSize: (theme) => theme.typography.body2,
+                        fontSize: (theme) => theme.typography.body2.fontSize,
                       }}
                     >
                       {`${templatedFlow.team.slug}/${templatedFlow.slug} (${templatedFlow.status})`}

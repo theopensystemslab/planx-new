@@ -51,6 +51,8 @@ describe("globalLayoutRoutes", () => {
       href: "/",
       state: { __TSR_index: 0 },
       searchStr: "",
+      publicHref: "",
+      external: false,
     });
   });
 
@@ -81,6 +83,8 @@ describe("teamLayoutRoutes", () => {
       href: "/test-team",
       state: { __TSR_index: 0 },
       searchStr: "",
+      publicHref: "",
+      external: false,
     });
     mockTeamName = "test-team";
     mockGetTeam.mockReturnValue({ settings: { referenceCode: null } });
@@ -129,6 +133,8 @@ describe("teamPlanningDataRoute", () => {
       href: "/test-team",
       state: { __TSR_index: 0 },
       searchStr: "",
+      publicHref: "",
+      external: false,
     });
     mockTeamName = "test-team";
   });
@@ -157,6 +163,8 @@ describe("flowLayoutRoutes", () => {
       href: "/test-team/test-flow",
       state: { __TSR_index: 0 },
       searchStr: "",
+      publicHref: "",
+      external: false,
     });
     mockTeamName = "test-team";
     mockFlowName = "test-flow";
@@ -192,6 +200,8 @@ describe("flowAnalyticsRoute", () => {
       href: "/test-team/test-flow",
       state: { __TSR_index: 0 },
       searchStr: "",
+      publicHref: "",
+      external: false,
     });
     mockTeamName = "test-team";
     mockFlowName = "test-flow";
@@ -220,6 +230,8 @@ describe("layout", () => {
       href: "/",
       state: { __TSR_index: 0 },
       searchStr: "",
+      publicHref: "",
+      external: false,
     });
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
 
@@ -241,6 +253,8 @@ describe("layout", () => {
       href: "/test-team",
       state: { __TSR_index: 0 },
       searchStr: "",
+      publicHref: "",
+      external: false,
     });
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
     mockTeamName = "test-team";
@@ -263,6 +277,8 @@ describe("layout", () => {
       href: "/test-team/test-flow",
       state: { __TSR_index: 0 },
       searchStr: "",
+      publicHref: "",
+      external: false,
     });
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
     mockTeamName = "test-team";

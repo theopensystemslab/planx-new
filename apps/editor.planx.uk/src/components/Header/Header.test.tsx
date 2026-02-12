@@ -122,6 +122,8 @@ describe("Header Component - Editor Route", () => {
       href: "/team-name/flow-name",
       state: { __TSR_index: 0 },
       searchStr: "",
+      publicHref: "",
+      external: false,
     });
 
     mockUseParams.mockReturnValue({
@@ -164,6 +166,8 @@ for (const route of ["/published", "/preview", "/draft", "/pay", "/invite"]) {
         href: "/opensystemslab/test-flow" + route,
         state: { __TSR_index: 0 },
         searchStr: "",
+        publicHref: "",
+        external: false,
       });
 
       mockUseParams.mockReturnValue({
@@ -229,6 +233,8 @@ describe("Section navigation bar", () => {
       href: "/team-name/flow-name/published",
       state: { __TSR_index: 0 },
       searchStr: "",
+      publicHref: "",
+      external: false,
     });
 
     mockUseParams.mockReturnValue({

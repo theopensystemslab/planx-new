@@ -67,7 +67,8 @@ export default function Component(props: Props) {
 }
 
 interface RootProps
-  extends Omit<SectionsOverviewListProps, "showChange" | "nextQuestion">,
+  extends
+    Omit<SectionsOverviewListProps, "showChange" | "nextQuestion">,
     Props {
   currentSectionIndex: number;
   flowName: string;

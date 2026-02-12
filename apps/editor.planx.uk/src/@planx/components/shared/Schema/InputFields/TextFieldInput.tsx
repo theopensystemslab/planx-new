@@ -23,9 +23,9 @@ export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
 
   const displayCharacterCount = Boolean(
     characterCountLimit &&
-      characterCountLimit > 120 &&
-      characterCountLimit <= 1500 &&
-      data.type !== TextInputType.Email,
+    characterCountLimit > 120 &&
+    characterCountLimit <= 1500 &&
+    data.type !== TextInputType.Email,
   );
 
   return (
@@ -43,8 +43,8 @@ export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
         })(data.type)}
         multiline={Boolean(
           characterCountLimit &&
-            characterCountLimit > 120 &&
-            data.type !== TextInputType.Email,
+          characterCountLimit > 120 &&
+          data.type !== TextInputType.Email,
         )}
         bordered
         rows={
