@@ -24,7 +24,7 @@ import React, { useMemo, useRef, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
 import { Switch } from "ui/shared/Switch";
-import { getNodeRoute, rootFlowPath } from "utils/routeUtils/utils";
+import { getNodeRoute } from "utils/routeUtils/utils";
 
 import { fromSlug, SLUGS } from "../../data/types";
 import { useStore } from "../../lib/store";
@@ -403,7 +403,10 @@ const FormModal: React.FC<FormModalProps> = ({
                   }
                 }
 
-                navigate({ to: rootFlowPath(true) });
+                navigate({
+                  to: "/app/$team/$flow",
+                  params: { team: teamSlug, flow: flowSlug },
+                });
               }}
             />
           </ErrorBoundary>

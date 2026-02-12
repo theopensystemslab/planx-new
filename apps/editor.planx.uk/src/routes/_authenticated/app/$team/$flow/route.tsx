@@ -33,27 +33,30 @@ export const Route = createFileRoute("/_authenticated/app/$team/$flow")({
       ]),
     ],
   },
-  beforeLoad: async ({ params }) => {
-    const { team: teamSlug, flow: flowSlug } = params;
+  context: ({ params }) => {
+    const [rootFlow, ...folderIds] = params.flow.split(",");
+
+    return { rootFlow, folderIds };
+  },
+  beforeLoad: async ({ params, context: { rootFlow } }) => {
+    const { team: teamSlug } = params;
     const store = useStore.getState();
 
-    const actualFlowSlug = flowSlug.split(",")[0];
-
     // Don't re-connect to document when navigating to nested flows
-    if (store.flowSlug === actualFlowSlug) return;
+    if (store.flowSlug === rootFlow) return;
 
     try {
       // Ensure we only have a single active connection
       store.disconnectFromFlow();
 
-      const flow = await getBasicFlowData(actualFlowSlug, teamSlug);
+      const flow = await getBasicFlowData(rootFlow, teamSlug);
       await store.connectToFlow(flow.id);
       useStore.setState({
         flowName: flow.name,
-        flowSlug: actualFlowSlug,
+        flowSlug: rootFlow,
       });
 
-      const flowEditorData = await getFlowEditorData(actualFlowSlug, teamSlug);
+      const flowEditorData = await getFlowEditorData(rootFlow, teamSlug);
 
       useStore.setState({
         id: flowEditorData.id,
@@ -68,7 +71,7 @@ export const Route = createFileRoute("/_authenticated/app/$team/$flow")({
         store.setOrderedFlow();
       }
 
-      store.getFlowInformation(actualFlowSlug, teamSlug);
+      store.getFlowInformation(rootFlow, teamSlug);
     } catch (error) {
       throw notFound();
     }

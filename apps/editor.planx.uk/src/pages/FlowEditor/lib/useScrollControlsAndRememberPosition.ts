@@ -1,3 +1,4 @@
+import { useParams } from "@tanstack/react-router";
 import React, { useEffect } from "react";
 import { fromEvent, merge } from "rxjs";
 import {
@@ -9,12 +10,13 @@ import {
   takeUntil,
   throttleTime,
 } from "rxjs/operators";
-import { rootFlowPath } from "utils/routeUtils/utils";
 
 const useScrollControlsAndRememberPosition = (
   scrollContainerRef: React.RefObject<HTMLDivElement> | null,
 ) => {
-  const currentPath = rootFlowPath(true);
+  const { flow: currentPath } = useParams({
+    from: "/_authenticated/app/$team/$flow",
+  });
 
   useEffect(() => {
     const container = scrollContainerRef?.current;

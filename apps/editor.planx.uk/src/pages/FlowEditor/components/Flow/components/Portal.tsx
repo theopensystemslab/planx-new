@@ -13,7 +13,6 @@ import React, { useEffect, useState } from "react";
 import { useDrag } from "react-dnd";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 import EditorIcon from "ui/icons/Editor";
-import { rootFlowPath } from "utils/routeUtils/utils";
 
 import { getParentId } from "../lib/utils";
 import Hanger from "./Hanger";
@@ -166,16 +165,13 @@ const ExternalPortal: React.FC<any> = (props) => {
 };
 
 const InternalPortal: React.FC<any> = (props) => {
-  const href = props.data.href || `${rootFlowPath(true)},${props.id}`;
-
+  const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
   const parent = getParentId(props.parent);
 
   const { isClone, showTags } = useStore((state) => ({
     isClone: state.isClone,
     showTags: state.showTags,
   }));
-
-  const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
   const [{ isDragging }, drag] = useDrag({
     item: {
@@ -223,7 +219,11 @@ const InternalPortal: React.FC<any> = (props) => {
           >
             <Box sx={{ display: "flex", alignItems: "stretch" }}>
               <Link
-                to={href}
+                to={`/app/$team/$flow`}
+                params={{
+                  team,
+                  flow: `${flow},${props.id}`,
+                }}
                 preload={false}
                 ref={drag}
                 onContextMenu={handleContextMenu}
