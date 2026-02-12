@@ -3,10 +3,11 @@ import Card from "@planx/components/shared/Preview/Card";
 import { ErrorSummaryContainer } from "@planx/components/shared/Preview/ErrorSummaryContainer";
 import { logger } from "airbrake";
 import React from "react";
+import type { FallbackProps } from "react-error-boundary";
 
 import { GraphErrorComponent, isGraphError } from "./GraphError";
 
-const ErrorFallback: React.FC<{ error: Error }> = ({ error }) => {
+const ErrorFallback: React.FC<FallbackProps> = ({ error }) => {
   if (isGraphError(error)) return <GraphErrorComponent error={error} />;
 
   logger.notify(error);
@@ -18,9 +19,9 @@ const ErrorFallback: React.FC<{ error: Error }> = ({ error }) => {
           Something went wrong
         </Typography>
         <Typography>
-          {error.message && (
+          {(error as Error).message && (
             <pre style={{ color: "#E91B0C", whiteSpace: "pre-line" }}>
-              {error.message}
+              {(error as Error).message}
             </pre>
           )}
         </Typography>

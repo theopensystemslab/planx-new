@@ -43,7 +43,9 @@ const EventsLog: React.FC<EventsLogProps> = ({
         text="Fetching events..."
       />
     );
-  if (error) return <ErrorFallback error={error} />;
+
+  if (error) throw error;
+
   if (submissions.length === 0)
     return (
       <SettingsSection>

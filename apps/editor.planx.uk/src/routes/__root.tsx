@@ -123,7 +123,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       );
     }
 
-    return <ErrorFallback error={error} />;
+    throw error;
   },
 
   notFoundComponent: CatchAllComponent,
