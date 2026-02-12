@@ -234,7 +234,9 @@ export = async () => {
       unhealthyThreshold: 10,
     },
   });
+  // TODO: understand why we don't need to listen on 443 (i.e. can't receive https connections??)
   const metabaseListenerHttp = new aws.lb.Listener("metabase-http", {
+    // NB. default action is always evaluated last (i.e. if no other rule/action is triggered)
     defaultActions: [{
       type: "forward",
       targetGroupArn: metabaseTargetGroup.arn,
@@ -244,7 +246,6 @@ export = async () => {
     protocol: "HTTP",
   });
 
-  // TODO: ensure cloudflare logic makes sense with rewrite
   addRedirectToCloudFlareListenerRule({
     serviceName: "metabase",
     listener: metabaseListenerHttp,
