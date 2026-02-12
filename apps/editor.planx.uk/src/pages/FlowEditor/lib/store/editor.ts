@@ -810,7 +810,7 @@ export const editorStore: StateCreator<
         ? `nodes/${grandparent.id}/nodes/${parent.id}/edit#${node.id}`
         : `nodes/${parent.id}/nodes/${node.id}/edit`;
 
-    const urlPath = `/${teamSlug}/${flowSlug}${portalPath}/${nodePath}`;
+    const urlPath = `/app/${teamSlug}/${flowSlug}${portalPath}/${nodePath}`;
     return urlPath;
   },
 
