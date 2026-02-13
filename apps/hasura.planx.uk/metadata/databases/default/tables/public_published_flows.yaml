@@ -5,6 +5,15 @@ object_relationships:
   - name: flow
     using:
       foreign_key_constraint_on: flow_id
+  - name: submission_integration
+    using:
+      manual_configuration:
+        column_mapping:
+          submission_email_id: id
+        insertion_order: null
+        remote_table:
+          name: submission_integrations
+          schema: public
   - name: user
     using:
       foreign_key_constraint_on: publisher_id
