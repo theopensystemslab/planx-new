@@ -1,0 +1,11 @@
+UPDATE analytics_logs
+SET allow_list_answers = jsonb_set(
+  allow_list_answers,
+  '{rab.exitReason}',
+  (
+    SELECT jsonb_agg(value ORDER BY key::int)
+    FROM jsonb_each(allow_list_answers -> 'rab.exitReason')
+  )
+)
+WHERE allow_list_answers ? 'rab.exitReason'
+  AND jsonb_typeof(allow_list_answers -> 'rab.exitReason') = 'object';
