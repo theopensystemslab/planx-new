@@ -3,12 +3,27 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
+import { createAllIpv4EgressRule, createIpv4IngressRule } from "../common/utils";
+
 const config = new pulumi.Config();
 
 const DB_ROOT_USERNAME = "dbuser";
 
 const env = pulumi.getStack();
 const networking = new pulumi.StackReference(`planx/networking/${env}`);
+
+const vpcId = networking.requireOutput("vpcId") as pulumi.Output<string>;
+
+// create dedicated security group and ingress/egress rules for the RDS instance
+const dbSecurityGroup = new aws.ec2.SecurityGroup("db-sg", {
+  description: "Security group for RDS instance",
+  vpcId: vpcId,
+});
+
+// current best practice would have us create ingress/egress rules separately, as below (rather than inline in SecurityGroup defn)
+createIpv4IngressRule(dbSecurityGroup.id, "db", [22]);
+createIpv4IngressRule(dbSecurityGroup.id, "db", [5432]);
+createAllIpv4EgressRule(dbSecurityGroup.id, "db-allow-ipv4-out");
 
 // ShareDB does not use SSL - from Postgres 16 onwards this is forced on my default
 // Create a parameter group which turns this setting off
@@ -33,9 +48,8 @@ const db = new aws.rds.Instance("app", {
   instanceClass: env === "production" ? "db.t3.medium" : "db.t3.small",
   allocatedStorage: env === "production" ? 100 : 20,
   allowMajorVersionUpgrade: true,
-  dbSubnetGroupName: networking.requireOutput("subnetId"),
-  vpcSecurityGroupIds: networking.requireOutput("vpcSecurityGroupIds"),
-  name: "app",
+  dbSubnetGroupName: networking.requireOutput("dbSubnetGroupId"),
+  vpcSecurityGroupIds: [dbSecurityGroup.id],
   username: DB_ROOT_USERNAME,
   password: config.require("db-password"),
   // we should keep a snapshot in case of (potentially mistaken) deletion

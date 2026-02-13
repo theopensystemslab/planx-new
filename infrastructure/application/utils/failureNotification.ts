@@ -10,7 +10,7 @@ import * as awsx from "@pulumi/awsx";
 export const setupNotificationForDeploymentRollback = (
   env: string,
   simpleServiceName: string,
-  cluster: awsx.ecs.Cluster,
+  cluster: aws.ecs.Cluster,
   service: awsx.ecs.FargateService
 ) => {
   const config = new pulumi.Config();
@@ -55,11 +55,11 @@ export const setupNotificationForDeploymentRollback = (
       eventPattern: pulumi.jsonStringify({
         source: ["aws.ecs"],
         "detail-type": ["ECS Deployment State Change"],
-        // with awsx at 0.x, we can't get the service ARN directly, so we filter on service name
+        // TODO: use the service ARN directly, instead of filtering on service name (which is less robust)
         // see https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-create-pattern-operators.html
         resources: [{ "suffix": { "equals-ignore-case": service.service.name }}],
         detail: {
-          clusterArn: [cluster.cluster.arn],
+          clusterArn: [cluster.arn],
           eventType: ["ERROR"],
           eventName: ["SERVICE_DEPLOYMENT_FAILED"],
         }

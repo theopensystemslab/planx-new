@@ -1,5 +1,8 @@
 name: certificates
-runtime: nodejs
 description: SSL certificates layer
+runtime:
+  name: nodejs
+  options:
+    packagemanager: pnpm
 config:
   aws:region: eu-west-2

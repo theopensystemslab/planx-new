@@ -1,4 +1,4 @@
-import * as awsx from "@pulumi/awsx";
+import * as aws from "@pulumi/aws";
 
 /**
  * Restrict access to ELB directly by redirecting all traffic via our DNS
@@ -6,10 +6,12 @@ import * as awsx from "@pulumi/awsx";
  */
 export const addRedirectToCloudFlareListenerRule = async ({ serviceName, listener, domain }: {
   serviceName: string;
-  listener: awsx.elasticloadbalancingv2.ApplicationListener;
+  listener: aws.lb.Listener;
   domain: string;
 }) => {
-  listener.addListenerRule(`${serviceName}-redirectToCloudFlare`, {
+  new aws.lb.ListenerRule(`${serviceName}-redirectToCloudFlare`, {
+    listenerArn: listener.arn,
+    priority: 100,
     actions: [{
       type: "redirect",
       redirect: {
