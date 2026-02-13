@@ -1,5 +1,6 @@
 import Link from "@mui/material/Link";
 import { useFormikContext } from "formik";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import SettingsDescription from "ui/editor/SettingsDescription";
 import { Switch } from "ui/shared/Switch";
@@ -7,6 +8,8 @@ import { Switch } from "ui/shared/Switch";
 import { LPSListingFormValues } from "../types";
 
 const ToggleLPS: React.FC = () => {
+  const isTrial = useStore((state) => state.getTeam().settings.isTrial);
+
   const { values, errors, setFieldValue } =
     useFormikContext<LPSListingFormValues>();
 
@@ -23,6 +26,7 @@ const ToggleLPS: React.FC = () => {
         variant="editorPage"
         checked={values.isListedOnLPS}
         onChange={() => setFieldValue("isListedOnLPS", !values.isListedOnLPS)}
+        disabled={isTrial}
       />
       <SettingsDescription>
         <p>
