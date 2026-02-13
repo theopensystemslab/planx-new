@@ -70,7 +70,7 @@ interface GetPublishedFlowIntegration {
 async function getPublishedFlowIntegration(flowId: string) {
   const response = await $api.client.request<GetPublishedFlowIntegration>(
     gql`
-      query getPublishedFlowIntegration($flowId: uuid!) {
+      query GetPublishedFlowIntegration($flowId: uuid!) {
         publishedFlows: published_flows(
           where: { flow_id: { _eq: $flowId } }
           order_by: [{ flow_id: asc }, { created_at: desc }]

@@ -273,12 +273,11 @@ describe(`downloading application data received by email`, () => {
     });
 
     queryMock.mockQuery({
-      name: "GetFlowSubmissionEmail",
+      name: "GetPublishedFlowIntegration",
       matchOnVariables: true,
       data: {
-        flowIntegrations: [
+        publishedFlows: [
           {
-            emailId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
             submissionIntegration: {
               submissionEmail: "planning.office.example@council.gov.uk",
             },
@@ -288,6 +287,8 @@ describe(`downloading application data received by email`, () => {
       variables: { flowId: "91693304-fc37-4079-8ec3-e33a6164a27a" },
     });
   });
+
+  //  MULTIPLE SUBMISSION TODO: add test for fallback logic
 
   it("errors if required query params are missing", async () => {
     await supertest(app)
@@ -303,7 +304,7 @@ describe(`downloading application data received by email`, () => {
   it("errors if email query param does not match the stored database value for this team", async () => {
     await supertest(app)
       .get(
-        "/download-application-files/123?email=wrong@council.gov.uk&localAuthority=southwark",
+        "/download-application-files/33d373d4-fff2-4ef7-a5f2-2a36e39ccc49?email=wrong@council.gov.uk&localAuthority=southwark",
       )
       .expect(403)
       .then((res) => {
@@ -321,6 +322,15 @@ describe(`downloading application data received by email`, () => {
         session: { data: null },
       },
       variables: { id: "456" },
+    });
+
+    queryMock.mockQuery({
+      name: "GetFlowId",
+      matchOnVariables: false,
+      data: {
+        lowcalSessions: [],
+      },
+      variables: { session_id: "456" },
     });
 
     await supertest(app)
@@ -357,6 +367,7 @@ describe(`downloading application data received by email`, () => {
       });
   });
 
+  // MULTIPLE SUBMISSION TODO
   it.skip("errors if submissionEmail is missing in GetFlowSubmissionEmail query response", async () => {
     queryMock.mockQuery({
       name: "GetFlowSubmissionEmail",

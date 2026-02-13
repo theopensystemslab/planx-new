@@ -32,26 +32,6 @@ export async function downloadApplicationFiles(
     const { id: teamId, teamSettings } =
       await getTeamEmailSettings(localAuthority);
 
-    // Get flow ID, in order to access flow submission email
-    const flowId = await getFlowId(sessionId);
-    console.log({ flowId });
-    if (!flowId) {
-      return next({
-        status: 400,
-        message: "Failed to find flow ID for this sessionId",
-      });
-    }
-
-    // MULTIPLE SUBMISSION TODO: Toggle this back on once record automatically created and all values populated
-    // Get the flow submission email, which will run parallel to getTeamEmailSettings for now
-    // const submissionEmail = await getSubmissionEmail(flowId, teamId);
-    // if (!submissionEmail) {
-    //   return next({
-    //     status: 400,
-    //     message: "Failed to retrieve submission email for this flow",
-    //   });
-    // }
-
     if (teamSettings.submissionEmail !== decodeURIComponent(email)) {
       // MULTIPLE SUBMISSION TODO: use submissionEmail
 
@@ -70,6 +50,25 @@ export async function downloadApplicationFiles(
         message: "Failed to find session data for this sessionId",
       });
     }
+
+    // Get flow ID, in order to access flow submission email
+    const flowId = await getFlowId(sessionId);
+    if (!flowId) {
+      return next({
+        status: 400,
+        message: "Failed to find flow ID for this sessionId",
+      });
+    }
+
+    // MULTIPLE SUBMISSION TODO: Toggle this back on once record automatically created and all values populated
+    // Get the flow submission email, which will run parallel to getTeamEmailSettings for now
+    // const submissionEmail = await getSubmissionEmail(flowId, teamId);
+    // if (!submissionEmail) {
+    //   return next({
+    //     status: 400,
+    //     message: "Failed to retrieve submission email for this flow",
+    //   });
+    // }
 
     // create the submission zip
     const zip = await logDuration(`zipTotal-${sessionId}`, () =>
