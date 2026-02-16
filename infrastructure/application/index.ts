@@ -23,6 +23,7 @@ import {
   generateTeamSecrets,
   getJavaOpts,
   getPostgresDbUrl,
+  setupLoadBalancerForService,
   setupNotificationForDeploymentRollback,
   usEast1,
 } from "./utils";
@@ -196,36 +197,16 @@ export = async () => {
   );
 
   const METABASE_PORT = 3000;
-  // TODO: abstract ideal setup pattern for all services (main differentiation is in task definition and service config)
-  // prepare security groups as per AWS docs, with SG for load balancer and Fargate service serving as source/destination for each other
-  // see: https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-update-security-groups.html
-  const metabaseLbSecurityGroup = new aws.ec2.SecurityGroup("metabase-lb-sg", {
-    description: "Security group for Metabase load balancer",
-    vpcId: vpcId,
-  });
-  const metabaseServiceSecurityGroup = new aws.ec2.SecurityGroup("metabase-service-sg", {
-    description: "Security group for Metabase Fargate service",
-    vpcId: vpcId,
-  });
-  // LB SG accepts traffic from open internet, and allows outbound traffic only to Fargate service SG
-  createAllIpv4IngressRule(metabaseLbSecurityGroup.id, "metabase-lb");
-  createDestinationSgEgressRule(metabaseLbSecurityGroup.id, "metabase-lb", [METABASE_PORT], metabaseServiceSecurityGroup.id);
-  // SG for the Fargate service accepts inbound traffic only from the LB SG, and allows outbound traffic to open internet
-  createSourceSgIngressRule(metabaseServiceSecurityGroup.id, "metabase-service", [METABASE_PORT], metabaseLbSecurityGroup.id);
-  createAllIpv4EgressRule(metabaseServiceSecurityGroup.id, "metabase-service");
-
-  const metabaseLb = new awsx.lb.ApplicationLoadBalancer("metabase-lb", {
-    internal: false,
-    subnetIds: publicSubnetIds,
-    // NB. VPC to be which the ALB belongs is conveyed by the security group
-    securityGroups: [metabaseLbSecurityGroup.id],
-  });
-  
-  // tag on a listener with metabase container as target
-  const metabaseTargetGroup = new aws.lb.TargetGroup("metabase", {
-    port: METABASE_PORT,
-    protocol: "HTTP",
-    vpcId: vpcId,
+  const {
+    loadBalancer: metabaseLb,
+    targetGroup: metabaseTargetGroup,
+    serviceSecurityGroup: metabaseServiceSecurityGroup,
+  } = await setupLoadBalancerForService({
+    serviceName: "metabase",
+    containerPort: METABASE_PORT,
+    vpcId,
+    publicSubnetIds,
+    domain: DOMAIN,
     healthCheck: {
       path: "/api/health",
       // XXX: Attempt to fix "504 Gateway Time-out"
@@ -233,24 +214,7 @@ export = async () => {
       interval: 300,
       timeout: 120,
       unhealthyThreshold: 10,
-    },
-  });
-  // XXX: we should accept HTTPS connections (i.e. traffic from Cloudflare reverse proxy to AWS is unencrypted !?)
-  const metabaseListenerHttp = new aws.lb.Listener("metabase-http", {
-    loadBalancerArn: metabaseLb.loadBalancer.arn,
-    port: 80,
-    protocol: "HTTP",
-    // NB. default action is always evaluated last (i.e. if no other rule/action is triggered)
-    defaultActions: [{
-      type: "forward",
-      targetGroupArn: metabaseTargetGroup.arn,
-    }],
-  });
-
-  addRedirectToCloudFlareListenerRule({
-    serviceName: "metabase",
-    listener: metabaseListenerHttp,
-    domain: DOMAIN,
+    }
   });
   
   // since our secrets here are of the type Output<string>, we have to use Pulumi methods to access them as strings
@@ -335,19 +299,16 @@ export = async () => {
   // we'll also pass this database URI to sharedb later on
   const rootDbUrl = pulumi.all([dbHost, dbRootPassword]).apply(([dbHost, dbRootPassword]) => 
     getPostgresDbUrl(dbUser, dbRootPassword, dbHost))
+  // TODO: pull other services out into their own separate files
   const hasuraService = await createHasuraService({
     env,
     vpcId,
     publicSubnetIds,
+    domain: DOMAIN,
     cluster,
     repo,
     dbUrl: rootDbUrl,
-    CUSTOM_DOMAINS,
-    stacks: {
-      networking,
-      certificates,
-      data,
-    },
+    customDomains: CUSTOM_DOMAINS,
   });
 
   // ----------------------- API
@@ -391,47 +352,18 @@ export = async () => {
   });
 
   const API_PORT = 80;
-  const apiLbSecurityGroup = new aws.ec2.SecurityGroup("api-lb-sg", {
-    description: "Security group for API load balancer",
-    vpcId: vpcId,
-  });
-  const apiServiceSecurityGroup = new aws.ec2.SecurityGroup("api-service-sg", {
-    description: "Security group for API Fargate service",
-    vpcId: vpcId,
-  });
-  createAllIpv4IngressRule(apiLbSecurityGroup.id, "api-lb");
-  createDestinationSgEgressRule(apiLbSecurityGroup.id, "api-lb", [API_PORT], apiServiceSecurityGroup.id);
-  createSourceSgIngressRule(apiServiceSecurityGroup.id, "api-service", [API_PORT], apiLbSecurityGroup.id);
-  createAllIpv4EgressRule(apiServiceSecurityGroup.id, "api-service");
-
-  const apiLb = new awsx.lb.ApplicationLoadBalancer("api-lb", {
-    internal: false,
-    subnetIds: publicSubnetIds,
-    securityGroups: [apiLbSecurityGroup.id],
-    idleTimeout: 120,
-  });
-  const targetApi = new aws.lb.TargetGroup("api", {
-    port: API_PORT,
-    protocol: "HTTP",
-    vpcId: vpcId,
-    healthCheck: {
-      path: "/",
-    },
-  });
-  const apiListenerHttp = new aws.lb.Listener("api-http", {
-    loadBalancerArn: apiLb.loadBalancer.arn,
-    port: 80,
-    protocol: "HTTP",
-    defaultActions: [{
-      type: "forward",
-      targetGroupArn: targetApi.arn,
-    }],
-  });
-
-  addRedirectToCloudFlareListenerRule({
+  const {
+    loadBalancer: apiLb,
+    targetGroup: apiTargetGroup,
+    serviceSecurityGroup: apiServiceSecurityGroup,
+  } = await setupLoadBalancerForService({
     serviceName: "api",
-    listener: apiListenerHttp,
+    containerPort: API_PORT,
+    vpcId,
+    publicSubnetIds,
     domain: DOMAIN,
+    idleTimeout: 120,
+    healthCheck: { path: "/" },
   });
 
   const apiImage = new awsx.ecr.Image("api-image", {
@@ -453,7 +385,7 @@ export = async () => {
       essential: true,
       cpu: 2048,
       memory: 4096 /*MB*/,
-      portMappings: [{ targetGroup: targetApi }],
+      portMappings: [{ targetGroup: apiTargetGroup }],
       environment: [
           { name: "NODE_ENV", value: env },
           { name: "APP_ENVIRONMENT", value: env },
@@ -663,28 +595,16 @@ export = async () => {
 
   // ----------------------- ShareDB
   const SHAREDB_PORT = 80;
-  const sharedbLbSecurityGroup = new aws.ec2.SecurityGroup("sharedb-lb-sg", {
-    description: "Security group for ShareDB load balancer",
-    vpcId: vpcId,
-  });
-  const sharedbServiceSecurityGroup = new aws.ec2.SecurityGroup("sharedb-service-sg", {
-    description: "Security group for ShareDB Fargate service",
-    vpcId: vpcId,
-  });
-  createAllIpv4IngressRule(sharedbLbSecurityGroup.id, "sharedb-lb");
-  createDestinationSgEgressRule(sharedbLbSecurityGroup.id, "sharedb-lb", [SHAREDB_PORT], sharedbServiceSecurityGroup.id);
-  createSourceSgIngressRule(sharedbServiceSecurityGroup.id, "sharedb-service", [SHAREDB_PORT], sharedbLbSecurityGroup.id);
-  createAllIpv4EgressRule(sharedbServiceSecurityGroup.id, "sharedb-service");
-
-  const sharedbLb = new awsx.lb.ApplicationLoadBalancer("sharedb-lb", {
-    internal: false,
-    subnetIds: publicSubnetIds,
-    securityGroups: [sharedbLbSecurityGroup.id],
-  });
-  const targetSharedb = new aws.lb.TargetGroup("sharedb", {
-    port: SHAREDB_PORT,
-    protocol: "HTTP",
-    vpcId: vpcId,
+    const {
+    loadBalancer: sharedbLb,
+    targetGroup: sharedbTargetGroup,
+    serviceSecurityGroup: sharedbServiceSecurityGroup,
+  } = await setupLoadBalancerForService({
+    serviceName: "sharedb",
+    containerPort: SHAREDB_PORT,
+    vpcId,
+    publicSubnetIds,
+    domain: DOMAIN,
     healthCheck: {
       path: "/",
       matcher: "426", // "HTTP 426 Upgrade Required"
@@ -693,21 +613,6 @@ export = async () => {
       enabled: true,
       type: "lb_cookie", // default duration will be 1 day (86400s)
     },
-  });
-  const sharedbListenerHttp = new aws.lb.Listener("sharedb-http", {
-    loadBalancerArn: sharedbLb.loadBalancer.arn,
-    port: 80,
-    protocol: "HTTP",
-    defaultActions: [{
-      type: "forward",
-      targetGroupArn: targetSharedb.arn,
-    }],
-  });
-
-  addRedirectToCloudFlareListenerRule({
-    serviceName: "sharedb",
-    listener: sharedbListenerHttp,
-    domain: DOMAIN,
   });
 
   const sharedbImage = new awsx.ecr.Image("sharedb-image", {
@@ -725,7 +630,7 @@ export = async () => {
       image: sharedbImage.imageUri,
       essential: true,
       memory: 512 /*MB*/,
-      portMappings: [{ targetGroup: targetSharedb }],
+      portMappings: [{ targetGroup: sharedbTargetGroup }],
       environment: [
         { name: "PORT", value: String(SHAREDB_PORT) },
         { name: "API_URL_EXT", value: `https://api.${DOMAIN}` },

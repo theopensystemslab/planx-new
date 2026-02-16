@@ -3,19 +3,26 @@ import * as awsx from "@pulumi/awsx";
 import * as pulumi from "@pulumi/pulumi";
 import { CustomDomain } from "../common/teams";
 
+export interface SetupLoadBalancer {
+  serviceName: string,
+  containerPort: number,
+  vpcId: pulumi.Output<string>,
+  publicSubnetIds: pulumi.Output<string[]>,
+  domain: string,
+  idleTimeout?: number,
+  healthCheck?: aws.types.input.lb.TargetGroupHealthCheck,
+  stickiness?: aws.types.input.lb.TargetGroupStickiness,
+}
+
 export interface CreateService {
   env: string,
   vpcId: pulumi.Output<string>,
   publicSubnetIds: pulumi.Output<string[]>,
+  domain: string,
   cluster: aws.ecs.Cluster,
   repo: awsx.ecr.Repository, 
   dbUrl: pulumi.Output<string>,
-  stacks: {
-    networking: pulumi.StackReference,
-    certificates: pulumi.StackReference,
-    data: pulumi.StackReference,
-  },
-  CUSTOM_DOMAINS: CustomDomain[],
+  customDomains: CustomDomain[],
 };
 
 export type KeyValuePair = {

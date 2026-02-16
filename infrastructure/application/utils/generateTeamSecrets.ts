@@ -1,7 +1,6 @@
 import * as pulumi from "@pulumi/pulumi";
 
 import { teams } from "../../common/teams";
-
 import { KeyValuePair } from "../types";
 
 // Greedily match any non-word characters

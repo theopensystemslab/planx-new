@@ -1,7 +1,6 @@
 import * as pulumi from "@pulumi/pulumi";
 
 import { CustomDomain } from "../../common/teams";
-
 import { KeyValuePair } from "../types";
 
 const config = new pulumi.Config();

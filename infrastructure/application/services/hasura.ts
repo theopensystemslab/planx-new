@@ -8,75 +8,35 @@ import * as tldjs from "tldjs";
 
 import { CreateService } from './../types';
 import {
-  addRedirectToCloudFlareListenerRule,
+  setupLoadBalancerForService,
   setupNotificationForDeploymentRollback,
 } from "../utils";
-import {
-  createAllIpv4IngressRule,
-  createAllIpv4EgressRule,
-  createSourceSgIngressRule,
-  createDestinationSgEgressRule,
-} from "../../common/utils";
 
 export const createHasuraService = async ({
   env,
   vpcId,
   publicSubnetIds,
+  domain,
   cluster,
   repo,
   dbUrl,
-  CUSTOM_DOMAINS,
-  stacks: {
-    networking, certificates, data,
-  },
+  customDomains,
 }: CreateService): Promise<awsx.ecs.FargateService> => {
-
   const config = new pulumi.Config();
-  const DOMAIN: string = await certificates.requireOutputValue("domain");
 
   // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
   const HASURA_PROXY_PORT = 80;
-  const hasuraLbSecurityGroup = new aws.ec2.SecurityGroup("hasura-lb-sg", {
-    description: "Security group for Hasura load balancer",
-    vpcId: vpcId,
-  });
-  const hasuraServiceSecurityGroup = new aws.ec2.SecurityGroup("hasura-service-sg", {
-    description: "Security group for Hasura Fargate service",
-    vpcId: vpcId,
-  });
-  createAllIpv4IngressRule(hasuraLbSecurityGroup.id, "hasura-lb");
-  createDestinationSgEgressRule(hasuraLbSecurityGroup.id, "hasura-lb", [HASURA_PROXY_PORT], hasuraServiceSecurityGroup.id);
-  createSourceSgIngressRule(hasuraServiceSecurityGroup.id, "hasura-service", [HASURA_PROXY_PORT], hasuraLbSecurityGroup.id);
-  createAllIpv4EgressRule(hasuraServiceSecurityGroup.id, "hasura-service");
-
-  const hasuraLb = new awsx.lb.ApplicationLoadBalancer("hasura-lb", {
-    internal: false,
-    subnetIds: publicSubnetIds,
-    securityGroups: [hasuraLbSecurityGroup.id],
-  });
-
-  const hasuraTargetGroup = new aws.lb.TargetGroup("hasura", {
-    port: HASURA_PROXY_PORT,
-    protocol: "HTTP",
-    vpcId: vpcId,
-    healthCheck: {
-      path: "/healthz",
-    },
-  });
-  const hasuraListenerHttp = new aws.lb.Listener("hasura-http", {
-    loadBalancerArn: hasuraLb.loadBalancer.arn,
-    port: 80,
-    protocol: "HTTP",
-    defaultActions: [{
-      type: "forward",
-      targetGroupArn: hasuraTargetGroup.arn,
-    }],
-  });
-
-  addRedirectToCloudFlareListenerRule({
+  const {
+    loadBalancer: hasuraLb,
+    targetGroup: hasuraTargetGroup,
+    serviceSecurityGroup: hasuraServiceSecurityGroup,
+  } = await setupLoadBalancerForService({
     serviceName: "hasura",
-    listener: hasuraListenerHttp,
-    domain: DOMAIN,
+    containerPort: HASURA_PROXY_PORT,
+    vpcId,
+    publicSubnetIds,
+    domain,
+    healthCheck: { path: "/healthz" },
   });
 
   // hasuraService is composed of two tightly coupled containers
@@ -158,7 +118,7 @@ export const createHasuraService = async ({
               {
                 name: "HASURA_GRAPHQL_CORS_DOMAIN",
                 value: pulumi
-                  .all([CUSTOM_DOMAINS, DOMAIN, config.require("lps-domain")])
+                  .all([customDomains, domain, config.require("lps-domain")])
                   .apply(([customDomains, domain, lpsDomain]) => {
                     const corsUrls = [
                       // Wildcard and exact domains for custom domains
@@ -192,7 +152,7 @@ export const createHasuraService = async ({
               { name: "HASURA_GRAPHQL_DATABASE_URL", value: dbUrl },
               {
                 name: "HASURA_PLANX_API_URL",
-                value: `https://api.${DOMAIN}`,
+                value: pulumi.interpolate`https://api.${domain}`,
               },
               {
                 name: "HASURA_PLANX_API_KEY",
@@ -287,8 +247,8 @@ export const createHasuraService = async ({
   });
 
   new cloudflare.DnsRecord("hasura", {
-    name: tldjs.getSubdomain(DOMAIN)
-      ? `hasura.${tldjs.getSubdomain(DOMAIN)}`
+    name: tldjs.getSubdomain(domain)
+      ? `hasura.${tldjs.getSubdomain(domain)}`
       : "hasura",
     type: "CNAME",
     zoneId: config.require("cloudflare-zone-id"),
