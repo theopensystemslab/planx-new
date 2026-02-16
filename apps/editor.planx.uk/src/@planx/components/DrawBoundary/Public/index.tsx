@@ -42,9 +42,9 @@ const slotsSchema = array()
     test: (slots?: Array<FileUploadSlot>) => {
       return Boolean(
         slots &&
-          slots.length === 1 &&
-          !slots.some((slot) => slot.status === "uploading") &&
-          slots.every((slot) => slot.url && slot.status === "success"),
+        slots.length === 1 &&
+        !slots.some((slot) => slot.status === "uploading") &&
+        slots.every((slot) => slot.url && slot.status === "success"),
       );
     },
   });

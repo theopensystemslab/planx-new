@@ -54,8 +54,8 @@ export const slotsSchema = array()
     test: (slots?: Array<FileUploadSlot>) => {
       return Boolean(
         slots &&
-          slots.length > 0 &&
-          !slots.some((slot) => slot.status === "uploading"),
+        slots.length > 0 &&
+        !slots.some((slot) => slot.status === "uploading"),
       );
     },
   })
@@ -65,8 +65,8 @@ export const slotsSchema = array()
     test: (slots?: Array<FileUploadSlot>) => {
       return Boolean(
         slots &&
-          slots.length > 0 &&
-          !slots.some((slot) => slot.status === "error"),
+        slots.length > 0 &&
+        !slots.some((slot) => slot.status === "error"),
       );
     },
   });
