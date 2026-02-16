@@ -265,7 +265,7 @@ const PublicToolbar: React.FC<{
       >
         <Typography>
           Are you sure you want to restart? This will delete your previous
-          answers 123
+          answers
         </Typography>
       </ConfirmationDialog>
     </>
