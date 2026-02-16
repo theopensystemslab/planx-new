@@ -4,35 +4,26 @@ import * as fsWalk from "@nodelib/fs.walk";
 import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
 import * as cloudflare from "@pulumi/cloudflare";
-import * as pulumi from "@pulumi/pulumi";
 import * as postgres from "@pulumi/postgresql";
+import * as pulumi from "@pulumi/pulumi";
 import * as tldjs from "tldjs";
 import mime from "mime";
 
+import { CustomDomain } from "../common/teams";
 import {
-  createAllIpv4EgressRule,
-  createAllIpv4IngressRule,
-  createDestinationSgEgressRule,
-  createSourceSgIngressRule,
-} from "../common/utils";
-
+  createApiService,
+  createHasuraService,
+  createLocalPlanningServices,
+  createMetabaseService,
+  createSharedbService,
+} from "./services"
 import {
-  addRedirectToCloudFlareListenerRule,
   createCdn,
-  generateCORSAllowList,
-  generateTeamSecrets,
-  getJavaOpts,
   getPostgresDbUrl,
-  setupLoadBalancerForService,
-  setupNotificationForDeploymentRollback,
   usEast1,
 } from "./utils";
-import { createHasuraService } from "./services/hasura";
-import { createLocalPlanningServices } from "./services/lps";
-import { CustomDomain } from "../common/teams";
 
 const config = new pulumi.Config();
-
 const env = pulumi.getStack();
 const certificates = new pulumi.StackReference(`planx/certificates/${env}`);
 const networking = new pulumi.StackReference(`planx/networking/${env}`);
@@ -157,8 +148,8 @@ export = async () => {
     ],
   });
 
-  // prepare DB credentials for Metabase and Hasura
-  const dbUser = config.require("db-user")
+  // prepare DB credentials for Metabase, Hasura and ShareDB
+  const DB_USER = "dbuser"
   const dbHost = config.requireSecret("db-host")
   const dbRootPassword = config.requireSecret("db-password");
 
@@ -166,7 +157,7 @@ export = async () => {
   const provider = new postgres.Provider("metabase", {
     host: dbHost,
     port: 5432,
-    username: dbUser,
+    username: DB_USER,
     password: dbRootPassword,
     database: "postgres",
     superuser: false,
@@ -196,478 +187,53 @@ export = async () => {
     }
   );
 
-  const METABASE_PORT = 3000;
-  const {
-    loadBalancer: metabaseLb,
-    targetGroup: metabaseTargetGroup,
-    serviceSecurityGroup: metabaseServiceSecurityGroup,
-  } = await setupLoadBalancerForService({
-    serviceName: "metabase",
-    containerPort: METABASE_PORT,
-    vpcId,
-    publicSubnetIds,
-    domain: DOMAIN,
-    healthCheck: {
-      path: "/api/health",
-      // XXX: Attempt to fix "504 Gateway Time-out"
-      healthyThreshold: 2,
-      interval: 300,
-      timeout: 120,
-      unhealthyThreshold: 10,
-    }
-  });
-  
   // since our secrets here are of the type Output<string>, we have to use Pulumi methods to access them as strings
   const metabaseDbUrl = pulumi.all([dbHost, metabasePgPassword]).apply(([dbHost, metabasePgPassword]) => 
     getPostgresDbUrl("metabase", metabasePgPassword, dbHost, "metabase"))
-  const metabaseMemoryMb = config.requireNumber("metabase-memory");
-  const metabaseLogGroup = new aws.cloudwatch.LogGroup("metabase", {
-    name: "/ecs/metabase",
-    retentionInDays: 30,
-  });
-  // see: https://github.com/pulumi/pulumi-awsx/blob/master/examples/ecs/nodejs/index.ts
-  const metabaseTask = new awsx.ecs.FargateTaskDefinition("metabase", {
-    logGroup: { existing: metabaseLogGroup },
-    container: {
-        name: "metabase",
-        // if changing, also check docker-compose.yml
-        image: "metabase/metabase:v0.56.6",
-        essential: true,
-        cpu: config.requireNumber("metabase-cpu"),
-        // when changing `memory`, also update `JAVA_OPTS` below
-        memory: metabaseMemoryMb,
-        portMappings: [{ targetGroup: metabaseTargetGroup }],
-        environment: [
-          // https://www.metabase.com/docs/latest/troubleshooting-guide/running.html#allocating-more-memory-to-the-jvm
-          { name: "JAVA_OPTS", value: getJavaOpts(metabaseMemoryMb) },
-          { name: "MB_DB_TYPE", value: "postgres" },
-          {
-            name: "MB_DB_CONNECTION_URI",
-            value: metabaseDbUrl,
-          },
-          { name: "MB_JETTY_HOST", value: "0.0.0.0" },
-          { name: "MB_JETTY_PORT", value: String(METABASE_PORT) },
-          {
-            name: "MB_SITE_URL",
-            value: pulumi.interpolate`https://metabase.${DOMAIN}/`,
-          },
-          // https://www.metabase.com/docs/latest/operations-guide/encrypting-database-details-at-rest.html
-          {
-            name: "MB_ENCRYPTION_SECRET_KEY",
-            value: config.requireSecret("metabase-encryption-secret-key"),
-          },
-        ],
-      }
-    });
-
-  const metabaseService = new awsx.ecs.FargateService("metabase", {
-      cluster: cluster.arn,
-      taskDefinition: metabaseTask.taskDefinition.arn,
-      // we get the LB config as an output of the task defn, as computed from the target group passed into port mappings
-      loadBalancers: metabaseTask.loadBalancers,
-      networkConfiguration: {
-        subnets: publicSubnetIds,
-        assignPublicIp: true,
-        securityGroups: [metabaseServiceSecurityGroup.id],
-      },
-      desiredCount: 1,
-      // Metabase takes a while to boot up
-      healthCheckGracePeriodSeconds: 60 * 15,
-      deploymentCircuitBreaker: {
-        enable: true,
-        rollback: true,
-      },
-    },
-    {
-      dependsOn: [metabaseLb],
-    }
-  );
-  setupNotificationForDeploymentRollback(env, "metabase", cluster, metabaseService);
-
-  new cloudflare.DnsRecord("metabase", {
-    name: tldjs.getSubdomain(DOMAIN)
-      ? `metabase.${tldjs.getSubdomain(DOMAIN)}`
-      : "metabase",
-    type: "CNAME",
-    zoneId: config.requireSecret("cloudflare-zone-id"),
-    content: metabaseLb.loadBalancer.dnsName,
-    ttl: 1,
-    proxied: true,
+  const metabaseService = await createMetabaseService({
+    env,
+    vpcId,
+    publicSubnetIds,
+    cluster,
+    dbUrl: metabaseDbUrl,
+    stacks: { certificates },
   });
 
   // ----------------------- Hasura
   // we'll also pass this database URI to sharedb later on
   const rootDbUrl = pulumi.all([dbHost, dbRootPassword]).apply(([dbHost, dbRootPassword]) => 
-    getPostgresDbUrl(dbUser, dbRootPassword, dbHost))
-  // TODO: pull other services out into their own separate files
+    getPostgresDbUrl(DB_USER, dbRootPassword, dbHost))
   const hasuraService = await createHasuraService({
     env,
     vpcId,
     publicSubnetIds,
-    domain: DOMAIN,
     cluster,
     repo,
     dbUrl: rootDbUrl,
     customDomains: CUSTOM_DOMAINS,
+    stacks: { certificates },
   });
 
   // ----------------------- API
-  const apiBucket = aws.s3.Bucket.get(
-    "bucket",
-    data.requireOutput("apiBucketId")
-  );
-  const apiUser = new aws.iam.User("api-user");
-  const apiUserAccessKey = new aws.iam.AccessKey("api-user-access-key", {
-    user: apiUser.name,
-  });
-  // Grant the user access to the bucket
-  new aws.iam.UserPolicy("api-user-role", {
-    user: apiUser.name,
-    policy: {
-      Version: "2012-10-17",
-      Statement: [
-        {
-          Effect: "Allow",
-          Action: "s3:*",
-          Resource: apiBucket.arn,
-        },
-      ],
-    },
-  });
-  new aws.s3.BucketPolicy("api-bucket-policy", {
-    bucket: apiBucket.id,
-    policy: {
-      Version: "2012-10-17",
-      Statement: [
-        {
-          Sid: "ApiWriteObject",
-          Effect: "Allow",
-          Principal: { AWS: [apiUser.arn] },
-          // XXX: We could narrow this down to the action `PutObject`
-          Action: ["s3:*"],
-          Resource: [pulumi.interpolate`${apiBucket.arn}/*`],
-        },
-      ],
-    },
-  });
-
-  const API_PORT = 80;
-  const {
-    loadBalancer: apiLb,
-    targetGroup: apiTargetGroup,
-    serviceSecurityGroup: apiServiceSecurityGroup,
-  } = await setupLoadBalancerForService({
-    serviceName: "api",
-    containerPort: API_PORT,
+  const apiService = await createApiService({
+    env,
     vpcId,
     publicSubnetIds,
-    domain: DOMAIN,
-    idleTimeout: 120,
-    healthCheck: { path: "/" },
-  });
-
-  const apiImage = new awsx.ecr.Image("api-image", {
-    repositoryUrl: repo.url,
-    context: "../../apps/api.planx.uk",
-    args: {
-      target: "production",
-    },
-  });
-  const apiLogGroup = new aws.cloudwatch.LogGroup("api", {
-    name: "/ecs/api",
-    retentionInDays: 30,
-  });
-  const apiTask = new awsx.ecs.FargateTaskDefinition("api", {
-    logGroup: { existing: apiLogGroup },
-    container: {
-      name: "api",
-      image: apiImage.imageUri,
-      essential: true,
-      cpu: 2048,
-      memory: 4096 /*MB*/,
-      portMappings: [{ targetGroup: apiTargetGroup }],
-      environment: [
-          { name: "NODE_ENV", value: env },
-          { name: "APP_ENVIRONMENT", value: env },
-          { name: "EDITOR_URL_EXT", value: `https://${DOMAIN}` },
-          { name: "AWS_S3_REGION", value: apiBucket.region },
-          { name: "AWS_ACCESS_KEY", value: apiUserAccessKey.id },
-          { name: "AWS_SECRET_KEY", value: apiUserAccessKey.secret },
-          {
-            name: "AWS_S3_BUCKET",
-            value: pulumi.interpolate`${apiBucket.bucket}`,
-          },
-          {
-            name: "AI_GATEWAY_API_KEY",
-            value: config.requireSecret("ai-gateway-api-key"),
-          },
-          {
-            name: "FILE_API_KEY",
-            value: config.requireSecret("file-api-key"),
-          },
-          {
-            name: "FILE_API_KEY_NEXUS",
-            value: config.requireSecret("file-api-key-nexus"),
-          },
-          {
-            name: "FILE_API_KEY_BARNET",
-            value: config.requireSecret("file-api-key-barnet"),
-          },
-          {
-            name: "FILE_API_KEY_LAMBETH",
-            value: config.requireSecret("file-api-key-lambeth"),
-          },
-          {
-            name: "FILE_API_KEY_SOUTHWARK",
-            value: config.requireSecret("file-api-key-southwark"),
-          },
-          {
-            name: "FILE_API_KEY_EPSOM_EWELL",
-            value: config.requireSecret("file-api-key-epsom-ewell"),
-          },
-          {
-            name: "FILE_API_KEY_MEDWAY",
-            value: config.requireSecret("file-api-key-medway"),
-          },
-          {
-            name: "FILE_API_KEY_GATESHEAD",
-            value: config.requireSecret("file-api-key-gateshead"),
-          },
-          {
-            name: "FILE_API_KEY_DONCASTER",
-            value: config.requireSecret("file-api-key-doncaster"),
-          },
-          {
-            name: "FILE_API_KEY_GLOUCESTER",
-            value: config.requireSecret("file-api-key-gloucester"),
-          },
-          {
-            name: "FILE_API_KEY_TEWKESBURY",
-            value: config.requireSecret("file-api-key-tewkesbury"),
-          },
-          {
-            name: "FILE_API_KEY_CAMDEN",
-            value: config.requireSecret("file-api-key-camden"),
-          },
-          {
-            name: "SKIP_RATE_LIMIT_SECRET",
-            value: config.requireSecret("skip-rate-limit-secret"),
-          },
-          {
-            name: "GOOGLE_CLIENT_ID",
-            value: config.requireSecret("google-client-id"),
-          },
-          {
-            name: "GOOGLE_CLIENT_SECRET",
-            value: config.requireSecret("google-client-secret"),
-          },
-          {
-            name: "MICROSOFT_CLIENT_ID",
-            value: config.requireSecret("microsoft-client-id"),
-          },
-          {
-            name: "MICROSOFT_CLIENT_SECRET",
-            value: config.requireSecret("microsoft-client-secret"),
-          },
-          {
-            name: "SESSION_SECRET",
-            value: config.requireSecret("session-secret"),
-          },
-          { name: "API_URL_EXT", value: `https://api.${DOMAIN}` },
-          { name: "JWT_SECRET", value: config.requireSecret("jwt-secret") },
-          { name: "PORT", value: String(API_PORT) },
-          {
-            name: "HASURA_GRAPHQL_ADMIN_SECRET",
-            value: config.requireSecret("hasura-admin-secret"),
-          },
-          {
-            name: "HASURA_GRAPHQL_URL",
-            value: pulumi.interpolate`https://hasura.${DOMAIN}/v1/graphql`,
-          },
-          {
-            name: "HASURA_METADATA_URL",
-            value: pulumi.interpolate`https://hasura.${DOMAIN}/v1/metadata`,
-          },
-          {
-            name: "HASURA_SCHEMA_URL",
-            value: pulumi.interpolate`https://hasura.${DOMAIN}/v2/query`,
-          },
-          {
-            name: "HASURA_PLANX_API_KEY",
-            value: config.requireSecret("hasura-planx-api-key"),
-          },
-          {
-            name: "AIRBRAKE_PROJECT_ID",
-            value: config.requireSecret("airbrake-project-id"),
-          },
-          {
-            name: "AIRBRAKE_PROJECT_KEY",
-            value: config.requireSecret("airbrake-project-key"),
-          },
-          {
-            name: "UNIFORM_TOKEN_URL",
-            value: config.requireSecret("uniform-token-url"),
-          },
-          {
-            name: "UNIFORM_SUBMISSION_URL",
-            value: config.requireSecret("uniform-submission-url"),
-          },
-          {
-            name: "GOVUK_NOTIFY_API_KEY",
-            value: config.requireSecret("govuk-notify-api-key"),
-          },
-          {
-            name: "SLACK_WEBHOOK_URL",
-            value: config.requireSecret("slack-webhook-url"),
-          },
-          {
-            name: "ORDNANCE_SURVEY_API_KEY",
-            value: config.requireSecret("ordnance-survey-api-key"),
-          },
-          {
-            name: "ENCRYPTION_KEY",
-            value: config.requireSecret("encryption-key"),
-          },
-          {
-            name: "IDOX_NEXUS_CLIENT",
-            value: config.requireSecret("idox-nexus-client"),
-          },
-          {
-            name: "IDOX_NEXUS_TOKEN_URL",
-            value: config.requireSecret("idox-nexus-token-url"),
-          },
-          {
-            name: "IDOX_NEXUS_SUBMISSION_URL",
-            value: config.requireSecret("idox-nexus-submission-url"),
-          },
-          {
-            name: "MAPBOX_ACCESS_TOKEN",
-            value: config.requireSecret("mapbox-access-token"),
-          },
-          {
-            name: "METABASE_API_KEY",
-            value: config.requireSecret("metabase-api-key"),
-          },
-          {
-            name: "METABASE_URL_EXT",
-            value: `https://metabase.${DOMAIN}`,
-          },
-          {
-            name: "LPS_URL_EXT",
-            value: pulumi.interpolate`https://${config.require("lps-domain")}`,
-          },
-          generateCORSAllowList(CUSTOM_DOMAINS, DOMAIN),
-          ...generateTeamSecrets(config, env),
-        ],
-      },
-    });
-
-  const apiService = new awsx.ecs.FargateService("api", {
-    cluster: cluster.arn,
-    taskDefinition: apiTask.taskDefinition.arn,
-    loadBalancers: apiTask.loadBalancers,
-    networkConfiguration: {
-      subnets: publicSubnetIds,
-      assignPublicIp: true,
-      securityGroups: [apiServiceSecurityGroup.id],
-    },
-    desiredCount: 1,
-    deploymentCircuitBreaker: {
-      enable: true,
-      rollback: true,
-    },
-  },
-  {
-    dependsOn: [apiLb],
-  });
-  setupNotificationForDeploymentRollback(env, "api", cluster, apiService);
-
-  new cloudflare.DnsRecord("api", {
-    name: tldjs.getSubdomain(DOMAIN)
-      ? `api.${tldjs.getSubdomain(DOMAIN)}`
-      : "api",
-    type: "CNAME",
-    zoneId: config.requireSecret("cloudflare-zone-id"),
-    content: apiLb.loadBalancer.dnsName,
-    ttl: 1,
-    proxied: true,
+    cluster,
+    repo,
+    customDomains: CUSTOM_DOMAINS,
+    stacks: { certificates, data },
   });
 
   // ----------------------- ShareDB
-  const SHAREDB_PORT = 80;
-    const {
-    loadBalancer: sharedbLb,
-    targetGroup: sharedbTargetGroup,
-    serviceSecurityGroup: sharedbServiceSecurityGroup,
-  } = await setupLoadBalancerForService({
-    serviceName: "sharedb",
-    containerPort: SHAREDB_PORT,
+  const sharedbService = await createSharedbService({
+    env,
     vpcId,
     publicSubnetIds,
-    domain: DOMAIN,
-    healthCheck: {
-      path: "/",
-      matcher: "426", // "HTTP 426 Upgrade Required"
-    },
-    stickiness: {
-      enabled: true,
-      type: "lb_cookie", // default duration will be 1 day (86400s)
-    },
-  });
-
-  const sharedbImage = new awsx.ecr.Image("sharedb-image", {
-    repositoryUrl: repo.repository.repositoryUrl,
-    context: "../../apps/sharedb.planx.uk",
-  });
-  const sharedbLogGroup = new aws.cloudwatch.LogGroup("sharedb", {
-    name: "/ecs/sharedb",
-    retentionInDays: 30,
-  });
-  const sharedbTask = new awsx.ecs.FargateTaskDefinition("sharedb", {
-    logGroup: { existing: sharedbLogGroup },
-    container: {
-      name: "sharedb",
-      image: sharedbImage.imageUri,
-      essential: true,
-      memory: 512 /*MB*/,
-      portMappings: [{ targetGroup: sharedbTargetGroup }],
-      environment: [
-        { name: "PORT", value: String(SHAREDB_PORT) },
-        { name: "API_URL_EXT", value: `https://api.${DOMAIN}` },
-        { name: "PG_URL", value: rootDbUrl },
-      ],
-    },
-  });
-
-  const sharedbService = new awsx.ecs.FargateService("sharedb", {
-    cluster: cluster.arn,
-    taskDefinition: sharedbTask.taskDefinition.arn,
-    loadBalancers: sharedbTask.loadBalancers,
-    networkConfiguration: {
-      subnets: publicSubnetIds,
-      assignPublicIp: true,
-      securityGroups: [sharedbServiceSecurityGroup.id],
-    },
-    desiredCount: 1,
-    deploymentCircuitBreaker: {
-      enable: true,
-      rollback: true,
-    },
-  },
-  {
-    dependsOn: [sharedbLb],
-  });
-  setupNotificationForDeploymentRollback(env, "sharedb", cluster, sharedbService);
-
-  const sharedbDnsRecord = new cloudflare.DnsRecord("sharedb", {
-    name: tldjs.getSubdomain(DOMAIN)
-      ? `sharedb.${tldjs.getSubdomain(DOMAIN)}`
-      : "sharedb",
-    type: "CNAME",
-    zoneId: config.requireSecret("cloudflare-zone-id"),
-    content: sharedbLb.loadBalancer.dnsName,
-    ttl: 1,
-    proxied: true,
+    cluster,
+    repo,
+    dbUrl: rootDbUrl,
+    stacks: { certificates },
   });
 
   // ------------------- PlanX Frontend

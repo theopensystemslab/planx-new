@@ -5,9 +5,10 @@ config:
     secure: AAABAE+ZtQZO26XlmfAS7tG1DkwQ+G5OP82Roe4EOuk/tG1bMsI=
   application:airbrake-project-key:
     secure: AAABAMykToEvR6LGE6kUIjNeKfV/MsLtGq1Uv8dk6wAHp5og8/UIFF7yoo8rAZX5brx08nUnqwqrDrS8/I16+g==
-  application:cloudflare-zone-id: a9b9933f28e786ec4cfd4bb596f5a519
+  application:cloudflare-zone-id:
+    secure: AAABAMvLmULFOFiKvka1nnX/mMlFocCVlBtBXrXuJbkdJeS1xKRxloKX10LYMoScqaMHSNlFSAMA6SeWFkm4Pw==
   application:db-host:
-    secure: AAABAKwKjFnIcXMFrWd1q378VFvSly5wFJaNaKk/mGv0W0AVyFn9reP3pZsI2BxfAliC3jn083AA+6kuh/uSezRId08GN0XBN9oqLdkeAFeucP4=
+    secure: AAABALfLAhFMoAzqQcMbG+83I3fc7KMpJ69QWeHJJrW+vdB9B5zwTeE8zruM4u2x3DsHwPZzb10GKsn0YP8RVHF2my9Pfq6uiTCWEI6Cr3uoRK0=
   application:db-password:
     secure: AAABAC2O6oVQLaaTRJw+MUVASpLK1Lo5qkARYpv90mbdc7T+XDLb27Z0LIKIA0yorbwvXjT1Ud4DnaCU4my5vA==
   application:db-url:

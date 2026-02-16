@@ -4,5 +4,4 @@ export * from "./generateCORSAllowList";
 export * from "./generateTeamSecrets";
 export * from "./helpers";
 export * from "./providers"
-export * from "./setupLoadBalancer";
-export * from "./setupRollbackNotification";
+export * from "./setupService";

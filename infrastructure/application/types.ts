@@ -18,11 +18,15 @@ export interface CreateService {
   env: string,
   vpcId: pulumi.Output<string>,
   publicSubnetIds: pulumi.Output<string[]>,
-  domain: string,
   cluster: aws.ecs.Cluster,
-  repo: awsx.ecr.Repository, 
-  dbUrl: pulumi.Output<string>,
-  customDomains: CustomDomain[],
+  repo?: awsx.ecr.Repository, 
+  dbUrl?: pulumi.Output<string>,
+  customDomains?: CustomDomain[],
+  stacks?: {
+    certificates?: pulumi.StackReference,
+    data?: pulumi.StackReference,
+    networking?: pulumi.StackReference,
+  },
 };
 
 export type KeyValuePair = {

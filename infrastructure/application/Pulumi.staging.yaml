@@ -7,7 +7,8 @@ config:
     secure: AAABAJ0llO2jfZjF0MsWRzA2gpcp/FyZg8tBe8ZwPCOvZy4EepGkUH74GoBzAiroVh1Om5uAoGmVWirlLhJ7cA==
   application:cloudflare-zone-id:
     secure: AAABAPZz/bzFCZEZd+jzPpYP4HXAOLYQmLGf2YLQE2YPfMBUtDC83KCo2l2DJ4AL4OKL+jFFx8wrrJc6DDwXJQ==
-  application:db-host: dbuser
+  application:db-host:
+    secure: AAABAAPuhNJbXoO9KrKmJE1L8enMlj0eGJQ/4E57Fvd0ZYW5d4ZB+8GfxUbGmmt/s841UULkAvqlEMhSlKS4Mrl9qVkTDqHPASepjUWZyF+Byaw=
   application:db-password:
     secure: AAABAAVV2tpNt1KK6I/h1PqHYZf5iDySr+GJOXy1cdMbIfO6cXNxel8Rv9EwmmAaPkPh7Z4vEZHIHSJqHrPDOA==
   application:encryption-key:

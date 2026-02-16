@@ -1,7 +1,7 @@
 {
   "name": "@planx/infrastructure-application",
   "dependencies": {
-    "@nodelib/fs.walk": "~1.2.8",
+    "@nodelib/fs.walk": "~3.0.1",
     "@pulumi/aws": "~7.19.0",
     "@pulumi/awsx": "~3.1.0",
     "@pulumi/cloudflare": "~6.13.0",

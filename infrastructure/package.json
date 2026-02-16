@@ -1,8 +1,13 @@
 {
   "name": "@planx/infrastructure",
   "devDependencies": {
-    "syncpack": "14.0.0-alpha.41"
+    "syncpack": "14.0.0"
   },
   "packageManager": "pnpm@10.10.0",
-  "private": true
+  "private": true,
+  "scripts": {
+    "format": "syncpack format",
+    "lint": "syncpack lint",
+    "update": "syncpack update --dependencies '@pulumi/**'"
+  }
 }

@@ -1,14 +1,11 @@
-"use strict";
-
 import * as awsx from "@pulumi/awsx";
 import * as aws from "@pulumi/aws";
-import * as cloudflare from "@pulumi/cloudflare";
 import * as pulumi from "@pulumi/pulumi";
-import * as tldjs from "tldjs";
 
 import { CreateService } from './../types';
 import {
-  setupLoadBalancerForService,
+  setupDnsRecord,
+  setupLoadBalancer,
   setupNotificationForDeploymentRollback,
 } from "../utils";
 
@@ -16,13 +13,20 @@ export const createHasuraService = async ({
   env,
   vpcId,
   publicSubnetIds,
-  domain,
   cluster,
   repo,
   dbUrl,
-  customDomains,
+  customDomains = [],
+  stacks: { certificates } = {},
 }: CreateService): Promise<awsx.ecs.FargateService> => {
+  if (!repo) {
+    throw new Error("An ECR repo is required to setup Hasura service");
+  }
+  if (!certificates) {
+    throw new Error("The Pulumi certificates stack is required to setup Hasura service");
+  }
   const config = new pulumi.Config();
+  const DOMAIN: string = await certificates.requireOutputValue("domain");
 
   // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
   const HASURA_PROXY_PORT = 80;
@@ -30,12 +34,12 @@ export const createHasuraService = async ({
     loadBalancer: hasuraLb,
     targetGroup: hasuraTargetGroup,
     serviceSecurityGroup: hasuraServiceSecurityGroup,
-  } = await setupLoadBalancerForService({
+  } = await setupLoadBalancer({
     serviceName: "hasura",
     containerPort: HASURA_PROXY_PORT,
     vpcId,
     publicSubnetIds,
-    domain,
+    domain: DOMAIN,
     healthCheck: { path: "/healthz" },
   });
 
@@ -118,11 +122,11 @@ export const createHasuraService = async ({
               {
                 name: "HASURA_GRAPHQL_CORS_DOMAIN",
                 value: pulumi
-                  .all([customDomains, domain, config.require("lps-domain")])
+                  .all([customDomains, DOMAIN, config.require("lps-domain")])
                   .apply(([customDomains, domain, lpsDomain]) => {
                     const corsUrls = [
                       // Wildcard and exact domains for custom domains
-                      ...customDomains.flatMap((x: any) => [
+                      ...(customDomains).flatMap((x: any) => [
                         `https://*.${x.domain}`,
                         `https://${x.domain}`,
                       ]),
@@ -152,7 +156,7 @@ export const createHasuraService = async ({
               { name: "HASURA_GRAPHQL_DATABASE_URL", value: dbUrl },
               {
                 name: "HASURA_PLANX_API_URL",
-                value: pulumi.interpolate`https://api.${domain}`,
+                value: pulumi.interpolate`https://api.${DOMAIN}`,
               },
               {
                 name: "HASURA_PLANX_API_KEY",
@@ -201,8 +205,7 @@ export const createHasuraService = async ({
   {
     dependsOn: [hasuraLb],
   });
-  setupNotificationForDeploymentRollback(env, "hasura", cluster, hasuraService);
-
+  
   // XXX: consider setting up similar auto-scaling policies for services other than Hasura?
   const hasuraScalingTarget = new aws.appautoscaling.Target("hasura-scaling-target", {
     // maxCapacity should consider compute power of the RDS instance which Hasura relies on
@@ -214,49 +217,39 @@ export const createHasuraService = async ({
     scalableDimension: "ecs:service:DesiredCount",
     serviceNamespace: "ecs",
   });
-
+  
   const hasuraCpuScaling = new aws.appautoscaling.Policy("hasura-cpu-scaling", {
     policyType: "TargetTrackingScaling",
     resourceId: hasuraScalingTarget.resourceId,
     scalableDimension: hasuraScalingTarget.scalableDimension,
     serviceNamespace: hasuraScalingTarget.serviceNamespace,
     targetTrackingScalingPolicyConfiguration: {
-        predefinedMetricSpecification: {
-            predefinedMetricType: "ECSServiceAverageCPUUtilization",
-        },
-        // scale out quickly for responsiveness, but scale in more slowly to avoid thrashing
-        targetValue: 30.0,
-        scaleInCooldown: 300,
-        scaleOutCooldown: 60,
+      predefinedMetricSpecification: {
+        predefinedMetricType: "ECSServiceAverageCPUUtilization",
+      },
+      // scale out quickly for responsiveness, but scale in more slowly to avoid thrashing
+      targetValue: 30.0,
+      scaleInCooldown: 300,
+      scaleOutCooldown: 60,
     },
   });
-
+  
   const hasuraMemoryScaling = new aws.appautoscaling.Policy("hasura-memory-scaling", {
     policyType: "TargetTrackingScaling",
     resourceId: hasuraScalingTarget.resourceId,
     scalableDimension: hasuraScalingTarget.scalableDimension,
     serviceNamespace: hasuraScalingTarget.serviceNamespace,
     targetTrackingScalingPolicyConfiguration: {
-        predefinedMetricSpecification: {
-            predefinedMetricType: "ECSServiceAverageMemoryUtilization",
-        },
-        targetValue: 30.0,
-        scaleInCooldown: 300,
-        scaleOutCooldown: 60,
+      predefinedMetricSpecification: {
+        predefinedMetricType: "ECSServiceAverageMemoryUtilization",
+      },
+      targetValue: 30.0,
+      scaleInCooldown: 300,
+      scaleOutCooldown: 60,
     },
   });
-
-  new cloudflare.DnsRecord("hasura", {
-    name: tldjs.getSubdomain(domain)
-      ? `hasura.${tldjs.getSubdomain(domain)}`
-      : "hasura",
-    type: "CNAME",
-    zoneId: config.require("cloudflare-zone-id"),
-    content: hasuraLb.loadBalancer.dnsName,
-    ttl: 1,
-    proxied: true,
-  });
-
+  
   setupNotificationForDeploymentRollback(env, "hasura", cluster, hasuraService);
+  setupDnsRecord("hasura", DOMAIN, hasuraLb);
   return hasuraService;
 }
