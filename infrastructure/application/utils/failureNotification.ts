@@ -9,18 +9,18 @@ import * as awsx from "@pulumi/awsx";
  */
 export const setupNotificationForDeploymentRollback = (
   env: string,
-  simpleServiceName: string,
+  serviceName: string,
   cluster: aws.ecs.Cluster,
   service: awsx.ecs.FargateService
-) => {
+): void => {
   const config = new pulumi.Config();
 
-  const topic = new aws.sns.Topic(`${simpleServiceName}-rollback-alerts`, {
-    name: `${simpleServiceName}-rollback-alerts-topic`,
+  const topic = new aws.sns.Topic(`${serviceName}-rollback-alerts`, {
+    name: `${serviceName}-rollback-alerts-topic`,
   });
 
   new aws.sns.TopicSubscription(
-    `${simpleServiceName}-rollback-alerts-subscription`,
+    `${serviceName}-rollback-alerts-subscription`,
     {
       topic: topic.arn,
       protocol: "https",
@@ -29,7 +29,7 @@ export const setupNotificationForDeploymentRollback = (
   );
 
   // allow SNS topic to receive events from EventBridge
-  new aws.sns.TopicPolicy(`${simpleServiceName}-rollback-alerts-topic-policy`, {
+  new aws.sns.TopicPolicy(`${serviceName}-rollback-alerts-topic-policy`, {
     arn: topic.arn,
     policy: pulumi.jsonStringify({
       Version: "2012-10-17",
@@ -49,26 +49,25 @@ export const setupNotificationForDeploymentRollback = (
   // EventBridge rule to catch circuit breaker rollbacks
   // https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs_service_deployment_events.html
   const rollbackRule = new aws.cloudwatch.EventRule(
-    `${simpleServiceName}-rollback-detection-rule`,
+    `${serviceName}-rollback-detection-rule`,
     {
-      description: `Detect deployment rollbacks for ${simpleServiceName}`,
+      description: `Detect deployment rollbacks for ${serviceName}`,
       eventPattern: pulumi.jsonStringify({
         source: ["aws.ecs"],
         "detail-type": ["ECS Deployment State Change"],
-        // TODO: use the service ARN directly, instead of filtering on service name (which is less robust)
         // see https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-create-pattern-operators.html
-        resources: [{ "suffix": { "equals-ignore-case": service.service.name }}],
+        resources: [service.service.arn],
         detail: {
-          clusterArn: [cluster.arn],
           eventType: ["ERROR"],
           eventName: ["SERVICE_DEPLOYMENT_FAILED"],
+          clusterArn: [cluster.arn],
         }
       })
     }
   );
 
   new aws.cloudwatch.EventTarget(
-    `${simpleServiceName}-rollback-alerts-target`,
+    `${serviceName}-rollback-alerts-target`,
     {
       rule: rollbackRule.name,
       arn: topic.arn,
@@ -82,7 +81,7 @@ export const setupNotificationForDeploymentRollback = (
         },
         inputTemplate: pulumi.jsonStringify([
             `-> Environment: ${env}`,
-            `-> Affected service: ${simpleServiceName}`,
+            `-> Affected service: ${serviceName}`,
             "-> Event type: <eventType>",
             "-> Event name: <eventName>",
             "-> Deployment ID: <deploymentId>",

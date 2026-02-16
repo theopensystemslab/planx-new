@@ -23,6 +23,7 @@ import {
   generateTeamSecrets,
   getJavaOpts,
   getPostgresDbUrl,
+  setupNotificationForDeploymentRollback,
   usEast1,
 } from "./utils";
 import { createHasuraService } from "./services/hasura";
@@ -143,7 +144,6 @@ export = async () => {
     },
   });
 
-  // TODO: can we remove these casts?
   const vpcId = networking.requireOutput("vpcId") as pulumi.Output<string>;
   const publicSubnetIds = networking.requireOutput("publicSubnetIds") as pulumi.Output<string[]>;
   // define ECS cluster to host all Fargate containers
@@ -196,7 +196,7 @@ export = async () => {
   );
 
   const METABASE_PORT = 3000;
-  // TODO: abstract ideal setup pattern for all services (main differenciation is in task definition and service config)
+  // TODO: abstract ideal setup pattern for all services (main differentiation is in task definition and service config)
   // prepare security groups as per AWS docs, with SG for load balancer and Fargate service serving as source/destination for each other
   // see: https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-update-security-groups.html
   const metabaseLbSecurityGroup = new aws.ec2.SecurityGroup("metabase-lb-sg", {
@@ -235,7 +235,7 @@ export = async () => {
       unhealthyThreshold: 10,
     },
   });
-  // TODO: understand why we don't need to listen on 443 (i.e. can't receive https connections??)
+  // XXX: we should accept HTTPS connections (i.e. traffic from Cloudflare reverse proxy to AWS is unencrypted !?)
   const metabaseListenerHttp = new aws.lb.Listener("metabase-http", {
     loadBalancerArn: metabaseLb.loadBalancer.arn,
     port: 80,
@@ -296,8 +296,7 @@ export = async () => {
       }
     });
 
-  // TODO: implement rollback/circuit break for services other than Hasura?
-  new awsx.ecs.FargateService("metabase", {
+  const metabaseService = new awsx.ecs.FargateService("metabase", {
       cluster: cluster.arn,
       taskDefinition: metabaseTask.taskDefinition.arn,
       // we get the LB config as an output of the task defn, as computed from the target group passed into port mappings
@@ -310,11 +309,16 @@ export = async () => {
       desiredCount: 1,
       // Metabase takes a while to boot up
       healthCheckGracePeriodSeconds: 60 * 15,
+      deploymentCircuitBreaker: {
+        enable: true,
+        rollback: true,
+      },
     },
     {
       dependsOn: [metabaseLb],
     }
   );
+  setupNotificationForDeploymentRollback(env, "metabase", cluster, metabaseService);
 
   new cloudflare.DnsRecord("metabase", {
     name: tldjs.getSubdomain(DOMAIN)
@@ -329,7 +333,6 @@ export = async () => {
 
   // ----------------------- Hasura
   // we'll also pass this database URI to sharedb later on
-
   const rootDbUrl = pulumi.all([dbHost, dbRootPassword]).apply(([dbHost, dbRootPassword]) => 
     getPostgresDbUrl(dbUser, dbRootPassword, dbHost))
   const hasuraService = await createHasuraService({
@@ -637,10 +640,15 @@ export = async () => {
       securityGroups: [apiServiceSecurityGroup.id],
     },
     desiredCount: 1,
+    deploymentCircuitBreaker: {
+      enable: true,
+      rollback: true,
+    },
   },
   {
     dependsOn: [apiLb],
   });
+  setupNotificationForDeploymentRollback(env, "api", cluster, apiService);
 
   new cloudflare.DnsRecord("api", {
     name: tldjs.getSubdomain(DOMAIN)
@@ -736,10 +744,15 @@ export = async () => {
       securityGroups: [sharedbServiceSecurityGroup.id],
     },
     desiredCount: 1,
+    deploymentCircuitBreaker: {
+      enable: true,
+      rollback: true,
+    },
   },
   {
     dependsOn: [sharedbLb],
   });
+  setupNotificationForDeploymentRollback(env, "sharedb", cluster, sharedbService);
 
   const sharedbDnsRecord = new cloudflare.DnsRecord("sharedb", {
     name: tldjs.getSubdomain(DOMAIN)
@@ -931,7 +944,10 @@ export = async () => {
 
   return {
     customDomains,
-    hasuraServiceName: hasuraService.serviceName,
+    metabaseServiceName: metabaseService.service.name,
+    hasuraServiceName: hasuraService.service.name,
+    apiServiceName: apiService.service.name,
+    sharedbServiceName: sharedbService.service.name,
   };
 };
 

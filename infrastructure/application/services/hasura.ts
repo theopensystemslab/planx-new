@@ -29,7 +29,7 @@ export const createHasuraService = async ({
   stacks: {
     networking, certificates, data,
   },
-}: CreateService) => {
+}: CreateService): Promise<awsx.ecs.FargateService> => {
 
   const config = new pulumi.Config();
   const DOMAIN: string = await certificates.requireOutputValue("domain");
@@ -230,7 +230,7 @@ export const createHasuraService = async ({
     },
     desiredCount: 1,
     deploymentMinimumHealthyPercent: 50,
-    deploymentMaximumPercent: 200,
+    deploymentMaximumPercent: 400,
     // service-level health check grace period should exceed proxy dependency timeout
     healthCheckGracePeriodSeconds: 240,
     deploymentCircuitBreaker: {
@@ -241,8 +241,9 @@ export const createHasuraService = async ({
   {
     dependsOn: [hasuraLb],
   });
+  setupNotificationForDeploymentRollback(env, "hasura", cluster, hasuraService);
 
-  // TODO: use the FargateService scaleConfig option to replace more verbose config below
+  // XXX: consider setting up similar auto-scaling policies for services other than Hasura?
   const hasuraScalingTarget = new aws.appautoscaling.Target("hasura-scaling-target", {
     // maxCapacity should consider compute power of the RDS instance which Hasura relies on
     maxCapacity: parseInt(config.require("hasura-service-scaling-maximum")),
@@ -297,7 +298,5 @@ export const createHasuraService = async ({
   });
 
   setupNotificationForDeploymentRollback(env, "hasura", cluster, hasuraService);
-  return {
-    serviceName: hasuraService.service.name,
-  };
+  return hasuraService;
 }

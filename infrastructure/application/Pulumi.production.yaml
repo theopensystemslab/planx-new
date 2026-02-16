@@ -1,5 +1,4 @@
 config:
-  aws:profile: planx-production-pulumi
   application:ai-gateway-api-key:
     secure: AAABAOo++Y1y8yUvYCFbMuROIimycuheH4oSRpRfj3wTCIKEgOlbPLjXKU4suUiiw4kOzWnJ4TkfNPG0sW8/a37lK4kJMMX9oVM5/4xCcI/9JdxS2dVnMOARzKQ=
   application:airbrake-project-id:
