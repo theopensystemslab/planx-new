@@ -63,7 +63,7 @@ export const validationSchema = lazy(
 
 export const TASKS: Record<Task, { label: string; description: string }> = {
   projectDescription: {
-    label: "Project description",
+    label: "Project description (max 250 characters)",
     description: "Lorem ispum....",
   },
 };
