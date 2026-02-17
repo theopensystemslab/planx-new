@@ -10,6 +10,7 @@ import * as tldjs from "tldjs";
 import mime from "mime";
 
 import { CustomDomain } from "../common/teams";
+import { getPostgresDbUrl } from "../common/utils";
 import {
   createApiService,
   createHasuraService,
@@ -19,7 +20,6 @@ import {
 } from "./services"
 import {
   createCdn,
-  getPostgresDbUrl,
   usEast1,
 } from "./utils";
 
@@ -149,15 +149,15 @@ export = async () => {
   });
 
   // prepare DB credentials for Metabase, Hasura and ShareDB
-  const DB_USER = "dbuser"
-  const dbHost = config.requireSecret("db-host")
+  const DB_ROOT_USER = "dbuser"
   const dbRootPassword = config.requireSecret("db-password");
+  const dbHost = config.requireSecret("db-host")
 
   // ----------------------- Metabase
   const provider = new postgres.Provider("metabase", {
     host: dbHost,
     port: 5432,
-    username: DB_USER,
+    username: DB_ROOT_USER,
     password: dbRootPassword,
     database: "postgres",
     superuser: false,
@@ -188,8 +188,15 @@ export = async () => {
   );
 
   // since our secrets here are of the type Output<string>, we have to use Pulumi methods to access them as strings
-  const metabaseDbUrl = pulumi.all([dbHost, metabasePgPassword]).apply(([dbHost, metabasePgPassword]) => 
-    getPostgresDbUrl("metabase", metabasePgPassword, dbHost, "metabase"))
+  const metabaseDbUrl = pulumi
+    .all([metabasePgPassword, dbHost])
+    .apply(([password, host]) => getPostgresDbUrl({
+      role: "metabase",
+      password,
+      host,
+      database: "metabase",
+    }));
+
   const metabaseService = await createMetabaseService({
     env,
     vpcId,
@@ -201,8 +208,10 @@ export = async () => {
 
   // ----------------------- Hasura
   // we'll also pass this database URI to sharedb later on
-  const rootDbUrl = pulumi.all([dbHost, dbRootPassword]).apply(([dbHost, dbRootPassword]) => 
-    getPostgresDbUrl(DB_USER, dbRootPassword, dbHost))
+  const rootDbUrl = pulumi
+    .all([dbRootPassword, dbHost])
+    .apply(([password, host]) => getPostgresDbUrl({ role: DB_ROOT_USER, password, host }));
+
   const hasuraService = await createHasuraService({
     env,
     vpcId,
@@ -237,12 +246,11 @@ export = async () => {
   });
 
   // ------------------- PlanX Frontend
-  const frontendBucket = new aws.s3.Bucket(`${DOMAIN}`, {
-    bucket: DOMAIN,
-    website: {
-      indexDocument: "index.html",
-      errorDocument: "error.html",
-    },
+  const frontendBucket = new aws.s3.Bucket(DOMAIN, { bucket: DOMAIN });
+  const frontendWebsiteConfig = new aws.s3.BucketWebsiteConfiguration(`${DOMAIN}-website-config`, {
+    bucket: frontendBucket.id,
+    indexDocument: { suffix: "index.html" },
+    errorDocument: { key: "error.html" },
   });
 
   fsWalk
@@ -274,9 +282,12 @@ export = async () => {
       );
     });
 
-  const logsBucket = new aws.s3.Bucket("requestLogs", {
-    bucket: `${DOMAIN}-logs`,
-    acl: "private",
+  const logsBucket = new aws.s3.Bucket(`${DOMAIN}-logs`, { bucket: `${DOMAIN}-logs` });
+  // XXX: AWS maintain that most modern use cases don't require ACLs - is this superfluous?
+  // see: https://docs.aws.amazon.com/AmazonS3/latest/userguide/about-object-ownership.html
+  const logsBucketAcl = new aws.s3.BucketAcl("example", {
+      bucket: logsBucket.id,
+      acl: "private",
   });
 
   const customDomains = ((): Array<any> => {

@@ -124,9 +124,6 @@ importers:
       '@pulumi/awsx':
         specifier: ~3.1.0
         version: 3.1.0(ts-node@7.0.1)(typescript@5.9.3)
-      '@pulumi/pulumi':
-        specifier: ~3.220.0
-        version: 3.220.0(ts-node@7.0.1)(typescript@5.9.3)
     devDependencies:
       '@types/node':
         specifier: ~22.14.1

@@ -1,6 +1,21 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
+import { dbUrlArgs } from "./types";
+
+// PG docs: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING-URIS
+// the AWS DB host/endpoint/address/URI will be of the form `instance.xxx.region.rds.amazonaws.com`
+export const getPostgresDbUrl = ({
+  role,
+  password,
+  host,
+  port = 5432,
+  database = 'postgres',
+}: dbUrlArgs): string => {
+  // the `postgres://` prefix provides a means of locating the resource, so this is a URL, not just a URI
+  return `postgres://${role}:${password}@${host}:${port}/${database}`
+}
+
 export const createAllIpv4IngressRule = (
   securityGroupId: pulumi.Output<string>,
   sgName: string,

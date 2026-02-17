@@ -1,8 +1,6 @@
 import * as awsx from "@pulumi/awsx";
 import * as aws from "@pulumi/aws";
-import * as cloudflare from "@pulumi/cloudflare";
 import * as pulumi from "@pulumi/pulumi";
-import * as tldjs from "tldjs";
 
 import { CreateService } from './../types';
 import {
@@ -302,18 +300,7 @@ export const createApiService = async ({
   {
     dependsOn: [apiLb],
   });
-  
-  new cloudflare.DnsRecord("api", {
-    name: tldjs.getSubdomain(DOMAIN)
-    ? `api.${tldjs.getSubdomain(DOMAIN)}`
-    : "api",
-    type: "CNAME",
-    zoneId: config.requireSecret("cloudflare-zone-id"),
-    content: apiLb.loadBalancer.dnsName,
-    ttl: 1,
-    proxied: true,
-  });
-  
+
   setupNotificationForDeploymentRollback(env, "api", cluster, apiService);
   setupDnsRecord("api", DOMAIN, apiLb);
   return apiService;
