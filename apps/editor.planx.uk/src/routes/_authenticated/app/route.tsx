@@ -6,7 +6,6 @@ import { CatchAllComponent } from "routes/$";
 import { useStore } from "../../../pages/FlowEditor/lib/store";
 import AuthenticatedLayout from "../../../pages/layout/AuthenticatedLayout";
 
-// TODO: should this be a step higher?
 export const Route = createFileRoute("/_authenticated/app")({
   pendingComponent: DelayedLoadingIndicator,
   beforeLoad: async () => {
