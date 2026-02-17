@@ -33,7 +33,9 @@ export const usePublicRouteContext = (): PublicRoutePattern => {
       if (routeId.includes("/preview")) return "/$team/$flow/preview";
       if (routeId.includes("/draft")) return "/$team/$flow/draft";
       if (routeId.includes("/published")) return "/$team/$flow/published";
-      if (routeId.includes("/pay")) return "/$team/$flow";
+
+      // Fallback - all other pages (/pay, /download-application) come from this path
+      return "/$team/$flow";
     }
 
     throw notFound();
