@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import CheckIcon from "@mui/icons-material/Check";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
@@ -9,7 +9,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import ErrorFallback from "components/Error/ErrorFallback";
-import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -18,7 +17,6 @@ import { AddButton } from "ui/editor/AddButton";
 import { StyledTableRow } from "../../../../Team/styles";
 import { EmailsUpsertModal } from "./EmailsUpsertModal";
 import {
-  DELETE_TEAM_SUBMISSION_INTEGRATIONS,
   GET_TEAM_SUBMISSION_INTEGRATIONS,
 } from "./queries";
 import { GetSubmissionEmails, SubmissionEmailInput } from "./types";
@@ -40,13 +38,6 @@ const EditEmailButton = styled(TableRowButton)(({ theme }) => ({
   },
 }));
 
-const RemoveEmailButton = styled(TableRowButton)(({ theme }) => ({
-  color: theme.palette.text.secondary,
-  "&:hover": {
-    color: theme.palette.secondary.contrastText,
-  },
-}));
-
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
   border: `1px solid ${theme.palette.border.light}`,
   borderRadius: theme.shape.borderRadius,
@@ -54,7 +45,6 @@ const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
 }));
 
 const EmailsTableContent = () => {
-  const toast = useToast();
   const teamId = useStore((state) => state.teamId);
 
   const { data, loading, refetch } = useQuery<GetSubmissionEmails>(
@@ -66,10 +56,8 @@ const EmailsTableContent = () => {
 
   const emails = data?.submissionIntegrations;
 
-  const [deleteEmail] = useMutation(DELETE_TEAM_SUBMISSION_INTEGRATIONS);
-
   const [showModal, setShowModal] = useState(false);
-  const [actionType, setActionType] = useState<"add" | "edit" | "remove">(
+  const [actionType, setActionType] = useState<"add" | "edit" >(
     "add",
   );
   const [initialValues, setInitialValues] = useState<
@@ -95,24 +83,6 @@ const EmailsTableContent = () => {
     setActionType("edit");
     setInitialValues(email);
     setShowModal(true);
-  };
-
-  const handleRemoveEmail = async (email: SubmissionEmailInput) => {
-    try {
-      await deleteEmail({
-        variables: { submissionEmail: email.submissionEmail, teamId },
-        optimisticResponse: {
-          delete_submission_integrations: {
-            returning: [{ ...email }],
-          },
-        },
-      });
-      toast.success("Email removed successfully");
-      refetch();
-    } catch (error) {
-      console.error("Error deleting email:", error);
-      toast.error("Failed to remove email");
-    }
   };
 
   if (loading) return <div>Loading...</div>;
@@ -157,7 +127,6 @@ const EmailsTableContent = () => {
               <TableCell>Email</TableCell>
               <TableCell align="center">Default</TableCell>
               <TableCell></TableCell>
-              <TableCell></TableCell>
             </StyledTableRow>
           </TableHead>
           <TableBody>
@@ -173,13 +142,6 @@ const EmailsTableContent = () => {
                   <EditEmailButton onClick={() => handleEditEmail(email)}>
                     Edit
                   </EditEmailButton>
-                </TableCell>
-                <TableCell>
-                  {!email.defaultEmail && (
-                    <RemoveEmailButton onClick={() => handleRemoveEmail(email)}>
-                      Remove
-                    </RemoveEmailButton>
-                  )}
                 </TableCell>
               </StyledTableRow>
             ))}
