@@ -2,10 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { VerifySubmissionEmail } from "pages/SubmissionDownload/VerifySubmissionEmail";
 import React from "react";
 import Main from "ui/shared/Main";
+import WatermarkBackground from "ui/shared/WatermarkBackground";
 import {
   createPublicRouteErrorComponent,
   createPublicRouteHead,
-  PublicRouteLayout,
 } from "utils/routeUtils/publicRouteHelpers";
 import {
   fetchDataForStandaloneView,
@@ -43,7 +43,8 @@ function DownloadApplicationComponent() {
   const { sessionId, team, flow } = Route.useLoaderData();
 
   return (
-    <PublicRouteLayout mode="download">
+    <>
+      <WatermarkBackground variant="dark" opacity={0.05} />
       <Main>
         <VerifySubmissionEmail
           params={{
@@ -53,6 +54,6 @@ function DownloadApplicationComponent() {
           }}
         />
       </Main>
-    </PublicRouteLayout>
+    </>
   );
 }

@@ -3,17 +3,11 @@ import { queryClient } from "lib/queryClient";
 import ErrorPage from "pages/ErrorPage/ErrorPage";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { Store } from "pages/FlowEditor/lib/store";
-import OfflineLayout from "pages/layout/OfflineLayout";
-import PublicLayout from "pages/layout/PublicLayout";
-import SaveAndReturnLayout from "pages/layout/SaveAndReturnLayout";
-import { TestWarningPage } from "pages/Preview/TestWarningPage";
 import React from "react";
 import type { PublicContext } from "routes/_public/-loader";
 import { Flow } from "types";
-import WatermarkBackground from "ui/shared/WatermarkBackground";
 import { z } from "zod";
 
-import { LoadingLayout } from "../../pages/layout/LoadingLayout";
 import {
   fetchSettingsForPublishedView,
   getLastPublishedAt,
@@ -22,12 +16,7 @@ import {
 import { setPath } from "./utils";
 
 // Types
-export type PublicRouteMode =
-  | "preview"
-  | "published"
-  | "draft"
-  | "pay"
-  | "download";
+export type PublicRouteMode = "preview" | "published" | "draft" | "download";
 
 export interface PublicRouteData {
   flow: Flow;
@@ -107,7 +96,6 @@ export const loadPublicRouteData = async (
       break;
 
     case "published":
-    case "pay":
       // Load published flow data
       publishedFlow = flow.publishedFlows[0]?.data;
       if (!publishedFlow) {
@@ -173,7 +161,7 @@ export const createPublicRouteBeforeLoad = <T extends PublicRouteMode>(
       updateStoreWithPublicRouteData(data);
 
       // Set application path for save-and-return flows
-      if (mode === "published" || mode === "pay") {
+      if (mode === "published") {
         setPath(data.flowData, {
           params: {
             ...params,
@@ -228,61 +216,6 @@ export const createPublicRouteErrorComponent = (mode: PublicRouteMode) => {
       </ErrorPage>
     );
   };
-};
-
-const MODE_CONFIG: Record<
-  PublicRouteMode,
-  {
-    wrappers: Array<React.ComponentType<{ children: React.ReactNode }>>;
-    watermarkVisible: boolean;
-  }
-> = {
-  preview: {
-    wrappers: [TestWarningPage, SaveAndReturnLayout],
-    watermarkVisible: true,
-  },
-  published: {
-    wrappers: [OfflineLayout, SaveAndReturnLayout],
-    watermarkVisible: false,
-  },
-  draft: {
-    wrappers: [SaveAndReturnLayout],
-    watermarkVisible: true,
-  },
-  pay: {
-    wrappers: [SaveAndReturnLayout],
-    watermarkVisible: false,
-  },
-  download: {
-    wrappers: [],
-    watermarkVisible: false,
-  },
-};
-
-// Layout wrapper components
-export const PublicRouteLayout: React.FC<{
-  mode: PublicRouteMode;
-  children: React.ReactNode;
-}> = ({ mode, children }) => {
-  const config = MODE_CONFIG[mode];
-
-  const wrappedContent = config.wrappers.reduceRight(
-    (content, Wrapper) => <Wrapper>{content}</Wrapper>,
-    children,
-  );
-
-  return (
-    <LoadingLayout>
-      <PublicLayout>
-        <WatermarkBackground
-          variant="dark"
-          opacity={0.05}
-          forceVisibility={config.watermarkVisible}
-        />
-        {wrappedContent}
-      </PublicLayout>
-    </LoadingLayout>
-  );
 };
 
 // Meta tags helper

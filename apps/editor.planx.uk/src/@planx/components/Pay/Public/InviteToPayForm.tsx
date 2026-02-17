@@ -8,7 +8,7 @@ import type {
 } from "@opensystemslab/planx-core/types";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
+import { notFound, useMatches, useNavigate } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { usePublicRouteContext } from "hooks/usePublicRouteContext";
@@ -88,13 +88,24 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
     state.hasAcknowledgedWarning,
   ]);
   const navigate = useNavigate();
+  const matches = useMatches();
   const defaults = getDefaultContent();
   const from = usePublicRouteContext();
 
+  /**
+   * Handle differing routes for the confirmation page based on isCustomDomain
+   */
   const redirectToConfirmationPage = (paymentRequestId: string) => {
-    // TODO: variable on custom subdomains?
+    const currentRoute = matches.at(-1);
+    if (!currentRoute?.routeId) throw notFound();
+
+    const { routeId } = currentRoute;
+    const isCustomDomain = routeId.includes("_customDomain");
+
+    const to = isCustomDomain ? "/$flow/pay/invite" : "../pay/invite";
+
     navigate({
-      to: "../pay/invite",
+      to,
       from,
       search: { paymentRequestId },
     });
