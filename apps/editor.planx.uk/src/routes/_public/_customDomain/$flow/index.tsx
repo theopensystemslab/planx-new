@@ -12,7 +12,6 @@ function RouteComponent() {
   return (
     <OfflineLayout>
       <SaveAndReturnLayout>
-        <WatermarkBackground variant="dark" opacity={0.05} />
         <Questions previewEnvironment="standalone" />
       </SaveAndReturnLayout>
     </OfflineLayout>
