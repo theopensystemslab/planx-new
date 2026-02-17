@@ -85,30 +85,33 @@ const ToggleButton = styled(IconButton)(({ theme }) => ({
 
 const RecentFlows: React.FC<RecentFlowsProps> = ({ flows }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const handleToggle = () => setIsExpanded((prev) => !prev);
 
-  const [firstFlow, ...rest] = flows;
-  const remainingFlows = [...rest].reverse();
+  const reversedFlows = [...flows].reverse();
+  const firstFlow = isExpanded ? reversedFlows[0] : flows[0];
+  const additionalFlows = reversedFlows.slice(1);
 
   return (
-    <RecentFlowContainer>
+    <RecentFlowContainer sx={{ overflow: isAnimating ? "hidden" : "visible" }}>
       <RecentFlowList>
-        {firstFlow && (
-          <RecentFlowItem indent={0}>
-            <RecentFlowLink variant="body3" href={firstFlow.href}>
-              <Box component="span" sx={{ mr: 0.25 }}>
-                back to
-              </Box>
-              <Box component="span" className="flow-name">
-                {firstFlow.flow}
-              </Box>
-            </RecentFlowLink>
-          </RecentFlowItem>
-        )}
-
-        <Collapse in={isExpanded}>
-          {remainingFlows.map((flow, index) => (
+        <RecentFlowItem indent={0}>
+          <RecentFlowLink variant="body3" href={firstFlow.href}>
+            <Box component="span" sx={{ mr: 0.25 }}>
+              back to
+            </Box>
+            <Box component="span" className="flow-name">
+              {firstFlow.flow}
+            </Box>
+          </RecentFlowLink>
+        </RecentFlowItem>
+        <Collapse
+          in={isExpanded}
+          unmountOnExit
+          timeout={{ enter: 225, exit: 0 }}
+        >
+          {additionalFlows.map((flow, index) => (
             <RecentFlowItem
               key={`${flow.team}-${flow.flow}-${index}`}
               indent={index + 1}
