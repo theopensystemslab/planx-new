@@ -97,6 +97,7 @@ export const AddFlow: React.FC = () => {
         validateOnBlur={false}
         validateOnChange={false}
         validationSchema={validationSchema}
+        enableReinitialize
       >
         {({ resetForm, isSubmitting, status }) => (
           <Dialog
