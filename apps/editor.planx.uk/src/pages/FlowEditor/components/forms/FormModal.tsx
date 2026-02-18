@@ -9,10 +9,12 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType,
+  ComponentType as TYPES,
+} from "@opensystemslab/planx-core/types";
 import { type BaseNodeData, parseFormValues } from "@planx/components/shared";
-import { useNavigate } from "@tanstack/react-router";
-import { useParams } from "@tanstack/react-router";
+import { useNavigate, useParams } from "@tanstack/react-router";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { FormikProps } from "formik";
 import isEqual from "lodash/isEqual";
@@ -403,9 +405,17 @@ const FormModal: React.FC<FormModalProps> = ({
                   }
                 }
 
+                // TODO account for nested folder paths (eg more than one-level deep)
                 navigate({
                   to: "/app/$team/$flow",
-                  params: { team: teamSlug, flow: flowSlug },
+                  params: {
+                    team: teamSlug,
+                    flow:
+                      parent &&
+                      flow[parent].type === ComponentType.InternalPortal
+                        ? `${flowSlug},${parent}`
+                        : `${flowSlug}`,
+                  },
                 });
               }}
             />
