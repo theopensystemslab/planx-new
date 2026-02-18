@@ -2,7 +2,6 @@ import Close from "@mui/icons-material/Close";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import TurnSharpLeftIcon from "@mui/icons-material/TurnSharpLeft";
 import Box from "@mui/material/Box";
-import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
@@ -26,7 +25,7 @@ const RecentFlowContainer = styled(Box)(({ theme }) => ({
   alignItems: "stretch",
   backgroundColor: theme.palette.text.primary,
   borderRadius: theme.spacing(0.5),
-  padding: theme.spacing(0.75, 0),
+  padding: theme.spacing(0.5, 0),
   maxWidth: "100%",
   "& svg": {
     color: theme.palette.secondary.dark,
@@ -83,46 +82,63 @@ const ToggleButton = styled(IconButton)(({ theme }) => ({
   alignItems: "flex-start",
 }));
 
+const ExpandableContent = styled(Box)<{ isExpanded: boolean }>(
+  ({ isExpanded }) => ({
+    display: "grid",
+    gridTemplateRows: isExpanded ? "1fr" : "0fr",
+    gridTemplateColumns: isExpanded ? "1fr" : "0fr",
+    transition:
+      "grid-template-rows 200ms ease-in-out, grid-template-columns 300ms ease-in-out",
+    "& > div": {
+      overflow: "hidden",
+      minWidth: 0,
+      minHeight: 0,
+    },
+  }),
+);
+
 const RecentFlows: React.FC<RecentFlowsProps> = ({ flows }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleToggle = () => setIsExpanded((prev) => !prev);
 
-  const [firstFlow, ...rest] = flows;
-  const remainingFlows = [...rest].reverse();
+  const reversedFlows = [...flows].reverse();
+  const firstFlow = isExpanded ? reversedFlows[0] : flows[0];
+  const additionalFlows = reversedFlows.slice(1);
 
   return (
     <RecentFlowContainer>
       <RecentFlowList>
-        {firstFlow && (
-          <RecentFlowItem indent={0}>
-            <RecentFlowLink variant="body3" href={firstFlow.href}>
-              <Box component="span" sx={{ mr: 0.25 }}>
-                back to
-              </Box>
-              <Box component="span" className="flow-name">
-                {firstFlow.flow}
-              </Box>
-            </RecentFlowLink>
-          </RecentFlowItem>
-        )}
+        <RecentFlowItem indent={0}>
+          <RecentFlowLink variant="body3" href={firstFlow.href}>
+            <Box component="span" sx={{ mr: 0.25 }}>
+              back to
+            </Box>
+            <Box component="span" className="flow-name">
+              {firstFlow.flow}
+            </Box>
+          </RecentFlowLink>
+        </RecentFlowItem>
 
-        <Collapse in={isExpanded}>
-          {remainingFlows.map((flow, index) => (
-            <RecentFlowItem
-              key={`${flow.team}-${flow.flow}-${index}`}
-              indent={index + 1}
-            >
-              <RecentFlowLink variant="body3" href={flow.href}>
-                <TurnSharpLeftIcon sx={{ mr: 0.25 }} fontSize="small" />
-                <Box component="span" className="flow-name">
-                  {flow.flow}
-                </Box>
-              </RecentFlowLink>
-            </RecentFlowItem>
-          ))}
-        </Collapse>
+        <ExpandableContent isExpanded={isExpanded}>
+          <div>
+            {additionalFlows.map((flow, index) => (
+              <RecentFlowItem
+                key={`${flow.team}-${flow.flow}-${index}`}
+                indent={index + 1}
+              >
+                <RecentFlowLink variant="body3" href={flow.href}>
+                  <TurnSharpLeftIcon sx={{ mr: 0.25 }} fontSize="small" />
+                  <Box component="span" className="flow-name">
+                    {flow.flow}
+                  </Box>
+                </RecentFlowLink>
+              </RecentFlowItem>
+            ))}
+          </div>
+        </ExpandableContent>
       </RecentFlowList>
+
       {flows.length > 1 && (
         <ToggleWrap>
           <ToggleButton
