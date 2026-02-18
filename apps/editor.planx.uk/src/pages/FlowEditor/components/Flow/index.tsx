@@ -54,7 +54,11 @@ const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
 
         {breadcrumbs.length ? (
           <li className="root-node-link">
-            <Link to={flow} preload={false}>
+            <Link
+              to={"/app/$team/$flow"}
+              params={{ team, flow: rootFlow }}
+              preload={false}
+            >
               {flowName}
             </Link>
           </li>
