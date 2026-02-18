@@ -27,12 +27,11 @@ export type TeamSearch = z.infer<typeof teamSearchSchema>;
 export const Route = createFileRoute("/_authenticated/app/$team/")({
   validateSearch: zodValidator(teamSearchSchema),
   pendingComponent: RouteLoadingIndicator,
-  loader: async () => {
-    const { getTeam, getFlows } = useStore.getState();
-    const team = getTeam();
+  loader: async ({ context }) => {
+    const { team } = context;
 
     try {
-      const flows = await getFlows(team.id);
+      const flows = await useStore.getState().getFlows(team.id);
       return {
         team,
         flows,
