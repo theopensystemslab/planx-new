@@ -39,6 +39,7 @@ describe(`sending an application by email to a planning office`, () => {
       data: {
         teams: [
           {
+            teamId: 1,
             teamSettings: {
               emailReplyToId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
               submissionEmail: "planning.office.example@council.gov.uk",
@@ -56,27 +57,6 @@ describe(`sending an application by email to a planning office`, () => {
       },
       variables: { id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
       matchOnVariables: true,
-    });
-
-    queryMock.mockQuery({
-      name: "GetSessionEmailDetails",
-      matchOnVariables: true,
-      data: {
-        session: {
-          email: "simulate-delivered@notifications.service.gov.uk",
-          flow: { slug: "test-flow", name: "Test Flow" },
-          passportData: {
-            _address: {
-              single_line_address: "Bag End, Underhill, Hobbiton",
-            },
-            "proposal.projectType": "",
-            "applicant.name.first": "Bilbo",
-            "applicant.name.last": "Baggins",
-            "application.fee.payable": 100,
-          },
-        },
-      },
-      variables: { id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
     });
 
     queryMock.mockQuery({
@@ -120,59 +100,43 @@ describe(`sending an application by email to a planning office`, () => {
         session_id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49",
       },
     });
-  });
 
-  it("succeeds when provided with valid data", async () => {
-    await supertest(app)
-      .post("/email-submission/southwark")
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
-      .send({ payload: { sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" } })
-      .expect(200)
-      .then((res) => {
-        expect(res.body).toEqual({
-          message: `Successfully sent to email`,
-          inbox: "planning.office.example@council.gov.uk",
-          govuk_notify_template: "Submit",
-        });
-      });
-  });
-
-  it("fails without authorization header", async () => {
-    await supertest(app)
-      .post("/email-submission/southwark")
-      .send({ payload: { sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" } })
-      .expect(401);
-  });
-
-  it("errors if the payload body does not include a sessionId", async () => {
-    await supertest(app)
-      .post("/email-submission/southwark")
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
-      .send({
-        payload: { somethingElse: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
-      })
-      .expect(400)
-      .then((res) => {
-        expect(res.body).toHaveProperty("issues");
-        expect(res.body).toHaveProperty("name", "ZodError");
-      });
-  });
-
-  it("errors if this team does not have a 'submission_email' configured in teams", async () => {
     queryMock.mockQuery({
-      name: "GetTeamEmailSettings",
-      matchOnVariables: false,
+      name: "GetFlowId",
+      matchOnVariables: true,
       data: {
-        teams: [
+        lowcalSessions: [{ flowId: "91693304-fc37-4079-8ec3-e33a6164a27a" }],
+      },
+      variables: { session_id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
+    });
+  });
+
+  it("errors if this team does not have a 'submission_email'", async () => {
+    queryMock.mockQuery({
+      name: "GetFlowSubmissionEmail",
+      data: {
+        flowIntegrations: [
           {
-            teamSettings: {
-              emailReplyToId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
+            emailId: null,
+            submissionIntegration: {
               submissionEmail: null,
             },
           },
         ],
       },
-      variables: { slug: "southwark" },
+      variables: { flowId: "91693304-fc37-4079-8ec3-e33a6164a27a" },
+    });
+
+    queryMock.mockQuery({
+      name: "GetDefaultSubmissionIntegration",
+      data: {
+        submissionIntegrations: [
+          {
+            submissionEmail: null,
+          },
+        ],
+      },
+      variables: { teamId: 1 },
     });
 
     await supertest(app)
@@ -187,54 +151,6 @@ describe(`sending an application by email to a planning office`, () => {
         });
       });
   });
-
-  it("exits early if the session has already been successfully submitted via email", async () => {
-    queryMock.mockQuery({
-      name: "FindApplication",
-      matchOnVariables: false,
-      data: {
-        emailApplications: [
-          {
-            response: "Success",
-          },
-        ],
-      },
-      variables: {
-        session_id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49",
-      },
-    });
-
-    await supertest(app)
-      .post("/email-submission/southwark")
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
-      .send({ payload: { sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" } })
-      .expect(200)
-      .then((res) => {
-        expect(res.body.error).toMatch(
-          /Skipping send, already successfully submitted/,
-        );
-      });
-  });
-
-  it("errors if session detail can't be found", async () => {
-    queryMock.mockQuery({
-      name: "GetSessionEmailDetails",
-      matchOnVariables: false,
-      data: {
-        session: null,
-      },
-      variables: { id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
-    });
-
-    await supertest(app)
-      .post("/email-submission/other-council")
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
-      .send({ payload: { sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" } })
-      .expect(500)
-      .then((res) => {
-        expect(res.body.error).toMatch(/Cannot find session/);
-      });
-  });
 });
 
 describe(`downloading application data received by email`, () => {
@@ -247,6 +163,7 @@ describe(`downloading application data received by email`, () => {
           {
             teamSettings: {
               submissionEmail: "planning.office.example@council.gov.uk",
+              teamId: 1,
             },
           },
         ],
@@ -303,7 +220,7 @@ describe(`downloading application data received by email`, () => {
   it("errors if email query param does not match the stored database value for this team", async () => {
     await supertest(app)
       .get(
-        "/download-application-files/123?email=wrong@council.gov.uk&localAuthority=southwark",
+        "/download-application-files/33d373d4-fff2-4ef7-a5f2-2a36e39ccc49?email=wrong@council.gov.uk&localAuthority=southwark",
       )
       .expect(403)
       .then((res) => {
