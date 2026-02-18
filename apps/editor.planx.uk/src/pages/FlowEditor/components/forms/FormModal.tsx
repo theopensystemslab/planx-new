@@ -9,7 +9,10 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType,
+  ComponentType as TYPES,
+} from "@opensystemslab/planx-core/types";
 import { type BaseNodeData, parseFormValues } from "@planx/components/shared";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import ErrorFallback from "components/Error/ErrorFallback";
@@ -407,7 +410,11 @@ const FormModal: React.FC<FormModalProps> = ({
                   to: "/app/$team/$flow",
                   params: {
                     team: teamSlug,
-                    flow: parent ? `${flowSlug},${parent}` : `${flowSlug}`,
+                    flow:
+                      parent &&
+                      flow[parent].type === ComponentType.InternalPortal
+                        ? `${flowSlug},${parent}`
+                        : `${flowSlug}`,
                   },
                 });
               }}
