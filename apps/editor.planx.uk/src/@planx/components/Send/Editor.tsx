@@ -25,13 +25,11 @@ import InputRow from "ui/shared/InputRow";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 import { Switch } from "ui/shared/Switch";
 
-import { SubmissionEmailInput } from "../../../../src/pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 import { ICONS } from "../shared/icons";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
 import { EditorProps } from "../shared/types";
 import { useFlowEmailId } from "./hooks/useFlowEmailId";
 import { useTeamSubmissionIntegrations } from "./hooks/useGetTeamSubmissionIntegrations";
-import { useInsertFlowIntegration } from "./hooks/useInsertFlowIntegrations";
 import { useUpdateFlowIntegration } from "./hooks/useUpdateFlowIntegration";
 import { parseSend, Send, validationSchema } from "./model";
 import { GetFlowEmailIdQuery } from "./types";
@@ -44,16 +42,12 @@ const SendComponent: React.FC<Props> = (props) => {
       initialValues: parseSend(props.node?.data),
       onSubmit: async (newValues) => {
         if (props.handleSubmit) {
-          if (hasFeatureFlag("MULTIPLE_SUBMISSION_SEND_COMPONENT")) {
-            await handleInsertOrUpdate(
-              teamId,
-              newValues,
-              existingEmailId,
-              defaultEmail,
-              id,
-              refetchFlowData,
-            );
-          }
+          await handleInsertOrUpdate(
+            newValues,
+            existingEmailId,
+            id,
+            refetchFlowData,
+          );
           props.handleSubmit({ type: TYPES.Send, data: newValues });
         }
       },
@@ -86,36 +80,19 @@ const SendComponent: React.FC<Props> = (props) => {
     (email: any) => email.defaultEmail === true,
   );
 
-  const [insertFlowIntegration] = useInsertFlowIntegration();
   const [updateFlowIntegration] = useUpdateFlowIntegration();
 
   const handleInsertOrUpdate = async (
-    teamId: number,
     newValues: Send,
     existingEmailId: string | undefined,
-    defaultEmail: SubmissionEmailInput | undefined,
     id: string,
     refetchFlowData: () => Promise<ApolloQueryResult<GetFlowEmailIdQuery>>,
   ) => {
-    const selectedEmailId = newValues.submissionEmailId || defaultEmail?.id;
-
-    if (!existingEmailId && selectedEmailId) {
-      await insertFlowIntegration({
-        variables: {
-          flowId: id,
-          emailId: selectedEmailId,
-          teamId: teamId,
-        },
-      });
-
-      await refetchFlowData();
-      return;
-    }
+    const selectedEmailId = newValues.submissionEmailId;
 
     if (
-      existingEmailId &&
       newValues.submissionEmailId &&
-      existingEmailId !== newValues.submissionEmailId
+      existingEmailId !== selectedEmailId
     ) {
       await updateFlowIntegration({
         variables: {
