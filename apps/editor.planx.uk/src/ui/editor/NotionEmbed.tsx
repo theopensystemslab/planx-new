@@ -11,7 +11,7 @@ const NotionEmbed: React.FC<{
   title: string;
 }> = ({ page, title }) => {
   const pageId = NOTION_PAGES[page];
-  const embedUrl = `https://opensystemslab.notion.site/ebd/${pageId}`;
+  const embedUrl = `https://opensystemslab.notion.site/ebd//${pageId}`;
 
   return (
     <iframe
