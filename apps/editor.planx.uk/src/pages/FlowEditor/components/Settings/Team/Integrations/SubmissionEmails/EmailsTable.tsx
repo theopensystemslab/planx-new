@@ -16,9 +16,7 @@ import { AddButton } from "ui/editor/AddButton";
 
 import { StyledTableRow } from "../../../../Team/styles";
 import { EmailsUpsertModal } from "./EmailsUpsertModal";
-import {
-  GET_TEAM_SUBMISSION_INTEGRATIONS,
-} from "./queries";
+import { GET_TEAM_SUBMISSION_INTEGRATIONS } from "./queries";
 import { GetSubmissionEmails, SubmissionEmailInput } from "./types";
 
 const TableRowButton = styled(Button)(({ theme }) => ({
@@ -57,9 +55,7 @@ const EmailsTableContent = () => {
   const emails = data?.submissionIntegrations;
 
   const [showModal, setShowModal] = useState(false);
-  const [actionType, setActionType] = useState<"add" | "edit" >(
-    "add",
-  );
+  const [actionType, setActionType] = useState<"add" | "edit">("add");
   const [initialValues, setInitialValues] = useState<
     SubmissionEmailInput | undefined
   >();
