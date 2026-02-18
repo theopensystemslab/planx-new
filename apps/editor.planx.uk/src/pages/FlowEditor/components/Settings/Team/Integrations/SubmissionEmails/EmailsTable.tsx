@@ -45,7 +45,7 @@ const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
 const EmailsTableContent = () => {
   const teamId = useStore((state) => state.teamId);
 
-  const { data, loading, refetch } = useQuery<GetSubmissionEmails>(
+  const { data, loading } = useQuery<GetSubmissionEmails>(
     GET_TEAM_SUBMISSION_INTEGRATIONS,
     {
       variables: { teamId },
@@ -59,10 +59,6 @@ const EmailsTableContent = () => {
   const [initialValues, setInitialValues] = useState<
     SubmissionEmailInput | undefined
   >();
-
-  const currentDefault = emails?.find(
-    (email: SubmissionEmailInput) => email.defaultEmail === true,
-  );
 
   const addEmail = () => {
     setActionType("add");
