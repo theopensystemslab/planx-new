@@ -34,24 +34,3 @@ export const UPSERT_TEAM_SUBMISSION_INTEGRATIONS = gql`
     }
   }
 `;
-
-export const DELETE_TEAM_SUBMISSION_INTEGRATIONS = gql`
-  mutation DeleteSubmissionIntegration(
-    $submissionEmail: String!
-    $teamId: Int!
-  ) {
-    delete_submission_integrations(
-      where: {
-        submission_email: { _eq: $submissionEmail }
-        team_id: { _eq: $teamId }
-        default_email: { _eq: false }
-      }
-    ) {
-      returning {
-        teamId: team_id
-        submissionEmail: submission_email
-        defaultEmail: default_email
-      }
-    }
-  }
-`;
