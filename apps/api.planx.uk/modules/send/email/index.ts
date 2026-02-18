@@ -9,9 +9,11 @@ import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
 import type { SendIntegrationController } from "../types.js";
 import {
   checkEmailAuditTable,
+  getSubmissionEmail,
   getSessionEmailDetailsById,
   getTeamEmailSettings,
   insertAuditEntry,
+  getFlowId,
 } from "./service.js";
 import type {
   SiteAddress,
@@ -31,9 +33,12 @@ export const sendToEmail: SendIntegrationController = async (
   const localAuthority = res.locals.parsedReq.params.localAuthority;
 
   try {
-    // Confirm this local authority (aka team) has an email configured in teams.submission_email
-    const { teamSettings } = await getTeamEmailSettings(localAuthority);
-    if (!teamSettings.submissionEmail) {
+    const { teamId, teamSettings } = await getTeamEmailSettings(localAuthority);
+    const flowId = await getFlowId(sessionId);
+
+    // Confirm this local authority (aka team) has an email configured
+    const submissionEmail = await getSubmissionEmail(teamId, flowId);
+    if (!submissionEmail) {
       return next({
         status: 400,
         message: `Send to email is not enabled for this local authority (${localAuthority})`,
@@ -51,16 +56,13 @@ export const sendToEmail: SendIntegrationController = async (
 
     const config = await getSubmitEmailConfig({
       teamSettings,
+      submissionEmail,
       localAuthority,
       sessionId,
     });
 
     // Send the email
-    const response = await sendEmail(
-      "submit",
-      teamSettings.submissionEmail,
-      config,
-    );
+    const response = await sendEmail("submit", submissionEmail, config);
 
     // Mark session as submitted so that reminder and expiry emails are not triggered
     markSessionAsSubmitted(sessionId);
@@ -69,14 +71,14 @@ export const sendToEmail: SendIntegrationController = async (
     insertAuditEntry(
       sessionId,
       localAuthority,
-      teamSettings.submissionEmail,
+      submissionEmail,
       config,
       response,
     );
 
     return res.status(200).send({
       message: `Successfully sent to email`,
-      inbox: teamSettings.submissionEmail,
+      inbox: submissionEmail,
       govuk_notify_template: "Submit",
     });
   } catch (error) {
@@ -92,10 +94,12 @@ export const sendToEmail: SendIntegrationController = async (
 
 const getSubmitEmailConfig = async ({
   teamSettings,
+  submissionEmail,
   localAuthority,
   sessionId,
 }: {
   teamSettings: TeamContactSettings;
+  submissionEmail: string;
   localAuthority: string;
   sessionId: string;
 }): Promise<TemplateRegistry["submit"]["config"]> => {
@@ -104,7 +108,7 @@ const getSubmitEmailConfig = async ({
       await getSessionEmailDetailsById(sessionId);
 
     // Type narrowing
-    if (!teamSettings.submissionEmail) throw Error("Submission email missing!");
+    if (!submissionEmail) throw Error("Submission email missing!");
 
     const projectTypes = passportData["proposal.projectType"] as
       | string[]
