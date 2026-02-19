@@ -233,7 +233,9 @@ const ProjectDescription: React.FC<Props> = (props) => {
         <Typography variant="h2" component="h1" mb={1}>
           {props.revisionTitle}
         </Typography>
-        <Typography variant="subtitle1">{props.revisionDescription}</Typography>
+        <Typography variant="subtitle1" component="p">
+          {props.revisionDescription}
+        </Typography>
         <Typography variant="subtitle1" component="div">
           <HelpButton
             variant="help"

@@ -66,12 +66,12 @@ describe("error handling", () => {
     expect(
       await screen.findByRole("heading", {
         level: 2,
-        name: /Invalid description/,
+        name: /This doesn't look like a planning project description/,
       }),
     ).toBeVisible();
     expect(
       await screen.findByText(
-        /The description doesn't appear to be related to a planning application/,
+        /Your text does not clearly describe a proposed development./,
       ),
     ).toBeVisible();
   });
@@ -103,7 +103,7 @@ describe("error handling", () => {
     ).toBeVisible();
     expect(
       await screen.findByText(
-        /Unable to generate enhanced project description. We'll use your original project description./,
+        /We were unable to generate an enhanced project description. We'll use your original project description:/,
       ),
     ).toBeVisible();
   });
@@ -135,7 +135,7 @@ describe("error handling", () => {
     ).toBeVisible();
     expect(
       await screen.findByText(
-        /You've sent too many requests to our AI service. We'll use your original project description./,
+        /You've sent too many requests to our AI service. We'll use your original project description:/,
       ),
     ).toBeVisible();
   });
