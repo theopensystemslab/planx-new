@@ -10,7 +10,7 @@ config:
   application:db-host:
     secure: AAABAAPuhNJbXoO9KrKmJE1L8enMlj0eGJQ/4E57Fvd0ZYW5d4ZB+8GfxUbGmmt/s841UULkAvqlEMhSlKS4Mrl9qVkTDqHPASepjUWZyF+Byaw=
   application:db-password:
-    secure: AAABAK8ajSnZHPGAQ/vuCxsVKmfBYRk+ZYxSxZugQd2zui+CdfTRgp3av8ilCQOpYeZxiezyaDTd4auWB0lliA==
+    secure: AAABAAR915Yo1MMe0E99FqIloGv4R7Mr2JWEsn9li/IIEt8FOHdGjv4SrPkc8d/QvbXaQgcn6MFeZD+mzH1ZPQ==
   application:encryption-key:
     secure: AAABAFTW2eRwQnXJq/IboPWtStOWXiF9WcsUKEiuosmp7TLZt52uKE3L+NrEGgsThOl3NkvFW2HhFa2XL6aB5w==
   application:file-api-key:
