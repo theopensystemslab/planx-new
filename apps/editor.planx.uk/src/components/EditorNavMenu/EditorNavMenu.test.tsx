@@ -56,7 +56,7 @@ describe("globalLayoutRoutes", () => {
     });
   });
 
-  it("hides menu for teamEditors (only 1 accessible route)", () => {
+  it("hides menu for teamEditors (only 1 accessible route)", async () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("teamEditor");
 
     const { queryAllByRole } = await setup(<EditorNavMenu />);
@@ -122,10 +122,10 @@ describe("teamLayoutRoutes", () => {
     expect(within(menuItems[1]).getByText("Team settings")).toBeInTheDocument();
   });
 
-  it("displays subtitles for sections", () => {
+  it("displays subtitles for sections", async () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
 
-    const { getByText } = setup(<EditorNavMenu />);
+    const { getByText } = await setup(<EditorNavMenu />);
     expect(getByText("Settings")).toBeInTheDocument();
     expect(getByText("Data")).toBeInTheDocument();
     expect(getByText("Documentation")).toBeInTheDocument();
