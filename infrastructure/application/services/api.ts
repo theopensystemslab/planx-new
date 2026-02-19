@@ -288,7 +288,7 @@ export const createApiService = async ({
     loadBalancers: apiTask.loadBalancers,
     networkConfiguration: {
       subnets: publicSubnetIds,
-      // assignPublicIp: true,
+      assignPublicIp: true,
       securityGroups: [apiServiceSecurityGroup.id],
     },
     desiredCount: 1,

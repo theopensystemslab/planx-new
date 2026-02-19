@@ -189,7 +189,7 @@ export const createHasuraService = async ({
     loadBalancers: hasuraTask.loadBalancers,
     networkConfiguration: {
       subnets: publicSubnetIds,
-      // assignPublicIp: true,
+      assignPublicIp: true,
       securityGroups: [hasuraServiceSecurityGroup.id],
     },
     desiredCount: 1,
