@@ -13,11 +13,11 @@ const EndPoint: React.FC<{ text: string }> = ({ text }) => {
 
   const isStart = text === "start";
 
-  const { rootFlow: href } = useRouteContext({
+  const { rootFlow } = useRouteContext({
     from: "/_authenticated/app/$team/$flow",
   });
 
-  const { flow: currentPath } = useParams({
+  const { team, flow: currentPath } = useParams({
     from: "/_authenticated/app/$team/$flow",
   });
   const isLoading = router.state.isLoading;
@@ -54,7 +54,11 @@ const EndPoint: React.FC<{ text: string }> = ({ text }) => {
       ref={el}
       style={{ pointerEvents: isStart ? "auto" : "none" }}
     >
-      <Link to={href} preload={false}>
+      <Link
+        to={"/app/$team/$flow"}
+        params={{ team, flow: rootFlow }}
+        preload={false}
+      >
         {text}
       </Link>
     </li>
