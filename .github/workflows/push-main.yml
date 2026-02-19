@@ -154,6 +154,7 @@ jobs:
       - uses: pulumi/actions@v6
         with:
           command: up
+          refresh: true
           stack-name: staging
           work-dir: infrastructure/application
           edit-pr-comment: true
