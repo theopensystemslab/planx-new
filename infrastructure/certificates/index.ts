@@ -34,6 +34,7 @@ const caaRecordWildcard = new cloudflare.DnsRecord("caa-record-wildcard", {
   },
 });
 
+// note the mix of AWS and Cloudflare infra being provisioned here
 const sslCert = new aws.acm.Certificate("sslCert",
   {
     // XXX: For wildcards remember that *.example.com will only cover a single level subdomain such as www.example.com not secondary levels such as beta.www.example.com.
@@ -54,7 +55,7 @@ const sslCert = new aws.acm.Certificate("sslCert",
 const sslCertValidationRecord = new cloudflare.DnsRecord("sslCertValidationRecord", {
     name: sslCert.domainValidationOptions[0].resourceRecordName,
     ttl: 3600,
-    type: sslCert.domainValidationOptions[0].resourceRecordType,
+    type: sslCert.domainValidationOptions[0].resourceRecordType,  // "CNAME"
     content: sslCert.domainValidationOptions[0].resourceRecordValue,
     zoneId: config.require("cloudflare-zone-id"),
 });
