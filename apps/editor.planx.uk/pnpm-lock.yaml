@@ -58,8 +58,8 @@ importers:
         specifier: 1.0.0-alpha.11
         version: 1.0.0-alpha.11(preact@8.5.3)
       '@opensystemslab/planx-core':
-        specifier: git+https://github.com/theopensystemslab/planx-core#7050578
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/7050578(@types/react@18.3.28)
+        specifier: git+https://github.com/theopensystemslab/planx-core#c20b0ca
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/c20b0ca(@types/react@18.3.28)
       '@tanstack/react-query':
         specifier: ^5.90.6
         version: 5.90.21(react@18.3.1)
@@ -1117,10 +1117,6 @@ packages:
     resolution: {integrity: sha512-Q/N6JNWvIvPnLDvjlE1OUBLPQHH6l3CltCEsHIujp45zQUSSh8K+gHnaEX45yAT1nyngnINhvWtzN+Nb9D8RAQ==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/runtime@7.28.6':
-    resolution: {integrity: sha512-05WQkdpL9COIMz4LjTxGpPNCdlpyimKppYNoJ5Di5EUObifl8t4tuLuUBBZEpoLYOmfvIWrsp9fCl0HoPRVTdA==}
-    engines: {node: '>=6.9.0'}
-
   '@babel/template@7.27.2':
     resolution: {integrity: sha512-LPDZ85aEJyYSd18/DkjNh4/y1ntkE5KwUHWTiqgRxruuZL2F1yuHligVHLvcHY2vMHXttKFpJn6LwfI7cw7ODw==}
     engines: {node: '>=6.9.0'}
@@ -1963,8 +1959,8 @@ packages:
   '@opensystemslab/map@1.0.0-alpha.11':
     resolution: {integrity: sha512-ETACPCk5Coef1L2kNT3MhIzLxVPDpyopxsTNcgeRyEqL71HBfTklGyC5+t7HgEgxRkX5wlUXqmKPNL9DdpVj8g==}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/7050578':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/7050578}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/c20b0ca':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/c20b0ca}
     version: 1.0.0
 
   '@parcel/watcher-android-arm64@2.5.1':
@@ -8140,8 +8136,6 @@ snapshots:
 
   '@babel/runtime@7.28.4': {}
 
-  '@babel/runtime@7.28.6': {}
-
   '@babel/template@7.27.2':
     dependencies:
       '@babel/code-frame': 7.29.0
@@ -8827,7 +8821,7 @@ snapshots:
 
   '@mui/x-charts-vendor@7.20.0':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.28.4
       '@types/d3-color': 3.1.3
       '@types/d3-delaunay': 6.0.4
       '@types/d3-interpolate': 3.0.4
@@ -8845,7 +8839,7 @@ snapshots:
 
   '@mui/x-charts@7.29.1(@emotion/react@11.14.0(@types/react@18.3.28)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.28)(react@18.3.1))(@types/react@18.3.28)(react@18.3.1))(@mui/material@5.18.0(@emotion/react@11.14.0(@types/react@18.3.28)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.28)(react@18.3.1))(@types/react@18.3.28)(react@18.3.1))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mui/system@5.18.0(@emotion/react@11.14.0(@types/react@18.3.28)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.28)(react@18.3.1))(@types/react@18.3.28)(react@18.3.1))(@types/react@18.3.28)(react@18.3.1))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.28.4
       '@mui/material': 5.18.0(@emotion/react@11.14.0(@types/react@18.3.28)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.28)(react@18.3.1))(@types/react@18.3.28)(react@18.3.1))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/system': 5.18.0(@emotion/react@11.14.0(@types/react@18.3.28)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.28)(react@18.3.1))(@types/react@18.3.28)(react@18.3.1))(@types/react@18.3.28)(react@18.3.1)
       '@mui/utils': 5.17.1(@types/react@18.3.28)(react@18.3.1)
@@ -8884,7 +8878,7 @@ snapshots:
 
   '@mui/x-internals@7.29.0(@types/react@18.3.28)(react@18.3.1)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.28.4
       '@mui/utils': 5.17.1(@types/react@18.3.28)(react@18.3.1)
       react: 18.3.1
     transitivePeerDependencies:
@@ -8930,7 +8924,7 @@ snapshots:
     transitivePeerDependencies:
       - preact
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/7050578(@types/react@18.3.28)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/c20b0ca(@types/react@18.3.28)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@18.3.28)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@18.3.28)(react@18.3.1))(@types/react@18.3.28)(react@18.3.1)

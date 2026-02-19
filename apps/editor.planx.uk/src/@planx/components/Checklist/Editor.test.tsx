@@ -27,7 +27,6 @@ describe("Checklist editor component", () => {
       email: "test@test.com",
       teams: [],
       jwt: "x.y.z",
-      defaultTeamId: null,
     });
   });
 

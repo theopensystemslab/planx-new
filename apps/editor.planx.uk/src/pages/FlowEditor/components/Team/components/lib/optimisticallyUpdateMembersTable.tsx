@@ -14,7 +14,6 @@ export const optimisticallyAddNewMember = async (
   const newMember: TeamMember = {
     ...values,
     id: userId,
-    defaultTeamId: null,
   };
 
   await useStore.getState().setTeamMembers([...existingMembers, newMember]);
@@ -27,12 +26,7 @@ export const optimisticallyUpdateExistingMember = async (
   const existingMembers = useStore.getState().teamMembers;
   const updatedMembers: TeamMember[] = existingMembers.map((member) => {
     if (member.id === userId) {
-      return {
-        ...values,
-        id: userId,
-        role: member.role,
-        defaultTeamId: member.defaultTeamId,
-      };
+      return { ...values, id: userId, role: member.role };
     }
     return member;
   });

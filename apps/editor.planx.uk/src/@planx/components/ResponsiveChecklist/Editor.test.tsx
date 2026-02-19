@@ -28,7 +28,6 @@ describe("Responsive Checklist editor component", async () => {
       email: "test@test.com",
       teams: [],
       jwt: "x.y.z",
-      defaultTeamId: null,
     });
   });
 

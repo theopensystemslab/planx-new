@@ -50,7 +50,6 @@ Given(
       email: featureData[0].email,
       isPlatformAdmin: false,
       isAnalyst: false,
-      defaultTeamId: null,
     });
 
     const userTwoId = await createUser({
@@ -60,7 +59,6 @@ Given(
       email: featureData[1].email,
       isPlatformAdmin: true,
       isAnalyst: false,
-      defaultTeamId: null,
     });
 
     const userOne = await $admin.user.getById(userOneId);
