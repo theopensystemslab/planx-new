@@ -5,15 +5,6 @@ object_relationships:
   - name: flow
     using:
       foreign_key_constraint_on: flow_id
-  - name: submission_integration
-    using:
-      manual_configuration:
-        column_mapping:
-          submission_email_id: id
-        insertion_order: null
-        remote_table:
-          name: submission_integrations
-          schema: public
   - name: user
     using:
       foreign_key_constraint_on: publisher_id
@@ -31,7 +22,6 @@ insert_permissions:
         - id
         - publisher_id
         - service_charge_enabled
-        - submission_email_id
         - summary
   - role: demoUser
     permission:
@@ -54,7 +44,6 @@ insert_permissions:
         - id
         - publisher_id
         - service_charge_enabled
-        - submission_email_id
         - summary
     comment: A demoUser can only insert a published flow for their own flows and for flows inside the Demo team [id = 32]
   - role: platformAdmin
@@ -70,7 +59,6 @@ insert_permissions:
         - id
         - publisher_id
         - service_charge_enabled
-        - submission_email_id
         - summary
   - role: teamEditor
     permission:
@@ -93,7 +81,6 @@ insert_permissions:
         - id
         - publisher_id
         - service_charge_enabled
-        - submission_email_id
         - summary
 select_permissions:
   - role: api
@@ -108,7 +95,6 @@ select_permissions:
         - id
         - publisher_id
         - service_charge_enabled
-        - submission_email_id
         - summary
       filter: {}
       allow_aggregations: true
@@ -124,7 +110,6 @@ select_permissions:
         - id
         - publisher_id
         - service_charge_enabled
-        - submission_email_id
         - summary
       filter: {}
       allow_aggregations: true
@@ -140,7 +125,6 @@ select_permissions:
         - id
         - publisher_id
         - service_charge_enabled
-        - submission_email_id
         - summary
       filter: {}
       allow_aggregations: true
@@ -171,7 +155,6 @@ select_permissions:
         - id
         - publisher_id
         - service_charge_enabled
-        - submission_email_id
         - summary
       filter: {}
       allow_aggregations: true
