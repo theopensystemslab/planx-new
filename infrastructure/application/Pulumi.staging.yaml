@@ -8,9 +8,9 @@ config:
   application:cloudflare-zone-id:
     secure: AAABAPZz/bzFCZEZd+jzPpYP4HXAOLYQmLGf2YLQE2YPfMBUtDC83KCo2l2DJ4AL4OKL+jFFx8wrrJc6DDwXJQ==
   application:db-host:
-    secure: AAABAMwwPy7/bMKC+iEonzpc0HrzblNfFBXBi60LiSTcoF1KxQkd+vkEUfBfhY96Tx4Nf8/JML6EBhtesIjoGN+r4Y1EcpW+thJoJa/g3Ssv4Dc=
+    secure: AAABAAPuhNJbXoO9KrKmJE1L8enMlj0eGJQ/4E57Fvd0ZYW5d4ZB+8GfxUbGmmt/s841UULkAvqlEMhSlKS4Mrl9qVkTDqHPASepjUWZyF+Byaw=
   application:db-password:
-    secure: AAABAAVV2tpNt1KK6I/h1PqHYZf5iDySr+GJOXy1cdMbIfO6cXNxel8Rv9EwmmAaPkPh7Z4vEZHIHSJqHrPDOA==
+    secure: AAABAAR915Yo1MMe0E99FqIloGv4R7Mr2JWEsn9li/IIEt8FOHdGjv4SrPkc8d/QvbXaQgcn6MFeZD+mzH1ZPQ==
   application:encryption-key:
     secure: AAABAFTW2eRwQnXJq/IboPWtStOWXiF9WcsUKEiuosmp7TLZt52uKE3L+NrEGgsThOl3NkvFW2HhFa2XL6aB5w==
   application:file-api-key:
@@ -37,7 +37,8 @@ config:
     secure: AAABAK8LsYKKNgIS4fepW5Sh6+WKxNopxsos51eBttT7O8E8K0HYOswgrIWuYJ0R1eJHDLKRHqQ=
   application:file-api-key-tewkesbury:
     secure: AAABALlStpxyNG5SRQFVYJMGmCyteUkoU9XBTBJn2kcf6APdqO1JwxU4jiU9Qo6a6aZQXK60an7xbkuD2hla/UvjR7Wu7cXY
-  application:google-client-id: 987324067365-vpsk3kgeq5n32ihjn760ihf8l7m5rhh8.apps.googleusercontent.com
+  application:google-client-id:
+    secure: AAABAFaopZb2Jp3OVhHQ9/jnqaYvzDLc2QkAYRKxyWeWOxn0anm3Jz/C4NdNoffq1OThczLVWAVODEmt+LQcJyzeCyXQiGQnKqpFUTYp0DKksqPK5N9Ntk8uL5ymmBT9aEfbaHbQX8Y=
   application:google-client-secret:
     secure: AAABAGQuqQDU4S+vR+cQaFoa6xAeWU9clVaNonQ/dq0R8Dke+o0y7ALOmYMy4fOX4Pa6HiZl85npU/cbwy8HdMYaiA==
   application:govuk-notify-api-key:
@@ -68,7 +69,7 @@ config:
     secure: AAABAGmfVICD8sR+IE6mHC8BNUY1WQXGCbv5F3C1fSgA+1ADiRem3GNrwY0YRZociRYuPIo3MIRS0aIg44jt10SBCE0ik58wHamcKA==
   application:metabase-memory: "2048"
   application:metabasePgPassword:
-    secure: AAABADfCkSRtVTdU8wi1F+nwuHl8OeI3bm9ZzaNkIY4yOGB9dsOqS30tkD8W7GZlNoWDZT2ojoP3zOFPuTLWbQ==
+    secure: AAABANW2Qlu5YFe+OVWdilpK+pW2NW0wR05mkl7thmxKMivWkYt5AZENmADE8LAw9MBEXx/S0Z9eyZLQet/d5Q==
   application:microsoft-client-id:
     secure: AAABAN/jlejEkv8Rf+u6nzbXy2yTIUNwWK7cw1Rz1P1DQTvvOYsPwhMYqo4Jjt9UAAx+b2FWPoUvrIOUm1dT+xpnqbU=
   application:microsoft-client-secret:
@@ -91,7 +92,5 @@ config:
     secure: AAABALWeaw3/BHLqTXaV4YWbC4f6YF4R3uOq0KPM4a23K5tYiTNOPjGE458CM7TIYiPX0R58Xf/8rIml3sfN
   application:uniform-submission-url: https://staging.identity.idoxgroup.com/agw/submission-api
   application:uniform-token-url: https://staging.identity.idoxgroup.com/uaa/oauth/token
-  aws:region: eu-west-2
-  certificates:cloudflare-zone-id: dc27ac531ff8862559ed9ab5016c4953
   cloudflare:apiToken:
     secure: AAABABWhDm+7RstbxLXd1D8CcxkylHS6UKMqk4kOaY7Y0E7FJS4bZfvyGs0nks80hl3vjENH4eDuFbUgA82/sA4SmDlfpNXr

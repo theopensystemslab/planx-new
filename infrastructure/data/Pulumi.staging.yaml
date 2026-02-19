@@ -1,4 +1,4 @@
 config:
   aws:profile: planx-staging-pulumi
   data:db-password:
-    secure: AAABAB+51nuPsU4NErw/mf5Xxh23M/lprQw4DR95zIlXKhyM7rX0Kmjq+FThgBaGVjHtmmE9b26+jVgU/3wc5w==
+    secure: AAABACN9xq8InQYROYExc7RwZUArJX49en8fnB5O1aJjRKuy3WIQ5gcGB6L23aZpnqY2vbCqJXMoD9Ll3tkpvA==

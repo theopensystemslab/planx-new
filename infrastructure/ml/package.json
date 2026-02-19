@@ -1,14 +1,13 @@
 {
-  "name": "ml",
-  "main": "index.ts",
-  "devDependencies": {
-    "@types/node": "22.14.1",
-    "typescript": "^5.9.3"
-  },
+  "name": "@planx/infrastructure-ml",
   "dependencies": {
-    "@pulumi/aws": "^7.8.0",
-    "@pulumi/awsx": "^3.0.0",
-    "@pulumi/pulumi": "^3.201.0"
+    "@pulumi/aws": "~7.19.0",
+    "@pulumi/pulumi": "~3.220.0"
   },
-  "packageManager": "pnpm@10.10.0"
+  "devDependencies": {
+    "@types/node": "~22.14.1",
+    "typescript": "~5.9.3"
+  },
+  "main": "index.ts",
+  "private": true
 }

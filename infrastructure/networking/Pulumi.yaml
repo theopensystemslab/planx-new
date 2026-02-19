@@ -1,5 +1,8 @@
 name: networking
-runtime: nodejs
 description: Networking layer
+runtime:
+  name: nodejs
+  options:
+    packagemanager: pnpm
 config:
   aws:region: eu-west-2

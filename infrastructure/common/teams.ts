@@ -49,5 +49,3 @@ export interface CustomDomain {
   domain: string,
   certificateLocation?: "secretsManager" | "pulumiConfig"
 }
-
-export default { teams }
