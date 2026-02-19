@@ -362,6 +362,8 @@ export = async () => {
     }
   })();
 
+  // note the mix of AWS and Cloudflare infra being provisioned here
+  // TODO: should this be provisioned in the certs layer, or all consolidated here? should that be run in CI? etc. 
   const sslCert = new aws.acm.Certificate(
     `sslCert`,
     {
@@ -386,7 +388,7 @@ export = async () => {
     {
       name: sslCert.domainValidationOptions[0].resourceRecordName,
       ttl: 3600,
-      type: sslCert.domainValidationOptions[0].resourceRecordType,
+      type: sslCert.domainValidationOptions[0].resourceRecordType,  // "CNAME"
       content: sslCert.domainValidationOptions[0].resourceRecordValue,
       zoneId: config.requireSecret("cloudflare-zone-id"),
     }

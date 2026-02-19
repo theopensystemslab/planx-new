@@ -1,7 +1,6 @@
 "use strict";
 
 import * as pulumi from "@pulumi/pulumi";
-import * as aws from "@pulumi/aws";
 import * as cloudflare from "@pulumi/cloudflare";
 
 const config = new pulumi.Config();
@@ -34,36 +33,4 @@ const caaRecordWildcard = new cloudflare.DnsRecord("caa-record-wildcard", {
   },
 });
 
-// note the mix of AWS and Cloudflare infra being provisioned here
-const sslCert = new aws.acm.Certificate("sslCert",
-  {
-    // XXX: For wildcards remember that *.example.com will only cover a single level subdomain such as www.example.com not secondary levels such as beta.www.example.com.
-    domainName: `${config.require("domain")}`,
-    validationMethod: "DNS",
-    subjectAlternativeNames: [
-      // Root
-      `${config.require("domain")}`,
-      // Wildcard / subdomains
-      `*.${config.require("domain")}`,
-    ],
-  },
-  {
-    dependsOn: [caaRecordRoot, caaRecordWildcard],
-  }
-);
-
-const sslCertValidationRecord = new cloudflare.DnsRecord("sslCertValidationRecord", {
-    name: sslCert.domainValidationOptions[0].resourceRecordName,
-    ttl: 3600,
-    type: sslCert.domainValidationOptions[0].resourceRecordType,  // "CNAME"
-    content: sslCert.domainValidationOptions[0].resourceRecordValue,
-    zoneId: config.require("cloudflare-zone-id"),
-});
-
-const sslCertValidation = new aws.acm.CertificateValidation("sslCertValidation", {
-    certificateArn: sslCert.arn,
-    validationRecordFqdns: [sslCertValidationRecord.name],
-});
-
-export const certificateArn = sslCertValidation.certificateArn;
 export const domain = config.require("domain");

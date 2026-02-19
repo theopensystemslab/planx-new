@@ -1,7 +1,6 @@
 {
   "name": "@planx/infrastructure-certificates",
   "dependencies": {
-    "@pulumi/aws": "~7.19.0",
     "@pulumi/cloudflare": "~6.13.0",
     "@pulumi/pulumi": "~3.220.0"
   },
