@@ -46,30 +46,9 @@ const createLPSBucket = (
 };
 
 const createLogsBucket = (domain: string) => {
-  const logsBucket = new aws.s3.Bucket("lpsRequestLogs", {
+  return new aws.s3.Bucket("lpsRequestLogs", {
     bucket: `${domain}-logs`,
   });
-
-  const ownershipControls = new aws.s3.BucketOwnershipControls(
-    "lpsRequestLogsOwnershipControls",
-    {
-      bucket: logsBucket.id,
-      rule: {
-        objectOwnership: "ObjectWriter",
-      },
-    }
-  );
-
-  new aws.s3.BucketAcl(
-    "lpsRequestLogsAcl",
-    {
-      bucket: logsBucket.id,
-      acl: "log-delivery-write",
-    },
-    { dependsOn: [ownershipControls] }
-  );
-
-  return logsBucket;
 };
 
 export const createLPSCertificates = (
