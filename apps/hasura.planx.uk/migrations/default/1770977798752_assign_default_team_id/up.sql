@@ -5,8 +5,8 @@ with
     analysts as (
         select id, null::integer as team_id, 'is_analyst' as bucket from users where is_analyst = 't'
     ),
-    mchlg_staff as (
-        select id, null::integer as team_id, 'is_mchlg_staff' as bucket from users where email like '%@localdigital.gov.uk'
+    mhclg_staff as (
+        select id, null::integer as team_id, 'is_mhclg_staff' as bucket from users where email like '%@localdigital.gov.uk'
     ),
     null_email_users as (
         select id, null::integer as team_id, 'has_null_email' as bucket from users where email is null
@@ -18,7 +18,7 @@ with
         union all
         select * from analysts
         union all
-        select * from mchlg_staff
+        select * from mhclg_staff
         union all
         select * from null_email_users
     ),
