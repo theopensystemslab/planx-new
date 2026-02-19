@@ -10,7 +10,7 @@ config:
   application:db-host:
     secure: AAABALfLAhFMoAzqQcMbG+83I3fc7KMpJ69QWeHJJrW+vdB9B5zwTeE8zruM4u2x3DsHwPZzb10GKsn0YP8RVHF2my9Pfq6uiTCWEI6Cr3uoRK0=
   application:db-password:
-    secure: AAABAC2O6oVQLaaTRJw+MUVASpLK1Lo5qkARYpv90mbdc7T+XDLb27Z0LIKIA0yorbwvXjT1Ud4DnaCU4my5vA==
+    secure: AAABAMnTk5yOcAfrt9fu9iUJtlrOITmnZkuILvvzYsscFReJybhQEQrjqfzvRp4JhVGC/6KfXTsrYcD1Sf770Q==
   application:db-url:
     secure: AAABAFI7BWi1MiV42eCEbNb5pkqvXsMD/AGFr76HpI96ZISZMDoTEZqMjkIOt8LKR6/dmxkgPa1pWfRYdKDYYnHJ0PY5brtHC5EwndG6Rpc9OcPmbkqjGIITv06jk1/IDxC1CRW9oq4xXhxDF4FN/MmhqqyCncUxS7jL2BhfKrQ/LMBrZtGF/e4GrXgHEqMXMTCHJQ==
   application:encryption-key:
@@ -74,7 +74,7 @@ config:
     secure: AAABAKQ6L5aOwZWpj9YOsaW8bOOukjt1mZuTgdKjM/3nSmF/0nM/f9c9W9DXygUFj2wtq5/iugo1UTS0+bhEn8Dr9k1Qzr2EmuGpQw==
   application:metabase-memory: "2048"
   application:metabasePgPassword:
-    secure: AAABACVXNwP6Fo0v2/PoiWklNGRECTSYLRX/Ypk6APtvt9e4iOdqPVt5+tZULOxwqnfO+1bL4B6AAJxjt8gAbQ==
+    secure: AAABAHYaix7aXE+7rgSPWYixhS/6G9IB7sXtZT2IhExBq/t35jbmgiV9R/XKUdCFnHqXa0Fwnjs+e/eK89DrLQ==
   application:microsoft-client-id:
     secure: AAABAGm0SUnS8I54uBHI+Y0F1hMk8WSSKO1n+b52MCaYU8aGlbtsEuccJiQ8WXf7IFwWWgoBIeVPdk0eIGENHUet0HA=
   application:microsoft-client-secret:

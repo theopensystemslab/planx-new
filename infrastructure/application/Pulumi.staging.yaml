@@ -10,7 +10,7 @@ config:
   application:db-host:
     secure: AAABAAPuhNJbXoO9KrKmJE1L8enMlj0eGJQ/4E57Fvd0ZYW5d4ZB+8GfxUbGmmt/s841UULkAvqlEMhSlKS4Mrl9qVkTDqHPASepjUWZyF+Byaw=
   application:db-password:
-    secure: AAABAAVV2tpNt1KK6I/h1PqHYZf5iDySr+GJOXy1cdMbIfO6cXNxel8Rv9EwmmAaPkPh7Z4vEZHIHSJqHrPDOA==
+    secure: AAABAK8ajSnZHPGAQ/vuCxsVKmfBYRk+ZYxSxZugQd2zui+CdfTRgp3av8ilCQOpYeZxiezyaDTd4auWB0lliA==
   application:encryption-key:
     secure: AAABAFTW2eRwQnXJq/IboPWtStOWXiF9WcsUKEiuosmp7TLZt52uKE3L+NrEGgsThOl3NkvFW2HhFa2XL6aB5w==
   application:file-api-key:
@@ -69,7 +69,7 @@ config:
     secure: AAABAGmfVICD8sR+IE6mHC8BNUY1WQXGCbv5F3C1fSgA+1ADiRem3GNrwY0YRZociRYuPIo3MIRS0aIg44jt10SBCE0ik58wHamcKA==
   application:metabase-memory: "2048"
   application:metabasePgPassword:
-    secure: AAABADfCkSRtVTdU8wi1F+nwuHl8OeI3bm9ZzaNkIY4yOGB9dsOqS30tkD8W7GZlNoWDZT2ojoP3zOFPuTLWbQ==
+    secure: AAABANW2Qlu5YFe+OVWdilpK+pW2NW0wR05mkl7thmxKMivWkYt5AZENmADE8LAw9MBEXx/S0Z9eyZLQet/d5Q==
   application:microsoft-client-id:
     secure: AAABAN/jlejEkv8Rf+u6nzbXy2yTIUNwWK7cw1Rz1P1DQTvvOYsPwhMYqo4Jjt9UAAx+b2FWPoUvrIOUm1dT+xpnqbU=
   application:microsoft-client-secret:
