@@ -124,7 +124,7 @@ jobs:
     name: Pulumi Up
     needs:
       - build_planx_frontend
-      - build_localplanning_services
+      # - build_localplanning_services
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v6
