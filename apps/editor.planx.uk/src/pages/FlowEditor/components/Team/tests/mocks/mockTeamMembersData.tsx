@@ -7,7 +7,6 @@ export const mockTeamMembersData: TeamMember[] = [
     email: null,
     id: 1,
     role: "teamEditor",
-    defaultTeamId: null,
   },
   {
     firstName: "Bill",
@@ -15,7 +14,6 @@ export const mockTeamMembersData: TeamMember[] = [
     email: "bill@example.com",
     id: 2,
     role: "platformAdmin",
-    defaultTeamId: null,
   },
   {
     firstName: "Bilbo",
@@ -23,6 +21,5 @@ export const mockTeamMembersData: TeamMember[] = [
     email: "bil.bags@email.com",
     id: 3,
     role: "teamEditor",
-    defaultTeamId: null,
   },
 ];

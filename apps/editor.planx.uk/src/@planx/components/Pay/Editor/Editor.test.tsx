@@ -42,7 +42,6 @@ describe("Pay component - Editor Modal", () => {
       firstName: "Bilbo",
       lastName: "Baggins",
       teams: [],
-      defaultTeamId: null,
     };
 
     let initialState: FullStore;

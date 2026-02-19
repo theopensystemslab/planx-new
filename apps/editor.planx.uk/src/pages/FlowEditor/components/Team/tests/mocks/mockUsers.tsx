@@ -8,7 +8,6 @@ export const alreadyExistingUser: TeamMember = {
   email: "mickeymouse@email.com",
   id: 3,
   role: "teamEditor",
-  defaultTeamId: null,
 };
 
 export const emptyTeamMemberObj: TeamMember = {
@@ -17,7 +16,6 @@ export const emptyTeamMemberObj: TeamMember = {
   email: "",
   id: 3,
   role: "teamEditor",
-  defaultTeamId: null,
 };
 
 export const mockPlainUser: User = {
@@ -37,7 +35,6 @@ export const mockPlainUser: User = {
       },
     },
   ],
-  defaultTeamId: null,
 };
 export const mockPlatformAdminUser: User = {
   ...mockPlainUser,
