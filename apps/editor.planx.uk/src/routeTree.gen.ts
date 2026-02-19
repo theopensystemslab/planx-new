@@ -602,6 +602,7 @@ const AuthenticatedAppTeamFlowFlowEditorNodesParentNodesIdEditBeforeRoute =
   )
 
 export interface FileRoutesByFullPath {
+  '/': typeof PublicCustomDomainRouteRouteWithChildren
   '/$': typeof SplatRoute
   '/app': typeof AuthenticatedAppRouteRouteWithChildren
   '/login': typeof authLoginRoute
@@ -661,7 +662,7 @@ export interface FileRoutesByFullPath {
   '/$team/$flow/published/view-application': typeof PublicPlanXDomainTeamFlowPublishedViewApplicationRoute
   '/app/$team/$flow/': typeof AuthenticatedAppTeamFlowFlowEditorIndexRoute
   '/app/$team/$flow/settings/': typeof AuthenticatedAppTeamFlowSettingsIndexRoute
-  '/$flow/pay/invite': typeof PublicCustomDomainFlowPayInviteIndexRoute
+  '/$flow/pay/invite/': typeof PublicCustomDomainFlowPayInviteIndexRoute
   '/$team/$flow/draft/': typeof PublicPlanXDomainTeamFlowDraftIndexRoute
   '/$team/$flow/pay/': typeof PublicPlanXDomainTeamFlowPayIndexRoute
   '/$team/$flow/preview/': typeof PublicPlanXDomainTeamFlowPreviewIndexRoute
@@ -674,18 +675,19 @@ export interface FileRoutesByFullPath {
   '/$team/$flow/pay/pages/$page': typeof PublicPlanXDomainTeamFlowPayPagesPageRoute
   '/$team/$flow/preview/pages/$page': typeof PublicPlanXDomainTeamFlowPreviewPagesPageRoute
   '/$team/$flow/published/pages/$page': typeof PublicPlanXDomainTeamFlowPublishedPagesPageRoute
-  '/$team/$flow/pay/invite': typeof PublicPlanXDomainTeamFlowPayInviteIndexRoute
+  '/$team/$flow/pay/invite/': typeof PublicPlanXDomainTeamFlowPayInviteIndexRoute
   '/app/$team/$flow/nodes/$id/edit': typeof AuthenticatedAppTeamFlowFlowEditorNodesIdEditRouteWithChildren
   '/app/$team/$flow/nodes/new/$before': typeof AuthenticatedAppTeamFlowFlowEditorNodesNewBeforeRoute
   '/$team/$flow/pay/invite/pages/$page': typeof PublicPlanXDomainTeamFlowPayInvitePagesPageRoute
-  '/app/$team/$flow/nodes/new': typeof AuthenticatedAppTeamFlowFlowEditorNodesNewIndexRoute
+  '/app/$team/$flow/nodes/new/': typeof AuthenticatedAppTeamFlowFlowEditorNodesNewIndexRoute
   '/app/$team/$flow/nodes/$id/edit/$before': typeof AuthenticatedAppTeamFlowFlowEditorNodesIdEditBeforeRoute
   '/app/$team/$flow/nodes/$parent/nodes/$id/edit': typeof AuthenticatedAppTeamFlowFlowEditorNodesParentNodesIdEditRouteWithChildren
   '/app/$team/$flow/nodes/$parent/nodes/new/$before': typeof AuthenticatedAppTeamFlowFlowEditorNodesParentNodesNewBeforeRoute
-  '/app/$team/$flow/nodes/$parent/nodes/new': typeof AuthenticatedAppTeamFlowFlowEditorNodesParentNodesNewIndexRoute
+  '/app/$team/$flow/nodes/$parent/nodes/new/': typeof AuthenticatedAppTeamFlowFlowEditorNodesParentNodesNewIndexRoute
   '/app/$team/$flow/nodes/$parent/nodes/$id/edit/$before': typeof AuthenticatedAppTeamFlowFlowEditorNodesParentNodesIdEditBeforeRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof PublicCustomDomainRouteRouteWithChildren
   '/$': typeof SplatRoute
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
@@ -848,6 +850,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | '/$'
     | '/app'
     | '/login'
@@ -907,7 +910,7 @@ export interface FileRouteTypes {
     | '/$team/$flow/published/view-application'
     | '/app/$team/$flow/'
     | '/app/$team/$flow/settings/'
-    | '/$flow/pay/invite'
+    | '/$flow/pay/invite/'
     | '/$team/$flow/draft/'
     | '/$team/$flow/pay/'
     | '/$team/$flow/preview/'
@@ -920,18 +923,19 @@ export interface FileRouteTypes {
     | '/$team/$flow/pay/pages/$page'
     | '/$team/$flow/preview/pages/$page'
     | '/$team/$flow/published/pages/$page'
-    | '/$team/$flow/pay/invite'
+    | '/$team/$flow/pay/invite/'
     | '/app/$team/$flow/nodes/$id/edit'
     | '/app/$team/$flow/nodes/new/$before'
     | '/$team/$flow/pay/invite/pages/$page'
-    | '/app/$team/$flow/nodes/new'
+    | '/app/$team/$flow/nodes/new/'
     | '/app/$team/$flow/nodes/$id/edit/$before'
     | '/app/$team/$flow/nodes/$parent/nodes/$id/edit'
     | '/app/$team/$flow/nodes/$parent/nodes/new/$before'
-    | '/app/$team/$flow/nodes/$parent/nodes/new'
+    | '/app/$team/$flow/nodes/$parent/nodes/new/'
     | '/app/$team/$flow/nodes/$parent/nodes/$id/edit/$before'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/$'
     | '/login'
     | '/logout'
@@ -1112,7 +1116,7 @@ declare module '@tanstack/react-router' {
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -1133,7 +1137,7 @@ declare module '@tanstack/react-router' {
     '/_public/_customDomain': {
       id: '/_public/_customDomain'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof PublicCustomDomainRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -1462,7 +1466,7 @@ declare module '@tanstack/react-router' {
     '/_public/_customDomain/$flow/pay/invite/': {
       id: '/_public/_customDomain/$flow/pay/invite/'
       path: '/invite'
-      fullPath: '/$flow/pay/invite'
+      fullPath: '/$flow/pay/invite/'
       preLoaderRoute: typeof PublicCustomDomainFlowPayInviteIndexRouteImport
       parentRoute: typeof PublicCustomDomainFlowPayRouteRoute
     }
@@ -1574,7 +1578,7 @@ declare module '@tanstack/react-router' {
     '/_public/_planXDomain/$team/$flow/pay/invite/': {
       id: '/_public/_planXDomain/$team/$flow/pay/invite/'
       path: '/invite'
-      fullPath: '/$team/$flow/pay/invite'
+      fullPath: '/$team/$flow/pay/invite/'
       preLoaderRoute: typeof PublicPlanXDomainTeamFlowPayInviteIndexRouteImport
       parentRoute: typeof PublicPlanXDomainTeamFlowPayRouteRoute
     }
@@ -1637,7 +1641,7 @@ declare module '@tanstack/react-router' {
     '/_authenticated/app/$team/$flow/_flowEditor/nodes/new/': {
       id: '/_authenticated/app/$team/$flow/_flowEditor/nodes/new/'
       path: '/new'
-      fullPath: '/app/$team/$flow/nodes/new'
+      fullPath: '/app/$team/$flow/nodes/new/'
       preLoaderRoute: typeof AuthenticatedAppTeamFlowFlowEditorNodesNewIndexRouteImport
       parentRoute: typeof AuthenticatedAppTeamFlowFlowEditorNodesRouteRoute
     }
@@ -1672,7 +1676,7 @@ declare module '@tanstack/react-router' {
     '/_authenticated/app/$team/$flow/_flowEditor/nodes/$parent/nodes/new/': {
       id: '/_authenticated/app/$team/$flow/_flowEditor/nodes/$parent/nodes/new/'
       path: '/$parent/nodes/new'
-      fullPath: '/app/$team/$flow/nodes/$parent/nodes/new'
+      fullPath: '/app/$team/$flow/nodes/$parent/nodes/new/'
       preLoaderRoute: typeof AuthenticatedAppTeamFlowFlowEditorNodesParentNodesNewIndexRouteImport
       parentRoute: typeof AuthenticatedAppTeamFlowFlowEditorNodesRouteRoute
     }

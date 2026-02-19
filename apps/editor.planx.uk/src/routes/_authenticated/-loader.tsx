@@ -7,7 +7,7 @@ export const validateDomain = () => {
   const allowedPatterns = [
     /^editor\.planx\.dev$/,
     /^editor\.planx\.uk$/,
-    /^(\d{4,5}\.)?editor\.planx\.pizza$/,
+    /^(\d{4,5})\.planx\.pizza$/,
     /^localhost:3000$/,
   ];
 
