@@ -11,7 +11,6 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { getIn } from "formik";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { useEffect } from "react";
@@ -181,66 +180,75 @@ const SendComponent: React.FC<Props> = (props) => {
                 <Switch
                   checked={formik.values.destinations.includes("email")}
                   onChange={() => toggleSwitch("email")}
-                  label={`Send to ${submissionEmail || "your inbox"}`}
+                  label={`Send to email`}
                   disabled={props.disabled}
                 />
               </InputRow>
-              {hasFeatureFlag("MULTIPLE_SUBMISSION_SEND_COMPONENT") ? (
                 <>
-                <Typography variant="body2" mb={2}>
-                    You can only select submission emails from the Send
-                    component. To add or update submission emails,
-                    please visit your{" "}
-                    <Link
-                      href={`/app/${teamSlug}/settings/integrations`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      team settings
-                    </Link>{" "}
-                    section.
-                  </Typography>
-                  <InputRow>
-                    {formik.values.destinations.includes("email") && (
-                      <>
-                        {loading || flowLoading ? (
-                          <Typography variant="body2">
-                            Loading email options...
+                  {formik.values.destinations.includes("email") && (
+                    <>
+                      {loading || flowLoading ? (
+                        <Typography variant="body2">
+                          Loading email options...
+                        </Typography>
+                      ) : error || flowError ? (
+                        <Typography variant="body2" color="error">
+                          Failed to load email options.
+                        </Typography>
+                      ) : emailOptions.length === 0 ? (
+                        <Typography variant="body2">
+                          You do not have a submission email configured.
+                          Please add one in your{" "}
+                          <Link
+                            href={`/app/${teamSlug}/settings/integrations`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            team settings
+                          </Link>
+                          .
+                        </Typography>
+                      ) : (
+                        <>
+                        <InputRow>
+                          <Typography variant="body2" mb={2}>
+                            You can only select submission emails from the Send
+                            component. To add or update submission emails,
+                            please visit your{" "}
+                            <Link
+                              href={`/app/${teamSlug}/settings/integrations`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              team settings
+                            </Link>{" "}
+                          page.
                           </Typography>
-                        ) : (
-                          <>
-                            {error || flowError ? (
-                              <Typography variant="body2" color="error">
-                                Failed to load email options.
-                              </Typography>
-                            ) : (
-                              <SelectInput
-                                name="submissionEmail"
-                                value={
-                                  formik.values.submissionEmailId ||
-                                  currentEmail?.id ||
-                                  ""
-                                }
-                                onChange={handleSelectChange}
-                                bordered
-                                disabled={props.disabled}
-                              >
-                                {emailOptions.map((email: any) => (
-                                  <MenuItem key={email.id} value={email.id}>
-                                    {email.submissionEmail}
-                                  </MenuItem>
-                                ))}
-                              </SelectInput>
-                            )}
-                          </>
-                        )}
-                      </>
-                    )}
-                  </InputRow>
+                        </InputRow>
+                        <InputRow>
+                          <SelectInput
+                            name="submissionEmail"
+                            value={
+                              formik.values.submissionEmailId ||
+                              currentEmail?.id ||
+                              ""
+                            }
+                            onChange={handleSelectChange}
+                            bordered
+                            disabled={props.disabled}
+                          >
+                            {emailOptions.map((email: any) => (
+                              <MenuItem key={email.id} value={email.id}>
+                                {email.submissionEmail}
+                              </MenuItem>
+                            ))}
+                          </SelectInput>
+                        </InputRow>
+                        </>
+                      )}
+                    </>
+                  )}
                 </>
-              ) : (
-                <></>
-              )}
             </ModalSectionContent>
             <Divider />
             <ModalSectionContent title={"Microsoft SharePoint"}>
