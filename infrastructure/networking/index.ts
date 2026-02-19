@@ -4,6 +4,8 @@ import * as awsx from "@pulumi/awsx";
 
 // NB. the CIDR block for the awsx-provisioned VPC defaults to 10.0.0.0/16 (no ipv6 by default)
 const vpc = new awsx.ec2.Vpc("vpc", {
+  enableDnsHostnames: true,
+  enableDnsSupport: true,
   natGateways: {
     strategy: awsx.ec2.NatGatewayStrategy.None,
   },
