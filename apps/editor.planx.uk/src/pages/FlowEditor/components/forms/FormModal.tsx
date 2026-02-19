@@ -405,16 +405,11 @@ const FormModal: React.FC<FormModalProps> = ({
                   }
                 }
 
-                // TODO account for nested folder paths (eg more than one-level deep)
                 navigate({
                   to: "/app/$team/$flow",
                   params: {
                     team: teamSlug,
-                    flow:
-                      parent &&
-                      flow[parent].type === ComponentType.InternalPortal
-                        ? `${flowSlug},${parent}`
-                        : `${flowSlug}`,
+                    flow: flowSlug,
                   },
                 });
               }}
