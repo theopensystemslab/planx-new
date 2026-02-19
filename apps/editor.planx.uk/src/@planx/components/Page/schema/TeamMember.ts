@@ -1,7 +1,8 @@
-import { Schema } from "@planx/components/shared/Schema/model";
 import { TextInputType } from "@planx/components/TextInput/model";
 
-export const TeamMembers: Schema = {
+import { PageSchema } from "../model";
+
+export const TeamMembers: PageSchema = {
   type: "Team Member",
   fields: [
     {
@@ -30,4 +31,5 @@ export const TeamMembers: Schema = {
     },
   ],
   min: 1,
+  max: 1,
 } as const;
