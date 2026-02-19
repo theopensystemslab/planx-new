@@ -1,5 +1,5 @@
 import { NodeId } from "@opensystemslab/planx-core/types";
-import { Link } from "@tanstack/react-router";
+import { Link, useParams } from "@tanstack/react-router";
 import classnames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
 import {
@@ -27,16 +27,16 @@ interface Item {
 
 const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   parent = getParentId(parent);
+  const { team: teamSlug, flow: flowSlug } = useParams({
+    from: "/_authenticated/app/$team/$flow",
+  });
 
-  const [moveNode, isTemplatedFrom, flow, orderedFlow, teamSlug, flowSlug] =
-    useStore((state) => [
-      state.moveNode,
-      state.isTemplatedFrom,
-      state.flow,
-      state.orderedFlow,
-      state.teamSlug,
-      state.flowSlug,
-    ]);
+  const [moveNode, isTemplatedFrom, flow, orderedFlow] = useStore((state) => [
+    state.moveNode,
+    state.isTemplatedFrom,
+    state.flow,
+    state.orderedFlow,
+  ]);
 
   // When working in a templated flow, if any internal portal is marked as "isTemplatedNode", then the Hanger should be visible to add children
   const indexedParent = orderedFlow?.find(({ id }) => id === parent);
