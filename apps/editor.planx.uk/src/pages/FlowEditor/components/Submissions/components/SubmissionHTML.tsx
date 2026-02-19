@@ -4,7 +4,7 @@ import Skeleton from "@mui/material/Skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { PrintButton } from "components/PrintButton";
 import { getSubmissionHTML } from "lib/api/submissions/requests";
-import React from "react";
+import React, { useEffect } from "react";
 
 const LoadingSkeleton = () => (
   <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -28,6 +28,22 @@ const SubmissionHTML: React.FC<{ sessionId: string }> = ({ sessionId }) => {
     queryFn: () => getSubmissionHTML(sessionId),
     enabled: !!sessionId,
   });
+
+  useEffect(() => {
+    if (!sanitisedHTML) return;
+    const buttons = document.querySelectorAll<HTMLElement>(".copy-button");
+    buttons.forEach((button) => {
+      button.addEventListener("click", function () {
+        const value = this.getAttribute("data-copy-value");
+        const span = this.querySelector("span");
+        if (!value || !span) return;
+        navigator.clipboard.writeText(value).then(() => {
+          span.textContent = "copied";
+          setTimeout(() => (span.textContent = "copy"), 1000);
+        });
+      });
+    });
+  }, [sanitisedHTML]);
 
   if (error) throw Error(`Unable to download session ${sessionId}`);
 

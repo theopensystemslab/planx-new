@@ -67,13 +67,13 @@ export const generateHTMLForSession = async (session: Session) => {
     userAction,
   });
 
-  // Sanitise output, allowing my-map webcomponent
+  // Sanitise output, allowing my-map webcomponent and data-copy-value attribute
   const window = new JSDOM("").window;
   const DOMPurify = createDOMPurify(window as unknown as WindowLike);
-  const cleanHTML = DOMPurify.sanitize(html, {
+  return DOMPurify.sanitize(html, {
     WHOLE_DOCUMENT: true,
     ADD_TAGS: ["my-map"],
-    ADD_ATTR: MY_MAP_ATTRS,
+    ADD_ATTR: [...MY_MAP_ATTRS, "data-copy-value"],
     CUSTOM_ELEMENT_HANDLING: {
       tagNameCheck: (tagName) => tagName === "my-map",
       attributeNameCheck: (attr, tagName) => {
@@ -82,6 +82,4 @@ export const generateHTMLForSession = async (session: Session) => {
       },
     },
   });
-
-  return cleanHTML;
 };
