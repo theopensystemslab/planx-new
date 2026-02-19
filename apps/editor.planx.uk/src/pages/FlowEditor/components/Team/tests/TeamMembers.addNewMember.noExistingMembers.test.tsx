@@ -12,6 +12,7 @@ const mockTeamMembersDataWithNoTeamEditors: TeamMember[] = [
     email: "donella@example.com",
     id: 1,
     role: "platformAdmin",
+    defaultTeamId: null,
   },
 ];
 

@@ -8,7 +8,7 @@ import AuthenticatedLayout from "../../../pages/layout/AuthenticatedLayout";
 
 export const Route = createFileRoute("/_authenticated/app")({
   pendingComponent: DelayedLoadingIndicator,
-  beforeLoad: async () => {
+  beforeLoad: async ({ search }) => {
     useStore.getState().setPreviewEnvironment("editor");
     try {
       const user = await useStore.getState().initUserStore();
@@ -21,6 +21,24 @@ export const Route = createFileRoute("/_authenticated/app")({
               location.pathname !== "/app" ? location.pathname : undefined,
           },
         });
+      }
+
+      // User is already authenticated - determine where to redirect
+      // If there's an explicit redirectTo to a specific page, handle it
+      if (search.redirectTo && search.redirectTo !== "/") {
+        throw redirect({ to: search.redirectTo });
+      }
+
+      if (user?.defaultTeamId) {
+        const defaultTeam = user.teams.find(
+          (t) => t.team.id === user.defaultTeamId,
+        );
+        if (defaultTeam) {
+          throw redirect({
+            to: "/app/$team",
+            params: { team: defaultTeam.team.slug },
+          });
+        }
       }
 
       return { user, isPublicRoute: false };
