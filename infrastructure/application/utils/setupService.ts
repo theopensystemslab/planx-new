@@ -59,6 +59,9 @@ export const setupLoadBalancer = async ({
     port: containerPort,
     protocol: "HTTP",
     vpcId: vpcId,
+    // our Fargate services are on the `awsvpc` network mode, so we need ip as the target type
+    // see https://docs.aws.amazon.com/AmazonECS/latest/developerguide/alb.html
+    targetType: "ip",
     // we only pass health check/stickness objects here if they're passed in above, to avoid overwriting defaults
     ...(typeof healthCheck !== 'undefined' && { healthCheck }),
     ...(typeof stickiness !== 'undefined' && { stickiness }),
