@@ -283,12 +283,21 @@ export = async () => {
     });
 
   const logsBucket = new aws.s3.Bucket(`${DOMAIN}-logs`, { bucket: `${DOMAIN}-logs` });
+  const ownershipControls = new aws.s3.BucketOwnershipControls(
+    `${DOMAIN}-logs-ownership-controls`,
+    {
+      bucket: logsBucket.id,
+      rule: {
+        objectOwnership: "BucketOwnerPreferred",
+      },
+    }
+  );
   // XXX: AWS maintain that most modern use cases don't require ACLs - is this superfluous?
   // see: https://docs.aws.amazon.com/AmazonS3/latest/userguide/about-object-ownership.html
-  const logsBucketAcl = new aws.s3.BucketAcl("example", {
+  const logsBucketAcl = new aws.s3.BucketAcl(`${DOMAIN}-logs-acl`, {
       bucket: logsBucket.id,
       acl: "private",
-  });
+    }, { dependsOn: [ownershipControls] });
 
   const customDomains = ((): Array<any> => {
     return CUSTOM_DOMAINS.map(createCustomDomain);
