@@ -4,7 +4,7 @@ import React, { type PropsWithChildren } from "react";
 
 interface Props {
   title: string;
-  description: string;
+  description: string | string[];
 }
 
 const ErrorCard: React.FC<PropsWithChildren<Props>> = ({
@@ -13,10 +13,22 @@ const ErrorCard: React.FC<PropsWithChildren<Props>> = ({
   children,
 }) => (
   <ErrorSummaryContainer role="status">
-    <Typography variant="h4" component="h2" gutterBottom>
+    <Typography variant="h3" component="h2" mb={2}>
       {title}
     </Typography>
-    <Typography variant="body2">{description}</Typography>
+    {Array.isArray(description) ? (
+      description.map((paragraph, index) => (
+        <Typography
+          key={index}
+          variant="body1"
+          gutterBottom={index < description.length - 1}
+        >
+          {paragraph}
+        </Typography>
+      ))
+    ) : (
+      <Typography variant="body1">{description}</Typography>
+    )}
     {children && children}
   </ErrorSummaryContainer>
 );

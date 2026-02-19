@@ -49,3 +49,9 @@ export const RevealedContent = styled(Box)(({ theme }) => ({
   marginLeft: theme.spacing(3.2),
   paddingTop: theme.spacing(1),
 }));
+
+export const QuotedText = styled(Typography)(({ theme }) => ({
+  marginTop: theme.spacing(2),
+  paddingLeft: theme.spacing(1.5),
+  borderLeft: `4px solid ${theme.palette.divider}`,
+})) as typeof Typography;
