@@ -45,6 +45,7 @@ export const setupLoadBalancer = async ({
   createSourceSgIngressRule(serviceSecurityGroup.id, `${serviceName}-service`, [containerPort], lbSecurityGroup.id);
   createAllIpv4EgressRule(serviceSecurityGroup.id, `${serviceName}-service`);
 
+  // XXX: does this ALB have a default listener? (we would prefer not)
   const loadBalancer = new awsx.lb.ApplicationLoadBalancer(`${serviceName}-lb`, {
     internal: false,
     subnetIds: publicSubnetIds,

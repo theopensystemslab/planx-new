@@ -76,9 +76,10 @@ export const createSharedbService = async ({
     cluster: cluster.arn,
     taskDefinition: sharedbTask.taskDefinition.arn,
     loadBalancers: sharedbTask.loadBalancers,
+    // XXX: we need the task network mode to be 'awsvpc', but it's unclear how to specify that
     networkConfiguration: {
       subnets: publicSubnetIds,
-      assignPublicIp: true,
+      // assignPublicIp: true,
       securityGroups: [sharedbServiceSecurityGroup.id],
     },
     desiredCount: 1,

@@ -92,7 +92,7 @@ export const createMetabaseService = async ({
       loadBalancers: metabaseTask.loadBalancers,
       networkConfiguration: {
         subnets: publicSubnetIds,
-        assignPublicIp: true,
+        // assignPublicIp: true,
         securityGroups: [metabaseServiceSecurityGroup.id],
       },
       desiredCount: 1,
