@@ -70,25 +70,31 @@ const EnhancedTextInputComponent = (props: Props) => {
       validateOnChange={false}
       validationSchema={validationSchema}
     >
-      {({ submitForm }) => (
-        <Card
-          handleSubmit={submitForm}
-          isValid={!isRunningTask}
-          handleBack={handleBack}
-        >
-          <CardHeader
-            title={props.title}
-            description={props.description}
-            {...(step === "input" && {
-              info: props.info,
-              policyRef: props.policyRef,
-              howMeasured: props.howMeasured,
-            })}
-          />
-          {step === "input" && <InitialUserInput {...props} />}
-          {step === "task" && <TaskComponent {...props} />}
-        </Card>
-      )}
+      {({ submitForm, values }) => {
+        const showCardHeader = step === "input" || values.status !== "success";
+
+        return (
+          <Card
+            handleSubmit={submitForm}
+            isValid={!isRunningTask}
+            handleBack={handleBack}
+          >
+            {showCardHeader && (
+              <CardHeader
+                title={props.title}
+                description={props.description}
+                {...(step === "input" && {
+                  info: props.info,
+                  policyRef: props.policyRef,
+                  howMeasured: props.howMeasured,
+                })}
+              />
+            )}
+            {step === "input" && <InitialUserInput {...props} />}
+            {step === "task" && <TaskComponent {...props} />}
+          </Card>
+        );
+      }}
     </Formik>
   );
 };
