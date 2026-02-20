@@ -52,8 +52,10 @@ export const setupLoadBalancer = async ({
     // NB. VPC to be which the ALB belongs is conveyed by the security group
     securityGroups: [lbSecurityGroup.id],
     idleTimeout: idleTimeout ?? 60,
+    // Do not auto-create a listener
+    listener: undefined,
   });
-  
+
   // tag on a listener with service container as target
   const targetGroup = new aws.lb.TargetGroup(`${serviceName}`, {
     port: containerPort,
