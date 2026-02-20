@@ -8,8 +8,11 @@ import AuthenticatedLayout from "../../../pages/layout/AuthenticatedLayout";
 
 export const Route = createFileRoute("/_authenticated/app")({
   pendingComponent: DelayedLoadingIndicator,
-  beforeLoad: async () => {
+  beforeLoad: async ({ location: { pathname } }) => {
     useStore.getState().setPreviewEnvironment("editor");
+
+    const isInitialSessionLoad = !useStore.getState().user;
+
     try {
       const user = await useStore.getState().initUserStore();
 
@@ -17,16 +20,16 @@ export const Route = createFileRoute("/_authenticated/app")({
         throw redirect({
           to: "/login",
           search: {
-            redirectTo:
-              location.pathname !== "/app" ? location.pathname : undefined,
+            redirectTo: pathname !== "/app" ? pathname : undefined,
           },
         });
       }
 
-      if (user?.defaultTeamId) {
+      if (isInitialSessionLoad && pathname === "/app" && user.defaultTeamId) {
         const defaultTeam = user.teams.find(
           (t) => t.team.id === user.defaultTeamId,
         );
+
         if (defaultTeam) {
           throw redirect({
             to: "/app/$team",
@@ -37,13 +40,9 @@ export const Route = createFileRoute("/_authenticated/app")({
 
       return { user, isPublicRoute: false };
     } catch (error) {
-      // Re-throw router-controlled errors (redirects, notFound) so they work correctly
       if (isRedirect(error)) throw error;
 
       console.error("Failed to initialize user store:", error);
-
-      // handleExpiredJWTErrors() has already been called and will redirect
-      // Return empty context to prevent error boundary from triggering
       return { authError: true };
     }
   },
