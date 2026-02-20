@@ -4,7 +4,7 @@ import React, { type PropsWithChildren } from "react";
 
 interface Props {
   title: string;
-  description: string | string[];
+  description: React.ReactNode;
 }
 
 const ErrorCard: React.FC<PropsWithChildren<Props>> = ({
@@ -29,7 +29,7 @@ const ErrorCard: React.FC<PropsWithChildren<Props>> = ({
     ) : (
       <Typography variant="body1">{description}</Typography>
     )}
-    {children && children}
+    {children}
   </ErrorSummaryContainer>
 );
 
