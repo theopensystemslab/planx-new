@@ -41,7 +41,7 @@ const SendComponent: React.FC<Props> = (props) => {
       initialValues: parseSend(props.node?.data),
       onSubmit: async (newValues) => {
         if (props.handleSubmit) {
-          await handleInsertOrUpdate(
+          await handleUpdate(
             newValues,
             existingEmailId,
             id,
@@ -81,7 +81,7 @@ const SendComponent: React.FC<Props> = (props) => {
 
   const [updateFlowIntegration] = useUpdateFlowIntegration();
 
-  const handleInsertOrUpdate = async (
+  const handleUpdate = async (
     newValues: Send,
     existingEmailId: string | undefined,
     id: string,
