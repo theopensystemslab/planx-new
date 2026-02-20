@@ -182,42 +182,43 @@ jobs:
       - run: pnpm test:silent --retry=1
         working-directory: ${{ env.EDITOR_DIRECTORY }}
 
-  build_localplanning_services:
-    name: Build localplanning.services
-    runs-on: ubuntu-22.04
-    needs: [changes]
-    if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
-    steps:
-      - uses: actions/checkout@v6
-      - name: Cache localplanning build assets
-        id: cache-localplanning-build-assets
-        uses: actions/cache@v5
-        with:
-          path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
-          key: ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
-          restore-keys: |
-            ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
-            ${{ runner.os }}-
-      - uses: pnpm/action-setup@v4.2.0
-        if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
-        with:
-          version: ${{ vars.PNPM_VERSION }}
-      - uses: actions/setup-node@v4
-        if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
-          cache: "pnpm"
-          cache-dependency-path: "./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/pnpm-lock.yaml"
-      - name: Setup .gitconfig
-        run: mv .gitconfig ~/.gitconfig
-      - run: pnpm install --frozen-lockfile
-        if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
-        working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
-      - run: pnpm build --site "https://localplanning.${{ env.FULL_DOMAIN }}" --mode pizza
-        env:
-          ROOT_DOMAIN: ${{ env.FULL_DOMAIN }}
-        if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
-        working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
+  # build_localplanning_services:
+  #   name: Build localplanning.services
+  #   runs-on: ubuntu-22.04
+  #   needs: [changes]
+  #   if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
+  #   steps:
+  #     - uses: actions/checkout@v6
+  #     - name: Cache localplanning build assets
+  #       id: cache-localplanning-build-assets
+  #       uses: actions/cache@v5
+  #       with:
+  #         path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
+  #         key: ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
+  #           ${{ runner.os }}-
+  #     - uses: pnpm/action-setup@v4.2.0
+  #       if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
+  #       with:
+  #         version: ${{ vars.PNPM_VERSION }}
+  #     - uses: actions/setup-node@v4
+  #       if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
+  #       with:
+  #         node-version: ${{ vars.NODE_VERSION }}
+  #         cache: "pnpm"
+  #         cache-dependency-path: "./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/pnpm-lock.yaml"
+  #     - name: Setup .gitconfig
+  #       run: mv .gitconfig ~/.gitconfig
+  #     - run: pnpm install --frozen-lockfile
+  #       if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
+  #       working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
+  #     - run: pnpm build --site "https://localplanning.${{ env.FULL_DOMAIN }}" --mode pizza
+  #       env:
+  #         ROOT_DOMAIN: ${{ env.FULL_DOMAIN }}
+  #       if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
+  #       working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
+  
   build_planx_frontend:
     name: Build PlanX frontend
     runs-on: ubuntu-22.04
@@ -280,7 +281,8 @@ jobs:
   pulumi_preview:
     name: Run Pulumi Preview
     runs-on: ubuntu-22.04
-    needs: [changes, build_planx_frontend, build_localplanning_services]
+    # needs: [changes, build_planx_frontend, build_localplanning_services]
+    needs: [changes, build_planx_frontend]
     if: ${{ needs.changes.outputs.infrastructure == 'true' }}
     steps:
       - uses: actions/checkout@v6
@@ -306,23 +308,24 @@ jobs:
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
           key: ${{ runner.os }}-${{ hashFiles(format('{0}/**', '!{0}/build/**', env.EDITOR_DIRECTORY)) }}
-      - name: Download LPS build assets
-        id: cache-localplanning-build-assets
-        uses: actions/cache@v5
-        with:
-          path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
-          key: ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
-          restore-keys: |
-            ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
-            ${{ runner.os }}-
-      - uses: pulumi/actions@v5
-        with:
-          command: preview
-          stack-name: staging
-          work-dir: infrastructure/application
-          edit-pr-comment: true
-        env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          
+      # - name: Download LPS build assets
+      #   id: cache-localplanning-build-assets
+      #   uses: actions/cache@v5
+      #   with:
+      #     path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
+      #     key: ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
+      #       ${{ runner.os }}-
+      # - uses: pulumi/actions@v5
+      #   with:
+      #     command: preview
+      #     stack-name: staging
+      #     work-dir: infrastructure/application
+      #     edit-pr-comment: true
+      #   env:
+      #     PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
 
   hasura-change-summary:
     name: Generate Hasura Change Summary
@@ -352,7 +355,8 @@ jobs:
 
   create_or_update_vultr_instance:
     name: Upsert Vultr Instance
-    needs: [changes, build_planx_frontend, build_localplanning_services]
+    # needs: [changes, build_planx_frontend, build_localplanning_services]
+    needs: [changes, build_planx_frontend]
     runs-on: ubuntu-22.04
     if: "${{ success() && !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
@@ -463,25 +467,25 @@ jobs:
           target: "planx-new/"
           overwrite: true
 
-      - name: Download localplanning.services build assets
-        id: cache-localplanning-build-assets-restore
-        uses: actions/cache/restore@v5
-        with:
-          path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
-          key: ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
-          restore-keys: |
-            ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
-            ${{ runner.os }}-
+      # - name: Download localplanning.services build assets
+      #   id: cache-localplanning-build-assets-restore
+      #   uses: actions/cache/restore@v5
+      #   with:
+      #     path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
+      #     key: ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
+      #       ${{ runner.os }}-
 
-      - name: upload built localplanning.services
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ env.FULL_DOMAIN }}
-          username: root
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist"
-          target: "planx-new/"
-          overwrite: true
+      # - name: upload built localplanning.services
+      #   uses: appleboy/scp-action@master
+      #   with:
+      #     host: ${{ env.FULL_DOMAIN }}
+      #     username: root
+      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
+      #     source: "./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist"
+      #     target: "planx-new/"
+      #     overwrite: true
 
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
