@@ -131,7 +131,7 @@
     "@vitest/coverage-v8": "3.2.4",
     "@vitest/eslint-plugin": "^1.4.0",
     "autoprefixer": "^10.4.16",
-    "css-loader": "^6.10.0",
+    "css-loader": "^7.1.4",
     "esbuild": "^0.27.2",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.0.0",
