@@ -28,7 +28,6 @@ export const Route = createFileRoute("/_authenticated/app")({
           (t) => t.team.id === user.defaultTeamId,
         );
         if (defaultTeam) {
-          console.log("Redirecting to team:", defaultTeam.team.slug);
           throw redirect({
             to: "/app/$team",
             params: { team: defaultTeam.team.slug },
