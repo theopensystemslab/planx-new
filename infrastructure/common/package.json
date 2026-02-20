@@ -5,7 +5,7 @@
     "@pulumi/pulumi": "~3.220.0"
   },
   "devDependencies": {
-    "@types/node": "~22.14.1",
+    "@types/node": "~25.3.0",
     "typescript": "~5.9.3"
   },
   "private": true
