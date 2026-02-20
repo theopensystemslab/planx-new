@@ -80,11 +80,7 @@ export const confirmationEmailController: ConfirmationEmail = async (
   }
 };
 
-export const resendEmailController: ResendEmail = async (
-  _req,
-  res,
-  next,
-) => {
+export const resendEmailController: ResendEmail = async (_req, res, next) => {
   const { payload } = res.locals.parsedReq.body;
   const { template } = res.locals.parsedReq.params;
 
