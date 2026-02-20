@@ -1,45 +1,45 @@
+# NB. this file configures dependabot's approach to general version updates of dependencies
+# fixes for vulnerabilities/CVEs (i.e. security updates) are handled automatically as per repo settings
 version: 2
+
+# TODO: increase use of groups to collect version upgrades in logical fashion and reduce PRs
 multi-ecosystem-groups:
-  # Sync versions of ShareDB between the Editor and ShareDB service 
+  # Sync versions of ShareDB between the Editor and ShareDB service
   sharedb-sync:
     schedule:
       interval: "monthly"
-    labels:
-      - "sharedb-sync"
-    reviewers:
-      - "theopensystemslab/planx"
+    labels: ["sharedb-sync", "npm"]
+
+  # keep pulumi packages for infra aligned
+  pulumi-sync:
+    schedule:
+      interval: "monthly"
+    labels: ["infra", "pulumi", "npm"]
+    commit-message:
+      prefix: "[skip pizza] "
 
 updates:
   # Root
-  - package-ecosystem: "docker"
+  - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "monthly"
-    labels:
-      - "root"
-      - "docker"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "theopensystemslab/planx"
+    labels: ["root", "npm"]
 
   # Editor
   - package-ecosystem: "npm"
     directory: "/apps/editor.planx.uk"
     schedule:
       interval: "monthly"
-    labels:
-      - "editor"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "theopensystemslab/planx"
+    labels: ["editor", "npm"]
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch", "version-update:semver-minor"]
-      - dependency-name: "sharedb"  # Ignore sharedb here, handled by sharedb-sync group
+        update-types:
+          ["version-update:semver-patch", "version-update:semver-minor"]
+      - dependency-name: "sharedb" # Ignore sharedb here, handled by sharedb-sync group
     groups:
       tiptap:
-        patterns:
-          - "@tiptap/*"
+        patterns: ["@tiptap/*"]
 
   # Editor - sharedb-sync group
   - package-ecosystem: "npm"
@@ -52,82 +52,61 @@ updates:
     directory: "/apps/localplanning.services"
     schedule:
       interval: "monthly"
-    labels:
-      - "lps"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "theopensystemslab/planx"
+    labels: ["lps", "npm"]
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch", "version-update:semver-minor"]
+        update-types:
+          ["version-update:semver-patch", "version-update:semver-minor"]
 
   # Hasura
   - package-ecosystem: "npm"
     directory: "/apps/hasura.planx.uk"
     schedule:
       interval: "monthly"
-    labels:
-      - "hasura"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "theopensystemslab/planx"
+    labels: ["hasura", "npm"]
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch", "version-update:semver-minor"]
+        update-types:
+          ["version-update:semver-patch", "version-update:semver-minor"]
 
   - package-ecosystem: "docker"
     directory: "/apps/hasura.planx.uk"
     schedule:
       interval: "monthly"
-    labels:
-      - "hasura"
-      - "docker"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "theopensystemslab/planx"
+    labels: ["hasura", "docker"]
+    open-pull-requests-limit: 1
 
   - package-ecosystem: "docker"
     directory: "/apps/hasura.planx.uk/proxy"
     schedule:
       interval: "monthly"
-    labels:
-      - "hasura"
-      - "caddy"
-      - "docker"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "theopensystemslab/planx"
+    labels: ["hasura", "caddy", "docker"]
+    open-pull-requests-limit: 1
 
   - package-ecosystem: "npm"
     directory: "/apps/hasura.planx.uk/tests"
     schedule:
       interval: "monthly"
-    labels:
-      - "hasura tests"
-    open-pull-requests-limit: 5
+    labels: ["hasura", "tests", "npm"]
     commit-message:
       prefix: "[skip pizza] "
-    reviewers:
-      - "theopensystemslab/planx"
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch", "version-update:semver-minor"]
-  
+        update-types:
+          ["version-update:semver-patch", "version-update:semver-minor"]
+
   # ShareDB
   - package-ecosystem: "npm"
     directory: "/apps/sharedb.planx.uk"
     schedule:
       interval: "monthly"
-    labels:
-      - "sharedb"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "theopensystemslab/planx"
+    labels: ["sharedb", "npm"]
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch", "version-update:semver-minor"]
-      - dependency-name: "sharedb"  # Ignore sharedb here, handled by sharedb-sync group
-  
+        update-types:
+          ["version-update:semver-patch", "version-update:semver-minor"]
+      - dependency-name: "sharedb" # Ignore sharedb here, handled by sharedb-sync group
+
   # ShareDB - sharedb-sync group
   - package-ecosystem: "npm"
     directory: "/apps/sharedb.planx.uk"
@@ -138,116 +117,135 @@ updates:
     directory: "/apps/sharedb.planx.uk"
     schedule:
       interval: "monthly"
-    labels:
-      - "sharedb"
-      - "docker"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "theopensystemslab/planx"
+    labels: ["sharedb", "docker"]
+    open-pull-requests-limit: 1
 
   # API
   - package-ecosystem: "npm"
     directory: "/apps/api.planx.uk"
     schedule:
       interval: "monthly"
-    labels:
-      - "api"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "theopensystemslab/planx"
+    labels: ["api", "npm"]
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch", "version-update:semver-minor"]
+        update-types:
+          ["version-update:semver-patch", "version-update:semver-minor"]
     groups:
       vitest:
-        patterns:
-          - "vitest"
-          - "@vitest/coverage-istanbul"
-          - "@vitest/ui"
+        patterns: ["vitest", "@vitest/coverage-istanbul", "@vitest/ui"]
 
   - package-ecosystem: "docker"
     directory: "/apps/api.planx.uk"
     schedule:
       interval: "monthly"
-    labels:
-      - "api"
-      - "docker"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "theopensystemslab/planx"
+    labels: ["api", "docker"]
+    open-pull-requests-limit: 1
 
   # E2E tests
   - package-ecosystem: "npm"
     directory: "/e2e"
     schedule:
       interval: "monthly"
-    labels:
-      - "e2e"
-    open-pull-requests-limit: 5
+    labels: ["e2e", "tests", "npm"]
     commit-message:
       prefix: "[skip pizza] "
-    reviewers:
-      - "theopensystemslab/planx"
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch", "version-update:semver-minor"]
-  
-  # Infrastructure
-  # - package-ecosystem: "npm"
-  #   directory: "/infrastructure/application"
-  #   schedule:
-  #     interval: "daily"
-  #   labels:
-  #     - "infra/application"
-  #   open-pull-requests-limit: 1
-  #   commit-message:
-  #     prefix: "[skip pizza] "
-  #   reviewers:
-  #     - "theopensystemslab/planx"
+        update-types:
+          ["version-update:semver-patch", "version-update:semver-minor"]
 
-  # - package-ecosystem: "npm"
-  #   directory: "/infrastructure/certificates"
-  #   schedule:
-  #     interval: "daily"
-  #   labels:
-  #     - "infra/certificates"
-  #   open-pull-requests-limit: 1
-  #   commit-message:
-  #     prefix: "[skip pizza] "
-  #   reviewers:
-  #     - "theopensystemslab/planx"
+  # Caddy container (reverse proxy for pizzas)
+  - package-ecosystem: "docker"
+    directory: "/ci/caddy"
+    schedule:
+      interval: "monthly"
+    labels: ["ci", "caddy", "docker"]
+    open-pull-requests-limit: 1
 
-  # - package-ecosystem: "npm"
-  #   directory: "/infrastructure/data"
-  #   schedule:
-  #     interval: "daily"
-  #   labels:
-  #     - "infra/data"
-  #   open-pull-requests-limit: 1
-  #   commit-message:
-  #     prefix: "[skip pizza] "
-  #   reviewers:
-  #     - "theopensystemslab/planx"
+  # custom postgres container
+  - package-ecosystem: "docker"
+    directory: "/apps/postgres"
+    schedule:
+      interval: "monthly"
+    labels: ["ci", "postgres", "docker"]
+    open-pull-requests-limit: 1
 
-  # - package-ecosystem: "npm"
-  #   directory: "/infrastructure/networking"
-  #   schedule:
-  #     interval: "daily"
-  #   labels:
-  #     - "infra/networking"
-  #   open-pull-requests-limit: 1
-  #   commit-message:
-  #     prefix: "[skip pizza] "
-  #   reviewers:
-  #     - "theopensystemslab/planx"
+  # Infrastructure - packages other than pulumi
+  - package-ecosystem: "npm"
+    directory: "/infrastructure"
+    schedule:
+      interval: "monthly"
+    labels: ["infra", "npm"]
+
+  - package-ecosystem: "npm"
+    directory: "/infrastructure/application"
+    schedule:
+      interval: "monthly"
+    labels: ["infra", "npm"]
+    ignore:
+      - dependency-name: "@pulumi/**"
+
+  - package-ecosystem: "npm"
+    directory: "/infrastructure/certificates"
+    schedule:
+      interval: "monthly"
+    labels: ["infra", "npm"]
+    ignore:
+      - dependency-name: "@pulumi/**"
+
+  - package-ecosystem: "npm"
+    directory: "/infrastructure/data"
+    schedule:
+      interval: "monthly"
+    labels: ["infra", "npm"]
+    ignore:
+      - dependency-name: "@pulumi/**"
+
+  - package-ecosystem: "npm"
+    directory: "/infrastructure/ml"
+    schedule:
+      interval: "monthly"
+    labels: ["infra", "npm"]
+    ignore:
+      - dependency-name: "@pulumi/**"
+
+  - package-ecosystem: "npm"
+    directory: "/infrastructure/networking"
+    schedule:
+      interval: "monthly"
+    labels: ["infra", "npm"]
+    ignore:
+      - dependency-name: "@pulumi/**"
+
+  # Infrastructure - pulumi packages (handled by pulumi-sync group)
+  - package-ecosystem: "npm"
+    directory: "/infrastructure/application"
+    patterns: ["@pulumi/**"]
+    multi-ecosystem-group: "pulumi-sync"
+
+  - package-ecosystem: "npm"
+    directory: "/infrastructure/certificates"
+    patterns: ["@pulumi/**"]
+    multi-ecosystem-group: "pulumi-sync"
+
+  - package-ecosystem: "npm"
+    directory: "/infrastructure/data"
+    patterns: ["@pulumi/**"]
+    multi-ecosystem-group: "pulumi-sync"
+
+  - package-ecosystem: "npm"
+    directory: "/infrastructure/ml"
+    patterns: ["@pulumi/**"]
+    multi-ecosystem-group: "pulumi-sync"
+
+  - package-ecosystem: "npm"
+    directory: "/infrastructure/networking"
+    patterns: ["@pulumi/**"]
+    multi-ecosystem-group: "pulumi-sync"
 
   # GitHub actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "monthly"
-    labels:
-      - "github actions"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "theopensystemslab/planx"
+    labels: ["ci", "github actions"]
