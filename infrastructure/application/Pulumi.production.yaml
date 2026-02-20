@@ -12,7 +12,7 @@ config:
   application:db-password:
     secure: AAABADSTnVT3cbPrxo58TM2MFK/gXusGmUZDYj8Yxnj2izl4gjEG9dKW8LT9mnmucccd1G3q7z5w1gRZ3JyMaQ==
   application:db-url:
-    secure: AAABAFI7BWi1MiV42eCEbNb5pkqvXsMD/AGFr76HpI96ZISZMDoTEZqMjkIOt8LKR6/dmxkgPa1pWfRYdKDYYnHJ0PY5brtHC5EwndG6Rpc9OcPmbkqjGIITv06jk1/IDxC1CRW9oq4xXhxDF4FN/MmhqqyCncUxS7jL2BhfKrQ/LMBrZtGF/e4GrXgHEqMXMTCHJQ==
+    secure: AAABADikgxQsKaFgnsvx8YPBM2fFGrz8F6m5gMd3agb6ldEHySEDYgqhZCYypyfJaNpnSlFTPEdZ/Ze5fETzg496j3D7hHGe/Q7bM1A557EVbFHIfdGDAjPtgL2dXvNPY6hlw84GIUZuKHg5fqItVUJSIZWthSeIlTLHHqUpUuZJp+6L4le/HcgNRMkr8t5QuPSvBw==
   application:encryption-key:
     secure: AAABAGbTpoRtazwoNFNmaPCW0RdeTqjhEzQuYR1kl4ft7EWNxqswAu8Dc9T+YBxkYr3uaHbu5obzyo8I4QuVgg==
   application:file-api-key:
