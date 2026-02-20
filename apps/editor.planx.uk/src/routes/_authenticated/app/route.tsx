@@ -23,12 +23,6 @@ export const Route = createFileRoute("/_authenticated/app")({
         });
       }
 
-      // User is already authenticated - determine where to redirect
-      // If there's an explicit redirectTo to a specific page, handle it
-      if (search.redirectTo && search.redirectTo !== "/") {
-        throw redirect({ to: search.redirectTo });
-      }
-
       if (user?.defaultTeamId) {
         const defaultTeam = user.teams.find(
           (t) => t.team.id === user.defaultTeamId,
