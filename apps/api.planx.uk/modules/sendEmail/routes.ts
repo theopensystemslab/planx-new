@@ -3,6 +3,7 @@ import { useSendEmailAuth } from "../auth/middleware.js";
 import {
   confirmationEmailController,
   paymentEmailController,
+  resendEmailController,
   singleApplicationEmailController,
 } from "./controller.js";
 import { sendEmailLimiter } from "../../rateLimit.js";
@@ -10,6 +11,7 @@ import { validate } from "../../shared/middleware/validate.js";
 import {
   confirmationEmailSchema,
   paymentEmailSchema,
+  resendEmailSchema,
   singleApplicationEmailSchema,
 } from "./types.js";
 
@@ -29,6 +31,13 @@ router.post(
   useSendEmailAuth,
   validate(confirmationEmailSchema),
   confirmationEmailController,
+);
+
+router.post(
+  "/send-email/:template(welcome)",
+  useSendEmailAuth,
+  validate(resendEmailSchema),
+  resendEmailController,
 );
 
 router.post(
