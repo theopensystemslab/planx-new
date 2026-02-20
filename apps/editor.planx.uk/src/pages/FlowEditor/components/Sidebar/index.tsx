@@ -10,7 +10,7 @@ import { styled } from "@mui/material/styles";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import ToggleButton from "@mui/material/ToggleButton";
 import Tooltip from "@mui/material/Tooltip";
-import { useParams, useRouter } from "@tanstack/react-router";
+import { useParams, useRouteContext,useRouter } from "@tanstack/react-router";
 import React, { useState } from "react";
 import { useLocation } from "react-use";
 import Permission from "ui/editor/Permission";
@@ -141,7 +141,8 @@ const Sidebar: React.FC = React.memo(() => {
 
   const defaultActiveTab = isTemplatedFrom ? "Customise" : "PreviewBrowser";
   const [activeTab, setActiveTab] = useState<SidebarTabs>(defaultActiveTab);
-  const params = useParams({ from: "/_authenticated/app/$team/$flow" });
+  const { team } = useParams({ from: "/_authenticated/app/$team/$flow" });
+  const { rootFlow } = useRouteContext({ from: "/_authenticated/app/$team/$flow" });
 
   const handleChange = (
     _event: React.SyntheticEvent,
@@ -155,7 +156,7 @@ const Sidebar: React.FC = React.memo(() => {
 
   const previewPath = router.buildLocation({
     to: "/$team/$flow/preview",
-    params,
+    params: { team, flow: rootFlow },
   }).href;
 
   const previewURL = `${origin}${previewPath}`;
@@ -182,7 +183,7 @@ const Sidebar: React.FC = React.memo(() => {
                 <Tooltip title="Open draft flow">
                   <CustomLink
                     to="/$team/$flow/draft"
-                    params={params}
+                    params={{ team, flow: rootFlow }}
                     target="_blank"
                     rel="noopener noreferrer"
                     color="inherit"
@@ -196,7 +197,7 @@ const Sidebar: React.FC = React.memo(() => {
               <Tooltip title="Open preview of changes to publish">
                 <CustomLink
                   to="/$team/$flow/preview"
-                  params={params}
+                  params={{ team, flow: rootFlow }}
                   target="_blank"
                   rel="noopener noreferrer"
                   color="inherit"
@@ -214,7 +215,7 @@ const Sidebar: React.FC = React.memo(() => {
                     search={{
                       analytics: false,
                     }}
-                    params={params}
+                    params={{ team, flow: rootFlow }}
                     target="_blank"
                     rel="noopener noreferrer"
                     color="inherit"
