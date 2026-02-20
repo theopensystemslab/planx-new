@@ -1,0 +1,1 @@
+alter table "public"."published_flows" drop column "submission_email_id" cascade;
