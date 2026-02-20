@@ -50,6 +50,7 @@
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "pino-http": "^11.0.0",
+    "resend": "^6.9.2",
     "sanitize-filename": "^1.6.3",
     "slack-notify": "^2.0.7",
     "string-to-stream": "^3.0.1",

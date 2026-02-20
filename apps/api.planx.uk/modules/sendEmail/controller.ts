@@ -8,8 +8,10 @@ import type { NextFunction } from "express";
 import type {
   ConfirmationEmail,
   PaymentEmail,
+  ResendEmail,
   SingleApplicationEmail,
 } from "./types.js";
+import { sendEmail } from "../../lib/resend/index.js";
 
 export const singleApplicationEmailController: SingleApplicationEmail = async (
   _req,
@@ -75,6 +77,29 @@ export const confirmationEmailController: ConfirmationEmail = async (
     }
   } catch (error) {
     emailErrorHandler(next, error, template, sessionId);
+  }
+};
+
+export const resendEmailController: ResendEmail = async (_req, res, next) => {
+  const { payload } = res.locals.parsedReq.body;
+  const { template } = res.locals.parsedReq.params;
+
+  const isProduction = process.env.APP_ENVIRONMENT === "production";
+  if (!isProduction) {
+    return res.status(200).send({
+      message: `Non-production environment: skipping email send template: ${template}`,
+    });
+  }
+  try {
+    const response = await sendEmail({ ...payload, template });
+    return res.status(200).send(response);
+  } catch (error) {
+    return next(
+      new ServerError({
+        message: `Failed to send ${template} email. ${(error as Error).message}`,
+        cause: error,
+      }),
+    );
   }
 };
 
