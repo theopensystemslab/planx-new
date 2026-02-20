@@ -23,6 +23,7 @@ const platformAdminUser: User & { jwt: string } = {
   teams: [],
   isAnalyst: false,
   jwt: "x.y.z",
+  defaultTeamId: null,
 };
 
 // 122 characters

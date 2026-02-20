@@ -27,6 +27,7 @@ export const GET_USERS_FOR_TEAM_QUERY = gql`
       lastName: last_name
       isPlatformAdmin: is_platform_admin
       email
+      defaultTeamId: default_team_id
       teams(where: { team: { slug: { _eq: $teamSlug } } }) {
         role
       }
@@ -56,6 +57,7 @@ export const Route = createFileRoute("/_authenticated/app/$team/members")({
       email: user.email,
       id: user.id,
       role: user.isPlatformAdmin ? "platformAdmin" : user.teams[0].role,
+      defaultTeamId: user.defaultTeamId,
     }));
     return teamMembers;
   },

@@ -21,7 +21,7 @@
     "@tanstack/react-router-devtools": "^1.131.28",
     "@tanstack/zod-adapter": "^1.132.47",
     "@opensystemslab/map": "1.0.0-alpha.11",
-    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#c20b0ca",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#7050578",
     "@tanstack/react-query": "^5.90.6",
     "@tiptap/core": "3.0.7",
     "@tiptap/extension-emoji": "3.0.7",
