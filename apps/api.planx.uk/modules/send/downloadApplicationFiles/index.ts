@@ -4,7 +4,7 @@ import {
   getFlowId,
   getSessionData,
   getTeamEmailSettings,
-  getFlowSubmissionEmail,
+  getSubmissionEmail,
 } from "../email/service.js";
 import { logDuration } from "../../../lib/performance.js";
 
@@ -28,15 +28,7 @@ export async function downloadApplicationFiles(
   }
 
   try {
-    // Confirm that the provided email matches the stored team settings for the provided localAuthority
-    const { teamSettings } = await getTeamEmailSettings(localAuthority);
-    if (teamSettings.submissionEmail !== decodeURIComponent(email)) {
-      return next({
-        status: 403,
-        message:
-          "Provided email address is not enabled to access application files",
-      });
-    }
+    const { teamId } = await getTeamEmailSettings(localAuthority);
 
     // Fetch this lowcal_session's data
     const sessionData = await getSessionData(sessionId);
@@ -55,18 +47,23 @@ export async function downloadApplicationFiles(
         message: "Failed to find flow ID for this sessionId",
       });
     }
+    const submissionEmail = await getSubmissionEmail(teamId, flowId);
 
-    // TODO: Toggle this back on once record automatically created and all values populated
+    if (!submissionEmail) {
+      return next({
+        status: 400,
+        message: "Failed to retrieve submission email for this flow",
+      });
+    }
 
-    // Get the flow submission email, which will run parallel to getTeamEmailSettings for now
-    // const submissionEmail = await getFlowSubmissionEmail(flowId);
-    // if (!submissionEmail) {
-    //   return next({
-    //     status: 400,
-    //     message: "Failed to retrieve submission email for this flow",
-    //   });
-    // }
-
+    // Confirm that the provided email matches the stored team settings for the provided localAuthority
+    if (submissionEmail !== decodeURIComponent(email)) {
+      return next({
+        status: 403,
+        message:
+          "Provided email address is not enabled to access application files",
+      });
+    }
     // create the submission zip
     const zip = await logDuration(`zipTotal-${sessionId}`, () =>
       buildSubmissionExportZip({

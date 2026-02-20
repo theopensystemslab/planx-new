@@ -8,6 +8,7 @@ import type { TemplateRegistry } from "../../../lib/notify/templates/index.js";
 
 interface GetTeamEmailSettings {
   teams: {
+    teamId: number;
     teamSettings: TeamContactSettings;
   }[];
 }
@@ -17,6 +18,7 @@ export async function getTeamEmailSettings(localAuthority: string) {
     gql`
       query GetTeamEmailSettings($slug: String) {
         teams(where: { slug: { _eq: $slug } }) {
+          teamId: id
           teamSettings: team_settings {
             helpEmail: help_email
             helpPhone: help_phone
@@ -66,25 +68,69 @@ interface GetFlowSubmissionEmail {
   }[];
 }
 
-export async function getFlowSubmissionEmail(flowId: string) {
-  const response = await $api.client.request<GetFlowSubmissionEmail>(
-    gql`
-      query GetFlowSubmissionEmail($flowId: uuid!) {
-        flowIntegrations: flow_integrations(
-          where: { flow_id: { _eq: $flowId } }
-        ) {
-          emailId: email_id
-          submissionIntegration: submission_integration {
-            submissionEmail: submission_email
+async function getFlowSubmissionEmail(flowId: string) {
+  try {
+    const response = await $api.client.request<GetFlowSubmissionEmail>(
+      gql`
+        query GetFlowSubmissionEmail($flowId: uuid!) {
+          flowIntegrations: flow_integrations(
+            where: { flow_id: { _eq: $flowId } }
+          ) {
+            emailId: email_id
+            submissionIntegration: submission_integration {
+              submissionEmail: submission_email
+            }
           }
+        }
+      `,
+      {
+        flowId,
+      },
+    );
+    return response?.flowIntegrations[0]?.submissionIntegration
+      ?.submissionEmail;
+  } catch (error) {
+    console.error(
+      `Error in getFlowSubmissionEmail for flowId: ${flowId}`,
+      error,
+    );
+    throw error;
+  }
+}
+
+interface GetDefaultSubmissionIntegration {
+  submissionIntegrations: {
+    submissionEmail: string;
+  }[];
+}
+
+async function getDefaultSubmissionIntegration(teamId: number) {
+  const response = await $api.client.request<GetDefaultSubmissionIntegration>(
+    gql`
+      query GetDefaultSubmissionIntegration($teamId: Int!) {
+        submissionIntegrations: submission_integrations(
+          where: { team_id: { _eq: $teamId } }
+        ) {
+          submissionEmail: submission_email
         }
       }
     `,
     {
-      flowId,
+      teamId,
     },
   );
-  return response?.flowIntegrations[0]?.submissionIntegration.submissionEmail;
+  return response?.submissionIntegrations[0]?.submissionEmail;
+}
+
+export async function getSubmissionEmail(
+  teamId: number,
+  flowId: string,
+): Promise<string | undefined> {
+  const submissionEmail = await getFlowSubmissionEmail(flowId);
+  if (submissionEmail == null) {
+    return await getDefaultSubmissionIntegration(teamId);
+  }
+  return submissionEmail;
 }
 
 interface GetSessionData {

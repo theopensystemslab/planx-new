@@ -8,20 +8,6 @@ export interface GetFlowEmailIdQueryVariables {
   flowId: string;
 }
 
-export interface InsertFlowIntegrationMutation {
-  insert_flow_integrations_one: {
-    flow_id: string;
-    email_id: string;
-    team_id: number;
-  } | null;
-}
-
-export interface InsertFlowIntegrationMutationVariables {
-  flowId: string;
-  teamId: number;
-  emailId: string;
-}
-
 export interface UpdateFlowIntegrationMutation {
   update_flow_integrations: {
     affected_rows: number;
