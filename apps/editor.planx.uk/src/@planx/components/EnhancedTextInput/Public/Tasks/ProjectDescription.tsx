@@ -18,7 +18,6 @@ import type { EnhanceError, EnhanceResponse } from "lib/api/ai/types";
 import type { APIError } from "lib/api/client";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { type ComponentProps, useEffect, useRef, useState } from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { ApplicationPath } from "types";
 import InputLabel from "ui/public/InputLabel";
 import { CharacterCounter } from "ui/shared/CharacterCounter";
@@ -35,6 +34,7 @@ import type { FormValues } from "../types";
 import ErrorCard from "./ErrorCard";
 import {
   QuoteDescription,
+  QuotedText,
   RecommendedTag,
   RevealedContent,
   StyledFormLabel,
@@ -189,25 +189,40 @@ const ProjectDescription: React.FC<Props> = (props) => {
       case "INVALID_INPUT":
         return (
           <ErrorCard
-            title="Invalid description"
-            description="We weren't able to generate a description based on your input. The description doesn't appear to be related to a planning application."
-          />
+            title="This doesn't look like a planning project description"
+            description={[
+              "Your text does not clearly describe a proposed development.",
+              "You can go back to revise your description. If you continue, your project description will be submitted as entered:",
+            ]}
+          >
+            <QuotedText variant="subtitle1">
+              {initialValueRef.current}
+            </QuotedText>
+          </ErrorCard>
         );
 
       case "TOO_MANY_REQUESTS":
         return (
           <ErrorCard
             title="Rate limit exceeded"
-            description="You've sent too many requests to our AI service. We'll use your original project description."
-          />
+            description="You've sent too many requests to our AI service. We'll use your original project description:"
+          >
+            <QuotedText variant="subtitle1">
+              {initialValueRef.current}
+            </QuotedText>
+          </ErrorCard>
         );
 
       default:
         return (
           <ErrorCard
             title="Service unavailable"
-            description="Unable to generate enhanced project description. We'll use your original project description."
-          />
+            description="We were unable to generate an enhanced project description. We'll use your original project description:"
+          >
+            <QuotedText variant="subtitle1">
+              {initialValueRef.current}
+            </QuotedText>
+          </ErrorCard>
         );
     }
   }
@@ -215,15 +230,12 @@ const ProjectDescription: React.FC<Props> = (props) => {
   return (
     <>
       <Box my={2}>
-        <Typography
-          variant="h3"
-          component="h2"
-          fontWeight={FONT_WEIGHT_SEMI_BOLD}
-          mb={1}
-        >
+        <Typography variant="h2" component="h1" mb={1}>
           {props.revisionTitle}
         </Typography>
-        <Typography variant="body2">{props.revisionDescription}</Typography>
+        <Typography variant="subtitle1" component="p">
+          {props.revisionDescription}
+        </Typography>
         <Typography variant="subtitle1" component="div">
           <HelpButton
             variant="help"
