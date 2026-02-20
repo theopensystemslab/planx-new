@@ -45,17 +45,6 @@ export const setupLoadBalancer = async ({
   createSourceSgIngressRule(serviceSecurityGroup.id, `${serviceName}-service`, [containerPort], lbSecurityGroup.id);
   createAllIpv4EgressRule(serviceSecurityGroup.id, `${serviceName}-service`);
 
-  // XXX: does this ALB have a default listener? (we would prefer not)
-  const loadBalancer = new awsx.lb.ApplicationLoadBalancer(`${serviceName}-lb`, {
-    internal: false,
-    subnetIds: publicSubnetIds,
-    // NB. VPC to be which the ALB belongs is conveyed by the security group
-    securityGroups: [lbSecurityGroup.id],
-    idleTimeout: idleTimeout ?? 60,
-    // Do not auto-create a listener
-    listener: undefined,
-  });
-
   // tag on a listener with service container as target
   const targetGroup = new aws.lb.TargetGroup(`${serviceName}`, {
     port: containerPort,
@@ -69,21 +58,23 @@ export const setupLoadBalancer = async ({
     ...(typeof stickiness !== 'undefined' && { stickiness }),
   });
 
-  // XXX: we should accept HTTPS connections (i.e. traffic from Cloudflare reverse proxy to AWS is unencrypted !?)
-  const listenerHttp = new aws.lb.Listener(`${serviceName}-http`, {
-    loadBalancerArn: loadBalancer.loadBalancer.arn,
-    port: 80,
-    protocol: "HTTP",
-    // NB. default action is always evaluated last (i.e. if no other rule/action is triggered)
-    defaultActions: [{
-      type: "forward",
-      targetGroupArn: targetGroup.arn,
-    }],
+  const loadBalancer = new awsx.lb.ApplicationLoadBalancer(`${serviceName}-lb`, {
+    internal: false,
+    subnetIds: publicSubnetIds,
+    // NB. VPC to be which the ALB belongs is conveyed by the security group
+    securityGroups: [lbSecurityGroup.id],
+    idleTimeout: idleTimeout ?? 60,
+    listener: {
+      defaultActions: [{
+        type: "forward",
+        targetGroupArn: targetGroup.arn,
+      }],
+    },
   });
 
   addRedirectToCloudFlareListenerRule({
-    serviceName: serviceName,
-    listener: listenerHttp,
+    serviceName,
+    listenerArn: loadBalancer.listeners.apply(ls => ls![0].arn),
     domain,
   });
 
