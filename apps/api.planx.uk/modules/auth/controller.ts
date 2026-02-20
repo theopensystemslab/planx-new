@@ -25,8 +25,11 @@ export const handleSuccess = (req: Request, res: Response) => {
 
   // Check referrer of original request
   // This means requests from Pizzas to the staging API will not get flagged as `isStagingOrProd`
-  const { returnTo = `${process.env.EDITOR_URL_EXT}/app` } = req.session!;
-  if (!returnTo) throw Error("Can't generate returnTo URL from session");
+  const referrer = req.get("Referrer");
+  const baseUrl = referrer
+    ? new URL(referrer).origin
+    : process.env.EDITOR_URL_EXT;
+  const returnTo = `${baseUrl}/app`
 
   const isStagingOrProd = returnTo.includes("editor.planx.");
 
