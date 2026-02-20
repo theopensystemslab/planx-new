@@ -73,58 +73,58 @@ jobs:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
           if-no-files-found: error
 
-  # build_localplanning_services:
-  #   name: Build localplanning.services
-  #   runs-on: ubuntu-22.04
-  #   steps:
-  #     - uses: actions/checkout@v6
-  #     - uses: actions/setup-node@v4
-  #       with:
-  #         node-version: ${{ vars.NODE_VERSION }}
-  #     # https://docs.github.com/en/free-pro-team@latest/actions/guides/caching-dependencies-to-speed-up-workflows#using-the-cache-action
-  #     - name: NPM cache
-  #       uses: actions/cache@v5
-  #       env:
-  #         cache-name: cache-npm
-  #       with:
-  #         # npm cache files are stored in `~/.npm` on Linux/macOS
-  #         path: ~/.npm
-  #         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-  #         restore-keys: |
-  #           ${{ runner.os }}-build-${{ env.cache-name }}-
-  #           ${{ runner.os }}-build-
-  #           ${{ runner.os }}-
-  #     - name: PNPM cache
-  #       uses: actions/cache@v5
-  #       env:
-  #         cache-name: cache-pnpm
-  #       with:
-  #         # pnpm cache files are stored in `~/.local/share/pnpm/store` on Linux
-  #         path: ~/.local/share/pnpm/store
-  #         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-  #         restore-keys: |
-  #           ${{ runner.os }}-build-${{ env.cache-name }}-
-  #           ${{ runner.os }}-build-
-  #           ${{ runner.os }}-
-  #     - run: npm install -g pnpm@${{ vars.PNPM_VERSION }}
-  #     - name: Setup .gitconfig
-  #       run: mv .gitconfig ~/.gitconfig
-  #     - run: pnpm install --frozen-lockfile
-  #       working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
-  #     - run: pnpm build --site https://localplanning.services --mode production
-  #       working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
-  #     - name: Upload LocalPlanning.services build artifact
-  #       uses: actions/upload-artifact@v6
-  #       with:
-  #         name: localplanning_services_build
-  #         path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
-  #         if-no-files-found: error
+  build_localplanning_services:
+    name: Build localplanning.services
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+      # https://docs.github.com/en/free-pro-team@latest/actions/guides/caching-dependencies-to-speed-up-workflows#using-the-cache-action
+      - name: NPM cache
+        uses: actions/cache@v5
+        env:
+          cache-name: cache-npm
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: PNPM cache
+        uses: actions/cache@v5
+        env:
+          cache-name: cache-pnpm
+        with:
+          # pnpm cache files are stored in `~/.local/share/pnpm/store` on Linux
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - run: npm install -g pnpm@${{ vars.PNPM_VERSION }}
+      - name: Setup .gitconfig
+        run: mv .gitconfig ~/.gitconfig
+      - run: pnpm install --frozen-lockfile
+        working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
+      - run: pnpm build --site https://localplanning.services --mode production
+        working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
+      - name: Upload LocalPlanning.services build artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: localplanning_services_build
+          path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
+          if-no-files-found: error
 
   preview:
     name: Pulumi Up
     needs:
       - build_planx_frontend
-      # - build_localplanning_services
+      - build_localplanning_services
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v6
@@ -149,11 +149,11 @@ jobs:
           name: planx_frontend_build
           path: ./${{ env.EDITOR_DIRECTORY }}/build
 
-      # - name: Download LocalPlanning.services build artifact
-      #   uses: actions/download-artifact@v7
-      #   with:
-      #     name: localplanning_services_build
-      #     path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
+      - name: Download LocalPlanning.services build artifact
+        uses: actions/download-artifact@v7
+        with:
+          name: localplanning_services_build
+          path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
       - uses: pulumi/actions@v6
         with:
           command: up
