@@ -161,10 +161,17 @@ export const useJWT = expressjwt({
 export const getGoogleAuthHandler = (
   passport: Authenticator,
 ): RequestHandler => {
-  return (req, res, next) =>
-    passport.authenticate("google", {
+  return (req, res, next) => {
+    // Always redirect to /app so frontend can handle default team redirect
+    const referrer = req.get("Referrer");
+    const baseUrl = referrer
+      ? new URL(referrer).origin
+      : process.env.EDITOR_URL_EXT;
+    req.session!.returnTo = `${baseUrl}/app`;
+    return passport.authenticate("google", {
       scope: ["profile", "email"],
     })(req, res, next);
+  };
 };
 
 export const getGoogleCallbackAuthHandler = (
@@ -181,6 +188,13 @@ export const getMicrosoftAuthHandler = (
   passport: Authenticator,
 ): RequestHandler => {
   return (req, res, next) => {
+    // Always redirect to /app so frontend can handle default team redirect
+    const referrer = req.get("Referrer");
+    const baseUrl = referrer
+      ? new URL(referrer).origin
+      : process.env.EDITOR_URL_EXT;
+    req.session!.returnTo = `${baseUrl}/app`;
+
     // generate a nonce to enable us to validate the response from OP (mitigates against CSRF attacks)
     const nonce = generators.nonce();
     console.debug(`Generated a nonce: %s`, nonce);
