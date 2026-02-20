@@ -2,6 +2,7 @@ import crypto from "crypto";
 import assert from "assert";
 import { ServerError } from "../../errors/index.js";
 import type { Template } from "../../lib/notify/templates/index.js";
+import type { ResendTemplate } from "../../lib/resend/templates/index.js";
 import { expressjwt, type IsRevoked } from "express-jwt";
 import { generators } from "openid-client";
 import type { Authenticator } from "passport";
@@ -54,7 +55,7 @@ export const useSendEmailAuth: RequestHandler = (req, res, next): void => {
       status: 400,
     });
   };
-  const template = req.params.template as Template;
+  const template = req.params.template as Template | ResendTemplate;
   switch (template) {
     // Requires authorization - can only be triggered by Hasura scheduled events
     case "reminder":
@@ -68,6 +69,7 @@ export const useSendEmailAuth: RequestHandler = (req, res, next): void => {
     case "payment-expiry-agent":
     case "confirmation-agent":
     case "confirmation-payee":
+    case "welcome":
       return useHasuraAuth(req, res, next);
     // Public access
     case "save":
