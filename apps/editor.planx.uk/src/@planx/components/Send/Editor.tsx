@@ -44,14 +44,16 @@ const SendComponent: React.FC<Props> = (props) => {
       initialValues: parseSend(props.node?.data),
       onSubmit: async (newValues) => {
         if (props.handleSubmit) {
-          await handleInsertOrUpdate(
-            teamId,
-            newValues,
-            existingEmailId,
-            defaultEmail,
-            id,
-            refetchFlowData,
-          );
+          if (hasFeatureFlag("MULTIPLE_SUBMISSION_SEND_COMPONENT")) {
+            await handleInsertOrUpdate(
+              teamId,
+              newValues,
+              existingEmailId,
+              defaultEmail,
+              id,
+              refetchFlowData,
+            );
+          }
           props.handleSubmit({ type: TYPES.Send, data: newValues });
         }
       },
