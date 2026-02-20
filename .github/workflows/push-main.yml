@@ -146,11 +146,11 @@ jobs:
         with:
           name: planx_frontend_build
           path: ./${{ env.EDITOR_DIRECTORY }}/build
-      # - name: Download LocalPlanning.services build artifact
-      #   uses: actions/download-artifact@v7
-      #   with:
-      #     name: localplanning_services_build
-      #     path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
+      - name: Download LocalPlanning.services build artifact
+        uses: actions/download-artifact@v7
+        with:
+          name: localplanning_services_build
+          path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
       - uses: pulumi/actions@v6
         with:
           command: up
