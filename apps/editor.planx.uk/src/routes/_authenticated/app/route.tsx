@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { createFileRoute, isRedirect, Outlet, redirect } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import React from "react";
 import { CatchAllComponent } from "routes/$";
@@ -8,7 +8,7 @@ import AuthenticatedLayout from "../../../pages/layout/AuthenticatedLayout";
 
 export const Route = createFileRoute("/_authenticated/app")({
   pendingComponent: DelayedLoadingIndicator,
-  beforeLoad: async ({ search }) => {
+  beforeLoad: async () => {
     useStore.getState().setPreviewEnvironment("editor");
     try {
       const user = await useStore.getState().initUserStore();
@@ -37,6 +37,9 @@ export const Route = createFileRoute("/_authenticated/app")({
 
       return { user, isPublicRoute: false };
     } catch (error) {
+      // Re-throw router-controlled errors (redirects, notFound) so they work correctly
+      if (isRedirect(error)) throw error;
+
       console.error("Failed to initialize user store:", error);
 
       // handleExpiredJWTErrors() has already been called and will redirect
