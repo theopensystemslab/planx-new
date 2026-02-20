@@ -154,12 +154,12 @@ const TextInputToggle: React.FC<{
   };
 
   return (
-    <Box sx={{ position: "absolute", right: 82, top: 38, zIndex: 1 }}>
+    <Box sx={{ position: "absolute", right: 82, top: 30, zIndex: 1 }}>
       <Switch
         label={
           <>
             <AutoAwesomeIcon sx={{ mr: 1 }} />
-            AI Enhanced (testing only)
+            AI enhanced (testing only)
           </>
         }
         onChange={toggleTextInput}
