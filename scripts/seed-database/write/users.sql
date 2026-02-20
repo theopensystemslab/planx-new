@@ -8,7 +8,8 @@ CREATE TEMPORARY TABLE sync_users (
   updated_at timestamptz,
   is_platform_admin boolean,
   is_staging_only boolean,
-  is_analyst boolean
+  is_analyst boolean,
+  default_team_id integer
 );
 
 \copy sync_users FROM '/tmp/users.csv'  WITH (FORMAT csv, DELIMITER ';');
@@ -20,7 +21,8 @@ INSERT INTO users (
   email,
   is_platform_admin,
   is_staging_only,
-  is_analyst
+  is_analyst,
+  default_team_id
 )
 SELECT
   id,
@@ -29,7 +31,8 @@ SELECT
   email,
   is_platform_admin,
   is_staging_only,
-  is_analyst
+  is_analyst,
+  default_team_id
 FROM sync_users
 ON CONFLICT (id) DO UPDATE
 SET
@@ -38,6 +41,7 @@ SET
   email = EXCLUDED.email,
   is_platform_admin = EXCLUDED.is_platform_admin,
   is_staging_only = EXCLUDED.is_staging_only,
-  is_analyst = EXCLUDED.is_analyst;
+  is_analyst = EXCLUDED.is_analyst,
+  default_team_id = EXCLUDED.default_team_id;
 
 SELECT setval('users_id_seq', max(id)) FROM users;
