@@ -3,10 +3,10 @@
   "dependencies": {
     "@nodelib/fs.walk": "~3.0.1",
     "@pulumi/aws": "~7.20.0",
-    "@pulumi/awsx": "~3.1.0",
+    "@pulumi/awsx": "~3.2.0",
     "@pulumi/cloudflare": "~6.13.0",
     "@pulumi/postgresql": "~3.16.2",
-    "@pulumi/pulumi": "~3.220.0",
+    "@pulumi/pulumi": "~3.223.0",
     "tldjs": "~2.3.2"
   },
   "devDependencies": {
