@@ -1,4 +1,4 @@
-FROM postgis/postgis:16-3.5
+FROM postgis/postgis:17-3.5
 
 # install build deps, build pg_cron and remove build deps to keep image small
 RUN apt-get update \
