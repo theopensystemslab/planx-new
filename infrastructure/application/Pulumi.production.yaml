@@ -10,7 +10,7 @@ config:
   application:db-host:
     secure: AAABALfLAhFMoAzqQcMbG+83I3fc7KMpJ69QWeHJJrW+vdB9B5zwTeE8zruM4u2x3DsHwPZzb10GKsn0YP8RVHF2my9Pfq6uiTCWEI6Cr3uoRK0=
   application:db-password:
-    secure: AAABAF/wXkRmtQ7w6Pur01F5qQqSq9+G9gxy7m8E9EHYl7HQb+Fyb3GMxqzxiJwZ/nFulL9HBA3uoKVh1JDxNA==
+    secure: AAABADSTnVT3cbPrxo58TM2MFK/gXusGmUZDYj8Yxnj2izl4gjEG9dKW8LT9mnmucccd1G3q7z5w1gRZ3JyMaQ==
   application:db-url:
     secure: AAABAFI7BWi1MiV42eCEbNb5pkqvXsMD/AGFr76HpI96ZISZMDoTEZqMjkIOt8LKR6/dmxkgPa1pWfRYdKDYYnHJ0PY5brtHC5EwndG6Rpc9OcPmbkqjGIITv06jk1/IDxC1CRW9oq4xXhxDF4FN/MmhqqyCncUxS7jL2BhfKrQ/LMBrZtGF/e4GrXgHEqMXMTCHJQ==
   application:encryption-key:
