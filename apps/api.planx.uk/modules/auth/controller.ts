@@ -29,7 +29,7 @@ export const handleSuccess = (req: Request, res: Response) => {
   const baseUrl = referrer
     ? new URL(referrer).origin
     : process.env.EDITOR_URL_EXT;
-  const returnTo = `${baseUrl}/app`
+  const returnTo = `${baseUrl}/app`;
 
   const isStagingOrProd = returnTo.includes("editor.planx.");
 
