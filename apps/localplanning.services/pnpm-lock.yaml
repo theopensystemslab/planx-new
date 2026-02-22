@@ -67,7 +67,7 @@ importers:
         version: 0.34.5
       tailwind-clamp:
         specifier: ^4.0.18
-        version: 4.2.1(tailwindcss@4.2.0)
+        version: 4.2.2(tailwindcss@4.2.0)
       tailwindcss:
         specifier: ^4.1.7
         version: 4.2.0
@@ -2164,8 +2164,8 @@ packages:
     engines: {node: '>=4'}
     hasBin: true
 
-  minimatch@3.1.2:
-    resolution: {integrity: sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==}
+  minimatch@3.1.3:
+    resolution: {integrity: sha512-M2GCs7Vk83NxkUyQV1bkABc4yxgz9kILhHImZiBPAZ9ybuvCb0/H7lEl5XvIg3g+9d4eNotkZA5IWwYl0tibaA==}
 
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
@@ -2665,8 +2665,8 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
 
-  tailwind-clamp@4.2.1:
-    resolution: {integrity: sha512-mSk1dtpB20D8MeeUoSpxmj0Z9N70HpJqI5u1GIaUa+shI9oADmBHkNQzOIikttrwUCWMaDoaDf6noSGV1bL8dw==}
+  tailwind-clamp@4.2.2:
+    resolution: {integrity: sha512-tcq9lhP8asAxZKtslrEzK69v0codW7G++9UXFcdEWuNx7tsce8ysM0d9oDv7tYAcvd7q5c+HmVUd0ZcdLlR3eg==}
     peerDependencies:
       tailwindcss: ^4.0.0
 
@@ -4832,7 +4832,7 @@ snapshots:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 3.1.2
+      minimatch: 3.1.3
       once: 1.4.0
       path-is-absolute: 1.0.1
     optional: true
@@ -5500,7 +5500,7 @@ snapshots:
   mime@1.6.0:
     optional: true
 
-  minimatch@3.1.2:
+  minimatch@3.1.3:
     dependencies:
       brace-expansion: 1.1.12
     optional: true
@@ -6092,7 +6092,7 @@ snapshots:
       picocolors: 1.1.1
       sax: 1.4.4
 
-  tailwind-clamp@4.2.1(tailwindcss@4.2.0):
+  tailwind-clamp@4.2.2(tailwindcss@4.2.0):
     dependencies:
       tailwindcss: 4.2.0
 
