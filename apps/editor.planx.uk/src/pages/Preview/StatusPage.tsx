@@ -6,10 +6,10 @@ import Typography from "@mui/material/Typography";
 import Card, {
   contentFlowSpacing,
 } from "@planx/components/shared/Preview/Card";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { type PropsWithChildren } from "react";
 import Banner from "ui/public/Banner";
 import ViewApplicationLink from "ui/public/ViewApplicationLink";
-import { removeSessionIdSearchParam } from "utils";
 
 interface Props {
   bannerHeading: string;
@@ -30,6 +30,7 @@ const StatusPage: React.FC<PropsWithChildren<Props>> = ({
   children,
 }) => {
   const theme = useTheme();
+  const resetPreview = useStore().resetPreview;
 
   return (
     <>
@@ -73,7 +74,7 @@ const StatusPage: React.FC<PropsWithChildren<Props>> = ({
             </Typography>
             <Link
               component="button"
-              onClick={removeSessionIdSearchParam}
+              onClick={() => resetPreview()}
               sx={contentFlowSpacing}
             >
               <Typography variant="body1" align="left">
