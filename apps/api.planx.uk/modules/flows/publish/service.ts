@@ -62,29 +62,6 @@ export const publishFlow = async (
 
   const { client: $client } = getClient();
 
-  // Fetch submissionEmailId from flow_integrations table
-  const { flowIntegrations } = await $client.request<{
-    flowIntegrations: { email_id: string }[];
-  }>(
-    gql`
-      query GetSubmissionEmail($flow_id: uuid!) {
-        flowIntegrations: flow_integrations(
-          where: { flow_id: { _eq: $flow_id } }
-          limit: 1
-        ) {
-          email_id
-        }
-      }
-    `,
-    {
-      flow_id: flowId,
-    },
-  );
-
-  const submissionEmailId = flowIntegrations.length
-    ? flowIntegrations[0].email_id
-    : null;
-
   const response = await $client.request<PublishFlow>(
     gql`
       mutation PublishFlow(
@@ -96,7 +73,6 @@ export const publishFlow = async (
         $has_sections: Boolean
         $has_pay_component: Boolean
         $service_charge_enabled: Boolean
-        $submission_email_id: uuid
       ) {
         publishedFlow: insert_published_flows_one(
           object: {
@@ -108,7 +84,6 @@ export const publishFlow = async (
             has_sections: $has_sections
             has_pay_component: $has_pay_component
             service_charge_enabled: $service_charge_enabled
-            submission_email_id: $submission_email_id
           }
         ) {
           id
@@ -128,7 +103,6 @@ export const publishFlow = async (
       has_sections: hasSections,
       has_pay_component: hasVisiblePayComponent,
       service_charge_enabled: hasEnabledServiceCharge,
-      submission_email_id: submissionEmailId,
     },
   );
 
