@@ -212,8 +212,7 @@ const SendComponent: React.FC<Props> = (props) => {
                         <>
                         <InputRow>
                           <Typography variant="body2" mb={2}>
-                            You can only select submission emails from the Send
-                            component. To add or update submission emails,
+                            Select a submission email for this service. To add or update submission emails,
                             please visit your{" "}
                             <Link
                               href={`/app/${teamSlug}/settings/integrations`}
