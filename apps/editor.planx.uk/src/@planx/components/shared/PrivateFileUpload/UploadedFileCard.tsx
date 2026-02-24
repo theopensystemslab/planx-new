@@ -1,9 +1,8 @@
 import FileIcon from "@mui/icons-material/AttachFile";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Box, { BoxProps } from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
-import IconButton from "@mui/material/IconButton";
-import Link from "@mui/material/Link";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import { styled } from "@mui/material/styles";
@@ -12,40 +11,42 @@ import { visuallyHidden } from "@mui/utils";
 import { FileUploadSlot } from "@planx/components/FileUpload/model";
 import ImagePreview from "components/ImagePreview";
 import React from "react";
+import CheckCircleIcon from "ui/icons/CheckCircle";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 interface Props extends FileUploadSlot {
   removeFile: () => void;
   onChange?: () => void;
+  changeLabel?: string;
   tags?: string[];
   FileCardProps?: BoxProps;
 }
 
 const FileCard = styled(Box)(({ theme }) => ({
   border: `1px solid ${theme.palette.border.main}`,
+  backgroundColor: theme.palette.background.paper,
   position: "relative",
   height: "auto",
   display: "flex",
   flexDirection: "column",
   alignItems: "flex-end",
-  gap: theme.spacing(1),
+  gap: theme.spacing(2),
   [theme.breakpoints.up("md")]: {
     flexDirection: "row",
     alignItems: "center",
   },
-  padding: theme.spacing(1, 1.5, 0.5),
+  padding: theme.spacing(1.5),
   "& > *": {
     zIndex: 1,
   },
 }));
 
 const FilePreview = styled(Box)(({ theme }) => ({
-  height: theme.spacing(10),
-  width: theme.spacing(10),
-  marginLeft: theme.spacing(-1),
-  opacity: 0.75,
+  height: theme.spacing(8),
+  width: theme.spacing(8),
   position: "relative",
   overflow: "hidden",
+  backgroundColor: theme.palette.background.default,
   "& img": {
     position: "absolute",
     width: "100%",
@@ -83,10 +84,16 @@ const TagRoot = styled(Box)(({ theme }) => ({
   border: `1px solid ${theme.palette.border.main}`,
   borderTop: "none",
   display: "flex",
-  justifyContent: "space-between",
   flexWrap: "wrap",
   alignItems: "center",
   padding: theme.spacing(1),
+}));
+
+const ActionButtons = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  gap: theme.spacing(1),
+  flexShrink: 0,
 }));
 
 export const UploadedFileCard: React.FC<Props> = ({
@@ -95,6 +102,7 @@ export const UploadedFileCard: React.FC<Props> = ({
   url,
   removeFile,
   onChange,
+  changeLabel = "Edit",
   tags,
   status,
   FileCardProps,
@@ -143,20 +151,44 @@ export const UploadedFileCard: React.FC<Props> = ({
               <FileSize variant="body2">{formatBytes(file.size)}</FileSize>
             </Box>
           </Box>
-          {removeFile && (
-            <IconButton
+          <ActionButtons>
+            <Button
               size="small"
               title={`Delete ${file.name}`}
               onClick={removeFile}
-              sx={{ gap: "3px" }}
+              sx={{ gap: 1, backgroundColor: "white" }}
               data-testid={`delete-${file.name}`}
+              variant="contained"
+              color="secondary"
             >
-              <DeleteIcon color="warning" />
-              Delete <span style={visuallyHidden}>{file.name}</span>
-            </IconButton>
-          )}
+              <DeleteIcon color="warning" fontSize="small" />
+              Remove <span style={visuallyHidden}>{file.name}</span>
+            </Button>
+            {onChange && (
+              <Button
+                variant="contained"
+                color={changeLabel === "Save" ? "prompt" : "secondary"}
+                sx={{
+                  minWidth: 80,
+                  ...(changeLabel !== "Save" && {
+                    backgroundColor: "white",
+                  }),
+                }}
+                size="small"
+                onClick={onChange}
+                data-testid={`${changeLabel.toLowerCase()}-${file.name}`}
+              >
+                {changeLabel}
+                <Box sx={visuallyHidden} component="span">
+                  {changeLabel === "Save"
+                    ? ` labels for ${file.name}`
+                    : ` what ${file.name} shows`}
+                </Box>
+              </Button>
+            )}
+          </ActionButtons>
         </FileCard>
-        {tags && (
+        {tags && tags.length > 0 && (
           <TagRoot>
             <List sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
               {tags.map((tag) => (
@@ -164,28 +196,20 @@ export const UploadedFileCard: React.FC<Props> = ({
                   <Chip
                     label={tag}
                     variant="uploadedFileTag"
-                    size="small"
                     data-testid="uploaded-file-chip"
+                    icon={<CheckCircleIcon />}
+                    sx={{
+                      backgroundColor: "#E6F3E6",
+                      color: "text.primary",
+                      border: "1px solid rgba(0, 0, 0, 0.25)",
+                      "& .MuiChip-icon": {
+                        color: "success.main",
+                      },
+                    }}
                   />
                 </ListItem>
               ))}
             </List>
-            <Box sx={{ marginLeft: "auto" }}>
-              <Link
-                onClick={() => onChange && onChange()}
-                sx={{
-                  fontFamily: "inherit",
-                  fontSize: "inherit",
-                }}
-                component="button"
-                variant="body2"
-              >
-                Change
-                <Box sx={visuallyHidden} component="span">
-                  the list of what file {file.name} shows
-                </Box>
-              </Link>
-            </Box>
           </TagRoot>
         )}
       </>

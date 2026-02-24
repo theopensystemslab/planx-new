@@ -7,7 +7,9 @@ import { visuallyHidden } from "@mui/utils";
 import capitalize from "lodash/capitalize";
 import React, { useMemo } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import InputLabel from "ui/public/InputLabel";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
+import Input from "ui/shared/Input/Input";
 
 import { FileUploadSlot } from "../../FileUpload/model";
 import {
@@ -22,6 +24,9 @@ interface ChecklistProps {
   uploadedFile: FileUploadSlot;
   fileList: FileList;
   setFileList: (value: React.SetStateAction<FileList>) => void;
+  showDrawingNumber?: boolean;
+  drawingNumber?: string;
+  onDrawingNumberChange?: (value: string) => void;
 }
 
 interface Option extends UserFile {
@@ -30,12 +35,19 @@ interface Option extends UserFile {
 
 const Root = styled(Box)(({ theme }) => ({
   width: "100%",
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: theme.palette.background.paper,
   borderColor: theme.palette.border.main,
   borderStyle: "solid",
-  borderWidth: "1px",
-  borderTopColor: theme.palette.border.light,
+  borderWidth: "0 1px 1px 1px",
   padding: theme.spacing(2),
+}));
+
+const ChecklistGrid = styled(Box)(({ theme }) => ({
+  display: "grid",
+  gridTemplateColumns: "1fr",
+  [theme.breakpoints.up("sm")]: {
+    gridTemplateColumns: "1fr 1fr",
+  },
 }));
 
 // Sanitize function to create valid IDs (no spaces)
@@ -44,7 +56,14 @@ const sanitizeId = (str: string): string => {
 };
 
 export const SelectMultipleFileTypes = (props: ChecklistProps) => {
-  const { uploadedFile, fileList, setFileList } = props;
+  const {
+    uploadedFile,
+    fileList,
+    setFileList,
+    showDrawingNumber,
+    drawingNumber,
+    onDrawingNumberChange,
+  } = props;
 
   const initialTags = getTagsForSlot(uploadedFile.id, fileList);
 
@@ -100,7 +119,7 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
 
   return (
     <Root>
-      <Typography variant="h3" mb={3} id={titleId}>
+      <Typography variant="h3" mb={2} id={titleId}>
         What does this file show? (select all that apply)
         <Box component="span" sx={visuallyHidden}>
           This question refers to file: {uploadedFile.file.name}
@@ -111,10 +130,7 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
         <FormControl
           key={category}
           component="fieldset"
-          sx={{
-            width: "100%",
-            mb: 1,
-          }}
+          sx={{ width: "100%", mb: 1 }}
           aria-describedby={titleId}
         >
           <FormLabel
@@ -127,7 +143,7 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
             {capitalize(category)} information
           </FormLabel>
 
-          <Box>
+          <ChecklistGrid>
             {categoryOptions.map((option) => (
               <ChecklistItem
                 key={`${category}-${option.name}`}
@@ -137,9 +153,25 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
                 onChange={() => handleCheckboxChange(option)}
               />
             ))}
-          </Box>
+          </ChecklistGrid>
         </FormControl>
       ))}
+
+      {showDrawingNumber && (
+        <Box sx={{ mt: 1, maxWidth: 400 }}>
+          <InputLabel
+            htmlFor={`drawing-number-${uploadedFile.id}`}
+            label="Drawing number (optional)"
+          >
+            <Input
+              id={`drawing-number-${uploadedFile.id}`}
+              value={drawingNumber ?? ""}
+              onChange={(e) => onDrawingNumberChange?.(e.target.value)}
+              fullWidth
+            />
+          </InputLabel>
+        </Box>
+      )}
     </Root>
   );
 };
