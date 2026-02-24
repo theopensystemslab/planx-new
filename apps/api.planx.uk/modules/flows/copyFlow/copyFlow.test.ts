@@ -62,18 +62,6 @@ beforeEach(() => {
   });
 
   queryMock.mockQuery({
-    name: "GetDefaultEmail",
-    matchOnVariables: false,
-    data: {
-      submissionIntegrations: [
-        {
-          id: "default-email-id",
-        },
-      ],
-    },
-  });
-
-  queryMock.mockQuery({
     name: "InsertFlowIntegration",
     matchOnVariables: false,
     data: {

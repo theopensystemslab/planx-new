@@ -156,21 +156,6 @@ describe("success", () => {
         },
       },
     });
-
-    queryMock.mockQuery({
-      name: "GetDefaultEmail",
-      variables: {
-        team_id: 1,
-      },
-      data: {
-        submissionIntegrations: [
-          {
-            id: "default-email-id",
-            team_id: 1,
-          },
-        ],
-      },
-    });
   });
 
   it("successfully creates a new flow", async () => {

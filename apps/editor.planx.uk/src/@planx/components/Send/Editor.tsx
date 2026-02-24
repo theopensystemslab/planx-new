@@ -11,7 +11,6 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { getIn } from "formik";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { useEffect } from "react";
@@ -25,13 +24,11 @@ import InputRow from "ui/shared/InputRow";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 import { Switch } from "ui/shared/Switch";
 
-import { SubmissionEmailInput } from "../../../../src/pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 import { ICONS } from "../shared/icons";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
 import { EditorProps } from "../shared/types";
 import { useFlowEmailId } from "./hooks/useFlowEmailId";
 import { useTeamSubmissionIntegrations } from "./hooks/useGetTeamSubmissionIntegrations";
-import { useInsertFlowIntegration } from "./hooks/useInsertFlowIntegrations";
 import { useUpdateFlowIntegration } from "./hooks/useUpdateFlowIntegration";
 import { parseSend, Send, validationSchema } from "./model";
 import { GetFlowEmailIdQuery } from "./types";
@@ -44,16 +41,12 @@ const SendComponent: React.FC<Props> = (props) => {
       initialValues: parseSend(props.node?.data),
       onSubmit: async (newValues) => {
         if (props.handleSubmit) {
-          if (hasFeatureFlag("MULTIPLE_SUBMISSION_SEND_COMPONENT")) {
-            await handleInsertOrUpdate(
-              teamId,
-              newValues,
-              existingEmailId,
-              defaultEmail,
-              id,
-              refetchFlowData,
-            );
-          }
+          await handleUpdate(
+            newValues,
+            existingEmailId,
+            id,
+            refetchFlowData,
+          );
           props.handleSubmit({ type: TYPES.Send, data: newValues });
         }
       },
@@ -86,36 +79,19 @@ const SendComponent: React.FC<Props> = (props) => {
     (email: any) => email.defaultEmail === true,
   );
 
-  const [insertFlowIntegration] = useInsertFlowIntegration();
   const [updateFlowIntegration] = useUpdateFlowIntegration();
 
-  const handleInsertOrUpdate = async (
-    teamId: number,
+  const handleUpdate = async (
     newValues: Send,
     existingEmailId: string | undefined,
-    defaultEmail: SubmissionEmailInput | undefined,
     id: string,
     refetchFlowData: () => Promise<ApolloQueryResult<GetFlowEmailIdQuery>>,
   ) => {
-    const selectedEmailId = newValues.submissionEmailId || defaultEmail?.id;
-
-    if (!existingEmailId && selectedEmailId) {
-      await insertFlowIntegration({
-        variables: {
-          flowId: id,
-          emailId: selectedEmailId,
-          teamId: teamId,
-        },
-      });
-
-      await refetchFlowData();
-      return;
-    }
+    const selectedEmailId = newValues.submissionEmailId;
 
     if (
-      existingEmailId &&
       newValues.submissionEmailId &&
-      existingEmailId !== newValues.submissionEmailId
+      existingEmailId !== selectedEmailId
     ) {
       await updateFlowIntegration({
         variables: {
@@ -204,53 +180,75 @@ const SendComponent: React.FC<Props> = (props) => {
                 <Switch
                   checked={formik.values.destinations.includes("email")}
                   onChange={() => toggleSwitch("email")}
-                  label={`Send to ${submissionEmail || "your inbox"}`}
+                  label={`Send to email`}
                   disabled={props.disabled}
                 />
               </InputRow>
-              {hasFeatureFlag("MULTIPLE_SUBMISSION_SEND_COMPONENT") ? (
                 <>
-                  <InputRow>
-                    {formik.values.destinations.includes("email") && (
-                      <>
-                        {loading || flowLoading ? (
-                          <Typography variant="body2">
-                            Loading email options...
+                  {formik.values.destinations.includes("email") && (
+                    <>
+                      {loading || flowLoading ? (
+                        <Typography variant="body2">
+                          Loading email options...
+                        </Typography>
+                      ) : error || flowError ? (
+                        <Typography variant="body2" color="error">
+                          Failed to load email options.
+                        </Typography>
+                      ) : emailOptions.length === 0 ? (
+                        <Typography variant="body2">
+                          You do not have a submission email configured.
+                          Please add one in your{" "}
+                          <Link
+                            href={`/app/${teamSlug}/settings/integrations`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            team settings
+                          </Link>
+                          .
+                        </Typography>
+                      ) : (
+                        <>
+                        <InputRow>
+                          <Typography variant="body2" mb={2}>
+                            You can only select submission emails from the Send
+                            component. To add or update submission emails,
+                            please visit your{" "}
+                            <Link
+                              href={`/app/${teamSlug}/settings/integrations`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              team settings
+                            </Link>{" "}
+                          page.
                           </Typography>
-                        ) : (
-                          <>
-                            {error || flowError ? (
-                              <Typography variant="body2" color="error">
-                                Failed to load email options.
-                              </Typography>
-                            ) : (
-                              <SelectInput
-                                name="submissionEmail"
-                                value={
-                                  formik.values.submissionEmailId ||
-                                  currentEmail?.id ||
-                                  ""
-                                }
-                                onChange={handleSelectChange}
-                                bordered
-                                disabled={props.disabled}
-                              >
-                                {emailOptions.map((email: any) => (
-                                  <MenuItem key={email.id} value={email.id}>
-                                    {email.submissionEmail}
-                                  </MenuItem>
-                                ))}
-                              </SelectInput>
-                            )}
-                          </>
-                        )}
-                      </>
-                    )}
-                  </InputRow>
+                        </InputRow>
+                        <InputRow>
+                          <SelectInput
+                            name="submissionEmail"
+                            value={
+                              formik.values.submissionEmailId ||
+                              currentEmail?.id ||
+                              ""
+                            }
+                            onChange={handleSelectChange}
+                            bordered
+                            disabled={props.disabled}
+                          >
+                            {emailOptions.map((email: any) => (
+                              <MenuItem key={email.id} value={email.id}>
+                                {email.submissionEmail}
+                              </MenuItem>
+                            ))}
+                          </SelectInput>
+                        </InputRow>
+                        </>
+                      )}
+                    </>
+                  )}
                 </>
-              ) : (
-                <></>
-              )}
             </ModalSectionContent>
             <Divider />
             <ModalSectionContent title={"Microsoft SharePoint"}>
