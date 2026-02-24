@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Link } from "@tanstack/react-router";
+import { useParams } from "@tanstack/react-router";
 import React from "react";
 
 const Root = styled(Box)(({ theme }) => ({
@@ -26,17 +27,24 @@ const Root = styled(Box)(({ theme }) => ({
   },
 }));
 
-export const GetStarted: React.FC = () => (
-  <Root>
-    <SchoolIcon />
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-      <Typography variant="body1">
-        <strong>Starting a new flow?</strong>
-      </Typography>
-      <Typography variant="body2">
-        Visit the <Link to="/app/tutorials">guides and tutorials</Link> to get
-        started.
-      </Typography>
-    </Box>
-  </Root>
-);
+export const GetStarted: React.FC = () => {
+  const { team } = useParams({ strict: false });
+
+  return (
+    <Root>
+      <SchoolIcon />
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+        <Typography variant="body1">
+          <strong>Starting a new flow?</strong>
+        </Typography>
+        <Typography variant="body2">
+          Visit the{" "}
+          <Link to="/app/$team/tutorials" params={{ team: team! }}>
+            guides and tutorials
+          </Link>{" "}
+          to get started.
+        </Typography>
+      </Box>
+    </Root>
+  );
+};
