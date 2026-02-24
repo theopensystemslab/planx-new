@@ -20,7 +20,7 @@
     "serve": "^14.2.4",
     "uuid": "^11.1.0"
   },
-  "packageManager": "pnpm@10.10.0",
+  "packageManager": "pnpm@10.30.2",
   "devDependencies": {
     "@playwright/test": "^1.56.1",
     "@types/geojson": "^7946.0.14",

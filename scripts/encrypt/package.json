@@ -7,7 +7,7 @@
     "encrypt": "tsx encrypt.ts",
     "decrypt": "tsx decrypt.ts"
   },
-  "packageManager": "pnpm@10.10.0",
+  "packageManager": "pnpm@10.30.2",
   "keywords": [],
   "dependencies": {
     "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#7e11427",

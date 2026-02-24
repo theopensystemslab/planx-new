@@ -2,12 +2,11 @@
   "name": "api.planx.uk",
   "license": "MPL-2.0",
   "private": true,
-  "packageManager": "pnpm@10.10.0",
+  "packageManager": "pnpm@10.30.2",
   "type": "module",
   "exports": "./dist/index.js",
   "engines": {
-    "node": ">=22.14",
-    "pnpm": "10.10.0"
+    "node": ">=22.14"
   },
   "dependencies": {
     "@airbrake/node": "^2.1.9",

@@ -10,7 +10,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.10.0",
+  "packageManager": "pnpm@10.30.2",
   "dependencies": {
     "csv-parse": "^6.1.0",
     "csv-stringify": "^6.6.0"
