@@ -8,15 +8,7 @@ multi-ecosystem-groups:
   sharedb-sync:
     schedule:
       interval: "monthly"
-    labels: ["sharedb-sync", "npm"]
-
-  # keep pulumi packages for infra aligned
-  pulumi-sync:
-    schedule:
-      interval: "monthly"
-    labels: ["infra", "pulumi", "npm"]
-    commit-message:
-      prefix: "[skip pizza] "
+    labels: ["sharedb", "pnpm"]
 
 updates:
   # Root
@@ -24,14 +16,14 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
-    labels: ["root", "npm"]
+    labels: ["pnpm"]
 
   # Editor
   - package-ecosystem: "npm"
     directory: "/apps/editor.planx.uk"
     schedule:
       interval: "monthly"
-    labels: ["editor", "npm"]
+    labels: ["editor", "pnpm"]
     ignore:
       - dependency-name: "*"
         update-types:
@@ -52,7 +44,7 @@ updates:
     directory: "/apps/localplanning.services"
     schedule:
       interval: "monthly"
-    labels: ["lps", "npm"]
+    labels: ["lps", "pnpm"]
     ignore:
       - dependency-name: "*"
         update-types:
@@ -63,7 +55,7 @@ updates:
     directory: "/apps/hasura.planx.uk"
     schedule:
       interval: "monthly"
-    labels: ["hasura", "npm"]
+    labels: ["hasura", "pnpm"]
     ignore:
       - dependency-name: "*"
         update-types:
@@ -87,7 +79,7 @@ updates:
     directory: "/apps/hasura.planx.uk/tests"
     schedule:
       interval: "monthly"
-    labels: ["hasura", "tests", "npm"]
+    labels: ["hasura", "tests", "pnpm"]
     commit-message:
       prefix: "[skip pizza] "
     ignore:
@@ -100,7 +92,7 @@ updates:
     directory: "/apps/sharedb.planx.uk"
     schedule:
       interval: "monthly"
-    labels: ["sharedb", "npm"]
+    labels: ["sharedb", "pnpm"]
     ignore:
       - dependency-name: "*"
         update-types:
@@ -125,7 +117,7 @@ updates:
     directory: "/apps/api.planx.uk"
     schedule:
       interval: "monthly"
-    labels: ["api", "npm"]
+    labels: ["api", "pnpm"]
     ignore:
       - dependency-name: "*"
         update-types:
@@ -146,7 +138,7 @@ updates:
     directory: "/e2e"
     schedule:
       interval: "monthly"
-    labels: ["e2e", "tests", "npm"]
+    labels: ["e2e", "tests", "pnpm"]
     commit-message:
       prefix: "[skip pizza] "
     ignore:
@@ -170,82 +162,26 @@ updates:
     labels: ["ci", "postgres", "docker"]
     open-pull-requests-limit: 1
 
-  # Infrastructure - packages other than pulumi
+  # Infrastructure (pnpm workspace so we only reference the root)
+  # NB. this config may serve as a useful reference when we push monorepo setup at project root
   - package-ecosystem: "npm"
     directory: "/infrastructure"
     schedule:
       interval: "monthly"
-    labels: ["infra", "npm"]
-
-  - package-ecosystem: "npm"
-    directory: "/infrastructure/application"
-    schedule:
-      interval: "monthly"
-    labels: ["infra", "npm"]
+    labels: ["infra", "pnpm"]
+    groups:
+      # group pulumi updates together to reduce noise
+      pulumi:
+        patterns: ["@pulumi/*"]
+    # handle all @types/node bumps (bar patches) manually, to keep alignment with node version (see .nvmrc)
     ignore:
-      - dependency-name: "@pulumi/**"
-
-  - package-ecosystem: "npm"
-    directory: "/infrastructure/certificates"
-    schedule:
-      interval: "monthly"
-    labels: ["infra", "npm"]
-    ignore:
-      - dependency-name: "@pulumi/**"
-
-  - package-ecosystem: "npm"
-    directory: "/infrastructure/data"
-    schedule:
-      interval: "monthly"
-    labels: ["infra", "npm"]
-    ignore:
-      - dependency-name: "@pulumi/**"
-
-  - package-ecosystem: "npm"
-    directory: "/infrastructure/ml"
-    schedule:
-      interval: "monthly"
-    labels: ["infra", "npm"]
-    ignore:
-      - dependency-name: "@pulumi/**"
-
-  - package-ecosystem: "npm"
-    directory: "/infrastructure/networking"
-    schedule:
-      interval: "monthly"
-    labels: ["infra", "npm"]
-    ignore:
-      - dependency-name: "@pulumi/**"
-
-  # Infrastructure - pulumi packages (handled by pulumi-sync group)
-  - package-ecosystem: "npm"
-    directory: "/infrastructure/application"
-    patterns: ["@pulumi/**"]
-    multi-ecosystem-group: "pulumi-sync"
-
-  - package-ecosystem: "npm"
-    directory: "/infrastructure/certificates"
-    patterns: ["@pulumi/**"]
-    multi-ecosystem-group: "pulumi-sync"
-
-  - package-ecosystem: "npm"
-    directory: "/infrastructure/data"
-    patterns: ["@pulumi/**"]
-    multi-ecosystem-group: "pulumi-sync"
-
-  - package-ecosystem: "npm"
-    directory: "/infrastructure/ml"
-    patterns: ["@pulumi/**"]
-    multi-ecosystem-group: "pulumi-sync"
-
-  - package-ecosystem: "npm"
-    directory: "/infrastructure/networking"
-    patterns: ["@pulumi/**"]
-    multi-ecosystem-group: "pulumi-sync"
+      - dependency-name: "@types/node"
+        update-types:
+          ["version-update:semver-major", "version-update:semver-minor"]
 
   # GitHub actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "monthly"
-    labels: ["ci", "github actions"]
+    labels: ["ci", "github-actions"]
