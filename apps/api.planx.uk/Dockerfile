@@ -9,9 +9,9 @@ COPY .gitconfig /root/.gitconfig
 WORKDIR /api
 RUN npm install -g pnpm@10.30.2
 
-# update package cache using lockfile
+# update package cache using lockfile (we include pnpm-workspace to allow planx-core build scripts)
 # see https://pnpm.io/cli/fetch
-COPY pnpm-lock.yaml ./
+COPY pnpm-workspace.yaml pnpm-lock.yaml ./
 RUN pnpm fetch
 
 # copy and install everything else using cache where possible
