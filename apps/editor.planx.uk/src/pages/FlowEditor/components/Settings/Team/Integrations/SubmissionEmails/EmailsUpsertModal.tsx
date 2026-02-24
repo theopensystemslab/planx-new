@@ -33,12 +33,13 @@ export const EmailsUpsertModal = ({
   const [upsertEmail] = useMutation(UPSERT_TEAM_SUBMISSION_INTEGRATIONS);
 
   const isFirstEmail = !currentEmails || currentEmails.length === 0;
+  const isDefaultEmail = isFirstEmail || initialValues?.defaultEmail || false;
 
   return (
     <Formik
       initialValues={{
         submissionEmail: initialValues?.submissionEmail || "",
-        defaultEmail: isFirstEmail || initialValues?.defaultEmail || false,
+        defaultEmail: isDefaultEmail,
         teamId: teamId,
       }}
       validationSchema={upsertEmailSchema(
@@ -117,7 +118,7 @@ export const EmailsUpsertModal = ({
                     setFieldValue("defaultEmail", e.target.checked)
                   }
                   label={"Default email"}
-                  disabled={isFirstEmail}
+                  disabled={isFirstEmail || isDefaultEmail}
                 />
               </Box>
             </DialogContent>
