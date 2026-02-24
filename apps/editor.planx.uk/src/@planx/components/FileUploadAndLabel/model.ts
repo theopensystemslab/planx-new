@@ -28,6 +28,7 @@ export interface FileUploadAndLabel extends BaseNodeData {
   fn?: string;
   fileTypes: FileType[];
   hideDropZone?: boolean;
+  showDrawingNumber?: boolean;
 }
 
 export const parseContent = (
@@ -38,6 +39,7 @@ export const parseContent = (
   fn: data?.fn || "",
   fileTypes: cloneDeep(data?.fileTypes) || [newFileType()],
   hideDropZone: data?.hideDropZone || false,
+  showDrawingNumber: data?.showDrawingNumber ?? false,
   ...parseBaseNodeData(data),
 });
 
