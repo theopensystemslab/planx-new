@@ -27,7 +27,7 @@ tables=(
   team_themes
   team_settings
   templated_flow_edits
-  submission_integrations
+  # submission_integrations
   flow_integrations
   # Optional tables
   # Please comment in if working on a feature and you require example data locally
@@ -57,6 +57,10 @@ echo team_integrations downloaded
 
 psql --quiet ${REMOTE_PG} --command="\\copy (SELECT DISTINCT ON (flow_id) id, data, flow_id, summary, publisher_id, created_at, has_send_component, has_sections, has_pay_component, service_charge_enabled FROM published_flows ORDER BY flow_id, created_at DESC) TO '/tmp/published_flows.csv' (FORMAT csv, DELIMITER ';');"
 echo published_flows downloaded
+
+# TODO: delete (temporary copy while staging and production are out of sync)
+psql --quiet ${REMOTE_PG} --command="\\copy (SELECT team_id, id, submission_email, default_email FROM submission_integrations) TO '/tmp/submission_integrations.csv' (FORMAT csv, DELIMITER ';');"
+echo submission_integrations downloaded
 
 if [[ ${RESET} == "reset_flows" ]]; then
   cat 'write/truncate_flows.sql' >> '/tmp/sync.sql'
