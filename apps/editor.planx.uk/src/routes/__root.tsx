@@ -11,6 +11,7 @@ import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedL
 import ErrorFallback from "components/Error/ErrorFallback";
 import ErrorPage from "pages/ErrorPage/ErrorPage";
 import React from "react";
+import { createPortal } from "react-dom";
 import { z } from "zod";
 
 import { CatchAllComponent } from "./$";
@@ -74,7 +75,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 function RootComponent() {
   return (
     <>
-      <HeadContent />
+      {createPortal(<HeadContent />, document.head)}
       <Outlet />
       {import.meta.env.DEV && <TanStackRouterDevtools />}
     </>
