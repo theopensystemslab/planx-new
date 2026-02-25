@@ -23,7 +23,7 @@ const meta = {
     title: "Describe the project",
     description: "Write a brief description of the proposed changes",
     task: "projectDescription",
-    fn: "project.description",
+    fn: "proposal.description",
     revisionTitle: "We suggest revising your project description",
     revisionDescription:
       "The suggested description uses planning terminology that planning officers expect, reducing the chance of a delay to your application.",

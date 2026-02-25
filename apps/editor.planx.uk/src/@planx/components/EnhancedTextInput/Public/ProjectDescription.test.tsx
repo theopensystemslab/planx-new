@@ -68,11 +68,11 @@ describe("Passport generation", () => {
     expect(handleSubmit).toHaveBeenCalledWith(
       expect.objectContaining({
         data: {
-          "project.description": ENHANCED,
-          "enhancedTextInput.project.description.action":
+          "proposal.description": ENHANCED,
+          "enhancedTextInput.proposal.description.action":
             "Accepted the AI-enhanced description",
           _enhancements: {
-            "project.description": {
+            "proposal.description": {
               original: ORIGINAL,
               enhanced: ENHANCED,
             },
@@ -113,11 +113,11 @@ describe("Passport generation", () => {
     expect(handleSubmit).toHaveBeenCalledWith(
       expect.objectContaining({
         data: {
-          "project.description": ORIGINAL,
-          "enhancedTextInput.project.description.action":
+          "proposal.description": ORIGINAL,
+          "enhancedTextInput.proposal.description.action":
             "Retained their original description",
           _enhancements: {
-            "project.description": {
+            "proposal.description": {
               original: ORIGINAL,
               enhanced: ENHANCED,
             },
@@ -164,11 +164,11 @@ describe("Passport generation", () => {
     expect(handleSubmit).toHaveBeenCalledWith(
       expect.objectContaining({
         data: {
-          "project.description": "a new description",
-          "enhancedTextInput.project.description.action":
+          "proposal.description": "a new description",
+          "enhancedTextInput.proposal.description.action":
             "Re-wrote their description after AI feedback",
           _enhancements: {
-            "project.description": {
+            "proposal.description": {
               original: ORIGINAL,
               enhanced: ENHANCED,
             },
@@ -185,11 +185,11 @@ describe("navigating back to the EnhancedTextInput component", () => {
     createdAt: "2026-01-12T15:12:40.994Z",
     seq: 1,
     data: {
-      "project.description": "My hybrid response",
-      "enhancedTextInput.project.description.action":
+      "proposal.description": "My hybrid response",
+      "enhancedTextInput.proposal.description.action":
         "Re-wrote their description after AI feedback",
       _enhancements: {
-        "project.description": {
+        "proposal.description": {
           original: "my first attempt",
           enhanced: "our LLM-enhanced suggestion",
         },
@@ -212,7 +212,7 @@ describe("navigating back to the EnhancedTextInput component", () => {
     const textbox = screen.getByRole("textbox", { name: /test/i });
     expect(textbox).toBeVisible();
     expect(textbox).toHaveValue(
-      previouslySubmittedData.data["project.description"],
+      previouslySubmittedData.data["proposal.description"],
     );
     expect(
       screen.queryByRole("heading", {
@@ -234,7 +234,7 @@ describe("navigating back to the EnhancedTextInput component", () => {
     );
 
     expect(screen.getByRole("textbox", { name: /test/i })).toHaveValue(
-      previouslySubmittedData.data["project.description"],
+      previouslySubmittedData.data["proposal.description"],
     );
   });
 
@@ -283,7 +283,7 @@ describe("navigating back to the EnhancedTextInput component", () => {
     await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL, {
       initialSelectionStart: 0,
       initialSelectionEnd:
-        previouslySubmittedData.data["project.description"].length,
+        previouslySubmittedData.data["proposal.description"].length,
     });
     await user.click(screen.getByTestId("continue-button"));
 
@@ -302,11 +302,11 @@ describe("navigating back to the EnhancedTextInput component", () => {
     expect(handleSubmit).toHaveBeenCalledWith(
       expect.objectContaining({
         data: {
-          "project.description": ENHANCED,
-          "enhancedTextInput.project.description.action":
+          "proposal.description": ENHANCED,
+          "enhancedTextInput.proposal.description.action":
             "Accepted the AI-enhanced description",
           _enhancements: {
-            "project.description": {
+            "proposal.description": {
               original: ORIGINAL,
               enhanced: ENHANCED,
             },

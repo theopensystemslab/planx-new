@@ -50,7 +50,7 @@ type CreateTask<
  */
 export type TaskRegistry = {
   projectDescription: CreateTask<
-    "project.description",
+    "proposal.description",
     {
       revisionTitle: string;
       revisionDescription: string;
