@@ -19,7 +19,7 @@ env:
 jobs:
   build_planx_frontend:
     name: Build PlanX frontend
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v4
@@ -75,7 +75,7 @@ jobs:
 
   build_localplanning_services:
     name: Build localplanning.services
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v4
@@ -125,7 +125,7 @@ jobs:
     needs:
       - build_planx_frontend
       - build_localplanning_services
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v4
@@ -164,7 +164,7 @@ jobs:
   notifications:
     name: Notifications
     needs: preview
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
       # Airbrake notification - https://airbrake.io/docs/features/deploy-tracking
