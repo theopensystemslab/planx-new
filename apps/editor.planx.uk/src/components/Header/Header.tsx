@@ -187,7 +187,7 @@ const PublicToolbar: React.FC<{
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const openConfirmationDialog = () => setIsDialogOpen(true);
 
-  const handleRestart = (isConfirmed: boolean) => {
+  const handleRestart = async (isConfirmed: boolean) => {
     setIsDialogOpen(false);
     if (isConfirmed) {
       trackEvent({
@@ -195,22 +195,23 @@ const PublicToolbar: React.FC<{
         metadata: null,
         flowDirection: "reset",
       });
+
+      // Clear local session data from IndexDB if non-Save & Return
       if (path === ApplicationPath.SingleSession) {
-        clearLocalFlowIdb(id);
-        window.location.reload();
-      } else {
-        // Save & Return flow
-        // don't delete old flow for now
-        // await NEW_LOCAL.clearLocalFlow(sessionId)
-        navigate({
-          to: ".",
-          search: (prev) => ({
-            ...prev,
-            sessionId: undefined,
-          }),
-          reloadDocument: true,
-        });
+        await clearLocalFlowIdb(id);
       }
+
+      // Navigate back to start of flow
+      navigate({
+        to: ".",
+        search: (prev) => ({
+          // Preserving e.g. `analytics=false` if applicable
+          ...prev,
+          // Resetting Save & Return
+          sessionId: undefined,
+        }),
+        reloadDocument: true,
+      });
     }
   };
 

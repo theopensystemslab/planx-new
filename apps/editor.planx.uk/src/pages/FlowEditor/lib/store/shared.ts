@@ -93,7 +93,15 @@ export const sharedStore: StateCreator<
       currentCard: null,
     });
 
-    removeSessionIdSearchParam();
+    // For public routes, additionally reload page and clear session data
+    const isPublished = get().previewEnvironment === "standalone";
+    const currentURL = new URL(window.location.href);
+    const isPreviewOrDraft =
+      currentURL.pathname.endsWith("/preview") ||
+      currentURL.pathname.endsWith("/draft");
+    if (isPublished || isPreviewOrDraft) {
+      removeSessionIdSearchParam(get().id);
+    }
   },
 
   setFlow({ id, flow, flowSlug, flowName, flowStatus, flowSummary }) {
