@@ -12,7 +12,7 @@ import {
 
 export const taskDefaults: TaskDefaults = {
   projectDescription: {
-    fn: "project.description",
+    fn: "proposal.description",
     revisionTitle: "We suggest revising your project description",
     revisionDescription:
       "The suggested description uses planning terminology that planning officers expect, reducing the chance of a delay to your application.",
@@ -46,7 +46,7 @@ export const taskSchemas = {
   projectDescription: baseEnhancedTextInputSchema.concat(
     object({
       fn: mixed()
-        .oneOf(["project.description"] as const)
+        .oneOf(["proposal.description"] as const)
         .required(),
       task: mixed()
         .oneOf(["projectDescription"] as const)
