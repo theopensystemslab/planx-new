@@ -5,7 +5,7 @@ permissions: read-all
 on:
   schedule:
     # Runs nightly at 04:00 (https://crontab.guru/#0_4_*_*_*)
-    - cron: '0 4 * * *'
+    - cron: "0 4 * * *"
   workflow_dispatch:
 
 env:
@@ -16,7 +16,7 @@ env:
 jobs:
   build:
     name: Seed Database
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
       - name: Install pulumi
@@ -41,7 +41,7 @@ jobs:
           files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, ${{ env.HASURA_DIRECTORY }}/.env.test"
           fail: true
       - name: Run sync script
-        run: | 
+        run: |
           {
             # Create temp .psqlrc file to hold config
             echo '\set VERBOSITY terse' > /tmp/.psqlrc

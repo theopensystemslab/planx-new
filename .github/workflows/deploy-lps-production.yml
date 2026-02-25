@@ -24,7 +24,7 @@ env:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - name: Checkout Code
@@ -55,7 +55,6 @@ jobs:
         id: deploy_script
         run: ./scripts/deploy-lps.sh
 
-      
       - name: Slack notification (success)
         if: success()
         uses: rtCamp/action-slack-notify@v2
@@ -64,7 +63,7 @@ jobs:
           SLACK_COLOR: "#4F93E3"
           SLACK_TITLE: LPS production deploy
           SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOYMENT_WEBHOOK }}
-  
+
   failure_notification:
     name: Slack notification (failure)
     if: failure()
