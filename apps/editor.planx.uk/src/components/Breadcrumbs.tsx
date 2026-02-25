@@ -45,6 +45,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
           to="/app"
           {...(isStandalone && { target: "_blank" })}
           variant="body1"
+          preload={false}
         >
           Plan✕
         </BreadcrumbsLink>
