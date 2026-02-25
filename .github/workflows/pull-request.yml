@@ -279,7 +279,7 @@ jobs:
 
   pulumi_preview:
     name: Run Pulumi Preview
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [changes, build_planx_frontend, build_localplanning_services]
     if: ${{ needs.changes.outputs.infrastructure == 'true' }}
     steps:
