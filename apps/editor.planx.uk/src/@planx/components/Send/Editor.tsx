@@ -40,14 +40,18 @@ const SendComponent: React.FC<Props> = (props) => {
     {
       initialValues: parseSend(props.node?.data),
       onSubmit: async (newValues) => {
-        if (props.handleSubmit) {
-          await handleUpdate(
-            newValues,
-            existingEmailId,
-            id,
-            refetchFlowData,
-          );
-          props.handleSubmit({ type: TYPES.Send, data: newValues });
+        try { 
+          if (props.handleSubmit) {
+            await handleUpdate(
+              newValues,
+              existingEmailId,
+              id,
+              refetchFlowData,
+            );
+            props.handleSubmit({ type: TYPES.Send, data: newValues });
+          }
+        } catch (error) {
+          formik.setFieldError("submissionEmailId", (error as Error).message);
         }
       },
       validationSchema,
@@ -88,7 +92,7 @@ const SendComponent: React.FC<Props> = (props) => {
     refetchFlowData: () => Promise<ApolloQueryResult<GetFlowEmailIdQuery>>,
   ) => {
     const selectedEmailId = newValues.submissionEmailId;
-
+    
     if (
       newValues.submissionEmailId &&
       existingEmailId !== selectedEmailId
@@ -196,18 +200,20 @@ const SendComponent: React.FC<Props> = (props) => {
                           Failed to load email options.
                         </Typography>
                       ) : emailOptions.length === 0 ? (
-                        <Typography variant="body2">
-                          You do not have a submission email configured.
-                          Please add one in your{" "}
-                          <Link
-                            href={`/app/${teamSlug}/settings/integrations`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            team settings
-                          </Link>
-                          .
-                        </Typography>
+                        <ErrorWrapper error={getIn(formik.errors, "submissionEmailId")}>
+                          <Typography variant="body2">
+                            You do not have a submission email configured.
+                            Please add one in your{" "}
+                            <Link
+                              href={`/app/${teamSlug}/settings/integrations`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              team settings
+                            </Link>
+                            .
+                          </Typography>
+                        </ErrorWrapper>
                       ) : (
                         <>
                         <InputRow>
