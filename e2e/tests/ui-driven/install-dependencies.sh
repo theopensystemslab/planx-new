@@ -12,5 +12,5 @@ if [ -z "${CI}" ]; then
 else
   echo "Installing E2E dependencies…"
   sudo apt-get update
-  sudo apt-get install -y libappindicator1 fonts-liberation chromium-browser
+  sudo apt-get install -y libappindicator3-1 fonts-liberation chromium-browser
 fi
