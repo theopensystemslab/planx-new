@@ -9,7 +9,7 @@ export interface SubmissionEmailInput {
 }
 
 export interface GetSubmissionEmails {
-  submissionIntegrations: (SubmissionEmailInput & { id: string })[];
+  submissionIntegrations: Required<SubmissionEmailInput>[];
 }
 
 export type SubmissionEmailMutation =
