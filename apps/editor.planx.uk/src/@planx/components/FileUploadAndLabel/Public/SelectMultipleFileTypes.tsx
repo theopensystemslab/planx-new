@@ -7,7 +7,6 @@ import { visuallyHidden } from "@mui/utils";
 import capitalize from "lodash/capitalize";
 import React, { useMemo } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
-import InputLabel from "ui/public/InputLabel";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import Input from "ui/shared/Input/Input";
 
@@ -159,17 +158,26 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
 
       {showDrawingNumber && (
         <Box sx={{ mt: 1, maxWidth: 400 }}>
-          <InputLabel
-            htmlFor={`drawing-number-${uploadedFile.id}`}
-            label="Drawing number (optional)"
+          <Typography
+            variant="h3"
+            pb={0.5}
+            sx={{ display: "inline-block" }}
+            id={`drawing-number-label-${uploadedFile.id}`}
+            component="label"
           >
-            <Input
-              id={`drawing-number-${uploadedFile.id}`}
-              value={drawingNumber ?? ""}
-              onChange={(e) => onDrawingNumberChange?.(e.target.value)}
-              fullWidth
-            />
-          </InputLabel>
+            Drawing number (optional)
+          </Typography>
+          <Typography variant="body2" color="text.secondary" mb={1}>
+            Separate multiple drawing numbers with a comma
+          </Typography>
+          <Input
+            id={`drawing-number-${uploadedFile.id}`}
+            value={drawingNumber ?? ""}
+            onChange={(e) => onDrawingNumberChange?.(e.target.value)}
+            fullWidth
+            aria-labelledby={`drawing-number-label-${uploadedFile.id}`}
+            bordered
+          />
         </Box>
       )}
     </Root>

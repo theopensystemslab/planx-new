@@ -19,6 +19,8 @@ interface Props extends FileUploadSlot {
   onChange?: () => void;
   changeLabel?: string;
   tags?: string[];
+  hideChangeButton?: boolean;
+  drawingNumber?: string;
   FileCardProps?: BoxProps;
 }
 
@@ -42,8 +44,8 @@ const FileCard = styled(Box)(({ theme }) => ({
 }));
 
 const FilePreview = styled(Box)(({ theme }) => ({
-  height: theme.spacing(8),
-  width: theme.spacing(8),
+  height: theme.spacing(9),
+  width: theme.spacing(9),
   position: "relative",
   overflow: "hidden",
   backgroundColor: theme.palette.background.default,
@@ -104,6 +106,8 @@ export const UploadedFileCard: React.FC<Props> = ({
   onChange,
   changeLabel = "Edit",
   tags,
+  hideChangeButton,
+  drawingNumber,
   status,
   FileCardProps,
 }) => (
@@ -149,6 +153,11 @@ export const UploadedFileCard: React.FC<Props> = ({
                 {file.name}
               </Typography>
               <FileSize variant="body2">{formatBytes(file.size)}</FileSize>
+              {drawingNumber && (
+                <Typography variant="body2" color="text.secondary" pt="0.25em">
+                  Drawing number: {drawingNumber}
+                </Typography>
+              )}
             </Box>
           </Box>
           <ActionButtons>
@@ -164,12 +173,12 @@ export const UploadedFileCard: React.FC<Props> = ({
               <DeleteIcon color="warning" fontSize="small" />
               Remove <span style={visuallyHidden}>{file.name}</span>
             </Button>
-            {onChange && (
+            {!hideChangeButton && onChange && (
               <Button
                 variant="contained"
                 color={changeLabel === "Save" ? "prompt" : "secondary"}
                 sx={{
-                  minWidth: 80,
+                  minWidth: 120,
                   ...(changeLabel !== "Save" && {
                     backgroundColor: "white",
                   }),

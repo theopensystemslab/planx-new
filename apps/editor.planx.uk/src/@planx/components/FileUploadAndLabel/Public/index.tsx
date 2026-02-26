@@ -120,7 +120,7 @@ function Component(props: Props) {
 
     // Auto-expand the most recently uploaded file for tagging
     if (slots.length > previousSlotCount && slots.length > 0) {
-      setExpandedSlotId(slots[0].id);
+      setExpandedSlotId(slots[previousSlotCount].id);
     }
   }, [slots.length]);
 
