@@ -30,7 +30,7 @@
     "sharp": "^0.34.2",
     "tailwind-clamp": "^4.0.18",
     "tailwindcss": "^4.1.7",
-    "typescript": "^5.8.3"
+    "typescript": "~5.9.3"
   },
   "packageManager": "pnpm@10.30.2",
   "devDependencies": {
