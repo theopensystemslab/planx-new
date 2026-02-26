@@ -512,7 +512,7 @@ describe("Error handling", () => {
     expect(fileLabelError).toBeVisible();
 
     // Edit the file and tag it
-    const editButton = screen.getByRole("button", { name: /Edit/ });
+    const editButton = screen.getByRole("button", { name: /Add labels/ });
     await user.click(editButton);
 
     const utilityBillCheckbox = screen.getByLabelText("Utility bill");
