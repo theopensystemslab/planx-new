@@ -14,7 +14,26 @@ object_relationships:
         remote_table:
           name: submission_integrations
           schema: public
+  - name: team
+    using:
+      manual_configuration:
+        column_mapping:
+          team_id: id
+        insertion_order: null
+        remote_table:
+          name: teams
+          schema: public
 insert_permissions:
+  - role: demoUser
+    permission:
+      check:
+        team_id:
+          _eq: 32
+      columns:
+        - team_id
+        - email_id
+        - flow_id
+    comment: ""
   - role: platformAdmin
     permission:
       check: {}
@@ -25,7 +44,14 @@ insert_permissions:
     comment: ""
   - role: teamEditor
     permission:
-      check: {}
+      check:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: x-hasura-user-id
+              - role:
+                  _eq: teamEditor
       columns:
         - email_id
         - flow_id
@@ -38,6 +64,16 @@ select_permissions:
         - email_id
         - flow_id
       filter: {}
+    comment: ""
+  - role: demoUser
+    permission:
+      columns:
+        - team_id
+        - email_id
+        - flow_id
+      filter:
+        team_id:
+          _eq: 32
     comment: ""
   - role: platformAdmin
     permission:
@@ -61,6 +97,15 @@ select_permissions:
       filter: {}
     comment: ""
 update_permissions:
+  - role: demoUser
+    permission:
+      columns:
+        - email_id
+      filter:
+        team_id:
+          _eq: 32
+      check: {}
+    comment: ""
   - role: platformAdmin
     permission:
       columns:
@@ -72,15 +117,35 @@ update_permissions:
     permission:
       columns:
         - email_id
-      filter: {}
+      filter:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: x-hasura-user-id
+              - role:
+                  _eq: teamEditor
       check: null
     comment: ""
 delete_permissions:
+  - role: demoUser
+    permission:
+      filter:
+        team_id:
+          _eq: 32
+    comment: ""
   - role: platformAdmin
     permission:
       filter: {}
     comment: ""
   - role: teamEditor
     permission:
-      filter: {}
+      filter:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: x-hasura-user-id
+              - role:
+                  _eq: teamEditor
     comment: ""
