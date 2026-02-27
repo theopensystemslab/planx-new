@@ -90,6 +90,13 @@ export const resendEmailController: ResendEmail = async (_req, res, next) => {
       message: `Non-production environment: skipping email send template: ${template}`,
     });
   }
+
+  const DEMO_TEAM_ID = 32;
+  if (template === "welcome" && payload.defaultTeamId === DEMO_TEAM_ID) {
+    return res.status(200).send({
+      message: `Skipping ${template} email for Demo team user`,
+    });
+  }
   try {
     const response = await sendEmail({ ...payload, template });
     return res.status(200).send(response);

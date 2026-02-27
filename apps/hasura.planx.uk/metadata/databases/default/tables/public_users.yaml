@@ -152,7 +152,8 @@ event_triggers:
               "userId": {{$body.event.data.new.id}},
               "email": {{$body.event.data.new.email}},
               "firstName": {{$body.event.data.new.first_name}},
-              "lastName": {{$body.event.data.new.last_name}}
+              "lastName": {{$body.event.data.new.last_name}},
+              "defaultTeamId": {{$body.event.data.new.default_team_id ?? null}}
             }
           }
       method: POST

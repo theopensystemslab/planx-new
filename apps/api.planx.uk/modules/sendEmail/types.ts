@@ -71,6 +71,7 @@ export const resendEmailSchema = z.object({
       email: z.string().email(),
       firstName: z.string(),
       lastName: z.string(),
+      defaultTeamId: z.number().nullable(),
     }),
   }),
   params: z.object({
