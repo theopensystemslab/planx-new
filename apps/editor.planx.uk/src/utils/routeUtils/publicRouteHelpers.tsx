@@ -226,7 +226,7 @@ export const createPublicRouteHead = (mode: PublicRouteMode) => {
   return () => {
     const { flowName, flowSummary, teamName } = useStore.getState();
 
-    const title = [teamName, flowName].filter(Boolean).join(": ");
+    const title = `${teamName}: ${flowName}`;
     const description = flowSummary || "";
     const meta: Array<Record<string, string>> = [
       { title },
