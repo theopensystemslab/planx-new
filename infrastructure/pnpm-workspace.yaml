@@ -6,26 +6,26 @@ packages:
   - ml
   - networking
 
+allowBuilds:
+  '@pulumi/aws': true
+  '@pulumi/cloudflare': true
+  '@pulumi/docker': true
+  '@pulumi/docker-build': true
+  aws-sdk: true
+  protobufjs: true
+  tldjs: true
+
 catalog:
-  "@pulumi/aws": ~7.20.0
-  "@pulumi/awsx": ~3.2.0
-  "@pulumi/cloudflare": ~6.13.0
-  "@pulumi/postgresql": ~3.16.2
-  "@pulumi/pulumi": ~3.223.0
-  "@types/node": ~24.10.14
+  '@pulumi/aws': ~7.20.0
+  '@pulumi/awsx': ~3.2.1
+  '@pulumi/cloudflare': ~6.13.0
+  '@pulumi/postgresql': ~3.16.2
+  '@pulumi/pulumi': ~3.223.0
+  '@types/node': ~24.10.14
   typescript: ~5.9.3
 
 minimumReleaseAge: 1440
 
-allowBuilds:
-  "@pulumi/aws": true
-  "@pulumi/cloudflare": true
-  "@pulumi/docker": true
-  "@pulumi/docker-build": true
-  "aws-sdk": true
-  "protobufjs": true
-  "tldjs": true
-
-savePrefix: "~"
+savePrefix: '~'
 
 strictPeerDependencies: true
