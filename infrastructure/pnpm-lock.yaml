@@ -22,8 +22,8 @@ catalogs:
       specifier: ~3.223.0
       version: 3.223.0
     '@types/node':
-      specifier: ~24.10.14
-      version: 24.10.14
+      specifier: ~24.10.15
+      version: 24.10.15
     typescript:
       specifier: ~5.9.3
       version: 5.9.3
@@ -62,7 +62,7 @@ importers:
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
-        version: 24.10.14
+        version: 24.10.15
       '@types/tldjs':
         specifier: ~2.3.4
         version: 2.3.4
@@ -84,7 +84,7 @@ importers:
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
-        version: 24.10.14
+        version: 24.10.15
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -100,7 +100,7 @@ importers:
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
-        version: 24.10.14
+        version: 24.10.15
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -116,7 +116,7 @@ importers:
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
-        version: 24.10.14
+        version: 24.10.15
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -132,7 +132,7 @@ importers:
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
-        version: 24.10.14
+        version: 24.10.15
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -151,7 +151,7 @@ importers:
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
-        version: 24.10.14
+        version: 24.10.15
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -723,8 +723,8 @@ packages:
     resolution: {integrity: sha512-Y8cK9aggNRsqJVaKUlEYs4s7CvQ1b1ta2DVPyAimb0I2qhzjNk+A+mxvll/klL0RlfuIUei8BF7YWiua4kQqww==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  '@types/aws-lambda@8.10.160':
-    resolution: {integrity: sha512-uoO4QVQNWFPJMh26pXtmtrRfGshPUSpMZGUyUQY20FhfHEElEBOPKgVmFs1z+kbpyBsRs2JnoOPT7++Z4GA9pA==}
+  '@types/aws-lambda@8.10.161':
+    resolution: {integrity: sha512-rUYdp+MQwSFocxIOcSsYSF3YYYC/uUpMbCY/mbO21vGqfrEYvNSoPyKYDj6RhXXpPfS0KstW9RwG3qXh9sL7FQ==}
 
   '@types/cacheable-request@6.0.3':
     resolution: {integrity: sha512-IQ3EbTzGxIigb1I3qPZc1rWJnH0BmSKv5QYTalEwweFvyBDLSAe24zP0le/hyi7ecGfZVlIVAg4BZqb8WBwKqw==}
@@ -738,8 +738,8 @@ packages:
   '@types/keyv@3.1.4':
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
 
-  '@types/node@24.10.14':
-    resolution: {integrity: sha512-OowOUbD1lBCOFIPOZ8xnMIhgqA4sCutMiYOmPHL1PTLt5+y1XA+g2+yC9OOyz8p+deMZqPZLxfMjYIfrKsPeFg==}
+  '@types/node@24.10.15':
+    resolution: {integrity: sha512-BgjLoRuSr0MTI5wA6gMw9Xy0sFudAaUuvrnjgGx9wZ522fYYLA5SYJ+1Y30vTcJEG+DRCyDHx/gzQVfofYzSdg==}
 
   '@types/responselike@1.0.3':
     resolution: {integrity: sha512-H/+L+UkTV33uf49PH5pCAUBVPNj2nDBXTN+qS1dOwyyg24l3CcicicCA7ca+HMvJBZcFgl5r8e+RR6elsb4Lyw==}
@@ -2197,7 +2197,7 @@ snapshots:
       '@pulumi/docker': 4.11.0(ts-node@7.0.1)(typescript@5.9.3)
       '@pulumi/docker-build': 0.0.14(ts-node@7.0.1)(typescript@5.9.3)
       '@pulumi/pulumi': 3.223.0(ts-node@7.0.1)(typescript@5.9.3)
-      '@types/aws-lambda': 8.10.160
+      '@types/aws-lambda': 8.10.161
       docker-classic: '@pulumi/docker@3.6.1(ts-node@7.0.1)(typescript@5.9.3)'
       mime: 2.6.0
     transitivePeerDependencies:
@@ -2609,13 +2609,13 @@ snapshots:
       '@tufjs/canonical-json': 2.0.0
       minimatch: 10.2.4
 
-  '@types/aws-lambda@8.10.160': {}
+  '@types/aws-lambda@8.10.161': {}
 
   '@types/cacheable-request@6.0.3':
     dependencies:
       '@types/http-cache-semantics': 4.2.0
       '@types/keyv': 3.1.4
-      '@types/node': 24.10.14
+      '@types/node': 24.10.15
       '@types/responselike': 1.0.3
 
   '@types/google-protobuf@3.15.12': {}
@@ -2624,15 +2624,15 @@ snapshots:
 
   '@types/keyv@3.1.4':
     dependencies:
-      '@types/node': 24.10.14
+      '@types/node': 24.10.15
 
-  '@types/node@24.10.14':
+  '@types/node@24.10.15':
     dependencies:
       undici-types: 7.16.0
 
   '@types/responselike@1.0.3':
     dependencies:
-      '@types/node': 24.10.14
+      '@types/node': 24.10.15
 
   '@types/semver@7.7.1': {}
 
@@ -3182,7 +3182,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 24.10.14
+      '@types/node': 24.10.15
       long: 5.3.2
 
   pump@3.0.3:

@@ -21,7 +21,7 @@ catalog:
   '@pulumi/cloudflare': ~6.13.0
   '@pulumi/postgresql': ~3.16.2
   '@pulumi/pulumi': ~3.223.0
-  '@types/node': ~24.10.14
+  '@types/node': ~24.10.15
   typescript: ~5.9.3
 
 minimumReleaseAge: 1440
