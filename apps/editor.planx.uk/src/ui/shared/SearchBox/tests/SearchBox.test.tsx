@@ -93,16 +93,18 @@ describe("the search functionality", () => {
     await user.type(searchBox, mockFirstSearchTerm);
     await waitForClearSearchIcon(screen);
 
-    expect(mockSetRecords).toHaveBeenLastCalledWith([
-      {
-        name: "Apply for a certificate",
-        slug: "apply-for-a-ceritifcate",
-      },
-      {
-        name: "Apply for an article 4 direction",
-        slug: "apply-for-an-article-4-direction",
-      },
-    ]);
+    await waitFor(() => {
+      expect(mockSetRecords).toHaveBeenLastCalledWith([
+        {
+          name: "Apply for a certificate",
+          slug: "apply-for-a-ceritifcate",
+        },
+        {
+          name: "Apply for an article 4 direction",
+          slug: "apply-for-an-article-4-direction",
+        },
+      ]);
+    });
   });
 
   it("sets the results back to records when a search term is deleted", async () => {

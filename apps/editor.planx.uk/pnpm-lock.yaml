@@ -58,8 +58,8 @@ importers:
         specifier: 1.0.0-alpha.11
         version: 1.0.0-alpha.11(preact@8.5.3)
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#bf5b077
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/bf5b0776ee06126957883e874302e49d5a20df9e(@types/react@18.3.28)
+        specifier: github:theopensystemslab/planx-core#272916e
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/272916eb22d2007d1ed4f59e79ebde43bcec0f1f(@types/react@18.3.28)
       '@tanstack/react-query':
         specifier: ^5.90.21
         version: 5.90.21(react@18.3.1)
@@ -467,8 +467,8 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.15)(jsdom@26.1.0)(msw@2.12.10(@types/node@24.10.15)(typescript@5.9.3))(sass@1.97.3)(terser@5.43.1)(tsx@4.21.0)
       vitest-axe:
-        specifier: 1.0.0-pre.3
-        version: 1.0.0-pre.3(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.10.15)(jsdom@26.1.0)(msw@2.12.10(@types/node@24.10.15)(typescript@5.9.3))(sass@1.97.3)(terser@5.43.1)(tsx@4.21.0))
+        specifier: 1.0.0-pre.5
+        version: 1.0.0-pre.5(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.10.15)(jsdom@26.1.0)(msw@2.12.10(@types/node@24.10.15)(typescript@5.9.3))(sass@1.97.3)(terser@5.43.1)(tsx@4.21.0))
 
 packages:
 
@@ -1889,8 +1889,8 @@ packages:
   '@opensystemslab/map@1.0.0-alpha.11':
     resolution: {integrity: sha512-ETACPCk5Coef1L2kNT3MhIzLxVPDpyopxsTNcgeRyEqL71HBfTklGyC5+t7HgEgxRkX5wlUXqmKPNL9DdpVj8g==}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/bf5b0776ee06126957883e874302e49d5a20df9e':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/bf5b0776ee06126957883e874302e49d5a20df9e}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/272916eb22d2007d1ed4f59e79ebde43bcec0f1f':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/272916eb22d2007d1ed4f59e79ebde43bcec0f1f}
     version: 1.0.0
 
   '@parcel/watcher-android-arm64@2.5.6':
@@ -6960,10 +6960,10 @@ packages:
       yaml:
         optional: true
 
-  vitest-axe@1.0.0-pre.3:
-    resolution: {integrity: sha512-vrsyixV225vMe0vGZV0aZjOYez2Pan5MxIx2RqnYnpbbRrUN2lJpQS9ong6dfF5a7BfQenR0LOD6hei3IQIPSw==}
+  vitest-axe@1.0.0-pre.5:
+    resolution: {integrity: sha512-eUGxjpXnceha9lkqIVyMgOUeDmWU9LVjNiLTjAjDtMew0WbaBDtixoUvdftOhZfqRI03G2Ay4ZxaU1KG6jNCiQ==}
     peerDependencies:
-      vitest: '>=0.31.0'
+      vitest: '>=1'
 
   vitest@3.2.4:
     resolution: {integrity: sha512-LUCP5ev3GURDysTWiP47wRRUpLKMOfPh+yKTx3kVIEiu5KOMeqzpnYNsKyOoVrULivR8tLcks4+lga33Whn90A==}
@@ -8765,7 +8765,7 @@ snapshots:
     transitivePeerDependencies:
       - preact
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/bf5b0776ee06126957883e874302e49d5a20df9e(@types/react@18.3.28)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/272916eb22d2007d1ed4f59e79ebde43bcec0f1f(@types/react@18.3.28)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@18.3.28)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@18.3.28)(react@18.3.1))(@types/react@18.3.28)(react@18.3.1)
@@ -14642,8 +14642,9 @@ snapshots:
       terser: 5.43.1
       tsx: 4.21.0
 
-  vitest-axe@1.0.0-pre.3(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.10.15)(jsdom@26.1.0)(msw@2.12.10(@types/node@24.10.15)(typescript@5.9.3))(sass@1.97.3)(terser@5.43.1)(tsx@4.21.0)):
+  vitest-axe@1.0.0-pre.5(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.10.15)(jsdom@26.1.0)(msw@2.12.10(@types/node@24.10.15)(typescript@5.9.3))(sass@1.97.3)(terser@5.43.1)(tsx@4.21.0)):
     dependencies:
+      '@vitest/pretty-format': 3.2.4
       axe-core: 4.11.1
       chalk: 5.6.2
       lodash-es: 4.17.23
