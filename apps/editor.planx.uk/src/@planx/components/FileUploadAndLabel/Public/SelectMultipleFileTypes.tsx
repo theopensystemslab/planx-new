@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { styled } from "@mui/material/styles";
@@ -26,6 +27,7 @@ interface ChecklistProps {
   showDrawingNumber?: boolean;
   drawingNumber?: string;
   onDrawingNumberChange?: (value: string) => void;
+  onSave: () => void;
 }
 
 interface Option extends UserFile {
@@ -44,7 +46,7 @@ const Root = styled(Box)(({ theme }) => ({
 const ChecklistGrid = styled(Box)(({ theme }) => ({
   display: "grid",
   gridTemplateColumns: "1fr",
-  [theme.breakpoints.up("sm")]: {
+  [theme.breakpoints.up("md")]: {
     gridTemplateColumns: "1fr 1fr",
   },
 }));
@@ -62,6 +64,7 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
     showDrawingNumber,
     drawingNumber,
     onDrawingNumberChange,
+    onSave,
   } = props;
 
   const initialTags = getTagsForSlot(uploadedFile.id, fileList);
@@ -119,7 +122,7 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
   return (
     <Root>
       <Typography variant="h3" mb={2} id={titleId}>
-        What does this file show? (select all that apply)
+        What does this file show? Select all that apply
         <Box component="span" sx={visuallyHidden}>
           This question refers to file: {uploadedFile.file.name}
         </Box>
@@ -157,7 +160,7 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
       ))}
 
       {showDrawingNumber && (
-        <Box sx={{ mt: 1, maxWidth: 400 }}>
+        <Box sx={{ mt: 1 }}>
           <Typography
             variant="h3"
             pb={0.5}
@@ -168,7 +171,7 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
             Drawing number (optional)
           </Typography>
           <Typography variant="body2" color="text.secondary" mb={1}>
-            Separate multiple drawing numbers with a comma
+            Separate multiple drawing numbers in this file with a comma
           </Typography>
           <Input
             id={`drawing-number-${uploadedFile.id}`}
@@ -177,9 +180,24 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
             fullWidth
             aria-labelledby={`drawing-number-label-${uploadedFile.id}`}
             bordered
+            sx={{ maxWidth: 400 }}
           />
         </Box>
       )}
+
+      <Button
+        variant="contained"
+        color="prompt"
+        sx={{ mt: 2, minWidth: 140 }}
+        size="small"
+        onClick={onSave}
+        data-testid={`save-${uploadedFile.file.name}`}
+      >
+        Save
+        <Box sx={visuallyHidden} component="span">
+          {` labels for ${uploadedFile.file.name}`}
+        </Box>
+      </Button>
     </Root>
   );
 };

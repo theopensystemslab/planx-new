@@ -1,13 +1,11 @@
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import Collapse from "@mui/material/Collapse";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import { styled } from "@mui/material/styles";
-import { visuallyHidden } from "@mui/utils";
 import { FileUploadSlot } from "@planx/components/FileUpload/model";
 import React, { useRef } from "react";
 import CheckCircleIcon from "ui/icons/CheckCircle";
@@ -21,12 +19,11 @@ const Root = styled(Box)(({ theme }) => ({
   scrollMarginTop: theme.spacing(2),
 }));
 
-const ActionBar = styled(Box)(({ theme }) => ({
+const LabelsRow = styled(Box)(({ theme }) => ({
   display: "flex",
+  flexWrap: "wrap",
   alignItems: "center",
-  justifyContent: "flex-start",
-  gap: theme.spacing(1),
-  padding: theme.spacing(1.5),
+  padding: theme.spacing(1),
   border: `1px solid ${theme.palette.border.main}`,
   borderTop: "none",
   backgroundColor: theme.palette.background.paper,
@@ -71,13 +68,15 @@ export const FileAccordionCard: React.FC<FileAccordionCardProps> = ({
   const tags = getTagsForSlot(slot.id, fileList);
   const hasLabels = tags.length > 0;
 
-  const getChangeButton = () => {
-    if (isExpanded) return { label: "Save", icon: undefined };
-    if (hasLabels) return { label: "Edit labels", icon: <EditIcon /> };
-    return { label: "Add labels", icon: <AddIcon /> };
+  const getChangeLabel = () => {
+    if (hasLabels) return "Edit labels";
+    return "Add labels";
   };
 
-  const { label: changeLabel, icon: changeIcon } = getChangeButton();
+  const getChangeIcon = () => {
+    if (hasLabels) return <EditIcon />;
+    return <AddIcon />;
+  };
 
   return (
     <Root ref={ref}>
@@ -85,7 +84,10 @@ export const FileAccordionCard: React.FC<FileAccordionCardProps> = ({
         <>
           <UploadedFileCard
             {...slot}
-            hideChangeButton
+            hideChangeButton={isExpanded}
+            changeLabel={getChangeLabel()}
+            changeIcon={getChangeIcon()}
+            onChange={() => onExpand(slot.id)}
             drawingNumber={isExpanded ? undefined : drawingNumber}
             removeFile={() => onRemove(slot)}
           />
@@ -97,32 +99,11 @@ export const FileAccordionCard: React.FC<FileAccordionCardProps> = ({
               showDrawingNumber={showDrawingNumber}
               drawingNumber={drawingNumber}
               onDrawingNumberChange={onDrawingNumberChange}
+              onSave={() => onSave(slot.id)}
             />
           </Collapse>
-          <ActionBar>
-            <Button
-              variant="contained"
-              color={isExpanded ? "prompt" : "secondary"}
-              startIcon={changeIcon}
-              sx={{
-                minWidth: 140,
-                flexShrink: 0,
-                ...(!isExpanded && { backgroundColor: "white" }),
-              }}
-              size="small"
-              onClick={
-                isExpanded ? () => onSave(slot.id) : () => onExpand(slot.id)
-              }
-              data-testid={`${changeLabel.toLowerCase().replace(/\s/g, "-")}-${slot.file.name}`}
-            >
-              {changeLabel}
-              <Box sx={visuallyHidden} component="span">
-                {isExpanded
-                  ? ` for ${slot.file.name}`
-                  : ` what ${slot.file.name} shows`}
-              </Box>
-            </Button>
-            {!isExpanded && hasLabels ? (
+          {!isExpanded && hasLabels && (
+            <LabelsRow>
               <List
                 sx={{
                   display: "flex",
@@ -150,10 +131,8 @@ export const FileAccordionCard: React.FC<FileAccordionCardProps> = ({
                   </ListItem>
                 ))}
               </List>
-            ) : (
-              <Box />
-            )}
-          </ActionBar>
+            </LabelsRow>
+          )}
         </>
       </ErrorWrapper>
     </Root>

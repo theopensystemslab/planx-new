@@ -18,6 +18,7 @@ interface Props extends FileUploadSlot {
   removeFile: () => void;
   onChange?: () => void;
   changeLabel?: string;
+  changeIcon?: React.ReactNode;
   tags?: string[];
   hideChangeButton?: boolean;
   drawingNumber?: string;
@@ -105,6 +106,7 @@ export const UploadedFileCard: React.FC<Props> = ({
   removeFile,
   onChange,
   changeLabel = "Edit",
+  changeIcon,
   tags,
   hideChangeButton,
   drawingNumber,
@@ -161,6 +163,25 @@ export const UploadedFileCard: React.FC<Props> = ({
             </Box>
           </Box>
           <ActionButtons>
+            {!hideChangeButton && onChange && (
+              <Button
+                variant="contained"
+                color="secondary"
+                startIcon={changeIcon}
+                sx={{
+                  minWidth: 120,
+                  backgroundColor: "white",
+                }}
+                size="small"
+                onClick={onChange}
+                data-testid={`${changeLabel.toLowerCase().replace(/\s/g, "-")}-${file.name}`}
+              >
+                {changeLabel}
+                <Box sx={visuallyHidden} component="span">
+                  {` what ${file.name} shows`}
+                </Box>
+              </Button>
+            )}
             <Button
               size="small"
               title={`Delete ${file.name}`}
@@ -173,28 +194,6 @@ export const UploadedFileCard: React.FC<Props> = ({
               <DeleteIcon color="warning" fontSize="small" />
               Remove <span style={visuallyHidden}>{file.name}</span>
             </Button>
-            {!hideChangeButton && onChange && (
-              <Button
-                variant="contained"
-                color={changeLabel === "Save" ? "prompt" : "secondary"}
-                sx={{
-                  minWidth: 120,
-                  ...(changeLabel !== "Save" && {
-                    backgroundColor: "white",
-                  }),
-                }}
-                size="small"
-                onClick={onChange}
-                data-testid={`${changeLabel.toLowerCase()}-${file.name}`}
-              >
-                {changeLabel}
-                <Box sx={visuallyHidden} component="span">
-                  {changeLabel === "Save"
-                    ? ` labels for ${file.name}`
-                    : ` what ${file.name} shows`}
-                </Box>
-              </Button>
-            )}
           </ActionButtons>
         </FileCard>
         {tags && tags.length > 0 && (
