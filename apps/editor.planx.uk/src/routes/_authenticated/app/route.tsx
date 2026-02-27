@@ -1,4 +1,9 @@
-import { createFileRoute, isRedirect, Outlet, redirect } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  isRedirect,
+  Outlet,
+  redirect,
+} from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import React from "react";
 import { CatchAllComponent } from "routes/$";

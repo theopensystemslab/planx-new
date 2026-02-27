@@ -9,8 +9,8 @@ We should always aim to be on an LTS version (even release numbers). For the ful
 1. Locally install desired Node.js version  
 
 ```shell
-nvm install 22.14.0
-nvm use 22.14.0
+nvm install 24.14.0
+nvm use 24.14.0
 ```
 
 2. Update `.nvmrc` file

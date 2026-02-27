@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql } from "@apollo/client";
 
 export const GET_FLOW_EMAIL_ID = gql`
   query GetFlowEmailId($flowId: uuid!) {
