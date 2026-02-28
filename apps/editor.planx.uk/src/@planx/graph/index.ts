@@ -349,8 +349,9 @@ const _remove = (draft: Graph, id: string, parent: string) => {
 
   if (numberOfEdgesTo(id, draft) === 0) {
     if (node.edges) {
-      for (const child of node.edges) {
-        _remove(draft, child, id);
+      // node.edges must be copy - see test "final node with id"
+      for (const childId of [...node.edges]) {
+        _remove(draft, childId, id);
       }
     }
     delete draft[id];
@@ -389,19 +390,21 @@ const _update = (
         newChildIds.toString() !== [...(node.edges || [])].toString()
       ) {
         const addedChildrenIds = difference(newChildIds, node.edges);
-        addedChildrenIds.forEach((cId) =>
+        for (const cId of addedChildrenIds) {
           _add(
             draft,
             (children as any).find((c: Child) => c.id === cId),
             { parent: id },
-          ),
-        );
+          );
+        }
 
         const removedChildrenIds = difference(
           node.edges,
           newChildIds,
         ) as string[];
-        removedChildrenIds.forEach((childId) => _remove(draft, childId, id));
+        for (const childId of removedChildrenIds) {
+          _remove(draft, childId, id);
+        }
 
         if (node.edges) {
           if (newChildIds.length === 0) delete node.edges;
@@ -411,7 +414,7 @@ const _update = (
         }
       }
 
-      children.forEach(({ id: childId, ...newData }) => {
+      for (const { id: childId, ...newData } of children) {
         if (draft[childId]) {
           _update(draft, childId as string, newData.data || newData, {
             removeKeyIfMissing,
@@ -419,16 +422,16 @@ const _update = (
         } else {
           _add(draft, { id: childId as string, ...newData }, { parent: id });
         }
-      });
+      }
     }
 
     if (node.data) {
       // if a value exists in the current data, but is null, undefined or "" in the
       // new data then remove it
-      Object.entries(node.data).forEach(([k, v]: [string, any]) => {
+      for (const [k, v] of Object.entries(node.data)) {
         if (v !== null && v !== undefined && !isSomething((newData as any)[k]))
           delete (node as any).data[k];
-      });
+      }
     }
   }
 
