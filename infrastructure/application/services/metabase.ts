@@ -55,8 +55,8 @@ export const createMetabaseService = async ({
     logGroup: { existing: metabaseLogGroup },
     container: {
         name: "metabase",
-        // if changing, also check docker-compose.yml
-        image: "metabase/metabase:v0.56.6",
+        // XXX: keep this image reference in sync with docker-compose.yml
+        image: "metabase/metabase:v0.58.8",
         essential: true,
         cpu: config.requireNumber("metabase-cpu"),
         // when changing `memory`, also update `JAVA_OPTS` below

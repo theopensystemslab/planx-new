@@ -1,3 +1,4 @@
+# XXX: if updating this file, also update the image on Vultr CR (see README)
 # initial block determines global options
 {
 	email {$TLS_EMAIL}
