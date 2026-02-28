@@ -32,7 +32,8 @@
       "@opensystemslab/planx-core"
     ],
     "overrides": {
-      "on-headers@<1.1.0": ">=1.1.0"
+      "on-headers@<1.1.0": ">=1.1.0",
+      "minimatch": "^3.1.5"
     }
   }
 }
