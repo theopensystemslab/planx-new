@@ -349,10 +349,9 @@ const _remove = (draft: Graph, id: string, parent: string) => {
 
   if (numberOfEdgesTo(id, draft) === 0) {
     if (node.edges) {
-      // must be a copy, for some reason?
-      [...node.edges].forEach((child) => {
+      for (const child of node.edges) {
         _remove(draft, child, id);
-      });
+      }
     }
     delete draft[id];
   }
