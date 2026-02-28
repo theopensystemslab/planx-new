@@ -21,9 +21,8 @@ services:
 
   metabase:
     container_name: metabase
-    # TODO: bump metabase image to latest minor version (e.g. v0.56.19.x at time of writing)
-    # if changing, also check infrastructure/application/services/metabase.ts
-    image: metabase/metabase:v0.56.6
+    # XXX: keep this image reference in sync with infrastructure/application/services/metabase.ts
+    image: metabase/metabase:v0.58.8
     profiles: ["analytics"]
     ports:
       - "${METABASE_PORT}:${METABASE_PORT}"
