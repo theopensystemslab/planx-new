@@ -327,10 +327,12 @@ export const move =
     });
 
 const _remove = (draft: Graph, id: string, parent: string) => {
-  if (!draft[id]) throw new Error("id not found");
-  else if (!draft[parent]) throw new Error("parent not found");
-
+  const node = draft[id];
   const parentNode = draft[parent];
+
+  if (!node) throw new Error("id not found");
+  else if (!parentNode) throw new Error("parent not found");
+
   parentNode.edges = parentNode.edges || [];
 
   const idx = parentNode.edges.indexOf(id);
@@ -342,14 +344,13 @@ const _remove = (draft: Graph, id: string, parent: string) => {
     throw new Error("not found in parent");
   }
 
-  if (parent !== ROOT_NODE_KEY && Object.keys(draft[parent]).length === 0)
+  if (parent !== ROOT_NODE_KEY && Object.keys(parentNode).length === 0)
     delete draft[parent];
 
   if (numberOfEdgesTo(id, draft) === 0) {
-    const { edges } = draft[id];
-    if (edges) {
+    if (node.edges) {
       // must be a copy, for some reason?
-      [...edges].forEach((child) => {
+      [...node.edges].forEach((child) => {
         _remove(draft, child, id);
       });
     }
