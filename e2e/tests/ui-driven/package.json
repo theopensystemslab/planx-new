@@ -32,6 +32,8 @@
       "@opensystemslab/planx-core"
     ],
     "overrides": {
+      "ajv": "^8.18.0",
+      "minimatch": "^3.1.5",
       "on-headers@<1.1.0": ">=1.1.0"
     }
   }
