@@ -86,12 +86,21 @@ describe("flow_integrations", () => {
       i = await introspectAs("demoUser");
     });
 
-    test("cannot query flow integrations", () => {
-      expect(i.queries).not.toContain("flow_integrations");
+    test("can add flow integrations", async () => {
+      expect(i.mutations).toContain("insert_flow_integrations");
     });
 
-    test("cannot create, update, or delete flow integrations", () => {
-      expect(i).toHaveNoMutationsFor("flow_integrations");
+    test("can query flow integrations", () => {
+      expect(i.queries).toContain("flow_integrations");
+    });
+
+    test("can update flow integrations", () => {
+      expect(i.mutations).toContain("update_flow_integrations");
+      expect(i.mutations).toContain("update_flow_integrations_by_pk");
+    });
+
+    test("can delete flow integrations", async () => {
+      expect(i.mutations).toContain("delete_flow_integrations");
     });
   });
 
