@@ -327,10 +327,12 @@ export const move =
     });
 
 const _remove = (draft: Graph, id: string, parent: string) => {
-  if (!draft[id]) throw new Error("id not found");
-  else if (!draft[parent]) throw new Error("parent not found");
-
+  const node = draft[id];
   const parentNode = draft[parent];
+
+  if (!node) throw new Error("id not found");
+  else if (!parentNode) throw new Error("parent not found");
+
   parentNode.edges = parentNode.edges || [];
 
   const idx = parentNode.edges.indexOf(id);
@@ -342,16 +344,15 @@ const _remove = (draft: Graph, id: string, parent: string) => {
     throw new Error("not found in parent");
   }
 
-  if (parent !== ROOT_NODE_KEY && Object.keys(draft[parent]).length === 0)
+  if (parent !== ROOT_NODE_KEY && Object.keys(parentNode).length === 0)
     delete draft[parent];
 
   if (numberOfEdgesTo(id, draft) === 0) {
-    const { edges } = draft[id];
-    if (edges) {
-      // must be a copy, for some reason?
-      [...edges].forEach((child) => {
-        _remove(draft, child, id);
-      });
+    if (node.edges) {
+      // node.edges must be copy - see test "final node with id"
+      for (const childId of [...node.edges]) {
+        _remove(draft, childId, id);
+      }
     }
     delete draft[id];
   }
@@ -389,19 +390,21 @@ const _update = (
         newChildIds.toString() !== [...(node.edges || [])].toString()
       ) {
         const addedChildrenIds = difference(newChildIds, node.edges);
-        addedChildrenIds.forEach((cId) =>
+        for (const cId of addedChildrenIds) {
           _add(
             draft,
             (children as any).find((c: Child) => c.id === cId),
             { parent: id },
-          ),
-        );
+          );
+        }
 
         const removedChildrenIds = difference(
           node.edges,
           newChildIds,
         ) as string[];
-        removedChildrenIds.forEach((childId) => _remove(draft, childId, id));
+        for (const childId of removedChildrenIds) {
+          _remove(draft, childId, id);
+        }
 
         if (node.edges) {
           if (newChildIds.length === 0) delete node.edges;
@@ -411,7 +414,7 @@ const _update = (
         }
       }
 
-      children.forEach(({ id: childId, ...newData }) => {
+      for (const { id: childId, ...newData } of children) {
         if (draft[childId]) {
           _update(draft, childId as string, newData.data || newData, {
             removeKeyIfMissing,
@@ -419,16 +422,16 @@ const _update = (
         } else {
           _add(draft, { id: childId as string, ...newData }, { parent: id });
         }
-      });
+      }
     }
 
     if (node.data) {
       // if a value exists in the current data, but is null, undefined or "" in the
       // new data then remove it
-      Object.entries(node.data).forEach(([k, v]: [string, any]) => {
+      for (const [k, v] of Object.entries(node.data)) {
         if (v !== null && v !== undefined && !isSomething((newData as any)[k]))
           delete (node as any).data[k];
-      });
+      }
     }
   }
 
