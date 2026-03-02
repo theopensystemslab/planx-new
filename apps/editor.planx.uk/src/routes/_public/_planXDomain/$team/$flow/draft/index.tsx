@@ -18,7 +18,7 @@ function RouteComponent() {
         opacity={0.05}
         forceVisibility={true}
       />
-      <Questions previewEnvironment="standalone" />;
+      <Questions previewEnvironment="standalone" />
     </SaveAndReturnLayout>
   );
 }
