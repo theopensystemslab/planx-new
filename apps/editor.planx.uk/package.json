@@ -20,9 +20,9 @@
     "@opensystemslab/map": "1.0.0-alpha.11",
     "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#272916e",
     "@tanstack/react-query": "^5.90.21",
-    "@tanstack/react-router": "^1.163.2",
-    "@tanstack/react-router-devtools": "^1.163.2",
-    "@tanstack/zod-adapter": "^1.163.2",
+    "@tanstack/react-router": "^1.163.3",
+    "@tanstack/react-router-devtools": "^1.163.3",
+    "@tanstack/zod-adapter": "^1.163.3",
     "@tiptap/core": "3.0.7",
     "@tiptap/extension-emoji": "3.0.7",
     "@tiptap/extension-image": "3.0.7",
@@ -109,7 +109,7 @@
     "@storybook/test": "^8.6.15",
     "@storybook/theming": "^8.6.17",
     "@tanstack/eslint-plugin-query": "^5.91.4",
-    "@tanstack/router-plugin": "^1.163.2",
+    "@tanstack/router-plugin": "^1.164.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -211,8 +211,9 @@
       "preact"
     ],
     "overrides": {
+      "linkifyjs@<4.3.2": ">=4.3.2",
       "micromatch@<4.0.8": ">=4.0.8",
-      "linkifyjs@<4.3.2": ">=4.3.2"
+      "serialize-javascript": "^7.0.3"
     },
     "ignoredBuiltDependencies": [
       "msw"

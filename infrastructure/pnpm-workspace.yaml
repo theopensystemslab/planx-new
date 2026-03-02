@@ -29,3 +29,6 @@ minimumReleaseAge: 1440
 savePrefix: '~'
 
 strictPeerDependencies: true
+
+overrides:
+  'fast-xml-parser': '^5.4.1'
