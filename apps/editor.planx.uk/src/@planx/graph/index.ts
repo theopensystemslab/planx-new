@@ -165,59 +165,85 @@ const isCyclic = (graph: Graph): boolean => {
   return false;
 };
 
-const _add = (
-  draft: Graph,
-  {
-    id = uniqueId(),
-    ...nodeData
-  }: { id?: string; type?: number; data?: object },
-  {
-    children = [],
-    parent,
-    before = undefined,
-  }: { children?: Child[]; parent: string; before?: string },
-) => {
-  if (!draft[parent]) throw new Error("parent not found");
-
-  const parentNode = draft[parent];
-
-  parentNode.edges = parentNode.edges || [];
-
-  draft[id] = sanitize(nodeData);
-
-  if (isSectionNodeType(id, draft) && !isValidSectionPosition(parent, draft)) {
-    alert(
-      "cannot add sections on branches, must be on center of main graph. close this window & try again",
-    );
-    throw new Error("cannot add sections on branches");
-  }
-
-  if (before) {
-    const idx = parentNode.edges.indexOf(before);
-    if (idx >= 0) {
-      parentNode.edges.splice(idx, 0, id);
-    } else throw new Error("before not found");
-  } else {
-    parentNode.edges.push(id);
-  }
-
-  children?.forEach((child) => {
-    const { children: grandChildren = [], ...childNode } = child;
-    _add(draft, childNode, { children: grandChildren, parent: id });
-  });
-};
-
 type NodeDataWithId = { id?: string; type?: number; data?: object };
 
 export type Relationships = {
-  children?: Child[];
-  parent?: NodeId;
+  children: Child[];
+  parent: NodeId;
   /**
    * NodeId of the older sibling of this node
    * Used to insert a new node in the correct location within it's parents' edges
    */
   before?: NodeId;
   self?: NodeId;
+};
+
+export type EmptyRelationships = Partial<Relationships>;
+
+const _add = (
+  draft: Graph,
+  { id = uniqueId(), ...nodeData }: NodeDataWithId,
+  { children = [], parent, before = undefined }: Omit<Relationships, "self">,
+) => {
+  // Represents one pending node to add
+  type StackEntry = {
+    node: NodeDataWithId;
+    parent: Relationships["parent"];
+    before?: Relationships["before"];
+    children: Relationships["children"];
+  };
+
+  const stack: StackEntry[] = [
+    {
+      node: { id: id, type: nodeData.type, data: nodeData.data },
+      parent: parent,
+      before: before,
+      children: children,
+    },
+  ];
+
+  while (stack.length > 0) {
+    const { node, parent, before, children } = stack.pop()!;
+    const id = node.id ?? uniqueId();
+
+    const parentNode = draft[parent];
+    if (!parentNode) throw new Error("parent not found");
+    parentNode.edges = parentNode.edges || [];
+
+    draft[id] = sanitize(node);
+    // Don't repeat node ID property at same level of `type` and `data`
+    delete draft[id]["id"];
+
+    if (
+      isSectionNodeType(id, draft) &&
+      !isValidSectionPosition(parent, draft)
+    ) {
+      alert(
+        "cannot add sections on branches, must be on center of main graph. close this window & try again",
+      );
+      throw new Error("cannot add sections on branches");
+    }
+
+    if (before) {
+      const idx = parentNode.edges.indexOf(before);
+      if (idx >= 0) {
+        parentNode.edges.splice(idx, 0, id);
+      } else throw new Error("before not found");
+    } else {
+      parentNode.edges.push(id);
+    }
+
+    // Push children onto the stack in reverse so they process in original order
+    for (let i = children.length - 1; i >= 0; i--) {
+      const child = children[i];
+      const { children: grandChildren = [], ...childNode } = child;
+      stack.push({
+        node: childNode,
+        parent: id,
+        children: grandChildren,
+      });
+    }
+  }
 };
 
 export const add =
@@ -227,7 +253,7 @@ export const add =
       children = [],
       parent = ROOT_NODE_KEY,
       before = undefined,
-    }: Relationships = {},
+    }: Relationships | EmptyRelationships = {},
   ) =>
   (graph: Graph = {}): [Graph, Array<OT.Op>] =>
     wrap(graph, (draft) => {
