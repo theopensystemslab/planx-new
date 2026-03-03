@@ -51,7 +51,6 @@ export const userStore: StateCreator<
       setUser(user);
       return user;
     } catch (error) {
-      handleExpiredJWTErrors();
       throw Error("Failed to fetch user matching JWT cookie");
     }
   },

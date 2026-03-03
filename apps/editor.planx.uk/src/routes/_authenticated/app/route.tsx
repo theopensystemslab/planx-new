@@ -21,15 +21,6 @@ export const Route = createFileRoute("/_authenticated/app")({
     try {
       const user = await useStore.getState().initUserStore();
 
-      if (!user) {
-        throw redirect({
-          to: "/login",
-          search: {
-            redirectTo: pathname !== "/app" ? pathname : undefined,
-          },
-        });
-      }
-
       if (isInitialSessionLoad && pathname === "/app" && user.defaultTeamId) {
         const defaultTeam = user.teams.find(
           (t) => t.team.id === user.defaultTeamId,
@@ -47,8 +38,12 @@ export const Route = createFileRoute("/_authenticated/app")({
     } catch (error) {
       if (isRedirect(error)) throw error;
 
-      console.error("Failed to initialize user store:", error);
-      return { authError: true };
+      throw redirect({
+        to: "/login",
+        search: {
+          redirectTo: pathname !== "/app" ? pathname : undefined,
+        },
+      });
     }
   },
   component: () => (
