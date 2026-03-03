@@ -170,7 +170,7 @@ type NodeDataWithId = { id?: string; type?: number; data?: object };
 const _add = (
   draft: Graph,
   { id = uniqueId(), ...nodeData }: NodeDataWithId,
-  { children = [], parent, before = undefined }: { children: Child[]; parent: string; before?: string},
+  { children = [], parent, before = undefined }: { children?: Child[]; parent: string; before?: string},
 ) => {
   // Represents one pending node to add
   type StackEntry = {
