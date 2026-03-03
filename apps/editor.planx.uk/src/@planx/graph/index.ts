@@ -165,49 +165,77 @@ const isCyclic = (graph: Graph): boolean => {
   return false;
 };
 
+type NodeDataWithId = { id?: string; type?: number; data?: object };
+
 const _add = (
   draft: Graph,
-  {
-    id = uniqueId(),
-    ...nodeData
-  }: { id?: string; type?: number; data?: object },
+  { id = uniqueId(), ...nodeData }: NodeDataWithId,
   {
     children = [],
     parent,
     before = undefined,
   }: { children?: Child[]; parent: string; before?: string },
 ) => {
-  if (!draft[parent]) throw new Error("parent not found");
+  // Represents one pending node to add
+  type StackEntry = {
+    node: NodeDataWithId;
+    parent: string;
+    before?: string;
+    children: Child[];
+  };
 
-  const parentNode = draft[parent];
+  const stack: StackEntry[] = [
+    {
+      node: { id: id, type: nodeData.type, data: nodeData.data },
+      parent: parent,
+      before: before,
+      children: children,
+    },
+  ];
 
-  parentNode.edges = parentNode.edges || [];
+  while (stack.length > 0) {
+    const { node, parent, before, children } = stack.pop()!;
+    const id = node.id ?? uniqueId();
 
-  draft[id] = sanitize(nodeData);
+    const parentNode = draft[parent];
+    if (!parentNode) throw new Error("parent not found");
+    parentNode.edges = parentNode.edges || [];
 
-  if (isSectionNodeType(id, draft) && !isValidSectionPosition(parent, draft)) {
-    alert(
-      "cannot add sections on branches, must be on center of main graph. close this window & try again",
-    );
-    throw new Error("cannot add sections on branches");
+    draft[id] = sanitize(node);
+    // Don't repeat node ID property at same level of `type` and `data` in graph operation
+    delete draft[id]["id"];
+
+    if (
+      isSectionNodeType(id, draft) &&
+      !isValidSectionPosition(parent, draft)
+    ) {
+      alert(
+        "cannot add sections on branches, must be on center of main graph. close this window & try again",
+      );
+      throw new Error("cannot add sections on branches");
+    }
+
+    if (before) {
+      const idx = parentNode.edges.indexOf(before);
+      if (idx >= 0) {
+        parentNode.edges.splice(idx, 0, id);
+      } else throw new Error("before not found");
+    } else {
+      parentNode.edges.push(id);
+    }
+
+    // Push children onto the stack in reverse so they process in original order
+    for (let i = children.length - 1; i >= 0; i--) {
+      const child = children[i];
+      const { children: grandChildren = [], ...childNode } = child;
+      stack.push({
+        node: childNode,
+        parent: id,
+        children: grandChildren,
+      });
+    }
   }
-
-  if (before) {
-    const idx = parentNode.edges.indexOf(before);
-    if (idx >= 0) {
-      parentNode.edges.splice(idx, 0, id);
-    } else throw new Error("before not found");
-  } else {
-    parentNode.edges.push(id);
-  }
-
-  children?.forEach((child) => {
-    const { children: grandChildren = [], ...childNode } = child;
-    _add(draft, childNode, { children: grandChildren, parent: id });
-  });
 };
-
-type NodeDataWithId = { id?: string; type?: number; data?: object };
 
 export type Relationships = {
   children?: Child[];
@@ -327,34 +355,57 @@ export const move =
     });
 
 const _remove = (draft: Graph, id: string, parent: string) => {
-  const node = draft[id];
-  const parentNode = draft[parent];
+  type Stage = "unlink" | "delete";
+  type StackEntry = { id: string; parent: string; stage: Stage };
 
-  if (!node) throw new Error("id not found");
-  else if (!parentNode) throw new Error("parent not found");
+  const stack: StackEntry[] = [{ id, parent, stage: "unlink" }];
 
-  parentNode.edges = parentNode.edges || [];
+  while (stack.length > 0) {
+    const { id: currentId, parent: parentId, stage } = stack.pop()!;
 
-  const idx = parentNode.edges.indexOf(id);
-  if (idx >= 0) {
-    if (parent !== ROOT_NODE_KEY && parentNode.edges.length === 1)
+    if (stage === "delete") {
+      const node = draft[currentId];
+      if (!node) continue; // already deleted as a side effect, not an error
+      delete draft[currentId];
+      continue;
+    }
+
+    const node = draft[currentId];
+    const parentNode = draft[parentId];
+
+    if (!node) throw new Error("id not found");
+    if (!parentNode) throw new Error("parent not found");
+
+    // Unlink current node from parent by removing parent edges
+    parentNode.edges = parentNode.edges || [];
+    const idx = parentNode.edges.indexOf(currentId);
+
+    if (idx === -1) throw new Error("not found in parent");
+
+    if (parentId !== ROOT_NODE_KEY && parentNode.edges.length === 1) {
       delete parentNode.edges;
-    else parentNode.edges.splice(idx, 1);
-  } else {
-    throw new Error("not found in parent");
-  }
+    } else {
+      parentNode.edges.splice(idx, 1);
+    }
 
-  if (parent !== ROOT_NODE_KEY && Object.keys(parentNode).length === 0)
-    delete draft[parent];
+    // Delete parent if empty
+    if (parentId !== ROOT_NODE_KEY && Object.keys(parentNode).length === 0) {
+      delete draft[parentId];
+    }
 
-  if (numberOfEdgesTo(id, draft) === 0) {
-    if (node.edges) {
-      // node.edges must be copy - see test "final node with id"
-      for (const childId of [...node.edges]) {
-        _remove(draft, childId, id);
+    // Check in-degree of current node
+    if (numberOfEdgesTo(currentId, draft) === 0) {
+      // Ensure current node itself is only deleted *after* its' children
+      stack.push({ id: currentId, parent: parentId, stage: "delete" });
+
+      // Schedule children for removal (unlink first)
+      if (node.edges) {
+        // Copy to avoid mutation issues
+        for (const childId of [...node.edges]) {
+          stack.push({ id: childId, parent: currentId, stage: "unlink" });
+        }
       }
     }
-    delete draft[id];
   }
 };
 
