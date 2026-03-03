@@ -170,7 +170,11 @@ type NodeDataWithId = { id?: string; type?: number; data?: object };
 const _add = (
   draft: Graph,
   { id = uniqueId(), ...nodeData }: NodeDataWithId,
-  { children = [], parent, before = undefined }: { children?: Child[]; parent: string; before?: string},
+  {
+    children = [],
+    parent,
+    before = undefined,
+  }: { children?: Child[]; parent: string; before?: string },
 ) => {
   // Represents one pending node to add
   type StackEntry = {
@@ -351,34 +355,57 @@ export const move =
     });
 
 const _remove = (draft: Graph, id: string, parent: string) => {
-  const node = draft[id];
-  const parentNode = draft[parent];
+  type Stage = "unlink" | "delete";
+  type StackEntry = { id: string; parent: string; stage: Stage };
 
-  if (!node) throw new Error("id not found");
-  else if (!parentNode) throw new Error("parent not found");
+  const stack: StackEntry[] = [{ id, parent, stage: "unlink" }];
 
-  parentNode.edges = parentNode.edges || [];
+  while (stack.length > 0) {
+    const { id: currentId, parent: parentId, stage } = stack.pop()!;
 
-  const idx = parentNode.edges.indexOf(id);
-  if (idx >= 0) {
-    if (parent !== ROOT_NODE_KEY && parentNode.edges.length === 1)
+    if (stage === "delete") {
+      const node = draft[currentId];
+      if (!node) continue; // already deleted as a side effect, not an error
+      delete draft[currentId];
+      continue;
+    }
+
+    const node = draft[currentId];
+    const parentNode = draft[parentId];
+
+    if (!node) throw new Error("id not found");
+    if (!parentNode) throw new Error("parent not found");
+
+    // Unlink current node from parent by removing parent edges
+    parentNode.edges = parentNode.edges || [];
+    const idx = parentNode.edges.indexOf(currentId);
+
+    if (idx === -1) throw new Error("not found in parent");
+
+    if (parentId !== ROOT_NODE_KEY && parentNode.edges.length === 1) {
       delete parentNode.edges;
-    else parentNode.edges.splice(idx, 1);
-  } else {
-    throw new Error("not found in parent");
-  }
+    } else {
+      parentNode.edges.splice(idx, 1);
+    }
 
-  if (parent !== ROOT_NODE_KEY && Object.keys(parentNode).length === 0)
-    delete draft[parent];
+    // Delete parent if empty
+    if (parentId !== ROOT_NODE_KEY && Object.keys(parentNode).length === 0) {
+      delete draft[parentId];
+    }
 
-  if (numberOfEdgesTo(id, draft) === 0) {
-    if (node.edges) {
-      // node.edges must be copy - see test "final node with id"
-      for (const childId of [...node.edges]) {
-        _remove(draft, childId, id);
+    // Check in-degree of current node
+    if (numberOfEdgesTo(currentId, draft) === 0) {
+      // Ensure current node itself is only deleted *after* its' children
+      stack.push({ id: currentId, parent: parentId, stage: "delete" });
+
+      // Schedule children for removal (unlink first)
+      if (node.edges) {
+        // Copy to avoid mutation issues
+        for (const childId of [...node.edges]) {
+          stack.push({ id: childId, parent: currentId, stage: "unlink" });
+        }
       }
     }
-    delete draft[id];
   }
 };
 
