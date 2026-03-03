@@ -9,7 +9,6 @@
 \include write/team_themes.sql
 \include write/team_settings.sql
 \include write/submission_integrations.sql
-\include write/flow_integrations.sql
 
 -- Optional tables
 -- \include write/feedback.sql
