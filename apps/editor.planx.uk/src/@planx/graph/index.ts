@@ -167,30 +167,17 @@ const isCyclic = (graph: Graph): boolean => {
 
 type NodeDataWithId = { id?: string; type?: number; data?: object };
 
-export type Relationships = {
-  children: Child[];
-  parent: NodeId;
-  /**
-   * NodeId of the older sibling of this node
-   * Used to insert a new node in the correct location within it's parents' edges
-   */
-  before?: NodeId;
-  self?: NodeId;
-};
-
-export type EmptyRelationships = Partial<Relationships>;
-
 const _add = (
   draft: Graph,
   { id = uniqueId(), ...nodeData }: NodeDataWithId,
-  { children = [], parent, before = undefined }: Omit<Relationships, "self">,
+  { children = [], parent, before = undefined }: { children: Child[]; parent: string; before?: string},
 ) => {
   // Represents one pending node to add
   type StackEntry = {
     node: NodeDataWithId;
-    parent: Relationships["parent"];
-    before?: Relationships["before"];
-    children: Relationships["children"];
+    parent: string;
+    before?: string;
+    children: Child[];
   };
 
   const stack: StackEntry[] = [
@@ -246,6 +233,17 @@ const _add = (
   }
 };
 
+export type Relationships = {
+  children?: Child[];
+  parent?: NodeId;
+  /**
+   * NodeId of the older sibling of this node
+   * Used to insert a new node in the correct location within it's parents' edges
+   */
+  before?: NodeId;
+  self?: NodeId;
+};
+
 export const add =
   (
     { id = uniqueId(), ...nodeData }: NodeDataWithId,
@@ -253,7 +251,7 @@ export const add =
       children = [],
       parent = ROOT_NODE_KEY,
       before = undefined,
-    }: Relationships | EmptyRelationships = {},
+    }: Relationships = {},
   ) =>
   (graph: Graph = {}): [Graph, Array<OT.Op>] =>
     wrap(graph, (draft) => {
