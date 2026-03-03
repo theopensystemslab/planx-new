@@ -211,7 +211,7 @@ const _add = (
     parentNode.edges = parentNode.edges || [];
 
     draft[id] = sanitize(node);
-    // Don't repeat node ID property at same level of `type` and `data`
+    // Don't repeat node ID property at same level of `type` and `data` in graph operation
     delete draft[id]["id"];
 
     if (
