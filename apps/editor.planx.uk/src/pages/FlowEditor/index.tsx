@@ -15,6 +15,7 @@ import { ToggleHelpTextButton } from "./components/FlowEditor/ToggleHelpTextButt
 import { ToggleImagesButton } from "./components/FlowEditor/ToggleImagesButton";
 import { ToggleNotesButton } from "./components/FlowEditor/ToggleNotesButton";
 import { ToggleTagsButton } from "./components/FlowEditor/ToggleTagsButton";
+import RecentFlows from "./components/RecentFlows/RecentFlows";
 import Sidebar from "./components/Sidebar";
 import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
@@ -42,15 +43,30 @@ const EditorVisualControls = styled(ButtonGroup)(({ theme }) => ({
   overflow: "hidden",
 }));
 
+const RecentFlowsOverlay = styled(Box)(({ theme }) => ({
+  position: "absolute",
+  top: theme.spacing(1.5),
+  left: theme.spacing(1.5),
+  zIndex: theme.zIndex.appBar,
+  maxWidth: `calc(100% - ${theme.spacing(5)})`,
+}));
+
 const FlowEditor = () => {
-  const [flowObject, orderedFlow, isTemplatedFrom, teamSlug, isNavMenuVisible] =
-    useStore((state) => [
-      state.flow,
-      state.orderedFlow,
-      state.isTemplatedFrom,
-      state.getTeam().slug,
-      state.isNavMenuVisible,
-    ]);
+  const [
+    flowObject,
+    orderedFlow,
+    isTemplatedFrom,
+    teamSlug,
+    isNavMenuVisible,
+    recentFlows,
+  ] = useStore((state) => [
+    state.flow,
+    state.orderedFlow,
+    state.isTemplatedFrom,
+    state.getTeam().slug,
+    state.isNavMenuVisible,
+    state.recentFlows,
+  ]);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   useScrollControlsAndRememberPosition(scrollContainerRef);
@@ -90,6 +106,11 @@ const FlowEditor = () => {
             lockedFlow={lockedFlow}
             showTemplatedNodeStatus={showTemplatedNodeStatus}
           />
+          {recentFlows.length > 0 && (
+            <RecentFlowsOverlay>
+              <RecentFlows flows={recentFlows} />
+            </RecentFlowsOverlay>
+          )}
           <EditorVisualControls
             orientation="vertical"
             aria-label="Toggle node attributes"

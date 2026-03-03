@@ -13,6 +13,8 @@ import type { NavigationStore } from "./navigation";
 import { navigationStore } from "./navigation";
 import type { PreviewStore } from "./preview";
 import { previewStore } from "./preview";
+import type { RecentFlowsStore } from "./recentFlows";
+import { recentFlowsStore } from "./recentFlows";
 import type { SettingsStore } from "./settings";
 import { settingsStore } from "./settings";
 import type { SharedStore } from "./shared";
@@ -60,7 +62,11 @@ export type PublicStore = SharedStore &
   SettingsStore &
   TeamStore;
 
-export type FullStore = PublicStore & EditorStore & EditorUIStore & UserStore;
+export type FullStore = PublicStore &
+  EditorStore &
+  EditorUIStore &
+  UserStore &
+  RecentFlowsStore;
 
 /**
  * If accessing the public preview, don't load editor store files
@@ -85,6 +91,7 @@ const createFullStore = () => {
     ...navigationStore(...args),
     ...editorStore(...args),
     ...editorUIStore(...args),
+    ...recentFlowsStore(...args),
     ...settingsStore(...args),
     ...teamStore(...args),
     ...userStore(...args),

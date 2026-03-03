@@ -6,6 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { useNavigate } from "@tanstack/react-router";
 import React, { useState } from "react";
 
 export interface RecentFlow {
@@ -99,18 +100,31 @@ const ExpandableContent = styled(Box)<{ isExpanded: boolean }>(
 
 const RecentFlows: React.FC<RecentFlowsProps> = ({ flows }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const navigate = useNavigate();
 
   const handleToggle = () => setIsExpanded((prev) => !prev);
 
-  const reversedFlows = [...flows].reverse();
-  const firstFlow = isExpanded ? reversedFlows[0] : flows[0];
-  const additionalFlows = reversedFlows.slice(1);
+  const handleFlowClick = (e: React.MouseEvent, flow: RecentFlow) => {
+    e.preventDefault();
+    // Extract the root flow slug from the stored href (/app/$team/$flow)
+    const [, , team, flowSlug] = flow.href.split("/");
+    navigate({ to: "/app/$team/$flow", params: { team, flow: flowSlug } });
+  };
+
+  // Collapsed: show the directly previous (most recent) flow
+  // Expanded: show the original flow at top, then in oldest→newest order
+  const firstFlow = isExpanded ? flows[0] : flows[flows.length - 1];
+  const additionalFlows = flows.slice(1);
 
   return (
     <RecentFlowContainer>
       <RecentFlowList>
         <RecentFlowItem indent={0}>
-          <RecentFlowLink variant="body3" href={firstFlow.href}>
+          <RecentFlowLink
+            variant="body3"
+            href={firstFlow.href}
+            onClick={(e) => handleFlowClick(e, firstFlow)}
+          >
             <Box component="span" sx={{ mr: 0.25 }}>
               back to
             </Box>
@@ -127,7 +141,11 @@ const RecentFlows: React.FC<RecentFlowsProps> = ({ flows }) => {
                 key={`${flow.team}-${flow.flow}-${index}`}
                 indent={index + 1}
               >
-                <RecentFlowLink variant="body3" href={flow.href}>
+                <RecentFlowLink
+                  variant="body3"
+                  href={flow.href}
+                  onClick={(e) => handleFlowClick(e, flow)}
+                >
                   <TurnSharpLeftIcon sx={{ mr: 0.25 }} fontSize="small" />
                   <Box component="span" className="flow-name">
                     {flow.flow}

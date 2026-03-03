@@ -43,10 +43,17 @@ const DashboardContainer = styled(Box)(({ theme }) => ({
 const Layout: React.FC<PropsWithChildren> = ({ children }) => {
   const router = useRouter();
   const initURLTracking = useStore((state) => state.initURLTracking);
+  const initRecentFlowsTracking = useStore(
+    (state) => state.initRecentFlowsTracking,
+  );
 
   useEffect(() => {
-    const cleanup = initURLTracking(router);
-    return cleanup;
+    const cleanupURLTracking = initURLTracking(router);
+    const cleanupRecentFlows = initRecentFlowsTracking(router);
+    return () => {
+      cleanupURLTracking();
+      cleanupRecentFlows();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty deps - run once on mount
 

@@ -60,6 +60,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
               }}
               {...(isStandalone && { target: "_blank" })}
               variant="body1"
+              preload={false}
             >
               {params.team}
             </BreadcrumbsLink>
