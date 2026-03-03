@@ -80,6 +80,7 @@ const createFlow = async ({
   summary,
   description,
   limitations,
+  submissionEmailId,
 }: {
   teamId: number;
   slug: string;
@@ -91,18 +92,19 @@ const createFlow = async ({
   summary?: string;
   description?: string;
   limitations?: string;
+  submissionEmailId?: string;
 }) => {
   const { client: $client } = getClient();
   const userId = userContext.getStore()?.user?.sub;
 
   try {
     const response = await $client.request<{
-      insertFlowWithIntegration: {
+      insertFlow: {
         id: Flow["id"];
       };
     }>(
       gql`
-        mutation InsertFlowWithIntegration(
+        mutation InsertFlow(
           $team_id: Int!
           $slug: String!
           $name: String!
@@ -113,9 +115,9 @@ const createFlow = async ({
           $summary: String
           $description: String
           $limitations: String
-          $email_id: uuid
+          $submission_email_id: uuid
         ) {
-          insertFlowWithIntegration: insert_flows_one(
+          insertFlow: insert_flows_one(
             object: {
               team_id: $team_id
               slug: $slug
@@ -128,7 +130,7 @@ const createFlow = async ({
               summary: $summary
               description: $description
               limitations: $limitations
-              flow_integration: { data: { team_id: $team_id } }
+              submission_email_id: $submission_email_id
             }
           ) {
             id
@@ -146,10 +148,11 @@ const createFlow = async ({
         summary: summary,
         description: description,
         limitations: limitations,
+        submission_email_id: submissionEmailId,
       },
     );
 
-    const flowId = response.insertFlowWithIntegration.id;
+    const flowId = response.insertFlow.id;
 
     await createAssociatedOperation(flowId);
     await publishFlow(flowId, "Created flow");
