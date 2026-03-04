@@ -26,10 +26,10 @@ const auth = authHeader({ role: "teamEditor" });
 describe("authentication and error handling", () => {
   beforeAll(() => {
     queryMock.mockQuery({
-      name: "InsertFlowWithIntegration",
+      name: "InsertFlow",
       matchOnVariables: false,
       data: {
-        insertFlowWithIntegration: {
+        insertFlow: {
           id: "2",
         },
       },
@@ -39,12 +39,7 @@ describe("authentication and error handling", () => {
         name: "My new flow",
         data: mockNewFlowData,
         email_id: "default-email-id",
-        flow_integration: {
-          data: {
-            team_id: 1,
-            email_id: "default-email-id",
-          },
-        },
+        submission_email_id: "111",
       },
     });
   });
@@ -106,10 +101,10 @@ describe("success", () => {
     });
 
     queryMock.mockQuery({
-      name: "InsertFlowWithIntegration",
+      name: "InsertFlow",
       matchOnVariables: false,
       data: {
-        insertFlowWithIntegration: {
+        insertFlow: {
           id: "2",
         },
       },
