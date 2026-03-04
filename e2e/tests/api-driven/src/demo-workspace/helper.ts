@@ -302,12 +302,10 @@ export async function updateTeamSettings(client, teamId: number) {
             where: { team_id: { _eq: $teamId } }
             _set: {
               homepage: "newpage.com"
-              submission_email: "new.email@email.com"
             }
           ) {
             returning {
               team_id
-              submission_email
               homepage
             }
           }

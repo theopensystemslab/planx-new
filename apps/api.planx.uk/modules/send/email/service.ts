@@ -24,7 +24,6 @@ export async function getTeamEmailSettings(localAuthority: string) {
             helpPhone: help_phone
             emailReplyToId: email_reply_to_id
             helpOpeningHours: help_opening_hours
-            submissionEmail: submission_email
           }
         }
       }

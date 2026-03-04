@@ -133,7 +133,6 @@ const SendComponent: React.FC<Props> = (props) => {
     state.teamId,
     state.flowSlug,
     state.id,
-    state.teamSettings.submissionEmail,
   ]);
 
   const {

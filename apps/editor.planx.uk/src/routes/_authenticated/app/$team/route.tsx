@@ -48,7 +48,6 @@ export const Route = createFileRoute("/_authenticated/app/$team")({
               homepage: homepage
               externalPlanningSiteName: external_planning_site_name
               externalPlanningSiteUrl: external_planning_site_url
-              submissionEmail: submission_email
               isTrial: is_trial
             }
           }

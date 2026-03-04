@@ -1,3 +1,4 @@
+import { useQuery } from "@apollo/client";
 import CloudDownload from "@mui/icons-material/CloudDownload";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
@@ -7,12 +8,30 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { RenderCellParams } from "ui/shared/DataTable/types";
 
+import { GET_TEAM_SUBMISSION_INTEGRATIONS } from "../../Settings/Team/Integrations/SubmissionEmails/queries";
+import { GetSubmissionEmails } from "../../Settings/Team/Integrations/SubmissionEmails/types";
+
 export const DownloadSubmissionButton = (params: RenderCellParams) => {
-  const [teamSlug, canUserEditTeam, submissionEmail] = useStore((state) => [
+  const [teamId, teamSlug, canUserEditTeam] = useStore((state) => [
+    state.teamId,
     state.teamSlug,
     state.canUserEditTeam,
-    state.teamSettings?.submissionEmail,
   ]);
+
+  const { data, loading } = useQuery<GetSubmissionEmails>(
+    GET_TEAM_SUBMISSION_INTEGRATIONS,
+    {
+      variables: { teamId },
+    },
+  );
+
+  // TODO does it matter *which* submission email is used to download in this case ??
+  //   Should this instead use sessionID -> flowID -> **flow** email ?
+  const emails = data?.submissionIntegrations;
+  let submissionEmail;
+  if (emails) {
+    submissionEmail = emails?.[0].submissionEmail;
+  }
 
   const submissionDataExpirationDate = addDays(
     new Date(params.row.createdAt),
@@ -22,6 +41,7 @@ export const DownloadSubmissionButton = (params: RenderCellParams) => {
   const showDownloadButton =
     teamSlug &&
     canUserEditTeam(teamSlug) &&
+    !loading &&
     submissionEmail &&
     params.row.status === "Success" &&
     params.row.eventType !== "Pay" &&
