@@ -27,6 +27,26 @@ insert_permissions:
         - team_id
     comment: ""
 select_permissions:
+  - role: analyst
+    permission:
+      columns:
+        - has_article4_schema
+        - id
+        - external_planning_site_name
+        - external_planning_site_url
+        - homepage
+        - help_email
+        - help_opening_hours
+        - help_phone
+        - email_reply_to_id
+        - is_trial
+        - team_id
+        - boundary_bbox
+        - submission_email
+        - reference_code
+        - boundary_url
+      filter: {}
+    comment: ""
   - role: api
     permission:
       columns:

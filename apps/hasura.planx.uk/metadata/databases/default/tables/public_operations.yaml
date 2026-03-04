@@ -55,6 +55,18 @@ insert_permissions:
         - updated_at
         - flow_id
 select_permissions:
+  - role: analyst
+    permission:
+      columns:
+        - id
+        - actor_id
+        - version
+        - data
+        - created_at
+        - updated_at
+        - flow_id
+      filter: {}
+    comment: ""
   - role: demoUser
     permission:
       columns:
