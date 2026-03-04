@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
-import { ACCEPTED_MODEL_IDS } from "../constants.js";
 import {
   GATEWAY_STATUS,
   GATEWAY_SUCCESS_STATUSES,
@@ -13,7 +12,6 @@ export const projectDescriptionSchema = z.object({
   body: z.object({
     original: z.string().trim().max(250),
     flowId: z.string().uuid(),
-    modelId: z.enum(ACCEPTED_MODEL_IDS).default("google/gemini-2.5-pro"),
     sessionId: z.string().uuid().optional(),
   }),
 });
