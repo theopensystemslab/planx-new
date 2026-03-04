@@ -119,9 +119,10 @@ function Component(props: Props) {
   useEffect(() => {
     if (previousSlotCount === undefined) return;
 
+    // Show most recent upload at the top
     if (!isNewUI && slots.length) setSlots(slots.reverse());
 
-    // Clear errors as files are added/removed
+    // Only stop modal opening on initial return to node
     if (isUserReturningToNode) return setIsUserReturningToNode(false);
     if (slots.length && dropzoneError) setDropzoneError(undefined);
     if (!slots.length && fileListError) setFileListError(undefined);
