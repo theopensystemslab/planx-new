@@ -8,6 +8,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/shared/types";
 import { PrintButton } from "components/PrintButton";
+import { hasFeatureFlag } from "lib/featureFlags";
 import capitalize from "lodash/capitalize";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useCallback, useEffect, useState } from "react";
@@ -20,6 +21,7 @@ import Card from "../../shared/Preview/Card";
 import { CardHeader } from "../../shared/Preview/CardHeader/CardHeader";
 import { Dropzone } from "../../shared/PrivateFileUpload/Dropzone";
 import { FileStatus } from "../../shared/PrivateFileUpload/FileStatus";
+import { UploadedFileCard } from "../../shared/PrivateFileUpload/UploadedFileCard";
 import {
   createFileList,
   FileList,
@@ -37,6 +39,7 @@ import {
 } from "../schema";
 import { FileAccordionCard } from "./FileAccordionCard";
 import { InteractiveFileListItem } from "./InteractiveFileListItem";
+import { FileTaggingModal } from "./Modal";
 
 type Props = PublicProps<FileUploadAndLabel>;
 
@@ -60,6 +63,8 @@ const UploadList = styled(List)(({ theme }) => ({
 }));
 
 function Component(props: Props) {
+  const isNewUI = hasFeatureFlag("UPLOAD_LABEL_REBUILD");
+
   const [fileList, setFileList] = useState<FileList>({
     required: [],
     recommended: [],
@@ -84,10 +89,10 @@ function Component(props: Props) {
 
   const [slots, setSlots] = useState<FileUploadSlot[]>([]);
 
-  // Accordion state: only one file can be expanded for editing at a time
+  // New UI: only one file can be expanded for editing at a time
   const [expandedSlotId, setExpandedSlotId] = useState<string | null>(null);
 
-  // Drawing numbers
+  // New UI: drawing numbers
   const [drawingNumbers, setDrawingNumbers] = useState<Record<string, string>>(
     {},
   );
@@ -99,28 +104,34 @@ function Component(props: Props) {
     [],
   );
 
-  // Exit animation
+  // New UI: exit animation
   const [removingSlotId, setRemovingSlotId] = useState<string | null>(null);
   const [pendingRemoval, setPendingRemoval] = useState<FileUploadSlot | null>(
     null,
   );
 
-  // Track number of slots and auto-expand newly uploaded files
+  // Legacy UI: modal open/close
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [selectedSlotId, setSelectedSlotId] = useState<string | null>(null);
+
+  // Track number of slots
   const previousSlotCount = usePrevious(slots.length);
   useEffect(() => {
     if (previousSlotCount === undefined) return;
 
-    // Only stop auto-expand on initial return to node
-    if (isUserReturningToNode) return setIsUserReturningToNode(false);
+    if (!isNewUI && slots.length) setSlots(slots.reverse());
 
     // Clear errors as files are added/removed
+    if (isUserReturningToNode) return setIsUserReturningToNode(false);
     if (slots.length && dropzoneError) setDropzoneError(undefined);
     if (!slots.length && fileListError) setFileListError(undefined);
     if (!slots.length && fileLabelErrors) setFileLabelErrors(undefined);
 
     // Auto-expand the most recently uploaded file for tagging
-    if (slots.length > previousSlotCount && slots.length > 0) {
+    if (isNewUI && slots.length > previousSlotCount && slots.length > 0) {
       setExpandedSlotId(slots[previousSlotCount].id);
+    } else if (!isNewUI && slots.length > previousSlotCount) {
+      setShowModal(true);
     }
   }, [slots.length]);
 
@@ -165,6 +176,7 @@ function Component(props: Props) {
       });
   };
 
+  // New UI handlers
   const handleExpand = (slotId: string) => {
     setFileListError(undefined);
     setFileLabelErrors(undefined);
@@ -182,20 +194,6 @@ function Component(props: Props) {
     });
 
     setExpandedSlotId(nextUntagged?.id ?? null);
-  };
-
-  const isCategoryVisible = (category: keyof typeof fileList) => {
-    // Display all categories when in information-only mode
-    if (props.hideDropZone) return true;
-
-    switch (category) {
-      // Display optional list if they are the only available file type
-      case "optional":
-        return !fileList["recommended"].length && !fileList["required"].length;
-      case "required":
-      case "recommended":
-        return fileList[category].length > 0;
-    }
   };
 
   // Start removal animation, defer actual state update to onExited
@@ -221,7 +219,6 @@ function Component(props: Props) {
     );
     setFileList(updatedFileList);
 
-    // Clean up drawing number for removed file
     setDrawingNumbers((prev) => {
       const next = { ...prev };
       delete next[slot.id];
@@ -230,6 +227,47 @@ function Component(props: Props) {
 
     setRemovingSlotId(null);
     setPendingRemoval(null);
+  };
+
+  // Legacy UI handlers
+  const onUploadedFileCardChange = (slotId: string) => {
+    setFileListError(undefined);
+    setFileLabelErrors(undefined);
+    setSelectedSlotId(slotId);
+    setShowModal(true);
+  };
+
+  const removeFile = (slot: FileUploadSlot) => {
+    setSlots(slots.filter((currentSlot) => currentSlot.file !== slot.file));
+    setFileUploadStatus(`${slot.file.path} was deleted`);
+    const updatedFileList = removeSlots(
+      getTagsForSlot(slot.id, fileList),
+      slot,
+      fileList,
+    );
+    setFileList(updatedFileList);
+  };
+
+  const closeModal = (_event: unknown, reason?: string) => {
+    if (reason && reason == "backdropClick") {
+      return;
+    }
+    setShowModal(false);
+    setSelectedSlotId(null);
+  };
+
+  const isCategoryVisible = (category: keyof typeof fileList) => {
+    // Display all categories when in information-only mode
+    if (props.hideDropZone) return true;
+
+    switch (category) {
+      // Display optional list if they are the only available file type
+      case "optional":
+        return !fileList["recommended"].length && !fileList["required"].length;
+      case "required":
+      case "recommended":
+        return fileList[category].length > 0;
+    }
   };
 
   return (
@@ -289,33 +327,66 @@ function Component(props: Props) {
                 Your uploaded files
               </Typography>
             )}
-            <Stack spacing={2}>
-              {slots.map((slot) => (
-                <Collapse
-                  key={slot.id}
-                  in={removingSlotId !== slot.id}
-                  onExited={
-                    removingSlotId === slot.id ? completeRemoveFile : undefined
-                  }
-                >
-                  <FileAccordionCard
-                    slot={slot}
-                    isExpanded={expandedSlotId === slot.id}
-                    onExpand={handleExpand}
-                    onSave={handleSave}
-                    onRemove={initiateRemoveFile}
+            {isNewUI ? (
+              <Stack spacing={2}>
+                {slots.map((slot) => (
+                  <Collapse
+                    key={slot.id}
+                    in={removingSlotId !== slot.id}
+                    onExited={
+                      removingSlotId === slot.id
+                        ? completeRemoveFile
+                        : undefined
+                    }
+                  >
+                    <FileAccordionCard
+                      slot={slot}
+                      isExpanded={expandedSlotId === slot.id}
+                      onExpand={handleExpand}
+                      onSave={handleSave}
+                      onRemove={initiateRemoveFile}
+                      fileList={fileList}
+                      setFileList={setFileList}
+                      error={fileLabelErrors?.[slot.id]}
+                      showDrawingNumber={props.showDrawingNumber}
+                      drawingNumber={drawingNumbers[slot.id]}
+                      onDrawingNumberChange={(value) =>
+                        handleDrawingNumberChange(slot.id, value)
+                      }
+                    />
+                  </Collapse>
+                ))}
+              </Stack>
+            ) : (
+              <>
+                {showModal && (
+                  <FileTaggingModal
+                    uploadedFiles={slots}
                     fileList={fileList}
                     setFileList={setFileList}
-                    error={fileLabelErrors?.[slot.id]}
-                    showDrawingNumber={props.showDrawingNumber}
-                    drawingNumber={drawingNumbers[slot.id]}
-                    onDrawingNumberChange={(value) =>
-                      handleDrawingNumberChange(slot.id, value)
-                    }
+                    closeModal={closeModal}
+                    removeFile={removeFile}
+                    selectedSlotId={selectedSlotId}
                   />
-                </Collapse>
-              ))}
-            </Stack>
+                )}
+                <Stack spacing={2}>
+                  {slots.map((slot) => (
+                    <ErrorWrapper
+                      error={fileLabelErrors?.[slot.id]}
+                      id={slot.id}
+                      key={slot.id}
+                    >
+                      <UploadedFileCard
+                        {...slot}
+                        tags={getTagsForSlot(slot.id, fileList)}
+                        onChange={() => onUploadedFileCardChange(slot.id)}
+                        removeFile={() => removeFile(slot)}
+                      />
+                    </ErrorWrapper>
+                  ))}
+                </Stack>
+              </>
+            )}
           </Box>
         </ErrorWrapper>
       </FullWidthWrapper>

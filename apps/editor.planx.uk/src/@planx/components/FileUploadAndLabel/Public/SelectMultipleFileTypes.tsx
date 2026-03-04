@@ -27,7 +27,7 @@ interface ChecklistProps {
   showDrawingNumber?: boolean;
   drawingNumber?: string;
   onDrawingNumberChange?: (value: string) => void;
-  onSave: () => void;
+  onSave?: () => void;
 }
 
 interface Option extends UserFile {
@@ -185,19 +185,21 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
         </Box>
       )}
 
-      <Button
-        variant="contained"
-        color="prompt"
-        sx={{ mt: 2, minWidth: 140 }}
-        size="small"
-        onClick={onSave}
-        data-testid={`save-${uploadedFile.file.name}`}
-      >
-        Save
-        <Box sx={visuallyHidden} component="span">
-          {` labels for ${uploadedFile.file.name}`}
-        </Box>
-      </Button>
+      {onSave && (
+        <Button
+          variant="contained"
+          color="prompt"
+          sx={{ mt: 2, minWidth: 140 }}
+          size="small"
+          onClick={onSave}
+          data-testid={`save-${uploadedFile.file.name}`}
+        >
+          Save
+          <Box sx={visuallyHidden} component="span">
+            {` labels for ${uploadedFile.file.name}`}
+          </Box>
+        </Button>
+      )}
     </Root>
   );
 };

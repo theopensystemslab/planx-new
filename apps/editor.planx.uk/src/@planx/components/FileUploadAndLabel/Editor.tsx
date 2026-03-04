@@ -6,6 +6,7 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { getIn } from "formik";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { merge } from "lodash";
 import React from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
@@ -100,19 +101,23 @@ function FileUploadAndLabelComponent(props: Props) {
               disabled={props.disabled}
             />
           </InputRow>
-          <InputRow>
-            <Switch
-              checked={formik.values.showDrawingNumber}
-              onChange={() =>
-                formik.setFieldValue(
-                  "showDrawingNumber",
-                  !formik.values.showDrawingNumber,
-                )
-              }
-              label="Show a drawing number field for each uploaded file"
-              disabled={props.disabled}
-            />
-          </InputRow>
+          {hasFeatureFlag("UPLOAD_LABEL_REBUILD") ? (
+            <InputRow>
+              <Switch
+                checked={formik.values.showDrawingNumber}
+                onChange={() =>
+                  formik.setFieldValue(
+                    "showDrawingNumber",
+                    !formik.values.showDrawingNumber,
+                  )
+                }
+                label="Show a drawing number field for each uploaded file"
+                disabled={props.disabled}
+              />
+            </InputRow>
+          ) : (
+            <></>
+          )}
         </ModalSectionContent>
       </ModalSection>
       <ModalSection>
