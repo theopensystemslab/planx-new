@@ -1,4 +1,5 @@
 import cors, { type CorsOptions } from "cors";
+import type { RequestHandler } from "express";
 
 const checkAllowedOrigins: CorsOptions["origin"] = (origin, callback) => {
   if (!origin) return callback(null, true);
@@ -17,7 +18,7 @@ const checkAllowedOrigins: CorsOptions["origin"] = (origin, callback) => {
     : callback(new Error(`Not allowed by CORS. Origin: ${origin}`));
 };
 
-export const apiCors = cors({
+const apiCors = cors({
   credentials: true,
   methods: "*",
   origin: checkAllowedOrigins,
@@ -29,6 +30,17 @@ export const apiCors = cors({
     "X-Requested-With",
   ],
 });
+
+const skipApiCors = ["/proxy/ordnance-survey"];
+
+/**
+ * App-level CORS middleware. Applies {@link apiCors} to all routes except those
+ * that define their own CORS policy (e.g. OS proxy routes which permit null origins).
+ */
+export const defaultCors: RequestHandler = (req, res, next) => {
+  if (skipApiCors.some((path) => req.path.startsWith(path))) return next();
+  return apiCors(req, res, next);
+};
 
 /**
  * Extends {@link checkAllowedOrigins} to additionally permit null origins.
@@ -49,5 +61,13 @@ const checkAllowedOriginsForOSRequests: CorsOptions["origin"] = (
 
 export const osCors = cors({
   credentials: false,
+  methods: "*",
   origin: checkAllowedOriginsForOSRequests,
+  allowedHeaders: [
+    "Accept",
+    "Authorization",
+    "Content-Type",
+    "Origin",
+    "X-Requested-With",
+  ],
 });
