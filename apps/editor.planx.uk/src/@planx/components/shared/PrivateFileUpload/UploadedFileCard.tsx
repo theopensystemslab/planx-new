@@ -2,16 +2,12 @@ import FileIcon from "@mui/icons-material/AttachFile";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Box, { BoxProps } from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import { FileUploadSlot } from "@planx/components/FileUpload/model";
 import ImagePreview from "components/ImagePreview";
 import React from "react";
-import CheckCircleIcon from "ui/icons/CheckCircle";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 interface Props extends FileUploadSlot {
@@ -19,7 +15,6 @@ interface Props extends FileUploadSlot {
   onChange?: () => void;
   changeLabel?: string;
   changeIcon?: React.ReactNode;
-  tags?: string[];
   hideChangeButton?: boolean;
   drawingNumber?: string;
   FileCardProps?: BoxProps;
@@ -82,16 +77,6 @@ const FileSize = styled(Typography)(({ theme }) => ({
   alignSelf: "flex-end",
 }));
 
-const TagRoot = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper,
-  border: `1px solid ${theme.palette.border.main}`,
-  borderTop: "none",
-  display: "flex",
-  flexWrap: "wrap",
-  alignItems: "center",
-  padding: theme.spacing(1),
-}));
-
 const ActionButtons = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
@@ -107,7 +92,6 @@ export const UploadedFileCard: React.FC<Props> = ({
   onChange,
   changeLabel = "Edit",
   changeIcon,
-  tags,
   hideChangeButton,
   drawingNumber,
   status,
@@ -196,30 +180,6 @@ export const UploadedFileCard: React.FC<Props> = ({
             </Button>
           </ActionButtons>
         </FileCard>
-        {tags && tags.length > 0 && (
-          <TagRoot>
-            <List sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-              {tags.map((tag) => (
-                <ListItem key={tag} disablePadding sx={{ width: "auto" }}>
-                  <Chip
-                    label={tag}
-                    variant="uploadedFileTag"
-                    data-testid="uploaded-file-chip"
-                    icon={<CheckCircleIcon />}
-                    sx={{
-                      backgroundColor: "#E6F3E6",
-                      color: "text.primary",
-                      border: "1px solid rgba(0, 0, 0, 0.25)",
-                      "& .MuiChip-icon": {
-                        color: "success.main",
-                      },
-                    }}
-                  />
-                </ListItem>
-              ))}
-            </List>
-          </TagRoot>
-        )}
       </>
     </ErrorWrapper>
   </Box>
