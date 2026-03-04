@@ -21,7 +21,6 @@ export const contextDefaults: TestContext = {
     },
     settings: {
       homepage: "planx.uk",
-      submissionEmail: "simulate-delivered@notifications.service.gov.uk",
     },
   },
 };
@@ -47,7 +46,6 @@ export async function setUpTestContext(
       name: context.team.name,
       settings: {
         homepage: context.team.settings?.homepage,
-        submissionEmail: context.team.settings?.submissionEmail,
       },
     });
 
