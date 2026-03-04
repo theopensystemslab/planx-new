@@ -1,7 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
+import Chip, { chipClasses } from "@mui/material/Chip";
 import Collapse from "@mui/material/Collapse";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -123,7 +123,7 @@ export const FileAccordionCard: React.FC<FileAccordionCardProps> = ({
                         backgroundColor: "#E6F3E6",
                         color: "text.primary",
                         border: "1px solid rgba(0, 0, 0, 0.25)",
-                        "& .MuiChip-icon": {
+                        [`& .${chipClasses.icon}`]: {
                           color: "success.main",
                         },
                       }}
