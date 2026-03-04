@@ -13,6 +13,7 @@ import { logAiGatewayExchange } from "../logs.js";
 import { getModel } from "../utils.js";
 import { type GatewayResult, GATEWAY_STATUS } from "../types.js";
 import { projectDescriptionObjectResultSchema } from "./types.js";
+import { DEFAULT_MODEL_ID } from "../constants.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -31,13 +32,12 @@ const loadSystemPrompt = (): string => {
 export const enhanceProjectDescription = async (
   original_description: string,
   endpoint: string,
-  modelId: string,
   flowId: string,
   sessionId?: string,
 ): Promise<GatewayResult> => {
   try {
     const startTime = Date.now();
-    const result = getModel(modelId);
+    const result = getModel(DEFAULT_MODEL_ID);
     if (!result.ok) {
       return { ok: false, error: result.error };
     }
@@ -57,7 +57,7 @@ export const enhanceProjectDescription = async (
     // log the exchange w/ Vercel AI Gateway to the audit table in db
     await logAiGatewayExchange({
       endpoint,
-      modelId: res.response?.modelId || modelId,
+      modelId: res.response?.modelId || DEFAULT_MODEL_ID,
       prompt,
       response: res.object.enhancedDescription ?? undefined,
       gatewayStatus: res.object.status || undefined,
