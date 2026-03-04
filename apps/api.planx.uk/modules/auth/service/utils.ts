@@ -33,3 +33,28 @@ export const checkUserCanAccessEnv = async (
 
   return true;
 };
+
+/**
+ * Validate that a given URL/origin is a trusted redirect destination
+ * Only allow known domains to prevent open redirect vulnerabilities
+ */
+export const isValidRedirect = (url: string): boolean => {
+  try {
+    // ensure we are validating against an origin (i.e. no path/query)
+    const { origin } = new URL(url);
+
+    // production and staging editors
+    if (/^https:\/\/editor\.planx\.(uk|dev)$/.test(origin)) return true;
+
+    // PR test build (pizza) environments
+    if (/^https:\/\/\d{4,5}\.planx\.pizza$/.test(origin)) return true;
+
+    // local dev
+    if (/^http:\/\/(127\.0\.0\.1|localhost):3000$/.test(origin)) return true;
+
+    return false;
+  } catch (err) {
+    console.error(`Could not validate URL: ${url}`, err);
+    return false;
+  }
+};

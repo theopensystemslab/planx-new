@@ -9,10 +9,12 @@ import type { RequestHandler } from "http-proxy-middleware";
 import type { Role } from "@opensystemslab/planx-core/types";
 import { AsyncLocalStorage } from "async_hooks";
 import type { CookieOptions, Request } from "express";
+
 import {
   createTokenDigest,
   isTokenRevoked,
 } from "./service/logout/revokeToken.js";
+import { isValidRedirect } from "./service/utils.js";
 
 export const userContext = new AsyncLocalStorage<{ user: Express.User }>();
 
@@ -162,12 +164,16 @@ export const getGoogleAuthHandler = (
   passport: Authenticator,
 ): RequestHandler => {
   return (req, res, next) => {
-    // Always redirect to /app so frontend can handle default team redirect
     const referrer = req.get("Referrer");
-    const baseUrl = referrer
-      ? new URL(referrer).origin
-      : process.env.EDITOR_URL_EXT;
+    // validate referrer header to prevent open redirect attacks / JWT exfiltration
+    const referrerOrigin = referrer ? new URL(referrer).origin : null;
+    const baseUrl =
+      referrerOrigin && isValidRedirect(referrerOrigin)
+        ? referrerOrigin
+        : process.env.EDITOR_URL_EXT;
+    // Always redirect to /app so frontend can handle default team redirect
     req.session!.returnTo = `${baseUrl}/app`;
+
     return passport.authenticate("google", {
       scope: ["profile", "email"],
     })(req, res, next);
@@ -188,11 +194,14 @@ export const getMicrosoftAuthHandler = (
   passport: Authenticator,
 ): RequestHandler => {
   return (req, res, next) => {
-    // Always redirect to /app so frontend can handle default team redirect
     const referrer = req.get("Referrer");
-    const baseUrl = referrer
-      ? new URL(referrer).origin
-      : process.env.EDITOR_URL_EXT;
+    // validate referrer header to prevent open redirect attacks / JWT exfiltration
+    const referrerOrigin = referrer ? new URL(referrer).origin : null;
+    const baseUrl =
+      referrerOrigin && isValidRedirect(referrerOrigin)
+        ? referrerOrigin
+        : process.env.EDITOR_URL_EXT;
+    // Always redirect to /app so frontend can handle default team redirect
     req.session!.returnTo = `${baseUrl}/app`;
 
     // generate a nonce to enable us to validate the response from OP (mitigates against CSRF attacks)
