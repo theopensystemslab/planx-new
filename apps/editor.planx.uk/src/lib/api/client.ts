@@ -43,7 +43,8 @@ apiClient.interceptors.response.use(
     switch (statusCode) {
       case 401:
         message = "Unauthenticated";
-        toastId = "api_unauthenticated_error";
+        // Do not show toast - user is already redirected to /login page for authentication errors
+        toastId = undefined;
         break;
 
       case 403:
