@@ -50,6 +50,17 @@ insert_permissions:
         - slug
         - updated_at
 select_permissions:
+  - role: analyst
+    permission:
+      columns:
+        - id
+        - domain
+        - name
+        - slug
+        - created_at
+        - updated_at
+      filter: {}
+    comment: ""
   - role: api
     permission:
       columns:
