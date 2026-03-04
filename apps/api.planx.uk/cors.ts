@@ -1,7 +1,7 @@
 import cors, { type CorsOptions } from "cors";
 
 const checkAllowedOrigins: CorsOptions["origin"] = (origin, callback) => {
-  if (!origin || origin === "null") return callback(null, true);
+  if (!origin) return callback(null, true);
 
   const isTest = process.env.NODE_ENV === "test";
   const localDevEnvs =
@@ -17,7 +17,7 @@ const checkAllowedOrigins: CorsOptions["origin"] = (origin, callback) => {
     : callback(new Error(`Not allowed by CORS. Origin: ${origin}`));
 };
 
-export const defaultCorsOptions: CorsOptions = {
+export const apiCors = cors({
   credentials: true,
   methods: "*",
   origin: checkAllowedOrigins,
@@ -28,6 +28,26 @@ export const defaultCorsOptions: CorsOptions = {
     "Origin",
     "X-Requested-With",
   ],
+});
+
+/**
+ * Extends {@link checkAllowedOrigins} to additionally permit null origins.
+ *
+ * Map tile requests come from two sources that don't require credentials -
+ * - file:// HTML reports (e.g. generated overview.html) — browsers assign these a "null" origin
+ * - The public-facing PlanX interface
+ *
+ * Null origins are safe to allow here specifically because credentials are disabled
+ */
+const checkAllowedOriginsForOSRequests: CorsOptions["origin"] = (
+  origin,
+  callback,
+) => {
+  if (!origin || origin === "null") return callback(null, true);
+  return checkAllowedOrigins(origin, callback);
 };
 
-export const apiCors = cors(defaultCorsOptions);
+export const osCors = cors({
+  credentials: false,
+  origin: checkAllowedOriginsForOSRequests,
+});
