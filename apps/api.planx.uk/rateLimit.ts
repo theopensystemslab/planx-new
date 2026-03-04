@@ -62,7 +62,8 @@ const getEmailLimiterOptions = (
 const lpsLoginLimiter = rateLimit(
   getEmailLimiterOptions(
     "LPSLogin",
-    (req: Request, _res: Response) => req.body?.email,
+    // normalise email strings to prevent bypass on case/whitespace
+    (req: Request, _res: Response) => req.body?.email.trim().toLowerCase(),
   ),
 );
 
@@ -70,9 +71,8 @@ const lpsLoginLimiter = rateLimit(
  * Limit the number of requests which can send a "Save & Return" email
  */
 const sendEmailLimiter = rateLimit(
-  getEmailLimiterOptions(
-    "SendEmail",
-    (req: Request, _res: Response) => req.body?.payload?.email,
+  getEmailLimiterOptions("SendEmail", (req: Request, _res: Response) =>
+    req.body?.payload?.email.trim().toLowerCase(),
   ),
 );
 
