@@ -185,9 +185,11 @@ function Component(props: Props) {
   };
 
   const isCategoryVisible = (category: keyof typeof fileList) => {
+    // Display all categories when in information-only mode
     if (props.hideDropZone) return true;
 
     switch (category) {
+      // Display optional list if they are the only available file type
       case "optional":
         return !fileList["recommended"].length && !fileList["required"].length;
       case "required":
