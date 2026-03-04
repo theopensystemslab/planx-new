@@ -263,6 +263,37 @@ insert_permissions:
           url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
         type: http
 select_permissions:
+  - role: analyst
+    permission:
+      columns:
+        - can_create_from_copy
+        - category
+        - created_at
+        - creator_id
+        - data
+        - description
+        - id
+        - is_listed_on_lps
+        - is_template
+        - limitations
+        - name
+        - settings
+        - slug
+        - status
+        - summary
+        - team_id
+        - templated_from
+        - updated_at
+        - version
+      computed_fields:
+        - data_merged
+        - first_online_at
+        - production_url
+      filter:
+        deleted_at:
+          _is_null: true
+      allow_aggregations: true
+    comment: ""
   - role: api
     permission:
       columns:

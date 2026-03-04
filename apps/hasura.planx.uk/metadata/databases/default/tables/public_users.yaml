@@ -48,6 +48,20 @@ insert_permissions:
         - last_name
         - updated_at
 select_permissions:
+  - role: analyst
+    permission:
+      columns:
+        - created_at
+        - default_team_id
+        - email
+        - first_name
+        - id
+        - is_analyst
+        - is_platform_admin
+        - last_name
+        - updated_at
+      filter: {}
+    comment: ""
   - role: api
     permission:
       columns:
