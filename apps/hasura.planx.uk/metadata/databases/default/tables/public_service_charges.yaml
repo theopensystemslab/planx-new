@@ -1,6 +1,16 @@
 table:
   name: service_charges
   schema: public
+object_relationships:
+  - name: team
+    using:
+      manual_configuration:
+        column_mapping:
+          team_slug: slug
+        insertion_order: null
+        remote_table:
+          name: teams
+          schema: public
 select_permissions:
   - role: platformAdmin
     permission:
@@ -32,5 +42,12 @@ select_permissions:
         - team_slug
         - paid_at
         - session_id
-      filter: {}
+      filter:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: x-hasura-user-id
+              - role:
+                  _eq: teamEditor
     comment: ""
