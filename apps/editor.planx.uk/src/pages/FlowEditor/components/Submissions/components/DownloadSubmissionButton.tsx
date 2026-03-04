@@ -25,13 +25,10 @@ export const DownloadSubmissionButton = (params: RenderCellParams) => {
     },
   );
 
-  // TODO does it matter *which* submission email is used to download in this case ??
-  //   Should this instead use sessionID -> flowID -> **flow** email ?
+  // TODO does it matter *which* submission email is used to download in this scenario (auth'ed users on team 'Submissions' page only), defaulting to first for simplicity
+  //   Should this instead use sessionID -> flowID -> **flow** email ??
   const emails = data?.submissionIntegrations;
-  let submissionEmail;
-  if (emails) {
-    submissionEmail = emails?.[0].submissionEmail;
-  }
+  const submissionEmail = emails?.[0]?.submissionEmail;
 
   const submissionDataExpirationDate = addDays(
     new Date(params.row.createdAt),
