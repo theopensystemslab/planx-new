@@ -2,6 +2,15 @@ table:
   name: submission_integrations
   schema: public
 object_relationships:
+  - name: team
+    using:
+      manual_configuration:
+        column_mapping:
+          team_id: id
+        insertion_order: null
+        remote_table:
+          name: teams
+          schema: public
   - name: team_setting
     using:
       foreign_key_constraint_on: team_id
@@ -17,7 +26,14 @@ insert_permissions:
     comment: ""
   - role: teamEditor
     permission:
-      check: {}
+      check:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: x-hasura-user-id
+              - role:
+                  _eq: teamEditor
       columns:
         - default_email
         - id
@@ -55,7 +71,14 @@ select_permissions:
         - id
         - submission_email
         - team_id
-      filter: {}
+      filter:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: x-hasura-user-id
+              - role:
+                  _eq: teamEditor
     comment: ""
 update_permissions:
   - role: platformAdmin
