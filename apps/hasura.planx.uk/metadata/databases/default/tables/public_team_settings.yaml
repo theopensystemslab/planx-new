@@ -70,26 +70,23 @@ select_permissions:
   - role: demoUser
     permission:
       columns:
-        - boundary_bbox
-        - boundary_url
-        - email_reply_to_id
+        - has_article4_schema
+        - id
         - external_planning_site_name
         - external_planning_site_url
-        - has_article4_schema
+        - homepage
         - help_email
         - help_opening_hours
         - help_phone
-        - homepage
-        - id
+        - email_reply_to_id
         - is_trial
-        - reference_code
-        - submission_email
         - team_id
-      filter:
-        team:
-          id:
-            _eq: 32
-    comment: Demo users can only select settings for their own team
+        - boundary_bbox
+        - submission_email
+        - reference_code
+        - boundary_url
+      filter: {}
+    comment: ""
   - role: platformAdmin
     permission:
       columns:
@@ -147,14 +144,7 @@ select_permissions:
         - reference_code
         - submission_email
         - team_id
-      filter:
-        team:
-          members:
-            _and:
-              - user_id:
-                  _eq: x-hasura-user-id
-              - role:
-                  _eq: teamEditor
+      filter: {}
     comment: ""
 update_permissions:
   - role: platformAdmin

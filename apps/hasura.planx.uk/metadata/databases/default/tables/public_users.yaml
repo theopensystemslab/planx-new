@@ -88,9 +88,7 @@ select_permissions:
         - is_platform_admin
         - last_name
         - updated_at
-      filter:
-        id:
-          _eq: x-hasura-user-id
+      filter: {}
     comment: Demo users can only seelect themselves, not other team members
   - role: platformAdmin
     permission:
@@ -117,15 +115,7 @@ select_permissions:
         - is_platform_admin
         - last_name
         - updated_at
-      filter:
-        teams:
-          team:
-            members:
-              _and:
-                - user_id:
-                    _eq: '"x-hasura-user-id"'
-                - role:
-                    _eq: teamEditor
+      filter: {}
     comment: ""
 update_permissions:
   - role: platformAdmin
