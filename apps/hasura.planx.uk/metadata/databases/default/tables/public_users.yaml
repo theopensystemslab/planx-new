@@ -89,7 +89,6 @@ select_permissions:
         - last_name
         - updated_at
       filter: {}
-    comment: Demo users can only seelect themselves, not other team members
   - role: platformAdmin
     permission:
       columns:
