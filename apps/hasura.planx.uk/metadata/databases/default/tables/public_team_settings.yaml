@@ -65,8 +65,11 @@ select_permissions:
         - reference_code
         - submission_email
         - team_id
-      filter: {}
-    comment: ""
+      filter:
+        team:
+          id:
+            _eq: 32
+    comment: Demo users can only select settings for their own team
   - role: platformAdmin
     permission:
       columns:
@@ -124,7 +127,14 @@ select_permissions:
         - reference_code
         - submission_email
         - team_id
-      filter: {}
+      filter:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: x-hasura-user-id
+              - role:
+                  _eq: teamEditor
     comment: ""
 update_permissions:
   - role: platformAdmin
