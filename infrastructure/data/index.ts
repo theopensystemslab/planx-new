@@ -70,7 +70,12 @@ export const dbRootUrl = pulumi
   .all([DB_ROOT_USER, dbRootPassword, db.address])
   .apply(([role, password, host]) => getPostgresDbUrl({ role, password, host }));
 
-const apiBucket = new aws.s3.Bucket("user-data", {
+const apiBucket = new aws.s3.Bucket("user-data");
+
+// in latest @pulumi/aws API CORS rules are determined separately from bucket defn
+// by default, objects are encrypted at rest using SSE-S3 encryption
+const apiBucketCors = new aws.s3.BucketCorsConfiguration("user-data-cors", {
+  bucket: apiBucket.id,
   corsRules: [
     {
       allowedHeaders: ["*"],
@@ -81,14 +86,6 @@ const apiBucket = new aws.s3.Bucket("user-data", {
       maxAgeSeconds: 3000,
     },
   ],
-  // Encrypt objects at rest using SSE-S3 encryption
-  serverSideEncryptionConfiguration: {
-    rule: {
-      applyServerSideEncryptionByDefault: {
-          sseAlgorithm: "AES256",
-        },
-      },
-    },
 });
 
 export const apiBucketId = apiBucket.id;
