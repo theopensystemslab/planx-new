@@ -300,9 +300,7 @@ export async function updateTeamSettings(client, teamId: number) {
         mutation updateTeamSettings($teamId: Int!) {
           update_team_settings(
             where: { team_id: { _eq: $teamId } }
-            _set: {
-              homepage: "newpage.com"
-            }
+            _set: { homepage: "newpage.com" }
           ) {
             returning {
               team_id
