@@ -1,7 +1,8 @@
 import cors, { type CorsOptions } from "cors";
+import type { RequestHandler } from "express";
 
 const checkAllowedOrigins: CorsOptions["origin"] = (origin, callback) => {
-  if (!origin || origin === "null") return callback(null, true);
+  if (!origin) return callback(null, true);
 
   const isTest = process.env.NODE_ENV === "test";
   const localDevEnvs =
@@ -17,7 +18,7 @@ const checkAllowedOrigins: CorsOptions["origin"] = (origin, callback) => {
     : callback(new Error(`Not allowed by CORS. Origin: ${origin}`));
 };
 
-export const defaultCorsOptions: CorsOptions = {
+const apiCors = cors({
   credentials: true,
   methods: "*",
   origin: checkAllowedOrigins,
@@ -28,6 +29,45 @@ export const defaultCorsOptions: CorsOptions = {
     "Origin",
     "X-Requested-With",
   ],
+});
+
+const skipApiCors = ["/proxy/ordnance-survey"];
+
+/**
+ * App-level CORS middleware. Applies {@link apiCors} to all routes except those
+ * that define their own CORS policy (e.g. OS proxy routes which permit null origins).
+ */
+export const defaultCors: RequestHandler = (req, res, next) => {
+  if (skipApiCors.some((path) => req.path.startsWith(path))) return next();
+  return apiCors(req, res, next);
 };
 
-export const apiCors = cors(defaultCorsOptions);
+/**
+ * Extends {@link checkAllowedOrigins} to additionally permit null origins.
+ *
+ * Map tile requests come from two sources that don't require credentials -
+ * - file:// HTML reports (e.g. generated overview.html) — browsers assign these a "null" origin
+ * - The public-facing PlanX interface
+ *
+ * Null origins are safe to allow here specifically because credentials are disabled
+ */
+const checkAllowedOriginsForOSRequests: CorsOptions["origin"] = (
+  origin,
+  callback,
+) => {
+  if (!origin || origin === "null") return callback(null, true);
+  return checkAllowedOrigins(origin, callback);
+};
+
+export const osCors = cors({
+  credentials: false,
+  methods: "*",
+  origin: checkAllowedOriginsForOSRequests,
+  allowedHeaders: [
+    "Accept",
+    "Authorization",
+    "Content-Type",
+    "Origin",
+    "X-Requested-With",
+  ],
+});
