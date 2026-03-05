@@ -427,7 +427,7 @@ export = async () => {
   });
 
   // ------------------- LocalPlanning.services
-  createLocalPlanningServices(sslCert);
+  createLocalPlanningServices(sslCertValidation.certificateArn);
 
   return {
     customDomains,
