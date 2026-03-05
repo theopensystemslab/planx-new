@@ -315,6 +315,7 @@ select_permissions:
         - settings
         - slug
         - status
+        - submission_email_id
         - summary
         - team_id
         - templated_from
@@ -391,6 +392,7 @@ select_permissions:
         - settings
         - slug
         - status
+        - submission_email_id
         - summary
         - team_id
         - templated_from
@@ -454,6 +456,7 @@ select_permissions:
         - settings
         - slug
         - status
+        - submission_email_id
         - summary
         - team_id
         - templated_from
@@ -580,6 +583,7 @@ update_permissions:
         - settings
         - slug
         - status
+        - submission_email_id
         - summary
         - team_id
         - templated_from
@@ -619,6 +623,7 @@ update_permissions:
         - settings
         - slug
         - status
+        - submission_email_id
         - summary
         - team_id
         - templated_from
