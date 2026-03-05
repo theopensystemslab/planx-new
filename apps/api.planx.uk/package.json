@@ -42,7 +42,7 @@
     "jsonwebtoken": "^9.0.3",
     "lodash": "^4.17.23",
     "mime": "^4.1.0",
-    "multer": "^2.1.0",
+    "multer": "^2.1.1",
     "nanoid": "^5.1.6",
     "notifications-node-client": "^8.3.0",
     "openid-client": "^5.7.1",
