@@ -80,7 +80,6 @@ const createFlow = async ({
   summary,
   description,
   limitations,
-  submissionEmailId,
 }: {
   teamId: number;
   slug: string;
@@ -92,7 +91,6 @@ const createFlow = async ({
   summary?: string;
   description?: string;
   limitations?: string;
-  submissionEmailId?: string;
 }) => {
   const { client: $client } = getClient();
   const userId = userContext.getStore()?.user?.sub;
@@ -115,7 +113,6 @@ const createFlow = async ({
           $summary: String
           $description: String
           $limitations: String
-          $submission_email_id: uuid
         ) {
           insertFlow: insert_flows_one(
             object: {
@@ -130,7 +127,6 @@ const createFlow = async ({
               summary: $summary
               description: $description
               limitations: $limitations
-              submission_email_id: $submission_email_id
             }
           ) {
             id
@@ -148,7 +144,6 @@ const createFlow = async ({
         summary: summary,
         description: description,
         limitations: limitations,
-        submission_email_id: submissionEmailId,
       },
     );
 
