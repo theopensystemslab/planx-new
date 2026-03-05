@@ -370,8 +370,12 @@ export = async () => {
       subjectAlternativeNames: [
         // Root
         `${DOMAIN}`,
-        // Wildcard / subdomains
-        `*.${DOMAIN}`,
+        // Subdomains
+        `api.${DOMAIN}`,
+        `hasura.${DOMAIN}`,
+        `sharedb.${DOMAIN}`,
+        `metabase.${DOMAIN}`,
+        ...(env === "staging" ? [`localplanning.${DOMAIN}`] : []),
       ],
     },
     {
