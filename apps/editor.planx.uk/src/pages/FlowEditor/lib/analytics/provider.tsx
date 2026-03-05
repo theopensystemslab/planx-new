@@ -115,11 +115,17 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     state.id,
     state.flow,
   ]);
-  const isAnalyticsEnabled =
-    new URL(window.location.href).searchParams.get("analytics") && // ensure null param isn't treated as !== "false"
-    new URL(window.location.href).searchParams.get("analytics") !== "false";
+
+  // Analytics should be disabled
+  //   - on `/published?analytics=false`
+  //   - always on `/draft` or `/preview`
+  // TODO fix `standalone` or consider scoping <AnalyticsProvider> directly to <SaveAndReturnLayout>
+  const isAnalyticsDisabled =
+    new URL(window.location.href).searchParams.get("analytics") === "false" ||
+    window.location.pathname.endsWith("/draft") ||
+    window.location.pathname.endsWith("/preview");
   const shouldTrackAnalytics =
-    previewEnvironment === "standalone" && isAnalyticsEnabled;
+    previewEnvironment === "standalone" && !isAnalyticsDisabled;
   const previousBreadcrumbs = usePrevious(breadcrumbs);
 
   const trackVisibilityChange = () => {
