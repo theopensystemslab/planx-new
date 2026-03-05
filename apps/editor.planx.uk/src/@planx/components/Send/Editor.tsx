@@ -163,7 +163,7 @@ const SendComponent: React.FC<Props> = (props) => {
       await updateFlowSubmissionEmail({
         variables: {
           flowId: id,
-          emailId: newValues.submissionEmailId,
+          submissionEmailId: newValues.submissionEmailId,
         },
       });
 

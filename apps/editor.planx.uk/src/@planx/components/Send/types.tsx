@@ -12,14 +12,14 @@ export interface GetFlowEmailIdQueryVariables {
 }
 
 export interface UpdateFlowSubmissionEmailMutation {
-  UPDATE_FLOW_SUBMISSION_EMAIL_IDs: {
+  update_flow_submission_email_id: {
     affected_rows: number;
   };
 }
 
 export interface UpdateFlowSubmissionEmailMutationVariables {
   flowId: string;
-  emailId: string;
+  submissionEmailId: string;
 }
 
 export interface GetTeamSubmissionIntegrationsQuery {
