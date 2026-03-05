@@ -53,11 +53,11 @@ const createLogsBucket = (domain: string) => {
 
 export const createLPSCertificates = (
   domain: string,
-  planXCert: aws.acm.Certificate
+  planXCertArn: pulumi.Output<string>,
 ): aws.acm.Certificate["arn"] => {
   // On the staging environment, LPS is hosted on a subdomain of planx.dev
   // Do not proceed to create an ACM record
-  if (env === "staging") return planXCert.arn;
+  if (env === "staging") return planXCertArn;
 
   // https://docs.aws.amazon.com/acm/latest/userguide/setup-caa.html
   const caaRecordRoot = new cloudflare.DnsRecord(`lps-caa-record-root`, {
@@ -162,7 +162,7 @@ const createCNAMERecords = (domain: string, cdn: aws.cloudfront.Distribution) =>
   }
 }
 
-export const createLocalPlanningServices = (planXCert: aws.acm.Certificate) => {
+export const createLocalPlanningServices = (planXCertArn: pulumi.Output<string>) => {
   const domain = config.require("lps-domain");
   const oai = new aws.cloudfront.OriginAccessIdentity("lpsOAI", {
     comment: `OAI for LPS CloudFront distribution`,
@@ -171,7 +171,7 @@ export const createLocalPlanningServices = (planXCert: aws.acm.Certificate) => {
   const lpsBucket = createLPSBucket(domain, oai);
   const logsBucket = createLogsBucket(domain);
 
-  const acmCertificateArn = createLPSCertificates(domain, planXCert);
+  const acmCertificateArn = createLPSCertificates(domain, planXCertArn);
 
   const cdn = createCdn({
     bucket: lpsBucket,
