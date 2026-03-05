@@ -359,46 +359,48 @@ export = async () => {
     }
   })();
 
+  const domains = [
+    `${DOMAIN}`,
+    `api.${DOMAIN}`,
+    `hasura.${DOMAIN}`,
+    `sharedb.${DOMAIN}`,
+    `metabase.${DOMAIN}`,
+    ...(env === "staging" ? [`localplanning.${DOMAIN}`] : []),
+  ];
+
   // note the mix of AWS and Cloudflare infra being provisioned here
   // TODO: should this be provisioned in the certs layer, or all consolidated here? should that be run in CI? etc. 
   const sslCert = new aws.acm.Certificate(
     `sslCert`,
     {
-      // XXX: For wildcards remember that *.example.com will only cover a single level subdomain such as www.example.com not secondary levels such as beta.www.example.com.
-      domainName: `${DOMAIN}`,
+      domainName: domains[0], // Root domain
       validationMethod: "DNS",
-      subjectAlternativeNames: [
-        // Root
-        `${DOMAIN}`,
-        // Subdomains
-        `api.${DOMAIN}`,
-        `hasura.${DOMAIN}`,
-        `sharedb.${DOMAIN}`,
-        `metabase.${DOMAIN}`,
-        ...(env === "staging" ? [`localplanning.${DOMAIN}`] : []),
-      ],
+      subjectAlternativeNames: domains.slice(1), // All the subdomains
     },
     {
       provider: usEast1,
-      // XXX: These records are set up upstream in the `certificates` stack.
-      //   dependsOn: [caaRecordRoot, caaRecordWildcard],
     }
   );
-  const sslCertValidationRecord = new cloudflare.DnsRecord(
-    `sslCertValidationRecord`,
-    {
-      name: sslCert.domainValidationOptions[0].resourceRecordName,
-      ttl: 3600,
-      type: sslCert.domainValidationOptions[0].resourceRecordType,  // "CNAME"
-      content: sslCert.domainValidationOptions[0].resourceRecordValue,
-      zoneId: config.requireSecret("cloudflare-zone-id"),
-    }
-  );
+
+  const validationRecords = domains.map((_domain, index) => {
+    return new cloudflare.DnsRecord(
+      `sslCertValidationRecord-${index}`,
+      {
+        name: sslCert.domainValidationOptions[index].resourceRecordName,
+        type: sslCert.domainValidationOptions[index].resourceRecordType,
+        content: sslCert.domainValidationOptions[index].resourceRecordValue,
+        zoneId: config.requireSecret("cloudflare-zone-id"),
+        ttl: 3600,
+        proxied: false,
+      }
+    );
+  });
+
   const sslCertValidation = new aws.acm.CertificateValidation(
     `sslCertValidation`,
     {
       certificateArn: sslCert.arn,
-      validationRecordFqdns: [sslCertValidationRecord.name],
+      validationRecordFqdns: validationRecords.map(record => record.name),
     },
     { provider: usEast1 }
   );
