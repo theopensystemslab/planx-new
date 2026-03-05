@@ -116,7 +116,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     state.flow,
   ]);
   const isAnalyticsEnabled =
-    new URL(window.location.href).searchParams.get("analytics") && // ensure null param isn't treated as !== "false"
+    // Analytics are enabled when the `analytics` search param is fully omitted (or manually set to any !== `false` value, but this never happens automatically)
     new URL(window.location.href).searchParams.get("analytics") !== "false";
   const shouldTrackAnalytics =
     previewEnvironment === "standalone" && isAnalyticsEnabled;
