@@ -116,10 +116,10 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     state.flow,
   ]);
   // Analytics are enabled when the `analytics` search param is fully omitted (or manually set to any !== `false` value, but this never happens automatically)
-  const isAnalyticsEnabled =
-    new URL(window.location.href).searchParams.get("analytics") !== "false";
+  const isAnalyticsDisabled =
+    new URL(window.location.href).searchParams.get("analytics") === "false";
   const shouldTrackAnalytics =
-    previewEnvironment === "standalone" && isAnalyticsEnabled;
+    previewEnvironment === "standalone" && !isAnalyticsDisabled;
   const previousBreadcrumbs = usePrevious(breadcrumbs);
 
   const trackVisibilityChange = () => {
