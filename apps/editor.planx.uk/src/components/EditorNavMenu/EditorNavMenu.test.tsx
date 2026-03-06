@@ -108,7 +108,7 @@ describe("teamLayoutRoutes", () => {
 
     const { getAllByRole } = await setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(11);
+    expect(menuItems).toHaveLength(12);
     expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
   });
 
@@ -117,7 +117,7 @@ describe("teamLayoutRoutes", () => {
 
     const { getAllByRole } = await setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(11);
+    expect(menuItems).toHaveLength(12);
     expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
     expect(within(menuItems[1]).getByText("Team settings")).toBeInTheDocument();
   });
@@ -196,6 +196,7 @@ describe("flowLayoutRoutes", () => {
     expect(menuItems).toHaveLength(5);
     expect(getByLabelText("Submissions")).toBeInTheDocument();
     expect(getByLabelText("Feedback")).toBeInTheDocument();
+    expect(getByLabelText("Analytics")).toBeInTheDocument();
   });
 });
 
