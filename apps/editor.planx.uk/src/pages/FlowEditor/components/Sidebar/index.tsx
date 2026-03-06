@@ -191,6 +191,7 @@ const Sidebar: React.FC = React.memo(() => {
                       rel="noopener noreferrer"
                       color="inherit"
                       preload={false}
+                      aria-label="Open draft flow"
                     >
                       <OpenInNewOffIcon />
                     </CustomLink>
@@ -207,6 +208,7 @@ const Sidebar: React.FC = React.memo(() => {
                     rel="noopener noreferrer"
                     color="inherit"
                     preload={false}
+                    aria-label="Open preview of changes to publish"
                   >
                     <OpenInNewIcon />
                   </CustomLink>
@@ -226,6 +228,7 @@ const Sidebar: React.FC = React.memo(() => {
                       rel="noopener noreferrer"
                       color="inherit"
                       preload={false}
+                      aria-label="Open published flow"
                     >
                       <LanguageIcon />
                     </CustomLink>
