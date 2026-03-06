@@ -12,7 +12,6 @@ CREATE TEMPORARY TABLE sync_team_settings (
   external_planning_site_name text,
   boundary_url text,
   boundary_bbox jsonb,
-  submission_email text,
   has_article4_schema boolean,
   is_trial boolean
 );
