@@ -49,6 +49,13 @@ function EditorNavMenu() {
       state.getTeam(),
     ],
   );
+  const environment = import.meta.env.VITE_APP_ENV;
+
+  const teamAnalyticsLink =
+    environment === "production"
+      ? `https://metabase.editor.planx.uk/public/dashboard/74337c9d-389d-4cb1-a65a-ad7e16428abf?date=&tab=641-key-figures&team_slug=${teamSlug}`
+      : undefined;
+
   const referenceCode = team?.settings?.referenceCode;
   const { url: lpsBaseUrl } = useLPS();
 
@@ -165,6 +172,13 @@ function EditorNavMenu() {
           route: referenceCode ? `${lpsBaseUrl}/${teamSlug}` : `#`,
           accessibleBy: "*",
           disabled: !referenceCode,
+        },
+        { 
+          title: "Analytics",
+          Icon: LeaderboardIcon,
+          route: teamAnalyticsLink ? teamAnalyticsLink : `#`,
+          accessibleBy: ["platformAdmin", "teamEditor", "analyst"],
+          disabled: !teamAnalyticsLink,
         },
       ],
     },
