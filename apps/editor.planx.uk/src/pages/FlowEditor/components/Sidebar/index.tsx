@@ -1,18 +1,26 @@
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import CloseIcon from "@mui/icons-material/Close";
+import HelpIcon from "@mui/icons-material/Help";
 import LanguageIcon from "@mui/icons-material/Language";
+import NorthEastIcon from "@mui/icons-material/NorthEast";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
-import MuiLink from "@mui/material/Link";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import ToggleButton from "@mui/material/ToggleButton";
 import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 import { useParams, useRouteContext, useRouter } from "@tanstack/react-router";
 import React, { useState } from "react";
 import { useLocation } from "react-use";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Permission from "ui/editor/Permission";
 import StyledTab from "ui/editor/StyledTab";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";
@@ -88,25 +96,91 @@ const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
 
 const Header = styled("header")(({ theme }) => ({
   padding: theme.spacing(1, 2),
-  "& input": {
-    flex: "1",
-    padding: "5px",
-    marginRight: "5px",
-    background: theme.palette.common.white,
-    border: "1px solid ${theme.palette.border.main}",
-    borderWidth: "1px",
+}));
+
+const ViewServiceRow = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  gap: theme.spacing(1),
+  flexWrap: "wrap",
+}));
+
+const ViewServiceButton = styled(CustomLink)(({ theme }) => ({
+  display: "inline-flex",
+  alignItems: "center",
+  gap: theme.spacing(0.5),
+  padding: theme.spacing(0.5, 0.75),
+  fontSize: "0.8125rem",
+  fontWeight: 600,
+  color: theme.palette.text.primary,
+  textDecoration: "none",
+  border: `1px solid ${theme.palette.border.main}`,
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: theme.palette.background.paper,
+  cursor: "pointer",
+  transition: "background-color 0.15s ease",
+  "&:hover": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  "& svg": {
+    fontSize: "0.875rem",
+  },
+})) as typeof CustomLink;
+
+const DisabledViewServiceButton = styled(Box)(({ theme }) => ({
+  display: "inline-flex",
+  alignItems: "center",
+  gap: theme.spacing(0.5),
+  padding: theme.spacing(0.5, 1),
+  fontSize: "0.8125rem",
+  fontWeight: 600,
+  color: theme.palette.text.disabled,
+  border: `1px solid ${theme.palette.border.main}`,
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: theme.palette.background.paper,
+  opacity: 0.6,
+  cursor: "default",
+  "& svg": {
+    fontSize: "0.875rem",
   },
 }));
 
-const Icons = styled(Box)(() => ({
-  display: "flex",
+const HelpLink = styled("button")(({ theme }) => ({
+  display: "inline-flex",
   alignItems: "center",
-  width: "100%",
+  gap: theme.spacing(0.5),
+  fontSize: "0.875rem",
+  color: theme.palette.primary.main,
+  textDecoration: "none",
+  borderWidth: 0,
+  borderBottom: `2px dotted ${theme.palette.text.secondary}`,
+  background: "none",
+  cursor: "pointer",
+  padding: "0 0 1px 0",
+  fontFamily: "inherit",
+  marginLeft: "auto",
+  "&:hover": {
+    color: theme.palette.text.primary,
+    borderBottomColor: theme.palette.text.primary,
+  },
   "& svg": {
-    cursor: "pointer",
-    opacity: "0.7",
-    margin: "6px 4px 1px 4px",
-    fontSize: "1.2rem",
+    fontSize: "1rem",
+  },
+}));
+
+const RouteExplanation = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "flex-start",
+  gap: theme.spacing(1.5),
+  padding: theme.spacing(2, 3, 2, 1.5),
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: theme.palette.background.default,
+  border: `1px solid ${theme.palette.border.light}`,
+  "& > svg": {
+    fontSize: "1.5rem",
+    marginTop: "2px",
+    color: theme.palette.text.primary,
+    flexShrink: 0,
   },
 }));
 
@@ -141,6 +215,7 @@ const Sidebar: React.FC = React.memo(() => {
 
   const defaultActiveTab = isTemplatedFrom ? "Customise" : "PreviewBrowser";
   const [activeTab, setActiveTab] = useState<SidebarTabs>(defaultActiveTab);
+  const [helpOpen, setHelpOpen] = useState(false);
   const { team } = useParams({ from: "/_authenticated/app/$team/$flow" });
   const { rootFlow } = useRouteContext({
     from: "/_authenticated/app/$team/$flow",
@@ -178,74 +253,203 @@ const Sidebar: React.FC = React.memo(() => {
             {showSidebar ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </StyledToggleButton>
           <Header>
-            <Icons>
-              <input type="text" disabled value={previewURL} />
+            <ViewServiceRow>
+              <Typography
+                variant="body3"
+                fontWeight="FONT_WEIGHT_SEMIBOLD"
+                sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+              >
+                View service:
+              </Typography>
 
               <Permission.IsPlatformAdmin>
-                <Tooltip title="Open draft flow">
-                  <Box component="span">
-                    <CustomLink
+                <Tooltip title="Open draft service">
+                  <span>
+                    <ViewServiceButton
                       to="/$team/$flow/draft"
                       params={{ team, flow: rootFlow }}
                       target="_blank"
                       rel="noopener noreferrer"
-                      color="inherit"
                       preload={false}
-                      aria-label="Open draft flow"
                     >
-                      <OpenInNewOffIcon />
-                    </CustomLink>
-                  </Box>
+                      Draft
+                      <NorthEastIcon />
+                    </ViewServiceButton>
+                  </span>
                 </Tooltip>
               </Permission.IsPlatformAdmin>
 
               <Tooltip title="Open preview of changes to publish">
-                <Box component="span">
-                  <CustomLink
+                <span>
+                  <ViewServiceButton
                     to="/$team/$flow/preview"
                     params={{ team, flow: rootFlow }}
                     target="_blank"
                     rel="noopener noreferrer"
-                    color="inherit"
                     preload={false}
                     aria-label="Open preview of changes to publish"
                   >
-                    <OpenInNewIcon />
-                  </CustomLink>
-                </Box>
+                    Preview
+                    <NorthEastIcon />
+                  </ViewServiceButton>
+                </span>
               </Tooltip>
 
               {isFlowPublished ? (
-                <Tooltip title="Open published flow">
-                  <Box component="span">
-                    <CustomLink
+                <Tooltip title="Open published service">
+                  <span>
+                    <ViewServiceButton
                       to="/$team/$flow/published"
-                      search={{
-                        analytics: false,
-                      }}
+                      search={{ analytics: false }}
                       params={{ team, flow: rootFlow }}
                       target="_blank"
                       rel="noopener noreferrer"
-                      color="inherit"
                       preload={false}
-                      aria-label="Open published flow"
                     >
-                      <LanguageIcon />
-                    </CustomLink>
-                  </Box>
+                      Published
+                      <NorthEastIcon />
+                    </ViewServiceButton>
+                  </span>
                 </Tooltip>
               ) : (
-                <Tooltip title="Flow not yet published">
-                  <Box>
-                    <MuiLink component={"button"} disabled aria-disabled={true}>
-                      <LanguageIcon />
-                    </MuiLink>
-                  </Box>
+                <Tooltip title="Service not yet published">
+                  <span>
+                    <DisabledViewServiceButton>
+                      Published
+                      <NorthEastIcon />
+                    </DisabledViewServiceButton>
+                  </span>
                 </Tooltip>
               )}
-            </Icons>
+
+              <HelpLink
+                onClick={() => setHelpOpen(true)}
+                aria-label="Help: understand service views"
+              >
+                <HelpIcon />
+                Help
+              </HelpLink>
+            </ViewServiceRow>
+
             <CheckForChangesToPublishButton previewURL={previewURL} />
           </Header>
+
+          <Dialog
+            open={helpOpen}
+            onClose={() => setHelpOpen(false)}
+            maxWidth="sm"
+            fullWidth
+            aria-labelledby="service-views-help-title"
+          >
+            <DialogTitle
+              id="service-views-help-title"
+              component="h1"
+              variant="h3"
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              Understanding service views
+              <IconButton
+                onClick={() => setHelpOpen(false)}
+                size="small"
+                aria-label="Close"
+              >
+                <CloseIcon />
+              </IconButton>
+            </DialogTitle>
+            <DialogContent
+              sx={{ display: "flex", flexDirection: "column", gap: 2, pb: 3 }}
+            >
+              <Typography variant="body1">
+                There are multiple ways to view your service, each showing a
+                different stage of your work.
+              </Typography>
+
+              <Permission.IsPlatformAdmin>
+                <RouteExplanation>
+                  <OpenInNewOffIcon fontSize="large" />
+                  <Box>
+                    <Typography variant="h3" component="h2" gutterBottom>
+                      Draft
+                    </Typography>
+                    <Typography variant="body2" sx={{ mb: 1.5 }}>
+                      The current working version of your service, including any
+                      unsaved changes. Draft service view is only accessible to
+                      platform admins.
+                    </Typography>
+                    <ViewServiceButton
+                      to="/$team/$flow/draft"
+                      params={{ team, flow: rootFlow }}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      preload={false}
+                    >
+                      Open draft
+                      <NorthEastIcon />
+                    </ViewServiceButton>
+                  </Box>
+                </RouteExplanation>
+              </Permission.IsPlatformAdmin>
+
+              <RouteExplanation>
+                <OpenInNewIcon />
+                <Box>
+                  <Typography variant="h3" component="h2" gutterBottom>
+                    Preview
+                  </Typography>
+                  <Typography variant="body2" sx={{ mb: 1.5 }}>
+                    A preview of the changes that are staged to be published.
+                    Use this to review your service before pushing it live.
+                  </Typography>
+                  <ViewServiceButton
+                    to="/$team/$flow/preview"
+                    params={{ team, flow: rootFlow }}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    preload={false}
+                  >
+                    Open preview
+                    <NorthEastIcon />
+                  </ViewServiceButton>
+                </Box>
+              </RouteExplanation>
+
+              <RouteExplanation>
+                <LanguageIcon />
+                <Box>
+                  <Typography variant="h3" component="h2" gutterBottom>
+                    Published
+                  </Typography>
+                  <Typography variant="body2" sx={{ mb: 1.5 }}>
+                    The live version of your service that is publicly
+                    accessible. This reflects the last set of changes that were
+                    published.
+                  </Typography>
+                  {isFlowPublished ? (
+                    <ViewServiceButton
+                      to="/$team/$flow/published"
+                      search={{ analytics: false }}
+                      params={{ team, flow: rootFlow }}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      preload={false}
+                    >
+                      Open published
+                      <NorthEastIcon />
+                    </ViewServiceButton>
+                  ) : (
+                    <Typography variant="body2" color="text.disabled">
+                      Not yet published
+                    </Typography>
+                  )}
+                </Box>
+              </RouteExplanation>
+            </DialogContent>
+          </Dialog>
+
           <TabList>
             <Tabs onChange={handleChange} value={activeTab} aria-label="">
               {isTemplatedFrom && (
