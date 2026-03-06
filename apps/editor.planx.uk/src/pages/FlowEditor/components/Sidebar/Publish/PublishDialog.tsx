@@ -224,7 +224,12 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
           </Box>
         </DialogContent>
         <DialogFooterActions>
-          <Button onClick={handleBack}>Back</Button>
+          <Button
+            onClick={handleBack}
+            sx={{ backgroundColor: "background.default" }}
+          >
+            Back
+          </Button>
           <Button
             data-testid="next-step-publish-button"
             color="primary"
@@ -325,7 +330,12 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
           )}
         </DialogContent>
         <DialogFooterActions>
-          <Button onClick={handleBack}>Back</Button>
+          <Button
+            onClick={handleBack}
+            sx={{ backgroundColor: "background.default" }}
+          >
+            Back
+          </Button>
           <Button
             data-testid="publish-button"
             color="primary"
@@ -353,6 +363,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
         sx: {
           height: "100%",
           overflowY: "hidden",
+          backgroundColor: (theme) => theme.palette.secondary.main,
         },
       }}
     >
@@ -384,7 +395,12 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
           </Step>
         ))}
       </Stepper>
-      <Box sx={{ overflowY: "scroll" }}>
+      <Box
+        sx={{
+          overflowY: "scroll",
+          backgroundColor: (theme) => theme.palette.background.paper,
+        }}
+      >
         {
           {
             0: <ReviewStep />,
