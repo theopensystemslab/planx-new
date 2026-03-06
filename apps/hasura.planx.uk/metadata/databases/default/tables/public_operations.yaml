@@ -77,8 +77,11 @@ select_permissions:
         - created_at
         - updated_at
         - flow_id
-      filter: {}
-    comment: ""
+      filter:
+        flow:
+          creator_id:
+            _eq: x-hasura-user-id
+    comment: Demo users can only select their own operations
   - role: platformAdmin
     permission:
       columns:

@@ -14,8 +14,10 @@ select_permissions:
         - type
         - created_at
         - flow_id
-      filter: {}
-    comment: ""
+      filter:
+        actor_id:
+          _eq: x-hasura-user-id
+    comment: Demo users can only see their own edit history
   - role: platformAdmin
     permission:
       columns:

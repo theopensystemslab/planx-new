@@ -88,7 +88,10 @@ select_permissions:
         - is_platform_admin
         - last_name
         - updated_at
-      filter: {}
+      filter:
+        id:
+          _eq: x-hasura-user-id
+    comment: Demo users can only select their own user
   - role: platformAdmin
     permission:
       columns:
