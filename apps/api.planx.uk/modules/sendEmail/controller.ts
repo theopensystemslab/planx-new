@@ -12,6 +12,8 @@ import type {
   SingleApplicationEmail,
 } from "./types.js";
 import { sendEmail } from "../../lib/resend/index.js";
+import { $api } from "../../client/index.js";
+import { gql } from "graphql-request";
 
 export const singleApplicationEmailController: SingleApplicationEmail = async (
   _req,
@@ -84,10 +86,9 @@ export const resendEmailController: ResendEmail = async (_req, res, next) => {
   const { payload } = res.locals.parsedReq.body;
   const { template } = res.locals.parsedReq.params;
 
-  const isProduction = process.env.APP_ENVIRONMENT === "production";
-  if (!isProduction) {
+  if (!process.env.RESEND_BASE_URL) {
     return res.status(200).send({
-      message: `Non-production environment: skipping email send template: ${template}`,
+      message: `Skipping ${template} email: RESEND_BASE_URL not configured`,
     });
   }
 
@@ -98,7 +99,8 @@ export const resendEmailController: ResendEmail = async (_req, res, next) => {
     });
   }
   try {
-    const response = await sendEmail({ ...payload, template });
+    const isTrial = await getTeamIsTrial(payload.defaultTeamId);
+    const response = await sendEmail({ ...payload, template, isTrial });
     return res.status(200).send(response);
   } catch (error) {
     return next(
@@ -108,6 +110,29 @@ export const resendEmailController: ResendEmail = async (_req, res, next) => {
       }),
     );
   }
+};
+
+interface GetTeamSettings {
+  teamSettings: {
+    isTrial: boolean;
+  }[];
+}
+
+const getTeamIsTrial = async (teamId: number | null): Promise<boolean> => {
+  if (!teamId) return false;
+
+  const { teamSettings } = await $api.client.request<GetTeamSettings>(
+    gql`
+      query GetTeamIsTrial($teamId: Int!) {
+        teamSettings: team_settings(where: { team_id: { _eq: $teamId } }) {
+          isTrial: is_trial
+        }
+      }
+    `,
+    { teamId },
+  );
+
+  return teamSettings[0]?.isTrial ?? false;
 };
 
 const emailErrorHandler = (

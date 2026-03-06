@@ -13,7 +13,13 @@ const FROM_ADDRESS =
 export const sendEmail = async (
   payload: TemplateParams & { template: ResendTemplate },
 ): Promise<{ message: string }> => {
-  const { template: templateName, email, firstName, lastName } = payload;
+  const {
+    template: templateName,
+    email,
+    firstName,
+    lastName,
+    isTrial,
+  } = payload;
   const template = templateRegistry[templateName];
 
   if (!template) {
@@ -24,7 +30,7 @@ export const sendEmail = async (
     from: FROM_ADDRESS,
     to: email,
     subject: template.subject,
-    html: template.html({ firstName, lastName, email }),
+    html: template.html({ firstName, lastName, email, isTrial }),
   });
 
   if (error) {

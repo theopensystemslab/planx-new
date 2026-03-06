@@ -4,6 +4,7 @@ export interface TemplateParams {
   firstName: string;
   lastName: string;
   email: string;
+  isTrial?: boolean;
 }
 
 export interface EmailTemplate {

@@ -2,9 +2,10 @@ import type { EmailTemplate } from "./index.js";
 
 export const welcomeTemplate: EmailTemplate = {
   subject: "Welcome to Plan✕",
-  html: ({ firstName }) => `
+  html: ({ firstName, isTrial }) => `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 16px; color: #37352f; font-size: 15px; line-height: 1.6;">
       <h1>Welcome to the Plan✕ Editor, ${firstName}!</h1>
+      <p><strong>Subscription Status: ${isTrial ? "Trial" : "Active"}</strong></p>
       <p>We're excited to have you on board!</p>
       <p>This is where you can build, customise and manage your local digital services, receive submissions, and view analytics for your services.</p>
 
