@@ -183,48 +183,56 @@ const Sidebar: React.FC = React.memo(() => {
 
               <Permission.IsPlatformAdmin>
                 <Tooltip title="Open draft flow">
-                  <CustomLink
-                    to="/$team/$flow/draft"
-                    params={{ team, flow: rootFlow }}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    color="inherit"
-                    preload={false}
-                  >
-                    <OpenInNewOffIcon />
-                  </CustomLink>
+                  <Box component="span">
+                    <CustomLink
+                      to="/$team/$flow/draft"
+                      params={{ team, flow: rootFlow }}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      color="inherit"
+                      preload={false}
+                      aria-label="Open draft flow"
+                    >
+                      <OpenInNewOffIcon />
+                    </CustomLink>
+                  </Box>
                 </Tooltip>
               </Permission.IsPlatformAdmin>
 
               <Tooltip title="Open preview of changes to publish">
-                <CustomLink
-                  to="/$team/$flow/preview"
-                  params={{ team, flow: rootFlow }}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  color="inherit"
-                  preload={false}
-                >
-                  <OpenInNewIcon />
-                </CustomLink>
-              </Tooltip>
-
-              {isFlowPublished ? (
-                // TODO: Tooltip + CustomLink doesn't work
-                <Tooltip title="Open published flow">
+                <Box component="span">
                   <CustomLink
-                    to="/$team/$flow/published"
-                    search={{
-                      analytics: false,
-                    }}
+                    to="/$team/$flow/preview"
                     params={{ team, flow: rootFlow }}
                     target="_blank"
                     rel="noopener noreferrer"
                     color="inherit"
                     preload={false}
+                    aria-label="Open preview of changes to publish"
                   >
-                    <LanguageIcon />
+                    <OpenInNewIcon />
                   </CustomLink>
+                </Box>
+              </Tooltip>
+
+              {isFlowPublished ? (
+                <Tooltip title="Open published flow">
+                  <Box component="span">
+                    <CustomLink
+                      to="/$team/$flow/published"
+                      search={{
+                        analytics: false,
+                      }}
+                      params={{ team, flow: rootFlow }}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      color="inherit"
+                      preload={false}
+                      aria-label="Open published flow"
+                    >
+                      <LanguageIcon />
+                    </CustomLink>
+                  </Box>
                 </Tooltip>
               ) : (
                 <Tooltip title="Flow not yet published">
