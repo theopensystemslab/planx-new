@@ -11,7 +11,10 @@ export const useAccessTokenAuthSchema = z.object({
 });
 
 interface AuthFailure {
-  error: "INVALID_ACCESS_TOKEN" | "REVOKED_ACCESS_TOKEN" | "EXPIRED_ACCESS_TOKEN"
+  error:
+    | "INVALID_ACCESS_TOKEN"
+    | "REVOKED_ACCESS_TOKEN"
+    | "EXPIRED_ACCESS_TOKEN";
 }
 
 type DownloadApplicationLocals = {
