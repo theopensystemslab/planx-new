@@ -14,10 +14,11 @@ import { getSubmissionsController, getSubmissionsSchema } from "./fme/index.js";
 import { sendToGOSSController } from "./goss/controller.js";
 import { sendToIdoxNexus } from "./idox/nexus.js";
 import { sendToS3 } from "./s3/index.js";
+import { submissionHTMLController } from "./submission/html/controller.js";
+import { submissionSchema } from "./submission/schema.js";
+import { submissionZipController } from "./submission/zip/controller.js";
 import { sendIntegrationSchema } from "./types.js";
 import { sendToUniform } from "./uniform/uniform.js";
-import { submissionSchema } from "./submission/schema.js";
-import { submissionController } from "./submission/controller.js";
 
 const router = Router();
 
@@ -75,7 +76,13 @@ router.get(
   "/submission/:sessionId/html",
   useTeamEditorAuth,
   validate(submissionSchema),
-  submissionController,
+  submissionHTMLController,
+);
+router.get(
+  "/submission/:sessionId/zip",
+  useTeamEditorAuth,
+  validate(submissionSchema),
+  submissionZipController,
 );
 
 export default router;
