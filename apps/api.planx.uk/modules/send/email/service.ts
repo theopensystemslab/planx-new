@@ -5,6 +5,9 @@ import type {
   TeamContactSettings,
 } from "@opensystemslab/planx-core/types";
 import type { TemplateRegistry } from "../../../lib/notify/templates/index.js";
+import { addDays } from "date-fns";
+import { ServerError } from "../../../errors/serverError.js";
+import { DAYS_UNTIL_EXPIRY } from "../../saveAndReturn/service/utils.js";
 
 interface GetTeamEmailSettings {
   teams: {
@@ -272,3 +275,43 @@ export async function checkEmailAuditTable(sessionId: string): Promise<string> {
 
   return application?.emailApplications[0]?.response;
 }
+
+export const generateAccessToken = async (sessionId: string) => {
+  try {
+    const expiresAt = addDays(Date.now(), DAYS_UNTIL_EXPIRY).toISOString();
+    const token = await insertApplicationAccessTokenRecord(
+      sessionId,
+      expiresAt,
+    );
+    return token;
+  } catch (error) {
+    throw new ServerError({
+      message: `Failed to create access token for sessionId ${sessionId} (email). Error: ${error}`,
+    });
+  }
+};
+
+const insertApplicationAccessTokenRecord = async (
+  sessionId: string,
+  expiresAt: string,
+) => {
+  const {
+    applicationAccessTokens: { token },
+  } = await $api.client.request<{ applicationAccessTokens: { token: string } }>(
+    gql`
+      mutation InsertApplicationAccessToken(
+        $sessionId: uuid!
+        $expiresAt: timestamptz!
+      ) {
+        applicationAccessTokens: insert_application_access_tokens_one(
+          object: { expires_at: $expiresAt, session_id: $sessionId }
+        ) {
+          token
+        }
+      }
+    `,
+    { sessionId, expiresAt },
+  );
+
+  return token;
+};
