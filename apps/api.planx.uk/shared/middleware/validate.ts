@@ -38,15 +38,18 @@ export const validate =
 
 /**
  * Generic RequestHandler for use at the Controller level
- * Accepts a ZodSchema representing the request and a Response type
+ * @param TSchema Zod schema to define Request type and validation rules
+ * @param TResponse Type to describe possible Response values
+ * @param TLocals Optional type to describe Locals - values passed down the middleware chain
  */
 export type ValidatedRequestHandler<
   TSchema extends z.ZodSchema,
   TResponse,
+  TLocals extends Record<string, unknown> = Record<string, never>,
 > = RequestHandler<
   Request["params"],
   TResponse,
   Request["body"],
   Request["query"],
-  { parsedReq: z.infer<TSchema> }
+  { parsedReq: z.infer<TSchema> } & TLocals
 >;
