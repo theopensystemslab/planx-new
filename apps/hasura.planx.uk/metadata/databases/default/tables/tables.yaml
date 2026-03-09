@@ -13,6 +13,7 @@
 - "!include public_analytics_results.yaml"
 - "!include public_analytics_sessions.yaml"
 - "!include public_analytics_summary.yaml"
+- "!include public_application_access_tokens.yaml"
 - "!include public_blpu_codes.yaml"
 - "!include public_bops_applications.yaml"
 - "!include public_email_applications.yaml"

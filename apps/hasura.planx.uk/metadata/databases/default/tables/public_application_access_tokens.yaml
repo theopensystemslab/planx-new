@@ -1,0 +1,43 @@
+table:
+  name: application_access_tokens
+  schema: public
+insert_permissions:
+  - role: api
+    permission:
+      check: {}
+      columns:
+        - created_at
+        - expires_at
+        - last_accessed_at
+        - revoked_at
+        - access_count
+        - session_id
+        - token
+    comment: ""
+select_permissions:
+  - role: api
+    permission:
+      columns:
+        - created_at
+        - expires_at
+        - last_accessed_at
+        - revoked_at
+        - access_count
+        - session_id
+        - token
+      filter: {}
+    comment: ""
+update_permissions:
+  - role: api
+    permission:
+      columns:
+        - created_at
+        - expires_at
+        - last_accessed_at
+        - revoked_at
+        - access_count
+        - session_id
+        - token
+      filter: {}
+      check: {}
+    comment: ""
