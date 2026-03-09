@@ -37,6 +37,11 @@ const parameterGroup = new aws.rds.ParameterGroup("parameterGroup", {
       name: "rds.force_ssl",
       value: "0",
     },
+    {
+      name: "shared_preload_libraries",
+      value: "rdsutils,pg_tle,pg_stat_statements,pg_cron",
+      applyMethod: "pending-reboot",
+    }
   ],
 });
 
