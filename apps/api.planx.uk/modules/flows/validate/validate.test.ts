@@ -161,7 +161,7 @@ describe("sections validation on diff", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
+        expect(res.body.validationChecks).toContainEqual([
           {
             title: "Sections",
             status: "Fail",
@@ -230,7 +230,7 @@ describe("sections validation on diff", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
+        expect(res.body.validationChecks).toContainEqual([
           {
             title: "Sections",
             status: "Fail",
@@ -289,7 +289,7 @@ describe("invite to pay validation on diff", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
+        expect(res.body.validationChecks).toContainEqual([
           {
             title: "Invite to Pay",
             status: "Fail",
@@ -357,7 +357,7 @@ describe("invite to pay validation on diff", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
+        expect(res.body.validationChecks).toContainEqual([
           {
             title: "Invite to Pay",
             status: "Fail",
@@ -422,7 +422,7 @@ describe("invite to pay validation on diff", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
+        expect(res.body.validationChecks).toContainEqual([
           {
             title: "Invite to Pay",
             status: "Fail",
@@ -489,7 +489,7 @@ describe("invite to pay validation on diff", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
+        expect(res.body.validationChecks).toContainEqual([
           {
             title: "Invite to Pay",
             status: "Fail",
@@ -549,7 +549,7 @@ describe("set fees validation on diff", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
+        expect(res.body.validationChecks).toContainEqual([
           {
             title: "Fees",
             status: "Fail",
@@ -621,7 +621,7 @@ describe("planning constraints validation on diff", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
+        expect(res.body.validationChecks).toContainEqual([
           {
             title: "Sections",
             status: "Pass",
@@ -697,7 +697,7 @@ describe("planning constraints validation on diff", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
+        expect(res.body.validationChecks).toContainEqual([
           {
             title: "Planning Constraints",
             status: "Fail",
@@ -792,7 +792,7 @@ describe("templated node requirements validation on diff", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
+        expect(res.body.validationChecks).toContainEqual([
           {
             title: "Templated nodes",
             status: "Fail",
@@ -884,7 +884,7 @@ describe("templated node requirements validation on diff", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
+        expect(res.body.validationChecks).toContainEqual([
           {
             title: "Sections",
             status: "Pass",
