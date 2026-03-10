@@ -1,14 +1,14 @@
-import { getClient } from "../../../client/index.js";
-import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
-import { generateHTMLForSession } from "../../lps/service/generateHTML.js";
-import type { submissionSchema } from "./schema.js";
+import { getClient } from "../../../../client/index.js";
+import type { ValidatedRequestHandler } from "../../../../shared/middleware/validate.js";
+import { generateHTMLForSession } from "../../../lps/service/generateHTML.js";
+import type { submissionSchema } from "./../schema.js";
 
 type SubmissionController = ValidatedRequestHandler<
   typeof submissionSchema,
   string
 >;
 
-export const submissionController: SubmissionController = async (
+export const submissionHTMLController: SubmissionController = async (
   _req,
   res,
   next,

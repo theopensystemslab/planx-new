@@ -219,7 +219,7 @@ paths:
         - fileAPIKeyAuth: []
   /submission/{sessionId}/html:
     get:
-      summary: Get a submission
+      summary: Get an overview of a submission
       description: Get a submission by session ID, as HTML
       tags:
         - send
@@ -239,5 +239,29 @@ paths:
               schema:
                 type: string
                 format: HTML
+          "500":
+            $ref: "#/components/responses/ErrorMessage"
+  /submission/{sessionId}/zip:
+    get:
+      summary: Get all files associated with a submission
+      description: Get a submission by session ID, as a zip folder
+      tags:
+        - send
+      parameters:
+        - in: path
+          name: sessionId
+          required: true
+          schema:
+            format: uuid
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          content:
+            application/octet-stream:
+              schema:
+                type: buffer
+                format: zip
           "500":
             $ref: "#/components/responses/ErrorMessage"
