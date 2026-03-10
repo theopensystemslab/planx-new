@@ -22,7 +22,7 @@ const StyledButtonBase = styled(ButtonBase)<{ teamcolor?: string }>(
     width: "100%",
     borderLeft: `8px solid ${teamcolor || "OliveDrab"}`,
     borderRadius: 3,
-    padding: theme.spacing(1, 1.25),
+    padding: theme.spacing(1, 0.5, 1, 1),
     justifyContent: "space-between",
     // TODO: standardise box shadow across nav menu items
     boxShadow: "0 1px 1.5px 0 rgba(0, 0, 0, 0.2)",
@@ -133,15 +133,21 @@ export const TeamSelect: React.FC<Props> = ({
       <StyledButtonBase
         onClick={handleOpen}
         selected={false}
-        sx={{ ml: 0.5 }}
         teamcolor={currentTeam?.theme.primaryColour}
       >
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 0.25,
+            alignItems: "flex-start",
+          }}
+        >
           <Typography variant="body3" component="span" color="text.secondary">
             Team
           </Typography>
           <Typography
-            variant="body2"
+            variant="body3"
             component="span"
             color="text.primary"
             sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
@@ -149,7 +155,7 @@ export const TeamSelect: React.FC<Props> = ({
             {currentTeam?.name || "Current team"}
           </Typography>
         </Box>
-        <UnfoldMoreIcon sx={{ color: "text.secondary", fontSize: "1.75rem" }} />
+        <UnfoldMoreIcon sx={{ color: "text.secondary", fontSize: "1.5rem" }} />
       </StyledButtonBase>
       <Dialog
         open={open}
@@ -158,8 +164,8 @@ export const TeamSelect: React.FC<Props> = ({
         PaperProps={{
           sx: {
             position: "absolute",
-            top: 5,
-            left: 10,
+            top: "65px",
+            left: "5px",
             m: 0,
             width: "300px",
             maxWidth: "300px",

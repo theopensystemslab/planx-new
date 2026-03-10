@@ -14,12 +14,14 @@ import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
 import { useLocation, useNavigate, useRouter } from "@tanstack/react-router";
+import { th } from "date-fns/locale";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef } from "react";
 import EditorIcon from "ui/icons/Editor";
 import LocalPlanningServicesIcon from "ui/icons/LocalPlanningServices";
 
 import { useLPS } from "../../hooks/useLPS";
+import { TeamSelect } from "./components/TeamSelect";
 import {
   MenuButton,
   MenuItem,
@@ -371,6 +373,14 @@ function EditorNavMenu() {
 
   return (
     <Root compact={compact}>
+      {teamSlug && !compact && (
+        <Box sx={(theme) => ({ padding: theme.spacing(1, 0.5, 0, 0.5) })}>
+          <TeamSelect
+            currentTeamSlug={teamSlug}
+            onTeamSelect={() => undefined}
+          />
+        </Box>
+      )}
       <MenuWrap>
         {visibleSections.map((section, sectionIndex) => (
           <React.Fragment key={sectionIndex}>
