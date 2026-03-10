@@ -1,8 +1,12 @@
+import Typography from "@mui/material/Typography";
 import { useQuery } from "@tanstack/react-query";
 import { useSearch } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import type { APIError } from "lib/api/client";
 import { downloadSubmission } from "lib/api/send/requests";
+import type { DownloadSubmissionResponse } from "lib/api/send/types";
 import PublicLayout from "pages/layout/PublicLayout";
 import StatusPage from "pages/Preview/StatusPage";
 import React from "react";
@@ -30,7 +34,10 @@ function RouteComponent() {
     from: "/_public/_planXDomain/download-submission/",
   });
 
-  const { isPending, isError } = useQuery({
+  const { isPending, isError, error } = useQuery<
+    Blob,
+    APIError<DownloadSubmissionResponse>
+  >({
     queryKey: ["download-submission", token],
     retry: false,
     enabled: !!token,
@@ -48,16 +55,41 @@ function RouteComponent() {
 
   if (!token)
     return (
-      <p>
+      <Typography variant="body2">
         To download your submission files, please use the link provided in your
         email.
-      </p>
+      </Typography>
     );
-  if (isPending) return <p>Preparing your download...</p>;
 
-  // TODO: granular errors
-  if (isError)
-    return <p>This link is invalid or has expired. Please contact support.</p>;
+  if (isPending)
+    return <DelayedLoadingIndicator text="Preparing your download..." />;
 
-  return <p>Your download has started.</p>;
+  if (isError) {
+    // Unhandled API error - throw to ErrorWrapper and Airbrake
+    if (!error.data.error) throw error;
+
+    // Handled API errors
+    switch (error.data.error) {
+      case "EXPIRED_ACCESS_TOKEN":
+        return (
+          <Typography variant="body2">
+            This link has expired, you are unable to download this submission
+          </Typography>
+        );
+      case "INVALID_ACCESS_TOKEN":
+        return (
+          <Typography variant="body2">
+            This link is invalid, please check your email for the correct URL
+          </Typography>
+        );
+      case "REVOKED_ACCESS_TOKEN":
+        return (
+          <Typography variant="body2">
+            Access revoked - please contact our support team
+          </Typography>
+        );
+    }
+  }
+
+  return <Typography variant="body2">Your download has started</Typography>;
 }
