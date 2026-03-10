@@ -86,9 +86,9 @@ export const resendEmailController: ResendEmail = async (_req, res, next) => {
   const { payload } = res.locals.parsedReq.body;
   const { template } = res.locals.parsedReq.params;
 
-  if (!process.env.RESEND_BASE_URL) {
+  if (process.env.RESEND_BASE_URL !== "https://api.resend.com") {
     return res.status(200).send({
-      message: `Skipping ${template} email: RESEND_BASE_URL not configured`,
+      message: `Skipping ${template} email: RESEND_BASE_URL is not set to production`,
     });
   }
 
