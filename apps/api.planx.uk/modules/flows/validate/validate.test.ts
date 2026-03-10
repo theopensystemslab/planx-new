@@ -188,6 +188,11 @@ describe("sections validation on diff", () => {
             status: "Not applicable",
             message: "This is not a templated flow",
           },
+          {
+            title: "Send",
+            status: "Pass",
+            message: `Flow does not have extra Send components`,
+          },
         ]);
       });
   });
@@ -251,6 +256,11 @@ describe("sections validation on diff", () => {
             status: "Not applicable",
             message: "This is not a templated flow",
           },
+          {
+            title: "Send",
+            status: "Not applicable",
+            message: "Your flow is not a submission service",
+          },
         ]);
       });
   });
@@ -304,6 +314,11 @@ describe("invite to pay validation on diff", () => {
             title: "Templated nodes",
             status: "Not applicable",
             message: "This is not a templated flow",
+          },
+          {
+            title: "Send",
+            status: "Not applicable",
+            message: "Your flow is not a submission service",
           },
         ]);
       });
@@ -369,6 +384,11 @@ describe("invite to pay validation on diff", () => {
             status: "Not applicable",
             message: "This is not a templated flow",
           },
+          {
+            title: "Send",
+            status: "Fail",
+            message: `Flows cannot have more than one Send component`,
+          },
         ]);
       });
   });
@@ -428,6 +448,11 @@ describe("invite to pay validation on diff", () => {
             title: "Templated nodes",
             status: "Not applicable",
             message: "This is not a templated flow",
+          },
+          {
+            title: "Send",
+            status: "Not applicable",
+            message: "Your flow is not a submission service",
           },
         ]);
       });
@@ -491,6 +516,11 @@ describe("invite to pay validation on diff", () => {
             status: "Not applicable",
             message: "This is not a templated flow",
           },
+          {
+            title: "Send",
+            status: "Not applicable",
+            message: "Your flow is not a submission service",
+          },
         ]);
       });
   });
@@ -545,6 +575,11 @@ describe("set fees validation on diff", () => {
             title: "Templated nodes",
             status: "Not applicable",
             message: "This is not a templated flow",
+          },
+          {
+            title: "Send",
+            status: "Not applicable",
+            message: "Your flow is not a submission service",
           },
         ]);
       });
@@ -611,6 +646,11 @@ describe("planning constraints validation on diff", () => {
             title: "Templated nodes",
             status: "Not applicable",
             message: "This is not a templated flow",
+          },
+          {
+            title: "Send",
+            status: "Pass",
+            message: `Flow does not have extra Send components`,
           },
         ]);
       });
@@ -683,6 +723,11 @@ describe("planning constraints validation on diff", () => {
             title: "Templated nodes",
             status: "Not applicable",
             message: "This is not a templated flow",
+          },
+          {
+            title: "Send",
+            status: "Not applicable",
+            message: "Your flow is not a submission service",
           },
         ]);
       });
@@ -773,6 +818,11 @@ describe("templated node requirements validation on diff", () => {
             status: "Not applicable",
             message: "Your flow is not using Invite to Pay",
           },
+          {
+            title: "Send",
+            status: "Pass",
+            message: "Flow does not have extra Send components",
+          },
         ]);
       });
   });
@@ -859,6 +909,11 @@ describe("templated node requirements validation on diff", () => {
             title: "Invite to Pay",
             status: "Not applicable",
             message: "Your flow is not using Invite to Pay",
+          },
+          {
+            title: "Send",
+            status: "Pass",
+            message: `Flow does not have extra Send components`,
           },
         ]);
       });
