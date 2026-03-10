@@ -173,36 +173,6 @@ paths:
           schema:
             type: string
             format: uuid
-  /download-application-files/{sessionId}:
-    get:
-      deprecated: true
-      summary: Download application files
-      description: Download application files via a link send to a team's "send to email" email address
-      tags:
-        - send
-      parameters:
-        - in: path
-          name: sessionId
-          required: true
-          schema:
-            type: string
-            format: uuid
-        - in: query
-          name: email
-          required: true
-          schema:
-            type: string
-            format: email
-        - in: query
-          name: localAuthority
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          $ref: "#/components/responses/DownloadFile"
-        "500":
-          $ref: "#/components/responses/ErrorMessage"
   /download-submission:
     get:
       summary: Download submission files
