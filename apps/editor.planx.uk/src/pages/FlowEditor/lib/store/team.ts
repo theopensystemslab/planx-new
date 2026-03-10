@@ -4,10 +4,9 @@ import {
   TeamSettings,
   TeamTheme,
 } from "@opensystemslab/planx-core/types";
-import gql from "graphql-tag";
-import { client } from "lib/graphql";
 import { TeamMember } from "pages/FlowEditor/components/Team/types";
 import { CreateTeam } from "pages/Teams/AddTeamButton";
+import { DEFAULT_PRIMARY_COLOR } from "theme";
 import type { StateCreator } from "zustand";
 
 import { SharedStore } from "./shared";
@@ -39,10 +38,16 @@ export const teamStore: StateCreator<
 > = (set, get) => ({
   teamId: 0,
   teamIntegrations: {} as TeamIntegrations,
-  teamName: "",
+  teamName: "Plan✕",
   teamSettings: {} as TeamSettings,
   teamSlug: "",
-  teamTheme: {} as TeamTheme,
+  teamTheme: {
+    primaryColour: DEFAULT_PRIMARY_COLOR,
+    actionColour: DEFAULT_PRIMARY_COLOR,
+    linkColour: DEFAULT_PRIMARY_COLOR,
+    logo: null,
+    favicon: null,
+  },
   teamMembers: [] as TeamMember[],
   teamDomain: "",
 

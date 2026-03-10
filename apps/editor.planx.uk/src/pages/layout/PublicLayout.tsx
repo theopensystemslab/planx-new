@@ -6,7 +6,6 @@ import {
   ThemeProvider,
 } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { useLocation } from "@tanstack/react-router";
 import ErrorFallback from "components/Error/ErrorFallback";
 import Feedback from "components/Feedback";
 import { useStore } from "pages/FlowEditor/lib/store";

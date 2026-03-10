@@ -2,7 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearch } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
-import { downloadApplication } from "lib/api/send/requests";
+import { downloadSubmission } from "lib/api/send/requests";
+import PublicLayout from "pages/layout/PublicLayout";
+import StatusPage from "pages/Preview/StatusPage";
 import React from "react";
 import z from "zod";
 
@@ -11,27 +13,33 @@ const searchSchema = z.object({
 });
 
 export const Route = createFileRoute(
-  "/_public/_planXDomain/download-application/",
+  "/_public/_planXDomain/download-submission/",
 )({
   validateSearch: zodValidator(searchSchema),
-  component: RouteComponent,
+  component: () => (
+    <PublicLayout>
+      <StatusPage bannerHeading="Download submission">
+        <RouteComponent />
+      </StatusPage>
+    </PublicLayout>
+  ),
 });
 
 function RouteComponent() {
   const { token } = useSearch({
-    from: "/_public/_planXDomain/download-application/",
+    from: "/_public/_planXDomain/download-submission/",
   });
 
   const { isPending, isError } = useQuery({
-    queryKey: ["download-application", token],
+    queryKey: ["download-submission", token],
     retry: false,
     enabled: !!token,
     queryFn: async () => {
-      const blob = await downloadApplication(token!);
+      const blob = await downloadSubmission(token!);
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "application.zip";
+      a.download = "submission.zip";
       a.click();
       URL.revokeObjectURL(url);
       return blob;
@@ -41,7 +49,7 @@ function RouteComponent() {
   if (!token)
     return (
       <p>
-        To download your application files, please use the link provided in your
+        To download your submission files, please use the link provided in your
         email.
       </p>
     );
