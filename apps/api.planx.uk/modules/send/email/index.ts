@@ -14,6 +14,7 @@ import {
   getTeamEmailSettings,
   insertAuditEntry,
   getFlowId,
+  generateAccessToken,
 } from "./service.js";
 import type {
   SiteAddress,
@@ -54,11 +55,14 @@ export const sendToEmail: SendIntegrationController = async (
       });
     }
 
+    const token = await generateAccessToken(sessionId);
+
     const config = await getSubmitEmailConfig({
       teamSettings,
       submissionEmail,
       localAuthority,
       sessionId,
+      token,
     });
 
     // Send the email
@@ -97,11 +101,13 @@ const getSubmitEmailConfig = async ({
   submissionEmail,
   localAuthority,
   sessionId,
+  token,
 }: {
   teamSettings: TeamContactSettings;
   submissionEmail: string;
   localAuthority: string;
   sessionId: string;
+  token: string;
 }): Promise<TemplateRegistry["submit"]["config"]> => {
   try {
     const { email, flow, passportData } =
@@ -130,6 +136,10 @@ const getSubmitEmailConfig = async ({
     const fee = getFee(passportData);
 
     const flowName = flow.name;
+
+    // TODO: Use new link format once frontend in place
+    const newDownloadLink = `${process.env.EDITOR_URL_EXT}/download-application/${token}`;
+    console.log({ newDownloadLink });
 
     const downloadLink = `${process.env.EDITOR_URL_EXT}/${localAuthority}/${flow.slug}/${sessionId}/download-application`;
 

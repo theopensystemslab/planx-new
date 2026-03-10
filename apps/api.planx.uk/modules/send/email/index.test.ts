@@ -140,6 +140,16 @@ describe(`sending an application by email to a planning office`, () => {
       },
       variables: { id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
     });
+
+    queryMock.mockQuery({
+      name: "InsertApplicationAccessToken",
+      matchOnVariables: false,
+      data: {
+        applicationAccessTokens: {
+          token: "mock-access-token",
+        },
+      },
+    });
   });
 
   it("succeeds when provided with valid data", async () => {
@@ -265,6 +275,24 @@ describe(`sending an application by email to a planning office`, () => {
       .expect(500)
       .then((res) => {
         expect(res.body.error).toMatch(/Cannot find session/);
+      });
+  });
+
+  it("errors if an access token cannot be generated", async () => {
+    queryMock.mockQuery({
+      name: "InsertApplicationAccessToken",
+      graphqlErrors: [{ message: "Something went wrong" }],
+      data: {},
+      matchOnVariables: false,
+    });
+
+    await supertest(app)
+      .post("/email-submission/southwark")
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+      .send({ payload: { sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" } })
+      .expect(500)
+      .then((res) => {
+        expect(res.body.error).toMatch(/Failed to create access token/);
       });
   });
 });
