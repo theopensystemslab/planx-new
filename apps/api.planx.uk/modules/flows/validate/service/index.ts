@@ -75,14 +75,14 @@ const validateAndDiffFlow = async (
   const inviteToPay = validateInviteToPay(flattenedFlow);
   const planningConstraints = validatePlanningConstraints(flattenedFlow);
   const templatedNodes = await validateTemplatedNodes(flowId, flattenedFlow);
-  const singleSend = validateSend(flattenedFlow);
+  const send = validateSend(flattenedFlow);
   validationChecks.push(
     sections,
     fees,
     inviteToPay,
     planningConstraints,
     templatedNodes,
-    singleSend,
+    send,
   );
 
   // Arrange list of validation checks in order of status: Fail, Warn, Pass, Not applicable
