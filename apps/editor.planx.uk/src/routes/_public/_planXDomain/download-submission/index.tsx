@@ -9,7 +9,7 @@ import { downloadSubmission } from "lib/api/send/requests";
 import type { DownloadSubmissionResponse } from "lib/api/send/types";
 import PublicLayout from "pages/layout/PublicLayout";
 import StatusPage from "pages/Preview/StatusPage";
-import React from "react";
+import React, { useEffect } from "react";
 import z from "zod";
 
 const searchSchema = z.object({
@@ -34,24 +34,27 @@ function RouteComponent() {
     from: "/_public/_planXDomain/download-submission/",
   });
 
-  const { isPending, isError, error } = useQuery<
+  const { isPending, isError, error, data } = useQuery<
     Blob,
     APIError<DownloadSubmissionResponse>
   >({
     queryKey: ["download-submission", token],
     retry: false,
+    staleTime: 0,
+    gcTime: 0,
     enabled: !!token,
-    queryFn: async () => {
-      const blob = await downloadSubmission(token!);
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "submission.zip";
-      a.click();
-      URL.revokeObjectURL(url);
-      return blob;
-    },
+    queryFn: () => downloadSubmission(token!),
   });
+
+  useEffect(() => {
+    if (!data) return;
+    const url = URL.createObjectURL(data);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "submission.zip";
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [data]);
 
   if (!token)
     return (
