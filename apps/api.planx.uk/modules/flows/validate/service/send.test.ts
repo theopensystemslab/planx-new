@@ -12,17 +12,17 @@ test("Fails when there are >1 Send", () => {
 });
 
 test("Passes when there is 1 Send", () => {
-  const result = validateSend(validFlattenedSendFlow);
+  const result = validateSend(validFlattenedFlow);
 
   expect(result.status).toEqual("Pass");
   expect(result.message).toEqual("Flow does not have extra Send components");
 });
 
-test("Passes when there is 0 Sends", () => {
-  const result = validateSend(validFlattenedNoSendFlow);
+test("Not applicable when there are 0 Sends", () => {
+  const result = validateSend(notApplicableFlattenedFlow);
 
-  expect(result.status).toEqual("Pass");
-  expect(result.message).toEqual("Flow does not have extra Send components");
+  expect(result.status).toEqual("Not applicable");
+  expect(result.message).toEqual("Your flow is not a submission service");
 });
 
 const invalidFlattenedFlow: FlowGraph = {
@@ -50,7 +50,7 @@ const invalidFlattenedFlow: FlowGraph = {
   },
 };
 
-const validFlattenedSendFlow = {
+const validFlattenedFlow = {
   _root: {
     edges: ["Send"],
   },
@@ -62,7 +62,7 @@ const validFlattenedSendFlow = {
   },
 };
 
-const validFlattenedNoSendFlow: FlowGraph = {
+const notApplicableFlattenedFlow: FlowGraph = {
   _root: {
     edges: ["Question"],
   },
