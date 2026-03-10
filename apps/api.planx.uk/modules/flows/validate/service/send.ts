@@ -17,9 +17,17 @@ export const validateSend = (flowGraph: FlowGraph): FlowValidationResponse => {
     };
   }
 
+  if (numberSends === 1) {
+    return {
+      title: "Send",
+      status: "Pass",
+      message: `Flow does not have extra Send components`,
+    };
+  }
+
   return {
     title: "Send",
-    status: "Pass",
-    message: `Flow does not have extra Send components`,
+    status: "Not applicable",
+    message: "Your flow is not a submission service",
   };
 };
