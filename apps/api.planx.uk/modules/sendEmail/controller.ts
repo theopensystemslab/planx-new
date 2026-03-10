@@ -86,16 +86,16 @@ export const resendEmailController: ResendEmail = async (_req, res, next) => {
   const { payload } = res.locals.parsedReq.body;
   const { template } = res.locals.parsedReq.params;
 
-  if (process.env.RESEND_BASE_URL !== "https://api.resend.com") {
-    return res.status(200).send({
-      message: `Skipping ${template} email: RESEND_BASE_URL is not set to production`,
-    });
-  }
-
   const DEMO_TEAM_ID = 32;
   if (template === "welcome" && payload.defaultTeamId === DEMO_TEAM_ID) {
     return res.status(200).send({
       message: `Skipping ${template} email for Demo team user`,
+    });
+  }
+
+  if (!["production", "test"].includes(process.env.APP_ENVIRONMENT!)) {
+    return res.status(200).send({
+      message: `Skipping ${template} email: APP_ENVIRONMENT is not production`,
     });
   }
   try {
