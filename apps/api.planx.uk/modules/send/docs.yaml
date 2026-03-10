@@ -203,6 +203,39 @@ paths:
           $ref: "#/components/responses/DownloadFile"
         "500":
           $ref: "#/components/responses/ErrorMessage"
+  /download-submission:
+    get:
+      summary: Download submission files
+      description: Download submission files via an access token. This is the magic link shared via email to back-office teams upon submission
+      security:
+        - bearerAuth: []
+      tags:
+        - send
+      responses:
+        "200":
+          $ref: "#/components/responses/DownloadFile"
+        "404":
+          description: Unrecognised access token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum: ["INVALID_ACCESS_TOKEN"]
+        "410":
+          description: Invalid access token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum: ["REVOKED_ACCESS_TOKEN, EXPIRED_ACCESS_TOKEN"]
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
   /submissions/{localAuthority}:
     get:
       summary: Get a list of submissions
