@@ -285,12 +285,15 @@ export const calculateExtraProps = async (
       .sort(sortFlows);
   }
 
+  const hasChildren = [
+    "checklist",
+    "responsive-checklist",
+    "question",
+    "responsive-question",
+  ].includes(type);
+
   // Handle checklist and question groupedOptions/options (edit only)
-  if (
-    options?.isEdit &&
-    options?.nodeId &&
-    (type === "checklist" || type === "question")
-  ) {
+  if (options?.isEdit && options?.nodeId && hasChildren) {
     const childNodes = useStore.getState().childNodesOf(options.nodeId);
     if (options.node?.data?.categories) {
       extraProps.groupedOptions = mapAccum(
