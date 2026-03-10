@@ -15,3 +15,11 @@ export const createSendEvents = async ({
   );
   return data;
 };
+
+export const downloadApplication = async (token: string) => {
+  const { data } = await apiClient.get<Blob>("/download-application", {
+    headers: { Authorization: `Bearer ${token}` },
+    responseType: "blob",
+  });
+  return data;
+};
