@@ -147,7 +147,7 @@ const TeamBrand: React.FC = () => {
       fontWeight={FONT_WEIGHT_SEMI_BOLD}
       sx={{ whiteSpace: "nowrap" }}
     >
-      {teamName}
+      {teamName || "Plan✕"}
     </Typography>
   );
 

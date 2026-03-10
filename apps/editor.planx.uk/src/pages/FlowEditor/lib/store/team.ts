@@ -38,7 +38,7 @@ export const teamStore: StateCreator<
 > = (set, get) => ({
   teamId: 0,
   teamIntegrations: {} as TeamIntegrations,
-  teamName: "Plan✕",
+  teamName: "",
   teamSettings: {} as TeamSettings,
   teamSlug: "",
   teamTheme: {
