@@ -1,8 +1,8 @@
 import { logDuration } from "../../../lib/performance.js";
 import { buildSubmissionExportZip } from "../utils/exportZip.js";
-import type { DownloadApplication } from "./types.js";
+import type { DownloadSubmission } from "./types.js";
 
-export const downloadApplication: DownloadApplication = async (
+export const downloadSubmission: DownloadSubmission = async (
   _req,
   res,
   next,

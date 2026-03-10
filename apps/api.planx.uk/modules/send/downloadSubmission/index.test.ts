@@ -31,11 +31,11 @@ vi.mock("../utils/exportZip", () => {
   };
 });
 
-describe("downloading application data with an access token", () => {
+describe("downloading submission data with an access token", () => {
   describe("token validation", () => {
     it("fails without authorization header", async () => {
       await supertest(app)
-        .get("/download-application")
+        .get("/download-submission")
         .expect(400)
         .then((res) =>
           expect(res.body.issues[0]).toHaveProperty(
@@ -47,7 +47,7 @@ describe("downloading application data with an access token", () => {
 
     it("fails without a correctly formatted authorization header", async () => {
       await supertest(app)
-        .get("/download-application")
+        .get("/download-submission")
         .set({ authorization: "super secret!" })
         .expect(400)
         .then((res) =>
@@ -69,7 +69,7 @@ describe("downloading application data with an access token", () => {
       });
 
       await supertest(app)
-        .get("/download-application")
+        .get("/download-submission")
         .set({ authorization: "Bearer 1aa3b03e-3071-438e-9ac7-0f9f6449f164" })
         .expect(404)
         .then((res) => expect(res.body.error).toEqual("INVALID_ACCESS_TOKEN"));
@@ -88,7 +88,7 @@ describe("downloading application data with an access token", () => {
       });
 
       await supertest(app)
-        .get("/download-application")
+        .get("/download-submission")
         .set({ authorization: "Bearer 1aa3b03e-3071-438e-9ac7-0f9f6449f164" })
         .expect(410)
         .then((res) => expect(res.body.error).toEqual("REVOKED_ACCESS_TOKEN"));
@@ -107,7 +107,7 @@ describe("downloading application data with an access token", () => {
       });
 
       await supertest(app)
-        .get("/download-application")
+        .get("/download-submission")
         .set({ authorization: "Bearer 1aa3b03e-3071-438e-9ac7-0f9f6449f164" })
         .expect(410)
         .then((res) => expect(res.body.error).toEqual("EXPIRED_ACCESS_TOKEN"));
@@ -149,7 +149,7 @@ describe("downloading application data with an access token", () => {
       });
 
       await supertest(app)
-        .get("/download-application")
+        .get("/download-submission")
         .set({ authorization: "Bearer 1aa3b03e-3071-438e-9ac7-0f9f6449f164" })
         .expect(500)
         .then((res) => {
@@ -160,9 +160,9 @@ describe("downloading application data with an access token", () => {
         });
     });
 
-    it("successfully downloads application files when all data is valid", async () => {
+    it("successfully downloads submission files when all data is valid", async () => {
       await supertest(app)
-        .get("/download-application")
+        .get("/download-submission")
         .set({ authorization: "Bearer 1aa3b03e-3071-438e-9ac7-0f9f6449f164" })
         .expect(200)
         .then((res) => {

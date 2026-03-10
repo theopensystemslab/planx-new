@@ -19,9 +19,9 @@ import { submissionSchema } from "./submission/schema.js";
 import { submissionZipController } from "./submission/zip/controller.js";
 import { sendIntegrationSchema } from "./types.js";
 import { sendToUniform } from "./uniform/uniform.js";
-import { useAccessTokenAuth } from "./downloadApplication/middleware.js";
-import { useAccessTokenAuthSchema } from "./downloadApplication/types.js";
-import { downloadApplication } from "./downloadApplication/controller.js";
+import { useAccessTokenAuth } from "./downloadSubmission/middleware.js";
+import { useAccessTokenAuthSchema } from "./downloadSubmission/types.js";
+import { downloadSubmission } from "./downloadSubmission/controller.js";
 
 const router = Router();
 
@@ -70,10 +70,10 @@ router.post(
 router.get("/download-application-files/:sessionId", downloadApplicationFiles);
 
 router.get(
-  "/download-application",
+  "/download-submission",
   validate(useAccessTokenAuthSchema),
   useAccessTokenAuth,
-  downloadApplication,
+  downloadSubmission,
 );
 
 router.get(

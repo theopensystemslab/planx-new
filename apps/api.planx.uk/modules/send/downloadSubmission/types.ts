@@ -17,18 +17,18 @@ interface AuthFailure {
     | "EXPIRED_ACCESS_TOKEN";
 }
 
-type DownloadApplicationLocals = {
+type DownloadSubmissionLocals = {
   sessionId: string;
 };
 
 export type UseAccessTokenAuth = ValidatedRequestHandler<
   typeof useAccessTokenAuthSchema,
   null | AuthFailure,
-  Partial<DownloadApplicationLocals>
+  Partial<DownloadSubmissionLocals>
 >;
 
-export type DownloadApplication = ValidatedRequestHandler<
+export type DownloadSubmission = ValidatedRequestHandler<
   typeof useAccessTokenAuthSchema,
   Buffer,
-  DownloadApplicationLocals
+  DownloadSubmissionLocals
 >;

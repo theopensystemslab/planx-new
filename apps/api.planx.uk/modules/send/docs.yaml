@@ -203,10 +203,10 @@ paths:
           $ref: "#/components/responses/DownloadFile"
         "500":
           $ref: "#/components/responses/ErrorMessage"
-  /download-application:
+  /download-submission:
     get:
-      summary: Download application files
-      description: Download application files via an access token, which is emailed to the back-office team
+      summary: Download submission files
+      description: Download submission files via an access token. This is the magic link shared via email to back-office teams upon submission
       security:
         - bearerAuth: []
       tags:
