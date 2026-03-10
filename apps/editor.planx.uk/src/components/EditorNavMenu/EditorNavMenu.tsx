@@ -14,7 +14,6 @@ import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
 import { useLocation, useNavigate, useRouter } from "@tanstack/react-router";
-import { th } from "date-fns/locale";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef } from "react";
 import EditorIcon from "ui/icons/Editor";
@@ -42,13 +41,14 @@ function EditorNavMenu() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const router = useRouter();
-  const [teamSlug, flowSlug, flowAnalyticsLink, role, team] = useStore(
+  const [teamSlug, flowSlug, flowAnalyticsLink, role, team, teams] = useStore(
     (state) => [
       state.teamSlug,
       state.flowSlug,
       state.flowAnalyticsLink,
       state.getUserRoleForCurrentTeam(),
       state.getTeam(),
+      state.teams,
     ],
   );
   const environment = import.meta.env.VITE_APP_ENV;
@@ -377,7 +377,10 @@ function EditorNavMenu() {
         <Box sx={(theme) => ({ padding: theme.spacing(1, 0.5, 0, 0.5) })}>
           <TeamSelect
             currentTeamSlug={teamSlug}
-            onTeamSelect={() => undefined}
+            onTeamSelect={(slug) =>
+              navigate({ to: "/app/$team", params: { team: slug } })
+            }
+            teams={teams}
           />
         </Box>
       )}

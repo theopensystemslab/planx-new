@@ -38,6 +38,10 @@ const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
   justifyContent: "space-between",
   alignItems: "center",
   padding: theme.spacing(1),
+  position: "sticky",
+  top: 0,
+  backgroundColor: theme.palette.background.paper,
+  zIndex: 1,
 }));
 
 const StyledCard = styled(Card)<{ selected?: boolean; teamcolor?: string }>(
@@ -166,9 +170,10 @@ export const TeamSelect: React.FC<Props> = ({
             position: "absolute",
             top: "65px",
             left: "5px",
+            bottom: "65px",
             m: 0,
-            width: "300px",
-            maxWidth: "300px",
+            width: "260px",
+            maxWidth: "260px",
             minWidth: "unset",
             borderTop: "none",
             borderRadius: 3,
@@ -192,6 +197,7 @@ export const TeamSelect: React.FC<Props> = ({
             searchKey={["slug", "name"]}
             clearSearch={clearSearch}
             hideLabel={true}
+            compact={true}
           />
           <Stack gap={2} pt={2}>
             {displayEditableTeams.length > 0 && (

@@ -1,8 +1,3 @@
-import {
-  Team,
-  TeamSettings,
-  TeamTheme,
-} from "@opensystemslab/planx-core/types";
 import { createFileRoute } from "@tanstack/react-router";
 import gql from "graphql-tag";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -10,10 +5,9 @@ import Teams from "pages/Teams";
 import React from "react";
 
 import { client } from "../../../lib/graphql";
+import { TeamSummary } from "../../../pages/FlowEditor/lib/store/team";
 
-export type TeamSummary = Pick<Team, "id" | "name" | "slug"> & {
-  settings: Pick<TeamSettings, "isTrial">;
-} & { theme: Pick<TeamTheme, "primaryColour" | "logo"> };
+export type { TeamSummary };
 
 export const Route = createFileRoute("/_authenticated/app/")({
   loader: async () => {
