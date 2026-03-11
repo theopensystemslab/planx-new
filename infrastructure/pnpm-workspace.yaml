@@ -26,9 +26,11 @@ catalog:
 
 minimumReleaseAge: 1440
 
+overrides:
+  fast-xml-parser: ^5.4.1
+  tar@<=7.5.10: '>=7.5.11'
+  tar@<=7.5.9: '>=7.5.10'
+
 savePrefix: '~'
 
 strictPeerDependencies: true
-
-overrides:
-  'fast-xml-parser': '^5.4.1'
