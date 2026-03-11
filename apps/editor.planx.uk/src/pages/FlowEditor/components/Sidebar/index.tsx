@@ -127,24 +127,6 @@ const ViewServiceButton = styled(CustomLink)(({ theme }) => ({
   },
 })) as typeof CustomLink;
 
-const DisabledViewServiceButton = styled(Box)(({ theme }) => ({
-  display: "inline-flex",
-  alignItems: "center",
-  gap: theme.spacing(0.5),
-  padding: theme.spacing(0.5, 1),
-  fontSize: "0.8125rem",
-  fontWeight: 600,
-  color: theme.palette.text.disabled,
-  border: `1px solid ${theme.palette.border.main}`,
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: theme.palette.background.paper,
-  opacity: 0.6,
-  cursor: "default",
-  "& svg": {
-    fontSize: "0.875rem",
-  },
-}));
-
 const HelpLink = styled("button")(({ theme }) => ({
   display: "inline-flex",
   alignItems: "center",
@@ -238,6 +220,14 @@ const Sidebar: React.FC = React.memo(() => {
 
   const previewURL = `${origin}${previewPath}`;
 
+  const publishedPath = router.buildLocation({
+    to: "/$team/$flow/published",
+    params: { team, flow: rootFlow },
+    search: { analytics: false },
+  }).href;
+
+  const publishedURL = `${origin}${publishedPath}`;
+
   return (
     <Root>
       <Collapse
@@ -264,7 +254,8 @@ const Sidebar: React.FC = React.memo(() => {
                       rel="noopener noreferrer"
                       preload={false}
                     >
-                      Draft
+                      <PlayArrowIcon />
+                      Open draft
                     </ViewServiceButton>
                   </span>
                 </Tooltip>
@@ -281,36 +272,10 @@ const Sidebar: React.FC = React.memo(() => {
                     aria-label="Open preview of changes to publish"
                   >
                     <PlayArrowIcon />
-                    Preview
+                    Open preview
                   </ViewServiceButton>
                 </span>
               </Tooltip>
-
-              {isFlowPublished ? (
-                <Tooltip title="Open published service">
-                  <span>
-                    <ViewServiceButton
-                      to="/$team/$flow/published"
-                      search={{ analytics: false }}
-                      params={{ team, flow: rootFlow }}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      preload={false}
-                    >
-                      <LanguageIcon />
-                      Published
-                    </ViewServiceButton>
-                  </span>
-                </Tooltip>
-              ) : (
-                <Tooltip title="Service not yet published">
-                  <span>
-                    <DisabledViewServiceButton>
-                      Published
-                    </DisabledViewServiceButton>
-                  </span>
-                </Tooltip>
-              )}
 
               <HelpLink
                 onClick={() => setHelpOpen(true)}
@@ -321,7 +286,11 @@ const Sidebar: React.FC = React.memo(() => {
               </HelpLink>
             </ViewServiceRow>
 
-            <CheckForChangesToPublishButton previewURL={previewURL} />
+            <CheckForChangesToPublishButton
+              previewURL={previewURL}
+              isFlowPublished={isFlowPublished}
+              publishedURL={publishedURL}
+            />
           </Header>
 
           <Dialog
