@@ -1,5 +1,6 @@
+import Typography from "@mui/material/Typography";
 import { createFileRoute } from "@tanstack/react-router";
-import { VerifySubmissionEmail } from "pages/SubmissionDownload/VerifySubmissionEmail";
+import StatusPage from "pages/Preview/StatusPage";
 import React from "react";
 import Main from "ui/shared/Main";
 import WatermarkBackground from "ui/shared/WatermarkBackground";
@@ -40,19 +41,19 @@ export const Route = createFileRoute(
 });
 
 function DownloadApplicationComponent() {
-  const { sessionId, team, flow } = Route.useLoaderData();
-
   return (
     <>
       <WatermarkBackground variant="dark" opacity={0.05} />
       <Main>
-        <VerifySubmissionEmail
-          params={{
-            sessionId,
-            team,
-            flow,
-          }}
-        />
+        <StatusPage
+          bannerHeading="Expired link"
+          bannerText="This link is no longer valid"
+        >
+          <Typography variant="body2">
+            This link is no longer active - please contact the support team for
+            assistance.
+          </Typography>
+        </StatusPage>
       </Main>
     </>
   );
