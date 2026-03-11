@@ -1,19 +1,14 @@
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import { styled } from "@mui/material/styles";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import ToggleButton from "@mui/material/ToggleButton";
-import Tooltip from "@mui/material/Tooltip";
 import { useParams, useRouteContext, useRouter } from "@tanstack/react-router";
 import React, { useState } from "react";
 import { useLocation } from "react-use";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
-import Permission from "ui/editor/Permission";
 import StyledTab from "ui/editor/StyledTab";
 
 import { useStore } from "../../lib/store";
@@ -24,7 +19,6 @@ import { PreviewBrowser } from "./PreviewBrowser";
 import { CheckForChangesToPublishButton } from "./Publish/CheckForChangesButton";
 import Reviews from "./Review";
 import Search from "./Search";
-import { ViewServiceButton } from "./ViewServiceButton";
 
 type SidebarTabs =
   | "PreviewBrowser"
@@ -90,13 +84,6 @@ const Header = styled("header")(({ theme }) => ({
   padding: theme.spacing(1, 2),
 }));
 
-const ViewServiceRow = styled(Box)(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  gap: theme.spacing(1),
-  flexWrap: "wrap",
-}));
-
 const TabList = styled(Box)(({ theme }) => ({
   position: "relative",
   "&::after": {
@@ -150,14 +137,6 @@ const Sidebar: React.FC = React.memo(() => {
 
   const previewURL = `${origin}${previewPath}`;
 
-  const publishedPath = router.buildLocation({
-    to: "/$team/$flow/published",
-    params: { team, flow: rootFlow },
-    search: { analytics: false },
-  }).href;
-
-  const publishedURL = `${origin}${publishedPath}`;
-
   return (
     <Root>
       <Collapse
@@ -173,45 +152,9 @@ const Sidebar: React.FC = React.memo(() => {
             {showSidebar ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </StyledToggleButton>
           <Header>
-            <ViewServiceRow>
-              <Permission.IsPlatformAdmin>
-                <Tooltip title="Open draft service">
-                  <span>
-                    <ViewServiceButton
-                      to="/$team/$flow/draft"
-                      params={{ team, flow: rootFlow }}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      preload={false}
-                    >
-                      <PlayArrowIcon />
-                      Draft
-                    </ViewServiceButton>
-                  </span>
-                </Tooltip>
-              </Permission.IsPlatformAdmin>
-
-              <Tooltip title="Open preview of changes to publish">
-                <span>
-                  <ViewServiceButton
-                    to="/$team/$flow/preview"
-                    params={{ team, flow: rootFlow }}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    preload={false}
-                    aria-label="Open preview of changes to publish"
-                  >
-                    <PlayArrowIcon />
-                    Preview
-                  </ViewServiceButton>
-                </span>
-              </Tooltip>
-            </ViewServiceRow>
-
             <CheckForChangesToPublishButton
               previewURL={previewURL}
               isFlowPublished={isFlowPublished}
-              publishedURL={publishedURL}
             />
           </Header>
 
