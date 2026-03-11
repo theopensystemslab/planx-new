@@ -29,7 +29,7 @@ import { WarningContainer } from "../shared/Preview/WarningContainer";
 import { EditorProps } from "../shared/types";
 import { useFlowEmailId } from "./hooks/useFlowEmailId";
 import { useTeamSubmissionIntegrations } from "./hooks/useGetTeamSubmissionIntegrations";
-import { useUpdateFlowIntegration } from "./hooks/useUpdateFlowIntegration";
+import { useUpdateFlowSubmissionEmail } from "./hooks/useUpdateFlowSubmissionEmail";
 import { parseSend, Send, validationSchema } from "./model";
 import {
   EmailEmptyStateProps,
@@ -141,7 +141,7 @@ const SendComponent: React.FC<Props> = (props) => {
     error: flowError,
     refetch: refetchFlowData,
   } = useFlowEmailId(id);
-  const existingEmailId = flowData?.flowIntegrations?.[0]?.emailId;
+  const existingEmailId = flowData?.flows?.[0]?.submissionEmailId;
 
   const { data, loading, error } = useTeamSubmissionIntegrations(teamId);
   const emailOptions = data?.submissionIntegrations || [];
@@ -149,7 +149,7 @@ const SendComponent: React.FC<Props> = (props) => {
     (email) => email.defaultEmail === true,
   );
 
-  const [updateFlowIntegration] = useUpdateFlowIntegration();
+  const [updateFlowSubmissionEmail] = useUpdateFlowSubmissionEmail();
 
   const handleUpdate = async (
     newValues: Send,
@@ -160,10 +160,10 @@ const SendComponent: React.FC<Props> = (props) => {
     const selectedEmailId = newValues.submissionEmailId;
 
     if (newValues.submissionEmailId && existingEmailId !== selectedEmailId) {
-      await updateFlowIntegration({
+      await updateFlowSubmissionEmail({
         variables: {
           flowId: id,
-          emailId: newValues.submissionEmailId,
+          submissionEmailId: newValues.submissionEmailId,
         },
       });
 

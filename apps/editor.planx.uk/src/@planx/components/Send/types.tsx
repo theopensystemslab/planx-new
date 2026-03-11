@@ -2,8 +2,8 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { SubmissionEmailInput } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 
 export interface GetFlowEmailIdQuery {
-  flowIntegrations: Array<{
-    emailId: string;
+  flows: Array<{
+    submissionEmailId: string;
   }>;
 }
 
@@ -11,15 +11,15 @@ export interface GetFlowEmailIdQueryVariables {
   flowId: string;
 }
 
-export interface UpdateFlowIntegrationMutation {
-  update_flow_integrations: {
+export interface UpdateFlowSubmissionEmailMutation {
+  update_flow_submission_email_id: {
     affected_rows: number;
   };
 }
 
-export interface UpdateFlowIntegrationMutationVariables {
+export interface UpdateFlowSubmissionEmailMutationVariables {
   flowId: string;
-  emailId: string;
+  submissionEmailId: string;
 }
 
 export interface GetTeamSubmissionIntegrationsQuery {

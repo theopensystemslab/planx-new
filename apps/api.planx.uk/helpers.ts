@@ -97,12 +97,12 @@ const createFlow = async ({
 
   try {
     const response = await $client.request<{
-      insertFlowWithIntegration: {
+      insertFlow: {
         id: Flow["id"];
       };
     }>(
       gql`
-        mutation InsertFlowWithIntegration(
+        mutation InsertFlow(
           $team_id: Int!
           $slug: String!
           $name: String!
@@ -113,9 +113,8 @@ const createFlow = async ({
           $summary: String
           $description: String
           $limitations: String
-          $email_id: uuid
         ) {
-          insertFlowWithIntegration: insert_flows_one(
+          insertFlow: insert_flows_one(
             object: {
               team_id: $team_id
               slug: $slug
@@ -128,7 +127,6 @@ const createFlow = async ({
               summary: $summary
               description: $description
               limitations: $limitations
-              flow_integration: { data: { team_id: $team_id } }
             }
           ) {
             id
@@ -149,7 +147,7 @@ const createFlow = async ({
       },
     );
 
-    const flowId = response.insertFlowWithIntegration.id;
+    const flowId = response.insertFlow.id;
 
     await createAssociatedOperation(flowId);
     await publishFlow(flowId, "Created flow");

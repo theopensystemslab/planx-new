@@ -5,6 +5,15 @@ object_relationships:
   - name: creator
     using:
       foreign_key_constraint_on: creator_id
+  - name: submission_integration
+    using:
+      manual_configuration:
+        column_mapping:
+          submission_email_id: id
+        insertion_order: null
+        remote_table:
+          name: submission_integrations
+          schema: public
   - name: team
     using:
       foreign_key_constraint_on: team_id
@@ -51,13 +60,6 @@ array_relationships:
         insertion_order: null
         remote_table:
           name: feedback
-          schema: public
-  - name: flow_integration
-    using:
-      foreign_key_constraint_on:
-        column: flow_id
-        table:
-          name: flow_integrations
           schema: public
   - name: flow_status_histories
     using:
@@ -313,6 +315,7 @@ select_permissions:
         - settings
         - slug
         - status
+        - submission_email_id
         - summary
         - team_id
         - templated_from
@@ -389,6 +392,7 @@ select_permissions:
         - settings
         - slug
         - status
+        - submission_email_id
         - summary
         - team_id
         - templated_from
@@ -452,6 +456,7 @@ select_permissions:
         - settings
         - slug
         - status
+        - submission_email_id
         - summary
         - team_id
         - templated_from
@@ -578,6 +583,7 @@ update_permissions:
         - settings
         - slug
         - status
+        - submission_email_id
         - summary
         - team_id
         - templated_from
@@ -617,6 +623,7 @@ update_permissions:
         - settings
         - slug
         - status
+        - submission_email_id
         - summary
         - team_id
         - templated_from

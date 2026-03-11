@@ -74,10 +74,10 @@ describe("success", () => {
     });
 
     queryMock.mockQuery({
-      name: "InsertFlowWithIntegration",
+      name: "InsertFlow",
       matchOnVariables: false,
       data: {
-        insertFlowWithIntegration: {
+        insertFlow: {
           id: "2",
         },
       },
