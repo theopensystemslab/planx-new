@@ -192,7 +192,7 @@ describe("sections validation on diff", () => {
             {
               title: "Send",
               status: "Pass",
-              message: "Flow does not have extra Send components",
+              message: "Flow correctly has exactly one Send component",
             },
           ]),
         );
@@ -462,7 +462,7 @@ describe("invite to pay validation on diff", () => {
             {
               title: "Send",
               status: "Pass",
-              message: "Flow does not have extra Send components",
+              message: "Flow correctly has exactly one Send component",
             },
           ]),
         );
@@ -531,7 +531,7 @@ describe("invite to pay validation on diff", () => {
             {
               title: "Send",
               status: "Pass",
-              message: "Flow does not have extra Send components",
+              message: "Flow correctly has exactly one Send component",
             },
           ]),
         );
@@ -594,7 +594,7 @@ describe("set fees validation on diff", () => {
             {
               title: "Send",
               status: "Pass",
-              message: "Flow does not have extra Send components",
+              message: "Flow correctly has exactly one Send component",
             },
           ]),
         );
@@ -667,7 +667,7 @@ describe("planning constraints validation on diff", () => {
             {
               title: "Send",
               status: "Pass",
-              message: `Flow does not have extra Send components`,
+              message: `Flow correctly has exactly one Send component`,
             },
           ]),
         );
@@ -741,7 +741,7 @@ describe("planning constraints validation on diff", () => {
             {
               title: "Send",
               status: "Pass",
-              message: "Flow does not have extra Send components",
+              message: "Flow correctly has exactly one Send component",
             },
             {
               title: "Templated nodes",
@@ -842,7 +842,7 @@ describe("templated node requirements validation on diff", () => {
             {
               title: "Send",
               status: "Pass",
-              message: "Flow does not have extra Send components",
+              message: "Flow correctly has exactly one Send component",
             },
           ]),
         );
@@ -936,7 +936,7 @@ describe("templated node requirements validation on diff", () => {
             {
               title: "Send",
               status: "Pass",
-              message: `Flow does not have extra Send components`,
+              message: `Flow correctly has exactly one Send component`,
             },
           ]),
         );

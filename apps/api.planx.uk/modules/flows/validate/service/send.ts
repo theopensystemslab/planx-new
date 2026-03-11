@@ -21,7 +21,7 @@ export const validateSend = (flowGraph: FlowGraph): FlowValidationResponse => {
     return {
       title: "Send",
       status: "Pass",
-      message: `Flow does not have extra Send components`,
+      message: `Flow correctly has exactly one Send component`,
     };
   }
 

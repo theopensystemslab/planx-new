@@ -15,7 +15,9 @@ test("Passes when there is 1 Send", () => {
   const result = validateSend(validFlattenedFlow);
 
   expect(result.status).toEqual("Pass");
-  expect(result.message).toEqual("Flow does not have extra Send components");
+  expect(result.message).toEqual(
+    "Flow correctly has exactly one Send component",
+  );
 });
 
 test("Not applicable when there are 0 Sends", () => {
