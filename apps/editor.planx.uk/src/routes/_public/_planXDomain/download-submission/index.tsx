@@ -74,7 +74,8 @@ function RouteComponent() {
       case "EXPIRED_ACCESS_TOKEN":
         return (
           <Typography variant="body2">
-            This link has expired, you are unable to download this submission
+            This link has expired, therefore this submission is no longer
+            available to download
           </Typography>
         );
       case "INVALID_ACCESS_TOKEN":
