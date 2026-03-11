@@ -3,6 +3,7 @@ import { validate } from "../../shared/middleware/validate.js";
 import {
   useFilePermission,
   useHasuraAuth,
+  useNoCache,
   useTeamEditorAuth,
 } from "../auth/middleware.js";
 import { sendToBOPS } from "./bops/bops.js";
@@ -68,6 +69,7 @@ router.post(
 
 router.get(
   "/download-submission",
+  useNoCache,
   validate(useAccessTokenAuthSchema),
   useAccessTokenAuth,
   downloadSubmission,

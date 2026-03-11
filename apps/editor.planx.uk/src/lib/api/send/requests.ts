@@ -20,7 +20,6 @@ export const downloadSubmission = async (token: string) => {
   const { data } = await apiClient.get<Blob>("/download-submission", {
     headers: {
       Authorization: `Bearer ${token}`,
-      cache: "no-store",
     },
     responseType: "blob",
   });
