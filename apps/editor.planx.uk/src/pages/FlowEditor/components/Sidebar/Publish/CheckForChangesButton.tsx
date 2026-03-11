@@ -1,7 +1,9 @@
+import LanguageIcon from "@mui/icons-material/Language";
 import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useToast } from "hooks/useToast";
 import { PublishFlowArgs } from "lib/api/publishFlow/types";
@@ -14,7 +16,9 @@ import { ChangesDialog, NoChangesDialog } from "./PublishDialog";
 
 export const CheckForChangesToPublishButton: React.FC<{
   previewURL: string;
-}> = ({ previewURL }) => {
+  isFlowPublished: boolean;
+  publishedURL: string;
+}> = ({ previewURL, isFlowPublished, publishedURL }) => {
   const [
     isTemplatedFrom,
     template,
@@ -100,38 +104,38 @@ export const CheckForChangesToPublishButton: React.FC<{
 
   return (
     <>
-      <Box width="100%" mt={2}>
-        <Box display="flex" flexDirection="column" alignItems="flex-end">
-          {isTemplatedFrom && template && (
-            <Box
-              sx={{
-                background: (theme) => theme.palette.template.main,
-                width: "100%",
-                padding: (theme) => theme.spacing(1),
-                marginBottom: (theme) => theme.spacing(2),
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "flex-start",
-              }}
-            >
-              <StarIcon sx={{ color: "#380F77", mr: 0.5 }} fontSize="small" />
-              <Box>
-                <Typography variant="body2">
-                  {`Templated from ${template.team.name}`}
-                </Typography>
-                <Typography variant="body2">
-                  <strong>
-                    {isTemplatedFlowDueToPublish
-                      ? "Due to review and publish"
-                      : "Up to date"}
-                  </strong>
-                </Typography>
-              </Box>
+      <Box width="100%" mt={1}>
+        {isTemplatedFrom && template && (
+          <Box
+            sx={{
+              background: (theme) => theme.palette.template.main,
+              width: "100%",
+              padding: (theme) => theme.spacing(1),
+              marginBottom: (theme) => theme.spacing(1),
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "flex-start",
+            }}
+          >
+            <StarIcon sx={{ color: "#380F77", mr: 0.5 }} fontSize="small" />
+            <Box>
+              <Typography variant="body2">
+                {`Templated from ${template.team.name}`}
+              </Typography>
+              <Typography variant="body2">
+                <strong>
+                  {isTemplatedFlowDueToPublish
+                    ? "Due to review and publish"
+                    : "Up to date"}
+                </strong>
+              </Typography>
             </Box>
-          )}
+          </Box>
+        )}
+        <Box display="flex" gap={1}>
           <Button
             data-testid="check-for-changes-to-publish-button"
-            sx={{ width: "100%" }}
+            sx={{ flex: 1 }}
             variant="contained"
             color="primary"
             disabled={isDisabled}
@@ -144,28 +148,83 @@ export const CheckForChangesToPublishButton: React.FC<{
           >
             {buttonText}
           </Button>
-          {!alteredNodes || alteredNodes?.length === 0 ? (
-            <NoChangesDialog
-              dialogOpen={dialogOpen}
-              setDialogOpen={setDialogOpen}
-            />
+          {isFlowPublished ? (
+            <Tooltip title="Open published service">
+              <Box
+                component="a"
+                href={publishedURL}
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={(theme) => ({
+                  flex: 1,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: theme.spacing(0.5),
+                  padding: theme.spacing(0.5, 0.75),
+                  fontSize: "0.8125rem",
+                  fontWeight: 600,
+                  color: theme.palette.text.primary,
+                  textDecoration: "none",
+                  border: `1px solid ${theme.palette.border.main}`,
+                  borderRadius: `${theme.shape.borderRadius}px`,
+                  backgroundColor: theme.palette.background.paper,
+                  cursor: "pointer",
+                  transition: "background-color 0.15s ease",
+                  "&:hover": { backgroundColor: theme.palette.action.hover },
+                  "& svg": { fontSize: "0.875rem" },
+                })}
+              >
+                <LanguageIcon />
+                Open published flow
+              </Box>
+            </Tooltip>
           ) : (
-            <ChangesDialog
-              dialogOpen={dialogOpen}
-              setDialogOpen={setDialogOpen}
-              alteredNodes={alteredNodes}
-              history={history}
-              status={status}
-              validationChecks={validationChecks}
-              previewURL={previewURL}
-              handlePublish={handlePublish}
-              templatedFlows={templatedFlows}
-            />
+            <Tooltip title="Service not yet published">
+              <Box
+                sx={(theme) => ({
+                  flex: 1,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: theme.spacing(0.5),
+                  padding: theme.spacing(0.5, 0.75),
+                  fontSize: "0.8125rem",
+                  fontWeight: 600,
+                  color: theme.palette.text.disabled,
+                  border: `1px solid ${theme.palette.border.main}`,
+                  borderRadius: `${theme.shape.borderRadius}px`,
+                  backgroundColor: theme.palette.background.paper,
+                  opacity: 0.6,
+                  cursor: "default",
+                  "& svg": { fontSize: "0.875rem" },
+                })}
+              >
+                <LanguageIcon />
+                Published
+              </Box>
+            </Tooltip>
           )}
-          <Box mr={0}>
-            <Typography variant="caption">{status}</Typography>
-          </Box>
         </Box>
+        {!alteredNodes || alteredNodes?.length === 0 ? (
+          <NoChangesDialog
+            dialogOpen={dialogOpen}
+            setDialogOpen={setDialogOpen}
+          />
+        ) : (
+          <ChangesDialog
+            dialogOpen={dialogOpen}
+            setDialogOpen={setDialogOpen}
+            alteredNodes={alteredNodes}
+            history={history}
+            status={status}
+            validationChecks={validationChecks}
+            previewURL={previewURL}
+            handlePublish={handlePublish}
+            templatedFlows={templatedFlows}
+          />
+        )}
+        <Typography variant="caption">{status}</Typography>
       </Box>
     </>
   );
