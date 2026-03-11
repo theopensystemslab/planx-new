@@ -1,4 +1,3 @@
-import LanguageIcon from "@mui/icons-material/Language";
 import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -10,15 +9,14 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { Template } from "pages/FlowEditor/lib/store/editor";
 import React, { useState } from "react";
 
-import { ViewServiceAnchorButton } from "../ViewServiceButton";
+import { OpenServiceMenu } from "../OpenServiceMenu";
 import { usePublishFlow } from "./hooks/usePublishFlow";
 import { ChangesDialog, NoChangesDialog } from "./PublishDialog";
 
 export const CheckForChangesToPublishButton: React.FC<{
   previewURL: string;
   isFlowPublished: boolean;
-  publishedURL: string;
-}> = ({ previewURL, isFlowPublished, publishedURL }) => {
+}> = ({ previewURL, isFlowPublished }) => {
   const [
     isTemplatedFrom,
     template,
@@ -104,7 +102,7 @@ export const CheckForChangesToPublishButton: React.FC<{
 
   return (
     <>
-      <Box width="100%" mt={1}>
+      <Box width="100%">
         {isTemplatedFrom && template && (
           <Box
             sx={{
@@ -148,15 +146,7 @@ export const CheckForChangesToPublishButton: React.FC<{
           >
             {buttonText}
           </Button>
-          <ViewServiceAnchorButton
-            href={isFlowPublished ? publishedURL : undefined}
-            target="_blank"
-            rel="noopener noreferrer"
-            disabled={!isFlowPublished}
-          >
-            <LanguageIcon />
-            {isFlowPublished ? "Open published service" : "Published"}
-          </ViewServiceAnchorButton>
+          <OpenServiceMenu isFlowPublished={isFlowPublished} />
         </Box>
         {!alteredNodes || alteredNodes?.length === 0 ? (
           <NoChangesDialog
