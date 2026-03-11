@@ -119,7 +119,7 @@ export const RemoveEmailModal = ({
                 </ListItem>
               ))}
               <Typography mt={2}>
-                Please <strong>update and republish</strong> the flow settings
+                Please <strong>update your Send component </strong> 
                 to use a different email address before removing this one.
               </Typography>
             </>
