@@ -113,14 +113,12 @@ describe(`sending an application by email to a planning office`, () => {
       name: "GetFlowSubmissionEmail",
       matchOnVariables: true,
       data: {
-        flows: [
-          {
-            submissionEmailId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
-            submissionIntegration: {
-              submissionEmail: "planning.office.example@council.gov.uk",
-            },
+        flowsByPK: {
+          submissionEmailId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
+          submissionIntegration: {
+            submissionEmail: "planning.office.example@council.gov.uk",
           },
-        ],
+        },
       },
       variables: { flowId: "91693304-fc37-4079-8ec3-e33a6164a27a" },
     });
@@ -193,14 +191,12 @@ describe(`sending an application by email to a planning office`, () => {
       name: "GetFlowSubmissionEmail",
       matchOnVariables: false,
       data: {
-        flows: [
-          {
-            submissionEmailId: null,
-            submissionIntegration: {
-              submissionEmail: null,
-            },
+        flowsByPK: {
+          submissionEmailId: null,
+          submissionIntegration: {
+            submissionEmail: null,
           },
-        ],
+        },
       },
       variables: { flowId: "11111111-1111-1111-1111-111111111111" },
     });
