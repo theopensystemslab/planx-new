@@ -20,6 +20,7 @@ import { Route as AuthenticatedAppGlobalSettingsRouteImport } from './routes/_au
 import { Route as AuthenticatedAppAdminPanelRouteImport } from './routes/_authenticated/app/admin-panel'
 import { Route as PublicCustomDomainFlowRouteRouteImport } from './routes/_public/_customDomain/$flow/route'
 import { Route as AuthenticatedAppTeamRouteRouteImport } from './routes/_authenticated/app/$team/route'
+import { Route as PublicPlanXDomainDownloadSubmissionIndexRouteImport } from './routes/_public/_planXDomain/download-submission/index'
 import { Route as PublicCustomDomainFlowIndexRouteImport } from './routes/_public/_customDomain/$flow/index'
 import { Route as AuthenticatedAppTeamIndexRouteImport } from './routes/_authenticated/app/$team/index'
 import { Route as PublicCustomDomainFlowViewApplicationRouteImport } from './routes/_public/_customDomain/$flow/view-application'
@@ -151,6 +152,12 @@ const AuthenticatedAppTeamRouteRoute =
     id: '/$team',
     path: '/$team',
     getParentRoute: () => AuthenticatedAppRouteRoute,
+  } as any)
+const PublicPlanXDomainDownloadSubmissionIndexRoute =
+  PublicPlanXDomainDownloadSubmissionIndexRouteImport.update({
+    id: '/_public/_planXDomain/download-submission/',
+    path: '/download-submission/',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const PublicCustomDomainFlowIndexRoute =
   PublicCustomDomainFlowIndexRouteImport.update({
@@ -627,6 +634,7 @@ export interface FileRoutesByFullPath {
   '/$flow/view-application': typeof PublicCustomDomainFlowViewApplicationRoute
   '/app/$team/': typeof AuthenticatedAppTeamIndexRoute
   '/$flow/': typeof PublicCustomDomainFlowIndexRoute
+  '/download-submission/': typeof PublicPlanXDomainDownloadSubmissionIndexRoute
   '/app/$team/$flow/settings': typeof AuthenticatedAppTeamFlowSettingsRouteRouteWithChildren
   '/$team/$flow/draft': typeof PublicPlanXDomainTeamFlowDraftRouteRouteWithChildren
   '/$team/$flow/pay': typeof PublicPlanXDomainTeamFlowPayRouteRouteWithChildren
@@ -706,6 +714,7 @@ export interface FileRoutesByTo {
   '/$flow/view-application': typeof PublicCustomDomainFlowViewApplicationRoute
   '/app/$team': typeof AuthenticatedAppTeamIndexRoute
   '/$flow': typeof PublicCustomDomainFlowIndexRoute
+  '/download-submission': typeof PublicPlanXDomainDownloadSubmissionIndexRoute
   '/app/$team/$flow/about': typeof AuthenticatedAppTeamFlowAboutRoute
   '/app/$team/$flow/feedback': typeof AuthenticatedAppTeamFlowFeedbackRoute
   '/app/$team/$flow/submissions': typeof AuthenticatedAppTeamFlowSubmissionsRoute
@@ -787,6 +796,7 @@ export interface FileRoutesById {
   '/_public/_customDomain/$flow/view-application': typeof PublicCustomDomainFlowViewApplicationRoute
   '/_authenticated/app/$team/': typeof AuthenticatedAppTeamIndexRoute
   '/_public/_customDomain/$flow/': typeof PublicCustomDomainFlowIndexRoute
+  '/_public/_planXDomain/download-submission/': typeof PublicPlanXDomainDownloadSubmissionIndexRoute
   '/_authenticated/app/$team/$flow/_flowEditor': typeof AuthenticatedAppTeamFlowFlowEditorRouteRouteWithChildren
   '/_authenticated/app/$team/$flow/settings': typeof AuthenticatedAppTeamFlowSettingsRouteRouteWithChildren
   '/_public/_planXDomain/$team/$flow/draft': typeof PublicPlanXDomainTeamFlowDraftRouteRouteWithChildren
@@ -875,6 +885,7 @@ export interface FileRouteTypes {
     | '/$flow/view-application'
     | '/app/$team/'
     | '/$flow/'
+    | '/download-submission/'
     | '/app/$team/$flow/settings'
     | '/$team/$flow/draft'
     | '/$team/$flow/pay'
@@ -954,6 +965,7 @@ export interface FileRouteTypes {
     | '/$flow/view-application'
     | '/app/$team'
     | '/$flow'
+    | '/download-submission'
     | '/app/$team/$flow/about'
     | '/app/$team/$flow/feedback'
     | '/app/$team/$flow/submissions'
@@ -1034,6 +1046,7 @@ export interface FileRouteTypes {
     | '/_public/_customDomain/$flow/view-application'
     | '/_authenticated/app/$team/'
     | '/_public/_customDomain/$flow/'
+    | '/_public/_planXDomain/download-submission/'
     | '/_authenticated/app/$team/$flow/_flowEditor'
     | '/_authenticated/app/$team/$flow/settings'
     | '/_public/_planXDomain/$team/$flow/draft'
@@ -1102,6 +1115,7 @@ export interface RootRouteChildren {
   authLoginRoute: typeof authLoginRoute
   authLogoutRoute: typeof authLogoutRoute
   PublicPlanXDomainTeamFlowRouteRoute: typeof PublicPlanXDomainTeamFlowRouteRouteWithChildren
+  PublicPlanXDomainDownloadSubmissionIndexRoute: typeof PublicPlanXDomainDownloadSubmissionIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1182,6 +1196,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/$team'
       preLoaderRoute: typeof AuthenticatedAppTeamRouteRouteImport
       parentRoute: typeof AuthenticatedAppRouteRoute
+    }
+    '/_public/_planXDomain/download-submission/': {
+      id: '/_public/_planXDomain/download-submission/'
+      path: '/download-submission'
+      fullPath: '/download-submission/'
+      preLoaderRoute: typeof PublicPlanXDomainDownloadSubmissionIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_public/_customDomain/$flow/': {
       id: '/_public/_customDomain/$flow/'
@@ -2143,6 +2164,8 @@ const rootRouteChildren: RootRouteChildren = {
   authLogoutRoute: authLogoutRoute,
   PublicPlanXDomainTeamFlowRouteRoute:
     PublicPlanXDomainTeamFlowRouteRouteWithChildren,
+  PublicPlanXDomainDownloadSubmissionIndexRoute:
+    PublicPlanXDomainDownloadSubmissionIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

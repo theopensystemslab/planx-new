@@ -12,3 +12,10 @@ export interface EventPayload {
     sessionId: string;
   };
 }
+
+export interface DownloadSubmissionResponse {
+  error:
+    | "INVALID_ACCESS_TOKEN"
+    | "REVOKED_ACCESS_TOKEN"
+    | "EXPIRED_ACCESS_TOKEN";
+}

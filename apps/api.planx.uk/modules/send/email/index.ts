@@ -137,11 +137,7 @@ const getSubmitEmailConfig = async ({
 
     const flowName = flow.name;
 
-    // TODO: Use new link format once frontend in place
-    const newDownloadLink = `${process.env.EDITOR_URL_EXT}/download-application/${token}`;
-    console.log({ newDownloadLink });
-
-    const downloadLink = `${process.env.EDITOR_URL_EXT}/${localAuthority}/${flow.slug}/${sessionId}/download-application`;
+    const downloadLink = `${process.env.EDITOR_URL_EXT}/download-submission?token=${token}`;
 
     // Prepare email template
     const config: TemplateRegistry["submit"]["config"] = {
