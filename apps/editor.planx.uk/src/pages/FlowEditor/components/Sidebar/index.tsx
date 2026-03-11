@@ -123,7 +123,7 @@ const ViewServiceButton = styled(CustomLink)(({ theme }) => ({
     backgroundColor: theme.palette.action.hover,
   },
   "& svg": {
-    fontSize: "0.875rem",
+    fontSize: "1.15rem",
   },
 })) as typeof CustomLink;
 
