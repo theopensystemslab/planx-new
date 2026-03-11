@@ -176,7 +176,7 @@ export const CheckForChangesToPublishButton: React.FC<{
                 })}
               >
                 <LanguageIcon />
-                Open published flow
+                Open published service
               </Box>
             </Tooltip>
           ) : (
