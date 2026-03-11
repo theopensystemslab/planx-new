@@ -20,6 +20,7 @@ export const Route = createFileRoute(
   "/_public/_planXDomain/download-submission/",
 )({
   validateSearch: zodValidator(searchSchema),
+  gcTime: 0,
   component: () => (
     <PublicLayout>
       <StatusPage bannerHeading="Download submission">
@@ -34,7 +35,7 @@ function RouteComponent() {
     from: "/_public/_planXDomain/download-submission/",
   });
 
-  const { mutate, isPending, isError, error, reset } = useMutation<
+  const { mutate, isPending, isError, error } = useMutation<
     Blob,
     APIError<DownloadSubmissionResponse>,
     string
@@ -51,10 +52,7 @@ function RouteComponent() {
   });
 
   useEffect(() => {
-    if (token) {
-      reset();
-      mutate(token);
-    }
+    if (token) mutate(token);
   }, [token, mutate]);
 
   if (!token)
