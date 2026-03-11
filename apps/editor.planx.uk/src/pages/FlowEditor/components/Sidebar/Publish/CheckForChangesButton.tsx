@@ -3,7 +3,6 @@ import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
-import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useToast } from "hooks/useToast";
 import { PublishFlowArgs } from "lib/api/publishFlow/types";
@@ -11,6 +10,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { Template } from "pages/FlowEditor/lib/store/editor";
 import React, { useState } from "react";
 
+import { ViewServiceAnchorButton } from "../ViewServiceButton";
 import { usePublishFlow } from "./hooks/usePublishFlow";
 import { ChangesDialog, NoChangesDialog } from "./PublishDialog";
 
@@ -148,63 +148,15 @@ export const CheckForChangesToPublishButton: React.FC<{
           >
             {buttonText}
           </Button>
-          {isFlowPublished ? (
-            <Tooltip title="Open published service">
-              <Box
-                component="a"
-                href={publishedURL}
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={(theme) => ({
-                  flex: 1,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: theme.spacing(0.65),
-                  padding: theme.spacing(0.5, 0.75),
-                  fontSize: "0.8125rem",
-                  fontWeight: 600,
-                  color: theme.palette.text.primary,
-                  textDecoration: "none",
-                  border: `1px solid ${theme.palette.border.main}`,
-                  borderRadius: `${theme.shape.borderRadius}px`,
-                  backgroundColor: theme.palette.background.paper,
-                  cursor: "pointer",
-                  transition: "background-color 0.15s ease",
-                  "&:hover": { backgroundColor: theme.palette.action.hover },
-                  "& svg": { fontSize: "1.1rem" },
-                })}
-              >
-                <LanguageIcon />
-                Open published service
-              </Box>
-            </Tooltip>
-          ) : (
-            <Tooltip title="Service not yet published">
-              <Box
-                sx={(theme) => ({
-                  flex: 1,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: theme.spacing(0.5),
-                  padding: theme.spacing(0.5, 0.75),
-                  fontSize: "0.8125rem",
-                  fontWeight: 600,
-                  color: theme.palette.text.disabled,
-                  border: `1px solid ${theme.palette.border.main}`,
-                  borderRadius: `${theme.shape.borderRadius}px`,
-                  backgroundColor: theme.palette.background.paper,
-                  opacity: 0.6,
-                  cursor: "default",
-                  "& svg": { fontSize: "0.875rem" },
-                })}
-              >
-                <LanguageIcon />
-                Published
-              </Box>
-            </Tooltip>
-          )}
+          <ViewServiceAnchorButton
+            href={isFlowPublished ? publishedURL : undefined}
+            target="_blank"
+            rel="noopener noreferrer"
+            disabled={!isFlowPublished}
+          >
+            <LanguageIcon />
+            {isFlowPublished ? "Open published service" : "Published"}
+          </ViewServiceAnchorButton>
         </Box>
         {!alteredNodes || alteredNodes?.length === 0 ? (
           <NoChangesDialog

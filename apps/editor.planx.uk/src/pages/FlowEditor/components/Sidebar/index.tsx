@@ -15,7 +15,6 @@ import { useLocation } from "react-use";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Permission from "ui/editor/Permission";
 import StyledTab from "ui/editor/StyledTab";
-import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 import { useStore } from "../../lib/store";
 import Customisations from "./Customisations";
@@ -25,6 +24,7 @@ import { PreviewBrowser } from "./PreviewBrowser";
 import { CheckForChangesToPublishButton } from "./Publish/CheckForChangesButton";
 import Reviews from "./Review";
 import Search from "./Search";
+import { ViewServiceButton } from "./ViewServiceButton";
 
 type SidebarTabs =
   | "PreviewBrowser"
@@ -96,28 +96,6 @@ const ViewServiceRow = styled(Box)(({ theme }) => ({
   gap: theme.spacing(1),
   flexWrap: "wrap",
 }));
-
-const ViewServiceButton = styled(CustomLink)(({ theme }) => ({
-  display: "inline-flex",
-  alignItems: "center",
-  gap: theme.spacing(0.5),
-  padding: theme.spacing(0.5, 0.75),
-  fontSize: "0.8125rem",
-  fontWeight: 600,
-  color: theme.palette.text.primary,
-  textDecoration: "none",
-  border: `1px solid ${theme.palette.border.main}`,
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: theme.palette.background.paper,
-  cursor: "pointer",
-  transition: "background-color 0.15s ease",
-  "&:hover": {
-    backgroundColor: theme.palette.action.hover,
-  },
-  "& svg": {
-    fontSize: "1.15rem",
-  },
-})) as typeof CustomLink;
 
 const TabList = styled(Box)(({ theme }) => ({
   position: "relative",
