@@ -62,12 +62,12 @@ export async function getFlowId(sessionId: string) {
 }
 
 interface GetFlowSubmissionEmail {
-  flows: {
+  flowsByPK: {
     submissionEmailId: string;
     submissionIntegration: {
       submissionEmail: string;
     };
-  }[];
+  };
 }
 
 async function getFlowSubmissionEmail(flowId: string) {
@@ -75,7 +75,7 @@ async function getFlowSubmissionEmail(flowId: string) {
     const response = await $api.client.request<GetFlowSubmissionEmail>(
       gql`
         query GetFlowSubmissionEmail($flowId: uuid!) {
-          flows(where: { id: { _eq: $flowId } }) {
+          flowsByPK: flows_by_pk(id: $flowId) {
             submissionEmailId: submission_email_id
             submissionIntegration: submission_integration {
               submissionEmail: submission_email
@@ -87,7 +87,8 @@ async function getFlowSubmissionEmail(flowId: string) {
         flowId,
       },
     );
-    return response?.flows[0]?.submissionIntegration?.submissionEmail;
+
+    return response?.flowsByPK.submissionIntegration.submissionEmail;
   } catch (error) {
     console.error(
       `Error in getFlowSubmissionEmail for flowId: ${flowId}`,
