@@ -21,13 +21,17 @@ export const Route = createFileRoute(
 )({
   validateSearch: zodValidator(searchSchema),
   gcTime: 0,
-  component: () => (
-    <PublicLayout>
-      <StatusPage bannerHeading="Download submission">
-        <RouteComponent />
-      </StatusPage>
-    </PublicLayout>
-  ),
+  component: function Wrapper() {
+    const { token } = Route.useSearch();
+
+    return (
+      <PublicLayout>
+        <StatusPage bannerHeading="Download submission">
+          <RouteComponent key={token || "empty"} />
+        </StatusPage>
+      </PublicLayout>
+    );
+  },
 });
 
 function RouteComponent() {
