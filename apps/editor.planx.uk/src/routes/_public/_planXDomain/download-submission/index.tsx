@@ -1,5 +1,5 @@
 import Typography from "@mui/material/Typography";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useSearch } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
@@ -34,27 +34,25 @@ function RouteComponent() {
     from: "/_public/_planXDomain/download-submission/",
   });
 
-  const { isPending, isError, error, data } = useQuery<
+  const { mutate, isPending, isError, error } = useMutation<
     Blob,
-    APIError<DownloadSubmissionResponse>
+    APIError<DownloadSubmissionResponse>,
+    string
   >({
-    queryKey: ["download-submission", token],
-    retry: false,
-    staleTime: 0,
-    gcTime: 0,
-    enabled: !!token,
-    queryFn: () => downloadSubmission(token!),
+    mutationFn: downloadSubmission,
+    onSuccess: (blob) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "submission.zip";
+      a.click();
+      URL.revokeObjectURL(url);
+    },
   });
 
   useEffect(() => {
-    if (!data) return;
-    const url = URL.createObjectURL(data);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "submission.zip";
-    a.click();
-    URL.revokeObjectURL(url);
-  }, [data]);
+    if (token) mutate(token);
+  }, [token, mutate]);
 
   if (!token)
     return (
@@ -69,7 +67,7 @@ function RouteComponent() {
 
   if (isError) {
     // Unhandled API error - throw to ErrorWrapper and Airbrake
-    if (!error.data.error) throw error;
+    if (!error?.data?.error) throw error;
 
     // Handled API errors
     switch (error.data.error) {
