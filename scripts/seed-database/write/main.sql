@@ -13,4 +13,3 @@
 -- \include write/feedback.sql
 -- \include write/flow_comments.sql
 -- \include write/lowcal_sessions.sql
--- \include write/submission_integrations.sql

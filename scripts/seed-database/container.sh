@@ -33,7 +33,6 @@ tables=(
   # feedback
   # flow_comments
   # lowcal_sessions
-  # submission_integrations
 )
 
 # run copy commands on remote db
