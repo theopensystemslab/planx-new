@@ -329,7 +329,7 @@ const Sidebar: React.FC = React.memo(() => {
 
               <Permission.IsPlatformAdmin>
                 <RouteExplanation>
-                  <OpenInNewOffIcon fontSize="large" />
+                  <PlayArrowIcon fontSize="large" />
                   <Box>
                     <Typography variant="h3" component="h2" gutterBottom>
                       Draft
