@@ -160,7 +160,7 @@ export const CheckForChangesToPublishButton: React.FC<{
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: theme.spacing(0.5),
+                  gap: theme.spacing(0.65),
                   padding: theme.spacing(0.5, 0.75),
                   fontSize: "0.8125rem",
                   fontWeight: 600,
@@ -172,7 +172,7 @@ export const CheckForChangesToPublishButton: React.FC<{
                   cursor: "pointer",
                   transition: "background-color 0.15s ease",
                   "&:hover": { backgroundColor: theme.palette.action.hover },
-                  "& svg": { fontSize: "0.875rem" },
+                  "& svg": { fontSize: "1.1rem" },
                 })}
               >
                 <LanguageIcon />
