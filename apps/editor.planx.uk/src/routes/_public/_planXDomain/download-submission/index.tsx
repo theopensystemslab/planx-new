@@ -34,7 +34,7 @@ function RouteComponent() {
     from: "/_public/_planXDomain/download-submission/",
   });
 
-  const { mutate, isPending, isError, error } = useMutation<
+  const { mutate, isPending, isError, error, reset } = useMutation<
     Blob,
     APIError<DownloadSubmissionResponse>,
     string
@@ -51,7 +51,10 @@ function RouteComponent() {
   });
 
   useEffect(() => {
-    if (token) mutate(token);
+    if (token) {
+      reset();
+      mutate(token);
+    }
   }, [token, mutate]);
 
   if (!token)
