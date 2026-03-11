@@ -18,6 +18,7 @@ import { validateInviteToPay } from "./inviteToPay.js";
 import { validatePlanningConstraints } from "./planningConstraints.js";
 import { validateSections } from "./sections.js";
 import { validateTemplatedNodes } from "./templatedNodes.js";
+import { validateSend } from "./send.js";
 
 type AlteredNode = {
   id: string;
@@ -74,12 +75,14 @@ const validateAndDiffFlow = async (
   const inviteToPay = validateInviteToPay(flattenedFlow);
   const planningConstraints = validatePlanningConstraints(flattenedFlow);
   const templatedNodes = await validateTemplatedNodes(flowId, flattenedFlow);
+  const send = validateSend(flattenedFlow);
   validationChecks.push(
     sections,
     fees,
     inviteToPay,
     planningConstraints,
     templatedNodes,
+    send,
   );
 
   // Arrange list of validation checks in order of status: Fail, Warn, Pass, Not applicable
