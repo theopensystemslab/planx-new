@@ -3,9 +3,9 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import CloseIcon from "@mui/icons-material/Close";
 import HelpIcon from "@mui/icons-material/Help";
 import LanguageIcon from "@mui/icons-material/Language";
-import NorthEastIcon from "@mui/icons-material/NorthEast";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import Dialog from "@mui/material/Dialog";
@@ -254,14 +254,6 @@ const Sidebar: React.FC = React.memo(() => {
           </StyledToggleButton>
           <Header>
             <ViewServiceRow>
-              <Typography
-                variant="body3"
-                fontWeight="FONT_WEIGHT_SEMIBOLD"
-                sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
-              >
-                View service:
-              </Typography>
-
               <Permission.IsPlatformAdmin>
                 <Tooltip title="Open draft service">
                   <span>
@@ -273,7 +265,6 @@ const Sidebar: React.FC = React.memo(() => {
                       preload={false}
                     >
                       Draft
-                      <NorthEastIcon />
                     </ViewServiceButton>
                   </span>
                 </Tooltip>
@@ -289,8 +280,8 @@ const Sidebar: React.FC = React.memo(() => {
                     preload={false}
                     aria-label="Open preview of changes to publish"
                   >
+                    <PlayArrowIcon />
                     Preview
-                    <NorthEastIcon />
                   </ViewServiceButton>
                 </span>
               </Tooltip>
@@ -306,8 +297,8 @@ const Sidebar: React.FC = React.memo(() => {
                       rel="noopener noreferrer"
                       preload={false}
                     >
+                      <LanguageIcon />
                       Published
-                      <NorthEastIcon />
                     </ViewServiceButton>
                   </span>
                 </Tooltip>
@@ -316,7 +307,6 @@ const Sidebar: React.FC = React.memo(() => {
                   <span>
                     <DisabledViewServiceButton>
                       Published
-                      <NorthEastIcon />
                     </DisabledViewServiceButton>
                   </span>
                 </Tooltip>
@@ -388,14 +378,13 @@ const Sidebar: React.FC = React.memo(() => {
                       preload={false}
                     >
                       Open draft
-                      <NorthEastIcon />
                     </ViewServiceButton>
                   </Box>
                 </RouteExplanation>
               </Permission.IsPlatformAdmin>
 
               <RouteExplanation>
-                <OpenInNewIcon />
+                <PlayArrowIcon />
                 <Box>
                   <Typography variant="h3" component="h2" gutterBottom>
                     Preview
@@ -412,7 +401,6 @@ const Sidebar: React.FC = React.memo(() => {
                     preload={false}
                   >
                     Open preview
-                    <NorthEastIcon />
                   </ViewServiceButton>
                 </Box>
               </RouteExplanation>
@@ -438,7 +426,6 @@ const Sidebar: React.FC = React.memo(() => {
                       preload={false}
                     >
                       Open published
-                      <NorthEastIcon />
                     </ViewServiceButton>
                   ) : (
                     <Typography variant="body2" color="text.disabled">
