@@ -18,6 +18,7 @@ import { StyledTableRow } from "../../../../Team/styles";
 import { EmailsUpsertModal } from "./EmailsUpsertModal";
 import { GET_TEAM_SUBMISSION_INTEGRATIONS } from "./queries";
 import { GetSubmissionEmails, SubmissionEmailInput } from "./types";
+import { RemoveEmailModal } from "./RemoveEmailModal";
 
 const TableRowButton = styled(Button)(({ theme }) => ({
   textDecoration: "underline",
@@ -36,6 +37,13 @@ const EditEmailButton = styled(TableRowButton)(({ theme }) => ({
   },
 }));
 
+const RemoveEmailButton = styled(TableRowButton)(({ theme }) => ({
+  color: theme.palette.text.secondary,
+  "&:hover": {
+    color: theme.palette.secondary.contrastText,
+  },
+}));
+
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
   border: `1px solid ${theme.palette.border.light}`,
   borderRadius: theme.shape.borderRadius,
@@ -45,7 +53,7 @@ const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
 const EmailsTableContent = () => {
   const teamId = useStore((state) => state.teamId);
 
-  const { data, loading } = useQuery<GetSubmissionEmails>(
+  const { data, loading, refetch } = useQuery<GetSubmissionEmails>(
     GET_TEAM_SUBMISSION_INTEGRATIONS,
     {
       variables: { teamId },
@@ -54,15 +62,16 @@ const EmailsTableContent = () => {
 
   const emails = data?.submissionIntegrations;
 
-  const [showModal, setShowModal] = useState(false);
-  const [actionType, setActionType] = useState<"add" | "edit">("add");
+  const [showUpsertModal, setShowUpsertModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [actionType, setActionType] = useState<"add" | "edit" | "remove">("add");
   const [initialValues, setInitialValues] = useState<
     SubmissionEmailInput | undefined
   >();
 
   const addEmail = () => {
     setActionType("add");
-    setShowModal(true);
+    setShowUpsertModal(true);
 
     if (!emails || emails.length === 0) {
       setInitialValues({ defaultEmail: true } as SubmissionEmailInput);
@@ -74,7 +83,13 @@ const EmailsTableContent = () => {
   const handleEditEmail = (email: SubmissionEmailInput) => {
     setActionType("edit");
     setInitialValues(email);
-    setShowModal(true);
+    setShowUpsertModal(true);
+  };
+
+  const deleteEmail = (email: SubmissionEmailInput) => {
+    setActionType("remove");
+    setShowDeleteModal(true);
+    setInitialValues(email);
   };
 
   if (loading) return <div>Loading...</div>;
@@ -98,12 +113,13 @@ const EmailsTableContent = () => {
             </TableRow>
           </TableBody>
         </Table>
-        {showModal && (
+        {showUpsertModal && (
           <EmailsUpsertModal
-            showModal={showModal}
-            setShowModal={setShowModal}
+            showModal={showUpsertModal}
+            setShowModal={setShowUpsertModal}
             initialValues={initialValues}
             actionType={actionType}
+            refetch={refetch}
           />
         )}
       </>
@@ -135,6 +151,13 @@ const EmailsTableContent = () => {
                     Edit
                   </EditEmailButton>
                 </TableCell>
+                <TableCell>
+                  {!email.defaultEmail && (
+                    <RemoveEmailButton onClick={() => deleteEmail(email)}>
+                      Remove
+                    </RemoveEmailButton>
+                  )}
+                </TableCell>
               </StyledTableRow>
             ))}
             <TableRow>
@@ -145,17 +168,27 @@ const EmailsTableContent = () => {
           </TableBody>
         </Table>
       </StyledTableContainer>
-      {showModal && (
+      {showUpsertModal && (
         <EmailsUpsertModal
-          showModal={showModal}
-          setShowModal={setShowModal}
+          showModal={showUpsertModal}
+          setShowModal={setShowUpsertModal}
           initialValues={initialValues}
           actionType={actionType}
           currentEmails={data.submissionIntegrations.map(
             (email) => email.submissionEmail,
           )}
+          refetch={refetch}
         />
       )}
+      {showDeleteModal && (
+          <RemoveEmailModal
+            showModal={showDeleteModal}
+            setShowModal={setShowDeleteModal}
+            initialValues={initialValues}
+            actionType={actionType}
+            refetch={refetch}
+          />
+        )}
     </>
   );
 };
