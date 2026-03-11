@@ -173,7 +173,7 @@ function EditorNavMenu() {
           accessibleBy: "*",
           disabled: !referenceCode,
         },
-        { 
+        {
           title: "Analytics",
           Icon: LeaderboardIcon,
           route: teamAnalyticsLink ? teamAnalyticsLink : `#`,

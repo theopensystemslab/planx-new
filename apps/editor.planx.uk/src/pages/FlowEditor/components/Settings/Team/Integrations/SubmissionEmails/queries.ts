@@ -2,12 +2,12 @@ import { gql } from "@apollo/client";
 
 export const GET_FLOWS = gql`
   query GetFlows($flowIds: [uuid!]!) {
-  flows(where: {id: {_in: $flowIds}}) {
-    slug
-    name
-    id
+    flows(where: { id: { _in: $flowIds } }) {
+      slug
+      name
+      id
+    }
   }
-}
 `;
 
 export const GET_TEAM_SUBMISSION_INTEGRATIONS = gql`
@@ -47,23 +47,16 @@ export const UPSERT_TEAM_SUBMISSION_INTEGRATIONS = gql`
 
 export const GET_FLOW_IDS_BY_SUBMISSION_INTEGRATION = gql`
   query GetFlowIdsBySubmissionIntegration($emailId: uuid!) {
-    flowIds: flows(
-      where: { submission_email_id: { _eq: $emailId } }
-    ) {
+    flowIds: flows(where: { submission_email_id: { _eq: $emailId } }) {
       flowId: id
     }
   }
 `;
 
 export const DELETE_TEAM_SUBMISSION_INTEGRATIONS = gql`
-  mutation DeleteSubmissionIntegration(
-    $submissionEmailId: uuid!
-  ) {
+  mutation DeleteSubmissionIntegration($submissionEmailId: uuid!) {
     delete_submission_integrations(
-      where: {
-        id: { _eq: $submissionEmailId }
-        default_email: { _eq: false }
-      }
+      where: { id: { _eq: $submissionEmailId }, default_email: { _eq: false } }
     ) {
       returning {
         teamId: team_id

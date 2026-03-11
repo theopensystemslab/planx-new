@@ -13,15 +13,14 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 import {
-    GET_FLOWS,
-GET_FLOW_IDS_BY_SUBMISSION_INTEGRATION,
-  DELETE_TEAM_SUBMISSION_INTEGRATIONS
+  DELETE_TEAM_SUBMISSION_INTEGRATIONS,
+  GET_FLOW_IDS_BY_SUBMISSION_INTEGRATION,
+  GET_FLOWS,
 } from "./queries";
-
 import {
-    GetFlows,
-    GetFlowIdsBySubmissionIntegration,
   EditorModalProps,
+  GetFlowIdsBySubmissionIntegration,
+  GetFlows,
   SubmissionEmailInput,
 } from "./types";
 
@@ -45,10 +44,9 @@ export const RemoveEmailModal = ({
 
   const flowIds = flowIdsData?.flowIds.map((flow) => flow.flowId) || [];
 
-  const { data: flowsData, error: flowsError } =
-    useQuery<GetFlows>(GET_FLOWS, {
-      variables: { emailId, flowIds },
-    });
+  const { data: flowsData, error: flowsError } = useQuery<GetFlows>(GET_FLOWS, {
+    variables: { emailId, flowIds },
+  });
 
   const { slug: teamSlug } = useStore((state) => state.getTeam());
 
@@ -119,7 +117,7 @@ export const RemoveEmailModal = ({
                 </ListItem>
               ))}
               <Typography mt={2}>
-                Please <strong>update your Send component </strong> 
+                Please <strong>update your Send component </strong>
                 to use a different email address before removing this one.
               </Typography>
             </>

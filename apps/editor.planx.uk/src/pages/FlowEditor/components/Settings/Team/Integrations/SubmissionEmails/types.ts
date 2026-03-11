@@ -11,10 +11,10 @@ export interface SubmissionEmailInput {
 
 export interface GetFlows {
   flows: {
-    slug: string,
-    name: string,
-    id: string
-  }[]
+    slug: string;
+    name: string;
+    id: string;
+  }[];
 }
 
 export interface GetFlowIdsBySubmissionIntegration {

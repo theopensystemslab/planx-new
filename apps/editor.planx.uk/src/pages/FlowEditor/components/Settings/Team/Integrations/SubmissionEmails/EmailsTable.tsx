@@ -17,8 +17,8 @@ import { AddButton } from "ui/editor/AddButton";
 import { StyledTableRow } from "../../../../Team/styles";
 import { EmailsUpsertModal } from "./EmailsUpsertModal";
 import { GET_TEAM_SUBMISSION_INTEGRATIONS } from "./queries";
-import { GetSubmissionEmails, SubmissionEmailInput } from "./types";
 import { RemoveEmailModal } from "./RemoveEmailModal";
+import { GetSubmissionEmails, SubmissionEmailInput } from "./types";
 
 const TableRowButton = styled(Button)(({ theme }) => ({
   textDecoration: "underline",
@@ -64,7 +64,9 @@ const EmailsTableContent = () => {
 
   const [showUpsertModal, setShowUpsertModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [actionType, setActionType] = useState<"add" | "edit" | "remove">("add");
+  const [actionType, setActionType] = useState<"add" | "edit" | "remove">(
+    "add",
+  );
   const [initialValues, setInitialValues] = useState<
     SubmissionEmailInput | undefined
   >();
@@ -181,14 +183,14 @@ const EmailsTableContent = () => {
         />
       )}
       {showDeleteModal && (
-          <RemoveEmailModal
-            showModal={showDeleteModal}
-            setShowModal={setShowDeleteModal}
-            initialValues={initialValues}
-            actionType={actionType}
-            refetch={refetch}
-          />
-        )}
+        <RemoveEmailModal
+          showModal={showDeleteModal}
+          setShowModal={setShowDeleteModal}
+          initialValues={initialValues}
+          actionType={actionType}
+          refetch={refetch}
+        />
+      )}
     </>
   );
 };
