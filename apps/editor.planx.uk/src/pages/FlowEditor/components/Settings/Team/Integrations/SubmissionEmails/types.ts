@@ -12,8 +12,9 @@ export interface GetSubmissionEmails {
   submissionIntegrations: Required<SubmissionEmailInput>[];
 }
 
-export type SubmissionEmailMutation =
-  SnakeCasedProperties<SubmissionEmailInput>;
+export type SubmissionEmailMutation = {
+  insertSubmissionIntegrationsOne: SnakeCasedProperties<SubmissionEmailInput>;
+};
 
 export interface SubmissionEmailValues {
   submissionIntegrations: SubmissionEmailInput[];
