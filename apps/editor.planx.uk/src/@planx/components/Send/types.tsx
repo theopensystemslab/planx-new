@@ -3,7 +3,7 @@ import { FormikErrors, FormikHelpers } from "formik";
 import { SubmissionEmailInput } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 
 export interface GetFlowEmailIdQuery {
-  flows_by_pk: {
+  flowsByPK: {
     submissionEmailId: string;
   };
 }
