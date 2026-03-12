@@ -8,6 +8,7 @@ export const useFlowEmailId = (flowId: string) => {
     GET_FLOW_EMAIL_ID,
     {
       variables: { flowId },
+      fetchPolicy: "network-only",
     },
   );
 
