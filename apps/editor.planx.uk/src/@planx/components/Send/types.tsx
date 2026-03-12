@@ -60,5 +60,4 @@ export interface EmailSelectionProps {
   disabled?: boolean;
   newEmailError?: FormikErrors<string>;
   setFieldValue: FormikHelpers<any>["setFieldValue"];
-  setNewEmail: (value: string) => void;
 }

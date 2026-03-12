@@ -15,7 +15,6 @@ import { SubmissionEmailInput } from "pages/FlowEditor/components/Settings/Team/
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { useEffect } from "react";
-import { useState } from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -38,7 +37,6 @@ import { parseSend, Send, validationSchema } from "./model";
 import {
   EmailEmptyStateProps,
   EmailSelectionProps,
-  GetFlowEmailIdQuery,
 } from "./types";
 
 const EmailLoadingState: React.FC = () => (
@@ -73,7 +71,6 @@ const EmailEmptyState: React.FC<EmailEmptyStateProps> = ({
 const EmailSelection: React.FC<EmailSelectionProps> = ({
   teamSlug,
   emailOptions,
-  currentEmail,
   newEmail,
   submissionEmailId,
   isNewEmailSelected,
@@ -81,7 +78,6 @@ const EmailSelection: React.FC<EmailSelectionProps> = ({
   disabled,
   newEmailError,
   setFieldValue,
-  setNewEmail,
 }) => (
   <>
     <InputRow>
@@ -120,9 +116,8 @@ const EmailSelection: React.FC<EmailSelectionProps> = ({
         value={newEmail}
         placeholder="Enter new email"
         onChange={(e) => {
-          setNewEmail(e.target.value);
-          setFieldValue("newEmail", e.target.value);
-        }}
+            setFieldValue("newEmail", e.target.value);
+          }}
         disabled={disabled}
         errorMessage={newEmailError}
       />
@@ -133,8 +128,6 @@ const EmailSelection: React.FC<EmailSelectionProps> = ({
 export type Props = EditorProps<TYPES.Send, Send>;
 
 const SendComponent: React.FC<Props> = (props) => {
-  const [isNewEmailSelected, setIsNewEmailSelected] = useState(false);
-  const [newEmail, setNewEmail] = useState("");
   const formik = useFormikWithRef<Send>(
     {
       initialValues: parseSend(props.node?.data),
@@ -142,12 +135,9 @@ const SendComponent: React.FC<Props> = (props) => {
         try {
           if (props.handleSubmit) {
             const updatedEmailId = await handleInsertOrUpdate(
-              teamId,
               newValues,
               existingEmailId,
               insertNewDefaultEmail,
-              newEmail,
-              id,
             );
 
             if (updatedEmailId) {
@@ -201,39 +191,29 @@ const SendComponent: React.FC<Props> = (props) => {
   );
   const insertNewDefaultEmail = defaultEmail ? false : true; // if an existing defaultEmail is set, the newly added one is not default
 
-  const [insertSubmissionIntegration] = useInsertSubmissionIntegration(
-    newEmail,
-    insertNewDefaultEmail,
-    teamId,
-  );
+  const [insertSubmissionIntegration] = useInsertSubmissionIntegration();
   const [updateFlowSubmissionEmail] = useUpdateFlowSubmissionEmail();
 
   const handleInsertOrUpdate = async (
-    teamId: number,
     newValues: Send,
     existingEmailId: string | undefined,
     insertNewDefaultEmail: boolean,
-    newSubmissionEmail: string,
-    id: string,
-  ) => {
+  ): Promise<string | undefined> => {
     const selectedEmailId = newValues.submissionEmailId;
     const newEmail = newValues.newEmail;
 
-    // if there is no existing email, write a new one and then update the flows record
     if (selectedEmailId === "new-email" && newEmail) {
       const { data } = await insertSubmissionIntegration({
         variables: {
-          submissionEmail: newSubmissionEmail,
+          submissionEmail: newEmail,
           defaultEmail: insertNewDefaultEmail,
           teamId,
         },
       });
-      const submissionEmailId = data?.insert_submission_integrations_one?.id;
+      const submissionEmailId = data?.insertSubmissionIntegrationsOne?.id;
       if (!submissionEmailId) {
         throw new Error("No submission email ID was returned");
       }
-
-      // after we add the new record to submission_integrations, we need to update the flows record too
       await updateFlowSubmissionEmail({
         variables: {
           flowId: id,
@@ -242,7 +222,7 @@ const SendComponent: React.FC<Props> = (props) => {
       });
       return submissionEmailId;
     }
-    // if a new email is selected
+
     if (selectedEmailId && existingEmailId !== selectedEmailId) {
       await updateFlowSubmissionEmail({
         variables: {
@@ -254,6 +234,8 @@ const SendComponent: React.FC<Props> = (props) => {
     }
   };
 
+  const isNewEmailSelected = formik.values.submissionEmailId === "new-email";
+
   useEffect(() => {
     if (flowData) {
       const existingEmailId = flowData.flowsByPK?.submissionEmailId;
@@ -263,13 +245,11 @@ const SendComponent: React.FC<Props> = (props) => {
         formik.setFieldValue("submissionEmailId", defaultEmail.id);
       }
     }
-  }, [flowData, defaultEmail?.id, formik]);
+  }, [flowData, defaultEmail?.id, formik.values.submissionEmailId]);
 
   const handleSelectChange = (event: SelectChangeEvent<unknown>) => {
     const selectedValue = event.target.value as string;
     formik.setFieldValue("submissionEmailId", selectedValue);
-
-    setIsNewEmailSelected(selectedValue === "new-email");
   };
 
   const currentEmail = emailOptions.find(
@@ -307,14 +287,13 @@ const SendComponent: React.FC<Props> = (props) => {
           teamSlug={teamSlug}
           emailOptions={emailOptions}
           currentEmail={currentEmail}
-          newEmail={newEmail}
+          newEmail={formik.values.newEmail}
           submissionEmailId={formik.values.submissionEmailId}
           isNewEmailSelected={isNewEmailSelected}
           handleSelectChange={handleSelectChange}
           disabled={props.disabled}
           newEmailError={formik.errors.newEmail}
           setFieldValue={formik.setFieldValue}
-          setNewEmail={setNewEmail}
         />
       );
   };
