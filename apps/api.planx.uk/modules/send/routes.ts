@@ -11,7 +11,6 @@ import { createSendEvents } from "./createSendEvents/controller.js";
 import { combinedEventsPayloadSchema } from "./createSendEvents/types.js";
 import { sendToEmail } from "./email/index.js";
 import { getSubmissionsController, getSubmissionsSchema } from "./fme/index.js";
-import { sendToGOSSController } from "./goss/controller.js";
 import { sendToIdoxNexus } from "./idox/nexus.js";
 import { sendToS3 } from "./s3/index.js";
 import { submissionHTMLController } from "./submission/html/controller.js";
@@ -59,12 +58,6 @@ router.post(
   useHasuraAuth,
   validate(sendIntegrationSchema),
   sendToS3,
-);
-router.post(
-  "/goss/:localAuthority",
-  useHasuraAuth,
-  validate(sendIntegrationSchema),
-  sendToGOSSController,
 );
 
 router.get(
