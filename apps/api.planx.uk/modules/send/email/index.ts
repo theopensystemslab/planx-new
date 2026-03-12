@@ -60,7 +60,6 @@ export const sendToEmail: SendIntegrationController = async (
     const config = await getSubmitEmailConfig({
       teamSettings,
       submissionEmail,
-      localAuthority,
       sessionId,
       token,
     });
@@ -99,13 +98,11 @@ export const sendToEmail: SendIntegrationController = async (
 const getSubmitEmailConfig = async ({
   teamSettings,
   submissionEmail,
-  localAuthority,
   sessionId,
   token,
 }: {
   teamSettings: TeamContactSettings;
   submissionEmail: string;
-  localAuthority: string;
   sessionId: string;
   token: string;
 }): Promise<TemplateRegistry["submit"]["config"]> => {
