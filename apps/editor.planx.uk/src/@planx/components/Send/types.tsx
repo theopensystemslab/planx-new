@@ -41,7 +41,7 @@ export interface InsertSubmissionEmailMutation {
     email: string;
     teamId: number;
     defaultEmail: boolean;
-  }
+  };
 }
 
 export interface EmailEmptyStateProps {
@@ -59,6 +59,6 @@ export interface EmailSelectionProps {
   handleSelectChange: (event: SelectChangeEvent<unknown>) => void;
   disabled?: boolean;
   newEmailError?: FormikErrors<string>;
-  setFieldValue: FormikHelpers<any>['setFieldValue'];
+  setFieldValue: FormikHelpers<any>["setFieldValue"];
   setNewEmail: (value: string) => void;
 }
