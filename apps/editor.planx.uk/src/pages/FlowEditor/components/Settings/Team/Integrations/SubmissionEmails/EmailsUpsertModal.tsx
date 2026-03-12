@@ -18,7 +18,7 @@ import {
   GET_TEAM_SUBMISSION_INTEGRATIONS,
   UPSERT_TEAM_SUBMISSION_INTEGRATIONS,
 } from "./queries";
-import { EditorModalProps } from "./types";
+import { UpsertModalProps } from "./types";
 
 export const EmailsUpsertModal = ({
   setShowModal,
@@ -26,7 +26,7 @@ export const EmailsUpsertModal = ({
   initialValues,
   actionType,
   currentEmails,
-}: EditorModalProps) => {
+}: UpsertModalProps) => {
   const teamId = useStore((state) => state.teamId);
   const toast = useToast();
 

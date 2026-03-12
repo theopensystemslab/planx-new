@@ -32,26 +32,29 @@ export interface UpdateTeamSubmissionIntegrationsVariables {
   emails: SubmissionEmailMutation[];
 }
 
+export type Flow = {
+  id: string;
+  slug: string;
+  name: string;
+};
+
 export type ActionType = "add" | "edit" | "remove"; // TODO: refactor, this is a duplicate from "apps/editor.planx.uk/src/pages/FlowEditor/components/Team/types.ts"
 
 export interface EditorModalProps {
   showModal?: boolean;
   setShowModal: React.Dispatch<SetStateAction<boolean>>;
   initialValues?: SubmissionEmailInput;
-  actionType?: ActionType;
-  previousDefaultEmail?: SubmissionEmailInput;
-  currentEmails?: string[];
-  teamId?: number;
+  actionType: ActionType;
   refetch: (
     variables?: Partial<Record<string, any>>,
   ) => Promise<ApolloQueryResult<GetSubmissionEmails>>;
 }
 
-export type Flow = {
-  id: string;
-  slug: string;
-  name: string;
-};
+export interface UpsertModalProps extends EditorModalProps {
+    previousDefaultEmail?: SubmissionEmailInput;
+    currentEmails?: string[];
+    teamId?: number;
+}
 
 export interface RemoveModalProps extends Omit<
   EditorModalProps,
