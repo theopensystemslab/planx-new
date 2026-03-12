@@ -14,6 +14,16 @@ object_relationships:
   - name: team_setting
     using:
       foreign_key_constraint_on: team_id
+array_relationships:
+  - name: flows
+    using:
+      manual_configuration:
+        column_mapping:
+          id: submission_email_id
+        insertion_order: null
+        remote_table:
+          name: flows
+          schema: public
 insert_permissions:
   - role: platformAdmin
     permission:
