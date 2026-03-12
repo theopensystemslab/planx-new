@@ -93,9 +93,10 @@ export const resendEmailController: ResendEmail = async (_req, res, next) => {
     });
   }
 
+  // call sendEmail only in production or when testing
   if (!["production", "test"].includes(process.env.APP_ENVIRONMENT!)) {
     return res.status(200).send({
-      message: `Skipping ${template} email: APP_ENVIRONMENT is not production`,
+      message: `Skipping ${template} email: APP_ENVIRONMENT is not production or test`,
     });
   }
   try {
