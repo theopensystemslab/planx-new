@@ -88,7 +88,7 @@ async function getFlowSubmissionEmail(flowId: string) {
       },
     );
 
-    return response?.flowsByPK.submissionIntegration.submissionEmail;
+    return response?.flowsByPK.submissionIntegration?.submissionEmail;
   } catch (error) {
     console.error(
       `Error in getFlowSubmissionEmail for flowId: ${flowId}`,
@@ -126,11 +126,12 @@ export async function getSubmissionEmail(
   teamId: number,
   flowId: string,
 ): Promise<string | undefined> {
-  const submissionEmail = await getFlowSubmissionEmail(flowId);
-  if (submissionEmail == null) {
-    return await getDefaultSubmissionIntegration(teamId);
-  }
-  return submissionEmail;
+  const flowSubmissionEmail = await getFlowSubmissionEmail(flowId);
+  if (flowSubmissionEmail) return flowSubmissionEmail;
+
+  const defaultTeamSubmissionEmail =
+    await getDefaultSubmissionIntegration(teamId);
+  return defaultTeamSubmissionEmail;
 }
 
 interface GetSessionData {
