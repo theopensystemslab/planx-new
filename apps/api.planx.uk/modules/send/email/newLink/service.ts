@@ -32,7 +32,7 @@ export const getSession = async (sessionId: string) => {
     } | null;
   }>(
     gql`
-      query GetSessionSubmittedAt($id: uuid!) {
+      query GetSessionForDownloadLink($id: uuid!) {
         session: lowcal_sessions_by_pk(id: $id) {
           id
           submittedAt: submitted_at

@@ -14,7 +14,7 @@ interface Success {
 }
 
 interface Failure {
-  error: "SESSION_NOT_FOUND" | "LINK_ALREADY_EMAILED";
+  error: "SESSION_NOT_FOUND" | "LINK_ALREADY_EMAILED" | "EMAIL_NOT_CONFIGURED";
 }
 
 export type Controller = ValidatedRequestHandler<

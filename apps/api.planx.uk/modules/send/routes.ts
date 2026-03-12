@@ -56,7 +56,7 @@ router.post(
   sendToEmail,
 );
 router.post(
-  "/email-submission/download-link",
+  "/email-download-link",
   validate(sendNewDownloadLinkSchema),
   sendNewDownloadLink,
 );

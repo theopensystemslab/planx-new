@@ -21,12 +21,7 @@ export const sendNewDownloadLink: Controller = async (req, res, next) => {
       session.flow.team.id,
       session.flow.id,
     );
-    if (!submissionEmail) {
-      return next({
-        status: 400,
-        message: `Send to email is not enabled for this local authority (${localAuthority})`,
-      });
-    }
+    if (!submissionEmail) return res.status(400).json({ error: "EMAIL_NOT_CONFIGURED" });
 
     await emailNewDownloadLink({
       submissionEmail,
