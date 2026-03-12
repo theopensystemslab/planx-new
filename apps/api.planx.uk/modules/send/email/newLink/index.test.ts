@@ -9,7 +9,7 @@ vi.mock("../../../../lib/notify/index.js", () => ({
   sendEmail: vi.fn(),
 }));
 
-const ENDPOINT = "/email-download-link"
+const ENDPOINT = "/email-download-link";
 
 describe("send a format new download link via email", () => {
   it("returns an error if a matching session cannot be found", async () => {
@@ -17,15 +17,19 @@ describe("send a format new download link via email", () => {
       name: "GetSessionForDownloadLink",
       matchOnVariables: false,
       data: {
-        session: null
+        session: null,
       },
     });
 
     await supertest(app)
       .post(ENDPOINT)
-      .send({ sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49", localAuthority: "lambeth", flowSlug: "report-a-planning-breach" })
+      .send({
+        sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49",
+        localAuthority: "lambeth",
+        flowSlug: "report-a-planning-breach",
+      })
       .expect(404)
-      .then(res => expect(res.body.error).toMatch(/SESSION_NOT_FOUND/));
+      .then((res) => expect(res.body.error).toMatch(/SESSION_NOT_FOUND/));
   });
 
   it("returns an error if an email has already been triggered (access token exists)", async () => {
@@ -40,10 +44,10 @@ describe("send a format new download link via email", () => {
             id: "66d373d4-fff2-4ef7-a5f2-2a36e39ccc49",
             name: "Report a planning breach",
             team: {
-              id: 123
-            }
-          }
-        }
+              id: 123,
+            },
+          },
+        },
       },
     });
 
@@ -56,9 +60,13 @@ describe("send a format new download link via email", () => {
 
     await supertest(app)
       .post(ENDPOINT)
-      .send({ sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49", localAuthority: "lambeth", flowSlug: "report-a-planning-breach" })
+      .send({
+        sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49",
+        localAuthority: "lambeth",
+        flowSlug: "report-a-planning-breach",
+      })
       .expect(409)
-      .then(res => expect(res.body.error).toMatch(/LINK_ALREADY_EMAILED/));
+      .then((res) => expect(res.body.error).toMatch(/LINK_ALREADY_EMAILED/));
   });
 
   it("errors if this team does not have a 'submission_email'", async () => {
@@ -73,10 +81,10 @@ describe("send a format new download link via email", () => {
             id: "66d373d4-fff2-4ef7-a5f2-2a36e39ccc49",
             name: "Report a planning breach",
             team: {
-              id: 123
-            }
-          }
-        }
+              id: 123,
+            },
+          },
+        },
       },
     });
 
@@ -117,9 +125,13 @@ describe("send a format new download link via email", () => {
 
     await supertest(app)
       .post(ENDPOINT)
-      .send({ sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49", localAuthority: "lambeth", flowSlug: "report-a-planning-breach" })
+      .send({
+        sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49",
+        localAuthority: "lambeth",
+        flowSlug: "report-a-planning-breach",
+      })
       .expect(400)
-      .then(res => expect(res.body.error).toMatch(/EMAIL_NOT_CONFIGURED/));
+      .then((res) => expect(res.body.error).toMatch(/EMAIL_NOT_CONFIGURED/));
   });
 
   it("errors if there's an unhandled exception", async () => {
@@ -132,9 +144,17 @@ describe("send a format new download link via email", () => {
 
     await supertest(app)
       .post(ENDPOINT)
-      .send({ sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49", localAuthority: "lambeth", flowSlug: "report-a-planning-breach" })
+      .send({
+        sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49",
+        localAuthority: "lambeth",
+        flowSlug: "report-a-planning-breach",
+      })
       .expect(500)
-      .then(res => expect(res.body.error).toMatch(/Failed to send "new-download-link" email/));
+      .then((res) =>
+        expect(res.body.error).toMatch(
+          /Failed to send "new-download-link" email/,
+        ),
+      );
   });
 
   it("send an email, with a valid download link, to the correct email address", async () => {
@@ -149,10 +169,10 @@ describe("send a format new download link via email", () => {
             id: "66d373d4-fff2-4ef7-a5f2-2a36e39ccc49",
             name: "Report a planning breach",
             team: {
-              id: 123
-            }
-          }
-        }
+              id: 123,
+            },
+          },
+        },
       },
     });
 
@@ -181,7 +201,11 @@ describe("send a format new download link via email", () => {
 
     await supertest(app)
       .post(ENDPOINT)
-      .send({ sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49", localAuthority: "lambeth", flowSlug: "report-a-planning-breach" })
+      .send({
+        sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49",
+        localAuthority: "lambeth",
+        flowSlug: "report-a-planning-breach",
+      })
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
@@ -194,7 +218,8 @@ describe("send a format new download link via email", () => {
           expect.objectContaining({
             emailReplyToId: DEVOPS_EMAIL_REPLY_TO_ID,
             personalisation: expect.objectContaining({
-              downloadLink: "https://www.example.com/download-submission?token=mock-access-token",
+              downloadLink:
+                "https://www.example.com/download-submission?token=mock-access-token",
               flowName: "Report a planning breach",
               sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49",
             }),

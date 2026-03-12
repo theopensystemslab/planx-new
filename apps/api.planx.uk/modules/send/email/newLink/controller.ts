@@ -21,7 +21,8 @@ export const sendNewDownloadLink: Controller = async (req, res, next) => {
       session.flow.team.id,
       session.flow.id,
     );
-    if (!submissionEmail) return res.status(400).json({ error: "EMAIL_NOT_CONFIGURED" });
+    if (!submissionEmail)
+      return res.status(400).json({ error: "EMAIL_NOT_CONFIGURED" });
 
     await emailNewDownloadLink({
       submissionEmail,
