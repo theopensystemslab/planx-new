@@ -18,7 +18,11 @@ import { StyledTableRow } from "../../../../Team/styles";
 import { EmailsUpsertModal } from "./EmailsUpsertModal";
 import { GET_TEAM_SUBMISSION_INTEGRATIONS } from "./queries";
 import { RemoveEmailModal } from "./RemoveEmailModal";
-import { GetSubmissionEmails, SubmissionEmailInput } from "./types";
+import {
+  GetSubmissionEmails,
+  SubmissionEmailInput,
+  SubmissionEmailWithFlows,
+} from "./types";
 
 const TableRowButton = styled(Button)(({ theme }) => ({
   textDecoration: "underline",
@@ -60,43 +64,54 @@ const EmailsTableContent = () => {
     },
   );
 
-  const emails = data?.submissionIntegrations;
+  const submissionIntegrations = data?.submissionIntegrations.map(
+    (submissionIntegration) => ({
+      submissionEmail: submissionIntegration.submissionEmail,
+      defaultEmail: submissionIntegration.defaultEmail,
+      teamId: submissionIntegration.teamId,
+      id: submissionIntegration.id,
+      flows: submissionIntegration.flows.map((flow) => ({
+        id: flow.id,
+        name: flow.name,
+        slug: flow.slug,
+      })),
+    }),
+  );
 
   const [showUpsertModal, setShowUpsertModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
   const [actionType, setActionType] = useState<"add" | "edit" | "remove">(
     "add",
-  );
-  const [initialValues, setInitialValues] = useState<
+  ); // TODO: do we need this if props are now separate types?
+
+  const [selectedUpsertIntegration, setSelectedUpsertIntegration] = useState<
     SubmissionEmailInput | undefined
+  >();
+  const [selectedDeleteIntegration, setSelectedDeleteIntegration] = useState<
+    SubmissionEmailWithFlows | undefined
   >();
 
   const addEmail = () => {
     setActionType("add");
     setShowUpsertModal(true);
-
-    if (!emails || emails.length === 0) {
-      setInitialValues({ defaultEmail: true } as SubmissionEmailInput);
-    } else {
-      setInitialValues(undefined);
-    }
   };
 
   const handleEditEmail = (email: SubmissionEmailInput) => {
     setActionType("edit");
-    setInitialValues(email);
+    setSelectedUpsertIntegration(email);
     setShowUpsertModal(true);
   };
 
-  const deleteEmail = (email: SubmissionEmailInput) => {
+  const deleteEmail = (email: SubmissionEmailWithFlows) => {
     setActionType("remove");
     setShowDeleteModal(true);
-    setInitialValues(email);
+    setSelectedDeleteIntegration(email);
   };
 
   if (loading) return <div>Loading...</div>;
 
-  if (!emails || emails.length === 0) {
+  if (!submissionIntegrations || submissionIntegrations.length === 0) {
     return (
       <>
         <Table>
@@ -119,7 +134,7 @@ const EmailsTableContent = () => {
           <EmailsUpsertModal
             showModal={showUpsertModal}
             setShowModal={setShowUpsertModal}
-            initialValues={initialValues}
+            initialValues={selectedUpsertIntegration}
             actionType={actionType}
             refetch={refetch}
           />
@@ -140,28 +155,36 @@ const EmailsTableContent = () => {
             </StyledTableRow>
           </TableHead>
           <TableBody>
-            {emails.map((email: SubmissionEmailInput) => (
-              <StyledTableRow key={email.id}>
-                <TableCell sx={{ wordWrap: "break-word", maxWidth: "280px" }}>
-                  {email.submissionEmail}
-                </TableCell>
-                <TableCell align="center">
-                  {email.defaultEmail && <CheckIcon color="primary" />}
-                </TableCell>
-                <TableCell>
-                  <EditEmailButton onClick={() => handleEditEmail(email)}>
-                    Edit
-                  </EditEmailButton>
-                </TableCell>
-                <TableCell>
-                  {!email.defaultEmail && (
-                    <RemoveEmailButton onClick={() => deleteEmail(email)}>
-                      Remove
-                    </RemoveEmailButton>
-                  )}
-                </TableCell>
-              </StyledTableRow>
-            ))}
+            {submissionIntegrations.map(
+              (submissionIntegration: SubmissionEmailWithFlows) => (
+                <StyledTableRow key={submissionIntegration.id}>
+                  <TableCell sx={{ wordWrap: "break-word", maxWidth: "280px" }}>
+                    {submissionIntegration.submissionEmail}
+                  </TableCell>
+                  <TableCell align="center">
+                    {submissionIntegration.defaultEmail && (
+                      <CheckIcon color="primary" />
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <EditEmailButton
+                      onClick={() => handleEditEmail(submissionIntegration)}
+                    >
+                      Edit
+                    </EditEmailButton>
+                  </TableCell>
+                  <TableCell>
+                    {!submissionIntegration.defaultEmail && (
+                      <RemoveEmailButton
+                        onClick={() => deleteEmail(submissionIntegration)}
+                      >
+                        Remove
+                      </RemoveEmailButton>
+                    )}
+                  </TableCell>
+                </StyledTableRow>
+              ),
+            )}
             <TableRow>
               <TableCell colSpan={4}>
                 <AddButton onClick={addEmail}>Add a new email</AddButton>
@@ -174,19 +197,19 @@ const EmailsTableContent = () => {
         <EmailsUpsertModal
           showModal={showUpsertModal}
           setShowModal={setShowUpsertModal}
-          initialValues={initialValues}
+          initialValues={selectedUpsertIntegration}
           actionType={actionType}
-          currentEmails={data.submissionIntegrations.map(
+          currentEmails={submissionIntegrations.map(
             (email) => email.submissionEmail,
           )}
           refetch={refetch}
         />
       )}
-      {showDeleteModal && (
+      {showDeleteModal && selectedDeleteIntegration && (
         <RemoveEmailModal
           showModal={showDeleteModal}
           setShowModal={setShowDeleteModal}
-          initialValues={initialValues}
+          initialValues={selectedDeleteIntegration}
           actionType={actionType}
           refetch={refetch}
         />

@@ -12,17 +12,8 @@ import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
-import {
-  DELETE_TEAM_SUBMISSION_INTEGRATIONS,
-  GET_FLOW_IDS_BY_SUBMISSION_INTEGRATION,
-  GET_FLOWS,
-} from "./queries";
-import {
-  EditorModalProps,
-  GetFlowIdsBySubmissionIntegration,
-  GetFlows,
-  SubmissionEmailInput,
-} from "./types";
+import { DELETE_TEAM_SUBMISSION_INTEGRATIONS } from "./queries";
+import { RemoveModalProps, SubmissionEmailWithFlows } from "./types";
 
 export const RemoveEmailModal = ({
   setShowModal,
@@ -30,45 +21,33 @@ export const RemoveEmailModal = ({
   actionType,
   initialValues,
   refetch,
-}: EditorModalProps) => {
+}: RemoveModalProps) => {
   const toast = useToast();
   const [deleteEmail] = useMutation(DELETE_TEAM_SUBMISSION_INTEGRATIONS);
-  const emailId = initialValues?.id || null;
-  const { data: flowIdsData, error: flowIdsError } =
-    useQuery<GetFlowIdsBySubmissionIntegration>(
-      GET_FLOW_IDS_BY_SUBMISSION_INTEGRATION,
-      {
-        variables: { emailId },
-      },
-    );
 
-  const flowIds = flowIdsData?.flowIds.map((flow) => flow.flowId) || [];
+  console.log({ initialValues });
 
-  const { data: flowsData, error: flowsError } = useQuery<GetFlows>(GET_FLOWS, {
-    variables: { emailId, flowIds },
-  });
-
+  const usedFlows = initialValues.flows.map((flow) => ({
+    id: flow.id,
+    slug: flow.slug,
+    name: flow.name,
+  }));
   const { slug: teamSlug } = useStore((state) => state.getTeam());
-
-  const usedFlows =
-    flowsData?.flows.map((flow) => ({
-      slug: flow.slug,
-      name: flow.name,
-      flowId: flow.id,
-    })) || [];
 
   const deletable = usedFlows.length === 0;
 
-  const handleRemoveEmail = async (email: SubmissionEmailInput) => {
-    if (!email?.id) {
+  const handleRemoveEmail = async (
+    submissionIntegration: SubmissionEmailWithFlows,
+  ) => {
+    if (!submissionIntegration?.id) {
       return;
     }
     try {
       await deleteEmail({
-        variables: { submissionEmailId: email.id },
+        variables: { submissionEmailId: submissionIntegration.id },
         optimisticResponse: {
           delete_submission_integrations: {
-            returning: [{ ...email }],
+            returning: [{ ...submissionIntegration }],
           },
         },
       });
@@ -97,7 +76,7 @@ export const RemoveEmailModal = ({
           {deletable ? (
             <Typography mb={2}>
               Are you sure you want to remove the email address "
-              {initialValues?.submissionEmail}" from receiving submissions?
+              {initialValues.submissionEmail}" from receiving submissions?
             </Typography>
           ) : (
             <>

@@ -2,33 +2,29 @@ import { ApolloQueryResult } from "@apollo/client";
 import { SetStateAction } from "react";
 import type { SnakeCasedProperties } from "type-fest";
 
-export interface SubmissionEmailInput {
+export interface SubmissionEmail {
   submissionEmail: string;
   defaultEmail: boolean;
   teamId: number;
+  id: string;
+}
+
+export type SubmissionEmailInput = Omit<SubmissionEmail, "id"> & {
   id?: string;
-}
+};
 
-export interface GetFlows {
-  flows: {
-    slug: string;
-    name: string;
-    id: string;
-  }[];
-}
-
-export interface GetFlowIdsBySubmissionIntegration {
-  flowIds: { flowId: string }[];
+export interface SubmissionEmailWithFlows extends Required<SubmissionEmail> {
+  flows: Flow[] | [];
 }
 
 export interface GetSubmissionEmails {
-  submissionIntegrations: Required<SubmissionEmailInput>[];
+  submissionIntegrations: SubmissionEmailWithFlows[];
 }
 
 export type SubmissionEmailMutation =
   SnakeCasedProperties<SubmissionEmailInput>;
 
-export interface SubmissionEmailValues {
+export interface SubmissionEmailInputs {
   submissionIntegrations: SubmissionEmailInput[];
 }
 
@@ -49,4 +45,17 @@ export interface EditorModalProps {
   refetch: (
     variables?: Partial<Record<string, any>>,
   ) => Promise<ApolloQueryResult<GetSubmissionEmails>>;
+}
+
+export type Flow = {
+  id: string;
+  slug: string;
+  name: string;
+};
+
+export interface RemoveModalProps extends Omit<
+  EditorModalProps,
+  "initialValues"
+> {
+  initialValues: SubmissionEmailWithFlows;
 }
