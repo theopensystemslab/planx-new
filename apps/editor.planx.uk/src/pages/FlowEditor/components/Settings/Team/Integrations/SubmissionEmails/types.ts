@@ -51,9 +51,8 @@ export interface EditorModalProps {
 }
 
 export interface UpsertModalProps extends EditorModalProps {
-    previousDefaultEmail?: SubmissionEmailInput;
-    currentEmails?: string[];
-    teamId?: number;
+  previousDefaultEmail?: SubmissionEmailInput;
+  currentEmails?: string[];
 }
 
 export interface RemoveModalProps extends Omit<

@@ -25,8 +25,6 @@ export const RemoveEmailModal = ({
   const toast = useToast();
   const [deleteEmail] = useMutation(DELETE_TEAM_SUBMISSION_INTEGRATIONS);
 
-  console.log({ initialValues });
-
   const usedFlows = initialValues.flows.map((flow) => ({
     id: flow.id,
     slug: flow.slug,

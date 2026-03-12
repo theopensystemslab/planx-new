@@ -83,7 +83,7 @@ const EmailsTableContent = () => {
 
   const [actionType, setActionType] = useState<"add" | "edit" | "remove">(
     "add",
-  ); // TODO: do we need this if props are now separate types?
+  );
 
   const [selectedUpsertIntegration, setSelectedUpsertIntegration] = useState<
     SubmissionEmailInput | undefined
@@ -104,7 +104,6 @@ const EmailsTableContent = () => {
   };
 
   const deleteEmail = (email: SubmissionEmailWithFlows) => {
-    setActionType("remove");
     setShowDeleteModal(true);
     setSelectedDeleteIntegration(email);
   };
@@ -210,7 +209,7 @@ const EmailsTableContent = () => {
           showModal={showDeleteModal}
           setShowModal={setShowDeleteModal}
           initialValues={selectedDeleteIntegration}
-          actionType={actionType}
+          actionType={"remove"}
           refetch={refetch}
         />
       )}
