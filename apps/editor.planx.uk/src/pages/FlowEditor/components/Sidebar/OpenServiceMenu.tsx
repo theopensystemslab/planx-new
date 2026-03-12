@@ -31,7 +31,7 @@ interface OpenServiceMenuProps {
 }
 
 const CardContent = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(1.25),
+  padding: theme.spacing(1, 1, 1.5, 1),
   display: "flex",
   alignItems: "flex-start",
   gap: theme.spacing(1),
@@ -79,7 +79,7 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
           paper: {
             sx: {
               mt: 0.5,
-              borderRadius: 2,
+              borderRadius: "5px",
               overflow: "hidden",
               bgcolor: "background.dark",
               maxWidth: "320px",
@@ -89,7 +89,7 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
       >
         <Stack p={1} gap={1} minWidth={240}>
           <Permission.IsPlatformAdmin>
-            <Card>
+            <Card sx={{ borderRadius: "2px" }}>
               <CardActionArea
                 LinkComponent="a"
                 href={draftURL}
@@ -99,7 +99,9 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
               >
                 <CardContent>
                   <PlayArrowIcon fontSize="small" sx={{ mt: 0.25 }} />
-                  <Box>
+                  <Box
+                    sx={{ display: "flex", flexDirection: "column", gap: 0.25 }}
+                  >
                     <Typography
                       variant="h6"
                       component="div"
@@ -107,7 +109,11 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
                     >
                       Draft
                     </Typography>
-                    <Typography variant="body3" color="text.secondary">
+                    <Typography
+                      component="p"
+                      variant="body4"
+                      color="text.secondary"
+                    >
                       Admin only view with unpublished nested flows
                     </Typography>
                   </Box>
@@ -116,7 +122,7 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
             </Card>
           </Permission.IsPlatformAdmin>
 
-          <Card>
+          <Card sx={{ borderRadius: "2px" }}>
             <CardActionArea
               LinkComponent="a"
               href={previewURL}
@@ -126,7 +132,9 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
             >
               <CardContent>
                 <PlayArrowIcon fontSize="small" sx={{ mt: 0.25 }} />
-                <Box>
+                <Box
+                  sx={{ display: "flex", flexDirection: "column", gap: 0.25 }}
+                >
                   <Typography
                     variant="h6"
                     component="div"
@@ -134,7 +142,11 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
                   >
                     Preview
                   </Typography>
-                  <Typography variant="body3" color="text.secondary">
+                  <Typography
+                    component="p"
+                    variant="body4"
+                    color="text.secondary"
+                  >
                     Review and test your service before publishing
                   </Typography>
                 </Box>
@@ -142,7 +154,7 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
             </CardActionArea>
           </Card>
 
-          <Card>
+          <Card sx={{ borderRadius: "2px" }}>
             {isFlowPublished ? (
               <CardActionArea
                 LinkComponent="a"
@@ -153,7 +165,9 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
               >
                 <CardContent>
                   <LanguageIcon fontSize="small" sx={{ mt: 0.25 }} />
-                  <Box>
+                  <Box
+                    sx={{ display: "flex", flexDirection: "column", gap: 0.25 }}
+                  >
                     <Typography
                       variant="h6"
                       component="div"
@@ -161,7 +175,11 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
                     >
                       Published
                     </Typography>
-                    <Typography variant="body3" color="text.secondary">
+                    <Typography
+                      component="p"
+                      variant="body4"
+                      color="text.secondary"
+                    >
                       The live version of your service that is publically
                       accessible
                     </Typography>
@@ -172,7 +190,9 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
               <CardActionArea disabled>
                 <CardContent>
                   <LanguageIcon fontSize="small" sx={{ mt: 0.25 }} />
-                  <Box>
+                  <Box
+                    sx={{ display: "flex", flexDirection: "column", gap: 0.25 }}
+                  >
                     <Typography
                       variant="h6"
                       component="div"
@@ -180,7 +200,7 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
                     >
                       Published
                     </Typography>
-                    <Typography variant="body3" color="text.secondary">
+                    <Typography variant="body4" color="text.secondary">
                       Not yet published
                     </Typography>
                   </Box>
