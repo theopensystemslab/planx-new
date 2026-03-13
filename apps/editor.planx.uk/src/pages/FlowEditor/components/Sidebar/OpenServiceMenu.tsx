@@ -10,12 +10,16 @@ import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useParams, useRouteContext, useRouter } from "@tanstack/react-router";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { Root as FlowTagRoot } from "ui/editor/FlowTag/styles";
+import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
 import Permission from "ui/editor/Permission";
 
 const OpenServiceButton = styled(Button)(({ theme }) => ({
   fontSize: "0.8125rem",
-  fontWeight: 600,
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
   color: theme.palette.text.primary,
   border: `1px solid ${theme.palette.border.main}`,
   backgroundColor: theme.palette.background.default,
@@ -41,6 +45,7 @@ interface MenuItemCardProps {
   description: string;
   href?: string;
   onClick: () => void;
+  isOnline?: boolean;
 }
 
 const MenuItemCard: React.FC<MenuItemCardProps> = ({
@@ -49,6 +54,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
   description,
   href,
   onClick,
+  isOnline,
 }) => (
   <Card sx={{ borderRadius: "2px" }}>
     <CardActionArea
@@ -71,6 +77,22 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
           <Typography variant="body4" color="text.secondary">
             {description}
           </Typography>
+          {isOnline !== undefined && (
+            <FlowTagRoot
+              tagType={FlowTagType.Status}
+              statusVariant={
+                isOnline ? StatusVariant.Online : StatusVariant.Offline
+              }
+              sx={{
+                fontSize: "0.875rem",
+                padding: "1px 6px",
+                mt: 0.6,
+                alignSelf: "flex-start",
+              }}
+            >
+              {isOnline ? "Online" : "Offline"}
+            </FlowTagRoot>
+          )}
         </Stack>
       </CardContent>
     </CardActionArea>
@@ -80,6 +102,8 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
 export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
   isFlowPublished,
 }) => {
+  const flowStatus = useStore((state) => state.flowStatus);
+  const isFlowOnline = flowStatus === "online";
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -124,7 +148,8 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
               borderRadius: "5px",
               overflow: "hidden",
               bgcolor: "background.dark",
-              maxWidth: "320px",
+              minWidth: "320px",
+              maxWidth: "340px",
             },
           },
         }}
@@ -153,11 +178,12 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
             title="Published"
             description={
               isFlowPublished
-                ? "View the latest stable version as users see it"
+                ? "View the latest stable version"
                 : "Not yet published"
             }
             href={isFlowPublished ? publishedURL : undefined}
             onClick={closeMenu}
+            isOnline={isFlowPublished ? isFlowOnline : undefined}
           />
         </Stack>
       </Popover>
