@@ -62,7 +62,6 @@ const CUSTOM_DOMAINS: CustomDomain[] =
         {
           domain: "planningservices.stalbans.gov.uk",
           name: "stalbans",
-          certificateLocation: "pulumiConfig",
         },
         {
           domain: "planningservices.camden.gov.uk",
