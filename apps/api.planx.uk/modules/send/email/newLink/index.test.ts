@@ -220,7 +220,7 @@ describe("send a format new download link via email", () => {
             personalisation: expect.objectContaining({
               downloadLink:
                 "https://www.example.com/download-submission?token=mock-access-token",
-              flowName: "Report a planning breach",
+              serviceName: "Report a planning breach",
               sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49",
             }),
           }),

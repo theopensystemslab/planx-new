@@ -80,11 +80,8 @@ function DownloadApplicationComponent() {
     return <DelayedLoadingIndicator text="Verifying your link..." />;
 
   if (isError) {
-    // Unhandled API error - throw to ErrorWrapper and Airbrake
-    if (!error?.data?.error) throw error;
-
     // Handled API errors
-    switch (error.data.error) {
+    switch (error.data?.error) {
       case "EMAIL_NOT_CONFIGURED":
         return (
           <Typography variant="body2">
@@ -105,6 +102,9 @@ function DownloadApplicationComponent() {
             Invalid link - unable to find matching session.
           </Typography>
         );
+      default:
+        // Unhandled API error - throw to ErrorWrapper and Airbrake
+        throw error;
     }
   }
 

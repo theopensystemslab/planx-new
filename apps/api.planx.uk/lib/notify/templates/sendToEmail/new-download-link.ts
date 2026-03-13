@@ -12,5 +12,5 @@ export const newDownloadLinkTemplate: NotifyTemplate<Config> = {
 export type Config = NotifyConfig<{
   sessionId: string;
   downloadLink: string;
-  flowName: string;
+  serviceName: string;
 }>;

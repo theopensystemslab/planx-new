@@ -277,10 +277,10 @@ export async function checkEmailAuditTable(sessionId: string): Promise<string> {
 
 export const generateAccessToken = async (
   sessionId: string,
-  createdAt = Date.now(),
+  submittedAt = new Date(),
 ) => {
   try {
-    const expiresAt = addDays(createdAt, DAYS_UNTIL_EXPIRY).toISOString();
+    const expiresAt = addDays(submittedAt, DAYS_UNTIL_EXPIRY).toISOString();
     const token = await insertApplicationAccessTokenRecord(
       sessionId,
       expiresAt,
