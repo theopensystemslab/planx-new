@@ -11,8 +11,6 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useParams, useRouteContext, useRouter } from "@tanstack/react-router";
 import React, { useState } from "react";
-import { useLocation } from "react-use";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Permission from "ui/editor/Permission";
 
 const OpenServiceButton = styled(Button)(({ theme }) => ({
@@ -37,6 +35,48 @@ const CardContent = styled(Box)(({ theme }) => ({
   gap: theme.spacing(1),
 }));
 
+interface MenuItemCardProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  href?: string;
+  onClick: () => void;
+}
+
+const MenuItemCard: React.FC<MenuItemCardProps> = ({
+  icon,
+  title,
+  description,
+  href,
+  onClick,
+}) => (
+  <Card sx={{ borderRadius: "2px" }}>
+    <CardActionArea
+      {...(href
+        ? {
+            LinkComponent: "a",
+            href,
+            target: "_blank",
+            rel: "noopener noreferrer",
+            onClick,
+          }
+        : { disabled: true })}
+    >
+      <CardContent>
+        {icon}
+        <Stack gap={0.25}>
+          <Typography variant="h6" component="div">
+            {title}
+          </Typography>
+          <Typography variant="body4" color="text.secondary">
+            {description}
+          </Typography>
+        </Stack>
+      </CardContent>
+    </CardActionArea>
+  </Card>
+);
+
 export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
   isFlowPublished,
 }) => {
@@ -48,7 +88,7 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
     from: "/_authenticated/app/$team/$flow",
   });
   const router = useRouter();
-  const { origin } = useLocation();
+  const { origin } = window.location;
 
   const draftURL = `${origin}${router.buildLocation({ to: "/$team/$flow/draft", params: { team, flow: rootFlow } }).href}`;
   const previewURL = `${origin}${router.buildLocation({ to: "/$team/$flow/preview", params: { team, flow: rootFlow } }).href}`;
@@ -56,6 +96,8 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) =>
     setAnchorEl((prev) => (prev ? null : event.currentTarget));
+
+  const closeMenu = () => setAnchorEl(null);
 
   return (
     <>
@@ -71,7 +113,7 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
       <Popover
         open={open}
         anchorEl={anchorEl}
-        onClose={() => setAnchorEl(null)}
+        onClose={closeMenu}
         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
         transformOrigin={{ vertical: "top", horizontal: "left" }}
         disableRestoreFocus
@@ -89,125 +131,34 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
       >
         <Stack p={1} gap={1} minWidth={240}>
           <Permission.IsPlatformAdmin>
-            <Card sx={{ borderRadius: "2px" }}>
-              <CardActionArea
-                LinkComponent="a"
-                href={draftURL}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setAnchorEl(null)}
-              >
-                <CardContent>
-                  <PlayArrowIcon fontSize="small" sx={{ mt: 0.25 }} />
-                  <Box
-                    sx={{ display: "flex", flexDirection: "column", gap: 0.25 }}
-                  >
-                    <Typography
-                      variant="h6"
-                      component="div"
-                      sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
-                    >
-                      Draft
-                    </Typography>
-                    <Typography
-                      component="p"
-                      variant="body4"
-                      color="text.secondary"
-                    >
-                      Admin only view with unpublished nested flows
-                    </Typography>
-                  </Box>
-                </CardContent>
-              </CardActionArea>
-            </Card>
+            <MenuItemCard
+              icon={<PlayArrowIcon fontSize="small" sx={{ mt: 0.25 }} />}
+              title="Draft"
+              description="Admin only view with unpublished nested flows"
+              href={draftURL}
+              onClick={closeMenu}
+            />
           </Permission.IsPlatformAdmin>
 
-          <Card sx={{ borderRadius: "2px" }}>
-            <CardActionArea
-              LinkComponent="a"
-              href={previewURL}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setAnchorEl(null)}
-            >
-              <CardContent>
-                <PlayArrowIcon fontSize="small" sx={{ mt: 0.25 }} />
-                <Box
-                  sx={{ display: "flex", flexDirection: "column", gap: 0.25 }}
-                >
-                  <Typography
-                    variant="h6"
-                    component="div"
-                    sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
-                  >
-                    Preview
-                  </Typography>
-                  <Typography
-                    component="p"
-                    variant="body4"
-                    color="text.secondary"
-                  >
-                    Review and test your service before publishing
-                  </Typography>
-                </Box>
-              </CardContent>
-            </CardActionArea>
-          </Card>
+          <MenuItemCard
+            icon={<PlayArrowIcon fontSize="small" sx={{ mt: 0.25 }} />}
+            title="Preview"
+            description="Review and test your service before publishing"
+            href={previewURL}
+            onClick={closeMenu}
+          />
 
-          <Card sx={{ borderRadius: "2px" }}>
-            {isFlowPublished ? (
-              <CardActionArea
-                LinkComponent="a"
-                href={publishedURL}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setAnchorEl(null)}
-              >
-                <CardContent>
-                  <LanguageIcon fontSize="small" sx={{ mt: 0.25 }} />
-                  <Box
-                    sx={{ display: "flex", flexDirection: "column", gap: 0.25 }}
-                  >
-                    <Typography
-                      variant="h6"
-                      component="div"
-                      sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
-                    >
-                      Published
-                    </Typography>
-                    <Typography
-                      component="p"
-                      variant="body4"
-                      color="text.secondary"
-                    >
-                      The live version of your service that is publically
-                      accessible
-                    </Typography>
-                  </Box>
-                </CardContent>
-              </CardActionArea>
-            ) : (
-              <CardActionArea disabled>
-                <CardContent>
-                  <LanguageIcon fontSize="small" sx={{ mt: 0.25 }} />
-                  <Box
-                    sx={{ display: "flex", flexDirection: "column", gap: 0.25 }}
-                  >
-                    <Typography
-                      variant="h6"
-                      component="div"
-                      sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
-                    >
-                      Published
-                    </Typography>
-                    <Typography variant="body4" color="text.secondary">
-                      Not yet published
-                    </Typography>
-                  </Box>
-                </CardContent>
-              </CardActionArea>
-            )}
-          </Card>
+          <MenuItemCard
+            icon={<LanguageIcon fontSize="small" sx={{ mt: 0.25 }} />}
+            title="Published"
+            description={
+              isFlowPublished
+                ? "The live version of your service that is publically accessible"
+                : "Not yet published"
+            }
+            href={isFlowPublished ? publishedURL : undefined}
+            onClick={closeMenu}
+          />
         </Stack>
       </Popover>
     </>
