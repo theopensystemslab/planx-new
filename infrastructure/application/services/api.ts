@@ -281,10 +281,6 @@ export const createApiService = async ({
             value: config.requireSecret("resend-api-key"),
           },
           {
-            name: "RESEND_BASE_URL",
-            value: config.requireSecret("resend-base-url"),
-          },
-          {
             name: "RESEND_FROM_ADDRESS",
             value: config.requireSecret("resend-from-address"),
           },
