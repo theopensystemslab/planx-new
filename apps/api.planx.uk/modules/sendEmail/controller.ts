@@ -8,8 +8,12 @@ import type { NextFunction } from "express";
 import type {
   ConfirmationEmail,
   PaymentEmail,
+  ResendEmail,
   SingleApplicationEmail,
 } from "./types.js";
+import { sendEmail } from "../../lib/resend/index.js";
+import { $api } from "../../client/index.js";
+import { gql } from "graphql-request";
 
 export const singleApplicationEmailController: SingleApplicationEmail = async (
   _req,
@@ -76,6 +80,60 @@ export const confirmationEmailController: ConfirmationEmail = async (
   } catch (error) {
     emailErrorHandler(next, error, template, sessionId);
   }
+};
+
+export const resendEmailController: ResendEmail = async (_req, res, next) => {
+  const { payload } = res.locals.parsedReq.body;
+  const { template } = res.locals.parsedReq.params;
+
+  const DEMO_TEAM_ID = 32;
+  if (template === "welcome" && payload.defaultTeamId === DEMO_TEAM_ID) {
+    return res.status(200).send({
+      message: `Skipping ${template} email for Demo team user`,
+    });
+  }
+
+  // call sendEmail only in production or when testing
+  if (!["production", "test"].includes(process.env.APP_ENVIRONMENT!)) {
+    return res.status(200).send({
+      message: `Skipping ${template} email: APP_ENVIRONMENT is not production or test`,
+    });
+  }
+  try {
+    const isTrial = await getTeamIsTrial(payload.defaultTeamId);
+    const response = await sendEmail({ ...payload, template, isTrial });
+    return res.status(200).send(response);
+  } catch (error) {
+    return next(
+      new ServerError({
+        message: `Failed to send ${template} email. ${(error as Error).message}`,
+        cause: error,
+      }),
+    );
+  }
+};
+
+interface GetTeamSettings {
+  teamSettings: {
+    isTrial: boolean;
+  }[];
+}
+
+const getTeamIsTrial = async (teamId: number | null): Promise<boolean> => {
+  if (!teamId) return false;
+
+  const { teamSettings } = await $api.client.request<GetTeamSettings>(
+    gql`
+      query GetTeamIsTrial($teamId: Int!) {
+        teamSettings: team_settings(where: { team_id: { _eq: $teamId } }) {
+          isTrial: is_trial
+        }
+      }
+    `,
+    { teamId },
+  );
+
+  return teamSettings[0]?.isTrial ?? false;
 };
 
 const emailErrorHandler = (

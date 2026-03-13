@@ -63,3 +63,23 @@ export type ConfirmationEmail = ValidatedRequestHandler<
   typeof confirmationEmailSchema,
   SendEmailResponse
 >;
+
+export const resendEmailSchema = z.object({
+  body: z.object({
+    payload: z.object({
+      userId: z.number(),
+      email: z.string().email(),
+      firstName: z.string(),
+      lastName: z.string(),
+      defaultTeamId: z.number().nullable(),
+    }),
+  }),
+  params: z.object({
+    template: z.enum(["welcome"]),
+  }),
+});
+
+export type ResendEmail = ValidatedRequestHandler<
+  typeof resendEmailSchema,
+  SendEmailResponse
+>;
