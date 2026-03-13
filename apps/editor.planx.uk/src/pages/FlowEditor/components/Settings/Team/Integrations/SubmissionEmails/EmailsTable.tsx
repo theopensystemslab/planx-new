@@ -132,6 +132,7 @@ const EmailsTableContent = () => {
               <TableCell>Email</TableCell>
               <TableCell align="center">Default</TableCell>
               <TableCell></TableCell>
+              <TableCell></TableCell>
             </StyledTableRow>
           </TableHead>
           <TableBody>
