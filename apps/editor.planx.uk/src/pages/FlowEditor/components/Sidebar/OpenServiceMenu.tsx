@@ -134,7 +134,7 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
             <MenuItemCard
               icon={<PlayArrowIcon fontSize="small" sx={{ mt: 0.25 }} />}
               title="Draft"
-              description="Admin only view with unpublished nested flows"
+              description="Preview with unpublished nested flows"
               href={draftURL}
               onClick={closeMenu}
             />
@@ -143,7 +143,7 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
           <MenuItemCard
             icon={<PlayArrowIcon fontSize="small" sx={{ mt: 0.25 }} />}
             title="Preview"
-            description="Review and test your service before publishing"
+            description="Preview changes before publishing"
             href={previewURL}
             onClick={closeMenu}
           />
@@ -153,7 +153,7 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
             title="Published"
             description={
               isFlowPublished
-                ? "The live version of your service that is publically accessible"
+                ? "View the latest stable version as users see it"
                 : "Not yet published"
             }
             href={isFlowPublished ? publishedURL : undefined}
