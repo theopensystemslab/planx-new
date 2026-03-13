@@ -16,6 +16,7 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { Root as FlowTagRoot } from "ui/editor/FlowTag/styles";
 import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
 import Permission from "ui/editor/Permission";
+import PlayOutlineIcon from "ui/icons/PlayOutline";
 
 const OpenServiceButton = styled(Button)(({ theme }) => ({
   fontSize: "0.8125rem",
@@ -157,7 +158,7 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
         <Stack p={1} gap={1} minWidth={240}>
           <Permission.IsPlatformAdmin>
             <MenuItemCard
-              icon={<PlayArrowIcon fontSize="small" sx={{ mt: 0.25 }} />}
+              icon={<PlayOutlineIcon fontSize="small" sx={{ mt: 0.25 }} />}
               title="Draft"
               description="Preview with unpublished nested flows"
               href={draftURL}
