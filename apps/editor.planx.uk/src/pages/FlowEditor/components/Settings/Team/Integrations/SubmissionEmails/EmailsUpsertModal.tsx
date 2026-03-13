@@ -18,14 +18,14 @@ import {
   GET_TEAM_SUBMISSION_INTEGRATIONS,
   UPSERT_TEAM_SUBMISSION_INTEGRATIONS,
 } from "./queries";
-import { UpsertModalProps } from "./types";
+import { EditorModalProps } from "./types";
 
 export const EmailsUpsertModal = ({
   modalState,
   setModalState,
-  refetch,
   currentEmails,
-}: UpsertModalProps) => {
+  refetch,
+}: EditorModalProps) => {
   const teamId = useStore((state) => state.teamId);
   const toast = useToast();
   const [upsertEmail] = useMutation(UPSERT_TEAM_SUBMISSION_INTEGRATIONS);
@@ -74,6 +74,7 @@ export const EmailsUpsertModal = ({
         toast.success(
           `Successfully ${modalState.actionType === "add" ? "added" : "updated"} email`,
         );
+        refetch();
         setModalState(null);
       }}
     >

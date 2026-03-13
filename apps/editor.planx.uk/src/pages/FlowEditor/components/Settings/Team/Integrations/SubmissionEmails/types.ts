@@ -53,12 +53,8 @@ export type ModalState =
 export interface EditorModalProps {
   modalState: ModalState;
   setModalState: React.Dispatch<SetStateAction<ModalState>>;
+  currentEmails?: string[];
   refetch: (
     variables?: Partial<Record<string, any>>,
   ) => Promise<ApolloQueryResult<GetSubmissionEmails>>;
-}
-
-export interface UpsertModalProps extends EditorModalProps {
-  previousDefaultEmail?: SubmissionEmailInput;
-  currentEmails?: string[];
 }
