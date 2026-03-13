@@ -54,6 +54,29 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/SessionPayload"
+  /email-download-link:
+    post:
+      summary: Trigger an email which contains a download link
+      tags:
+        - send
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                localAuthority:
+                  type: string
+                sessionId:
+                  type: string
+                  format: uuid
+                flowSlug:
+                  type: string
+              required:
+                - localAuthority
+                - sessionId
+                - flowSlug
   /uniform/{localAuthority}:
     post:
       summary: Submits an application to Uniform

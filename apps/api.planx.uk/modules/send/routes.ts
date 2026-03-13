@@ -21,6 +21,8 @@ import { sendToUniform } from "./uniform/uniform.js";
 import { useAccessTokenAuth } from "./downloadSubmission/middleware.js";
 import { useAccessTokenAuthSchema } from "./downloadSubmission/types.js";
 import { downloadSubmission } from "./downloadSubmission/controller.js";
+import { sendNewDownloadLinkSchema } from "./email/newLink/types.js";
+import { sendNewDownloadLink } from "./email/newLink/controller.js";
 
 const router = Router();
 
@@ -52,6 +54,11 @@ router.post(
   useHasuraAuth,
   validate(sendIntegrationSchema),
   sendToEmail,
+);
+router.post(
+  "/email-download-link",
+  validate(sendNewDownloadLinkSchema),
+  sendNewDownloadLink,
 );
 router.post(
   "/upload-submission/:localAuthority",
