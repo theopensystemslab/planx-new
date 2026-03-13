@@ -13,7 +13,7 @@ export const welcomeTemplate: EmailTemplate = {
 
       <ul style="padding-left: 16px;">
         <li>
-          <strong>Staging vs Production:</strong> Plan✕ has two environments. Use <strong>Production</strong> (<a href="https://editor.planx.uk/app">editor.planx.uk/app</a>) to create and edit any content you want to keep. Use <strong>Staging</strong> (<a href="https://editor.planx.dev/app">editor.planx.dev/app</a>) to test services and integrations. <strong>Important:</strong> new content on staging is overwritten nightly with what's in production, so don't make lasting changes directly in staging or you will lose them overnight!
+          <strong>Staging vs Production:</strong> Plan✕ has two environments. Use <strong>Production</strong> (<a href="https://editor.planx.uk">editor.planx.uk</a>) to create and edit any content you want to keep. Use <strong>Staging</strong> (<a href="https://editor.planx.dev">editor.planx.dev</a>) to test services and integrations. <strong>Important:</strong> new content on staging is overwritten nightly with what's in production, so don't make lasting changes directly in staging or you will lose them overnight!
         </li>
         <li>
           <strong>Resources:</strong> You can access guidance on creating, customising and managing your services directly from the Editor – under <strong>Resources</strong> – as well as on our <a href="https://www.notion.so/Plan-Resources-6b896f88be4c4b4c8ec8474a34c70d7c">Resources pages</a>.
