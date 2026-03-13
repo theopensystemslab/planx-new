@@ -276,6 +276,18 @@ export const createApiService = async ({
             name: "LPS_URL_EXT",
             value: pulumi.interpolate`https://${config.require("lps-domain")}`,
           },
+          {
+            name: "RESEND_API_KEY",
+            value: config.requireSecret("resend-api-key"),
+          },
+          {
+            name: "RESEND_BASE_URL",
+            value: config.requireSecret("resend-base-url"),
+          },
+          {
+            name: "RESEND_FROM_ADDRESS",
+            value: config.requireSecret("resend-from-address"),
+          },
           generateCORSAllowList(customDomains, DOMAIN),
           ...generateTeamSecrets(config, env),
         ],

@@ -94,3 +94,9 @@ config:
   application:uniform-token-url: https://staging.identity.idoxgroup.com/uaa/oauth/token
   cloudflare:apiToken:
     secure: AAABABWhDm+7RstbxLXd1D8CcxkylHS6UKMqk4kOaY7Y0E7FJS4bZfvyGs0nks80hl3vjENH4eDuFbUgA82/sA4SmDlfpNXr
+  application:resend-api-key:
+    secure: AAABAFmzQejlInptwqtYYDEGS+U+aizq8a/+vGvFei2iMyHKwiwCgKmuGoN3o+7D/tbH0wgZIWtEW5p6nZ5p7DZTyyw=
+  application:resend-base-url:
+    secure: AAABANXyMaLsi7HRhykFLbVlSFQRxP7ck3F+wJIeg7Tlq18zzJuBn4broMn99tHJMK43QRGi
+  application:resend-from-address:
+    secure: AAABAIyo5sjwMg+bJ1iRAU44fOPdQNsdpJqTdcazQibTLktJdxQHi+hDi/0rIyrbviDizNaMNtrWcf9EZE0=

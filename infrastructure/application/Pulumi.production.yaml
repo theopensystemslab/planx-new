@@ -141,3 +141,9 @@ config:
   application:uniform-token-url: https://identity.idoxgroup.com/uaa/oauth/token
   cloudflare:apiToken:
     secure: AAABAMbIBX9N21ModHyDYCQCGZXkRUP62NIUMhsxkK+/YUPRQr6PEqgZX9LRP2UuVwvVHd2RxvKGT8lpq8oAgyeDYP1eZSUl
+  application:resend-from-address:
+    secure: AAABACSDFBG/Z8fAVReyp/KD41l9YAsuqldyHSYDCBmZaY7EqAgsod8TjdXYLvOR4CQ8c07XTJ8UsirXOwQ=
+  application:resend-base-url:
+    secure: AAABABydKa2qQmv3UI7uzVSDxK/l+nGnfftSgFrv73hDJuZfYsX2WBR0LhTKnzSTbkpktzfV
+  application:resend-api-key:
+    secure: AAABAGl5L3MjVaGcm6xCnQeGpoBflVREcAielFkw1CSGs7dfeQJoU41d30Br/QVTkrn8dk/dr6IVavqT3Cbtq07jGuI=
