@@ -21,36 +21,39 @@ import {
 import { UpsertModalProps } from "./types";
 
 export const EmailsUpsertModal = ({
-  setShowModal,
-  showModal,
-  initialValues,
-  actionType,
+  modalState,
+  setModalState,
+  refetch,
   currentEmails,
 }: UpsertModalProps) => {
   const teamId = useStore((state) => state.teamId);
   const toast = useToast();
-
   const [upsertEmail] = useMutation(UPSERT_TEAM_SUBMISSION_INTEGRATIONS);
 
+  if (!modalState || modalState.type !== "upsert") {
+    throw new Error("RemoveEmailModal requires an upsert modalState");
+  }
+
   const isFirstEmail = !currentEmails || currentEmails.length === 0;
-  const isDefaultEmail = isFirstEmail || initialValues?.defaultEmail || false;
+  const isDefaultEmail =
+    isFirstEmail || modalState?.integration?.defaultEmail || false;
 
   return (
     <Formik
       initialValues={{
-        submissionEmail: initialValues?.submissionEmail || "",
+        submissionEmail: modalState?.integration?.submissionEmail || "",
         defaultEmail: isDefaultEmail,
         teamId: teamId,
       }}
       validationSchema={upsertEmailSchema(
         currentEmails || [],
-        initialValues?.submissionEmail,
+        modalState?.integration?.submissionEmail,
       )}
       onSubmit={async (values) => {
         const variables = {
           emails: [
             {
-              id: initialValues?.id,
+              id: modalState?.integration?.id,
               submission_email: values.submissionEmail,
               default_email: values.defaultEmail,
               team_id: teamId,
@@ -69,9 +72,9 @@ export const EmailsUpsertModal = ({
         });
 
         toast.success(
-          `Successfully ${actionType === "add" ? "added" : "updated"} email`,
+          `Successfully ${modalState.actionType === "add" ? "added" : "updated"} email`,
         );
-        setShowModal(false);
+        setModalState(null);
       }}
     >
       {({
@@ -83,10 +86,10 @@ export const EmailsUpsertModal = ({
         errors,
         touched,
       }) => (
-        <Dialog open={showModal || false} onClose={() => setShowModal(false)}>
+        <Dialog open={true} onClose={() => setModalState(null)}>
           <form onSubmit={handleSubmit}>
             <DialogTitle variant="h3" component="h1">
-              {actionType === "add" ? "Add Email" : "Edit Email"}
+              {modalState.actionType === "add" ? "Add Email" : "Edit Email"}
             </DialogTitle>
             <DialogContent dividers>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -124,7 +127,7 @@ export const EmailsUpsertModal = ({
             </DialogContent>
             <DialogActions>
               <Button
-                onClick={() => setShowModal(false)}
+                onClick={() => setModalState(null)}
                 color="secondary"
                 variant="contained"
                 sx={{ backgroundColor: "background.default" }}
@@ -139,7 +142,7 @@ export const EmailsUpsertModal = ({
                   (touched.submissionEmail && !!errors.submissionEmail)
                 }
               >
-                {actionType === "add" ? "Add" : "Update"}
+                {modalState.actionType === "add" ? "Add" : "Update"}
               </Button>
             </DialogActions>
           </form>

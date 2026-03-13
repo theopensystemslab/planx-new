@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -13,21 +13,21 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 import { DELETE_TEAM_SUBMISSION_INTEGRATIONS } from "./queries";
-import { RemoveModalProps, SubmissionEmailWithFlows } from "./types";
+import { EditorModalProps, SubmissionEmailWithFlows } from "./types";
 
 export const RemoveEmailModal = ({
-  setShowModal,
-  showModal,
-  actionType,
-  initialValues,
+  modalState,
+  setModalState,
   refetch,
-}: RemoveModalProps) => {
+}: EditorModalProps) => {
   const toast = useToast();
   const [deleteEmail] = useMutation(DELETE_TEAM_SUBMISSION_INTEGRATIONS);
-
-  const usedFlows = initialValues.flows;
   const { slug: teamSlug } = useStore((state) => state.getTeam());
 
+  if (!modalState || modalState.type !== "delete") {
+    throw new Error("RemoveEmailModal requires a delete modalState");
+  }
+  const usedFlows = modalState.integration.flows;
   const deletable = usedFlows.length === 0;
 
   const handleRemoveEmail = async (
@@ -45,7 +45,7 @@ export const RemoveEmailModal = ({
           },
         },
       });
-      setShowModal(false);
+      setModalState(null);
       toast.success("Email removed successfully");
       refetch();
     } catch (error) {
@@ -57,9 +57,9 @@ export const RemoveEmailModal = ({
   return (
     <Dialog
       aria-labelledby="dialog-heading"
-      data-testid={`modal-${actionType}-email`}
-      open={showModal || false}
-      onClose={() => setShowModal(false)}
+      data-testid={`modal-${modalState.type}-email`}
+      open={true}
+      onClose={() => setModalState(null)}
       fullWidth
     >
       <DialogTitle variant="h3" component="h1">
@@ -70,7 +70,8 @@ export const RemoveEmailModal = ({
           {deletable ? (
             <Typography mb={2}>
               Are you sure you want to remove the email address "
-              {initialValues.submissionEmail}" from receiving submissions?
+              {modalState.integration.submissionEmail}" from receiving
+              submissions?
             </Typography>
           ) : (
             <>
@@ -101,14 +102,16 @@ export const RemoveEmailModal = ({
         <Button
           color="secondary"
           variant="contained"
-          onClick={() => setShowModal(false)}
+          onClick={() => setModalState(null)}
         >
           Cancel
         </Button>
         <Button
           variant="contained"
           color="warning"
-          onClick={() => initialValues && handleRemoveEmail(initialValues)}
+          onClick={() =>
+            modalState.integration && handleRemoveEmail(modalState.integration)
+          }
           data-testid="confirm-remove-email-button"
           disabled={!deletable}
         >

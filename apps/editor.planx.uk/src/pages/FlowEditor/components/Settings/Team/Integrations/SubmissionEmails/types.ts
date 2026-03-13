@@ -38,13 +38,21 @@ export type Flow = {
   name: string;
 };
 
-export type ActionType = "add" | "edit" | "remove"; // TODO: refactor, this is a duplicate from "apps/editor.planx.uk/src/pages/FlowEditor/components/Team/types.ts"
+export type ModalState =
+  | {
+      type: "upsert";
+      actionType: "add" | "edit";
+      integration?: SubmissionEmailInput;
+    }
+  | {
+      type: "delete";
+      integration: SubmissionEmailWithFlows;
+    }
+  | null;
 
 export interface EditorModalProps {
-  showModal?: boolean;
-  setShowModal: React.Dispatch<SetStateAction<boolean>>;
-  initialValues?: SubmissionEmailInput;
-  actionType: ActionType;
+  modalState: ModalState;
+  setModalState: React.Dispatch<SetStateAction<ModalState>>;
   refetch: (
     variables?: Partial<Record<string, any>>,
   ) => Promise<ApolloQueryResult<GetSubmissionEmails>>;
@@ -53,11 +61,4 @@ export interface EditorModalProps {
 export interface UpsertModalProps extends EditorModalProps {
   previousDefaultEmail?: SubmissionEmailInput;
   currentEmails?: string[];
-}
-
-export interface RemoveModalProps extends Omit<
-  EditorModalProps,
-  "initialValues"
-> {
-  initialValues: SubmissionEmailWithFlows;
 }

@@ -20,6 +20,7 @@ import { GET_TEAM_SUBMISSION_INTEGRATIONS } from "./queries";
 import { RemoveEmailModal } from "./RemoveEmailModal";
 import {
   GetSubmissionEmails,
+  ModalState,
   SubmissionEmailInput,
   SubmissionEmailWithFlows,
 } from "./types";
@@ -66,34 +67,28 @@ const EmailsTableContent = () => {
 
   const submissionIntegrations = data?.submissionIntegrations;
 
-  const [showUpsertModal, setShowUpsertModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-  const [actionType, setActionType] = useState<"add" | "edit" | "remove">(
-    "add",
-  );
-
-  const [selectedUpsertIntegration, setSelectedUpsertIntegration] = useState<
-    SubmissionEmailInput | undefined
-  >();
-  const [selectedDeleteIntegration, setSelectedDeleteIntegration] = useState<
-    SubmissionEmailWithFlows | undefined
-  >();
+  const [modalState, setModalState] = useState<ModalState>(null);
 
   const addEmail = () => {
-    setActionType("add");
-    setShowUpsertModal(true);
+    setModalState({
+      type: "upsert",
+      actionType: "add",
+    });
   };
 
   const handleEditEmail = (email: SubmissionEmailInput) => {
-    setActionType("edit");
-    setSelectedUpsertIntegration(email);
-    setShowUpsertModal(true);
+    setModalState({
+      type: "upsert",
+      actionType: "edit",
+      integration: email,
+    });
   };
 
   const deleteEmail = (email: SubmissionEmailWithFlows) => {
-    setShowDeleteModal(true);
-    setSelectedDeleteIntegration(email);
+    setModalState({
+      type: "delete",
+      integration: email,
+    });
   };
 
   if (loading) return <div>Loading...</div>;
@@ -117,12 +112,10 @@ const EmailsTableContent = () => {
             </TableRow>
           </TableBody>
         </Table>
-        {showUpsertModal && (
+        {modalState && modalState?.type === "upsert" && (
           <EmailsUpsertModal
-            showModal={showUpsertModal}
-            setShowModal={setShowUpsertModal}
-            initialValues={selectedUpsertIntegration}
-            actionType={actionType}
+            modalState={modalState}
+            setModalState={setModalState}
             refetch={refetch}
           />
         )}
@@ -180,24 +173,20 @@ const EmailsTableContent = () => {
           </TableBody>
         </Table>
       </StyledTableContainer>
-      {showUpsertModal && (
+      {modalState && modalState.type === "upsert" && (
         <EmailsUpsertModal
-          showModal={showUpsertModal}
-          setShowModal={setShowUpsertModal}
-          initialValues={selectedUpsertIntegration}
-          actionType={actionType}
+          modalState={modalState}
+          setModalState={setModalState}
+          refetch={refetch}
           currentEmails={submissionIntegrations.map(
             (email) => email.submissionEmail,
           )}
-          refetch={refetch}
         />
       )}
-      {showDeleteModal && selectedDeleteIntegration && (
+      {modalState && modalState.type === "delete" && (
         <RemoveEmailModal
-          showModal={showDeleteModal}
-          setShowModal={setShowDeleteModal}
-          initialValues={selectedDeleteIntegration}
-          actionType={"remove"}
+          modalState={modalState}
+          setModalState={setModalState}
           refetch={refetch}
         />
       )}
