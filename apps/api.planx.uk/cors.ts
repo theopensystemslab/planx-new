@@ -29,6 +29,7 @@ const apiCors = cors({
     "Origin",
     "X-Requested-With",
   ],
+  exposedHeaders: ["Content-Disposition"],
 });
 
 const skipApiCors = ["/proxy/ordnance-survey"];

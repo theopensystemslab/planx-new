@@ -21,13 +21,16 @@ export const createSendEvents = async ({
 };
 
 export const downloadSubmission = async (token: string) => {
-  const { data } = await apiClient.get<Blob>("/download-submission", {
+  const response = await apiClient.get<Blob>("/download-submission", {
     headers: {
       Authorization: `Bearer ${token}`,
     },
     responseType: "blob",
   });
-  return data;
+  const blob = response.data;
+  const disposition = response.headers["content-disposition"];
+  const filename = disposition?.match(/filename=(.+)/)?.[1] ?? "submission.zip";
+  return { blob, filename };
 };
 
 export const sendNewDownloadLinkEmail = async ({
