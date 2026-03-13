@@ -64,19 +64,7 @@ const EmailsTableContent = () => {
     },
   );
 
-  const submissionIntegrations = data?.submissionIntegrations.map(
-    (submissionIntegration) => ({
-      submissionEmail: submissionIntegration.submissionEmail,
-      defaultEmail: submissionIntegration.defaultEmail,
-      teamId: submissionIntegration.teamId,
-      id: submissionIntegration.id,
-      flows: submissionIntegration.flows.map((flow) => ({
-        id: flow.id,
-        name: flow.name,
-        slug: flow.slug,
-      })),
-    }),
-  );
+  const submissionIntegrations = data?.submissionIntegrations;
 
   const [showUpsertModal, setShowUpsertModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);

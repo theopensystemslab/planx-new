@@ -25,11 +25,7 @@ export const RemoveEmailModal = ({
   const toast = useToast();
   const [deleteEmail] = useMutation(DELETE_TEAM_SUBMISSION_INTEGRATIONS);
 
-  const usedFlows = initialValues.flows.map((flow) => ({
-    id: flow.id,
-    slug: flow.slug,
-    name: flow.name,
-  }));
+  const usedFlows = initialValues.flows;
   const { slug: teamSlug } = useStore((state) => state.getTeam());
 
   const deletable = usedFlows.length === 0;
