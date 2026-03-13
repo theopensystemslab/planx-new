@@ -1,7 +1,5 @@
 import { array, boolean, number, object, string } from "yup";
 
-import { SubmissionEmailValues } from "./types";
-
 export const validationSchema = object().shape({
   submissionIntegrations: array(
     object().shape({
@@ -14,7 +12,3 @@ export const validationSchema = object().shape({
     }),
   ),
 });
-
-export const defaultValues: SubmissionEmailValues = {
-  submissionIntegrations: [],
-};

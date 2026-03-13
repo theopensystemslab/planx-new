@@ -17,7 +17,13 @@ import { AddButton } from "ui/editor/AddButton";
 import { StyledTableRow } from "../../../../Team/styles";
 import { EmailsUpsertModal } from "./EmailsUpsertModal";
 import { GET_TEAM_SUBMISSION_INTEGRATIONS } from "./queries";
-import { GetSubmissionEmails, SubmissionEmailInput } from "./types";
+import { RemoveEmailModal } from "./RemoveEmailModal";
+import {
+  GetSubmissionEmails,
+  ModalState,
+  SubmissionEmailInput,
+  SubmissionEmailWithFlows,
+} from "./types";
 
 const TableRowButton = styled(Button)(({ theme }) => ({
   textDecoration: "underline",
@@ -36,6 +42,13 @@ const EditEmailButton = styled(TableRowButton)(({ theme }) => ({
   },
 }));
 
+const RemoveEmailButton = styled(TableRowButton)(({ theme }) => ({
+  color: theme.palette.text.secondary,
+  "&:hover": {
+    color: theme.palette.secondary.contrastText,
+  },
+}));
+
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
   border: `1px solid ${theme.palette.border.light}`,
   borderRadius: theme.shape.borderRadius,
@@ -45,41 +58,42 @@ const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
 const EmailsTableContent = () => {
   const teamId = useStore((state) => state.teamId);
 
-  const { data, loading } = useQuery<GetSubmissionEmails>(
+  const { data, loading, refetch } = useQuery<GetSubmissionEmails>(
     GET_TEAM_SUBMISSION_INTEGRATIONS,
     {
       variables: { teamId },
     },
   );
 
-  const emails = data?.submissionIntegrations;
+  const submissionIntegrations = data?.submissionIntegrations;
 
-  const [showModal, setShowModal] = useState(false);
-  const [actionType, setActionType] = useState<"add" | "edit">("add");
-  const [initialValues, setInitialValues] = useState<
-    SubmissionEmailInput | undefined
-  >();
+  const [modalState, setModalState] = useState<ModalState>(null);
 
   const addEmail = () => {
-    setActionType("add");
-    setShowModal(true);
-
-    if (!emails || emails.length === 0) {
-      setInitialValues({ defaultEmail: true } as SubmissionEmailInput);
-    } else {
-      setInitialValues(undefined);
-    }
+    setModalState({
+      type: "upsert",
+      actionType: "add",
+    });
   };
 
   const handleEditEmail = (email: SubmissionEmailInput) => {
-    setActionType("edit");
-    setInitialValues(email);
-    setShowModal(true);
+    setModalState({
+      type: "upsert",
+      actionType: "edit",
+      integration: email,
+    });
+  };
+
+  const deleteEmail = (email: SubmissionEmailWithFlows) => {
+    setModalState({
+      type: "delete",
+      integration: email,
+    });
   };
 
   if (loading) return <div>Loading...</div>;
 
-  if (!emails || emails.length === 0) {
+  if (!submissionIntegrations || submissionIntegrations.length === 0) {
     return (
       <>
         <Table>
@@ -98,12 +112,11 @@ const EmailsTableContent = () => {
             </TableRow>
           </TableBody>
         </Table>
-        {showModal && (
+        {modalState && modalState?.type === "upsert" && (
           <EmailsUpsertModal
-            showModal={showModal}
-            setShowModal={setShowModal}
-            initialValues={initialValues}
-            actionType={actionType}
+            modalState={modalState}
+            setModalState={setModalState}
+            refetch={refetch}
           />
         )}
       </>
@@ -119,24 +132,40 @@ const EmailsTableContent = () => {
               <TableCell>Email</TableCell>
               <TableCell align="center">Default</TableCell>
               <TableCell></TableCell>
+              <TableCell></TableCell>
             </StyledTableRow>
           </TableHead>
           <TableBody>
-            {emails.map((email: SubmissionEmailInput) => (
-              <StyledTableRow key={email.id}>
-                <TableCell sx={{ wordWrap: "break-word", maxWidth: "280px" }}>
-                  {email.submissionEmail}
-                </TableCell>
-                <TableCell align="center">
-                  {email.defaultEmail && <CheckIcon color="primary" />}
-                </TableCell>
-                <TableCell>
-                  <EditEmailButton onClick={() => handleEditEmail(email)}>
-                    Edit
-                  </EditEmailButton>
-                </TableCell>
-              </StyledTableRow>
-            ))}
+            {submissionIntegrations.map(
+              (submissionIntegration: SubmissionEmailWithFlows) => (
+                <StyledTableRow key={submissionIntegration.id}>
+                  <TableCell sx={{ wordWrap: "break-word", maxWidth: "280px" }}>
+                    {submissionIntegration.submissionEmail}
+                  </TableCell>
+                  <TableCell align="center">
+                    {submissionIntegration.defaultEmail && (
+                      <CheckIcon color="primary" />
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <EditEmailButton
+                      onClick={() => handleEditEmail(submissionIntegration)}
+                    >
+                      Edit
+                    </EditEmailButton>
+                  </TableCell>
+                  <TableCell>
+                    {!submissionIntegration.defaultEmail && (
+                      <RemoveEmailButton
+                        onClick={() => deleteEmail(submissionIntegration)}
+                      >
+                        Remove
+                      </RemoveEmailButton>
+                    )}
+                  </TableCell>
+                </StyledTableRow>
+              ),
+            )}
             <TableRow>
               <TableCell colSpan={4}>
                 <AddButton onClick={addEmail}>Add a new email</AddButton>
@@ -145,15 +174,21 @@ const EmailsTableContent = () => {
           </TableBody>
         </Table>
       </StyledTableContainer>
-      {showModal && (
+      {modalState && modalState.type === "upsert" && (
         <EmailsUpsertModal
-          showModal={showModal}
-          setShowModal={setShowModal}
-          initialValues={initialValues}
-          actionType={actionType}
-          currentEmails={data.submissionIntegrations.map(
+          modalState={modalState}
+          setModalState={setModalState}
+          refetch={refetch}
+          currentEmails={submissionIntegrations.map(
             (email) => email.submissionEmail,
           )}
+        />
+      )}
+      {modalState && modalState.type === "delete" && (
+        <RemoveEmailModal
+          modalState={modalState}
+          setModalState={setModalState}
+          refetch={refetch}
         />
       )}
     </>
