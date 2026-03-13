@@ -144,10 +144,10 @@ test.describe("Flow creation, publish and preview", () => {
     // Exit back to main Editor page
     page.locator('[aria-label="Editor"]').click();
 
-    const previewLink = page.getByRole("link", {
-      name: "Open published flow",
-    });
-    await expect(previewLink).toBeVisible();
+    await page.getByRole("button", { name: "Open service" }).click();
+    await expect(
+      page.getByRole("link", { name: "Published" }),
+    ).toBeVisible();
   });
 
   test("Can add an external portal", async ({
@@ -213,14 +213,8 @@ test.describe("Flow creation, publish and preview", () => {
       page.getByRole("link", { name: "E2E/an-external-portal-service" }),
     ).toBeVisible();
 
-    const previewLink = page.getByRole("link", {
-      name: "Open published flow",
-    });
-    await expect(previewLink).toBeVisible();
-
-    await page.goto(
-      `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
-    );
+    await page.getByRole("button", { name: "Open service" }).click();
+    await page.getByRole("link", { name: "Published" }).click();
 
     await answerQuestion({ page, title: "Is this a test?", answer: "Yes" });
     await clickContinue({ page });
