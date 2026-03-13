@@ -25,12 +25,20 @@ interface InsertComment {
   };
 }
 
+interface InsertNotification {
+  notification: {
+    id: number;
+  };
+}
+
 export const updateTemplatedFlow = async (
   sourceFlowId: string,
   templatedFlowId: string,
 ) => {
   const { data: sourceData, publishedFlows } = await getFlowData(sourceFlowId);
   const { publisher_id: sourcePublisher, summary } = publishedFlows[0];
+
+  const { team_id: templatedFlowTeamId } = await getFlowData(templatedFlowId);
 
   // Get templated flow edits (aka "customisations")
   //   Since initiated via a Hasura event, we don't have user context here and rely on $api client
@@ -92,9 +100,33 @@ export const updateTemplatedFlow = async (
     },
   );
 
+  // Insert a new "Notification" that the templatedFlowId is ready to review & publish
+  const insertNotificationResponse =
+    await $api.client.request<InsertNotification>(
+      gql`
+        mutation InsertNotification(
+          $flow_id: uuid!
+          $team_id: Int!
+          $type: notification_type_enum_enum!
+        ) {
+          notification: insert_notifications_one(
+            object: { flow_id: $flow_id, team_id: $team_id, type: $type }
+          ) {
+            id
+          }
+        }
+      `,
+      {
+        flow_id: templatedFlowId,
+        team_id: templatedFlowTeamId,
+        type: "updated_templated_flow",
+      },
+    );
+
   return {
     templatedFlowData: updateFlowResponse.flow.data,
     commentId: insertCommentResponse.comment.id,
+    notificationId: insertNotificationResponse.notification.id,
   };
 };
 

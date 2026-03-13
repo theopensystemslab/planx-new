@@ -97,6 +97,16 @@ describe("success", () => {
         },
       },
     });
+
+    queryMock.mockQuery({
+      name: "InsertNotification",
+      matchOnVariables: false,
+      data: {
+        notification: {
+          id: 1,
+        },
+      },
+    });
   });
 
   it("correctly updates a templated flow that has been customised", async () => {
@@ -131,6 +141,7 @@ describe("success", () => {
           data: {
             templatedFlowData: mockUpdatedTemplatedFlowData,
             commentId: 1,
+            notificationId: 1,
           },
         });
       });
@@ -168,6 +179,7 @@ describe("success", () => {
           data: {
             templatedFlowData: mockSourceTemplateFlowData,
             commentId: 1,
+            notificationId: 1,
           },
         });
       });
