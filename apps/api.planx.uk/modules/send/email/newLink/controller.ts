@@ -28,7 +28,7 @@ export const sendNewDownloadLink: Controller = async (req, res, next) => {
       submissionEmail,
       sessionId,
       token,
-      flowName: session.flow.name,
+      serviceName: session.flow.name,
     });
 
     return res.status(200).json({ message: "An email sent to your inbox" });

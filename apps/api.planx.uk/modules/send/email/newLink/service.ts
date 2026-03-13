@@ -12,10 +12,7 @@ export const createAccessToken = async (
   submittedAt: string,
 ) => {
   try {
-    const token = await generateAccessToken(
-      sessionId,
-      new Date(submittedAt).getUTCDate(),
-    );
+    const token = await generateAccessToken(sessionId, new Date(submittedAt));
 
     return token;
   } catch (error) {
@@ -32,8 +29,8 @@ export const getSession = async (sessionId: string) => {
     } | null;
   }>(
     gql`
-      query GetSessionForDownloadLink($id: uuid!) {
-        session: lowcal_sessions_by_pk(id: $id) {
+      query GetSessionForDownloadLink($sessionId: uuid!) {
+        session: lowcal_sessions_by_pk(id: $sessionId) {
           id
           submittedAt: submitted_at
           flow {
@@ -56,17 +53,17 @@ export const emailNewDownloadLink = async ({
   sessionId,
   submissionEmail,
   token,
-  flowName,
+  serviceName,
 }: {
   sessionId: string;
   submissionEmail: string;
   token: string;
-  flowName: string;
+  serviceName: string;
 }) => {
   const config: TemplateRegistry["new-download-link"]["config"] = {
     personalisation: {
-      flowName,
       downloadLink: `${process.env.EDITOR_URL_EXT}/download-submission?token=${token}`,
+      serviceName,
       sessionId,
     },
     emailReplyToId: DEVOPS_EMAIL_REPLY_TO_ID,

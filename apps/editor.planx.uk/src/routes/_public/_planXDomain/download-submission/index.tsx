@@ -40,16 +40,16 @@ function RouteComponent() {
   });
 
   const { mutate, isPending, isError, error } = useMutation<
-    Blob,
+    { blob: Blob; filename: string },
     APIError<DownloadSubmissionResponse>,
     string
   >({
     mutationFn: downloadSubmission,
-    onSuccess: (blob) => {
+    onSuccess: ({ blob, filename }) => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "submission.zip";
+      a.download = filename;
       a.click();
       URL.revokeObjectURL(url);
     },
