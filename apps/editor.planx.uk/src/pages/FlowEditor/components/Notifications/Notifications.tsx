@@ -5,8 +5,8 @@ import CardContent from "@mui/material/CardContent";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
-import { useNavigate, useParams } from "@tanstack/react-router";
-import { formatDistanceToNow } from "date-fns";
+import { useNavigate } from "@tanstack/react-router";
+import { formatLastEditDate } from "pages/FlowEditor/utils";
 import React from "react";
 import SettingsSection from "ui/editor/SettingsSection";
 
@@ -54,7 +54,7 @@ const NotificationCard = ({ notification }: NotificationCardProps) => {
           {notification.flow.name}
         </Typography>
         <Typography gutterBottom variant="body2" sx={{ color: 'text.secondary' }}>
-          {formatDistanceToNow(Date.parse(notification.createdAt), { includeSeconds: true, addSuffix: true })}
+          {formatLastEditDate(notification.createdAt)}
         </Typography>
         <Typography variant="body2" sx={{ marginTop: 1 }}>
           Your templated flow has been updated and is ready to review and publish.
