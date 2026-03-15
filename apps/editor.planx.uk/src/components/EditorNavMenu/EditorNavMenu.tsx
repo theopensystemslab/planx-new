@@ -7,6 +7,8 @@ import GroupIcon from "@mui/icons-material/Group";
 import LayersIcon from "@mui/icons-material/Layers";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
+import NorthEastIcon from "@mui/icons-material/NorthEast";
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import SchoolIcon from "@mui/icons-material/School";
 import TuneIcon from "@mui/icons-material/Tune";
@@ -21,6 +23,7 @@ import {
 import AccountMenu from "components/AccountMenu";
 import { useFlowAnalyticsLink } from "hooks/analyticsLinks/useFlowAnalyticsLink";
 import { useTeamAnalyticsLink } from "hooks/analyticsLinks/useTeamAnalyticsLink";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useMemo, useState } from "react";
 import EditorIcon from "ui/icons/Editor";
@@ -110,10 +113,10 @@ function EditorNavMenu() {
           accessibleBy: ["platformAdmin", "analyst"],
         },
         {
-          title: "User management",
-          Icon: GroupIcon,
-          route: `/app/users`,
-          accessibleBy: ["platformAdmin"],
+          title: "Notifications",
+          Icon: NotificationsActiveIcon, // TODO colour based on active/new or all resolved ??
+          route: `/app/${teamSlug}/notifications`,
+          accessibleBy: ["platformAdmin", "teamEditor"],
         },
       ],
     },
@@ -122,7 +125,20 @@ function EditorNavMenu() {
   const teamLayoutSections: MenuSection[] = useMemo(
     () => [
       {
-        routes: [
+        routes: hasFeatureFlag("NOTIFICATIONS") ? [
+        {
+          title: "Flows",
+          Icon: EditorIcon,
+          route: `/app/${teamSlug}`,
+          accessibleBy: "*",
+        },
+        {
+          title: "Notifications",
+          Icon: NotificationsActiveIcon, // TODO colour based on active/new or all resolved ??
+          route: `/app/${teamSlug}/notifications`,
+          accessibleBy: ["platformAdmin", "teamEditor"],
+        },
+      ] : [
           {
             title: "Flows",
             Icon: EditorIcon,

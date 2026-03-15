@@ -1,6 +1,28 @@
 table:
   name: notifications
   schema: public
+object_relationships:
+  - name: flow
+    using:
+      manual_configuration:
+        column_mapping:
+          flow_id: id
+        insertion_order: null
+        remote_table:
+          name: flows
+          schema: public
+  - name: notification_type_enum
+    using:
+      foreign_key_constraint_on: type
+  - name: team
+    using:
+      manual_configuration:
+        column_mapping:
+          team_id: id
+        insertion_order: null
+        remote_table:
+          name: teams
+          schema: public
 insert_permissions:
   - role: api
     permission:
@@ -25,8 +47,7 @@ select_permissions:
         - team_id
       filter: {}
     comment: ""
-update_permissions:
-  - role: api
+  - role: platformAdmin
     permission:
       columns:
         - id
@@ -36,5 +57,22 @@ update_permissions:
         - resolved_at
         - flow_id
       filter: {}
-      check: {}
+    comment: ""
+  - role: teamEditor
+    permission:
+      columns:
+        - id
+        - team_id
+        - type
+        - created_at
+        - resolved_at
+        - flow_id
+      filter:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: x-hasura-user-id
+              - role:
+                  _eq: teamEditor
     comment: ""
