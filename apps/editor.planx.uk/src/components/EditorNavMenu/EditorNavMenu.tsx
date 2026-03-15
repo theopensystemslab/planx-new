@@ -8,6 +8,7 @@ import LayersIcon from "@mui/icons-material/Layers";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import SchoolIcon from "@mui/icons-material/School";
 import TuneIcon from "@mui/icons-material/Tune";
@@ -115,6 +116,12 @@ function EditorNavMenu() {
           Icon: EditorIcon,
           route: `/app/${teamSlug}`,
           accessibleBy: "*",
+        },
+        {
+          title: "Notifications",
+          Icon: NotificationsActiveIcon, // TODO colour based on active/new or all resolved ??
+          route: `/app/${teamSlug}/notifications`,
+          accessibleBy: ["platformAdmin", "teamEditor"],
         },
       ],
     },
