@@ -19,6 +19,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef } from "react";
 import EditorIcon from "ui/icons/Editor";
 import LocalPlanningServicesIcon from "ui/icons/LocalPlanningServices";
+import { hasFeatureFlag } from "lib/featureFlags";
 
 import { useLPS } from "../../hooks/useLPS";
 import {
@@ -110,7 +111,7 @@ function EditorNavMenu() {
 
   const teamLayoutSections: MenuSection[] = [
     {
-      routes: [
+      routes: hasFeatureFlag("NOTIFICATIONS") ? [
         {
           title: "Flows",
           Icon: EditorIcon,
@@ -122,6 +123,13 @@ function EditorNavMenu() {
           Icon: NotificationsActiveIcon, // TODO colour based on active/new or all resolved ??
           route: `/app/${teamSlug}/notifications`,
           accessibleBy: ["platformAdmin", "teamEditor"],
+        },
+      ] : [
+        {
+          title: "Flows",
+          Icon: EditorIcon,
+          route: `/app/${teamSlug}`,
+          accessibleBy: "*",
         },
       ],
     },
