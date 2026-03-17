@@ -19,12 +19,11 @@ import Permission from "ui/editor/Permission";
 import PlayOutlineIcon from "ui/icons/PlayOutline";
 
 const OpenServiceButton = styled(Button)(({ theme }) => ({
-  fontSize: "0.8125rem",
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
   color: theme.palette.text.primary,
   border: `1px solid ${theme.palette.border.main}`,
   backgroundColor: theme.palette.background.default,
-  minWidth: "140px",
+  minWidth: "120px",
   "&:hover": { backgroundColor: theme.palette.action.hover },
   "& svg": { fontSize: "1.15rem" },
 }));
@@ -57,7 +56,13 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
   onClick,
   isOnline,
 }) => (
-  <Card sx={{ borderRadius: "2px" }}>
+  <Card
+    sx={(theme) => ({
+      borderRadius: "2px",
+      borderBottom: `1px solid ${theme.palette.border.light}`,
+      "&:last-of-type": { borderBottom: "none" },
+    })}
+  >
     <CardActionArea
       {...(href
         ? {
@@ -132,7 +137,7 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
         aria-expanded={open}
         endIcon={<UnfoldMoreIcon />}
       >
-        Open service
+        View
       </OpenServiceButton>
 
       <Popover
@@ -144,18 +149,18 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
         disableRestoreFocus
         slotProps={{
           paper: {
-            sx: {
+            sx: (theme) => ({
               mt: 0.5,
-              borderRadius: "5px",
+              borderRadius: theme.shape.borderRadius,
               overflow: "hidden",
-              bgcolor: "background.dark",
               minWidth: "320px",
               maxWidth: "340px",
-            },
+              border: `1px solid ${theme.palette.border.main}`,
+            }),
           },
         }}
       >
-        <Stack p={1} gap={1} minWidth={240}>
+        <Stack>
           <Permission.IsPlatformAdmin>
             <MenuItemCard
               icon={<PlayOutlineIcon fontSize="small" sx={{ mt: 0.25 }} />}
