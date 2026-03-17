@@ -61,6 +61,7 @@ test.describe("Flow creation, publish and preview", () => {
   });
 
   // Skipped due to flaky / inconsistent failures on CI, passes locally
+  // eslint-disable-next-line playwright/no-skipped-test
   test.skip("Create, publish, and preview a flow with geospatial components", async ({
     browser,
   }) => {
