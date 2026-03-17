@@ -184,7 +184,7 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
             title="Published"
             description={
               isFlowPublished
-                ? "View the latest stable version"
+                ? "View the current published version"
                 : "Not yet published"
             }
             href={isFlowPublished ? publishedURL : undefined}
