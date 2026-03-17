@@ -25,7 +25,13 @@ WITH data AS (
     FROM lowcal_sessions ls 
     JOIN flows f ON ls.flow_id = f.id 
     JOIN teams t ON t.id = f.team_id 
-    WHERE ls.data->'passport'->'data'->>'applicant.researchOptIn' = '["true"]'
+    WHERE
+        (
+            -- Recent session, with an un-sanitised passport
+            ls.data -> 'passport' -> 'data' ->> 'applicant.researchOptIn' = '["true"]'
+            -- Older session, with a sanitised passport
+            OR ls.allow_list_answers ->> 'applicant.researchOptIn' = '["true"]'
+        )
 )
 SELECT * 
 FROM data 
