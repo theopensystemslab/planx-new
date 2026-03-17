@@ -42,13 +42,11 @@ export const Route = createFileRoute("/_authenticated/app/$team/members")({
       throw notFound();
     }
 
-    const teamSlug = useStore.getState().teamSlug;
     const {
       data: { users },
     } = await client.query<GetUsersForTeam>({
       query: GET_USERS_FOR_TEAM_QUERY,
-      variables: { teamSlug },
-      fetchPolicy: "no-cache",
+      variables: { teamSlug: params.team },
     });
 
     const teamMembers: TeamMember[] = users.map((user) => ({
