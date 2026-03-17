@@ -11,8 +11,9 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import ButtonBase from "@planx/components/shared/Buttons/ButtonBase";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { TeamSummary } from "pages/FlowEditor/lib/store/team";
 import React, { useEffect, useMemo, useState } from "react";
-import { TeamSummary } from "routes/_authenticated/app";
+import { useAppLoaderData } from "routes/_authenticated/app/route";
 import { focusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 
@@ -65,22 +66,19 @@ const StyledCard = styled(Card)<{ selected?: boolean; teamcolor?: string }>(
 interface Props {
   currentTeamSlug: string;
   onTeamSelect: (teamSlug: string) => void;
-  teams?: TeamSummary[];
 }
 
 export const TeamSelect: React.FC<Props> = ({
   currentTeamSlug,
   onTeamSelect,
-  teams: teamsProp,
 }) => {
+  const { teams } = useAppLoaderData();
   const [open, setOpen] = useState(false);
   const [canUserEditTeam] = useStore((state) => [state.canUserEditTeam]);
   const [searchedTeams, setSearchedTeams] = useState<TeamSummary[] | null>(
     null,
   );
   const [clearSearch, setClearSearch] = useState<boolean>(false);
-
-  const teams: TeamSummary[] = teamsProp || [];
 
   const viewOnlyTeams = useMemo(
     () => teams.filter((team) => !canUserEditTeam(team.slug)),

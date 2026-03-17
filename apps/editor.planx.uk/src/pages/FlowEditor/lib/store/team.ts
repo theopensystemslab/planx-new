@@ -17,7 +17,6 @@ export type TeamSummary = Pick<Team, "id" | "name" | "slug"> & {
 
 export interface TeamStore {
   teamId: number;
-  teams: TeamSummary[];
   teamIntegrations: TeamIntegrations;
   teamName: string;
   teamSettings: TeamSettings;
@@ -27,7 +26,6 @@ export interface TeamStore {
   teamDomain: string;
 
   setTeam: (team: Team) => void;
-  setTeams: (teams: TeamSummary[]) => void;
   getTeam: () => Team;
   clearTeamStore: () => void;
   fetchCurrentTeam: () => Promise<Team>;
@@ -43,7 +41,6 @@ export const teamStore: StateCreator<
   TeamStore
 > = (set, get) => ({
   teamId: 0,
-  teams: [],
   teamIntegrations: {} as TeamIntegrations,
   teamName: "",
   teamSettings: {} as TeamSettings,
@@ -57,8 +54,6 @@ export const teamStore: StateCreator<
   },
   teamMembers: [] as TeamMember[],
   teamDomain: "",
-
-  setTeams: (teams) => set({ teams }),
 
   setTeam: (team) => {
     set({

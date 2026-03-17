@@ -36,7 +36,9 @@ export const Route = createFileRoute("/_authenticated/app")({
       `,
     });
 
-    useStore.getState().setTeams(data.teams);
+    return {
+      teams: data.teams,
+    };
   },
   staleTime: Infinity,
   beforeLoad: async ({ location: { pathname } }) => {
@@ -79,3 +81,5 @@ export const Route = createFileRoute("/_authenticated/app")({
   ),
   notFoundComponent: CatchAllComponent,
 });
+
+export const useAppLoaderData = () => Route.useLoaderData();

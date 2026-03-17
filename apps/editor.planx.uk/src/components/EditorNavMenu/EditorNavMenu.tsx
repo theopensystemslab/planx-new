@@ -41,14 +41,13 @@ function EditorNavMenu() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const router = useRouter();
-  const [teamSlug, flowSlug, flowAnalyticsLink, role, team, teams] = useStore(
+  const [teamSlug, flowSlug, flowAnalyticsLink, role, team] = useStore(
     (state) => [
       state.teamSlug,
       state.flowSlug,
       state.flowAnalyticsLink,
       state.getUserRoleForCurrentTeam(),
       state.getTeam(),
-      state.teams,
     ],
   );
   const environment = import.meta.env.VITE_APP_ENV;
@@ -380,7 +379,6 @@ function EditorNavMenu() {
             onTeamSelect={(slug) =>
               navigate({ to: "/app/$team", params: { team: slug } })
             }
-            teams={teams}
           />
         </Box>
       )}
