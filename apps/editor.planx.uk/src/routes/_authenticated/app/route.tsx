@@ -6,7 +6,6 @@ import {
 } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import gql from "graphql-tag";
-import { client } from "lib/graphql";
 import React from "react";
 import { CatchAllComponent } from "routes/$";
 
@@ -17,6 +16,7 @@ import AuthenticatedLayout from "../../../pages/layout/AuthenticatedLayout";
 export const Route = createFileRoute("/_authenticated/app")({
   pendingComponent: DelayedLoadingIndicator,
   loader: async () => {
+    const { client } = await import("lib/graphql");
     const { data } = await client.query<{ teams: TeamSummary[] }>({
       query: gql`
         query GetTeamSummaries {

@@ -25,6 +25,10 @@ const mockGetUserRoleForCurrentTeam = vi.fn();
 const mockGetTeam = vi.fn();
 const mockSetIsNavMenuVisible = vi.fn();
 
+vi.mock("routes/_authenticated/app/route", () => ({
+  useAppLoaderData: vi.fn(() => ({ teams: [] })),
+}));
+
 vi.mock("pages/FlowEditor/lib/store", async () => ({
   useStore: vi.fn((selector) =>
     selector({
