@@ -145,9 +145,7 @@ test.describe("Flow creation, publish and preview", () => {
     page.locator('[aria-label="Editor"]').click();
 
     await page.getByRole("button", { name: "View" }).click();
-    await expect(
-      page.getByRole("link", { name: "Published" }),
-    ).toBeVisible();
+    await expect(page.getByRole("link", { name: "Published" })).toBeVisible();
   });
 
   test("Can add an external portal", async ({
