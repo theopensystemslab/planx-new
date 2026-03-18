@@ -19,6 +19,9 @@ interface PublishFlow {
     publisherId: string;
     createdAt: string;
     data: FlowGraph;
+    flow: {
+      templatedFrom: string | null;
+    };
   };
 }
 
@@ -29,6 +32,7 @@ export const publishFlow = async (
 ): Promise<{
   alteredNodes: Node[];
   templatedFlowsScheduledEventsResponse?: CreateScheduledEventResponse[];
+  resolveNotificationsScheduledEventResponse?: CreateScheduledEventResponse;
 } | null> => {
   const userId = userContext.getStore()?.user?.sub;
   if (!userId) throw Error("User details missing from request");
@@ -91,6 +95,9 @@ export const publishFlow = async (
           publisherId: publisher_id
           createdAt: created_at
           data
+          flow {
+            templatedFrom: templated_from
+          }
         }
       }
     `,
@@ -135,5 +142,25 @@ export const publishFlow = async (
     );
   }
 
-  return { alteredNodes, templatedFlowsScheduledEventsResponse };
+  // If we're publishing a templated flow, queue up an event to resolve any of its' active publish notifications
+  let resolveNotificationsScheduledEventResponse:
+    | CreateScheduledEventResponse
+    | undefined;
+  if (response?.publishedFlow?.flow?.templatedFrom) {
+    resolveNotificationsScheduledEventResponse = await createScheduledEvent({
+      webhook: `{{HASURA_PLANX_API_URL}}/resolve-notification`,
+      schedule_at: new Date(), // now
+      payload: {
+        flowId: flowId,
+        type: "updated_templated_flow",
+      },
+      comment: `resolve_notification_on_templated_flow_publish_${flowId}`,
+    });
+  }
+
+  return {
+    alteredNodes,
+    templatedFlowsScheduledEventsResponse,
+    resolveNotificationsScheduledEventResponse,
+  };
 };
