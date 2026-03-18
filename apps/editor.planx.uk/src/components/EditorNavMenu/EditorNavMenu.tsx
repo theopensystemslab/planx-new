@@ -20,6 +20,7 @@ import EditorIcon from "ui/icons/Editor";
 import LocalPlanningServicesIcon from "ui/icons/LocalPlanningServices";
 
 import { useLPS } from "../../hooks/useLPS";
+import { TeamSelect } from "./components/TeamSelect";
 import {
   MenuButton,
   MenuItem,
@@ -371,6 +372,16 @@ function EditorNavMenu() {
 
   return (
     <Root compact={compact}>
+      {teamSlug && !compact && (
+        <Box sx={(theme) => ({ padding: theme.spacing(1, 0.5, 0, 0.5) })}>
+          <TeamSelect
+            currentTeamSlug={teamSlug}
+            onTeamSelect={(slug) =>
+              navigate({ to: "/app/$team", params: { team: slug } })
+            }
+          />
+        </Box>
+      )}
       <MenuWrap>
         {visibleSections.map((section, sectionIndex) => (
           <React.Fragment key={sectionIndex}>

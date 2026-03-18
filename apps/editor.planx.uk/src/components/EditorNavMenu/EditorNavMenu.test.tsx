@@ -13,6 +13,7 @@ vi.mock("@tanstack/react-router", async () => {
     useLocation: vi.fn(),
     useNavigate: vi.fn(() => vi.fn()),
     useRouter: vi.fn(() => ({ state: { isLoading: false } })),
+    useLoaderData: vi.fn(() => ({ teams: [] })),
   };
 });
 
