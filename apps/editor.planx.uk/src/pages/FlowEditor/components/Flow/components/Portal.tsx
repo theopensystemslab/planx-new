@@ -24,10 +24,11 @@ const ExternalPortal: React.FC<any> = (props) => {
 
   const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(href);
 
-  const { addExternalPortal, showTags } = useStore((state) => ({
-    addExternalPortal: state.addExternalPortal,
-    showTags: state.showTags,
-  }));
+  const [id, addExternalPortal, showTags] = useStore((state) => [
+    state.id,
+    state.addExternalPortal,
+    state.showTags,
+  ]);
 
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
@@ -120,6 +121,11 @@ const ExternalPortal: React.FC<any> = (props) => {
                     team: internalTeamSlug,
                     flow: internalFlowSlug,
                   }}
+                  // Inject current flowId into router state, for RecentFlows component
+                  state={(prev) => ({
+                    ...prev,
+                    recentFlows: [...(prev?.recentFlows || []), id],
+                  })}
                   preload={false}
                   ref={drag}
                 >
@@ -145,6 +151,7 @@ const ExternalPortal: React.FC<any> = (props) => {
                   ...(parent && { parent }),
                 }}
                 preload={false}
+                state={(prev) => prev}
                 className="portalMenu"
               >
                 <MoreVert titleAccess="Edit Portal" />
@@ -227,6 +234,7 @@ const InternalPortal: React.FC<any> = (props) => {
                 preload={false}
                 ref={drag}
                 onContextMenu={handleContextMenu}
+                state={(prev) => prev}
               >
                 <span>{props.data.text}</span>
               </Link>
@@ -244,6 +252,7 @@ const InternalPortal: React.FC<any> = (props) => {
                 }}
                 preload={false}
                 className="portalMenu"
+                state={(prev) => prev}
               >
                 <MoreVert titleAccess="Edit Portal" />
               </Link>

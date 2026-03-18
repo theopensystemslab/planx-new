@@ -31,9 +31,9 @@ const mockFlows = [
 ];
 
 export const Basic = {
-  render: () => <RecentFlows flows={mockFlows} />,
+  render: () => <RecentFlows />,
 } satisfies Story;
 
 export const SingleFlow = {
-  render: () => <RecentFlows flows={[mockFlows[0]]} />,
+  render: () => <RecentFlows />,
 } satisfies Story;

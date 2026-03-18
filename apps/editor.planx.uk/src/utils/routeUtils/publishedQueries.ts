@@ -63,6 +63,7 @@ export const fetchSettingsForPublishedView = async (
               limit: 1
               order_by: { created_at: desc }
             ) {
+              id
               data
             }
           }
