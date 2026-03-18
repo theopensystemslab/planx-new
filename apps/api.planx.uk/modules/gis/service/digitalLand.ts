@@ -24,6 +24,7 @@ import * as horsham from "./local_authorities/metadata/horsham.js";
 import * as lambeth from "./local_authorities/metadata/lambeth.js";
 import * as medway from "./local_authorities/metadata/medway.js";
 import * as newcastle from "./local_authorities/metadata/newcastle.js";
+import * as northumberland from "./local_authorities/metadata/northumberland.js";
 import * as southGloucestershire from "./local_authorities/metadata/southGloucestershire.js";
 import * as southwark from "./local_authorities/metadata/southwark.js";
 import * as stAlbans from "./local_authorities/metadata/stAlbans.js";
@@ -57,6 +58,7 @@ export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   lambeth,
   medway,
   newcastle,
+  northumberland,
   "south-gloucestershire": southGloucestershire,
   southwark,
   "st-albans": stAlbans,
