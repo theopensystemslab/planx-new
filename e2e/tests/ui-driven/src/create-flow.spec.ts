@@ -142,7 +142,7 @@ test.describe("Flow creation, publish and preview", () => {
     await turnServiceOnline(page);
 
     // Exit back to main Editor page
-    page.locator('[aria-label="Editor"]').click();
+    await page.locator('[aria-label="Editor"]').click();
 
     await page.getByRole("button", { name: "View" }).click();
     await expect(page.getByRole("link", { name: "Published" })).toBeVisible();

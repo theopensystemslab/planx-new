@@ -129,6 +129,7 @@ async function navigateToPaymentRequestPage(
 ) {
   const paymentRequestURL = `/${context.team!.slug!}/${context.flow?.slug}/pay?analytics=false&paymentRequestId=${paymentRequest.id}`;
   await page.goto(paymentRequestURL);
+  await page.waitForLoadState("networkidle");
 }
 
 async function setupPaymentRequest(

@@ -28,10 +28,6 @@ const OpenServiceButton = styled(Button)(({ theme }) => ({
   "& svg": { fontSize: "1.15rem" },
 }));
 
-interface OpenServiceMenuProps {
-  isFlowPublished: boolean;
-}
-
 const CardContent = styled(Box)(({ theme }) => ({
   padding: theme.spacing(1, 1, 1.5, 1),
   display: "flex",
@@ -105,10 +101,11 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
   </Card>
 );
 
-export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
-  isFlowPublished,
-}) => {
-  const flowStatus = useStore((state) => state.flowStatus);
+export const OpenServiceMenu: React.FC = () => {
+  const [flowStatus, isFlowPublished] = useStore((state) => [
+    state.flowStatus,
+    state.isFlowPublished,
+  ]);
   const isFlowOnline = flowStatus === "online";
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -124,8 +121,10 @@ export const OpenServiceMenu: React.FC<OpenServiceMenuProps> = ({
   const previewURL = `${origin}${router.buildLocation({ to: "/$team/$flow/preview", params: { team, flow: rootFlow } }).href}`;
   const publishedURL = `${origin}${router.buildLocation({ to: "/$team/$flow/published", params: { team, flow: rootFlow }, search: { analytics: false } }).href}`;
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) =>
-    setAnchorEl((prev) => (prev ? null : event.currentTarget));
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    const target = event.currentTarget;
+    setAnchorEl((prev) => (prev ? null : target));
+  };
 
   const closeMenu = () => setAnchorEl(null);
 

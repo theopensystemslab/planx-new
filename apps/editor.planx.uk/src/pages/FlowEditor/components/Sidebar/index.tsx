@@ -105,13 +105,11 @@ const TabList = styled(Box)(({ theme }) => ({
 }));
 
 const Sidebar: React.FC = React.memo(() => {
-  const [isFlowPublished, toggleSidebar, showSidebar, isTemplatedFrom] =
-    useStore((state) => [
-      state.isFlowPublished,
-      state.toggleSidebar,
-      state.showSidebar,
-      state.isTemplatedFrom,
-    ]);
+  const [toggleSidebar, showSidebar, isTemplatedFrom] = useStore((state) => [
+    state.toggleSidebar,
+    state.showSidebar,
+    state.isTemplatedFrom,
+  ]);
 
   const defaultActiveTab = isTemplatedFrom ? "Customise" : "PreviewBrowser";
   const [activeTab, setActiveTab] = useState<SidebarTabs>(defaultActiveTab);
@@ -152,10 +150,7 @@ const Sidebar: React.FC = React.memo(() => {
             {showSidebar ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </StyledToggleButton>
           <Header>
-            <CheckForChangesToPublishButton
-              previewURL={previewURL}
-              isFlowPublished={isFlowPublished}
-            />
+            <CheckForChangesToPublishButton previewURL={previewURL} />
           </Header>
 
           <TabList>

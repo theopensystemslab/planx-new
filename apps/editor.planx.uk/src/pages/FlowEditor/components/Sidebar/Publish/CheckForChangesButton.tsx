@@ -15,8 +15,7 @@ import { ChangesDialog, NoChangesDialog } from "./PublishDialog";
 
 export const CheckForChangesToPublishButton: React.FC<{
   previewURL: string;
-  isFlowPublished: boolean;
-}> = ({ previewURL, isFlowPublished }) => {
+}> = ({ previewURL }) => {
   const [
     isTemplatedFrom,
     template,
@@ -146,7 +145,7 @@ export const CheckForChangesToPublishButton: React.FC<{
           >
             {buttonText}
           </Button>
-          <OpenServiceMenu isFlowPublished={isFlowPublished} />
+          <OpenServiceMenu />
         </Box>
         {!alteredNodes || alteredNodes?.length === 0 ? (
           <NoChangesDialog

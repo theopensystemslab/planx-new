@@ -9,7 +9,7 @@ export const navigateToService = async (page: Page, slug: string) => {
 
 export const publishService = async (page: Page) => {
   // Open modal
-  page.getByTestId("check-for-changes-to-publish-button").click();
+  await page.getByTestId("check-for-changes-to-publish-button").click();
 
   // 3-step modal opens on Review step, click "next" to Test step
   await expect(page.getByRole("heading", { name: "Review" })).toBeVisible();
@@ -30,9 +30,9 @@ export const publishService = async (page: Page) => {
 };
 
 export const turnServiceOnline = async (page: Page) => {
-  page.locator('[aria-label="Flow settings"]').click();
-  page.getByRole("tab", { name: "Visibility" }).click();
-  page.getByTestId("set-status-button").click();
+  await page.locator('[aria-label="Flow settings"]').click();
+  await page.getByRole("tab", { name: "Visibility" }).click();
+  await page.getByTestId("set-status-button").click();
 
   await expect(page.getByText("Settings updated successfully")).toBeVisible();
 };

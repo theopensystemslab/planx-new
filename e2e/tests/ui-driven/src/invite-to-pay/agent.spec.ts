@@ -92,6 +92,7 @@ test.describe("Agent journey @regression", async () => {
     await page.getByText("Continue").click();
     await page.getByLabel("email").fill(context.user.email);
     await page.getByText("Continue").click();
+    await page.waitForLoadState("networkidle");
     await expect(toggleInviteToPayButton).toBeDisabled();
   });
 
