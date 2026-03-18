@@ -32,7 +32,7 @@ export const publishFlow = async (
 ): Promise<{
   alteredNodes: Node[];
   templatedFlowsScheduledEventsResponse?: CreateScheduledEventResponse[];
-  resolveNotificationsEventResponse?: CreateScheduledEventResponse;
+  resolveNotificationsScheduledEventResponse?: CreateScheduledEventResponse;
 } | null> => {
   const userId = userContext.getStore()?.user?.sub;
   if (!userId) throw Error("User details missing from request");
@@ -146,10 +146,10 @@ export const publishFlow = async (
   let resolveNotificationsScheduledEventResponse:
     | CreateScheduledEventResponse
     | undefined;
-  if (response.publishedFlow.flow.templatedFrom) {
+  if (response?.publishedFlow?.flow?.templatedFrom) {
     resolveNotificationsScheduledEventResponse = await createScheduledEvent({
       webhook: `{{HASURA_PLANX_API_URL}}/resolve-notification`,
-      schedule_at: new Date(),
+      schedule_at: new Date(), // now
       payload: {
         flowId: flowId,
         type: "updated_templated_flow",
@@ -158,5 +158,9 @@ export const publishFlow = async (
     });
   }
 
-  return { alteredNodes, templatedFlowsScheduledEventsResponse };
+  return {
+    alteredNodes,
+    templatedFlowsScheduledEventsResponse,
+    resolveNotificationsScheduledEventResponse,
+  };
 };
