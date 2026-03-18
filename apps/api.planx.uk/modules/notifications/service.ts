@@ -21,7 +21,7 @@ export const resolveNotification = async (flowId: string, type: string) => {
         mutation UpdateNotifications(
           $flowId: uuid!
           $type: notification_type_enum_enum!
-          $resolvedAt: timestamptz!
+          $resolvedAt: timestamp!
         ) {
           notifications: update_notifications_many(
             updates: {

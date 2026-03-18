@@ -25,3 +25,16 @@ select_permissions:
         - team_id
       filter: {}
     comment: ""
+update_permissions:
+  - role: api
+    permission:
+      columns:
+        - id
+        - team_id
+        - type
+        - created_at
+        - resolved_at
+        - flow_id
+      filter: {}
+      check: {}
+    comment: ""
