@@ -25,9 +25,15 @@ const mockGetUserRoleForCurrentTeam = vi.fn();
 const mockGetTeam = vi.fn();
 const mockSetIsNavMenuVisible = vi.fn();
 
-vi.mock("routes/_authenticated/app/route", () => ({
-  useAppLoaderData: vi.fn(() => ({ teams: [] })),
-}));
+vi.mock("routes/_authenticated/app/route", async () => {
+  const { createFileRoute } = await vi.importActual<
+    typeof import("@tanstack/react-router")
+  >("@tanstack/react-router");
+  return {
+    Route: createFileRoute("/_authenticated/app")({}),
+    useAppLoaderData: vi.fn(() => ({ teams: [] })),
+  };
+});
 
 vi.mock("pages/FlowEditor/lib/store", async () => ({
   useStore: vi.fn((selector) =>
