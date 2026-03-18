@@ -232,6 +232,10 @@ const getThemeOptions = ({
       body3: {
         fontSize: "0.913rem",
       },
+      body4: {
+        fontSize: "0.8125rem",
+        lineHeight: LINE_HEIGHT_BASE,
+      },
       data: {
         fontFamily: '"Source Code Pro", monospace',
       },

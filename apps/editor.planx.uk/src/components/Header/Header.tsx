@@ -10,7 +10,6 @@ import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useLocation, useNavigate } from "@tanstack/react-router";
-import AccountMenu from "components/AccountMenu";
 import Breadcrumbs from "components/Breadcrumbs";
 import { clearLocalFlowIdb } from "lib/local.idb";
 import { capitalize } from "lodash";
@@ -311,9 +310,7 @@ const EditorToolbar: React.FC<{
             <LeftBox>
               <Breadcrumbs showEnvironmentSelect />
             </LeftBox>
-            <RightBox>
-              <AccountMenu />
-            </RightBox>
+            <RightBox></RightBox>
           </InnerContainer>
         </EditorHeaderContainer>
       </EditorHeader>
