@@ -34,7 +34,5 @@ export const useExternalPortal = (flowId?: string) => {
   const flow = data?.externalPortal;
   const isCorrupted = !loading && !flow;
 
-  const href = flow ? `${flow.team?.slug}/${flow.slug}` : "Loading...";
-
-  return { flow, href, loading, isCorrupted };
+  return { flow, loading, isCorrupted };
 };

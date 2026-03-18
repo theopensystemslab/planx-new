@@ -10,7 +10,7 @@ export const RecentFlowLink: React.FC<{
   flowId: string;
   isFirst?: boolean;
 }> = ({ flowId, isFirst }) => {
-  const { href, flow } = useExternalPortal(flowId);
+  const { flow } = useExternalPortal(flowId);
   if (!flow) return null;
 
   const sliceHistoryUpTo = (targetFlowId: string) => {
@@ -26,7 +26,12 @@ export const RecentFlowLink: React.FC<{
   };
 
   return (
-    <RecentFlowLinkRoot to={`../../${href}`} state={sliceHistoryUpTo(flowId)}>
+    <RecentFlowLinkRoot
+      to={"/app/$team/$flow"}
+      // TODO: Handle folders
+      params={{ team: flow.team.slug, flow: flow.slug }}
+      state={sliceHistoryUpTo(flowId)}
+    >
       {isFirst ? (
         <Box component="span" sx={{ mr: 0.25 }}>
           back to

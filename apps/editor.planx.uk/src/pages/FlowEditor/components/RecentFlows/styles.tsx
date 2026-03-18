@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
-import { Link } from "@tanstack/react-router";
+import { createLink } from "@tanstack/react-router";
 
 const RECENT_ROW_HEIGHT = "26px";
 
@@ -74,7 +74,7 @@ export const ExpandableContent = styled(Box, {
   },
 }));
 
-export const RecentFlowLinkRoot = styled(Link)(({ theme }) => ({
+export const StyledAnchor = styled("a")(({ theme }) => ({
   color: theme.palette.secondary.dark,
   display: "flex",
   alignItems: "center",
@@ -89,3 +89,5 @@ export const RecentFlowLinkRoot = styled(Link)(({ theme }) => ({
     textDecorationThickness: "2px",
   },
 }));
+
+export const RecentFlowLinkRoot = createLink(StyledAnchor);
