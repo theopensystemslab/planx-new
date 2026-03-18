@@ -18,6 +18,7 @@ import {
   useNavigate,
   useRouterState,
 } from "@tanstack/react-router";
+import AccountMenu from "components/AccountMenu";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef } from "react";
 import EditorIcon from "ui/icons/Editor";
@@ -30,6 +31,7 @@ import {
   MenuItem,
   MenuTitle,
   MenuWrap,
+  NavBarContainer,
   Root,
   StyledChip,
   Subtitle,
@@ -376,30 +378,33 @@ function EditorNavMenu() {
 
   return (
     <Root compact={compact}>
-      {teamSlug && !compact && (
-        <Box sx={(theme) => ({ padding: theme.spacing(1, 0.5, 0, 0.5) })}>
-          <TeamSelect
-            currentTeamSlug={teamSlug}
-            onTeamSelect={(slug) =>
-              navigate({ to: "/app/$team", params: { team: slug } })
-            }
-          />
-        </Box>
-      )}
-      <MenuWrap>
-        {visibleSections.map((section, sectionIndex) => (
-          <React.Fragment key={sectionIndex}>
-            {section.subtitle && (
-              <Subtitle variant="body3">{section.subtitle}</Subtitle>
-            )}
-            {section.routes.map(({ title, Icon, route, disabled, isNew }) => (
-              <MenuItem key={title}>
-                {renderMenuItem(title, Icon, route, disabled, isNew)}
-              </MenuItem>
-            ))}
-          </React.Fragment>
-        ))}
-      </MenuWrap>
+      <NavBarContainer>
+        {teamSlug && !compact && (
+          <Box sx={(theme) => ({ padding: theme.spacing(1, 0.5, 0, 0.5) })}>
+            <TeamSelect
+              currentTeamSlug={teamSlug}
+              onTeamSelect={(slug) =>
+                navigate({ to: "/app/$team", params: { team: slug } })
+              }
+            />
+          </Box>
+        )}
+        <MenuWrap>
+          {visibleSections.map((section, sectionIndex) => (
+            <React.Fragment key={sectionIndex}>
+              {section.subtitle && (
+                <Subtitle variant="body3">{section.subtitle}</Subtitle>
+              )}
+              {section.routes.map(({ title, Icon, route, disabled, isNew }) => (
+                <MenuItem key={title}>
+                  {renderMenuItem(title, Icon, route, disabled, isNew)}
+                </MenuItem>
+              ))}
+            </React.Fragment>
+          ))}
+        </MenuWrap>
+        <AccountMenu compact={compact} />
+      </NavBarContainer>
     </Root>
   );
 }
