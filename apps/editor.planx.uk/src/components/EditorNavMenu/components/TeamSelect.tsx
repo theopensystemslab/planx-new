@@ -48,7 +48,7 @@ const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
 const StyledCard = styled(Card)<{ selected?: boolean; teamcolor?: string }>(
   ({ theme, teamcolor }) => ({
     backgroundColor: theme.palette.background.default,
-    borderRadius: 3,
+    borderRadius: theme.shape.borderRadius,
     borderLeft: `6px solid ${teamcolor || "OliveDrab"}`,
     padding: theme.spacing(0.75),
     boxShadow: "0 1px 1.5px 0 rgba(0, 0, 0, 0.2)",
@@ -256,6 +256,14 @@ export const TeamSelect: React.FC<Props> = ({
                       >
                         {team.name}
                       </Typography>
+                      {team.slug === currentTeamSlug && (
+                        <CheckCircleIcon
+                          sx={(theme) => ({
+                            color: theme.palette.info.main,
+                            fontSize: "1em",
+                          })}
+                        />
+                      )}
                     </StyledCard>
                   ))}
                 </Stack>
