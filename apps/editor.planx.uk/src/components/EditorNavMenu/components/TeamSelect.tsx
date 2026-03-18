@@ -10,10 +10,10 @@ import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import ButtonBase from "@planx/components/shared/Buttons/ButtonBase";
+import { useLoaderData } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { TeamSummary } from "pages/FlowEditor/lib/store/team";
 import React, { useEffect, useMemo, useState } from "react";
-import { useAppLoaderData } from "routes/_authenticated/app/route";
 import { focusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 
@@ -72,7 +72,7 @@ export const TeamSelect: React.FC<Props> = ({
   currentTeamSlug,
   onTeamSelect,
 }) => {
-  const { teams } = useAppLoaderData();
+  const { teams } = useLoaderData({ from: "/_authenticated/app" });
   const [open, setOpen] = useState(false);
   const [canUserEditTeam] = useStore((state) => [state.canUserEditTeam]);
   const [searchedTeams, setSearchedTeams] = useState<TeamSummary[] | null>(

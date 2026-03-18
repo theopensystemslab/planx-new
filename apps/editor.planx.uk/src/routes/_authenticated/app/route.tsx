@@ -81,5 +81,3 @@ export const Route = createFileRoute("/_authenticated/app")({
   ),
   notFoundComponent: CatchAllComponent,
 });
-
-export const useAppLoaderData = () => Route.useLoaderData();

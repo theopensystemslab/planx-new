@@ -1,9 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useLoaderData } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import Teams from "pages/Teams";
 import React from "react";
-
-import { useAppLoaderData } from "./route";
 
 export const Route = createFileRoute("/_authenticated/app/")({
   loader: () => {
@@ -13,7 +11,7 @@ export const Route = createFileRoute("/_authenticated/app/")({
 });
 
 function AuthenticatedHomeRoute() {
-  const { teams } = useAppLoaderData();
+  const { teams } = useLoaderData({ from: "/_authenticated/app" });
   return (
     <>
       <Teams teams={teams} />
