@@ -22,8 +22,8 @@ import { FileStatus } from "../../shared/PrivateFileUpload/FileStatus";
 import { UploadedFileCard } from "../../shared/PrivateFileUpload/UploadedFileCard";
 import {
   createFileList,
-  FileList,
-  FileUploadAndLabel,
+  type FileList,
+  type FileUploadAndLabel as FileUploadAndLabelType,
   generatePayload,
   getRecoveredData,
   getTagsForSlot,
@@ -38,7 +38,7 @@ import {
 import { InteractiveFileListItem } from "./InteractiveFileListItem";
 import { FileTaggingModal } from "./Modal";
 
-type Props = PublicProps<FileUploadAndLabel>;
+type Props = PublicProps<FileUploadAndLabelType>;
 
 const DropzoneContainer = styled(Box)(({ theme }) => ({
   display: "grid",
