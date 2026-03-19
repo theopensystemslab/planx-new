@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import MoreVert from "@mui/icons-material/MoreVert";
 import Box from "@mui/material/Box";
 import { NodeTag } from "@opensystemslab/planx-core/types";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouteContext } from "@tanstack/react-router";
 import { useParams } from "@tanstack/react-router";
 import classNames from "classnames";
 import gql from "graphql-tag";
@@ -21,6 +21,9 @@ import { Tag } from "./Tag";
 
 const ExternalPortal: React.FC<any> = (props) => {
   const [href, setHref] = useState("Loading...");
+  const { folderIds } = useRouteContext({
+    from: "/_authenticated/app/$team/$flow",
+  });
 
   const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(href);
 
@@ -121,10 +124,13 @@ const ExternalPortal: React.FC<any> = (props) => {
                     team: internalTeamSlug,
                     flow: internalFlowSlug,
                   }}
-                  // Inject current flowId into router state, for RecentFlows component
+                  // Inject current flowId and folderIds into router state, for RecentFlows component
                   state={(prev) => ({
                     ...prev,
-                    recentFlows: [...(prev?.recentFlows || []), id],
+                    recentFlows: [
+                      ...(prev?.recentFlows || []),
+                      { id, folderIds },
+                    ],
                   })}
                   preload={false}
                   ref={drag}

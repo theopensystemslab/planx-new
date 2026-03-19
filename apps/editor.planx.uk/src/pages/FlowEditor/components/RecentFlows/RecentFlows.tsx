@@ -39,14 +39,14 @@ const RecentFlows = () => {
       <RecentFlowContainer>
         <RecentFlowList>
           <RecentFlowItem indent={0}>
-            <RecentFlowLink isFirst flowId={firstFlow} />
+            <RecentFlowLink isFirst flow={firstFlow} />
           </RecentFlowItem>
 
           <ExpandableContent isExpanded={isExpanded}>
             <Box>
-              {additionalFlows.map((flowId, index) => (
-                <RecentFlowItem key={`${flowId}-${index}`} indent={index + 1}>
-                  <RecentFlowLink flowId={flowId} />
+              {additionalFlows.map((flow, index) => (
+                <RecentFlowItem key={`${flow.id}-${index}`} indent={index + 1}>
+                  <RecentFlowLink flow={flow} />
                 </RecentFlowItem>
               ))}
             </Box>

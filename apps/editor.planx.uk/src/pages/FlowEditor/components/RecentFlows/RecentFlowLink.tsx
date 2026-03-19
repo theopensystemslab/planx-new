@@ -6,17 +6,25 @@ import React from "react";
 
 import { RecentFlowLinkRoot } from "./styles";
 
-export const RecentFlowLink: React.FC<{
-  flowId: string;
+interface Props {
+  flow: {
+    id: string;
+    folderIds: string[];
+  };
   isFirst?: boolean;
-}> = ({ flowId, isFirst }) => {
-  const { flow } = useExternalPortal(flowId);
+}
+
+export const RecentFlowLink: React.FC<Props> = ({
+  flow: { id, folderIds },
+  isFirst,
+}) => {
+  const { flow } = useExternalPortal(id);
   if (!flow) return null;
 
   const sliceHistoryUpTo = (targetFlowId: string) => {
     return (prev: HistoryState): HistoryState => {
       const flows = prev.recentFlows || [];
-      const index = flows.indexOf(targetFlowId);
+      const index = flows.findIndex(({ id }) => id === targetFlowId);
 
       return {
         ...prev,
@@ -25,12 +33,14 @@ export const RecentFlowLink: React.FC<{
     };
   };
 
+  // Ensure we navigate back to the correct folder we came from
+  const flowSlug = [flow.slug, ...folderIds].join(",");
+
   return (
     <RecentFlowLinkRoot
       to={"/app/$team/$flow"}
-      // TODO: Handle folders
-      params={{ team: flow.team.slug, flow: flow.slug }}
-      state={sliceHistoryUpTo(flowId)}
+      params={{ team: flow.team.slug, flow: flowSlug }}
+      state={sliceHistoryUpTo(id)}
     >
       {isFirst ? (
         <Box component="span" sx={{ mr: 0.25 }}>
