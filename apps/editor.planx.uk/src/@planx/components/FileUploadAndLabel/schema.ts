@@ -59,6 +59,7 @@ export const fileUploadAndLabelSchema: SchemaOf<FileUploadAndLabel> =
       fn: string(),
       fileTypes: array().of(fileTypeSchema).required().min(1),
       hideDropZone: boolean(),
+      showDrawingNumber: boolean(),
     }),
   );
 

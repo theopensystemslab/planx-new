@@ -48,12 +48,6 @@ export const FileTaggingModal = ({
     }
   }, []);
 
-  useEffect(() => {
-    if (initialFocusRef.current) {
-      initialFocusRef.current.focus();
-    }
-  }, []);
-
   const handleValidation = () => {
     fileLabelSchema
       .validate(fileList, { context: { slots: uploadedFiles } })

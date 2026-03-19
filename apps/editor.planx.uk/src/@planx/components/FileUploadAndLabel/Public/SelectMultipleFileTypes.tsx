@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { styled } from "@mui/material/styles";
@@ -8,6 +9,7 @@ import capitalize from "lodash/capitalize";
 import React, { useMemo } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
+import Input from "ui/shared/Input/Input";
 
 import { FileUploadSlot } from "../../FileUpload/model";
 import {
@@ -22,6 +24,10 @@ interface ChecklistProps {
   uploadedFile: FileUploadSlot;
   fileList: FileList;
   setFileList: (value: React.SetStateAction<FileList>) => void;
+  showDrawingNumber?: boolean;
+  drawingNumber?: string;
+  onDrawingNumberChange?: (value: string) => void;
+  onSave?: () => void;
 }
 
 interface Option extends UserFile {
@@ -30,12 +36,19 @@ interface Option extends UserFile {
 
 const Root = styled(Box)(({ theme }) => ({
   width: "100%",
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: theme.palette.background.paper,
   borderColor: theme.palette.border.main,
   borderStyle: "solid",
-  borderWidth: "1px",
-  borderTopColor: theme.palette.border.light,
+  borderWidth: "0 1px 1px 1px",
   padding: theme.spacing(2),
+}));
+
+const ChecklistGrid = styled(Box)(({ theme }) => ({
+  display: "grid",
+  gridTemplateColumns: "1fr",
+  [theme.breakpoints.up("md")]: {
+    gridTemplateColumns: "1fr 1fr",
+  },
 }));
 
 // Sanitize function to create valid IDs (no spaces)
@@ -44,7 +57,15 @@ const sanitizeId = (str: string): string => {
 };
 
 export const SelectMultipleFileTypes = (props: ChecklistProps) => {
-  const { uploadedFile, fileList, setFileList } = props;
+  const {
+    uploadedFile,
+    fileList,
+    setFileList,
+    showDrawingNumber,
+    drawingNumber,
+    onDrawingNumberChange,
+    onSave,
+  } = props;
 
   const initialTags = getTagsForSlot(uploadedFile.id, fileList);
 
@@ -100,8 +121,8 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
 
   return (
     <Root>
-      <Typography variant="h3" mb={3} id={titleId}>
-        What does this file show? (select all that apply)
+      <Typography variant="h3" mb={2} id={titleId}>
+        What does this file show? Select all that apply
         <Box component="span" sx={visuallyHidden}>
           This question refers to file: {uploadedFile.file.name}
         </Box>
@@ -111,10 +132,7 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
         <FormControl
           key={category}
           component="fieldset"
-          sx={{
-            width: "100%",
-            mb: 1,
-          }}
+          sx={{ width: "100%", mb: 1 }}
           aria-describedby={titleId}
         >
           <FormLabel
@@ -127,7 +145,7 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
             {capitalize(category)} information
           </FormLabel>
 
-          <Box>
+          <ChecklistGrid>
             {categoryOptions.map((option) => (
               <ChecklistItem
                 key={`${category}-${option.name}`}
@@ -137,9 +155,51 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
                 onChange={() => handleCheckboxChange(option)}
               />
             ))}
-          </Box>
+          </ChecklistGrid>
         </FormControl>
       ))}
+
+      {showDrawingNumber && (
+        <Box sx={{ mt: 1 }}>
+          <Typography
+            variant="h3"
+            pb={0.5}
+            sx={{ display: "inline-block" }}
+            id={`drawing-number-label-${uploadedFile.id}`}
+            component="label"
+          >
+            Drawing number (optional)
+          </Typography>
+          <Typography variant="body2" color="text.secondary" mb={1}>
+            Separate multiple drawing numbers in this file with a comma
+          </Typography>
+          <Input
+            id={`drawing-number-${uploadedFile.id}`}
+            value={drawingNumber ?? ""}
+            onChange={(e) => onDrawingNumberChange?.(e.target.value)}
+            fullWidth
+            aria-labelledby={`drawing-number-label-${uploadedFile.id}`}
+            bordered
+            sx={{ maxWidth: 400 }}
+          />
+        </Box>
+      )}
+
+      {onSave && (
+        <Button
+          variant="contained"
+          color="prompt"
+          sx={{ mt: 2, minWidth: 140 }}
+          size="small"
+          onClick={onSave}
+          data-testid={`save-${uploadedFile.file.name}`}
+        >
+          Save
+          <Box sx={visuallyHidden} component="span">
+            {` labels for ${uploadedFile.file.name}`}
+          </Box>
+        </Button>
+      )}
     </Root>
   );
 };
