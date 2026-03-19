@@ -22,6 +22,7 @@ const RecentFlows = () => {
   const handleToggle = () => setIsExpanded((prev) => !prev);
 
   const recentFlows = useRecentFlows();
+  if (!recentFlows?.length) return null;
 
   // Collapsed: show the directly previous (most recent) flow
   // Expanded: show the original flow at top, then in oldest → newest order
@@ -29,8 +30,6 @@ const RecentFlows = () => {
     ? recentFlows[0]
     : recentFlows[recentFlows.length - 1];
   const additionalFlows = recentFlows.slice(1);
-
-  if (!recentFlows.length) return null;
 
   return (
     <RecentFlowsOverlay>

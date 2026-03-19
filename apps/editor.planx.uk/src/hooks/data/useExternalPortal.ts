@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 
-interface ExternalPortal {
+export interface ExternalPortal {
   id: string;
   slug: string;
   name: string;
