@@ -157,7 +157,6 @@ const ExternalPortal: React.FC<any> = (props) => {
                   ...(parent && { parent }),
                 }}
                 preload={false}
-                state={(prev) => prev}
                 className="portalMenu"
               >
                 <MoreVert titleAccess="Edit Portal" />
@@ -240,7 +239,6 @@ const InternalPortal: React.FC<any> = (props) => {
                 preload={false}
                 ref={drag}
                 onContextMenu={handleContextMenu}
-                state={(prev) => prev}
               >
                 <span>{props.data.text}</span>
               </Link>
@@ -258,7 +256,6 @@ const InternalPortal: React.FC<any> = (props) => {
                 }}
                 preload={false}
                 className="portalMenu"
-                state={(prev) => prev}
               >
                 <MoreVert titleAccess="Edit Portal" />
               </Link>

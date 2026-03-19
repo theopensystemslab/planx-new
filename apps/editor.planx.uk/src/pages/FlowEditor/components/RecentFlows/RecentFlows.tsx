@@ -2,7 +2,6 @@ import Close from "@mui/icons-material/Close";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useRouterState } from "@tanstack/react-router";
 import React, { useState } from "react";
 
 import { RecentFlowLink } from "./RecentFlowLink";
@@ -15,15 +14,14 @@ import {
   ToggleButton,
   ToggleWrap,
 } from "./styles";
+import { useRecentFlows } from "./useRecentFlows";
 
 const RecentFlows = () => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleToggle = () => setIsExpanded((prev) => !prev);
 
-  const recentFlows = useRouterState({
-    select: (s) => s.location.state?.recentFlows || [],
-  });
+  const recentFlows = useRecentFlows();
 
   // Collapsed: show the directly previous (most recent) flow
   // Expanded: show the original flow at top, then in oldest → newest order
