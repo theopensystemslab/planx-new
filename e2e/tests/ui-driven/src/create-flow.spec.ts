@@ -145,7 +145,7 @@ test.describe("Flow creation, publish and preview", () => {
     await page.locator('[aria-label="Editor"]').click();
 
     await page.getByTestId("open-service-menu-button").click();
-    await expect(page.getByRole("link", { name: "Published" })).toBeVisible();
+    await expect(page.getByTestId("published-link")).toBeVisible();
   });
 
   test("Can add an external portal", async ({
@@ -212,7 +212,7 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
 
     await page.getByTestId("open-service-menu-button").click();
-    await page.getByRole("link", { name: "Published" }).click();
+    await page.getByTestId("published-link").click();
 
     await answerQuestion({ page, title: "Is this a test?", answer: "Yes" });
     await clickContinue({ page });

@@ -42,6 +42,7 @@ interface MenuItemCardProps {
   href?: string;
   onClick: () => void;
   isOnline?: boolean;
+  "data-testid"?: string;
 }
 
 const MenuItemCard: React.FC<MenuItemCardProps> = ({
@@ -51,6 +52,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
   href,
   onClick,
   isOnline,
+  "data-testid": dataTestId,
 }) => (
   <Card
     sx={(theme) => ({
@@ -60,6 +62,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
     })}
   >
     <CardActionArea
+      data-testid={dataTestId}
       {...(href
         ? {
             LinkComponent: "a",
@@ -168,6 +171,7 @@ export const OpenServiceMenu: React.FC = () => {
               description="Preview with unpublished nested flows"
               href={draftURL}
               onClick={closeMenu}
+              data-testid="draft-link"
             />
           </Permission.IsPlatformAdmin>
 
@@ -177,11 +181,13 @@ export const OpenServiceMenu: React.FC = () => {
             description="Preview changes before publishing"
             href={previewURL}
             onClick={closeMenu}
+            data-testid="preview-link"
           />
 
           <MenuItemCard
             icon={<LanguageIcon fontSize="small" sx={{ mt: 0.25 }} />}
             title="Published"
+            data-testid="published-link"
             description={
               isFlowPublished
                 ? "View the current published version"
