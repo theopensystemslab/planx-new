@@ -50,7 +50,7 @@ export const RecentFlowLink: React.FC<Props> = ({
         <TurnSharpLeftIcon sx={{ mr: 0.25 }} fontSize="small" />
       )}
       <Box component="span" className="flow-name">
-        {flow.name}
+        {flow.slug}
       </Box>
     </RecentFlowLinkRoot>
   );

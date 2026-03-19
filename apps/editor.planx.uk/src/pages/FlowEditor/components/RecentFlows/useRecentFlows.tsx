@@ -9,7 +9,7 @@ const STORAGE_KEY = "planx:recentFlows";
  * **Why do we need this?**
  *
  * Standard `<Link>` clicks or `navigate()` calls always drop the router's `location.state` by default
- * Passing along state manually is possible, but would be a fragile solution - easy to forget, tedious to maintain
+ * Passing along state manually is possible, but would be a brittle solution - easy to forget, tedious to maintain
  *
  * This hook acts as a background safety net, continuously backing up the breadcrumb trail to `sessionStorage`
  * and instantly re-hydrates the router state if it detects a drop, allowing the user to maintain their journey

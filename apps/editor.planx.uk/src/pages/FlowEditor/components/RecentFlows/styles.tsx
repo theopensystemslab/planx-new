@@ -81,13 +81,6 @@ export const StyledAnchor = styled("a")(({ theme }) => ({
   flexWrap: "nowrap",
   gap: theme.spacing(0.25),
   textDecoration: "none",
-  "& .flow-name": {
-    textDecoration: "underline",
-    color: theme.palette.common.white,
-  },
-  "&:hover .flow-name": {
-    textDecorationThickness: "2px",
-  },
 }));
 
 export const RecentFlowLinkRoot = createLink(StyledAnchor);
