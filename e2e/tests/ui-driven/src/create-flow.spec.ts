@@ -144,7 +144,7 @@ test.describe("Flow creation, publish and preview", () => {
     // Exit back to main Editor page
     await page.locator('[aria-label="Editor"]').click();
 
-    await page.getByRole("button", { name: "View" }).click();
+    await page.getByTestId("open-service-menu-button").click();
     await expect(page.getByRole("link", { name: "Published" })).toBeVisible();
   });
 
@@ -211,7 +211,7 @@ test.describe("Flow creation, publish and preview", () => {
       page.getByRole("link", { name: "E2E/an-external-portal-service" }),
     ).toBeVisible();
 
-    await page.getByRole("button", { name: "View" }).click();
+    await page.getByTestId("open-service-menu-button").click();
     await page.getByRole("link", { name: "Published" }).click();
 
     await answerQuestion({ page, title: "Is this a test?", answer: "Yes" });

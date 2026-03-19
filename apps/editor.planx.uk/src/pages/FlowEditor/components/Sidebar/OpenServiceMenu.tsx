@@ -135,6 +135,7 @@ export const OpenServiceMenu: React.FC = () => {
         aria-haspopup="true"
         aria-expanded={open}
         endIcon={<UnfoldMoreIcon />}
+        data-testid="open-service-menu-button"
       >
         View
       </OpenServiceButton>
