@@ -1,21 +1,61 @@
+import type { NextFunction, Request, Response } from "express";
 import supertest from "supertest";
 
 import app from "../../../server.js";
+import { sanitiseInput } from "./sanitiseInput.js";
 
 const mockEnhanceProjectDescription = vi.fn();
-const mockLogAiGuardrailRejection = vi.fn();
-const mockLogAiGatewayExchange = vi.fn();
-
 vi.mock("../projectDescription/service.js", () => ({
   enhanceProjectDescription: () => mockEnhanceProjectDescription(),
 }));
 
-vi.mock("../logs.js", () => ({
-  logAiGuardrailRejection: () => mockLogAiGuardrailRejection(),
-  logAiGatewayExchange: () => mockLogAiGatewayExchange(),
-}));
+const getMockRes = (input: string) => {
+  return {
+    locals: {
+      parsedReq: {
+        body: { original: input },
+      },
+    },
+  } as unknown as Response;
+};
+const getMockReq = () => ({}) as unknown as Request;
 
-describe.todo("Input sanitisation middleware - unit tests");
+describe("Input sanitisation middleware - unit tests", () => {
+  const sanitise = sanitiseInput("original");
+  it("calls next() for clean input", () => {
+    const next: NextFunction = vi.fn();
+    sanitise(
+      getMockReq(),
+      getMockRes("Rear extension to existing dwelling"),
+      next,
+    );
+    expect(next).toHaveBeenCalledOnce();
+  });
+
+  it("removes control characters", () => {
+    const res = getMockRes("Building\x00 an\x0B extension");
+    sanitise(getMockReq(), res, vi.fn());
+    expect(res.locals.parsedReq.body.original).toBe("Building an extension");
+  });
+
+  it("normalises whitespace", () => {
+    const res = getMockRes(
+      "  First   paragraph\n\n\n\nSecond \t\t paragraph  ",
+    );
+    sanitise(getMockReq(), res, vi.fn());
+    expect(res.locals.parsedReq.body.original).toBe(
+      "First paragraph\n\nSecond paragraph",
+    );
+  });
+
+  it("strips XML-like tags", () => {
+    const res = getMockRes("Build <script>alert('hi')</script> extension");
+    sanitise(getMockReq(), res, vi.fn());
+    expect(res.locals.parsedReq.body.original).toBe(
+      "Build alert('hi') extension",
+    );
+  });
+});
 
 describe("Input sanitisation middleware - integration tests", () => {
   beforeEach(() => {
@@ -24,7 +64,6 @@ describe("Input sanitisation middleware - integration tests", () => {
   });
 
   const mockFlowId = "123e4567-e89b-12d3-a456-426614174000";
-
   it("sanitises control characters from input before processing", async () => {
     mockEnhanceProjectDescription.mockResolvedValueOnce({
       ok: true,

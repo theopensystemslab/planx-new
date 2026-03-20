@@ -15,7 +15,7 @@
     "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#6cca854",
     "@types/isomorphic-fetch": "^0.0.36",
     "adm-zip": "^0.5.16",
-    "ai": "^6.0.105",
+    "ai": "^6.0.116",
     "axios": "^1.13.6",
     "body-parser": "^2.2.2",
     "cookie-parser": "^1.4.7",

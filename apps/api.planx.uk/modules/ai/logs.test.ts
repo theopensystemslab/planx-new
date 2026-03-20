@@ -1,12 +1,13 @@
 import { describe, expect, it } from "vitest";
 
 import { queryMock } from "../../tests/graphqlQueryMock.js";
+import { DEFAULT_MODEL_ID } from "./constants.js";
 import { logAiGatewayExchange, logAiGuardrailRejection } from "./logs.js";
 import { GATEWAY_STATUS, GUARDRAIL_REJECTION_REASON } from "./types.js";
 
 const mockCommonArgs = {
   endpoint: "/ai/project-description/enhance",
-  modelId: "google/gemini-2.5-pro",
+  modelId: DEFAULT_MODEL_ID,
   prompt: "Building a small rear extension",
   flowId: "123e4567-e89b-12d3-a456-426614174000",
 };

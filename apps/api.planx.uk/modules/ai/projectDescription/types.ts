@@ -31,7 +31,7 @@ export type ProjectDescriptionController = ValidatedRequestHandler<
   ProjectDescriptionSuccess | ProjectDescriptionFailure
 >;
 
-export const projectDescriptionObjectResultSchema = z.object({
+export const projectDescriptionOutputSchema = z.object({
   enhancedDescription: z.string().trim().max(250),
   status: z.enum([...GATEWAY_SUCCESS_STATUSES, GATEWAY_STATUS.INVALID]),
 });
