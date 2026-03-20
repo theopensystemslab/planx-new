@@ -75,12 +75,16 @@ export const ExpandableContent = styled(Box, {
 }));
 
 export const StyledAnchor = styled("a")(({ theme }) => ({
+  ...theme.typography.body3,
   color: theme.palette.secondary.dark,
   display: "flex",
   alignItems: "center",
   flexWrap: "nowrap",
   gap: theme.spacing(0.25),
   textDecoration: "none",
+  "& .flow-name": {
+    textDecoration: "underline",
+  },
 }));
 
 export const RecentFlowLinkRoot = createLink(StyledAnchor);
