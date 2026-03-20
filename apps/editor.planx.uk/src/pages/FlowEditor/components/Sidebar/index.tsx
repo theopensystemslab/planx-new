@@ -1,21 +1,15 @@
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import LanguageIcon from "@mui/icons-material/Language";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
-import MuiLink from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import ToggleButton from "@mui/material/ToggleButton";
-import Tooltip from "@mui/material/Tooltip";
 import { useParams, useRouteContext, useRouter } from "@tanstack/react-router";
 import React, { useState } from "react";
 import { useLocation } from "react-use";
-import Permission from "ui/editor/Permission";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import StyledTab from "ui/editor/StyledTab";
-import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 import { useStore } from "../../lib/store";
 import Customisations from "./Customisations";
@@ -88,26 +82,6 @@ const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
 
 const Header = styled("header")(({ theme }) => ({
   padding: theme.spacing(1, 2),
-  "& input": {
-    flex: "1",
-    padding: "5px",
-    marginRight: "5px",
-    background: theme.palette.common.white,
-    border: "1px solid ${theme.palette.border.main}",
-    borderWidth: "1px",
-  },
-}));
-
-const Icons = styled(Box)(() => ({
-  display: "flex",
-  alignItems: "center",
-  width: "100%",
-  "& svg": {
-    cursor: "pointer",
-    opacity: "0.7",
-    margin: "6px 4px 1px 4px",
-    fontSize: "1.2rem",
-  },
 }));
 
 const TabList = styled(Box)(({ theme }) => ({
@@ -131,13 +105,11 @@ const TabList = styled(Box)(({ theme }) => ({
 }));
 
 const Sidebar: React.FC = React.memo(() => {
-  const [isFlowPublished, toggleSidebar, showSidebar, isTemplatedFrom] =
-    useStore((state) => [
-      state.isFlowPublished,
-      state.toggleSidebar,
-      state.showSidebar,
-      state.isTemplatedFrom,
-    ]);
+  const [toggleSidebar, showSidebar, isTemplatedFrom] = useStore((state) => [
+    state.toggleSidebar,
+    state.showSidebar,
+    state.isTemplatedFrom,
+  ]);
 
   const defaultActiveTab = isTemplatedFrom ? "Customise" : "PreviewBrowser";
   const [activeTab, setActiveTab] = useState<SidebarTabs>(defaultActiveTab);
@@ -178,74 +150,9 @@ const Sidebar: React.FC = React.memo(() => {
             {showSidebar ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </StyledToggleButton>
           <Header>
-            <Icons>
-              <input type="text" disabled value={previewURL} />
-
-              <Permission.IsPlatformAdmin>
-                <Tooltip title="Open draft flow">
-                  <Box component="span">
-                    <CustomLink
-                      to="/$team/$flow/draft"
-                      params={{ team, flow: rootFlow }}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      color="inherit"
-                      preload={false}
-                      aria-label="Open draft flow"
-                    >
-                      <OpenInNewOffIcon />
-                    </CustomLink>
-                  </Box>
-                </Tooltip>
-              </Permission.IsPlatformAdmin>
-
-              <Tooltip title="Open preview of changes to publish">
-                <Box component="span">
-                  <CustomLink
-                    to="/$team/$flow/preview"
-                    params={{ team, flow: rootFlow }}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    color="inherit"
-                    preload={false}
-                    aria-label="Open preview of changes to publish"
-                  >
-                    <OpenInNewIcon />
-                  </CustomLink>
-                </Box>
-              </Tooltip>
-
-              {isFlowPublished ? (
-                <Tooltip title="Open published flow">
-                  <Box component="span">
-                    <CustomLink
-                      to="/$team/$flow/published"
-                      search={{
-                        analytics: false,
-                      }}
-                      params={{ team, flow: rootFlow }}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      color="inherit"
-                      preload={false}
-                      aria-label="Open published flow"
-                    >
-                      <LanguageIcon />
-                    </CustomLink>
-                  </Box>
-                </Tooltip>
-              ) : (
-                <Tooltip title="Flow not yet published">
-                  <Box>
-                    <MuiLink component={"button"} disabled aria-disabled={true}>
-                      <LanguageIcon />
-                    </MuiLink>
-                  </Box>
-                </Tooltip>
-              )}
-            </Icons>
             <CheckForChangesToPublishButton previewURL={previewURL} />
           </Header>
+
           <TabList>
             <Tabs onChange={handleChange} value={activeTab} aria-label="">
               {isTemplatedFrom && (

@@ -142,12 +142,10 @@ test.describe("Flow creation, publish and preview", () => {
     await turnServiceOnline(page);
 
     // Exit back to main Editor page
-    page.locator('[aria-label="Editor"]').click();
+    await page.locator('[aria-label="Editor"]').click();
 
-    const previewLink = page.getByRole("link", {
-      name: "Open published flow",
-    });
-    await expect(previewLink).toBeVisible();
+    await page.getByTestId("open-service-menu-button").click();
+    await expect(page.getByTestId("published-link")).toBeVisible();
   });
 
   test("Can add an external portal", async ({
@@ -212,11 +210,6 @@ test.describe("Flow creation, publish and preview", () => {
     await expect(
       page.getByRole("link", { name: "E2E/an-external-portal-service" }),
     ).toBeVisible();
-
-    const previewLink = page.getByRole("link", {
-      name: "Open published flow",
-    });
-    await expect(previewLink).toBeVisible();
 
     await page.goto(
       `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
