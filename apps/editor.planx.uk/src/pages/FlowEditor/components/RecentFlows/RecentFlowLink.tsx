@@ -49,8 +49,12 @@ export const RecentFlowLink: React.FC<Props> = ({
       ) : (
         <TurnSharpLeftIcon sx={{ mr: 0.25 }} fontSize="small" />
       )}
-      <Box component="span" className="flow-name">
-        {flow.slug}
+      <Box
+        component="span"
+        className="flow-name"
+        title={flow.slug.length > 20 ? flow.slug : undefined}
+      >
+        {flow.slug.length > 20 ? `${flow.slug.slice(0, 20)}…` : flow.slug}
       </Box>
     </RecentFlowLinkRoot>
   );
