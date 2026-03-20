@@ -20,6 +20,7 @@ import {
 } from "./services"
 import {
   createCdn,
+  createFlowLinkPreviewLambda,
   usEast1,
 } from "./utils";
 
@@ -243,6 +244,15 @@ export = async () => {
     stacks: { certificates },
   });
 
+  // ------------------- Flow Link Preview Lambda@Edge
+  const flowLinkPreviewLambda = createFlowLinkPreviewLambda(
+    `https://hasura.${DOMAIN}/v1/graphql`
+  );
+  const linkPreviewAssociation = {
+    lambdaArn: flowLinkPreviewLambda.qualifiedArn,
+    eventType: "viewer-request",
+  };
+
   // ------------------- PlanX Frontend
   const frontendBucket = new aws.s3.Bucket(DOMAIN, { bucket: DOMAIN });
   const frontendWebsiteConfig = new aws.s3.BucketWebsiteConfiguration(`${DOMAIN}-website-config`, {
@@ -346,12 +356,13 @@ export = async () => {
         comment: `OAI for ${domain} CloudFront distribution`,
       });
 
-      const cdn = createCdn({ 
+      const cdn = createCdn({
         domain, 
         acmCertificateArn,
         bucket: frontendBucket, 
         logsBucket,
         oai,
+        lambdaFunctionAssociation: linkPreviewAssociation,
       });
 
       return { domain, cname: cdn.domainName };
@@ -414,6 +425,7 @@ export = async () => {
     bucket: frontendBucket,
     logsBucket,
     oai,
+    lambdaFunctionAssociation: linkPreviewAssociation,
   });
 
   const frontendDnsRecord = new cloudflare.DnsRecord("frontend", {

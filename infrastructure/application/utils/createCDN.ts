@@ -35,6 +35,7 @@ export const createCdn = ({
   oai,
   mode = "spa",
   includeWWW = false,
+  lambdaFunctionAssociation,
 }: {
   domain: string;
   acmCertificateArn: pulumi.Input<string>;
@@ -43,6 +44,11 @@ export const createCdn = ({
   oai: aws.cloudfront.OriginAccessIdentity,
   mode?: "static" | "spa"
   includeWWW?: boolean;
+  lambdaFunctionAssociation?: {
+    lambdaArn: pulumi.Input<string>;
+    eventType: string;
+    includeBody?: boolean;
+  };
 }) => {
   const aliases = includeWWW 
     ? [`www.${domain}`, domain]
@@ -77,6 +83,9 @@ export const createCdn = ({
       minTtl: 0,
       defaultTtl: 60 * 10,
       maxTtl: 60 * 10,
+      lambdaFunctionAssociations: lambdaFunctionAssociation
+        ? [lambdaFunctionAssociation]
+        : [],
       responseHeadersPolicyId: new aws.cloudfront.ResponseHeadersPolicy(
         `${domain.replace(/[^a-z0-9_-]/g, "_")}-policy`,
         {
