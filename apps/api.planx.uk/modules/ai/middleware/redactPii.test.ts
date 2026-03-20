@@ -1,21 +1,80 @@
+import type { NextFunction, Request, Response } from "express";
 import supertest from "supertest";
 
 import app from "../../../server.js";
+import { redactPii } from "./redactPii.js";
 
 const mockEnhanceProjectDescription = vi.fn();
-const mockLogAiGuardrailRejection = vi.fn();
-const mockLogAiGatewayExchange = vi.fn();
-
 vi.mock("../projectDescription/service.js", () => ({
   enhanceProjectDescription: () => mockEnhanceProjectDescription(),
 }));
 
-vi.mock("../logs.js", () => ({
-  logAiGuardrailRejection: () => mockLogAiGuardrailRejection(),
-  logAiGatewayExchange: () => mockLogAiGatewayExchange(),
-}));
+const getMockRes = (input: string) => {
+  return {
+    locals: {
+      parsedReq: {
+        body: { original: input },
+      },
+    },
+  } as unknown as Response;
+};
+const getMockReq = () => ({}) as unknown as Request;
 
-describe.todo("PII redaction middleware - unit tests");
+describe("PII redaction middleware - unit tests", () => {
+  const redact = redactPii("original");
+
+  it("calls next() without modifying clean input", () => {
+    const next: NextFunction = vi.fn();
+    const res = getMockRes("Rear extension to existing dwelling");
+    redact(getMockReq(), res, next);
+    expect(next).toHaveBeenCalledOnce();
+    expect(res.locals.parsedReq.body.original).toBe(
+      "Rear extension to existing dwelling",
+    );
+    expect(res.locals.redactedInput).toBeUndefined();
+  });
+
+  it("redacts email addresses", () => {
+    const res = getMockRes("Contact me at test@example.com about extension");
+    redact(getMockReq(), res, vi.fn());
+    expect(res.locals.parsedReq.body.original).toBe(
+      "Contact me at [EMAIL] about extension",
+    );
+  });
+
+  it("redacts postcodes", () => {
+    const res = getMockRes("Property at SW1A 1AA needs extension");
+    redact(getMockReq(), res, vi.fn());
+    expect(res.locals.parsedReq.body.original).toBe(
+      "Property at [POSTCODE] needs extension",
+    );
+  });
+
+  it("redacts National Insurance numbers", () => {
+    const res = getMockRes("My NI is AB 12 34 56 C for the extension");
+    redact(getMockReq(), res, vi.fn());
+    expect(res.locals.parsedReq.body.original).toBe(
+      "My NI is [NINO] for the extension",
+    );
+  });
+
+  it("redacts street addresses", () => {
+    const res = getMockRes("Extension at 123 High Street for my family");
+    redact(getMockReq(), res, vi.fn());
+    expect(res.locals.parsedReq.body.original).toBe(
+      "Extension at [ADDRESS] for my family",
+    );
+  });
+
+  it("stores original input when PII is detected", () => {
+    const res = getMockRes("Contact test@example.com about extension");
+    redact(getMockReq(), res, vi.fn());
+    expect(res.locals.originalInput).toBe(
+      "Contact test@example.com about extension",
+    );
+    expect(res.locals.redactedInput).toBe("Contact [EMAIL] about extension");
+  });
+});
 
 describe("PII redaction middleware - integration tests", () => {
   beforeEach(() => {
