@@ -29,6 +29,7 @@
 - "!include public_flow_status_history.yaml"
 - "!include public_flows.yaml"
 - "!include public_global_settings.yaml"
+- "!include public_gov_notify_email_template_enum.yaml"
 - "!include public_lowcal_sessions.yaml"
 - "!include public_lps_magic_links.yaml"
 - "!include public_notification_type_enum.yaml"
