@@ -239,6 +239,8 @@ const InternalPortal: React.FC<any> = (props) => {
                 preload={false}
                 ref={drag}
                 onContextMenu={handleContextMenu}
+                // Maintain recentFlows state when navigating into folders
+                state={(prev) => prev}
               >
                 <span>{props.data.text}</span>
               </Link>
