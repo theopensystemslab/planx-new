@@ -3,16 +3,17 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
 import {
-  generateObject,
+  generateText,
   InvalidPromptError,
   NoContentGeneratedError,
   NoObjectGeneratedError,
+  Output,
 } from "ai";
 
 import { logAiGatewayExchange } from "../logs.js";
 import { getModel } from "../utils.js";
 import { type GatewayResult, GATEWAY_STATUS } from "../types.js";
-import { projectDescriptionObjectResultSchema } from "./types.js";
+import { projectDescriptionOutputSchema } from "./types.js";
 import { DEFAULT_MODEL_ID } from "../constants.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -45,10 +46,11 @@ export const enhanceProjectDescription = async (
       return { ok: false, error: GATEWAY_STATUS.ERROR };
     }
     const prompt = `<user_input>${original_description}</user_input>`;
-    const res = await generateObject({
+    const res = await generateText({
       model: result.model,
-      output: "object",
-      schema: projectDescriptionObjectResultSchema,
+      output: Output.object({
+        schema: projectDescriptionOutputSchema,
+      }),
       system: loadSystemPrompt(),
       prompt,
     });
@@ -59,8 +61,8 @@ export const enhanceProjectDescription = async (
       endpoint,
       modelId: res.response?.modelId || DEFAULT_MODEL_ID,
       prompt,
-      response: res.object.enhancedDescription ?? undefined,
-      gatewayStatus: res.object.status || undefined,
+      response: res.output.enhancedDescription ?? undefined,
+      gatewayStatus: res.output.status || undefined,
       tokenUsage: res.usage?.totalTokens,
       costUsd: res.providerMetadata?.gateway?.cost
         ? parseFloat(res.providerMetadata.gateway.cost as string)
@@ -72,11 +74,11 @@ export const enhanceProjectDescription = async (
       sessionId,
     });
 
-    const object = res.object;
-    console.debug(`Model returned status: ${object.status}`);
-    return object.status === GATEWAY_STATUS.INVALID
-      ? { ok: false, error: object.status }
-      : { ok: true, value: object.enhancedDescription };
+    const output = res.output;
+    console.debug(`Model returned status: ${output.status}`);
+    return output.status === GATEWAY_STATUS.INVALID
+      ? { ok: false, error: output.status }
+      : { ok: true, value: output.enhancedDescription };
   } catch (error) {
     if (InvalidPromptError.isInstance(error)) {
       console.error(
@@ -88,7 +90,7 @@ export const enhanceProjectDescription = async (
       console.error("Model failed to generate any content", error);
     } else if (NoObjectGeneratedError.isInstance(error)) {
       console.error(
-        "Model failed to return an object compliant with given schema",
+        "Model failed to return an output compliant with given schema",
         error,
       );
     } else {
