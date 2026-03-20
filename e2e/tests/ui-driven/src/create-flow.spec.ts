@@ -211,8 +211,9 @@ test.describe("Flow creation, publish and preview", () => {
       page.getByRole("link", { name: "E2E/an-external-portal-service" }),
     ).toBeVisible();
 
-    await page.getByTestId("open-service-menu-button").click();
-    await page.getByTestId("published-link").click();
+    await page.goto(
+      `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
+    );
 
     await answerQuestion({ page, title: "Is this a test?", answer: "Yes" });
     await clickContinue({ page });
