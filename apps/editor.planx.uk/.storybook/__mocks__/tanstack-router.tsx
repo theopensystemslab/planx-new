@@ -10,7 +10,6 @@ import React from "react";
 export const tanstackRouterDecorator: Decorator = (Story, context) => {
   const { parameters } = context;
 
-  const mockParams = parameters?.tanstackRouter?.params || {};
   const mockLocation = parameters?.tanstackRouter?.location || {
     pathname: "/",
     search: "",
@@ -18,14 +17,18 @@ export const tanstackRouterDecorator: Decorator = (Story, context) => {
   };
   const mockContext = parameters?.tanstackRouter?.context || {};
 
-  const rootRoute = createRootRoute({
-    component: () => <Story />,
-  });
+  const fullPath = `${mockLocation.pathname}${mockLocation.search || ""}${mockLocation.hash || ""}`;
 
   const memoryHistory = createMemoryHistory({
-    initialEntries: [
-      mockLocation.pathname + mockLocation.search + mockLocation.hash,
-    ],
+    initialEntries: [fullPath],
+  });
+
+  if (mockLocation.state) {
+    memoryHistory.replace(fullPath, mockLocation.state);
+  }
+
+  const rootRoute = createRootRoute({
+    component: () => <Story />,
   });
 
   const router = createRouter({

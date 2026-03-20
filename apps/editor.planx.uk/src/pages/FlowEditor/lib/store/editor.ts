@@ -574,6 +574,7 @@ export const editorStore: StateCreator<
       query: gql`
         query GetLastPublishedFlow($id: uuid!) {
           flow: flows_by_pk(id: $id) {
+            id
             published_flows(order_by: { created_at: desc }, limit: 1) {
               created_at
             }
@@ -601,6 +602,7 @@ export const editorStore: StateCreator<
       query: gql`
         query GetLastPublisher($id: uuid!) {
           flow: flows_by_pk(id: $id) {
+            id
             publishedFlows: published_flows(
               order_by: { created_at: desc }
               limit: 1
