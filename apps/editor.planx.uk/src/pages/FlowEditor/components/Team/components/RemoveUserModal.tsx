@@ -1,4 +1,4 @@
-import Box from "@mui/material/Box";
+import { useMutation } from "@apollo/client";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -6,51 +6,42 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
 import { useToast } from "hooks/useToast";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
+import { REMOVE_TEAM_MEMBER } from "../queries";
 import { EditorModalProps } from "../types";
-import { optimisticallyUpdateExistingMember } from "./lib/optimisticallyUpdateMembersTable";
 
-export const RemoveUserModal = ({
+type Props = Extract<EditorModalProps, { action: "remove" }>;
+
+export const RemoveUserModal: React.FC<Props> = ({
   setShowModal,
   showModal,
-  actionType,
-  initialValues,
-}: EditorModalProps) => {
+  member,
+}) => {
   const toast = useToast();
 
-  const removeUser = useStore.getState().deleteUser;
-  const handleClick = async () => {
-    if (!initialValues?.id) {
-      return;
-    }
-    const response = await removeUser(initialValues.id).catch((err) => {
-      if (err.message === "Unable to remove user") {
-        toast.error(
-          `Failed to remove ${initialValues.firstName} ${initialValues.lastName}, try again`,
-        );
-      }
-      console.error(err);
-    });
+  const [removeUser, { loading }] = useMutation(REMOVE_TEAM_MEMBER, {
+    onCompleted: () => {
+      setShowModal(false);
+      toast.success(
+        `Successfully removed ${member.firstName} ${member.lastName}`,
+      );
+    },
+    onError: () => {
+      toast.error(
+        `Failed to remove ${member.firstName} ${member.lastName}, try again`,
+      );
+    },
+  });
 
-    if (!response) {
-      return;
-    }
-    optimisticallyUpdateExistingMember(
-      { ...initialValues, email: null },
-      initialValues.id,
-    );
-    setShowModal(false);
-    toast.success(
-      `Successfully removed ${initialValues.firstName} ${initialValues.lastName}`,
-    );
+  const handleClick = () => {
+    removeUser({ variables: { id: member.id } });
   };
 
   return (
     <Dialog
       aria-labelledby="dialog-heading"
-      data-testid={`modal-${actionType}-user`}
+      data-testid={"modal-remove-user"}
       open={showModal || false}
       onClose={() => setShowModal(false)}
       fullWidth
@@ -59,15 +50,13 @@ export const RemoveUserModal = ({
         Remove a user
       </DialogTitle>
       <DialogContent dividers>
-        <Box sx={{}}>
-          <Typography variant="body1" component="p" id="dialog-body">
-            {`Do you want to remove ${initialValues?.firstName} ${initialValues?.lastName}?`}
-          </Typography>
-          <br />
-          <Typography variant="body1" component="p" id="dialog-body">
-            {`They will be moved to Archived Users and no longer have access to PlanX`}
-          </Typography>
-        </Box>
+        <Typography variant="body1" component="p">
+          {`Do you want to remove ${member.firstName} ${member.lastName}?`}
+        </Typography>
+        <br />
+        <Typography variant="body1" component="p">
+          They will be moved to Archived Users and no longer have access to PlanX
+        </Typography>
       </DialogContent>
       <DialogActions>
         <Button
@@ -84,7 +73,8 @@ export const RemoveUserModal = ({
           variant="contained"
           color="warning"
           type="submit"
-          data-testid={"modal-remove-user-button"}
+          data-testid="modal-remove-user-button"
+          disabled={loading}
           onClick={handleClick}
         >
           Remove user
