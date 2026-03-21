@@ -11,10 +11,7 @@ import { UserUpsertModal } from "../components/UserUpsertModal";
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { userTriesToAddNewMember } from "./helpers/userTriesToAddNewMember";
 import { createUserHandler } from "./mocks/handlers";
-import {
-  mockPlainUser,
-  mockPlatformAdminUser,
-} from "./mocks/users";
+import { mockPlainUser, mockPlatformAdminUser } from "./mocks/users";
 
 let initialState: FullStore;
 
@@ -82,7 +79,7 @@ describe("when the addNewMember modal is rendered", () => {
       <DndProvider backend={HTML5Backend}>
         <UserUpsertModal
           showModal={true}
-          setShowModal={() => { }}
+          setShowModal={() => {}}
           action="add"
         />
       </DndProvider>,

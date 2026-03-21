@@ -154,8 +154,6 @@ describe("About flow page", () => {
     const teamViewerUser = { ...platformAdminUser, isPlatformAdmin: false };
     getState().setUser(teamViewerUser);
 
-    getState().setTeamMembers([{ ...teamViewerUser, role: "teamViewer" }]);
-
     await setup(<About />);
 
     const serviceSummaryInput = await screen.findByPlaceholderText("Summary");

@@ -14,7 +14,7 @@ export const setupTeamMembersScreen = async () => {
   const setupResult = await setup(
     <DndProvider backend={HTML5Backend}>
       <TeamMembers />
-    </DndProvider>
+    </DndProvider>,
   );
   await screen.findByTestId("team-members");
   return setupResult;

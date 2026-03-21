@@ -13,7 +13,9 @@ export const mockUsersData: (User & { __typename: "users" })[] = [
     isPlatformAdmin: false,
     isAnalyst: false,
     defaultTeamId: null,
-    teams: [{ role: "teamEditor", team: { name: "Test Team", slug: "test", id: 1 } }],
+    teams: [
+      { role: "teamEditor", team: { name: "Test Team", slug: "test", id: 1 } },
+    ],
   },
   {
     __typename: "users",
@@ -35,7 +37,9 @@ export const mockUsersData: (User & { __typename: "users" })[] = [
     isPlatformAdmin: false,
     isAnalyst: false,
     defaultTeamId: null,
-    teams: [{ role: "teamEditor", team: { name: "Test Team", slug: "test", id: 1 } }],
+    teams: [
+      { role: "teamEditor", team: { name: "Test Team", slug: "test", id: 1 } },
+    ],
   },
 ];
 
@@ -72,7 +76,12 @@ export const newDemoMember: User = {
   isPlatformAdmin: false,
   isAnalyst: false,
   defaultTeamId: DEMO_TEAM_ID,
-  teams: [{ role: "demoUser", team: { name: "Demo Team", slug: "demo", id: DEMO_TEAM_ID } }],
+  teams: [
+    {
+      role: "demoUser",
+      team: { name: "Demo Team", slug: "demo", id: DEMO_TEAM_ID },
+    },
+  ],
 };
 
 export const newMember: User = {
@@ -83,7 +92,9 @@ export const newMember: User = {
   isPlatformAdmin: false,
   isAnalyst: false,
   defaultTeamId: 2,
-  teams: [{ role: "teamEditor", team: { name: "Test Team", slug: "test", id: 2 } }],
+  teams: [
+    { role: "teamEditor", team: { name: "Test Team", slug: "test", id: 2 } },
+  ],
 };
 
 export const mockTeamMembersDataWithNoTeamEditors: User[] = [

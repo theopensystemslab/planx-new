@@ -55,7 +55,8 @@ export const RemoveUserModal: React.FC<Props> = ({
         </Typography>
         <br />
         <Typography variant="body1" component="p">
-          They will be moved to Archived Users and no longer have access to PlanX
+          They will be moved to Archived Users and no longer have access to
+          PlanX
         </Typography>
       </DialogContent>
       <DialogActions>

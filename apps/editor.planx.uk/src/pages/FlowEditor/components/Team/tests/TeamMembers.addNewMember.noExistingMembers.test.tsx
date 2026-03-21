@@ -21,7 +21,7 @@ describe("when a user views the 'Team members' screen but there are no existing 
     await setup(
       <DndProvider backend={HTML5Backend}>
         <TeamMembers />
-      </DndProvider>
+      </DndProvider>,
     );
 
     screen.getByText("No members found");

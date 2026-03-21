@@ -8,7 +8,6 @@ import { userTriesToAddNewMember } from "./helpers/userTriesToAddNewMember";
 import { addDemoUserHandler } from "./mocks/handlers";
 import { mockPlatformAdminUser } from "./mocks/users";
 
-
 describe("adding a new user to the Demo team", () => {
   beforeEach(async () => {
     useStore.setState({

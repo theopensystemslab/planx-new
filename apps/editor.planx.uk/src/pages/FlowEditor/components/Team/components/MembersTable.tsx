@@ -14,7 +14,12 @@ import { AddButton } from "ui/editor/AddButton";
 import Permission from "ui/editor/Permission";
 
 import { StyledAvatar, StyledTableRow } from "../styles";
-import { MembersTableProps, type ModalState,ROLE_LABELS, TeamMember } from "../types";
+import {
+  MembersTableProps,
+  type ModalState,
+  ROLE_LABELS,
+  TeamMember,
+} from "../types";
 import { RemoveUserModal } from "./RemoveUserModal";
 import { UserUpsertModal } from "./UserUpsertModal";
 
@@ -55,7 +60,8 @@ export const MembersTable = ({
   const closeModal = () => setModal({ action: "closed" });
   const addUser = () => setModal({ action: "add" });
   const editUser = (member: TeamMember) => setModal({ action: "edit", member });
-  const removeUser = (member: TeamMember) => setModal({ action: "remove", member });
+  const removeUser = (member: TeamMember) =>
+    setModal({ action: "remove", member });
 
   if (members.length === 0) {
     return (
@@ -81,11 +87,7 @@ export const MembersTable = ({
           )}
         </Table>
         {modal.action !== "closed" && (
-          <UserUpsertModal
-            showModal
-            setShowModal={closeModal}
-            action="add"
-          />
+          <UserUpsertModal showModal setShowModal={closeModal} action="add" />
         )}
       </>
     );
@@ -197,7 +199,7 @@ export const MembersTable = ({
         />
       )}
 
-      {(modal.action === "edit") && (
+      {modal.action === "edit" && (
         <UserUpsertModal
           showModal
           setShowModal={closeModal}

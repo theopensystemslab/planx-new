@@ -14,17 +14,25 @@ import InputLabel from "ui/editor/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 
-import { AddNewMemberErrors, isUserAlreadyExistsError } from "../errors/addNewEditorErrors";
+import {
+  AddNewMemberErrors,
+  isUserAlreadyExistsError,
+} from "../errors/addNewEditorErrors";
 import { upsertMemberSchema } from "../formSchema";
-import { CREATE_AND_ADD_USER_TO_TEAM, GET_USERS_FOR_TEAM_QUERY, UPDATE_TEAM_MEMBER } from "../queries";
+import {
+  CREATE_AND_ADD_USER_TO_TEAM,
+  GET_USERS_FOR_TEAM_QUERY,
+  UPDATE_TEAM_MEMBER,
+} from "../queries";
 import { AddNewEditorFormValues, EditorModalProps } from "../types";
 
 export const DEMO_TEAM_ID = 32;
 
-type Props = Extract<EditorModalProps, { action: "add" } | { action: "edit" }>
+type Props = Extract<EditorModalProps, { action: "add" } | { action: "edit" }>;
 
 const MemberFields = () => {
-  const { getFieldProps, touched, errors, values } = useFormikContext<AddNewEditorFormValues>();
+  const { getFieldProps, touched, errors, values } =
+    useFormikContext<AddNewEditorFormValues>();
 
   return (
     <InputGroup flowSpacing>
@@ -33,7 +41,9 @@ const MemberFields = () => {
           id="firstName"
           type="text"
           {...getFieldProps("firstName")}
-          errorMessage={touched.firstName && errors.firstName ? errors.firstName : undefined}
+          errorMessage={
+            touched.firstName && errors.firstName ? errors.firstName : undefined
+          }
           value={values.firstName}
         />
       </InputLabel>
@@ -42,7 +52,9 @@ const MemberFields = () => {
           id="lastName"
           type="text"
           {...getFieldProps("lastName")}
-          errorMessage={touched.lastName && errors.lastName ? errors.lastName : undefined}
+          errorMessage={
+            touched.lastName && errors.lastName ? errors.lastName : undefined
+          }
           value={values.lastName}
         />
       </InputLabel>
@@ -51,7 +63,9 @@ const MemberFields = () => {
           id="email"
           type="email"
           {...getFieldProps("email")}
-          errorMessage={touched.email && errors.email ? errors.email : undefined}
+          errorMessage={
+            touched.email && errors.email ? errors.email : undefined
+          }
           value={values.email}
         />
       </InputLabel>
@@ -86,7 +100,11 @@ const ModalActions = ({
         variant="contained"
         color="prompt"
         type="submit"
-        data-testid={action === "add" ? "modal-create-user-button" : "modal-edit-user-button"}
+        data-testid={
+          action === "add"
+            ? "modal-create-user-button"
+            : "modal-edit-user-button"
+        }
         disabled={!dirty || !isValid || isSubmitting}
       >
         {action === "add" ? "Create user" : "Update user"}
@@ -95,9 +113,16 @@ const ModalActions = ({
   );
 };
 
-export const UserUpsertModal: React.FC<Props> = ({ setShowModal, showModal, action, member }) => {
-
-  const [teamId, teamSlug] = useStore((state) => [state.teamId, state.teamSlug]);
+export const UserUpsertModal: React.FC<Props> = ({
+  setShowModal,
+  showModal,
+  action,
+  member,
+}) => {
+  const [teamId, teamSlug] = useStore((state) => [
+    state.teamId,
+    state.teamSlug,
+  ]);
   const isDemoTeam = teamId === DEMO_TEAM_ID;
   const toast = useToast();
 
@@ -106,40 +131,43 @@ export const UserUpsertModal: React.FC<Props> = ({ setShowModal, showModal, acti
     toast.success(successMessage);
   };
 
-  const [createUser, { loading: createLoading, error: createError }] = useMutation(
-    CREATE_AND_ADD_USER_TO_TEAM,
-    {
+  const [createUser, { loading: createLoading, error: createError }] =
+    useMutation(CREATE_AND_ADD_USER_TO_TEAM, {
       onCompleted: () => handleCompleted("Successfully added a user"),
       onError: (err) => {
         if (!isUserAlreadyExistsError(err.message)) {
           toast.error("Failed to add new user, please try again");
         }
       },
-      refetchQueries: [{ query: GET_USERS_FOR_TEAM_QUERY, variables: { teamSlug } }],
-    },
-  );
+      refetchQueries: [
+        { query: GET_USERS_FOR_TEAM_QUERY, variables: { teamSlug } },
+      ],
+    });
 
-  const [updateUser, { loading: updateLoading, error: updateError }] = useMutation(
-    UPDATE_TEAM_MEMBER,
-    {
+  const [updateUser, { loading: updateLoading, error: updateError }] =
+    useMutation(UPDATE_TEAM_MEMBER, {
       onCompleted: () => handleCompleted("Successfully updated a user"),
       onError: (err) => {
         if (!isUserAlreadyExistsError(err.message)) {
           toast.error("Failed to update the user, please try again");
         }
       },
-    },
-  );
+    });
 
   const activeError = createError || updateError;
-  const showUserAlreadyExistsError = !!activeError && isUserAlreadyExistsError(activeError.message);
+  const showUserAlreadyExistsError =
+    !!activeError && isUserAlreadyExistsError(activeError.message);
 
   const handleSubmit = (values: AddNewEditorFormValues) => {
     const formatted = { ...values, email: values.email.toLowerCase() };
 
     if (action === "add") {
       createUser({
-        variables: { ...formatted, teamId, role: isDemoTeam ? "demoUser" : "teamEditor" },
+        variables: {
+          ...formatted,
+          teamId,
+          role: isDemoTeam ? "demoUser" : "teamEditor",
+        },
       });
     }
 
@@ -181,7 +209,9 @@ export const UserUpsertModal: React.FC<Props> = ({ setShowModal, showModal, acti
           </DialogTitle>
           <DialogContent
             dividers
-            data-testid={action === "add" ? "modal-create-user" : "modal-edit-user"}
+            data-testid={
+              action === "add" ? "modal-create-user" : "modal-edit-user"
+            }
           >
             <MemberFields />
           </DialogContent>

@@ -7,7 +7,6 @@ import { userTriesToAddNewMember } from "./helpers/userTriesToAddNewMember";
 import { failToAddUserHandler } from "./mocks/handlers";
 import { mockPlatformAdminUser } from "./mocks/users";
 
-
 describe("when a user fills in the 'add a new member' form correctly but there is a server-side error", () => {
   beforeEach(async () => {
     useStore.setState({

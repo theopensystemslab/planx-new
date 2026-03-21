@@ -7,7 +7,6 @@ import { userTriesToAddNewMember } from "./helpers/userTriesToAddNewMember";
 import { createUserAlreadyExistsHandler } from "./mocks/handlers";
 import { mockPlatformAdminUser } from "./mocks/users";
 
-
 describe("when a user fills in the 'add a new member' form correctly but the user already exists", () => {
   beforeEach(async () => {
     server.use(createUserAlreadyExistsHandler());

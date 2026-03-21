@@ -40,7 +40,7 @@ export interface AddNewEditorFormValues {
 }
 
 export type ModalState =
-  | { action: "closed"; }
+  | { action: "closed" }
   | { action: "add"; member?: never }
   | { action: "edit"; member: TeamMember }
   | { action: "remove"; member: TeamMember };

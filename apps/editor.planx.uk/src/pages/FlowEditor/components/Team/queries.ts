@@ -27,12 +27,12 @@ export const GET_USERS_FOR_TEAM_QUERY = gql`
 export const UPDATE_TEAM_MEMBER = gql`
   mutation UpdateUser($userId: Int, $userValues: users_set_input) {
     update_users(where: { id: { _eq: $userId } }, _set: $userValues) {
-      returning { 
+      returning {
         id
-        firstName: first_name 
-        lastName: last_name 
+        firstName: first_name
+        lastName: last_name
         email
-       }
+      }
     }
   }
 `;
@@ -54,9 +54,9 @@ export const CREATE_AND_ADD_USER_TO_TEAM = gql`
         teams: { data: { role: $role, team_id: $teamId } }
       }
     ) {
-      id 
-      first_name 
-      last_name 
+      id
+      first_name
+      last_name
       email
     }
   }
@@ -64,10 +64,7 @@ export const CREATE_AND_ADD_USER_TO_TEAM = gql`
 
 export const REMOVE_TEAM_MEMBER = gql`
   mutation SoftDeleteUserById($id: Int!) {
-    users: update_users_by_pk(
-      pk_columns: { id: $id }
-      _set: { email: null }
-    ) {
+    users: update_users_by_pk(pk_columns: { id: $id }, _set: { email: null }) {
       id
       email
     }

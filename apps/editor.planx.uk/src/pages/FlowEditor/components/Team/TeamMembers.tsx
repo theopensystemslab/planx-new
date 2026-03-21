@@ -19,23 +19,27 @@ import { GET_USERS_FOR_TEAM_QUERY } from "./queries";
 import { TeamMember } from "./types";
 
 export const TeamMembers = () => {
-  const teamSlug = useStore(state => state.teamSlug);
+  const teamSlug = useStore((state) => state.teamSlug);
 
-  const { data, loading, error } = useQuery<{ users: User[] }>(GET_USERS_FOR_TEAM_QUERY, {
-    variables: { teamSlug },
-  });
+  const { data, loading, error } = useQuery<{ users: User[] }>(
+    GET_USERS_FOR_TEAM_QUERY,
+    {
+      variables: { teamSlug },
+    },
+  );
 
   if (loading) return <DelayedLoadingIndicator />;
   if (error) return <ErrorSummary message={error.message} />;
 
-  const teamMembers: TeamMember[] = data?.users.map((user) => ({
-    firstName: user.firstName,
-    lastName: user.lastName,
-    email: user.email,
-    id: user.id,
-    role: user.isPlatformAdmin ? "platformAdmin" : user.teams[0].role,
-    defaultTeamId: user.defaultTeamId,
-  })) || [];
+  const teamMembers: TeamMember[] =
+    data?.users.map((user) => ({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      id: user.id,
+      role: user.isPlatformAdmin ? "platformAdmin" : user.teams[0].role,
+      defaultTeamId: user.defaultTeamId,
+    })) || [];
 
   // All users are automatically added to Templates team via a db trigger, we never want to manually add/edit them
   const isNotTemplatesTeam = teamSlug !== "templates";

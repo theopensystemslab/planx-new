@@ -4,7 +4,11 @@ import server from "test/mockServer";
 
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { updateUserHandler } from "./mocks/handlers";
-import { mockPlainUser, mockPlatformAdminUser, mockUsersData } from "./mocks/users";
+import {
+  mockPlainUser,
+  mockPlatformAdminUser,
+  mockUsersData,
+} from "./mocks/users";
 
 describe("when a user presses 'edit button'", () => {
   beforeEach(async () => {
