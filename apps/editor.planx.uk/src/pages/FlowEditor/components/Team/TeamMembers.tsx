@@ -1,10 +1,13 @@
+import { useQuery } from "@apollo/client";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { Role } from "@opensystemslab/planx-core/types";
+import { Role, type User } from "@opensystemslab/planx-core/types";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { groupBy } from "lodash";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import SettingsSection from "ui/editor/SettingsSection";
+import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import {
   filterByEmailPresent,
@@ -12,10 +15,31 @@ import {
   hasEmailPresent,
 } from "./components/lib/filterTeamMembers";
 import { MembersTable } from "./components/MembersTable";
+import { GET_USERS_FOR_TEAM_QUERY } from "./queries";
 import { TeamMember } from "./types";
 
-export const TeamMembers = ({ teamMembers }: { teamMembers: TeamMember[] }) => {
-  const [teamSlug] = useStore((state) => [state.teamSlug]);
+export const TeamMembers = () => {
+  const teamSlug = useStore((state) => state.teamSlug);
+
+  const { data, loading, error } = useQuery<{ users: User[] }>(
+    GET_USERS_FOR_TEAM_QUERY,
+    {
+      variables: { teamSlug },
+    },
+  );
+
+  if (loading) return <DelayedLoadingIndicator />;
+  if (error) return <ErrorSummary message={error.message} />;
+
+  const teamMembers: TeamMember[] =
+    data?.users.map((user) => ({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      id: user.id,
+      role: user.isPlatformAdmin ? "platformAdmin" : user.teams[0].role,
+      defaultTeamId: user.defaultTeamId,
+    })) || [];
 
   // All users are automatically added to Templates team via a db trigger, we never want to manually add/edit them
   const isNotTemplatesTeam = teamSlug !== "templates";
