@@ -16,6 +16,7 @@ import * as birmingham from "./local_authorities/metadata/birmingham.js";
 import * as buckinghamshire from "./local_authorities/metadata/buckinghamshire.js";
 import * as camden from "./local_authorities/metadata/camden.js";
 import * as canterbury from "./local_authorities/metadata/canterbury.js";
+import * as coventry from "./local_authorities/metadata/coventry.js";
 import * as doncaster from "./local_authorities/metadata/doncaster.js";
 import * as epsomAndEwell from "./local_authorities/metadata/epsomAndEwell.js";
 import * as gateshead from "./local_authorities/metadata/gateshead.js";
@@ -51,6 +52,7 @@ export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   buckinghamshire,
   camden,
   canterbury,
+  coventry,
   doncaster,
   "epsom-and-ewell": epsomAndEwell,
   gateshead,
