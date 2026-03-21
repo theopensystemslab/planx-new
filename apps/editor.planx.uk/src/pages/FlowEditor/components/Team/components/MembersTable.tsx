@@ -14,7 +14,7 @@ import { AddButton } from "ui/editor/AddButton";
 import Permission from "ui/editor/Permission";
 
 import { StyledAvatar, StyledTableRow } from "../styles";
-import { ActionType, MembersTableProps, TeamMember } from "../types";
+import { MembersTableProps, type ModalState,ROLE_LABELS, TeamMember } from "../types";
 import { RemoveUserModal } from "./RemoveUserModal";
 import { UserUpsertModal } from "./UserUpsertModal";
 
@@ -42,47 +42,20 @@ const RemoveUserButton = styled(TableRowButton)(({ theme }) => ({
   },
 }));
 
+const getRoleLabel = (role: Role) => ROLE_LABELS[role] ?? role;
+
 export const MembersTable = ({
   members,
   showAddMemberButton,
   showEditMemberButton,
   showRemoveMemberButton,
 }: MembersTableProps) => {
-  const [showModal, setShowModal] = useState<boolean>(false);
-  const [actionType, setActionType] = useState<ActionType>("add");
-  const [initialValues, setInitialValues] = useState<TeamMember | undefined>();
+  const [modal, setModal] = useState<ModalState>({ action: "closed" });
 
-  const roleLabels: Record<Role, string> = {
-    platformAdmin: "Admin",
-    teamAdmin: "Team admin",
-    teamEditor: "Editor",
-    teamViewer: "Viewer",
-    demoUser: "Demo User",
-    public: "Public",
-    analyst: "Analyst",
-  };
-
-  const editUser = (member: TeamMember) => {
-    setActionType("edit");
-    setShowModal(true);
-    setInitialValues(member);
-  };
-
-  const removeUser = (member: TeamMember) => {
-    setActionType("remove");
-    setShowModal(true);
-    setInitialValues(member);
-  };
-
-  const addUser = () => {
-    setActionType("add");
-    setShowModal(true);
-    setInitialValues(undefined);
-  };
-
-  const getRoleLabel = (role: Role) => {
-    return roleLabels[role] || role;
-  };
+  const closeModal = () => setModal({ action: "closed" });
+  const addUser = () => setModal({ action: "add" });
+  const editUser = (member: TeamMember) => setModal({ action: "edit", member });
+  const removeUser = (member: TeamMember) => setModal({ action: "remove", member });
 
   if (members.length === 0) {
     return (
@@ -100,25 +73,18 @@ export const MembersTable = ({
               <TableBody>
                 <TableRow>
                   <TableCell colSpan={3}>
-                    <AddButton
-                      onClick={() => {
-                        addUser();
-                      }}
-                    >
-                      Add a new member
-                    </AddButton>
+                    <AddButton onClick={addUser}>Add a new member</AddButton>
                   </TableCell>
                 </TableRow>
               </TableBody>
             </Permission.IsPlatformAdmin>
           )}
         </Table>
-        {showModal && (
+        {modal.action !== "closed" && (
           <UserUpsertModal
-            showModal={showModal}
-            setShowModal={setShowModal}
-            initialValues={initialValues}
-            actionType={actionType}
+            showModal
+            setShowModal={closeModal}
+            action="add"
           />
         )}
       </>
@@ -151,7 +117,7 @@ export const MembersTable = ({
             data-testid={`members-table${showAddMemberButton && "-add-member"}`}
           >
             {members.map((member) => (
-              <StyledTableRow key={member.id}>
+              <StyledTableRow key={member.id} data-testid="member-row">
                 <TableCell
                   sx={{
                     display: "table-cell",
@@ -179,9 +145,7 @@ export const MembersTable = ({
                   <Permission.IsPlatformAdmin>
                     {showEditMemberButton && (
                       <EditUserButton
-                        onClick={() => {
-                          editUser(member);
-                        }}
+                        onClick={() => editUser(member)}
                         data-testid={`edit-button-${member.id}`}
                       >
                         Edit
@@ -193,9 +157,7 @@ export const MembersTable = ({
                   <Permission.IsPlatformAdmin>
                     {showRemoveMemberButton && (
                       <RemoveUserButton
-                        onClick={() => {
-                          removeUser(member);
-                        }}
+                        onClick={() => removeUser(member)}
                         data-testid={`remove-button-${member.id}`}
                       >
                         Remove
@@ -209,13 +171,7 @@ export const MembersTable = ({
               <Permission.IsPlatformAdmin>
                 <TableRow>
                   <TableCell colSpan={5}>
-                    <AddButton
-                      onClick={() => {
-                        addUser();
-                      }}
-                    >
-                      Add a new member
-                    </AddButton>
+                    <AddButton onClick={addUser}>Add a new member</AddButton>
                   </TableCell>
                 </TableRow>
               </Permission.IsPlatformAdmin>
@@ -223,22 +179,32 @@ export const MembersTable = ({
           </TableBody>
         </Table>
       </TableContainer>
-      {showModal &&
-        (actionType === "remove" ? (
-          <RemoveUserModal
-            setShowModal={setShowModal}
-            showModal={showModal}
-            initialValues={initialValues}
-            actionType={actionType}
-          />
-        ) : (
-          <UserUpsertModal
-            setShowModal={setShowModal}
-            showModal={showModal}
-            initialValues={initialValues}
-            actionType={actionType}
-          />
-        ))}
+
+      {modal.action === "remove" && (
+        <RemoveUserModal
+          showModal
+          setShowModal={closeModal}
+          member={modal.member}
+          action="remove"
+        />
+      )}
+
+      {modal.action === "add" && (
+        <UserUpsertModal
+          showModal
+          setShowModal={closeModal}
+          action={modal.action}
+        />
+      )}
+
+      {(modal.action === "edit") && (
+        <UserUpsertModal
+          showModal
+          setShowModal={closeModal}
+          member={modal.member}
+          action={modal.action}
+        />
+      )}
     </>
   );
 };
