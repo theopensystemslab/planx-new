@@ -1,57 +1,39 @@
-import { waitFor, within } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { vi } from "vitest";
+import server from "test/mockServer";
 
 import { DEMO_TEAM_ID } from "../components/UserUpsertModal";
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { userTriesToAddNewMember } from "./helpers/userTriesToAddNewMember";
-import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
-import { mockPlatformAdminUser } from "./mocks/mockUsers";
+import { addDemoUserHandler } from "./mocks/handlers";
+import { mockPlatformAdminUser } from "./mocks/users";
 
-const { setState, getState } = useStore;
-
-vi.mock(
-  "pages/FlowEditor/components/Team/queries/createAndAddUserToTeam.tsx",
-  async () => ({
-    createAndAddUserToTeam: vi.fn().mockResolvedValue({
-      id: 1,
-      __typename: "users",
-    }),
-  }),
-);
 
 describe("adding a new user to the Demo team", () => {
   beforeEach(async () => {
-    setState({
+    useStore.setState({
       user: mockPlatformAdminUser,
-      teamMembers: mockTeamMembersData,
       teamId: DEMO_TEAM_ID,
     });
+
+    server.use(addDemoUserHandler());
   });
 
   it("assigns the `demoUser` role automatically", async () => {
-    let currentUsers = getState().teamMembers;
-    expect(currentUsers).toHaveLength(3);
+    const { user } = await setupTeamMembersScreen();
 
-    const { user, getByTestId } = await setupTeamMembersScreen();
+    let memberRows = await screen.findAllByTestId("member-row");
+    expect(memberRows).toHaveLength(3);
+
     await userTriesToAddNewMember(user);
 
-    const membersTable = getByTestId("members-table-add-member");
-
     await waitFor(() => {
-      expect(
-        within(membersTable).getByText(/Mickey Mouse/),
-      ).toBeInTheDocument();
+      expect(screen.getByText(/Mickey Mouse/)).toBeInTheDocument();
     });
 
-    currentUsers = getState().teamMembers;
-    expect(currentUsers).toHaveLength(4);
+    memberRows = screen.getAllByTestId("member-row");
+    expect(memberRows).toHaveLength(4);
 
-    // Role correctly assigned to user
-    const newUser = getState().teamMembers[3];
-    expect(newUser.role).toBe("demoUser");
-
-    // Use role tag displayed in table
-    expect(within(membersTable).getByText("Demo User")).toBeVisible();
+    expect(screen.getByText("Demo User")).toBeVisible();
   });
 });
