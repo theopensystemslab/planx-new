@@ -14,7 +14,6 @@ export const TeamMembers = () => {
 
   const { platformAdmins, activeMembers, archivedMembers, loading, error } = useTeamMembers(teamSlug);
 
-  if (loading) return <DelayedLoadingIndicator />;
   if (error) return <ErrorSummary message={error.message} />;
 
   // All users are automatically added to Templates team via a db trigger, we never want to manually add/edit them
@@ -30,12 +29,15 @@ export const TeamMembers = () => {
           Editors have access to edit your flows, whilst viewers can only browse
           your flows.
         </Typography>
-        <MembersTable
-          members={activeMembers}
-          showAddMemberButton={isNotTemplatesTeam}
-          showEditMemberButton={isNotTemplatesTeam}
-          showRemoveMemberButton={isNotTemplatesTeam}
-        />
+        {loading && <DelayedLoadingIndicator />}
+        {activeMembers &&
+          <MembersTable
+            members={activeMembers}
+            showAddMemberButton={isNotTemplatesTeam}
+            showEditMemberButton={isNotTemplatesTeam}
+            showRemoveMemberButton={isNotTemplatesTeam}
+          />
+        }
       </SettingsSection>
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
@@ -44,10 +46,13 @@ export const TeamMembers = () => {
         <Typography variant="body1">
           Admins have editor access across all teams.
         </Typography>
-        <MembersTable
-          members={platformAdmins}
-          showEditMemberButton={isNotTemplatesTeam}
-        />
+        {loading && <DelayedLoadingIndicator />}
+        {platformAdmins &&
+          <MembersTable
+            members={platformAdmins}
+            showEditMemberButton={isNotTemplatesTeam}
+          />
+        }
       </SettingsSection>
       {archivedMembers.length > 0 && (
         <SettingsSection data-testid="archived-members">
