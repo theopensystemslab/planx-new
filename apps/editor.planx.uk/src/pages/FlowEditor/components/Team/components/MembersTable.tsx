@@ -75,7 +75,7 @@ export const MembersTable = ({
             </TableRow>
           </TableHead>
           {showAddMemberButton && (
-            <Permission.IsPlatformAdmin>
+            <Permission.IsTeamEditor>
               <TableBody>
                 <TableRow>
                   <TableCell colSpan={3}>
@@ -83,7 +83,7 @@ export const MembersTable = ({
                   </TableCell>
                 </TableRow>
               </TableBody>
-            </Permission.IsPlatformAdmin>
+            </Permission.IsTeamEditor>
           )}
         </Table>
         {modal.action !== "closed" && (
@@ -144,7 +144,7 @@ export const MembersTable = ({
                 </TableCell>
                 <TableCell>{member.email}</TableCell>
                 <TableCell>
-                  <Permission.IsPlatformAdmin>
+                  <Permission.IsTeamEditor>
                     {showEditMemberButton && (
                       <EditUserButton
                         onClick={() => editUser(member)}
@@ -153,10 +153,10 @@ export const MembersTable = ({
                         Edit
                       </EditUserButton>
                     )}
-                  </Permission.IsPlatformAdmin>
+                  </Permission.IsTeamEditor>
                 </TableCell>
                 <TableCell>
-                  <Permission.IsPlatformAdmin>
+                  <Permission.IsTeamEditor>
                     {showRemoveMemberButton && (
                       <RemoveUserButton
                         onClick={() => removeUser(member)}
@@ -165,18 +165,18 @@ export const MembersTable = ({
                         Remove
                       </RemoveUserButton>
                     )}
-                  </Permission.IsPlatformAdmin>
+                  </Permission.IsTeamEditor>
                 </TableCell>
               </StyledTableRow>
             ))}
             {showAddMemberButton && (
-              <Permission.IsPlatformAdmin>
+              <Permission.IsTeamEditor>
                 <TableRow>
                   <TableCell colSpan={5}>
                     <AddButton onClick={addUser}>Add a new member</AddButton>
                   </TableCell>
                 </TableRow>
-              </Permission.IsPlatformAdmin>
+              </Permission.IsTeamEditor>
             )}
           </TableBody>
         </Table>
