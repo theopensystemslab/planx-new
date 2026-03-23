@@ -11,6 +11,8 @@ import {
   MapContainer,
   MapFooter,
 } from "@planx/components/shared/Preview/MapContainer";
+import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
+import { multiPolygon, point } from "@turf/helpers";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
@@ -47,25 +49,72 @@ export const DescriptionInput = styled(Box)(({ theme }) => ({
   paddingBottom: theme.spacing(2),
 }));
 
+export interface GeocodeAutocompleteAddress {
+  LPI: {
+    LAT: number;
+    LNG: number;
+  };
+}
+
 export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
+  // `coordinates` refer to the point proposed/plotted by the user
   const [coordinates, setCoordinates] = useState<Coordinates | undefined>(
     props.initialProposedAddress
       ? {
-          longitude: props.initialProposedAddress.longitude,
-          latitude: props.initialProposedAddress.latitude,
-          x: props.initialProposedAddress.x,
-          y: props.initialProposedAddress.y,
-        }
+        longitude: props.initialProposedAddress.longitude,
+        latitude: props.initialProposedAddress.latitude,
+        x: props.initialProposedAddress.x,
+        y: props.initialProposedAddress.y,
+      }
       : undefined,
   );
   const [siteDescription, setSiteDescription] = useState<string | null>(
     props.initialProposedAddress?.title ?? null,
   );
 
+  // `searchedPoint` is optionally used to position the map only (you shouldn't propose an existing address point)
+  const [searchedPoint, setSearchedPoint] = useState<GeocodeAutocompleteAddress | undefined>(undefined);
+  const [searchValidationError, setSearchValidationError] = useState<string | undefined>(undefined);
+
   const [environment, boundaryBBox] = useStore((state) => [
     state.previewEnvironment,
-    state.teamSettings.boundaryBBox,
+    state.teamSettings.boundaryBBox as unknown as any,
   ]);
+
+  useEffect(() => {
+    const geocodeAutocompleteSearchHandler = ({
+      detail,
+    }: {
+      detail: Record<"address", GeocodeAutocompleteAddress>;
+    }) => {
+      const selectedAddress = detail?.address;
+      if (selectedAddress) {
+        if (boundaryBBox) {
+          const searchedAddressIsWithinClip = booleanPointInPolygon(
+            point([selectedAddress.LPI.LNG, selectedAddress.LPI.LAT]),
+            multiPolygon(boundaryBBox?.geometry)
+          );
+
+          if (!searchedAddressIsWithinClip) {
+            setSearchValidationError("Searched address is outside of map bounds, try another address");
+            setSearchedPoint(undefined);
+          } else {
+            setSearchedPoint(selectedAddress)
+          }
+        }
+      }
+    };
+
+    const geocodeAutocomplete: any = document.getElementById("geocode-autocomplete");
+    geocodeAutocomplete?.addEventListener("addressSelection", geocodeAutocompleteSearchHandler);
+
+    return function cleanup() {
+      geocodeAutocomplete?.removeEventListener(
+        "addressSelection",
+        geocodeAutocompleteSearchHandler,
+      );
+    };
+  }, [setSearchedPoint]);
 
   useEffect(() => {
     const geojsonChangeHandler = ({ detail: geojson }: any) => {
@@ -100,6 +149,18 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
     }
   }, [coordinates]);
 
+  const searchValidationErrorRef = useRef(searchValidationError);
+  useEffect(() => {
+    searchValidationErrorRef.current = searchValidationError;
+  }, [searchValidationError]);
+
+
+  useEffect(() => {
+    if (searchValidationErrorRef.current) {
+      setSearchValidationError(undefined);
+    }
+  }, [searchedPoint]);
+
   useEffect(() => {
     // when we have all required address parts, call setAddress to enable the "Continue" button
     if (siteDescription && coordinates) {
@@ -126,6 +187,17 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
 
   return (
     <>
+      <ErrorWrapper
+        error={searchValidationError}
+        id="geocode-autocomplete"
+      >
+        {/* @ts-ignore */}
+        <geocode-autocomplete
+          id="geocode-autocomplete"
+          label="Search for an address to position the map"
+          osProxyEndpoint={`${import.meta.env.VITE_APP_API_URL}/proxy/ordnance-survey`}
+        />
+      </ErrorWrapper>
       <FullWidthWrapper>
         <ErrorWrapper
           error={props.mapValidationError}
@@ -142,7 +214,9 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
               id="plot-new-address-map"
               ariaLabelOlFixedOverlay="An interactive map for providing your site location"
               data-testid="map-web-component"
-              zoom={10}
+              zoom={searchedPoint ? 18 : 10}
+              latitude={searchedPoint && searchedPoint.LPI.LAT}
+              longitude={searchedPoint && searchedPoint.LPI.LNG}
               drawMode
               drawType="Point"
               drawGeojsonData={
@@ -162,9 +236,8 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
               resetControlImage="trash"
               showScale
               showNorthArrow
-              osProxyEndpoint={`${
-                import.meta.env.VITE_APP_API_URL
-              }/proxy/ordnance-survey`}
+              osProxyEndpoint={`${import.meta.env.VITE_APP_API_URL
+                }/proxy/ordnance-survey`}
               clipGeojsonData={JSON.stringify(boundaryBBox)}
               osCopyright={`© Crown copyright and database rights ${new Date().getFullYear()} OS AC0000812160`}
               collapseAttributions={window.innerWidth < 500 ? true : undefined}
@@ -175,11 +248,9 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
           <Typography variant="body2">
             The coordinate location of your address point is:{" "}
             <strong>
-              {`${
-                (coordinates?.x && Math.round(coordinates.x)) || 0
-              } Easting (X), ${
-                (coordinates?.y && Math.round(coordinates.y)) || 0
-              } Northing (Y)`}
+              {`${(coordinates?.x && Math.round(coordinates.x)) || 0
+                } Easting (X), ${(coordinates?.y && Math.round(coordinates.y)) || 0
+                } Northing (Y)`}
             </strong>
           </Typography>
           <Link
