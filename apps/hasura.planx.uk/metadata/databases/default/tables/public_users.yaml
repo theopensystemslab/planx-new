@@ -47,6 +47,25 @@ insert_permissions:
         - is_staging_only
         - last_name
         - updated_at
+  - role: teamEditor
+    permission:
+      check:
+        default_team:
+          members:
+            _and:
+              - user_id:
+                  _eq: X-Hasura-User-Id
+              - role:
+                  _eq: teamEditor
+      columns:
+        - created_at
+        - default_team_id
+        - email
+        - first_name
+        - id
+        - last_name
+        - updated_at
+    comment: teamEditor can insert other users. default_team_id must match a team which the user has the teamEditor role.
 select_permissions:
   - role: analyst
     permission:
@@ -129,6 +148,44 @@ update_permissions:
         - last_name
       filter: {}
       check: {}
+  - role: teamEditor
+    permission:
+      columns:
+        - created_at
+        - email
+        - first_name
+        - last_name
+        - updated_at
+      filter:
+        _and:
+          - default_team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: X-Hasura-User-Id
+                  - role:
+                      _eq: teamEditor
+          - teams:
+              role:
+                _eq: teamEditor
+      check: null
+    comment: teamEditors can update the details of other teamEditors
+delete_permissions:
+  - role: teamEditor
+    permission:
+      filter:
+        _and:
+          - default_team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: X-Hasura-User-Id
+                  - role:
+                      _eq: teamEditor
+          - teams:
+              role:
+                _eq: teamEditor
+    comment: teamEditor can delete other teamEditors from their own team
 event_triggers:
   - name: send_user_welcome_emails
     definition:
