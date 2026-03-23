@@ -7,17 +7,16 @@ import SettingsSection from "ui/editor/SettingsSection";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import { MembersTable } from "./components/MembersTable";
+import { useTeamManagementPermissions } from "./hooks/useTeamManagementPermissions";
 import { useTeamMembers } from "./hooks/useTeamMembers";
 
 export const TeamMembers = () => {
   const teamSlug = useStore((state) => state.teamSlug);
 
   const { platformAdmins, activeMembers, archivedMembers, loading, error } = useTeamMembers(teamSlug);
+  const { canManageActiveMembers, canManageAdmins } = useTeamManagementPermissions();
 
   if (error) return <ErrorSummary message={error.message} />;
-
-  // All users are automatically added to Templates team via a db trigger, we never want to manually add/edit them
-  const isNotTemplatesTeam = teamSlug !== "templates";
 
   return (
     <Container maxWidth="contentWrap">
@@ -33,9 +32,9 @@ export const TeamMembers = () => {
         {activeMembers &&
           <MembersTable
             members={activeMembers}
-            showAddMemberButton={isNotTemplatesTeam}
-            showEditMemberButton={isNotTemplatesTeam}
-            showRemoveMemberButton={isNotTemplatesTeam}
+            showAddMemberButton={canManageActiveMembers}
+            showEditMemberButton={canManageActiveMembers}
+            showRemoveMemberButton={canManageActiveMembers}
           />
         }
       </SettingsSection>
@@ -50,7 +49,7 @@ export const TeamMembers = () => {
         {platformAdmins &&
           <MembersTable
             members={platformAdmins}
-            showEditMemberButton={isNotTemplatesTeam}
+            showEditMemberButton={canManageAdmins}
           />
         }
       </SettingsSection>

@@ -11,7 +11,6 @@ import TableRow from "@mui/material/TableRow";
 import { Role } from "@opensystemslab/planx-core/types";
 import React, { useState } from "react";
 import { AddButton } from "ui/editor/AddButton";
-import Permission from "ui/editor/Permission";
 
 import { StyledAvatar, StyledTableRow } from "../styles";
 import {
@@ -75,15 +74,13 @@ export const MembersTable = ({
             </TableRow>
           </TableHead>
           {showAddMemberButton && (
-            <Permission.IsTeamEditor>
-              <TableBody>
-                <TableRow>
-                  <TableCell colSpan={3}>
-                    <AddButton onClick={addUser}>Add a new member</AddButton>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Permission.IsTeamEditor>
+            <TableBody>
+              <TableRow>
+                <TableCell colSpan={3}>
+                  <AddButton onClick={addUser}>Add a new member</AddButton>
+                </TableCell>
+              </TableRow>
+            </TableBody>
           )}
         </Table>
         {modal.action !== "closed" && (
@@ -144,39 +141,33 @@ export const MembersTable = ({
                 </TableCell>
                 <TableCell>{member.email}</TableCell>
                 <TableCell>
-                  <Permission.IsTeamEditor>
-                    {showEditMemberButton && (
-                      <EditUserButton
-                        onClick={() => editUser(member)}
-                        data-testid={`edit-button-${member.id}`}
-                      >
-                        Edit
-                      </EditUserButton>
-                    )}
-                  </Permission.IsTeamEditor>
+                  {showEditMemberButton && (
+                    <EditUserButton
+                      onClick={() => editUser(member)}
+                      data-testid={`edit-button-${member.id}`}
+                    >
+                      Edit
+                    </EditUserButton>
+                  )}
                 </TableCell>
                 <TableCell>
-                  <Permission.IsTeamEditor>
-                    {showRemoveMemberButton && (
-                      <RemoveUserButton
-                        onClick={() => removeUser(member)}
-                        data-testid={`remove-button-${member.id}`}
-                      >
-                        Remove
-                      </RemoveUserButton>
-                    )}
-                  </Permission.IsTeamEditor>
+                  {showRemoveMemberButton && (
+                    <RemoveUserButton
+                      onClick={() => removeUser(member)}
+                      data-testid={`remove-button-${member.id}`}
+                    >
+                      Remove
+                    </RemoveUserButton>
+                  )}
                 </TableCell>
               </StyledTableRow>
             ))}
             {showAddMemberButton && (
-              <Permission.IsTeamEditor>
-                <TableRow>
-                  <TableCell colSpan={5}>
-                    <AddButton onClick={addUser}>Add a new member</AddButton>
-                  </TableCell>
-                </TableRow>
-              </Permission.IsTeamEditor>
+              <TableRow>
+                <TableCell colSpan={5}>
+                  <AddButton onClick={addUser}>Add a new member</AddButton>
+                </TableCell>
+              </TableRow>
             )}
           </TableBody>
         </Table>
