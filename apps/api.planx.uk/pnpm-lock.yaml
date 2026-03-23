@@ -22,8 +22,8 @@ importers:
         specifier: ^3.1000.0
         version: 3.1000.0
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#6cca854
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/6cca85432078c1da6472c48ada6a32ec03528765(@types/react@19.2.14)
+        specifier: github:theopensystemslab/planx-core#17a4eea
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/17a4eeaba5c6be65cf9cd456e438951c4e53e7df(@types/react@19.2.14)
       '@types/isomorphic-fetch':
         specifier: ^0.0.36
         version: 0.0.36
@@ -76,11 +76,11 @@ importers:
         specifier: ^4.0.5
         version: 4.0.5
       graphql:
-        specifier: ^16.13.0
-        version: 16.13.0
+        specifier: ^16.13.1
+        version: 16.13.1
       graphql-request:
         specifier: ^4.3.0
-        version: 4.3.0(graphql@16.13.0)
+        version: 4.3.0(graphql@16.13.1)
       he:
         specifier: ^1.2.0
         version: 1.2.0
@@ -1066,17 +1066,20 @@ packages:
       '@noble/hashes':
         optional: true
 
-  '@formatjs/ecma402-abstract@3.1.1':
-    resolution: {integrity: sha512-jhZbTwda+2tcNrs4kKvxrPLPjx8QsBCLCUgrrJ/S+G9YrGHWLhAyFMMBHJBnBoOwuLHd7L14FgYudviKaxkO2Q==}
+  '@formatjs/bigdecimal@0.2.0':
+    resolution: {integrity: sha512-GeaxHZbUoYvHL9tC5eltHLs+1zU70aPw0s7LwqgktIzF5oMhNY4o4deEtusJMsq7WFJF3Ye2zQEzdG8beVk73w==}
 
-  '@formatjs/fast-memoize@3.1.0':
-    resolution: {integrity: sha512-b5mvSWCI+XVKiz5WhnBCY3RJ4ZwfjAidU0yVlKa3d3MSgKmH1hC3tBGEAtYyN5mqL7N0G5x0BOUYyO8CEupWgg==}
+  '@formatjs/ecma402-abstract@3.2.0':
+    resolution: {integrity: sha512-dHnqHgBo6GXYGRsepaE1wmsC2etaivOWd5VaJstZd+HI2zR3DCUjbDVZRtoPGkkXZmyHvBwrdEUuqfvzhF/DtQ==}
 
-  '@formatjs/intl-listformat@8.2.1':
-    resolution: {integrity: sha512-L7e1NFXP6Dd7Ev28zHoI8E7CbQTFzlh6uhZz4UvFOjhFFX3ikVvelV9G8/XPhqhjs+j+EI/XjDqwR9NFAxLLLg==}
+  '@formatjs/fast-memoize@3.1.1':
+    resolution: {integrity: sha512-CbNbf+tlJn1baRnPkNePnBqTLxGliG6DDgNa/UtV66abwIjwsliPMOt0172tzxABYzSuxZBZfcp//qI8AvBWPg==}
 
-  '@formatjs/intl-localematcher@0.8.1':
-    resolution: {integrity: sha512-xwEuwQFdtSq1UKtQnyTZWC+eHdv7Uygoa+H2k/9uzBVQjDyp9r20LNDNKedWXll7FssT3GRHvqsdJGYSUWqYFA==}
+  '@formatjs/intl-listformat@8.3.1':
+    resolution: {integrity: sha512-82pPPyPOzkFMBbUmuseMwckFtpT+meZSxZSaxyD/3wRo5DZEq08hBUe1uhzNmukI8hwJFH5mIMBwSIAuse0RDQ==}
+
+  '@formatjs/intl-localematcher@0.8.2':
+    resolution: {integrity: sha512-q05KMYGJLyqFNFtIb8NhWLF5X3aK/k0wYt7dnRFuy6aLQL+vUwQ1cg5cO4qawEiINybeCPXAWlprY2mSBjSXAQ==}
 
   '@graphql-typed-document-node/core@3.2.0':
     resolution: {integrity: sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==}
@@ -1212,8 +1215,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/6cca85432078c1da6472c48ada6a32ec03528765':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/6cca85432078c1da6472c48ada6a32ec03528765}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/17a4eeaba5c6be65cf9cd456e438951c4e53e7df':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/17a4eeaba5c6be65cf9cd456e438951c4e53e7df}
     version: 1.0.0
 
   '@opentelemetry/api@1.9.0':
@@ -2782,8 +2785,8 @@ packages:
     engines: {node: '>= 6.x'}
     deprecated: 'No longer supported; please update to a newer version. Details: https://github.com/graphql/graphql-js#version-support'
 
-  graphql@16.13.0:
-    resolution: {integrity: sha512-uSisMYERbaB9bkA9M4/4dnqyktaEkf1kMHNKq/7DHyxVeWqHQ2mBmVqm5u6/FVHwF3iCNalKcg82Zfl+tffWoA==}
+  graphql@16.13.1:
+    resolution: {integrity: sha512-gGgrVCoDKlIZ8fIqXBBb0pPKqDgki0Z/FSKNiQzSGj2uEYHr1tq5wmBegGwJx6QB5S5cM0khSBpi/JFHMCvsmQ==}
     engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
 
   has-flag@3.0.0:
@@ -3179,8 +3182,8 @@ packages:
     resolution: {integrity: sha512-hXdUTZYIVOt1Ex//jAQi+wTZZpUpwBj/0QsOzqegb3rGMMeJiSEu5xLHnYfBrRV4RH2+OCSOO95Is/7x1WJ4bw==}
     engines: {node: '>=10'}
 
-  marked@17.0.3:
-    resolution: {integrity: sha512-jt1v2ObpyOKR8p4XaUJVk3YWRJ5n+i4+rjQopxvV32rSndTJXvIzuUdWWIy/1pFQMkQmvTXawzDNqOH/CUmx6A==}
+  marked@17.0.5:
+    resolution: {integrity: sha512-6hLvc0/JEbRjRgzI6wnT2P1XuM1/RrrDEX0kPt0N7jGm1133g6X7DlxFasUIx+72aKAr904GTxhSLDrd5DIlZg==}
     engines: {node: '>= 20'}
     hasBin: true
 
@@ -5323,31 +5326,28 @@ snapshots:
     optionalDependencies:
       '@noble/hashes': 1.8.0
 
-  '@formatjs/ecma402-abstract@3.1.1':
-    dependencies:
-      '@formatjs/fast-memoize': 3.1.0
-      '@formatjs/intl-localematcher': 0.8.1
-      decimal.js: 10.6.0
-      tslib: 2.8.1
+  '@formatjs/bigdecimal@0.2.0': {}
 
-  '@formatjs/fast-memoize@3.1.0':
+  '@formatjs/ecma402-abstract@3.2.0':
     dependencies:
-      tslib: 2.8.1
+      '@formatjs/bigdecimal': 0.2.0
+      '@formatjs/fast-memoize': 3.1.1
+      '@formatjs/intl-localematcher': 0.8.2
 
-  '@formatjs/intl-listformat@8.2.1':
-    dependencies:
-      '@formatjs/ecma402-abstract': 3.1.1
-      '@formatjs/intl-localematcher': 0.8.1
-      tslib: 2.8.1
+  '@formatjs/fast-memoize@3.1.1': {}
 
-  '@formatjs/intl-localematcher@0.8.1':
+  '@formatjs/intl-listformat@8.3.1':
     dependencies:
-      '@formatjs/fast-memoize': 3.1.0
-      tslib: 2.8.1
+      '@formatjs/ecma402-abstract': 3.2.0
+      '@formatjs/intl-localematcher': 0.8.2
 
-  '@graphql-typed-document-node/core@3.2.0(graphql@16.13.0)':
+  '@formatjs/intl-localematcher@0.8.2':
     dependencies:
-      graphql: 16.13.0
+      '@formatjs/fast-memoize': 3.1.1
+
+  '@graphql-typed-document-node/core@3.2.0(graphql@16.13.1)':
+    dependencies:
+      graphql: 16.13.1
 
   '@humanwhocodes/config-array@0.13.0':
     dependencies:
@@ -5474,11 +5474,11 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.20.1
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/6cca85432078c1da6472c48ada6a32ec03528765(@types/react@19.2.14)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/17a4eeaba5c6be65cf9cd456e438951c4e53e7df(@types/react@19.2.14)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.14)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@18.3.1))(@types/react@19.2.14)(react@18.3.1)
-      '@formatjs/intl-listformat': 8.2.1
+      '@formatjs/intl-listformat': 8.3.1
       '@mui/material': 5.18.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@18.3.1))(@types/react@19.2.14)(react@18.3.1))(@types/react@19.2.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       ajv: 8.18.0
       ajv-formats: 2.1.1(ajv@8.18.0)
@@ -5486,11 +5486,11 @@ snapshots:
       copyfiles: 2.4.1
       eslint: 8.57.1
       fast-xml-parser: 5.4.1
-      graphql: 16.13.0
-      graphql-request: 6.1.0(graphql@16.13.0)
+      graphql: 16.13.1
+      graphql-request: 6.1.0(graphql@16.13.1)
       json-schema-to-typescript: 15.0.4
       lodash-es: 4.17.23
-      marked: 17.0.3
+      marked: 17.0.5
       prettier: 3.8.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -7340,20 +7340,20 @@ snapshots:
       nock: 13.5.6
       object-hash: 1.3.1
 
-  graphql-request@4.3.0(graphql@16.13.0):
+  graphql-request@4.3.0(graphql@16.13.1):
     dependencies:
       cross-fetch: 3.2.0
       extract-files: 9.0.0
       form-data: 3.0.4
-      graphql: 16.13.0
+      graphql: 16.13.1
     transitivePeerDependencies:
       - encoding
 
-  graphql-request@6.1.0(graphql@16.13.0):
+  graphql-request@6.1.0(graphql@16.13.1):
     dependencies:
-      '@graphql-typed-document-node/core': 3.2.0(graphql@16.13.0)
+      '@graphql-typed-document-node/core': 3.2.0(graphql@16.13.1)
       cross-fetch: 3.2.0
-      graphql: 16.13.0
+      graphql: 16.13.1
     transitivePeerDependencies:
       - encoding
 
@@ -7361,7 +7361,7 @@ snapshots:
     dependencies:
       iterall: 1.3.0
 
-  graphql@16.13.0: {}
+  graphql@16.13.1: {}
 
   has-flag@3.0.0: {}
 
@@ -7782,7 +7782,7 @@ snapshots:
     dependencies:
       semver: 7.7.4
 
-  marked@17.0.3: {}
+  marked@17.0.5: {}
 
   math-intrinsics@1.1.0: {}
 
