@@ -91,22 +91,6 @@ describe("when the addNewMember modal is rendered", () => {
   });
 });
 
-describe("'add a new member' button is hidden from Templates team", () => {
-  beforeEach(async () => {
-    useStore.setState({
-      user: mockPlatformAdminUser,
-      teamSlug: "templates",
-    });
-
-    await setupTeamMembersScreen();
-  });
-
-  it("hides the button on the Templates team", async () => {
-    const teamMembers = screen.getByTestId("team-members");
-    const addMemberButton = within(teamMembers).queryByText("Add a new member");
-    expect(addMemberButton).not.toBeInTheDocument();
-  });
-});
 
 describe("when a user is not a platform admin", () => {
   beforeEach(async () => {

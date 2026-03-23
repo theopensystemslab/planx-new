@@ -1,11 +1,11 @@
 import { usePermission } from "hooks/usePermission";
 
 export const useTeamManagementPermissions = () => {
-  const canManageActiveMembers = usePermission(["platformAdmin", "teamEditor"]);
-  const canManageAdmins = usePermission(["platformAdmin"]);
+  const isTeamEditor = usePermission(["platformAdmin", "teamEditor"]);
+  const isPlatformAdmin = usePermission(["platformAdmin"]);
 
   return {
-    canManageActiveMembers,
-    canManageAdmins,
+    canManageActiveMembers: isTeamEditor,
+    canManageAdmins: isPlatformAdmin,
   };
 };
