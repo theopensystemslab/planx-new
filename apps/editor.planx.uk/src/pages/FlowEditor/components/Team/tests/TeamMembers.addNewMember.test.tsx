@@ -3,40 +3,24 @@ import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { vi } from "vitest";
+import server from "test/mockServer";
 import { axe } from "vitest-axe";
 
 import { setup } from "../../../../../testUtils";
 import { UserUpsertModal } from "../components/UserUpsertModal";
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { userTriesToAddNewMember } from "./helpers/userTriesToAddNewMember";
-import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
-import {
-  emptyTeamMemberObj,
-  mockPlainUser,
-  mockPlatformAdminUser,
-} from "./mocks/mockUsers";
-
-vi.mock(
-  "pages/FlowEditor/components/Team/queries/createAndAddUserToTeam.tsx",
-  () => ({
-    createAndAddUserToTeam: vi.fn().mockResolvedValue({
-      id: 1,
-      __typename: "users",
-    }),
-  }),
-);
+import { createUserHandler } from "./mocks/handlers";
+import { mockPlainUser, mockPlatformAdminUser } from "./mocks/users";
 
 let initialState: FullStore;
 
 describe("when a user presses 'add a new member'", () => {
   beforeEach(async () => {
     useStore.setState({
-      teamMembers: mockTeamMembersData,
       user: mockPlatformAdminUser,
-      teamSlug: "planx",
-      teamId: 1,
     });
+
     const { user } = await setupTeamMembersScreen();
 
     const teamMembersTable = screen.getByTestId("team-members");
@@ -57,11 +41,11 @@ describe("when a user fills in the 'add a new member' form correctly", () => {
 
   beforeEach(async () => {
     useStore.setState({
-      teamMembers: mockTeamMembersData,
       user: mockPlatformAdminUser,
-      teamSlug: "planx",
-      teamId: 1,
     });
+
+    server.use(createUserHandler());
+
     const { user } = await setupTeamMembersScreen();
     await userTriesToAddNewMember(user);
   });
@@ -90,21 +74,13 @@ describe("when a user fills in the 'add a new member' form correctly", () => {
 });
 
 describe("when the addNewMember modal is rendered", () => {
-  beforeEach(async () => {
-    useStore.setState({
-      teamSlug: "planx",
-      teamId: 1,
-    });
-  });
-
   it("should not have any accessibility issues", async () => {
     const { container } = await setup(
       <DndProvider backend={HTML5Backend}>
         <UserUpsertModal
           showModal={true}
           setShowModal={() => {}}
-          initialValues={emptyTeamMemberObj}
-          actionType="add"
+          action="add"
         />
       </DndProvider>,
     );
@@ -118,15 +94,14 @@ describe("when the addNewMember modal is rendered", () => {
 describe("'add a new member' button is hidden from Templates team", () => {
   beforeEach(async () => {
     useStore.setState({
-      teamMembers: mockTeamMembersData,
       user: mockPlatformAdminUser,
       teamSlug: "templates",
-      teamId: 2,
     });
+
+    await setupTeamMembersScreen();
   });
 
   it("hides the button on the Templates team", async () => {
-    await setupTeamMembersScreen();
     const teamMembers = screen.getByTestId("team-members");
     const addMemberButton = within(teamMembers).queryByText("Add a new member");
     expect(addMemberButton).not.toBeInTheDocument();
@@ -136,15 +111,13 @@ describe("'add a new member' button is hidden from Templates team", () => {
 describe("when a user is not a platform admin", () => {
   beforeEach(async () => {
     useStore.setState({
-      teamMembers: mockTeamMembersData,
       user: mockPlainUser,
-      teamSlug: "trumptonshire",
-      teamId: 3,
     });
+
+    await setupTeamMembersScreen();
   });
 
   it("hides the button from non-admin users", async () => {
-    await setupTeamMembersScreen();
     const teamMembersTable = screen.getByTestId("team-members");
     const addMemberButton =
       within(teamMembersTable).queryByText("Add a new member");
