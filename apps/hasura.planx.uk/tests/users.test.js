@@ -62,8 +62,12 @@ describe("users", () => {
       expect(i.queries).toContain("users");
     });
 
-    test("cannot create, update, or delete users", async () => {
-      expect(i).toHaveNoMutationsFor("users");
+    // Row-level permissions in place
+    // teamEditor can only mutate other users from their team
+    test("has full access to mutate users", async () => {
+      expect(i.mutations).toContain("insert_users");
+      expect(i.mutations).toContain("update_users_by_pk");
+      expect(i.mutations).toContain("delete_users");
     });
   });
 
