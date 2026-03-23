@@ -22,7 +22,6 @@ insert_permissions:
         - id
         - publisher_id
         - service_charge_enabled
-        - submission_email_id
         - summary
   - role: demoUser
     permission:
@@ -45,7 +44,6 @@ insert_permissions:
         - id
         - publisher_id
         - service_charge_enabled
-        - submission_email_id
         - summary
     comment: A demoUser can only insert a published flow for their own flows and for flows inside the Demo team [id = 32]
   - role: platformAdmin
@@ -61,7 +59,6 @@ insert_permissions:
         - id
         - publisher_id
         - service_charge_enabled
-        - submission_email_id
         - summary
   - role: teamEditor
     permission:
@@ -84,9 +81,24 @@ insert_permissions:
         - id
         - publisher_id
         - service_charge_enabled
-        - submission_email_id
         - summary
 select_permissions:
+  - role: analyst
+    permission:
+      columns:
+        - has_pay_component
+        - has_sections
+        - has_send_component
+        - service_charge_enabled
+        - id
+        - publisher_id
+        - summary
+        - created_at
+        - flow_id
+        - data
+      filter: {}
+      allow_aggregations: true
+    comment: ""
   - role: api
     permission:
       columns:
@@ -99,7 +111,6 @@ select_permissions:
         - id
         - publisher_id
         - service_charge_enabled
-        - submission_email_id
         - summary
       filter: {}
       allow_aggregations: true
@@ -115,7 +126,6 @@ select_permissions:
         - id
         - publisher_id
         - service_charge_enabled
-        - submission_email_id
         - summary
       filter: {}
       allow_aggregations: true
@@ -131,7 +141,6 @@ select_permissions:
         - id
         - publisher_id
         - service_charge_enabled
-        - submission_email_id
         - summary
       filter: {}
       allow_aggregations: true
@@ -162,7 +171,6 @@ select_permissions:
         - id
         - publisher_id
         - service_charge_enabled
-        - submission_email_id
         - summary
       filter: {}
       allow_aggregations: true

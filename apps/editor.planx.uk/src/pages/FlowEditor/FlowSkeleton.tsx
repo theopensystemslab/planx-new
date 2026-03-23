@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
-import React, { PropsWithChildren, useEffect, useState } from "react";
+import React, { PropsWithChildren } from "react";
 
 const Container: React.FC<PropsWithChildren> = ({ children }) => (
   <Box
@@ -64,16 +64,6 @@ const HorizontalConnector = () => (
 );
 
 export const FlowSkeleton = () => {
-  const msDelayBeforeVisible = 100;
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => setVisible(true), msDelayBeforeVisible);
-    return () => clearTimeout(timeout);
-  }, [msDelayBeforeVisible]);
-
-  if (!visible) return null;
-
   return (
     <Container>
       <TerminalNode />

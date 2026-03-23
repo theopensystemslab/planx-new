@@ -1,5 +1,6 @@
 import FormControl from "@mui/material/FormControl";
 import RadioGroup from "@mui/material/RadioGroup";
+import Typography from "@mui/material/Typography";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { Form, Formik } from "formik";
@@ -59,9 +60,57 @@ const EnhancedTextInputComponent = (props: Props) => {
           />
           <ModalSection>
             <ModalSectionContent
-              title="Enhanced Text Input"
+              title="Enhanced text input"
               Icon={ICONS[ComponentType.EnhancedTextInput]}
             >
+              <InputRow>
+                <FormControl component="fieldset">
+                  <Typography component="legend" variant="body2" sx={{ py: 1 }}>
+                    Select a function
+                  </Typography>
+                  <RadioGroup defaultValue="short" value={formik.values.task}>
+                    {Object.entries(TASKS).map(([task, { label }]) => (
+                      <BasicRadio
+                        key={task}
+                        id={task}
+                        label={label}
+                        variant="compact"
+                        value={task}
+                        onChange={(e) => {
+                          formik.setFieldValue("task", e.target);
+                          formik.setFieldValue(
+                            "fn",
+                            taskDefaults[task as Task].fn,
+                          );
+                        }}
+                        disabled={props.disabled}
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+              </InputRow>
+            </ModalSectionContent>
+          </ModalSection>
+          <ModalSection>
+            <ModalSectionContent>
+              <p>
+                Project descriptions are often invalid or in need of revision at
+                point of receipt. This component uses Google Gemini to review
+                the users input and suggest revisions upfront that better match
+                the expected tone and format of typical statutory planning
+                proposals.
+              </p>
+              <p>You can see our exact Gemini prompt (coming soon).</p>
+              <p>
+                Your Plan× submission payload will include metadata about
+                whether the user accepted, revised, or discarded the Gemini
+                suggested description both for your internal review and to help
+                us improve the prompt over time.
+              </p>
+            </ModalSectionContent>
+          </ModalSection>
+          <ModalSection>
+            <ModalSectionContent title="Initial screen">
               <InputRow>
                 <Input
                   format="large"
@@ -94,36 +143,9 @@ const EnhancedTextInputComponent = (props: Props) => {
               </InputRow>
             </ModalSectionContent>
           </ModalSection>
-          <ModalSection>
-            <ModalSectionContent title="Enhancement">
-              <InputRow>
-                <FormControl component="fieldset">
-                  <RadioGroup defaultValue="short" value={formik.values.task}>
-                    {Object.entries(TASKS).map(([task, { label }]) => (
-                      <BasicRadio
-                        key={task}
-                        id={task}
-                        label={label}
-                        variant="compact"
-                        value={task}
-                        onChange={(e) => {
-                          formik.setFieldValue("task", e.target);
-                          formik.setFieldValue(
-                            "fn",
-                            taskDefaults[task as Task].fn,
-                          );
-                        }}
-                        disabled={props.disabled}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </InputRow>
-            </ModalSectionContent>
-          </ModalSection>
           {formik.values.task === "projectDescription" && (
             <ModalSection>
-              <ModalSectionContent title="Project description">
+              <ModalSectionContent title="Results screen">
                 <InputRow>
                   <Input
                     format="large"

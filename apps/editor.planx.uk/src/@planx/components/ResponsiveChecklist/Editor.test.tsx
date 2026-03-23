@@ -17,7 +17,7 @@ import { ResponsiveChecklist } from "./model";
 
 const { getState } = useStore;
 
-describe("Responsive Checklist editor component", () => {
+describe("Responsive Checklist editor component", async () => {
   beforeEach(() => {
     getState().setUser({
       id: 1,
@@ -28,11 +28,12 @@ describe("Responsive Checklist editor component", () => {
       email: "test@test.com",
       teams: [],
       jwt: "x.y.z",
+      defaultTeamId: null,
     });
   });
 
-  it("renders without error", () => {
-    setup(
+  it("renders without error", async () => {
+    await setup(
       <DndProvider backend={HTML5Backend}>
         <ResponsiveChecklistEditor options={[]} />
       </DndProvider>,
@@ -42,7 +43,7 @@ describe("Responsive Checklist editor component", () => {
   });
 
   it("displays the grouped checklist inputs when the 'expandable' toggle is clicked", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ResponsiveChecklistEditor options={[]} />
       </DndProvider>,
@@ -56,7 +57,7 @@ describe("Responsive Checklist editor component", () => {
   });
 
   it("displays the options editor when the 'Add option' button is clicked", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ResponsiveChecklistEditor options={[]} />
       </DndProvider>,
@@ -69,7 +70,7 @@ describe("Responsive Checklist editor component", () => {
   });
 
   it("adds a new section when the 'add group' button is clicked", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ResponsiveChecklistEditor options={[]} />
       </DndProvider>,
@@ -87,7 +88,7 @@ describe("Responsive Checklist editor component", () => {
   });
 
   it("shows the 'add exclusive or' button only when an option has been added already", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ResponsiveChecklistEditor options={[]} />
       </DndProvider>,
@@ -105,7 +106,7 @@ describe("Responsive Checklist editor component", () => {
   });
 
   it("shows an error if no options set a data field, but one is set at the top level", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ResponsiveChecklistEditor options={[]} />
       </DndProvider>,
@@ -137,7 +138,7 @@ describe("Responsive Checklist editor component", () => {
   it("does not show an error if at least one option sets a data field", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ResponsiveChecklistEditor options={[]} handleSubmit={handleSubmit} />
       </DndProvider>,
@@ -176,7 +177,7 @@ describe("Responsive Checklist editor component", () => {
   }, 50_000);
 
   it("only allows a single exclusive option to be added", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ResponsiveChecklistEditor options={[]} />
       </DndProvider>,
@@ -245,7 +246,7 @@ describe("Responsive Checklist editor component", () => {
 
     const handleSubmit = vi.fn();
 
-    setup(
+    await setup(
       <DndProvider backend={HTML5Backend}>
         <ResponsiveChecklistEditor
           handleSubmit={handleSubmit}
@@ -314,7 +315,7 @@ describe("Responsive Checklist editor component", () => {
 
     const handleSubmit = vi.fn();
 
-    setup(
+    await setup(
       <DndProvider backend={HTML5Backend}>
         <ResponsiveChecklistEditor
           handleSubmit={handleSubmit}
@@ -386,7 +387,7 @@ describe("Responsive Checklist editor component", () => {
 
     const handleSubmit = vi.fn();
 
-    setup(
+    await setup(
       <DndProvider backend={HTML5Backend}>
         <ResponsiveChecklistEditor
           handleSubmit={handleSubmit}
@@ -406,7 +407,7 @@ describe("Responsive Checklist editor component", () => {
 
   it("can construct a valid payload", async () => {
     const handleSubmit = vi.fn();
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ResponsiveChecklistEditor
           node={{}}
@@ -435,9 +436,7 @@ describe("Responsive Checklist editor component", () => {
     expect(ruleDropdowns).toHaveLength(2);
 
     await user.click(ruleDropdowns[1]);
-    await user.click(
-      await screen.findByRole("option", { name: /show if/i }),
-    );
+    await user.click(await screen.findByRole("option", { name: /show if/i }));
 
     const conditionalField = (
       await screen.findAllByPlaceholderText("Data field")

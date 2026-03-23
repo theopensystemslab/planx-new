@@ -68,30 +68,6 @@ const getFlowData = async (id: string): Promise<GetFlowDataResponse> => {
   return flow;
 };
 
-const getDefaultEmail = async (teamId: number): Promise<string | null> => {
-  const { client: $client } = getClient();
-
-  const { submissionIntegrations } = await $client.request<{
-    submissionIntegrations: { id: string }[];
-  }>(
-    gql`
-      query GetDefaultEmail($team_id: Int!) {
-        submissionIntegrations: submission_integrations(
-          where: { team_id: { _eq: $team_id }, default_email: { _eq: true } }
-          limit: 1
-        ) {
-          id
-        }
-      }
-    `,
-    {
-      team_id: teamId,
-    },
-  );
-
-  return submissionIntegrations.length ? submissionIntegrations[0].id : null;
-};
-
 // Insert a new flow into the `flows` table
 const createFlow = async ({
   teamId,
@@ -120,15 +96,13 @@ const createFlow = async ({
   const userId = userContext.getStore()?.user?.sub;
 
   try {
-    const emailId = await getDefaultEmail(teamId);
-
     const response = await $client.request<{
-      insertFlowWithIntegration: {
+      insertFlow: {
         id: Flow["id"];
       };
     }>(
       gql`
-        mutation InsertFlowWithIntegration(
+        mutation InsertFlow(
           $team_id: Int!
           $slug: String!
           $name: String!
@@ -139,9 +113,8 @@ const createFlow = async ({
           $summary: String
           $description: String
           $limitations: String
-          $email_id: uuid
         ) {
-          insertFlowWithIntegration: insert_flows_one(
+          insertFlow: insert_flows_one(
             object: {
               team_id: $team_id
               slug: $slug
@@ -154,9 +127,6 @@ const createFlow = async ({
               summary: $summary
               description: $description
               limitations: $limitations
-              flow_integration: {
-                data: { team_id: $team_id, email_id: $email_id }
-              }
             }
           ) {
             id
@@ -174,11 +144,10 @@ const createFlow = async ({
         summary: summary,
         description: description,
         limitations: limitations,
-        email_id: emailId,
       },
     );
 
-    const flowId = response.insertFlowWithIntegration.id;
+    const flowId = response.insertFlow.id;
 
     await createAssociatedOperation(flowId);
     await publishFlow(flowId, "Created flow");

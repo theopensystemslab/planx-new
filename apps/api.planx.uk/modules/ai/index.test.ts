@@ -84,21 +84,6 @@ describe("/ai/project-description/enhance", () => {
         });
     });
 
-    it("returns 400 when modelId is not in the accepted list", async () => {
-      await supertest(app)
-        .post("/ai/project-description/enhance")
-        .send({
-          ...mockArgs,
-          modelId: "invalid-model-id",
-        })
-        .expect(400)
-        .then((res) => {
-          expect(res.body).toHaveProperty("issues");
-          expect(res.body).toHaveProperty("name", "ZodError");
-          expect(res.body.issues[0].path).toContain("modelId");
-        });
-    });
-
     it("accepts a valid request body with optional fields, and no explicit model ID", async () => {
       mockEnhanceProjectDescription.mockResolvedValueOnce({
         ok: true,

@@ -23,10 +23,10 @@ const meta = {
     title: "Describe the project",
     description: "Write a brief description of the proposed changes",
     task: "projectDescription",
-    fn: "project.description",
+    fn: "proposal.description",
     revisionTitle: "We suggest revising your project description",
     revisionDescription:
-      "The suggested description uses planning terminology that planning officers expect, increasing your chances of approval.",
+      "The suggested description uses planning terminology that planning officers expect, reducing the chance of a delay to your application.",
     howMeasured:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     policyRef:
@@ -37,7 +37,7 @@ const meta = {
     msw: {
       handlers: [
         http.post("*/ai/project-description/enhance", async () => {
-          await delay(3_000);
+          await delay(6_000);
           return HttpResponse.json(
             {
               original: ORIGINAL,

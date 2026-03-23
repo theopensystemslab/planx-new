@@ -12,3 +12,17 @@ export interface EventPayload {
     sessionId: string;
   };
 }
+
+export interface DownloadSubmissionResponse {
+  error:
+    | "INVALID_ACCESS_TOKEN"
+    | "REVOKED_ACCESS_TOKEN"
+    | "EXPIRED_ACCESS_TOKEN";
+}
+
+export interface SendNewDownloadLinkSuccess {
+  message: string;
+}
+export interface SendNewDownloadLinkFailure {
+  error: "SESSION_NOT_FOUND" | "LINK_ALREADY_EMAILED" | "EMAIL_NOT_CONFIGURED";
+}

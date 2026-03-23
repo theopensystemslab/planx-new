@@ -1,4 +1,6 @@
 import { Router } from "express";
+
+import { lpsLoginLimiter } from "../../rateLimit.js";
 import { validate } from "../../shared/middleware/validate.js";
 import { applicationsSchema } from "./types/applications.js";
 import { loginSchema } from "./types/login.js";
@@ -16,7 +18,12 @@ import { validateDownloadToken } from "./middleware/validateDownloadToken.js";
 
 const router = Router();
 
-router.post("/lps/login", validate(loginSchema), loginController);
+router.post(
+  "/lps/login",
+  lpsLoginLimiter,
+  validate(loginSchema),
+  loginController,
+);
 router.post(
   "/lps/applications",
   validate(applicationsSchema),

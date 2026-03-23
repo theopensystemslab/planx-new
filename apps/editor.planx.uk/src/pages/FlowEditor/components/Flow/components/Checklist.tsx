@@ -5,12 +5,13 @@ import {
   NodeTag,
 } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
+import { Link } from "@tanstack/react-router";
+import { useParams } from "@tanstack/react-router";
 import classNames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
 import mapAccum from "ramda/src/mapAccum";
 import React, { useMemo } from "react";
 import { useDrag } from "react-dnd";
-import { Link } from "react-navi";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 
 import { useStore } from "../../../lib/store";
@@ -38,6 +39,8 @@ const Checklist: React.FC<Props> = React.memo((props) => {
       state.showNotes,
     ],
   );
+
+  const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
   const parent = getParentId(props.parent);
 
@@ -72,11 +75,6 @@ const Checklist: React.FC<Props> = React.memo((props) => {
       isDragging: monitor.isDragging(),
     }),
   });
-
-  let href = `${window.location.pathname}/nodes/${props.id}/edit`;
-  if (parent) {
-    href = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
-  }
 
   const handleContextMenu = useContextMenu({
     source: "node",
@@ -116,8 +114,18 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           showStatus={props.showTemplatedNodeStatus}
         >
           <Link
-            href={href}
-            prefetch={false}
+            to={
+              parent
+                ? "/app/$team/$flow/nodes/$parent/nodes/$id/edit"
+                : "/app/$team/$flow/nodes/$id/edit"
+            }
+            params={{
+              team,
+              flow,
+              id: props.id,
+              ...(parent && { parent }),
+            }}
+            preload={false}
             onContextMenu={handleContextMenu}
             ref={drag}
           >
@@ -150,9 +158,24 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           <ol className="categories">
             {groupedOptions.map(({ title, children }, i) => (
               <li key={i} className="card category">
-                <Link href={href + `#group-${i}`}>{title}</Link>
+                <Link
+                  to={
+                    parent
+                      ? "/app/$team/$flow/nodes/$parent/nodes/$id/edit"
+                      : "/app/$team/$flow/nodes/$id/edit"
+                  }
+                  params={{
+                    team,
+                    flow,
+                    id: props.id,
+                    ...(parent && { parent }),
+                  }}
+                  hash={`group-${i}`}
+                >
+                  {title}
+                </Link>
                 <ol className="options">
-                  {children.map((child: any) => (
+                  {children.map((child) => (
                     <Node
                       parent={props.id}
                       key={child.id}
@@ -166,7 +189,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           </ol>
         ) : (
           <ol className="options">
-            {childNodes.map((child: any) => (
+            {childNodes.map((child) => (
               <Node
                 parent={props.id}
                 key={child.id}

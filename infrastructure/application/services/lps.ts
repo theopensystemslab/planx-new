@@ -46,42 +46,21 @@ const createLPSBucket = (
 };
 
 const createLogsBucket = (domain: string) => {
-  const logsBucket = new aws.s3.Bucket("lpsRequestLogs", {
+  return new aws.s3.Bucket("lpsRequestLogs", {
     bucket: `${domain}-logs`,
   });
-
-  const ownershipControls = new aws.s3.BucketOwnershipControls(
-    "lpsRequestLogsOwnershipControls",
-    {
-      bucket: logsBucket.id,
-      rule: {
-        objectOwnership: "ObjectWriter",
-      },
-    }
-  );
-
-  new aws.s3.BucketAclV2(
-    "lpsRequestLogsAcl",
-    {
-      bucket: logsBucket.id,
-      acl: "log-delivery-write",
-    },
-    { dependsOn: [ownershipControls] }
-  );
-
-  return logsBucket;
 };
 
 export const createLPSCertificates = (
   domain: string,
-  planXCert: aws.acm.Certificate
+  planXCertArn: pulumi.Output<string>,
 ): aws.acm.Certificate["arn"] => {
   // On the staging environment, LPS is hosted on a subdomain of planx.dev
   // Do not proceed to create an ACM record
-  if (env === "staging") return planXCert.arn;
+  if (env === "staging") return planXCertArn;
 
   // https://docs.aws.amazon.com/acm/latest/userguide/setup-caa.html
-  const caaRecordRoot = new cloudflare.Record(`lps-caa-record-root`, {
+  const caaRecordRoot = new cloudflare.DnsRecord(`lps-caa-record-root`, {
     name: domain,
     ttl: 600,
     type: "CAA",
@@ -109,24 +88,24 @@ export const createLPSCertificates = (
     }
   );
 
-  const sslCertValidationRecord = new cloudflare.Record(
+  const sslCertValidationRecord = new cloudflare.DnsRecord(
     `lps-sslCertValidationRecord`,
     {
       name: sslCert.domainValidationOptions[0].resourceRecordName,
       ttl: 3600,
       type: sslCert.domainValidationOptions[0].resourceRecordType,
-      value: sslCert.domainValidationOptions[0].resourceRecordValue,
+      content: sslCert.domainValidationOptions[0].resourceRecordValue,
       zoneId: config.require("lps-cloudflare-zone-id"),
     }
   );
 
-  const sslCertValidationRecordWWW = new cloudflare.Record(
+  const sslCertValidationRecordWWW = new cloudflare.DnsRecord(
     `lps-sslCertValidationRecord-www`,
     {
       name: sslCert.domainValidationOptions[1].resourceRecordName,
       ttl: 3600,
       type: sslCert.domainValidationOptions[1].resourceRecordType,
-      value: sslCert.domainValidationOptions[1].resourceRecordValue,
+      content: sslCert.domainValidationOptions[1].resourceRecordValue,
       zoneId: config.require("lps-cloudflare-zone-id"),
     }
   );
@@ -151,11 +130,11 @@ export const createLPSCertificates = (
 const createCNAMERecords = (domain: string, cdn: aws.cloudfront.Distribution) => {
   // Create record on planx.dev
   if (env === "staging") {
-    new cloudflare.Record("localplanningservices", {
+    new cloudflare.DnsRecord("localplanningservices", {
       name: domain,
       type: "CNAME",
       zoneId: config.require("cloudflare-zone-id"),
-      value: cdn.domainName,
+      content: cdn.domainName,
       ttl: 1,
       proxied: false,
     });
@@ -163,27 +142,27 @@ const createCNAMERecords = (domain: string, cdn: aws.cloudfront.Distribution) =>
   
   // Create records on localplanning.services
   if (env === "production") {
-    new cloudflare.Record("localplanningservices", {
+    new cloudflare.DnsRecord("localplanningservices", {
       name: domain,
       type: "CNAME",
       zoneId: config.require("lps-cloudflare-zone-id"),
-      value: cdn.domainName,
+      content: cdn.domainName,
       ttl: 1,
       proxied: true,
     });
 
-    new cloudflare.Record("localplanningservices-www", {
+    new cloudflare.DnsRecord("localplanningservices-www", {
       name: `www.${domain}`,
       type: "CNAME",
       zoneId: config.require("lps-cloudflare-zone-id"),
-      value: cdn.domainName,
+      content: cdn.domainName,
       ttl: 1,
       proxied: true,
     });
   }
 }
 
-export const createLocalPlanningServices = (planXCert: aws.acm.Certificate) => {
+export const createLocalPlanningServices = (planXCertArn: pulumi.Output<string>) => {
   const domain = config.require("lps-domain");
   const oai = new aws.cloudfront.OriginAccessIdentity("lpsOAI", {
     comment: `OAI for LPS CloudFront distribution`,
@@ -192,7 +171,7 @@ export const createLocalPlanningServices = (planXCert: aws.acm.Certificate) => {
   const lpsBucket = createLPSBucket(domain, oai);
   const logsBucket = createLogsBucket(domain);
 
-  const acmCertificateArn = createLPSCertificates(domain, planXCert);
+  const acmCertificateArn = createLPSCertificates(domain, planXCertArn);
 
   const cdn = createCdn({
     bucket: lpsBucket,

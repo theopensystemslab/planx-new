@@ -1,6 +1,5 @@
 import { act } from "@testing-library/react";
 import ErrorFallback from "components/Error/ErrorFallback";
-import { not } from "mathjs";
 import { http, HttpResponse } from "msw";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -42,7 +41,7 @@ beforeEach(() => {
 
 describe("error state", () => {
   it("renders an error if no address is present in the passport", async () => {
-    const { getByRole, getByTestId } = setup(
+    const { getByRole, getByTestId } = await setup(
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <PlanningConstraints
           title="Planning constraints"
@@ -60,7 +59,7 @@ describe("error state", () => {
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(
+    const { container } = await setup(
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <PlanningConstraints
           title="Planning constraints"
@@ -92,7 +91,7 @@ describe("following a FindProperty component", () => {
   it("renders correctly", async () => {
     const handleSubmit = vi.fn();
 
-    const { user, getByRole, getByTestId, findByRole } = setup(
+    const { user, getByRole, getByTestId, findByRole } = await setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
@@ -128,7 +127,7 @@ describe("following a FindProperty component", () => {
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container, findByRole } = setup(
+    const { container, findByRole } = await setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
@@ -147,7 +146,7 @@ describe("following a FindProperty component", () => {
   });
 
   it("fetches planning constraints when we have lng, lat or siteBoundary", async () => {
-    const { findByRole } = setup(
+    const { findByRole } = await setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
@@ -164,7 +163,7 @@ describe("following a FindProperty component", () => {
   });
 
   it("fetches classified roads when a USRN is provided", async () => {
-    const { findByRole } = setup(
+    const { findByRole } = await setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
@@ -195,7 +194,7 @@ describe("following a FindProperty component", () => {
       }),
     );
 
-    const { findByRole, queryByRole } = setup(
+    const { findByRole, queryByRole } = await setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
@@ -218,16 +217,17 @@ describe("following a FindProperty component", () => {
   });
 
   test("basic layout and interactions", async () => {
-    const { user, getByRole, queryByRole, getByTestId, findByRole } = setup(
-      <PlanningConstraints
-        title="Planning constraints"
-        description="Things that might affect your project"
-        fn="property.constraints.planning"
-        disclaimer="This page does not include information about historic planning conditions that may apply to this property."
-        handleSubmit={vi.fn()}
-        dataValues={["test1", "test2", "test3"]}
-      />,
-    );
+    const { user, getByRole, queryByRole, getByTestId, findByRole } =
+      await setup(
+        <PlanningConstraints
+          title="Planning constraints"
+          description="Things that might affect your project"
+          fn="property.constraints.planning"
+          disclaimer="This page does not include information about historic planning conditions that may apply to this property."
+          handleSubmit={vi.fn()}
+          dataValues={["test1", "test2", "test3"]}
+        />,
+      );
 
     expect(
       await findByRole("button", { name: /Parks and gardens/ }),
@@ -259,7 +259,7 @@ describe("following a FindProperty component", () => {
   });
 
   test("default disclaimer text should render if none provided", async () => {
-    const { queryByText, findByRole } = setup(
+    const { queryByText, findByRole } = await setup(
       // @ts-ignore - we deliberately want to test the case where PlanningConstraints is missing the disclaimer prop
       <PlanningConstraints
         title="Planning constraints"
@@ -295,7 +295,7 @@ describe("selectable datasets in editor", () => {
   });
 
   it("does not initiate `/roads` request when `road.classified` is not selected by an editor", async () => {
-    const { findByRole, queryByRole } = setup(
+    const { findByRole, queryByRole } = await setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
@@ -320,7 +320,7 @@ describe("selectable datasets in editor", () => {
   });
 
   it("does not initiate `/gis/:localAuthority` request when only `road.classified` is selected by an editor", async () => {
-    const { queryByRole, findByRole } = setup(
+    const { queryByRole, findByRole } = await setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
@@ -363,7 +363,7 @@ describe("demo state", () => {
 
   it("should render an error when teamSlug is demo", async () => {
     const handleSubmit = vi.fn();
-    const { queryByText, queryByRole, user, getByTestId } = setup(
+    const { queryByText, queryByRole, user, getByTestId } = await setup(
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <PlanningConstraints
           title="Planning constraints"

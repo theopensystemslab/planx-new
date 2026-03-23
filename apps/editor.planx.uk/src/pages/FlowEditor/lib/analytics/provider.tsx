@@ -45,6 +45,10 @@ import {
  *  so that Metabase picks up the new columns
  */
 export const ALLOW_LIST = [
+  "_enhancements",
+  "_feedback",
+  "_overrides",
+  "applicant.researchOptIn",
   "application.declaration.connection",
   "application.fastTrack",
   "application.fee.serviceCharge",
@@ -52,25 +56,23 @@ export const ALLOW_LIST = [
   "application.information.sensitive",
   "application.type",
   "drawBoundary.action",
-  "_feedback",
   "findProperty.action",
-  "_overrides",
   "permittedDevelopmentCheck",
   "planningConstraints.action",
   "project.reportType.multiple",
   "property.constraints.planning",
+  "property.type.userProvided",
   "property.type",
   "propertyInformation.action",
   "proposal.description",
   "proposal.projectType",
   "rab.exitReason",
   "report.projectType",
-  "send.analytics.userAgent",
   "send.analytics.referrer",
+  "send.analytics.userAgent",
   "service.type",
   "usedFOIYNPP",
   "user.role",
-  "property.type.userProvided",
 ] as const;
 
 let lastVisibleNodeAnalyticsLogId: number | undefined = undefined;
@@ -115,10 +117,17 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     state.id,
     state.flow,
   ]);
-  const isAnalyticsEnabled =
-    new URL(window.location.href).searchParams.get("analytics") !== "false";
+
+  // Analytics should be disabled
+  //   - on `/published?analytics=false`
+  //   - always on `/draft` or `/preview`
+  // TODO fix `standalone` or consider scoping <AnalyticsProvider> directly to <SaveAndReturnLayout>
+  const isAnalyticsDisabled =
+    new URL(window.location.href).searchParams.get("analytics") === "false" ||
+    window.location.pathname.endsWith("/draft") ||
+    window.location.pathname.endsWith("/preview");
   const shouldTrackAnalytics =
-    previewEnvironment === "standalone" && isAnalyticsEnabled;
+    previewEnvironment === "standalone" && !isAnalyticsDisabled;
   const previousBreadcrumbs = usePrevious(breadcrumbs);
 
   const trackVisibilityChange = () => {

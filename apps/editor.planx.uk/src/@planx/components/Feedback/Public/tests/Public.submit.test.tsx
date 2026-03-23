@@ -15,6 +15,10 @@ vi.mock("lib/feedback", () => ({
   insertFeedbackMutation: vi.fn(),
 }));
 
+vi.mock("hooks/usePublicRouteContext", () => ({
+  usePublicRouteContext: vi.fn(() => "/$flow"),
+}));
+
 describe.each([
   {
     dataType: "a rating",
@@ -44,7 +48,7 @@ describe.each([
   "when a user submits $dataType on a feedback component where feedback is not required",
   ({ dataType, expectedData }) => {
     beforeEach(async () => {
-      const { user } = setup(
+      const { user } = await setup(
         <FeedbackComponent
           handleSubmit={handleSubmit}
           feedbackRequired={false}
@@ -79,7 +83,7 @@ describe.each([
 
 describe("when feedback is required but the user does not submit any data", async () => {
   beforeEach(async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <FeedbackComponent handleSubmit={handleSubmit} feedbackRequired={true} />,
     );
     await user.click(screen.getByTestId("continue-button"));
@@ -100,7 +104,7 @@ describe("When the user presses to go back to the feedback component", () => {
   it("recovers the previously submitted answers", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <FeedbackComponent
         handleSubmit={handleSubmit}
         feedbackRequired={false}

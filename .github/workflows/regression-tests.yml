@@ -5,7 +5,7 @@ permissions: read-all
 on:
   schedule:
     # Runs every morning at 06:06 (https://crontab.guru/#06_6_*_*_*)
-    - cron: '06 6 * * *'
+    - cron: "06 6 * * *"
   workflow_dispatch:
 
 env:
@@ -16,11 +16,11 @@ env:
 jobs:
   integration_tests:
     name: Run Integration tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -56,12 +56,12 @@ jobs:
 
   api_tests:
     name: Run API Tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -93,11 +93,11 @@ jobs:
 
   test_react:
     name: Run React Tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -129,12 +129,12 @@ jobs:
 
   end_to_end_tests:
     name: E2E tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v6
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -157,7 +157,7 @@ jobs:
         run: pnpm install --frozen-lockfile
         working-directory: e2e
       - name: Code checks
-        run:  pnpm check
+        run: pnpm check
         working-directory: e2e
       - name: Install Playwright Dependencies
         run: pnpm playwright install --with-deps
@@ -165,11 +165,11 @@ jobs:
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
       - name: End-to-end Tests
-        run:  pnpm test:regression
+        run: pnpm test:regression
         working-directory: e2e
       - name: Archive Playwright Test Results
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-report
           path: e2e/tests/ui-driven/test-results/
@@ -177,7 +177,7 @@ jobs:
 
   notify:
     name: Notify On Failure
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs:
       - integration_tests
       - api_tests

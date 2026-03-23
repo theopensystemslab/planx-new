@@ -121,11 +121,13 @@ export async function buildSubmissionExportZip({
     const boundingBox = passport.data["proposal.site.buffered"];
     const userAction = passport.data?.["drawBoundary.action"];
 
-    const overviewHTML = generateApplicationHTML({
-      planXExportData: schema as PlanXExportData[],
-      boundingBox,
-      userAction,
-    });
+    const overviewHTML = injectCopyButtonScript(
+      generateApplicationHTML({
+        planXExportData: schema as PlanXExportData[],
+        boundingBox,
+        userAction,
+      }),
+    );
     zip.addFile({ name: "Overview.htm", buffer: Buffer.from(overviewHTML) });
 
     // add an optional GeoJSON file to zip
@@ -262,4 +264,22 @@ async function resolveStream(stream: {
     stream.on("error", reject);
     stream.on("finish", resolve);
   });
+}
+
+export function injectCopyButtonScript(html: string): string {
+  const copyButtonScript = `<script>
+document.querySelectorAll('.copy-button').forEach(function(button) {
+  button.addEventListener('click', function() {
+    var value = this.getAttribute('data-copy-value');
+    var span = this.querySelector('span');
+    if (!value || !span) return;
+    navigator.clipboard.writeText(value).then(function() {
+      span.textContent = 'copied';
+      setTimeout(function() { span.textContent = 'copy'; }, 1000);
+    });
+  });
+});
+</script>`;
+
+  return html.replace("</body>", `${copyButtonScript}</body>`);
 }

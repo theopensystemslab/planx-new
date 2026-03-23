@@ -1,6 +1,7 @@
 import FileIcon from "@mui/icons-material/AttachFile";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Box, { BoxProps } from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
@@ -17,35 +18,41 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 interface Props extends FileUploadSlot {
   removeFile: () => void;
   onChange?: () => void;
+  // New accordion UI props
+  changeLabel?: string;
+  changeIcon?: React.ReactNode;
+  hideChangeButton?: boolean;
+  drawingNumber?: string;
+  // Legacy modal UI props
   tags?: string[];
   FileCardProps?: BoxProps;
 }
 
 const FileCard = styled(Box)(({ theme }) => ({
   border: `1px solid ${theme.palette.border.main}`,
+  backgroundColor: theme.palette.background.paper,
   position: "relative",
   height: "auto",
   display: "flex",
   flexDirection: "column",
   alignItems: "flex-end",
-  gap: theme.spacing(1),
+  gap: theme.spacing(2),
   [theme.breakpoints.up("md")]: {
     flexDirection: "row",
     alignItems: "center",
   },
-  padding: theme.spacing(1, 1.5, 0.5),
+  padding: theme.spacing(1.5),
   "& > *": {
     zIndex: 1,
   },
 }));
 
 const FilePreview = styled(Box)(({ theme }) => ({
-  height: theme.spacing(10),
-  width: theme.spacing(10),
-  marginLeft: theme.spacing(-1),
-  opacity: 0.75,
+  height: theme.spacing(9),
+  width: theme.spacing(9),
   position: "relative",
   overflow: "hidden",
+  backgroundColor: theme.palette.background.default,
   "& img": {
     position: "absolute",
     width: "100%",
@@ -78,6 +85,13 @@ const FileSize = styled(Typography)(({ theme }) => ({
   alignSelf: "flex-end",
 }));
 
+const ActionButtons = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  gap: theme.spacing(1),
+  flexShrink: 0,
+}));
+
 const TagRoot = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   border: `1px solid ${theme.palette.border.main}`,
@@ -95,6 +109,10 @@ export const UploadedFileCard: React.FC<Props> = ({
   url,
   removeFile,
   onChange,
+  changeLabel = "Edit",
+  changeIcon,
+  hideChangeButton,
+  drawingNumber,
   tags,
   status,
   FileCardProps,
@@ -141,19 +159,62 @@ export const UploadedFileCard: React.FC<Props> = ({
                 {file.name}
               </Typography>
               <FileSize variant="body2">{formatBytes(file.size)}</FileSize>
+              {drawingNumber && (
+                <Typography variant="body2" color="text.secondary" pt="0.25em">
+                  Drawing number: {drawingNumber}
+                </Typography>
+              )}
             </Box>
           </Box>
-          {removeFile && (
-            <IconButton
-              size="small"
-              title={`Delete ${file.name}`}
-              onClick={removeFile}
-              sx={{ gap: "3px" }}
-              data-testid={`delete-${file.name}`}
-            >
-              <DeleteIcon color="warning" />
-              Delete <span style={visuallyHidden}>{file.name}</span>
-            </IconButton>
+          {tags !== undefined ? (
+            // Legacy modal UI: icon button delete
+            removeFile && (
+              <IconButton
+                size="small"
+                title={`Delete ${file.name}`}
+                onClick={removeFile}
+                sx={{ gap: "3px" }}
+                data-testid={`delete-${file.name}`}
+              >
+                <DeleteIcon color="warning" />
+                Delete <span style={visuallyHidden}>{file.name}</span>
+              </IconButton>
+            )
+          ) : (
+            // New accordion UI: button-style actions
+            <ActionButtons>
+              {!hideChangeButton && onChange && (
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  startIcon={changeIcon}
+                  sx={{
+                    minWidth: 120,
+                    backgroundColor: "white",
+                  }}
+                  size="small"
+                  onClick={onChange}
+                  data-testid={`${changeLabel.toLowerCase().replace(/\s/g, "-")}-${file.name}`}
+                >
+                  {changeLabel}
+                  <Box sx={visuallyHidden} component="span">
+                    {` what ${file.name} shows`}
+                  </Box>
+                </Button>
+              )}
+              <Button
+                size="small"
+                title={`Delete ${file.name}`}
+                onClick={removeFile}
+                sx={{ gap: 1, backgroundColor: "white" }}
+                data-testid={`delete-${file.name}`}
+                variant="contained"
+                color="secondary"
+              >
+                <DeleteIcon color="warning" fontSize="small" />
+                Remove <span style={visuallyHidden}>{file.name}</span>
+              </Button>
+            </ActionButtons>
           )}
         </FileCard>
         {tags && (

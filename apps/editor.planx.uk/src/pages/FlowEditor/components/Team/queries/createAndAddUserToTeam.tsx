@@ -1,5 +1,5 @@
 import { FetchResult, gql } from "@apollo/client";
-import { GET_USERS_FOR_TEAM_QUERY } from "routes/teamMembers";
+import { GET_USERS_FOR_TEAM_QUERY } from "routes/_authenticated/app/$team/members";
 
 import { client } from "../../../../../lib/graphql";
 import { AddNewEditorFormValues } from "../types";
@@ -31,6 +31,7 @@ export const createAndAddUserToTeam = async ({
             email: $email
             first_name: $firstName
             last_name: $lastName
+            default_team_id: $teamId
             teams: { data: { role: $role, team_id: $teamId } }
           }
         ) {

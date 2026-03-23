@@ -20,6 +20,7 @@ import { Page, parsePage, validationSchema } from "./model";
 import { ProposedAdvertisements } from "./schema/AdvertConsent";
 import { EnvironmentGLA } from "./schema/Environment";
 import { MonitoringGLA } from "./schema/Monitoring";
+import { TeamMembers } from "./schema/TeamMember";
 import { UtilitiesGLA } from "./schema/Utilities";
 
 type Props = EditorProps<TYPES.Page, Page>;
@@ -29,6 +30,7 @@ export const PAGE_SCHEMAS = [
   { name: "Utilities (GLA)", schema: UtilitiesGLA },
   { name: "Environmental management (GLA)", schema: EnvironmentGLA },
   { name: "Monitoring questions (GLA)", schema: MonitoringGLA },
+  { name: "Team members", schema: TeamMembers },
 ] as const;
 
 function PageComponent(props: Props) {

@@ -25,7 +25,7 @@ let context: TestContext = {
   sessionIds: [], // used to collect and clean up sessions
 };
 
-const PAYMENT_NOT_FOUND_TEXT = "Sorry, we can’t find that payment link";
+const PAYMENT_NOT_FOUND_TEXT = "Sorry, we can't find that payment link";
 
 const adminGQLClient = getGraphQLClient();
 
@@ -84,19 +84,18 @@ test.describe("Nominee journey @regression", async () => {
   });
 
   test("navigating to a URL with an invalid ID", async ({ page }) => {
+    const mockUUID = uuidV4();
+
     const invalidPaymentRequestURL = `/${context.team!.slug!}/${
       context.flow?.slug
-    }/pay?analytics=false&paymentRequestId=INVALID-ID`;
+    }/pay?analytics=false&paymentRequestId=${mockUUID}`;
     await page.goto(invalidPaymentRequestURL);
-    await page.waitForLoadState("networkidle");
-
     await expect(page.getByText(PAYMENT_NOT_FOUND_TEXT)).toBeVisible();
   });
 
   test("navigating to a URL without a paymentRequestId", async ({ page }) => {
     const invalidPaymentRequestURL = `/${context.team!.slug!}/${context.flow?.slug}/pay?analytics=false`;
     await page.goto(invalidPaymentRequestURL);
-    await page.waitForLoadState("networkidle");
 
     await expect(page.getByText(PAYMENT_NOT_FOUND_TEXT)).toBeVisible();
   });

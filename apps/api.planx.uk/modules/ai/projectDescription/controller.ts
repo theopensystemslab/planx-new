@@ -13,13 +13,11 @@ export const projectDescriptionController: ProjectDescriptionController =
         );
       }
 
-      const { original, modelId, sessionId, flowId } =
-        res.locals.parsedReq.body;
+      const { original, sessionId, flowId } = res.locals.parsedReq.body;
       const endpoint = req.route.path;
       const result = await enhanceProjectDescription(
         original,
         endpoint,
-        modelId,
         flowId,
         sessionId,
       );

@@ -20,11 +20,11 @@ beforeEach(() => {
 });
 
 describe("Building a list", () => {
-  it("does not display a default item if the schema has no required minimum", () => {
+  it("does not display a default item if the schema has no required minimum", async () => {
     const mockWithMinZero = merge(cloneDeep(mockZooProps), {
       schema: { min: 0 },
     });
-    const { queryByRole, getByTestId } = setup(
+    const { queryByRole, getByTestId } = await setup(
       <ListComponent {...mockWithMinZero} />,
     );
 
@@ -41,8 +41,8 @@ describe("Building a list", () => {
     expect(addItemButton).toBeEnabled();
   });
 
-  it("displays a default item if the schema has a required minimum", () => {
-    const { getByRole, queryByLabelText } = setup(
+  it("displays a default item if the schema has a required minimum", async () => {
+    const { getByRole, queryByLabelText } = await setup(
       <ListComponent {...mockZooProps} />,
     );
 
@@ -59,8 +59,8 @@ describe("Building a list", () => {
     expect(inputField).toBeEnabled();
   });
 
-  it("hides the index number in the card header and the 'add another' button if the schema has a max of 1", () => {
-    const { getAllByTestId, queryByTestId } = setup(
+  it("hides the index number in the card header and the 'add another' button if the schema has a max of 1", async () => {
+    const { getAllByTestId, queryByTestId } = await setup(
       <ListComponent {...mockMaxOneProps} />,
     );
 
@@ -73,7 +73,7 @@ describe("Building a list", () => {
   });
 
   test("Adding an item", { timeout: 35_000 }, async () => {
-    const { getAllByTestId, getByTestId, user } = setup(
+    const { getAllByTestId, getByTestId, user } = await setup(
       <ListComponent {...mockZooProps} />,
     );
 
@@ -105,7 +105,7 @@ describe("Building a list", () => {
 
   test("Editing an item", { timeout: 45_000 }, async () => {
     // Setup three cards
-    const { getAllByTestId, getByTestId, user } = setup(
+    const { getAllByTestId, getByTestId, user } = await setup(
       <ListComponent {...mockZooProps} />,
     );
 
@@ -165,7 +165,7 @@ describe("Building a list", () => {
         user,
         getByLabelText,
         queryAllByTestId,
-      } = setup(<ListComponent {...mockZooProps} />);
+      } = await setup(<ListComponent {...mockZooProps} />);
 
       await fillInResponse(user);
 
@@ -238,7 +238,7 @@ describe("Building a list", () => {
     { timeout: 35_000 },
     async () => {
       // Setup two cards
-      const { getAllByTestId, getByTestId, user } = setup(
+      const { getAllByTestId, getByTestId, user } = await setup(
         <ListComponent {...mockZooProps} />,
       );
 
@@ -275,7 +275,7 @@ describe("Building a list", () => {
     { timeout: 35_000 },
     async () => {
       const { getAllByTestId, getByText, user, queryAllByTestId, getByTestId } =
-        setup(<ListComponent {...mockZooProps} />);
+        await setup(<ListComponent {...mockZooProps} />);
 
       let cards = getAllByTestId(/list-card/);
       expect(cards).toHaveLength(1);
@@ -313,7 +313,7 @@ describe("Building a list", () => {
         getByTestId,
         getAllByTestId,
         getAllByText,
-      } = setup(<ListComponent {...mockZooProps} />);
+      } = await setup(<ListComponent {...mockZooProps} />);
 
       await fillInResponse(user);
 

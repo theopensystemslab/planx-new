@@ -19,7 +19,7 @@ env:
 jobs:
   build_planx_frontend:
     name: Build PlanX frontend
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v4
@@ -67,7 +67,7 @@ jobs:
           VITE_APP_HASURA_WEBSOCKET: wss://hasura.editor.planx.dev/v1/graphql
           VITE_APP_SHAREDB_URL: wss://sharedb.editor.planx.dev
       - name: Upload PlanX frontend build artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: planx_frontend_build
           path: ./${{ env.EDITOR_DIRECTORY }}/build
@@ -75,7 +75,7 @@ jobs:
 
   build_localplanning_services:
     name: Build localplanning.services
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v4
@@ -114,7 +114,7 @@ jobs:
       - run: pnpm build --site https://localplanning.editor.planx.dev --mode staging
         working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
       - name: Upload LocalPlanning.services build artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: localplanning_services_build
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
@@ -125,14 +125,14 @@ jobs:
     needs:
       - build_planx_frontend
       - build_localplanning_services
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ vars.NODE_VERSION }}
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
           aws-region: eu-west-2
@@ -142,18 +142,19 @@ jobs:
       - run: pnpm install --frozen-lockfile
         working-directory: infrastructure/application
       - name: Download PlanX frontend build artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: planx_frontend_build
           path: ./${{ env.EDITOR_DIRECTORY }}/build
       - name: Download LocalPlanning.services build artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: localplanning_services_build
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
       - uses: pulumi/actions@v6
         with:
           command: up
+          refresh: true
           stack-name: staging
           work-dir: infrastructure/application
           edit-pr-comment: true
@@ -163,7 +164,7 @@ jobs:
   notifications:
     name: Notifications
     needs: preview
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
       # Airbrake notification - https://airbrake.io/docs/features/deploy-tracking

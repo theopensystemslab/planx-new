@@ -1,21 +1,26 @@
+import { Link, useRouteContext, useRouter } from "@tanstack/react-router";
+import { useParams } from "@tanstack/react-router";
 import React, { useEffect, useRef } from "react";
-import { Link, useLoadingRoute } from "react-navi";
 import scrollIntoView from "scroll-into-view-if-needed";
 
-import { rootFlowPath } from "../../../../../routes/utils";
 import { useStore } from "../../../lib/store";
 import { FlowLayout } from "..";
 
 const EndPoint: React.FC<{ text: string }> = ({ text }) => {
   const el = useRef<HTMLLIElement>(null);
   const flowLayout = useStore((state) => state.flowLayout);
+  const router = useRouter();
 
   const isStart = text === "start";
 
-  const href = rootFlowPath(false);
+  const { rootFlow } = useRouteContext({
+    from: "/_authenticated/app/$team/$flow",
+  });
 
-  const currentPath = rootFlowPath(true);
-  const isLoading = useLoadingRoute();
+  const { team, flow: currentPath } = useParams({
+    from: "/_authenticated/app/$team/$flow",
+  });
+  const isLoading = router.state.isLoading;
 
   useEffect(() => {
     if (isStart && el.current) {
@@ -49,7 +54,11 @@ const EndPoint: React.FC<{ text: string }> = ({ text }) => {
       ref={el}
       style={{ pointerEvents: isStart ? "auto" : "none" }}
     >
-      <Link href={href} prefetch={false}>
+      <Link
+        to={"/app/$team/$flow"}
+        params={{ team, flow: rootFlow }}
+        preload={false}
+      >
         {text}
       </Link>
     </li>

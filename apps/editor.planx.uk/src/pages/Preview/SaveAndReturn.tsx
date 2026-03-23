@@ -3,11 +3,10 @@ import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { TitleWrapper } from "@planx/components/shared/Preview/CardHeader/styled";
+import { useMatches } from "@tanstack/react-router";
 import { useFormik } from "formik";
-import { NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
-import { useCurrentRoute } from "react-navi";
+import React, { type PropsWithChildren } from "react";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
@@ -101,18 +100,21 @@ export const ConfirmEmail: React.FC<{
   );
 };
 
-const SaveAndReturn: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+const SaveAndReturn: React.FC<PropsWithChildren> = ({ children }) => {
   const isEmailCaptured = Boolean(useStore((state) => state.saveToEmail));
   const sessionId = useStore((state) => state.sessionId);
-  const isContentPage = useCurrentRoute()?.data?.isContentPage;
-  const isViewApplicationPage = useCurrentRoute()?.data?.isViewApplicationPage;
 
-  // Navigating directly to View Application page
-  if (!isEmailCaptured && isViewApplicationPage) {
-    throw new NotFoundError("No application data - please log in first")
-  }
+  // Check all route matches, not just immediate parent of the layout
+  const matches = useMatches();
+  const isContentPage = matches.some(
+    (match) =>
+      "isContentPage" in match.context && match.context.isContentPage === true,
+  );
+  const isViewApplicationPage = matches.some(
+    (match) =>
+      "isViewApplicationPage" in match.context &&
+      match.context.isViewApplicationPage === true,
+  );
 
   // Setting the URL search param "sessionId" will route the user to ApplicationPath.Resume
   // Without this the user will need to click the magic link in their email after a refresh

@@ -1,12 +1,12 @@
 import Button from "@mui/material/Button";
-import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import { Form, Formik, useFormikContext } from "formik";
+import { usePublicRouteContext } from "hooks/usePublicRouteContext";
 import React from "react";
-import { Link as ReactNaviLink } from "react-navi";
 import FeedbackDisclaimer from "ui/public/FeedbackDisclaimer";
 import InputLabel from "ui/public/InputLabel";
+import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 
@@ -51,20 +51,22 @@ const FeedbackForm: React.FC<FormProps> = ({ inputs, handleSubmit }) => {
     userComment: "",
   };
 
+  const from = usePublicRouteContext();
+
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
       <StyledForm>
         <FeedbackDisclaimer>
           Please do not include any personal data such as your name, email or
           address. All feedback is processed according to our{" "}
-          <Link
-            component={ReactNaviLink}
-            href="pages/privacy"
-            prefetch={false}
+          <CustomLink
+            to="pages/$page"
+            params={{ page: "privacy" }}
+            from={from}
             color="primary"
           >
             privacy notice
-          </Link>
+          </CustomLink>
           .
         </FeedbackDisclaimer>
         <FormInputs inputs={inputs} />

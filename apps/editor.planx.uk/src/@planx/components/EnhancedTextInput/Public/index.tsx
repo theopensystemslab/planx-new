@@ -29,12 +29,16 @@ const EnhancedTextInputComponent = (props: Props) => {
         enhanced:
           props.previouslySubmittedData?.data?._enhancements[props.fn].enhanced,
         error: null,
+        selectedOption: null,
+        customDescription: "",
       }
     : {
         userInput: "",
         status: "idle",
         enhanced: null,
         error: null,
+        selectedOption: null,
+        customDescription: "",
       };
 
   const nextStep = (values: FormValues) => {
@@ -55,6 +59,8 @@ const EnhancedTextInputComponent = (props: Props) => {
 
   const validationSchema = getValidationSchema(props);
 
+  const handleBack = step === "task" ? () => setStep("input") : undefined;
+
   return (
     <Formik<FormValues>
       initialValues={initialValues}
@@ -64,21 +70,31 @@ const EnhancedTextInputComponent = (props: Props) => {
       validateOnChange={false}
       validationSchema={validationSchema}
     >
-      {({ submitForm }) => (
-        <Card handleSubmit={submitForm} isValid={!isRunningTask}>
-          <CardHeader
-            title={props.title}
-            description={props.description}
-            {...(step === "input" && {
-              info: props.info,
-              policyRef: props.policyRef,
-              howMeasured: props.howMeasured,
-            })}
-          />
-          {step === "input" && <InitialUserInput {...props} />}
-          {step === "task" && <TaskComponent {...props} />}
-        </Card>
-      )}
+      {({ submitForm, values }) => {
+        const showCardHeader = step === "input" || values.status !== "success";
+
+        return (
+          <Card
+            handleSubmit={submitForm}
+            isValid={!isRunningTask}
+            handleBack={handleBack}
+          >
+            {showCardHeader && (
+              <CardHeader
+                title={props.title}
+                description={props.description}
+                {...(step === "input" && {
+                  info: props.info,
+                  policyRef: props.policyRef,
+                  howMeasured: props.howMeasured,
+                })}
+              />
+            )}
+            {step === "input" && <InitialUserInput {...props} />}
+            {step === "task" && <TaskComponent {...props} />}
+          </Card>
+        );
+      }}
     </Formik>
   );
 };

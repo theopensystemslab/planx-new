@@ -8,6 +8,8 @@ import { axe } from "vitest-axe";
 import { taskDefaults } from "../model";
 import EnhancedTextInputComponent from ".";
 
+const requestSpy = vi.fn();
+
 const ORIGINAL =
   "The Proposal is for a sympathetic mansard roof to replace the flat roof to the ground and fist floor side extension at the property under planning consent 2018/5913/P. See Planning Statement in Support Attached (PDF)";
 
@@ -15,7 +17,10 @@ const ENHANCED =
   "Erection of a mansard roof extension to the flat roof of the side extension.";
 
 const handlers = [
-  http.post("*/ai/project-description/enhance", async () => {
+  http.post("*/ai/project-description/enhance", async ({ request }) => {
+    const payload = await request.json();
+    requestSpy(payload);
+
     return HttpResponse.json(
       {
         original: ORIGINAL,
@@ -27,6 +32,7 @@ const handlers = [
 ];
 
 beforeEach(() => {
+  requestSpy.mockClear();
   server.use(...handlers);
 });
 
@@ -34,7 +40,7 @@ describe("Passport generation", () => {
   test("accepting the enhancement", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -52,18 +58,21 @@ describe("Passport generation", () => {
       screen.getByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
-    // Accept suggestion
+    // Select suggested description and submit
+    await user.click(
+      screen.getByRole("radio", { name: /Use suggested description/i }),
+    );
     await user.click(screen.getByTestId("continue-button"));
 
     // Breadcrumb formatted as expected
     expect(handleSubmit).toHaveBeenCalledWith(
       expect.objectContaining({
         data: {
-          "project.description": ENHANCED,
-          "enhancedTextInput.project.description.action":
+          "proposal.description": ENHANCED,
+          "enhancedTextInput.proposal.description.action":
             "Accepted the AI-enhanced description",
           _enhancements: {
-            "project.description": {
+            "proposal.description": {
               original: ORIGINAL,
               enhanced: ENHANCED,
             },
@@ -76,7 +85,7 @@ describe("Passport generation", () => {
   test("retaining the original description", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -94,9 +103,9 @@ describe("Passport generation", () => {
       screen.getByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
-    // Switch back to original
-    user.click(
-      screen.getByRole("button", { name: "Revert to original description" }),
+    // Select original description and submit
+    await user.click(
+      screen.getByRole("radio", { name: /Use your original description/i }),
     );
     await user.click(screen.getByTestId("continue-button"));
 
@@ -104,11 +113,11 @@ describe("Passport generation", () => {
     expect(handleSubmit).toHaveBeenCalledWith(
       expect.objectContaining({
         data: {
-          "project.description": ORIGINAL,
-          "enhancedTextInput.project.description.action":
+          "proposal.description": ORIGINAL,
+          "enhancedTextInput.proposal.description.action":
             "Retained their original description",
           _enhancements: {
-            "project.description": {
+            "proposal.description": {
               original: ORIGINAL,
               enhanced: ENHANCED,
             },
@@ -121,7 +130,7 @@ describe("Passport generation", () => {
   test("using a hybrid value", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -139,14 +148,15 @@ describe("Passport generation", () => {
       screen.getByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
-    // Enter a value which is neither original or enhanced, overwriting previous value
+    // Select "Write a new description" to reveal the text input
+    await user.click(
+      screen.getByRole("radio", { name: /Write a new description/i }),
+    );
+
+    // Enter a custom description
     await user.type(
-      screen.getByRole("textbox", { name: /test/i }),
+      screen.getByRole("textbox", { name: /Enter your project description/i }),
       "a new description",
-      {
-        initialSelectionStart: 0,
-        initialSelectionEnd: ORIGINAL.length,
-      },
     );
     await user.click(screen.getByTestId("continue-button"));
 
@@ -154,11 +164,11 @@ describe("Passport generation", () => {
     expect(handleSubmit).toHaveBeenCalledWith(
       expect.objectContaining({
         data: {
-          "project.description": "a new description",
-          "enhancedTextInput.project.description.action":
+          "proposal.description": "a new description",
+          "enhancedTextInput.proposal.description.action":
             "Re-wrote their description after AI feedback",
           _enhancements: {
-            "project.description": {
+            "proposal.description": {
               original: ORIGINAL,
               enhanced: ENHANCED,
             },
@@ -175,11 +185,11 @@ describe("navigating back to the EnhancedTextInput component", () => {
     createdAt: "2026-01-12T15:12:40.994Z",
     seq: 1,
     data: {
-      "project.description": "My hybrid response",
-      "enhancedTextInput.project.description.action":
+      "proposal.description": "My hybrid response",
+      "enhancedTextInput.proposal.description.action":
         "Re-wrote their description after AI feedback",
       _enhancements: {
-        "project.description": {
+        "proposal.description": {
           original: "my first attempt",
           enhanced: "our LLM-enhanced suggestion",
         },
@@ -188,7 +198,7 @@ describe("navigating back to the EnhancedTextInput component", () => {
   };
 
   it("returns the user to the original input screen", async () => {
-    setup(
+    await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -202,7 +212,7 @@ describe("navigating back to the EnhancedTextInput component", () => {
     const textbox = screen.getByRole("textbox", { name: /test/i });
     expect(textbox).toBeVisible();
     expect(textbox).toHaveValue(
-      previouslySubmittedData.data["project.description"],
+      previouslySubmittedData.data["proposal.description"],
     );
     expect(
       screen.queryByRole("heading", {
@@ -212,8 +222,8 @@ describe("navigating back to the EnhancedTextInput component", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("pre-populates their previous answer", () => {
-    setup(
+  it("pre-populates their previous answer", async () => {
+    await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -224,14 +234,14 @@ describe("navigating back to the EnhancedTextInput component", () => {
     );
 
     expect(screen.getByRole("textbox", { name: /test/i })).toHaveValue(
-      previouslySubmittedData.data["project.description"],
+      previouslySubmittedData.data["proposal.description"],
     );
   });
 
   test("proceeding forwards again, without making a change", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -258,7 +268,7 @@ describe("navigating back to the EnhancedTextInput component", () => {
   test("proceeding forwards again, with a change", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -273,7 +283,7 @@ describe("navigating back to the EnhancedTextInput component", () => {
     await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL, {
       initialSelectionStart: 0,
       initialSelectionEnd:
-        previouslySubmittedData.data["project.description"].length,
+        previouslySubmittedData.data["proposal.description"].length,
     });
     await user.click(screen.getByTestId("continue-button"));
 
@@ -282,18 +292,21 @@ describe("navigating back to the EnhancedTextInput component", () => {
       screen.getByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
-    // Proceed with new AI-enhanced description
+    // Select suggested description and submit
+    await user.click(
+      screen.getByRole("radio", { name: /Use suggested description/i }),
+    );
     await user.click(screen.getByTestId("continue-button"));
 
     // Breadcrumb formatted as expected - action and values updated
     expect(handleSubmit).toHaveBeenCalledWith(
       expect.objectContaining({
         data: {
-          "project.description": ENHANCED,
-          "enhancedTextInput.project.description.action":
+          "proposal.description": ENHANCED,
+          "enhancedTextInput.proposal.description.action":
             "Accepted the AI-enhanced description",
           _enhancements: {
-            "project.description": {
+            "proposal.description": {
               original: ORIGINAL,
               enhanced: ENHANCED,
             },
@@ -306,7 +319,7 @@ describe("navigating back to the EnhancedTextInput component", () => {
 
 describe("basic layout and behaviour", () => {
   it("loads the 'input' step first", async () => {
-    setup(
+    await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="Describe the project"
@@ -324,7 +337,7 @@ describe("basic layout and behaviour", () => {
   });
 
   it("should not have any accessibility violations on the 'input' step", async () => {
-    const { container } = setup(
+    const { container } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -340,7 +353,7 @@ describe("basic layout and behaviour", () => {
   it("enforces a character limit", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -367,7 +380,7 @@ describe("basic layout and behaviour", () => {
   }, 10_000);
 
   it("loads the 'task' step and displays the API result to the user", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -384,12 +397,22 @@ describe("basic layout and behaviour", () => {
       screen.getByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
-    // API results displayed to user
-    expect(screen.getAllByText(ENHANCED)[0]).toBeVisible();
+    // API results displayed to user as radio options
+    expect(
+      screen.getByRole("radio", { name: /Use suggested description/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("radio", { name: /Use your original description/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("radio", { name: /Write a new description/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(ENHANCED)).toBeVisible();
+    expect(screen.getByText(ORIGINAL)).toBeVisible();
   });
 
   it("should not have any accessibility violations on the 'task' step", async () => {
-    const { container, user } = setup(
+    const { container, user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -410,8 +433,8 @@ describe("basic layout and behaviour", () => {
     expect(results).toHaveNoViolations();
   });
 
-  it("allows the user to toggle between the enhanced or original description, or enter a hybrid response", async () => {
-    const { user } = setup(
+  it("allows the user to select between the enhanced, original, or custom description", async () => {
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -428,33 +451,48 @@ describe("basic layout and behaviour", () => {
       screen.getByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
-    const textarea = screen.getByRole("textbox", { name: /test/i });
+    // No option selected by default, custom textarea not visible
+    expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
 
-    // Enhanced value is populated by default
-    expect(textarea).toHaveValue(ENHANCED);
-
-    // User can toggle back to original
+    // User can select suggested description
     await user.click(
-      screen.getByRole("button", { name: "Revert to original description" }),
+      screen.getByRole("radio", { name: /Use suggested description/i }),
     );
-    expect(textarea).toHaveValue(ORIGINAL);
+    expect(
+      screen.getByRole("radio", { name: /Use suggested description/i }),
+    ).toBeChecked();
 
-    // User can toggle back to enhanced
+    // User can select original description
     await user.click(
-      screen.getByRole("button", { name: "Use suggested description" }),
+      screen.getByRole("radio", { name: /Use your original description/i }),
     );
-    expect(textarea).toHaveValue(ENHANCED);
+    expect(
+      screen.getByRole("radio", { name: /Use your original description/i }),
+    ).toBeChecked();
 
-    // User can type their own hybrid result
-    await user.type(textarea, "Something unique", {
-      initialSelectionStart: 0,
-      initialSelectionEnd: ENHANCED.length,
-    });
-    expect(textarea).toHaveValue("Something unique");
+    // User can select to write a new description - textarea appears
+    await user.click(
+      screen.getByRole("radio", { name: /Write a new description/i }),
+    );
+    expect(
+      screen.getByRole("radio", { name: /Write a new description/i }),
+    ).toBeChecked();
+    expect(
+      screen.getByRole("textbox", { name: /Enter your project description/i }),
+    ).toBeVisible();
+
+    // User can type their own custom description
+    await user.type(
+      screen.getByRole("textbox", { name: /Enter your project description/i }),
+      "Something unique",
+    );
+    expect(
+      screen.getByRole("textbox", { name: /Enter your project description/i }),
+    ).toHaveValue("Something unique");
   });
 
   it("displays additional information to the user on the 'task' step", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <EnhancedTextInputComponent
         id="testId"
         title="test"
@@ -512,6 +550,105 @@ describe("basic layout and behaviour", () => {
 
     // Exit sidebar
     await user.keyboard("{Esc}");
+  });
+
+  test("users can navigate 'back' to the input step", async () => {
+    const { user } = await setup(
+      <EnhancedTextInputComponent
+        id="testId"
+        title="test"
+        task={"projectDescription"}
+        {...taskDefaults.projectDescription}
+      />,
+    );
+
+    // "Back" button not visible on the "input" step
+    expect(
+      screen.queryByRole("button", { name: "Back" }),
+    ).not.toBeInTheDocument();
+
+    // Proceed to "task" step
+    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByTestId("continue-button"));
+    expect(
+      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+    ).toBeVisible();
+
+    // "Back" button present...
+    const backButton = screen.getByRole("button", { name: "Back" });
+    expect(backButton).toBeVisible();
+
+    // ...and clicking it returns the user to the "input step"
+    await user.click(backButton);
+    expect(screen.getByRole("textbox", { name: /test/i })).toBeVisible();
+  });
+
+  test("navigating 'back' allows the user to re-trigger the API when given a new input", async () => {
+    const { user } = await setup(
+      <EnhancedTextInputComponent
+        id="testId"
+        title="test"
+        task={"projectDescription"}
+        {...taskDefaults.projectDescription}
+      />,
+    );
+
+    // Proceed to "task" step
+    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByTestId("continue-button"));
+    expect(
+      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+    ).toBeVisible();
+
+    // Navigate 'back'
+    await user.click(screen.getByRole("button", { name: "Back" }));
+    expect(screen.getByRole("textbox", { name: /test/i })).toBeVisible();
+
+    const NEW_INPUT = "A new description because I've changed my mind";
+
+    // Enter new description, triggering a new API request
+    await user.type(screen.getByRole("textbox", { name: /test/i }), NEW_INPUT, {
+      initialSelectionStart: 0,
+      initialSelectionEnd: ENHANCED.length,
+    });
+    await user.click(screen.getByTestId("continue-button"));
+
+    expect(requestSpy).toHaveBeenCalledTimes(2);
+    expect(requestSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        original: expect.stringMatching(NEW_INPUT),
+      }),
+    );
+  });
+
+  // Revisit this with new UI which doesn't contain a textinput natively on the second step
+  test.skip("navigating 'back' does not re-trigger the API when the input does not change", async () => {
+    const { user } = await setup(
+      <EnhancedTextInputComponent
+        id="testId"
+        title="test"
+        task={"projectDescription"}
+        {...taskDefaults.projectDescription}
+      />,
+    );
+
+    // Proceed to "task" step
+    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByTestId("continue-button"));
+    expect(
+      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+    ).toBeVisible();
+    expect(requestSpy).toHaveBeenCalledTimes(1);
+
+    // Navigate 'back'
+    await user.click(screen.getByRole("button", { name: "Back" }));
+    expect(screen.getByRole("textbox", { name: /test/i })).toBeVisible();
+
+    // Retain original descriptions, avoiding re-triggering of the API
+    await user.click(screen.getByTestId("continue-button"));
+
+    // API not re-hit, we retain value from cache
+    expect(requestSpy).toHaveBeenCalledTimes(1);
   });
 });
 

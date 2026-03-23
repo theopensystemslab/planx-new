@@ -6,6 +6,8 @@ import { client } from "./graphql";
 
 let current: string | null;
 
+let mutationQueue = Promise.resolve();
+
 class LowcalStorage {
   getItem = memoize(async (key: string): Promise<string | null> => {
     console.debug({ getItem: key });
@@ -64,39 +66,54 @@ class LowcalStorage {
 
     const id = getSessionId(key);
 
-    await client.mutate({
-      mutation: gql`
-        mutation SetItem(
-          $data: jsonb!
-          $id: uuid!
-          $email: String
-          $flowId: uuid!
-        ) {
-          insert_lowcal_sessions_one(
-            object: { data: $data, id: $id, email: $email, flow_id: $flowId }
-            on_conflict: {
-              constraint: lowcal_sessions_pkey
-              update_columns: data
+    // Add to queue - this mutation won't start until previous ones finish
+    mutationQueue = mutationQueue.then(async () => {
+      await client
+        .mutate({
+          mutation: gql`
+            mutation SetItem(
+              $data: jsonb!
+              $id: uuid!
+              $email: String
+              $flowId: uuid!
+            ) {
+              insert_lowcal_sessions_one(
+                object: {
+                  data: $data
+                  id: $id
+                  email: $email
+                  flow_id: $flowId
+                }
+                on_conflict: {
+                  constraint: lowcal_sessions_pkey
+                  update_columns: data
+                }
+              ) {
+                id
+              }
             }
-          ) {
-            id
-          }
-        }
-      `,
-      variables: {
-        id,
-        data: JSON.parse(value),
-        // email may be absent for non save and return journeys
-        email: useStore.getState().saveToEmail || "",
-        flowId: useStore.getState().id,
-      },
-      context: {
-        ...getSessionContext(id),
-        // Do not retry failed requests (e.g. due to network connectivity or timeouts)
-        // This prevents older, failed, updates from overwriting the most recent requests
-        skipRetry: true,
-      },
+          `,
+          variables: {
+            id,
+            data: JSON.parse(value),
+            // email may be absent for non save and return journeys
+            email: useStore.getState().saveToEmail || "",
+            flowId: useStore.getState().id,
+          },
+          context: {
+            ...getSessionContext(id),
+            // Do not retry failed requests (e.g. due to network connectivity or timeouts)
+            // This prevents older, failed, updates from overwriting the most recent requests
+            skipRetry: true,
+          },
+        })
+        .catch((err) => {
+          // Don't re-throw - allow the queue to continue
+          console.error(`SetItem mutation failed for ${key}:`, err);
+        });
     });
+
+    await mutationQueue;
   });
 }
 

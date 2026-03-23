@@ -12,29 +12,30 @@
   "dependencies": {
     "@astrojs/check": "^0.9.6",
     "@astrojs/react": "^4.4.2",
-    "@astrojs/sitemap": "^3.6.0",
+    "@astrojs/sitemap": "^3.7.0",
     "@nanostores/react": "^1.0.0",
     "@opensystemslab/map": "1.0.0-alpha.11",
-    "@tailwindcss/vite": "^4.1.15",
-    "@tanstack/react-query": "^5.81.5",
-    "@types/react": "^19.1.5",
-    "@types/react-dom": "^19.1.5",
-    "astro": "^5.16.3",
+    "@tailwindcss/vite": "^4.2.1",
+    "@tanstack/react-query": "^5.90.21",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "astro": "^5.18.0",
     "astro-icon": "^1.1.5",
     "astro-seo": "^1.1.0",
-    "graphql": "^16.11.0",
+    "graphql": "^16.13.0",
     "graphql-tag": "^2.12.6",
-    "nanostores": "^1.0.1",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "sharp": "^0.34.2",
-    "tailwind-clamp": "^4.0.18",
-    "tailwindcss": "^4.1.7",
-    "typescript": "^5.8.3"
+    "nanostores": "^1.1.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "sharp": "^0.34.5",
+    "tailwind-clamp": "^4.4.0",
+    "tailwindcss": "^4.2.1",
+    "typescript": "~5.9.3"
   },
-  "packageManager": "pnpm@10.10.0",
+  "packageManager": "pnpm@10.30.2",
   "devDependencies": {
+    "@types/node": "~24.10.15",
     "typescript-plugin-css-modules": "^5.2.0",
-    "vite": "^7.1.11"
+    "vite": "^7.3.1"
   }
 }

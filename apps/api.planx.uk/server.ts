@@ -20,6 +20,7 @@ import flowRoutes from "./modules/flows/routes.js";
 import gisRoutes from "./modules/gis/routes.js";
 import lpsRoutes from "./modules/lps/routes.js";
 import miscRoutes from "./modules/misc/routes.js";
+import notificationRoutes from "./modules/notifications/routes.js";
 import ordnanceSurveyRoutes from "./modules/ordnanceSurvey/routes.js";
 import payRoutes from "./modules/pay/routes.js";
 import saveAndReturnRoutes from "./modules/saveAndReturn/routes.js";
@@ -32,7 +33,7 @@ import userRoutes from "./modules/user/routes.js";
 import webhookRoutes from "./modules/webhooks/routes.js";
 import { apiLimiter } from "./rateLimit.js";
 import { registerSessionStubs } from "./session.js";
-import { apiCors } from "./cors.js";
+import { defaultCors } from "./cors.js";
 
 const app = express();
 
@@ -40,7 +41,7 @@ useSwaggerDocs(app);
 
 app.set("trust proxy", 1);
 
-app.use(apiCors);
+app.use(defaultCors);
 
 app.use(bodyParser.json({ limit: "100mb" }));
 
@@ -116,6 +117,7 @@ app.use(flowRoutes);
 app.use(gisRoutes);
 app.use(lpsRoutes);
 app.use(miscRoutes);
+app.use(notificationRoutes);
 app.use(ordnanceSurveyRoutes);
 app.use(payRoutes);
 app.use(saveAndReturnRoutes);

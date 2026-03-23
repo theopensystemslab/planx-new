@@ -9,6 +9,7 @@ import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
+import { Switch } from "ui/shared/Switch";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
@@ -78,6 +79,19 @@ function Component(props: Props) {
             disabled={props.disabled}
             allowCustomValues={false}
           />
+          <InputRow>
+            <Switch
+              checked={Boolean(formik.values.maxFiles === 1)}
+              onChange={() =>
+                formik.setFieldValue(
+                  "maxFiles",
+                  formik.values.maxFiles === 1 ? 0 : 1,
+                )
+              }
+              label="Limit to one file"
+              disabled={props.disabled}
+            />
+          </InputRow>
         </ModalSectionContent>
       </ModalSection>
       <ModalFooter formik={formik} disabled={props.disabled} />

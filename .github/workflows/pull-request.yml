@@ -24,7 +24,7 @@ env:
 jobs:
   changes:
     name: Check file changes
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
       pull-requests: read
     outputs:
@@ -65,13 +65,13 @@ jobs:
 
   integration_tests:
     name: Run Integration tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [changes]
     if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.e2e == 'true' || needs.changes.outputs.editor == 'true' || needs.changes.outputs.sharedb == 'true' || needs.changes.outputs.hasura == 'true' }}
     steps:
       - uses: actions/checkout@v6
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -107,14 +107,14 @@ jobs:
 
   api_tests:
     name: Run API Tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     needs: [changes]
     if: ${{ needs.changes.outputs.api == 'true' }}
     steps:
       - uses: actions/checkout@v6
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -146,13 +146,13 @@ jobs:
 
   test_react:
     name: Run React Tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [changes]
     if: ${{ needs.changes.outputs.editor == 'true' }}
     steps:
       - uses: actions/checkout@v6
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -184,7 +184,7 @@ jobs:
 
   build_localplanning_services:
     name: Build localplanning.services
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [changes]
     if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
@@ -220,7 +220,7 @@ jobs:
         working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
   build_planx_frontend:
     name: Build PlanX frontend
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [changes]
     if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
@@ -279,13 +279,13 @@ jobs:
 
   pulumi_preview:
     name: Run Pulumi Preview
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [changes, build_planx_frontend, build_localplanning_services]
     if: ${{ needs.changes.outputs.infrastructure == 'true' }}
     steps:
       - uses: actions/checkout@v6
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
           aws-region: eu-west-2
@@ -326,7 +326,7 @@ jobs:
 
   hasura-change-summary:
     name: Generate Hasura Change Summary
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [changes]
     if: ${{ needs.changes.outputs.hasura == 'true' }}
     steps:
@@ -353,7 +353,7 @@ jobs:
   create_or_update_vultr_instance:
     name: Upsert Vultr Instance
     needs: [changes, build_planx_frontend, build_localplanning_services]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     if: "${{ success() && !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
       - name: Create Pizza (if it doesn't exist)
@@ -503,7 +503,7 @@ jobs:
   healthcheck:
     name: Run Healthcheck on Pizza Services
     needs: [create_or_update_vultr_instance]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Wait for caddy reverse-proxy server to provision TLS certs for pizza
         run: bash -c "sleep 180s"
@@ -521,14 +521,14 @@ jobs:
 
   end_to_end_tests:
     name: E2E tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [changes]
     if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.e2e == 'true' || needs.changes.outputs.editor == 'true' || needs.changes.outputs.sharedb == 'true' || needs.changes.outputs.hasura == 'true' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -563,7 +563,7 @@ jobs:
         working-directory: e2e
       - name: Archive Playwright Test Results
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-report
           path: e2e/tests/ui-driven/test-results/

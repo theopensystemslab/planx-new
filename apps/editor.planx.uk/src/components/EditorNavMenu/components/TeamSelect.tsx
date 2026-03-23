@@ -10,9 +10,10 @@ import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import ButtonBase from "@planx/components/shared/Buttons/ButtonBase";
+import { useLoaderData } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { TeamSummary } from "pages/FlowEditor/lib/store/team";
 import React, { useEffect, useMemo, useState } from "react";
-import { TeamSummary } from "routes/authenticated";
 import { focusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 
@@ -22,7 +23,7 @@ const StyledButtonBase = styled(ButtonBase)<{ teamcolor?: string }>(
     width: "100%",
     borderLeft: `8px solid ${teamcolor || "OliveDrab"}`,
     borderRadius: 3,
-    padding: theme.spacing(1, 1.25),
+    padding: theme.spacing(1, 0.5, 1, 1),
     justifyContent: "space-between",
     // TODO: standardise box shadow across nav menu items
     boxShadow: "0 1px 1.5px 0 rgba(0, 0, 0, 0.2)",
@@ -38,12 +39,16 @@ const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
   justifyContent: "space-between",
   alignItems: "center",
   padding: theme.spacing(1),
+  position: "sticky",
+  top: 0,
+  backgroundColor: theme.palette.background.paper,
+  zIndex: 1,
 }));
 
 const StyledCard = styled(Card)<{ selected?: boolean; teamcolor?: string }>(
   ({ theme, teamcolor }) => ({
     backgroundColor: theme.palette.background.default,
-    borderRadius: 3,
+    borderRadius: theme.shape.borderRadius,
     borderLeft: `6px solid ${teamcolor || "OliveDrab"}`,
     padding: theme.spacing(0.75),
     boxShadow: "0 1px 1.5px 0 rgba(0, 0, 0, 0.2)",
@@ -61,22 +66,19 @@ const StyledCard = styled(Card)<{ selected?: boolean; teamcolor?: string }>(
 interface Props {
   currentTeamSlug: string;
   onTeamSelect: (teamSlug: string) => void;
-  teams?: TeamSummary[];
 }
 
 export const TeamSelect: React.FC<Props> = ({
   currentTeamSlug,
   onTeamSelect,
-  teams: teamsProp,
 }) => {
+  const { teams } = useLoaderData({ from: "/_authenticated/app" });
   const [open, setOpen] = useState(false);
   const [canUserEditTeam] = useStore((state) => [state.canUserEditTeam]);
   const [searchedTeams, setSearchedTeams] = useState<TeamSummary[] | null>(
     null,
   );
   const [clearSearch, setClearSearch] = useState<boolean>(false);
-
-  const teams: TeamSummary[] = teamsProp || [];
 
   const viewOnlyTeams = useMemo(
     () => teams.filter((team) => !canUserEditTeam(team.slug)),
@@ -133,15 +135,21 @@ export const TeamSelect: React.FC<Props> = ({
       <StyledButtonBase
         onClick={handleOpen}
         selected={false}
-        sx={{ ml: 0.5 }}
         teamcolor={currentTeam?.theme.primaryColour}
       >
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 0.25,
+            alignItems: "flex-start",
+          }}
+        >
           <Typography variant="body3" component="span" color="text.secondary">
             Team
           </Typography>
           <Typography
-            variant="body2"
+            variant="body3"
             component="span"
             color="text.primary"
             sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
@@ -149,7 +157,7 @@ export const TeamSelect: React.FC<Props> = ({
             {currentTeam?.name || "Current team"}
           </Typography>
         </Box>
-        <UnfoldMoreIcon sx={{ color: "text.secondary", fontSize: "1.75rem" }} />
+        <UnfoldMoreIcon sx={{ color: "text.secondary", fontSize: "1.5rem" }} />
       </StyledButtonBase>
       <Dialog
         open={open}
@@ -158,11 +166,12 @@ export const TeamSelect: React.FC<Props> = ({
         PaperProps={{
           sx: {
             position: "absolute",
-            top: 5,
-            left: 10,
+            top: "65px",
+            left: "5px",
+            bottom: "65px",
             m: 0,
-            width: "300px",
-            maxWidth: "300px",
+            width: "260px",
+            maxWidth: "260px",
             minWidth: "unset",
             borderTop: "none",
             borderRadius: 3,
@@ -186,6 +195,7 @@ export const TeamSelect: React.FC<Props> = ({
             searchKey={["slug", "name"]}
             clearSearch={clearSearch}
             hideLabel={true}
+            compact={true}
           />
           <Stack gap={2} pt={2}>
             {displayEditableTeams.length > 0 && (
@@ -246,6 +256,14 @@ export const TeamSelect: React.FC<Props> = ({
                       >
                         {team.name}
                       </Typography>
+                      {team.slug === currentTeamSlug && (
+                        <CheckCircleIcon
+                          sx={(theme) => ({
+                            color: theme.palette.info.main,
+                            fontSize: "1em",
+                          })}
+                        />
+                      )}
                     </StyledCard>
                   ))}
                 </Stack>

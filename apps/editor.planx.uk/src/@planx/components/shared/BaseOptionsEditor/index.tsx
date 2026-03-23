@@ -48,7 +48,7 @@ export const BaseOptionsEditor: React.FC<Props> = (props) => {
     <Box
       id={props.value.id}
       sx={(theme) => ({
-        scrollMarginTop: theme.spacing(1),
+        scrollMarginTop: theme.spacing(5),
         width: "100%",
       })}
     >

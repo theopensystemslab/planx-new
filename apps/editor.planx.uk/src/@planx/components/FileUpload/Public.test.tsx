@@ -11,7 +11,7 @@ import FileUpload from "./Public";
 test("renders correctly", async () => {
   const handleSubmit = vi.fn();
 
-  setup(
+  await setup(
     <FileUpload
       title="Please upload your files"
       fn="someKey"
@@ -27,7 +27,7 @@ test("renders correctly", async () => {
 test("shows error if user tries to continue before adding files", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <FileUpload
       title="Please upload your files"
       fn="elevations"
@@ -58,7 +58,7 @@ test("recovers previously submitted files when clicking the back button", async 
     },
   };
 
-  const { user } = setup(
+  const { user } = await setup(
     <FileUpload
       title="Please upload your files"
       fn={dataField}
@@ -96,7 +96,7 @@ it("should not have any accessibility violations", async () => {
   const handleSubmit = vi.fn();
   const componentId = uniqueId();
 
-  const { container } = setup(
+  const { container } = await setup(
     <FileUpload
       title="Please upload your files"
       fn="someKey"
@@ -107,4 +107,22 @@ it("should not have any accessibility violations", async () => {
   );
   const results = await axe(container);
   expect(results).toHaveNoViolations();
+});
+
+test("shows singular 'Drop file here' text when maxFiles is 1", async () => {
+  const handleSubmit = vi.fn();
+  const componentId = uniqueId();
+
+  await setup(
+    <FileUpload
+      title="Upload single file"
+      fn="singleFile"
+      id={componentId}
+      handleSubmit={handleSubmit}
+      maxFiles={1}
+    />,
+  );
+
+  expect(screen.getByText(/Drop file here/)).toBeInTheDocument();
+  expect(screen.queryByText(/Drop files here/)).not.toBeInTheDocument();
 });

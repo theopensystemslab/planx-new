@@ -1,4 +1,5 @@
 import { NodeId } from "@opensystemslab/planx-core/types";
+import { Link, useParams } from "@tanstack/react-router";
 import classnames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
 import {
@@ -7,9 +8,8 @@ import {
 } from "pages/FlowEditor/utils";
 import React from "react";
 import { useDrop } from "react-dnd";
-import { Link } from "react-navi";
+import { getNodeRoute } from "utils/routeUtils/utils";
 
-import { rootFlowPath } from "../../../../../routes/utils";
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
 
@@ -25,16 +25,11 @@ interface Item {
   text: string;
 }
 
-const buildHref = (before: any, parent: any) => {
-  let hrefParts = [rootFlowPath(true)];
-  if (parent) {
-    hrefParts = hrefParts.concat(["nodes", parent]);
-  }
-  return hrefParts.concat(["nodes", "new", before]).filter(Boolean).join("/");
-};
-
 const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   parent = getParentId(parent);
+  const { team: teamSlug, flow: flowSlug } = useParams({
+    from: "/_authenticated/app/$team/$flow",
+  });
 
   const [moveNode, isTemplatedFrom, flow, orderedFlow] = useStore((state) => [
     state.moveNode,
@@ -42,9 +37,6 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
     state.flow,
     state.orderedFlow,
   ]);
-
-  // useStore.getState().getTeam().slug undefined here, use window instead
-  const teamSlug = window.location.pathname.split("/")[1];
 
   // When working in a templated flow, if any internal portal is marked as "isTemplatedNode", then the Hanger should be visible to add children
   const indexedParent = orderedFlow?.find(({ id }) => id === parent);
@@ -87,8 +79,15 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
       ref={drop}
     >
       <Link
-        href={buildHref(before, parent)}
-        prefetch={false}
+        to={getNodeRoute(parent, before)}
+        params={{
+          team: teamSlug,
+          flow: flowSlug,
+          ...(parent && { parent }),
+          ...(before && { before }),
+        }}
+        search={{ type: "question" }}
+        preload={false}
         onContextMenu={handleContextMenu}
       >
         {canDrop && item && item.text}

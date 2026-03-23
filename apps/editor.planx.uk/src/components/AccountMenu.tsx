@@ -12,11 +12,9 @@ import Popover, { popoverClasses } from "@mui/material/Popover";
 import { styled } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { useMutation } from "@tanstack/react-query";
-import { logout } from "lib/api/auth/requests";
+import { useNavigate } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef, useState } from "react";
-import { useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export const HEADER_HEIGHT_EDITOR = 56;
@@ -54,7 +52,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 }));
 
 const AccountMenu: React.FC = () => {
-  const { navigate } = useNavigation();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
   const user = useStore((state) => state.user);
@@ -67,13 +65,7 @@ const AccountMenu: React.FC = () => {
     setOpen(!open);
   };
 
-  const logoutMutation = useMutation({
-    mutationKey: ["logout", user?.id],
-    mutationFn: logout,
-    onSuccess: () => navigate("/logout"),
-  });
-
-  const handleLogout = () => logoutMutation.mutate();
+  const handleLogout = () => navigate({ to: "/logout" });
 
   if (!user) return null;
 

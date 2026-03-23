@@ -9,7 +9,6 @@ import { format } from "date-fns";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { useLocation } from "react-use";
-import { rootFlowPath } from "routes/utils";
 import { FONT_WEIGHT_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
@@ -44,7 +43,7 @@ const FlowStatus: React.FC = () => {
 
   const { origin } = useLocation();
 
-  const publishedLink = `${origin}${rootFlowPath(false)}/published`;
+  const publishedLink = `${origin}/${teamSlug}/${flowSlug}/published`;
 
   const subdomainLink = teamDomain && `https://${teamDomain}/${flowSlug}`;
 

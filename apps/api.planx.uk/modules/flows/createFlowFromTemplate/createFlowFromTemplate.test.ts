@@ -74,10 +74,10 @@ describe("success", () => {
     });
 
     queryMock.mockQuery({
-      name: "InsertFlowWithIntegration",
+      name: "InsertFlow",
       matchOnVariables: false,
       data: {
-        insertFlowWithIntegration: {
+        insertFlow: {
           id: "2",
         },
       },
@@ -127,20 +127,6 @@ describe("success", () => {
             },
           ],
         },
-      },
-    });
-
-    queryMock.mockQuery({
-      name: "GetDefaultEmail",
-      variables: {
-        team_id: 1,
-      },
-      data: {
-        submissionIntegrations: [
-          {
-            id: "default-email-id",
-          },
-        ],
       },
     });
   });

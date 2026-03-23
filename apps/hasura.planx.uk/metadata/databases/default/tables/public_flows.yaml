@@ -5,6 +5,15 @@ object_relationships:
   - name: creator
     using:
       foreign_key_constraint_on: creator_id
+  - name: submission_integration
+    using:
+      manual_configuration:
+        column_mapping:
+          submission_email_id: id
+        insertion_order: null
+        remote_table:
+          name: submission_integrations
+          schema: public
   - name: team
     using:
       foreign_key_constraint_on: team_id
@@ -51,13 +60,6 @@ array_relationships:
         insertion_order: null
         remote_table:
           name: feedback
-          schema: public
-  - name: flow_integration
-    using:
-      foreign_key_constraint_on:
-        column: flow_id
-        table:
-          name: flow_integrations
           schema: public
   - name: flow_status_histories
     using:
@@ -263,6 +265,37 @@ insert_permissions:
           url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
         type: http
 select_permissions:
+  - role: analyst
+    permission:
+      columns:
+        - can_create_from_copy
+        - category
+        - created_at
+        - creator_id
+        - data
+        - description
+        - id
+        - is_listed_on_lps
+        - is_template
+        - limitations
+        - name
+        - settings
+        - slug
+        - status
+        - summary
+        - team_id
+        - templated_from
+        - updated_at
+        - version
+      computed_fields:
+        - data_merged
+        - first_online_at
+        - production_url
+      filter:
+        deleted_at:
+          _is_null: true
+      allow_aggregations: true
+    comment: ""
   - role: api
     permission:
       columns:
@@ -282,6 +315,7 @@ select_permissions:
         - settings
         - slug
         - status
+        - submission_email_id
         - summary
         - team_id
         - templated_from
@@ -358,6 +392,7 @@ select_permissions:
         - settings
         - slug
         - status
+        - submission_email_id
         - summary
         - team_id
         - templated_from
@@ -421,6 +456,7 @@ select_permissions:
         - settings
         - slug
         - status
+        - submission_email_id
         - summary
         - team_id
         - templated_from
@@ -547,6 +583,7 @@ update_permissions:
         - settings
         - slug
         - status
+        - submission_email_id
         - summary
         - team_id
         - templated_from
@@ -586,6 +623,7 @@ update_permissions:
         - settings
         - slug
         - status
+        - submission_email_id
         - summary
         - team_id
         - templated_from

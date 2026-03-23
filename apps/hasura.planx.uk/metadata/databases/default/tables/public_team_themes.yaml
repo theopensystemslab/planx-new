@@ -19,6 +19,18 @@ insert_permissions:
         - primary_colour
     comment: ""
 select_permissions:
+  - role: analyst
+    permission:
+      columns:
+        - id
+        - team_id
+        - favicon
+        - logo
+        - action_colour
+        - link_colour
+        - primary_colour
+      filter: {}
+    comment: ""
   - role: api
     permission:
       columns:

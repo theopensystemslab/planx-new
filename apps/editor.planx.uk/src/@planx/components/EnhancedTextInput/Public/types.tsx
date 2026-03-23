@@ -1,11 +1,13 @@
 import type { PublicProps } from "@planx/components/shared/types";
 
-import type { EnhancedTextInput } from "../types";
+import type { EnhancedTextInput, TaskAction } from "../types";
 
 export type Props = PublicProps<EnhancedTextInput>;
 
 interface FormValuesBase {
   userInput: string;
+  selectedOption: TaskAction | null;
+  customDescription: string;
 }
 
 interface FormValuesIdle extends FormValuesBase {

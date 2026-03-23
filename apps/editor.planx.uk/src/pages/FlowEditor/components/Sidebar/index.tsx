@@ -1,18 +1,14 @@
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import LanguageIcon from "@mui/icons-material/Language";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
-import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import ToggleButton from "@mui/material/ToggleButton";
-import Tooltip from "@mui/material/Tooltip";
+import { useParams, useRouteContext, useRouter } from "@tanstack/react-router";
 import React, { useState } from "react";
-import { rootFlowPath } from "routes/utils";
-import Permission from "ui/editor/Permission";
+import { useLocation } from "react-use";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import StyledTab from "ui/editor/StyledTab";
 
 import { useStore } from "../../lib/store";
@@ -86,26 +82,6 @@ const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
 
 const Header = styled("header")(({ theme }) => ({
   padding: theme.spacing(1, 2),
-  "& input": {
-    flex: "1",
-    padding: "5px",
-    marginRight: "5px",
-    background: theme.palette.common.white,
-    border: "1px solid ${theme.palette.border.main}",
-    borderWidth: "1px",
-  },
-}));
-
-const Icons = styled(Box)(() => ({
-  display: "flex",
-  alignItems: "center",
-  width: "100%",
-  "& svg": {
-    cursor: "pointer",
-    opacity: "0.7",
-    margin: "6px 4px 1px 4px",
-    fontSize: "1.2rem",
-  },
 }));
 
 const TabList = styled(Box)(({ theme }) => ({
@@ -129,16 +105,18 @@ const TabList = styled(Box)(({ theme }) => ({
 }));
 
 const Sidebar: React.FC = React.memo(() => {
-  const [isFlowPublished, toggleSidebar, showSidebar, isTemplatedFrom] =
-    useStore((state) => [
-      state.isFlowPublished,
-      state.toggleSidebar,
-      state.showSidebar,
-      state.isTemplatedFrom,
-    ]);
+  const [toggleSidebar, showSidebar, isTemplatedFrom] = useStore((state) => [
+    state.toggleSidebar,
+    state.showSidebar,
+    state.isTemplatedFrom,
+  ]);
 
   const defaultActiveTab = isTemplatedFrom ? "Customise" : "PreviewBrowser";
   const [activeTab, setActiveTab] = useState<SidebarTabs>(defaultActiveTab);
+  const { team } = useParams({ from: "/_authenticated/app/$team/$flow" });
+  const { rootFlow } = useRouteContext({
+    from: "/_authenticated/app/$team/$flow",
+  });
 
   const handleChange = (
     _event: React.SyntheticEvent,
@@ -147,13 +125,15 @@ const Sidebar: React.FC = React.memo(() => {
     setActiveTab(newValue);
   };
 
-  const baseUrl = `${window.location.origin}${rootFlowPath(false)}`;
+  const router = useRouter();
+  const { origin } = useLocation();
 
-  const urls = {
-    preview: baseUrl + "/preview",
-    draft: baseUrl + "/draft",
-    analytics: baseUrl + "/published" + "?analytics=false",
-  };
+  const previewPath = router.buildLocation({
+    to: "/$team/$flow/preview",
+    params: { team, flow: rootFlow },
+  }).href;
+
+  const previewURL = `${origin}${previewPath}`;
 
   return (
     <Root>
@@ -170,56 +150,9 @@ const Sidebar: React.FC = React.memo(() => {
             {showSidebar ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </StyledToggleButton>
           <Header>
-            <Icons>
-              <input type="text" disabled value={urls.preview} />
-
-              <Permission.IsPlatformAdmin>
-                <Tooltip title="Open draft flow">
-                  <Link
-                    href={urls.draft}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    color="inherit"
-                  >
-                    <OpenInNewOffIcon />
-                  </Link>
-                </Tooltip>
-              </Permission.IsPlatformAdmin>
-
-              <Tooltip title="Open preview of changes to publish">
-                <Link
-                  href={urls.preview}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  color="inherit"
-                >
-                  <OpenInNewIcon />
-                </Link>
-              </Tooltip>
-
-              {isFlowPublished ? (
-                <Tooltip title="Open published flow">
-                  <Link
-                    href={urls.analytics}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    color="inherit"
-                  >
-                    <LanguageIcon />
-                  </Link>
-                </Tooltip>
-              ) : (
-                <Tooltip title="Flow not yet published">
-                  <Box>
-                    <Link component={"button"} disabled aria-disabled={true}>
-                      <LanguageIcon />
-                    </Link>
-                  </Box>
-                </Tooltip>
-              )}
-            </Icons>
-            <CheckForChangesToPublishButton previewURL={urls.preview} />
+            <CheckForChangesToPublishButton previewURL={previewURL} />
           </Header>
+
           <TabList>
             <Tabs onChange={handleChange} value={activeTab} aria-label="">
               {isTemplatedFrom && (

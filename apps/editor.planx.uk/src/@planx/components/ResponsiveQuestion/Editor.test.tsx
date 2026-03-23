@@ -8,8 +8,8 @@ import { setup } from "testUtils";
 import { Condition, Operator } from "../shared/RuleBuilder/types";
 import ResponsiveQuestion from "./Editor";
 
-it("renders without error", () => {
-  setup(
+it("renders without error", async () => {
+  await setup(
     <DndProvider backend={HTML5Backend}>
       <ResponsiveQuestion node={{}} options={[]} />
     </DndProvider>,
@@ -19,7 +19,7 @@ it("renders without error", () => {
 });
 
 it("displays the options editor when the 'Add option' button is clicked", async () => {
-  const { user } = setup(
+  const { user } = await setup(
     <DndProvider backend={HTML5Backend}>
       <ResponsiveQuestion node={{}} options={[]} />
     </DndProvider>,
@@ -34,7 +34,7 @@ it("displays the options editor when the 'Add option' button is clicked", async 
 });
 
 it("populates the modal with existing data", async () => {
-  setup(
+  await setup(
     <DndProvider backend={HTML5Backend}>
       <ResponsiveQuestion
         node={{ data: { text: "My title", description: "My description" } }}
@@ -71,7 +71,7 @@ it("populates the modal with existing data", async () => {
 
 it("can construct a valid payload", async () => {
   const handleSubmit = vi.fn();
-  const { user } = setup(
+  const { user } = await setup(
     <DndProvider backend={HTML5Backend}>
       <ResponsiveQuestion node={{}} options={[]} handleSubmit={handleSubmit} />
     </DndProvider>,

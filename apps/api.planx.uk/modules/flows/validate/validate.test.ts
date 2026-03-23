@@ -161,34 +161,41 @@ describe("sections validation on diff", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
-          {
-            title: "Sections",
-            status: "Fail",
-            message:
-              "Found Sections in one or more External Portals, but Sections are only allowed in main flow",
-          },
-          {
-            title: "Fees",
-            status: "Not applicable",
-            message: "Your flow is not using Pay",
-          },
-          {
-            title: "Invite to Pay",
-            status: "Not applicable",
-            message: "Your flow is not using Invite to Pay",
-          },
-          {
-            title: "Planning Constraints",
-            status: "Not applicable",
-            message: "Your flow is not using Planning Constraints",
-          },
-          {
-            title: "Templated nodes",
-            status: "Not applicable",
-            message: "This is not a templated flow",
-          },
-        ]);
+        expect(res.body.validationChecks).toEqual(
+          expect.arrayContaining([
+            {
+              title: "Sections",
+              status: "Fail",
+              message:
+                "Found Sections in one or more External Portals, but Sections are only allowed in main flow",
+            },
+            {
+              title: "Fees",
+              status: "Not applicable",
+              message: "Your flow is not using Pay",
+            },
+            {
+              title: "Invite to Pay",
+              status: "Not applicable",
+              message: "Your flow is not using Invite to Pay",
+            },
+            {
+              title: "Planning Constraints",
+              status: "Not applicable",
+              message: "Your flow is not using Planning Constraints",
+            },
+            {
+              title: "Templated nodes",
+              status: "Not applicable",
+              message: "This is not a templated flow",
+            },
+            {
+              title: "Send",
+              status: "Pass",
+              message: "Flow correctly has exactly one Send component",
+            },
+          ]),
+        );
       });
   });
 
@@ -225,33 +232,41 @@ describe("sections validation on diff", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
-          {
-            title: "Sections",
-            status: "Fail",
-            message: "When using Sections, your flow must start with a Section",
-          },
-          {
-            title: "Fees",
-            status: "Not applicable",
-            message: "Your flow is not using Pay",
-          },
-          {
-            title: "Invite to Pay",
-            status: "Not applicable",
-            message: "Your flow is not using Invite to Pay",
-          },
-          {
-            title: "Planning Constraints",
-            status: "Not applicable",
-            message: "Your flow is not using Planning Constraints",
-          },
-          {
-            title: "Templated nodes",
-            status: "Not applicable",
-            message: "This is not a templated flow",
-          },
-        ]);
+        expect(res.body.validationChecks).toEqual(
+          expect.arrayContaining([
+            {
+              title: "Sections",
+              status: "Fail",
+              message:
+                "When using Sections, your flow must start with a Section",
+            },
+            {
+              title: "Fees",
+              status: "Not applicable",
+              message: "Your flow is not using Pay",
+            },
+            {
+              title: "Invite to Pay",
+              status: "Not applicable",
+              message: "Your flow is not using Invite to Pay",
+            },
+            {
+              title: "Planning Constraints",
+              status: "Not applicable",
+              message: "Your flow is not using Planning Constraints",
+            },
+            {
+              title: "Templated nodes",
+              status: "Not applicable",
+              message: "This is not a templated flow",
+            },
+            {
+              title: "Send",
+              status: "Not applicable",
+              message: "Your flow is not a submission service",
+            },
+          ]),
+        );
       });
   });
 });
@@ -279,33 +294,40 @@ describe("invite to pay validation on diff", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
-          {
-            title: "Invite to Pay",
-            status: "Fail",
-            message: "When using Invite to Pay, your flow must have a Send",
-          },
-          {
-            title: "Fees",
-            status: "Pass",
-            message: "Your flow has valid Pay using Set Fees",
-          },
-          {
-            title: "Sections",
-            status: "Not applicable",
-            message: "Your flow is not using Sections",
-          },
-          {
-            title: "Planning Constraints",
-            status: "Not applicable",
-            message: "Your flow is not using Planning Constraints",
-          },
-          {
-            title: "Templated nodes",
-            status: "Not applicable",
-            message: "This is not a templated flow",
-          },
-        ]);
+        expect(res.body.validationChecks).toEqual(
+          expect.arrayContaining([
+            {
+              title: "Invite to Pay",
+              status: "Fail",
+              message: "When using Invite to Pay, your flow must have a Send",
+            },
+            {
+              title: "Fees",
+              status: "Pass",
+              message: "Your flow has valid Pay using Set Fees",
+            },
+            {
+              title: "Sections",
+              status: "Not applicable",
+              message: "Your flow is not using Sections",
+            },
+            {
+              title: "Planning Constraints",
+              status: "Not applicable",
+              message: "Your flow is not using Planning Constraints",
+            },
+            {
+              title: "Templated nodes",
+              status: "Not applicable",
+              message: "This is not a templated flow",
+            },
+            {
+              title: "Send",
+              status: "Not applicable",
+              message: "Your flow is not a submission service",
+            },
+          ]),
+        );
       });
   });
 
@@ -342,34 +364,41 @@ describe("invite to pay validation on diff", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
-          {
-            title: "Invite to Pay",
-            status: "Fail",
-            message:
-              "When using Invite to Pay, your flow must have exactly ONE Send. It can select many destinations",
-          },
-          {
-            title: "Fees",
-            status: "Pass",
-            message: "Your flow has valid Pay using Set Fees",
-          },
-          {
-            title: "Sections",
-            status: "Not applicable",
-            message: "Your flow is not using Sections",
-          },
-          {
-            title: "Planning Constraints",
-            status: "Not applicable",
-            message: "Your flow is not using Planning Constraints",
-          },
-          {
-            title: "Templated nodes",
-            status: "Not applicable",
-            message: "This is not a templated flow",
-          },
-        ]);
+        expect(res.body.validationChecks).toEqual(
+          expect.arrayContaining([
+            {
+              title: "Invite to Pay",
+              status: "Fail",
+              message:
+                "When using Invite to Pay, your flow must have exactly ONE Send. It can select many destinations",
+            },
+            {
+              title: "Fees",
+              status: "Pass",
+              message: "Your flow has valid Pay using Set Fees",
+            },
+            {
+              title: "Sections",
+              status: "Not applicable",
+              message: "Your flow is not using Sections",
+            },
+            {
+              title: "Planning Constraints",
+              status: "Not applicable",
+              message: "Your flow is not using Planning Constraints",
+            },
+            {
+              title: "Templated nodes",
+              status: "Not applicable",
+              message: "This is not a templated flow",
+            },
+            {
+              title: "Send",
+              status: "Fail",
+              message: `Flows cannot have more than one Send component`,
+            },
+          ]),
+        );
       });
   });
 
@@ -402,34 +431,41 @@ describe("invite to pay validation on diff", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
-          {
-            title: "Invite to Pay",
-            status: "Fail",
-            message:
-              "When using Invite to Pay, your flow must have a FindProperty",
-          },
-          {
-            title: "Fees",
-            status: "Pass",
-            message: "Your flow has valid Pay using Set Fees",
-          },
-          {
-            title: "Sections",
-            status: "Not applicable",
-            message: "Your flow is not using Sections",
-          },
-          {
-            title: "Planning Constraints",
-            status: "Not applicable",
-            message: "Your flow is not using Planning Constraints",
-          },
-          {
-            title: "Templated nodes",
-            status: "Not applicable",
-            message: "This is not a templated flow",
-          },
-        ]);
+        expect(res.body.validationChecks).toEqual(
+          expect.arrayContaining([
+            {
+              title: "Invite to Pay",
+              status: "Fail",
+              message:
+                "When using Invite to Pay, your flow must have a FindProperty",
+            },
+            {
+              title: "Fees",
+              status: "Pass",
+              message: "Your flow has valid Pay using Set Fees",
+            },
+            {
+              title: "Sections",
+              status: "Not applicable",
+              message: "Your flow is not using Sections",
+            },
+            {
+              title: "Planning Constraints",
+              status: "Not applicable",
+              message: "Your flow is not using Planning Constraints",
+            },
+            {
+              title: "Templated nodes",
+              status: "Not applicable",
+              message: "This is not a templated flow",
+            },
+            {
+              title: "Send",
+              status: "Pass",
+              message: "Flow correctly has exactly one Send component",
+            },
+          ]),
+        );
       });
   });
 
@@ -464,34 +500,41 @@ describe("invite to pay validation on diff", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
-          {
-            title: "Invite to Pay",
-            status: "Fail",
-            message:
-              "When using Invite to Pay, your flow must have exactly ONE Pay",
-          },
-          {
-            title: "Fees",
-            status: "Pass",
-            message: "Your flow has valid Pay using Set Fees",
-          },
-          {
-            title: "Sections",
-            status: "Not applicable",
-            message: "Your flow is not using Sections",
-          },
-          {
-            title: "Planning Constraints",
-            status: "Not applicable",
-            message: "Your flow is not using Planning Constraints",
-          },
-          {
-            title: "Templated nodes",
-            status: "Not applicable",
-            message: "This is not a templated flow",
-          },
-        ]);
+        expect(res.body.validationChecks).toEqual(
+          expect.arrayContaining([
+            {
+              title: "Invite to Pay",
+              status: "Fail",
+              message:
+                "When using Invite to Pay, your flow must have exactly ONE Pay",
+            },
+            {
+              title: "Fees",
+              status: "Pass",
+              message: "Your flow has valid Pay using Set Fees",
+            },
+            {
+              title: "Sections",
+              status: "Not applicable",
+              message: "Your flow is not using Sections",
+            },
+            {
+              title: "Planning Constraints",
+              status: "Not applicable",
+              message: "Your flow is not using Planning Constraints",
+            },
+            {
+              title: "Templated nodes",
+              status: "Not applicable",
+              message: "This is not a templated flow",
+            },
+            {
+              title: "Send",
+              status: "Pass",
+              message: "Flow correctly has exactly one Send component",
+            },
+          ]),
+        );
       });
   });
 });
@@ -519,34 +562,42 @@ describe("set fees validation on diff", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
-          {
-            title: "Fees",
-            status: "Fail",
-            message:
-              "When using Pay, your flow must also use Set Fees to generate an accurate fee breakdown",
-          },
-          {
-            title: "Invite to Pay",
-            status: "Pass",
-            message: "Your flow has valid Invite to Pay",
-          },
-          {
-            title: "Sections",
-            status: "Not applicable",
-            message: "Your flow is not using Sections",
-          },
-          {
-            title: "Planning Constraints",
-            status: "Not applicable",
-            message: "Your flow is not using Planning Constraints",
-          },
-          {
-            title: "Templated nodes",
-            status: "Not applicable",
-            message: "This is not a templated flow",
-          },
-        ]);
+
+        expect(res.body.validationChecks).toEqual(
+          expect.arrayContaining([
+            {
+              title: "Fees",
+              status: "Fail",
+              message:
+                "When using Pay, your flow must also use Set Fees to generate an accurate fee breakdown",
+            },
+            {
+              title: "Invite to Pay",
+              status: "Pass",
+              message: "Your flow has valid Invite to Pay",
+            },
+            {
+              title: "Sections",
+              status: "Not applicable",
+              message: "Your flow is not using Sections",
+            },
+            {
+              title: "Planning Constraints",
+              status: "Not applicable",
+              message: "Your flow is not using Planning Constraints",
+            },
+            {
+              title: "Templated nodes",
+              status: "Not applicable",
+              message: "This is not a templated flow",
+            },
+            {
+              title: "Send",
+              status: "Pass",
+              message: "Flow correctly has exactly one Send component",
+            },
+          ]),
+        );
       });
   });
 });
@@ -586,33 +637,40 @@ describe("planning constraints validation on diff", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
-          {
-            title: "Sections",
-            status: "Pass",
-            message: "Your flow has valid Sections",
-          },
-          {
-            title: "Planning Constraints",
-            status: "Pass",
-            message: "Your flow has valid Planning Constraints",
-          },
-          {
-            title: "Fees",
-            status: "Not applicable",
-            message: "Your flow is not using Pay",
-          },
-          {
-            title: "Invite to Pay",
-            status: "Not applicable",
-            message: "Your flow is not using Invite to Pay",
-          },
-          {
-            title: "Templated nodes",
-            status: "Not applicable",
-            message: "This is not a templated flow",
-          },
-        ]);
+        expect(res.body.validationChecks).toEqual(
+          expect.arrayContaining([
+            {
+              title: "Sections",
+              status: "Pass",
+              message: "Your flow has valid Sections",
+            },
+            {
+              title: "Planning Constraints",
+              status: "Pass",
+              message: "Your flow has valid Planning Constraints",
+            },
+            {
+              title: "Fees",
+              status: "Not applicable",
+              message: "Your flow is not using Pay",
+            },
+            {
+              title: "Invite to Pay",
+              status: "Not applicable",
+              message: "Your flow is not using Invite to Pay",
+            },
+            {
+              title: "Templated nodes",
+              status: "Not applicable",
+              message: "This is not a templated flow",
+            },
+            {
+              title: "Send",
+              status: "Pass",
+              message: `Flow correctly has exactly one Send component`,
+            },
+          ]),
+        );
       });
   });
 
@@ -657,34 +715,41 @@ describe("planning constraints validation on diff", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
-          {
-            title: "Planning Constraints",
-            status: "Fail",
-            message:
-              "When using Planning Constraints, your flow must have exactly ONE Planning Constraints component",
-          },
-          {
-            title: "Sections",
-            status: "Pass",
-            message: "Your flow has valid Sections",
-          },
-          {
-            title: "Fees",
-            status: "Not applicable",
-            message: "Your flow is not using Pay",
-          },
-          {
-            title: "Invite to Pay",
-            status: "Not applicable",
-            message: "Your flow is not using Invite to Pay",
-          },
-          {
-            title: "Templated nodes",
-            status: "Not applicable",
-            message: "This is not a templated flow",
-          },
-        ]);
+        expect(res.body.validationChecks).toEqual(
+          expect.arrayContaining([
+            {
+              title: "Fees",
+              status: "Not applicable",
+              message: "Your flow is not using Pay",
+            },
+            {
+              title: "Invite to Pay",
+              status: "Not applicable",
+              message: "Your flow is not using Invite to Pay",
+            },
+            {
+              title: "Planning Constraints",
+              status: "Fail",
+              message:
+                "When using Planning Constraints, your flow must have exactly ONE Planning Constraints component",
+            },
+            {
+              title: "Sections",
+              status: "Pass",
+              message: "Your flow has valid Sections",
+            },
+            {
+              title: "Send",
+              status: "Pass",
+              message: "Flow correctly has exactly one Send component",
+            },
+            {
+              title: "Templated nodes",
+              status: "Not applicable",
+              message: "This is not a templated flow",
+            },
+          ]),
+        );
       });
   });
 });
@@ -747,33 +812,40 @@ describe("templated node requirements validation on diff", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
-          {
-            title: "Templated nodes",
-            status: "Fail",
-            message: `Customise each "Required" node before publishing your templated flow`,
-          },
-          {
-            title: "Sections",
-            status: "Pass",
-            message: "Your flow has valid Sections",
-          },
-          {
-            title: "Planning Constraints",
-            status: "Pass",
-            message: "Your flow has valid Planning Constraints",
-          },
-          {
-            title: "Fees",
-            status: "Not applicable",
-            message: "Your flow is not using Pay",
-          },
-          {
-            title: "Invite to Pay",
-            status: "Not applicable",
-            message: "Your flow is not using Invite to Pay",
-          },
-        ]);
+        expect(res.body.validationChecks).toEqual(
+          expect.arrayContaining([
+            {
+              title: "Templated nodes",
+              status: "Fail",
+              message: `Customise each "Required" node before publishing your templated flow`,
+            },
+            {
+              title: "Sections",
+              status: "Pass",
+              message: "Your flow has valid Sections",
+            },
+            {
+              title: "Planning Constraints",
+              status: "Pass",
+              message: "Your flow has valid Planning Constraints",
+            },
+            {
+              title: "Fees",
+              status: "Not applicable",
+              message: "Your flow is not using Pay",
+            },
+            {
+              title: "Invite to Pay",
+              status: "Not applicable",
+              message: "Your flow is not using Invite to Pay",
+            },
+            {
+              title: "Send",
+              status: "Pass",
+              message: "Flow correctly has exactly one Send component",
+            },
+          ]),
+        );
       });
   });
 
@@ -834,33 +906,40 @@ describe("templated node requirements validation on diff", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
-          {
-            title: "Sections",
-            status: "Pass",
-            message: "Your flow has valid Sections",
-          },
-          {
-            title: "Planning Constraints",
-            status: "Pass",
-            message: "Your flow has valid Planning Constraints",
-          },
-          {
-            title: "Templated nodes",
-            status: "Pass",
-            message: `All "Required" nodes in your templated flow have been customised`,
-          },
-          {
-            title: "Fees",
-            status: "Not applicable",
-            message: "Your flow is not using Pay",
-          },
-          {
-            title: "Invite to Pay",
-            status: "Not applicable",
-            message: "Your flow is not using Invite to Pay",
-          },
-        ]);
+        expect(res.body.validationChecks).toEqual(
+          expect.arrayContaining([
+            {
+              title: "Sections",
+              status: "Pass",
+              message: "Your flow has valid Sections",
+            },
+            {
+              title: "Planning Constraints",
+              status: "Pass",
+              message: "Your flow has valid Planning Constraints",
+            },
+            {
+              title: "Templated nodes",
+              status: "Pass",
+              message: `All "Required" nodes in your templated flow have been customised`,
+            },
+            {
+              title: "Fees",
+              status: "Not applicable",
+              message: "Your flow is not using Pay",
+            },
+            {
+              title: "Invite to Pay",
+              status: "Not applicable",
+              message: "Your flow is not using Invite to Pay",
+            },
+            {
+              title: "Send",
+              status: "Pass",
+              message: `Flow correctly has exactly one Send component`,
+            },
+          ]),
+        );
       });
   });
 });

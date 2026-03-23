@@ -10,7 +10,7 @@ import NumberInput from "./Public";
 test("renders correctly", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <NumberInput fn="num" title="Numberwang!" handleSubmit={handleSubmit} />,
   );
 
@@ -25,7 +25,7 @@ test("renders correctly", async () => {
 test("allows 0 to be input as a valid number", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <NumberInput fn="num" title="Numberwang!" handleSubmit={handleSubmit} />,
   );
 
@@ -40,7 +40,7 @@ test("allows 0 to be input as a valid number", async () => {
 test("requires a positive number to be input by default", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <NumberInput
       fn="doors"
       title="How many doors are you adding?"
@@ -65,7 +65,7 @@ test("requires a positive number to be input by default", async () => {
 test("allows negative numbers to be input when toggled on by editor", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <NumberInput
       fn="fahrenheit"
       title="What's the temperature?"
@@ -87,7 +87,7 @@ test("allows negative numbers to be input when toggled on by editor", async () =
 test("a clear error is shown if decimal value added when onlyWholeNumbers is toggled on", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <NumberInput
       fn="fahrenheit"
       title="What's the temperature?"
@@ -112,7 +112,7 @@ test("a clear error is shown if decimal value added when onlyWholeNumbers is tog
 test("allows only whole numbers to be submitted when toggled on by editor", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <NumberInput
       fn="fahrenheit"
       title="What's the temperature?"
@@ -135,7 +135,7 @@ test("allows only whole numbers to be submitted when toggled on by editor", asyn
 test("requires a value before being able to continue", async () => {
   const handleSubmit = vi.fn();
 
-  const { user } = setup(
+  const { user } = await setup(
     <NumberInput fn="num" title="Numberwang!" handleSubmit={handleSubmit} />,
   );
 
@@ -148,7 +148,7 @@ test("recovers previously submitted number when clicking the back button", async
   const handleSubmit = vi.fn();
   const componentId = uniqueId();
 
-  const { user } = setup(
+  const { user } = await setup(
     <NumberInput
       title="Cached Number"
       handleSubmit={handleSubmit}
@@ -171,7 +171,7 @@ test("recovers previously submitted number when clicking the back button even if
   const componentId = uniqueId();
   const dataField = "data-field";
 
-  const { user } = setup(
+  const { user } = await setup(
     <NumberInput
       fn={dataField}
       title="Cached Number"
@@ -191,7 +191,9 @@ test("recovers previously submitted number when clicking the back button even if
 });
 
 it("should not have any accessibility violations", async () => {
-  const { container } = setup(<NumberInput fn="num" title="Numberwang!" />);
+  const { container } = await setup(
+    <NumberInput fn="num" title="Numberwang!" />,
+  );
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });

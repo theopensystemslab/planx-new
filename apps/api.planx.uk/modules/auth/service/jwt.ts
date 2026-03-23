@@ -49,6 +49,7 @@ const generateHasuraClaimsForUser = (user: User): HasuraClaims => ({
  */
 const getDefaultRoleForUser = (user: User): Role => {
   if (user.isPlatformAdmin) return "platformAdmin";
+  if (user.isAnalyst) return "analyst";
 
   const isTeamEditor = user.teams.find((team) => team.role === "teamEditor");
   if (isTeamEditor) return "teamEditor";

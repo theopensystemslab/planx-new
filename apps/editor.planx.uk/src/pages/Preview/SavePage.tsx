@@ -7,7 +7,6 @@ import { useLPS } from "hooks/useLPS";
 import { sendSaveEmail } from "lib/api/saveAndReturn/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
-import { removeSessionIdSearchParam } from "utils";
 
 import StatusPage from "./StatusPage";
 
@@ -16,13 +15,14 @@ export const SaveSuccess: React.FC<{
   expiryDate?: string;
 }> = ({ saveToEmail, expiryDate }) => {
   const { url: lpsURL } = useLPS();
+  const resetPreview = useStore().resetPreview;
 
   return (
     <StatusPage
       bannerHeading="Form saved"
       showDownloadLink
       buttonText="Start a new form"
-      onButtonClick={removeSessionIdSearchParam}
+      onButtonClick={() => resetPreview()}
     >
       <Stack spacing={1}>
         <Typography variant="body2" sx={{ fontWeight: "bold" }}>

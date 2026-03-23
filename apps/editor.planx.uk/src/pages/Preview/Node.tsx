@@ -201,8 +201,6 @@ const Node: React.FC<Props> = (props) => {
       return <DrawBoundaryComponent {...getComponentProps<DrawBoundary>()} />;
 
     case TYPES.EnhancedTextInput:
-      if (!hasFeatureFlag("ENHANCED_TEXTINPUT")) return null;
-
       return (
         <EnhancedTextInputComponent
           {...getComponentProps<EnhancedTextInput>()}

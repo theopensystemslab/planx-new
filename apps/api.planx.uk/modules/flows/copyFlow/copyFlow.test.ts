@@ -18,10 +18,10 @@ beforeEach(() => {
   });
 
   queryMock.mockQuery({
-    name: "InsertFlowWithIntegration",
+    name: "InsertFlow",
     matchOnVariables: false,
     data: {
-      insertFlowWithIntegration: {
+      insertFlow: {
         id: 2,
       },
     },
@@ -57,28 +57,6 @@ beforeEach(() => {
     data: {
       publishedFlow: {
         data: mockFlowData,
-      },
-    },
-  });
-
-  queryMock.mockQuery({
-    name: "GetDefaultEmail",
-    matchOnVariables: false,
-    data: {
-      submissionIntegrations: [
-        {
-          id: "default-email-id",
-        },
-      ],
-    },
-  });
-
-  queryMock.mockQuery({
-    name: "InsertFlowIntegration",
-    matchOnVariables: false,
-    data: {
-      insert_flow_integrations_one: {
-        flow_id: 2,
       },
     },
   });
@@ -159,7 +137,7 @@ describe("authentication and error handling", () => {
     });
 
     queryMock.mockQuery({
-      name: "InsertFlowWithIntegration",
+      name: "InsertFlow",
       matchOnVariables: false,
       data: {
         flow: {

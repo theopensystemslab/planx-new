@@ -28,7 +28,7 @@ describe("Payload generation", () => {
     { timeout: 35_000 },
     async () => {
       const handleSubmit = vi.fn();
-      const { getByTestId, user } = setup(
+      const { getByTestId, user } = await setup(
         <ListComponent {...mockZooProps} handleSubmit={handleSubmit} />,
       );
       const addItemButton = getByTestId("list-add-button");
@@ -69,7 +69,7 @@ describe("Payload generation", () => {
     async () => {
       const handleSubmit = vi.fn();
       const { getByTestId, user, getByRole, getAllByRole, getByLabelText } =
-        setup(
+        await setup(
           <ListComponent {...mockUnitsProps} handleSubmit={handleSubmit} />,
         );
 

@@ -1,0 +1,8 @@
+import { createFileRoute } from "@tanstack/react-router";
+import AdvancedSettings from "pages/FlowEditor/components/Settings/Team/Advanced";
+
+export const Route = createFileRoute(
+  "/_authenticated/app/$team/settings/advanced",
+)({
+  component: AdvancedSettings,
+});

@@ -56,7 +56,7 @@ export const validationSchema: SchemaOf<Send> =
       submissionEmailId: string().when("destinations", {
         is: (destinations: SendIntegration[]) => destinations.includes("email"),
         then: string().required(
-          "Submission email is required when 'email' is selected.",
+          "Submission email is required when 'send to email' is selected.",
         ),
       }),
     }),

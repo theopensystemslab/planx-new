@@ -2,6 +2,7 @@ import Alert, { alertClasses } from "@mui/material/Alert";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Portal from "@mui/material/Portal";
+import { useRouter } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
@@ -15,7 +16,9 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
   msDelayBeforeVisible = 300,
   msMinimumDisplayTime = 900,
 }) => {
-  const isLoading = useStore((state) => state.isLoading);
+  const routerIsLoading = useRouter().state.isLoading;
+  const storeIsLoading = useStore((state) => state.isLoading);
+  const isLoading = routerIsLoading || storeIsLoading;
   const loadingMessage = useStore((state) => state.loadingMessage);
   const onLoadingComplete = useStore((state) => state.onLoadingComplete);
 

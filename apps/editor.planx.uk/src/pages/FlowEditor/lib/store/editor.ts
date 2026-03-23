@@ -22,8 +22,8 @@ import {
   update,
 } from "@planx/graph";
 import { OT } from "@planx/graph/types";
+import type { RegisteredRouter } from "@tanstack/react-router";
 import { client } from "lib/graphql";
-import navigation from "lib/navigation";
 import debounce from "lodash/debounce";
 import { type } from "ot-json0";
 import {
@@ -76,7 +76,7 @@ export interface EditorUIStore {
   toggleShowHelpText: () => void;
   previousURL?: string;
   currentURL: string;
-  initURLTracking: () => void;
+  initURLTracking: (router: RegisteredRouter) => () => void;
   openContextMenu: (
     position: ContextMenuPosition,
     relationships: Relationships,
@@ -147,16 +147,19 @@ export const editorUIStore: StateCreator<
 
     currentURL: window.location.pathname,
 
-    initURLTracking: () => {
-      navigation.subscribe((route) => {
+    initURLTracking: (router: RegisteredRouter) => {
+      const unsubscribe = router.subscribe("onResolved", () => {
         const { currentURL } = get();
-        if (route.url.pathname === currentURL) return;
+        const newURL = window.location.pathname;
+        if (newURL === currentURL) return;
 
         set((state) => ({
           previousURL: state.currentURL,
-          currentURL: route.url.pathname,
+          currentURL: newURL,
         }));
       });
+
+      return unsubscribe;
     },
 
     contextMenuPosition: null,
@@ -410,6 +413,8 @@ export const editorStore: StateCreator<
   },
 
   disconnectFromFlow: () => {
+    if (!doc?.id) return;
+
     console.debug("[ShareDB] Disconnecting from flow:", doc?.id);
     // Clear local store cache of flow data
     set({ flow: {} });
@@ -569,6 +574,7 @@ export const editorStore: StateCreator<
       query: gql`
         query GetLastPublishedFlow($id: uuid!) {
           flow: flows_by_pk(id: $id) {
+            id
             published_flows(order_by: { created_at: desc }, limit: 1) {
               created_at
             }
@@ -596,6 +602,7 @@ export const editorStore: StateCreator<
       query: gql`
         query GetLastPublisher($id: uuid!) {
           flow: flows_by_pk(id: $id) {
+            id
             publishedFlows: published_flows(
               order_by: { created_at: desc }
               limit: 1
@@ -805,7 +812,7 @@ export const editorStore: StateCreator<
         ? `nodes/${grandparent.id}/nodes/${parent.id}/edit#${node.id}`
         : `nodes/${parent.id}/nodes/${node.id}/edit`;
 
-    const urlPath = `/${teamSlug}/${flowSlug}${portalPath}/${nodePath}`;
+    const urlPath = `/app/${teamSlug}/${flowSlug}${portalPath}/${nodePath}`;
     return urlPath;
   },
 

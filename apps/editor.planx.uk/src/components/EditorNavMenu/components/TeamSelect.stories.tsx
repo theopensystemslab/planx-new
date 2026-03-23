@@ -1,7 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import {
+  createMemoryHistory,
+  createRootRoute,
+  createRoute,
+  createRouter,
+  RouterProvider,
+} from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { TeamSummary } from "pages/FlowEditor/lib/store/team";
 import React from "react";
-import { TeamSummary } from "routes/authenticated";
 
 import TeamSelect from "./TeamSelect";
 
@@ -51,12 +58,24 @@ export const Basic = {
       canUserEditTeam: (slug: string) => slug === "open-systems-lab",
     });
 
-    return (
-      <TeamSelect
-        currentTeamSlug="open-systems-lab"
-        onTeamSelect={(teamSlug) => console.log(`Navigating to ${teamSlug}`)}
-        teams={mockTeams}
-      />
-    );
+    const rootRoute = createRootRoute();
+    const authenticatedAppRoute = createRoute({
+      getParentRoute: () => rootRoute,
+      id: "_authenticated/app/",
+      loader: () => ({ teams: mockTeams }),
+      component: () => (
+        <TeamSelect
+          currentTeamSlug="open-systems-lab"
+          onTeamSelect={(teamSlug) => console.log(`Navigating to ${teamSlug}`)}
+        />
+      ),
+    });
+
+    const router = createRouter({
+      routeTree: rootRoute.addChildren([authenticatedAppRoute]),
+      history: createMemoryHistory({ initialEntries: ["/"] }),
+    });
+
+    return <RouterProvider router={router} />;
   },
 } satisfies Story;

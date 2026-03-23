@@ -1,3 +1,6 @@
+import PendingActionsIcon from "@mui/icons-material/PendingActions";
+import Typography from "@mui/material/Typography";
+import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { Switch } from "ui/shared/Switch";
@@ -12,7 +15,10 @@ import {
 } from "./types";
 
 const FlowCopySettings: React.FC = () => {
-  const flowId = useStore((state) => state.id);
+  const [flowId, isTrial] = useStore((state) => [
+    state.id,
+    state.getTeam().settings.isTrial,
+  ]);
 
   return (
     <SettingsFormContainer<
@@ -36,6 +42,14 @@ const FlowCopySettings: React.FC = () => {
     >
       {({ formik }) => (
         <>
+          {isTrial && (
+            <WarningContainer>
+              <PendingActionsIcon sx={{ mr: 1 }} />
+              <Typography variant="body2">
+                Trial accounts cannot set flow copy permissions.
+              </Typography>
+            </WarningContainer>
+          )}
           <Switch
             label={
               formik.values.canCreateFromCopy
@@ -51,6 +65,7 @@ const FlowCopySettings: React.FC = () => {
                 !formik.values.canCreateFromCopy,
               )
             }
+            disabled={isTrial}
           />
         </>
       )}

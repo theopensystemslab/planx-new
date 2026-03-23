@@ -148,7 +148,9 @@ function PlanningConstraintsComponent(props: Props) {
                         />
                       </TableCell>
                       <TableCell
-                        sx={{ fontSize: (theme) => theme.typography.h4 }}
+                        sx={{
+                          fontSize: (theme) => theme.typography.h4.fontSize,
+                        }}
                       >
                         All constraints
                       </TableCell>

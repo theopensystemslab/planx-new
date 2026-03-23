@@ -10,6 +10,11 @@ export const GET_TEAM_SUBMISSION_INTEGRATIONS = gql`
       id
       submissionEmail: submission_email
       defaultEmail: default_email
+      flows {
+        id
+        name
+        slug
+      }
     }
   }
 `;
@@ -36,16 +41,9 @@ export const UPSERT_TEAM_SUBMISSION_INTEGRATIONS = gql`
 `;
 
 export const DELETE_TEAM_SUBMISSION_INTEGRATIONS = gql`
-  mutation DeleteSubmissionIntegration(
-    $submissionEmail: String!
-    $teamId: Int!
-  ) {
+  mutation DeleteSubmissionIntegration($submissionEmailId: uuid!) {
     delete_submission_integrations(
-      where: {
-        submission_email: { _eq: $submissionEmail }
-        team_id: { _eq: $teamId }
-        default_email: { _eq: false }
-      }
+      where: { id: { _eq: $submissionEmailId }, default_email: { _eq: false } }
     ) {
       returning {
         teamId: team_id

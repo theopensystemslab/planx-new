@@ -18,6 +18,7 @@ import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
 import { List, parseContent, validationSchema } from "./model";
+import { AddTeamMembers } from "./schemas/AddTeamMember";
 import { ProposedAdvertisements } from "./schemas/Adverts";
 import { AmendDocuments } from "./schemas/AmendDocuments";
 import { ExistingBuildingsCIL } from "./schemas/CIL/ExistingCIL";
@@ -94,6 +95,7 @@ export const SCHEMAS = [
   { name: "Discharge conditions", schema: DischargeConditions },
   { name: "Tree description - Conservation Area", schema: TreeDescriptionCA },
   { name: "Tree description - TPO", schema: TreeDescriptionTPO },
+  { name: "Add team members", schema: AddTeamMembers },
 ];
 
 function ListComponent(props: Props) {

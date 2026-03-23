@@ -1,7 +1,8 @@
 import { Flag, flatFlags } from "@opensystemslab/planx-core/types";
+import { Link } from "@tanstack/react-router";
+import { useParams } from "@tanstack/react-router";
 import classNames from "classnames";
 import React from "react";
-import { Link } from "react-navi";
 
 import { useStore } from "../../../lib/store";
 import { DataField } from "./DataField";
@@ -11,9 +12,9 @@ import Node from "./Node";
 import { Thumbnail } from "./Thumbnail";
 
 const Option: React.FC<any> = (props) => {
+  const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
   const childNodes = useStore((state) => state.childNodesOf(props.id));
 
-  const href = `${window.location.pathname}/nodes/${props.parent}/edit#${props.id}`;
   let flags: Flag[] | undefined;
 
   try {
@@ -38,7 +39,16 @@ const Option: React.FC<any> = (props) => {
       className={classNames("card", "option", { wasVisited: props.wasVisited })}
       onContextMenu={(e) => e.preventDefault()}
     >
-      <Link href={href} prefetch={false}>
+      <Link
+        to="/app/$team/$flow/nodes/$id/edit"
+        params={{
+          team,
+          flow,
+          id: props.parent,
+        }}
+        hash={props.id}
+        preload={false}
+      >
         {props.data?.img && (
           <Thumbnail
             imageSource={props.data?.img}
@@ -58,7 +68,7 @@ const Option: React.FC<any> = (props) => {
         )}
       </Link>
       <ol className="decisions">
-        {childNodes.map((child: any) => (
+        {childNodes.map((child) => (
           <Node
             key={child.id}
             parent={props.id}

@@ -14,7 +14,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
     it(`answers are submitted in order they were supplied (${ChecklistLayout[type]} layout)`, async () => {
       const handleSubmit = vi.fn();
 
-      setup(
+      await setup(
         <Checklist
           allRequired={false}
           description=""
@@ -41,7 +41,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
     it(`recovers checkboxes state when clicking the back button (${ChecklistLayout[type]} layout)`, async () => {
       const handleSubmit = vi.fn();
 
-      const { user } = setup(
+      const { user } = await setup(
         <Checklist
           allRequired={false}
           description=""
@@ -60,7 +60,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
     });
 
     it(`should not have any accessibility violations (${ChecklistLayout[type]} layout)`, async () => {
-      const { container } = setup(
+      const { container } = await setup(
         <Checklist
           allRequired={false}
           description=""
@@ -75,7 +75,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
     test(`Focus jumps from checkbox to checkbox (${ChecklistLayout[type]} layout)`, async () => {
       const handleSubmit = vi.fn();
 
-      const { user } = setup(
+      const { user } = await setup(
         <Checklist
           allRequired={false}
           description=""

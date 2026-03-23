@@ -26,13 +26,17 @@ vi.mock("lib/feedback", () => ({
   insertFeedbackMutation: vi.fn(),
 }));
 
+vi.mock("hooks/usePublicRouteContext", () => ({
+  usePublicRouteContext: vi.fn(() => "/$flow"),
+}));
+
 describe("Feedback component triage journey", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  test("Initial render shows the FeedbackPhaseBannerView but doesn't scroll into view", () => {
-    const { getByText } = setup(<Feedback />);
+  test("Initial render shows the FeedbackPhaseBannerView but doesn't scroll into view", async () => {
+    const { getByText } = await setup(<Feedback />);
 
     expect(getByText("PUBLIC BETA")).toBeInTheDocument();
     expect(getByText("Report an issue with this page")).toBeInTheDocument();
@@ -40,7 +44,7 @@ describe("Feedback component triage journey", () => {
   });
 
   test("Selecting 'feedback' scrolls triage into view", async () => {
-    const { getByText, getByRole, user } = setup(<Feedback />);
+    const { getByText, getByRole, user } = await setup(<Feedback />);
 
     await user.click(getByText("feedback"));
 
@@ -52,7 +56,9 @@ describe("Feedback component triage journey", () => {
   });
 
   test("Selecting 'Issue' from triage scrolls the issue form into view", async () => {
-    const { getByLabelText, getByText, getByRole, user } = setup(<Feedback />);
+    const { getByLabelText, getByText, getByRole, user } = await setup(
+      <Feedback />,
+    );
 
     await user.click(getByText("feedback"));
     await user.click(getByRole("button", { name: "Issue" }));
@@ -64,7 +70,9 @@ describe("Feedback component triage journey", () => {
   });
 
   test("Submitting 'Report an Issue' form changes view to thank you message", async () => {
-    const { getByText, getByLabelText, getByRole, user } = setup(<Feedback />);
+    const { getByText, getByLabelText, getByRole, user } = await setup(
+      <Feedback />,
+    );
 
     await user.click(getByText("feedback"));
     await user.click(getByRole("button", { name: "Issue" }));
@@ -86,7 +94,7 @@ describe("Feedback component triage journey", () => {
   });
 
   test("Selecting 'Idea' from triage scrolls the idea form into view", async () => {
-    const { getByText, getByRole, user } = setup(<Feedback />);
+    const { getByText, getByRole, user } = await setup(<Feedback />);
 
     await user.click(getByText("feedback"));
     await user.click(getByRole("button", { name: "Idea" }));
@@ -97,7 +105,9 @@ describe("Feedback component triage journey", () => {
   });
 
   test("Submitting 'Share an idea' form changes view to thank you message", async () => {
-    const { getByText, getByTestId, getByRole, user } = setup(<Feedback />);
+    const { getByText, getByTestId, getByRole, user } = await setup(
+      <Feedback />,
+    );
 
     await user.click(getByText("feedback"));
     await user.click(getByRole("button", { name: "Idea" }));
@@ -117,7 +127,7 @@ describe("Feedback component triage journey", () => {
   });
 
   test("Selecting 'Comment' from triage scrolls the comment form into view", async () => {
-    const { getByText, getByRole, user } = setup(<Feedback />);
+    const { getByText, getByRole, user } = await setup(<Feedback />);
 
     await user.click(getByText("feedback"));
     await user.click(getByRole("button", { name: "Comment" }));
@@ -128,7 +138,9 @@ describe("Feedback component triage journey", () => {
   });
 
   test("Submitting 'Share a comment' form changes view to thank you message", async () => {
-    const { getByText, getByTestId, getByRole, user } = setup(<Feedback />);
+    const { getByText, getByTestId, getByRole, user } = await setup(
+      <Feedback />,
+    );
 
     await user.click(getByText("feedback"));
     await user.click(getByRole("button", { name: "Comment" }));
@@ -148,7 +160,7 @@ describe("Feedback component triage journey", () => {
   });
 
   test("Selecting 'Inaccuracy' from triage scrolls the comment form into view", async () => {
-    const { getByText, getByRole, user } = setup(<Feedback />);
+    const { getByText, getByRole, user } = await setup(<Feedback />);
 
     await user.click(getByText("feedback"));
     await user.click(getByRole("button", { name: "Inaccuracy" }));
@@ -159,7 +171,9 @@ describe("Feedback component triage journey", () => {
   });
 
   test("Submitting 'Inaccuracy' form changes view to thank you message", async () => {
-    const { getByText, getByTestId, getByRole, user } = setup(<Feedback />);
+    const { getByText, getByTestId, getByRole, user } = await setup(
+      <Feedback />,
+    );
 
     await user.click(getByText("feedback"));
     await user.click(getByRole("button", { name: "Inaccuracy" }));
@@ -188,7 +202,7 @@ describe("Feedback component 'Report an issue with this page journey'", () => {
   });
 
   test("Selecting 'Report an issue with this page journey' directly scrolls the issue form variation into view", async () => {
-    const { getByText, getByLabelText, user } = setup(<Feedback />);
+    const { getByText, getByLabelText, user } = await setup(<Feedback />);
 
     await user.click(getByText("Report an issue with this page"));
 
@@ -202,7 +216,7 @@ describe("Feedback component 'Report an issue with this page journey'", () => {
   });
 
   test("Submitting directly opened 'Report an issue' form changes to 'Thank you' view", async () => {
-    const { getByText, getByLabelText, user } = setup(<Feedback />);
+    const { getByText, getByLabelText, user } = await setup(<Feedback />);
 
     await user.click(getByText("Report an issue with this page"));
 
@@ -229,7 +243,9 @@ describe("Feedback view changes with breadcrumbs", () => {
   });
 
   test("If breadcrumbs change and the view was thank you it resets to banner", async () => {
-    const { getByText, getByTestId, getByRole, user } = setup(<Feedback />);
+    const { getByText, getByTestId, getByRole, user } = await setup(
+      <Feedback />,
+    );
 
     await user.click(getByText("feedback"));
     await user.click(getByRole("button", { name: "Idea" }));
@@ -256,7 +272,7 @@ describe("Feedback view changes with breadcrumbs", () => {
   });
 
   test("If breadcrumbs change and the view was not 'thank you' it doesn't reset to banner", async () => {
-    const { getByText, getByRole, user } = setup(<Feedback />);
+    const { getByText, getByRole, user } = await setup(<Feedback />);
 
     await user.click(getByText("feedback"));
     await user.click(getByRole("button", { name: "Idea" }));
@@ -279,13 +295,13 @@ describe("Feedback component accessibility", () => {
   });
 
   test("Initial load should have no accessibility violations", async () => {
-    const { container } = setup(<Feedback />);
+    const { container } = await setup(<Feedback />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
 
   test("Direct to Issue form view should have no accessibility violations", async () => {
-    const { container, getByText, user } = setup(<Feedback />);
+    const { container, getByText, user } = await setup(<Feedback />);
     await user.click(getByText("Report an issue with this page"));
 
     const results = await axe(container);
@@ -293,7 +309,7 @@ describe("Feedback component accessibility", () => {
   });
 
   test("Triage view should have no accessibility violations", async () => {
-    const { container, getByText, getByRole, user } = setup(<Feedback />);
+    const { container, getByText, getByRole, user } = await setup(<Feedback />);
 
     user.click(getByText("feedback"));
 
@@ -306,9 +322,8 @@ describe("Feedback component accessibility", () => {
   });
 
   test("Issue form via triage should have no accessibility violations", async () => {
-    const { container, getByText, getByLabelText, getByRole, user } = setup(
-      <Feedback />,
-    );
+    const { container, getByText, getByLabelText, getByRole, user } =
+      await setup(<Feedback />);
 
     await user.click(getByText("feedback"));
 
@@ -327,7 +342,7 @@ describe("Feedback component accessibility", () => {
   });
 
   test("Idea form should have no accessibility violations", async () => {
-    const { container, getByText, getByRole, user } = setup(<Feedback />);
+    const { container, getByText, getByRole, user } = await setup(<Feedback />);
 
     await user.click(getByText("feedback"));
 
@@ -346,7 +361,7 @@ describe("Feedback component accessibility", () => {
   });
 
   test("Comment form should have no accessibility violations", async () => {
-    const { container, getByText, getByRole, user } = setup(<Feedback />);
+    const { container, getByText, getByRole, user } = await setup(<Feedback />);
 
     await user.click(getByText("feedback"));
 
@@ -365,7 +380,9 @@ describe("Feedback component accessibility", () => {
   });
 
   test("Thank you view should have no accessibility violations", async () => {
-    const { container, getByLabelText, getByText, user } = setup(<Feedback />);
+    const { container, getByLabelText, getByText, user } = await setup(
+      <Feedback />,
+    );
 
     await user.click(getByText("Report an issue with this page"));
 

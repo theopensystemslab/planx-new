@@ -18,6 +18,15 @@ insert_permissions:
         - role
         - id
 select_permissions:
+  - role: analyst
+    permission:
+      columns:
+        - team_id
+        - user_id
+        - role
+        - id
+      filter: {}
+    comment: ""
   - role: api
     permission:
       columns:

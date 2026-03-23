@@ -8,10 +8,9 @@ import React from "react";
 import { RenderCellParams } from "ui/shared/DataTable/types";
 
 export const DownloadSubmissionButton = (params: RenderCellParams) => {
-  const [teamSlug, canUserEditTeam, submissionEmail] = useStore((state) => [
+  const [teamSlug, canUserEditTeam] = useStore((state) => [
     state.teamSlug,
     state.canUserEditTeam,
-    state.teamSettings?.submissionEmail,
   ]);
 
   const submissionDataExpirationDate = addDays(
@@ -22,16 +21,13 @@ export const DownloadSubmissionButton = (params: RenderCellParams) => {
   const showDownloadButton =
     teamSlug &&
     canUserEditTeam(teamSlug) &&
-    submissionEmail &&
     params.row.status === "Success" &&
     params.row.eventType !== "Pay" &&
     isBefore(new Date(), submissionDataExpirationDate);
 
   if (!showDownloadButton) return;
 
-  const zipUrl = `${import.meta.env.VITE_APP_API_URL}/download-application-files/${
-    params.row.sessionId
-  }?localAuthority=${teamSlug}&email=${submissionEmail}`;
+  const zipUrl = `${import.meta.env.VITE_APP_API_URL}/submission/${params.row.sessionId}/zip`;
 
   return (
     <Tooltip title="Download application data">

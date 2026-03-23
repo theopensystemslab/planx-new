@@ -2,9 +2,9 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { useMatches } from "@tanstack/react-router";
 import { capitalize } from "lodash";
 import React from "react";
-import { useCurrentRoute } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { ApplicationPath } from "types";
 
@@ -29,10 +29,23 @@ export const SectionNavBar: React.FC = () => {
   );
   const isSaveAndReturnLandingPage =
     path !== ApplicationPath.SingleSession && !saveToEmail;
-  const isContentPage = useCurrentRoute()?.data?.isContentPage;
-  const isViewApplicationPage = useCurrentRoute()?.data?.isViewApplicationPage;
+
+  // Check all route matches, not just immediate parent of the layout
+  const matches = useMatches();
+  const isContentPage = matches.some(
+    (match) =>
+      "isContentPage" in match.context && match.context.isContentPage === true,
+  );
+  const isViewApplicationPage = matches.some(
+    (match) =>
+      "isViewApplicationPage" in match.context &&
+      match.context.isViewApplicationPage === true,
+  );
   const isVisible =
-    hasSections && !isSaveAndReturnLandingPage && !isContentPage && !isViewApplicationPage;
+    hasSections &&
+    !isSaveAndReturnLandingPage &&
+    !isContentPage &&
+    !isViewApplicationPage;
 
   if (!isVisible) return null;
 

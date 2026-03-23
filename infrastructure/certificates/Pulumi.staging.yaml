@@ -1,4 +1,5 @@
 config:
+  aws:profile: planx-staging-pulumi
   certificates:cloudflare-zone-id: dc27ac531ff8862559ed9ab5016c4953
   certificates:domain: editor.planx.dev
   cloudflare:apiToken:

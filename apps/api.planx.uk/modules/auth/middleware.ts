@@ -2,6 +2,7 @@ import crypto from "crypto";
 import assert from "assert";
 import { ServerError } from "../../errors/index.js";
 import type { Template } from "../../lib/notify/templates/index.js";
+import type { ResendTemplate } from "../../lib/resend/templates/index.js";
 import { expressjwt, type IsRevoked } from "express-jwt";
 import { generators } from "openid-client";
 import type { Authenticator } from "passport";
@@ -9,10 +10,12 @@ import type { RequestHandler } from "http-proxy-middleware";
 import type { Role } from "@opensystemslab/planx-core/types";
 import { AsyncLocalStorage } from "async_hooks";
 import type { CookieOptions, Request } from "express";
+
 import {
   createTokenDigest,
   isTokenRevoked,
 } from "./service/logout/revokeToken.js";
+import { isValidRedirect } from "./service/utils.js";
 
 export const userContext = new AsyncLocalStorage<{ user: Express.User }>();
 
@@ -52,7 +55,7 @@ export const useSendEmailAuth: RequestHandler = (req, res, next): void => {
       status: 400,
     });
   };
-  const template = req.params.template as Template;
+  const template = req.params.template as Template | ResendTemplate;
   switch (template) {
     // Requires authorization - can only be triggered by Hasura scheduled events
     case "reminder":
@@ -66,6 +69,7 @@ export const useSendEmailAuth: RequestHandler = (req, res, next): void => {
     case "payment-expiry-agent":
     case "confirmation-agent":
     case "confirmation-payee":
+    case "welcome":
       return useHasuraAuth(req, res, next);
     // Public access
     case "save":
@@ -74,6 +78,7 @@ export const useSendEmailAuth: RequestHandler = (req, res, next): void => {
     case "submit":
     case "resume":
     case "lps-login":
+    case "new-download-link":
       return next();
     default: {
       return handleInvalidTemplate(template);
@@ -162,7 +167,16 @@ export const getGoogleAuthHandler = (
   passport: Authenticator,
 ): RequestHandler => {
   return (req, res, next) => {
-    req.session!.returnTo = req.get("Referrer");
+    const referrer = req.get("Referrer");
+    // validate referrer header to prevent open redirect attacks / JWT exfiltration
+    const referrerOrigin = referrer ? new URL(referrer).origin : null;
+    const baseUrl =
+      referrerOrigin && isValidRedirect(referrerOrigin)
+        ? referrerOrigin
+        : process.env.EDITOR_URL_EXT;
+    // Always redirect to /app so frontend can handle default team redirect
+    req.session!.returnTo = `${baseUrl}/app`;
+
     return passport.authenticate("google", {
       scope: ["profile", "email"],
     })(req, res, next);
@@ -183,7 +197,15 @@ export const getMicrosoftAuthHandler = (
   passport: Authenticator,
 ): RequestHandler => {
   return (req, res, next) => {
-    req.session!.returnTo = req.get("Referrer");
+    const referrer = req.get("Referrer");
+    // validate referrer header to prevent open redirect attacks / JWT exfiltration
+    const referrerOrigin = referrer ? new URL(referrer).origin : null;
+    const baseUrl =
+      referrerOrigin && isValidRedirect(referrerOrigin)
+        ? referrerOrigin
+        : process.env.EDITOR_URL_EXT;
+    // Always redirect to /app so frontend can handle default team redirect
+    req.session!.returnTo = `${baseUrl}/app`;
 
     // generate a nonce to enable us to validate the response from OP (mitigates against CSRF attacks)
     const nonce = generators.nonce();

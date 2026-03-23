@@ -5,9 +5,13 @@ import type {
   TeamContactSettings,
 } from "@opensystemslab/planx-core/types";
 import type { TemplateRegistry } from "../../../lib/notify/templates/index.js";
+import { addDays } from "date-fns";
+import { ServerError } from "../../../errors/serverError.js";
+import { DAYS_UNTIL_EXPIRY } from "../../saveAndReturn/service/utils.js";
 
 interface GetTeamEmailSettings {
   teams: {
+    teamId: number;
     teamSettings: TeamContactSettings;
   }[];
 }
@@ -17,12 +21,12 @@ export async function getTeamEmailSettings(localAuthority: string) {
     gql`
       query GetTeamEmailSettings($slug: String) {
         teams(where: { slug: { _eq: $slug } }) {
+          teamId: id
           teamSettings: team_settings {
             helpEmail: help_email
             helpPhone: help_phone
             emailReplyToId: email_reply_to_id
             helpOpeningHours: help_opening_hours
-            submissionEmail: submission_email
           }
         }
       }
@@ -58,33 +62,76 @@ export async function getFlowId(sessionId: string) {
 }
 
 interface GetFlowSubmissionEmail {
-  flowIntegrations: {
-    emailId: string;
+  flowsByPK: {
+    submissionEmailId: string;
     submissionIntegration: {
       submissionEmail: string;
     };
+  };
+}
+
+async function getFlowSubmissionEmail(flowId: string) {
+  try {
+    const response = await $api.client.request<GetFlowSubmissionEmail>(
+      gql`
+        query GetFlowSubmissionEmail($flowId: uuid!) {
+          flowsByPK: flows_by_pk(id: $flowId) {
+            submissionEmailId: submission_email_id
+            submissionIntegration: submission_integration {
+              submissionEmail: submission_email
+            }
+          }
+        }
+      `,
+      {
+        flowId,
+      },
+    );
+
+    return response?.flowsByPK.submissionIntegration?.submissionEmail;
+  } catch (error) {
+    console.error(
+      `Error in getFlowSubmissionEmail for flowId: ${flowId}`,
+      error,
+    );
+    throw error;
+  }
+}
+
+interface GetDefaultSubmissionIntegration {
+  submissionIntegrations: {
+    submissionEmail: string;
   }[];
 }
 
-export async function getFlowSubmissionEmail(flowId: string) {
-  const response = await $api.client.request<GetFlowSubmissionEmail>(
+async function getDefaultSubmissionIntegration(teamId: number) {
+  const response = await $api.client.request<GetDefaultSubmissionIntegration>(
     gql`
-      query GetFlowSubmissionEmail($flowId: uuid!) {
-        flowIntegrations: flow_integrations(
-          where: { flow_id: { _eq: $flowId } }
+      query GetDefaultSubmissionIntegration($teamId: Int!) {
+        submissionIntegrations: submission_integrations(
+          where: { team_id: { _eq: $teamId } }
         ) {
-          emailId: email_id
-          submissionIntegration: submission_integration {
-            submissionEmail: submission_email
-          }
+          submissionEmail: submission_email
         }
       }
     `,
     {
-      flowId,
+      teamId,
     },
   );
-  return response?.flowIntegrations[0]?.submissionIntegration.submissionEmail;
+  return response?.submissionIntegrations[0]?.submissionEmail;
+}
+
+export async function getSubmissionEmail(
+  teamId: number,
+  flowId: string,
+): Promise<string | undefined> {
+  const flowSubmissionEmail = await getFlowSubmissionEmail(flowId);
+  if (flowSubmissionEmail) return flowSubmissionEmail;
+
+  const defaultTeamSubmissionEmail =
+    await getDefaultSubmissionIntegration(teamId);
+  return defaultTeamSubmissionEmail;
 }
 
 interface GetSessionData {
@@ -227,3 +274,46 @@ export async function checkEmailAuditTable(sessionId: string): Promise<string> {
 
   return application?.emailApplications[0]?.response;
 }
+
+export const generateAccessToken = async (
+  sessionId: string,
+  submittedAt = new Date(),
+) => {
+  try {
+    const expiresAt = addDays(submittedAt, DAYS_UNTIL_EXPIRY).toISOString();
+    const token = await insertApplicationAccessTokenRecord(
+      sessionId,
+      expiresAt,
+    );
+    return token;
+  } catch (error) {
+    throw new ServerError({
+      message: `Failed to create access token for sessionId ${sessionId} (email). Error: ${error}`,
+    });
+  }
+};
+
+const insertApplicationAccessTokenRecord = async (
+  sessionId: string,
+  expiresAt: string,
+) => {
+  const {
+    applicationAccessTokens: { token },
+  } = await $api.client.request<{ applicationAccessTokens: { token: string } }>(
+    gql`
+      mutation InsertApplicationAccessToken(
+        $sessionId: uuid!
+        $expiresAt: timestamptz!
+      ) {
+        applicationAccessTokens: insert_application_access_tokens_one(
+          object: { expires_at: $expiresAt, session_id: $sessionId }
+        ) {
+          token
+        }
+      }
+    `,
+    { sessionId, expiresAt },
+  );
+
+  return token;
+};

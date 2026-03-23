@@ -19,6 +19,7 @@ export interface UpdateTemplatedFlowResponse {
   data: {
     templatedFlowData: FlowGraph;
     commentId: number;
+    notificationId: number;
   };
 }
 

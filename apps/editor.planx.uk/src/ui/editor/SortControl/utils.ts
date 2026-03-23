@@ -1,4 +1,3 @@
-import { Params } from "navi";
 import { slugify } from "utils";
 import { z } from "zod";
 
@@ -10,7 +9,7 @@ const routeQuerySchema = z.object({
 });
 
 export const getSortParams = <T extends object>(
-  routeQueryParams: Params,
+  routeQueryParams: Record<string, unknown>,
   sortOptions: SortableFields<T>[],
 ): {
   sortObject: SortableFields<T>;

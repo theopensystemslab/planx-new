@@ -1,7 +1,6 @@
 # HASURA_PROXY_PORT - The publicly exposed port through which this service can be accessed
 # HASURA_NETWORK_LOCATION - Either "hasura" in Docker environments, or "localhost" on Fargate
 
-
 # General options
 {
 	# Handle HTTPS redirection in AWS at the LoadBalancer level
