@@ -13,7 +13,11 @@ import SchoolIcon from "@mui/icons-material/School";
 import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
-import { useLocation, useNavigate, useRouter } from "@tanstack/react-router";
+import {
+  useLocation,
+  useNavigate,
+  useRouterState,
+} from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef } from "react";
 import EditorIcon from "ui/icons/Editor";
@@ -40,7 +44,7 @@ interface MenuSection {
 function EditorNavMenu() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const router = useRouter();
+  const isRouterLoading = useRouterState({ select: (s) => s.isLoading });
   const [teamSlug, flowSlug, flowAnalyticsLink, role, team] = useStore(
     (state) => [
       state.teamSlug,
@@ -254,7 +258,7 @@ function EditorNavMenu() {
 
   const getRoutesForUrl = (url: string): RoutesForURL => {
     // Return the previous value when route is loading to avoid flash of incorrect version
-    if (router.state.isLoading) return previousRoutes.current;
+    if (isRouterLoading) return previousRoutes.current;
 
     let result: RoutesForURL;
 
