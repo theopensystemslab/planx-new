@@ -4,6 +4,7 @@ import { Feature } from "geojson";
 import { getFindPropertyData } from "lib/planningData/requests";
 import { useMemo } from "react";
 
+import { isWalesTeam } from "../../../PlanningConstraints/model";
 import type { SiteAddress } from "../../model";
 
 interface FindPropertyData {
@@ -13,13 +14,6 @@ interface FindPropertyData {
   wards?: string[];
   developmentCorporations?: string[];
   titleBoundary?: Feature;
-}
-
-// Wales: hardcode teams
-const WALES_TEAMS = ["bannau-brycheiniog"];
-
-function isWalesTeam(teamSlug?: string): boolean {
-  return teamSlug ? WALES_TEAMS.includes(teamSlug) : false;
 }
 
 export const useFindPropertyData = (

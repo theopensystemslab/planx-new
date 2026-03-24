@@ -14,7 +14,7 @@ import {
 // hardcode wales teams
 const WALES_TEAMS = ["bannau-brycheiniog"];
 
-function isWalesTeam(teamSlug?: string): boolean {
+export function isWalesTeam(teamSlug?: string): boolean {
   return teamSlug ? WALES_TEAMS.includes(teamSlug) : false;
 }
 
