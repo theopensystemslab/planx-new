@@ -3,7 +3,7 @@ import { createFileRoute, notFound, Outlet } from "@tanstack/react-router";
 import RouteLoadingIndicator from "components/RouteLoadingIndicator";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
-import React, { useEffect } from "react";
+import React from "react";
 import { CatchAllComponent } from "routes/$";
 
 import { useStore } from "../../../../pages/FlowEditor/lib/store";
@@ -64,7 +64,10 @@ export const Route = createFileRoute("/_authenticated/app/$team")({
 
     return { team };
   },
-  loader: ({ context }) => {
+  loader: ({ context, cause }) => {
+    if (cause !== "preload") {
+      useStore.getState().setTeam(context.team);
+    }
     return context.team;
   },
   component: TeamLayout,
@@ -72,14 +75,5 @@ export const Route = createFileRoute("/_authenticated/app/$team")({
 });
 
 function TeamLayout() {
-  const teamData = Route.useLoaderData();
-  const setTeam = useStore((state) => state.setTeam);
-
-  useEffect(() => {
-    if (!teamData) return;
-
-    setTeam(teamData);
-  }, [teamData, setTeam]);
-
   return <Outlet />;
 }
