@@ -1,5 +1,4 @@
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
@@ -22,6 +21,7 @@ import {
   LINE_HEIGHT_BASE,
 } from "theme";
 import { ApplicationPath } from "types";
+import PlayOutlineIcon from "ui/icons/PlayOutline";
 import Reset from "ui/icons/Reset";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
@@ -287,8 +287,8 @@ const ServiceTitle: React.FC = () => {
           size="medium"
           icon={
             {
-              preview: <OpenInNewIcon fontSize="small" />,
-              draft: <OpenInNewOffIcon fontSize="small" />,
+              preview: <PlayArrowIcon fontSize="small" />,
+              draft: <PlayOutlineIcon fontSize="small" />,
             }[path]
           }
         />
