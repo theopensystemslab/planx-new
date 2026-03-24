@@ -17,7 +17,7 @@ const planningConstraints = {
       "articleFour.coventry.copsewoodGrange": "A4/005/001",
       "articleFour.coventry.unitedReformChurch": "A4/006/001",
       "articleFour.coventry.landAtSixTheFirs": "A4/007/001",
-      "articleFour.coventry.landAtTwoThreeBankHouse": "A4/009/001",
+      "articleFour.coventry.landAtTwentyThreeBankHouse": "A4/009/001",
       "articleFour.coventry.brownshillGreen": "A4/010/001",
       "articleFour.coventry.earlsdon": "A4/011/001",
       "articleFour.coventry.cheylesmore": "A4/012/001",
