@@ -49,14 +49,7 @@ insert_permissions:
         - updated_at
   - role: teamEditor
     permission:
-      check:
-        default_team:
-          members:
-            _and:
-              - user_id:
-                  _eq: X-Hasura-User-Id
-              - role:
-                  _eq: teamEditor
+      check: {}
       columns:
         - created_at
         - default_team_id
@@ -65,7 +58,10 @@ insert_permissions:
         - id
         - last_name
         - updated_at
-    comment: teamEditor can insert other users. default_team_id must match a team which the user has the teamEditor role.
+    comment: |-
+      teamEditor can insert other users.
+
+      The permission boundary is enforced on the team_members table.
 select_permissions:
   - role: analyst
     permission:
@@ -157,35 +153,29 @@ update_permissions:
         - last_name
         - updated_at
       filter:
-        _and:
-          - default_team:
-              members:
-                _and:
-                  - user_id:
-                      _eq: X-Hasura-User-Id
-                  - role:
-                      _eq: teamEditor
-          - teams:
-              role:
-                _eq: teamEditor
+        teams:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: X-Hasura-User-Id
+                - role:
+                    _eq: teamEditor
       check: null
-    comment: teamEditors can update the details of other teamEditors
+    comment: teamEditors can update the details of other teamEditors, within their team
 delete_permissions:
   - role: teamEditor
     permission:
       filter:
-        _and:
-          - default_team:
-              members:
-                _and:
-                  - user_id:
-                      _eq: X-Hasura-User-Id
-                  - role:
-                      _eq: teamEditor
-          - teams:
-              role:
-                _eq: teamEditor
-    comment: teamEditor can delete other teamEditors from their own team
+        teams:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: X-Hasura-User-Id
+                - role:
+                    _eq: teamEditor
+    comment: teamEditors can delete other teamEditors, within their team
 event_triggers:
   - name: send_user_welcome_emails
     definition:
