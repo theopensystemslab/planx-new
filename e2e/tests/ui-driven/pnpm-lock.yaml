@@ -26,11 +26,11 @@ importers:
         specifier: ^8.57.1
         version: 8.57.1
       graphql:
-        specifier: ^16.13.0
-        version: 16.13.0
+        specifier: ^16.13.1
+        version: 16.13.1
       graphql-request:
         specifier: ^6.1.0
-        version: 6.1.0(graphql@16.13.0)
+        version: 6.1.0(graphql@16.13.1)
       isomorphic-fetch:
         specifier: ^3.0.0
         version: 3.0.0
@@ -814,10 +814,6 @@ packages:
     resolution: {integrity: sha512-p+XPfS4q7aIpKVcgmnZKhMNqhltk20hfXtkaIkTfjjmiKMJ5xrt5c743cL03y/K7y1rg3WrIC49xGiEQ4mxdNw==}
     peerDependencies:
       graphql: 14 - 16
-
-  graphql@16.13.0:
-    resolution: {integrity: sha512-uSisMYERbaB9bkA9M4/4dnqyktaEkf1kMHNKq/7DHyxVeWqHQ2mBmVqm5u6/FVHwF3iCNalKcg82Zfl+tffWoA==}
-    engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
 
   graphql@16.13.1:
     resolution: {integrity: sha512-gGgrVCoDKlIZ8fIqXBBb0pPKqDgki0Z/FSKNiQzSGj2uEYHr1tq5wmBegGwJx6QB5S5cM0khSBpi/JFHMCvsmQ==}
@@ -1679,10 +1675,6 @@ snapshots:
     dependencies:
       '@formatjs/fast-memoize': 3.1.1
 
-  '@graphql-typed-document-node/core@3.2.0(graphql@16.13.0)':
-    dependencies:
-      graphql: 16.13.0
-
   '@graphql-typed-document-node/core@3.2.0(graphql@16.13.1)':
     dependencies:
       graphql: 16.13.1
@@ -2358,14 +2350,6 @@ snapshots:
 
   graphemer@1.4.0: {}
 
-  graphql-request@6.1.0(graphql@16.13.0):
-    dependencies:
-      '@graphql-typed-document-node/core': 3.2.0(graphql@16.13.0)
-      cross-fetch: 3.2.0
-      graphql: 16.13.0
-    transitivePeerDependencies:
-      - encoding
-
   graphql-request@6.1.0(graphql@16.13.1):
     dependencies:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.13.1)
@@ -2373,8 +2357,6 @@ snapshots:
       graphql: 16.13.1
     transitivePeerDependencies:
       - encoding
-
-  graphql@16.13.0: {}
 
   graphql@16.13.1: {}
 
