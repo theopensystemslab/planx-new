@@ -274,6 +274,7 @@ export function FileUploadAndLabelNew(props: Props) {
                       fn={fileType.fn}
                       completed={Boolean(fileType.slots?.length)}
                       moreInformation={fileType.moreInformation}
+                      showStatusIcon={!props.hideDropZone}
                     />
                   </ListItem>
                 )),
