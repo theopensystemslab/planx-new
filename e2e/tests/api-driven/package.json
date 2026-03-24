@@ -8,7 +8,7 @@
   "packageManager": "pnpm@10.30.2",
   "dependencies": {
     "@cucumber/cucumber": "^11.3.0",
-    "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#17a4eea",
+    "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#69a24d7",
     "axios": "^1.13.6",
     "dotenv": "^16.6.1",
     "dotenv-expand": "^10.0.0",

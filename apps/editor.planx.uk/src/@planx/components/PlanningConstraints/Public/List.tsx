@@ -23,7 +23,7 @@ import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import { SiteAddress } from "../../FindProperty/model";
-import { availableDatasets } from "../model";
+import { getAvailableDatasets } from "../model";
 import { InaccurateConstraints } from ".";
 import { OverrideEntitiesModal } from "./Modal";
 
@@ -167,14 +167,22 @@ interface ConstraintListItemProps {
 function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
   const [showModal, setShowModal] = useState<boolean>(false);
 
-  const [{ longitude, latitude, usrn }, hasPlanningData] = useStore((state) => [
-    (state.computePassport().data?.["_address"] as SiteAddress) || {},
-    state.teamIntegrations?.hasPlanningData,
-  ]);
+  const [{ longitude, latitude, usrn }, hasPlanningData, teamSlug] = useStore(
+    (state) => [
+      (state.computePassport().data?.["_address"] as SiteAddress) || {},
+      state.teamIntegrations?.hasPlanningData,
+      state.teamSlug,
+    ],
+  );
 
-  // Whether a particular constraint list item is sourced from Planning Data
+  const availableDatasets = getAvailableDatasets(teamSlug);
+
+  // Determine the data source based on metadata
+  const isSourcedFromDataMapWales =
+    props.metadata?.text?.includes("DataMapWales");
+  const isSourcedFromOs = props.metadata?.plural === "Classified roads";
   const isSourcedFromPlanningData =
-    props.metadata?.plural !== "Classified roads";
+    !isSourcedFromDataMapWales && !isSourcedFromOs;
 
   // Whether to show the button to the override modal
   const showOverrideButton =
@@ -255,51 +263,58 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
                 sx={{ listStyleType: "disc", pl: 4, pt: 1 }}
               >
                 {props.data &&
-                  props.data.map((record: any) => (
-                    <ListItem
-                      key={`entity-${record.entity}-li`}
-                      dense
-                      disableGutters
-                      sx={{
-                        display: "list-item",
-                      }}
-                    >
-                      <Box
+                  props.data
+                    .filter(
+                      (record: any) =>
+                        !isSourcedFromDataMapWales || record.name,
+                    )
+                    .map((record: any) => (
+                      <ListItem
+                        key={`entity-${record.entity}-li`}
+                        dense
+                        disableGutters
                         sx={{
-                          display: "flex",
-                          flexDirection: { xs: "column", md: "row" },
-                          alignItems: { xs: "flex-start", md: "center" },
+                          display: "list-item",
                         }}
                       >
-                        {isSourcedFromPlanningData ? (
-                          <Typography variant="body2" component="span">
-                            <Link
-                              href={`https://www.planning.data.gov.uk/entity/${record.entity}`}
-                              target="_blank"
-                            >
-                              {formatEntityName(record, props.metadata)}
-                            </Link>
-                          </Typography>
-                        ) : (
-                          <Typography variant="body2">{record.name}</Typography>
-                        )}
-                        {props.inaccurateConstraints?.[props.fn]?.[
-                          "entities"
-                        ]?.includes(`${record.entity}`) && (
-                          <Chip
-                            label="Marked as not applicable"
-                            variant="notApplicableTag"
-                            size="small"
-                            sx={{ ml: { md: "0.75em" } }}
-                          />
-                        )}
-                      </Box>
-                    </ListItem>
-                  ))}
+                        <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: { xs: "column", md: "row" },
+                            alignItems: { xs: "flex-start", md: "center" },
+                          }}
+                        >
+                          {isSourcedFromPlanningData ? (
+                            <Typography variant="body2" component="span">
+                              <Link
+                                href={`https://www.planning.data.gov.uk/entity/${record.entity}`}
+                                target="_blank"
+                              >
+                                {formatEntityName(record, props.metadata)}
+                              </Link>
+                            </Typography>
+                          ) : (
+                            <Typography variant="body2">
+                              {record.name}
+                            </Typography>
+                          )}
+                          {props.inaccurateConstraints?.[props.fn]?.[
+                            "entities"
+                          ]?.includes(`${record.entity}`) && (
+                            <Chip
+                              label="Marked as not applicable"
+                              variant="notApplicableTag"
+                              size="small"
+                              sx={{ ml: { md: "0.75em" } }}
+                            />
+                          )}
+                        </Box>
+                      </ListItem>
+                    ))}
               </List>
             )}
           </React.Fragment>
-          {isSourcedFromPlanningData ? (
+          {isSourcedFromPlanningData && (
             <Typography component="div" variant="body2" my={2}>
               {`View on the `}
               <Link href={planningDataMapURL} target="_blank">
@@ -307,11 +322,15 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
               </Link>
               {` (opens in a new tab).`}
             </Typography>
-          ) : (
+          )}
+          {isSourcedFromOs && (
             <Typography component="div" variant="body2" my={2}>
               {`We searched Ordnance Survey MasterMap Highways using the Unique Street Reference Number of your property`}
               {usrn && ` (${usrn})`}
             </Typography>
+          )}
+          {isSourcedFromDataMapWales && (
+            <Typography component="div" variant="body2" my={2}></Typography>
           )}
           <Typography variant="h5">{`How is it defined`}</Typography>
           <Typography component="div" variant="body2" my={2}>
@@ -371,8 +390,11 @@ export function formatEntityName(
   } else if (entity["flood-risk-level"] && metadata?.name) {
     // Flood zones don't publish "name", so rely on dataset name plus risk level
     return `${metadata.name} - Level ${entity["flood-risk-level"]}`;
+  } else if (metadata?.name) {
+    // Use metadata name when entity name is not available
+    return metadata.name;
   } else {
-    // Default to entity "name" or fallback to "id"
-    return entity.name || `Planning Data entity #${entity.entity}`;
+    // Default to entity name or generic fallback
+    return entity.name || `Entity #${entity.entity}`;
   }
 }

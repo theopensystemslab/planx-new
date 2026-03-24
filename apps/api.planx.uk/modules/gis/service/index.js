@@ -1,6 +1,7 @@
 import * as digitalLand from "./digitalLand.js";
+import * as dataMapWales from "./dataMapWales.js";
 
-const localAuthorities = { digitalLand };
+const localAuthorities = { digitalLand, dataMapWales };
 
 /**
  * @swagger
@@ -49,6 +50,16 @@ export async function locationSearch(req, res, next) {
 
 // Planning Data is a single request with standardized geometry, so timeout is not necessary
 export function locationSearchViaPlanningData(localAuthority, queryParams) {
+  // Wales => DataMapWales
+  if (dataMapWales.isWalesTeam(localAuthority)) {
+    return localAuthorities["dataMapWales"].locationSearch(
+      localAuthority,
+      queryParams.geom,
+      queryParams,
+    );
+  }
+
+  // Otherwise: Digital Land
   return localAuthorities["digitalLand"].locationSearch(
     localAuthority,
     queryParams.geom,

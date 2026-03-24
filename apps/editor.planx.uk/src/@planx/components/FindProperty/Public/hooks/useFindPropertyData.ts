@@ -4,6 +4,7 @@ import { Feature } from "geojson";
 import { getFindPropertyData } from "lib/planningData/requests";
 import { useMemo } from "react";
 
+import { isWalesTeam } from "../../../PlanningConstraints/model";
 import type { SiteAddress } from "../../model";
 
 interface FindPropertyData {
@@ -15,7 +16,13 @@ interface FindPropertyData {
   titleBoundary?: Feature;
 }
 
-export const useFindPropertyData = (address?: SiteAddress) => {
+export const useFindPropertyData = (
+  address?: SiteAddress,
+  teamSlug?: string,
+) => {
+  // Wales: Skip planning.data.gov.uk call
+  const shouldFetchPlanningData = !isWalesTeam(teamSlug);
+
   // Fetch data from planning.data.gov.uk
   const { data, isPending, error } = useQuery({
     queryKey: ["findProperty", address?.latitude, address?.longitude],
@@ -24,7 +31,9 @@ export const useFindPropertyData = (address?: SiteAddress) => {
         latitude: address!.latitude,
         longitude: address!.longitude,
       }),
-    enabled: Boolean(address?.latitude && address?.longitude),
+    enabled:
+      Boolean(address?.latitude && address?.longitude) &&
+      shouldFetchPlanningData,
   });
 
   // Calculate derived data required for component
@@ -86,6 +95,20 @@ export const useFindPropertyData = (address?: SiteAddress) => {
   // This is a long-running request, so prefetching in the background allows
   // us to reduce the overall wait time for the user
   usePrefetchClassifiedRoads(address?.usrn);
+
+  // Wales: return null data with isPending: false
+  if (!shouldFetchPlanningData) {
+    return {
+      localAuthorityDistricts: undefined,
+      localPlanningAuthorities: undefined,
+      regions: undefined,
+      wards: undefined,
+      developmentCorporations: undefined,
+      titleBoundary: undefined,
+      isPending: false,
+      error: undefined,
+    };
+  }
 
   return {
     ...findPropertyData,
