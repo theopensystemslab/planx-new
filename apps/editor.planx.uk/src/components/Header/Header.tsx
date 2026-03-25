@@ -13,7 +13,7 @@ import Breadcrumbs from "components/Breadcrumbs";
 import { clearLocalFlowIdb } from "lib/local.idb";
 import { capitalize } from "lodash";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
-import React, { RefObject, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   borderedFocusStyle,
   FONT_WEIGHT_SEMI_BOLD,
@@ -299,30 +299,7 @@ const ServiceTitle: React.FC = () => {
   );
 };
 
-const EditorToolbar: React.FC<{
-  headerRef: React.RefObject<HTMLElement>;
-}> = () => {
-  return (
-    <>
-      <EditorHeader disableGutters>
-        <EditorHeaderContainer>
-          <InnerContainer>
-            <LeftBox>
-              <Breadcrumbs showEnvironmentSelect />
-            </LeftBox>
-            <RightBox></RightBox>
-          </InnerContainer>
-        </EditorHeaderContainer>
-      </EditorHeader>
-    </>
-  );
-};
-
-interface ToolbarProps {
-  headerRef: RefObject<HTMLDivElement>;
-}
-
-const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
+const Toolbar: React.FC = () => {
   const location = useLocation();
   const path = location.pathname.split("/").slice(-1)[0] || undefined;
   const [flowSlug, previewEnvironment] = useStore((state) => [
@@ -336,7 +313,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
     path !== "draft" &&
     path !== "preview"
   ) {
-    return <EditorToolbar headerRef={headerRef}></EditorToolbar>;
+    return null;
   }
 
   switch (path) {
@@ -367,7 +344,7 @@ const Header: React.FC = () => {
         "@media print": { backgroundColor: "white", color: "black" },
       })}
     >
-      <Toolbar headerRef={headerRef} />
+      <Toolbar />
     </Root>
   );
 };
