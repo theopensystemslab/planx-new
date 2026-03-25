@@ -7,7 +7,7 @@ import server from "test/mockServer";
 import { axe } from "vitest-axe";
 
 import { setup } from "../../../../../testUtils";
-import { UserUpsertModal } from "../components/UserUpsertModal";
+import { AddUserModal } from "../components/AddUserModal";
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { userTriesToAddNewMember } from "./helpers/userTriesToAddNewMember";
 import { createUserHandler } from "./mocks/handlers";
@@ -77,7 +77,7 @@ describe("when the addNewMember modal is rendered", () => {
   it("should not have any accessibility issues", async () => {
     const { container } = await setup(
       <DndProvider backend={HTML5Backend}>
-        <UserUpsertModal
+        <AddUserModal
           showModal={true}
           setShowModal={() => {}}
           action="add"
