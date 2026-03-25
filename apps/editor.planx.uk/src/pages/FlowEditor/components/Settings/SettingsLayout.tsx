@@ -21,6 +21,7 @@ interface Props {
   settingsLinks: SettingsLink[];
   getNavigationPath: (path: string) => string;
   children: React.ReactNode;
+  topOffset?: number;
 }
 
 const TabList = styled(Box)(() => ({
@@ -36,6 +37,7 @@ const SettingsLayout: React.FC<Props> = ({
   settingsLinks,
   getNavigationPath,
   children,
+  topOffset = 0,
 }) => {
   const navigate = useNavigate();
   const pathname = useLocation();
@@ -61,10 +63,13 @@ const SettingsLayout: React.FC<Props> = ({
         flexDirection="column"
         alignItems="center"
         bgcolor="background.default"
-        pt={5}
-        sx={{
-          borderBottom: (theme) => `1px solid ${theme.palette.border.light}`,
-        }}
+        sx={(theme) => ({
+          paddingTop: theme.spacing(3 + topOffset),
+          [theme.breakpoints.up("lg")]: {
+            paddingTop: theme.spacing(5 + topOffset),
+          },
+          borderBottom: `1px solid ${theme.palette.border.light}`,
+        })}
       >
         <Container maxWidth="contentWrap">
           <Typography variant="h2" component="h1" gutterBottom>

@@ -7,8 +7,8 @@ const RECENT_ROW_HEIGHT = "26px";
 
 export const RecentFlowsOverlay = styled(Box)(({ theme }) => ({
   position: "absolute",
-  top: theme.spacing(1.5),
-  left: theme.spacing(1.5),
+  top: theme.spacing(5),
+  left: theme.spacing(2),
   zIndex: theme.zIndex.appBar,
   maxWidth: `calc(100% - ${theme.spacing(5)})`,
 }));

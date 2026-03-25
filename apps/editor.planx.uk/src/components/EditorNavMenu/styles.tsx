@@ -42,7 +42,7 @@ export const MenuWrap = styled("ul", {
 }));
 
 export const MenuItem = styled("li")(({ theme }) => ({
-  margin: theme.spacing(0.4, 0),
+  margin: theme.spacing(0.1, 0),
   padding: 0,
 }));
 

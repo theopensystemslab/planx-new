@@ -166,7 +166,7 @@ export const TeamSelect: React.FC<Props> = ({
         PaperProps={{
           sx: {
             position: "absolute",
-            top: "65px",
+            top: "58px",
             left: "5px",
             bottom: "65px",
             m: 0,
@@ -174,7 +174,7 @@ export const TeamSelect: React.FC<Props> = ({
             maxWidth: "260px",
             minWidth: "unset",
             borderTop: "none",
-            borderRadius: 3,
+            borderRadius: theme => theme.shape.borderRadius,
           },
         }}
       >

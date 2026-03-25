@@ -36,6 +36,7 @@ import {
   StyledChip,
   Subtitle,
 } from "./styles";
+import NavMenuHeader from "./components/NavMenuHeader";
 import { Route, RoutesForURL } from "./types";
 
 interface MenuSection {
@@ -379,6 +380,7 @@ function EditorNavMenu() {
   return (
     <Root compact={compact}>
       <NavBarContainer>
+        <NavMenuHeader compact={compact} />
         {teamSlug && !compact && (
           <Box sx={(theme) => ({ padding: theme.spacing(1, 0.5, 0, 0.5) })}>
             <TeamSelect
