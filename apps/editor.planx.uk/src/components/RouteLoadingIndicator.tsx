@@ -1,5 +1,7 @@
 import Box from "@mui/material/Box";
-import LinearProgress from "@mui/material/LinearProgress";
+import LinearProgress, {
+  linearProgressClasses,
+} from "@mui/material/LinearProgress";
 import { styled } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
 
@@ -13,7 +15,7 @@ const Root = styled(Box)({
 const StyledLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: "3px",
   backgroundColor: theme.palette.background.dark,
-  "& .MuiLinearProgress-bar": {
+  [`& .${linearProgressClasses.bar}`]: {
     backgroundColor: theme.palette.secondary.dark,
   },
 }));
