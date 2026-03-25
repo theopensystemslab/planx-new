@@ -32,7 +32,7 @@ export interface MembersTableProps {
   showRemoveMemberButton?: boolean;
 }
 
-export interface AddNewEditorFormValues {
+export interface UserFormValues {
   email: string;
   firstName: string;
   lastName: string;
@@ -51,3 +51,5 @@ type SharedModalProps = {
 };
 
 export type EditorModalProps = SharedModalProps & ModalState;
+
+export const DEMO_TEAM_ID = 32;
