@@ -133,7 +133,6 @@ export const updateStoreWithPublicRouteData = (data: PublicRouteData): void => {
     flowSlug: data.flowSlug,
     flowStatus: data.flow.status,
     flowName: data.flow.name,
-    flowSummary: data.flow.summary,
   });
 
   state.setGlobalSettings(data.settings.globalSettings[0]);
@@ -223,25 +222,20 @@ export const createPublicRouteErrorComponent = (mode: PublicRouteMode) => {
 export const createPublicRouteHead = (mode: PublicRouteMode) => {
   const shouldNoIndex = mode === "preview" || mode === "draft";
 
-  return () => {
-    const { flowName, flowSummary, teamName } = useStore.getState();
+  if (shouldNoIndex) {
+    return () => ({
+      meta: [
+        {
+          name: "robots",
+          content: "noindex, nofollow",
+        },
+        {
+          name: "googlebot",
+          content: "noindex, nofollow",
+        },
+      ],
+    });
+  }
 
-    const title = `${teamName}: ${flowName}`;
-    const description = flowSummary || "";
-    const meta: Array<Record<string, string>> = [
-      { title },
-      { name: "description", content: description },
-      { property: "og:title", content: title },
-      { property: "og:description", content: description },
-    ];
-
-    if (shouldNoIndex) {
-      meta.push(
-        { name: "robots", content: "noindex, nofollow" },
-        { name: "googlebot", content: "noindex, nofollow" },
-      );
-    }
-
-    return { meta };
-  };
+  return undefined;
 };
