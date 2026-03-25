@@ -16,10 +16,12 @@ import * as birmingham from "./local_authorities/metadata/birmingham.js";
 import * as buckinghamshire from "./local_authorities/metadata/buckinghamshire.js";
 import * as camden from "./local_authorities/metadata/camden.js";
 import * as canterbury from "./local_authorities/metadata/canterbury.js";
+import * as coventry from "./local_authorities/metadata/coventry.js";
 import * as doncaster from "./local_authorities/metadata/doncaster.js";
 import * as epsomAndEwell from "./local_authorities/metadata/epsomAndEwell.js";
 import * as gateshead from "./local_authorities/metadata/gateshead.js";
 import * as gloucester from "./local_authorities/metadata/gloucester.js";
+import * as greaterCambridge from "./local_authorities/metadata/greaterCambridge.js";
 import * as horsham from "./local_authorities/metadata/horsham.js";
 import * as lambeth from "./local_authorities/metadata/lambeth.js";
 import * as medway from "./local_authorities/metadata/medway.js";
@@ -50,10 +52,12 @@ export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   buckinghamshire,
   camden,
   canterbury,
+  coventry,
   doncaster,
   "epsom-and-ewell": epsomAndEwell,
   gateshead,
   gloucester,
+  "greater-cambridge-shared-planning": greaterCambridge,
   horsham,
   lambeth,
   medway,

@@ -18,7 +18,6 @@ router.use("/ai", aiLimiter);
 router.post(
   "/ai/project-description/enhance",
   validate(projectDescriptionSchema),
-  // TODO: write unit tests for these middleware functions (see respective *.test.ts files)
   detectPromptInjection("original"),
   sanitiseInput("original"),
   redactPii("original"),

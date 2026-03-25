@@ -15,6 +15,7 @@ import { ToggleHelpTextButton } from "./components/FlowEditor/ToggleHelpTextButt
 import { ToggleImagesButton } from "./components/FlowEditor/ToggleImagesButton";
 import { ToggleNotesButton } from "./components/FlowEditor/ToggleNotesButton";
 import { ToggleTagsButton } from "./components/FlowEditor/ToggleTagsButton";
+import RecentFlows from "./components/RecentFlows/RecentFlows";
 import Sidebar from "./components/Sidebar";
 import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
@@ -90,6 +91,7 @@ const FlowEditor = () => {
             lockedFlow={lockedFlow}
             showTemplatedNodeStatus={showTemplatedNodeStatus}
           />
+          <RecentFlows />
           <EditorVisualControls
             orientation="vertical"
             aria-label="Toggle node attributes"

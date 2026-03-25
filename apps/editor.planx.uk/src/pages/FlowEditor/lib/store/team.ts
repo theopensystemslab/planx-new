@@ -4,7 +4,6 @@ import {
   TeamSettings,
   TeamTheme,
 } from "@opensystemslab/planx-core/types";
-import { TeamMember } from "pages/FlowEditor/components/Team/types";
 import { CreateTeam } from "pages/Teams/AddTeamButton";
 import { DEFAULT_PRIMARY_COLOR } from "theme";
 import type { StateCreator } from "zustand";
@@ -22,7 +21,6 @@ export interface TeamStore {
   teamSettings: TeamSettings;
   teamSlug: string;
   teamTheme: TeamTheme;
-  teamMembers: TeamMember[];
   teamDomain: string;
 
   setTeam: (team: Team) => void;
@@ -30,8 +28,6 @@ export interface TeamStore {
   clearTeamStore: () => void;
   fetchCurrentTeam: () => Promise<Team>;
   createTeam: (newTeam: CreateTeam) => Promise<number>;
-  setTeamMembers: (teamMembers: TeamMember[]) => Promise<void>;
-  deleteUser: (userId: number) => Promise<boolean>;
 }
 
 export const teamStore: StateCreator<
@@ -52,7 +48,6 @@ export const teamStore: StateCreator<
     logo: null,
     favicon: null,
   },
-  teamMembers: [] as TeamMember[],
   teamDomain: "",
 
   setTeam: (team) => {
@@ -79,7 +74,6 @@ export const teamStore: StateCreator<
     settings: get().teamSettings,
     slug: get().teamSlug,
     theme: get().teamTheme,
-    members: get().teamMembers,
     domain: get().teamDomain,
   }),
 
@@ -96,7 +90,6 @@ export const teamStore: StateCreator<
       teamSettings: undefined,
       teamSlug: "",
       teamTheme: undefined,
-      teamMembers: [],
     }),
 
   /**
@@ -106,18 +99,5 @@ export const teamStore: StateCreator<
   fetchCurrentTeam: async () => {
     const { teamSlug, $client } = get();
     return await $client.team.getBySlug(teamSlug);
-  },
-
-  setTeamMembers: async (teamMembers: TeamMember[]) => {
-    set(() => ({ teamMembers }));
-  },
-  deleteUser: async (userId: number) => {
-    try {
-      const { $client } = get();
-      const response = await $client.user.delete(userId);
-      return response;
-    } catch (error) {
-      throw new Error(`Unable to remove user. ${error}`);
-    }
   },
 });

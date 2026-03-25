@@ -1,6 +1,7 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import RouteLoadingIndicator from "components/RouteLoadingIndicator";
+import { startNewRecentFlowsJourney } from "pages/FlowEditor/components/RecentFlows/useRecentFlows";
 import Team from "pages/Team";
 import React from "react";
 import { z } from "zod";
@@ -25,6 +26,7 @@ export const teamSearchSchema = z.object({
 export type TeamSearch = z.infer<typeof teamSearchSchema>;
 
 export const Route = createFileRoute("/_authenticated/app/$team/")({
+  beforeLoad: startNewRecentFlowsJourney,
   validateSearch: zodValidator(teamSearchSchema),
   pendingComponent: RouteLoadingIndicator,
   loader: async ({ context }) => {

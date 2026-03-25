@@ -63,11 +63,11 @@ const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
 }));
 
 const StyledCard = styled(Card)<{ selected?: boolean }>(() => ({
-  borderRadius: 5,
+  borderRadius: "2px",
 }));
 
 const CardContent = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(1),
+  padding: theme.spacing(1, 1, 1.25, 1),
   display: "flex",
   justifyContent: "space-between",
   alignItems: "flex-start",
@@ -135,7 +135,7 @@ export const EnvironmentSelect: React.FC = () => {
             maxWidth: "300px",
             minWidth: "unset",
             borderTop: "none",
-            borderRadius: 3,
+            borderRadius: "5px",
           },
         }}
       >
@@ -167,7 +167,9 @@ export const EnvironmentSelect: React.FC = () => {
                 disabled={env.name === currentEnv}
               >
                 <CardContent>
-                  <Box>
+                  <Box
+                    sx={{ display: "flex", flexDirection: "column", gap: 0.25 }}
+                  >
                     <Typography
                       variant="h6"
                       component="div"
@@ -178,7 +180,11 @@ export const EnvironmentSelect: React.FC = () => {
                     >
                       {env.name}
                     </Typography>
-                    <Typography variant="body3" color="text.secondary">
+                    <Typography
+                      variant="body4"
+                      component="p"
+                      color="text.secondary"
+                    >
                       {env.description}
                     </Typography>
                   </Box>
