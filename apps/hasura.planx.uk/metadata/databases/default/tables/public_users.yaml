@@ -163,19 +163,6 @@ update_permissions:
                     _eq: teamEditor
       check: null
     comment: teamEditors can update the details of other teamEditors, within their team
-delete_permissions:
-  - role: teamEditor
-    permission:
-      filter:
-        teams:
-          team:
-            members:
-              _and:
-                - user_id:
-                    _eq: X-Hasura-User-Id
-                - role:
-                    _eq: teamEditor
-    comment: teamEditors can delete other teamEditors, within their team
 event_triggers:
   - name: send_user_welcome_emails
     definition:
