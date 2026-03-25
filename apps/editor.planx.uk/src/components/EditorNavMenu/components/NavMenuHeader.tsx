@@ -31,6 +31,7 @@ const NavMenuHeader: React.FC<NavMenuHeaderProps> = ({ compact = false }) => {
     <HeaderRoot>
       <LogoLink
         to="/"
+        preload={false}
         {...(isStandalone && { target: "_blank" })}
         variant="subtitle1"
       >
