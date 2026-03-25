@@ -27,6 +27,7 @@ export interface Submission {
   response: Record<string, any>;
   createdAt: string;
   flowName: string;
+  address: string;
 }
 export interface EventsLogProps {
   submissions: Submission[];
