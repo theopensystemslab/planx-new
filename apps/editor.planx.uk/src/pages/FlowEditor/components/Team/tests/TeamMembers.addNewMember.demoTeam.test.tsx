@@ -2,7 +2,7 @@ import { screen, waitFor } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import server from "test/mockServer";
 
-import { DEMO_TEAM_ID } from "../components/UserUpsertModal";
+import { DEMO_TEAM_ID } from "../types";
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { userTriesToAddNewMember } from "./helpers/userTriesToAddNewMember";
 import { addDemoUserHandler } from "./mocks/handlers";

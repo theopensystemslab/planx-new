@@ -1,6 +1,6 @@
 import type { User } from "@opensystemslab/planx-core/types";
 
-import { DEMO_TEAM_ID } from "../../components/UserUpsertModal";
+import { DEMO_TEAM_ID } from "../../types";
 
 export const mockUsersData: (User & { __typename: "users" })[] = [
   {
