@@ -70,12 +70,13 @@ describe("globalLayoutRoutes", () => {
     });
   });
 
-  it("hides menu for teamEditors (only 1 accessible route)", async () => {
+  it("shows menu for teamEditors (only 1 accessible route)", async () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("teamEditor");
 
-    const { queryAllByRole } = await setup(<EditorNavMenu />);
-    const menuItems = queryAllByRole("listitem");
-    expect(menuItems).toHaveLength(0);
+    const { getAllByRole } = await setup(<EditorNavMenu />);
+    const menuItems = getAllByRole("listitem");
+    expect(menuItems).toHaveLength(1);
+    expect(within(menuItems[0]).getByText("Select a team")).toBeInTheDocument();
   });
 
   it("displays for platformAdmins", async () => {
