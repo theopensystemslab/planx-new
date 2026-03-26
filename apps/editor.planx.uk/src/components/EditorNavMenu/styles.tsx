@@ -31,12 +31,10 @@ export const NavBarContainer = styled(Box)(() => ({
   top: 0,
 }));
 
-export const MenuWrap = styled("ul", {
-  shouldForwardProp: (prop) => prop !== "compact",
-})<{ compact?: boolean }>(({ theme, compact }) => ({
+export const MenuWrap = styled("ul")(({ theme }) => ({
   listStyle: "none",
   margin: 0,
-  padding: theme.spacing(1, 0.5, 7, 0.5),
+  padding: theme.spacing(1, 0.5, 2, 0.5),
   flex: 1,
   overflowY: "auto",
 }));

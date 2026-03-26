@@ -8,7 +8,6 @@ import ToggleButton from "@mui/material/ToggleButton";
 import { useParams, useRouteContext, useRouter } from "@tanstack/react-router";
 import React, { useState } from "react";
 import { useLocation } from "react-use";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import StyledTab from "ui/editor/StyledTab";
 
 import { useStore } from "../../lib/store";
