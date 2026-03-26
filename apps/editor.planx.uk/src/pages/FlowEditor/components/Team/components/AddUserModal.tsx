@@ -17,8 +17,9 @@ import {
   GET_USER_BY_EMAIL,
   GET_USERS_FOR_TEAM_QUERY,
 } from "../queries";
-import { DEMO_TEAM_ID, EditorModalProps, UserFormValues } from "../types";
-import { MemberFields } from "./MemberFields";
+import { type AddUserModalProps, DEMO_TEAM_ID, UserFormValues } from "../types";
+import { EmailField } from "./Fields/EmailField";
+import { NameFields } from "./Fields/NameFields";
 import { ModalActions } from "./ModalActions";
 
 const SUBMIT_BUTTON_TEXT: Record<Step["stage"], string> = {
@@ -32,9 +33,7 @@ export type Step =
   | { stage: "confirm-existing"; existingUser: User }
   | { stage: "create-new" };
 
-type Props = Extract<EditorModalProps, { action: "add" }>;
-
-export const AddUserModal: React.FC<Props> = ({ onClose }) => {
+export const AddUserModal: React.FC<AddUserModalProps> = ({ onClose }) => {
   const [teamId, teamSlug] = useStore((state) => [state.teamId, state.teamSlug]);
   const isDemoTeam = teamId === DEMO_TEAM_ID;
   const toast = useToast();
@@ -135,7 +134,13 @@ export const AddUserModal: React.FC<Props> = ({ onClose }) => {
             {title}
           </DialogTitle>
           <DialogContent dividers data-testid="modal-create-user">
-            <MemberFields mode={step["stage"]}/>
+            {step.stage === "email" && <EmailField />}
+            {step.stage === "create-new" &&
+              <>
+                <EmailField disabled />
+                <NameFields />
+              </>
+            }
             {step.stage === "confirm-existing" && (
               <Typography>
                 An account already exists for that email address. Would you
@@ -143,7 +148,6 @@ export const AddUserModal: React.FC<Props> = ({ onClose }) => {
               </Typography>
             )}
           </DialogContent>
-
           <DialogActions>
             <ModalActions
               submitButtonText={SUBMIT_BUTTON_TEXT[step.stage]}

@@ -9,11 +9,9 @@ import { useToast } from "hooks/useToast";
 import React from "react";
 
 import { REMOVE_TEAM_MEMBER } from "../queries";
-import { EditorModalProps } from "../types";
+import type { RemoveUserModalProps } from "../types";
 
-type Props = Extract<EditorModalProps, { action: "remove" }>;
-
-export const RemoveUserModal: React.FC<Props> = ({
+export const RemoveUserModal: React.FC<RemoveUserModalProps> = ({
   onClose,
   member,
 }) => {
