@@ -25,6 +25,7 @@ import EditorIcon from "ui/icons/Editor";
 import LocalPlanningServicesIcon from "ui/icons/LocalPlanningServices";
 
 import { useLPS } from "../../hooks/useLPS";
+import NavMenuHeader from "./components/NavMenuHeader";
 import { TeamSelect } from "./components/TeamSelect";
 import {
   MenuButton,
@@ -36,7 +37,6 @@ import {
   StyledChip,
   Subtitle,
 } from "./styles";
-import NavMenuHeader from "./components/NavMenuHeader";
 import { Route, RoutesForURL } from "./types";
 
 interface MenuSection {
@@ -288,8 +288,6 @@ function EditorNavMenu() {
     return accessibleByCurrentUserRole;
   };
 
-  const setIsNavMenuVisible = useStore((state) => state.setIsNavMenuVisible);
-
   // Filter accessible routes within each section
   const visibleSections = sections
     .map((section) => ({
@@ -297,19 +295,6 @@ function EditorNavMenu() {
       routes: section.routes.filter(isRouteAccessible),
     }))
     .filter((section) => section.routes.length > 0);
-
-  // Count total visible routes across all sections
-  const totalVisibleRoutes = visibleSections.reduce(
-    (count, section) => count + section.routes.length,
-    0,
-  );
-
-  React.useEffect(() => {
-    setIsNavMenuVisible(totalVisibleRoutes >= 2);
-  }, [totalVisibleRoutes, setIsNavMenuVisible]);
-
-  // Hide menu if the user does not have a selection of items
-  if (totalVisibleRoutes < 2) return null;
 
   const renderMenuButton = (
     title: string,
