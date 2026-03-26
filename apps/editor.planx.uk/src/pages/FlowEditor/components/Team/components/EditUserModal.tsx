@@ -10,13 +10,13 @@ import React from "react";
 
 import { upsertMemberSchema } from "../formSchema";
 import { UPDATE_TEAM_MEMBER } from "../queries";
-import { DEMO_TEAM_ID, EditorModalProps,UserFormValues } from "../types";
-import { MemberFields } from "./MemberFields";
+import { DEMO_TEAM_ID, type EditUserModalProps, type UserFormValues } from "../types";
+import { EmailField } from "./Fields/EmailField";
+import { NameFields } from "./Fields/NameFields";
 import { ModalActions } from "./ModalActions";
 
-type Props = Extract<EditorModalProps, { action: "edit" }>;
 
-export const EditUserModal: React.FC<Props> = ({
+export const EditUserModal: React.FC<EditUserModalProps> = ({
   onClose,
   member,
 }) => {
@@ -79,7 +79,8 @@ export const EditUserModal: React.FC<Props> = ({
             dividers
             data-testid="modal-edit-user"
           >
-            <MemberFields mode={"edit"}/>
+            <EmailField/>
+            <NameFields/>
           </DialogContent>
           <DialogActions>
             <ModalActions

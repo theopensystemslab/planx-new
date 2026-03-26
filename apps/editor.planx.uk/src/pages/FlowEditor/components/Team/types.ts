@@ -38,16 +38,12 @@ export interface UserFormValues {
   role: TeamRole;
 }
 
-export type ModalState =
-  | { action: "closed" }
-  | { action: "add"; member?: never }
-  | { action: "edit"; member: TeamMember }
-  | { action: "remove"; member: TeamMember };
-
 type SharedModalProps = {
   onClose: () => void;
 };
 
-export type EditorModalProps = SharedModalProps & ModalState;
+export type AddUserModalProps = SharedModalProps;
+export type EditUserModalProps = SharedModalProps & { member: TeamMember };
+export type RemoveUserModalProps = SharedModalProps & { member: TeamMember };
 
 export const DEMO_TEAM_ID = 32;
