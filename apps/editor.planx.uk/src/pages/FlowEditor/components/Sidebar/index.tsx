@@ -68,7 +68,7 @@ const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
   width: "40px",
   height: "40px",
   left: "-20px",
-  top: theme.spacing(0.5),
+  top: theme.spacing(1),
   boxShadow: "none",
   color: theme.palette.text.primary,
   "& > svg": {
