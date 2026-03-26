@@ -7,7 +7,6 @@ import server from "test/mockServer";
 import { axe } from "vitest-axe";
 
 import { setup } from "../../../../../testUtils";
-import { UserUpsertModal } from "../components/UserUpsertModal";
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { userTriesToAddNewMember } from "./helpers/userTriesToAddNewMember";
 import { createUserHandler } from "./mocks/handlers";
@@ -31,7 +30,7 @@ describe("when a user presses 'add a new member'", () => {
 
   it("opens the modal and displays the input fields", async () => {
     expect(await screen.findByTestId("modal-create-user-button")).toBeVisible();
-    expect(await screen.findByLabelText("First name")).toBeVisible();
+    expect(await screen.findByLabelText("Email address")).toBeVisible();
   });
 });
 
@@ -77,9 +76,8 @@ describe("when the addNewMember modal is rendered", () => {
   it("should not have any accessibility issues", async () => {
     const { container } = await setup(
       <DndProvider backend={HTML5Backend}>
-        <UserUpsertModal
-          showModal={true}
-          setShowModal={() => {}}
+        <AddUserModal
+          onClose={vi.fn()}
           action="add"
         />
       </DndProvider>,
