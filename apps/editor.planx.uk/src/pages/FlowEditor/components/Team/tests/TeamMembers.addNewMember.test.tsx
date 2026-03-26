@@ -77,10 +77,7 @@ describe("when the addNewMember modal is rendered", () => {
   it("should not have any accessibility issues", async () => {
     const { container } = await setup(
       <DndProvider backend={HTML5Backend}>
-        <AddUserModal
-          onClose={vi.fn()}
-          action="add"
-        />
+        <AddUserModal onClose={vi.fn()}/>
       </DndProvider>,
     );
     await screen.findByTestId("modal-create-user");

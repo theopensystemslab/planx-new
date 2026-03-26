@@ -85,7 +85,7 @@ export const MembersTable = ({
           )}
         </Table>
         {modal.action !== "closed" && (
-          <AddUserModal onClose={closeModal} action="add" />
+          <AddUserModal onClose={closeModal} />
         )}
       </>
     );
@@ -178,22 +178,17 @@ export const MembersTable = ({
         <RemoveUserModal
           onClose={closeModal}
           member={modal.member}
-          action="remove"
         />
       )}
 
       {modal.action === "add" && (
-        <AddUserModal
-          onClose={closeModal}
-          action={modal.action}
-        />
+        <AddUserModal onClose={closeModal}/>
       )}
 
       {modal.action === "edit" && (
         <EditUserModal
           onClose={closeModal}
           member={modal.member}
-          action={modal.action}
         />
       )}
     </>
