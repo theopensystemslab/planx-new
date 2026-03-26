@@ -1,5 +1,4 @@
 import { Role, TeamRole, User } from "@opensystemslab/planx-core/types";
-import React, { SetStateAction } from "react";
 
 export const ROLE_LABELS = {
   platformAdmin: "Admin",
@@ -46,8 +45,7 @@ export type ModalState =
   | { action: "remove"; member: TeamMember };
 
 type SharedModalProps = {
-  showModal: boolean;
-  setShowModal: React.Dispatch<SetStateAction<boolean>>;
+  onClose: () => void;
 };
 
 export type EditorModalProps = SharedModalProps & ModalState;
