@@ -70,3 +70,23 @@ export const REMOVE_TEAM_MEMBER = gql`
     }
   }
 `;
+
+export const ADD_EXISTING_USER_TO_TEAM = gql`
+  mutation AddExistingUserToTeam($role: user_roles_enum, $teamId: Int!, $userId: Int!) {
+    insert_team_members_one(object: {
+      role: $role, 
+      team_id: $teamId, 
+      user_id: $userId
+    }) {
+      id
+    }
+  }`;
+
+export const GET_USER_BY_EMAIL = gql`
+  query GetUserByEmail($email: String!) {
+    users(where: {email: {_eq: $email}}) {
+      id
+      firstName: first_name
+      lastName: last_name
+    }
+  }`

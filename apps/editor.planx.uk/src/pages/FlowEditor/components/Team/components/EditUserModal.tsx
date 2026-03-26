@@ -7,12 +7,7 @@ import { Form, Formik } from "formik";
 import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import ErrorWrapper from "ui/shared/ErrorWrapper";
 
-import {
-  AddNewMemberErrors,
-  isUserAlreadyExistsError,
-} from "../errors/addNewEditorErrors";
 import { upsertMemberSchema } from "../formSchema";
 import { UPDATE_TEAM_MEMBER } from "../queries";
 import { DEMO_TEAM_ID, EditorModalProps,UserFormValues } from "../types";
@@ -22,8 +17,7 @@ import { ModalActions } from "./ModalActions";
 type Props = Extract<EditorModalProps, { action: "edit" }>;
 
 export const EditUserModal: React.FC<Props> = ({
-  setShowModal,
-  showModal,
+  onClose,
   member,
 }) => {
   const teamId = useStore((state) => state.teamId);
@@ -31,22 +25,16 @@ export const EditUserModal: React.FC<Props> = ({
   const toast = useToast();
 
   const handleCompleted = (successMessage: string) => {
-    setShowModal(false);
+    onClose();
     toast.success(successMessage);
   };
 
-  const [updateUser, { loading, error }] =
+  const [updateUser, { loading }] =
     useMutation(UPDATE_TEAM_MEMBER, {
       onCompleted: () => handleCompleted("Successfully updated a user"),
-      onError: (err) => {
-        if (!isUserAlreadyExistsError(err.message)) {
-          toast.error("Failed to update the user, please try again");
-        }
-      },
+      onError: () => 
+        toast.error("Failed to update the user, please try again")
     });
-
-  const showUserAlreadyExistsError =
-    !!error && isUserAlreadyExistsError(error.message);
 
   const handleSubmit = (values: UserFormValues) => {
     const formatted = { ...values, email: values.email.toLowerCase() };
@@ -67,8 +55,8 @@ export const EditUserModal: React.FC<Props> = ({
     <Dialog
       aria-labelledby="dialog-heading"
       data-testid="dialog-edit-user"
-      open={showModal || false}
-      onClose={() => setShowModal(false)}
+      open
+      onClose={onClose}
     >
       <Formik<UserFormValues>
         initialValues={{
@@ -80,6 +68,8 @@ export const EditUserModal: React.FC<Props> = ({
         validationSchema={upsertMemberSchema}
         onSubmit={handleSubmit}
         enableReinitialize
+        validateOnBlur={false}
+        validateOnChange={false}
       >
         <Form>
           <DialogTitle variant="h3" component="h1" id="dialog-heading">
@@ -89,23 +79,15 @@ export const EditUserModal: React.FC<Props> = ({
             dividers
             data-testid="modal-edit-user"
           >
-            <MemberFields />
+            <MemberFields mode={"edit"}/>
           </DialogContent>
           <DialogActions>
-            <ErrorWrapper
-              error={
-                showUserAlreadyExistsError
-                  ? AddNewMemberErrors.USER_ALREADY_EXISTS.errorMessage
-                  : undefined
-              }
-            >
-              <ModalActions
-                submitButtonText="Update user"
-                submitDataTestId="modal-edit-user-button"
-                isSubmitting={loading}
-                onCancel={() => setShowModal(false)}
-              />
-            </ErrorWrapper>
+            <ModalActions
+              submitButtonText="Update user"
+              submitDataTestId="modal-edit-user-button"
+              isSubmitting={loading}
+              onCancel={onClose}
+            />
           </DialogActions>
         </Form>
       </Formik>
