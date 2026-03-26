@@ -15,7 +15,7 @@ const BreadcrumbsContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   gap: theme.spacing(1.5),
   alignItems: "center",
-  position: "absolute",
+  position: "fixed",
   top: 0,
   left: MENU_WIDTH_COMPACT,
   zIndex: theme.zIndex.appBar,
