@@ -15,7 +15,6 @@ import { EmailField } from "./Fields/EmailField";
 import { NameFields } from "./Fields/NameFields";
 import { ModalActions } from "./ModalActions";
 
-
 export const EditUserModal: React.FC<EditUserModalProps> = ({
   onClose,
   member,

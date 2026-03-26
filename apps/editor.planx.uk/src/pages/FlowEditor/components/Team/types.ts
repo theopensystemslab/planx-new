@@ -40,7 +40,7 @@ export interface UserFormValues {
 
 export type ModalState =
   | { action: "closed" }
-  | { action: "add"; member?: never }
+  | { action: "add" }
   | { action: "edit"; member: TeamMember }
   | { action: "remove"; member: TeamMember };
 
