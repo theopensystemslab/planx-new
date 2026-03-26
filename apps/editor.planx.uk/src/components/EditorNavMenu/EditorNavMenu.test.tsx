@@ -26,6 +26,17 @@ const mockGetUserRoleForCurrentTeam = vi.fn();
 const mockGetTeam = vi.fn();
 const mockSetIsNavMenuVisible = vi.fn();
 
+const mockUser = {
+  firstName: "Test",
+  lastName: "User",
+  isPlatformAdmin: false,
+  isAnalyst: false,
+  teams: [],
+  id: 123,
+  email: "test@example.com",
+  defaultTeamId: 1,
+};
+
 vi.mock("pages/FlowEditor/lib/store", async () => ({
   useStore: vi.fn((selector) =>
     selector({
@@ -33,8 +44,10 @@ vi.mock("pages/FlowEditor/lib/store", async () => ({
       flowSlug: mockFlowName,
       flowAnalyticsLink: mockAnalyticsLink,
       getUserRoleForCurrentTeam: mockGetUserRoleForCurrentTeam,
+      getUserRole: vi.fn(),
       getTeam: mockGetTeam,
       setIsNavMenuVisible: mockSetIsNavMenuVisible,
+      user: mockUser,
     }),
   ),
   getState: () => ({
@@ -231,6 +244,30 @@ describe("flowAnalyticsRoute", () => {
   });
 });
 
+describe("account menu", () => {
+  beforeEach(() => {
+    mockUseLocation.mockReturnValue({
+      pathname: "/test-team/test-flow",
+      search: {},
+      hash: "",
+      href: "/test-team/test-flow",
+      state: { __TSR_index: 0 },
+      searchStr: "",
+      publicHref: "",
+      external: false,
+    });
+    mockTeamName = "test-team";
+    mockFlowName = "test-flow";
+    mockGetUserRoleForCurrentTeam.mockReturnValue("teamEditor");
+  });
+
+  it("displays avatar initials and toggle button", async () => {
+    const { getByText, getByLabelText } = await setup(<EditorNavMenu />);
+    expect(getByText("TU")).toBeInTheDocument();
+    expect(getByLabelText("Toggle Menu")).toBeInTheDocument();
+  });
+});
+
 describe("layout", () => {
   it("displays in a full mode on global routes", async () => {
     mockUseLocation.mockReturnValue({
@@ -245,7 +282,9 @@ describe("layout", () => {
     });
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
 
-    const { queryAllByRole, queryByLabelText } = await setup(<EditorNavMenu />);
+    const { queryAllByRole, queryByLabelText, getByText } = await setup(
+      <EditorNavMenu />,
+    );
     const menuItems = queryAllByRole("listitem");
 
     // Tooltip not present
@@ -253,6 +292,9 @@ describe("layout", () => {
 
     // Full text present
     expect(within(menuItems[0]).getByText("Select a team")).toBeInTheDocument();
+
+    // Logo displays full text in non-compact mode
+    expect(getByText("Plan✕")).toBeInTheDocument();
   });
 
   it("displays in a full mode on team routes", async () => {
