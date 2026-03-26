@@ -6,10 +6,10 @@ import server from "test/mockServer";
 
 import { setup } from "../../../../../../testUtils";
 import { TeamMembers } from "../../TeamMembers";
-import { getUsersHandler } from "../mocks/handlers";
+import { getNoExistingUserHandler, getUsersHandler } from "../mocks/handlers";
 
 export const setupTeamMembersScreen = async () => {
-  server.use(getUsersHandler());
+  server.use(getUsersHandler(), getNoExistingUserHandler());
 
   const setupResult = await setup(
     <DndProvider backend={HTML5Backend}>
