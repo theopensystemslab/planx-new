@@ -10,6 +10,7 @@ import React, { useRef } from "react";
 
 import Flow from "./components/Flow";
 import { getParentId } from "./components/Flow/lib/utils";
+import { FlowMiniMap } from "./components/FlowEditor/FlowMiniMap";
 import { ToggleDataFieldsButton } from "./components/FlowEditor/ToggleDataFieldsButton";
 import { ToggleHelpTextButton } from "./components/FlowEditor/ToggleHelpTextButton";
 import { ToggleImagesButton } from "./components/FlowEditor/ToggleImagesButton";
@@ -92,6 +93,7 @@ const FlowEditor = () => {
             showTemplatedNodeStatus={showTemplatedNodeStatus}
           />
           <RecentFlows />
+          <FlowMiniMap />
           <EditorVisualControls
             orientation="vertical"
             aria-label="Toggle node attributes"
