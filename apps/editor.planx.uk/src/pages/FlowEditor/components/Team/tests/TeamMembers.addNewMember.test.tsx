@@ -31,7 +31,7 @@ describe("when a user presses 'add a new member'", () => {
 
   it("opens the modal and displays the input fields", async () => {
     expect(await screen.findByTestId("modal-create-user-button")).toBeVisible();
-    expect(await screen.findByLabelText("First name")).toBeVisible();
+    expect(await screen.findByLabelText("Email address")).toBeVisible();
   });
 });
 
@@ -78,8 +78,7 @@ describe("when the addNewMember modal is rendered", () => {
     const { container } = await setup(
       <DndProvider backend={HTML5Backend}>
         <AddUserModal
-          showModal={true}
-          setShowModal={() => {}}
+          onClose={vi.fn()}
           action="add"
         />
       </DndProvider>,
