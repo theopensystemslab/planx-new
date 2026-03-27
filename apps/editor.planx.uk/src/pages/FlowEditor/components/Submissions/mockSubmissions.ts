@@ -17,6 +17,7 @@ const sendToEmailSuccess: Submission = {
   },
   createdAt: "2024-01-12T12:17:42.275655+00:00",
   flowName: "Dsn impact metrics",
+  address: "2, CALVERT AVENUE, COLINDALE, LONDON, BARNET, NW9 4EW",
 };
 
 const sendToBOPSFailure: Submission = {
@@ -36,6 +37,7 @@ const sendToBOPSFailure: Submission = {
   },
   createdAt: "2024-01-12T12:18:12.805747+00:00",
   flowName: "Apply for a lawful development certificate",
+  address: "2, CALVERT AVENUE, COLINDALE, LONDON, BARNET, NW9 4EW",
 };
 
 const jsonError: Submission = {
@@ -52,6 +54,7 @@ const jsonError: Submission = {
   },
   createdAt: "2024-01-12T12:18:12.805747+00:00",
   flowName: "Report a breach",
+  address: "2, CALVERT AVENUE, COLINDALE, LONDON, BARNET, NW9 4EW",
 };
 
 export const mockSubmissions: Submission[] = [

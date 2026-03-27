@@ -27,6 +27,7 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
           status: status
           retry: retry
           response: response
+          address: address
           createdAt: created_at
           flowName: flow_name
         }
