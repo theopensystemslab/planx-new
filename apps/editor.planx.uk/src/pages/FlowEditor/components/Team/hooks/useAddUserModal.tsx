@@ -4,6 +4,7 @@ import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useEffect, useState } from "react";
 
+import { isUserAlreadyExistsError } from "../errors/addNewEditorErrors";
 import { emailSchema, upsertMemberSchema } from "../formSchema";
 import {
   ADD_EXISTING_USER_TO_TEAM,
@@ -66,7 +67,12 @@ export const useAddUserModal = ({ onClose }: { onClose: () => void }) => {
     ADD_EXISTING_USER_TO_TEAM,
     {
       onCompleted: () => handleCompleted("Successfully added user to team"),
-      onError: () => toast.error("Failed to add user to team, please try again"),
+      onError: (error) => {
+        if (isUserAlreadyExistsError(error.message)) {
+          return toast.error("User is already a member of this team")
+        };
+        toast.error("Failed to add user to team, please try again")
+      },
       refetchQueries: [{ query: GET_USERS_FOR_TEAM_QUERY, variables: { teamSlug } }],
     },
   );
