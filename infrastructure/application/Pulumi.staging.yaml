@@ -98,3 +98,4 @@ config:
     secure: AAABAFmzQejlInptwqtYYDEGS+U+aizq8a/+vGvFei2iMyHKwiwCgKmuGoN3o+7D/tbH0wgZIWtEW5p6nZ5p7DZTyyw=
   application:resend-from-address:
     secure: AAABAIyo5sjwMg+bJ1iRAU44fOPdQNsdpJqTdcazQibTLktJdxQHi+hDi/0rIyrbviDizNaMNtrWcf9EZE0=
+  application:lambda-nodejs-runtime: nodejs24.x

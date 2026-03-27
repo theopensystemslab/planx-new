@@ -9,6 +9,8 @@ import { usEast1 } from "./providers";
  * and returns skeleton HTML with meta tags for published flow URLs.
  */
 export const createFlowLinkPreviewLambda = (hasuraUrl: string) => {
+  const config = new pulumi.Config();
+  const lambdaNodejsRuntime = config.require("lambda-nodejs-runtime");
 
   // Role + policy required for Lambda@Edge functions
   // https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-edge-permissions.html
@@ -42,7 +44,7 @@ export const createFlowLinkPreviewLambda = (hasuraUrl: string) => {
   const lambda = new aws.lambda.Function(
     "flow-link-preview",
     {
-      runtime: "nodejs22.x",
+      runtime: lambdaNodejsRuntime,
       handler: "flow_link_preview.handler",
       role: role.arn,
       code: new pulumi.asset.AssetArchive({
