@@ -19,8 +19,9 @@ import {
   ROLE_LABELS,
   TeamMember,
 } from "../types";
+import { AddUserModal } from "./AddUserModal";
+import { EditUserModal } from "./EditUserModal";
 import { RemoveUserModal } from "./RemoveUserModal";
-import { UserUpsertModal } from "./UserUpsertModal";
 
 const TableRowButton = styled(Button)(({ theme }) => ({
   textDecoration: "underline",
@@ -84,7 +85,7 @@ export const MembersTable = ({
           )}
         </Table>
         {modal.action !== "closed" && (
-          <UserUpsertModal showModal setShowModal={closeModal} action="add" />
+          <AddUserModal onClose={closeModal} />
         )}
       </>
     );
@@ -175,27 +176,19 @@ export const MembersTable = ({
 
       {modal.action === "remove" && (
         <RemoveUserModal
-          showModal
-          setShowModal={closeModal}
+          onClose={closeModal}
           member={modal.member}
-          action="remove"
         />
       )}
 
       {modal.action === "add" && (
-        <UserUpsertModal
-          showModal
-          setShowModal={closeModal}
-          action={modal.action}
-        />
+        <AddUserModal onClose={closeModal}/>
       )}
 
       {modal.action === "edit" && (
-        <UserUpsertModal
-          showModal
-          setShowModal={closeModal}
+        <EditUserModal
+          onClose={closeModal}
           member={modal.member}
-          action={modal.action}
         />
       )}
     </>

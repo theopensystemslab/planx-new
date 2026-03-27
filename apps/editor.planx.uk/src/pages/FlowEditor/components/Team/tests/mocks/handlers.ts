@@ -96,3 +96,10 @@ export const updateUserHandler = () =>
       },
     }),
   );
+
+export const getNoExistingUserHandler = () =>
+  graphql.query("GetUserByEmail", () =>
+    HttpResponse.json({
+      data: { users: [] },
+    }),
+  );

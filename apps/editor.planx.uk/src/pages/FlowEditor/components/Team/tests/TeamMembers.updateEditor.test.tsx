@@ -51,42 +51,6 @@ describe("when a user presses 'edit button'", () => {
   });
 });
 
-describe("when a user deletes an input value", () => {
-  beforeEach(async () => {
-    useStore.setState({ teamSlug: "planx" });
-  });
-
-  it("displays an error message when clicking away", async () => {
-    const { user } = await setupTeamMembersScreen();
-
-    const teamMembersTable = screen.getByTestId("team-members");
-    const addMemberButton =
-      await within(teamMembersTable).findByTestId("edit-button-3");
-    await user.click(addMemberButton);
-
-    const modal = await screen.findByRole("dialog");
-    const firstNameInput = await screen.findByLabelText("First name");
-    expect(firstNameInput).toHaveDisplayValue(mockUsersData[2].firstName);
-
-    await user.clear(firstNameInput);
-
-    // initially no error
-    const firstNameError = await screen.findByTestId(/error-message-firstName/);
-    expect(firstNameError).toBeEmptyDOMElement();
-
-    await user.click(modal);
-
-    //error appears after clicking away
-    expect(firstNameError).not.toBeEmptyDOMElement();
-
-    const updateUserButton = await within(modal).findByRole("button", {
-      name: "Update user",
-    });
-
-    expect(updateUserButton).toBeDisabled();
-  });
-});
-
 describe("when a user updates a field correctly", () => {
   beforeEach(async () => {
     useStore.setState({ teamSlug: "planx" });

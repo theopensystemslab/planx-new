@@ -1,6 +1,6 @@
 export const AddNewMemberErrors = {
   USER_ALREADY_EXISTS: {
-    regex: /violates unique constraint "users_email_key"/i,
+    regex: /violates unique constraint/i,
     errorMessage: "User already exists",
   },
 };
