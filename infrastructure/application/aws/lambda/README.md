@@ -47,15 +47,20 @@ sequenceDiagram
 
 ## Local testing
 
-Run the test script against a live Hasura instance:
+Run the test script against a live Hasura instance. `HASURA_URL` defaults to production if not set.
 
 ```sh
-# Production
-HASURA_URL=https://hasura.editor.planx.uk/v1/graphql node test_flow_link_preview.js southwark apply-for-a-lawful-development-certificate
+# Run both default URL types (planx.uk domain + custom council domain)
+node test_flow_link_preview.js
 
-# Staging
-HASURA_URL=https://hasura.editor.planx.dev/v1/graphql node test_flow_link_preview.js
+# Test a specific planx.{dev,uk} URL
+HASURA_URL=https://hasura.editor.planx.dev/v1/graphql node test_flow_link_preview.js https://editor.planx.dev/barnet/find-out-if-you-need-planning-permission/published
+
+# Test a specific custom domain URL
+node test_flow_link_preview.js https://planningservices.camden.gov.uk/find-out-if-you-need-planning-permission
 ```
+
+Each URL is tested against multiple scenarios: crawler request, normal browser request, non-flow URL, and (for planx.{dev,uk} URLs) draft/preview variants.
 
 ## Deployment
 
