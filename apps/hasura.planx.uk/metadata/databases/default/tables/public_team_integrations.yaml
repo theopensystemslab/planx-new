@@ -84,3 +84,13 @@ select_permissions:
         - team_id
       filter: {}
     comment: ""
+update_permissions:
+  - role: platformAdmin
+    permission:
+      columns:
+        - has_planning_data
+        - id
+        - team_id
+      filter: {}
+      check: null
+    comment: ""
