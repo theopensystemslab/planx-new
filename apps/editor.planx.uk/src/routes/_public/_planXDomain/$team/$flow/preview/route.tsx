@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
-import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import { getFlattenedFlowData } from "lib/api/flow/requests";
+import { queryClient } from "lib/queryClient";
 import {
   createPublicRouteBeforeLoad,
   createPublicRouteErrorComponent,
@@ -14,6 +15,16 @@ export const Route = createFileRoute(
   validateSearch: zodValidator(publicRouteSearchSchemas.preview),
   beforeLoad: (args) =>
     createPublicRouteBeforeLoad("preview", args.context)(args),
+  loader: ({ context }) => {
+    queryClient.prefetchQuery({
+      queryKey: ["flattenedFlowData", "preview", context.flow.id],
+      queryFn: () =>
+        getFlattenedFlowData({
+          flowId: context.flow.id,
+          isDraft: false,
+        }),
+    })
+  },
   head: createPublicRouteHead("preview"),
   errorComponent: createPublicRouteErrorComponent("preview"),
 });
