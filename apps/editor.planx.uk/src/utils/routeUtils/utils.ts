@@ -1,25 +1,18 @@
-import { ComponentType as NodeTypes } from "@opensystemslab/planx-core/types";
-import { useStore } from "pages/FlowEditor/lib/store";
-import { Store } from "pages/FlowEditor/lib/store";
 import { ApplicationPath } from "types";
 
 export interface RouteParams {
   params: Record<string, string>;
 }
 
-export const isSaveReturnFlow = (flowData: Store.Flow): boolean =>
-  Boolean(Object.values(flowData).find((node) => node.type === NodeTypes.Send));
-
-export const setPath = (flowData: Store.Flow, req: RouteParams) => {
-  // XXX: store.path is SingleSession by default
-  if (!isSaveReturnFlow(flowData)) return;
-
-  const isEmailCaptured = Boolean(useStore.getState().saveToEmail);
-  const path =
-    req.params.sessionId && !isEmailCaptured
-      ? ApplicationPath.Resume
-      : ApplicationPath.SaveAndReturn;
-  useStore.setState({ path });
+export const computePath = (
+  hasSendComponent: boolean,
+  sessionId?: string,
+  isEmailCaptured?: boolean,
+): ApplicationPath => {
+  if (!hasSendComponent) return ApplicationPath.SingleSession;
+  if (sessionId && !isEmailCaptured) return ApplicationPath.Resume;
+  
+  return ApplicationPath.SaveAndReturn;
 };
 
 //
