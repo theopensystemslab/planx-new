@@ -3,7 +3,7 @@ import SaveAndReturnLayout from "pages/layout/SaveAndReturnLayout";
 import React from "react";
 import WatermarkBackground from "ui/shared/WatermarkBackground";
 
-import { FlattenedFlow } from "../-FlattenedFlow";
+import { FlattenedFlow } from "../../../../../../utils/routeUtils/FlattenedFlow";
 
 export const Route = createFileRoute(
   "/_public/_planXDomain/$team/$flow/draft/",
@@ -12,6 +12,8 @@ export const Route = createFileRoute(
 });
 
 function RouteComponent() {
+  const { flow } = Route.useRouteContext();
+
   return (
     <SaveAndReturnLayout>
       <WatermarkBackground
@@ -19,7 +21,7 @@ function RouteComponent() {
         opacity={0.05}
         forceVisibility={true}
       />
-      <FlattenedFlow mode="draft"/>
+      <FlattenedFlow mode="draft" flowId={flow.id}/>
     </SaveAndReturnLayout>
   );
 }

@@ -3,15 +3,21 @@ import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedL
 import { Store } from "pages/FlowEditor/lib/store";
 import Questions from "pages/Preview/Questions";
 import React from "react";
-import { Route as PublishedLayoutRoute } from "routes/_public/_planXDomain/$team/$flow/published/route";
 import { updateStoreWithFlowData } from "utils/routeUtils/publicRouteHelpers";
 import { GET_PUBLISHED_FLOW_DATA } from "utils/routeUtils/publishedQueries";
 
-export const PublishedFlow = () => {
-  const { flow } = PublishedLayoutRoute.useRouteContext();
-
+/**
+ * Helper component to lazily load flow data
+ * 
+ * Splitting this up from the main flow metdata fetch (settings, theme, etc) allows us to render the basic 
+ * layout asap without a blocking request
+ * 
+ * Should always be accompanied by a prefetch (non-awaited) request on the route `loader()` function 
+ * to ensure we always kick off this long-running request immediately in the background
+ */
+export const PublishedFlow: React.FC<{ flowId: string }> = ({ flowId }) => {
   const { data, loading, error } = useQuery<{ publishedFlows: { data: Store.Flow }[]}>(GET_PUBLISHED_FLOW_DATA, {
-    variables: { flowId: flow.id },
+    variables: { flowId },
     context: { role: "public" },
   });
 
