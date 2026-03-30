@@ -1,5 +1,5 @@
 import ErrorPage from "pages/ErrorPage/ErrorPage";
-import { type Store,useStore } from "pages/FlowEditor/lib/store";
+import { type Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import type { PublicContext } from "routes/_public/-loader";
 import { z } from "zod";
@@ -75,7 +75,11 @@ export const loadPublicRouteData = async (
   };
 };
 
-export const updateStoreWithPublicRouteData = (data: PublicRouteData, search?: { sessionId?: string },): void => {
+export const updateStoreWithPublicRouteData = (
+  mode: PublicRouteMode,
+  data: PublicRouteData,
+  search?: { sessionId?: string }
+): void => {
   useStore.setState({
     id: data.flow.id,
     flowSlug: data.flowSlug,
@@ -92,11 +96,15 @@ export const updateStoreWithPublicRouteData = (data: PublicRouteData, search?: {
     useStore.setState({ lastPublishedDate: data.lastPublishedDate });
   }
 
-  const hasSendComponent = data.flow.publishedFlows[0]?.hasSendComponent;
-  const isEmailCaptured = Boolean(state.saveToEmail);
-  useStore.setState({
-    path: computePath(hasSendComponent, search?.sessionId, isEmailCaptured),
-  });
+  // Only /published routes use the SaveAndReturn layout
+  // TODO: Is there a better place for this?
+  if (mode === "published") {
+    const hasSendComponent = data.flow.publishedFlows[0]?.hasSendComponent;
+    const isEmailCaptured = Boolean(state.saveToEmail);
+    useStore.setState({
+      path: computePath(hasSendComponent, search?.sessionId, isEmailCaptured),
+    });
+  }
 };
 
 // Complete beforeLoad helper
@@ -111,7 +119,7 @@ export const createPublicRouteBeforeLoad = <T extends PublicRouteMode>(
   }) => {
     try {
       const data = await loadPublicRouteData(mode, context);
-      updateStoreWithPublicRouteData(data, search);
+      updateStoreWithPublicRouteData(mode, data, search);
 
       return data;
     } catch (error) {
