@@ -40,6 +40,8 @@ test.describe("Section statuses", () => {
       slug: "sections-test-flow",
       name: "Sections test flow",
       data: flow,
+      hasSendComponent: true,
+      hasSections: true,
     },
   };
 
@@ -546,7 +548,12 @@ async function modifyFlow({
           data
         }
         insert_published_flows_one(
-          object: { flow_id: $flowId, data: $data, publisher_id: $userId }
+          object: {
+            flow_id: $flowId
+            data: $data
+            publisher_id: $userId
+            has_send_component: true
+          }
         ) {
           id
         }

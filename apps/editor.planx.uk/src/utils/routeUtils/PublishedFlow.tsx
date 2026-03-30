@@ -1,8 +1,8 @@
 import { useQuery } from "@apollo/client";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
-import { Store } from "pages/FlowEditor/lib/store";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
 import Questions from "pages/Preview/Questions";
-import React from "react";
+import React, { useEffect } from "react";
 import { updateStoreWithFlowData } from "utils/routeUtils/publicRouteHelpers";
 import { GET_PUBLISHED_FLOW_DATA } from "utils/routeUtils/publishedQueries";
 
@@ -16,15 +16,20 @@ import { GET_PUBLISHED_FLOW_DATA } from "utils/routeUtils/publishedQueries";
  * to ensure we always kick off this long-running request immediately in the background
  */
 export const PublishedFlow: React.FC<{ flowId: string }> = ({ flowId }) => {
-  const { data, loading, error } = useQuery<{ publishedFlows: { data: Store.Flow }[]}>(GET_PUBLISHED_FLOW_DATA, {
-    variables: { flowId },
-    context: { role: "public" },
-  });
+  const { data, loading, error } = useQuery<{ publishedFlows: { data: Store.Flow }[] }>(
+    GET_PUBLISHED_FLOW_DATA,
+    { variables: { flowId }, context: { role: "public" } },
+  );
 
-  if (loading) return <DelayedLoadingIndicator />;
-  if (error || !data ) throw error;
+  const isStoreReady = useStore((state) => Object.keys(state.flow).length > 0);
 
-  updateStoreWithFlowData(data.publishedFlows[0].data);
+  useEffect(() => {
+    if (!data) return;
+    updateStoreWithFlowData(data.publishedFlows[0].data);
+  }, [data]);
+
+  if (error) throw error;
+  if (loading || !isStoreReady) return <DelayedLoadingIndicator />;
 
   return <Questions previewEnvironment="standalone" />;
 };
