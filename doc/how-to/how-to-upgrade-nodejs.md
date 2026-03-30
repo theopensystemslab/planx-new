@@ -55,3 +55,13 @@ The following steps need to be taken on both AWS Staging and Production account 
 **Steps**
 
 Select function > Runtime settings > Edit > Runtime > Select Node version > Save
+
+### Lambda@Edge function runtime
+
+The `flow_link_preview.js` Lambda@Edge function is managed via Pulumi. Its Node.js runtime is configured via the `lambda-nodejs-runtime` Pulumi config value.
+
+To upgrade, update the value in each stack:
+
+```shell
+pulumi config set lambda-nodejs-runtime nodejs24.x --stack <stack>
+```

@@ -145,3 +145,4 @@ config:
     secure: AAABACSDFBG/Z8fAVReyp/KD41l9YAsuqldyHSYDCBmZaY7EqAgsod8TjdXYLvOR4CQ8c07XTJ8UsirXOwQ=
   application:resend-api-key:
     secure: AAABAGl5L3MjVaGcm6xCnQeGpoBflVREcAielFkw1CSGs7dfeQJoU41d30Br/QVTkrn8dk/dr6IVavqT3Cbtq07jGuI=
+  application:lambda-nodejs-runtime: nodejs24.x
