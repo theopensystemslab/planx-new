@@ -4,7 +4,7 @@ import { TestWarningPage } from "pages/Preview/TestWarningPage";
 import React from "react";
 import WatermarkBackground from "ui/shared/WatermarkBackground";
 
-import { FlattenedFlow } from "../-FlattenedFlow";
+import { FlattenedFlow } from "../../../../../../utils/routeUtils/FlattenedFlow";
 
 export const Route = createFileRoute(
   "/_public/_planXDomain/$team/$flow/preview/",
@@ -13,6 +13,8 @@ export const Route = createFileRoute(
 });
 
 function RouteComponent() {
+  const { flow } = Route.useRouteContext();
+
   return (
     <TestWarningPage>
       <SaveAndReturnLayout>
@@ -21,7 +23,7 @@ function RouteComponent() {
           opacity={0.05}
           forceVisibility={true}
         />
-        <FlattenedFlow mode="preview"/>
+        <FlattenedFlow mode="preview" flowId={flow.id}/>
       </SaveAndReturnLayout>
     </TestWarningPage>
   );

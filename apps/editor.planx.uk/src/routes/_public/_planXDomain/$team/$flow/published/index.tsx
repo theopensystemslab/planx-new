@@ -4,7 +4,7 @@ import SaveAndReturnLayout from "pages/layout/SaveAndReturnLayout";
 import React from "react";
 import WatermarkBackground from "ui/shared/WatermarkBackground";
 
-import { PublishedFlow } from "./-PublishedFlow";
+import { PublishedFlow } from "../../../../../../utils/routeUtils/PublishedFlow";
 
 export const Route = createFileRoute(
   "/_public/_planXDomain/$team/$flow/published/",
@@ -13,11 +13,13 @@ export const Route = createFileRoute(
 });
 
 function RouteComponent() {
+  const { flow } = Route.useRouteContext()
+
   return (
     <OfflineLayout>
       <SaveAndReturnLayout>
         <WatermarkBackground variant="dark" opacity={0.05} />
-        <PublishedFlow/>
+        <PublishedFlow flowId={flow.id}/>
       </SaveAndReturnLayout>
     </OfflineLayout>
   );
