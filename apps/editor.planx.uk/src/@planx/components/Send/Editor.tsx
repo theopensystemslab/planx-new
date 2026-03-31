@@ -123,7 +123,6 @@ const SendComponent: React.FC<Props> = (props) => {
           (email: SubmissionEmailInput) => email.submissionEmail,
         ),
       )}
-      enableReinitialize={true}
     >
       {(formik) => {
         const toggleSwitch = (value: SendIntegration) => {
