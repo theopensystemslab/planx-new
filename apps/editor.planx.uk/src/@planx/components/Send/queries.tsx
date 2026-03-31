@@ -29,11 +29,17 @@ export const INSERT_TEAM_SUBMISSION_INTEGRATION = gql`
     $teamId: Int!
     $defaultEmail: Boolean!
   ) {
-  insertSubmissionIntegrationsOne: insert_submission_integrations_one(object: {default_email: $defaultEmail, submission_email: $submissionEmail, team_id: $teamId}) {
-    default_email
-    id
-    submission_email
-    team_id
+    insertSubmissionIntegrationsOne: insert_submission_integrations_one(
+      object: {
+        default_email: $defaultEmail
+        submission_email: $submissionEmail
+        team_id: $teamId
+      }
+    ) {
+      default_email
+      id
+      submission_email
+      team_id
+    }
   }
-}
-`
+`;

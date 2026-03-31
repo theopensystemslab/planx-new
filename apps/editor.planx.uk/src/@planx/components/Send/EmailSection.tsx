@@ -1,34 +1,30 @@
+import Link from "@mui/material/Link";
+import MenuItem from "@mui/material/MenuItem";
+import { SelectChangeEvent } from "@mui/material/Select";
+import Typography from "@mui/material/Typography";
+import { SendIntegration } from "@opensystemslab/planx-core/types";
+import { Send } from "@planx/components/Send/model";
+import { getIn } from "formik";
+import { useFormikContext } from "formik";
+import { useEffect } from "react";
+import React from "react";
+import ModalSectionContent from "ui/editor/ModalSectionContent";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
-import MenuItem from "@mui/material/MenuItem";
-import Link from "@mui/material/Link";
-import { SelectChangeEvent } from "@mui/material/Select";
-import Typography from "@mui/material/Typography";
-import { getIn } from "formik";
-import ModalSectionContent from "ui/editor/ModalSectionContent";
 import { Switch } from "ui/shared/Switch";
-import { SendIntegration } from "@opensystemslab/planx-core/types";
-import { useEffect } from "react";
-import { useFormikContext } from "formik";
-import { Send } from "@planx/components/Send/model";
 
 import { useFlowEmailId } from "./hooks/useFlowEmailId";
 import { useTeamSubmissionIntegrations } from "./hooks/useGetTeamSubmissionIntegrations";
-
-import {
-  EmailEmptyStateProps,
-  EmailSelectionProps,
-} from "./types";
-import React from "react";
+import { EmailEmptyStateProps, EmailSelectionProps } from "./types";
 
 interface EmailSectionProps {
-    id: string;
-    teamId: number;
-    teamSlug: string;
-    toggleSwitch: (value: SendIntegration) => void;
-    disabled?: boolean;
+  id: string;
+  teamId: number;
+  teamSlug: string;
+  toggleSwitch: (value: SendIntegration) => void;
+  disabled?: boolean;
 }
 
 const EmailLoadingState: React.FC = () => (
@@ -108,8 +104,8 @@ const EmailSelection: React.FC<EmailSelectionProps> = ({
         value={newEmail}
         placeholder="Enter new email"
         onChange={(e) => {
-            setFieldValue("newEmail", e.target.value);
-          }}
+          setFieldValue("newEmail", e.target.value);
+        }}
         disabled={disabled}
         errorMessage={newEmailError}
       />
@@ -118,97 +114,94 @@ const EmailSelection: React.FC<EmailSelectionProps> = ({
 );
 
 const EmailSection: React.FC<EmailSectionProps> = ({
-    id,
-    teamId,
-    teamSlug,
-    toggleSwitch,
-    disabled,
+  id,
+  teamId,
+  teamSlug,
+  toggleSwitch,
+  disabled,
 }) => {
-    const { values, setFieldValue, errors } = useFormikContext<Send>();
+  const { values, setFieldValue, errors } = useFormikContext<Send>();
 
-    const {
-        data: flowData,
-        loading: flowLoading,
-        error: flowError,
-        refetch: refetchFlowData,
-    } = useFlowEmailId(id);
+  const {
+    data: flowData,
+    loading: flowLoading,
+    error: flowError,
+    refetch: refetchFlowData,
+  } = useFlowEmailId(id);
 
-    const existingEmailId = flowData?.flowsByPK?.submissionEmailId;
+  const existingEmailId = flowData?.flowsByPK?.submissionEmailId;
 
-    const { data, loading, error } = useTeamSubmissionIntegrations(teamId);
-    const emailOptions = data?.submissionIntegrations || [];
-    const defaultEmail = emailOptions.find(
+  const { data, loading, error } = useTeamSubmissionIntegrations(teamId);
+  const emailOptions = data?.submissionIntegrations || [];
+  const defaultEmail = emailOptions.find(
     (email) => email.defaultEmail === true,
-    );
-    const insertNewDefaultEmail = defaultEmail ? false : true; // if an existing defaultEmail is set, the newly added one is not default
-    
-    const isNewEmailSelected = values.submissionEmailId === "new-email";
-    
-    useEffect(() => {
-        if (flowData) {
-            const existingEmailId = flowData.flowsByPK?.submissionEmailId;
-            if (!values.submissionEmailId && existingEmailId) {
-            setFieldValue("submissionEmailId", existingEmailId);
-            } else if (!values.submissionEmailId && defaultEmail?.id) {
-            setFieldValue("submissionEmailId", defaultEmail.id);
-            }
-        }
-        }, [flowData, defaultEmail?.id, values.submissionEmailId]);
-    
-      const handleSelectChange = (event: SelectChangeEvent<unknown>) => {
-        const selectedValue = event.target.value as string;
-        setFieldValue("submissionEmailId", selectedValue);
-      };
-    
-      const currentEmail = emailOptions.find(
-        (email) => email.id === existingEmailId,
+  );
+  const insertNewDefaultEmail = defaultEmail ? false : true; // if an existing defaultEmail is set, the newly added one is not default
+
+  const isNewEmailSelected = values.submissionEmailId === "new-email";
+
+  useEffect(() => {
+    if (flowData) {
+      const existingEmailId = flowData.flowsByPK?.submissionEmailId;
+      if (!values.submissionEmailId && existingEmailId) {
+        setFieldValue("submissionEmailId", existingEmailId);
+      } else if (!values.submissionEmailId && defaultEmail?.id) {
+        setFieldValue("submissionEmailId", defaultEmail.id);
+      }
+    }
+  }, [flowData, defaultEmail?.id, values.submissionEmailId]);
+
+  const handleSelectChange = (event: SelectChangeEvent<unknown>) => {
+    const selectedValue = event.target.value as string;
+    setFieldValue("submissionEmailId", selectedValue);
+  };
+
+  const currentEmail = emailOptions.find(
+    (email) => email.id === existingEmailId,
+  );
+
+  const renderEmailContent = () => {
+    if (loading || flowLoading) {
+      return <EmailLoadingState />;
+    } else if (error || flowError) {
+      return <EmailErrorState />;
+    } else if (emailOptions.length === 0) {
+      return (
+        <EmailEmptyState
+          teamSlug={teamSlug}
+          error={getIn(errors, "submissionEmailId")}
+        />
       );
+    } else
+      return (
+        <EmailSelection
+          teamSlug={teamSlug}
+          emailOptions={emailOptions}
+          currentEmail={currentEmail}
+          newEmail={values.newEmail}
+          submissionEmailId={values.submissionEmailId}
+          isNewEmailSelected={isNewEmailSelected}
+          handleSelectChange={handleSelectChange}
+          disabled={disabled}
+          newEmailError={errors.newEmail}
+          setFieldValue={setFieldValue}
+        />
+      );
+  };
 
-    const renderEmailContent = () => {
-        if (loading || flowLoading) {
-          return <EmailLoadingState />;
-        } else if (error || flowError) {
-          return <EmailErrorState />;
-        } else if (emailOptions.length === 0) {
-          return (
-            <EmailEmptyState
-              teamSlug={teamSlug}
-              error={getIn(errors, "submissionEmailId")}
-            />
-          );
-        } else
-          return (
-            <EmailSelection
-              teamSlug={teamSlug}
-              emailOptions={emailOptions}
-              currentEmail={currentEmail}
-              newEmail={values.newEmail}
-              submissionEmailId={values.submissionEmailId}
-              isNewEmailSelected={isNewEmailSelected}
-              handleSelectChange={handleSelectChange}
-              disabled={disabled}
-              newEmailError={errors.newEmail}
-              setFieldValue={setFieldValue}
-            />
-          );
-      };
-
-    return ( 
-        <ModalSectionContent title={"Email"}>
-            <InputRow>
-            <Switch
-                checked={values.destinations.includes("email")}
-                onChange={() => toggleSwitch("email")}
-                label={`Send to email`}
-                disabled={disabled}
-            />
-            </InputRow>
-            <>
-            {values.destinations.includes("email") &&
-                renderEmailContent()}
-            </>
-        </ModalSectionContent>
-    )
+  return (
+    <ModalSectionContent title={"Email"}>
+      <InputRow>
+        <Switch
+          checked={values.destinations.includes("email")}
+          onChange={() => toggleSwitch("email")}
+          label={`Send to email`}
+          disabled={disabled}
+        />
+      </InputRow>
+      <>{values.destinations.includes("email") && renderEmailContent()}</>
+    </ModalSectionContent>
+  );
 };
 
 export default EmailSection;
