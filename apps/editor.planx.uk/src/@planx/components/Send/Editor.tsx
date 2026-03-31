@@ -49,7 +49,7 @@ const SendComponent: React.FC<Props> = (props) => {
   const defaultEmail = emailOptions.find(
     (email: SubmissionEmailInput) => email.defaultEmail === true,
   );
-  const insertNewDefaultEmail = defaultEmail ? false : true;
+  const insertNewDefaultEmail = !defaultEmail;
 
   const [insertSubmissionIntegration] = useInsertSubmissionIntegration();
   const [updateFlowSubmissionEmail] = useUpdateFlowSubmissionEmail();
@@ -119,6 +119,7 @@ const SendComponent: React.FC<Props> = (props) => {
           );
         }
       }}
+      enableReinitialize={true}
     >
       {(formik) => {
         const toggleSwitch = (value: SendIntegration) => {

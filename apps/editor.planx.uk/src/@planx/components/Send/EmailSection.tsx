@@ -126,7 +126,6 @@ const EmailSection: React.FC<EmailSectionProps> = ({
     data: flowData,
     loading: flowLoading,
     error: flowError,
-    refetch: refetchFlowData,
   } = useFlowEmailId(id);
 
   const existingEmailId = flowData?.flowsByPK?.submissionEmailId;
@@ -136,20 +135,8 @@ const EmailSection: React.FC<EmailSectionProps> = ({
   const defaultEmail = emailOptions.find(
     (email) => email.defaultEmail === true,
   );
-  const insertNewDefaultEmail = defaultEmail ? false : true; // if an existing defaultEmail is set, the newly added one is not default
 
   const isNewEmailSelected = values.submissionEmailId === "new-email";
-
-  useEffect(() => {
-    if (flowData) {
-      const existingEmailId = flowData.flowsByPK?.submissionEmailId;
-      if (!values.submissionEmailId && existingEmailId) {
-        setFieldValue("submissionEmailId", existingEmailId);
-      } else if (!values.submissionEmailId && defaultEmail?.id) {
-        setFieldValue("submissionEmailId", defaultEmail.id);
-      }
-    }
-  }, [flowData, defaultEmail?.id, values.submissionEmailId]);
 
   const handleSelectChange = (event: SelectChangeEvent<unknown>) => {
     const selectedValue = event.target.value as string;
