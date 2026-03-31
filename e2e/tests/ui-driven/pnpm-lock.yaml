@@ -14,8 +14,8 @@ importers:
   .:
     dependencies:
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#17a4eea
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/17a4eeaba5c6be65cf9cd456e438951c4e53e7df(@types/react@19.2.6)
+        specifier: github:theopensystemslab/planx-core#18f3e25
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/18f3e25526194917d91709ef46d7377725e57351(@types/react@19.2.6)
       axios:
         specifier: ^1.13.6
         version: 1.13.6
@@ -318,8 +318,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/17a4eeaba5c6be65cf9cd456e438951c4e53e7df':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/17a4eeaba5c6be65cf9cd456e438951c4e53e7df}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/18f3e25526194917d91709ef46d7377725e57351':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/18f3e25526194917d91709ef46d7377725e57351}
     version: 1.0.0
 
   '@playwright/test@1.58.2':
@@ -1795,7 +1795,7 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.20.1
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/17a4eeaba5c6be65cf9cd456e438951c4e53e7df(@types/react@19.2.6)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/18f3e25526194917d91709ef46d7377725e57351(@types/react@19.2.6)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.6)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.6)(react@18.3.1))(@types/react@19.2.6)(react@18.3.1)
