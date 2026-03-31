@@ -69,10 +69,11 @@ const lpsLoginLimiter = rateLimit(
 
 /**
  * Limit the number of requests which can send a "Save & Return" email
+ * XXX: `email` is not always provided (e.g. Hasura triggered events) - optional chaining here is intentional
  */
 const sendEmailLimiter = rateLimit(
   getEmailLimiterOptions("SendEmail", (req: Request, _res: Response) =>
-    req.body?.payload?.email.trim().toLowerCase(),
+    req.body?.payload?.email?.trim().toLowerCase(),
   ),
 );
 
