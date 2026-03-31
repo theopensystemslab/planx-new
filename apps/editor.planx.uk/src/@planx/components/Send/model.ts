@@ -47,7 +47,7 @@ export function getCombinedEventsPayload({
   return payload;
 }
 
-export const validationSchema: SchemaOf<Send> =
+export const validateSchema = (existingEmails: string[]) =>
   baseNodeDataValidationSchema.concat(
     object({
       title: string().required(),
@@ -69,14 +69,8 @@ export const validationSchema: SchemaOf<Send> =
             .test(
               "is-unique",
               "Please enter a unique email address.",
-              async function (value) {
+              function (value) {
                 if (!value) return true;
-                const { existingEmails } = this.options.context || {};
-                if (!existingEmails || !Array.isArray(existingEmails)) {
-                  throw new Error(
-                    "Validation context is missing existing emails.",
-                  );
-                }
                 return !existingEmails.includes(value);
               },
             ),

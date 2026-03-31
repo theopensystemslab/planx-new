@@ -6,7 +6,6 @@ import {
   ComponentType as TYPES,
   SendIntegration,
 } from "@opensystemslab/planx-core/types";
-import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { Formik, getIn } from "formik";
 import { SubmissionEmailInput } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -29,7 +28,7 @@ import { useFlowEmailId } from "./hooks/useFlowEmailId";
 import { useTeamSubmissionIntegrations } from "./hooks/useGetTeamSubmissionIntegrations";
 import { useInsertSubmissionIntegration } from "./hooks/useInsertSubmissionIntegration";
 import { useUpdateFlowSubmissionEmail } from "./hooks/useUpdateFlowSubmissionEmail";
-import { parseSend, Send, validationSchema } from "./model";
+import { parseSend, Send, validateSchema } from "./model";
 
 export type Props = EditorProps<TYPES.Send, Send>;
 
@@ -119,6 +118,11 @@ const SendComponent: React.FC<Props> = (props) => {
           );
         }
       }}
+      validationSchema={validateSchema(
+        emailOptions.map(
+          (email: SubmissionEmailInput) => email.submissionEmail,
+        ),
+      )}
       enableReinitialize={true}
     >
       {(formik) => {

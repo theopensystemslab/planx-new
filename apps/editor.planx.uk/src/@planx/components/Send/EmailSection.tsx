@@ -6,7 +6,6 @@ import { SendIntegration } from "@opensystemslab/planx-core/types";
 import { Send } from "@planx/components/Send/model";
 import { getIn } from "formik";
 import { useFormikContext } from "formik";
-import { useEffect } from "react";
 import React from "react";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -66,6 +65,7 @@ const EmailSelection: React.FC<EmailSelectionProps> = ({
   disabled,
   newEmailError,
   setFieldValue,
+  touched,
 }) => (
   <>
     <InputRow>
@@ -107,7 +107,7 @@ const EmailSelection: React.FC<EmailSelectionProps> = ({
           setFieldValue("newEmail", e.target.value);
         }}
         disabled={disabled}
-        errorMessage={newEmailError}
+        errorMessage={touched.newEmail ? newEmailError : undefined}
       />
     )}
   </>
@@ -120,7 +120,7 @@ const EmailSection: React.FC<EmailSectionProps> = ({
   toggleSwitch,
   disabled,
 }) => {
-  const { values, setFieldValue, errors } = useFormikContext<Send>();
+  const { values, setFieldValue, errors, touched } = useFormikContext<Send>();
 
   const {
     data: flowData,
@@ -166,12 +166,13 @@ const EmailSection: React.FC<EmailSectionProps> = ({
           emailOptions={emailOptions}
           currentEmail={currentEmail}
           newEmail={values.newEmail}
-          submissionEmailId={values.submissionEmailId}
+          submissionEmailId={values.submissionEmailId || defaultEmail?.id}
           isNewEmailSelected={isNewEmailSelected}
           handleSelectChange={handleSelectChange}
           disabled={disabled}
           newEmailError={errors.newEmail}
           setFieldValue={setFieldValue}
+          touched={touched}
         />
       );
   };

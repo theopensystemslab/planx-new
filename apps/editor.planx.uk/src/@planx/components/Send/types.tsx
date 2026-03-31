@@ -1,6 +1,8 @@
 import { SelectChangeEvent } from "@mui/material/Select";
-import { FormikErrors, FormikHelpers } from "formik";
+import { FormikErrors, FormikHelpers, FormikTouched } from "formik";
 import { SubmissionEmailInput } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
+
+import { Send } from "./model";
 
 export interface GetFlowEmailIdQuery {
   flowsByPK: {
@@ -60,4 +62,5 @@ export interface EmailSelectionProps {
   disabled?: boolean;
   newEmailError?: FormikErrors<string>;
   setFieldValue: FormikHelpers<any>["setFieldValue"];
+  touched: FormikTouched<Send>;
 }
