@@ -13,13 +13,11 @@ export const Route = createFileRoute(
 });
 
 function RouteComponent() {
-  const { flow } = Route.useRouteContext()
-
   return (
     <OfflineLayout>
       <SaveAndReturnLayout>
         <WatermarkBackground variant="dark" opacity={0.05} />
-        <PublishedFlow flowId={flow.id}/>
+        <PublishedFlow />
       </SaveAndReturnLayout>
     </OfflineLayout>
   );
