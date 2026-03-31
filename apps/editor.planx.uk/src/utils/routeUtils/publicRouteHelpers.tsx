@@ -87,6 +87,7 @@ export const updateStoreWithPublicRouteData = (
     flowSlug: data.flowSlug,
     flowStatus: data.flow.status,
     flowName: data.flow.name,
+    lastPublishedDate: data?.lastPublishedDate,
   });
 
   const state = useStore.getState();
@@ -94,12 +95,7 @@ export const updateStoreWithPublicRouteData = (
   state.setFlowSettings(data.flow.settings);
   state.setTeam(data.flow.team);
 
-  if (data.lastPublishedDate) {
-    useStore.setState({ lastPublishedDate: data.lastPublishedDate });
-  }
-
-  // Only /published routes use the SaveAndReturn layout
-  // TODO: Is there a better place for this?
+  // Only /published routes use the SaveAndReturn layout, but this needs to be resolved on beforeLoad()
   if (mode === "published") {
     const hasSendComponent = data.flow.publishedFlows[0]?.hasSendComponent;
     const isEmailCaptured = Boolean(state.saveToEmail);
@@ -109,7 +105,6 @@ export const updateStoreWithPublicRouteData = (
   }
 };
 
-// Complete beforeLoad helper
 export const createPublicRouteBeforeLoad = <T extends PublicRouteMode>(
   mode: T,
   context: PublicContext,

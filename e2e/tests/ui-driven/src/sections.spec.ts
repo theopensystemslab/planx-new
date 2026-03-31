@@ -41,7 +41,6 @@ test.describe("Section statuses", () => {
       name: "Sections test flow",
       data: flow,
       hasSendComponent: true,
-      hasSections: true,
     },
   };
 
