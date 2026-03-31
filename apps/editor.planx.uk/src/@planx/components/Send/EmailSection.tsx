@@ -6,7 +6,7 @@ import { SendIntegration } from "@opensystemslab/planx-core/types";
 import { Send } from "@planx/components/Send/model";
 import { getIn } from "formik";
 import { useFormikContext } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
@@ -146,6 +146,12 @@ const EmailSection: React.FC<EmailSectionProps> = ({
   const currentEmail = emailOptions.find(
     (email) => email.id === existingEmailId,
   );
+
+  useEffect(() => {
+    if (!values.submissionEmailId && defaultEmail) {
+      setFieldValue("submissionEmailId", defaultEmail.id);
+    }
+  }, [defaultEmail?.id]);
 
   const renderEmailContent = () => {
     if (loading || flowLoading) {
