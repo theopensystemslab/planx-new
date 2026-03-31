@@ -9,12 +9,10 @@ export const Route = createFileRoute("/_public/_customDomain/$flow/")({
 });
 
 function RouteComponent() {
-  const { flow } = Route.useRouteContext();
-
   return (
     <OfflineLayout>
       <SaveAndReturnLayout>
-        <PublishedFlow flowId={flow.id}/>
+        <PublishedFlow />
       </SaveAndReturnLayout>
     </OfflineLayout>
   );

@@ -1,3 +1,4 @@
+import { client } from "lib/graphql";
 import ErrorPage from "pages/ErrorPage/ErrorPage";
 import { type Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -6,6 +7,7 @@ import { z } from "zod";
 
 import {
   fetchSettingsForPublishedView,
+  GET_PUBLISHED_FLOW_DATA,
   type PublishedFlow,
   PublishedViewSettings,
 } from "./publishedQueries";
@@ -78,7 +80,7 @@ export const loadPublicRouteData = async (
 export const updateStoreWithPublicRouteData = (
   mode: PublicRouteMode,
   data: PublicRouteData,
-  search?: { sessionId?: string }
+  search?: { sessionId?: string },
 ): void => {
   useStore.setState({
     id: data.flow.id,
@@ -112,11 +114,7 @@ export const createPublicRouteBeforeLoad = <T extends PublicRouteMode>(
   mode: T,
   context: PublicContext,
 ) => {
-  return async ({
-    search,
-  }: {
-    search: PublicRouteSearchParams[T];
-  }) => {
+  return async ({ search }: { search: PublicRouteSearchParams[T] }) => {
     try {
       const data = await loadPublicRouteData(mode, context);
       updateStoreWithPublicRouteData(mode, data, search);
@@ -191,11 +189,30 @@ export const createPublicRouteHead = (mode: PublicRouteMode) => {
   return undefined;
 };
 
-export const updateStoreWithFlowData = (
-  flowData: Store.Flow,
-): void => {
-  useStore.setState({ flow: flowData });
+export const updateStoreWithFlowData = (flowData: Store.Flow): void => {
+  useStore.setState({ flow: flowData, isFlowLoaded: false });
   // Initialise navigation store now that we have flow data to derive sections from
   // TODO: Pre-compute this on publish?
   useStore.getState().initNavigationStore();
+  useStore.setState({ isFlowLoaded: true });
+};
+
+/**
+ * Prefetch flow data. Do not await - just kick off request.
+ * Once loaded, set the required store values
+ */
+export const prefetchPublishedFlowData = ({
+  context,
+}: {
+  context: PublicRouteData;
+}) => {
+  client
+    .query({
+      query: GET_PUBLISHED_FLOW_DATA,
+      variables: { flowId: context.flow.id },
+      context: { role: "public" },
+    })
+    .then(({ data }) => {
+      updateStoreWithFlowData(data.publishedFlows[0].data);
+    });
 };
