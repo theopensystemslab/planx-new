@@ -157,7 +157,7 @@ export const TeamSelect: React.FC<Props> = ({
             {currentTeam?.name || "Current team"}
           </Typography>
         </Box>
-        <UnfoldMoreIcon sx={{ color: "text.secondary", fontSize: "1.5rem" }} />
+        <UnfoldMoreIcon sx={{ color: "text.secondary", fontSize: "1.25rem" }} />
       </StyledButtonBase>
       <Dialog
         open={open}
@@ -174,7 +174,7 @@ export const TeamSelect: React.FC<Props> = ({
             maxWidth: "260px",
             minWidth: "unset",
             borderTop: "none",
-            borderRadius: theme => theme.shape.borderRadius,
+            borderRadius: (theme) => theme.shape.borderRadius,
           },
         }}
       >

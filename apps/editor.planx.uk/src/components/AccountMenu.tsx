@@ -24,9 +24,10 @@ const ProfileSection = styled(MuiToolbar)(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  padding: theme.spacing(1, 0.5),
+  padding: theme.spacing(0.5, 0.5, 1, 0.5),
   backgroundColor: theme.palette.background.paper,
   borderRight: `1px solid ${theme.palette.border.light}`,
+  borderTop: `1px solid ${theme.palette.border.light}`,
   zIndex: theme.zIndex.appBar,
   "@media print": {
     visibility: "hidden",

@@ -7,7 +7,7 @@ import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export const MENU_WIDTH_COMPACT = 51;
-export const MENU_WIDTH_FULL = 190;
+export const MENU_WIDTH_FULL = 200;
 
 export const Root = styled(Box, {
   shouldForwardProp: (prop) => prop !== "compact",
@@ -40,7 +40,7 @@ export const MenuWrap = styled("ul")(({ theme }) => ({
 }));
 
 export const MenuItem = styled("li")(({ theme }) => ({
-  margin: theme.spacing(0.1, 0),
+  margin: theme.spacing(0.5, 0),
   padding: 0,
 }));
 
@@ -58,7 +58,8 @@ export const MenuButton = styled(IconButton, {
   justifyContent: "flex-start",
   gap: theme.spacing(0.65),
   alignItems: "flex-start",
-  borderRadius: "3px",
+  borderRadius: theme.shape.borderRadius,
+  padding: theme.spacing(0.8, 0.5),
   "&:hover": {
     background: theme.palette.common.white,
     boxShadow: "0 1px 1.5px 0 rgba(0, 0, 0, 0.2)",
@@ -77,6 +78,14 @@ export const MenuButton = styled(IconButton, {
   "& > svg": {
     opacity: 0.75,
   },
+}));
+
+export const AccordionContent = styled("ul")(({ theme }) => ({
+  listStyle: "none",
+  margin: theme.spacing(0, 0.25, 0, 1.25),
+  padding: 0,
+  borderLeft: `2px solid ${theme.palette.border.light}`,
+  paddingLeft: theme.spacing(0.75),
 }));
 
 export const Subtitle = styled(Typography)(({ theme }) => ({

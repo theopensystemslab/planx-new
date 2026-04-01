@@ -1,6 +1,8 @@
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import CurrencyPoundIcon from "@mui/icons-material/CurrencyPound";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GroupIcon from "@mui/icons-material/Group";
@@ -12,6 +14,7 @@ import RateReviewIcon from "@mui/icons-material/RateReview";
 import SchoolIcon from "@mui/icons-material/School";
 import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
+import Collapse from "@mui/material/Collapse";
 import Tooltip from "@mui/material/Tooltip";
 import {
   useLocation,
@@ -20,7 +23,7 @@ import {
 } from "@tanstack/react-router";
 import AccountMenu from "components/AccountMenu";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import EditorIcon from "ui/icons/Editor";
 import LocalPlanningServicesIcon from "ui/icons/LocalPlanningServices";
 
@@ -28,6 +31,7 @@ import { useLPS } from "../../hooks/useLPS";
 import NavMenuHeader from "./components/NavMenuHeader";
 import { TeamSelect } from "./components/TeamSelect";
 import {
+  AccordionContent,
   MenuButton,
   MenuItem,
   MenuTitle,
@@ -37,17 +41,13 @@ import {
   StyledChip,
   Subtitle,
 } from "./styles";
-import { Route, RoutesForURL } from "./types";
-
-interface MenuSection {
-  subtitle?: string;
-  routes: Route[];
-}
+import { MenuSection, Route, RoutesForURL } from "./types";
 
 function EditorNavMenu() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const isRouterLoading = useRouterState({ select: (s) => s.isLoading });
+  const [openAccordions, setOpenAccordions] = useState<Set<string>>(new Set());
   const [teamSlug, flowSlug, flowAnalyticsLink, role, team] = useStore(
     (state) => [
       state.teamSlug,
@@ -128,6 +128,7 @@ function EditorNavMenu() {
     },
     {
       subtitle: "Settings",
+      accordion: true,
       routes: [
         {
           title: "Team settings",
@@ -152,6 +153,8 @@ function EditorNavMenu() {
     },
     {
       subtitle: "Data",
+      accordion: true,
+      icon: LeaderboardIcon,
       routes: [
         {
           title: "Submissions",
@@ -192,6 +195,7 @@ function EditorNavMenu() {
     },
     {
       subtitle: "Documentation",
+      accordion: true,
       routes: [
         {
           title: "Resources",
@@ -296,6 +300,73 @@ function EditorNavMenu() {
     }))
     .filter((section) => section.routes.length > 0);
 
+  const toggleAccordion = (subtitle: string) => {
+    setOpenAccordions((prev) => {
+      const next = new Set(prev);
+      if (next.has(subtitle)) {
+        next.delete(subtitle);
+      } else {
+        next.add(subtitle);
+      }
+      return next;
+    });
+  };
+
+  const renderAccordionToggle = (subtitle: string, Icon: Route["Icon"]) => {
+    const isOpen = openAccordions.has(subtitle);
+    const ChevronIcon = isOpen ? ExpandLessIcon : ExpandMoreIcon;
+    return (
+      <MenuButton
+        isActive={false}
+        disableRipple
+        onClick={() => toggleAccordion(subtitle)}
+      >
+        <Icon fontSize="small" />
+        <MenuTitle variant="body3" pt={0.15}>
+          {subtitle}
+        </MenuTitle>
+        <ChevronIcon sx={{ fontSize: "1rem", ml: "auto", mt: 0.2 }} />
+      </MenuButton>
+    );
+  };
+
+  const renderAccordionItemButton = (
+    title: string,
+    route: string,
+    disabled?: boolean,
+    isNew?: boolean,
+  ) => {
+    const showExternalIcon = isExternalLink(route) && !disabled;
+
+    const button = (
+      <MenuButton
+        isActive={isActive(route)}
+        disabled={disabled}
+        disableRipple
+        onClick={() => handleClick(route, disabled)}
+        sx={{ p: 0.8 }}
+      >
+        <MenuTitle variant="body3" pt={0.15}>
+          {title}
+        </MenuTitle>
+        {isNew && <StyledChip label="new" size="small" color="success" />}
+        {showExternalIcon && (
+          <NorthEastIcon sx={{ fontSize: "0.8rem", ml: "auto", mt: 0.2 }} />
+        )}
+      </MenuButton>
+    );
+
+    if (disabled) {
+      return (
+        <Tooltip title={`${title} unavailable`} placement="right">
+          <Box component="span">{button}</Box>
+        </Tooltip>
+      );
+    }
+
+    return button;
+  };
+
   const renderMenuButton = (
     title: string,
     Icon: Route["Icon"],
@@ -341,6 +412,7 @@ function EditorNavMenu() {
               disabled={disabled}
               disableRipple
               onClick={() => handleClick(route, disabled)}
+              sx={{ padding: "8px" }}
             >
               <Icon />
             </MenuButton>
@@ -377,18 +449,48 @@ function EditorNavMenu() {
           </Box>
         )}
         <MenuWrap>
-          {visibleSections.map((section, sectionIndex) => (
-            <React.Fragment key={sectionIndex}>
-              {section.subtitle && (
-                <Subtitle variant="body3">{section.subtitle}</Subtitle>
-              )}
-              {section.routes.map(({ title, Icon, route, disabled, isNew }) => (
-                <MenuItem key={title}>
-                  {renderMenuItem(title, Icon, route, disabled, isNew)}
+          {visibleSections.map((section, sectionIndex) => {
+            if (section.accordion && section.subtitle) {
+              const FirstIcon = section.icon ?? section.routes[0].Icon;
+              const isOpen = openAccordions.has(section.subtitle);
+              return (
+                <MenuItem key={sectionIndex}>
+                  {renderAccordionToggle(section.subtitle, FirstIcon)}
+                  <Collapse in={isOpen}>
+                    <AccordionContent>
+                      {section.routes.map(
+                        ({ title, route, disabled, isNew }) => (
+                          <MenuItem key={title}>
+                            {renderAccordionItemButton(
+                              title,
+                              route,
+                              disabled,
+                              isNew,
+                            )}
+                          </MenuItem>
+                        ),
+                      )}
+                    </AccordionContent>
+                  </Collapse>
                 </MenuItem>
-              ))}
-            </React.Fragment>
-          ))}
+              );
+            }
+
+            return (
+              <React.Fragment key={sectionIndex}>
+                {section.subtitle && (
+                  <Subtitle variant="body3">{section.subtitle}</Subtitle>
+                )}
+                {section.routes.map(
+                  ({ title, Icon, route, disabled, isNew }) => (
+                    <MenuItem key={title}>
+                      {renderMenuItem(title, Icon, route, disabled, isNew)}
+                    </MenuItem>
+                  ),
+                )}
+              </React.Fragment>
+            );
+          })}
         </MenuWrap>
         <AccountMenu compact={compact} />
       </NavBarContainer>
