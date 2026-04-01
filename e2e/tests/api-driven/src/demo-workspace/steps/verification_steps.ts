@@ -3,7 +3,7 @@ import { CustomWorld } from "./background_steps.js";
 import { strict as assert } from "node:assert";
 import {
   createFlow,
-  deleteFlow,
+  archiveFlow,
   Flow,
   getFlowBySlug,
   updateFlow,
@@ -92,19 +92,22 @@ Then<CustomWorld>("I should be able to update the flow", async function (this) {
   assert.ok(hasSucceeded, `Cannot update the flow `);
 });
 
-Then<CustomWorld>("I should be able to delete the flow", async function (this) {
-  const hasSucceeded = await deleteFlow(this.demoClient, this.demoFlowId);
+Then<CustomWorld>(
+  "I should be able to archive the flow",
+  async function (this) {
+    const hasSucceeded = await archiveFlow(this.demoClient, this.demoFlowId);
 
-  assert.ok(hasSucceeded, `Cannot delete the flow `);
-});
+    assert.ok(hasSucceeded, `Cannot archive the flow `);
+  },
+);
 
 Then<CustomWorld>(
   "I should not have access to modify the flow",
   async function (this) {
     const canUpdate = await updateFlow(this.demoClient, this.teamFlows[0].id);
-    const canDelete = await deleteFlow(this.demoClient, this.teamFlows[0].id);
+    const canArchive = await archiveFlow(this.demoClient, this.teamFlows[0].id);
     assert.ok(
-      !canUpdate && !canDelete,
+      !canUpdate && !canArchive,
       "Flow can be modified by the demo user",
     );
   },
