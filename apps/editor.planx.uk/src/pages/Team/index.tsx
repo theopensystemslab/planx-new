@@ -26,6 +26,7 @@ import { Card, CardContent } from "./components/FlowCard/styles";
 import { FlowTable } from "./components/FlowTable";
 import { ShowingServicesHeader } from "./components/ShowingServicesHeader";
 import { filterOptions, sortOptions } from "./helpers/sortAndFilterOptions";
+import TeamLayout from "./TeamLayout";
 
 const DashboardList = styled("ul")(({ theme }) => ({
   padding: theme.spacing(2, 0, 3),
@@ -93,6 +94,11 @@ interface TeamProps {
 }
 
 const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
+  const links = [
+    { label: "Flows", path: "/" },
+    { label: "Archive", path: "/archive" },
+  ];
+
   const [
     { id: teamId, slug },
     canUserEditTeam,
@@ -224,20 +230,14 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
             gap: 2,
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 2,
-            }}
+          <TeamLayout 
+            title="Flows"
+            links={links}
+            getNavigationPath={(path) => `/app/${slug}${path}`}
           >
-            <Typography variant="h2" component="h1" pr={1}>
-              Flows
-            </Typography>
             {isTrial && <InfoChip label="Trial account" />}
             {showAddFlowButton && <AddFlow />}
-          </Box>
+          </TeamLayout>
           {teamHasFlows && (
             <SearchBox<FlowSummary>
               records={flows}
