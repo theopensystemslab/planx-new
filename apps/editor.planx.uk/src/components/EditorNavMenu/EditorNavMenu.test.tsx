@@ -108,13 +108,14 @@ describe("teamLayoutRoutes", () => {
   it("only displays the external link routes for teamViewers", async () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("teamViewer");
 
-    const { queryAllByRole } = await setup(<EditorNavMenu />);
-    const menuItems = queryAllByRole("listitem");
-    expect(menuItems).toHaveLength(6);
-    expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
-    expect(within(menuItems[1]).getByText("Planning Data")).toBeInTheDocument();
+    const { queryAllByRole, getByRole, user } = await setup(<EditorNavMenu />);
+    expect(queryAllByRole("listitem")).toHaveLength(3);
+    expect(queryAllByRole("listitem")[0]).toHaveTextContent("Flows");
+
+    await user.click(getByRole("button", { name: "Data" }));
+    expect(getByRole("button", { name: /Planning Data/ })).toBeInTheDocument();
     expect(
-      within(menuItems[2]).getByText("Local Planning Services"),
+      getByRole("button", { name: /Local Planning Services/ }),
     ).toBeInTheDocument();
   });
 
@@ -123,18 +124,19 @@ describe("teamLayoutRoutes", () => {
 
     const { getAllByRole } = await setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(12);
+    expect(menuItems).toHaveLength(4);
     expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
   });
 
   it("displays for platformAdmins", async () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
 
-    const { getAllByRole } = await setup(<EditorNavMenu />);
-    const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(12);
-    expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
-    expect(within(menuItems[1]).getByText("Team settings")).toBeInTheDocument();
+    const { getAllByRole, getByRole, user } = await setup(<EditorNavMenu />);
+    expect(getAllByRole("listitem")).toHaveLength(4);
+    expect(getAllByRole("listitem")[0]).toHaveTextContent("Flows");
+
+    await user.click(getByRole("button", { name: "Settings" }));
+    expect(getByRole("button", { name: /Team settings/ })).toBeInTheDocument();
   });
 
   it("displays subtitles for sections", async () => {
@@ -165,14 +167,16 @@ describe("teamPlanningDataRoute", () => {
   it("is disabled without a reference code", async () => {
     mockGetTeam.mockReturnValue({ settings: { referenceCode: null } });
 
-    const { getByRole } = await setup(<EditorNavMenu />);
+    const { getByRole, user } = await setup(<EditorNavMenu />);
+    await user.click(getByRole("button", { name: "Data" }));
     expect(getByRole("button", { name: /Planning Data/ })).toBeDisabled();
   });
 
   it("is enabled with a reference code", async () => {
     mockGetTeam.mockReturnValue({ settings: { referenceCode: "TEST" } });
 
-    const { getByRole } = await setup(<EditorNavMenu />);
+    const { getByRole, user } = await setup(<EditorNavMenu />);
+    await user.click(getByRole("button", { name: "Data" }));
     expect(getByRole("button", { name: /Planning Data/ })).toBeEnabled();
   });
 });
