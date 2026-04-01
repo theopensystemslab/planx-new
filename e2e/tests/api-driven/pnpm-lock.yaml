@@ -12,8 +12,8 @@ importers:
         specifier: ^11.3.0
         version: 11.3.0
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#17a4eea
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/17a4eeaba5c6be65cf9cd456e438951c4e53e7df(@types/react@19.2.6)
+        specifier: github:theopensystemslab/planx-core#eb4f355
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/eb4f355fcf108c0368369ede98bcb8d3e3c89590(@types/react@19.2.6)
       axios:
         specifier: ^1.13.6
         version: 1.13.6
@@ -24,11 +24,11 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0
       graphql:
-        specifier: ^16.13.1
-        version: 16.13.1
+        specifier: ^16.13.2
+        version: 16.13.2
       graphql-tag:
         specifier: ^2.12.6
-        version: 2.12.6(graphql@16.13.1)
+        version: 2.12.6(graphql@16.13.2)
       jsonwebtoken:
         specifier: ^9.0.3
         version: 9.0.3
@@ -386,8 +386,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/17a4eeaba5c6be65cf9cd456e438951c4e53e7df':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/17a4eeaba5c6be65cf9cd456e438951c4e53e7df}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/eb4f355fcf108c0368369ede98bcb8d3e3c89590':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/eb4f355fcf108c0368369ede98bcb8d3e3c89590}
     version: 1.0.0
 
   '@pkgjs/parseargs@0.11.0':
@@ -800,8 +800,8 @@ packages:
   fast-xml-builder@1.1.4:
     resolution: {integrity: sha512-f2jhpN4Eccy0/Uz9csxh3Nu6q4ErKxf0XIsasomfOihuSUa3/xw6w8dnOtCDgEItQFJG8KyXPzQXzcODDrrbOg==}
 
-  fast-xml-parser@5.5.8:
-    resolution: {integrity: sha512-Z7Fh2nVQSb2d+poDViM063ix2ZGt9jmY1nWhPfHBOK2Hgnb/OW3P4Et3P/81SEej0J7QbWtJqxO05h8QYfK7LQ==}
+  fast-xml-parser@5.5.9:
+    resolution: {integrity: sha512-jldvxr1MC6rtiZKgrFnDSvT8xuH+eJqxqOBThUVjYrxssYTo1avZLGql5l0a0BAERR01CadYzZ83kVEkbyDg+g==}
     hasBin: true
 
   fastq@1.20.1:
@@ -916,8 +916,8 @@ packages:
     peerDependencies:
       graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
 
-  graphql@16.13.1:
-    resolution: {integrity: sha512-gGgrVCoDKlIZ8fIqXBBb0pPKqDgki0Z/FSKNiQzSGj2uEYHr1tq5wmBegGwJx6QB5S5cM0khSBpi/JFHMCvsmQ==}
+  graphql@16.13.2:
+    resolution: {integrity: sha512-5bJ+nf/UCpAjHM8i06fl7eLyVC9iuNAjm9qzkiu2ZGhM0VscSvS6WDPfAwkdkBuoXGM9FJSbKl6wylMwP9Ktig==}
     engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
 
   has-ansi@4.0.1:
@@ -1512,8 +1512,8 @@ packages:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
 
-  strnum@2.2.1:
-    resolution: {integrity: sha512-BwRvNd5/QoAtyW1na1y1LsJGQNvRlkde6Q/ipqqEaivoMdV+B1OMOTVdwR+N/cwVUcIt9PYyHmV8HyexCZSupg==}
+  strnum@2.2.2:
+    resolution: {integrity: sha512-DnR90I+jtXNSTXWdwrEy9FakW7UX+qUZg28gj5fk2vxxl7uS/3bpI4fjFYVmdK9etptYBPNkpahuQnEwhwECqA==}
 
   stylis@4.2.0:
     resolution: {integrity: sha512-Orov6g6BB1sDfYgzWfTHDOxamtX1bE/zo104Dh9e6fqJ3PooipYyfJ0pUmrZO2wAvO8YbEyeFrkV91XTsGMSrw==}
@@ -2023,9 +2023,9 @@ snapshots:
     dependencies:
       '@formatjs/fast-memoize': 3.1.1
 
-  '@graphql-typed-document-node/core@3.2.0(graphql@16.13.1)':
+  '@graphql-typed-document-node/core@3.2.0(graphql@16.13.2)':
     dependencies:
-      graphql: 16.13.1
+      graphql: 16.13.2
 
   '@humanwhocodes/config-array@0.13.0':
     dependencies:
@@ -2157,7 +2157,7 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.20.1
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/17a4eeaba5c6be65cf9cd456e438951c4e53e7df(@types/react@19.2.6)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/eb4f355fcf108c0368369ede98bcb8d3e3c89590(@types/react@19.2.6)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.6)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.6)(react@18.3.1))(@types/react@19.2.6)(react@18.3.1)
@@ -2168,9 +2168,9 @@ snapshots:
       cheerio: 1.2.0
       copyfiles: 2.4.1
       eslint: 8.57.1
-      fast-xml-parser: 5.5.8
-      graphql: 16.13.1
-      graphql-request: 6.1.0(graphql@16.13.1)
+      fast-xml-parser: 5.5.9
+      graphql: 16.13.2
+      graphql-request: 6.1.0(graphql@16.13.2)
       json-schema-to-typescript: 15.0.4
       lodash-es: 4.17.23
       marked: 17.0.5
@@ -2624,11 +2624,11 @@ snapshots:
     dependencies:
       path-expression-matcher: 1.2.0
 
-  fast-xml-parser@5.5.8:
+  fast-xml-parser@5.5.9:
     dependencies:
       fast-xml-builder: 1.1.4
       path-expression-matcher: 1.2.0
-      strnum: 2.2.1
+      strnum: 2.2.2
 
   fastq@1.20.1:
     dependencies:
@@ -2736,20 +2736,20 @@ snapshots:
 
   graphemer@1.4.0: {}
 
-  graphql-request@6.1.0(graphql@16.13.1):
+  graphql-request@6.1.0(graphql@16.13.2):
     dependencies:
-      '@graphql-typed-document-node/core': 3.2.0(graphql@16.13.1)
+      '@graphql-typed-document-node/core': 3.2.0(graphql@16.13.2)
       cross-fetch: 3.2.0
-      graphql: 16.13.1
+      graphql: 16.13.2
     transitivePeerDependencies:
       - encoding
 
-  graphql-tag@2.12.6(graphql@16.13.1):
+  graphql-tag@2.12.6(graphql@16.13.2):
     dependencies:
-      graphql: 16.13.1
+      graphql: 16.13.2
       tslib: 2.8.1
 
-  graphql@16.13.1: {}
+  graphql@16.13.2: {}
 
   has-ansi@4.0.1:
     dependencies:
@@ -3295,7 +3295,7 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  strnum@2.2.1: {}
+  strnum@2.2.2: {}
 
   stylis@4.2.0: {}
 
