@@ -28,7 +28,7 @@ jobs:
           tag: pullrequest
           ssh_key_ids: ${{ secrets.VULTR_SSH_KEY_IDS }}
 
-      - uses: marocchino/sticky-pull-request-comment@v2
+      - uses: marocchino/sticky-pull-request-comment@v3
         with:
           header: vultr
           message: |

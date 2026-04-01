@@ -337,13 +337,13 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           hasura_endpoint: https://hasura.${{ env.FULL_DOMAIN }}
           project_dir: ./${{ env.HASURA_DIRECTORY }}
-      - uses: marocchino/sticky-pull-request-comment@v2
+      - uses: marocchino/sticky-pull-request-comment@v3
         if: ${{steps.hasura-change.outputs.change_html != ''}}
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: hasura-change-summary
           message: ${{ steps.hasura-change.outputs.change_html }}
-      - uses: marocchino/sticky-pull-request-comment@v2
+      - uses: marocchino/sticky-pull-request-comment@v3
         if: ${{ steps.hasura-change.outputs.change_html == '' }}
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -483,7 +483,7 @@ jobs:
           target: "planx-new/"
           overwrite: true
 
-      - uses: marocchino/sticky-pull-request-comment@v2
+      - uses: marocchino/sticky-pull-request-comment@v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: vultr
