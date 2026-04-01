@@ -17,7 +17,7 @@ import { Presentational, PresentationalProps } from "./Public/Presentational";
  * If an applicant uploads a PDF location plan or skips drawing, then we fallback to checking for constraints that intersect with the address point selected using FindProperty.
  *
  * Example sites:
- * - "With Intersections" is based on a site boundary around LAMBETH PALACE, LAMBETH PALACE ROAD, LONDON, SE1 7JU in July 2023
+ * - "With Intersections" is based on a site boundary around LAMBETH PALACE, LAMBETH PALACE ROAD, LONDON, SE1 7JU in April 2026
  * - "Without Intersections" is based on a site boundary around 2, WALLER ROAD, BEACONSFIELD, BUCKINGHAMSHIRE, HP9 2HE in July 2023
  */
 export default {
