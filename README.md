@@ -48,6 +48,7 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 5. Move into the hasura directory `cd ../apps/hasura.planx.uk` and install dependencies `pnpm i`.
 
 6. Open [Hasura's](https://hasura.io/) web console (`cd apps/hasura.planx.uk` then `pnpm start`) and check that your Google email address is in the `users` table, if not then add it. This will eventually allow you to authenticate into the application as an admin.
+  - In order to sign in to the editor, you will need to either set the `is_platform_admin` boolean on your user, or add your user to a `team` via the `team_members` join table, setting their role to `teamEditor`
 
 7. Move into the editor directory `cd ../apps/editor.planx.uk` & install dependencies `pnpm i`.
 
