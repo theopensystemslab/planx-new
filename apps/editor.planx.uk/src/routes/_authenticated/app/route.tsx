@@ -67,10 +67,7 @@ export const Route = createFileRoute("/_authenticated/app")({
       if (isRedirect(error)) throw error;
 
       throw redirect({
-        to: "/login",
-        search: {
-          redirectTo: pathname !== "/app" ? pathname : undefined,
-        },
+        to: "/logout",
       });
     }
   },
