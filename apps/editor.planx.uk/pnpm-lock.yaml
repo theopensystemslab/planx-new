@@ -59,8 +59,8 @@ importers:
         specifier: 1.0.0-alpha.11
         version: 1.0.0-alpha.11
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#17a4eea
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/17a4eeaba5c6be65cf9cd456e438951c4e53e7df(@types/react@18.3.28)
+        specifier: github:theopensystemslab/planx-core#eb4f355
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/eb4f355fcf108c0368369ede98bcb8d3e3c89590(@types/react@18.3.28)
       '@tanstack/react-query':
         specifier: ^5.90.21
         version: 5.95.2(react@18.3.1)
@@ -1887,8 +1887,8 @@ packages:
   '@opensystemslab/map@1.0.0-alpha.11':
     resolution: {integrity: sha512-ETACPCk5Coef1L2kNT3MhIzLxVPDpyopxsTNcgeRyEqL71HBfTklGyC5+t7HgEgxRkX5wlUXqmKPNL9DdpVj8g==}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/17a4eeaba5c6be65cf9cd456e438951c4e53e7df':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/17a4eeaba5c6be65cf9cd456e438951c4e53e7df}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/eb4f355fcf108c0368369ede98bcb8d3e3c89590':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/eb4f355fcf108c0368369ede98bcb8d3e3c89590}
     version: 1.0.0
 
   '@parcel/watcher-android-arm64@2.5.6':
@@ -4468,6 +4468,10 @@ packages:
 
   graphql@16.13.1:
     resolution: {integrity: sha512-gGgrVCoDKlIZ8fIqXBBb0pPKqDgki0Z/FSKNiQzSGj2uEYHr1tq5wmBegGwJx6QB5S5cM0khSBpi/JFHMCvsmQ==}
+    engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
+
+  graphql@16.13.2:
+    resolution: {integrity: sha512-5bJ+nf/UCpAjHM8i06fl7eLyVC9iuNAjm9qzkiu2ZGhM0VscSvS6WDPfAwkdkBuoXGM9FJSbKl6wylMwP9Ktig==}
     engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
 
   has-bigints@1.1.0:
@@ -8200,6 +8204,10 @@ snapshots:
     dependencies:
       graphql: 16.13.1
 
+  '@graphql-typed-document-node/core@3.2.0(graphql@16.13.2)':
+    dependencies:
+      graphql: 16.13.2
+
   '@humanwhocodes/config-array@0.13.0':
     dependencies:
       '@humanwhocodes/object-schema': 2.0.3
@@ -8609,7 +8617,7 @@ snapshots:
     transitivePeerDependencies:
       - preact
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/17a4eeaba5c6be65cf9cd456e438951c4e53e7df(@types/react@18.3.28)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/eb4f355fcf108c0368369ede98bcb8d3e3c89590(@types/react@18.3.28)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@18.3.28)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@18.3.28)(react@18.3.1))(@types/react@18.3.28)(react@18.3.1)
@@ -8621,8 +8629,8 @@ snapshots:
       copyfiles: 2.4.1
       eslint: 8.57.1
       fast-xml-parser: 5.5.9
-      graphql: 16.13.1
-      graphql-request: 6.1.0(graphql@16.13.1)
+      graphql: 16.13.2
+      graphql-request: 6.1.0(graphql@16.13.2)
       json-schema-to-typescript: 15.0.4
       lodash-es: 4.17.23
       marked: 17.0.5
@@ -11554,11 +11562,11 @@ snapshots:
 
   graphemer@1.4.0: {}
 
-  graphql-request@6.1.0(graphql@16.13.1):
+  graphql-request@6.1.0(graphql@16.13.2):
     dependencies:
-      '@graphql-typed-document-node/core': 3.2.0(graphql@16.13.1)
+      '@graphql-typed-document-node/core': 3.2.0(graphql@16.13.2)
       cross-fetch: 3.2.0
-      graphql: 16.13.1
+      graphql: 16.13.2
     transitivePeerDependencies:
       - encoding
 
@@ -11568,6 +11576,8 @@ snapshots:
       tslib: 2.8.1
 
   graphql@16.13.1: {}
+
+  graphql@16.13.2: {}
 
   has-bigints@1.1.0: {}
 
