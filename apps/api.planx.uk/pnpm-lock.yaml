@@ -77,7 +77,7 @@ importers:
         specifier: ^4.0.5
         version: 4.0.5
       graphql:
-        specifier: ^16.13.1
+        specifier: ^16.13.2
         version: 16.13.2
       graphql-request:
         specifier: ^4.3.0

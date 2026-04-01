@@ -18,7 +18,7 @@ importers:
         version: 2.1.9
       '@apollo/client':
         specifier: ^3.14.0
-        version: 3.14.1(@types/react@18.3.28)(graphql@16.13.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@16.13.1))
+        version: 3.14.1(@types/react@18.3.28)(graphql@16.13.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@16.13.2))
       '@ctrl/tinycolor':
         specifier: ^4.2.0
         version: 4.2.0
@@ -152,11 +152,11 @@ importers:
         specifier: ^7.1.0
         version: 7.1.0
       graphql:
-        specifier: ^16.13.1
-        version: 16.13.1
+        specifier: ^16.13.2
+        version: 16.13.2
       graphql-tag:
         specifier: ^2.12.6
-        version: 2.12.6(graphql@16.13.1)
+        version: 2.12.6(graphql@16.13.2)
       idb:
         specifier: ^8.0.3
         version: 8.0.3
@@ -246,7 +246,7 @@ importers:
         version: 5.2.2
       subscriptions-transport-ws:
         specifier: ^0.11.0
-        version: 0.11.0(graphql@16.13.1)
+        version: 0.11.0(graphql@16.13.2)
       tippy.js:
         specifier: ^6.3.7
         version: 6.3.7
@@ -4466,10 +4466,6 @@ packages:
     peerDependencies:
       graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
 
-  graphql@16.13.1:
-    resolution: {integrity: sha512-gGgrVCoDKlIZ8fIqXBBb0pPKqDgki0Z/FSKNiQzSGj2uEYHr1tq5wmBegGwJx6QB5S5cM0khSBpi/JFHMCvsmQ==}
-    engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
-
   graphql@16.13.2:
     resolution: {integrity: sha512-5bJ+nf/UCpAjHM8i06fl7eLyVC9iuNAjm9qzkiu2ZGhM0VscSvS6WDPfAwkdkBuoXGM9FJSbKl6wylMwP9Ktig==}
     engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
@@ -7104,14 +7100,14 @@ snapshots:
       '@types/json-schema': 7.0.15
       js-yaml: 4.1.1
 
-  '@apollo/client@3.14.1(@types/react@18.3.28)(graphql@16.13.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@16.13.1))':
+  '@apollo/client@3.14.1(@types/react@18.3.28)(graphql@16.13.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(subscriptions-transport-ws@0.11.0(graphql@16.13.2))':
     dependencies:
-      '@graphql-typed-document-node/core': 3.2.0(graphql@16.13.1)
+      '@graphql-typed-document-node/core': 3.2.0(graphql@16.13.2)
       '@wry/caches': 1.0.1
       '@wry/equality': 0.5.7
       '@wry/trie': 0.5.0
-      graphql: 16.13.1
-      graphql-tag: 2.12.6(graphql@16.13.1)
+      graphql: 16.13.2
+      graphql-tag: 2.12.6(graphql@16.13.2)
       hoist-non-react-statics: 3.3.2
       optimism: 0.18.1
       prop-types: 15.8.1
@@ -7123,7 +7119,7 @@ snapshots:
     optionalDependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      subscriptions-transport-ws: 0.11.0(graphql@16.13.1)
+      subscriptions-transport-ws: 0.11.0(graphql@16.13.2)
     transitivePeerDependencies:
       - '@types/react'
 
@@ -8199,10 +8195,6 @@ snapshots:
   '@formatjs/intl-localematcher@0.8.2':
     dependencies:
       '@formatjs/fast-memoize': 3.1.1
-
-  '@graphql-typed-document-node/core@3.2.0(graphql@16.13.1)':
-    dependencies:
-      graphql: 16.13.1
 
   '@graphql-typed-document-node/core@3.2.0(graphql@16.13.2)':
     dependencies:
@@ -11570,12 +11562,10 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  graphql-tag@2.12.6(graphql@16.13.1):
+  graphql-tag@2.12.6(graphql@16.13.2):
     dependencies:
-      graphql: 16.13.1
+      graphql: 16.13.2
       tslib: 2.8.1
-
-  graphql@16.13.1: {}
 
   graphql@16.13.2: {}
 
@@ -12550,7 +12540,7 @@ snapshots:
       '@open-draft/deferred-promise': 2.2.0
       '@types/statuses': 2.0.6
       cookie: 1.1.1
-      graphql: 16.13.1
+      graphql: 16.13.2
       headers-polyfill: 4.0.3
       is-node-process: 1.2.0
       outvariant: 1.4.3
@@ -13844,11 +13834,11 @@ snapshots:
 
   stylis@4.3.6: {}
 
-  subscriptions-transport-ws@0.11.0(graphql@16.13.1):
+  subscriptions-transport-ws@0.11.0(graphql@16.13.2):
     dependencies:
       backo2: 1.0.2
       eventemitter3: 3.1.2
-      graphql: 16.13.1
+      graphql: 16.13.2
       iterall: 1.3.0
       symbol-observable: 1.2.0
       ws: 7.5.10
