@@ -10,7 +10,7 @@ export const addRedirectToCloudFlareListenerRule = async ({ serviceName, listene
   listenerLabel: string;
   domain: string;
 }) => {
-  new aws.lb.ListenerRule(`${serviceName}-${listenerLabel}-redirectToCloudFlare`, {
+  return new aws.lb.ListenerRule(`${serviceName}-${listenerLabel}-redirectToCloudFlare`, {
     listenerArn,
     priority: 100,
     actions: [{

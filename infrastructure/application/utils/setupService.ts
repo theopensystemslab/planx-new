@@ -102,8 +102,8 @@ export const setupLoadBalancer = async ({
       })
     });
   
-  ["HTTPS", "HTTP"].forEach(protocol => {
-    addRedirectToCloudFlareListenerRule({
+  ["HTTPS", "HTTP"].forEach(async protocol => {
+    await addRedirectToCloudFlareListenerRule({
       serviceName,
       listenerArn: getListenerArn(protocol),
       listenerLabel: protocol.toLowerCase(),
