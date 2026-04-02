@@ -20,6 +20,7 @@ const CRAWLER_USER_AGENTS = [
   /WhatsApp/i,            // WhatsApp
   /Applebot/i,            // iMessage, Safari, Siri
   /Googlebot/i,           // Google Search
+  /SkypeUriPreview/i,     // MS Teams/Skype
 ];
 
 // planx.{uk,dev} domains: regex for identifying team-hosted domains and extracting team and flow slugs from path
