@@ -402,9 +402,7 @@ select_permissions:
         - data_merged
         - first_online_at
         - production_url
-      filter:
-        archived_at:
-          _is_null: true
+      filter: {}
       allow_aggregations: true
   - role: public
     permission:
@@ -466,9 +464,7 @@ select_permissions:
         - data_merged
         - first_online_at
         - production_url
-      filter:
-        archived_at:
-          _is_null: true
+      filter: {}
       allow_aggregations: true
 update_permissions:
   - role: api
