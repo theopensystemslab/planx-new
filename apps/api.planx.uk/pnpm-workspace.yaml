@@ -1,2 +1,4 @@
 allowBuilds:
   "@opensystemslab/planx-core": true
+
+minimumReleaseAge: 10080
