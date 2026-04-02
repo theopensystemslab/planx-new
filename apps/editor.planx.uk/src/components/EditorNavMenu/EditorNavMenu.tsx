@@ -18,18 +18,21 @@ import {
   useNavigate,
   useRouterState,
 } from "@tanstack/react-router";
+import AccountMenu from "components/AccountMenu";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef } from "react";
 import EditorIcon from "ui/icons/Editor";
 import LocalPlanningServicesIcon from "ui/icons/LocalPlanningServices";
 
 import { useLPS } from "../../hooks/useLPS";
+import NavMenuHeader from "./components/NavMenuHeader";
 import { TeamSelect } from "./components/TeamSelect";
 import {
   MenuButton,
   MenuItem,
   MenuTitle,
   MenuWrap,
+  NavBarContainer,
   Root,
   StyledChip,
   Subtitle,
@@ -285,8 +288,6 @@ function EditorNavMenu() {
     return accessibleByCurrentUserRole;
   };
 
-  const setIsNavMenuVisible = useStore((state) => state.setIsNavMenuVisible);
-
   // Filter accessible routes within each section
   const visibleSections = sections
     .map((section) => ({
@@ -294,19 +295,6 @@ function EditorNavMenu() {
       routes: section.routes.filter(isRouteAccessible),
     }))
     .filter((section) => section.routes.length > 0);
-
-  // Count total visible routes across all sections
-  const totalVisibleRoutes = visibleSections.reduce(
-    (count, section) => count + section.routes.length,
-    0,
-  );
-
-  React.useEffect(() => {
-    setIsNavMenuVisible(totalVisibleRoutes >= 2);
-  }, [totalVisibleRoutes, setIsNavMenuVisible]);
-
-  // Hide menu if the user does not have a selection of items
-  if (totalVisibleRoutes < 2) return null;
 
   const renderMenuButton = (
     title: string,
@@ -376,30 +364,34 @@ function EditorNavMenu() {
 
   return (
     <Root compact={compact}>
-      {teamSlug && !compact && (
-        <Box sx={(theme) => ({ padding: theme.spacing(1, 0.5, 0, 0.5) })}>
-          <TeamSelect
-            currentTeamSlug={teamSlug}
-            onTeamSelect={(slug) =>
-              navigate({ to: "/app/$team", params: { team: slug } })
-            }
-          />
-        </Box>
-      )}
-      <MenuWrap>
-        {visibleSections.map((section, sectionIndex) => (
-          <React.Fragment key={sectionIndex}>
-            {section.subtitle && (
-              <Subtitle variant="body3">{section.subtitle}</Subtitle>
-            )}
-            {section.routes.map(({ title, Icon, route, disabled, isNew }) => (
-              <MenuItem key={title}>
-                {renderMenuItem(title, Icon, route, disabled, isNew)}
-              </MenuItem>
-            ))}
-          </React.Fragment>
-        ))}
-      </MenuWrap>
+      <NavBarContainer>
+        <NavMenuHeader compact={compact} />
+        {teamSlug && !compact && (
+          <Box sx={(theme) => ({ padding: theme.spacing(1, 0.5, 0, 0.5) })}>
+            <TeamSelect
+              currentTeamSlug={teamSlug}
+              onTeamSelect={(slug) =>
+                navigate({ to: "/app/$team", params: { team: slug } })
+              }
+            />
+          </Box>
+        )}
+        <MenuWrap>
+          {visibleSections.map((section, sectionIndex) => (
+            <React.Fragment key={sectionIndex}>
+              {section.subtitle && (
+                <Subtitle variant="body3">{section.subtitle}</Subtitle>
+              )}
+              {section.routes.map(({ title, Icon, route, disabled, isNew }) => (
+                <MenuItem key={title}>
+                  {renderMenuItem(title, Icon, route, disabled, isNew)}
+                </MenuItem>
+              ))}
+            </React.Fragment>
+          ))}
+        </MenuWrap>
+        <AccountMenu compact={compact} />
+      </NavBarContainer>
     </Root>
   );
 }

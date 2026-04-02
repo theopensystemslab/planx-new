@@ -4,7 +4,6 @@ import Box from "@mui/material/Box";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { styled } from "@mui/material/styles";
 import { MENU_WIDTH_COMPACT } from "components/EditorNavMenu/styles";
-import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
 import { parentNodeIsTemplatedInternalPortal } from "pages/FlowEditor/utils";
 import React, { useRef } from "react";
 
@@ -27,7 +26,7 @@ const EditorContainer = styled(Box, {
   alignItems: "stretch",
   overflow: "hidden",
   flexGrow: 1,
-  maxHeight: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
+  maxHeight: "100vh",
   maxWidth: hasNavMenu ? `calc(100vw - ${MENU_WIDTH_COMPACT}px)` : "100vw",
 }));
 
