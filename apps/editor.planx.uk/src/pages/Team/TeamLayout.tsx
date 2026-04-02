@@ -2,20 +2,20 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
-import { useNavigate } from "@tanstack/react-router";
 import React, { ReactNode } from "react";
-import { useLocation } from "react-use";
+import { Dispatch, SetStateAction } from "react";
 import StyledTab from "ui/editor/StyledTab";
 
-export interface TeamLink {
-  label: string;
-  path: string;
-}
+import { FlowView } from "./index"
+
+const tabs = [
+  { label: "Flows", path: "flows" },
+  { label: "Archive", path: "archive" },
+];
 
 interface Props {
-  title: string;
-  links: TeamLink[];
-  getNavigationPath: (path: string) => string;
+  flowView: "flows" | "archive";
+  setFlowView: Dispatch<SetStateAction<FlowView>>;
   children: ReactNode;
 }
 
@@ -28,21 +28,13 @@ const TabList = styled(Box)(() => ({
 })); // TODO: a lot of this is copied from SettingsLayout, is there a better pattern for reusing them?
 
 const TeamLayout: React.FC<Props> = ({
-  title,
-  links,
-  getNavigationPath,
+  flowView,
+  setFlowView,
   children
 }) => {
-  const navigate = useNavigate();
-  const pathname = useLocation();
 
-  const activeTab =
-    links.find((link) =>
-      pathname.href?.includes(`/settings${link.path}`),
-    )?.path || links[0]?.path;
-
-  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-    navigate({ to: getNavigationPath(newValue) });
+  const handleChange = () => {
+    flowView === "flows" ? setFlowView("archive") : setFlowView("flows")
   };
 
   return (
@@ -62,8 +54,8 @@ const TeamLayout: React.FC<Props> = ({
             {children}
           </Box>
           <TabList>
-            <Tabs onChange={handleChange} value={activeTab} aria-label={title}>
-              {links.map(({ label, path }) => (
+            <Tabs onChange={handleChange} value={flowView} aria-label={"Flows"}>
+              {tabs.map(({ label, path }) => (
                 <StyledTab
                   size="large"
                   key={path}

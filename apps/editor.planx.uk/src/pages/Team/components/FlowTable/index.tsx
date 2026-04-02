@@ -33,12 +33,14 @@ interface FlowTableProps {
   teamId: number;
   teamSlug: string;
   refreshFlows: () => void;
+  showDetails: boolean;
 }
 
 export const FlowTable: React.FC<FlowTableProps> = ({
   flows,
   teamSlug,
   refreshFlows,
+  showDetails,
 }) => {
   const { headerText } = useFlowSortDisplay();
 
@@ -47,10 +49,14 @@ export const FlowTable: React.FC<FlowTableProps> = ({
       <StyledTableHead>
         <TableRow>
           <FlowTitleCell>Flow title</FlowTitleCell>
-          <FlowStatusCell>Online status</FlowStatusCell>
-          <FlowStatusCell>Flow type</FlowStatusCell>
-          <TableCell>{headerText}</TableCell>
-          <FlowActionsCell align="center">Actions</FlowActionsCell>
+          {showDetails && 
+          <>
+            <FlowStatusCell>Online status</FlowStatusCell>
+            <FlowStatusCell>Flow type</FlowStatusCell>
+            <TableCell>{headerText}</TableCell>
+            <FlowActionsCell align="center">Actions</FlowActionsCell>
+          </>
+          }
         </TableRow>
       </StyledTableHead>
       <TableBody>
@@ -60,6 +66,7 @@ export const FlowTable: React.FC<FlowTableProps> = ({
             flow={flow}
             teamSlug={teamSlug}
             refreshFlows={refreshFlows}
+            showDetails={showDetails}
           />
         ))}
       </TableBody>
@@ -71,12 +78,14 @@ interface FlowTableRowProps {
   flow: FlowSummary;
   teamSlug: string;
   refreshFlows: () => void;
+  showDetails: boolean;
 }
 
 const FlowTableRow: React.FC<FlowTableRowProps> = ({
   flow,
   teamSlug,
   refreshFlows,
+  showDetails,
 }) => {
   const router = useRouter();
   const navigate = useNavigate();
@@ -153,44 +162,50 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
           )}
         </Box>
       </FlowTitleCell>
-      <FlowStatusCell>
-        <Box sx={{ display: "inline-flex" }}>
-          <FlowTag tagType={FlowTagType.Status} statusVariant={statusVariant}>
-            {statusVariant}
-          </FlowTag>
-        </Box>
-      </FlowStatusCell>
-      <FlowStatusCell>
-        {isSubmissionService && (
-          <Box sx={{ display: "inline-flex" }}>
-            <FlowTag tagType={FlowTagType.ServiceType}>Submission</FlowTag>
+      {showDetails && 
+        <>
+          <FlowStatusCell>
+            <Box sx={{ display: "inline-flex" }}>
+              <FlowTag tagType={FlowTagType.Status} statusVariant={statusVariant}>
+                {statusVariant}
+              </FlowTag>
+            </Box>
+          </FlowStatusCell>
+          <FlowStatusCell>
+            {isSubmissionService && (
+              <Box sx={{ display: "inline-flex" }}>
+                <FlowTag tagType={FlowTagType.ServiceType}>Submission</FlowTag>
+              </Box>
+            )}
+          </FlowStatusCell>
+
+        <TableCell>
+          <Box>
+            <Typography variant="body2">{displayTimeAgo}</Typography>
+            {displayActor && (
+              <Typography variant="body2" color="textSecondary">
+                by {displayActor}
+              </Typography>
+            )}
           </Box>
-        )}
-      </FlowStatusCell>
-      <TableCell>
-        <Box>
-          <Typography variant="body2">{displayTimeAgo}</Typography>
-          {displayActor && (
-            <Typography variant="body2" color="textSecondary">
-              by {displayActor}
-            </Typography>
-          )}
-        </Box>
-      </TableCell>
-      <FlowActionsCell
-        className="actions-cell"
-        align="center"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {canUserEditTeam(teamSlug) && (
-          <FlowMenu
-            flow={flow}
-            refreshFlows={refreshFlows}
-            isAnyTemplate={isAnyTemplate}
-            variant="table"
-          />
+        </TableCell>
+        <FlowActionsCell
+          className="actions-cell"
+          align="center"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {canUserEditTeam(teamSlug) && (
+            <FlowMenu
+              flow={flow}
+              refreshFlows={refreshFlows}
+              isAnyTemplate={isAnyTemplate}
+              variant="table"
+            />
         )}
       </FlowActionsCell>
+        </>
+      }
+
     </StyledTableRow>
   );
 };
