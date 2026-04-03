@@ -154,12 +154,11 @@ describe("Passport generation", () => {
     );
 
     // Enter a custom description
-    await user.type(
-      screen.getByRole("textbox", {
-        name: /Modify the suggested description below/i,
-      }),
-      "a new description",
-    );
+    const modifyTextbox = screen.getByRole("textbox", {
+      name: /Modify the suggested description below/i,
+    });
+    await user.clear(modifyTextbox);
+    await user.type(modifyTextbox, "a new description");
     await user.click(screen.getByTestId("continue-button"));
 
     // Breadcrumb formatted as expected
@@ -486,17 +485,12 @@ describe("basic layout and behaviour", () => {
     ).toBeVisible();
 
     // User can type their own custom description
-    await user.type(
-      screen.getByRole("textbox", {
-        name: /Modify the suggested description below/i,
-      }),
-      "Something unique",
-    );
-    expect(
-      screen.getByRole("textbox", {
-        name: /Modify the suggested description below/i,
-      }),
-    ).toHaveValue("Something unique");
+    const customTextbox = screen.getByRole("textbox", {
+      name: /Modify the suggested description below/i,
+    });
+    await user.clear(customTextbox);
+    await user.type(customTextbox, "Something unique");
+    expect(customTextbox).toHaveValue("Something unique");
   });
 
   it("displays additional information to the user on the 'task' step", async () => {
