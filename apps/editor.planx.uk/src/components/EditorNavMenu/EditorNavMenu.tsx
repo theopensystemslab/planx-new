@@ -43,6 +43,182 @@ import {
 } from "./styles";
 import { MenuSection, Route, RoutesForURL } from "./types";
 
+interface AccordionToggleProps {
+  subtitle: string;
+  Icon: Route["Icon"];
+  isOpen: boolean;
+  onToggle: () => void;
+}
+
+function AccordionToggle({
+  subtitle,
+  Icon,
+  isOpen,
+  onToggle,
+}: AccordionToggleProps) {
+  const ChevronIcon = isOpen ? ExpandLessIcon : ExpandMoreIcon;
+  return (
+    <MenuButton isActive={false} disableRipple onClick={onToggle}>
+      <Icon fontSize="small" />
+      <MenuTitle variant="body3" pt={0.15}>
+        {subtitle}
+      </MenuTitle>
+      <ChevronIcon sx={{ fontSize: "1rem", ml: "auto", mt: 0.2 }} />
+    </MenuButton>
+  );
+}
+
+interface AccordionItemButtonProps {
+  title: string;
+  disabled?: boolean;
+  isNew?: boolean;
+  isActive: boolean;
+  isExternal: boolean;
+  onClick: () => void;
+}
+
+function AccordionItemButton({
+  title,
+  disabled,
+  isNew,
+  isActive,
+  isExternal,
+  onClick,
+}: AccordionItemButtonProps) {
+  const showExternalIcon = isExternal && !disabled;
+
+  const button = (
+    <MenuButton
+      isActive={isActive}
+      disabled={disabled}
+      disableRipple
+      onClick={onClick}
+      sx={{ p: 0.8 }}
+    >
+      <MenuTitle variant="body3" pt={0.15}>
+        {title}
+      </MenuTitle>
+      {isNew && <StyledChip label="new" size="small" color="success" />}
+      {showExternalIcon && (
+        <NorthEastIcon sx={{ fontSize: "0.8rem", ml: "auto", mt: 0.2 }} />
+      )}
+    </MenuButton>
+  );
+
+  if (disabled) {
+    return (
+      <Tooltip title={`${title} unavailable`} placement="right">
+        <Box component="span">{button}</Box>
+      </Tooltip>
+    );
+  }
+
+  return button;
+}
+
+interface NavMenuButtonProps {
+  title: string;
+  Icon: Route["Icon"];
+  disabled?: boolean;
+  isNew?: boolean;
+  isActive: boolean;
+  isExternal: boolean;
+  onClick: () => void;
+}
+
+function NavMenuButton({
+  title,
+  Icon,
+  disabled,
+  isNew,
+  isActive,
+  isExternal,
+  onClick,
+}: NavMenuButtonProps) {
+  const showExternalIcon = isExternal && !disabled;
+  return (
+    <MenuButton
+      isActive={isActive}
+      disabled={disabled}
+      disableRipple
+      onClick={onClick}
+    >
+      <Icon fontSize="small" />
+      <MenuTitle variant="body3" pt={0.15}>
+        {title}
+      </MenuTitle>
+      {isNew && <StyledChip label="new" size="small" color="success" />}
+      {showExternalIcon && (
+        <NorthEastIcon sx={{ fontSize: "0.875rem", ml: "auto", mt: 0.2 }} />
+      )}
+    </MenuButton>
+  );
+}
+
+interface NavMenuItemProps extends NavMenuButtonProps {
+  compact: boolean;
+}
+
+function NavMenuItem({
+  title,
+  Icon,
+  disabled,
+  isNew,
+  isActive,
+  isExternal,
+  compact,
+  onClick,
+}: NavMenuItemProps) {
+  if (compact) {
+    return (
+      <Tooltip title={title} placement="right">
+        <Box component="span">
+          <MenuButton
+            title={title}
+            isActive={isActive}
+            disabled={disabled}
+            disableRipple
+            onClick={onClick}
+            sx={{ padding: "8px" }}
+          >
+            <Icon />
+          </MenuButton>
+        </Box>
+      </Tooltip>
+    );
+  }
+
+  if (disabled) {
+    return (
+      <Tooltip title={`${title} unavailable`} placement="right">
+        <Box component="span">
+          <NavMenuButton
+            title={title}
+            Icon={Icon}
+            isActive={isActive}
+            isExternal={isExternal}
+            disabled={disabled}
+            isNew={isNew}
+            onClick={onClick}
+          />
+        </Box>
+      </Tooltip>
+    );
+  }
+
+  return (
+    <NavMenuButton
+      title={title}
+      Icon={Icon}
+      isActive={isActive}
+      isExternal={isExternal}
+      disabled={disabled}
+      isNew={isNew}
+      onClick={onClick}
+    />
+  );
+}
+
 function EditorNavMenu() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -312,128 +488,6 @@ function EditorNavMenu() {
     });
   };
 
-  const renderAccordionToggle = (subtitle: string, Icon: Route["Icon"]) => {
-    const isOpen = openAccordions.has(subtitle);
-    const ChevronIcon = isOpen ? ExpandLessIcon : ExpandMoreIcon;
-    return (
-      <MenuButton
-        isActive={false}
-        disableRipple
-        onClick={() => toggleAccordion(subtitle)}
-      >
-        <Icon fontSize="small" />
-        <MenuTitle variant="body3" pt={0.15}>
-          {subtitle}
-        </MenuTitle>
-        <ChevronIcon sx={{ fontSize: "1rem", ml: "auto", mt: 0.2 }} />
-      </MenuButton>
-    );
-  };
-
-  const renderAccordionItemButton = (
-    title: string,
-    route: string,
-    disabled?: boolean,
-    isNew?: boolean,
-  ) => {
-    const showExternalIcon = isExternalLink(route) && !disabled;
-
-    const button = (
-      <MenuButton
-        isActive={isActive(route)}
-        disabled={disabled}
-        disableRipple
-        onClick={() => handleClick(route, disabled)}
-        sx={{ p: 0.8 }}
-      >
-        <MenuTitle variant="body3" pt={0.15}>
-          {title}
-        </MenuTitle>
-        {isNew && <StyledChip label="new" size="small" color="success" />}
-        {showExternalIcon && (
-          <NorthEastIcon sx={{ fontSize: "0.8rem", ml: "auto", mt: 0.2 }} />
-        )}
-      </MenuButton>
-    );
-
-    if (disabled) {
-      return (
-        <Tooltip title={`${title} unavailable`} placement="right">
-          <Box component="span">{button}</Box>
-        </Tooltip>
-      );
-    }
-
-    return button;
-  };
-
-  const renderMenuButton = (
-    title: string,
-    Icon: Route["Icon"],
-    route: string,
-    disabled?: boolean,
-    isNew?: boolean,
-  ) => {
-    const showExternalIcon = isExternalLink(route) && !disabled;
-
-    return (
-      <MenuButton
-        isActive={isActive(route)}
-        disabled={disabled}
-        disableRipple
-        onClick={() => handleClick(route, disabled)}
-      >
-        <Icon fontSize="small" />
-        <MenuTitle variant="body3" pt={0.15}>
-          {title}
-        </MenuTitle>
-        {isNew && <StyledChip label="new" size="small" color="success" />}
-        {showExternalIcon && (
-          <NorthEastIcon sx={{ fontSize: "0.875rem", ml: "auto", mt: 0.2 }} />
-        )}
-      </MenuButton>
-    );
-  };
-
-  const renderMenuItem = (
-    title: string,
-    Icon: Route["Icon"],
-    route: string,
-    disabled?: boolean,
-    isNew?: boolean,
-  ) => {
-    if (compact) {
-      return (
-        <Tooltip title={title} placement="right">
-          <Box component="span">
-            <MenuButton
-              title={title}
-              isActive={isActive(route)}
-              disabled={disabled}
-              disableRipple
-              onClick={() => handleClick(route, disabled)}
-              sx={{ padding: "8px" }}
-            >
-              <Icon />
-            </MenuButton>
-          </Box>
-        </Tooltip>
-      );
-    }
-
-    if (disabled) {
-      return (
-        <Tooltip title={`${title} unavailable`} placement="right">
-          <Box component="span">
-            {renderMenuButton(title, Icon, route, disabled, isNew)}
-          </Box>
-        </Tooltip>
-      );
-    }
-
-    return renderMenuButton(title, Icon, route, disabled, isNew);
-  };
-
   return (
     <Root compact={compact}>
       <NavBarContainer>
@@ -455,18 +509,25 @@ function EditorNavMenu() {
               const isOpen = openAccordions.has(section.subtitle);
               return (
                 <MenuItem key={sectionIndex}>
-                  {renderAccordionToggle(section.subtitle, FirstIcon)}
+                  <AccordionToggle
+                    subtitle={section.subtitle}
+                    Icon={FirstIcon}
+                    isOpen={isOpen}
+                    onToggle={() => toggleAccordion(section.subtitle!)}
+                  />
                   <Collapse in={isOpen}>
                     <AccordionContent>
                       {section.routes.map(
                         ({ title, route, disabled, isNew }) => (
                           <MenuItem key={title}>
-                            {renderAccordionItemButton(
-                              title,
-                              route,
-                              disabled,
-                              isNew,
-                            )}
+                            <AccordionItemButton
+                              title={title}
+                              disabled={disabled}
+                              isNew={isNew}
+                              isActive={isActive(route)}
+                              isExternal={isExternalLink(route)}
+                              onClick={() => handleClick(route, disabled)}
+                            />
                           </MenuItem>
                         ),
                       )}
@@ -484,7 +545,16 @@ function EditorNavMenu() {
                 {section.routes.map(
                   ({ title, Icon, route, disabled, isNew }) => (
                     <MenuItem key={title}>
-                      {renderMenuItem(title, Icon, route, disabled, isNew)}
+                      <NavMenuItem
+                        title={title}
+                        Icon={Icon}
+                        disabled={disabled}
+                        isNew={isNew}
+                        isActive={isActive(route)}
+                        isExternal={isExternalLink(route)}
+                        compact={compact}
+                        onClick={() => handleClick(route, disabled)}
+                      />
                     </MenuItem>
                   ),
                 )}
