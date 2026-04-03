@@ -3,10 +3,6 @@ import Box from "@mui/material/Box";
 import Radio from "@mui/material/Radio";
 import RadioGroup, { useRadioGroup } from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
-import {
-  DESCRIPTION_TEXT,
-  ERROR_MESSAGE,
-} from "@planx/components/shared/constants";
 import { HelpButton } from "@planx/components/shared/Preview/CardHeader/styled";
 import MoreInfo from "@planx/components/shared/Preview/MoreInfo";
 import MoreInfoSection from "@planx/components/shared/Preview/MoreInfoSection";
@@ -94,7 +90,16 @@ const ProjectDescription: React.FC<Props> = (props) => {
     useFormikContext<FormValues>();
   const [open, setOpen] = useState(false);
 
-  const initialValueRef = useRef(values.userInput);
+  const initialValueRef = useRef(
+    (() => {
+      if (values.status !== "success") return values.userInput;
+      // If userInput matches a previously-processed value, use the cached original
+      const isPreviouslyProcessed =
+        values.userInput === values.original ||
+        values.userInput === values.enhanced;
+      return isPreviouslyProcessed ? values.original : values.userInput;
+    })(),
+  );
 
   const { isPending, data, error, isSuccess } = useQuery<
     EnhanceResponse,
@@ -115,6 +120,8 @@ const ProjectDescription: React.FC<Props> = (props) => {
       initialValueRef.current,
     ],
     retry: 0,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
 
   useEffect(() => {
@@ -157,7 +164,7 @@ const ProjectDescription: React.FC<Props> = (props) => {
         case "retainedOriginal":
           setFieldValue("userInput", data.original);
           break;
-        case "hybrid":
+        case "new":
           setFieldValue("userInput", values.customDescription);
           break;
       }
@@ -167,14 +174,11 @@ const ProjectDescription: React.FC<Props> = (props) => {
   const handleCustomDescriptionChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    const value = event.target.value;
-    setFieldValue("customDescription", value);
-    setFieldValue("userInput", value);
+    setFieldValue("customDescription", event.target.value);
+    setFieldValue("userInput", event.target.value);
   };
 
   const showRadioError = !values.selectedOption && Boolean(errors.userInput);
-  const showCustomInputError =
-    values.selectedOption === "hybrid" && Boolean(errors.userInput);
 
   const LOADING_STAGES = [
     "Analysing your project description",
@@ -233,8 +237,8 @@ const ProjectDescription: React.FC<Props> = (props) => {
         <Typography variant="h2" component="h1" sx={{ mb: 1 }}>
           {props.revisionTitle}
         </Typography>
-        <Typography variant="subtitle1" component="p">
-          {props.revisionDescription}
+        <Typography variant="subtitle1" component="div">
+          <ReactMarkdownOrHtml source={props.revisionDescription} />
         </Typography>
         <Typography variant="subtitle1" component="div">
           <HelpButton
@@ -272,20 +276,18 @@ const ProjectDescription: React.FC<Props> = (props) => {
                 title="Use your original description"
                 description={data.original}
               />
-
               <Box sx={{ width: 68, my: 1 }}>
                 <Typography align="center">or</Typography>
               </Box>
-
               <DescriptionRadio
-                id="hybrid"
+                id="new"
                 onChange={handleOptionChange}
                 title="Write a new description"
               />
             </RadioGroup>
           </ErrorWrapper>
 
-          {values.selectedOption === "hybrid" && (
+          {values.selectedOption === "new" && (
             <RevealedContent>
               <InputRow>
                 <InputLabel
@@ -296,32 +298,16 @@ const ProjectDescription: React.FC<Props> = (props) => {
                     type="text"
                     multiline
                     rows={5}
-                    name="userInput"
+                    name="customDescription"
                     value={values.customDescription}
                     bordered
                     onChange={handleCustomDescriptionChange}
-                    errorMessage={
-                      showCustomInputError
-                        ? (errors.userInput as string)
-                        : undefined
-                    }
                     id={props.id}
-                    inputProps={{
-                      "aria-describedby": [
-                        props.description ? DESCRIPTION_TEXT : "",
-                        "character-hint",
-                        showCustomInputError
-                          ? `${ERROR_MESSAGE}-${props.id}`
-                          : "",
-                      ]
-                        .filter(Boolean)
-                        .join(" "),
-                    }}
                   />
                   <CharacterCounter
                     limit={TEXT_LIMITS[TextInputType.Long]}
                     count={values.customDescription.length}
-                    error={showCustomInputError}
+                    error={false}
                   />
                 </InputLabel>
               </InputRow>
