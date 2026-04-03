@@ -18,6 +18,9 @@ const taskComponents: TaskComponentMap = {
 const EnhancedTextInputComponent = (props: Props) => {
   const previous = getPreviouslySubmittedData(props);
   const [step, setStep] = useState<"input" | "task">("input");
+  const [taskSubStep, setTaskSubStep] = useState<"selection" | "modification">(
+    "selection",
+  );
   const isRunningTask = useIsFetching({ queryKey: [props.task] });
 
   const initialValues: FormValues = previous
@@ -50,8 +53,10 @@ const EnhancedTextInputComponent = (props: Props) => {
 
     if (step === "input") return setStep("task");
 
-    if (step === "task")
+    if (step === "task") {
+      if (taskSubStep === "selection") return setTaskSubStep("modification");
       props.handleSubmit?.({ data: makeBreadcrumb(props.fn, values) });
+    }
   };
 
   const TaskComponent = taskComponents[props.task];
@@ -59,7 +64,18 @@ const EnhancedTextInputComponent = (props: Props) => {
 
   const validationSchema = getValidationSchema(props);
 
-  const handleBack = step === "task" ? () => setStep("input") : undefined;
+  const handleBack = (() => {
+    if (step === "task" && taskSubStep === "modification") {
+      return () => setTaskSubStep("selection");
+    }
+    if (step === "task") {
+      return () => {
+        setStep("input");
+        setTaskSubStep("selection");
+      };
+    }
+    return undefined;
+  })();
 
   return (
     <Formik<FormValues>
@@ -91,7 +107,10 @@ const EnhancedTextInputComponent = (props: Props) => {
               />
             )}
             {step === "input" && <InitialUserInput {...props} />}
-            {step === "task" && <TaskComponent {...props} />}
+            {step === "task" && (
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              <TaskComponent {...(props as any)} taskSubStep={taskSubStep} />
+            )}
           </Card>
         );
       }}
