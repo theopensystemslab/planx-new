@@ -6,6 +6,7 @@ import PrivacyTipIcon from "@mui/icons-material/PrivacyTip";
 import StarIcon from "@mui/icons-material/Star";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useParams } from "@tanstack/react-router";
+import { BREADCRUMBS_HEIGHT } from "components/Breadcrumbs";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
@@ -46,6 +47,7 @@ const FlowSettingsLayout: React.FC<Props> = ({ children }) => {
       title="Flow settings"
       settingsLinks={settingsLinks}
       getNavigationPath={(path) => `/app/${team}/${flowSlug}/settings${path}`}
+      topOffset={BREADCRUMBS_HEIGHT}
     >
       {children}
     </SettingsLayout>

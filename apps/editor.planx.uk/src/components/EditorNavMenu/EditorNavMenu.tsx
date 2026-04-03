@@ -7,44 +7,43 @@ import GroupIcon from "@mui/icons-material/Group";
 import LayersIcon from "@mui/icons-material/Layers";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
-import NorthEastIcon from "@mui/icons-material/NorthEast";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import SchoolIcon from "@mui/icons-material/School";
 import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
-import Tooltip from "@mui/material/Tooltip";
+import Collapse from "@mui/material/Collapse";
 import {
   useLocation,
   useNavigate,
   useRouterState,
 } from "@tanstack/react-router";
+import AccountMenu from "components/AccountMenu";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import EditorIcon from "ui/icons/Editor";
 import LocalPlanningServicesIcon from "ui/icons/LocalPlanningServices";
 
 import { useLPS } from "../../hooks/useLPS";
+import AccordionItemButton from "./components/AccordionItemButton";
+import AccordionToggle from "./components/AccordionToggle";
+import NavMenuHeader from "./components/NavMenuHeader";
+import NavMenuItem from "./components/NavMenuItem";
 import { TeamSelect } from "./components/TeamSelect";
 import {
-  MenuButton,
+  AccordionContent,
   MenuItem,
-  MenuTitle,
   MenuWrap,
+  NavBarContainer,
   Root,
-  StyledChip,
   Subtitle,
 } from "./styles";
-import { Route, RoutesForURL } from "./types";
-
-interface MenuSection {
-  subtitle?: string;
-  routes: Route[];
-}
+import { MenuSection, Route, RoutesForURL } from "./types";
 
 function EditorNavMenu() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const isRouterLoading = useRouterState({ select: (s) => s.isLoading });
+  const [openAccordions, setOpenAccordions] = useState<Set<string>>(new Set());
   const [teamSlug, flowSlug, flowAnalyticsLink, role, team] = useStore(
     (state) => [
       state.teamSlug,
@@ -125,6 +124,7 @@ function EditorNavMenu() {
     },
     {
       subtitle: "Settings",
+      accordion: true,
       routes: [
         {
           title: "Team settings",
@@ -149,6 +149,8 @@ function EditorNavMenu() {
     },
     {
       subtitle: "Data",
+      accordion: true,
+      icon: LeaderboardIcon,
       routes: [
         {
           title: "Submissions",
@@ -189,6 +191,7 @@ function EditorNavMenu() {
     },
     {
       subtitle: "Documentation",
+      accordion: true,
       routes: [
         {
           title: "Resources",
@@ -285,8 +288,6 @@ function EditorNavMenu() {
     return accessibleByCurrentUserRole;
   };
 
-  const setIsNavMenuVisible = useStore((state) => state.setIsNavMenuVisible);
-
   // Filter accessible routes within each section
   const visibleSections = sections
     .map((section) => ({
@@ -295,111 +296,94 @@ function EditorNavMenu() {
     }))
     .filter((section) => section.routes.length > 0);
 
-  // Count total visible routes across all sections
-  const totalVisibleRoutes = visibleSections.reduce(
-    (count, section) => count + section.routes.length,
-    0,
-  );
-
-  React.useEffect(() => {
-    setIsNavMenuVisible(totalVisibleRoutes >= 2);
-  }, [totalVisibleRoutes, setIsNavMenuVisible]);
-
-  // Hide menu if the user does not have a selection of items
-  if (totalVisibleRoutes < 2) return null;
-
-  const renderMenuButton = (
-    title: string,
-    Icon: Route["Icon"],
-    route: string,
-    disabled?: boolean,
-    isNew?: boolean,
-  ) => {
-    const showExternalIcon = isExternalLink(route) && !disabled;
-
-    return (
-      <MenuButton
-        isActive={isActive(route)}
-        disabled={disabled}
-        disableRipple
-        onClick={() => handleClick(route, disabled)}
-      >
-        <Icon fontSize="small" />
-        <MenuTitle variant="body3" pt={0.15}>
-          {title}
-        </MenuTitle>
-        {isNew && <StyledChip label="new" size="small" color="success" />}
-        {showExternalIcon && (
-          <NorthEastIcon sx={{ fontSize: "0.875rem", ml: "auto", mt: 0.2 }} />
-        )}
-      </MenuButton>
-    );
-  };
-
-  const renderMenuItem = (
-    title: string,
-    Icon: Route["Icon"],
-    route: string,
-    disabled?: boolean,
-    isNew?: boolean,
-  ) => {
-    if (compact) {
-      return (
-        <Tooltip title={title} placement="right">
-          <Box component="span">
-            <MenuButton
-              title={title}
-              isActive={isActive(route)}
-              disabled={disabled}
-              disableRipple
-              onClick={() => handleClick(route, disabled)}
-            >
-              <Icon />
-            </MenuButton>
-          </Box>
-        </Tooltip>
-      );
-    }
-
-    if (disabled) {
-      return (
-        <Tooltip title={`${title} unavailable`} placement="right">
-          <Box component="span">
-            {renderMenuButton(title, Icon, route, disabled, isNew)}
-          </Box>
-        </Tooltip>
-      );
-    }
-
-    return renderMenuButton(title, Icon, route, disabled, isNew);
+  const toggleAccordion = (subtitle: string) => {
+    setOpenAccordions((prev) => {
+      const next = new Set(prev);
+      if (next.has(subtitle)) {
+        next.delete(subtitle);
+      } else {
+        next.add(subtitle);
+      }
+      return next;
+    });
   };
 
   return (
     <Root compact={compact}>
-      {teamSlug && !compact && (
-        <Box sx={(theme) => ({ padding: theme.spacing(1, 0.5, 0, 0.5) })}>
-          <TeamSelect
-            currentTeamSlug={teamSlug}
-            onTeamSelect={(slug) =>
-              navigate({ to: "/app/$team", params: { team: slug } })
+      <NavBarContainer>
+        <NavMenuHeader compact={compact} />
+        {teamSlug && !compact && (
+          <Box sx={(theme) => ({ padding: theme.spacing(1, 0.5, 0, 0.5) })}>
+            <TeamSelect
+              currentTeamSlug={teamSlug}
+              onTeamSelect={(slug) =>
+                navigate({ to: "/app/$team", params: { team: slug } })
+              }
+            />
+          </Box>
+        )}
+        <MenuWrap>
+          {visibleSections.map((section, sectionIndex) => {
+            if (section.accordion && section.subtitle) {
+              const FirstIcon = section.icon ?? section.routes[0].Icon;
+              const isOpen = openAccordions.has(section.subtitle);
+              return (
+                <MenuItem key={sectionIndex}>
+                  <AccordionToggle
+                    subtitle={section.subtitle}
+                    Icon={FirstIcon}
+                    isOpen={isOpen}
+                    onToggle={() => toggleAccordion(section.subtitle!)}
+                  />
+                  <Collapse in={isOpen}>
+                    <AccordionContent>
+                      {section.routes.map(
+                        ({ title, route, disabled, isNew }) => (
+                          <MenuItem key={title}>
+                            <AccordionItemButton
+                              title={title}
+                              disabled={disabled}
+                              isNew={isNew}
+                              isActive={isActive(route)}
+                              isExternal={isExternalLink(route)}
+                              onClick={() => handleClick(route, disabled)}
+                            />
+                          </MenuItem>
+                        ),
+                      )}
+                    </AccordionContent>
+                  </Collapse>
+                </MenuItem>
+              );
             }
-          />
-        </Box>
-      )}
-      <MenuWrap>
-        {visibleSections.map((section, sectionIndex) => (
-          <React.Fragment key={sectionIndex}>
-            {section.subtitle && (
-              <Subtitle variant="body3">{section.subtitle}</Subtitle>
-            )}
-            {section.routes.map(({ title, Icon, route, disabled, isNew }) => (
-              <MenuItem key={title}>
-                {renderMenuItem(title, Icon, route, disabled, isNew)}
-              </MenuItem>
-            ))}
-          </React.Fragment>
-        ))}
-      </MenuWrap>
+
+            return (
+              <React.Fragment key={sectionIndex}>
+                {section.subtitle && (
+                  <Subtitle variant="body3">{section.subtitle}</Subtitle>
+                )}
+                {section.routes.map(
+                  ({ title, Icon, route, disabled, isNew }) => (
+                    <MenuItem key={title}>
+                      <NavMenuItem
+                        title={title}
+                        Icon={Icon}
+                        disabled={disabled}
+                        isNew={isNew}
+                        isActive={isActive(route)}
+                        isExternal={isExternalLink(route)}
+                        compact={compact}
+                        onClick={() => handleClick(route, disabled)}
+                      />
+                    </MenuItem>
+                  ),
+                )}
+              </React.Fragment>
+            );
+          })}
+        </MenuWrap>
+        <AccountMenu compact={compact} />
+      </NavBarContainer>
     </Root>
   );
 }
