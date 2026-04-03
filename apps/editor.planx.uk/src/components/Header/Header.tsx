@@ -9,7 +9,6 @@ import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useLocation, useNavigate } from "@tanstack/react-router";
-import Breadcrumbs from "components/Breadcrumbs";
 import { clearLocalFlowIdb } from "lib/local.idb";
 import { capitalize } from "lodash";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
@@ -39,21 +38,6 @@ const Root = styled(AppBar)(({ theme }) => ({
 
 const PublicHeader = styled(MuiToolbar)(() => ({
   height: HEADER_HEIGHT_PUBLIC,
-}));
-
-const EditorHeader = styled(MuiToolbar)(({ theme }) => ({
-  [theme.breakpoints.up("md")]: {
-    minHeight: HEADER_HEIGHT_EDITOR,
-  },
-}));
-
-const EditorHeaderContainer = styled(Box)(({ theme }) => ({
-  width: "100%",
-  padding: theme.spacing(0, 2),
-  "@media print": {
-    background: theme.palette.background.dark,
-    color: theme.palette.common.white,
-  },
 }));
 
 const InnerContainer = styled(Box)(() => ({
