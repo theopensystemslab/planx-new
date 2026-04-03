@@ -127,7 +127,7 @@ describe("Passport generation", () => {
     );
   });
 
-  test("using a hybrid value", async () => {
+  test("using a modifiedEnhanced value", async () => {
     const handleSubmit = vi.fn();
 
     const { user } = await setup(

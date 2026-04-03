@@ -8,6 +8,7 @@ interface FormValuesBase {
   userInput: string;
   selectedOption: TaskAction | null;
   customDescription: string;
+  customOriginalDescription: string;
 }
 
 interface FormValuesIdle extends FormValuesBase {
