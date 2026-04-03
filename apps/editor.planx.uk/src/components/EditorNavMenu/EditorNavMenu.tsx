@@ -1,21 +1,17 @@
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import CurrencyPoundIcon from "@mui/icons-material/CurrencyPound";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GroupIcon from "@mui/icons-material/Group";
 import LayersIcon from "@mui/icons-material/Layers";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
-import NorthEastIcon from "@mui/icons-material/NorthEast";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import SchoolIcon from "@mui/icons-material/School";
 import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
-import Tooltip from "@mui/material/Tooltip";
 import {
   useLocation,
   useNavigate,
@@ -28,196 +24,20 @@ import EditorIcon from "ui/icons/Editor";
 import LocalPlanningServicesIcon from "ui/icons/LocalPlanningServices";
 
 import { useLPS } from "../../hooks/useLPS";
+import AccordionItemButton from "./components/AccordionItemButton";
+import AccordionToggle from "./components/AccordionToggle";
 import NavMenuHeader from "./components/NavMenuHeader";
+import NavMenuItem from "./components/NavMenuItem";
 import { TeamSelect } from "./components/TeamSelect";
 import {
   AccordionContent,
-  MenuButton,
   MenuItem,
-  MenuTitle,
   MenuWrap,
   NavBarContainer,
   Root,
-  StyledChip,
   Subtitle,
 } from "./styles";
 import { MenuSection, Route, RoutesForURL } from "./types";
-
-interface AccordionToggleProps {
-  subtitle: string;
-  Icon: Route["Icon"];
-  isOpen: boolean;
-  onToggle: () => void;
-}
-
-function AccordionToggle({
-  subtitle,
-  Icon,
-  isOpen,
-  onToggle,
-}: AccordionToggleProps) {
-  const ChevronIcon = isOpen ? ExpandLessIcon : ExpandMoreIcon;
-  return (
-    <MenuButton isActive={false} disableRipple onClick={onToggle}>
-      <Icon fontSize="small" />
-      <MenuTitle variant="body3" pt={0.15}>
-        {subtitle}
-      </MenuTitle>
-      <ChevronIcon sx={{ fontSize: "1rem", ml: "auto", mt: 0.2 }} />
-    </MenuButton>
-  );
-}
-
-interface AccordionItemButtonProps {
-  title: string;
-  disabled?: boolean;
-  isNew?: boolean;
-  isActive: boolean;
-  isExternal: boolean;
-  onClick: () => void;
-}
-
-function AccordionItemButton({
-  title,
-  disabled,
-  isNew,
-  isActive,
-  isExternal,
-  onClick,
-}: AccordionItemButtonProps) {
-  const showExternalIcon = isExternal && !disabled;
-
-  const button = (
-    <MenuButton
-      isActive={isActive}
-      disabled={disabled}
-      disableRipple
-      onClick={onClick}
-      sx={{ p: 0.8 }}
-    >
-      <MenuTitle variant="body3" pt={0.15}>
-        {title}
-      </MenuTitle>
-      {isNew && <StyledChip label="new" size="small" color="success" />}
-      {showExternalIcon && (
-        <NorthEastIcon sx={{ fontSize: "0.8rem", ml: "auto", mt: 0.2 }} />
-      )}
-    </MenuButton>
-  );
-
-  if (disabled) {
-    return (
-      <Tooltip title={`${title} unavailable`} placement="right">
-        <Box component="span">{button}</Box>
-      </Tooltip>
-    );
-  }
-
-  return button;
-}
-
-interface NavMenuButtonProps {
-  title: string;
-  Icon: Route["Icon"];
-  disabled?: boolean;
-  isNew?: boolean;
-  isActive: boolean;
-  isExternal: boolean;
-  onClick: () => void;
-}
-
-function NavMenuButton({
-  title,
-  Icon,
-  disabled,
-  isNew,
-  isActive,
-  isExternal,
-  onClick,
-}: NavMenuButtonProps) {
-  const showExternalIcon = isExternal && !disabled;
-  return (
-    <MenuButton
-      isActive={isActive}
-      disabled={disabled}
-      disableRipple
-      onClick={onClick}
-    >
-      <Icon fontSize="small" />
-      <MenuTitle variant="body3" pt={0.15}>
-        {title}
-      </MenuTitle>
-      {isNew && <StyledChip label="new" size="small" color="success" />}
-      {showExternalIcon && (
-        <NorthEastIcon sx={{ fontSize: "0.875rem", ml: "auto", mt: 0.2 }} />
-      )}
-    </MenuButton>
-  );
-}
-
-interface NavMenuItemProps extends NavMenuButtonProps {
-  compact: boolean;
-}
-
-function NavMenuItem({
-  title,
-  Icon,
-  disabled,
-  isNew,
-  isActive,
-  isExternal,
-  compact,
-  onClick,
-}: NavMenuItemProps) {
-  if (compact) {
-    return (
-      <Tooltip title={title} placement="right">
-        <Box component="span">
-          <MenuButton
-            title={title}
-            isActive={isActive}
-            disabled={disabled}
-            disableRipple
-            onClick={onClick}
-            sx={{ padding: "8px" }}
-          >
-            <Icon />
-          </MenuButton>
-        </Box>
-      </Tooltip>
-    );
-  }
-
-  if (disabled) {
-    return (
-      <Tooltip title={`${title} unavailable`} placement="right">
-        <Box component="span">
-          <NavMenuButton
-            title={title}
-            Icon={Icon}
-            isActive={isActive}
-            isExternal={isExternal}
-            disabled={disabled}
-            isNew={isNew}
-            onClick={onClick}
-          />
-        </Box>
-      </Tooltip>
-    );
-  }
-
-  return (
-    <NavMenuButton
-      title={title}
-      Icon={Icon}
-      isActive={isActive}
-      isExternal={isExternal}
-      disabled={disabled}
-      isNew={isNew}
-      onClick={onClick}
-    />
-  );
-}
 
 function EditorNavMenu() {
   const navigate = useNavigate();
