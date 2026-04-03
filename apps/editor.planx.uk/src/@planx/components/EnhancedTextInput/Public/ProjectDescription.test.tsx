@@ -148,14 +148,16 @@ describe("Passport generation", () => {
       screen.getByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
-    // Select "Write a new description" to reveal the text input
+    // Select "Modify suggested description" to reveal the text input
     await user.click(
-      screen.getByRole("radio", { name: /Write a new description/i }),
+      screen.getByRole("radio", { name: /Modify suggested description/i }),
     );
 
     // Enter a custom description
     await user.type(
-      screen.getByRole("textbox", { name: /Enter your project description/i }),
+      screen.getByRole("textbox", {
+        name: /Modify the suggested description below/i,
+      }),
       "a new description",
     );
     await user.click(screen.getByTestId("continue-button"));
@@ -405,7 +407,7 @@ describe("basic layout and behaviour", () => {
       screen.getByRole("radio", { name: /Use your original description/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("radio", { name: /Write a new description/i }),
+      screen.getByRole("radio", { name: /Modify suggested description/i }),
     ).toBeInTheDocument();
     expect(screen.getByText(ENHANCED)).toBeVisible();
     expect(screen.getByText(ORIGINAL)).toBeVisible();
@@ -470,24 +472,30 @@ describe("basic layout and behaviour", () => {
       screen.getByRole("radio", { name: /Use your original description/i }),
     ).toBeChecked();
 
-    // User can select to write a new description - textarea appears
+    // User can select to modify the suggested description - textarea appears
     await user.click(
-      screen.getByRole("radio", { name: /Write a new description/i }),
+      screen.getByRole("radio", { name: /Modify suggested description/i }),
     );
     expect(
-      screen.getByRole("radio", { name: /Write a new description/i }),
+      screen.getByRole("radio", { name: /Modify suggested description/i }),
     ).toBeChecked();
     expect(
-      screen.getByRole("textbox", { name: /Enter your project description/i }),
+      screen.getByRole("textbox", {
+        name: /Modify the suggested description below/i,
+      }),
     ).toBeVisible();
 
     // User can type their own custom description
     await user.type(
-      screen.getByRole("textbox", { name: /Enter your project description/i }),
+      screen.getByRole("textbox", {
+        name: /Modify the suggested description below/i,
+      }),
       "Something unique",
     );
     expect(
-      screen.getByRole("textbox", { name: /Enter your project description/i }),
+      screen.getByRole("textbox", {
+        name: /Modify the suggested description below/i,
+      }),
     ).toHaveValue("Something unique");
   });
 
