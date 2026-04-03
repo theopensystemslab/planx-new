@@ -20,7 +20,7 @@ const BreadcrumbsContainer = styled(Box)(({ theme }) => ({
   left: MENU_WIDTH_COMPACT,
   zIndex: theme.zIndex.appBar,
   backgroundColor: `rgba(255, 255, 255, 0.2)`,
-  padding: theme.spacing(1, 1.25, 1, 3.25),
+  padding: theme.spacing(1, 1.25, 1, 2),
   borderRadius: "0 50px 50px 0",
   backdropFilter: "blur(20px)",
 }));
