@@ -1,4 +1,5 @@
 import { useQuery } from "@apollo/client";
+import EmailIcon from '@mui/icons-material/Email';
 import GavelIcon from "@mui/icons-material/Gavel";
 import HelpIcon from "@mui/icons-material/Help";
 import InfoIcon from "@mui/icons-material/Info";
@@ -33,6 +34,7 @@ const FlowSettingsLayout: React.FC<Props> = ({ children }) => {
     { label: "Legal disclaimer", path: "/legal-disclaimer", icon: GavelIcon },
     { label: "Help page", path: "/pages/help", icon: HelpIcon },
     { label: "Privacy page", path: "/pages/privacy", icon: PrivacyTipIcon },
+    { label: "Email", path: "/email", icon: EmailIcon },
     {
       label: "Templates",
       path: "/templates",
