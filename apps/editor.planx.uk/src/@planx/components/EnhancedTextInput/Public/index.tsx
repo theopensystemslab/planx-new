@@ -31,6 +31,7 @@ const EnhancedTextInputComponent = (props: Props) => {
         error: null,
         selectedOption: null,
         customDescription: "",
+        customOriginalDescription: "",
       }
     : {
         userInput: "",
@@ -39,6 +40,7 @@ const EnhancedTextInputComponent = (props: Props) => {
         error: null,
         selectedOption: null,
         customDescription: "",
+        customOriginalDescription: "",
       };
 
   const nextStep = (values: FormValues) => {
