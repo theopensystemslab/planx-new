@@ -10,6 +10,7 @@ export const useTeamSubmissionIntegrations = (teamId: number) => {
     GetTeamSubmissionIntegrationsQueryVariables
   >(GET_TEAM_SUBMISSION_INTEGRATIONS, {
     variables: { teamId },
+    fetchPolicy: "network-only",
   });
 
   return query;
