@@ -232,8 +232,8 @@ const ProjectDescription: React.FC<Props> = ({
         <Typography variant="h2" component="h1" mb={1}>
           Do you want to modify this description?
         </Typography>
-        <Typography variant="subtitle1" component="p" mb={2}>
-          You can edit the description below, or continue to submit it as shown.
+        <Typography variant="body1" component="p" mb={2}>
+          Edit the description below, or continue to submit it as shown.
         </Typography>
         <InputRow>
           <InputLabel label="Project description" htmlFor={props.id} hidden>
