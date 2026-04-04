@@ -292,7 +292,7 @@ select_permissions:
         - first_online_at
         - production_url
       filter:
-        deleted_at:
+        archived_at:
           _is_null: true
       allow_aggregations: true
     comment: ""
@@ -305,7 +305,7 @@ select_permissions:
         - created_at
         - creator_id
         - data
-        - deleted_at
+        - archived_at
         - description
         - id
         - is_listed_on_lps
@@ -326,7 +326,7 @@ select_permissions:
         - first_online_at
         - production_url
       filter:
-        deleted_at:
+        archived_at:
           _is_null: true
       allow_aggregations: true
   - role: demoUser
@@ -336,7 +336,7 @@ select_permissions:
         - created_at
         - creator_id
         - data
-        - deleted_at
+        - archived_at
         - description
         - id
         - is_listed_on_lps
@@ -370,7 +370,7 @@ select_permissions:
                       - 1
                       - 29
                       - 30
-          - deleted_at:
+          - archived_at:
               _is_null: true
     comment: 'For the demo user, we want to ensure they can only see their own flows, and flows from the Open Digital Planning [id = 30], Open Systems Lab [id = 1], and Templates [id = 29]  team '
   - role: platformAdmin
@@ -382,7 +382,7 @@ select_permissions:
         - created_at
         - creator_id
         - data
-        - deleted_at
+        - archived_at
         - description
         - id
         - is_listed_on_lps
@@ -403,7 +403,7 @@ select_permissions:
         - first_online_at
         - production_url
       filter:
-        deleted_at:
+        archived_at:
           _is_null: true
       allow_aggregations: true
   - role: public
@@ -433,7 +433,7 @@ select_permissions:
         - first_online_at
         - production_url
       filter:
-        deleted_at:
+        archived_at:
           _is_null: true
       allow_aggregations: true
     comment: ""
@@ -446,7 +446,7 @@ select_permissions:
         - created_at
         - creator_id
         - data
-        - deleted_at
+        - archived_at
         - description
         - id
         - is_listed_on_lps
@@ -467,7 +467,7 @@ select_permissions:
         - first_online_at
         - production_url
       filter:
-        deleted_at:
+        archived_at:
           _is_null: true
       allow_aggregations: true
 update_permissions:
@@ -495,7 +495,7 @@ update_permissions:
         _and:
           - is_template:
               _eq: false
-          - deleted_at:
+          - archived_at:
               _is_null: true
       check:
         _not:
@@ -522,7 +522,7 @@ update_permissions:
         - created_at
         - creator_id
         - data
-        - deleted_at
+        - archived_at
         - description
         - id
         - limitations
@@ -539,7 +539,7 @@ update_permissions:
               _eq: 32
           - creator_id:
               _eq: x-hasura-user-id
-          - deleted_at:
+          - archived_at:
               _is_null: true
           - is_template:
               _eq: false
@@ -574,7 +574,7 @@ update_permissions:
         - category
         - copied_from
         - data
-        - deleted_at
+        - archived_at
         - description
         - is_listed_on_lps
         - is_template
@@ -588,7 +588,7 @@ update_permissions:
         - team_id
         - templated_from
       filter:
-        deleted_at:
+        archived_at:
           _is_null: true
       check:
         _not:
@@ -615,7 +615,7 @@ update_permissions:
         - category
         - copied_from
         - data
-        - deleted_at
+        - archived_at
         - description
         - is_listed_on_lps
         - limitations
@@ -636,7 +636,7 @@ update_permissions:
                       _eq: x-hasura-user-id
                   - role:
                       _eq: teamEditor
-          - deleted_at:
+          - archived_at:
               _is_null: true
           - is_template:
               _eq: false

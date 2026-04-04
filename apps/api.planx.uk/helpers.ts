@@ -326,7 +326,7 @@ export const getTemplatedFlows = async (flowId: string) => {
       query GetTemplatedFlows($flow_id: uuid!) {
         flow: flows_by_pk(id: $flow_id) {
           templatedFlows: templated_flows(
-            where: { deleted_at: { _is_null: true } }
+            where: { archived_at: { _is_null: true } }
           ) {
             id
             slug

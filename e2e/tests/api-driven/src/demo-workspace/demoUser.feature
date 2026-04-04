@@ -60,7 +60,7 @@
     Scenario Outline: Actioning my own flows
         When I am on my own flow
         Then I should be able to update the flow
-        And I should be able to delete the flow
+        And I should be able to archive the flow
 
     @demo-user-permissions 
     Scenario Outline: Actioning flows in other teams
