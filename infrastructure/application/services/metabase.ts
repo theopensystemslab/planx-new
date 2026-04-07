@@ -12,7 +12,6 @@ import {
 
 export const createMetabaseService = async ({
   env,
-  certificateArn,
   vpcId,
   publicSubnetIds,
   cluster,
@@ -33,7 +32,6 @@ export const createMetabaseService = async ({
   } = await setupLoadBalancer({
     serviceName: "metabase",
     containerPort: METABASE_PORT,
-    certificateArn,
     vpcId,
     publicSubnetIds,
     domain: DOMAIN,

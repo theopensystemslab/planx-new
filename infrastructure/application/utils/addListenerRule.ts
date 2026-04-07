@@ -4,13 +4,12 @@ import * as aws from "@pulumi/aws";
  * Restrict access to ELB directly by redirecting all traffic via our DNS
  * This ensures that CloudFlare proxies all requests
  */
-export const addRedirectToCloudFlareListenerRule = async ({ serviceName, listenerArn, listenerLabel, domain }: {
+export const addRedirectToCloudFlareListenerRule = async ({ serviceName, listenerArn, domain }: {
   serviceName: string;
   listenerArn: aws.lb.Listener["arn"];
-  listenerLabel: string;
   domain: string;
 }) => {
-  return new aws.lb.ListenerRule(`${serviceName}-${listenerLabel}-redirectToCloudFlare`, {
+  new aws.lb.ListenerRule(`${serviceName}-redirectToCloudFlare`, {
     listenerArn,
     priority: 100,
     actions: [{
