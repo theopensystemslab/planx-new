@@ -7,6 +7,7 @@ import { CustomDomain } from "../common/teams";
 export interface SetupLoadBalancer {
   serviceName: string,
   containerPort: number,
+  certificateArn: pulumi.Output<string>,
   vpcId: pulumi.Output<string>,
   publicSubnetIds: pulumi.Output<string[]>,
   domain: string,
@@ -17,6 +18,7 @@ export interface SetupLoadBalancer {
 
 export interface CreateService {
   env: string,
+  certificateArn: pulumi.Output<string>,
   vpcId: pulumi.Output<string>,
   publicSubnetIds: pulumi.Output<string[]>,
   cluster: aws.ecs.Cluster,
