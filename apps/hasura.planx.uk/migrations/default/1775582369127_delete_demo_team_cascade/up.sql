@@ -1,5 +1,3 @@
-
-
 DELETE FROM team_members
 WHERE role = 'demoUser'
   OR team_id = 32; -- 'Demo'
