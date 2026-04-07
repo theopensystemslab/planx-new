@@ -18,7 +18,6 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
-import { ValidationError } from "yup";
 
 import { ICONS } from "../shared/icons";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
@@ -185,7 +184,6 @@ const SendComponent: React.FC<Props> = (props) => {
                   </ModalSectionContent>
                   <Divider />
                   <EmailSection
-                    id={id}
                     teamId={teamId}
                     teamSlug={teamSlug}
                     toggleSwitch={toggleSwitch}

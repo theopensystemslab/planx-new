@@ -14,12 +14,10 @@ import InputRow from "ui/shared/InputRow";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 import { Switch } from "ui/shared/Switch";
 
-import { useFlowEmailId } from "./hooks/useFlowEmailId";
 import { useTeamSubmissionIntegrations } from "./hooks/useGetTeamSubmissionIntegrations";
 import { EmailSelectionProps } from "./types";
 
 interface EmailSectionProps {
-  id: string;
   teamId: number;
   teamSlug: string;
   toggleSwitch: (value: SendIntegration) => void;
@@ -31,7 +29,6 @@ interface EmailContentProps {
   error: ApolloError | undefined;
   teamSlug: string;
   emailOptions: Required<SubmissionEmailInput>[];
-  currentEmail: Required<SubmissionEmailInput> | undefined;
   submissionEmailId: string | undefined;
   handleSelectChange: (event: SelectChangeEvent<unknown>) => void;
   disabled?: boolean;
@@ -118,21 +115,12 @@ const EmailSelection: React.FC<EmailSelectionProps> = ({
 };
 
 const EmailSection: React.FC<EmailSectionProps> = ({
-  id,
   teamId,
   teamSlug,
   toggleSwitch,
   disabled,
 }) => {
   const { values, setFieldValue } = useFormikContext<Send>();
-
-  const {
-    data: flowData,
-    loading: flowLoading,
-    error: flowError,
-  } = useFlowEmailId(id);
-
-  const existingEmailId = flowData?.flowsByPK?.submissionEmailId;
 
   const { data, loading, error } = useTeamSubmissionIntegrations(teamId);
   const emailOptions = data?.submissionIntegrations || [];
@@ -144,10 +132,6 @@ const EmailSection: React.FC<EmailSectionProps> = ({
     const selectedValue = event.target.value as string;
     setFieldValue("submissionEmailId", selectedValue);
   };
-
-  const currentEmail = emailOptions.find(
-    (email) => email.id === existingEmailId,
-  );
 
   useEffect(() => {
     if (!values.submissionEmailId && defaultEmail) {
@@ -166,11 +150,10 @@ const EmailSection: React.FC<EmailSectionProps> = ({
         />
       </InputRow>
       <EmailContent
-        loading={loading || flowLoading}
-        error={error || flowError}
+        loading={loading}
+        error={error}
         teamSlug={teamSlug}
         emailOptions={emailOptions}
-        currentEmail={currentEmail}
         submissionEmailId={values.submissionEmailId}
         handleSelectChange={handleSelectChange}
       />
@@ -183,7 +166,6 @@ const EmailContent: React.FC<EmailContentProps> = ({
   error,
   teamSlug,
   emailOptions,
-  currentEmail,
   submissionEmailId,
   handleSelectChange,
 }) => {
@@ -194,7 +176,6 @@ const EmailContent: React.FC<EmailContentProps> = ({
     <EmailSelection
       teamSlug={teamSlug}
       emailOptions={emailOptions}
-      currentEmail={currentEmail}
       submissionEmailId={submissionEmailId}
       handleSelectChange={handleSelectChange}
     />
