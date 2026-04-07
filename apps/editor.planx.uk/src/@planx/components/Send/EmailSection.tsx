@@ -58,60 +58,63 @@ const EmailEmptyState: React.FC<EmailEmptyStateProps> = ({
 const EmailSelection: React.FC<EmailSelectionProps> = ({
   teamSlug,
   emailOptions,
-  newEmail,
   submissionEmailId,
-  isNewEmailSelected,
   handleSelectChange,
   disabled,
-  newEmailError,
-  setFieldValue,
-  touched,
-}) => (
-  <>
-    <InputRow>
-      <Typography variant="body2" mb={2}>
-        Select a submission email for this service. To add or update submission
-        emails, please visit your{" "}
-        <Link
-          href={`/app/${teamSlug}/settings/integrations`}
-          target="_blank"
-          rel="noopener noreferrer"
+}) => {
+  const { values, setFieldValue, touched, errors } = useFormikContext<Send>();
+
+  const newEmail = values.newEmail;
+  const isNewEmailSelected = values.submissionEmailId === "new-email";
+  const newEmailError = errors.newEmail;
+
+  return (
+    <>
+      <InputRow>
+        <Typography variant="body2" mb={2}>
+          Select a submission email for this service. To add or update
+          submission emails, please visit your{" "}
+          <Link
+            href={`/app/${teamSlug}/settings/integrations`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            team settings
+          </Link>{" "}
+          page.
+        </Typography>
+      </InputRow>
+      <InputRow>
+        <SelectInput
+          name="submissionEmail"
+          value={isNewEmailSelected ? "new-email" : submissionEmailId}
+          onChange={handleSelectChange}
+          bordered
+          disabled={disabled}
         >
-          team settings
-        </Link>{" "}
-        page.
-      </Typography>
-    </InputRow>
-    <InputRow>
-      <SelectInput
-        name="submissionEmail"
-        value={isNewEmailSelected ? "new-email" : submissionEmailId}
-        onChange={handleSelectChange}
-        bordered
-        disabled={disabled}
-      >
-        {emailOptions.map((email) => (
-          <MenuItem key={email.id} value={email.id}>
-            {email.submissionEmail}
-          </MenuItem>
-        ))}
-        <MenuItem value="new-email">New email...</MenuItem>
-      </SelectInput>
-    </InputRow>
-    {isNewEmailSelected && (
-      <Input
-        name="newEmail"
-        value={newEmail}
-        placeholder="Enter new email"
-        onChange={(e) => {
-          setFieldValue("newEmail", e.target.value);
-        }}
-        disabled={disabled}
-        errorMessage={touched.newEmail ? newEmailError : undefined}
-      />
-    )}
-  </>
-);
+          {emailOptions.map((email) => (
+            <MenuItem key={email.id} value={email.id}>
+              {email.submissionEmail}
+            </MenuItem>
+          ))}
+          <MenuItem value="new-email">New email...</MenuItem>
+        </SelectInput>
+      </InputRow>
+      {isNewEmailSelected && (
+        <Input
+          name="newEmail"
+          value={newEmail}
+          placeholder="Enter new email"
+          onChange={(e) => {
+            setFieldValue("newEmail", e.target.value);
+          }}
+          disabled={disabled}
+          errorMessage={touched.newEmail ? newEmailError : undefined}
+        />
+      )}
+    </>
+  );
+};
 
 const EmailSection: React.FC<EmailSectionProps> = ({
   id,
@@ -120,7 +123,7 @@ const EmailSection: React.FC<EmailSectionProps> = ({
   toggleSwitch,
   disabled,
 }) => {
-  const { values, setFieldValue, errors, touched } = useFormikContext<Send>();
+  const { values, setFieldValue, errors } = useFormikContext<Send>();
 
   const {
     data: flowData,
@@ -171,14 +174,9 @@ const EmailSection: React.FC<EmailSectionProps> = ({
           teamSlug={teamSlug}
           emailOptions={emailOptions}
           currentEmail={currentEmail}
-          newEmail={values.newEmail}
           submissionEmailId={values.submissionEmailId || defaultEmail?.id}
-          isNewEmailSelected={isNewEmailSelected}
           handleSelectChange={handleSelectChange}
           disabled={disabled}
-          newEmailError={errors.newEmail}
-          setFieldValue={setFieldValue}
-          touched={touched}
         />
       );
   };

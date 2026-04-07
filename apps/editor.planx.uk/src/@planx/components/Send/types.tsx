@@ -55,12 +55,7 @@ export interface EmailSelectionProps {
   teamSlug: string;
   emailOptions: Required<SubmissionEmailInput>[];
   currentEmail: Required<SubmissionEmailInput> | undefined;
-  newEmail: string | undefined;
   submissionEmailId: string | undefined;
-  isNewEmailSelected: boolean;
   handleSelectChange: (event: SelectChangeEvent<unknown>) => void;
   disabled?: boolean;
-  newEmailError?: FormikErrors<string>;
-  setFieldValue: FormikHelpers<any>["setFieldValue"];
-  touched: FormikTouched<Send>;
 }
