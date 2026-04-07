@@ -9,12 +9,10 @@ import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useLocation, useNavigate } from "@tanstack/react-router";
-import AccountMenu from "components/AccountMenu";
-import Breadcrumbs from "components/Breadcrumbs";
 import { clearLocalFlowIdb } from "lib/local.idb";
 import { capitalize } from "lodash";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
-import React, { RefObject, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   borderedFocusStyle,
   FONT_WEIGHT_SEMI_BOLD,
@@ -40,21 +38,6 @@ const Root = styled(AppBar)(({ theme }) => ({
 
 const PublicHeader = styled(MuiToolbar)(() => ({
   height: HEADER_HEIGHT_PUBLIC,
-}));
-
-const EditorHeader = styled(MuiToolbar)(({ theme }) => ({
-  [theme.breakpoints.up("md")]: {
-    minHeight: HEADER_HEIGHT_EDITOR,
-  },
-}));
-
-const EditorHeaderContainer = styled(Box)(({ theme }) => ({
-  width: "100%",
-  padding: theme.spacing(0, 2),
-  "@media print": {
-    background: theme.palette.background.dark,
-    color: theme.palette.common.white,
-  },
 }));
 
 const InnerContainer = styled(Box)(() => ({
@@ -300,32 +283,7 @@ const ServiceTitle: React.FC = () => {
   );
 };
 
-const EditorToolbar: React.FC<{
-  headerRef: React.RefObject<HTMLElement>;
-}> = () => {
-  return (
-    <>
-      <EditorHeader disableGutters>
-        <EditorHeaderContainer>
-          <InnerContainer>
-            <LeftBox>
-              <Breadcrumbs showEnvironmentSelect />
-            </LeftBox>
-            <RightBox>
-              <AccountMenu />
-            </RightBox>
-          </InnerContainer>
-        </EditorHeaderContainer>
-      </EditorHeader>
-    </>
-  );
-};
-
-interface ToolbarProps {
-  headerRef: RefObject<HTMLDivElement>;
-}
-
-const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
+const Toolbar: React.FC = () => {
   const location = useLocation();
   const path = location.pathname.split("/").slice(-1)[0] || undefined;
   const [flowSlug, previewEnvironment] = useStore((state) => [
@@ -339,7 +297,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
     path !== "draft" &&
     path !== "preview"
   ) {
-    return <EditorToolbar headerRef={headerRef}></EditorToolbar>;
+    return null;
   }
 
   switch (path) {
@@ -370,7 +328,7 @@ const Header: React.FC = () => {
         "@media print": { backgroundColor: "white", color: "black" },
       })}
     >
-      <Toolbar headerRef={headerRef} />
+      <Toolbar />
     </Root>
   );
 };

@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import { containerClasses } from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import { useRouter } from "@tanstack/react-router";
+import Breadcrumbs from "components/Breadcrumbs";
 import EditorNavMenu from "components/EditorNavMenu/EditorNavMenu";
 import ErrorFallback from "components/Error/ErrorFallback";
 import LoadingOverlay from "components/LoadingOverlay";
@@ -54,6 +55,7 @@ const Layout: React.FC<PropsWithChildren> = ({ children }) => {
     <>
       <LoadingOverlay />
       <Header />
+      <Breadcrumbs />
       <DashboardWrap>
         <EditorNavMenu />
         <DashboardContainer>

@@ -21,7 +21,7 @@ const StyledButtonBase = styled(ButtonBase)<{ teamcolor?: string }>(
   ({ theme, teamcolor }) => ({
     backgroundColor: theme.palette.background.default,
     width: "100%",
-    borderLeft: `8px solid ${teamcolor || "OliveDrab"}`,
+    borderLeft: `8px solid ${teamcolor || theme.palette.primary.main}`,
     borderRadius: 3,
     padding: theme.spacing(1, 0.5, 1, 1),
     justifyContent: "space-between",
@@ -157,7 +157,7 @@ export const TeamSelect: React.FC<Props> = ({
             {currentTeam?.name || "Current team"}
           </Typography>
         </Box>
-        <UnfoldMoreIcon sx={{ color: "text.secondary", fontSize: "1.5rem" }} />
+        <UnfoldMoreIcon sx={{ color: "text.secondary", fontSize: "1.25rem" }} />
       </StyledButtonBase>
       <Dialog
         open={open}
@@ -166,7 +166,7 @@ export const TeamSelect: React.FC<Props> = ({
         PaperProps={{
           sx: {
             position: "absolute",
-            top: "65px",
+            top: "58px",
             left: "5px",
             bottom: "65px",
             m: 0,
@@ -174,7 +174,7 @@ export const TeamSelect: React.FC<Props> = ({
             maxWidth: "260px",
             minWidth: "unset",
             borderTop: "none",
-            borderRadius: 3,
+            borderRadius: (theme) => theme.shape.borderRadius,
           },
         }}
       >

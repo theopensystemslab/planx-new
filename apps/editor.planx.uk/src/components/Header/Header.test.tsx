@@ -137,19 +137,6 @@ describe("Header Component - Editor Route", () => {
     setState({ previewEnvironment: "standalone" });
   });
 
-  it("displays breadcrumbs", async () => {
-    await setup(<Header />);
-    expect(screen.getByText("Plan✕")).toBeInTheDocument();
-    expect(screen.getByText("team-name")).toBeInTheDocument();
-    expect(screen.getByText("test-flow")).toBeInTheDocument();
-  });
-
-  it("displays avatar and settings", async () => {
-    await setup(<Header />);
-    expect(screen.getByText("TU")).toBeInTheDocument();
-    expect(screen.getByLabelText("Toggle Menu")).toBeInTheDocument();
-  });
-
   it("should not have any accessibility violations", async () => {
     const { container } = await setup(<Header />);
     const results = await axe(container);

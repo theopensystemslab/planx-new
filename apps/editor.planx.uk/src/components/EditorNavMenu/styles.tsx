@@ -3,10 +3,11 @@ import Chip, { chipClasses } from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export const MENU_WIDTH_COMPACT = 51;
-export const MENU_WIDTH_FULL = 190;
+export const MENU_WIDTH_FULL = 200;
 
 export const Root = styled(Box, {
   shouldForwardProp: (prop) => prop !== "compact",
@@ -21,16 +22,25 @@ export const Root = styled(Box, {
   },
 }));
 
-export const MenuWrap = styled("ul")(({ theme }) => ({
-  listStyle: "none",
-  margin: 0,
-  padding: theme.spacing(1, 0.5, 0, 0.5),
+export const NavBarContainer = styled(Box)(() => ({
+  display: "flex",
+  flexDirection: "column",
+  height: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
   position: "sticky",
+  width: "inherit",
   top: 0,
 }));
 
+export const MenuWrap = styled("ul")(({ theme }) => ({
+  listStyle: "none",
+  margin: 0,
+  padding: theme.spacing(1, 0.5, 2, 0.5),
+  flex: 1,
+  overflowY: "auto",
+}));
+
 export const MenuItem = styled("li")(({ theme }) => ({
-  margin: theme.spacing(0.4, 0),
+  margin: theme.spacing(0.5, 0),
   padding: 0,
 }));
 
@@ -48,7 +58,8 @@ export const MenuButton = styled(IconButton, {
   justifyContent: "flex-start",
   gap: theme.spacing(0.65),
   alignItems: "flex-start",
-  borderRadius: "3px",
+  borderRadius: theme.shape.borderRadius,
+  padding: theme.spacing(0.8, 0.5),
   "&:hover": {
     background: theme.palette.common.white,
     boxShadow: "0 1px 1.5px 0 rgba(0, 0, 0, 0.2)",
@@ -67,6 +78,14 @@ export const MenuButton = styled(IconButton, {
   "& > svg": {
     opacity: 0.75,
   },
+}));
+
+export const AccordionContent = styled("ul")(({ theme }) => ({
+  listStyle: "none",
+  margin: theme.spacing(0, 0.25, 0, 1.25),
+  padding: 0,
+  borderLeft: `2px solid ${theme.palette.border.light}`,
+  paddingLeft: theme.spacing(0.75),
 }));
 
 export const Subtitle = styled(Typography)(({ theme }) => ({

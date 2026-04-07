@@ -26,6 +26,17 @@ const mockGetUserRoleForCurrentTeam = vi.fn();
 const mockGetTeam = vi.fn();
 const mockSetIsNavMenuVisible = vi.fn();
 
+const mockUser = {
+  firstName: "Test",
+  lastName: "User",
+  isPlatformAdmin: false,
+  isAnalyst: false,
+  teams: [],
+  id: 123,
+  email: "test@example.com",
+  defaultTeamId: 1,
+};
+
 vi.mock("pages/FlowEditor/lib/store", async () => ({
   useStore: vi.fn((selector) =>
     selector({
@@ -33,8 +44,10 @@ vi.mock("pages/FlowEditor/lib/store", async () => ({
       flowSlug: mockFlowName,
       flowAnalyticsLink: mockAnalyticsLink,
       getUserRoleForCurrentTeam: mockGetUserRoleForCurrentTeam,
+      getUserRole: vi.fn(),
       getTeam: mockGetTeam,
       setIsNavMenuVisible: mockSetIsNavMenuVisible,
+      user: mockUser,
     }),
   ),
   getState: () => ({
@@ -57,12 +70,13 @@ describe("globalLayoutRoutes", () => {
     });
   });
 
-  it("hides menu for teamEditors (only 1 accessible route)", async () => {
+  it("shows menu for teamEditors (only 1 accessible route)", async () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("teamEditor");
 
-    const { queryAllByRole } = await setup(<EditorNavMenu />);
-    const menuItems = queryAllByRole("listitem");
-    expect(menuItems).toHaveLength(0);
+    const { getAllByRole } = await setup(<EditorNavMenu />);
+    const menuItems = getAllByRole("listitem");
+    expect(menuItems).toHaveLength(1);
+    expect(within(menuItems[0]).getByText("Select a team")).toBeInTheDocument();
   });
 
   it("displays for platformAdmins", async () => {
@@ -94,13 +108,14 @@ describe("teamLayoutRoutes", () => {
   it("only displays the external link routes for teamViewers", async () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("teamViewer");
 
-    const { queryAllByRole } = await setup(<EditorNavMenu />);
-    const menuItems = queryAllByRole("listitem");
-    expect(menuItems).toHaveLength(6);
-    expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
-    expect(within(menuItems[1]).getByText("Planning Data")).toBeInTheDocument();
+    const { queryAllByRole, getByRole, user } = await setup(<EditorNavMenu />);
+    expect(queryAllByRole("listitem")).toHaveLength(3);
+    expect(queryAllByRole("listitem")[0]).toHaveTextContent("Flows");
+
+    await user.click(getByRole("button", { name: "Data" }));
+    expect(getByRole("button", { name: /Planning Data/ })).toBeInTheDocument();
     expect(
-      within(menuItems[2]).getByText("Local Planning Services"),
+      getByRole("button", { name: /Local Planning Services/ }),
     ).toBeInTheDocument();
   });
 
@@ -109,18 +124,19 @@ describe("teamLayoutRoutes", () => {
 
     const { getAllByRole } = await setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(12);
+    expect(menuItems).toHaveLength(4);
     expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
   });
 
   it("displays for platformAdmins", async () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
 
-    const { getAllByRole } = await setup(<EditorNavMenu />);
-    const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(12);
-    expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
-    expect(within(menuItems[1]).getByText("Team settings")).toBeInTheDocument();
+    const { getAllByRole, getByRole, user } = await setup(<EditorNavMenu />);
+    expect(getAllByRole("listitem")).toHaveLength(4);
+    expect(getAllByRole("listitem")[0]).toHaveTextContent("Flows");
+
+    await user.click(getByRole("button", { name: "Settings" }));
+    expect(getByRole("button", { name: /Team settings/ })).toBeInTheDocument();
   });
 
   it("displays subtitles for sections", async () => {
@@ -151,14 +167,16 @@ describe("teamPlanningDataRoute", () => {
   it("is disabled without a reference code", async () => {
     mockGetTeam.mockReturnValue({ settings: { referenceCode: null } });
 
-    const { getByRole } = await setup(<EditorNavMenu />);
+    const { getByRole, user } = await setup(<EditorNavMenu />);
+    await user.click(getByRole("button", { name: "Data" }));
     expect(getByRole("button", { name: /Planning Data/ })).toBeDisabled();
   });
 
   it("is enabled with a reference code", async () => {
     mockGetTeam.mockReturnValue({ settings: { referenceCode: "TEST" } });
 
-    const { getByRole } = await setup(<EditorNavMenu />);
+    const { getByRole, user } = await setup(<EditorNavMenu />);
+    await user.click(getByRole("button", { name: "Data" }));
     expect(getByRole("button", { name: /Planning Data/ })).toBeEnabled();
   });
 });
@@ -231,6 +249,30 @@ describe("flowAnalyticsRoute", () => {
   });
 });
 
+describe("account menu", () => {
+  beforeEach(() => {
+    mockUseLocation.mockReturnValue({
+      pathname: "/test-team/test-flow",
+      search: {},
+      hash: "",
+      href: "/test-team/test-flow",
+      state: { __TSR_index: 0 },
+      searchStr: "",
+      publicHref: "",
+      external: false,
+    });
+    mockTeamName = "test-team";
+    mockFlowName = "test-flow";
+    mockGetUserRoleForCurrentTeam.mockReturnValue("teamEditor");
+  });
+
+  it("displays avatar initials and toggle button", async () => {
+    const { getByText, getByLabelText } = await setup(<EditorNavMenu />);
+    expect(getByText("TU")).toBeInTheDocument();
+    expect(getByLabelText("Toggle Menu")).toBeInTheDocument();
+  });
+});
+
 describe("layout", () => {
   it("displays in a full mode on global routes", async () => {
     mockUseLocation.mockReturnValue({
@@ -245,7 +287,9 @@ describe("layout", () => {
     });
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
 
-    const { queryAllByRole, queryByLabelText } = await setup(<EditorNavMenu />);
+    const { queryAllByRole, queryByLabelText, getByText } = await setup(
+      <EditorNavMenu />,
+    );
     const menuItems = queryAllByRole("listitem");
 
     // Tooltip not present
@@ -253,6 +297,9 @@ describe("layout", () => {
 
     // Full text present
     expect(within(menuItems[0]).getByText("Select a team")).toBeInTheDocument();
+
+    // Logo displays full text in non-compact mode
+    expect(getByText("Plan✕")).toBeInTheDocument();
   });
 
   it("displays in a full mode on team routes", async () => {
