@@ -17,6 +17,8 @@ import { Card, CardContent } from "./components/FlowCard/styles";
 import Flows from "./components/Flows";
 import { sortOptions } from "./helpers/sortAndFilterOptions";
 import TeamLayout from "./TeamLayout";
+import FlowCard from "./components/FlowCard";
+import { FlowTable } from "./components/FlowTable";
 
 export type FlowView = "flows" | "archive";
 
@@ -140,6 +142,14 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
     });
   }, [teamId, setFlows, getFlows]);
 
+  const updateFlow = useCallback((updatedFlow: FlowSummary) => {
+    const updateSingleFlow = (prev: FlowSummary[] | null) =>
+      prev?.map((f) => (f.id === updatedFlow.id ? updatedFlow : f)) ?? prev;
+
+    setFlows(updateSingleFlow(flows));
+    setSearchedFlows(updateSingleFlow);
+  }, []);
+
   useEffect(() => {
     if (shouldClearSearch) {
       setShouldClearSearch(false);
@@ -185,6 +195,30 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
                 searchKey={["name", "slug"]}
                 clearSearch={shouldClearSearch}
               />
+            )}
+            {sortedFlows && (
+              <>
+                {flowCardView === "grid" ? (
+                  <DashboardList>
+                    {sortedFlows.map((flow) => (
+                      <FlowCard
+                        flow={flow}
+                        key={flow.slug}
+                        refreshFlows={fetchFlows}
+                        showDetails={true}
+                        updateFlow={updateFlow}
+                      />
+                    ))}
+                  </DashboardList>
+                ) : (
+                  <FlowTable
+                    flows={sortedFlows}
+                    teamId={teamId}
+                    teamSlug={slug}
+                    refreshFlows={fetchFlows}
+                  />
+                )}
+              </>
             )}
           </Box>
           {hasFeatureFlag("ARCHIVE_VIEW") && (
