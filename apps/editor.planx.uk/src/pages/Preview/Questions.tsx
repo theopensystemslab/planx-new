@@ -21,6 +21,7 @@ import { ApplicationPath, Session } from "types";
 import Main from "ui/shared/Main";
 
 import ErrorFallback from "../../components/Error/ErrorFallback";
+import OpenInEditorButton from "../../components/OpenInEditorButton";
 import { useStore } from "../FlowEditor/lib/store";
 import Node, { HandleSubmit } from "./Node";
 
@@ -257,6 +258,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
           </ErrorBoundary>
         </Main>
       )}
+      <OpenInEditorButton />
     </Box>
   );
 };

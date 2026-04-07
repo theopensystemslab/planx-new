@@ -1,7 +1,9 @@
+import { getPathForNode, sortFlow } from "@opensystemslab/planx-core";
 import type {
   Address,
   Flag,
   FlagSet,
+  FlowGraph,
   GovUKPayment,
   Node,
   NodeId,
@@ -117,6 +119,7 @@ export interface PreviewStore extends Store.Store {
   autoAnswerableFlag: (filterId: NodeId) => NodeId | undefined;
   hasAcknowledgedWarning: boolean;
   setHasAcknowledgedWarning: () => void;
+  getEditorURLForCurrentCard: () => string | null;
 }
 
 export const previewStore: StateCreator<
@@ -863,6 +866,67 @@ export const previewStore: StateCreator<
 
   hasAcknowledgedWarning: false,
   setHasAcknowledgedWarning: () => set({ hasAcknowledgedWarning: true }),
+
+  getEditorURLForCurrentCard: () => {
+    const { currentCard, flow, flowSlug, teamSlug } = get();
+    if (!currentCard?.id) return null;
+
+    const orderedFlow = sortFlow(flow as FlowGraph);
+    const path = getPathForNode({ nodeId: currentCard.id, flow: orderedFlow });
+    if (!path || path.length === 0) return null;
+
+    let basePath = `${teamSlug}/${flowSlug}`;
+    const internalPortals: typeof path = [];
+    let externalPortalId: string | null = null;
+
+    // Walk node to root and check for nested flows
+    for (let i = 0; i < path.length; i++) {
+      const pNode = path[i];
+
+      if (pNode.type === TYPES.InternalPortal) {
+        const orderedNode = orderedFlow.find((n) => n.id === pNode.id);
+        const nodeData = orderedNode?.data || {};
+
+        if (nodeData.flattenedFromExternalPortal) {
+          if (nodeData.text) {
+            basePath = String(nodeData.text);
+            externalPortalId = pNode.id;
+            break;
+          }
+        } else {
+          internalPortals.push(pNode);
+        }
+      }
+    }
+
+    const [node, parent, grandparent] = path;
+
+    // Folder (internal portal) segments
+    const portalPath = internalPortals.length
+      ? "," +
+        internalPortals
+          .reverse()
+          .map(({ id }) => id)
+          .join(",")
+      : "";
+
+    // Swap nested flow ID for _root
+    const getCleanId = (pathNode: (typeof path)[0] | undefined) => {
+      if (!pathNode) return "_root";
+      if (pathNode.id === externalPortalId) return "_root";
+      return pathNode.id;
+    };
+
+    const cleanParentId = getCleanId(parent);
+    const cleanGrandparentId = getCleanId(grandparent);
+
+    const nodePath =
+      node?.type === TYPES.Answer
+        ? `nodes/${cleanGrandparentId}/nodes/${cleanParentId}/edit#${node.id}`
+        : `nodes/${cleanParentId}/nodes/${node?.id}/edit`;
+
+    return `${window.location.origin}/app/${basePath}${portalPath}/${nodePath}`;
+  },
 });
 
 interface RemoveOrphansFromBreadcrumbsProps {
