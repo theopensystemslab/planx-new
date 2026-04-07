@@ -307,10 +307,7 @@ export const useTeamViewerAuth = useRoleAuth([
   "teamEditor",
   "platformAdmin",
 ]);
-export const useTeamEditorAuth = useRoleAuth([
-  "teamEditor",
-  "platformAdmin",
-]);
+export const useTeamEditorAuth = useRoleAuth(["teamEditor", "platformAdmin"]);
 export const usePlatformAdminAuth = useRoleAuth(["platformAdmin"]);
 
 /**
