@@ -16,11 +16,11 @@ allowBuilds:
   tldjs: true
 
 catalog:
-  '@pulumi/aws': ~7.20.0
-  '@pulumi/awsx': ~3.2.1
-  '@pulumi/cloudflare': ~6.13.0
+  '@pulumi/aws': ~7.23.0
+  '@pulumi/awsx': ~3.3.1
+  '@pulumi/cloudflare': ~6.13.1
   '@pulumi/postgresql': ~3.16.2
-  '@pulumi/pulumi': ~3.223.0
+  '@pulumi/pulumi': ~3.228.0
   '@types/node': ~24.10.15
   typescript: ~5.9.3
 

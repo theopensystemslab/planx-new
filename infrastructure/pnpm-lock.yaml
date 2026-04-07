@@ -7,20 +7,20 @@ settings:
 catalogs:
   default:
     '@pulumi/aws':
-      specifier: ~7.20.0
-      version: 7.20.0
+      specifier: ~7.23.0
+      version: 7.23.0
     '@pulumi/awsx':
-      specifier: ~3.2.1
-      version: 3.2.1
+      specifier: ~3.3.1
+      version: 3.3.1
     '@pulumi/cloudflare':
-      specifier: ~6.13.0
-      version: 6.13.0
+      specifier: ~6.13.1
+      version: 6.13.1
     '@pulumi/postgresql':
       specifier: ~3.16.2
       version: 3.16.2
     '@pulumi/pulumi':
-      specifier: ~3.223.0
-      version: 3.223.0
+      specifier: ~3.228.0
+      version: 3.228.0
     '@types/node':
       specifier: ~24.10.15
       version: 24.10.15
@@ -48,19 +48,19 @@ importers:
         version: 3.0.1
       '@pulumi/aws':
         specifier: 'catalog:'
-        version: 7.20.0(ts-node@7.0.1)(typescript@5.9.3)
+        version: 7.23.0(ts-node@7.0.1)(typescript@5.9.3)
       '@pulumi/awsx':
         specifier: 'catalog:'
-        version: 3.2.1(ts-node@7.0.1)(typescript@5.9.3)
+        version: 3.3.1(ts-node@7.0.1)(typescript@5.9.3)
       '@pulumi/cloudflare':
         specifier: 'catalog:'
-        version: 6.13.0(ts-node@7.0.1)(typescript@5.9.3)
+        version: 6.13.1(ts-node@7.0.1)(typescript@5.9.3)
       '@pulumi/postgresql':
         specifier: 'catalog:'
         version: 3.16.2(ts-node@7.0.1)(typescript@5.9.3)
       '@pulumi/pulumi':
         specifier: 'catalog:'
-        version: 3.223.0(ts-node@7.0.1)(typescript@5.9.3)
+        version: 3.228.0(ts-node@7.0.1)(typescript@5.9.3)
       tldjs:
         specifier: ~2.3.2
         version: 2.3.2
@@ -82,10 +82,10 @@ importers:
     dependencies:
       '@pulumi/cloudflare':
         specifier: 'catalog:'
-        version: 6.13.0(ts-node@7.0.1)(typescript@5.9.3)
+        version: 6.13.1(ts-node@7.0.1)(typescript@5.9.3)
       '@pulumi/pulumi':
         specifier: 'catalog:'
-        version: 3.223.0(ts-node@7.0.1)(typescript@5.9.3)
+        version: 3.228.0(ts-node@7.0.1)(typescript@5.9.3)
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -98,10 +98,10 @@ importers:
     dependencies:
       '@pulumi/aws':
         specifier: 'catalog:'
-        version: 7.20.0(ts-node@7.0.1)(typescript@5.9.3)
+        version: 7.23.0(ts-node@7.0.1)(typescript@5.9.3)
       '@pulumi/pulumi':
         specifier: 'catalog:'
-        version: 3.223.0(ts-node@7.0.1)(typescript@5.9.3)
+        version: 3.228.0(ts-node@7.0.1)(typescript@5.9.3)
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -114,10 +114,10 @@ importers:
     dependencies:
       '@pulumi/aws':
         specifier: 'catalog:'
-        version: 7.20.0(ts-node@7.0.1)(typescript@5.9.3)
+        version: 7.23.0(ts-node@7.0.1)(typescript@5.9.3)
       '@pulumi/pulumi':
         specifier: 'catalog:'
-        version: 3.223.0(ts-node@7.0.1)(typescript@5.9.3)
+        version: 3.228.0(ts-node@7.0.1)(typescript@5.9.3)
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -130,10 +130,10 @@ importers:
     dependencies:
       '@pulumi/aws':
         specifier: 'catalog:'
-        version: 7.20.0(ts-node@7.0.1)(typescript@5.9.3)
+        version: 7.23.0(ts-node@7.0.1)(typescript@5.9.3)
       '@pulumi/pulumi':
         specifier: 'catalog:'
-        version: 3.223.0(ts-node@7.0.1)(typescript@5.9.3)
+        version: 3.228.0(ts-node@7.0.1)(typescript@5.9.3)
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -146,13 +146,13 @@ importers:
     dependencies:
       '@pulumi/aws':
         specifier: 'catalog:'
-        version: 7.20.0(ts-node@7.0.1)(typescript@5.9.3)
+        version: 7.23.0(ts-node@7.0.1)(typescript@5.9.3)
       '@pulumi/awsx':
         specifier: 'catalog:'
-        version: 3.2.1(ts-node@7.0.1)(typescript@5.9.3)
+        version: 3.3.1(ts-node@7.0.1)(typescript@5.9.3)
       '@pulumi/pulumi':
         specifier: 'catalog:'
-        version: 3.223.0(ts-node@7.0.1)(typescript@5.9.3)
+        version: 3.228.0(ts-node@7.0.1)(typescript@5.9.3)
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -373,8 +373,8 @@ packages:
     resolution: {integrity: sha512-mGUWr1uMnf0le2TwfOZY4SFxZGXGfm4Jtay/nwAa2FLNAKXUoUwaGwBMNH36UHPtinWfTSJ3nqFQr0091CxVGg==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  '@opentelemetry/api-logs@0.55.0':
-    resolution: {integrity: sha512-3cpa+qI45VHYcA5c0bHM6VHo9gicv3p5mlLHNG3rLyjQU8b7e0st1rWtrUn3JbZ3DwwCfhKop4eQ9UuYlC6Pkg==}
+  '@opentelemetry/api-logs@0.57.2':
+    resolution: {integrity: sha512-uIX52NnTM0iBh84MShlpouI7UKqkZ7MrUszTmaypHBu4r7NofznSnQRfJ+uUeDtQDj6w8eFGg5KBLDAwAPz1+A==}
     engines: {node: '>=14'}
 
   '@opentelemetry/api@1.9.0':
@@ -393,20 +393,44 @@ packages:
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.10.0'
 
+  '@opentelemetry/exporter-trace-otlp-grpc@0.57.2':
+    resolution: {integrity: sha512-gHU1vA3JnHbNxEXg5iysqCWxN9j83d7/epTYBZflqQnTyCC4N7yZXn/dMM+bEmyhQPGjhCkNZLx4vZuChH1PYw==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@opentelemetry/api': ^1.3.0
+
   '@opentelemetry/exporter-zipkin@1.30.1':
     resolution: {integrity: sha512-6S2QIMJahIquvFaaxmcwpvQQRD/YFaMTNoIxrfPIPOeITN+a8lfEcPDxNxn8JDAaxkg+4EnXhz8upVDYenoQjA==}
     engines: {node: '>=14'}
     peerDependencies:
       '@opentelemetry/api': ^1.0.0
 
-  '@opentelemetry/instrumentation-grpc@0.55.0':
-    resolution: {integrity: sha512-n2ZH4pRwOy0Vhag/3eKqiyDBwcpUnGgJI9iiIRX7vivE0FMncaLazWphNFezRRaM/LuKwq1TD8pVUvieP68mow==}
+  '@opentelemetry/instrumentation-grpc@0.57.2':
+    resolution: {integrity: sha512-TR6YQA67cLSZzdxbf2SrbADJy2Y8eBW1+9mF15P0VK2MYcpdoUSmQTF1oMkBwa3B9NwqDFA2fq7wYTTutFQqaQ==}
     engines: {node: '>=14'}
     peerDependencies:
       '@opentelemetry/api': ^1.3.0
 
-  '@opentelemetry/instrumentation@0.55.0':
-    resolution: {integrity: sha512-YDCMlaQRZkziLL3t6TONRgmmGxDx6MyQDXRD0dknkkgUZtOK5+8MWft1OXzmNu6XfBOdT12MKN5rz+jHUkafKQ==}
+  '@opentelemetry/instrumentation@0.57.2':
+    resolution: {integrity: sha512-BdBGhQBh8IjZ2oIIX6F2/Q3LKm/FDDKi6ccYKcBTeilh6SNdNKveDOLk73BkSJjQLJk6qe4Yh+hHw1UPhCDdrg==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@opentelemetry/api': ^1.3.0
+
+  '@opentelemetry/otlp-exporter-base@0.57.2':
+    resolution: {integrity: sha512-XdxEzL23Urhidyebg5E6jZoaiW5ygP/mRjxLHixogbqwDy2Faduzb5N0o/Oi+XTIJu+iyxXdVORjXax+Qgfxag==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@opentelemetry/api': ^1.3.0
+
+  '@opentelemetry/otlp-grpc-exporter-base@0.57.2':
+    resolution: {integrity: sha512-USn173KTWy0saqqRB5yU9xUZ2xdgb1Rdu5IosJnm9aV4hMTuFFRTUsQxbgc24QxpCHeoKzzCSnS/JzdV0oM2iQ==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@opentelemetry/api': ^1.3.0
+
+  '@opentelemetry/otlp-transformer@0.57.2':
+    resolution: {integrity: sha512-48IIRj49gbQVK52jYsw70+Jv+JbahT8BqT2Th7C4H7RCM9d0gZ5sgNPoMpWldmfjvIsSgiGJtjfk9MeZvjhoig==}
     engines: {node: '>=14'}
     peerDependencies:
       '@opentelemetry/api': ^1.3.0
@@ -429,6 +453,18 @@ packages:
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.10.0'
 
+  '@opentelemetry/sdk-logs@0.57.2':
+    resolution: {integrity: sha512-TXFHJ5c+BKggWbdEQ/inpgIzEmS2BGQowLE9UhsMd7YYlUfBQJ4uax0VF/B5NYigdM/75OoJGhAV3upEhK+3gg==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@opentelemetry/api': '>=1.4.0 <1.10.0'
+
+  '@opentelemetry/sdk-metrics@1.30.1':
+    resolution: {integrity: sha512-q9zcZ0Okl8jRgmy7eNW3Ku1XSgg3sDLa5evHZpCwjspw7E8Is4K/haRPDJrBcX3YSn/Y7gUvFnByNYEKQNbNog==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@opentelemetry/api': '>=1.3.0 <1.10.0'
+
   '@opentelemetry/sdk-trace-base@1.30.1':
     resolution: {integrity: sha512-jVPgBbH1gCy2Lb7X0AVQ8XAfgg0pJ4nvl8/IiQA6nxOsPvS+0zMJaFSs2ltXe0J6C8dqjcnpyqINDJmU30+uOg==}
     engines: {node: '>=14'}
@@ -440,10 +476,6 @@ packages:
     engines: {node: '>=14'}
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.10.0'
-
-  '@opentelemetry/semantic-conventions@1.27.0':
-    resolution: {integrity: sha512-sAay1RrB+ONOem0OZanAR1ZI/k7yDpnOQSQmTMuGImUQb2y8EbSaCJ94FQluM74xoU03vlb2d2U90hZluL6nQg==}
-    engines: {node: '>=14'}
 
   '@opentelemetry/semantic-conventions@1.28.0':
     resolution: {integrity: sha512-lp4qAiMTD4sNWW4DbKLBkfiMZ4jbAboJIGOQr5DvciMRI494OapieI9qiODpOt0XBr1LjIDy1xAGAnVs5supTA==}
@@ -479,14 +511,14 @@ packages:
   '@protobufjs/utf8@1.1.0':
     resolution: {integrity: sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==}
 
-  '@pulumi/aws@7.20.0':
-    resolution: {integrity: sha512-f8efmjHXKRUQY4fojfw7vuWN7Q07Cz0bjqbIwD/qtOuz+qs+zrKWU50uAB0HcWXAxjI0ll4KslGu2oLRiMTxng==}
+  '@pulumi/aws@7.23.0':
+    resolution: {integrity: sha512-tRyG4cwTQQ+88gb2TwejLWXW4TvuC72zlrNpCm2BBTnBp6YaZRT23xLFTYK8GN37fjzglmoVE9DF4yYMPvt17g==}
 
-  '@pulumi/awsx@3.2.1':
-    resolution: {integrity: sha512-4X7HCzfVlvDJcgIewqNkn5Ny30IMWHuY3DbLzDknuxNKDt9fWUac4g50zL7qMbcLtWNfIhQFxthdcRrkG/g/dA==}
+  '@pulumi/awsx@3.3.1':
+    resolution: {integrity: sha512-AHyh2RPngaoe7jJfadxE00EUUDepW9yIq1hROXGU+WmVjcUffiHF1sgvzH7UEllLUxa20DgKN3njitHd9XKnRA==}
 
-  '@pulumi/cloudflare@6.13.0':
-    resolution: {integrity: sha512-M3tMo5/1S2NgOiCBhrN6gUYZg50/59HlAYQ1NsLkfb7prgH4aSdh7R01wgXlBQPu2BtiZswCtAigMdyAXVA+Ig==}
+  '@pulumi/cloudflare@6.13.1':
+    resolution: {integrity: sha512-8Wq6u3UsHlsNYWrixcTLrpur5huFWtepMrkzUuhc3E+/OeXFJrv2f2TO8JFbQm+4CygzTcAibRB5gKSZ9joD8Q==}
 
   '@pulumi/docker-build@0.0.14':
     resolution: {integrity: sha512-dLCta3BOrYRxHyp22QnVh06qlSiSORtmIypcQ6yb4+GZ2+ThbML06pINyERc5ClgJXGQFSVTtuWhMSiurTWU2w==}
@@ -500,8 +532,8 @@ packages:
   '@pulumi/postgresql@3.16.2':
     resolution: {integrity: sha512-F0YHgZFzGhvp8Y46DAL1WeiJvj2IVXObgj7Ei1i+qIuWnXnuKEAk9BeKldSr2e5VP2H+f586MIRQyeJKAy2FrQ==}
 
-  '@pulumi/pulumi@3.223.0':
-    resolution: {integrity: sha512-mPDnQ60a1cWz2ABorH4Qi4fymlpgLGp/pbObVwmsBK+58zQ6OLC2bjYxGzOlo2PFXiTQ91ji8u3QFLKsJEXIrg==}
+  '@pulumi/pulumi@3.228.0':
+    resolution: {integrity: sha512-yAwieapB/Huro8/psool1sKhe2rGT80GTnEFLDWbKPHTMo6oSegGb6aYg+bzPuC3vgBOn2dnHkobSuwbBhQ7gQ==}
     engines: {node: '>=20'}
     peerDependencies:
       ts-node: '>= 7.0.1 < 12'
@@ -1490,6 +1522,7 @@ packages:
   syncpack@14.0.0:
     resolution: {integrity: sha512-OfAa3Oip5YC9Ad1jEs92Hw08Wy4JfdpdeequIwaJGsQG0tJtb8gpQfCdLuBefsk6n8WiUdt/5qmzcW+BDXtzbQ==}
     engines: {node: '>=14.17.0'}
+    deprecated: 'pnpm users: upgrade to 14.0.2 or newer'
     hasBin: true
 
   tar@7.5.11:
@@ -2086,7 +2119,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@opentelemetry/api-logs@0.55.0':
+  '@opentelemetry/api-logs@0.57.2':
     dependencies:
       '@opentelemetry/api': 1.9.0
 
@@ -2101,6 +2134,17 @@ snapshots:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/semantic-conventions': 1.28.0
 
+  '@opentelemetry/exporter-trace-otlp-grpc@0.57.2(@opentelemetry/api@1.9.0)':
+    dependencies:
+      '@grpc/grpc-js': 1.14.3
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/otlp-exporter-base': 0.57.2(@opentelemetry/api@1.9.0)
+      '@opentelemetry/otlp-grpc-exporter-base': 0.57.2(@opentelemetry/api@1.9.0)
+      '@opentelemetry/otlp-transformer': 0.57.2(@opentelemetry/api@1.9.0)
+      '@opentelemetry/resources': 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-trace-base': 1.30.1(@opentelemetry/api@1.9.0)
+
   '@opentelemetry/exporter-zipkin@1.30.1(@opentelemetry/api@1.9.0)':
     dependencies:
       '@opentelemetry/api': 1.9.0
@@ -2109,18 +2153,18 @@ snapshots:
       '@opentelemetry/sdk-trace-base': 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/semantic-conventions': 1.28.0
 
-  '@opentelemetry/instrumentation-grpc@0.55.0(@opentelemetry/api@1.9.0)':
+  '@opentelemetry/instrumentation-grpc@0.57.2(@opentelemetry/api@1.9.0)':
     dependencies:
       '@opentelemetry/api': 1.9.0
-      '@opentelemetry/instrumentation': 0.55.0(@opentelemetry/api@1.9.0)
-      '@opentelemetry/semantic-conventions': 1.27.0
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.0)
+      '@opentelemetry/semantic-conventions': 1.28.0
     transitivePeerDependencies:
       - supports-color
 
-  '@opentelemetry/instrumentation@0.55.0(@opentelemetry/api@1.9.0)':
+  '@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0)':
     dependencies:
       '@opentelemetry/api': 1.9.0
-      '@opentelemetry/api-logs': 0.55.0
+      '@opentelemetry/api-logs': 0.57.2
       '@types/shimmer': 1.2.0
       import-in-the-middle: 1.15.0
       require-in-the-middle: 7.5.2
@@ -2128,6 +2172,31 @@ snapshots:
       shimmer: 1.2.1
     transitivePeerDependencies:
       - supports-color
+
+  '@opentelemetry/otlp-exporter-base@0.57.2(@opentelemetry/api@1.9.0)':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/otlp-transformer': 0.57.2(@opentelemetry/api@1.9.0)
+
+  '@opentelemetry/otlp-grpc-exporter-base@0.57.2(@opentelemetry/api@1.9.0)':
+    dependencies:
+      '@grpc/grpc-js': 1.14.3
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/otlp-exporter-base': 0.57.2(@opentelemetry/api@1.9.0)
+      '@opentelemetry/otlp-transformer': 0.57.2(@opentelemetry/api@1.9.0)
+
+  '@opentelemetry/otlp-transformer@0.57.2(@opentelemetry/api@1.9.0)':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/api-logs': 0.57.2
+      '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/resources': 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-logs': 0.57.2(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-metrics': 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-trace-base': 1.30.1(@opentelemetry/api@1.9.0)
+      protobufjs: 7.5.4
 
   '@opentelemetry/propagator-b3@1.30.1(@opentelemetry/api@1.9.0)':
     dependencies:
@@ -2145,6 +2214,19 @@ snapshots:
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/semantic-conventions': 1.28.0
 
+  '@opentelemetry/sdk-logs@0.57.2(@opentelemetry/api@1.9.0)':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/api-logs': 0.57.2
+      '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/resources': 1.30.1(@opentelemetry/api@1.9.0)
+
+  '@opentelemetry/sdk-metrics@1.30.1(@opentelemetry/api@1.9.0)':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/resources': 1.30.1(@opentelemetry/api@1.9.0)
+
   '@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0)':
     dependencies:
       '@opentelemetry/api': 1.9.0
@@ -2161,8 +2243,6 @@ snapshots:
       '@opentelemetry/propagator-jaeger': 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/sdk-trace-base': 1.30.1(@opentelemetry/api@1.9.0)
       semver: 7.7.4
-
-  '@opentelemetry/semantic-conventions@1.27.0': {}
 
   '@opentelemetry/semantic-conventions@1.28.0': {}
 
@@ -2189,22 +2269,22 @@ snapshots:
 
   '@protobufjs/utf8@1.1.0': {}
 
-  '@pulumi/aws@7.20.0(ts-node@7.0.1)(typescript@5.9.3)':
+  '@pulumi/aws@7.23.0(ts-node@7.0.1)(typescript@5.9.3)':
     dependencies:
-      '@pulumi/pulumi': 3.223.0(ts-node@7.0.1)(typescript@5.9.3)
+      '@pulumi/pulumi': 3.228.0(ts-node@7.0.1)(typescript@5.9.3)
       mime: 2.6.0
     transitivePeerDependencies:
       - supports-color
       - ts-node
       - typescript
 
-  '@pulumi/awsx@3.2.1(ts-node@7.0.1)(typescript@5.9.3)':
+  '@pulumi/awsx@3.3.1(ts-node@7.0.1)(typescript@5.9.3)':
     dependencies:
       '@aws-sdk/client-ecs': 3.998.0
-      '@pulumi/aws': 7.20.0(ts-node@7.0.1)(typescript@5.9.3)
+      '@pulumi/aws': 7.23.0(ts-node@7.0.1)(typescript@5.9.3)
       '@pulumi/docker': 4.11.0(ts-node@7.0.1)(typescript@5.9.3)
       '@pulumi/docker-build': 0.0.14(ts-node@7.0.1)(typescript@5.9.3)
-      '@pulumi/pulumi': 3.223.0(ts-node@7.0.1)(typescript@5.9.3)
+      '@pulumi/pulumi': 3.228.0(ts-node@7.0.1)(typescript@5.9.3)
       '@types/aws-lambda': 8.10.161
       docker-classic: '@pulumi/docker@3.6.1(ts-node@7.0.1)(typescript@5.9.3)'
       mime: 2.6.0
@@ -2214,9 +2294,9 @@ snapshots:
       - ts-node
       - typescript
 
-  '@pulumi/cloudflare@6.13.0(ts-node@7.0.1)(typescript@5.9.3)':
+  '@pulumi/cloudflare@6.13.1(ts-node@7.0.1)(typescript@5.9.3)':
     dependencies:
-      '@pulumi/pulumi': 3.223.0(ts-node@7.0.1)(typescript@5.9.3)
+      '@pulumi/pulumi': 3.228.0(ts-node@7.0.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - supports-color
       - ts-node
@@ -2224,7 +2304,7 @@ snapshots:
 
   '@pulumi/docker-build@0.0.14(ts-node@7.0.1)(typescript@5.9.3)':
     dependencies:
-      '@pulumi/pulumi': 3.223.0(ts-node@7.0.1)(typescript@5.9.3)
+      '@pulumi/pulumi': 3.228.0(ts-node@7.0.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - supports-color
       - ts-node
@@ -2232,7 +2312,7 @@ snapshots:
 
   '@pulumi/docker@3.6.1(ts-node@7.0.1)(typescript@5.9.3)':
     dependencies:
-      '@pulumi/pulumi': 3.223.0(ts-node@7.0.1)(typescript@5.9.3)
+      '@pulumi/pulumi': 3.228.0(ts-node@7.0.1)(typescript@5.9.3)
       semver: 5.7.2
     transitivePeerDependencies:
       - supports-color
@@ -2241,7 +2321,7 @@ snapshots:
 
   '@pulumi/docker@4.11.0(ts-node@7.0.1)(typescript@5.9.3)':
     dependencies:
-      '@pulumi/pulumi': 3.223.0(ts-node@7.0.1)(typescript@5.9.3)
+      '@pulumi/pulumi': 3.228.0(ts-node@7.0.1)(typescript@5.9.3)
       semver: 5.7.2
     transitivePeerDependencies:
       - supports-color
@@ -2250,21 +2330,22 @@ snapshots:
 
   '@pulumi/postgresql@3.16.2(ts-node@7.0.1)(typescript@5.9.3)':
     dependencies:
-      '@pulumi/pulumi': 3.223.0(ts-node@7.0.1)(typescript@5.9.3)
+      '@pulumi/pulumi': 3.228.0(ts-node@7.0.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - supports-color
       - ts-node
       - typescript
 
-  '@pulumi/pulumi@3.223.0(ts-node@7.0.1)(typescript@5.9.3)':
+  '@pulumi/pulumi@3.228.0(ts-node@7.0.1)(typescript@5.9.3)':
     dependencies:
       '@grpc/grpc-js': 1.14.3
       '@logdna/tail-file': 2.2.0
       '@npmcli/arborist': 9.4.0
       '@opentelemetry/api': 1.9.0
+      '@opentelemetry/exporter-trace-otlp-grpc': 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/exporter-zipkin': 1.30.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/instrumentation': 0.55.0(@opentelemetry/api@1.9.0)
-      '@opentelemetry/instrumentation-grpc': 0.55.0(@opentelemetry/api@1.9.0)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.0)
+      '@opentelemetry/instrumentation-grpc': 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/resources': 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/sdk-trace-base': 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/sdk-trace-node': 1.30.1(@opentelemetry/api@1.9.0)
