@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
@@ -115,6 +116,7 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows, updateFlow }) => {
             direction="row"
             justifyContent="space-between"
             alignItems="flex-start"
+            width="100%"
           >
             <Stack direction="column" alignItems="flex-start">
               <Typography variant="h3" component="h2">
@@ -138,24 +140,28 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows, updateFlow }) => {
                 />
               )}
               {isPinnedByCurrentUser ? (
-                <IconButton
-                  size="small"
-                  onClick={handleUnpinFlow}
-                  aria-label="Unpin flow"
-                  sx={{ borderRadius: "50%" }}
-                >
-                  <StarIcon sx={{ fontSize: 24 }} />
-                </IconButton>
+                <Tooltip title="Unpin flow">
+                  <IconButton
+                    size="small"
+                    onClick={handleUnpinFlow}
+                    aria-label="Unpin flow"
+                    sx={{ borderRadius: "50%" }}
+                  >
+                    <StarIcon sx={{ fontSize: 24 }} />
+                  </IconButton>
+                </Tooltip>
               ) : (
-                <IconButton
-                  size="small"
-                  onClick={handlePinFlow}
-                  aria-label="Pin flow"
-                  disabled={!user}
-                  sx={{ borderRadius: "50%" }}
-                >
-                  <StarOutlineIcon sx={{ fontSize: 24 }} />
-                </IconButton>
+                <Tooltip title="Pin flow">
+                  <IconButton
+                    size="small"
+                    onClick={handlePinFlow}
+                    aria-label="Pin flow"
+                    disabled={!user}
+                    sx={{ borderRadius: "50%" }}
+                  >
+                    <StarOutlineIcon sx={{ fontSize: 24 }} />
+                  </IconButton>
+                </Tooltip>
               )}
             </Box>
           </Stack>
