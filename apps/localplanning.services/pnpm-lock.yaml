@@ -32,7 +32,7 @@ importers:
         version: 1.0.0-alpha.11
       '@tailwindcss/vite':
         specifier: ^4.2.2
-        version: 4.2.2(vite@8.0.3(@emnapi/core@1.9.1)(@emnapi/runtime@1.8.1)(@types/node@24.10.15)(esbuild@0.27.4)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3))
+        version: 4.2.2(vite@8.0.5(@emnapi/core@1.9.1)(@emnapi/runtime@1.8.1)(@types/node@24.10.15)(esbuild@0.27.4)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3))
       '@tanstack/react-query':
         specifier: ^5.90.21
         version: 5.90.21(react@19.2.4)
@@ -86,8 +86,8 @@ importers:
         specifier: ^5.2.0
         version: 5.2.0(typescript@5.9.3)
       vite:
-        specifier: ^8.0.3
-        version: 8.0.3(@emnapi/core@1.9.1)(@emnapi/runtime@1.8.1)(@types/node@24.10.15)(esbuild@0.27.4)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3)
+        specifier: ^8.0.5
+        version: 8.0.5(@emnapi/core@1.9.1)(@emnapi/runtime@1.8.1)(@types/node@24.10.15)(esbuild@0.27.4)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3)
 
 packages:
 
@@ -2150,8 +2150,8 @@ packages:
   lodash.camelcase@4.3.0:
     resolution: {integrity: sha512-TwuEnCnxbc3rAvhf/LbG7tJUDzhqXyFnv3dtzLOPgCG/hODL7WFnsbwktkD7yUV0RrreP/l1PALq/YSg6VvjlA==}
 
-  lodash@4.17.23:
-    resolution: {integrity: sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w==}
+  lodash@4.18.1:
+    resolution: {integrity: sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==}
 
   longest-streak@3.1.0:
     resolution: {integrity: sha512-9Ri+o0JYgehTaVBBDoMqIl8GXtbWg711O3srftcHhZ0dqnETqLaoIK0x17fUw9rFSlK/0NlsKe0Ahhyl5pXE2g==}
@@ -3039,8 +3039,8 @@ packages:
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
 
-  vite@6.4.1:
-    resolution: {integrity: sha512-+Oxm7q9hDoLMyJOYfUYBuHQo+dkAloi33apOPP56pzj+vsdJDzr+j1NISE5pyaAuKL4A3UD34qd0lx5+kfKp2g==}
+  vite@6.4.2:
+    resolution: {integrity: sha512-2N/55r4JDJ4gdrCvGgINMy+HH3iRpNIz8K6SFwVsA+JbQScLiC+clmAxBgwiSPgcG9U15QmvqCGWzMbqda5zGQ==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
     peerDependencies:
@@ -3079,14 +3079,14 @@ packages:
       yaml:
         optional: true
 
-  vite@8.0.3:
-    resolution: {integrity: sha512-B9ifbFudT1TFhfltfaIPgjo9Z3mDynBTJSUYxTjOQruf/zHH+ezCQKcoqO+h7a9Pw9Nm/OtlXAiGT1axBgwqrQ==}
+  vite@8.0.5:
+    resolution: {integrity: sha512-nmu43Qvq9UopTRfMx2jOYW5l16pb3iDC1JH6yMuPkpVbzK0k+L7dfsEDH4jRgYFmsg0sTAqkojoZgzLMlwHsCQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
       '@types/node': ^20.19.0 || >=22.12.0
       '@vitejs/devtools': ^0.1.0
-      esbuild: ^0.27.0
+      esbuild: ^0.27.0 || ^0.28.0
       jiti: '>=1.21.0'
       less: ^4.0.0
       sass: ^1.70.0
@@ -3426,11 +3426,11 @@ snapshots:
     dependencies:
       '@types/react': 19.2.14
       '@types/react-dom': 19.2.3(@types/react@19.2.14)
-      '@vitejs/plugin-react': 4.7.0(vite@6.4.1(@types/node@24.10.15)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.32.0)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3))
+      '@vitejs/plugin-react': 4.7.0(vite@6.4.2(@types/node@24.10.15)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.32.0)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3))
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
       ultrahtml: 1.6.0
-      vite: 6.4.1(@types/node@24.10.15)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.32.0)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3)
+      vite: 6.4.2(@types/node@24.10.15)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.32.0)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3)
     transitivePeerDependencies:
       - '@types/node'
       - jiti
@@ -4277,12 +4277,12 @@ snapshots:
       '@tailwindcss/oxide-win32-arm64-msvc': 4.2.2
       '@tailwindcss/oxide-win32-x64-msvc': 4.2.2
 
-  '@tailwindcss/vite@4.2.2(vite@8.0.3(@emnapi/core@1.9.1)(@emnapi/runtime@1.8.1)(@types/node@24.10.15)(esbuild@0.27.4)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3))':
+  '@tailwindcss/vite@4.2.2(vite@8.0.5(@emnapi/core@1.9.1)(@emnapi/runtime@1.8.1)(@types/node@24.10.15)(esbuild@0.27.4)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3))':
     dependencies:
       '@tailwindcss/node': 4.2.2
       '@tailwindcss/oxide': 4.2.2
       tailwindcss: 4.2.2
-      vite: 8.0.3(@emnapi/core@1.9.1)(@emnapi/runtime@1.8.1)(@types/node@24.10.15)(esbuild@0.27.4)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3)
+      vite: 8.0.5(@emnapi/core@1.9.1)(@emnapi/runtime@1.8.1)(@types/node@24.10.15)(esbuild@0.27.4)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3)
 
   '@tanstack/query-core@5.90.20': {}
 
@@ -4402,7 +4402,7 @@ snapshots:
 
   '@ungap/structured-clone@1.3.0': {}
 
-  '@vitejs/plugin-react@4.7.0(vite@6.4.1(@types/node@24.10.15)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.32.0)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3))':
+  '@vitejs/plugin-react@4.7.0(vite@6.4.2(@types/node@24.10.15)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.32.0)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3))':
     dependencies:
       '@babel/core': 7.29.0
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.29.0)
@@ -4410,7 +4410,7 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-beta.27
       '@types/babel__core': 7.20.5
       react-refresh: 0.17.0
-      vite: 6.4.1(@types/node@24.10.15)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.32.0)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3)
+      vite: 6.4.2(@types/node@24.10.15)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.32.0)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3)
     transitivePeerDependencies:
       - supports-color
 
@@ -4584,8 +4584,8 @@ snapshots:
       unist-util-visit: 5.1.0
       unstorage: 1.17.5
       vfile: 6.0.3
-      vite: 6.4.1(@types/node@24.10.15)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.32.0)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3)
-      vitefu: 1.1.2(vite@6.4.1(@types/node@24.10.15)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.32.0)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3))
+      vite: 6.4.2(@types/node@24.10.15)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.32.0)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3)
+      vitefu: 1.1.2(vite@6.4.2(@types/node@24.10.15)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.32.0)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3))
       xxhash-wasm: 1.1.0
       yargs-parser: 21.1.1
       yocto-spinner: 0.2.3
@@ -5377,7 +5377,7 @@ snapshots:
 
   lodash.camelcase@4.3.0: {}
 
-  lodash@4.17.23: {}
+  lodash@4.18.1: {}
 
   longest-streak@3.1.0: {}
 
@@ -6532,7 +6532,7 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
 
-  vite@6.4.1(@types/node@24.10.15)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.32.0)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3):
+  vite@6.4.2(@types/node@24.10.15)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.32.0)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3):
     dependencies:
       esbuild: 0.25.12
       fdir: 6.5.0(picomatch@4.0.4)
@@ -6550,7 +6550,7 @@ snapshots:
       stylus: 0.62.0
       yaml: 2.8.3
 
-  vite@8.0.3(@emnapi/core@1.9.1)(@emnapi/runtime@1.8.1)(@types/node@24.10.15)(esbuild@0.27.4)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3):
+  vite@8.0.5(@emnapi/core@1.9.1)(@emnapi/runtime@1.8.1)(@types/node@24.10.15)(esbuild@0.27.4)(jiti@2.6.1)(less@4.5.1)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3):
     dependencies:
       lightningcss: 1.32.0
       picomatch: 4.0.4
@@ -6570,9 +6570,9 @@ snapshots:
       - '@emnapi/core'
       - '@emnapi/runtime'
 
-  vitefu@1.1.2(vite@6.4.1(@types/node@24.10.15)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.32.0)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3)):
+  vitefu@1.1.2(vite@6.4.2(@types/node@24.10.15)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.32.0)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3)):
     optionalDependencies:
-      vite: 6.4.1(@types/node@24.10.15)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.32.0)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3)
+      vite: 6.4.2(@types/node@24.10.15)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.32.0)(sass@1.97.3)(stylus@0.62.0)(yaml@2.8.3)
 
   volar-service-css@0.0.68(@volar/language-service@2.4.28):
     dependencies:
@@ -6718,7 +6718,7 @@ snapshots:
       '@vscode/l10n': 0.0.18
       ajv: 8.18.0
       ajv-draft-04: 1.0.0(ajv@8.18.0)
-      lodash: 4.17.23
+      lodash: 4.18.1
       prettier: 3.8.1
       request-light: 0.5.8
       vscode-json-languageservice: 4.1.8
