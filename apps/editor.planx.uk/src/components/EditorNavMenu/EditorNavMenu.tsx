@@ -165,6 +165,13 @@ function EditorNavMenu() {
           accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
         },
         {
+          title: "Analytics",
+          Icon: LeaderboardIcon,
+          route: teamAnalyticsLink ? teamAnalyticsLink : `#`,
+          accessibleBy: ["platformAdmin", "teamEditor", "analyst"],
+          disabled: !teamAnalyticsLink,
+        },
+        {
           title: "Planning Data",
           Icon: LayersIcon,
           route: referenceCode
@@ -179,13 +186,6 @@ function EditorNavMenu() {
           route: referenceCode ? `${lpsBaseUrl}/${teamSlug}` : `#`,
           accessibleBy: "*",
           disabled: !referenceCode,
-        },
-        {
-          title: "Analytics",
-          Icon: LeaderboardIcon,
-          route: teamAnalyticsLink ? teamAnalyticsLink : `#`,
-          accessibleBy: ["platformAdmin", "teamEditor", "analyst"],
-          disabled: !teamAnalyticsLink,
         },
       ],
     },
