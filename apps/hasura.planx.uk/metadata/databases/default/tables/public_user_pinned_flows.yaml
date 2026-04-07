@@ -1,6 +1,13 @@
 table:
   name: user_pinned_flows
   schema: public
+object_relationships:
+  - name: flow
+    using:
+      foreign_key_constraint_on: flow_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
 insert_permissions:
   - role: demoUser
     permission:
