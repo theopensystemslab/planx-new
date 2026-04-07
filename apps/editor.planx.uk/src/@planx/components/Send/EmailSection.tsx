@@ -1,3 +1,4 @@
+import { ApolloError } from "@apollo/client";
 import Link from "@mui/material/Link";
 import MenuItem from "@mui/material/MenuItem";
 import { SelectChangeEvent } from "@mui/material/Select";
@@ -6,6 +7,7 @@ import { SendIntegration } from "@opensystemslab/planx-core/types";
 import { Send } from "@planx/components/Send/model";
 import { getIn } from "formik";
 import { useFormikContext } from "formik";
+import { SubmissionEmailInput } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 import React, { useEffect } from "react";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -16,13 +18,24 @@ import { Switch } from "ui/shared/Switch";
 
 import { useFlowEmailId } from "./hooks/useFlowEmailId";
 import { useTeamSubmissionIntegrations } from "./hooks/useGetTeamSubmissionIntegrations";
-import { EmailEmptyStateProps, EmailSelectionProps } from "./types";
+import { EmailSelectionProps } from "./types";
 
 interface EmailSectionProps {
   id: string;
   teamId: number;
   teamSlug: string;
   toggleSwitch: (value: SendIntegration) => void;
+  disabled?: boolean;
+}
+
+interface EmailContentProps {
+  loading: boolean;
+  error: ApolloError | undefined;
+  teamSlug: string;
+  emailOptions: Required<SubmissionEmailInput>[];
+  currentEmail: Required<SubmissionEmailInput> | undefined;
+  submissionEmailId: string | undefined;
+  handleSelectChange: (event: SelectChangeEvent<unknown>) => void;
   disabled?: boolean;
 }
 
@@ -36,25 +49,6 @@ const EmailErrorState: React.FC = () => (
   </Typography>
 );
 
-const EmailEmptyState: React.FC<EmailEmptyStateProps> = ({
-  teamSlug,
-  error,
-}) => (
-  <ErrorWrapper error={error}>
-    <Typography variant="body2">
-      You do not have a submission email configured. Please add one in your{" "}
-      <Link
-        href={`/app/${teamSlug}/settings/integrations`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        team settings
-      </Link>
-      .
-    </Typography>
-  </ErrorWrapper>
-);
-
 const EmailSelection: React.FC<EmailSelectionProps> = ({
   teamSlug,
   emailOptions,
@@ -65,15 +59,22 @@ const EmailSelection: React.FC<EmailSelectionProps> = ({
   const { values, setFieldValue, touched, errors } = useFormikContext<Send>();
 
   const newEmail = values.newEmail;
-  const isNewEmailSelected = values.submissionEmailId === "new-email";
+  const isNewEmailSelected =
+    emailOptions.length === 0 ? true : values.submissionEmailId === "new-email";
   const newEmailError = errors.newEmail;
+
+  useEffect(() => {
+    if (emailOptions.length === 0 && values.submissionEmailId !== "new-email") {
+      setFieldValue("submissionEmailId", "new-email");
+    }
+  }, [emailOptions.length]);
 
   return (
     <>
       <InputRow>
         <Typography variant="body2" mb={2}>
-          Select a submission email for this service. To add or update
-          submission emails, please visit your{" "}
+          Add or select a submission email address for this service. To edit or
+          delete submission emails, please visit your{" "}
           <Link
             href={`/app/${teamSlug}/settings/integrations`}
             target="_blank"
@@ -84,22 +85,24 @@ const EmailSelection: React.FC<EmailSelectionProps> = ({
           page.
         </Typography>
       </InputRow>
-      <InputRow>
-        <SelectInput
-          name="submissionEmail"
-          value={isNewEmailSelected ? "new-email" : submissionEmailId}
-          onChange={handleSelectChange}
-          bordered
-          disabled={disabled}
-        >
-          {emailOptions.map((email) => (
-            <MenuItem key={email.id} value={email.id}>
-              {email.submissionEmail}
-            </MenuItem>
-          ))}
-          <MenuItem value="new-email">New email...</MenuItem>
-        </SelectInput>
-      </InputRow>
+      {emailOptions.length > 0 && (
+        <InputRow>
+          <SelectInput
+            name="submissionEmail"
+            value={isNewEmailSelected ? "new-email" : submissionEmailId}
+            onChange={handleSelectChange}
+            bordered
+            disabled={disabled}
+          >
+            {emailOptions.map((email) => (
+              <MenuItem key={email.id} value={email.id}>
+                {email.submissionEmail}
+              </MenuItem>
+            ))}
+            <MenuItem value="new-email">New email...</MenuItem>
+          </SelectInput>
+        </InputRow>
+      )}
       {isNewEmailSelected && (
         <Input
           name="newEmail"
@@ -156,31 +159,6 @@ const EmailSection: React.FC<EmailSectionProps> = ({
     }
   }, [defaultEmail?.id]);
 
-  const renderEmailContent = () => {
-    if (loading || flowLoading) {
-      return <EmailLoadingState />;
-    } else if (error || flowError) {
-      return <EmailErrorState />;
-    } else if (emailOptions.length === 0) {
-      return (
-        <EmailEmptyState
-          teamSlug={teamSlug}
-          error={getIn(errors, "submissionEmailId")}
-        />
-      );
-    } else
-      return (
-        <EmailSelection
-          teamSlug={teamSlug}
-          emailOptions={emailOptions}
-          currentEmail={currentEmail}
-          submissionEmailId={values.submissionEmailId || defaultEmail?.id}
-          handleSelectChange={handleSelectChange}
-          disabled={disabled}
-        />
-      );
-  };
-
   return (
     <ModalSectionContent title={"Email"}>
       <InputRow>
@@ -191,8 +169,39 @@ const EmailSection: React.FC<EmailSectionProps> = ({
           disabled={disabled}
         />
       </InputRow>
-      <>{values.destinations.includes("email") && renderEmailContent()}</>
+      <EmailContent
+        loading={loading}
+        error={error}
+        teamSlug={teamSlug}
+        emailOptions={emailOptions}
+        currentEmail={currentEmail}
+        submissionEmailId={values.submissionEmailId}
+        handleSelectChange={handleSelectChange}
+      />
     </ModalSectionContent>
+  );
+};
+
+const EmailContent: React.FC<EmailContentProps> = ({
+  loading,
+  error,
+  teamSlug,
+  emailOptions,
+  currentEmail,
+  submissionEmailId,
+  handleSelectChange,
+}) => {
+  if (loading) return <EmailLoadingState />;
+  if (error) return <EmailErrorState />;
+
+  return (
+    <EmailSelection
+      teamSlug={teamSlug}
+      emailOptions={emailOptions}
+      currentEmail={currentEmail}
+      submissionEmailId={submissionEmailId}
+      handleSelectChange={handleSelectChange}
+    />
   );
 };
 

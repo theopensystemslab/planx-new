@@ -46,11 +46,6 @@ export interface InsertSubmissionEmailMutation {
   };
 }
 
-export interface EmailEmptyStateProps {
-  teamSlug: string;
-  error?: string;
-}
-
 export interface EmailSelectionProps {
   teamSlug: string;
   emailOptions: Required<SubmissionEmailInput>[];
