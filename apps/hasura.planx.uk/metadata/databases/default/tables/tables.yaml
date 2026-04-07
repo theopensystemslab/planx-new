@@ -58,5 +58,6 @@
 - "!include public_templated_flow_edits.yaml"
 - "!include public_templated_flow_update_requests.yaml"
 - "!include public_uniform_applications.yaml"
+- "!include public_user_pinned_flows.yaml"
 - "!include public_user_roles.yaml"
 - "!include public_users.yaml"
