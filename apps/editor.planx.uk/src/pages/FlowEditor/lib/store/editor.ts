@@ -235,6 +235,7 @@ export interface FlowSummary {
   templatedFrom: string | null;
   isTemplate: boolean;
   isListedOnLPS: boolean;
+  pinnedFlows: { flowId: string }[];
   template: {
     team: {
       name: string;
@@ -555,6 +556,9 @@ export const editorStore: StateCreator<
               hasSendComponent: has_send_component
               hasVisiblePayComponent: has_pay_component
               hasEnabledServiceCharge: service_charge_enabled
+            }
+            pinnedFlows: user_pinned_flows {
+              flowId: flow_id
             }
           }
         }

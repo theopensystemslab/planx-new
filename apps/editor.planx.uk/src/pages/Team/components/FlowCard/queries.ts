@@ -1,0 +1,65 @@
+import { gql } from "@apollo/client";
+
+// this is copied from the getFlows query in FlowEditor/lib/store/editor.ts - might be worth re-using the fragment there as well?
+const FLOW_SUMMARY_FIELDS = gql`
+  fragment FlowSummaryFields on flows {
+    id
+    name
+    slug
+    status
+    summary
+    updatedAt: updated_at
+    isListedOnLPS: is_listed_on_lps
+    operations(limit: 1, order_by: { created_at: desc }) {
+      createdAt: created_at
+      actor {
+        firstName: first_name
+        lastName: last_name
+      }
+    }
+    templatedFrom: templated_from
+    isTemplate: is_template
+    template {
+      team {
+        id
+        name
+      }
+    }
+    publishedFlows: published_flows(order_by: { created_at: desc }, limit: 1) {
+      publishedAt: created_at
+      hasSendComponent: has_send_component
+      hasVisiblePayComponent: has_pay_component
+      hasEnabledServiceCharge: service_charge_enabled
+    }
+    pinnedFlows: user_pinned_flows {
+      flowId: flow_id
+    }
+  }
+`;
+
+export const PIN_FLOW = gql`
+  ${FLOW_SUMMARY_FIELDS}
+  mutation PinFlow($flowId: uuid!, $userId: Int!) {
+    insert_user_pinned_flows_one(
+      object: { flow_id: $flowId, user_id: $userId }
+    ) {
+      flow {
+        ...FlowSummaryFields
+      }
+    }
+  }
+`;
+
+// userId not required as a variable, as it is pulled from the jwt by the hasura middleware, and used to restrict operations
+export const UNPIN_FLOW = gql`
+  ${FLOW_SUMMARY_FIELDS}
+  mutation UnpinFlow($flowId: uuid!) {
+    delete_user_pinned_flows(where: { flow_id: { _eq: $flowId } }) {
+      returning {
+        flow {
+          ...FlowSummaryFields
+        }
+      }
+    }
+  }
+`;
