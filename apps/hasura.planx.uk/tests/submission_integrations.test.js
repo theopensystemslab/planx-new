@@ -80,21 +80,6 @@ describe("submission_integrations", () => {
     });
   });
 
-  describe("demoUser", () => {
-    let i;
-    beforeAll(async () => {
-      i = await introspectAs("demoUser");
-    });
-
-    test("cannot query flow integrations", () => {
-      expect(i.queries).not.toContain("submission_integrations");
-    });
-
-    test("cannot create, update, or delete flow integrations", () => {
-      expect(i).toHaveNoMutationsFor("submission_integrations");
-    });
-  });
-
   describe("api", () => {
     let i;
     beforeAll(async () => {

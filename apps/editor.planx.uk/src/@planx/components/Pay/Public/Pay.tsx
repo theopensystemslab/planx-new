@@ -111,8 +111,7 @@ function Component(props: Props) {
 
   const { showBoundary } = useErrorBoundary();
 
-  const isTeamSupported =
-    state.status !== "unsupported_team" && teamSlug !== "demo";
+  const isTeamSupported = state.status !== "unsupported_team";
   const showPayOptions = props.allowInviteToPay && !props.hidePay;
 
   useEffect(() => {
@@ -307,8 +306,6 @@ function Component(props: Props) {
               : "Retry payment"
           }
           error={
-            (teamSlug === "demo" &&
-              "GOV.UK Pay is not enabled for demo users") ||
             (state.status === "unsupported_team" &&
               "GOV.UK Pay is not enabled for this local authority") ||
             (state.status === "undefined_fee" &&

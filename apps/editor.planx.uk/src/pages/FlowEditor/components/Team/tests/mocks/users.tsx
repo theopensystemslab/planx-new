@@ -1,7 +1,5 @@
 import type { User } from "@opensystemslab/planx-core/types";
 
-import { DEMO_TEAM_ID } from "../../components/UserUpsertModal";
-
 export const mockUsersData: (User & { __typename: "users" })[] = [
   {
     __typename: "users",
@@ -66,22 +64,6 @@ export const mockPlainUser: User = {
 export const mockPlatformAdminUser: User = {
   ...mockPlainUser,
   isPlatformAdmin: true,
-};
-
-export const newDemoMember: User = {
-  id: 99,
-  firstName: "Mickey",
-  lastName: "Mouse",
-  email: "mickeymouse@email.com",
-  isPlatformAdmin: false,
-  isAnalyst: false,
-  defaultTeamId: DEMO_TEAM_ID,
-  teams: [
-    {
-      role: "demoUser",
-      team: { name: "Demo Team", slug: "demo", id: DEMO_TEAM_ID },
-    },
-  ],
 };
 
 export const newMember: User = {

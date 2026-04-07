@@ -86,13 +86,6 @@ export const resendEmailController: ResendEmail = async (_req, res, next) => {
   const { payload } = res.locals.parsedReq.body;
   const { template } = res.locals.parsedReq.params;
 
-  const DEMO_TEAM_ID = 32;
-  if (template === "welcome" && payload.defaultTeamId === DEMO_TEAM_ID) {
-    return res.status(200).send({
-      message: `Skipping ${template} email for Demo team user`,
-    });
-  }
-
   // call sendEmail only in production or when testing
   if (!["production", "test"].includes(process.env.APP_ENVIRONMENT!)) {
     return res.status(200).send({

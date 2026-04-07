@@ -4,7 +4,6 @@ import server from "test/mockServer";
 import {
   mockTeamMembersDataWithNoTeamEditors,
   mockUsersData,
-  newDemoMember,
   newMember,
 } from "./users";
 
@@ -26,20 +25,6 @@ export const getUsersHandler = () =>
       data: { users: mockUsersData },
     }),
   );
-
-export const addDemoUserHandler = () =>
-  graphql.mutation("CreateAndAddUserToTeam", () => {
-    server.use(
-      graphql.query("GetUsersForTeam", () =>
-        HttpResponse.json({
-          data: { users: [...mockUsersData, newDemoMember] },
-        }),
-      ),
-    );
-    return HttpResponse.json({
-      data: { insertUsersOne: { id: newDemoMember.id, __typename: "users" } },
-    });
-  });
 
 export const failToAddUserHandler = () =>
   graphql.mutation("CreateAndAddUserToTeam", () =>

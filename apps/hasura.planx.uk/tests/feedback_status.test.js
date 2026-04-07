@@ -66,21 +66,6 @@ describe("feedback_status_enum", () => {
       expect(i).toHaveNoMutationsFor("feedback_status_enum");
     });
   });
-  
-  describe("demoUser", () => {
-    let i;
-    beforeAll(async () => {
-      i = await introspectAs("demoUser");
-    });
-
-    test("cannot query feedback_status_enum", () => {
-      expect(i.queries).not.toContain("feedback_status_enum");
-    });
-
-    test("cannot create, update, or delete feedback_status_enum", () => {
-      expect(i).toHaveNoMutationsFor("feedback_status_enum");
-    });
-  });
 
   describe("api", () => {
     let i;

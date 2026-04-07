@@ -26,8 +26,6 @@ import {
 } from "../queries";
 import { AddNewEditorFormValues, EditorModalProps } from "../types";
 
-export const DEMO_TEAM_ID = 32;
-
 type Props = Extract<EditorModalProps, { action: "add" } | { action: "edit" }>;
 
 const MemberFields = () => {
@@ -123,7 +121,6 @@ export const UserUpsertModal: React.FC<Props> = ({
     state.teamId,
     state.teamSlug,
   ]);
-  const isDemoTeam = teamId === DEMO_TEAM_ID;
   const toast = useToast();
 
   const handleCompleted = (successMessage: string) => {
@@ -166,7 +163,7 @@ export const UserUpsertModal: React.FC<Props> = ({
         variables: {
           ...formatted,
           teamId,
-          role: isDemoTeam ? "demoUser" : "teamEditor",
+          role: "teamEditor",
         },
       });
     }
@@ -197,7 +194,7 @@ export const UserUpsertModal: React.FC<Props> = ({
           firstName: member?.firstName ?? "",
           lastName: member?.lastName ?? "",
           email: member?.email ?? "",
-          role: isDemoTeam ? "demoUser" : "teamEditor",
+          role: "teamEditor",
         }}
         validationSchema={upsertMemberSchema}
         onSubmit={handleSubmit}

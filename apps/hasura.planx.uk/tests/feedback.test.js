@@ -96,21 +96,6 @@ describe("feedback", () => {
     });
   });
 
-  describe("demoUser", () => {
-    let i;
-    beforeAll(async () => {
-      i = await introspectAs("demoUser");
-    });
-
-    test("cannot query feedback", () => {
-      expect(i.queries).not.toContain("feedback");
-    });
-
-    test("cannot mutate feedback", async () => {
-      expect(i).toHaveNoMutationsFor("feedback");
-    });
-  });
-
   describe("api", () => {
     let i;
     beforeAll(async () => {
