@@ -17,8 +17,6 @@ import { Card, CardContent } from "./components/FlowCard/styles";
 import Flows from "./components/Flows";
 import { sortOptions } from "./helpers/sortAndFilterOptions";
 import TeamLayout from "./TeamLayout";
-import FlowCard from "./components/FlowCard";
-import { FlowTable } from "./components/FlowTable";
 
 export type FlowView = "flows" | "archive";
 
@@ -63,6 +61,10 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
   );
   const [shouldClearSearch, setShouldClearSearch] = useState<boolean>(false);
   const searchParams = useSearch({ from: "/_authenticated/app/$team/" });
+
+  const pinnedFlows = useMemo(() => {
+    return flows?.filter((flow) => flow.pinnedFlows.length > 0) ?? [];
+  }, [flows]);
 
   const sortedFlows = useMemo(() => {
     // Use searchedFlows if available (from SearchBox), otherwise use all flows
@@ -146,7 +148,7 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
     const updateSingleFlow = (prev: FlowSummary[] | null) =>
       prev?.map((f) => (f.id === updatedFlow.id ? updatedFlow : f)) ?? prev;
 
-    setFlows(updateSingleFlow(flows));
+    setFlows(updateSingleFlow);
     setSearchedFlows(updateSingleFlow);
   }, []);
 
@@ -188,43 +190,20 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
               {isTrial && <InfoChip label="Trial account" />}
               {showAddFlowButton && <AddFlow />}
             </Box>
-            {teamHasFlows && (
-              <SearchBox<FlowSummary>
-                records={flows}
-                setRecords={setSearchedFlows}
-                searchKey={["name", "slug"]}
-                clearSearch={shouldClearSearch}
-              />
-            )}
-            {sortedFlows && (
-              <>
-                {flowCardView === "grid" ? (
-                  <DashboardList>
-                    {sortedFlows.map((flow) => (
-                      <FlowCard
-                        flow={flow}
-                        key={flow.slug}
-                        refreshFlows={fetchFlows}
-                        showDetails={true}
-                        updateFlow={updateFlow}
-                      />
-                    ))}
-                  </DashboardList>
-                ) : (
-                  <FlowTable
-                    flows={sortedFlows}
-                    teamId={teamId}
-                    teamSlug={slug}
-                    refreshFlows={fetchFlows}
-                  />
-                )}
-              </>
-            )}
           </Box>
-          {hasFeatureFlag("ARCHIVE_VIEW") && (
-            <TeamLayout flowView={flowView} setFlowView={setFlowView} />
+          {teamHasFlows && (
+            <SearchBox<FlowSummary>
+              records={flows}
+              setRecords={setSearchedFlows}
+              searchKey={["name", "slug"]}
+              clearSearch={shouldClearSearch}
+            />
           )}
         </Box>
+
+        {hasFeatureFlag("ARCHIVE_VIEW") && (
+          <TeamLayout flowView={flowView} setFlowView={setFlowView} />
+        )}
 
         {flowView === "flows" && (
           <Flows
@@ -237,8 +216,10 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
             fetchFlows={fetchFlows}
             teamId={teamId}
             flows={flows}
+            pinnedFlows={pinnedFlows}
             handleViewChange={handleViewChange}
             slug={slug}
+            updateFlow={updateFlow}
           />
         )}
         {flowView === "archive" && (

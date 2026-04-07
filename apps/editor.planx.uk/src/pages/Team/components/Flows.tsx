@@ -45,11 +45,13 @@ type Props = {
   fetchFlows: () => void;
   teamId: number;
   flows: FlowSummary[] | null;
+  pinnedFlows: FlowSummary[];
   handleViewChange: (
     _event: React.MouseEvent<HTMLElement>,
     newView: FlowCardView | null,
   ) => void;
   slug: string;
+  updateFlow: (updatedFlow: FlowSummary) => void;
 };
 
 const Flows: React.FC<Props> = ({
@@ -61,8 +63,10 @@ const Flows: React.FC<Props> = ({
   flowCardView,
   fetchFlows,
   teamId,
+  pinnedFlows,
   handleViewChange,
   slug,
+  updateFlow,
 }) => {
   const teamHasFlows = sortedFlows ? true : false;
   const navigate = useNavigate();
@@ -80,11 +84,57 @@ const Flows: React.FC<Props> = ({
               <SortControl<FlowSummary> sortOptions={sortOptions} />
             </Box>
           )}
+          <ToggleButtonGroup
+            value={flowCardView}
+            exclusive
+            onChange={handleViewChange}
+            size="small"
+          >
+            <Tooltip title="Card view" placement="bottom">
+              <StyledToggleButton value="grid" disableRipple>
+                <ViewModuleIcon />
+              </StyledToggleButton>
+            </Tooltip>
+            <Tooltip title="Table view" placement="bottom">
+              <StyledToggleButton value="row" disableRipple>
+                <TableRowsIcon />
+              </StyledToggleButton>
+            </Tooltip>
+          </ToggleButtonGroup>
         </FiltersContainer>
+        {pinnedFlows.length > 0 && !flowsHaveBeenFiltered && (
+          <Box>
+            <ShowingServicesHeader
+              matchedFlowsCount={pinnedFlows?.length || 0}
+              isPinnedFlows={true}
+            />
+            {flowCardView === "grid" ? (
+              <DashboardList>
+                {pinnedFlows.map((flow) => (
+                  <FlowCard
+                    flow={flow}
+                    key={flow.slug}
+                    refreshFlows={fetchFlows}
+                    showDetails={true}
+                    updateFlow={updateFlow}
+                  />
+                ))}
+              </DashboardList>
+            ) : (
+              <FlowTable
+                flows={pinnedFlows}
+                teamId={teamId}
+                teamSlug={slug}
+                refreshFlows={fetchFlows}
+                showDetails={true}
+              />
+            )}
+          </Box>
+        )}
         <Box
           sx={{
             display: "flex",
-            justifyContent: "space-between",
+            flexDirection: "row",
             alignItems: "center",
             gap: 2,
           }}
@@ -100,6 +150,7 @@ const Flows: React.FC<Props> = ({
           >
             <ShowingServicesHeader
               matchedFlowsCount={sortedFlows?.length || 0}
+              isFiltered={flowsHaveBeenFiltered}
             />
             {flowsHaveBeenFiltered && (
               <Button
@@ -125,23 +176,6 @@ const Flows: React.FC<Props> = ({
               </Button>
             )}
           </Box>
-          <ToggleButtonGroup
-            value={flowCardView}
-            exclusive
-            onChange={handleViewChange}
-            size="small"
-          >
-            <Tooltip title="Card view" placement="bottom">
-              <StyledToggleButton value="grid" disableRipple>
-                <ViewModuleIcon />
-              </StyledToggleButton>
-            </Tooltip>
-            <Tooltip title="Table view" placement="bottom">
-              <StyledToggleButton value="row" disableRipple>
-                <TableRowsIcon />
-              </StyledToggleButton>
-            </Tooltip>
-          </ToggleButtonGroup>
         </Box>
         {sortedFlows && (
           <>
@@ -150,10 +184,10 @@ const Flows: React.FC<Props> = ({
                 {sortedFlows.map((flow) => (
                   <FlowCard
                     flow={flow}
-                    flows={sortedFlows}
                     key={flow.slug}
                     refreshFlows={fetchFlows}
                     showDetails={true}
+                    updateFlow={updateFlow}
                   />
                 ))}
               </DashboardList>
@@ -172,4 +206,5 @@ const Flows: React.FC<Props> = ({
     )
   );
 };
+
 export default Flows;
