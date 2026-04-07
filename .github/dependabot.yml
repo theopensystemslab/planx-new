@@ -92,11 +92,6 @@ updates:
       interval: "monthly"
     labels: ["hasura", "docker"]
     open-pull-requests-limit: 1
-    cooldown:
-      default-days: 7
-      semver-major-days: 14
-      semver-minor-days: 7
-      semver-patch-days: 3
 
   - package-ecosystem: "docker"
     directory: "/apps/hasura.planx.uk/proxy"
@@ -104,11 +99,6 @@ updates:
       interval: "monthly"
     labels: ["hasura", "caddy", "docker"]
     open-pull-requests-limit: 1
-    cooldown:
-      default-days: 7
-      semver-major-days: 14
-      semver-minor-days: 7
-      semver-patch-days: 3
 
   - package-ecosystem: "npm"
     directory: "/apps/hasura.planx.uk/tests"
@@ -161,11 +151,6 @@ updates:
       interval: "monthly"
     labels: ["sharedb", "docker"]
     open-pull-requests-limit: 1
-    cooldown:
-      default-days: 7
-      semver-major-days: 14
-      semver-minor-days: 7
-      semver-patch-days: 3
 
   # API
   - package-ecosystem: "npm"
@@ -192,11 +177,6 @@ updates:
       interval: "monthly"
     labels: ["api", "docker"]
     open-pull-requests-limit: 1
-    cooldown:
-      default-days: 7
-      semver-major-days: 14
-      semver-minor-days: 7
-      semver-patch-days: 3
 
   # E2E tests
   - package-ecosystem: "npm"
@@ -223,11 +203,6 @@ updates:
       interval: "monthly"
     labels: ["ci", "caddy", "docker"]
     open-pull-requests-limit: 1
-    cooldown:
-      default-days: 7
-      semver-major-days: 14
-      semver-minor-days: 7
-      semver-patch-days: 3
 
   # custom postgres container
   - package-ecosystem: "docker"
@@ -236,11 +211,6 @@ updates:
       interval: "monthly"
     labels: ["ci", "postgres", "docker"]
     open-pull-requests-limit: 1
-    cooldown:
-      default-days: 7
-      semver-major-days: 14
-      semver-minor-days: 7
-      semver-patch-days: 3
 
   # Infrastructure (pnpm workspace so we only reference the root)
   # NB. this config may serve as a useful reference when we push monorepo setup at project root
@@ -270,8 +240,3 @@ updates:
     schedule:
       interval: "monthly"
     labels: ["ci", "github-actions"]
-    cooldown:
-      default-days: 7
-      semver-major-days: 14
-      semver-minor-days: 7
-      semver-patch-days: 3
