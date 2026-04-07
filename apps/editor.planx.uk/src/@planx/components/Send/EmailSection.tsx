@@ -3,16 +3,13 @@ import Link from "@mui/material/Link";
 import MenuItem from "@mui/material/MenuItem";
 import { SelectChangeEvent } from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
-import { SendIntegration } from "@opensystemslab/planx-core/types";
 import { Send } from "@planx/components/Send/model";
 import { useFormikContext } from "formik";
 import { SubmissionEmailInput } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 import React, { useEffect } from "react";
-import ModalSectionContent from "ui/editor/ModalSectionContent";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
-import { Switch } from "ui/shared/Switch";
 
 import { useTeamSubmissionIntegrations } from "./hooks/useGetTeamSubmissionIntegrations";
 import { EmailSelectionProps } from "./types";
@@ -20,8 +17,6 @@ import { EmailSelectionProps } from "./types";
 interface EmailSectionProps {
   teamId: number;
   teamSlug: string;
-  toggleSwitch: (value: SendIntegration) => void;
-  disabled?: boolean;
 }
 
 interface EmailContentProps {
@@ -114,12 +109,7 @@ const EmailSelection: React.FC<EmailSelectionProps> = ({
   );
 };
 
-const EmailSection: React.FC<EmailSectionProps> = ({
-  teamId,
-  teamSlug,
-  toggleSwitch,
-  disabled,
-}) => {
+const EmailSection: React.FC<EmailSectionProps> = ({ teamId, teamSlug }) => {
   const { values, setFieldValue } = useFormikContext<Send>();
 
   const { data, loading, error } = useTeamSubmissionIntegrations(teamId);
@@ -140,24 +130,14 @@ const EmailSection: React.FC<EmailSectionProps> = ({
   }, [defaultEmail?.id, defaultEmail, setFieldValue, values.submissionEmailId]);
 
   return (
-    <ModalSectionContent title={"Email"}>
-      <InputRow>
-        <Switch
-          checked={values.destinations.includes("email")}
-          onChange={() => toggleSwitch("email")}
-          label={`Send to email`}
-          disabled={disabled}
-        />
-      </InputRow>
-      <EmailContent
-        loading={loading}
-        error={error}
-        teamSlug={teamSlug}
-        emailOptions={emailOptions}
-        submissionEmailId={values.submissionEmailId}
-        handleSelectChange={handleSelectChange}
-      />
-    </ModalSectionContent>
+    <EmailContent
+      loading={loading}
+      error={error}
+      teamSlug={teamSlug}
+      emailOptions={emailOptions}
+      submissionEmailId={values.submissionEmailId}
+      handleSelectChange={handleSelectChange}
+    />
   );
 };
 

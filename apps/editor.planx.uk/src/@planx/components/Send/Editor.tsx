@@ -6,10 +6,10 @@ import {
   ComponentType as TYPES,
   SendIntegration,
 } from "@opensystemslab/planx-core/types";
-import { Formik, getIn } from "formik";
+import { Formik, getIn, useFormikContext } from "formik";
 import { SubmissionEmailInput } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
+import React, { useCallback } from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -31,13 +31,186 @@ import { parseSend, Send, validateSchema } from "./model";
 
 export type Props = EditorProps<TYPES.Send, Send>;
 
-const SendComponent: React.FC<Props> = (props) => {
-  const [teamSlug, teamId, flowSlug, id] = useStore((state) => [
+interface SendFormProps {
+  disabled?: boolean;
+}
+
+const SendForm: React.FC<SendFormProps> = ({ disabled }) => {
+  const [teamSlug, teamId, flowSlug] = useStore((state) => [
     state.teamSlug,
     state.teamId,
     state.flowSlug,
-    state.id,
   ]);
+
+  const formik = useFormikContext<Send>();
+
+  const toggleSwitch = useCallback(
+    (value: SendIntegration) => {
+      let newCheckedValues: SendIntegration[];
+
+      if (formik.values.destinations.includes(value)) {
+        newCheckedValues = formik.values.destinations.filter(
+          (x) => x !== value,
+        );
+      } else {
+        newCheckedValues = [...formik.values.destinations, value];
+      }
+
+      formik.setFieldValue("destinations", newCheckedValues.sort());
+    },
+    [formik],
+  );
+
+  return (
+    <form onSubmit={formik.handleSubmit} id="modal">
+      <TemplatedNodeInstructions
+        isTemplatedNode={formik.values.isTemplatedNode}
+        templatedNodeInstructions={formik.values.templatedNodeInstructions}
+        areTemplatedNodeInstructionsRequired={
+          formik.values.areTemplatedNodeInstructionsRequired
+        }
+      />
+      <ModalSection>
+        <ModalSectionContent title="Send" Icon={ICONS[TYPES.Send]}>
+          <InputRow>
+            <Input
+              format="large"
+              name="title"
+              value={formik.values.title}
+              placeholder="Editor title"
+              onChange={formik.handleChange}
+              disabled={disabled}
+              errorMessage={formik.errors.title}
+            />
+          </InputRow>
+        </ModalSectionContent>
+      </ModalSection>
+      <ModalSection>
+        <ErrorWrapper error={getIn(formik.errors, "destinations")}>
+          <>
+            <ModalSectionContent title={"Back Office Planning System"}>
+              <InputRow>
+                <Switch
+                  checked={formik.values.destinations.includes("bops")}
+                  onChange={() => toggleSwitch("bops")}
+                  label={`Send to BOPS ${
+                    import.meta.env.VITE_APP_ENV === "production"
+                      ? "production"
+                      : "staging"
+                  }`}
+                  disabled={disabled}
+                />
+              </InputRow>
+            </ModalSectionContent>
+            <Divider />
+            <ModalSectionContent title={"Email"}>
+              <InputRow>
+                <Switch
+                  checked={formik.values.destinations.includes("email")}
+                  onChange={() => toggleSwitch("email")}
+                  label={`Send to email`}
+                  disabled={disabled}
+                />
+              </InputRow>
+              {formik.values.destinations.includes("email") ? (
+                <EmailSection teamId={teamId} teamSlug={teamSlug} />
+              ) : (
+                <></>
+              )}
+            </ModalSectionContent>
+            <Divider />
+            <ModalSectionContent title={"Microsoft SharePoint"}>
+              <InputRow>
+                <Switch
+                  checked={formik.values.destinations.includes("s3")}
+                  onChange={() => toggleSwitch("s3")}
+                  label="Send to Microsoft SharePoint"
+                  disabled={disabled}
+                />
+              </InputRow>
+              <Typography variant="body2">
+                Receive submissions in MS SharePoint via a Power Automate
+                workflow. This option requires you to host a Power Automate
+                webhook that can receive notifications of new submissions in
+                real-time. Learn more about this option in our{" "}
+                <Link
+                  href="https://opensystemslab.notion.site/How-you-can-receive-process-PlanX-applications-using-Microsoft-365-tools-like-Power-Automate-13197a4bbd24421eaf7b5021ddd07741?pvs=74"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  resources
+                </Link>
+                .
+              </Typography>
+            </ModalSectionContent>
+            <Divider />
+            <ModalSectionContent title={"FME Workbench"}>
+              <InputRow>
+                <Switch
+                  checked={formik.values.destinations.includes("fme")}
+                  onChange={() => toggleSwitch("fme")}
+                  label="Retrieve using FME Workbench"
+                  disabled={disabled}
+                />
+              </InputRow>
+              <Typography variant="body2">
+                Retrieve submissions using FME Workbench to download to your
+                local network. This option requires you to setup a workflow
+                which polls for new submissions on a schedule of your choice.
+              </Typography>
+            </ModalSectionContent>
+            <Divider />
+            <ModalSectionContent title={"Uniform"}>
+              <InputRow>
+                <Switch
+                  checked={formik.values.destinations.includes("uniform")}
+                  onChange={() => toggleSwitch("uniform")}
+                  label={`Send to Uniform ${
+                    import.meta.env.VITE_APP_ENV === "production"
+                      ? "production"
+                      : "staging"
+                  }`}
+                  disabled={
+                    disabled ||
+                    !["buckinghamshire", "lambeth", "southwark"].includes(
+                      teamSlug,
+                    )
+                  }
+                />
+              </InputRow>
+              <Typography variant="body2">
+                This is a legacy integration with limited support. It is only
+                available for specific councils and suitable for use with Lawful
+                Development Certificate applications (existing and proposed).
+              </Typography>
+            </ModalSectionContent>
+          </>
+        </ErrorWrapper>
+        <ModalSectionContent>
+          <WarningContainer>
+            <FactCheckIcon />
+            <Typography variant="body2" ml={2}>
+              Records of submissions can be viewed in the{" "}
+              <Link
+                href={`/${teamSlug}/${flowSlug}/submissions`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Submissions
+              </Link>{" "}
+              log in the left-hand menu. Editors can download successful
+              submissions within 28 days from receipt.
+            </Typography>
+          </WarningContainer>
+        </ModalSectionContent>
+      </ModalSection>
+      <ModalFooter formik={formik} showMoreInformation={false} />
+    </form>
+  );
+};
+
+const SendComponent: React.FC<Props> = (props) => {
+  const [teamId, id] = useStore((state) => [state.teamId, state.id]);
 
   const { data: flowData } = useFlowEmailId(id);
   const existingEmailId = flowData?.flowsByPK?.submissionEmailId;
@@ -123,165 +296,7 @@ const SendComponent: React.FC<Props> = (props) => {
         ),
       )}
     >
-      {(formik) => {
-        const toggleSwitch = (value: SendIntegration) => {
-          let newCheckedValues: SendIntegration[];
-
-          // Remove or append this value from the existing array of destinations
-          if (formik.values.destinations.includes(value)) {
-            newCheckedValues = formik.values.destinations.filter(
-              (x) => x !== value,
-            );
-          } else {
-            newCheckedValues = [...formik.values.destinations, value];
-          }
-
-          formik.setFieldValue("destinations", newCheckedValues.sort());
-        };
-
-        return (
-          <form onSubmit={formik.handleSubmit} id="modal">
-            <TemplatedNodeInstructions
-              isTemplatedNode={formik.values.isTemplatedNode}
-              templatedNodeInstructions={
-                formik.values.templatedNodeInstructions
-              }
-              areTemplatedNodeInstructionsRequired={
-                formik.values.areTemplatedNodeInstructionsRequired
-              }
-            />
-            <ModalSection>
-              <ModalSectionContent title="Send" Icon={ICONS[TYPES.Send]}>
-                <InputRow>
-                  <Input
-                    format="large"
-                    name="title"
-                    value={formik.values.title}
-                    placeholder="Editor title"
-                    onChange={formik.handleChange}
-                    disabled={props.disabled}
-                    errorMessage={formik.errors.title}
-                  />
-                </InputRow>
-              </ModalSectionContent>
-            </ModalSection>
-            <ModalSection>
-              <ErrorWrapper error={getIn(formik.errors, "destinations")}>
-                <>
-                  <ModalSectionContent title={"Back Office Planning System"}>
-                    <InputRow>
-                      <Switch
-                        checked={formik.values.destinations.includes("bops")}
-                        onChange={() => toggleSwitch("bops")}
-                        label={`Send to BOPS ${
-                          import.meta.env.VITE_APP_ENV === "production"
-                            ? "production"
-                            : "staging"
-                        }`}
-                        disabled={props.disabled}
-                      />
-                    </InputRow>
-                  </ModalSectionContent>
-                  <Divider />
-                  <EmailSection
-                    teamId={teamId}
-                    teamSlug={teamSlug}
-                    toggleSwitch={toggleSwitch}
-                    disabled={props.disabled}
-                  />
-                  <Divider />
-                  <ModalSectionContent title={"Microsoft SharePoint"}>
-                    <InputRow>
-                      <Switch
-                        checked={formik.values.destinations.includes("s3")}
-                        onChange={() => toggleSwitch("s3")}
-                        label="Send to Microsoft SharePoint"
-                        disabled={props.disabled}
-                      />
-                    </InputRow>
-                    <Typography variant="body2">
-                      Receive submissions in MS SharePoint via a Power Automate
-                      workflow. This option requires you to host a Power
-                      Automate webhook that can receive notifications of new
-                      submissions in real-time. Learn more about this option in
-                      our{" "}
-                      <Link
-                        href="https://opensystemslab.notion.site/How-you-can-receive-process-PlanX-applications-using-Microsoft-365-tools-like-Power-Automate-13197a4bbd24421eaf7b5021ddd07741?pvs=74"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        resources
-                      </Link>
-                      .
-                    </Typography>
-                  </ModalSectionContent>
-                  <Divider />
-                  <ModalSectionContent title={"FME Workbench"}>
-                    <InputRow>
-                      <Switch
-                        checked={formik.values.destinations.includes("fme")}
-                        onChange={() => toggleSwitch("fme")}
-                        label="Retrieve using FME Workbench"
-                        disabled={props.disabled}
-                      />
-                    </InputRow>
-                    <Typography variant="body2">
-                      Retrieve submissions using FME Workbench to download to
-                      your local network. This option requires you to setup a
-                      workflow which polls for new submissions on a schedule of
-                      your choice.
-                    </Typography>
-                  </ModalSectionContent>
-                  <Divider />
-                  <ModalSectionContent title={"Uniform"}>
-                    <InputRow>
-                      <Switch
-                        checked={formik.values.destinations.includes("uniform")}
-                        onChange={() => toggleSwitch("uniform")}
-                        label={`Send to Uniform ${
-                          import.meta.env.VITE_APP_ENV === "production"
-                            ? "production"
-                            : "staging"
-                        }`}
-                        disabled={
-                          props.disabled ||
-                          !["buckinghamshire", "lambeth", "southwark"].includes(
-                            teamSlug,
-                          )
-                        }
-                      />
-                    </InputRow>
-                    <Typography variant="body2">
-                      This is a legacy integration with limited support. It is
-                      only available for specific councils and suitable for use
-                      with Lawful Development Certificate applications (existing
-                      and proposed).
-                    </Typography>
-                  </ModalSectionContent>
-                </>
-              </ErrorWrapper>
-              <ModalSectionContent>
-                <WarningContainer>
-                  <FactCheckIcon />
-                  <Typography variant="body2" ml={2}>
-                    Records of submissions can be viewed in the{" "}
-                    <Link
-                      href={`/${teamSlug}/${flowSlug}/submissions`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Submissions
-                    </Link>{" "}
-                    log in the left-hand menu. Editors can download successful
-                    submissions within 28 days from receipt.
-                  </Typography>
-                </WarningContainer>
-              </ModalSectionContent>
-            </ModalSection>
-            <ModalFooter formik={formik} showMoreInformation={false} />
-          </form>
-        );
-      }}
+      <SendForm />
     </Formik>
   );
 };
