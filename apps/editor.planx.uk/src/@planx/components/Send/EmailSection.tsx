@@ -5,12 +5,10 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import { SendIntegration } from "@opensystemslab/planx-core/types";
 import { Send } from "@planx/components/Send/model";
-import { getIn } from "formik";
 import { useFormikContext } from "formik";
 import { SubmissionEmailInput } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 import React, { useEffect } from "react";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
@@ -67,7 +65,7 @@ const EmailSelection: React.FC<EmailSelectionProps> = ({
     if (emailOptions.length === 0 && values.submissionEmailId !== "new-email") {
       setFieldValue("submissionEmailId", "new-email");
     }
-  }, [emailOptions.length]);
+  }, [emailOptions.length, setFieldValue, values.submissionEmailId]);
 
   return (
     <>
@@ -126,7 +124,7 @@ const EmailSection: React.FC<EmailSectionProps> = ({
   toggleSwitch,
   disabled,
 }) => {
-  const { values, setFieldValue, errors } = useFormikContext<Send>();
+  const { values, setFieldValue } = useFormikContext<Send>();
 
   const {
     data: flowData,
@@ -142,8 +140,6 @@ const EmailSection: React.FC<EmailSectionProps> = ({
     (email) => email.defaultEmail === true,
   );
 
-  const isNewEmailSelected = values.submissionEmailId === "new-email";
-
   const handleSelectChange = (event: SelectChangeEvent<unknown>) => {
     const selectedValue = event.target.value as string;
     setFieldValue("submissionEmailId", selectedValue);
@@ -157,7 +153,7 @@ const EmailSection: React.FC<EmailSectionProps> = ({
     if (!values.submissionEmailId && defaultEmail) {
       setFieldValue("submissionEmailId", defaultEmail.id);
     }
-  }, [defaultEmail?.id]);
+  }, [defaultEmail?.id, defaultEmail, setFieldValue, values.submissionEmailId]);
 
   return (
     <ModalSectionContent title={"Email"}>
@@ -170,8 +166,8 @@ const EmailSection: React.FC<EmailSectionProps> = ({
         />
       </InputRow>
       <EmailContent
-        loading={loading}
-        error={error}
+        loading={loading || flowLoading}
+        error={error || flowError}
         teamSlug={teamSlug}
         emailOptions={emailOptions}
         currentEmail={currentEmail}
