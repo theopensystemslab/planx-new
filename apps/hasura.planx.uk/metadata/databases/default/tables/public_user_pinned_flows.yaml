@@ -43,17 +43,6 @@ select_permissions:
         user_id:
           _eq: X-Hasura-User-Id
     comment: ""
-  - role: demoUser
-    permission:
-      columns:
-        - user_id
-        - created_at
-        - updated_at
-        - flow_id
-      filter:
-        user_id:
-          _eq: X-Hasura-User-Id
-    comment: ""
   - role: platformAdmin
     permission:
       columns:
@@ -77,12 +66,6 @@ select_permissions:
           _eq: X-Hasura-User-Id
     comment: ""
 delete_permissions:
-  - role: demoUser
-    permission:
-      filter:
-        user_id:
-          _eq: X-Hasura-User-Id
-    comment: ""
   - role: platformAdmin
     permission:
       filter:
