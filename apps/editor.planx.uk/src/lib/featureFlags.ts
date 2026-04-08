@@ -1,5 +1,8 @@
 // add/edit/remove feature flags in array below
-const AVAILABLE_FEATURE_FLAGS = ["UPLOAD_LABEL_REBUILD"] as const;
+const AVAILABLE_FEATURE_FLAGS = [
+  "UPLOAD_LABEL_REBUILD",
+  "ARCHIVE_VIEW",
+] as const;
 
 type FeatureFlag = (typeof AVAILABLE_FEATURE_FLAGS)[number];
 

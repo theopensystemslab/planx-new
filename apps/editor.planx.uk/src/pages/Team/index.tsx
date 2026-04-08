@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { useSearch } from "@tanstack/react-router";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { isEmpty, orderBy } from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { InfoChip } from "ui/editor/InfoChip";
@@ -198,7 +199,9 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
               />
             )}
           </Box>
-          <TeamLayout flowView={flowView} setFlowView={setFlowView} />
+          {hasFeatureFlag("ARCHIVE_VIEW") && (
+            <TeamLayout flowView={flowView} setFlowView={setFlowView} />
+          )}
         </Box>
 
         {flowView === "flows" && (
