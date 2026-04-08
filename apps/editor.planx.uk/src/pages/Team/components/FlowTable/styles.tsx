@@ -6,6 +6,7 @@ import TableRow from "@mui/material/TableRow";
 
 export const StyledTable = styled(Table)(({ theme }) => ({
   marginTop: theme.spacing(2),
+  marginBottom: theme.spacing(2),
   zIndex: 1,
   position: "relative",
   border: `1px solid ${theme.palette.border.main}`,

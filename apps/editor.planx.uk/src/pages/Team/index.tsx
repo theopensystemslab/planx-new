@@ -80,6 +80,10 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
     return flows?.filter((flow) => flow.pinnedFlows.length > 0) ?? [];
   }, [flows]);
 
+  const unpinnedFlows = useMemo(() => {
+    return flows?.filter((flow) => flow.pinnedFlows.length === 0) ?? [];
+  }, [flows]);
+
   const sortedFlows = useMemo(() => {
     // Use searchedFlows if available (from SearchBox), otherwise use all flows
     const sourceFlows = searchedFlows || flows;
@@ -223,6 +227,7 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
           teamId={teamId}
           flows={flows}
           pinnedFlows={pinnedFlows}
+          unpinnedFlows={unpinnedFlows}
           handleViewChange={handleViewChange}
           slug={slug}
           updateFlow={updateFlow}
