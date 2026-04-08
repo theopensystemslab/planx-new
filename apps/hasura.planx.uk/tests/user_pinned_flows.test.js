@@ -42,8 +42,6 @@ describe("user_pinned_flows", () => {
       i = await introspectAs("platformAdmin");
     });
 
-    // Row-level permissions tested in e2e/tests/api-driven
-    // platformAdmins can only query/mutate their own records
     test("can query user_pinned_flows", () => {
       expect(i.queries).toContain("user_pinned_flows");
     });
@@ -68,8 +66,6 @@ describe("user_pinned_flows", () => {
       i = await introspectAs("teamEditor");
     });
 
-    // Row-level permissions tested in e2e/tests/api-driven
-    // teamEditors can only query/mutate their own records
     test("can query user_pinned_flows", () => {
       expect(i.queries).toContain("user_pinned_flows");
     });
@@ -94,8 +90,6 @@ describe("user_pinned_flows", () => {
       i = await introspectAs("demoUser");
     });
 
-    // Row-level permissions tested in e2e/tests/api-driven
-    // demoUsers can only query/mutate their own records
     test("can query user_pinned_flows", () => {
       expect(i.queries).toContain("user_pinned_flows");
     });
@@ -120,8 +114,6 @@ describe("user_pinned_flows", () => {
       i = await introspectAs("analyst");
     });
 
-    // Row-level permissions tested in e2e/tests/api-driven
-    // analysts can only query their own records
     test("can query user_pinned_flows", () => {
       expect(i.queries).toContain("user_pinned_flows");
     });
