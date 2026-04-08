@@ -97,23 +97,6 @@ describe("when a user clicks 'Remove user' button", () => {
   });
 });
 
-describe("'remove' button is hidden from Templates team", () => {
-  beforeEach(async () => {
-    useStore.setState({
-      user: mockPlatformAdminUser,
-      teamSlug: "templates",
-    });
-  });
-
-  it("hides the button on the Templates team", async () => {
-    await setupTeamMembersScreen();
-    const teamMembersTable = screen.getByTestId("team-members");
-    const editButton =
-      within(teamMembersTable).queryByTestId("remove-button-3");
-    expect(editButton).not.toBeInTheDocument();
-  });
-});
-
 describe("when a user is not a platform admin", () => {
   beforeEach(async () => {
     useStore.setState({

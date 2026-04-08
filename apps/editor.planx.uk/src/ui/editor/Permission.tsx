@@ -1,23 +1,23 @@
-import { useStore } from "pages/FlowEditor/lib/store";
+import { usePermission } from "hooks/usePermission";
 import React, { PropsWithChildren } from "react";
 
-type PermissionComponent = React.FC<PropsWithChildren> & {
-  IsPlatformAdmin: React.FC<PropsWithChildren>;
-} & { IsNotPlatformAdmin: React.FC<PropsWithChildren> };
+type FC = React.FC<PropsWithChildren>;
+
+interface PermissionComponent extends FC {
+  IsPlatformAdmin: FC;
+  IsNotPlatformAdmin: FC;
+}
 
 const Permission: PermissionComponent = ({ children }) => {
   return children;
 };
 
-const IsPlatformAdmin: React.FC<PropsWithChildren> = ({ children }) => {
-  const isPlatformAdmin = useStore((state) => state.user?.isPlatformAdmin);
-  return isPlatformAdmin ? children : null;
-};
+const IsPlatformAdmin: FC = ({ children }) =>
+  usePermission(["platformAdmin"]) ? children : null;
 
-const IsNotPlatformAdmin: React.FC<PropsWithChildren> = ({ children }) => {
-  const isPlatformAdmin = useStore((state) => state.user?.isPlatformAdmin);
-  return !isPlatformAdmin ? children : null;
-};
+const IsNotPlatformAdmin: FC = ({ children }) =>
+  !usePermission(["platformAdmin"]) ? children : null;
+
 
 // Attach permission specific components as static properties
 Permission.IsPlatformAdmin = IsPlatformAdmin;
