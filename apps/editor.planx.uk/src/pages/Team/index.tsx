@@ -59,6 +59,7 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
   const [flows, setFlows] = useState<FlowSummary[] | null>(initialFlows);
   const [archivedFlows, setArchivedFlows] = useState<FlowSummary[] | null>(null);
   const [flowView, setFlowView] = useState<FlowView>("flows");
+
   const [searchedFlows, setSearchedFlows] = useState<FlowSummary[] | null>(
     null,
   );
@@ -142,12 +143,6 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
       setFlows(flows);
     });
   }, [teamId, setFlows, getFlows]);
-
-  useEffect(() => {
-    if (initialFlows) {
-      setFlows(initialFlows);
-    }
-  }, [initialFlows]);
 
   useEffect(() => {
     if (flowView === "archive" && archivedFlows === null) {
