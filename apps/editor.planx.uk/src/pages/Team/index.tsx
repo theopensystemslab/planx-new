@@ -26,6 +26,10 @@ import { Card, CardContent } from "./components/FlowCard/styles";
 import { FlowTable } from "./components/FlowTable";
 import { ShowingServicesHeader } from "./components/ShowingServicesHeader";
 import { filterOptions, sortOptions } from "./helpers/sortAndFilterOptions";
+import TeamLayout from "./TeamLayout";
+import { hasFeatureFlag } from "lib/featureFlags";
+
+export type FlowView = "flows" | "archive";
 
 const DashboardList = styled("ul")(({ theme }) => ({
   padding: theme.spacing(2, 0, 3),
@@ -113,10 +117,11 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
   const [searchedFlows, setSearchedFlows] = useState<FlowSummary[] | null>(
     null,
   );
+  const [flowView, setFlowView] = useState<FlowView>("flows");
   const [shouldClearSearch, setShouldClearSearch] = useState<boolean>(false);
   const searchParams = useSearch({ from: "/_authenticated/app/$team/" });
   const navigate = useNavigate();
-
+  
   const sortedFlows = useMemo(() => {
     // Use searchedFlows if available (from SearchBox), otherwise use all flows
     const sourceFlows = searchedFlows || flows;
@@ -214,37 +219,42 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
   return (
     <Box bgcolor={"background.paper"} flexGrow={1}>
       <Container maxWidth="contentWide">
-        <Box
-          pb={1}
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", contentWrap: "row" },
-            justifyContent: "space-between",
-            alignItems: { xs: "flex-start", contentWrap: "center" },
-            gap: 2,
-          }}
-        >
+        <Box>
           <Box
+            pb={1}
             sx={{
               display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
+              flexDirection: { xs: "column", contentWrap: "row" },
+              justifyContent: "space-between",
+              alignItems: { xs: "flex-start", contentWrap: "center" },
               gap: 2,
             }}
           >
-            <Typography variant="h2" component="h1" pr={1}>
-              Flows
-            </Typography>
-            {isTrial && <InfoChip label="Trial account" />}
-            {showAddFlowButton && <AddFlow />}
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 2,
+              }}
+            >
+              <Typography variant="h2" component="h1" pr={1}>
+                Flows
+              </Typography>
+              {isTrial && <InfoChip label="Trial account" />}
+              {showAddFlowButton && <AddFlow />}
+            </Box>
+            {teamHasFlows && (
+              <SearchBox<FlowSummary>
+                records={flows}
+                setRecords={setSearchedFlows}
+                searchKey={["name", "slug"]}
+                clearSearch={shouldClearSearch}
+              />
+            )}
           </Box>
-          {teamHasFlows && (
-            <SearchBox<FlowSummary>
-              records={flows}
-              setRecords={setSearchedFlows}
-              searchKey={["name", "slug"]}
-              clearSearch={shouldClearSearch}
-            />
+          {hasFeatureFlag("ARCHIVE_VIEW") && (
+            <TeamLayout flowView={flowView} setFlowView={setFlowView} />
           )}
         </Box>
         {teamHasFlows && (
