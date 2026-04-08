@@ -126,6 +126,7 @@ const Flows: React.FC<Props> = ({
                 teamId={teamId}
                 teamSlug={slug}
                 refreshFlows={fetchFlows}
+                updateFlow={updateFlow}
                 showDetails={true}
               />
             )}
@@ -198,6 +199,7 @@ const Flows: React.FC<Props> = ({
                 teamSlug={slug}
                 refreshFlows={fetchFlows}
                 showDetails={true}
+                updateFlow={updateFlow}
               />
             )}
           </>
