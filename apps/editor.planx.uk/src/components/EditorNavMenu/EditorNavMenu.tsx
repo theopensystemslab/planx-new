@@ -14,12 +14,13 @@ import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import {
   useLocation,
+  useMatches,
   useNavigate,
-  useRouterState,
+  useParams,
 } from "@tanstack/react-router";
 import AccountMenu from "components/AccountMenu";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useRef, useState } from "react";
+import React, { useMemo, useState } from "react";
 import EditorIcon from "ui/icons/Editor";
 import LocalPlanningServicesIcon from "ui/icons/LocalPlanningServices";
 
@@ -37,22 +38,26 @@ import {
   Root,
   Subtitle,
 } from "./styles";
-import { MenuSection, Route, RoutesForURL } from "./types";
+import { MenuSection, Route } from "./types";
 
 function EditorNavMenu() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const isRouterLoading = useRouterState({ select: (s) => s.isLoading });
+  const { team: teamSlug, flow: flowSlug } = useParams({ strict: false });
+
+  // Check route via matches to decide which mode menu items to display
+  const matches = useMatches();
+  const isFlowRoute = matches.some((match) => match.routeId.includes("$flow"));
+  const isTeamRoute = matches.some((match) => match.routeId.includes("$team"));
+
   const [openAccordions, setOpenAccordions] = useState<Set<string>>(new Set());
-  const [teamSlug, flowSlug, flowAnalyticsLink, role, team] = useStore(
-    (state) => [
-      state.teamSlug,
-      state.flowSlug,
-      state.flowAnalyticsLink,
-      state.getUserRoleForCurrentTeam(),
-      state.getTeam(),
-    ],
-  );
+
+  const [flowAnalyticsLink, role, team] = useStore((state) => [
+    state.flowAnalyticsLink,
+    state.getUserRoleForCurrentTeam(),
+    state.getTeam(),
+  ]);
+
   const environment = import.meta.env.VITE_APP_ENV;
 
   const teamAnalyticsLink =
@@ -111,174 +116,165 @@ function EditorNavMenu() {
     },
   ];
 
-  const teamLayoutSections: MenuSection[] = [
-    {
-      routes: [
-        {
-          title: "Flows",
-          Icon: EditorIcon,
-          route: `/app/${teamSlug}`,
-          accessibleBy: "*",
-        },
-      ],
-    },
-    {
-      subtitle: "Settings",
-      accordion: true,
-      routes: [
-        {
-          title: "Team settings",
-          Icon: TuneIcon,
-          route: `/app/${teamSlug}/settings`,
-          accessibleBy: ["platformAdmin", "teamEditor"],
-        },
-        {
-          title: "Team members",
-          Icon: GroupIcon,
-          route: `/app/${teamSlug}/members`,
-          accessibleBy: ["platformAdmin", "teamEditor"],
-        },
-        {
-          title: "Subscription",
-          Icon: CurrencyPoundIcon,
-          route: `/app/${teamSlug}/subscription`,
-          accessibleBy: ["platformAdmin", "teamEditor"],
-          isNew: true,
-        },
-      ],
-    },
-    {
-      subtitle: "Data",
-      accordion: true,
-      icon: LeaderboardIcon,
-      routes: [
-        {
-          title: "Submissions",
-          Icon: FactCheckIcon,
-          route: `/app/${teamSlug}/submissions`,
-          accessibleBy: ["platformAdmin", "teamEditor"],
-        },
-        {
-          title: "Feedback",
-          Icon: RateReviewIcon,
-          route: `/app/${teamSlug}/feedback`,
-          accessibleBy: ["platformAdmin", "teamEditor"],
-        },
-        {
-          title: "Analytics",
-          Icon: LeaderboardIcon,
-          route: teamAnalyticsLink ? teamAnalyticsLink : `#`,
-          accessibleBy: ["platformAdmin", "teamEditor", "analyst"],
-          disabled: !teamAnalyticsLink,
-        },
-        {
-          title: "Planning Data",
-          Icon: LayersIcon,
-          route: referenceCode
-            ? `https://submit.planning.data.gov.uk/organisations/local-authority:${referenceCode}`
-            : `#`,
-          accessibleBy: "*",
-          disabled: !referenceCode,
-        },
-        {
-          title: "Local Planning Services",
-          Icon: LocalPlanningServicesIcon,
-          route: referenceCode ? `${lpsBaseUrl}/${teamSlug}` : `#`,
-          accessibleBy: "*",
-          disabled: !referenceCode,
-        },
-      ],
-    },
-    {
-      subtitle: "Documentation",
-      accordion: true,
-      routes: [
-        {
-          title: "Resources",
-          Icon: MenuBookIcon,
-          route: `/app/${teamSlug}/resources`,
-          accessibleBy: "*",
-        },
-        {
-          title: "Onboarding",
-          Icon: AssignmentTurnedInIcon,
-          route: `/app/${teamSlug}/onboarding`,
-          accessibleBy: "*",
-        },
-        {
-          title: "Tutorials",
-          Icon: SchoolIcon,
-          route: `/app/${teamSlug}/tutorials`,
-          accessibleBy: "*",
-        },
-      ],
-    },
-  ];
+  const teamLayoutSections: MenuSection[] = useMemo(
+    () => [
+      {
+        routes: [
+          {
+            title: "Flows",
+            Icon: EditorIcon,
+            route: `/app/${teamSlug}`,
+            accessibleBy: "*",
+          },
+        ],
+      },
+      {
+        subtitle: "Settings",
+        accordion: true,
+        routes: [
+          {
+            title: "Team settings",
+            Icon: TuneIcon,
+            route: `/app/${teamSlug}/settings`,
+            accessibleBy: ["platformAdmin", "teamEditor"],
+          },
+          {
+            title: "Team members",
+            Icon: GroupIcon,
+            route: `/app/${teamSlug}/members`,
+            accessibleBy: ["platformAdmin", "teamEditor"],
+          },
+          {
+            title: "Subscription",
+            Icon: CurrencyPoundIcon,
+            route: `/app/${teamSlug}/subscription`,
+            accessibleBy: ["platformAdmin", "teamEditor"],
+            isNew: true,
+          },
+        ],
+      },
+      {
+        subtitle: "Data",
+        accordion: true,
+        icon: LeaderboardIcon,
+        routes: [
+          {
+            title: "Submissions",
+            Icon: FactCheckIcon,
+            route: `/app/${teamSlug}/submissions`,
+            accessibleBy: ["platformAdmin", "teamEditor"],
+          },
+          {
+            title: "Feedback",
+            Icon: RateReviewIcon,
+            route: `/app/${teamSlug}/feedback`,
+            accessibleBy: ["platformAdmin", "teamEditor"],
+          },
+          {
+            title: "Analytics",
+            Icon: LeaderboardIcon,
+            route: teamAnalyticsLink ? teamAnalyticsLink : `#`,
+            accessibleBy: ["platformAdmin", "teamEditor", "analyst"],
+            disabled: !teamAnalyticsLink,
+          },
+          {
+            title: "Planning Data",
+            Icon: LayersIcon,
+            route: referenceCode
+              ? `https://submit.planning.data.gov.uk/organisations/local-authority:${referenceCode}`
+              : `#`,
+            accessibleBy: "*",
+            disabled: !referenceCode,
+          },
+          {
+            title: "Local Planning Services",
+            Icon: LocalPlanningServicesIcon,
+            route: referenceCode ? `${lpsBaseUrl}/${teamSlug}` : `#`,
+            accessibleBy: "*",
+            disabled: !referenceCode,
+          },
+        ],
+      },
+      {
+        subtitle: "Documentation",
+        accordion: true,
+        routes: [
+          {
+            title: "Resources",
+            Icon: MenuBookIcon,
+            route: `/app/${teamSlug}/resources`,
+            accessibleBy: "*",
+          },
+          {
+            title: "Onboarding",
+            Icon: AssignmentTurnedInIcon,
+            route: `/app/${teamSlug}/onboarding`,
+            accessibleBy: "*",
+          },
+          {
+            title: "Tutorials",
+            Icon: SchoolIcon,
+            route: `/app/${teamSlug}/tutorials`,
+            accessibleBy: "*",
+          },
+        ],
+      },
+    ],
+    [teamSlug, lpsBaseUrl, referenceCode, teamAnalyticsLink],
+  );
 
-  const flowLayoutSections: MenuSection[] = [
-    {
-      routes: [
-        {
-          title: "Editor",
-          Icon: EditorIcon,
-          route: `/app/${teamSlug}/${flowSlug}`,
-          accessibleBy: "*",
-        },
-        {
-          title: "Flow settings",
-          Icon: TuneIcon,
-          route: `/app/${teamSlug}/${flowSlug}/settings`,
-          accessibleBy: ["platformAdmin", "teamEditor"],
-        },
-        {
-          title: "Feedback",
-          Icon: RateReviewIcon,
-          route: `/app/${teamSlug}/${flowSlug}/feedback`,
-          accessibleBy: ["platformAdmin", "teamEditor"],
-        },
-        {
-          title: "Submissions",
-          Icon: FactCheckIcon,
-          route: `/app/${teamSlug}/${flowSlug}/submissions`,
-          accessibleBy: ["platformAdmin", "teamEditor"],
-        },
-        {
-          title: "Analytics",
-          Icon: LeaderboardIcon,
-          route: flowAnalyticsLink ? flowAnalyticsLink : `#`,
-          accessibleBy: ["platformAdmin", "teamEditor", "analyst"],
-          disabled: !flowAnalyticsLink,
-        },
-      ],
-    },
-  ];
+  const flowLayoutSections: MenuSection[] = useMemo(
+    () => [
+      {
+        routes: [
+          {
+            title: "Editor",
+            Icon: EditorIcon,
+            route: `/app/${teamSlug}/${flowSlug}`,
+            accessibleBy: "*",
+          },
+          {
+            title: "Flow settings",
+            Icon: TuneIcon,
+            route: `/app/${teamSlug}/${flowSlug}/settings`,
+            accessibleBy: ["platformAdmin", "teamEditor"],
+          },
+          {
+            title: "Feedback",
+            Icon: RateReviewIcon,
+            route: `/app/${teamSlug}/${flowSlug}/feedback`,
+            accessibleBy: ["platformAdmin", "teamEditor"],
+          },
+          {
+            title: "Submissions",
+            Icon: FactCheckIcon,
+            route: `/app/${teamSlug}/${flowSlug}/submissions`,
+            accessibleBy: ["platformAdmin", "teamEditor"],
+          },
+          {
+            title: "Analytics",
+            Icon: LeaderboardIcon,
+            route: flowAnalyticsLink ? flowAnalyticsLink : `#`,
+            accessibleBy: [
+              "platformAdmin",
+              "teamEditor",
+              "analyst",
+            ],
+            disabled: !flowAnalyticsLink,
+          },
+        ],
+      },
+    ],
+    [teamSlug, flowSlug, flowAnalyticsLink],
+  );
 
-  const defaultRoutesForURL: RoutesForURL = {
-    sections: globalLayoutSections,
-    compact: false,
-  };
-  const previousRoutes = useRef<RoutesForURL>(defaultRoutesForURL);
-
-  const getRoutesForUrl = (url: string): RoutesForURL => {
-    // Return the previous value when route is loading to avoid flash of incorrect version
-    if (isRouterLoading) return previousRoutes.current;
-
-    let result: RoutesForURL;
-
-    if (flowSlug && url.includes(flowSlug)) {
-      result = { sections: flowLayoutSections, compact: true };
-    } else if (teamSlug && url.includes(teamSlug)) {
-      result = { sections: teamLayoutSections, compact: false };
-    } else {
-      result = defaultRoutesForURL;
-    }
-
-    previousRoutes.current = result;
-
-    return result;
+  const getRoutesForUrl = (): { sections: MenuSection[]; compact: boolean } => {
+    if (isFlowRoute) return { sections: flowLayoutSections, compact: true };
+    if (isTeamRoute) return { sections: teamLayoutSections, compact: false };
+    return { sections: globalLayoutSections, compact: false };
   };
 
-  const { sections, compact } = getRoutesForUrl(pathname);
+  const { sections, compact } = getRoutesForUrl();
 
   const isRouteAccessible = ({ accessibleBy }: Route) => {
     const accessibleByAll = accessibleBy === "*";
