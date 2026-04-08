@@ -519,7 +519,12 @@ export const editorStore: StateCreator<
     } = await client.query<{ flows: FlowSummary[] }>({
       query: gql`
         query GetFlows($teamId: Int!) {
-          flows(where: { team: { id: { _eq: $teamId } } }) {
+          flows(
+            where: {
+              team: { id: { _eq: $teamId } }
+              archived_at: { _is_null: true }
+            }
+          ) {
             id
             name
             slug
