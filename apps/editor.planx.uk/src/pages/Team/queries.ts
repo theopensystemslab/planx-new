@@ -31,11 +31,23 @@ export const GET_ARCHIVED_FLOWS = gql`
           name
         }
       }
+      publishedFlows: published_flows(
+        order_by: { created_at: desc }
+        limit: 1
+      ) {
+        publishedAt: created_at
+        hasSendComponent: has_send_component
+        hasVisiblePayComponent: has_pay_component
+        hasEnabledServiceCharge: service_charge_enabled
+      }
     }
   }
 `;
 
-export type GetArchivedFlowsQuery = FlowSummary[]
+export type GetArchivedFlowsQuery = {
+  flows: FlowSummary[];
+};
+
 export type GetArchivedFlowsVars = {
   teamId: number;
-}
+};
