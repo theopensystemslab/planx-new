@@ -279,6 +279,7 @@ export interface EditorStore extends Store.Store {
   copyNode: (id: NodeId) => void;
   getCopiedNode: () => { node: Store.Node; children: Store.Node[] };
   getFlows: (teamId: number) => Promise<FlowSummary[]>;
+  getArchivedFlows: (teamId: number) => Promise<FlowSummary[]>;
   isClone: (id: NodeId) => boolean;
   lastPublished: (flowId: string) => Promise<string>;
   lastPublisher: (flowId: string) => Promise<string>;
@@ -519,7 +520,69 @@ export const editorStore: StateCreator<
     } = await client.query<{ flows: FlowSummary[] }>({
       query: gql`
         query GetFlows($teamId: Int!) {
-          flows(where: { team: { id: { _eq: $teamId } } }) {
+          flows(
+            where: {
+              team: { id: { _eq: $teamId } }
+              archived_at: { _is_null: true }
+            }
+          ) {
+            id
+            name
+            slug
+            status
+            summary
+            updatedAt: updated_at
+            isListedOnLPS: is_listed_on_lps
+            operations(limit: 1, order_by: { created_at: desc }) {
+              createdAt: created_at
+              actor {
+                firstName: first_name
+                lastName: last_name
+              }
+            }
+            templatedFrom: templated_from
+            isTemplate: is_template
+            template {
+              team {
+                id
+                name
+              }
+            }
+            publishedFlows: published_flows(
+              order_by: { created_at: desc }
+              limit: 1
+            ) {
+              publishedAt: created_at
+              hasSendComponent: has_send_component
+              hasVisiblePayComponent: has_pay_component
+              hasEnabledServiceCharge: service_charge_enabled
+            }
+          }
+        }
+      `,
+      variables: {
+        teamId,
+      },
+      // Flows are modified via REST API requests, not via the Apollo client
+      // Always get an up to date list when showing the page
+      fetchPolicy: "network-only",
+    });
+
+    return flows;
+  },
+
+  getArchivedFlows: async (teamId) => {
+    const {
+      data: { flows },
+    } = await client.query<{ flows: FlowSummary[] }>({
+      query: gql`
+        query GetArchivedFlows($teamId: Int!) {
+          flows(
+            where: {
+              team: { id: { _eq: $teamId } }
+              archived_at: { _is_null: false }
+            }
+          ) {
             id
             name
             slug
