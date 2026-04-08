@@ -33,6 +33,13 @@ array_relationships:
         table:
           name: team_members
           schema: public
+  - name: user_pinned_flows
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: user_pinned_flows
+          schema: public
 insert_permissions:
   - role: platformAdmin
     permission:
