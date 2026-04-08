@@ -46,6 +46,7 @@ type Props = {
   teamId: number;
   flows: FlowSummary[] | null;
   pinnedFlows: FlowSummary[];
+  unpinnedFlows: FlowSummary[];
   handleViewChange: (
     _event: React.MouseEvent<HTMLElement>,
     newView: FlowCardView | null,
@@ -64,12 +65,16 @@ const Flows: React.FC<Props> = ({
   fetchFlows,
   teamId,
   pinnedFlows,
+  unpinnedFlows,
   handleViewChange,
   slug,
   updateFlow,
 }) => {
   const teamHasFlows = sortedFlows ? true : false;
   const navigate = useNavigate();
+
+  const showPinnedFlows = pinnedFlows.length > 0 && !flowsHaveBeenFiltered;
+  const remainingFlows = showPinnedFlows ? unpinnedFlows : sortedFlows;
 
   return (
     teamHasFlows && (
@@ -178,11 +183,11 @@ const Flows: React.FC<Props> = ({
             )}
           </Box>
         </Box>
-        {sortedFlows && (
+        {remainingFlows && (
           <>
             {flowCardView === "grid" ? (
               <DashboardList>
-                {sortedFlows.map((flow) => (
+                {remainingFlows.map((flow) => (
                   <FlowCard
                     flow={flow}
                     key={flow.slug}
@@ -194,7 +199,7 @@ const Flows: React.FC<Props> = ({
               </DashboardList>
             ) : (
               <FlowTable
-                flows={sortedFlows}
+                flows={remainingFlows}
                 teamId={teamId}
                 teamSlug={slug}
                 refreshFlows={fetchFlows}
