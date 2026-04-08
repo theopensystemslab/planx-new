@@ -13,7 +13,6 @@ import {
 
 export const createApiService = async ({
   env,
-  certificateArn,
   vpcId,
   publicSubnetIds,
   cluster,
@@ -80,7 +79,6 @@ export const createApiService = async ({
   } = await setupLoadBalancer({
     serviceName: "api",
     containerPort: API_PORT,
-    certificateArn,
     vpcId,
     publicSubnetIds,
     domain: DOMAIN,
