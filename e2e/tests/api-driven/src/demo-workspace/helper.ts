@@ -276,13 +276,13 @@ export async function updateFlow(client, flowId: UUID): Promise<UUID> {
   return response;
 }
 
-export async function deleteFlow(client, flowId: UUID): Promise<UUID> {
+export async function archiveFlow(client, flowId: UUID): Promise<UUID> {
   const { update_flows_by_pk: response } = await client.request(
     gql`
       mutation softDeleteFlow($flowId: uuid!) {
         update_flows_by_pk(
           pk_columns: { id: $flowId }
-          _set: { deleted_at: "now()" }
+          _set: { archived_at: "now()" }
         ) {
           id
         }

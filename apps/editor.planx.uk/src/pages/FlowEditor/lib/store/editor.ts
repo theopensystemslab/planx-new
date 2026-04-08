@@ -350,7 +350,7 @@ export const editorStore: StateCreator<
           mutation updateFlow($id: uuid!, $slug: String!) {
             flow: update_flows_by_pk(
               pk_columns: { id: $id }
-              _set: { deleted_at: "now()", status: offline, slug: $slug }
+              _set: { archived_at: "now()", status: offline, slug: $slug }
             ) {
               id
               name
