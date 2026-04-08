@@ -90,9 +90,6 @@ export function FileUploadAndLabelNew(props: Props) {
 
   const [slots, setSlots] = useState<FileUploadSlot[]>([]);
 
-  // Accordion state: only one file can be expanded for editing at a time
-  const [expandedSlotId, setExpandedSlotId] = useState<string | null>(null);
-
   const handleDrawingNumberChange = useCallback(
     (slotId: string, value: string) => {
       dispatch({
@@ -117,14 +114,15 @@ export function FileUploadAndLabelNew(props: Props) {
     // Only stop auto-expand on initial return to node
     if (isUserReturningToNode) return setIsUserReturningToNode(false);
 
+    // TODO: cleanup elsewhere
     // Clear errors as files are added/removed
-    if (slots.length && dropzoneError) setDropzoneError(undefined);
-    if (!slots.length && fileListError) setFileListError(undefined);
-    if (!slots.length && fileLabelErrors) setFileLabelErrors(undefined);
+    // if (slots.length && dropzoneError) setDropzoneError(undefined);
+    // if (!slots.length && fileListError) setFileListError(undefined);
+    // if (!slots.length && fileLabelErrors) setFileLabelErrors(undefined);
 
     // Auto-expand the most recently uploaded file for tagging
     if (slots.length > previousSlotCount && slots.length > 0) {
-      setExpandedSlotId(slots[0].id);
+      dispatch({ type: "EXPAND_SLOT", payload: { slotId: slots[0].id } });
     }
   }, [slots.length]);
 
@@ -132,11 +130,6 @@ export function FileUploadAndLabelNew(props: Props) {
     undefined,
   );
 
-  const [dropzoneError, setDropzoneError] = useState<string | undefined>();
-  const [fileLabelErrors, setFileLabelErrors] = useState<
-    Record<string, string> | undefined
-  >();
-  const [fileListError, setFileListError] = useState<string | undefined>();
   const [isUserReturningToNode, setIsUserReturningToNode] =
     useState<boolean>(false);
 
@@ -154,26 +147,32 @@ export function FileUploadAndLabelNew(props: Props) {
         switch (err?.type) {
           case "minFileUploaded":
           case "nonUploading":
-            setDropzoneError(err?.message);
+            dispatch({
+              type: "SET_DROPZONE_ERROR",
+              payload: { error: err?.message },
+            });
             break;
           case "allFilesTagged": {
             const formattedErrors = formatFileLabelSchemaErrors(err);
-            setFileLabelErrors(formattedErrors);
+            dispatch({
+              type: "SET_FILE_LABEL_ERRORS",
+              payload: { errors: formattedErrors },
+            });
             break;
           }
           case "allRequiredFilesUploaded":
           case "errorStatus":
-            setFileListError(err?.message);
+            dispatch({
+              type: "SET_FILE_LIST_ERROR",
+              payload: { error: err?.message },
+            });
             break;
         }
       });
   };
 
-  const handleExpand = (slotId: string) => {
-    setFileListError(undefined);
-    setFileLabelErrors(undefined);
-    setExpandedSlotId(slotId);
-  };
+  const handleExpand = (slotId: string) =>
+    dispatch({ type: "EXPAND_SLOT", payload: { slotId } });
 
   const handleSave = (slotId: string) => {
     const currentIndex = slots.findIndex((s) => s.id === slotId);
@@ -185,7 +184,8 @@ export function FileUploadAndLabelNew(props: Props) {
       return tags.length === 0;
     });
 
-    setExpandedSlotId(nextUntagged?.id ?? null);
+    // TODO: should this be part of a save "action"?
+    dispatch({ type: "EXPAND_SLOT", payload: { slotId: nextUntagged?.id } });
   };
 
   const isCategoryVisible = (category: keyof typeof fileList) => {
@@ -202,8 +202,9 @@ export function FileUploadAndLabelNew(props: Props) {
 
   // Start removal animation, defer actual state update to onExited
   const initiateRemoveFile = (slot: FileUploadSlot) => {
-    if (expandedSlotId === slot.id) {
-      setExpandedSlotId(null);
+    if (state.expandedSlotId === slot.id) {
+      // TODO: removefile action
+      dispatch({ type: "EXPAND_SLOT", payload: { slotId: undefined } });
     }
     setPendingRemoval(slot);
     setRemovingSlotId(slot.id);
@@ -239,7 +240,10 @@ export function FileUploadAndLabelNew(props: Props) {
           {!props.hideDropZone && (
             <>
               <FileStatus status={fileUploadStatus} />
-              <ErrorWrapper error={dropzoneError} id={`${props.id}-dropzone`}>
+              <ErrorWrapper
+                error={state.dropzoneError}
+                id={`${props.id}-dropzone`}
+              >
                 <Dropzone
                   slots={slots}
                   setSlots={setSlots}
@@ -280,7 +284,7 @@ export function FileUploadAndLabelNew(props: Props) {
               ])}
           </UploadList>
         </DropzoneContainer>
-        <ErrorWrapper error={fileListError} id={`${props.id}-fileList`}>
+        <ErrorWrapper error={state.fileListError} id={`${props.id}-fileList`}>
           <Box>
             {Boolean(slots.length) && (
               <Typography variant="h3" mb={2}>
@@ -298,13 +302,13 @@ export function FileUploadAndLabelNew(props: Props) {
                 >
                   <FileAccordionCard
                     slot={slot}
-                    isExpanded={expandedSlotId === slot.id}
+                    isExpanded={state?.expandedSlotId === slot.id}
                     onExpand={handleExpand}
                     onSave={handleSave}
                     onRemove={initiateRemoveFile}
                     fileList={fileList}
                     setFileList={setFileList}
-                    error={fileLabelErrors?.[slot.id]}
+                    error={state.fileLabelErrors?.[slot.id]}
                     showDrawingNumber={props.showDrawingNumber}
                     drawingNumber={state.drawingNumbers[slot.id]}
                     onDrawingNumberChange={(value) =>
