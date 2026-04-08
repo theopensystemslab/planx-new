@@ -10,7 +10,7 @@ import { PublicProps } from "@planx/components/shared/types";
 import { PrintButton } from "components/PrintButton";
 import capitalize from "lodash/capitalize";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useReducer, useState } from "react";
 import { usePrevious } from "react-use";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -36,6 +36,10 @@ import {
   slotsSchema,
 } from "../schema";
 import { FileAccordionCard } from "./FileAccordionCard";
+import {
+  fileUploadAndLabelReducer,
+  initialState,
+} from "./hooks/fileUploadAndLabelReducer";
 import { InteractiveFileListItem } from "./InteractiveFileListItem";
 
 type Props = PublicProps<FileUploadAndLabel>;
@@ -60,6 +64,8 @@ const UploadList = styled(List)(({ theme }) => ({
 }));
 
 export function FileUploadAndLabelNew(props: Props) {
+  const [state, dispatch] = useReducer(fileUploadAndLabelReducer, initialState);
+
   const [fileList, setFileList] = useState<FileList>({
     required: [],
     recommended: [],
@@ -87,14 +93,12 @@ export function FileUploadAndLabelNew(props: Props) {
   // Accordion state: only one file can be expanded for editing at a time
   const [expandedSlotId, setExpandedSlotId] = useState<string | null>(null);
 
-  // Drawing numbers
-  const [drawingNumbers, setDrawingNumbers] = useState<Record<string, string>>(
-    {},
-  );
-
   const handleDrawingNumberChange = useCallback(
     (slotId: string, value: string) => {
-      setDrawingNumbers((prev) => ({ ...prev, [slotId]: value }));
+      dispatch({
+        type: "UPDATE_DRAWING_NUMBER",
+        payload: { slotId, value },
+      });
     },
     [],
   );
@@ -219,12 +223,7 @@ export function FileUploadAndLabelNew(props: Props) {
     );
     setFileList(updatedFileList);
 
-    // Clean up drawing number for removed file
-    setDrawingNumbers((prev) => {
-      const next = { ...prev };
-      delete next[slot.id];
-      return next;
-    });
+    dispatch({ type: "REMOVE_DRAWING_NUMBER", payload: { slotId: slot.id } });
 
     setRemovingSlotId(null);
     setPendingRemoval(null);
@@ -307,7 +306,7 @@ export function FileUploadAndLabelNew(props: Props) {
                     setFileList={setFileList}
                     error={fileLabelErrors?.[slot.id]}
                     showDrawingNumber={props.showDrawingNumber}
-                    drawingNumber={drawingNumbers[slot.id]}
+                    drawingNumber={state.drawingNumbers[slot.id]}
                     onDrawingNumberChange={(value) =>
                       handleDrawingNumberChange(slot.id, value)
                     }
