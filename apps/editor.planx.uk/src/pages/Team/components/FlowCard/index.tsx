@@ -1,11 +1,5 @@
-import { useMutation } from "@apollo/client/react";
-import StarIcon from "@mui/icons-material/Star";
-import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
-import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
-import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
@@ -15,10 +9,10 @@ import TruncatedText from "ui/editor/TruncatedText";
 import { useStore } from "../../../FlowEditor/lib/store";
 import { FlowSummary } from "../../../FlowEditor/lib/store/editor";
 import FlowMenu from "../FlowMenu";
+import { FlowPinButton } from "../FlowPinButton";
 import { FlowTemplateIndicator } from "../FlowTemplateIndicator";
 import { useFlowDates } from "../hooks/useFlowDates";
 import { useFlowMetadata } from "../hooks/useFlowMetadata";
-import { PIN_FLOW, UNPIN_FLOW } from "./queries";
 import {
   Card,
   CardBanner,
@@ -30,14 +24,13 @@ import {
 interface Props {
   flow: FlowSummary;
   refreshFlows: () => void;
-  updateFlow: (updatedFlow: FlowSummary) => void;
+  updateFlow: (flow: FlowSummary) => void;
 }
 
 const FlowCard: React.FC<Props> = ({ flow, refreshFlows, updateFlow }) => {
-  const [canUserEditTeam, teamSlug, user] = useStore((state) => [
+  const [canUserEditTeam, teamSlug] = useStore((state) => [
     state.canUserEditTeam,
     state.teamSlug,
-    state.user,
   ]);
 
   const {
@@ -49,14 +42,6 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows, updateFlow }) => {
   } = useFlowMetadata(flow);
 
   const { displayFormatted } = useFlowDates(flow);
-
-  const [pinFlow, { loading: isPinLoading }] = useMutation<{
-    insert_user_pinned_flows_one: { flow: FlowSummary };
-  }>(PIN_FLOW);
-
-  const [unpinFlow, { loading: isUnpinLoading }] = useMutation<{
-    delete_user_pinned_flows: { returning: { flow: FlowSummary }[] };
-  }>(UNPIN_FLOW);
 
   const displayTags = [
     {
@@ -70,23 +55,6 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows, updateFlow }) => {
       shouldAddTag: isSubmissionService,
     },
   ];
-
-  const handlePinFlow = async () => {
-    if (!user) return;
-
-    const result = await pinFlow({
-      variables: { flowId: flow.id, userId: user.id },
-    });
-    const updatedFlow = result.data?.insert_user_pinned_flows_one?.flow;
-    if (updatedFlow) updateFlow(updatedFlow);
-  };
-
-  const handleUnpinFlow = async () => {
-    const result = await unpinFlow({ variables: { flowId: flow.id } });
-    const updatedFlow =
-      result.data?.delete_user_pinned_flows?.returning?.[0]?.flow;
-    if (updatedFlow) updateFlow(updatedFlow);
-  };
 
   const isPinnedByCurrentUser = flow.pinnedFlows.some(
     (f) => f.flowId === flow.id,
@@ -125,45 +93,11 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows, updateFlow }) => {
               <LinkSubText>{displayFormatted}</LinkSubText>
             </Stack>
 
-            <Box sx={{ position: "relative", zIndex: 2 }}>
-              {(isPinLoading || isUnpinLoading) && (
-                <CircularProgress
-                  size={34}
-                  disableShrink
-                  thickness={1}
-                  sx={{
-                    position: "absolute",
-                    top: 0,
-                    right: 0,
-                    animationDuration: "700ms",
-                  }}
-                />
-              )}
-              {isPinnedByCurrentUser ? (
-                <Tooltip title="Unpin flow">
-                  <IconButton
-                    size="small"
-                    onClick={handleUnpinFlow}
-                    aria-label="Unpin flow"
-                    sx={{ borderRadius: "50%" }}
-                  >
-                    <StarIcon sx={{ fontSize: 24 }} />
-                  </IconButton>
-                </Tooltip>
-              ) : (
-                <Tooltip title="Pin flow">
-                  <IconButton
-                    size="small"
-                    onClick={handlePinFlow}
-                    aria-label="Pin flow"
-                    disabled={!user}
-                    sx={{ borderRadius: "50%" }}
-                  >
-                    <StarOutlineIcon sx={{ fontSize: 24 }} />
-                  </IconButton>
-                </Tooltip>
-              )}
-            </Box>
+            <FlowPinButton
+              isPinnedByCurrentUser={isPinnedByCurrentUser}
+              flowId={flow.id}
+              updateFlow={updateFlow}
+            />
           </Stack>
           <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
             {displayTags
