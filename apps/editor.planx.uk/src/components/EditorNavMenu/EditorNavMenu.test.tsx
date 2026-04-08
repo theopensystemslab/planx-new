@@ -12,6 +12,7 @@ vi.mock("@tanstack/react-router", async () => {
     ...actual,
     useLocation: vi.fn(),
     useNavigate: vi.fn(() => vi.fn()),
+    useParams: vi.fn(() => ({})),
     useLoaderData: vi.fn(() => ({ teams: [] })),
   };
 });
@@ -50,22 +51,43 @@ vi.mock("pages/FlowEditor/lib/store", async () => ({
   }),
 }));
 
+/**
+ * Helper to manage route context across test setups
+ */
+const setRouteContext = (
+  pathname: string,
+  routeIds: string[],
+  params: Record<string, string> = {},
+) => {
+  mockUseLocation.mockReturnValue({
+    pathname,
+  } as TanStackRouter.ParsedLocation);
+
+  vi.spyOn(TanStackRouter, "useMatches").mockReturnValue(
+    routeIds.map(
+      (id) =>
+        ({ routeId: id }) as TanStackRouter.RouteMatch<
+          unknown,
+          unknown,
+          unknown,
+          unknown,
+          unknown,
+          unknown,
+          unknown
+        >,
+    ),
+  );
+  vi.spyOn(TanStackRouter, "useParams").mockReturnValue(params);
+};
+
+afterEach(() => {
+  vi.clearAllMocks();
+  mockAnalyticsLink = undefined;
+});
+
 describe("globalLayoutRoutes", () => {
   beforeEach(() => {
-    mockUseLocation.mockReturnValue({
-      pathname: "/",
-      search: {},
-      hash: "",
-      href: "/",
-      state: { __TSR_index: 0 },
-      searchStr: "",
-      publicHref: "",
-      external: false,
-    });
-
-    vi.spyOn(TanStackRouter, "useMatches").mockReturnValue([
-      { routeId: "app" },
-    ] as any[]);
+    setRouteContext("/", ["app"]);
   });
 
   it("shows menu for teamEditors (only 1 accessible route)", async () => {
@@ -89,23 +111,8 @@ describe("globalLayoutRoutes", () => {
 
 describe("teamLayoutRoutes", () => {
   beforeEach(() => {
-    mockUseLocation.mockReturnValue({
-      pathname: "/test-team",
-      search: {},
-      hash: "",
-      href: "/test-team",
-      state: { __TSR_index: 0 },
-      searchStr: "",
-      publicHref: "",
-      external: false,
-    });
-
+    setRouteContext("/test-team", ["app", "app/$team"], { team: "test-team" });
     mockGetTeam.mockReturnValue({ settings: { referenceCode: null } });
-
-    vi.spyOn(TanStackRouter, "useMatches").mockReturnValue([
-      { routeId: "app" },
-      { routeId: "app/$team" },
-    ] as any[]);
   });
 
   it("only displays the external link routes for teamViewers", async () => {
@@ -154,21 +161,7 @@ describe("teamLayoutRoutes", () => {
 
 describe("teamPlanningDataRoute", () => {
   beforeEach(() => {
-    mockUseLocation.mockReturnValue({
-      pathname: "/test-team",
-      search: {},
-      hash: "",
-      href: "/test-team",
-      state: { __TSR_index: 0 },
-      searchStr: "",
-      publicHref: "",
-      external: false,
-    });
-
-    vi.spyOn(TanStackRouter, "useMatches").mockReturnValue([
-      { routeId: "app" },
-      { routeId: "app/$team" },
-    ] as any[]);
+    setRouteContext("/test-team", ["app", "app/$team"], { team: "test-team" });
   });
 
   it("is disabled without a reference code", async () => {
@@ -190,22 +183,14 @@ describe("teamPlanningDataRoute", () => {
 
 describe("flowLayoutRoutes", () => {
   beforeEach(() => {
-    mockUseLocation.mockReturnValue({
-      pathname: "/test-team/test-flow",
-      search: {},
-      hash: "",
-      href: "/test-team/test-flow",
-      state: { __TSR_index: 0 },
-      searchStr: "",
-      publicHref: "",
-      external: false,
-    });
-
-    vi.spyOn(TanStackRouter, "useMatches").mockReturnValue([
-      { routeId: "app" },
-      { routeId: "app/$team" },
-      { routeId: "app/$team/$flow" },
-    ] as any[]);
+    setRouteContext(
+      "/test-team/test-flow",
+      ["app", "app/$team", "app/$team/$flow"],
+      {
+        team: "test-team",
+        flow: "test-flow",
+      },
+    );
   });
 
   it("displays for teamEditors", async () => {
@@ -232,22 +217,14 @@ describe("flowLayoutRoutes", () => {
 
 describe("flowAnalyticsRoute", () => {
   beforeEach(() => {
-    mockUseLocation.mockReturnValue({
-      pathname: "/test-team/test-flow",
-      search: {},
-      hash: "",
-      href: "/test-team/test-flow",
-      state: { __TSR_index: 0 },
-      searchStr: "",
-      publicHref: "",
-      external: false,
-    });
-
-    vi.spyOn(TanStackRouter, "useMatches").mockReturnValue([
-      { routeId: "app" },
-      { routeId: "app/$team" },
-      { routeId: "app/$team/$flow" },
-    ] as any[]);
+    setRouteContext(
+      "/test-team/test-flow",
+      ["app", "app/$team", "app/$team/$flow"],
+      {
+        team: "test-team",
+        flow: "test-flow",
+      },
+    );
   });
 
   it("is disabled without an analytics link", async () => {
@@ -265,22 +242,11 @@ describe("flowAnalyticsRoute", () => {
 
 describe("account menu", () => {
   beforeEach(() => {
-    mockUseLocation.mockReturnValue({
-      pathname: "/test-team/test-flow",
-      search: {},
-      hash: "",
-      href: "/test-team/test-flow",
-      state: { __TSR_index: 0 },
-      searchStr: "",
-      publicHref: "",
-      external: false,
+    setRouteContext("/test-team/test-flow", ["app"], {
+      team: "test-team",
+      flow: "test-flow",
     });
-
     mockGetUserRoleForCurrentTeam.mockReturnValue("teamEditor");
-
-    vi.spyOn(TanStackRouter, "useMatches").mockReturnValue([
-      { routeId: "app" },
-    ] as any[]);
   });
 
   it("displays avatar initials and toggle button", async () => {
@@ -292,22 +258,8 @@ describe("account menu", () => {
 
 describe("layout", () => {
   it("displays in a full mode on global routes", async () => {
-    mockUseLocation.mockReturnValue({
-      pathname: "/",
-      search: {},
-      hash: "",
-      href: "/",
-      state: { __TSR_index: 0 },
-      searchStr: "",
-      publicHref: "",
-      external: false,
-    });
-
+    setRouteContext("/", ["app"]);
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
-
-    vi.spyOn(TanStackRouter, "useMatches").mockReturnValue([
-      { routeId: "app" },
-    ] as any[]);
 
     const { queryAllByRole, queryByLabelText, getByText } = await setup(
       <EditorNavMenu />,
@@ -325,23 +277,9 @@ describe("layout", () => {
   });
 
   it("displays in a full mode on team routes", async () => {
-    mockUseLocation.mockReturnValue({
-      pathname: "/test-team",
-      search: {},
-      hash: "",
-      href: "/test-team",
-      state: { __TSR_index: 0 },
-      searchStr: "",
-      publicHref: "",
-      external: false,
-    });
+    setRouteContext("/test-team", ["app", "app/$team"], { team: "test-team" });
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
     mockGetTeam.mockReturnValue({ settings: { referenceCode: null } });
-
-    vi.spyOn(TanStackRouter, "useMatches").mockReturnValue([
-      { routeId: "app" },
-      { routeId: "app/$team" },
-    ] as any[]);
 
     const { queryAllByRole, queryByLabelText } = await setup(<EditorNavMenu />);
     const menuItems = queryAllByRole("listitem");
@@ -354,29 +292,20 @@ describe("layout", () => {
   });
 
   it("displays in a compact mode on flow routes", async () => {
-    mockUseLocation.mockReturnValue({
-      pathname: "/test-team/test-flow",
-      search: {},
-      hash: "",
-      href: "/test-team/test-flow",
-      state: { __TSR_index: 0 },
-      searchStr: "",
-      publicHref: "",
-      external: false,
-    });
-
+    setRouteContext(
+      "/test-team/test-flow",
+      ["app", "app/$team", "app/$team/$flow"],
+      {
+        team: "test-team",
+        flow: "test-flow",
+      },
+    );
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
-
-    vi.spyOn(TanStackRouter, "useMatches").mockReturnValue([
-      { routeId: "app" },
-      { routeId: "app/$team" },
-      { routeId: "app/$team/$flow" },
-    ] as any[]);
 
     const { queryAllByRole, getByLabelText } = await setup(<EditorNavMenu />);
     const menuItems = queryAllByRole("listitem");
 
-    // Tooltip  present
+    // Tooltip present
     expect(getByLabelText("Submissions")).toBeInTheDocument();
 
     // Full text present
