@@ -25,7 +25,12 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ onClose }) => {
   } = useAddUserModal({ onClose });
 
   return (
-    <Dialog aria-labelledby="dialog-heading" data-testid="dialog-add-user" open onClose={onClose}>
+    <Dialog
+      aria-labelledby="dialog-heading"
+      data-testid="dialog-add-user"
+      open
+      onClose={onClose}
+    >
       <Formik<UserFormValues>
         initialValues={{ firstName: "", lastName: "", email: "", role }}
         validationSchema={validationSchema}
@@ -40,10 +45,16 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ onClose }) => {
           </DialogTitle>
           <DialogContent dividers data-testid="modal-create-user">
             {step.stage === "email" && <EmailField />}
-            {step.stage === "create-new" && <><EmailField disabled /><NameFields /></>}
+            {step.stage === "create-new" && (
+              <>
+                <EmailField disabled />
+                <NameFields />
+              </>
+            )}
             {step.stage === "confirm-existing" && (
               <Typography>
-                An account already exists for that email address. Would you like to add them to this team?
+                An account already exists for that email address. Would you like
+                to additionally add them to this team?
               </Typography>
             )}
           </DialogContent>
