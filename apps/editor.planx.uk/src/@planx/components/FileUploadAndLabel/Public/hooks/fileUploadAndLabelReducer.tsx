@@ -1,6 +1,9 @@
+import type { FileUploadSlot } from "@planx/components/FileUpload/model";
+import type { SetStateAction } from "react";
 import { exhaustiveCheck } from "utils";
 
 export interface FileUploadState {
+  slots: FileUploadSlot[];
   drawingNumbers: Record<string, string>;
   /**
    * Accordion state: only one file can be expanded for editing at a time
@@ -12,6 +15,7 @@ export interface FileUploadState {
 }
 
 export const initialState: FileUploadState = {
+  slots: [],
   drawingNumbers: {},
 };
 
@@ -27,7 +31,8 @@ export type FileUploadAction =
   | {
       type: "SET_FILE_LABEL_ERRORS";
       payload: { errors: Record<string, string> };
-    };
+    }
+  | { type: "SET_SLOTS"; payload: SetStateAction<FileUploadSlot[]> };
 
 export const fileUploadAndLabelReducer = (
   state: FileUploadState,
@@ -80,6 +85,27 @@ export const fileUploadAndLabelReducer = (
       return {
         ...state,
         fileLabelErrors: action.payload.errors,
+      };
+    }
+
+    case "SET_SLOTS": {
+      const nextSlots =
+        typeof action.payload === "function"
+          ? action.payload(state.slots)
+          : action.payload;
+
+      const isNewFileAdded = nextSlots.length > state.slots.length;
+      const newlyAddedSlotId = isNewFileAdded
+        ? nextSlots[state.slots.length].id
+        : state.expandedSlotId;
+
+      return {
+        ...state,
+        slots: nextSlots,
+        // Clear error on new upload
+        dropzoneError: isNewFileAdded ? undefined : state.dropzoneError,
+        // Auto-expand if a new file was just added
+        expandedSlotId: newlyAddedSlotId,
       };
     }
 

@@ -66,6 +66,13 @@ const UploadList = styled(List)(({ theme }) => ({
 export function FileUploadAndLabelNew(props: Props) {
   const [state, dispatch] = useReducer(fileUploadAndLabelReducer, initialState);
 
+  const handleSetSlots = useCallback(
+    (updater: React.SetStateAction<FileUploadSlot[]>) => {
+      dispatch({ type: "SET_SLOTS", payload: updater });
+    },
+    [],
+  );
+
   const [fileList, setFileList] = useState<FileList>({
     required: [],
     recommended: [],
@@ -88,8 +95,6 @@ export function FileUploadAndLabelNew(props: Props) {
     }
   }, []);
 
-  const [slots, setSlots] = useState<FileUploadSlot[]>([]);
-
   const handleDrawingNumberChange = useCallback(
     (slotId: string, value: string) => {
       dispatch({
@@ -107,24 +112,13 @@ export function FileUploadAndLabelNew(props: Props) {
   );
 
   // Track number of slots and auto-expand newly uploaded files
-  const previousSlotCount = usePrevious(slots.length);
+  const previousSlotCount = usePrevious(state.slots.length);
   useEffect(() => {
     if (previousSlotCount === undefined) return;
 
     // Only stop auto-expand on initial return to node
     if (isUserReturningToNode) return setIsUserReturningToNode(false);
-
-    // TODO: cleanup elsewhere
-    // Clear errors as files are added/removed
-    // if (slots.length && dropzoneError) setDropzoneError(undefined);
-    // if (!slots.length && fileListError) setFileListError(undefined);
-    // if (!slots.length && fileLabelErrors) setFileLabelErrors(undefined);
-
-    // Auto-expand the most recently uploaded file for tagging
-    if (slots.length > previousSlotCount && slots.length > 0) {
-      dispatch({ type: "EXPAND_SLOT", payload: { slotId: slots[0].id } });
-    }
-  }, [slots.length]);
+  }, [state.slots.length]);
 
   const [fileUploadStatus, setFileUploadStatus] = useState<string | undefined>(
     undefined,
@@ -135,12 +129,12 @@ export function FileUploadAndLabelNew(props: Props) {
 
   const validateAndSubmit = () => {
     Promise.all([
-      slotsSchema.validate(slots, { context: { fileList } }),
-      fileLabelSchema.validate(fileList, { context: { slots } }),
-      fileListSchema.validate(fileList, { context: { slots } }),
+      slotsSchema.validate(state.slots, { context: { fileList } }),
+      fileLabelSchema.validate(fileList, { context: { slots: state.slots } }),
+      fileListSchema.validate(fileList, { context: { slots: state.slots } }),
     ])
       .then(() => {
-        const payload = generatePayload(fileList, slots);
+        const payload = generatePayload(fileList, state.slots);
         props.handleSubmit?.(payload);
       })
       .catch((err) => {
@@ -175,10 +169,10 @@ export function FileUploadAndLabelNew(props: Props) {
     dispatch({ type: "EXPAND_SLOT", payload: { slotId } });
 
   const handleSave = (slotId: string) => {
-    const currentIndex = slots.findIndex((s) => s.id === slotId);
+    const currentIndex = state.slots.findIndex((s) => s.id === slotId);
 
     // Find the next file that has no tags yet
-    const nextUntagged = slots.find((s, i) => {
+    const nextUntagged = state.slots.find((s, i) => {
       if (i <= currentIndex) return false;
       const tags = getTagsForSlot(s.id, fileList);
       return tags.length === 0;
@@ -245,8 +239,8 @@ export function FileUploadAndLabelNew(props: Props) {
                 id={`${props.id}-dropzone`}
               >
                 <Dropzone
-                  slots={slots}
-                  setSlots={setSlots}
+                  slots={state.slots}
+                  setSlots={handleSetSlots}
                   setFileUploadStatus={setFileUploadStatus}
                 />
               </ErrorWrapper>
@@ -286,13 +280,13 @@ export function FileUploadAndLabelNew(props: Props) {
         </DropzoneContainer>
         <ErrorWrapper error={state.fileListError} id={`${props.id}-fileList`}>
           <Box>
-            {Boolean(slots.length) && (
+            {Boolean(state.slots.length) && (
               <Typography variant="h3" mb={2}>
                 Your uploaded files
               </Typography>
             )}
             <Stack spacing={2}>
-              {slots.map((slot) => (
+              {state.slots.map((slot) => (
                 <Collapse
                   key={slot.id}
                   in={removingSlotId !== slot.id}
