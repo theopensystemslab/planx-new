@@ -5,12 +5,11 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Form, Formik } from "formik";
 import { useToast } from "hooks/useToast";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 import { upsertMemberSchema } from "../formSchema";
 import { UPDATE_TEAM_MEMBER } from "../queries";
-import { DEMO_TEAM_ID, type EditUserModalProps, type UserFormValues } from "../types";
+import { type EditUserModalProps, type UserFormValues } from "../types";
 import { EmailField } from "./Fields/EmailField";
 import { NameFields } from "./Fields/NameFields";
 import { ModalActions } from "./ModalActions";
@@ -19,8 +18,6 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
   onClose,
   member,
 }) => {
-  const teamId = useStore((state) => state.teamId);
-  const isDemoTeam = teamId === DEMO_TEAM_ID;
   const toast = useToast();
 
   const handleCompleted = (successMessage: string) => {
@@ -28,12 +25,10 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
     toast.success(successMessage);
   };
 
-  const [updateUser, { loading }] =
-    useMutation(UPDATE_TEAM_MEMBER, {
-      onCompleted: () => handleCompleted("Successfully updated a user"),
-      onError: () => 
-        toast.error("Failed to update the user, please try again")
-    });
+  const [updateUser, { loading }] = useMutation(UPDATE_TEAM_MEMBER, {
+    onCompleted: () => handleCompleted("Successfully updated a user"),
+    onError: () => toast.error("Failed to update the user, please try again"),
+  });
 
   const handleSubmit = (values: UserFormValues) => {
     const formatted = { ...values, email: values.email.toLowerCase() };
@@ -62,7 +57,7 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
           firstName: member.firstName,
           lastName: member.lastName,
           email: member?.email ?? "",
-          role: isDemoTeam ? "demoUser" : "teamEditor",
+          role: "teamEditor",
         }}
         validationSchema={upsertMemberSchema}
         onSubmit={handleSubmit}
@@ -74,12 +69,9 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
           <DialogTitle variant="h3" component="h1" id="dialog-heading">
             Edit member
           </DialogTitle>
-          <DialogContent
-            dividers
-            data-testid="modal-edit-user"
-          >
-            <EmailField/>
-            <NameFields/>
+          <DialogContent dividers data-testid="modal-edit-user">
+            <EmailField />
+            <NameFields />
           </DialogContent>
           <DialogActions>
             <ModalActions

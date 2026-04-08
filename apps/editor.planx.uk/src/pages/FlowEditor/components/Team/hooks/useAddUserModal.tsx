@@ -12,7 +12,7 @@ import {
   GET_USER_BY_EMAIL,
   GET_USERS_FOR_TEAM_QUERY,
 } from "../queries";
-import { DEMO_TEAM_ID, type UserFormValues } from "../types";
+import { type UserFormValues } from "../types";
 
 export type Step =
   | { stage: "email" }
@@ -20,19 +20,21 @@ export type Step =
   | { stage: "create-new" };
 
 const SUBMIT_BUTTON_TEXT: Record<Step["stage"], string> = {
-  "email": "Continue",
+  email: "Continue",
   "confirm-existing": "Add to team",
   "create-new": "Create user",
 };
 
 export const useAddUserModal = ({ onClose }: { onClose: () => void }) => {
-  const [teamId, teamSlug] = useStore((state) => [state.teamId, state.teamSlug]);
-  const isDemoTeam = teamId === DEMO_TEAM_ID;
+  const [teamId, teamSlug] = useStore((state) => [
+    state.teamId,
+    state.teamSlug,
+  ]);
   const toast = useToast();
 
   const [step, setStep] = useState<Step>({ stage: "email" });
 
-  const role: Role = isDemoTeam ? "demoUser" : "teamEditor";
+  const role: Role = "teamEditor";
 
   const handleClose = () => {
     onClose();
@@ -44,8 +46,10 @@ export const useAddUserModal = ({ onClose }: { onClose: () => void }) => {
     toast.success(message);
   };
 
-  const [checkEmail, { loading: checkingEmail, data: emailCheckData, error: emailCheckError }] =
-    useLazyQuery(GET_USER_BY_EMAIL);
+  const [
+    checkEmail,
+    { loading: checkingEmail, data: emailCheckData, error: emailCheckError },
+  ] = useLazyQuery(GET_USER_BY_EMAIL);
 
   useEffect(() => {
     if (emailCheckError) {
@@ -56,33 +60,40 @@ export const useAddUserModal = ({ onClose }: { onClose: () => void }) => {
     if (!emailCheckData) return;
 
     if (emailCheckData.users[0]) {
-      setStep({ stage: "confirm-existing", existingUser: emailCheckData.users[0] });
+      setStep({
+        stage: "confirm-existing",
+        existingUser: emailCheckData.users[0],
+      });
       return;
     }
 
     setStep({ stage: "create-new" });
   }, [emailCheckData, emailCheckError, toast]);
 
-  const [assignUser, { loading: assignLoading }] = useMutation<User[], { teamId: number; role: Role; userId: number }>(
-    ADD_EXISTING_USER_TO_TEAM,
-    {
-      onCompleted: () => handleCompleted("Successfully added user to team"),
-      onError: (error) => {
-        if (isUserAlreadyExistsError(error.message)) {
-          return toast.error("User is already a member of this team")
-        };
-        toast.error("Failed to add user to team, please try again")
-      },
-      refetchQueries: [{ query: GET_USERS_FOR_TEAM_QUERY, variables: { teamSlug } }],
+  const [assignUser, { loading: assignLoading }] = useMutation<
+    User[],
+    { teamId: number; role: Role; userId: number }
+  >(ADD_EXISTING_USER_TO_TEAM, {
+    onCompleted: () => handleCompleted("Successfully added user to team"),
+    onError: (error) => {
+      if (isUserAlreadyExistsError(error.message)) {
+        return toast.error("User is already a member of this team");
+      }
+      toast.error("Failed to add user to team, please try again");
     },
-  );
+    refetchQueries: [
+      { query: GET_USERS_FOR_TEAM_QUERY, variables: { teamSlug } },
+    ],
+  });
 
   const [createUser, { loading: createLoading }] = useMutation(
     CREATE_AND_ADD_USER_TO_TEAM,
     {
       onCompleted: () => handleCompleted("Successfully added a user"),
       onError: () => toast.error("Failed to add new user, please try again"),
-      refetchQueries: [{ query: GET_USERS_FOR_TEAM_QUERY, variables: { teamSlug } }],
+      refetchQueries: [
+        { query: GET_USERS_FOR_TEAM_QUERY, variables: { teamSlug } },
+      ],
     },
   );
 
@@ -97,7 +108,7 @@ export const useAddUserModal = ({ onClose }: { onClose: () => void }) => {
       assignUser({ variables: { userId: step.existingUser.id, teamId, role } });
       return;
     }
-    
+
     if (step.stage === "create-new") {
       createUser({ variables: { ...values, email, teamId, role } });
     }
@@ -116,6 +127,7 @@ export const useAddUserModal = ({ onClose }: { onClose: () => void }) => {
     handleSubmit,
     submitButtonText: SUBMIT_BUTTON_TEXT[step.stage],
     isSubmitting: checkingEmail || assignLoading || createLoading,
-    validationSchema: step.stage === "create-new" ? upsertMemberSchema : emailSchema,
+    validationSchema:
+      step.stage === "create-new" ? upsertMemberSchema : emailSchema,
   };
 };

@@ -50,5 +50,3 @@ type SharedModalProps = {
 export type AddUserModalProps = SharedModalProps;
 export type EditUserModalProps = SharedModalProps & { member: TeamMember };
 export type RemoveUserModalProps = SharedModalProps & { member: TeamMember };
-
-export const DEMO_TEAM_ID = 32;
