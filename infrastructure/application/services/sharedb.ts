@@ -11,7 +11,6 @@ import {
 
 export const createSharedbService = async ({
   env,
-  certificateArn,
   vpcId,
   publicSubnetIds,
   cluster,
@@ -36,7 +35,6 @@ export const createSharedbService = async ({
   } = await setupLoadBalancer({
     serviceName: "sharedb",
     containerPort: SHAREDB_PORT,
-    certificateArn,
     vpcId,
     publicSubnetIds,
     domain: DOMAIN,

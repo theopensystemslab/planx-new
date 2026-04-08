@@ -1,19 +1,15 @@
-import { ApolloQueryResult } from "@apollo/client/core/types";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
-import MenuItem from "@mui/material/MenuItem";
-import { SelectChangeEvent } from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import {
   ComponentType as TYPES,
   SendIntegration,
 } from "@opensystemslab/planx-core/types";
-import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
-import { getIn } from "formik";
+import { Formik, getIn, useFormikContext } from "formik";
+import { SubmissionEmailInput } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
-import { useEffect } from "react";
+import React, { useCallback } from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -21,209 +17,49 @@ import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
-import SelectInput from "ui/shared/SelectInput/SelectInput";
 import { Switch } from "ui/shared/Switch";
 
 import { ICONS } from "../shared/icons";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
 import { EditorProps } from "../shared/types";
+import EmailSection from "./EmailSection";
 import { useFlowEmailId } from "./hooks/useFlowEmailId";
 import { useTeamSubmissionIntegrations } from "./hooks/useGetTeamSubmissionIntegrations";
+import { useInsertSubmissionIntegration } from "./hooks/useInsertSubmissionIntegration";
 import { useUpdateFlowSubmissionEmail } from "./hooks/useUpdateFlowSubmissionEmail";
-import { parseSend, Send, validationSchema } from "./model";
-import {
-  EmailEmptyStateProps,
-  EmailSelectionProps,
-  GetFlowEmailIdQuery,
-} from "./types";
-
-const EmailLoadingState: React.FC = () => (
-  <Typography variant="body2">Loading email options...</Typography>
-);
-
-const EmailErrorState: React.FC = () => (
-  <Typography variant="body2" color="error">
-    Failed to load email options.
-  </Typography>
-);
-
-const EmailEmptyState: React.FC<EmailEmptyStateProps> = ({
-  teamSlug,
-  error,
-}) => (
-  <ErrorWrapper error={error}>
-    <Typography variant="body2">
-      You do not have a submission email configured. Please add one in your{" "}
-      <Link
-        href={`/app/${teamSlug}/settings/integrations`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        team settings
-      </Link>
-      .
-    </Typography>
-  </ErrorWrapper>
-);
-
-const EmailSelection: React.FC<EmailSelectionProps> = ({
-  teamSlug,
-  emailOptions,
-  currentEmail,
-  submissionEmailId,
-  handleSelectChange,
-  disabled,
-}) => (
-  <>
-    <InputRow>
-      <Typography variant="body2" mb={2}>
-        Select a submission email for this service. To add or update submission
-        emails, please visit your{" "}
-        <Link
-          href={`/app/${teamSlug}/settings/integrations`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          team settings
-        </Link>{" "}
-        page.
-      </Typography>
-    </InputRow>
-    <InputRow>
-      <SelectInput
-        name="submissionEmail"
-        value={submissionEmailId || currentEmail?.id || ""}
-        onChange={handleSelectChange}
-        bordered
-        disabled={disabled}
-      >
-        {emailOptions.map((email) => (
-          <MenuItem key={email.id} value={email.id}>
-            {email.submissionEmail}
-          </MenuItem>
-        ))}
-      </SelectInput>
-    </InputRow>
-  </>
-);
+import { parseSend, Send, validateSchema } from "./model";
 
 export type Props = EditorProps<TYPES.Send, Send>;
 
-const SendComponent: React.FC<Props> = (props) => {
-  const formik = useFormikWithRef<Send>(
-    {
-      initialValues: parseSend(props.node?.data),
-      onSubmit: async (newValues) => {
-        try {
-          if (props.handleSubmit) {
-            await handleUpdate(newValues, existingEmailId, id, refetchFlowData);
-            props.handleSubmit({ type: TYPES.Send, data: newValues });
-          }
-        } catch (error) {
-          formik.setFieldError("submissionEmailId", (error as Error).message);
-        }
-      },
-      validationSchema,
-    },
-    props.formikRef,
-  );
+interface SendFormProps {
+  disabled?: boolean;
+}
 
-  const [teamSlug, teamId, flowSlug, id] = useStore((state) => [
+const SendForm: React.FC<SendFormProps> = ({ disabled }) => {
+  const [teamSlug, teamId, flowSlug] = useStore((state) => [
     state.teamSlug,
     state.teamId,
     state.flowSlug,
-    state.id,
   ]);
 
-  const {
-    data: flowData,
-    loading: flowLoading,
-    error: flowError,
-    refetch: refetchFlowData,
-  } = useFlowEmailId(id);
-  const existingEmailId = flowData?.flows?.[0]?.submissionEmailId;
+  const formik = useFormikContext<Send>();
 
-  const { data, loading, error } = useTeamSubmissionIntegrations(teamId);
-  const emailOptions = data?.submissionIntegrations || [];
-  const defaultEmail = emailOptions.find(
-    (email) => email.defaultEmail === true,
+  const toggleSwitch = useCallback(
+    (value: SendIntegration) => {
+      let newCheckedValues: SendIntegration[];
+
+      if (formik.values.destinations.includes(value)) {
+        newCheckedValues = formik.values.destinations.filter(
+          (x) => x !== value,
+        );
+      } else {
+        newCheckedValues = [...formik.values.destinations, value];
+      }
+
+      formik.setFieldValue("destinations", newCheckedValues.sort());
+    },
+    [formik],
   );
-
-  const [updateFlowSubmissionEmail] = useUpdateFlowSubmissionEmail();
-
-  const handleUpdate = async (
-    newValues: Send,
-    existingEmailId: string | undefined,
-    id: string,
-    refetchFlowData: () => Promise<ApolloQueryResult<GetFlowEmailIdQuery>>,
-  ) => {
-    const selectedEmailId = newValues.submissionEmailId;
-
-    if (newValues.submissionEmailId && existingEmailId !== selectedEmailId) {
-      await updateFlowSubmissionEmail({
-        variables: {
-          flowId: id,
-          submissionEmailId: newValues.submissionEmailId,
-        },
-      });
-
-      await refetchFlowData();
-      return;
-    }
-  };
-
-  useEffect(() => {
-    if (!formik.values.submissionEmailId && defaultEmail?.id) {
-      formik.setFieldValue("submissionEmailId", defaultEmail.id);
-    }
-  }, [defaultEmail?.id, formik]);
-
-  const handleSelectChange = (event: SelectChangeEvent<unknown>) => {
-    const selectedValue = event.target.value as string;
-    formik.setFieldValue("submissionEmailId", selectedValue);
-  };
-
-  const currentEmail = emailOptions.find(
-    (email) => email.id === existingEmailId,
-  );
-
-  const toggleSwitch = (value: SendIntegration) => {
-    let newCheckedValues: SendIntegration[];
-
-    // Remove or append this value from the existing array of destinations
-    if (formik.values.destinations.includes(value)) {
-      newCheckedValues = formik.values.destinations.filter((x) => x !== value);
-    } else {
-      newCheckedValues = [...formik.values.destinations, value];
-    }
-
-    formik.setFieldValue("destinations", newCheckedValues.sort());
-  };
-
-  const renderEmailContent = () => {
-    if (loading || flowLoading) {
-      return <EmailLoadingState />;
-    } else if (error || flowError) {
-      return <EmailErrorState />;
-    } else if (emailOptions.length === 0) {
-      return (
-        <EmailEmptyState
-          teamSlug={teamSlug}
-          error={getIn(formik.errors, "submissionEmailId")}
-        />
-      );
-    } else
-      return (
-        <EmailSelection
-          teamSlug={teamSlug}
-          emailOptions={emailOptions}
-          currentEmail={currentEmail}
-          submissionEmailId={formik.values.submissionEmailId}
-          handleSelectChange={handleSelectChange}
-          disabled={props.disabled}
-        />
-      );
-  };
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
@@ -243,7 +79,7 @@ const SendComponent: React.FC<Props> = (props) => {
               value={formik.values.title}
               placeholder="Editor title"
               onChange={formik.handleChange}
-              disabled={props.disabled}
+              disabled={disabled}
               errorMessage={formik.errors.title}
             />
           </InputRow>
@@ -262,7 +98,7 @@ const SendComponent: React.FC<Props> = (props) => {
                       ? "production"
                       : "staging"
                   }`}
-                  disabled={props.disabled}
+                  disabled={disabled}
                 />
               </InputRow>
             </ModalSectionContent>
@@ -273,13 +109,14 @@ const SendComponent: React.FC<Props> = (props) => {
                   checked={formik.values.destinations.includes("email")}
                   onChange={() => toggleSwitch("email")}
                   label={`Send to email`}
-                  disabled={props.disabled}
+                  disabled={disabled}
                 />
               </InputRow>
-              <>
-                {formik.values.destinations.includes("email") &&
-                  renderEmailContent()}
-              </>
+              {formik.values.destinations.includes("email") ? (
+                <EmailSection teamId={teamId} teamSlug={teamSlug} />
+              ) : (
+                <></>
+              )}
             </ModalSectionContent>
             <Divider />
             <ModalSectionContent title={"Microsoft SharePoint"}>
@@ -288,7 +125,7 @@ const SendComponent: React.FC<Props> = (props) => {
                   checked={formik.values.destinations.includes("s3")}
                   onChange={() => toggleSwitch("s3")}
                   label="Send to Microsoft SharePoint"
-                  disabled={props.disabled}
+                  disabled={disabled}
                 />
               </InputRow>
               <Typography variant="body2">
@@ -313,7 +150,7 @@ const SendComponent: React.FC<Props> = (props) => {
                   checked={formik.values.destinations.includes("fme")}
                   onChange={() => toggleSwitch("fme")}
                   label="Retrieve using FME Workbench"
-                  disabled={props.disabled}
+                  disabled={disabled}
                 />
               </InputRow>
               <Typography variant="body2">
@@ -334,7 +171,7 @@ const SendComponent: React.FC<Props> = (props) => {
                       : "staging"
                   }`}
                   disabled={
-                    props.disabled ||
+                    disabled ||
                     !["buckinghamshire", "lambeth", "southwark"].includes(
                       teamSlug,
                     )
@@ -369,6 +206,98 @@ const SendComponent: React.FC<Props> = (props) => {
       </ModalSection>
       <ModalFooter formik={formik} showMoreInformation={false} />
     </form>
+  );
+};
+
+const SendComponent: React.FC<Props> = (props) => {
+  const [teamId, id] = useStore((state) => [state.teamId, state.id]);
+
+  const { data: flowData } = useFlowEmailId(id);
+  const existingEmailId = flowData?.flowsByPK?.submissionEmailId;
+
+  const { data } = useTeamSubmissionIntegrations(teamId);
+  const emailOptions = data?.submissionIntegrations || [];
+  const defaultEmail = emailOptions.find(
+    (email: SubmissionEmailInput) => email.defaultEmail === true,
+  );
+  const insertNewDefaultEmail = !defaultEmail;
+
+  const [insertSubmissionIntegration] = useInsertSubmissionIntegration();
+  const [updateFlowSubmissionEmail] = useUpdateFlowSubmissionEmail();
+
+  const handleInsertOrUpdate = async (
+    newValues: Send,
+    existingEmailId: string | undefined,
+    insertNewDefaultEmail: boolean,
+  ): Promise<string | undefined> => {
+    const selectedEmailId = newValues.submissionEmailId;
+    const newEmail = newValues.newEmail;
+
+    if (selectedEmailId === "new-email" && newEmail) {
+      const { data } = await insertSubmissionIntegration({
+        variables: {
+          submissionEmail: newEmail,
+          defaultEmail: insertNewDefaultEmail,
+          teamId,
+        },
+      });
+      const submissionEmailId = data?.insertSubmissionIntegrationsOne?.id;
+      if (!submissionEmailId) {
+        throw new Error("No submission email ID was returned");
+      }
+      await updateFlowSubmissionEmail({
+        variables: {
+          flowId: id,
+          submissionEmailId,
+        },
+      });
+      return submissionEmailId;
+    }
+
+    if (selectedEmailId && existingEmailId !== selectedEmailId) {
+      await updateFlowSubmissionEmail({
+        variables: {
+          flowId: id,
+          submissionEmailId: selectedEmailId,
+        },
+      });
+      return selectedEmailId;
+    }
+  };
+
+  return (
+    <Formik<Send>
+      initialValues={parseSend(props.node?.data)}
+      onSubmit={async (newValues, formikHelpers) => {
+        try {
+          if (props.handleSubmit) {
+            const updatedEmailId = await handleInsertOrUpdate(
+              newValues,
+              existingEmailId,
+              insertNewDefaultEmail,
+            );
+
+            if (updatedEmailId) {
+              newValues.submissionEmailId = updatedEmailId;
+            }
+
+            props.handleSubmit({ type: TYPES.Send, data: newValues });
+          }
+        } catch (error) {
+          formikHelpers.setFieldError(
+            "submissionEmailId",
+            (error as Error).message,
+          );
+        }
+      }}
+      validationSchema={validateSchema(
+        emailOptions.map(
+          (email: SubmissionEmailInput) => email.submissionEmail,
+        ),
+      )}
+    >
+      <SendForm />
+    </Formik>
   );
 };
 
