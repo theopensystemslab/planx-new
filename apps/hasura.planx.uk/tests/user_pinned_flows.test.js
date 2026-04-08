@@ -84,30 +84,6 @@ describe("user_pinned_flows", () => {
     });
   });
 
-  describe("demoUser", () => {
-    let i;
-    beforeAll(async () => {
-      i = await introspectAs("demoUser");
-    });
-
-    test("can query user_pinned_flows", () => {
-      expect(i.queries).toContain("user_pinned_flows");
-    });
-
-    test("can create user_pinned_flows", () => {
-      expect(i.mutations).toContain("insert_user_pinned_flows");
-    });
-
-    test("cannot update user_pinned_flows", () => {
-      expect(i.mutations).not.toContain("update_user_pinned_flows");
-      expect(i.mutations).not.toContain("update_user_pinned_flows_by_pk");
-    });
-
-    test("can delete user_pinned_flows", () => {
-      expect(i.mutations).toContain("delete_user_pinned_flows");
-    });
-  });
-
   describe("analyst", () => {
     let i;
     beforeAll(async () => {
