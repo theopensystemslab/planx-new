@@ -520,7 +520,12 @@ export const editorStore: StateCreator<
     } = await client.query<{ flows: FlowSummary[] }>({
       query: gql`
         query GetFlows($teamId: Int!) {
-          flows(where: {team: {id: {_eq: $teamId}}, archived_at: {_is_null: true}}) {
+          flows(
+            where: {
+              team: { id: { _eq: $teamId } }
+              archived_at: { _is_null: true }
+            }
+          ) {
             id
             name
             slug
@@ -528,7 +533,7 @@ export const editorStore: StateCreator<
             summary
             updatedAt: updated_at
             isListedOnLPS: is_listed_on_lps
-            operations(limit: 1, order_by: {created_at: desc}) {
+            operations(limit: 1, order_by: { created_at: desc }) {
               createdAt: created_at
               actor {
                 firstName: first_name
@@ -543,7 +548,10 @@ export const editorStore: StateCreator<
                 name
               }
             }
-            publishedFlows: published_flows(order_by: {created_at: desc}, limit: 1) {
+            publishedFlows: published_flows(
+              order_by: { created_at: desc }
+              limit: 1
+            ) {
               publishedAt: created_at
               hasSendComponent: has_send_component
               hasVisiblePayComponent: has_pay_component
@@ -551,7 +559,6 @@ export const editorStore: StateCreator<
             }
           }
         }
-
       `,
       variables: {
         teamId,
@@ -570,7 +577,12 @@ export const editorStore: StateCreator<
     } = await client.query<{ flows: FlowSummary[] }>({
       query: gql`
         query GetArchivedFlows($teamId: Int!) {
-          flows(where: {team: {id: {_eq: $teamId}}, archived_at: {_is_null: false}}) {
+          flows(
+            where: {
+              team: { id: { _eq: $teamId } }
+              archived_at: { _is_null: false }
+            }
+          ) {
             id
             name
             slug
@@ -578,7 +590,7 @@ export const editorStore: StateCreator<
             summary
             updatedAt: updated_at
             isListedOnLPS: is_listed_on_lps
-            operations(limit: 1, order_by: {created_at: desc}) {
+            operations(limit: 1, order_by: { created_at: desc }) {
               createdAt: created_at
               actor {
                 firstName: first_name
@@ -593,7 +605,10 @@ export const editorStore: StateCreator<
                 name
               }
             }
-            publishedFlows: published_flows(order_by: {created_at: desc}, limit: 1) {
+            publishedFlows: published_flows(
+              order_by: { created_at: desc }
+              limit: 1
+            ) {
               publishedAt: created_at
               hasSendComponent: has_send_component
               hasVisiblePayComponent: has_pay_component
