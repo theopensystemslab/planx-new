@@ -25,9 +25,6 @@ export const checkUserCanAccessEnv = async (
   const isProduction = env === "production";
   if (!isProduction) return true;
 
-  const isDemoUser = getAllowedRolesForUser(user).includes("demoUser");
-  if (isDemoUser) return false;
-
   const isStagingOnlyUser = await $admin.user.isStagingOnly(user.email);
   if (isStagingOnlyUser) return false;
 

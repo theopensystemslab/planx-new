@@ -54,17 +54,6 @@ select_permissions:
         - role
         - id
       filter: {}
-  - role: demoUser
-    permission:
-      columns:
-        - team_id
-        - user_id
-        - role
-        - id
-      filter:
-        user_id:
-          _eq: x-hasura-user-id
-    comment: ""
   - role: platformAdmin
     permission:
       columns:

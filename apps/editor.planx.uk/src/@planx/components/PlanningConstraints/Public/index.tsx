@@ -154,26 +154,6 @@ function Component(props: Props) {
     });
   };
 
-  if (teamSlug === "demo") {
-    return (
-      <Card handleSubmit={props.handleSubmit}>
-        <CardHeader title={props.title} />
-        <ErrorSummaryContainer role="status">
-          <Typography variant="h4" ml={2} mb={1}>
-            Planning Constraints are not enabled for demo users
-          </Typography>
-          <Typography variant="body2" ml={2}>
-            Since we cannot automatically check constraints, you might be asked
-            additional questions.
-          </Typography>
-          <Typography variant="body2" ml={2} mt={0.5}>
-            Click continue to proceed with your form.
-          </Typography>
-        </ErrorSummaryContainer>
-      </Card>
-    );
-  }
-
   const isLoading =
     (isPendingGIS && isFetchingGIS) || (isPendingRoads && isFetchingRoads);
 

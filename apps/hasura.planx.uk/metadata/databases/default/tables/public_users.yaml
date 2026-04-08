@@ -91,22 +91,6 @@ select_permissions:
         - last_name
         - updated_at
       filter: {}
-  - role: demoUser
-    permission:
-      columns:
-        - created_at
-        - default_team_id
-        - email
-        - first_name
-        - id
-        - is_analyst
-        - is_platform_admin
-        - last_name
-        - updated_at
-      filter:
-        id:
-          _eq: x-hasura-user-id
-    comment: Demo users can only select their own user
   - role: platformAdmin
     permission:
       columns:

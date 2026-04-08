@@ -38,15 +38,6 @@ When(
 );
 
 When(
-  "a welcome email request is made for a Demo team user",
-  async function (this: CustomWorld) {
-    this.response = await callWelcomeEndpoint({
-      payload: { defaultTeamId: 32 },
-    });
-  },
-);
-
-When(
   "a welcome email request is made with an invalid payload",
   async function (this: CustomWorld) {
     this.response = await callWelcomeEndpoint({
@@ -75,16 +66,6 @@ Then(
     assert.ok(
       this.response.body.message?.includes("sent successfully"),
       `Expected success message, got: ${JSON.stringify(this.response.body)}`,
-    );
-  },
-);
-
-Then(
-  "the response message indicates the email was skipped for Demo team",
-  function (this: CustomWorld) {
-    assert.ok(
-      this.response.body.message?.includes("Demo team"),
-      `Expected Demo team skip message, got: ${JSON.stringify(this.response.body)}`,
     );
   },
 );

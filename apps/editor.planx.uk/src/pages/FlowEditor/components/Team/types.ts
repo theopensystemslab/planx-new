@@ -6,7 +6,6 @@ export const ROLE_LABELS = {
   teamAdmin: "Team admin",
   teamEditor: "Editor",
   teamViewer: "Viewer",
-  demoUser: "Demo User",
   public: "Public",
   analyst: "Analyst",
 } as const;

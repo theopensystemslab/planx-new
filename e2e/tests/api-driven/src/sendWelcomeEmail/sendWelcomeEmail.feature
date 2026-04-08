@@ -12,12 +12,6 @@ Feature: Send welcome email
     And the response message indicates the email was sent successfully
 
   @send-welcome-email
-  Scenario: Demo team user is excluded
-    When a welcome email request is made for a Demo team user
-    Then the response status is 200
-    And the response message indicates the email was skipped for Demo team
-
-  @send-welcome-email
   Scenario: Invalid payload is rejected
     When a welcome email request is made with an invalid payload
     Then the response status is 400

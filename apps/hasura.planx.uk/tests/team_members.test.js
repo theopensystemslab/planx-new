@@ -68,21 +68,6 @@ describe("team_members", () => {
     });
   });
 
-  describe("demoUser", () => {
-    let i;
-    beforeAll(async () => {
-      i = await introspectAs("demoUser");
-    });
-
-    test("can query teams", () => {
-      expect(i.queries).toContain("team_members");
-    });
-
-    test("cannot create, update, or delete team_members", () => {
-      expect(i).toHaveNoMutationsFor("team_members");
-    });
-  });
-
   describe("api", () => {
     let i;
     beforeAll(async () => {

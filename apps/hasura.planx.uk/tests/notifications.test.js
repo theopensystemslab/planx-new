@@ -62,21 +62,6 @@ describe("notifications", () => {
     });
   });
 
-  describe("demoUser", () => {
-    let i;
-    beforeAll(async () => {
-      i = await introspectAs("demoUser");
-    });
-
-    test("cannot query notifications", () => {
-      expect(i.queries).not.toContain("notifications");
-    });
-
-    test("cannot create, update, or delete notifications", () => {
-      expect(i).toHaveNoMutationsFor("notifications");
-    });
-  });
-
   describe("api", () => {
     let i;
     beforeAll(async () => {
