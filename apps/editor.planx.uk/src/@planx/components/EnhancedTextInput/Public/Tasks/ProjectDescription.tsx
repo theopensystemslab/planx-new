@@ -127,6 +127,7 @@ const ProjectDescription: React.FC<Props> = (props) => {
         error: null,
         selectedOption: null,
         customDescription: "",
+        customOriginalDescription: "",
       });
     }
   }, [isSuccess, data, setValues]);
@@ -141,6 +142,7 @@ const ProjectDescription: React.FC<Props> = (props) => {
         userInput: initialValueRef.current,
         selectedOption: null,
         customDescription: "",
+        customOriginalDescription: "",
       });
     }
   }, [error, setValues]);
@@ -157,9 +159,18 @@ const ProjectDescription: React.FC<Props> = (props) => {
         case "retainedOriginal":
           setFieldValue("userInput", data.original);
           break;
-        case "hybrid":
-          setFieldValue("userInput", values.customDescription);
+        case "modifiedEnhanced": {
+          const prefill = values.customDescription || data.enhanced;
+          setFieldValue("customDescription", prefill);
+          setFieldValue("userInput", prefill);
           break;
+        }
+        case "modifiedOriginal": {
+          const prefill = values.customOriginalDescription || data.original;
+          setFieldValue("customOriginalDescription", prefill);
+          setFieldValue("userInput", prefill);
+          break;
+        }
       }
     }
   };
@@ -172,9 +183,19 @@ const ProjectDescription: React.FC<Props> = (props) => {
     setFieldValue("userInput", value);
   };
 
+  const handleCustomOriginalDescriptionChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const value = event.target.value;
+    setFieldValue("customOriginalDescription", value);
+    setFieldValue("userInput", value);
+  };
+
   const showRadioError = !values.selectedOption && Boolean(errors.userInput);
   const showCustomInputError =
-    values.selectedOption === "hybrid" && Boolean(errors.userInput);
+    (values.selectedOption === "modifiedEnhanced" ||
+      values.selectedOption === "modifiedOriginal") &&
+    Boolean(errors.userInput);
 
   const LOADING_STAGES = [
     "Analysing your project description",
@@ -267,66 +288,109 @@ const ProjectDescription: React.FC<Props> = (props) => {
                 recommended
               />
               <DescriptionRadio
+                id="modifiedEnhanced"
+                onChange={handleOptionChange}
+                title="Modify suggested description"
+              />
+              {values.selectedOption === "modifiedEnhanced" && (
+                <RevealedContent>
+                  <InputRow>
+                    <InputLabel
+                      label="Modify the suggested description below."
+                      htmlFor={props.id}
+                      hidden={true}
+                    >
+                      <Input
+                        type="text"
+                        multiline
+                        rows={5}
+                        name="userInput"
+                        value={values.customDescription}
+                        bordered
+                        onChange={handleCustomDescriptionChange}
+                        errorMessage={
+                          showCustomInputError
+                            ? (errors.userInput as string)
+                            : undefined
+                        }
+                        id={props.id}
+                        inputProps={{
+                          "aria-describedby": [
+                            props.description ? DESCRIPTION_TEXT : "",
+                            "character-hint",
+                            showCustomInputError
+                              ? `${ERROR_MESSAGE}-${props.id}`
+                              : "",
+                          ]
+                            .filter(Boolean)
+                            .join(" "),
+                        }}
+                      />
+                      <CharacterCounter
+                        limit={TEXT_LIMITS[TextInputType.Long]}
+                        count={values.customDescription.length}
+                        error={showCustomInputError}
+                      />
+                    </InputLabel>
+                  </InputRow>
+                </RevealedContent>
+              )}
+              <DescriptionRadio
                 id="retainedOriginal"
                 onChange={handleOptionChange}
                 title="Use your original description"
                 description={data.original}
               />
-
-              <Box width={68} my={1}>
-                <Typography align="center">or</Typography>
-              </Box>
-
               <DescriptionRadio
-                id="hybrid"
+                id="modifiedOriginal"
                 onChange={handleOptionChange}
-                title="Write a new description"
+                title="Modify your original description"
               />
+              {values.selectedOption === "modifiedOriginal" && (
+                <RevealedContent>
+                  <InputRow>
+                    <InputLabel
+                      label="Modify your original description below."
+                      htmlFor={props.id}
+                      hidden={true}
+                    >
+                      <Input
+                        type="text"
+                        multiline
+                        rows={5}
+                        name="userInput"
+                        value={values.customOriginalDescription}
+                        bordered
+                        onChange={handleCustomOriginalDescriptionChange}
+                        errorMessage={
+                          showCustomInputError
+                            ? (errors.userInput as string)
+                            : undefined
+                        }
+                        id={props.id}
+                        inputProps={{
+                          "aria-describedby": [
+                            props.description ? DESCRIPTION_TEXT : "",
+                            "character-hint",
+                            showCustomInputError
+                              ? `${ERROR_MESSAGE}-${props.id}`
+                              : "",
+                          ]
+                            .filter(Boolean)
+                            .join(" "),
+                        }}
+                      />
+                      <CharacterCounter
+                        limit={TEXT_LIMITS[TextInputType.Long]}
+                        count={values.customOriginalDescription.length}
+                        error={showCustomInputError}
+                      />
+                    </InputLabel>
+                  </InputRow>
+                </RevealedContent>
+              )}
             </RadioGroup>
           </ErrorWrapper>
-
-          {values.selectedOption === "hybrid" && (
-            <RevealedContent>
-              <InputRow>
-                <InputLabel
-                  label="Enter your project description. This will not be checked for suggested improvements."
-                  htmlFor={props.id}
-                >
-                  <Input
-                    type="text"
-                    multiline
-                    rows={5}
-                    name="userInput"
-                    value={values.customDescription}
-                    bordered
-                    onChange={handleCustomDescriptionChange}
-                    errorMessage={
-                      showCustomInputError
-                        ? (errors.userInput as string)
-                        : undefined
-                    }
-                    id={props.id}
-                    inputProps={{
-                      "aria-describedby": [
-                        props.description ? DESCRIPTION_TEXT : "",
-                        "character-hint",
-                        showCustomInputError
-                          ? `${ERROR_MESSAGE}-${props.id}`
-                          : "",
-                      ]
-                        .filter(Boolean)
-                        .join(" "),
-                    }}
-                  />
-                  <CharacterCounter
-                    limit={TEXT_LIMITS[TextInputType.Long]}
-                    count={values.customDescription.length}
-                    error={showCustomInputError}
-                  />
-                </InputLabel>
-              </InputRow>
-            </RevealedContent>
-          )}
         </Box>
       )}
 
