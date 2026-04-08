@@ -1,4 +1,3 @@
-
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -12,7 +11,7 @@ import { useStore } from "../FlowEditor/lib/store";
 import { FlowCardView, FlowSummary } from "../FlowEditor/lib/store/editor";
 import { AddFlow } from "./components/AddFlow";
 import Archive from "./components/Archive";
-import { DashboardList } from "./components/DashboardList"
+import { DashboardList } from "./components/DashboardList";
 import { Card, CardContent } from "./components/FlowCard/styles";
 import Flows from "./components/Flows";
 import { sortOptions } from "./helpers/sortAndFilterOptions";
@@ -56,7 +55,9 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
   ]);
 
   const [flows, setFlows] = useState<FlowSummary[] | null>(initialFlows);
-  const [archivedFlows, setArchivedFlows] = useState<FlowSummary[] | null>(null);
+  const [archivedFlows, setArchivedFlows] = useState<FlowSummary[] | null>(
+    null,
+  );
   const [flowView, setFlowView] = useState<FlowView>("flows");
 
   const [searchedFlows, setSearchedFlows] = useState<FlowSummary[] | null>(
@@ -149,7 +150,6 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
     }
   }, [flowView, teamId, getArchivedFlows, archivedFlows]);
 
-
   useEffect(() => {
     if (shouldClearSearch) {
       setShouldClearSearch(false);
@@ -158,41 +158,51 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
 
   const teamHasFlows = !isEmpty(flows) && flows;
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
+  console.log({ showAddFlowButton });
   const flowsHaveBeenFiltered = sortedFlows?.length !== flows?.length;
 
   return (
     <Box bgcolor={"background.paper"} flexGrow={1}>
       <Container maxWidth="contentWide">
-        <Box
-          pb={1}
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", contentWrap: "row" },
-            justifyContent: "space-between",
-            alignItems: { xs: "flex-start", contentWrap: "center" },
-            gap: 2,
-          }}
-        >
-          <TeamLayout 
-            flowView={flowView}
-            setFlowView={setFlowView}
-
+        <Box>
+          <Box
+            pb={1}
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", contentWrap: "row" },
+              justifyContent: "space-between",
+              alignItems: { xs: "flex-start", contentWrap: "center" },
+              gap: 2,
+            }}
           >
-            {isTrial && <InfoChip label="Trial account" />}
-            {showAddFlowButton && <AddFlow />}
-          </TeamLayout>
-          {teamHasFlows && (
-            <SearchBox<FlowSummary>
-              records={flows}
-              setRecords={setSearchedFlows}
-              searchKey={["name", "slug"]}
-              clearSearch={shouldClearSearch}
-            />
-          )}
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 2,
+              }}
+            >
+              <Typography variant="h2" component="h1" pr={1}>
+                Flows
+              </Typography>
+              {isTrial && <InfoChip label="Trial account" />}
+              {showAddFlowButton && <AddFlow />}
+            </Box>
+            {teamHasFlows && (
+              <SearchBox<FlowSummary>
+                records={flows}
+                setRecords={setSearchedFlows}
+                searchKey={["name", "slug"]}
+                clearSearch={shouldClearSearch}
+              />
+            )}
+          </Box>
+          <TeamLayout flowView={flowView} setFlowView={setFlowView} />
         </Box>
 
-        {flowView === "flows" && 
-          <Flows 
+        {flowView === "flows" && (
+          <Flows
             flowsHaveBeenFiltered={flowsHaveBeenFiltered}
             setSearchedFlows={setSearchedFlows}
             setShouldClearSearch={setShouldClearSearch}
@@ -205,18 +215,18 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
             handleViewChange={handleViewChange}
             slug={slug}
           />
-        }
-        {flowView === "archive" && 
-          <Archive 
+        )}
+        {flowView === "archive" && (
+          <Archive
             flowCardView={flowCardView}
             handleViewChange={handleViewChange}
             archivedFlows={archivedFlows}
             teamId={teamId}
             slug={slug}
             fetchFlows={fetchFlows}
-            />
-        }
-        
+          />
+        )}
+
         {flows && !flows.length && <GetStarted />}
       </Container>
     </Box>
