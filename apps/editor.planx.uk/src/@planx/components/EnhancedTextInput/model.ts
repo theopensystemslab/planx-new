@@ -15,7 +15,7 @@ export const taskDefaults: TaskDefaults = {
     fn: "proposal.description",
     revisionTitle: "We suggest revising your project description",
     revisionDescription:
-      "The suggested description uses planning terminology that planning officers expect, reducing the chance of a delay to your application.",
+      "<p>The suggested description uses planning terminology that planning officers expect, reducing the chance of a delay to your application.</p><p>You will be able to modify either of the selected descriptions at the next step.</p>",
   },
 };
 
