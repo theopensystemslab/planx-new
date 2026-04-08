@@ -11,11 +11,12 @@ import {
   createSourceSgIngressRule,
 } from "../../common/utils";
 import type { SetupLoadBalancer } from "../types";
-import { addRedirectToCloudFlareListenerRule } from "./addListenerRule";
+import { addRedirectToCloudflareListenerRule } from "./addListenerRule";
 
 export const setupLoadBalancer = async ({
   serviceName,
   containerPort,
+  certificateArn,
   vpcId,
   publicSubnetIds,
   domain,
@@ -64,18 +65,50 @@ export const setupLoadBalancer = async ({
     // NB. VPC to be which the ALB belongs is conveyed by the security group
     securityGroups: [lbSecurityGroup.id],
     idleTimeout: idleTimeout ?? 60,
-    listener: {
-      defaultActions: [{
-        type: "forward",
-        targetGroupArn: targetGroup.arn,
-      }],
-    },
+    listeners: [
+      {
+        port: 443,
+        protocol: "HTTPS",
+        certificateArn,
+        sslPolicy: "ELBSecurityPolicy-TLS13-1-2-Res-PQ-2025-09",
+        defaultActions: [{
+          type: "forward",
+          targetGroupArn: targetGroup.arn,
+        }],
+      },
+      {
+        port: 80,
+        protocol: "HTTP",
+        defaultActions: [{
+          type: "redirect",
+          redirect: {
+            port: "443",
+            protocol: "HTTPS",
+            statusCode: "HTTP_301",
+          },
+        }],
+      },
+    ],
   });
 
-  addRedirectToCloudFlareListenerRule({
-    serviceName,
-    listenerArn: loadBalancer.listeners.apply(ls => ls![0].arn),
-    domain,
+  // we have no guarantee that the ALB listeners will keep the order given above, so we need a method to get listener by protocol
+  const getListenerArn = (targetProtocol: string) =>
+    loadBalancer.listeners.apply(listeners => {
+      if (!listeners) throw new Error(`No listeners found on ${serviceName} ALB`);
+      return pulumi.all(listeners.map(ls => ls.protocol)).apply(protocols => {
+        const index = protocols.indexOf(targetProtocol.toUpperCase());
+        if (index === -1) throw new Error(`No ${targetProtocol} listener found on ${serviceName} ALB`);
+        return listeners[index].arn;
+      })
+    });
+
+  ["HTTPS", "HTTP"].forEach(async protocol => {
+    await addRedirectToCloudflareListenerRule({
+      serviceName,
+      listenerArn: getListenerArn(protocol),
+      listenerLabel: protocol.toLowerCase(),
+      domain,
+    });
   });
 
   return {
