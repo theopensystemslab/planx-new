@@ -9,6 +9,21 @@ object_relationships:
     using:
       foreign_key_constraint_on: flow_id
 insert_permissions:
+  - role: demoUser
+    permission:
+      check:
+        flow:
+          creator_id:
+            _eq: x-hasura-user-id
+      columns:
+        - id
+        - actor_id
+        - version
+        - data
+        - created_at
+        - updated_at
+        - flow_id
+    comment: ""
   - role: platformAdmin
     permission:
       check: {}
@@ -52,6 +67,21 @@ select_permissions:
         - flow_id
       filter: {}
     comment: ""
+  - role: demoUser
+    permission:
+      columns:
+        - id
+        - actor_id
+        - version
+        - data
+        - created_at
+        - updated_at
+        - flow_id
+      filter:
+        flow:
+          creator_id:
+            _eq: x-hasura-user-id
+    comment: Demo users can only select their own operations
   - role: platformAdmin
     permission:
       columns:
@@ -75,6 +105,22 @@ select_permissions:
         - updated_at
       filter: {}
 update_permissions:
+  - role: demoUser
+    permission:
+      columns:
+        - id
+        - actor_id
+        - version
+        - data
+        - created_at
+        - updated_at
+        - flow_id
+      filter:
+        flow:
+          creator_id:
+            _eq: x-hasura-user-id
+      check: null
+    comment: ""
   - role: platformAdmin
     permission:
       columns:

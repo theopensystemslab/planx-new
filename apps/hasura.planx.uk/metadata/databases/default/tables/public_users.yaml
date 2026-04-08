@@ -33,13 +33,6 @@ array_relationships:
         table:
           name: team_members
           schema: public
-  - name: user_pinned_flows
-    using:
-      foreign_key_constraint_on:
-        column: user_id
-        table:
-          name: user_pinned_flows
-          schema: public
 insert_permissions:
   - role: platformAdmin
     permission:
@@ -54,21 +47,6 @@ insert_permissions:
         - is_staging_only
         - last_name
         - updated_at
-  - role: teamEditor
-    permission:
-      check: {}
-      columns:
-        - created_at
-        - default_team_id
-        - email
-        - first_name
-        - id
-        - last_name
-        - updated_at
-    comment: |-
-      teamEditor can insert other users.
-
-      The permission boundary is enforced on the team_members table.
 select_permissions:
   - role: analyst
     permission:
@@ -98,6 +76,22 @@ select_permissions:
         - last_name
         - updated_at
       filter: {}
+  - role: demoUser
+    permission:
+      columns:
+        - created_at
+        - default_team_id
+        - email
+        - first_name
+        - id
+        - is_analyst
+        - is_platform_admin
+        - last_name
+        - updated_at
+      filter:
+        id:
+          _eq: x-hasura-user-id
+    comment: Demo users can only select their own user
   - role: platformAdmin
     permission:
       columns:
@@ -135,25 +129,6 @@ update_permissions:
         - last_name
       filter: {}
       check: {}
-  - role: teamEditor
-    permission:
-      columns:
-        - created_at
-        - email
-        - first_name
-        - last_name
-        - updated_at
-      filter:
-        teams:
-          team:
-            members:
-              _and:
-                - user_id:
-                    _eq: X-Hasura-User-Id
-                - role:
-                    _eq: teamEditor
-      check: null
-    comment: teamEditors can update the details of other teamEditors, within their team
 event_triggers:
   - name: send_user_welcome_emails
     definition:

@@ -16,6 +16,28 @@ insert_permissions:
         - flow_id
         - id
     comment: ""
+  - role: demoUser
+    permission:
+      check:
+        flow:
+          team_id:
+            _eq: 32
+      columns:
+        - created_at
+        - flow_id
+        - id
+        - data
+        - updated_at
+      validate_input:
+        definition:
+          forward_client_headers: false
+          headers:
+            - name: authorization
+              value: '{{HASURA_PLANX_API_KEY}}'
+          timeout: 10
+          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+        type: http
+    comment: Demo users can only insert records for flows from the demo team (teamId = 32)
   - role: platformAdmin
     permission:
       check: {}
@@ -73,6 +95,19 @@ select_permissions:
         - id
       filter: {}
     comment: ""
+  - role: demoUser
+    permission:
+      columns:
+        - created_at
+        - flow_id
+        - id
+        - data
+        - updated_at
+      filter:
+        flow:
+          creator_id:
+            _eq: x-hasura-user-id
+    comment: Demo users can only view records associated with flows they have created
   - role: platformAdmin
     permission:
       columns:
@@ -105,6 +140,29 @@ update_permissions:
       filter: {}
       check: {}
     comment: ""
+  - role: demoUser
+    permission:
+      columns:
+        - created_at
+        - flow_id
+        - id
+        - data
+        - updated_at
+      filter:
+        flow:
+          creator_id:
+            _eq: x-hasura-user-id
+      check: null
+      validate_input:
+        definition:
+          forward_client_headers: false
+          headers:
+            - name: authorization
+              value: '{{HASURA_PLANX_API_KEY}}'
+          timeout: 10
+          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+        type: http
+    comment: Demo users can only update records associated with flows they have created
   - role: platformAdmin
     permission:
       columns:

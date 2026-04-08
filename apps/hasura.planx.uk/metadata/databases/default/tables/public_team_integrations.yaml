@@ -52,6 +52,14 @@ select_permissions:
         - staging_govpay_secret
         - power_automate_webhook_url
       filter: {}
+  - role: demoUser
+    permission:
+      columns:
+        - has_planning_data
+        - id
+        - team_id
+      filter: {}
+    comment: ""
   - role: platformAdmin
     permission:
       columns:

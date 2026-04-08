@@ -2,6 +2,22 @@ table:
   name: flow_history
   schema: public
 select_permissions:
+  - role: demoUser
+    permission:
+      columns:
+        - id
+        - actor_id
+        - data
+        - comment
+        - first_name
+        - last_name
+        - type
+        - created_at
+        - flow_id
+      filter:
+        actor_id:
+          _eq: x-hasura-user-id
+    comment: Demo users can only see their own edit history
   - role: platformAdmin
     permission:
       columns:

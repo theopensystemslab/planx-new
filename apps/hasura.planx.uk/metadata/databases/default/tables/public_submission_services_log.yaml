@@ -12,6 +12,26 @@ object_relationships:
           name: teams
           schema: public
 select_permissions:
+  - role: demoUser
+    permission:
+      columns:
+        - address
+        - created_at
+        - event_id
+        - event_type
+        - flow_id
+        - flow_name
+        - response
+        - retry
+        - session_id
+        - status
+        - team_id
+      filter:
+        team:
+          flows:
+            creator_id:
+              _eq: x-hasura-user-id
+    comment: ""
   - role: platformAdmin
     permission:
       columns:

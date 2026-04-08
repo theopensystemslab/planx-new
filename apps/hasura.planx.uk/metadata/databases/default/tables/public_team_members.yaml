@@ -17,25 +17,6 @@ insert_permissions:
         - user_id
         - role
         - id
-  - role: teamEditor
-    permission:
-      check:
-        _and:
-          - team:
-              members:
-                _and:
-                  - user_id:
-                      _eq: X-Hasura-User-Id
-                  - role:
-                      _eq: teamEditor
-          - role:
-              _eq: teamEditor
-      columns:
-        - team_id
-        - user_id
-        - role
-        - id
-    comment: teamEditors can assign other teamEditors to their team
 select_permissions:
   - role: analyst
     permission:
@@ -54,6 +35,17 @@ select_permissions:
         - role
         - id
       filter: {}
+  - role: demoUser
+    permission:
+      columns:
+        - team_id
+        - user_id
+        - role
+        - id
+      filter:
+        user_id:
+          _eq: x-hasura-user-id
+    comment: ""
   - role: platformAdmin
     permission:
       columns:
@@ -84,17 +76,3 @@ delete_permissions:
   - role: platformAdmin
     permission:
       filter: {}
-  - role: teamEditor
-    permission:
-      filter:
-        _and:
-          - team:
-              members:
-                _and:
-                  - user_id:
-                      _eq: X-Hasura-User-Id
-                  - role:
-                      _eq: teamEditor
-          - role:
-              _eq: teamEditor
-    comment: teamEditors can revoke membership of other teamEditors in their team

@@ -31,6 +31,17 @@ insert_permissions:
         - created_at
         - flow_id
     comment: ""
+  - role: demoUser
+    permission:
+      check:
+        flow:
+          creator_id:
+            _eq: x-hasura-user-id
+      columns:
+        - actor_id
+        - comment
+        - flow_id
+    comment: ""
   - role: platformAdmin
     permission:
       check: {}
@@ -66,6 +77,19 @@ select_permissions:
         - flow_id
       filter: {}
     comment: ""
+  - role: demoUser
+    permission:
+      columns:
+        - actor_id
+        - id
+        - comment
+        - created_at
+        - flow_id
+      filter:
+        flow:
+          creator_id:
+            _eq: x-hasura-user-id
+    comment: Demo users can only select their own comments
   - role: platformAdmin
     permission:
       columns:
@@ -87,6 +111,13 @@ select_permissions:
       filter: {}
     comment: ""
 delete_permissions:
+  - role: demoUser
+    permission:
+      filter:
+        flow:
+          creator_id:
+            _eq: x-hasura-user-id
+    comment: ""
   - role: platformAdmin
     permission:
       filter: {}

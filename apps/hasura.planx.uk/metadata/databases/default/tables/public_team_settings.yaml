@@ -64,6 +64,25 @@ select_permissions:
         - team_id
       filter: {}
     comment: ""
+  - role: demoUser
+    permission:
+      columns:
+        - boundary_bbox
+        - boundary_url
+        - email_reply_to_id
+        - external_planning_site_name
+        - external_planning_site_url
+        - has_article4_schema
+        - help_email
+        - help_opening_hours
+        - help_phone
+        - homepage
+        - id
+        - is_trial
+        - reference_code
+        - team_id
+      filter: {}
+    comment: ""
   - role: platformAdmin
     permission:
       columns:
