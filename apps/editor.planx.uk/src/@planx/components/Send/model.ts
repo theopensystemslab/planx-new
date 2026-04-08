@@ -12,6 +12,7 @@ export interface Send extends BaseNodeData {
   title: string;
   destinations: SendIntegration[];
   submissionEmailId?: string;
+  newEmail?: string;
 }
 
 export const DEFAULT_TITLE = "Send";
@@ -46,7 +47,7 @@ export function getCombinedEventsPayload({
   return payload;
 }
 
-export const validationSchema: SchemaOf<Send> =
+export const validateSchema = (existingEmails: string[]) =>
   baseNodeDataValidationSchema.concat(
     object({
       title: string().required(),
@@ -59,5 +60,20 @@ export const validationSchema: SchemaOf<Send> =
           "Submission email is required when 'send to email' is selected.",
         ),
       }),
+      newEmail: string()
+        .email("Please enter a valid email address.")
+        .when("submissionEmailId", {
+          is: (submissionEmailId: string) => submissionEmailId === "new-email",
+          then: string()
+            .required("Please enter a new submission email.")
+            .test(
+              "is-unique",
+              "Please enter a unique email address.",
+              function (value) {
+                if (!value) return true;
+                return !existingEmails.includes(value);
+              },
+            ),
+        }),
     }),
   );
