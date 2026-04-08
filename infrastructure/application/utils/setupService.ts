@@ -6,12 +6,11 @@ import * as tldjs from "tldjs";
 
 import {
   createAllIpv4EgressRule,
-  createAllIpv4IngressRule,
   createDestinationSgEgressRule,
   createSourceSgIngressRule,
 } from "../../common/utils";
 import type { SetupLoadBalancer } from "../types";
-import { addRedirectToCloudflareListenerRule } from "./addListenerRule";
+import { createCloudflareIngressRules } from "./createCloudflareIngressRule";
 
 export const setupLoadBalancer = async ({
   serviceName,
@@ -39,8 +38,8 @@ export const setupLoadBalancer = async ({
     vpcId: vpcId,
   });
 
-  // LB SG accepts traffic from open internet, and allows outbound traffic only to Fargate service SG
-  createAllIpv4IngressRule(lbSecurityGroup.id, `${serviceName}-lb`);
+  // LB SG accepts traffic only from Cloudflare, and allows outbound traffic only to Fargate service SG
+  await createCloudflareIngressRules(lbSecurityGroup.id, `${serviceName}-lb`);
   createDestinationSgEgressRule(lbSecurityGroup.id, `${serviceName}-lb`, [containerPort], serviceSecurityGroup.id);
   // SG for the Fargate service accepts inbound traffic only from the LB SG, and allows outbound traffic to open internet
   createSourceSgIngressRule(serviceSecurityGroup.id, `${serviceName}-service`, [containerPort], lbSecurityGroup.id);
@@ -76,6 +75,7 @@ export const setupLoadBalancer = async ({
           targetGroupArn: targetGroup.arn,
         }],
       },
+      // force http connections to upgrade to https
       {
         port: 80,
         protocol: "HTTP",
@@ -89,26 +89,6 @@ export const setupLoadBalancer = async ({
         }],
       },
     ],
-  });
-
-  // we have no guarantee that the ALB listeners will keep the order given above, so we need a method to get listener by protocol
-  const getListenerArn = (targetProtocol: string) =>
-    loadBalancer.listeners.apply(listeners => {
-      if (!listeners) throw new Error(`No listeners found on ${serviceName} ALB`);
-      return pulumi.all(listeners.map(ls => ls.protocol)).apply(protocols => {
-        const index = protocols.indexOf(targetProtocol.toUpperCase());
-        if (index === -1) throw new Error(`No ${targetProtocol} listener found on ${serviceName} ALB`);
-        return listeners[index].arn;
-      })
-    });
-
-  ["HTTPS", "HTTP"].forEach(async protocol => {
-    await addRedirectToCloudflareListenerRule({
-      serviceName,
-      listenerArn: getListenerArn(protocol),
-      listenerLabel: protocol.toLowerCase(),
-      domain,
-    });
   });
 
   return {

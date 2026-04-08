@@ -1,4 +1,4 @@
-export * from "./addListenerRule";
+export * from "./createCloudflareIngressRule";
 export * from "./createCDN";
 export * from "./createFlowLinkPreviewLambda";
 export * from "./generateCORSAllowList";
