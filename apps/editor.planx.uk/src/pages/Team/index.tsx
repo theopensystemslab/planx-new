@@ -1,50 +1,24 @@
-import TableRowsIcon from "@mui/icons-material/TableRows";
-import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
-import ToggleButton, { toggleButtonClasses } from "@mui/material/ToggleButton";
-import ToggleButtonGroup, {
-  toggleButtonGroupClasses,
-} from "@mui/material/ToggleButtonGroup";
-import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useNavigate, useSearch } from "@tanstack/react-router";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { isEmpty, orderBy } from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import Filters from "ui/editor/Filter/Filter";
 import { InfoChip } from "ui/editor/InfoChip";
-import { SortControl } from "ui/editor/SortControl/SortControl";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 
 import { useStore } from "../FlowEditor/lib/store";
 import { FlowCardView, FlowSummary } from "../FlowEditor/lib/store/editor";
 import { AddFlow } from "./components/AddFlow";
-import FlowCard from "./components/FlowCard/";
+import { DashboardList } from "./components/DashboardList";
 import { Card, CardContent } from "./components/FlowCard/styles";
-import { FlowTable } from "./components/FlowTable";
-import { ShowingServicesHeader } from "./components/ShowingServicesHeader";
-import { filterOptions, sortOptions } from "./helpers/sortAndFilterOptions";
+import Flows from "./components/Flows";
+import { sortOptions } from "./helpers/sortAndFilterOptions";
 import TeamLayout from "./TeamLayout";
-import { hasFeatureFlag } from "lib/featureFlags";
 
 export type FlowView = "flows" | "archive";
-
-const DashboardList = styled("ul")(({ theme }) => ({
-  padding: theme.spacing(2, 0, 3),
-  margin: 0,
-  gap: theme.spacing(2),
-  display: "grid",
-  gridAutoRows: "1fr",
-  gridTemplateColumns: "repeat(1, 1fr)",
-  [theme.breakpoints.up("md")]: {
-    gridTemplateColumns: "repeat(2, 1fr)",
-  },
-  [theme.breakpoints.up("lg")]: {
-    gridTemplateColumns: "repeat(3, 1fr)",
-  },
-}));
 
 export const FiltersContainer = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -58,26 +32,6 @@ export const FiltersContainer = styled(Box)(({ theme }) => ({
   gap: theme.spacing(1),
   borderTop: `1px solid ${theme.palette.border.light}`,
   borderBottom: `1px solid ${theme.palette.border.light}`,
-}));
-
-export const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper,
-  borderColor: theme.palette.border.main,
-  borderRadius: 0,
-  margin: 0,
-  [`&.${toggleButtonGroupClasses.lastButton}`]: {
-    borderColor: theme.palette.border.main,
-  },
-  "&:hover": {
-    backgroundColor: theme.palette.background.paper,
-  },
-  [`&.${toggleButtonClasses.selected}`]: {
-    backgroundColor: theme.palette.background.default,
-    boxShadow: `0 -4px 0 0 ${theme.palette.info.main} inset`,
-  },
-  [`&.${toggleButtonClasses.selected}:hover`]: {
-    backgroundColor: theme.palette.background.default,
-  },
 }));
 
 const GetStarted: React.FC = () => (
@@ -257,106 +211,19 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
             <TeamLayout flowView={flowView} setFlowView={setFlowView} />
           )}
         </Box>
-        {teamHasFlows && (
-          <>
-            <FiltersContainer>
-              <Filters<FlowSummary> filterOptions={filterOptions} />
-              {teamHasFlows && sortedFlows && (
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <Typography variant="body2" sx={{ width: "70px" }}>
-                    <strong>Sort by</strong>
-                  </Typography>
-                  <SortControl<FlowSummary> sortOptions={sortOptions} />
-                </Box>
-              )}
-            </FiltersContainer>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                gap: 2,
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "flex-start",
-                  alignItems: "center",
-                  gap: 2,
-                  minHeight: "50px",
-                }}
-              >
-                <ShowingServicesHeader
-                  matchedFlowsCount={sortedFlows?.length || 0}
-                />
-                {flowsHaveBeenFiltered && (
-                  <Button
-                    onClick={() => {
-                      setSearchedFlows(null);
-                      setShouldClearSearch(true);
-                      navigate({
-                        to: ".",
-                        search: (prev) => ({
-                          ...prev,
-                          "online-status": undefined,
-                          "flow-type": undefined,
-                          templates: undefined,
-                          "lps-listing": undefined,
-                          search: undefined,
-                        }),
-                        replace: true,
-                      });
-                    }}
-                    variant="link"
-                  >
-                    Clear filters
-                  </Button>
-                )}
-              </Box>
-              <ToggleButtonGroup
-                value={flowCardView}
-                exclusive
-                onChange={handleViewChange}
-                size="small"
-              >
-                <Tooltip title="Card view" placement="bottom">
-                  <StyledToggleButton value="grid" disableRipple>
-                    <ViewModuleIcon />
-                  </StyledToggleButton>
-                </Tooltip>
-                <Tooltip title="Table view" placement="bottom">
-                  <StyledToggleButton value="row" disableRipple>
-                    <TableRowsIcon />
-                  </StyledToggleButton>
-                </Tooltip>
-              </ToggleButtonGroup>
-            </Box>
-            {sortedFlows && (
-              <>
-                {flowCardView === "grid" ? (
-                  <DashboardList>
-                    {sortedFlows.map((flow) => (
-                      <FlowCard
-                        flow={flow}
-                        flows={flows}
-                        key={flow.slug}
-                        refreshFlows={fetchFlows}
-                      />
-                    ))}
-                  </DashboardList>
-                ) : (
-                  <FlowTable
-                    flows={sortedFlows}
-                    teamId={teamId}
-                    teamSlug={slug}
-                    refreshFlows={fetchFlows}
-                  />
-                )}
-              </>
-            )}
-          </>
-        )}
+        <Flows
+            flowsHaveBeenFiltered={flowsHaveBeenFiltered}
+            setSearchedFlows={setSearchedFlows}
+            setShouldClearSearch={setShouldClearSearch}
+            sortedFlows={sortedFlows}
+            sortOptions={sortOptions}
+            flowCardView={flowCardView}
+            fetchFlows={fetchFlows}
+            teamId={teamId}
+            flows={flows}
+            handleViewChange={handleViewChange}
+            slug={slug}
+          />
         {flows && !flows.length && <GetStarted />}
       </Container>
     </Box>
