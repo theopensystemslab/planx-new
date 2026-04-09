@@ -8,4 +8,7 @@ export const getUser = async () => {
   return data;
 };
 
-export const logout = async () => await apiClient.post("auth/logout");
+export const logout = async () =>
+  await apiClient.post("auth/logout", undefined, {
+    withCredentials: true,
+  });
