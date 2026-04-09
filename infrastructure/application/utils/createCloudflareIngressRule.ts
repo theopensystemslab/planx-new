@@ -15,8 +15,10 @@ export const createCloudflareIngressRules = async (
   const { ipv4Cidrs } = await cloudflare.getIpRanges();
 
   for (const port of ports) {
-    ipv4Cidrs.forEach((cidr, i) => {
-      new aws.vpc.SecurityGroupIngressRule(`${sgName}-allow-tcp-in-${port}-from-cloudflare-${i}`, {
+    ipv4Cidrs.forEach((cidr) => {
+      // we use a simplified cidr directly in resource name to avoid replacing these rules on every deploy
+      const sanitisedCidr = cidr.replace(/[./\s]/g, "");
+      new aws.vpc.SecurityGroupIngressRule(`${sgName}-allow-tcp-in-${port}-from-cloudflare-${sanitisedCidr}`, {
         securityGroupId,
         cidrIpv4: cidr,
         fromPort: port,
