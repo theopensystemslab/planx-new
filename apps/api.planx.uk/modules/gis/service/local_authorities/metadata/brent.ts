@@ -11,6 +11,8 @@ const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
     records: {
       "articleFour.brent.hmo": "A4D_HMO",
       "articleFour.brent.ca": "A4D_CA",
+      "articleFour.brent.caTwo": "A4D_CA2",
+      "articleFour.brent.caNine": "A4D_CA9",
       "articleFour.brent.rb": "A4D_RB",
       "articleFour.brent.sl": "A4D_SL",
       "articleFour.brent.sa": "A4D_SA",
