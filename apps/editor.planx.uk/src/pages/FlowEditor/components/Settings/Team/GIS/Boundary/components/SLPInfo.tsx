@@ -14,10 +14,7 @@ export const SLPInfo: React.FC<{ geojsonData?: GeoJsonObject }> = ({
   <SettingsSection background>
     <InputLegend>Boundary</InputLegend>
     <SettingsDescription>
-      <Typography
-        variant="body2"
-        color={(theme) => theme.palette.text.secondary}
-      >
+      <Typography variant="body2" color="text.secondary">
         Tewkesbury, Cheltenham and Gloucestershire share a Strategic and Local
         Plan (SLP). Planning applicantions can span across boundaries of these
         three authorities.
