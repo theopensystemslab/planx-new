@@ -200,19 +200,31 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
               gap: 2,
             }}
           >
-            <Typography variant="h2" component="h1" pr={1}>
-              Flows
-            </Typography>
-            {isTrial && <InfoChip label="Trial account" />}
-            {showAddFlowButton && <AddFlow />}
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 2,
+              }}
+            >
+              <Typography variant="h2" component="h1" pr={1}>
+                Flows
+              </Typography>
+              {isTrial && <InfoChip label="Trial account" />}
+              {showAddFlowButton && <AddFlow />}
+            </Box>
+            {teamHasFlows && (
+              <SearchBox<FlowSummary>
+                records={flows}
+                setRecords={setSearchedFlows}
+                searchKey={["name", "slug"]}
+                clearSearch={shouldClearSearch}
+              />
+            )}
           </Box>
-          {teamHasFlows && (
-            <SearchBox<FlowSummary>
-              records={flows}
-              setRecords={setSearchedFlows}
-              searchKey={["name", "slug"]}
-              clearSearch={shouldClearSearch}
-            />
+          {hasFeatureFlag("ARCHIVE_VIEW") && (
+            <TeamLayout flowView={flowView} setFlowView={setFlowView} />
           )}
         </Box>
 
@@ -232,10 +244,6 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
           slug={slug}
           updateFlow={updateFlow}
         />
-
-        {hasFeatureFlag("ARCHIVE_VIEW") && (
-          <TeamLayout flowView={flowView} setFlowView={setFlowView} />
-        )}
 
         {flows && !flows.length && <GetStarted />}
       </Container>
