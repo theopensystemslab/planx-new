@@ -1,8 +1,7 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { useNavigate, useSearch } from "@tanstack/react-router";
+import { useSearch } from "@tanstack/react-router";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { isEmpty, orderBy } from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -12,27 +11,15 @@ import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { useStore } from "../FlowEditor/lib/store";
 import { FlowCardView, FlowSummary } from "../FlowEditor/lib/store/editor";
 import { AddFlow } from "./components/AddFlow";
+import Archive from "./components/Archive";
 import { DashboardList } from "./components/DashboardList";
 import { Card, CardContent } from "./components/FlowCard/styles";
 import Flows from "./components/Flows";
 import { sortOptions } from "./helpers/sortAndFilterOptions";
+import { useArchivedFlows } from "./helpers/useGetArchivedFlows";
 import TeamLayout from "./TeamLayout";
 
 export type FlowView = "flows" | "archive";
-
-export const FiltersContainer = styled(Box)(({ theme }) => ({
-  width: "100%",
-  margin: theme.spacing(1, 0, 2),
-  padding: theme.spacing(1.5, 0),
-  display: "flex",
-  flexDirection: "row",
-  flexWrap: "wrap",
-  alignItems: "center",
-  justifyContent: "space-between",
-  gap: theme.spacing(1),
-  borderTop: `1px solid ${theme.palette.border.light}`,
-  borderBottom: `1px solid ${theme.palette.border.light}`,
-}));
 
 const GetStarted: React.FC = () => (
   <DashboardList sx={{ paddingTop: 2 }}>
@@ -68,14 +55,16 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
   ]);
 
   const [flows, setFlows] = useState<FlowSummary[] | null>(initialFlows);
+  const [flowView, setFlowView] = useState<FlowView>("flows");
+  const { data: archivedFlowsData } = useArchivedFlows(teamId);
+  const archivedFlows = archivedFlowsData?.flows ?? null;
+
   const [searchedFlows, setSearchedFlows] = useState<FlowSummary[] | null>(
     null,
   );
-  const [flowView, setFlowView] = useState<FlowView>("flows");
   const [shouldClearSearch, setShouldClearSearch] = useState<boolean>(false);
   const searchParams = useSearch({ from: "/_authenticated/app/$team/" });
-  const navigate = useNavigate();
-  
+
   const sortedFlows = useMemo(() => {
     // Use searchedFlows if available (from SearchBox), otherwise use all flows
     const sourceFlows = searchedFlows || flows;
@@ -155,12 +144,6 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
   }, [teamId, setFlows, getFlows]);
 
   useEffect(() => {
-    if (initialFlows) {
-      setFlows(initialFlows);
-    }
-  }, [initialFlows]);
-
-  useEffect(() => {
     if (shouldClearSearch) {
       setShouldClearSearch(false);
     }
@@ -211,7 +194,9 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
             <TeamLayout flowView={flowView} setFlowView={setFlowView} />
           )}
         </Box>
-        <Flows
+
+        {flowView === "flows" && (
+          <Flows
             flowsHaveBeenFiltered={flowsHaveBeenFiltered}
             setSearchedFlows={setSearchedFlows}
             setShouldClearSearch={setShouldClearSearch}
@@ -224,6 +209,18 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
             handleViewChange={handleViewChange}
             slug={slug}
           />
+        )}
+        {flowView === "archive" && (
+          <Archive
+            flowCardView={flowCardView}
+            handleViewChange={handleViewChange}
+            archivedFlows={archivedFlows}
+            teamId={teamId}
+            slug={slug}
+            fetchFlows={fetchFlows}
+          />
+        )}
+
         {flows && !flows.length && <GetStarted />}
       </Container>
     </Box>

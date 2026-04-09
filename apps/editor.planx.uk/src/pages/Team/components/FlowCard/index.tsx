@@ -55,9 +55,6 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows, showDetails }) => {
     },
   ];
 
-  const editPermissions = canUserEditTeam(teamSlug);
-  console.log({ showDetails, editPermissions });
-
   return (
     <Card>
       <Box
