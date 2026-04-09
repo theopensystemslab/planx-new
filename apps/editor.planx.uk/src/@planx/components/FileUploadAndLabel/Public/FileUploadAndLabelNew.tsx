@@ -10,8 +10,7 @@ import { PublicProps } from "@planx/components/shared/types";
 import { PrintButton } from "components/PrintButton";
 import capitalize from "lodash/capitalize";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useCallback, useEffect, useState } from "react";
-import { usePrevious } from "react-use";
+import React, { useCallback, useReducer } from "react";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
@@ -22,12 +21,10 @@ import { Dropzone } from "../../shared/PrivateFileUpload/Dropzone";
 import { FileStatus } from "../../shared/PrivateFileUpload/FileStatus";
 import {
   createFileList,
-  FileList,
+  type FileList,
   FileUploadAndLabel,
   generatePayload,
   getRecoveredData,
-  getTagsForSlot,
-  removeSlots,
 } from "../model";
 import {
   fileLabelSchema,
@@ -36,6 +33,11 @@ import {
   slotsSchema,
 } from "../schema";
 import { FileAccordionCard } from "./FileAccordionCard";
+import {
+  fileUploadAndLabelReducer,
+  type FileUploadState,
+  initialState,
+} from "./hooks/fileUploadAndLabelReducer";
 import { InteractiveFileListItem } from "./InteractiveFileListItem";
 
 type Props = PublicProps<FileUploadAndLabel>;
@@ -60,174 +62,127 @@ const UploadList = styled(List)(({ theme }) => ({
 }));
 
 export function FileUploadAndLabelNew(props: Props) {
-  const [fileList, setFileList] = useState<FileList>({
-    required: [],
-    recommended: [],
-    optional: [],
-  });
-
-  useEffect(() => {
+  const initState = (props: Props): FileUploadState => {
     const passport = useStore.getState().computePassport();
-    const fileList = createFileList({ passport, fileTypes: props.fileTypes });
-    setFileList(fileList);
+    const initialFileList = createFileList({
+      passport,
+      fileTypes: props.fileTypes,
+    });
 
     if (props.previouslySubmittedData) {
       const recoveredData = getRecoveredData(
         props.previouslySubmittedData,
-        fileList,
+        initialFileList,
       );
-      setSlots(recoveredData.slots);
-      setFileList(recoveredData.fileList);
-      setIsUserReturningToNode(true);
+
+      return {
+        ...initialState,
+        fileList: recoveredData.fileList,
+        slots: recoveredData.slots,
+      };
     }
-  }, []);
 
-  const [slots, setSlots] = useState<FileUploadSlot[]>([]);
+    return {
+      ...initialState,
+      fileList: initialFileList,
+    };
+  };
 
-  // Accordion state: only one file can be expanded for editing at a time
-  const [expandedSlotId, setExpandedSlotId] = useState<string | null>(null);
-
-  // Drawing numbers
-  const [drawingNumbers, setDrawingNumbers] = useState<Record<string, string>>(
-    {},
+  const [state, dispatch] = useReducer(
+    fileUploadAndLabelReducer,
+    props,
+    initState,
   );
 
-  const handleDrawingNumberChange = useCallback(
-    (slotId: string, value: string) => {
-      setDrawingNumbers((prev) => ({ ...prev, [slotId]: value }));
-    },
-    [],
-  );
+  const handleSetSlots = (updater: React.SetStateAction<FileUploadSlot[]>) => {
+    dispatch({ type: "SET_SLOTS", payload: updater });
+  };
 
-  // Exit animation
-  const [removingSlotId, setRemovingSlotId] = useState<string | null>(null);
-  const [pendingRemoval, setPendingRemoval] = useState<FileUploadSlot | null>(
-    null,
-  );
+  const handleSetFileUploadStatus = (
+    updater: React.SetStateAction<string | undefined>,
+  ) => {
+    dispatch({ type: "SET_FILE_UPLOAD_STATUS", payload: updater });
+  };
 
-  // Track number of slots and auto-expand newly uploaded files
-  const previousSlotCount = usePrevious(slots.length);
-  useEffect(() => {
-    if (previousSlotCount === undefined) return;
+  const handleSetFileList = (updater: React.SetStateAction<FileList>) => {
+    dispatch({ type: "SET_FILE_LIST", payload: updater });
+  };
 
-    // Only stop auto-expand on initial return to node
-    if (isUserReturningToNode) return setIsUserReturningToNode(false);
+  const handleExpand = (slotId: string) =>
+    dispatch({ type: "EXPAND_SLOT", payload: { slotId } });
 
-    // Clear errors as files are added/removed
-    if (slots.length && dropzoneError) setDropzoneError(undefined);
-    if (!slots.length && fileListError) setFileListError(undefined);
-    if (!slots.length && fileLabelErrors) setFileLabelErrors(undefined);
+  const handleSave = (slotId: string) =>
+    dispatch({ type: "SAVE_SLOT", payload: { slotId } });
 
-    // Auto-expand the most recently uploaded file for tagging
-    if (slots.length > previousSlotCount && slots.length > 0) {
-      setExpandedSlotId(slots[0].id);
-    }
-  }, [slots.length]);
+  const initiateRemoveFile = (slot: FileUploadSlot) =>
+    dispatch({ type: "INIT_REMOVE_FILE", payload: { slot } });
 
-  const [fileUploadStatus, setFileUploadStatus] = useState<string | undefined>(
-    undefined,
-  );
+  const completeRemoveFile = () => dispatch({ type: "COMPLETE_REMOVE_FILE" });
 
-  const [dropzoneError, setDropzoneError] = useState<string | undefined>();
-  const [fileLabelErrors, setFileLabelErrors] = useState<
-    Record<string, string> | undefined
-  >();
-  const [fileListError, setFileListError] = useState<string | undefined>();
-  const [isUserReturningToNode, setIsUserReturningToNode] =
-    useState<boolean>(false);
+  const handleDrawingNumberChange = (slotId: string, value: string) => {
+    dispatch({
+      type: "UPDATE_DRAWING_NUMBER",
+      payload: { slotId, value },
+    });
+  };
 
   const validateAndSubmit = () => {
     Promise.all([
-      slotsSchema.validate(slots, { context: { fileList } }),
-      fileLabelSchema.validate(fileList, { context: { slots } }),
-      fileListSchema.validate(fileList, { context: { slots } }),
+      slotsSchema.validate(state.slots, {
+        context: { fileList: state.fileList },
+      }),
+      fileLabelSchema.validate(state.fileList, {
+        context: { slots: state.slots },
+      }),
+      fileListSchema.validate(state.fileList, {
+        context: { slots: state.slots },
+      }),
     ])
       .then(() => {
-        const payload = generatePayload(fileList, slots);
+        const payload = generatePayload(state.fileList, state.slots);
         props.handleSubmit?.(payload);
       })
       .catch((err) => {
         switch (err?.type) {
           case "minFileUploaded":
           case "nonUploading":
-            setDropzoneError(err?.message);
+            dispatch({
+              type: "SET_DROPZONE_ERROR",
+              payload: { error: err?.message },
+            });
             break;
           case "allFilesTagged": {
             const formattedErrors = formatFileLabelSchemaErrors(err);
-            setFileLabelErrors(formattedErrors);
+            dispatch({
+              type: "SET_FILE_LABEL_ERRORS",
+              payload: { errors: formattedErrors },
+            });
             break;
           }
           case "allRequiredFilesUploaded":
           case "errorStatus":
-            setFileListError(err?.message);
+            dispatch({
+              type: "SET_FILE_LIST_ERROR",
+              payload: { error: err?.message },
+            });
             break;
         }
       });
   };
 
-  const handleExpand = (slotId: string) => {
-    setFileListError(undefined);
-    setFileLabelErrors(undefined);
-    setExpandedSlotId(slotId);
-  };
-
-  const handleSave = (slotId: string) => {
-    const currentIndex = slots.findIndex((s) => s.id === slotId);
-
-    // Find the next file that has no tags yet
-    const nextUntagged = slots.find((s, i) => {
-      if (i <= currentIndex) return false;
-      const tags = getTagsForSlot(s.id, fileList);
-      return tags.length === 0;
-    });
-
-    setExpandedSlotId(nextUntagged?.id ?? null);
-  };
-
-  const isCategoryVisible = (category: keyof typeof fileList) => {
+  const isCategoryVisible = (category: keyof typeof state.fileList) => {
     if (props.hideDropZone) return true;
 
     switch (category) {
       case "optional":
-        return !fileList["recommended"].length && !fileList["required"].length;
+        return (
+          !state.fileList["recommended"].length &&
+          !state.fileList["required"].length
+        );
       case "required":
       case "recommended":
-        return fileList[category].length > 0;
+        return state.fileList[category].length > 0;
     }
-  };
-
-  // Start removal animation, defer actual state update to onExited
-  const initiateRemoveFile = (slot: FileUploadSlot) => {
-    if (expandedSlotId === slot.id) {
-      setExpandedSlotId(null);
-    }
-    setPendingRemoval(slot);
-    setRemovingSlotId(slot.id);
-  };
-
-  // Called when the Collapse exit animation completes
-  const completeRemoveFile = () => {
-    if (!pendingRemoval) return;
-
-    const slot = pendingRemoval;
-    setSlots((prev) => prev.filter((s) => s.file !== slot.file));
-    setFileUploadStatus(`${slot.file.path} was deleted`);
-    const updatedFileList = removeSlots(
-      getTagsForSlot(slot.id, fileList),
-      slot,
-      fileList,
-    );
-    setFileList(updatedFileList);
-
-    // Clean up drawing number for removed file
-    setDrawingNumbers((prev) => {
-      const next = { ...prev };
-      delete next[slot.id];
-      return next;
-    });
-
-    setRemovingSlotId(null);
-    setPendingRemoval(null);
   };
 
   return (
@@ -239,18 +194,21 @@ export function FileUploadAndLabelNew(props: Props) {
         <DropzoneContainer>
           {!props.hideDropZone && (
             <>
-              <FileStatus status={fileUploadStatus} />
-              <ErrorWrapper error={dropzoneError} id={`${props.id}-dropzone`}>
+              <FileStatus status={state.fileUploadStatus} />
+              <ErrorWrapper
+                error={state.dropzoneError}
+                id={`${props.id}-dropzone`}
+              >
                 <Dropzone
-                  slots={slots}
-                  setSlots={setSlots}
-                  setFileUploadStatus={setFileUploadStatus}
+                  slots={state.slots}
+                  setSlots={handleSetSlots}
+                  setFileUploadStatus={handleSetFileUploadStatus}
                 />
               </ErrorWrapper>
             </>
           )}
           <UploadList disablePadding>
-            {(Object.keys(fileList) as Array<keyof typeof fileList>)
+            {(Object.keys(state.fileList) as Array<keyof typeof state.fileList>)
               .filter(isCategoryVisible)
               .flatMap((fileListCategory) => [
                 <ListSubheader
@@ -267,7 +225,7 @@ export function FileUploadAndLabelNew(props: Props) {
                     {`${capitalize(fileListCategory)} information`}
                   </Typography>
                 </ListSubheader>,
-                fileList[fileListCategory].map((fileType) => (
+                state.fileList[fileListCategory].map((fileType) => (
                   <ListItem key={fileType.name} disablePadding>
                     <InteractiveFileListItem
                       name={fileType.name}
@@ -281,33 +239,35 @@ export function FileUploadAndLabelNew(props: Props) {
               ])}
           </UploadList>
         </DropzoneContainer>
-        <ErrorWrapper error={fileListError} id={`${props.id}-fileList`}>
+        <ErrorWrapper error={state.fileListError} id={`${props.id}-fileList`}>
           <Box>
-            {Boolean(slots.length) && (
+            {Boolean(state.slots.length) && (
               <Typography variant="h3" mb={2}>
                 Your uploaded files
               </Typography>
             )}
             <Stack spacing={2}>
-              {slots.map((slot) => (
+              {state.slots.map((slot) => (
                 <Collapse
                   key={slot.id}
-                  in={removingSlotId !== slot.id}
+                  in={state.removingSlotId !== slot.id}
                   onExited={
-                    removingSlotId === slot.id ? completeRemoveFile : undefined
+                    state.removingSlotId === slot.id
+                      ? completeRemoveFile
+                      : undefined
                   }
                 >
                   <FileAccordionCard
                     slot={slot}
-                    isExpanded={expandedSlotId === slot.id}
+                    isExpanded={state?.expandedSlotId === slot.id}
                     onExpand={handleExpand}
                     onSave={handleSave}
                     onRemove={initiateRemoveFile}
-                    fileList={fileList}
-                    setFileList={setFileList}
-                    error={fileLabelErrors?.[slot.id]}
+                    fileList={state.fileList}
+                    setFileList={handleSetFileList}
+                    error={state.fileLabelErrors?.[slot.id]}
                     showDrawingNumber={props.showDrawingNumber}
-                    drawingNumber={drawingNumbers[slot.id]}
+                    drawingNumber={state.drawingNumbers[slot.id]}
                     onDrawingNumberChange={(value) =>
                       handleDrawingNumberChange(slot.id, value)
                     }

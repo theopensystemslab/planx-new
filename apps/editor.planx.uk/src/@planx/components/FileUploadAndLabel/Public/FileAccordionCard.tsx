@@ -36,7 +36,7 @@ interface FileAccordionCardProps {
   onSave: (slotId: string) => void;
   onRemove: (slot: FileUploadSlot) => void;
   fileList: FileList;
-  setFileList: (value: React.SetStateAction<FileList>) => void;
+  setFileList: React.Dispatch<React.SetStateAction<FileList>>;
   error?: string;
   showDrawingNumber?: boolean;
   drawingNumber?: string;
