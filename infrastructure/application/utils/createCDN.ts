@@ -35,6 +35,7 @@ export const createCdn = ({
   oai,
   mode = "spa",
   includeWWW = false,
+  aliases: aliasOverride,
   lambdaFunctionAssociation,
 }: {
   domain: string;
@@ -44,15 +45,15 @@ export const createCdn = ({
   oai: aws.cloudfront.OriginAccessIdentity,
   mode?: "static" | "spa"
   includeWWW?: boolean;
+  aliases?: string[];
   lambdaFunctionAssociation?: {
     lambdaArn: pulumi.Input<string>;
     eventType: string;
     includeBody?: boolean;
   };
 }) => {
-  const aliases = includeWWW 
-    ? [`www.${domain}`, domain]
-    : [domain]
+  const aliases = aliasOverride
+    ?? (includeWWW ? [`www.${domain}`, domain] : [domain]);
 
   const cdn = new aws.cloudfront.Distribution(`${domain}-cdn`, {
     enabled: true,

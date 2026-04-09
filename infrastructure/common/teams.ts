@@ -47,5 +47,13 @@ export const teams: Team[] = [
 export interface CustomDomain {
   name: string,
   domain: string,
-  certificateLocation?: "secretsManager" | "pulumiConfig"
+  certificateLocation?: "secretsManager" | "pulumiConfig",
+  // whether domain is served by legacy per-domain CloudFront distribution setup (defaults to false)
+  isLegacy?: boolean,
+  /**
+   * Whether the council has completed DNS validation for the shared ACM certificate.
+   * When false (default), the domain is added to the "mining" cert to surface validation records.
+   * When true, the domain is added to the shared SAN cert and the shared CDN aliases.
+   */
+  isReady?: boolean,
 }
