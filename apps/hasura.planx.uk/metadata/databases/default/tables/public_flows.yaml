@@ -12,7 +12,7 @@ object_relationships:
           submission_email_id: id
         insertion_order: null
         remote_table:
-          name: submission_integrations
+          name: submission_emails
           schema: public
   - name: team
     using:
