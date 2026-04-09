@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
-import StarIcon from "@mui/icons-material/Star";
-import StarOutlineIcon from "@mui/icons-material/StarOutline";
+import PushPinIcon from "@mui/icons-material/PushPin";
+import PushPinOutlineIcon from "@mui/icons-material/PushPinOutlined";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
@@ -89,7 +89,7 @@ export const FlowPinButton = ({
             aria-label="Unpin flow"
             sx={{ borderRadius: "50%" }}
           >
-            <StarIcon sx={{ fontSize: 24 }} />
+            <PushPinIcon sx={{ fontSize: 24, transform: "translateY(2px)" }} />
           </IconButton>
         </Tooltip>
       ) : (
@@ -106,7 +106,9 @@ export const FlowPinButton = ({
             disabled={!user}
             sx={{ borderRadius: "50%" }}
           >
-            <StarOutlineIcon sx={{ fontSize: 24 }} />
+            <PushPinOutlineIcon
+              sx={{ fontSize: 24, transform: "translateY(2px)" }}
+            />
           </IconButton>
         </Tooltip>
       )}
