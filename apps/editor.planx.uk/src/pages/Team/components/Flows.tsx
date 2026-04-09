@@ -153,7 +153,6 @@ const Flows: React.FC<Props> = ({
                     flows={sortedFlows}
                     key={flow.slug}
                     refreshFlows={fetchFlows}
-                    showDetails={true}
                   />
                 ))}
               </DashboardList>
@@ -163,7 +162,6 @@ const Flows: React.FC<Props> = ({
                 teamId={teamId}
                 teamSlug={slug}
                 refreshFlows={fetchFlows}
-                showDetails={true}
               />
             )}
           </>
