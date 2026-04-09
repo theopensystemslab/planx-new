@@ -157,7 +157,7 @@ export async function cleanup({
     await $admin.user._destroy(userId);
   }
   if (teamId) {
-    await cleanupSubmissionIntegration(teamId);
+    await cleanupSubmissionEmail(teamId);
     await $admin.team._destroy(teamId);
   }
 }
@@ -184,21 +184,21 @@ const setupMockBopsSubmissionUrl = async (teamId: number) => {
   );
 };
 
-const setupSubmissionIntegration = async (
+const setupSubmissionEmail = async (
   teamId: number,
-  submissionEmail: string,
+  address: string,
 ) => {
   await $admin.client.request(
     gql`
-      mutation InsertSubmissionIntegration(
+      mutation InsertSubmissionEmail(
         $teamId: Int!
-        $submissionEmail: String!
+        $address: String!
       ) {
-        insert_submission_integrations_one(
+        insert_submission_emails_one(
           object: {
             team_id: $teamId
-            submission_email: $submissionEmail
-            default_email: true
+            address: $address
+            is_default: true
           }
         ) {
           id
@@ -207,16 +207,16 @@ const setupSubmissionIntegration = async (
     `,
     {
       teamId,
-      submissionEmail,
+      address,
     },
   );
 };
 
-const cleanupSubmissionIntegration = async (teamId: number) => {
+const cleanupSubmissionEmail = async (teamId: number) => {
   await $admin.client.request(
     gql`
-      mutation DeleteSubmissionIntegrations($teamId: Int!) {
-        delete_submission_integrations(where: { team_id: { _eq: $teamId } }) {
+      mutation DeleteSubmissionEmails($teamId: Int!) {
+        delete_submission_emails(where: { team_id: { _eq: $teamId } }) {
           affected_rows
         }
       }
@@ -233,7 +233,7 @@ export const setup = async () => {
   });
   const userId = await createUser();
   await setupMockBopsSubmissionUrl(teamId);
-  await setupSubmissionIntegration(teamId, TEST_EMAIL);
+  await setupSubmissionEmail(teamId, TEST_EMAIL);
   const world = { teamId, userId };
 
   return world;
