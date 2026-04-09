@@ -35,10 +35,6 @@ export const initialState: FileUploadState = {
 
 export type FileUploadAction =
   | {
-      type: "INIT_RECOVERED_DATA";
-      payload: { fileList: FileList; slots: FileUploadSlot[] };
-    }
-  | {
       type: "UPDATE_DRAWING_NUMBER";
       payload: { slotId: string; value: string };
     }
@@ -135,14 +131,6 @@ export const fileUploadAndLabelReducer = (
         dropzoneError: isNewFileAdded ? undefined : state.dropzoneError,
         // Auto-expand if a new file was just added
         expandedSlotId: newlyAddedSlotId,
-      };
-    }
-
-    case "INIT_RECOVERED_DATA": {
-      return {
-        ...state,
-        fileList: action.payload.fileList,
-        slots: action.payload.slots,
       };
     }
 

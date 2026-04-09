@@ -10,7 +10,7 @@ import { PublicProps } from "@planx/components/shared/types";
 import { PrintButton } from "components/PrintButton";
 import capitalize from "lodash/capitalize";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useCallback, useEffect, useReducer } from "react";
+import React, { useCallback, useReducer } from "react";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
@@ -35,6 +35,7 @@ import {
 import { FileAccordionCard } from "./FileAccordionCard";
 import {
   fileUploadAndLabelReducer,
+  type FileUploadState,
   initialState,
 } from "./hooks/fileUploadAndLabelReducer";
 import { InteractiveFileListItem } from "./InteractiveFileListItem";
@@ -61,30 +62,7 @@ const UploadList = styled(List)(({ theme }) => ({
 }));
 
 export function FileUploadAndLabelNew(props: Props) {
-  const [state, dispatch] = useReducer(fileUploadAndLabelReducer, initialState);
-
-  const handleSetSlots = useCallback(
-    (updater: React.SetStateAction<FileUploadSlot[]>) => {
-      dispatch({ type: "SET_SLOTS", payload: updater });
-    },
-    [],
-  );
-
-  const handleSetFileUploadStatus = useCallback(
-    (updater: React.SetStateAction<string | undefined>) => {
-      dispatch({ type: "SET_FILE_UPLOAD_STATUS", payload: updater });
-    },
-    [],
-  );
-
-  const handleSetFileList = useCallback(
-    (updater: React.SetStateAction<FileList>) => {
-      dispatch({ type: "SET_FILE_LIST", payload: updater });
-    },
-    [],
-  );
-
-  useEffect(() => {
+  const initState = (props: Props): FileUploadState => {
     const passport = useStore.getState().computePassport();
     const initialFileList = createFileList({
       passport,
@@ -97,33 +75,56 @@ export function FileUploadAndLabelNew(props: Props) {
         initialFileList,
       );
 
-      dispatch({
-        type: "INIT_RECOVERED_DATA",
-        payload: {
-          fileList: recoveredData.fileList,
-          slots: recoveredData.slots,
-        },
-      });
-    } else {
-      dispatch({
-        type: "INIT_RECOVERED_DATA",
-        payload: {
-          fileList: initialFileList,
-          slots: [],
-        },
-      });
+      return {
+        ...initialState,
+        fileList: recoveredData.fileList,
+        slots: recoveredData.slots,
+      };
     }
-  }, [props.fileTypes, props.previouslySubmittedData]);
 
-  const handleDrawingNumberChange = useCallback(
-    (slotId: string, value: string) => {
-      dispatch({
-        type: "UPDATE_DRAWING_NUMBER",
-        payload: { slotId, value },
-      });
-    },
-    [],
+    return {
+      ...initialState,
+      fileList: initialFileList,
+    };
+  };
+
+  const [state, dispatch] = useReducer(
+    fileUploadAndLabelReducer,
+    props,
+    initState,
   );
+
+  const handleSetSlots = (updater: React.SetStateAction<FileUploadSlot[]>) => {
+    dispatch({ type: "SET_SLOTS", payload: updater });
+  };
+
+  const handleSetFileUploadStatus = (
+    updater: React.SetStateAction<string | undefined>,
+  ) => {
+    dispatch({ type: "SET_FILE_UPLOAD_STATUS", payload: updater });
+  };
+
+  const handleSetFileList = (updater: React.SetStateAction<FileList>) => {
+    dispatch({ type: "SET_FILE_LIST", payload: updater });
+  };
+
+  const handleExpand = (slotId: string) =>
+    dispatch({ type: "EXPAND_SLOT", payload: { slotId } });
+
+  const handleSave = (slotId: string) =>
+    dispatch({ type: "SAVE_SLOT", payload: { slotId } });
+
+  const initiateRemoveFile = (slot: FileUploadSlot) =>
+    dispatch({ type: "INIT_REMOVE_FILE", payload: { slot } });
+
+  const completeRemoveFile = () => dispatch({ type: "COMPLETE_REMOVE_FILE" });
+
+  const handleDrawingNumberChange = (slotId: string, value: string) => {
+    dispatch({
+      type: "UPDATE_DRAWING_NUMBER",
+      payload: { slotId, value },
+    });
+  };
 
   const validateAndSubmit = () => {
     Promise.all([
@@ -169,12 +170,6 @@ export function FileUploadAndLabelNew(props: Props) {
       });
   };
 
-  const handleExpand = (slotId: string) =>
-    dispatch({ type: "EXPAND_SLOT", payload: { slotId } });
-
-  const handleSave = (slotId: string) =>
-    dispatch({ type: "SAVE_SLOT", payload: { slotId } });
-
   const isCategoryVisible = (category: keyof typeof state.fileList) => {
     if (props.hideDropZone) return true;
 
@@ -189,11 +184,6 @@ export function FileUploadAndLabelNew(props: Props) {
         return state.fileList[category].length > 0;
     }
   };
-
-  const initiateRemoveFile = (slot: FileUploadSlot) =>
-    dispatch({ type: "INIT_REMOVE_FILE", payload: { slot } });
-
-  const completeRemoveFile = () => dispatch({ type: "COMPLETE_REMOVE_FILE" });
 
   return (
     <Card
