@@ -4,10 +4,10 @@ import {
   SubmissionEmailMutation,
 } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 
-import { INSERT_TEAM_SUBMISSION_INTEGRATION } from "../queries";
+import { INSERT_TEAM_SUBMISSION_EMAIL } from "../queries";
 
-export const useInsertSubmissionIntegration = () => {
+export const useInsertSubmissionEmail = () => {
   return useMutation<SubmissionEmailMutation, SubmissionEmailInput>(
-    INSERT_TEAM_SUBMISSION_INTEGRATION,
+    INSERT_TEAM_SUBMISSION_EMAIL,
   );
 };

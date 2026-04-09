@@ -1,14 +1,14 @@
 import { useQuery } from "@apollo/client";
-import { GET_TEAM_SUBMISSION_INTEGRATIONS } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/queries";
+import { GET_TEAM_SUBMISSION_EMAILS } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/queries";
 import { GetSubmissionEmails } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 
-import { GetTeamSubmissionIntegrationsQueryVariables } from "../types";
+import { GetTeamSubmissionEmailsQueryVariables } from "../types";
 
-export const useTeamSubmissionIntegrations = (teamId: number) => {
+export const useTeamSubmissionEmails = (teamId: number) => {
   const query = useQuery<
     GetSubmissionEmails,
-    GetTeamSubmissionIntegrationsQueryVariables
-  >(GET_TEAM_SUBMISSION_INTEGRATIONS, {
+    GetTeamSubmissionEmailsQueryVariables
+  >(GET_TEAM_SUBMISSION_EMAILS, {
     variables: { teamId },
     fetchPolicy: "network-only",
   });

@@ -24,8 +24,8 @@ import { WarningContainer } from "../shared/Preview/WarningContainer";
 import { EditorProps } from "../shared/types";
 import EmailSection from "./EmailSection";
 import { useFlowEmailId } from "./hooks/useFlowEmailId";
-import { useTeamSubmissionIntegrations } from "./hooks/useGetTeamSubmissionIntegrations";
-import { useInsertSubmissionIntegration } from "./hooks/useInsertSubmissionIntegration";
+import { useTeamSubmissionEmails } from "./hooks/useGetTeamSubmissionIntegrations";
+import { useInsertSubmissionEmail } from "./hooks/useInsertSubmissionIntegration";
 import { useUpdateFlowSubmissionEmail } from "./hooks/useUpdateFlowSubmissionEmail";
 import { parseSend, Send, validateSchema } from "./model";
 
@@ -215,14 +215,14 @@ const SendComponent: React.FC<Props> = (props) => {
   const { data: flowData } = useFlowEmailId(id);
   const existingEmailId = flowData?.flowsByPK?.submissionEmailId;
 
-  const { data } = useTeamSubmissionIntegrations(teamId);
-  const emailOptions = data?.submissionIntegrations || [];
+  const { data } = useTeamSubmissionEmails(teamId);
+  const emailOptions = data?.submissionEmails || [];
   const defaultEmail = emailOptions.find(
-    (email: SubmissionEmailInput) => email.defaultEmail === true,
+    (email: SubmissionEmailInput) => email.isDefault === true,
   );
   const insertNewDefaultEmail = !defaultEmail;
 
-  const [insertSubmissionIntegration] = useInsertSubmissionIntegration();
+  const [insertSubmissionEmail] = useInsertSubmissionEmail();
   const [updateFlowSubmissionEmail] = useUpdateFlowSubmissionEmail();
 
   const handleInsertOrUpdate = async (
@@ -234,14 +234,14 @@ const SendComponent: React.FC<Props> = (props) => {
     const newEmail = newValues.newEmail;
 
     if (selectedEmailId === "new-email" && newEmail) {
-      const { data } = await insertSubmissionIntegration({
+      const { data } = await insertSubmissionEmail({
         variables: {
-          submissionEmail: newEmail,
-          defaultEmail: insertNewDefaultEmail,
+          address: newEmail,
+          isDefault: insertNewDefaultEmail,
           teamId,
         },
       });
-      const submissionEmailId = data?.insertSubmissionIntegrationsOne?.id;
+      const submissionEmailId = data?.insertSubmissionEmailsOne?.id;
       if (!submissionEmailId) {
         throw new Error("No submission email ID was returned");
       }
@@ -292,7 +292,7 @@ const SendComponent: React.FC<Props> = (props) => {
       }}
       validationSchema={validateSchema(
         emailOptions.map(
-          (email: SubmissionEmailInput) => email.submissionEmail,
+          (email: SubmissionEmailInput) => email.address,
         ),
       )}
     >

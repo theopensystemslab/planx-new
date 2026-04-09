@@ -15,8 +15,8 @@ import { Switch } from "ui/shared/Switch";
 
 import { upsertEmailSchema } from "./formSchema";
 import {
-  GET_TEAM_SUBMISSION_INTEGRATIONS,
-  UPSERT_TEAM_SUBMISSION_INTEGRATIONS,
+  GET_TEAM_SUBMISSION_EMAILS,
+  UPSERT_TEAM_SUBMISSION_EMAILS,
 } from "./queries";
 import { EditorModalProps } from "./types";
 
@@ -28,7 +28,7 @@ export const EmailsUpsertModal = ({
 }: EditorModalProps) => {
   const teamId = useStore((state) => state.teamId);
   const toast = useToast();
-  const [upsertEmail] = useMutation(UPSERT_TEAM_SUBMISSION_INTEGRATIONS);
+  const [upsertEmail] = useMutation(UPSERT_TEAM_SUBMISSION_EMAILS);
 
   if (!modalState || modalState.type !== "upsert") {
     throw new Error("RemoveEmailModal requires an upsert modalState");
@@ -36,26 +36,26 @@ export const EmailsUpsertModal = ({
 
   const isFirstEmail = !currentEmails || currentEmails.length === 0;
   const isDefaultEmail =
-    isFirstEmail || modalState?.integration?.defaultEmail || false;
+    isFirstEmail || modalState?.email?.isDefault || false;
 
   return (
     <Formik
       initialValues={{
-        submissionEmail: modalState?.integration?.submissionEmail || "",
-        defaultEmail: isDefaultEmail,
+        address: modalState?.email?.address || "",
+        isDefault: isDefaultEmail,
         teamId: teamId,
       }}
       validationSchema={upsertEmailSchema(
         currentEmails || [],
-        modalState?.integration?.submissionEmail,
+        modalState?.email?.address,
       )}
       onSubmit={async (values) => {
         const variables = {
           emails: [
             {
-              id: modalState?.integration?.id,
-              submission_email: values.submissionEmail,
-              default_email: values.defaultEmail,
+              id: modalState?.email?.id,
+              address: values.address,
+              is_default: values.isDefault,
               team_id: teamId,
             },
           ],
@@ -65,7 +65,7 @@ export const EmailsUpsertModal = ({
           variables,
           refetchQueries: [
             {
-              query: GET_TEAM_SUBMISSION_INTEGRATIONS,
+              query: GET_TEAM_SUBMISSION_EMAILS,
               variables: { teamId },
             },
           ],
@@ -95,15 +95,15 @@ export const EmailsUpsertModal = ({
             <DialogContent dividers>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <ErrorWrapper
-                  id="submissionEmail"
+                  id="address"
                   error={
-                    touched.submissionEmail && errors.submissionEmail
-                      ? errors.submissionEmail
+                    touched.address && errors.address
+                      ? errors.address
                       : undefined
                   }
                 >
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Input {...getFieldProps("submissionEmail")} />
+                    <Input {...getFieldProps("address")} />
                   </Box>
                 </ErrorWrapper>
               </Box>
@@ -117,9 +117,9 @@ export const EmailsUpsertModal = ({
               >
                 <Switch
                   name="isDefault"
-                  checked={values.defaultEmail}
+                  checked={values.isDefault}
                   onChange={(e) =>
-                    setFieldValue("defaultEmail", e.target.checked)
+                    setFieldValue("isDefault", e.target.checked)
                   }
                   label={"Default email"}
                   disabled={isFirstEmail || isDefaultEmail}
@@ -140,7 +140,7 @@ export const EmailsUpsertModal = ({
                 type="submit"
                 disabled={
                   !dirty ||
-                  (touched.submissionEmail && !!errors.submissionEmail)
+                  (touched.address && !!errors.address)
                 }
               >
                 {modalState.actionType === "add" ? "Add" : "Update"}

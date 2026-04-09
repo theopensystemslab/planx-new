@@ -11,7 +11,7 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 
-import { useTeamSubmissionIntegrations } from "./hooks/useGetTeamSubmissionIntegrations";
+import { useTeamSubmissionEmails } from "./hooks/useGetTeamSubmissionIntegrations";
 import { EmailSelectionProps } from "./types";
 
 interface EmailSectionProps {
@@ -86,7 +86,7 @@ const EmailSelection: React.FC<EmailSelectionProps> = ({
           >
             {emailOptions.map((email) => (
               <MenuItem key={email.id} value={email.id}>
-                {email.submissionEmail}
+                {email.address}
               </MenuItem>
             ))}
             <MenuItem value="new-email">New email...</MenuItem>
@@ -112,10 +112,10 @@ const EmailSelection: React.FC<EmailSelectionProps> = ({
 const EmailSection: React.FC<EmailSectionProps> = ({ teamId, teamSlug }) => {
   const { values, setFieldValue } = useFormikContext<Send>();
 
-  const { data, loading, error } = useTeamSubmissionIntegrations(teamId);
-  const emailOptions = data?.submissionIntegrations || [];
+  const { data, loading, error } = useTeamSubmissionEmails(teamId);
+  const emailOptions = data?.submissionEmails || [];
   const defaultEmail = emailOptions.find(
-    (email) => email.defaultEmail === true,
+    (email) => email.isDefault === true,
   );
 
   const handleSelectChange = (event: SelectChangeEvent<unknown>) => {
