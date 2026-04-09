@@ -76,7 +76,6 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
           placeholder={placeholder}
           required={Boolean(props.required)}
           onChange={handleChange}
-          autoSelect
           value={value}
           options={options}
           disabled={props.disabled}
