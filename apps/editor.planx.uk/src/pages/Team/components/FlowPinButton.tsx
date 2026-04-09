@@ -1,4 +1,3 @@
-import { useMutation } from "@apollo/client";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import PushPinOutlineIcon from "@mui/icons-material/PushPinOutlined";
 import Box from "@mui/material/Box";
@@ -9,7 +8,7 @@ import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import React, { useState } from "react";
 
 import { useStore } from "../../FlowEditor/lib/store";
-import { PIN_FLOW, UNPIN_FLOW } from "./FlowCard/queries";
+import { usePinFlow, useUnpinFlow } from "./FlowCard/queries";
 
 interface Props {
   flowId: string;
@@ -24,22 +23,20 @@ export const FlowPinButton = ({
 }: Props) => {
   const user = useStore((state) => state.user);
 
-  const [pinFlow, { loading: isPinLoading }] = useMutation<{
-    insert_user_pinned_flows_one: { flow: FlowSummary };
-  }>(PIN_FLOW);
+  const [pinFlow, { loading: isPinLoading }] = usePinFlow({
+    flowId,
+    userId: user?.id,
+  });
+  const [unpinFlow, { loading: isUnpinLoading }] = useUnpinFlow({
+    flowId,
+  });
 
-  const [unpinFlow, { loading: isUnpinLoading }] = useMutation<{
-    delete_user_pinned_flows: { returning: { flow: FlowSummary }[] };
-  }>(UNPIN_FLOW);
-
-  const handlePinFlow = async (flowId: string) => {
+  const handlePinFlow = async () => {
     if (!user) {
       return;
     }
 
-    const result = await pinFlow({
-      variables: { flowId, userId: user.id },
-    });
+    const result = await pinFlow();
     const updatedFlow = result.data?.insert_user_pinned_flows_one?.flow;
     if (updatedFlow) {
       setTooltipOpen(false);
@@ -47,8 +44,8 @@ export const FlowPinButton = ({
     }
   };
 
-  const handleUnpinFlow = async (flowId: string) => {
-    const result = await unpinFlow({ variables: { flowId } });
+  const handleUnpinFlow = async () => {
+    const result = await unpinFlow();
     const updatedFlow =
       result.data?.delete_user_pinned_flows?.returning?.[0]?.flow;
 
@@ -85,7 +82,7 @@ export const FlowPinButton = ({
         >
           <IconButton
             size="small"
-            onClick={() => handleUnpinFlow(flowId)}
+            onClick={handleUnpinFlow}
             aria-label="Unpin flow"
             sx={{ borderRadius: "50%" }}
           >
@@ -101,7 +98,7 @@ export const FlowPinButton = ({
         >
           <IconButton
             size="small"
-            onClick={() => handlePinFlow(flowId)}
+            onClick={handlePinFlow}
             aria-label="Pin flow"
             disabled={!user}
             sx={{ borderRadius: "50%" }}
