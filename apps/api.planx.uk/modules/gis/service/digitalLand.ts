@@ -299,8 +299,7 @@ async function go(
             // these are various ways we link source data to granular planx values (see local_authorities/metadata for specifics)
             entity.name.replace(/\r?\n|\r/g, " ") === a4s[key] ||
             entity.reference === a4s[key] ||
-            (entity?.["article-4-direction"] === a4s[key] &&
-              !brentSkip) ||
+            (entity?.["article-4-direction"] === a4s[key] && !brentSkip) ||
             entity?.notes === a4s[key] ||
             entity?.description?.startsWith(a4s[key]) ||
             formattedResult[key]?.value // if this granular var is already true, make sure it remains true
