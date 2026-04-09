@@ -22,7 +22,6 @@ import { Dropzone } from "../../shared/PrivateFileUpload/Dropzone";
 import { FileStatus } from "../../shared/PrivateFileUpload/FileStatus";
 import {
   createFileList,
-  FileList,
   FileUploadAndLabel,
   generatePayload,
   getRecoveredData,
@@ -73,27 +72,36 @@ export function FileUploadAndLabelNew(props: Props) {
     [],
   );
 
-  const [fileList, setFileList] = useState<FileList>({
-    required: [],
-    recommended: [],
-    optional: [],
-  });
-
   useEffect(() => {
     const passport = useStore.getState().computePassport();
-    const fileList = createFileList({ passport, fileTypes: props.fileTypes });
-    setFileList(fileList);
+    const initialFileList = createFileList({
+      passport,
+      fileTypes: props.fileTypes,
+    });
 
     if (props.previouslySubmittedData) {
       const recoveredData = getRecoveredData(
         props.previouslySubmittedData,
-        fileList,
+        initialFileList,
       );
-      setSlots(recoveredData.slots);
-      setFileList(recoveredData.fileList);
-      setIsUserReturningToNode(true);
+
+      dispatch({
+        type: "INIT_RECOVERED_DATA",
+        payload: {
+          fileList: recoveredData.fileList,
+          slots: recoveredData.slots,
+        },
+      });
+    } else {
+      dispatch({
+        type: "INIT_RECOVERED_DATA",
+        payload: {
+          fileList: initialFileList,
+          slots: [],
+        },
+      });
     }
-  }, []);
+  }, [props.fileTypes, props.previouslySubmittedData]);
 
   const handleDrawingNumberChange = useCallback(
     (slotId: string, value: string) => {
@@ -105,12 +113,6 @@ export function FileUploadAndLabelNew(props: Props) {
     [],
   );
 
-  // Exit animation
-  const [removingSlotId, setRemovingSlotId] = useState<string | null>(null);
-  const [pendingRemoval, setPendingRemoval] = useState<FileUploadSlot | null>(
-    null,
-  );
-
   // Track number of slots and auto-expand newly uploaded files
   const previousSlotCount = usePrevious(state.slots.length);
   useEffect(() => {
@@ -120,21 +122,23 @@ export function FileUploadAndLabelNew(props: Props) {
     if (isUserReturningToNode) return setIsUserReturningToNode(false);
   }, [state.slots.length]);
 
-  const [fileUploadStatus, setFileUploadStatus] = useState<string | undefined>(
-    undefined,
-  );
-
   const [isUserReturningToNode, setIsUserReturningToNode] =
     useState<boolean>(false);
 
   const validateAndSubmit = () => {
     Promise.all([
-      slotsSchema.validate(state.slots, { context: { fileList } }),
-      fileLabelSchema.validate(fileList, { context: { slots: state.slots } }),
-      fileListSchema.validate(fileList, { context: { slots: state.slots } }),
+      slotsSchema.validate(state.slots, {
+        context: { fileList: state.fileList },
+      }),
+      fileLabelSchema.validate(state.fileList, {
+        context: { slots: state.slots },
+      }),
+      fileListSchema.validate(state.fileList, {
+        context: { slots: state.slots },
+      }),
     ])
       .then(() => {
-        const payload = generatePayload(fileList, state.slots);
+        const payload = generatePayload(state.fileList, state.slots);
         props.handleSubmit?.(payload);
       })
       .catch((err) => {
@@ -174,7 +178,7 @@ export function FileUploadAndLabelNew(props: Props) {
     // Find the next file that has no tags yet
     const nextUntagged = state.slots.find((s, i) => {
       if (i <= currentIndex) return false;
-      const tags = getTagsForSlot(s.id, fileList);
+      const tags = getTagsForSlot(s.id, state.fileList);
       return tags.length === 0;
     });
 
@@ -182,47 +186,25 @@ export function FileUploadAndLabelNew(props: Props) {
     dispatch({ type: "EXPAND_SLOT", payload: { slotId: nextUntagged?.id } });
   };
 
-  const isCategoryVisible = (category: keyof typeof fileList) => {
+  const isCategoryVisible = (category: keyof typeof state.fileList) => {
     if (props.hideDropZone) return true;
 
     switch (category) {
       case "optional":
-        return !fileList["recommended"].length && !fileList["required"].length;
+        return (
+          !state.fileList["recommended"].length &&
+          !state.fileList["required"].length
+        );
       case "required":
       case "recommended":
-        return fileList[category].length > 0;
+        return state.fileList[category].length > 0;
     }
   };
 
-  // Start removal animation, defer actual state update to onExited
-  const initiateRemoveFile = (slot: FileUploadSlot) => {
-    if (state.expandedSlotId === slot.id) {
-      // TODO: removefile action
-      dispatch({ type: "EXPAND_SLOT", payload: { slotId: undefined } });
-    }
-    setPendingRemoval(slot);
-    setRemovingSlotId(slot.id);
-  };
+  const initiateRemoveFile = (slot: FileUploadSlot) =>
+    dispatch({ type: "INIT_REMOVE_FILE", payload: { slot } });
 
-  // Called when the Collapse exit animation completes
-  const completeRemoveFile = () => {
-    if (!pendingRemoval) return;
-
-    const slot = pendingRemoval;
-    setSlots((prev) => prev.filter((s) => s.file !== slot.file));
-    setFileUploadStatus(`${slot.file.path} was deleted`);
-    const updatedFileList = removeSlots(
-      getTagsForSlot(slot.id, fileList),
-      slot,
-      fileList,
-    );
-    setFileList(updatedFileList);
-
-    dispatch({ type: "REMOVE_DRAWING_NUMBER", payload: { slotId: slot.id } });
-
-    setRemovingSlotId(null);
-    setPendingRemoval(null);
-  };
+  const completeRemoveFile = () => dispatch({ type: "COMPLETE_REMOVE_FILE" });
 
   return (
     <Card
@@ -233,7 +215,7 @@ export function FileUploadAndLabelNew(props: Props) {
         <DropzoneContainer>
           {!props.hideDropZone && (
             <>
-              <FileStatus status={fileUploadStatus} />
+              <FileStatus status={state.fileUploadStatus} />
               <ErrorWrapper
                 error={state.dropzoneError}
                 id={`${props.id}-dropzone`}
@@ -247,7 +229,7 @@ export function FileUploadAndLabelNew(props: Props) {
             </>
           )}
           <UploadList disablePadding>
-            {(Object.keys(fileList) as Array<keyof typeof fileList>)
+            {(Object.keys(state.fileList) as Array<keyof typeof state.fileList>)
               .filter(isCategoryVisible)
               .flatMap((fileListCategory) => [
                 <ListSubheader
@@ -264,7 +246,7 @@ export function FileUploadAndLabelNew(props: Props) {
                     {`${capitalize(fileListCategory)} information`}
                   </Typography>
                 </ListSubheader>,
-                fileList[fileListCategory].map((fileType) => (
+                state.fileList[fileListCategory].map((fileType) => (
                   <ListItem key={fileType.name} disablePadding>
                     <InteractiveFileListItem
                       name={fileType.name}
@@ -289,9 +271,11 @@ export function FileUploadAndLabelNew(props: Props) {
               {state.slots.map((slot) => (
                 <Collapse
                   key={slot.id}
-                  in={removingSlotId !== slot.id}
+                  in={state.removingSlotId !== slot.id}
                   onExited={
-                    removingSlotId === slot.id ? completeRemoveFile : undefined
+                    state.removingSlotId === slot.id
+                      ? completeRemoveFile
+                      : undefined
                   }
                 >
                   <FileAccordionCard
@@ -300,7 +284,7 @@ export function FileUploadAndLabelNew(props: Props) {
                     onExpand={handleExpand}
                     onSave={handleSave}
                     onRemove={initiateRemoveFile}
-                    fileList={fileList}
+                    fileList={state.fileList}
                     setFileList={setFileList}
                     error={state.fileLabelErrors?.[slot.id]}
                     showDrawingNumber={props.showDrawingNumber}
