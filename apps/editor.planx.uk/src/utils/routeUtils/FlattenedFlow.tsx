@@ -13,14 +13,14 @@ interface Props {
 
 /**
  * Helper component to lazily load flattened flow data
- * 
- * Splitting this up from the main flow metdata fetch (settings, theme, etc) allows us to render the basic 
+ *
+ * Splitting this up from the main flow metdata fetch (settings, theme, etc) allows us to render the basic
  * layout asap without a blocking request
- * 
- * Should always be accompanied by a prefetch (non-awaited) request on the route `loader()` function 
+ *
+ * Should always be accompanied by a prefetch (non-awaited) request on the route `loader()` function
  * to ensure we always kick off this long-running request immediately in the background
  */
-export const FlattenedFlow: React.FC<Props> = ({ mode, flowId  }) => {
+export const FlattenedFlow: React.FC<Props> = ({ mode, flowId }) => {
   const { data, isPending, error } = useQuery({
     queryKey: ["flattenedFlowData", mode, flowId],
     queryFn: () =>
@@ -28,12 +28,12 @@ export const FlattenedFlow: React.FC<Props> = ({ mode, flowId  }) => {
         flowId,
         isDraft: mode === "draft",
       }),
-    // Never re-flatted without a refresh
+    // Never re-flatten the flow without a refresh
     staleTime: Infinity,
   });
 
   if (isPending) return <DelayedLoadingIndicator />;
-  if (error || !data ) throw error;
+  if (error || !data) throw error;
 
   updateStoreWithFlowData(data as Store.Flow);
 
