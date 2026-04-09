@@ -56,6 +56,10 @@ export type FileUploadAction =
   | {
       type: "SET_FILE_UPLOAD_STATUS";
       payload: SetStateAction<string | undefined>;
+    }
+  | {
+      type: "SAVE";
+      payload: { slotId: string };
     };
 
 export const fileUploadAndLabelReducer = (
@@ -202,6 +206,26 @@ export const fileUploadAndLabelReducer = (
       return {
         ...state,
         fileUploadStatus: nextStatus,
+      };
+    }
+
+    case "SAVE": {
+      const currentIndex = state.slots.findIndex(
+        ({ id }) => id === action.payload.slotId,
+      );
+
+      // Find the next file that has no tags yet
+      const nextUntagged = state.slots.find((s, i) => {
+        if (i <= currentIndex) return false;
+        const tags = getTagsForSlot(s.id, state.fileList);
+        return tags.length === 0;
+      });
+
+      return {
+        ...state,
+        expandedSlotId: nextUntagged?.id,
+        fileListError: undefined,
+        fileLabelErrors: undefined,
       };
     }
 

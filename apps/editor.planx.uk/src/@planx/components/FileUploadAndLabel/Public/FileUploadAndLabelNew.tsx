@@ -178,19 +178,8 @@ export function FileUploadAndLabelNew(props: Props) {
   const handleExpand = (slotId: string) =>
     dispatch({ type: "EXPAND_SLOT", payload: { slotId } });
 
-  const handleSave = (slotId: string) => {
-    const currentIndex = state.slots.findIndex((s) => s.id === slotId);
-
-    // Find the next file that has no tags yet
-    const nextUntagged = state.slots.find((s, i) => {
-      if (i <= currentIndex) return false;
-      const tags = getTagsForSlot(s.id, state.fileList);
-      return tags.length === 0;
-    });
-
-    // TODO: should this be part of a save "action"?
-    dispatch({ type: "EXPAND_SLOT", payload: { slotId: nextUntagged?.id } });
-  };
+  const handleSave = (slotId: string) =>
+    dispatch({ type: "SAVE", payload: { slotId } });
 
   const isCategoryVisible = (category: keyof typeof state.fileList) => {
     if (props.hideDropZone) return true;
