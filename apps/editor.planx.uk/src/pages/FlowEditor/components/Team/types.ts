@@ -1,5 +1,4 @@
 import { Role, TeamRole, User } from "@opensystemslab/planx-core/types";
-import React, { SetStateAction } from "react";
 
 export const ROLE_LABELS = {
   platformAdmin: "Admin",
@@ -31,7 +30,7 @@ export interface MembersTableProps {
   showRemoveMemberButton?: boolean;
 }
 
-export interface AddNewEditorFormValues {
+export interface UserFormValues {
   email: string;
   firstName: string;
   lastName: string;
@@ -40,13 +39,14 @@ export interface AddNewEditorFormValues {
 
 export type ModalState =
   | { action: "closed" }
-  | { action: "add"; member?: never }
+  | { action: "add" }
   | { action: "edit"; member: TeamMember }
   | { action: "remove"; member: TeamMember };
 
 type SharedModalProps = {
-  showModal: boolean;
-  setShowModal: React.Dispatch<SetStateAction<boolean>>;
+  onClose: () => void;
 };
 
-export type EditorModalProps = SharedModalProps & ModalState;
+export type AddUserModalProps = SharedModalProps;
+export type EditUserModalProps = SharedModalProps & { member: TeamMember };
+export type RemoveUserModalProps = SharedModalProps & { member: TeamMember };

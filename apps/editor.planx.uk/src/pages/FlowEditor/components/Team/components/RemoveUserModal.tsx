@@ -9,20 +9,17 @@ import { useToast } from "hooks/useToast";
 import React from "react";
 
 import { REMOVE_TEAM_MEMBER } from "../queries";
-import { EditorModalProps } from "../types";
+import type { RemoveUserModalProps } from "../types";
 
-type Props = Extract<EditorModalProps, { action: "remove" }>;
-
-export const RemoveUserModal: React.FC<Props> = ({
-  setShowModal,
-  showModal,
+export const RemoveUserModal: React.FC<RemoveUserModalProps> = ({
+  onClose,
   member,
 }) => {
   const toast = useToast();
 
   const [removeUser, { loading }] = useMutation(REMOVE_TEAM_MEMBER, {
     onCompleted: () => {
-      setShowModal(false);
+      onClose();
       toast.success(
         `Successfully removed ${member.firstName} ${member.lastName}`,
       );
@@ -42,8 +39,8 @@ export const RemoveUserModal: React.FC<Props> = ({
     <Dialog
       aria-labelledby="dialog-heading"
       data-testid={"modal-remove-user"}
-      open={showModal || false}
-      onClose={() => setShowModal(false)}
+      open
+      onClose={onClose}
       fullWidth
     >
       <DialogTitle variant="h3" component="h1" id="dialog-heading">
@@ -65,7 +62,7 @@ export const RemoveUserModal: React.FC<Props> = ({
           color="secondary"
           type="reset"
           sx={{ backgroundColor: "background.default" }}
-          onClick={() => setShowModal(false)}
+          onClick={onClose}
           data-testid="modal-cancel-button"
         >
           Cancel

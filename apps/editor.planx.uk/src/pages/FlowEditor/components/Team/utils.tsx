@@ -4,10 +4,6 @@ import { TeamMember } from "./types";
 
 export const hasEmailPresent = (member: TeamMember) => !!member.email;
 
-export const filterByEmailPresent = (members: TeamMember[]): TeamMember[] => {
-  return members.filter(hasEmailPresent);
-};
-
 export const userToTeamMember = (user: User): TeamMember => ({
   firstName: user.firstName,
   lastName: user.lastName,
