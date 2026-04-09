@@ -29,7 +29,7 @@ insert_permissions:
     permission:
       check: {}
       columns:
-        - default_email
+        - is_default
         - id
         - address
         - team_id
@@ -45,7 +45,7 @@ insert_permissions:
               - role:
                   _eq: teamEditor
       columns:
-        - default_email
+        - is_default
         - id
         - address
         - team_id
@@ -54,7 +54,7 @@ select_permissions:
   - role: api
     permission:
       columns:
-        - default_email
+        - is_default
         - id
         - address
         - team_id
@@ -63,7 +63,7 @@ select_permissions:
   - role: platformAdmin
     permission:
       columns:
-        - default_email
+        - is_default
         - id
         - address
         - team_id
@@ -77,7 +77,7 @@ select_permissions:
   - role: teamEditor
     permission:
       columns:
-        - default_email
+        - is_default
         - id
         - address
         - team_id
@@ -94,7 +94,7 @@ update_permissions:
   - role: platformAdmin
     permission:
       columns:
-        - default_email
+        - is_default
         - id
         - address
       filter: {}
@@ -103,7 +103,7 @@ update_permissions:
   - role: teamEditor
     permission:
       columns:
-        - default_email
+        - is_default
         - id
         - address
       filter: {}
@@ -113,12 +113,12 @@ delete_permissions:
   - role: platformAdmin
     permission:
       filter:
-        default_email:
+        is_default:
           _eq: false
     comment: ""
   - role: teamEditor
     permission:
       filter:
-        default_email:
+        is_default:
           _eq: false
     comment: ""
