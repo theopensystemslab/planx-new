@@ -7,35 +7,30 @@ import Tooltip from "@mui/material/Tooltip";
 import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import React, { useState } from "react";
 
-import { useStore } from "../../FlowEditor/lib/store";
 import { usePinFlow, useUnpinFlow } from "./FlowCard/queries";
 
 interface Props {
   flowId: string;
+  userId: number;
   isPinnedByCurrentUser: boolean;
   updateFlow: (flow: FlowSummary) => void;
 }
 
 export const FlowPinButton = ({
   flowId,
+  userId,
   isPinnedByCurrentUser,
   updateFlow,
 }: Props) => {
-  const user = useStore((state) => state.user);
-
   const [pinFlow, { loading: isPinLoading }] = usePinFlow({
     flowId,
-    userId: user?.id,
+    userId,
   });
   const [unpinFlow, { loading: isUnpinLoading }] = useUnpinFlow({
     flowId,
   });
 
   const handlePinFlow = async () => {
-    if (!user) {
-      return;
-    }
-
     const result = await pinFlow();
     const updatedFlow = result.data?.insert_user_pinned_flows_one?.flow;
     if (updatedFlow) {
@@ -100,7 +95,6 @@ export const FlowPinButton = ({
             size="small"
             onClick={handlePinFlow}
             aria-label="Pin flow"
-            disabled={!user}
             sx={{ borderRadius: "50%" }}
           >
             <PushPinOutlineIcon

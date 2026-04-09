@@ -91,7 +91,10 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
   showDetails,
   updateFlow,
 }) => {
-  const [canUserEditTeam] = useStore((state) => [state.canUserEditTeam]);
+  const [canUserEditTeam, userId] = useStore((state) => [
+    state.canUserEditTeam,
+    state.user?.id,
+  ]);
 
   const {
     isSubmissionService,
@@ -170,11 +173,14 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
           </TableCell>
           <TableCell>
             <Box onClick={(e) => e.stopPropagation()}>
-              <FlowPinButton
-                flowId={flow.id}
-                isPinnedByCurrentUser={flow.pinnedFlows.length > 0}
-                updateFlow={updateFlow}
-              />
+              {userId && (
+                <FlowPinButton
+                  flowId={flow.id}
+                  userId={userId}
+                  isPinnedByCurrentUser={flow.pinnedFlows.length > 0}
+                  updateFlow={updateFlow}
+                />
+              )}
             </Box>
           </TableCell>
           <FlowActionsCell

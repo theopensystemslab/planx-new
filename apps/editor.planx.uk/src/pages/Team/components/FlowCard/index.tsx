@@ -29,9 +29,10 @@ interface Props {
 }
 
 const FlowCard: React.FC<Props> = ({ flow, refreshFlows, showDetails, updateFlow }) => {
-  const [canUserEditTeam, teamSlug] = useStore((state) => [
+  const [canUserEditTeam, teamSlug, userId] = useStore((state) => [
     state.canUserEditTeam,
     state.teamSlug,
+    state.user?.id,
   ]);
 
   const {
@@ -93,12 +94,14 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows, showDetails, updateFlow
               </Typography>
               <LinkSubText>{displayFormatted}</LinkSubText>
             </Stack>
-
-            <FlowPinButton
-              isPinnedByCurrentUser={isPinnedByCurrentUser}
-              flowId={flow.id}
-              updateFlow={updateFlow}
-            />
+            {userId && (
+              <FlowPinButton
+                flowId={flow.id}
+                userId={userId}
+                isPinnedByCurrentUser={isPinnedByCurrentUser}
+                updateFlow={updateFlow}
+              />
+            )}
           </Stack>
           {showDetails && (
             <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
