@@ -30,6 +30,7 @@ import * as northumberland from "./local_authorities/metadata/northumberland.js"
 import * as southGloucestershire from "./local_authorities/metadata/southGloucestershire.js";
 import * as southwark from "./local_authorities/metadata/southwark.js";
 import * as stAlbans from "./local_authorities/metadata/stAlbans.js";
+import * as stoke from "./local_authorities/metadata/stoke.js";
 import * as tewkesbury from "./local_authorities/metadata/tewkesbury.js";
 import * as westBerkshire from "./local_authorities/metadata/westBerkshire.js";
 
@@ -66,6 +67,7 @@ export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   "south-gloucestershire": southGloucestershire,
   southwark,
   "st-albans": stAlbans,
+  "stoke-on-trent": stoke,
   tewkesbury,
   "west-berkshire": westBerkshire,
 };
