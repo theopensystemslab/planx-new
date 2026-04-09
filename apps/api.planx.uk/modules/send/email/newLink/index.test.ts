@@ -104,19 +104,19 @@ describe("send a format new download link via email", () => {
       data: {
         flowsByPK: {
           submissionEmailId: null,
-          submissionIntegration: {
-            submissionEmail: null,
+          submissionEmail: {
+            address: null,
           },
         },
       },
     });
 
     queryMock.mockQuery({
-      name: "GetDefaultSubmissionIntegration",
+      name: "GetDefaultSubmissionEmail",
       data: {
-        submissionIntegrations: [
+        submissionEmails: [
           {
-            submissionEmail: null,
+            address: null,
           },
         ],
       },
@@ -192,8 +192,8 @@ describe("send a format new download link via email", () => {
       data: {
         flowsByPK: {
           submissionEmailId: "fb75d140-cddf-4405-af7b-c93ec2ecfc03",
-          submissionIntegration: {
-            submissionEmail: NOTIFY_TEST_EMAIL,
+          submissionEmail: {
+            address: NOTIFY_TEST_EMAIL,
           },
         },
       },

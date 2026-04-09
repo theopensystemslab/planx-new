@@ -17,15 +17,15 @@ export const sendNewDownloadLink: Controller = async (req, res, next) => {
     const token = await createAccessToken(sessionId, session.submittedAt);
     if (!token) return res.status(409).json({ error: "LINK_ALREADY_EMAILED" });
 
-    const submissionEmail = await getSubmissionEmail(
+    const submissionEmailAddress = await getSubmissionEmail(
       session.flow.team.id,
       session.flow.id,
     );
-    if (!submissionEmail)
+    if (!submissionEmailAddress)
       return res.status(400).json({ error: "EMAIL_NOT_CONFIGURED" });
 
     await emailNewDownloadLink({
-      submissionEmail,
+      submissionEmailAddress,
       sessionId,
       token,
       serviceName: session.flow.name,

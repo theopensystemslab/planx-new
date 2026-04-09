@@ -115,8 +115,8 @@ describe(`sending an application by email to a planning office`, () => {
       data: {
         flowsByPK: {
           submissionEmailId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
-          submissionIntegration: {
-            submissionEmail: "planning.office.example@council.gov.uk",
+          submissionEmail: {
+            address: "planning.office.example@council.gov.uk",
           },
         },
       },
@@ -193,8 +193,8 @@ describe(`sending an application by email to a planning office`, () => {
       data: {
         flowsByPK: {
           submissionEmailId: null,
-          submissionIntegration: {
-            submissionEmail: null,
+          submissionEmail: {
+            address: null,
           },
         },
       },
@@ -202,11 +202,11 @@ describe(`sending an application by email to a planning office`, () => {
     });
 
     queryMock.mockQuery({
-      name: "GetDefaultSubmissionIntegration",
+      name: "GetDefaultSubmissionEmail",
       data: {
-        submissionIntegrations: [
+        submissionEmails: [
           {
-            submissionEmail: null,
+            address: null,
           },
         ],
       },
