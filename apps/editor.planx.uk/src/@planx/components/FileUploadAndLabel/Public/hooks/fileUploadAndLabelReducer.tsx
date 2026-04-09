@@ -58,9 +58,10 @@ export type FileUploadAction =
       payload: SetStateAction<string | undefined>;
     }
   | {
-      type: "SAVE";
+      type: "SAVE_SLOT";
       payload: { slotId: string };
-    };
+    }
+  | { type: "SET_FILE_LIST"; payload: SetStateAction<FileList> };
 
 export const fileUploadAndLabelReducer = (
   state: FileUploadState,
@@ -209,7 +210,7 @@ export const fileUploadAndLabelReducer = (
       };
     }
 
-    case "SAVE": {
+    case "SAVE_SLOT": {
       const currentIndex = state.slots.findIndex(
         ({ id }) => id === action.payload.slotId,
       );
@@ -224,6 +225,20 @@ export const fileUploadAndLabelReducer = (
       return {
         ...state,
         expandedSlotId: nextUntagged?.id,
+        fileListError: undefined,
+        fileLabelErrors: undefined,
+      };
+    }
+
+    case "SET_FILE_LIST": {
+      const nextFileList =
+        typeof action.payload === "function"
+          ? action.payload(state.fileList)
+          : action.payload;
+
+      return {
+        ...state,
+        fileList: nextFileList,
         fileListError: undefined,
         fileLabelErrors: undefined,
       };

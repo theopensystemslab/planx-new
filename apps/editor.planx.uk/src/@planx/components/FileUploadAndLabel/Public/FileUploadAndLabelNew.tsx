@@ -10,8 +10,7 @@ import { PublicProps } from "@planx/components/shared/types";
 import { PrintButton } from "components/PrintButton";
 import capitalize from "lodash/capitalize";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useCallback, useEffect, useReducer, useState } from "react";
-import { usePrevious } from "react-use";
+import React, { useCallback, useEffect, useReducer } from "react";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
@@ -22,10 +21,10 @@ import { Dropzone } from "../../shared/PrivateFileUpload/Dropzone";
 import { FileStatus } from "../../shared/PrivateFileUpload/FileStatus";
 import {
   createFileList,
+  type FileList,
   FileUploadAndLabel,
   generatePayload,
   getRecoveredData,
-  getTagsForSlot,
 } from "../model";
 import {
   fileLabelSchema,
@@ -78,6 +77,13 @@ export function FileUploadAndLabelNew(props: Props) {
     [],
   );
 
+  const handleSetFileList = useCallback(
+    (updater: React.SetStateAction<FileList>) => {
+      dispatch({ type: "SET_FILE_LIST", payload: updater });
+    },
+    [],
+  );
+
   useEffect(() => {
     const passport = useStore.getState().computePassport();
     const initialFileList = createFileList({
@@ -118,18 +124,6 @@ export function FileUploadAndLabelNew(props: Props) {
     },
     [],
   );
-
-  // Track number of slots and auto-expand newly uploaded files
-  const previousSlotCount = usePrevious(state.slots.length);
-  useEffect(() => {
-    if (previousSlotCount === undefined) return;
-
-    // Only stop auto-expand on initial return to node
-    if (isUserReturningToNode) return setIsUserReturningToNode(false);
-  }, [state.slots.length]);
-
-  const [isUserReturningToNode, setIsUserReturningToNode] =
-    useState<boolean>(false);
 
   const validateAndSubmit = () => {
     Promise.all([
@@ -179,7 +173,7 @@ export function FileUploadAndLabelNew(props: Props) {
     dispatch({ type: "EXPAND_SLOT", payload: { slotId } });
 
   const handleSave = (slotId: string) =>
-    dispatch({ type: "SAVE", payload: { slotId } });
+    dispatch({ type: "SAVE_SLOT", payload: { slotId } });
 
   const isCategoryVisible = (category: keyof typeof state.fileList) => {
     if (props.hideDropZone) return true;
@@ -280,7 +274,7 @@ export function FileUploadAndLabelNew(props: Props) {
                     onSave={handleSave}
                     onRemove={initiateRemoveFile}
                     fileList={state.fileList}
-                    setFileList={setFileList}
+                    setFileList={handleSetFileList}
                     error={state.fileLabelErrors?.[slot.id]}
                     showDrawingNumber={props.showDrawingNumber}
                     drawingNumber={state.drawingNumbers[slot.id]}
