@@ -289,11 +289,18 @@ async function go(
     if (a4s && formattedResult["articleFour"]?.value) {
       formattedResult["articleFour"]?.data?.forEach((entity: any) => {
         Object.keys(a4s)?.forEach((key) => {
+          // For Brent LPA, as they have shared article-4-direction values across multiple granular constraints that we can identify via refrence
+          const brentSkip =
+            localAuthority === "brent" &&
+            entity?.["article-4-direction"] === "A4D_CA" &&
+            Object.values(a4s).includes(entity.reference);
+
           if (
             // these are various ways we link source data to granular planx values (see local_authorities/metadata for specifics)
             entity.name.replace(/\r?\n|\r/g, " ") === a4s[key] ||
             entity.reference === a4s[key] ||
-            entity?.["article-4-direction"] === a4s[key] ||
+            (entity?.["article-4-direction"] === a4s[key] &&
+              !brentSkip) ||
             entity?.notes === a4s[key] ||
             entity?.description?.startsWith(a4s[key]) ||
             formattedResult[key]?.value // if this granular var is already true, make sure it remains true
