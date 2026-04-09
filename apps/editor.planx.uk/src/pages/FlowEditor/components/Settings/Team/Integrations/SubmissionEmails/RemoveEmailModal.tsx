@@ -12,7 +12,7 @@ import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
-import { DELETE_TEAM_SUBMISSION_INTEGRATIONS } from "./queries";
+import { DELETE_TEAM_SUBMISSION_EMAILS } from "./queries";
 import { EditorModalProps, SubmissionEmailWithFlows } from "./types";
 
 export const RemoveEmailModal = ({
@@ -21,27 +21,27 @@ export const RemoveEmailModal = ({
   refetch,
 }: EditorModalProps) => {
   const toast = useToast();
-  const [deleteEmail] = useMutation(DELETE_TEAM_SUBMISSION_INTEGRATIONS);
+  const [deleteEmail] = useMutation(DELETE_TEAM_SUBMISSION_EMAILS);
   const { slug: teamSlug } = useStore((state) => state.getTeam());
 
   if (!modalState || modalState.type !== "delete") {
     throw new Error("RemoveEmailModal requires a delete modalState");
   }
-  const usedFlows = modalState.integration.flows;
+  const usedFlows = modalState.email.flows;
   const deletable = usedFlows.length === 0;
 
   const handleRemoveEmail = async (
-    submissionIntegration: SubmissionEmailWithFlows,
+    submissionEmail: SubmissionEmailWithFlows,
   ) => {
-    if (!submissionIntegration?.id) {
+    if (!submissionEmail?.id) {
       return;
     }
     try {
       await deleteEmail({
-        variables: { submissionEmailId: submissionIntegration.id },
+        variables: { submissionEmailId: submissionEmail.id },
         optimisticResponse: {
-          delete_submission_integrations: {
-            returning: [{ ...submissionIntegration }],
+          delete_submission_emails: {
+            returning: [{ ...submissionEmail }],
           },
         },
       });
@@ -70,7 +70,7 @@ export const RemoveEmailModal = ({
           {deletable ? (
             <Typography mb={2}>
               Are you sure you want to remove the email address "
-              {modalState.integration.submissionEmail}" from receiving
+              {modalState.email.address}" from receiving
               submissions?
             </Typography>
           ) : (
@@ -110,7 +110,7 @@ export const RemoveEmailModal = ({
           variant="contained"
           color="warning"
           onClick={() =>
-            modalState.integration && handleRemoveEmail(modalState.integration)
+            modalState.email && handleRemoveEmail(modalState.email)
           }
           data-testid="confirm-remove-email-button"
           disabled={!deletable}
