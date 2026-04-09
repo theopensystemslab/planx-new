@@ -194,20 +194,19 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
               {isTrial && <InfoChip label="Trial account" />}
               {showAddFlowButton && <AddFlow />}
             </Box>
+            {teamHasFlows && (
+              <SearchBox<FlowSummary>
+                records={flows}
+                setRecords={setSearchedFlows}
+                searchKey={["name", "slug"]}
+                clearSearch={shouldClearSearch}
+              />
+            )}
           </Box>
-          {teamHasFlows && (
-            <SearchBox<FlowSummary>
-              records={flows}
-              setRecords={setSearchedFlows}
-              searchKey={["name", "slug"]}
-              clearSearch={shouldClearSearch}
-            />
+          {hasFeatureFlag("ARCHIVE_VIEW") && (
+            <TeamLayout flowView={flowView} setFlowView={setFlowView} />
           )}
         </Box>
-
-        {hasFeatureFlag("ARCHIVE_VIEW") && (
-          <TeamLayout flowView={flowView} setFlowView={setFlowView} />
-        )}
 
         {flowView === "flows" && (
           <Flows
