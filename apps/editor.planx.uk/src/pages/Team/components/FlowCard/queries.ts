@@ -1,4 +1,6 @@
-import { gql } from "@apollo/client";
+import { useMutation } from "@apollo/client";
+import gql from "graphql-tag";
+import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 
 // this is copied from the getFlows query in FlowEditor/lib/store/editor.ts - might be worth re-using the fragment there as well?
 const FLOW_SUMMARY_FIELDS = gql`
@@ -63,3 +65,30 @@ export const UNPIN_FLOW = gql`
     }
   }
 `;
+
+interface PinFlowMutation {
+  insert_user_pinned_flows_one: { flow: FlowSummary };
+}
+
+interface UnpinFlowMutation {
+  delete_user_pinned_flows: { returning: { flow: FlowSummary }[] };
+}
+
+interface PinFlowVars {
+  flowId: string;
+  userId: number;
+}
+
+interface UnpinFlowVars {
+  flowId: string;
+}
+
+export const usePinFlow = (variables: PinFlowVars) =>
+  useMutation<PinFlowMutation, PinFlowVars>(PIN_FLOW, {
+    variables,
+  });
+
+export const useUnpinFlow = (variables: UnpinFlowVars) =>
+  useMutation<UnpinFlowMutation, UnpinFlowVars>(UNPIN_FLOW, {
+    variables,
+  });
