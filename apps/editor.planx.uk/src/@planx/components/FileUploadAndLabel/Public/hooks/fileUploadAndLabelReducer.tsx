@@ -52,7 +52,11 @@ export type FileUploadAction =
     }
   | { type: "SET_SLOTS"; payload: SetStateAction<FileUploadSlot[]> }
   | { type: "INIT_REMOVE_FILE"; payload: { slot: FileUploadSlot } }
-  | { type: "COMPLETE_REMOVE_FILE" };
+  | { type: "COMPLETE_REMOVE_FILE" }
+  | {
+      type: "SET_FILE_UPLOAD_STATUS";
+      payload: SetStateAction<string | undefined>;
+    };
 
 export const fileUploadAndLabelReducer = (
   state: FileUploadState,
@@ -186,6 +190,18 @@ export const fileUploadAndLabelReducer = (
         fileListError: newSlots.length === 0 ? undefined : state.fileListError,
         fileLabelErrors:
           newSlots.length === 0 ? undefined : state.fileLabelErrors,
+      };
+    }
+
+    case "SET_FILE_UPLOAD_STATUS": {
+      const nextStatus =
+        typeof action.payload === "function"
+          ? action.payload(state.fileUploadStatus)
+          : action.payload;
+
+      return {
+        ...state,
+        fileUploadStatus: nextStatus,
       };
     }
 

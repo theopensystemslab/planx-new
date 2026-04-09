@@ -26,7 +26,6 @@ import {
   generatePayload,
   getRecoveredData,
   getTagsForSlot,
-  removeSlots,
 } from "../model";
 import {
   fileLabelSchema,
@@ -68,6 +67,13 @@ export function FileUploadAndLabelNew(props: Props) {
   const handleSetSlots = useCallback(
     (updater: React.SetStateAction<FileUploadSlot[]>) => {
       dispatch({ type: "SET_SLOTS", payload: updater });
+    },
+    [],
+  );
+
+  const handleSetFileUploadStatus = useCallback(
+    (updater: React.SetStateAction<string | undefined>) => {
+      dispatch({ type: "SET_FILE_UPLOAD_STATUS", payload: updater });
     },
     [],
   );
@@ -223,7 +229,7 @@ export function FileUploadAndLabelNew(props: Props) {
                 <Dropzone
                   slots={state.slots}
                   setSlots={handleSetSlots}
-                  setFileUploadStatus={setFileUploadStatus}
+                  setFileUploadStatus={handleSetFileUploadStatus}
                 />
               </ErrorWrapper>
             </>
