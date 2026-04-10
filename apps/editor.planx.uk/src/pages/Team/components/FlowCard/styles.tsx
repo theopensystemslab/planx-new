@@ -39,7 +39,7 @@ export const CardContent = styled(Box)(({ theme }) => ({
   width: "100%",
 }));
 
-export const DashboardLink = styled(CustomLink)(() => ({
+export const FlowCardLink = styled(CustomLink)(() => ({
   position: "absolute",
   left: 0,
   top: 0,
