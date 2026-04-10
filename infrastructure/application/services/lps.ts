@@ -6,7 +6,7 @@ import * as cloudflare from "@pulumi/cloudflare";
 
 import { createCdn, usEast1 } from "../utils";
 
-// The @pulumi/cloudflare package doesn't generate errors so this is here just to create a warning in case the CloudFlare API token is missing.
+// The @pulumi/cloudflare package doesn't generate errors so this is here just to create a warning in case the Cloudflare API token is missing.
 new pulumi.Config("cloudflare").requireSecret("apiToken");
 
 const env = pulumi.getStack();

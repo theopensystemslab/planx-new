@@ -6,16 +6,16 @@ import * as tldjs from "tldjs";
 
 import {
   createAllIpv4EgressRule,
-  createAllIpv4IngressRule,
   createDestinationSgEgressRule,
   createSourceSgIngressRule,
 } from "../../common/utils";
 import type { SetupLoadBalancer } from "../types";
-import { addRedirectToCloudFlareListenerRule } from "./addListenerRule";
+import { createCloudflareIngressRules } from "./createCloudflareIngressRule";
 
 export const setupLoadBalancer = async ({
   serviceName,
   containerPort,
+  certificateArn,
   vpcId,
   publicSubnetIds,
   domain,
@@ -38,8 +38,8 @@ export const setupLoadBalancer = async ({
     vpcId: vpcId,
   });
 
-  // LB SG accepts traffic from open internet, and allows outbound traffic only to Fargate service SG
-  createAllIpv4IngressRule(lbSecurityGroup.id, `${serviceName}-lb`);
+  // LB SG accepts traffic only from Cloudflare, and allows outbound traffic only to Fargate service SG
+  await createCloudflareIngressRules(lbSecurityGroup.id, `${serviceName}-lb`);
   createDestinationSgEgressRule(lbSecurityGroup.id, `${serviceName}-lb`, [containerPort], serviceSecurityGroup.id);
   // SG for the Fargate service accepts inbound traffic only from the LB SG, and allows outbound traffic to open internet
   createSourceSgIngressRule(serviceSecurityGroup.id, `${serviceName}-service`, [containerPort], lbSecurityGroup.id);
@@ -64,18 +64,31 @@ export const setupLoadBalancer = async ({
     // NB. VPC to be which the ALB belongs is conveyed by the security group
     securityGroups: [lbSecurityGroup.id],
     idleTimeout: idleTimeout ?? 60,
-    listener: {
-      defaultActions: [{
-        type: "forward",
-        targetGroupArn: targetGroup.arn,
-      }],
-    },
-  });
-
-  addRedirectToCloudFlareListenerRule({
-    serviceName,
-    listenerArn: loadBalancer.listeners.apply(ls => ls![0].arn),
-    domain,
+    listeners: [
+      {
+        port: 443,
+        protocol: "HTTPS",
+        certificateArn,
+        sslPolicy: "ELBSecurityPolicy-TLS13-1-2-Res-PQ-2025-09",
+        defaultActions: [{
+          type: "forward",
+          targetGroupArn: targetGroup.arn,
+        }],
+      },
+      // force http connections to upgrade to https
+      {
+        port: 80,
+        protocol: "HTTP",
+        defaultActions: [{
+          type: "redirect",
+          redirect: {
+            port: "443",
+            protocol: "HTTPS",
+            statusCode: "HTTP_301",
+          },
+        }],
+      },
+    ],
   });
 
   return {
