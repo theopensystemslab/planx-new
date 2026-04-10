@@ -25,9 +25,8 @@ export const Route = createFileRoute("/(auth)/logout")({
     // Clear cookies
     clearCookie("auth");
     clearCookie("jwt");
-
-    // Clear localStorage
-    localStorage.removeItem("jwt");
+    clearCookie("session");
+    clearCookie("session.sig");
 
     // Must throw redirect to trigger navigation
     throw redirect({ to: "/login", search: {}, replace: true });
