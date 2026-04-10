@@ -2,12 +2,12 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-
 import { Switch } from "ui/shared/Switch";
+
 import SettingsFormContainer from "../../../shared/SettingsForm";
-import { GetTeamConstraintsData, TeamConstraintsFormValues, UpdateTeamConstraintsVariables } from "./types";
 import { GET_TEAM_CONSTRAINTS, UPDATE_TEAM_CONSTRAINTS } from "./queries";
 import { defaultValues, validationSchema } from "./schema";
+import { GetTeamConstraintsData, TeamConstraintsFormValues, UpdateTeamConstraintsVariables } from "./types";
 
 const Constraints: React.FC = () => {
   const [teamId] = useStore((state) => [
