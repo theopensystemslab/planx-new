@@ -5,14 +5,14 @@ object_relationships:
   - name: creator
     using:
       foreign_key_constraint_on: creator_id
-  - name: submission_integration
+  - name: submission_email
     using:
       manual_configuration:
         column_mapping:
           submission_email_id: id
         insertion_order: null
         remote_table:
-          name: submission_integrations
+          name: submission_emails
           schema: public
   - name: team
     using:

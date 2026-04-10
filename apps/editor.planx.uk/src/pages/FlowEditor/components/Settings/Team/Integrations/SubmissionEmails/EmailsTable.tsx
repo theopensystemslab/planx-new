@@ -16,7 +16,7 @@ import { AddButton } from "ui/editor/AddButton";
 
 import { StyledTableRow } from "../../../../Team/styles";
 import { EmailsUpsertModal } from "./EmailsUpsertModal";
-import { GET_TEAM_SUBMISSION_INTEGRATIONS } from "./queries";
+import { GET_TEAM_SUBMISSION_EMAILS } from "./queries";
 import { RemoveEmailModal } from "./RemoveEmailModal";
 import {
   GetSubmissionEmails,
@@ -59,14 +59,14 @@ const EmailsTableContent = () => {
   const teamId = useStore((state) => state.teamId);
 
   const { data, loading, refetch } = useQuery<GetSubmissionEmails>(
-    GET_TEAM_SUBMISSION_INTEGRATIONS,
+    GET_TEAM_SUBMISSION_EMAILS,
     {
       variables: { teamId },
       fetchPolicy: "network-only",
     },
   );
 
-  const submissionIntegrations = data?.submissionIntegrations;
+  const submissionEmails = data?.submissionEmails;
 
   const [modalState, setModalState] = useState<ModalState>(null);
 
@@ -81,20 +81,20 @@ const EmailsTableContent = () => {
     setModalState({
       type: "upsert",
       actionType: "edit",
-      integration: email,
+      email: email,
     });
   };
 
   const deleteEmail = (email: SubmissionEmailWithFlows) => {
     setModalState({
       type: "delete",
-      integration: email,
+      email: email,
     });
   };
 
   if (loading) return <div>Loading...</div>;
 
-  if (!submissionIntegrations || submissionIntegrations.length === 0) {
+  if (!submissionEmails || submissionEmails.length === 0) {
     return (
       <>
         <Table>
@@ -137,28 +137,28 @@ const EmailsTableContent = () => {
             </StyledTableRow>
           </TableHead>
           <TableBody>
-            {submissionIntegrations.map(
-              (submissionIntegration: SubmissionEmailWithFlows) => (
-                <StyledTableRow key={submissionIntegration.id}>
+            {submissionEmails.map(
+              (submissionEmail: SubmissionEmailWithFlows) => (
+                <StyledTableRow key={submissionEmail.id}>
                   <TableCell sx={{ wordWrap: "break-word", maxWidth: "280px" }}>
-                    {submissionIntegration.submissionEmail}
+                    {submissionEmail.address}
                   </TableCell>
                   <TableCell align="center">
-                    {submissionIntegration.defaultEmail && (
+                    {submissionEmail.isDefault && (
                       <CheckIcon color="primary" />
                     )}
                   </TableCell>
                   <TableCell>
                     <EditEmailButton
-                      onClick={() => handleEditEmail(submissionIntegration)}
+                      onClick={() => handleEditEmail(submissionEmail)}
                     >
                       Edit
                     </EditEmailButton>
                   </TableCell>
                   <TableCell>
-                    {!submissionIntegration.defaultEmail && (
+                    {!submissionEmail.isDefault && (
                       <RemoveEmailButton
-                        onClick={() => deleteEmail(submissionIntegration)}
+                        onClick={() => deleteEmail(submissionEmail)}
                       >
                         Remove
                       </RemoveEmailButton>
@@ -180,8 +180,8 @@ const EmailsTableContent = () => {
           modalState={modalState}
           setModalState={setModalState}
           refetch={refetch}
-          currentEmails={submissionIntegrations.map(
-            (email) => email.submissionEmail,
+          currentEmails={submissionEmails.map(
+            (email) => email.address,
           )}
         />
       )}
