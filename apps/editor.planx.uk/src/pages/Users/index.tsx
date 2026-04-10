@@ -18,6 +18,9 @@ export const UserManagement = () => {
 
   if (error) return <ErrorSummary message={error.message} />; 
 
+  // Filtering out active analysts allows the MembersTable to responsively update when an analyst is removed
+  const activeAnalysts = analysts.filter(({ email }) => email);
+
   return (
     <Container maxWidth="contentWrap">
       <SettingsSection data-testid="team-members">
@@ -28,10 +31,10 @@ export const UserManagement = () => {
           Analysts have access to global dashboards and analytics, but cannot create, update, or delete flows.
         </Typography>
         {loading && <DelayedLoadingIndicator />}
-        {analysts &&
+        {activeAnalysts &&
         <>
           <MembersTable
-            members={analysts}
+            members={activeAnalysts}
             showEditMemberButton
             showRemoveMemberButton
           />

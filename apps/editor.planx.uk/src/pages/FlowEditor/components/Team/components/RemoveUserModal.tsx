@@ -29,17 +29,6 @@ export const RemoveUserModal: React.FC<RemoveUserModalProps> = ({
         `Failed to remove ${member.firstName} ${member.lastName}, try again`,
       );
     },
-    // Optimistically update the Apollo cache
-    // Required as the list of users can come from many different queries (GetUsersForTeam, GetAnalysts)
-    update(cache) {
-      const cacheId = cache.identify({
-        __typename: "users",
-        id: member.id
-      });
-
-      cache.evict({ id: cacheId });
-      cache.gc();
-    },
   });
 
   const handleClick = () => {
