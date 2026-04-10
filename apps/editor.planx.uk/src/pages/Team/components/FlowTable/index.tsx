@@ -15,6 +15,7 @@ import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 import { useStore } from "../../../FlowEditor/lib/store";
 import FlowMenu from "../FlowMenu";
+import { FlowPinButton } from "../FlowPinButton";
 import { FlowTemplateIndicator } from "../FlowTemplateIndicator";
 import { useFlowDates } from "../hooks/useFlowDates";
 import { useFlowMetadata } from "../hooks/useFlowMetadata";
@@ -33,12 +34,14 @@ interface FlowTableProps {
   teamId: number;
   teamSlug: string;
   refreshFlows: () => void;
+  updateFlow: (flow: FlowSummary) => void;
 }
 
 export const FlowTable: React.FC<FlowTableProps> = ({
   flows,
   teamSlug,
   refreshFlows,
+  updateFlow,
 }) => {
   const { headerText } = useFlowSortDisplay();
 
@@ -50,6 +53,7 @@ export const FlowTable: React.FC<FlowTableProps> = ({
           <FlowStatusCell>Online status</FlowStatusCell>
           <FlowStatusCell>Flow type</FlowStatusCell>
           <TableCell>{headerText}</TableCell>
+          <TableCell>Pinned</TableCell>
           <FlowActionsCell align="center">Actions</FlowActionsCell>
         </TableRow>
       </StyledTableHead>
@@ -60,6 +64,7 @@ export const FlowTable: React.FC<FlowTableProps> = ({
             flow={flow}
             teamSlug={teamSlug}
             refreshFlows={refreshFlows}
+            updateFlow={updateFlow}
           />
         ))}
       </TableBody>
@@ -71,16 +76,21 @@ interface FlowTableRowProps {
   flow: FlowSummary;
   teamSlug: string;
   refreshFlows: () => void;
+  updateFlow: (flow: FlowSummary) => void;
 }
 
 const FlowTableRow: React.FC<FlowTableRowProps> = ({
   flow,
   teamSlug,
   refreshFlows,
+  updateFlow,
 }) => {
   const router = useRouter();
   const navigate = useNavigate();
-  const [canUserEditTeam] = useStore((state) => [state.canUserEditTeam]);
+  const [canUserEditTeam, userId] = useStore((state) => [
+    state.canUserEditTeam,
+    state.user?.id,
+  ]);
 
   const {
     isSubmissionService,
@@ -174,6 +184,18 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
             <Typography variant="body2" color="textSecondary">
               by {displayActor}
             </Typography>
+          )}
+        </Box>
+      </TableCell>
+      <TableCell>
+        <Box onClick={(e) => e.stopPropagation()}>
+          {userId && (
+            <FlowPinButton
+              flowId={flow.id}
+              userId={userId}
+              isPinnedByCurrentUser={flow.pinnedFlows.length > 0}
+              updateFlow={updateFlow}
+            />
           )}
         </Box>
       </TableCell>
