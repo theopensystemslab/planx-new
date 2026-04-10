@@ -51,7 +51,6 @@ export const AddAnalystModal: React.FC<Props> = ({ onClose }) => {
   return (
     <Dialog
       aria-labelledby="dialog-heading"
-      data-testid="dialog-add-user"
       open
       onClose={onClose}
     >
@@ -68,7 +67,7 @@ export const AddAnalystModal: React.FC<Props> = ({ onClose }) => {
             <DialogTitle variant="h3" component="h1" id="dialog-heading">
               Add analyst
             </DialogTitle>
-            <DialogContent dividers data-testid="modal-create-analyst">
+            <DialogContent dividers>
               <InputGroup flowSpacing>
                 <InputLabel label="Email address" htmlFor="email">
                   <Input
@@ -102,7 +101,7 @@ export const AddAnalystModal: React.FC<Props> = ({ onClose }) => {
             <DialogActions>
               <ModalActions
                 submitButtonText="Add analyst"
-                submitDataTestId="modal-create-user-button"
+                submitDataTestId="modal-create-analyst-button"
                 isSubmitting={isSubmitting || loading}
                 onCancel={onClose}
               />
