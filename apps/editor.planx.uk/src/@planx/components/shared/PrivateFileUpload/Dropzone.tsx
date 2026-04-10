@@ -1,5 +1,6 @@
 import CloudUpload from "@mui/icons-material/CloudUpload";
-import Box, { BoxProps } from "@mui/material/Box";
+import Box from "@mui/material/Box";
+import { BoxProps } from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { FileUploadSlot } from "@planx/components/FileUpload/model";
@@ -24,7 +25,7 @@ interface RootProps extends BoxProps {
   isWithinListCard: boolean;
 }
 
-const FauxLink = styled(Box)(({ theme }) => ({
+const FauxLink = styled("span")(({ theme }) => ({
   color: theme.palette.link.main,
   textDecoration: "underline",
   whiteSpace: "nowrap",
@@ -193,7 +194,7 @@ export function Dropzone<T extends FileUploadSlot>({
           ) : (
             <>
               Drop {maxFiles === 1 ? "file" : "files"} here or{" "}
-              <FauxLink component="span">
+              <FauxLink>
                 {maxFiles === 1 ? "choose a file" : "choose files"}
               </FauxLink>{" "}
               to upload
