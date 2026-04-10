@@ -8,6 +8,7 @@ import { client } from "../../lib/graphql";
 export const Route = createFileRoute("/(auth)/logout")({
   beforeLoad: async () => {
     try {
+      // httpOnly JWT cookie cleared via server headers
       await logout();
     } catch (error) {
       // Non-blocking - API may fail due to expired tokens, still need to proceed to local cleanup
@@ -22,11 +23,12 @@ export const Route = createFileRoute("/(auth)/logout")({
       console.error("Failed to cleanup client state:", err);
     }
 
-    // Clear cookies
+    // Clear the non-httpOnly cookies
     clearCookie("auth");
-    clearCookie("jwt");
+    clearCookie("session");
+    clearCookie("session.sig");
 
-    // Clear localStorage
+    // Clear localStorage fallback (used for local dev/Pizzas)
     localStorage.removeItem("jwt");
 
     // Must throw redirect to trigger navigation

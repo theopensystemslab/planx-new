@@ -6,8 +6,7 @@ import {
   isTokenRevoked,
   revokeToken,
 } from "./service/logout/revokeToken.js";
-import { getToken, userContext } from "./middleware.js";
-import { ServerError } from "../../errors/serverError.js";
+import { getToken } from "./middleware.js";
 
 export const failedLogin: RequestHandler = (_req, _res, next) =>
   next({
@@ -81,29 +80,43 @@ function setJWTSearchParams(returnTo: string, res: Response, req: Request) {
 
 /**
  * Revokes a user's JWT on logout
- * TODO: We check if a JWT is revoked when authenticating requests via the API and Hasura
  */
-export const logout: RequestHandler = async (_req, res, next) => {
-  const { jwt, sub: userId } = userContext.getStore()?.user || {};
-
-  if (!jwt) {
-    return next(
-      new ServerError({
-        message: `JWT missing from logout request, no token to revoke for user ${userId}`,
-      }),
-    );
+export const logout: RequestHandler = async (req, res) => {
+  // If a token was provided, try to revoke
+  const token = getToken(req);
+  if (token) {
+    try {
+      await revokeToken(token);
+    } catch (error) {
+      console.warn(`Failed to revoke token during logout: ${error}`);
+    }
   }
 
-  try {
-    await revokeToken(jwt);
-    return res.status(200).send();
-  } catch (error) {
-    return next(
-      new ServerError({
-        message: `Failed to logout successfully. Error: ${error}`,
-      }),
-    );
+  // Always clear cookies, even if we didn't get passed a JWT or the above failed
+  const origin = req.headers.origin || req.headers.referer;
+  let cookieDomain: string | undefined = undefined;
+
+  if (origin) {
+    try {
+      cookieDomain = `.${new URL(origin).host}`;
+    } catch (e) {
+      console.warn(
+        "Could not parse origin to set cookie domain during logout:",
+        origin,
+      );
+    }
   }
+
+  const baseCookieOptions: CookieOptions = {
+    domain: cookieDomain,
+    sameSite: "none",
+    secure: true,
+  };
+
+  res.clearCookie("jwt", { ...baseCookieOptions, httpOnly: true });
+  res.clearCookie("auth", { ...baseCookieOptions, httpOnly: false });
+
+  return res.status(200).send();
 };
 
 export const isJWTRevoked: RequestHandler = async (req, res) => {
