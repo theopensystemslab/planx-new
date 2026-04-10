@@ -23,9 +23,10 @@ interface Props {
   flow: FlowSummary;
   flows: FlowSummary[];
   refreshFlows: () => void;
+  showDetails: boolean;
 }
 
-const FlowCard: React.FC<Props> = ({ flow, refreshFlows }) => {
+const FlowCard: React.FC<Props> = ({ flow, refreshFlows, showDetails }) => {
   const [canUserEditTeam, teamSlug] = useStore((state) => [
     state.canUserEditTeam,
     state.teamSlug,
@@ -80,19 +81,21 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows }) => {
             </Typography>
             <LinkSubText>{displayFormatted}</LinkSubText>
           </Box>
-          <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-            {displayTags
-              .filter((tag) => tag.shouldAddTag)
-              .map((tag) => (
-                <FlowTag
-                  key={`${tag.displayName}-flowtag`}
-                  tagType={tag.type}
-                  statusVariant={statusVariant}
-                >
-                  {tag.displayName}
-                </FlowTag>
-              ))}
-          </Box>
+          {showDetails && (
+            <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+              {displayTags
+                .filter((tag) => tag.shouldAddTag)
+                .map((tag) => (
+                  <FlowTag
+                    key={`${tag.displayName}-flowtag`}
+                    tagType={tag.type}
+                    statusVariant={statusVariant}
+                  >
+                    {tag.displayName}
+                  </FlowTag>
+                ))}
+            </Box>
+          )}
           {flow.summary && (
             <TruncatedText
               variant="body2"
@@ -103,15 +106,17 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows }) => {
               {flow.summary}
             </TruncatedText>
           )}
-          <DashboardLink
-            to="/app/$team/$flow"
-            params={{ team: teamSlug, flow: flow.slug }}
-            aria-label={flow.name}
-            preload={false}
-          />
+          {showDetails && (
+            <DashboardLink
+              to="/app/$team/$flow"
+              params={{ team: teamSlug, flow: flow.slug }}
+              aria-label={flow.name}
+              preload={false}
+            />
+          )}
         </CardContent>
       </Box>
-      {canUserEditTeam(teamSlug) && (
+      {canUserEditTeam(teamSlug) && showDetails && (
         <FlowMenu
           flow={flow}
           refreshFlows={refreshFlows}
