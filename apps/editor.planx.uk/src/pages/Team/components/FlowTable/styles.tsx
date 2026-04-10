@@ -48,12 +48,8 @@ export const StyledTableRow = styled(TableRow, {
     backgroundColor: isTemplated
       ? theme.palette.template.light
       : theme.palette.background.default,
-    cursor: clickable ? "pointer" : "default",
     "&:hover": {
       backgroundColor: hoverBackground,
-      "& a": {
-        textDecoration: clickable ? "underline" : "none",
-      },
     },
     "& .actions-cell": {
       cursor: "default",
@@ -67,9 +63,6 @@ export const StyledTableRow = styled(TableRow, {
         width: "100%",
         height: "100%",
       },
-    },
-    "&:has(.actions-cell:hover) a": {
-      textDecoration: "none",
     },
   };
 });
