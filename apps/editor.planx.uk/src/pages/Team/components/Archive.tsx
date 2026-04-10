@@ -5,6 +5,7 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import React from "react";
+import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import { FlowCardView } from "../../FlowEditor/lib/store/editor";
 import { FlowTable } from "../components/FlowTable";
@@ -13,7 +14,6 @@ import { useGetArchivedFlows } from "../helpers/useGetArchivedFlows";
 import { DashboardList } from "./DashboardList";
 import FlowCard from "./FlowCard";
 import { StyledToggleButton } from "./StyledToggleButton"
-
 type Props = {
   flowCardView: FlowCardView;
   handleViewChange: (
@@ -34,11 +34,14 @@ const Archive: React.FC<Props> = ({
 }) => {
   const { data: archivedFlowsData, loading, error } = useGetArchivedFlows(teamId);
   const archivedFlows = archivedFlowsData?.flows ?? null;
-
+  
   if (error) {
-      console.log(error.message);
-      return null;
-    }
+    return (
+      <Box sx={{pt: 2}}>
+        <ErrorSummary message={error.message} />
+      </Box>
+    )
+  }
 
   if (loading) {
     return (
