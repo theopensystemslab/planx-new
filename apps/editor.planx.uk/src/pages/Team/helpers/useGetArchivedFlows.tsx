@@ -6,7 +6,7 @@ import {
   GetArchivedFlowsVars,
 } from "../queries";
 
-export const useArchivedFlows = (teamId: number) =>
+export const useGetArchivedFlows = (teamId: number) =>
   useQuery<GetArchivedFlowsQuery, GetArchivedFlowsVars>(GET_ARCHIVED_FLOWS, {
     variables: { teamId },
   });

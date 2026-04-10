@@ -16,7 +16,7 @@ import { DashboardList } from "./components/DashboardList";
 import { Card, CardContent } from "./components/FlowCard/styles";
 import Flows from "./components/Flows";
 import { sortOptions } from "./helpers/sortAndFilterOptions";
-import { useArchivedFlows } from "./helpers/useGetArchivedFlows";
+import { useGetArchivedFlows } from "./helpers/useGetArchivedFlows";
 import TeamLayout from "./TeamLayout";
 
 export type FlowView = "flows" | "archive";
@@ -56,7 +56,7 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
 
   const [flows, setFlows] = useState<FlowSummary[] | null>(initialFlows);
   const [flowView, setFlowView] = useState<FlowView>("flows");
-  const { data: archivedFlowsData } = useArchivedFlows(teamId);
+  const { data: archivedFlowsData } = useGetArchivedFlows(teamId);
   const archivedFlows = archivedFlowsData?.flows ?? null;
 
   const [searchedFlows, setSearchedFlows] = useState<FlowSummary[] | null>(
