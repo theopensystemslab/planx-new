@@ -15,7 +15,7 @@ import {
   Card,
   CardBanner,
   CardContent,
-  DashboardLink,
+  FlowCardLink,
   LinkSubText,
 } from "./styles";
 
@@ -107,7 +107,7 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows, showDetails }) => {
             </TruncatedText>
           )}
           {showDetails && (
-            <DashboardLink
+            <FlowCardLink
               to="/app/$team/$flow"
               params={{ team: teamSlug, flow: flow.slug }}
               aria-label={flow.name}

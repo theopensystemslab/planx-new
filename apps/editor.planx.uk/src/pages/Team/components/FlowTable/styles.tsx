@@ -3,6 +3,9 @@ import Table from "@mui/material/Table";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { inputFocusStyle } from "theme";
+
+import { CustomLink } from "../../../../ui/shared/CustomLink/CustomLink";
 
 export const StyledTable = styled(Table)(({ theme }) => ({
   marginTop: theme.spacing(2),
@@ -31,38 +34,50 @@ export const StyledTableHead = styled(TableHead)(({ theme }) => ({
 }));
 
 export const StyledTableRow = styled(TableRow, {
-  shouldForwardProp: (prop) => prop !== "isTemplated",
-})<{ isTemplated?: boolean }>(({ theme, isTemplated }) => ({
-  backgroundColor: isTemplated
-    ? theme.palette.template.light
-    : theme.palette.background.default,
-  cursor: "pointer",
-  "&:hover": {
-    backgroundColor: isTemplated
-      ? theme.palette.template.main
-      : theme.palette.background.paper,
-    "& a": {
-      textDecoration: "underline",
-    },
-  },
-  "& .actions-cell": {
-    cursor: "default",
+  shouldForwardProp: (prop) => prop !== "isTemplated" && prop !== "clickable",
+})<{ isTemplated?: boolean; clickable?: boolean }>(({ theme, isTemplated, clickable = true }) => {
+  let hoverBackground: string | undefined;
+  if (clickable && isTemplated) {
+    hoverBackground = theme.palette.template.main;
+  } else if (clickable) {
+    hoverBackground = theme.palette.background.paper;
+  }
+
+  return {
     position: "relative",
-    // Min-height to compensate for padding
-    height: "80px",
-    // Make the entire cell clickable area for the menu button
-    "& > div, & button": {
-      position: "absolute",
-      left: 0,
-      top: 0,
-      width: "100%",
-      height: "100%",
+    backgroundColor: isTemplated
+      ? theme.palette.template.light
+      : theme.palette.background.default,
+    "&:hover": {
+      backgroundColor: hoverBackground,
     },
+    "& .actions-cell": {
+      cursor: "default",
+      position: "relative",
+      zIndex: 2,
+      height: "80px",
+      "& > div, & button": {
+        position: "absolute",
+        left: 0,
+        top: 0,
+        width: "100%",
+        height: "100%",
+      },
+    },
+  };
+});
+
+export const FlowRowLink = styled(CustomLink)(() => ({
+  position: "absolute",
+  left: 0,
+  top: 0,
+  width: "100%",
+  height: "100%",
+  zIndex: 1,
+  "&:focus": {
+    ...inputFocusStyle,
   },
-  "&:has(.actions-cell:hover) a": {
-    textDecoration: "none",
-  },
-}));
+})) as typeof CustomLink;
 
 export const FlowTitleCell = styled(TableCell)(() => ({
   width: "45%",

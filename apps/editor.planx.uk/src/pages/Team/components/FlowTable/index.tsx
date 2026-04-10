@@ -3,15 +3,11 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
-import { type LinkOptions, useNavigate } from "@tanstack/react-router";
-import { useRouter } from "@tanstack/react-router";
 import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import React from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType } from "ui/editor/FlowTag/types";
 import TruncatedText from "ui/editor/TruncatedText";
-import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 import { useStore } from "../../../FlowEditor/lib/store";
 import FlowMenu from "../FlowMenu";
@@ -19,6 +15,7 @@ import { FlowTemplateIndicator } from "../FlowTemplateIndicator";
 import { useFlowDates } from "../hooks/useFlowDates";
 import { useFlowMetadata } from "../hooks/useFlowMetadata";
 import { useFlowSortDisplay } from "../hooks/useFlowSortDisplay";
+import { FlowRowLink } from "./styles";
 import {
   FlowActionsCell,
   FlowStatusCell,
@@ -87,8 +84,6 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
   refreshFlows,
   showDetails,
 }) => {
-  const router = useRouter();
-  const navigate = useNavigate();
   const [canUserEditTeam] = useStore((state) => [state.canUserEditTeam]);
 
   const {
@@ -101,26 +96,8 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
 
   const { displayTimeAgo, displayActor } = useFlowDates(flow);
 
-  const handleRowClick = (e: React.MouseEvent) => {
-    if ((e.target as HTMLElement).closest("a")) return;
-
-    const destination: LinkOptions = {
-      to: "/app/$team/$flow",
-      params: { team: teamSlug, flow: flow.slug },
-    };
-
-    // Allow links to be opened in new tabs
-    if (e.metaKey || e.ctrlKey) {
-      const { href } = router.buildLocation(destination);
-      window.open(href, "_blank");
-      return;
-    }
-
-    navigate(destination);
-  };
-
   return (
-    <StyledTableRow isTemplated={isAnyTemplate} onClick={handleRowClick}>
+    <StyledTableRow isTemplated={isAnyTemplate} clickable={showDetails}>
       <FlowTitleCell>
         <Box>
           {isAnyTemplate && (
@@ -132,24 +109,17 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
               />
             </Box>
           )}
-          <CustomLink
-            to="/app/$team/$flow"
-            preload={false}
-            params={{ team: teamSlug, flow: flow.slug }}
-            onClick={(e) => e.stopPropagation()}
-            sx={(theme) => ({
-              textDecoration: "none",
-              color: theme.palette.text.primary,
-              fontWeight: FONT_WEIGHT_SEMI_BOLD,
-              "&:hover": {
-                textDecoration: "underline",
-              },
-            })}
-          >
-            <Typography variant="h4" component="span">
-              {flow.name}
-            </Typography>
-          </CustomLink>
+          <Typography variant="h4" component="span">
+            {flow.name}
+          </Typography>
+          {showDetails && (
+            <FlowRowLink
+              to="/app/$team/$flow"
+              params={{ team: teamSlug, flow: flow.slug }}
+              aria-label={flow.name}
+              preload={false}
+            />
+          )}
           {flow.summary && (
             <TruncatedText
               variant="body2"
