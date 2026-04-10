@@ -184,22 +184,12 @@ const setupMockBopsSubmissionUrl = async (teamId: number) => {
   );
 };
 
-const setupSubmissionEmail = async (
-  teamId: number,
-  address: string,
-) => {
+const setupSubmissionEmail = async (teamId: number, address: string) => {
   await $admin.client.request(
     gql`
-      mutation InsertSubmissionEmail(
-        $teamId: Int!
-        $address: String!
-      ) {
+      mutation InsertSubmissionEmail($teamId: Int!, $address: String!) {
         insert_submission_emails_one(
-          object: {
-            team_id: $teamId
-            address: $address
-            is_default: true
-          }
+          object: { team_id: $teamId, address: $address, is_default: true }
         ) {
           id
         }
