@@ -3,23 +3,23 @@ import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import Box from "@mui/material/Box";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
-import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
+import Typography from "@mui/material/Typography";
 import React from "react";
+import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import { FlowCardView } from "../../FlowEditor/lib/store/editor";
 import { FlowTable } from "../components/FlowTable";
 import { ShowingServicesHeader } from "../components/ShowingServicesHeader";
+import { useGetArchivedFlows } from "../helpers/useGetArchivedFlows";
 import { DashboardList } from "./DashboardList";
 import FlowCard from "./FlowCard";
 import { StyledToggleButton } from "./StyledToggleButton"
-
 type Props = {
   flowCardView: FlowCardView;
   handleViewChange: (
     _event: React.MouseEvent<HTMLElement>,
     newView: FlowCardView | null,
   ) => void;
-  archivedFlows: FlowSummary[] | null;
   teamId: number;
   slug: string;
   fetchFlows: () => void;
@@ -28,11 +28,37 @@ type Props = {
 const Archive: React.FC<Props> = ({
   flowCardView,
   handleViewChange,
-  archivedFlows,
   teamId,
   slug,
   fetchFlows,
 }) => {
+  const { data: archivedFlowsData, loading, error } = useGetArchivedFlows(teamId);
+  const archivedFlows = archivedFlowsData?.flows ?? null;
+  
+  if (error) {
+    return (
+      <Box sx={{pt: 2}}>
+        <ErrorSummary message={error.message} />
+      </Box>
+    )
+  }
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          pt: 2,
+          display: "flex",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          gap: 2,
+          minHeight: "50px",
+        }}
+      >
+        <Typography>Loading...</Typography>
+      </Box>
+    );
+  }
   return (
     <>
       <Box
@@ -45,6 +71,7 @@ const Archive: React.FC<Props> = ({
       >
         <Box
           sx={{
+            pt: 2,
             display: "flex",
             justifyContent: "flex-start",
             alignItems: "center",

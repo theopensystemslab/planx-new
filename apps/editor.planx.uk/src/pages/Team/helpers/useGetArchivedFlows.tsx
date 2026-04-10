@@ -9,4 +9,5 @@ import {
 export const useGetArchivedFlows = (teamId: number) =>
   useQuery<GetArchivedFlowsQuery, GetArchivedFlowsVars>(GET_ARCHIVED_FLOWS, {
     variables: { teamId },
+    fetchPolicy: "cache-and-network",
   });
