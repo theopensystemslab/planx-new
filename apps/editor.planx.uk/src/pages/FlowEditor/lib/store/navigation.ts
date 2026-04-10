@@ -58,7 +58,6 @@ export const navigationStore: StateCreator<
 
   /**
    * Set up initial values to populate store
-   * Called by setFlow() as we require a flow from the DB before proceeding
    */
   initNavigationStore: () => {
     const {
