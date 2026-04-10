@@ -112,6 +112,12 @@ function EditorNavMenu() {
           route: "/app/admin-panel",
           accessibleBy: ["platformAdmin", "analyst"],
         },
+        {
+          title: "User management",
+          Icon: GroupIcon,
+          route: `/app/users`,
+          accessibleBy: ["platformAdmin"],
+        },
       ],
     },
   ];
