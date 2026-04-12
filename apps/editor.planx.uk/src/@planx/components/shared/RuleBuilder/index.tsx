@@ -30,7 +30,7 @@ export interface Props {
   /**
    * Override the default condition titles with custom labels
    */
-  labels?: Partial<Record<Condition, string>>
+  labels?: Partial<Record<Condition, string>>;
 }
 
 export const RuleBuilder: React.FC<Props> = ({
@@ -80,25 +80,24 @@ export const RuleBuilder: React.FC<Props> = ({
           />
           <Operator variant="body2">Equals</Operator>
           {dataSchema ? (
-              <DataFieldAutocomplete
-                required
-                schema={dataSchema}
-                value={rule.val}
-                onChange={handleValChange}
-                placeholder="Value"
-                disabled={disabled}
-              />
-            ) : (
-              <Input
-                required
-                name="val"
-                value={rule.val}
-                onChange={(e) => handleValChange(e.target.value)}
-                placeholder="Value"
-                disabled={disabled}
-              />
-            )
-          }
+            <DataFieldAutocomplete
+              required
+              schema={dataSchema}
+              value={rule.val}
+              onChange={handleValChange}
+              placeholder="Value"
+              disabled={disabled}
+            />
+          ) : (
+            <Input
+              required
+              name="val"
+              value={rule.val}
+              onChange={(e) => handleValChange(e.target.value)}
+              placeholder="Value"
+              disabled={disabled}
+            />
+          )}
         </InputRow>
       )}
     </>

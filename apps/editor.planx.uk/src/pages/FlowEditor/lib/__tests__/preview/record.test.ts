@@ -58,8 +58,18 @@ test("record(id, undefined) clears up breadcrumbs", () => {
   record("a", { answers: ["c"] });
   record("d", { answers: ["e", "f"] });
   expect(getState().breadcrumbs).toEqual({
-    a: { answers: ["c"], auto: false },
-    d: { answers: ["e", "f"], auto: false },
+    a: {
+      answers: ["c"],
+      auto: false,
+      createdAt: expect.any(String),
+      seq: expect.any(Number),
+    },
+    d: {
+      answers: ["e", "f"],
+      auto: false,
+      createdAt: expect.any(String),
+      seq: expect.any(Number),
+    },
   });
 
   record("a");

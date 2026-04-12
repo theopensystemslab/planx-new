@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import rateLimit from "express-rate-limit";
+import type { Options, ValueDeterminingMiddleware } from "express-rate-limit";
 
 const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
 const TEN_MINUTES_IN_MS = 10 * 60 * 1000;
@@ -32,13 +33,13 @@ const apiLimiter = rateLimit({
 
 const HASURA_ONLY_SEND_EMAIL_TEMPLATES = ["reminder", "expiry"];
 
-/**
- * Limit the number of requests which can send a "Save & Return" email
- */
-const sendEmailLimiter = rateLimit({
+const getEmailLimiterOptions = (
+  messageTag: string,
+  keyGenerator: ValueDeterminingMiddleware<string>,
+): Partial<Options> => ({
   message: {
     error: "TOO_MANY_REQUESTS",
-    message: "[SendEmail limiter]: Too many requests, please try again",
+    message: `[${messageTag} limiter]: Too many requests, please try again`,
   },
   windowMs: FIVE_MINUTES_IN_MS,
   max: 25,
@@ -46,7 +47,7 @@ const sendEmailLimiter = rateLimit({
   legacyHeaders: false,
   // Use email as key for limiter
   // Invalid emails will fail at validation
-  keyGenerator: (req: Request, _res: Response) => req.body?.payload?.email,
+  keyGenerator,
   skip: (req: Request, _res: Response) => {
     if (isTestEnv()) return true;
     // Only apply limiter to public requests - allow Hasura to make multiple requests without limit
@@ -54,6 +55,27 @@ const sendEmailLimiter = rateLimit({
     return HASURA_ONLY_SEND_EMAIL_TEMPLATES.includes(req.params.template);
   },
 });
+
+/**
+ * Limit the number of requests which can send an LPS login email
+ */
+const lpsLoginLimiter = rateLimit(
+  getEmailLimiterOptions(
+    "LPSLogin",
+    // normalise email strings to prevent bypass on case/whitespace
+    (req: Request, _res: Response) => req.body?.email.trim().toLowerCase(),
+  ),
+);
+
+/**
+ * Limit the number of requests which can send a "Save & Return" email
+ * XXX: `email` is not always provided (e.g. Hasura triggered events) - optional chaining here is intentional
+ */
+const sendEmailLimiter = rateLimit(
+  getEmailLimiterOptions("SendEmail", (req: Request, _res: Response) =>
+    req.body?.payload?.email?.trim().toLowerCase(),
+  ),
+);
 
 /**
  * Very strict limiter for AI powered endpoints
@@ -70,4 +92,4 @@ const aiLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-export { apiLimiter, sendEmailLimiter, aiLimiter };
+export { aiLimiter, apiLimiter, lpsLoginLimiter, sendEmailLimiter };

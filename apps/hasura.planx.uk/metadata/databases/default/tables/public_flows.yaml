@@ -5,6 +5,15 @@ object_relationships:
   - name: creator
     using:
       foreign_key_constraint_on: creator_id
+  - name: submission_integration
+    using:
+      manual_configuration:
+        column_mapping:
+          submission_email_id: id
+        insertion_order: null
+        remote_table:
+          name: submission_integrations
+          schema: public
   - name: team
     using:
       foreign_key_constraint_on: team_id
@@ -100,6 +109,13 @@ array_relationships:
         remote_table:
           name: flows
           schema: public
+  - name: user_pinned_flows
+    using:
+      foreign_key_constraint_on:
+        column: flow_id
+        table:
+          name: user_pinned_flows
+          schema: public
 computed_fields:
   - name: data_merged
     definition:
@@ -111,6 +127,11 @@ computed_fields:
     definition:
       function:
         name: flow_first_online_at
+        schema: public
+  - name: production_url
+    definition:
+      function:
+        name: flow_production_url
         schema: public
 insert_permissions:
   - role: api
@@ -145,40 +166,6 @@ insert_permissions:
           timeout: 10
           url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
         type: http
-  - role: demoUser
-    permission:
-      check:
-        team_id:
-          _eq: 32
-      set:
-        creator_id: x-hasura-user-id
-      columns:
-        - copied_from
-        - created_at
-        - creator_id
-        - data
-        - description
-        - id
-        - is_template
-        - limitations
-        - name
-        - settings
-        - slug
-        - summary
-        - team_id
-        - templated_from
-        - updated_at
-        - version
-      validate_input:
-        definition:
-          forward_client_headers: false
-          headers:
-            - name: authorization
-              value: '{{HASURA_PLANX_API_KEY}}'
-          timeout: 10
-          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
-        type: http
-    comment: They can only insert into Demo team [id = 32]
   - role: platformAdmin
     permission:
       check: {}
@@ -251,6 +238,37 @@ insert_permissions:
           url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
         type: http
 select_permissions:
+  - role: analyst
+    permission:
+      columns:
+        - can_create_from_copy
+        - category
+        - created_at
+        - creator_id
+        - data
+        - description
+        - id
+        - is_listed_on_lps
+        - is_template
+        - limitations
+        - name
+        - settings
+        - slug
+        - status
+        - summary
+        - team_id
+        - templated_from
+        - updated_at
+        - version
+      computed_fields:
+        - data_merged
+        - first_online_at
+        - production_url
+      filter:
+        archived_at:
+          _is_null: true
+      allow_aggregations: true
+    comment: ""
   - role: api
     permission:
       columns:
@@ -260,7 +278,7 @@ select_permissions:
         - created_at
         - creator_id
         - data
-        - deleted_at
+        - archived_at
         - description
         - id
         - is_listed_on_lps
@@ -270,34 +288,7 @@ select_permissions:
         - settings
         - slug
         - status
-        - summary
-        - team_id
-        - templated_from
-        - updated_at
-        - version
-      computed_fields:
-        - data_merged
-      filter:
-        deleted_at:
-          _is_null: true
-      allow_aggregations: true
-  - role: demoUser
-    permission:
-      columns:
-        - can_create_from_copy
-        - created_at
-        - creator_id
-        - data
-        - deleted_at
-        - description
-        - id
-        - is_listed_on_lps
-        - is_template
-        - limitations
-        - name
-        - settings
-        - slug
-        - status
+        - submission_email_id
         - summary
         - team_id
         - templated_from
@@ -306,24 +297,11 @@ select_permissions:
       computed_fields:
         - data_merged
         - first_online_at
+        - production_url
       filter:
-        _and:
-          - _or:
-              - _and:
-                  - creator_id:
-                      _eq: x-hasura-user-id
-                  - team:
-                      id:
-                        _eq: 32
-              - team:
-                  id:
-                    _in:
-                      - 1
-                      - 29
-                      - 30
-          - deleted_at:
-              _is_null: true
-    comment: 'For the demo user, we want to ensure they can only see their own flows, and flows from the Open Digital Planning [id = 30], Open Systems Lab [id = 1], and Templates [id = 29]  team '
+        archived_at:
+          _is_null: true
+      allow_aggregations: true
   - role: platformAdmin
     permission:
       columns:
@@ -333,7 +311,7 @@ select_permissions:
         - created_at
         - creator_id
         - data
-        - deleted_at
+        - archived_at
         - description
         - id
         - is_listed_on_lps
@@ -343,6 +321,7 @@ select_permissions:
         - settings
         - slug
         - status
+        - submission_email_id
         - summary
         - team_id
         - templated_from
@@ -351,9 +330,8 @@ select_permissions:
       computed_fields:
         - data_merged
         - first_online_at
-      filter:
-        deleted_at:
-          _is_null: true
+        - production_url
+      filter: {}
       allow_aggregations: true
   - role: public
     permission:
@@ -379,8 +357,10 @@ select_permissions:
         - version
       computed_fields:
         - data_merged
+        - first_online_at
+        - production_url
       filter:
-        deleted_at:
+        archived_at:
           _is_null: true
       allow_aggregations: true
     comment: ""
@@ -393,7 +373,7 @@ select_permissions:
         - created_at
         - creator_id
         - data
-        - deleted_at
+        - archived_at
         - description
         - id
         - is_listed_on_lps
@@ -403,6 +383,7 @@ select_permissions:
         - settings
         - slug
         - status
+        - submission_email_id
         - summary
         - team_id
         - templated_from
@@ -411,9 +392,8 @@ select_permissions:
       computed_fields:
         - data_merged
         - first_online_at
-      filter:
-        deleted_at:
-          _is_null: true
+        - production_url
+      filter: {}
       allow_aggregations: true
 update_permissions:
   - role: api
@@ -440,7 +420,7 @@ update_permissions:
         _and:
           - is_template:
               _eq: false
-          - deleted_at:
+          - archived_at:
               _is_null: true
       check:
         _not:
@@ -460,58 +440,6 @@ update_permissions:
           timeout: 10
           url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
         type: http
-  - role: demoUser
-    permission:
-      columns:
-        - copied_from
-        - created_at
-        - creator_id
-        - data
-        - deleted_at
-        - description
-        - id
-        - limitations
-        - name
-        - settings
-        - slug
-        - summary
-        - team_id
-        - updated_at
-        - version
-      filter:
-        _and:
-          - team_id:
-              _eq: 32
-          - creator_id:
-              _eq: x-hasura-user-id
-          - deleted_at:
-              _is_null: true
-          - is_template:
-              _eq: false
-      check:
-        _and:
-          - team_id:
-              _eq: 32
-          - creator_id:
-              _eq: x-hasura-user-id
-          - _not:
-              _and:
-                - status:
-                    _eq: online
-                - team:
-                    team_settings:
-                      is_trial:
-                        _eq: true
-      validate_input:
-        definition:
-          forward_client_headers: false
-          headers:
-            - name: authorization
-              value: '{{HASURA_PLANX_API_KEY}}'
-          timeout: 10
-          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
-        type: http
-    comment: ""
   - role: platformAdmin
     permission:
       columns:
@@ -519,7 +447,7 @@ update_permissions:
         - category
         - copied_from
         - data
-        - deleted_at
+        - archived_at
         - description
         - is_listed_on_lps
         - is_template
@@ -528,11 +456,12 @@ update_permissions:
         - settings
         - slug
         - status
+        - submission_email_id
         - summary
         - team_id
         - templated_from
       filter:
-        deleted_at:
+        archived_at:
           _is_null: true
       check:
         _not:
@@ -559,7 +488,7 @@ update_permissions:
         - category
         - copied_from
         - data
-        - deleted_at
+        - archived_at
         - description
         - is_listed_on_lps
         - limitations
@@ -567,6 +496,7 @@ update_permissions:
         - settings
         - slug
         - status
+        - submission_email_id
         - summary
         - team_id
         - templated_from
@@ -579,7 +509,7 @@ update_permissions:
                       _eq: x-hasura-user-id
                   - role:
                       _eq: teamEditor
-          - deleted_at:
+          - archived_at:
               _is_null: true
           - is_template:
               _eq: false

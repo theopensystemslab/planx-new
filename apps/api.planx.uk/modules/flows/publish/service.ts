@@ -19,6 +19,9 @@ interface PublishFlow {
     publisherId: string;
     createdAt: string;
     data: FlowGraph;
+    flow: {
+      templatedFrom: string | null;
+    };
   };
 }
 
@@ -29,6 +32,7 @@ export const publishFlow = async (
 ): Promise<{
   alteredNodes: Node[];
   templatedFlowsScheduledEventsResponse?: CreateScheduledEventResponse[];
+  resolveNotificationsScheduledEventResponse?: CreateScheduledEventResponse;
 } | null> => {
   const userId = userContext.getStore()?.user?.sub;
   if (!userId) throw Error("User details missing from request");
@@ -53,7 +57,15 @@ export const publishFlow = async (
     (id) => !flattenedFlow[id]?.data?.hidePay,
   );
 
+  const setFeeNodeIds = Array.from(
+    flowTypeMap.get(ComponentType.SetFee) ?? new Set<string>(),
+  );
+  const hasEnabledServiceCharge = setFeeNodeIds.some(
+    (id) => flattenedFlow[id]?.data?.applyServiceCharge,
+  );
+
   const { client: $client } = getClient();
+
   const response = await $client.request<PublishFlow>(
     gql`
       mutation PublishFlow(
@@ -64,6 +76,7 @@ export const publishFlow = async (
         $has_send_component: Boolean
         $has_sections: Boolean
         $has_pay_component: Boolean
+        $service_charge_enabled: Boolean
       ) {
         publishedFlow: insert_published_flows_one(
           object: {
@@ -74,6 +87,7 @@ export const publishFlow = async (
             has_send_component: $has_send_component
             has_sections: $has_sections
             has_pay_component: $has_pay_component
+            service_charge_enabled: $service_charge_enabled
           }
         ) {
           id
@@ -81,6 +95,9 @@ export const publishFlow = async (
           publisherId: publisher_id
           createdAt: created_at
           data
+          flow {
+            templatedFrom: templated_from
+          }
         }
       }
     `,
@@ -92,6 +109,7 @@ export const publishFlow = async (
       has_send_component: hasSendComponent,
       has_sections: hasSections,
       has_pay_component: hasVisiblePayComponent,
+      service_charge_enabled: hasEnabledServiceCharge,
     },
   );
 
@@ -124,5 +142,25 @@ export const publishFlow = async (
     );
   }
 
-  return { alteredNodes, templatedFlowsScheduledEventsResponse };
+  // If we're publishing a templated flow, queue up an event to resolve any of its' active publish notifications
+  let resolveNotificationsScheduledEventResponse:
+    | CreateScheduledEventResponse
+    | undefined;
+  if (response?.publishedFlow?.flow?.templatedFrom) {
+    resolveNotificationsScheduledEventResponse = await createScheduledEvent({
+      webhook: `{{HASURA_PLANX_API_URL}}/resolve-notification`,
+      schedule_at: new Date(), // now
+      payload: {
+        flowId: flowId,
+        type: "updated_templated_flow",
+      },
+      comment: `resolve_notification_on_templated_flow_publish_${flowId}`,
+    });
+  }
+
+  return {
+    alteredNodes,
+    templatedFlowsScheduledEventsResponse,
+    resolveNotificationsScheduledEventResponse,
+  };
 };

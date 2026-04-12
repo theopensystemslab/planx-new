@@ -19,6 +19,7 @@ interface SettingsFormContainerProps<
   query: DocumentNode;
   queryVariables?: Record<string, unknown>;
   mutation: DocumentNode;
+  preloadedData?: TData;
   /** Extract the initial values from query data */
   getInitialValues: (data: TData) => TFormValues;
   defaultValues: TFormValues;
@@ -66,6 +67,7 @@ const SettingsFormContainer = <
   query,
   queryVariables,
   mutation,
+  preloadedData,
   getInitialValues,
   defaultValues,
   getMutationVariables,
@@ -85,10 +87,13 @@ const SettingsFormContainer = <
   ]);
   const userPermissionError = !canUserEditTeam(teamSlug);
 
-  // Fetch current data
+  // Fetch current data (skip if preloaded)
   const { data, loading, error } = useQuery<TData>(query, {
     variables: queryVariables,
+    skip: !!preloadedData,
   });
+
+  const actualData = preloadedData || data;
 
   // Update data
   const [updateSettings, { loading: updating }] = useMutation<
@@ -104,7 +109,9 @@ const SettingsFormContainer = <
     },
   });
 
-  const initialValues = data ? getInitialValues(data) : defaultValues;
+  const initialValues = actualData
+    ? getInitialValues(actualData)
+    : defaultValues;
 
   if (error) {
     return (
@@ -114,7 +121,7 @@ const SettingsFormContainer = <
     );
   }
 
-  if (loading && !data) {
+  if (loading && !actualData) {
     return (
       <NewSettingsSection>
         <p>Loading...</p>
@@ -127,12 +134,12 @@ const SettingsFormContainer = <
     formikHelpers: FormikHelpers<TFormValues>,
   ) => {
     try {
-      if (!data) throw Error("Unable to mutate, missing initial data");
+      if (!actualData) throw Error("Unable to mutate, missing initial data");
 
-      const variables = await getMutationVariables(values, data);
+      const variables = await getMutationVariables(values, actualData);
       await updateSettings({ variables });
 
-      onSuccess && onSuccess(data, formikHelpers, values);
+      onSuccess && onSuccess(actualData, formikHelpers, values);
       formikHelpers.resetForm({ values });
     } catch (error) {
       console.error("Settings update error:", error);
@@ -166,7 +173,7 @@ const SettingsFormContainer = <
                     paddingTop: 0.25,
                   }}
                 >
-                  {children({ formik, data, loading })}
+                  {children({ formik, data: actualData, loading })}
                 </Box>
                 {preview && <Box mt={2}>{preview(formik)}</Box>}
                 {showActionButtons && (

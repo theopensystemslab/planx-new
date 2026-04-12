@@ -90,6 +90,7 @@ const ResultComponent: React.FC<Props> = (props) => {
 
   return (
     <Formik<Result>
+      innerRef={props.formikRef}
       initialValues={{
         flagSet: props.node?.data?.flagSet || Object.keys(flags)[0],
         overrides: props.node?.data?.overrides || {},
@@ -139,13 +140,14 @@ const ResultComponent: React.FC<Props> = (props) => {
                   Flag text overrides (optional)
                 </Typography>
                 <Typography variant="body2">
-                  The overrides you set here will change what is displayed to the
-                  user upon arriving at this result. If you provide no overrides,
-                  the flag title will be used.
+                  The overrides you set here will change what is displayed to
+                  the user upon arriving at this result. If you provide no
+                  overrides, the flag title will be used.
                 </Typography>
                 <Box mt={2}>
                   {allFlagsForSet(formik.values.flagSet).map((flag) => {
-                    const override = formik.values.overrides?.[flag.value] || {};
+                    const override =
+                      formik.values.overrides?.[flag.value] || {};
                     return (
                       <FlagEditor
                         key={flag.value}

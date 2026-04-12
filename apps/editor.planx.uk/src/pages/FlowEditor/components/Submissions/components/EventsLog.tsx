@@ -43,7 +43,9 @@ const EventsLog: React.FC<EventsLogProps> = ({
         text="Fetching events..."
       />
     );
-  if (error) return <ErrorFallback error={error} />;
+
+  if (error) throw error;
+
   if (submissions.length === 0)
     return (
       <SettingsSection>
@@ -74,6 +76,11 @@ const EventsLog: React.FC<EventsLogProps> = ({
         // Allow filtering by unique flow names
         valueOptions: [...new Set(submissions.map(({ flowName }) => flowName))],
       },
+    },
+    {
+      field: "address",
+      headerName: "Address",
+      width: 250,
     },
     {
       field: "eventType",

@@ -54,26 +54,29 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/SessionPayload"
-  /goss/{localAuthority}:
+  /email-download-link:
     post:
-      summary: Submits an application to GOSS case management
-      description: |
-        <b>Test only endpoint - not live</b>
-        <br/><br/>
-        Submits an application to GOSS case management
+      summary: Trigger an email which contains a download link
       tags:
         - send
-      parameters:
-        - $ref: "#/components/parameters/localAuthority"
-      security:
-        - hasuraAuth: []
       requestBody:
-        description: This endpoint is only called via Hasura's scheduled event webhook, so body is wrapped in a `payload` key
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/SessionPayload"
+              type: object
+              properties:
+                localAuthority:
+                  type: string
+                sessionId:
+                  type: string
+                  format: uuid
+                flowSlug:
+                  type: string
+              required:
+                - localAuthority
+                - sessionId
+                - flowSlug
   /uniform/{localAuthority}:
     post:
       summary: Submits an application to Uniform
@@ -173,33 +176,37 @@ paths:
           schema:
             type: string
             format: uuid
-  /download-application-files/{sessionId}:
+  /download-submission:
     get:
-      summary: Download application files
-      description: Download application files via a link send to a team's "send to email" email address
+      summary: Download submission files
+      description: Download submission files via an access token. This is the magic link shared via email to back-office teams upon submission
+      security:
+        - bearerAuth: []
       tags:
         - send
-      parameters:
-        - in: path
-          name: sessionId
-          required: true
-          schema:
-            type: string
-            format: uuid
-        - in: query
-          name: email
-          required: true
-          schema:
-            type: string
-            format: email
-        - in: query
-          name: localAuthority
-          required: true
-          schema:
-            type: string
       responses:
         "200":
           $ref: "#/components/responses/DownloadFile"
+        "404":
+          description: Unrecognised access token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum: ["INVALID_ACCESS_TOKEN"]
+        "410":
+          description: Invalid access token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum: ["REVOKED_ACCESS_TOKEN, EXPIRED_ACCESS_TOKEN"]
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /submissions/{localAuthority}:
@@ -218,7 +225,7 @@ paths:
         - fileAPIKeyAuth: []
   /submission/{sessionId}/html:
     get:
-      summary: Get a submission
+      summary: Get an overview of a submission
       description: Get a submission by session ID, as HTML
       tags:
         - send
@@ -238,5 +245,29 @@ paths:
               schema:
                 type: string
                 format: HTML
+          "500":
+            $ref: "#/components/responses/ErrorMessage"
+  /submission/{sessionId}/zip:
+    get:
+      summary: Get all files associated with a submission
+      description: Get a submission by session ID, as a zip folder
+      tags:
+        - send
+      parameters:
+        - in: path
+          name: sessionId
+          required: true
+          schema:
+            format: uuid
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          content:
+            application/octet-stream:
+              schema:
+                type: buffer
+                format: zip
           "500":
             $ref: "#/components/responses/ErrorMessage"

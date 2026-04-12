@@ -46,5 +46,5 @@ export const validationSchema = baseChecklistValidationSchema.concat(
       }).required(),
     ).optional(),
     options: array(optionValidationSchema).optional(),
-  })
+  }),
 );

@@ -48,7 +48,7 @@ export const BaseOptionsEditor: React.FC<Props> = (props) => {
     <Box
       id={props.value.id}
       sx={(theme) => ({
-        scrollMarginTop: theme.spacing(1),
+        scrollMarginTop: theme.spacing(5),
         width: "100%",
       })}
     >
@@ -107,6 +107,11 @@ export const BaseOptionsEditor: React.FC<Props> = (props) => {
         />
         {showRuleBuilder && (
           <RuleBuilder
+            labels={{
+              [Condition.AlwaysRequired]: "Always show",
+              [Condition.RequiredIf]: "Show if",
+            }}
+            dataSchema={[]}
             conditions={[Condition.AlwaysRequired, Condition.RequiredIf]}
             disabled={props.disabled}
             rule={props.value.data.rule}

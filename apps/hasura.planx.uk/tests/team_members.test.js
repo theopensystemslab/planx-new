@@ -56,23 +56,15 @@ describe("team_members", () => {
       expect(i.queries).toContain("team_members");
     });
 
-    test("cannot create, update, or delete team_members", () => {
-      expect(i).toHaveNoMutationsFor("team_members");
-    });
-  });
-
-  describe("demoUser", () => {
-    let i;
-    beforeAll(async () => {
-      i = await introspectAs("demoUser");
+    test("cannot update team_members", () => {
+      expect(i).not.toContain("update_team_members_by_pk");
     });
 
-    test("can query teams", () => {
-      expect(i.queries).toContain("team_members");
-    });
-
-    test("cannot create, update, or delete team_members", () => {
-      expect(i).toHaveNoMutationsFor("team_members");
+    // Row-level permissions in place
+    // teamEditor can only assign teamEditor roles to their team
+    test("can add and remove team_members", () => {
+      expect(i.mutations).toContain("insert_team_members");
+      expect(i.mutations).toContain("delete_team_members");
     });
   });
 

@@ -1,6 +1,6 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
-import { useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
@@ -21,20 +21,21 @@ import {
 export type Props = EditorProps<TYPES.ContactInput, ContactInput>;
 
 const ContactInputComponent: React.FC<Props> = (props) => {
-  const formik = useFormik({
-    initialValues: parseContactInput(props.node?.data),
-    onSubmit: (newValues) => {
-      if (props.handleSubmit) {
-        props.handleSubmit({
-          type: TYPES.ContactInput,
-          data: newValues,
-        });
-      }
+  const formik = useFormikWithRef<ContactInput>(
+    {
+      initialValues: parseContactInput(props.node?.data),
+      onSubmit: (newValues) => {
+        if (props.handleSubmit) {
+          props.handleSubmit({
+            type: TYPES.ContactInput,
+            data: newValues,
+          });
+        }
+      },
+      validationSchema: editorValidationSchema,
     },
-    validationSchema: editorValidationSchema,
-    validateOnBlur: false,
-    validateOnChange: false,
-  });
+    props.formikRef,
+  );
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal" name="modal">

@@ -4,14 +4,18 @@ import { MoreInformation } from "ui/editor/MoreInformation/MoreInformation";
 
 import { Props } from "./types";
 
-const TypeGuardedMoreInformation: React.FC<Props> = ({ type, formik, disabled }: Props) => {
-  if ( type === ComponentType.Question) {
+const TypeGuardedMoreInformation: React.FC<Props> = ({
+  type,
+  formik,
+  disabled,
+}: Props) => {
+  if (type === ComponentType.Question) {
     return <MoreInformation formik={formik} disabled={disabled} />;
   }
 
-  if ( type === ComponentType.ResponsiveQuestion) {
+  if (type === ComponentType.ResponsiveQuestion) {
     return <MoreInformation formik={formik} disabled={disabled} />;
   }
 };
 
-export default TypeGuardedMoreInformation
+export default TypeGuardedMoreInformation;

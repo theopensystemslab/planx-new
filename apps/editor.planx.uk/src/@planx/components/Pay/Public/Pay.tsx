@@ -11,7 +11,7 @@ import { getPayment, initiatePayment } from "lib/api/pay/requests";
 import { saveSession } from "lib/local.new";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useReducer } from "react";
-import { useErrorHandler } from "react-error-boundary";
+import { useErrorBoundary } from "react-error-boundary";
 
 import { makeData } from "../../shared/utils";
 import { createPayload, getDefaultContent, Pay } from "../model";
@@ -109,10 +109,9 @@ function Component(props: Props) {
     displayText: "Loading...",
   });
 
-  const handleError = useErrorHandler();
+  const { showBoundary } = useErrorBoundary();
 
-  const isTeamSupported =
-    state.status !== "unsupported_team" && teamSlug !== "demo";
+  const isTeamSupported = state.status !== "unsupported_team";
   const showPayOptions = props.allowInviteToPay && !props.hidePay;
 
   useEffect(() => {
@@ -272,7 +271,7 @@ function Component(props: Props) {
           dispatch(Action.StartNewPaymentError);
         } else {
           // Throw all other errors so they're caught by our ErrorBoundary
-          handleError(apiErrorMessage ? { message: apiErrorMessage } : error);
+          showBoundary(Error(apiErrorMessage));
         }
       });
   };
@@ -307,8 +306,6 @@ function Component(props: Props) {
               : "Retry payment"
           }
           error={
-            (teamSlug === "demo" &&
-              "GOV.UK Pay is not enabled for demo users") ||
             (state.status === "unsupported_team" &&
               "GOV.UK Pay is not enabled for this local authority") ||
             (state.status === "undefined_fee" &&

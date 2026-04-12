@@ -1,17 +1,17 @@
 ## BASE ##
-# 22.14.0 = LTS
-FROM node:22.14.0-alpine AS base
+# 24.14.0 = LTS
+FROM node:24.14.0-alpine AS base
 
 # Setup Git - required for fetching git dependencies (planx-core)
 RUN apk add --no-cache git 
 COPY .gitconfig /root/.gitconfig
 
 WORKDIR /api
-RUN npm install -g pnpm@10.10.0
+RUN npm install -g pnpm@10.30.2
 
-# update package cache using lockfile
+# update package cache using lockfile (we include pnpm-workspace to allow planx-core build scripts)
 # see https://pnpm.io/cli/fetch
-COPY pnpm-lock.yaml ./
+COPY pnpm-workspace.yaml pnpm-lock.yaml ./
 RUN pnpm fetch
 
 # copy and install everything else using cache where possible
@@ -21,7 +21,7 @@ RUN pnpm install --recursive --prefer-offline
 RUN pnpm build
 RUN pnpm prune --production
 
-FROM node:22.14.0-alpine AS production
+FROM node:24.14.0-alpine AS production
 WORKDIR /api
 
 ## PRODUCTION ##

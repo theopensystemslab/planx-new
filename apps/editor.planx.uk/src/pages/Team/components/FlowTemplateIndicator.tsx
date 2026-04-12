@@ -17,9 +17,7 @@ export const FlowTemplateIndicator: React.FC<Props> = ({
 }) => {
   if (!isSourceTemplate && !isTemplatedFlow) return null;
 
-  const text = isSourceTemplate 
-    ? "Source template" 
-    : `${teamName}`;
+  const text = isSourceTemplate ? "Source template" : `${teamName}`;
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: 0.25 }}>

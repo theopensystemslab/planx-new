@@ -1,11 +1,16 @@
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { Role, Team, User, UserTeams } from "@opensystemslab/planx-core/types";
 import { getUser } from "lib/api/auth/requests";
-import { handleExpiredJWTErrors } from "lib/graphql/auth";
 import type { StateCreator } from "zustand";
 
 import { EditorStore } from "./editor";
 import { TeamStore } from "./team";
+
+export const getDisplayRole = (user: User): string => {
+  if (user.isPlatformAdmin) return "Platform Admin";
+  if (user.isAnalyst) return "Analyst";
+  return "Team Editor";
+};
 
 export interface UserStore {
   user?: User;
@@ -15,6 +20,7 @@ export interface UserStore {
   canUserEditTeam: (teamSlug: Team["slug"]) => boolean;
   initUserStore: () => Promise<User>;
   getUserRoleForCurrentTeam: () => Role | undefined;
+  getUserRole: () => string | undefined;
 }
 
 export const userStore: StateCreator<
@@ -51,7 +57,6 @@ export const userStore: StateCreator<
       setUser(user);
       return user;
     } catch (error) {
-      handleExpiredJWTErrors();
       throw Error("Failed to fetch user matching JWT cookie");
     }
   },
@@ -69,5 +74,11 @@ export const userStore: StateCreator<
     if (!currentUserTeam) return;
 
     return currentUserTeam.role;
+  },
+
+  getUserRole: () => {
+    const user = get().user;
+    if (!user) return;
+    return getDisplayRole(user);
   },
 });

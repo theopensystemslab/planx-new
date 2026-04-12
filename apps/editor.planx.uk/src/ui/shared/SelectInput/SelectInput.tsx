@@ -24,22 +24,24 @@ const classes = {
   inputSelect: `${PREFIX}-inputSelect`,
 };
 
-const Root = styled(Select)<{ size?: "small" | "default" }>(({ theme, size }) => ({
-  width: "100%",
-  padding: 0,
-  height: size === "small" ? 40 : "unset",
-  minWidth: "175px",
-  [`& .${selectClasses.select}`]: {
+const Root = styled(Select)<{ size?: "small" | "default" }>(
+  ({ theme, size }) => ({
     width: "100%",
-    padding: size === "small" ? theme.spacing(1) : theme.spacing(1, 1.5),
-  },
-  // Match caret in MultipleSelect component
-  [`& .${classes.icon}`]: {
-    padding: size === "small" ? theme.spacing(0.25) : theme.spacing(0.5),
-    color: theme.palette.primary.main,
-    fontSize: size === "small" ? "2rem" : "2.5rem",
-  },
-}));
+    padding: 0,
+    height: size === "small" ? 40 : "unset",
+    minWidth: "175px",
+    [`& .${selectClasses.select}`]: {
+      width: "100%",
+      padding: size === "small" ? theme.spacing(1) : theme.spacing(1, 1.5),
+    },
+    // Match caret in MultipleSelect component
+    [`& .${classes.icon}`]: {
+      padding: size === "small" ? theme.spacing(0.25) : theme.spacing(0.5),
+      color: theme.palette.primary.main,
+      fontSize: size === "small" ? "2rem" : "2.5rem",
+    },
+  }),
+);
 
 export default function SelectInput({
   children,

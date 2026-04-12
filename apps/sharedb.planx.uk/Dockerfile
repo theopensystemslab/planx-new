@@ -1,8 +1,8 @@
-# 22.14.0 = LTS
-FROM node:22.14.0-alpine AS base
+# 24.14.0 = LTS
+FROM node:24.14.0-alpine AS base
 
 WORKDIR /sharedb
-RUN npm install -g pnpm@10.10.0
+RUN npm install -g pnpm@10.30.2
 COPY pnpm-lock.yaml .
 
 FROM base AS production

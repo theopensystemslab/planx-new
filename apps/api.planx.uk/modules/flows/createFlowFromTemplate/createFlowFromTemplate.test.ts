@@ -77,8 +77,21 @@ describe("success", () => {
       name: "InsertFlow",
       matchOnVariables: false,
       data: {
-        flow: {
+        insertFlow: {
           id: "2",
+        },
+      },
+      variables: {
+        team_id: 1,
+        slug: "my-new-flow",
+        name: "My New Flow",
+        data: mockSourceTemplateFlowData,
+        email_id: "default-email-id",
+        flow_integration: {
+          data: {
+            team_id: 1,
+            email_id: "default-email-id",
+          },
         },
       },
     });

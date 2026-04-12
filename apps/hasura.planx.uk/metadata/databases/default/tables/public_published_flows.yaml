@@ -21,29 +21,8 @@ insert_permissions:
         - has_send_component
         - id
         - publisher_id
+        - service_charge_enabled
         - summary
-  - role: demoUser
-    permission:
-      check:
-        _and:
-          - flow:
-              creator_id:
-                _eq: x-hasura-user-id
-          - flow:
-              team:
-                id:
-                  _eq: 32
-      columns:
-        - created_at
-        - data
-        - flow_id
-        - has_pay_component
-        - has_sections
-        - has_send_component
-        - id
-        - publisher_id
-        - summary
-    comment: A demoUser can only insert a published flow for their own flows and for flows inside the Demo team [id = 32]
   - role: platformAdmin
     permission:
       check: {}
@@ -56,6 +35,7 @@ insert_permissions:
         - has_send_component
         - id
         - publisher_id
+        - service_charge_enabled
         - summary
   - role: teamEditor
     permission:
@@ -77,8 +57,25 @@ insert_permissions:
         - has_send_component
         - id
         - publisher_id
+        - service_charge_enabled
         - summary
 select_permissions:
+  - role: analyst
+    permission:
+      columns:
+        - has_pay_component
+        - has_sections
+        - has_send_component
+        - service_charge_enabled
+        - id
+        - publisher_id
+        - summary
+        - created_at
+        - flow_id
+        - data
+      filter: {}
+      allow_aggregations: true
+    comment: ""
   - role: api
     permission:
       columns:
@@ -90,20 +87,7 @@ select_permissions:
         - has_send_component
         - id
         - publisher_id
-        - summary
-      filter: {}
-      allow_aggregations: true
-  - role: demoUser
-    permission:
-      columns:
-        - created_at
-        - data
-        - flow_id
-        - has_pay_component
-        - has_sections
-        - has_send_component
-        - id
-        - publisher_id
+        - service_charge_enabled
         - summary
       filter: {}
       allow_aggregations: true
@@ -118,6 +102,7 @@ select_permissions:
         - has_send_component
         - id
         - publisher_id
+        - service_charge_enabled
         - summary
       filter: {}
       allow_aggregations: true
@@ -132,6 +117,7 @@ select_permissions:
         - has_send_component
         - id
         - publisher_id
+        - service_charge_enabled
         - summary
       filter: {}
       allow_aggregations: true
@@ -146,6 +132,7 @@ select_permissions:
         - has_send_component
         - id
         - publisher_id
+        - service_charge_enabled
         - summary
       filter: {}
       allow_aggregations: true

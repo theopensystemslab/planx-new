@@ -38,11 +38,12 @@ const Component: React.FC<Props> = (props: Props) => {
 
   return (
     <Formik<Pay>
+      innerRef={props.formikRef}
       initialValues={parsePay(props.node?.data)}
       onSubmit={onSubmit}
       validationSchema={validationSchema}
-      validateOnChange={false}
       validateOnBlur={false}
+      validateOnChange={false}
     >
       {(formik) => (
         <Form id="modal" name="modal">

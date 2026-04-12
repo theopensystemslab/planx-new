@@ -8,8 +8,8 @@ import { setup } from "testUtils";
 import { Condition, Operator } from "../shared/RuleBuilder/types";
 import ResponsiveQuestion from "./Editor";
 
-it("renders without error", () => {
-  setup(
+it("renders without error", async () => {
+  await setup(
     <DndProvider backend={HTML5Backend}>
       <ResponsiveQuestion node={{}} options={[]} />
     </DndProvider>,
@@ -19,7 +19,7 @@ it("renders without error", () => {
 });
 
 it("displays the options editor when the 'Add option' button is clicked", async () => {
-  const { user } = setup(
+  const { user } = await setup(
     <DndProvider backend={HTML5Backend}>
       <ResponsiveQuestion node={{}} options={[]} />
     </DndProvider>,
@@ -34,7 +34,7 @@ it("displays the options editor when the 'Add option' button is clicked", async 
 });
 
 it("populates the modal with existing data", async () => {
-  setup(
+  await setup(
     <DndProvider backend={HTML5Backend}>
       <ResponsiveQuestion
         node={{ data: { text: "My title", description: "My description" } }}
@@ -71,7 +71,7 @@ it("populates the modal with existing data", async () => {
 
 it("can construct a valid payload", async () => {
   const handleSubmit = vi.fn();
-  const { user } = setup(
+  const { user } = await setup(
     <DndProvider backend={HTML5Backend}>
       <ResponsiveQuestion node={{}} options={[]} handleSubmit={handleSubmit} />
     </DndProvider>,
@@ -83,17 +83,17 @@ it("can construct a valid payload", async () => {
   // Add first option with default rule
   await user.click(screen.getByRole("button", { name: /Add option/i }));
   await user.type(screen.getByPlaceholderText("Option"), "First Option");
-  expect(screen.getByText("Always required")).toBeVisible();
+  expect(screen.getByText("Always show")).toBeVisible();
 
   // Add second option with conditional rule
   await user.click(screen.getByRole("button", { name: /Add option/i }));
   await user.type(screen.getAllByPlaceholderText("Option")[1], "Second Option");
 
-  const ruleDropdowns = screen.getAllByText("Always required");
+  const ruleDropdowns = screen.getAllByText("Always show");
   expect(ruleDropdowns).toHaveLength(2);
 
   await user.click(ruleDropdowns[1]);
-  await user.click(await screen.findByRole("option", { name: /required if/i }));
+  await user.click(await screen.findByRole("option", { name: /show if/i }));
 
   const conditionalField = (
     await screen.findAllByPlaceholderText("Data field")

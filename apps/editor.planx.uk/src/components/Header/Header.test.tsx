@@ -1,8 +1,8 @@
 import { Team } from "@opensystemslab/planx-core/types";
+import * as TanStackRouter from "@tanstack/react-router";
 import { act, screen } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import * as ReactNavi from "react-navi";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
@@ -67,9 +67,30 @@ const mockTeam2: Team = {
   },
 };
 
-vi.spyOn(ReactNavi, "useNavigation").mockReturnValue({
-  navigate: vi.fn(),
-} as any);
+vi.mock("ui/shared/CustomLink/CustomLink", () => ({
+  CustomLink: ({
+    children,
+    ...props
+  }: {
+    children?: React.ReactNode;
+  } & React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
+    <a {...props}>{children}</a>
+  ),
+}));
+
+vi.mock("@tanstack/react-router", async () => {
+  const actual = await vi.importActual("@tanstack/react-router");
+  return {
+    ...actual,
+    useLocation: vi.fn(),
+    useNavigate: vi.fn(() => vi.fn()),
+    useParams: vi.fn(() => ({})),
+    useRouteContext: vi.fn(() => ({})),
+  };
+});
+
+const mockUseLocation = vi.mocked(TanStackRouter.useLocation);
+const mockUseParams = vi.mocked(TanStackRouter.useParams);
 
 describe("Header Component - Editor Route", () => {
   beforeAll(() => {
@@ -80,6 +101,8 @@ describe("Header Component - Editor Route", () => {
         teamSettings: mockTeam1.settings,
         teamTheme: mockTeam1.theme,
         teamSlug: mockTeam1.slug,
+        flowName: "test-flow",
+        flowSlug: "test-flow",
         user: {
           firstName: "Test",
           lastName: "User",
@@ -88,43 +111,34 @@ describe("Header Component - Editor Route", () => {
           teams: [],
           id: 123,
           email: "test@example.com",
+          defaultTeamId: mockTeam1.id,
         },
       }),
     );
 
-    vi.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
-      () =>
-        ({
-          url: {
-            href: "test",
-            pathname: "/team-name/flow-name",
-          },
-          data: {
-            flow: "test-flow",
-          },
-        }) as any,
-    );
+    mockUseLocation.mockReturnValue({
+      pathname: "/team-name/flow-name",
+      search: {},
+      hash: "",
+      href: "/team-name/flow-name",
+      state: { __TSR_index: 0 },
+      searchStr: "",
+      publicHref: "",
+      external: false,
+    });
+
+    mockUseParams.mockReturnValue({
+      team: "team-name",
+      flow: "flow-name",
+    });
   });
 
   afterAll(() => {
     setState({ previewEnvironment: "standalone" });
   });
 
-  it("displays breadcrumbs", () => {
-    setup(<Header />);
-    expect(screen.getByText("Plan✕")).toBeInTheDocument();
-    expect(screen.getByText(mockTeam1.slug)).toBeInTheDocument();
-    expect(screen.getByText("test-flow")).toBeInTheDocument();
-  });
-
-  it("displays avatar and settings", () => {
-    setup(<Header />);
-    expect(screen.getByText("TU")).toBeInTheDocument();
-    expect(screen.getByLabelText("Toggle Menu")).toBeInTheDocument();
-  });
-
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(<Header />);
+    const { container } = await setup(<Header />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
@@ -133,22 +147,33 @@ describe("Header Component - Editor Route", () => {
 for (const route of ["/published", "/preview", "/draft", "/pay", "/invite"]) {
   describe(`Header Component - ${route} Routes`, () => {
     beforeAll(() => {
-      vi.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
-        () =>
-          ({
-            url: {
-              href: "test",
-              pathname: "/opensystemslab/test-flow" + route,
-            },
-            data: {
-              flow: "test-flow",
-            },
-          }) as any,
-      );
+      mockUseLocation.mockReturnValue({
+        pathname: "/opensystemslab/test-flow" + route,
+        search: {},
+        hash: "",
+        href: "/opensystemslab/test-flow" + route,
+        state: { __TSR_index: 0 },
+        searchStr: "",
+        publicHref: "",
+        external: false,
+      });
+
+      mockUseParams.mockReturnValue({
+        team: "opensystemslab",
+        flow: "test-flow",
+      });
     });
 
-    it("displays a logo when available", () => {
-      setup(<Header />);
+    it("displays a logo when available", async () => {
+      act(() => {
+        setState({
+          previewEnvironment: "standalone",
+          teamTheme: mockTeam1.theme,
+          teamName: mockTeam1.name,
+          teamSlug: mockTeam1.slug,
+        });
+      });
+      await setup(<Header />);
       expect(screen.queryByText("Plan✕")).not.toBeInTheDocument();
       expect(screen.getByAltText(`${mockTeam1.name} Logo`)).toHaveAttribute(
         "src",
@@ -156,18 +181,23 @@ for (const route of ["/published", "/preview", "/draft", "/pay", "/invite"]) {
       );
     });
 
-    it("falls back to the PlanX link when a logo is not present", () => {
-      act(() => setState({ teamTheme: mockTeam2.theme }));
-      setup(<Header />);
-      expect(
-        screen.queryByAltText(`${mockTeam2.name} Logo`),
-      ).not.toBeInTheDocument();
-      expect(screen.getByText("Plan✕")).toBeInTheDocument();
+    it("falls back to the team name when a logo is not present", async () => {
+      act(() => {
+        setState({
+          previewEnvironment: "standalone",
+          teamTheme: mockTeam2.theme,
+          teamName: mockTeam2.name,
+          teamSlug: mockTeam2.slug,
+        });
+      });
+      await setup(<Header />);
+      expect(screen.getByText(mockTeam2.name)).toBeInTheDocument();
+      expect(screen.queryByText("Plan✕")).not.toBeInTheDocument();
       act(() => setState({ teamTheme: mockTeam1.theme }));
     });
 
-    it("displays service title from the store", () => {
-      setup(<Header />);
+    it("displays service title from the store", async () => {
+      await setup(<Header />);
       act(() => setState({ flowName: "test flow" }));
 
       expect(screen.getByTestId("service-title")).toBeInTheDocument();
@@ -175,7 +205,7 @@ for (const route of ["/published", "/preview", "/draft", "/pay", "/invite"]) {
     });
 
     it("should not have any accessibility violations", async () => {
-      const { container } = setup(<Header />);
+      const { container } = await setup(<Header />);
       const results = await axe(container);
       expect(results).toHaveNoViolations();
     });
@@ -184,23 +214,26 @@ for (const route of ["/published", "/preview", "/draft", "/pay", "/invite"]) {
 
 describe("Section navigation bar", () => {
   beforeAll(() => {
-    vi.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
-      () =>
-        ({
-          url: {
-            href: "test",
-            pathname: "/team-name/flow-name/published",
-          },
-          data: {
-            flow: "test-flow",
-          },
-        }) as any,
-    );
+    mockUseLocation.mockReturnValue({
+      pathname: "/team-name/flow-name/published",
+      search: {},
+      hash: "",
+      href: "/team-name/flow-name/published",
+      state: { __TSR_index: 0 },
+      searchStr: "",
+      publicHref: "",
+      external: false,
+    });
+
+    mockUseParams.mockReturnValue({
+      team: "team-name",
+      flow: "flow-name",
+    });
   });
 
   describe("Flow without sections", () => {
-    it("does not display", () => {
-      setup(<Header />);
+    it("does not display", async () => {
+      await setup(<Header />);
       act(() => setState({ flow: flowWithoutSections }));
       act(() => getState().initNavigationStore());
 
@@ -209,18 +242,18 @@ describe("Section navigation bar", () => {
   });
 
   describe("Flow with sections", () => {
-    it("displays as expected", () => {
+    it("displays as expected", async () => {
       act(() => setState({ flow: flowWithThreeSections }));
       act(() => getState().initNavigationStore());
-      setup(<Header />);
+      await setup(<Header />);
 
       expect(screen.getByTestId("navigation-bar")).toBeInTheDocument();
     });
 
-    it("display the correct information from the store", () => {
+    it("display the correct information from the store", async () => {
       act(() => setState({ flow: flowWithThreeSections }));
       act(() => getState().initNavigationStore());
-      setup(<Header />);
+      await setup(<Header />);
 
       expect(screen.getByText("Section 1 of 3")).toBeInTheDocument();
       expect(screen.getByText("First section")).toBeInTheDocument();
@@ -229,7 +262,7 @@ describe("Section navigation bar", () => {
     it("should not have any accessibility violations", async () => {
       act(() => setState({ flow: flowWithThreeSections }));
       act(() => getState().initNavigationStore());
-      const { container } = setup(<Header />);
+      const { container } = await setup(<Header />);
 
       const results = await axe(container);
       expect(results).toHaveNoViolations();

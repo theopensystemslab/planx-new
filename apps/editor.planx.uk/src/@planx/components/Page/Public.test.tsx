@@ -7,7 +7,7 @@ import PageComponent from "./Public";
 import { ProposedAdvertisements } from "./schema/AdvertConsent";
 
 it("renders correctly", async () => {
-  const { getByRole } = setup(
+  const { getByRole } = await setup(
     <PageComponent
       handleSubmit={vi.fn()}
       schema={ProposedAdvertisements}
@@ -25,7 +25,7 @@ it("renders correctly", async () => {
 });
 
 it("has no accessibility violations", async () => {
-  const { container } = setup(
+  const { container } = await setup(
     <PageComponent
       handleSubmit={vi.fn()}
       schema={ProposedAdvertisements}
@@ -39,8 +39,8 @@ it("has no accessibility violations", async () => {
   expect(results).toHaveNoViolations();
 });
 
-it("displays the supplied Page schema", () => {
-  const { getByLabelText } = setup(
+it("displays the supplied Page schema", async () => {
+  const { getByLabelText } = await setup(
     <PageComponent
       handleSubmit={vi.fn()}
       schema={ProposedAdvertisements}
@@ -66,7 +66,7 @@ it("handles PageSchema errors", async () => {
     getByTestId,
     queryByText,
     getAllByText,
-  } = setup(
+  } = await setup(
     <PageComponent
       handleSubmit={handleSubmit}
       schema={ProposedAdvertisements}
@@ -100,7 +100,7 @@ it("handles PageSchema errors", async () => {
 
 it("submits a valid payload", async () => {
   const handleSubmit = vi.fn();
-  const { user, getAllByLabelText, getByTestId } = setup(
+  const { user, getAllByLabelText, getByTestId } = await setup(
     <PageComponent
       handleSubmit={handleSubmit}
       schema={ProposedAdvertisements}
@@ -148,7 +148,7 @@ it("submits a valid payload", async () => {
   expect(handleSubmit).toHaveBeenCalledWith(expectedDefaultData);
 });
 
-it("handles back navigation", () => {
+it("handles back navigation", async () => {
   const previousData = {
     data: {
       testFn: [
@@ -167,7 +167,7 @@ it("handles back navigation", () => {
   };
 
   const handleSubmit = vi.fn();
-  const { getByLabelText } = setup(
+  const { getByLabelText } = await setup(
     <PageComponent
       handleSubmit={handleSubmit}
       schema={ProposedAdvertisements}

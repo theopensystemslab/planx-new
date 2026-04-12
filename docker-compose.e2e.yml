@@ -29,3 +29,5 @@ services:
       UNIFORM_CLIENT_E2E: e2e:123
       NODE_ENV: test
       APP_ENVIRONMENT: test
+      RESEND_BASE_URL: http://mock-server:8080
+      RESEND_API_KEY: test

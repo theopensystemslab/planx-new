@@ -4,39 +4,52 @@ export const GET_TEAM_SUBMISSION_INTEGRATIONS = gql`
   query GetTeamSubmissionIntegrations($teamId: Int!) {
     submissionIntegrations: submission_integrations(
       where: { team_id: { _eq: $teamId } }
+      order_by: { submission_email: asc }
     ) {
       teamId: team_id
+      id
       submissionEmail: submission_email
       defaultEmail: default_email
-    }
-  }
-`;
-
-export const CREATE_TEAM_SUBMISSION_INTEGRATIONS = gql`
-  mutation InsertSubmissionIntegration {
-    insert_submission_integrations(
-      objects: { submission_email: $submission_email, team_id: $team_id }
-    ) {
-      returning {
+      flows {
         id
+        name
+        slug
       }
     }
   }
 `;
 
-export const UPDATE_TEAM_SUBMISSION_INTEGRATIONS = gql`
-  mutation UpdateSubmissionIntegration(
-    $id: uuid!
-    $submissionEmail: String
-    $teamId: Int
+export const UPSERT_TEAM_SUBMISSION_INTEGRATIONS = gql`
+  mutation UpsertSubmissionIntegrations(
+    $emails: [submission_integrations_insert_input!]!
   ) {
-    update_submission_integrations_by_pk(
-      pk_columns: { id: $id }
-      _set: { submission_email: $submissionEmail, team_id: $teamId }
+    insert_submission_integrations(
+      objects: $emails
+      on_conflict: {
+        constraint: submission_integrations_pkey
+        update_columns: [submission_email, default_email]
+      }
     ) {
-      id
-      submissionEmail: submission_email
-      teamId: team_id
+      returning {
+        id
+        submissionEmail: submission_email
+        teamId: team_id
+        defaultEmail: default_email
+      }
+    }
+  }
+`;
+
+export const DELETE_TEAM_SUBMISSION_INTEGRATIONS = gql`
+  mutation DeleteSubmissionIntegration($submissionEmailId: uuid!) {
+    delete_submission_integrations(
+      where: { id: { _eq: $submissionEmailId }, default_email: { _eq: false } }
+    ) {
+      returning {
+        teamId: team_id
+        submissionEmail: submission_email
+        defaultEmail: default_email
+      }
     }
   }
 `;

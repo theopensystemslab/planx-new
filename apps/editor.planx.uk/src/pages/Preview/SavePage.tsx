@@ -7,7 +7,6 @@ import { useLPS } from "hooks/useLPS";
 import { sendSaveEmail } from "lib/api/saveAndReturn/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
-import { removeSessionIdSearchParam } from "utils";
 
 import StatusPage from "./StatusPage";
 
@@ -16,13 +15,14 @@ export const SaveSuccess: React.FC<{
   expiryDate?: string;
 }> = ({ saveToEmail, expiryDate }) => {
   const { url: lpsURL } = useLPS();
+  const resetPreview = useStore().resetPreview;
 
   return (
     <StatusPage
       bannerHeading="Form saved"
       showDownloadLink
       buttonText="Start a new form"
-      onButtonClick={removeSessionIdSearchParam}
+      onButtonClick={() => resetPreview()}
     >
       <Stack spacing={1}>
         <Typography variant="body2" sx={{ fontWeight: "bold" }}>
@@ -40,22 +40,19 @@ export const SaveSuccess: React.FC<{
         </Typography>
         <Typography variant="body2">
           Use the link to continue your form. You have until {expiryDate} to
-          complete it. Your form will be deleted if you do not complete it by this
-          date.
+          complete it. Your form will be deleted if you do not complete it by
+          this date.
         </Typography>
         <Typography variant="body2">
           Your can also continue this form via{" "}
-          <Link
-            href={lpsURL}
-            data-testid="upload-file-button"
-          >
+          <Link href={lpsURL} data-testid="upload-file-button">
             Find Local Planning Services (opens in a new tab)
           </Link>
         </Typography>
         <Typography variant="body2">You may now close this tab.</Typography>
       </Stack>
     </StatusPage>
-  )
+  );
 };
 
 export const SaveError: React.FC = () => {

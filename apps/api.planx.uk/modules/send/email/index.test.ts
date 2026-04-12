@@ -1,16 +1,7 @@
 import supertest from "supertest";
 import type * as planxCore from "@opensystemslab/planx-core";
-import type { ExportClient } from "@opensystemslab/planx-core";
 import { queryMock } from "../../../tests/graphqlQueryMock.js";
 import app from "../../../server.js";
-
-const mockGenerateCSVData = vi.fn().mockResolvedValue([
-  {
-    question: "Is this a test?",
-    responses: [{ value: "Yes" }],
-    metadata: {},
-  },
-]);
 
 vi.mock("@opensystemslab/planx-core", async () => {
   const actualCore = await vi.importActual<typeof planxCore>(
@@ -19,17 +10,10 @@ vi.mock("@opensystemslab/planx-core", async () => {
   const mockPassport = class MockPassport {
     files = vi.fn().mockImplementation(() => []);
   };
-  const mockCoreDomainClient = class extends actualCore.CoreDomainClient {
-    constructor() {
-      super();
-      this.export.csvData = () => mockGenerateCSVData();
-    }
-  };
 
   return {
     ...actualCore,
     Passport: mockPassport,
-    CoreDomainClient: mockCoreDomainClient,
   };
 });
 
@@ -55,9 +39,9 @@ describe(`sending an application by email to a planning office`, () => {
       data: {
         teams: [
           {
+            teamId: 1,
             teamSettings: {
               emailReplyToId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
-              submissionEmail: "planning.office.example@council.gov.uk",
             },
           },
         ],
@@ -72,27 +56,6 @@ describe(`sending an application by email to a planning office`, () => {
       },
       variables: { id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
       matchOnVariables: true,
-    });
-
-    queryMock.mockQuery({
-      name: "GetSessionEmailDetails",
-      matchOnVariables: true,
-      data: {
-        session: {
-          email: "simulate-delivered@notifications.service.gov.uk",
-          flow: { slug: "test-flow", name: "Test Flow" },
-          passportData: {
-            _address: {
-              single_line_address: "Bag End, Underhill, Hobbiton",
-            },
-            "proposal.projectType": "",
-            "applicant.name.first": "Bilbo",
-            "applicant.name.last": "Baggins",
-            "application.fee.payable": 100,
-          },
-        },
-      },
-      variables: { id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
     });
 
     queryMock.mockQuery({
@@ -136,6 +99,55 @@ describe(`sending an application by email to a planning office`, () => {
         session_id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49",
       },
     });
+
+    queryMock.mockQuery({
+      name: "GetFlowId",
+      matchOnVariables: true,
+      data: {
+        lowcalSessions: [{ flowId: "91693304-fc37-4079-8ec3-e33a6164a27a" }],
+      },
+      variables: { session_id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
+    });
+
+    queryMock.mockQuery({
+      name: "GetFlowSubmissionEmail",
+      matchOnVariables: true,
+      data: {
+        flowsByPK: {
+          submissionEmailId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
+          submissionIntegration: {
+            submissionEmail: "planning.office.example@council.gov.uk",
+          },
+        },
+      },
+      variables: { flowId: "91693304-fc37-4079-8ec3-e33a6164a27a" },
+    });
+
+    queryMock.mockQuery({
+      name: "GetSessionEmailDetails",
+      matchOnVariables: false,
+      data: {
+        session: {
+          passportData: {},
+          email: "email@email.com",
+          flow: {
+            slug: "a-flow",
+            name: "A Flow",
+          },
+        },
+      },
+      variables: { id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
+    });
+
+    queryMock.mockQuery({
+      name: "InsertApplicationAccessToken",
+      matchOnVariables: false,
+      data: {
+        applicationAccessTokens: {
+          token: "mock-access-token",
+        },
+      },
+    });
   });
 
   it("succeeds when provided with valid data", async () => {
@@ -174,21 +186,31 @@ describe(`sending an application by email to a planning office`, () => {
       });
   });
 
-  it("errors if this team does not have a 'submission_email' configured in teams", async () => {
+  it("errors if this team does not have a 'submission_email'", async () => {
     queryMock.mockQuery({
-      name: "GetTeamEmailSettings",
+      name: "GetFlowSubmissionEmail",
       matchOnVariables: false,
       data: {
-        teams: [
+        flowsByPK: {
+          submissionEmailId: null,
+          submissionIntegration: {
+            submissionEmail: null,
+          },
+        },
+      },
+      variables: { flowId: "11111111-1111-1111-1111-111111111111" },
+    });
+
+    queryMock.mockQuery({
+      name: "GetDefaultSubmissionIntegration",
+      data: {
+        submissionIntegrations: [
           {
-            teamSettings: {
-              emailReplyToId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
-              submissionEmail: null,
-            },
+            submissionEmail: null,
           },
         ],
       },
-      variables: { slug: "southwark" },
+      variables: { teamId: 1 },
     });
 
     await supertest(app)
@@ -251,169 +273,22 @@ describe(`sending an application by email to a planning office`, () => {
         expect(res.body.error).toMatch(/Cannot find session/);
       });
   });
-});
 
-describe(`downloading application data received by email`, () => {
-  beforeEach(() => {
+  it("errors if an access token cannot be generated", async () => {
     queryMock.mockQuery({
-      name: "GetTeamEmailSettings",
+      name: "InsertApplicationAccessToken",
+      graphqlErrors: [{ message: "Something went wrong" }],
+      data: {},
       matchOnVariables: false,
-      data: {
-        teams: [
-          {
-            teamSettings: {
-              submissionEmail: "planning.office.example@council.gov.uk",
-            },
-          },
-        ],
-      },
-      variables: { slug: "southwark" },
-    });
-
-    queryMock.mockQuery({
-      name: "GetSessionData",
-      matchOnVariables: true,
-      data: {
-        session: { data: { passport: { test: "dummy data" } } },
-      },
-      variables: { id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
-    });
-
-    queryMock.mockQuery({
-      name: "GetFlowId",
-      matchOnVariables: true,
-      data: {
-        lowcalSessions: [{ flowId: "91693304-fc37-4079-8ec3-e33a6164a27a" }],
-      },
-      variables: { session_id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
-    });
-
-    queryMock.mockQuery({
-      name: "GetFlowSubmissionEmail",
-      matchOnVariables: true,
-      data: {
-        flowIntegrations: [
-          {
-            emailId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
-            submissionIntegration: {
-              submissionEmail: "planning.office.example@council.gov.uk",
-            },
-          },
-        ],
-      },
-      variables: { flowId: "91693304-fc37-4079-8ec3-e33a6164a27a" },
-    });
-  });
-
-  it("errors if required query params are missing", async () => {
-    await supertest(app)
-      .get("/download-application-files/123?email=planning_office@test.com")
-      .expect(400)
-      .then((res) => {
-        expect(res.body).toEqual({
-          error: "Missing values required to access application files",
-        });
-      });
-  });
-
-  it("errors if email query param does not match the stored database value for this team", async () => {
-    await supertest(app)
-      .get(
-        "/download-application-files/123?email=wrong@council.gov.uk&localAuthority=southwark",
-      )
-      .expect(403)
-      .then((res) => {
-        expect(res.body).toEqual({
-          error:
-            "Provided email address is not enabled to access application files",
-        });
-      });
-  });
-
-  it("errors if session data is not found", async () => {
-    queryMock.mockQuery({
-      name: "GetSessionData",
-      data: {
-        session: { data: null },
-      },
-      variables: { id: "456" },
     });
 
     await supertest(app)
-      .get(
-        "/download-application-files/456?email=planning.office.example@council.gov.uk&localAuthority=southwark",
-      )
-      .expect(400)
+      .post("/email-submission/southwark")
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+      .send({ payload: { sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" } })
+      .expect(500)
       .then((res) => {
-        expect(res.body.error).toMatch(
-          /Failed to find session data for this sessionId/,
-        );
-      });
-  });
-
-  it("errors if flowId is missing in GetFlowId query response", async () => {
-    queryMock.mockQuery({
-      name: "GetFlowId",
-      matchOnVariables: false,
-      data: {
-        lowcalSessions: [], // No flowId returned
-      },
-      variables: { session_id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
-    });
-
-    await supertest(app)
-      .get(
-        "/download-application-files/33d373d4-fff2-4ef7-a5f2-2a36e39ccc49?email=planning.office.example@council.gov.uk&localAuthority=southwark",
-      )
-      .expect(400)
-      .then((res) => {
-        expect(res.body.error).toMatch(
-          /Failed to find flow ID for this sessionId/,
-        );
-      });
-  });
-
-  it("errors if submissionEmail is missing in GetFlowSubmissionEmail query response", async () => {
-    queryMock.mockQuery({
-      name: "GetFlowSubmissionEmail",
-      matchOnVariables: false,
-      data: {
-        flowIntegrations: [
-          {
-            emailId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
-            submissionIntegration: {
-              submissionEmail: null, // Missing submissionEmail
-            },
-          },
-        ],
-      },
-      variables: { flowId: "91693304-fc37-4079-8ec3-e33a6164a27a" },
-    });
-
-    await supertest(app)
-      .get(
-        "/download-application-files/33d373d4-fff2-4ef7-a5f2-2a36e39ccc49?email=planning.office.example@council.gov.uk&localAuthority=southwark",
-      )
-      .expect(400)
-      .then((res) => {
-        expect(res.body.error).toMatch(
-          /Failed to retrieve submission email for this flow/,
-        );
-      });
-  });
-
-  it("successfully downloads application files when all data is valid", async () => {
-    await supertest(app)
-      .get(
-        "/download-application-files/33d373d4-fff2-4ef7-a5f2-2a36e39ccc49?email=planning.office.example@council.gov.uk&localAuthority=southwark",
-      )
-      .expect(200)
-      .then((res) => {
-        expect(res.headers["content-type"]).toBe("application/octet-stream");
-        expect(res.headers["content-disposition"]).toMatch(
-          /attachment; filename=/,
-        );
-        expect(res.body).toBeInstanceOf(Buffer); // Ensure the response is a buffer
+        expect(res.body.error).toMatch(/Failed to create access token/);
       });
   });
 });

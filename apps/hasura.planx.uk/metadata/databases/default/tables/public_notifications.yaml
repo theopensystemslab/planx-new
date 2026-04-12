@@ -1,0 +1,40 @@
+table:
+  name: notifications
+  schema: public
+insert_permissions:
+  - role: api
+    permission:
+      check: {}
+      columns:
+        - id
+        - type
+        - created_at
+        - resolved_at
+        - flow_id
+        - team_id
+    comment: ""
+select_permissions:
+  - role: api
+    permission:
+      columns:
+        - id
+        - type
+        - created_at
+        - resolved_at
+        - flow_id
+        - team_id
+      filter: {}
+    comment: ""
+update_permissions:
+  - role: api
+    permission:
+      columns:
+        - id
+        - team_id
+        - type
+        - created_at
+        - resolved_at
+        - flow_id
+      filter: {}
+      check: {}
+    comment: ""

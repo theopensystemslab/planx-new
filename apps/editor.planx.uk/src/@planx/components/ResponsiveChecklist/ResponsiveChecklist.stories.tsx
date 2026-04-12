@@ -20,7 +20,7 @@ import { ResponsiveChecklistWithOptions } from "./model";
 import ResponsiveChecklist from "./Public";
 
 const meta = {
-  title: "PlanX Components/Responsive Checklist",
+  title: "PlanX Components/ResponsiveChecklist",
   component: ResponsiveChecklist,
   argTypes: {
     handleSubmit: { action: true, control: { disable: true } },

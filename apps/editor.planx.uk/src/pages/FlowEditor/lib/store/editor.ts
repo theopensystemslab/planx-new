@@ -22,8 +22,8 @@ import {
   update,
 } from "@planx/graph";
 import { OT } from "@planx/graph/types";
+import type { RegisteredRouter } from "@tanstack/react-router";
 import { client } from "lib/graphql";
-import navigation from "lib/navigation";
 import debounce from "lodash/debounce";
 import { type } from "ot-json0";
 import {
@@ -76,7 +76,7 @@ export interface EditorUIStore {
   toggleShowHelpText: () => void;
   previousURL?: string;
   currentURL: string;
-  initURLTracking: () => void;
+  initURLTracking: (router: RegisteredRouter) => () => void;
   openContextMenu: (
     position: ContextMenuPosition,
     relationships: Relationships,
@@ -147,16 +147,19 @@ export const editorUIStore: StateCreator<
 
     currentURL: window.location.pathname,
 
-    initURLTracking: () => {
-      navigation.subscribe((route) => {
+    initURLTracking: (router: RegisteredRouter) => {
+      const unsubscribe = router.subscribe("onResolved", () => {
         const { currentURL } = get();
-        if (route.url.pathname === currentURL) return;
+        const newURL = window.location.pathname;
+        if (newURL === currentURL) return;
 
         set((state) => ({
           previousURL: state.currentURL,
-          currentURL: route.url.pathname,
+          currentURL: newURL,
         }));
       });
+
+      return unsubscribe;
     },
 
     contextMenuPosition: null,
@@ -209,6 +212,7 @@ export type PublishedFlowSummary = {
   publishedAt: string;
   hasSendComponent: boolean;
   hasVisiblePayComponent: boolean;
+  hasEnabledServiceCharge: boolean;
 };
 
 export type FlowSummaryOperations = {
@@ -346,7 +350,7 @@ export const editorStore: StateCreator<
           mutation updateFlow($id: uuid!, $slug: String!) {
             flow: update_flows_by_pk(
               pk_columns: { id: $id }
-              _set: { deleted_at: "now()", status: offline, slug: $slug }
+              _set: { archived_at: "now()", status: offline, slug: $slug }
             ) {
               id
               name
@@ -409,6 +413,8 @@ export const editorStore: StateCreator<
   },
 
   disconnectFromFlow: () => {
+    if (!doc?.id) return;
+
     console.debug("[ShareDB] Disconnecting from flow:", doc?.id);
     // Clear local store cache of flow data
     set({ flow: {} });
@@ -513,7 +519,12 @@ export const editorStore: StateCreator<
     } = await client.query<{ flows: FlowSummary[] }>({
       query: gql`
         query GetFlows($teamId: Int!) {
-          flows(where: { team: { id: { _eq: $teamId } } }) {
+          flows(
+            where: {
+              team: { id: { _eq: $teamId } }
+              archived_at: { _is_null: true }
+            }
+          ) {
             id
             name
             slug
@@ -543,6 +554,7 @@ export const editorStore: StateCreator<
               publishedAt: created_at
               hasSendComponent: has_send_component
               hasVisiblePayComponent: has_pay_component
+              hasEnabledServiceCharge: service_charge_enabled
             }
           }
         }
@@ -567,6 +579,7 @@ export const editorStore: StateCreator<
       query: gql`
         query GetLastPublishedFlow($id: uuid!) {
           flow: flows_by_pk(id: $id) {
+            id
             published_flows(order_by: { created_at: desc }, limit: 1) {
               created_at
             }
@@ -594,6 +607,7 @@ export const editorStore: StateCreator<
       query: gql`
         query GetLastPublisher($id: uuid!) {
           flow: flows_by_pk(id: $id) {
+            id
             publishedFlows: published_flows(
               order_by: { created_at: desc }
               limit: 1
@@ -803,7 +817,7 @@ export const editorStore: StateCreator<
         ? `nodes/${grandparent.id}/nodes/${parent.id}/edit#${node.id}`
         : `nodes/${parent.id}/nodes/${node.id}/edit`;
 
-    const urlPath = `/${teamSlug}/${flowSlug}${portalPath}/${nodePath}`;
+    const urlPath = `/app/${teamSlug}/${flowSlug}${portalPath}/${nodePath}`;
     return urlPath;
   },
 

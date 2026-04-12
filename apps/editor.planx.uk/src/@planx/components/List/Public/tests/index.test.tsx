@@ -19,8 +19,8 @@ beforeEach(() => {
 });
 
 describe("Basic UI", () => {
-  it("renders correctly", () => {
-    const { getByText } = setup(<ListComponent {...mockZooProps} />);
+  it("renders correctly", async () => {
+    const { getByText } = await setup(<ListComponent {...mockZooProps} />);
 
     expect(getByText(/Mock Title/)).toBeInTheDocument();
     expect(getByText(/Mock description/)).toBeInTheDocument();
@@ -34,7 +34,7 @@ describe("Basic UI", () => {
       getByRole,
       queryAllByRole,
       queryByTestId,
-    } = setup(<ListComponent {...mockZooProps} />);
+    } = await setup(<ListComponent {...mockZooProps} />);
 
     // Text inputs are generated from schema...
     const textInput = getByLabelText(/What's their name?/) as HTMLInputElement;
@@ -110,7 +110,7 @@ describe("Basic UI", () => {
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(<ListComponent {...mockZooProps} />);
+    const { container } = await setup(<ListComponent {...mockZooProps} />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
@@ -120,7 +120,9 @@ test(
   "Input data is displayed in the inactive card view",
   { timeout: 35_000 },
   async () => {
-    const { getByText, user } = setup(<ListComponent {...mockZooProps} />);
+    const { getByText, user } = await setup(
+      <ListComponent {...mockZooProps} />,
+    );
 
     await fillInResponse(user);
 
@@ -169,7 +171,7 @@ test(
 
 describe("Navigating back", () => {
   test("it pre-populates list correctly", async () => {
-    const { getAllByText, queryByLabelText, getAllByTestId } = setup(
+    const { getAllByText, queryByLabelText, getAllByTestId } = await setup(
       <ListComponent
         {...mockZooProps}
         previouslySubmittedData={mockZooPayload}

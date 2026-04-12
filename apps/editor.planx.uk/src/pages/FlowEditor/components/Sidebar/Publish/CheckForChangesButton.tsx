@@ -9,6 +9,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { Template } from "pages/FlowEditor/lib/store/editor";
 import React, { useState } from "react";
 
+import { OpenServiceMenu } from "../OpenServiceMenu";
 import { usePublishFlow } from "./hooks/usePublishFlow";
 import { ChangesDialog, NoChangesDialog } from "./PublishDialog";
 
@@ -21,12 +22,14 @@ export const CheckForChangesToPublishButton: React.FC<{
     showLoading,
     hideLoading,
     setLoadingCompleteCallback,
+    teamSlug,
   ] = useStore((state) => [
     state.isTemplatedFrom,
     state.template,
     state.showLoading,
     state.hideLoading,
     state.setLoadingCompleteCallback,
+    state.getTeam().slug,
   ]);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const toast = useToast();
@@ -91,9 +94,6 @@ export const CheckForChangesToPublishButton: React.FC<{
     lastPublishedQuery.data,
   );
 
-  // useStore.getState().getTeam().slug undefined here, use window instead
-  const teamSlug = window.location.pathname.split("/")[1];
-
   const isDisabled =
     !useStore.getState().canUserEditTeam(teamSlug) ||
     checkForChangesMutation.isPending ||
@@ -101,38 +101,38 @@ export const CheckForChangesToPublishButton: React.FC<{
 
   return (
     <>
-      <Box width="100%" mt={2}>
-        <Box display="flex" flexDirection="column" alignItems="flex-end">
-          {isTemplatedFrom && template && (
-            <Box
-              sx={{
-                background: (theme) => theme.palette.template.main,
-                width: "100%",
-                padding: (theme) => theme.spacing(1),
-                marginBottom: (theme) => theme.spacing(2),
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "flex-start",
-              }}
-            >
-              <StarIcon sx={{ color: "#380F77", mr: 0.5 }} fontSize="small" />
-              <Box>
-                <Typography variant="body2">
-                  {`Templated from ${template.team.name}`}
-                </Typography>
-                <Typography variant="body2">
-                  <strong>
-                    {isTemplatedFlowDueToPublish
-                      ? "Due to review and publish"
-                      : "Up to date"}
-                  </strong>
-                </Typography>
-              </Box>
+      <Box width="100%">
+        {isTemplatedFrom && template && (
+          <Box
+            sx={{
+              background: (theme) => theme.palette.template.main,
+              width: "100%",
+              padding: (theme) => theme.spacing(1),
+              marginBottom: (theme) => theme.spacing(1),
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "flex-start",
+            }}
+          >
+            <StarIcon sx={{ color: "#380F77", mr: 0.5 }} fontSize="small" />
+            <Box>
+              <Typography variant="body2">
+                {`Templated from ${template.team.name}`}
+              </Typography>
+              <Typography variant="body2">
+                <strong>
+                  {isTemplatedFlowDueToPublish
+                    ? "Due to review and publish"
+                    : "Up to date"}
+                </strong>
+              </Typography>
             </Box>
-          )}
+          </Box>
+        )}
+        <Box display="flex" gap={1}>
           <Button
             data-testid="check-for-changes-to-publish-button"
-            sx={{ width: "100%" }}
+            sx={{ flex: 1 }}
             variant="contained"
             color="primary"
             disabled={isDisabled}
@@ -145,28 +145,27 @@ export const CheckForChangesToPublishButton: React.FC<{
           >
             {buttonText}
           </Button>
-          {!alteredNodes || alteredNodes?.length === 0 ? (
-            <NoChangesDialog
-              dialogOpen={dialogOpen}
-              setDialogOpen={setDialogOpen}
-            />
-          ) : (
-            <ChangesDialog
-              dialogOpen={dialogOpen}
-              setDialogOpen={setDialogOpen}
-              alteredNodes={alteredNodes}
-              history={history}
-              status={status}
-              validationChecks={validationChecks}
-              previewURL={previewURL}
-              handlePublish={handlePublish}
-              templatedFlows={templatedFlows}
-            />
-          )}
-          <Box mr={0}>
-            <Typography variant="caption">{status}</Typography>
-          </Box>
+          <OpenServiceMenu />
         </Box>
+        {!alteredNodes || alteredNodes?.length === 0 ? (
+          <NoChangesDialog
+            dialogOpen={dialogOpen}
+            setDialogOpen={setDialogOpen}
+          />
+        ) : (
+          <ChangesDialog
+            dialogOpen={dialogOpen}
+            setDialogOpen={setDialogOpen}
+            alteredNodes={alteredNodes}
+            history={history}
+            status={status}
+            validationChecks={validationChecks}
+            previewURL={previewURL}
+            handlePublish={handlePublish}
+            templatedFlows={templatedFlows}
+          />
+        )}
+        <Typography variant="caption">{status}</Typography>
       </Box>
     </>
   );

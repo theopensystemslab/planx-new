@@ -27,18 +27,20 @@ describe("authentication and error handling", () => {
   beforeAll(() => {
     queryMock.mockQuery({
       name: "InsertFlow",
+      matchOnVariables: false,
+      data: {
+        insertFlow: {
+          id: "2",
+        },
+      },
       variables: {
         team_id: 1,
         slug: "my-new-flow",
         name: "My new flow",
         data: mockNewFlowData,
+        email_id: "default-email-id",
+        submission_email_id: "111",
       },
-      data: {},
-      graphqlErrors: [
-        {
-          message: "Something went wrong",
-        },
-      ],
     });
   });
 
@@ -102,9 +104,16 @@ describe("success", () => {
       name: "InsertFlow",
       matchOnVariables: false,
       data: {
-        flow: {
+        insertFlow: {
           id: "2",
         },
+      },
+      variables: {
+        team_id: 1,
+        slug: "my-new-flow",
+        name: "My new flow",
+        data: mockNewFlowData,
+        email_id: "default-email-id",
       },
     });
 

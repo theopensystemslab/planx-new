@@ -4,33 +4,33 @@ import * as fsWalk from "@nodelib/fs.walk";
 import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
 import * as cloudflare from "@pulumi/cloudflare";
-import * as pulumi from "@pulumi/pulumi";
 import * as postgres from "@pulumi/postgresql";
-import * as mime from "mime";
+import * as pulumi from "@pulumi/pulumi";
 import * as tldjs from "tldjs";
+import mime from "mime";
 
+import { CustomDomain } from "../common/teams";
+import { getPostgresDbUrl } from "../common/utils";
 import {
-  addRedirectToCloudFlareListenerRule,
+  createApiService,
+  createHasuraService,
+  createLocalPlanningServices,
+  createMetabaseService,
+  createSharedbService,
+} from "./services"
+import {
   createCdn,
-  DEFAULT_POSTGRES_PORT,
-  generateCORSAllowList,
-  generateTeamSecrets,
-  getJavaOpts,
-  getPostgresDbUrl,
+  createFlowLinkPreviewLambda,
   usEast1,
 } from "./utils";
-import { createHasuraService } from "./services/hasura";
-import { createLocalPlanningServices } from "./services/lps";
-import { CustomDomain } from "../common/teams";
 
 const config = new pulumi.Config();
-
 const env = pulumi.getStack();
 const certificates = new pulumi.StackReference(`planx/certificates/${env}`);
 const networking = new pulumi.StackReference(`planx/networking/${env}`);
 const data = new pulumi.StackReference(`planx/data/${env}`);
 
-// The @pulumi/cloudflare package doesn't generate errors so this is here just to create a warning in case the CloudFlare API token is missing.
+// The @pulumi/cloudflare package doesn't generate errors so this is here just to create a warning in case the Cloudflare API token is missing.
 // You can generate tokens here: https://dash.cloudflare.com/profile/api-tokens
 new pulumi.Config("cloudflare").requireSecret("apiToken");
 
@@ -59,12 +59,10 @@ const CUSTOM_DOMAINS: CustomDomain[] =
         {
           domain: "planningservices.medway.gov.uk",
           name: "medway",
-          certificateLocation: "pulumiConfig",
         },
         {
           domain: "planningservices.stalbans.gov.uk",
           name: "stalbans",
-          certificateLocation: "pulumiConfig",
         },
         {
           domain: "planningservices.camden.gov.uk",
@@ -78,7 +76,6 @@ const CUSTOM_DOMAINS: CustomDomain[] =
         {
           domain: "planningservices.tewkesbury.gov.uk",
           name: "tewkesbury",
-          certificateLocation: "pulumiConfig",
         },
         {
           domain: "planningservices.westberks.gov.uk",
@@ -107,7 +104,6 @@ const CUSTOM_DOMAINS: CustomDomain[] =
         {
           domain: "planningservices.lbbd.gov.uk",
           name: "barking-and-dagenham",
-          certificateLocation: "pulumiConfig",
         },
         {
           domain: "planningservices.southglos.gov.uk",
@@ -117,6 +113,10 @@ const CUSTOM_DOMAINS: CustomDomain[] =
           domain: "planningservices.birmingham.gov.uk",
           name: "birmingham",
         },
+        {
+          domain: "planningservices.horsham.gov.uk",
+          name: "horsham",
+        },
       ]
     : [];
 
@@ -124,33 +124,81 @@ export = async () => {
   const DOMAIN: string = await certificates.requireOutputValue("domain");
 
   const repo = new awsx.ecr.Repository("repo", {
-    lifeCyclePolicyArgs: {
+    lifecyclePolicy: {
       rules: [
         {
           description: "Keep last 100 images",
           maximumNumberOfImages: 100,
-          selection: "any",
+          tagStatus: "any",
         },
       ],
     },
   });
 
-  const vpc = awsx.ec2.Vpc.fromExistingIds("vpc", {
-    vpcId: networking.requireOutput("vpcId"),
-  });
-  const cluster = new awsx.ecs.Cluster("cluster", {
-    cluster: networking.requireOutput("clusterName"),
-    vpc,
+  const vpcId = networking.requireOutput("vpcId") as pulumi.Output<string>;
+  const publicSubnetIds = networking.requireOutput("publicSubnetIds") as pulumi.Output<string[]>;
+  // define ECS cluster to host all Fargate containers
+  const cluster = new aws.ecs.Cluster("cluster", {
+    settings: [
+      {
+        name: "containerInsights",
+        value: "enabled",
+      },
+    ],
   });
 
-  const DB_ROOT_USERNAME = "dbuser";
-  const dbHost = config.requireSecret("db-host")
+  // ----------------------- SSL cert for services (eu-west-2)
+  // NB. the ssl cert created later for CloudFront is in us-east-1, as required by AWS for CF distributions
+  // meanwhile our ALBs require a cert in their own region (eu-west-2), which we provision here
+  // this enables a secure connection from Cloudflare (via which all requests are proxied) to the origin (AWS)
+  const serviceDomains = [
+    `api.${DOMAIN}`,
+    `hasura.${DOMAIN}`,
+    `sharedb.${DOMAIN}`,
+    `metabase.${DOMAIN}`,
+  ];
+
+  // TODO: consider collapsing certs/validation into 'certificates' layer (see also similar TODO for sslCert below)
+  const serviceSslCert = new aws.acm.Certificate(`serviceSslCert`, {
+    domainName: serviceDomains[0],
+    validationMethod: "DNS",
+    subjectAlternativeNames: serviceDomains.slice(1),
+  });
+
+  const serviceValidationRecords = serviceDomains.map((_domain, index) => {
+    return new cloudflare.DnsRecord(
+      `serviceSslCertValidationRecord-${index}`,
+      {
+        name: serviceSslCert.domainValidationOptions[index].resourceRecordName,
+        type: serviceSslCert.domainValidationOptions[index].resourceRecordType,
+        content: serviceSslCert.domainValidationOptions[index].resourceRecordValue,
+        zoneId: config.requireSecret("cloudflare-zone-id"),
+        ttl: 3600,
+        proxied: false,
+      }
+    );
+  });
+
+  const serviceSslCertValidation = new aws.acm.CertificateValidation(
+    `serviceSslCertValidation`,
+    {
+      certificateArn: serviceSslCert.arn,
+      validationRecordFqdns: serviceValidationRecords.map(record => record.name),
+    }
+  );
+
+  const serviceCertificateArn = serviceSslCertValidation.certificateArn;
+
+  // prepare DB credentials for Metabase, Hasura and ShareDB
+  const DB_ROOT_USER = "dbuser"
   const dbRootPassword = config.requireSecret("db-password");
+  const dbHost = config.requireSecret("db-host")
+
   // ----------------------- Metabase
   const provider = new postgres.Provider("metabase", {
     host: dbHost,
     port: 5432,
-    username: DB_ROOT_USERNAME,
+    username: DB_ROOT_USER,
     password: dbRootPassword,
     database: "postgres",
     superuser: false,
@@ -169,7 +217,7 @@ export = async () => {
     },
     { provider }
   );
-  const metabasePgDatabase = new postgres.Database(
+  new postgres.Database(
     "metabase",
     {
       name: role.name,
@@ -180,459 +228,83 @@ export = async () => {
     }
   );
 
-  const METABASE_PORT = 3000;
-  const lbMetabase = new awsx.lb.ApplicationLoadBalancer("metabase", {
-    external: true,
-    vpc,
-    subnets: networking.requireOutput("publicSubnetIds"),
-    securityGroups: [
-      new awsx.ec2.SecurityGroup("metabase-custom-port", {
-        vpc,
-        egress: [
-          {
-            protocol: "tcp",
-            cidrBlocks: ["0.0.0.0/0"],
-            fromPort: METABASE_PORT,
-            toPort: METABASE_PORT,
-          },
-        ],
-      }),
-    ],
-  });
-  const targetMetabase = lbMetabase.createTargetGroup("metabase", {
-    port: METABASE_PORT,
-    protocol: "HTTP",
-    healthCheck: {
-      path: "/api/health",
-      // XXX: Attempt to fix "504 Gateway Time-out"
-      healthyThreshold: 2,
-      interval: 300,
-      timeout: 120,
-      unhealthyThreshold: 10,
-    },
-  });
-  const metabaseListenerHttp = targetMetabase.createListener(
-    "metabase-http", { protocol: "HTTP" }
-  );
-
-  addRedirectToCloudFlareListenerRule({
-    serviceName: "metabase",
-    listener: metabaseListenerHttp,
-    domain: DOMAIN,
-  });
-  
   // since our secrets here are of the type Output<string>, we have to use Pulumi methods to access them as strings
-  const metabaseDbUrl = pulumi.all([dbHost, metabasePgPassword]).apply(([dbHost, metabasePgPassword]) => 
-    getPostgresDbUrl("metabase", metabasePgPassword, dbHost, DEFAULT_POSTGRES_PORT, "metabase"))
-  const metabaseMemoryMb = config.requireNumber("metabase-memory");
-  new awsx.ecs.FargateService("metabase", {
-    cluster,
-    subnets: networking.requireOutput("publicSubnetIds"),
-    taskDefinitionArgs: {
-      logGroup: new aws.cloudwatch.LogGroup("metabase", {
-        namePrefix: "metabase",
-        retentionInDays: 30,
-      }),
-      container: {
-        // if changing, also check docker-compose.yml
-        image: "metabase/metabase:v0.56.6",
-        portMappings: [metabaseListenerHttp],
-        // When changing `memory`, also update `JAVA_OPTS` below
-        cpu: config.requireNumber("metabase-cpu"),
-        memory: metabaseMemoryMb,
-        environment: [
-          // https://www.metabase.com/docs/latest/troubleshooting-guide/running.html#allocating-more-memory-to-the-jvm
-          { name: "JAVA_OPTS", value: getJavaOpts(metabaseMemoryMb) },
-          { name: "MB_DB_TYPE", value: "postgres" },
-          {
-            name: "MB_DB_CONNECTION_URI",
-            value: metabaseDbUrl,
-          },
-          { name: "MB_JETTY_HOST", value: "0.0.0.0" },
-          { name: "MB_JETTY_PORT", value: String(METABASE_PORT) },
-          {
-            name: "MB_SITE_URL",
-            value: pulumi.interpolate`https://metabase.${DOMAIN}/`,
-          },
-          // https://www.metabase.com/docs/latest/operations-guide/encrypting-database-details-at-rest.html
-          {
-            name: "MB_ENCRYPTION_SECRET_KEY",
-            value: config.requireSecret("metabase-encryption-secret-key"),
-          },
-        ],
-      },
-    },
-    desiredCount: 1,
-    // Metabase takes a while to boot up
-    healthCheckGracePeriodSeconds: 60 * 15,
-  });
+  const metabaseDbUrl = pulumi
+    .all([metabasePgPassword, dbHost])
+    .apply(([password, host]) => getPostgresDbUrl({
+      role: "metabase",
+      password,
+      host,
+      database: "metabase",
+    }));
 
-  new cloudflare.Record("metabase", {
-    name: tldjs.getSubdomain(DOMAIN)
-      ? `metabase.${tldjs.getSubdomain(DOMAIN)}`
-      : "metabase",
-    type: "CNAME",
-    zoneId: config.require("cloudflare-zone-id"),
-    value: metabaseListenerHttp.endpoint.hostname,
-    ttl: 1,
-    proxied: true,
+  const metabaseService = await createMetabaseService({
+    env,
+    certificateArn: serviceCertificateArn,
+    vpcId,
+    publicSubnetIds,
+    cluster,
+    dbUrl: metabaseDbUrl,
+    stacks: { certificates },
   });
 
   // ----------------------- Hasura
   // we'll also pass this database URI to sharedb later on
+  const rootDbUrl = pulumi
+    .all([dbRootPassword, dbHost])
+    .apply(([password, host]) => getPostgresDbUrl({ role: DB_ROOT_USER, password, host }));
 
-  const rootDbUrl = pulumi.all([dbHost, dbRootPassword]).apply(([dbHost, dbRootPassword]) => 
-    getPostgresDbUrl(DB_ROOT_USERNAME, dbRootPassword, dbHost))
   const hasuraService = await createHasuraService({
     env,
-    vpc,
+    certificateArn: serviceCertificateArn,
+    vpcId,
+    publicSubnetIds,
     cluster,
     repo,
     dbUrl: rootDbUrl,
-    CUSTOM_DOMAINS,
-    stacks: {
-      networking,
-      certificates,
-      data,
-    },
+    customDomains: CUSTOM_DOMAINS,
+    stacks: { certificates },
   });
 
   // ----------------------- API
-  const apiBucket = aws.s3.Bucket.get(
-    "bucket",
-    data.requireOutput("apiBucketId")
-  );
-  const apiUser = new aws.iam.User("api-user");
-  const apiUserAccessKey = new aws.iam.AccessKey("api-user-access-key", {
-    user: apiUser.name,
-  });
-  // Grant the user access to the bucket
-  new aws.iam.UserPolicy("api-user-role", {
-    user: apiUser.name,
-    policy: {
-      Version: "2012-10-17",
-      Statement: [
-        {
-          Effect: "Allow",
-          Action: "s3:*",
-          Resource: apiBucket.arn,
-        },
-      ],
-    },
-  });
-  new aws.s3.BucketPolicy("api-bucket-policy", {
-    bucket: apiBucket.id,
-    policy: {
-      Version: "2012-10-17",
-      Statement: [
-        {
-          Sid: "ApiWriteObject",
-          Effect: "Allow",
-          Principal: { AWS: [apiUser.arn] },
-          // XXX: We could narrow this down to the action `PutObject`
-          Action: ["s3:*"],
-          Resource: [pulumi.interpolate`${apiBucket.arn}/*`],
-        },
-      ],
-    },
-  });
-
-  const lbApi = new awsx.lb.ApplicationLoadBalancer("api", {
-    external: true,
-    vpc,
-    subnets: networking.requireOutput("publicSubnetIds"),
-    idleTimeout: 120,
-  });
-  // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
-  const API_PORT = 80;
-  const targetApi = lbApi.createTargetGroup("api", {
-    port: API_PORT,
-    protocol: "HTTP",
-    healthCheck: {
-      path: "/",
-    },
-  });
-  const apiListenerHttp = targetApi.createListener("api-http", {
-    protocol: "HTTP",
-  });
-
-  addRedirectToCloudFlareListenerRule({
-    serviceName: "api",
-    listener: apiListenerHttp,
-    domain: DOMAIN,
-  });
-
-  const apiService = new awsx.ecs.FargateService("api", {
+  const apiService = await createApiService({
+    env,
+    certificateArn: serviceCertificateArn,
+    vpcId,
+    publicSubnetIds,
     cluster,
-    subnets: networking.requireOutput("publicSubnetIds"),
-    taskDefinitionArgs: {
-      logGroup: new aws.cloudwatch.LogGroup("api", {
-        namePrefix: "api",
-        retentionInDays: 30,
-      }),
-      container: {
-        image: repo.buildAndPushImage({
-          context: "../../apps/api.planx.uk",
-          target: "production",
-        }),
-        cpu: 2048,
-        memory: 4096 /*MB*/,
-        portMappings: [apiListenerHttp],
-        environment: [
-          { name: "NODE_ENV", value: env },
-          { name: "APP_ENVIRONMENT", value: env },
-          { name: "EDITOR_URL_EXT", value: `https://${DOMAIN}` },
-          { name: "AWS_S3_REGION", value: apiBucket.region },
-          { name: "AWS_ACCESS_KEY", value: apiUserAccessKey.id },
-          { name: "AWS_SECRET_KEY", value: apiUserAccessKey.secret },
-          {
-            name: "AWS_S3_BUCKET",
-            value: pulumi.interpolate`${apiBucket.bucket}`,
-          },
-          {
-            name: "FILE_API_KEY",
-            value: config.requireSecret("file-api-key"),
-          },
-          {
-            name: "FILE_API_KEY_NEXUS",
-            value: config.requireSecret("file-api-key-nexus"),
-          },
-          {
-            name: "FILE_API_KEY_BARNET",
-            value: config.requireSecret("file-api-key-barnet"),
-          },
-          {
-            name: "FILE_API_KEY_LAMBETH",
-            value: config.requireSecret("file-api-key-lambeth"),
-          },
-          {
-            name: "FILE_API_KEY_SOUTHWARK",
-            value: config.requireSecret("file-api-key-southwark"),
-          },
-          {
-            name: "FILE_API_KEY_EPSOM_EWELL",
-            value: config.requireSecret("file-api-key-epsom-ewell"),
-          },
-          {
-            name: "FILE_API_KEY_MEDWAY",
-            value: config.requireSecret("file-api-key-medway"),
-          },
-          {
-            name: "FILE_API_KEY_GATESHEAD",
-            value: config.requireSecret("file-api-key-gateshead"),
-          },
-          {
-            name: "FILE_API_KEY_DONCASTER",
-            value: config.requireSecret("file-api-key-doncaster"),
-          },
-          {
-            name: "FILE_API_KEY_GLOUCESTER",
-            value: config.requireSecret("file-api-key-gloucester"),
-          },
-          {
-            name: "FILE_API_KEY_TEWKESBURY",
-            value: config.requireSecret("file-api-key-tewkesbury"),
-          },
-          {
-            name: "FILE_API_KEY_CAMDEN",
-            value: config.requireSecret("file-api-key-camden"),
-          },
-          {
-            name: "SKIP_RATE_LIMIT_SECRET",
-            value: config.requireSecret("skip-rate-limit-secret"),
-          },
-          {
-            name: "GOOGLE_CLIENT_ID",
-            value: config.require("google-client-id"),
-          },
-          {
-            name: "GOOGLE_CLIENT_SECRET",
-            value: config.requireSecret("google-client-secret"),
-          },
-          {
-            name: "MICROSOFT_CLIENT_ID",
-            value: config.require("microsoft-client-id"),
-          },
-          {
-            name: "MICROSOFT_CLIENT_SECRET",
-            value: config.requireSecret("microsoft-client-secret"),
-          },
-          {
-            name: "SESSION_SECRET",
-            value: config.requireSecret("session-secret"),
-          },
-          { name: "API_URL_EXT", value: `https://api.${DOMAIN}` },
-          { name: "JWT_SECRET", value: config.requireSecret("jwt-secret") },
-          { name: "PORT", value: String(API_PORT) },
-          {
-            name: "HASURA_GRAPHQL_ADMIN_SECRET",
-            value: config.requireSecret("hasura-admin-secret"),
-          },
-          {
-            name: "HASURA_GRAPHQL_URL",
-            value: pulumi.interpolate`https://hasura.${DOMAIN}/v1/graphql`,
-          },
-          {
-            name: "HASURA_METADATA_URL",
-            value: pulumi.interpolate`https://hasura.${DOMAIN}/v1/metadata`,
-          },
-          {
-            name: "HASURA_SCHEMA_URL",
-            value: pulumi.interpolate`https://hasura.${DOMAIN}/v2/query`,
-          },
-          {
-            name: "HASURA_PLANX_API_KEY",
-            value: config.requireSecret("hasura-planx-api-key"),
-          },
-          {
-            name: "AIRBRAKE_PROJECT_ID",
-            value: config.requireSecret("airbrake-project-id"),
-          },
-          {
-            name: "AIRBRAKE_PROJECT_KEY",
-            value: config.requireSecret("airbrake-project-key"),
-          },
-          {
-            name: "UNIFORM_TOKEN_URL",
-            value: config.requireSecret("uniform-token-url"),
-          },
-          {
-            name: "UNIFORM_SUBMISSION_URL",
-            value: config.requireSecret("uniform-submission-url"),
-          },
-          {
-            name: "GOVUK_NOTIFY_API_KEY",
-            value: config.requireSecret("govuk-notify-api-key"),
-          },
-          {
-            name: "SLACK_WEBHOOK_URL",
-            value: config.requireSecret("slack-webhook-url"),
-          },
-          {
-            name: "ORDNANCE_SURVEY_API_KEY",
-            value: config.requireSecret("ordnance-survey-api-key"),
-          },
-          {
-            name: "ENCRYPTION_KEY",
-            value: config.requireSecret("encryption-key"),
-          },
-          {
-            name: "IDOX_NEXUS_CLIENT",
-            value: config.requireSecret("idox-nexus-client"),
-          },
-          {
-            name: "IDOX_NEXUS_TOKEN_URL",
-            value: config.requireSecret("idox-nexus-token-url"),
-          },
-          {
-            name: "IDOX_NEXUS_SUBMISSION_URL",
-            value: config.requireSecret("idox-nexus-submission-url"),
-          },
-          {
-            name: "MAPBOX_ACCESS_TOKEN",
-            value: config.requireSecret("mapbox-access-token"),
-          },
-          {
-            name: "METABASE_API_KEY",
-            value: config.requireSecret("metabase-api-key"),
-          },
-          {
-            name: "METABASE_URL_EXT",
-            value: `https://metabase.${DOMAIN}`,
-          },
-          {
-            name: "LPS_URL_EXT",
-            value: pulumi.interpolate`https://${config.require("lps-domain")}`,
-          },
-          generateCORSAllowList(CUSTOM_DOMAINS, DOMAIN),
-          ...generateTeamSecrets(config, env),
-        ],
-      },
-    },
-    desiredCount: 1,
-  });
-  new cloudflare.Record("api", {
-    name: tldjs.getSubdomain(DOMAIN)
-      ? `api.${tldjs.getSubdomain(DOMAIN)}`
-      : "api",
-    type: "CNAME",
-    zoneId: config.requireSecret("cloudflare-zone-id"),
-    value: apiListenerHttp.endpoint.hostname,
-    ttl: 1,
-    proxied: true,
+    repo,
+    customDomains: CUSTOM_DOMAINS,
+    stacks: { certificates, data },
   });
 
   // ----------------------- ShareDB
-  const lbSharedb = new awsx.lb.ApplicationLoadBalancer("sharedb", {
-    external: true,
-    vpc,
-    subnets: networking.requireOutput("publicSubnetIds"),
-  });
-  // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
-  const SHAREDB_PORT = 80;
-  const targetSharedb = lbSharedb.createTargetGroup("sharedb", {
-    port: SHAREDB_PORT,
-    protocol: "HTTP",
-    healthCheck: {
-      path: "/",
-      matcher: "426", // "HTTP 426 Upgrade Required"
-    },
-    stickiness: {
-      enabled: true,
-      type: "lb_cookie",
-    },
-  });
-  const sharedbListenerHttp = targetSharedb.createListener("sharedb-http", { protocol: "HTTP" });
-
-  addRedirectToCloudFlareListenerRule({
-    serviceName: "sharedb",
-    listener: sharedbListenerHttp,
-    domain: DOMAIN,
-  });
-
-  const sharedbService = new awsx.ecs.FargateService("sharedb", {
+  const sharedbService = await createSharedbService({
+    env,
+    certificateArn: serviceCertificateArn,
+    vpcId,
+    publicSubnetIds,
     cluster,
-    subnets: networking.requireOutput("publicSubnetIds"),
-    taskDefinitionArgs: {
-      logGroup: new aws.cloudwatch.LogGroup("sharedb", {
-        namePrefix: "sharedb",
-        retentionInDays: 30,
-      }),
-      container: {
-        image: repo.buildAndPushImage("../../apps/sharedb.planx.uk"),
-        memory: 512 /*MB*/,
-        portMappings: [sharedbListenerHttp],
-        environment: [
-          { name: "PORT", value: String(SHAREDB_PORT) },
-          { name: "API_URL_EXT", value: `https://api.${DOMAIN}` },
-          {
-            name: "PG_URL",
-            value: rootDbUrl,
-          },
-        ],
-      },
-    },
-    desiredCount: 1,
+    repo,
+    dbUrl: rootDbUrl,
+    stacks: { certificates },
   });
 
-  const sharedbDnsRecord = new cloudflare.Record("sharedb", {
-    name: tldjs.getSubdomain(DOMAIN)
-      ? `sharedb.${tldjs.getSubdomain(DOMAIN)}`
-      : "sharedb",
-    type: "CNAME",
-    zoneId: config.require("cloudflare-zone-id"),
-    value: sharedbListenerHttp.endpoint.hostname,
-    ttl: 1,
-    proxied: true,
-  });
+  // ----------------------- Flow Link Preview Lambda@Edge
+  const flowLinkPreviewLambda = createFlowLinkPreviewLambda(
+    `https://hasura.${DOMAIN}/v1/graphql`
+  );
+  const linkPreviewAssociation = {
+    lambdaArn: flowLinkPreviewLambda.qualifiedArn,
+    eventType: "viewer-request",
+  };
 
-  // ------------------- PlanX Frontend
-  const frontendBucket = new aws.s3.Bucket(`${DOMAIN}`, {
-    bucket: DOMAIN,
-    website: {
-      indexDocument: "index.html",
-      errorDocument: "error.html",
-    },
+  // ----------------------- PlanX Frontend
+  const frontendBucket = new aws.s3.Bucket(DOMAIN, { bucket: DOMAIN });
+  const frontendWebsiteConfig = new aws.s3.BucketWebsiteConfiguration(`${DOMAIN}-website-config`, {
+    bucket: frontendBucket.id,
+    indexDocument: { suffix: "index.html" },
+    errorDocument: { key: "error.html" },
   });
 
   fsWalk
@@ -664,9 +336,10 @@ export = async () => {
       );
     });
 
-  const logsBucket = new aws.s3.Bucket("requestLogs", {
+    // XXX: AWS maintain that most modern use cases don't require ACLs, so we've simplified here
+  // see: https://docs.aws.amazon.com/AmazonS3/latest/userguide/about-object-ownership.html
+  const logsBucket = new aws.s3.Bucket(`${DOMAIN}-logs`, {
     bucket: `${DOMAIN}-logs`,
-    acl: "private",
   });
 
   const customDomains = ((): Array<any> => {
@@ -677,7 +350,8 @@ export = async () => {
       name,
       certificateLocation = "secretsManager"
     }: CustomDomain) {
-      // These certificates are created on the `application` stack (as opposed to the `certificates` stack) they're certificates generated by third-party. We're just importing into AWS ACM.
+      // These certificates are created on the `application` stack (as opposed to the `certificates` stack)
+      // They're certificates generated by third-party — we're just importing into AWS ACM
       let acmCertificateArn: pulumi.Output<string>;
 
       // Get certificates from AWS Secrets Manager
@@ -729,52 +403,58 @@ export = async () => {
         comment: `OAI for ${domain} CloudFront distribution`,
       });
 
-      const cdn = createCdn({ 
+      const cdn = createCdn({
         domain, 
         acmCertificateArn,
         bucket: frontendBucket, 
         logsBucket,
         oai,
+        lambdaFunctionAssociation: linkPreviewAssociation,
       });
 
       return { domain, cname: cdn.domainName };
     }
   })();
 
+  // domains served by CloudFront distributions (i.e. not already covered by serviceSslCert above)
+  const cloudfrontDomains = [
+    `${DOMAIN}`,
+    ...(env === "staging" ? [`localplanning.${DOMAIN}`] : []),
+  ];
+
+  // note the mix of AWS and Cloudflare infra being provisioned here
+  // TODO: should this be provisioned in the certs layer, or all consolidated here? should that be run in CI? etc.
   const sslCert = new aws.acm.Certificate(
     `sslCert`,
     {
-      // XXX: For wildcards remember that *.example.com will only cover a single level subdomain such as www.example.com not secondary levels such as beta.www.example.com.
-      domainName: `${DOMAIN}`,
+      domainName: cloudfrontDomains[0],
       validationMethod: "DNS",
-      subjectAlternativeNames: [
-        // Root
-        `${DOMAIN}`,
-        // Wildcard / subdomains
-        `*.${DOMAIN}`,
-      ],
+      subjectAlternativeNames: cloudfrontDomains.slice(1),
     },
     {
       provider: usEast1,
-      // XXX: These records are set up upstream in the `certificates` stack.
-      //   dependsOn: [caaRecordRoot, caaRecordWildcard],
     }
   );
-  const sslCertValidationRecord = new cloudflare.Record(
-    `sslCertValidationRecord`,
-    {
-      name: sslCert.domainValidationOptions[0].resourceRecordName,
-      ttl: 3600,
-      type: sslCert.domainValidationOptions[0].resourceRecordType,
-      value: sslCert.domainValidationOptions[0].resourceRecordValue,
-      zoneId: config.require("cloudflare-zone-id"),
-    }
-  );
+
+  const cloudfrontValidationRecords = cloudfrontDomains.map((_domain, index) => {
+    return new cloudflare.DnsRecord(
+      `sslCertValidationRecord-${index}`,
+      {
+        name: sslCert.domainValidationOptions[index].resourceRecordName,
+        type: sslCert.domainValidationOptions[index].resourceRecordType,
+        content: sslCert.domainValidationOptions[index].resourceRecordValue,
+        zoneId: config.requireSecret("cloudflare-zone-id"),
+        ttl: 3600,
+        proxied: false,
+      }
+    );
+  });
+
   const sslCertValidation = new aws.acm.CertificateValidation(
     `sslCertValidation`,
     {
       certificateArn: sslCert.arn,
-      validationRecordFqdns: [sslCertValidationRecord.name],
+      validationRecordFqdns: cloudfrontValidationRecords.map(record => record.name),
     },
     { provider: usEast1 }
   );
@@ -789,23 +469,27 @@ export = async () => {
     bucket: frontendBucket,
     logsBucket,
     oai,
+    lambdaFunctionAssociation: linkPreviewAssociation,
   });
 
-  const frontendDnsRecord = new cloudflare.Record("frontend", {
+  const frontendDnsRecord = new cloudflare.DnsRecord("frontend", {
     name: tldjs.getSubdomain(DOMAIN) || "@",
     type: "CNAME",
-    zoneId: config.require("cloudflare-zone-id"),
-    value: cdn.domainName,
+    zoneId: config.requireSecret("cloudflare-zone-id"),
+    content: cdn.domainName,
     ttl: 1,
     proxied: false, // This was causing infinite HTTPS redirects, so let's just use CloudFront only
   });
 
-  // ------------------- LocalPlanning.services
-  createLocalPlanningServices(sslCert);
+  // ----------------------- LocalPlanning.services
+  createLocalPlanningServices(sslCertValidation.certificateArn);
 
   return {
     customDomains,
+    metabaseServiceName: metabaseService.service.name,
     hasuraServiceName: hasuraService.service.name,
+    apiServiceName: apiService.service.name,
+    sharedbServiceName: sharedbService.service.name,
   };
 };
 

@@ -4,12 +4,14 @@ import FlowCopy from "./FlowCopy";
 import FlowStatus from "./FlowStatus";
 import LPSListing from "./LPS";
 
-const VisibilitySettings: React.FC = () => (
-  <>
-    <FlowStatus />
-    <FlowCopy />
-    <LPSListing />
-  </>
-);
+const VisibilitySettings: React.FC = () => {
+  return (
+    <>
+      <FlowStatus />
+      <FlowCopy />
+      <LPSListing />
+    </>
+  );
+};
 
 export default VisibilitySettings;

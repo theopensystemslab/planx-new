@@ -14,7 +14,7 @@ export default meta;
 export const Basic = {
   args: {
     id: "1",
-    data: { 
+    data: {
       text: "Prior approval",
       img: "https://planx-temp.s3.eu-west-2.amazonaws.com/production/mdc5c7eb/Terrace_wraparound.svg",
       description: "This option has a description underneath.",

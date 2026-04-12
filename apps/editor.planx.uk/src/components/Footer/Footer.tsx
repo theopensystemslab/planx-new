@@ -3,11 +3,12 @@ import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { usePublicRouteContext } from "hooks/usePublicRouteContext";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { formatServiceLastUpdated } from "pages/FlowEditor/utils";
 import React from "react";
-import { Link as ReactNaviLink } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 const Root = styled("footer")(({ theme }) => ({
   color: theme.palette.common.white,
@@ -79,11 +80,13 @@ export default function Footer(props: Props) {
 
 function FooterItem(props: {
   title: string;
-  href?: string;
+  param?: string;
   onClick?: () => void;
   bold?: boolean;
   newTab?: boolean;
 }) {
+  const from = usePublicRouteContext();
+
   const title = (
     <Typography
       variant="body2"
@@ -92,17 +95,18 @@ function FooterItem(props: {
       {props.title.toLowerCase()}
     </Typography>
   );
-  return props.href ? (
-    <Link
+  return props.param ? (
+    <CustomLink
       color="inherit"
-      component={ReactNaviLink}
-      href={props.href}
-      prefetch={false}
+      to="pages/$page"
+      params={{ page: props.param }}
+      from={from}
+      preload={false}
       target={props.newTab ? "_blank" : ""}
       rel={props.newTab ? "noopener" : ""}
     >
       {title}
-    </Link>
+    </CustomLink>
   ) : (
     <Link color="inherit" component="button" onClick={props.onClick}>
       {title}

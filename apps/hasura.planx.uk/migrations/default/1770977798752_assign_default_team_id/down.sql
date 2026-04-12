@@ -1,0 +1,1 @@
+update "public"."users" set "default_team_id" = null

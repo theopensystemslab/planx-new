@@ -26,7 +26,13 @@ const customFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
 
 export const retryLink = new RetryLink({
   delay: { initial: 500, max: Infinity },
-  attempts: { max: Infinity },
+  attempts: {
+    retryIf: (_error, operation) => {
+      if (operation.getContext().skipRetry) return false;
+      return true;
+    },
+    max: Infinity,
+  },
 });
 
 export const publicHttpLink = createHttpLink({

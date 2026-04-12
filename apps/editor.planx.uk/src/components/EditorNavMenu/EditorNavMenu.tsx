@@ -11,206 +11,270 @@ import RateReviewIcon from "@mui/icons-material/RateReview";
 import SchoolIcon from "@mui/icons-material/School";
 import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
-import Tooltip from "@mui/material/Tooltip";
+import Collapse from "@mui/material/Collapse";
+import {
+  useLocation,
+  useMatches,
+  useNavigate,
+  useParams,
+} from "@tanstack/react-router";
+import AccountMenu from "components/AccountMenu";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useRef } from "react";
-import { useCurrentRoute, useLoadingRoute, useNavigation } from "react-navi";
+import React, { useMemo, useState } from "react";
 import EditorIcon from "ui/icons/Editor";
 import LocalPlanningServicesIcon from "ui/icons/LocalPlanningServices";
 
 import { useLPS } from "../../hooks/useLPS";
-import { MenuButton, MenuItem, MenuTitle, MenuWrap, Root } from "./styles";
-import { Route, RoutesForURL } from "./types";
+import AccordionItemButton from "./components/AccordionItemButton";
+import AccordionToggle from "./components/AccordionToggle";
+import NavMenuHeader from "./components/NavMenuHeader";
+import NavMenuItem from "./components/NavMenuItem";
+import { TeamSelect } from "./components/TeamSelect";
+import {
+  AccordionContent,
+  MenuItem,
+  MenuWrap,
+  NavBarContainer,
+  Root,
+  Subtitle,
+} from "./styles";
+import { MenuSection, Route } from "./types";
 
 function EditorNavMenu() {
-  const { navigate } = useNavigation();
-  const { url } = useCurrentRoute();
-  const isRouteLoading = useLoadingRoute();
-  const [teamSlug, flowSlug, flowAnalyticsLink, role, team] = useStore(
-    (state) => [
-      state.teamSlug,
-      state.flowSlug,
-      state.flowAnalyticsLink,
-      state.getUserRoleForCurrentTeam(),
-      state.getTeam(),
-    ],
-  );
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const { team: teamSlug, flow: flowSlug } = useParams({ strict: false });
+
+  // Check route via matches to decide which mode menu items to display
+  const matches = useMatches();
+  const isFlowRoute = matches.some((match) => match.routeId.includes("$flow"));
+  const isTeamRoute = matches.some((match) => match.routeId.includes("$team"));
+
+  const [openAccordions, setOpenAccordions] = useState<Set<string>>(new Set());
+
+  const [flowAnalyticsLink, role, team] = useStore((state) => [
+    state.flowAnalyticsLink,
+    state.getUserRoleForCurrentTeam(),
+    state.getTeam(),
+  ]);
+
+  const environment = import.meta.env.VITE_APP_ENV;
+
+  const teamAnalyticsLink =
+    environment === "production"
+      ? `https://metabase.editor.planx.uk/public/dashboard/74337c9d-389d-4cb1-a65a-ad7e16428abf?date=&tab=641-key-figures&team_slug=${teamSlug}`
+      : undefined;
+
   const referenceCode = team?.settings?.referenceCode;
   const { url: lpsBaseUrl } = useLPS();
 
-  const isActive = (route: string) => url.href.endsWith(route);
+  const isActive = (route: string) => {
+    const currentPath = pathname;
+
+    // Factor in nested routes when determining active state
+    if (route.includes("/settings")) {
+      return currentPath.startsWith(route);
+    }
+
+    return currentPath.endsWith(route);
+  };
+
+  const isExternalLink = (route: string) =>
+    route.startsWith("http://") || route.startsWith("https://");
 
   const handleClick = (route: string, disabled?: boolean) => {
     if (isActive(route) || disabled) return;
-    const isExternalLink =
-      route.startsWith("http://") || route.startsWith("https://");
-    if (isExternalLink) {
+    if (isExternalLink(route)) {
       window.open(route, "_blank");
     } else {
-      navigate(route);
+      navigate({ to: route });
     }
   };
 
-  const globalLayoutRoutes: Route[] = [
+  const globalLayoutSections: MenuSection[] = [
     {
-      title: "Select a team",
-      Icon: FormatListBulletedIcon,
-      route: "/",
-      accessibleBy: "*",
-    },
-    {
-      title: "Global settings",
-      Icon: TuneIcon,
-      route: "global-settings",
-      accessibleBy: ["platformAdmin"],
-    },
-    {
-      title: "Admin panel",
-      Icon: AdminPanelSettingsIcon,
-      route: "admin-panel",
-      accessibleBy: ["platformAdmin", "analyst"],
-    },
-    {
-      title: "Resources",
-      Icon: MenuBookIcon,
-      route: "resources",
-      accessibleBy: "*",
-    },
-    {
-      title: "Onboarding",
-      Icon: AssignmentTurnedInIcon,
-      route: "onboarding",
-      accessibleBy: "*",
-    },
-    {
-      title: "Tutorials",
-      Icon: SchoolIcon,
-      route: "tutorials",
-      accessibleBy: "*",
+      routes: [
+        {
+          title: "Select a team",
+          Icon: FormatListBulletedIcon,
+          route: "/app",
+          accessibleBy: "*",
+        },
+        {
+          title: "Global settings",
+          Icon: TuneIcon,
+          route: "/app/global-settings",
+          accessibleBy: ["platformAdmin"],
+        },
+        {
+          title: "Admin panel",
+          Icon: AdminPanelSettingsIcon,
+          route: "/app/admin-panel",
+          accessibleBy: ["platformAdmin", "analyst"],
+        },
+      ],
     },
   ];
 
-  const teamLayoutRoutes: Route[] = [
-    {
-      title: "Flows",
-      Icon: FormatListBulletedIcon,
-      route: `/${teamSlug}`,
-      accessibleBy: "*",
-    },
-    {
-      title: "Settings",
-      Icon: TuneIcon,
-      route: `/${teamSlug}/settings`,
-      accessibleBy: ["platformAdmin", "teamEditor"],
-    },
-    {
-      title: "Team members",
-      Icon: GroupIcon,
-      route: `/${teamSlug}/members`,
-      accessibleBy: ["platformAdmin", "teamEditor"],
-    },
-    {
-      title: "Subscription",
-      Icon: CurrencyPoundIcon,
-      route: `/${teamSlug}/subscription`,
-      accessibleBy: ["platformAdmin", "teamEditor"],
-    },
-    {
-      title: "Feedback",
-      Icon: RateReviewIcon,
-      route: `/${teamSlug}/feedback`,
-      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
-    },
-    {
-      title: "Submissions",
-      Icon: FactCheckIcon,
-      route: `/${teamSlug}/submissions`,
-      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
-    },
-    {
-      title: referenceCode
-        ? `Planning Data (external link)`
-        : `Planning Data unavailable`,
-      Icon: LayersIcon,
-      route: referenceCode
-        ? `https://submit.planning.data.gov.uk/organisations/local-authority:${referenceCode}`
-        : `#`,
-      accessibleBy: "*",
-      disabled: !referenceCode,
-    },
-    {
-      title: referenceCode
-        ? `Local Planning Services (external link)`
-        : `Local Planning Services unavailable`,
-      Icon: LocalPlanningServicesIcon,
-      route: referenceCode ? `${lpsBaseUrl}/${teamSlug}` : `#`,
-      accessibleBy: "*",
-      disabled: !referenceCode,
-    },
-  ];
+  const teamLayoutSections: MenuSection[] = useMemo(
+    () => [
+      {
+        routes: [
+          {
+            title: "Flows",
+            Icon: EditorIcon,
+            route: `/app/${teamSlug}`,
+            accessibleBy: "*",
+          },
+        ],
+      },
+      {
+        subtitle: "Settings",
+        accordion: true,
+        routes: [
+          {
+            title: "Team settings",
+            Icon: TuneIcon,
+            route: `/app/${teamSlug}/settings`,
+            accessibleBy: ["platformAdmin", "teamEditor"],
+          },
+          {
+            title: "Team members",
+            Icon: GroupIcon,
+            route: `/app/${teamSlug}/members`,
+            accessibleBy: ["platformAdmin", "teamEditor"],
+          },
+          {
+            title: "Subscription",
+            Icon: CurrencyPoundIcon,
+            route: `/app/${teamSlug}/subscription`,
+            accessibleBy: ["platformAdmin", "teamEditor"],
+            isNew: true,
+          },
+        ],
+      },
+      {
+        subtitle: "Data",
+        accordion: true,
+        icon: LeaderboardIcon,
+        routes: [
+          {
+            title: "Submissions",
+            Icon: FactCheckIcon,
+            route: `/app/${teamSlug}/submissions`,
+            accessibleBy: ["platformAdmin", "teamEditor"],
+          },
+          {
+            title: "Feedback",
+            Icon: RateReviewIcon,
+            route: `/app/${teamSlug}/feedback`,
+            accessibleBy: ["platformAdmin", "teamEditor"],
+          },
+          {
+            title: "Analytics",
+            Icon: LeaderboardIcon,
+            route: teamAnalyticsLink ? teamAnalyticsLink : `#`,
+            accessibleBy: ["platformAdmin", "teamEditor", "analyst"],
+            disabled: !teamAnalyticsLink,
+          },
+          {
+            title: "Planning Data",
+            Icon: LayersIcon,
+            route: referenceCode
+              ? `https://submit.planning.data.gov.uk/organisations/local-authority:${referenceCode}`
+              : `#`,
+            accessibleBy: "*",
+            disabled: !referenceCode,
+          },
+          {
+            title: "Local Planning Services",
+            Icon: LocalPlanningServicesIcon,
+            route: referenceCode ? `${lpsBaseUrl}/${teamSlug}` : `#`,
+            accessibleBy: "*",
+            disabled: !referenceCode,
+          },
+        ],
+      },
+      {
+        subtitle: "Documentation",
+        accordion: true,
+        routes: [
+          {
+            title: "Resources",
+            Icon: MenuBookIcon,
+            route: `/app/${teamSlug}/resources`,
+            accessibleBy: "*",
+          },
+          {
+            title: "Onboarding",
+            Icon: AssignmentTurnedInIcon,
+            route: `/app/${teamSlug}/onboarding`,
+            accessibleBy: "*",
+          },
+          {
+            title: "Tutorials",
+            Icon: SchoolIcon,
+            route: `/app/${teamSlug}/tutorials`,
+            accessibleBy: "*",
+          },
+        ],
+      },
+    ],
+    [teamSlug, lpsBaseUrl, referenceCode, teamAnalyticsLink],
+  );
 
-  const flowLayoutRoutes: Route[] = [
-    {
-      title: "Editor",
-      Icon: EditorIcon,
-      route: `/${teamSlug}/${flowSlug}`,
-      accessibleBy: "*",
-    },
-    {
-      title: "Flow settings",
-      Icon: TuneIcon,
-      route: `/${teamSlug}/${flowSlug}/settings`,
-      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
-    },
-    {
-      title: "Feedback",
-      Icon: RateReviewIcon,
-      route: `/${teamSlug}/${flowSlug}/feedback`,
-      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
-    },
-    {
-      title: "Submissions",
-      Icon: FactCheckIcon,
-      route: `/${teamSlug}/${flowSlug}/submissions`,
-      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
-    },
-    {
-      title: flowAnalyticsLink
-        ? `Analytics (external link)`
-        : `Analytics page unavailable`,
-      Icon: LeaderboardIcon,
-      route: flowAnalyticsLink ? flowAnalyticsLink : `#`,
-      accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "analyst"],
-      disabled: !flowAnalyticsLink,
-    },
-  ];
+  const flowLayoutSections: MenuSection[] = useMemo(
+    () => [
+      {
+        routes: [
+          {
+            title: "Editor",
+            Icon: EditorIcon,
+            route: `/app/${teamSlug}/${flowSlug}`,
+            accessibleBy: "*",
+          },
+          {
+            title: "Flow settings",
+            Icon: TuneIcon,
+            route: `/app/${teamSlug}/${flowSlug}/settings`,
+            accessibleBy: ["platformAdmin", "teamEditor"],
+          },
+          {
+            title: "Feedback",
+            Icon: RateReviewIcon,
+            route: `/app/${teamSlug}/${flowSlug}/feedback`,
+            accessibleBy: ["platformAdmin", "teamEditor"],
+          },
+          {
+            title: "Submissions",
+            Icon: FactCheckIcon,
+            route: `/app/${teamSlug}/${flowSlug}/submissions`,
+            accessibleBy: ["platformAdmin", "teamEditor"],
+          },
+          {
+            title: "Analytics",
+            Icon: LeaderboardIcon,
+            route: flowAnalyticsLink ? flowAnalyticsLink : `#`,
+            accessibleBy: [
+              "platformAdmin",
+              "teamEditor",
+              "analyst",
+            ],
+            disabled: !flowAnalyticsLink,
+          },
+        ],
+      },
+    ],
+    [teamSlug, flowSlug, flowAnalyticsLink],
+  );
 
-  const defaultRoutes: RoutesForURL = {
-    routes: globalLayoutRoutes,
-    compact: false,
+  const getRoutesForUrl = (): { sections: MenuSection[]; compact: boolean } => {
+    if (isFlowRoute) return { sections: flowLayoutSections, compact: true };
+    if (isTeamRoute) return { sections: teamLayoutSections, compact: false };
+    return { sections: globalLayoutSections, compact: false };
   };
-  const previousRoutes = useRef<RoutesForURL>(defaultRoutes);
 
-  const getRoutesForUrl = (url: string): RoutesForURL => {
-    // Return the previous value when route is loading to avoid flash of incorrect version
-    if (isRouteLoading) return previousRoutes.current;
-
-    let result: RoutesForURL;
-
-    if (flowSlug && url.includes(flowSlug)) {
-      result = { routes: flowLayoutRoutes, compact: true };
-    } else if (teamSlug && url.includes(teamSlug)) {
-      result = { routes: teamLayoutRoutes, compact: false };
-    } else {
-      result = defaultRoutes;
-    }
-
-    previousRoutes.current = result;
-
-    return result;
-  };
-
-  const { routes, compact } = getRoutesForUrl(url.href);
+  const { sections, compact } = getRoutesForUrl();
 
   const isRouteAccessible = ({ accessibleBy }: Route) => {
     const accessibleByAll = accessibleBy === "*";
@@ -220,46 +284,102 @@ function EditorNavMenu() {
     return accessibleByCurrentUserRole;
   };
 
-  const visibleRoutes = routes.filter(isRouteAccessible);
+  // Filter accessible routes within each section
+  const visibleSections = sections
+    .map((section) => ({
+      ...section,
+      routes: section.routes.filter(isRouteAccessible),
+    }))
+    .filter((section) => section.routes.length > 0);
 
-  // Hide menu if the user does not have a selection of items
-  if (visibleRoutes.length < 2) return null;
+  const toggleAccordion = (subtitle: string) => {
+    setOpenAccordions((prev) => {
+      const next = new Set(prev);
+      if (next.has(subtitle)) {
+        next.delete(subtitle);
+      } else {
+        next.add(subtitle);
+      }
+      return next;
+    });
+  };
 
   return (
     <Root compact={compact}>
-      <MenuWrap>
-        {visibleRoutes.map(({ title, Icon, route, disabled }) => (
-          <MenuItem key={title}>
-            {compact ? (
-              <Tooltip title={title} placement="right">
-                <Box component="span">
-                  <MenuButton
-                    title={title}
-                    isActive={isActive(route)}
-                    disabled={disabled}
-                    disableRipple
-                    onClick={() => handleClick(route, disabled)}
-                  >
-                    <Icon />
-                  </MenuButton>
-                </Box>
-              </Tooltip>
-            ) : (
-              <MenuButton
-                isActive={isActive(route)}
-                disabled={disabled}
-                disableRipple
-                onClick={() => handleClick(route, disabled)}
-              >
-                <Icon fontSize="small" />
-                <MenuTitle variant="body3" pt={0.15}>
-                  {title}
-                </MenuTitle>
-              </MenuButton>
-            )}
-          </MenuItem>
-        ))}
-      </MenuWrap>
+      <NavBarContainer>
+        <NavMenuHeader compact={compact} />
+        {teamSlug && !compact && (
+          <Box sx={(theme) => ({ padding: theme.spacing(1, 0.5, 0, 0.5) })}>
+            <TeamSelect
+              currentTeamSlug={teamSlug}
+              onTeamSelect={(slug) =>
+                navigate({ to: "/app/$team", params: { team: slug } })
+              }
+            />
+          </Box>
+        )}
+        <MenuWrap>
+          {visibleSections.map((section, sectionIndex) => {
+            if (section.accordion && section.subtitle) {
+              const FirstIcon = section.icon ?? section.routes[0].Icon;
+              const isOpen = openAccordions.has(section.subtitle);
+              return (
+                <MenuItem key={sectionIndex}>
+                  <AccordionToggle
+                    subtitle={section.subtitle}
+                    Icon={FirstIcon}
+                    isOpen={isOpen}
+                    onToggle={() => toggleAccordion(section.subtitle!)}
+                  />
+                  <Collapse in={isOpen}>
+                    <AccordionContent>
+                      {section.routes.map(
+                        ({ title, route, disabled, isNew }) => (
+                          <MenuItem key={title}>
+                            <AccordionItemButton
+                              title={title}
+                              disabled={disabled}
+                              isNew={isNew}
+                              isActive={isActive(route)}
+                              isExternal={isExternalLink(route)}
+                              onClick={() => handleClick(route, disabled)}
+                            />
+                          </MenuItem>
+                        ),
+                      )}
+                    </AccordionContent>
+                  </Collapse>
+                </MenuItem>
+              );
+            }
+
+            return (
+              <React.Fragment key={sectionIndex}>
+                {section.subtitle && (
+                  <Subtitle variant="body3">{section.subtitle}</Subtitle>
+                )}
+                {section.routes.map(
+                  ({ title, Icon, route, disabled, isNew }) => (
+                    <MenuItem key={title}>
+                      <NavMenuItem
+                        title={title}
+                        Icon={Icon}
+                        disabled={disabled}
+                        isNew={isNew}
+                        isActive={isActive(route)}
+                        isExternal={isExternalLink(route)}
+                        compact={compact}
+                        onClick={() => handleClick(route, disabled)}
+                      />
+                    </MenuItem>
+                  ),
+                )}
+              </React.Fragment>
+            );
+          })}
+        </MenuWrap>
+        <AccountMenu compact={compact} />
+      </NavBarContainer>
     </Root>
   );
 }

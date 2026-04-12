@@ -1,8 +1,11 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { NumberInput } from "@planx/components/NumberInput/model";
-import { editorValidationSchema, parseNumberInput } from "@planx/components/NumberInput/model";
+import {
+  editorValidationSchema,
+  parseNumberInput,
+} from "@planx/components/NumberInput/model";
 import { EditorProps } from "@planx/components/shared/types";
-import { useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
@@ -21,17 +24,18 @@ import { ICONS } from "../shared/icons";
 export type Props = EditorProps<TYPES.NumberInput, NumberInput>;
 
 export default function NumberInputComponent(props: Props): FCReturn {
-  const formik = useFormik<NumberInput>({
-    initialValues: parseNumberInput(props.node?.data),
-    onSubmit: (newValues) => {
-      if (props.handleSubmit) {
-        props.handleSubmit({ type: TYPES.NumberInput, data: newValues });
-      }
+  const formik = useFormikWithRef<NumberInput>(
+    {
+      initialValues: parseNumberInput(props.node?.data),
+      onSubmit: (newValues) => {
+        if (props.handleSubmit) {
+          props.handleSubmit({ type: TYPES.NumberInput, data: newValues });
+        }
+      },
+      validationSchema: editorValidationSchema,
     },
-    validationSchema: editorValidationSchema,
-    validateOnBlur: false,
-    validateOnChange: false,
-  });
+    props.formikRef,
+  );
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">

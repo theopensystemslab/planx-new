@@ -32,7 +32,11 @@ export const FileUploadInput: React.FC<Props<FileUploadField>> = (props) => {
         <FieldInputDescription description={data.description} />
       )}
       <ErrorWrapper id={`${id}-error`} error={errorMessage}>
-        <PrivateFileUpload slots={slots} setSlots={setSlots} />
+        <PrivateFileUpload
+          slots={slots}
+          setSlots={setSlots}
+          maxFiles={data.maxFiles}
+        />
       </ErrorWrapper>
     </Box>
   );

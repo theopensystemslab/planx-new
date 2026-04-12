@@ -36,6 +36,8 @@ export interface NavigationStore {
     currentSectionIndex: number,
   ) => Progress | undefined;
   sectionProgress: Progress | undefined;
+  isNavMenuVisible: boolean;
+  setIsNavMenuVisible: (visible: boolean) => void;
 }
 
 export const navigationStore: StateCreator<
@@ -56,7 +58,6 @@ export const navigationStore: StateCreator<
 
   /**
    * Set up initial values to populate store
-   * Called by setFlow() as we require a flow from the DB before proceeding
    */
   initNavigationStore: () => {
     const {
@@ -276,4 +277,7 @@ export const navigationStore: StateCreator<
 
     return sortedSections;
   },
+
+  isNavMenuVisible: true,
+  setIsNavMenuVisible: (visible: boolean) => set({ isNavMenuVisible: visible }),
 });

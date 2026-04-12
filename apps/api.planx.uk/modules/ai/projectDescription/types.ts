@@ -1,25 +1,37 @@
 import { z } from "zod";
-import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 
-export const schema = z.object({
+import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
+import {
+  GATEWAY_STATUS,
+  GATEWAY_SUCCESS_STATUSES,
+  type ApiErrorStatus,
+  type GatewayFailureStatus,
+} from "../types.js";
+
+export const projectDescriptionSchema = z.object({
   body: z.object({
     original: z.string().trim().max(250),
+    flowId: z.string().uuid(),
+    sessionId: z.string().uuid().optional(),
   }),
 });
 
-interface Success {
+interface ProjectDescriptionSuccess {
   original: string;
-  suggested: string;
+  enhanced: string;
 }
 
-export type ErrorStatus = "INVALID_DESCRIPTION" | "SERVICE_UNAVAILABLE";
-
-interface Failure {
-  error: ErrorStatus;
+interface ProjectDescriptionFailure {
+  error: ApiErrorStatus | Omit<GatewayFailureStatus, "GATEWAY_ERROR">;
   message: string;
 }
 
-export type Controller = ValidatedRequestHandler<
-  typeof schema,
-  Success | Failure
+export type ProjectDescriptionController = ValidatedRequestHandler<
+  typeof projectDescriptionSchema,
+  ProjectDescriptionSuccess | ProjectDescriptionFailure
 >;
+
+export const projectDescriptionOutputSchema = z.object({
+  enhancedDescription: z.string().trim().max(250),
+  status: z.enum([...GATEWAY_SUCCESS_STATUSES, GATEWAY_STATUS.INVALID]),
+});

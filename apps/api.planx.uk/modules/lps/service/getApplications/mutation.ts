@@ -30,7 +30,7 @@ export const CONSUME_MAGIC_LINK_MUTATION = gql`
             flow: {
               _and: [
                 { id: { _is_null: false } }
-                { deleted_at: { _is_null: true } }
+                { archived_at: { _is_null: true } }
               ]
             }
           }

@@ -23,7 +23,7 @@ describe("Form validation and error handling", () => {
     "form validation is triggered when saving an item",
     { timeout: 35_000 },
     async () => {
-      const { user, getByRole, getAllByTestId } = setup(
+      const { user, getByRole, getAllByTestId } = await setup(
         <ListComponent {...mockZooProps} />,
       );
 
@@ -78,7 +78,7 @@ describe("Form validation and error handling", () => {
    */
   describe("existing validation schemas are correctly referenced", () => {
     test("text fields", { timeout: 20_000 }, async () => {
-      const { user, getByRole, getByTestId } = setup(
+      const { user, getByRole, getByTestId } = await setup(
         <ListComponent {...mockZooProps} />,
       );
 
@@ -99,7 +99,7 @@ describe("Form validation and error handling", () => {
     });
 
     test("number fields", { timeout: 20_000 }, async () => {
-      const { user, getByRole, getByTestId } = setup(
+      const { user, getByRole, getByTestId } = await setup(
         <ListComponent {...mockZooProps} />,
       );
 
@@ -115,7 +115,7 @@ describe("Form validation and error handling", () => {
     });
 
     test("question fields", { timeout: 20_000 }, async () => {
-      const { user, getByRole, getByTestId } = setup(
+      const { user, getByRole, getByTestId } = await setup(
         <ListComponent {...mockZooProps} />,
       );
 
@@ -131,7 +131,7 @@ describe("Form validation and error handling", () => {
     });
 
     test("radio fields", { timeout: 20_000 }, async () => {
-      const { user, getByRole, getByTestId } = setup(
+      const { user, getByRole, getByTestId } = await setup(
         <ListComponent {...mockZooProps} />,
       );
 
@@ -147,7 +147,7 @@ describe("Form validation and error handling", () => {
     });
 
     test("checklist fields", { timeout: 20_000 }, async () => {
-      const { user, getByRole, getByTestId } = setup(
+      const { user, getByRole, getByTestId } = await setup(
         <ListComponent {...mockZooProps} />,
       );
 
@@ -163,7 +163,7 @@ describe("Form validation and error handling", () => {
     });
 
     test("date fields", { timeout: 20_000 }, async () => {
-      const { user, getByRole, getAllByTestId } = setup(
+      const { user, getByRole, getAllByTestId } = await setup(
         <ListComponent {...mockZooProps} />,
       );
 
@@ -181,7 +181,7 @@ describe("Form validation and error handling", () => {
     test.todo("map fields");
 
     test("address fields", { timeout: 20_000 }, async () => {
-      const { user, getByRole, getAllByTestId } = setup(
+      const { user, getByRole, getAllByTestId } = await setup(
         <ListComponent {...mockZooProps} />,
       );
 
@@ -197,7 +197,7 @@ describe("Form validation and error handling", () => {
     });
 
     test("file upload fields", { timeout: 20_000 }, async () => {
-      const { user, getByRole, getByTestId } = setup(
+      const { user, getByRole, getByTestId } = await setup(
         <ListComponent {...mockZooProps} />,
       );
 
@@ -220,7 +220,7 @@ describe("Form validation and error handling", () => {
       const mockWithMinTwo = merge(cloneDeep(mockZooProps), {
         schema: { min: 2 },
       });
-      const { user, getByTestId, getByText } = setup(
+      const { user, getByTestId, getByText } = await setup(
         <ListComponent {...mockWithMinTwo} />,
       );
 
@@ -243,7 +243,7 @@ describe("Form validation and error handling", () => {
     "an error displays if the maximum number of items is exceeded",
     { timeout: 40_000 },
     async () => {
-      const { user, getAllByTestId, getByTestId, getByText } = setup(
+      const { user, getAllByTestId, getByTestId, getByText } = await setup(
         <ListComponent {...mockZooProps} />,
       );
       const addItemButton = getByTestId(/list-add-button/);
@@ -276,7 +276,7 @@ describe("Form validation and error handling", () => {
     "an error displays if you add a new item, without saving the active item",
     { timeout: 35_000 },
     async () => {
-      const { user, getByTestId, getByText, getByLabelText } = setup(
+      const { user, getByTestId, getByText, getByLabelText } = await setup(
         <ListComponent {...mockZooProps} />,
       );
       // Start filling out item
@@ -300,7 +300,7 @@ describe("Form validation and error handling", () => {
     "an error displays if you continue, without saving the active item",
     { timeout: 35_000 },
     async () => {
-      const { user, getByTestId, getByText, getByLabelText } = setup(
+      const { user, getByTestId, getByText, getByLabelText } = await setup(
         <ListComponent {...mockZooProps} />,
       );
       // Start filling out item

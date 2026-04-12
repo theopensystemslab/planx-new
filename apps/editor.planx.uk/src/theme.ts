@@ -25,9 +25,9 @@ import type {} from "@mui/x-data-grid/themeAugmentation";
 import { TeamTheme } from "@opensystemslab/planx-core/types";
 import { getContrastTextColor } from "styleUtils";
 
-const DEFAULT_PRIMARY_COLOR = "#0010A4";
+export const DEFAULT_PRIMARY_COLOR = "#0010A4";
 const DEFAULT_TONAL_OFFSET = 0.1;
-export const DEFAULT_CONTRAST_THRESHOLD = 3;
+export const DEFAULT_CONTRAST_THRESHOLD = 4.5;
 
 // Type styles
 export const FONT_WEIGHT_SEMI_BOLD = "600";
@@ -232,6 +232,10 @@ const getThemeOptions = ({
       body3: {
         fontSize: "0.913rem",
       },
+      body4: {
+        fontSize: "0.8125rem",
+        lineHeight: LINE_HEIGHT_BASE,
+      },
       data: {
         fontFamily: '"Source Code Pro", monospace',
       },
@@ -316,7 +320,7 @@ const getThemeOptions = ({
               fontWeight: "initial",
               fontSize: "inherit",
               textDecoration: "underline",
-              textUnderlineOffset: "0.1em",
+              textUnderlineOffset: "0.15em",
               gap: "10px",
               minHeight: "48px",
               "&:hover": {
@@ -328,6 +332,9 @@ const getThemeOptions = ({
               "&:focus": {
                 borderColor: palette.text.primary,
                 borderStyle: "solid",
+              },
+              "&:disabled": {
+                textDecoration: "none",
               },
             },
           },
@@ -372,14 +379,18 @@ const getThemeOptions = ({
             },
           },
           outlined: {
-            borderWidth: "2px 2px 3px",
-            borderColor: palette.primary.main,
+            borderWidth: "2px",
+            borderColor: palette.prompt.main,
             color: palette.text.primary,
             backgroundColor: palette.common.white,
+            boxShadow: "none",
             "&:hover": {
-              borderWidth: "2px 2px 3px",
-              backgroundColor: palette.primary.dark,
-              color: palette.common.white,
+              borderWidth: "2px",
+              backgroundColor: palette.prompt.dark,
+              color: palette.prompt.contrastText,
+            },
+            "&:disabled": {
+              borderWidth: "2px",
             },
           },
         },
@@ -553,6 +564,9 @@ const getThemeOptions = ({
             background: theme.palette.background.paper,
             margin: theme.spacing(1),
           }),
+          paperWidthMd: {
+            maxWidth: "768px",
+          },
         },
       },
       MuiDialogContent: {

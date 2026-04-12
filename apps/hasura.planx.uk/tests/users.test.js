@@ -62,23 +62,11 @@ describe("users", () => {
       expect(i.queries).toContain("users");
     });
 
-    test("cannot create, update, or delete users", async () => {
-      expect(i).toHaveNoMutationsFor("users");
-    });
-  });
-
-  describe("demoUser", () => {
-    let i;
-    beforeAll(async () => {
-      i = await introspectAs("demoUser");
-    });
-
-    test("can query users", async () => {
-      expect(i.queries).toContain("users");
-    });
-
-    test("cannot create, update, or delete users", async () => {
-      expect(i).toHaveNoMutationsFor("users");
+    // Row-level permissions in place
+    // teamEditor can only mutate other users from their team
+    test("has full access to create and update users", async () => {
+      expect(i.mutations).toContain("insert_users");
+      expect(i.mutations).toContain("update_users_by_pk");
     });
   });
 

@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { EditorProps } from "@planx/components/shared/types";
-import { useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
@@ -79,18 +79,19 @@ const DescriptionText: React.FC<SetValue> = ({ fn, val, operation }) => {
 };
 
 function SetValueComponent(props: Props) {
-  const formik = useFormik({
-    initialValues: parseSetValue(props.node?.data),
-    onSubmit: (newValues) => {
-      props.handleSubmit?.({
-        type: TYPES.SetValue,
-        data: newValues,
-      });
+  const formik = useFormikWithRef<SetValue>(
+    {
+      initialValues: parseSetValue(props.node?.data),
+      onSubmit: (newValues) => {
+        props.handleSubmit?.({
+          type: TYPES.SetValue,
+          data: newValues,
+        });
+      },
+      validationSchema,
     },
-    validationSchema,
-    validateOnBlur: false,
-    validateOnChange: false,
-  });
+    props.formikRef,
+  );
 
   const handleRadioChange = (event: React.SyntheticEvent<Element, Event>) => {
     const target = event.target as HTMLInputElement;

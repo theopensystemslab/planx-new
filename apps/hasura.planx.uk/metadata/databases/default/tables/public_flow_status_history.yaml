@@ -1,15 +1,12 @@
 table:
   name: flow_status_history
   schema: public
+object_relationships:
+  - name: flow
+    using:
+      foreign_key_constraint_on: flow_id
 select_permissions:
   - role: analyst
-    permission:
-      columns:
-        - flow_id
-        - status
-      filter: {}
-    comment: ""
-  - role: demoUser
     permission:
       columns:
         - flow_id

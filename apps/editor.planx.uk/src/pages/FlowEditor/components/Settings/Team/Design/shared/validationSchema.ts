@@ -20,7 +20,7 @@ export const validationSchema = object({
       return this.createError({
         path: "linkColour",
         message:
-          "Colour does not meet accessibility contrast requirements (3:1)",
+          "Colour does not meet accessibility contrast requirements (4.5:1)",
       });
     },
   })
@@ -34,7 +34,7 @@ export const validationSchema = object({
       return this.createError({
         path: "primaryColour",
         message:
-          "Theme colour does not meet accessibility contrast requirements (3:1)",
+          "Theme colour does not meet accessibility contrast requirements (4.5:1)",
       });
     },
   });
@@ -48,4 +48,4 @@ export const defaultValues: TeamTheme = {
 };
 
 const isContrastThresholdMet = (color: string) =>
-  getContrastRatio("#FFF", color) > DEFAULT_CONTRAST_THRESHOLD;
+  getContrastRatio("#f9f8f8", color) > DEFAULT_CONTRAST_THRESHOLD;

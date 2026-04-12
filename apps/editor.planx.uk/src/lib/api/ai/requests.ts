@@ -1,11 +1,11 @@
 import apiClient from "lib/api/client";
 
-import type { EnhanceResponse } from "./types";
+import type { EnhanceRequest, EnhanceResponse } from "./types";
 
-export const enhanceProjectDescription = async (original: string) => {
+export const enhanceProjectDescription = async (request: EnhanceRequest) => {
   const { data } = await apiClient.post<EnhanceResponse>(
     "/ai/project-description/enhance",
-    { original },
+    request,
   );
   return data;
 };

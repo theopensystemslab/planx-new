@@ -5,7 +5,7 @@ import React from "react";
 
 const StyledListManagerHeader = styled(Box)(({ theme }) => ({
   display: "flex",
-  gap: theme.spacing(1),
+  gap: theme.spacing(2),
   marginBottom: theme.spacing(2),
   position: "sticky",
   top: 0,
@@ -34,17 +34,19 @@ export const ListManagerHeader: React.FC<ListManagerHeaderProps> = ({
     <StyledListManagerHeader>
       <Button
         size="small"
+        variant="link"
         onClick={onCollapseAll}
         disabled={disabled || !hasItems || allCollapsed}
-        sx={{ px: 1 }}
+        sx={{ p: 0 }}
       >
         Collapse all
       </Button>
       <Button
         size="small"
+        variant="link"
         onClick={onExpandAll}
         disabled={disabled || !hasItems || allExpanded}
-        sx={{ px: 1 }}
+        sx={{ p: 0 }}
       >
         Expand all
       </Button>

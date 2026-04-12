@@ -1,28 +1,30 @@
 import { screen, within } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
+import React from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import server from "test/mockServer";
+import { setup } from "testUtils";
 
-import { TeamMember } from "../types";
-import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
-import { mockPlatformAdminUser } from "./mocks/mockUsers";
-
-const mockTeamMembersDataWithNoTeamEditors: TeamMember[] = [
-  {
-    firstName: "Donella",
-    lastName: "Meadows",
-    email: "donella@example.com",
-    id: 1,
-    role: "platformAdmin",
-  },
-];
+import { TeamMembers } from "../TeamMembers";
+import { getUsersWithNoTeamEditorHandler } from "./mocks/handlers";
+import { mockPlatformAdminUser } from "./mocks/users";
 
 describe("when a user views the 'Team members' screen but there are no existing team members listed", () => {
   beforeEach(async () => {
     useStore.setState({
-      teamMembers: mockTeamMembersDataWithNoTeamEditors,
       user: mockPlatformAdminUser,
     });
-    const { getByText } = await setupTeamMembersScreen();
-    getByText("No members found");
+
+    server.use(getUsersWithNoTeamEditorHandler());
+
+    await setup(
+      <DndProvider backend={HTML5Backend}>
+        <TeamMembers />
+      </DndProvider>,
+    );
+
+    screen.getByText("No members found");
   });
 
   it("shows the 'add a new member' button", async () => {

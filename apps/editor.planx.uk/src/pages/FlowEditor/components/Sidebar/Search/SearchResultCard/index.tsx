@@ -11,8 +11,7 @@ import { getDisplayDetailsForResult } from "./getDisplayDetailsForResult";
 export const SearchResultCard: React.FC<{
   result: SearchResult<IndexedNode>;
 }> = ({ result }) => {
-  const { key, headline } =
-    getDisplayDetailsForResult(result);
+  const { key, headline } = getDisplayDetailsForResult(result);
 
   const isDataKey = DATA_FACETS.includes(result.key);
   const headlineVariant = isDataKey ? "data" : undefined;
@@ -27,6 +26,6 @@ export const SearchResultCard: React.FC<{
         matchIndices={result.matchIndices!}
         variant={headlineVariant}
       />
-    </NodeCard >
+    </NodeCard>
   );
 };

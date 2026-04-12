@@ -3,6 +3,7 @@ import Typography from "@mui/material/Typography";
 import { PaymentRequest } from "@opensystemslab/planx-core/types";
 import { useMutation } from "@tanstack/react-query";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import { usePublicRouteContext } from "hooks/usePublicRouteContext";
 import { APIError } from "lib/api/client";
 import { validateSession } from "lib/api/saveAndReturn/requests";
 import {
@@ -11,8 +12,8 @@ import {
 } from "lib/api/saveAndReturn/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useCallback, useEffect } from "react";
-import { Link as ReactNaviLink } from "react-navi";
 import { ApplicationPath } from "types";
+import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 import ReconciliationPage from "../ReconciliationPage";
 import StatusPage from "../StatusPage";
@@ -55,34 +56,45 @@ export const InvalidSession: React.FC<{
 
 export const LockedSession: React.FC<{
   paymentRequest?: MinPaymentRequest;
-}> = ({ paymentRequest }) => (
-  <StatusPage
-    bannerHeading="Sorry, you can't make changes to this form"
-    additionalOption="startNewApplication"
-  >
-    <Typography variant="body1">
-      This is because you've invited {paymentRequest?.payeeName} (
-      <Link href={`mailto:${paymentRequest?.payeeEmail}`}>
-        {paymentRequest?.payeeEmail}
-      </Link>
-      ) to pay and changes might affect the fee.
-      <br />
-      <br />
-      You can{" "}
-      <Link
-        component={ReactNaviLink}
-        href={`../pay?paymentRequestId=${paymentRequest?.id}`}
-      >
-        pay yourself on the payment page
-      </Link>
-    </Typography>
-  </StatusPage>
-);
+}> = ({ paymentRequest }) => {
+  const from = usePublicRouteContext();
+
+  return (
+    <StatusPage
+      bannerHeading="Sorry, you can't make changes to this form"
+      additionalOption="startNewApplication"
+    >
+      {paymentRequest && (
+        <Typography variant="body1">
+          This is because you've invited {paymentRequest?.payeeName} (
+          <Link href={`mailto:${paymentRequest?.payeeEmail}`}>
+            {paymentRequest?.payeeEmail}
+          </Link>
+          ) to pay and changes might affect the fee.
+          <br />
+          <br />
+          You can {/* TODO: Check / fix this link */}
+          <CustomLink
+            to="pay"
+            from={from}
+            search={{ paymentRequestId: paymentRequest.id }}
+          >
+            pay yourself on the payment page
+          </CustomLink>
+        </Typography>
+      )}
+    </StatusPage>
+  );
+};
 
 export const ValidationSuccess: React.FC<{
   reconciliationResponse: ReconciliationResponse;
   continueApplication: () => void;
 }> = ({ reconciliationResponse, continueApplication }) => {
+  // ReconciliationPage relies on flow data and navigation store (section data)
+  const isFlowLoaded = useStore((state) => state.isFlowLoaded);
+  if (!isFlowLoaded) return <DelayedLoadingIndicator />;
+
   return (
     <ReconciliationPage
       bannerHeading="Resume your form"
@@ -123,7 +135,6 @@ const ValidateSession: React.FC<{
   >({
     mutationFn: validateSession,
     onSuccess: (data) => resumeSession(data.reconciledSessionData),
-    onError: console.debug,
   });
 
   const handleSubmit = useCallback(

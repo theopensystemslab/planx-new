@@ -72,7 +72,8 @@ const TaskEditor: React.FC<ListManagerEditorProps<Task>> = (props) => {
 };
 
 const TaskListComponent: React.FC<Props> = (props) => (
-  <Formik
+  <Formik<TaskList>
+    innerRef={props.formikRef}
     initialValues={parseTaskList(props.node?.data)}
     onSubmit={(newValues) => {
       if (props.handleSubmit) {

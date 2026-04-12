@@ -19,19 +19,19 @@ insert_permissions:
         - primary_colour
     comment: ""
 select_permissions:
-  - role: api
+  - role: analyst
     permission:
       columns:
-        - action_colour
-        - favicon
         - id
-        - link_colour
-        - logo
-        - primary_colour
         - team_id
+        - favicon
+        - logo
+        - action_colour
+        - link_colour
+        - primary_colour
       filter: {}
     comment: ""
-  - role: demoUser
+  - role: api
     permission:
       columns:
         - action_colour

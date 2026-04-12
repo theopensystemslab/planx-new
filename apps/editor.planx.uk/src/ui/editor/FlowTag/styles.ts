@@ -9,6 +9,7 @@ export const Root = styled(Box, {
 })<FlowTagProps>(({ theme, tagType, statusVariant }) => ({
   fontSize: theme.typography.body2.fontSize,
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
+  color: theme.palette.common.black,
   padding: "2px 8px",
   display: "flex",
   alignItems: "center",

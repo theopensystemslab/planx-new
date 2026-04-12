@@ -1,7 +1,7 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
 import { EditorProps } from "@planx/components/shared/types";
-import { useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import InputLabel from "ui/editor/InputLabel";
@@ -20,20 +20,21 @@ import { Feedback, parseFeedback, validationSchema } from "../model";
 type FeedbackEditorProps = EditorProps<TYPES.Feedback, Feedback>;
 
 export const FeedbackEditor = (props: FeedbackEditorProps) => {
-  const formik = useFormik<Feedback>({
-    initialValues: parseFeedback(props.node?.data),
-    onSubmit: (newValues) => {
-      if (props.handleSubmit) {
-        props.handleSubmit({
-          type: TYPES.Feedback,
-          data: newValues,
-        });
-      }
+  const formik = useFormikWithRef<Feedback>(
+    {
+      initialValues: parseFeedback(props.node?.data),
+      onSubmit: (newValues) => {
+        if (props.handleSubmit) {
+          props.handleSubmit({
+            type: TYPES.Feedback,
+            data: newValues,
+          });
+        }
+      },
+      validationSchema,
     },
-    validationSchema,
-    validateOnBlur: false,
-    validateOnChange: false,
-  });
+    props.formikRef,
+  );
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">

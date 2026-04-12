@@ -10,8 +10,8 @@ const foxIndices: [number, number][] = [[10, 13]];
 
 const DEFAULT_FONT_WEIGHT = "400";
 
-it("displays matches from the headline in bold", () => {
-  const { getByText } = setup(
+it("displays matches from the headline in bold", async () => {
+  const { getByText } = await setup(
     <Headline text={sampleText} matchIndices={foxIndices} variant="data" />,
   );
 
@@ -36,7 +36,7 @@ it("displays matches from the headline in bold", () => {
 });
 
 it("should not have any accessibility violations on initial load", async () => {
-  const { container } = setup(
+  const { container } = await setup(
     <Headline text={sampleText} matchIndices={foxIndices} variant="data" />,
   );
   const results = await axe(container);

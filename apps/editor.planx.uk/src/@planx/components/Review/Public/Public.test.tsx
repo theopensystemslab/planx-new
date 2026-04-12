@@ -39,7 +39,7 @@ describe("Simple flow", () => {
     const handleSubmit = vi.fn();
     const changeAnswer = vi.fn();
 
-    const { user, getByText } = setup(
+    const { user, getByText } = await setup(
       <Review
         title="Review"
         description="Check your answers before submitting"
@@ -65,7 +65,7 @@ describe("Simple flow", () => {
     const handleSubmit = vi.fn();
     const changeAnswer = vi.fn();
 
-    setup(
+    await setup(
       <Review
         title="Review"
         description="Check your answers before submitting"
@@ -88,7 +88,7 @@ describe("Simple flow", () => {
   it("should not have any accessibility violations", async () => {
     const changeAnswer = vi.fn();
 
-    const { container } = setup(
+    const { container } = await setup(
       <Review
         title="Review"
         description="Check your answers before submitting"
@@ -108,7 +108,7 @@ describe("Simple flow", () => {
     const handleSubmit = vi.fn();
     const changeAnswer = vi.fn();
 
-    setup(
+    await setup(
       <Review
         title="Review"
         description="Check your answers before submitting"
@@ -144,7 +144,7 @@ describe("Simple flow", () => {
     const handleSubmit = vi.fn();
     const changeAnswer = vi.fn();
 
-    setup(
+    await setup(
       <Review
         title="Review"
         description="Check your answers before submitting"
@@ -180,7 +180,7 @@ describe("Simple flow", () => {
     const handleSubmit = vi.fn();
     const changeAnswer = vi.fn();
 
-    setup(
+    await setup(
       <Review
         title="Review"
         description="Check your answers before submitting"
@@ -221,7 +221,7 @@ describe("File uploads", () => {
   });
 
   it("should render file upload filename", async () => {
-    const { getByTestId } = setup(
+    const { getByTestId } = await setup(
       <Review
         title="Review"
         description="Check your answers before submitting"
@@ -240,7 +240,7 @@ describe("File uploads", () => {
   });
 
   it("should render uploaded location plan link", async () => {
-    const { getByTestId } = setup(
+    const { getByTestId } = await setup(
       <Review
         title="Review"
         description="Check your answers before submitting"
@@ -275,7 +275,7 @@ describe("Flow with sections", () => {
   it("renders correctly", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user } = await setup(
       <Review
         title="Review with sections"
         description="Check your answers before submitting"
@@ -303,7 +303,7 @@ describe("Flow with sections", () => {
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(
+    const { container } = await setup(
       <Review
         title="Review with sections"
         description="Check your answers before submitting"
@@ -335,7 +335,7 @@ describe("Flow with empty sections", () => {
   afterEach(() => act(() => setState(initialState)));
 
   test("headers display as expected", async () => {
-    setup(
+    await setup(
       <Review
         title="Review with empty sections"
         description="Check your answers before submitting"
@@ -369,7 +369,7 @@ describe("Flow with empty sections", () => {
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(
+    const { container } = await setup(
       <Review
         title="Review with empty sections"
         description="Check your answers before submitting"

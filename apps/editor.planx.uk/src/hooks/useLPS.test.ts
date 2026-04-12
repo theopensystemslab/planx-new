@@ -1,7 +1,7 @@
 import { renderHook } from "@testing-library/react";
 import * as reactUse from "react-use";
 import type { LocationSensorState } from "react-use/lib/useLocation";
-import { beforeEach,describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useLPS } from "./useLPS";
 

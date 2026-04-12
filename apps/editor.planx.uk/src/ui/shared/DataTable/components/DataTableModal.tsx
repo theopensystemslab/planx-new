@@ -39,7 +39,7 @@ export const DataTableModal: React.FC<DataTableModalProps> = ({
   children,
 }) => {
   return (
-    <Dialog open={open} fullWidth maxWidth="md" onClose={onClose}>
+    <Dialog open={open} fullWidth onClose={onClose}>
       <ModalHeader>
         <Typography variant="h4">{title}</Typography>
         <CloseButton aria-label="close" onClick={onClose} size="large">

@@ -34,7 +34,16 @@ apiClient.interceptors.request.use(
  */
 apiClient.interceptors.response.use(
   (response) => response,
-  (error: AxiosError) => {
+  async (error: AxiosError) => {
+    // Endpoint which return blob data (e.g /download-submission) will return JSON on error
+    if (
+      error.response?.data instanceof Blob &&
+      error.response.data.type === "application/json"
+    ) {
+      const text = await error.response.data.text();
+      error.response.data = JSON.parse(text);
+    }
+
     const statusCode = error.response?.status;
 
     let message = error.message || "An unexpected error occurred";
@@ -43,7 +52,8 @@ apiClient.interceptors.response.use(
     switch (statusCode) {
       case 401:
         message = "Unauthenticated";
-        toastId = "api_unauthenticated_error";
+        // Do not show toast - user is already redirected to /login page for authentication errors
+        toastId = undefined;
         break;
 
       case 403:
@@ -77,7 +87,7 @@ apiClient.interceptors.response.use(
         hideProgressBar: false,
         autoClose: 4_000,
       });
-    };
+    }
 
     return Promise.reject({
       message,

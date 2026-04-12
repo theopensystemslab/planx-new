@@ -4,13 +4,15 @@ import {
   TeamSettings,
   TeamTheme,
 } from "@opensystemslab/planx-core/types";
-import gql from "graphql-tag";
-import { client } from "lib/graphql";
-import { TeamMember } from "pages/FlowEditor/components/Team/types";
 import { CreateTeam } from "pages/Teams/AddTeamButton";
+import { DEFAULT_PRIMARY_COLOR } from "theme";
 import type { StateCreator } from "zustand";
 
 import { SharedStore } from "./shared";
+
+export type TeamSummary = Pick<Team, "id" | "name" | "slug"> & {
+  settings: Pick<TeamSettings, "isTrial">;
+} & { theme: Pick<TeamTheme, "primaryColour" | "logo"> };
 
 export interface TeamStore {
   teamId: number;
@@ -19,17 +21,13 @@ export interface TeamStore {
   teamSettings: TeamSettings;
   teamSlug: string;
   teamTheme: TeamTheme;
-  teamMembers: TeamMember[];
   teamDomain: string;
 
   setTeam: (team: Team) => void;
   getTeam: () => Team;
-  initTeamStore: (slug: string) => Promise<void>;
   clearTeamStore: () => void;
   fetchCurrentTeam: () => Promise<Team>;
   createTeam: (newTeam: CreateTeam) => Promise<number>;
-  setTeamMembers: (teamMembers: TeamMember[]) => Promise<void>;
-  deleteUser: (userId: number) => Promise<boolean>;
 }
 
 export const teamStore: StateCreator<
@@ -43,8 +41,13 @@ export const teamStore: StateCreator<
   teamName: "",
   teamSettings: {} as TeamSettings,
   teamSlug: "",
-  teamTheme: {} as TeamTheme,
-  teamMembers: [] as TeamMember[],
+  teamTheme: {
+    primaryColour: DEFAULT_PRIMARY_COLOR,
+    actionColour: DEFAULT_PRIMARY_COLOR,
+    linkColour: DEFAULT_PRIMARY_COLOR,
+    logo: null,
+    favicon: null,
+  },
   teamDomain: "",
 
   setTeam: (team) => {
@@ -71,66 +74,12 @@ export const teamStore: StateCreator<
     settings: get().teamSettings,
     slug: get().teamSlug,
     theme: get().teamTheme,
-    members: get().teamMembers,
     domain: get().teamDomain,
   }),
 
   createTeam: async (newTeam) => {
     const { $client } = get();
     return await $client.team.create(newTeam);
-  },
-
-  initTeamStore: async (slug) => {
-    const { data } = await client.query({
-      query: gql`
-        query GetTeamBySlug($slug: String!) {
-          teams(
-            order_by: { name: asc }
-            limit: 1
-            where: { slug: { _eq: $slug } }
-          ) {
-            id
-            name
-            slug
-            domain
-            flows(order_by: { updated_at: desc }) {
-              slug
-              updated_at
-              operations(limit: 1, order_by: { id: desc }) {
-                actor {
-                  first_name
-                  last_name
-                }
-              }
-            }
-            integrations {
-              hasPlanningData: has_planning_data
-            }
-            settings: team_settings {
-              id
-              boundaryUrl: boundary_url
-              boundaryBBox: boundary_bbox
-              referenceCode: reference_code
-              helpEmail: help_email
-              helpPhone: help_phone
-              helpOpeningHours: help_opening_hours
-              emailReplyToId: email_reply_to_id
-              homepage: homepage
-              externalPlanningSiteName: external_planning_site_name
-              externalPlanningSiteUrl: external_planning_site_url
-              submissionEmail: submission_email
-              isTrial: is_trial
-            }
-          }
-        }
-      `,
-      variables: { slug },
-    });
-
-    const team = data.teams[0];
-
-    if (!team) throw new Error("Team not found");
-    get().setTeam(team);
   },
 
   clearTeamStore: () =>
@@ -141,7 +90,6 @@ export const teamStore: StateCreator<
       teamSettings: undefined,
       teamSlug: "",
       teamTheme: undefined,
-      teamMembers: [],
     }),
 
   /**
@@ -151,18 +99,5 @@ export const teamStore: StateCreator<
   fetchCurrentTeam: async () => {
     const { teamSlug, $client } = get();
     return await $client.team.getBySlug(teamSlug);
-  },
-
-  setTeamMembers: async (teamMembers: TeamMember[]) => {
-    set(() => ({ teamMembers }));
-  },
-  deleteUser: async (userId: number) => {
-    try {
-      const { $client } = get();
-      const response = await $client.user.delete(userId);
-      return response;
-    } catch (error) {
-      throw new Error(`Unable to remove user. ${error}`);
-    }
   },
 });

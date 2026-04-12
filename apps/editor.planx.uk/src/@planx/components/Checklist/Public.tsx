@@ -1,7 +1,7 @@
 import { PublicProps } from "@planx/components/shared/types";
 import React from "react";
 
-import FlatChecklist from "../shared/BaseChecklist/Public/components/FlatChecklist"
+import FlatChecklist from "../shared/BaseChecklist/Public/components/FlatChecklist";
 import GroupedChecklist from "../shared/BaseChecklist/Public/components/GroupedChecklist";
 import type { ChecklistWithOptions } from "./model";
 

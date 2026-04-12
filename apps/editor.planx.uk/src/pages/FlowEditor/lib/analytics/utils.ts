@@ -226,6 +226,7 @@ const foiynppDashboard = {
   slugs: [
     "check-if-you-need-planning-permission",
     "find-out-if-you-need-planning-permission",
+    "find-out-if-you-need-planning-permission-advice-service",
   ],
 };
 
@@ -270,7 +271,7 @@ export const getAnalyticsDashboardId = ({
   return undefined;
 };
 
-export const generateAnalyticsLink = ({
+export const generateFlowAnalyticsLink = ({
   flowId,
   dashboardId,
 }: {

@@ -4,10 +4,8 @@ import Box from "@mui/material/Box";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { styled } from "@mui/material/styles";
 import { MENU_WIDTH_COMPACT } from "components/EditorNavMenu/styles";
-import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
-import { isEmpty } from "lodash";
 import { parentNodeIsTemplatedInternalPortal } from "pages/FlowEditor/utils";
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 
 import Flow from "./components/Flow";
 import { getParentId } from "./components/Flow/lib/utils";
@@ -16,24 +14,26 @@ import { ToggleHelpTextButton } from "./components/FlowEditor/ToggleHelpTextButt
 import { ToggleImagesButton } from "./components/FlowEditor/ToggleImagesButton";
 import { ToggleNotesButton } from "./components/FlowEditor/ToggleNotesButton";
 import { ToggleTagsButton } from "./components/FlowEditor/ToggleTagsButton";
+import RecentFlows from "./components/RecentFlows/RecentFlows";
 import Sidebar from "./components/Sidebar";
-import FlowSkeleton from "./FlowSkeleton";
 import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
 
-const EditorContainer = styled(Box)(() => ({
+const EditorContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "hasNavMenu",
+})<{ hasNavMenu?: boolean }>(({ hasNavMenu = true }) => ({
   display: "flex",
   alignItems: "stretch",
   overflow: "hidden",
   flexGrow: 1,
-  maxHeight: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
-  maxWidth: `calc(100vw - ${MENU_WIDTH_COMPACT}px)`,
+  maxHeight: "100vh",
+  maxWidth: hasNavMenu ? `calc(100vw - ${MENU_WIDTH_COMPACT}px)` : "100vw",
 }));
 
 const EditorVisualControls = styled(ButtonGroup)(({ theme }) => ({
-  position: "fixed",
+  position: "absolute",
   bottom: theme.spacing(2.5),
-  left: theme.spacing(7.5),
+  left: theme.spacing(2.5),
   zIndex: theme.zIndex.appBar,
   border: `1px solid ${theme.palette.border.main}`,
   borderRadius: "3px",
@@ -43,34 +43,17 @@ const EditorVisualControls = styled(ButtonGroup)(({ theme }) => ({
 }));
 
 const FlowEditor = () => {
-  const [
-    flowObject,
-    orderedFlow,
-    isTemplatedFrom,
-    teamSlug,
-    flowId,
-    connectToFlow,
-    disconnectFromFlow,
-  ] = useStore((state) => [
-    state.flow,
-    state.orderedFlow,
-    state.isTemplatedFrom,
-    state.getTeam().slug,
-    state.id,
-    state.connectToFlow,
-    state.disconnectFromFlow,
-  ]);
-
-  useEffect(() => {
-    if (!flowId) return;
-    connectToFlow(flowId);
-
-    return () => disconnectFromFlow();
-  }, [flowId, connectToFlow, disconnectFromFlow]);
+  const [flowObject, orderedFlow, isTemplatedFrom, teamSlug, isNavMenuVisible] =
+    useStore((state) => [
+      state.flow,
+      state.orderedFlow,
+      state.isTemplatedFrom,
+      state.getTeam().slug,
+      state.isNavMenuVisible,
+    ]);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const isLoading = isEmpty(flowObject);
-  useScrollControlsAndRememberPosition(isLoading ? null : scrollContainerRef);
+  useScrollControlsAndRememberPosition(scrollContainerRef);
 
   const parentId = getParentId(undefined);
 
@@ -88,30 +71,26 @@ const FlowEditor = () => {
     !lockedFlow && !parentIsTemplatedInternalPortal;
 
   return (
-    <EditorContainer id="editor-container">
+    <EditorContainer id="editor-container" hasNavMenu={isNavMenuVisible}>
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           width: "100%",
           overflowX: "auto",
+          position: "relative",
         }}
       >
         <Box
           id="editor"
           ref={scrollContainerRef}
           className={lockedFlow ? "flow-locked" : ""}
-          sx={{ position: "relative" }}
         >
-          {" "}
-          {isLoading ? (
-            <FlowSkeleton />
-          ) : (
-            <Flow
-              lockedFlow={lockedFlow}
-              showTemplatedNodeStatus={showTemplatedNodeStatus}
-            />
-          )}
+          <Flow
+            lockedFlow={lockedFlow}
+            showTemplatedNodeStatus={showTemplatedNodeStatus}
+          />
+          <RecentFlows />
           <EditorVisualControls
             orientation="vertical"
             aria-label="Toggle node attributes"

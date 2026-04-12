@@ -27,6 +27,7 @@ let context: TestContext = {
     slug: "invite-to-pay-test",
     name: "Invite to pay test",
     data: inviteToPayFlow,
+    hasSendComponent: true,
   },
   sessionIds: [], // used to collect and clean up sessions
 };
@@ -93,7 +94,6 @@ test.describe("Agent journey @regression", async () => {
     await page.getByLabel("email").fill(context.user.email);
     await page.getByText("Continue").click();
     await page.waitForLoadState("networkidle");
-
     await expect(toggleInviteToPayButton).toBeDisabled();
   });
 

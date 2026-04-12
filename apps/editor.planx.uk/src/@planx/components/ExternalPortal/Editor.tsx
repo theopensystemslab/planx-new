@@ -3,8 +3,9 @@ import {
   ComponentType as TYPES,
   NodeTag,
 } from "@opensystemslab/planx-core/types";
-import { useFormik } from "formik";
-import React from "react";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
+import { FormikProps } from "formik";
+import React, { MutableRefObject } from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -46,6 +47,16 @@ const renderGroup: FlowAutocompleteListProps["renderGroup"] = (params) => {
   );
 };
 
+interface ExternalPortalFormData {
+  flow: Flow | null;
+  flowId: string | null;
+  tags: NodeTag[];
+  notes: string;
+  isTemplatedNode: boolean;
+  templatedNodeInstructions: string;
+  areTemplatedNodeInstructionsRequired: boolean;
+}
+
 const ExternalPortalForm: React.FC<{
   flowId?: string;
   notes?: string;
@@ -56,6 +67,7 @@ const ExternalPortalForm: React.FC<{
   isTemplatedNode?: boolean;
   templatedNodeInstructions?: string;
   areTemplatedNodeInstructionsRequired?: boolean;
+  formikRef?: MutableRefObject<FormikProps<ExternalPortalFormData> | null>;
 }> = ({
   handleSubmit,
   flowId,
@@ -66,26 +78,28 @@ const ExternalPortalForm: React.FC<{
   isTemplatedNode = false,
   templatedNodeInstructions = "",
   areTemplatedNodeInstructionsRequired = false,
+  formikRef,
 }) => {
-  const formik = useFormik({
-    initialValues: {
-      flow: flows.find((flow) => flow.id === flowId) || null,
-      flowId: flowId || null,
-      tags,
-      notes,
-      isTemplatedNode,
-      templatedNodeInstructions,
-      areTemplatedNodeInstructionsRequired,
+  const formik = useFormikWithRef<ExternalPortalFormData>(
+    {
+      initialValues: {
+        flow: flows.find((flow) => flow.id === flowId) || null,
+        flowId: flowId || null,
+        tags,
+        notes,
+        isTemplatedNode,
+        templatedNodeInstructions,
+        areTemplatedNodeInstructionsRequired,
+      },
+      onSubmit: (data) => {
+        if (handleSubmit) {
+          handleSubmit({ type: TYPES.ExternalPortal, data });
+        }
+      },
+      validationSchema,
     },
-    onSubmit: (data) => {
-      if (handleSubmit) {
-        handleSubmit({ type: TYPES.ExternalPortal, data });
-      }
-    },
-    validationSchema,
-    validateOnChange: false,
-    validateOnBlur: false,
-  });
+    formikRef,
+  );
 
   return (
     <form id="modal" onSubmit={formik.handleSubmit} data-testid="form">

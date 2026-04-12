@@ -1,4 +1,4 @@
-import { getByLabelText, waitFor } from "@testing-library/react";
+import { waitFor } from "@testing-library/react";
 import {
   getInternalFeedbackMetadata,
   insertFeedbackMutation,
@@ -17,6 +17,10 @@ vi.mock("lib/feedback", () => {
   };
 });
 
+vi.mock("hooks/usePublicRouteContext", () => ({
+  usePublicRouteContext: vi.fn(() => "/$flow"),
+}));
+
 const scrollIntoView = vi.fn();
 window.Element.prototype.scrollIntoView = scrollIntoView;
 
@@ -26,20 +30,20 @@ describe("MoreInfoFeedbackComponent presentation and functionality", () => {
   });
 
   // Initial load
-  test('Initial loads renders "Yes" and "No" buttons initially', () => {
-    const { getByText } = setup(<MoreInfoFeedbackComponent />);
+  test('Initial loads renders "Yes" and "No" buttons initially', async () => {
+    const { getByText } = await setup(<MoreInfoFeedbackComponent />);
     expect(getByText("Yes")).toBeInTheDocument();
     expect(getByText("No")).toBeInTheDocument();
   });
 
-  test("Does not scroll into view on initial render", () => {
-    setup(<MoreInfoFeedbackComponent />);
+  test("Does not scroll into view on initial render", async () => {
+    await setup(<MoreInfoFeedbackComponent />);
     expect(scrollIntoView).not.toHaveBeenCalled();
   });
 
   // Sentiment selection
   test("Clicking Yes input form scrolls into view", async () => {
-    const { getByText, user } = setup(<MoreInfoFeedbackComponent />);
+    const { getByText, user } = await setup(<MoreInfoFeedbackComponent />);
     await user.click(getByText("Yes"));
     expect(scrollIntoView).toHaveBeenCalled();
     await waitFor(() => {
@@ -50,7 +54,7 @@ describe("MoreInfoFeedbackComponent presentation and functionality", () => {
   });
 
   test("Clicking No input form scrolls into view", async () => {
-    const { getByText, user } = setup(<MoreInfoFeedbackComponent />);
+    const { getByText, user } = await setup(<MoreInfoFeedbackComponent />);
 
     await user.click(getByText("No"));
     expect(scrollIntoView).toHaveBeenCalled();
@@ -63,7 +67,7 @@ describe("MoreInfoFeedbackComponent presentation and functionality", () => {
 
   // Form submission
   test("Submitting feedback changes view to thank you message", async () => {
-    const { getByText, getByTestId, user } = setup(
+    const { getByText, getByTestId, user } = await setup(
       <MoreInfoFeedbackComponent />,
     );
 
@@ -87,16 +91,14 @@ describe("MoreInfoFeedbackComponent presentation and functionality", () => {
 
   /*
     We use the `required` property to validate that a user can't submit an empty
-    comment. 
-    
+    comment.
     It doesn't seem to be possible to test that the Browser stops form
     submit in the Jest environment.
-    
     Checking for `required` property currently but we could add explicit
     validation.
   */
   test("Feedback form requires a comment before submitting", async () => {
-    const { getByLabelText, queryByLabelText, getByText, user } = setup(
+    const { getByLabelText, queryByLabelText, getByText, user } = await setup(
       <MoreInfoFeedbackComponent />,
     );
 
@@ -118,13 +120,15 @@ describe("MoreInfoFeedbackComponent accessibility", () => {
   });
 
   test("Initial load should have no accessibility violations", async () => {
-    const { container } = setup(<MoreInfoFeedbackComponent />);
+    const { container } = await setup(<MoreInfoFeedbackComponent />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
 
   test("Form view should have no accessability violations", async () => {
-    const { container, getByText, user } = setup(<MoreInfoFeedbackComponent />);
+    const { container, getByText, user } = await setup(
+      <MoreInfoFeedbackComponent />,
+    );
     user.click(getByText("Yes"));
 
     const results = await axe(container);
@@ -132,7 +136,7 @@ describe("MoreInfoFeedbackComponent accessibility", () => {
   });
 
   test("Thank you view should have no accessibility violations", async () => {
-    const { container, getByText, getByTestId, user } = setup(
+    const { container, getByText, getByTestId, user } = await setup(
       <MoreInfoFeedbackComponent />,
     );
 

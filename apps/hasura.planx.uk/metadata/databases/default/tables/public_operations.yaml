@@ -9,21 +9,6 @@ object_relationships:
     using:
       foreign_key_constraint_on: flow_id
 insert_permissions:
-  - role: demoUser
-    permission:
-      check:
-        flow:
-          creator_id:
-            _eq: x-hasura-user-id
-      columns:
-        - id
-        - actor_id
-        - version
-        - data
-        - created_at
-        - updated_at
-        - flow_id
-    comment: ""
   - role: platformAdmin
     permission:
       check: {}
@@ -55,7 +40,7 @@ insert_permissions:
         - updated_at
         - flow_id
 select_permissions:
-  - role: demoUser
+  - role: analyst
     permission:
       columns:
         - id
@@ -90,22 +75,6 @@ select_permissions:
         - updated_at
       filter: {}
 update_permissions:
-  - role: demoUser
-    permission:
-      columns:
-        - id
-        - actor_id
-        - version
-        - data
-        - created_at
-        - updated_at
-        - flow_id
-      filter:
-        flow:
-          creator_id:
-            _eq: x-hasura-user-id
-      check: null
-    comment: ""
   - role: platformAdmin
     permission:
       columns:

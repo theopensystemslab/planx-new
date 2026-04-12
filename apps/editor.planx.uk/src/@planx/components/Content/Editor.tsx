@@ -5,7 +5,7 @@ import {
   validationSchema,
 } from "@planx/components/Content/model";
 import { EditorProps } from "@planx/components/shared/types";
-import { useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import ColorPicker from "ui/editor/ColorPicker/ColorPicker";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -21,17 +21,18 @@ import { ICONS } from "../shared/icons";
 export type Props = EditorProps<TYPES.Content, Content>;
 
 const ContentComponent: React.FC<Props> = (props) => {
-  const formik = useFormik<Content>({
-    initialValues: parseContent(props.node?.data),
-    onSubmit: (newValues) => {
-      if (props.handleSubmit) {
-        props.handleSubmit({ type: TYPES.Content, data: newValues });
-      }
+  const formik = useFormikWithRef<Content>(
+    {
+      initialValues: parseContent(props.node?.data),
+      onSubmit: (newValues) => {
+        if (props.handleSubmit) {
+          props.handleSubmit({ type: TYPES.Content, data: newValues });
+        }
+      },
+      validationSchema,
     },
-    validationSchema,
-    validateOnChange: false,
-    validateOnBlur: false,
-  });
+    props.formikRef,
+  );
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <TemplatedNodeInstructions

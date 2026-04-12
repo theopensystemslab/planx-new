@@ -1,5 +1,5 @@
 import { CoreDomainClient } from "@opensystemslab/planx-core";
-import { FlowStatus, NodeId } from "@opensystemslab/planx-core/types";
+import { NodeId } from "@opensystemslab/planx-core/types";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import { removeSessionIdSearchParam } from "utils";
 import type { StateCreator } from "zustand";
@@ -16,27 +16,17 @@ export interface SharedStore extends Store.Store {
   breadcrumbs: Store.Breadcrumbs;
   childNodesOf: (id?: NodeId) => Store.Node[];
   flow: Store.Flow;
+  /**
+   * Flow data is lazily loaded to allow faster initial loading times
+   * Component trees which rely on this data need to check the status before rendering
+   */
+  isFlowLoaded: boolean;
   flowSlug: string;
   flowName: string;
   flowAnalyticsLink: string | undefined;
   id: string;
   getNode: (id: NodeId) => Store.Node | undefined;
   resetPreview: () => void;
-  setFlow: ({
-    id,
-    flow,
-    flowSlug,
-    flowName,
-    flowStatus,
-    flowSummary,
-  }: {
-    id?: string;
-    flow?: Store.Flow;
-    flowSlug?: string;
-    flowName?: string;
-    flowStatus?: FlowStatus;
-    flowSummary?: string;
-  }) => void;
   wasVisited: (id: NodeId) => boolean;
   previewEnvironment: PreviewEnvironment;
   setPreviewEnvironment: (previewEnvironment: PreviewEnvironment) => void;
@@ -58,6 +48,8 @@ export const sharedStore: StateCreator<
   },
 
   flow: {},
+
+  isFlowLoaded: false,
 
   flowSlug: "",
 
@@ -93,21 +85,15 @@ export const sharedStore: StateCreator<
       currentCard: null,
     });
 
-    removeSessionIdSearchParam();
-  },
-
-  setFlow({ id, flow, flowSlug, flowName, flowStatus, flowSummary }) {
-    set({
-      id,
-      flow,
-      flowSlug,
-      flowName,
-      flowStatus,
-      flowSummary,
-      orderedFlow: undefined,
-      externalPortals: {},
-    });
-    get().initNavigationStore();
+    // For public routes, additionally reload page and clear session data
+    const isPublished = get().previewEnvironment === "standalone";
+    const currentURL = new URL(window.location.href);
+    const isPreviewOrDraft =
+      currentURL.pathname.endsWith("/preview") ||
+      currentURL.pathname.endsWith("/draft");
+    if (isPublished || isPreviewOrDraft) {
+      removeSessionIdSearchParam(get().id);
+    }
   },
 
   wasVisited(id) {

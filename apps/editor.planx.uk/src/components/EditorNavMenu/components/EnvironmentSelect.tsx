@@ -36,11 +36,12 @@ const Root = styled(Box)(() => ({
   },
 }));
 
-const StyledButtonBase = styled(ButtonBase)(() => ({
+const StyledButtonBase = styled(ButtonBase)(({ theme }) => ({
   backgroundColor: "transparent",
   height: "auto",
   width: "auto",
   textTransform: "capitalize",
+  color: theme.palette.common.white,
   "&:hover": {
     backgroundColor: "transparent",
   },
@@ -63,11 +64,11 @@ const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
 }));
 
 const StyledCard = styled(Card)<{ selected?: boolean }>(() => ({
-  borderRadius: 5,
+  borderRadius: "2px",
 }));
 
 const CardContent = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(1),
+  padding: theme.spacing(1, 1, 1.25, 1),
   display: "flex",
   justifyContent: "space-between",
   alignItems: "flex-start",
@@ -107,9 +108,14 @@ const environments: Environment[] = [
     : []),
 ];
 
+const ENV_DISPLAY_NAMES: Record<string, string> = {
+  development: "Dev",
+};
+
 export const EnvironmentSelect: React.FC = () => {
   const [open, setOpen] = useState(false);
   const currentEnv = import.meta.env.VITE_APP_ENV;
+  const displayEnv = ENV_DISPLAY_NAMES[currentEnv] ?? currentEnv;
   const { pathname } = useLocation();
 
   const handleOpen = () => setOpen(true);
@@ -117,9 +123,12 @@ export const EnvironmentSelect: React.FC = () => {
 
   return (
     <Root>
-      <StyledButtonBase onClick={handleOpen} selected={false} sx={{ ml: 0.5 }}>
-        {currentEnv}
-        <UnfoldMoreIcon />
+      <StyledButtonBase onClick={handleOpen} selected={false}>
+        {displayEnv}
+        <UnfoldMoreIcon
+          fontSize="small"
+          sx={(theme) => ({ color: theme.palette.secondary.dark, ml: 0.25 })}
+        />
       </StyledButtonBase>
       <StyledDialog
         open={open}
@@ -128,23 +137,28 @@ export const EnvironmentSelect: React.FC = () => {
         PaperProps={{
           sx: {
             position: "absolute",
-            top: 5,
-            left: 10,
+            top: 0,
+            left: 0,
             m: 0,
             width: "300px",
             maxWidth: "300px",
             minWidth: "unset",
             borderTop: "none",
-            borderRadius: 3,
+            borderRadius: "5px",
           },
         }}
       >
         <StyledDialogTitle>
           <Box>
-            <Typography variant="body1" component="span" mr={1}>
+            <Typography
+              variant="subtitle1"
+              component="span"
+              mr={1}
+              color="white"
+            >
               Plan✕
             </Typography>
-            <Typography variant="body1" component="span">
+            <Typography variant="body2" component="span">
               environments
             </Typography>
           </Box>
@@ -167,7 +181,9 @@ export const EnvironmentSelect: React.FC = () => {
                 disabled={env.name === currentEnv}
               >
                 <CardContent>
-                  <Box>
+                  <Box
+                    sx={{ display: "flex", flexDirection: "column", gap: 0.25 }}
+                  >
                     <Typography
                       variant="h6"
                       component="div"
@@ -178,7 +194,11 @@ export const EnvironmentSelect: React.FC = () => {
                     >
                       {env.name}
                     </Typography>
-                    <Typography variant="body3" color="text.secondary">
+                    <Typography
+                      variant="body4"
+                      component="p"
+                      color="text.secondary"
+                    >
                       {env.description}
                     </Typography>
                   </Box>

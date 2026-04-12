@@ -130,21 +130,6 @@ describe("payment_requests", () => {
     });
   });
 
-  describe("demoUser", () => {
-    let i;
-    beforeAll(async () => {
-      i = await introspectAs("demoUser");
-    });
-
-    test("cannot query payment_requests", () => {
-      expect(i.queries).not.toContain("payment_requests");
-    });
-
-    test("cannot create, update, or delete payment_requests", () => {
-      expect(i).toHaveNoMutationsFor("payment_requests");
-    });
-  });
-
   describe("api", () => {
     let i;
     beforeAll(async () => {

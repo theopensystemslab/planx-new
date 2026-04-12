@@ -21,11 +21,12 @@ describe("FileUploadAndLabel - Editor Modal", () => {
       email: "test@test.com",
       teams: [],
       jwt: "x.y.z",
+      defaultTeamId: null,
     });
   });
 
-  it("renders", () => {
-    setup(
+  it("renders", async () => {
+    await setup(
       <DndProvider backend={HTML5Backend}>
         <FileUploadAndLabelComponent id="test" />
       </DndProvider>,
@@ -33,8 +34,8 @@ describe("FileUploadAndLabel - Editor Modal", () => {
     expect(screen.getByText("Upload and label")).toBeInTheDocument();
   });
 
-  it("initialises with a single rule", () => {
-    setup(
+  it("initialises with a single rule", async () => {
+    await setup(
       <DndProvider backend={HTML5Backend}>
         <FileUploadAndLabelComponent id="test" />
       </DndProvider>,
@@ -43,7 +44,7 @@ describe("FileUploadAndLabel - Editor Modal", () => {
   });
 
   it("allows an Editor to add multiple rules", async () => {
-    const { user } = setup(
+    const { user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <FileUploadAndLabelComponent id="test" />
       </DndProvider>,

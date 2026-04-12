@@ -1,8 +1,9 @@
 import Box from "@mui/material/Box";
-import LinearProgress from "@mui/material/LinearProgress";
+import LinearProgress, {
+  linearProgressClasses,
+} from "@mui/material/LinearProgress";
 import { styled } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
-import { useLoadingRoute } from "react-navi";
 
 const Root = styled(Box)({
   width: "100%",
@@ -11,24 +12,36 @@ const Root = styled(Box)({
   left: 0,
 });
 
-const RouteLoadingIndicator: React.FC<{
-  msDelayBeforeVisible?: number;
-}> = ({ msDelayBeforeVisible = 50 }) => {
-  const isLoading = useLoadingRoute();
-  const [isVisible, setIsVisible] = useState(false);
+const StyledLinearProgress = styled(LinearProgress)(({ theme }) => ({
+  height: "3px",
+  backgroundColor: theme.palette.background.dark,
+  [`& .${linearProgressClasses.bar}`]: {
+    backgroundColor: theme.palette.secondary.dark,
+  },
+}));
+
+const RouteLoadingIndicator: React.FC = () => {
+  const [progress, setProgress] = useState(10);
 
   useEffect(() => {
-    if (!isLoading) return setIsVisible(false);
+    const timer = setInterval(() => {
+      setProgress((prev) => {
+        // Exponential decay toward 90% — slows as it approaches the cap
+        const next = prev + (90 - prev) * 0.3;
+        if (next >= 90) {
+          clearInterval(timer);
+          return 90;
+        }
+        return next;
+      });
+    }, 150);
 
-    const timer = setTimeout(() => setIsVisible(true), msDelayBeforeVisible);
-    return () => clearTimeout(timer);
-  }, [isLoading, msDelayBeforeVisible]);
-
-  if (!isVisible) return null;
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <Root role="alert" aria-busy="true" aria-live="assertive">
-      <LinearProgress />
+      <StyledLinearProgress variant="determinate" value={progress} />
     </Root>
   );
 };

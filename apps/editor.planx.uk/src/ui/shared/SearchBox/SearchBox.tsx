@@ -22,6 +22,7 @@ interface SearchBoxProps<T> {
   searchKey: FuseOptionKey<T>[];
   clearSearch?: boolean;
   hideLabel?: boolean;
+  compact?: boolean;
 }
 
 export const SearchBox = <T extends object>({
@@ -30,6 +31,7 @@ export const SearchBox = <T extends object>({
   searchKey,
   clearSearch = false,
   hideLabel = false,
+  compact = false,
 }: SearchBoxProps<T>) => {
   const [isSearching, setIsSearching] = useState(false);
   const [searchedTerm, setSearchedTerm] = useState<string>();
@@ -95,6 +97,10 @@ export const SearchBox = <T extends object>({
             <Input
               sx={{
                 pr: 5,
+                ...(compact && {
+                  height: 40,
+                  padding: (theme) => theme.spacing(0.25, 0.5, 0.25, 1.25),
+                }),
               }}
               name="search"
               id="search"
@@ -104,7 +110,12 @@ export const SearchBox = <T extends object>({
                 setFieldValue("pattern", e.target.value);
                 submitForm();
               }}
-              startAdornment={<Search sx={{ ml: -0.5, mr: 0.5 }} />}
+              startAdornment={
+                <Search
+                  sx={{ ml: -0.5, mr: 0.5 }}
+                  fontSize={compact ? "small" : "medium"}
+                />
+              }
             />
             {searchedTerm && !isSearching && (
               <IconButton

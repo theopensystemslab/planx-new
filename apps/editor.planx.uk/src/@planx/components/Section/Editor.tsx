@@ -5,7 +5,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
-import { useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -47,18 +47,19 @@ const SectionLengthLabel: React.FC<{ length: SectionLength }> = ({
 );
 
 function SectionComponent(props: Props) {
-  const formik = useFormik({
-    initialValues: parseSection(props.node?.data),
-    onSubmit: (newValues) => {
-      props.handleSubmit?.({
-        type: TYPES.Section,
-        data: newValues,
-      });
+  const formik = useFormikWithRef<Section>(
+    {
+      initialValues: parseSection(props.node?.data),
+      onSubmit: (newValues) => {
+        props.handleSubmit?.({
+          type: TYPES.Section,
+          data: newValues,
+        });
+      },
+      validationSchema,
     },
-    validationSchema,
-    validateOnBlur: false,
-    validateOnChange: false,
-  });
+    props.formikRef,
+  );
 
   const handleRadioChange = (event: React.SyntheticEvent<Element, Event>) => {
     const target = event.target as HTMLInputElement;

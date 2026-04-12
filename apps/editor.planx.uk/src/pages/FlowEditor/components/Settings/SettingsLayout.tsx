@@ -4,11 +4,12 @@ import { styled } from "@mui/material/styles";
 import { SvgIconProps } from "@mui/material/SvgIcon";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
+import { useNavigate } from "@tanstack/react-router";
 import React from "react";
-import { useCurrentRoute, useNavigation } from "react-navi";
+import { useLocation } from "react-use";
 import StyledTab from "ui/editor/StyledTab";
 
-interface SettingsLink {
+export interface SettingsLink {
   label: string;
   path: string;
   icon: React.ComponentType<SvgIconProps>;
@@ -20,6 +21,7 @@ interface Props {
   settingsLinks: SettingsLink[];
   getNavigationPath: (path: string) => string;
   children: React.ReactNode;
+  topOffset?: number;
 }
 
 const TabList = styled(Box)(() => ({
@@ -35,20 +37,22 @@ const SettingsLayout: React.FC<Props> = ({
   settingsLinks,
   getNavigationPath,
   children,
+  topOffset = 0,
 }) => {
-  const { navigate } = useNavigation();
-  const { url } = useCurrentRoute();
+  const navigate = useNavigate();
+  const pathname = useLocation();
 
   const filteredLinks = settingsLinks.filter(
     (link) => link.condition === undefined || link.condition,
   );
 
   const activeTab =
-    filteredLinks.find((link) => url.pathname.includes(`/settings${link.path}`))
-      ?.path || filteredLinks[0]?.path;
+    filteredLinks.find((link) =>
+      pathname.href?.includes(`/settings${link.path}`),
+    )?.path || filteredLinks[0]?.path;
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-    navigate(getNavigationPath(newValue));
+    navigate({ to: getNavigationPath(newValue) });
   };
 
   return (
@@ -59,10 +63,13 @@ const SettingsLayout: React.FC<Props> = ({
         flexDirection="column"
         alignItems="center"
         bgcolor="background.default"
-        pt={5}
-        sx={{
-          borderBottom: (theme) => `1px solid ${theme.palette.border.light}`,
-        }}
+        sx={(theme) => ({
+          paddingTop: theme.spacing(3 + topOffset),
+          [theme.breakpoints.up("lg")]: {
+            paddingTop: theme.spacing(5 + topOffset),
+          },
+          borderBottom: `1px solid ${theme.palette.border.light}`,
+        })}
       >
         <Container maxWidth="contentWrap">
           <Typography variant="h2" component="h1" gutterBottom>

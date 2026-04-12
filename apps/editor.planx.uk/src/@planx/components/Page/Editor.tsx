@@ -1,6 +1,6 @@
 import MenuItem from "@mui/material/MenuItem";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
@@ -20,6 +20,7 @@ import { Page, parsePage, validationSchema } from "./model";
 import { ProposedAdvertisements } from "./schema/AdvertConsent";
 import { EnvironmentGLA } from "./schema/Environment";
 import { MonitoringGLA } from "./schema/Monitoring";
+import { TeamMembers } from "./schema/TeamMember";
 import { UtilitiesGLA } from "./schema/Utilities";
 
 type Props = EditorProps<TYPES.Page, Page>;
@@ -29,21 +30,23 @@ export const PAGE_SCHEMAS = [
   { name: "Utilities (GLA)", schema: UtilitiesGLA },
   { name: "Environmental management (GLA)", schema: EnvironmentGLA },
   { name: "Monitoring questions (GLA)", schema: MonitoringGLA },
+  { name: "Team members", schema: TeamMembers },
 ] as const;
 
 function PageComponent(props: Props) {
-  const formik = useFormik({
-    initialValues: parsePage(props.node?.data),
-    onSubmit: (newValues) => {
-      props.handleSubmit?.({
-        type: TYPES.Page,
-        data: newValues,
-      });
+  const formik = useFormikWithRef<Page>(
+    {
+      initialValues: parsePage(props.node?.data),
+      onSubmit: (newValues) => {
+        props.handleSubmit?.({
+          type: TYPES.Page,
+          data: newValues,
+        });
+      },
+      validationSchema,
     },
-    validationSchema,
-    validateOnBlur: false,
-    validateOnChange: false,
-  });
+    props.formikRef,
+  );
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">

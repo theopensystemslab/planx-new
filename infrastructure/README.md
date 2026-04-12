@@ -1,12 +1,16 @@
 # Infrastructure
 
 We use Pulumi to write Infrastructure-as-Code in TypeScript.
+
+This directory is structured as a **pnpm workspace**.
+
 The code is split up into separate layers, so as to isolate changes and minimize the chance of losing data:
 
 1. `networking`: basic VPC setup which should rarely change
 2. `data`: persistent data layer - contains S3 buckets and RDS databases
 3. `certificates`: SSL certs for our domains
 4. `application`: the application layer - includes the frontend and services
+5. `ml`: machine learning infrastructure
 
 # CD/CI
 
@@ -27,7 +31,7 @@ Steps:
 2. Install the [Pulumi CLI](https://www.pulumi.com/docs/reference/cli/)
 3. Setup AWS credentials for Pulumi IAM role. Profile names should have the format `planx-<STACK>-pulumi`.
 4. Log in to the Pulumi CLI using your PAT (`pulumi login`)
-5. Install project dependencies at root (`pnpm i`), this will install dependencies for all layers
+5. Install project dependencies from the infrastructure directory (`cd infrastructure && pnpm install`) - this will install dependencies for all layers via the pnpm workspace
 6. Provision layers manually (`cd <LAYER_DIR> && pulumi up --stack <STACK>`)
 
 ### What about the secrets?

@@ -1,6 +1,6 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
-import { useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -21,17 +21,18 @@ export type Props = EditorProps<TYPES.DrawBoundary, DrawBoundary>;
 export default DrawBoundaryComponent;
 
 function DrawBoundaryComponent(props: Props) {
-  const formik = useFormik({
-    initialValues: parseDrawBoundary(props.node?.data),
-    onSubmit: (newValues) => {
-      if (props.handleSubmit) {
-        props.handleSubmit({ type: TYPES.DrawBoundary, data: newValues });
-      }
+  const formik = useFormikWithRef<DrawBoundary>(
+    {
+      initialValues: parseDrawBoundary(props.node?.data),
+      onSubmit: (newValues) => {
+        if (props.handleSubmit) {
+          props.handleSubmit({ type: TYPES.DrawBoundary, data: newValues });
+        }
+      },
+      validationSchema,
     },
-    validationSchema,
-    validateOnBlur: false,
-    validateOnChange: false,
-  });
+    props.formikRef,
+  );
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <TemplatedNodeInstructions

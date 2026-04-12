@@ -1,14 +1,17 @@
-import { SiteAddress } from "@opensystemslab/planx-core/types";
+import { usePrefetchClassifiedRoads } from "@planx/components/PlanningConstraints/Public/hooks/useClassifiedRoads";
 import { useQuery } from "@tanstack/react-query";
 import { Feature } from "geojson";
 import { getFindPropertyData } from "lib/planningData/requests";
 import { useMemo } from "react";
+
+import type { SiteAddress } from "../../model";
 
 interface FindPropertyData {
   localAuthorityDistricts?: string[];
   localPlanningAuthorities?: string[];
   regions?: string[];
   wards?: string[];
+  developmentCorporations?: string[];
   titleBoundary?: Feature;
 }
 
@@ -32,6 +35,7 @@ export const useFindPropertyData = (address?: SiteAddress) => {
         localPlanningAuthorities: undefined,
         regions: undefined,
         wards: undefined,
+        developmentCorporations: undefined,
         titleBoundary: undefined,
       };
     }
@@ -40,6 +44,7 @@ export const useFindPropertyData = (address?: SiteAddress) => {
     const localPlanningAuthorities = new Set<string>();
     const regions = new Set<string>();
     const wards = new Set<string>();
+    const developmentCorporations = new Set<string>();
     let titleBoundary: Feature | undefined;
 
     data.features.forEach((feature) => {
@@ -58,6 +63,9 @@ export const useFindPropertyData = (address?: SiteAddress) => {
         case "ward":
           wards.add(name);
           break;
+        case "development-corporation-boundary":
+          developmentCorporations.add(name);
+          break;
         case "title-boundary":
           titleBoundary = feature;
           break;
@@ -69,13 +77,19 @@ export const useFindPropertyData = (address?: SiteAddress) => {
       localPlanningAuthorities: Array.from(localPlanningAuthorities),
       regions: Array.from(regions),
       wards: Array.from(wards),
+      developmentCorporations: Array.from(developmentCorporations),
       titleBoundary,
     };
   }, [data]);
+
+  // Side effect - As soon as we have a USR, pre-fetch classified roads data.
+  // This is a long-running request, so prefetching in the background allows
+  // us to reduce the overall wait time for the user
+  usePrefetchClassifiedRoads(address?.usrn);
 
   return {
     ...findPropertyData,
     isPending,
     error,
   };
-}
+};

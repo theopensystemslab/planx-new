@@ -68,12 +68,6 @@ const getFlowData = async (id: string): Promise<GetFlowDataResponse> => {
   return flow;
 };
 
-interface CreateFlowResponse {
-  flow: {
-    id: Flow["id"];
-  };
-}
-
 // Insert a new flow into the `flows` table
 const createFlow = async ({
   teamId,
@@ -102,9 +96,11 @@ const createFlow = async ({
   const userId = userContext.getStore()?.user?.sub;
 
   try {
-    const {
-      flow: { id },
-    } = await $client.request<CreateFlowResponse>(
+    const response = await $client.request<{
+      insertFlow: {
+        id: Flow["id"];
+      };
+    }>(
       gql`
         mutation InsertFlow(
           $team_id: Int!
@@ -118,7 +114,7 @@ const createFlow = async ({
           $description: String
           $limitations: String
         ) {
-          flow: insert_flows_one(
+          insertFlow: insert_flows_one(
             object: {
               team_id: $team_id
               slug: $slug
@@ -151,10 +147,12 @@ const createFlow = async ({
       },
     );
 
-    await createAssociatedOperation(id);
-    await publishFlow(id, "Created flow");
+    const flowId = response.insertFlow.id;
 
-    return { id };
+    await createAssociatedOperation(flowId);
+    await publishFlow(flowId, "Created flow");
+
+    return { id: flowId };
   } catch (error) {
     throw Error(
       `User ${userId} failed to insert flow to teamId ${teamId}. Please check permissions. Error: ${error}`,
@@ -328,7 +326,7 @@ export const getTemplatedFlows = async (flowId: string) => {
       query GetTemplatedFlows($flow_id: uuid!) {
         flow: flows_by_pk(id: $flow_id) {
           templatedFlows: templated_flows(
-            where: { deleted_at: { _is_null: true } }
+            where: { archived_at: { _is_null: true } }
           ) {
             id
             slug

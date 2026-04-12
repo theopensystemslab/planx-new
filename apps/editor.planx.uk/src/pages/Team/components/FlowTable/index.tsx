@@ -5,7 +5,6 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import React from "react";
-import { useNavigation } from "react-navi";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType } from "ui/editor/FlowTag/types";
 import TruncatedText from "ui/editor/TruncatedText";
@@ -16,9 +15,9 @@ import { FlowTemplateIndicator } from "../FlowTemplateIndicator";
 import { useFlowDates } from "../hooks/useFlowDates";
 import { useFlowMetadata } from "../hooks/useFlowMetadata";
 import { useFlowSortDisplay } from "../hooks/useFlowSortDisplay";
+import { FlowRowLink } from "./styles";
 import {
   FlowActionsCell,
-  FlowLink,
   FlowStatusCell,
   FlowTitleCell,
   StyledTable,
@@ -31,12 +30,14 @@ interface FlowTableProps {
   teamId: number;
   teamSlug: string;
   refreshFlows: () => void;
+  showDetails: boolean;
 }
 
 export const FlowTable: React.FC<FlowTableProps> = ({
   flows,
   teamSlug,
   refreshFlows,
+  showDetails,
 }) => {
   const { headerText } = useFlowSortDisplay();
 
@@ -45,10 +46,14 @@ export const FlowTable: React.FC<FlowTableProps> = ({
       <StyledTableHead>
         <TableRow>
           <FlowTitleCell>Flow title</FlowTitleCell>
-          <FlowStatusCell>Online status</FlowStatusCell>
-          <FlowStatusCell>Flow type</FlowStatusCell>
-          <TableCell>{headerText}</TableCell>
-          <FlowActionsCell align="center">Actions</FlowActionsCell>
+          {showDetails && (
+            <>
+              <FlowStatusCell>Online status</FlowStatusCell>
+              <FlowStatusCell>Flow type</FlowStatusCell>
+              <TableCell>{headerText}</TableCell>
+              <FlowActionsCell align="center">Actions</FlowActionsCell>
+            </>
+          )}
         </TableRow>
       </StyledTableHead>
       <TableBody>
@@ -58,6 +63,7 @@ export const FlowTable: React.FC<FlowTableProps> = ({
             flow={flow}
             teamSlug={teamSlug}
             refreshFlows={refreshFlows}
+            showDetails={showDetails}
           />
         ))}
       </TableBody>
@@ -69,14 +75,15 @@ interface FlowTableRowProps {
   flow: FlowSummary;
   teamSlug: string;
   refreshFlows: () => void;
+  showDetails: boolean;
 }
 
 const FlowTableRow: React.FC<FlowTableRowProps> = ({
   flow,
   teamSlug,
   refreshFlows,
+  showDetails,
 }) => {
-  const navigation = useNavigation();
   const [canUserEditTeam] = useStore((state) => [state.canUserEditTeam]);
 
   const {
@@ -89,20 +96,8 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
 
   const { displayTimeAgo, displayActor } = useFlowDates(flow);
 
-  const handleRowClick = (e: React.MouseEvent) => {
-    if ((e.target as HTMLElement).closest("a")) {
-      return;
-    }
-    // Allow links to be opened in new tabs
-    if (e.metaKey || e.ctrlKey) {
-      window.open(`./${teamSlug}/${flow.slug}`, "_blank");
-      return;
-    }
-    navigation.navigate(`./${teamSlug}/${flow.slug}`);
-  };
-
   return (
-    <StyledTableRow isTemplated={isAnyTemplate} onClick={handleRowClick}>
+    <StyledTableRow isTemplated={isAnyTemplate} clickable={showDetails}>
       <FlowTitleCell>
         <Box>
           {isAnyTemplate && (
@@ -114,15 +109,17 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
               />
             </Box>
           )}
-          <FlowLink
-            href={`./${flow.slug}`}
-            prefetch={false}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Typography variant="h4" component="span">
-              {flow.name}
-            </Typography>
-          </FlowLink>
+          <Typography variant="h4" component="span">
+            {flow.name}
+          </Typography>
+          {showDetails && (
+            <FlowRowLink
+              to="/app/$team/$flow"
+              params={{ team: teamSlug, flow: flow.slug }}
+              aria-label={flow.name}
+              preload={false}
+            />
+          )}
           {flow.summary && (
             <TruncatedText
               variant="body2"
@@ -135,44 +132,52 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
           )}
         </Box>
       </FlowTitleCell>
-      <FlowStatusCell>
-        <Box sx={{ display: "inline-flex" }}>
-          <FlowTag tagType={FlowTagType.Status} statusVariant={statusVariant}>
-            {statusVariant}
-          </FlowTag>
-        </Box>
-      </FlowStatusCell>
-      <FlowStatusCell>
-        {isSubmissionService && (
-          <Box sx={{ display: "inline-flex" }}>
-            <FlowTag tagType={FlowTagType.ServiceType}>Submission</FlowTag>
-          </Box>
-        )}
-      </FlowStatusCell>
-      <TableCell>
-        <Box>
-          <Typography variant="body2">{displayTimeAgo}</Typography>
-          {displayActor && (
-            <Typography variant="body2" color="textSecondary">
-              by {displayActor}
-            </Typography>
-          )}
-        </Box>
-      </TableCell>
-      <FlowActionsCell
-        className="actions-cell"
-        align="center"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {canUserEditTeam(teamSlug) && (
-          <FlowMenu
-            flow={flow}
-            refreshFlows={refreshFlows}
-            isAnyTemplate={isAnyTemplate}
-            variant="table"
-          />
-        )}
-      </FlowActionsCell>
+      {showDetails && (
+        <>
+          <FlowStatusCell>
+            <Box sx={{ display: "inline-flex" }}>
+              <FlowTag
+                tagType={FlowTagType.Status}
+                statusVariant={statusVariant}
+              >
+                {statusVariant}
+              </FlowTag>
+            </Box>
+          </FlowStatusCell>
+          <FlowStatusCell>
+            {isSubmissionService && (
+              <Box sx={{ display: "inline-flex" }}>
+                <FlowTag tagType={FlowTagType.ServiceType}>Submission</FlowTag>
+              </Box>
+            )}
+          </FlowStatusCell>
+
+          <TableCell>
+            <Box>
+              <Typography variant="body2">{displayTimeAgo}</Typography>
+              {displayActor && (
+                <Typography variant="body2" color="textSecondary">
+                  by {displayActor}
+                </Typography>
+              )}
+            </Box>
+          </TableCell>
+          <FlowActionsCell
+            className="actions-cell"
+            align="center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {canUserEditTeam(teamSlug) && (
+              <FlowMenu
+                flow={flow}
+                refreshFlows={refreshFlows}
+                isAnyTemplate={isAnyTemplate}
+                variant="table"
+              />
+            )}
+          </FlowActionsCell>
+        </>
+      )}
     </StyledTableRow>
   );
 };

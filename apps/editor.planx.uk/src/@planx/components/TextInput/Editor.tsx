@@ -4,7 +4,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { EditorProps } from "@planx/components/shared/types";
-import { useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
@@ -20,20 +20,47 @@ import { editorValidationSchema, parseTextInput, TextInput } from "./model";
 
 export type Props = EditorProps<TYPES.TextInput, TextInput>;
 
-const TextInputComponent: React.FC<Props> = (props) => {
-  const formik = useFormik<TextInput>({
-    initialValues: parseTextInput(props.node?.data),
-    onSubmit: (newValues) => {
-      if (props.handleSubmit) {
-        props.handleSubmit({
-          type: TYPES.TextInput,
-          data: newValues,
-        });
-      }
+type InputTypeOption = {
+  id: string;
+  title: string;
+  nestedInput?: {
+    name: keyof TextInput;
+    placeholder: string;
+  };
+};
+
+const inputTypes: InputTypeOption[] = [
+  { id: "short", title: "Short (max 120 characters)" },
+  { id: "long", title: "Long (max 250 characters)" },
+  { id: "extraLong", title: "Extra long (max 750 characters)" },
+  {
+    id: "custom",
+    title: "Custom character limit",
+    nestedInput: {
+      name: "customLength",
+      placeholder: "Maximum characters",
     },
-    validateOnChange: false,
-    validationSchema: editorValidationSchema,
-  });
+  },
+  { id: "email", title: "Email" },
+  { id: "phone", title: "Phone" },
+];
+
+const TextInputComponent: React.FC<Props> = (props) => {
+  const formik = useFormikWithRef<TextInput>(
+    {
+      initialValues: parseTextInput(props.node?.data),
+      onSubmit: (newValues) => {
+        if (props.handleSubmit) {
+          props.handleSubmit({
+            type: TYPES.TextInput,
+            data: newValues,
+          });
+        }
+      },
+      validationSchema: editorValidationSchema,
+    },
+    props.formikRef,
+  );
 
   const handleRadioChange = (event: React.SyntheticEvent<Element, Event>) => {
     const target = event.target as HTMLInputElement;
@@ -81,48 +108,39 @@ const TextInputComponent: React.FC<Props> = (props) => {
         <ModalSectionContent title="Input style">
           <FormControl component="fieldset">
             <RadioGroup defaultValue="short" value={formik.values.type}>
-              {[
-                { id: "short", title: "Short (max 120 characters)" },
-                { id: "long", title: "Long (max 250 characters)" },
-                { id: "extraLong", title: "Extra long (max 750 characters)" },
-                { id: "email", title: "Email" },
-                { id: "phone", title: "Phone" },
-                { id: "custom", title: "Custom" },
-              ].map((type) => (
-                <BasicRadio
-                  key={type.id}
-                  id={type.id}
-                  label={type.title}
-                  variant="compact"
-                  value={type.id}
-                  onChange={handleRadioChange}
-                  disabled={props.disabled}
-                />
-              ))}
-            </RadioGroup>
-          </FormControl>
-          <FormControl>
-            <InputRow>
-              {formik.values.type === "custom" && (
-                <Box
-                  sx={(theme) => ({
-                    borderLeft: `4px solid ${theme.palette.border.main}`,
-                    padding: theme.spacing(1, 2),
-                    marginLeft: "13px",
-                  })}
-                >
-                  <Input
-                    placeholder="Maximum characters"
-                    name="customLength"
-                    value={formik.values.customLength}
-                    onChange={formik.handleChange}
-                    errorMessage={formik.errors.customLength}
-                    type="number"
+              {inputTypes.map((type) => (
+                <React.Fragment key={type.id}>
+                  <BasicRadio
+                    id={type.id}
+                    label={type.title}
+                    variant="compact"
+                    value={type.id}
+                    onChange={handleRadioChange}
                     disabled={props.disabled}
                   />
-                </Box>
-              )}
-            </InputRow>
+                  {type.nestedInput && formik.values.type === type.id && (
+                    <Box
+                      sx={(theme) => ({
+                        borderLeft: `4px solid ${theme.palette.border.main}`,
+                        padding: theme.spacing(1, 2),
+                        marginLeft: "13px",
+                        marginBottom: theme.spacing(1),
+                      })}
+                    >
+                      <Input
+                        name={type.nestedInput.name}
+                        placeholder={type.nestedInput.placeholder}
+                        value={formik.values[type.nestedInput.name]}
+                        onChange={formik.handleChange}
+                        errorMessage={formik.errors[type.nestedInput.name]}
+                        type="number"
+                        disabled={props.disabled}
+                      />
+                    </Box>
+                  )}
+                </React.Fragment>
+              ))}
+            </RadioGroup>
           </FormControl>
         </ModalSectionContent>
       </ModalSection>

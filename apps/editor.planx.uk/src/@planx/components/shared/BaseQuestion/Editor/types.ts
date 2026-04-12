@@ -6,12 +6,12 @@ import { ResponsiveQuestionWithOptions } from "@planx/components/ResponsiveQuest
 import { useFormik } from "formik";
 
 export interface QuestionProps extends EditorQuestionProps {
-  type: TYPES.Question
+  type: TYPES.Question;
   formik: ReturnType<typeof useFormik<QuestionWithOptions>>;
 }
 
 export interface ResponsiveQuestionProps extends EditorResponsiveQuestionProps {
-  type: TYPES.ResponsiveQuestion
+  type: TYPES.ResponsiveQuestion;
   formik: ReturnType<typeof useFormik<ResponsiveQuestionWithOptions>>;
 }
 

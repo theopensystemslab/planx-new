@@ -11,6 +11,7 @@ import { getExpiryDateForPaymentRequest } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Banner from "ui/public/Banner";
+import ViewApplicationLink from "ui/public/ViewApplicationLink";
 
 const List = styled("ul")(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
@@ -82,7 +83,8 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
               We aim to respond within 2 working days.
             </Typography>
           </Box>
-          <Divider sx={{ mt: 4 }} />
+          <Divider sx={{ my: 4 }} />
+          <ViewApplicationLink />
           <Box>
             <Link href="../published" variant="body2">
               Start a new form

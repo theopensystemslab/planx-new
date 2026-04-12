@@ -1,3 +1,5 @@
+import { clearLocalFlowIdb } from "lib/local.idb";
+
 export function removeAt<T>(index: number, arr: Array<T>): Array<T> {
   return arr.filter((_item, i) => {
     return i !== index;
@@ -68,14 +70,20 @@ export const isLiveEnv = () =>
     import.meta.env.VITE_APP_ENV || "",
   );
 
-export const removeSessionIdSearchParam = () => {
+// TODO What's more TanStack way to handle now?? (can't call useNavigate() hook outside of component)
+export const removeSessionIdSearchParam = async (flowId: string) => {
   const currentURL = new URL(window.location.href);
-  // Only reload page on public interface of PlanX, not Editor interface
   if (currentURL.searchParams.get("sessionId")) {
+    // Save & Return flow (`/published` route only has param)
     currentURL.searchParams.delete("sessionId");
-    window.history.pushState({}, document.title, currentURL);
-    window.location.reload();
+  } else {
+    // Ensure local state is cleared on `/published` routes of guidance flows
+    await clearLocalFlowIdb(flowId);
   }
+
+  // Still call reload on guidance flows, all `/preview`, and `/draf` links
+  window.history.pushState({}, document.title, currentURL);
+  window.location.reload();
 };
 
 export const exhaustiveCheck = (type: never): never => {

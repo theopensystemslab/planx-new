@@ -1,0 +1,50 @@
+table:
+  name: ai_gateway_audit_log
+  schema: public
+object_relationships:
+  - name: flows
+    using:
+      manual_configuration:
+        column_mapping:
+          flow_id: id
+        insertion_order: null
+        remote_table:
+          name: flows
+          schema: public
+  - name: sessions
+    using:
+      manual_configuration:
+        column_mapping:
+          session_id: id
+        insertion_order: null
+        remote_table:
+          name: lowcal_sessions
+          schema: public
+insert_permissions:
+  - role: api
+    permission:
+      check: {}
+      columns:
+        - cost_usd
+        - flow_id
+        - gateway_status
+        - guardrail_reason
+        - guardrail_message
+        - guardrail_tripped
+        - model_id
+        - planx_api_endpoint
+        - prompt
+        - response
+        - response_time_ms
+        - session_id
+        - token_usage
+        - vercel_generation_id
+    comment: ""
+select_permissions:
+  - role: api
+    permission:
+      columns:
+        - id
+      filter: {}
+      limit: 1
+    comment: ""

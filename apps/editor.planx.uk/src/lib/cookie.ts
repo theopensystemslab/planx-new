@@ -13,5 +13,11 @@ const defaultCookieSettings = {
 export const getCookie = (key: string): string | null =>
   Cookies.get(key, defaultCookieSettings) ?? Cookies.get(key);
 
-export const setCookie = (key: string, value: any): string | null =>
+export const setCookie = (key: string, value: string | null): string | null =>
   Cookies.set(key, value, defaultCookieSettings);
+
+export const clearCookie = (key: string): void => {
+  Cookies.remove(key, defaultCookieSettings);
+  // Also try to remove without domain
+  Cookies.remove(key);
+};

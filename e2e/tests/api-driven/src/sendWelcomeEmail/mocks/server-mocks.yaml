@@ -1,0 +1,9 @@
+- request:
+    method: POST
+    path: /emails
+  response:
+    status: 200
+    headers:
+      Content-Type: application/json
+    body: >
+      { "id": "test-email-id" }

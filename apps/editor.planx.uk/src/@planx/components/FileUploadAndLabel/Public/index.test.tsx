@@ -29,7 +29,7 @@ beforeEach(() => {
 
 describe("Basic state and setup", () => {
   test("renders correctly", async () => {
-    const { getAllByRole, getByTestId, getByText } = setup(
+    const { getAllByRole, getByTestId, getByText } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -50,7 +50,7 @@ describe("Basic state and setup", () => {
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(
+    const { container } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -67,7 +67,7 @@ describe("Basic state and setup", () => {
   });
 
   it("does not show a print button if hideDropZone is false", async () => {
-    const { queryByText } = setup(
+    const { queryByText } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[mockFileTypes.AlwaysRequired, mockFileTypes.NotRequired]}
@@ -79,7 +79,7 @@ describe("Basic state and setup", () => {
   });
 
   test("shows help buttons for header and applicable file", async () => {
-    const { getAllByTestId } = setup(
+    const { getAllByTestId } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={mockFileTypesUniqueKeys}
@@ -91,8 +91,8 @@ describe("Basic state and setup", () => {
     expect(helpButtons).toHaveLength(1);
   });
 
-  it("does not show optional files if there are other types", () => {
-    const { queryByRole } = setup(
+  it("does not show optional files if there are other types", async () => {
+    const { queryByRole } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -108,8 +108,8 @@ describe("Basic state and setup", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("shows optional files if there are no other types", () => {
-    const { getByRole } = setup(
+  it("shows optional files if there are no other types", async () => {
+    const { getByRole } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[mockFileTypes.NotRequired]}
@@ -124,7 +124,7 @@ describe("Basic state and setup", () => {
 
 describe("Info-only mode with hidden drop zone", () => {
   test("renders correctly", async () => {
-    const { getAllByRole, queryByTestId, getByText } = setup(
+    const { getAllByRole, queryByTestId, getByText } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -146,7 +146,7 @@ describe("Info-only mode with hidden drop zone", () => {
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(
+    const { container } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -164,7 +164,7 @@ describe("Info-only mode with hidden drop zone", () => {
   });
 
   it("shows a print button", async () => {
-    const { getByText } = setup(
+    const { getByText } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[mockFileTypes.AlwaysRequired, mockFileTypes.NotRequired]}
@@ -175,7 +175,7 @@ describe("Info-only mode with hidden drop zone", () => {
   });
 
   test("shows help buttons for header and applicable file", async () => {
-    const { getAllByTestId } = setup(
+    const { getAllByTestId } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={mockFileTypesUniqueKeys}
@@ -188,8 +188,8 @@ describe("Info-only mode with hidden drop zone", () => {
     expect(helpButtons).toHaveLength(1);
   });
 
-  it("shows optional files by default", () => {
-    const { queryByRole } = setup(
+  it("shows optional files by default", async () => {
+    const { queryByRole } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -207,11 +207,11 @@ describe("Info-only mode with hidden drop zone", () => {
   });
 });
 
-describe("Modal trigger", () => {
+describe("Accordion trigger", () => {
   afterEach(() => vi.clearAllMocks());
 
-  test("Modal does not open on initial component render", async () => {
-    setup(
+  test("No file card is expanded on initial component render", async () => {
+    await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -222,15 +222,14 @@ describe("Modal trigger", () => {
       />,
     );
 
-    const fileTaggingModal = within(document.body).queryByTestId(
-      "file-tagging-dialog",
-    );
-
-    expect(fileTaggingModal).not.toBeInTheDocument();
+    // No checklist headings visible (accordion content is hidden)
+    expect(
+      screen.queryByRole("heading", { name: /What does this file show/ }),
+    ).not.toBeInTheDocument();
   });
 
-  test("Modal opens when a single file is uploaded", async () => {
-    const { getByTestId, user } = setup(
+  test("Accordion expands when a single file is uploaded", async () => {
+    const { getByTestId, user } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -246,18 +245,17 @@ describe("Modal trigger", () => {
     await user.upload(input, file);
     expect(mockedUploadPrivateFile).toHaveBeenCalled();
 
-    const fileTaggingModal = await within(document.body).findByTestId(
-      "file-tagging-dialog",
-    );
-    expect(fileTaggingModal).toBeVisible();
+    // File card is visible
+    expect(await screen.findByTestId("test.png")).toBeVisible();
 
+    // Accordion content is expanded showing the checklist
     expect(
-      await within(fileTaggingModal).findByTestId("test.png"),
+      await screen.findByRole("heading", { name: /What does this file show/ }),
     ).toBeVisible();
   });
 
-  test("Modal opens when multiple files are uploaded", async () => {
-    const { getByTestId, user } = setup(
+  test("Accordion expands when multiple files are uploaded", async () => {
+    const { getByTestId, user } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -274,19 +272,19 @@ describe("Modal trigger", () => {
     await user.upload(input, [file1, file2]);
     expect(mockedUploadPrivateFile).toHaveBeenCalledTimes(2);
 
-    const fileTaggingModal = await within(document.body).findByTestId(
-      "file-tagging-dialog",
-    );
-    expect(
-      await within(fileTaggingModal).findByTestId("test1.png"),
-    ).toBeVisible();
-    expect(
-      await within(fileTaggingModal).findByTestId("test2.png"),
-    ).toBeVisible();
+    // Both file cards are visible
+    expect(await screen.findByTestId("test1.png")).toBeVisible();
+    expect(await screen.findByTestId("test2.png")).toBeVisible();
+
+    // Only one accordion is expanded at a time
+    const checklistHeadings = screen.getAllByRole("heading", {
+      name: /What does this file show/,
+    });
+    expect(checklistHeadings).toHaveLength(1);
   });
 
-  test("Modal does not open when a file is deleted", async () => {
-    const { getByTestId, queryByText, user } = setup(
+  test("Accordion does not expand when a file is deleted", async () => {
+    const { getByTestId, queryByText, user } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -302,42 +300,34 @@ describe("Modal trigger", () => {
     const input = getByTestId("upload-input");
     await user.upload(input, [file1, file2]);
 
-    const fileTaggingModal = await within(document.body).findByTestId(
-      "file-tagging-dialog",
-    );
+    // Save the first file's accordion (close it)
+    const saveButton = await screen.findByRole("button", { name: /Save/ });
+    await user.click(saveButton);
 
-    // Close modal
-    await user.keyboard("{Esc}");
-    await waitFor(() => expect(fileTaggingModal).not.toBeVisible());
-
-    // Uploaded files displayed as cards
+    // Both uploaded files displayed as cards
     expect(getByTestId("test1.png")).toBeVisible();
     expect(getByTestId("test2.png")).toBeVisible();
 
     // Delete the second file
-    user.click(getByTestId("delete-test2.png"));
+    const removeButtons = screen.getAllByRole("button", { name: /Remove/ });
+    await user.click(removeButtons[removeButtons.length - 1]);
 
     // Card removed from screen
     await waitFor(() =>
       expect(queryByText("test2.png")).not.toBeInTheDocument(),
     );
 
-    // Modal not open
-    expect(fileTaggingModal).not.toBeVisible();
+    // No accordion is expanded
+    expect(
+      screen.queryByRole("heading", { name: /What does this file show/ }),
+    ).not.toBeInTheDocument();
   });
 });
 
 describe("Adding tags and syncing state", () => {
   test("Can continue when all required file types are uploaded and tagged", async () => {
     const handleSubmit = vi.fn();
-    const {
-      getAllByRole,
-      getAllByTestId,
-      getByRole,
-      getByTestId,
-      getByText,
-      user,
-    } = setup(
+    const { getAllByTestId, getByTestId, getByText, user } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         handleSubmit={handleSubmit}
@@ -353,30 +343,20 @@ describe("Adding tags and syncing state", () => {
     const input = getByTestId("upload-input");
     await user.upload(input, [file1]);
 
-    // Modal opened automatically
-    const fileTaggingModal = await within(document.body).findByTestId(
-      "file-tagging-dialog",
-    );
+    // Accordion auto-expanded for the uploaded file
+    expect(
+      await screen.findByRole("heading", { name: /What does this file show/ }),
+    ).toBeVisible();
 
-    // The number of file cards in the modal matches the number of uploaded files
-    const uploadedFileCards = getAllByRole("heading", {
-      name: /What does this file show/,
-    });
-    expect(uploadedFileCards).toHaveLength(1);
-
-    const submitModalButton = getByRole("button", { name: /Done/ });
-    expect(submitModalButton).toBeVisible();
-
-    // Find the "Roof plan" checkbox using label text
-    const roofPlanCheckbox =
-      within(fileTaggingModal).getByLabelText("Roof plan");
+    // Find the "Roof plan" checkbox
+    const roofPlanCheckbox = screen.getByLabelText("Roof plan");
 
     // Apply tag to this file
     await user.click(roofPlanCheckbox);
 
-    // Close modal
-    await user.click(submitModalButton);
-    expect(fileTaggingModal).not.toBeVisible();
+    // Save and close the accordion
+    const saveButton = screen.getByRole("button", { name: /Save/ });
+    await user.click(saveButton);
 
     // Uploaded file displayed as card with chip tags
     expect(getByTestId("test1.png")).toBeVisible();
@@ -398,14 +378,13 @@ describe("Adding tags and syncing state", () => {
 
   test("Cannot continue when only an optional file type is uploaded and tagged", async () => {
     const handleSubmit = vi.fn();
-    const { getAllByRole, getAllByTestId, getByTestId, getByText, user } =
-      setup(
-        <FileUploadAndLabelComponent
-          title="Test title"
-          handleSubmit={handleSubmit}
-          fileTypes={mockFileTypesUniqueKeys}
-        />,
-      );
+    const { getAllByTestId, getByTestId, getByText, user } = await setup(
+      <FileUploadAndLabelComponent
+        title="Test title"
+        handleSubmit={handleSubmit}
+        fileTypes={mockFileTypesUniqueKeys}
+      />,
+    );
 
     // No file requirements have been satisfied yet
     let incompleteIcons = getAllByTestId("incomplete-icon");
@@ -415,27 +394,21 @@ describe("Adding tags and syncing state", () => {
     const input = getByTestId("upload-input");
     await user.upload(input, [file1]);
 
-    // Modal opened automatically
-    const fileTaggingModal = await within(document.body).findByTestId(
-      "file-tagging-dialog",
-    );
+    // Accordion auto-expanded
+    expect(
+      await screen.findByRole("heading", { name: /What does this file show/ }),
+    ).toBeVisible();
 
-    // The number of file cards in the modal matches the number of uploaded files
-    const uploadedFileCards = getAllByRole("heading", {
-      name: /What does this file show/,
-    });
-    expect(uploadedFileCards).toHaveLength(1);
-
-    // Find the "Heritage statement" checkbox using label text
+    // Find the "Heritage statement" checkbox
     const heritageStatementCheckbox =
-      within(fileTaggingModal).getByLabelText("Heritage statement");
+      screen.getByLabelText("Heritage statement");
 
     // Apply tag to this file
     await user.click(heritageStatementCheckbox);
 
-    // Close modal
-    await user.keyboard("{Esc}");
-    await waitFor(() => expect(fileTaggingModal).not.toBeVisible());
+    // Save and close the accordion
+    const saveButton = screen.getByRole("button", { name: /Save/ });
+    await user.click(saveButton);
 
     // Uploaded file displayed as card with chip tags
     expect(getByTestId("test1.png")).toBeVisible();
@@ -464,7 +437,7 @@ describe("Error handling", () => {
   test("An error is thrown if a user does not upload any files", async () => {
     const handleSubmit = vi.fn();
 
-    const { getByTestId, getByRole, findByText, user } = setup(
+    const { getByTestId, findByText, user } = await setup(
       <FileUploadAndLabelComponent
         handleSubmit={handleSubmit}
         title="Test title"
@@ -488,19 +461,23 @@ describe("Error handling", () => {
     expect(dropzoneError).toBeVisible();
 
     await user.upload(input, file);
-    const fileTaggingModal = await within(document.body).findByTestId(
-      "file-tagging-dialog",
-    );
-    expect(fileTaggingModal).toBeVisible();
-    await user.keyboard("{Esc}");
+
+    // File uploaded and accordion expanded
+    expect(await screen.findByTestId("test.png")).toBeVisible();
 
     // Error message is cleared
     expect(dropzoneError).toBeEmptyDOMElement();
 
-    const deleteButton = getByRole("button", { name: /Delete/ });
-    await user.click(deleteButton);
+    // Remove the file
+    const removeButton = screen.getByRole("button", {
+      name: /Remove test.png/,
+    });
+    await user.click(removeButton);
 
     // Error message does not immediately re-appear
+    await waitFor(() =>
+      expect(screen.queryByTestId("test.png")).not.toBeInTheDocument(),
+    );
     expect(dropzoneError).toBeEmptyDOMElement();
 
     // Error appears again after user attempt to submit without files
@@ -509,41 +486,10 @@ describe("Error handling", () => {
     expect(dropzoneError).toBeVisible();
   });
 
-  test("An error is thrown in the modal if a user does not tag all files", async () => {
-    const { getByTestId, user } = setup(
-      <FileUploadAndLabelComponent
-        title="Test title"
-        fileTypes={[
-          mockFileTypes.AlwaysRequired,
-          mockFileTypes.AlwaysRecommended,
-          mockFileTypes.NotRequired,
-        ]}
-      />,
-    );
-
-    const file = new File(["test"], "test.jpg", { type: "image/jpg" });
-    const input = getByTestId("upload-input");
-    await user.upload(input, file);
-
-    const fileTaggingModal = await within(document.body).findByTestId(
-      "file-tagging-dialog",
-    );
-    expect(fileTaggingModal).toBeVisible();
-    const submitModalButton = await within(fileTaggingModal).findByText("Done");
-
-    // Attempt to close without tagging files
-    await user.click(submitModalButton);
-    expect(true).toBeTruthy();
-    const modalError = await within(fileTaggingModal).findByText(
-      /File test.jpg is not labeled/,
-    );
-    expect(modalError).toBeVisible();
-  });
-
-  test("An error is thrown in the main component if a user does not tag all files", async () => {
+  test("An error is thrown if a user does not tag all files", async () => {
     const handleSubmit = vi.fn();
 
-    const { getByTestId, getByRole, getAllByRole, findByText, user } = setup(
+    const { getByTestId, findByText, user } = await setup(
       <FileUploadAndLabelComponent
         handleSubmit={handleSubmit}
         title="Test title"
@@ -555,38 +501,28 @@ describe("Error handling", () => {
     const input = getByTestId("upload-input");
     await user.upload(input, file);
 
-    // Exit modal without tagging
-    await user.keyboard("{Esc}");
+    // Accordion is expanded — save without tagging
+    const saveButton = await screen.findByRole("button", { name: /Save/ });
+    await user.click(saveButton);
 
-    // User cannot submit without uploading a file
+    // User cannot submit without tagging files
     await user.click(getByTestId("continue-button"));
     expect(handleSubmit).not.toHaveBeenCalled();
-    const fileListError = await findByText(/File test.jpg is not labeled/);
-    expect(fileListError).toBeVisible();
+    const fileLabelError = await findByText(/File test.jpg is not labeled/);
+    expect(fileLabelError).toBeVisible();
 
-    // Re-open modal and tag file
-    await user.click(getByRole("button", { name: /Change/ }));
-    const uploadedFileCards = getAllByRole("heading", {
-      name: /What does this file show/,
-    });
-    expect(uploadedFileCards).toHaveLength(1);
+    // Edit the file and tag it
+    const editButton = screen.getByRole("button", { name: /Add labels/ });
+    await user.click(editButton);
 
-    // Find the "Utility bill" checkbox using label text
-    const fileTaggingModal = await within(document.body).findByTestId(
-      "file-tagging-dialog",
-    );
-    const utilityBillCheckbox =
-      within(fileTaggingModal).getByLabelText("Utility bill");
-
-    // Apply tag to this file
+    const utilityBillCheckbox = screen.getByLabelText("Utility bill");
     await user.click(utilityBillCheckbox);
 
-    await user.click(getByRole("button", { name: /Done/ }));
+    const saveButtonAgain = screen.getByRole("button", { name: /Save/ });
+    await user.click(saveButtonAgain);
 
-    // Error message is cleared, user can submit
-    expect(fileListError).toBeEmptyDOMElement();
-    await user.click(getByTestId("continue-button"));
-    expect(handleSubmit).not.toHaveBeenCalled();
+    // Error message is cleared
+    expect(fileLabelError).toBeEmptyDOMElement();
   });
 });
 
@@ -597,7 +533,7 @@ describe("Submitting data", () => {
 
   it("records the user uploaded files", async () => {
     const handleSubmit = vi.fn();
-    const { getByText, user } = setup(
+    const { getByText, user } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         handleSubmit={handleSubmit}
@@ -625,7 +561,7 @@ describe("Submitting data", () => {
 
   it("records the full file type list presented to the user", async () => {
     const handleSubmit = vi.fn();
-    const { getByText, user } = setup(
+    const { getByText, user } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         handleSubmit={handleSubmit}
@@ -698,7 +634,7 @@ describe("Submitting data", () => {
     act(() => setState({ flow, breadcrumbs }));
 
     const handleSubmit = vi.fn();
-    const { getByText, user } = setup(
+    const { getByText, user } = await setup(
       <FileUploadAndLabelComponent
         title="Test title"
         handleSubmit={handleSubmit}
@@ -731,17 +667,13 @@ const uploadAndTagSingleFile = async (user: UserEvent) => {
   const input = screen.getByTestId("upload-input");
   await user.upload(input, [file1]);
 
-  const fileTaggingModal = await within(document.body).findByTestId(
-    "file-tagging-dialog",
-  );
-
-  // Find the "Roof plan" checkbox using label text
-  const roofPlanCheckbox = within(fileTaggingModal).getByLabelText("Roof plan");
+  // Accordion auto-expanded — find the "Roof plan" checkbox
+  const roofPlanCheckbox = await screen.findByLabelText("Roof plan");
   await user.click(roofPlanCheckbox);
 
-  // Close modal
-  const submitModalButton = await within(fileTaggingModal).findByText("Done");
-  user.click(submitModalButton);
+  // Save (close accordion)
+  const saveButton = screen.getByRole("button", { name: /Save/ });
+  await user.click(saveButton);
 
   // Wait for upload to complete
   const progressBar = screen.getByRole("progressbar");

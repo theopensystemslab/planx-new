@@ -1,0 +1,1 @@
+DROP FUNCTION IF EXISTS ensure_single_default_email_per_team();

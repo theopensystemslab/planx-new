@@ -3,7 +3,7 @@ import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import RadioGroup from "@mui/material/RadioGroup";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import ColorPicker from "ui/editor/ColorPicker/ColorPicker";
 import InputGroup from "ui/editor/InputGroup";
@@ -24,6 +24,7 @@ import BasicRadio from "../shared/Radio/BasicRadio/BasicRadio";
 import { EditorProps } from "../shared/types";
 import { MapAndLabel, parseContent, validationSchema } from "./model";
 import { BreachLocations } from "./schemas/BreachLocations";
+import { GenericFeature } from "./schemas/GenericFeature";
 import { SketchPlanCA } from "./schemas/SketchPlanCA";
 import { SketchPlanFullDescriptionCA } from "./schemas/SketchPlanFullDescriptionCA";
 import { SketchPlanFullDescriptionTPO } from "./schemas/SketchPlanFullDescriptionTPO";
@@ -46,23 +47,28 @@ export const SCHEMAS = [
     name: "Report a Breach - breach locations",
     schema: BreachLocations,
   },
+  {
+    name: "Generic feature",
+    schema: GenericFeature,
+  },
 ];
 
 export default MapAndLabelComponent;
 
 function MapAndLabelComponent(props: Props) {
-  const formik = useFormik({
-    initialValues: parseContent(props.node?.data),
-    onSubmit: (newValues) => {
-      props.handleSubmit?.({
-        type: TYPES.MapAndLabel,
-        data: newValues,
-      });
+  const formik = useFormikWithRef<MapAndLabel>(
+    {
+      initialValues: parseContent(props.node?.data),
+      onSubmit: (newValues) => {
+        props.handleSubmit?.({
+          type: TYPES.MapAndLabel,
+          data: newValues,
+        });
+      },
+      validationSchema,
     },
-    validationSchema,
-    validateOnBlur: false,
-    validateOnChange: false,
-  });
+    props.formikRef,
+  );
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">

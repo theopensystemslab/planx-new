@@ -56,7 +56,6 @@ export const NoChangesDialog = ({
     onClose={() => setDialogOpen(false)}
     aria-labelledby="alert-dialog-title"
     aria-describedby="alert-dialog-description"
-    maxWidth="md"
   >
     <DialogTitle variant="h3" component="h1" sx={{ px: 3, py: 2 }}>
       {`Check for changes to publish`}
@@ -225,7 +224,12 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
           </Box>
         </DialogContent>
         <DialogFooterActions>
-          <Button onClick={handleBack}>Back</Button>
+          <Button
+            onClick={handleBack}
+            sx={{ backgroundColor: "background.default" }}
+          >
+            Back
+          </Button>
           <Button
             data-testid="next-step-publish-button"
             color="primary"
@@ -314,7 +318,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
                       disablePadding
                       sx={{
                         display: "list-item",
-                        fontSize: (theme) => theme.typography.body2,
+                        fontSize: (theme) => theme.typography.body2.fontSize,
                       }}
                     >
                       {`${templatedFlow.team.slug}/${templatedFlow.slug} (${templatedFlow.status})`}
@@ -326,7 +330,12 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
           )}
         </DialogContent>
         <DialogFooterActions>
-          <Button onClick={handleBack}>Back</Button>
+          <Button
+            onClick={handleBack}
+            sx={{ backgroundColor: "background.default" }}
+          >
+            Back
+          </Button>
           <Button
             data-testid="publish-button"
             color="primary"
@@ -344,7 +353,6 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
     <Dialog
       open={dialogOpen}
       fullWidth
-      maxWidth="md"
       onClose={() => {
         setDialogOpen(false);
         setActiveStep(0);
@@ -355,6 +363,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
         sx: {
           height: "100%",
           overflowY: "hidden",
+          backgroundColor: (theme) => theme.palette.secondary.main,
         },
       }}
     >
@@ -386,7 +395,12 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
           </Step>
         ))}
       </Stepper>
-      <Box sx={{ overflowY: "scroll" }}>
+      <Box
+        sx={{
+          overflowY: "scroll",
+          backgroundColor: (theme) => theme.palette.background.paper,
+        }}
+      >
         {
           {
             0: <ReviewStep />,

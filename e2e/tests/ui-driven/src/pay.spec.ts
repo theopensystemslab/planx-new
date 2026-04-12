@@ -28,6 +28,7 @@ let context: TestContext = {
     slug: "pay-test",
     name: "Pay test",
     data: payFlow,
+    hasSendComponent: true,
   },
 
   sessionIds: [], // used to collect and clean up sessions
@@ -233,7 +234,7 @@ test.describe("Gov Pay integration @regression", async () => {
     ).toBe(true);
 
     // resume the session via a magic link
-    await resumeSessionViaMagicLink({ page, context });
+    await resumeSessionViaMagicLink({ page, context, sessionId });
 
     await page.getByText("Retry payment").click();
     await page.getByText("Continue with your payment").click();
@@ -279,7 +280,7 @@ test.describe("Gov Pay integration @regression", async () => {
     });
 
     // abandon the payment and return to PlanX via a magic link
-    await resumeSessionViaMagicLink({ page, context });
+    await resumeSessionViaMagicLink({ page, context, sessionId });
 
     // resume the payment and cancel it
     await page.getByText("Retry payment").click();
@@ -426,11 +427,13 @@ async function findSession({
 async function resumeSessionViaMagicLink({
   page,
   context,
+  sessionId,
 }: {
   page: Page;
   context: TestContext;
+  sessionId: string;
 }) {
-  await page.goto(`${previewURL}&sessionId=${context.sessionIds?.[0]}`);
+  await page.goto(`${previewURL}&sessionId=${sessionId}`);
   await page.locator("#email").fill(context.user.email);
   await page.getByTestId("continue-button").click();
 }

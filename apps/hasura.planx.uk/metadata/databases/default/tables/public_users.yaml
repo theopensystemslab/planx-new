@@ -1,6 +1,16 @@
 table:
   name: users
   schema: public
+object_relationships:
+  - name: default_team
+    using:
+      manual_configuration:
+        column_mapping:
+          default_team_id: id
+        insertion_order: null
+        remote_table:
+          name: teams
+          schema: public
 array_relationships:
   - name: created_flows
     using:
@@ -23,12 +33,20 @@ array_relationships:
         table:
           name: team_members
           schema: public
+  - name: user_pinned_flows
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: user_pinned_flows
+          schema: public
 insert_permissions:
   - role: platformAdmin
     permission:
       check: {}
       columns:
         - created_at
+        - default_team_id
         - email
         - first_name
         - id
@@ -36,29 +54,47 @@ insert_permissions:
         - is_staging_only
         - last_name
         - updated_at
+  - role: teamEditor
+    permission:
+      check: {}
+      columns:
+        - created_at
+        - default_team_id
+        - email
+        - first_name
+        - id
+        - last_name
+        - updated_at
+    comment: |-
+      teamEditor can insert other users.
+
+      The permission boundary is enforced on the team_members table.
 select_permissions:
+  - role: analyst
+    permission:
+      columns:
+        - created_at
+        - default_team_id
+        - email
+        - first_name
+        - id
+        - is_analyst
+        - is_platform_admin
+        - last_name
+        - updated_at
+      filter: {}
+    comment: ""
   - role: api
     permission:
       columns:
         - created_at
+        - default_team_id
         - email
         - first_name
         - id
         - is_analyst
         - is_platform_admin
         - is_staging_only
-        - last_name
-        - updated_at
-      filter: {}
-  - role: demoUser
-    permission:
-      columns:
-        - created_at
-        - email
-        - first_name
-        - id
-        - is_analyst
-        - is_platform_admin
         - last_name
         - updated_at
       filter: {}
@@ -66,6 +102,7 @@ select_permissions:
     permission:
       columns:
         - created_at
+        - default_team_id
         - email
         - first_name
         - id
@@ -78,6 +115,7 @@ select_permissions:
     permission:
       columns:
         - created_at
+        - default_team_id
         - email
         - first_name
         - id
@@ -91,8 +129,60 @@ update_permissions:
   - role: platformAdmin
     permission:
       columns:
+        - default_team_id
         - email
         - first_name
         - last_name
       filter: {}
       check: {}
+  - role: teamEditor
+    permission:
+      columns:
+        - created_at
+        - email
+        - first_name
+        - last_name
+        - updated_at
+      filter:
+        teams:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: X-Hasura-User-Id
+                - role:
+                    _eq: teamEditor
+      check: null
+    comment: teamEditors can update the details of other teamEditors, within their team
+event_triggers:
+  - name: send_user_welcome_emails
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+    retry_conf:
+      interval_sec: 10
+      num_retries: 3
+      timeout_sec: 60
+    webhook_from_env: HASURA_PLANX_API_URL
+    headers:
+      - name: authorization
+        value_from_env: HASURA_PLANX_API_KEY
+    request_transform:
+      body:
+        action: transform
+        template: |-
+          {
+            "payload": {
+              "userId": {{$body.event.data.new.id}},
+              "email": {{$body.event.data.new.email}},
+              "firstName": {{$body.event.data.new.first_name}},
+              "lastName": {{$body.event.data.new.last_name}},
+              "defaultTeamId": {{$body.event.data.new.default_team_id ?? null}}
+            }
+          }
+      method: POST
+      query_params: {}
+      template_engine: Kriti
+      url: '{{$base_url}}/send-email/welcome'
+      version: 2

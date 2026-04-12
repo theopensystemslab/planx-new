@@ -41,7 +41,11 @@ const Limitations: React.FC = () => {
       getMutationVariables={(flow) => ({ flowId, flow })}
     >
       {({ formik }) => (
-        <InputLabel label="Limitations" htmlFor="limitations">
+        <InputLabel
+          label="Limitations"
+          htmlFor="limitations"
+          id="limitations-label"
+        >
           <RichTextInput
             disabled={isDisabled}
             inputProps={{

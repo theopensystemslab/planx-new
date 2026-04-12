@@ -28,4 +28,4 @@ export const NoFlagBand: React.FC = () => {
       })}
     />
   );
-}
+};

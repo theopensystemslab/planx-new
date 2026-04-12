@@ -21,7 +21,6 @@ export const contextDefaults: TestContext = {
     },
     settings: {
       homepage: "planx.uk",
-      submissionEmail: "simulate-delivered@notifications.service.gov.uk",
     },
   },
 };
@@ -47,7 +46,6 @@ export async function setUpTestContext(
       name: context.team.name,
       settings: {
         homepage: context.team.settings?.homepage,
-        submissionEmail: context.team.settings?.submissionEmail,
       },
     });
 
@@ -86,6 +84,7 @@ export async function setUpTestContext(
       data: context.flow.data,
       status: "online",
       userId: context.user!.id!,
+      hasSendComponent: context.flow.hasSendComponent,
     });
   }
   await setupGovPaySecret($admin, context);

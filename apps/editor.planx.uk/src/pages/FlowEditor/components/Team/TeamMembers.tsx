@@ -1,43 +1,22 @@
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { Role } from "@opensystemslab/planx-core/types";
-import { groupBy } from "lodash";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import SettingsSection from "ui/editor/SettingsSection";
+import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
-import {
-  filterByEmailPresent,
-  filterExcludingPlatformAdmins,
-  hasEmailPresent,
-} from "./components/lib/filterTeamMembers";
 import { MembersTable } from "./components/MembersTable";
-import { TeamMember } from "./types";
+import { useTeamManagementPermissions } from "./hooks/useTeamManagementPermissions";
+import { useTeamMembers } from "./hooks/useTeamMembers";
 
 export const TeamMembers = () => {
-  const [teamMembers, teamSlug] = useStore((state) => [
-    state.teamMembers,
-    state.teamSlug,
-  ]);
+  const teamSlug = useStore((state) => state.teamSlug);
 
-  // All users are automatically added to Templates team via a db trigger, we never want to manually add/edit them
-  const isNotTemplatesTeam = teamSlug !== "templates";
+  const { platformAdmins, activeMembers, archivedMembers, loading, error } = useTeamMembers(teamSlug);
+  const { canManageActiveMembers, canManageAdmins } = useTeamManagementPermissions();
 
-  const teamMembersByRole = groupBy(teamMembers, "role") as Record<
-    Role,
-    TeamMember[]
-  >;
-
-  const platformAdmins =
-    teamMembersByRole.platformAdmin.filter(hasEmailPresent);
-
-  const otherRoles = filterExcludingPlatformAdmins(teamMembers);
-
-  const activeMembers = filterByEmailPresent(otherRoles);
-
-  const archivedMembers: TeamMember[] = otherRoles.filter(
-    (member) => !hasEmailPresent(member),
-  );
+  if (error) return <ErrorSummary message={error.message} />;
 
   return (
     <Container maxWidth="contentWrap">
@@ -49,12 +28,15 @@ export const TeamMembers = () => {
           Editors have access to edit your flows, whilst viewers can only browse
           your flows.
         </Typography>
-        <MembersTable
-          members={activeMembers}
-          showAddMemberButton={isNotTemplatesTeam}
-          showEditMemberButton={isNotTemplatesTeam}
-          showRemoveMemberButton={isNotTemplatesTeam}
-        />
+        {loading && <DelayedLoadingIndicator />}
+        {activeMembers &&
+          <MembersTable
+            members={activeMembers}
+            showAddMemberButton={canManageActiveMembers}
+            showEditMemberButton={canManageActiveMembers}
+            showRemoveMemberButton={canManageActiveMembers}
+          />
+        }
       </SettingsSection>
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
@@ -63,10 +45,13 @@ export const TeamMembers = () => {
         <Typography variant="body1">
           Admins have editor access across all teams.
         </Typography>
-        <MembersTable
-          members={platformAdmins}
-          showEditMemberButton={isNotTemplatesTeam}
-        />
+        {loading && <DelayedLoadingIndicator />}
+        {platformAdmins &&
+          <MembersTable
+            members={platformAdmins}
+            showEditMemberButton={canManageAdmins}
+          />
+        }
       </SettingsSection>
       {archivedMembers.length > 0 && (
         <SettingsSection data-testid="archived-members">

@@ -19,7 +19,8 @@ interface InviteToPaySectionProps {
 export const InviteToPaySection: React.FC<InviteToPaySectionProps> = ({
   disabled,
 }) => {
-  const { handleChange, values, setFieldValue, errors } = useFormikContext<Pay>();
+  const { handleChange, values, setFieldValue, errors } =
+    useFormikContext<Pay>();
 
   return (
     <ModalSection>

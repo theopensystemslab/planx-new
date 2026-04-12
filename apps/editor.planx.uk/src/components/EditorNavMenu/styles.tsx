@@ -1,11 +1,13 @@
 import Box from "@mui/material/Box";
+import Chip, { chipClasses } from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export const MENU_WIDTH_COMPACT = 51;
-export const MENU_WIDTH_FULL = 164;
+export const MENU_WIDTH_FULL = 200;
 
 export const Root = styled(Box, {
   shouldForwardProp: (prop) => prop !== "compact",
@@ -20,22 +22,30 @@ export const Root = styled(Box, {
   },
 }));
 
-export const MenuWrap = styled("ul")(({ theme }) => ({
-  listStyle: "none",
-  margin: 0,
-  padding: theme.spacing(1, 0.4, 0, 0.4),
+export const NavBarContainer = styled(Box)(() => ({
+  display: "flex",
+  flexDirection: "column",
+  height: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
   position: "sticky",
+  width: "inherit",
   top: 0,
 }));
 
+export const MenuWrap = styled("ul")(({ theme }) => ({
+  listStyle: "none",
+  margin: 0,
+  padding: theme.spacing(1, 0.5, 2, 0.5),
+  flex: 1,
+  overflowY: "auto",
+}));
+
 export const MenuItem = styled("li")(({ theme }) => ({
-  margin: theme.spacing(0.75, 0),
+  margin: theme.spacing(0.5, 0),
   padding: 0,
 }));
 
 export const MenuTitle = styled(Typography)(({ theme }) => ({
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  paddingLeft: theme.spacing(0.5),
   paddingTop: theme.spacing(0.1),
   textAlign: "left",
 })) as typeof Typography;
@@ -45,30 +55,55 @@ export const MenuButton = styled(IconButton, {
 })<{ isActive: boolean }>(({ theme, isActive, disabled }) => ({
   color: theme.palette.text.primary,
   width: "100%",
-  border: "1px solid transparent",
   justifyContent: "flex-start",
+  gap: theme.spacing(0.65),
   alignItems: "flex-start",
-  borderRadius: "3px",
+  borderRadius: theme.shape.borderRadius,
+  padding: theme.spacing(0.8, 0.5),
   "&:hover": {
     background: theme.palette.common.white,
-    borderColor: theme.palette.border.light,
+    boxShadow: "0 1px 1.5px 0 rgba(0, 0, 0, 0.2)",
   },
   ...(isActive && {
     background: theme.palette.common.white,
     color: theme.palette.text.primary,
-    border: `1px solid ${theme.palette.border.main}`,
-    "&:hover": {
-      borderColor: theme.palette.border.main,
-    },
+    boxShadow: "0 1px 1.5px 0 rgba(0, 0, 0, 0.2)",
   }),
   ...(disabled && {
     color: theme.palette.text.disabled,
     "&:hover": {
       background: "none",
-      borderColor: "transparent",
     },
   }),
   "& > svg": {
-    opacity: 0.8,
+    opacity: 0.75,
+  },
+}));
+
+export const AccordionContent = styled("ul")(({ theme }) => ({
+  listStyle: "none",
+  margin: theme.spacing(0, 0.25, 0, 1.25),
+  padding: 0,
+  borderLeft: `2px solid ${theme.palette.border.light}`,
+  paddingLeft: theme.spacing(0.75),
+}));
+
+export const Subtitle = styled(Typography)(({ theme }) => ({
+  display: "block",
+  color: theme.palette.text.secondary,
+  padding: theme.spacing(1.5, 0.8, 0.5, 0.8),
+  fontSize: "0.8rem",
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+}));
+
+export const StyledChip = styled(Chip)(({ theme }) => ({
+  height: "16px",
+  fontSize: "0.625rem",
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+  borderRadius: "3px",
+  margin: theme.spacing(0.15, 0.2, 0, 0),
+  marginLeft: "auto",
+  [`& .${chipClasses.label}`]: {
+    padding: theme.spacing(0, 0.35),
   },
 }));

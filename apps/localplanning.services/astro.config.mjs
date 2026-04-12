@@ -25,6 +25,20 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()]
   },
+  image: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "raw.githubusercontent.com",
+        pathname: "/theopensystemslab/planx-team-logos/main/**",
+      },
+      {
+        protocol: "https",
+        hostname: "api.editor.planx.uk",
+        pathname: "/file/public/**",
+      }
+    ],
+  },
   experimental: {
     fonts: [
       {

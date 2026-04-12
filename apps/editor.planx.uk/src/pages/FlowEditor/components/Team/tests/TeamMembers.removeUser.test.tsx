@@ -1,38 +1,23 @@
 import { screen, waitFor, within } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { vi } from "vitest";
+import server from "test/mockServer";
 import { axe } from "vitest-axe";
 
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
-import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
-import { mockPlainUser, mockPlatformAdminUser } from "./mocks/mockUsers";
-
-const mockRemoveUser = vi.fn().mockResolvedValue(true);
-vi.mock("@opensystemslab/planx-core", () => {
-  return {
-    CoreDomainClient: vi.fn().mockImplementation(() => ({
-      user: {
-        delete: () => mockRemoveUser(),
-      },
-    })),
-  };
-});
+import { deleteUserHandler } from "./mocks/handlers";
+import { mockPlainUser, mockPlatformAdminUser } from "./mocks/users";
 
 describe("when a user presses 'remove' button", () => {
   let axeContainer: HTMLElement;
   beforeEach(async () => {
     useStore.setState({
-      teamMembers: mockTeamMembersData,
       user: mockPlatformAdminUser,
-      teamSlug: "planx",
-      teamId: 1,
     });
     const { user, container } = await setupTeamMembersScreen();
 
     const teamMembersTable = screen.getByTestId("team-members");
-    const removeRowButton = await within(teamMembersTable).findByTestId(
-      "remove-button-3",
-    );
+    const removeRowButton =
+      await within(teamMembersTable).findByTestId("remove-button-3");
     axeContainer = container;
     await user.click(removeRowButton);
     // Start each test with an open modal
@@ -72,12 +57,11 @@ describe("when a user presses 'remove' button", () => {
 describe("when a user clicks 'Remove user' button", () => {
   beforeEach(async () => {
     useStore.setState({
-      teamMembers: mockTeamMembersData,
       user: mockPlatformAdminUser,
-      teamSlug: "planx",
-      teamId: 1,
     });
     const { user } = await setupTeamMembersScreen();
+
+    server.use(deleteUserHandler());
 
     const teamMembersTable = screen.getByTestId("team-members");
 
@@ -91,7 +75,6 @@ describe("when a user clicks 'Remove user' button", () => {
   });
 
   it("should close the modal", async () => {
-    expect(mockRemoveUser).toHaveBeenCalled();
     const removeModal = screen.queryByTestId("modal-remove-user");
 
     await waitFor(() => {
@@ -100,11 +83,10 @@ describe("when a user clicks 'Remove user' button", () => {
   });
 
   it("should move the user to Archived Members table", async () => {
-    const archiveTable = screen.getByTestId("archived-members");
-
-    const archivedBill = within(archiveTable).queryByText(/Bilbo/);
-
-    expect(archivedBill).toBeInTheDocument();
+    await waitFor(() => {
+      const archiveTable = screen.getByTestId("archived-members");
+      expect(within(archiveTable).getByText(/Bilbo/)).toBeInTheDocument();
+    });
   });
 
   it("should display a success toast message", async () => {
@@ -115,36 +97,15 @@ describe("when a user clicks 'Remove user' button", () => {
   });
 });
 
-describe("'remove' button is hidden from Templates team", () => {
-  beforeEach(async () => {
-    useStore.setState({
-      teamMembers: mockTeamMembersData,
-      user: mockPlatformAdminUser,
-      teamSlug: "templates",
-      teamId: 2,
-    });
-  });
-
-  it("hides the button on the Templates team", async () => {
-    const { user: _user } = await setupTeamMembersScreen();
-    const teamMembersTable = screen.getByTestId("team-members");
-    const editButton =
-      within(teamMembersTable).queryByTestId("remove-button-3");
-    expect(editButton).not.toBeInTheDocument();
-  });
-});
-
 describe("when a user is not a platform admin", () => {
   beforeEach(async () => {
     useStore.setState({
-      teamMembers: mockTeamMembersData,
       user: mockPlainUser,
-      team: "planx",
-      teamId: 1,
     });
 
     await setupTeamMembersScreen();
   });
+
   it("does not show a remove button", async () => {
     const teamMembersTable = screen.getByTestId("team-members");
     const addEditorButton =

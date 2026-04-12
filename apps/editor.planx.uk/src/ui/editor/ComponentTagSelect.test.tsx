@@ -18,6 +18,7 @@ const mockUser: Omit<User, "isPlatformAdmin"> = {
   email: "test@email.com",
   teams: [],
   isAnalyst: false,
+  defaultTeamId: null,
 };
 
 describe("Checklist Component for a Platform Admin", () => {
@@ -34,7 +35,7 @@ describe("Checklist Component for a Platform Admin", () => {
   );
 
   it("renders all tags with none selected", async () => {
-    const { getByRole, user } = setup(
+    const { getByRole, user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ChecklistComponent options={[]} />
       </DndProvider>,
@@ -68,7 +69,7 @@ describe("Checklist Component for a non Platform Admin", () => {
   );
 
   it("renders all tags with none selected", async () => {
-    const { getByRole, user } = setup(
+    const { getByRole, user } = await setup(
       <DndProvider backend={HTML5Backend}>
         <ChecklistComponent options={[]} />
       </DndProvider>,

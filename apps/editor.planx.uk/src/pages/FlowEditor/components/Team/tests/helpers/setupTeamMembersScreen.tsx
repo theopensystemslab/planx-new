@@ -1,18 +1,19 @@
 import { screen } from "@testing-library/react";
-import { ToastContextProvider } from "contexts/ToastContext";
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import server from "test/mockServer";
 
 import { setup } from "../../../../../../testUtils";
 import { TeamMembers } from "../../TeamMembers";
+import { getNoExistingUserHandler, getUsersHandler } from "../mocks/handlers";
 
 export const setupTeamMembersScreen = async () => {
-  const setupResult = setup(
+  server.use(getUsersHandler(), getNoExistingUserHandler());
+
+  const setupResult = await setup(
     <DndProvider backend={HTML5Backend}>
-      <ToastContextProvider>
-        <TeamMembers />
-      </ToastContextProvider>
+      <TeamMembers />
     </DndProvider>,
   );
   await screen.findByTestId("team-members");

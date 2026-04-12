@@ -18,6 +18,7 @@ export interface FindProperty extends BaseNodeData {
   title: string;
   description: string;
   allowNewAddresses?: boolean;
+  newAddressFirstPage?: boolean;
   newAddressTitle?: string;
   newAddressDescription?: string;
   newAddressDescriptionLabel?: string;
@@ -29,6 +30,7 @@ export const parseFindProperty = (
   title: data?.title || DEFAULT_TITLE,
   description: data?.description || "",
   allowNewAddresses: data?.allowNewAddresses || false,
+  newAddressFirstPage: data?.newAddressFirstPage || false,
   newAddressTitle: data?.newAddressTitle || DEFAULT_NEW_ADDRESS_TITLE,
   newAddressDescription:
     data?.newAddressDescription || DEFAULT_NEW_ADDRESS_DESCRIPTION,
@@ -86,6 +88,7 @@ export const validationSchema: SchemaOf<FindProperty> =
       title: string().required(),
       description: richText(),
       allowNewAddresses: boolean(),
+      newAddressFirstPage: boolean(),
       newAddressTitle: string(),
       newAddressDescription: richText(),
       newAddressDescriptionLabel: string(),

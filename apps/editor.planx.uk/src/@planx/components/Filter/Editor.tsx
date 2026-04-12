@@ -5,12 +5,18 @@ import {
   flatFlags,
   Node,
 } from "@opensystemslab/planx-core/types";
-import { useFormik } from "formik";
-import React from "react";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
+import { FormikProps } from "formik";
+import React, { MutableRefObject } from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 
 import { ICONS } from "../shared/icons";
+
+interface FilterData {
+  fn: string;
+  category: string;
+}
 
 export interface Props {
   id?: string;
@@ -18,37 +24,41 @@ export interface Props {
   node?: any;
   autoAnswer?: Node["id"];
   disabled?: boolean;
+  formikRef?: MutableRefObject<FormikProps<FilterData> | null>;
 }
 
 const Filter: React.FC<Props> = (props) => {
-  const formik = useFormik({
-    initialValues: {
-      fn: "flag",
-      category: props?.node?.data?.category || DEFAULT_FLAG_CATEGORY,
-    },
-    onSubmit: (newValues) => {
-      if (props?.handleSubmit) {
-        const children = [
-          ...flatFlags,
-          {
-            category: formik.values.category,
-            text: "No flag result",
-            value: "",
-          },
-        ]
-          .filter((f) => f.category === formik.values.category)
-          .map((f) => ({
-            type: TYPES.Answer,
-            data: {
-              text: f.text,
-              val: f.value,
+  const formik = useFormikWithRef<FilterData>(
+    {
+      initialValues: {
+        fn: "flag",
+        category: props?.node?.data?.category || DEFAULT_FLAG_CATEGORY,
+      },
+      onSubmit: (newValues) => {
+        if (props?.handleSubmit) {
+          const children = [
+            ...flatFlags,
+            {
+              category: formik.values.category,
+              text: "No flag result",
+              value: "",
             },
-          }));
+          ]
+            .filter((f) => f.category === formik.values.category)
+            .map((f) => ({
+              type: TYPES.Answer,
+              data: {
+                text: f.text,
+                val: f.value,
+              },
+            }));
 
-        props.handleSubmit({ type: TYPES.Filter, data: newValues }, children);
-      }
+          props.handleSubmit({ type: TYPES.Filter, data: newValues }, children);
+        }
+      },
     },
-  });
+    props.formikRef,
+  );
 
   const categories = new Set(flatFlags.map((flag) => flag.category));
 

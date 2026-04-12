@@ -1,0 +1,158 @@
+import Person from "@mui/icons-material/Person";
+import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
+import Avatar from "@mui/material/Avatar";
+import { grey } from "@mui/material/colors";
+import IconButton from "@mui/material/IconButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import MenuItem from "@mui/material/MenuItem";
+import Paper from "@mui/material/Paper";
+import Popover, { popoverClasses } from "@mui/material/Popover";
+import Stack from "@mui/material/Stack";
+import { styled } from "@mui/material/styles";
+import MuiToolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import { useNavigate } from "@tanstack/react-router";
+import { useStore } from "pages/FlowEditor/lib/store";
+import React, { useRef, useState } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+
+const ProfileSection = styled(MuiToolbar)(({ theme }) => ({
+  position: "fixed",
+  bottom: 0,
+  width: "inherit",
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  padding: theme.spacing(0.5, 0.5, 1, 0.5),
+  backgroundColor: theme.palette.background.paper,
+  borderRight: `1px solid ${theme.palette.border.light}`,
+  borderTop: `1px solid ${theme.palette.border.light}`,
+  zIndex: theme.zIndex.appBar,
+  "@media print": {
+    visibility: "hidden",
+  },
+}));
+
+const StyledPopover = styled(Popover)(({ theme }) => ({
+  [`& .${popoverClasses.paper}`]: {
+    boxShadow: "4px 4px 0px rgba(150, 150, 150, 0.5)",
+    backgroundColor: theme.palette.background.dark,
+    borderRadius: 0,
+  },
+}));
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.background.dark,
+  color: theme.palette.common.white,
+  borderRadius: 0,
+  boxShadow: "none",
+  minWidth: 180,
+  "& li": {
+    padding: theme.spacing(1.5, 2),
+  },
+}));
+
+export interface AccountMenuProps {
+  compact?: boolean;
+}
+
+const AccountMenu: React.FC<AccountMenuProps> = ({ compact = false }) => {
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef<HTMLButtonElement>(null);
+  const user = useStore((state) => state.user);
+  const userRole = useStore((state) => state.getUserRole());
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleMenuToggle = () => {
+    setOpen(!open);
+  };
+
+  const handleLogout = () => navigate({ to: "/logout" });
+
+  if (!user) return null;
+
+  return (
+    <>
+      <ProfileSection disableGutters>
+        <IconButton
+          ref={anchorRef}
+          edge="end"
+          color="inherit"
+          aria-label="Toggle Menu"
+          onClick={handleMenuToggle}
+          size="large"
+          sx={{
+            padding: "0.25em",
+            width: "100%",
+            justifyContent: compact ? "center" : "flex-start",
+          }}
+        >
+          <Avatar
+            component="span"
+            sx={{
+              bgcolor: grey[900],
+              color: "#fff",
+              fontSize: "1rem",
+              fontWeight: FONT_WEIGHT_SEMI_BOLD,
+              width: 33,
+              height: 33,
+              marginRight: compact ? 0 : "0.5rem",
+            }}
+          >
+            {user.firstName[0]}
+            {user.lastName[0]}
+          </Avatar>
+          {!compact && (
+            <>
+              <Stack
+                spacing={0.25}
+                sx={{ alignItems: "flex-start", textAlign: "left" }}
+              >
+                <Typography
+                  variant="body3"
+                  sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+                >
+                  {user.firstName} {user.lastName}
+                </Typography>
+                <Typography variant="body4">{userRole}</Typography>
+              </Stack>
+
+              <UnfoldMoreIcon fontSize="small" sx={{ marginLeft: "auto" }} />
+            </>
+          )}
+        </IconButton>
+      </ProfileSection>
+
+      <StyledPopover
+        open={open}
+        anchorEl={anchorRef.current}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <StyledPaper>
+          <MenuItem disabled>
+            <ListItemIcon>
+              <Person fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>{user.email}</ListItemText>
+          </MenuItem>
+          <MenuItem onClick={handleLogout}>Log out</MenuItem>
+        </StyledPaper>
+      </StyledPopover>
+    </>
+  );
+};
+
+export default AccountMenu;

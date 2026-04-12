@@ -1,6 +1,6 @@
 import MenuItem from "@mui/material/MenuItem";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
@@ -18,6 +18,7 @@ import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
 import { List, parseContent, validationSchema } from "./model";
+import { AddTeamMembers } from "./schemas/AddTeamMember";
 import { ProposedAdvertisements } from "./schemas/Adverts";
 import { AmendDocuments } from "./schemas/AmendDocuments";
 import { ExistingBuildingsCIL } from "./schemas/CIL/ExistingCIL";
@@ -35,7 +36,6 @@ import { ProtectedSpaceGLA } from "./schemas/GLA/ProtectedSpace";
 import { InterestInLandLDC } from "./schemas/InterestInLandLDC";
 import { MaterialDetails } from "./schemas/Materials";
 import { MaterialDetailsLBC } from "./schemas/MaterialsLBC";
-import { Zoo } from "./schemas/mocks/Zoo/schema";
 import { OwnershipCertificateOwners } from "./schemas/OwnershipCertificateOwners";
 import { Parking } from "./schemas/Parking";
 import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";
@@ -46,7 +46,6 @@ import { ResidentialUnitsPreviousLDCE } from "./schemas/ResidentialUnits/Previou
 import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
 import { TreeDescriptionCA } from "./schemas/TreeDescriptionCA";
 import { TreeDescriptionTPO } from "./schemas/TreeDescriptionTPO";
-import { Trees } from "./schemas/Trees";
 
 type Props = EditorProps<TYPES.List, List>;
 
@@ -96,20 +95,23 @@ export const SCHEMAS = [
   { name: "Discharge conditions", schema: DischargeConditions },
   { name: "Tree description - Conservation Area", schema: TreeDescriptionCA },
   { name: "Tree description - TPO", schema: TreeDescriptionTPO },
+  { name: "Add team members", schema: AddTeamMembers },
 ];
 
 function ListComponent(props: Props) {
-  const formik = useFormik<List>({
-    initialValues: parseContent(props.node?.data),
-    onSubmit: (newValues) => {
-      props.handleSubmit?.({
-        type: TYPES.List,
-        data: newValues,
-      });
+  const formik = useFormikWithRef<List>(
+    {
+      initialValues: parseContent(props.node?.data),
+      onSubmit: (newValues) => {
+        props.handleSubmit?.({
+          type: TYPES.List,
+          data: newValues,
+        });
+      },
+      validationSchema,
     },
-    validationSchema,
-    validateOnChange: false,
-  });
+    props.formikRef,
+  );
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">

@@ -53,6 +53,7 @@ const Summary: React.FC = () => {
           <InputLabel label="Summary" htmlFor="summary">
             <Input
               multiline
+              rows={2}
               {...formik.getFieldProps("summary")}
               id="summary"
               placeholder="Summary"
