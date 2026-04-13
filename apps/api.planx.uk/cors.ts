@@ -22,6 +22,8 @@ const apiCors = cors({
   credentials: true,
   methods: "*",
   origin: checkAllowedOrigins,
+  // set maxAge to ensure cache for bad preflight requests does not persist for hours
+  maxAge: process.env.APP_ENVIRONMENT == "development" ? 300 : 600,
   allowedHeaders: [
     "Accept",
     "Authorization",
