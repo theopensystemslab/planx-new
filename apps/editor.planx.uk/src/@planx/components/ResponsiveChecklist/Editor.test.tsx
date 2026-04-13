@@ -15,20 +15,22 @@ import { Condition } from "../shared/RuleBuilder/types";
 import ResponsiveChecklistEditor from "./Editor";
 import { ResponsiveChecklist } from "./model";
 
-const { getState } = useStore;
+const { setState } = useStore;
 
 describe("Responsive Checklist editor component", async () => {
   beforeEach(() => {
-    getState().setUser({
-      id: 1,
-      firstName: "Editor",
-      lastName: "Test",
-      isPlatformAdmin: true,
-      isAnalyst: true,
-      email: "test@test.com",
-      teams: [],
+    setState({
+      user: {
+        id: 1,
+        firstName: "Editor",
+        lastName: "Test",
+        isPlatformAdmin: true,
+        isAnalyst: true,
+        email: "test@test.com",
+        teams: [],
+        defaultTeamId: null,
+      },
       jwt: "x.y.z",
-      defaultTeamId: null,
     });
   });
 
