@@ -39,7 +39,6 @@ import { getFlowDoc, subscribeToDoc } from "./../sharedb";
 import { type Store } from ".";
 import { NavigationStore } from "./navigation";
 import type { SharedStore } from "./shared";
-import { UserStore } from "./user";
 
 let doc: Doc;
 
@@ -325,7 +324,7 @@ export interface EditorStore extends Store.Store {
 }
 
 export const editorStore: StateCreator<
-  SharedStore & EditorStore & UserStore & NavigationStore,
+  SharedStore & EditorStore & NavigationStore,
   [],
   [],
   EditorStore

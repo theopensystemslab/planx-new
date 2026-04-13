@@ -1,9 +1,7 @@
-import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { Role, Team, User, UserTeams } from "@opensystemslab/planx-core/types";
-import { getUser } from "lib/api/auth/requests";
 import type { StateCreator } from "zustand";
 
-import { EditorStore } from "./editor";
+import type { AuthStore } from "./auth";
 import { TeamStore } from "./team";
 
 export const getDisplayRole = (user: User): string => {
@@ -13,31 +11,17 @@ export const getDisplayRole = (user: User): string => {
 };
 
 export interface UserStore {
-  user?: User;
-  jwt?: string;
-
-  setUser: (user: User & { jwt: string }) => void;
   canUserEditTeam: (teamSlug: Team["slug"]) => boolean;
-  initUserStore: () => Promise<User>;
   getUserRoleForCurrentTeam: () => Role | undefined;
   getUserRole: () => string | undefined;
 }
 
 export const userStore: StateCreator<
-  UserStore & EditorStore & TeamStore,
+  UserStore & TeamStore & AuthStore,
   [],
   [],
   UserStore
-> = (set, get) => ({
-  setUser: ({ jwt, ...user }) => {
-    const authenticatedClient = new CoreDomainClient({
-      targetURL: import.meta.env.VITE_APP_HASURA_URL!,
-      auth: { jwt },
-    });
-    set({ $client: authenticatedClient });
-    set({ jwt, user });
-  },
-
+> = (_set, get) => ({
   canUserEditTeam(teamSlug) {
     const user = get().user;
     if (!user) return false;
@@ -46,19 +30,6 @@ export const userStore: StateCreator<
       team.role !== "teamViewer" && team.team.slug === teamSlug;
 
     return user.isPlatformAdmin || user.teams.some(canEditTeam);
-  },
-
-  async initUserStore() {
-    const { user, setUser } = get();
-    if (user) return user;
-
-    try {
-      const user = await getUser();
-      setUser(user);
-      return user;
-    } catch (error) {
-      throw Error("Failed to fetch user matching JWT cookie");
-    }
   },
 
   getUserRoleForCurrentTeam: () => {
