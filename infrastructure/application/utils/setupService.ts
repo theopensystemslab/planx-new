@@ -75,17 +75,14 @@ export const setupLoadBalancer = async ({
           targetGroupArn: targetGroup.arn,
         }],
       },
-      // force http connections to upgrade to https
+      // don't force http to https, to avoid ALB <-> Cloudflare redirect loop during deploy
+      // TODO: after Cloudflare SSL mode successfully upgraded to 'Full (Strict)', delete this listener
       {
         port: 80,
         protocol: "HTTP",
         defaultActions: [{
-          type: "redirect",
-          redirect: {
-            port: "443",
-            protocol: "HTTPS",
-            statusCode: "HTTP_301",
-          },
+          type: "forward",
+          targetGroupArn: targetGroup.arn,
         }],
       },
     ],
