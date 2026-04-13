@@ -19,6 +19,7 @@ import * as camden from "./local_authorities/metadata/camden.js";
 import * as canterbury from "./local_authorities/metadata/canterbury.js";
 import * as coventry from "./local_authorities/metadata/coventry.js";
 import * as doncaster from "./local_authorities/metadata/doncaster.js";
+import * as eastRidingOfYorkshire from "./local_authorities/metadata/eastRidingOfYorkshire.js";
 import * as epsomAndEwell from "./local_authorities/metadata/epsomAndEwell.js";
 import * as gateshead from "./local_authorities/metadata/gateshead.js";
 import * as gloucester from "./local_authorities/metadata/gloucester.js";
@@ -57,6 +58,7 @@ export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   canterbury,
   coventry,
   doncaster,
+  "east-riding-of-yorkshire": eastRidingOfYorkshire,
   "epsom-and-ewell": epsomAndEwell,
   gateshead,
   gloucester,
