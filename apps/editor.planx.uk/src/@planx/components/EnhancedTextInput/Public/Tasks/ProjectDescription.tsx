@@ -36,6 +36,7 @@ import {
   QuoteDescription,
   QuotedText,
   RecommendedTag,
+  RevealedContent,
   StyledFormLabel,
 } from "./styles";
 
@@ -161,8 +162,18 @@ const ProjectDescription: React.FC<Props> = ({
         case "retainedOriginal":
           setFieldValue("userInput", data.original);
           break;
+        case "new":
+          setFieldValue("userInput", values.customDescription);
+          break;
       }
     }
+  };
+
+  const handleCustomDescriptionChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setFieldValue("customDescription", event.target.value);
+    setFieldValue("userInput", event.target.value);
   };
 
   const handleModificationChange = (
@@ -315,8 +326,43 @@ const ProjectDescription: React.FC<Props> = ({
                 title="Use your original description"
                 description={data.original}
               />
+              <Box width={68} my={1}>
+                <Typography align="center">or</Typography>
+              </Box>
+              <DescriptionRadio
+                id="new"
+                onChange={handleOptionChange}
+                title="Write a new description"
+              />
             </RadioGroup>
           </ErrorWrapper>
+
+          {values.selectedOption === "new" && (
+            <RevealedContent>
+              <InputRow>
+                <InputLabel
+                  label="Enter your project description. This will not be checked for suggested improvements."
+                  htmlFor={props.id}
+                >
+                  <Input
+                    type="text"
+                    multiline
+                    rows={5}
+                    name="customDescription"
+                    value={values.customDescription}
+                    bordered
+                    onChange={handleCustomDescriptionChange}
+                    id={props.id}
+                  />
+                  <CharacterCounter
+                    limit={TEXT_LIMITS[TextInputType.Long]}
+                    count={values.customDescription.length}
+                    error={false}
+                  />
+                </InputLabel>
+              </InputRow>
+            </RevealedContent>
+          )}
         </Box>
       )}
 
