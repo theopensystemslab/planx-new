@@ -145,6 +145,63 @@ describe("Passport generation", () => {
     );
   });
 
+  test("writing a new description", async () => {
+    const handleSubmit = vi.fn();
+
+    const { user } = await setup(
+      <EnhancedTextInputComponent
+        id="testId"
+        title="test"
+        task={"projectDescription"}
+        handleSubmit={handleSubmit}
+        {...taskDefaults.projectDescription}
+      />,
+    );
+
+    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByTestId("continue-button"));
+
+    // Wait for next screen
+    expect(
+      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+    ).toBeVisible();
+
+    // Select "Write a new description" and type a custom value
+    await user.click(
+      screen.getByRole("radio", { name: /Write a new description/i }),
+    );
+    const customInput = screen.getByRole("textbox", {
+      name: /Enter your project description/i,
+    });
+    await user.type(customInput, "my custom description");
+
+    // Continuing submits directly without a modification step
+    await user.click(screen.getByTestId("continue-button"));
+    expect(
+      screen.queryByRole("heading", {
+        name: /Do you want to modify this description/i,
+        level: 1,
+      }),
+    ).not.toBeInTheDocument();
+
+    // Breadcrumb formatted as expected
+    expect(handleSubmit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: {
+          "proposal.description": "my custom description",
+          "enhancedTextInput.proposal.description.action":
+            "Re-wrote their description after AI feedback",
+          _enhancements: {
+            "proposal.description": {
+              original: ORIGINAL,
+              enhanced: ENHANCED,
+            },
+          },
+        },
+      }),
+    );
+  });
+
   test("modifying a description", async () => {
     const handleSubmit = vi.fn();
 
@@ -428,6 +485,9 @@ describe("basic layout and behaviour", () => {
     expect(
       screen.getByRole("radio", { name: /Use your original description/i }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("radio", { name: /Write a new description/i }),
+    ).toBeInTheDocument();
     expect(screen.getByText(ENHANCED)).toBeVisible();
     expect(screen.getByText(ORIGINAL)).toBeVisible();
   });
@@ -502,6 +562,42 @@ describe("basic layout and behaviour", () => {
     expect(
       screen.getByRole("textbox", { name: /Project description/i }),
     ).toHaveValue(ORIGINAL);
+  });
+
+  it("selecting 'Write a new description' reveals a text input", async () => {
+    const { user } = await setup(
+      <EnhancedTextInputComponent
+        id="testId"
+        title="test"
+        task={"projectDescription"}
+        {...taskDefaults.projectDescription}
+      />,
+    );
+
+    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByTestId("continue-button"));
+
+    // Wait for next screen
+    expect(
+      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+    ).toBeVisible();
+
+    // No text input visible before selecting the option
+    expect(
+      screen.queryByRole("textbox", {
+        name: /Enter your project description/i,
+      }),
+    ).not.toBeInTheDocument();
+
+    // Selecting the option reveals the text input
+    await user.click(
+      screen.getByRole("radio", { name: /Write a new description/i }),
+    );
+    expect(
+      screen.getByRole("textbox", {
+        name: /Enter your project description/i,
+      }),
+    ).toBeVisible();
   });
 
   it("displays additional information to the user on the 'task' step", async () => {
