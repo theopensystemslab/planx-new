@@ -50,7 +50,6 @@ insert_permissions:
         - email
         - first_name
         - id
-        - is_analyst
         - is_platform_admin
         - is_staging_only
         - last_name

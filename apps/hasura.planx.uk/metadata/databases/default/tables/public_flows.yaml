@@ -460,9 +460,7 @@ update_permissions:
         - summary
         - team_id
         - templated_from
-      filter:
-        archived_at:
-          _is_null: true
+      filter: {}
       check:
         _not:
           _and:
@@ -509,8 +507,6 @@ update_permissions:
                       _eq: x-hasura-user-id
                   - role:
                       _eq: teamEditor
-          - archived_at:
-              _is_null: true
           - is_template:
               _eq: false
       check:
