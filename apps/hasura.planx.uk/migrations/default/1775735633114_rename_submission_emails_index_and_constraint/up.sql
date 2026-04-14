@@ -1,5 +1,0 @@
-ALTER TABLE submission_emails
-  RENAME CONSTRAINT submission_integrations_pkey TO submission_emails_pkey;
-
-ALTER TABLE submission_emails
-  RENAME CONSTRAINT fk_submission_integrations_team_settings TO fk_submission_emails_team_settings;

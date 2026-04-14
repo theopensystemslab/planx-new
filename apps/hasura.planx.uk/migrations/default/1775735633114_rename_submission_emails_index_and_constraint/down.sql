@@ -1,4 +1,0 @@
-ALTER INDEX submission_emails_pkey RENAME TO submission_integrations_pkey;
-
-ALTER TABLE submission_emails
-  RENAME CONSTRAINT fk_submission_emails_team_settings TO fk_submission_integrations_team_settings;

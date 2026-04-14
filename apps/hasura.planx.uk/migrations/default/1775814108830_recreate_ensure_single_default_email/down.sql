@@ -1,1 +1,0 @@
-DROP TRIGGER IF EXISTS enforce_single_default_email ON submission_integrations;
