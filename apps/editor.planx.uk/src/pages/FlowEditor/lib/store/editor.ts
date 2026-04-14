@@ -267,9 +267,6 @@ export interface EditorStore extends Store.Store {
   cutNode: (id: NodeId, parent: NodeId) => void;
   getCutNode: () => CutPayload | null;
   addNode: (node: any, relationships?: Relationships) => void;
-  archiveFlow: (
-    flow: FlowSummary,
-  ) => Promise<{ id: string; name: string } | void>;
   connect: (src: NodeId, tgt: NodeId, object?: any) => void;
   connectToFlow: (id: NodeId) => Promise<void>;
   disconnectFromFlow: () => void;
@@ -338,34 +335,6 @@ export const editorStore: StateCreator<
       { children, parent, before },
     )(get().flow);
     send(ops);
-  },
-
-  archiveFlow: async ({ id, slug }) => {
-    try {
-      const { data } = await client.mutate<{
-        flow: { id: string; name: string };
-      }>({
-        mutation: gql`
-          mutation updateFlow($id: uuid!, $slug: String!) {
-            flow: update_flows_by_pk(
-              pk_columns: { id: $id }
-              _set: { archived_at: "now()", status: offline, slug: $slug }
-            ) {
-              id
-              name
-            }
-          }
-        `,
-        variables: {
-          id,
-          slug: `${slug}-archived`,
-        },
-      });
-
-      return data?.flow;
-    } catch (error) {
-      throw Error("Failed to archive flow", { cause: error });
-    }
   },
 
   connect: (src, tgt, { before = undefined } = {}) => {

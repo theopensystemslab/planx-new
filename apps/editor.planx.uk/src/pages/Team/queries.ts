@@ -52,6 +52,27 @@ export type GetArchivedFlowsVars = {
   teamId: number;
 };
 
+export const ARCHIVE_FLOW = gql`
+  mutation ArchiveFlow($id: uuid!, $slug: String!) {
+    flow: update_flows_by_pk(pk_columns: {id: $id}, _set: {archived_at: "now()", status: offline, slug: $slug}) {
+      id
+      name
+    }
+  }
+`
+
+export type ArchiveFlowQuery = {
+  flow: {
+    id: string;
+    name: string; 
+  }
+}
+
+export type ArchiveFlowQueryVars = {
+  id: string; 
+  slug: string;
+}
+
 export const UNARCHIVE_FLOW = gql`
   mutation UnarchiveFlow($id: uuid!, $slug: String!) {
     flow: update_flows_by_pk(pk_columns: {id: $id}, _set: {archived_at: null, slug: $slug}) {
@@ -64,7 +85,7 @@ export const UNARCHIVE_FLOW = gql`
 export type UnarchiveFlowQuery = {
   flow: {
     id: string;
-    name: string; 
+    slug: string; 
   }
 }
 
