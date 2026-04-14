@@ -131,12 +131,7 @@ export async function modifyFlow({
           data
         }
         insert_published_flows_one(
-          object: {
-            flow_id: $flowId
-            data: $data
-            publisher_id: $userId
-            has_send_component: true
-          }
+          object: { flow_id: $flowId, data: $data, publisher_id: $userId }
         ) {
           id
         }

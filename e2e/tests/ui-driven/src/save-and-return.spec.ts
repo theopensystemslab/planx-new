@@ -26,7 +26,6 @@ test.describe("Save and return", () => {
       slug: "e2e-save-and-return-test-flow",
       name: "E2E Save and Return test flow",
       data: simpleSendFlow,
-      hasSendComponent: true,
     },
   };
   const previewURL = `/${context.team?.slug}/${context.flow?.slug}/published?analytics=false`;

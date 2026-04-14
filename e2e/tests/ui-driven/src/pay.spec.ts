@@ -28,7 +28,6 @@ let context: TestContext = {
     slug: "pay-test",
     name: "Pay test",
     data: payFlow,
-    hasSendComponent: true,
   },
 
   sessionIds: [], // used to collect and clean up sessions

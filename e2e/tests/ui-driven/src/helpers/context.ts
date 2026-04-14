@@ -84,7 +84,6 @@ export async function setUpTestContext(
       data: context.flow.data,
       status: "online",
       userId: context.user!.id!,
-      hasSendComponent: context.flow.hasSendComponent,
     });
   }
   await setupGovPaySecret($admin, context);
