@@ -9,5 +9,5 @@ import {
 export const useGetFlows = (teamId: number) =>
   useQuery<GetAnyFlowsQuery, GetAnyFlowsVars>(GET_FLOWS, {
     variables: { teamId },
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: "cache-first",
   });

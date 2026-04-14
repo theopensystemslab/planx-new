@@ -33,11 +33,7 @@ const GetStarted: React.FC = () => (
   </DashboardList>
 );
 
-interface TeamProps {
-  flows: FlowSummary[];
-}
-
-const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
+const Team: React.FC = () => {
   const [
     { id: teamId, slug },
     canUserEditTeam,

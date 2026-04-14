@@ -24,7 +24,7 @@ const ArchivedFlowMenu: React.FC<FlowMenuProps> = ({
 
     const handleClose = () => {
         setOpenFlowDialog(null);
-        }; // TODO: this is repetitive, refactor? 
+        };
 
     const handleUnarchive = async () => {
         try {
