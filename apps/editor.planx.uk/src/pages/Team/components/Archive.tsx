@@ -10,10 +10,11 @@ import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 import { FlowCardView } from "../../FlowEditor/lib/store/editor";
 import { FlowTable } from "../components/FlowTable";
 import { ShowingServicesHeader } from "../components/ShowingServicesHeader";
-import { useGetArchivedFlows } from "../helpers/useGetArchivedFlows";
 import { DashboardList } from "./DashboardList";
 import FlowCard from "./FlowCard";
-import { StyledToggleButton } from "./StyledToggleButton"
+import { useGetArchivedFlows } from "./hooks/useGetArchivedFlows";
+import { StyledToggleButton } from "./StyledToggleButton";
+
 type Props = {
   flowCardView: FlowCardView;
   handleViewChange: (
@@ -111,7 +112,7 @@ const Archive: React.FC<Props> = ({
                   flows={archivedFlows}
                   key={flow.slug}
                   refreshFlows={fetchFlows}
-                  showDetails={false}
+                  view={"archive"}
                 />
               ))}
             </DashboardList>
@@ -121,7 +122,7 @@ const Archive: React.FC<Props> = ({
               teamId={teamId}
               teamSlug={slug}
               refreshFlows={fetchFlows}
-              showDetails={false}
+              view={"archive"}
             />
           )}
         </>
