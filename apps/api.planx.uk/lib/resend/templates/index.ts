@@ -1,3 +1,4 @@
+import type { SubmitTemplate } from "./submit.js";
 import type { WelcomeTemplate } from "./welcome.js";
 
 export type EmailTemplate<
@@ -10,6 +11,7 @@ export type EmailTemplate<
 
 export interface TemplateRegistry {
   welcome: WelcomeTemplate;
+  submit: SubmitTemplate;
 }
 
 export type ResendTemplate = keyof TemplateRegistry;

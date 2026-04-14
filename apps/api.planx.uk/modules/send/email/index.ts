@@ -3,8 +3,6 @@ import {
   getFeeBreakdown,
 } from "@opensystemslab/planx-core";
 import { ServerError } from "../../../errors/serverError.js";
-import { sendEmail } from "../../../lib/notify/index.js";
-import type { TemplateRegistry } from "../../../lib/notify/templates/index.js";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
 import type { SendIntegrationController } from "../types.js";
 import {
@@ -16,10 +14,9 @@ import {
   getFlowId,
   generateAccessToken,
 } from "./service.js";
-import type {
-  SiteAddress,
-  TeamContactSettings,
-} from "@opensystemslab/planx-core/types";
+import type { SiteAddress } from "@opensystemslab/planx-core/types";
+import { sendEmail } from "../../../lib/resend/index.js";
+import type { TemplateRegistry } from "../../../lib/resend/templates/index.js";
 
 export const sendToEmail: SendIntegrationController = async (
   req,
@@ -34,7 +31,7 @@ export const sendToEmail: SendIntegrationController = async (
   const localAuthority = res.locals.parsedReq.params.localAuthority;
 
   try {
-    const { teamId, teamSettings } = await getTeamEmailSettings(localAuthority);
+    const { teamId } = await getTeamEmailSettings(localAuthority);
     const flowId = await getFlowId(sessionId);
 
     // Confirm this local authority (aka team) has an email configured
@@ -58,7 +55,6 @@ export const sendToEmail: SendIntegrationController = async (
     const token = await generateAccessToken(sessionId);
 
     const config = await getSubmitEmailConfig({
-      teamSettings,
       submissionEmailAddress,
       sessionId,
       token,
@@ -81,8 +77,8 @@ export const sendToEmail: SendIntegrationController = async (
 
     return res.status(200).send({
       message: `Successfully sent to email`,
-      inbox: submissionEmailAddress,
-      govuk_notify_template: "Submit",
+      inbox: submissionEmail,
+      resendTemplate: "submit",
     });
   } catch (error) {
     return next(
@@ -96,16 +92,14 @@ export const sendToEmail: SendIntegrationController = async (
 };
 
 const getSubmitEmailConfig = async ({
-  teamSettings,
   submissionEmailAddress,
   sessionId,
   token,
 }: {
-  teamSettings: TeamContactSettings;
-  submissionEmailAddress: string;
+    submissionEmailAddress: string;
   sessionId: string;
   token: string;
-}): Promise<TemplateRegistry["submit"]["config"]> => {
+}): Promise<TemplateRegistry["submit"]["variables"]> => {
   try {
     const { email, flow, passportData } =
       await getSessionEmailDetailsById(sessionId);
@@ -137,18 +131,15 @@ const getSubmitEmailConfig = async ({
     const downloadLink = `${process.env.EDITOR_URL_EXT}/download-submission?token=${token}`;
 
     // Prepare email template
-    const config: TemplateRegistry["submit"]["config"] = {
-      personalisation: {
-        serviceName: flowName,
-        sessionId,
-        applicantEmail: email,
-        downloadLink,
-        address: addressLine || "Address not submitted",
-        projectType: projectType || "Project type not submitted",
-        applicantName,
-        fee: fee || "N/A",
-      },
-      emailReplyToId: teamSettings.emailReplyToId,
+    const config: TemplateRegistry["submit"]["variables"] = {
+      serviceName: flowName,
+      sessionId,
+      applicantEmail: email,
+      downloadLink,
+      address: addressLine || "Address not submitted",
+      projectType: projectType || "Project type not submitted",
+      applicantName,
+      fee: fee || "N/A",
     };
 
     return config;
