@@ -232,7 +232,7 @@ const ProjectDescription: React.FC<Props> = ({
         <Typography variant="h2" component="h1" mb={1}>
           Do you want to modify this description?
         </Typography>
-        <Typography variant="body1" component="p" mb={2}>
+        <Typography variant="subtitle1" component="p" mb={2}>
           Edit the description below, or continue to submit it as shown.
         </Typography>
         <InputRow>
@@ -276,7 +276,9 @@ const ProjectDescription: React.FC<Props> = ({
         <Typography variant="h2" component="h1" mb={1}>
           {props.revisionTitle}
         </Typography>
-        <ReactMarkdownOrHtml source={props.revisionDescription} />
+        <Typography variant="subtitle1" component="div">
+          <ReactMarkdownOrHtml source={props.revisionDescription} />
+        </Typography>
         <Typography variant="subtitle1" component="div">
           <HelpButton
             variant="help"
