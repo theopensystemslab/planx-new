@@ -91,10 +91,6 @@ export const ValidationSuccess: React.FC<{
   reconciliationResponse: ReconciliationResponse;
   continueApplication: () => void;
 }> = ({ reconciliationResponse, continueApplication }) => {
-  // ReconciliationPage relies on flow data and navigation store (section data)
-  const isFlowLoaded = useStore((state) => state.isFlowLoaded);
-  if (!isFlowLoaded) return <DelayedLoadingIndicator />;
-
   return (
     <ReconciliationPage
       bannerHeading="Resume your form"
