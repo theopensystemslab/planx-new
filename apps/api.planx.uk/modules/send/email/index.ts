@@ -38,8 +38,8 @@ export const sendToEmail: SendIntegrationController = async (
     const flowId = await getFlowId(sessionId);
 
     // Confirm this local authority (aka team) has an email configured
-    const submissionEmail = await getSubmissionEmail(teamId, flowId);
-    if (!submissionEmail) {
+    const submissionEmailAddress = await getSubmissionEmail(teamId, flowId);
+    if (!submissionEmailAddress) {
       return next({
         status: 400,
         message: `Send to email is not enabled for this local authority (${localAuthority})`,
@@ -59,13 +59,13 @@ export const sendToEmail: SendIntegrationController = async (
 
     const config = await getSubmitEmailConfig({
       teamSettings,
-      submissionEmail,
+      submissionEmailAddress,
       sessionId,
       token,
     });
 
     // Send the email
-    const response = await sendEmail("submit", submissionEmail, config);
+    const response = await sendEmail("submit", submissionEmailAddress, config);
 
     // Mark session as submitted so that reminder and expiry emails are not triggered
     markSessionAsSubmitted(sessionId);
@@ -74,14 +74,14 @@ export const sendToEmail: SendIntegrationController = async (
     insertAuditEntry(
       sessionId,
       localAuthority,
-      submissionEmail,
+      submissionEmailAddress,
       config,
       response,
     );
 
     return res.status(200).send({
       message: `Successfully sent to email`,
-      inbox: submissionEmail,
+      inbox: submissionEmailAddress,
       govuk_notify_template: "Submit",
     });
   } catch (error) {
@@ -97,12 +97,12 @@ export const sendToEmail: SendIntegrationController = async (
 
 const getSubmitEmailConfig = async ({
   teamSettings,
-  submissionEmail,
+  submissionEmailAddress,
   sessionId,
   token,
 }: {
   teamSettings: TeamContactSettings;
-  submissionEmail: string;
+  submissionEmailAddress: string;
   sessionId: string;
   token: string;
 }): Promise<TemplateRegistry["submit"]["config"]> => {
@@ -111,7 +111,7 @@ const getSubmitEmailConfig = async ({
       await getSessionEmailDetailsById(sessionId);
 
     // Type narrowing
-    if (!submissionEmail) throw Error("Submission email missing!");
+    if (!submissionEmailAddress) throw Error("Submission email missing!");
 
     const projectTypes = passportData["proposal.projectType"] as
       | string[]

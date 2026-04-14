@@ -22,24 +22,24 @@ export interface UpdateFlowSubmissionEmailMutationVariables {
   submissionEmailId: string;
 }
 
-export interface GetTeamSubmissionIntegrationsQuery {
-  submissionIntegrations: Array<{
+export interface GetTeamSubmissionEmailsQuery {
+  submissionEmails: Array<{
     id: string;
     name: string;
-    email: string;
+    address: string;
   }>;
 }
 
-export interface GetTeamSubmissionIntegrationsQueryVariables {
+export interface GetTeamSubmissionEmailsQueryVariables {
   teamId: number;
 }
 
 export interface InsertSubmissionEmailMutation {
-  submissionIntegrations: {
+  submissionEmails: {
     id: string;
-    email: string;
+    address: string;
     teamId: number;
-    defaultEmail: boolean;
+    isDefault: boolean;
   };
 }
 

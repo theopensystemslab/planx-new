@@ -1,15 +1,15 @@
 import { gql } from "@apollo/client";
 
-export const GET_TEAM_SUBMISSION_INTEGRATIONS = gql`
-  query GetTeamSubmissionIntegrations($teamId: Int!) {
-    submissionIntegrations: submission_integrations(
+export const GET_TEAM_SUBMISSION_EMAILS = gql`
+  query GetTeamSubmissionEmails($teamId: Int!) {
+    submissionEmails: submission_emails(
       where: { team_id: { _eq: $teamId } }
-      order_by: { submission_email: asc }
+      order_by: { address: asc }
     ) {
       teamId: team_id
       id
-      submissionEmail: submission_email
-      defaultEmail: default_email
+      address
+      isDefault: is_default
       flows {
         id
         name
@@ -19,36 +19,36 @@ export const GET_TEAM_SUBMISSION_INTEGRATIONS = gql`
   }
 `;
 
-export const UPSERT_TEAM_SUBMISSION_INTEGRATIONS = gql`
-  mutation UpsertSubmissionIntegrations(
-    $emails: [submission_integrations_insert_input!]!
+export const UPSERT_TEAM_SUBMISSION_EMAILS = gql`
+  mutation UpsertSubmissionEmails(
+    $emails: [submission_emails_insert_input!]!
   ) {
-    insert_submission_integrations(
+    insert_submission_emails(
       objects: $emails
       on_conflict: {
-        constraint: submission_integrations_pkey
-        update_columns: [submission_email, default_email]
+        constraint: submission_emails_pkey
+        update_columns: [address, is_default]
       }
     ) {
       returning {
         id
-        submissionEmail: submission_email
+        address
         teamId: team_id
-        defaultEmail: default_email
+        isDefault: is_default
       }
     }
   }
 `;
 
-export const DELETE_TEAM_SUBMISSION_INTEGRATIONS = gql`
-  mutation DeleteSubmissionIntegration($submissionEmailId: uuid!) {
-    delete_submission_integrations(
-      where: { id: { _eq: $submissionEmailId }, default_email: { _eq: false } }
+export const DELETE_TEAM_SUBMISSION_EMAILS = gql`
+  mutation DeleteSubmissionEmail($submissionEmailId: uuid!) {
+    delete_submission_emails(
+      where: { id: { _eq: $submissionEmailId }, is_default: { _eq: false } }
     ) {
       returning {
         teamId: team_id
-        submissionEmail: submission_email
-        defaultEmail: default_email
+        address: address
+        isDefault: is_default
       }
     }
   }
