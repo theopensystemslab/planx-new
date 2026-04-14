@@ -42,7 +42,6 @@ type Props = {
   sortedFlows: FlowSummary[] | null;
   sortOptions: SortableFields<FlowSummary>[];
   flowCardView: FlowCardView;
-  fetchFlows: () => void;
   teamId: number;
   flows: FlowSummary[] | null;
   handleViewChange: (
@@ -59,7 +58,6 @@ const Flows: React.FC<Props> = ({
   sortedFlows,
   sortOptions,
   flowCardView,
-  fetchFlows,
   teamId,
   handleViewChange,
   slug,
@@ -152,7 +150,6 @@ const Flows: React.FC<Props> = ({
                     flow={flow}
                     flows={sortedFlows}
                     key={flow.slug}
-                    refreshFlows={fetchFlows}
                     view={"flows"}
                   />
                 ))}
@@ -162,7 +159,6 @@ const Flows: React.FC<Props> = ({
                 flows={sortedFlows}
                 teamId={teamId}
                 teamSlug={slug}
-                refreshFlows={fetchFlows}
                 view={"flows"}
               />
             )}

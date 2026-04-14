@@ -23,7 +23,6 @@ type Props = {
   ) => void;
   teamId: number;
   slug: string;
-  fetchFlows: () => void;
 };
 
 const Archive: React.FC<Props> = ({
@@ -31,7 +30,6 @@ const Archive: React.FC<Props> = ({
   handleViewChange,
   teamId,
   slug,
-  fetchFlows,
 }) => {
   const { data: archivedFlowsData, loading, error } = useGetArchivedFlows(teamId);
   const archivedFlows = archivedFlowsData?.flows ?? null;
@@ -111,7 +109,6 @@ const Archive: React.FC<Props> = ({
                   flow={flow}
                   flows={archivedFlows}
                   key={flow.slug}
-                  refreshFlows={fetchFlows}
                   view={"archive"}
                 />
               ))}
@@ -121,7 +118,6 @@ const Archive: React.FC<Props> = ({
               flows={archivedFlows}
               teamId={teamId}
               teamSlug={slug}
-              refreshFlows={fetchFlows}
               view={"archive"}
             />
           )}

@@ -31,14 +31,12 @@ interface FlowTableProps {
   flows: FlowSummary[];
   teamId: number;
   teamSlug: string;
-  refreshFlows: () => void;
   view: FlowView;
 }
 
 export const FlowTable: React.FC<FlowTableProps> = ({
   flows,
   teamSlug,
-  refreshFlows,
   view,
 }) => {
   const { headerText } = useFlowSortDisplay();
@@ -64,7 +62,6 @@ export const FlowTable: React.FC<FlowTableProps> = ({
             key={flow.slug}
             flow={flow}
             teamSlug={teamSlug}
-            refreshFlows={refreshFlows}
             view={view}
           />
         ))}
@@ -76,17 +73,15 @@ export const FlowTable: React.FC<FlowTableProps> = ({
 interface FlowTableRowProps {
   flow: FlowSummary;
   teamSlug: string;
-  refreshFlows: () => void;
   view: FlowView;
 }
 
 const FlowTableRow: React.FC<FlowTableRowProps> = ({
   flow,
   teamSlug,
-  refreshFlows,
   view,
 }) => {
-  const [canUserEditTeam] = useStore((state) => [state.canUserEditTeam]);
+  const [canUserEditTeam, teamId] = useStore((state) => [state.canUserEditTeam, state.teamId]);
 
   const {
     isSubmissionService,
@@ -177,17 +172,17 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
             {view === "flows" && (
               <ActiveFlowMenu
                 flow={flow}
-                refreshFlows={refreshFlows}
                 isAnyTemplate={isAnyTemplate}
                 variant="table"
+                teamId={teamId}
               />
             )}
 
             {view === "archive" && (
               <ArchivedFlowMenu
                 flow={flow}
-                refreshFlows={refreshFlows}
                 variant="table"
+                teamId={teamId}
               />
             )}
           </FlowActionsCell>

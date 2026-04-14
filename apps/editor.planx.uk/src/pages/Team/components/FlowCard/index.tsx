@@ -24,14 +24,14 @@ import {
 interface Props {
   flow: FlowSummary;
   flows: FlowSummary[];
-  refreshFlows: () => void;
   view: FlowView;
 }
 
-const FlowCard: React.FC<Props> = ({ flow, refreshFlows, view }) => {
-  const [canUserEditTeam, teamSlug] = useStore((state) => [
+const FlowCard: React.FC<Props> = ({ flow, view }) => {
+  const [canUserEditTeam, teamSlug, teamId] = useStore((state) => [
     state.canUserEditTeam,
     state.teamSlug,
+    state.teamId
   ]);
 
   const {
@@ -121,17 +121,17 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows, view }) => {
       {canUserEditTeam(teamSlug) && view === "flows" && (
         <ActiveFlowMenu
           flow={flow}
-          refreshFlows={refreshFlows}
           isAnyTemplate={isAnyTemplate}
           variant="card"
+          teamId={teamId}
         />
       )}
       {canUserEditTeam(teamSlug) && view === "archive" && (
         <ArchivedFlowMenu
           flow={flow}
-          refreshFlows={refreshFlows}
           isAnyTemplate={isAnyTemplate}
           variant="card"
+          teamId={teamId}
         />
       )}
     </Card>

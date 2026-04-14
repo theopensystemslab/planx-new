@@ -14,25 +14,23 @@ import { FlowMenuProps, StyledSimpleMenu } from "./StyledSimpleMenu";
 
 const ActiveFlowMenu: React.FC<FlowMenuProps> = ({
   flow,
-  refreshFlows,
   isAnyTemplate,
   variant = "card",
+  teamId, 
 }) => {
   type OpenFlowDialog = "archive" | "copy" | "rename" | "move";
   const [openFlowDialog, setOpenFlowDialog] = useState<OpenFlowDialog | null>(null);
-  const [archiveFlow] = useArchiveFlow(flow.id, flow.slug);
+  const [archiveFlow] = useArchiveFlow(flow.id, flow.slug, teamId);
 
   const toast = useToast();
 
   const handleClose = () => {
     setOpenFlowDialog(null);
-    refreshFlows();
   };
 
 const handleArchive = async () => {
   try {
     await archiveFlow();
-    refreshFlows();
     toast.success("Archived flow");
   } catch (error) {
     toast.error(
