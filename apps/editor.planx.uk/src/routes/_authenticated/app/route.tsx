@@ -44,35 +44,23 @@ export const Route = createFileRoute("/_authenticated/app")({
   beforeLoad: async ({ location: { pathname } }) => {
     useStore.getState().setPreviewEnvironment("editor");
 
-    const isInitialSessionLoad = !useStore.getState().user;
+    const user = useStore.getState().user;
 
-    try {
-      const user = await useStore.getState().initUserStore();
+    // Handle default team redirect for initial session load
+    if (pathname === "/app" && user?.defaultTeamId) {
+      const defaultTeam = user.teams.find(
+        (t) => t.team.id === user.defaultTeamId,
+      );
 
-      if (isInitialSessionLoad && pathname === "/app" && user.defaultTeamId) {
-        const defaultTeam = user.teams.find(
-          (t) => t.team.id === user.defaultTeamId,
-        );
-
-        if (defaultTeam) {
-          throw redirect({
-            to: "/app/$team",
-            params: { team: defaultTeam.team.slug },
-          });
-        }
+      if (defaultTeam) {
+        throw redirect({
+          to: "/app/$team",
+          params: { team: defaultTeam.team.slug },
+        });
       }
-
-      return { user, isPublicRoute: false };
-    } catch (error) {
-      if (isRedirect(error)) throw error;
-
-      throw redirect({
-        to: "/login",
-        search: {
-          redirectTo: pathname !== "/app" ? pathname : undefined,
-        },
-      });
     }
+
+    return { user, isPublicRoute: false };
   },
   component: () => (
     <AuthenticatedLayout>

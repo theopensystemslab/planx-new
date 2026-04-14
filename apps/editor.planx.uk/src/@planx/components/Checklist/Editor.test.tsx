@@ -14,20 +14,22 @@ import { vi } from "vitest";
 import { ChecklistEditor } from "./Editor";
 import { Checklist } from "./model";
 
-const { getState } = useStore;
+const { setState } = useStore;
 
 describe("Checklist editor component", () => {
   beforeEach(() => {
-    getState().setUser({
-      id: 1,
-      firstName: "Editor",
-      lastName: "Test",
-      isPlatformAdmin: true,
-      isAnalyst: true,
-      email: "test@test.com",
-      teams: [],
+    setState({
+      user: {
+        id: 1,
+        firstName: "Editor",
+        lastName: "Test",
+        isPlatformAdmin: true,
+        isAnalyst: true,
+        email: "test@test.com",
+        teams: [],
+        defaultTeamId: null,
+      },
       jwt: "x.y.z",
-      defaultTeamId: null,
     });
   });
 

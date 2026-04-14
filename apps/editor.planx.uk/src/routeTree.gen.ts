@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as authLogoutRouteImport } from './routes/(auth)/logout'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as PublicCustomDomainRouteRouteImport } from './routes/_public/_customDomain/route'
@@ -103,6 +104,11 @@ const SplatRoute = SplatRouteImport.update({
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const authLogoutRoute = authLogoutRouteImport.update({
@@ -609,7 +615,7 @@ const AuthenticatedAppTeamFlowFlowEditorNodesParentNodesIdEditBeforeRoute =
   )
 
 export interface FileRoutesByFullPath {
-  '/': typeof PublicCustomDomainRouteRouteWithChildren
+  '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/app': typeof AuthenticatedAppRouteRouteWithChildren
   '/login': typeof authLoginRoute
@@ -695,7 +701,7 @@ export interface FileRoutesByFullPath {
   '/app/$team/$flow/nodes/$parent/nodes/$id/edit/$before': typeof AuthenticatedAppTeamFlowFlowEditorNodesParentNodesIdEditBeforeRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof PublicCustomDomainRouteRouteWithChildren
+  '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
@@ -770,6 +776,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/$': typeof SplatRoute
   '/_authenticated/app': typeof AuthenticatedAppRouteRouteWithChildren
@@ -1020,6 +1027,7 @@ export interface FileRouteTypes {
     | '/app/$team/$flow/nodes/$parent/nodes/$id/edit/$before'
   id:
     | '__root__'
+    | '/'
     | '/_authenticated'
     | '/$'
     | '/_authenticated/app'
@@ -1109,6 +1117,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   SplatRoute: typeof SplatRoute
   PublicCustomDomainRouteRoute: typeof PublicCustomDomainRouteRouteWithChildren
@@ -1132,6 +1141,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(auth)/logout': {
@@ -2157,6 +2173,7 @@ const PublicPlanXDomainTeamFlowRouteRouteWithChildren =
   )
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   SplatRoute: SplatRoute,
   PublicCustomDomainRouteRoute: PublicCustomDomainRouteRouteWithChildren,

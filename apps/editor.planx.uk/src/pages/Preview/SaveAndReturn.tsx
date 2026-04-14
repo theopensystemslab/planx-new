@@ -108,10 +108,13 @@ const SaveAndReturn: React.FC<PropsWithChildren> = ({ children }) => {
   const matches = useMatches();
   const isContentPage = matches.some(
     (match) =>
-      "isContentPage" in match.context && match.context.isContentPage === true,
+      match?.context &&
+      "isContentPage" in match.context && 
+      match.context.isContentPage === true,
   );
   const isViewApplicationPage = matches.some(
     (match) =>
+      match?.context &&
       "isViewApplicationPage" in match.context &&
       match.context.isViewApplicationPage === true,
   );

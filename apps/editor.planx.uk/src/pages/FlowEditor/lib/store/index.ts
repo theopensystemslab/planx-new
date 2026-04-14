@@ -7,6 +7,7 @@ import {
 import { isPreviewOnlyDomain } from "utils/routeUtils/utils";
 import { create, StoreApi, UseBoundStore } from "zustand";
 
+import { AuthStore, authStore } from "./auth";
 import type { EditorStore, EditorUIStore } from "./editor";
 import { editorStore, editorUIStore } from "./editor";
 import type { NavigationStore } from "./navigation";
@@ -60,7 +61,7 @@ export type PublicStore = SharedStore &
   SettingsStore &
   TeamStore;
 
-export type FullStore = PublicStore & EditorStore & EditorUIStore & UserStore;
+export type FullStore = PublicStore & EditorStore & EditorUIStore & UserStore & AuthStore;
 
 /**
  * If accessing the public preview, don't load editor store files
@@ -88,6 +89,7 @@ const createFullStore = () => {
     ...settingsStore(...args),
     ...teamStore(...args),
     ...userStore(...args),
+    ...authStore(...args),
   }));
 };
 
