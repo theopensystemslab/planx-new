@@ -1,64 +1,37 @@
 import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import Box from "@mui/material/Box";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useToast } from "hooks/useToast";
-import { useStore } from "pages/FlowEditor/lib/store";
-import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import React, { useState } from "react";
 import SimpleMenu from "ui/editor/SimpleMenu";
 
 import { ArchiveDialog } from "./ArchiveDialog";
 import { CopyDialog } from "./CopyDialog";
+import { useArchiveFlow } from "./hooks/useArchiveFlow";
 import { MoveDialog } from "./MoveDialog";
 import { RenameDialog } from "./RenameDialog";
+import { FlowMenuProps, StyledSimpleMenu } from "./StyledSimpleMenu";
 
-export const StyledSimpleMenu = styled(SimpleMenu)(({ theme }) => ({
-  display: "flex",
-  marginTop: "auto",
-  borderTop: `1px solid ${theme.palette.border.light}`,
-  backgroundColor: theme.palette.background.paper,
-  overflow: "hidden",
-  borderRadius: "0px 0px 4px 4px",
-  maxHeight: "35px",
-  "& > button": {
-    padding: theme.spacing(0.25, 1),
-    width: "100%",
-    justifyContent: "flex-start",
-    "& > svg": {
-      display: "none",
-    },
-  },
-}));
-
-interface Props {
-  flow: FlowSummary;
-  refreshFlows: () => void;
-  isAnyTemplate: boolean;
-  variant?: "card" | "table";
-}
-
-const FlowMenu: React.FC<Props> = ({
+const ActiveFlowMenu: React.FC<FlowMenuProps> = ({
   flow,
   refreshFlows,
   isAnyTemplate,
   variant = "card",
 }) => {
-  type OpenDialog = "archive" | "copy" | "rename" | "move";
-  const [openDialog, setOpenDialog] = useState<OpenDialog | null>(null);
-
-  const archiveFlow = useStore((state) => state.archiveFlow);
+  type OpenFlowDialog = "archive" | "copy" | "rename" | "move";
+  const [openFlowDialog, setOpenFlowDialog] = useState<OpenFlowDialog | null>(null);
+  const [archiveFlow] = useArchiveFlow(flow.id, flow.slug);
 
   const toast = useToast();
 
   const handleClose = () => {
-    setOpenDialog(null);
+    setOpenFlowDialog(null);
     refreshFlows();
   };
 
 const handleArchive = async () => {
   try {
-    await archiveFlow(flow);
+    await archiveFlow();
     refreshFlows();
     toast.success("Archived flow");
   } catch (error) {
@@ -66,45 +39,45 @@ const handleArchive = async () => {
       "We are unable to archive this flow, refesh and try again or contact an admin",
     );
   } finally {
-    setOpenDialog(null);
+    setOpenFlowDialog(null);
   }
 };
 
   const menuItems = [
     {
       label: "Rename",
-      onClick: () => setOpenDialog("rename"),
+      onClick: () => setOpenFlowDialog("rename"),
     },
     {
       label: "Make a copy",
-      onClick: () => setOpenDialog("copy"),
+      onClick: () => setOpenFlowDialog("copy"),
       disabled: isAnyTemplate,
     },
     {
       label: "Move",
-      onClick: () => setOpenDialog("move"),
+      onClick: () => setOpenFlowDialog("move"),
     },
     {
       label: "Archive",
-      onClick: () => setOpenDialog("archive"),
+      onClick: () => setOpenFlowDialog("archive"),
     },
   ];
 
   return (
     <>
-      {openDialog === "archive" && (
+      {openFlowDialog === "archive" && (
         <ArchiveDialog
           title={`Archive "${flow.name}"`}
-          open={openDialog === "archive"}
-          content={`Are you sure you want to archive "${flow.name}"? Once archived, a flow is no longer able to be viewed in the editor and can only be restored by a developer.`}
+          open={openFlowDialog === "archive"}
+          content={`Are you sure you want to archive "${flow.name}"? Once archived, a flow is no longer able to be viewed in the editor.`}
           handleClose={handleClose}
           onConfirm={handleArchive}
           submitLabel="Archive this flow"
         />
       )}
-      {openDialog === "copy" && (
+      {openFlowDialog === "copy" && (
         <CopyDialog
-          isDialogOpen={openDialog === "copy"}
+          isDialogOpen={openFlowDialog === "copy"}
           handleClose={handleClose}
           sourceFlow={{
             name: flow.name,
@@ -113,9 +86,9 @@ const handleArchive = async () => {
           }}
         />
       )}
-      {openDialog === "rename" && (
+      {openFlowDialog === "rename" && (
         <RenameDialog
-          isDialogOpen={openDialog === "rename"}
+          isDialogOpen={openFlowDialog === "rename"}
           handleClose={handleClose}
           flow={{
             name: flow.name,
@@ -124,9 +97,9 @@ const handleArchive = async () => {
           }}
         />
       )}
-      {openDialog === "move" && (
+      {openFlowDialog === "move" && (
         <MoveDialog
-          isDialogOpen={openDialog === "move"}
+          isDialogOpen={openFlowDialog === "move"}
           handleClose={handleClose}
           sourceFlow={{
             name: flow.name,
@@ -152,4 +125,4 @@ const handleArchive = async () => {
   );
 };
 
-export default FlowMenu;
+export default ActiveFlowMenu;
