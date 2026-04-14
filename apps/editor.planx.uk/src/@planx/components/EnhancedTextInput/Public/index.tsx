@@ -54,7 +54,8 @@ const EnhancedTextInputComponent = (props: Props) => {
     if (step === "input") return setStep("task");
 
     if (step === "task") {
-      if (taskSubStep === "selection") return setTaskSubStep("modification");
+      if (taskSubStep === "selection" && values.selectedOption !== "new")
+        return setTaskSubStep("modification");
       props.handleSubmit?.({ data: makeBreadcrumb(props.fn, values) });
     }
   };
