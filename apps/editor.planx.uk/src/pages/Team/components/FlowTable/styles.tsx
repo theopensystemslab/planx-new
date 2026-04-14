@@ -14,6 +14,7 @@ export const StyledTable = styled(Table)(({ theme }) => ({
   border: `1px solid ${theme.palette.border.main}`,
   borderBottom: 0,
   borderCollapse: "separate",
+  tableLayout: "fixed",
   [`& .${tableCellClasses.root}`]: {
     padding: theme.spacing(1.5, 2),
     borderBottom: `1px solid ${theme.palette.border.main}`,
@@ -80,7 +81,7 @@ export const FlowRowLink = styled(CustomLink)(() => ({
 })) as typeof CustomLink;
 
 export const FlowTitleCell = styled(TableCell)(() => ({
-  width: "45%",
+  width: "auto",
   minWidth: "240px",
 }));
 
@@ -90,7 +91,7 @@ export const FlowStatusCell = styled(TableCell)(() => ({
 }));
 
 export const FlowActionsCell = styled(TableCell)(({ theme }) => ({
-  width: "5%",
+  width: "100px",
   maxWidth: "100px",
   backgroundColor: theme.palette.background.paper,
   borderLeft: `1px solid ${theme.palette.border.main}`,
