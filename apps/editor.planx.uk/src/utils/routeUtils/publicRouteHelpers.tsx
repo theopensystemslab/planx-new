@@ -1,31 +1,27 @@
-import { getFlattenedFlowData } from "lib/api/flow/requests";
-import { queryClient } from "lib/queryClient";
+import { client } from "lib/graphql";
 import ErrorPage from "pages/ErrorPage/ErrorPage";
-import { useStore } from "pages/FlowEditor/lib/store";
-import { Store } from "pages/FlowEditor/lib/store";
+import { type Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import type { PublicContext } from "routes/_public/-loader";
-import { Flow } from "types";
 import { z } from "zod";
 
 import {
   fetchSettingsForPublishedView,
-  getLastPublishedAt,
+  GET_PUBLISHED_FLOW_DATA,
+  type PublishedFlow,
   PublishedViewSettings,
 } from "./publishedQueries";
-import { setPath } from "./utils";
+import { computePath } from "./utils";
 
-// Types
 export type PublicRouteMode = "preview" | "published" | "draft" | "download";
 
 export interface PublicRouteData {
-  flow: Flow;
-  flowData: Store.Flow;
-  publishedFlow?: Store.Flow;
+  flow: PublishedFlow;
   settings: PublishedViewSettings;
   lastPublishedDate?: string;
   teamSlug: string;
   flowSlug: string;
+  hasSendComponent: boolean;
 }
 
 const basePublicSearchSchema = z.object({
@@ -71,104 +67,52 @@ export const loadPublicRouteData = async (
     throw new Error(`Flow ${flowSlug} not found for ${teamSlug}`);
   }
 
-  let flowData;
-  let publishedFlow;
-  let lastPublishedDate;
-
-  // Mode-specific data loading
-  switch (mode) {
-    case "preview":
-    case "draft":
-      // Load current flow data for preview/draft
-      flowData = await queryClient.fetchQuery({
-        queryKey: ["flattenedFlowData", mode, flow.id],
-        queryFn: () =>
-          getFlattenedFlowData({
-            flowId: flow.id,
-            isDraft: mode === "draft",
-          }),
-      });
-
-      // Get last published date for preview
-      if (mode === "preview") {
-        lastPublishedDate = await getLastPublishedAt(flow.id);
-      }
-      break;
-
-    case "published":
-      // Load published flow data
-      publishedFlow = flow.publishedFlows[0]?.data;
-      if (!publishedFlow) {
-        throw new Error(`Flow ${flowSlug} not published for ${teamSlug}`);
-      }
-      lastPublishedDate = await getLastPublishedAt(flow.id);
-      flowData = publishedFlow;
-      break;
-
-    case "download":
-      // For download mode, we don't need flow data, just team/flow existence validation
-      // Flow data will be empty object, store setup handled separately
-      flowData = {};
-      break;
-  }
-
   return {
     flow,
-    flowData,
-    publishedFlow,
+    hasSendComponent: flow.publishedFlows[0].hasSendComponent,
     settings: data,
-    lastPublishedDate,
+    lastPublishedDate: flow.publishedFlows[0].createdAt,
     teamSlug,
     flowSlug,
   };
 };
 
-// Store update function
-export const updateStoreWithPublicRouteData = (data: PublicRouteData): void => {
-  const state = useStore.getState();
-
-  state.setFlow({
+export const updateStoreWithPublicRouteData = (
+  mode: PublicRouteMode,
+  data: PublicRouteData,
+  search?: { sessionId?: string },
+): void => {
+  useStore.setState({
     id: data.flow.id,
-    flow: data.flowData,
     flowSlug: data.flowSlug,
     flowStatus: data.flow.status,
     flowName: data.flow.name,
+    lastPublishedDate: data?.lastPublishedDate,
   });
 
+  const state = useStore.getState();
   state.setGlobalSettings(data.settings.globalSettings[0]);
   state.setFlowSettings(data.flow.settings);
   state.setTeam(data.flow.team);
 
-  if (data.lastPublishedDate) {
-    useStore.setState({ lastPublishedDate: data.lastPublishedDate });
+  // Only /published routes use the SaveAndReturn layout, but this needs to be resolved on beforeLoad()
+  if (mode === "published") {
+    const hasSendComponent = data.flow.publishedFlows[0]?.hasSendComponent;
+    const isEmailCaptured = Boolean(state.saveToEmail);
+    useStore.setState({
+      path: computePath(hasSendComponent, search?.sessionId, isEmailCaptured),
+    });
   }
 };
 
-// Complete beforeLoad helper
 export const createPublicRouteBeforeLoad = <T extends PublicRouteMode>(
   mode: T,
   context: PublicContext,
 ) => {
-  return async ({
-    params,
-    search,
-  }: {
-    params: Record<string, string>;
-    search: PublicRouteSearchParams[T];
-  }) => {
+  return async ({ search }: { search: PublicRouteSearchParams[T] }) => {
     try {
       const data = await loadPublicRouteData(mode, context);
-      updateStoreWithPublicRouteData(data);
-
-      // Set application path for save-and-return flows
-      if (mode === "published") {
-        setPath(data.flowData, {
-          params: {
-            ...params,
-            ...(search?.sessionId && { sessionId: search.sessionId }),
-          },
-        });
-      }
+      updateStoreWithPublicRouteData(mode, data, search);
 
       return data;
     } catch (error) {
@@ -238,4 +182,32 @@ export const createPublicRouteHead = (mode: PublicRouteMode) => {
   }
 
   return undefined;
+};
+
+export const updateStoreWithFlowData = (flowData: Store.Flow): void => {
+  useStore.setState({ flow: flowData, isFlowLoaded: false });
+  // Initialise navigation store now that we have flow data to derive sections from
+  // TODO: Pre-compute this on publish?
+  useStore.getState().initNavigationStore();
+  useStore.setState({ isFlowLoaded: true });
+};
+
+/**
+ * Prefetch flow data. Do not await - just kick off request.
+ * Once loaded, set the required store values
+ */
+export const prefetchPublishedFlowData = ({
+  context,
+}: {
+  context: PublicRouteData;
+}) => {
+  client
+    .query({
+      query: GET_PUBLISHED_FLOW_DATA,
+      variables: { flowId: context.flow.id },
+      context: { role: "public" },
+    })
+    .then(({ data }) => {
+      updateStoreWithFlowData(data.publishedFlows[0].data);
+    });
 };
