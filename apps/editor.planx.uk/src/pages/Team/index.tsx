@@ -15,7 +15,6 @@ import Archive from "./components/Archive";
 import { DashboardList } from "./components/DashboardList";
 import { Card, CardContent } from "./components/FlowCard/styles";
 import Flows from "./components/Flows";
-import { useGetArchivedFlows } from "./components/hooks/useGetArchivedFlows";
 import { sortOptions } from "./helpers/sortAndFilterOptions";
 import TeamLayout from "./TeamLayout";
 
