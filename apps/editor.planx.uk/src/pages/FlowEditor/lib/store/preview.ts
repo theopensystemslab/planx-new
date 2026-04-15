@@ -119,7 +119,7 @@ export interface PreviewStore extends Store.Store {
   autoAnswerableFlag: (filterId: NodeId) => NodeId | undefined;
   hasAcknowledgedWarning: boolean;
   setHasAcknowledgedWarning: () => void;
-  getEditorURLForCurrentCard: () => string | null;
+  currentCardURL: () => string | null;
 }
 
 export const previewStore: StateCreator<
@@ -867,7 +867,7 @@ export const previewStore: StateCreator<
   hasAcknowledgedWarning: false,
   setHasAcknowledgedWarning: () => set({ hasAcknowledgedWarning: true }),
 
-  getEditorURLForCurrentCard: () => {
+  currentCardURL: () => {
     const { currentCard, flow, flowSlug, teamSlug } = get();
     if (!currentCard?.id) return null;
 

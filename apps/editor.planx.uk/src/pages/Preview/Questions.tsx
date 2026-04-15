@@ -81,6 +81,9 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     state.sectionProgress,
   ]);
   const isStandalone = previewEnvironment === "standalone";
+  const isDraft =
+    typeof window !== "undefined" &&
+    window.location.pathname.endsWith("/draft");
   const { createAnalytics, trackEvent } = useAnalyticsTracking();
   const [gotFlow, setGotFlow] = useState(false);
   const isUsingLocalStorage =
@@ -258,7 +261,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
           </ErrorBoundary>
         </Main>
       )}
-      <OpenInEditorButton />
+      {isDraft && <OpenInEditorButton />}
     </Box>
   );
 };

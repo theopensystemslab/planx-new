@@ -12,6 +12,7 @@ const StyledFab = styled(Fab)(() => ({
   zIndex: 9999,
   backgroundColor: "#2c2c2c",
   color: "#fff",
+  border: "1px solid #ffffff",
   "&:hover": {
     backgroundColor: "#444",
   },
@@ -26,16 +27,11 @@ const StyledFab = styled(Fab)(() => ({
  * On click, opens the corresponding node in the PlanX Editor in a new tab.
  */
 const OpenInEditorButton: React.FC = () => {
-  const getEditorURLForCurrentCard = useStore(
-    (state) => state.getEditorURLForCurrentCard,
-  );
-
-  const isDraft = window.location.pathname.includes("/draft");
-  if (!isDraft) return null;
+  const currentCardURL = useStore((state) => state.currentCardURL);
 
   const handleClick = () => {
     try {
-      const url = getEditorURLForCurrentCard();
+      const url = currentCardURL();
       if (url) {
         window.open(url, "_blank");
       }
