@@ -74,7 +74,12 @@ const Flows: React.FC<Props> = ({
   const navigate = useNavigate();
 
   const showPinnedFlows = pinnedFlows.length > 0 && !flowsHaveBeenFiltered;
-  const remainingFlows = showPinnedFlows ? unpinnedFlows : sortedFlows;
+  const sortedPinnedFlows = showPinnedFlows
+    ? (sortedFlows?.filter((flow) => flow.pinnedFlows.length > 0) ?? [])
+    : [];
+  const remainingFlows = showPinnedFlows
+    ? (sortedFlows?.filter((flow) => flow.pinnedFlows.length === 0) ?? null)
+    : sortedFlows;
 
   return (
     teamHasFlows && (
@@ -107,19 +112,19 @@ const Flows: React.FC<Props> = ({
             </Tooltip>
           </ToggleButtonGroup>
         </FiltersContainer>
-        {pinnedFlows.length > 0 && !flowsHaveBeenFiltered && (
+        {sortedPinnedFlows.length > 0 && (
           <Box>
             <Box
               sx={{ minHeight: "50px", display: "flex", alignItems: "center" }}
             >
               <ShowingServicesHeader
-                matchedFlowsCount={pinnedFlows?.length || 0}
+                matchedFlowsCount={sortedPinnedFlows.length}
                 isPinnedFlows={true}
               />
             </Box>
             {flowCardView === "grid" ? (
               <DashboardList>
-                {pinnedFlows.map((flow) => (
+                {sortedPinnedFlows.map((flow) => (
                   <FlowCard
                     flow={flow}
                     key={flow.slug}
@@ -131,7 +136,7 @@ const Flows: React.FC<Props> = ({
               </DashboardList>
             ) : (
               <FlowTable
-                flows={pinnedFlows}
+                flows={sortedPinnedFlows}
                 teamId={teamId}
                 teamSlug={slug}
                 refreshFlows={fetchFlows}
