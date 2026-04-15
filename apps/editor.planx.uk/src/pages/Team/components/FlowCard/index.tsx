@@ -8,7 +8,7 @@ import TruncatedText from "ui/editor/TruncatedText";
 
 import { useStore } from "../../../FlowEditor/lib/store";
 import { FlowSummary } from "../../../FlowEditor/lib/store/editor";
-import FlowMenu from "../FlowMenu";
+import FlowMenu from "../ActiveFlowMenu";
 import { FlowPinButton } from "../FlowPinButton";
 import { FlowTemplateIndicator } from "../FlowTemplateIndicator";
 import { useFlowDates } from "../hooks/useFlowDates";
