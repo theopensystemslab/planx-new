@@ -25,10 +25,15 @@ interface Props {
   flow: FlowSummary;
   refreshFlows: () => void;
   showDetails: boolean;
-  updateFlow: (updatedFlow: FlowSummary) => void;
+  updateFlow?: (updatedFlow: FlowSummary) => void;
 }
 
-const FlowCard: React.FC<Props> = ({ flow, refreshFlows, showDetails, updateFlow }) => {
+const FlowCard: React.FC<Props> = ({
+  flow,
+  refreshFlows,
+  showDetails,
+  updateFlow,
+}) => {
   const [canUserEditTeam, teamSlug, userId] = useStore((state) => [
     state.canUserEditTeam,
     state.teamSlug,
@@ -94,7 +99,7 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows, showDetails, updateFlow
               </Typography>
               <LinkSubText>{displayFormatted}</LinkSubText>
             </Stack>
-            {userId && (
+            {userId && updateFlow && (
               <FlowPinButton
                 flowId={flow.id}
                 userId={userId}

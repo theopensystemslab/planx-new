@@ -32,7 +32,7 @@ interface FlowTableProps {
   teamSlug: string;
   refreshFlows: () => void;
   showDetails: boolean;
-  updateFlow: (flow: FlowSummary) => void;
+  updateFlow?: (flow: FlowSummary) => void;
 }
 
 export const FlowTable: React.FC<FlowTableProps> = ({
@@ -42,7 +42,10 @@ export const FlowTable: React.FC<FlowTableProps> = ({
   showDetails,
   updateFlow,
 }) => {
+  const [userId] = useStore((state) => [state.user?.id]);
   const { headerText } = useFlowSortDisplay();
+
+  const showPinnedColumn = updateFlow && userId;
 
   return (
     <StyledTable>
@@ -54,7 +57,7 @@ export const FlowTable: React.FC<FlowTableProps> = ({
               <FlowStatusCell>Online status</FlowStatusCell>
               <FlowStatusCell>Flow type</FlowStatusCell>
               <TableCell>{headerText}</TableCell>
-              <TableCell>Pinned</TableCell>
+              {showPinnedColumn && <TableCell>Pinned</TableCell>}
               <FlowActionsCell align="center">Actions</FlowActionsCell>
             </>
           )}
@@ -81,7 +84,7 @@ interface FlowTableRowProps {
   teamSlug: string;
   refreshFlows: () => void;
   showDetails: boolean;
-  updateFlow: (flow: FlowSummary) => void;
+  updateFlow?: (flow: FlowSummary) => void;
 }
 
 const FlowTableRow: React.FC<FlowTableRowProps> = ({
@@ -105,6 +108,8 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
   } = useFlowMetadata(flow);
 
   const { displayTimeAgo, displayActor } = useFlowDates(flow);
+
+  const showPinnedColumn = updateFlow && userId;
 
   return (
     <StyledTableRow isTemplated={isAnyTemplate} clickable={showDetails}>
@@ -171,18 +176,20 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
               )}
             </Box>
           </TableCell>
-          <TableCell>
-            <Box onClick={(e) => e.stopPropagation()}>
-              {userId && (
-                <FlowPinButton
-                  flowId={flow.id}
-                  userId={userId}
-                  isPinnedByCurrentUser={flow.pinnedFlows.length > 0}
-                  updateFlow={updateFlow}
-                />
-              )}
-            </Box>
-          </TableCell>
+          {showPinnedColumn && (
+            <TableCell>
+              <Box onClick={(e) => e.stopPropagation()}>
+                {userId && updateFlow && (
+                  <FlowPinButton
+                    flowId={flow.id}
+                    userId={userId}
+                    isPinnedByCurrentUser={flow.pinnedFlows.length > 0}
+                    updateFlow={updateFlow}
+                  />
+                )}
+              </Box>
+            </TableCell>
+          )}
           <FlowActionsCell
             className="actions-cell"
             align="center"
