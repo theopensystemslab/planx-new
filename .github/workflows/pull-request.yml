@@ -464,15 +464,15 @@ jobs:
           target: "planx-new/"
           overwrite: true
 
-      # - name: Download localplanning.services build assets
-      #   id: cache-localplanning-build-assets-restore
-      #   uses: actions/cache/restore@v5
-      #   with:
-      #     path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
-      #     key: ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
-      #       ${{ runner.os }}-
+      - name: Download localplanning.services build assets
+        id: cache-localplanning-build-assets-restore
+        uses: actions/cache/restore@v5
+        with:
+          path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
+          key: ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
+          restore-keys: |
+            ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
+            ${{ runner.os }}-
 
 
       - name: upload built localplanning.services
