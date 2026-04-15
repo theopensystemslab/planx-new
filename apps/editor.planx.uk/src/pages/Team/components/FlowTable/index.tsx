@@ -10,7 +10,7 @@ import { FlowTagType } from "ui/editor/FlowTag/types";
 import TruncatedText from "ui/editor/TruncatedText";
 
 import { useStore } from "../../../FlowEditor/lib/store";
-import FlowMenu from "../FlowMenu";
+import FlowMenu from "../ActiveFlowMenu";
 import { FlowPinButton } from "../FlowPinButton";
 import { FlowTemplateIndicator } from "../FlowTemplateIndicator";
 import { useFlowDates } from "../hooks/useFlowDates";
