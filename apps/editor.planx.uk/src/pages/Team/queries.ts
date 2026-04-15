@@ -55,3 +55,11 @@ export type FlowStatusMutationVars = {
   id: string; 
   slug: string;
 }
+
+export const DELETE_FLOW = gql`
+  mutation DeleteFlow($id: uuid!, $slug: String!) {
+    flow: update_flows_by_pk(pk_columns: {id: $id}, _set: {deleted_at: "now()", slug: $slug}) {
+      id
+    }
+  }
+`
