@@ -1,19 +1,15 @@
-import { welcomeTemplate } from "./welcome.js";
+import type { WelcomeTemplate } from "./welcome.js";
 
-export interface TemplateParams {
-  firstName: string;
-  lastName: string;
-  email: string;
-  isTrial?: boolean;
+export type EmailTemplate<
+  TTemplateName extends string,
+  TVariables extends Record<string, string | number>,
+> = {
+  id: TTemplateName;
+  variables: TVariables;
+};
+
+export interface TemplateRegistry {
+  welcome: WelcomeTemplate;
 }
 
-export interface EmailTemplate {
-  subject: string;
-  html: (params: TemplateParams) => string;
-}
-
-export const templateRegistry = {
-  welcome: welcomeTemplate,
-} as const satisfies Record<string, EmailTemplate>;
-
-export type ResendTemplate = keyof typeof templateRegistry;
+export type ResendTemplate = keyof TemplateRegistry;
