@@ -62,6 +62,14 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
   const [shouldClearSearch, setShouldClearSearch] = useState<boolean>(false);
   const searchParams = useSearch({ from: "/_authenticated/app/$team/" });
 
+  const pinnedFlows = useMemo(() => {
+    return flows?.filter((flow) => flow.pinnedFlows.length > 0) ?? [];
+  }, [flows]);
+
+  const unpinnedFlows = useMemo(() => {
+    return flows?.filter((flow) => flow.pinnedFlows.length === 0) ?? [];
+  }, [flows]);
+
   const sortedFlows = useMemo(() => {
     // Use searchedFlows if available (from SearchBox), otherwise use all flows
     const sourceFlows = searchedFlows || flows;
@@ -140,6 +148,14 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
     });
   }, [teamId, setFlows, getFlows]);
 
+  const updateFlow = useCallback((updatedFlow: FlowSummary) => {
+    const updateSingleFlow = (prev: FlowSummary[] | null) =>
+      prev?.map((f) => (f.id === updatedFlow.id ? updatedFlow : f)) ?? prev;
+
+    setFlows(updateSingleFlow);
+    setSearchedFlows(updateSingleFlow);
+  }, []);
+
   useEffect(() => {
     if (shouldClearSearch) {
       setShouldClearSearch(false);
@@ -203,8 +219,11 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
             fetchFlows={fetchFlows}
             teamId={teamId}
             flows={flows}
+            pinnedFlows={pinnedFlows}
+            unpinnedFlows={unpinnedFlows}
             handleViewChange={handleViewChange}
             slug={slug}
+            updateFlow={updateFlow}
           />
         )}
         {flowView === "archive" && (

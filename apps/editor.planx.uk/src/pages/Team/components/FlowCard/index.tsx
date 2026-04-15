@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
@@ -8,6 +9,7 @@ import TruncatedText from "ui/editor/TruncatedText";
 import { useStore } from "../../../FlowEditor/lib/store";
 import { FlowSummary } from "../../../FlowEditor/lib/store/editor";
 import FlowMenu from "../FlowMenu";
+import { FlowPinButton } from "../FlowPinButton";
 import { FlowTemplateIndicator } from "../FlowTemplateIndicator";
 import { useFlowDates } from "../hooks/useFlowDates";
 import { useFlowMetadata } from "../hooks/useFlowMetadata";
@@ -21,15 +23,21 @@ import {
 
 interface Props {
   flow: FlowSummary;
-  flows: FlowSummary[];
   refreshFlows: () => void;
   showDetails: boolean;
+  updateFlow?: (updatedFlow: FlowSummary) => void;
 }
 
-const FlowCard: React.FC<Props> = ({ flow, refreshFlows, showDetails }) => {
-  const [canUserEditTeam, teamSlug] = useStore((state) => [
+const FlowCard: React.FC<Props> = ({
+  flow,
+  refreshFlows,
+  showDetails,
+  updateFlow,
+}) => {
+  const [canUserEditTeam, teamSlug, userId] = useStore((state) => [
     state.canUserEditTeam,
     state.teamSlug,
+    state.user?.id,
   ]);
 
   const {
@@ -55,6 +63,10 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows, showDetails }) => {
     },
   ];
 
+  const isPinnedByCurrentUser = flow.pinnedFlows.some(
+    (f) => f.flowId === flow.id,
+  );
+
   return (
     <Card>
       <Box
@@ -75,12 +87,27 @@ const FlowCard: React.FC<Props> = ({ flow, refreshFlows, showDetails }) => {
           </CardBanner>
         )}
         <CardContent>
-          <Box>
-            <Typography variant="h3" component="h2">
-              {flow.name}
-            </Typography>
-            <LinkSubText>{displayFormatted}</LinkSubText>
-          </Box>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="flex-start"
+            width="100%"
+          >
+            <Stack direction="column" alignItems="flex-start">
+              <Typography variant="h3" component="h2">
+                {flow.name}
+              </Typography>
+              <LinkSubText>{displayFormatted}</LinkSubText>
+            </Stack>
+            {userId && updateFlow && (
+              <FlowPinButton
+                flowId={flow.id}
+                userId={userId}
+                isPinnedByCurrentUser={isPinnedByCurrentUser}
+                updateFlow={updateFlow}
+              />
+            )}
+          </Stack>
           {showDetails && (
             <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
               {displayTags

@@ -45,11 +45,14 @@ type Props = {
   fetchFlows: () => void;
   teamId: number;
   flows: FlowSummary[] | null;
+  pinnedFlows: FlowSummary[];
+  unpinnedFlows: FlowSummary[];
   handleViewChange: (
     _event: React.MouseEvent<HTMLElement>,
     newView: FlowCardView | null,
   ) => void;
   slug: string;
+  updateFlow: (updatedFlow: FlowSummary) => void;
 };
 
 const Flows: React.FC<Props> = ({
@@ -61,11 +64,22 @@ const Flows: React.FC<Props> = ({
   flowCardView,
   fetchFlows,
   teamId,
+  pinnedFlows,
+  unpinnedFlows,
   handleViewChange,
   slug,
+  updateFlow,
 }) => {
   const teamHasFlows = sortedFlows ? true : false;
   const navigate = useNavigate();
+
+  const showPinnedFlows = pinnedFlows.length > 0 && !flowsHaveBeenFiltered;
+  const sortedPinnedFlows = showPinnedFlows
+    ? (sortedFlows?.filter((flow) => flow.pinnedFlows.length > 0) ?? [])
+    : [];
+  const remainingFlows = showPinnedFlows
+    ? (sortedFlows?.filter((flow) => flow.pinnedFlows.length === 0) ?? null)
+    : sortedFlows;
 
   return (
     teamHasFlows && (
@@ -80,11 +94,62 @@ const Flows: React.FC<Props> = ({
               <SortControl<FlowSummary> sortOptions={sortOptions} />
             </Box>
           )}
+          <ToggleButtonGroup
+            value={flowCardView}
+            exclusive
+            onChange={handleViewChange}
+            size="small"
+          >
+            <Tooltip title="Card view" placement="bottom">
+              <StyledToggleButton value="grid" disableRipple>
+                <ViewModuleIcon />
+              </StyledToggleButton>
+            </Tooltip>
+            <Tooltip title="Table view" placement="bottom">
+              <StyledToggleButton value="row" disableRipple>
+                <TableRowsIcon />
+              </StyledToggleButton>
+            </Tooltip>
+          </ToggleButtonGroup>
         </FiltersContainer>
+        {sortedPinnedFlows.length > 0 && (
+          <Box>
+            <Box
+              sx={{ minHeight: "50px", display: "flex", alignItems: "center" }}
+            >
+              <ShowingServicesHeader
+                matchedFlowsCount={sortedPinnedFlows.length}
+                isPinnedFlows={true}
+              />
+            </Box>
+            {flowCardView === "grid" ? (
+              <DashboardList>
+                {sortedPinnedFlows.map((flow) => (
+                  <FlowCard
+                    flow={flow}
+                    key={flow.slug}
+                    refreshFlows={fetchFlows}
+                    showDetails={true}
+                    updateFlow={updateFlow}
+                  />
+                ))}
+              </DashboardList>
+            ) : (
+              <FlowTable
+                flows={sortedPinnedFlows}
+                teamId={teamId}
+                teamSlug={slug}
+                refreshFlows={fetchFlows}
+                updateFlow={updateFlow}
+                showDetails={true}
+              />
+            )}
+          </Box>
+        )}
         <Box
           sx={{
             display: "flex",
-            justifyContent: "space-between",
+            flexDirection: "row",
             alignItems: "center",
             gap: 2,
           }}
@@ -100,6 +165,7 @@ const Flows: React.FC<Props> = ({
           >
             <ShowingServicesHeader
               matchedFlowsCount={sortedFlows?.length || 0}
+              isFiltered={flowsHaveBeenFiltered}
             />
             {flowsHaveBeenFiltered && (
               <Button
@@ -125,45 +191,29 @@ const Flows: React.FC<Props> = ({
               </Button>
             )}
           </Box>
-          <ToggleButtonGroup
-            value={flowCardView}
-            exclusive
-            onChange={handleViewChange}
-            size="small"
-          >
-            <Tooltip title="Card view" placement="bottom">
-              <StyledToggleButton value="grid" disableRipple>
-                <ViewModuleIcon />
-              </StyledToggleButton>
-            </Tooltip>
-            <Tooltip title="Table view" placement="bottom">
-              <StyledToggleButton value="row" disableRipple>
-                <TableRowsIcon />
-              </StyledToggleButton>
-            </Tooltip>
-          </ToggleButtonGroup>
         </Box>
-        {sortedFlows && (
+        {remainingFlows && (
           <>
             {flowCardView === "grid" ? (
               <DashboardList>
-                {sortedFlows.map((flow) => (
+                {remainingFlows.map((flow) => (
                   <FlowCard
                     flow={flow}
-                    flows={sortedFlows}
                     key={flow.slug}
                     refreshFlows={fetchFlows}
                     showDetails={true}
+                    updateFlow={updateFlow}
                   />
                 ))}
               </DashboardList>
             ) : (
               <FlowTable
-                flows={sortedFlows}
+                flows={remainingFlows}
                 teamId={teamId}
                 teamSlug={slug}
                 refreshFlows={fetchFlows}
                 showDetails={true}
+                updateFlow={updateFlow}
               />
             )}
           </>
@@ -172,4 +222,5 @@ const Flows: React.FC<Props> = ({
     )
   );
 };
+
 export default Flows;

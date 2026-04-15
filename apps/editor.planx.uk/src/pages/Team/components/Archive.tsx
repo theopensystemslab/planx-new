@@ -13,7 +13,7 @@ import { ShowingServicesHeader } from "../components/ShowingServicesHeader";
 import { useGetArchivedFlows } from "../helpers/useGetArchivedFlows";
 import { DashboardList } from "./DashboardList";
 import FlowCard from "./FlowCard";
-import { StyledToggleButton } from "./StyledToggleButton"
+import { StyledToggleButton } from "./StyledToggleButton";
 type Props = {
   flowCardView: FlowCardView;
   handleViewChange: (
@@ -32,15 +32,19 @@ const Archive: React.FC<Props> = ({
   slug,
   fetchFlows,
 }) => {
-  const { data: archivedFlowsData, loading, error } = useGetArchivedFlows(teamId);
+  const {
+    data: archivedFlowsData,
+    loading,
+    error,
+  } = useGetArchivedFlows(teamId);
   const archivedFlows = archivedFlowsData?.flows ?? null;
-  
+
   if (error) {
     return (
-      <Box sx={{pt: 2}}>
+      <Box sx={{ pt: 2 }}>
         <ErrorSummary message={error.message} />
       </Box>
-    )
+    );
   }
 
   if (loading) {
@@ -108,7 +112,6 @@ const Archive: React.FC<Props> = ({
               {archivedFlows.map((flow) => (
                 <FlowCard
                   flow={flow}
-                  flows={archivedFlows}
                   key={flow.slug}
                   refreshFlows={fetchFlows}
                   showDetails={false}
