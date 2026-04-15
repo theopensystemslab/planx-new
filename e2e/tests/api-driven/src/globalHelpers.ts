@@ -38,7 +38,7 @@ export function createFlow(
 ) {
   return safely(() =>
     $admin.flow.create({
-      data: { dummy: "flowData " },
+      data: { dummy: "flowData" },
       ...args,
     }),
   );

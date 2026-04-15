@@ -54,6 +54,7 @@ export async function buildITPFlow({
     data: flowGraph,
     status: "online",
     userId,
+    hasSendComponent: true,
   });
   return { flowId };
 }
