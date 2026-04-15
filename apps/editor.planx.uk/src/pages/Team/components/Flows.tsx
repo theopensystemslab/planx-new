@@ -109,10 +109,14 @@ const Flows: React.FC<Props> = ({
         </FiltersContainer>
         {pinnedFlows.length > 0 && !flowsHaveBeenFiltered && (
           <Box>
-            <ShowingServicesHeader
-              matchedFlowsCount={pinnedFlows?.length || 0}
-              isPinnedFlows={true}
-            />
+            <Box
+              sx={{ minHeight: "50px", display: "flex", alignItems: "center" }}
+            >
+              <ShowingServicesHeader
+                matchedFlowsCount={pinnedFlows?.length || 0}
+                isPinnedFlows={true}
+              />
+            </Box>
             {flowCardView === "grid" ? (
               <DashboardList>
                 {pinnedFlows.map((flow) => (
