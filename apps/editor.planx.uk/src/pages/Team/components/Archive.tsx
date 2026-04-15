@@ -114,7 +114,7 @@ const Archive: React.FC<Props> = ({
                   flow={flow}
                   key={flow.slug}
                   refreshFlows={fetchFlows}
-                  showDetails={false}
+                  view={"archive"}
                 />
               ))}
             </DashboardList>
@@ -124,7 +124,7 @@ const Archive: React.FC<Props> = ({
               teamId={teamId}
               teamSlug={slug}
               refreshFlows={fetchFlows}
-              showDetails={false}
+              view={"archive"}
             />
           )}
         </>

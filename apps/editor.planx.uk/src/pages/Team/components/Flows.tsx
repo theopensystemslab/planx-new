@@ -129,7 +129,7 @@ const Flows: React.FC<Props> = ({
                     flow={flow}
                     key={flow.slug}
                     refreshFlows={fetchFlows}
-                    showDetails={true}
+                    view={"flows"}
                     updateFlow={updateFlow}
                   />
                 ))}
@@ -141,7 +141,7 @@ const Flows: React.FC<Props> = ({
                 teamSlug={slug}
                 refreshFlows={fetchFlows}
                 updateFlow={updateFlow}
-                showDetails={true}
+                view={"flows"}
               />
             )}
           </Box>
@@ -201,7 +201,7 @@ const Flows: React.FC<Props> = ({
                     flow={flow}
                     key={flow.slug}
                     refreshFlows={fetchFlows}
-                    showDetails={true}
+                    view={"flows"}
                     updateFlow={updateFlow}
                   />
                 ))}
@@ -212,7 +212,7 @@ const Flows: React.FC<Props> = ({
                 teamId={teamId}
                 teamSlug={slug}
                 refreshFlows={fetchFlows}
-                showDetails={true}
+                view={"flows"}
                 updateFlow={updateFlow}
               />
             )}
