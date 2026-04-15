@@ -21,6 +21,7 @@ import { ApplicationPath, Session } from "types";
 import Main from "ui/shared/Main";
 
 import ErrorFallback from "../../components/Error/ErrorFallback";
+import OpenInEditorButton from "../../components/OpenInEditorButton";
 import { useStore } from "../FlowEditor/lib/store";
 import Node, { HandleSubmit } from "./Node";
 
@@ -80,6 +81,9 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     state.sectionProgress,
   ]);
   const isStandalone = previewEnvironment === "standalone";
+  const isDraft =
+    typeof window !== "undefined" &&
+    window.location.pathname.endsWith("/draft");
   const { createAnalytics, trackEvent } = useAnalyticsTracking();
   const [gotFlow, setGotFlow] = useState(false);
   const isUsingLocalStorage =
@@ -257,6 +261,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
           </ErrorBoundary>
         </Main>
       )}
+      {isDraft && <OpenInEditorButton />}
     </Box>
   );
 };
