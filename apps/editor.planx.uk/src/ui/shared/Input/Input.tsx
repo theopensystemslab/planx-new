@@ -19,7 +19,7 @@ const classes: Partial<InputBaseClasses> = {
   focused: `${PREFIX}-focused`,
 };
 
-export interface Props extends InputBaseProps {
+export interface Props extends Omit<InputBaseProps, "ref"> {
   format?: "large" | "bold" | "data";
   classes?: InputBaseClasses;
   className?: string;
@@ -85,39 +85,41 @@ const StyledInputBase = styled(InputBase, {
   },
 }));
 
-export default forwardRef((props: Props, ref): FCReturn => {
-  const {
-    format,
-    bordered,
-    errorMessage,
-    "aria-label": ariaLabel,
-    "aria-describedby": ariaDescribedBy,
-    "aria-labelledby": ariaLabelledBy,
-    id,
-    ...restProps
-  } = props;
+export default forwardRef<HTMLInputElement, Omit<Props, "ref">>(
+  (props, ref) => {
+    const {
+      format,
+      bordered,
+      errorMessage,
+      "aria-label": ariaLabel,
+      "aria-describedby": ariaDescribedBy,
+      "aria-labelledby": ariaLabelledBy,
+      id,
+      ...restProps
+    } = props;
 
-  return (
-    <ErrorWrapper error={errorMessage} id={id}>
-      <StyledInputBase
-        format={format}
-        bordered={bordered}
-        classes={classes}
-        inputProps={{
-          "aria-label": ariaLabel,
-          "aria-describedby": ariaDescribedBy,
-          "aria-labelledby": ariaLabelledBy,
-          // Disable autofill using common browser password managers, unless an autocomplete value is provided
-          "data-1p-ignore": !props.autoComplete,
-          "data-op-ignore": !props.autoComplete,
-          "data-lpignore": !props.autoComplete,
-          "data-form-type": props.autoComplete || "other",
-          "data-bwignore": !props.autoComplete,
-        }}
-        id={id}
-        inputRef={ref}
-        {...restProps}
-      />
-    </ErrorWrapper>
-  );
-});
+    return (
+      <ErrorWrapper error={errorMessage} id={id}>
+        <StyledInputBase
+          format={format}
+          bordered={bordered}
+          classes={classes}
+          inputProps={{
+            "aria-label": ariaLabel,
+            "aria-describedby": ariaDescribedBy,
+            "aria-labelledby": ariaLabelledBy,
+            // Disable autofill using common browser password managers, unless an autocomplete value is provided
+            "data-1p-ignore": !props.autoComplete,
+            "data-op-ignore": !props.autoComplete,
+            "data-lpignore": !props.autoComplete,
+            "data-form-type": props.autoComplete || "other",
+            "data-bwignore": !props.autoComplete,
+          }}
+          id={id}
+          inputRef={ref}
+          {...restProps}
+        />
+      </ErrorWrapper>
+    );
+  },
+);

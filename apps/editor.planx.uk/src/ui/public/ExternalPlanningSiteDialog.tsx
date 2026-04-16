@@ -19,7 +19,7 @@ export enum DialogPurpose {
 const getTitleAndContent = (
   purpose: DialogPurpose,
   settings?: TeamSettings,
-): Record<string, string | JSX.Element> => {
+): Record<string, string | React.JSX.Element> => {
   switch (purpose) {
     case DialogPurpose.MissingAddress:
       return {

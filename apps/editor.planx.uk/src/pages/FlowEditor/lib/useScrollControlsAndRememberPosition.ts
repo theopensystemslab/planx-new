@@ -12,7 +12,7 @@ import {
 } from "rxjs/operators";
 
 const useScrollControlsAndRememberPosition = (
-  scrollContainerRef: React.RefObject<HTMLDivElement> | null,
+  scrollContainerRef: React.RefObject<HTMLDivElement | null> | null,
 ) => {
   const { flow: currentPath } = useParams({
     from: "/_authenticated/app/$team/$flow",
