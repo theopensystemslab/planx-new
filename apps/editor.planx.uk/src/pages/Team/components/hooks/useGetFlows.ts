@@ -6,8 +6,8 @@ import {
   GetAnyFlowsVars,
 } from "../../queries";
 
-export const useGetFlows = (teamId: number, userId: number) =>
+export const useGetFlows = (teamId: number) =>
   useQuery<GetAnyFlowsQuery, GetAnyFlowsVars>(GET_FLOWS, {
-    variables: { teamId, userId },
+    variables: { teamId },
     fetchPolicy: "cache-and-network",
   });

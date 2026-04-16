@@ -40,21 +40,19 @@ interface TeamProps {
 const Team: React.FC<TeamProps> = () => {
   const [
     { id: teamId, slug },
-    userId,
     canUserEditTeam,
     isTrial,
     flowCardView,
     setFlowCardView,
   ] = useStore((state) => [
     state.getTeam(),
-    state.user!.id,
     state.canUserEditTeam,
     state.teamSettings?.isTrial,
     state.flowCardView,
     state.setFlowCardView,
   ]);
 
-  const { data } = useGetFlows(teamId, userId);
+  const { data } = useGetFlows(teamId);
   const flows = data?.flows ?? null;
   const [flowView, setFlowView] = useState<FlowView>("flows");
 
@@ -209,16 +207,14 @@ const Team: React.FC<TeamProps> = () => {
             unpinnedFlows={unpinnedFlows}
             handleViewChange={handleViewChange}
             slug={slug}
-            userId={userId}
           />
         )}
-        {flowView === "archive" && userId && (
+        {flowView === "archive" && (
           <Archive
             flowCardView={flowCardView}
             handleViewChange={handleViewChange}
             teamId={teamId}
             slug={slug}
-            userId={userId}
           />
         )}
 

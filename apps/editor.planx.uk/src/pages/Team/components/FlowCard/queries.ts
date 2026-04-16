@@ -77,29 +77,28 @@ interface UnpinFlowMutation {
 
 interface PinFlowVars {
   flowId: string;
-  userId: number;
   teamId: number;
+  userId: number;
 }
 
 interface UnpinFlowVars {
   flowId: string;
-  userId: number; // TODO un-duplicate types
   teamId: number;
 }
 
 export const usePinFlow = (variables: PinFlowVars) => {
-  const { teamId, userId } = variables;
+  const { teamId } = variables
 
   return useMutation<PinFlowMutation, PinFlowVars>(PIN_FLOW, {
     variables,
-    refetchQueries: [{ query: GET_FLOWS, variables: { teamId, userId } }],
+    refetchQueries: [{ query: GET_FLOWS, variables: { teamId } }],
   })
 };
 
 export const useUnpinFlow = (variables: UnpinFlowVars) => {
-  const { teamId, userId } = variables;
+  const { teamId } = variables;
 
   return useMutation<UnpinFlowMutation, UnpinFlowVars>(UNPIN_FLOW, {
     variables,
-    refetchQueries: [{ query: GET_FLOWS, variables: { teamId, userId } }],
+    refetchQueries: [{ query: GET_FLOWS, variables: { teamId } }],
   })};
