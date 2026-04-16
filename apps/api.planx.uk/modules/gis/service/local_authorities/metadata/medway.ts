@@ -18,8 +18,7 @@ const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
       "articleFour.medway.bromptonLines.one": "BR01",
       "articleFour.medway.bromptonLines.two": "BR02",
       "articleFour.medway.chathamBrompton": "CCBROM",
-      "articleFour.medway.elmhavenMarina":
-        "ELM01",
+      "articleFour.medway.elmhavenMarina": "ELM01",
       "articleFour.medway.gillinghamPark": "GILL01",
       "articleFour.medway.gillinghamSouth": "GILSOU",
       "articleFour.medway.gillinghamNorth": "GILNOR",
