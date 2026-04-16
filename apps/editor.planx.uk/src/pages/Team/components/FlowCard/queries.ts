@@ -1,6 +1,7 @@
 import { useMutation } from "@apollo/client";
 import gql from "graphql-tag";
 import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
+import { GET_FLOWS } from "pages/Team/queries";
 
 // this is copied from the getFlows query in FlowEditor/lib/store/editor.ts - might be worth re-using the fragment there as well?
 const FLOW_SUMMARY_FIELDS = gql`
@@ -77,18 +78,28 @@ interface UnpinFlowMutation {
 interface PinFlowVars {
   flowId: string;
   userId: number;
+  teamId: number;
 }
 
 interface UnpinFlowVars {
   flowId: string;
+  userId: number; // TODO un-duplicate types
+  teamId: number;
 }
 
-export const usePinFlow = (variables: PinFlowVars) =>
-  useMutation<PinFlowMutation, PinFlowVars>(PIN_FLOW, {
-    variables,
-  });
+export const usePinFlow = (variables: PinFlowVars) => {
+  const { teamId, userId } = variables;
 
-export const useUnpinFlow = (variables: UnpinFlowVars) =>
-  useMutation<UnpinFlowMutation, UnpinFlowVars>(UNPIN_FLOW, {
+  return useMutation<PinFlowMutation, PinFlowVars>(PIN_FLOW, {
     variables,
-  });
+    refetchQueries: [{ query: GET_FLOWS, variables: { teamId, userId } }],
+  })
+};
+
+export const useUnpinFlow = (variables: UnpinFlowVars) => {
+  const { teamId, userId } = variables;
+
+  return useMutation<UnpinFlowMutation, UnpinFlowVars>(UNPIN_FLOW, {
+    variables,
+    refetchQueries: [{ query: GET_FLOWS, variables: { teamId, userId } }],
+  })};

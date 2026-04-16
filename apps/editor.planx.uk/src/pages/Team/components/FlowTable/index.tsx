@@ -32,22 +32,20 @@ interface FlowTableProps {
   flows: FlowSummary[];
   teamId: number;
   teamSlug: string;
-  refreshFlows: () => void;
   updateFlow?: (flow: FlowSummary) => void;
   view: FlowView;
+  userId: number;
 }
 
 export const FlowTable: React.FC<FlowTableProps> = ({
   flows,
   teamSlug,
-  refreshFlows,
-  updateFlow,
   view,
+  userId,
 }) => {
-  const [userId] = useStore((state) => [state.user?.id]);
   const { headerText } = useFlowSortDisplay();
 
-  const showPinnedColumn = updateFlow && userId;
+  const showPinnedColumn = view === "flows";
 
   return (
     <StyledTable>
@@ -71,9 +69,8 @@ export const FlowTable: React.FC<FlowTableProps> = ({
             key={flow.slug}
             flow={flow}
             teamSlug={teamSlug}
-            refreshFlows={refreshFlows}
             view={view}
-            updateFlow={updateFlow}
+            userId={userId}
           />
         ))}
       </TableBody>
@@ -84,21 +81,19 @@ export const FlowTable: React.FC<FlowTableProps> = ({
 interface FlowTableRowProps {
   flow: FlowSummary;
   teamSlug: string;
-  refreshFlows: () => void;
   view: FlowView;
-  updateFlow?: (flow: FlowSummary) => void;
+  userId: number;
 }
 
 const FlowTableRow: React.FC<FlowTableRowProps> = ({
   flow,
   teamSlug,
-  refreshFlows,
   view,
-  updateFlow,
+  userId,
 }) => {
-  const [canUserEditTeam, userId] = useStore((state) => [
+  const [canUserEditTeam, teamId] = useStore((state) => [
     state.canUserEditTeam,
-    state.user?.id,
+    state.teamId,
   ]);
 
   const {
@@ -112,7 +107,7 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
   const { displayTimeAgo, displayActor } = useFlowDates(flow);
   const isRowLinkActive = view === "flows" ? true : false;
 
-  const showPinnedColumn = updateFlow && userId;
+  const showPinnedColumn = view === "flows";
 
   return (
     <StyledTableRow isTemplated={isAnyTemplate} clickable={isRowLinkActive}>
@@ -182,12 +177,12 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
           {showPinnedColumn && (
             <TableCell>
               <Box onClick={(e) => e.stopPropagation()}>
-                {userId && updateFlow && (
+                {userId && (
                   <FlowPinButton
                     flowId={flow.id}
                     userId={userId}
+                    teamId={teamId}
                     isPinnedByCurrentUser={flow.pinnedFlows.length > 0}
-                    updateFlow={updateFlow}
                   />
                 )}
               </Box>
@@ -205,17 +200,19 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
           {view === "flows" && (
             <ActiveFlowMenu
               flow={flow}
-              refreshFlows={refreshFlows}
               isAnyTemplate={isAnyTemplate}
               variant="table"
+              teamId={teamId}
+              userId={userId}
             />
           )}
 
           {view === "archive" && (
             <ArchivedFlowMenu
               flow={flow}
-              refreshFlows={refreshFlows}
               variant="table"
+              teamId={teamId}
+              userId={userId}
             />
           )}
         </FlowActionsCell>
