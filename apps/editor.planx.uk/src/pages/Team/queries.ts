@@ -1,87 +1,23 @@
 import { gql } from "@apollo/client";
 import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 
+import { FLOW_SUMMARY_FIELDS } from "./components/FlowCard/queries"
+
 export const GET_FLOWS = gql`  
-query GetFlows($teamId: Int!, $userId: Int!) {
-  flows(where: {team: {id: {_eq: $teamId}}, archived_at: {_is_null: true}}) {
-    id
-    name
-    slug
-    status
-    summary
-    updatedAt: updated_at
-    isListedOnLPS: is_listed_on_lps
-    operations(limit: 1, order_by: {created_at: desc}) {
-      createdAt: created_at
-      actor {
-        firstName: first_name
-        lastName: last_name
-      }
-    }
-    templatedFrom: templated_from
-    isTemplate: is_template
-    template {
-      team {
-        id
-        name
-      }
-    }
-    publishedFlows: published_flows(order_by: {created_at: desc}, limit: 1) {
-      publishedAt: created_at
-      hasSendComponent: has_send_component
-      hasVisiblePayComponent: has_pay_component
-      hasEnabledServiceCharge: service_charge_enabled
-    }
-    pinnedFlows: user_pinned_flows(where: {user_id: {_eq: $userId}}) {
-      flow_id
+  ${FLOW_SUMMARY_FIELDS}
+  query GetFlows($teamId: Int!) {
+    flows(where: { team: { id: { _eq: $teamId } }, archived_at: { _is_null: true } }) {
+      ...FlowSummaryFields
     }
   }
-}
 `
 
 export const GET_ARCHIVED_FLOWS = gql`
-  query GetArchivedFlows($teamId: Int!, $userId: Int!) {
-    flows(
-      where: {
-        team: { id: { _eq: $teamId } }
-        archived_at: { _is_null: false }
-      }
-    ) {
-      id
-      name
-      slug
-      status
-      summary
-      updatedAt: updated_at
-      isListedOnLPS: is_listed_on_lps
-      operations(limit: 1, order_by: { created_at: desc }) {
-        createdAt: created_at
-        actor {
-          firstName: first_name
-          lastName: last_name
-        }
-      }
-      templatedFrom: templated_from
-      isTemplate: is_template
-      template {
-        team {
-          id
-          name
-        }
-      }
-      publishedFlows: published_flows(
-        order_by: { created_at: desc }
-        limit: 1
-      ) {
-        publishedAt: created_at
-        hasSendComponent: has_send_component
-        hasVisiblePayComponent: has_pay_component
-        hasEnabledServiceCharge: service_charge_enabled
-      }
-      pinnedFlows: user_pinned_flows(where: {user_id: {_eq: $userId}}) {
-        flow_id
-        }
-      }
+  ${FLOW_SUMMARY_FIELDS}
+  query GetArchivedFlows($teamId: Int!) {
+    flows(where: { team: { id: { _eq: $teamId } }, archived_at: { _is_null: false } }) {
+      ...FlowSummaryFields
+    }
   }
 `;
 
