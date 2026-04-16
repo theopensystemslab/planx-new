@@ -241,6 +241,7 @@ select_permissions:
   - role: analyst
     permission:
       columns:
+        - archived_at
         - can_create_from_copy
         - category
         - created_at
