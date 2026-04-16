@@ -40,7 +40,7 @@
     "@types/react-transition-group": "^4.4.12",
     "@vitejs/plugin-react-swc": "^4.2.3",
     "array-move": "^4.0.0",
-    "axios": "^1.13.6",
+    "axios": "^1.15.0",
     "bowser": "^2.14.1",
     "camelcase-keys": "^10.0.2",
     "classnames": "^2.5.1",
