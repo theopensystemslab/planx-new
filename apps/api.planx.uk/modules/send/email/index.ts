@@ -77,7 +77,7 @@ export const sendToEmail: SendIntegrationController = async (
 
     return res.status(200).send({
       message: `Successfully sent to email`,
-      inbox: submissionEmail,
+      inbox: submissionEmailAddress,
       resendTemplate: "submit",
     });
   } catch (error) {
@@ -96,7 +96,7 @@ const getSubmitEmailConfig = async ({
   sessionId,
   token,
 }: {
-    submissionEmailAddress: string;
+  submissionEmailAddress: string;
   sessionId: string;
   token: string;
 }): Promise<TemplateRegistry["submit"]["variables"]> => {
