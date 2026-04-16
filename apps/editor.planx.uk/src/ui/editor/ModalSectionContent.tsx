@@ -9,7 +9,7 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 interface Props {
   title?: string;
   subtitle?: string;
-  children?: JSX.Element[] | JSX.Element;
+  children?: React.JSX.Element[] | React.JSX.Element;
   author?: string;
   Icon?:
     | React.ComponentType<SvgIconProps>

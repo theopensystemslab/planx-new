@@ -40,7 +40,7 @@ export type ColumnConfig<T> = {
   type?: ColumnRenderType;
   width?: number;
   customComponent?:
-    | ((params: RenderCellParams) => JSX.Element | undefined)
+    | ((params: RenderCellParams) => React.JSX.Element | undefined)
     | undefined;
   columnOptions?: Omit<GridColDef, "headerName" | "field" | "type"> &
     Omit<GridSingleSelectColDef, "editable" | "type" | "field">;

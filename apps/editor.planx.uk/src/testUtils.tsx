@@ -63,7 +63,7 @@ const testApolloClient = new ApolloClient({
  * Tests must await the setup() call.
  */
 export const setup = async (
-  jsx: JSX.Element,
+  jsx: React.JSX.Element,
 ): Promise<Record<"user", UserEvent> & RenderResult> => {
   testQueryClient.clear();
 

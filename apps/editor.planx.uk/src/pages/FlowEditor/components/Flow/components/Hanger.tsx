@@ -76,7 +76,9 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   return (
     <li
       className={classnames("hanger", { hidden: hidden || hideHangerFromUser })}
-      ref={drop}
+      ref={(el) => {
+        drop(el);
+      }}
     >
       <Link
         to={getNodeRoute(parent, before)}

@@ -16,7 +16,7 @@ const Root = styled(Box)(({ theme }) => ({
 
 interface IMoreInfoSection {
   title?: string;
-  children: JSX.Element[] | JSX.Element;
+  children: React.JSX.Element[] | React.JSX.Element;
 }
 
 const MoreInfoSection: React.FC<IMoreInfoSection> = ({ title, children }) => {
