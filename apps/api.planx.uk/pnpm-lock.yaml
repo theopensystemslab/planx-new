@@ -23,8 +23,8 @@ importers:
         specifier: ^3.1000.0
         version: 3.1015.0
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#b657195
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/b6571959157fb4bb95112f03700113b92ac9c54d(@types/react@19.2.14)
+        specifier: github:theopensystemslab/planx-core#fb8f44f
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/fb8f44f66d0ab55a89311b918c0a16768fb6f16e(@types/react@19.2.14)
       '@types/isomorphic-fetch':
         specifier: ^0.0.36
         version: 0.0.36
@@ -1072,20 +1072,14 @@ packages:
       '@noble/hashes':
         optional: true
 
-  '@formatjs/bigdecimal@0.2.0':
-    resolution: {integrity: sha512-GeaxHZbUoYvHL9tC5eltHLs+1zU70aPw0s7LwqgktIzF5oMhNY4o4deEtusJMsq7WFJF3Ye2zQEzdG8beVk73w==}
+  '@formatjs/fast-memoize@3.1.2':
+    resolution: {integrity: sha512-vPnriihkfK0lzoQGaXq+qXH23VsYyansRTkTgo2aTG0k1NjLFyZimFVdfj4C9JkSE5dm7CEngcQ5TTc1yAyBfQ==}
 
-  '@formatjs/ecma402-abstract@3.2.0':
-    resolution: {integrity: sha512-dHnqHgBo6GXYGRsepaE1wmsC2etaivOWd5VaJstZd+HI2zR3DCUjbDVZRtoPGkkXZmyHvBwrdEUuqfvzhF/DtQ==}
+  '@formatjs/intl-listformat@8.3.2':
+    resolution: {integrity: sha512-PH8V1YVSm+AcrQ1D9Th5wxWo74vDs1V1rRGz9PCFm1HTBtZLVMN3P/+tDcpizQBvvdGNwUqHBOdxN5ZZtlq2bQ==}
 
-  '@formatjs/fast-memoize@3.1.1':
-    resolution: {integrity: sha512-CbNbf+tlJn1baRnPkNePnBqTLxGliG6DDgNa/UtV66abwIjwsliPMOt0172tzxABYzSuxZBZfcp//qI8AvBWPg==}
-
-  '@formatjs/intl-listformat@8.3.1':
-    resolution: {integrity: sha512-82pPPyPOzkFMBbUmuseMwckFtpT+meZSxZSaxyD/3wRo5DZEq08hBUe1uhzNmukI8hwJFH5mIMBwSIAuse0RDQ==}
-
-  '@formatjs/intl-localematcher@0.8.2':
-    resolution: {integrity: sha512-q05KMYGJLyqFNFtIb8NhWLF5X3aK/k0wYt7dnRFuy6aLQL+vUwQ1cg5cO4qawEiINybeCPXAWlprY2mSBjSXAQ==}
+  '@formatjs/intl-localematcher@0.8.3':
+    resolution: {integrity: sha512-pHUjWb9NuhnMs8+PxQdzBtZRFJHlGhrURGAbm6Ltwl82BFajeuiIR3jblSa7ia3r62rXe/0YtVpUG3xWr5bFCA==}
 
   '@graphql-typed-document-node/core@3.2.0':
     resolution: {integrity: sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==}
@@ -1224,8 +1218,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/b6571959157fb4bb95112f03700113b92ac9c54d':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/b6571959157fb4bb95112f03700113b92ac9c54d}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/fb8f44f66d0ab55a89311b918c0a16768fb6f16e':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/fb8f44f66d0ab55a89311b918c0a16768fb6f16e}
     version: 1.0.0
 
   '@opentelemetry/api@1.9.0':
@@ -3556,6 +3550,11 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
+  prettier@3.8.3:
+    resolution: {integrity: sha512-7igPTM53cGHMW8xWuVTydi2KO233VFiTNyF5hLJqpilHfmn8C8gPf+PS7dUT64YcXFbiMGZxS9pCSxL/Dxm/Jw==}
+    engines: {node: '>=14'}
+    hasBin: true
+
   pretty-format@23.6.0:
     resolution: {integrity: sha512-zf9NV1NSlDLDjycnwm6hpFATCGl/K1lt0R/GdkAK2O5LN/rwJoB+Mh93gGJjut4YbmecbfgLWVGSTCr0Ewvvbw==}
 
@@ -5347,24 +5346,15 @@ snapshots:
     optionalDependencies:
       '@noble/hashes': 1.8.0
 
-  '@formatjs/bigdecimal@0.2.0': {}
+  '@formatjs/fast-memoize@3.1.2': {}
 
-  '@formatjs/ecma402-abstract@3.2.0':
+  '@formatjs/intl-listformat@8.3.2':
     dependencies:
-      '@formatjs/bigdecimal': 0.2.0
-      '@formatjs/fast-memoize': 3.1.1
-      '@formatjs/intl-localematcher': 0.8.2
+      '@formatjs/intl-localematcher': 0.8.3
 
-  '@formatjs/fast-memoize@3.1.1': {}
-
-  '@formatjs/intl-listformat@8.3.1':
+  '@formatjs/intl-localematcher@0.8.3':
     dependencies:
-      '@formatjs/ecma402-abstract': 3.2.0
-      '@formatjs/intl-localematcher': 0.8.2
-
-  '@formatjs/intl-localematcher@0.8.2':
-    dependencies:
-      '@formatjs/fast-memoize': 3.1.1
+      '@formatjs/fast-memoize': 3.1.2
 
   '@graphql-typed-document-node/core@3.2.0(graphql@16.13.2)':
     dependencies:
@@ -5496,11 +5486,11 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.20.1
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/b6571959157fb4bb95112f03700113b92ac9c54d(@types/react@19.2.14)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/fb8f44f66d0ab55a89311b918c0a16768fb6f16e(@types/react@19.2.14)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.14)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@18.3.1))(@types/react@19.2.14)(react@18.3.1)
-      '@formatjs/intl-listformat': 8.3.1
+      '@formatjs/intl-listformat': 8.3.2
       '@mui/material': 6.5.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@18.3.1))(@types/react@19.2.14)(react@18.3.1))(@types/react@19.2.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       ajv: 8.18.0
       ajv-formats: 2.1.1(ajv@8.18.0)
@@ -5513,7 +5503,7 @@ snapshots:
       json-schema-to-typescript: 15.0.4
       lodash-es: 4.17.23
       marked: 18.0.0
-      prettier: 3.8.1
+      prettier: 3.8.3
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       type-fest: 4.41.0
@@ -7650,7 +7640,7 @@ snapshots:
       js-yaml: 4.1.1
       lodash: 4.18.1
       minimist: 1.2.8
-      prettier: 3.8.1
+      prettier: 3.8.3
       tinyglobby: 0.2.16
 
   json-schema-traverse@0.4.1: {}
@@ -8124,6 +8114,8 @@ snapshots:
   prelude-ls@1.2.1: {}
 
   prettier@3.8.1: {}
+
+  prettier@3.8.3: {}
 
   pretty-format@23.6.0:
     dependencies:

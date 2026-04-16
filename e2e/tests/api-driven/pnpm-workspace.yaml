@@ -1,1 +1,9 @@
 minimumReleaseAge: 10080
+minimumReleaseAgeExclude:
+  - prettier
+  - fast-xml-parser
+  - '@formatjs/intl-listformat'
+  - '@formatjs/intl-localematcher'
+  - '@formatjs/fast-memoize'
+  - '@nodable/entities'
+  - 'path-expression-matcher'
