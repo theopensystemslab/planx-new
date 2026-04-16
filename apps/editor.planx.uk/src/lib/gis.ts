@@ -33,7 +33,14 @@ export const useGeoJSONChange: UseGeoJSONChange = (mapId, callback) => {
       callback(event);
     };
 
-    const map: HTMLElement | null = document.getElementById(mapId);
+    // React 19 sets `id` as a DOM property (not HTML attribute) on custom elements
+    // in some environments (e.g. jsdom), causing getElementById to return null.
+    // Fall back to querying by data-map-id attribute which is always set as an attribute.
+    const map: HTMLElement | null =
+      document.getElementById(mapId) ??
+      (document.querySelector(
+        `[data-map-id="${mapId}"]`,
+      ) as HTMLElement | null);
     map?.addEventListener("geojsonChange", geojsonChangeHandler);
 
     return function cleanup() {
