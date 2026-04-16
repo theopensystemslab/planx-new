@@ -14,7 +14,7 @@ import { queryClient } from "lib/queryClient";
 import { AnalyticsProvider } from "pages/FlowEditor/lib/analytics/provider";
 import React, { Suspense, useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import { ToastContainer } from "react-toastify";
+import { Bounce, ToastContainer } from "react-toastify";
 import { router } from "router";
 
 // init airbrake before everything else
@@ -87,6 +87,16 @@ root.render(
         </AnalyticsProvider>
       </ApolloProvider>
     </QueryClientProvider>
-    <ToastContainer icon={false} theme="colored" />
+    <ToastContainer
+      icon={false}
+      theme="colored"
+      position="top-right"
+      transition={Bounce}
+      autoClose={5000}
+      closeOnClick
+      pauseOnHover
+      pauseOnFocusLoss
+      draggable
+    />
   </ToastContextProvider>,
 );
