@@ -34,14 +34,12 @@ interface FlowTableProps {
   teamSlug: string;
   updateFlow?: (flow: FlowSummary) => void;
   view: FlowView;
-  userId: number;
 }
 
 export const FlowTable: React.FC<FlowTableProps> = ({
   flows,
   teamSlug,
   view,
-  userId,
 }) => {
   const { headerText } = useFlowSortDisplay();
 
@@ -70,7 +68,6 @@ export const FlowTable: React.FC<FlowTableProps> = ({
             flow={flow}
             teamSlug={teamSlug}
             view={view}
-            userId={userId}
           />
         ))}
       </TableBody>
@@ -82,14 +79,12 @@ interface FlowTableRowProps {
   flow: FlowSummary;
   teamSlug: string;
   view: FlowView;
-  userId: number;
 }
 
 const FlowTableRow: React.FC<FlowTableRowProps> = ({
   flow,
   teamSlug,
   view,
-  userId,
 }) => {
   const [canUserEditTeam, teamId] = useStore((state) => [
     state.canUserEditTeam,
@@ -177,14 +172,11 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
           {showPinnedColumn && (
             <TableCell>
               <Box onClick={(e) => e.stopPropagation()}>
-                {userId && (
-                  <FlowPinButton
-                    flowId={flow.id}
-                    userId={userId}
-                    teamId={teamId}
-                    isPinnedByCurrentUser={flow.pinnedFlows.length > 0}
-                  />
-                )}
+                <FlowPinButton
+                  flowId={flow.id}
+                  teamId={teamId}
+                  isPinnedByCurrentUser={flow.pinnedFlows.length > 0}
+                />
               </Box>
             </TableCell>
           )}
@@ -203,7 +195,6 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
               isAnyTemplate={isAnyTemplate}
               variant="table"
               teamId={teamId}
-              userId={userId}
             />
           )}
 
@@ -212,7 +203,6 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
               flow={flow}
               variant="table"
               teamId={teamId}
-              userId={userId}
             />
           )}
         </FlowActionsCell>

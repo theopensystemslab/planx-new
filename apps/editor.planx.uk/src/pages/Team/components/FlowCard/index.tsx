@@ -26,13 +26,11 @@ import {
 interface Props {
   flow: FlowSummary;
   view: FlowView;
-  userId: number;
 }
 
 const FlowCard: React.FC<Props> = ({
   flow,
   view,
-  userId,
 }) => {
   const [canUserEditTeam, teamSlug, teamId] = useStore((state) => [
     state.canUserEditTeam,
@@ -96,10 +94,9 @@ const FlowCard: React.FC<Props> = ({
               </Typography>
               <LinkSubText>{displayFormatted}</LinkSubText>
             </Stack>
-            {userId && view === "flows" && ( 
+            {view === "flows" && ( 
               <FlowPinButton
                 flowId={flow.id}
-                userId={userId}
                 teamId={teamId}
                 isPinnedByCurrentUser={isPinnedByCurrentUser}
               />
@@ -146,7 +143,6 @@ const FlowCard: React.FC<Props> = ({
           isAnyTemplate={isAnyTemplate}
           variant="card"
           teamId={teamId}
-          userId={userId} // TODO refactor prop drilling?
         />
       )}
       {canUserEditTeam(teamSlug) && view === "archive" && (
@@ -155,7 +151,6 @@ const FlowCard: React.FC<Props> = ({
           isAnyTemplate={isAnyTemplate}
           variant="card"
           teamId={teamId}
-          userId={userId}
         />
       )}
     </Card>

@@ -14,12 +14,11 @@ const ArchivedFlowMenu: React.FC<FlowMenuProps> = ({
     flow,
     variant = "card",
     teamId,
-    userId,
 }) => {
     type OpenFlowDialog = "unarchive";
     const [openFlowDialog, setOpenFlowDialog] = useState<OpenFlowDialog | null>(null);
     const unarchivedSlug = flow.slug.replace("-archive", "");
-    const [unarchiveFlow] = useUnarchiveFlow(flow.id, unarchivedSlug, teamId, userId);
+    const [unarchiveFlow] = useUnarchiveFlow(flow.id, unarchivedSlug, teamId);
 
     const toast = useToast();
 

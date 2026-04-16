@@ -7,7 +7,6 @@ export interface FlowMenuProps {
   isAnyTemplate?: boolean;
   variant?: "card" | "table";
   teamId: number;
-  userId: number;
 }
 
 export const StyledSimpleMenu = styled(SimpleMenu)(({ theme }) => ({

@@ -27,7 +27,6 @@ export type GetAnyFlowsQuery = {
 
 export type GetAnyFlowsVars = {
   teamId: number;
-  userId: number
 };
 
 export const ARCHIVE_FLOW = gql`

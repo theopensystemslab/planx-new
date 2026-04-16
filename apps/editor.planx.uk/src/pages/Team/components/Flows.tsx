@@ -51,7 +51,6 @@ type Props = {
     newView: FlowCardView | null,
   ) => void;
   slug: string;
-  userId: number;
 };
 
 const Flows: React.FC<Props> = ({
@@ -65,7 +64,6 @@ const Flows: React.FC<Props> = ({
   pinnedFlows,
   handleViewChange,
   slug,
-  userId,
 }) => {
   const teamHasFlows = sortedFlows ? true : false;
   const navigate = useNavigate();
@@ -126,7 +124,6 @@ const Flows: React.FC<Props> = ({
                     flow={flow}
                     key={flow.slug}
                     view={"flows"}
-                    userId={userId}
                   />
                 ))}
               </DashboardList>
@@ -136,7 +133,6 @@ const Flows: React.FC<Props> = ({
                 teamId={teamId}
                 teamSlug={slug}
                 view={"flows"}
-                userId={userId}
               />
             )}
           </Box>
@@ -196,7 +192,6 @@ const Flows: React.FC<Props> = ({
                     flow={flow}
                     key={flow.slug}
                     view={"flows"}
-                    userId={userId}
                   />
                 ))}
               </DashboardList>
@@ -206,7 +201,6 @@ const Flows: React.FC<Props> = ({
                 teamId={teamId}
                 teamSlug={slug}
                 view={"flows"}
-                userId={userId}
               />
             )}
           </>

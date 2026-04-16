@@ -17,11 +17,10 @@ const ActiveFlowMenu: React.FC<FlowMenuProps> = ({
   isAnyTemplate,
   variant = "card",
   teamId,
-  userId,
 }) => {
   type OpenDialog = "archive" | "copy" | "rename" | "move";
   const [openDialog, setOpenDialog] = useState<OpenDialog | null>(null);
-  const [archiveFlow] = useArchiveFlow(flow.id, flow.slug, teamId, userId);
+  const [archiveFlow] = useArchiveFlow(flow.id, flow.slug, teamId);
 
   const toast = useToast();
 
