@@ -25,21 +25,19 @@ import {
 
 interface Props {
   flow: FlowSummary;
-  refreshFlows: () => void;
-  updateFlow?: (updatedFlow: FlowSummary) => void;
   view: FlowView;
+  userId: number;
 }
 
 const FlowCard: React.FC<Props> = ({
   flow,
-  refreshFlows,
-  updateFlow,
   view,
+  userId,
 }) => {
-  const [canUserEditTeam, teamSlug, userId] = useStore((state) => [
+  const [canUserEditTeam, teamSlug, teamId] = useStore((state) => [
     state.canUserEditTeam,
     state.teamSlug,
-    state.user?.id,
+    state.teamId
   ]);
 
   const {
@@ -65,10 +63,7 @@ const FlowCard: React.FC<Props> = ({
     },
   ];
 
-  const isPinnedByCurrentUser = flow.pinnedFlows.some(
-    (f) => f.flowId === flow.id,
-  );
-
+  const isPinnedByCurrentUser = flow.pinnedFlows.length > 0;
   return (
     <Card>
       <Box
@@ -101,12 +96,12 @@ const FlowCard: React.FC<Props> = ({
               </Typography>
               <LinkSubText>{displayFormatted}</LinkSubText>
             </Stack>
-            {userId && updateFlow && (
+            {userId && view === "flows" && ( 
               <FlowPinButton
                 flowId={flow.id}
                 userId={userId}
+                teamId={teamId}
                 isPinnedByCurrentUser={isPinnedByCurrentUser}
-                updateFlow={updateFlow}
               />
             )}
           </Stack>
@@ -148,17 +143,19 @@ const FlowCard: React.FC<Props> = ({
       {canUserEditTeam(teamSlug) && view === "flows" && (
         <ActiveFlowMenu
           flow={flow}
-          refreshFlows={refreshFlows}
           isAnyTemplate={isAnyTemplate}
           variant="card"
+          teamId={teamId}
+          userId={userId} // TODO refactor prop drilling?
         />
       )}
       {canUserEditTeam(teamSlug) && view === "archive" && (
         <ArchivedFlowMenu
           flow={flow}
-          refreshFlows={refreshFlows}
           isAnyTemplate={isAnyTemplate}
           variant="card"
+          teamId={teamId}
+          userId={userId}
         />
       )}
     </Card>

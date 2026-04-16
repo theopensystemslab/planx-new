@@ -42,7 +42,6 @@ type Props = {
   sortedFlows: FlowSummary[] | null;
   sortOptions: SortableFields<FlowSummary>[];
   flowCardView: FlowCardView;
-  fetchFlows: () => void;
   teamId: number;
   flows: FlowSummary[] | null;
   pinnedFlows: FlowSummary[];
@@ -52,7 +51,7 @@ type Props = {
     newView: FlowCardView | null,
   ) => void;
   slug: string;
-  updateFlow: (updatedFlow: FlowSummary) => void;
+  userId: number;
 };
 
 const Flows: React.FC<Props> = ({
@@ -62,13 +61,11 @@ const Flows: React.FC<Props> = ({
   sortedFlows,
   sortOptions,
   flowCardView,
-  fetchFlows,
   teamId,
   pinnedFlows,
-  unpinnedFlows,
   handleViewChange,
   slug,
-  updateFlow,
+  userId,
 }) => {
   const teamHasFlows = sortedFlows ? true : false;
   const navigate = useNavigate();
@@ -128,9 +125,8 @@ const Flows: React.FC<Props> = ({
                   <FlowCard
                     flow={flow}
                     key={flow.slug}
-                    refreshFlows={fetchFlows}
                     view={"flows"}
-                    updateFlow={updateFlow}
+                    userId={userId}
                   />
                 ))}
               </DashboardList>
@@ -139,9 +135,8 @@ const Flows: React.FC<Props> = ({
                 flows={sortedPinnedFlows}
                 teamId={teamId}
                 teamSlug={slug}
-                refreshFlows={fetchFlows}
-                updateFlow={updateFlow}
                 view={"flows"}
+                userId={userId}
               />
             )}
           </Box>
@@ -200,9 +195,8 @@ const Flows: React.FC<Props> = ({
                   <FlowCard
                     flow={flow}
                     key={flow.slug}
-                    refreshFlows={fetchFlows}
                     view={"flows"}
-                    updateFlow={updateFlow}
+                    userId={userId}
                   />
                 ))}
               </DashboardList>
@@ -211,9 +205,8 @@ const Flows: React.FC<Props> = ({
                 flows={remainingFlows}
                 teamId={teamId}
                 teamSlug={slug}
-                refreshFlows={fetchFlows}
                 view={"flows"}
-                updateFlow={updateFlow}
+                userId={userId}
               />
             )}
           </>

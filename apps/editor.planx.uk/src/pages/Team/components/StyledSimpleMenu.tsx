@@ -4,9 +4,10 @@ import SimpleMenu from "ui/editor/SimpleMenu";
 
 export interface FlowMenuProps {
   flow: FlowSummary;
-  refreshFlows: () => void;
   isAnyTemplate?: boolean;
   variant?: "card" | "table";
+  teamId: number;
+  userId: number;
 }
 
 export const StyledSimpleMenu = styled(SimpleMenu)(({ theme }) => ({

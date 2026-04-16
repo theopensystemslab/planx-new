@@ -1,8 +1,46 @@
 import { gql } from "@apollo/client";
 import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 
+export const GET_FLOWS = gql`  
+query GetFlows($teamId: Int!, $userId: Int!) {
+  flows(where: {team: {id: {_eq: $teamId}}, archived_at: {_is_null: true}}) {
+    id
+    name
+    slug
+    status
+    summary
+    updatedAt: updated_at
+    isListedOnLPS: is_listed_on_lps
+    operations(limit: 1, order_by: {created_at: desc}) {
+      createdAt: created_at
+      actor {
+        firstName: first_name
+        lastName: last_name
+      }
+    }
+    templatedFrom: templated_from
+    isTemplate: is_template
+    template {
+      team {
+        id
+        name
+      }
+    }
+    publishedFlows: published_flows(order_by: {created_at: desc}, limit: 1) {
+      publishedAt: created_at
+      hasSendComponent: has_send_component
+      hasVisiblePayComponent: has_pay_component
+      hasEnabledServiceCharge: service_charge_enabled
+    }
+    pinnedFlows: user_pinned_flows(where: {user_id: {_eq: $userId}}) {
+      flow_id
+    }
+  }
+}
+`
+
 export const GET_ARCHIVED_FLOWS = gql`
-  query GetArchivedFlows($teamId: Int!) {
+  query GetArchivedFlows($teamId: Int!, $userId: Int!) {
     flows(
       where: {
         team: { id: { _eq: $teamId } }
@@ -40,23 +78,26 @@ export const GET_ARCHIVED_FLOWS = gql`
         hasVisiblePayComponent: has_pay_component
         hasEnabledServiceCharge: service_charge_enabled
       }
-    }
+      pinnedFlows: user_pinned_flows(where: {user_id: {_eq: $userId}}) {
+        flow_id
+        }
+      }
   }
 `;
 
-export type GetArchivedFlowsQuery = {
+export type GetAnyFlowsQuery = {
   flows: FlowSummary[];
 };
 
-export type GetArchivedFlowsVars = {
+export type GetAnyFlowsVars = {
   teamId: number;
+  userId: number
 };
 
 export const ARCHIVE_FLOW = gql`
   mutation ArchiveFlow($id: uuid!, $slug: String!) {
     flow: update_flows_by_pk(pk_columns: {id: $id}, _set: {archived_at: "now()", status: offline, slug: $slug}) {
       id
-      name
     }
   }
 `

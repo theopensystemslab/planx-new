@@ -12,25 +12,24 @@ import { StyledSimpleMenu } from "./StyledSimpleMenu";
 
 const ArchivedFlowMenu: React.FC<FlowMenuProps> = ({
     flow,
-    refreshFlows,
     variant = "card",
+    teamId,
+    userId,
 }) => {
     type OpenFlowDialog = "unarchive";
     const [openFlowDialog, setOpenFlowDialog] = useState<OpenFlowDialog | null>(null);
     const unarchivedSlug = flow.slug.replace("-archive", "");
-    const [unarchiveFlow] = useUnarchiveFlow(flow.id, unarchivedSlug);
+    const [unarchiveFlow] = useUnarchiveFlow(flow.id, unarchivedSlug, teamId, userId);
 
     const toast = useToast();
 
     const handleClose = () => {
         setOpenFlowDialog(null);
-        refreshFlows();
-        }; // TODO: this is repetitive, refactor? 
+        };
 
     const handleUnarchive = async () => {
         try {
             await unarchiveFlow();
-            refreshFlows();
             toast.success("Unarchived flow");
         } catch (error) {
             toast.error(
