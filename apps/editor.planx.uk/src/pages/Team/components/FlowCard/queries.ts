@@ -4,7 +4,7 @@ import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import { GET_FLOWS } from "pages/Team/queries";
 
 // this is copied from the getFlows query in FlowEditor/lib/store/editor.ts - might be worth re-using the fragment there as well?
-const FLOW_SUMMARY_FIELDS = gql`
+export const FLOW_SUMMARY_FIELDS = gql`
   fragment FlowSummaryFields on flows {
     id
     name
