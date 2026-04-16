@@ -34,14 +34,16 @@ export const waitForClearSearchIcon = async (screen: Screen) => {
  * we would expect these results from the mocks
  */
 export const checkForFirstSearchResults = async () => {
-  expect(mockSetRecords).toHaveBeenLastCalledWith([
-    {
-      name: "Apply for a certificate",
-      slug: "apply-for-a-ceritifcate",
-    },
-    {
-      name: "Apply for an article 4 direction",
-      slug: "apply-for-an-article-4-direction",
-    },
-  ]);
+  await waitFor(() => {
+    expect(mockSetRecords).toHaveBeenLastCalledWith([
+      {
+        name: "Apply for a certificate",
+        slug: "apply-for-a-ceritifcate",
+      },
+      {
+        name: "Apply for an article 4 direction",
+        slug: "apply-for-an-article-4-direction",
+      },
+    ]);
+  });
 };
