@@ -138,8 +138,9 @@ export default function ConstraintsList({
                   inaccurateConstraints={inaccurateConstraints}
                   setInaccurateConstraints={setInaccurateConstraints}
                 >
-                  {metadata?.[con.fn]?.plural ||
-                    ReactMarkdownOrHtml({ source: con.text })}
+                  {metadata?.[con.fn]?.plural || (
+                    <ReactMarkdownOrHtml source={con.text} />
+                  )}
                 </ConstraintListItem>
               ))}
             </List>

@@ -52,7 +52,7 @@ describe("Basic UI", () => {
     );
     const map = getByTestId("map-and-label-map");
 
-    addFeaturesToMap(map, [point1]);
+    await addFeaturesToMap(map, [point1]);
 
     await waitFor(() =>
       expect(
@@ -69,7 +69,7 @@ describe("Basic UI", () => {
 
     const map = getByTestId("map-and-label-map");
 
-    addFeaturesToMap(map, [point1]);
+    await addFeaturesToMap(map, [point1]);
 
     expect(getByRole("tab", { name: /Tree 1/ })).toBeInTheDocument();
     expect(getByRole("heading", { name: /Tree 1/ })).toBeInTheDocument();
@@ -83,7 +83,7 @@ describe("Basic UI", () => {
 
     const map = getByTestId("map-and-label-map");
 
-    addFeaturesToMap(map, [point1]);
+    await addFeaturesToMap(map, [point1]);
 
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -98,7 +98,7 @@ describe("validation and error handling", () => {
     );
     const map = getByTestId("map-and-label-map");
 
-    addFeaturesToMap(map, [point1]);
+    await addFeaturesToMap(map, [point1]);
 
     const tabOne = queryByRole("tab", { name: /Tree 1/ });
     expect(tabOne).toBeInTheDocument();
@@ -119,7 +119,7 @@ describe("validation and error handling", () => {
       <MapAndLabel {...props} />,
     );
 
-    addMultipleFeatures([point1, point2]);
+    await addMultipleFeatures([point1, point2]);
 
     // vertical side tab query
     const firstTab = getByRole("tab", { name: /Tree 1/ });
@@ -166,7 +166,7 @@ describe("validation and error handling", () => {
     );
     const map = getByTestId("map-and-label-map");
 
-    addFeaturesToMap(map, [point1]);
+    await addFeaturesToMap(map, [point1]);
 
     const tabOne = queryByRole("tab", { name: /Tree 1/ });
 
@@ -185,7 +185,7 @@ it("does not trigger handleSubmit when errors exist", async () => {
   );
   const map = getByTestId("map-and-label-map");
 
-  addFeaturesToMap(map, [point1]);
+  await addFeaturesToMap(map, [point1]);
 
   await clickContinue(user);
 
@@ -201,14 +201,15 @@ describe("basic interactions - happy path", () => {
     const { getByTestId } = await setup(<MapAndLabel {...props} />);
 
     let map = getByTestId("map-and-label-map");
-    addFeaturesToMap(map, [point1]);
+    await addFeaturesToMap(map, [point1]);
 
     const firstTabPanel = getByTestId("vertical-tabpanel-0");
 
     expect(firstTabPanel).toBeVisible();
 
     map = getByTestId("map-and-label-map");
-    expect(map).toHaveAttribute("drawgeojsondata", mockFeaturePointObj);
+    // React 19 sets known web component properties directly (not as HTML attributes)
+    expect((map as any).drawGeojsonData).toBe(mockFeaturePointObj);
   });
 
   it("a user can input details on a single feature and submit", async () => {
@@ -216,7 +217,7 @@ describe("basic interactions - happy path", () => {
 
     const map = getByTestId("map-and-label-map");
 
-    addFeaturesToMap(map, [point1]);
+    await addFeaturesToMap(map, [point1]);
 
     const firstTabPanel = getByTestId("vertical-tabpanel-0");
 
@@ -232,7 +233,7 @@ describe("basic interactions - happy path", () => {
   it("adding multiple features to the map adds multiple feature tabs", async () => {
     const { queryByRole } = await setup(<MapAndLabel {...props} />);
 
-    addMultipleFeatures([point1, point2, point3]);
+    await addMultipleFeatures([point1, point2, point3]);
 
     // vertical side tab query
     const firstTab = queryByRole("tab", { name: /Tree 1/ });
@@ -257,7 +258,7 @@ describe("basic interactions - happy path", () => {
     );
     getByTestId("map-and-label-map");
 
-    addMultipleFeatures([point1, point2]);
+    await addMultipleFeatures([point1, point2]);
 
     // vertical side tab query
     const firstTab = getByRole("tab", { name: /Tree 1/ });
@@ -288,7 +289,7 @@ describe("basic interactions - happy path", () => {
       <MapAndLabel {...props} />,
     );
 
-    addMultipleFeatures([point1, point2]);
+    await addMultipleFeatures([point1, point2]);
 
     const firstTab = getByRole("tab", { name: /Tree 1/ });
     const secondTab = getByRole("tab", { name: /Tree 2/ });
@@ -334,7 +335,7 @@ describe("copy feature select", () => {
     const { getByTestId, getByTitle } = await setup(<MapAndLabel {...props} />);
     const map = getByTestId("map-and-label-map");
 
-    addFeaturesToMap(map, [point1]);
+    await addFeaturesToMap(map, [point1]);
 
     const copyTitle = getByTitle("Copy from");
 
@@ -346,7 +347,7 @@ describe("copy feature select", () => {
   it("is enabled once multiple features are present", async () => {
     const { getByTitle } = await setup(<MapAndLabel {...props} />);
 
-    addMultipleFeatures([point1, point2]);
+    await addMultipleFeatures([point1, point2]);
 
     const copyTitle = getByTitle("Copy from");
 
@@ -359,7 +360,7 @@ describe("copy feature select", () => {
     const { getByTitle, user, queryByRole, getByRole } = await setup(
       <MapAndLabel {...props} />,
     );
-    addMultipleFeatures([point1, point2]);
+    await addMultipleFeatures([point1, point2]);
 
     const copyTitle = getByTitle("Copy from");
 
@@ -378,7 +379,7 @@ describe("copy feature select", () => {
   it("copies all data from one feature to another", async () => {
     const { getByTitle, user, getByLabelText, getByRole, getByTestId } =
       await setup(<MapAndLabel {...props} />);
-    addMultipleFeatures([point1, point2, point3]);
+    await addMultipleFeatures([point1, point2, point3]);
     const tabTwo = getByRole("tab", { name: /Tree 2/ });
 
     await fillOutForm(user);
@@ -405,7 +406,7 @@ describe("copy feature select", () => {
     const { getByTitle, user, container } = await setup(
       <MapAndLabel {...props} />,
     );
-    addMultipleFeatures([point1, point2]);
+    await addMultipleFeatures([point1, point2]);
 
     const copyTitle = getByTitle("Copy from");
 
@@ -425,7 +426,7 @@ describe("remove feature button", () => {
     );
     const map = getByTestId("map-and-label-map");
 
-    addFeaturesToMap(map, [point1]);
+    await addFeaturesToMap(map, [point1]);
 
     const tabOne = getByRole("tab", { name: /Tree 1/ });
     const tabOnePanel = getByRole("tabpanel", { name: /Tree 1/ });
@@ -441,7 +442,7 @@ describe("remove feature button", () => {
   it("removes a feature from the form - multiple features", async () => {
     const { getByRole, user } = await setup(<MapAndLabel {...props} />);
 
-    addMultipleFeatures([point1, point2]);
+    await addMultipleFeatures([point1, point2]);
 
     const tabOne = getByRole("tab", { name: /Tree 1/ });
     const tabTwo = getByRole("tab", { name: /Tree 2/ });
@@ -467,7 +468,7 @@ describe("remove feature button", () => {
     );
     let map = getByTestId("map-and-label-map");
 
-    addFeaturesToMap(map, [point1]);
+    await addFeaturesToMap(map, [point1]);
 
     const removeButton = getByRole("button", { name: "Remove" });
 
@@ -475,8 +476,8 @@ describe("remove feature button", () => {
 
     map = getByTestId("map-and-label-map");
 
-    expect(map).toHaveAttribute(
-      "drawgeojsondata",
+    // React 19 sets known web component properties directly (not as HTML attributes)
+    expect((map as any).drawGeojsonData).toBe(
       `{"type":"FeatureCollection","features":[]}`,
     );
   });
@@ -491,7 +492,7 @@ describe("payload generation", () => {
 
     const map = getByTestId("map-and-label-map");
 
-    addFeaturesToMap(map, [point1]);
+    await addFeaturesToMap(map, [point1]);
 
     const firstTabPanel = getByTestId("vertical-tabpanel-0");
 
@@ -516,7 +517,7 @@ describe("payload generation", () => {
 
     const map = getByTestId("map-and-label-map");
 
-    addFeaturesToMap(map, [point1]);
+    await addFeaturesToMap(map, [point1]);
 
     const firstTabPanel = getByTestId("vertical-tabpanel-0");
 
@@ -544,7 +545,7 @@ describe("payload generation", () => {
 
     const map = getByTestId("map-and-label-map");
 
-    addFeaturesToMap(map, [point1]);
+    await addFeaturesToMap(map, [point1]);
 
     const firstTabPanel = getByTestId("vertical-tabpanel-0");
 
@@ -610,8 +611,8 @@ describe("back navigation", () => {
     );
 
     const map = getByTestId("map-and-label-map");
-    expect(map).toHaveAttribute(
-      "drawgeojsondata",
+    // React 19 sets known web component properties directly (not as HTML attributes)
+    expect((map as any).drawGeojsonData).toBe(
       JSON.stringify(breadcrumb["data"]["trees"]),
     );
 

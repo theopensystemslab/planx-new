@@ -37,7 +37,7 @@ export const DataTable = <T,>({
     params: RenderCellParams,
     column: ColumnConfig<T>,
     filterValues?: string[],
-  ): JSX.Element | undefined => {
+  ): React.JSX.Element | undefined => {
     if (!column.type) return undefined;
     if (column.customComponent) {
       return column.customComponent(params);

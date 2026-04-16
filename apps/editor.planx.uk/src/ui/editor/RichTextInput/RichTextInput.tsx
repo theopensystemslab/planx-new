@@ -160,7 +160,7 @@ const RichTextInput: FC<Props> = (props) => {
     }
   };
 
-  const urlInputRef = useRef<{ focus: () => void; select: () => void }>(null);
+  const urlInputRef = useRef<HTMLInputElement>(null);
 
   const isAddingLink = Boolean(addingLink);
 
