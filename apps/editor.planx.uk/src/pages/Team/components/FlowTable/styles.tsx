@@ -78,6 +78,9 @@ export const FlowRowLink = styled(CustomLink)(() => ({
   "&:focus": {
     ...inputFocusStyle,
   },
+  "&:focus-visible": {
+    backgroundColor: "transparent",
+  },
 })) as typeof CustomLink;
 
 export const FlowTitleCell = styled(TableCell)(() => ({
