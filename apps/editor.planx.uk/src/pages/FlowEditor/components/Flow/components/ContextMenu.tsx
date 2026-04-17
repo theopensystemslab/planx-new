@@ -1,11 +1,13 @@
 import ContentCutIcon from "@mui/icons-material/ContentCut";
 import ContentPaste from "@mui/icons-material/ContentPaste";
+import HelpTextIcon from "@mui/icons-material/Help";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
 import Paper from "@mui/material/Paper";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import { useStore } from "pages/FlowEditor/lib/store";
 import {
@@ -50,6 +52,10 @@ export const ContextMenu: React.FC = () => {
     isTemplatedFrom,
     flow,
     orderedFlow,
+    showHelpText,
+    copyHelpText,
+    getCopiedHelpText,
+    pasteHelpText,
   ] = useStore((state) => [
     state.contextMenuSource,
     state.contextMenuPosition,
@@ -68,6 +74,10 @@ export const ContextMenu: React.FC = () => {
     state.isTemplatedFrom,
     state.flow,
     state.orderedFlow,
+    state.showHelpText,
+    state.copyHelpText,
+    state.getCopiedHelpText(),
+    state.pasteHelpText,
   ]);
 
   const handleCopy = () => {
@@ -97,6 +107,22 @@ export const ContextMenu: React.FC = () => {
       );
 
     cutNode(self, parent);
+    closeMenu();
+  };
+
+  const handleCopyHelp = () => {
+    if (!self)
+      return alert(
+        "Unable to copy help text, missing value for relationship 'self' (nodeId)",
+      );
+
+    copyHelpText(self);
+    closeMenu();
+  };
+
+  const handlePasteHelp = () => {
+    if (!self) return;
+    pasteHelpText(self);
     closeMenu();
   };
 
@@ -142,7 +168,28 @@ export const ContextMenu: React.FC = () => {
       parentIsTemplatedInternalPortal || parentIsChildOfTemplatedInternalPortal;
 
     if (source === "node") {
-      return [
+      const node = self ? getNode(self) : null;
+      const excludedTypes = [
+        TYPES.Result,
+        TYPES.Review,
+        TYPES.PlanningConstraints,
+        TYPES.Filter,
+        TYPES.InternalPortal,
+        TYPES.Section,
+        TYPES.SetValue,
+        TYPES.SetFee,
+        TYPES.Send,
+      ];
+
+      const supportsHelpText = Boolean(
+        showHelpText &&
+        node &&
+        node.type !== undefined &&
+        !excludedTypes.includes(node.type),
+      );
+      const hasCopiedHelper = Boolean(getCopiedHelpText);
+
+      const actions: ContextMenuAction[] = [
         {
           id: "copy",
           label: "Copy",
@@ -171,6 +218,26 @@ export const ContextMenu: React.FC = () => {
           onClick: handleCut,
         },
       ];
+
+      if (supportsHelpText) {
+        actions.push({
+          id: "copy-help",
+          label: "Copy help text",
+          icon: <HelpTextIcon fontSize="small" />,
+          disabled: false,
+          onClick: handleCopyHelp,
+        });
+
+        actions.push({
+          id: "paste-help",
+          label: "Paste help text",
+          icon: <HelpTextIcon fontSize="small" />,
+          disabled: !hasCopiedHelper,
+          onClick: handlePasteHelp,
+        });
+      }
+
+      return actions;
     }
 
     if (source === "hanger") {
