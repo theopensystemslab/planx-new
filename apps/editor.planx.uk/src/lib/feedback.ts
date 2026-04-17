@@ -27,10 +27,9 @@ export async function getInternalFeedbackMetadata(): Promise<FeedbackMetadata> {
     breadcrumbs,
     currentCard: node,
     computePassport,
-    fetchCurrentTeam,
+    teamId,
     id: flowId,
   } = useStore.getState();
-  const { id: teamId } = await fetchCurrentTeam();
   const userData = {
     breadcrumbs: breadcrumbs,
     passport: computePassport(),
