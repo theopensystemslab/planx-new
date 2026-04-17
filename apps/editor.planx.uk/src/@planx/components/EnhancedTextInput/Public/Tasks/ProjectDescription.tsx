@@ -241,7 +241,7 @@ const ProjectDescription: React.FC<Props> = ({
     return (
       <Box mb={2}>
         <Typography variant="h2" component="h1" mb={1}>
-          Do you want to modify this description?
+          Confirm your project description
         </Typography>
         <Typography variant="subtitle1" component="p" mb={2}>
           Edit the description below, or continue to submit it as shown.
