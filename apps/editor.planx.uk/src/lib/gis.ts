@@ -44,6 +44,52 @@ export const useGeoJSONChange: UseGeoJSONChange = (mapId, callback) => {
   return [features, setFeatures];
 };
 
+export type GeocodeAutocompleteAddress = {
+  LPI: {
+    LAT: number;
+    LNG: number;
+  };
+}
+
+export type GeocodeChangeEvent = CustomEvent<GeocodeAutocompleteAddress>;
+
+const isGeocodeChangeEvent = (event: Event): event is GeocodeChangeEvent => {
+  return event instanceof CustomEvent;
+};
+
+type UseGeocodeChange = (
+  inputId: string,
+  callback: (event: GeocodeChangeEvent) => void,
+) => [GeocodeAutocompleteAddress | undefined, Dispatch<SetStateAction<GeocodeAutocompleteAddress | undefined>>];
+
+/**
+ * Hook for interacting with @opensystemslab/map geocode-autocomplete
+ * Assign a callback function to be triggered on the "addressSelection" event
+ */
+export const useGeocodeChange: UseGeocodeChange = (inputId, callback) => {
+  const [selectedAddress, setSelectedAddress] = useState<GeocodeAutocompleteAddress | undefined>(undefined);
+
+  useEffect(() => {
+    const geocodeAutocompleteSearchHandler: EventListener = (event) => {
+      if (!isGeocodeChangeEvent(event)) return;
+
+      callback(event);
+    }
+
+    const geocodeAutocomplete: HTMLElement | null = document.getElementById("geocode-autocomplete");
+    geocodeAutocomplete?.addEventListener("addressSelection", geocodeAutocompleteSearchHandler);
+
+    return function cleanup() {
+      geocodeAutocomplete?.removeEventListener(
+        "addressSelection",
+        geocodeAutocompleteSearchHandler,
+      );
+    };
+  }, [callback, inputId]);
+
+  return [selectedAddress, setSelectedAddress];
+};
+
 /**
  * Convert a complex local authority boundary to a simplified bounding box
  */

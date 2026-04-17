@@ -106,6 +106,9 @@ importers:
       '@turf/bbox-polygon':
         specifier: ^7.3.4
         version: 7.3.4
+      '@turf/boolean-point-in-polygon':
+        specifier: ^7.3.4
+        version: 7.3.4
       '@turf/buffer':
         specifier: ^7.3.4
         version: 7.3.4
@@ -2768,6 +2771,9 @@ packages:
   '@turf/bbox@7.3.4':
     resolution: {integrity: sha512-D5ErVWtfQbEPh11yzI69uxqrcJmbPU/9Y59f1uTapgwAwQHQztDWgsYpnL3ns8r1GmPWLP8sGJLVTIk2TZSiYA==}
 
+  '@turf/boolean-point-in-polygon@7.3.4':
+    resolution: {integrity: sha512-v/4hfyY90Vz9cDgs2GwjQf+Lft8o7mNCLJOTz/iv8SHAIgMMX0czEoIaNVOJr7tBqPqwin1CGwsncrkf5C9n8Q==}
+
   '@turf/buffer@7.3.4':
     resolution: {integrity: sha512-MVOCBDuOl3KGDsh2stW12RmiFaFeSkVjeUbZ+ADUtIVnv+jlFsmjBpFtsEw8s9YQn5g0667QppOshm0FBHA57Q==}
 
@@ -2779,6 +2785,9 @@ packages:
 
   '@turf/helpers@7.3.4':
     resolution: {integrity: sha512-U/S5qyqgx3WTvg4twaH0WxF3EixoTCfDsmk98g1E3/5e2YKp7JKYZdz0vivsS5/UZLJeZDEElOSFH4pUgp+l7g==}
+
+  '@turf/invariant@7.3.4':
+    resolution: {integrity: sha512-88Eo4va4rce9sNZs6XiMJowWkikM3cS2TBhaCKlU+GFHdNf8PFEpiU42VDU8q5tOF6/fu21Rvlke5odgOGW4AQ==}
 
   '@turf/jsts@2.7.2':
     resolution: {integrity: sha512-zAezGlwWHPyU0zxwcX2wQY3RkRpwuoBmhhNE9HY9kWhFDkCxZ3aWK5URKwa/SWKJbj9aztO+8vtdiBA28KVJFg==}
@@ -5520,6 +5529,9 @@ packages:
   pkg-dir@5.0.0:
     resolution: {integrity: sha512-NPE8TDbzl/3YQYY7CSS228s3g2ollTFnc+Qi3tqmqJp9Vg2ovUpixcJEo2HJScN2Ez+kEaal6y70c0ehqJBJeA==}
     engines: {node: '>=10'}
+
+  point-in-polygon-hao@1.2.4:
+    resolution: {integrity: sha512-x2pcvXeqhRHlNRdhLs/tgFapAbSSe86wa/eqmj1G6pWftbEs5aVRJhRGM6FYSUERKu0PjekJzMq0gsI2XyiclQ==}
 
   polished@4.3.1:
     resolution: {integrity: sha512-OBatVyC/N7SCW/FaDHrSd+vn0o5cS855TOmYi4OkdWUMSJCET/xip//ch8xGUvtr3i44X9LVyWwQlRMTN3pwSA==}
@@ -9481,6 +9493,14 @@ snapshots:
       '@types/geojson': 7946.0.16
       tslib: 2.8.1
 
+  '@turf/boolean-point-in-polygon@7.3.4':
+    dependencies:
+      '@turf/helpers': 7.3.4
+      '@turf/invariant': 7.3.4
+      '@types/geojson': 7946.0.16
+      point-in-polygon-hao: 1.2.4
+      tslib: 2.8.1
+
   '@turf/buffer@7.3.4':
     dependencies:
       '@turf/bbox': 7.3.4
@@ -9507,6 +9527,12 @@ snapshots:
 
   '@turf/helpers@7.3.4':
     dependencies:
+      '@types/geojson': 7946.0.16
+      tslib: 2.8.1
+
+  '@turf/invariant@7.3.4':
+    dependencies:
+      '@turf/helpers': 7.3.4
       '@types/geojson': 7946.0.16
       tslib: 2.8.1
 
@@ -12809,6 +12835,10 @@ snapshots:
   pkg-dir@5.0.0:
     dependencies:
       find-up: 5.0.0
+
+  point-in-polygon-hao@1.2.4:
+    dependencies:
+      robust-predicates: 3.0.3
 
   polished@4.3.1:
     dependencies:
