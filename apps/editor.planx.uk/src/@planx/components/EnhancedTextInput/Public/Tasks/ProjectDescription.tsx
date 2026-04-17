@@ -120,6 +120,7 @@ const ProjectDescription: React.FC<Props> = ({
       initialValueRef.current,
     ],
     retry: 0,
+    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
