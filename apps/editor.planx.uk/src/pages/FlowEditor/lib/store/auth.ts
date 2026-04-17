@@ -1,12 +1,9 @@
-import { CoreDomainClient } from "@opensystemslab/planx-core";
 import type { User } from "@opensystemslab/planx-core/types";
 import { getUser, logout } from "lib/api/auth/requests";
 import { clearCookie, setCookie } from "lib/cookie";
 import { client } from "lib/graphql";
 import { disconnectShareDB } from "pages/FlowEditor/lib/sharedb";
 import { type StateCreator } from "zustand";
-
-import type { SharedStore } from "./shared";
 
 export interface AuthStore {
   authStatus: "idle" | "loading" | "authenticated" | "unauthenticated";
@@ -17,12 +14,10 @@ export interface AuthStore {
   logout: () => Promise<void>;
 }
 
-export const authStore: StateCreator<
-  AuthStore & SharedStore,
-  [],
-  [],
-  AuthStore
-> = (set, get) => ({
+export const authStore: StateCreator<AuthStore, [], [], AuthStore> = (
+  set,
+  get,
+) => ({
   authStatus: "idle",
   user: null,
   jwt: null,
@@ -34,7 +29,7 @@ export const authStore: StateCreator<
     set({ authStatus: "loading" });
 
     // On local and Pizza environments, JWT is stored as a URL param due to restrictions on
-    // cross-domain cookies (we auth via planx.dev). On staging and production these cookies 
+    // cross-domain cookies (we auth via planx.dev). On staging and production these cookies
     // are set via response headers from the API.
     const url = new URL(window.location.href);
     const jwtParam = url.searchParams.get("jwt");
@@ -44,7 +39,11 @@ export const authStore: StateCreator<
       setCookie("auth", JSON.stringify({ loggedIn: true }));
 
       url.searchParams.delete("jwt");
-      window.history.replaceState({}, document.title, url.pathname + url.search);
+      window.history.replaceState(
+        {},
+        document.title,
+        url.pathname + url.search,
+      );
     }
 
     try {
@@ -60,10 +59,6 @@ export const authStore: StateCreator<
         authStatus: "authenticated",
         user,
         jwt,
-        $client: new CoreDomainClient({
-          targetURL: import.meta.env.VITE_APP_HASURA_URL!,
-          auth: { jwt },
-        }),
       });
     } catch (err) {
       set({ authStatus: "unauthenticated", user: null, jwt: null });
@@ -71,7 +66,7 @@ export const authStore: StateCreator<
   },
 
   logout: async () => {
-    await logout()
+    await logout();
 
     // Clean up client connections
     disconnectShareDB();
@@ -86,9 +81,6 @@ export const authStore: StateCreator<
       authStatus: "unauthenticated",
       user: null,
       jwt: null,
-      $client: new CoreDomainClient({
-        targetURL: import.meta.env.VITE_APP_HASURA_URL!,
-      }),
     });
   },
 });
