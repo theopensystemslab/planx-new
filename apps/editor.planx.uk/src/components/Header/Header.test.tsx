@@ -34,8 +34,6 @@ const mockTeam1: Team = {
     helpOpeningHours: "Monday - Friday, 9am - 5pm",
     emailReplyToId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
     referenceCode: "OSL",
-    externalPlanningSiteName: "Open Planning",
-    externalPlanningSiteUrl: "openplanning.com",
     isTrial: false,
   },
 };
@@ -61,8 +59,6 @@ const mockTeam2: Team = {
     helpOpeningHours: "Monday - Friday, 9am - 5pm",
     emailReplyToId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
     referenceCode: "CSL",
-    externalPlanningSiteName: "Closed Planning",
-    externalPlanningSiteUrl: "closedplanning.com",
     isTrial: false,
   },
 };

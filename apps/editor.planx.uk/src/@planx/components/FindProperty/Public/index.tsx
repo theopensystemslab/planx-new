@@ -10,9 +10,6 @@ import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedL
 import { Feature } from "geojson";
 import { Store } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
-import ExternalPlanningSiteDialog, {
-  DialogPurpose,
-} from "ui/public/ExternalPlanningSiteDialog";
 
 import {
   FindProperty,
@@ -140,8 +137,9 @@ function Component(props: Props) {
     </Card>
   );
 
+
   function getBody() {
-    if (props.allowNewAddresses && page === "new-address") {
+    if (page === "new-address") {
       return (
         <>
           <CardHeader
@@ -192,11 +190,6 @@ function Component(props: Props) {
             id={props.id}
             description={props.description || ""}
           />
-          {!props.allowNewAddresses ? (
-            <ExternalPlanningSiteDialog
-              purpose={DialogPurpose.MissingAddress}
-            ></ExternalPlanningSiteDialog>
-          ) : (
             <Box sx={{ textAlign: "right" }}>
               <Link
                 component="button"
@@ -210,7 +203,6 @@ function Component(props: Props) {
                 </Typography>
               </Link>
             </Box>
-          )}
           <AddressLoadingWrap>
             {Boolean(address) && isPending && (
               <DelayedLoadingIndicator
