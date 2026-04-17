@@ -278,6 +278,14 @@ export interface EditorStore extends Store.Store {
   getClonedNodeId: () => string | null;
   copyNode: (id: NodeId) => void;
   getCopiedNode: () => { node: Store.Node; children: Store.Node[] };
+  copyHelpText: (id: NodeId) => void;
+  getCopiedHelpText: () => {
+    info?: string;
+    policyRef?: string;
+    howMeasured?: string;
+    definitionImg?: string | null;
+  } | null;
+  pasteHelpText: (toId: NodeId) => void;
   getFlows: (teamId: number) => Promise<FlowSummary[]>;
   isClone: (id: NodeId) => boolean;
   lastPublished: (flowId: string) => Promise<string>;
@@ -504,6 +512,60 @@ export const editorStore: StateCreator<
     if (!payload) return;
 
     return JSON.parse(payload);
+  },
+  copyHelpText(id: string) {
+    const { flow } = get();
+    const node = flow[id];
+    if (!node) return;
+
+    const payload = {
+      rootId: id,
+      info: node.data?.info ?? null,
+      policyRef: node.data?.policyRef ?? null,
+      howMeasured: node.data?.howMeasured ?? null,
+      definitionImg: node.data?.definitionImg ?? null,
+    };
+
+    try {
+      localStorage.setItem("copiedHelpText", JSON.stringify(payload));
+    } catch (error) {
+      alert("Failed to copy help text");
+    }
+  },
+
+  getCopiedHelpText: () => {
+    const payload = localStorage.getItem("copiedHelpText");
+    if (!payload) return null;
+    try {
+      return JSON.parse(payload);
+    } catch (err) {
+      return null;
+    }
+  },
+
+  pasteHelpText(toId: string) {
+    const copied = localStorage.getItem("copiedHelpText");
+    if (!copied) return;
+    const payload = JSON.parse(copied);
+
+    const { flow } = get();
+    const node = flow[toId];
+    if (!node) return;
+
+    const newData = {
+      ...(node.data || {}),
+      info: payload.info ?? node.data?.info,
+      policyRef: payload.policyRef ?? node.data?.policyRef,
+      howMeasured: payload.howMeasured ?? node.data?.howMeasured,
+      definitionImg:
+        payload.definitionImg ?? node.data?.definitionImg ?? undefined,
+    };
+
+    try {
+      get().updateNode({ id: toId, data: newData });
+    } catch (err) {
+      alert("Failed to paste help text");
+    }
   },
 
   getCutNode: () => {
