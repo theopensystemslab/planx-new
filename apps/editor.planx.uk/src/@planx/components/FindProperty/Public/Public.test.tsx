@@ -188,7 +188,6 @@ describe("render states", () => {
       <FindProperty
         description="Find your property"
         title="Type your postal code"
-        allowNewAddresses={true}
         newAddressTitle="Plot a new address"
         handleSubmit={handleSubmit}
       />,
@@ -226,7 +225,6 @@ describe("render states", () => {
       <FindProperty
         description="Find your property"
         title="Type your postal code"
-        allowNewAddresses={true}
         newAddressFirstPage={true}
         newAddressTitle="Plot a new address"
         handleSubmit={handleSubmit}
@@ -252,14 +250,13 @@ describe("render states", () => {
     expect(handleSubmit).not.toHaveBeenCalled();
   });
 
-  it("opens the external planning site dialog by default if allowNewAddresses is toggled off", async () => {
+  it("opens the external planning site dialog by default", async () => {
     const handleSubmit = vi.fn();
 
     const { user } = await setup(
       <FindProperty
         description="Find your property"
         title="Type your postal code"
-        allowNewAddresses={false}
         handleSubmit={handleSubmit}
       />,
     );
@@ -291,7 +288,6 @@ describe("render states", () => {
       <FindProperty
         description="Find your property"
         title="Type your postal code"
-        allowNewAddresses
         handleSubmit={handleSubmit}
         previouslySubmittedData={{
           data: previousData,
@@ -396,7 +392,6 @@ describe("picking an OS address", () => {
       <FindProperty
         description="Find your property"
         title="Type your postal code"
-        allowNewAddresses
         handleSubmit={handleSubmit}
         previouslySubmittedData={{
           data: previousData,
@@ -422,7 +417,6 @@ describe("plotting a new address that does not have a uprn yet", () => {
       <FindProperty
         description="Find your property"
         title="Type your postal code"
-        allowNewAddresses={true}
         newAddressTitle="Plot a new address"
         handleSubmit={handleSubmit}
       />,
@@ -466,7 +460,6 @@ describe("plotting a new address that does not have a uprn yet", () => {
       <FindProperty
         description="Find your property"
         title="Type your postal code"
-        allowNewAddresses
         newAddressTitle="Plot a new address"
         handleSubmit={handleSubmit}
         previouslySubmittedData={{

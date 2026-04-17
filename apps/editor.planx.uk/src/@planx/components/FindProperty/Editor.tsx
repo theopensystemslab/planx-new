@@ -69,20 +69,6 @@ function FindPropertyComponent(props: Props) {
           </InputRow>
         </ModalSectionContent>
         <ModalSectionContent>
-          <InputRow>
-            <Switch
-              checked={formik.values.allowNewAddresses}
-              onChange={() =>
-                formik.setFieldValue(
-                  "allowNewAddresses",
-                  !formik.values.allowNewAddresses,
-                )
-              }
-              label="Allow users to plot new addresses without a UPRN"
-              disabled={props.disabled}
-            />
-          </InputRow>
-          {formik.values.allowNewAddresses ? (
             <>
               <InputRow>
                 <Switch
@@ -133,9 +119,6 @@ function FindPropertyComponent(props: Props) {
                 </InputRow>
               </InputGroup>
             </>
-          ) : (
-            <></>
-          )}
         </ModalSectionContent>
       </ModalSection>
       <ModalFooter formik={formik} disabled={props.disabled} />
