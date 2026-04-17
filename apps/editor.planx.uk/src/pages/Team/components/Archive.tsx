@@ -10,10 +10,11 @@ import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 import { FlowCardView } from "../../FlowEditor/lib/store/editor";
 import { FlowTable } from "../components/FlowTable";
 import { ShowingServicesHeader } from "../components/ShowingServicesHeader";
-import { useGetArchivedFlows } from "../helpers/useGetArchivedFlows";
 import { DashboardList } from "./DashboardList";
 import FlowCard from "./FlowCard";
+import { useGetArchivedFlows } from "./hooks/useGetArchivedFlows";
 import { StyledToggleButton } from "./StyledToggleButton";
+
 type Props = {
   flowCardView: FlowCardView;
   handleViewChange: (
@@ -22,7 +23,6 @@ type Props = {
   ) => void;
   teamId: number;
   slug: string;
-  fetchFlows: () => void;
 };
 
 const Archive: React.FC<Props> = ({
@@ -30,7 +30,6 @@ const Archive: React.FC<Props> = ({
   handleViewChange,
   teamId,
   slug,
-  fetchFlows,
 }) => {
   const {
     data: archivedFlowsData,
@@ -113,8 +112,7 @@ const Archive: React.FC<Props> = ({
                 <FlowCard
                   flow={flow}
                   key={flow.slug}
-                  refreshFlows={fetchFlows}
-                  showDetails={false}
+                  view={"archive"}
                 />
               ))}
             </DashboardList>
@@ -123,8 +121,7 @@ const Archive: React.FC<Props> = ({
               flows={archivedFlows}
               teamId={teamId}
               teamSlug={slug}
-              refreshFlows={fetchFlows}
-              showDetails={false}
+              view={"archive"}
             />
           )}
         </>

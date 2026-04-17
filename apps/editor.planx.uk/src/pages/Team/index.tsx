@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import { useSearch } from "@tanstack/react-router";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { isEmpty, orderBy } from "lodash";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { InfoChip } from "ui/editor/InfoChip";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 
@@ -15,6 +15,7 @@ import Archive from "./components/Archive";
 import { DashboardList } from "./components/DashboardList";
 import { Card, CardContent } from "./components/FlowCard/styles";
 import Flows from "./components/Flows";
+import { useGetFlows } from "./components/hooks/useGetFlows";
 import { sortOptions } from "./helpers/sortAndFilterOptions";
 import TeamLayout from "./TeamLayout";
 
@@ -36,24 +37,23 @@ interface TeamProps {
   flows: FlowSummary[];
 }
 
-const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
+const Team: React.FC<TeamProps> = () => {
   const [
     { id: teamId, slug },
     canUserEditTeam,
-    getFlows,
     isTrial,
     flowCardView,
     setFlowCardView,
   ] = useStore((state) => [
     state.getTeam(),
     state.canUserEditTeam,
-    state.getFlows,
     state.teamSettings?.isTrial,
     state.flowCardView,
     state.setFlowCardView,
   ]);
 
-  const [flows, setFlows] = useState<FlowSummary[] | null>(initialFlows);
+  const { data } = useGetFlows(teamId);
+  const flows = data?.flows ?? null;
   const [flowView, setFlowView] = useState<FlowView>("flows");
 
   const [searchedFlows, setSearchedFlows] = useState<FlowSummary[] | null>(
@@ -141,21 +141,6 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
     }
   };
 
-  const fetchFlows = useCallback(() => {
-    getFlows(teamId).then((flows) => {
-      // Copy the array and sort by most recently edited desc using last associated operation.createdAt, not flow.updatedAt
-      setFlows(flows);
-    });
-  }, [teamId, setFlows, getFlows]);
-
-  const updateFlow = useCallback((updatedFlow: FlowSummary) => {
-    const updateSingleFlow = (prev: FlowSummary[] | null) =>
-      prev?.map((f) => (f.id === updatedFlow.id ? updatedFlow : f)) ?? prev;
-
-    setFlows(updateSingleFlow);
-    setSearchedFlows(updateSingleFlow);
-  }, []);
-
   useEffect(() => {
     if (shouldClearSearch) {
       setShouldClearSearch(false);
@@ -216,14 +201,12 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
             sortedFlows={sortedFlows}
             sortOptions={sortOptions}
             flowCardView={flowCardView}
-            fetchFlows={fetchFlows}
             teamId={teamId}
             flows={flows}
             pinnedFlows={pinnedFlows}
             unpinnedFlows={unpinnedFlows}
             handleViewChange={handleViewChange}
             slug={slug}
-            updateFlow={updateFlow}
           />
         )}
         {flowView === "archive" && (
@@ -232,7 +215,6 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
             handleViewChange={handleViewChange}
             teamId={teamId}
             slug={slug}
-            fetchFlows={fetchFlows}
           />
         )}
 
