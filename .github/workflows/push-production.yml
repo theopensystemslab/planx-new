@@ -110,6 +110,12 @@ jobs:
           edit-pr-comment: true
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+      - name: Invalidate CloudFront cache
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+        run: |
+          DIST_ID=$(pulumi stack output cdnDistributionId --stack production --cwd infrastructure/application)
+          aws cloudfront create-invalidation --distribution-id "$DIST_ID" --paths "/*"
 
   notifications:
     name: Notifications
