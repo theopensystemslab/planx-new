@@ -27,6 +27,46 @@ const staticErrorResponses: aws.cloudfront.DistributionArgs["customErrorResponse
   },
 ];
 
+const responseHeadersPolicy = new aws.cloudfront.ResponseHeadersPolicy(
+  "shared-cdn-headers-policy",
+  {
+    corsConfig: {
+      // XXX: might need to turn this back on because the editor side uses cookies
+      //      but when this is true, AllowHeaders can't be `*` so will need to dive deeper
+      accessControlAllowCredentials: false,
+      accessControlAllowHeaders: {
+        items: ["*"],
+      },
+      accessControlAllowMethods: {
+        items: ["GET", "HEAD", "OPTIONS"],
+      },
+      // TODO: Narrow this down to the list of domain names we're actually using
+      accessControlAllowOrigins: {
+        items: ["*"],
+      },
+      originOverride: true,
+    },
+    securityHeadersConfig: {
+      // Prevent iFrames
+      frameOptions: {
+        frameOption: "DENY",
+        override: true,
+      },
+      // Implements HTTP Strict Transport Security
+      strictTransportSecurity: {
+        accessControlMaxAgeSec: 63072000, // maximum (2 years)
+        override: true,
+        includeSubdomains: true,
+        preload: true,
+      },
+      // Set X-Content-Type-Options = "nosniff"
+      contentTypeOptions: {
+        override: true,
+      },
+    },
+  }
+);
+
 export const createCdn = ({
   domain,
   acmCertificateArn,
@@ -86,45 +126,7 @@ export const createCdn = ({
       lambdaFunctionAssociations: lambdaFunctionAssociation
         ? [lambdaFunctionAssociation]
         : [],
-      responseHeadersPolicyId: new aws.cloudfront.ResponseHeadersPolicy(
-        `${domain.replace(/[^a-z0-9_-]/g, "_")}-policy`,
-        {
-          corsConfig: {
-            // XXX: might need to turn this back on because the editor side uses cookies
-            //      but when this is true, AllowHeaders can't be `*` so will need to dive deeper
-            accessControlAllowCredentials: false,
-            accessControlAllowHeaders: {
-              items: ["*"],
-            },
-            accessControlAllowMethods: {
-              items: ["GET", "HEAD", "OPTIONS"],
-            },
-            // TODO: Narrow this down to the list of domain names we're actually using
-            accessControlAllowOrigins: {
-              items: ["*"],
-            },
-            originOverride: true,
-          },
-          securityHeadersConfig: {
-            // Prevent iFrames
-            frameOptions: {
-              frameOption: "DENY",
-              override: true,
-            },
-            // Implements HTTP Strict Transport Security
-            strictTransportSecurity: {
-              accessControlMaxAgeSec: 63072000, // maximum (2 years)
-              override: true,
-              includeSubdomains: true,
-              preload: true,
-            },
-            // Set X-Content-Type-Options = "nosniff"
-            contentTypeOptions: {
-              override: true,
-            },
-          },
-        }
-      ).id,
+      responseHeadersPolicyId: responseHeadersPolicy.id
     },
 
     // "All" is the most broad distribution, and also the most expensive.
