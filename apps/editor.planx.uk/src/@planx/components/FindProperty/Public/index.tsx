@@ -44,8 +44,6 @@ function Component(props: Props) {
     previouslySubmittedData?._address,
   );
 
-  const newAddressTitle = props.newAddressTitle
-  console.log({newAddressTitle})
   const {
     localAuthorityDistricts,
     localPlanningAuthorities,
