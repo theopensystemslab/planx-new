@@ -19,6 +19,17 @@ export const taskDefaults: TaskDefaults = {
   },
 };
 
+const initialScreenDefaults: Record<
+  Task,
+  { title: string; description: string }
+> = {
+  projectDescription: {
+    title: "Describe the project",
+    description:
+      "<p>Write a brief description of the changes using two sentences or fewer.</p><p>Your description will be checked for likelihood of validity using an AI model, and you'll have the opportunity to review and modify any changes.</p>",
+  },
+};
+
 export const parseEnhancedTextInput = (
   data: Partial<EnhancedTextInput> | undefined,
 ): EnhancedTextInput => {
@@ -26,8 +37,8 @@ export const parseEnhancedTextInput = (
 
   return {
     task,
-    title: data?.title || "",
-    description: data?.description,
+    title: initialScreenDefaults[task].title,
+    description: initialScreenDefaults[task].description,
     ...parseBaseNodeData(data),
     ...taskDefaults[task],
     ...(data || {}),
