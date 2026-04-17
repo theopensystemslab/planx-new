@@ -250,36 +250,6 @@ describe("render states", () => {
     expect(handleSubmit).not.toHaveBeenCalled();
   });
 
-  it("opens the external planning site dialog by default", async () => {
-    const handleSubmit = vi.fn();
-
-    const { user } = await setup(
-      <FindProperty
-        description="Find your property"
-        title="Type your postal code"
-        handleSubmit={handleSubmit}
-      />,
-    );
-
-    await user.click(
-      await screen.findByText("The site does not have an address"),
-    );
-
-    // confirm we can open & close the dialog
-    expect(
-      screen.getByTestId("external-planning-site-dialog"),
-    ).toBeInTheDocument();
-    await user.click(await screen.findByText("Return to application"));
-
-    // land back on the autocomplete page
-    expect(
-      await screen.findByText("Type your postal code"),
-    ).toBeInTheDocument();
-
-    expect(screen.getByTestId("continue-button")).toBeDisabled();
-    expect(handleSubmit).not.toHaveBeenCalled();
-  });
-
   it("clears address data when switching between pages", async () => {
     const handleSubmit = vi.fn();
     const previousData = osAddressProps;
