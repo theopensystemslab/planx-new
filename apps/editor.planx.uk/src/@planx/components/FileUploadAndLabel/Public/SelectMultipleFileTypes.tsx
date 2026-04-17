@@ -5,6 +5,7 @@ import FormLabel from "@mui/material/FormLabel";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
+import { groupBy } from "lodash";
 import capitalize from "lodash/capitalize";
 import React, { useMemo } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -89,7 +90,7 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
    * Group options by category for rendering
    */
   const groupedOptions = useMemo(
-    () => Object.groupBy(options, ({ category }) => category),
+    () => groupBy(options, ({ category }) => category),
     [options],
   );
 
