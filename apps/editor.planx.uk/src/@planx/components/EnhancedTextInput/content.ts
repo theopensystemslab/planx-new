@@ -1,5 +1,5 @@
 export const HOW_DOES_THIS_WORK = `
-  We use AI to review your project description and suggest improvements that may help your planning application be accepted more quickly.
+  We use AI to review your project description and suggest improvements that may help your planning application be validated more quickly.
 
   The AI checks your description for - 
   - Clear explanations of what you want to build
