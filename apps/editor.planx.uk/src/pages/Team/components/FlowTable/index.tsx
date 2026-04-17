@@ -178,7 +178,7 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
           </TableCell>
           {showPinnedColumn && (
             <TableCell>
-              <Box onClick={(e) => e.stopPropagation()}>
+              <Box onClick={(e) => e.stopPropagation()} sx={{ textAlign: "center" }}>
                 {userId && updateFlow && (
                   <FlowPinButton
                     flowId={flow.id}
