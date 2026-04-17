@@ -486,6 +486,7 @@ export = async () => {
 
   return {
     customDomains,
+    cdnDistributionId: cdn.id,
     metabaseServiceName: metabaseService.service.name,
     hasuraServiceName: hasuraService.service.name,
     apiServiceName: apiService.service.name,
