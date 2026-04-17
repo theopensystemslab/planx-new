@@ -27,7 +27,7 @@ export const StyledTableHead = styled(TableHead)(({ theme }) => ({
     borderBottom: `1px solid ${theme.palette.border.main}`,
     position: "sticky",
     top: 0,
-    zIndex: 2,
+    zIndex: theme.zIndex.appBar,
     "&:last-of-type": {
       borderLeft: `1px solid ${theme.palette.border.main}`,
     },
