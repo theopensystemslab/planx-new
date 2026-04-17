@@ -67,7 +67,7 @@ describe("Passport generation", () => {
     // Modification step: continue without changes
     expect(
       screen.getByRole("heading", {
-        name: /Do you want to modify this description/i,
+        name: /Confirm your project description/i,
         level: 1,
       }),
     ).toBeVisible();
@@ -121,7 +121,7 @@ describe("Passport generation", () => {
     // Modification step: continue without changes
     expect(
       screen.getByRole("heading", {
-        name: /Do you want to modify this description/i,
+        name: /Confirm your project description/i,
         level: 1,
       }),
     ).toBeVisible();
@@ -179,7 +179,7 @@ describe("Passport generation", () => {
     await user.click(screen.getByTestId("continue-button"));
     expect(
       screen.queryByRole("heading", {
-        name: /Do you want to modify this description/i,
+        name: /Confirm your project description/i,
         level: 1,
       }),
     ).not.toBeInTheDocument();
@@ -555,7 +555,7 @@ describe("basic layout and behaviour", () => {
     await user.click(screen.getByTestId("continue-button"));
     expect(
       screen.getByRole("heading", {
-        name: /Do you want to modify this description/i,
+        name: /Confirm your project description/i,
         level: 1,
       }),
     ).toBeVisible();
@@ -681,7 +681,7 @@ describe("basic layout and behaviour", () => {
     await user.click(screen.getByTestId("continue-button"));
     expect(
       screen.getByRole("heading", {
-        name: /Do you want to modify this description/i,
+        name: /Confirm your project description/i,
         level: 1,
       }),
     ).toBeVisible();
