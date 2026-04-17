@@ -14,6 +14,9 @@ export const Card = styled("li")(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
   border: `1px solid ${theme.palette.border.light}`,
   boxShadow: "0 2px 6px 1px rgba(0, 0, 0, 0.1)",
+  "&:hover": {
+    backgroundColor: theme.palette.background.paper,
+  },
 }));
 
 export const CardBanner = styled(Box)(({ theme }) => ({
@@ -48,6 +51,9 @@ export const FlowCardLink = styled(CustomLink)(() => ({
   zIndex: 1,
   "&:focus": {
     ...inputFocusStyle,
+  },
+  "&:focus-visible": {
+    backgroundColor: "transparent",
   },
 })) as typeof CustomLink;
 
