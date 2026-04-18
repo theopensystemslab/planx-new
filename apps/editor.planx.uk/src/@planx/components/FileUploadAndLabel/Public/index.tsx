@@ -13,6 +13,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { type SetStateAction, useReducer } from "react";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
+import { ValidationError } from "yup";
 
 import Card from "../../shared/Preview/Card";
 import { CardHeader } from "../../shared/Preview/CardHeader/CardHeader";
@@ -25,12 +26,7 @@ import {
   generatePayload,
   getRecoveredData,
 } from "../model";
-import {
-  fileLabelSchema,
-  fileListSchema,
-  formatFileLabelSchemaErrors,
-  slotsSchema,
-} from "../schema";
+import { formatValidationErrors, slotsSchema } from "../schema";
 import { FileAccordionCard } from "./FileAccordionCard";
 import {
   fileUploadAndLabelReducer,
@@ -127,48 +123,25 @@ export default function Component(props: Props) {
     });
   };
 
-  const validateAndSubmit = () => {
-    Promise.all([
-      slotsSchema.validate(state.slots, {
+  const validateAndSubmit = async () => {
+    try {
+      await slotsSchema.validate(state.slots, {
+        abortEarly: false,
         context: { fileList: state.fileList },
-      }),
-      fileLabelSchema.validate(state.fileList, {
-        context: { slots: state.slots },
-      }),
-      fileListSchema.validate(state.fileList, {
-        context: { slots: state.slots },
-      }),
-    ])
-      .then(() => {
-        const payload = generatePayload(state.fileList, state.slots);
-        props.handleSubmit?.(payload);
-      })
-      .catch((err) => {
-        switch (err?.type) {
-          case "minFileUploaded":
-          case "nonUploading":
-            dispatch({
-              type: "SET_ERRORS",
-              payload: { dropzone: err?.message },
-            });
-            break;
-          case "allFilesTagged": {
-            const formattedErrors = formatFileLabelSchemaErrors(err);
-            dispatch({
-              type: "SET_ERRORS",
-              payload: { fileLabel: formattedErrors },
-            });
-            break;
-          }
-          case "allRequiredFilesUploaded":
-          case "errorStatus":
-            dispatch({
-              type: "SET_ERRORS",
-              payload: { fileList: err?.message },
-            });
-            break;
-        }
       });
+
+      dispatch({ type: "SET_ERRORS", payload: {} });
+
+      const payload = generatePayload(state.fileList, state.slots);
+      props.handleSubmit?.(payload);
+    } catch (err) {
+      if (err instanceof ValidationError) {
+        const formattedErrors = formatValidationErrors(err);
+        dispatch({ type: "SET_ERRORS", payload: formattedErrors });
+      } else {
+        console.error("Unexpected submission error:", err);
+      }
+    }
   };
 
   const isCategoryVisible = (category: keyof typeof state.fileList) => {
