@@ -1,6 +1,6 @@
 import { FileUploadSlot } from "../FileUpload/model";
 import { Condition, Operator, Rule } from "../shared/RuleBuilder/types";
-import { FileList, FileType } from "./model";
+import { FileList, FileType, type FileUploadAndLabelSlot } from "./model";
 
 const mockAlwaysRequiredRule: Rule = {
   condition: Condition.AlwaysRequired,
@@ -345,4 +345,4 @@ export const mockSlot = {
   progress: 1,
   id: "6bZBneLnY-L6qiqOblu8t",
   url: "http://localhost:7002/file/private/truap5az/PXL_20230511_093922923.jpg",
-} as FileUploadSlot;
+} as FileUploadAndLabelSlot;

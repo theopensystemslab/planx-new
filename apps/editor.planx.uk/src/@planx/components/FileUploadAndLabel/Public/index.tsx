@@ -14,7 +14,6 @@ import React, { useReducer } from "react";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
-import { FileUploadSlot } from "../../FileUpload/model";
 import Card from "../../shared/Preview/Card";
 import { CardHeader } from "../../shared/Preview/CardHeader/CardHeader";
 import { Dropzone } from "../../shared/PrivateFileUpload/Dropzone";
@@ -23,6 +22,7 @@ import {
   createFileList,
   type FileList,
   FileUploadAndLabel,
+  type FileUploadAndLabelSlot,
   generatePayload,
   getRecoveredData,
 } from "../model";
@@ -94,7 +94,9 @@ export default function Component(props: Props) {
     initState,
   );
 
-  const handleSetSlots = (updater: React.SetStateAction<FileUploadSlot[]>) => {
+  const handleSetSlots = (
+    updater: React.SetStateAction<FileUploadAndLabelSlot[]>,
+  ) => {
     dispatch({ type: "SET_SLOTS", payload: updater });
   };
 
@@ -114,7 +116,7 @@ export default function Component(props: Props) {
   const handleSave = (slotId: string) =>
     dispatch({ type: "SAVE_SLOT", payload: { slotId } });
 
-  const initiateRemoveFile = (slot: FileUploadSlot) =>
+  const initiateRemoveFile = (slot: FileUploadAndLabelSlot) =>
     dispatch({ type: "INIT_REMOVE_FILE", payload: { slot } });
 
   const completeRemoveFile = () => dispatch({ type: "COMPLETE_REMOVE_FILE" });

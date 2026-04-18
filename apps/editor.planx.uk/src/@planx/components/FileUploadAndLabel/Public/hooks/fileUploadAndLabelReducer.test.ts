@@ -1,7 +1,10 @@
-import { FileUploadSlot } from "@planx/components/FileUpload/model";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { getTagsForSlot, removeSlots } from "../../model";
+import {
+  type FileUploadAndLabelSlot,
+  getTagsForSlot,
+  removeSlots,
+} from "../../model";
 import {
   type FileUploadAction,
   fileUploadAndLabelReducer,
@@ -13,9 +16,18 @@ vi.mock("../../model", () => ({
   removeSlots: vi.fn(),
 }));
 
-const mockFileA = { id: "slot-A", file: { path: "a.pdf" } } as FileUploadSlot;
-const mockFileB = { id: "slot-B", file: { path: "b.pdf" } } as FileUploadSlot;
-const mockFileC = { id: "slot-C", file: { path: "c.pdf" } } as FileUploadSlot;
+const mockFileA = {
+  id: "slot-A",
+  file: { path: "a.pdf" },
+} as FileUploadAndLabelSlot;
+const mockFileB = {
+  id: "slot-B",
+  file: { path: "b.pdf" },
+} as FileUploadAndLabelSlot;
+const mockFileC = {
+  id: "slot-C",
+  file: { path: "c.pdf" },
+} as FileUploadAndLabelSlot;
 
 const baseState: FileUploadState = {
   slots: [],

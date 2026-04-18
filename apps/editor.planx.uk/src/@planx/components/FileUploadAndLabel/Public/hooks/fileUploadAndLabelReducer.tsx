@@ -1,18 +1,22 @@
-import type { FileUploadSlot } from "@planx/components/FileUpload/model";
 import type { SetStateAction } from "react";
 import { exhaustiveCheck } from "utils";
 
-import { type FileList, getTagsForSlot, removeSlots } from "../../model";
+import {
+  type FileList,
+  type FileUploadAndLabelSlot,
+  getTagsForSlot,
+  removeSlots,
+} from "../../model";
 
 export interface FileUploadState {
-  slots: FileUploadSlot[];
+  slots: FileUploadAndLabelSlot[];
   fileList: FileList;
   drawingNumbers: Record<string, string>;
   /**
    * Accordion state: only one file can be expanded for editing at a time
    */
   expandedSlotId?: string;
-  pendingRemoval: FileUploadSlot | null;
+  pendingRemoval: FileUploadAndLabelSlot | null;
   removingSlotId: string | null;
   fileUploadStatus?: string;
   fileListError?: string;
@@ -54,11 +58,11 @@ export type FileUploadAction =
     }
 
   // File removal- Two-step process required to allow UI to animate out before data is deleted
-  | { type: "INIT_REMOVE_FILE"; payload: { slot: FileUploadSlot } }
+  | { type: "INIT_REMOVE_FILE"; payload: { slot: FileUploadAndLabelSlot } }
   | { type: "COMPLETE_REMOVE_FILE" }
 
   // Adapters - allow child components to dispatch updated via setState calls
-  | { type: "SET_SLOTS"; payload: SetStateAction<FileUploadSlot[]> }
+  | { type: "SET_SLOTS"; payload: SetStateAction<FileUploadAndLabelSlot[]> }
   | { type: "SET_FILE_LIST"; payload: SetStateAction<FileList> }
   | {
       type: "SET_FILE_UPLOAD_STATUS";

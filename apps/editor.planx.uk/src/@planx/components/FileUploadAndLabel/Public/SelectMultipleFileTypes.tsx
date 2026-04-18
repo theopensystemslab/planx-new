@@ -12,17 +12,17 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import Input from "ui/shared/Input/Input";
 
-import { FileUploadSlot } from "../../FileUpload/model";
 import {
   addOrAppendSlots,
   FileList,
+  type FileUploadAndLabelSlot,
   getTagsForSlot,
   removeSlots,
   UserFile,
 } from "../model";
 
 interface ChecklistProps {
-  uploadedFile: FileUploadSlot;
+  uploadedFile: FileUploadAndLabelSlot;
   fileList: FileList;
   setFileList: (value: React.SetStateAction<FileList>) => void;
   showDrawingNumber?: boolean;

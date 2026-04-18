@@ -6,13 +6,16 @@ import Collapse from "@mui/material/Collapse";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import { styled } from "@mui/material/styles";
-import { FileUploadSlot } from "@planx/components/FileUpload/model";
 import React, { useRef } from "react";
 import CheckCircleIcon from "ui/icons/CheckCircle";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { UploadedFileCard } from "../../shared/PrivateFileUpload/UploadedFileCard";
-import { FileList, getTagsForSlot } from "../model";
+import {
+  FileList,
+  type FileUploadAndLabelSlot,
+  getTagsForSlot,
+} from "../model";
 import { SelectMultipleFileTypes } from "./SelectMultipleFileTypes";
 
 const Root = styled(Box)(({ theme }) => ({
@@ -30,11 +33,11 @@ const LabelsRow = styled(Box)(({ theme }) => ({
 }));
 
 interface FileAccordionCardProps {
-  slot: FileUploadSlot;
+  slot: FileUploadAndLabelSlot;
   isExpanded: boolean;
   onExpand: (slotId: string) => void;
   onSave: (slotId: string) => void;
-  onRemove: (slot: FileUploadSlot) => void;
+  onRemove: (slot: FileUploadAndLabelSlot) => void;
   fileList: FileList;
   setFileList: React.Dispatch<React.SetStateAction<FileList>>;
   error?: string;
