@@ -10,7 +10,7 @@ import { PublicProps } from "@planx/components/shared/types";
 import { PrintButton } from "components/PrintButton";
 import capitalize from "lodash/capitalize";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useReducer } from "react";
+import React, { type SetStateAction, useReducer } from "react";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
@@ -20,7 +20,6 @@ import { Dropzone } from "../../shared/PrivateFileUpload/Dropzone";
 import { FileStatus } from "../../shared/PrivateFileUpload/FileStatus";
 import {
   createFileList,
-  type FileList,
   FileUploadAndLabel,
   type FileUploadAndLabelSlot,
   generatePayload,
@@ -94,20 +93,17 @@ export default function Component(props: Props) {
     initState,
   );
 
-  const handleSetSlots = (
-    updater: React.SetStateAction<FileUploadAndLabelSlot[]>,
-  ) => {
-    dispatch({ type: "SET_SLOTS", payload: updater });
+  const handleSetSlots = (action: SetStateAction<FileUploadAndLabelSlot[]>) => {
+    const payload = typeof action === "function" ? action(state.slots) : action;
+    dispatch({ type: "SET_SLOTS", payload });
   };
 
   const handleSetFileUploadStatus = (
-    updater: React.SetStateAction<string | undefined>,
+    action: SetStateAction<string | undefined>,
   ) => {
-    dispatch({ type: "SET_FILE_UPLOAD_STATUS", payload: updater });
-  };
-
-  const handleSetFileList = (updater: React.SetStateAction<FileList>) => {
-    dispatch({ type: "SET_FILE_LIST", payload: updater });
+    const payload =
+      typeof action === "function" ? action(state.fileUploadStatus) : action;
+    dispatch({ type: "SET_FILE_UPLOAD_STATUS", payload: payload ?? "" });
   };
 
   const handleExpand = (slotId: string) =>
@@ -120,6 +116,9 @@ export default function Component(props: Props) {
     dispatch({ type: "INIT_REMOVE_FILE", payload: { slot } });
 
   const completeRemoveFile = () => dispatch({ type: "COMPLETE_REMOVE_FILE" });
+
+  const handleTagChange = (slotId: string, tags: string[]) =>
+    dispatch({ type: "UPDATE_TAGS", payload: { slotId, tags } });
 
   const handleDrawingNumberChange = (slotId: string, value: string) => {
     dispatch({
@@ -149,23 +148,23 @@ export default function Component(props: Props) {
           case "minFileUploaded":
           case "nonUploading":
             dispatch({
-              type: "SET_DROPZONE_ERROR",
-              payload: { error: err?.message },
+              type: "SET_ERRORS",
+              payload: { dropzone: err?.message },
             });
             break;
           case "allFilesTagged": {
             const formattedErrors = formatFileLabelSchemaErrors(err);
             dispatch({
-              type: "SET_FILE_LABEL_ERRORS",
-              payload: { errors: formattedErrors },
+              type: "SET_ERRORS",
+              payload: { fileLabel: formattedErrors },
             });
             break;
           }
           case "allRequiredFilesUploaded":
           case "errorStatus":
             dispatch({
-              type: "SET_FILE_LIST_ERROR",
-              payload: { error: err?.message },
+              type: "SET_ERRORS",
+              payload: { fileList: err?.message },
             });
             break;
         }
@@ -198,13 +197,18 @@ export default function Component(props: Props) {
             <>
               <FileStatus status={state.fileUploadStatus} />
               <ErrorWrapper
-                error={state.dropzoneError}
+                error={state.errors?.dropzone}
                 id={`${props.id}-dropzone`}
               >
-                <Dropzone
+                <Dropzone<FileUploadAndLabelSlot>
                   slots={state.slots}
                   setSlots={handleSetSlots}
                   setFileUploadStatus={handleSetFileUploadStatus}
+                  createSlot={(baseSlot) => ({
+                    ...baseSlot,
+                    tags: [],
+                    drawingNumber: "",
+                  })}
                 />
               </ErrorWrapper>
             </>
@@ -241,7 +245,10 @@ export default function Component(props: Props) {
               ])}
           </UploadList>
         </DropzoneContainer>
-        <ErrorWrapper error={state.fileListError} id={`${props.id}-fileList`}>
+        <ErrorWrapper
+          error={state.errors?.fileList}
+          id={`${props.id}-fileList`}
+        >
           <Box>
             {Boolean(state.slots.length) && (
               <Typography variant="h3" mb={2}>
@@ -260,19 +267,17 @@ export default function Component(props: Props) {
                   }
                 >
                   <FileAccordionCard
+                    key={slot.id}
                     slot={slot}
-                    isExpanded={state?.expandedSlotId === slot.id}
+                    fileList={state.fileList}
+                    isExpanded={state.expandedSlotId === slot.id}
                     onExpand={handleExpand}
                     onSave={handleSave}
                     onRemove={initiateRemoveFile}
-                    fileList={state.fileList}
-                    setFileList={handleSetFileList}
-                    error={state.fileLabelErrors?.[slot.id]}
+                    error={state.errors?.fileLabel?.[slot.id]}
                     showDrawingNumber={props.showDrawingNumber}
-                    drawingNumber={state.drawingNumbers[slot.id]}
-                    onDrawingNumberChange={(value) =>
-                      handleDrawingNumberChange(slot.id, value)
-                    }
+                    onTagsChange={handleTagChange}
+                    onDrawingNumberChange={handleDrawingNumberChange}
                   />
                 </Collapse>
               ))}
