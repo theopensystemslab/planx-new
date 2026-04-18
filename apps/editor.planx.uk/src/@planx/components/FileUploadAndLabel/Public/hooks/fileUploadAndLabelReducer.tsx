@@ -1,32 +1,24 @@
-import type { SetStateAction } from "react";
 import { exhaustiveCheck } from "utils";
 
-import {
-  type FileList,
-  type FileUploadAndLabelSlot,
-  getTagsForSlot,
-  removeSlots,
-} from "../../model";
+import type { FileList, FileUploadAndLabelSlot } from "../../model";
 
 export interface FileUploadState {
   slots: FileUploadAndLabelSlot[];
+  // TODO: Readonly<T> ?
   fileList: FileList;
-  drawingNumbers: Record<string, string>;
-  /**
-   * Accordion state: only one file can be expanded for editing at a time
-   */
+  fileUploadStatus?: string;
   expandedSlotId?: string;
+  dropzoneError?: string;
+  fileListError?: string;
+  fileLabelErrors?: Record<string, string>;
+
+  // File removal- Two-step process required to allow UI to animate out before data is deleted
   pendingRemoval: FileUploadAndLabelSlot | null;
   removingSlotId: string | null;
-  fileUploadStatus?: string;
-  fileListError?: string;
-  dropzoneError?: string;
-  fileLabelErrors?: Record<string, string>;
 }
 
 export const initialState: FileUploadState = {
   slots: [],
-  drawingNumbers: {},
   fileList: {
     required: [],
     recommended: [],
@@ -39,34 +31,29 @@ export const initialState: FileUploadState = {
 
 export type FileUploadAction =
   // Data updates
+  | { type: "UPDATE_TAGS"; payload: { slotId: string; tags: string[] } }
   | {
       type: "UPDATE_DRAWING_NUMBER";
       payload: { slotId: string; value: string };
     }
-  | { type: "REMOVE_DRAWING_NUMBER"; payload: { slotId: string } }
 
-  // UI interactions
-  | { type: "EXPAND_SLOT"; payload: { slotId?: string } }
-  | { type: "SAVE_SLOT"; payload: { slotId: string } }
+  // Dropzone sync
+  | { type: "SET_SLOTS"; payload: FileUploadAndLabelSlot[] }
+  | { type: "SET_FILE_UPLOAD_STATUS"; payload: string }
 
-  // Validation errors
-  | { type: "SET_FILE_LIST_ERROR"; payload: { error: string } }
-  | { type: "SET_DROPZONE_ERROR"; payload: { error?: string } }
-  | {
-      type: "SET_FILE_LABEL_ERRORS";
-      payload: { errors: Record<string, string> };
-    }
-
-  // File removal- Two-step process required to allow UI to animate out before data is deleted
+  // File removal process
   | { type: "INIT_REMOVE_FILE"; payload: { slot: FileUploadAndLabelSlot } }
   | { type: "COMPLETE_REMOVE_FILE" }
 
-  // Adapters - allow child components to dispatch updated via setState calls
-  | { type: "SET_SLOTS"; payload: SetStateAction<FileUploadAndLabelSlot[]> }
-  | { type: "SET_FILE_LIST"; payload: SetStateAction<FileList> }
+  // UI controls
+  | { type: "EXPAND_SLOT"; payload: { slotId: string } }
+  | { type: "SAVE_SLOT"; payload: { slotId: string } }
   | {
-      type: "SET_FILE_UPLOAD_STATUS";
-      payload: SetStateAction<string | undefined>;
+      type: "SET_ERRORS";
+      payload: {
+        fileLabelErrors?: Record<string, string>;
+        fileListError?: string;
+      };
     };
 
 export const fileUploadAndLabelReducer = (
@@ -74,22 +61,79 @@ export const fileUploadAndLabelReducer = (
   action: FileUploadAction,
 ): FileUploadState => {
   switch (action.type) {
-    case "UPDATE_DRAWING_NUMBER":
+    case "UPDATE_TAGS": {
       return {
         ...state,
-        drawingNumbers: {
-          ...state.drawingNumbers,
-          [action.payload.slotId]: action.payload.value,
-        },
+        slots: state.slots.map((slot) =>
+          slot.id === action.payload.slotId
+            ? { ...slot, tags: action.payload.tags }
+            : slot,
+        ),
+        // Clear global validation errors when the user interacts
+        fileListError: undefined,
+        fileLabelErrors: state.fileLabelErrors
+          ? { ...state.fileLabelErrors, [action.payload.slotId]: "" }
+          : undefined,
       };
+    }
 
-    case "REMOVE_DRAWING_NUMBER": {
-      const newDrawingNumbers = { ...state.drawingNumbers };
-      delete newDrawingNumbers[action.payload.slotId];
+    case "UPDATE_DRAWING_NUMBER": {
+      return {
+        ...state,
+        slots: state.slots.map((slot) =>
+          slot.id === action.payload.slotId
+            ? { ...slot, drawingNumber: action.payload.value }
+            : slot,
+        ),
+      };
+    }
+
+    case "SET_SLOTS": {
+      const newSlots = action.payload.filter(
+        (newSlot) => !state.slots.some((oldSlot) => oldSlot.id === newSlot.id),
+      );
+      const isNewFileUpload = newSlots.length > 0;
 
       return {
         ...state,
-        drawingNumbers: newDrawingNumbers,
+        slots: action.payload,
+        // Auto-expand if a new file was just added
+        expandedSlotId: isNewFileUpload ? newSlots[0].id : state.expandedSlotId,
+        // Clear error on new upload
+        dropzoneError: isNewFileUpload ? undefined : state.dropzoneError,
+      };
+    }
+
+    case "SET_FILE_UPLOAD_STATUS": {
+      return {
+        ...state,
+        fileUploadStatus: action.payload,
+      };
+    }
+
+    case "INIT_REMOVE_FILE": {
+      return {
+        ...state,
+        pendingRemoval: action.payload.slot,
+        removingSlotId: action.payload.slot.id,
+        expandedSlotId: undefined,
+      };
+    }
+
+    case "COMPLETE_REMOVE_FILE": {
+      const nextSlots = state.slots.filter(
+        (slot) => slot.id !== state.removingSlotId,
+      );
+      const isLastFile = nextSlots.length === 0;
+
+      return {
+        ...state,
+        slots: nextSlots,
+        pendingRemoval: null,
+        removingSlotId: null,
+        // Clear errors if they deleted the last file
+        fileListError: isLastFile ? undefined : state.fileListError,
+        fileLabelErrors: isLastFile ? undefined : state.fileLabelErrors,
       };
     }
 
@@ -98,147 +142,33 @@ export const fileUploadAndLabelReducer = (
         ...state,
         expandedSlotId: action.payload.slotId,
         fileListError: undefined,
-        fileLabelErrors: undefined,
+        fileLabelErrors: state.fileLabelErrors
+          ? { ...state.fileLabelErrors, [action.payload.slotId]: "" }
+          : undefined,
       };
     }
 
     case "SAVE_SLOT": {
-      const currentIndex = state.slots.findIndex(
-        ({ id }) => id === action.payload.slotId,
+      const currentSlotIndex = state.slots.findIndex(
+        (s) => s.id === action.payload.slotId,
       );
 
       // Find the next file that has no tags yet
-      const nextUntagged = state.slots.find((s, i) => {
-        if (i <= currentIndex) return false;
-        const tags = getTagsForSlot(s.id, state.fileList);
-        return tags.length === 0;
-      });
+      const nextUntaggedSlot = state.slots
+        .slice(currentSlotIndex + 1)
+        .find((s) => s.tags.length === 0);
 
       return {
         ...state,
-        expandedSlotId: nextUntagged?.id,
+        expandedSlotId: nextUntaggedSlot?.id,
         fileListError: undefined,
-        fileLabelErrors: undefined,
       };
     }
 
-    case "SET_FILE_LIST_ERROR": {
+    case "SET_ERRORS": {
       return {
         ...state,
-        fileListError: action.payload.error,
-      };
-    }
-
-    case "SET_DROPZONE_ERROR": {
-      return {
-        ...state,
-        dropzoneError: action.payload.error,
-      };
-    }
-
-    case "SET_FILE_LABEL_ERRORS": {
-      return {
-        ...state,
-        fileLabelErrors: action.payload.errors,
-      };
-    }
-
-    case "INIT_REMOVE_FILE": {
-      return {
-        ...state,
-        // Close the accordion if the one they are deleting is currently open
-        expandedSlotId:
-          state.expandedSlotId === action.payload.slot.id
-            ? undefined
-            : state.expandedSlotId,
-        // Queue the file for deletion and trigger the UI exit animation
-        pendingRemoval: action.payload.slot,
-        removingSlotId: action.payload.slot.id,
-      };
-    }
-
-    case "COMPLETE_REMOVE_FILE": {
-      if (!state.pendingRemoval) return state;
-      const slot = state.pendingRemoval;
-
-      // Remove from slots array
-      const newSlots = state.slots.filter((s) => s.id !== slot.id);
-
-      // Remove from fileList object
-      // TODO: Single source of truth, no need to sync this
-      const updatedFileList = removeSlots(
-        getTagsForSlot(slot.id, state.fileList),
-        slot,
-        state.fileList,
-      );
-
-      // Clean up drawing numbers
-      // TODO: Make this a property of slots
-      const newDrawingNumbers = { ...state.drawingNumbers };
-      delete newDrawingNumbers[slot.id];
-
-      return {
-        ...state,
-        slots: newSlots,
-        fileList: updatedFileList,
-        drawingNumbers: newDrawingNumbers,
-        fileUploadStatus: `${slot.file.path} was deleted`,
-
-        // Reset animation states
-        removingSlotId: null,
-        pendingRemoval: null,
-
-        // Clear errors if they deleted the last file
-        fileListError: newSlots.length === 0 ? undefined : state.fileListError,
-        fileLabelErrors:
-          newSlots.length === 0 ? undefined : state.fileLabelErrors,
-      };
-    }
-
-    case "SET_SLOTS": {
-      const nextSlots =
-        typeof action.payload === "function"
-          ? action.payload(state.slots)
-          : action.payload;
-
-      const isNewFileAdded = nextSlots.length > state.slots.length;
-      const newlyAddedSlotId = isNewFileAdded
-        ? nextSlots[state.slots.length].id
-        : state.expandedSlotId;
-
-      return {
-        ...state,
-        slots: nextSlots,
-        // Clear error on new upload
-        dropzoneError: isNewFileAdded ? undefined : state.dropzoneError,
-        // Auto-expand if a new file was just added
-        expandedSlotId: newlyAddedSlotId,
-      };
-    }
-
-    case "SET_FILE_UPLOAD_STATUS": {
-      const nextStatus =
-        typeof action.payload === "function"
-          ? action.payload(state.fileUploadStatus)
-          : action.payload;
-
-      return {
-        ...state,
-        fileUploadStatus: nextStatus,
-      };
-    }
-
-    case "SET_FILE_LIST": {
-      const nextFileList =
-        typeof action.payload === "function"
-          ? action.payload(state.fileList)
-          : action.payload;
-
-      return {
-        ...state,
-        fileList: nextFileList,
-        fileListError: undefined,
-        fileLabelErrors: undefined,
+        ...action.payload,
       };
     }
 
