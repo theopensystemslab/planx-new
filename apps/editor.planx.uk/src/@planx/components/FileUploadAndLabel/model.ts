@@ -15,6 +15,7 @@ export interface RequestedFile {
   fn: string;
   condition: Condition;
 }
+
 export interface FileType {
   name: string;
   fn: string;
@@ -55,6 +56,11 @@ export const newFileType = (): FileType => ({
 
 export interface UserFile extends FileType {
   slots?: FileUploadSlot[];
+}
+
+export interface FileUploadAndLabelSlot extends FileUploadSlot {
+  tags: string[];
+  drawingNumber: string;
 }
 
 export interface FormattedUserFile {
@@ -248,7 +254,7 @@ export const generatePayload = (
 const getCachedSlotsFromPreviousData = (
   userFile: UserFile,
   previouslySubmittedData: Store.UserData | undefined,
-): FileUploadSlot[] =>
+): FileUploadAndLabelSlot[] =>
   previouslySubmittedData?.data?.[userFile.fn]
     ?.filter((file: FormattedUserFile) => file.name === userFile.name)
     .map((file: FormattedUserFile) => file.cachedSlot);
@@ -363,7 +369,7 @@ export const addOrAppendSlots = (
 
 export const removeSlots = (
   tags: string[],
-  uploadedFile: FileUploadSlot,
+  uploadedFile: FileUploadAndLabelSlot,
   fileList: FileList,
 ): FileList => {
   const updatedFileList: FileList = cloneDeep(fileList);

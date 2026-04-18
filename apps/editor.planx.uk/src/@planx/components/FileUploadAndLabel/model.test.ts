@@ -1,7 +1,7 @@
 import { Store } from "pages/FlowEditor/lib/store";
 import { FileWithPath } from "react-dropzone";
 
-import { FileUploadSlot } from "../FileUpload/model";
+import { FileUploadAndLabelSlot } from "../FileUploadAndLabel/model";
 import { Condition, Operator } from "../shared/RuleBuilder/types";
 import {
   mockFileList,
@@ -433,7 +433,7 @@ describe("generatePayload function", () => {
       progress: 1,
       id: "slot-001",
       url: "http://localhost:7002/file/private/xxx/single-file.pdf",
-    } as FileUploadSlot;
+    } as FileUploadAndLabelSlot;
 
     const fileListOneSlotMultipleTags: FileList = {
       required: [
@@ -703,7 +703,7 @@ describe("removeSlots function", () => {
       progress: 1,
       id: "001",
       url: "http://localhost:7002/file/private/jjpmkz8g/first.jpg",
-    } as FileUploadSlot;
+    } as FileUploadAndLabelSlot;
     const result = removeSlots(["firstFileType"], slot, mockFileListMultiple);
 
     result.required.map((userFile) => {
