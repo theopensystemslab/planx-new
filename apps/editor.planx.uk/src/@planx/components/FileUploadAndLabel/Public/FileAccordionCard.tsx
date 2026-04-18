@@ -11,11 +11,7 @@ import CheckCircleIcon from "ui/icons/CheckCircle";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { UploadedFileCard } from "../../shared/PrivateFileUpload/UploadedFileCard";
-import {
-  FileList,
-  type FileUploadAndLabelSlot,
-  getTagsForSlot,
-} from "../model";
+import { FileList, type FileUploadAndLabelSlot } from "../model";
 import { SelectMultipleFileTypes } from "./SelectMultipleFileTypes";
 
 const Root = styled(Box)(({ theme }) => ({
@@ -38,12 +34,11 @@ interface FileAccordionCardProps {
   onExpand: (slotId: string) => void;
   onSave: (slotId: string) => void;
   onRemove: (slot: FileUploadAndLabelSlot) => void;
+  onTagsChange: (slotId: string, tags: string[]) => void;
   fileList: FileList;
-  setFileList: React.Dispatch<React.SetStateAction<FileList>>;
   error?: string;
   showDrawingNumber?: boolean;
-  drawingNumber?: string;
-  onDrawingNumberChange?: (value: string) => void;
+  onDrawingNumberChange?: (slotId: string, value: string) => void;
 }
 
 export const FileAccordionCard: React.FC<FileAccordionCardProps> = ({
@@ -52,11 +47,10 @@ export const FileAccordionCard: React.FC<FileAccordionCardProps> = ({
   onExpand,
   onSave,
   onRemove,
+  onTagsChange,
   fileList,
-  setFileList,
   error,
   showDrawingNumber,
-  drawingNumber,
   onDrawingNumberChange,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -68,7 +62,7 @@ export const FileAccordionCard: React.FC<FileAccordionCardProps> = ({
     });
   };
 
-  const tags = getTagsForSlot(slot.id, fileList);
+  const tags = slot.tags || [];
   const hasLabels = tags.length > 0;
 
   const getChangeLabel = () => {
@@ -91,18 +85,18 @@ export const FileAccordionCard: React.FC<FileAccordionCardProps> = ({
             changeLabel={getChangeLabel()}
             changeIcon={getChangeIcon()}
             onChange={() => onExpand(slot.id)}
-            drawingNumber={isExpanded ? undefined : drawingNumber}
+            drawingNumber={isExpanded ? undefined : slot.drawingNumber}
             removeFile={() => onRemove(slot)}
           />
           <Collapse in={isExpanded} unmountOnExit onEntered={handleEntered}>
             <SelectMultipleFileTypes
               uploadedFile={slot}
               fileList={fileList}
-              setFileList={setFileList}
               showDrawingNumber={showDrawingNumber}
-              drawingNumber={drawingNumber}
+              drawingNumber={slot.drawingNumber}
               onDrawingNumberChange={onDrawingNumberChange}
               onSave={() => onSave(slot.id)}
+              onTagsChange={(newTags) => onTagsChange(slot.id, newTags)}
             />
           </Collapse>
           {!isExpanded && hasLabels && (

@@ -19,10 +19,12 @@ vi.mock("../../model", () => ({
 const mockFileA = {
   id: "slot-A",
   file: { path: "a.pdf" },
+  drawingNumber: "123",
 } as FileUploadAndLabelSlot;
 const mockFileB = {
   id: "slot-B",
   file: { path: "b.pdf" },
+  drawingNumber: "456",
 } as FileUploadAndLabelSlot;
 const mockFileC = {
   id: "slot-C",
@@ -31,7 +33,6 @@ const mockFileC = {
 
 const baseState: FileUploadState = {
   slots: [],
-  drawingNumbers: {},
   fileList: { required: [], recommended: [], optional: [] },
   pendingRemoval: null,
   removingSlotId: null,
@@ -47,7 +48,7 @@ describe("fileUploadAndLabelReducer", () => {
       const state: FileUploadState = {
         ...baseState,
         slots: [mockFileA],
-        dropzoneError: "Please upload a file.",
+        errors: { dropzone: "Please upload a file." },
         expandedSlotId: "slot-A",
       };
 
@@ -59,7 +60,7 @@ describe("fileUploadAndLabelReducer", () => {
       const result = fileUploadAndLabelReducer(state, action);
 
       expect(result.slots).toHaveLength(2);
-      expect(result.dropzoneError).toBeUndefined();
+      expect(result.errors?.dropzone).toBeUndefined();
       expect(result.expandedSlotId).toBe("slot-B");
     });
 
@@ -67,7 +68,7 @@ describe("fileUploadAndLabelReducer", () => {
       const state: FileUploadState = {
         ...baseState,
         slots: [mockFileA],
-        dropzoneError: "Some other error",
+        errors: { dropzone: "Some other error" },
         expandedSlotId: "slot-A",
       };
 
@@ -79,7 +80,7 @@ describe("fileUploadAndLabelReducer", () => {
 
       const result = fileUploadAndLabelReducer(state, action);
 
-      expect(result.dropzoneError).toBe("Some other error");
+      expect(result.errors?.dropzone).toBe("Some other error");
       expect(result.expandedSlotId).toBe("slot-A");
     });
   });
@@ -90,7 +91,7 @@ describe("fileUploadAndLabelReducer", () => {
         ...baseState,
         slots: [mockFileA, mockFileB, mockFileC],
         expandedSlotId: "slot-A",
-        fileListError: "Missing tags",
+        errors: { fileList: "Missing tags" },
       };
 
       vi.mocked(getTagsForSlot).mockImplementation((slotId) => {
@@ -108,7 +109,7 @@ describe("fileUploadAndLabelReducer", () => {
       const result = fileUploadAndLabelReducer(state, action);
 
       expect(result.expandedSlotId).toBe("slot-C");
-      expect(result.fileListError).toBeUndefined();
+      expect(result.errors?.fileList).toBeUndefined();
     });
 
     it("sets expandedSlotId to undefined if all subsequent files are fully tagged", () => {
@@ -158,7 +159,6 @@ describe("fileUploadAndLabelReducer", () => {
         const state: FileUploadState = {
           ...baseState,
           slots: [mockFileA, mockFileB],
-          drawingNumbers: { "slot-A": "123", "slot-B": "456" },
           pendingRemoval: mockFileA,
           removingSlotId: "slot-A",
         };
@@ -175,7 +175,7 @@ describe("fileUploadAndLabelReducer", () => {
 
         expect(result.slots).toHaveLength(1);
         expect(result.slots[0].id).toBe("slot-B");
-        expect(result.drawingNumbers).toEqual({ "slot-B": "456" });
+        expect(result.slots[0]).toEqual("456");
         expect(result.pendingRemoval).toBeNull();
         expect(result.removingSlotId).toBeNull();
         expect(result.fileList).toBe(mockUpdatedFileList);
@@ -186,16 +186,18 @@ describe("fileUploadAndLabelReducer", () => {
           ...baseState,
           slots: [mockFileA],
           pendingRemoval: mockFileA,
-          fileListError: "Error",
-          fileLabelErrors: { "slot-A": "Missing label" },
+          errors: {
+            fileList: "Error",
+            fileLabel: { "slot-A": "Missing label" },
+          },
         };
 
         const action: FileUploadAction = { type: "COMPLETE_REMOVE_FILE" };
         const result = fileUploadAndLabelReducer(state, action);
 
         expect(result.slots).toHaveLength(0);
-        expect(result.fileListError).toBeUndefined();
-        expect(result.fileLabelErrors).toBeUndefined();
+        expect(result.errors?.fileList).toBeUndefined();
+        expect(result.errors?.fileLabel).toBeUndefined();
       });
     });
   });
@@ -205,8 +207,10 @@ describe("fileUploadAndLabelReducer", () => {
       const state: FileUploadState = {
         ...baseState,
         expandedSlotId: "slot-A",
-        fileListError: "Error",
-        fileLabelErrors: { "slot-B": "Error" },
+        errors: {
+          fileList: "Error",
+          fileLabel: { "slot-B": "Error" },
+        },
       };
 
       const result = fileUploadAndLabelReducer(state, {
@@ -215,8 +219,8 @@ describe("fileUploadAndLabelReducer", () => {
       });
 
       expect(result.expandedSlotId).toBe("slot-B");
-      expect(result.fileListError).toBeUndefined();
-      expect(result.fileLabelErrors).toBeUndefined();
+      expect(result.errors?.fileList).toBeUndefined();
+      expect(result.errors?.fileLabel).toBeUndefined();
     });
   });
 });
