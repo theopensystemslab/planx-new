@@ -8,9 +8,11 @@ export interface FileUploadState {
   fileList: FileList;
   fileUploadStatus?: string;
   expandedSlotId?: string;
-  dropzoneError?: string;
-  fileListError?: string;
-  fileLabelErrors?: Record<string, string>;
+  errors?: {
+    dropzone?: string;
+    fileList?: string;
+    fileLabel?: Record<string, string>;
+  };
 
   // File removal- Two-step process required to allow UI to animate out before data is deleted
   pendingRemoval: FileUploadAndLabelSlot | null;
@@ -50,10 +52,7 @@ export type FileUploadAction =
   | { type: "SAVE_SLOT"; payload: { slotId: string } }
   | {
       type: "SET_ERRORS";
-      payload: {
-        fileLabelErrors?: Record<string, string>;
-        fileListError?: string;
-      };
+      payload: NonNullable<FileUploadState["errors"]>;
     };
 
 export const fileUploadAndLabelReducer = (
@@ -70,10 +69,14 @@ export const fileUploadAndLabelReducer = (
             : slot,
         ),
         // Clear global validation errors when the user interacts
-        fileListError: undefined,
-        fileLabelErrors: state.fileLabelErrors
-          ? { ...state.fileLabelErrors, [action.payload.slotId]: "" }
-          : undefined,
+        errors: {
+          ...state.errors,
+          fileList: undefined,
+          fileLabel: {
+            ...state.errors?.fileLabel,
+            [action.payload.slotId]: "",
+          },
+        },
       };
     }
 
@@ -100,7 +103,9 @@ export const fileUploadAndLabelReducer = (
         // Auto-expand if a new file was just added
         expandedSlotId: isNewFileUpload ? newSlots[0].id : state.expandedSlotId,
         // Clear error on new upload
-        dropzoneError: isNewFileUpload ? undefined : state.dropzoneError,
+        errors: isNewFileUpload
+          ? { ...state.errors, dropzone: undefined }
+          : state.errors,
       };
     }
 
@@ -132,8 +137,13 @@ export const fileUploadAndLabelReducer = (
         pendingRemoval: null,
         removingSlotId: null,
         // Clear errors if they deleted the last file
-        fileListError: isLastFile ? undefined : state.fileListError,
-        fileLabelErrors: isLastFile ? undefined : state.fileLabelErrors,
+        errors: isLastFile
+          ? {
+              ...state.errors,
+              fileList: undefined,
+              fileLabel: undefined,
+            }
+          : state.errors,
       };
     }
 
@@ -141,10 +151,14 @@ export const fileUploadAndLabelReducer = (
       return {
         ...state,
         expandedSlotId: action.payload.slotId,
-        fileListError: undefined,
-        fileLabelErrors: state.fileLabelErrors
-          ? { ...state.fileLabelErrors, [action.payload.slotId]: "" }
-          : undefined,
+        errors: {
+          ...state.errors,
+          fileList: undefined,
+          fileLabel: {
+            ...state.errors?.fileLabel,
+            [action.payload.slotId]: "",
+          },
+        },
       };
     }
 
@@ -161,14 +175,20 @@ export const fileUploadAndLabelReducer = (
       return {
         ...state,
         expandedSlotId: nextUntaggedSlot?.id,
-        fileListError: undefined,
+        errors: {
+          ...state.errors,
+          fileList: undefined,
+        },
       };
     }
 
     case "SET_ERRORS": {
       return {
         ...state,
-        ...action.payload,
+        errors: {
+          ...state.errors,
+          ...action.payload,
+        },
       };
     }
 
