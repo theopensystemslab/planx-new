@@ -42,7 +42,9 @@ import {
 
 type Props = ComponentProps<
   NonNullable<TaskComponentMap["projectDescription"]>
->;
+> & {
+  taskSubStep?: "selection" | "modification";
+};
 
 interface DescriptionRadioProps {
   id: string;
@@ -84,7 +86,10 @@ const DescriptionRadio: React.FC<DescriptionRadioProps> = ({
   );
 };
 
-const ProjectDescription: React.FC<Props> = (props) => {
+const ProjectDescription: React.FC<Props> = ({
+  taskSubStep = "selection",
+  ...props
+}) => {
   const [flowId, sessionId, path] = useStore((state) => [
     state.id,
     state.sessionId,
@@ -115,6 +120,7 @@ const ProjectDescription: React.FC<Props> = (props) => {
       initialValueRef.current,
     ],
     retry: 0,
+    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
@@ -157,7 +163,7 @@ const ProjectDescription: React.FC<Props> = (props) => {
         case "retainedOriginal":
           setFieldValue("userInput", data.original);
           break;
-        case "hybrid":
+        case "new":
           setFieldValue("userInput", values.customDescription);
           break;
       }
@@ -167,14 +173,19 @@ const ProjectDescription: React.FC<Props> = (props) => {
   const handleCustomDescriptionChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    const value = event.target.value;
-    setFieldValue("customDescription", value);
-    setFieldValue("userInput", value);
+    setFieldValue("customDescription", event.target.value);
+    setFieldValue("userInput", event.target.value);
+  };
+
+  const handleModificationChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setFieldValue("userInput", event.target.value);
   };
 
   const showRadioError = !values.selectedOption && Boolean(errors.userInput);
-  const showCustomInputError =
-    values.selectedOption === "hybrid" && Boolean(errors.userInput);
+  const showModificationError =
+    taskSubStep === "modification" && Boolean(errors.userInput);
 
   const LOADING_STAGES = [
     "Analysing your project description",
@@ -227,14 +238,58 @@ const ProjectDescription: React.FC<Props> = (props) => {
     }
   }
 
+  if (taskSubStep === "modification") {
+    return (
+      <Box mb={2}>
+        <Typography variant="h2" component="h1" mb={1}>
+          Confirm your project description
+        </Typography>
+        <Typography variant="subtitle1" component="p" mb={2}>
+          Edit the description below, or continue to submit it as shown.
+        </Typography>
+        <InputRow>
+          <InputLabel label="Project description" htmlFor={props.id} hidden>
+            <Input
+              type="text"
+              multiline
+              rows={5}
+              name="userInput"
+              value={values.userInput}
+              bordered
+              onChange={handleModificationChange}
+              errorMessage={
+                showModificationError ? (errors.userInput as string) : undefined
+              }
+              id={props.id}
+              inputProps={{
+                "aria-describedby": [
+                  props.description ? DESCRIPTION_TEXT : "",
+                  "character-hint",
+                  showModificationError ? `${ERROR_MESSAGE}-${props.id}` : "",
+                ]
+                  .filter(Boolean)
+                  .join(" "),
+              }}
+            />
+            <CharacterCounter
+              limit={TEXT_LIMITS[TextInputType.Long]}
+              count={values.userInput.length}
+              error={showModificationError}
+            />
+          </InputLabel>
+        </InputRow>
+      </Box>
+    );
+  }
+
   return (
     <>
       <Box my={2}>
         <Typography variant="h2" component="h1" mb={1}>
           {props.revisionTitle}
         </Typography>
-        <Typography variant="subtitle1" component="p">
-          {props.revisionDescription}
+        <Typography variant="subtitle1" component="div">
+          <ReactMarkdownOrHtml source={props.revisionDescription} />
         </Typography>
         <Typography variant="subtitle1" component="div">
           <HelpButton
@@ -272,20 +327,18 @@ const ProjectDescription: React.FC<Props> = (props) => {
                 title="Use your original description"
                 description={data.original}
               />
-
               <Box width={68} my={1}>
                 <Typography align="center">or</Typography>
               </Box>
-
               <DescriptionRadio
-                id="hybrid"
+                id="new"
                 onChange={handleOptionChange}
                 title="Write a new description"
               />
             </RadioGroup>
           </ErrorWrapper>
 
-          {values.selectedOption === "hybrid" && (
+          {values.selectedOption === "new" && (
             <RevealedContent>
               <InputRow>
                 <InputLabel
@@ -296,32 +349,16 @@ const ProjectDescription: React.FC<Props> = (props) => {
                     type="text"
                     multiline
                     rows={5}
-                    name="userInput"
+                    name="customDescription"
                     value={values.customDescription}
                     bordered
                     onChange={handleCustomDescriptionChange}
-                    errorMessage={
-                      showCustomInputError
-                        ? (errors.userInput as string)
-                        : undefined
-                    }
                     id={props.id}
-                    inputProps={{
-                      "aria-describedby": [
-                        props.description ? DESCRIPTION_TEXT : "",
-                        "character-hint",
-                        showCustomInputError
-                          ? `${ERROR_MESSAGE}-${props.id}`
-                          : "",
-                      ]
-                        .filter(Boolean)
-                        .join(" "),
-                    }}
                   />
                   <CharacterCounter
                     limit={TEXT_LIMITS[TextInputType.Long]}
                     count={values.customDescription.length}
-                    error={showCustomInputError}
+                    error={false}
                   />
                 </InputLabel>
               </InputRow>
