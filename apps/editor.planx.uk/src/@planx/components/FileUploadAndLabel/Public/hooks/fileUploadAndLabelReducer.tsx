@@ -1,3 +1,4 @@
+import type { SetStateAction } from "react";
 import { exhaustiveCheck } from "utils";
 
 import type { FileList, FileUploadAndLabelSlot } from "../../model";
@@ -40,8 +41,11 @@ export type FileUploadAction =
     }
 
   // Dropzone sync
-  | { type: "SET_SLOTS"; payload: FileUploadAndLabelSlot[] }
-  | { type: "SET_FILE_UPLOAD_STATUS"; payload: string }
+  | { type: "SET_SLOTS"; payload: SetStateAction<FileUploadAndLabelSlot[]> }
+  | {
+      type: "SET_FILE_UPLOAD_STATUS";
+      payload: SetStateAction<string | undefined>;
+    }
 
   // File removal process
   | { type: "INIT_REMOVE_FILE"; payload: { slot: FileUploadAndLabelSlot } }
@@ -92,27 +96,37 @@ export const fileUploadAndLabelReducer = (
     }
 
     case "SET_SLOTS": {
-      const newSlots = action.payload.filter(
+      const nextSlots =
+        typeof action.payload === "function"
+          ? action.payload(state.slots)
+          : action.payload;
+
+      const newSlots = nextSlots.filter(
         (newSlot) => !state.slots.some((oldSlot) => oldSlot.id === newSlot.id),
       );
       const isNewFileUpload = newSlots.length > 0;
 
       return {
         ...state,
-        slots: action.payload,
+        slots: nextSlots,
         // Auto-expand if a new file was just added
         expandedSlotId: isNewFileUpload ? newSlots[0].id : state.expandedSlotId,
-        // Clear error on new upload
+        // Clear errors on successful new upload
         errors: isNewFileUpload
-          ? { ...state.errors, dropzone: undefined }
+          ? { ...state.errors, dropzone: undefined, fileList: undefined }
           : state.errors,
       };
     }
 
     case "SET_FILE_UPLOAD_STATUS": {
+      const nextFileUploadStatus =
+        typeof action.payload === "function"
+          ? action.payload(state.fileUploadStatus)
+          : action.payload;
+
       return {
         ...state,
-        fileUploadStatus: action.payload,
+        fileUploadStatus: nextFileUploadStatus,
       };
     }
 

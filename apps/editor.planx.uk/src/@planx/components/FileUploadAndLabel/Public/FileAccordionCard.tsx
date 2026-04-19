@@ -109,7 +109,7 @@ export const FileAccordionCard: React.FC<FileAccordionCardProps> = ({
                   p: 0,
                 }}
               >
-                {tags.map((tag) => (
+                {tags?.map((tag) => (
                   <ListItem key={tag} disablePadding sx={{ width: "auto" }}>
                     <Chip
                       label={tag}

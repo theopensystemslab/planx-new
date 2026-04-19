@@ -66,16 +66,6 @@ interface SlotsSchemaTestContext extends TestContext {
 }
 
 export const slotsSchema = array()
-  .of(
-    object({
-      id: string().required(),
-      status: string().required(),
-      tags: array().of(string()).required(),
-      file: object({
-        name: string().required(),
-      }),
-    }),
-  )
   .required()
   .test({
     name: "minFileUploaded",
@@ -135,6 +125,8 @@ export const slotsSchema = array()
     test: (slots, context) => {
       const fileList = context.options.context?.fileList as FileList;
       if (!fileList) return true;
+
+      if (!slots || slots.length === 0) return true;
 
       const assignedTags = new Set(
         slots?.flatMap((s) => (s as FileUploadAndLabelSlot).tags || []),
