@@ -1,35 +1,32 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import {
-  type FileUploadAndLabelSlot,
-  getTagsForSlot,
-  removeSlots,
-} from "../../model";
+import { type FileUploadAndLabelSlot } from "../../model";
 import {
   type FileUploadAction,
   fileUploadAndLabelReducer,
   type FileUploadState,
 } from "./fileUploadAndLabelReducer";
 
-vi.mock("../../model", () => ({
-  getTagsForSlot: vi.fn(),
-  removeSlots: vi.fn(),
-}));
-
 const mockFileA = {
   id: "slot-A",
   file: { path: "a.pdf" },
   drawingNumber: "123",
-} as FileUploadAndLabelSlot;
+  tags: [],
+} as unknown as FileUploadAndLabelSlot;
+
 const mockFileB = {
   id: "slot-B",
   file: { path: "b.pdf" },
   drawingNumber: "456",
-} as FileUploadAndLabelSlot;
+  tags: [],
+} as unknown as FileUploadAndLabelSlot;
+
 const mockFileC = {
   id: "slot-C",
   file: { path: "c.pdf" },
-} as FileUploadAndLabelSlot;
+  drawingNumber: "",
+  tags: [],
+} as unknown as FileUploadAndLabelSlot;
 
 const baseState: FileUploadState = {
   slots: [],
@@ -41,6 +38,45 @@ const baseState: FileUploadState = {
 describe("fileUploadAndLabelReducer", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+  });
+
+  describe("UPDATE_TAGS action", () => {
+    it("updates the tags for a specific slot and clears relevant errors", () => {
+      const state: FileUploadState = {
+        ...baseState,
+        slots: [mockFileA, mockFileB],
+        errors: {
+          fileList: "Global error",
+          fileLabel: { "slot-A": "Local error" },
+        },
+      };
+
+      const result = fileUploadAndLabelReducer(state, {
+        type: "UPDATE_TAGS",
+        payload: { slotId: "slot-A", tags: ["New Tag"] },
+      });
+
+      expect(result.slots[0].tags).toEqual(["New Tag"]);
+      expect(result.slots[1].tags).toEqual([]);
+      expect(result.errors?.fileList).toBeUndefined();
+      expect(result.errors?.fileLabel?.["slot-A"]).toBeUndefined();
+    });
+  });
+
+  describe("UPDATE_DRAWING_NUMBER action", () => {
+    it("updates the drawing number for a specific slot", () => {
+      const state: FileUploadState = {
+        ...baseState,
+        slots: [mockFileA],
+      };
+
+      const result = fileUploadAndLabelReducer(state, {
+        type: "UPDATE_DRAWING_NUMBER",
+        payload: { slotId: "slot-A", value: "789" },
+      });
+
+      expect(result.slots[0].drawingNumber).toBe("789");
+    });
   });
 
   describe("SET_SLOTS action", () => {
@@ -87,20 +123,16 @@ describe("fileUploadAndLabelReducer", () => {
 
   describe("SAVE_SLOT action", () => {
     it("advances expandedSlotId to the next untagged file", () => {
+      const slotA = { ...mockFileA, tags: ["Site Plan"] };
+      const slotB = { ...mockFileB, tags: ["Elevations"] };
+      const slotC = { ...mockFileC, tags: [] };
+
       const state: FileUploadState = {
         ...baseState,
-        slots: [mockFileA, mockFileB, mockFileC],
+        slots: [slotA, slotB, slotC],
         expandedSlotId: "slot-A",
         errors: { fileList: "Missing tags" },
       };
-
-      vi.mocked(getTagsForSlot).mockImplementation((slotId) => {
-        if (slotId === "slot-A") return ["Site Plan"];
-        if (slotId === "slot-B") return ["Elevations"];
-        // Only C is untagged - we should jump to this
-        if (slotId === "slot-C") return [];
-        return [];
-      });
 
       const action: FileUploadAction = {
         type: "SAVE_SLOT",
@@ -113,12 +145,13 @@ describe("fileUploadAndLabelReducer", () => {
     });
 
     it("sets expandedSlotId to undefined if all subsequent files are fully tagged", () => {
+      const slotA = { ...mockFileA, tags: ["Tag"] };
+      const slotB = { ...mockFileB, tags: ["Tag"] };
+
       const state: FileUploadState = {
         ...baseState,
-        slots: [mockFileA, mockFileB],
+        slots: [slotA, slotB],
       };
-
-      vi.mocked(getTagsForSlot).mockReturnValue(["Some Tag"]);
 
       const action: FileUploadAction = {
         type: "SAVE_SLOT",
@@ -163,22 +196,14 @@ describe("fileUploadAndLabelReducer", () => {
           removingSlotId: "slot-A",
         };
 
-        const mockUpdatedFileList = {
-          required: [],
-          recommended: [],
-          optional: [],
-        };
-        vi.mocked(removeSlots).mockReturnValue(mockUpdatedFileList);
-
         const action: FileUploadAction = { type: "COMPLETE_REMOVE_FILE" };
         const result = fileUploadAndLabelReducer(state, action);
 
         expect(result.slots).toHaveLength(1);
         expect(result.slots[0].id).toBe("slot-B");
-        expect(result.slots[0]).toEqual("456");
+        expect(result.slots[0].drawingNumber).toBe("456");
         expect(result.pendingRemoval).toBeNull();
         expect(result.removingSlotId).toBeNull();
-        expect(result.fileList).toBe(mockUpdatedFileList);
       });
 
       it("clears validation errors when the last file is deleted", () => {
@@ -186,6 +211,7 @@ describe("fileUploadAndLabelReducer", () => {
           ...baseState,
           slots: [mockFileA],
           pendingRemoval: mockFileA,
+          removingSlotId: "slot-A",
           errors: {
             fileList: "Error",
             fileLabel: { "slot-A": "Missing label" },
@@ -220,7 +246,7 @@ describe("fileUploadAndLabelReducer", () => {
 
       expect(result.expandedSlotId).toBe("slot-B");
       expect(result.errors?.fileList).toBeUndefined();
-      expect(result.errors?.fileLabel).toBeUndefined();
+      expect(result.errors?.fileLabel?.["slot-B"]).toBeUndefined();
     });
   });
 });
