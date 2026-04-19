@@ -89,17 +89,16 @@ export default function Component(props: Props) {
     initState,
   );
 
-  const handleSetSlots = (action: SetStateAction<FileUploadAndLabelSlot[]>) => {
-    const payload = typeof action === "function" ? action(state.slots) : action;
-    dispatch({ type: "SET_SLOTS", payload });
+  const handleSetSlots = (
+    updater: SetStateAction<FileUploadAndLabelSlot[]>,
+  ) => {
+    dispatch({ type: "SET_SLOTS", payload: updater });
   };
 
   const handleSetFileUploadStatus = (
-    action: SetStateAction<string | undefined>,
+    updater: SetStateAction<string | undefined>,
   ) => {
-    const payload =
-      typeof action === "function" ? action(state.fileUploadStatus) : action;
-    dispatch({ type: "SET_FILE_UPLOAD_STATUS", payload: payload ?? "" });
+    dispatch({ type: "SET_FILE_UPLOAD_STATUS", payload: updater });
   };
 
   const handleExpand = (slotId: string) =>
@@ -159,6 +158,9 @@ export default function Component(props: Props) {
     }
   };
 
+  const checkIsComplete = (fileName: string) =>
+    state.slots.some((slot) => slot.tags?.includes(fileName));
+
   return (
     <Card
       handleSubmit={props.hideDropZone ? props.handleSubmit : validateAndSubmit}
@@ -209,7 +211,7 @@ export default function Component(props: Props) {
                     <InteractiveFileListItem
                       name={fileType.name}
                       fn={fileType.fn}
-                      completed={Boolean(fileType.slots?.length)}
+                      completed={checkIsComplete(fileType.name)}
                       moreInformation={fileType.moreInformation}
                       showStatusIcon={!props.hideDropZone}
                     />
