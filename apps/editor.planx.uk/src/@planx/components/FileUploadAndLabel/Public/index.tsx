@@ -59,27 +59,27 @@ const UploadList = styled(List)(({ theme }) => ({
 export default function Component(props: Props) {
   const initState = (props: Props): FileUploadState => {
     const passport = useStore.getState().computePassport();
-    const initialFileList = createFileList({
+    const fileList = createFileList({
       passport,
       fileTypes: props.fileTypes,
     });
 
     if (props.previouslySubmittedData) {
-      const recoveredData = getRecoveredData(
+      const recoveredSlots = getRecoveredData(
         props.previouslySubmittedData,
-        initialFileList,
+        fileList,
       );
 
       return {
         ...initialState,
-        fileList: recoveredData.fileList,
-        slots: recoveredData.slots,
+        fileList,
+        slots: recoveredSlots,
       };
     }
 
     return {
       ...initialState,
-      fileList: initialFileList,
+      fileList,
     };
   };
 

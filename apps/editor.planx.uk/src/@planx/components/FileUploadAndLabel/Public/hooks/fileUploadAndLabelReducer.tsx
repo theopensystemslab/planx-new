@@ -61,6 +61,9 @@ export const fileUploadAndLabelReducer = (
 ): FileUploadState => {
   switch (action.type) {
     case "UPDATE_TAGS": {
+      const { [action.payload.slotId]: _, ...remainingFileLabels } =
+        state.errors?.fileLabel || {};
+
       return {
         ...state,
         slots: state.slots.map((slot) =>
@@ -72,10 +75,7 @@ export const fileUploadAndLabelReducer = (
         errors: {
           ...state.errors,
           fileList: undefined,
-          fileLabel: {
-            ...state.errors?.fileLabel,
-            [action.payload.slotId]: "",
-          },
+          fileLabel: remainingFileLabels,
         },
       };
     }
@@ -148,16 +148,16 @@ export const fileUploadAndLabelReducer = (
     }
 
     case "EXPAND_SLOT": {
+      const { [action.payload.slotId]: _, ...remainingFileLabels } =
+        state.errors?.fileLabel || {};
+
       return {
         ...state,
         expandedSlotId: action.payload.slotId,
         errors: {
           ...state.errors,
           fileList: undefined,
-          fileLabel: {
-            ...state.errors?.fileLabel,
-            [action.payload.slotId]: "",
-          },
+          fileLabel: remainingFileLabels,
         },
       };
     }
