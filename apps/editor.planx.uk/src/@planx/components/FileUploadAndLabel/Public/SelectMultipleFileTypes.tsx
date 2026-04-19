@@ -12,22 +12,15 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import Input from "ui/shared/Input/Input";
 
-import { FileUploadSlot } from "../../FileUpload/model";
-import {
-  addOrAppendSlots,
-  FileList,
-  getTagsForSlot,
-  removeSlots,
-  UserFile,
-} from "../model";
+import { FileList, type FileUploadAndLabelSlot, UserFile } from "../model";
 
 interface ChecklistProps {
-  uploadedFile: FileUploadSlot;
+  uploadedFile: FileUploadAndLabelSlot;
   fileList: FileList;
-  setFileList: (value: React.SetStateAction<FileList>) => void;
+  onTagsChange: (tags: string[]) => void;
   showDrawingNumber?: boolean;
   drawingNumber?: string;
-  onDrawingNumberChange?: (value: string) => void;
+  onDrawingNumberChange?: (slotId: string, value: string) => void;
   onSave?: () => void;
 }
 
@@ -61,14 +54,14 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
   const {
     uploadedFile,
     fileList,
-    setFileList,
+    onTagsChange,
     showDrawingNumber,
     drawingNumber,
     onDrawingNumberChange,
     onSave,
   } = props;
 
-  const initialTags = getTagsForSlot(uploadedFile.id, fileList);
+  const currentTags = uploadedFile.tags || [];
 
   const titleId = `file-selection-title-${uploadedFile.id}`;
 
@@ -98,25 +91,16 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
    * Handle individual checkbox change
    */
   const handleCheckboxChange = (option: Option) => {
-    const isCurrentlyChecked = initialTags.includes(option.name);
-    const newCheckedState = !isCurrentlyChecked;
+    const isCurrentlyChecked = currentTags.includes(option.name);
 
-    if (newCheckedState) {
-      // Add the tag
-      const updatedFileList = addOrAppendSlots(
-        [option.name],
-        uploadedFile,
-        fileList,
-      );
-      setFileList(updatedFileList);
-    } else {
+    if (isCurrentlyChecked) {
       // Remove the tag
-      const updatedFileList = removeSlots(
-        [option.name],
-        uploadedFile,
-        fileList,
-      );
-      setFileList(updatedFileList);
+      const nextTags = currentTags.filter((tag) => tag !== option.name);
+      onTagsChange(nextTags);
+    } else {
+      // Add the tag
+      const nextTags = [...currentTags, option.name];
+      onTagsChange(nextTags);
     }
   };
 
@@ -152,7 +136,7 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
                 key={`${category}-${option.name}`}
                 id={sanitizeId(`${uploadedFile.id}-${category}-${option.name}`)}
                 label={option.name}
-                checked={initialTags.includes(option.name)}
+                checked={currentTags.includes(option.name)}
                 onChange={() => handleCheckboxChange(option)}
               />
             ))}
@@ -177,7 +161,9 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
           <Input
             id={`drawing-number-${uploadedFile.id}`}
             value={drawingNumber ?? ""}
-            onChange={(e) => onDrawingNumberChange?.(e.target.value)}
+            onChange={(e) =>
+              onDrawingNumberChange?.(uploadedFile.id, e.target.value)
+            }
             fullWidth
             aria-labelledby={`drawing-number-label-${uploadedFile.id}`}
             bordered

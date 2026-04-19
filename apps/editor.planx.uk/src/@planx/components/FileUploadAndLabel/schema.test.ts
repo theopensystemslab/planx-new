@@ -1,10 +1,9 @@
-import { FileUploadSlot } from "../FileUpload/model";
+import type { FileWithPath } from "react-dropzone";
+
 import { Condition, Operator } from "../shared/RuleBuilder/types";
 import { mockFileList, mockFileTypes, mockRules } from "./mocks";
-import { FileType } from "./model";
+import { type FileList, FileType, type FileUploadAndLabelSlot } from "./model";
 import {
-  fileLabelSchema,
-  fileListSchema,
   fileTypeSchema,
   fileUploadAndLabelSchema,
   ruleSchema,
@@ -159,174 +158,148 @@ describe("fileUploadAndLabelSchema", () => {
   });
 });
 
-describe("slotSchema", () => {
-  it("rejects slots with a failed upload", async () => {
-    const mockSlots = [
-      { status: "error" },
-      { status: "success" },
-    ] as FileUploadSlot[];
+describe("slotsSchema", () => {
+  const emptyFileList: FileList = {
+    required: [],
+    recommended: [],
+    optional: [],
+  };
 
+  const createSlot = (
+    id: string,
+    tags: string[] = [],
+  ): Partial<FileUploadAndLabelSlot> => ({
+    id,
+    status: "success",
+    file: { name: `${id}.jpg`, path: `./${id}.jpg` } as FileWithPath,
+    tags,
+    drawingNumber: "",
+  });
+
+  it("rejects slots with a failed upload status", async () => {
+    // Add dummy file and tags so the "allFilesTagged" test doesn't fail first or crash
+    const mockSlots = [
+      { id: "1", status: "error", file: { name: "test.jpg" }, tags: ["Tag"] },
+    ];
     const result = await slotsSchema.isValid(mockSlots, {
       context: { fileList: mockFileList },
     });
-
     expect(result).toBe(false);
   });
 
   it("rejects slots which are still uploading", async () => {
     const mockSlots = [
-      { status: "uploading" },
-      { status: "success" },
-    ] as FileUploadSlot[];
-
+      {
+        id: "1",
+        status: "uploading",
+        file: { name: "test.jpg" },
+        tags: ["Tag"],
+      },
+    ];
     const result = await slotsSchema.isValid(mockSlots, {
       context: { fileList: mockFileList },
     });
-
     expect(result).toBe(false);
   });
 
-  it("rejects slots which failed to upload", async () => {
-    const mockSlots = [
-      { status: "error" },
-      { status: "success" },
-    ] as FileUploadSlot[];
-
+  it("allows slots with all files successfully uploaded", async () => {
+    const mockSlots = [createSlot("1", ["Tag"]), createSlot("2", ["Tag"])];
     const result = await slotsSchema.isValid(mockSlots, {
-      context: { fileList: mockFileList },
+      context: { fileList: emptyFileList },
     });
+    expect(result).toBe(true);
+  });
 
+  it("allows users to proceed without files if there are no required types", async () => {
+    const result = await slotsSchema.isValid([], {
+      context: {
+        fileList: {
+          required: [],
+          recommended: [mockFileTypes.AlwaysRecommended],
+          optional: [mockFileTypes.NotRequired],
+        },
+      },
+    });
+    expect(result).toBe(true);
+  });
+
+  it("rejects zero files if there is at least one required type", async () => {
+    const result = await slotsSchema.isValid([], {
+      context: {
+        fileList: {
+          required: [mockFileTypes.AlwaysRequired],
+          recommended: [],
+          optional: [],
+        },
+      },
+    });
     expect(result).toBe(false);
   });
 
-  it("allows slots with all files uploaded", async () => {
-    const mockSlots = [
-      { status: "success" },
-      { status: "success" },
-    ] as FileUploadSlot[];
+  it("rejects if any individual slot is missing a tag (allFilesTagged)", async () => {
+    const mockSlots = [createSlot("123", ["Site Plan"]), createSlot("456", [])];
 
-    const result = await slotsSchema.isValid(mockSlots, {
-      context: { fileList: mockFileList },
-    });
-
-    expect(result).toBe(true);
+    await expect(
+      slotsSchema.validate(mockSlots, { context: { fileList: emptyFileList } }),
+    ).rejects.toThrow(/File 456.jpg is not labeled/);
   });
 
-  it("allows users to proceed if there are no required files", async () => {
-    const mockSlots: FileUploadSlot[] = [];
+  it("allows fileLists where all files are tagged, even if requirements aren't met yet (allFilesTagged pass)", async () => {
+    const mockSlots = [createSlot("1", ["Random Tag"])];
 
-    const result = await slotsSchema.isValid(mockSlots, {
-      context: {
-        fileList: {
-          required: [],
-          recommended: [
-            { ...mockFileTypes.AlwaysRecommended, slots: [{ id: "123" }] },
-          ],
-          optional: [{ ...mockFileTypes.NotRequired, slots: [{ id: "456" }] }],
-        },
-      },
-    });
+    // Check for the "allFilesTagged" error specifically
+    const hasUntaggedError = await slotsSchema
+      .validate(mockSlots, { context: { fileList: mockFileList } })
+      .then(() => false)
+      .catch((err) =>
+        err.inner.some((e: any) => e.message.includes("is not labeled")),
+      );
 
-    expect(result).toBe(true);
+    expect(hasUntaggedError).toBe(false);
   });
 
-  it("allows users to proceed if there are no required files, and they have not uploaded any optional or recommended files", async () => {
-    const mockSlots: FileUploadSlot[] = [];
-
-    const result = await slotsSchema.isValid(mockSlots, {
-      context: {
-        fileList: {
-          required: [],
-          recommended: [{ ...mockFileTypes.AlwaysRecommended }],
-          optional: [{ ...mockFileTypes.NotRequired }],
-        },
-      },
-    });
-
-    expect(result).toBe(true);
-  });
-});
-
-describe("fileLabelSchema", () => {
-  it("rejects if the proper context is not provided for validation", async () => {
-    const mockFileList = {
-      required: [],
-      recommended: [],
-      optional: [],
+  it("rejects if any 'required' fileTypes do not have a matching tag in any slot", async () => {
+    const requiredType = {
+      ...mockFileTypes.AlwaysRequired,
+      name: "Required Document",
     };
-    await expect(() => fileLabelSchema.validate(mockFileList)).rejects.toThrow(
-      /Missing context for fileListSchema/,
+    const mockSlots = [createSlot("1", ["Unrelated Tag"])];
+
+    const context = {
+      fileList: { required: [requiredType], recommended: [], optional: [] },
+    };
+
+    await expect(slotsSchema.validate(mockSlots, { context })).rejects.toThrow(
+      /Please upload and label all required information/,
     );
   });
 
-  it("rejects if any slots are untagged", async () => {
-    const mockSlots = [
-      { id: "123", file: { path: "./first.jpg", name: "first.jpg" } },
-      { id: "456", file: { path: "./second.jpg", name: "second.jpg" } },
-    ] as FileUploadSlot[];
+  it("allows if all 'required' fileTypes have been assigned to at least one slot", async () => {
+    const requiredType = {
+      ...mockFileTypes.AlwaysRequired,
+      name: "Required Document",
+    };
+    const mockSlots = [createSlot("1", ["Required Document"])];
 
-    const mockFileList = {
-      required: [
-        // Second slot is not assigned to any fileTypes
-        {
-          ...mockFileTypes.AlwaysRequired,
-          slots: [{ id: "123", file: { path: "abc.jpg" } }],
-        },
-      ],
-      recommended: [],
-      optional: [],
+    const context = {
+      fileList: { required: [requiredType], recommended: [], optional: [] },
     };
 
-    await expect(() =>
-      fileLabelSchema.validate(mockFileList, { context: { slots: mockSlots } }),
-    ).rejects.toThrow(/File second.jpg is not labeled/);
-  });
-
-  it("allows fileLists where all files are tagged, but requirements are not satisfied yet", async () => {
-    const mockSlots = [{ id: "123" }, { id: "456" }] as FileUploadSlot[];
-
-    const mockFileList = {
-      required: [{ ...mockFileTypes.AlwaysRequired, slots: undefined }],
-      recommended: [
-        { ...mockFileTypes.AlwaysRecommended, slots: [{ id: "123" }] },
-      ],
-      optional: [{ ...mockFileTypes.NotRequired, slots: [{ id: "456" }] }],
-    };
-
-    const result = await fileLabelSchema.isValid(mockFileList, {
-      context: { slots: mockSlots },
-    });
+    const result = await slotsSchema.isValid(mockSlots, { context });
     expect(result).toBe(true);
   });
-});
 
-describe("fileListSchema", () => {
-  it("rejects if any 'required' fileTypes do not have slots set", async () => {
-    const mockSlots = [{ id: "123" }, { id: "456" }] as FileUploadSlot[];
+  it("handles complex multi-tag scenarios (one file fulfilling multiple requirements)", async () => {
+    const req1 = { ...mockFileTypes.AlwaysRequired, name: "Doc A" };
+    const req2 = { ...mockFileTypes.AlwaysRequired, name: "Doc B" };
 
-    const mockFileList = {
-      required: [{ ...mockFileTypes.AlwaysRequired, slots: undefined }],
-      recommended: [],
-      optional: [],
+    const mockSlots = [createSlot("1", ["Doc A", "Doc B"])];
+
+    const context = {
+      fileList: { required: [req1, req2], recommended: [], optional: [] },
     };
 
-    await expect(() =>
-      fileListSchema.validate(mockFileList, { context: { slots: mockSlots } }),
-    ).rejects.toThrow(/Please upload and label all required information/);
-  });
-
-  it("allows fileLists where all 'required' fileTypes have slots set", async () => {
-    const mockSlots = [{ id: "123" }, { id: "456" }] as FileUploadSlot[];
-
-    const mockFileList = {
-      required: [{ ...mockFileTypes.AlwaysRequired, slots: mockSlots }],
-      recommended: [],
-      optional: [],
-    };
-
-    const result = await fileListSchema.isValid(mockFileList, {
-      context: { slots: mockSlots },
-    });
+    const result = await slotsSchema.isValid(mockSlots, { context });
     expect(result).toBe(true);
   });
 });
