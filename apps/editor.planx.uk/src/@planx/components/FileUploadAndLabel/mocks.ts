@@ -1,4 +1,3 @@
-import { FileUploadSlot } from "../FileUpload/model";
 import { Condition, Operator, Rule } from "../shared/RuleBuilder/types";
 import { FileList, FileType } from "./model";
 
@@ -101,219 +100,13 @@ export const mockFileTypesUniqueKeys: FileType[] = [
   },
 ];
 
-export const mockSlots = [
-  {
-    file: {
-      path: "./PXL_20230511_093922923.jpg",
-      name: "PXL_20230511_093922923.jpg",
-    },
-    status: "success",
-    progress: 1,
-    id: "EFGI1yU8s5s_cSBxnnYau",
-    url: "http://localhost:7002/file/private/jjpmkz8g/PXL_20230511_093922923.jpg",
-  },
-  {
-    file: {
-      path: "PXL_20230507_150205350~2.jpg",
-    },
-    status: "success",
-    progress: 1,
-    id: "ZrGNE4siV36zvA7u1QZQD",
-    url: "http://localhost:7002/file/private/82wo7bev/PXL_20230507_150205350~2.jpg",
-  },
-  {
-    file: {
-      path: "PXL_20230511_093922923.jpg",
-    },
-    status: "success",
-    progress: 1,
-    id: "6bZBneLnY-L6qiqOblu8t",
-    url: "http://localhost:7002/file/private/truap5az/PXL_20230511_093922923.jpg",
-  },
-] as FileUploadSlot[];
-
-export const mockFileList = {
+export const mockFileList: FileList = {
   required: [
     {
       fn: "requiredFileFn",
       name: "firstFile",
       rule: {
-        condition: "AlwaysRequired",
-      },
-      slots: [mockSlots[0]],
-    },
-  ],
-  recommended: [
-    {
-      fn: "recommendedFileFn",
-      name: "secondFile",
-      rule: {
-        condition: "AlwaysRecommended",
-      },
-      slots: [mockSlots[1]],
-    },
-  ],
-  optional: [
-    {
-      fn: "optionalFileFn",
-      name: "thirdFile",
-      rule: {
-        condition: "NotRequired",
-      },
-      slots: [mockSlots[2]],
-    },
-  ],
-} as FileList;
-
-export const mockSlotsMultiple = [
-  {
-    file: {
-      name: "first.jpg",
-      path: "./first.jpg",
-    },
-    status: "success",
-    progress: 1,
-    id: "001",
-    url: "http://localhost:7002/file/private/jjpmkz8g/first.jpg",
-  },
-  {
-    file: {
-      name: "second.jpg",
-      path: "./second.jpg",
-    },
-    status: "success",
-    progress: 1,
-    id: "002",
-    url: "http://localhost:7002/file/private/jjpmkz8g/second.jpg",
-  },
-  {
-    file: {
-      name: "third.jpg",
-      path: "./third.jpg",
-    },
-    status: "success",
-    progress: 1,
-    id: "003",
-    url: "http://localhost:7002/file/private/jjpmkz8g/third.jpg",
-  },
-] as FileUploadSlot[];
-
-export const mockFileListMultiple = {
-  required: [
-    {
-      fn: "fileFn",
-      name: "firstFileType",
-      rule: {
-        condition: "AlwaysRequired",
-      },
-      slots: [
-        {
-          file: {
-            name: "first.jpg",
-            path: "./first.jpg",
-          },
-          status: "success",
-          progress: 1,
-          id: "001",
-          url: "http://localhost:7002/file/private/jjpmkz8g/first.jpg",
-        },
-        {
-          file: {
-            name: "second.jpg",
-            path: "./second.jpg",
-          },
-          status: "success",
-          progress: 1,
-          id: "002",
-          url: "http://localhost:7002/file/private/jjpmkz8g/second.jpg",
-        },
-        {
-          file: {
-            name: "third.jpg",
-            path: "./third.jpg",
-          },
-          status: "success",
-          progress: 1,
-          id: "003",
-          url: "http://localhost:7002/file/private/jjpmkz8g/third.jpg",
-        },
-      ],
-    },
-  ],
-  recommended: [],
-  optional: [],
-} as unknown as FileList;
-
-export const mockFileListManyTagsOneSlot = {
-  required: [
-    {
-      fn: "requiredFileFn",
-      name: "firstFile",
-      rule: {
-        condition: "AlwaysRequired",
-      },
-      slots: [
-        {
-          file: {
-            path: "PXL_20230511_093922923.jpg",
-          },
-          status: "success",
-          progress: 1,
-          id: "6bZBneLnY-L6qiqOblu8t",
-          url: "http://localhost:7002/file/private/truap5az/PXL_20230511_093922923.jpg",
-        },
-      ],
-    },
-  ],
-  recommended: [
-    {
-      fn: "recommendedFileFn",
-      name: "secondFile",
-      rule: {
-        condition: "AlwaysRecommended",
-      },
-      slots: [
-        {
-          file: {
-            path: "PXL_20230511_093922923.jpg",
-          },
-          status: "success",
-          progress: 1,
-          id: "6bZBneLnY-L6qiqOblu8t",
-          url: "http://localhost:7002/file/private/truap5az/PXL_20230511_093922923.jpg",
-        },
-      ],
-    },
-  ],
-  optional: [
-    {
-      fn: "optionalFileFn",
-      name: "thirdFile",
-      rule: {
-        condition: "NotRequired",
-      },
-      slots: [
-        {
-          file: {
-            path: "PXL_20230511_093922923.jpg",
-          },
-          status: "success",
-          progress: 1,
-          id: "6bZBneLnY-L6qiqOblu8t",
-          url: "http://localhost:7002/file/private/truap5az/PXL_20230511_093922923.jpg",
-        },
-      ],
-    },
-  ],
-} as FileList;
-
-export const mockFileListWithoutSlots = {
-  required: [
-    {
-      fn: "requiredFileFn",
-      name: "firstFile",
-      rule: {
-        condition: "AlwaysRequired",
+        condition: Condition.AlwaysRequired,
       },
     },
   ],
@@ -322,7 +115,7 @@ export const mockFileListWithoutSlots = {
       fn: "recommendedFileFn",
       name: "secondFile",
       rule: {
-        condition: "AlwaysRecommended",
+        condition: Condition.AlwaysRecommended,
       },
     },
   ],
@@ -331,18 +124,8 @@ export const mockFileListWithoutSlots = {
       fn: "optionalFileFn",
       name: "thirdFile",
       rule: {
-        condition: "NotRequired",
+        condition: Condition.NotRequired,
       },
     },
   ],
-} as FileList;
-
-export const mockSlot = {
-  file: {
-    path: "PXL_20230511_093922923.jpg",
-  },
-  status: "success",
-  progress: 1,
-  id: "6bZBneLnY-L6qiqOblu8t",
-  url: "http://localhost:7002/file/private/truap5az/PXL_20230511_093922923.jpg",
-} as FileUploadSlot;
+};
