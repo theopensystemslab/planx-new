@@ -519,7 +519,6 @@ export const editorStore: StateCreator<
     if (!node) return;
 
     const payload = {
-      rootId: id,
       info: node.data?.info ?? null,
       policyRef: node.data?.policyRef ?? null,
       howMeasured: node.data?.howMeasured ?? null,
