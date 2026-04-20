@@ -37,7 +37,7 @@ interface TeamProps {
   flows: FlowSummary[];
 }
 
-const Team: React.FC<TeamProps> = () => {
+const Team: React.FC<TeamProps> = (initialFlows) => {
   const [
     { id: teamId, slug },
     canUserEditTeam,
@@ -53,7 +53,7 @@ const Team: React.FC<TeamProps> = () => {
   ]);
 
   const { data } = useGetFlows(teamId);
-  const flows = data?.flows ?? null;
+  const flows = data?.flows ?? initialFlows.flows;
   const [flowView, setFlowView] = useState<FlowView>("flows");
 
   const [searchedFlows, setSearchedFlows] = useState<FlowSummary[] | null>(

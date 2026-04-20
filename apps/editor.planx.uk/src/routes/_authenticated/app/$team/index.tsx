@@ -3,10 +3,15 @@ import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import RouteLoadingIndicator from "components/RouteLoadingIndicator";
 import { startNewRecentFlowsJourney } from "pages/FlowEditor/components/RecentFlows/useRecentFlows";
 import Team from "pages/Team";
+import {
+  GET_FLOWS,
+  GetAnyFlowsQuery,
+  GetAnyFlowsVars,
+} from "pages/Team/queries";
 import React from "react";
 import { z } from "zod";
 
-import { useStore } from "../../../../pages/FlowEditor/lib/store";
+import { client } from "../../../../lib/graphql";
 
 export const teamSearchSchema = z.object({
   sort: fallback(
@@ -33,11 +38,13 @@ export const Route = createFileRoute("/_authenticated/app/$team/")({
     const { team } = context;
 
     try {
-      const flows = await useStore.getState().getFlows(team.id);
-      return {
-        team,
-        flows,
-      };
+      const result = await client.query<GetAnyFlowsQuery, GetAnyFlowsVars>({
+        query: GET_FLOWS,
+        variables: { teamId: team.id },
+        fetchPolicy: "network-only",
+      });
+
+      return { team, flows: result.data.flows };
     } catch (error) {
       throw notFound();
     }
@@ -47,6 +54,5 @@ export const Route = createFileRoute("/_authenticated/app/$team/")({
 
 function TeamComponent() {
   const { flows } = Route.useLoaderData();
-
   return <Team flows={flows} />;
 }
