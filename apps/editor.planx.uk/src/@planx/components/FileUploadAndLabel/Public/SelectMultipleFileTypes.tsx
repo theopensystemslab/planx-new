@@ -12,7 +12,7 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import Input from "ui/shared/Input/Input";
 
-import { FileList, type FileUploadAndLabelSlot, UserFile } from "../model";
+import { FileList, type FileType, type FileUploadAndLabelSlot } from "../model";
 
 interface ChecklistProps {
   uploadedFile: FileUploadAndLabelSlot;
@@ -24,7 +24,7 @@ interface ChecklistProps {
   onSave?: () => void;
 }
 
-interface Option extends UserFile {
+interface Option extends FileType {
   category: keyof FileList;
 }
 

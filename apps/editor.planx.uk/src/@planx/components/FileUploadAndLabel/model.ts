@@ -53,10 +53,6 @@ export const newFileType = (): FileType => ({
   },
 });
 
-export interface UserFile extends FileType {
-  slots?: FileUploadSlot[];
-}
-
 export interface FileUploadAndLabelSlot extends FileUploadSlot {
   tags: string[];
   drawingNumber: string;
@@ -73,9 +69,9 @@ export interface FormattedUserFile {
 }
 
 export interface FileList {
-  required: UserFile[];
-  recommended: UserFile[];
-  optional: UserFile[];
+  required: FileType[];
+  recommended: FileType[];
+  optional: FileType[];
 }
 
 export const createFileList = ({
