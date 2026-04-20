@@ -72,6 +72,64 @@ export const Basic = {
   },
 } satisfies Story;
 
+export const WithDrawingNumbers = {
+  args: {
+    title: "Upload and label",
+    description:
+      "Based on your answers so far, these are the documents and drawings you need to submit.",
+    handleSubmit: () => {},
+    hideDropZone: false,
+    showDrawingNumber: true,
+    fileTypes: [
+      {
+        fn: "always",
+        name: "Site plan",
+        rule: {
+          condition: Condition.AlwaysRequired,
+        },
+      },
+      {
+        fn: "conditional",
+        name: "Roof plan",
+        rule: {
+          condition: Condition.AlwaysRequired,
+        },
+      },
+      {
+        fn: "documents.designAndAccess",
+        name: "Design and Access statement",
+        rule: {
+          condition: Condition.AlwaysRecommended,
+        },
+        moreInformation: {
+          info: "<p>It&apos;s a design and access statement innit.</p>",
+        },
+      },
+      {
+        fn: "proposal.drawing.section",
+        name: "Section drawings",
+        rule: {
+          condition: Condition.AlwaysRecommended,
+        },
+      },
+      {
+        fn: "optional",
+        name: "Heritage statement",
+        rule: {
+          condition: Condition.NotRequired,
+        },
+      },
+      {
+        fn: "optional2",
+        name: "Utility bill",
+        rule: {
+          condition: Condition.NotRequired,
+        },
+      },
+    ],
+  },
+} satisfies Story;
+
 export const OptionalFilesOnly = {
   args: {
     title: "Upload and label",

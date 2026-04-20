@@ -324,7 +324,7 @@ describe("Accordion trigger", () => {
   });
 });
 
-describe("Adding tags and syncing state", () => {
+describe("Adding tags", () => {
   test("Can continue when all required file types are uploaded and tagged", async () => {
     const handleSubmit = vi.fn();
     const { getAllByTestId, getByTestId, getByText, user } = await setup(
@@ -430,6 +430,74 @@ describe("Adding tags and syncing state", () => {
       /Please upload and label all required information/,
     );
     expect(error).toBeVisible();
+  });
+});
+
+describe("Adding drawing numbers", () => {
+  it("allows submission without a drawing number", async () => {
+    const handleSubmit = vi.fn();
+    const { getByTestId, user } = await setup(
+      <FileUploadAndLabelComponent
+        title="Test title"
+        handleSubmit={handleSubmit}
+        fileTypes={mockFileTypesUniqueKeys}
+        showDrawingNumber={true}
+      />,
+    );
+
+    // Upload file
+    const file = new File(["test"], "test.jpg", { type: "image/jpg" });
+    const input = getByTestId("upload-input");
+    await user.upload(input, file);
+
+    // Tag the file
+    const tagCheckbox = screen.getByLabelText("Roof plan");
+    await user.click(tagCheckbox);
+
+    // Save and continue
+    await user.click(screen.getByRole("button", { name: /Save/ }));
+    await user.click(screen.getByRole("button", { name: /Continue/ }));
+
+    expect(handleSubmit).toHaveBeenCalledTimes(1);
+
+    const submittedData = handleSubmit.mock.calls[0][0];
+    const submittedFile = submittedData.data.roofPlan[0];
+    expect(submittedFile.drawingNumber).toBeUndefined();
+  });
+
+  it("maps the drawing number to the passport payload", async () => {
+    const handleSubmit = vi.fn();
+    const { getByTestId, user } = await setup(
+      <FileUploadAndLabelComponent
+        title="Test title"
+        handleSubmit={handleSubmit}
+        fileTypes={mockFileTypesUniqueKeys}
+        showDrawingNumber={true}
+      />,
+    );
+
+    // Upload file
+    const file = new File(["test"], "test.jpg", { type: "image/jpg" });
+    const input = getByTestId("upload-input");
+    await user.upload(input, file);
+
+    // Tag the file
+    const tagCheckbox = screen.getByLabelText("Roof plan");
+    await user.click(tagCheckbox);
+
+    // Enter drawing number
+    const drawingNumberInput = screen.getByLabelText(/Drawing number/i);
+    await user.type(drawingNumberInput, "ABC-12345");
+
+    // Save and continue
+    await user.click(screen.getByRole("button", { name: /Save/ }));
+    await user.click(screen.getByRole("button", { name: /Continue/ }));
+
+    expect(handleSubmit).toHaveBeenCalledTimes(1);
+
+    const submittedData = handleSubmit.mock.calls[0][0];
+    const submittedFile = submittedData.data.roofPlan[0];
+    expect(submittedFile.drawingNumber).toBe("ABC-12345");
   });
 });
 

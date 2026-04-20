@@ -179,7 +179,7 @@ export default function Component(props: Props) {
                   createSlot={(baseSlot) => ({
                     ...baseSlot,
                     tags: [],
-                    drawingNumber: "",
+                    drawingNumber: undefined,
                   })}
                 />
               </ErrorWrapper>
