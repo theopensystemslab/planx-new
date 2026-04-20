@@ -6,7 +6,6 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { getIn } from "formik";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { merge } from "lodash";
 import React from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
@@ -110,7 +109,7 @@ function FileUploadAndLabelComponent(props: Props) {
                   !formik.values.showDrawingNumber,
                 )
               }
-              label="Show a drawing number field for each uploaded file"
+              label="Show an optional drawing number input for each uploaded file"
               disabled={props.disabled}
             />
           </InputRow>
