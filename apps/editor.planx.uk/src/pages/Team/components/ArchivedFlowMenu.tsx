@@ -11,42 +11,44 @@ import { FlowMenuProps } from "./StyledSimpleMenu";
 import { StyledSimpleMenu } from "./StyledSimpleMenu";
 
 const ArchivedFlowMenu: React.FC<FlowMenuProps> = ({
-    flow,
-    variant = "card",
-    teamId,
+  flow,
+  variant = "card",
+  teamId,
 }) => {
-    type OpenFlowDialog = "unarchive";
-    const [openFlowDialog, setOpenFlowDialog] = useState<OpenFlowDialog | null>(null);
-    const unarchivedSlug = flow.slug.replace("-archive", "");
-    const [unarchiveFlow] = useUnarchiveFlow(flow.id, unarchivedSlug, teamId);
+  type OpenFlowDialog = "unarchive";
+  const [openFlowDialog, setOpenFlowDialog] = useState<OpenFlowDialog | null>(
+    null,
+  );
+  const unarchivedSlug = flow.slug.replace("-archive", "");
+  const [unarchiveFlow] = useUnarchiveFlow(flow.id, unarchivedSlug, teamId);
 
-    const toast = useToast();
+  const toast = useToast();
 
-    const handleClose = () => {
-        setOpenFlowDialog(null);
-        };
+  const handleClose = () => {
+    setOpenFlowDialog(null);
+  };
 
-    const handleUnarchive = async () => {
-        try {
-            await unarchiveFlow();
-            toast.success("Unarchived flow");
-        } catch (error) {
-            toast.error(
-            "We are unable to unarchive this flow, refesh and try again or contact an admin",
-            );
-        } finally {
-            setOpenFlowDialog(null);
-        }
-        };
+  const handleUnarchive = async () => {
+    try {
+      await unarchiveFlow();
+      toast.success("Unarchived flow");
+    } catch (error) {
+      toast.error(
+        "We are unable to unarchive this flow, refesh and try again or contact an admin",
+      );
+    } finally {
+      setOpenFlowDialog(null);
+    }
+  };
 
-    const menuItems = [
-        {
-        label: "Unarchive",
-        onClick: () => setOpenFlowDialog("unarchive"),
-        },
-    ];
+  const menuItems = [
+    {
+      label: "Unarchive",
+      onClick: () => setOpenFlowDialog("unarchive"),
+    },
+  ];
 
-return (
+  return (
     <>
       {openFlowDialog === "unarchive" && (
         <ArchiveDialog
@@ -72,6 +74,7 @@ return (
         <SimpleMenu items={menuItems} />
       )}
     </>
-)};
+  );
+};
 
 export default ArchivedFlowMenu;
