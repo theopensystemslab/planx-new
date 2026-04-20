@@ -5,9 +5,8 @@ import { Form, Formik } from "formik";
 import { useToast } from "hooks/useToast";
 import { richText } from "lib/yupExtensions";
 import { nanoid } from "nanoid";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef, useState } from "react";
-import { useUpdateGlobalSettings } from "./queries";
+import { useGetGlobalSettings, useUpdateGlobalSettings } from "./queries";
 import type { TextContent } from "types";
 import { AddButton } from "ui/editor/AddButton";
 import InputLegend from "ui/editor/InputLegend";
@@ -130,12 +129,12 @@ const FooterItem: React.FC<FooterItemProps> = ({ item, onSave, onDelete }) => (
 );
 
 function FooterSettings() {
-  const globalSettings = useStore((state) => state.globalSettings);
+  const { data } = useGetGlobalSettings();
   const toast = useToast();
   const [updateGlobalSettings] = useUpdateGlobalSettings();
 
-  const initialItems: TextContent[] = globalSettings?.footerContent
-    ? Object.values(globalSettings.footerContent)
+  const initialItems: TextContent[] = data?.globalSettings[0]?.footerContent
+    ? Object.values(data.globalSettings[0].footerContent)
     : [];
 
   const [items, setItems] = useState<TextContent[]>(initialItems);

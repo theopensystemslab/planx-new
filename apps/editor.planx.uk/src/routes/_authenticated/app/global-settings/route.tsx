@@ -1,8 +1,7 @@
 import { createFileRoute, notFound, Outlet, rootRouteId } from "@tanstack/react-router";
-import { gql } from "graphql-tag";
 import { client } from "lib/graphql";
 import GlobalSettingsLayout from "pages/GlobalSettings/Layout";
-import { useStore } from "pages/FlowEditor/lib/store";
+import { GET_GLOBAL_SETTINGS } from "pages/GlobalSettings/queries";
 import React from "react";
 
 export const Route = createFileRoute("/_authenticated/app/global-settings")({
@@ -10,16 +9,8 @@ export const Route = createFileRoute("/_authenticated/app/global-settings")({
     const isAuthorised = context.user?.isPlatformAdmin;
     if (!isAuthorised) throw notFound({ routeId: rootRouteId });
 
-    const { data } = await client.query({
-      query: gql`
-        query {
-          globalSettings: global_settings {
-            footerContent: footer_content
-          }
-        }
-      `,
-    });
-    useStore.getState().setGlobalSettings(data.globalSettings[0]);
+    // Pre-warm the Apollo cache so the Footer component reads immediately from cache
+    await client.query({ query: GET_GLOBAL_SETTINGS });
   },
   component: RouteComponent,
 });
