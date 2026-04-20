@@ -55,7 +55,7 @@ export const newFileType = (): FileType => ({
 
 export interface FileUploadAndLabelSlot extends FileUploadSlot {
   tags: string[];
-  drawingNumber: string;
+  drawingNumber: string | undefined;
 }
 
 export interface FormattedUserFile {
@@ -63,6 +63,7 @@ export interface FormattedUserFile {
   rule: Rule;
   url: string | undefined;
   filename: string | undefined;
+  drawingNumber: string | undefined;
   /**
    * Store the data required for the UI in the breadcrumbs
    * This allows us to restore the UI on refresh / resume / back
@@ -205,6 +206,7 @@ export const generatePayload = (
         rule: definition.rule,
         url: slot.url,
         filename: slot.file.name,
+        drawingNumber: slot.drawingNumber,
         cachedSlot: {
           ...slot,
           file: {
