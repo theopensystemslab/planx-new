@@ -20,7 +20,8 @@ const ActiveFlowMenu: React.FC<FlowMenuProps> = ({
 }) => {
   type OpenDialog = "archive" | "copy" | "rename" | "move";
   const [openDialog, setOpenDialog] = useState<OpenDialog | null>(null);
-  const [archiveFlow] = useArchiveFlow(flow.id, flow.slug, teamId);
+  const archivedSlug = flow.slug.concat("-archived");
+  const [archiveFlow] = useArchiveFlow(flow.id, archivedSlug, teamId);
 
   const toast = useToast();
 
@@ -28,18 +29,18 @@ const ActiveFlowMenu: React.FC<FlowMenuProps> = ({
     setOpenDialog(null);
   };
 
-const handleArchive = async () => {
-  try {
-    await archiveFlow();
-    toast.success("Archived flow");
-  } catch (error) {
-    toast.error(
-      "We are unable to archive this flow, refesh and try again or contact an admin",
-    );
-  } finally {
-    setOpenDialog(null);
-  }
-};
+  const handleArchive = async () => {
+    try {
+      await archiveFlow();
+      toast.success("Archived flow");
+    } catch (error) {
+      toast.error(
+        "We are unable to archive this flow, refesh and try again or contact an admin",
+      );
+    } finally {
+      setOpenDialog(null);
+    }
+  };
 
   const menuItems = [
     {
