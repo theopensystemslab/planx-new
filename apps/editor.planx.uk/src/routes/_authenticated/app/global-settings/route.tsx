@@ -1,9 +1,9 @@
-import { createFileRoute, notFound, rootRouteId } from "@tanstack/react-router";
+import { createFileRoute, notFound, Outlet, rootRouteId } from "@tanstack/react-router";
 import { gql } from "graphql-tag";
 import { client } from "lib/graphql";
+import GlobalSettingsLayout from "pages/GlobalSettings/Layout";
 import { useStore } from "pages/FlowEditor/lib/store";
-
-import GlobalSettingsView from "../../../pages/GlobalSettings";
+import React from "react";
 
 export const Route = createFileRoute("/_authenticated/app/global-settings")({
   loader: async ({ context }) => {
@@ -21,5 +21,13 @@ export const Route = createFileRoute("/_authenticated/app/global-settings")({
     });
     useStore.getState().setGlobalSettings(data.globalSettings[0]);
   },
-  component: GlobalSettingsView,
+  component: RouteComponent,
 });
+
+function RouteComponent() {
+  return (
+    <GlobalSettingsLayout>
+      <Outlet />
+    </GlobalSettingsLayout>
+  );
+}
