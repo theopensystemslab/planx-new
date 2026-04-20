@@ -65,10 +65,7 @@ export default function Component(props: Props) {
     });
 
     if (props.previouslySubmittedData) {
-      const recoveredSlots = getRecoveredData(
-        props.previouslySubmittedData,
-        fileList,
-      );
+      const recoveredSlots = getRecoveredData(props.previouslySubmittedData);
 
       return {
         ...initialState,

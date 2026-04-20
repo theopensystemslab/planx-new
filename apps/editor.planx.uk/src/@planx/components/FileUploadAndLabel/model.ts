@@ -1,7 +1,7 @@
 import cloneDeep from "lodash/cloneDeep";
 import sortBy from "lodash/sortBy";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
-import { FileWithPath } from "react-dropzone";
+import type { FileWithPath } from "react-dropzone";
 
 import { FileUploadSlot } from "../FileUpload/model";
 import { BaseNodeData, MoreInformation, parseBaseNodeData } from "../shared";
@@ -63,7 +63,11 @@ export interface FormattedUserFile {
   rule: Rule;
   url: string | undefined;
   filename: string | undefined;
-  cachedSlot: Omit<FileUploadSlot, "file"> & {
+  /**
+   * Store the data required for the UI in the breadcrumbs
+   * This allows us to restore the UI on refresh / resume / back
+   */
+  cachedSlot: Omit<FileUploadAndLabelSlot, "file"> & {
     file: Pick<FileWithPath, "path" | "type" | "size">;
   };
 }
@@ -196,7 +200,6 @@ export const generatePayload = (
 
       const key = definition.fn;
 
-      // TODO: Helper?
       const formattedFile: FormattedUserFile = {
         name: definition.name,
         rule: definition.rule,
@@ -232,42 +235,38 @@ export const generatePayload = (
 
 export const getRecoveredData = (
   previouslySubmittedData: Store.UserData | undefined,
-  fileList: FileList,
 ): FileUploadAndLabelSlot[] => {
-  const allDefinitions = [
-    ...fileList.required,
-    ...fileList.recommended,
-    ...fileList.optional,
-  ];
+  if (!previouslySubmittedData?.data) return [];
 
   const recoveredSlotsMap = new Map<string, FileUploadAndLabelSlot>();
 
-  allDefinitions.forEach((def) => {
-    const storedFiles = previouslySubmittedData?.data?.[def.fn] as
-      | FormattedUserFile[]
-      | undefined;
+  const storedFiles: FormattedUserFile[] = Object.values(
+    previouslySubmittedData.data,
+  )
+    // Filter out _requestedFiles
+    .filter(Array.isArray)
+    .flat();
 
-    storedFiles?.forEach((storedFile) => {
-      if (storedFile.name === def.name) {
-        const slotId = storedFile.cachedSlot.id;
+  storedFiles.forEach((file) => {
+    if (!file?.cachedSlot?.id) return;
 
-        if (!recoveredSlotsMap.has(slotId)) {
-          recoveredSlotsMap.set(slotId, {
-            ...(storedFile.cachedSlot as FileUploadAndLabelSlot),
-            tags: [def.name],
-            // TODO: check out this casting
-            drawingNumber:
-              (storedFile.cachedSlot as FileUploadAndLabelSlot).drawingNumber ||
-              "",
-          });
-        } else {
-          const existingSlot = recoveredSlotsMap.get(slotId)!;
-          if (!existingSlot.tags.includes(def.name)) {
-            existingSlot.tags.push(def.name);
-          }
-        }
+    const slotId = file.cachedSlot.id;
+    const tagName = file.name;
+    const existingSlot = recoveredSlotsMap.get(slotId);
+
+    if (!existingSlot) {
+      // Populate slots with recovered file
+      recoveredSlotsMap.set(slotId, {
+        ...file.cachedSlot,
+        file: file.cachedSlot.file as unknown as FileWithPath,
+        tags: [tagName],
+      });
+    } else {
+      // Append additional tags
+      if (!existingSlot.tags.includes(tagName)) {
+        existingSlot.tags.push(tagName);
       }
-    });
+    }
   });
 
   return Array.from(recoveredSlotsMap.values());

@@ -560,22 +560,7 @@ describe("getRecoveredData function", () => {
       },
     };
 
-    const mockFileListForRecovery: FileList = {
-      required: [
-        {
-          fn: "requiredFileFn",
-          name: "firstFile",
-          rule: { condition: Condition.AlwaysRequired },
-        },
-      ],
-      recommended: [],
-      optional: [],
-    };
-
-    const result = getRecoveredData(
-      previouslySubmittedData,
-      mockFileListForRecovery,
-    );
+    const result = getRecoveredData(previouslySubmittedData);
 
     expect(result).toHaveLength(1);
     expect(result?.[0]).toMatchObject(mockCachedSlot);
@@ -614,25 +599,7 @@ describe("getRecoveredData function", () => {
         ],
       },
     };
-
-    const fileListToRecover: FileList = {
-      required: [
-        {
-          fn: "otherDocument",
-          name: "file1",
-          rule: { condition: Condition.AlwaysRequired },
-        },
-        {
-          fn: "otherDocument",
-          name: "file2",
-          rule: { condition: Condition.AlwaysRequired },
-        },
-      ],
-      recommended: [],
-      optional: [],
-    };
-
-    const slots = getRecoveredData(previouslySubmittedData, fileListToRecover);
+    const slots = getRecoveredData(previouslySubmittedData);
 
     // Both slots were recovered
     expect(slots).toHaveLength(2);
