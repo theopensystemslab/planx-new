@@ -158,7 +158,7 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
               </Box>
             )}
           </FlowStatusCell>
-          <TableCell>
+          <FlowStatusCell>
             <Box>
               <Typography variant="body2">{displayTimeAgo}</Typography>
               {displayActor && (
@@ -167,7 +167,7 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
                 </Typography>
               )}
             </Box>
-          </TableCell>
+          </FlowStatusCell>
           {showDetails && (
             <TableCell>
               <Box onClick={(e) => e.stopPropagation()}>
