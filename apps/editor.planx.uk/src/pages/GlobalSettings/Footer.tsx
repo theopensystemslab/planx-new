@@ -6,7 +6,6 @@ import { useToast } from "hooks/useToast";
 import { richText } from "lib/yupExtensions";
 import { nanoid } from "nanoid";
 import React, { useRef, useState } from "react";
-import { useGetGlobalSettings, useUpdateGlobalSettings } from "./queries";
 import type { TextContent } from "types";
 import { AddButton } from "ui/editor/AddButton";
 import InputLegend from "ui/editor/InputLegend";
@@ -18,6 +17,8 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import { slugify } from "utils";
 import { boolean, object, string } from "yup";
+
+import { useGetGlobalSettings, useUpdateGlobalSettings } from "./queries";
 
 const itemSchema = object({
   heading: string().required("Page title is required"),

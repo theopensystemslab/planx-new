@@ -3,7 +3,7 @@ import { FlowStatus } from "@opensystemslab/planx-core/types";
 import camelcaseKeys from "camelcase-keys";
 import { client } from "lib/graphql";
 import { FlowInformation } from "pages/FlowEditor/utils";
-import { FlowSettings, GlobalSettings, TextContent } from "types";
+import { FlowSettings, GlobalSettings } from "types";
 import type { StateCreator } from "zustand";
 
 import {
@@ -24,7 +24,6 @@ export interface SettingsStore {
   flowSummary?: string;
   globalSettings?: GlobalSettings;
   setGlobalSettings: (globalSettings: GlobalSettings) => void;
-  updateGlobalSettings: (newSettings: { [key: string]: TextContent }) => void;
   teamAnalyticsLink?: string;
 }
 
@@ -155,26 +154,5 @@ export const settingsStore: StateCreator<
       globalSettings as Record<string, unknown>,
     ) as GlobalSettings;
     set({ globalSettings: fixedKeys });
-  },
-
-  updateGlobalSettings: async (newSettings: { [key: string]: TextContent }) => {
-    await client.mutate({
-      mutation: gql`
-        mutation UpdateGlobalSettings($new_settings: jsonb) {
-          insert_global_settings(
-            objects: { id: 1, footer_content: $new_settings }
-            on_conflict: {
-              constraint: global_settings_pkey
-              update_columns: footer_content
-            }
-          ) {
-            affected_rows
-          }
-        }
-      `,
-      variables: {
-        new_settings: newSettings,
-      },
-    });
   },
 });
