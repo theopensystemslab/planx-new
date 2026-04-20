@@ -42,8 +42,7 @@ export const FlowTable: React.FC<FlowTableProps> = ({
   view,
 }) => {
   const { headerText } = useFlowSortDisplay();
-
-  const showPinnedColumn = view === "flows";
+  const showDetails = view === "flows";
 
   return (
     <StyledTable>
@@ -55,7 +54,7 @@ export const FlowTable: React.FC<FlowTableProps> = ({
               <FlowStatusCell>Online status</FlowStatusCell>
               <FlowStatusCell>Flow type</FlowStatusCell>
               <TableCell>{headerText}</TableCell>
-              {showPinnedColumn && <TableCell>Pinned</TableCell>}
+              {showDetails && <TableCell>Pinned</TableCell>}
             </>
           )}
           <FlowActionsCell align="center">Actions</FlowActionsCell>
@@ -68,6 +67,7 @@ export const FlowTable: React.FC<FlowTableProps> = ({
             flow={flow}
             teamSlug={teamSlug}
             view={view}
+            showDetails={showDetails}
           />
         ))}
       </TableBody>
@@ -79,12 +79,14 @@ interface FlowTableRowProps {
   flow: FlowSummary;
   teamSlug: string;
   view: FlowView;
+  showDetails: boolean;
 }
 
 const FlowTableRow: React.FC<FlowTableRowProps> = ({
   flow,
   teamSlug,
   view,
+  showDetails,
 }) => {
   const [canUserEditTeam, teamId] = useStore((state) => [
     state.canUserEditTeam,
@@ -100,12 +102,9 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
   } = useFlowMetadata(flow);
 
   const { displayTimeAgo, displayActor } = useFlowDates(flow);
-  const isRowLinkActive = view === "flows" ? true : false;
-
-  const showPinnedColumn = view === "flows";
 
   return (
-    <StyledTableRow isTemplated={isAnyTemplate} clickable={isRowLinkActive}>
+    <StyledTableRow isTemplated={isAnyTemplate} clickable={showDetails}>
       <FlowTitleCell>
         <Box>
           {isAnyTemplate && (
@@ -169,7 +168,7 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
               )}
             </Box>
           </TableCell>
-          {showPinnedColumn && (
+          {showDetails && (
             <TableCell>
               <Box onClick={(e) => e.stopPropagation()}>
                 <FlowPinButton
@@ -184,30 +183,26 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
       )}
       {canUserEditTeam(teamSlug) && (
         <>
-        <FlowActionsCell
-          className="actions-cell"
-          align="center"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {view === "flows" && (
-            <ActiveFlowMenu
-              flow={flow}
-              isAnyTemplate={isAnyTemplate}
-              variant="table"
-              teamId={teamId}
-            />
-          )}
+          <FlowActionsCell
+            className="actions-cell"
+            align="center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {view === "flows" && (
+              <ActiveFlowMenu
+                flow={flow}
+                isAnyTemplate={isAnyTemplate}
+                variant="table"
+                teamId={teamId}
+              />
+            )}
 
-          {view === "archive" && (
-            <ArchivedFlowMenu
-              flow={flow}
-              variant="table"
-              teamId={teamId}
-            />
-          )}
-        </FlowActionsCell>
-      </>
-    )}
+            {view === "archive" && (
+              <ArchivedFlowMenu flow={flow} variant="table" teamId={teamId} />
+            )}
+          </FlowActionsCell>
+        </>
+      )}
     </StyledTableRow>
   );
 };
