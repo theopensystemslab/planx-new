@@ -2,11 +2,6 @@ import FileIcon from "@mui/icons-material/AttachFile";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Box, { BoxProps } from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
-import IconButton from "@mui/material/IconButton";
-import Link from "@mui/material/Link";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
@@ -92,17 +87,6 @@ const ActionButtons = styled(Box)(({ theme }) => ({
   flexShrink: 0,
 }));
 
-const TagRoot = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper,
-  border: `1px solid ${theme.palette.border.main}`,
-  borderTop: "none",
-  display: "flex",
-  justifyContent: "space-between",
-  flexWrap: "wrap",
-  alignItems: "center",
-  padding: theme.spacing(1),
-}));
-
 export const UploadedFileCard: React.FC<Props> = ({
   file,
   progress,
@@ -113,7 +97,6 @@ export const UploadedFileCard: React.FC<Props> = ({
   changeIcon,
   hideChangeButton,
   drawingNumber,
-  tags,
   status,
   FileCardProps,
 }) => (
@@ -166,89 +149,40 @@ export const UploadedFileCard: React.FC<Props> = ({
               )}
             </Box>
           </Box>
-          {tags !== undefined ? (
-            // Legacy modal UI: icon button delete
-            removeFile && (
-              <IconButton
-                size="small"
-                title={`Delete ${file.name}`}
-                onClick={removeFile}
-                sx={{ gap: "3px" }}
-                data-testid={`delete-${file.name}`}
-              >
-                <DeleteIcon color="warning" />
-                Delete <span style={visuallyHidden}>{file.name}</span>
-              </IconButton>
-            )
-          ) : (
-            // New accordion UI: button-style actions
-            <ActionButtons>
-              {!hideChangeButton && onChange && (
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  startIcon={changeIcon}
-                  sx={{
-                    minWidth: 120,
-                    backgroundColor: "white",
-                  }}
-                  size="small"
-                  onClick={onChange}
-                  data-testid={`${changeLabel.toLowerCase().replace(/\s/g, "-")}-${file.name}`}
-                >
-                  {changeLabel}
-                  <Box sx={visuallyHidden} component="span">
-                    {` what ${file.name} shows`}
-                  </Box>
-                </Button>
-              )}
+          <ActionButtons>
+            {!hideChangeButton && onChange && (
               <Button
-                size="small"
-                title={`Delete ${file.name}`}
-                onClick={removeFile}
-                sx={{ gap: 1, backgroundColor: "white" }}
-                data-testid={`delete-${file.name}`}
                 variant="contained"
                 color="secondary"
-              >
-                <DeleteIcon color="warning" fontSize="small" />
-                Remove <span style={visuallyHidden}>{file.name}</span>
-              </Button>
-            </ActionButtons>
-          )}
-        </FileCard>
-        {tags && (
-          <TagRoot>
-            <List sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-              {tags.map((tag) => (
-                <ListItem key={tag} disablePadding sx={{ width: "auto" }}>
-                  <Chip
-                    label={tag}
-                    variant="uploadedFileTag"
-                    size="small"
-                    data-testid="uploaded-file-chip"
-                  />
-                </ListItem>
-              ))}
-            </List>
-            <Box sx={{ marginLeft: "auto" }}>
-              <Link
-                onClick={() => onChange && onChange()}
+                startIcon={changeIcon}
                 sx={{
-                  fontFamily: "inherit",
-                  fontSize: "inherit",
+                  minWidth: 120,
+                  backgroundColor: "white",
                 }}
-                component="button"
-                variant="body2"
+                size="small"
+                onClick={onChange}
+                data-testid={`${changeLabel.toLowerCase().replace(/\s/g, "-")}-${file.name}`}
               >
-                Change
+                {changeLabel}
                 <Box sx={visuallyHidden} component="span">
-                  the list of what file {file.name} shows
+                  {` what ${file.name} shows`}
                 </Box>
-              </Link>
-            </Box>
-          </TagRoot>
-        )}
+              </Button>
+            )}
+            <Button
+              size="small"
+              title={`Delete ${file.name}`}
+              onClick={removeFile}
+              sx={{ gap: 1, backgroundColor: "white" }}
+              data-testid={`delete-${file.name}`}
+              variant="contained"
+              color="secondary"
+            >
+              <DeleteIcon color="warning" fontSize="small" />
+              Remove <span style={visuallyHidden}>{file.name}</span>
+            </Button>
+          </ActionButtons>
+        </FileCard>
       </>
     </ErrorWrapper>
   </Box>

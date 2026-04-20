@@ -1,25 +1,35 @@
-import { FileUploadSlot } from "@planx/components/FileUpload/model";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { getTagsForSlot, removeSlots } from "../../model";
+import { type FileUploadAndLabelSlot } from "../../model";
 import {
   type FileUploadAction,
   fileUploadAndLabelReducer,
   type FileUploadState,
 } from "./fileUploadAndLabelReducer";
 
-vi.mock("../../model", () => ({
-  getTagsForSlot: vi.fn(),
-  removeSlots: vi.fn(),
-}));
+const mockFileA = {
+  id: "slot-A",
+  file: { path: "a.pdf" },
+  drawingNumber: "123",
+  tags: [],
+} as unknown as FileUploadAndLabelSlot;
 
-const mockFileA = { id: "slot-A", file: { path: "a.pdf" } } as FileUploadSlot;
-const mockFileB = { id: "slot-B", file: { path: "b.pdf" } } as FileUploadSlot;
-const mockFileC = { id: "slot-C", file: { path: "c.pdf" } } as FileUploadSlot;
+const mockFileB = {
+  id: "slot-B",
+  file: { path: "b.pdf" },
+  drawingNumber: "456",
+  tags: [],
+} as unknown as FileUploadAndLabelSlot;
+
+const mockFileC = {
+  id: "slot-C",
+  file: { path: "c.pdf" },
+  drawingNumber: "",
+  tags: [],
+} as unknown as FileUploadAndLabelSlot;
 
 const baseState: FileUploadState = {
   slots: [],
-  drawingNumbers: {},
   fileList: { required: [], recommended: [], optional: [] },
   pendingRemoval: null,
   removingSlotId: null,
@@ -30,12 +40,51 @@ describe("fileUploadAndLabelReducer", () => {
     vi.clearAllMocks();
   });
 
+  describe("UPDATE_TAGS action", () => {
+    it("updates the tags for a specific slot and clears relevant errors", () => {
+      const state: FileUploadState = {
+        ...baseState,
+        slots: [mockFileA, mockFileB],
+        errors: {
+          fileList: "Global error",
+          fileLabel: { "slot-A": "Local error" },
+        },
+      };
+
+      const result = fileUploadAndLabelReducer(state, {
+        type: "UPDATE_TAGS",
+        payload: { slotId: "slot-A", tags: ["New Tag"] },
+      });
+
+      expect(result.slots[0].tags).toEqual(["New Tag"]);
+      expect(result.slots[1].tags).toEqual([]);
+      expect(result.errors?.fileList).toBeUndefined();
+      expect(result.errors?.fileLabel?.["slot-A"]).toBeUndefined();
+    });
+  });
+
+  describe("UPDATE_DRAWING_NUMBER action", () => {
+    it("updates the drawing number for a specific slot", () => {
+      const state: FileUploadState = {
+        ...baseState,
+        slots: [mockFileA],
+      };
+
+      const result = fileUploadAndLabelReducer(state, {
+        type: "UPDATE_DRAWING_NUMBER",
+        payload: { slotId: "slot-A", value: "789" },
+      });
+
+      expect(result.slots[0].drawingNumber).toBe("789");
+    });
+  });
+
   describe("SET_SLOTS action", () => {
     it("clears dropzoneError and auto-expands when a new file is added", () => {
       const state: FileUploadState = {
         ...baseState,
         slots: [mockFileA],
-        dropzoneError: "Please upload a file.",
+        errors: { dropzone: "Please upload a file." },
         expandedSlotId: "slot-A",
       };
 
@@ -47,7 +96,7 @@ describe("fileUploadAndLabelReducer", () => {
       const result = fileUploadAndLabelReducer(state, action);
 
       expect(result.slots).toHaveLength(2);
-      expect(result.dropzoneError).toBeUndefined();
+      expect(result.errors?.dropzone).toBeUndefined();
       expect(result.expandedSlotId).toBe("slot-B");
     });
 
@@ -55,7 +104,7 @@ describe("fileUploadAndLabelReducer", () => {
       const state: FileUploadState = {
         ...baseState,
         slots: [mockFileA],
-        dropzoneError: "Some other error",
+        errors: { dropzone: "Some other error" },
         expandedSlotId: "slot-A",
       };
 
@@ -67,27 +116,23 @@ describe("fileUploadAndLabelReducer", () => {
 
       const result = fileUploadAndLabelReducer(state, action);
 
-      expect(result.dropzoneError).toBe("Some other error");
+      expect(result.errors?.dropzone).toBe("Some other error");
       expect(result.expandedSlotId).toBe("slot-A");
     });
   });
 
   describe("SAVE_SLOT action", () => {
     it("advances expandedSlotId to the next untagged file", () => {
+      const slotA = { ...mockFileA, tags: ["Site Plan"] };
+      const slotB = { ...mockFileB, tags: ["Elevations"] };
+      const slotC = { ...mockFileC, tags: [] };
+
       const state: FileUploadState = {
         ...baseState,
-        slots: [mockFileA, mockFileB, mockFileC],
+        slots: [slotA, slotB, slotC],
         expandedSlotId: "slot-A",
-        fileListError: "Missing tags",
+        errors: { fileList: "Missing tags" },
       };
-
-      vi.mocked(getTagsForSlot).mockImplementation((slotId) => {
-        if (slotId === "slot-A") return ["Site Plan"];
-        if (slotId === "slot-B") return ["Elevations"];
-        // Only C is untagged - we should jump to this
-        if (slotId === "slot-C") return [];
-        return [];
-      });
 
       const action: FileUploadAction = {
         type: "SAVE_SLOT",
@@ -96,16 +141,17 @@ describe("fileUploadAndLabelReducer", () => {
       const result = fileUploadAndLabelReducer(state, action);
 
       expect(result.expandedSlotId).toBe("slot-C");
-      expect(result.fileListError).toBeUndefined();
+      expect(result.errors?.fileList).toBeUndefined();
     });
 
     it("sets expandedSlotId to undefined if all subsequent files are fully tagged", () => {
+      const slotA = { ...mockFileA, tags: ["Tag"] };
+      const slotB = { ...mockFileB, tags: ["Tag"] };
+
       const state: FileUploadState = {
         ...baseState,
-        slots: [mockFileA, mockFileB],
+        slots: [slotA, slotB],
       };
-
-      vi.mocked(getTagsForSlot).mockReturnValue(["Some Tag"]);
 
       const action: FileUploadAction = {
         type: "SAVE_SLOT",
@@ -146,27 +192,18 @@ describe("fileUploadAndLabelReducer", () => {
         const state: FileUploadState = {
           ...baseState,
           slots: [mockFileA, mockFileB],
-          drawingNumbers: { "slot-A": "123", "slot-B": "456" },
           pendingRemoval: mockFileA,
           removingSlotId: "slot-A",
         };
-
-        const mockUpdatedFileList = {
-          required: [],
-          recommended: [],
-          optional: [],
-        };
-        vi.mocked(removeSlots).mockReturnValue(mockUpdatedFileList);
 
         const action: FileUploadAction = { type: "COMPLETE_REMOVE_FILE" };
         const result = fileUploadAndLabelReducer(state, action);
 
         expect(result.slots).toHaveLength(1);
         expect(result.slots[0].id).toBe("slot-B");
-        expect(result.drawingNumbers).toEqual({ "slot-B": "456" });
+        expect(result.slots[0].drawingNumber).toBe("456");
         expect(result.pendingRemoval).toBeNull();
         expect(result.removingSlotId).toBeNull();
-        expect(result.fileList).toBe(mockUpdatedFileList);
       });
 
       it("clears validation errors when the last file is deleted", () => {
@@ -174,16 +211,19 @@ describe("fileUploadAndLabelReducer", () => {
           ...baseState,
           slots: [mockFileA],
           pendingRemoval: mockFileA,
-          fileListError: "Error",
-          fileLabelErrors: { "slot-A": "Missing label" },
+          removingSlotId: "slot-A",
+          errors: {
+            fileList: "Error",
+            fileLabel: { "slot-A": "Missing label" },
+          },
         };
 
         const action: FileUploadAction = { type: "COMPLETE_REMOVE_FILE" };
         const result = fileUploadAndLabelReducer(state, action);
 
         expect(result.slots).toHaveLength(0);
-        expect(result.fileListError).toBeUndefined();
-        expect(result.fileLabelErrors).toBeUndefined();
+        expect(result.errors?.fileList).toBeUndefined();
+        expect(result.errors?.fileLabel).toBeUndefined();
       });
     });
   });
@@ -193,8 +233,10 @@ describe("fileUploadAndLabelReducer", () => {
       const state: FileUploadState = {
         ...baseState,
         expandedSlotId: "slot-A",
-        fileListError: "Error",
-        fileLabelErrors: { "slot-B": "Error" },
+        errors: {
+          fileList: "Error",
+          fileLabel: { "slot-B": "Error" },
+        },
       };
 
       const result = fileUploadAndLabelReducer(state, {
@@ -203,8 +245,8 @@ describe("fileUploadAndLabelReducer", () => {
       });
 
       expect(result.expandedSlotId).toBe("slot-B");
-      expect(result.fileListError).toBeUndefined();
-      expect(result.fileLabelErrors).toBeUndefined();
+      expect(result.errors?.fileList).toBeUndefined();
+      expect(result.errors?.fileLabel?.["slot-B"]).toBeUndefined();
     });
   });
 });

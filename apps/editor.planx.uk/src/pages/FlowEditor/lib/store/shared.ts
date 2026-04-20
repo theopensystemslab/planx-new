@@ -1,4 +1,3 @@
-import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { NodeId } from "@opensystemslab/planx-core/types";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import { removeSessionIdSearchParam } from "utils";
@@ -6,10 +5,6 @@ import type { StateCreator } from "zustand";
 
 import type { Store } from ".";
 import { NavigationStore } from "./navigation";
-
-type Auth = NonNullable<
-  ConstructorParameters<typeof CoreDomainClient>[0]
->["auth"];
 
 export type PreviewEnvironment = "editor" | "standalone";
 export interface SharedStore extends Store.Store {
@@ -30,8 +25,6 @@ export interface SharedStore extends Store.Store {
   wasVisited: (id: NodeId) => boolean;
   previewEnvironment: PreviewEnvironment;
   setPreviewEnvironment: (previewEnvironment: PreviewEnvironment) => void;
-  $public: (auth?: Auth) => CoreDomainClient;
-  $client: CoreDomainClient;
 }
 
 export const sharedStore: StateCreator<
@@ -104,18 +97,4 @@ export const sharedStore: StateCreator<
       ]),
     ).has(id);
   },
-
-  $public(auth: Auth | undefined): CoreDomainClient {
-    return new CoreDomainClient({
-      targetURL: import.meta.env.VITE_APP_HASURA_URL!,
-      auth: auth,
-    });
-  },
-
-  /**
-   * Authenticated client is re-instantiated upon user login
-   */
-  $client: new CoreDomainClient({
-    targetURL: import.meta.env.VITE_APP_HASURA_URL!,
-  }),
 });

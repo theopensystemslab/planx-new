@@ -1,8 +1,7 @@
 import cloneDeep from "lodash/cloneDeep";
 import sortBy from "lodash/sortBy";
-import uniqBy from "lodash/uniqBy";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
-import { FileWithPath } from "react-dropzone";
+import type { FileWithPath } from "react-dropzone";
 
 import { FileUploadSlot } from "../FileUpload/model";
 import { BaseNodeData, MoreInformation, parseBaseNodeData } from "../shared";
@@ -15,6 +14,7 @@ export interface RequestedFile {
   fn: string;
   condition: Condition;
 }
+
 export interface FileType {
   name: string;
   fn: string;
@@ -53,8 +53,9 @@ export const newFileType = (): FileType => ({
   },
 });
 
-export interface UserFile extends FileType {
-  slots?: FileUploadSlot[];
+export interface FileUploadAndLabelSlot extends FileUploadSlot {
+  tags: string[];
+  drawingNumber: string | undefined;
 }
 
 export interface FormattedUserFile {
@@ -62,15 +63,20 @@ export interface FormattedUserFile {
   rule: Rule;
   url: string | undefined;
   filename: string | undefined;
-  cachedSlot: Omit<FileUploadSlot, "file"> & {
+  drawingNumber: string | undefined;
+  /**
+   * Store the data required for the UI in the breadcrumbs
+   * This allows us to restore the UI on refresh / resume / back
+   */
+  cachedSlot: Omit<FileUploadAndLabelSlot, "file"> & {
     file: Pick<FileWithPath, "path" | "type" | "size">;
   };
 }
 
 export interface FileList {
-  required: UserFile[];
-  recommended: UserFile[];
-  optional: UserFile[];
+  required: FileType[];
+  recommended: FileType[];
+  optional: FileType[];
 }
 
 export const createFileList = ({
@@ -146,43 +152,6 @@ const populateFileList = ({
   }
 };
 
-interface UserFileWithSlots extends UserFile {
-  slots: NonNullable<UserFile["slots"]>;
-}
-
-const formatUserFiles = (
-  userFile: UserFileWithSlots,
-  slots: FileUploadSlot[],
-): FormattedUserFile[] =>
-  userFile.slots.map((userSlot) => {
-    // Get the up to date, validated, slot
-    // When a slot is assigned to a UserFile it may not have finished uploading
-    const slot = slots.find(({ id }) => id === userSlot.id);
-    if (!slot) throw Error(`Unable to find matching slot ${userSlot.id}`);
-
-    return {
-      name: userFile.name,
-      rule: userFile.rule,
-      url: slot.url,
-      filename: slot.file.name,
-      cachedSlot: {
-        ...slot,
-        file: {
-          name: slot.file.name,
-          path: slot.file.path,
-          type: slot.file.type,
-          size: slot.file.size,
-        },
-      },
-    };
-  });
-
-/**
- * Type guard to coerce UserFile -> UserFileWithSlot
- */
-const hasSlots = (userFile: UserFile): userFile is UserFileWithSlots =>
-  Boolean(userFile?.slots);
-
 const getUpdatedRequestedFiles = (fileList: FileList) => {
   const { required, recommended, optional } = useStore
     .getState()
@@ -215,24 +184,45 @@ const getUpdatedRequestedFiles = (fileList: FileList) => {
  */
 export const generatePayload = (
   fileList: FileList,
-  slots: FileUploadSlot[],
+  slots: FileUploadAndLabelSlot[],
 ): Store.UserData => {
   const newPassportData: Store.UserData["data"] = {};
 
-  const uploadedFiles = [
+  const allDefinitions = [
     ...fileList.required,
     ...fileList.recommended,
     ...fileList.optional,
-  ].filter(hasSlots);
+  ];
 
-  uploadedFiles.forEach((userFile) => {
-    const formattedFiles = formatUserFiles(userFile, slots);
+  slots.forEach((slot) => {
+    slot.tags?.forEach((tagName) => {
+      const definition = allDefinitions.find(({ name }) => name === tagName);
+      if (!definition) return;
 
-    if (newPassportData[userFile.fn]) {
-      newPassportData[userFile.fn].push(...formattedFiles);
-    } else {
-      newPassportData[userFile.fn] = formattedFiles;
-    }
+      const key = definition.fn;
+
+      const formattedFile: FormattedUserFile = {
+        name: definition.name,
+        rule: definition.rule,
+        url: slot.url,
+        filename: slot.file.name,
+        drawingNumber: slot.drawingNumber,
+        cachedSlot: {
+          ...slot,
+          file: {
+            path: slot.file.path,
+            type: slot.file.type,
+            size: slot.file.size,
+          },
+        },
+      };
+
+      if (newPassportData[key]) {
+        newPassportData[key].push(formattedFile);
+      } else {
+        newPassportData[key] = [formattedFile];
+      }
+    });
   });
 
   const requestedFiles = getUpdatedRequestedFiles(fileList);
@@ -245,165 +235,41 @@ export const generatePayload = (
   };
 };
 
-const getCachedSlotsFromPreviousData = (
-  userFile: UserFile,
-  previouslySubmittedData: Store.UserData | undefined,
-): FileUploadSlot[] =>
-  previouslySubmittedData?.data?.[userFile.fn]
-    ?.filter((file: FormattedUserFile) => file.name === userFile.name)
-    .map((file: FormattedUserFile) => file.cachedSlot);
-
-const getRecoveredSlots = (
-  previouslySubmittedData: Store.UserData | undefined,
-  fileList: FileList,
-) => {
-  const allFiles = [
-    ...fileList.required,
-    ...fileList.recommended,
-    ...fileList.optional,
-  ];
-
-  const allSlots = allFiles
-    .flatMap((userFile) =>
-      getCachedSlotsFromPreviousData(userFile, previouslySubmittedData),
-    )
-    .filter(Boolean);
-
-  const recoveredSlots = uniqBy(allSlots, "id");
-
-  return recoveredSlots;
-};
-
-const getRecoveredFileList = (
-  previouslySubmittedData: Store.UserData | undefined,
-  fileList: FileList,
-) => {
-  const recoveredFileList = cloneDeep(fileList);
-  const categories = Object.keys(fileList) as Array<keyof typeof fileList>;
-
-  categories.forEach((category) =>
-    recoveredFileList[category].forEach((fileType) => {
-      const cachedSlots = getCachedSlotsFromPreviousData(
-        fileType,
-        previouslySubmittedData,
-      );
-      if (cachedSlots) fileType.slots = cachedSlots;
-    }),
-  );
-
-  return recoveredFileList;
-};
-
 export const getRecoveredData = (
   previouslySubmittedData: Store.UserData | undefined,
-  fileList: FileList,
-) => {
-  const recoveredSlots = getRecoveredSlots(previouslySubmittedData, fileList);
-  const recoveredFileList = getRecoveredFileList(
-    previouslySubmittedData,
-    fileList,
-  );
+): FileUploadAndLabelSlot[] => {
+  if (!previouslySubmittedData?.data) return [];
 
-  return { slots: recoveredSlots, fileList: recoveredFileList };
-};
+  const recoveredSlotsMap = new Map<string, FileUploadAndLabelSlot>();
 
-export const getTagsForSlot = (
-  slotId: FileUploadSlot["id"],
-  fileList: FileList,
-): string[] => {
-  const allFiles = [
-    ...fileList.required,
-    ...fileList.recommended,
-    ...fileList.optional,
-  ];
+  const storedFiles: FormattedUserFile[] = Object.values(
+    previouslySubmittedData.data,
+  )
+    // Filter out _requestedFiles
+    .filter(Array.isArray)
+    .flat();
 
-  const tags = allFiles
-    .filter((userFile) => userFile?.slots?.some((slot) => slot.id === slotId))
-    .map((userFile) => userFile.name);
+  storedFiles.forEach((file) => {
+    if (!file?.cachedSlot?.id) return;
 
-  return tags;
-};
+    const slotId = file.cachedSlot.id;
+    const tagName = file.name;
+    const existingSlot = recoveredSlotsMap.get(slotId);
 
-export const addOrAppendSlots = (
-  tags: string[],
-  uploadedFile: FileUploadSlot,
-  fileList: FileList,
-): FileList => {
-  const updatedFileList: FileList = cloneDeep(fileList);
-  const categories = Object.keys(updatedFileList) as Array<
-    keyof typeof updatedFileList
-  >;
-
-  tags.forEach((tag) => {
-    categories.forEach((category) => {
-      const index = updatedFileList[category].findIndex(
-        (fileType) => fileType.name === tag,
-      );
-      if (index > -1) {
-        const updatedFileType = updatedFileList[category][index];
-        if (
-          updatedFileType.slots &&
-          !updatedFileType.slots
-            .map((slot) => slot.id)
-            .includes(uploadedFile.id)
-        ) {
-          updatedFileList[category][index].slots?.push(uploadedFile);
-        } else {
-          updatedFileList[category][index] = {
-            ...updatedFileList[category][index],
-            slots: [uploadedFile],
-          };
-        }
+    if (!existingSlot) {
+      // Populate slots with recovered file
+      recoveredSlotsMap.set(slotId, {
+        ...file.cachedSlot,
+        file: file.cachedSlot.file as unknown as FileWithPath,
+        tags: [tagName],
+      });
+    } else {
+      // Append additional tags
+      if (!existingSlot.tags.includes(tagName)) {
+        existingSlot.tags.push(tagName);
       }
-    });
+    }
   });
 
-  return updatedFileList;
-};
-
-export const removeSlots = (
-  tags: string[],
-  uploadedFile: FileUploadSlot,
-  fileList: FileList,
-): FileList => {
-  const updatedFileList: FileList = cloneDeep(fileList);
-  const categories = Object.keys(updatedFileList) as Array<
-    keyof typeof updatedFileList
-  >;
-
-  tags.forEach((tag) => {
-    categories.forEach((category) => {
-      const index = updatedFileList[category].findIndex(
-        (fileType) => fileType.name === tag,
-      );
-      if (index > -1) {
-        const updatedFileType = updatedFileList[category][index];
-        if (updatedFileType.slots) {
-          const indexToRemove = updatedFileType.slots?.findIndex(
-            (slot) => slot.id === uploadedFile.id,
-          );
-          if (indexToRemove > -1) {
-            updatedFileList[category][index].slots?.splice(indexToRemove, 1);
-          }
-        }
-      }
-    });
-  });
-
-  return updatedFileList;
-};
-
-export const resetAllSlots = (fileList: FileList): FileList => {
-  const updatedFileList: FileList = cloneDeep(fileList);
-  const categories = Object.keys(updatedFileList) as Array<
-    keyof typeof updatedFileList
-  >;
-
-  categories.forEach((category) => {
-    updatedFileList[category]
-      .filter((userFile) => userFile.slots)
-      .forEach((userFile) => delete userFile.slots);
-  });
-
-  return updatedFileList;
+  return Array.from(recoveredSlotsMap.values());
 };

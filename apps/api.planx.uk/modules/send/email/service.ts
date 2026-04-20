@@ -4,10 +4,10 @@ import type {
   Session,
   TeamContactSettings,
 } from "@opensystemslab/planx-core/types";
-import type { TemplateRegistry } from "../../../lib/notify/templates/index.js";
 import { addDays } from "date-fns";
 import { ServerError } from "../../../errors/serverError.js";
 import { DAYS_UNTIL_EXPIRY } from "../../saveAndReturn/service/utils.js";
+import type { TemplateRegistry } from "../../../lib/resend/templates/index.js";
 
 interface GetTeamEmailSettings {
   teams: {
@@ -202,7 +202,7 @@ export async function insertAuditEntry(
   sessionId: string,
   teamSlug: string,
   recipient: string,
-  notifyRequest: TemplateRegistry["submit"]["config"],
+  notifyRequest: TemplateRegistry["submit"]["variables"],
   sendEmailResponse: {
     message: string;
     expiryDate?: string;

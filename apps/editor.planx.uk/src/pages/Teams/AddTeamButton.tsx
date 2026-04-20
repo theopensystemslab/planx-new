@@ -7,7 +7,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "@tanstack/react-router";
 import { Form, Formik, FormikConfig } from "formik";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { AddButton } from "ui/editor/AddButton";
 import Permission from "ui/editor/Permission";
@@ -17,6 +16,8 @@ import Input from "ui/shared/Input/Input";
 import { Switch } from "ui/shared/Switch";
 import { slugify } from "utils";
 import { boolean, object, SchemaOf, string } from "yup";
+
+import { useCreateTeam } from "./hooks/useCreateTeam";
 
 export interface CreateTeam {
   name: string;
@@ -35,8 +36,10 @@ const validationSchema: SchemaOf<CreateTeam> = object({
 });
 
 export const AddTeamButton: React.FC = () => {
-  const [createTeam] = useStore((state) => [state.createTeam]);
   const navigate = useNavigate();
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+
+  const { createTeam } = useCreateTeam();
 
   const initialValues: CreateTeam = {
     name: "",
@@ -46,12 +49,24 @@ export const AddTeamButton: React.FC = () => {
     },
   };
 
-  const onSubmit: FormikConfig<CreateTeam>["onSubmit"] = async (values) => {
-    await createTeam(values);
-    navigate({ to: `/app/$team`, params: { team: values.slug } });
-  };
+  const onSubmit: FormikConfig<CreateTeam>["onSubmit"] = async (
+    values,
+    { setSubmitting },
+  ) => {
+    try {
+      await createTeam({
+        name: values.name,
+        slug: values.slug,
+        settings: values.settings,
+      });
 
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+      navigate({ to: `/app/$team`, params: { team: values.slug } });
+    } catch (error) {
+      console.error("Failed to create team:", error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <Permission.IsPlatformAdmin>

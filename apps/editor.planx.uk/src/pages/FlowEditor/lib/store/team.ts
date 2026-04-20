@@ -4,7 +4,6 @@ import {
   TeamSettings,
   TeamTheme,
 } from "@opensystemslab/planx-core/types";
-import { CreateTeam } from "pages/Teams/AddTeamButton";
 import { DEFAULT_PRIMARY_COLOR } from "theme";
 import type { StateCreator } from "zustand";
 
@@ -26,8 +25,6 @@ export interface TeamStore {
   setTeam: (team: Team) => void;
   getTeam: () => Team;
   clearTeamStore: () => void;
-  fetchCurrentTeam: () => Promise<Team>;
-  createTeam: (newTeam: CreateTeam) => Promise<number>;
 }
 
 export const teamStore: StateCreator<
@@ -77,11 +74,6 @@ export const teamStore: StateCreator<
     domain: get().teamDomain,
   }),
 
-  createTeam: async (newTeam) => {
-    const { $client } = get();
-    return await $client.team.create(newTeam);
-  },
-
   clearTeamStore: () =>
     set({
       teamId: 0,
@@ -91,13 +83,4 @@ export const teamStore: StateCreator<
       teamSlug: "",
       teamTheme: undefined,
     }),
-
-  /**
-   * Fetch current team
-   * Does not necessarily match team held in store as this is context-based (e.g. we don't use the team theme in the Editor)
-   */
-  fetchCurrentTeam: async () => {
-    const { teamSlug, $client } = get();
-    return await $client.team.getBySlug(teamSlug);
-  },
 });
