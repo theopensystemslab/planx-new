@@ -268,9 +268,6 @@ export interface EditorStore extends Store.Store {
   cutNode: (id: NodeId, parent: NodeId) => void;
   getCutNode: () => CutPayload | null;
   addNode: (node: any, relationships?: Relationships) => void;
-  archiveFlow: (
-    flow: FlowSummary,
-  ) => Promise<{ id: string; name: string } | void>;
   connect: (src: NodeId, tgt: NodeId, object?: any) => void;
   connectToFlow: (id: NodeId) => Promise<void>;
   disconnectFromFlow: () => void;
@@ -286,7 +283,6 @@ export interface EditorStore extends Store.Store {
     definitionImg?: string | null;
   } | null;
   pasteHelpText: (toId: NodeId) => void;
-  getFlows: (teamId: number) => Promise<FlowSummary[]>;
   isClone: (id: NodeId) => boolean;
   lastPublished: (flowId: string) => Promise<string>;
   lastPublisher: (flowId: string) => Promise<string>;
@@ -347,34 +343,6 @@ export const editorStore: StateCreator<
       { children, parent, before },
     )(get().flow);
     send(ops);
-  },
-
-  archiveFlow: async ({ id, slug }) => {
-    try {
-      const { data } = await client.mutate<{
-        flow: { id: string; name: string };
-      }>({
-        mutation: gql`
-          mutation updateFlow($id: uuid!, $slug: String!) {
-            flow: update_flows_by_pk(
-              pk_columns: { id: $id }
-              _set: { archived_at: "now()", status: offline, slug: $slug }
-            ) {
-              id
-              name
-            }
-          }
-        `,
-        variables: {
-          id,
-          slug: `${slug}-archived`,
-        },
-      });
-
-      return data?.flow;
-    } catch (error) {
-      throw Error("Failed to archive flow", { cause: error });
-    }
   },
 
   connect: (src, tgt, { before = undefined } = {}) => {
@@ -572,66 +540,6 @@ export const editorStore: StateCreator<
     if (!payload) return;
 
     return JSON.parse(payload);
-  },
-
-  getFlows: async (teamId) => {
-    const {
-      data: { flows },
-    } = await client.query<{ flows: FlowSummary[] }>({
-      query: gql`
-        query GetFlows($teamId: Int!) {
-          flows(
-            where: {
-              team: { id: { _eq: $teamId } }
-              archived_at: { _is_null: true }
-            }
-          ) {
-            id
-            name
-            slug
-            status
-            summary
-            updatedAt: updated_at
-            isListedOnLPS: is_listed_on_lps
-            operations(limit: 1, order_by: { created_at: desc }) {
-              createdAt: created_at
-              actor {
-                firstName: first_name
-                lastName: last_name
-              }
-            }
-            templatedFrom: templated_from
-            isTemplate: is_template
-            template {
-              team {
-                id
-                name
-              }
-            }
-            publishedFlows: published_flows(
-              order_by: { created_at: desc }
-              limit: 1
-            ) {
-              publishedAt: created_at
-              hasSendComponent: has_send_component
-              hasVisiblePayComponent: has_pay_component
-              hasEnabledServiceCharge: service_charge_enabled
-            }
-            pinnedFlows: user_pinned_flows {
-              flowId: flow_id
-            }
-          }
-        }
-      `,
-      variables: {
-        teamId,
-      },
-      // Flows are modified via REST API requests, not via the Apollo client
-      // Always get an up to date list when showing the page
-      fetchPolicy: "network-only",
-    });
-
-    return flows;
   },
 
   isClone: (id) => {
