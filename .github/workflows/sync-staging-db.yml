@@ -26,20 +26,12 @@ jobs:
         working-directory: infrastructure/data
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v6
+      - uses: ./.github/actions/setup-pizza-env
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-2
-      - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
-        run: ./scripts/pull-secrets.sh
-      - name: Check if .env files exist
-        id: check_files
-        uses: andstor/file-existence-action@v2
-        with:
-          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, ${{ env.HASURA_DIRECTORY }}/.env.test"
-          fail: true
+          api-directory: ${{ env.API_DIRECTORY }}
+          hasura-directory: ${{ env.HASURA_DIRECTORY }}
       - name: Run sync script
         run: |
           {

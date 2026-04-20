@@ -1,0 +1,62 @@
+name: Build PlanX Frontend
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: Deployment environment name (e.g. staging, production)
+        required: true
+        type: string
+      vite-api-url:
+        description: Value for VITE_APP_API_URL
+        required: true
+        type: string
+      vite-hasura-url:
+        description: Value for VITE_APP_HASURA_URL
+        required: true
+        type: string
+      vite-hasura-websocket:
+        description: Value for VITE_APP_HASURA_WEBSOCKET
+        required: true
+        type: string
+      vite-sharedb-url:
+        description: Value for VITE_APP_SHAREDB_URL
+        required: true
+        type: string
+      editor-directory:
+        description: Path to the editor app directory
+        required: false
+        type: string
+        default: apps/editor.planx.uk
+    secrets:
+      inherit: true
+
+jobs:
+  build_planx_frontend:
+    name: Build PlanX frontend
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-node-pnpm
+        with:
+          pnpm-version: ${{ vars.PNPM_VERSION }}
+          node-version: ${{ vars.NODE_VERSION }}
+      - run: pnpm install --frozen-lockfile
+        working-directory: ${{ inputs.editor-directory }}
+      - run: pnpm build
+        working-directory: ${{ inputs.editor-directory }}
+        env:
+          VITE_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
+          VITE_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
+          VITE_APP_API_URL: ${{ inputs.vite-api-url }}
+          VITE_APP_ENV: ${{ inputs.environment }}
+          VITE_APP_HASURA_URL: ${{ inputs.vite-hasura-url }}
+          VITE_APP_HASURA_WEBSOCKET: ${{ inputs.vite-hasura-websocket }}
+          VITE_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
+          VITE_APP_SHAREDB_URL: ${{ inputs.vite-sharedb-url }}
+      - name: Upload PlanX frontend build artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: planx_frontend_build
+          path: ./${{ inputs.editor-directory }}/build
+          if-no-files-found: error

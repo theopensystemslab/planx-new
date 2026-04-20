@@ -70,30 +70,16 @@ jobs:
     if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.e2e == 'true' || needs.changes.outputs.editor == 'true' || needs.changes.outputs.sharedb == 'true' || needs.changes.outputs.hasura == 'true' }}
     steps:
       - uses: actions/checkout@v6
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v6
+      - uses: ./.github/actions/setup-pizza-env
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-2
-      - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
-        run: ./scripts/pull-secrets.sh
-      - name: Check if .env files exist
-        id: check_files
-        uses: andstor/file-existence-action@v2
+          api-directory: ${{ env.API_DIRECTORY }}
+          hasura-directory: ${{ env.HASURA_DIRECTORY }}
+      - uses: ./.github/actions/setup-node-pnpm
         with:
-          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, ${{ env.HASURA_DIRECTORY }}/.env.test"
-          fail: true
-      - name: Setup .gitconfig
-        run: mv .gitconfig ~/.gitconfig
-      - uses: pnpm/action-setup@v5.0.0
-        with:
-          version: ${{ vars.PNPM_VERSION }}
-      - uses: actions/setup-node@v4
-        with:
+          pnpm-version: ${{ vars.PNPM_VERSION }}
           node-version: ${{ vars.NODE_VERSION }}
-          cache: "pnpm"
-          cache-dependency-path: "**/pnpm-lock.yaml"
       - run: pnpm install --frozen-lockfile
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - name: Start test containers
@@ -113,30 +99,16 @@ jobs:
     if: ${{ needs.changes.outputs.api == 'true' }}
     steps:
       - uses: actions/checkout@v6
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v6
+      - uses: ./.github/actions/setup-pizza-env
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-2
-      - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
-        run: ./scripts/pull-secrets.sh
-      - name: Check if .env files exist
-        id: check_files
-        uses: andstor/file-existence-action@v2
+          api-directory: ${{ env.API_DIRECTORY }}
+          hasura-directory: ${{ env.HASURA_DIRECTORY }}
+      - uses: ./.github/actions/setup-node-pnpm
         with:
-          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, ${{ env.HASURA_DIRECTORY }}/.env.test"
-          fail: true
-      - name: Setup .gitconfig
-        run: mv .gitconfig ~/.gitconfig
-      - uses: pnpm/action-setup@v5.0.0
-        with:
-          version: ${{ vars.PNPM_VERSION }}
-      - uses: actions/setup-node@v4
-        with:
+          pnpm-version: ${{ vars.PNPM_VERSION }}
           node-version: ${{ vars.NODE_VERSION }}
-          cache: "pnpm"
-          cache-dependency-path: "**/pnpm-lock.yaml"
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
         working-directory: ${{ env.API_DIRECTORY }}
@@ -151,30 +123,16 @@ jobs:
     if: ${{ needs.changes.outputs.editor == 'true' }}
     steps:
       - uses: actions/checkout@v6
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v6
+      - uses: ./.github/actions/setup-pizza-env
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-2
-      - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
-        run: ./scripts/pull-secrets.sh
-      - name: Check if .env files exist
-        id: check_files
-        uses: andstor/file-existence-action@v2
+          api-directory: ${{ env.API_DIRECTORY }}
+          hasura-directory: ${{ env.HASURA_DIRECTORY }}
+      - uses: ./.github/actions/setup-node-pnpm
         with:
-          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, ${{ env.HASURA_DIRECTORY }}/.env.test"
-          fail: true
-      - uses: pnpm/action-setup@v5.0.0
-        with:
-          version: ${{ vars.PNPM_VERSION }}
-      - uses: actions/setup-node@v4
-        with:
+          pnpm-version: ${{ vars.PNPM_VERSION }}
           node-version: ${{ vars.NODE_VERSION }}
-          cache: "pnpm"
-          cache-dependency-path: "**/pnpm-lock.yaml"
-      - name: Setup .gitconfig
-        run: mv .gitconfig ~/.gitconfig
       - run: pnpm install --frozen-lockfile
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build
@@ -292,14 +250,10 @@ jobs:
           aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
           aws-region: eu-west-2
           aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
-      - uses: pnpm/action-setup@v5.0.0
+      - uses: ./.github/actions/setup-node-pnpm
         with:
-          version: ${{ vars.PNPM_VERSION }}
-      - uses: actions/setup-node@v4
-        with:
+          pnpm-version: ${{ vars.PNPM_VERSION }}
           node-version: ${{ vars.NODE_VERSION }}
-          cache: "pnpm"
-          cache-dependency-path: "**/pnpm-lock.yaml"
       - run: pnpm install --frozen-lockfile
         working-directory: infrastructure/application
       - name: Download PlanX frontend build assets
@@ -530,26 +484,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v6
+      - uses: ./.github/actions/setup-pizza-env
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-2
-      - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
-        run: ./scripts/pull-secrets.sh
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v5.0.0
+          api-directory: ${{ env.API_DIRECTORY }}
+          hasura-directory: ${{ env.HASURA_DIRECTORY }}
+          check-env-files: 'false'
+      - uses: ./.github/actions/setup-node-pnpm
         with:
-          version: ${{ vars.PNPM_VERSION }}
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
+          pnpm-version: ${{ vars.PNPM_VERSION }}
           node-version: ${{ vars.NODE_VERSION }}
-          cache: "pnpm"
-          cache-dependency-path: "**/pnpm-lock.yaml"
-      - name: Setup .gitconfig
-        run: mv .gitconfig ~/.gitconfig
       - name: PNPM Install
         run: pnpm install --frozen-lockfile
         working-directory: e2e

@@ -1,0 +1,25 @@
+name: Setup Node and pnpm
+description: Install pnpm, set up Node with pnpm cache, and apply .gitconfig
+
+inputs:
+  pnpm-version:
+    description: pnpm version to install
+    required: true
+  node-version:
+    description: Node.js version to install
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: pnpm/action-setup@v5.0.0
+      with:
+        version: ${{ inputs.pnpm-version }}
+    - uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: "pnpm"
+        cache-dependency-path: "**/pnpm-lock.yaml"
+    - name: Setup .gitconfig
+      shell: bash
+      run: mv .gitconfig ~/.gitconfig

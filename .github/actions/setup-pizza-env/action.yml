@@ -1,0 +1,39 @@
+name: Setup Pizza environment
+description: Configure AWS credentials, pull secrets from S3, and optionally verify .env files exist
+
+inputs:
+  aws-access-key-id:
+    description: AWS access key ID
+    required: true
+  aws-secret-access-key:
+    description: AWS secret access key
+    required: true
+  api-directory:
+    description: Path to API directory, used for .env.test existence check
+    required: true
+  hasura-directory:
+    description: Path to Hasura directory, used for .env.test existence check
+    required: true
+  check-env-files:
+    description: Whether to verify .env files exist after pulling from S3
+    required: false
+    default: 'true'
+
+runs:
+  using: composite
+  steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v6
+      with:
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        aws-region: eu-west-2
+    - name: Copy .env files from Staging S3
+      shell: bash
+      run: ./scripts/pull-secrets.sh
+    - name: Check if .env files exist
+      if: inputs.check-env-files == 'true'
+      uses: andstor/file-existence-action@v2
+      with:
+        files: ".env, .env.staging, ${{ inputs.api-directory }}/.env.test, ${{ inputs.hasura-directory }}/.env.test"
+        fail: true
