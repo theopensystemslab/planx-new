@@ -36,7 +36,11 @@ export const StyledTableHead = styled(TableHead)(({ theme }) => ({
 
 export const StyledTableRow = styled(TableRow, {
   shouldForwardProp: (prop) => prop !== "isTemplated" && prop !== "clickable",
-})<{ isTemplated?: boolean; clickable?: boolean }>(({ theme, isTemplated, clickable = true }) => {
+})<{ isTemplated?: boolean; clickable?: boolean }>(({
+  theme,
+  isTemplated,
+  clickable = true,
+}) => {
   let hoverBackground: string | undefined;
   if (clickable && isTemplated) {
     hoverBackground = theme.palette.template.main;
@@ -84,7 +88,7 @@ export const FlowRowLink = styled(CustomLink)(() => ({
 })) as typeof CustomLink;
 
 export const FlowTitleCell = styled(TableCell)(() => ({
-  width: "45%",
+  width: "100%",
   minWidth: "240px",
 }));
 
