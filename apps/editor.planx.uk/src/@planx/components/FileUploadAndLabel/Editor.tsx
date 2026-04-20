@@ -101,23 +101,19 @@ function FileUploadAndLabelComponent(props: Props) {
               disabled={props.disabled}
             />
           </InputRow>
-          {hasFeatureFlag("UPLOAD_LABEL_REBUILD") ? (
-            <InputRow>
-              <Switch
-                checked={formik.values.showDrawingNumber}
-                onChange={() =>
-                  formik.setFieldValue(
-                    "showDrawingNumber",
-                    !formik.values.showDrawingNumber,
-                  )
-                }
-                label="Show a drawing number field for each uploaded file"
-                disabled={props.disabled}
-              />
-            </InputRow>
-          ) : (
-            <></>
-          )}
+          <InputRow>
+            <Switch
+              checked={formik.values.showDrawingNumber}
+              onChange={() =>
+                formik.setFieldValue(
+                  "showDrawingNumber",
+                  !formik.values.showDrawingNumber,
+                )
+              }
+              label="Show a drawing number field for each uploaded file"
+              disabled={props.disabled}
+            />
+          </InputRow>
         </ModalSectionContent>
       </ModalSection>
       <ModalSection>
