@@ -5,7 +5,6 @@ import type { FileList, FileUploadAndLabelSlot } from "../../model";
 
 export interface FileUploadState {
   slots: FileUploadAndLabelSlot[];
-  // TODO: Readonly<T> ?
   fileList: FileList;
   fileUploadStatus?: string;
   expandedSlotId?: string;
