@@ -53,6 +53,6 @@ export const Route = createFileRoute("/_authenticated/app/$team/")({
 });
 
 function TeamComponent() {
-  const { flows } = Route.useLoaderData();
-  return <Team flows={flows} />;
+  const { flows, team } = Route.useLoaderData();
+  return <Team key={team.id} flows={flows} />;
 }
