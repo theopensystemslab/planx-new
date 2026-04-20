@@ -28,6 +28,7 @@ export const sendSlackNotification = async (
     "barnet",
     "buckinghamshire",
     "camden",
+    "doncaster",
     "gateshead",
     "lambeth",
     "medway",
