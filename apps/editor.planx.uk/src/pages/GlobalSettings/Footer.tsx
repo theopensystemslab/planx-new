@@ -7,6 +7,7 @@ import { richText } from "lib/yupExtensions";
 import { nanoid } from "nanoid";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef, useState } from "react";
+import { useUpdateGlobalSettings } from "./queries";
 import type { TextContent } from "types";
 import { AddButton } from "ui/editor/AddButton";
 import InputLegend from "ui/editor/InputLegend";
@@ -129,11 +130,9 @@ const FooterItem: React.FC<FooterItemProps> = ({ item, onSave, onDelete }) => (
 );
 
 function FooterSettings() {
-  const [globalSettings, updateGlobalSettings] = useStore((state) => [
-    state.globalSettings,
-    state.updateGlobalSettings,
-  ]);
+  const globalSettings = useStore((state) => state.globalSettings);
   const toast = useToast();
+  const [updateGlobalSettings] = useUpdateGlobalSettings();
 
   const initialItems: TextContent[] = globalSettings?.footerContent
     ? Object.values(globalSettings.footerContent)
@@ -142,19 +141,31 @@ function FooterSettings() {
   const [items, setItems] = useState<TextContent[]>(initialItems);
   const keysRef = useRef<string[]>(initialItems.map(() => nanoid()));
 
-  const handleSave = (index: number, updated: TextContent) => {
+  const handleSave = async (index: number, updated: TextContent) => {
     const newItems = items.map((item, i) => (i === index ? updated : item));
     setItems(newItems);
-    updateGlobalSettings(buildFooterContent(newItems));
-    toast.success("Footer element saved successfully");
+    try {
+      await updateGlobalSettings({
+        variables: { footerContent: buildFooterContent(newItems) },
+      });
+      toast.success("Footer element saved successfully");
+    } catch {
+      toast.error("Failed to save footer element");
+    }
   };
 
-  const handleDelete = (index: number) => {
+  const handleDelete = async (index: number) => {
     const newItems = items.filter((_, i) => i !== index);
     keysRef.current = keysRef.current.filter((_, i) => i !== index);
     setItems(newItems);
-    updateGlobalSettings(buildFooterContent(newItems));
-    toast.success("Footer element deleted");
+    try {
+      await updateGlobalSettings({
+        variables: { footerContent: buildFooterContent(newItems) },
+      });
+      toast.success("Footer element deleted");
+    } catch {
+      toast.error("Failed to delete footer element");
+    }
   };
 
   const handleAdd = () => {
