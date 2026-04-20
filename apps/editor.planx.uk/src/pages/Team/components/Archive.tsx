@@ -109,11 +109,7 @@ const Archive: React.FC<Props> = ({
           {flowCardView === "grid" ? (
             <DashboardList>
               {archivedFlows.map((flow) => (
-                <FlowCard
-                  flow={flow}
-                  key={flow.slug}
-                  view={"archive"}
-                />
+                <FlowCard flow={flow} key={flow.slug} view={"archive"} />
               ))}
             </DashboardList>
           ) : (

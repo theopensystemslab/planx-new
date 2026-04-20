@@ -20,9 +20,7 @@ export const FlowPinButton = ({
   teamId,
   isPinnedByCurrentUser,
 }: Props) => {
-  const [userId] = useStore((state) => [
-    state.user!.id,
-  ]);
+  const [userId] = useStore((state) => [state.user!.id]);
 
   const [pinFlow, { loading: isPinLoading }] = usePinFlow({
     flowId,

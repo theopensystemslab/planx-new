@@ -120,11 +120,7 @@ const Flows: React.FC<Props> = ({
             {flowCardView === "grid" ? (
               <DashboardList>
                 {sortedPinnedFlows.map((flow) => (
-                  <FlowCard
-                    flow={flow}
-                    key={flow.slug}
-                    view={"flows"}
-                  />
+                  <FlowCard flow={flow} key={flow.slug} view={"flows"} />
                 ))}
               </DashboardList>
             ) : (
@@ -188,11 +184,7 @@ const Flows: React.FC<Props> = ({
             {flowCardView === "grid" ? (
               <DashboardList>
                 {remainingFlows.map((flow) => (
-                  <FlowCard
-                    flow={flow}
-                    key={flow.slug}
-                    view={"flows"}
-                  />
+                  <FlowCard flow={flow} key={flow.slug} view={"flows"} />
                 ))}
               </DashboardList>
             ) : (

@@ -28,14 +28,11 @@ interface Props {
   view: FlowView;
 }
 
-const FlowCard: React.FC<Props> = ({
-  flow,
-  view,
-}) => {
+const FlowCard: React.FC<Props> = ({ flow, view }) => {
   const [canUserEditTeam, teamSlug, teamId] = useStore((state) => [
     state.canUserEditTeam,
     state.teamSlug,
-    state.teamId
+    state.teamId,
   ]);
 
   const {
@@ -94,7 +91,7 @@ const FlowCard: React.FC<Props> = ({
               </Typography>
               <LinkSubText>{displayFormatted}</LinkSubText>
             </Stack>
-            {view === "flows" && ( 
+            {view === "flows" && (
               <FlowPinButton
                 flowId={flow.id}
                 teamId={teamId}

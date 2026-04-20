@@ -137,7 +137,6 @@ function Component(props: Props) {
     </Card>
   );
 
-
   function getBody() {
     if (page === "new-address") {
       return (
@@ -190,19 +189,19 @@ function Component(props: Props) {
             id={props.id}
             description={props.description || ""}
           />
-            <Box sx={{ textAlign: "right" }}>
-              <Link
-                component="button"
-                onClick={() => {
-                  setPage("new-address");
-                  setAddress(undefined);
-                }}
-              >
-                <Typography variant="body1">
-                  The site does not have an address
-                </Typography>
-              </Link>
-            </Box>
+          <Box sx={{ textAlign: "right" }}>
+            <Link
+              component="button"
+              onClick={() => {
+                setPage("new-address");
+                setAddress(undefined);
+              }}
+            >
+              <Typography variant="body1">
+                The site does not have an address
+              </Typography>
+            </Link>
+          </Box>
           <AddressLoadingWrap>
             {Boolean(address) && isPending && (
               <DelayedLoadingIndicator
