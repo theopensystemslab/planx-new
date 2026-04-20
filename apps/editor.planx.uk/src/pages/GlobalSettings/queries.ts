@@ -1,7 +1,6 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
 import type { TextContent } from "types";
 
-// Exported so the route loader can pre-warm the same cache entry
 export const GET_GLOBAL_SETTINGS = gql`
   query GetGlobalSettings {
     globalSettings: global_settings {

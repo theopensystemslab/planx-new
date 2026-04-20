@@ -9,7 +9,6 @@ export const Route = createFileRoute("/_authenticated/app/global-settings")({
     const isAuthorised = context.user?.isPlatformAdmin;
     if (!isAuthorised) throw notFound({ routeId: rootRouteId });
 
-    // Pre-warm the Apollo cache so the Footer component reads immediately from cache
     await client.query({ query: GET_GLOBAL_SETTINGS });
   },
   component: RouteComponent,
