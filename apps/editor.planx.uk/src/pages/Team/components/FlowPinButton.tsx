@@ -4,30 +4,34 @@ import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 
 import { usePinFlow, useUnpinFlow } from "./FlowCard/queries";
 
 interface Props {
   flowId: string;
-  userId: number;
+  teamId: number;
   isPinnedByCurrentUser: boolean;
-  updateFlow: (flow: FlowSummary) => void;
 }
 
 export const FlowPinButton = ({
   flowId,
-  userId,
+  teamId,
   isPinnedByCurrentUser,
-  updateFlow,
 }: Props) => {
+  const [userId] = useStore((state) => [
+    state.user!.id,
+  ]);
+
   const [pinFlow, { loading: isPinLoading }] = usePinFlow({
     flowId,
+    teamId,
     userId,
   });
   const [unpinFlow, { loading: isUnpinLoading }] = useUnpinFlow({
     flowId,
+    teamId,
   });
 
   const handlePinFlow = async () => {
@@ -35,7 +39,6 @@ export const FlowPinButton = ({
     const updatedFlow = result.data?.insert_user_pinned_flows_one?.flow;
     if (updatedFlow) {
       setTooltipOpen(false);
-      updateFlow(updatedFlow);
     }
   };
 
@@ -46,7 +49,6 @@ export const FlowPinButton = ({
 
     if (updatedFlow) {
       setTooltipOpen(false);
-      updateFlow(updatedFlow);
     }
   };
 

@@ -42,7 +42,6 @@ type Props = {
   sortedFlows: FlowSummary[] | null;
   sortOptions: SortableFields<FlowSummary>[];
   flowCardView: FlowCardView;
-  fetchFlows: () => void;
   teamId: number;
   flows: FlowSummary[] | null;
   pinnedFlows: FlowSummary[];
@@ -52,7 +51,6 @@ type Props = {
     newView: FlowCardView | null,
   ) => void;
   slug: string;
-  updateFlow: (updatedFlow: FlowSummary) => void;
 };
 
 const Flows: React.FC<Props> = ({
@@ -62,13 +60,10 @@ const Flows: React.FC<Props> = ({
   sortedFlows,
   sortOptions,
   flowCardView,
-  fetchFlows,
   teamId,
   pinnedFlows,
-  unpinnedFlows,
   handleViewChange,
   slug,
-  updateFlow,
 }) => {
   const teamHasFlows = sortedFlows ? true : false;
   const navigate = useNavigate();
@@ -128,9 +123,7 @@ const Flows: React.FC<Props> = ({
                   <FlowCard
                     flow={flow}
                     key={flow.slug}
-                    refreshFlows={fetchFlows}
-                    showDetails={true}
-                    updateFlow={updateFlow}
+                    view={"flows"}
                   />
                 ))}
               </DashboardList>
@@ -139,9 +132,7 @@ const Flows: React.FC<Props> = ({
                 flows={sortedPinnedFlows}
                 teamId={teamId}
                 teamSlug={slug}
-                refreshFlows={fetchFlows}
-                updateFlow={updateFlow}
-                showDetails={true}
+                view={"flows"}
               />
             )}
           </Box>
@@ -200,9 +191,7 @@ const Flows: React.FC<Props> = ({
                   <FlowCard
                     flow={flow}
                     key={flow.slug}
-                    refreshFlows={fetchFlows}
-                    showDetails={true}
-                    updateFlow={updateFlow}
+                    view={"flows"}
                   />
                 ))}
               </DashboardList>
@@ -211,9 +200,7 @@ const Flows: React.FC<Props> = ({
                 flows={remainingFlows}
                 teamId={teamId}
                 teamSlug={slug}
-                refreshFlows={fetchFlows}
-                showDetails={true}
-                updateFlow={updateFlow}
+                view={"flows"}
               />
             )}
           </>

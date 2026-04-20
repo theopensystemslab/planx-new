@@ -1,65 +1,36 @@
 import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import Box from "@mui/material/Box";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useToast } from "hooks/useToast";
-import { useStore } from "pages/FlowEditor/lib/store";
-import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import React, { useState } from "react";
 import SimpleMenu from "ui/editor/SimpleMenu";
 
 import { ArchiveDialog } from "./ArchiveDialog";
 import { CopyDialog } from "./CopyDialog";
+import { useArchiveFlow } from "./hooks/useArchiveFlow";
 import { MoveDialog } from "./MoveDialog";
 import { RenameDialog } from "./RenameDialog";
+import { FlowMenuProps, StyledSimpleMenu } from "./StyledSimpleMenu";
 
-export const StyledSimpleMenu = styled(SimpleMenu)(({ theme }) => ({
-  display: "flex",
-  marginTop: "auto",
-  borderTop: `1px solid ${theme.palette.border.light}`,
-  backgroundColor: theme.palette.background.paper,
-  overflow: "hidden",
-  borderRadius: "0px 0px 4px 4px",
-  maxHeight: "35px",
-  "& > button": {
-    padding: theme.spacing(0.25, 1),
-    width: "100%",
-    justifyContent: "flex-start",
-    "& > svg": {
-      display: "none",
-    },
-  },
-}));
-
-interface Props {
-  flow: FlowSummary;
-  refreshFlows: () => void;
-  isAnyTemplate: boolean;
-  variant?: "card" | "table";
-}
-
-const FlowMenu: React.FC<Props> = ({
+const ActiveFlowMenu: React.FC<FlowMenuProps> = ({
   flow,
-  refreshFlows,
   isAnyTemplate,
   variant = "card",
+  teamId,
 }) => {
   type OpenDialog = "archive" | "copy" | "rename" | "move";
   const [openDialog, setOpenDialog] = useState<OpenDialog | null>(null);
-
-  const archiveFlow = useStore((state) => state.archiveFlow);
+  const [archiveFlow] = useArchiveFlow(flow.id, flow.slug, teamId);
 
   const toast = useToast();
 
   const handleClose = () => {
     setOpenDialog(null);
-    refreshFlows();
   };
 
 const handleArchive = async () => {
   try {
-    await archiveFlow(flow);
-    refreshFlows();
+    await archiveFlow();
     toast.success("Archived flow");
   } catch (error) {
     toast.error(
@@ -96,7 +67,7 @@ const handleArchive = async () => {
         <ArchiveDialog
           title={`Archive "${flow.name}"`}
           open={openDialog === "archive"}
-          content={`Are you sure you want to archive "${flow.name}"? Once archived, a flow is no longer able to be viewed in the editor and can only be restored by a developer.`}
+          content={`Are you sure you want to archive "${flow.name}"? Once archived, a flow is no longer able to be viewed in the editor.`}
           handleClose={handleClose}
           onConfirm={handleArchive}
           submitLabel="Archive this flow"
@@ -152,4 +123,4 @@ const handleArchive = async () => {
   );
 };
 
-export default FlowMenu;
+export default ActiveFlowMenu;

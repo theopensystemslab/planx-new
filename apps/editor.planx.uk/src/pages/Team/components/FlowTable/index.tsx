@@ -4,13 +4,15 @@ import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
+import { FlowView } from "pages/Team";
 import React from "react";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType } from "ui/editor/FlowTag/types";
 import TruncatedText from "ui/editor/TruncatedText";
 
 import { useStore } from "../../../FlowEditor/lib/store";
-import FlowMenu from "../FlowMenu";
+import ActiveFlowMenu from "../ActiveFlowMenu";
+import ArchivedFlowMenu from "../ArchivedFlowMenu";
 import { FlowPinButton } from "../FlowPinButton";
 import { FlowTemplateIndicator } from "../FlowTemplateIndicator";
 import { useFlowDates } from "../hooks/useFlowDates";
@@ -30,37 +32,32 @@ interface FlowTableProps {
   flows: FlowSummary[];
   teamId: number;
   teamSlug: string;
-  refreshFlows: () => void;
-  showDetails: boolean;
   updateFlow?: (flow: FlowSummary) => void;
+  view: FlowView;
 }
 
 export const FlowTable: React.FC<FlowTableProps> = ({
   flows,
   teamSlug,
-  refreshFlows,
-  showDetails,
-  updateFlow,
+  view,
 }) => {
-  const [userId] = useStore((state) => [state.user?.id]);
   const { headerText } = useFlowSortDisplay();
-
-  const showPinnedColumn = updateFlow && userId;
+  const showDetails = view === "flows";
 
   return (
     <StyledTable>
       <StyledTableHead>
         <TableRow>
           <FlowTitleCell>Flow title</FlowTitleCell>
-          {showDetails && (
+          {view === "flows" && (
             <>
               <FlowStatusCell>Online status</FlowStatusCell>
               <FlowStatusCell>Flow type</FlowStatusCell>
               <TableCell>{headerText}</TableCell>
-              {showPinnedColumn && <TableCell>Pinned</TableCell>}
-              <FlowActionsCell align="center">Actions</FlowActionsCell>
+              {showDetails && <TableCell>Pinned</TableCell>}
             </>
           )}
+          <FlowActionsCell align="center">Actions</FlowActionsCell>
         </TableRow>
       </StyledTableHead>
       <TableBody>
@@ -69,9 +66,8 @@ export const FlowTable: React.FC<FlowTableProps> = ({
             key={flow.slug}
             flow={flow}
             teamSlug={teamSlug}
-            refreshFlows={refreshFlows}
+            view={view}
             showDetails={showDetails}
-            updateFlow={updateFlow}
           />
         ))}
       </TableBody>
@@ -82,21 +78,19 @@ export const FlowTable: React.FC<FlowTableProps> = ({
 interface FlowTableRowProps {
   flow: FlowSummary;
   teamSlug: string;
-  refreshFlows: () => void;
+  view: FlowView;
   showDetails: boolean;
-  updateFlow?: (flow: FlowSummary) => void;
 }
 
 const FlowTableRow: React.FC<FlowTableRowProps> = ({
   flow,
   teamSlug,
-  refreshFlows,
+  view,
   showDetails,
-  updateFlow,
 }) => {
-  const [canUserEditTeam, userId] = useStore((state) => [
+  const [canUserEditTeam, teamId] = useStore((state) => [
     state.canUserEditTeam,
-    state.user?.id,
+    state.teamId,
   ]);
 
   const {
@@ -108,8 +102,6 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
   } = useFlowMetadata(flow);
 
   const { displayTimeAgo, displayActor } = useFlowDates(flow);
-
-  const showPinnedColumn = updateFlow && userId;
 
   return (
     <StyledTableRow isTemplated={isAnyTemplate} clickable={showDetails}>
@@ -127,7 +119,7 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
           <Typography variant="h4" component="span">
             {flow.name}
           </Typography>
-          {showDetails && (
+          {view === "flows" && (
             <FlowRowLink
               to="/app/$team/$flow"
               params={{ team: teamSlug, flow: flow.slug }}
@@ -147,7 +139,7 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
           )}
         </Box>
       </FlowTitleCell>
-      {showDetails && (
+      {view === "flows" && (
         <>
           <FlowStatusCell>
             <Box sx={{ display: "inline-flex" }}>
@@ -176,32 +168,37 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
               )}
             </Box>
           </TableCell>
-          {showPinnedColumn && (
+          {showDetails && (
             <TableCell>
-              <Box onClick={(e) => e.stopPropagation()} sx={{ textAlign: "center" }}>
-                {userId && updateFlow && (
-                  <FlowPinButton
-                    flowId={flow.id}
-                    userId={userId}
-                    isPinnedByCurrentUser={flow.pinnedFlows.length > 0}
-                    updateFlow={updateFlow}
-                  />
-                )}
+              <Box onClick={(e) => e.stopPropagation()}>
+                <FlowPinButton
+                  flowId={flow.id}
+                  teamId={teamId}
+                  isPinnedByCurrentUser={flow.pinnedFlows.length > 0}
+                />
               </Box>
             </TableCell>
           )}
+        </>
+      )}
+      {canUserEditTeam(teamSlug) && (
+        <>
           <FlowActionsCell
             className="actions-cell"
             align="center"
             onClick={(e) => e.stopPropagation()}
           >
-            {canUserEditTeam(teamSlug) && (
-              <FlowMenu
+            {view === "flows" && (
+              <ActiveFlowMenu
                 flow={flow}
-                refreshFlows={refreshFlows}
                 isAnyTemplate={isAnyTemplate}
                 variant="table"
+                teamId={teamId}
               />
+            )}
+
+            {view === "archive" && (
+              <ArchivedFlowMenu flow={flow} variant="table" teamId={teamId} />
             )}
           </FlowActionsCell>
         </>
