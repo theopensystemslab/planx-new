@@ -7,6 +7,7 @@ import React, { useState } from "react";
 
 import type { TaskComponentMap } from "../types";
 import InitialUserInput from "./InitialUserInput";
+import ModifyUserInput from "./ModifyUserInput";
 import ProjectDescription from "./Tasks/ProjectDescription";
 import type { FormValues, Props } from "./types";
 import { getValidationSchema, makeBreadcrumb } from "./utils";
@@ -17,9 +18,8 @@ const taskComponents: TaskComponentMap = {
 
 const EnhancedTextInputComponent = (props: Props) => {
   const previous = getPreviouslySubmittedData(props);
-  const [step, setStep] = useState<"input" | "task">("input");
-  const [taskSubStep, setTaskSubStep] = useState<"selection" | "modification">(
-    "selection",
+  const [step, setStep] = useState<"input" | "selection" | "modification">(
+    "input",
   );
   const isRunningTask = useIsFetching({ queryKey: [props.task] });
 
@@ -51,11 +51,14 @@ const EnhancedTextInputComponent = (props: Props) => {
       return props.handleSubmit?.({ data: makeBreadcrumb(props.fn, values) });
     }
 
-    if (step === "input") return setStep("task");
+    if (step === "input") return setStep("selection");
 
-    if (step === "task") {
-      if (taskSubStep === "selection" && values.selectedOption !== "new")
-        return setTaskSubStep("modification");
+    if (step === "selection") {
+      if (values.selectedOption !== "new") return setStep("modification");
+      return props.handleSubmit?.({ data: makeBreadcrumb(props.fn, values) });
+    }
+
+    if (step === "modification") {
       props.handleSubmit?.({ data: makeBreadcrumb(props.fn, values) });
     }
   };
@@ -66,15 +69,8 @@ const EnhancedTextInputComponent = (props: Props) => {
   const validationSchema = getValidationSchema(props);
 
   const handleBack = (() => {
-    if (step === "task" && taskSubStep === "modification") {
-      return () => setTaskSubStep("selection");
-    }
-    if (step === "task") {
-      return () => {
-        setStep("input");
-        setTaskSubStep("selection");
-      };
-    }
+    if (step === "modification") return () => setStep("selection");
+    if (step === "selection") return () => setStep("input");
     return undefined;
   })();
 
@@ -108,9 +104,10 @@ const EnhancedTextInputComponent = (props: Props) => {
               />
             )}
             {step === "input" && <InitialUserInput {...props} />}
-            {step === "task" && (
+            {step === "modification" && <ModifyUserInput {...props} />}
+            {step === "selection" && (
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              <TaskComponent {...(props as any)} taskSubStep={taskSubStep} />
+              <TaskComponent {...(props as any)} />
             )}
           </Card>
         );
