@@ -26,6 +26,7 @@ import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 import { useStore } from "../../pages/FlowEditor/lib/store";
 import AnalyticsDisabledBanner from "../AnalyticsDisabled/AnalyticsDisabledBanner";
 import { ConfirmationDialog } from "../ConfirmationDialog";
+import DowntimeBanner from "../DowntimeBanner/DowntimeBanner";
 import { SectionNavBar } from "./Sections/NavBar";
 import SkipLink from "./SkipLink";
 
@@ -316,20 +317,26 @@ const Header: React.FC = () => {
   const headerRef = useRef<HTMLDivElement>(null);
   const teamTheme = useStore((state) => state.teamTheme);
 
+  // TODO query value direct via db so not deployment sensitive
+  const showDowntimeBanner = false;
+
   return (
-    <Root
-      position="static"
-      elevation={0}
-      color="transparent"
-      ref={headerRef}
-      sx={(theme) => ({
-        backgroundColor:
-          teamTheme?.primaryColour || theme.palette.background.dark,
-        "@media print": { backgroundColor: "white", color: "black" },
-      })}
-    >
-      <Toolbar />
-    </Root>
+    <>
+      {showDowntimeBanner && <DowntimeBanner />}
+      <Root
+        position="static"
+        elevation={0}
+        color="transparent"
+        ref={headerRef}
+        sx={(theme) => ({
+          backgroundColor:
+            teamTheme?.primaryColour || theme.palette.background.dark,
+          "@media print": { backgroundColor: "white", color: "black" },
+        })}
+      >
+        <Toolbar />
+      </Root>
+    </>
   );
 };
 
