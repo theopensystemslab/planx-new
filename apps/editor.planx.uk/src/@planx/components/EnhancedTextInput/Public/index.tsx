@@ -68,12 +68,6 @@ const EnhancedTextInputComponent = (props: Props) => {
 
   const validationSchema = getValidationSchema(props);
 
-  const handleBack = (() => {
-    if (step === "modification") return () => setStep("selection");
-    if (step === "selection") return () => setStep("input");
-    return undefined;
-  })();
-
   return (
     <Formik<FormValues>
       initialValues={initialValues}
@@ -83,8 +77,23 @@ const EnhancedTextInputComponent = (props: Props) => {
       validateOnChange={false}
       validationSchema={validationSchema}
     >
-      {({ submitForm, values }) => {
-        const showCardHeader = step === "input" || values.status !== "success";
+      {({ submitForm, values, setFieldValue }) => {
+        const showCardHeader =
+          step === "input" ||
+          values.status !== "success" ||
+          Boolean(isRunningTask);
+
+        const handleBack = (() => {
+          if (step === "modification") return () => setStep("selection");
+          if (step === "selection" && !isRunningTask)
+            return () => {
+              if (values.status === "success") {
+                setFieldValue("userInput", values.original);
+              }
+              setStep("input");
+            };
+          return undefined;
+        })();
 
         return (
           <Card
