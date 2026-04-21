@@ -14,7 +14,6 @@ import { NodeSearchParams } from "../../routes/_authenticated/app/$team/$flow/_f
 export interface FlowEditorData {
   id: string;
   flowStatus: FlowStatus;
-  flowAnalyticsLink: string;
   templatedFrom: string;
   isTemplate: boolean;
   isFlowPublished: boolean;
@@ -34,7 +33,6 @@ export interface GetFlowEditorDataResponse {
   flows: {
     id: string;
     status: FlowStatus;
-    flowAnalyticsLink: string;
     templatedFrom: string;
     isTemplate: boolean;
     publishedFlowsAggregate: {
@@ -117,7 +115,6 @@ export const getFlowEditorData = async (
   return {
     id: flow.id,
     flowStatus: flow.status,
-    flowAnalyticsLink: flow.flowAnalyticsLink,
     templatedFrom: flow.templatedFrom,
     isTemplate: flow.isTemplate,
     isFlowPublished: flow.publishedFlowsAggregate?.aggregate.count > 0,

@@ -38,7 +38,6 @@ const mockUser = {
 vi.mock("pages/FlowEditor/lib/store", async () => ({
   useStore: vi.fn((selector) =>
     selector({
-      flowAnalyticsLink: mockAnalyticsLink,
       getUserRoleForCurrentTeam: mockGetUserRoleForCurrentTeam,
       getUserRole: vi.fn(),
       getTeam: mockGetTeam,
@@ -46,9 +45,10 @@ vi.mock("pages/FlowEditor/lib/store", async () => ({
       user: mockUser,
     }),
   ),
-  getState: () => ({
-    teamAnalyticsLink: mockAnalyticsLink,
-  }),
+}));
+
+vi.mock("hooks/analyticsLinks/useFlowAnalyticsLink", () => ({
+  useFlowAnalyticsLink: vi.fn(() => mockAnalyticsLink),
 }));
 
 /**

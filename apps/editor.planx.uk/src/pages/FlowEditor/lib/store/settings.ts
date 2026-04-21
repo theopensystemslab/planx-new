@@ -6,10 +6,6 @@ import { FlowInformation } from "pages/FlowEditor/utils";
 import { FlowSettings, GlobalSettings } from "types";
 import type { StateCreator } from "zustand";
 
-import {
-  generateFlowAnalyticsLink,
-  getAnalyticsDashboardId,
-} from "../analytics/utils";
 import { SharedStore } from "./shared";
 import { TeamStore } from "./team";
 
@@ -24,7 +20,6 @@ export interface SettingsStore {
   flowSummary?: string;
   globalSettings?: GlobalSettings;
   setGlobalSettings: (globalSettings: GlobalSettings) => void;
-  teamAnalyticsLink?: string;
 }
 
 export const settingsStore: StateCreator<
@@ -57,14 +52,11 @@ export const settingsStore: StateCreator<
       data: {
         flows: [
           {
-            id,
             settings,
             status,
             summary,
             canCreateFromCopy,
-            publishedFlows,
             isListedOnLPS,
-            onlineHistory,
             templatedFrom,
           },
         ],
@@ -102,38 +94,14 @@ export const settingsStore: StateCreator<
         slug: flowSlug,
         team_slug: teamSlug,
       },
-      fetchPolicy: "no-cache",
+      fetchPolicy: "network-only",
     });
-
-    // Default to no send component as not all flows will be in the table, over time as all flows get published we can revise this
-    const isSubmissionService = Boolean(publishedFlows[0]?.hasSendComponent);
-
-    const environment = import.meta.env.VITE_APP_ENV;
-
-    // If a flow has ever been online, there will be analytics to show
-    const hasAnalytics = Boolean(onlineHistory?.length);
-
-    const dashboardId = hasAnalytics
-      ? getAnalyticsDashboardId({
-          flowSlug,
-          isSubmissionService,
-        })
-      : undefined;
-
-    const analyticsLink =
-      environment === "production" && dashboardId
-        ? generateFlowAnalyticsLink({
-            flowId: id,
-            dashboardId,
-          })
-        : undefined;
 
     set({
       flowSettings: settings,
       flowStatus: status,
       flowSummary: summary,
       flowCanCreateFromCopy: canCreateFromCopy,
-      flowAnalyticsLink: analyticsLink,
       isFlowListedOnLPS: isListedOnLPS,
       isTemplatedFrom: Boolean(templatedFrom),
     });
@@ -142,7 +110,6 @@ export const settingsStore: StateCreator<
       settings,
       status,
       summary,
-      analyticsLink,
       isListedOnLPS,
     };
   },
