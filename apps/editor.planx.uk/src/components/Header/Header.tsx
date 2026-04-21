@@ -9,6 +9,7 @@ import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useLocation, useNavigate } from "@tanstack/react-router";
+import { useDowntimeBanner } from "hooks/data/useDowntimeBanner";
 import { clearLocalFlowIdb } from "lib/local.idb";
 import { capitalize } from "lodash";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
@@ -317,8 +318,9 @@ const Header: React.FC = () => {
   const headerRef = useRef<HTMLDivElement>(null);
   const teamTheme = useStore((state) => state.teamTheme);
 
-  // TODO query value direct via db so not deployment sensitive
-  const showDowntimeBanner = false;
+  // Query `downtime_banner` visibility direct via db so not deployment sensitive
+  const { data } = useDowntimeBanner();
+  const showDowntimeBanner = data?.downtimeBanner?.isVisible || false;
 
   return (
     <>
