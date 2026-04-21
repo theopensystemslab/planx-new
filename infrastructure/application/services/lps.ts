@@ -1,7 +1,5 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
-import * as fsWalk from "@nodelib/fs.walk";
-import * as mime from "mime";
 import * as cloudflare from "@pulumi/cloudflare";
 
 import { createCdn, usEast1 } from "../utils";
@@ -174,13 +172,14 @@ export const createLocalPlanningServices = (planXCertArn: pulumi.Output<string>)
   const acmCertificateArn = createLPSCertificates(domain, planXCertArn);
 
   const cdn = createCdn({
+    cdnName: domain,
+    domains: [domain],
+    acmCertificateArn,
     bucket: lpsBucket,
     logsBucket,
-    domain,
-    acmCertificateArn,
     oai,
     mode: "static",
-    includeWWW: env === "production",
+    includeWww: env === "production",
   });
 
   createCNAMERecords(domain, cdn);
