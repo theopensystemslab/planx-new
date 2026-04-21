@@ -12,7 +12,6 @@ export interface FlowInformation {
   settings: FlowSettings;
   status: FlowStatus;
   canCreateFromCopy?: boolean;
-  analyticsLink?: string;
   isListedOnLPS: boolean;
   summary?: string;
 }
