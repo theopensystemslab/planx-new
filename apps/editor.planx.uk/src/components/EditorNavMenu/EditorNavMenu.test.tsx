@@ -211,7 +211,7 @@ describe("flowLayoutRoutes", () => {
     expect(menuItems).toHaveLength(5);
     expect(getByLabelText("Submissions")).toBeInTheDocument();
     expect(getByLabelText("Feedback")).toBeInTheDocument();
-    expect(getByLabelText("Analytics")).toBeInTheDocument();
+    expect(getByLabelText(/Analytics/)).toBeInTheDocument();
   });
 });
 
