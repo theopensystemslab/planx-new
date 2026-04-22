@@ -9,7 +9,7 @@ import SimpleMenu from "ui/editor/SimpleMenu";
 import { ArchiveDialog } from "./ArchiveDialog";
 import { useDeleteFlow } from "./hooks/useDeleteFlow";
 import { useUnarchiveFlow } from "./hooks/useUnarchiveFlow";
-import { RenameAndUnarchiveDialog } from "./RenameAndUnarchiveDialog";
+import { RenameDialog } from "./RenameDialog";
 import { FlowMenuProps } from "./StyledSimpleMenu";
 import { StyledSimpleMenu } from "./StyledSimpleMenu";
 
@@ -18,7 +18,7 @@ const ArchivedFlowMenu: React.FC<FlowMenuProps> = ({
   variant = "card",
   teamId,
 }) => {
-  type OpenFlowDialog = "unarchive" | "delete" | "rename";
+  type OpenFlowDialog = "unarchive" | "delete" | "renameAndUnarchive";
   const [openFlowDialog, setOpenFlowDialog] = useState<OpenFlowDialog | null>(
     null,
   );
@@ -46,7 +46,7 @@ const ArchivedFlowMenu: React.FC<FlowMenuProps> = ({
         error.message.includes("Uniqueness violation");
 
       if (isUniqueSlugError) {
-        setOpenFlowDialog("rename");
+        setOpenFlowDialog("renameAndUnarchive");
         return;
       }
 
@@ -93,10 +93,11 @@ const ArchivedFlowMenu: React.FC<FlowMenuProps> = ({
           submitLabel="Unarchive this flow"
         />
       )}
-      {openFlowDialog === "rename" && (
-        <RenameAndUnarchiveDialog
-          isDialogOpen={openFlowDialog === "rename"}
-          handleClose={handleUnarchive}
+      {openFlowDialog === "renameAndUnarchive" && (
+        <RenameDialog
+          mode="renameAndUnarchive"
+          isDialogOpen={openFlowDialog === "renameAndUnarchive"}
+          handleClose={handleClose}
           flow={{
             name: flow.name,
             slug: flow.slug,

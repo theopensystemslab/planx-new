@@ -5,11 +5,11 @@ import {
   GET_ARCHIVED_FLOWS,
   GET_FLOWS,
   RENAME_AND_UNARCHIVE_FLOW,
-  RenameAndUnarchiveMutationVars,
+  RenameFlowMutationVars,
 } from "../../queries";
 
 export const useRenameAndUnarchiveFlow = (flowId: string, teamId: number) =>
-  useMutation<FlowStatusMutation, RenameAndUnarchiveMutationVars>(
+  useMutation<FlowStatusMutation, RenameFlowMutationVars>(
     RENAME_AND_UNARCHIVE_FLOW,
     {
       refetchQueries: [
