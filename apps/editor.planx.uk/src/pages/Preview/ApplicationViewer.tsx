@@ -35,7 +35,7 @@ const ApplicationViewer: React.FC = () => {
   if (noBreadcrumbs) return <NoContentPage />;
 
   return (
-    <StatusPage bannerHeading="Your form" bannerText="Review your answers">
+    <StatusPage bannerHeading="Review your responses">
       <Typography variant="h2">Overview</Typography>
       <ApplicationSummary />
       <Typography variant="h2">Your responses</Typography>
