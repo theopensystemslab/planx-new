@@ -8,7 +8,7 @@ import React from "react";
 const DowntimeBannerWrapper = styled(Box)(({ theme }) => ({
   display: "flex",
   backgroundColor: theme.palette.error.main,
-  color: "#070707",
+  color: theme.palette.error.contrastText,
   justifyContent: "space-between",
   alignItems: "center",
   padding: "0.5em 0",
@@ -26,7 +26,13 @@ const DowntimeBanner: React.FC = () => (
         justifyContent: "space-between",
       }}
     >
-      <Box display="flex" alignItems="center" justifyContent="space-between">
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+        role="alert"
+        aria-live="assertive"
+      >
         <BrokenImageIcon />
         <Typography variant="body2" ml={1}>
           <strong>Partial degradation</strong> of some services and features. We
