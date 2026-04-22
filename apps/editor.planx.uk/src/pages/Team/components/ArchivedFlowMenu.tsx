@@ -9,7 +9,7 @@ import SimpleMenu from "ui/editor/SimpleMenu";
 import { ArchiveDialog } from "./ArchiveDialog";
 import { useDeleteFlow } from "./hooks/useDeleteFlow";
 import { useUnarchiveFlow } from "./hooks/useUnarchiveFlow";
-import { RenameDialog } from "./RenameDialog";
+import { RenameAndUnarchiveDialog } from "./RenameAndUnarchiveDialog";
 import { FlowMenuProps } from "./StyledSimpleMenu";
 import { StyledSimpleMenu } from "./StyledSimpleMenu";
 
@@ -94,7 +94,7 @@ const ArchivedFlowMenu: React.FC<FlowMenuProps> = ({
         />
       )}
       {openFlowDialog === "rename" && (
-        <RenameDialog
+        <RenameAndUnarchiveDialog
           isDialogOpen={openFlowDialog === "rename"}
           handleClose={handleUnarchive}
           flow={{
@@ -102,6 +102,7 @@ const ArchivedFlowMenu: React.FC<FlowMenuProps> = ({
             slug: flow.slug,
             id: flow.id,
           }}
+          teamId={teamId}
         />
       )}
       {openFlowDialog === "delete" && (

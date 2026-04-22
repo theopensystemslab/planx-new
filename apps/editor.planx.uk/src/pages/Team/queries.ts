@@ -113,3 +113,24 @@ export const DELETE_FLOW = gql`
     }
   }
 `;
+
+export type RenameAndUnarchiveMutationVars = {
+  flowId: string;
+  newSlug: string;
+  newName: string;
+};
+
+export const RENAME_AND_UNARCHIVE_FLOW = gql`
+  mutation RenameAndUnarchiveFlow(
+    $flowId: uuid!
+    $newSlug: String
+    $newName: String
+  ) {
+    flow: update_flows_by_pk(
+      pk_columns: { id: $flowId }
+      _set: { slug: $newSlug, name: $newName, archived_at: null }
+    ) {
+      id
+    }
+  }
+`;
