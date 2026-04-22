@@ -1,4 +1,4 @@
-import ErrorOutline from "@mui/icons-material/ErrorOutline";
+import ErrorOutline from "@mui/icons-material/ErrorOutlined";
 import Typography from "@mui/material/Typography";
 import { Meta } from "@storybook/react";
 import React from "react";
@@ -19,7 +19,7 @@ export const WithEditor = () => {
       <Wrapper Editor={Editor} Public={Public} />
       <WarningContainer>
         <ErrorOutline />
-        <Typography variant="body2" ml={2}>
+        <Typography variant="body2" sx={{ ml: 2 }}>
           This component is only available in the Editor when designing
           services, it does <strong>not</strong> display in the Public form.
         </Typography>

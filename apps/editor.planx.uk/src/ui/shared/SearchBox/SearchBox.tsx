@@ -81,7 +81,7 @@ export const SearchBox = <T extends object>({
   }, [clearSearch, resetForm, submitForm]);
 
   return (
-    <Box maxWidth={360}>
+    <Box sx={{ maxWidth: 360 }}>
       <InputRow>
         <InputRowLabel
           inputProps={{

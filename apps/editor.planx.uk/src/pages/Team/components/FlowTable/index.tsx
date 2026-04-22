@@ -132,7 +132,7 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
               variant="body2"
               color="textSecondary"
               lineClamp={2}
-              pt={0.5}
+              sx={{ pt: 0.5 }}
             >
               {flow.summary}
             </TruncatedText>

@@ -28,29 +28,29 @@ export function MultipleOptionSelectFilter<T>(props: Props<T>) {
         renderInput={(params) => (
           <TextField
             {...params}
-            InputLabelProps={{
-              shrink: true,
+            slotProps={{
+              ...params.slotProps,
+              inputLabel: { ...params.slotProps.inputLabel, shrink: true },
             }}
             label="Option"
             variant="standard"
-            InputProps={{
-              ...params.InputProps,
-            }}
           />
         )}
-        ChipProps={{
-          variant: "uploadedFileTag",
-          size: "small",
-          onDelete: (event) => {
-            const element = event.currentTarget;
-            const chipIndex = Number(
-              element.parentElement.getAttribute("data-tag-index"),
-            );
-            setChipData((prev: string[]) => {
-              prev.splice(chipIndex, 1);
-            });
-            applyValue({ ...item, chipData });
-            setChipData(item.value);
+        slotProps={{
+          chip: {
+            variant: "uploadedFileTag",
+            size: "small",
+            onDelete: (event) => {
+              const element = event.currentTarget;
+              const chipIndex = Number(
+                element.parentElement.getAttribute("data-tag-index"),
+              );
+              setChipData((prev: string[]) => {
+                prev.splice(chipIndex, 1);
+              });
+              applyValue({ ...item, chipData });
+              setChipData(item.value);
+            },
           },
         }}
         options={props.options}

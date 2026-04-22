@@ -95,7 +95,7 @@ export default function ConstraintsList({
   });
 
   return (
-    <Box mb={3}>
+    <Box sx={{ mb: 3 }}>
       {Object.keys(groupedConstraints).map(
         (category: string, index: number) => (
           <React.Fragment key={`${category}-wrapper`}>
@@ -114,10 +114,10 @@ export default function ConstraintsList({
               <Typography
                 variant="body1"
                 component="h3"
-                py={1}
-                px={2}
-                pl={2.5}
                 sx={{
+                  py: 1,
+                  px: 2,
+                  pl: 2.5,
                   fontWeight: FONT_WEIGHT_SEMI_BOLD,
                   color: (theme) => theme.palette.text.primary,
                 }}
@@ -223,7 +223,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
               width: "100%",
             }}
           >
-            <Typography component="div" variant="body2" pr={1.5}>
+            <Typography component="div" variant="body2" sx={{ pr: 1.5 }}>
               {children}
             </Typography>
             {allEntitiesInaccurate && (
@@ -301,7 +301,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
             )}
           </React.Fragment>
           {isSourcedFromPlanningData ? (
-            <Typography component="div" variant="body2" my={2}>
+            <Typography component="div" variant="body2" sx={{ my: 2 }}>
               {`View on the `}
               <Link href={planningDataMapURL} target="_blank">
                 Planning Data map
@@ -309,13 +309,13 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
               {` (opens in a new tab).`}
             </Typography>
           ) : (
-            <Typography component="div" variant="body2" my={2}>
+            <Typography component="div" variant="body2" sx={{ my: 2 }}>
               {`We searched Ordnance Survey MasterMap Highways using the Unique Street Reference Number of your property`}
               {usrn && ` (${usrn})`}
             </Typography>
           )}
           <Typography variant="h5">{`How is it defined`}</Typography>
-          <Typography component="div" variant="body2" my={2}>
+          <Typography component="div" variant="body2" sx={{ my: 2 }}>
             <ReactMarkdownOrHtml
               source={
                 isSourcedFromPlanningData

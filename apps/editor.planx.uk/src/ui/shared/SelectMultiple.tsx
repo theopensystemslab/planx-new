@@ -68,25 +68,23 @@ export function SelectMultiple<T>(props: Props<T>) {
         renderInput={(params) => (
           <StyledTextField
             {...params}
-            InputProps={{
-              ...params.InputProps,
-              notched: false,
-            }}
-            InputLabelProps={{
-              shrink: true,
+            slotProps={{
+              ...params.slotProps,
+              input: { ...params.slotProps.input, notched: false },
+              inputLabel: { ...params.slotProps.inputLabel, shrink: true },
             }}
             label={props.label}
             placeholder={placeholder}
             disabled={props.disabled}
           />
         )}
-        ChipProps={{
-          variant: "uploadedFileTag",
-          size: "small",
-          sx: { pointerEvents: "none" },
-          onDelete: undefined,
-        }}
-        componentsProps={{
+        slotProps={{
+          chip: {
+            variant: "uploadedFileTag",
+            size: "small",
+            sx: { pointerEvents: "none" },
+            onDelete: undefined,
+          },
           popupIndicator: {
             disableRipple: true,
           },

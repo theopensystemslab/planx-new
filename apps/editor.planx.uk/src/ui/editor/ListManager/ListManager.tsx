@@ -6,7 +6,7 @@ import {
   DroppableProvided,
   DropResult,
 } from "@hello-pangea/dnd";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutlined";
 import Delete from "@mui/icons-material/Delete";
 import DragHandle from "@mui/icons-material/DragHandle";
 import ExpandLess from "@mui/icons-material/ExpandLess";

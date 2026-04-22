@@ -12,7 +12,7 @@ export const TestWarningPage = ({ children }: PropsWithChildren) => {
       {hasAcknowledgedWarning ? (
         children
       ) : (
-        <Box width="100%">
+        <Box sx={{ width: "100%" }}>
           <WatermarkBackground variant="dark" opacity={0.05} />
           <Card handleSubmit={() => setHasAcknowledgedWarning()}>
             <CardHeader

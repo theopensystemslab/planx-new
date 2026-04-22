@@ -100,12 +100,12 @@ const ContinueStep = (props: ListItemProps) => (
 
 const Step = ({ title, description, url }: ListItemProps) => (
   <>
-    <Box pr={2}>
+    <Box sx={{ pr: 2 }}>
       <Typography
         variant="h3"
         component="h2"
-        mb={0.75}
         sx={{
+          mb: 0.75,
           textDecoration: url && "underline",
           textDecorationThickness: "1px",
         }}

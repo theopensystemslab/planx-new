@@ -34,11 +34,13 @@ export const SectionNavBar: React.FC = () => {
   const matches = useMatches();
   const isContentPage = matches.some(
     (match) =>
-      match?.context && "isContentPage" in match.context && match.context.isContentPage === true,
+      match?.context &&
+      "isContentPage" in match.context &&
+      match.context.isContentPage === true,
   );
   const isViewApplicationPage = matches.some(
     (match) =>
-      match?.context && 
+      match?.context &&
       "isViewApplicationPage" in match.context &&
       match.context.isViewApplicationPage === true,
   );
@@ -72,7 +74,10 @@ export const SectionNavBar: React.FC = () => {
             sx={{ whiteSpace: "nowrap" }}
           >{`Section ${index} of ${sectionCount}`}</Typography>
           <Typography component="span">—</Typography>
-          <Typography variant="body2" fontWeight={FONT_WEIGHT_SEMI_BOLD}>
+          <Typography
+            variant="body2"
+            sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+          >
             {capitalize(title)}
           </Typography>
         </Box>

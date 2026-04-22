@@ -55,13 +55,13 @@ const FooterItem: React.FC<FooterItemProps> = ({ item, onSave, onDelete }) => (
       {({ values, errors, setFieldValue, dirty, resetForm }) => (
         <Form>
           <Grid container spacing={4}>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <InputLegend>Footer element</InputLegend>
               <SettingsDescription>
                 The heading appears as a footer link that opens a content page.
               </SettingsDescription>
             </Grid>
-            <Grid item xs={12} md={8}>
+            <Grid size={{ xs: 12, md: 8 }}>
               <Box
                 sx={{
                   display: "flex",
@@ -98,13 +98,11 @@ const FooterItem: React.FC<FooterItemProps> = ({ item, onSave, onDelete }) => (
                   </InputRowItem>
                 </InputRow>
               </Box>
-              <Box mt={2} display="flex" justifyContent="space-between">
-                <Box display="flex" gap={1.5}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    disabled={!dirty}
-                  >
+              <Box
+                sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}
+              >
+                <Box sx={{ display: "flex", gap: 1.5 }}>
+                  <Button type="submit" variant="contained" disabled={!dirty}>
                     Save
                   </Button>
                   <Button

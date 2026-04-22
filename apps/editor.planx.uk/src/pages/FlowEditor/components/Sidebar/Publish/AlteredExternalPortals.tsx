@@ -68,10 +68,8 @@ const AlteredExternalPortalListItem = (props: ExternalPortal) => {
         secondary={
           <>
             <Typography
-              color="secondary.dark"
               variant="body2"
-              fontSize="small"
-              sx={{ pt: 0.5 }}
+              sx={{ pt: 0.5, fontSize: "small", color: "secondary.dark" }}
             >
               {externalPortalLastPublishedTitle}
             </Typography>
@@ -100,7 +98,7 @@ export const AlteredExternalPortalsSummary = (props: {
   const { portals } = props;
 
   return (
-    <Box py={1}>
+    <Box sx={{ py: 1 }}>
       <Typography variant="h4" component="h3" gutterBottom>
         {`Nested flows`}
       </Typography>

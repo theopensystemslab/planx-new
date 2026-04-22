@@ -59,8 +59,8 @@ const Customisations = () => {
   const flowEdits = data?.edits?.[0]?.data || {};
 
   return (
-    <Box p={2} sx={{ backgroundColor: "background.paper", minHeight: "100%" }}>
-      <Typography variant="h4" mb={1}>
+    <Box sx={{ p: 2, backgroundColor: "background.paper", minHeight: "100%" }}>
+      <Typography variant="h4" sx={{ mb: 1 }}>
         {`Customise`}
       </Typography>
       <Typography variant="body2">

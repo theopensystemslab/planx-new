@@ -14,7 +14,12 @@ interface BannerProps {
   children?: React.ReactNode;
 }
 
-const Root = styled(Box)(({ theme, color, bgcolor }) => ({
+interface RootProps {
+  $bgcolor?: string;
+  $color?: string;
+}
+
+const Root = styled(Box)<RootProps>(({ theme, $bgcolor, $color }) => ({
   display: "flex",
   justifyContent: "center",
   textAlign: "left",
@@ -24,22 +29,21 @@ const Root = styled(Box)(({ theme, color, bgcolor }) => ({
   minHeight: theme.spacing(10),
   "& a": {
     color: getContrastTextColor(
-      (bgcolor as string) || theme.palette.background.paper,
+      $bgcolor || theme.palette.background.paper,
       theme.palette.primary.main,
     ),
   },
-  ...(!color && {
+  ...(!$color && {
     backgroundColor: theme.palette.background.paper,
     color: "currentColor",
   }),
+  ...($bgcolor && { backgroundColor: $bgcolor }),
+  ...($color && { color: $color }),
 }));
 
 function Banner(props: BannerProps) {
   return (
-    <Root
-      bgcolor={props.color && props.color.background}
-      color={props.color && props.color.text}
-    >
+    <Root $bgcolor={props.color?.background} $color={props.color?.text}>
       <Container
         maxWidth="contentWrap"
         sx={{ display: "flex", flexDirection: "column", gap: 2 }}

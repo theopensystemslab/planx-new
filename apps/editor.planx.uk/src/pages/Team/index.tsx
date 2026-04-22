@@ -152,12 +152,12 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
   const flowsHaveBeenFiltered = sortedFlows?.length !== flows?.length;
 
   return (
-    <Box bgcolor={"background.paper"} flexGrow={1}>
+    <Box sx={{ bgcolor: "background.paper", flexGrow: 1 }}>
       <Container maxWidth="contentWide">
         <Box>
           <Box
-            pb={1}
             sx={{
+              pb: 1,
               display: "flex",
               flexDirection: { xs: "column", contentWrap: "row" },
               justifyContent: "space-between",
@@ -173,7 +173,7 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
                 gap: 2,
               }}
             >
-              <Typography variant="h2" component="h1" pr={1}>
+              <Typography variant="h2" component="h1" sx={{ pr: 1 }}>
                 Flows
               </Typography>
               {isTrial && <InfoChip label="Trial account" />}

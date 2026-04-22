@@ -20,7 +20,7 @@ export default function ConfirmationComponent(props: Props) {
   const isFinalCard = useStore().isFinalCard();
   const theme = useTheme();
   return (
-    <Box width="100%">
+    <Box sx={{ width: "100%" }}>
       <Banner
         heading={props.heading || ""}
         color={{
@@ -31,7 +31,7 @@ export default function ConfirmationComponent(props: Props) {
         iconTitle={"Success"}
       >
         {props.description && (
-          <Box mt={2} maxWidth="formWrap">
+          <Box sx={{ mt: 2, maxWidth: "formWrap" }}>
             <ReactMarkdownOrHtml source={props.description} openLinksOnNewTab />
           </Box>
         )}
@@ -40,8 +40,8 @@ export default function ConfirmationComponent(props: Props) {
         <ApplicationSummary />
         <ViewApplicationLink />
         {props.nextSteps && Boolean(props.nextSteps?.length) && (
-          <Box pt={3}>
-            <Typography variant="h2" mb={2}>
+          <Box sx={{ pt: 3 }}>
+            <Typography variant="h2" sx={{ mb: 2 }}>
               What happens next?
             </Typography>
             <NumberedList items={props.nextSteps} heading="h2" />
@@ -49,14 +49,14 @@ export default function ConfirmationComponent(props: Props) {
         )}
         {props.moreInfo && (
           <>
-            <Box py={1}>
+            <Box sx={{ py: 1 }}>
               <ReactMarkdownOrHtml source={props.moreInfo} />
             </Box>
             <hr />
           </>
         )}
         {props.contactInfo && (
-          <Box py={1}>
+          <Box sx={{ py: 1 }}>
             <Typography variant="h2" component="h3" gutterBottom>
               Contact us
             </Typography>

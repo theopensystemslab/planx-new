@@ -57,7 +57,7 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
         <Typography variant="h2" component="h3" gutterBottom>
           Submissions
         </Typography>
-        <Typography variant="body1" maxWidth="contentWrap">
+        <Typography variant="body1" sx={{ maxWidth: "contentWrap" }}>
           Payment and send events for{" "}
           {flowSlug ? "this service" : "all services in this team"}. Successful
           submissions received within the last 28 days are available to

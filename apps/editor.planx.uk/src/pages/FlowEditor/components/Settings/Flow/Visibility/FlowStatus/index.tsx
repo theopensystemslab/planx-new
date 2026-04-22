@@ -102,11 +102,10 @@ const FlowStatus: React.FC = () => {
                 </Typography>
               </WarningContainer>
             )}
-            <Box display="flex" alignItems="center" mb={2}>
+            <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
               <Typography
                 variant="body1"
-                fontWeight={FONT_WEIGHT_BOLD}
-                sx={{ mr: 1 }}
+                sx={{ fontWeight: FONT_WEIGHT_BOLD, mr: 1 }}
               >
                 Your service is currently
               </Typography>
@@ -209,7 +208,7 @@ const FlowStatus: React.FC = () => {
                 }
                 cancelText="Cancel"
               >
-                <Box marginTop={2}>
+                <Box sx={{ marginTop: 2 }}>
                   <ErrorWrapper
                     error={confirmationError ? `Confirm before continuing` : ``}
                   >
@@ -219,7 +218,7 @@ const FlowStatus: React.FC = () => {
                           ? "Services that are set offline are no longer publicly discoverable and cannot accept responses from users."
                           : "Only services that are ready to be publicly discoverable and accept responses from users should be set online."}
                       </Typography>
-                      <Grid item xs={12} sx={{ pointerEvents: "auto" }}>
+                      <Grid size={12} sx={{ pointerEvents: "auto" }}>
                         <ChecklistItem
                           id="status-confirmation-checkbox"
                           data-testid="status-confirmation-checkbox"

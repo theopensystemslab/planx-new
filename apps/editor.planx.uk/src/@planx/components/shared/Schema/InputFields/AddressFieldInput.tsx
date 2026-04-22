@@ -28,7 +28,7 @@ export const AddressFieldInput: React.FC<Props<AddressField>> = (props) => {
   return (
     <Box component="fieldset">
       <InputLegend>
-        <Typography variant="body1" pb={1}>
+        <Typography variant="body1" sx={{ pb: 1 }}>
           <strong>{data.title}</strong>
         </Typography>
       </InputLegend>

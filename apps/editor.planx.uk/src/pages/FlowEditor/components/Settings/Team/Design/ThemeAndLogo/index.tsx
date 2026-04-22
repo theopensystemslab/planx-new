@@ -40,7 +40,7 @@ const ThemeAndLogo: React.FC = () => {
       validationSchema={validationSchema.pick(["logo", "primaryColour"])}
       legend="Theme colour & logo"
       preview={(formik) => [
-        <DesignPreview bgcolor={formik.values.primaryColour}>
+        <DesignPreview sx={{ bgcolor: formik.values.primaryColour }}>
           {formik.values.logo ? (
             <img width="140" src={formik.values.logo} alt="council logo" />
           ) : (
@@ -105,8 +105,7 @@ const ThemeAndLogo: React.FC = () => {
             <Typography
               color="text.secondary"
               variant="body2"
-              pl={2}
-              alignSelf="center"
+              sx={{ pl: 2, alignSelf: "center" }}
             >
               .png or .svg
             </Typography>

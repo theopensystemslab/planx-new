@@ -102,7 +102,7 @@ const ActiveListCard: React.FC<{
           activeIndex={activeIndex}
           formik={formik}
         />
-        <Box display="flex" gap={2}>
+        <Box sx={{ display: "flex", gap: 2 }}>
           <Button
             variant="contained"
             color="prompt"
@@ -177,7 +177,7 @@ const InactiveListCard: React.FC<{
           </TableBody>
         </Table>
       </InactiveListCardLayout>
-      <Box display="flex" gap={2}>
+      <Box sx={{ display: "flex", gap: 2 }}>
         <CardButton onClick={() => removeItem(i)}>
           <DeleteIcon color="warning" fontSize="medium" />
           Remove

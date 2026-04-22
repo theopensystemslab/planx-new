@@ -117,11 +117,13 @@ const FeatureTabs: React.FC = () => {
             editFeatureInForm(parseInt(newValue, 10));
           }}
           aria-label="Select a feature to enter data"
-          TabIndicatorProps={{
-            sx: {
-              height: { xs: "4px", lg: "2px" },
-              width: { xs: "2px", lg: "4px" },
-              transition: "none",
+          slotProps={{
+            indicator: {
+              sx: {
+                height: { xs: "4px", lg: "2px" },
+                width: { xs: "2px", lg: "4px" },
+                transition: "none",
+              },
             },
           }}
           sx={{
@@ -174,7 +176,7 @@ const FeatureTabs: React.FC = () => {
                 <Typography component="h2" variant="h3" gutterBottom>
                   {`${schema.type} ${feature.properties?.label}`}
                 </Typography>
-                <Typography variant="body2" mb={2}>
+                <Typography variant="body2" sx={{ mb: 2 }}>
                   {`${feature.geometry.type}`}
                   {feature.geometry.type === "Point"
                     ? ` (${feature.geometry.coordinates.map((coord) =>
@@ -233,7 +235,7 @@ const PlotFeatureToBegin = () => (
       border: `1px solid ${theme.palette.border.main}`,
     })}
   >
-    <Typography variant="body2" fontSize={"large"}>
+    <Typography variant="body2" sx={{ fontSize: "large" }}>
       Plot a feature on the map to begin
     </Typography>
   </Box>

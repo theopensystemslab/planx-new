@@ -77,12 +77,12 @@ const DiscountProgress = ({ serviceCharges }: SubscriptionProps) => {
         text={() => `${sumServiceCharges(serviceCharges)} / £10k`}
       />
       {percentOfThreshold < 100 ? (
-        <Typography variant="body1" align="center" mt={2}>
+        <Typography variant="body1" align="center" sx={{ mt: 2 }}>
           <strong>{formattedPriceWithCurrencySymbol(amountToGo)}</strong>
           {` (${numberSubmissionsToGo} submissions) to go until eligible for a discount.`}
         </Typography>
       ) : (
-        <Typography variant="body1" align="center" mt={2}>
+        <Typography variant="body1" align="center" sx={{ mt: 2 }}>
           {`Eligible for a discount of `}
           <strong>{formattedPriceWithCurrencySymbol(amountExceeded)}</strong>
           {` to-date on your next renewal.`}

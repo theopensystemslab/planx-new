@@ -39,12 +39,12 @@ export const ChangeStatusTool: React.FC = () => {
   };
 
   const updateGridUI = (status: FeedbackStatus) => {
-    selectedRowIds.forEach((id) => {
+    selectedRowIds.ids.forEach((id) => {
       apiRef.current.updateRows([{ id, status }]);
     });
 
     // Deselect rows
-    apiRef.current.setRowSelectionModel([]);
+    apiRef.current.setRowSelectionModel({ type: "include", ids: new Set() });
   };
 
   const handleChangeStatus = async (status: FeedbackStatus) => {
@@ -52,7 +52,7 @@ export const ChangeStatusTool: React.FC = () => {
     handleClose();
 
     try {
-      await updateFeedbackStatus(selectedRowIds, status);
+      await updateFeedbackStatus([...selectedRowIds.ids], status);
       updateGridUI(status);
     } catch (error) {
       console.log(error);
@@ -77,7 +77,7 @@ export const ChangeStatusTool: React.FC = () => {
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
         size="small"
-        disabled={!selectedRowIds.length}
+        disabled={!selectedRowIds.ids.size}
       >
         Mark as
       </Button>
@@ -86,8 +86,10 @@ export const ChangeStatusTool: React.FC = () => {
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        MenuListProps={{
-          "aria-labelledby": "basic-button",
+        slotProps={{
+          list: {
+            "aria-labelledby": "basic-button",
+          },
         }}
       >
         {statusOptions.map(({ value, label }, index) => (

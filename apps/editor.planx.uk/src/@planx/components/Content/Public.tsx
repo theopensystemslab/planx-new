@@ -75,7 +75,7 @@ const ContentComponent: React.FC<Props> = (props) => {
       <Content
         color={color}
         data-testid="content"
-        p={color === "#ffffff" || !color ? 0 : 2}
+        sx={{ p: color === "#ffffff" || !color ? 0 : 2 }}
       >
         <ReactMarkdownOrHtml
           source={content}

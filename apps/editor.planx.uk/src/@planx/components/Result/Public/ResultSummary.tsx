@@ -6,7 +6,12 @@ import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHt
 const ResultSummary = ({ heading, description, color }: any) => (
   <Banner heading={heading} color={color}>
     {description && (
-      <Typography variant="body1" align="left" gutterBottom maxWidth="formWrap">
+      <Typography
+        variant="body1"
+        align="left"
+        gutterBottom
+        sx={{ maxWidth: "formWrap" }}
+      >
         <ReactMarkdownOrHtml source={description} openLinksOnNewTab />
       </Typography>
     )}

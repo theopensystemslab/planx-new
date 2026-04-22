@@ -71,8 +71,8 @@ export default function ModalSectionContent({
 }: Props): FCReturn {
   return (
     <SectionContentGrid container>
-      <LeftGutter item>{Icon && <Icon />}</LeftGutter>
-      <SectionContent item>
+      <LeftGutter>{Icon && <Icon />}</LeftGutter>
+      <SectionContent>
         {title && (
           <Title variant="h3">
             {title}

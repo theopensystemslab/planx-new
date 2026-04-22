@@ -1,4 +1,4 @@
-import ErrorOutline from "@mui/icons-material/ErrorOutline";
+import ErrorOutline from "@mui/icons-material/ErrorOutlined";
 import Typography from "@mui/material/Typography";
 import { useMutation } from "@tanstack/react-query";
 import { logger } from "airbrake";
@@ -37,7 +37,7 @@ const SkipSendWarning: React.FC<Props> = (props) => (
   <Card handleSubmit={props.handleSubmit}>
     <WarningContainer>
       <ErrorOutline />
-      <Typography variant="body1" ml={2}>
+      <Typography variant="body1" sx={{ ml: 2 }}>
         You can only test submissions on published routes where Save & Return is
         enabled. Select <strong>Continue</strong> to finish reviewing content
         and skip submission.

@@ -63,7 +63,7 @@ const ReconciliationPage: React.FC<Props> = ({
 
   return (
     <>
-      <Box width="100%">
+      <Box sx={{ width: "100%" }}>
         <Banner
           heading={bannerHeading}
           color={{
@@ -75,7 +75,7 @@ const ReconciliationPage: React.FC<Props> = ({
       <Card>
         {/* Only show a warning if the content change has affected the user's path */}
         {reconciliationResponse.changesFound && (
-          <Box display="flex" mb={4}>
+          <Box sx={{ display: "flex", mb: 4 }}>
             <Warning
               titleAccess="Warning"
               color="primary"

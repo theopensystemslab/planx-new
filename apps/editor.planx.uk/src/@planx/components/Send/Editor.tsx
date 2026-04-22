@@ -189,7 +189,7 @@ const SendForm: React.FC<SendFormProps> = ({ disabled }) => {
         <ModalSectionContent>
           <WarningContainer>
             <FactCheckIcon />
-            <Typography variant="body2" ml={2}>
+            <Typography variant="body2" sx={{ ml: 2 }}>
               Records of submissions can be viewed in the{" "}
               <Link
                 href={`/${teamSlug}/${flowSlug}/submissions`}
@@ -291,9 +291,7 @@ const SendComponent: React.FC<Props> = (props) => {
         }
       }}
       validationSchema={validateSchema(
-        emailOptions.map(
-          (email: SubmissionEmailInput) => email.address,
-        ),
+        emailOptions.map((email: SubmissionEmailInput) => email.address),
       )}
     >
       <SendForm />

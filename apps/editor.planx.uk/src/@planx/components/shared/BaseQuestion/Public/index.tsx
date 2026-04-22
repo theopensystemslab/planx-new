@@ -81,7 +81,7 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
               <Grid
                 container
                 spacing={layout === QuestionLayout.Images ? 2 : 0}
-                alignItems="stretch"
+                sx={{ alignItems: "stretch" }}
               >
                 {props.options?.map((response) => {
                   const onChange = () => {
@@ -95,7 +95,11 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
                     case QuestionLayout.Basic:
                       return (
                         <FormWrapper key={`wrapper-${response.id}`}>
-                          <Grid item xs={12} ml={1} key={`grid-${response.id}`}>
+                          <Grid
+                            size={12}
+                            sx={{ ml: 1 }}
+                            key={`grid-${response.id}`}
+                          >
                             <BasicRadio
                               {...buttonProps}
                               {...response}
@@ -110,8 +114,7 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
                       return (
                         <FormWrapper key={`wrapper-${response.id}`}>
                           <Grid
-                            item
-                            xs={12}
+                            size={12}
                             key={`grid-${response.id}`}
                             data-testid="description-radio"
                           >
@@ -122,10 +125,8 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
                     case QuestionLayout.Images:
                       return (
                         <Grid
-                          item
-                          xs={12}
-                          sm={6}
-                          contentWrap={4}
+                          size={{ xs: 12, sm: 6 }}
+                          sx={{ contentWrap: 4 }}
                           key={response.id}
                         >
                           <ImageRadio {...buttonProps} {...response} />

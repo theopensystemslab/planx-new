@@ -223,7 +223,7 @@ export default function Component(props: Props) {
         >
           <Box>
             {Boolean(state.slots.length) && (
-              <Typography variant="h3" mb={2}>
+              <Typography variant="h3" sx={{ mb: 2 }}>
                 Your uploaded files
               </Typography>
             )}

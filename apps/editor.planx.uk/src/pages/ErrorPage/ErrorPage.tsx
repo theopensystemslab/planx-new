@@ -34,7 +34,7 @@ const ErrorPage: React.FC<PropsWithChildren<ErrorPageProps>> = ({
 }) => (
   <Root>
     <Dashboard>
-      <Box pl={2} pb={2}>
+      <Box sx={{ pl: 2, pb: 2 }}>
         <Typography variant="h1" gutterBottom>
           {title}
         </Typography>

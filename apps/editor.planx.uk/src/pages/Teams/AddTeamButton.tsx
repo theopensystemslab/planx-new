@@ -136,7 +136,7 @@ export const AddTeamButton: React.FC = () => {
                     }
                     label={"Trial account"}
                   />
-                  <Typography variant="body2" mt={-2}>
+                  <Typography variant="body2" sx={{ mt: -2 }}>
                     A trial account has limited access to PlanX functionality
                     (e.g. turning services online). Trial accounts can be
                     promoted to having full access via the settings panel.

@@ -111,7 +111,7 @@ export const UploadedFileCard: React.FC<Props> = ({
       <>
         <FileCard {...FileCardProps}>
           <ProgressBar
-            width={`${Math.min(Math.ceil(progress * 100), 100)}%`}
+            sx={{ width: `${Math.min(Math.ceil(progress * 100), 100)}%` }}
             role="progressbar"
             aria-valuenow={progress * 100 || 0}
             aria-label={`Upload progress of file ${file.name}`}
@@ -132,18 +132,25 @@ export const UploadedFileCard: React.FC<Props> = ({
                 <FileIcon />
               )}
             </FilePreview>
-            <Box mr={2}>
+            <Box sx={{ mr: 2 }}>
               <Typography
                 variant="body1"
-                pb="0.25em"
-                sx={{ overflowWrap: "break-word", wordBreak: "break-all" }}
+                sx={{
+                  pb: "0.25em",
+                  overflowWrap: "break-word",
+                  wordBreak: "break-all",
+                }}
                 data-testid={file.name}
               >
                 {file.name}
               </Typography>
               <FileSize variant="body2">{formatBytes(file.size)}</FileSize>
               {drawingNumber && (
-                <Typography variant="body2" color="text.secondary" pt="0.25em">
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ pt: "0.25em" }}
+                >
                   Drawing number: {drawingNumber}
                 </Typography>
               )}

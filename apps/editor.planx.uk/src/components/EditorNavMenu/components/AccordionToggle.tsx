@@ -17,7 +17,7 @@ const AccordionToggle = ({ subtitle, Icon, isOpen, onToggle }: Props) => {
   return (
     <MenuButton isActive={false} disableRipple onClick={onToggle}>
       <Icon fontSize="small" />
-      <MenuTitle variant="body3" pt={0.15}>
+      <MenuTitle variant="body3" sx={{ pt: 0.15 }}>
         {subtitle}
       </MenuTitle>
       <ChevronIcon sx={{ fontSize: "1rem", ml: "auto", mt: 0.2 }} />

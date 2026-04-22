@@ -16,7 +16,7 @@ export const UserManagement = () => {
   const { analysts, loading, error } = useGetAnalysts();
   const [showAddAnalystModal, toggleAddAnalystModal] = useToggle(false);
 
-  if (error) return <ErrorSummary message={error.message} />; 
+  if (error) return <ErrorSummary message={error.message} />;
 
   // Filtering out active analysts allows the MembersTable to responsively update when an analyst is removed
   const activeAnalysts = analysts.filter(({ email }) => email);
@@ -28,24 +28,28 @@ export const UserManagement = () => {
           Analysts
         </Typography>
         <Typography variant="body1">
-          Analysts have access to global dashboards and analytics, but cannot create, update, or delete flows.
+          Analysts have access to global dashboards and analytics, but cannot
+          create, update, or delete flows.
         </Typography>
         {loading && <DelayedLoadingIndicator />}
-        {activeAnalysts &&
-        <>
-          <MembersTable
-            members={activeAnalysts}
-            showEditMemberButton
-            showRemoveMemberButton
-          />
-          <Box m={1}>
-           <AddButton onClick={toggleAddAnalystModal}>Add a new analyst</AddButton>
-          </Box>
-          {showAddAnalystModal && <AddAnalystModal onClose={toggleAddAnalystModal}/>}
-        </>
-        }
+        {activeAnalysts && (
+          <>
+            <MembersTable
+              members={activeAnalysts}
+              showEditMemberButton
+              showRemoveMemberButton
+            />
+            <Box sx={{ m: 1 }}>
+              <AddButton onClick={toggleAddAnalystModal}>
+                Add a new analyst
+              </AddButton>
+            </Box>
+            {showAddAnalystModal && (
+              <AddAnalystModal onClose={toggleAddAnalystModal} />
+            )}
+          </>
+        )}
       </SettingsSection>
     </Container>
-
-  )
-}
+  );
+};

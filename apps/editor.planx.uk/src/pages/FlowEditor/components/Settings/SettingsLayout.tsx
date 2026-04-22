@@ -56,14 +56,14 @@ const SettingsLayout: React.FC<Props> = ({
   };
 
   return (
-    <Box width="100%" bgcolor="background.paper">
+    <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
       <Box
-        width="100%"
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        bgcolor="background.default"
         sx={(theme) => ({
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          bgcolor: "background.default",
           paddingTop: theme.spacing(3 + topOffset),
           [theme.breakpoints.up("lg")]: {
             paddingTop: theme.spacing(5 + topOffset),

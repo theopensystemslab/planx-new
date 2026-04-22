@@ -75,7 +75,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
     >
       <CardContent>
         {icon}
-        <Stack gap={0.25}>
+        <Stack sx={{ gap: 0.25 }}>
           <Typography variant="h6" component="div">
             {title}
           </Typography>

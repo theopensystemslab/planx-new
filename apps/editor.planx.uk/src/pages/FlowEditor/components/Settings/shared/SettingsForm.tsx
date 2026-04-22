@@ -160,11 +160,11 @@ const SettingsFormContainer = <
         {(formik) => (
           <Form>
             <Grid container spacing={4}>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <InputLegend gutterBottom>{legend}</InputLegend>
                 <SettingsDescription>{description}</SettingsDescription>
               </Grid>
-              <Grid item xs={12} md={8}>
+              <Grid size={{ xs: 12, md: 8 }}>
                 <Box
                   sx={{
                     display: "flex",
@@ -175,9 +175,9 @@ const SettingsFormContainer = <
                 >
                   {children({ formik, data: actualData, loading })}
                 </Box>
-                {preview && <Box mt={2}>{preview(formik)}</Box>}
+                {preview && <Box sx={{ mt: 2 }}>{preview(formik)}</Box>}
                 {showActionButtons && (
-                  <Box mt={2} display="flex" gap={1.5}>
+                  <Box sx={{ mt: 2, display: "flex", gap: 1.5 }}>
                     <Button
                       type="submit"
                       variant="contained"

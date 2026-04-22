@@ -446,8 +446,8 @@ const FormModal: React.FC<FormModalProps> = ({
               display: "flex",
               alignItems: "stretch",
               marginLeft: "auto",
+              gap: 1,
             }}
-            gap={1}
           >
             {showMakeUniqueButton && (
               <Button

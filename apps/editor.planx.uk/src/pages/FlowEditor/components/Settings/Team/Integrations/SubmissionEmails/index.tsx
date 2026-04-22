@@ -7,7 +7,7 @@ import { EmailsTable } from "./EmailsTable";
 export const SubmissionEmails: React.FC = () => {
   return (
     <NewSettingsSection>
-      <Box mt={2}>
+      <Box sx={{ mt: 2 }}>
         <h2>Submission Emails</h2>
         <p>
           Manage the email addresses that will receive submissions. One must

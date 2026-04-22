@@ -18,7 +18,7 @@ export const SearchResultCard: React.FC<{
 
   return (
     <NodeCard nodeId={result.item.id}>
-      <Typography variant="body2" display="inline-block" mr={0.5}>
+      <Typography variant="body2" sx={{ display: "inline-block", mr: 0.5 }}>
         {key} -
       </Typography>
       <Headline

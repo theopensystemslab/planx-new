@@ -65,7 +65,7 @@ export const SortControl = <T extends object>({
   };
 
   return (
-    <Box display={"flex"} gap={1} alignItems="center">
+    <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
       <SelectInput
         visuallyHiddenLabel
         value={selectedDisplaySlug}

@@ -70,8 +70,7 @@ const Favicon: React.FC = () => {
           <Typography
             color="text.secondary"
             variant="body2"
-            pl={2}
-            alignSelf="center"
+            sx={{ pl: 2, alignSelf: "center" }}
           >
             .ico or .png
           </Typography>

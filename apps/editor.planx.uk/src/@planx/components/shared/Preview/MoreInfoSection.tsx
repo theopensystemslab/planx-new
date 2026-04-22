@@ -21,9 +21,9 @@ interface IMoreInfoSection {
 
 const MoreInfoSection: React.FC<IMoreInfoSection> = ({ title, children }) => {
   return (
-    <Root className="MoreInfoSection-root" pb={3}>
+    <Root className="MoreInfoSection-root" sx={{ pb: 3 }}>
       {title && (
-        <Typography mb="1em" variant="h3" component="h2">
+        <Typography sx={{ mb: "1em" }} variant="h3" component="h2">
           {title}
         </Typography>
       )}
