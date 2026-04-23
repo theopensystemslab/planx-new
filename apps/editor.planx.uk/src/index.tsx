@@ -87,16 +87,6 @@ root.render(
         </AnalyticsProvider>
       </ApolloProvider>
     </QueryClientProvider>
-    <ToastContainer
-      icon={false}
-      theme="colored"
-      position="top-right"
-      transition={Bounce}
-      autoClose={5000}
-      closeOnClick
-      pauseOnHover
-      pauseOnFocusLoss
-      draggable
-    />
+    <ToastContainer icon={false} theme="colored" />
   </ToastContextProvider>,
 );
