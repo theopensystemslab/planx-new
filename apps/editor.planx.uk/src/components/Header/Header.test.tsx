@@ -35,8 +35,6 @@ const mockTeam1: Team = {
     emailReplyToId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
     referenceCode: "OSL",
     isTrial: false,
-    externalPlanningSiteUrl: "https://www.planningportal.co.uk/",
-    externalPlanningSiteName: "Planning Portal",
   },
 };
 
@@ -62,8 +60,6 @@ const mockTeam2: Team = {
     emailReplyToId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
     referenceCode: "CSL",
     isTrial: false,
-    externalPlanningSiteUrl: "https://www.planningportal.co.uk/",
-    externalPlanningSiteName: "Planning Portal",
   },
 };
 
