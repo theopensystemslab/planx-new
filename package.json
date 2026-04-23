@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "up": "pnpm recreate && pnpm sync-data",
+    "up": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml -f ./docker-compose.e2e.yml --profile mock-services --project-name planx-e2e down --volumes --remove-orphans; pnpm recreate && pnpm sync-data",
     "down": "pnpm destroy",
     "restart": "pnpm stop && pnpm start",
     "start": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services up -d --quiet-pull",
