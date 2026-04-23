@@ -138,7 +138,8 @@ export const RenameDialog: React.FC<Props> = ({
               >
                 {mode === "renameAndUnarchive" && (
                   <Typography>
-                    Duplicate found, please give the flow a unique name.
+                    An active flow called "{flow.name}" already exists. To
+                    unarchive this one, please give it a unique name first.
                   </Typography>
                 )}
                 <InputLabel label="Flow name" htmlFor="flowName">
