@@ -48,8 +48,8 @@ export const RenameDialog: React.FC<Props> = ({
   teamId,
 }) => {
   const toast = useToast();
-  const [renameFlow] = useRenameFlow(flow.id, teamId);
-  const [renameAndUnarchiveFlow] = useRenameAndUnarchiveFlow(flow.id, teamId);
+  const [renameFlow] = useRenameFlow(teamId);
+  const [renameAndUnarchiveFlow] = useRenameAndUnarchiveFlow(teamId);
 
   const onSubmit: FormikConfig<RenameFlow>["onSubmit"] = async (
     { flowName, flowSlug },

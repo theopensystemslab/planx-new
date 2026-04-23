@@ -7,7 +7,7 @@ import {
   RenameFlowMutationVars,
 } from "../../queries";
 
-export const useRenameFlow = (flowId: string, teamId: number) =>
+export const useRenameFlow = (teamId: number) =>
   useMutation<FlowStatusMutation, RenameFlowMutationVars>(RENAME_FLOW, {
     refetchQueries: [{ query: GET_FLOWS, variables: { teamId } }],
   });

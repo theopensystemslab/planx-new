@@ -8,7 +8,7 @@ import {
   RenameFlowMutationVars,
 } from "../../queries";
 
-export const useRenameAndUnarchiveFlow = (flowId: string, teamId: number) =>
+export const useRenameAndUnarchiveFlow = (teamId: number) =>
   useMutation<FlowStatusMutation, RenameFlowMutationVars>(
     RENAME_AND_UNARCHIVE_FLOW,
     {
