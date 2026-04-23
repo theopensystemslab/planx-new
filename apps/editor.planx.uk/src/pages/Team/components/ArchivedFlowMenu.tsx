@@ -1,3 +1,4 @@
+import { isApolloError } from "@apollo/client";
 import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -8,6 +9,7 @@ import SimpleMenu from "ui/editor/SimpleMenu";
 import { ArchiveDialog } from "./ArchiveDialog";
 import { useDeleteFlow } from "./hooks/useDeleteFlow";
 import { useUnarchiveFlow } from "./hooks/useUnarchiveFlow";
+import { RenameDialog } from "./RenameDialog";
 import { FlowMenuProps } from "./StyledSimpleMenu";
 import { StyledSimpleMenu } from "./StyledSimpleMenu";
 
@@ -16,7 +18,7 @@ const ArchivedFlowMenu: React.FC<FlowMenuProps> = ({
   variant = "card",
   teamId,
 }) => {
-  type OpenFlowDialog = "unarchive" | "delete";
+  type OpenFlowDialog = "unarchive" | "delete" | "renameAndUnarchive";
   const [openFlowDialog, setOpenFlowDialog] = useState<OpenFlowDialog | null>(
     null,
   );
@@ -38,10 +40,19 @@ const ArchivedFlowMenu: React.FC<FlowMenuProps> = ({
       await unarchiveFlow();
       toast.success("Unarchived flow");
     } catch (error) {
+      const isUniqueSlugError =
+        error instanceof Error &&
+        isApolloError(error) &&
+        error.message.includes("Uniqueness violation");
+
+      if (isUniqueSlugError) {
+        setOpenFlowDialog("renameAndUnarchive");
+        return;
+      }
+
       toast.error(
         "We are unable to unarchive this flow, refesh and try again or contact an admin",
       );
-    } finally {
       setOpenFlowDialog(null);
     }
   };
@@ -80,6 +91,19 @@ const ArchivedFlowMenu: React.FC<FlowMenuProps> = ({
           handleClose={handleClose}
           onConfirm={handleUnarchive}
           submitLabel="Unarchive this flow"
+        />
+      )}
+      {openFlowDialog === "renameAndUnarchive" && (
+        <RenameDialog
+          mode="renameAndUnarchive"
+          isDialogOpen={openFlowDialog === "renameAndUnarchive"}
+          handleClose={handleClose}
+          flow={{
+            name: flow.name,
+            slug: flow.slug,
+            id: flow.id,
+          }}
+          teamId={teamId}
         />
       )}
       {openFlowDialog === "delete" && (

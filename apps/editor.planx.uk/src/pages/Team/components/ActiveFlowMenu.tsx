@@ -87,6 +87,7 @@ const ActiveFlowMenu: React.FC<FlowMenuProps> = ({
       )}
       {openDialog === "rename" && (
         <RenameDialog
+          mode={"rename"}
           isDialogOpen={openDialog === "rename"}
           handleClose={handleClose}
           flow={{
@@ -94,6 +95,7 @@ const ActiveFlowMenu: React.FC<FlowMenuProps> = ({
             slug: flow.slug,
             id: flow.id,
           }}
+          teamId={teamId}
         />
       )}
       {openDialog === "move" && (

@@ -2,14 +2,14 @@ import { useMutation } from "@apollo/client";
 
 import {
   ARCHIVE_FLOW,
-  FlowStatusMutation,
+  FlowMutationResponse,
   FlowStatusMutationVars,
   GET_ARCHIVED_FLOWS,
   GET_FLOWS,
 } from "../../queries";
 
 export const useArchiveFlow = (id: string, slug: string, teamId: number) =>
-  useMutation<FlowStatusMutation, FlowStatusMutationVars>(ARCHIVE_FLOW, {
+  useMutation<FlowMutationResponse, FlowStatusMutationVars>(ARCHIVE_FLOW, {
     variables: { id, slug },
     refetchQueries: [
       { query: GET_FLOWS, variables: { teamId } },
