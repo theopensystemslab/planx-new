@@ -76,3 +76,16 @@ select_permissions:
               - role:
                   _eq: teamEditor
     comment: ""
+update_permissions:
+  - role: api
+    permission:
+      columns:
+        - id
+        - team_id
+        - type
+        - created_at
+        - resolved_at
+        - flow_id
+      filter: {}
+      check: {}
+    comment: ""
