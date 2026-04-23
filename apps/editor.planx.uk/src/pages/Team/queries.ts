@@ -92,7 +92,7 @@ export const UNARCHIVE_FLOW = gql`
   }
 `;
 
-export type FlowStatusMutation = {
+export type FlowMutationResponse = {
   flow: {
     id: string;
   };

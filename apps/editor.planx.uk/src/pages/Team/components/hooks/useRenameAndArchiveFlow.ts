@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/client";
 
 import {
-  FlowStatusMutation,
+  FlowMutationResponse,
   GET_ARCHIVED_FLOWS,
   GET_FLOWS,
   RENAME_AND_UNARCHIVE_FLOW,
@@ -9,7 +9,7 @@ import {
 } from "../../queries";
 
 export const useRenameAndUnarchiveFlow = (teamId: number) =>
-  useMutation<FlowStatusMutation, RenameFlowMutationVars>(
+  useMutation<FlowMutationResponse, RenameFlowMutationVars>(
     RENAME_AND_UNARCHIVE_FLOW,
     {
       refetchQueries: [
