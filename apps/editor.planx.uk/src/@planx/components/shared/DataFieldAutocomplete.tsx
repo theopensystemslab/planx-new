@@ -50,7 +50,16 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
     placeholder = "Data field",
   } = props;
 
+  const [inputValue, setInputValue] = React.useState(value || "");
+  const skipBlurRef = React.useRef(false);
+
+  React.useEffect(() => {
+    setInputValue(value || "");
+  }, [value]);
+
   const handleChange = (_event: React.SyntheticEvent, value: string | null) => {
+    skipBlurRef.current = true;
+
     // Adding a new option via the "Add" button
     if (
       allowCustomValues &&
@@ -66,6 +75,20 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
     props.onChange(value);
   };
 
+  const handleBlur = () => {
+    if (skipBlurRef.current) {
+      skipBlurRef.current = false;
+      return;
+    }
+    if (!allowCustomValues) return;
+    const trimmed = inputValue.trim();
+
+    // Auto-commit a typed value on blur if it's new and not already set
+    if (trimmed && trimmed !== value && !options.includes(trimmed)) {
+      props.onChange(trimmed);
+    }
+  };
+
   return (
     <InputRow>
       <ErrorWrapper error={props.errorMessage}>
@@ -76,7 +99,11 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
           placeholder={placeholder}
           required={Boolean(props.required)}
           onChange={handleChange}
-          autoSelect
+          onBlur={handleBlur}
+          inputValue={inputValue}
+          onInputChange={(_event, newInputValue) =>
+            setInputValue(newInputValue)
+          }
           value={value}
           options={options}
           disabled={props.disabled}
