@@ -27,6 +27,9 @@ const staticErrorResponses: aws.cloudfront.DistributionArgs["customErrorResponse
   },
 ];
 
+// TODO: should we just be using a pre-baked AWS policy to simplify this?
+// e.g. CORS-with-preflight-and-SecurityHeadersPolicy
+// see: https://github.com/theopensystemslab/planx-new/pull/6491#issue-4281272671
 const responseHeadersPolicy = new aws.cloudfront.ResponseHeadersPolicy(
   "shared-cdn-headers-policy",
   {

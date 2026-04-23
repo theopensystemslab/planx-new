@@ -9,8 +9,14 @@ import * as pulumi from "@pulumi/pulumi";
 import * as tldjs from "tldjs";
 import mime from "mime";
 
-import { CustomDomain } from "../common/teams";
-import { getPostgresDbUrl } from "../common/utils";
+import { getCustomDomains } from "../common/customDomains";
+import type { CustomDomain } from "../common/types";
+import {
+  getLegacyDomains,
+  getPostgresDbUrl,
+  getValidatedDomains,
+} from "../common/utils";
+
 import {
   createApiService,
   createHasuraService,
@@ -34,120 +40,9 @@ const data = new pulumi.StackReference(`planx/data/${env}`);
 // You can generate tokens here: https://dash.cloudflare.com/profile/api-tokens
 new pulumi.Config("cloudflare").requireSecret("apiToken");
 
-const CUSTOM_DOMAINS: CustomDomain[] =
-  env === "production"
-    ? [
-        {
-          domain: "planningservices.buckinghamshire.gov.uk",
-          name: "buckinghamshire",
-          isLegacy: true,
-        },
-        {
-          domain: "planningservices.southwark.gov.uk",
-          name: "southwark",
-          isLegacy: true,
-          certificateLocation: "pulumiConfig",
-        },
-        {
-          domain: "planningservices.lambeth.gov.uk",
-          name: "lambeth",
-          isLegacy: true,
-          certificateLocation: "pulumiConfig",
-        },
-        {
-          domain: "planningservices.doncaster.gov.uk",
-          name: "doncaster",
-          isLegacy: true,
-          certificateLocation: "pulumiConfig",
-        },
-        {
-          domain: "planningservices.medway.gov.uk",
-          name: "medway",
-          isLegacy: true,
-        },
-        {
-          domain: "planningservices.stalbans.gov.uk",
-          name: "stalbans",
-          isLegacy: true,
-        },
-        {
-          domain: "planningservices.camden.gov.uk",
-          name: "camden",
-          isLegacy: true,
-          certificateLocation: "pulumiConfig",
-        },
-        {
-          domain: "planningservices.barnet.gov.uk",
-          name: "barnet",
-          isLegacy: true,
-        },
-        {
-          domain: "planningservices.tewkesbury.gov.uk",
-          name: "tewkesbury",
-          isLegacy: true,
-        },
-        {
-          domain: "planningservices.westberks.gov.uk",
-          name: "westberks",
-          isLegacy: true,
-          certificateLocation: "pulumiConfig",
-        },
-        {
-          domain: "planningservices.gateshead.gov.uk",
-          name: "gateshead",
-          isLegacy: true,
-        },
-        {
-          domain: "planningservices.gloucester.gov.uk",
-          name: "gloucester",
-          isLegacy: true,
-          certificateLocation: "pulumiConfig",
-        },
-        {
-          domain: "planningservices.epsom-ewell.gov.uk",
-          name: "epsom-and-ewell",
-          isLegacy: true,
-          certificateLocation: "pulumiConfig",
-        },
-        {
-          domain: "planningservices.newcastle.gov.uk",
-          name: "newcastle",
-          isLegacy: true,
-          certificateLocation: "pulumiConfig",
-        },
-        {
-          domain: "planningservices.lbbd.gov.uk",
-          name: "barking-and-dagenham",
-          isLegacy: true,
-        },
-        {
-          domain: "planningservices.southglos.gov.uk",
-          name: "south-gloucestershire",
-          isLegacy: true,
-        },
-        {
-          domain: "planningservices.birmingham.gov.uk",
-          name: "birmingham",
-          isLegacy: true,
-        },
-        {
-          domain: "planningservices.horsham.gov.uk",
-          name: "horsham",
-          isLegacy: true,
-        },
-        {
-          domain: "planningservices.canterbury.gov.uk",
-          name: "canterbury",
-        },
-      ]
-    : [];
-
-// domains still served by their own dedicated CloudFront distribution + BYO certificate
-const legacyCustomDomains = CUSTOM_DOMAINS.filter(cd => cd.isLegacy == true);
-// domains with DNS validation pending — added to 'mining' cert to surface records to send to council
-const pendingCustomDomains = CUSTOM_DOMAINS.filter(cd => !cd.isReady);
-// domains validated and ready to be served by the single shared CloudFront distribution
-const validatedCustomDomains = CUSTOM_DOMAINS.filter(cd => !cd.isLegacy && cd.isReady == true);
+const CUSTOM_DOMAINS = getCustomDomains(env);
+const legacyCustomDomains = getLegacyDomains(CUSTOM_DOMAINS);
+const validatedCustomDomains = getValidatedDomains(CUSTOM_DOMAINS);
 
 export = async () => {
   const DOMAIN: string = await certificates.requireOutputValue("domain");
@@ -445,46 +340,13 @@ export = async () => {
 
   const legacyDistributions = legacyCustomDomains.map(createLegacyDistributions);
 
-  // ------------------- 'mining' certificate (surfaces DNS validation records for pending domains)
-  // This cert is NOT attached to any CloudFront distribution. Its sole purpose is to
-  // request DNS validation from AWS ACM so we can extract the required CNAME records
-  // and send them to council IT teams. Safe to replace on every deploy.
-  const miningCert = pendingCustomDomains.length > 0
-    ? new aws.acm.Certificate(
-        "sslCert-dns-mining",
-        {
-          domainName: pendingCustomDomains[0].domain,
-          subjectAlternativeNames: pendingCustomDomains.slice(1).map(d => d.domain),
-          validationMethod: "DNS",
-        },
-        { provider: usEast1 }
-      )
-    : undefined;
-
-  // ------------------- single shared custom domain CDN (multi-tenant)
-  // A single CloudFront distribution + DNS-validated ACM certificate serving all councils
-  // that have completed migration (i.e. where isLegacy flag is false, isReady flag is true).
+  // ------------------- Single shared custom domain CDN (multi-tenant)
+  // Here we only create the CloudFront distribution, consuming the validated cert ARN
   let customDomainsCdnDomainName: pulumi.Output<string> | undefined;
 
+  const customDomainsCertificateArn = certificates.getOutput("customDomainsCertificateArn") as pulumi.Output<string | undefined>;
+
   if (validatedCustomDomains.length > 0) {
-    const customDomainsCert = new aws.acm.Certificate(
-      "sslCert-custom-domains",
-      {
-        domainName: validatedCustomDomains[0].domain,
-        subjectAlternativeNames: validatedCustomDomains.slice(1).map(d => d.domain),
-        validationMethod: "DNS",
-      },
-      { provider: usEast1 }
-    );
-
-    const customDomainsCertValidation = new aws.acm.CertificateValidation(
-      "sslCertValidation-custom-domains",
-      {
-        certificateArn: customDomainsCert.arn,
-      },
-      { provider: usEast1 }
-    );
-
     const customDomainsOai = new aws.cloudfront.OriginAccessIdentity("custom-domains-OAI", {
       comment: "OAI for shared custom domain CloudFront distribution",
     });
@@ -492,7 +354,10 @@ export = async () => {
     const customDomainsCdn = createCdn({
       cdnName: "custom-domains",
       domains: validatedCustomDomains.map(d => d.domain),
-      acmCertificateArn: customDomainsCertValidation.certificateArn,
+      acmCertificateArn: customDomainsCertificateArn.apply(arn => {
+        if (!arn) throw new Error("customDomainsCertificateArn not found in certificates stack — run `pulumi up` on the certificates stack first");
+        return arn;
+      }),
       bucket: frontendBucket,
       logsBucket,
       oai: customDomainsOai,
@@ -583,19 +448,6 @@ export = async () => {
     sharedbServiceName: sharedbService.service.name,
     // shared CDN domain name — councils should CNAME their domain to this value
     ...(customDomainsCdnDomainName && { customDomainsCdnDomainName }),
-    // DNS validation records that councils need to add before we can migrate
-    ...(miningCert && {
-      pendingCouncilDnsRecords: miningCert.domainValidationOptions.apply(
-        (options) =>
-          options.map((opt) => ({
-            domain: opt.domainName,
-            validationCname: {
-              name: opt.resourceRecordName,
-              value: opt.resourceRecordValue,
-            },
-          }))
-      ),
-    }),
   };
 };
 

@@ -1,7 +1,7 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
-import { dbUrlArgs } from "./types";
+import type { DbUrlArgs, CustomDomain } from "./types";
 
 // PG docs: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING-URIS
 // the AWS DB host/endpoint/address/URI will be of the form `instance.xxx.region.rds.amazonaws.com`
@@ -11,7 +11,7 @@ export const getPostgresDbUrl = ({
   host,
   port = 5432,
   database = 'postgres',
-}: dbUrlArgs): string => {
+}: DbUrlArgs): string => {
   // the `postgres://` prefix provides a means of locating the resource, so this is a URL, not just a URI
   return `postgres://${role}:${password}@${host}:${port}/${database}`
 }
@@ -107,3 +107,12 @@ export const createDestinationSgEgressRule = (
     });
   }
 }
+
+// get domains still served by their own dedicated CloudFront distribution + BYO certificate
+export const getLegacyDomains = (customDomains: CustomDomain[]) => customDomains.filter(cd => cd.isLegacy == true);
+
+// get domains with DNS validation pending — added to 'mining' cert to surface records to send to council
+export const getPendingDomains = (customDomains: CustomDomain[]) => customDomains.filter(cd => cd.isReady == false);
+
+// get domains validated and ready to be served by the single shared CloudFront distribution
+export const getValidatedDomains = (customDomains: CustomDomain[]) => customDomains.filter(cd => cd.isReady == true);

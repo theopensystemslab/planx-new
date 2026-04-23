@@ -75,6 +75,9 @@ importers:
 
   certificates:
     dependencies:
+      '@pulumi/aws':
+        specifier: 'catalog:'
+        version: 7.28.0(typescript@5.9.3)
       '@pulumi/cloudflare':
         specifier: 'catalog:'
         version: 6.15.0(typescript@5.9.3)
