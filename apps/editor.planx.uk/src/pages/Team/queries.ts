@@ -122,7 +122,7 @@ export type RenameFlowMutationVars = {
 
 export const RENAME_FLOW = gql`
   mutation RenameFlow($flowId: uuid!, $newSlug: String, $newName: String) {
-    update_flows_by_pk(
+    flow: update_flows_by_pk(
       pk_columns: { id: $flowId }
       _set: { slug: $newSlug, name: $newName }
     ) {
