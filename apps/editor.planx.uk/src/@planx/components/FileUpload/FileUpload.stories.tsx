@@ -25,6 +25,18 @@ export const Basic = {
   },
 } satisfies Story;
 
+export const WithDrawingNumbers = {
+  args: {
+    fn: "roofPlan",
+    title: "Upload roof plan",
+    description:
+      "The plan should show the roof of the building as it looks today.",
+    handleSubmit: () => {},
+    howMeasured: `<p>Your roof plan must:</p><ul><li>be drawn to scale. This is usually 1:100 or 1:50 at A3 or A4 size</li><li>have a scale bar</li><li>have a unique drawing reference number</li></ul>`,
+    showDrawingNumber: true,
+  },
+} satisfies Story;
+
 export const WithEditor = () => {
   return <Wrapper Editor={Editor} Public={Public} />;
 };
