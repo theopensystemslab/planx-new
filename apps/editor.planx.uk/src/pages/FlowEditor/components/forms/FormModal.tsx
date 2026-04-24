@@ -150,6 +150,7 @@ const TextInputToggle: React.FC<{
         ...prev,
         type: SLUGS[destinationType] as NodeSearchParams["type"],
       }),
+      state: (prev) => prev,
     });
   };
 
@@ -333,6 +334,7 @@ const FormModal: React.FC<FormModalProps> = ({
         ...prev,
         type: SLUGS[type] as NodeSearchParams["type"],
       }),
+      state: (prev) => prev,
     });
   };
 
