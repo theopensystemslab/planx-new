@@ -9,9 +9,9 @@ import MenuItem from "@mui/material/MenuItem";
 import Skeleton from "@mui/material/Skeleton";
 import { Team } from "@opensystemslab/planx-core/types";
 import { useMutation } from "@tanstack/react-query";
-import { isAxiosError } from "axios";
 import { Form, Formik, FormikConfig } from "formik";
 import { useToast } from "hooks/useToast";
+import type { APIError } from "lib/api/client";
 import { moveFlow } from "lib/api/flow/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -46,24 +46,26 @@ export const MoveDialog: React.FC<Props> = ({
     state.canUserEditTeam,
   ]);
   const toast = useToast();
-  const moveFlowMutation = useMutation({
+  const moveFlowMutation = useMutation<
+    { message: string },
+    APIError<{ error?: string }>,
+    { flowId: string; teamSlug: string }
+  >({
     mutationFn: moveFlow,
     onSuccess: (data) => {
       toast.success(data.message || "Flow moved successfully");
       handleClose();
     },
     onError: (error) => {
-      if (isAxiosError(error) && error.response) {
-        const apiError = error.response.data?.error;
-        if (apiError?.toLowerCase().includes("uniqueness violation")) {
-          toast.error(
-            `Failed to move. A flow with name '${sourceFlow.name}' already exists in that team. Rename the flow and try again.`,
-          );
-        } else {
-          toast.error(
-            "Failed to move. Make sure you're entering a valid team name and try again.",
-          );
-        }
+      const apiError = error.data?.error;
+      if (apiError?.toLowerCase().includes("uniqueness violation")) {
+        toast.error(
+          `Failed to move. A flow with name '${sourceFlow.name}' already exists in that team. Rename the flow and try again.`,
+        );
+      } else {
+        toast.error(
+          "Failed to move. Make sure you're entering a valid team name...",
+        );
       }
     },
   });

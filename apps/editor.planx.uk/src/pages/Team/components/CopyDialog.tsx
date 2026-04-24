@@ -4,7 +4,6 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { isAxiosError } from "axios";
 import { Form, Formik, FormikConfig } from "formik";
 import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -57,14 +56,12 @@ export const CopyDialog: React.FC<Props> = ({
         toast.success(`Created new flow "${values.flow.name}"`);
       },
       onError: (error) => {
-        if (isAxiosError(error)) {
-          const message = error?.response?.data?.error;
-          if (message?.includes("Uniqueness violation")) {
-            setFieldError("flow.name", "Flow name must be unique");
-          }
+        const message = error.data?.error;
+        if (message?.includes("Uniqueness violation")) {
+          setFieldError("flow.name", "Flow name must be unique");
+          return;
         }
-
-        throw error;
+        toast.error("Failed to copy flow, please try again.");
       },
     });
   };

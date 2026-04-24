@@ -6,7 +6,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useNavigate } from "@tanstack/react-router";
 import { logger } from "airbrake";
-import { isAxiosError } from "axios";
 import { Form, Formik, FormikConfig } from "formik";
 import { useToast } from "hooks/useToast";
 import React, { useState } from "react";
@@ -40,7 +39,7 @@ export const AddFlow: React.FC = () => {
     },
   };
 
-  const { mutateAsync: createFlow } = useCreateFlow();
+  const { mutate: createFlow } = useCreateFlow();
 
   const handleSubmit: FormikConfig<CreateFlow>["onSubmit"] = async (
     values,
@@ -52,18 +51,18 @@ export const AddFlow: React.FC = () => {
     });
 
     showLoading("Creating flow...");
-    try {
-      const result = await createFlow(values);
-      await navigate({
-        to: "/app/$team/$flow",
-        params: { team: teamSlug, flow: result.flow.slug },
-      });
-      hideLoading();
-    } catch (error) {
-      setLoadingCompleteCallback(undefined);
 
-      if (isAxiosError(error)) {
-        const message = error?.response?.data?.error;
+    createFlow(values, {
+      onSuccess: async ({ flow }) => {
+        await navigate({
+          to: "/app/$team/$flow",
+          params: { team: teamSlug, flow: flow.slug },
+        });
+        hideLoading();
+      },
+      onError: (error) => {
+        setLoadingCompleteCallback(undefined);
+        const message = error.data?.error;
         if (message?.includes("Uniqueness violation")) {
           setFieldError("flow.name", "Flow name must be unique");
           hideLoading();
@@ -80,10 +79,10 @@ export const AddFlow: React.FC = () => {
           hideLoading();
           return;
         }
-      }
-      setStatus({ error: "Failed to create flow, please try again." });
-      hideLoading();
-    }
+        setStatus({ error: "Failed to create flow, please try again." });
+        hideLoading();
+      },
+    });
   };
 
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
