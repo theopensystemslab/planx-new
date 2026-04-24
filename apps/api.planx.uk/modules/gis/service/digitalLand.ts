@@ -10,6 +10,7 @@ import fetch from "isomorphic-fetch";
 import { addDesignatedVariable } from "./helpers.js";
 import { $api } from "../../../client/index.js";
 
+import * as adurAndWorthing from "./local_authorities/metadata/adurAndWorthing.js";
 import * as barkingAndDagenham from "./local_authorities/metadata/barkingAndDagenham.js";
 import * as barnet from "./local_authorities/metadata/barnet.js";
 import * as birmingham from "./local_authorities/metadata/birmingham.js";
@@ -51,6 +52,7 @@ export interface LocalAuthorityMetadata {
  * The database column team_setting.has_article4_schema also needs to be updated via the Hasura console
  */
 export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
+  "adur-worthing": adurAndWorthing,
   "barking-and-dagenham": barkingAndDagenham,
   barnet,
   birmingham,
