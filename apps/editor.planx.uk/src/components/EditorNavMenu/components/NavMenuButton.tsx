@@ -1,7 +1,7 @@
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import React from "react";
 
-import { MenuButton, MenuTitle, StyledChip } from "../styles";
+import { BadgeChip, MenuButton, MenuTitle, StyledChip } from "../styles";
 import { Route } from "../types";
 
 export interface NavMenuButtonProps {
@@ -9,6 +9,7 @@ export interface NavMenuButtonProps {
   Icon: Route["Icon"];
   disabled?: boolean;
   isNew?: boolean;
+  badge?: number;
   isActive: boolean;
   isExternal: boolean;
   onClick: () => void;
@@ -19,6 +20,7 @@ const NavMenuButton = ({
   Icon,
   disabled,
   isNew,
+  badge,
   isActive,
   isExternal,
   onClick,
@@ -36,6 +38,7 @@ const NavMenuButton = ({
         {title}
       </MenuTitle>
       {isNew && <StyledChip label="new" size="small" color="success" />}
+      {badge ? <BadgeChip label={badge} color="info" /> : null}
       {showExternalIcon && (
         <NorthEastIcon sx={{ fontSize: "0.875rem", ml: "auto", mt: 0.2 }} />
       )}

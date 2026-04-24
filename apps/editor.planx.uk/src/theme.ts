@@ -77,7 +77,8 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     light: "#EFF7EE",
   },
   info: {
-    main: "#2196F3",
+    main: "#0B78D0",
+    contrastText: "#FFFFFF",
     light: "#EBF4FD",
   },
   border: {

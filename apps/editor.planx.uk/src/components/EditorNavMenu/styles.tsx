@@ -3,7 +3,6 @@ import Chip, { chipClasses } from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export const MENU_WIDTH_COMPACT = 51;
@@ -25,7 +24,7 @@ export const Root = styled(Box, {
 export const NavBarContainer = styled(Box)(() => ({
   display: "flex",
   flexDirection: "column",
-  height: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
+  height: "100vh",
   position: "sticky",
   width: "inherit",
   top: 0,
@@ -57,7 +56,7 @@ export const MenuButton = styled(IconButton, {
   width: "100%",
   justifyContent: "flex-start",
   gap: theme.spacing(0.65),
-  alignItems: "flex-start",
+  alignItems: "center",
   borderRadius: theme.shape.borderRadius,
   padding: theme.spacing(0.8, 0.5),
   "&:hover": {
@@ -105,5 +104,17 @@ export const StyledChip = styled(Chip)(({ theme }) => ({
   marginLeft: "auto",
   [`& .${chipClasses.label}`]: {
     padding: theme.spacing(0, 0.35),
+  },
+}));
+
+export const BadgeChip = styled(Chip)(({ theme }) => ({
+  height: "22px",
+  fontSize: "0.75rem",
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+  borderRadius: "3px",
+  margin: theme.spacing(0.15, 0, 0, 0),
+  marginLeft: "auto",
+  [`& .${chipClasses.label}`]: {
+    padding: theme.spacing(0, 0.75),
   },
 }));

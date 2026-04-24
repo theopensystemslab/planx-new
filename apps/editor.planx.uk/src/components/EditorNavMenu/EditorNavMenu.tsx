@@ -29,6 +29,7 @@ import React, { useMemo, useState } from "react";
 import EditorIcon from "ui/icons/Editor";
 import LocalPlanningServicesIcon from "ui/icons/LocalPlanningServices";
 
+import { useNotificationsCount } from "../../hooks/data/useNotificationsCount";
 import { useLPS } from "../../hooks/useLPS";
 import AccordionItemButton from "./components/AccordionItemButton";
 import AccordionToggle from "./components/AccordionToggle";
@@ -90,6 +91,7 @@ function EditorNavMenu() {
 
   const teamAnalyticsLink = useTeamAnalyticsLink();
   const flowAnalyticsLink = useFlowAnalyticsLink();
+  const notificationsCount = useNotificationsCount(teamSlug);
 
   const globalLayoutSections: MenuSection[] = [
     {
@@ -125,29 +127,14 @@ function EditorNavMenu() {
   const teamLayoutSections: MenuSection[] = useMemo(
     () => [
       {
-        routes: hasFeatureFlag("NOTIFICATIONS")
-          ? [
-              {
-                title: "Flows",
-                Icon: EditorIcon,
-                route: `/app/${teamSlug}`,
-                accessibleBy: "*",
-              },
-              {
-                title: "Notifications",
-                Icon: NotificationsActiveIcon, // TODO colour based on active/new or all resolved ??
-                route: `/app/${teamSlug}/notifications`,
-                accessibleBy: ["platformAdmin", "teamEditor"],
-              },
-            ]
-          : [
-              {
-                title: "Flows",
-                Icon: EditorIcon,
-                route: `/app/${teamSlug}`,
-                accessibleBy: "*",
-              },
-            ],
+        routes: [
+          {
+            title: "Flows",
+            Icon: EditorIcon,
+            route: `/app/${teamSlug}`,
+            accessibleBy: "*",
+          },
+        ],
       },
       {
         subtitle: "Settings",
@@ -395,6 +382,19 @@ function EditorNavMenu() {
             );
           })}
         </MenuWrap>
+        {isTeamRoute && hasFeatureFlag("NOTIFICATIONS") && (role === "platformAdmin" || role === "teamEditor") && (
+          <Box sx={(theme) => ({ padding: theme.spacing(0, 0.5, 1) })}>
+            <NavMenuItem
+              title="Notifications"
+              Icon={NotificationsActiveIcon}
+              badge={notificationsCount}
+              isActive={isActive(`/app/${teamSlug}/notifications`)}
+              isExternal={false}
+              compact={compact}
+              onClick={() => handleClick(`/app/${teamSlug}/notifications`)}
+            />
+          </Box>
+        )}
         <AccountMenu compact={compact} />
       </NavBarContainer>
     </Root>
