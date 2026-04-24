@@ -9,23 +9,26 @@ import { FileUploadSlot } from "@planx/components/FileUpload/model";
 import ImagePreview from "components/ImagePreview";
 import React from "react";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
+import Input from "ui/shared/Input/Input";
 
 interface Props extends FileUploadSlot {
   removeFile: () => void;
   onChange?: () => void;
-  // New accordion UI props
   changeLabel?: string;
   changeIcon?: React.ReactNode;
   hideChangeButton?: boolean;
-  drawingNumber?: string;
-  // Legacy modal UI props
-  tags?: string[];
+  showDrawingNumber?: boolean;
+  onDrawingNumberChange?: (slotId: string, drawingNumber: string) => void;
   FileCardProps?: BoxProps;
 }
 
-const FileCard = styled(Box)(({ theme }) => ({
+const FileCardRoot = styled(Box)(({ theme }) => ({
   border: `1px solid ${theme.palette.border.main}`,
   backgroundColor: theme.palette.background.paper,
+  padding: theme.spacing(1.5),
+}));
+
+const FileCard = styled(Box)(({ theme }) => ({
   position: "relative",
   height: "auto",
   display: "flex",
@@ -36,7 +39,6 @@ const FileCard = styled(Box)(({ theme }) => ({
     flexDirection: "row",
     alignItems: "center",
   },
-  padding: theme.spacing(1.5),
   "& > *": {
     zIndex: 1,
   },
@@ -88,6 +90,7 @@ const ActionButtons = styled(Box)(({ theme }) => ({
 }));
 
 export const UploadedFileCard: React.FC<Props> = ({
+  id,
   file,
   progress,
   url,
@@ -99,6 +102,8 @@ export const UploadedFileCard: React.FC<Props> = ({
   drawingNumber,
   status,
   FileCardProps,
+  showDrawingNumber = false,
+  onDrawingNumberChange,
 }) => (
   <Box>
     <ErrorWrapper
@@ -109,87 +114,109 @@ export const UploadedFileCard: React.FC<Props> = ({
       }
     >
       <>
-        <FileCard {...FileCardProps}>
-          <ProgressBar
-            sx={{ width: `${Math.min(Math.ceil(progress * 100), 100)}%` }}
-            role="progressbar"
-            aria-valuenow={progress * 100 || 0}
-            aria-label={`Upload progress of file ${file.name}`}
-          />
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "flex-start",
-              gap: 1,
-              alignItems: "center",
-              width: "100%",
-            }}
-          >
-            <FilePreview>
-              {file instanceof File && file?.type?.includes("image") ? (
-                <ImagePreview file={file} url={url} />
-              ) : (
-                <FileIcon />
-              )}
-            </FilePreview>
-            <Box sx={{ mr: 2 }}>
-              <Typography
-                variant="body1"
-                sx={{
-                  pb: "0.25em",
-                  overflowWrap: "break-word",
-                  wordBreak: "break-all",
-                }}
-                data-testid={file.name}
-              >
-                {file.name}
-              </Typography>
-              <FileSize variant="body2">{formatBytes(file.size)}</FileSize>
-              {drawingNumber && (
+        <FileCardRoot {...FileCardProps}>
+          <FileCard>
+            <ProgressBar
+              sx={{ width: `${Math.min(Math.ceil(progress * 100), 100)}%` }}
+              role="progressbar"
+              aria-valuenow={progress * 100 || 0}
+              aria-label={`Upload progress of file ${file.name}`}
+            />
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-start",
+                gap: 1,
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <FilePreview>
+                {file instanceof File && file?.type?.includes("image") ? (
+                  <ImagePreview file={file} url={url} />
+                ) : (
+                  <FileIcon />
+                )}
+              </FilePreview>
+              <Box sx={{ mr: 2 }}>
                 <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ pt: "0.25em" }}
+                  variant="body1"
+                  sx={{ overflowWrap: "break-word", wordBreak: "break-all", pb: "0.25em" }}
+                  data-testid={file.name}
                 >
-                  Drawing number: {drawingNumber}
+                  {file.name}
                 </Typography>
-              )}
+                <FileSize variant="body2">{formatBytes(file.size)}</FileSize>
+                {drawingNumber && (
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ pt: "0.25em" }}
+                  >
+                    Drawing number: {drawingNumber}
+                  </Typography>
+                )}
+              </Box>
             </Box>
-          </Box>
-          <ActionButtons>
-            {!hideChangeButton && onChange && (
+            <ActionButtons>
+              {!hideChangeButton && onChange && (
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  startIcon={changeIcon}
+                  sx={{
+                    minWidth: 120,
+                    backgroundColor: "white",
+                  }}
+                  size="small"
+                  onClick={onChange}
+                  data-testid={`${changeLabel.toLowerCase().replace(/\s/g, "-")}-${file.name}`}
+                >
+                  {changeLabel}
+                  <Box sx={visuallyHidden} component="span">
+                    {` what ${file.name} shows`}
+                  </Box>
+                </Button>
+              )}
               <Button
+                size="small"
+                title={`Delete ${file.name}`}
+                onClick={removeFile}
+                sx={{ gap: 1, backgroundColor: "white" }}
+                data-testid={`delete-${file.name}`}
                 variant="contained"
                 color="secondary"
-                startIcon={changeIcon}
-                sx={{
-                  minWidth: 120,
-                  backgroundColor: "white",
-                }}
-                size="small"
-                onClick={onChange}
-                data-testid={`${changeLabel.toLowerCase().replace(/\s/g, "-")}-${file.name}`}
               >
-                {changeLabel}
-                <Box sx={visuallyHidden} component="span">
-                  {` what ${file.name} shows`}
-                </Box>
+                <DeleteIcon color="warning" fontSize="small" />
+                Remove <span style={visuallyHidden}>{file.name}</span>
               </Button>
-            )}
-            <Button
-              size="small"
-              title={`Delete ${file.name}`}
-              onClick={removeFile}
-              sx={{ gap: 1, backgroundColor: "white" }}
-              data-testid={`delete-${file.name}`}
-              variant="contained"
-              color="secondary"
-            >
-              <DeleteIcon color="warning" fontSize="small" />
-              Remove <span style={visuallyHidden}>{file.name}</span>
-            </Button>
-          </ActionButtons>
-        </FileCard>
+            </ActionButtons>
+          </FileCard>
+          {showDrawingNumber && onDrawingNumberChange && (
+            <Box sx={{ mt: 1 }}>
+              <Typography
+                variant="h3"
+                sx={{ display: "inline-block", pb: 0.5 }}
+                id={`drawing-number-label-${id}`}
+                component="label"
+              >
+                Drawing number (optional)
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                Separate multiple drawing numbers in this file with a comma
+              </Typography>
+              <Input
+                id={`drawing-number-${id}`}
+                value={drawingNumber || ""}
+                onChange={(e) => onDrawingNumberChange(id, e.target.value)}
+                fullWidth
+                aria-labelledby={`drawing-number-label-${id}`}
+                bordered
+                sx={{ maxWidth: 400 }}
+              />
+            </Box>
+          )}
+        </FileCardRoot>
       </>
     </ErrorWrapper>
   </Box>

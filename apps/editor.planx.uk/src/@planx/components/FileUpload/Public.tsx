@@ -100,6 +100,7 @@ const FileUploadComponent: React.FC<Props> = (props) => {
           slots={slots}
           setSlots={setSlots}
           maxFiles={props.maxFiles}
+          showDrawingNumber={props.showDrawingNumber}
         />
       </ErrorWrapper>
     </Card>
