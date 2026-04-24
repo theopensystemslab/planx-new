@@ -67,5 +67,5 @@ export const RecentFlowsProvider: React.FC<{ children: React.ReactNode }> = ({
 
 export const useRecentFlowsContext = () => useContext(RecentFlowsContext);
 
-export const clearRecentFlowsStorage = () =>
+export const startNewRecentFlowsJourney = () =>
   sessionStorage.removeItem(STORAGE_KEY);

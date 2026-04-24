@@ -3,8 +3,8 @@ import React from "react";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import {
-  clearRecentFlowsStorage,
   RecentFlowsProvider,
+  startNewRecentFlowsJourney,
   useRecentFlowsContext,
 } from "./RecentFlowsContext";
 
@@ -112,7 +112,7 @@ describe("clearRecentFlowsStorage", () => {
       STORAGE_KEY,
       JSON.stringify([{ id: "flow1", folderIds: [] }]),
     );
-    clearRecentFlowsStorage();
+    startNewRecentFlowsJourney();
     expect(sessionStorage.getItem(STORAGE_KEY)).toBeNull();
   });
 });
