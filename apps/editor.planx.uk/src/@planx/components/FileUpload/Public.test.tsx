@@ -173,3 +173,103 @@ test("shows singular 'Drop file here' text when maxFiles is 1", async () => {
   expect(screen.getByText(/Drop file here/)).toBeInTheDocument();
   expect(screen.queryByText(/Drop files here/)).not.toBeInTheDocument();
 });
+
+describe("drawing numbers", () => {
+  const dataField = "data-field";
+
+  const previouslySubmittedDataWithFile = (dataField: string) => ({
+    data: {
+      [dataField]: [dummyFile],
+      [PASSPORT_REQUESTED_FILES_KEY]: {
+        required: [dataField],
+        recommended: [],
+        optional: [],
+      },
+    },
+  });
+
+  test("does not show a drawing number field by default", async () => {
+    await setup(
+      <FileUpload
+        title="Please upload your files"
+        fn={dataField}
+        handleSubmit={vi.fn()}
+        previouslySubmittedData={previouslySubmittedDataWithFile(dataField)}
+      />,
+    );
+
+    expect(screen.queryByText(/Drawing number/i)).not.toBeInTheDocument();
+  });
+
+  test("shows a drawing number field for each file when showDrawingNumber is true", async () => {
+    await setup(
+      <FileUpload
+        title="Please upload your files"
+        fn={dataField}
+        handleSubmit={vi.fn()}
+        showDrawingNumber={true}
+        previouslySubmittedData={previouslySubmittedDataWithFile(dataField)}
+      />,
+    );
+
+    expect(
+      screen.getByText(/Drawing number \(optional\)/i),
+    ).toBeInTheDocument();
+  });
+
+  test("allows submission without a drawing number when showDrawingNumber is true", async () => {
+    const handleSubmit = vi.fn();
+
+    const { user } = await setup(
+      <FileUpload
+        title="Please upload your files"
+        fn={dataField}
+        handleSubmit={handleSubmit}
+        showDrawingNumber={true}
+        previouslySubmittedData={previouslySubmittedDataWithFile(dataField)}
+      />,
+    );
+
+    await user.click(screen.getByTestId("continue-button"));
+
+    expect(handleSubmit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          [dataField]: expect.arrayContaining([
+            expect.objectContaining({ drawingNumber: undefined }),
+          ]),
+        }),
+      }),
+    );
+  });
+
+  test("maps the drawing number to the submitted data", async () => {
+    const handleSubmit = vi.fn();
+
+    const { user } = await setup(
+      <FileUpload
+        title="Please upload your files"
+        fn={dataField}
+        handleSubmit={handleSubmit}
+        showDrawingNumber={true}
+        previouslySubmittedData={previouslySubmittedDataWithFile(dataField)}
+      />,
+    );
+
+    await user.type(
+      screen.getByRole("textbox", { name: /Drawing number/i }),
+      "ABC-12345",
+    );
+    await user.click(screen.getByTestId("continue-button"));
+
+    expect(handleSubmit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          [dataField]: expect.arrayContaining([
+            expect.objectContaining({ drawingNumber: "ABC-12345" }),
+          ]),
+        }),
+      }),
+    );
+  });
+});
