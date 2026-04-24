@@ -8,6 +8,7 @@ import classNames from "classnames";
 import gql from "graphql-tag";
 import { useContextMenu } from "hooks/useContextMenu";
 import useScrollOnPreviousURLMatch from "hooks/useScrollOnPreviousURLMatch";
+import { useRecentFlowsContext } from "pages/FlowEditor/components/RecentFlows/RecentFlowsContext";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { useDrag } from "react-dnd";
@@ -26,6 +27,7 @@ const ExternalPortal: React.FC<any> = (props) => {
   });
 
   const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(href);
+  const { addRecentFlow } = useRecentFlowsContext();
 
   const [id, addExternalPortal, showTags] = useStore((state) => [
     state.id,
@@ -124,14 +126,7 @@ const ExternalPortal: React.FC<any> = (props) => {
                     team: internalTeamSlug,
                     flow: internalFlowSlug,
                   }}
-                  // Inject current flowId and folderIds into router state, for RecentFlows component
-                  state={(prev) => ({
-                    ...prev,
-                    recentFlows: [
-                      ...(prev?.recentFlows || []),
-                      { id, folderIds },
-                    ],
-                  })}
+                  onClick={() => addRecentFlow({ id, folderIds })}
                   preload={false}
                   ref={(el) => {
                     drag(el);
@@ -247,8 +242,6 @@ const InternalPortal: React.FC<any> = (props) => {
                   drag(el);
                 }}
                 onContextMenu={handleContextMenu}
-                // Maintain recentFlows state when navigating into folders
-                state={(prev) => prev}
               >
                 <span>{props.data.text}</span>
               </Link>
