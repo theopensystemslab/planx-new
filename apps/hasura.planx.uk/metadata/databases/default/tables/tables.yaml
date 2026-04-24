@@ -17,6 +17,7 @@
 - "!include public_application_access_tokens.yaml"
 - "!include public_blpu_codes.yaml"
 - "!include public_bops_applications.yaml"
+- "!include public_downtime_banner.yaml"
 - "!include public_email_applications.yaml"
 - "!include public_email_events_log.yaml"
 - "!include public_feedback.yaml"
