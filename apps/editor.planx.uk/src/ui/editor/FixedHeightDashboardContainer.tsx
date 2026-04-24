@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
 import React, { ReactNode } from "react";
 
 interface FixedHeightDashboardContainerProps {
