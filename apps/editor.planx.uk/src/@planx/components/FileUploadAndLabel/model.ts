@@ -55,7 +55,6 @@ export const newFileType = (): FileType => ({
 
 export interface FileUploadAndLabelSlot extends FileUploadSlot {
   tags: string[];
-  drawingNumber: string | undefined;
 }
 
 export interface FormattedUserFile {

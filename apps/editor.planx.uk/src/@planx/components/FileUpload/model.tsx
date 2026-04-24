@@ -20,6 +20,7 @@ export interface FileUploadSlot {
   progress: number;
   id: string;
   url?: string;
+  drawingNumber: string | undefined;
   cachedSlot?: Omit<FileUploadSlot, "cachedSlot">;
 }
 
