@@ -29,7 +29,6 @@ const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
       "articleFour.adurAndWorthing.wbc06": "WBC06",
       "articleFour.adurAndWorthing.wbc07": "WBC07",
       "articleFour.adurAndWorthing.wbc08": "WBC08",
-
     },
   },
 };
