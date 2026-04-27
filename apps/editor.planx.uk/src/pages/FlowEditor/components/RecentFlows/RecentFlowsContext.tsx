@@ -1,4 +1,12 @@
-import React, { createContext, useCallback, useContext, useState } from "react";
+import { useRouterState } from "@tanstack/react-router";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 const STORAGE_KEY = "planx:recentFlows";
 
@@ -6,6 +14,12 @@ export interface RecentFlow {
   id: string;
   folderIds: string[];
 }
+
+/**
+ * Maps each TanStack Router history key to the breadcrumb journey at that point
+ * Stored in sessionStorage so tab refresh can restore the most recent state
+ */
+type JourneyMap = Record<string, RecentFlow[]>;
 
 interface RecentFlowsContextValue {
   recentFlows: RecentFlow[];
@@ -22,39 +36,86 @@ export const RecentFlowsContext = createContext<RecentFlowsContextValue>({
 export const RecentFlowsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  // Hydrate recentFlows from sessionStorage
-  const [recentFlows, setRecentFlows] = useState<RecentFlow[]>(() => {
-    const stored = sessionStorage.getItem(STORAGE_KEY);
-    if (!stored) return [];
+  // Subscribe to the router's per-history-entry key
+  // Each push/replace gets a unique key
+  // Browser back/forward restores an earlier key
+  const currentKey = useRouterState({
+    select: (s) =>
+      s.location.state.__TSR_key ?? s.location.state.key ?? "initial",
+  });
+
+  const [journeyMap, setJourneyMap] = useState<JourneyMap>(() => {
     try {
-      return JSON.parse(stored);
+      const stored = sessionStorage.getItem(STORAGE_KEY);
+      const map: JourneyMap = stored ? JSON.parse(stored) : {};
+      if (!map[currentKey]) map[currentKey] = [];
+
+      return map;
     } catch {
-      return [];
+      return { [currentKey]: [] };
     }
   });
 
+  const prevKeyRef = useRef<string>(currentKey);
+  const pendingAddRef = useRef<RecentFlow | null>(null);
+  const pendingSliceRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (prevKeyRef.current === currentKey) return;
+
+    const prevKey = prevKeyRef.current;
+    prevKeyRef.current = currentKey;
+
+    const pendingAdd = pendingAddRef.current;
+    pendingAddRef.current = null;
+
+    const pendingSlice = pendingSliceRef.current;
+    pendingSliceRef.current = null;
+
+    setJourneyMap((prev) => {
+      // Known key: browser back/forward restoring an earlier history entry
+      // The recorded journey for that key is already correct - no update needed
+      if (prev[currentKey]) return prev;
+
+      // Unknown key: fresh navigation
+      // Derive the new journey from the previous key's journey and any pending
+      // operation that was queued before navigation
+      const prevJourney = prev[prevKey] ?? [];
+      let newJourney: RecentFlow[];
+
+      if (pendingAdd) {
+        // Portal click: record current flow as an ancestor in the new location
+        newJourney = [...prevJourney, pendingAdd];
+      } else if (pendingSlice !== null) {
+        // Breadcrumb click: remove everything from the target flow onwards
+        const idx = prevJourney.findIndex(({ id }) => id === pendingSlice);
+        newJourney = idx >= 0 ? prevJourney.slice(0, idx) : [];
+      } else {
+        // Intra-flow navigation (modal open, node type change, etc): preserve journey
+        newJourney = prevJourney;
+      }
+
+      const updated = { ...prev, [currentKey]: newJourney };
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return updated;
+    });
+  }, [currentKey]);
+
   /**
-   * Add recent flow and sync sessionStorage synchronously
+   * Use a ref to store the intent of this action - we are navigating into a portal
    */
   const addRecentFlow = useCallback((flow: RecentFlow) => {
-    setRecentFlows((prev) => {
-      const next = [...prev, flow];
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      return next;
-    });
+    pendingAddRef.current = flow;
   }, []);
 
   /**
-   * Drop one (or many) recent flows on navigation back "up" the list
+   * Use a ref to store the intent of this action - we are navigating one (or more) steps up the breadcrumbs
    */
   const sliceRecentFlows = useCallback((toFlowId: string) => {
-    setRecentFlows((prev) => {
-      const idx = prev.findIndex(({ id }) => id === toFlowId);
-      const next = idx >= 0 ? prev.slice(0, idx) : prev;
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      return next;
-    });
+    pendingSliceRef.current = toFlowId;
   }, []);
+
+  const recentFlows = journeyMap[currentKey] ?? [];
 
   return (
     <RecentFlowsContext.Provider

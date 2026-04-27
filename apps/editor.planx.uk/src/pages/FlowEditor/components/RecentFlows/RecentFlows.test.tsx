@@ -4,9 +4,7 @@ import { setup } from "testUtils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import RecentFlows from "./RecentFlows";
-import { RecentFlowsProvider } from "./RecentFlowsContext";
-
-const STORAGE_KEY = "planx:recentFlows";
+import { RecentFlowsContext } from "./RecentFlowsContext";
 
 vi.mock("hooks/data/useExternalPortal", () => ({
   useExternalPortal: (id: string) => ({
@@ -36,26 +34,25 @@ vi.mock("hooks/data/useExternalPortal", () => ({
   }),
 }));
 
-const seedFlows = (flows: { id: string; folderIds: string[] }[]) =>
-  sessionStorage.setItem(STORAGE_KEY, JSON.stringify(flows));
-
-const withProvider = (children: React.ReactNode) => (
-  <RecentFlowsProvider>{children}</RecentFlowsProvider>
+const withFlows = (recentFlows: { id: string; folderIds: string[] }[]) => (
+  <RecentFlowsContext.Provider
+    value={{ recentFlows, addRecentFlow: vi.fn(), sliceRecentFlows: vi.fn() }}
+  >
+    <RecentFlows />
+  </RecentFlowsContext.Provider>
 );
 
-beforeEach(() => sessionStorage.clear());
+beforeEach(() => vi.clearAllMocks());
 
 describe("RecentFlows", () => {
   it("renders nothing when there are no recent flows", async () => {
-    const { container } = await setup(withProvider(<RecentFlows />));
-    expect(container).toBeEmptyDOMElement();
+    await setup(withFlows([]));
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
   });
 
   describe("with a single flow", () => {
-    beforeEach(() => seedFlows([{ id: "flow-a", folderIds: [] }]));
-
     it("renders a 'back to' breadcrumb for the flow", async () => {
-      await setup(withProvider(<RecentFlows />));
+      await setup(withFlows([{ id: "flow-a", folderIds: [] }]));
       await waitFor(() =>
         expect(screen.getByText("back to")).toBeInTheDocument(),
       );
@@ -63,7 +60,7 @@ describe("RecentFlows", () => {
     });
 
     it("does not render an expand button when there is only one flow", async () => {
-      await setup(withProvider(<RecentFlows />));
+      await setup(withFlows([{ id: "flow-a", folderIds: [] }]));
       await waitFor(() =>
         expect(screen.getByText("apply-for-planning")).toBeInTheDocument(),
       );
@@ -74,26 +71,27 @@ describe("RecentFlows", () => {
   });
 
   describe("with multiple flows", () => {
-    beforeEach(() =>
-      seedFlows([
-        { id: "flow-a", folderIds: [] },
-        { id: "flow-b", folderIds: [] },
-        { id: "flow-c", folderIds: [] },
-      ]),
-    );
+    const flows = [
+      { id: "flow-a", folderIds: [] },
+      { id: "flow-b", folderIds: [] },
+      { id: "flow-c", folderIds: [] },
+    ];
 
     it("shows only the most recent flow when collapsed", async () => {
-      await setup(withProvider(<RecentFlows />));
+      await setup(withFlows(flows));
 
       // Most recent is flow-c (last in array)
       await waitFor(() =>
-        expect(screen.getByText("find-out-if-you-need")).toBeInTheDocument(),
+        expect(screen.getByText("back to")).toBeInTheDocument(),
+      );
+      expect(screen.getByText("back to").closest("a")).toHaveTextContent(
+        "find-out-if-you-need",
       );
       expect(screen.queryByText("apply-for-planning")).not.toBeInTheDocument();
     });
 
     it("renders an expand button with the count of additional flows", async () => {
-      await setup(withProvider(<RecentFlows />));
+      await setup(withFlows(flows));
       await waitFor(() =>
         expect(
           screen.getByRole("button", {
@@ -104,7 +102,7 @@ describe("RecentFlows", () => {
     });
 
     it("shows all flows after expanding", async () => {
-      const { user } = await setup(withProvider(<RecentFlows />));
+      const { user } = await setup(withFlows(flows));
 
       await waitFor(() =>
         expect(
@@ -122,7 +120,7 @@ describe("RecentFlows", () => {
     });
 
     it("collapses again after clicking the close button", async () => {
-      const { user } = await setup(withProvider(<RecentFlows />));
+      const { user } = await setup(withFlows(flows));
 
       await waitFor(() =>
         expect(

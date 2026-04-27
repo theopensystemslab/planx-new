@@ -50,12 +50,12 @@ beforeEach(() => vi.clearAllMocks());
 
 describe("RecentFlowLink", () => {
   it("renders null when the flow cannot be found", async () => {
-    const { container } = await setup(
+    await setup(
       withContext(
         <RecentFlowLink flow={{ id: "unknown-id", folderIds: [] }} />,
       ),
     );
-    expect(container).toBeEmptyDOMElement();
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
   });
 
   it("renders 'back to' label when isFirst=true", async () => {
@@ -138,10 +138,10 @@ describe("RecentFlowLink", () => {
       ),
     );
     const link = screen.getByText("short").closest("a")!;
-    // TanStack Router renders href as the resolved route path
+    // TanStack Router URL-encodes commas in route params
     expect(link).toHaveAttribute(
       "href",
-      expect.stringContaining("short,folder1"),
+      expect.stringContaining("short%2Cfolder1"),
     );
   });
 });
