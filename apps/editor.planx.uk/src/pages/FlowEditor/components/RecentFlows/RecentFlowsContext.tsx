@@ -115,7 +115,8 @@ export const RecentFlowsProvider: React.FC<{ children: React.ReactNode }> = ({
     pendingSliceRef.current = toFlowId;
   }, []);
 
-  const recentFlows = journeyMap[currentKey] ?? [];
+  const recentFlows =
+    journeyMap[currentKey] ?? journeyMap[prevKeyRef.current] ?? [];
 
   return (
     <RecentFlowsContext.Provider
