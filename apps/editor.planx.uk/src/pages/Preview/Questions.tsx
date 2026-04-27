@@ -53,6 +53,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     previousCard,
     record,
     breadcrumbs,
+    cachedBreadcrumbs,
     passport,
     sessionId,
     id,
@@ -68,6 +69,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     state.previousCard,
     state.record,
     state.breadcrumbs,
+    state.cachedBreadcrumbs,
     state.computePassport(),
     state.sessionId,
     state.id,
@@ -138,6 +140,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
 
     const session: Session = {
       breadcrumbs,
+      cachedBreadcrumbs,
       id,
       passport,
       sessionId,
