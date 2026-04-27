@@ -31,6 +31,9 @@ on:
     secrets:
       inherit: true
 
+permissions:
+  contents: read
+
 jobs:
   build_planx_frontend:
     name: Build PlanX frontend
