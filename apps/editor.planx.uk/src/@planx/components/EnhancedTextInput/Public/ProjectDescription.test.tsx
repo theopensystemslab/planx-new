@@ -163,7 +163,7 @@ describe("Passport generation", () => {
 
     // Wait for next screen
     expect(
-      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+      await screen.findByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
     // Select "Write a new description" and type a custom value
@@ -579,7 +579,7 @@ describe("basic layout and behaviour", () => {
 
     // Wait for next screen
     expect(
-      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+      await screen.findByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
     // No text input visible before selecting the option
@@ -673,6 +673,11 @@ describe("basic layout and behaviour", () => {
 
     await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
     await user.click(screen.getByTestId("continue-button"));
+
+    // Wait for API response before interacting with selection step
+    expect(
+      await screen.findByText(taskDefaults.projectDescription.revisionTitle),
+    ).toBeVisible();
 
     // Advance to modification step
     await user.click(

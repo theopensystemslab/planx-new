@@ -65,7 +65,11 @@ const DescriptionRadio: React.FC<DescriptionRadioProps> = ({
       showBorder={recommended}
     >
       {recommended && <RecommendedTag>Recommended</RecommendedTag>}
-      <Radio value={id} onChange={onChange} />
+      <Radio
+        value={id}
+        onChange={onChange}
+        inputProps={{ "aria-label": title }}
+      />
       <Box sx={{ position: "relative" }}>
         <Typography color="text.primary" variant="body1" sx={{ pt: 0.95 }}>
           {title}
