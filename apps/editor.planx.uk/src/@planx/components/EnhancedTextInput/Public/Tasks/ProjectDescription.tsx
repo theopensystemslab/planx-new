@@ -234,7 +234,7 @@ const ProjectDescription: React.FC<Props> = (props) => {
   return (
     <>
       <Box sx={{ my: 2 }}>
-        <Typography variant="h2" component="h1" sx={{ mb: 1 }}>
+        <Typography variant="h2" component="h1">
           {props.revisionTitle}
         </Typography>
         <Typography variant="subtitle1" component="div">

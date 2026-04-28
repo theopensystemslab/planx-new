@@ -26,11 +26,11 @@ const ModifyUserInput: React.FC<PublicProps<EnhancedTextInput>> = (props) => {
   const showError = Boolean(errors.userInput);
 
   return (
-    <Box mb={2}>
-      <Typography variant="h2" component="h1" mb={1}>
+    <Box sx={{ mb: 2 }}>
+      <Typography variant="h2" component="h1" sx={{ mb: 1 }}>
         Confirm your project description
       </Typography>
-      <Typography variant="subtitle1" component="p" mb={2}>
+      <Typography variant="subtitle1" component="p" sx={{ mb: 2 }}>
         Edit the description below, or continue to submit it as shown.
       </Typography>
       <InputRow>
