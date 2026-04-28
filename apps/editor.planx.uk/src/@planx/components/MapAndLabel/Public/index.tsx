@@ -250,6 +250,7 @@ const Root = () => {
     updateMapKey,
     validateAndSubmitForm,
     addInitialFeaturesToMap,
+    handleGeoJSONChange,
   } = useMapAndLabelContext();
   const {
     title,
@@ -334,6 +335,7 @@ const Root = () => {
               clipGeojsonData={boundaryBBox && JSON.stringify(boundaryBBox)}
               mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
               collapseAttributions
+              ongeojsonChange={handleGeoJSONChange}
             />
           </MapContainer>
         </ErrorWrapper>

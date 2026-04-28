@@ -4,8 +4,9 @@ import { MapContainer } from "@planx/components/shared/Preview/MapContainer";
 import type { MapField } from "@planx/components/shared/Schema/model";
 import { GraphError } from "components/Error/GraphError";
 import { Feature } from "geojson";
+import type { GeoJSONChangeEvent } from "lib/gis";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
@@ -37,26 +38,16 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
     editableFeatures?.length > 0 ? editableFeatures : undefined,
   );
 
-  useEffect(() => {
-    const geojsonChangeHandler = async ({ detail: geojson }: any) => {
-      if (geojson["EPSG:3857"]?.features) {
-        setFeatures(geojson["EPSG:3857"].features);
-        formik.setFieldValue(name, geojson["EPSG:3857"].features);
-      } else {
-        // if the user clicks 'reset' on the map, geojson will be empty object, so set features to undefined
-        setFeatures(undefined);
-        formik.setFieldValue(name, undefined);
-      }
-    };
-
-    const map: HTMLElement | null = document.getElementById(id);
-
-    map?.addEventListener("geojsonChange", geojsonChangeHandler);
-
-    return function cleanup() {
-      map?.removeEventListener("geojsonChange", geojsonChangeHandler);
-    };
-  }, [setFeatures]);
+  const geojsonChangeHandler = async ({ detail: geojson }: GeoJSONChangeEvent) => {
+    if (geojson["EPSG:3857"]?.features) {
+      setFeatures(geojson["EPSG:3857"].features);
+      formik.setFieldValue(name, geojson["EPSG:3857"].features);
+    } else {
+      // if the user clicks 'reset' on the map, geojson will be empty object, so set features to undefined
+      setFeatures(undefined);
+      formik.setFieldValue(name, undefined);
+    }
+  };
 
   return (
     <Box sx={{ "& > label": { maxWidth: "100% !important" } }}>
@@ -105,6 +96,7 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
               }
               mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
               collapseAttributions
+              ongeojsonChange={geojsonChangeHandler}
             />
           </MapContainer>
         </ErrorWrapper>

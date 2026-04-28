@@ -11,6 +11,7 @@ import {
   MapContainer,
   MapFooter,
 } from "@planx/components/shared/Preview/MapContainer";
+import type { GeoJSONChangeEvent } from "lib/gis";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
@@ -48,6 +49,8 @@ export const DescriptionInput = styled(Box)(({ theme }) => ({
 }));
 
 export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
+  const { setAddress, setMapValidationError } = props;
+
   const [coordinates, setCoordinates] = useState<Coordinates | undefined>(
     props.initialProposedAddress
       ? {
@@ -67,27 +70,25 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
     state.teamSettings.boundaryBBox,
   ]);
 
-  useEffect(() => {
-    const geojsonChangeHandler = ({ detail: geojson }: any) => {
-      if (geojson["EPSG:3857"]?.features && geojson["EPSG:27700"]?.features) {
-        // only a single point can be plotted, so get first feature in geojson "FeatureCollection" per projection
-        const [longitude, latitude] =
-          geojson["EPSG:3857"].features[0]?.geometry?.coordinates;
-        const [x, y] = geojson["EPSG:27700"].features[0]?.geometry?.coordinates;
-        setCoordinates({ longitude, latitude, x, y });
-      } else {
-        // triggered if a user "clears" their point on the map
-        setCoordinates(undefined);
-      }
-    };
+  const geojsonChangeHandler = ({ detail: geojson }: GeoJSONChangeEvent) => {
+    if (geojson["EPSG:3857"]?.features && geojson["EPSG:27700"]?.features) {
+      // Only a single point can be plotted, so get first feature in geojson "FeatureCollection" per projection
+      const geomWebMercator = geojson["EPSG:3857"].features[0]?.geometry;
+      const geomBNG = geojson["EPSG:27700"].features[0]?.geometry;
 
-    const map: any = document.getElementById("plot-new-address-map");
-    map?.addEventListener("geojsonChange", geojsonChangeHandler);
+      // Type-narrowing to exclude GeometryCollection
+      const coordsWebMercator =
+        geomWebMercator?.type === "Point" ? geomWebMercator.coordinates : [];
+      const coordsBNG = geomBNG?.type === "Point" ? geomBNG.coordinates : [];
 
-    return function cleanup() {
-      map?.removeEventListener("geojsonChange", geojsonChangeHandler);
-    };
-  }, [setCoordinates]);
+      const [longitude, latitude] = coordsWebMercator;
+      const [x, y] = coordsBNG;
+      setCoordinates({ longitude, latitude, x, y });
+    } else {
+      // triggered if a user "clears" their point on the map
+      setCoordinates(undefined);
+    }
+  };
 
   const mapValidationErrorRef = useRef(props.mapValidationError);
   useEffect(() => {
@@ -96,22 +97,22 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
 
   useEffect(() => {
     if (mapValidationErrorRef.current) {
-      props.setMapValidationError(undefined);
+      setMapValidationError(undefined);
     }
-  }, [coordinates]);
+  }, [coordinates, setMapValidationError]);
 
   useEffect(() => {
     // when we have all required address parts, call setAddress to enable the "Continue" button
     if (siteDescription && coordinates) {
-      props.setAddress({
+      setAddress({
         ...coordinates,
         title: siteDescription,
         source: "proposed",
       });
     } else {
-      props.setAddress(undefined);
+      setAddress(undefined);
     }
-  }, [coordinates, siteDescription]);
+  }, [coordinates, siteDescription, setAddress]);
 
   const handleSiteDescriptionCheck = () => {
     if (!siteDescription) props.setShowSiteDescriptionError(true);
@@ -168,6 +169,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
               clipGeojsonData={JSON.stringify(boundaryBBox)}
               osCopyright={`© Crown copyright and database rights ${new Date().getFullYear()} OS AC0000812160`}
               collapseAttributions={window.innerWidth < 500 ? true : undefined}
+              ongeojsonChange={geojsonChangeHandler}
             />
           </MapContainer>
         </ErrorWrapper>
