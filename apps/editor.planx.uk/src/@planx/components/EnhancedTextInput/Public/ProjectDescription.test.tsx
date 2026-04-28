@@ -55,7 +55,7 @@ describe("Passport generation", () => {
 
     // Wait for next screen
     expect(
-      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+      await screen.findByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
     // Select suggested description and submit
@@ -100,7 +100,7 @@ describe("Passport generation", () => {
 
     // Wait for next screen
     expect(
-      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+      await screen.findByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
     // Select original description and submit
@@ -145,7 +145,7 @@ describe("Passport generation", () => {
 
     // Wait for next screen
     expect(
-      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+      await screen.findByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
     // Select "Write a new description" to reveal the text input
@@ -289,7 +289,7 @@ describe("navigating back to the EnhancedTextInput component", () => {
 
     // Wait for next screen
     expect(
-      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+      await screen.findByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
     // Select suggested description and submit
@@ -394,7 +394,7 @@ describe("basic layout and behaviour", () => {
 
     // Wait for next screen
     expect(
-      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+      await screen.findByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
     // API results displayed to user as radio options
@@ -426,7 +426,7 @@ describe("basic layout and behaviour", () => {
 
     // Wait for next screen
     expect(
-      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+      await screen.findByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
     const results = await axe(container);
@@ -448,7 +448,7 @@ describe("basic layout and behaviour", () => {
 
     // Wait for next screen
     expect(
-      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+      await screen.findByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
     // No option selected by default, custom textarea not visible
@@ -527,7 +527,7 @@ describe("basic layout and behaviour", () => {
 
     // Wait for next screen
     expect(
-      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+      await screen.findByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
     // More information sidebar is not present
@@ -571,7 +571,7 @@ describe("basic layout and behaviour", () => {
     await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
     await user.click(screen.getByTestId("continue-button"));
     expect(
-      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+      await screen.findByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
     // "Back" button present...
@@ -597,7 +597,7 @@ describe("basic layout and behaviour", () => {
     await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
     await user.click(screen.getByTestId("continue-button"));
     expect(
-      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+      await screen.findByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
     // Navigate 'back'
@@ -636,7 +636,7 @@ describe("basic layout and behaviour", () => {
     await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
     await user.click(screen.getByTestId("continue-button"));
     expect(
-      screen.getByText(taskDefaults.projectDescription.revisionTitle),
+      await screen.findByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
     expect(requestSpy).toHaveBeenCalledTimes(1);
 

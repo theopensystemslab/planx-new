@@ -175,16 +175,16 @@ export function Dropzone<T extends FileUploadSlot>({
 
   return (
     <Root
+      {...getRootProps()}
       isDragActive={isDragActive}
       isWithinListCard={isWithinListCard}
-      {...getRootProps()}
     >
       <input
         data-testid="upload-input"
         {...getInputProps()}
         aria-labelledby="dropzone-label"
       />
-      <Box pl={2} pr={3} color="text.secondary">
+      <Box sx={{ pl: 2, pr: 3, color: "text.secondary" }}>
         <CloudUpload />
       </Box>
       <Box sx={{ textAlign: "left" }} id="dropzone-label">
@@ -204,7 +204,11 @@ export function Dropzone<T extends FileUploadSlot>({
         <Typography color="text.secondary" variant="body2">
           pdf, jpg, png
         </Typography>
-        <Typography color="text.secondary" variant="body2" fontSize={14} pt={1}>
+        <Typography
+          color="text.secondary"
+          variant="body2"
+          sx={{ fontSize: 14, pt: 1 }}
+        >
           Max size per file 30MB
         </Typography>
       </Box>

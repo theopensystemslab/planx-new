@@ -111,7 +111,7 @@ function GovPayMetadataEditor(
 
 const Headers: React.FC<{ title: string }> = ({ title }) => (
   <>
-    <Typography variant="h4" mb={2}>
+    <Typography variant="h4" sx={{ mb: 2 }}>
       {title}
     </Typography>
     <Box

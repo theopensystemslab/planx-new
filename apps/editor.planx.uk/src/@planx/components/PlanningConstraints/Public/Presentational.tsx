@@ -55,7 +55,7 @@ export function Presentational(props: PresentationalProps) {
       <CardHeader title={title} description={description} />
       {positiveConstraints.length > 0 && (
         <>
-          <Typography variant="h3" component="h2" mt={3}>
+          <Typography variant="h3" component="h2" sx={{ mt: 3 }}>
             These are the planning constraints we think apply to this property
           </Typography>
           <ConstraintsList
@@ -88,7 +88,7 @@ export function Presentational(props: PresentationalProps) {
       )}
       {positiveConstraints.length === 0 && negativeConstraints.length > 0 && (
         <>
-          <Typography variant="h3" component="h2" gutterBottom mt={3}>
+          <Typography variant="h3" component="h2" gutterBottom sx={{ mt: 3 }}>
             It looks like there are no constraints on this property
           </Typography>
           <Typography variant="body1" gutterBottom>

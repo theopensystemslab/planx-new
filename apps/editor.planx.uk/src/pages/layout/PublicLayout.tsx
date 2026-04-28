@@ -78,7 +78,7 @@ const PublicFooter: React.FC = () => {
     <Box>
       <Feedback />
       <Footer items={[...footerItems]}>
-        <Box display="flex" alignItems="center">
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           <OglLogo src={Logo} alt="Open Government License Logo" />
           <Typography variant="body2">
             All content is available under the{" "}

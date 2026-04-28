@@ -69,8 +69,7 @@ export const OperationTimelineItem = ({
       <Typography
         variant="body3"
         component="ul"
-        padding={1.5}
-        paddingLeft={3}
+        sx={{ padding: 1.5, paddingLeft: 3 }}
         color={inUndoScope(i) ? "GrayText" : "inherit"}
       >
         {uniqueFormattedOps.slice(0, OPS_TO_DISPLAY).map((formattedOp, i) => (
@@ -89,10 +88,12 @@ export const OperationTimelineItem = ({
           <Typography
             variant="body3"
             component="ul"
-            padding={2}
-            paddingLeft={3.5}
-            color={inUndoScope(i) ? "GrayText" : "inherit"}
-            style={{ paddingRight: "50px" }}
+            sx={{
+              padding: 2,
+              paddingLeft: 3.5,
+              color: inUndoScope(i) ? "GrayText" : "inherit",
+              paddingRight: "50px",
+            }}
           >
             {uniqueFormattedOps.slice(OPS_TO_DISPLAY)?.map((formattedOp, i) => (
               <EditHistoryListItem key={i}>{formattedOp}</EditHistoryListItem>
@@ -114,34 +115,30 @@ export const CommentTimelineItem = ({
   event,
   i,
   inUndoScope,
-}: CommentTimelineItemProps) => (
-  <TimeLineItem
-    bgcolor={(theme) => {
-      if (inUndoScope(i)) {
-        return theme.palette.grey[100];
-      } else if (isAutoComment(event.comment)) {
-        return theme.palette.template.main;
-      } else {
-        return theme.palette.secondary.dark;
-      }
-    }}
-    color={inUndoScope(i) ? "GrayText" : "inherit"}
-    p={1}
-  >
-    <BlockQuote>{` ${event.comment}`}</BlockQuote>
-  </TimeLineItem>
-);
+}: CommentTimelineItemProps) => {
+  let bgcolor = "secondary.dark";
+
+  if (inUndoScope(i)) {
+    bgcolor = "grey.100";
+  } else if (isAutoComment(event.comment)) {
+    bgcolor = "template.main";
+  }
+
+  return (
+    <TimeLineItem
+      sx={{ color: inUndoScope(i) ? "GrayText" : "inherit", p: 1, bgcolor }}
+    >
+      <BlockQuote>{` ${event.comment}`}</BlockQuote>
+    </TimeLineItem>
+  );
+};
 
 interface PublishTimelineItemProps {
   event: PublishHistoryItem;
 }
 
 export const PublishTimelineItem = ({ event }: PublishTimelineItemProps) => (
-  <TimeLineItem
-    bgcolor={(theme) => theme.palette.background.dark}
-    color="white"
-    p={1}
-  >
+  <TimeLineItem sx={{ color: "white", bgcolor: "background.dark", p: 1 }}>
     <BlockQuote>{event.comment || ""}</BlockQuote>
   </TimeLineItem>
 );

@@ -48,7 +48,7 @@ const ApplicationViewer: React.FC = () => {
         sectionComponent="h2"
       />
       {showFeeBreakdown && (
-        <Box mb={4}>
+        <Box sx={{ mb: 4 }}>
           <Typography variant="h2">Fee breakdown</Typography>
           <FeeBreakdown />
         </Box>

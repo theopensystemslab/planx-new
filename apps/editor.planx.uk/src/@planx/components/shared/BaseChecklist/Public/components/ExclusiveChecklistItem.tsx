@@ -27,8 +27,8 @@ export const ExclusiveChecklistItem = ({
 
   return (
     <>
-      <Grid item xs={12}>
-        <Box width={40}>
+      <Grid size={12}>
+        <Box sx={{ width: 40 }}>
           <Typography align="center">or</Typography>
         </Box>
       </Grid>
@@ -36,7 +36,7 @@ export const ExclusiveChecklistItem = ({
         Selecting this option will deselect all other options.
       </p>
       {hasImages ? (
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <ImageButton
             title={exclusiveOrOption.data.text}
             id={exclusiveOrOption.id}
@@ -48,7 +48,7 @@ export const ExclusiveChecklistItem = ({
         </Grid>
       ) : (
         <FormWrapper key={exclusiveOrOption.id}>
-          <Grid item xs={12} sx={{ width: "100%" }}>
+          <Grid size={12} sx={{ width: "100%" }}>
             <ChecklistItem
               onChange={changeCheckbox(exclusiveOrOption.id)}
               label={exclusiveOrOption.data.text}

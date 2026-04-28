@@ -335,7 +335,7 @@ function SummaryList(props: SummaryListProps) {
                   <Link
                     onClick={() => handleChange(nodeId)}
                     component="button"
-                    fontSize="body2.fontSize"
+                    sx={{ fontSize: "body2.fontSize" }}
                   >
                     Change
                     <span style={visuallyHidden}>
@@ -733,7 +733,7 @@ function Page(props: ComponentProps) {
       >
         {fieldsWithAnswers.map((field) => (
           <Box key={field.data.fn}>
-            <Typography fontWeight={FONT_WEIGHT_SEMI_BOLD}>
+            <Typography sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
               {formatTitle(field)}
             </Typography>
             <Typography>

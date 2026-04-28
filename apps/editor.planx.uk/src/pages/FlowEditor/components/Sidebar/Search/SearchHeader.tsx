@@ -33,13 +33,12 @@ export const SearchHeader: Components<Data, Context>["Header"] = ({
       : formik.setFieldValue("facets", DATA_FACETS);
 
   return (
-    <Box mx={3} pt={3} component="form" onSubmit={formik.handleSubmit}>
+    <Box sx={{ mx: 3, pt: 3 }} component="form" onSubmit={formik.handleSubmit}>
       <Typography
         component={"label"}
         htmlFor="pattern"
         variant="h4"
-        mb={1}
-        display={"block"}
+        sx={{ mb: 1, display: "block" }}
       >
         Search this flow
       </Typography>
@@ -74,7 +73,7 @@ export const SearchHeader: Components<Data, Context>["Header"] = ({
         variant="compact"
       />
       {formik.values.pattern && (
-        <Typography variant="h3" mt={2} mb={1}>
+        <Typography variant="h3" sx={{ mt: 2, mb: 1 }}>
           {context?.results.length === 0 && "No matches found"}
           {context?.results.length === 1 && "1 result:"}
           {context!.results.length > 1 && `${context?.results.length} results:`}

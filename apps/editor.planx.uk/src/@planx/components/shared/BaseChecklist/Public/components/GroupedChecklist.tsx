@@ -132,8 +132,8 @@ const GroupedChecklistComponent: React.FC<PublicProps<GroupedChecklist>> = (
         {exclusiveOrOptionGroup && (
           <ErrorWrapper error={getIn(formik.errors, "checked")} id={id}>
             <Grid container spacing={hasImages ? 2 : 0} component="fieldset">
-              <Grid item xs={12}>
-                <Box width={40} pt={1}>
+              <Grid size={12}>
+                <Box sx={{ width: 40, pt: 1 }}>
                   <Typography align="center">or</Typography>
                 </Box>
               </Grid>
@@ -141,7 +141,7 @@ const GroupedChecklistComponent: React.FC<PublicProps<GroupedChecklist>> = (
                 Selecting this option will deselect all other options.
               </p>
               {hasImages ? (
-                <Grid item xs={12} sm={6} md={4}>
+                <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                   <ImageButton
                     title={exclusiveOrOptionGroup.children[0].data.text}
                     id={exclusiveOrOptionGroup.children[0].id}
@@ -157,7 +157,7 @@ const GroupedChecklistComponent: React.FC<PublicProps<GroupedChecklist>> = (
                 </Grid>
               ) : (
                 <FormWrapper>
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     <ChecklistItem
                       onChange={toggleCheckbox(
                         exclusiveOrOptionGroup.children[0].id,

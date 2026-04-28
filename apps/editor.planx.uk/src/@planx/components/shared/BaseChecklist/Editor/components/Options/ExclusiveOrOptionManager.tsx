@@ -43,8 +43,8 @@ export const ExclusiveOrOptionManager = <T extends AnyChecklist>({
   return (
     <Box>
       <ErrorWrapper error={getIn(formik.errors, "allRequired")}>
-        <Box mt={1}>
-          <Typography variant="h4" mt={4} mb={2}>
+        <Box sx={{ mt: 1 }}>
+          <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>
             Exclusive "or" option
           </Typography>
           <ListManager

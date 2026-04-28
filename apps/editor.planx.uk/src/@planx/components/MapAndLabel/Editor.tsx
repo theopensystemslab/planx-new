@@ -116,7 +116,7 @@ function MapAndLabelComponent(props: Props) {
         </ModalSectionContent>
         <ModalSectionContent title="Map options">
           <InputGroup>
-            <Box mb={2}>
+            <Box sx={{ mb: 2 }}>
               <FormControl component="fieldset">
                 <InputLabel label="Basemap">
                   <RadioGroup
@@ -150,7 +150,7 @@ function MapAndLabelComponent(props: Props) {
                 </InputLabel>
               </FormControl>
             </Box>
-            <Box mb={2}>
+            <Box sx={{ mb: 2 }}>
               <FormControl component="fieldset">
                 <InputLabel label="Drawing type">
                   <RadioGroup

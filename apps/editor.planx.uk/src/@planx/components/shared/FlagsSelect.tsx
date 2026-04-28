@@ -33,14 +33,14 @@ const renderOption: AutocompleteProps<
   />
 );
 
-const renderTags: AutocompleteProps<
+const renderValue: AutocompleteProps<
   Flag,
   true,
   true,
   false,
   "div"
->["renderTags"] = (value, getFlagProps) =>
-  value.map((flag, index) => (
+>["renderValue"] = (value, getFlagProps) =>
+  (value as Flag[]).map((flag, index) => (
     <Chip
       {...getFlagProps({ index })}
       key={flag.value}
@@ -82,7 +82,7 @@ export const FlagsSelect: React.FC<Props> = (props) => {
         isOptionEqualToValue={(flag, value) => flag.value === value.value}
         value={value}
         renderOption={renderOption}
-        renderTags={renderTags}
+        renderValue={renderValue}
         disabled={props.disabled}
       />
     </InputRow>

@@ -15,11 +15,11 @@ const Root = styled(LinearProgress)(({ theme }) => ({
     backgroundColor: `rgba(255, 255, 255, 0.3)`,
   },
   // Completed
-  [`& .${linearProgressClasses.bar1Buffer}`]: {
+  [`& .${linearProgressClasses.bar1}`]: {
     backgroundColor: theme.palette.common.white,
   },
   // Current
-  [`& .${linearProgressClasses.bar2Buffer}`]: {
+  [`& .${linearProgressClasses.bar2}`]: {
     backgroundColor: "transparent",
     backgroundImage: `linear-gradient(135deg, rgba(255, 255, 255, 0.9) 12.50%, transparent 12.50%, transparent 50%, rgba(255, 255, 255, 0.9) 50%, rgba(255, 255, 255, 0.9) 62.50%, transparent 62.50%, transparent 100%)`,
     backgroundSize: "4.24px 4.24px",

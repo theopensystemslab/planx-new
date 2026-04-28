@@ -1,4 +1,4 @@
-import ErrorOutline from "@mui/icons-material/ErrorOutline";
+import ErrorOutline from "@mui/icons-material/ErrorOutlined";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -198,7 +198,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
             }}
           />
         </InputLabel>
-        <Typography variant="h2" pt={2}>
+        <Typography variant="h2" sx={{ pt: 2 }}>
           {yourDetailsTitle}
         </Typography>
         {yourDetailsDescription && (
@@ -233,7 +233,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
         </InputLabel>
         <WarningContainer>
           <ErrorOutline />
-          <Typography variant="body2" ml={2} fontWeight="bold">
+          <Typography variant="body2" sx={{ ml: 2, fontWeight: "bold" }}>
             Selecting "Send invitation to pay" locks your answers and you'll no
             longer be able to make changes.
           </Typography>

@@ -70,25 +70,26 @@ export default function PhaseBanner(props: Props): FCReturn {
         <Inner>
           <PhaseWrap>
             <BetaFlag
-              bgcolor="primary.dark"
-              color="white"
-              display="flex"
-              alignItems="flex-start"
-              flexBasis={0}
-              px={1}
-              py={0.5}
-              fontSize={14}
-              textAlign="center"
-              whiteSpace="nowrap"
-              fontWeight={600}
+              sx={{
+                bgcolor: "primary.dark",
+                color: "white",
+                display: "flex",
+                alignItems: "flex-start",
+                flexBasis: 0,
+                px: 1,
+                py: 0.5,
+                fontSize: 14,
+                textAlign: "center",
+                whiteSpace: "nowrap",
+                fontWeight: 600,
+              }}
             >
               PUBLIC BETA
             </BetaFlag>
             <Typography
               variant="body2"
               color="textPrimary"
-              textAlign="left"
-              mt="0.2em"
+              sx={{ textAlign: "left", mt: "0.2em" }}
             >
               This is a new service. Your{" "}
               <Link

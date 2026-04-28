@@ -49,13 +49,15 @@ export const CharacterCounter: React.FC<Props> = ({ limit, count, error }) => {
         {`You can enter up to ${limit} characters`} {/* Use limit directly */}
       </Typography>
       <Typography
-        paddingTop={0.5}
         variant="body2"
+        sx={{
+          pt: 0.5,
+          fontWeight: showCharacterLimitError ? FONT_WEIGHT_SEMI_BOLD : 400,
+          paddingLeft: error ? 2 : 0,
+        }}
         color={showCharacterLimitError ? "error" : "InfoText"}
-        fontWeight={showCharacterLimitError ? FONT_WEIGHT_SEMI_BOLD : 400}
         id={"character-live-hint"}
         aria-hidden={"true"}
-        paddingLeft={error ? 2 : 0}
       >
         {characterLimitText}
       </Typography>

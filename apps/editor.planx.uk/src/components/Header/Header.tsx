@@ -129,8 +129,7 @@ const TeamBrand: React.FC = () => {
     <Typography
       variant="h4"
       component="span"
-      fontWeight={FONT_WEIGHT_SEMI_BOLD}
-      sx={{ whiteSpace: "nowrap" }}
+      sx={{ whiteSpace: "nowrap", fontWeight: FONT_WEIGHT_SEMI_BOLD }}
     >
       {teamName || "Plan✕"}
     </Typography>
@@ -224,9 +223,11 @@ const PublicToolbar: React.FC<{
                   <Typography
                     id="restart-application-description"
                     variant="body2"
-                    fontSize="small"
-                    fontWeight={FONT_WEIGHT_SEMI_BOLD}
-                    pl={0.5}
+                    sx={{
+                      pl: 0.5,
+                      fontSize: "small",
+                      fontWeight: FONT_WEIGHT_SEMI_BOLD,
+                    }}
                   >
                     Restart
                   </Typography>

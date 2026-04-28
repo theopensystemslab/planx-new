@@ -44,15 +44,17 @@ const AnalyticsDisabledBanner: React.FC = () => {
             }}
           >
             <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
             >
               <AnalyticsChart />
-              <Typography variant="body2" ml={1}>
+              <Typography variant="body2" sx={{ ml: 1 }}>
                 <strong>Analytics off</strong> This is a preview link for
                 testing. No usage data is being recorded.{"  "}
-                <Link href={enableAnalytics()} color="inherit" mr={1}>
+                <Link href={enableAnalytics()} color="inherit" sx={{ mr: 1 }}>
                   Go to normal link
                 </Link>
               </Typography>

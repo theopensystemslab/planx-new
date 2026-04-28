@@ -62,7 +62,7 @@ const EmailSelection: React.FC<EmailSelectionProps> = ({
   return (
     <>
       <InputRow>
-        <Typography variant="body2" mb={2}>
+        <Typography variant="body2" sx={{ mb: 2 }}>
           Add or select a submission email address for this service. To edit or
           delete submission emails, please visit your{" "}
           <Link
@@ -114,9 +114,7 @@ const EmailSection: React.FC<EmailSectionProps> = ({ teamId, teamSlug }) => {
 
   const { data, loading, error } = useTeamSubmissionEmails(teamId);
   const emailOptions = data?.submissionEmails || [];
-  const defaultEmail = emailOptions.find(
-    (email) => email.isDefault === true,
-  );
+  const defaultEmail = emailOptions.find((email) => email.isDefault === true);
 
   const handleSelectChange = (event: SelectChangeEvent<unknown>) => {
     const selectedValue = event.target.value as string;

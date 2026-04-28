@@ -114,7 +114,7 @@ const ActiveFlowMenu: React.FC<FlowMenuProps> = ({
         <StyledSimpleMenu items={menuItems}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.2 }}>
             <MoreHoriz sx={{ fontSize: "1.4em" }} />
-            <Typography variant="body2" fontSize="small">
+            <Typography variant="body2" sx={{ fontSize: "small" }}>
               <strong>Menu</strong>
             </Typography>
           </Box>

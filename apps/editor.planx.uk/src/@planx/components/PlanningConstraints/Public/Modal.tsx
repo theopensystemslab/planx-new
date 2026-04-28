@@ -161,7 +161,7 @@ export const OverrideEntitiesModal = ({
             Your feedback will also help us improve local open data.
           </Typography>
           <Divider sx={{ marginY: 2 }} />
-          <Box marginBottom={2}>
+          <Box sx={{ marginBottom: 2 }}>
             <ErrorWrapper
               error={
                 showChecklistError ? ERROR_MESSAGES["checklist"] : undefined
@@ -179,8 +179,7 @@ export const OverrideEntitiesModal = ({
                 {Boolean(entities?.length) &&
                   entities?.map((e) => (
                     <Grid
-                      item
-                      xs={12}
+                      size={12}
                       sx={{ pointerEvents: "auto" }}
                       key={`${e.entity}`}
                     >

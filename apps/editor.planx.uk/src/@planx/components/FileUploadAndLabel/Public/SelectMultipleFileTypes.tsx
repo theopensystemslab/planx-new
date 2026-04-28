@@ -106,7 +106,7 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
 
   return (
     <Root>
-      <Typography variant="h3" mb={2} id={titleId}>
+      <Typography variant="h3" sx={{ mb: 2 }} id={titleId}>
         What does this file show? Select all that apply
         <Box component="span" sx={visuallyHidden}>
           This question refers to file: {uploadedFile.file.name}
@@ -148,14 +148,13 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
         <Box sx={{ mt: 1 }}>
           <Typography
             variant="h3"
-            pb={0.5}
-            sx={{ display: "inline-block" }}
+            sx={{ display: "inline-block", pb: 0.5 }}
             id={`drawing-number-label-${uploadedFile.id}`}
             component="label"
           >
             Drawing number (optional)
           </Typography>
-          <Typography variant="body2" color="text.secondary" mb={1}>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
             Separate multiple drawing numbers in this file with a comma
           </Typography>
           <Input

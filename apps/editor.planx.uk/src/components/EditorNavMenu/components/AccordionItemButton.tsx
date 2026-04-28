@@ -32,7 +32,7 @@ const AccordionItemButton = ({
       onClick={onClick}
       sx={{ p: 0.8 }}
     >
-      <MenuTitle variant="body3" pt={0.15}>
+      <MenuTitle variant="body3" sx={{ pt: 0.15 }}>
         {title}
       </MenuTitle>
       {isNew && <StyledChip label="new" size="small" color="success" />}

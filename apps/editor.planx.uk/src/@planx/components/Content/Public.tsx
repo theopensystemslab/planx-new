@@ -23,7 +23,7 @@ export type Props = PublicProps<Content>;
 
 const Content = styled(Box, {
   shouldForwardProp: (prop) => prop !== "color",
-})<{ color?: string }>(({ theme, color }) => ({
+})<{ color?: string }>(({ theme, color = "#ffffff" }) => ({
   backgroundColor: color,
   color:
     mostReadable(color || "#fff", [
@@ -37,10 +37,6 @@ const Content = styled(Box, {
     marginTop: 0,
   },
 }));
-
-Content.defaultProps = {
-  color: "#ffffff",
-};
 
 const ContentComponent: React.FC<Props> = (props) => {
   const {
@@ -79,7 +75,7 @@ const ContentComponent: React.FC<Props> = (props) => {
       <Content
         color={color}
         data-testid="content"
-        p={color === "#ffffff" || !color ? 0 : 2}
+        sx={{ p: color === "#ffffff" || !color ? 0 : 2 }}
       >
         <ReactMarkdownOrHtml
           source={content}

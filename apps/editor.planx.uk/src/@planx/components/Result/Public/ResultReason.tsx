@@ -184,10 +184,12 @@ const ResultReason: React.FC<IResultReason> = ({
             ref={summaryRef}
           >
             <SummaryWrap
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              width="100%"
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "100%",
+              }}
             >
               <Typography
                 variant="body1"

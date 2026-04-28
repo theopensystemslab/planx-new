@@ -42,12 +42,14 @@ const FlagEditor: React.FC<{
   const { errors } = useFormikContext<Result>();
 
   return (
-    <Box px={1.5} py={2} bgcolor={flag.bgColor} color={flag.color} mt={1}>
+    <Box
+      sx={{ px: 1.5, py: 2, bgcolor: flag.bgColor, color: flag.color, mt: 1 }}
+    >
       <Box>
         <Typography variant="h4">{flag.text}</Typography>
       </Box>
 
-      <Box display="flex" flexDirection="column" gap={2} mt={2}>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
         <InputLabel label="Heading">
           <Input
             multiline
@@ -75,7 +77,7 @@ const FlagEditor: React.FC<{
           />
         </InputLabel>
       </Box>
-      <Box mt={2}>{props.children}</Box>
+      <Box sx={{ mt: 2 }}>{props.children}</Box>
     </Box>
   );
 };
@@ -135,7 +137,7 @@ const ResultComponent: React.FC<Props> = (props) => {
                 </select>
               </InputRow>
 
-              <Box mt={2}>
+              <Box sx={{ mt: 2 }}>
                 <Typography variant="h5" component="h6">
                   Flag text overrides (optional)
                 </Typography>
@@ -144,7 +146,7 @@ const ResultComponent: React.FC<Props> = (props) => {
                   the user upon arriving at this result. If you provide no
                   overrides, the flag title will be used.
                 </Typography>
-                <Box mt={2}>
+                <Box sx={{ mt: 2 }}>
                   {allFlagsForSet(formik.values.flagSet).map((flag) => {
                     const override =
                       formik.values.overrides?.[flag.value] || {};

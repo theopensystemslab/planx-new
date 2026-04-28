@@ -43,7 +43,7 @@ export const AddCommentDialog = ({
 
   return (
     <Box>
-      <Box ml={-0.5}>
+      <Box sx={{ ml: -0.5 }}>
         <AddButton onClick={() => setDialogOpen(true)} size="small">
           Add a comment
         </AddButton>
@@ -60,7 +60,7 @@ export const AddCommentDialog = ({
         </DialogTitle>
         <DialogContent dividers>
           {`History reflects the individual edits to your flow. Insert a custom comment into the timeline to add context. This will help other editors understand what's changed on next publish.`}
-          <Box mt={2} component="form" onSubmit={formik.handleSubmit}>
+          <Box sx={{ mt: 2 }} component="form" onSubmit={formik.handleSubmit}>
             <InputLabel label="Comment">
               <ErrorWrapper
                 error={showError ? "Enter a comment" : undefined}

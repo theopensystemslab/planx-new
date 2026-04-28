@@ -26,7 +26,7 @@ export const ChecklistItems = ({
     {nonExclusiveOptions.map((option: Option) =>
       layout === ChecklistLayout.Basic ? (
         <FormWrapper key={option.id}>
-          <Grid item xs={12} key={option.data.text}>
+          <Grid size={12} key={option.data.text}>
             <ChecklistItem
               onChange={changeCheckbox(option.id)}
               label={option.data.text}
@@ -40,7 +40,11 @@ export const ChecklistItems = ({
           </Grid>
         </FormWrapper>
       ) : (
-        <Grid item xs={12} sm={6} contentWrap={4} key={option.data.text}>
+        <Grid
+          size={{ xs: 12, sm: 6 }}
+          sx={{ contentWrap: 4 }}
+          key={option.data.text}
+        >
           <ImageButton
             title={option.data.text}
             id={option.id}

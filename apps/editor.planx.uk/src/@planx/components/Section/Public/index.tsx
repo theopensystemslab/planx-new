@@ -89,7 +89,7 @@ export const Root = ({
   <Card isValid handleSubmit={handleSubmit}>
     <CardHeader title={flowName} />
     <Box>
-      <Typography variant="h3" component="h2" pb="0.25em">
+      <Typography variant="h3" component="h2" sx={{ pb: "0.25em" }}>
         Form incomplete.
       </Typography>
       <Typography variant="subtitle2" component="h3">

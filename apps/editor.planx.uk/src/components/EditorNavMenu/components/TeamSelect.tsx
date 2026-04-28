@@ -163,18 +163,20 @@ export const TeamSelect: React.FC<Props> = ({
         open={open}
         onClose={handleClose}
         maxWidth="xs"
-        PaperProps={{
-          sx: {
-            position: "absolute",
-            top: "58px",
-            left: "5px",
-            bottom: "65px",
-            m: 0,
-            width: "260px",
-            maxWidth: "260px",
-            minWidth: "unset",
-            borderTop: "none",
-            borderRadius: (theme) => theme.shape.borderRadius,
+        slotProps={{
+          paper: {
+            sx: {
+              position: "absolute",
+              top: "58px",
+              left: "5px",
+              bottom: "65px",
+              m: 0,
+              width: "260px",
+              maxWidth: "260px",
+              minWidth: "unset",
+              borderTop: "none",
+              borderRadius: (theme) => theme.shape.borderRadius,
+            },
           },
         }}
       >
@@ -188,7 +190,7 @@ export const TeamSelect: React.FC<Props> = ({
             <CloseIcon />
           </IconButton>
         </StyledDialogTitle>
-        <Box p={1} pb={1.5} pt={0}>
+        <Box sx={{ p: 1, pb: 1.5, pt: 0 }}>
           <SearchBox
             records={teams}
             setRecords={setSearchedTeams}
@@ -197,13 +199,13 @@ export const TeamSelect: React.FC<Props> = ({
             hideLabel={true}
             compact={true}
           />
-          <Stack gap={2} pt={2}>
+          <Stack sx={{ gap: 2, pt: 2 }}>
             {displayEditableTeams.length > 0 && (
-              <Stack gap={1}>
+              <Stack sx={{ gap: 1 }}>
                 <Typography variant="body3" component="span">
                   My teams
                 </Typography>
-                <Stack gap={0.75}>
+                <Stack sx={{ gap: 0.75 }}>
                   {displayEditableTeams.map((team) => (
                     <StyledCard
                       key={team.slug}
@@ -235,11 +237,11 @@ export const TeamSelect: React.FC<Props> = ({
               </Stack>
             )}
             {displayViewOnlyTeams.length > 0 && (
-              <Stack gap={1}>
+              <Stack sx={{ gap: 1 }}>
                 <Typography variant="body3" component="span">
                   Other teams (view only)
                 </Typography>
-                <Stack gap={0.75}>
+                <Stack sx={{ gap: 0.75 }}>
                   {displayViewOnlyTeams.map((team) => (
                     <StyledCard
                       key={team.slug}

@@ -65,7 +65,7 @@ export const ValidationChecks = (props: {
   };
 
   return (
-    <Box pb={2}>
+    <Box sx={{ pb: 2 }}>
       <ValidationSummary validationChecks={validationChecks} />
       <PublishModalAccordion
         expanded={expanded}
@@ -107,7 +107,7 @@ export const ValidationChecks = (props: {
                   secondary={
                     <Typography
                       variant="body2"
-                      fontSize="small"
+                      sx={{ fontSize: "small" }}
                       color={
                         check.status === "Not applicable"
                           ? "text.disabled"

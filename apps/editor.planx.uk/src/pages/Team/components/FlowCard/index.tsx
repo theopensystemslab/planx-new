@@ -81,11 +81,13 @@ const FlowCard: React.FC<Props> = ({ flow, view }) => {
         <CardContent>
           <Stack
             direction="row"
-            justifyContent="space-between"
-            alignItems="flex-start"
-            width="100%"
+            sx={{
+              width: "100%",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+            }}
           >
-            <Stack direction="column" alignItems="flex-start">
+            <Stack direction="column" sx={{ alignItems: "flex-start" }}>
               <Typography variant="h3" component="h2">
                 {flow.name}
               </Typography>

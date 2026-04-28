@@ -157,9 +157,7 @@ export const EditHistoryTimeline = ({
                 </Typography>
                 <Typography
                   variant="body2"
-                  fontSize="small"
-                  pt={0.25}
-                  pb={0.75}
+                  sx={{ fontSize: "small", pt: 0.25, pb: 0.75 }}
                   color={
                     inUndoScope(i) && isUndoType(op.type)
                       ? "GrayText"

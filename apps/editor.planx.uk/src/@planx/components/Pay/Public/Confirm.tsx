@@ -202,9 +202,9 @@ export default function Confirm(props: Props) {
   };
 
   return (
-    <Box textAlign="left" width="100%">
+    <Box sx={{ textAlign: "left", width: "100%" }}>
       <Container maxWidth="contentWrap">
-        <Typography variant="h2" component="h1" align="left" pb={3}>
+        <Typography variant="h2" component="h1" align="left" sx={{ pb: 3 }}>
           {componentState === "inviteToPay"
             ? props.secondaryPageTitle
             : props.title}

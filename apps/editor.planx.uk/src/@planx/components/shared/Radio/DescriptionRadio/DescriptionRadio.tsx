@@ -25,10 +25,10 @@ const DescriptionRadio: React.FC<Props> = ({
     <StyledFormLabel focused={false}>
       <Radio value={id} onChange={onChange} />
       <Box>
-        <Typography color="text.primary" variant="body1" pt={0.95}>
+        <Typography color="text.primary" variant="body1" sx={{ pt: 0.95 }}>
           {title}
         </Typography>
-        <Typography variant="body2" pt={0.5}>
+        <Typography variant="body2" sx={{ pt: 0.5 }}>
           {description}
         </Typography>
       </Box>

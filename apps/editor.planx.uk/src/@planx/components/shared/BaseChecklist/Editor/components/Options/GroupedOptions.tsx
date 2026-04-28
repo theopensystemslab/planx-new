@@ -59,11 +59,13 @@ export const GroupedOptions = <T extends AnyChecklist>({
       {nonExclusiveOptionGroups.map((groupedOption, groupIndex: number) => (
         <Box
           key={groupIndex}
-          mt={groupIndex === 0 ? 0 : 4}
           id={`group-${groupIndex}`}
-          sx={(theme) => ({ scrollMarginTop: theme.spacing(1) })}
+          sx={(theme) => ({
+            scrollMarginTop: theme.spacing(1),
+            mt: groupIndex === 0 ? 0 : 4,
+          })}
         >
-          <Box display="flex" pb={1}>
+          <Box sx={{ display: "flex", pb: 1 }}>
             <Box sx={{ minWidth: "100%" }}>
               <Input
                 errorMessage={getIn(
@@ -79,7 +81,7 @@ export const GroupedOptions = <T extends AnyChecklist>({
               />
             </Box>
             {showAddDeleteButtons && (
-              <Box flex={0}>
+              <Box sx={{ flex: 0 }}>
                 <Tooltip title="Delete group" placement="bottom">
                   <IconButton
                     aria-label="Delete group"
@@ -160,7 +162,7 @@ export const GroupedOptions = <T extends AnyChecklist>({
         </Box>
       ))}
       {showAddDeleteButtons && (
-        <Box mt={1} display="flex" justifyContent="center">
+        <Box sx={{ mt: 1, display: "flex", justifyContent: "center" }}>
           <StyledAddButton
             size="large"
             disabled={disabled}

@@ -28,10 +28,9 @@ export const RenderGroupHeaderBlock = ({
         })}
       >
         <Typography
-          py={1}
+          sx={{ py: 1, padding: 0 }}
           variant="subtitle2"
           component="span"
-          sx={{ padding: 0 }}
         >
           {displayName}
         </Typography>

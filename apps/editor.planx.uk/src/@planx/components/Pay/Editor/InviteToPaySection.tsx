@@ -50,7 +50,7 @@ export const InviteToPaySection: React.FC<InviteToPaySectionProps> = ({
                 />
               </InputRow>
             </Box>
-            <Box pt={4}>
+            <Box sx={{ pt: 4 }}>
               <InputRow>
                 <Input
                   required
@@ -74,7 +74,7 @@ export const InviteToPaySection: React.FC<InviteToPaySectionProps> = ({
                 />
               </InputRow>
             </Box>
-            <Box pt={4}>
+            <Box sx={{ pt: 4 }}>
               <InputRow>
                 <Input
                   required

@@ -36,7 +36,7 @@ export const GroupedChecklistOptions = ({
 
   return (
     <FormWrapper variant={hasImages ? "fullWidth" : "default"}>
-      <Grid item xs={12} sx={{ width: "100%" }}>
+      <Grid size={12} sx={{ width: "100%" }}>
         <ExpandableList>
           {groupedOptions.map((group: Group<Option>, index: number) => {
             const isExpanded = expandedGroups.includes(index);
@@ -53,15 +53,14 @@ export const GroupedChecklistOptions = ({
                   <Grid
                     container
                     spacing={2}
-                    pt={0.5}
-                    pb={3}
+                    sx={{ pt: 0.5, pb: 3 }}
                     aria-labelledby={`whole-group-heading group-${index}-heading`}
                     id={`group-${index}-content`}
                     data-testid={`group-${index}${isExpanded ? "-expanded" : ""}`}
                     role="group"
                   >
                     {group.children.map((option) => (
-                      <Grid item xs={12} sm={6} md={4} key={option.id}>
+                      <Grid size={{ xs: 12, sm: 6, md: 4 }} key={option.id}>
                         <ImageButton
                           title={option.data.text}
                           id={option.id}
@@ -75,8 +74,7 @@ export const GroupedChecklistOptions = ({
                   </Grid>
                 ) : (
                   <Box
-                    pt={0.5}
-                    pb={2}
+                    sx={{ pt: 0.5, pb: 2 }}
                     aria-labelledby={`whole-group-heading group-${index}-heading`}
                     id={`group-${index}-content`}
                     data-testid={`group-${index}${isExpanded ? "-expanded" : ""}`}

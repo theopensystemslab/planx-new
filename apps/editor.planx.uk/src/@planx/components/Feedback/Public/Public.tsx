@@ -1,4 +1,4 @@
-import ErrorOutline from "@mui/icons-material/ErrorOutline";
+import ErrorOutline from "@mui/icons-material/ErrorOutlined";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -97,7 +97,7 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
         id={"DESCRIPTION_TEXT"}
         openLinksOnNewTab
       />
-      <Box my={4}>
+      <Box sx={{ my: 4 }}>
         {props.ratingQuestion && (
           <Box
             sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
@@ -119,7 +119,7 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
               container
               columnSpacing={2}
               component="fieldset"
-              direction={{ xs: "column", formWrap: "row" }}
+              sx={{ flexDirection: { xs: "column", formWrap: "row" } }}
             >
               <FaceBox
                 value={1}
@@ -183,8 +183,7 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
         <Typography
           variant="body2"
           component="div"
-          ml={2}
-          sx={{ "& p:first-of-type": { marginTop: 0 } }}
+          sx={{ ml: 2, "& p:first-of-type": { marginTop: 0 } }}
         >
           Please do not include any personal data such as your name, email or
           address. All feedback is processed according to our{" "}

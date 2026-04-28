@@ -66,16 +66,15 @@ export const RemoveEmailModal = ({
         Remove an email
       </DialogTitle>
       <DialogContent>
-        <Box mt={2}>
+        <Box sx={{ mt: 2 }}>
           {deletable ? (
-            <Typography mb={2}>
+            <Typography sx={{ mb: 2 }}>
               Are you sure you want to remove the email address "
-              {modalState.email.address}" from receiving
-              submissions?
+              {modalState.email.address}" from receiving submissions?
             </Typography>
           ) : (
             <>
-              <Typography mb={2}>
+              <Typography sx={{ mb: 2 }}>
                 This email address cannot be removed as it is currently used in
                 the following flows:
               </Typography>
@@ -90,7 +89,7 @@ export const RemoveEmailModal = ({
                   </Link>
                 </ListItem>
               ))}
-              <Typography mt={2}>
+              <Typography sx={{ mt: 2 }}>
                 Please <strong>update your Send component </strong>
                 to use a different email address before removing this one.
               </Typography>

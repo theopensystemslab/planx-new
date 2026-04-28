@@ -235,7 +235,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
   );
 
   return (
-    <Box width="100%">
+    <Box sx={{ width: "100%" }}>
       <BackBar hidden={!showBackBar}>
         <Container maxWidth="contentWrap">
           <BackButton

@@ -1,6 +1,6 @@
 import ImageIcon from "@mui/icons-material/Image";
 import Box from "@mui/material/Box";
-import { styled, Theme } from "@mui/material/styles";
+import { styled, Theme, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useLayoutEffect, useRef, useState } from "react";
 import Checkbox from "ui/shared/Checkbox/Checkbox";
@@ -28,7 +28,7 @@ const TextLabelRoot = styled(Box)(({ theme }) => ({
 const TextLabel = (props: Props): FCReturn => {
   const { selected, title, id, onClick } = props;
   const [multiline, setMultiline] = useState(false);
-
+  const theme = useTheme();
   const textContentEl = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -47,10 +47,10 @@ const TextLabel = (props: Props): FCReturn => {
     <TextLabelRoot
       {...({ ref: textContentEl } as any)}
       alignItems={multiline ? "flex-start" : "center"}
-      border={(theme) => borderStyle(theme, selected)}
+      sx={{ border: borderStyle(theme, selected) }}
     >
       <Checkbox id={id} checked={selected} onChange={onClick} />
-      <Typography variant="body1" ml={1.5} mt={0.9}>
+      <Typography variant="body1" sx={{ ml: 1.5, mt: 0.9 }}>
         {title}
       </Typography>
     </TextLabelRoot>
@@ -104,6 +104,7 @@ const Image = styled("img")(({ theme }) => ({
 const ImageLabel = (props: ImageLabelProps): FCReturn => {
   const { selected, img, alt } = props;
   const [imgError, setImgError] = useState(!(img && img.length));
+  const theme = useTheme();
   const onError = () => {
     if (!imgError) {
       setImgError(true);
@@ -111,7 +112,7 @@ const ImageLabel = (props: ImageLabelProps): FCReturn => {
   };
 
   return (
-    <ImageLabelRoot border={(theme) => borderStyle(theme, selected)}>
+    <ImageLabelRoot sx={{ border: borderStyle(theme, selected) }}>
       {imgError ? (
         <ImageError>
           <ImageIcon />
@@ -139,10 +140,12 @@ function ImageResponse(props: Props): FCReturn {
       sx={{ cursor: "pointer" }}
     >
       <Box
-        display="flex"
-        flexDirection="column"
-        width="100%"
-        height="100%"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+          height: "100%",
+        }}
         data-testid="image-button"
       >
         <ImageLabel selected={selected} img={img} alt={altText} />

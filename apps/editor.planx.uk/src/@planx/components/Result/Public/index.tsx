@@ -1,4 +1,4 @@
-import ErrorOutline from "@mui/icons-material/ErrorOutline";
+import ErrorOutline from "@mui/icons-material/ErrorOutlined";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
@@ -102,7 +102,14 @@ export const Presentational: React.FC<PresentationalProps> = ({
   };
 
   return (
-    <Box width="100%" display="flex" flexDirection="column" alignItems="center">
+    <Box
+      sx={{
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
       <ResultSummary
         heading={headingTitle}
         description={description}
@@ -110,7 +117,7 @@ export const Presentational: React.FC<PresentationalProps> = ({
       />
       <Card handleSubmit={!resetButton ? () => handleSubmit?.() : undefined}>
         {visibleResponses.length > 0 && (
-          <Box mt={4} mb={3}>
+          <Box sx={{ mt: 4, mb: 3 }}>
             <Typography variant="h2" gutterBottom>
               {reasonsTitle}
             </Typography>
@@ -119,14 +126,14 @@ export const Presentational: React.FC<PresentationalProps> = ({
             </Typography>
           </Box>
         )}
-        <Box mb={3}>
+        <Box sx={{ mb: 3 }}>
           <Responses
             responses={visibleResponses}
             allowChanges={allowChanges}
             flagColor={headingColor.background}
           />
           {hiddenResponses.length > 0 && (
-            <Box py={2}>
+            <Box sx={{ py: 2 }}>
               <SimpleExpand
                 id="hidden-responses"
                 buttonText={{
@@ -149,7 +156,7 @@ export const Presentational: React.FC<PresentationalProps> = ({
                 <ErrorOutline sx={{ width: 34, height: 34 }} />
                 <Title variant="h3"> {disclaimer.heading}</Title>
               </TitleWrap>
-              <Box mt={2}>
+              <Box sx={{ mt: 2 }}>
                 <ReactMarkdownOrHtml
                   source={disclaimer.content}
                   openLinksOnNewTab
