@@ -14,8 +14,8 @@ importers:
   .:
     dependencies:
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#aee0edd
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/aee0edd5f5f2c941407cd6794b8862c96d2fd0b7(@types/react@19.2.6)
+        specifier: github:theopensystemslab/planx-core#16948de
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/16948de2801f4ba58f61e1954102686ed60f1df2(@types/react@19.2.6)
       axios:
         specifier: ^1.15.0
         version: 1.15.0
@@ -318,8 +318,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/aee0edd5f5f2c941407cd6794b8862c96d2fd0b7':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/aee0edd5f5f2c941407cd6794b8862c96d2fd0b7}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/16948de2801f4ba58f61e1954102686ed60f1df2':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/16948de2801f4ba58f61e1954102686ed60f1df2}
     version: 1.0.0
 
   '@playwright/test@1.58.2':
@@ -1406,10 +1406,6 @@ packages:
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
-  uuid@13.0.0:
-    resolution: {integrity: sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==}
-    hasBin: true
-
   uuid@14.0.0:
     resolution: {integrity: sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg==}
     hasBin: true
@@ -1792,7 +1788,7 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.20.1
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/aee0edd5f5f2c941407cd6794b8862c96d2fd0b7(@types/react@19.2.6)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/16948de2801f4ba58f61e1954102686ed60f1df2(@types/react@19.2.6)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.6)(react@19.2.4)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.6)(react@19.2.4))(@types/react@19.2.6)(react@19.2.4)
@@ -1813,7 +1809,7 @@ snapshots:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
       type-fest: 4.41.0
-      uuid: 13.0.0
+      uuid: 14.0.0
       zod: 3.25.76
     transitivePeerDependencies:
       - '@mui/material-pigment-css'
@@ -2889,8 +2885,6 @@ snapshots:
       registry-url: 3.1.0
 
   util-deprecate@1.0.2: {}
-
-  uuid@13.0.0: {}
 
   uuid@14.0.0: {}
 

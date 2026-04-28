@@ -59,8 +59,8 @@ importers:
         specifier: 1.0.0-alpha.11
         version: 1.0.0-alpha.11
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#aee0edd
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/aee0edd5f5f2c941407cd6794b8862c96d2fd0b7(@types/react@19.2.14)
+        specifier: github:theopensystemslab/planx-core#16948de
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/16948de2801f4ba58f61e1954102686ed60f1df2(@types/react@19.2.14)
       '@tanstack/react-query':
         specifier: ^5.90.21
         version: 5.95.2(react@19.2.5)
@@ -1825,8 +1825,8 @@ packages:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@nodable/entities@1.1.0':
-    resolution: {integrity: sha512-bidpxmTBP0pOsxULw6XlxzQpTgrAGLDHGBK/JuWhPDL6ZV0GZ/PmN9CA9do6e+A9lYI6qx6ikJUtJYRxup141g==}
+  '@nodable/entities@2.1.0':
+    resolution: {integrity: sha512-nyT7T3nbMyBI/lvr6L5TyWbFJAI9FTgVRakNoBqCD+PmID8DzFrrNdLLtHMwMszOtqZa8PAOV24ZqDnQrhQINA==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1852,8 +1852,8 @@ packages:
   '@opensystemslab/map@1.0.0-alpha.11':
     resolution: {integrity: sha512-ETACPCk5Coef1L2kNT3MhIzLxVPDpyopxsTNcgeRyEqL71HBfTklGyC5+t7HgEgxRkX5wlUXqmKPNL9DdpVj8g==}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/aee0edd5f5f2c941407cd6794b8862c96d2fd0b7':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/aee0edd5f5f2c941407cd6794b8862c96d2fd0b7}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/16948de2801f4ba58f61e1954102686ed60f1df2':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/16948de2801f4ba58f61e1954102686ed60f1df2}
     version: 1.0.0
 
   '@parcel/watcher-android-arm64@2.5.6':
@@ -4194,11 +4194,11 @@ packages:
   fast-uri@3.1.0:
     resolution: {integrity: sha512-iPeeDKJSWf4IEOasVVrknXpaBV0IApz/gp7S2bb7Z4Lljbl2MGJRqInZiUrQwV16cpzw/D3S5j5Julj/gT52AA==}
 
-  fast-xml-builder@1.1.4:
-    resolution: {integrity: sha512-f2jhpN4Eccy0/Uz9csxh3Nu6q4ErKxf0XIsasomfOihuSUa3/xw6w8dnOtCDgEItQFJG8KyXPzQXzcODDrrbOg==}
+  fast-xml-builder@1.1.5:
+    resolution: {integrity: sha512-4TJn/8FKLeslLAH3dnohXqE3QSoxkhvaMzepOIZytwJXZO69Bfz0HBdDHzOTOon6G59Zrk6VQ2bEiv1t61rfkA==}
 
-  fast-xml-parser@5.6.0:
-    resolution: {integrity: sha512-5G+uaEBbOm9M4dgMOV3K/rBzfUNGqGqoUTaYJM3hBwM8t71w07gxLQZoTsjkY8FtfjabqgQHEkeIySBDYeBmJw==}
+  fast-xml-parser@5.7.2:
+    resolution: {integrity: sha512-P7oW7tLbYnhOLQk/Gv7cZgzgMPP/XN03K02/Jy6Y/NHzyIAIpxuZIM/YqAkfiXFPxA2CTm7NtCijK9EDu09u2w==}
     hasBin: true
 
   fastest-stable-stringify@2.0.2:
@@ -6700,10 +6700,6 @@ packages:
   utrie@1.0.2:
     resolution: {integrity: sha512-1MLa5ouZiOmQzUbjbu9VmjLzn1QLXBhwpUa7kdLUQK+KQ5KA9I1vk5U4YHe/X2Ch7PYnJfWuWT+VbuxbGwljhw==}
 
-  uuid@13.0.0:
-    resolution: {integrity: sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==}
-    hasBin: true
-
   uuid@14.0.0:
     resolution: {integrity: sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg==}
     hasBin: true
@@ -8602,7 +8598,7 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@nodable/entities@1.1.0': {}
+  '@nodable/entities@2.1.0': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -8644,7 +8640,7 @@ snapshots:
     transitivePeerDependencies:
       - preact
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/aee0edd5f5f2c941407cd6794b8862c96d2fd0b7(@types/react@19.2.14)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/16948de2801f4ba58f61e1954102686ed60f1df2(@types/react@19.2.14)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.4)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.4)
@@ -8655,7 +8651,7 @@ snapshots:
       cheerio: 1.2.0
       copyfiles: 2.4.1
       eslint: 8.57.1
-      fast-xml-parser: 5.6.0
+      fast-xml-parser: 5.7.2
       graphql: 16.13.2
       graphql-request: 6.1.0(graphql@16.13.2)
       json-schema-to-typescript: 15.0.4
@@ -8665,7 +8661,7 @@ snapshots:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
       type-fest: 4.41.0
-      uuid: 13.0.0
+      uuid: 14.0.0
       zod: 3.25.76
     transitivePeerDependencies:
       - '@mui/material-pigment-css'
@@ -11324,14 +11320,14 @@ snapshots:
 
   fast-uri@3.1.0: {}
 
-  fast-xml-builder@1.1.4:
+  fast-xml-builder@1.1.5:
     dependencies:
       path-expression-matcher: 1.5.0
 
-  fast-xml-parser@5.6.0:
+  fast-xml-parser@5.7.2:
     dependencies:
-      '@nodable/entities': 1.1.0
-      fast-xml-builder: 1.1.4
+      '@nodable/entities': 2.1.0
+      fast-xml-builder: 1.1.5
       path-expression-matcher: 1.5.0
       strnum: 2.2.3
 
@@ -14193,8 +14189,6 @@ snapshots:
     dependencies:
       base64-arraybuffer: 1.0.2
     optional: true
-
-  uuid@13.0.0: {}
 
   uuid@14.0.0: {}
 
