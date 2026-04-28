@@ -2,7 +2,6 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { useSearch } from "@tanstack/react-router";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { isEmpty, orderBy } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
 import { InfoChip } from "ui/editor/InfoChip";
@@ -177,7 +176,7 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
                 Flows
               </Typography>
               {isTrial && <InfoChip label="Trial account" />}
-              {showAddFlowButton && <AddFlow />}
+              {showAddFlowButton && flowView === "flows" && <AddFlow />}
             </Box>
             {teamHasFlows && (
               <SearchBox<FlowSummary>
@@ -188,9 +187,7 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
               />
             )}
           </Box>
-          {hasFeatureFlag("ARCHIVE_VIEW") && (
-            <TeamLayout flowView={flowView} setFlowView={setFlowView} />
-          )}
+          <TeamLayout flowView={flowView} setFlowView={setFlowView} />
         </Box>
 
         {flowView === "flows" && (
