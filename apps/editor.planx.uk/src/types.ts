@@ -60,6 +60,8 @@ export enum ApplicationPath {
 export type Session = {
   passport: Store.Passport;
   breadcrumbs: Store.Breadcrumbs;
+  /** Only present on journeys where the user has navigated "back" */
+  cachedBreadcrumbs?: Store.CachedBreadcrumbs;
   sessionId: string;
   // TODO: replace `id` with `flow: { id, published_flow_id }`
   id: SharedStore["id"];
