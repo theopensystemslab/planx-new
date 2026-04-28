@@ -19,7 +19,7 @@ trap 'echo "Error detected! Saving logs..."; \
       dev_compose down --remove-orphans' ERR
 
 function setupContainers(){
-  # Bring down e2e containers (including volumes) to avoid conflicts
+  # Bring down e2e containers and their volumes - we're done with testing
   # project-name planx-e2e matches what start-containers-for-tests.sh uses
   DOCKER_DEFAULT_PLATFORM= docker compose \
     --project-name planx-e2e \
@@ -28,23 +28,15 @@ function setupContainers(){
     --profile mock-services \
     down --volumes --remove-orphans
 
-  # Destroy any previous dev containers and data
-  dev_compose down --volumes --remove-orphans
-
   # Remove any dangling images that might cause conflicts
   echo "Cleaning up dangling images..."
   docker image prune -f || true
 
   echo "Starting docker…"
 
-  DOCKER_BUILDKIT=1 dev_compose up -d --quiet-pull --build --renew-anon-volumes --force-recreate
-
-  echo "Seeding database..."
-  DOCKER_DEFAULT_PLATFORM= docker compose \
-    -f docker-compose.yml \
-    -f docker-compose.local.yml \
-    -f docker-compose.seed.yml \
-    run seed-database
+  # Bring dev containers back up, preserving existing volumes so local data changes are not lost.
+  # For a clean first-time setup, use `pnpm up` instead.
+  DOCKER_BUILDKIT=1 dev_compose up -d --quiet-pull --build --force-recreate
 
   echo "All containers ready."
 }
