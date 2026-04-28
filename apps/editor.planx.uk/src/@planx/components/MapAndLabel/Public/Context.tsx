@@ -10,7 +10,7 @@ import {
 } from "@planx/components/shared/utils";
 import { FormikProps, useFormik } from "formik";
 import { Feature, FeatureCollection } from "geojson";
-import { GeoJSONChange, GeoJSONChangeEvent, useGeoJSONChange } from "lib/gis";
+import type { GeoJSONChange, GeoJSONChangeEvent } from "lib/gis";
 import { get, omit } from "lodash";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, {
@@ -41,6 +41,7 @@ interface MapAndLabelContextValue {
     min: boolean;
     max: boolean;
   };
+  handleGeoJSONChange: (event: GeoJSONChangeEvent) => void,
 }
 
 type MapAndLabelProviderProps = PropsWithChildren<PresentationalProps>;
@@ -162,7 +163,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     }
   };
 
-  const [features, setFeatures] = useGeoJSONChange(MAP_ID, handleGeoJSONChange);
+  const [features, setFeatures] = useState<Feature[] | undefined>(undefined)
 
   const [updateMapKey, setUpdateMapKey] = useState<number>(0);
 
@@ -290,6 +291,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
           min: minError,
           max: maxError,
         },
+        handleGeoJSONChange,
       }}
     >
       {children}
