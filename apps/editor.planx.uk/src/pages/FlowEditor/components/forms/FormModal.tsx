@@ -160,7 +160,7 @@ const TextInputToggle: React.FC<{
         label={
           <>
             <AutoAwesomeIcon sx={{ mr: 1 }} />
-            AI enhanced (testing only)
+            AI enhanced
           </>
         }
         onChange={toggleTextInput}
