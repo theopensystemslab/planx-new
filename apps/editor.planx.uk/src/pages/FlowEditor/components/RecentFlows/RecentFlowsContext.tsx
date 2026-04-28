@@ -8,7 +8,7 @@ import React, {
   useState,
 } from "react";
 
-const STORAGE_KEY = "planx:recentFlows";
+export const STORAGE_KEY = "planx:recentFlows";
 
 export interface RecentFlow {
   id: string;

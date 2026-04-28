@@ -6,10 +6,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   RecentFlowsProvider,
   startNewRecentFlowsJourney,
+  STORAGE_KEY,
   useRecentFlowsContext,
 } from "./RecentFlowsContext";
-
-const STORAGE_KEY = "planx:recentFlows";
 
 let mockLocationKey = "key-1";
 

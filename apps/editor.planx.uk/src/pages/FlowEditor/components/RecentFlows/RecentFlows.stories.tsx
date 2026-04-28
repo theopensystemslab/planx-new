@@ -5,9 +5,7 @@ import { graphql, HttpResponse } from "msw";
 import React from "react";
 
 import RecentFlows from "./RecentFlows";
-import { RecentFlowsProvider } from "./RecentFlowsContext";
-
-const STORAGE_KEY = "planx:recentFlows";
+import { RecentFlowsProvider, STORAGE_KEY } from "./RecentFlowsContext";
 
 const recentFlows = [
   { id: "ghi789", folderIds: [] },
