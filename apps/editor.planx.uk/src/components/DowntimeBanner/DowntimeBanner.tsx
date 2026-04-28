@@ -27,14 +27,16 @@ const DowntimeBanner: React.FC = () => (
       }}
     >
       <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="space-between"
         role="alert"
         aria-live="assertive"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
       >
         <BrokenImageIcon />
-        <Typography variant="body2" ml={1}>
+        <Typography variant="body2" sx={{ ml: 1 }}>
           <strong>Partial degradation</strong> of some services and features. We
           are actively working on a fix. Please try again soon.
         </Typography>
