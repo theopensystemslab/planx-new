@@ -7,7 +7,7 @@ import {
 import { useBLPUCodes } from "hooks/data/useBLPUCodes";
 import find from "lodash/find";
 import { parse, toNormalised } from "postcode";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 
@@ -59,14 +59,14 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
   const { data } = useBLPUCodes();
 
   const { setAddress } = props;
-  useEffect(() => {
-    if (!data?.blpuCodes) return;
-    // Handles mapping the raw Ordnance Survey record to planx's address model
-    const addressSelectionHandler = ({
+
+  const addressSelectionHandler = ({
       detail,
     }: {
       detail: Record<"address", Record<string, any>>;
     }) => {
+      if (!data?.blpuCodes) return;
+
       const selectedAddress: Record<string, any> | undefined =
         detail?.address?.LPI;
       if (selectedAddress) {
@@ -127,17 +127,6 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
         });
       }
     };
-
-    const autocomplete: any = document.getElementById("address-autocomplete");
-    autocomplete?.addEventListener("addressSelection", addressSelectionHandler);
-
-    return function cleanup() {
-      autocomplete?.removeEventListener(
-        "addressSelection",
-        addressSelectionHandler,
-      );
-    };
-  }, [sanitizedPostcode, selectedOption, data?.blpuCodes, setAddress]);
 
   const handleCheckPostcode = () => {
     if (!sanitizedPostcode) setShowPostcodeError(true);
@@ -211,6 +200,7 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
           }/proxy/ordnance-survey`}
           arrowStyle="light"
           labelStyle="static"
+          onaddressSelection={addressSelectionHandler}
         />
       )}
     </AutocompleteWrapper>
