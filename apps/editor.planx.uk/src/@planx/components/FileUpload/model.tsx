@@ -5,13 +5,14 @@ import {
 } from "@planx/components/shared";
 import { richText } from "lib/yupExtensions";
 import { FileWithPath } from "react-dropzone";
-import { array, number, object, SchemaOf, string } from "yup";
+import { array, boolean, number, object, SchemaOf, string } from "yup";
 
 export interface FileUpload extends BaseNodeData {
   title: string;
   fn: string;
   description?: string;
   maxFiles?: number;
+  showDrawingNumber?: boolean;
 }
 
 export interface FileUploadSlot {
@@ -20,6 +21,7 @@ export interface FileUploadSlot {
   progress: number;
   id: string;
   url?: string;
+  drawingNumber: string | undefined;
   cachedSlot?: Omit<FileUploadSlot, "cachedSlot">;
 }
 
@@ -35,6 +37,7 @@ export const parseFileUpload = (
   policyRef: data?.policyRef,
   title: data?.title || "",
   maxFiles: data?.maxFiles,
+  showDrawingNumber: data?.showDrawingNumber || false,
   ...parseBaseNodeData(data),
 });
 
@@ -78,6 +81,7 @@ export const validationSchema: SchemaOf<FileUpload> =
       title: string().required(),
       fn: string().nullable().required(),
       maxFiles: number().optional(),
+      showDrawingNumber: boolean().optional(),
     }),
   );
 

@@ -141,6 +141,7 @@ export function Dropzone<T extends FileUploadSlot>({
           status: "uploading",
           progress: 0,
           id: nanoid(),
+          drawingNumber: undefined,
         };
 
         const slot = createSlot

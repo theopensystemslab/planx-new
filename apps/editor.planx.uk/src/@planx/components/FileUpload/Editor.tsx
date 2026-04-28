@@ -92,6 +92,19 @@ function Component(props: Props) {
               disabled={props.disabled}
             />
           </InputRow>
+          <InputRow>
+            <Switch
+              checked={formik.values.showDrawingNumber}
+              onChange={() =>
+                formik.setFieldValue(
+                  "showDrawingNumber",
+                  !formik.values.showDrawingNumber,
+                )
+              }
+              label="Show an optional drawing number input for each uploaded file"
+              disabled={props.disabled}
+            />
+          </InputRow>
         </ModalSectionContent>
       </ModalSection>
       <ModalFooter formik={formik} disabled={props.disabled} />
