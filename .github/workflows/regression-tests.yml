@@ -26,9 +26,6 @@ jobs:
           api-directory: ${{ env.API_DIRECTORY }}
           hasura-directory: ${{ env.HASURA_DIRECTORY }}
       - uses: ./.github/actions/setup-node-pnpm
-        with:
-          pnpm-version: ${{ vars.PNPM_VERSION }}
-          node-version: ${{ vars.NODE_VERSION }}
       - run: pnpm install --frozen-lockfile
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - name: Start test containers
@@ -52,10 +49,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
           api-directory: ${{ env.API_DIRECTORY }}
           hasura-directory: ${{ env.HASURA_DIRECTORY }}
-      - uses: ./.github/actions/setup-node-pnpm
-        with:
-          pnpm-version: ${{ vars.PNPM_VERSION }}
-          node-version: ${{ vars.NODE_VERSION }}
+      - name: Setup Node and PNPM
+        uses: ./.github/actions/setup-node-pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
         working-directory: ${{ env.API_DIRECTORY }}
@@ -74,10 +69,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
           api-directory: ${{ env.API_DIRECTORY }}
           hasura-directory: ${{ env.HASURA_DIRECTORY }}
-      - uses: ./.github/actions/setup-node-pnpm
-        with:
-          pnpm-version: ${{ vars.PNPM_VERSION }}
-          node-version: ${{ vars.NODE_VERSION }}
+      - name: Setup Node and PNPM
+        uses: ./.github/actions/setup-node-pnpm
       - run: pnpm install --frozen-lockfile
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build
@@ -98,10 +91,8 @@ jobs:
           api-directory: ${{ env.API_DIRECTORY }}
           hasura-directory: ${{ env.HASURA_DIRECTORY }}
           check-env-files: 'false'
-      - uses: ./.github/actions/setup-node-pnpm
-        with:
-          pnpm-version: ${{ vars.PNPM_VERSION }}
-          node-version: ${{ vars.NODE_VERSION }}
+      - name: Setup Node and PNPM
+        uses: ./.github/actions/setup-node-pnpm
       - name: PNPM Install
         run: pnpm install --frozen-lockfile
         working-directory: e2e

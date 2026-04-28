@@ -41,9 +41,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-node-pnpm
-        with:
-          pnpm-version: ${{ vars.PNPM_VERSION }}
-          node-version: ${{ vars.NODE_VERSION }}
       - run: pnpm install --frozen-lockfile
         working-directory: ${{ inputs.editor-directory }}
       - run: pnpm build

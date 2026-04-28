@@ -44,9 +44,6 @@ jobs:
           aws-region: eu-west-2
           aws-secret-access-key: ${{ secrets.PRODUCTION_AWS_SECRET_ACCESS_KEY }}
       - uses: ./.github/actions/setup-node-pnpm
-        with:
-          pnpm-version: ${{ vars.PNPM_VERSION }}
-          node-version: ${{ vars.NODE_VERSION }}
       - run: pnpm install --frozen-lockfile
         working-directory: infrastructure/application
       - name: Download PlanX frontend build artifact
