@@ -68,7 +68,7 @@ const DescriptionRadio: React.FC<DescriptionRadioProps> = ({
       <Radio
         value={id}
         onChange={onChange}
-        inputProps={{ "aria-label": title }}
+        slotProps={{ input: { "aria-label": title } }}
       />
       <Box sx={{ position: "relative" }}>
         <Typography color="text.primary" variant="body1" sx={{ pt: 0.95 }}>
