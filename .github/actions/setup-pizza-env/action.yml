@@ -10,14 +10,12 @@ inputs:
     required: true
   api-directory:
     description: Path to API directory, used for .env.test existence check
-    required: true
+    required: false
+    default: apps/api.planx.uk
   hasura-directory:
     description: Path to Hasura directory, used for .env.test existence check
-    required: true
-  check-env-files:
-    description: Whether to verify .env files exist after pulling from S3
     required: false
-    default: 'true'
+    default: apps/hasura.planx.uk
 
 runs:
   using: composite
@@ -32,7 +30,6 @@ runs:
       shell: bash
       run: ./scripts/pull-secrets.sh
     - name: Check if .env files exist
-      if: inputs.check-env-files == 'true'
       uses: andstor/file-existence-action@v2
       with:
         files: ".env, .env.staging, ${{ inputs.api-directory }}/.env.test, ${{ inputs.hasura-directory }}/.env.test"
