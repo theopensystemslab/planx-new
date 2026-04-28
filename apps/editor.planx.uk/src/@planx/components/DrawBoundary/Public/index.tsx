@@ -227,14 +227,8 @@ export default function Component(props: Props) {
    * Clip map extent to buffered boundary, with a fallback to address point if required
    */
   const clipGeojsonData = (() => {
-    if (boundary)
-      return JSON.stringify(
-        buffer(boundary, bufferInMeters, { units: "meters" }),
-      );
-    if (addressPoint)
-      return JSON.stringify(
-        buffer(addressPoint, bufferInMeters, { units: "meters" }),
-      );
+    if (boundary) return buffer(boundary, bufferInMeters, { units: "meters" });
+    if (addressPoint) return buffer(addressPoint, bufferInMeters, { units: "meters" });
   })();
 
   function getBody(mapValidationError?: string, fileValidationError?: string) {
@@ -282,7 +276,7 @@ export default function Component(props: Props) {
                   ariaLabelOlFixedOverlay="An interactive map for providing your location plan boundary"
                   drawMode
                   drawPointer="crosshair"
-                  drawGeojsonData={JSON.stringify(boundary)}
+                  drawGeojsonData={boundary}
                   drawGeojsonDataBuffer={10}
                   clipGeojsonData={clipGeojsonData}
                   zoom={20}

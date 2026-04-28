@@ -148,7 +148,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
               drawType="Point"
               drawGeojsonData={
                 coordinates &&
-                JSON.stringify({
+                {
                   type: "Feature",
                   geometry: {
                     type: "Point",
@@ -158,7 +158,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
                     ],
                   },
                   properties: {},
-                })
+                }
               }
               resetControlImage="trash"
               showScale
@@ -166,7 +166,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
               osProxyEndpoint={`${
                 import.meta.env.VITE_APP_API_URL
               }/proxy/ordnance-survey`}
-              clipGeojsonData={JSON.stringify(boundaryBBox)}
+              clipGeojsonData={boundaryBBox}
               osCopyright={`© Crown copyright and database rights ${new Date().getFullYear()} OS AC0000812160`}
               collapseAttributions={window.innerWidth < 500 ? true : undefined}
               ongeojsonChange={geojsonChangeHandler}

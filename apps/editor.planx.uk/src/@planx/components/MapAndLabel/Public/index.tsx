@@ -303,17 +303,15 @@ const Root = () => {
               data-testid={MAP_ID}
               basemap={basemap}
               ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
-              geojsonData={
-                passport && JSON.stringify(passport["proposal.site"])
-              }
+              geojsonData={passport && passport["proposal.site"]}
               geojsonBuffer={30}
               drawMode
               drawGeojsonData={
                 features &&
-                JSON.stringify({
+                {
                   type: "FeatureCollection",
                   features: features,
-                })
+                }
               }
               drawGeojsonDataBuffer={25}
               drawMany
@@ -332,7 +330,7 @@ const Root = () => {
                   ? `© Crown copyright and database rights ${new Date().getFullYear()} OS AC0000812160`
                   : ``
               }
-              clipGeojsonData={boundaryBBox && JSON.stringify(boundaryBBox)}
+              clipGeojsonData={boundaryBBox && boundaryBBox}
               mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
               collapseAttributions
               ongeojsonChange={handleGeoJSONChange}

@@ -62,15 +62,15 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
               // ariaLabelOlFixedOverlay={`An interactive map for plotting and describing ${schema.type.toLocaleLowerCase()}`}
               height={400}
               basemap={mapOptions?.basemap}
-              geojsonData={JSON.stringify(passport.data?.["proposal.site"])}
+              geojsonData={passport.data?.["proposal.site"]}
               geojsonBuffer={30}
               drawMode
               drawGeojsonData={
                 features &&
-                JSON.stringify({
+                {
                   type: "FeatureCollection",
                   features: features,
-                })
+                }
               }
               drawMany={mapOptions?.drawMany}
               hideDrawLabels={mapOptions?.drawMany}
@@ -92,7 +92,7 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
               }
               clipGeojsonData={
                 teamSettings?.boundaryBBox &&
-                JSON.stringify(teamSettings?.boundaryBBox)
+                teamSettings?.boundaryBBox
               }
               mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
               collapseAttributions

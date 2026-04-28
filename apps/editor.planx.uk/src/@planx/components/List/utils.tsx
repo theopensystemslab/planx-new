@@ -78,10 +78,10 @@ export const formatSchemaDisplayValue = <T extends Field>(
           <my-map
             id="inactive-list-map"
             basemap={field.data.mapOptions?.basemap}
-            geojsonData={JSON.stringify({
+            geojsonData={{
               type: "FeatureCollection",
               features: value,
-            })}
+            }}
             geojsonColor={field.data.mapOptions?.drawColor}
             geojsonFill
             geojsonBuffer={20}
