@@ -64,7 +64,7 @@ export const MembersTable = ({
   const removeUser = (member: TeamMember) =>
     setModal({ action: "remove", member });
   const maxUsers = () => setModal({ action: "attemptedAdd" });
-  console.log({ members });
+
   if (members.length === 0) {
     return (
       <>
@@ -166,6 +166,7 @@ export const MembersTable = ({
             {showAddMemberButton && (
               <TableRow>
                 <TableCell colSpan={5}>
+                  {/* the hard-coded team member limit value should be kept in sync with the hasura trigger (see enforce_team_member_limit) */}
                   <AddButton onClick={members.length < 20 ? addUser : maxUsers}>
                     Add a new member
                   </AddButton>
