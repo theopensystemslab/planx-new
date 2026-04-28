@@ -41,7 +41,8 @@ export type ModalState =
   | { action: "closed" }
   | { action: "add" }
   | { action: "edit"; member: TeamMember }
-  | { action: "remove"; member: TeamMember };
+  | { action: "remove"; member: TeamMember }
+  | { action: "attemptedAdd" };
 
 type SharedModalProps = {
   onClose: () => void;
