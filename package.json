@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "up": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml -f ./docker-compose.e2e.yml --profile mock-services --project-name planx-e2e down --volumes --remove-orphans; pnpm recreate && pnpm sync-data",
+    "up": "pnpm recreate && pnpm sync-data",
     "down": "pnpm destroy",
     "restart": "pnpm stop && pnpm start",
     "start": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services up -d --quiet-pull",
@@ -10,6 +10,7 @@
     "sync-data": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml -f ./docker-compose.seed.yml run seed-database",
     "test-sync": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml -f ./docker-compose.seed.yml run seed-database reset_flows",
     "clean-data": "docker compose -f ./docker-compose.yml -f ./docker-compose.seed.yml run seed-database reset_all",
+    "dev": "./scripts/start-containers-for-dev.sh",
     "tests": "./scripts/start-containers-for-tests.sh",
     "analytics": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services --profile analytics  up -d --quiet-pull",
     "logs": "docker compose logs --tail 30 -f"
