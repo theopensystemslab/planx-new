@@ -28,8 +28,6 @@ on:
         required: false
         type: string
         default: apps/editor.planx.uk
-    secrets:
-      inherit: true
 
 permissions:
   contents: read
