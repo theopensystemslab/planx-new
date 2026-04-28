@@ -85,6 +85,7 @@ const EnhancedTextInputComponent = (props: Props) => {
 
         const handleBack = (() => {
           if (step === "modification") return () => setStep("selection");
+          // Repopulate field with user's original input
           if (step === "selection" && !isRunningTask)
             return () => {
               if (values.status === "success") {
@@ -114,10 +115,7 @@ const EnhancedTextInputComponent = (props: Props) => {
             )}
             {step === "input" && <InitialUserInput {...props} />}
             {step === "modification" && <ModifyUserInput {...props} />}
-            {step === "selection" && (
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              <TaskComponent {...(props as any)} />
-            )}
+            {step === "selection" && <TaskComponent {...props} />}
           </Card>
         );
       }}
