@@ -101,7 +101,7 @@ function Component(props: Props) {
                   !formik.values.showDrawingNumber,
                 )
               }
-              label="Show a drawing number field for each uploaded file"
+              label="Show an optional drawing number input for each uploaded file"
               disabled={props.disabled}
             />
           </InputRow>
