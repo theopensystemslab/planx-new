@@ -68,7 +68,7 @@ const Favicon: React.FC = () => {
             />
           </InputRowItem>
           <Typography
-            color="text.secondary"
+            color="textSecondary"
             variant="body2"
             sx={{ pl: 2, alignSelf: "center" }}
           >

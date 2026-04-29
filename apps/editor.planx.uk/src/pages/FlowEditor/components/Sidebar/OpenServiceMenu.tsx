@@ -79,7 +79,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
           <Typography variant="h6" component="div">
             {title}
           </Typography>
-          <Typography variant="body4" color="text.secondary">
+          <Typography variant="body4" color="textSecondary">
             {description}
           </Typography>
           {isOnline !== undefined && (

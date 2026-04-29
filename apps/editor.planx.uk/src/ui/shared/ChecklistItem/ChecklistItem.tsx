@@ -61,7 +61,7 @@ export default function ChecklistItem({
         <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
           <Label
             variant="body1"
-            color="text.primary"
+            color="textPrimary"
             className="label"
             component={"label"}
             htmlFor={id}
@@ -72,7 +72,8 @@ export default function ChecklistItem({
           <Typography
             id={`checkbox-description-${id}`}
             variant="body2"
-            sx={{ px: 1.5, py: 0.5, color: "text.secondary" }}
+            sx={{ px: 1.5, py: 0.5 }}
+            color="textSecondary"
           >
             {description}
           </Typography>

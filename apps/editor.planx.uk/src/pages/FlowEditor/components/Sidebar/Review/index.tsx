@@ -41,7 +41,7 @@ const Reviews = () => {
           ))}
         </List>
       ) : (
-        <Typography variant="body1" color="text.secondary" sx={{ mt: 2 }}>
+        <Typography variant="body1" color="textSecondary" sx={{ mt: 2 }}>
           No nodes are currently tagged 'To review'.
         </Typography>
       )}

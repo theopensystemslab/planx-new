@@ -202,11 +202,11 @@ export function Dropzone<T extends FileUploadSlot>({
             </>
           )}
         </Typography>
-        <Typography color="text.secondary" variant="body2">
+        <Typography color="textSecondary" variant="body2">
           pdf, jpg, png
         </Typography>
         <Typography
-          color="text.secondary"
+          color="textSecondary"
           variant="body2"
           sx={{ fontSize: 14, pt: 1 }}
         >

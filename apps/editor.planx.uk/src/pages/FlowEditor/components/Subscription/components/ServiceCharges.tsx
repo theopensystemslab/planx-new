@@ -34,7 +34,7 @@ export const ServiceCharges = ({ serviceCharges }: SubscriptionProps) => {
       <Typography variant="h3" component="h4" gutterBottom>
         Service charges
       </Typography>
-      <Typography variant="body2" color="text.secondary" gutterBottom>
+      <Typography variant="body2" color="textSecondary" gutterBottom>
         Summary of service charges collected by your team on behalf of OSL.
         Service charges are transferred to OSL quarterly.
       </Typography>

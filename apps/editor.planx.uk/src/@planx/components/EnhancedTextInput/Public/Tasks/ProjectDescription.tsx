@@ -71,7 +71,7 @@ const DescriptionRadio: React.FC<DescriptionRadioProps> = ({
       {recommended && <RecommendedTag>Recommended</RecommendedTag>}
       <Radio value={id} onChange={onChange} />
       <Box sx={{ position: "relative" }}>
-        <Typography color="text.primary" variant="body1" sx={{ pt: 0.95 }}>
+        <Typography color="textPrimary" variant="body1" sx={{ pt: 0.95 }}>
           {title}
         </Typography>
         {description && (

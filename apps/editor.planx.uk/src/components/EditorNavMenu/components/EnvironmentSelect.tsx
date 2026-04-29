@@ -204,7 +204,7 @@ export const EnvironmentSelect: React.FC = () => {
                     <Typography
                       variant="body4"
                       component="p"
-                      color="text.secondary"
+                      color="textSecondary"
                     >
                       {env.description}
                     </Typography>

@@ -154,7 +154,7 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
           >
             Drawing number (optional)
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+          <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
             Separate multiple drawing numbers in this file with a comma
           </Typography>
           <Input

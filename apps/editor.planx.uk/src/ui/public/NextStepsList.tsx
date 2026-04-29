@@ -112,7 +112,7 @@ const Step = ({ title, description, url }: ListItemProps) => (
       >
         {title}
       </Typography>
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="body2" color="textSecondary">
         {description}
       </Typography>
     </Box>

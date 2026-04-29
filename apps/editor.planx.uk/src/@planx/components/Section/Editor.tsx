@@ -40,7 +40,7 @@ const SectionLengthLabel: React.FC<{ length: SectionLength }> = ({
     >
       {length}
     </Typography>
-    <Typography variant="body2" color="text.secondary">
+    <Typography variant="body2" color="textSecondary">
       {SECTION_LENGTH_DESCRIPTIONS[length]}
     </Typography>
   </Box>

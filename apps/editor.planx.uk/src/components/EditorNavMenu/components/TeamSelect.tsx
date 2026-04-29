@@ -146,13 +146,13 @@ export const TeamSelect: React.FC<Props> = ({
             alignItems: "flex-start",
           }}
         >
-          <Typography variant="body3" component="span" color="text.secondary">
+          <Typography variant="body3" component="span" color="textSecondary">
             Team
           </Typography>
           <Typography
             variant="body3"
             component="span"
-            color="text.primary"
+            color="textPrimary"
             sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
           >
             {currentTeam?.name || "Current team"}
