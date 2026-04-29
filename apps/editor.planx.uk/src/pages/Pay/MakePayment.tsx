@@ -163,7 +163,7 @@ export default function MakePayment({
     ) : (
       <Container maxWidth="contentWrap">
         <Typography
-          component="header"
+          component="h1"
           variant="h1"
           sx={{ maxWidth: "formWrap", pt: 5 }}
           gutterBottom

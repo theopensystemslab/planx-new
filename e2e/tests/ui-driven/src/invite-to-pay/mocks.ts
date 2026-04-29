@@ -92,6 +92,7 @@ export const mockSessionData: Omit<SessionData, "id"> = {
     F9iwWG1jBQ: {
       auto: true,
       data: {
+        "application.fee.calculated": 123.45,
         "application.fee.payable": 123.45,
       },
     },
