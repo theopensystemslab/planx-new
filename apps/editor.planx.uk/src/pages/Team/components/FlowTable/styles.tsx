@@ -97,6 +97,11 @@ export const FlowStatusCell = styled(TableCell)(() => ({
   minWidth: "150px",
 }));
 
+export const FlowDateCell = styled(TableCell)(() => ({
+  width: "20%",
+  minWidth: "240px",
+}));
+
 export const FlowActionsCell = styled(TableCell)(({ theme }) => ({
   width: "5%",
   maxWidth: "100px",

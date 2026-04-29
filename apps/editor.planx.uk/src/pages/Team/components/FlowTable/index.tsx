@@ -21,6 +21,7 @@ import { useFlowSortDisplay } from "../hooks/useFlowSortDisplay";
 import { FlowRowLink } from "./styles";
 import {
   FlowActionsCell,
+  FlowDateCell,
   FlowStatusCell,
   FlowTitleCell,
   StyledTable,
@@ -53,7 +54,7 @@ export const FlowTable: React.FC<FlowTableProps> = ({
             <>
               <FlowStatusCell>Online status</FlowStatusCell>
               <FlowStatusCell>Flow type</FlowStatusCell>
-              <TableCell>{headerText}</TableCell>
+              <FlowDateCell>{headerText}</FlowDateCell>
               {showDetails && <TableCell>Pinned</TableCell>}
             </>
           )}
@@ -158,7 +159,7 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
               </Box>
             )}
           </FlowStatusCell>
-          <FlowStatusCell>
+          <FlowDateCell>
             <Box>
               <Typography variant="body2">{displayTimeAgo}</Typography>
               {displayActor && (
@@ -167,9 +168,9 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
                 </Typography>
               )}
             </Box>
-          </FlowStatusCell>
+          </FlowDateCell>
           {showDetails && (
-            <TableCell>
+            <TableCell align="center">
               <Box onClick={(e) => e.stopPropagation()}>
                 <FlowPinButton
                   flowId={flow.id}

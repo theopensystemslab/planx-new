@@ -38,9 +38,10 @@ export const formatLastEditMessage = (
   date: string,
   actor?: { firstName: string; lastName: string },
 ): DateMessage => {
-  const timeAgo = `Last edited ${formatLastEditDate(date)}`;
+  const timeAgo = formatLastEditDate(date);
   const actorName = actor ? `${actor.firstName} ${actor.lastName}` : undefined;
-  const formatted = actorName ? `${timeAgo} by ${actorName}` : timeAgo;
+  const withLabel = `Last edited ${timeAgo}`;
+  const formatted = actorName ? `${withLabel} by ${actorName}` : withLabel;
   return {
     timeAgo,
     actor: actorName,
@@ -59,8 +60,9 @@ export const formatLastPublishMessage = (
       formatted: "Not yet published",
     };
   }
-  const timeAgo = `Last published ${formatLastEditDate(date)}`;
-  const formatted = user ? `${timeAgo} by ${user}` : timeAgo;
+  const timeAgo = formatLastEditDate(date);
+  const withLabel = `Last published ${timeAgo}`;
+  const formatted = user ? `${withLabel} by ${user}` : withLabel;
   return {
     timeAgo,
     actor: user,

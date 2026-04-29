@@ -23,7 +23,7 @@ import { StyledToggleButton } from "./StyledToggleButton";
 
 const FiltersContainer = styled(Box)(({ theme }) => ({
   width: "100%",
-  margin: theme.spacing(1, 0, 2),
+  margin: theme.spacing(0, 0, 2),
   padding: theme.spacing(1.5, 0),
   display: "flex",
   flexDirection: "row",
@@ -31,7 +31,6 @@ const FiltersContainer = styled(Box)(({ theme }) => ({
   alignItems: "center",
   justifyContent: "space-between",
   gap: theme.spacing(1),
-  borderTop: `1px solid ${theme.palette.border.light}`,
   borderBottom: `1px solid ${theme.palette.border.light}`,
 }));
 
