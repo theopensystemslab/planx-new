@@ -344,7 +344,7 @@ export = async () => {
   // Here we only create the CloudFront distribution, consuming the validated cert ARN
   let customDomainsCdnDomainName: pulumi.Output<string> | undefined;
 
-  const customDomainsCertificateArn = certificates.getOutput("customDomainsCertificateArn") as pulumi.Output<string | undefined>;
+  const customDomainsCertArn = certificates.getOutput("customDomainsCertArn") as pulumi.Output<string | undefined>;
 
   if (validatedCustomDomains.length > 0) {
     const customDomainsOai = new aws.cloudfront.OriginAccessIdentity("custom-domains-OAI", {
@@ -354,8 +354,8 @@ export = async () => {
     const customDomainsCdn = createCdn({
       cdnName: "custom-domains",
       domains: validatedCustomDomains.map(d => d.domain),
-      acmCertificateArn: customDomainsCertificateArn.apply(arn => {
-        if (!arn) throw new Error("customDomainsCertificateArn not found in certificates stack — run `pulumi up` on the certificates stack first");
+      acmCertificateArn: customDomainsCertArn.apply(arn => {
+        if (!arn) throw new Error("customDomainsCertArn not found in certificates stack — run `pulumi up` on the certificates stack first");
         return arn;
       }),
       bucket: frontendBucket,

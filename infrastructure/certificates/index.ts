@@ -68,7 +68,7 @@ const miningCert = pendingCustomDomains.length > 0
 
 // Shared custom domain certificate — a single DNS-validated ACM cert for all non-legacy domains.
 // The application layer attaches this to the shared CloudFront distribution.
-let customDomainsCertificateArn: pulumi.Output<string> | undefined;
+let customDomainsCertArn: pulumi.Output<string> | undefined;
 
 if (validatedCustomDomains.length > 0) {
   const customDomainsCert = new aws.acm.Certificate(
@@ -85,28 +85,34 @@ if (validatedCustomDomains.length > 0) {
     "sslCertValidation-custom-domains",
     {
       certificateArn: customDomainsCert.arn,
+      validationRecordFqdns: customDomainsCert.domainValidationOptions.apply(
+        options => options.map(opt => opt.resourceRecordName)
+      ),
     },
     { provider: usEast1 }
   );
 
-  customDomainsCertificateArn = customDomainsCertValidation.certificateArn;
+  customDomainsCertArn = customDomainsCertValidation.certificateArn;
 }
 
 // ----------------------- Exports
 
 export const domain = config.require("domain");
 
-// Validated cert ARN — application layer uses this for the shared CloudFront distribution
-export { customDomainsCertificateArn };
+// ARN of validated shared cert — application layer uses this for the shared CloudFront distribution
+export { customDomainsCertArn };
 
-// DNS validation records that councils need to add before we can migrate (i.e. flip isReady: true)
+// ARN of the mining cert — can check this in AWS console to verify DNS validation after sending records to council
+export const miningCertArn = miningCert ? miningCert.arn : undefined;
+
+// DNS validation records that councils need to add before we can move domain to shared cert/CDN
 export const pendingCouncilDnsRecords = miningCert
   ? miningCert.domainValidationOptions.apply((options: aws.types.output.acm.CertificateDomainValidationOption[]) =>
       options.map((opt) => ({
         domain: opt.domainName,
         validationCname: {
           name: opt.resourceRecordName,
-          value: opt.resourceRecordValue,
+          target: opt.resourceRecordValue,
         },
       }))
     )

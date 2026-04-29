@@ -4,115 +4,120 @@ import type { CustomDomain } from "./types";
 export const getCustomDomains = (env: string): CustomDomain[] =>
   env === "production"
     ? [
-        { 
-          domain: "planningservices.buckinghamshire.gov.uk",
+        {
           name: "buckinghamshire",
-          isLegacy: true,
+          domain: "planningservices.buckinghamshire.gov.uk",
+          cloudFrontState: "single-plus-validation",
         },
-        { 
-          domain: "planningservices.southwark.gov.uk",
+        {
           name: "southwark",
-          isLegacy: true,
+          domain: "planningservices.southwark.gov.uk",
+          cloudFrontState: "single-plus-validation",
           certificateLocation: "pulumiConfig",
         },
-        { 
-          domain: "planningservices.lambeth.gov.uk",
+        {
           name: "lambeth",
-          isLegacy: true,
+          domain: "planningservices.lambeth.gov.uk",
+          cloudFrontState: "single-plus-validation",
           certificateLocation: "pulumiConfig",
         },
-        { 
-          domain: "planningservices.doncaster.gov.uk",
+        {
           name: "doncaster",
-          isLegacy: true,
+          domain: "planningservices.doncaster.gov.uk",
+          cloudFrontState: "single-plus-validation",
           certificateLocation: "pulumiConfig",
         },
-        { 
-          domain: "planningservices.medway.gov.uk",
+        {
           name: "medway",
-          isLegacy: true,
+          domain: "planningservices.medway.gov.uk",
+          cloudFrontState: "single-plus-validation",
         },
-        { 
-          domain: "planningservices.stalbans.gov.uk",
+        {
           name: "stalbans",
-          isLegacy: true,
+          domain: "planningservices.stalbans.gov.uk",
+          cloudFrontState: "single-plus-validation",
         },
-        { 
-          domain: "planningservices.camden.gov.uk",
+        {
           name: "camden",
-          isLegacy: true,
+          domain: "planningservices.camden.gov.uk",
+          cloudFrontState: "single-plus-validation",
           certificateLocation: "pulumiConfig",
         },
-        { 
-          domain: "planningservices.barnet.gov.uk",
+        {
           name: "barnet",
-          isLegacy: true,
+          domain: "planningservices.barnet.gov.uk",
+          cloudFrontState: "single-plus-validation",
         },
-        { 
-          domain: "planningservices.tewkesbury.gov.uk",
+        {
           name: "tewkesbury",
-          isLegacy: true,
+          domain: "planningservices.tewkesbury.gov.uk",
+          cloudFrontState: "single-plus-validation",
         },
-        { 
-          domain: "planningservices.westberks.gov.uk",
+        {
           name: "westberks",
-          isLegacy: true,
+          domain: "planningservices.westberks.gov.uk",
+          cloudFrontState: "single-plus-validation",
           certificateLocation: "pulumiConfig",
         },
-        { 
-          domain: "planningservices.gateshead.gov.uk",
+        {
           name: "gateshead",
-          isLegacy: true,
+          domain: "planningservices.gateshead.gov.uk",
+          cloudFrontState: "single-plus-validation",
         },
-        { 
-          domain: "planningservices.gloucester.gov.uk",
+        {
           name: "gloucester",
-          isLegacy: true,
+          domain: "planningservices.gloucester.gov.uk",
+          cloudFrontState: "single-plus-validation",
           certificateLocation: "pulumiConfig",
         },
-        { 
-          domain: "planningservices.epsom-ewell.gov.uk",
+        {
           name: "epsom-and-ewell",
-          isLegacy: true,
+          domain: "planningservices.epsom-ewell.gov.uk",
+          cloudFrontState: "single-plus-validation",
           certificateLocation: "pulumiConfig",
         },
-        { 
-          domain: "planningservices.newcastle.gov.uk",
+        {
           name: "newcastle",
-          isLegacy: true,
+          domain: "planningservices.newcastle.gov.uk",
+          cloudFrontState: "single-plus-validation",
           certificateLocation: "pulumiConfig",
         },
-        { 
-          domain: "planningservices.lbbd.gov.uk",
+        {
           name: "barking-and-dagenham",
-          isLegacy: true,
+          domain: "planningservices.lbbd.gov.uk",
+          cloudFrontState: "single-plus-validation",
         },
-        { 
-          domain: "planningservices.southglos.gov.uk",
+        {
           name: "south-gloucestershire",
-          isLegacy: true,
+          domain: "planningservices.southglos.gov.uk",
+          cloudFrontState: "single-plus-validation",
         },
-        { 
-          domain: "planningservices.birmingham.gov.uk",
+        {
           name: "birmingham",
-          isLegacy: true,
+          domain: "planningservices.birmingham.gov.uk",
+          cloudFrontState: "single-plus-validation",
         },
-        { 
-          domain: "planningservices.horsham.gov.uk",
+        {
           name: "horsham",
-          isLegacy: true,
+          domain: "planningservices.horsham.gov.uk",
+          cloudFrontState: "single-plus-validation",
         },
-        { 
+        {
+          name: "canterbury",
           domain: "planningservices.canterbury.gov.uk",
-          name: "canterbury"
+          cloudFrontState: "single-plus-validation",
         },
       ]
     : [
-        // we maintain a 'custom domain' on staging for testing (on a domain we control but which is not PlanX)
-        { 
-          domain: "planningservices.fairhold.org",
-          name: "fairhold",
-          isLegacy: true,
-          // isReady: false,
+        // we spin up 'custom domains' on staging for testing purposes
+        {
+          name: "test-legacy",
+          domain: "planningserviceslegacy.planx.in",
+          cloudFrontState: "single-plus-validation",
+        },
+        {
+          name: "test-new",
+          domain: "planningservices.planx.in",
+          cloudFrontState: "shared-only",
         },
     ];

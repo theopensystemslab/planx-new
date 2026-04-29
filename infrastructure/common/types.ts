@@ -17,18 +17,23 @@ export interface Team {
   govPayStagingOnly?: boolean;
 };
 
+/**
+ * Describes which CloudFront infrastructure serves a custom domain.
+ *
+ * On-boarding path for new councils: validation-only → shared-only
+ * Migration path for existing councils: single-plus-validation → single-plus-shared → shared-only
+ */
+export type CloudFrontState =
+  | "validation-only"        // no CDN yet; mining cert surfaces DNS validation records
+  | "single-plus-validation" // legacy per-domain CDN running; mining cert surfaces validation records
+  | "single-plus-shared"     // legacy CDN + shared CDN running in parallel during cutover
+  | "shared-only";           // shared CDN only; legacy CDN torn down (or never existed)
+
 export interface CustomDomain {
   name: string,
   domain: string,
   certificateLocation?: "secretsManager" | "pulumiConfig",
-  // whether domain is served by legacy per-domain CloudFront distribution setup (defaults to false)
-  isLegacy?: boolean,
-  /**
-   * Whether the council has added DNS records for the shared ACM certificate.
-   * When false (default), the domain is added to the "mining" cert to surface validation records.
-   * When true, the domain is added to the shared cert as a SAN, and to the shared CDN as an alias.
-   */
-  isReady?: boolean,
+  cloudFrontState: CloudFrontState,
 }
 
 export interface DbUrlArgs {
