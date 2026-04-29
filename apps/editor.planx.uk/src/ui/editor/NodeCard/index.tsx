@@ -41,7 +41,8 @@ const HeaderRoot = styled(Box)(({ theme }) => ({
 }));
 
 const InternalPortalHeader: React.FC<{ portalId: string }> = ({ portalId }) => {
-  const portalName = useStore((state) => state.flow)[portalId].data?.text;
+  const portalNode = useStore((state) => state.flow)[portalId];
+  const portalName = portalNode?.data?.text || "Nested Flow";
 
   return (
     <HeaderRoot className="node-card portal internal-portal">

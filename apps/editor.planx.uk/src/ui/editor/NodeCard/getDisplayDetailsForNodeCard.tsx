@@ -19,14 +19,17 @@ const componentFormatters: ComponentMap = {
   [ComponentType.Answer]: {
     getIconKey: ({ parentId }) => {
       const parentNode = useStore.getState().flow[parentId];
+      if (!parentNode) return ComponentType.Answer;
       return parentNode.type!;
     },
     getTitle: ({ parentId }) => {
       const parentNode = useStore.getState().flow[parentId];
+      if (!parentNode) return "";
       return parentNode.data?.text;
     },
     getComponentType: ({ parentId }) => {
       const parentNode = useStore.getState().flow[parentId];
+      if (!parentNode) return "Answer";
       const parentType = parentNode.type!;
       const formatted = capitalize(SLUGS[parentType].replaceAll("-", " "));
 
