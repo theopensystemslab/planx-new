@@ -20,7 +20,7 @@ export const mockPaymentRequest: Partial<PaymentRequest> = {
   applicantName: "Mr Agent (Agency Ltd)",
   feeBreakdown: {
     amount: {
-      calculated: 123.45,
+      calculated: 0,
       calculatedVAT: 0,
       payable: 123.45,
       payableVAT: 0,
@@ -66,7 +66,6 @@ export const mockSessionData: Omit<SessionData, "id"> = {
       "property.region": ["South East"],
       "proposal.projectType": ["alter.decks", "alter.internal"],
       "applicant.agent.email": "testAgent@opensystemslab.com",
-      "application.fee.calculated": 123.45,
       "application.fee.payable": 123.45,
       "_contact.applicant.agent": {
         "applicant.agent": {
@@ -92,7 +91,6 @@ export const mockSessionData: Omit<SessionData, "id"> = {
     F9iwWG1jBQ: {
       auto: true,
       data: {
-        "application.fee.calculated": 123.45,
         "application.fee.payable": 123.45,
       },
     },
