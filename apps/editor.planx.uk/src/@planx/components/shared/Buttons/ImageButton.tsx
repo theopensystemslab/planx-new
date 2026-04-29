@@ -18,7 +18,6 @@ export interface Props extends ButtonBaseProps {
 const TextLabelRoot = styled(Box)(({ theme }) => ({
   width: "100%",
   pointerEvents: "none",
-  borderTop: "none",
   display: "flex",
   flexGrow: 1,
   alignItems: "flex-start",
@@ -47,7 +46,7 @@ const TextLabel = (props: Props): FCReturn => {
     <TextLabelRoot
       {...({ ref: textContentEl } as any)}
       alignItems={multiline ? "flex-start" : "center"}
-      sx={{ border: borderStyle(theme, selected) }}
+      sx={{ border: borderStyle(theme, selected), borderTop: "none" }}
     >
       <Checkbox id={id} checked={selected} onChange={onClick} />
       <Typography variant="body1" sx={{ ml: 1.5, mt: 0.9 }}>
@@ -85,7 +84,6 @@ const ImageLabelRoot = styled(Box)(({ theme }) => ({
   height: 0,
   overflow: "hidden",
   zIndex: 2,
-  borderBottom: "none",
   backgroundColor: theme.palette.background.default,
 }));
 
@@ -112,7 +110,9 @@ const ImageLabel = (props: ImageLabelProps): FCReturn => {
   };
 
   return (
-    <ImageLabelRoot sx={{ border: borderStyle(theme, selected) }}>
+    <ImageLabelRoot
+      sx={{ border: borderStyle(theme, selected), borderBottom: "none" }}
+    >
       {imgError ? (
         <ImageError>
           <ImageIcon />
