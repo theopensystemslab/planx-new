@@ -59,9 +59,6 @@ const TextLabelContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   color: theme.palette.text.primary,
-  "& > p": {
-    color: theme.palette.text.secondary,
-  },
   "& + p:not(:empty)": {
     paddingTop: theme.spacing(1),
   },
@@ -113,7 +110,7 @@ const TextLabel = (props: Props): FCReturn => {
     >
       <TextLabelContainer>
         <Radio value={id} onChange={onChange} />
-        <Typography>{title}</Typography>
+        <Typography sx={{ color: "text.primary" }}>{title}</Typography>
       </TextLabelContainer>
       <Typography variant="body2">{description}</Typography>
     </TextLabelRoot>

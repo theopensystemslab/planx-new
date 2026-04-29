@@ -72,8 +72,7 @@ export default function ChecklistItem({
           <Typography
             id={`checkbox-description-${id}`}
             variant="body2"
-            color="text.secondary"
-            sx={{ px: 1.5 }}
+            sx={{ px: 1.5, py: 0.5, color: "text.secondary" }}
           >
             {description}
           </Typography>

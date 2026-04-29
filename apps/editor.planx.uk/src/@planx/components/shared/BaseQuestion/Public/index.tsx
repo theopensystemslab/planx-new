@@ -77,6 +77,7 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
               aria-labelledby={`radio-buttons-group-label-${props.id}`}
               name={`radio-buttons-group-${props.id}`}
               value={formik.values.selected.id}
+              sx={{ display: "block" }}
             >
               <Grid
                 container
@@ -125,8 +126,7 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
                     case QuestionLayout.Images:
                       return (
                         <Grid
-                          size={{ xs: 12, sm: 6 }}
-                          sx={{ contentWrap: 4 }}
+                          size={{ xs: 12, sm: 6, contentWrap: 4 }}
                           key={response.id}
                         >
                           <ImageRadio {...buttonProps} {...response} />

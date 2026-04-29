@@ -40,11 +40,7 @@ export const ChecklistItems = ({
           </Grid>
         </FormWrapper>
       ) : (
-        <Grid
-          size={{ xs: 12, sm: 6 }}
-          sx={{ contentWrap: 4 }}
-          key={option.data.text}
-        >
+        <Grid size={{ xs: 12, sm: 6, contentWrap: 4 }} key={option.data.text}>
           <ImageButton
             title={option.data.text}
             id={option.id}
