@@ -29,6 +29,7 @@ const StyledButtonBase = styled(ButtonBase)<{ teamcolor?: string }>(
     boxShadow: "0 1px 1.5px 0 rgba(0, 0, 0, 0.2)",
     "&:hover": {
       backgroundColor: theme.palette.background.paper,
+      color: "inherit",
     },
   }),
 );

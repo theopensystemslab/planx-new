@@ -155,8 +155,7 @@ export const EnvironmentSelect: React.FC = () => {
             <Typography
               variant="subtitle1"
               component="span"
-              sx={{ mr: 1 }}
-              color="white"
+              sx={{ mr: 1, color: (theme) => theme.palette.common.white }}
             >
               Plan✕
             </Typography>
