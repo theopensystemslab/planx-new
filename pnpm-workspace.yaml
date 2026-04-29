@@ -1,1 +1,10 @@
+packages:
+  - 'apps/*'
+  - 'apps/hasura.planx.uk/tests'
+  - 'packages/*'
+  - 'e2e'
+  - 'e2e/tests/ui-driven'
+  - 'e2e/tests/api-driven'
+  - 'scripts/*'
+  
 minimumReleaseAge: 10080
