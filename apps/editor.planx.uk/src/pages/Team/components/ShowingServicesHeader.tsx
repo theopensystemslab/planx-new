@@ -5,10 +5,12 @@ export const ShowingServicesHeader = ({
   matchedFlowsCount,
   isFiltered = false,
   isPinnedFlows = false,
+  isArchived = false,
 }: {
   matchedFlowsCount: number;
   isFiltered?: boolean;
   isPinnedFlows?: boolean;
+  isArchived?: boolean;
 }) => {
   let message =
     matchedFlowsCount !== 1
@@ -27,6 +29,13 @@ export const ShowingServicesHeader = ({
       matchedFlowsCount !== 1
         ? `Showing ${matchedFlowsCount} pinned flows`
         : `Showing ${matchedFlowsCount} pinned flow`;
+  }
+
+  if (isArchived) {
+    message =
+      matchedFlowsCount !== 1
+        ? `Showing ${matchedFlowsCount} archived flows`
+        : `Showing ${matchedFlowsCount} archived flow`;
   }
 
   return (

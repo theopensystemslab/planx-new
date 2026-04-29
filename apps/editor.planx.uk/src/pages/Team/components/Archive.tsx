@@ -70,20 +70,20 @@ const Archive: React.FC<Props> = ({
           justifyContent: "space-between",
           alignItems: "center",
           gap: 2,
+          pt: 1,
         }}
       >
         <Box
           sx={{
-            pt: 2,
             display: "flex",
             justifyContent: "flex-start",
             alignItems: "center",
-            gap: 2,
             minHeight: "50px",
           }}
         >
           <ShowingServicesHeader
             matchedFlowsCount={archivedFlows?.length || 0}
+            isArchived
           />
         </Box>
         <ToggleButtonGroup
