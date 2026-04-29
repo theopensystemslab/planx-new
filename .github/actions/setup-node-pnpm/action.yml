@@ -30,4 +30,4 @@ runs:
         
     - name: Setup .gitconfig
       shell: bash
-      run: mv .gitconfig ~/.gitconfig
+      run: cp .gitconfig ~/.gitconfig
