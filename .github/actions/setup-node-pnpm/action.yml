@@ -22,8 +22,7 @@ runs:
       with:
         node-version: ${{ inputs.node-version }}
         cache: "pnpm"
-        cache-dependency-path: "**/pnpm-lock.yaml"
-        
+        cache-dependency-path: "pnpm-lock.yaml"
     - name: Setup .gitconfig
       shell: bash
-      run: mv .gitconfig ~/.gitconfig
+      run: cp .gitconfig ~/.gitconfig

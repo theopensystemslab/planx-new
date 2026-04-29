@@ -33,7 +33,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        working-directory: apps/localplanning.services
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v6
