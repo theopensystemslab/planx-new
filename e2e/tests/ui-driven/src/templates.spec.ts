@@ -28,6 +28,8 @@ const OPTIONAL_NODE_INSTRUCTIONS =
 const TEMPLATED_FLOW_NAME = `${SOURCE_TEMPLATE_NAME} (templated)`;
 const TEMPLATED_FLOW_SLUG = `${SOURCE_TEMPLATE_SLUG}-templated`;
 
+const REGULAR_FLOW_NAME = "E2E Regular Flow";
+
 test.describe("Templates", () => {
   let context: TestContext = { ...contextDefaults };
 
@@ -157,6 +159,29 @@ test.describe("Templates", () => {
 
       await navigateToTeamPage(page);
       await expect(page.getByText(SOURCE_TEMPLATE_NAME)).toBeVisible();
+    });
+
+    test("can filter flows for source templates only", async ({ browser }) => {
+      const page = await getTeamPage({
+        browser,
+        userId: context.user!.id!,
+        teamName: context.team.name,
+      });
+
+      // Create a regular flow so we can assert it is excluded by the filter
+      await page.locator("button", { hasText: "Add a new flow" }).click();
+      await page.getByLabel("Flow name").fill(REGULAR_FLOW_NAME);
+      await page.getByRole("button", { name: "Add flow" }).click();
+      await page.locator("li.hanger > a").first().waitFor();
+
+      await navigateToTeamPage(page);
+
+      // Apply the "source template" filter from the Templates filter control
+      await page.locator('[aria-labelledby~="Templates-label"]').click();
+      await page.getByRole("option", { name: "Source template" }).click();
+
+      await expect(page.getByText(SOURCE_TEMPLATE_NAME)).toBeVisible();
+      await expect(page.getByText(REGULAR_FLOW_NAME)).not.toBeVisible();
     });
   });
 
