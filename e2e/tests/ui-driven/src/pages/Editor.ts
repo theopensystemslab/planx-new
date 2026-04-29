@@ -78,6 +78,68 @@ export class PlaywrightEditor {
     this.page.getByRole("button", { name: "Add flow " }).click();
   }
 
+  async addNewSourceTemplate(name: string): Promise<void> {
+    const openModalButton = this.page.locator("button", {
+      hasText: "Add a new flow",
+    });
+    await openModalButton.click();
+
+    await this.page.getByLabel("Flow name").fill(name);
+
+    await this.page.getByLabel("Source template").click();
+
+    await this.page.getByRole("button", { name: "Add flow" }).click();
+
+    await expect(this.firstNode).toBeVisible();
+  }
+
+  // Creates a templated flow from a named source template.
+  async addNewFlowFromTemplate(sourceTemplateName: string): Promise<void> {
+    const openModalButton = this.page.locator("button", {
+      hasText: "Add a new flow",
+    });
+    await openModalButton.click();
+
+    // Switch mode to "From a template..."
+    await this.page.locator('[aria-labelledby~="create-flow-mode"]').click();
+    await this.page.getByRole("option", { name: "From a template..." }).click();
+
+    // Select the source template
+    await this.page
+      .locator('[aria-labelledby~="available-templates-select"]')
+      .click();
+    await this.page.getByRole("option", { name: sourceTemplateName }).click();
+
+    // Save flow and redirect
+    await this.page.getByRole("button", { name: "Add flow " }).click();
+    await expect(
+      this.page.getByRole("tab", { name: "Customise" }),
+    ).toBeVisible();
+  }
+
+  // Create a new node in a templated flow
+  async createNodeWithTemplateConfig(
+    title: string,
+    instructions: string,
+    required: boolean,
+    locator?: Locator,
+  ): Promise<void> {
+    await (locator ?? this.firstNode).click();
+    await this.page.getByRole("dialog").waitFor();
+
+    await this.page.getByPlaceholder("Text").fill(title);
+
+    // force: true is necessary for MuiSwitch inputs
+    await this.page.getByLabel("Allow edits").click({ force: true });
+    await this.page.locator("#templatedNodeInstructions").fill(instructions);
+    if (required) {
+      await this.page.getByLabel("Require edits").click({ force: true });
+    }
+
+    await this.page.locator('button[form="modal"][type="submit"]').click();
+    await this.page.getByRole("dialog").waitFor({ state: "detached" });
+  }
+
   async createQuestion() {
     await createQuestionWithOptions(
       this.page,
@@ -305,5 +367,11 @@ export class PlaywrightEditor {
 
   async createFeedback() {
     await createFeedback(this.page, this.getNextNode());
+  }
+
+  async checkNodeExists(nodeName: string): Promise<Locator> {
+    const node = this.nodeList.filter({ hasText: nodeName }).first();
+    await expect(node).toBeVisible();
+    return node;
   }
 }

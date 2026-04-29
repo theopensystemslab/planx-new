@@ -1,0 +1,279 @@
+import { expect, test } from "@playwright/test";
+import {
+  contextDefaults,
+  setUpTestContext,
+  tearDownTestContext,
+} from "./helpers/context.js";
+import { getTeamPage } from "./helpers/getPage.js";
+import {
+  navigateToService,
+  navigateToTeamPage,
+  publishService,
+  turnServiceOnline,
+} from "./helpers/navigateAndPublish.js";
+import { TestContext } from "./helpers/types.js";
+import { PlaywrightEditor } from "./pages/Editor.js";
+
+const SOURCE_TEMPLATE_NAME = "E2E Source Template";
+const SOURCE_TEMPLATE_SLUG = "e2e-source-template";
+
+const REQUIRED_NODE_TITLE = "Required node";
+const REQUIRED_NODE_INSTRUCTIONS =
+  "You have to customise this node before publishing";
+
+const OPTIONAL_NODE_TITLE = "Optional node";
+const OPTIONAL_NODE_INSTRUCTIONS =
+  "You can customise this node if you feel like it";
+
+const TEMPLATED_FLOW_NAME = `${SOURCE_TEMPLATE_NAME} (templated)`;
+const TEMPLATED_FLOW_SLUG = `${SOURCE_TEMPLATE_SLUG}-templated`;
+
+test.describe("Templates", () => {
+  let context: TestContext = { ...contextDefaults };
+
+  test.beforeAll(async () => {
+    try {
+      context = await setUpTestContext(context);
+    } catch (error) {
+      await tearDownTestContext();
+      throw error;
+    }
+  });
+
+  test.afterAll(async () => {
+    await tearDownTestContext();
+  });
+
+  test.describe("As a platform admin", () => {
+    test("can create a source template flow", async ({ browser }) => {
+      const page = await getTeamPage({
+        browser,
+        userId: context.user!.id!,
+        teamName: context.team.name,
+      });
+      const editor = new PlaywrightEditor(page);
+
+      await editor.addNewSourceTemplate(SOURCE_TEMPLATE_NAME);
+
+      // After creation the editor redirects us into the source template flow
+      await expect(
+        page.getByRole("link", { name: SOURCE_TEMPLATE_SLUG }),
+      ).toBeVisible();
+    });
+
+    test("component modals show a Templates section not present in regular flows", async ({
+      browser,
+    }) => {
+      const page = await getTeamPage({
+        browser,
+        userId: context.user!.id!,
+        teamName: context.team.name,
+      });
+      await navigateToService(page, SOURCE_TEMPLATE_SLUG);
+
+      const editor = new PlaywrightEditor(page);
+      await editor.firstNode.click();
+      await page.getByRole("dialog").waitFor();
+
+      // check section is present
+      await expect(
+        page.getByText("This node is in a source template"),
+      ).toBeVisible();
+
+      // check "require edits" control and instructions are not initially visible
+      await expect(page.getByLabel("Require edits")).not.toBeVisible();
+      await expect(page.getByText("Instructions")).not.toBeVisible();
+
+      // check "allow edits" control is visible then click it
+      const allowEditsControl = page.getByLabel("Allow edits");
+      await expect(allowEditsControl).toBeVisible();
+      await allowEditsControl.click({ force: true });
+
+      // check "require edits" control and instructions fields are now visible after clicking "allow edits"
+      await expect(page.getByLabel("Require edits")).toBeVisible();
+      await expect(page.getByText("Instructions")).toBeVisible();
+      await page.getByLabel("Require edits").click({ force: true });
+
+      // Close modal without saving
+      await page.locator('button[aria-label="close"]').click();
+      await page.getByRole("button", { name: "Discard changes" }).click();
+      await page.getByRole("dialog").waitFor({ state: "detached" });
+
+      // check node is not visible
+      await expect(editor.nodeList).not.toContainText([REQUIRED_NODE_TITLE]);
+    });
+
+    test("can add required and optional nodes to a source template flow", async ({
+      browser,
+    }) => {
+      const page = await getTeamPage({
+        browser,
+        userId: context.user!.id!,
+        teamName: context.team.name,
+      });
+      await navigateToService(page, SOURCE_TEMPLATE_SLUG);
+
+      const editor = new PlaywrightEditor(page);
+
+      await editor.createNodeWithTemplateConfig(
+        REQUIRED_NODE_TITLE,
+        REQUIRED_NODE_INSTRUCTIONS,
+        true,
+      );
+
+      await editor.createNodeWithTemplateConfig(
+        OPTIONAL_NODE_TITLE,
+        OPTIONAL_NODE_INSTRUCTIONS,
+        false,
+        editor.getNextNode(),
+      );
+
+      // Check that the required node is visible and has the "Required" label
+      const requiredNode = await editor.checkNodeExists(REQUIRED_NODE_TITLE);
+      await expect(
+        requiredNode.getByText("Required", { exact: true }),
+      ).toBeVisible();
+
+      // Check that the optional node is visible and has the "Optional" label
+      const optionalNode = await editor.checkNodeExists(OPTIONAL_NODE_TITLE);
+      await expect(
+        optionalNode.getByText("Optional", { exact: true }),
+      ).toBeVisible();
+    });
+
+    test("can publish the source template and make it available for use", async ({
+      browser,
+    }) => {
+      const page = await getTeamPage({
+        browser,
+        userId: context.user!.id!,
+        teamName: context.team.name,
+      });
+      await navigateToService(page, SOURCE_TEMPLATE_SLUG);
+
+      await publishService(page);
+
+      await turnServiceOnline(page);
+
+      await navigateToTeamPage(page);
+      await expect(page.getByText(SOURCE_TEMPLATE_NAME)).toBeVisible();
+    });
+  });
+
+  // team editor creating a flow from source template, customising it and publishing it
+  // relies on the source template being online and published from the first block
+  test.describe("As a team editor", () => {
+    test("can create a templated flow from an available source template", async ({
+      browser,
+    }) => {
+      const page = await getTeamPage({
+        browser,
+        userId: context.user!.id!,
+        teamName: context.team.name,
+      });
+      const editor = new PlaywrightEditor(page);
+
+      await editor.addNewFlowFromTemplate(SOURCE_TEMPLATE_NAME);
+
+      await expect(
+        page.getByRole("link", { name: TEMPLATED_FLOW_SLUG }),
+      ).toBeVisible();
+    });
+
+    test("sees the Customise tab open by default with required tasks listed", async ({
+      browser,
+    }) => {
+      const page = await getTeamPage({
+        browser,
+        userId: context.user!.id!,
+        teamName: context.team.name,
+      });
+      await navigateToService(page, TEMPLATED_FLOW_SLUG);
+
+      // The "Customise" tab is the default active tab for templated flows
+      const customiseTab = page.getByRole("tab", { name: "Customise" });
+      await expect(customiseTab).toBeVisible();
+      await expect(customiseTab).toHaveAttribute("aria-selected", "true");
+
+      const editor = new PlaywrightEditor(page);
+      await editor.checkNodeExists(REQUIRED_NODE_TITLE);
+      await editor.checkNodeExists(OPTIONAL_NODE_TITLE);
+    });
+
+    // TODO - test("Cannot add new nodes in a templated flow");
+
+    test("cannot proceed past the Review step when required customisations are incomplete", async ({
+      browser,
+    }) => {
+      const page = await getTeamPage({
+        browser,
+        userId: context.user!.id!,
+        teamName: context.team.name,
+      });
+      await navigateToService(page, TEMPLATED_FLOW_SLUG);
+
+      // Make a change to the flow by editing the optional template node.
+      // this is required to get past the 'has any changes' step on publish
+      await page.getByRole("link", { name: OPTIONAL_NODE_TITLE }).click();
+      await page.getByRole("dialog").waitFor();
+      await page
+        .getByPlaceholder("Text")
+        .fill(`${OPTIONAL_NODE_TITLE} (updated)`);
+      await page.locator('button[form="modal"][type="submit"]').click();
+      await page.getByRole("dialog").waitFor({ state: "detached" });
+
+      // Open the publish dialog
+      await page.getByTestId("check-for-changes-to-publish-button").click();
+      await expect(page.getByRole("heading", { name: "Review" })).toBeVisible();
+
+      // Validation should report a failure for the uncustomised required node
+      await expect(page.getByText("Fail")).toBeVisible();
+
+      // Clicking "Next" should be blocked and show an error
+      await page.getByTestId("next-step-test-button").click();
+      await expect(
+        page.getByText("Fix errors before continuing"),
+      ).toBeVisible();
+
+      // Close dialog and return to editor
+      await page.getByRole("button", { name: "Keep editing" }).click();
+    });
+
+    test("can complete a required customisation task and then publish successfully", async ({
+      browser,
+    }) => {
+      const page = await getTeamPage({
+        browser,
+        userId: context.user!.id!,
+        teamName: context.team.name,
+      });
+      await navigateToService(page, TEMPLATED_FLOW_SLUG);
+
+      // Edit the required templated node to satisfy the customisation requirement.
+      await page.getByRole("link", { name: REQUIRED_NODE_TITLE }).click();
+      await page.getByRole("dialog").waitFor();
+      await page
+        .getByPlaceholder("Text")
+        .fill("Updated proposal description for this team");
+      await page.locator('button[form="modal"][type="submit"]').click();
+      await page.getByRole("dialog").waitFor({ state: "detached" });
+
+      // Check that our required node is complete in the customisation task list
+      const requiredCustomisationTask = page
+        .locator("li")
+        .filter({
+          has: page.getByRole("button", { name: REQUIRED_NODE_TITLE }),
+        })
+        .first();
+
+      await expect(
+        requiredCustomisationTask.locator("#customisation-complete"),
+      ).toBeVisible();
+
+      await publishService(page);
+
+      await navigateToTeamPage(page);
+      await expect(page.getByText(TEMPLATED_FLOW_NAME)).toBeVisible();
+    });
+  });
+});
