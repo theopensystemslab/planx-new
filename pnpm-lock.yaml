@@ -35,8 +35,8 @@ importers:
         specifier: ^3.1000.0
         version: 3.1032.0
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#aee0edd
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/aee0edd5f5f2c941407cd6794b8862c96d2fd0b7(@types/react@19.2.14)
+        specifier: github:theopensystemslab/planx-core#d282d7a
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f(@types/react@19.2.14)
       '@types/geojson':
         specifier: ^7946.0.16
         version: 7946.0.16
@@ -342,8 +342,8 @@ importers:
         specifier: 1.0.0-alpha.11
         version: 1.0.0-alpha.11
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#aee0edd
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/aee0edd5f5f2c941407cd6794b8862c96d2fd0b7(@types/react@19.2.14)
+        specifier: github:theopensystemslab/planx-core#d282d7a
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f(@types/react@19.2.14)
       '@tanstack/react-query':
         specifier: ^5.90.21
         version: 5.99.2(react@19.2.5)
@@ -909,8 +909,8 @@ importers:
         specifier: ^11.3.0
         version: 11.3.0
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#aee0edd
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/aee0edd5f5f2c941407cd6794b8862c96d2fd0b7(@types/react@19.2.14)
+        specifier: github:theopensystemslab/planx-core#d282d7a
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f(@types/react@19.2.14)
       axios:
         specifier: ^1.15.0
         version: 1.15.1
@@ -952,8 +952,8 @@ importers:
   e2e/tests/ui-driven:
     dependencies:
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#aee0edd
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/aee0edd5f5f2c941407cd6794b8862c96d2fd0b7(@types/react@19.2.14)
+        specifier: github:theopensystemslab/planx-core#d282d7a
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f(@types/react@19.2.14)
       axios:
         specifier: ^1.15.0
         version: 1.15.1
@@ -998,8 +998,8 @@ importers:
   scripts/encrypt:
     dependencies:
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#aee0edd
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/aee0edd5f5f2c941407cd6794b8862c96d2fd0b7(@types/react@19.2.14)
+        specifier: github:theopensystemslab/planx-core#d282d7a
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f(@types/react@19.2.14)
       tsx:
         specifier: ^4.21.0
         version: 4.21.0
@@ -3047,8 +3047,8 @@ packages:
   '@opensystemslab/map@1.0.0-alpha.11':
     resolution: {integrity: sha512-ETACPCk5Coef1L2kNT3MhIzLxVPDpyopxsTNcgeRyEqL71HBfTklGyC5+t7HgEgxRkX5wlUXqmKPNL9DdpVj8g==}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/aee0edd5f5f2c941407cd6794b8862c96d2fd0b7':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/aee0edd5f5f2c941407cd6794b8862c96d2fd0b7}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f}
     version: 1.0.0
 
   '@opentelemetry/api@1.9.0':
@@ -6647,10 +6647,6 @@ packages:
 
   fast-xml-builder@1.1.5:
     resolution: {integrity: sha512-4TJn/8FKLeslLAH3dnohXqE3QSoxkhvaMzepOIZytwJXZO69Bfz0HBdDHzOTOon6G59Zrk6VQ2bEiv1t61rfkA==}
-
-  fast-xml-parser@5.5.8:
-    resolution: {integrity: sha512-Z7Fh2nVQSb2d+poDViM063ix2ZGt9jmY1nWhPfHBOK2Hgnb/OW3P4Et3P/81SEej0J7QbWtJqxO05h8QYfK7LQ==}
-    hasBin: true
 
   fast-xml-parser@5.7.1:
     resolution: {integrity: sha512-8Cc3f8GUGUULg34pBch/KGyPLglS+OFs05deyOlY7fL2MTagYPKrVQNmR1fLF/yJ9PH5ZSTd3YDF6pnmeZU+zA==}
@@ -10681,10 +10677,6 @@ packages:
     resolution: {integrity: sha512-508e6IcKLrhxKdBbcA2b4KQZlLVp2+J5UwQ6F7Drckkc5N9ZJwFa4TgWtsww9UG8fGHbm6gbV19TdM5pQ4GaIA==}
     hasBin: true
 
-  uuid@13.0.0:
-    resolution: {integrity: sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==}
-    hasBin: true
-
   uuid@14.0.0:
     resolution: {integrity: sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg==}
     hasBin: true
@@ -12013,7 +12005,7 @@ snapshots:
   '@aws-sdk/xml-builder@3.972.18':
     dependencies:
       '@smithy/types': 4.14.1
-      fast-xml-parser: 5.5.8
+      fast-xml-parser: 5.7.1
       tslib: 2.8.1
 
   '@aws/lambda-invoke-store@0.2.4': {}
@@ -13945,7 +13937,7 @@ snapshots:
     transitivePeerDependencies:
       - preact
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/aee0edd5f5f2c941407cd6794b8862c96d2fd0b7(@types/react@19.2.14)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f(@types/react@19.2.14)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.4)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
@@ -13966,7 +13958,7 @@ snapshots:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
       type-fest: 4.41.0
-      uuid: 13.0.0
+      uuid: 14.0.0
       zod: 3.25.76
     transitivePeerDependencies:
       - '@mui/material-pigment-css'
@@ -18176,12 +18168,6 @@ snapshots:
   fast-xml-builder@1.1.5:
     dependencies:
       path-expression-matcher: 1.5.0
-
-  fast-xml-parser@5.5.8:
-    dependencies:
-      fast-xml-builder: 1.1.5
-      path-expression-matcher: 1.5.0
-      strnum: 2.2.3
 
   fast-xml-parser@5.7.1:
     dependencies:
@@ -22840,8 +22826,6 @@ snapshots:
   uuid@10.0.0: {}
 
   uuid@11.0.5: {}
-
-  uuid@13.0.0: {}
 
   uuid@14.0.0: {}
 
