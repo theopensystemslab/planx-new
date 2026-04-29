@@ -2,6 +2,7 @@ import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
+import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
@@ -18,7 +19,11 @@ import { useSlackMessage } from "../../../hooks/useSlackMessage";
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import { Description } from "./components/Description";
 import { PublicLink } from "./components/PublicLink";
-import { GET_FLOW_STATUS, UPDATE_FLOW_STATUS } from "./queries";
+import {
+  GET_FLOW_STATUS,
+  UPDATE_FLOW_STATUS,
+  useGetActiveSessions,
+} from "./queries";
 import { validationSchema } from "./schema";
 import type {
   FlowStatusFormValues,
@@ -42,6 +47,9 @@ const FlowStatus: React.FC = () => {
   const { mutate: sendSlackMessage } = useSlackMessage();
 
   const { origin } = useLocation();
+
+  const activeSessionsCount =
+    useGetActiveSessions(flowId)?.data?.lowcalSessions?.length || 0;
 
   const publishedLink = `${origin}/${teamSlug}/${flowSlug}/published`;
 
@@ -212,19 +220,35 @@ const FlowStatus: React.FC = () => {
                   <ErrorWrapper
                     error={confirmationError ? `Confirm before continuing` : ``}
                   >
-                    <Grid container component="fieldset" sx={{ margin: 0 }}>
-                      <Typography gutterBottom>
+                    <Stack component="fieldset" sx={{ margin: 0 }}>
+                      <Typography sx={{ mb: 2 }}>
                         {formik.values.status === "online"
-                          ? "Services that are set offline are no longer publicly discoverable and cannot accept responses from users."
+                          ? `Services that are set offline are not publicly discoverable and cannot accept new responses.
+                          ${activeSessionsCount > 0 ? "Ongoing submissions will not be blocked." : ""}`
                           : "Only services that are ready to be publicly discoverable and accept responses from users should be set online."}
                       </Typography>
+
+                      {activeSessionsCount > 0 && (
+                        <>
+                          <Typography sx={{ mb: 2 }}>
+                            This service currently has{" "}
+                            <strong>{activeSessionsCount}</strong> active
+                            session{activeSessionsCount > 1 ? "s" : ""} that can
+                            still be completed.
+                          </Typography>
+                          <Typography sx={{ mb: 2 }}>
+                            Are you sure you want to turn this service offline?
+                          </Typography>
+                        </>
+                      )}
+
                       <Grid size={12} sx={{ pointerEvents: "auto" }}>
                         <ChecklistItem
                           id="status-confirmation-checkbox"
                           data-testid="status-confirmation-checkbox"
                           label={
                             formik.values.status === "online"
-                              ? "This service will no longer be able to receive public responses"
+                              ? "This service will no longer be able to receive new public responses"
                               : "This service is ready to accept public responses"
                           }
                           checked={completed}
@@ -234,7 +258,7 @@ const FlowStatus: React.FC = () => {
                           }}
                         />
                       </Grid>
-                    </Grid>
+                    </Stack>
                   </ErrorWrapper>
                 </Box>
               </ConfirmationDialog>
