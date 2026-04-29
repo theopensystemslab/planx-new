@@ -162,7 +162,12 @@ export default function MakePayment({
       </Banner>
     ) : (
       <Container maxWidth="contentWrap">
-        <Typography sx={{ maxWidth: "formWrap", pt: 5 }} gutterBottom>
+        <Typography
+          component="h1"
+          variant="h1"
+          sx={{ maxWidth: "formWrap", pt: 5 }}
+          gutterBottom
+        >
           Pay
         </Typography>
       </Container>
