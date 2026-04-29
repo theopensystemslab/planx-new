@@ -31,7 +31,12 @@ export const Discount = ({ serviceCharges }: SubscriptionProps) => {
       <Typography variant="h3" component="h4" gutterBottom>
         Discount
       </Typography>
-      <Typography variant="body2" color="text.secondary">
+      <Typography
+        variant="body2"
+        sx={{
+          color: "text.secondary",
+        }}
+      >
         Service charges exceeding £10k per fiscal year count as a discount
         towards your next renewal cost of Plan✕. Upon reaching £10k, 50% of the
         excess amount is applied as a discount.

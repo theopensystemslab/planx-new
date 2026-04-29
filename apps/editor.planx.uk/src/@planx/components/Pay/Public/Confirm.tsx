@@ -236,7 +236,13 @@ export default function Confirm(props: Props) {
                 ? "Unknown"
                 : formattedPriceWithCurrencySymbol(props.fee)}
             </Typography>
-            <Typography variant="subtitle1" component="span" color="inherit">
+            <Typography
+              variant="subtitle1"
+              component="span"
+              sx={{
+                color: "inherit",
+              }}
+            >
               <ReactMarkdownOrHtml
                 source={props.description}
                 openLinksOnNewTab

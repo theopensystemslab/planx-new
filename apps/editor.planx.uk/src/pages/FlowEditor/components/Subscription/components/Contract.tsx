@@ -7,7 +7,12 @@ export const Contract = () => (
     <Typography variant="h3" component="h4" gutterBottom>
       Contract
     </Typography>
-    <Typography variant="body2" color="text.secondary">
+    <Typography
+      variant="body2"
+      sx={{
+        color: "text.secondary",
+      }}
+    >
       Terms and key dates of your software contract. OSL invoices annually for
       the fixed subscription cost of Plan✕.
     </Typography>

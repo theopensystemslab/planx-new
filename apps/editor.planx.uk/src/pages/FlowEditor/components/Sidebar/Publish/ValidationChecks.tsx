@@ -95,11 +95,12 @@ export const ValidationChecks = (props: {
                   primary={
                     <Typography
                       variant="body2"
-                      color={
-                        check.status === "Not applicable"
-                          ? "text.disabled"
-                          : "inherit"
-                      }
+                      sx={{
+                        color:
+                          check.status === "Not applicable"
+                            ? "text.disabled"
+                            : "inherit",
+                      }}
                     >
                       {check.title}
                     </Typography>
@@ -107,12 +108,13 @@ export const ValidationChecks = (props: {
                   secondary={
                     <Typography
                       variant="body2"
-                      sx={{ fontSize: "small" }}
-                      color={
-                        check.status === "Not applicable"
-                          ? "text.disabled"
-                          : "inherit"
-                      }
+                      sx={{
+                        fontSize: "small",
+                        color:
+                          check.status === "Not applicable"
+                            ? "text.disabled"
+                            : "inherit",
+                      }}
                     >
                       {check.message}
                     </Typography>
