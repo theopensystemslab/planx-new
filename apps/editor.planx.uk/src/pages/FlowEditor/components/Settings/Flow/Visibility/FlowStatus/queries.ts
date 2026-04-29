@@ -1,3 +1,4 @@
+import { useQuery } from "@apollo/client";
 import gql from "graphql-tag";
 
 export const GET_FLOW_STATUS = gql`
@@ -31,3 +32,35 @@ export const UPDATE_FLOW_STATUS = gql`
     }
   }
 `;
+
+export const GET_ACTIVE_SESSIONS = gql`
+  query GetActiveSessions($flowId: uuid!) {
+    lowcalSessions: lowcal_sessions(
+      where: {
+        flow_id: { _eq: $flowId }
+        deleted_at: { _is_null: true }
+        submitted_at: { _is_null: true }
+        sanitised_at: { _is_null: true }
+      }
+    ) {
+      id
+    }
+  }
+`;
+
+type GetActiveSessionsQuery = {
+  lowcalSessions: {
+    id: string;
+  }[];
+};
+
+type GetActiveSessionsVars = { flowId: string };
+
+export const useGetActiveSessions = (flowId: string) => {
+  return useQuery<GetActiveSessionsQuery, GetActiveSessionsVars>(
+    GET_ACTIVE_SESSIONS,
+    {
+      variables: { flowId },
+    },
+  );
+};
