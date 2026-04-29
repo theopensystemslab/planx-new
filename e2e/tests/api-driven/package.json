@@ -1,11 +1,11 @@
 {
+  "name": "@planx/e2e-api",
   "private": true,
   "scripts": {
     "test": "cucumber-js --tags 'not @regression'",
     "test:regression": "cucumber-js"
   },
   "type": "module",
-  "packageManager": "pnpm@10.30.2",
   "dependencies": {
     "@cucumber/cucumber": "^11.3.0",
     "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#3c3dea5",
@@ -23,10 +23,5 @@
     "@types/node": "~24.10.15",
     "ts-node": "^10.9.2",
     "typescript": "~5.9.3"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@opensystemslab/planx-core"
-    ]
   }
 }
