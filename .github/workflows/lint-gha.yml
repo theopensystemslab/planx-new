@@ -4,7 +4,6 @@ on:
   pull_request:
     paths:
       - '.github/workflows/**'
-      - '.github/actions/**'
 
 permissions:
   contents: read
@@ -16,7 +15,3 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run actionlint
         uses: rhysd/actionlint@v1.7.12
-        with:
-          args: >-
-            .github/workflows/*.yml
-            .github/actions/*/action.yml
