@@ -246,11 +246,13 @@ test.describe("Templates", () => {
       // The card should show a purple banner with the team name and a star icon
       await expect(templatedCard.getByText(context.team.name)).toBeVisible();
       await expect(
-        templatedCard.locator('[data-testid="templated-flow-star"]'),
+        templatedCard.getByTestId("templated-flow-star"),
       ).toBeVisible();
 
       // The source template should not appear in the filtered results
-      await expect(page.getByText(SOURCE_TEMPLATE_NAME)).not.toBeVisible();
+      await expect(
+        page.getByText(SOURCE_TEMPLATE_NAME, { exact: true }),
+      ).not.toBeVisible();
     });
 
     // TODO - test("Cannot add new nodes in a templated flow");
@@ -320,7 +322,7 @@ test.describe("Templates", () => {
         .first();
 
       await expect(
-        requiredCustomisationTask.locator("#customisation-complete"),
+        requiredCustomisationTask.getByTestId("customisation-complete"),
       ).toBeVisible();
 
       await publishService(page);

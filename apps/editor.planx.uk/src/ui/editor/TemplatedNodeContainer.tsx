@@ -124,7 +124,7 @@ export const TemplatedNodeContainer: React.FC<TemplatedNodeContainerProps> = ({
           </Typography>
           {isComplete && (
             <CheckCircleIcon
-              id="customisation-complete"
+              data-testid="customisation-complete"
               fontSize="small"
               sx={(theme) => ({ color: theme.palette.success.main })}
             />
