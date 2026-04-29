@@ -225,6 +225,34 @@ test.describe("Templates", () => {
       await editor.checkNodeExists(OPTIONAL_NODE_TITLE);
     });
 
+    test("can filter flows for templated flows only", async ({ browser }) => {
+      const page = await getTeamPage({
+        browser,
+        userId: context.user!.id!,
+        teamName: context.team.name,
+      });
+
+      // Apply the "templated" filter from the Templates filter control
+      await page.locator('[aria-labelledby~="Templates-label"]').click();
+      await page.getByRole("option", { name: "Templated" }).click();
+
+      // The templated flow card should be visible in the filtered results
+      const templatedCard = page
+        .locator("li")
+        .filter({ hasText: TEMPLATED_FLOW_NAME })
+        .first();
+      await expect(templatedCard).toBeVisible();
+
+      // The card should show a purple banner with the team name and a star icon
+      await expect(templatedCard.getByText(context.team.name)).toBeVisible();
+      await expect(
+        templatedCard.locator('[data-testid="templated-flow-star"]'),
+      ).toBeVisible();
+
+      // The source template should not appear in the filtered results
+      await expect(page.getByText(SOURCE_TEMPLATE_NAME)).not.toBeVisible();
+    });
+
     // TODO - test("Cannot add new nodes in a templated flow");
 
     test("cannot proceed past the Review step when required customisations are incomplete", async ({
@@ -336,9 +364,7 @@ test.describe("Templates", () => {
       await expect(
         page.getByRole("heading", { name: "Publish" }),
       ).toBeVisible();
-      await expect(
-        page.getByText("This flow is a template"),
-      ).toBeVisible();
+      await expect(page.getByText("This flow is a template")).toBeVisible();
       await expect(
         page.getByText(new RegExp(TEMPLATED_FLOW_SLUG)),
       ).toBeVisible();
