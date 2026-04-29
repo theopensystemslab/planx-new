@@ -1,3 +1,4 @@
+import type { Feature, GeoJsonProperties, Geometry } from "geojson";
 import { JSDOM } from "jsdom";
 import createDOMPurify, { type WindowLike } from "dompurify";
 import { subMinutes } from "date-fns";
@@ -63,7 +64,7 @@ export const generateHTMLForSession = async (session: Session) => {
 
   const html = generateApplicationHTML({
     planXExportData: responses,
-    boundingBox,
+    boundingBox: boundingBox as unknown as Feature<Geometry, GeoJsonProperties>,
     userAction,
   });
 
