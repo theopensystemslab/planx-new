@@ -68,9 +68,12 @@ const Favicon: React.FC = () => {
             />
           </InputRowItem>
           <Typography
-            color="text.secondary"
             variant="body2"
-            sx={{ pl: 2, alignSelf: "center" }}
+            sx={{
+              color: "text.secondary",
+              pl: 2,
+              alignSelf: "center",
+            }}
           >
             .ico or .png
           </Typography>

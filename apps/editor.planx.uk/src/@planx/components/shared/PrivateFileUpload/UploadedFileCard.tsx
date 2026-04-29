@@ -141,7 +141,11 @@ export const UploadedFileCard: React.FC<Props> = ({
               <Box sx={{ mr: 2 }}>
                 <Typography
                   variant="body1"
-                  sx={{ overflowWrap: "break-word", wordBreak: "break-all", pb: "0.25em" }}
+                  sx={{
+                    overflowWrap: "break-word",
+                    wordBreak: "break-all",
+                    pb: "0.25em",
+                  }}
                   data-testid={file.name}
                 >
                   {file.name}
@@ -150,8 +154,10 @@ export const UploadedFileCard: React.FC<Props> = ({
                 {drawingNumber && (
                   <Typography
                     variant="body2"
-                    color="text.secondary"
-                    sx={{ pt: "0.25em" }}
+                    sx={{
+                      color: "text.secondary",
+                      pt: "0.25em",
+                    }}
                   >
                     Drawing number: {drawingNumber}
                   </Typography>
@@ -202,7 +208,13 @@ export const UploadedFileCard: React.FC<Props> = ({
               >
                 Drawing number (optional)
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "text.secondary",
+                  mb: 1,
+                }}
+              >
                 Separate multiple drawing numbers in this file with a comma
               </Typography>
               <Input

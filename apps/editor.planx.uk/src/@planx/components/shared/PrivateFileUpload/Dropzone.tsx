@@ -202,13 +202,21 @@ export function Dropzone<T extends FileUploadSlot>({
             </>
           )}
         </Typography>
-        <Typography color="text.secondary" variant="body2">
+        <Typography
+          variant="body2"
+          sx={{
+            color: "text.secondary",
+          }}
+        >
           pdf, jpg, png
         </Typography>
         <Typography
-          color="text.secondary"
           variant="body2"
-          sx={{ fontSize: 14, pt: 1 }}
+          sx={{
+            color: "text.secondary",
+            fontSize: 14,
+            pt: 1,
+          }}
         >
           Max size per file 30MB
         </Typography>

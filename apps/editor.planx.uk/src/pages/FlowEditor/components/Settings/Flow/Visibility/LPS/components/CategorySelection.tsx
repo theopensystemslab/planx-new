@@ -38,7 +38,12 @@ const CategoryLabel: React.FC<(typeof CATEGORIES)[number]> = ({
     <Typography variant="body2" sx={{ fontWeight: "bold" }}>
       {label}
     </Typography>
-    <Typography variant="body2" color="text.secondary">
+    <Typography
+      variant="body2"
+      sx={{
+        color: "text.secondary",
+      }}
+    >
       {description}
     </Typography>
   </>
