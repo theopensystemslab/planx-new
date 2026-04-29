@@ -301,4 +301,54 @@ test.describe("Templates", () => {
       await expect(page.getByText(TEMPLATED_FLOW_NAME)).toBeVisible();
     });
   });
+
+  // relies on the templated flow being created in the "As a team editor" block
+  test.describe("As a platform admin", () => {
+    test("can publish changes to the source template and sees affected templated flows listed", async ({
+      browser,
+    }) => {
+      const page = await getTeamPage({
+        browser,
+        userId: context.user!.id!,
+        teamName: context.team.name,
+      });
+      await navigateToService(page, SOURCE_TEMPLATE_SLUG);
+
+      // Make a change to the source template by editing the optional node
+      await page.getByRole("link", { name: OPTIONAL_NODE_TITLE }).click();
+      await page.getByRole("dialog").waitFor();
+      await page
+        .getByPlaceholder("Text")
+        .fill(`${OPTIONAL_NODE_TITLE} (source updated)`);
+      await page.locator('button[form="modal"][type="submit"]').click();
+      await page.getByRole("dialog").waitFor({ state: "detached" });
+
+      // Open the publish dialog and advance to the Publish step
+      await page.getByTestId("check-for-changes-to-publish-button").click();
+      await expect(page.getByRole("heading", { name: "Review" })).toBeVisible();
+      await page.getByTestId("next-step-test-button").click();
+
+      await expect(page.getByRole("heading", { name: "Test" })).toBeVisible();
+      await page.getByTestId("test-confirmation-checkbox").click();
+      await page.getByTestId("next-step-publish-button").click();
+
+      // The Publish step should show template-specific messaging and list affected flows
+      await expect(
+        page.getByRole("heading", { name: "Publish" }),
+      ).toBeVisible();
+      await expect(
+        page.getByText("This flow is a template"),
+      ).toBeVisible();
+      await expect(
+        page.getByText(new RegExp(TEMPLATED_FLOW_SLUG)),
+      ).toBeVisible();
+
+      // Complete the publish
+      await page.getByTestId("publish-summary-input").fill("lorem ipsum");
+      await page.getByTestId("publish-button").click();
+      await expect(
+        page.getByText("Successfully published changes").first(),
+      ).toBeVisible();
+    });
+  });
 });
