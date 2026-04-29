@@ -1,4 +1,0 @@
-minimumReleaseAge: 10080
-
-minimumReleaseAgeExclude:
-  - dompurify@3.4.11

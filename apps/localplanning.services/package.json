@@ -33,7 +33,6 @@
     "tailwindcss": "^4.2.1",
     "typescript": "~5.9.3"
   },
-  "packageManager": "pnpm@10.30.2",
   "devDependencies": {
     "@storybook/addon-a11y": "^10",
     "@storybook/react": "^10",

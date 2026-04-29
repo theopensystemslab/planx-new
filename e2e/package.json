@@ -1,4 +1,5 @@
 {
+  "name": "@planx/e2e",
   "private": true,
   "scripts": {
     "pretest": "../scripts/check-containers.sh e2e",
@@ -12,7 +13,6 @@
     "lint": "eslint './tests/**/*.{js,ts}' && prettier -c ./tests",
     "lint:fix": "eslint --fix './tests/**/*.{js,ts}' && prettier -w ./tests",
     "check": "tsc && pnpm lint",
-    "postinstall": "cd tests/ui-driven && pnpm install && cd ../api-driven && pnpm install",
     "prepare": "cd .. && husky install e2e/.husky"
   },
   "lint-staged": {
@@ -21,7 +21,6 @@
       "prettier -w ./tests"
     ]
   },
-  "packageManager": "pnpm@10.30.2",
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "~24.10.15",
