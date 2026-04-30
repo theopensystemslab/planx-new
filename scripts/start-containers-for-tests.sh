@@ -33,14 +33,23 @@ function setupContainers(){
   # Destroy any previous e2e containers and data
   e2e_compose down --volumes --remove-orphans
 
-  # Remove any dangling images that might cause conflicts
-  echo "Cleaning up dangling images..."
-  docker image prune -f || true
+  echo "Building images..."
+
+  if [ -n "$CI" ]; then
+    # In CI, build with GitHub Actions cache so layers are reused across runs
+    docker buildx bake \
+      -f docker-compose.yml \
+      -f docker-compose.e2e.yml \
+      --set "*.cache-from=type=gha" \
+      --set "*.cache-to=type=gha,mode=max" \
+      --load
+  else
+    DOCKER_BUILDKIT=1 e2e_compose build
+  fi
 
   echo "Starting docker…"
 
-  DOCKER_BUILDKIT=1 e2e_compose build
-  DOCKER_BUILDKIT=1 e2e_compose up --wait test-ready
+  DOCKER_BUILDKIT=1 e2e_compose up --no-build --wait test-ready
   echo "All containers ready."
 }
 

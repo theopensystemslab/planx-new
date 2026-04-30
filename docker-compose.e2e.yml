@@ -22,7 +22,20 @@ services:
     entrypoint: sh
     command: -c "echo ready for testing"
 
+  postgres:
+    image: planx-e2e/postgres:latest
+
+  hasura:
+    image: planx-e2e/hasura:latest
+
+  hasura-proxy:
+    image: planx-e2e/hasura-proxy:latest
+
+  sharedb:
+    image: planx-e2e/sharedb:latest
+
   api:
+    image: planx-e2e/api:latest
     environment:
       UNIFORM_SUBMISSION_URL: http://mock-server:8080
       UNIFORM_TOKEN_URL: http://mock-server:8080
