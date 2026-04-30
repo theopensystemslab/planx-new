@@ -229,12 +229,10 @@ test("character limit counter shows error state when over limit", async () => {
   const { user } = await setup(
     <TextInput title="hello" type={TextInputType.Long} />,
   );
-  const textArea = screen.getByRole("textbox", {
-    name: /hello/i,
-  });
+  const textArea = screen.getByRole("textbox", { name: /hello/i });
 
-  await user.type(textArea, `${twentyFiveCharacterTest.repeat(10)}`);
-  await user.type(textArea, `extra`);
+  await user.click(textArea);
+  await user.paste(`${twentyFiveCharacterTest.repeat(10)}extra`);
 
   const errorCharacterCounter = await screen.findByText(
     "You have 5 characters too many",
@@ -247,19 +245,18 @@ test("character limit counter should meet accessibility requirements", async () 
   const { user, container } = await setup(
     <TextInput title="hello" type={TextInputType.Long} />,
   );
-  const textArea = screen.getByRole("textbox", {
-    name: /hello/i,
-  });
+  const textArea = screen.getByRole("textbox", { name: /hello/i });
 
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 
-  await user.type(textArea, `${twentyFiveCharacterTest.repeat(10)}`);
+  await user.click(textArea);
+  await user.paste(`${twentyFiveCharacterTest.repeat(10)}`);
 
   const resultsAfterTyping = await axe(container);
   expect(resultsAfterTyping).toHaveNoViolations();
 
-  await user.type(textArea, `extra`);
+  await user.paste(`extra`);
   const resultsWithError = await axe(container);
   expect(resultsWithError).toHaveNoViolations();
 });
