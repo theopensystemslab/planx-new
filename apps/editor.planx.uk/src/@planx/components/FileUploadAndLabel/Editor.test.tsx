@@ -7,21 +7,23 @@ import { setup } from "testUtils";
 
 import FileUploadAndLabelComponent from "./Editor";
 
-const { getState } = useStore;
+const { setState } = useStore;
 
 describe("FileUploadAndLabel - Editor Modal", () => {
   // TODO correctly mock an authenticated Platform Admin user so 'add' button is enabled in final test
   beforeEach(() => {
-    getState().setUser({
-      id: 1,
-      firstName: "Editor",
-      lastName: "Test",
-      isPlatformAdmin: true,
-      isAnalyst: false,
-      email: "test@test.com",
-      teams: [],
+    setState({
+      user: {
+        id: 1,
+        firstName: "Editor",
+        lastName: "Test",
+        isPlatformAdmin: true,
+        isAnalyst: false,
+        email: "test@test.com",
+        teams: [],
+        defaultTeamId: null,
+      },
       jwt: "x.y.z",
-      defaultTeamId: null,
     });
   });
 

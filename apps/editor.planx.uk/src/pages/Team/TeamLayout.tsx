@@ -31,7 +31,14 @@ const TeamLayout: React.FC<Props> = ({ flowView, setFlowView }) => {
   };
 
   return (
-    <Box width="100%" bgcolor="background.paper">
+    <Box
+      sx={{
+        width: "100%",
+        bgcolor: "background.paper",
+        borderBottom: 1,
+        borderColor: "border.main",
+      }}
+    >
       <TabList>
         <Tabs onChange={handleChange} value={flowView} aria-label={"Flows"}>
           {tabs.map(({ label, path }) => (

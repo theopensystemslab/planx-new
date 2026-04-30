@@ -11,7 +11,7 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 
-import { useTeamSubmissionIntegrations } from "./hooks/useGetTeamSubmissionIntegrations";
+import { useTeamSubmissionEmails } from "./hooks/useGetTeamSubmissionEmails";
 import { EmailSelectionProps } from "./types";
 
 interface EmailSectionProps {
@@ -62,7 +62,7 @@ const EmailSelection: React.FC<EmailSelectionProps> = ({
   return (
     <>
       <InputRow>
-        <Typography variant="body2" mb={2}>
+        <Typography variant="body2" sx={{ mb: 2 }}>
           Add or select a submission email address for this service. To edit or
           delete submission emails, please visit your{" "}
           <Link
@@ -86,7 +86,7 @@ const EmailSelection: React.FC<EmailSelectionProps> = ({
           >
             {emailOptions.map((email) => (
               <MenuItem key={email.id} value={email.id}>
-                {email.submissionEmail}
+                {email.address}
               </MenuItem>
             ))}
             <MenuItem value="new-email">New email...</MenuItem>
@@ -112,11 +112,9 @@ const EmailSelection: React.FC<EmailSelectionProps> = ({
 const EmailSection: React.FC<EmailSectionProps> = ({ teamId, teamSlug }) => {
   const { values, setFieldValue } = useFormikContext<Send>();
 
-  const { data, loading, error } = useTeamSubmissionIntegrations(teamId);
-  const emailOptions = data?.submissionIntegrations || [];
-  const defaultEmail = emailOptions.find(
-    (email) => email.defaultEmail === true,
-  );
+  const { data, loading, error } = useTeamSubmissionEmails(teamId);
+  const emailOptions = data?.submissionEmails || [];
+  const defaultEmail = emailOptions.find((email) => email.isDefault === true);
 
   const handleSelectChange = (event: SelectChangeEvent<unknown>) => {
     const selectedValue = event.target.value as string;

@@ -127,7 +127,9 @@ const Checklist: React.FC<Props> = React.memo((props) => {
             }}
             preload={false}
             onContextMenu={handleContextMenu}
-            ref={drag}
+            ref={(el) => {
+              drag(el);
+            }}
           >
             {props.data?.img && (
               <Thumbnail

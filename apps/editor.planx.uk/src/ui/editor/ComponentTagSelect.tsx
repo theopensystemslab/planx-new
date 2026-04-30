@@ -42,14 +42,14 @@ const renderOption: AutocompleteProps<
   );
 };
 
-const renderTags: AutocompleteProps<
+const renderValue: AutocompleteProps<
   NodeTag,
   true,
   true,
   false,
   "div"
->["renderTags"] = (value, getTagProps) =>
-  value.map((tag, index) => {
+>["renderValue"] = (value, getTagProps) =>
+  (value as NodeTag[]).map((tag, index) => {
     return (
       <Chip
         {...getTagProps({ index })}
@@ -90,7 +90,7 @@ export const ComponentTagSelect: React.FC<Props> = ({
             onChange={(_e, value) => onChange(value)}
             value={value}
             renderOption={renderOption}
-            renderTags={renderTags}
+            renderValue={renderValue}
             disabled={disabled}
           />
         </InputRow>

@@ -78,10 +78,8 @@ describe(`sending an application by email to a planning office`, () => {
         teamSlug: "southwark",
         recipient: "planning.office.example@council.gov.uk",
         request: {
-          personalisation: {
-            serviceName: "Apply for something",
-            downloadLink: "https://api.editor.planx.uk/test/123",
-          },
+          serviceName: "Apply for something",
+          downloadLink: "https://api.editor.planx.uk/test/123",
         },
         response: {
           message: "Success",
@@ -115,8 +113,8 @@ describe(`sending an application by email to a planning office`, () => {
       data: {
         flowsByPK: {
           submissionEmailId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
-          submissionIntegration: {
-            submissionEmail: "planning.office.example@council.gov.uk",
+          submissionEmail: {
+            address: "delivered@resend.dev",
           },
         },
       },
@@ -159,8 +157,8 @@ describe(`sending an application by email to a planning office`, () => {
       .then((res) => {
         expect(res.body).toEqual({
           message: `Successfully sent to email`,
-          inbox: "planning.office.example@council.gov.uk",
-          govuk_notify_template: "Submit",
+          inbox: "delivered@resend.dev",
+          resendTemplate: "submit",
         });
       });
   });
@@ -193,8 +191,8 @@ describe(`sending an application by email to a planning office`, () => {
       data: {
         flowsByPK: {
           submissionEmailId: null,
-          submissionIntegration: {
-            submissionEmail: null,
+          submissionEmail: {
+            address: null,
           },
         },
       },
@@ -202,11 +200,11 @@ describe(`sending an application by email to a planning office`, () => {
     });
 
     queryMock.mockQuery({
-      name: "GetDefaultSubmissionIntegration",
+      name: "GetDefaultSubmissionEmail",
       data: {
-        submissionIntegrations: [
+        submissionEmails: [
           {
-            submissionEmail: null,
+            address: null,
           },
         ],
       },

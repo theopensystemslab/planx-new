@@ -43,7 +43,7 @@ export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
           <FieldInputDescription description={data.description} />
         )}
         {data.options.map((option) => (
-          <Grid item xs={12} key={option.id}>
+          <Grid size={12} key={option.id}>
             <ChecklistItem
               onChange={changeCheckbox(option.id)}
               label={option.data.text}

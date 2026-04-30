@@ -7,9 +7,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
 import { Form, Formik, FormikConfig } from "formik";
-import gql from "graphql-tag";
 import { useToast } from "hooks/useToast";
-import { client } from "lib/graphql";
 import React from "react";
 import { URLPrefix } from "ui/editor/URLPrefix";
 import InputLabel from "ui/public/InputLabel";
@@ -17,12 +15,16 @@ import Input from "ui/shared/Input/Input";
 import { slugify } from "utils";
 import { object, string } from "yup";
 
+import { useRenameAndUnarchiveFlow } from "./hooks/useRenameAndArchiveFlow";
+import { useRenameFlow } from "./hooks/useRenameFlow";
+
 interface RenameFlow {
   flowName: string;
   flowSlug: string;
 }
 
 interface Props {
+  mode: "rename" | "renameAndUnarchive";
   isDialogOpen: boolean;
   handleClose: () => void;
   flow: {
@@ -30,6 +32,7 @@ interface Props {
     slug: string;
     id: string;
   };
+  teamId: number;
 }
 
 const validationSchema = object().shape({
@@ -38,40 +41,39 @@ const validationSchema = object().shape({
 });
 
 export const RenameDialog: React.FC<Props> = ({
+  mode,
   isDialogOpen,
   handleClose,
   flow,
+  teamId,
 }) => {
   const toast = useToast();
+  const [renameFlow] = useRenameFlow(teamId);
+  const [renameAndUnarchiveFlow] = useRenameAndUnarchiveFlow(teamId);
 
   const onSubmit: FormikConfig<RenameFlow>["onSubmit"] = async (
     { flowName, flowSlug },
     { setFieldError, setSubmitting },
   ) => {
+    const variables = {
+      flowId: flow.id,
+      newName: flowName.trim(),
+      newSlug: flowSlug,
+      teamId,
+    };
     try {
-      await client.mutate({
-        mutation: gql`
-          mutation UpdateFlowSlug(
-            $flowId: uuid!
-            $newSlug: String
-            $newName: String
-          ) {
-            update_flows_by_pk(
-              pk_columns: { id: $flowId }
-              _set: { slug: $newSlug, name: $newName }
-            ) {
-              id
-            }
-          }
-        `,
-        variables: {
-          flowId: flow.id,
-          newSlug: flowSlug,
-          newName: flowName.trim(),
-        },
-      });
+      if (mode === "rename") {
+        await renameFlow({
+          variables,
+        });
+        toast.success(`Renamed flow to "${flowName}"`);
+      } else {
+        await renameAndUnarchiveFlow({
+          variables,
+        });
+        toast.success(`Renamed and unarchived flow "${flowName}"`);
+      }
       handleClose();
-      toast.success(`Renamed flow to "${flowName}"`);
     } catch (error) {
       const isUniqueSlugError =
         error instanceof Error &&
@@ -89,9 +91,16 @@ export const RenameDialog: React.FC<Props> = ({
     }
   };
 
+  const initialFlowName =
+    mode === "rename" ? flow.name : flow.name.concat(" Unarchived");
+  const initialFlowSlug =
+    mode === "rename"
+      ? flow.slug
+      : flow.slug.replace("-archived", "-unarchived");
+
   return (
     <Formik<RenameFlow>
-      initialValues={{ flowName: flow.name, flowSlug: flow.slug }}
+      initialValues={{ flowName: initialFlowName, flowSlug: initialFlowSlug }}
       onSubmit={onSubmit}
       validateOnBlur={false}
       validateOnChange={false}
@@ -116,7 +125,7 @@ export const RenameDialog: React.FC<Props> = ({
           fullWidth
         >
           <DialogTitle variant="h3" component="h1">
-            <Box sx={{ mt: 1, mb: 4 }}>
+            <Box sx={{ mt: 1, mb: 1 }}>
               <Typography variant="h3" component="h2" id="dialog-heading">
                 Rename "{flow.name}"
               </Typography>
@@ -127,6 +136,12 @@ export const RenameDialog: React.FC<Props> = ({
               <DialogContent
                 sx={{ gap: 2, display: "flex", flexDirection: "column" }}
               >
+                {mode === "renameAndUnarchive" && (
+                  <Typography>
+                    An active flow called "{flow.name}" already exists. To
+                    unarchive this one, please give it a unique name first.
+                  </Typography>
+                )}
                 <InputLabel label="Flow name" htmlFor="flowName">
                   <Input
                     {...getFieldProps("flowName")}
@@ -165,7 +180,9 @@ export const RenameDialog: React.FC<Props> = ({
                   disableRipple
                   disabled={isSubmitting}
                 >
-                  Rename flow
+                  {mode === "rename"
+                    ? "Rename flow"
+                    : "Rename and unarchive flow"}
                 </Button>
               </DialogActions>
             </Form>

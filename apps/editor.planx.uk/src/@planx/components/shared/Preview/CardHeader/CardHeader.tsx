@@ -38,7 +38,7 @@ export const CardHeader: React.FC<ICardHeader> = ({
   return (
     <CardHeaderWrapper>
       {title && (
-        <TitleWrapper mr={1} pt={0.5}>
+        <TitleWrapper sx={{ mr: 1, pt: 0.5 }}>
           <Typography
             id={titleId}
             variant="h2"

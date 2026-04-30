@@ -9,6 +9,7 @@ import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useLocation, useNavigate } from "@tanstack/react-router";
+import { useDowntimeBanner } from "hooks/data/useDowntimeBanner";
 import { clearLocalFlowIdb } from "lib/local.idb";
 import { capitalize } from "lodash";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
@@ -26,6 +27,7 @@ import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 import { useStore } from "../../pages/FlowEditor/lib/store";
 import AnalyticsDisabledBanner from "../AnalyticsDisabled/AnalyticsDisabledBanner";
 import { ConfirmationDialog } from "../ConfirmationDialog";
+import DowntimeBanner from "../DowntimeBanner/DowntimeBanner";
 import { SectionNavBar } from "./Sections/NavBar";
 import SkipLink from "./SkipLink";
 
@@ -127,8 +129,7 @@ const TeamBrand: React.FC = () => {
     <Typography
       variant="h4"
       component="span"
-      fontWeight={FONT_WEIGHT_SEMI_BOLD}
-      sx={{ whiteSpace: "nowrap" }}
+      sx={{ whiteSpace: "nowrap", fontWeight: FONT_WEIGHT_SEMI_BOLD }}
     >
       {teamName || "Plan✕"}
     </Typography>
@@ -222,9 +223,11 @@ const PublicToolbar: React.FC<{
                   <Typography
                     id="restart-application-description"
                     variant="body2"
-                    fontSize="small"
-                    fontWeight={FONT_WEIGHT_SEMI_BOLD}
-                    pl={0.5}
+                    sx={{
+                      pl: 0.5,
+                      fontSize: "small",
+                      fontWeight: FONT_WEIGHT_SEMI_BOLD,
+                    }}
                   >
                     Restart
                   </Typography>
@@ -316,20 +319,27 @@ const Header: React.FC = () => {
   const headerRef = useRef<HTMLDivElement>(null);
   const teamTheme = useStore((state) => state.teamTheme);
 
+  // Query `downtime_banner` visibility direct via db so not deployment sensitive
+  const { data } = useDowntimeBanner();
+  const showDowntimeBanner = data?.downtimeBanner?.isVisible || false;
+
   return (
-    <Root
-      position="static"
-      elevation={0}
-      color="transparent"
-      ref={headerRef}
-      sx={(theme) => ({
-        backgroundColor:
-          teamTheme?.primaryColour || theme.palette.background.dark,
-        "@media print": { backgroundColor: "white", color: "black" },
-      })}
-    >
-      <Toolbar />
-    </Root>
+    <>
+      {showDowntimeBanner && <DowntimeBanner />}
+      <Root
+        position="static"
+        elevation={0}
+        color="transparent"
+        ref={headerRef}
+        sx={(theme) => ({
+          backgroundColor:
+            teamTheme?.primaryColour || theme.palette.background.dark,
+          "@media print": { backgroundColor: "white", color: "black" },
+        })}
+      >
+        <Toolbar />
+      </Root>
+    </>
   );
 };
 

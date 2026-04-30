@@ -1,49 +1,17 @@
 import supertest from "supertest";
 import app from "../../../../server.js";
-import { authHeader, expiredAuthHeader } from "../../../../tests/mockJWT.js";
+import { authHeader } from "../../../../tests/mockJWT.js";
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 
 const ENDPOINT = "/auth/logout";
 
 afterEach(() => queryMock.reset());
 
-test("requests without a JWT will be rejected", async () => {
-  await supertest(app)
-    .post(ENDPOINT)
-    .expect(401)
-    .then((res) => {
-      expect(res.body).toEqual({
-        error: "No authorization token was found",
-      });
-    });
+test("logout succeeds even without a JWT", async () => {
+  await supertest(app).post(ENDPOINT).expect(200);
 });
 
-test("invalid tokens will be rejected", async () => {
-  await supertest(app)
-    .post(ENDPOINT)
-    .set({ authorization: "Bearer INVALID_JWT" })
-    .expect(401)
-    .then((res) => {
-      expect(res.body).toEqual({
-        error: "jwt malformed",
-      });
-    });
-});
-
-test("expired tokens will be rejected", async () => {
-  const auth = expiredAuthHeader({ role: "teamEditor" });
-
-  await supertest(app)
-    .post(ENDPOINT)
-    .set(auth)
-    .expect(302)
-    .then((res) => {
-      expect(res.redirect).toBe(true);
-      expect(res.header.location).toMatch(/logout/);
-    });
-});
-
-test("errors thrown whilst checking if a token is revoked are handled", async () => {
+test("logout succeeds even if token revocation check fails", async () => {
   const auth = authHeader({ role: "teamEditor" });
 
   // Throw an error whilst calling IsTokenRevoked query
@@ -54,24 +22,12 @@ test("errors thrown whilst checking if a token is revoked are handled", async ()
     matchOnVariables: false,
   });
 
-  await supertest(app)
-    .post(ENDPOINT)
-    .set(auth)
-    .expect(500)
-    .then((res) => {
-      const error = JSON.stringify(res.error);
-
-      expect(error).toMatch(/Failed to check if token is already revoked/);
-
-      // Don't log potentially sensitive information
-      expect(error).not.toMatch(/Something went wrong with Hasura/);
-    });
+  await supertest(app).post(ENDPOINT).set(auth).expect(200);
 });
 
-test("revoked tokens cannot get re-revoked", async () => {
+test("logout succeeds even if token is already revoked", async () => {
   const auth = authHeader({ role: "teamEditor" });
 
-  // Mock an already revoked token
   queryMock.mockQuery({
     name: "IsTokenRevoked",
     matchOnVariables: false,
@@ -82,24 +38,17 @@ test("revoked tokens cannot get re-revoked", async () => {
     },
   });
 
-  await supertest(app)
-    .post(ENDPOINT)
-    .set(auth)
-    .expect(401)
-    .then((res) => expect(res.text).toMatch(/The token has been revoked/));
+  await supertest(app).post(ENDPOINT).set(auth).expect(200);
 });
 
-test("errors thrown whilst revoking a token are handled", async () => {
+test("logout succeeds even if writing to revoked_tokens fails", async () => {
   const auth = authHeader({ role: "teamEditor" });
 
-  // Mock a token which is not yet revoked
   queryMock.mockQuery({
     name: "IsTokenRevoked",
     matchOnVariables: false,
     data: {
-      revokedToken: {
-        revokedAt: null,
-      },
+      revokedToken: { revokedAt: null },
     },
   });
 
@@ -110,33 +59,16 @@ test("errors thrown whilst revoking a token are handled", async () => {
     matchOnVariables: false,
   });
 
-  await supertest(app)
-    .post(ENDPOINT)
-    .set(auth)
-    .expect(500)
-    .then((res) => {
-      const error = JSON.stringify(res.error);
-
-      expect(error).toMatch(/Failed to logout successfully/);
-      expect(error).toMatch(/Failed to add token to revoked list/);
-
-      // Don't log potentially sensitive information
-      expect(error).not.toMatch(/Something went wrong with Hasura/);
-    });
+  await supertest(app).post(ENDPOINT).set(auth).expect(200);
 });
 
-test("valid tokens will be written to the revoked_tokens table", async () => {
+test("valid tokens are written to the revoked_tokens table", async () => {
   const auth = authHeader({ role: "teamEditor" });
 
-  // Mock a token which is not yet revoked
   queryMock.mockQuery({
     name: "IsTokenRevoked",
     matchOnVariables: false,
-    data: {
-      revokedToken: {
-        revokedAt: null,
-      },
-    },
+    data: { revokedToken: { revokedAt: null } },
   });
 
   // Insert revoked_tokens record
@@ -154,6 +86,16 @@ test("valid tokens will be written to the revoked_tokens table", async () => {
   await supertest(app).post(ENDPOINT).set(auth).expect(200);
 });
 
-// Awaiting implementation
+test("cookies are cleared on logout regardless of token state", async () => {
+  await supertest(app)
+    .post(ENDPOINT)
+    .expect(200)
+    .then((res) => {
+      const cookies = res.headers["set-cookie"] as unknown as string[];
+      expect(cookies.some((c) => c.startsWith("jwt=;"))).toBe(true);
+      expect(cookies.some((c) => c.startsWith("auth=;"))).toBe(true);
+    });
+});
+
 test.todo("revoked tokens cannot access the REST API");
 test.todo("revoked tokens cannot access the GraphQL API");

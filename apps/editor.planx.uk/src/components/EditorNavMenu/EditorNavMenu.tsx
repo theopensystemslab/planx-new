@@ -19,6 +19,8 @@ import {
   useParams,
 } from "@tanstack/react-router";
 import AccountMenu from "components/AccountMenu";
+import { useFlowAnalyticsLink } from "hooks/analyticsLinks/useFlowAnalyticsLink";
+import { useTeamAnalyticsLink } from "hooks/analyticsLinks/useTeamAnalyticsLink";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useMemo, useState } from "react";
 import EditorIcon from "ui/icons/Editor";
@@ -52,18 +54,10 @@ function EditorNavMenu() {
 
   const [openAccordions, setOpenAccordions] = useState<Set<string>>(new Set());
 
-  const [flowAnalyticsLink, role, team] = useStore((state) => [
-    state.flowAnalyticsLink,
+  const [role, team] = useStore((state) => [
     state.getUserRoleForCurrentTeam(),
     state.getTeam(),
   ]);
-
-  const environment = import.meta.env.VITE_APP_ENV;
-
-  const teamAnalyticsLink =
-    environment === "production"
-      ? `https://metabase.editor.planx.uk/public/dashboard/74337c9d-389d-4cb1-a65a-ad7e16428abf?date=&tab=641-key-figures&team_slug=${teamSlug}`
-      : undefined;
 
   const referenceCode = team?.settings?.referenceCode;
   const { url: lpsBaseUrl } = useLPS();
@@ -91,6 +85,9 @@ function EditorNavMenu() {
     }
   };
 
+  const teamAnalyticsLink = useTeamAnalyticsLink();
+  const flowAnalyticsLink = useFlowAnalyticsLink();
+
   const globalLayoutSections: MenuSection[] = [
     {
       routes: [
@@ -111,6 +108,12 @@ function EditorNavMenu() {
           Icon: AdminPanelSettingsIcon,
           route: "/app/admin-panel",
           accessibleBy: ["platformAdmin", "analyst"],
+        },
+        {
+          title: "User management",
+          Icon: GroupIcon,
+          route: `/app/users`,
+          accessibleBy: ["platformAdmin"],
         },
       ],
     },
@@ -255,11 +258,7 @@ function EditorNavMenu() {
             title: "Analytics",
             Icon: LeaderboardIcon,
             route: flowAnalyticsLink ? flowAnalyticsLink : `#`,
-            accessibleBy: [
-              "platformAdmin",
-              "teamEditor",
-              "analyst",
-            ],
+            accessibleBy: ["platformAdmin", "teamEditor", "analyst"],
             disabled: !flowAnalyticsLink,
           },
         ],

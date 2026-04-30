@@ -3,7 +3,7 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 
 export interface Props {
-  children: JSX.Element[] | JSX.Element;
+  children: React.JSX.Element[] | React.JSX.Element;
 }
 
 const Root = styled(Box)(() => ({

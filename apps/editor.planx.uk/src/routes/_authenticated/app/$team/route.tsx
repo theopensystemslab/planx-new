@@ -46,8 +46,6 @@ export const Route = createFileRoute("/_authenticated/app/$team")({
               helpOpeningHours: help_opening_hours
               emailReplyToId: email_reply_to_id
               homepage: homepage
-              externalPlanningSiteName: external_planning_site_name
-              externalPlanningSiteUrl: external_planning_site_url
               isTrial: is_trial
             }
           }

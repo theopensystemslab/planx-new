@@ -3,8 +3,8 @@ import { SetStateAction } from "react";
 import type { SnakeCasedProperties } from "type-fest";
 
 export interface SubmissionEmail {
-  submissionEmail: string;
-  defaultEmail: boolean;
+  address: string;
+  isDefault: boolean;
   teamId: number;
   id: string;
 }
@@ -18,18 +18,18 @@ export interface SubmissionEmailWithFlows extends Required<SubmissionEmail> {
 }
 
 export interface GetSubmissionEmails {
-  submissionIntegrations: SubmissionEmailWithFlows[];
+  submissionEmails: SubmissionEmailWithFlows[];
 }
 
 export type SubmissionEmailMutation = {
-  insertSubmissionIntegrationsOne: SnakeCasedProperties<SubmissionEmailInput>;
+  insertSubmissionEmailsOne: SnakeCasedProperties<SubmissionEmailInput>;
 };
 
 export interface SubmissionEmailInputs {
-  submissionIntegrations: SubmissionEmailInput[];
+  submissionEmails: SubmissionEmailInput[];
 }
 
-export interface UpdateTeamSubmissionIntegrationsVariables {
+export interface UpdateTeamSubmissionEmailsVariables {
   emails: SubmissionEmailMutation[];
 }
 
@@ -43,11 +43,11 @@ export type ModalState =
   | {
       type: "upsert";
       actionType: "add" | "edit";
-      integration?: SubmissionEmailInput;
+      email?: SubmissionEmailInput;
     }
   | {
       type: "delete";
-      integration: SubmissionEmailWithFlows;
+      email: SubmissionEmailWithFlows;
     }
   | null;
 

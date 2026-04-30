@@ -53,7 +53,10 @@ const SubmissionHTML: React.FC<{ sessionId: string }> = ({ sessionId }) => {
         <LoadingSkeleton />
       ) : (
         <>
-          <Box dangerouslySetInnerHTML={{ __html: sanitisedHTML }} mb={2} />
+          <Box
+            dangerouslySetInnerHTML={{ __html: sanitisedHTML }}
+            sx={{ mb: 2 }}
+          />
           <PrintButton />
         </>
       )}

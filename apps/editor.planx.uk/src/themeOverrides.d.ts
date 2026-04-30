@@ -1,8 +1,6 @@
 import "@mui/material/Chip";
 import "@mui/material/Radio";
 import "@mui/material/styles";
-// eslint-disable-next-line no-restricted-imports
-import "@mui/material/styles/createPalette";
 import "@mui/material/Typography";
 
 declare module "@mui/material/Chip" {
@@ -27,7 +25,7 @@ declare module "@mui/material/styles" {
 }
 
 // Append our custom colours to MUI palette
-declare module "@mui/material/styles/createPalette" {
+declare module "@mui/material/styles" {
   interface Palette {
     border: { main: string; input: string; light: string };
     link: { main: string };

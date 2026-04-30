@@ -1,4 +1,12 @@
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import {
+  DragDropContext,
+  Draggable,
+  DraggableProvided,
+  Droppable,
+  DroppableProvided,
+  DropResult,
+} from "@hello-pangea/dnd";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutlined";
 import Delete from "@mui/icons-material/Delete";
 import DragHandle from "@mui/icons-material/DragHandle";
 import ExpandLess from "@mui/icons-material/ExpandLess";
@@ -16,14 +24,6 @@ import { FormikErrors } from "formik";
 import { nanoid } from "nanoid";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef, useState } from "react";
-import {
-  DragDropContext,
-  Draggable,
-  DraggableProvided,
-  Droppable,
-  DroppableProvided,
-  DropResult,
-} from "react-beautiful-dnd";
 import { TransitionGroup } from "react-transition-group";
 
 import { insertAt, removeAt, setAt } from "../../../utils";

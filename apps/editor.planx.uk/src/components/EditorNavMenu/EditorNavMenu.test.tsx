@@ -38,7 +38,6 @@ const mockUser = {
 vi.mock("pages/FlowEditor/lib/store", async () => ({
   useStore: vi.fn((selector) =>
     selector({
-      flowAnalyticsLink: mockAnalyticsLink,
       getUserRoleForCurrentTeam: mockGetUserRoleForCurrentTeam,
       getUserRole: vi.fn(),
       getTeam: mockGetTeam,
@@ -46,9 +45,10 @@ vi.mock("pages/FlowEditor/lib/store", async () => ({
       user: mockUser,
     }),
   ),
-  getState: () => ({
-    teamAnalyticsLink: mockAnalyticsLink,
-  }),
+}));
+
+vi.mock("hooks/analyticsLinks/useFlowAnalyticsLink", () => ({
+  useFlowAnalyticsLink: vi.fn(() => mockAnalyticsLink),
 }));
 
 /**
@@ -104,7 +104,7 @@ describe("globalLayoutRoutes", () => {
 
     const { getAllByRole } = await setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(3);
+    expect(menuItems).toHaveLength(4);
     expect(within(menuItems[0]).getByText("Select a team")).toBeInTheDocument();
   });
 });
@@ -211,7 +211,7 @@ describe("flowLayoutRoutes", () => {
     expect(menuItems).toHaveLength(5);
     expect(getByLabelText("Submissions")).toBeInTheDocument();
     expect(getByLabelText("Feedback")).toBeInTheDocument();
-    expect(getByLabelText("Analytics")).toBeInTheDocument();
+    expect(getByLabelText(/Analytics/)).toBeInTheDocument();
   });
 });
 

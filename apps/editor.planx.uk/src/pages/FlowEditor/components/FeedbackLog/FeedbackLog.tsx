@@ -147,7 +147,7 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({
         <Typography variant="h2" component="h3" gutterBottom>
           Feedback
         </Typography>
-        <Typography variant="body1" maxWidth="contentWrap">
+        <Typography variant="body1" sx={{ maxWidth: "contentWrap" }}>
           Feedback reports from users about{" "}
           {isFlowLevel ? "this service" : "all services in this team"}. This
           table only includes feedback received within the last six months.

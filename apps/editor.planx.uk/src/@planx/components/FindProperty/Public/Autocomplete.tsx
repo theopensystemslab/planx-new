@@ -7,7 +7,7 @@ import {
 import { useBLPUCodes } from "hooks/data/useBLPUCodes";
 import find from "lodash/find";
 import { parse, toNormalised } from "postcode";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 
@@ -59,85 +59,74 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
   const { data } = useBLPUCodes();
 
   const { setAddress } = props;
-  useEffect(() => {
+
+  const addressSelectionHandler = ({
+    detail,
+  }: {
+    detail: Record<"address", Record<string, any>>;
+  }) => {
     if (!data?.blpuCodes) return;
-    // Handles mapping the raw Ordnance Survey record to planx's address model
-    const addressSelectionHandler = ({
-      detail,
-    }: {
-      detail: Record<"address", Record<string, any>>;
-    }) => {
-      const selectedAddress: Record<string, any> | undefined =
-        detail?.address?.LPI;
-      if (selectedAddress) {
-        setAddress({
-          uprn: selectedAddress.UPRN.padStart(12, "0"),
-          usrn: selectedAddress.USRN, // padStart(8, "0") will break /roads API request
-          blpu_code: selectedAddress.BLPU_STATE_CODE,
-          latitude: selectedAddress.LAT,
-          longitude: selectedAddress.LNG,
-          organisation: selectedAddress.ORGANISATION || null,
-          sao:
-            [
-              selectedAddress.SAO_START_NUMBER,
-              selectedAddress.SAO_START_SUFFIX,
-              selectedAddress.SAO_TEXT, // populated in cases of building name only, no street number
-            ]
-              .filter(Boolean)
-              .join("") || undefined,
-          saoEnd:
-            [selectedAddress.SAO_END_NUMBER, selectedAddress.SAO_END_SUFFIX]
-              .filter(Boolean)
-              .join("") || undefined,
-          pao:
-            [
-              selectedAddress.PAO_START_NUMBER,
-              selectedAddress.PAO_START_SUFFIX,
-              selectedAddress.PAO_TEXT, // populated in cases of building name only, no street number
-            ]
-              .filter(Boolean)
-              .join("") || undefined,
-          paoEnd:
-            [selectedAddress.PAO_END_NUMBER, selectedAddress.PAO_END_SUFFIX]
-              .filter(Boolean)
-              .join("") || undefined,
-          street: selectedAddress.STREET_DESCRIPTION,
-          town: selectedAddress.TOWN_NAME,
-          postcode: selectedAddress.POSTCODE_LOCATOR,
-          parish: selectedAddress.PARISH__CODE,
-          ward: selectedAddress.WARD_CODE,
-          x: selectedAddress.X_COORDINATE,
-          y: selectedAddress.Y_COORDINATE,
-          planx_description:
-            find(data.blpuCodes, {
-              code: selectedAddress.CLASSIFICATION_CODE,
-            })?.description ?? undefined,
-          planx_value:
-            find(data.blpuCodes, {
-              code: selectedAddress.CLASSIFICATION_CODE,
-            })?.value ?? undefined,
-          single_line_address: selectedAddress.ADDRESS,
-          title: selectedAddress.ADDRESS.slice(
-            0,
-            selectedAddress.ADDRESS.lastIndexOf(
-              `, ${selectedAddress.ADMINISTRATIVE_AREA}`,
-            ),
-          ), // display value shown on PropertyInformation, should match <address-autocomplete /> options formatting
-          source: "os",
-        });
-      }
-    };
 
-    const autocomplete: any = document.getElementById("address-autocomplete");
-    autocomplete?.addEventListener("addressSelection", addressSelectionHandler);
-
-    return function cleanup() {
-      autocomplete?.removeEventListener(
-        "addressSelection",
-        addressSelectionHandler,
-      );
-    };
-  }, [sanitizedPostcode, selectedOption, data?.blpuCodes, setAddress]);
+    const selectedAddress: Record<string, any> | undefined =
+      detail?.address?.LPI;
+    if (selectedAddress) {
+      setAddress({
+        uprn: selectedAddress.UPRN.padStart(12, "0"),
+        usrn: selectedAddress.USRN, // padStart(8, "0") will break /roads API request
+        blpu_code: selectedAddress.BLPU_STATE_CODE,
+        latitude: selectedAddress.LAT,
+        longitude: selectedAddress.LNG,
+        organisation: selectedAddress.ORGANISATION || null,
+        sao:
+          [
+            selectedAddress.SAO_START_NUMBER,
+            selectedAddress.SAO_START_SUFFIX,
+            selectedAddress.SAO_TEXT, // populated in cases of building name only, no street number
+          ]
+            .filter(Boolean)
+            .join("") || undefined,
+        saoEnd:
+          [selectedAddress.SAO_END_NUMBER, selectedAddress.SAO_END_SUFFIX]
+            .filter(Boolean)
+            .join("") || undefined,
+        pao:
+          [
+            selectedAddress.PAO_START_NUMBER,
+            selectedAddress.PAO_START_SUFFIX,
+            selectedAddress.PAO_TEXT, // populated in cases of building name only, no street number
+          ]
+            .filter(Boolean)
+            .join("") || undefined,
+        paoEnd:
+          [selectedAddress.PAO_END_NUMBER, selectedAddress.PAO_END_SUFFIX]
+            .filter(Boolean)
+            .join("") || undefined,
+        street: selectedAddress.STREET_DESCRIPTION,
+        town: selectedAddress.TOWN_NAME,
+        postcode: selectedAddress.POSTCODE_LOCATOR,
+        parish: selectedAddress.PARISH__CODE,
+        ward: selectedAddress.WARD_CODE,
+        x: selectedAddress.X_COORDINATE,
+        y: selectedAddress.Y_COORDINATE,
+        planx_description:
+          find(data.blpuCodes, {
+            code: selectedAddress.CLASSIFICATION_CODE,
+          })?.description ?? undefined,
+        planx_value:
+          find(data.blpuCodes, {
+            code: selectedAddress.CLASSIFICATION_CODE,
+          })?.value ?? undefined,
+        single_line_address: selectedAddress.ADDRESS,
+        title: selectedAddress.ADDRESS.slice(
+          0,
+          selectedAddress.ADDRESS.lastIndexOf(
+            `, ${selectedAddress.ADMINISTRATIVE_AREA}`,
+          ),
+        ), // display value shown on PropertyInformation, should match <address-autocomplete /> options formatting
+        source: "os",
+      });
+    }
+  };
 
   const handleCheckPostcode = () => {
     if (!sanitizedPostcode) setShowPostcodeError(true);
@@ -211,6 +200,7 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
           }/proxy/ordnance-survey`}
           arrowStyle="light"
           labelStyle="static"
+          onaddressSelection={addressSelectionHandler}
         />
       )}
     </AutocompleteWrapper>

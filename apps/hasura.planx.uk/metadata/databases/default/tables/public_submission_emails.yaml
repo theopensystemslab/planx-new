@@ -1,5 +1,5 @@
 table:
-  name: submission_integrations
+  name: submission_emails
   schema: public
 object_relationships:
   - name: team
@@ -29,9 +29,9 @@ insert_permissions:
     permission:
       check: {}
       columns:
-        - default_email
+        - is_default
         - id
-        - submission_email
+        - address
         - team_id
     comment: ""
   - role: teamEditor
@@ -45,27 +45,27 @@ insert_permissions:
               - role:
                   _eq: teamEditor
       columns:
-        - default_email
+        - is_default
         - id
-        - submission_email
+        - address
         - team_id
     comment: ""
 select_permissions:
   - role: api
     permission:
       columns:
-        - default_email
+        - is_default
         - id
-        - submission_email
+        - address
         - team_id
       filter: {}
     comment: ""
   - role: platformAdmin
     permission:
       columns:
-        - default_email
+        - is_default
         - id
-        - submission_email
+        - address
         - team_id
       filter: {}
     comment: ""
@@ -77,9 +77,9 @@ select_permissions:
   - role: teamEditor
     permission:
       columns:
-        - default_email
+        - is_default
         - id
-        - submission_email
+        - address
         - team_id
       filter:
         team:
@@ -94,18 +94,18 @@ update_permissions:
   - role: platformAdmin
     permission:
       columns:
-        - default_email
+        - is_default
         - id
-        - submission_email
+        - address
       filter: {}
       check: null
     comment: ""
   - role: teamEditor
     permission:
       columns:
-        - default_email
+        - is_default
         - id
-        - submission_email
+        - address
       filter: {}
       check: null
     comment: ""
@@ -113,12 +113,12 @@ delete_permissions:
   - role: platformAdmin
     permission:
       filter:
-        default_email:
+        is_default:
           _eq: false
     comment: ""
   - role: teamEditor
     permission:
       filter:
-        default_email:
+        is_default:
           _eq: false
     comment: ""

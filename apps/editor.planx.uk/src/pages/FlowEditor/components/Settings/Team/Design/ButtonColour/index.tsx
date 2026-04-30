@@ -35,7 +35,7 @@ const ButtonColour: React.FC = () => {
       validationSchema={validationSchema.pick(["actionColour"])}
       legend="Button colour"
       preview={(formik) => [
-        <DesignPreview bgcolor="white">
+        <DesignPreview sx={{ bgcolor: "white" }}>
           <Button
             variant="contained"
             sx={{

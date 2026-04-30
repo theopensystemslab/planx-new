@@ -1,0 +1,3 @@
+table:
+  name: analytics_first_used
+  schema: public

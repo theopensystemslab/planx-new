@@ -25,8 +25,8 @@ export const TextInput: React.FC<{
   contentInputProps,
 }) => {
   return (
-    <Box width="100%">
-      <Box mb={0.5} display="flex" alignItems="center">
+    <Box sx={{ width: "100%" }}>
+      <Box sx={{ mb: 0.5, display: "flex", alignItems: "center" }}>
         <Switch
           label={title}
           name={switchProps?.name}
@@ -35,7 +35,7 @@ export const TextInput: React.FC<{
           checked={switchProps?.checked}
         />
       </Box>
-      <Box mb={1}>
+      <Box sx={{ mb: 1 }}>
         {description && (
           <SettingsDescription>{description}</SettingsDescription>
         )}

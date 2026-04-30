@@ -5,14 +5,14 @@ object_relationships:
   - name: creator
     using:
       foreign_key_constraint_on: creator_id
-  - name: submission_integration
+  - name: submission_email
     using:
       manual_configuration:
         column_mapping:
           submission_email_id: id
         insertion_order: null
         remote_table:
-          name: submission_integrations
+          name: submission_emails
           schema: public
   - name: team
     using:
@@ -241,6 +241,7 @@ select_permissions:
   - role: analyst
     permission:
       columns:
+        - archived_at
         - can_create_from_copy
         - category
         - created_at
@@ -265,20 +266,21 @@ select_permissions:
         - first_online_at
         - production_url
       filter:
-        archived_at:
+        deleted_at:
           _is_null: true
       allow_aggregations: true
     comment: ""
   - role: api
     permission:
       columns:
+        - archived_at
         - can_create_from_copy
         - category
         - copied_from
         - created_at
         - creator_id
         - data
-        - archived_at
+        - deleted_at
         - description
         - id
         - is_listed_on_lps
@@ -299,19 +301,20 @@ select_permissions:
         - first_online_at
         - production_url
       filter:
-        archived_at:
+        deleted_at:
           _is_null: true
       allow_aggregations: true
   - role: platformAdmin
     permission:
       columns:
+        - archived_at
         - can_create_from_copy
         - category
         - copied_from
         - created_at
         - creator_id
         - data
-        - archived_at
+        - deleted_at
         - description
         - id
         - is_listed_on_lps
@@ -331,7 +334,9 @@ select_permissions:
         - data_merged
         - first_online_at
         - production_url
-      filter: {}
+      filter:
+        deleted_at:
+          _is_null: true
       allow_aggregations: true
   - role: public
     permission:
@@ -360,7 +365,7 @@ select_permissions:
         - first_online_at
         - production_url
       filter:
-        archived_at:
+        deleted_at:
           _is_null: true
       allow_aggregations: true
     comment: ""
@@ -393,7 +398,9 @@ select_permissions:
         - data_merged
         - first_online_at
         - production_url
-      filter: {}
+      filter:
+        deleted_at:
+          _is_null: true
       allow_aggregations: true
 update_permissions:
   - role: api
@@ -420,7 +427,7 @@ update_permissions:
         _and:
           - is_template:
               _eq: false
-          - archived_at:
+          - deleted_at:
               _is_null: true
       check:
         _not:
@@ -443,11 +450,12 @@ update_permissions:
   - role: platformAdmin
     permission:
       columns:
+        - archived_at
         - can_create_from_copy
         - category
         - copied_from
         - data
-        - archived_at
+        - deleted_at
         - description
         - is_listed_on_lps
         - is_template
@@ -461,7 +469,7 @@ update_permissions:
         - team_id
         - templated_from
       filter:
-        archived_at:
+        deleted_at:
           _is_null: true
       check:
         _not:
@@ -509,7 +517,7 @@ update_permissions:
                       _eq: x-hasura-user-id
                   - role:
                       _eq: teamEditor
-          - archived_at:
+          - deleted_at:
               _is_null: true
           - is_template:
               _eq: false

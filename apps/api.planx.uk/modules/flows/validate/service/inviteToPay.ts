@@ -64,7 +64,7 @@ const inviteToPayEnabled = (flowGraph: FlowGraph): boolean => {
   );
   return (
     payNodeStatuses.length > 0 &&
-    payNodeStatuses.every((status) => status === true)
+    payNodeStatuses.some((status) => status === true)
   );
 };
 

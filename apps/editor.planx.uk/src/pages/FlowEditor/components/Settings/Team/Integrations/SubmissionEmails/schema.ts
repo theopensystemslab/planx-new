@@ -1,12 +1,12 @@
 import { array, boolean, number, object, string } from "yup";
 
 export const validationSchema = object().shape({
-  submissionIntegrations: array(
+  submissionEmails: array(
     object().shape({
-      submissionEmail: string()
+      address: string()
         .email("Enter a valid email address")
         .required("Submission email is required"),
-      defaultEmail: boolean().required(),
+      isDefault: boolean().required(),
       teamId: number().required(),
       id: string().notRequired(),
     }),

@@ -61,7 +61,7 @@ describe("About flow page", () => {
   beforeAll(() => (initialState = getState()));
 
   beforeEach(() => {
-    getState().setUser(platformAdminUser);
+    setState({ user: platformAdminUser });
     server.use(...handlers);
   });
 
@@ -152,7 +152,7 @@ describe("About flow page", () => {
 
   it("is not editable if the user has the teamViewer role", async () => {
     const teamViewerUser = { ...platformAdminUser, isPlatformAdmin: false };
-    getState().setUser(teamViewerUser);
+    setState({ user: teamViewerUser });
 
     await setup(<About />);
 

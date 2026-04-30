@@ -1,0 +1,1 @@
+DROP REPLACE VIEW "public"."analytics_first_used";

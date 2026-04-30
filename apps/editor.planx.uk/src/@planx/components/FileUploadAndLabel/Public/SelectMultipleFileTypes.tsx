@@ -5,32 +5,26 @@ import FormLabel from "@mui/material/FormLabel";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
+import { groupBy } from "lodash";
 import capitalize from "lodash/capitalize";
 import React, { useMemo } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import Input from "ui/shared/Input/Input";
 
-import { FileUploadSlot } from "../../FileUpload/model";
-import {
-  addOrAppendSlots,
-  FileList,
-  getTagsForSlot,
-  removeSlots,
-  UserFile,
-} from "../model";
+import { FileList, type FileType, type FileUploadAndLabelSlot } from "../model";
 
 interface ChecklistProps {
-  uploadedFile: FileUploadSlot;
+  uploadedFile: FileUploadAndLabelSlot;
   fileList: FileList;
-  setFileList: (value: React.SetStateAction<FileList>) => void;
+  onTagsChange: (tags: string[]) => void;
   showDrawingNumber?: boolean;
   drawingNumber?: string;
-  onDrawingNumberChange?: (value: string) => void;
+  onDrawingNumberChange?: (slotId: string, value: string) => void;
   onSave?: () => void;
 }
 
-interface Option extends UserFile {
+interface Option extends FileType {
   category: keyof FileList;
 }
 
@@ -60,14 +54,14 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
   const {
     uploadedFile,
     fileList,
-    setFileList,
+    onTagsChange,
     showDrawingNumber,
     drawingNumber,
     onDrawingNumberChange,
     onSave,
   } = props;
 
-  const initialTags = getTagsForSlot(uploadedFile.id, fileList);
+  const currentTags = uploadedFile.tags || [];
 
   const titleId = `file-selection-title-${uploadedFile.id}`;
 
@@ -89,7 +83,7 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
    * Group options by category for rendering
    */
   const groupedOptions = useMemo(
-    () => Object.groupBy(options, ({ category }) => category),
+    () => groupBy(options, ({ category }) => category),
     [options],
   );
 
@@ -97,37 +91,27 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
    * Handle individual checkbox change
    */
   const handleCheckboxChange = (option: Option) => {
-    const isCurrentlyChecked = initialTags.includes(option.name);
-    const newCheckedState = !isCurrentlyChecked;
+    const isCurrentlyChecked = currentTags.includes(option.name);
 
-    if (newCheckedState) {
-      // Add the tag
-      const updatedFileList = addOrAppendSlots(
-        [option.name],
-        uploadedFile,
-        fileList,
-      );
-      setFileList(updatedFileList);
-    } else {
+    if (isCurrentlyChecked) {
       // Remove the tag
-      const updatedFileList = removeSlots(
-        [option.name],
-        uploadedFile,
-        fileList,
-      );
-      setFileList(updatedFileList);
+      const nextTags = currentTags.filter((tag) => tag !== option.name);
+      onTagsChange(nextTags);
+    } else {
+      // Add the tag
+      const nextTags = [...currentTags, option.name];
+      onTagsChange(nextTags);
     }
   };
 
   return (
     <Root>
-      <Typography variant="h3" mb={2} id={titleId}>
+      <Typography variant="h3" sx={{ mb: 2 }} id={titleId}>
         What does this file show? Select all that apply
         <Box component="span" sx={visuallyHidden}>
           This question refers to file: {uploadedFile.file.name}
         </Box>
       </Typography>
-
       {Object.entries(groupedOptions).map(([category, categoryOptions]) => (
         <FormControl
           key={category}
@@ -151,32 +135,38 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
                 key={`${category}-${option.name}`}
                 id={sanitizeId(`${uploadedFile.id}-${category}-${option.name}`)}
                 label={option.name}
-                checked={initialTags.includes(option.name)}
+                checked={currentTags.includes(option.name)}
                 onChange={() => handleCheckboxChange(option)}
               />
             ))}
           </ChecklistGrid>
         </FormControl>
       ))}
-
       {showDrawingNumber && (
         <Box sx={{ mt: 1 }}>
           <Typography
             variant="h3"
-            pb={0.5}
-            sx={{ display: "inline-block" }}
+            sx={{ display: "inline-block", pb: 0.5 }}
             id={`drawing-number-label-${uploadedFile.id}`}
             component="label"
           >
             Drawing number (optional)
           </Typography>
-          <Typography variant="body2" color="text.secondary" mb={1}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: "text.secondary",
+              mb: 1,
+            }}
+          >
             Separate multiple drawing numbers in this file with a comma
           </Typography>
           <Input
             id={`drawing-number-${uploadedFile.id}`}
             value={drawingNumber ?? ""}
-            onChange={(e) => onDrawingNumberChange?.(e.target.value)}
+            onChange={(e) =>
+              onDrawingNumberChange?.(uploadedFile.id, e.target.value)
+            }
             fullWidth
             aria-labelledby={`drawing-number-label-${uploadedFile.id}`}
             bordered
@@ -184,7 +174,6 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
           />
         </Box>
       )}
-
       {onSave && (
         <Button
           variant="contained"

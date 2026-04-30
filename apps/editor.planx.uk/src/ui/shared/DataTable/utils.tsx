@@ -82,9 +82,14 @@ export const columnCellComponentRegistry = {
   [ColumnFilterType.SINGLE_SELECT]: () => undefined,
   [ColumnFilterType.ARRAY]: (value: string[], filterValues?: string[]) => {
     return (
-      <Box component="ol" padding={0} margin={0} sx={{ listStyleType: "none" }}>
+      <Box component="ol" sx={{ listStyleType: "none", p: 0, m: 0 }}>
         {value?.map((item: string, index: number) => (
-          <Typography py={0.4} variant="body2" key={index} component="li">
+          <Typography
+            sx={{ py: 0.4 }}
+            variant="body2"
+            key={index}
+            component="li"
+          >
             {filterValues?.includes(capitalize(item)) ? (
               <strong>{item}</strong>
             ) : (

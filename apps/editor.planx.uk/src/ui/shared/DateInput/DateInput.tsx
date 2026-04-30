@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import React, { ChangeEvent, FocusEvent } from "react";
+import React, { FocusEvent } from "react";
 
 import ErrorWrapper from "../ErrorWrapper";
 import Input from "../Input/Input";
@@ -61,9 +61,13 @@ export default function DateInput(props: Props): FCReturn {
             inputProps={{ maxLength: "2" }}
             bordered={props.bordered}
             id={`${props.id}-day`}
-            onInput={(ev: ChangeEvent<HTMLInputElement>) => {
+            onInput={(ev: React.FormEvent<HTMLDivElement>) => {
               props.onChange(
-                [year || "", month || "", ev.target.value].join("-"),
+                [
+                  year || "",
+                  month || "",
+                  (ev.target as HTMLInputElement).value,
+                ].join("-"),
                 ev.type,
               );
             }}
@@ -90,9 +94,13 @@ export default function DateInput(props: Props): FCReturn {
             inputProps={{ maxLength: "9" }}
             bordered={props.bordered}
             id={`${props.id}-month`}
-            onInput={(ev: ChangeEvent<HTMLInputElement>) => {
+            onInput={(ev: React.FormEvent<HTMLDivElement>) => {
               props.onChange(
-                [year || "", ev.target.value, day || ""].join("-"),
+                [
+                  year || "",
+                  (ev.target as HTMLInputElement).value,
+                  day || "",
+                ].join("-"),
                 ev.type,
               );
             }}
@@ -119,9 +127,13 @@ export default function DateInput(props: Props): FCReturn {
             inputProps={{ maxLength: "4" }}
             bordered={props.bordered}
             id={`${props.id}-year`}
-            onInput={(ev: ChangeEvent<HTMLInputElement>) => {
+            onInput={(ev: React.FormEvent<HTMLDivElement>) => {
               props.onChange(
-                [ev.target.value, month || "", day || ""].join("-"),
+                [
+                  (ev.target as HTMLInputElement).value,
+                  month || "",
+                  day || "",
+                ].join("-"),
                 ev.type,
               );
             }}

@@ -28,7 +28,7 @@ export const TemplatedNodeConfiguration = <T extends BaseNodeData>({
   return (
     <ModalSection>
       <ModalSectionContent title="Templates" Icon={StarIcon}>
-        <Typography variant="body2" mb={2}>
+        <Typography variant="body2" sx={{ mb: 2 }}>
           This node is in a source template. Configure how it should behave in
           templated flows.
         </Typography>

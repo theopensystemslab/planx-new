@@ -43,7 +43,7 @@ export default function AutocompleteInput<T>({
             />
           )
         }
-        componentsProps={{
+        slotProps={{
           popupIndicator: {
             disableRipple: true,
           },

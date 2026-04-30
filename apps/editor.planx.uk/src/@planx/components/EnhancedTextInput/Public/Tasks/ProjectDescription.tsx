@@ -71,7 +71,13 @@ const DescriptionRadio: React.FC<DescriptionRadioProps> = ({
       {recommended && <RecommendedTag>Recommended</RecommendedTag>}
       <Radio value={id} onChange={onChange} />
       <Box sx={{ position: "relative" }}>
-        <Typography color="text.primary" variant="body1" pt={0.95}>
+        <Typography
+          variant="body1"
+          sx={{
+            color: "text.primary",
+            pt: 0.95,
+          }}
+        >
           {title}
         </Typography>
         {description && (
@@ -229,8 +235,8 @@ const ProjectDescription: React.FC<Props> = (props) => {
 
   return (
     <>
-      <Box my={2}>
-        <Typography variant="h2" component="h1" mb={1}>
+      <Box sx={{ my: 2 }}>
+        <Typography variant="h2" component="h1" sx={{ mb: 1 }}>
           {props.revisionTitle}
         </Typography>
         <Typography variant="subtitle1" component="p">
@@ -252,7 +258,7 @@ const ProjectDescription: React.FC<Props> = (props) => {
       </Box>
 
       {data && (
-        <Box mb={2}>
+        <Box sx={{ mb: 2 }}>
           <ErrorWrapper error={showRadioError ? "Select an option" : undefined}>
             <RadioGroup
               value={values.selectedOption ?? ""}
@@ -273,7 +279,7 @@ const ProjectDescription: React.FC<Props> = (props) => {
                 description={data.original}
               />
 
-              <Box width={68} my={1}>
+              <Box sx={{ width: 68, my: 1 }}>
                 <Typography align="center">or</Typography>
               </Box>
 

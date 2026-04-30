@@ -134,17 +134,19 @@ export const EnvironmentSelect: React.FC = () => {
         open={open}
         onClose={handleClose}
         maxWidth="xs"
-        PaperProps={{
-          sx: {
-            position: "absolute",
-            top: 0,
-            left: 0,
-            m: 0,
-            width: "300px",
-            maxWidth: "300px",
-            minWidth: "unset",
-            borderTop: "none",
-            borderRadius: "5px",
+        slotProps={{
+          paper: {
+            sx: {
+              position: "absolute",
+              top: 0,
+              left: 0,
+              m: 0,
+              width: "300px",
+              maxWidth: "300px",
+              minWidth: "unset",
+              borderTop: "none",
+              borderRadius: "5px",
+            },
           },
         }}
       >
@@ -153,8 +155,7 @@ export const EnvironmentSelect: React.FC = () => {
             <Typography
               variant="subtitle1"
               component="span"
-              mr={1}
-              color="white"
+              sx={{ mr: 1, color: (theme) => theme.palette.common.white }}
             >
               Plan✕
             </Typography>
@@ -170,7 +171,13 @@ export const EnvironmentSelect: React.FC = () => {
             <CloseIcon />
           </IconButton>
         </StyledDialogTitle>
-        <Stack p={1} bgcolor={(theme) => theme.palette.background.dark} gap={1}>
+        <Stack
+          sx={{
+            p: 1,
+            bgcolor: (theme) => theme.palette.background.dark,
+            gap: 1,
+          }}
+        >
           {environments.map((env) => (
             <StyledCard key={env.name} selected={env.name === currentEnv}>
               <CardActionArea
@@ -197,7 +204,9 @@ export const EnvironmentSelect: React.FC = () => {
                     <Typography
                       variant="body4"
                       component="p"
-                      color="text.secondary"
+                      sx={{
+                        color: "text.secondary",
+                      }}
                     >
                       {env.description}
                     </Typography>

@@ -1,5 +1,6 @@
 import CloudUpload from "@mui/icons-material/CloudUpload";
-import Box, { BoxProps } from "@mui/material/Box";
+import Box from "@mui/material/Box";
+import { BoxProps } from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { FileUploadSlot } from "@planx/components/FileUpload/model";
@@ -24,7 +25,7 @@ interface RootProps extends BoxProps {
   isWithinListCard: boolean;
 }
 
-const FauxLink = styled(Box)(({ theme }) => ({
+const FauxLink = styled("span")(({ theme }) => ({
   color: theme.palette.link.main,
   textDecoration: "underline",
   whiteSpace: "nowrap",
@@ -140,6 +141,7 @@ export function Dropzone<T extends FileUploadSlot>({
           status: "uploading",
           progress: 0,
           id: nanoid(),
+          drawingNumber: undefined,
         };
 
         const slot = createSlot
@@ -174,16 +176,16 @@ export function Dropzone<T extends FileUploadSlot>({
 
   return (
     <Root
+      {...getRootProps()}
       isDragActive={isDragActive}
       isWithinListCard={isWithinListCard}
-      {...getRootProps()}
     >
       <input
         data-testid="upload-input"
         {...getInputProps()}
         aria-labelledby="dropzone-label"
       />
-      <Box pl={2} pr={3} color="text.secondary">
+      <Box sx={{ pl: 2, pr: 3, color: "text.secondary" }}>
         <CloudUpload />
       </Box>
       <Box sx={{ textAlign: "left" }} id="dropzone-label">
@@ -193,17 +195,29 @@ export function Dropzone<T extends FileUploadSlot>({
           ) : (
             <>
               Drop {maxFiles === 1 ? "file" : "files"} here or{" "}
-              <FauxLink component="span">
+              <FauxLink>
                 {maxFiles === 1 ? "choose a file" : "choose files"}
               </FauxLink>{" "}
               to upload
             </>
           )}
         </Typography>
-        <Typography color="text.secondary" variant="body2">
+        <Typography
+          variant="body2"
+          sx={{
+            color: "text.secondary",
+          }}
+        >
           pdf, jpg, png
         </Typography>
-        <Typography color="text.secondary" variant="body2" fontSize={14} pt={1}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "text.secondary",
+            fontSize: 14,
+            pt: 1,
+          }}
+        >
           Max size per file 30MB
         </Typography>
       </Box>

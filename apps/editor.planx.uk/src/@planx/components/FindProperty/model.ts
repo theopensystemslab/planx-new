@@ -17,7 +17,6 @@ export const PASSPORT_COMPONENT_ACTION_KEY = "findProperty.action";
 export interface FindProperty extends BaseNodeData {
   title: string;
   description: string;
-  allowNewAddresses?: boolean;
   newAddressFirstPage?: boolean;
   newAddressTitle?: string;
   newAddressDescription?: string;
@@ -29,7 +28,6 @@ export const parseFindProperty = (
 ): FindProperty => ({
   title: data?.title || DEFAULT_TITLE,
   description: data?.description || "",
-  allowNewAddresses: data?.allowNewAddresses || false,
   newAddressFirstPage: data?.newAddressFirstPage || false,
   newAddressTitle: data?.newAddressTitle || DEFAULT_NEW_ADDRESS_TITLE,
   newAddressDescription:
@@ -87,7 +85,6 @@ export const validationSchema: SchemaOf<FindProperty> =
     object({
       title: string().required(),
       description: richText(),
-      allowNewAddresses: boolean(),
       newAddressFirstPage: boolean(),
       newAddressTitle: string(),
       newAddressDescription: richText(),

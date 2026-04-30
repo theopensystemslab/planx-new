@@ -13,18 +13,6 @@ const { getState, setState } = useStore;
 
 let initialState: FullStore;
 
-vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
-  const actual = await importOriginal<typeof planxCore>();
-  return {
-    ...actual,
-    CoreDomainClient: vi.fn().mockImplementation(() => ({
-      export: {
-        csvData: () => vi.fn(),
-      },
-    })),
-  };
-});
-
 vi.mock("hooks/usePublicRouteContext", () => ({
   usePublicRouteContext: vi.fn(() => "/$flow"),
 }));

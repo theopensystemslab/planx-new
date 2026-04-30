@@ -19,9 +19,9 @@ export const RenderDataFieldInput = ({
   return (
     <StyledDataField
       {...params}
-      InputProps={{
-        ...params.InputProps,
-        notched: false,
+      slotProps={{
+        ...params.slotProps,
+        input: { ...params.slotProps.input, notched: false },
       }}
       label={label}
       placeholder={placeholder}
@@ -39,9 +39,9 @@ export const RenderTextFieldInput = ({
   return (
     <StyledTextField
       {...params}
-      InputProps={{
-        ...params.InputProps,
-        notched: false,
+      slotProps={{
+        ...params.slotProps,
+        input: { ...params.slotProps.input, notched: false },
       }}
       label={label}
       placeholder={placeholder}

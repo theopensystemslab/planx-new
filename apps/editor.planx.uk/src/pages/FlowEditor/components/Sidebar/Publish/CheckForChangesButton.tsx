@@ -101,7 +101,7 @@ export const CheckForChangesToPublishButton: React.FC<{
 
   return (
     <>
-      <Box width="100%">
+      <Box sx={{ width: "100%" }}>
         {isTemplatedFrom && template && (
           <Box
             sx={{
@@ -129,7 +129,7 @@ export const CheckForChangesToPublishButton: React.FC<{
             </Box>
           </Box>
         )}
-        <Box display="flex" gap={1}>
+        <Box sx={{ display: "flex", gap: 1 }}>
           <Button
             data-testid="check-for-changes-to-publish-button"
             sx={{ flex: 1 }}

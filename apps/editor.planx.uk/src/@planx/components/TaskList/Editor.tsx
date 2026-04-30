@@ -95,7 +95,7 @@ const TaskListComponent: React.FC<Props> = (props) => (
         />
         <ModalSection>
           <ModalSectionContent title="Task list" Icon={ICONS[TYPES.TaskList]}>
-            <Box mb="1rem">
+            <Box sx={{ mb: "1rem" }}>
               <InputRow>
                 <Input
                   name="title"

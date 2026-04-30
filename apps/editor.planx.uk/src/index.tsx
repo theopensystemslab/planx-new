@@ -5,7 +5,7 @@ import "./app.css";
 import { ApolloProvider } from "@apollo/client";
 import CssBaseline from "@mui/material/CssBaseline";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
-import { MyMap, GeocodeAutocomplete } from "@opensystemslab/map";
+import { GeocodeAutocomplete,MyMap } from "@opensystemslab/map";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider as TanStackRouterProvider } from "@tanstack/react-router";
 import { ToastContextProvider } from "contexts/ToastContext";
@@ -14,7 +14,7 @@ import { queryClient } from "lib/queryClient";
 import { AnalyticsProvider } from "pages/FlowEditor/lib/analytics/provider";
 import React, { Suspense, useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import { ToastContainer } from "react-toastify";
+import { Bounce, ToastContainer } from "react-toastify";
 import { router } from "router";
 
 // init airbrake before everything else

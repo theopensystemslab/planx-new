@@ -14,6 +14,7 @@ import type {
 import { sendEmail } from "../../lib/resend/index.js";
 import { $api } from "../../client/index.js";
 import { gql } from "graphql-request";
+import type { TemplateRegistry } from "../../lib/resend/templates/index.js";
 
 export const singleApplicationEmailController: SingleApplicationEmail = async (
   _req,
@@ -92,9 +93,15 @@ export const resendEmailController: ResendEmail = async (_req, res, next) => {
       message: `Skipping ${template} email: APP_ENVIRONMENT is not production or test`,
     });
   }
+
   try {
     const isTrial = await getTeamIsTrial(payload.defaultTeamId);
-    const response = await sendEmail({ ...payload, template, isTrial });
+    const variables: TemplateRegistry["welcome"]["variables"] = {
+      firstName: payload.firstName,
+      subscriptionStatus: isTrial ? "Trial" : "Active",
+    };
+
+    const response = await sendEmail("welcome", payload.email, variables);
     return res.status(200).send(response);
   } catch (error) {
     return next(

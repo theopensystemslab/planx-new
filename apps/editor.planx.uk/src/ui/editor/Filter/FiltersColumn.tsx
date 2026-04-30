@@ -29,7 +29,7 @@ export const FiltersColumn = <T extends object>(
       <Typography
         component={"legend"}
         variant="h5"
-        pb={0.5}
+        sx={{ pb: 0.5 }}
         style={visuallyHidden}
       >
         {props.title}

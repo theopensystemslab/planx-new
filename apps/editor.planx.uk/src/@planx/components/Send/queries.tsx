@@ -23,22 +23,18 @@ export const UPDATE_FLOW_SUBMISSION_EMAIL_ID = gql`
   }
 `;
 
-export const INSERT_TEAM_SUBMISSION_INTEGRATION = gql`
-  mutation InsertSubmissionIntegration(
-    $submissionEmail: String!
+export const INSERT_TEAM_SUBMISSION_EMAIL = gql`
+  mutation InsertSubmissionEmail(
+    $address: String!
     $teamId: Int!
-    $defaultEmail: Boolean!
+    $isDefault: Boolean!
   ) {
-    insertSubmissionIntegrationsOne: insert_submission_integrations_one(
-      object: {
-        default_email: $defaultEmail
-        submission_email: $submissionEmail
-        team_id: $teamId
-      }
+    insertSubmissionEmailsOne: insert_submission_emails_one(
+      object: { is_default: $isDefault, address: $address, team_id: $teamId }
     ) {
-      default_email
+      is_default
       id
-      submission_email
+      address
       team_id
     }
   }

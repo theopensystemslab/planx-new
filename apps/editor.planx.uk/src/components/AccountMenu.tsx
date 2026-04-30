@@ -6,6 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
+import MenuList from "@mui/material/MenuList";
 import Paper from "@mui/material/Paper";
 import Popover, { popoverClasses } from "@mui/material/Popover";
 import Stack from "@mui/material/Stack";
@@ -142,13 +143,15 @@ const AccountMenu: React.FC<AccountMenuProps> = ({ compact = false }) => {
         }}
       >
         <StyledPaper>
-          <MenuItem disabled>
-            <ListItemIcon>
-              <Person fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>{user.email}</ListItemText>
-          </MenuItem>
-          <MenuItem onClick={handleLogout}>Log out</MenuItem>
+          <MenuList>
+            <MenuItem disabled>
+              <ListItemIcon>
+                <Person fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>{user.email}</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={handleLogout}>Log out</MenuItem>
+          </MenuList>
         </StyledPaper>
       </StyledPopover>
     </>

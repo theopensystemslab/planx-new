@@ -156,13 +156,18 @@ export default function MakePayment({
           text: theme.palette.text.primary,
         }}
       >
-        <Typography pt={2} variant="body2" maxWidth="formWrap">
+        <Typography variant="body2" sx={{ pt: 2, maxWidth: "formWrap" }}>
           Thanks for making your payment. We'll send you a confirmation email.
         </Typography>
       </Banner>
     ) : (
       <Container maxWidth="contentWrap">
-        <Typography maxWidth="formWrap" variant="h1" pt={5} gutterBottom>
+        <Typography
+          component="h1"
+          variant="h1"
+          sx={{ maxWidth: "formWrap", pt: 5 }}
+          gutterBottom
+        >
           Pay
         </Typography>
       </Container>

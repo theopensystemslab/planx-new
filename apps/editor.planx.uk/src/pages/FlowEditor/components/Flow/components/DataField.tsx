@@ -13,8 +13,7 @@ export const DataField: React.FC<{
     <Box
       className="card-data-field"
       sx={(theme) => ({
-        fontFamily: theme.typography.data.fontFamily,
-        fontSize: theme.typography.data,
+        fontFamily: theme.typography.data.fontFamily!,
         borderWidth: variant === "parent" ? "0 1px 1px 1px" : "1px 0 0 0",
         borderStyle: "solid",
         width: "100%",

@@ -99,7 +99,7 @@ it("can construct a valid payload", async () => {
     await screen.findAllByPlaceholderText("Data field")
   ).at(-1);
   expect(conditionalField).toBeInTheDocument();
-  await user.type(conditionalField!, "mockOptionFn");
+  await user.type(conditionalField!, "mockOptionFn{enter}");
 
   const conditionalValue = (await screen.findAllByPlaceholderText("Value")).at(
     -1,

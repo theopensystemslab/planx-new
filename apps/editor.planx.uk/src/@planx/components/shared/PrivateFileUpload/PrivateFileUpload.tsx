@@ -10,17 +10,27 @@ interface PrivateFileUploadProps {
   slots: FileUploadSlot[];
   setSlots: React.Dispatch<React.SetStateAction<FileUploadSlot[]>>;
   maxFiles?: number;
+  showDrawingNumber?: boolean;
 }
 
 export const PrivateFileUpload: React.FC<PrivateFileUploadProps> = ({
   slots,
   setSlots,
   maxFiles,
+  showDrawingNumber = false,
 }) => {
   const [fileUploadStatus, setFileUploadStatus] = useState<string | undefined>(
     undefined,
   );
   const hasEmptySlots = !maxFiles || maxFiles > slots.length;
+
+  const onDrawingNumberChange = (slotId: string, drawingNumber: string) => {
+    setSlots((prevSlots) =>
+      prevSlots.map((slot) =>
+        slot.id === slotId ? { ...slot, drawingNumber } : slot,
+      ),
+    );
+  };
 
   return (
     <>
@@ -36,6 +46,8 @@ export const PrivateFileUpload: React.FC<PrivateFileUploadProps> = ({
         {slots.map((slot) => (
           <UploadedFileCard
             {...slot}
+            showDrawingNumber={showDrawingNumber}
+            onDrawingNumberChange={onDrawingNumberChange}
             key={slot.id}
             removeFile={() => {
               setSlots(

@@ -9,6 +9,7 @@ import { CustomLink } from "../../../../ui/shared/CustomLink/CustomLink";
 
 export const StyledTable = styled(Table)(({ theme }) => ({
   marginTop: theme.spacing(2),
+  marginBottom: theme.spacing(2),
   zIndex: 1,
   position: "relative",
   border: `1px solid ${theme.palette.border.main}`,
@@ -26,7 +27,7 @@ export const StyledTableHead = styled(TableHead)(({ theme }) => ({
     borderBottom: `1px solid ${theme.palette.border.main}`,
     position: "sticky",
     top: 0,
-    zIndex: 2,
+    zIndex: theme.zIndex.appBar,
     "&:last-of-type": {
       borderLeft: `1px solid ${theme.palette.border.main}`,
     },
@@ -35,7 +36,11 @@ export const StyledTableHead = styled(TableHead)(({ theme }) => ({
 
 export const StyledTableRow = styled(TableRow, {
   shouldForwardProp: (prop) => prop !== "isTemplated" && prop !== "clickable",
-})<{ isTemplated?: boolean; clickable?: boolean }>(({ theme, isTemplated, clickable = true }) => {
+})<{ isTemplated?: boolean; clickable?: boolean }>(({
+  theme,
+  isTemplated,
+  clickable = true,
+}) => {
   let hoverBackground: string | undefined;
   if (clickable && isTemplated) {
     hoverBackground = theme.palette.template.main;
@@ -77,16 +82,24 @@ export const FlowRowLink = styled(CustomLink)(() => ({
   "&:focus": {
     ...inputFocusStyle,
   },
+  "&:focus-visible": {
+    backgroundColor: "transparent",
+  },
 })) as typeof CustomLink;
 
 export const FlowTitleCell = styled(TableCell)(() => ({
-  width: "45%",
+  width: "100%",
   minWidth: "240px",
 }));
 
 export const FlowStatusCell = styled(TableCell)(() => ({
   width: "11%",
   minWidth: "150px",
+}));
+
+export const FlowDateCell = styled(TableCell)(() => ({
+  width: "20%",
+  minWidth: "240px",
 }));
 
 export const FlowActionsCell = styled(TableCell)(({ theme }) => ({

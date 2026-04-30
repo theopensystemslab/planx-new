@@ -19,44 +19,21 @@ const NavMenuItem = ({
   compact,
   onClick,
 }: Props) => {
-  if (compact) {
-    return (
-      <Tooltip title={title} placement="right">
-        <Box component="span">
-          <MenuButton
-            title={title}
-            isActive={isActive}
-            disabled={disabled}
-            disableRipple
-            onClick={onClick}
-            sx={{ padding: "8px" }}
-          >
-            <Icon />
-          </MenuButton>
-        </Box>
-      </Tooltip>
-    );
-  }
+  const tooltipTitle = disabled ? `${title} unavailable` : title;
+  const showTooltip = compact || disabled;
 
-  if (disabled) {
-    return (
-      <Tooltip title={`${title} unavailable`} placement="right">
-        <Box component="span">
-          <NavMenuButton
-            title={title}
-            Icon={Icon}
-            isActive={isActive}
-            isExternal={isExternal}
-            disabled={disabled}
-            isNew={isNew}
-            onClick={onClick}
-          />
-        </Box>
-      </Tooltip>
-    );
-  }
-
-  return (
+  const buttonContent = compact ? (
+    <MenuButton
+      title={title}
+      isActive={isActive}
+      disabled={disabled}
+      disableRipple
+      onClick={onClick}
+      sx={{ padding: "8px" }}
+    >
+      <Icon />
+    </MenuButton>
+  ) : (
     <NavMenuButton
       title={title}
       Icon={Icon}
@@ -67,6 +44,16 @@ const NavMenuItem = ({
       onClick={onClick}
     />
   );
+
+  if (showTooltip) {
+    return (
+      <Tooltip title={tooltipTitle} placement="right">
+        <Box component="span">{buttonContent}</Box>
+      </Tooltip>
+    );
+  }
+
+  return buttonContent;
 };
 
 export default NavMenuItem;

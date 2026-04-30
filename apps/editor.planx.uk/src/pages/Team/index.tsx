@@ -2,9 +2,8 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { useSearch } from "@tanstack/react-router";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { isEmpty, orderBy } from "lodash";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { InfoChip } from "ui/editor/InfoChip";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 
@@ -15,6 +14,7 @@ import Archive from "./components/Archive";
 import { DashboardList } from "./components/DashboardList";
 import { Card, CardContent } from "./components/FlowCard/styles";
 import Flows from "./components/Flows";
+import { useGetFlows } from "./components/hooks/useGetFlows";
 import { sortOptions } from "./helpers/sortAndFilterOptions";
 import TeamLayout from "./TeamLayout";
 
@@ -36,24 +36,23 @@ interface TeamProps {
   flows: FlowSummary[];
 }
 
-const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
+const Team: React.FC<TeamProps> = (initialFlows) => {
   const [
     { id: teamId, slug },
     canUserEditTeam,
-    getFlows,
     isTrial,
     flowCardView,
     setFlowCardView,
   ] = useStore((state) => [
     state.getTeam(),
     state.canUserEditTeam,
-    state.getFlows,
     state.teamSettings?.isTrial,
     state.flowCardView,
     state.setFlowCardView,
   ]);
 
-  const [flows, setFlows] = useState<FlowSummary[] | null>(initialFlows);
+  const { data } = useGetFlows(teamId);
+  const flows = data?.flows ?? initialFlows.flows;
   const [flowView, setFlowView] = useState<FlowView>("flows");
 
   const [searchedFlows, setSearchedFlows] = useState<FlowSummary[] | null>(
@@ -61,6 +60,14 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
   );
   const [shouldClearSearch, setShouldClearSearch] = useState<boolean>(false);
   const searchParams = useSearch({ from: "/_authenticated/app/$team/" });
+
+  const pinnedFlows = useMemo(() => {
+    return flows?.filter((flow) => flow.pinnedFlows.length > 0) ?? [];
+  }, [flows]);
+
+  const unpinnedFlows = useMemo(() => {
+    return flows?.filter((flow) => flow.pinnedFlows.length === 0) ?? [];
+  }, [flows]);
 
   const sortedFlows = useMemo(() => {
     // Use searchedFlows if available (from SearchBox), otherwise use all flows
@@ -133,13 +140,6 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
     }
   };
 
-  const fetchFlows = useCallback(() => {
-    getFlows(teamId).then((flows) => {
-      // Copy the array and sort by most recently edited desc using last associated operation.createdAt, not flow.updatedAt
-      setFlows(flows);
-    });
-  }, [teamId, setFlows, getFlows]);
-
   useEffect(() => {
     if (shouldClearSearch) {
       setShouldClearSearch(false);
@@ -151,12 +151,12 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
   const flowsHaveBeenFiltered = sortedFlows?.length !== flows?.length;
 
   return (
-    <Box bgcolor={"background.paper"} flexGrow={1}>
+    <Box sx={{ bgcolor: "background.paper", flexGrow: 1 }}>
       <Container maxWidth="contentWide">
         <Box>
           <Box
-            pb={1}
             sx={{
+              pb: 1,
               display: "flex",
               flexDirection: { xs: "column", contentWrap: "row" },
               justifyContent: "space-between",
@@ -172,11 +172,11 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
                 gap: 2,
               }}
             >
-              <Typography variant="h2" component="h1" pr={1}>
+              <Typography variant="h2" component="h1" sx={{ pr: 1 }}>
                 Flows
               </Typography>
               {isTrial && <InfoChip label="Trial account" />}
-              {showAddFlowButton && <AddFlow />}
+              {showAddFlowButton && flowView === "flows" && <AddFlow />}
             </Box>
             {teamHasFlows && (
               <SearchBox<FlowSummary>
@@ -187,9 +187,7 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
               />
             )}
           </Box>
-          {hasFeatureFlag("ARCHIVE_VIEW") && (
-            <TeamLayout flowView={flowView} setFlowView={setFlowView} />
-          )}
+          <TeamLayout flowView={flowView} setFlowView={setFlowView} />
         </Box>
 
         {flowView === "flows" && (
@@ -200,9 +198,10 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
             sortedFlows={sortedFlows}
             sortOptions={sortOptions}
             flowCardView={flowCardView}
-            fetchFlows={fetchFlows}
             teamId={teamId}
             flows={flows}
+            pinnedFlows={pinnedFlows}
+            unpinnedFlows={unpinnedFlows}
             handleViewChange={handleViewChange}
             slug={slug}
           />
@@ -213,7 +212,6 @@ const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
             handleViewChange={handleViewChange}
             teamId={teamId}
             slug={slug}
-            fetchFlows={fetchFlows}
           />
         )}
 

@@ -1,5 +1,5 @@
 import { mostReadable } from "@ctrl/tinycolor";
-import ErrorOutline from "@mui/icons-material/ErrorOutline";
+import ErrorOutline from "@mui/icons-material/ErrorOutlined";
 import HelpIcon from "@mui/icons-material/Help";
 import Box, { BoxProps } from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -117,7 +117,7 @@ const NoticeComponent: React.FC<Props> = (props) => {
                 {props.title}
               </Title>
             </TitleWrap>
-            <Box mt={2}>
+            <Box sx={{ mt: 2 }}>
               <ReactMarkdownOrHtml
                 textColor={textColor}
                 source={props.description}

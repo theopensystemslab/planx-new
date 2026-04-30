@@ -2,11 +2,6 @@ import FileIcon from "@mui/icons-material/AttachFile";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Box, { BoxProps } from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
-import IconButton from "@mui/material/IconButton";
-import Link from "@mui/material/Link";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
@@ -14,23 +9,26 @@ import { FileUploadSlot } from "@planx/components/FileUpload/model";
 import ImagePreview from "components/ImagePreview";
 import React from "react";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
+import Input from "ui/shared/Input/Input";
 
 interface Props extends FileUploadSlot {
   removeFile: () => void;
   onChange?: () => void;
-  // New accordion UI props
   changeLabel?: string;
   changeIcon?: React.ReactNode;
   hideChangeButton?: boolean;
-  drawingNumber?: string;
-  // Legacy modal UI props
-  tags?: string[];
+  showDrawingNumber?: boolean;
+  onDrawingNumberChange?: (slotId: string, drawingNumber: string) => void;
   FileCardProps?: BoxProps;
 }
 
-const FileCard = styled(Box)(({ theme }) => ({
+const FileCardRoot = styled(Box)(({ theme }) => ({
   border: `1px solid ${theme.palette.border.main}`,
   backgroundColor: theme.palette.background.paper,
+  padding: theme.spacing(1.5),
+}));
+
+const FileCard = styled(Box)(({ theme }) => ({
   position: "relative",
   height: "auto",
   display: "flex",
@@ -41,7 +39,6 @@ const FileCard = styled(Box)(({ theme }) => ({
     flexDirection: "row",
     alignItems: "center",
   },
-  padding: theme.spacing(1.5),
   "& > *": {
     zIndex: 1,
   },
@@ -92,18 +89,8 @@ const ActionButtons = styled(Box)(({ theme }) => ({
   flexShrink: 0,
 }));
 
-const TagRoot = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper,
-  border: `1px solid ${theme.palette.border.main}`,
-  borderTop: "none",
-  display: "flex",
-  justifyContent: "space-between",
-  flexWrap: "wrap",
-  alignItems: "center",
-  padding: theme.spacing(1),
-}));
-
 export const UploadedFileCard: React.FC<Props> = ({
+  id,
   file,
   progress,
   url,
@@ -113,9 +100,10 @@ export const UploadedFileCard: React.FC<Props> = ({
   changeIcon,
   hideChangeButton,
   drawingNumber,
-  tags,
   status,
   FileCardProps,
+  showDrawingNumber = false,
+  onDrawingNumberChange,
 }) => (
   <Box>
     <ErrorWrapper
@@ -126,62 +114,56 @@ export const UploadedFileCard: React.FC<Props> = ({
       }
     >
       <>
-        <FileCard {...FileCardProps}>
-          <ProgressBar
-            width={`${Math.min(Math.ceil(progress * 100), 100)}%`}
-            role="progressbar"
-            aria-valuenow={progress * 100 || 0}
-            aria-label={`Upload progress of file ${file.name}`}
-          />
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "flex-start",
-              gap: 1,
-              alignItems: "center",
-              width: "100%",
-            }}
-          >
-            <FilePreview>
-              {file instanceof File && file?.type?.includes("image") ? (
-                <ImagePreview file={file} url={url} />
-              ) : (
-                <FileIcon />
-              )}
-            </FilePreview>
-            <Box mr={2}>
-              <Typography
-                variant="body1"
-                pb="0.25em"
-                sx={{ overflowWrap: "break-word", wordBreak: "break-all" }}
-                data-testid={file.name}
-              >
-                {file.name}
-              </Typography>
-              <FileSize variant="body2">{formatBytes(file.size)}</FileSize>
-              {drawingNumber && (
-                <Typography variant="body2" color="text.secondary" pt="0.25em">
-                  Drawing number: {drawingNumber}
+        <FileCardRoot {...FileCardProps}>
+          <FileCard>
+            <ProgressBar
+              sx={{ width: `${Math.min(Math.ceil(progress * 100), 100)}%` }}
+              role="progressbar"
+              aria-valuenow={progress * 100 || 0}
+              aria-label={`Upload progress of file ${file.name}`}
+            />
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-start",
+                gap: 1,
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <FilePreview>
+                {file instanceof File && file?.type?.includes("image") ? (
+                  <ImagePreview file={file} url={url} />
+                ) : (
+                  <FileIcon />
+                )}
+              </FilePreview>
+              <Box sx={{ mr: 2 }}>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    overflowWrap: "break-word",
+                    wordBreak: "break-all",
+                    pb: "0.25em",
+                  }}
+                  data-testid={file.name}
+                >
+                  {file.name}
                 </Typography>
-              )}
+                <FileSize variant="body2">{formatBytes(file.size)}</FileSize>
+                {drawingNumber && (
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: "text.secondary",
+                      pt: "0.25em",
+                    }}
+                  >
+                    Drawing number: {drawingNumber}
+                  </Typography>
+                )}
+              </Box>
             </Box>
-          </Box>
-          {tags !== undefined ? (
-            // Legacy modal UI: icon button delete
-            removeFile && (
-              <IconButton
-                size="small"
-                title={`Delete ${file.name}`}
-                onClick={removeFile}
-                sx={{ gap: "3px" }}
-                data-testid={`delete-${file.name}`}
-              >
-                <DeleteIcon color="warning" />
-                Delete <span style={visuallyHidden}>{file.name}</span>
-              </IconButton>
-            )
-          ) : (
-            // New accordion UI: button-style actions
             <ActionButtons>
               {!hideChangeButton && onChange && (
                 <Button
@@ -215,40 +197,38 @@ export const UploadedFileCard: React.FC<Props> = ({
                 Remove <span style={visuallyHidden}>{file.name}</span>
               </Button>
             </ActionButtons>
-          )}
-        </FileCard>
-        {tags && (
-          <TagRoot>
-            <List sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-              {tags.map((tag) => (
-                <ListItem key={tag} disablePadding sx={{ width: "auto" }}>
-                  <Chip
-                    label={tag}
-                    variant="uploadedFileTag"
-                    size="small"
-                    data-testid="uploaded-file-chip"
-                  />
-                </ListItem>
-              ))}
-            </List>
-            <Box sx={{ marginLeft: "auto" }}>
-              <Link
-                onClick={() => onChange && onChange()}
-                sx={{
-                  fontFamily: "inherit",
-                  fontSize: "inherit",
-                }}
-                component="button"
-                variant="body2"
+          </FileCard>
+          {showDrawingNumber && onDrawingNumberChange && (
+            <Box sx={{ mt: 1 }}>
+              <Typography
+                variant="h3"
+                sx={{ display: "inline-block", pb: 0.5 }}
+                id={`drawing-number-label-${id}`}
+                component="label"
               >
-                Change
-                <Box sx={visuallyHidden} component="span">
-                  the list of what file {file.name} shows
-                </Box>
-              </Link>
+                Drawing number (optional)
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "text.secondary",
+                  mb: 1,
+                }}
+              >
+                Separate multiple drawing numbers in this file with a comma
+              </Typography>
+              <Input
+                id={`drawing-number-${id}`}
+                value={drawingNumber || ""}
+                onChange={(e) => onDrawingNumberChange(id, e.target.value)}
+                fullWidth
+                aria-labelledby={`drawing-number-label-${id}`}
+                bordered
+                sx={{ maxWidth: 400 }}
+              />
             </Box>
-          </TagRoot>
-        )}
+          )}
+        </FileCardRoot>
       </>
     </ErrorWrapper>
   </Box>

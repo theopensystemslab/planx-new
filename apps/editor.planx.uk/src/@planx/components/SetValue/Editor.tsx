@@ -50,28 +50,28 @@ const DescriptionText: React.FC<SetValue> = ({ fn, val, operation }) => {
   switch (operation) {
     case "replace":
       return (
-        <Typography mb={2}>
+        <Typography sx={{ mb: 2 }}>
           Any existing value for <strong>{fn}</strong> will be replaced by{" "}
           <strong>{val}</strong>
         </Typography>
       );
     case "append":
       return (
-        <Typography mb={2}>
+        <Typography sx={{ mb: 2 }}>
           Any existing value for <strong>{fn}</strong> will have{" "}
           <strong>{val}</strong> appended to it
         </Typography>
       );
     case "removeOne":
       return (
-        <Typography mb={2}>
+        <Typography sx={{ mb: 2 }}>
           Any existing value for <strong>{fn}</strong> set to{" "}
           <strong>{val}</strong> will be removed
         </Typography>
       );
     case "removeAll":
       return (
-        <Typography mb={2}>
+        <Typography sx={{ mb: 2 }}>
           All existing values for <strong>{fn}</strong> will be removed
         </Typography>
       );

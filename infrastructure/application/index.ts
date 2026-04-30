@@ -117,6 +117,10 @@ const CUSTOM_DOMAINS: CustomDomain[] =
           domain: "planningservices.horsham.gov.uk",
           name: "horsham",
         },
+        {
+          domain: "planningservices.canterbury.gov.uk",
+          name: "canterbury",
+        },
       ]
     : [];
 
@@ -486,6 +490,7 @@ export = async () => {
 
   return {
     customDomains,
+    cdnDistributionId: cdn.id,
     metabaseServiceName: metabaseService.service.name,
     hasuraServiceName: hasuraService.service.name,
     apiServiceName: apiService.service.name,

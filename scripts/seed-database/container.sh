@@ -44,7 +44,7 @@ for table in "${tables[@]}"; do
 
   if [[ ${RESET} == "reset_all" ]]; then
     reset_cmd="TRUNCATE TABLE ${table} CASCADE;"
-    cat $reset_cmd >> '/tmp/sync.sql'
+    echo "${reset_cmd}" >> '/tmp/sync.sql'
   fi
 done
 

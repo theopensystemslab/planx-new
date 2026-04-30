@@ -132,7 +132,10 @@ export const PlatformAdminPanel = () => {
         </Typography>
         <Typography variant="body1">
           {`This is an overview of each team's integrations and settings for the `}
-          <Typography component="span" fontWeight={FONT_WEIGHT_SEMI_BOLD}>
+          <Typography
+            component="span"
+            sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+          >
             {import.meta.env.VITE_APP_ENV}
           </Typography>
           {` environment.`}

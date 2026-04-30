@@ -20,7 +20,8 @@ const StyledTimestamp = styled(Typography)(() => ({
 const PrintedAt = () => {
   return (
     <StyledTimestamp>
-      Printed at {new Date().toLocaleString("en-GB")}
+      Printed at {new Date().toLocaleString("en-GB")}. This is a record of your
+      responses so far and does not confirm submission.
     </StyledTimestamp>
   );
 };

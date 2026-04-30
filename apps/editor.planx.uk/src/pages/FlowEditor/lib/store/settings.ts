@@ -3,13 +3,9 @@ import { FlowStatus } from "@opensystemslab/planx-core/types";
 import camelcaseKeys from "camelcase-keys";
 import { client } from "lib/graphql";
 import { FlowInformation } from "pages/FlowEditor/utils";
-import { FlowSettings, GlobalSettings, TextContent } from "types";
+import { FlowSettings, GlobalSettings } from "types";
 import type { StateCreator } from "zustand";
 
-import {
-  generateFlowAnalyticsLink,
-  getAnalyticsDashboardId,
-} from "../analytics/utils";
 import { SharedStore } from "./shared";
 import { TeamStore } from "./team";
 
@@ -24,8 +20,6 @@ export interface SettingsStore {
   flowSummary?: string;
   globalSettings?: GlobalSettings;
   setGlobalSettings: (globalSettings: GlobalSettings) => void;
-  updateGlobalSettings: (newSettings: { [key: string]: TextContent }) => void;
-  teamAnalyticsLink?: string;
 }
 
 export const settingsStore: StateCreator<
@@ -58,14 +52,11 @@ export const settingsStore: StateCreator<
       data: {
         flows: [
           {
-            id,
             settings,
             status,
             summary,
             canCreateFromCopy,
-            publishedFlows,
             isListedOnLPS,
-            onlineHistory,
             templatedFrom,
           },
         ],
@@ -103,38 +94,14 @@ export const settingsStore: StateCreator<
         slug: flowSlug,
         team_slug: teamSlug,
       },
-      fetchPolicy: "no-cache",
+      fetchPolicy: "network-only",
     });
-
-    // Default to no send component as not all flows will be in the table, over time as all flows get published we can revise this
-    const isSubmissionService = Boolean(publishedFlows[0]?.hasSendComponent);
-
-    const environment = import.meta.env.VITE_APP_ENV;
-
-    // If a flow has ever been online, there will be analytics to show
-    const hasAnalytics = Boolean(onlineHistory?.length);
-
-    const dashboardId = hasAnalytics
-      ? getAnalyticsDashboardId({
-          flowSlug,
-          isSubmissionService,
-        })
-      : undefined;
-
-    const analyticsLink =
-      environment === "production" && dashboardId
-        ? generateFlowAnalyticsLink({
-            flowId: id,
-            dashboardId,
-          })
-        : undefined;
 
     set({
       flowSettings: settings,
       flowStatus: status,
       flowSummary: summary,
       flowCanCreateFromCopy: canCreateFromCopy,
-      flowAnalyticsLink: analyticsLink,
       isFlowListedOnLPS: isListedOnLPS,
       isTemplatedFrom: Boolean(templatedFrom),
     });
@@ -143,7 +110,6 @@ export const settingsStore: StateCreator<
       settings,
       status,
       summary,
-      analyticsLink,
       isListedOnLPS,
     };
   },
@@ -155,26 +121,5 @@ export const settingsStore: StateCreator<
       globalSettings as Record<string, unknown>,
     ) as GlobalSettings;
     set({ globalSettings: fixedKeys });
-  },
-
-  updateGlobalSettings: async (newSettings: { [key: string]: TextContent }) => {
-    await client.mutate({
-      mutation: gql`
-        mutation UpdateGlobalSettings($new_settings: jsonb) {
-          insert_global_settings(
-            objects: { id: 1, footer_content: $new_settings }
-            on_conflict: {
-              constraint: global_settings_pkey
-              update_columns: footer_content
-            }
-          ) {
-            affected_rows
-          }
-        }
-      `,
-      variables: {
-        new_settings: newSettings,
-      },
-    });
   },
 });

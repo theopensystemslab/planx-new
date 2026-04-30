@@ -31,17 +31,6 @@ export const EmptyForm: StoryObj = {
     <FindProperty
       title="Find your property"
       description="For example, SE5 0HU"
-      allowNewAddresses={false}
-    />
-  ),
-};
-
-export const AllowNewAddressesOnMap: StoryObj = {
-  render: () => (
-    <FindProperty
-      title="Find your property"
-      description="For example, SE5 0HU"
-      allowNewAddresses={true}
     />
   ),
 };
@@ -54,7 +43,6 @@ export const WithEditor = () => {
         <FindProperty
           title="Find your property"
           description="For example, SE5 0HU"
-          allowNewAddresses={false}
         />
       )}
     />

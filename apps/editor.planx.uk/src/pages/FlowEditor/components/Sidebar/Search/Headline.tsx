@@ -19,10 +19,10 @@ export const Headline: React.FC<Props> = ({ text, matchIndices, variant }) => {
           <Typography
             component="span"
             variant={variant || "body2"}
-            whiteSpace={"pre-wrap"}
             sx={(theme) => ({
               fontWeight: isHighlighted(index) ? FONT_WEIGHT_BOLD : "regular",
               fontSize: theme.typography.body2.fontSize,
+              whiteSpace: "pre-wrap",
             })}
           >
             {char}

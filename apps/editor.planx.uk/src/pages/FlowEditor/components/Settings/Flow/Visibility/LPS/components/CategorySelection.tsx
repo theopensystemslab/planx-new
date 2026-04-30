@@ -35,10 +35,15 @@ const CategoryLabel: React.FC<(typeof CATEGORIES)[number]> = ({
   description,
 }) => (
   <>
-    <Typography variant="body2" fontWeight="bold">
+    <Typography variant="body2" sx={{ fontWeight: "bold" }}>
       {label}
     </Typography>
-    <Typography variant="body2" color="text.secondary">
+    <Typography
+      variant="body2"
+      sx={{
+        color: "text.secondary",
+      }}
+    >
       {description}
     </Typography>
   </>
@@ -59,7 +64,7 @@ const CategorySelection: React.FC = () => {
   return (
     <Box>
       <Typography variant="h4">Category</Typography>
-      <SettingsDescription mt={0}>
+      <SettingsDescription sx={{ mt: 0 }}>
         Which of the following categories best describes your service?
       </SettingsDescription>
       <ErrorWrapper error={errors.category}>

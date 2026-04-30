@@ -129,12 +129,6 @@ const ExternalPortalForm: React.FC<{
               aria-live="polite"
               fullWidth
               popupIcon={PopupIcon}
-              ListboxProps={{
-                sx: (theme) => ({
-                  paddingY: 0,
-                  backgroundColor: theme.palette.background.default,
-                }),
-              }}
               value={formik.values.flow}
               onChange={(_event, value: string | Flow | null) => {
                 if (typeof value !== "string") {
@@ -154,6 +148,12 @@ const ExternalPortalForm: React.FC<{
               renderOption={renderOption}
               renderGroup={renderGroup}
               slotProps={{
+                listbox: {
+                  sx: (theme) => ({
+                    paddingY: 0,
+                    backgroundColor: theme.palette.background.default,
+                  }),
+                },
                 popper: {
                   placement: "bottom-start",
                   modifiers: [{ name: "flip", enabled: false }],
