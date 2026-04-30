@@ -10,16 +10,21 @@ const mockedUploadPrivateFile = vi.mocked(uploadPrivateFile);
 
 /**
  * Helper function to fill out a list item form
+ * XXX: user.paste() is significantly more preformant that user.type()
+ * This is a worthwile optimisation as this helper is called many times
  */
 export const fillInResponse = async (user: UserEvent) => {
   const nameInput = screen.getByLabelText(/What's their name/);
-  await user.type(nameInput, "Richard Parker");
+  await user.click(nameInput);
+  await user.paste("Richard Parker");
 
   const emailInput = screen.getByLabelText(/email/);
-  await user.type(emailInput, "richard.parker@pi.com");
+  await user.click(emailInput);
+  await user.paste("richard.parker@pi.com");
 
   const ageInput = screen.getByLabelText(/old/);
-  await user.type(ageInput, "10");
+  await user.click(ageInput);
+  await user.paste("10");
 
   const sizeSelect = screen.getByRole("combobox");
   await user.click(sizeSelect);
@@ -36,9 +41,12 @@ export const fillInResponse = async (user: UserEvent) => {
   const dayInput = screen.getByLabelText("Day");
   const monthInput = screen.getByLabelText("Month");
   const yearInput = screen.getByLabelText("Year");
-  await user.type(dayInput, "14");
-  await user.type(monthInput, "7");
-  await user.type(yearInput, "1988");
+  await user.click(dayInput);
+  await user.paste("14");
+  await user.click(monthInput);
+  await user.paste("7");
+  await user.click(yearInput);
+  await user.paste("1988");
 
   const line1Input = screen.getByLabelText("Address line 1");
   const line2Input = screen.getByLabelText("Address line 2 (optional)");
@@ -46,12 +54,18 @@ export const fillInResponse = async (user: UserEvent) => {
   const countyInput = screen.getByLabelText("County (optional)");
   const postcodeInput = screen.getByLabelText("Postcode");
   const countryInput = screen.getByLabelText("Country (optional)");
-  await user.type(line1Input, "134 Corstorphine Rd");
-  await user.type(line2Input, "Corstorphine");
-  await user.type(townInput, "Edinburgh");
-  await user.type(countyInput, "Midlothian");
-  await user.type(postcodeInput, "EH12 6TS");
-  await user.type(countryInput, "Scotland");
+  await user.click(line1Input);
+  await user.paste("134 Corstorphine Rd");
+  await user.click(line2Input);
+  await user.paste("Corstorphine");
+  await user.click(townInput);
+  await user.paste("Edinburgh");
+  await user.click(countyInput);
+  await user.paste("Midlothian");
+  await user.click(postcodeInput);
+  await user.paste("EH12 6TS");
+  await user.click(countryInput);
+  await user.paste("Scotland");
 
   const file1 = new File(["test1"], "test1.png", { type: "image/png" });
   const file2 = new File(["test2"], "test2.png", { type: "image/png" });

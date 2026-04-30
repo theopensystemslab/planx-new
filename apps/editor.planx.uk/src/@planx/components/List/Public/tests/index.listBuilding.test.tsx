@@ -337,7 +337,8 @@ describe("Building a list", () => {
       await user.click(secondEditButton);
 
       const emailInput = getByLabelText(/email/);
-      await user.type(emailInput, "my.new.email@test.com");
+      await user.click(emailInput);
+      await user.paste("my.new.email@test.com");
 
       const secondCancelButton = getAllByText(/Cancel/, {
         selector: "button",
