@@ -52,6 +52,8 @@ jobs:
               - 'apps/api.planx.uk/**'
             e2e:
               - 'e2e/**'
+              - 'docker-compose.e2e.yml'
+              - 'scripts/start-containers-for-tests.sh'
             hasura:
               - 'apps/hasura.planx.uk/**'
             infrastructure:
