@@ -66,6 +66,7 @@ export const setup = async (
   jsx: React.JSX.Element,
 ): Promise<Record<"user", UserEvent> & RenderResult> => {
   testQueryClient.clear();
+  const user = userEvent.setup();
 
   const rootRoute = createRootRoute({
     component: () => (
@@ -113,8 +114,5 @@ export const setup = async (
     { timeout: 1000 },
   );
 
-  return {
-    user: userEvent.setup(),
-    ...renderResult,
-  };
+  return { user, ...renderResult };
 };
