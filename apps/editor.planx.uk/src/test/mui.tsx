@@ -15,16 +15,29 @@ import { vi } from "vitest";
  */
 const mockFade = vi.fn(({ children }: FadeProps) => <div>{children}</div>);
 
-const mockCollapse = vi.fn(
-  ({
-    children,
-    in: inProp,
-    id,
-    "data-testid": dataTestId,
-  }: CollapseProps & { "data-testid"?: string }) => (
+// Separate named component so we can use hooks (vi.fn wrappers can't use hooks directly)
+function MockCollapseImpl({
+  children,
+  in: inProp,
+  onExited,
+  id,
+  "data-testid": dataTestId,
+}: CollapseProps & { "data-testid"?: string }) {
+  // Fire onExited immediately when closing to simulate animation completion
+  React.useEffect(() => {
+    if (!inProp) onExited?.(null!);
+  }, [inProp, onExited]);
+
+  return (
     <div hidden={!inProp} id={id} data-testid={dataTestId}>
       {children}
     </div>
+  );
+}
+
+const mockCollapse = vi.fn(
+  (props: CollapseProps & { "data-testid"?: string }) => (
+    <MockCollapseImpl {...props} />
   ),
 );
 
