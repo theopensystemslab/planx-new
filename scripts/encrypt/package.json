@@ -9,7 +9,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#2f19e28",
+    "@opensystemslab/planx-core": "catalog:",
     "tsx": "^4.21.0",
     "typescript": "~5.9.3"
   },

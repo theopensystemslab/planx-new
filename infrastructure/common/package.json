@@ -5,8 +5,8 @@
     "@pulumi/pulumi": "catalog:infrastructure"
   },
   "devDependencies": {
-    "@types/node": "catalog:infrastructure",
-    "typescript": "catalog:infrastructure"
+    "@types/node": "catalog:",
+    "typescript": "catalog:typescript"
   },
   "private": true
 }

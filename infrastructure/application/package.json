@@ -11,10 +11,10 @@
     "tldjs": "^2.3.2"
   },
   "devDependencies": {
-    "@types/node": "catalog:infrastructure",
+    "@types/node": "catalog:",
     "@types/tldjs": "^2.3.4",
     "mime": "^4.1.0",
-    "typescript": "catalog:infrastructure"
+    "typescript": "catalog:typescript"
   },
   "private": true
 }
