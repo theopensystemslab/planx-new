@@ -18,10 +18,12 @@ const SOURCE_TEMPLATE_NAME = "E2E Source Template";
 const SOURCE_TEMPLATE_SLUG = "e2e-source-template";
 
 const REQUIRED_NODE_TITLE = "Required node";
+const UPDATED_REQUIRED_NODE_TITLE = `${REQUIRED_NODE_TITLE} (updated)`;
 const REQUIRED_NODE_INSTRUCTIONS =
   "You have to customise this node before publishing";
 
 const OPTIONAL_NODE_TITLE = "Optional node";
+const UPDATED_OPTIONAL_NODE_TITLE = `${OPTIONAL_NODE_TITLE} (updated)`;
 const OPTIONAL_NODE_INSTRUCTIONS =
   "You can customise this node if you feel like it";
 
@@ -29,6 +31,8 @@ const TEMPLATED_FLOW_NAME = `${SOURCE_TEMPLATE_NAME} (templated)`;
 const TEMPLATED_FLOW_SLUG = `${SOURCE_TEMPLATE_SLUG}-templated`;
 
 const REGULAR_FLOW_NAME = "E2E Regular Flow";
+
+const REPUBLISH_MESSAGE = "lorem ipsum";
 
 test.describe("Templates", () => {
   let context: TestContext = { ...contextDefaults };
@@ -271,9 +275,7 @@ test.describe("Templates", () => {
       // this is required to get past the 'has any changes' step on publish
       await page.getByRole("link", { name: OPTIONAL_NODE_TITLE }).click();
       await page.getByRole("dialog").waitFor();
-      await page
-        .getByPlaceholder("Text")
-        .fill(`${OPTIONAL_NODE_TITLE} (updated)`);
+      await page.getByPlaceholder("Text").fill(UPDATED_OPTIONAL_NODE_TITLE);
       await page.locator('button[form="modal"][type="submit"]').click();
       await page.getByRole("dialog").waitFor({ state: "detached" });
 
@@ -307,9 +309,7 @@ test.describe("Templates", () => {
       // Edit the required templated node to satisfy the customisation requirement.
       await page.getByRole("link", { name: REQUIRED_NODE_TITLE }).click();
       await page.getByRole("dialog").waitFor();
-      await page
-        .getByPlaceholder("Text")
-        .fill("Updated proposal description for this team");
+      await page.getByPlaceholder("Text").fill(UPDATED_REQUIRED_NODE_TITLE);
       await page.locator('button[form="modal"][type="submit"]').click();
       await page.getByRole("dialog").waitFor({ state: "detached" });
 
@@ -372,10 +372,47 @@ test.describe("Templates", () => {
       ).toBeVisible();
 
       // Complete the publish
-      await page.getByTestId("publish-summary-input").fill("lorem ipsum");
+      await page.getByTestId("publish-summary-input").fill(REPUBLISH_MESSAGE);
       await page.getByTestId("publish-button").click();
       await expect(
         page.getByText("Successfully published changes").first(),
+      ).toBeVisible();
+    });
+  });
+
+  // relies on the source template being republished in the "As a platform admin" block above
+  test.describe("As a team editor", () => {
+    test("sees a History entry describing the source template update and still has Customise tasks to complete", async ({
+      browser,
+    }) => {
+      const page = await getTeamPage({
+        browser,
+        userId: context.user!.id!,
+        teamName: context.team.name,
+      });
+      await navigateToService(page, TEMPLATED_FLOW_SLUG);
+
+      // The History tab should contain an auto-generated entry for the source template update
+      await page.getByRole("tab", { name: "History" }).click();
+      await expect(
+        page.getByText(`Source template published: "${REPUBLISH_MESSAGE}"`),
+      ).toBeVisible();
+
+      // The Customise tab should still list the required and optional tasks
+      await page.getByRole("tab", { name: "Customise" }).click();
+      await expect(page.getByText(REQUIRED_NODE_INSTRUCTIONS)).toBeVisible();
+      await expect(page.getByText(OPTIONAL_NODE_INSTRUCTIONS)).toBeVisible();
+
+      // Check that our required node is complete in the customisation task list
+      const requiredCustomisationTask = page
+        .locator("li")
+        .filter({
+          has: page.getByRole("button", { name: UPDATED_REQUIRED_NODE_TITLE }),
+        })
+        .first();
+
+      await expect(
+        requiredCustomisationTask.getByTestId("customisation-complete"),
       ).toBeVisible();
     });
   });
