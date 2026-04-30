@@ -19,6 +19,7 @@ test.describe("Focus navigation accessibility", () => {
       slug: "focus-navigation-test-flow",
       name: "Focus navigation test flow",
       data: simpleSendFlow,
+      hasSendComponent: true,
     },
   };
 

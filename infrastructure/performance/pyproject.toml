@@ -13,3 +13,6 @@ dependencies = [
 
 [tool.ruff]
 indent-width = 2
+
+[tool.uv]
+exclude-newer = "7d"

@@ -1,0 +1,18 @@
+DELETE FROM team_members
+WHERE role = 'demoUser'
+  OR team_id = 32; -- 'Demo'
+
+DELETE FROM team_integrations
+WHERE team_id = 32;
+
+DELETE FROM team_settings
+WHERE team_id = 32;
+
+DELETE FROM team_themes
+WHERE team_id = 32; 
+
+DELETE FROM flows
+WHERE team_id = 32; -- fkeys will automatically handle cascade to operations, published flows etc
+
+DELETE FROM teams
+WHERE id = 32;

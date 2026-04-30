@@ -24,7 +24,7 @@ const SaveResumeButton: React.FC = () => {
 
   return (
     <Link component="button" onClick={handleClick}>
-      <Typography variant="body1" textAlign="left">
+      <Typography variant="body1" sx={{ textAlign: "left" }}>
         {saveToEmail
           ? "Save and return to this form later"
           : "Resume a form you have already started"}

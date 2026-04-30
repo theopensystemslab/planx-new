@@ -8,7 +8,7 @@ interface FieldInputDescriptionProps {
 export const FieldInputDescription: React.FC<FieldInputDescriptionProps> = ({
   description,
 }) => (
-  <Typography variant="body2" mb={1.5}>
+  <Typography variant="body2" sx={{ mb: 1.5 }}>
     {description}
   </Typography>
 );

@@ -30,7 +30,7 @@ export const EmailRequired: React.FC<{
   });
 
   return (
-    <Box width="100%">
+    <Box sx={{ width: "100%" }}>
       <Card handleSubmit={formik.handleSubmit}>
         <CardHeader
           title="Resume your form"

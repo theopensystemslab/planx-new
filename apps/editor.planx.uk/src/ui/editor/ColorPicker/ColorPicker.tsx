@@ -106,7 +106,7 @@ export default function ColorPicker(props: Props): FCReturn {
     >
       <Root inline={props.inline}>
         {props.inline ? (
-          <Typography mr={2} variant="body2" component="label">
+          <Typography sx={{ mr: 2 }} variant="body2" component="label">
             {props.label}:{" "}
           </Typography>
         ) : (

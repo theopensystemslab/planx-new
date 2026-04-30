@@ -47,8 +47,7 @@ const InternalPortalHeader: React.FC<{ portalId: string }> = ({ portalId }) => {
     <HeaderRoot className="node-card portal internal-portal">
       <Typography
         variant="body2"
-        fontSize={14}
-        fontWeight={FONT_WEIGHT_SEMI_BOLD}
+        sx={{ fontSize: 14, fontWeight: FONT_WEIGHT_SEMI_BOLD }}
       >
         {portalName}
       </Typography>
@@ -100,7 +99,7 @@ export const NodeCard: React.FC<Props> = ({
       backgroundColor={backgroundColor}
     >
       {portalId && <InternalPortalHeader portalId={portalId} />}
-      <Box p={1}>
+      <Box sx={{ p: 1 }}>
         <Box
           sx={{
             display: "flex",
@@ -110,26 +109,26 @@ export const NodeCard: React.FC<Props> = ({
           {Icon && <Icon />}
           <Typography
             variant="body2"
-            fontSize={14}
-            fontWeight={FONT_WEIGHT_SEMI_BOLD}
-            ml={1}
+            sx={{ ml: 1, fontSize: 14, fontWeight: FONT_WEIGHT_SEMI_BOLD }}
           >
             {componentType}
           </Typography>
           {title && (
             <Typography
               variant="body2"
-              fontSize={14}
-              ml={0.5}
-              overflow="hidden"
-              textOverflow="ellipsis"
-              whiteSpace="nowrap"
+              sx={{
+                ml: 0.5,
+                fontSize: 14,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
             >
               {` • ${title}`}
             </Typography>
           )}
         </Box>
-        {children && <Box mt={1}>{children}</Box>}
+        {children && <Box sx={{ mt: 1 }}>{children}</Box>}
       </Box>
     </Root>
   );

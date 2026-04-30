@@ -10,10 +10,7 @@ import {
   Theme as MUITheme,
   ThemeOptions,
 } from "@mui/material/styles";
-// eslint-disable-next-line no-restricted-imports
-import createPalette, {
-  PaletteOptions,
-} from "@mui/material/styles/createPalette";
+import { PaletteOptions } from "@mui/material/styles";
 import { svgIconClasses } from "@mui/material/SvgIcon";
 // eslint-disable-next-line no-restricted-imports
 import { switchClasses } from "@mui/material/Switch";
@@ -170,7 +167,9 @@ const getThemeOptions = ({
       contrastText: getContrastTextColor(actionColour, "#FFF")!,
     },
   };
-  const palette = createPalette(deepmerge(DEFAULT_PALETTE, teamPalette));
+  const palette = createTheme({
+    palette: deepmerge(DEFAULT_PALETTE, teamPalette),
+  }).palette;
 
   const themeOptions: ThemeOptions = {
     // Set default spacing unit to match GOV.UK
@@ -862,16 +861,18 @@ const getThemeOptions = ({
       MuiTooltip: {
         defaultProps: {
           arrow: true,
-          PopperProps: {
-            modifiers: [
-              {
-                // Ensure tooltips are padded from viewport edge
-                name: "preventOverflow",
-                options: {
-                  padding: 10,
+          slotProps: {
+            popper: {
+              modifiers: [
+                {
+                  // Ensure tooltips are padded from viewport edge
+                  name: "preventOverflow",
+                  options: {
+                    padding: 10,
+                  },
                 },
-              },
-            ],
+              ],
+            },
           },
         },
         styleOverrides: {

@@ -141,7 +141,7 @@ const MoreInfoFeedbackComponent: React.FC = () => {
           <Typography variant="h4" component="h3" gutterBottom>
             Thank you for your feedback.
           </Typography>
-          <Typography variant="body2" pt={1}>
+          <Typography variant="body2" sx={{ pt: 1 }}>
             We value the time you’ve taken to share. We’ll use your insights to
             improve our services.
           </Typography>

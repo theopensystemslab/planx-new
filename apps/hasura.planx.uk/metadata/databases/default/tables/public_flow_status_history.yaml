@@ -13,16 +13,6 @@ select_permissions:
         - status
       filter: {}
     comment: ""
-  - role: demoUser
-    permission:
-      columns:
-        - flow_id
-        - status
-      filter:
-        flow:
-          creator_id:
-            _eq: x-hasura-user-id
-    comment: Demo users can only see the status history of their own flows
   - role: platformAdmin
     permission:
       columns:

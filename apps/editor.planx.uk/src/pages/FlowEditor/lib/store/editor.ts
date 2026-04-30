@@ -39,7 +39,6 @@ import { getFlowDoc, subscribeToDoc } from "./../sharedb";
 import { type Store } from ".";
 import { NavigationStore } from "./navigation";
 import type { SharedStore } from "./shared";
-import { UserStore } from "./user";
 
 let doc: Doc;
 
@@ -235,6 +234,7 @@ export interface FlowSummary {
   templatedFrom: string | null;
   isTemplate: boolean;
   isListedOnLPS: boolean;
+  pinnedFlows: { flowId: string }[];
   template: {
     team: {
       name: string;
@@ -268,9 +268,6 @@ export interface EditorStore extends Store.Store {
   cutNode: (id: NodeId, parent: NodeId) => void;
   getCutNode: () => CutPayload | null;
   addNode: (node: any, relationships?: Relationships) => void;
-  archiveFlow: (
-    flow: FlowSummary,
-  ) => Promise<{ id: string; name: string } | void>;
   connect: (src: NodeId, tgt: NodeId, object?: any) => void;
   connectToFlow: (id: NodeId) => Promise<void>;
   disconnectFromFlow: () => void;
@@ -278,7 +275,14 @@ export interface EditorStore extends Store.Store {
   getClonedNodeId: () => string | null;
   copyNode: (id: NodeId) => void;
   getCopiedNode: () => { node: Store.Node; children: Store.Node[] };
-  getFlows: (teamId: number) => Promise<FlowSummary[]>;
+  copyHelpText: (id: NodeId) => void;
+  getCopiedHelpText: () => {
+    info?: string;
+    policyRef?: string;
+    howMeasured?: string;
+    definitionImg?: string | null;
+  } | null;
+  pasteHelpText: (toId: NodeId) => void;
   isClone: (id: NodeId) => boolean;
   lastPublished: (flowId: string) => Promise<string>;
   lastPublisher: (flowId: string) => Promise<string>;
@@ -325,7 +329,7 @@ export interface EditorStore extends Store.Store {
 }
 
 export const editorStore: StateCreator<
-  SharedStore & EditorStore & UserStore & NavigationStore,
+  SharedStore & EditorStore & NavigationStore,
   [],
   [],
   EditorStore
@@ -339,34 +343,6 @@ export const editorStore: StateCreator<
       { children, parent, before },
     )(get().flow);
     send(ops);
-  },
-
-  archiveFlow: async ({ id, slug }) => {
-    try {
-      const { data } = await client.mutate<{
-        flow: { id: string; name: string };
-      }>({
-        mutation: gql`
-          mutation updateFlow($id: uuid!, $slug: String!) {
-            flow: update_flows_by_pk(
-              pk_columns: { id: $id }
-              _set: { deleted_at: "now()", status: offline, slug: $slug }
-            ) {
-              id
-              name
-            }
-          }
-        `,
-        variables: {
-          id,
-          slug: `${slug}-archived`,
-        },
-      });
-
-      return data?.flow;
-    } catch (error) {
-      throw Error("Failed to archive flow", { cause: error });
-    }
   },
 
   connect: (src, tgt, { before = undefined } = {}) => {
@@ -505,64 +481,65 @@ export const editorStore: StateCreator<
 
     return JSON.parse(payload);
   },
+  copyHelpText(id: string) {
+    const { flow } = get();
+    const node = flow[id];
+    if (!node) return;
+
+    const payload = {
+      info: node.data?.info ?? null,
+      policyRef: node.data?.policyRef ?? null,
+      howMeasured: node.data?.howMeasured ?? null,
+      definitionImg: node.data?.definitionImg ?? null,
+    };
+
+    try {
+      localStorage.setItem("copiedHelpText", JSON.stringify(payload));
+    } catch (error) {
+      alert("Failed to copy help text");
+    }
+  },
+
+  getCopiedHelpText: () => {
+    const payload = localStorage.getItem("copiedHelpText");
+    if (!payload) return null;
+    try {
+      return JSON.parse(payload);
+    } catch (err) {
+      return null;
+    }
+  },
+
+  pasteHelpText(toId: string) {
+    const copied = localStorage.getItem("copiedHelpText");
+    if (!copied) return;
+    const payload = JSON.parse(copied);
+
+    const { flow } = get();
+    const node = flow[toId];
+    if (!node) return;
+
+    const newData = {
+      ...(node.data || {}),
+      info: payload.info ?? node.data?.info,
+      policyRef: payload.policyRef ?? node.data?.policyRef,
+      howMeasured: payload.howMeasured ?? node.data?.howMeasured,
+      definitionImg:
+        payload.definitionImg ?? node.data?.definitionImg ?? undefined,
+    };
+
+    try {
+      get().updateNode({ id: toId, data: newData });
+    } catch (err) {
+      alert("Failed to paste help text");
+    }
+  },
 
   getCutNode: () => {
     const payload = localStorage.getItem("cutNode");
     if (!payload) return;
 
     return JSON.parse(payload);
-  },
-
-  getFlows: async (teamId) => {
-    const {
-      data: { flows },
-    } = await client.query<{ flows: FlowSummary[] }>({
-      query: gql`
-        query GetFlows($teamId: Int!) {
-          flows(where: { team: { id: { _eq: $teamId } } }) {
-            id
-            name
-            slug
-            status
-            summary
-            updatedAt: updated_at
-            isListedOnLPS: is_listed_on_lps
-            operations(limit: 1, order_by: { created_at: desc }) {
-              createdAt: created_at
-              actor {
-                firstName: first_name
-                lastName: last_name
-              }
-            }
-            templatedFrom: templated_from
-            isTemplate: is_template
-            template {
-              team {
-                id
-                name
-              }
-            }
-            publishedFlows: published_flows(
-              order_by: { created_at: desc }
-              limit: 1
-            ) {
-              publishedAt: created_at
-              hasSendComponent: has_send_component
-              hasVisiblePayComponent: has_pay_component
-              hasEnabledServiceCharge: service_charge_enabled
-            }
-          }
-        }
-      `,
-      variables: {
-        teamId,
-      },
-      // Flows are modified via REST API requests, not via the Apollo client
-      // Always get an up to date list when showing the page
-      fetchPolicy: "network-only",
-    });
-
-    return flows;
   },
 
   isClone: (id) => {

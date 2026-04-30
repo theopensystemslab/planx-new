@@ -8,7 +8,6 @@ import ToggleButton from "@mui/material/ToggleButton";
 import { useParams, useRouteContext, useRouter } from "@tanstack/react-router";
 import React, { useState } from "react";
 import { useLocation } from "react-use";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import StyledTab from "ui/editor/StyledTab";
 
 import { useStore } from "../../lib/store";
@@ -68,7 +67,7 @@ const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
   width: "40px",
   height: "40px",
   left: "-20px",
-  top: theme.spacing(0.5),
+  top: theme.spacing(1),
   boxShadow: "none",
   color: theme.palette.text.primary,
   "& > svg": {

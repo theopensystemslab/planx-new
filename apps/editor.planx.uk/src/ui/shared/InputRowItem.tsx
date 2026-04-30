@@ -4,7 +4,7 @@ import React from "react";
 
 interface Props {
   width?: number | string;
-  children: JSX.Element[] | JSX.Element;
+  children: React.JSX.Element[] | React.JSX.Element;
 }
 
 const Root = styled(Box)(({ width }: { width?: number | string }) => ({

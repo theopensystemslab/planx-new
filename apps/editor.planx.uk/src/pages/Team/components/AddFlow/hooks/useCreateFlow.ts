@@ -1,15 +1,21 @@
 import { useMutation } from "@tanstack/react-query";
+import type { APIError } from "lib/api/client";
 import {
   createFlow,
   createFlowFromCopy,
   createFlowFromTemplate,
 } from "lib/api/flow/requests";
+import type { NewFlow } from "lib/api/flow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 import { CreateFlow } from "../types";
 
 export const useCreateFlow = () => {
-  return useMutation({
+  return useMutation<
+    { mode: CreateFlow["mode"]; flow: NewFlow },
+    APIError<{ error?: string }>,
+    CreateFlow
+  >({
     mutationFn: async ({ mode, flow }: CreateFlow) => {
       const mutation = {
         new: createFlow,

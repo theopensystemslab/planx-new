@@ -51,12 +51,12 @@ export const getSession = async (sessionId: string) => {
 
 export const emailNewDownloadLink = async ({
   sessionId,
-  submissionEmail,
+  submissionEmailAddress,
   token,
   serviceName,
 }: {
   sessionId: string;
-  submissionEmail: string;
+  submissionEmailAddress: string;
   token: string;
   serviceName: string;
 }) => {
@@ -69,5 +69,5 @@ export const emailNewDownloadLink = async ({
     emailReplyToId: DEVOPS_EMAIL_REPLY_TO_ID,
   };
 
-  await sendEmail("new-download-link", submissionEmail, config);
+  await sendEmail("new-download-link", submissionEmailAddress, config);
 };

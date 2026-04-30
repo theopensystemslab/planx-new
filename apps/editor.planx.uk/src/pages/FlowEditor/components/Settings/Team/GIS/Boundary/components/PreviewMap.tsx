@@ -16,7 +16,7 @@ export const PreviewMap: React.FC<{ geojsonData?: GeoJsonObject }> = ({
       <my-map
         id="team-boundary-map"
         ariaLabelOlFixedOverlay="A static map displaying your team's boundary"
-        geojsonData={JSON.stringify(geojsonData)}
+        geojsonData={geojsonData}
         geojsonColor="#ff0000"
         geojsonFill
         geojsonBuffer={1_000}

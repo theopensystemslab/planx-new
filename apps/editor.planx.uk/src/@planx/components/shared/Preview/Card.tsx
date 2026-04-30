@@ -74,14 +74,16 @@ const Card: React.FC<Props> = ({
       >
         <Container maxWidth="contentWrap" sx={sx}>
           <InnerContainer
-            bgcolor="background.default"
-            mt={{ xs: 4, md: 6 }}
-            mb={{ xs: 4, md: 8 }}
+            sx={{
+              bgcolor: "background.default",
+              mt: { xs: 4, md: 6 },
+              mb: { xs: 4, md: 8 },
+            }}
             {...props}
           >
             {children}
 
-            <Box pt={2}>
+            <Box sx={{ pt: 2 }}>
               {handleSubmit && (
                 <Button
                   variant="contained"

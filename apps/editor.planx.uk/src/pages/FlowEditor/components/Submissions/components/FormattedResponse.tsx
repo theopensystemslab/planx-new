@@ -1,10 +1,9 @@
 import ReactJson from "@microlink/react-json-view";
-import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
-const Root = styled(Box)(({ theme }) => ({
+const Root = styled("pre")(({ theme }) => ({
   padding: theme.spacing(2.5, 2),
   margin: 0,
   width: "100%",
@@ -35,7 +34,7 @@ export const FormattedResponse: React.FC<FormattedResponseProps> = ({
   }
 
   return (
-    <Root component="pre">
+    <Root>
       <ErrorBoundary FallbackComponent={InvalidJSONError}>
         <ReactJson
           src={parsedResponse}

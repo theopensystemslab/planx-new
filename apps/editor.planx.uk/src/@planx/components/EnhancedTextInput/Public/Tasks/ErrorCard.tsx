@@ -13,7 +13,7 @@ const ErrorCard: React.FC<PropsWithChildren<Props>> = ({
   children,
 }) => (
   <ErrorSummaryContainer role="status">
-    <Typography variant="h3" component="h2" mb={2}>
+    <Typography variant="h3" component="h2" sx={{ mb: 2 }}>
       {title}
     </Typography>
     {Array.isArray(description) ? (

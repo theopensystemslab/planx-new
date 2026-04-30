@@ -73,40 +73,6 @@ describe("canUserAccessEnv() helper function", () => {
       expect(result).toBe(true);
     });
   });
-
-  describe("a demo user", () => {
-    beforeAll(() => {
-      mockIsStagingOnly.mockResolvedValue(false);
-      mockUser.teams.push({
-        role: "demoUser",
-        team: {
-          name: "Demo",
-          slug: "demo",
-          id: 123,
-        },
-      });
-    });
-
-    test("can't access production", async () => {
-      const result = await checkUserCanAccessEnv(mockUser, "production");
-      expect(result).toBe(false);
-    });
-
-    test("can access staging", async () => {
-      const result = await checkUserCanAccessEnv(mockUser, "staging");
-      expect(result).toBe(true);
-    });
-
-    test("can access pizzas", async () => {
-      const result = await checkUserCanAccessEnv(mockUser, "pizza");
-      expect(result).toBe(true);
-    });
-
-    test("can access test envs", async () => {
-      const result = await checkUserCanAccessEnv(mockUser, "test");
-      expect(result).toBe(true);
-    });
-  });
 });
 
 describe("isValidRedirect() helper function", () => {

@@ -11,7 +11,7 @@ const ExternalPortalList = () => {
   const hasExternalPortals = Boolean(Object.keys(externalPortals).length);
 
   return (
-    <Box pt={2}>
+    <Box sx={{ pt: 2 }}>
       <SimpleExpand
         buttonText={{
           open: "Show nested flows",
@@ -19,11 +19,11 @@ const ExternalPortalList = () => {
         }}
         id="externalPortalsToggle"
       >
-        <Box py={2}>
+        <Box sx={{ py: 2 }}>
           {hasExternalPortals ? (
             <Box data-testid="searchExternalPortalList">
               <InputLegend>External Portals</InputLegend>
-              <Typography variant="body1" my={2}>
+              <Typography variant="body1" sx={{ my: 2 }}>
                 Your service contains the following nested flows:
               </Typography>
               <ExternalPortals externalPortals={externalPortals} />

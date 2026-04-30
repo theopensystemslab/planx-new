@@ -629,21 +629,6 @@ describe("sessions", () => {
     });
   });
 
-  describe("demoUser", () => {
-    let i;
-    beforeAll(async () => {
-      i = await introspectAs("demoUser");
-    });
-
-    test("cannot query sessions", () => {
-      expect(i.queries).not.toContain("sessions");
-    });
-
-    test("cannot create, update, or delete sessions", () => {
-      expect(i).toHaveNoMutationsFor("sessions");
-    });
-  });
-
   describe("api", () => {
     let i;
     beforeAll(async () => {

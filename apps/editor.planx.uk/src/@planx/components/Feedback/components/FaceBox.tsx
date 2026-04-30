@@ -20,7 +20,7 @@ export const FaceBox = ({
   value,
 }: FaceBoxProps): ReactElement => {
   return (
-    <Grid item xs={2.4} key={label}>
+    <Grid size={2.4} key={label}>
       <ToggleButton
         value={value}
         data-testid={testId}

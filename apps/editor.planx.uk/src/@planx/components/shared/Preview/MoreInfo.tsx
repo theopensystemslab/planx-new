@@ -31,7 +31,7 @@ const CloseButton = styled(Box)(({ theme }) => ({
 
 interface IMoreInfo {
   open: boolean;
-  children: (JSX.Element | string | undefined)[] | JSX.Element;
+  children: (React.JSX.Element | string | undefined)[] | React.JSX.Element;
   handleClose: Function;
 }
 

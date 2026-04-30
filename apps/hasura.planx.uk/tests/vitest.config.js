@@ -9,6 +9,7 @@ export default defineConfig({
     setupFiles: ['./vitest.setup.js'],
     deps: {
       inline: ['dotenv']
-    }
+    },
+    fileParallelism: false
   }
 });

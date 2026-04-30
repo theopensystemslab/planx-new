@@ -16,8 +16,9 @@ import { squareMetresToHectares } from "@planx/components/shared/utils";
 import buffer from "@turf/buffer";
 import { point } from "@turf/helpers";
 import { Feature } from "geojson";
+import type { GeoJSONChangeEvent } from "lib/gis";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -108,28 +109,21 @@ export default function Component(props: Props) {
   useEffect(() => {
     if (isMounted.current) setSlots([]);
     isMounted.current = true;
+  }, [setSlots]);
 
-    const geojsonChangeHandler = ({ detail: geojson }: any) => {
-      if (geojson["EPSG:3857"]?.features) {
-        // only a single polygon can be drawn, so get first feature in geojson "FeatureCollection"
-        setBoundary(geojson["EPSG:3857"].features[0]);
-        setArea(
-          geojson["EPSG:3857"].features[0]?.properties?.["area.squareMetres"],
-        );
-      } else {
-        // if the user clicks 'reset' to erase the drawing, geojson will be empty object, so set boundary to undefined & area to 0
-        setBoundary(undefined);
-        setArea(0);
-      }
-    };
-
-    const map: any = document.getElementById("draw-boundary-map");
-    map?.addEventListener("geojsonChange", geojsonChangeHandler);
-
-    return function cleanup() {
-      map?.removeEventListener("geojsonChange", geojsonChangeHandler);
-    };
-  }, [page, setArea, setBoundary, setSlots]);
+  const geojsonChangeHandler = ({ detail: geojson }: GeoJSONChangeEvent) => {
+    if (geojson["EPSG:3857"]?.features) {
+      // only a single polygon can be drawn, so get first feature in geojson "FeatureCollection"
+      setBoundary(geojson["EPSG:3857"].features[0]);
+      setArea(
+        geojson["EPSG:3857"].features[0]?.properties?.["area.squareMetres"],
+      );
+    } else {
+      // if the user clicks 'reset' to erase the drawing, geojson will be empty object, so set boundary to undefined & area to 0
+      setBoundary(undefined);
+      setArea(0);
+    }
+  };
 
   /**
    * Declare refs to hold a mutable copy the up-to-date validation errors
@@ -233,14 +227,9 @@ export default function Component(props: Props) {
    * Clip map extent to buffered boundary, with a fallback to address point if required
    */
   const clipGeojsonData = (() => {
-    if (boundary)
-      return JSON.stringify(
-        buffer(boundary, bufferInMeters, { units: "meters" }),
-      );
+    if (boundary) return buffer(boundary, bufferInMeters, { units: "meters" });
     if (addressPoint)
-      return JSON.stringify(
-        buffer(addressPoint, bufferInMeters, { units: "meters" }),
-      );
+      return buffer(addressPoint, bufferInMeters, { units: "meters" });
   })();
 
   function getBody(mapValidationError?: string, fileValidationError?: string) {
@@ -288,7 +277,7 @@ export default function Component(props: Props) {
                   ariaLabelOlFixedOverlay="An interactive map for providing your location plan boundary"
                   drawMode
                   drawPointer="crosshair"
-                  drawGeojsonData={JSON.stringify(boundary)}
+                  drawGeojsonData={boundary}
                   drawGeojsonDataBuffer={10}
                   clipGeojsonData={clipGeojsonData}
                   zoom={20}
@@ -307,6 +296,7 @@ export default function Component(props: Props) {
                   collapseAttributions={
                     self.innerWidth < 500 ? true : undefined
                   }
+                  ongeojsonChange={geojsonChangeHandler}
                 />
               </MapContainer>
             </ErrorWrapper>

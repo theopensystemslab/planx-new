@@ -69,73 +69,56 @@ function FindPropertyComponent(props: Props) {
           </InputRow>
         </ModalSectionContent>
         <ModalSectionContent>
-          <InputRow>
-            <Switch
-              checked={formik.values.allowNewAddresses}
-              onChange={() =>
-                formik.setFieldValue(
-                  "allowNewAddresses",
-                  !formik.values.allowNewAddresses,
-                )
-              }
-              label="Allow users to plot new addresses without a UPRN"
-              disabled={props.disabled}
-            />
-          </InputRow>
-          {formik.values.allowNewAddresses ? (
-            <>
+          <>
+            <InputRow>
+              <Switch
+                checked={formik.values.newAddressFirstPage}
+                onChange={() =>
+                  formik.setFieldValue(
+                    "newAddressFirstPage",
+                    !formik.values.newAddressFirstPage,
+                  )
+                }
+                label="Show the new address map as the primary journey, and existing postcode/address inputs page secondary"
+                disabled={props.disabled}
+              />
+            </InputRow>
+            <br />
+            <InputRow>
+              <Input
+                format="large"
+                placeholder="Title"
+                name="newAddressTitle"
+                value={formik.values.newAddressTitle}
+                onChange={formik.handleChange}
+                disabled={props.disabled}
+              />
+            </InputRow>
+            <InputRow>
+              <RichTextInput
+                name="newAddressDescription"
+                placeholder="Description"
+                value={formik.values.newAddressDescription}
+                onChange={formik.handleChange}
+                disabled={props.disabled}
+                errorMessage={formik.errors.newAddressDescription}
+              />
+            </InputRow>
+            <InputGroup label="New address description label">
               <InputRow>
-                <Switch
-                  checked={formik.values.newAddressFirstPage}
-                  onChange={() =>
-                    formik.setFieldValue(
-                      "newAddressFirstPage",
-                      !formik.values.newAddressFirstPage,
-                    )
-                  }
-                  label="Show the new address map as the primary journey, and existing postcode/address inputs page secondary"
-                  disabled={props.disabled}
-                />
+                <InputRowItem width="100%">
+                  <Input
+                    id="new-address-description-label"
+                    placeholder="Label"
+                    name="newAddressDescriptionLabel"
+                    value={formik.values.newAddressDescriptionLabel}
+                    onChange={formik.handleChange}
+                    disabled={props.disabled}
+                  />
+                </InputRowItem>
               </InputRow>
-              <br />
-              <InputRow>
-                <Input
-                  format="large"
-                  placeholder="Title"
-                  name="newAddressTitle"
-                  value={formik.values.newAddressTitle}
-                  onChange={formik.handleChange}
-                  disabled={props.disabled}
-                />
-              </InputRow>
-              <InputRow>
-                <RichTextInput
-                  name="newAddressDescription"
-                  placeholder="Description"
-                  value={formik.values.newAddressDescription}
-                  onChange={formik.handleChange}
-                  disabled={props.disabled}
-                  errorMessage={formik.errors.newAddressDescription}
-                />
-              </InputRow>
-              <InputGroup label="New address description label">
-                <InputRow>
-                  <InputRowItem width="100%">
-                    <Input
-                      id="new-address-description-label"
-                      placeholder="Label"
-                      name="newAddressDescriptionLabel"
-                      value={formik.values.newAddressDescriptionLabel}
-                      onChange={formik.handleChange}
-                      disabled={props.disabled}
-                    />
-                  </InputRowItem>
-                </InputRow>
-              </InputGroup>
-            </>
-          ) : (
-            <></>
-          )}
+            </InputGroup>
+          </>
         </ModalSectionContent>
       </ModalSection>
       <ModalFooter formik={formik} disabled={props.disabled} />

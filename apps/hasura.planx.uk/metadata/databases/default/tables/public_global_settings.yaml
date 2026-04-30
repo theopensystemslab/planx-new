@@ -18,11 +18,6 @@ insert_permissions:
           url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
         type: http
 select_permissions:
-  - role: demoUser
-    permission:
-      columns:
-        - footer_content
-      filter: {}
   - role: platformAdmin
     permission:
       columns:

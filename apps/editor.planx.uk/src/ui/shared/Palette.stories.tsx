@@ -15,21 +15,25 @@ const metadata: Meta = {
 };
 
 const ColorSwatch: React.FC<{ color: string; title: string }> = (props) => (
-  <Grid item>
+  <Grid>
     <Box
-      display="flex"
-      flexDirection="column"
-      flexShrink={1}
-      alignItems="flex-start"
-      marginX={0}
-      marginY={1}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        flexShrink: 1,
+        alignItems: "flex-start",
+        marginX: 0,
+        marginY: 1,
+      }}
     >
       <Typography variant="caption">{props.title}</Typography>
       <Box
-        height={100}
-        width={150}
-        bgcolor={props.color}
-        border="1px solid #eee"
+        sx={{
+          height: 100,
+          width: 150,
+          bgcolor: props.color,
+          border: "1px solid #eee",
+        }}
       ></Box>
     </Box>
   </Grid>

@@ -1,5 +1,13 @@
 import { Role, TeamRole, User } from "@opensystemslab/planx-core/types";
-import React, { SetStateAction } from "react";
+
+export const ROLE_LABELS = {
+  platformAdmin: "Admin",
+  teamAdmin: "Team admin",
+  teamEditor: "Editor",
+  teamViewer: "Viewer",
+  public: "Public",
+  analyst: "Analyst",
+} as const;
 
 export type TeamMember = ActiveTeamMember | ArchivedTeamMember;
 
@@ -11,7 +19,7 @@ type ArchivedTeamMember = Omit<
   email: string | null;
 };
 
-type ActiveTeamMember = Omit<User, "teams" | "isPlatformAdmin"> & {
+type ActiveTeamMember = Omit<User, "teams"> & {
   role: Role;
 };
 
@@ -22,29 +30,23 @@ export interface MembersTableProps {
   showRemoveMemberButton?: boolean;
 }
 
-export interface AddNewEditorModalProps {
-  showModal: boolean;
-  setShowModal: React.Dispatch<SetStateAction<boolean>>;
-}
-
-export interface AddNewEditorFormValues {
+export interface UserFormValues {
   email: string;
   firstName: string;
   lastName: string;
   role: TeamRole;
 }
 
-export interface UpdateEditorFormValues {
-  email: string | null;
-  firstName: string;
-  lastName: string;
-}
-export type ActionType = "add" | "edit" | "remove";
+export type ModalState =
+  | { action: "closed" }
+  | { action: "add" }
+  | { action: "edit"; member: TeamMember }
+  | { action: "remove"; member: TeamMember };
 
-export interface EditorModalProps {
-  showModal?: boolean;
-  setShowModal: React.Dispatch<SetStateAction<boolean>>;
-  initialValues?: TeamMember;
-  userId?: number;
-  actionType?: ActionType;
-}
+type SharedModalProps = {
+  onClose: () => void;
+};
+
+export type AddUserModalProps = SharedModalProps;
+export type EditUserModalProps = SharedModalProps & { member: TeamMember };
+export type RemoveUserModalProps = SharedModalProps & { member: TeamMember };

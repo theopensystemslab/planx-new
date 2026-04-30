@@ -17,6 +17,11 @@ updates:
     schedule:
       interval: "monthly"
     labels: ["pnpm"]
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+      semver-minor-days: 7
+      semver-patch-days: 3
 
   # Editor
   - package-ecosystem: "npm"
@@ -32,12 +37,22 @@ updates:
     groups:
       tiptap:
         patterns: ["@tiptap/*"]
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+      semver-minor-days: 7
+      semver-patch-days: 3
 
   # Editor - sharedb-sync group
   - package-ecosystem: "npm"
     directory: "/apps/editor.planx.uk"
     patterns: ["sharedb"]
     multi-ecosystem-group: "sharedb-sync"
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+      semver-minor-days: 7
+      semver-patch-days: 3
 
   # localplanning.services
   - package-ecosystem: "npm"
@@ -49,6 +64,11 @@ updates:
       - dependency-name: "*"
         update-types:
           ["version-update:semver-patch", "version-update:semver-minor"]
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+      semver-minor-days: 7
+      semver-patch-days: 3
 
   # Hasura
   - package-ecosystem: "npm"
@@ -60,6 +80,11 @@ updates:
       - dependency-name: "*"
         update-types:
           ["version-update:semver-patch", "version-update:semver-minor"]
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+      semver-minor-days: 7
+      semver-patch-days: 3
 
   - package-ecosystem: "docker"
     directory: "/apps/hasura.planx.uk"
@@ -86,6 +111,11 @@ updates:
       - dependency-name: "*"
         update-types:
           ["version-update:semver-patch", "version-update:semver-minor"]
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+      semver-minor-days: 7
+      semver-patch-days: 3
 
   # ShareDB
   - package-ecosystem: "npm"
@@ -98,12 +128,22 @@ updates:
         update-types:
           ["version-update:semver-patch", "version-update:semver-minor"]
       - dependency-name: "sharedb" # Ignore sharedb here, handled by sharedb-sync group
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+      semver-minor-days: 7
+      semver-patch-days: 3
 
   # ShareDB - sharedb-sync group
   - package-ecosystem: "npm"
     directory: "/apps/sharedb.planx.uk"
     patterns: ["sharedb"]
     multi-ecosystem-group: "sharedb-sync"
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+      semver-minor-days: 7
+      semver-patch-days: 3
 
   - package-ecosystem: "docker"
     directory: "/apps/sharedb.planx.uk"
@@ -125,6 +165,11 @@ updates:
     groups:
       vitest:
         patterns: ["vitest", "@vitest/coverage-istanbul", "@vitest/ui"]
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+      semver-minor-days: 7
+      semver-patch-days: 3
 
   - package-ecosystem: "docker"
     directory: "/apps/api.planx.uk"
@@ -145,6 +190,11 @@ updates:
       - dependency-name: "*"
         update-types:
           ["version-update:semver-patch", "version-update:semver-minor"]
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+      semver-minor-days: 7
+      semver-patch-days: 3
 
   # Caddy container (reverse proxy for pizzas)
   - package-ecosystem: "docker"
@@ -178,6 +228,11 @@ updates:
       - dependency-name: "@types/node"
         update-types:
           ["version-update:semver-major", "version-update:semver-minor"]
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+      semver-minor-days: 7
+      semver-patch-days: 3
 
   # GitHub actions
   - package-ecosystem: "github-actions"

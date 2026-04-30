@@ -58,29 +58,4 @@ test.describe("Refresh page", () => {
 
     Promise.all([await page.reload(), await reloadRequest]);
   });
-
-  test("team data persists on page refresh @regression", async ({
-    browser,
-  }) => {
-    const page = await createAuthenticatedSession({
-      browser,
-      userId: context.user!.id!,
-    });
-
-    await page.goto("/");
-    const team = page.locator("h3", { hasText: context.team.name });
-    await team.click();
-
-    const teamSlugInHeader = page.getByRole("link", {
-      name: context.team.slug,
-      exact: true,
-    });
-    await expect(teamSlugInHeader).toBeVisible();
-
-    await page.reload();
-    await expect(teamSlugInHeader).toBeVisible();
-
-    await page.goBack();
-    await expect(teamSlugInHeader).toBeHidden();
-  });
 });

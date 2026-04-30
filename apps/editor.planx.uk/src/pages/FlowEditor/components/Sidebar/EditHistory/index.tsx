@@ -64,7 +64,7 @@ const EditHistory = () => {
   if (!loading && !data?.history) return null;
 
   return (
-    <Box p={2}>
+    <Box sx={{ p: 2 }}>
       {user?.id && canUserEditTeam(teamSlug) && (
         <AddCommentDialog flowId={flowId} actorId={user.id} />
       )}
@@ -72,7 +72,7 @@ const EditHistory = () => {
       {data?.history.length === 50 && (
         <>
           <Divider />
-          <Typography variant="body2" mt={2} color="GrayText">
+          <Typography variant="body2" sx={{ mt: 2 }} color="GrayText">
             {`History shows the last 50 edits made to this service within the last six months. If you have questions about restoring to an earlier point in time, please contact a developer.`}
           </Typography>
         </>

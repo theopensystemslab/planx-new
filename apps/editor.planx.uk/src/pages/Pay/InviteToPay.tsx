@@ -42,14 +42,14 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
           text: theme.palette.text.primary,
         }}
       >
-        <Typography pt={2} variant="body2" maxWidth="formWrap">
+        <Typography variant="body2" sx={{ pt: 2, maxWidth: "formWrap" }}>
           A payment invitation has been sent to your nominee. You will receive
           an email to confirm when the payment has been completed.
         </Typography>
       </Banner>
       <Container maxWidth="contentWrap">
-        <FormInner maxWidth="formWrap">
-          <Typography variant="h2" mt={2}>
+        <FormInner sx={{ maxWidth: "formWrap" }}>
+          <Typography variant="h2" sx={{ mt: 2 }}>
             You will be contacted
           </Typography>
           <List>
@@ -62,7 +62,7 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
             <li>to arrange a site visit, if required</li>
           </List>
           <Divider sx={{ mt: 4 }} />
-          <Typography variant="h2" mt={4}>
+          <Typography variant="h2" sx={{ mt: 4 }}>
             Contact us
           </Typography>
           <List>

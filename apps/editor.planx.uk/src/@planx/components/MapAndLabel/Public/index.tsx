@@ -117,11 +117,13 @@ const FeatureTabs: React.FC = () => {
             editFeatureInForm(parseInt(newValue, 10));
           }}
           aria-label="Select a feature to enter data"
-          TabIndicatorProps={{
-            sx: {
-              height: { xs: "4px", lg: "2px" },
-              width: { xs: "2px", lg: "4px" },
-              transition: "none",
+          slotProps={{
+            indicator: {
+              sx: {
+                height: { xs: "4px", lg: "2px" },
+                width: { xs: "2px", lg: "4px" },
+                transition: "none",
+              },
             },
           }}
           sx={{
@@ -174,7 +176,7 @@ const FeatureTabs: React.FC = () => {
                 <Typography component="h2" variant="h3" gutterBottom>
                   {`${schema.type} ${feature.properties?.label}`}
                 </Typography>
-                <Typography variant="body2" mb={2}>
+                <Typography variant="body2" sx={{ mb: 2 }}>
                   {`${feature.geometry.type}`}
                   {feature.geometry.type === "Point"
                     ? ` (${feature.geometry.coordinates.map((coord) =>
@@ -233,7 +235,7 @@ const PlotFeatureToBegin = () => (
       border: `1px solid ${theme.palette.border.main}`,
     })}
   >
-    <Typography variant="body2" fontSize={"large"}>
+    <Typography variant="body2" sx={{ fontSize: "large" }}>
       Plot a feature on the map to begin
     </Typography>
   </Box>
@@ -248,6 +250,7 @@ const Root = () => {
     updateMapKey,
     validateAndSubmitForm,
     addInitialFeaturesToMap,
+    handleGeoJSONChange,
   } = useMapAndLabelContext();
   const {
     title,
@@ -296,20 +299,18 @@ const Root = () => {
             {/* @ts-ignore */}
             <my-map
               id={MAP_ID}
+              data-map-id={MAP_ID}
               data-testid={MAP_ID}
               basemap={basemap}
               ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
-              geojsonData={
-                passport && JSON.stringify(passport["proposal.site"])
-              }
+              geojsonData={passport && passport["proposal.site"]}
               geojsonBuffer={30}
               drawMode
               drawGeojsonData={
-                features &&
-                JSON.stringify({
+                features && {
                   type: "FeatureCollection",
                   features: features,
-                })
+                }
               }
               drawGeojsonDataBuffer={25}
               drawMany
@@ -328,9 +329,10 @@ const Root = () => {
                   ? `© Crown copyright and database rights ${new Date().getFullYear()} OS AC0000812160`
                   : ``
               }
-              clipGeojsonData={boundaryBBox && JSON.stringify(boundaryBBox)}
+              clipGeojsonData={boundaryBBox && boundaryBBox}
               mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
               collapseAttributions
+              ongeojsonChange={handleGeoJSONChange}
             />
           </MapContainer>
         </ErrorWrapper>

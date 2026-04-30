@@ -54,10 +54,7 @@ const getDefaultRoleForUser = (user: User): Role => {
   const isTeamEditor = user.teams.find((team) => team.role === "teamEditor");
   if (isTeamEditor) return "teamEditor";
 
-  const isTeamViewer = user.teams.find((team) => team.role === "teamViewer");
-  if (isTeamViewer) return "teamViewer";
-
-  return "demoUser";
+  return "teamViewer";
 };
 
 /**

@@ -34,7 +34,13 @@ export const ServiceCharges = ({ serviceCharges }: SubscriptionProps) => {
       <Typography variant="h3" component="h4" gutterBottom>
         Service charges
       </Typography>
-      <Typography variant="body2" color="text.secondary" gutterBottom>
+      <Typography
+        variant="body2"
+        gutterBottom
+        sx={{
+          color: "text.secondary",
+        }}
+      >
         Summary of service charges collected by your team on behalf of OSL.
         Service charges are transferred to OSL quarterly.
       </Typography>
@@ -58,11 +64,11 @@ const ActiveServiceCharges = ({ serviceCharges }: SubscriptionProps) => {
 
   return (
     <>
-      <Typography variant="h4" component="h5" mt={2} gutterBottom>
+      <Typography variant="h4" component="h5" sx={{ mt: 2 }} gutterBottom>
         Service charges due this quarter
       </Typography>
       <ThisQuarterServiceChargeCard serviceCharges={serviceCharges} />
-      <Typography variant="h4" component="h5" mt={2} gutterBottom>
+      <Typography variant="h4" component="h5" sx={{ mt: 2 }} gutterBottom>
         Total service charges collected
       </Typography>
       <AnnualServiceChargeCards
@@ -72,8 +78,8 @@ const ActiveServiceCharges = ({ serviceCharges }: SubscriptionProps) => {
         setActiveYear={setActiveYear}
       />
       <Box
-        mt={2}
         sx={{
+          mt: 2,
           border: (theme) => `1px solid ${theme.palette.border.main}`,
           backgroundColor: (theme) => theme.palette.background.default,
         }}
@@ -88,7 +94,7 @@ const ActiveServiceCharges = ({ serviceCharges }: SubscriptionProps) => {
           serviceCharges={serviceChargesInActiveYear}
         />
       </Box>
-      <Box mt={2} sx={{ textAlign: "right" }}>
+      <Box sx={{ mt: 2, textAlign: "right" }}>
         <Link component="button" onClick={() => console.log("todo")}>
           <Typography variant="body2">
             {"Download service charge payment records (.csv)"}
@@ -128,7 +134,7 @@ const ThisQuarterServiceChargeCard = ({
             <Typography variant="h3" component="div" gutterBottom>
               {`Q${thisQuarter} ${formatUKFiscalYear(thisFiscalYear)}`}
             </Typography>
-            <Typography variant="body2" mt={2}>
+            <Typography variant="body2" sx={{ mt: 2 }}>
               <strong>
                 {sumServiceCharges(
                   serviceCharges.filter((sc) => sc.quarter === thisQuarter),
@@ -186,7 +192,7 @@ const AnnualServiceChargeCards = ({
             <Typography variant="h3" component="div" gutterBottom>
               {formatUKFiscalYear(year)}
             </Typography>
-            <Typography variant="body2" mt={2}>
+            <Typography variant="body2" sx={{ mt: 2 }}>
               <strong>
                 {sumServiceCharges(
                   serviceCharges.filter((sc) => sc.fiscalYear === year),
@@ -213,7 +219,7 @@ const ServiceChargesByQuarterAccordion = ({
         aria-controls="by-quarter-content"
         id="by-quarter-header"
       >
-        <Typography component="span" fontWeight={FONT_WEIGHT_SEMI_BOLD}>
+        <Typography component="span" sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
           By quarter
         </Typography>
       </AccordionSummary>
@@ -251,7 +257,7 @@ const ServiceChargesByMonthAccordion = ({
         aria-controls="by-month-content"
         id="by-month-header"
       >
-        <Typography component="span" fontWeight={FONT_WEIGHT_SEMI_BOLD}>
+        <Typography component="span" sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
           By month
         </Typography>
       </AccordionSummary>
@@ -289,7 +295,7 @@ const ServiceChargeByFlowAccordion = ({
         aria-controls="by-service-content"
         id="by-service-header"
       >
-        <Typography component="span" fontWeight={FONT_WEIGHT_SEMI_BOLD}>
+        <Typography component="span" sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
           By service
         </Typography>
       </AccordionSummary>

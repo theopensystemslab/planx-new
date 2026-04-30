@@ -64,21 +64,6 @@ describe("revoked_tokens", () => {
     });
   });
 
-  describe("demoUser", () => {
-    let i;
-    beforeAll(async () => {
-      i = await introspectAs("demoUser");
-    });
-
-    test("cannot query revoked_tokens", () => {
-      expect(i.queries).not.toContain("revoked_tokens");
-    });
-
-    test("cannot create, update, or delete revoked_tokens", () => {
-      expect(i).toHaveNoMutationsFor("revoked_tokens");
-    });
-  });
-
   describe("api", () => {
     let i;
     beforeAll(async () => {

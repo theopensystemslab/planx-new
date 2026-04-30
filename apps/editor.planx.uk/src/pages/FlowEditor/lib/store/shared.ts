@@ -1,5 +1,4 @@
-import { CoreDomainClient } from "@opensystemslab/planx-core";
-import { FlowStatus, NodeId } from "@opensystemslab/planx-core/types";
+import { NodeId } from "@opensystemslab/planx-core/types";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import { removeSessionIdSearchParam } from "utils";
 import type { StateCreator } from "zustand";
@@ -7,41 +6,24 @@ import type { StateCreator } from "zustand";
 import type { Store } from ".";
 import { NavigationStore } from "./navigation";
 
-type Auth = NonNullable<
-  ConstructorParameters<typeof CoreDomainClient>[0]
->["auth"];
-
 export type PreviewEnvironment = "editor" | "standalone";
 export interface SharedStore extends Store.Store {
   breadcrumbs: Store.Breadcrumbs;
   childNodesOf: (id?: NodeId) => Store.Node[];
   flow: Store.Flow;
+  /**
+   * Flow data is lazily loaded to allow faster initial loading times
+   * Component trees which rely on this data need to check the status before rendering
+   */
+  isFlowLoaded: boolean;
   flowSlug: string;
   flowName: string;
-  flowAnalyticsLink: string | undefined;
   id: string;
   getNode: (id: NodeId) => Store.Node | undefined;
   resetPreview: () => void;
-  setFlow: ({
-    id,
-    flow,
-    flowSlug,
-    flowName,
-    flowStatus,
-    flowSummary,
-  }: {
-    id?: string;
-    flow?: Store.Flow;
-    flowSlug?: string;
-    flowName?: string;
-    flowStatus?: FlowStatus;
-    flowSummary?: string;
-  }) => void;
   wasVisited: (id: NodeId) => boolean;
   previewEnvironment: PreviewEnvironment;
   setPreviewEnvironment: (previewEnvironment: PreviewEnvironment) => void;
-  $public: (auth?: Auth) => CoreDomainClient;
-  $client: CoreDomainClient;
 }
 
 export const sharedStore: StateCreator<
@@ -59,11 +41,11 @@ export const sharedStore: StateCreator<
 
   flow: {},
 
+  isFlowLoaded: false,
+
   flowSlug: "",
 
   flowName: "",
-
-  flowAnalyticsLink: undefined,
 
   id: "",
   previewEnvironment: "standalone",
@@ -104,20 +86,6 @@ export const sharedStore: StateCreator<
     }
   },
 
-  setFlow({ id, flow, flowSlug, flowName, flowStatus, flowSummary }) {
-    set({
-      id,
-      flow,
-      flowSlug,
-      flowName,
-      flowStatus,
-      flowSummary,
-      orderedFlow: undefined,
-      externalPortals: {},
-    });
-    get().initNavigationStore();
-  },
-
   wasVisited(id) {
     return new Set(
       Object.entries(get().breadcrumbs).flatMap(([id, { answers }]) => [
@@ -126,18 +94,4 @@ export const sharedStore: StateCreator<
       ]),
     ).has(id);
   },
-
-  $public(auth: Auth | undefined): CoreDomainClient {
-    return new CoreDomainClient({
-      targetURL: import.meta.env.VITE_APP_HASURA_URL!,
-      auth: auth,
-    });
-  },
-
-  /**
-   * Authenticated client is re-instantiated upon user login
-   */
-  $client: new CoreDomainClient({
-    targetURL: import.meta.env.VITE_APP_HASURA_URL!,
-  }),
 });

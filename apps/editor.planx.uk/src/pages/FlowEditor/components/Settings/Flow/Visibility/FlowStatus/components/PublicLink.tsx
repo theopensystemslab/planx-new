@@ -25,7 +25,7 @@ export const CopyButton = (props: { link: string; isActive: boolean }) => {
       sx={{ marginLeft: 0.5 }}
     >
       <ContentCopyIcon style={{ width: "18px", height: "18px" }} />
-      <Typography ml={0.5} variant="body3">
+      <Typography sx={{ ml: 0.5 }} variant="body3">
         {copyMessage}
       </Typography>
     </Button>
@@ -38,8 +38,8 @@ const TitledLink: React.FC<{
   helpText: string | undefined;
 }> = ({ link, isActive, helpText }) => {
   return (
-    <Box paddingBottom={0.5} mt={1}>
-      <Typography mb={0.5} variant="h4">
+    <Box sx={{ paddingBottom: 0.5, mt: 1 }}>
+      <Typography sx={{ mb: 0.5 }} variant="h4">
         Your public link
         <CopyButton isActive={isActive} link={link} />
       </Typography>

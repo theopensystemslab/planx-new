@@ -78,7 +78,7 @@ const DateInputComponent: React.FC<Props> = (props) => {
             onChange={(value) => formik.setFieldValue("fn", value)}
             disabled={props.disabled}
           />
-          <Box mt={2}>
+          <Box sx={{ mt: 2 }}>
             <InputRow>
               <DateInputUi
                 id={`${props.id}-min`}
@@ -92,7 +92,7 @@ const DateInputComponent: React.FC<Props> = (props) => {
               />
             </InputRow>
           </Box>
-          <Box mt={2}>
+          <Box sx={{ mt: 2 }}>
             <InputRow>
               <DateInputUi
                 id={`${props.id}-max`}

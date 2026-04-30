@@ -5,7 +5,10 @@ import { authHeader, getTestJWT } from "../../../tests/mockJWT.js";
 import app from "../../../server.js";
 import { flowWithInviteToPay } from "../../../tests/mocks/inviteToPayData.js";
 import { userContext } from "../../auth/middleware.js";
-import type { FlowGraph } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType,
+  type FlowGraph,
+} from "@opensystemslab/planx-core/types";
 import { mockFlowData } from "../../../tests/mocks/validateAndPublishMocks.js";
 
 beforeAll(() => {
@@ -472,7 +475,14 @@ describe("invite to pay validation on diff", () => {
   it("does not update if invite to pay is enabled, but there is more than one Pay component", async () => {
     const invalidFlow = {
       ...flowWithInviteToPay,
-      PayTwo: { ...flowWithInviteToPay.Pay },
+      PayTwo: {
+        type: ComponentType.Pay,
+        data: {
+          fn: "application.fee.payable",
+          hidePay: true, // "PayTwo" is in info-only mode
+          allowInviteToPay: false,
+        },
+      },
       _root: {
         edges: [...flowWithInviteToPay._root.edges!, "PayTwo"],
       },

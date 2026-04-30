@@ -113,6 +113,10 @@
         {
           "selector": "MemberExpression[object.name='process'][property.name='env']",
           "message": "Use import.meta.env instead of process.env in Vite applications"
+        },
+        {
+          "selector": "JSXAttribute[name.name=/^(color|bgcolor|backgroundColor|borderColor|fill|stroke)$/] Literal[value=/\\./]",
+          "message": "Passing dot-notation colour strings (e.g., color={'text.primary'}) directly to props is no longer supported in MUI v9. Please use the sx prop instead: sx={{ color: 'text.primary' }}."
         }
     ]
   },

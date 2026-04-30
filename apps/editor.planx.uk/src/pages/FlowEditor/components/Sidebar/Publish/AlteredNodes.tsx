@@ -121,7 +121,7 @@ export const AlteredNodesSummaryContent = (props: {
 
   return (
     <Box>
-      <Typography variant="h3" component="h2" gutterBottom pt={1}>
+      <Typography variant="h3" component="h2" sx={{ mb: 1, pt: 1 }}>
         {`Changes to your flow since last publish`}
       </Typography>
       {comments.length > 0 && (
@@ -139,7 +139,10 @@ export const AlteredNodesSummaryContent = (props: {
                 }
                 secondary={
                   <>
-                    <Typography variant="body2" fontSize="small" py={0.25}>
+                    <Typography
+                      variant="body2"
+                      sx={{ fontSize: "small", py: 0.25 }}
+                    >
                       <strong>Commented</strong>{" "}
                       {`${formatLastEditDate(comment.createdAt)}`}
                     </Typography>
@@ -172,7 +175,7 @@ export const AlteredNodesSummaryContent = (props: {
                   </Typography>
                 }
                 secondary={
-                  <Typography variant="body2" fontSize="small">
+                  <Typography variant="body2" sx={{ fontSize: "small" }}>
                     {`Find full details in the History tab in the editor sidebar.`}
                   </Typography>
                 }
@@ -180,7 +183,7 @@ export const AlteredNodesSummaryContent = (props: {
             </HistoryComment>
           </ListItem>
           <ListItem key={"hint"} disablePadding>
-            <Typography variant="body2" fontSize="small">
+            <Typography variant="body2" sx={{ fontSize: "small", py: 0.25 }}>
               {`Hint: Comments added to the History tab in the editor sidebar will display here. Comments are the friendliest way to describe what's changed.`}
             </Typography>
           </ListItem>
@@ -217,7 +220,7 @@ export const AlteredNodesSummaryContent = (props: {
                 disablePadding
                 sx={{ display: "list-item" }}
               >
-                <Typography variant="body2" fontWeight="bold">
+                <Typography variant="body2" sx={{ fontWeight: "bold" }}>
                   {`${changeSummary.updated} nodes have been updated or added`}
                 </Typography>
               </ListItem>
@@ -226,7 +229,7 @@ export const AlteredNodesSummaryContent = (props: {
                 disablePadding
                 sx={{ display: "list-item" }}
               >
-                <Typography variant="body2" fontWeight="bold">
+                <Typography variant="body2" sx={{ fontWeight: "bold" }}>
                   {`${changeSummary.deleted} nodes have been deleted`}
                 </Typography>
               </ListItem>

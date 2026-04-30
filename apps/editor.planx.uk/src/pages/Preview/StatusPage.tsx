@@ -34,7 +34,7 @@ const StatusPage: React.FC<PropsWithChildren<Props>> = ({
 
   return (
     <>
-      <Box width="100%">
+      <Box sx={{ width: "100%" }}>
         <Banner
           heading={bannerHeading}
           color={{
@@ -43,7 +43,7 @@ const StatusPage: React.FC<PropsWithChildren<Props>> = ({
           }}
         >
           {bannerText && (
-            <Box mt={4}>
+            <Box sx={{ mt: 4 }}>
               <Typography>{bannerText}</Typography>
             </Box>
           )}
@@ -52,7 +52,7 @@ const StatusPage: React.FC<PropsWithChildren<Props>> = ({
       <Card>
         {children}
         {showDownloadLink && (
-          <Box width={"100%"}>
+          <Box sx={{ width: "100%" }}>
             <ViewApplicationLink />
           </Box>
         )}

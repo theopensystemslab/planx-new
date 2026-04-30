@@ -31,7 +31,7 @@ export const DELETE_FLOW_QUERY = gql`
   mutation SoftDeleteFlowE2E($team1FlowId: uuid!) {
     result: update_flows_by_pk(
       pk_columns: { id: $team1FlowId }
-      _set: { deleted_at: "now()" }
+      _set: { archived_at: "now()" }
     ) {
       id
     }

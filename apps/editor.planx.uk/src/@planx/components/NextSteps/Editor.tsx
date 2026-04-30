@@ -115,7 +115,7 @@ const NextStepsComponent: React.FC<Props> = (props) => {
             If you want users to continue to the next step in the service from a
             given step, leave that URL section empty.
           </Typography>
-          <Box mb="1rem">
+          <Box sx={{ mb: "1rem" }}>
             <InputRow>
               <Input
                 name="title"

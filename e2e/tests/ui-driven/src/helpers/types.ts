@@ -9,6 +9,7 @@ export interface Flow {
   slug: string;
   name: string;
   data?: object;
+  hasSendComponent?: boolean;
 }
 
 export interface TestContext {

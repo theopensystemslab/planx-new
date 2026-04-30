@@ -18,18 +18,18 @@ export const addFeaturesToMap = async (
       "EPSG:3857": { features },
     },
   });
-  act(() => map.dispatchEvent(mockEvent));
+  await act(() => map.dispatchEvent(mockEvent));
 };
 
-export const addMultipleFeatures = (
+export const addMultipleFeatures = async (
   featureArray: Feature<Point, { label: string }>[],
 ) => {
   const map = screen.getByTestId("map-and-label-map");
   const pointsAddedArray: Feature<Point, { label: string }>[] = [];
-  featureArray.forEach((feature) => {
+  for (const feature of featureArray) {
     pointsAddedArray.push(feature);
-    addFeaturesToMap(map, pointsAddedArray);
-  });
+    await addFeaturesToMap(map, pointsAddedArray);
+  }
 };
 
 export const fillOutFirstHalfOfForm = async (user: UserEvent) => {

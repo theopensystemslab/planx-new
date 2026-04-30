@@ -3,6 +3,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { PropsWithChildren } from "react";
+import WatermarkBackground from "ui/shared/WatermarkBackground";
 
 export const TestWarningPage = ({ children }: PropsWithChildren) => {
   const { hasAcknowledgedWarning, setHasAcknowledgedWarning } = useStore();
@@ -11,7 +12,8 @@ export const TestWarningPage = ({ children }: PropsWithChildren) => {
       {hasAcknowledgedWarning ? (
         children
       ) : (
-        <Box width="100%">
+        <Box sx={{ width: "100%" }}>
+          <WatermarkBackground variant="dark" opacity={0.05} />
           <Card handleSubmit={() => setHasAcknowledgedWarning()}>
             <CardHeader
               title="This is a test environment"

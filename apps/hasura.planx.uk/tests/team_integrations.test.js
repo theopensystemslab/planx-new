@@ -36,13 +36,13 @@ describe("team_integrations", () => {
       i = await introspectAs("platformAdmin");
     });
 
-    test("cann query team_integrations", () => {
+    test("can query team_integrations", () => {
       expect(i.queries).toContain("team_integrations");
     });
 
-    test("can create but, cannot update, or delete team_integrations", () => {
+    test("can create and update, but cannot delete team_integrations", () => {
       expect(i.mutations).toContain("insert_team_integrations");
-      expect(i.mutations).not.toContain("update_team_integrations_by_pk");
+      expect(i.mutations).toContain("update_team_integrations");
       expect(i.mutations).not.toContain("delete_team_integrations");
     });
   });
@@ -51,21 +51,6 @@ describe("team_integrations", () => {
     let i;
     beforeAll(async () => {
       i = await introspectAs("teamEditor");
-    });
-
-    test("can query team_integrations", () => {
-      expect(i.queries).toContain("team_integrations");
-    });
-
-    test("cannot create, update, or delete team_integrations", () => {
-      expect(i).toHaveNoMutationsFor("team_integrations");
-    });
-  });
-
-  describe("demoUser", () => {
-    let i;
-    beforeAll(async () => {
-      i = await introspectAs("demoUser");
     });
 
     test("can query team_integrations", () => {

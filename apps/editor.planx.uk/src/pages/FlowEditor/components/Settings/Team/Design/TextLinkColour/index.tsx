@@ -31,7 +31,7 @@ const TextLinkColour: React.FC = () => {
       validationSchema={validationSchema.pick(["linkColour"])}
       legend="Text link colour"
       preview={(formik) => [
-        <DesignPreview bgcolor="paper">
+        <DesignPreview sx={{ bgcolor: "paper" }}>
           <Link sx={{ color: formik.values.linkColour }}>
             Example text link
           </Link>

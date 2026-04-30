@@ -133,13 +133,19 @@ const ExternalPortal: React.FC<any> = (props) => {
                     ],
                   })}
                   preload={false}
-                  ref={drag}
+                  ref={(el) => {
+                    drag(el);
+                  }}
                 >
                   <EditorIcon />
                   <span>{href}</span>
                 </Link>
               ) : (
-                <span ref={drag}>
+                <span
+                  ref={(el) => {
+                    drag(el);
+                  }}
+                >
                   <EditorIcon />
                   <span>{href}</span>
                 </span>
@@ -237,7 +243,9 @@ const InternalPortal: React.FC<any> = (props) => {
                   flow: `${flow},${props.id}`,
                 }}
                 preload={false}
-                ref={drag}
+                ref={(el) => {
+                  drag(el);
+                }}
                 onContextMenu={handleContextMenu}
                 // Maintain recentFlows state when navigating into folders
                 state={(prev) => prev}

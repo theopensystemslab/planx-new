@@ -1,4 +1,5 @@
 import Typography from "@mui/material/Typography";
+import { BREADCRUMBS_HEIGHT } from "components/Breadcrumbs";
 import { format } from "date-fns";
 import capitalize from "lodash/capitalize";
 import React from "react";
@@ -138,12 +139,15 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({
   ];
 
   return (
-    <FixedHeightDashboardContainer bgColor="background.paper">
+    <FixedHeightDashboardContainer
+      bgColor="background.paper"
+      topOffset={isFlowLevel ? BREADCRUMBS_HEIGHT : 0}
+    >
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
           Feedback
         </Typography>
-        <Typography variant="body1" maxWidth="contentWrap">
+        <Typography variant="body1" sx={{ maxWidth: "contentWrap" }}>
           Feedback reports from users about{" "}
           {isFlowLevel ? "this service" : "all services in this team"}. This
           table only includes feedback received within the last six months.

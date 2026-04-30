@@ -1,5 +1,4 @@
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
@@ -10,24 +9,25 @@ import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useLocation, useNavigate } from "@tanstack/react-router";
-import AccountMenu from "components/AccountMenu";
-import Breadcrumbs from "components/Breadcrumbs";
+import { useDowntimeBanner } from "hooks/data/useDowntimeBanner";
 import { clearLocalFlowIdb } from "lib/local.idb";
 import { capitalize } from "lodash";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
-import React, { RefObject, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   borderedFocusStyle,
   FONT_WEIGHT_SEMI_BOLD,
   LINE_HEIGHT_BASE,
 } from "theme";
 import { ApplicationPath } from "types";
+import PlayOutlineIcon from "ui/icons/PlayOutline";
 import Reset from "ui/icons/Reset";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 import { useStore } from "../../pages/FlowEditor/lib/store";
 import AnalyticsDisabledBanner from "../AnalyticsDisabled/AnalyticsDisabledBanner";
 import { ConfirmationDialog } from "../ConfirmationDialog";
+import DowntimeBanner from "../DowntimeBanner/DowntimeBanner";
 import { SectionNavBar } from "./Sections/NavBar";
 import SkipLink from "./SkipLink";
 
@@ -40,21 +40,6 @@ const Root = styled(AppBar)(({ theme }) => ({
 
 const PublicHeader = styled(MuiToolbar)(() => ({
   height: HEADER_HEIGHT_PUBLIC,
-}));
-
-const EditorHeader = styled(MuiToolbar)(({ theme }) => ({
-  [theme.breakpoints.up("md")]: {
-    minHeight: HEADER_HEIGHT_EDITOR,
-  },
-}));
-
-const EditorHeaderContainer = styled(Box)(({ theme }) => ({
-  width: "100%",
-  padding: theme.spacing(0, 2),
-  "@media print": {
-    background: theme.palette.background.dark,
-    color: theme.palette.common.white,
-  },
 }));
 
 const InnerContainer = styled(Box)(() => ({
@@ -144,8 +129,7 @@ const TeamBrand: React.FC = () => {
     <Typography
       variant="h4"
       component="span"
-      fontWeight={FONT_WEIGHT_SEMI_BOLD}
-      sx={{ whiteSpace: "nowrap" }}
+      sx={{ whiteSpace: "nowrap", fontWeight: FONT_WEIGHT_SEMI_BOLD }}
     >
       {teamName || "Plan✕"}
     </Typography>
@@ -239,9 +223,11 @@ const PublicToolbar: React.FC<{
                   <Typography
                     id="restart-application-description"
                     variant="body2"
-                    fontSize="small"
-                    fontWeight={FONT_WEIGHT_SEMI_BOLD}
-                    pl={0.5}
+                    sx={{
+                      pl: 0.5,
+                      fontSize: "small",
+                      fontWeight: FONT_WEIGHT_SEMI_BOLD,
+                    }}
                   >
                     Restart
                   </Typography>
@@ -287,8 +273,8 @@ const ServiceTitle: React.FC = () => {
           size="medium"
           icon={
             {
-              preview: <OpenInNewIcon fontSize="small" />,
-              draft: <OpenInNewOffIcon fontSize="small" />,
+              preview: <PlayArrowIcon fontSize="small" />,
+              draft: <PlayOutlineIcon fontSize="small" />,
             }[path]
           }
         />
@@ -300,32 +286,7 @@ const ServiceTitle: React.FC = () => {
   );
 };
 
-const EditorToolbar: React.FC<{
-  headerRef: React.RefObject<HTMLElement>;
-}> = () => {
-  return (
-    <>
-      <EditorHeader disableGutters>
-        <EditorHeaderContainer>
-          <InnerContainer>
-            <LeftBox>
-              <Breadcrumbs showEnvironmentSelect />
-            </LeftBox>
-            <RightBox>
-              <AccountMenu />
-            </RightBox>
-          </InnerContainer>
-        </EditorHeaderContainer>
-      </EditorHeader>
-    </>
-  );
-};
-
-interface ToolbarProps {
-  headerRef: RefObject<HTMLDivElement>;
-}
-
-const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
+const Toolbar: React.FC = () => {
   const location = useLocation();
   const path = location.pathname.split("/").slice(-1)[0] || undefined;
   const [flowSlug, previewEnvironment] = useStore((state) => [
@@ -339,7 +300,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
     path !== "draft" &&
     path !== "preview"
   ) {
-    return <EditorToolbar headerRef={headerRef}></EditorToolbar>;
+    return null;
   }
 
   switch (path) {
@@ -358,20 +319,27 @@ const Header: React.FC = () => {
   const headerRef = useRef<HTMLDivElement>(null);
   const teamTheme = useStore((state) => state.teamTheme);
 
+  // Query `downtime_banner` visibility direct via db so not deployment sensitive
+  const { data } = useDowntimeBanner();
+  const showDowntimeBanner = data?.downtimeBanner?.isVisible || false;
+
   return (
-    <Root
-      position="static"
-      elevation={0}
-      color="transparent"
-      ref={headerRef}
-      sx={(theme) => ({
-        backgroundColor:
-          teamTheme?.primaryColour || theme.palette.background.dark,
-        "@media print": { backgroundColor: "white", color: "black" },
-      })}
-    >
-      <Toolbar headerRef={headerRef} />
-    </Root>
+    <>
+      {showDowntimeBanner && <DowntimeBanner />}
+      <Root
+        position="static"
+        elevation={0}
+        color="transparent"
+        ref={headerRef}
+        sx={(theme) => ({
+          backgroundColor:
+            teamTheme?.primaryColour || theme.palette.background.dark,
+          "@media print": { backgroundColor: "white", color: "black" },
+        })}
+      >
+        <Toolbar />
+      </Root>
+    </>
   );
 };
 

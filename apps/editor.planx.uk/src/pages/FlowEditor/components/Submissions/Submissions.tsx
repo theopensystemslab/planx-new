@@ -1,5 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import Typography from "@mui/material/Typography";
+import { BREADCRUMBS_HEIGHT } from "components/Breadcrumbs";
 import React, { useMemo } from "react";
 import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContainer";
 import SettingsSection from "ui/editor/SettingsSection";
@@ -27,6 +28,7 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
           status: status
           retry: retry
           response: response
+          address: address
           createdAt: created_at
           flowName: flow_name
         }
@@ -47,12 +49,15 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
   );
 
   return (
-    <FixedHeightDashboardContainer bgColor="background.paper">
+    <FixedHeightDashboardContainer
+      bgColor="background.paper"
+      topOffset={flowSlug ? BREADCRUMBS_HEIGHT : 0}
+    >
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
           Submissions
         </Typography>
-        <Typography variant="body1" maxWidth="contentWrap">
+        <Typography variant="body1" sx={{ maxWidth: "contentWrap" }}>
           Payment and send events for{" "}
           {flowSlug ? "this service" : "all services in this team"}. Successful
           submissions received within the last 28 days are available to

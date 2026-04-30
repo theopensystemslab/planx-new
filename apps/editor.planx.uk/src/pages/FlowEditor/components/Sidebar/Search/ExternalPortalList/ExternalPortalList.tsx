@@ -21,8 +21,8 @@ export const ExternalPortalList: Components<Data, Context>["Footer"] = ({
   if (!context.results.length && !context.formik.values.pattern) return null;
 
   return (
-    <Box mx={3} pb={2} data-testid="searchExternalPortalList">
-      <Typography variant="body1" mb={2}>
+    <Box sx={{ mx: 3, pb: 2 }} data-testid="searchExternalPortalList">
+      <Typography variant="body1" sx={{ mb: 2 }}>
         Your flow also contains the following nested flows, which have not been
         searched:
       </Typography>

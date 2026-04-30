@@ -4,10 +4,10 @@ import type {
   Session,
   TeamContactSettings,
 } from "@opensystemslab/planx-core/types";
-import type { TemplateRegistry } from "../../../lib/notify/templates/index.js";
 import { addDays } from "date-fns";
 import { ServerError } from "../../../errors/serverError.js";
 import { DAYS_UNTIL_EXPIRY } from "../../saveAndReturn/service/utils.js";
+import type { TemplateRegistry } from "../../../lib/resend/templates/index.js";
 
 interface GetTeamEmailSettings {
   teams: {
@@ -64,8 +64,8 @@ export async function getFlowId(sessionId: string) {
 interface GetFlowSubmissionEmail {
   flowsByPK: {
     submissionEmailId: string;
-    submissionIntegration: {
-      submissionEmail: string;
+    submissionEmail: {
+      address: string;
     };
   };
 }
@@ -77,8 +77,8 @@ async function getFlowSubmissionEmail(flowId: string) {
         query GetFlowSubmissionEmail($flowId: uuid!) {
           flowsByPK: flows_by_pk(id: $flowId) {
             submissionEmailId: submission_email_id
-            submissionIntegration: submission_integration {
-              submissionEmail: submission_email
+            submissionEmail: submission_email {
+              address
             }
           }
         }
@@ -88,7 +88,7 @@ async function getFlowSubmissionEmail(flowId: string) {
       },
     );
 
-    return response?.flowsByPK.submissionIntegration?.submissionEmail;
+    return response?.flowsByPK.submissionEmail?.address;
   } catch (error) {
     console.error(
       `Error in getFlowSubmissionEmail for flowId: ${flowId}`,
@@ -98,20 +98,20 @@ async function getFlowSubmissionEmail(flowId: string) {
   }
 }
 
-interface GetDefaultSubmissionIntegration {
-  submissionIntegrations: {
-    submissionEmail: string;
+interface GetDefaultSubmissionEmail {
+  submissionEmails: {
+    address: string;
   }[];
 }
 
-async function getDefaultSubmissionIntegration(teamId: number) {
-  const response = await $api.client.request<GetDefaultSubmissionIntegration>(
+async function getDefaultSubmissionEmail(teamId: number) {
+  const response = await $api.client.request<GetDefaultSubmissionEmail>(
     gql`
-      query GetDefaultSubmissionIntegration($teamId: Int!) {
-        submissionIntegrations: submission_integrations(
+      query GetDefaultSubmissionEmail($teamId: Int!) {
+        submissionEmails: submission_emails(
           where: { team_id: { _eq: $teamId } }
         ) {
-          submissionEmail: submission_email
+          address: address
         }
       }
     `,
@@ -119,7 +119,7 @@ async function getDefaultSubmissionIntegration(teamId: number) {
       teamId,
     },
   );
-  return response?.submissionIntegrations[0]?.submissionEmail;
+  return response?.submissionEmails[0]?.address;
 }
 
 export async function getSubmissionEmail(
@@ -129,8 +129,7 @@ export async function getSubmissionEmail(
   const flowSubmissionEmail = await getFlowSubmissionEmail(flowId);
   if (flowSubmissionEmail) return flowSubmissionEmail;
 
-  const defaultTeamSubmissionEmail =
-    await getDefaultSubmissionIntegration(teamId);
+  const defaultTeamSubmissionEmail = await getDefaultSubmissionEmail(teamId);
   return defaultTeamSubmissionEmail;
 }
 
@@ -203,7 +202,7 @@ export async function insertAuditEntry(
   sessionId: string,
   teamSlug: string,
   recipient: string,
-  notifyRequest: TemplateRegistry["submit"]["config"],
+  notifyRequest: TemplateRegistry["submit"]["variables"],
   sendEmailResponse: {
     message: string;
     expiryDate?: string;

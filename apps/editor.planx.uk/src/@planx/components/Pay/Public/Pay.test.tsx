@@ -526,38 +526,3 @@ describe("Confirm component in information-only mode", () => {
     expect(results).toHaveNoViolations();
   });
 });
-
-describe("the demo user view", () => {
-  beforeAll(() => (initialState = getState()));
-
-  beforeEach(() => {
-    act(() =>
-      setState({
-        teamSlug: "demo",
-      }),
-    );
-  });
-
-  afterEach(() => act(() => setState(initialState)));
-
-  it("should render an error when teamSlug is demo", async () => {
-    const handleSubmit = vi.fn();
-    const { queryByText } = await setup(
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <Pay
-          fn="application.fee.payable"
-          handleSubmit={handleSubmit}
-          govPayMetadata={[]}
-          {...defaultProps}
-        />
-      </ErrorBoundary>,
-    );
-    const errorHeader = queryByText("GOV.UK Pay is not enabled for demo users");
-    const errorGuidance = queryByText(
-      "Click continue to skip payment and continue testing.",
-    );
-
-    expect(errorGuidance).toBeInTheDocument();
-    expect(errorHeader).toBeInTheDocument();
-  });
-});

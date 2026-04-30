@@ -1,2 +1,9 @@
 allowBuilds:
   "@opensystemslab/planx-core": true
+
+minimumReleaseAge: 10080
+minimumReleaseAgeExclude:
+  - prettier
+  - "@formatjs/intl-listformat"
+  - "@formatjs/intl-localematcher"
+  - "@formatjs/fast-memoize"

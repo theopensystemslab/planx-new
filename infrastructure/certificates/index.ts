@@ -5,9 +5,11 @@ import * as cloudflare from "@pulumi/cloudflare";
 
 const config = new pulumi.Config();
 
-// The @pulumi/cloudflare package doesn't generate errors so this is here just to create a warning in case the CloudFlare API token is missing.
+// The @pulumi/cloudflare package doesn't generate errors so this is here just to create a warning in case the Cloudflare API token is missing.
 new pulumi.Config("cloudflare").requireSecret("apiToken");
 
+// TODO: consider removing these records, or expand to include Cloudflare's CAs too
+// (they protect against a quite exotic attack scenario, where a compromised CA specifically targets our domain)
 // https://docs.aws.amazon.com/acm/latest/userguide/setup-caa.html
 const caaRecordRoot = new cloudflare.DnsRecord("caa-record-root", {
   name: `${config.require("domain")}`,

@@ -76,8 +76,8 @@ const Teams: React.FC<Props> = ({ teams }) => {
         >
           <TeamCard>
             <Box sx={{ display: "flex" }}>
-              <TeamColourBand bgcolor={team.theme.primaryColour} />
-              <Typography p={2} variant="h3">
+              <TeamColourBand sx={{ bgcolor: team.theme.primaryColour }} />
+              <Typography sx={{ p: 2 }} variant="h3">
                 {team.name}
               </Typography>
             </Box>
@@ -91,7 +91,9 @@ const Teams: React.FC<Props> = ({ teams }) => {
     <Card>
       <CardContent>
         <Typography variant="h3">No results</Typography>
-        <Typography pt={1}>Check your search term and try again</Typography>
+        <Typography sx={{ pt: 1 }}>
+          Check your search term and try again
+        </Typography>
         <Button variant="link" onClick={() => setClearSearch(true)}>
           Clear search
         </Button>
@@ -102,8 +104,8 @@ const Teams: React.FC<Props> = ({ teams }) => {
   return (
     <Container maxWidth="formWrap">
       <Box
-        pb={1}
         sx={{
+          pb: 1,
           display: "flex",
           flexDirection: "row",
           justifyContent: "space-between",
@@ -118,7 +120,7 @@ const Teams: React.FC<Props> = ({ teams }) => {
       </Box>
       {editableTeams.length > 0 && (
         <>
-          <Typography variant="h3" component="h2" mb={2}>
+          <Typography variant="h3" component="h2" sx={{ mb: 2 }}>
             My teams
           </Typography>
           {renderTeams(editableTeams)}
@@ -128,9 +130,9 @@ const Teams: React.FC<Props> = ({ teams }) => {
       {viewOnlyTeams.length > 0 && (
         <>
           <Box
-            pb={1}
-            mt={4}
             sx={{
+              mt: 4,
+              pb: 1,
               display: "flex",
               flexDirection: { xs: "column", contentWrap: "row" },
               justifyContent: "space-between",
@@ -141,9 +143,7 @@ const Teams: React.FC<Props> = ({ teams }) => {
             <Typography
               variant="h3"
               component="h2"
-              mt={2}
-              mb={2}
-              sx={{ textWrap: "nowrap" }}
+              sx={{ mt: 2, mb: 2, textWrap: "nowrap" }}
             >
               Other teams (view only)
             </Typography>

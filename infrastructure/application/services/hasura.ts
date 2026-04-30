@@ -11,6 +11,7 @@ import {
 
 export const createHasuraService = async ({
   env,
+  certificateArn,
   vpcId,
   publicSubnetIds,
   cluster,
@@ -37,6 +38,7 @@ export const createHasuraService = async ({
   } = await setupLoadBalancer({
     serviceName: "hasura",
     containerPort: HASURA_PROXY_PORT,
+    certificateArn,
     vpcId,
     publicSubnetIds,
     domain: DOMAIN,

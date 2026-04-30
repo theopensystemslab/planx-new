@@ -41,7 +41,7 @@ const testApolloClient = new ApolloClient({
   link: new HttpLink({
     uri: "http://mock-api/graphql",
     fetch: (uri, options) => {
-      //Known workaround for test environments where AbortSignal
+      // Known workaround for test environments where AbortSignal
       // instances from different contexts don't pass instanceof checks.
       //eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { signal, ...fetchOptions } = options || {};
@@ -50,8 +50,8 @@ const testApolloClient = new ApolloClient({
   }),
   cache: new InMemoryCache(),
   defaultOptions: {
-    watchQuery: { fetchPolicy: "no-cache" },
-    query: { fetchPolicy: "no-cache" },
+    watchQuery: { fetchPolicy: "network-only" },
+    query: { fetchPolicy: "network-only" },
   },
 });
 
@@ -63,7 +63,7 @@ const testApolloClient = new ApolloClient({
  * Tests must await the setup() call.
  */
 export const setup = async (
-  jsx: JSX.Element,
+  jsx: React.JSX.Element,
 ): Promise<Record<"user", UserEvent> & RenderResult> => {
   testQueryClient.clear();
 

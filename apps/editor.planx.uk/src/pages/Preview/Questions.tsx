@@ -21,6 +21,7 @@ import { ApplicationPath, Session } from "types";
 import Main from "ui/shared/Main";
 
 import ErrorFallback from "../../components/Error/ErrorFallback";
+import OpenInEditorButton from "../../components/OpenInEditorButton";
 import { useStore } from "../FlowEditor/lib/store";
 import Node, { HandleSubmit } from "./Node";
 
@@ -52,6 +53,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     previousCard,
     record,
     breadcrumbs,
+    cachedBreadcrumbs,
     passport,
     sessionId,
     id,
@@ -67,6 +69,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     state.previousCard,
     state.record,
     state.breadcrumbs,
+    state.cachedBreadcrumbs,
     state.computePassport(),
     state.sessionId,
     state.id,
@@ -80,6 +83,9 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     state.sectionProgress,
   ]);
   const isStandalone = previewEnvironment === "standalone";
+  const isDraft =
+    typeof window !== "undefined" &&
+    window.location.pathname.endsWith("/draft");
   const { createAnalytics, trackEvent } = useAnalyticsTracking();
   const [gotFlow, setGotFlow] = useState(false);
   const isUsingLocalStorage =
@@ -134,6 +140,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
 
     const session: Session = {
       breadcrumbs,
+      cachedBreadcrumbs,
       id,
       passport,
       sessionId,
@@ -231,7 +238,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
   );
 
   return (
-    <Box width="100%">
+    <Box sx={{ width: "100%" }}>
       <BackBar hidden={!showBackBar}>
         <Container maxWidth="contentWrap">
           <BackButton
@@ -257,6 +264,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
           </ErrorBoundary>
         </Main>
       )}
+      {isDraft && <OpenInEditorButton />}
     </Box>
   );
 };

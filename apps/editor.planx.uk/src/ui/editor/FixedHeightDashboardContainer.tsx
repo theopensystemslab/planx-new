@@ -6,21 +6,26 @@ import React, { ReactNode } from "react";
 interface FixedHeightDashboardContainerProps {
   children: ReactNode;
   bgColor?: string;
+  topOffset?: number;
 }
 
 const FixedHeightDashboardContainer: React.FC<
   FixedHeightDashboardContainerProps
-> = ({ children, bgColor, ...props }) => {
+> = ({ children, bgColor, topOffset = 0, ...props }) => {
   return (
     <Box
       sx={(theme) => ({
         width: "100%",
-        height: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
+        height: "100vh",
         display: "flex",
         flexDirection: "column",
         backgroundColor: bgColor,
-        paddingTop: theme.spacing(3),
+        paddingTop: theme.spacing(3 + topOffset),
         paddingBottom: theme.spacing(3),
+        [theme.breakpoints.up("lg")]: {
+          paddingTop: theme.spacing(3.5 + topOffset),
+          paddingBottom: theme.spacing(3.5),
+        },
       })}
       className="fixed-height-container"
       {...props}

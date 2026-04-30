@@ -34,8 +34,6 @@ const mockTeam1: Team = {
     helpOpeningHours: "Monday - Friday, 9am - 5pm",
     emailReplyToId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
     referenceCode: "OSL",
-    externalPlanningSiteName: "Open Planning",
-    externalPlanningSiteUrl: "openplanning.com",
     isTrial: false,
   },
 };
@@ -61,8 +59,6 @@ const mockTeam2: Team = {
     helpOpeningHours: "Monday - Friday, 9am - 5pm",
     emailReplyToId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
     referenceCode: "CSL",
-    externalPlanningSiteName: "Closed Planning",
-    externalPlanningSiteUrl: "closedplanning.com",
     isTrial: false,
   },
 };
@@ -135,19 +131,6 @@ describe("Header Component - Editor Route", () => {
 
   afterAll(() => {
     setState({ previewEnvironment: "standalone" });
-  });
-
-  it("displays breadcrumbs", async () => {
-    await setup(<Header />);
-    expect(screen.getByText("Plan✕")).toBeInTheDocument();
-    expect(screen.getByText("team-name")).toBeInTheDocument();
-    expect(screen.getByText("test-flow")).toBeInTheDocument();
-  });
-
-  it("displays avatar and settings", async () => {
-    await setup(<Header />);
-    expect(screen.getByText("TU")).toBeInTheDocument();
-    expect(screen.getByLabelText("Toggle Menu")).toBeInTheDocument();
   });
 
   it("should not have any accessibility violations", async () => {

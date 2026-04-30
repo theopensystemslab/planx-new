@@ -24,6 +24,7 @@ import BasicRadio from "../shared/Radio/BasicRadio/BasicRadio";
 import { EditorProps } from "../shared/types";
 import { MapAndLabel, parseContent, validationSchema } from "./model";
 import { BreachLocations } from "./schemas/BreachLocations";
+import { GenericFeature } from "./schemas/GenericFeature";
 import { SketchPlanCA } from "./schemas/SketchPlanCA";
 import { SketchPlanFullDescriptionCA } from "./schemas/SketchPlanFullDescriptionCA";
 import { SketchPlanFullDescriptionTPO } from "./schemas/SketchPlanFullDescriptionTPO";
@@ -45,6 +46,10 @@ export const SCHEMAS = [
   {
     name: "Report a Breach - breach locations",
     schema: BreachLocations,
+  },
+  {
+    name: "Generic feature",
+    schema: GenericFeature,
   },
 ];
 
@@ -111,7 +116,7 @@ function MapAndLabelComponent(props: Props) {
         </ModalSectionContent>
         <ModalSectionContent title="Map options">
           <InputGroup>
-            <Box mb={2}>
+            <Box sx={{ mb: 2 }}>
               <FormControl component="fieldset">
                 <InputLabel label="Basemap">
                   <RadioGroup
@@ -145,7 +150,7 @@ function MapAndLabelComponent(props: Props) {
                 </InputLabel>
               </FormControl>
             </Box>
-            <Box mb={2}>
+            <Box sx={{ mb: 2 }}>
               <FormControl component="fieldset">
                 <InputLabel label="Drawing type">
                   <RadioGroup

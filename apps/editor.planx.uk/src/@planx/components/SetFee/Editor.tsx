@@ -90,7 +90,7 @@ function SetFeeComponent(props: Props) {
       </ModalSection>
       <ModalSection>
         <ModalSectionContent title="Fast Track fee">
-          <Typography variant="body2" mb={2}>
+          <Typography variant="body2" sx={{ mb: 2 }}>
             If this service supports Fast Track journeys, specify the fee
             amount. This fee plus {VAT_PERCENTAGE * 100}% VAT will be added when{" "}
             <strong>application.fastTrack</strong> applies.
@@ -129,14 +129,14 @@ function SetFeeComponent(props: Props) {
               disabled={props.disabled}
             />
           </InputRow>
-          <Typography variant="body2" mb={2}>
+          <Typography variant="body2" sx={{ mb: 2 }}>
             A £{formik.values.serviceChargeAmount} service charge plus{" "}
             {VAT_PERCENTAGE * 100}% VAT will be added unless{" "}
             <strong>application.fee.payable</strong> is less than £
             {DEFAULT_SERVICE_CHARGE_THRESHOLD} (after any Fast Track fees,
             exemptions, reductions or increases, inclusive of VAT).
           </Typography>
-          <Typography variant="body2" mb={2}>
+          <Typography variant="body2" sx={{ mb: 2 }}>
             Open Systems Lab invoices quarterly to collect the service charge.
             If you'd like to charge a higher fee than £
             {formik.values.serviceChargeAmount}, please contact{" "}
@@ -162,14 +162,14 @@ function SetFeeComponent(props: Props) {
               disabled={props.disabled}
             />
           </InputRow>
-          <Typography variant="body2" mb={2}>
+          <Typography variant="body2" sx={{ mb: 2 }}>
             If your council does not wish to absorb Stripe transaction fees
             incurred by GOV.UK Pay for this service, use this option to apply an
             additional {DEFAULT_PAYMENT_PROCESSING_PERCENTAGE * 100}% of{" "}
             <strong>application.fee.payable</strong> plus {VAT_PERCENTAGE * 100}
             % VAT payment processing fee to the amount owed by the applicant.
           </Typography>
-          <Typography variant="body2" mb={2}>
+          <Typography variant="body2" sx={{ mb: 2 }}>
             Please note that it is your responsibility to configure which credit
             card types are accepted in your GOV.UK Pay account.{" "}
             {DEFAULT_PAYMENT_PROCESSING_PERCENTAGE * 100}% is an average
@@ -180,7 +180,7 @@ function SetFeeComponent(props: Props) {
       </ModalSection>
       <ModalSection>
         <ModalSectionContent title="Example" Icon={Code}>
-          <Typography variant="body2" mb={2}>
+          <Typography variant="body2" sx={{ mb: 2 }}>
             This example output is based on an incoming{" "}
             <strong>application.fee.calculated</strong> of £
             {examplePassport.data?.["application.fee.calculated"]} and your
@@ -201,7 +201,7 @@ function SetFeeComponent(props: Props) {
               },
             })}
           />
-          <Typography variant="body2" my={2}>
+          <Typography variant="body2" sx={{ my: 2 }}>
             <strong>application.fee.payable</strong> is the total sum{" "}
             <em>inclusive of VAT</em> that the applicant will owe when they
             reach Pay. Any of the passport data values above can be referenced

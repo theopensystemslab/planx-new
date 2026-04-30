@@ -41,7 +41,7 @@ describe("navigating back after adding single feature", () => {
     expect(firstTabPanel).toBeVisible();
 
     // To properly add the features to the map, you need to pass all previous features as well
-    addMultipleFeatures([point1, point2]);
+    await addMultipleFeatures([point1, point2]);
 
     const secondTab = queryByRole("tab", { name: /Tree 2/ });
     expect(secondTab).toBeVisible();
@@ -69,7 +69,7 @@ describe("navigating back after adding two features", () => {
     expect(secondTabPanel).toBeVisible();
 
     // To properly add the features to the map, you need to pass all previous features as well
-    addMultipleFeatures([point1, point2, point3]);
+    await addMultipleFeatures([point1, point2, point3]);
 
     const thirdTab = queryByRole("tab", { name: /Tree 3/ });
     expect(thirdTab).toBeVisible();

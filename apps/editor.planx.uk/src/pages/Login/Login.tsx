@@ -52,7 +52,7 @@ const Login: React.FC = () => {
     <Wrapper>
       <WatermarkBackground variant="light" opacity={0.1} />
       <LoginContainer>
-        <Typography mb={1} mt={1} variant="h1" fontWeight="400">
+        <Typography variant="h1" sx={{ mb: 1, mt: 1, fontWeight: "400" }}>
           Plan✕
           <PhaseText>beta</PhaseText>
         </Typography>

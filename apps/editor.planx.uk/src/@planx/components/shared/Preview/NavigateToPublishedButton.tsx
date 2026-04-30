@@ -24,7 +24,7 @@ const NavigateToPublishedButton: React.FC = () => {
 
   return (
     <Link onClick={handleClick} component="button">
-      <Typography variant="body1" textAlign="left">
+      <Typography variant="body1" sx={{ textAlign: "left" }}>
         Go to the published version of this service
       </Typography>
     </Link>

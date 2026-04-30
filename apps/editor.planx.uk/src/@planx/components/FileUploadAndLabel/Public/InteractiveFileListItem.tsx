@@ -26,6 +26,7 @@ interface FileListItemProps {
   fn: string;
   completed: boolean;
   moreInformation?: MoreInformation;
+  showStatusIcon?: boolean;
 }
 
 export const InteractiveFileListItem = (props: FileListItemProps) => {
@@ -52,15 +53,17 @@ export const InteractiveFileListItem = (props: FileListItemProps) => {
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center" }}>
-        <Box sx={{ display: "flex", alignItems: "center", mr: 0.65 }}>
-          <StatusIcon
-            isCompleted={props.completed}
-            title={{
-              complete: `${props.name} has been uploaded`,
-              incomplete: `${props.name} has not been uploaded`,
-            }}
-          />
-        </Box>
+        {props.showStatusIcon && (
+          <Box sx={{ display: "flex", alignItems: "center", mr: 0.65 }}>
+            <StatusIcon
+              isCompleted={props.completed}
+              title={{
+                complete: `${props.name} has been uploaded`,
+                incomplete: `${props.name} has not been uploaded`,
+              }}
+            />
+          </Box>
+        )}
         <Typography component="span" variant="body1">
           {props.name}
         </Typography>

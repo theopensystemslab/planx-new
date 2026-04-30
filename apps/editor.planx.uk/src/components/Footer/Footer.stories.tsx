@@ -26,8 +26,8 @@ export const Basic = {
       { title: "Cookies" },
     ],
     children: (
-      <Box display="flex" alignItems="center">
-        <Box pr={3} display="flex">
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Box sx={{ pr: 3, display: "flex" }}>
           <img src={Logo} alt="Open Government License Logo" />
         </Box>
         <Typography variant="body2">

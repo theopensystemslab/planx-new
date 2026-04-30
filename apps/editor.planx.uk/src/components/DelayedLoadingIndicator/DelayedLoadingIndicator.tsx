@@ -62,7 +62,7 @@ const DelayedLoadingIndicator: React.FC<Props> = ({
         aria-busy="true"
         aria-live="assertive"
         data-testid="delayed-loading-text"
-        pt={2}
+        sx={{ pt: 2 }}
       >
         <EllipsesText variant="body1">{text ?? "Loading…"}</EllipsesText>
         {children}

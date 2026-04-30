@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -14,7 +13,7 @@ const BG_ALERT = "#FAFF00";
 const BG_ACTIVE = "#E5F1EB";
 const BG_NOTICE = "#F3F2F1";
 
-const Root = styled(Box, {
+const Root = styled("span", {
   shouldForwardProp: (prop) => prop !== "tagType",
 })<Props>(({ theme, tagType }) => ({
   fontSize: theme.typography.body2.fontSize,
@@ -54,7 +53,7 @@ export default function Tag(props: Props): FCReturn {
   const { id, tagType, children } = props;
 
   return (
-    <Root id={id} tagType={tagType} component="span">
+    <Root id={id} tagType={tagType}>
       {children}
     </Root>
   );

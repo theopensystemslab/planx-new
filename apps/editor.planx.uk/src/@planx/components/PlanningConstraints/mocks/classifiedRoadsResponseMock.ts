@@ -18,9 +18,10 @@ export default {
       data: [
         {
           name: "Lambeth Palace Road - A Road",
+          entity: "Highways_RoadLink.236046",
           properties: {
-            GmlID: "Highways_RoadLink.102656",
-            OBJECTID: 102656,
+            GmlID: "Highways_RoadLink.236046",
+            OBJECTID: 236046,
             ID: "osgb4000000031199613",
             Identifier: "http://data.os.uk/id/4000000031199613",
             InspireIDNamespace: "http://data.os.uk/",
@@ -51,7 +52,7 @@ export default {
             EndGradeSeparation: 0,
             RoadStructure: "null",
             CycleFacility: "null",
-            RoadWidth: "null",
+            CycleFacilityWholeLink: "null",
             RoadWidthConfidenceLevel: "OS Urban And Full Extent",
             RoadWidthAverage: "15",
             RoadWidthMinimum: "13",
@@ -75,7 +76,7 @@ export default {
             EndNode: "osgb5000005261651517",
             RelatedRoadArea: "osgb1000001769238935",
             BeginLifespanVersion: "4/19/2020",
-            ValidForm: "null",
+            ValidFrom: "null",
             ReasonForChange: "Modified Attributes",
             AlternateIdentifierScheme: "NSG Elementary Street Unit ID (ESU ID)",
             SHAPE_Length: 27.11897034,

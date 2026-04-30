@@ -9,7 +9,7 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 interface Props {
   title?: string;
   subtitle?: string;
-  children?: JSX.Element[] | JSX.Element;
+  children?: React.JSX.Element[] | React.JSX.Element;
   author?: string;
   Icon?:
     | React.ComponentType<SvgIconProps>
@@ -71,8 +71,8 @@ export default function ModalSectionContent({
 }: Props): FCReturn {
   return (
     <SectionContentGrid container>
-      <LeftGutter item>{Icon && <Icon />}</LeftGutter>
-      <SectionContent item>
+      <LeftGutter>{Icon && <Icon />}</LeftGutter>
+      <SectionContent>
         {title && (
           <Title variant="h3">
             {title}

@@ -58,22 +58,23 @@ export default function ChecklistItem({
         disabled={disabled}
       />
       {description ? (
-        <Box display="flex" flexDirection="column" width="100%">
+        <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
           <Label
             variant="body1"
-            color="text.primary"
             className="label"
             component={"label"}
             htmlFor={id}
-            pb={0}
+            sx={{ pb: 0, color: "text.primary" }}
           >
             {label}
           </Label>
           <Typography
             id={`checkbox-description-${id}`}
             variant="body2"
-            color="text.secondary"
-            px={1.5}
+            sx={{
+              color: "text.secondary",
+              px: 1.5,
+            }}
           >
             {description}
           </Typography>

@@ -25,20 +25,13 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-24.04
+    continue-on-error: true
     timeout-minutes: 10
     steps:
       - name: Checkout Code
         uses: actions/checkout@v6
 
-      - uses: pnpm/action-setup@v4.2.0
-        with:
-          version: ${{ vars.PNPM_VERSION }}
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
-          cache: pnpm
+      - uses: ./.github/actions/setup-node-pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -66,7 +59,8 @@ jobs:
 
   failure_notification:
     name: Slack notification (failure)
-    if: failure()
+    needs: [deploy]
+    if: needs.deploy.result == 'failure'
     uses: ./.github/workflows/action-failure.yml
     secrets: inherit
     with:

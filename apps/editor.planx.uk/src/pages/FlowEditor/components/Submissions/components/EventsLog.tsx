@@ -78,6 +78,11 @@ const EventsLog: React.FC<EventsLogProps> = ({
       },
     },
     {
+      field: "address",
+      headerName: "Address",
+      width: 250,
+    },
+    {
       field: "eventType",
       headerName: "Event",
       width: 230,

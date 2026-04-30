@@ -30,8 +30,8 @@ const Reviews = () => {
   }, [orderedFlow, setOrderedFlow]);
 
   return (
-    <Box p={2} sx={{ backgroundColor: "background.paper", minHeight: "100%" }}>
-      <Typography variant="h4" mb={1}>
+    <Box sx={{ p: 2, backgroundColor: "background.paper", minHeight: "100%" }}>
+      <Typography variant="h4" sx={{ mb: 1 }}>
         {`Nodes with a 'To review' tag`}
       </Typography>
       {sortedReviewNodeIds.length ? (
@@ -41,7 +41,13 @@ const Reviews = () => {
           ))}
         </List>
       ) : (
-        <Typography variant="body1" color="text.secondary" mt={2}>
+        <Typography
+          variant="body1"
+          sx={{
+            color: "text.secondary",
+            mt: 2,
+          }}
+        >
           No nodes are currently tagged 'To review'.
         </Typography>
       )}

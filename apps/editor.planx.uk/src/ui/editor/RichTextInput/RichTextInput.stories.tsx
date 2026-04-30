@@ -25,7 +25,7 @@ export const Basic = () => {
 
   return (
     <Grid container>
-      <Grid item xs={4}>
+      <Grid size={4}>
         <Button
           variant="outlined"
           onClick={() => {
@@ -37,7 +37,7 @@ export const Basic = () => {
           Reset from the outside
         </Button>
       </Grid>
-      <Grid item xs={8}>
+      <Grid size={8}>
         <Stack spacing={4}>
           <Box>
             <p>Editor</p>

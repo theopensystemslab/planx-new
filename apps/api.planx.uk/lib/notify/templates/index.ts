@@ -12,7 +12,6 @@ import { reminderTemplate } from "./saveAndReturn/reminder.js";
 import { saveTemplate } from "./saveAndReturn/save-application.js";
 import { userConfirmationTemplate } from "./saveAndReturn/user-confirmation.js";
 import { resumeTemplate } from "./saveAndReturn/resume-application.js";
-import { submitTemplate } from "./sendToEmail/submit-application.js";
 import { lpsLoginTemplate } from "./lps/lpsLoginTemplate.js";
 import { newDownloadLinkTemplate } from "./sendToEmail/new-download-link.js";
 
@@ -61,7 +60,6 @@ export const templateRegistry = {
   save: saveTemplate,
   confirmation: userConfirmationTemplate,
   // Send to email
-  submit: submitTemplate,
   "new-download-link": newDownloadLinkTemplate,
   // localplanning.services
   "lps-login": lpsLoginTemplate,

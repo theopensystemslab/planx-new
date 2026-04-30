@@ -140,8 +140,13 @@ describe("the search functionality", () => {
 
     await waitForClearSearchIcon(screen);
 
-    expect(mockSetRecords).toHaveBeenLastCalledWith([
-      { name: "Application for something", slug: "application-for-something" },
-    ]);
+    await waitFor(() => {
+      expect(mockSetRecords).toHaveBeenLastCalledWith([
+        {
+          name: "Application for something",
+          slug: "application-for-something",
+        },
+      ]);
+    });
   });
 });

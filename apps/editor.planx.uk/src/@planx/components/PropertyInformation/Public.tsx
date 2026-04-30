@@ -171,7 +171,7 @@ export function Presentational(props: PresentationalProps) {
           markerLatitude={address?.latitude}
           markerLongitude={address?.longitude}
           // markerColor={team?.settings?.design?.color} // defaults to black
-          geojsonData={JSON.stringify(titleBoundary)}
+          geojsonData={titleBoundary}
           geojsonColor="#0010A4"
           geojsonBuffer={30}
           osCopyright={`Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS AC0000812160`}

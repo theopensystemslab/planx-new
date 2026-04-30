@@ -10,13 +10,17 @@ import fetch from "isomorphic-fetch";
 import { addDesignatedVariable } from "./helpers.js";
 import { $api } from "../../../client/index.js";
 
+import * as adurAndWorthing from "./local_authorities/metadata/adurAndWorthing.js";
 import * as barkingAndDagenham from "./local_authorities/metadata/barkingAndDagenham.js";
 import * as barnet from "./local_authorities/metadata/barnet.js";
 import * as birmingham from "./local_authorities/metadata/birmingham.js";
+import * as brent from "./local_authorities/metadata/brent.js";
 import * as buckinghamshire from "./local_authorities/metadata/buckinghamshire.js";
 import * as camden from "./local_authorities/metadata/camden.js";
 import * as canterbury from "./local_authorities/metadata/canterbury.js";
+import * as coventry from "./local_authorities/metadata/coventry.js";
 import * as doncaster from "./local_authorities/metadata/doncaster.js";
+import * as eastRidingOfYorkshire from "./local_authorities/metadata/eastRidingOfYorkshire.js";
 import * as epsomAndEwell from "./local_authorities/metadata/epsomAndEwell.js";
 import * as gateshead from "./local_authorities/metadata/gateshead.js";
 import * as gloucester from "./local_authorities/metadata/gloucester.js";
@@ -27,9 +31,12 @@ import * as medway from "./local_authorities/metadata/medway.js";
 import * as newcastle from "./local_authorities/metadata/newcastle.js";
 import * as northumberland from "./local_authorities/metadata/northumberland.js";
 import * as southGloucestershire from "./local_authorities/metadata/southGloucestershire.js";
+import * as southStaffordshire from "./local_authorities/metadata/southStaffordshire.js";
 import * as southwark from "./local_authorities/metadata/southwark.js";
 import * as stAlbans from "./local_authorities/metadata/stAlbans.js";
+import * as stoke from "./local_authorities/metadata/stoke.js";
 import * as tewkesbury from "./local_authorities/metadata/tewkesbury.js";
+import * as torbay from "./local_authorities/metadata/torbay.js";
 import * as westBerkshire from "./local_authorities/metadata/westBerkshire.js";
 
 export interface LocalAuthorityMetadata {
@@ -45,13 +52,17 @@ export interface LocalAuthorityMetadata {
  * The database column team_setting.has_article4_schema also needs to be updated via the Hasura console
  */
 export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
+  "adur-worthing": adurAndWorthing,
   "barking-and-dagenham": barkingAndDagenham,
   barnet,
   birmingham,
+  brent,
   buckinghamshire,
   camden,
   canterbury,
+  coventry,
   doncaster,
+  "east-riding-of-yorkshire": eastRidingOfYorkshire,
   "epsom-and-ewell": epsomAndEwell,
   gateshead,
   gloucester,
@@ -62,9 +73,12 @@ export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   newcastle,
   northumberland,
   "south-gloucestershire": southGloucestershire,
+  "south-staffordshire": southStaffordshire,
   southwark,
   "st-albans": stAlbans,
+  "stoke-on-trent": stoke,
   tewkesbury,
+  torbay,
   "west-berkshire": westBerkshire,
 };
 
@@ -283,11 +297,17 @@ async function go(
     if (a4s && formattedResult["articleFour"]?.value) {
       formattedResult["articleFour"]?.data?.forEach((entity: any) => {
         Object.keys(a4s)?.forEach((key) => {
+          // For Brent LPA, as they have shared article-4-direction values across multiple granular constraints that we can identify via refrence
+          const brentSkip =
+            localAuthority === "brent" &&
+            entity?.["article-4-direction"] === "A4D_CA" &&
+            Object.values(a4s).includes(entity.reference);
+
           if (
             // these are various ways we link source data to granular planx values (see local_authorities/metadata for specifics)
             entity.name.replace(/\r?\n|\r/g, " ") === a4s[key] ||
             entity.reference === a4s[key] ||
-            entity?.["article-4-direction"] === a4s[key] ||
+            (entity?.["article-4-direction"] === a4s[key] && !brentSkip) ||
             entity?.notes === a4s[key] ||
             entity?.description?.startsWith(a4s[key]) ||
             formattedResult[key]?.value // if this granular var is already true, make sure it remains true

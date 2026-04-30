@@ -6,7 +6,7 @@ We should always aim to be on an LTS version (even release numbers). For the ful
 
 ## planx-new
 
-1. Locally install desired Node.js version  
+1. Locally install desired Node.js version
 
 ```shell
 nvm install 24.14.0
@@ -16,8 +16,9 @@ nvm use 24.14.0
 2. Update `.nvmrc` file
 
 3. Update Dockerfiles -
-  - `apps/api.planx.uk/Dockerfile`
-  - `apps/sharedb.planx.uk/Dockerfile`
+
+- `apps/api.planx.uk/Dockerfile`
+- `apps/sharedb.planx.uk/Dockerfile`
 
 4. Update `@types/node` package across all projects ([npm](https://www.npmjs.com/package/@types/node)). Note: Only major.minor version need to match e.g. types version 22.10.7893 would be fine for Node 22.10.x ([docs](https://github.com/definitelytyped/definitelytyped#how-do-definitely-typed-package-versions-relate-to-versions-of-the-corresponding-library)).
 
@@ -27,9 +28,9 @@ nvm use 24.14.0
 
 7. Update `README.md`
 
-8. Rebuild docker containers, test and run locally 
+8. Rebuild docker containers, test and run locally
 
-9. Upgrade the `NODE_VERSION` on GitHub (Settings > Secrets and variables > Actions > "Variables" tab > Update `NODE_VERSION` variable). This variable is used across our GitHub actions to define which Node version runs our CI services.
+9. Upgrade the Node version used for GitHub Actions by updating our "Setup Node and pnpm" action (/.github/actions/setup-node-pnpm/action.yml). This shared action is used across our GHA jobs to define which Node version runs our CI services.
 
 Please note - this update is immediate and will effect other open PRs. It's advisable to hardcode the desired Node version into the GitHub action files initially to test CI and regression tests, before making this change.
 
@@ -45,13 +46,22 @@ We have an AWS Lambda application (Scanii) which also runs on Node. This applica
 
 The runtime Node version used for Lambda functions is not tied to the Node version used by PlanX, but it's worth upgrading at the same time to keep these in sync.
 
-The following steps need to be taken on both AWS Staging and Production account - 
+The following steps need to be taken on both AWS Staging and Production account -
 
 1. Log in to AWS environment
 2. Navigate to AWS Lambda > Functions
 3. For each function (currently 2) update the runtime
 
-  
 **Steps**
 
 Select function > Runtime settings > Edit > Runtime > Select Node version > Save
+
+### Lambda@Edge function runtime
+
+The `flow_link_preview.js` Lambda@Edge function is managed via Pulumi. Its Node.js runtime is configured via the `lambda-nodejs-runtime` Pulumi config value.
+
+To upgrade, update the value in each stack:
+
+```shell
+pulumi config set lambda-nodejs-runtime nodejs24.x --stack <stack>
+```

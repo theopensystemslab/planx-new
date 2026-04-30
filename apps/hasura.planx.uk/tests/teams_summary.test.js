@@ -57,21 +57,6 @@ describe("teams_summary", () => {
     });
   });
 
-  describe("demoUser", () => {
-    let i;
-    beforeAll(async () => {
-      i = await introspectAs("demoUser");
-    });
-
-    test("cannot query teams_summary", () => {
-      expect(i.queries).not.toContain("teams_summary");
-    });
-
-    test("cannot create, update, or delete teams_summary", () => {
-      expect(i).toHaveNoMutationsFor("teams_summary");
-    });
-  });
-
   describe("api", () => {
     let i;
     beforeAll(async () => {

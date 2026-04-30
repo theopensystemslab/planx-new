@@ -25,6 +25,7 @@ const FileUploadComponent: React.FC<Props> = (props) => {
       slots.map((slot) => ({
         url: slot.url,
         filename: slot.file.name,
+        drawingNumber: slot.drawingNumber || undefined,
         cachedSlot: {
           ...slot,
           file: {
@@ -99,6 +100,7 @@ const FileUploadComponent: React.FC<Props> = (props) => {
           slots={slots}
           setSlots={setSlots}
           maxFiles={props.maxFiles}
+          showDrawingNumber={props.showDrawingNumber}
         />
       </ErrorWrapper>
     </Card>

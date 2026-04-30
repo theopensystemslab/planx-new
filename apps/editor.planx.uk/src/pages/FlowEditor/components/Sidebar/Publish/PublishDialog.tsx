@@ -176,11 +176,11 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
           {`Test`}
         </DialogTitle>
         <DialogContent sx={{ display: "flex", flexDirection: "column", p: 3 }}>
-          <Typography variant="h4" component="h2" mb={1}>
+          <Typography variant="h4" component="h2" sx={{ mb: 1 }}>
             {`Your preview link`}
             <CopyButton link={previewURL} isActive={true} />
           </Typography>
-          <Typography variant="body2" mb={2}>
+          <Typography variant="body2" sx={{ mb: 2 }}>
             <Link href={previewURL} target="_blank">
               {previewURL}
             </Link>
@@ -188,7 +188,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
           <Typography variant="body2">
             {`This link reflects how the public form will appear on next publish. You can share this link internally with others on your team without prompting them to log into the editor. Do not share this link publicly.`}
           </Typography>
-          <Box marginTop={2}>
+          <Box sx={{ mt: 2 }}>
             <ErrorWrapper
               error={
                 showError
@@ -201,13 +201,13 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
                 <Typography
                   component="legend"
                   variant="body2"
-                  fontWeight={FONT_WEIGHT_BOLD}
+                  sx={{ fontWeight: FONT_WEIGHT_BOLD }}
                   gutterBottom
                   id={`test-step-completion-label`}
                 >
                   {`Have you or your team previewed these changes?`}
                 </Typography>
-                <Grid item xs={12} sx={{ pointerEvents: "auto" }}>
+                <Grid size={12} sx={{ pointerEvents: "auto" }}>
                   <ChecklistItem
                     id="test-confirmation-checkbox"
                     data-testid="test-confirmation-checkbox"
@@ -273,7 +273,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
           {`Publish`}
         </DialogTitle>
         <DialogContent sx={{ p: 3 }}>
-          <Typography variant="body2" mb={2}>
+          <Typography variant="body2" sx={{ mb: 2 }}>
             {`This is the final step to publish your content. Summary messages help other editors on your team understand what is changing and will appear in the History tab in the editor sidebar.`}
           </Typography>
           <InputLabel label="Summarise the changes" htmlFor="summary">
@@ -299,10 +299,10 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
           </InputLabel>
           {isTemplate && (
             <>
-              <Typography variant="h4" component="h3" mt={2}>
+              <Typography variant="h4" component="h3" sx={{ mt: 2 }}>
                 {`This flow is a template`}
               </Typography>
-              <Typography variant="body2" my={2}>
+              <Typography variant="body2" sx={{ my: 2 }}>
                 {`Publishing it will automatically update the contents of ${templatedFlows?.length || 0} templated flows. Each templated flow will still need to be reviewed and published by its' owner.`}
               </Typography>
               {templatedFlows?.length && templatedFlows.length > 0 && (
@@ -359,11 +359,13 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
       }}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
-      PaperProps={{
-        sx: {
-          height: "100%",
-          overflowY: "hidden",
-          backgroundColor: (theme) => theme.palette.secondary.main,
+      slotProps={{
+        paper: {
+          sx: {
+            height: "100%",
+            overflowY: "hidden",
+            backgroundColor: (theme) => theme.palette.secondary.main,
+          },
         },
       }}
     >

@@ -304,15 +304,10 @@ export const useRoleAuth: UseRoleAuth =
 // Convenience methods for role-based access
 export const useTeamViewerAuth = useRoleAuth([
   "teamViewer",
-  "demoUser",
   "teamEditor",
   "platformAdmin",
 ]);
-export const useTeamEditorAuth = useRoleAuth([
-  "teamEditor",
-  "platformAdmin",
-  "demoUser",
-]);
+export const useTeamEditorAuth = useRoleAuth(["teamEditor", "platformAdmin"]);
 export const usePlatformAdminAuth = useRoleAuth(["platformAdmin"]);
 
 /**

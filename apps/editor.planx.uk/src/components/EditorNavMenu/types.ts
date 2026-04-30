@@ -14,6 +14,8 @@ export interface Route {
 
 export interface MenuSection {
   subtitle?: string;
+  accordion?: boolean;
+  icon?: Route["Icon"];
   routes: Route[];
 }
 

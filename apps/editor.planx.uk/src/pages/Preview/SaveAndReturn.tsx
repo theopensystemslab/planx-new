@@ -49,10 +49,7 @@ export const ConfirmEmail: React.FC<{
             {`Enter your email address`}
           </Typography>
         </TitleWrapper>
-        <Box
-          mb={(theme) => theme.spacing(1)}
-          mt={(theme) => theme.spacing(0.75)}
-        >
+        <Box sx={{ mb: 1, mt: 0.75 }}>
           <Typography variant="subtitle1" component="div">
             {`We will use this to save your form so you can come back to it later. We may also email you updates about it.`}
           </Typography>
@@ -108,10 +105,13 @@ const SaveAndReturn: React.FC<PropsWithChildren> = ({ children }) => {
   const matches = useMatches();
   const isContentPage = matches.some(
     (match) =>
-      "isContentPage" in match.context && match.context.isContentPage === true,
+      match?.context &&
+      "isContentPage" in match.context &&
+      match.context.isContentPage === true,
   );
   const isViewApplicationPage = matches.some(
     (match) =>
+      match?.context &&
       "isViewApplicationPage" in match.context &&
       match.context.isViewApplicationPage === true,
   );

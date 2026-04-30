@@ -83,21 +83,6 @@ describe("team_settings", () => {
     });
   });
 
-  describe("demoUser", () => {
-    let i;
-    beforeAll(async () => {
-      i = await introspectAs("demoUser");
-    });
-
-    test("can query team_settings", () => {
-      expect(i.queries).toContain("team_settings");
-    });
-
-    test("cannot create, update, or delete team_settings", () => {
-      expect(i).toHaveNoMutationsFor("team_settings");
-    });
-  });
-
   describe("api", () => {
     let i;
     beforeAll(async () => {
