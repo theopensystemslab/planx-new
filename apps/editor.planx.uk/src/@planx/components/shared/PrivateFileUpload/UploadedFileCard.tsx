@@ -26,10 +26,10 @@ const FileCardRoot = styled(Box)(({ theme }) => ({
   border: `1px solid ${theme.palette.border.main}`,
   backgroundColor: theme.palette.background.paper,
   padding: theme.spacing(1.5),
+  position: "relative",
 }));
 
 const FileCard = styled(Box)(({ theme }) => ({
-  position: "relative",
   height: "auto",
   display: "flex",
   flexDirection: "column",
@@ -115,13 +115,13 @@ export const UploadedFileCard: React.FC<Props> = ({
     >
       <>
         <FileCardRoot {...FileCardProps}>
+          <ProgressBar
+            sx={{ width: `${Math.min(Math.ceil(progress * 100), 100)}%` }}
+            role="progressbar"
+            aria-valuenow={progress * 100 || 0}
+            aria-label={`Upload progress of file ${file.name}`}
+          />
           <FileCard>
-            <ProgressBar
-              sx={{ width: `${Math.min(Math.ceil(progress * 100), 100)}%` }}
-              role="progressbar"
-              aria-valuenow={progress * 100 || 0}
-              aria-label={`Upload progress of file ${file.name}`}
-            />
             <Box
               sx={{
                 display: "flex",
