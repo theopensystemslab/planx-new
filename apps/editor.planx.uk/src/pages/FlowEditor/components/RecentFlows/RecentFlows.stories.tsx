@@ -5,6 +5,7 @@ import { graphql, HttpResponse } from "msw";
 import React from "react";
 
 import RecentFlows from "./RecentFlows";
+import { RecentFlowsProvider, STORAGE_KEY } from "./RecentFlowsContext";
 
 const recentFlows = [
   { id: "ghi789", folderIds: [] },
@@ -50,42 +51,29 @@ const meta: Meta<typeof RecentFlows> = {
       ],
     },
   },
-  decorators: [
-    (Story) => {
-      sessionStorage.removeItem("planx:recentFlows");
-      return (
-        <Box sx={{ minHeight: 100 }}>
-          <Story />
-        </Box>
-      );
-    },
-  ],
 };
 
 export default meta;
 
 type Story = StoryObj<typeof RecentFlows>;
 
+const withFlows = (flows: typeof recentFlows) => (Story: React.FC) => {
+  sessionStorage.setItem(STORAGE_KEY, JSON.stringify(flows));
+  return (
+    <RecentFlowsProvider>
+      <Box sx={{ minHeight: 100 }}>
+        <Story />
+      </Box>
+    </RecentFlowsProvider>
+  );
+};
+
 export const Basic = {
   render: () => <RecentFlows />,
-  parameters: {
-    tanstackRouter: {
-      location: {
-        pathname: "/",
-        state: { recentFlows },
-      },
-    },
-  },
+  decorators: [withFlows(recentFlows)],
 } satisfies Story;
 
 export const SingleFlow = {
   render: () => <RecentFlows />,
-  parameters: {
-    tanstackRouter: {
-      location: {
-        pathname: "/",
-        state: { recentFlows: [recentFlows[0]] },
-      },
-    },
-  },
+  decorators: [withFlows([recentFlows[0]])],
 } satisfies Story;

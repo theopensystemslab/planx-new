@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import ErrorFallback from "components/Error/ErrorFallback";
 import FlowEditor from "pages/FlowEditor";
+import { RecentFlowsProvider } from "pages/FlowEditor/components/RecentFlows/RecentFlowsContext";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
@@ -15,9 +16,11 @@ export const Route = createFileRoute(
  */
 function FlowEditorLayout() {
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <FlowEditor />
-      <Outlet />
-    </ErrorBoundary>
+    <RecentFlowsProvider>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <FlowEditor />
+        <Outlet />
+      </ErrorBoundary>
+    </RecentFlowsProvider>
   );
 }

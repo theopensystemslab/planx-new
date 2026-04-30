@@ -1,7 +1,7 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import RouteLoadingIndicator from "components/RouteLoadingIndicator";
-import { startNewRecentFlowsJourney } from "pages/FlowEditor/components/RecentFlows/useRecentFlows";
+import { startNewRecentFlowsJourney } from "pages/FlowEditor/components/RecentFlows/RecentFlowsContext";
 import Team from "pages/Team";
 import {
   GET_FLOWS,

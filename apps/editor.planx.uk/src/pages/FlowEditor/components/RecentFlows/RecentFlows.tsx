@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 
 import { RecentFlowLink } from "./RecentFlowLink";
+import { useRecentFlowsContext } from "./RecentFlowsContext";
 import {
   ExpandableContent,
   RecentFlowContainer,
@@ -14,14 +15,13 @@ import {
   ToggleButton,
   ToggleWrap,
 } from "./styles";
-import { useRecentFlows } from "./useRecentFlows";
 
 const RecentFlows = () => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleToggle = () => setIsExpanded((prev) => !prev);
 
-  const recentFlows = useRecentFlows();
+  const { recentFlows } = useRecentFlowsContext();
   if (!recentFlows?.length) return null;
 
   // Collapsed: show the directly previous (most recent) flow
