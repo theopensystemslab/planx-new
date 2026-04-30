@@ -18,7 +18,7 @@ export const getAction = (values: FormValues): TaskActionDescription => {
 
   if (userInput === original) return TaskActionMap.retainedOriginal;
   if (userInput === enhanced) return TaskActionMap.acceptedEnhanced;
-  return TaskActionMap.hybrid;
+  return TaskActionMap.new;
 };
 
 export const makeBreadcrumb = (

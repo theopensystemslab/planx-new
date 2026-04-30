@@ -7,6 +7,7 @@ import React, { useState } from "react";
 
 import type { TaskComponentMap } from "../types";
 import InitialUserInput from "./InitialUserInput";
+import ModifyUserInput from "./ModifyUserInput";
 import ProjectDescription from "./Tasks/ProjectDescription";
 import type { FormValues, Props } from "./types";
 import { getValidationSchema, makeBreadcrumb } from "./utils";
@@ -17,7 +18,9 @@ const taskComponents: TaskComponentMap = {
 
 const EnhancedTextInputComponent = (props: Props) => {
   const previous = getPreviouslySubmittedData(props);
-  const [step, setStep] = useState<"input" | "task">("input");
+  const [step, setStep] = useState<"input" | "selection" | "modification">(
+    "input",
+  );
   const isRunningTask = useIsFetching({ queryKey: [props.task] });
 
   const initialValues: FormValues = previous
@@ -48,18 +51,22 @@ const EnhancedTextInputComponent = (props: Props) => {
       return props.handleSubmit?.({ data: makeBreadcrumb(props.fn, values) });
     }
 
-    if (step === "input") return setStep("task");
+    if (step === "input") return setStep("selection");
 
-    if (step === "task")
+    if (step === "selection") {
+      if (values.selectedOption !== "new") return setStep("modification");
+      return props.handleSubmit?.({ data: makeBreadcrumb(props.fn, values) });
+    }
+
+    if (step === "modification") {
       props.handleSubmit?.({ data: makeBreadcrumb(props.fn, values) });
+    }
   };
 
   const TaskComponent = taskComponents[props.task];
   if (!TaskComponent) return null;
 
   const validationSchema = getValidationSchema(props);
-
-  const handleBack = step === "task" ? () => setStep("input") : undefined;
 
   return (
     <Formik<FormValues>
@@ -70,8 +77,24 @@ const EnhancedTextInputComponent = (props: Props) => {
       validateOnChange={false}
       validationSchema={validationSchema}
     >
-      {({ submitForm, values }) => {
-        const showCardHeader = step === "input" || values.status !== "success";
+      {({ submitForm, values, setFieldValue }) => {
+        const showCardHeader =
+          step === "input" ||
+          values.status !== "success" ||
+          Boolean(isRunningTask);
+
+        const handleBack = (() => {
+          if (step === "modification") return () => setStep("selection");
+          // Repopulate field with user's original input
+          if (step === "selection" && !isRunningTask)
+            return () => {
+              if (values.status === "success") {
+                setFieldValue("userInput", values.original);
+              }
+              setStep("input");
+            };
+          return undefined;
+        })();
 
         return (
           <Card
@@ -91,7 +114,8 @@ const EnhancedTextInputComponent = (props: Props) => {
               />
             )}
             {step === "input" && <InitialUserInput {...props} />}
-            {step === "task" && <TaskComponent {...props} />}
+            {step === "modification" && <ModifyUserInput {...props} />}
+            {step === "selection" && <TaskComponent {...props} />}
           </Card>
         );
       }}
