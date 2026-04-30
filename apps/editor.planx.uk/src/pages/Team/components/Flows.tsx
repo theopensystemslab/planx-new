@@ -43,8 +43,6 @@ type Props = {
   flowCardView: FlowCardView;
   teamId: number;
   flows: FlowSummary[] | null;
-  pinnedFlows: FlowSummary[];
-  unpinnedFlows: FlowSummary[];
   handleViewChange: (
     _event: React.MouseEvent<HTMLElement>,
     newView: FlowCardView | null,
@@ -60,20 +58,16 @@ const Flows: React.FC<Props> = ({
   sortOptions,
   flowCardView,
   teamId,
-  pinnedFlows,
   handleViewChange,
   slug,
 }) => {
   const teamHasFlows = sortedFlows ? true : false;
   const navigate = useNavigate();
 
-  const showPinnedFlows = pinnedFlows.length > 0 && !flowsHaveBeenFiltered;
-  const sortedPinnedFlows = showPinnedFlows
-    ? (sortedFlows?.filter((flow) => flow.pinnedFlows.length > 0) ?? [])
-    : [];
-  const remainingFlows = showPinnedFlows
-    ? (sortedFlows?.filter((flow) => flow.pinnedFlows.length === 0) ?? null)
-    : sortedFlows;
+  const sortedPinnedFlows =
+    sortedFlows?.filter((flow) => flow.pinnedFlows.length > 0) ?? [];
+  const sortedUnpinnedFlows =
+    sortedFlows?.filter((flow) => flow.pinnedFlows.length === 0) ?? null;
 
   return (
     teamHasFlows && (
@@ -106,32 +100,6 @@ const Flows: React.FC<Props> = ({
             </Tooltip>
           </ToggleButtonGroup>
         </FiltersContainer>
-        {sortedPinnedFlows.length > 0 && (
-          <Box>
-            <Box
-              sx={{ minHeight: "50px", display: "flex", alignItems: "center" }}
-            >
-              <ShowingServicesHeader
-                matchedFlowsCount={sortedPinnedFlows.length}
-                isPinnedFlows={true}
-              />
-            </Box>
-            {flowCardView === "grid" ? (
-              <DashboardList>
-                {sortedPinnedFlows.map((flow) => (
-                  <FlowCard flow={flow} key={flow.slug} view={"flows"} />
-                ))}
-              </DashboardList>
-            ) : (
-              <FlowTable
-                flows={sortedPinnedFlows}
-                teamId={teamId}
-                teamSlug={slug}
-                view={"flows"}
-              />
-            )}
-          </Box>
-        )}
         <Box
           sx={{
             display: "flex",
@@ -178,23 +146,41 @@ const Flows: React.FC<Props> = ({
             )}
           </Box>
         </Box>
-        {remainingFlows && (
+        {sortedPinnedFlows.length > 0 && (
           <>
             {flowCardView === "grid" ? (
               <DashboardList>
-                {remainingFlows.map((flow) => (
+                {sortedPinnedFlows.map((flow) => (
                   <FlowCard flow={flow} key={flow.slug} view={"flows"} />
                 ))}
               </DashboardList>
             ) : (
               <FlowTable
-                flows={remainingFlows}
+                flows={sortedPinnedFlows}
                 teamId={teamId}
                 teamSlug={slug}
                 view={"flows"}
               />
             )}
           </>
+        )}
+        {sortedUnpinnedFlows && sortedUnpinnedFlows.length > 0 && (
+          <Box>
+            {flowCardView === "grid" ? (
+              <DashboardList>
+                {sortedUnpinnedFlows.map((flow) => (
+                  <FlowCard flow={flow} key={flow.slug} view={"flows"} />
+                ))}
+              </DashboardList>
+            ) : (
+              <FlowTable
+                flows={sortedUnpinnedFlows}
+                teamId={teamId}
+                teamSlug={slug}
+                view={"flows"}
+              />
+            )}
+          </Box>
         )}
       </>
     )
