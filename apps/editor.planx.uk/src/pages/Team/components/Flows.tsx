@@ -146,41 +146,33 @@ const Flows: React.FC<Props> = ({
             )}
           </Box>
         </Box>
-        {sortedPinnedFlows.length > 0 && (
+        {flowCardView === "grid" ? (
           <>
-            {flowCardView === "grid" ? (
+            {sortedPinnedFlows.length > 0 && (
               <DashboardList>
                 {sortedPinnedFlows.map((flow) => (
                   <FlowCard flow={flow} key={flow.slug} view={"flows"} />
                 ))}
               </DashboardList>
-            ) : (
-              <FlowTable
-                flows={sortedPinnedFlows}
-                teamId={teamId}
-                teamSlug={slug}
-                view={"flows"}
-              />
+            )}
+            {sortedUnpinnedFlows && sortedUnpinnedFlows.length > 0 && (
+              <Box>
+                <DashboardList>
+                  {sortedUnpinnedFlows.map((flow) => (
+                    <FlowCard flow={flow} key={flow.slug} view={"flows"} />
+                  ))}
+                </DashboardList>
+              </Box>
             )}
           </>
-        )}
-        {sortedUnpinnedFlows && sortedUnpinnedFlows.length > 0 && (
-          <Box>
-            {flowCardView === "grid" ? (
-              <DashboardList>
-                {sortedUnpinnedFlows.map((flow) => (
-                  <FlowCard flow={flow} key={flow.slug} view={"flows"} />
-                ))}
-              </DashboardList>
-            ) : (
-              <FlowTable
-                flows={sortedUnpinnedFlows}
-                teamId={teamId}
-                teamSlug={slug}
-                view={"flows"}
-              />
-            )}
-          </Box>
+        ) : (
+          <FlowTable
+            pinnedFlows={sortedPinnedFlows}
+            unpinnedFlows={sortedUnpinnedFlows ?? []}
+            teamId={teamId}
+            teamSlug={slug}
+            view={"flows"}
+          />
         )}
       </>
     )

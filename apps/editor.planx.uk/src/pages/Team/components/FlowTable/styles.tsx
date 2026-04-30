@@ -5,6 +5,16 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { inputFocusStyle } from "theme";
 
+export const SpacerTableRow = styled(TableRow)(({ theme }) => ({
+  height: theme.spacing(3),
+  backgroundColor: `${theme.palette.background.paper} !important`,
+  pointerEvents: "none",
+  [`& .${tableCellClasses.root}`]: {
+    padding: "0 !important",
+    borderBottom: `1px solid ${theme.palette.border.main} !important`,
+  },
+}));
+
 import { CustomLink } from "../../../../ui/shared/CustomLink/CustomLink";
 
 export const StyledTable = styled(Table)(({ theme }) => ({
