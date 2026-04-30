@@ -1,7 +1,7 @@
 import { screen, waitFor } from "@testing-library/react";
 import { uniqueId } from "lodash";
 import React from "react";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 

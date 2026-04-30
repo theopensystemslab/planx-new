@@ -22,7 +22,7 @@ import { ToastContextProvider } from "contexts/ToastContext";
 import React from "react";
 import { CatchAllComponent } from "routes/$";
 
-import { defaultTheme } from "./theme";
+import { defaultTheme } from "../theme";
 
 const testQueryClient = new QueryClient({
   defaultOptions: {

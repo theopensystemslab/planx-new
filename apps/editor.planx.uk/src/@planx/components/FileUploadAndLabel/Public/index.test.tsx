@@ -4,7 +4,7 @@ import type { UserEvent } from "@testing-library/user-event";
 import { uploadPrivateFile } from "lib/api/fileUpload/requests";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { Breadcrumbs } from "types";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";

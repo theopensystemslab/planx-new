@@ -1,7 +1,7 @@
 import { act, screen, waitFor, within } from "@testing-library/react";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 

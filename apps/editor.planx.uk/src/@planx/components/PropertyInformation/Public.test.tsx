@@ -2,7 +2,7 @@ import { screen } from "@testing-library/react";
 import ErrorFallback from "components/Error/ErrorFallback";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { vi } from "vitest";
 
 import { presentationalPropsMock } from "./mocks/propsMock";

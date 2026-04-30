@@ -2,7 +2,7 @@ import { screen, within } from "@testing-library/react";
 import { graphql, HttpResponse } from "msw";
 import React from "react";
 import server from "test/mockServer";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { mockTeams } from "ui/shared/DataTable/mockTeams";
 import { it } from "vitest";
 

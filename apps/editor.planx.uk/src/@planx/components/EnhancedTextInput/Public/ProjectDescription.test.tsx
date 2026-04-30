@@ -2,7 +2,7 @@ import { screen } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import React from "react";
 import server from "test/mockServer";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { axe } from "vitest-axe";
 
 import { taskDefaults } from "../model";

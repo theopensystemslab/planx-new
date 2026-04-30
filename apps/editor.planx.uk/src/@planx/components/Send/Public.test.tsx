@@ -5,7 +5,7 @@ import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react";
 import server from "test/mockServer";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { it, vi } from "vitest";
 import { axe } from "vitest-axe";
 

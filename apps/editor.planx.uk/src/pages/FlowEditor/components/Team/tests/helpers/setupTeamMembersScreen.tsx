@@ -4,7 +4,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import server from "test/mockServer";
 
-import { setup } from "../../../../../../testUtils";
+import { setup } from "../../../../../../test/utils";
 import { TeamMembers } from "../../TeamMembers";
 import { getNoExistingUserHandler, getUsersHandler } from "../mocks/handlers";
 

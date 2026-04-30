@@ -2,7 +2,7 @@ import { within } from "@testing-library/react";
 import { uploadPrivateFile } from "lib/api/fileUpload/requests";
 import { cloneDeep, merge } from "lodash";
 import React from "react";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { it, test, vi } from "vitest";
 
 import { mockMaxOneProps } from "../../schemas/mocks/MaxOne";

@@ -2,7 +2,7 @@ import { QuestionLayout } from "@planx/components/shared/BaseQuestion/model";
 import { act, waitFor } from "@testing-library/react";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 

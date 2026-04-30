@@ -1,5 +1,5 @@
 import React from "react";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { FONT_WEIGHT_BOLD } from "theme";
 import { axe } from "vitest-axe";
 

@@ -2,7 +2,7 @@ import { screen, waitForElementToBeRemoved } from "@testing-library/react";
 import { delay, graphql, HttpResponse } from "msw";
 import React from "react";
 import server from "test/mockServer";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 
 import FlowStatus from "../..";
 import type { GetFlowStatus } from "../../types";

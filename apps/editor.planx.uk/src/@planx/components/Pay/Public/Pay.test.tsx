@@ -6,7 +6,7 @@ import ErrorFallback from "components/Error/ErrorFallback";
 import { FullStore, Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { ApplicationPath, Breadcrumbs } from "types";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";

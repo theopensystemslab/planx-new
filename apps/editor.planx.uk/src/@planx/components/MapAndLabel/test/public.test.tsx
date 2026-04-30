@@ -1,7 +1,7 @@
 import { MyMap } from "@opensystemslab/map";
 import { Presentational as MapAndLabel } from "@planx/components/MapAndLabel/Public";
 import { waitFor, within } from "@testing-library/react";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
@@ -474,7 +474,10 @@ describe("remove feature button", () => {
 
     map = getByTestId("map-and-label-map");
 
-    expect((map as any).drawGeojsonData).toStrictEqual({"type":"FeatureCollection","features":[]});
+    expect((map as any).drawGeojsonData).toStrictEqual({
+      type: "FeatureCollection",
+      features: [],
+    });
   });
 });
 
@@ -606,7 +609,9 @@ describe("back navigation", () => {
     );
 
     const map = getByTestId("map-and-label-map");
-    expect((map as any).drawGeojsonData).toStrictEqual(breadcrumb["data"]["trees"]);
+    expect((map as any).drawGeojsonData).toStrictEqual(
+      breadcrumb["data"]["trees"],
+    );
 
     const secondTabPanel = getByTestId("vertical-tabpanel-1");
     expect(secondTabPanel).toBeVisible();
