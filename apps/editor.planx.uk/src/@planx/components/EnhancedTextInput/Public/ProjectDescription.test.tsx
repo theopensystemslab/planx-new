@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { act, screen } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import server from "test/mockServer";
 import { setup } from "test/utils";
@@ -430,8 +430,10 @@ describe("basic layout and behaviour", () => {
       />,
     );
 
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+    await act(async () => {
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
   });
 
   it("enforces a character limit", async () => {
@@ -516,8 +518,10 @@ describe("basic layout and behaviour", () => {
       await screen.findByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+    await act(async () => {
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
   });
 
   it("allows the user to select between the enhanced and original description", async () => {
