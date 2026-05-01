@@ -31,10 +31,18 @@ export const CopyFeature: React.FC<Props> = ({
 
   const formik = useFormik({
     initialValues: {
-      sourceLabel: sourceFeatures[0]?.properties?.label,
+      sourceLabel: sourceFeatures[0]?.properties?.label ?? "",
     },
     onSubmit: ({ sourceLabel }) => copyFeature(sourceLabel, destinationIndex),
   });
+
+  // Fall back to first available option if formik's value is stale (e.g. that feature was removed)
+  const isFormikValueStillValid = sourceFeatures.some(
+    (f) => f.properties?.label === formik.values.sourceLabel,
+  );
+  const sourceLabel = isFormikValueStillValid
+    ? formik.values.sourceLabel
+    : (sourceFeatures[0]?.properties?.label ?? "");
 
   return (
     <Box
@@ -52,7 +60,7 @@ export const CopyFeature: React.FC<Props> = ({
             bordered
             required
             title={"Copy from"}
-            value={formik.values.sourceLabel}
+            value={sourceLabel}
             onChange={(e) =>
               formik.setFieldValue("sourceLabel", e.target.value)
             }

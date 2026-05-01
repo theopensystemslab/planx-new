@@ -18,7 +18,9 @@ export const addFeaturesToMap = async (
       "EPSG:3857": { features },
     },
   });
-  await act(() => map.dispatchEvent(mockEvent));
+  await act(async () => {
+    map.dispatchEvent(mockEvent);
+  });
 };
 
 export const addMultipleFeatures = async (

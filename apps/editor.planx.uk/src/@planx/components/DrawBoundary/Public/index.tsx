@@ -18,7 +18,7 @@ import { point } from "@turf/helpers";
 import { Feature } from "geojson";
 import type { GeoJSONChangeEvent } from "lib/gis";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -228,8 +228,18 @@ export default function Component(props: Props) {
    */
   const clipGeojsonData = (() => {
     if (boundary) return buffer(boundary, bufferInMeters, { units: "meters" });
-    if (addressPoint) return buffer(addressPoint, bufferInMeters, { units: "meters" });
+    if (addressPoint)
+      return buffer(addressPoint, bufferInMeters, { units: "meters" });
   })();
+
+  const mapRef = useCallback((node: HTMLElement | null) => {
+    if (node) {
+      (
+        node as HTMLElement & { ariaLabelOlFixedOverlay: string }
+      ).ariaLabelOlFixedOverlay =
+        "An interactive map for providing your location plan boundary";
+    }
+  }, []);
 
   function getBody(mapValidationError?: string, fileValidationError?: string) {
     if (page === "draw") {
@@ -272,8 +282,8 @@ export default function Component(props: Props) {
                 )}
                 {/* @ts-ignore */}
                 <my-map
+                  ref={mapRef}
                   id="draw-boundary-map"
-                  ariaLabelOlFixedOverlay="An interactive map for providing your location plan boundary"
                   drawMode
                   drawPointer="crosshair"
                   drawGeojsonData={boundary}

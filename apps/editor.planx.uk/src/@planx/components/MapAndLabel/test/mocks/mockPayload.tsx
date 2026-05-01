@@ -18,7 +18,7 @@ export const mockSingleFeaturePayload: MockPayload = {
             coordinates: [-3.685929607119201, 57.15301433687542],
             type: "Point",
           },
-          properties: { mockTreeData, label: "1" },
+          properties: { ...mockTreeData, label: "1" },
           type: "Feature",
         },
       ],
@@ -36,7 +36,7 @@ export const mockDoubleFeaturePayload: MockPayload = {
             coordinates: [-3.685929607119201, 57.15301433687542],
             type: "Point",
           },
-          properties: { mockTreeData, label: "1" },
+          properties: { ...mockTreeData, label: "1" },
           type: "Feature",
         },
         {

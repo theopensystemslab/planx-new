@@ -15,7 +15,7 @@ import { GeoJsonObject } from "geojson";
 import { useFormErrorFocus } from "hooks/useFormErrorFocus";
 import sortBy from "lodash/sortBy";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -271,11 +271,26 @@ const Root = () => {
 
   const passport = useStore((state) => state.computePassport().data);
 
+  // Set ariaLabelOlFixedOverlay as a DOM property via ref to avoid React's ARIA attribute validation warning
+  const mapRef = useCallback(
+    (node: HTMLElement | null) => {
+      if (node) {
+        (
+          node as HTMLElement & { ariaLabelOlFixedOverlay: string }
+        ).ariaLabelOlFixedOverlay =
+          `An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`;
+      }
+    },
+    [schemaName],
+  );
+
   // If coming "back" or "changing", load initial features & tabs onto the map
   // Pre-populating form fields within tabs is handled via formik.initialValues in Context.tsx
-  if (previouslySubmittedData?.data?.[fn]?.features?.length > 0) {
-    addInitialFeaturesToMap(previouslySubmittedData?.data?.[fn]?.features);
-  }
+  useEffect(() => {
+    if (previouslySubmittedData?.data?.[fn]?.features?.length > 0) {
+      addInitialFeaturesToMap(previouslySubmittedData?.data?.[fn]?.features);
+    }
+  }, [addInitialFeaturesToMap, previouslySubmittedData, fn]);
 
   const rootError: string =
     (errors.min &&
@@ -298,17 +313,16 @@ const Root = () => {
           <MapContainer environment="standalone">
             {/* @ts-ignore */}
             <my-map
+              ref={mapRef}
               id={MAP_ID}
               data-map-id={MAP_ID}
               data-testid={MAP_ID}
               basemap={basemap}
-              ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
               geojsonData={passport && passport["proposal.site"]}
               geojsonBuffer={30}
               drawMode
               drawGeojsonData={
-                features &&
-                {
+                features && {
                   type: "FeatureCollection",
                   features: features,
                 }

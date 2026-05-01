@@ -12,7 +12,7 @@ import find from "lodash/find";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { HandleSubmit } from "pages/Preview/Node";
-import React from "react";
+import React, { useCallback } from "react";
 
 import type { SiteAddress } from "../FindProperty/model";
 import { MapContainer } from "../shared/Preview/MapContainer";
@@ -107,6 +107,14 @@ export function Presentational(props: PresentationalProps) {
   } = props;
   const [environment] = useStore((state) => [state.previewEnvironment]);
 
+  const mapRef = useCallback((node: HTMLElement | null) => {
+    if (node) {
+      (
+        node as HTMLElement & { ariaLabelOlFixedOverlay: string }
+      ).ariaLabelOlFixedOverlay = "A static map of the property address";
+    }
+  }, []);
+
   const propertyDetails: PropertyDetail[] = [
     {
       heading: "Address",
@@ -157,8 +165,8 @@ export function Presentational(props: PresentationalProps) {
         </p>
         {/* @ts-ignore */}
         <my-map
+          ref={mapRef}
           id="property-information-map"
-          ariaLabelOlFixedOverlay="A static map of the property address"
           zoom={19.5}
           latitude={address?.latitude}
           longitude={address?.longitude}
