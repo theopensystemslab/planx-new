@@ -1,6 +1,6 @@
 import { screen } from "@testing-library/react";
 import React from "react";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { SectionNode, SectionStatus } from "types";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";

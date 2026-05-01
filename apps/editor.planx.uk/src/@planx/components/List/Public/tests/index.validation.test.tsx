@@ -2,7 +2,7 @@ import { screen, waitFor } from "@testing-library/react";
 import { uploadPrivateFile } from "lib/api/fileUpload/requests";
 import { cloneDeep, merge } from "lodash";
 import React from "react";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { test, vi } from "vitest";
 
 import { mockZooProps } from "../../schemas/mocks/Zoo/props";
@@ -83,8 +83,8 @@ describe("Form validation and error handling", () => {
       );
 
       const nameInput = screen.getByLabelText(/What's their name/);
-      await user.type(
-        nameInput,
+      await user.click(nameInput);
+      await user.paste(
         "This is a long string of text over one hundred and twenty characters, which should trigger the 'short' text validation warning",
       );
       await user.click(getByRole("button", { name: /Save/ }));
@@ -281,10 +281,12 @@ describe("Form validation and error handling", () => {
       );
       // Start filling out item
       const nameInput = getByLabelText(/What's their name/);
-      await user.type(nameInput, "Richard Parker");
+      await user.click(nameInput);
+      await user.paste("Richard Parker");
 
       const emailInput = getByLabelText(/email/);
-      await user.type(emailInput, "richard.parker@pi.com");
+      await user.click(emailInput);
+      await user.paste("richard.parker@pi.com");
 
       // Try to add a new item
       await user.click(getByTestId(/list-add-button/));
@@ -305,10 +307,12 @@ describe("Form validation and error handling", () => {
       );
       // Start filling out item
       const nameInput = getByLabelText(/What's their name/);
-      await user.type(nameInput, "Richard Parker");
+      await user.click(nameInput);
+      await user.paste("Richard Parker");
 
       const emailInput = getByLabelText(/email/);
-      await user.type(emailInput, "richard.parker@pi.com");
+      await user.click(emailInput);
+      await user.paste("richard.parker@pi.com");
 
       // Try to continue
       await user.click(getByTestId(/continue-button/));

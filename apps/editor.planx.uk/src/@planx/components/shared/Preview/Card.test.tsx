@@ -3,7 +3,7 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { act, screen, waitFor } from "@testing-library/react";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { ApplicationPath } from "types";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";

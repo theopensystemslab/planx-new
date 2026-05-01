@@ -6,6 +6,7 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: [
+      "./src/test/jsdom.ts",
       "./src/test/mockServer.ts",
       "./src/test/mui.tsx",
     ],

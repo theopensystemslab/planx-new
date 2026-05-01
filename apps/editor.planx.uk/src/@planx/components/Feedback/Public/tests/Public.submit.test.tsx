@@ -4,7 +4,7 @@ import {
   insertFeedbackMutation,
 } from "lib/feedback";
 import React from "react";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { vi } from "vitest";
 
 import FeedbackComponent from "../Public";

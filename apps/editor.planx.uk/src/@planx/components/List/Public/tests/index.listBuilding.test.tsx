@@ -2,7 +2,7 @@ import { within } from "@testing-library/react";
 import { uploadPrivateFile } from "lib/api/fileUpload/requests";
 import { cloneDeep, merge } from "lodash";
 import React from "react";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { it, test, vi } from "vitest";
 
 import { mockMaxOneProps } from "../../schemas/mocks/MaxOne";
@@ -337,7 +337,8 @@ describe("Building a list", () => {
       await user.click(secondEditButton);
 
       const emailInput = getByLabelText(/email/);
-      await user.type(emailInput, "my.new.email@test.com");
+      await user.click(emailInput);
+      await user.paste("my.new.email@test.com");
 
       const secondCancelButton = getAllByText(/Cancel/, {
         selector: "button",

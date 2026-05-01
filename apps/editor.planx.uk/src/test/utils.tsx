@@ -22,7 +22,7 @@ import { ToastContextProvider } from "contexts/ToastContext";
 import React from "react";
 import { CatchAllComponent } from "routes/$";
 
-import { defaultTheme } from "./theme";
+import { defaultTheme } from "../theme";
 
 const testQueryClient = new QueryClient({
   defaultOptions: {
@@ -66,6 +66,7 @@ export const setup = async (
   jsx: React.JSX.Element,
 ): Promise<Record<"user", UserEvent> & RenderResult> => {
   testQueryClient.clear();
+  const user = userEvent.setup();
 
   const rootRoute = createRootRoute({
     component: () => (
@@ -113,8 +114,5 @@ export const setup = async (
     { timeout: 1000 },
   );
 
-  return {
-    user: userEvent.setup(),
-    ...renderResult,
-  };
+  return { user, ...renderResult };
 };

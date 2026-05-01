@@ -8,7 +8,7 @@ import {
 } from "msw";
 import React from "react";
 import server from "test/mockServer";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 

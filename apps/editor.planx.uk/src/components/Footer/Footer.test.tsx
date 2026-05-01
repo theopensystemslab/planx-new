@@ -1,7 +1,7 @@
 import { act, screen } from "@testing-library/react";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { it } from "vitest";
 
 import Footer from "./Footer";

@@ -2,7 +2,7 @@ import { act, fireEvent, screen } from "@testing-library/react";
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { vi } from "vitest";
 
 import DateInputComponent from "./Editor";

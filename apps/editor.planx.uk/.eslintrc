@@ -46,14 +46,14 @@
           },
           {
             "name": "@testing-library/user-event",
-            "message": "Please import setup() from testUtils to get test user"
+            "message": "Please import setup() from test/utils to get test user"
           },
           {
             "name": "@testing-library/react",
             "importNames": [
               "render"
             ],
-            "message": "Please import setup() from testUtils to render test component"
+            "message": "Please import setup() from test/utils to render test component"
           },
           {
             "name": "@mui/styles",

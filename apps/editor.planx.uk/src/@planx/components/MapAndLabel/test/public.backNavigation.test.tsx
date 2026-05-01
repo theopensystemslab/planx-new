@@ -1,6 +1,6 @@
 import { MyMap } from "@opensystemslab/map";
 import React from "react";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { it, vi } from "vitest";
 
 import { Presentational as MapAndLabel } from "../Public";

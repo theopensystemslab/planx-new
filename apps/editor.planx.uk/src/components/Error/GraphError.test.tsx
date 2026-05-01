@@ -2,7 +2,7 @@ import { logger } from "airbrake";
 import ErrorFallback from "components/Error/ErrorFallback";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 

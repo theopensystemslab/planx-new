@@ -3,7 +3,7 @@ import { fireEvent, screen, waitFor } from "@testing-library/react";
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 
 import { Condition, Operator } from "../shared/RuleBuilder/types";
 import ResponsiveQuestion from "./Editor";

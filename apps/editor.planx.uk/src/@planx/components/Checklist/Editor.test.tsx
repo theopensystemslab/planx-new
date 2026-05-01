@@ -8,7 +8,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { vi } from "vitest";
 
 import { ChecklistEditor } from "./Editor";

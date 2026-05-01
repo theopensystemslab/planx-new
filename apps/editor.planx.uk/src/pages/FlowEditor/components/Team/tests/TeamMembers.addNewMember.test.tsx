@@ -6,7 +6,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import server from "test/mockServer";
 import { axe } from "vitest-axe";
 
-import { setup } from "../../../../../testUtils";
+import { setup } from "../../../../../test/utils";
 import { AddUserModal } from "../components/AddUserModal";
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { userTriesToAddNewMember } from "./helpers/userTriesToAddNewMember";
@@ -77,7 +77,7 @@ describe("when the addNewMember modal is rendered", () => {
   it("should not have any accessibility issues", async () => {
     const { container } = await setup(
       <DndProvider backend={HTML5Backend}>
-        <AddUserModal onClose={vi.fn()}/>
+        <AddUserModal onClose={vi.fn()} />
       </DndProvider>,
     );
     await screen.findByTestId("modal-create-user");
@@ -86,7 +86,6 @@ describe("when the addNewMember modal is rendered", () => {
     expect(results).toHaveNoViolations();
   });
 });
-
 
 describe("when a user is not a platform admin", () => {
   beforeEach(async () => {

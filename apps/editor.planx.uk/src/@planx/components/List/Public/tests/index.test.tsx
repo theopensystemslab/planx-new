@@ -1,6 +1,6 @@
 import { uploadPrivateFile } from "lib/api/fileUpload/requests";
 import React from "react";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { it, test, vi } from "vitest";
 import { axe } from "vitest-axe";
 

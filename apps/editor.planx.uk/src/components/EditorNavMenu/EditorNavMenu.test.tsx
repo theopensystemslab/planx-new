@@ -1,7 +1,7 @@
 import * as TanStackRouter from "@tanstack/react-router";
 import { within } from "@testing-library/react";
 import React from "react";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { vi } from "vitest";
 
 import EditorNavMenu from "./EditorNavMenu";

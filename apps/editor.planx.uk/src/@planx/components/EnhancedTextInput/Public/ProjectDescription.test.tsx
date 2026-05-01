@@ -1,8 +1,7 @@
-import { screen } from "@testing-library/react";
+import { act, screen } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
-import React from "react";
 import server from "test/mockServer";
-import { setup } from "testUtils";
+import { setup } from "test/utils";
 import { axe } from "vitest-axe";
 
 import { taskDefaults } from "../model";
@@ -50,7 +49,9 @@ describe("Passport generation", () => {
       />,
     );
 
-    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByRole("textbox", { name: /test/i }));
+    await user.paste(ORIGINAL);
+
     await user.click(screen.getByTestId("continue-button"));
 
     // Wait for next screen
@@ -104,7 +105,8 @@ describe("Passport generation", () => {
       />,
     );
 
-    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByRole("textbox", { name: /test/i }));
+    await user.paste(ORIGINAL);
     await user.click(screen.getByTestId("continue-button"));
 
     // Wait for next screen
@@ -158,7 +160,8 @@ describe("Passport generation", () => {
       />,
     );
 
-    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByRole("textbox", { name: /test/i }));
+    await user.paste(ORIGINAL);
     await user.click(screen.getByTestId("continue-button"));
 
     // Wait for next screen
@@ -215,7 +218,8 @@ describe("Passport generation", () => {
       />,
     );
 
-    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByRole("textbox", { name: /test/i }));
+    await user.paste(ORIGINAL);
     await user.click(screen.getByTestId("continue-button"));
 
     // Wait for next screen
@@ -358,11 +362,10 @@ describe("navigating back to the EnhancedTextInput component", () => {
     );
 
     // User navigate back and then enters a new description
-    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL, {
-      initialSelectionStart: 0,
-      initialSelectionEnd:
-        previouslySubmittedData.data["proposal.description"].length,
-    });
+    const textBox = screen.getByRole("textbox", { name: /test/i });
+    await user.clear(textBox);
+    await user.paste(ORIGINAL);
+
     await user.click(screen.getByTestId("continue-button"));
 
     // Wait for next screen
@@ -427,8 +430,10 @@ describe("basic layout and behaviour", () => {
       />,
     );
 
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+    await act(async () => {
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
   });
 
   it("enforces a character limit", async () => {
@@ -446,10 +451,9 @@ describe("basic layout and behaviour", () => {
 
     expect(screen.getByText("You have 250 characters remaining")).toBeVisible();
 
-    await user.type(
-      screen.getByRole("textbox", { name: /test/i }),
-      ORIGINAL + ORIGINAL,
-    );
+    await user.click(screen.getByRole("textbox", { name: /test/i }));
+    await user.paste(ORIGINAL + ORIGINAL);
+
     expect(screen.getByText("You have 182 characters too many")).toBeVisible();
 
     await user.click(screen.getByTestId("continue-button"));
@@ -470,7 +474,9 @@ describe("basic layout and behaviour", () => {
       />,
     );
 
-    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByRole("textbox", { name: /test/i }));
+    await user.paste(ORIGINAL);
+
     await user.click(screen.getByTestId("continue-button"));
 
     // Wait for next screen
@@ -502,7 +508,9 @@ describe("basic layout and behaviour", () => {
       />,
     );
 
-    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByRole("textbox", { name: /test/i }));
+    await user.paste(ORIGINAL);
+
     await user.click(screen.getByTestId("continue-button"));
 
     // Wait for next screen
@@ -510,8 +518,10 @@ describe("basic layout and behaviour", () => {
       await screen.findByText(taskDefaults.projectDescription.revisionTitle),
     ).toBeVisible();
 
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+    await act(async () => {
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
   });
 
   it("allows the user to select between the enhanced and original description", async () => {
@@ -524,7 +534,8 @@ describe("basic layout and behaviour", () => {
       />,
     );
 
-    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByRole("textbox", { name: /test/i }));
+    await user.paste(ORIGINAL);
     await user.click(screen.getByTestId("continue-button"));
 
     // Wait for next screen
@@ -574,7 +585,8 @@ describe("basic layout and behaviour", () => {
       />,
     );
 
-    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByRole("textbox", { name: /test/i }));
+    await user.paste(ORIGINAL);
     await user.click(screen.getByTestId("continue-button"));
 
     // Wait for next screen
@@ -631,7 +643,9 @@ describe("basic layout and behaviour", () => {
     // Exit sidebar
     await user.keyboard("{Esc}");
 
-    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByRole("textbox", { name: /test/i }));
+    await user.paste(ORIGINAL);
+
     await user.click(screen.getByTestId("continue-button"));
 
     // Wait for next screen
@@ -671,7 +685,8 @@ describe("basic layout and behaviour", () => {
       />,
     );
 
-    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByRole("textbox", { name: /test/i }));
+    await user.paste(ORIGINAL);
     await user.click(screen.getByTestId("continue-button"));
 
     // Wait for API response before interacting with selection step
@@ -717,7 +732,8 @@ describe("basic layout and behaviour", () => {
     ).not.toBeInTheDocument();
 
     // Proceed to "task" step
-    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByRole("textbox", { name: /test/i }));
+    await user.paste(ORIGINAL);
     await user.click(screen.getByTestId("continue-button"));
     expect(
       await screen.findByText(taskDefaults.projectDescription.revisionTitle),
@@ -743,7 +759,8 @@ describe("basic layout and behaviour", () => {
     );
 
     // Proceed to "task" step
-    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByRole("textbox", { name: /test/i }));
+    await user.paste(ORIGINAL);
     await user.click(screen.getByTestId("continue-button"));
     expect(
       await screen.findByText(taskDefaults.projectDescription.revisionTitle),
@@ -756,10 +773,13 @@ describe("basic layout and behaviour", () => {
     const NEW_INPUT = "A new description because I've changed my mind";
 
     // Enter new description, triggering a new API request
-    await user.type(screen.getByRole("textbox", { name: /test/i }), NEW_INPUT, {
-      initialSelectionStart: 0,
-      initialSelectionEnd: ENHANCED.length,
+    const textBox: HTMLInputElement = screen.getByRole("textbox", {
+      name: /test/i,
     });
+    await user.click(textBox);
+    textBox.setSelectionRange(0, ENHANCED.length);
+    await user.paste(NEW_INPUT);
+
     await user.click(screen.getByTestId("continue-button"));
 
     expect(requestSpy).toHaveBeenCalledTimes(2);
@@ -782,7 +802,8 @@ describe("basic layout and behaviour", () => {
     );
 
     // Proceed to "task" step
-    await user.type(screen.getByRole("textbox", { name: /test/i }), ORIGINAL);
+    await user.click(screen.getByRole("textbox", { name: /test/i }));
+    await user.paste(ORIGINAL);
     await user.click(screen.getByTestId("continue-button"));
     expect(
       await screen.findByText(taskDefaults.projectDescription.revisionTitle),
