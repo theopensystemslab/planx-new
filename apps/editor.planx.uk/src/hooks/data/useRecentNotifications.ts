@@ -10,7 +10,6 @@ const GET_PANEL_NOTIFICATIONS = gql`
         resolved_at: { _is_null: true }
       }
       order_by: { created_at: desc }
-      limit: 5
     ) {
       id
       flow {

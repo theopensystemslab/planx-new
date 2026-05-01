@@ -6,7 +6,6 @@ import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useState } from "react";
-import SettingsSection from "ui/editor/SettingsSection";
 import StyledTab from "ui/editor/StyledTab";
 
 import NotificationCard from "./NotificationCard";
@@ -16,6 +15,9 @@ import { getStatusLabel, partitionBySuperseded } from "./utils";
 const TabList = styled(Box)(() => ({
   position: "relative",
   marginLeft: "-12px",
+  [`& .${tabsClasses.root}`]: {
+    minHeight: "0",
+  },
   [`& .${tabsClasses.indicator}`]: {
     display: "none",
   },
@@ -36,43 +38,59 @@ export const Notifications = ({ notifications }: NotificationProps) => {
     tab === 0 ? activeNotifications : inactiveNotifications;
 
   return (
-    <Container maxWidth="formWrap">
-      <SettingsSection>
-        <Typography variant="h2" component="h3" gutterBottom>
-          Notifications
-        </Typography>
-        <Typography variant="body1">Alerts about your Plan✕ flows.</Typography>
-      </SettingsSection>
-      <TabList sx={{ marginBottom: 3 }}>
-        <Tabs value={tab} onChange={(_, value) => setTab(value)}>
-          <StyledTab
-            label={`Active${activeNotifications.length ? ` (${activeNotifications.length})` : ""}`}
-          />
-          <StyledTab label="Inactive" />
-        </Tabs>
-      </TabList>
-      {!visibleNotifications.length && (
-        <WarningContainer>
-          <Typography variant="body2">
-            {tab === 0
-              ? "No active notifications found."
-              : "No inactive notifications found."}
+    <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
+      <Box
+        sx={(theme) => ({
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          bgcolor: "background.default",
+          paddingTop: theme.spacing(3),
+          [theme.breakpoints.up("lg")]: {
+            paddingTop: theme.spacing(5),
+          },
+          borderBottom: `1px solid ${theme.palette.border.light}`,
+        })}
+      >
+        <Container maxWidth="formWrap">
+          <Typography variant="h2" component="h1" gutterBottom>
+            Notifications
           </Typography>
-        </WarningContainer>
-      )}
-      <Stack spacing={2}>
-        {visibleNotifications.map((notification) => (
-          <NotificationCard
-            key={notification.id}
-            notification={notification}
-            statusLabel={
-              tab === 1
-                ? getStatusLabel(notification.id, supersededIds)
-                : undefined
-            }
-          />
-        ))}
-      </Stack>
-    </Container>
+          <TabList>
+            <Tabs value={tab} onChange={(_, value) => setTab(value)}>
+              <StyledTab
+                label={`Active${activeNotifications.length ? ` (${activeNotifications.length})` : ""}`}
+              />
+              <StyledTab label="Inactive" />
+            </Tabs>
+          </TabList>
+        </Container>
+      </Box>
+      <Container maxWidth="formWrap">
+        {!visibleNotifications.length && (
+          <WarningContainer>
+            <Typography variant="body2">
+              {tab === 0
+                ? "No active notifications found."
+                : "No inactive notifications found."}
+            </Typography>
+          </WarningContainer>
+        )}
+        <Stack spacing={2}>
+          {visibleNotifications.map((notification) => (
+            <NotificationCard
+              key={notification.id}
+              notification={notification}
+              statusLabel={
+                tab === 1
+                  ? getStatusLabel(notification.id, supersededIds)
+                  : undefined
+              }
+            />
+          ))}
+        </Stack>
+      </Container>
+    </Box>
   );
 };

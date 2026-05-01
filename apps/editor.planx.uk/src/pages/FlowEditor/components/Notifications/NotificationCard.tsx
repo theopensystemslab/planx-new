@@ -50,7 +50,7 @@ const NotificationCard = ({
         />
       )}
     </CardBanner>
-    <CardContent sx={compact ? { py: 1.5, px: 1.25, gap: 1 } : undefined}>
+    <CardContent sx={compact ? { py: 1.5, px: 1.25, gap: 0.5 } : { gap: 1 }}>
       <Typography
         variant={compact ? "body1" : "h4"}
         sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}

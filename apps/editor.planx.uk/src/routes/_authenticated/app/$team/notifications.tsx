@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
@@ -53,15 +52,5 @@ export const Route = createFileRoute("/_authenticated/app/$team/notifications")(
 
 function NotificationsRoute() {
   const { notifications } = Route.useLoaderData();
-  return (
-    <Box
-      sx={{
-        backgroundColor: "background.paper",
-        minHeight: "100%",
-        width: "100%",
-      }}
-    >
-      <Notifications notifications={notifications} />
-    </Box>
-  );
+  return <Notifications notifications={notifications} />;
 }
