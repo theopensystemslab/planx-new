@@ -56,6 +56,8 @@ export const MembersTable = ({
   showEditMemberButton,
   showRemoveMemberButton,
 }: MembersTableProps) => {
+  /** The hard-coded team member limit value should be kept in sync with the hasura trigger (see enforce_team_member_limit **/
+  const MAX_USER_COUNT = 20;
   const [modal, setModal] = useState<ModalState>({ action: "closed" });
 
   const closeModal = () => setModal({ action: "closed" });
@@ -167,7 +169,11 @@ export const MembersTable = ({
               <TableRow>
                 <TableCell colSpan={5}>
                   {/* the hard-coded team member limit value should be kept in sync with the hasura trigger (see enforce_team_member_limit) */}
-                  <AddButton onClick={members.length < 20 ? addUser : maxUsers}>
+                  <AddButton
+                    onClick={
+                      members.length < MAX_USER_COUNT ? addUser : maxUsers
+                    }
+                  >
                     Add a new member
                   </AddButton>
                 </TableCell>

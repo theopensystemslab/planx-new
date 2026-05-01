@@ -1,9 +1,7 @@
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
-import { Form, Formik } from "formik";
 import React from "react";
 
 import { AddUserModalProps } from "../types";
@@ -12,7 +10,7 @@ export const MaximumUserModal: React.FC<AddUserModalProps> = ({ onClose }) => {
   return (
     <Dialog
       aria-labelledby="dialog-heading"
-      data-testid="dialog-add-user"
+      data-testid="dialog-maximum-users"
       open
       onClose={onClose}
     >
