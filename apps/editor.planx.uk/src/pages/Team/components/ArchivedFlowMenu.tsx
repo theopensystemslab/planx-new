@@ -87,7 +87,7 @@ const ArchivedFlowMenu: React.FC<FlowMenuProps> = ({
         <ArchiveDialog
           title={`Unarchive "${flow.name}"`}
           open={openFlowDialog === "unarchive"}
-          content={`Are you sure you want to unarchive "${flow.name}"?`}
+          content={`Are you sure you want to unarchive "${flow.name}"? This flow will be viewable and editable from the Flows tab.`}
           handleClose={handleClose}
           onConfirm={handleUnarchive}
           submitLabel="Unarchive this flow"
@@ -110,7 +110,7 @@ const ArchivedFlowMenu: React.FC<FlowMenuProps> = ({
         <ArchiveDialog
           title={`Delete "${flow.name}"`}
           open={openFlowDialog === "delete"}
-          content={`Are you sure you want to delete "${flow.name}"? You will no longer be able to restore it from the archive.`}
+          content={`Are you sure you want to delete "${flow.name}"? The flow will no longer be accessible from the PlanX editor.`}
           handleClose={handleClose}
           onConfirm={handleDelete}
           submitLabel="Delete this flow"

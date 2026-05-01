@@ -68,7 +68,7 @@ const ActiveFlowMenu: React.FC<FlowMenuProps> = ({
         <ArchiveDialog
           title={`Archive "${flow.name}"`}
           open={openDialog === "archive"}
-          content={`Are you sure you want to archive "${flow.name}"? Once archived, a flow is no longer able to be viewed in the editor.`}
+          content={`Are you sure you want to archive "${flow.name}"? Once archived, a flow is no longer viewable or editable, but can be restored from the Archive tab.`}
           handleClose={handleClose}
           onConfirm={handleArchive}
           submitLabel="Archive this flow"
