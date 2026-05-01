@@ -1,10 +1,7 @@
 .git
 .claude
 .github
-node_modules
-e2e
-infrastructure
+**/node_modules
+e2e/tests/ui-driven/test-results
 apps/editor.planx.uk/build
-apps/editor.planx.uk/node_modules
 apps/localplanning.services/dist
-apps/localplanning.services/node_modules
