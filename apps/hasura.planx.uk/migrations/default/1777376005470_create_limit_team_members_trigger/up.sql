@@ -3,10 +3,12 @@ RETURNS trigger AS $$
 DECLARE
   member_count INTEGER;
 BEGIN
-  SELECT COUNT(user_id)
+  SELECT COUNT(tm.user_id)
     INTO member_count
-    FROM team_members
-   WHERE team_id = NEW.team_id;
+    FROM team_members tm
+    JOIN users u ON u.id = tm.user_id
+   WHERE tm.team_id = NEW.team_id
+     AND u.email IS NOT NULL;
 
   IF member_count >= 20 THEN
     RAISE EXCEPTION
