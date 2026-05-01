@@ -1,74 +1,83 @@
-import Button from "@mui/material/Button";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
+import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import { styled } from "@mui/material/styles";
+import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useNavigate } from "@tanstack/react-router";
-import { formatLastEditDate } from "pages/FlowEditor/utils";
-import React from "react";
+import { useState } from "react";
 import SettingsSection from "ui/editor/SettingsSection";
+import StyledTab from "ui/editor/StyledTab";
 
-import { NotificationCardProps, NotificationProps } from "./types";
+import NotificationCard from "./NotificationCard";
+import { NotificationProps } from "./types";
+import { getStatusLabel, partitionBySuperseded } from "./utils";
 
-export const Notifications = ({ notifications }: NotificationProps) => (
-  <Container maxWidth="formWrap">
-    <SettingsSection>
-      <Typography variant="h2" component="h3" gutterBottom>
-        Notifications
-      </Typography>
-      <Typography variant="body1">
-        Alerts about your Plan✕ flows.
-      </Typography>
-    </SettingsSection>
-    {!notifications.length && (
-      <WarningContainer>
-        <Typography variant="body2">
-          No active notifications found.
-        </Typography>
-      </WarningContainer>
-    )}
-    {notifications.length > 0 &&
-      notifications.map((notification) => (
-        <NotificationCard notification={notification} />
-      ))}
-  </Container>
-);
+const TabList = styled(Box)(() => ({
+  position: "relative",
+  marginLeft: "-12px",
+  [`& .${tabsClasses.indicator}`]: {
+    display: "none",
+  },
+}));
 
-// TODO handle content dynamically based on `notification.type`
-const NotificationCard = ({ notification }: NotificationCardProps) => {
+export const Notifications = ({ notifications }: NotificationProps) => {
   const navigate = useNavigate();
+  const [tab, setTab] = useState(0);
 
-  const handleClick = () => {
-    navigate({ to: `/${notification.team.slug}/${notification.flow.slug}` });
-  };
+  const unresolved = notifications.filter((n) => !n.resolvedAt);
+  const { current: activeNotifications, superseded } =
+    partitionBySuperseded(unresolved);
+  const supersededIds = new Set(superseded.map((n) => n.id));
+  const inactiveNotifications = [
+    ...superseded,
+    ...notifications.filter((n) => !!n.resolvedAt),
+  ];
+  const visibleNotifications =
+    tab === 0 ? activeNotifications : inactiveNotifications;
 
   return (
-    <Card sx={{ maxWidth: "formWrap", marginBottom: 3 }}>
-      <CardContent>
-        <Typography gutterBottom variant="body2" sx={{ color: 'text.secondary' }}>
-          {`Templated flow updated`}
+    <Container maxWidth="formWrap">
+      <SettingsSection>
+        <Typography variant="h2" component="h3" gutterBottom>
+          Notifications
         </Typography>
-        <Typography gutterBottom variant="h4">
-          {notification.flow.name}
-        </Typography>
-        <Typography gutterBottom variant="body2" sx={{ color: 'text.secondary' }}>
-          {formatLastEditDate(notification.createdAt)}
-        </Typography>
-        <Typography variant="body2" sx={{ marginTop: 1 }}>
-          Your templated flow has been updated and is ready to review and publish.
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleClick}
-        >
-          Go to flow
-        </Button>
-      </CardActions>
-    </Card>
+        <Typography variant="body1">Alerts about your Plan✕ flows.</Typography>
+      </SettingsSection>
+      <TabList sx={{ marginBottom: 3 }}>
+        <Tabs value={tab} onChange={(_, value) => setTab(value)}>
+          <StyledTab
+            label={`Active${activeNotifications.length ? ` (${activeNotifications.length})` : ""}`}
+          />
+          <StyledTab label="Inactive" />
+        </Tabs>
+      </TabList>
+      {!visibleNotifications.length && (
+        <WarningContainer>
+          <Typography variant="body2">
+            {tab === 0
+              ? "No active notifications found."
+              : "No inactive notifications found."}
+          </Typography>
+        </WarningContainer>
+      )}
+      {visibleNotifications.map((notification) => (
+        <NotificationCard
+          key={notification.id}
+          notification={notification}
+          onGoToFlow={() =>
+            navigate({
+              to: `/${notification.team.slug}/${notification.flow.slug}`,
+            })
+          }
+          statusLabel={
+            tab === 1
+              ? getStatusLabel(notification.id, supersededIds)
+              : undefined
+          }
+          sx={{ maxWidth: "formWrap", marginBottom: 3 }}
+        />
+      ))}
+    </Container>
   );
 };

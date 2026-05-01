@@ -8,6 +8,7 @@ const GET_UNRESOLVED_NOTIFICATIONS = gql`
         team: { slug: { _eq: $teamSlug } }
         resolved_at: { _is_null: true }
       }
+      distinct_on: flow_id
     ) {
       id
     }
