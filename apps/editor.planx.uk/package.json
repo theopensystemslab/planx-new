@@ -139,7 +139,7 @@
     "eslint-plugin-testing-library": "^7.16.0",
     "fake-indexeddb": "^6.2.5",
     "husky": "catalog:",
-    "jsdom": "catalog:",
+    "jsdom": "^26.1.0",
     "lint-staged": "^13.3.0",
     "msw-storybook-addon": "^2.0.6",
     "postcss": "^8.5.10",
