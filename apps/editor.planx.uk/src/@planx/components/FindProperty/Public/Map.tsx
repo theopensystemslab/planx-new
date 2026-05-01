@@ -13,7 +13,7 @@ import {
 } from "@planx/components/shared/Preview/MapContainer";
 import type { GeoJSONChangeEvent } from "lib/gis";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -90,6 +90,15 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
     }
   };
 
+  const mapRef = useCallback((node: HTMLElement | null) => {
+    if (node) {
+      (
+        node as HTMLElement & { ariaLabelOlFixedOverlay: string }
+      ).ariaLabelOlFixedOverlay =
+        "An interactive map for providing your site location";
+    }
+  }, []);
+
   const mapValidationErrorRef = useRef(props.mapValidationError);
   useEffect(() => {
     mapValidationErrorRef.current = props.mapValidationError;
@@ -140,15 +149,14 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
             </p>
             {/* @ts-ignore */}
             <my-map
+              ref={mapRef}
               id="plot-new-address-map"
-              ariaLabelOlFixedOverlay="An interactive map for providing your site location"
               data-testid="map-web-component"
               zoom={10}
               drawMode
               drawType="Point"
               drawGeojsonData={
-                coordinates &&
-                {
+                coordinates && {
                   type: "Feature",
                   geometry: {
                     type: "Point",
