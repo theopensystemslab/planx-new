@@ -53,14 +53,15 @@ const ListItemComponent = React.forwardRef<HTMLLIElement>((props, ref) => (
  */
 const Search: React.FC = () => {
   // Get ordered flow of indexed nodes from store
-  const [orderedFlow, setOrderedFlow] = useStore((state) => [
+  const [orderedFlow, setOrderedFlow, flowId] = useStore((state) => [
     state.orderedFlow,
     state.setOrderedFlow,
+    state.id,
   ]);
 
   useEffect(() => {
-    if (!orderedFlow) setOrderedFlow();
-  }, [orderedFlow, setOrderedFlow]);
+    setOrderedFlow();
+  }, [flowId, setOrderedFlow]);
 
   // Set up search input form
   const formik = useFormik<SearchNodes>({
