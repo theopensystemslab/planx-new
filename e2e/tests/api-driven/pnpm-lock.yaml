@@ -12,7 +12,7 @@ importers:
         specifier: ^11.3.0
         version: 11.3.0
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#d282d7a
+        specifier: github:theopensystemslab/planx-core#c090824
         version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f(@types/react@19.2.6)
       axios:
         specifier: ^1.15.0
