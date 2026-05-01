@@ -1,7 +1,12 @@
+import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
+import Fade from "@mui/material/Fade";
+import IconButton from "@mui/material/IconButton";
 import Popover from "@mui/material/Popover";
+import Stack from "@mui/material/Stack";
+import { styled } from "@mui/material/styles";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "@tanstack/react-router";
@@ -21,6 +26,26 @@ interface Props {
   resolvedNotifications: Notification[];
   teamSlug: string;
 }
+
+const TabList = styled(Box)(({ theme }) => ({
+  position: "relative",
+  "&::after": {
+    content: "''",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    width: "100%",
+    height: "1px",
+    backgroundColor: theme.palette.border.main,
+  },
+  [`& .${tabsClasses.root}`]: {
+    minHeight: "0",
+    padding: theme.spacing(0, 0.5),
+  },
+  [`& .${tabsClasses.indicator}`]: {
+    display: "none",
+  },
+}));
 
 const NotificationsPanel = ({
   anchorEl,
@@ -54,32 +79,54 @@ const NotificationsPanel = ({
       open={open}
       anchorEl={anchorEl}
       onClose={onClose}
-      anchorOrigin={{ vertical: "center", horizontal: "right" }}
-      transformOrigin={{ vertical: "center", horizontal: "left" }}
+      slots={{ transition: Fade }}
+      anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      transformOrigin={{ vertical: "bottom", horizontal: "left" }}
       slotProps={{
         paper: {
           sx: {
-            width: 320,
-            height: 480,
+            width: 480,
+            height: 640,
             display: "flex",
             flexDirection: "column",
+            borderRadius: (theme) => theme.shape.borderRadius,
           },
+        },
+        backdrop: {
+          sx: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
         },
       }}
     >
       <Box
         sx={{
-          px: 0.5,
-          [`& .${tabsClasses.indicator}`]: { display: "none" },
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          px: 1,
+          py: 0.5,
+          position: "sticky",
+          top: 0,
+          backgroundColor: "background.paper",
+          zIndex: 1,
         }}
       >
-        <Tabs value={tab} onChange={(_, value) => setTab(value)}>
+        <Typography variant="h4">Notifications</Typography>
+        <IconButton aria-label="close" onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      </Box>
+      <TabList>
+        <Tabs
+          value={tab}
+          onChange={(_, value) => setTab(value)}
+          variant="fullWidth"
+        >
           <StyledTab
             label={`Active${currentNotifications.length ? ` (${currentNotifications.length})` : ""}`}
           />
           <StyledTab label="Inactive" />
         </Tabs>
-      </Box>
+      </TabList>
       <Divider />
       <Box sx={{ overflowY: "auto", flex: 1, p: 1.5 }}>
         {!visibleNotifications.length && (
@@ -89,23 +136,31 @@ const NotificationsPanel = ({
               : "No inactive notifications."}
           </Typography>
         )}
-        {visibleNotifications.map((notification) => (
-          <NotificationCard
-            key={notification.id}
-            notification={notification}
-            onGoToFlow={() => handleGoToFlow(notification)}
-            statusLabel={
-              tab === 1
-                ? getStatusLabel(notification.id, supersededIds)
-                : undefined
-            }
-            sx={{ marginBottom: 1.5 }}
-          />
-        ))}
+        <Stack spacing={1}>
+          {visibleNotifications.map((notification) => (
+            <NotificationCard
+              key={notification.id}
+              notification={notification}
+              onGoToFlow={() => handleGoToFlow(notification)}
+              statusLabel={
+                tab === 1
+                  ? getStatusLabel(notification.id, supersededIds)
+                  : undefined
+              }
+            />
+          ))}
+        </Stack>
       </Box>
       <Divider />
       <Box sx={{ p: 1 }}>
-        <Button onClick={handleViewAll} size="small" fullWidth>
+        <Button
+          onClick={handleViewAll}
+          size="small"
+          variant="contained"
+          color="secondary"
+          sx={{ backgroundColor: "background.default" }}
+          fullWidth
+        >
           View all notifications
         </Button>
       </Box>
