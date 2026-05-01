@@ -224,7 +224,7 @@ const FlowStatus: React.FC = () => {
                       <Typography sx={{ mb: 2 }}>
                         {formik.values.status === "online"
                           ? `Services that are set offline are not publicly discoverable and cannot accept new responses.
-                          ${activeSessionsCount > 0 ? "Ongoing submissions will not be blocked." : ""}`
+                          ${activeSessionsCount > 0 ? "Sessions which have been saved within the last 28 days or those that are awaiting payment will still be able to resume." : ""}`
                           : "Only services that are ready to be publicly discoverable and accept responses from users should be set online."}
                       </Typography>
 
@@ -234,7 +234,7 @@ const FlowStatus: React.FC = () => {
                             This service currently has{" "}
                             <strong>{activeSessionsCount}</strong> active
                             session{activeSessionsCount > 1 ? "s" : ""} that can
-                            still be completed.
+                            still be resumed.
                           </Typography>
                           <Typography sx={{ mb: 2 }}>
                             Are you sure you want to turn this service offline?
