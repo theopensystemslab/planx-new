@@ -13,8 +13,8 @@ type UserData = {
 };
 
 export type FeedbackMetadata = {
-  teamId?: number;
-  flowId?: string;
+  teamId: number;
+  flowId: string;
   nodeId?: string | null;
   nodeType?: string | null;
   device: Bowser.Parser.ParsedResult;
@@ -48,8 +48,8 @@ export async function getInternalFeedbackMetadata(): Promise<FeedbackMetadata> {
 }
 
 export async function insertFeedbackMutation(data: {
-  teamId?: number;
-  flowId?: string;
+  teamId: number;
+  flowId: string;
   nodeId?: string | null;
   nodeType?: string | null;
   device?: Bowser.Parser.ParsedResult;
