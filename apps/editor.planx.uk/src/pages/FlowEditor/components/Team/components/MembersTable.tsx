@@ -21,6 +21,7 @@ import {
 } from "../types";
 import { AddUserModal } from "./AddUserModal";
 import { EditUserModal } from "./EditUserModal";
+import { MaximumUserModal } from "./MaximumUserModal";
 import { RemoveUserModal } from "./RemoveUserModal";
 
 const TableRowButton = styled(Button)(({ theme }) => ({
@@ -55,6 +56,8 @@ export const MembersTable = ({
   showEditMemberButton,
   showRemoveMemberButton,
 }: MembersTableProps) => {
+  /** The hard-coded team member limit value should be kept in sync with the hasura trigger (see enforce_team_member_limit **/
+  const MAX_USER_COUNT = 20;
   const [modal, setModal] = useState<ModalState>({ action: "closed" });
 
   const closeModal = () => setModal({ action: "closed" });
@@ -62,6 +65,7 @@ export const MembersTable = ({
   const editUser = (member: TeamMember) => setModal({ action: "edit", member });
   const removeUser = (member: TeamMember) =>
     setModal({ action: "remove", member });
+  const maxUsers = () => setModal({ action: "attemptedAdd" });
 
   if (members.length === 0) {
     return (
@@ -84,9 +88,7 @@ export const MembersTable = ({
             </TableBody>
           )}
         </Table>
-        {modal.action !== "closed" && (
-          <AddUserModal onClose={closeModal} />
-        )}
+        {modal.action !== "closed" && <AddUserModal onClose={closeModal} />}
       </>
     );
   }
@@ -166,7 +168,14 @@ export const MembersTable = ({
             {showAddMemberButton && (
               <TableRow>
                 <TableCell colSpan={5}>
-                  <AddButton onClick={addUser}>Add a new member</AddButton>
+                  {/* the hard-coded team member limit value should be kept in sync with the hasura trigger (see enforce_team_member_limit) */}
+                  <AddButton
+                    onClick={
+                      members.length < MAX_USER_COUNT ? addUser : maxUsers
+                    }
+                  >
+                    Add a new member
+                  </AddButton>
                 </TableCell>
               </TableRow>
             )}
@@ -175,21 +184,17 @@ export const MembersTable = ({
       </TableContainer>
 
       {modal.action === "remove" && (
-        <RemoveUserModal
-          onClose={closeModal}
-          member={modal.member}
-        />
+        <RemoveUserModal onClose={closeModal} member={modal.member} />
       )}
 
-      {modal.action === "add" && (
-        <AddUserModal onClose={closeModal}/>
-      )}
+      {modal.action === "add" && <AddUserModal onClose={closeModal} />}
 
       {modal.action === "edit" && (
-        <EditUserModal
-          onClose={closeModal}
-          member={modal.member}
-        />
+        <EditUserModal onClose={closeModal} member={modal.member} />
+      )}
+
+      {modal.action === "attemptedAdd" && (
+        <MaximumUserModal onClose={closeModal} />
       )}
     </>
   );
