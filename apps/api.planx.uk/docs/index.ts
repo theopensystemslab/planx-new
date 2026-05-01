@@ -154,6 +154,7 @@ const options = {
 };
 
 export const useSwaggerDocs = (app: Express) => {
+  if (process.env.APP_ENVIRONMENT === "test") return;
   const swaggerSpec = swaggerJSDoc(options);
   app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 };
