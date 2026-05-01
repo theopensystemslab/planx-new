@@ -63,11 +63,6 @@ const NotificationsPanel = ({
     navigate({ to: `/app/${teamSlug}/notifications` });
   };
 
-  const handleGoToFlow = (notification: Notification) => {
-    onClose();
-    navigate({ to: `/${notification.team.slug}/${notification.flow.slug}` });
-  };
-
   const { current: currentNotifications, superseded } =
     partitionBySuperseded(activeNotifications);
   const supersededIds = new Set(superseded.map((n) => n.id));
@@ -138,16 +133,16 @@ const NotificationsPanel = ({
         )}
         <Stack spacing={1}>
           {visibleNotifications.map((notification) => (
-            <NotificationCard
-              key={notification.id}
-              notification={notification}
-              onGoToFlow={() => handleGoToFlow(notification)}
-              statusLabel={
-                tab === 1
-                  ? getStatusLabel(notification.id, supersededIds)
-                  : undefined
-              }
-            />
+            <Box key={notification.id} onClick={onClose}>
+              <NotificationCard
+                notification={notification}
+                statusLabel={
+                  tab === 1
+                    ? getStatusLabel(notification.id, supersededIds)
+                    : undefined
+                }
+              />
+            </Box>
           ))}
         </Stack>
       </Box>

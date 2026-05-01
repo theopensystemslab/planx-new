@@ -4,7 +4,6 @@ import { styled } from "@mui/material/styles";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
-import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import SettingsSection from "ui/editor/SettingsSection";
 import StyledTab from "ui/editor/StyledTab";
@@ -22,7 +21,6 @@ const TabList = styled(Box)(() => ({
 }));
 
 export const Notifications = ({ notifications }: NotificationProps) => {
-  const navigate = useNavigate();
   const [tab, setTab] = useState(0);
 
   const unresolved = notifications.filter((n) => !n.resolvedAt);
@@ -65,11 +63,6 @@ export const Notifications = ({ notifications }: NotificationProps) => {
         <NotificationCard
           key={notification.id}
           notification={notification}
-          onGoToFlow={() =>
-            navigate({
-              to: `/${notification.team.slug}/${notification.flow.slug}`,
-            })
-          }
           statusLabel={
             tab === 1
               ? getStatusLabel(notification.id, supersededIds)
