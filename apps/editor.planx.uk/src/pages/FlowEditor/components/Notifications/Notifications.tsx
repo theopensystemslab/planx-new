@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
@@ -59,18 +60,19 @@ export const Notifications = ({ notifications }: NotificationProps) => {
           </Typography>
         </WarningContainer>
       )}
-      {visibleNotifications.map((notification) => (
-        <NotificationCard
-          key={notification.id}
-          notification={notification}
-          statusLabel={
-            tab === 1
-              ? getStatusLabel(notification.id, supersededIds)
-              : undefined
-          }
-          sx={{ maxWidth: "formWrap", marginBottom: 3 }}
-        />
-      ))}
+      <Stack spacing={2}>
+        {visibleNotifications.map((notification) => (
+          <NotificationCard
+            key={notification.id}
+            notification={notification}
+            statusLabel={
+              tab === 1
+                ? getStatusLabel(notification.id, supersededIds)
+                : undefined
+            }
+          />
+        ))}
+      </Stack>
     </Container>
   );
 };

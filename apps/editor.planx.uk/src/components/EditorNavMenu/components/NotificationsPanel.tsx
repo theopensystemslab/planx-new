@@ -75,6 +75,7 @@ const NotificationsPanel = ({
       anchorEl={anchorEl}
       onClose={onClose}
       slots={{ transition: Fade }}
+      marginThreshold={0}
       anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       transformOrigin={{ vertical: "bottom", horizontal: "left" }}
       slotProps={{
@@ -97,7 +98,7 @@ const NotificationsPanel = ({
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          px: 1,
+          px: 1.5,
           py: 0.5,
           position: "sticky",
           top: 0,
@@ -131,11 +132,12 @@ const NotificationsPanel = ({
               : "No inactive notifications."}
           </Typography>
         )}
-        <Stack spacing={1}>
+        <Stack spacing={1.5}>
           {visibleNotifications.map((notification) => (
             <Box key={notification.id} onClick={onClose}>
               <NotificationCard
                 notification={notification}
+                compact
                 statusLabel={
                   tab === 1
                     ? getStatusLabel(notification.id, supersededIds)
