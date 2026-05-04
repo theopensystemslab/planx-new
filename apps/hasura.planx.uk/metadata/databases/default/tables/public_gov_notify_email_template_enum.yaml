@@ -1,0 +1,3 @@
+table:
+  name: gov_notify_email_template_enum
+  schema: public
