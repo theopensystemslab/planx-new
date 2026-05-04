@@ -10,12 +10,12 @@ export const reminderTemplate: NotifyTemplate<Config> = {
 };
 
 /**
- * GovNotify generic template: https://www.notifications.service.gov.uk/services/012e65af-0eb2-45d5-87bd-4248354c4c22/templates/f1f968b2-c173-438e-bfd2-d149093580ca
+ * GovNotify general template: https://www.notifications.service.gov.uk/services/012e65af-0eb2-45d5-87bd-4248354c4c22/templates/f1f968b2-c173-438e-bfd2-d149093580ca
  */
-export const genericReminderTemplate: NotifyTemplate<GenericConfig> = {
+export const genericReminderTemplate: NotifyTemplate<GeneralConfig> = {
   id: "f1f968b2-c173-438e-bfd2-d149093580ca",
   access: "private",
-  config: {} as GenericConfig,
+  config: {} as GeneralConfig,
 };
 
 type Config = NotifyConfig<
@@ -29,6 +29,6 @@ type Config = NotifyConfig<
   }
 >;
 
-type GenericConfig = Omit<Config, "personalisation"> & {
+type GeneralConfig = Omit<Config, "personalisation"> & {
   personalisation: Omit<Config["personalisation"], "projectType">;
 };

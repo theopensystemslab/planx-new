@@ -10,12 +10,12 @@ export const expiryTemplate: NotifyTemplate<Config> = {
 };
 
 /**
- * GovNotify generic template: https://www.notifications.service.gov.uk/services/012e65af-0eb2-45d5-87bd-4248354c4c22/templates/b38532ea-9808-4367-b53d-3317d2389f8a
+ * GovNotify general template: https://www.notifications.service.gov.uk/services/012e65af-0eb2-45d5-87bd-4248354c4c22/templates/b38532ea-9808-4367-b53d-3317d2389f8a
  */
-export const genericExpiryTemplate: NotifyTemplate<GenericConfig> = {
+export const genericExpiryTemplate: NotifyTemplate<GeneralConfig> = {
   id: "b38532ea-9808-4367-b53d-3317d2389f8a",
   access: "private",
-  config: {} as GenericConfig,
+  config: {} as GeneralConfig,
 };
 
 type Config = NotifyConfig<
@@ -28,6 +28,6 @@ type Config = NotifyConfig<
   }
 >;
 
-type GenericConfig = Omit<Config, "personalisation"> & {
+type GeneralConfig = Omit<Config, "personalisation"> & {
   personalisation: Omit<Config["personalisation"], "projectType">;
 };
