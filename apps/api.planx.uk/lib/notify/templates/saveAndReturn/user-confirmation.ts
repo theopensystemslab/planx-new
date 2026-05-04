@@ -27,6 +27,6 @@ type Config = NotifyConfig<
   }
 >;
 
-type GenericConfig = Omit<Config, "personalisation"> & { 
-  personalisation: Omit<Config["personalisation"], "projectType">
+type GenericConfig = Omit<Config, "personalisation"> & {
+  personalisation: Omit<Config["personalisation"], "projectType">;
 };

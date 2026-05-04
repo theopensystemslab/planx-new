@@ -16,7 +16,7 @@ export const genericSaveTemplate: NotifyTemplate<GenericConfig> = {
   id: "98db65ed-df94-4859-875a-e15f2fe8b9ec",
   access: "public",
   config: {} as GenericConfig,
-}
+};
 
 type Config = NotifyConfig<
   EmailFooter & {
@@ -29,6 +29,6 @@ type Config = NotifyConfig<
   }
 >;
 
-type GenericConfig = Omit<Config, "personalisation"> & { 
-  personalisation: Omit<Config["personalisation"], "projectType">
+type GenericConfig = Omit<Config, "personalisation"> & {
+  personalisation: Omit<Config["personalisation"], "projectType">;
 };
