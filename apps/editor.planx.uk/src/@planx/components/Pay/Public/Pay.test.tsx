@@ -351,7 +351,9 @@ describe("Confirm component with inviteToPay", () => {
     await user.click(screen.getByText(invitePrompt));
     expect(screen.getByText("Details of your nominee")).toBeInTheDocument();
 
-    await user.type(await screen.findByLabelText("Email"), "jess@{enter}");
+    await user.click(await screen.findByLabelText("Email"));
+    await user.paste("jess@");
+    await user.keyboard("{Enter}");
     expect(
       await screen.findByText(
         /Enter an email address in the correct format, like name@example.com/,
@@ -366,10 +368,9 @@ describe("Confirm component with inviteToPay", () => {
     await user.click(screen.getByText(invitePrompt));
     expect(screen.getByText("Details of your nominee")).toBeInTheDocument();
 
-    await user.type(
-      await screen.findByLabelText("Email"),
-      "test@opensystemslab.io{enter}",
-    );
+    await user.click(await screen.findByLabelText("Email"));
+    await user.paste("test@opensystemslab.io");
+    await user.keyboard("{Enter}");
     expect(
       await screen.findByText(/Enter the full name of the person paying/),
     ).toBeInTheDocument();
@@ -382,14 +383,11 @@ describe("Confirm component with inviteToPay", () => {
     await user.click(screen.getByText(invitePrompt));
     expect(screen.getByText("Details of your nominee")).toBeInTheDocument();
 
-    await user.type(
-      await screen.findByLabelText("Email"),
-      "test@opensystemslab.io",
-    );
-    await user.type(
-      await screen.findByLabelText("Full name"),
-      "Mr Nominee{enter}",
-    );
+    await user.click(await screen.findByLabelText("Email"));
+    await user.paste("test@opensystemslab.io");
+    await user.click(await screen.findByLabelText("Full name"));
+    await user.paste("Mr Nominee");
+    await user.keyboard("{Enter}");
     expect(
       await screen.findByText(/Enter your name or organisation name/),
     ).toBeInTheDocument();
