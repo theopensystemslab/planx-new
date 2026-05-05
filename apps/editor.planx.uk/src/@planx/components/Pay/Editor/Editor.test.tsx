@@ -112,7 +112,7 @@ describe("Pay component - Editor Modal", () => {
       expect(getByDisplayValue("myValue")).toBeInTheDocument();
     });
 
-    it("allows new values to be added", { timeout: 20000 }, async () => {
+    it("allows new values to be added", async () => {
       act(() => setState({ user: mockUser, flowName: "test flow" }));
 
       const handleSubmit = vi.fn();
@@ -139,8 +139,10 @@ describe("Pay component - Editor Modal", () => {
       const keyInput = getAllByPlaceholderText("key")[2];
       const valueInput = getAllByPlaceholderText("value")[2];
 
-      await user.type(keyInput, "myNewKey");
-      await user.type(valueInput, "myNewValue");
+      await user.click(keyInput);
+      await user.paste("myNewKey");
+      await user.click(valueInput);
+      await user.paste("myNewValue");
 
       // Required to trigger submission outside the context of FormModal component
       fireEvent.submit(getByRole("form"));
@@ -224,7 +226,7 @@ describe("Pay component - Editor Modal", () => {
       );
     });
 
-    it("displays array-level errors", { timeout: 20000 }, async () => {
+    it("displays array-level errors", async () => {
       act(() => setState({ user: mockUser, flowName: "test flow" }));
 
       const handleSubmit = vi.fn();
@@ -240,15 +242,19 @@ describe("Pay component - Editor Modal", () => {
       await user.click(getByRole("button", { name: /Add static field/ }));
       const keyInput4 = getAllByPlaceholderText("key")[2];
       const valueInput4 = getAllByPlaceholderText("value")[2];
-      await user.type(keyInput4, "duplicatedKey");
-      await user.type(valueInput4, "myNewValue");
+      await user.click(keyInput4);
+      await user.paste("duplicatedKey");
+      await user.click(valueInput4);
+      await user.paste("myNewValue");
 
       // Add second duplicate key
       await user.click(getByRole("button", { name: /Add static field/ }));
       const keyInput5 = getAllByPlaceholderText("key")[3];
       const valueInput5 = getAllByPlaceholderText("value")[3];
-      await user.type(keyInput5, "duplicatedKey");
-      await user.type(valueInput5, "myNewValue");
+      await user.click(keyInput5);
+      await user.paste("duplicatedKey");
+      await user.click(valueInput5);
+      await user.paste("myNewValue");
 
       fireEvent.submit(getByRole("form"));
 
@@ -287,10 +293,12 @@ describe("Pay component - Editor Modal", () => {
       const keyInput = getAllByPlaceholderText("key")[2];
       const valueInput = getAllByPlaceholderText("value")[2];
 
-      await user.type(keyInput, "flow");
+      await user.click(keyInput);
+      await user.paste("flow");
 
       expect(valueInput).toBeEnabled();
-      await user.type(valueInput, "myNewValue");
+      await user.click(valueInput);
+      await user.paste("myNewValue");
 
       // Required to trigger submission outside the context of FormModal component
       fireEvent.submit(getByRole("form"));
@@ -308,6 +316,6 @@ describe("Pay component - Editor Modal", () => {
 
       // This tests that the user is able to fix their mistake
       expect(duplicateKeyDeleteIcon).toBeEnabled();
-    }, 10_000);
+    });
   });
 });
