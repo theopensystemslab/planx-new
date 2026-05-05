@@ -4,7 +4,7 @@ import { setup } from "test/utils";
 import { it, test, vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import { mockZooPayload } from "../../schemas/mocks/Zoo/payload";
+import { mockZooPreviouslySubmittedData } from "../../schemas/mocks/Zoo/payload";
 import { mockZooProps } from "../../schemas/mocks/Zoo/props";
 import ListComponent from "..";
 import { fillInResponse } from "./testUtils";
@@ -174,7 +174,7 @@ describe("Navigating back", () => {
     const { getAllByText, queryByLabelText, getAllByTestId } = await setup(
       <ListComponent
         {...mockZooProps}
-        previouslySubmittedData={mockZooPayload}
+        previouslySubmittedData={mockZooPreviouslySubmittedData}
       />,
     );
 

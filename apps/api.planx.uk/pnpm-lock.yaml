@@ -23,8 +23,8 @@ importers:
         specifier: ^3.1000.0
         version: 3.1015.0
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#c090824
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f(@types/react@19.2.14)
+        specifier: github:theopensystemslab/planx-core#3c3dea5
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/3c3dea57cdb9be92a95619c85b00af436b7b26dd(@types/react@19.2.14)
       '@types/isomorphic-fetch':
         specifier: ^0.0.36
         version: 0.0.36
@@ -35,8 +35,8 @@ importers:
         specifier: ^6.0.116
         version: 6.0.137(zod@3.25.76)
       axios:
-        specifier: ^1.15.0
-        version: 1.15.0
+        specifier: ^1.15.2
+        version: 1.15.2
       body-parser:
         specifier: ^2.2.2
         version: 2.2.2
@@ -1218,8 +1218,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/3c3dea57cdb9be92a95619c85b00af436b7b26dd':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/3c3dea57cdb9be92a95619c85b00af436b7b26dd}
     version: 1.0.0
 
   '@opentelemetry/api@1.9.0':
@@ -2026,8 +2026,8 @@ packages:
     resolution: {integrity: sha512-kNOjDqAh7px0XWNI+4QbzoiR/nTkHAWNud2uvnJquD1/x5a7EQZMJT0AczqK0Qn67oY/TTQ1LbUKajZpp3I9tQ==}
     engines: {node: '>=8.0.0'}
 
-  axios@1.15.0:
-    resolution: {integrity: sha512-wWyJDlAatxk30ZJer+GeCWS209sA42X+N5jU2jy6oHTp7ufw8uzUTVFBX9+wTfAlhiJXGS0Bq7X6efruWjuK9Q==}
+  axios@1.15.2:
+    resolution: {integrity: sha512-wLrXxPtcrPTsNlJmKjkPnNPK2Ihe0hn0wGSaTEiHRPxwjvJwT3hKmXF4dpqxmPO9SoNb2FsYXj/xEo0gHN+D5A==}
 
   babel-plugin-macros@3.1.0:
     resolution: {integrity: sha512-Cg7TFGpIr01vOQNODXOOaGz2NpCU5gl8x1qJFbb6hbZxR7XrcE2vtbAsTAbJ7/xwJtUuJEw8K8Zr/AE0LHlesg==}
@@ -2661,8 +2661,8 @@ packages:
   flatted@3.4.2:
     resolution: {integrity: sha512-PjDse7RzhcPkIJwy5t7KPWQSZ9cAbzQXcafsetQoD7sOJRQlGikNbx7yZp2OotDnJyrDcbyRq3Ttb18iYOqkxA==}
 
-  follow-redirects@1.15.11:
-    resolution: {integrity: sha512-deG2P0JfjrTxl50XGCDyfI97ZGVCxIpfKYmfyrQ54n5FO/0gfIES8C/Psl6kWVDolizcaaxZJnTS0QSMxvnsBQ==}
+  follow-redirects@1.16.0:
+    resolution: {integrity: sha512-y5rN/uOsadFT/JfYwhxRS5R7Qce+g3zG97+JrtFZlC9klX/W5hD7iiLzScI4nZqUS7DNUdhPgw4xI8W2LuXlUw==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'
@@ -3183,8 +3183,8 @@ packages:
     resolution: {integrity: sha512-hXdUTZYIVOt1Ex//jAQi+wTZZpUpwBj/0QsOzqegb3rGMMeJiSEu5xLHnYfBrRV4RH2+OCSOO95Is/7x1WJ4bw==}
     engines: {node: '>=10'}
 
-  marked@18.0.0:
-    resolution: {integrity: sha512-2e7Qiv/HJSXj8rDEpgTvGKsP8yYtI9xXHKDnrftrmnrJPaFNM7VRb2YCzWaX4BP1iCJ/XPduzDJZMFoqTCcIMA==}
+  marked@18.0.2:
+    resolution: {integrity: sha512-NsmlUYBS/Zg57rgDWMYdnre6OTj4e+qq/JS2ot3KrYLSoHLw+sDu0Nm1ZGpRgYAq6c+b1ekaY5NzVchMCQnzcg==}
     engines: {node: '>= 20'}
     hasBin: true
 
@@ -4107,6 +4107,7 @@ packages:
 
   uuid@10.0.0:
     resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   uuid@14.0.0:
@@ -5484,7 +5485,7 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.20.1
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f(@types/react@19.2.14)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/3c3dea57cdb9be92a95619c85b00af436b7b26dd(@types/react@19.2.14)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.4)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
@@ -5500,7 +5501,7 @@ snapshots:
       graphql-request: 6.1.0(graphql@16.13.2)
       json-schema-to-typescript: 15.0.4
       lodash-es: 4.17.23
-      marked: 18.0.0
+      marked: 18.0.2
       prettier: 3.8.3
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
@@ -6450,9 +6451,9 @@ snapshots:
 
   atomic-sleep@1.0.0: {}
 
-  axios@1.15.0:
+  axios@1.15.2:
     dependencies:
-      follow-redirects: 1.15.11
+      follow-redirects: 1.16.0
       form-data: 4.0.5
       proxy-from-env: 2.1.0
     transitivePeerDependencies:
@@ -7225,7 +7226,7 @@ snapshots:
 
   flatted@3.4.2: {}
 
-  follow-redirects@1.15.11: {}
+  follow-redirects@1.16.0: {}
 
   form-data@2.5.5:
     dependencies:
@@ -7454,7 +7455,7 @@ snapshots:
   http-proxy@1.18.1:
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.15.11
+      follow-redirects: 1.16.0
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
@@ -7790,7 +7791,7 @@ snapshots:
     dependencies:
       semver: 7.7.4
 
-  marked@18.0.0: {}
+  marked@18.0.2: {}
 
   math-intrinsics@1.1.0: {}
 
@@ -7893,7 +7894,7 @@ snapshots:
 
   notifications-node-client@8.3.0:
     dependencies:
-      axios: 1.15.0
+      axios: 1.15.2
       jsonwebtoken: 9.0.3
     transitivePeerDependencies:
       - debug

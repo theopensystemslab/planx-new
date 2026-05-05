@@ -11,7 +11,7 @@ export const computePath = (
 ): ApplicationPath => {
   if (!hasSendComponent) return ApplicationPath.SingleSession;
   if (sessionId && !isEmailCaptured) return ApplicationPath.Resume;
-  
+
   return ApplicationPath.SaveAndReturn;
 };
 
@@ -36,6 +36,7 @@ const PREVIEW_ONLY_DOMAINS = [
   "planningservices.birmingham.gov.uk",
   "planningservices.buckinghamshire.gov.uk",
   "planningservices.camden.gov.uk",
+  "planningservices.canterbury.gov.uk",
   "planningservices.doncaster.gov.uk",
   "planningservices.epsom-ewell.gov.uk",
   "planningservices.gateshead.gov.uk",

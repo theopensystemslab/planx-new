@@ -1,13 +1,13 @@
 import { screen, waitFor } from "@testing-library/react";
 import { uploadPrivateFile } from "lib/api/fileUpload/requests";
 import { cloneDeep, merge } from "lodash";
-import React from "react";
 import { setup } from "test/utils";
 import { test, vi } from "vitest";
 
+import { mockSimpleProps } from "../../schemas/mocks/Simple";
 import { mockZooProps } from "../../schemas/mocks/Zoo/props";
 import ListComponent from "..";
-import { fillInResponse } from "./testUtils";
+import { fillInSimpleResponse } from "./testUtils";
 
 Element.prototype.scrollIntoView = vi.fn();
 
@@ -215,9 +215,8 @@ describe("Form validation and error handling", () => {
 
   test(
     "an error displays if the minimum number of items is not met",
-    { timeout: 20_000 },
     async () => {
-      const mockWithMinTwo = merge(cloneDeep(mockZooProps), {
+      const mockWithMinTwo = merge(cloneDeep(mockSimpleProps), {
         schema: { min: 2 },
       });
       const { user, getByTestId, getByText } = await setup(
@@ -228,7 +227,7 @@ describe("Form validation and error handling", () => {
       expect(minNumberOfItems).toEqual(2);
 
       // Fill in one response only
-      await fillInResponse(user);
+      await fillInSimpleResponse(user);
 
       await user.click(getByTestId("continue-button"));
 
@@ -241,22 +240,21 @@ describe("Form validation and error handling", () => {
 
   test(
     "an error displays if the maximum number of items is exceeded",
-    { timeout: 40_000 },
     async () => {
       const { user, getAllByTestId, getByTestId, getByText } = await setup(
-        <ListComponent {...mockZooProps} />,
+        <ListComponent {...mockSimpleProps} />,
       );
       const addItemButton = getByTestId(/list-add-button/);
 
-      const maxNumberOfItems = mockZooProps.schema.max;
+      const maxNumberOfItems = mockSimpleProps.schema.max;
       expect(maxNumberOfItems).toEqual(3);
 
       // Complete three items
-      await fillInResponse(user);
+      await fillInSimpleResponse(user);
       await user.click(addItemButton);
-      await fillInResponse(user);
+      await fillInSimpleResponse(user);
       await user.click(addItemButton);
-      await fillInResponse(user);
+      await fillInSimpleResponse(user);
 
       const cards = getAllByTestId(/list-card/);
       waitFor(() => expect(cards).toHaveLength(3));

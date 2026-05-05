@@ -37,20 +37,15 @@ export const fetchSettingsForPublishedView = async (
 };
 
 const GET_SETTINGS_FOR_PUBLISHED_VIEW = gql`
-  query GetSettingsForPublishedView(
-    $flowSlug: String!
-    $teamSlug: String!
-  ) {
+  query GetSettingsForPublishedView($flowSlug: String!, $teamSlug: String!) {
     flows(
       limit: 1
-      where: {
-        slug: { _eq: $flowSlug }
-        team: { slug: { _eq: $teamSlug } }
-      }
+      where: { slug: { _eq: $flowSlug }, team: { slug: { _eq: $teamSlug } } }
     ) {
       id
       name
       team {
+        id
         theme {
           primaryColour: primary_colour
           actionColour: action_colour
