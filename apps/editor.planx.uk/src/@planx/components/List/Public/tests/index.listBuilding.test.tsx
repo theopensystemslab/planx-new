@@ -1,14 +1,14 @@
 import { within } from "@testing-library/react";
 import { uploadPrivateFile } from "lib/api/fileUpload/requests";
 import { cloneDeep, merge } from "lodash";
-import React from "react";
 import { setup } from "test/utils";
 import { it, test, vi } from "vitest";
 
 import { mockMaxOneProps } from "../../schemas/mocks/MaxOne";
+import { mockSimpleProps } from "../../schemas/mocks/Simple";
 import { mockZooProps } from "../../schemas/mocks/Zoo/props";
 import ListComponent from "..";
-import { fillInResponse } from "./testUtils";
+import { fillInSimpleResponse } from "./testUtils";
 
 Element.prototype.scrollIntoView = vi.fn();
 
@@ -72,15 +72,15 @@ describe("Building a list", () => {
     expect(addItemButton).not.toBeInTheDocument();
   });
 
-  test("Adding an item", { timeout: 35_000 }, async () => {
+  test("Adding an item", async () => {
     const { getAllByTestId, getByTestId, user } = await setup(
-      <ListComponent {...mockZooProps} />,
+      <ListComponent {...mockSimpleProps} />,
     );
 
     let cards = getAllByTestId(/list-card/);
     expect(cards).toHaveLength(1);
 
-    await fillInResponse(user);
+    await fillInSimpleResponse(user);
 
     const addItemButton = getByTestId("list-add-button");
     await user.click(addItemButton);
@@ -103,21 +103,21 @@ describe("Building a list", () => {
     ).toBeInTheDocument();
   });
 
-  test("Editing an item", { timeout: 45_000 }, async () => {
+  test("Editing an item", async () => {
     // Setup three cards
     const { getAllByTestId, getByTestId, user } = await setup(
-      <ListComponent {...mockZooProps} />,
+      <ListComponent {...mockSimpleProps} />,
     );
 
-    await fillInResponse(user);
+    await fillInSimpleResponse(user);
 
     const addItemButton = getByTestId("list-add-button");
 
     await user.click(addItemButton);
-    await fillInResponse(user);
+    await fillInSimpleResponse(user);
 
     await user.click(addItemButton);
-    await fillInResponse(user);
+    await fillInSimpleResponse(user);
 
     const cards = getAllByTestId(/list-card/);
     expect(cards).toHaveLength(3);
@@ -156,7 +156,6 @@ describe("Building a list", () => {
 
   test(
     "Removing an item when all cards are inactive",
-    { timeout: 35_000 },
     async () => {
       // Setup three cards
       const {
@@ -165,17 +164,17 @@ describe("Building a list", () => {
         user,
         getByLabelText,
         queryAllByTestId,
-      } = await setup(<ListComponent {...mockZooProps} />);
+      } = await setup(<ListComponent {...mockSimpleProps} />);
 
-      await fillInResponse(user);
+      await fillInSimpleResponse(user);
 
       const addItemButton = getByTestId("list-add-button");
 
       await user.click(addItemButton);
-      await fillInResponse(user);
+      await fillInSimpleResponse(user);
 
       await user.click(addItemButton);
-      await fillInResponse(user);
+      await fillInSimpleResponse(user);
 
       let cards = getAllByTestId(/list-card/);
       expect(cards).toHaveLength(3);
@@ -235,14 +234,13 @@ describe("Building a list", () => {
 
   test(
     "Removing an item when another card is active",
-    { timeout: 35_000 },
     async () => {
       // Setup two cards
       const { getAllByTestId, getByTestId, user } = await setup(
-        <ListComponent {...mockZooProps} />,
+        <ListComponent {...mockSimpleProps} />,
       );
 
-      await fillInResponse(user);
+      await fillInSimpleResponse(user);
 
       const addItemButton = getByTestId("list-add-button");
 
@@ -272,16 +270,15 @@ describe("Building a list", () => {
 
   test(
     "Cancelling an invalid (new) item removes it",
-    { timeout: 35_000 },
     async () => {
       const { getAllByTestId, getByText, user, queryAllByTestId, getByTestId } =
-        await setup(<ListComponent {...mockZooProps} />);
+        await setup(<ListComponent {...mockSimpleProps} />);
 
       let cards = getAllByTestId(/list-card/);
       expect(cards).toHaveLength(1);
 
       // "Cancel" is hidden from initial item, so fill out an item first
-      await fillInResponse(user);
+      await fillInSimpleResponse(user);
 
       const addItemButton = getByTestId("list-add-button");
       await user.click(addItemButton);
@@ -303,7 +300,6 @@ describe("Building a list", () => {
 
   test(
     "Cancelling a valid (existing) item resets previous state",
-    { timeout: 35_000 },
     async () => {
       const {
         getByLabelText,
@@ -313,9 +309,9 @@ describe("Building a list", () => {
         getByTestId,
         getAllByTestId,
         getAllByText,
-      } = await setup(<ListComponent {...mockZooProps} />);
+      } = await setup(<ListComponent {...mockSimpleProps} />);
 
-      await fillInResponse(user);
+      await fillInSimpleResponse(user);
 
       const addItemButton = getByTestId("list-add-button");
       await user.click(addItemButton);
@@ -328,7 +324,7 @@ describe("Building a list", () => {
       ).toBeInTheDocument();
 
       // "Cancel" button was hidden on first item, so fill in second item
-      await fillInResponse(user);
+      await fillInSimpleResponse(user);
 
       const secondEmail = getAllByText("richard.parker@pi.com")[1];
       expect(secondEmail).toBeInTheDocument();
