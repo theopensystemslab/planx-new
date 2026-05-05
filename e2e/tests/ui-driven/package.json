@@ -10,7 +10,7 @@
   "type": "module",
   "dependencies": {
     "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#c090824",
-    "axios": "^1.15.0",
+    "axios": "^1.15.2",
     "dotenv": "^16.6.1",
     "eslint": "^8.57.1",
     "graphql": "^16.13.2",
