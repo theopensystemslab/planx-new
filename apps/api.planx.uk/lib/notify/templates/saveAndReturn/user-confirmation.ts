@@ -12,10 +12,10 @@ export const userConfirmationTemplate: NotifyTemplate<Config> = {
 /**
  * GovNotify general template: https://www.notifications.service.gov.uk/services/012e65af-0eb2-45d5-87bd-4248354c4c22/templates/7171a340-5e63-471e-8994-0bdec45baf42
  */
-export const genericUserConfirmationTemplate: NotifyTemplate<GeneralConfig> = {
+export const generalUserConfirmationTemplate: NotifyTemplate<Config> = {
   id: "7171a340-5e63-471e-8994-0bdec45baf42",
   access: "private",
-  config: {} as GeneralConfig,
+  config: {} as Config,
 };
 
 type Config = NotifyConfig<
@@ -26,7 +26,3 @@ type Config = NotifyConfig<
     projectType: string;
   }
 >;
-
-type GeneralConfig = Omit<Config, "personalisation"> & {
-  personalisation: Omit<Config["personalisation"], "projectType">;
-};

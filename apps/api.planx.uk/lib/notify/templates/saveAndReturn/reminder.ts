@@ -12,10 +12,10 @@ export const reminderTemplate: NotifyTemplate<Config> = {
 /**
  * GovNotify general template: https://www.notifications.service.gov.uk/services/012e65af-0eb2-45d5-87bd-4248354c4c22/templates/f1f968b2-c173-438e-bfd2-d149093580ca
  */
-export const genericReminderTemplate: NotifyTemplate<GeneralConfig> = {
+export const generalReminderTemplate: NotifyTemplate<Config> = {
   id: "f1f968b2-c173-438e-bfd2-d149093580ca",
   access: "private",
-  config: {} as GeneralConfig,
+  config: {} as Config,
 };
 
 type Config = NotifyConfig<
@@ -28,7 +28,3 @@ type Config = NotifyConfig<
     resumeLink: string;
   }
 >;
-
-type GeneralConfig = Omit<Config, "personalisation"> & {
-  personalisation: Omit<Config["personalisation"], "projectType">;
-};
