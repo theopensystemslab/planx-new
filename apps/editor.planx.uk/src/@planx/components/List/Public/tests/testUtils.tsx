@@ -91,3 +91,22 @@ export const fillInResponse = async (user: UserEvent) => {
   });
   await user.click(saveButton);
 };
+
+/**
+ * Helper for tests that only care about list structure
+ * (add / remove / edit / cancel) rather than specific field types
+ *
+ * Use with mockSimpleProps (name and email fields, no file upload)
+ */
+export const fillInSimpleResponse = async (user: UserEvent) => {
+  const nameInput = screen.getByLabelText(/What's their name/);
+  await user.click(nameInput);
+  await user.paste("Richard Parker");
+
+  const emailInput = screen.getByLabelText(/email/);
+  await user.click(emailInput);
+  await user.paste("richard.parker@pi.com");
+
+  const saveButton = screen.getByRole("button", { name: /Save/ });
+  await user.click(saveButton);
+};
