@@ -50,14 +50,16 @@ const RemoveUserButton = styled(TableRowButton)(({ theme }) => ({
 
 const getRoleLabel = (role: Role) => ROLE_LABELS[role] ?? role;
 
+/** The hard-coded team member limit value should be kept in sync with the hasura trigger (see enforce_team_member_limit)
+ * e2e tests will also have to be updated if the threshold changes **/
+export const MAX_USER_COUNT = 20;
+
 export const MembersTable = ({
   members,
   showAddMemberButton,
   showEditMemberButton,
   showRemoveMemberButton,
 }: MembersTableProps) => {
-  /** The hard-coded team member limit value should be kept in sync with the hasura trigger (see enforce_team_member_limit **/
-  const MAX_USER_COUNT = 20;
   const [modal, setModal] = useState<ModalState>({ action: "closed" });
 
   const closeModal = () => setModal({ action: "closed" });
