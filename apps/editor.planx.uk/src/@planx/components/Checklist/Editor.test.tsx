@@ -114,13 +114,12 @@ describe("Checklist editor component", () => {
     );
 
     await user.click(screen.getByRole("button", { name: /Add option/i }));
-    await user.type(screen.getByPlaceholderText("Option"), "First");
+    await user.click(screen.getByPlaceholderText("Option"));
+    await user.paste("First");
 
     await user.click(screen.getByRole("button", { name: /Add "or" option/i }));
-    await user.type(
-      screen.getByPlaceholderText("Exclusive 'or' option"),
-      "Second",
-    );
+    await user.click(screen.getByPlaceholderText("Exclusive 'or' option"));
+    await user.paste("Second");
 
     await user.click(screen.getByLabelText("All required"));
 
@@ -133,7 +132,7 @@ describe("Checklist editor component", () => {
         ),
       ).toBeInTheDocument(),
     );
-  }, 10_000);
+  });
 
   it("shows an error if 'never put to user' is toggled on without a data field", async () => {
     const { user } = await setup(
@@ -171,12 +170,13 @@ describe("Checklist editor component", () => {
 
     // Set a top-level data field
     await user.click(autocompleteInput);
-    await user.type(autocompleteInput, "my.data.value");
+    await user.paste("my.data.value");
     await user.keyboard("{Enter}");
 
-    // An an option without a data field
+    // Add an option without a data field
     await user.click(screen.getByRole("button", { name: /Add option/i }));
-    await user.type(screen.getByPlaceholderText("Option"), "First");
+    await user.click(screen.getByPlaceholderText("Option"));
+    await user.paste("First");
 
     fireEvent.submit(screen.getByTestId("checklistEditorForm"));
 
@@ -185,7 +185,7 @@ describe("Checklist editor component", () => {
         screen.getByText(/At least one option must also set a data field/),
       ).toBeInTheDocument(),
     );
-  }, 20_000);
+  });
 
   it("does not show an error if at least one option sets a data field", async () => {
     const handleSubmit = vi.fn();
@@ -203,16 +203,18 @@ describe("Checklist editor component", () => {
 
     // Set a top-level data field
     await user.click(autocompleteInput);
-    await user.type(autocompleteInput, "my.data.value");
+    await user.paste("my.data.value");
     await user.keyboard("{Enter}");
 
-    // An an option without a data field
+    // Add an option without a data field
     await user.click(screen.getByRole("button", { name: /Add option/i }));
-    await user.type(screen.getByPlaceholderText("Option"), "First");
+    await user.click(screen.getByPlaceholderText("Option"));
+    await user.paste("First");
 
-    // An another option, this time with a data field
+    // Add another option, this time with a data field
     await user.click(screen.getByRole("button", { name: /Add option/i }));
-    await user.type(screen.getAllByPlaceholderText("Option")[1], "Second");
+    await user.click(screen.getAllByPlaceholderText("Option")[1]);
+    await user.paste("Second");
     const autocompleteComponentOption = screen.getByTestId(
       "data-field-autocomplete-option-1",
     );
@@ -220,13 +222,13 @@ describe("Checklist editor component", () => {
       autocompleteComponentOption,
     ).getByRole("combobox");
     await user.click(autocompleteInputOption);
-    await user.type(autocompleteInputOption, "my.option.data.value");
+    await user.paste("my.option.data.value");
     await user.keyboard("{Enter}");
 
     fireEvent.submit(screen.getByTestId("checklistEditorForm"));
 
     await waitFor(() => expect(handleSubmit).toHaveBeenCalled());
-  }, 50_000);
+  });
 
   it("only allows a single exclusive option to be added", async () => {
     const { user } = await setup(
@@ -236,7 +238,8 @@ describe("Checklist editor component", () => {
     );
 
     await user.click(screen.getByRole("button", { name: /Add option/i }));
-    await user.type(screen.getByPlaceholderText("Option"), "First");
+    await user.click(screen.getByPlaceholderText("Option"));
+    await user.paste("First");
 
     const addExclusiveOptionButton = screen.getByRole("button", {
       name: /Add "or" option/i,
@@ -331,7 +334,7 @@ describe("Checklist editor component", () => {
       "combobox",
     );
     await user.click(autocompleteInput);
-    await user.type(autocompleteInput, "my.data.value");
+    await user.paste("my.data.value");
     await user.keyboard("{Enter}");
 
     user.click(screen.getByLabelText(/Never put to user/));
@@ -344,8 +347,10 @@ describe("Checklist editor component", () => {
 
     const [first, second] = screen.getAllByPlaceholderText("Option");
 
-    await user.type(first, "First");
-    await user.type(second, "Second");
+    await user.click(first);
+    await user.paste("First");
+    await user.click(second);
+    await user.paste("Second");
 
     fireEvent.submit(screen.getByTestId("checklistEditorForm"));
 
@@ -356,7 +361,7 @@ describe("Checklist editor component", () => {
         ),
       ).toBeInTheDocument(),
     );
-  }, 30_000);
+  });
 
   it("populates existing options", async () => {
     const props: EditorProps<ComponentType.Checklist, Checklist> = {
