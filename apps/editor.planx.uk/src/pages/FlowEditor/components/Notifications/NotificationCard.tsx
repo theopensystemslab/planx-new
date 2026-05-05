@@ -1,3 +1,4 @@
+import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import { SxProps, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -29,7 +30,13 @@ const NotificationCard = ({
   compact = false,
   sx,
 }: NotificationCardProps) => (
-  <Card sx={{ position: "relative", ...sx }}>
+  <Card
+    sx={{
+      position: "relative",
+      "&:hover button": { backgroundColor: "background.default" },
+      ...sx,
+    }}
+  >
     <CardBanner
       sx={{
         justifyContent: "space-between",
@@ -60,9 +67,16 @@ const NotificationCard = ({
       <Typography variant="body2" sx={{ color: "text.secondary" }}>
         {formatLastEditDate(notification.createdAt)}
       </Typography>
-      <Typography variant={compact ? "body3" : "body2"}>
-        Your templated flow has been updated and is ready to review and publish.
-      </Typography>
+      {!statusLabel && (
+        <Button
+          variant="contained"
+          size="small"
+          color="secondary"
+          sx={{ fontSize: "0.875rem", mt: 1 }}
+        >
+          Review and publish
+        </Button>
+      )}
     </CardContent>
     <FlowCardLink
       to="/app/$team/$flow"

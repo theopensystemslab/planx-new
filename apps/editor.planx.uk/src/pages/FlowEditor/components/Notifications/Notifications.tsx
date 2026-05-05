@@ -62,7 +62,7 @@ export const Notifications = ({ notifications }: NotificationProps) => {
               <StyledTab
                 label={`Active${activeNotifications.length ? ` (${activeNotifications.length})` : ""}`}
               />
-              <StyledTab label="Inactive" />
+              <StyledTab label="Resolved" />
             </Tabs>
           </TabList>
         </Container>
@@ -73,7 +73,7 @@ export const Notifications = ({ notifications }: NotificationProps) => {
             <Typography variant="body2">
               {tab === 0
                 ? "No active notifications found."
-                : "No inactive notifications found."}
+                : "No resolved notifications found."}
             </Typography>
           </WarningContainer>
         )}

@@ -120,7 +120,7 @@ const NotificationsPanel = ({
           <StyledTab
             label={`Active${currentNotifications.length ? ` (${currentNotifications.length})` : ""}`}
           />
-          <StyledTab label="Inactive" />
+          <StyledTab label="Resolved" />
         </Tabs>
       </TabList>
       <Divider />
@@ -129,7 +129,7 @@ const NotificationsPanel = ({
           <Typography variant="body2" color="textSecondary">
             {tab === 0
               ? "No active notifications."
-              : "No inactive notifications."}
+              : "No resolved notifications."}
           </Typography>
         )}
         <Stack spacing={1.5}>
