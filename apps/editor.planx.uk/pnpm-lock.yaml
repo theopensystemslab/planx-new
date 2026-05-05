@@ -60,7 +60,7 @@ importers:
         version: 1.0.0-alpha.11
       '@opensystemslab/planx-core':
         specifier: github:theopensystemslab/planx-core#c090824
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f(@types/react@19.2.14)
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/c090824245bc32a0e4bae148b9805c555f2077f9(@types/react@19.2.14)
       '@tanstack/react-query':
         specifier: ^5.90.21
         version: 5.95.2(react@19.2.5)
@@ -1852,8 +1852,8 @@ packages:
   '@opensystemslab/map@1.0.0-alpha.11':
     resolution: {integrity: sha512-ETACPCk5Coef1L2kNT3MhIzLxVPDpyopxsTNcgeRyEqL71HBfTklGyC5+t7HgEgxRkX5wlUXqmKPNL9DdpVj8g==}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/c090824245bc32a0e4bae148b9805c555f2077f9':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/c090824245bc32a0e4bae148b9805c555f2077f9}
     version: 1.0.0
 
   '@parcel/watcher-android-arm64@2.5.6':
@@ -6706,6 +6706,7 @@ packages:
 
   uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   uzip-module@1.0.3:
@@ -8640,7 +8641,7 @@ snapshots:
     transitivePeerDependencies:
       - preact
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f(@types/react@19.2.14)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/c090824245bc32a0e4bae148b9805c555f2077f9(@types/react@19.2.14)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.4)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.4)
