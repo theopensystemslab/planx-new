@@ -13,6 +13,7 @@ it("renders without error", async () => {
     <DndProvider backend={HTML5Backend}>
       <ResponsiveQuestion node={{}} options={[]} />
     </DndProvider>,
+    { withRouter: true },
   );
   expect(screen.getByText("Responsive question")).toBeInTheDocument();
   expect(screen.getByText("Add option")).toBeInTheDocument();
@@ -23,6 +24,7 @@ it("displays the options editor when the 'Add option' button is clicked", async 
     <DndProvider backend={HTML5Backend}>
       <ResponsiveQuestion node={{}} options={[]} />
     </DndProvider>,
+    { withRouter: true },
   );
   await user.click(screen.getByRole("button", { name: /Add option/i }));
 
@@ -61,6 +63,7 @@ it("populates the modal with existing data", async () => {
         ]}
       />
     </DndProvider>,
+    { withRouter: true },
   );
 
   expect(screen.getByDisplayValue("My title")).toBeVisible();
@@ -75,6 +78,7 @@ it("can construct a valid payload", async () => {
     <DndProvider backend={HTML5Backend}>
       <ResponsiveQuestion node={{}} options={[]} handleSubmit={handleSubmit} />
     </DndProvider>,
+    { withRouter: true },
   );
 
   // Set title

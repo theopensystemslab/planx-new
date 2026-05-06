@@ -52,6 +52,7 @@ describe("error state", () => {
           dataValues={["test1", "test2", "test3"]}
         />
       </ErrorBoundary>,
+      { withRouter: true },
     );
 
     expect(getByTestId("error-summary-invalid-graph")).toBeInTheDocument();
@@ -69,6 +70,7 @@ describe("error state", () => {
           dataValues={["test1", "test2", "test3"]}
         />
       </ErrorBoundary>,
+      { withRouter: true },
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -100,6 +102,7 @@ describe("following a FindProperty component", () => {
         handleSubmit={handleSubmit}
         dataValues={["test1", "test2", "test3"]}
       />,
+      { withRouter: true },
     );
 
     expect(
@@ -135,6 +138,7 @@ describe("following a FindProperty component", () => {
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         dataValues={["test1", "test2", "test3"]}
       />,
+      { withRouter: true },
     );
 
     expect(
@@ -155,6 +159,7 @@ describe("following a FindProperty component", () => {
         handleSubmit={vi.fn()}
         dataValues={["test1", "test2", "test3"]}
       />,
+      { withRouter: true },
     );
 
     expect(
@@ -172,6 +177,7 @@ describe("following a FindProperty component", () => {
         handleSubmit={vi.fn()}
         dataValues={["test1", "test2", "test3", "road.classified"]}
       />,
+      { withRouter: true },
     );
 
     expect(
@@ -203,6 +209,7 @@ describe("following a FindProperty component", () => {
         handleSubmit={vi.fn()}
         dataValues={["test1", "test2", "test3", "road.classified"]}
       />,
+      { withRouter: true },
     );
 
     // GIS data present
@@ -227,6 +234,7 @@ describe("following a FindProperty component", () => {
           handleSubmit={vi.fn()}
           dataValues={["test1", "test2", "test3"]}
         />,
+        { withRouter: true },
       );
 
     expect(
@@ -267,6 +275,7 @@ describe("following a FindProperty component", () => {
         fn="property.constraints.planning"
         handleSubmit={vi.fn()}
       />,
+      { withRouter: true },
     );
 
     expect(
@@ -306,6 +315,7 @@ describe("selectable datasets in editor", () => {
           .filter((d) => d.val !== "road.classified")
           .map((d) => d.val)}
       />,
+      { withRouter: true },
     );
 
     // GIS data present
@@ -329,6 +339,7 @@ describe("selectable datasets in editor", () => {
         handleSubmit={vi.fn()}
         dataValues={["road.classified"]}
       />,
+      { withRouter: true },
     );
 
     await act(async () => {

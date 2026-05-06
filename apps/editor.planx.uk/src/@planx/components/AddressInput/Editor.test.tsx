@@ -12,6 +12,7 @@ describe("AddressInputComponent - Editor Modal", () => {
       <DndProvider backend={HTML5Backend}>
         <AddressInputComponent id="test" />
       </DndProvider>,
+      { withRouter: true },
     );
     expect(screen.getByText("Address input")).toBeInTheDocument();
   });
@@ -22,6 +23,7 @@ describe("AddressInputComponent - Editor Modal", () => {
       <DndProvider backend={HTML5Backend}>
         <AddressInputComponent id="test" handleSubmit={handleSubmit} />
       </DndProvider>,
+      { withRouter: true },
     );
 
     fireEvent.submit(screen.getByRole("form"));
@@ -37,6 +39,7 @@ describe("AddressInputComponent - Editor Modal", () => {
       <DndProvider backend={HTML5Backend}>
         <AddressInputComponent id="test" handleSubmit={handleSubmit} />
       </DndProvider>,
+      { withRouter: true },
     );
 
     const title = screen.getByPlaceholderText("Title");
@@ -58,6 +61,7 @@ describe("AddressInputComponent - Editor Modal", () => {
       <DndProvider backend={HTML5Backend}>
         <AddressInputComponent id="test" handleSubmit={handleSubmit} />
       </DndProvider>,
+      { withRouter: true },
     );
 
     const title = screen.getByPlaceholderText("Title");

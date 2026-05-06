@@ -12,6 +12,7 @@ describe("ContactInputComponent - Editor Modal", () => {
       <DndProvider backend={HTML5Backend}>
         <ContactInputComponent id="test" />
       </DndProvider>,
+      { withRouter: true },
     );
     expect(screen.getByText("Contact input")).toBeInTheDocument();
   });
@@ -22,6 +23,7 @@ describe("ContactInputComponent - Editor Modal", () => {
       <DndProvider backend={HTML5Backend}>
         <ContactInputComponent id="test" handleSubmit={handleSubmit} />
       </DndProvider>,
+      { withRouter: true },
     );
 
     fireEvent.submit(screen.getByRole("form"));
@@ -37,6 +39,7 @@ describe("ContactInputComponent - Editor Modal", () => {
       <DndProvider backend={HTML5Backend}>
         <ContactInputComponent id="test" handleSubmit={handleSubmit} />
       </DndProvider>,
+      { withRouter: true },
     );
 
     const title = screen.getByPlaceholderText("Title");
@@ -58,6 +61,7 @@ describe("ContactInputComponent - Editor Modal", () => {
       <DndProvider backend={HTML5Backend}>
         <ContactInputComponent id="test" handleSubmit={handleSubmit} />
       </DndProvider>,
+      { withRouter: true },
     );
 
     const title = screen.getByPlaceholderText("Title");

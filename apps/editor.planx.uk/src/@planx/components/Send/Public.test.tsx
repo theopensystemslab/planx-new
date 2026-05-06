@@ -53,6 +53,7 @@ it("displays a warning at /draft URLs", async () => {
   window.history.pushState({}, "", "/draft");
   const { getByText } = await setup(
     <SendComponent title="Send" destinations={["bops", "uniform"]} />,
+    { withRouter: true },
   );
 
   expect(getByText(/You can only test submissions on/)).toBeVisible();
@@ -62,6 +63,7 @@ it("displays a warning at /preview URLs", async () => {
   window.history.pushState({}, "", "/preview");
   const { getByText } = await setup(
     <SendComponent title="Send" destinations={["bops", "uniform"]} />,
+    { withRouter: true },
   );
 
   expect(getByText(/You can only test submissions on/)).toBeVisible();
@@ -85,6 +87,7 @@ it("displays loading messages to the user", async () => {
       destinations={["bops", "uniform"]}
       handleSubmit={handleSubmit}
     />,
+    { withRouter: true },
   );
 
   // Initial loading state
@@ -117,6 +120,7 @@ it("generates a valid payload for the API", async () => {
       destinations={destinations}
       handleSubmit={handleSubmit}
     />,
+    { withRouter: true },
   );
 
   await waitFor(() => expect(handleSubmit).toHaveBeenCalledTimes(1));
@@ -139,6 +143,7 @@ it("generates a valid breadcrumb", { retry: 1 }, async () => {
       destinations={["bops", "uniform"]}
       handleSubmit={handleSubmit}
     />,
+    { withRouter: true },
   );
 
   await waitFor(() => expect(handleSubmit).toHaveBeenCalledTimes(1));
@@ -161,6 +166,7 @@ it("should not have any accessibility violations", async () => {
       destinations={["bops", "uniform"]}
       handleSubmit={handleSubmit}
     />,
+    { withRouter: true },
   );
   const results = await axe(container);
   expect(results).toHaveNoViolations();

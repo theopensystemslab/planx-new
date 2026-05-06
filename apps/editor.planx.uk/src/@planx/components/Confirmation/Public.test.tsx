@@ -30,6 +30,7 @@ it("should not have any accessibility violations", async () => {
       moreInfo="more info"
       contactInfo="contact info"
     />,
+    { withRouter: true },
   );
   const results = await axe(container);
   expect(results).toHaveNoViolations();
@@ -70,6 +71,7 @@ describe("Confirmation component", () => {
         contactInfo="contact info"
         handleSubmit={handleSubmit}
       />,
+      { withRouter: true },
     );
 
     expect(screen.queryByText("Continue")).not.toBeInTheDocument();
@@ -109,6 +111,7 @@ describe("Confirmation component", () => {
         contactInfo="contact info"
         handleSubmit={handleSubmit}
       />,
+      { withRouter: true },
     );
 
     expect(screen.queryByText("Continue")).toBeInTheDocument();

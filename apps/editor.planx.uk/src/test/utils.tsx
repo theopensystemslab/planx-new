@@ -55,30 +55,44 @@ const testApolloClient = new ApolloClient({
   },
 });
 
+interface SetupOptions {
+  withRouter?: boolean;
+}
+
+const Providers: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <ToastContextProvider>
+    <ApolloProvider client={testApolloClient}>
+      <QueryClientProvider client={testQueryClient}>
+        <ThemeProvider theme={defaultTheme}>{children}</ThemeProvider>
+      </QueryClientProvider>
+    </ApolloProvider>
+  </ToastContextProvider>
+);
+
 /**
- * Setup @testing-library/react environment with userEvent and TanStack Router
+ * Setup @testing-library/react environment with userEvent and (optionally) TanStack Router
  * https://testing-library.com/docs/user-event/intro#writing-tests-with-userevent
  *
  * Note: This function is async to allow the router to finish rendering.
- * Tests must await the setup() call.
  */
 export const setup = async (
   jsx: React.JSX.Element,
+  { withRouter = false }: SetupOptions = {},
 ): Promise<Record<"user", UserEvent> & RenderResult> => {
   testQueryClient.clear();
   const user = userEvent.setup();
 
+  // Lightweight setup - no router
+  if (!withRouter) {
+    const renderResult = render(<Providers>{jsx}</Providers>);
+    return { user, ...renderResult };
+  }
+
   const rootRoute = createRootRoute({
     component: () => (
-      <ToastContextProvider>
-        <ApolloProvider client={testApolloClient}>
-          <QueryClientProvider client={testQueryClient}>
-            <ThemeProvider theme={defaultTheme}>
-              <Outlet />
-            </ThemeProvider>
-          </QueryClientProvider>
-        </ApolloProvider>
-      </ToastContextProvider>
+      <Providers>
+        <Outlet />
+      </Providers>
     ),
     notFoundComponent: CatchAllComponent,
   });
