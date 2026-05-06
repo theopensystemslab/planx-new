@@ -5,16 +5,12 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     globals: true,
+    pool: "threads",
     setupFiles: [
       "./src/test/jsdom.ts",
       "./src/test/mockServer.ts",
       "./src/test/mui.tsx",
     ],
-    environmentOptions: {
-      jsdom: {
-        resources: "usable",
-      },
-    },
   },
   plugins: [tsconfigPaths()],
 });
