@@ -80,9 +80,11 @@ export const FlowTable: React.FC<FlowTableProps> = ({
                 showDetails={showDetails}
               />
             ))}
-            <SpacerTableRow>
-              <TableCell colSpan={99} />
-            </SpacerTableRow>
+            {pinnedFlows.length > 0 && (
+              <SpacerTableRow>
+                <TableCell colSpan={99} />
+              </SpacerTableRow>
+            )}
             {unpinnedFlows.map((flow) => (
               <FlowTableRow
                 key={flow.slug}
