@@ -11,6 +11,7 @@ it("renders without error", async () => {
     <DndProvider backend={HTML5Backend}>
       <Question node={{}} options={[]} />
     </DndProvider>,
+    { withRouter: true },
   );
   expect(screen.getByText("Question")).toBeInTheDocument();
   expect(screen.getByText("Add option")).toBeInTheDocument();
@@ -21,6 +22,7 @@ it("displays the options editor when the 'Add option' button is clicked", async 
     <DndProvider backend={HTML5Backend}>
       <Question node={{}} options={[]} />
     </DndProvider>,
+    { withRouter: true },
   );
   await user.click(screen.getByRole("button", { name: /Add option/i }));
 
@@ -34,6 +36,7 @@ describe("validation", () => {
       <DndProvider backend={HTML5Backend}>
         <Question node={{}} options={[]} />
       </DndProvider>,
+      { withRouter: true },
     );
     await user.click(screen.getByRole("button", { name: /Add option/i }));
     await user.type(

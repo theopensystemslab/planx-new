@@ -23,6 +23,7 @@ describe("when the Feedback component is rendered", async () => {
   it("should not have any accessibility violations", async () => {
     const { container } = await setup(
       <FeedbackComponent feedbackRequired={false} />,
+      { withRouter: true },
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -30,6 +31,7 @@ describe("when the Feedback component is rendered", async () => {
   it("should be navigable by keyboard", async () => {
     const { user } = await setup(
       <FeedbackComponent feedbackRequired={false} />,
+      { withRouter: true },
     );
 
     const ratingButtons = screen.getAllByRole("button");

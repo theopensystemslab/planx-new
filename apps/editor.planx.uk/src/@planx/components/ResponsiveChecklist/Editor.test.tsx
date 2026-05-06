@@ -39,6 +39,7 @@ describe("Responsive Checklist editor component", async () => {
       <DndProvider backend={HTML5Backend}>
         <ResponsiveChecklistEditor options={[]} />
       </DndProvider>,
+      { withRouter: true },
     );
     expect(screen.getByText("Responsive checklist")).toBeInTheDocument();
     expect(screen.getByText("Add option")).toBeInTheDocument();
@@ -49,6 +50,7 @@ describe("Responsive Checklist editor component", async () => {
       <DndProvider backend={HTML5Backend}>
         <ResponsiveChecklistEditor options={[]} />
       </DndProvider>,
+      { withRouter: true },
     );
 
     await user.click(screen.getByLabelText("Expandable"));
@@ -63,6 +65,7 @@ describe("Responsive Checklist editor component", async () => {
       <DndProvider backend={HTML5Backend}>
         <ResponsiveChecklistEditor options={[]} />
       </DndProvider>,
+      { withRouter: true },
     );
 
     await user.click(screen.getByRole("button", { name: /Add option/i }));
@@ -76,6 +79,7 @@ describe("Responsive Checklist editor component", async () => {
       <DndProvider backend={HTML5Backend}>
         <ResponsiveChecklistEditor options={[]} />
       </DndProvider>,
+      { withRouter: true },
     );
 
     await user.click(screen.getByLabelText("Expandable"));
@@ -94,6 +98,7 @@ describe("Responsive Checklist editor component", async () => {
       <DndProvider backend={HTML5Backend}>
         <ResponsiveChecklistEditor options={[]} />
       </DndProvider>,
+      { withRouter: true },
     );
 
     expect(
@@ -112,6 +117,7 @@ describe("Responsive Checklist editor component", async () => {
       <DndProvider backend={HTML5Backend}>
         <ResponsiveChecklistEditor options={[]} />
       </DndProvider>,
+      { withRouter: true },
     );
 
     const autocompleteComponent = screen.getByTestId("checklist-data-field");
@@ -144,6 +150,7 @@ describe("Responsive Checklist editor component", async () => {
       <DndProvider backend={HTML5Backend}>
         <ResponsiveChecklistEditor options={[]} handleSubmit={handleSubmit} />
       </DndProvider>,
+      { withRouter: true },
     );
 
     const autocompleteComponent = screen.getByTestId("checklist-data-field");
@@ -183,6 +190,7 @@ describe("Responsive Checklist editor component", async () => {
       <DndProvider backend={HTML5Backend}>
         <ResponsiveChecklistEditor options={[]} />
       </DndProvider>,
+      { withRouter: true },
     );
 
     await user.click(screen.getByRole("button", { name: /Add option/i }));
@@ -256,6 +264,7 @@ describe("Responsive Checklist editor component", async () => {
           {...props}
         />
       </DndProvider>,
+      { withRouter: true },
     );
 
     fireEvent.submit(screen.getByTestId("checklistEditorForm"));
@@ -325,6 +334,7 @@ describe("Responsive Checklist editor component", async () => {
           {...props}
         />
       </DndProvider>,
+      { withRouter: true },
     );
 
     expect(screen.getByDisplayValue("Apple")).toBeVisible();
@@ -397,6 +407,7 @@ describe("Responsive Checklist editor component", async () => {
           {...props}
         />
       </DndProvider>,
+      { withRouter: true },
     );
 
     expect(screen.getByDisplayValue("First group")).toBeVisible();
@@ -417,6 +428,7 @@ describe("Responsive Checklist editor component", async () => {
           handleSubmit={handleSubmit}
         />
       </DndProvider>,
+      { withRouter: true },
     );
 
     // Set title

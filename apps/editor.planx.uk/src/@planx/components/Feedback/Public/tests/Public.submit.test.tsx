@@ -53,6 +53,7 @@ describe.each([
           handleSubmit={handleSubmit}
           feedbackRequired={false}
         />,
+        { withRouter: true },
       );
 
       switch (dataType) {
@@ -85,6 +86,7 @@ describe("when feedback is required but the user does not submit any data", asyn
   beforeEach(async () => {
     const { user } = await setup(
       <FeedbackComponent handleSubmit={handleSubmit} feedbackRequired={true} />,
+      { withRouter: true },
     );
     await user.click(screen.getByTestId("continue-button"));
   });
@@ -117,6 +119,7 @@ describe("When the user presses to go back to the feedback component", () => {
           },
         }}
       />,
+      { withRouter: true },
     );
 
     expect(screen.getByText("I wrote this previously")).toBeVisible();
