@@ -226,7 +226,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles(format('{0}/**', '!{0}/build/**', env.EDITOR_DIRECTORY)) }}
+          key: ${{ runner.os }}-${{ hashFiles(format('{0}/**', env.EDITOR_DIRECTORY)) }}
       - name: Download LPS build assets
         id: cache-localplanning-build-assets
         uses: actions/cache@v5
@@ -373,7 +373,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles(format('{0}/**', '!{0}/build/**', env.EDITOR_DIRECTORY)) }}
+          key: ${{ runner.os }}-${{ hashFiles(format('{0}/**', env.EDITOR_DIRECTORY)) }}
       - name: upload built editor
         uses: appleboy/scp-action@master
         with:
