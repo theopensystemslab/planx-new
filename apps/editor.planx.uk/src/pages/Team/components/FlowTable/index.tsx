@@ -24,13 +24,16 @@ import {
   FlowDateCell,
   FlowStatusCell,
   FlowTitleCell,
+  SpacerTableRow,
   StyledTable,
   StyledTableHead,
   StyledTableRow,
 } from "./styles";
 
 interface FlowTableProps {
-  flows: FlowSummary[];
+  flows?: FlowSummary[];
+  pinnedFlows?: FlowSummary[];
+  unpinnedFlows?: FlowSummary[];
   teamId: number;
   teamSlug: string;
   updateFlow?: (flow: FlowSummary) => void;
@@ -39,11 +42,15 @@ interface FlowTableProps {
 
 export const FlowTable: React.FC<FlowTableProps> = ({
   flows,
+  pinnedFlows,
+  unpinnedFlows,
   teamSlug,
   view,
 }) => {
   const { headerText } = useFlowSortDisplay();
   const showDetails = view === "flows";
+  const useSplitLayout =
+    pinnedFlows !== undefined && unpinnedFlows !== undefined;
 
   return (
     <StyledTable>
@@ -62,15 +69,43 @@ export const FlowTable: React.FC<FlowTableProps> = ({
         </TableRow>
       </StyledTableHead>
       <TableBody>
-        {flows.map((flow) => (
-          <FlowTableRow
-            key={flow.slug}
-            flow={flow}
-            teamSlug={teamSlug}
-            view={view}
-            showDetails={showDetails}
-          />
-        ))}
+        {useSplitLayout ? (
+          <>
+            {pinnedFlows.map((flow) => (
+              <FlowTableRow
+                key={flow.slug}
+                flow={flow}
+                teamSlug={teamSlug}
+                view={view}
+                showDetails={showDetails}
+              />
+            ))}
+            {pinnedFlows.length > 0 && (
+              <SpacerTableRow>
+                <TableCell colSpan={99} />
+              </SpacerTableRow>
+            )}
+            {unpinnedFlows.map((flow) => (
+              <FlowTableRow
+                key={flow.slug}
+                flow={flow}
+                teamSlug={teamSlug}
+                view={view}
+                showDetails={showDetails}
+              />
+            ))}
+          </>
+        ) : (
+          flows?.map((flow) => (
+            <FlowTableRow
+              key={flow.slug}
+              flow={flow}
+              teamSlug={teamSlug}
+              view={view}
+              showDetails={showDetails}
+            />
+          ))
+        )}
       </TableBody>
     </StyledTable>
   );

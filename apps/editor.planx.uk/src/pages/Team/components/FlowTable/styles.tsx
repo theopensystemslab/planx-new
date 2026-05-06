@@ -5,6 +5,16 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { inputFocusStyle } from "theme";
 
+export const SpacerTableRow = styled(TableRow)(({ theme }) => ({
+  height: theme.spacing(3),
+  backgroundColor: `${theme.palette.background.paper} !important`,
+  pointerEvents: "none",
+  [`& .${tableCellClasses.root}`]: {
+    padding: "0 !important",
+    borderBottom: `1px solid ${theme.palette.border.main} !important`,
+  },
+}));
+
 import { CustomLink } from "../../../../ui/shared/CustomLink/CustomLink";
 
 export const StyledTable = styled(Table)(({ theme }) => ({
@@ -12,9 +22,8 @@ export const StyledTable = styled(Table)(({ theme }) => ({
   marginBottom: theme.spacing(2),
   zIndex: 1,
   position: "relative",
-  border: `1px solid ${theme.palette.border.main}`,
-  borderBottom: 0,
   borderCollapse: "separate",
+  borderSpacing: 0,
   [`& .${tableCellClasses.root}`]: {
     padding: theme.spacing(1.5, 2),
     borderBottom: `1px solid ${theme.palette.border.main}`,
@@ -24,12 +33,17 @@ export const StyledTable = styled(Table)(({ theme }) => ({
 export const StyledTableHead = styled(TableHead)(({ theme }) => ({
   [`& .${tableCellClasses.root}`]: {
     backgroundColor: theme.palette.background.default,
+    borderTop: `1px solid ${theme.palette.border.main}`,
     borderBottom: `1px solid ${theme.palette.border.main}`,
     position: "sticky",
     top: 0,
     zIndex: theme.zIndex.appBar,
+    "&:first-of-type": {
+      borderLeft: `1px solid ${theme.palette.border.main}`,
+    },
     "&:last-of-type": {
       borderLeft: `1px solid ${theme.palette.border.main}`,
+      borderRight: `1px solid ${theme.palette.border.main}`,
     },
   },
 }));
@@ -55,6 +69,12 @@ export const StyledTableRow = styled(TableRow, {
       : theme.palette.background.default,
     "&:hover": {
       backgroundColor: hoverBackground,
+    },
+    "& > td:first-of-type": {
+      borderLeft: `1px solid ${theme.palette.border.main}`,
+    },
+    "& > td:last-of-type": {
+      borderRight: `1px solid ${theme.palette.border.main}`,
     },
     "& .actions-cell": {
       cursor: "default",
