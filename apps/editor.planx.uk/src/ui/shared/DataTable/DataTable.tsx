@@ -130,6 +130,7 @@ export const DataTable = <T,>({
           slots={{
             toolbar: CustomToolbar,
           }}
+          showToolbar
           getRowId={(row) => row.id}
           processRowUpdate={onProcessRowUpdate}
           checkboxSelection={checkboxSelection}
