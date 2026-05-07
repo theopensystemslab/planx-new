@@ -5,7 +5,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { cardBoxShadow, FONT_WEIGHT_SEMI_BOLD } from "theme";
 
-export const MENU_WIDTH_COMPACT = 51;
+export const MENU_WIDTH_COMPACT = 48;
 export const MENU_WIDTH_FULL = 200;
 
 export const Root = styled(Box, {
@@ -39,7 +39,7 @@ export const MenuWrap = styled("ul")(({ theme }) => ({
 }));
 
 export const MenuItem = styled("li")(({ theme }) => ({
-  margin: theme.spacing(0.5, 0),
+  margin: theme.spacing(0.75, 0),
   padding: 0,
 }));
 
@@ -81,10 +81,10 @@ export const MenuButton = styled(IconButton, {
 
 export const AccordionContent = styled("ul")(({ theme }) => ({
   listStyle: "none",
-  margin: theme.spacing(0, 0.25, 0, 1.25),
+  margin: theme.spacing(0, 0.25, 0, 1.75),
   padding: 0,
   borderLeft: `2px solid ${theme.palette.border.light}`,
-  paddingLeft: theme.spacing(0.75),
+  paddingLeft: theme.spacing(0.8),
 }));
 
 export const Subtitle = styled(Typography)(({ theme }) => ({
