@@ -4,7 +4,7 @@ import { differenceInDays } from "date-fns";
 import { gql } from "graphql-request";
 
 import { $api } from "../../../client/index.js";
-import { sendEmail } from "../../../lib/notify/index.js";
+import { resolveNotifyTemplate, sendEmail } from "../../../lib/notify/index.js";
 import type { LowCalSession } from "../../../types.js";
 import {
   DAYS_UNTIL_EXPIRY,
@@ -25,7 +25,14 @@ const resumeApplication = async (teamSlug: string, email: string) => {
     reference: null,
     emailReplyToId: team.settings.emailReplyToId,
   };
-  const response = await sendEmail("resume", email, config);
+  const hasGeneralSession = sessions.some(
+    (s) => s.flow.email_template === "general",
+  );
+  const template = resolveNotifyTemplate(
+    "resume",
+    hasGeneralSession ? "general" : "application",
+  );
+  const response = await sendEmail(template, email, config);
   return response;
 };
 
@@ -62,6 +69,7 @@ const validateRequest = async (
           data
           flow {
             slug
+            email_template
           }
         }
         teams(where: { slug: { _eq: $teamSlug } }) {

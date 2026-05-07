@@ -76,6 +76,7 @@ export interface LowCalSession {
   flow: {
     slug: string;
     name: string;
+    email_template: "application" | "general";
     team: Team;
   };
   lockedAt?: string;
