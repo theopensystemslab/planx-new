@@ -10,10 +10,10 @@ We use [Playwright](https://playwright.dev/docs/api/class-test) to run UI driven
 
 ### Running UI-driven tests
 
-1. Navigate to `/tests/ui-driven`
-2. Run `pnpm install` to install the Playwright package.
-3. Run `pnpm exec playwright install` to install the Playwright test browsers.
-4. Run the tests with `pnpm test`
+1. From the project root, install all dependencies: `pnpm install`
+2. Build the Editor in test mode: `VITE_APP_ENV=test pnpm --filter editor.planx.uk build`
+3. Install Playwright test browsers (from `e2e/tests/ui-driven`): `pnpm exec playwright install --with-deps chromium`
+4. Run the tests (from `e2e/`): `pnpm test`
 
 ## API driven tests
 

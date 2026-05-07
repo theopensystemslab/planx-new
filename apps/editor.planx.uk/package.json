@@ -47,7 +47,7 @@
     "date-fns": "^2.30.0",
     "dompurify": "^3.4.0",
     "formik": "^2.4.9",
-    "fuse.js": "^7.1.0",
+    "fuse.js": "7.1.0",
     "graphql": "^16.13.2",
     "graphql-tag": "^2.12.6",
     "idb": "^8.0.3",
@@ -155,7 +155,6 @@
     "vitest": "^3.2.4",
     "vitest-axe": "1.0.0-pre.5"
   },
-  "packageManager": "pnpm@10.30.2",
   "scripts": {
     "prestart": "../../scripts/check-containers.sh dev",
     "start": "vite --open",
@@ -197,29 +196,6 @@
     ],
     "src/**/*.{ts,tsx}": [
       "scripts/tsc-lint.sh"
-    ]
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@opensystemslab/planx-core",
-      "@parcel/watcher",
-      "@swc/core",
-      "core-js",
-      "esbuild",
-      "preact"
-    ],
-    "overrides": {
-      "linkifyjs@<4.3.2": ">=4.3.2",
-      "micromatch@<4.0.8": ">=4.0.8",
-      "serialize-javascript": "^7.0.3"
-    },
-    "ignoredBuiltDependencies": [
-      "msw"
-    ]
-  },
-  "msw": {
-    "workerDirectory": [
-      "public"
     ]
   }
 }

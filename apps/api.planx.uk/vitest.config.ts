@@ -29,7 +29,7 @@ export default defineConfig({
   resolve: {
     alias: [
       {
-        find: /^(.*)\.js$/,
+        find: /^(\..*)\.js$/,
         replacement: "$1",
       },
     ],

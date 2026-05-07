@@ -7,7 +7,6 @@
     "encrypt": "tsx encrypt.ts",
     "decrypt": "tsx decrypt.ts"
   },
-  "packageManager": "pnpm@10.30.2",
   "keywords": [],
   "dependencies": {
     "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#3c3dea5",
@@ -15,10 +14,5 @@
     "typescript": "~5.9.3"
   },
   "author": "",
-  "license": "ISC",
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@opensystemslab/planx-core"
-    ]
-  }
+  "license": "ISC"
 }

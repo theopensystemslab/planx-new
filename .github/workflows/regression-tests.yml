@@ -25,14 +25,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
       - uses: ./.github/actions/setup-node-pnpm
       - run: pnpm install --frozen-lockfile
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
       - name: Postgres Tests
         run: ./${{ env.HASURA_DIRECTORY }}/run-postgres-tests.sh
       - run: pnpm i -g hasura-cli@2.36.1
       - name: Hasura Tests
-        run: pnpm install --frozen-lockfile && pnpm test
+        run: pnpm test
         working-directory: ${{ env.HASURA_DIRECTORY }}/tests
 
   api_tests:
@@ -49,9 +48,8 @@ jobs:
         uses: ./.github/actions/setup-node-pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        working-directory: ${{ env.API_DIRECTORY }}
       - name: Run API Tests
-        run: pnpm install --frozen-lockfile && pnpm check --quiet && pnpm test
+        run: pnpm check --quiet && pnpm test
         working-directory: ${{ env.API_DIRECTORY }}
 
   test_react:
@@ -66,7 +64,6 @@ jobs:
       - name: Setup Node and PNPM
         uses: ./.github/actions/setup-node-pnpm
       - run: pnpm install --frozen-lockfile
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm test:silent --retry=1
@@ -86,13 +83,15 @@ jobs:
         uses: ./.github/actions/setup-node-pnpm
       - name: PNPM Install
         run: pnpm install --frozen-lockfile
-        working-directory: e2e
       - name: Code checks
         run: pnpm check
         working-directory: e2e
       - name: Install Playwright Dependencies
-        run: pnpm playwright install --with-deps
+        run: pnpm playwright install --with-deps chromium
         working-directory: e2e/tests/ui-driven
+      - name: Build editor (test mode)
+        run: VITE_APP_ENV=test pnpm build
+        working-directory: apps/editor.planx.uk
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
       - name: End-to-end Tests
