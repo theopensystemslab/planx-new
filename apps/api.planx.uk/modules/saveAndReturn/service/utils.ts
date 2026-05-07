@@ -5,7 +5,7 @@ import { gql } from "graphql-request";
 
 import { $api } from "../../../client/index.js";
 import type { Template } from "../../../lib/notify/templates/index.js";
-import { getClientForTemplate, sendEmail } from "../../../lib/notify/index.js";
+import { getClientForTemplate, resolveNotifyTemplate, sendEmail } from "../../../lib/notify/index.js";
 import type { LowCalSession } from "../../../types.js";
 
 const DAYS_UNTIL_EXPIRY = 28;
@@ -57,7 +57,7 @@ const sendSingleApplicationEmail = async ({
   sessionId: string;
 }) => {
   try {
-    const { flowSlug, flowName, team, session } =
+    const { flowSlug, flowName, team, session, resolvedTemplate } =
       await validateSingleSessionRequest(email, sessionId, template);
     const config = {
       personalisation: getPersonalisation(session, flowSlug, flowName, team),
@@ -67,7 +67,7 @@ const sendSingleApplicationEmail = async ({
     const firstSave = !session.hasUserSaved;
     if (firstSave && !session.submittedAt)
       await setupEmailEventTriggers(sessionId);
-    return await sendEmail(template, email, config);
+    return await sendEmail(resolvedTemplate, email, config);
   } catch (error) {
     throw Error((error as Error).message);
   }
@@ -97,6 +97,7 @@ const validateSingleSessionRequest = async (
           flow {
             slug
             name
+            email_template
             team {
               name
               slug
@@ -128,11 +129,15 @@ const validateSingleSessionRequest = async (
 
     if (!session) throw Error(`Unable to find session: ${sessionId}`);
 
+    const emailTemplate = session.flow.email_template;
+    const resolvedTemplate = resolveNotifyTemplate(template, emailTemplate);
+
     return {
       flowSlug: session.flow.slug,
       flowName: session.flow.name,
       team: session.flow.team,
       session: getSessionDetails(session),
+      resolvedTemplate,
     };
   } catch (error) {
     throw Error(`Unable to validate request. ${(error as Error).message}`);

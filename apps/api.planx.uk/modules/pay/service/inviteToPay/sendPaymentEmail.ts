@@ -4,6 +4,7 @@ import { gql } from "graphql-request";
 import type { Template } from "../../../../lib/notify/templates/index.js";
 import {
   getClientForTemplate,
+  resolveNotifyTemplate,
   sendEmail,
 } from "../../../../lib/notify/index.js";
 import {
@@ -16,6 +17,7 @@ interface SessionDetails {
   flow: {
     slug: string;
     name: string;
+    email_template: "application" | "general";
     team: Team;
   };
 }
@@ -40,7 +42,11 @@ const sendSinglePaymentEmail = async ({
     const recipient = template.includes("-agent")
       ? session.email
       : paymentRequest.payeeEmail;
-    return await sendEmail(template, recipient, config);
+    const resolvedTemplate = resolveNotifyTemplate(
+      template,
+      session.flow.email_template,
+    );
+    return await sendEmail(resolvedTemplate, recipient, config);
   } catch (error) {
     throw Error((error as Error).message);
   }
@@ -68,6 +74,7 @@ const validatePaymentRequest = async (
             flow {
               slug
               name
+              email_template
               team {
                 id
                 name
