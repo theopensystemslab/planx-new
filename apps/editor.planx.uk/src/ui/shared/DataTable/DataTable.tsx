@@ -1,5 +1,6 @@
 /* eslint-disable no-restricted-imports */
 import Box from "@mui/material/Box";
+import type { GridToolbarProps, ToolbarPropsOverrides } from "@mui/x-data-grid";
 import {
   DataGrid,
   GridColDef,
@@ -25,6 +26,32 @@ import {
   getValueOptions,
 } from "./utils";
 
+declare module "@mui/x-data-grid" {
+  interface ToolbarPropsOverrides {
+    customTools?: React.FC[];
+    csvExportFileName?: string;
+  }
+}
+
+const CustomToolbar = (props: GridToolbarProps & ToolbarPropsOverrides) => {
+  const { customTools, csvExportFileName } = props;
+
+  return (
+    <GridToolbarContainer>
+      {customTools &&
+        customTools.map((CustomTool, index) => <CustomTool key={index} />)}
+      <GridToolbarColumnsButton />
+      <GridToolbarFilterButton />
+      <GridToolbarDensitySelector />
+      <GridToolbarExport
+        csvOptions={{
+          fileName: csvExportFileName,
+        }}
+      />
+    </GridToolbarContainer>
+  );
+};
+
 export const DataTable = <T,>({
   rows,
   columns,
@@ -44,23 +71,6 @@ export const DataTable = <T,>({
     }
     const ComponentRenderer = columnCellComponentRegistry[column.type];
     return ComponentRenderer(params.value, filterValues);
-  };
-
-  const CustomToolbar = () => {
-    return (
-      <GridToolbarContainer>
-        {customTools &&
-          customTools.map((CustomTool, index) => <CustomTool key={index} />)}
-        <GridToolbarColumnsButton />
-        <GridToolbarFilterButton />
-        <GridToolbarDensitySelector />
-        <GridToolbarExport
-          csvOptions={{
-            fileName: csvExportFileName,
-          }}
-        />
-      </GridToolbarContainer>
-    );
   };
 
   const [filterValues, setFilterValues] = useState<string[]>([]);
@@ -130,6 +140,13 @@ export const DataTable = <T,>({
           slots={{
             toolbar: CustomToolbar,
           }}
+          slotProps={{
+            toolbar: {
+              customTools,
+              csvExportFileName,
+            },
+          }}
+          showToolbar
           getRowId={(row) => row.id}
           processRowUpdate={onProcessRowUpdate}
           checkboxSelection={checkboxSelection}
