@@ -9,21 +9,21 @@
   },
   "type": "module",
   "dependencies": {
-    "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#3c3dea5",
-    "axios": "^1.15.2",
-    "dotenv": "^16.6.1",
-    "eslint": "^8.57.1",
-    "graphql": "^16.13.2",
+    "@opensystemslab/planx-core": "catalog:",
+    "axios": "catalog:",
+    "dotenv": "catalog:",
+    "eslint": "catalog:",
+    "graphql": "catalog:graphql",
     "graphql-request": "^6.1.0",
     "isomorphic-fetch": "^3.0.0",
-    "jsonwebtoken": "^9.0.3",
+    "jsonwebtoken": "catalog:jwt",
     "serve": "^14.2.5",
-    "uuid": "^14.0.0"
+    "uuid": "catalog:"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
     "@types/geojson": "^7946.0.16",
-    "@types/node": "~24.10.15",
+    "@types/node": "catalog:",
     "eslint-plugin-playwright": "^0.20.0"
   }
 }

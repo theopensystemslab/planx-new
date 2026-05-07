@@ -6,11 +6,11 @@
     "build-jwt": "DOTENV_CONFIG_PATH=../.env.test node -r dotenv/config scripts/buildJWT.js"
   },
   "dependencies": {
-    "dotenv": "^17.3.1",
+    "dotenv": "catalog:",
     "isomorphic-fetch": "^3.0.0",
-    "jsonwebtoken": "^9.0.3",
-    "uuid": "^14.0.0",
+    "jsonwebtoken": "catalog:jwt",
+    "uuid": "catalog:",
     "vite": "^8.0.5",
-    "vitest": "^4.0.18"
+    "vitest": "catalog:"
   }
 }

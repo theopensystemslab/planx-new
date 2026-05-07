@@ -150,10 +150,11 @@ const options = {
       responses,
     },
   },
-  apis: ["./**/*.ts", "./**/*.js", "./**/docs.yaml"],
+  apis: ["./modules/**/*.ts", "./modules/**/*.js", "./**/docs.yaml"],
 };
 
 export const useSwaggerDocs = (app: Express) => {
+  if (process.env.APP_ENVIRONMENT === "test") return;
   const swaggerSpec = swaggerJSDoc(options);
   app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 };

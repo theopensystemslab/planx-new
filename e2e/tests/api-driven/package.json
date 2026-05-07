@@ -8,20 +8,20 @@
   "type": "module",
   "dependencies": {
     "@cucumber/cucumber": "^11.3.0",
-    "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#3c3dea5",
-    "axios": "^1.15.2",
-    "dotenv": "^16.6.1",
+    "@opensystemslab/planx-core": "catalog:",
+    "axios": "catalog:",
+    "dotenv": "catalog:",
     "dotenv-expand": "^10.0.0",
-    "graphql": "^16.13.2",
-    "graphql-tag": "^2.12.6",
-    "jsonwebtoken": "^9.0.3",
+    "graphql": "catalog:graphql",
+    "graphql-tag": "catalog:graphql",
+    "jsonwebtoken": "catalog:jwt",
     "nock": "^13.5.6"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.10",
+    "@types/jsonwebtoken": "catalog:jwt",
     "@types/lodash.zipobject": "^4.1.9",
-    "@types/node": "~24.10.15",
+    "@types/node": "catalog:",
     "ts-node": "^10.9.2",
-    "typescript": "~5.9.3"
+    "typescript": "catalog:typescript"
   }
 }

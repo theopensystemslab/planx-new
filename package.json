@@ -16,7 +16,7 @@
     "logs": "docker compose logs --tail 30 -f"
   },
   "devDependencies": {
-    "typescript": "~5.9.3"
+    "typescript": "catalog:typescript"
   },
   "packageManager": "pnpm@10.30.2",
   "pnpm": {
