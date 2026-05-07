@@ -1,6 +1,5 @@
 import Typography from "@mui/material/Typography";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
-import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { AdminPanelData, type LiveFlow } from "types";
 import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContainer";
