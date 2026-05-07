@@ -1,7 +1,7 @@
 import FormControl from "@mui/material/FormControl";
+import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import TextField from "@mui/material/TextField";
-import { GridFilterFormProps } from "@mui/x-data-grid";
-import React from "react";
+import { GridFilterInputValueProps } from "@mui/x-data-grid";
 import {
   OptionalAutocompleteProps,
   RequiredAutocompleteProps,
@@ -10,21 +10,30 @@ import {
 
 type Props<T> = RequiredAutocompleteProps<T> &
   OptionalAutocompleteProps<T> &
-  GridFilterFormProps & { applyValue: (args: Record<string, any>) => void };
+  GridFilterInputValueProps;
 
 export function MultipleOptionSelectFilter<T>(props: Props<T>) {
-  const { item, applyValue } = props;
+  const { item, applyValue, options, focusElementRef, ...otherProps } = props;
 
-  const [chipData, setChipData] = React.useState(item.value);
+  const currentValue = Array.isArray(item.value) ? item.value : [];
 
   return (
     <FormControl sx={{ display: "flex", flexDirection: "column" }}>
       <StyledAutocomplete
+        {...otherProps}
         role="status"
         aria-atomic={true}
         aria-live="polite"
         disableCloseOnSelect
         multiple
+        disableClearable
+        value={currentValue}
+        sx={{
+          backgroundColor: "transparent",
+          [`&. ${outlinedInputClasses.root}`]: {
+            backgroundColor: "transparent",
+          },
+        }}
         renderInput={(params) => (
           <TextField
             {...params}
@@ -32,32 +41,25 @@ export function MultipleOptionSelectFilter<T>(props: Props<T>) {
               ...params.slotProps,
               inputLabel: { ...params.slotProps.inputLabel, shrink: true },
             }}
-            label="Option"
-            variant="standard"
+            label="Value"
+            variant="outlined"
+            inputRef={focusElementRef}
+            size="small"
           />
         )}
         slotProps={{
           chip: {
             variant: "uploadedFileTag",
             size: "small",
-            onDelete: (event) => {
-              const element = event.currentTarget;
-              const chipIndex = Number(
-                element.parentElement.getAttribute("data-tag-index"),
-              );
-              setChipData((prev: string[]) => {
-                prev.splice(chipIndex, 1);
-              });
-              applyValue({ ...item, chipData });
-              setChipData(item.value);
+          },
+          popper: {
+            sx: {
+              width: "max-content !important",
             },
           },
         }}
-        options={props.options}
-        onChange={(_e, value) => {
-          setChipData(value);
-          return applyValue({ ...item, value });
-        }}
+        options={options}
+        onChange={(_e, value) => applyValue({ ...item, value })}
       />
     </FormControl>
   );
