@@ -1,3 +1,22 @@
 table:
   name: gov_notify_email_template_enum
   schema: public
+select_permissions:
+  - role: api
+    permission:
+      columns:
+        - column
+        - value
+      filter: {}
+  - role: platformAdmin
+    permission:
+      columns:
+        - column
+        - value
+      filter: {}
+  - role: teamEditor
+    permission:
+      columns:
+        - column
+        - value
+      filter: {}
