@@ -1,0 +1,1 @@
+alter table "public"."flows" drop column "is_service";
