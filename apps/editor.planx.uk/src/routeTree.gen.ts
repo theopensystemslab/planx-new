@@ -78,6 +78,7 @@ import { Route as PublicCustomDomainFlowPayPagesPageRouteImport } from './routes
 import { Route as PublicCustomDomainFlowPayInviteFailedRouteImport } from './routes/_public/_customDomain/$flow/pay/invite/failed'
 import { Route as AuthenticatedAppTeamFlowSettingsVisibilityRouteImport } from './routes/_authenticated/app/$team/$flow/settings/visibility'
 import { Route as AuthenticatedAppTeamFlowSettingsTemplatesRouteImport } from './routes/_authenticated/app/$team/$flow/settings/templates'
+import { Route as AuthenticatedAppTeamFlowSettingsNotificationsRouteImport } from './routes/_authenticated/app/$team/$flow/settings/notifications'
 import { Route as AuthenticatedAppTeamFlowSettingsLegalDisclaimerRouteImport } from './routes/_authenticated/app/$team/$flow/settings/legal-disclaimer'
 import { Route as AuthenticatedAppTeamFlowSettingsAboutRouteImport } from './routes/_authenticated/app/$team/$flow/settings/about'
 import { Route as AuthenticatedAppTeamFlowFlowEditorNodesRouteRouteImport } from './routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route'
@@ -502,6 +503,12 @@ const AuthenticatedAppTeamFlowSettingsTemplatesRoute =
     path: '/templates',
     getParentRoute: () => AuthenticatedAppTeamFlowSettingsRouteRoute,
   } as any)
+const AuthenticatedAppTeamFlowSettingsNotificationsRoute =
+  AuthenticatedAppTeamFlowSettingsNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => AuthenticatedAppTeamFlowSettingsRouteRoute,
+  } as any)
 const AuthenticatedAppTeamFlowSettingsLegalDisclaimerRoute =
   AuthenticatedAppTeamFlowSettingsLegalDisclaimerRouteImport.update({
     id: '/legal-disclaimer',
@@ -687,6 +694,7 @@ export interface FileRoutesByFullPath {
   '/app/$team/$flow/nodes': typeof AuthenticatedAppTeamFlowFlowEditorNodesRouteRouteWithChildren
   '/app/$team/$flow/settings/about': typeof AuthenticatedAppTeamFlowSettingsAboutRoute
   '/app/$team/$flow/settings/legal-disclaimer': typeof AuthenticatedAppTeamFlowSettingsLegalDisclaimerRoute
+  '/app/$team/$flow/settings/notifications': typeof AuthenticatedAppTeamFlowSettingsNotificationsRoute
   '/app/$team/$flow/settings/templates': typeof AuthenticatedAppTeamFlowSettingsTemplatesRoute
   '/app/$team/$flow/settings/visibility': typeof AuthenticatedAppTeamFlowSettingsVisibilityRoute
   '/$flow/pay/invite/failed': typeof PublicCustomDomainFlowPayInviteFailedRoute
@@ -764,6 +772,7 @@ export interface FileRoutesByTo {
   '/app/$team/$flow/nodes': typeof AuthenticatedAppTeamFlowFlowEditorNodesRouteRouteWithChildren
   '/app/$team/$flow/settings/about': typeof AuthenticatedAppTeamFlowSettingsAboutRoute
   '/app/$team/$flow/settings/legal-disclaimer': typeof AuthenticatedAppTeamFlowSettingsLegalDisclaimerRoute
+  '/app/$team/$flow/settings/notifications': typeof AuthenticatedAppTeamFlowSettingsNotificationsRoute
   '/app/$team/$flow/settings/templates': typeof AuthenticatedAppTeamFlowSettingsTemplatesRoute
   '/app/$team/$flow/settings/visibility': typeof AuthenticatedAppTeamFlowSettingsVisibilityRoute
   '/$flow/pay/invite/failed': typeof PublicCustomDomainFlowPayInviteFailedRoute
@@ -856,6 +865,7 @@ export interface FileRoutesById {
   '/_authenticated/app/$team/$flow/_flowEditor/nodes': typeof AuthenticatedAppTeamFlowFlowEditorNodesRouteRouteWithChildren
   '/_authenticated/app/$team/$flow/settings/about': typeof AuthenticatedAppTeamFlowSettingsAboutRoute
   '/_authenticated/app/$team/$flow/settings/legal-disclaimer': typeof AuthenticatedAppTeamFlowSettingsLegalDisclaimerRoute
+  '/_authenticated/app/$team/$flow/settings/notifications': typeof AuthenticatedAppTeamFlowSettingsNotificationsRoute
   '/_authenticated/app/$team/$flow/settings/templates': typeof AuthenticatedAppTeamFlowSettingsTemplatesRoute
   '/_authenticated/app/$team/$flow/settings/visibility': typeof AuthenticatedAppTeamFlowSettingsVisibilityRoute
   '/_public/_customDomain/$flow/pay/invite/failed': typeof PublicCustomDomainFlowPayInviteFailedRoute
@@ -947,6 +957,7 @@ export interface FileRouteTypes {
     | '/app/$team/$flow/nodes'
     | '/app/$team/$flow/settings/about'
     | '/app/$team/$flow/settings/legal-disclaimer'
+    | '/app/$team/$flow/settings/notifications'
     | '/app/$team/$flow/settings/templates'
     | '/app/$team/$flow/settings/visibility'
     | '/$flow/pay/invite/failed'
@@ -1024,6 +1035,7 @@ export interface FileRouteTypes {
     | '/app/$team/$flow/nodes'
     | '/app/$team/$flow/settings/about'
     | '/app/$team/$flow/settings/legal-disclaimer'
+    | '/app/$team/$flow/settings/notifications'
     | '/app/$team/$flow/settings/templates'
     | '/app/$team/$flow/settings/visibility'
     | '/$flow/pay/invite/failed'
@@ -1115,6 +1127,7 @@ export interface FileRouteTypes {
     | '/_authenticated/app/$team/$flow/_flowEditor/nodes'
     | '/_authenticated/app/$team/$flow/settings/about'
     | '/_authenticated/app/$team/$flow/settings/legal-disclaimer'
+    | '/_authenticated/app/$team/$flow/settings/notifications'
     | '/_authenticated/app/$team/$flow/settings/templates'
     | '/_authenticated/app/$team/$flow/settings/visibility'
     | '/_public/_customDomain/$flow/pay/invite/failed'
@@ -1648,6 +1661,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppTeamFlowSettingsTemplatesRouteImport
       parentRoute: typeof AuthenticatedAppTeamFlowSettingsRouteRoute
     }
+    '/_authenticated/app/$team/$flow/settings/notifications': {
+      id: '/_authenticated/app/$team/$flow/settings/notifications'
+      path: '/notifications'
+      fullPath: '/app/$team/$flow/settings/notifications'
+      preLoaderRoute: typeof AuthenticatedAppTeamFlowSettingsNotificationsRouteImport
+      parentRoute: typeof AuthenticatedAppTeamFlowSettingsRouteRoute
+    }
     '/_authenticated/app/$team/$flow/settings/legal-disclaimer': {
       id: '/_authenticated/app/$team/$flow/settings/legal-disclaimer'
       path: '/legal-disclaimer'
@@ -1879,6 +1899,7 @@ const AuthenticatedAppTeamFlowFlowEditorRouteRouteWithChildren =
 interface AuthenticatedAppTeamFlowSettingsRouteRouteChildren {
   AuthenticatedAppTeamFlowSettingsAboutRoute: typeof AuthenticatedAppTeamFlowSettingsAboutRoute
   AuthenticatedAppTeamFlowSettingsLegalDisclaimerRoute: typeof AuthenticatedAppTeamFlowSettingsLegalDisclaimerRoute
+  AuthenticatedAppTeamFlowSettingsNotificationsRoute: typeof AuthenticatedAppTeamFlowSettingsNotificationsRoute
   AuthenticatedAppTeamFlowSettingsTemplatesRoute: typeof AuthenticatedAppTeamFlowSettingsTemplatesRoute
   AuthenticatedAppTeamFlowSettingsVisibilityRoute: typeof AuthenticatedAppTeamFlowSettingsVisibilityRoute
   AuthenticatedAppTeamFlowSettingsIndexRoute: typeof AuthenticatedAppTeamFlowSettingsIndexRoute
@@ -1892,6 +1913,8 @@ const AuthenticatedAppTeamFlowSettingsRouteRouteChildren: AuthenticatedAppTeamFl
       AuthenticatedAppTeamFlowSettingsAboutRoute,
     AuthenticatedAppTeamFlowSettingsLegalDisclaimerRoute:
       AuthenticatedAppTeamFlowSettingsLegalDisclaimerRoute,
+    AuthenticatedAppTeamFlowSettingsNotificationsRoute:
+      AuthenticatedAppTeamFlowSettingsNotificationsRoute,
     AuthenticatedAppTeamFlowSettingsTemplatesRoute:
       AuthenticatedAppTeamFlowSettingsTemplatesRoute,
     AuthenticatedAppTeamFlowSettingsVisibilityRoute:
