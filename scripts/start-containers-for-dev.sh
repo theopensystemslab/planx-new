@@ -4,34 +4,29 @@ set -o errexit -o errtrace
 # run from project root
 cd "$(dirname $0)/.."
 
-# --project-name planx-e2e isolates e2e volumes from the dev project
-#
 # clear DOCKER_DEFAULT_PLATFORM in case it was set in .env for Apple Silicon.
-function e2e_compose() {
+function dev_compose() {
   DOCKER_DEFAULT_PLATFORM= docker compose \
-    --project-name planx-e2e \
     -f docker-compose.yml \
-    -f docker-compose.e2e.yml \
+    -f docker-compose.local.yml \
     --profile mock-services \
     "$@"
 }
 
 trap 'echo "Error detected! Saving logs..."; \
-      e2e_compose logs > docker_compose_logs.txt; \
+      dev_compose logs > docker_compose_logs.txt; \
       echo "Logs saved to docker_compose_logs.txt"; \
-      e2e_compose down --volumes --remove-orphans' ERR
+      dev_compose down --remove-orphans' ERR
 
 function setupContainers(){
-  # Bring down the dev environment containers
-  # volumes are kept as they are a different docker project
-  docker compose \
+  # Bring down e2e containers and their volumes - we're done with testing
+  # project-name planx-e2e matches what start-containers-for-tests.sh uses
+  DOCKER_DEFAULT_PLATFORM= docker compose \
+    --project-name planx-e2e \
     -f docker-compose.yml \
-    -f docker-compose.local.yml \
+    -f docker-compose.e2e.yml \
     --profile mock-services \
-    down --remove-orphans
-
-  # Destroy any previous e2e containers and data
-  e2e_compose down --volumes --remove-orphans
+    down --volumes --remove-orphans
 
   # Remove any dangling images that might cause conflicts
   echo "Cleaning up dangling images..."
@@ -39,8 +34,10 @@ function setupContainers(){
 
   echo "Starting docker…"
 
-  DOCKER_BUILDKIT=1 e2e_compose build
-  DOCKER_BUILDKIT=1 e2e_compose up --wait test-ready
+  # Bring dev containers back up, preserving existing volumes so local data changes are not lost.
+  # For a clean first-time setup, use `pnpm up` instead.
+  DOCKER_BUILDKIT=1 dev_compose up -d --quiet-pull --build --force-recreate
+
   echo "All containers ready."
 }
 

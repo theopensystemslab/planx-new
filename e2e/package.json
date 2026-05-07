@@ -1,6 +1,7 @@
 {
   "private": true,
   "scripts": {
+    "pretest": "../scripts/check-containers.sh e2e",
     "test": "pnpm test:api && pnpm test:ui",
     "test:ui": "cd tests/ui-driven && pnpm test",
     "test:api": "cd tests/api-driven && pnpm test",

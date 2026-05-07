@@ -157,6 +157,7 @@
   },
   "packageManager": "pnpm@10.30.2",
   "scripts": {
+    "prestart": "../../scripts/check-containers.sh dev",
     "start": "vite --open",
     "build": "tsc && vite build",
     "serve": "vite preview",
