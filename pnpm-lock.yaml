@@ -35,11 +35,8 @@ importers:
         specifier: ^3.1000.0
         version: 3.1032.0
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#d282d7a
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f(@types/react@19.2.14)
-      '@types/geojson':
-        specifier: ^7946.0.16
-        version: 7946.0.16
+        specifier: github:theopensystemslab/planx-core#3c3dea5
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/3c3dea57cdb9be92a95619c85b00af436b7b26dd(@types/react@19.2.14)
       '@types/isomorphic-fetch':
         specifier: ^0.0.36
         version: 0.0.36
@@ -50,8 +47,8 @@ importers:
         specifier: ^6.0.116
         version: 6.0.168(zod@3.25.76)
       axios:
-        specifier: ^1.15.0
-        version: 1.15.1
+        specifier: ^1.15.2
+        version: 1.15.2
       body-parser:
         specifier: ^2.2.2
         version: 2.2.2
@@ -200,6 +197,9 @@ importers:
       '@types/express-pino-logger':
         specifier: ^4.0.6
         version: 4.0.6
+      '@types/geojson':
+        specifier: ^7946.0.16
+        version: 7946.0.16
       '@types/he':
         specifier: ^1.2.3
         version: 1.2.3
@@ -342,8 +342,8 @@ importers:
         specifier: 1.0.0-alpha.11
         version: 1.0.0-alpha.11
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#d282d7a
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f(@types/react@19.2.14)
+        specifier: github:theopensystemslab/planx-core#3c3dea5
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/3c3dea57cdb9be92a95619c85b00af436b7b26dd(@types/react@19.2.14)
       '@tanstack/react-query':
         specifier: ^5.90.21
         version: 5.99.2(react@19.2.5)
@@ -408,8 +408,8 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       axios:
-        specifier: ^1.15.0
-        version: 1.15.1
+        specifier: ^1.15.2
+        version: 1.15.2
       bowser:
         specifier: ^2.14.1
         version: 2.14.1
@@ -909,11 +909,11 @@ importers:
         specifier: ^11.3.0
         version: 11.3.0
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#d282d7a
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f(@types/react@19.2.14)
+        specifier: github:theopensystemslab/planx-core#3c3dea5
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/3c3dea57cdb9be92a95619c85b00af436b7b26dd(@types/react@19.2.14)
       axios:
-        specifier: ^1.15.0
-        version: 1.15.1
+        specifier: ^1.15.2
+        version: 1.15.2
       dotenv:
         specifier: ^16.6.1
         version: 16.6.1
@@ -952,11 +952,11 @@ importers:
   e2e/tests/ui-driven:
     dependencies:
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#d282d7a
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f(@types/react@19.2.14)
+        specifier: github:theopensystemslab/planx-core#3c3dea5
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/3c3dea57cdb9be92a95619c85b00af436b7b26dd(@types/react@19.2.14)
       axios:
-        specifier: ^1.15.0
-        version: 1.15.1
+        specifier: ^1.15.2
+        version: 1.15.2
       dotenv:
         specifier: ^16.6.1
         version: 16.6.1
@@ -998,8 +998,8 @@ importers:
   scripts/encrypt:
     dependencies:
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#d282d7a
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f(@types/react@19.2.14)
+        specifier: github:theopensystemslab/planx-core#3c3dea5
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/3c3dea57cdb9be92a95619c85b00af436b7b26dd(@types/react@19.2.14)
       tsx:
         specifier: ^4.21.0
         version: 4.21.0
@@ -3047,8 +3047,8 @@ packages:
   '@opensystemslab/map@1.0.0-alpha.11':
     resolution: {integrity: sha512-ETACPCk5Coef1L2kNT3MhIzLxVPDpyopxsTNcgeRyEqL71HBfTklGyC5+t7HgEgxRkX5wlUXqmKPNL9DdpVj8g==}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/3c3dea57cdb9be92a95619c85b00af436b7b26dd':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/3c3dea57cdb9be92a95619c85b00af436b7b26dd}
     version: 1.0.0
 
   '@opentelemetry/api@1.9.0':
@@ -5316,8 +5316,8 @@ packages:
     resolution: {integrity: sha512-zBQouZixDTbo3jMGqHKyePxYxr1e5W8UdTmBQ7sNtaA9M2bE32daxxPLS/jojhKOHxQ7LWwPjfiwf/fhaJWzlg==}
     engines: {node: '>=4'}
 
-  axios@1.15.1:
-    resolution: {integrity: sha512-WOG+Jj8ZOvR0a3rAn+Tuf1UQJRxw5venr6DgdbJzngJE3qG7X0kL83CZGpdHMxEm+ZK3seAbvFsw4FfOfP9vxg==}
+  axios@1.15.2:
+    resolution: {integrity: sha512-wLrXxPtcrPTsNlJmKjkPnNPK2Ihe0hn0wGSaTEiHRPxwjvJwT3hKmXF4dpqxmPO9SoNb2FsYXj/xEo0gHN+D5A==}
 
   axobject-query@4.1.0:
     resolution: {integrity: sha512-qIj0G9wZbMGNLjLmg1PT6v2mE9AH2zlnADJD/2tC6E00hgmhUOfEB6greHPAfLRSufHqROIUTkw6E+M3lH0PTQ==}
@@ -10671,6 +10671,7 @@ packages:
 
   uuid@10.0.0:
     resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   uuid@11.0.5:
@@ -10683,6 +10684,7 @@ packages:
 
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   uuid@9.0.1:
@@ -13937,7 +13939,7 @@ snapshots:
     transitivePeerDependencies:
       - preact
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d282d7a82a78e25a50eedc7bbac514a2c696170f(@types/react@19.2.14)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/3c3dea57cdb9be92a95619c85b00af436b7b26dd(@types/react@19.2.14)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.4)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
@@ -16581,7 +16583,7 @@ snapshots:
 
   axe-core@4.11.3: {}
 
-  axios@1.15.1:
+  axios@1.15.2:
     dependencies:
       follow-redirects: 1.16.0
       form-data: 4.0.5
@@ -20309,7 +20311,7 @@ snapshots:
 
   notifications-node-client@8.3.2:
     dependencies:
-      axios: 1.15.1
+      axios: 1.15.2
       jsonwebtoken: 9.0.3
     transitivePeerDependencies:
       - debug
