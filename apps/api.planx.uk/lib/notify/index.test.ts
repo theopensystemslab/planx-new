@@ -1,4 +1,4 @@
-import { sendEmail } from "./index.js";
+import { resolveNotifyTemplate, sendEmail } from "./index.js";
 import { NotifyClient } from "notifications-node-client";
 import type { TemplateRegistry } from "./templates/index.js";
 import { NOTIFY_TEST_EMAIL } from "./utils.js";
@@ -19,6 +19,34 @@ const mockConfig: TemplateRegistry["save"]["config"] = {
     helpPhone: "test",
   },
 };
+
+describe("resolveNotifyTemplate", () => {
+  it("returns the base template for 'application'", () => {
+    expect(resolveNotifyTemplate("save", "application")).toBe("save");
+    expect(resolveNotifyTemplate("resume", "application")).toBe("resume");
+  });
+
+  it("returns the general template for 'general'", () => {
+    expect(resolveNotifyTemplate("save", "general")).toBe("general-save");
+    expect(resolveNotifyTemplate("resume", "general")).toBe("general-resume");
+    expect(resolveNotifyTemplate("reminder", "general")).toBe("general-reminder");
+    expect(resolveNotifyTemplate("expiry", "general")).toBe("general-expiry");
+    expect(resolveNotifyTemplate("confirmation", "general")).toBe("general-confirmation");
+    expect(resolveNotifyTemplate("invite-to-pay", "general")).toBe("general-invite-to-pay");
+    expect(resolveNotifyTemplate("invite-to-pay-agent", "general")).toBe("general-invite-to-pay-agent");
+    expect(resolveNotifyTemplate("payment-reminder", "general")).toBe("general-payment-reminder");
+    expect(resolveNotifyTemplate("payment-reminder-agent", "general")).toBe("general-payment-reminder-agent");
+    expect(resolveNotifyTemplate("payment-expiry", "general")).toBe("general-payment-expiry");
+    expect(resolveNotifyTemplate("payment-expiry-agent", "general")).toBe("general-payment-expiry-agent");
+    expect(resolveNotifyTemplate("confirmation-agent", "general")).toBe("general-confirmation-agent");
+    expect(resolveNotifyTemplate("confirmation-payee", "general")).toBe("general-confirmation-payee");
+    expect(resolveNotifyTemplate("new-download-link", "general")).toBe("general-new-download-link");
+  });
+
+  it("falls back to the base template for unmapped templates", () => {
+    expect(resolveNotifyTemplate("lps-login", "general")).toBe("lps-login");
+  });
+});
 
 describe("sendEmail", () => {
   it("throws an error if an invalid template is used", async () => {

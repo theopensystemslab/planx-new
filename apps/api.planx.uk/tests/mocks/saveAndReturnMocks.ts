@@ -66,6 +66,7 @@ export const mockLowcalSession: LowCalSession = {
   flow: {
     slug: "apply-for-a-lawful-development-certificate",
     name: "Apply for a Lawful Development Certificate",
+    email_template: "application" as const,
     team: mockTeam,
   },
   flow_id: mockFlow.id,
