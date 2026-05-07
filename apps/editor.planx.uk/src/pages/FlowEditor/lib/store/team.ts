@@ -27,6 +27,11 @@ export interface TeamStore {
   clearTeamStore: () => void;
 }
 
+const generateCircleFavicon = (color: string): string => {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="${color}"/></svg>`;
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+};
+
 export const teamStore: StateCreator<
   TeamStore & SharedStore,
   [],
@@ -57,6 +62,14 @@ export const teamStore: StateCreator<
       teamTheme: team.theme,
       teamDomain: team.domain,
     });
+
+    const favicon = document.getElementById("favicon") as HTMLLinkElement;
+    if (team.theme?.favicon) {
+      favicon.href = team.theme.favicon;
+    } else {
+      const color = team.theme?.primaryColour ?? DEFAULT_PRIMARY_COLOR;
+      favicon.href = generateCircleFavicon(color);
+    }
   },
 
   getTeam: () => ({
