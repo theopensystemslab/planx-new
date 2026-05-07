@@ -79,7 +79,7 @@ export const Route = createFileRoute("/_authenticated/app/$team")({
   },
   loader: ({ context, cause }) => {
     if (cause !== "preload") {
-      useStore.getState().setTeam(context.team);
+      useStore.getState().setTeam(context.team, { useCustomFavicon: false });
     }
     return context.team;
   },
