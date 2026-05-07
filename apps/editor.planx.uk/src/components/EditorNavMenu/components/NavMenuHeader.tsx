@@ -25,18 +25,20 @@ const LogoLink = styled(CustomLink)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  gap: theme.spacing(0.5),
-  padding: theme.spacing(0.5, 0.75),
+  gap: theme.spacing(0.75),
+  padding: theme.spacing(0.5, 0.9),
   lineHeight: 0.5,
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
 }));
 
-const LogoIcon = styled(Box)(({ theme }) => ({
-  width: 16,
-  height: 16,
-  backgroundColor: theme.palette.primary.main,
-  borderRadius: "50%",
-}));
+const LogoIcon = styled(Box)<{ teamcolour?: string }>(
+  ({ theme, teamcolour }) => ({
+    width: 12,
+    height: 12,
+    backgroundColor: teamcolour ?? theme.palette.primary.main,
+    borderRadius: "50%",
+  }),
+);
 
 export interface NavMenuHeaderProps {
   compact?: boolean;
@@ -46,6 +48,7 @@ const NavMenuHeader: React.FC<NavMenuHeaderProps> = ({ compact = false }) => {
   const isStandalone = useStore(
     (state) => state.previewEnvironment === "standalone",
   );
+  const teamColour = useStore((state) => state.teamTheme?.primaryColour);
 
   return (
     <HeaderRoot>
@@ -55,7 +58,7 @@ const NavMenuHeader: React.FC<NavMenuHeaderProps> = ({ compact = false }) => {
         {...(isStandalone && { target: "_blank" })}
         variant="subtitle2"
       >
-        <LogoIcon />
+        <LogoIcon teamcolour={teamColour} />
         {compact ? "" : "Plan✕"}
       </LogoLink>
 

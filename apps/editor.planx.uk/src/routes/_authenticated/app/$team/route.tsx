@@ -33,6 +33,13 @@ export const Route = createFileRoute("/_authenticated/app/$team")({
                 }
               }
             }
+            theme {
+              primaryColour: primary_colour
+              actionColour: action_colour
+              linkColour: link_colour
+              logo
+              favicon
+            }
             integrations {
               hasPlanningData: has_planning_data
             }
