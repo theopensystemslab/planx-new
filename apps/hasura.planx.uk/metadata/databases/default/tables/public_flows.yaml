@@ -248,6 +248,7 @@ select_permissions:
         - creator_id
         - data
         - description
+        - email_template
         - id
         - is_listed_on_lps
         - is_template
@@ -282,6 +283,7 @@ select_permissions:
         - data
         - deleted_at
         - description
+        - email_template
         - id
         - is_listed_on_lps
         - is_template
@@ -316,6 +318,7 @@ select_permissions:
         - data
         - deleted_at
         - description
+        - email_template
         - id
         - is_listed_on_lps
         - is_template
@@ -347,6 +350,7 @@ select_permissions:
         - creator_id
         - data
         - description
+        - email_template
         - id
         - is_listed_on_lps
         - is_template
@@ -380,6 +384,7 @@ select_permissions:
         - data
         - archived_at
         - description
+        - email_template
         - id
         - is_listed_on_lps
         - is_template
@@ -457,6 +462,7 @@ update_permissions:
         - data
         - deleted_at
         - description
+        - email_template
         - is_listed_on_lps
         - is_template
         - limitations
@@ -498,6 +504,7 @@ update_permissions:
         - data
         - archived_at
         - description
+        - email_template
         - is_listed_on_lps
         - limitations
         - name
