@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
-export const MENU_WIDTH_COMPACT = 51;
+export const MENU_WIDTH_COMPACT = 48;
 export const MENU_WIDTH_FULL = 200;
 
 export const Root = styled(Box, {
@@ -40,7 +40,7 @@ export const MenuWrap = styled("ul")(({ theme }) => ({
 }));
 
 export const MenuItem = styled("li")(({ theme }) => ({
-  margin: theme.spacing(0.5, 0),
+  margin: theme.spacing(0.75, 0),
   padding: 0,
 }));
 
@@ -51,41 +51,43 @@ export const MenuTitle = styled(Typography)(({ theme }) => ({
 })) as typeof Typography;
 
 export const MenuButton = styled(IconButton, {
-  shouldForwardProp: (prop) => prop !== "isActive",
-})<{ isActive: boolean }>(({ theme, isActive, disabled }) => ({
-  color: theme.palette.text.primary,
-  width: "100%",
-  justifyContent: "flex-start",
-  gap: theme.spacing(0.65),
-  alignItems: "flex-start",
-  borderRadius: theme.shape.borderRadius,
-  padding: theme.spacing(0.8, 0.5),
-  "&:hover": {
-    background: theme.palette.common.white,
-    boxShadow: "0 1px 1.5px 0 rgba(0, 0, 0, 0.2)",
-  },
-  ...(isActive && {
-    background: theme.palette.common.white,
+  shouldForwardProp: (prop) => prop !== "isActive" && prop !== "compact",
+})<{ isActive: boolean; compact?: boolean }>(
+  ({ theme, isActive, compact, disabled }) => ({
     color: theme.palette.text.primary,
-    boxShadow: "0 1px 1.5px 0 rgba(0, 0, 0, 0.2)",
-  }),
-  ...(disabled && {
-    color: theme.palette.text.disabled,
+    width: "100%",
+    justifyContent: "flex-start",
+    gap: theme.spacing(0.75),
+    alignItems: "flex-start",
+    borderRadius: theme.shape.borderRadius,
+    padding: compact ? theme.spacing(0.5, 0.25) : theme.spacing(0.8),
     "&:hover": {
-      background: "none",
+      background: theme.palette.common.white,
+      boxShadow: "0 1px 1.5px 0 rgba(0, 0, 0, 0.2)",
+    },
+    ...(isActive && {
+      background: theme.palette.common.white,
+      color: theme.palette.text.primary,
+      boxShadow: "0 1px 1.5px 0 rgba(0, 0, 0, 0.2)",
+    }),
+    ...(disabled && {
+      color: theme.palette.text.disabled,
+      "&:hover": {
+        background: "none",
+      },
+    }),
+    "& > svg": {
+      opacity: 0.75,
     },
   }),
-  "& > svg": {
-    opacity: 0.75,
-  },
-}));
+);
 
 export const AccordionContent = styled("ul")(({ theme }) => ({
   listStyle: "none",
-  margin: theme.spacing(0, 0.25, 0, 1.25),
+  margin: theme.spacing(0, 0.25, 0, 1.75),
   padding: 0,
   borderLeft: `2px solid ${theme.palette.border.light}`,
-  paddingLeft: theme.spacing(0.75),
+  paddingLeft: theme.spacing(0.8),
 }));
 
 export const Subtitle = styled(Typography)(({ theme }) => ({
