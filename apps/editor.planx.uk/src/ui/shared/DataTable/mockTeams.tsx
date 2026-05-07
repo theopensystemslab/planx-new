@@ -52,7 +52,8 @@ export const mockTeams: AdminPanelData[] = [
         firstOnlineAt: "2025-11-24T15:36:17Z",
       },
       {
-        name: "apply for prior approval ",
+        // Intentional whitespace to be trimmed
+        name: "apply for prior approval   ",
         firstOnlineAt: "2025-11-24T15:36:17Z",
       },
       {

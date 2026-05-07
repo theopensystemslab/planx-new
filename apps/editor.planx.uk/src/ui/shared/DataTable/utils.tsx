@@ -8,7 +8,6 @@ import {
 } from "@mui/x-data-grid";
 import { format } from "date-fns";
 import capitalize from "lodash/capitalize";
-import React from "react";
 
 import { False, True } from "./components/cellIcons";
 import { MultipleOptionSelectFilter } from "./components/MultipleOptionSelectFilter";
