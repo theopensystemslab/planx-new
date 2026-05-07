@@ -121,12 +121,13 @@ describe("Responsive Checklist editor component", async () => {
 
     // Set a top-level data field
     await user.click(autocompleteInput);
-    await user.type(autocompleteInput, "my.data.value");
+    await user.paste("my.data.value");
     await user.keyboard("{Enter}");
 
-    // An an option without a data field
+    // Add an option without a data field
     await user.click(screen.getByRole("button", { name: /Add option/i }));
-    await user.type(screen.getByPlaceholderText("Option"), "First");
+    await user.click(screen.getByPlaceholderText("Option"));
+    await user.paste("First");
 
     fireEvent.submit(screen.getByTestId("checklistEditorForm"));
 
@@ -135,7 +136,7 @@ describe("Responsive Checklist editor component", async () => {
         screen.getByText(/At least one option must also set a data field/),
       ).toBeInTheDocument(),
     );
-  }, 20_000);
+  });
 
   it("does not show an error if at least one option sets a data field", async () => {
     const handleSubmit = vi.fn();
@@ -153,16 +154,18 @@ describe("Responsive Checklist editor component", async () => {
 
     // Set a top-level data field
     await user.click(autocompleteInput);
-    await user.type(autocompleteInput, "my.data.value");
+    await user.paste("my.data.value");
     await user.keyboard("{Enter}");
 
-    // An an option without a data field
+    // Add an option without a data field
     await user.click(screen.getByRole("button", { name: /Add option/i }));
-    await user.type(screen.getByPlaceholderText("Option"), "First");
+    await user.click(screen.getByPlaceholderText("Option"));
+    await user.paste("First");
 
-    // An another option, this time with a data field
+    // Add another option, this time with a data field
     await user.click(screen.getByRole("button", { name: /Add option/i }));
-    await user.type(screen.getAllByPlaceholderText("Option")[1], "Second");
+    await user.click(screen.getAllByPlaceholderText("Option")[1]);
+    await user.paste("Second");
     const autocompleteComponentOption = screen.getByTestId(
       "data-field-autocomplete-option-1",
     );
@@ -170,13 +173,13 @@ describe("Responsive Checklist editor component", async () => {
       autocompleteComponentOption,
     ).getByRole("combobox");
     await user.click(autocompleteInputOption);
-    await user.type(autocompleteInputOption, "my.option.data.value");
+    await user.paste("my.option.data.value");
     await user.keyboard("{Enter}");
 
     fireEvent.submit(screen.getByTestId("checklistEditorForm"));
 
     await waitFor(() => expect(handleSubmit).toHaveBeenCalled());
-  }, 50_000);
+  });
 
   it("only allows a single exclusive option to be added", async () => {
     const { user } = await setup(
@@ -186,7 +189,8 @@ describe("Responsive Checklist editor component", async () => {
     );
 
     await user.click(screen.getByRole("button", { name: /Add option/i }));
-    await user.type(screen.getByPlaceholderText("Option"), "First");
+    await user.click(screen.getByPlaceholderText("Option"));
+    await user.paste("First");
 
     const addExclusiveOptionButton = screen.getByRole("button", {
       name: /Add "or" option/i,
@@ -420,19 +424,19 @@ describe("Responsive Checklist editor component", async () => {
     );
 
     // Set title
-    await user.type(screen.getByPlaceholderText("Text"), "mockTitle");
+    await user.click(screen.getByPlaceholderText("Text"));
+    await user.paste("mockTitle");
 
     // Add first option with default rule
     await user.click(screen.getByRole("button", { name: /Add option/i }));
-    await user.type(screen.getByPlaceholderText("Option"), "First Option");
+    await user.click(screen.getByPlaceholderText("Option"));
+    await user.paste("First Option");
     expect(screen.getByText("Always show")).toBeVisible();
 
     // Add second option with conditional rule
     await user.click(screen.getByRole("button", { name: /Add option/i }));
-    await user.type(
-      screen.getAllByPlaceholderText("Option")[1],
-      "Second Option",
-    );
+    await user.click(screen.getAllByPlaceholderText("Option")[1]);
+    await user.paste("Second Option");
 
     const ruleDropdowns = screen.getAllByText("Always show");
     expect(ruleDropdowns).toHaveLength(2);
@@ -444,13 +448,17 @@ describe("Responsive Checklist editor component", async () => {
       await screen.findAllByPlaceholderText("Data field")
     ).at(-1);
     expect(conditionalField).toBeInTheDocument();
-    await user.type(conditionalField!, "mockOptionFn{enter}");
+    await user.click(conditionalField!);
+    await user.paste("mockOptionFn");
+    await user.keyboard("{Enter}");
 
     const conditionalValue = (
       await screen.findAllByPlaceholderText("Value")
     ).at(-1);
     expect(conditionalValue).toBeInTheDocument();
-    await user.type(conditionalValue!, "mockOptionVal{enter}");
+    await user.click(conditionalValue!);
+    await user.paste("mockOptionVal");
+    await user.keyboard("{Enter}");
 
     // Submit form
     fireEvent.submit(screen.getByTestId("checklistEditorForm"));
@@ -490,5 +498,5 @@ describe("Responsive Checklist editor component", async () => {
         ]),
       ),
     );
-  }, 20_000);
+  });
 });
