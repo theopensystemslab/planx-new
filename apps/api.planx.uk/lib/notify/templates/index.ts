@@ -1,19 +1,61 @@
 import type { UUID } from "crypto";
-import { confirmationAgentTemplate, generalConfirmationAgentTemplate } from "./inviteToPay/confirmation-agent.js";
-import { confirmationPayeeTemplate, generalConfirmationPayeeTemplate } from "./inviteToPay/confirmation-payee.js";
-import { invitationToPayTemplate, generalInvitationToPayTemplate } from "./inviteToPay/invitation-to-pay.js";
-import { invitationToPayAgentTemplate, generalInvitationToPayAgentTemplate } from "./inviteToPay/invitation-to-pay-agent.js";
-import { paymentExpiryTemplate, generalPaymentExpiryTemplate } from "./inviteToPay/payment-expiry.js";
-import { paymentExpiryAgentTemplate, generalPaymentExpiryAgentTemplate } from "./inviteToPay/payment-expiry-agent.js";
-import { paymentReminderTemplate, generalPaymentReminderTemplate } from "./inviteToPay/payment-reminder.js";
-import { paymentReminderAgentTemplate, generalPaymentReminderAgentTemplate } from "./inviteToPay/payment-reminder-agent.js";
-import { expiryTemplate, generalExpiryTemplate } from "./saveAndReturn/expiry.js";
-import { reminderTemplate, generalReminderTemplate } from "./saveAndReturn/reminder.js";
-import { saveTemplate, generalSaveTemplate } from "./saveAndReturn/save-application.js";
-import { userConfirmationTemplate, generalUserConfirmationTemplate } from "./saveAndReturn/user-confirmation.js";
-import { resumeTemplate, generalResumeTemplate } from "./saveAndReturn/resume-application.js";
+import {
+  confirmationAgentTemplate,
+  generalConfirmationAgentTemplate,
+} from "./inviteToPay/confirmation-agent.js";
+import {
+  confirmationPayeeTemplate,
+  generalConfirmationPayeeTemplate,
+} from "./inviteToPay/confirmation-payee.js";
+import {
+  invitationToPayTemplate,
+  generalInvitationToPayTemplate,
+} from "./inviteToPay/invitation-to-pay.js";
+import {
+  invitationToPayAgentTemplate,
+  generalInvitationToPayAgentTemplate,
+} from "./inviteToPay/invitation-to-pay-agent.js";
+import {
+  paymentExpiryTemplate,
+  generalPaymentExpiryTemplate,
+} from "./inviteToPay/payment-expiry.js";
+import {
+  paymentExpiryAgentTemplate,
+  generalPaymentExpiryAgentTemplate,
+} from "./inviteToPay/payment-expiry-agent.js";
+import {
+  paymentReminderTemplate,
+  generalPaymentReminderTemplate,
+} from "./inviteToPay/payment-reminder.js";
+import {
+  paymentReminderAgentTemplate,
+  generalPaymentReminderAgentTemplate,
+} from "./inviteToPay/payment-reminder-agent.js";
+import {
+  expiryTemplate,
+  generalExpiryTemplate,
+} from "./saveAndReturn/expiry.js";
+import {
+  reminderTemplate,
+  generalReminderTemplate,
+} from "./saveAndReturn/reminder.js";
+import {
+  saveTemplate,
+  generalSaveTemplate,
+} from "./saveAndReturn/save-application.js";
+import {
+  userConfirmationTemplate,
+  generalUserConfirmationTemplate,
+} from "./saveAndReturn/user-confirmation.js";
+import {
+  resumeTemplate,
+  generalResumeTemplate,
+} from "./saveAndReturn/resume-application.js";
 import { lpsLoginTemplate } from "./lps/lpsLoginTemplate.js";
-import { newDownloadLinkTemplate, generalNewDownloadLinkTemplate } from "./sendToEmail/new-download-link.js";
+import {
+  newDownloadLinkTemplate,
+  generalNewDownloadLinkTemplate,
+} from "./sendToEmail/new-download-link.js";
 
 export type NotifyConfig<T> = { personalisation: T; emailReplyToId: string };
 

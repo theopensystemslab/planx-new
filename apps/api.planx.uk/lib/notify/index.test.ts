@@ -29,18 +29,40 @@ describe("resolveNotifyTemplate", () => {
   it("returns the general template for 'general'", () => {
     expect(resolveNotifyTemplate("save", "general")).toBe("general-save");
     expect(resolveNotifyTemplate("resume", "general")).toBe("general-resume");
-    expect(resolveNotifyTemplate("reminder", "general")).toBe("general-reminder");
+    expect(resolveNotifyTemplate("reminder", "general")).toBe(
+      "general-reminder",
+    );
     expect(resolveNotifyTemplate("expiry", "general")).toBe("general-expiry");
-    expect(resolveNotifyTemplate("confirmation", "general")).toBe("general-confirmation");
-    expect(resolveNotifyTemplate("invite-to-pay", "general")).toBe("general-invite-to-pay");
-    expect(resolveNotifyTemplate("invite-to-pay-agent", "general")).toBe("general-invite-to-pay-agent");
-    expect(resolveNotifyTemplate("payment-reminder", "general")).toBe("general-payment-reminder");
-    expect(resolveNotifyTemplate("payment-reminder-agent", "general")).toBe("general-payment-reminder-agent");
-    expect(resolveNotifyTemplate("payment-expiry", "general")).toBe("general-payment-expiry");
-    expect(resolveNotifyTemplate("payment-expiry-agent", "general")).toBe("general-payment-expiry-agent");
-    expect(resolveNotifyTemplate("confirmation-agent", "general")).toBe("general-confirmation-agent");
-    expect(resolveNotifyTemplate("confirmation-payee", "general")).toBe("general-confirmation-payee");
-    expect(resolveNotifyTemplate("new-download-link", "general")).toBe("general-new-download-link");
+    expect(resolveNotifyTemplate("confirmation", "general")).toBe(
+      "general-confirmation",
+    );
+    expect(resolveNotifyTemplate("invite-to-pay", "general")).toBe(
+      "general-invite-to-pay",
+    );
+    expect(resolveNotifyTemplate("invite-to-pay-agent", "general")).toBe(
+      "general-invite-to-pay-agent",
+    );
+    expect(resolveNotifyTemplate("payment-reminder", "general")).toBe(
+      "general-payment-reminder",
+    );
+    expect(resolveNotifyTemplate("payment-reminder-agent", "general")).toBe(
+      "general-payment-reminder-agent",
+    );
+    expect(resolveNotifyTemplate("payment-expiry", "general")).toBe(
+      "general-payment-expiry",
+    );
+    expect(resolveNotifyTemplate("payment-expiry-agent", "general")).toBe(
+      "general-payment-expiry-agent",
+    );
+    expect(resolveNotifyTemplate("confirmation-agent", "general")).toBe(
+      "general-confirmation-agent",
+    );
+    expect(resolveNotifyTemplate("confirmation-payee", "general")).toBe(
+      "general-confirmation-payee",
+    );
+    expect(resolveNotifyTemplate("new-download-link", "general")).toBe(
+      "general-new-download-link",
+    );
   });
 
   it("falls back to the base template for unmapped templates", () => {

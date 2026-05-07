@@ -5,7 +5,11 @@ import { gql } from "graphql-request";
 
 import { $api } from "../../../client/index.js";
 import type { Template } from "../../../lib/notify/templates/index.js";
-import { getClientForTemplate, resolveNotifyTemplate, sendEmail } from "../../../lib/notify/index.js";
+import {
+  getClientForTemplate,
+  resolveNotifyTemplate,
+  sendEmail,
+} from "../../../lib/notify/index.js";
 import type { LowCalSession } from "../../../types.js";
 
 const DAYS_UNTIL_EXPIRY = 28;

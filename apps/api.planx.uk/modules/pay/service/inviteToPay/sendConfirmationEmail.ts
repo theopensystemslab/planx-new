@@ -1,7 +1,10 @@
 import { formatRawProjectTypes } from "@opensystemslab/planx-core";
 import { gql } from "graphql-request";
 import { $api } from "../../../../client/index.js";
-import { resolveNotifyTemplate, sendEmail } from "../../../../lib/notify/index.js";
+import {
+  resolveNotifyTemplate,
+  sendEmail,
+} from "../../../../lib/notify/index.js";
 import type { TemplateRegistry } from "../../../../lib/notify/templates/index.js";
 
 export async function sendAgentAndPayeeConfirmationEmail(sessionId: string) {

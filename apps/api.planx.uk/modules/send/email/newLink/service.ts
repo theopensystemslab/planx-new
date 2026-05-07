@@ -5,7 +5,10 @@ import {
   DEVOPS_EMAIL_REPLY_TO_ID,
   type TemplateRegistry,
 } from "../../../../lib/notify/templates/index.js";
-import { resolveNotifyTemplate, sendEmail } from "../../../../lib/notify/index.js";
+import {
+  resolveNotifyTemplate,
+  sendEmail,
+} from "../../../../lib/notify/index.js";
 
 export const createAccessToken = async (
   sessionId: string,
