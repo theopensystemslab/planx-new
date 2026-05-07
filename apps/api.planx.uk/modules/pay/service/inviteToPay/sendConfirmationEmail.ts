@@ -1,7 +1,7 @@
 import { formatRawProjectTypes } from "@opensystemslab/planx-core";
 import { gql } from "graphql-request";
 import { $api } from "../../../../client/index.js";
-import { sendEmail } from "../../../../lib/notify/index.js";
+import { resolveNotifyTemplate, sendEmail } from "../../../../lib/notify/index.js";
 import type { TemplateRegistry } from "../../../../lib/notify/templates/index.js";
 
 export async function sendAgentAndPayeeConfirmationEmail(sessionId: string) {
@@ -11,6 +11,7 @@ export async function sendAgentAndPayeeConfirmationEmail(sessionId: string) {
     payeeEmail,
     projectTypes,
     emailReplyToId,
+    emailTemplate,
   } = await getDataForPayeeAndAgentEmails(sessionId);
   const projectType = projectTypes.length
     ? formatRawProjectTypes(projectTypes)
@@ -22,8 +23,16 @@ export async function sendAgentAndPayeeConfirmationEmail(sessionId: string) {
     },
     emailReplyToId,
   };
-  await sendEmail("confirmation-agent", applicantEmail, config);
-  await sendEmail("confirmation-payee", payeeEmail, config);
+  await sendEmail(
+    resolveNotifyTemplate("confirmation-agent", emailTemplate),
+    applicantEmail,
+    config,
+  );
+  await sendEmail(
+    resolveNotifyTemplate("confirmation-payee", emailTemplate),
+    payeeEmail,
+    config,
+  );
 
   return { message: "Success" };
 }
@@ -40,6 +49,7 @@ type PayeeAndAgentEmailData = {
   payeeEmail: string;
   projectTypes: string[];
   emailReplyToId: string;
+  emailTemplate: "application" | "general";
 };
 
 async function getDataForPayeeAndAgentEmails(
@@ -52,6 +62,7 @@ async function getDataForPayeeAndAgentEmails(
         flow {
           name
           slug
+          email_template
           team {
             notifyPersonalisation: team_settings {
               helpEmail: help_email
@@ -80,6 +91,7 @@ async function getDataForPayeeAndAgentEmails(
       flow: {
         slug: string;
         name: string;
+        email_template: "application" | "general";
         team: {
           notifyPersonalisation: {
             emailReplyToId: string;
@@ -120,5 +132,6 @@ async function getDataForPayeeAndAgentEmails(
     applicantEmail,
     payeeEmail,
     projectTypes,
+    emailTemplate: data.flow.email_template,
   };
 }
