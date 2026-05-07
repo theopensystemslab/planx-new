@@ -22,13 +22,13 @@ export interface TeamStore {
   teamTheme: TeamTheme;
   teamDomain: string;
 
-  setTeam: (team: Team) => void;
+  setTeam: (team: Team, options?: { useCustomFavicon?: boolean }) => void;
   getTeam: () => Team;
   clearTeamStore: () => void;
 }
 
 const generateCircleFavicon = (color: string): string => {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="${color}"/></svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12" fill="${color}"/></svg>`;
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 };
 
@@ -52,7 +52,7 @@ export const teamStore: StateCreator<
   },
   teamDomain: "",
 
-  setTeam: (team) => {
+  setTeam: (team, options = { useCustomFavicon: true }) => {
     set({
       teamId: team.id,
       teamIntegrations: team.integrations,
@@ -64,7 +64,7 @@ export const teamStore: StateCreator<
     });
 
     const favicon = document.getElementById("favicon") as HTMLLinkElement;
-    if (team.theme?.favicon) {
+    if (options.useCustomFavicon && team.theme?.favicon) {
       favicon.href = team.theme.favicon;
     } else {
       const color = team.theme?.primaryColour ?? DEFAULT_PRIMARY_COLOR;
