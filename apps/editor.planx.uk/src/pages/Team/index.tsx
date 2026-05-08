@@ -222,7 +222,7 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
             teamId={teamId}
             slug={slug}
             archivedFlows={displayedArchivedFlows}
-            loading={archivedFlowsLoading}
+            loading={archivedFlowsLoading && !displayedArchivedFlows}
             error={archivedFlowsError}
             isFiltered={archiveIsFiltered}
             onClearSearch={() => {
