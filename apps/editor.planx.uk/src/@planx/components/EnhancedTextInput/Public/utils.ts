@@ -31,15 +31,16 @@ export const makeBreadcrumb = (
     );
 
   const { userInput, original } = values;
+  const userAction = getAction(values);
 
   const enhancement =
     values.status === "success"
-      ? { original, enhanced: values.enhanced }
-      : { original, error: values.error };
+      ? { original, enhanced: values.enhanced, userAction }
+      : { original, error: values.error, userAction };
 
   return {
     [fn]: userInput,
-    [`enhancedTextInput.${fn}.action`]: getAction(values),
+    [`enhancedTextInput.${fn}.action`]: userAction,
     // TODO: Ensure we deep merge this
     _enhancements: {
       [fn]: enhancement,
