@@ -1,7 +1,7 @@
 import { useMutation,useQuery } from "@apollo/client";
 import gql from "graphql-tag";
 
-import { GetIsServiceResponse, GetIsServiceVars, UpdateIsServiceVars } from "./types"
+import { GetIsServiceResponse, IsServiceVars } from "./types"
 
 export const GET_IS_SERVICE = gql`
 query GetIsService($flowId: uuid!) {
@@ -18,8 +18,8 @@ query GetIsService($flowId: uuid!) {
 `;
 
 export const UPDATE_IS_SERVICE = gql`
-  mutation SetIsService($flowId: uuid!, $isService: Boolean!) {
-    update_flows_by_pk(pk_columns: {id: $flowId}, _set: {is_service: $isService, status: offline}) {
+  mutation SetIsService($flowId: uuid!) {
+    update_flows_by_pk(pk_columns: {id: $flowId}, _set: {is_service: true}) {
       id
       isService: is_service
     }
@@ -28,7 +28,7 @@ export const UPDATE_IS_SERVICE = gql`
 
 
 export const useGetIsService = (flowId: string) => {
-  return useQuery<GetIsServiceResponse, GetIsServiceVars>(
+  return useQuery<GetIsServiceResponse, IsServiceVars>(
     GET_IS_SERVICE,
     {
       variables: { flowId },
@@ -36,11 +36,11 @@ export const useGetIsService = (flowId: string) => {
   );
 };
 
-export const useUpdateIsService = (flowId: string, isService: boolean) => {
-  return useMutation<GetIsServiceResponse, UpdateIsServiceVars>(
+export const useUpdateIsService = (flowId: string) => {
+  return useMutation<GetIsServiceResponse, IsServiceVars>(
     UPDATE_IS_SERVICE,
     {
-      variables: { flowId, isService },
+      variables: { flowId },
       refetchQueries: [{ query: GET_IS_SERVICE, variables: { flowId } }],
     }
   );

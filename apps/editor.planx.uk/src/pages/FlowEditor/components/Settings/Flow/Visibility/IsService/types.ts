@@ -1,4 +1,4 @@
-export type GetIsServiceVars = { flowId: string};
+export type IsServiceVars = { flowId: string};
 export type GetIsServiceResponse = 
     {
       flow: {
@@ -11,4 +11,3 @@ export type GetIsServiceResponse =
       }
     }
 export type IsServiceFormValues = { isService: boolean };
-export type UpdateIsServiceVars = { flowId: string, isService: boolean };

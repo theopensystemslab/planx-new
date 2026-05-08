@@ -17,7 +17,7 @@ import { validationSchema } from "./schema";
 import type {
   GetIsServiceResponse,
   IsServiceFormValues,
-  UpdateIsServiceVars,
+  IsServiceVars,
 } from "./types";
 
 const IsService: React.FC = () => {
@@ -30,7 +30,7 @@ const IsService: React.FC = () => {
   return (
     <SettingsFormContainer<
       GetIsServiceResponse,
-      UpdateIsServiceVars,
+      IsServiceVars,
       IsServiceFormValues
     >
       query={GET_IS_SERVICE}
@@ -38,7 +38,7 @@ const IsService: React.FC = () => {
       validationSchema={validationSchema}
       legend={"Is this flow a service?"}
       description={
-        "A service is user-facing and includes more customisable settings. Only services can accept responses."
+        "A service is user-facing and can accept responses when turned online. Only services can accept responses."
       }
       getInitialValues={({ flow: { isService } }) => ({ isService })}
       queryVariables={{ flowId }}
@@ -66,17 +66,22 @@ const IsService: React.FC = () => {
                 variant="body1"
                 sx={{ fontWeight: FONT_WEIGHT_BOLD, mr: 1, mb: 2 }}
               >
-                This is currently a {formik.values.isService === true ? "service" : "flow"}
+                {formik.values.isService === true ? "This is a service" : "This is currently a flow"}
               </Typography>
-              <Typography
-                variant="body1"
-              >
-                {formik.values.isService === true ? 
-                "A service is user-facing and can accept submissions" : 
-                "A flow is content that will be nested in other services, and cannot directly accept submissions"}
-                .
-              </Typography>
+              {formik.values.isService === true ? 
+                <Typography
+                  variant="body2"
+                >
+                  If this flow has been made a service in error, please contact an admin to revert it to a flow.
+                </Typography> :
+                <Typography
+                  variant="body1"
+                  >
+                  A flow is content that will be nested in other services, and cannot directly accept responses.
+                </Typography>
+              }
             </Box>
+              {formik.values.isService !== true &&
               <Box sx={{ display: "flex" }}>
                 <Button
                   id="set-is-service-button"
@@ -86,11 +91,9 @@ const IsService: React.FC = () => {
                   variant="contained"
                   onClick={() => setDialogOpen(true)}
                 >
-                  {formik.values.isService === false
-                    ? "Change to user-facing service"
-                    : "Change to flow"}
+                  {"Make this a user-facing service"}
                 </Button>
-              </Box>
+              </Box>}
               </>
             )}
             {isProduction && (
@@ -105,17 +108,11 @@ const IsService: React.FC = () => {
                     await formik.submitForm();
                 }
                 }
-                title="Confirm flow type change"
-                confirmText={
-                  formik.values.isService === false
-                    ? "Set to service"
-                    : "Set to flow"
-                }
+                title="Confirm change to service"
+                confirmText={"Set to service"}
                 cancelText="Cancel"
               >
-                {formik.values.isService === false 
-                ? "Are you sure you want to set this flow as a user-facing service?"
-                : "Are you sure you want to set this service as a flow? This should only be set if it is intended for use as a nested flow."}
+                Are you sure you want to set this flow as a user-facing service?
               </ConfirmationDialog>
             )}
           </>
