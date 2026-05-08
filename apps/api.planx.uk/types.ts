@@ -3,6 +3,7 @@ import type {
   Team,
   PaymentRequest,
 } from "@opensystemslab/planx-core/types";
+import type { GovNotifyEmailTemplate } from "./lib/notify/index.js";
 
 /**
  * @deprecated Migrating to Node from planx-core
@@ -76,7 +77,7 @@ export interface LowCalSession {
   flow: {
     slug: string;
     name: string;
-    email_template: "application" | "general";
+    email_template: GovNotifyEmailTemplate;
     team: Team;
   };
   lockedAt?: string;

@@ -8,6 +8,7 @@ import {
 import {
   resolveNotifyTemplate,
   sendEmail,
+  type GovNotifyEmailTemplate,
 } from "../../../../lib/notify/index.js";
 
 export const createAccessToken = async (
@@ -31,7 +32,7 @@ export const getSession = async (sessionId: string) => {
       flow: {
         id: string;
         name: string;
-        email_template: "application" | "general";
+        email_template: GovNotifyEmailTemplate;
         team: { id: number };
       };
     } | null;
@@ -69,7 +70,7 @@ export const emailNewDownloadLink = async ({
   submissionEmailAddress: string;
   token: string;
   serviceName: string;
-  emailTemplate: "application" | "general";
+  emailTemplate: GovNotifyEmailTemplate;
 }) => {
   const config: TemplateRegistry["new-download-link"]["config"] = {
     personalisation: {

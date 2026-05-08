@@ -11,13 +11,14 @@ import {
   calculateExpiryDate,
   getServiceLink,
 } from "../../../saveAndReturn/service/utils.js";
+import type { GovNotifyEmailTemplate } from "../../../../lib/notify/index.js";
 
 interface SessionDetails {
   email: string;
   flow: {
     slug: string;
     name: string;
-    email_template: "application" | "general";
+    email_template: GovNotifyEmailTemplate;
     team: Team;
   };
 }

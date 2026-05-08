@@ -4,6 +4,7 @@ import { $api } from "../../../../client/index.js";
 import {
   resolveNotifyTemplate,
   sendEmail,
+  type GovNotifyEmailTemplate,
 } from "../../../../lib/notify/index.js";
 import type { TemplateRegistry } from "../../../../lib/notify/templates/index.js";
 
@@ -52,7 +53,7 @@ type PayeeAndAgentEmailData = {
   payeeEmail: string;
   projectTypes: string[];
   emailReplyToId: string;
-  emailTemplate: "application" | "general";
+  emailTemplate: GovNotifyEmailTemplate;
 };
 
 async function getDataForPayeeAndAgentEmails(
@@ -94,7 +95,7 @@ async function getDataForPayeeAndAgentEmails(
       flow: {
         slug: string;
         name: string;
-        email_template: "application" | "general";
+        email_template: GovNotifyEmailTemplate;
         team: {
           notifyPersonalisation: {
             emailReplyToId: string;
