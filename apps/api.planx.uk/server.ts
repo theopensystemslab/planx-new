@@ -8,7 +8,6 @@ import helmet from "helmet";
 import { Server, type IncomingMessage } from "http";
 import "isomorphic-fetch";
 import { pinoHttp } from "pino-http";
-import qs from "qs";
 
 import { defaultCors } from "./cors.js";
 import { useSwaggerDocs } from "./docs/index.js";
@@ -43,11 +42,8 @@ useSwaggerDocs(app);
 
 app.set("trust proxy", 1);
 
-// Set arrayLimit to 100 (default is 20)
-export const QS_ARRAY_LIMIT = 100;
-app.set("query parser", (str: string) => {
-  return qs.parse(str, { arrayLimit: QS_ARRAY_LIMIT });
-});
+// Set arrayLimit to 100 (default is 20, which is too low for `templatedFlowIds`)
+app.use(express.query({ arrayLimit: 100 }));
 
 app.use(defaultCors);
 

@@ -3,7 +3,6 @@ import { z } from "zod";
 
 import { ServerError } from "../../../errors/index.js";
 import type { CreateScheduledEventResponse } from "../../../lib/hasura/metadata/types.js";
-import { QS_ARRAY_LIMIT } from "../../../server.js";
 import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 import { publishFlow } from "./service.js";
 
@@ -19,7 +18,8 @@ export const publishFlowSchema = z.object({
   }),
   query: z.object({
     summary: z.string(),
-    templatedFlowIds: z.array(z.string()).max(QS_ARRAY_LIMIT).optional(),
+    // Keep max in sync with `apiLimit` in server.ts
+    templatedFlowIds: z.array(z.string()).max(100).optional(),
   }),
 });
 
