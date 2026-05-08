@@ -14,7 +14,14 @@ export const singleApplicationEmailSchema = z.object({
     }),
   }),
   params: z.object({
-    template: z.enum(["reminder", "expiry", "save"]),
+    template: z.enum([
+      "reminder",
+      "expiry",
+      "save",
+      "general-reminder",
+      "general-expiry",
+      "general-save",
+    ]),
   }),
 });
 
@@ -37,6 +44,12 @@ export const paymentEmailSchema = z.object({
       "payment-reminder-agent",
       "payment-expiry",
       "payment-expiry-agent",
+      "general-invite-to-pay",
+      "general-invite-to-pay-agent",
+      "general-payment-reminder",
+      "general-payment-reminder-agent",
+      "general-payment-expiry",
+      "general-payment-expiry-agent",
     ]),
   }),
 });
@@ -55,7 +68,7 @@ export const confirmationEmailSchema = z.object({
     }),
   }),
   params: z.object({
-    template: z.enum(["confirmation"]),
+    template: z.enum(["confirmation", "general-confirmation"]),
   }),
 });
 

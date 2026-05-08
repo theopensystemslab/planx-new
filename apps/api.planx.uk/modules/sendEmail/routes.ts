@@ -18,7 +18,7 @@ import {
 const router = Router();
 
 router.post(
-  `/send-email/:template(reminder|expiry|save)`,
+  `/send-email/:template(reminder|expiry|save|general-reminder|general-expiry|general-save)`,
   sendEmailLimiter,
   useSendEmailAuth,
   validate(singleApplicationEmailSchema),
@@ -26,7 +26,7 @@ router.post(
 );
 
 router.post(
-  "/send-email/:template(confirmation)",
+  "/send-email/:template(confirmation|general-confirmation)",
   sendEmailLimiter,
   useSendEmailAuth,
   validate(confirmationEmailSchema),
