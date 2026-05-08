@@ -1,18 +1,19 @@
+import { ApolloError } from "@apollo/client";
 import TableRowsIcon from "@mui/icons-material/TableRows";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
-import { FlowCardView } from "../../FlowEditor/lib/store/editor";
+import { FlowCardView, FlowSummary } from "../../FlowEditor/lib/store/editor";
 import { FlowTable } from "../components/FlowTable";
 import { ShowingServicesHeader } from "../components/ShowingServicesHeader";
 import { DashboardList } from "./DashboardList";
 import FlowCard from "./FlowCard";
-import { useGetArchivedFlows } from "./hooks/useGetArchivedFlows";
 import { StyledToggleButton } from "./StyledToggleButton";
 
 type Props = {
@@ -23,6 +24,11 @@ type Props = {
   ) => void;
   teamId: number;
   slug: string;
+  archivedFlows: FlowSummary[] | null;
+  loading: boolean;
+  error: ApolloError | undefined;
+  isFiltered: boolean;
+  onClearSearch: () => void;
 };
 
 const Archive: React.FC<Props> = ({
@@ -30,14 +36,12 @@ const Archive: React.FC<Props> = ({
   handleViewChange,
   teamId,
   slug,
+  archivedFlows,
+  loading,
+  error,
+  isFiltered,
+  onClearSearch,
 }) => {
-  const {
-    data: archivedFlowsData,
-    loading,
-    error,
-  } = useGetArchivedFlows(teamId);
-  const archivedFlows = archivedFlowsData?.flows ?? null;
-
   if (error) {
     return (
       <Box sx={{ pt: 2 }}>
@@ -78,13 +82,20 @@ const Archive: React.FC<Props> = ({
             display: "flex",
             justifyContent: "flex-start",
             alignItems: "center",
+            gap: 2,
             minHeight: "50px",
           }}
         >
           <ShowingServicesHeader
             matchedFlowsCount={archivedFlows?.length || 0}
             isArchived
+            isFiltered={isFiltered}
           />
+          {isFiltered && (
+            <Button onClick={onClearSearch} variant="link">
+              Clear filters
+            </Button>
+          )}
         </Box>
         <ToggleButtonGroup
           value={flowCardView}

@@ -6,8 +6,9 @@ import {
   GetAnyFlowsVars,
 } from "../../queries";
 
-export const useGetArchivedFlows = (teamId: number) =>
+export const useGetArchivedFlows = (teamId: number, skip?: boolean) =>
   useQuery<GetAnyFlowsQuery, GetAnyFlowsVars>(GET_ARCHIVED_FLOWS, {
     variables: { teamId },
     fetchPolicy: "cache-and-network",
+    skip,
   });

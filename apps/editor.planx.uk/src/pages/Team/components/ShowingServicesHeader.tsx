@@ -31,11 +31,18 @@ export const ShowingServicesHeader = ({
         : `Showing ${matchedFlowsCount} pinned flow`;
   }
 
-  if (isArchived) {
+  if (isArchived && !isFiltered) {
     message =
       matchedFlowsCount !== 1
         ? `Showing ${matchedFlowsCount} archived flows`
         : `Showing ${matchedFlowsCount} archived flow`;
+  }
+
+  if (isArchived && isFiltered) {
+    message =
+      matchedFlowsCount !== 1
+        ? `Showing ${matchedFlowsCount} filtered archived flows`
+        : `Showing ${matchedFlowsCount} filtered archived flow`;
   }
 
   return (
