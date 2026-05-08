@@ -61,6 +61,21 @@ describe("email_applications", () => {
     });
   });
 
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("cannot query email_applications", () => {
+      expect(i.queries).not.toContain("email_applications");
+    });
+
+    test("cannot create, update, or delete email_applications", () => {
+      expect(i).toHaveNoMutationsFor("email_applications");
+    });
+  });
+
   describe("api", () => {
     let i;
     beforeAll(async () => {

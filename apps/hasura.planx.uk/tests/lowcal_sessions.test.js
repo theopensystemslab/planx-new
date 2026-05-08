@@ -562,6 +562,21 @@ describe("lowcal_sessions", () => {
     });
   });
 
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("can query lowcal_sessions", () => {
+      expect(i.queries).toContain("lowcal_sessions");
+    });
+
+    test("cannot create, update, or delete lowcal_sessions", () => {
+      expect(i).toHaveNoMutationsFor("lowcal_sessions");
+    });
+  });
+
   describe("api", () => {
     let i;
     beforeAll(async () => {

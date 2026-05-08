@@ -59,6 +59,21 @@ describe("application_access_tokens", () => {
     });
   });
 
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("cannot query application_access_tokens", () => {
+      expect(i.queries).not.toContain("application_access_tokens");
+    });
+
+    test("cannot create, update, or delete application_access_tokens", () => {
+      expect(i).toHaveNoMutationsFor("application_access_tokens");
+    });
+  });
+
   describe("api", () => {
     let i;
     beforeAll(async () => {

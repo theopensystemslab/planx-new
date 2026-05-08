@@ -68,6 +68,26 @@ describe("team_members", () => {
     });
   });
 
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("can query teams", () => {
+      expect(i.queries).toContain("team_members");
+    });
+
+    test("cannot update team_members", () => {
+      expect(i).not.toContain("update_team_members_by_pk");
+    });
+
+    test("can add and remove team_members", () => {
+      expect(i.mutations).toContain("insert_team_members");
+      expect(i.mutations).toContain("delete_team_members");
+    });
+  });
+
   describe("api", () => {
     let i;
     beforeAll(async () => {

@@ -62,6 +62,21 @@ describe("planning_constraints_requests", () => {
     });
   });
 
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("cannot query planning_constraints_requests", () => {
+      expect(i.queries).not.toContain("planning_constraints_requests");
+    });
+
+    test("cannot create, update, or delete planning_constraints_requests", () => {
+      expect(i).toHaveNoMutationsFor("planning_constraints_requests");
+    });
+  });
+
   describe("api", () => {
     let i;
     beforeAll(async () => {

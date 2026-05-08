@@ -67,6 +67,21 @@ describe("feedback_type_enum", () => {
     });
   });
 
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("cannot query feedback_type_enum", () => {
+      expect(i.queries).not.toContain("feedback_type_enum");
+    });
+
+    test("cannot create, update, or delete feedback_type_enum", () => {
+      expect(i).toHaveNoMutationsFor("feedback_type_enum");
+    });
+  });
+
   describe("api", () => {
     let i;
     beforeAll(async () => {
