@@ -85,6 +85,7 @@ describe("Passport generation", () => {
             "proposal.description": {
               original: ORIGINAL,
               enhanced: ENHANCED,
+              userAction: "Accepted the AI-enhanced description",
             },
           },
         },
@@ -140,6 +141,7 @@ describe("Passport generation", () => {
             "proposal.description": {
               original: ORIGINAL,
               enhanced: ENHANCED,
+              userAction: "Retained their original description",
             },
           },
         },
@@ -198,6 +200,7 @@ describe("Passport generation", () => {
             "proposal.description": {
               original: ORIGINAL,
               enhanced: ENHANCED,
+              userAction: "Re-wrote their description after AI feedback",
             },
           },
         },
@@ -253,6 +256,7 @@ describe("Passport generation", () => {
             "proposal.description": {
               original: ORIGINAL,
               enhanced: ENHANCED,
+              userAction: "Re-wrote their description after AI feedback",
             },
           },
         },
@@ -274,6 +278,7 @@ describe("navigating back to the EnhancedTextInput component", () => {
         "proposal.description": {
           original: "my first attempt",
           enhanced: "our LLM-enhanced suggestion",
+          userAction: "Re-wrote their description after AI feedback"
         },
       },
     },
@@ -393,6 +398,7 @@ describe("navigating back to the EnhancedTextInput component", () => {
             "proposal.description": {
               original: ORIGINAL,
               enhanced: ENHANCED,
+              userAction: "Accepted the AI-enhanced description",
             },
           },
         },
