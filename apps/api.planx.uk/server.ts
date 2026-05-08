@@ -4,10 +4,13 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
 import express from "express";
-import { pinoHttp } from "pino-http";
 import helmet from "helmet";
 import { Server, type IncomingMessage } from "http";
 import "isomorphic-fetch";
+import { pinoHttp } from "pino-http";
+import qs from "qs";
+
+import { defaultCors } from "./cors.js";
 import { useSwaggerDocs } from "./docs/index.js";
 import { errorHandler, expiredJWTHandler } from "./errors/requestHandlers.js";
 import adminRoutes from "./modules/admin/routes.js";
@@ -33,13 +36,18 @@ import userRoutes from "./modules/user/routes.js";
 import webhookRoutes from "./modules/webhooks/routes.js";
 import { apiLimiter } from "./rateLimit.js";
 import { registerSessionStubs } from "./session.js";
-import { defaultCors } from "./cors.js";
 
 const app = express();
 
 useSwaggerDocs(app);
 
 app.set("trust proxy", 1);
+
+// Set arrayLimit to 100 (default is 20)
+export const QS_ARRAY_LIMIT = 100;
+app.set("query parser", (str: string) => {
+  return qs.parse(str, { arrayLimit: QS_ARRAY_LIMIT });
+});
 
 app.use(defaultCors);
 
