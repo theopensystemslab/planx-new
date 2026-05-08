@@ -47,10 +47,10 @@ describe("notifications", () => {
     });
   });
 
-  describe("teamEditor", () => {
+  describe("teamAdmin", () => {
     let i;
     beforeAll(async () => {
-      i = await introspectAs("teamEditor");
+      i = await introspectAs("teamAdmin");
     });
 
     test("cannot query notifications", () => {

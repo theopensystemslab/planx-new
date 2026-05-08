@@ -61,6 +61,21 @@ describe("flows status history", () => {
     });
   });
 
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("can query flow_status_history", () => {
+      expect(i.queries).toContain("flow_status_history");
+    });
+
+    test("cannot create, update, or delete flows or their associated operations", () => {
+      expect(i).toHaveNoMutationsFor("flow_status_history");
+    });
+  });
+
   describe("api", () => {
     let i;
     beforeAll(async () => {

@@ -1,1 +1,3 @@
-[]
+- role_name: teamAdmin
+  role_set:
+    - teamEditor

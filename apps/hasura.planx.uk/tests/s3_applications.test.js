@@ -60,6 +60,21 @@ describe("s3_applications", () => {
     });
   });
 
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("cannot query s3_applications", () => {
+      expect(i.queries).not.toContain("s3_applications");
+    });
+
+    test("cannot create, update, or delete s3_applications", () => {
+      expect(i).toHaveNoMutationsFor("s3_applications");
+    });
+  });
+
   describe("api", () => {
     let i;
     beforeAll(async () => {

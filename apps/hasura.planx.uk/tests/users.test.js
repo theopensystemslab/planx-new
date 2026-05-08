@@ -70,6 +70,26 @@ describe("users", () => {
     });
   });
 
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    // Row-level permissions tested in e2e/tests/api-driven
+    // teamAdmin can only query their own record
+    test("can query users", async () => {
+      expect(i.queries).toContain("users");
+    });
+
+    // Row-level permissions in place
+    // teamAdmin can only mutate other users from their team
+    test("has full access to create and update users", async () => {
+      expect(i.mutations).toContain("insert_users");
+      expect(i.mutations).toContain("update_users_by_pk");
+    });
+  });
+
   describe("api", () => {
     let i;
     beforeAll(async () => {
