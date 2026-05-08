@@ -23,7 +23,7 @@ import { StyledToggleButton } from "./StyledToggleButton";
 
 const FiltersContainer = styled(Box)(({ theme }) => ({
   width: "100%",
-  margin: theme.spacing(0, 0, 2),
+  marginBottom: theme.spacing(1),
   padding: theme.spacing(1.5, 0),
   display: "flex",
   flexDirection: "row",
@@ -82,29 +82,13 @@ const Flows: React.FC<Props> = ({
               <SortControl<FlowSummary> sortOptions={sortOptions} />
             </Box>
           )}
-          <ToggleButtonGroup
-            value={flowCardView}
-            exclusive
-            onChange={handleViewChange}
-            size="small"
-          >
-            <Tooltip title="Card view" placement="bottom">
-              <StyledToggleButton value="grid" disableRipple>
-                <ViewModuleIcon />
-              </StyledToggleButton>
-            </Tooltip>
-            <Tooltip title="Table view" placement="bottom">
-              <StyledToggleButton value="row" disableRipple>
-                <TableRowsIcon />
-              </StyledToggleButton>
-            </Tooltip>
-          </ToggleButtonGroup>
         </FiltersContainer>
         <Box
           sx={{
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
+            justifyContent: "space-between",
             gap: 2,
           }}
         >
@@ -145,6 +129,23 @@ const Flows: React.FC<Props> = ({
               </Button>
             )}
           </Box>
+          <ToggleButtonGroup
+            value={flowCardView}
+            exclusive
+            onChange={handleViewChange}
+            size="small"
+          >
+            <Tooltip title="Card view" placement="bottom">
+              <StyledToggleButton value="grid" disableRipple>
+                <ViewModuleIcon />
+              </StyledToggleButton>
+            </Tooltip>
+            <Tooltip title="Table view" placement="bottom">
+              <StyledToggleButton value="row" disableRipple>
+                <TableRowsIcon />
+              </StyledToggleButton>
+            </Tooltip>
+          </ToggleButtonGroup>
         </Box>
         {flowCardView === "grid" ? (
           <>
