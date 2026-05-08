@@ -54,7 +54,9 @@ const sendEmail: SendEmail = async (template, emailAddress, config) => {
     } = { message: "Success" };
 
     if (template === "save" || template === "general-save") {
-      const saveConfig = config as TemplateRegistry["save"]["config"];
+      const saveConfig = config as TemplateRegistry[
+        | "save"
+        | "general-save"]["config"];
       returnValue.expiryDate = saveConfig.personalisation.expiryDate;
     }
 
