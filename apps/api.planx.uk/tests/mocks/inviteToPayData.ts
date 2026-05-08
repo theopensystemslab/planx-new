@@ -52,6 +52,7 @@ export const validSession: Session = {
     id: "741a2372-b0b4-4f30-98a8-7c98c6464954",
     slug: "apply-for-a-lawful-development-certificate",
     name: "Apply for a Lawful Development Certificate",
+    email_template: "application",
   },
 };
 
