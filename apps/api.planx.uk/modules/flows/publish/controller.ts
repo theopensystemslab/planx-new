@@ -16,10 +16,9 @@ export const publishFlowSchema = z.object({
   params: z.object({
     flowId: z.string(),
   }),
-  query: z.object({
+  body: z.object({
     summary: z.string(),
-    // Keep max in sync with `apiLimit` in server.ts
-    templatedFlowIds: z.array(z.string()).max(100).optional(),
+    templatedFlowIds: z.array(z.string()).optional(),
   }),
 });
 
@@ -35,7 +34,7 @@ export const publishFlowController: PublishFlowController = async (
 ) => {
   try {
     const { flowId } = res.locals.parsedReq.params;
-    const { summary, templatedFlowIds } = res.locals.parsedReq.query;
+    const { summary, templatedFlowIds } = res.locals.parsedReq.body;
     const response = await publishFlow(flowId, summary, templatedFlowIds);
 
     return res.json({

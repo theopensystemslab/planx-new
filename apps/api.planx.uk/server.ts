@@ -42,9 +42,6 @@ useSwaggerDocs(app);
 
 app.set("trust proxy", 1);
 
-// Set arrayLimit to 100 (default is 20, which is too low for `templatedFlowIds`)
-app.use(express.query({ arrayLimit: 100 }));
-
 app.use(defaultCors);
 
 app.use(bodyParser.json({ limit: "100mb" }));

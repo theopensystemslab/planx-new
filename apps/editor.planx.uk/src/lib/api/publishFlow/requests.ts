@@ -19,12 +19,9 @@ export const publishFlow = async ({
 }: PublishFlowArgs & { flowId: string }) => {
   const { data } = await apiClient.post<PublishFlowResponse>(
     `${import.meta.env.VITE_APP_API_URL}/flows/${flowId}/publish`,
-    {},
     {
-      params: {
-        summary,
-        templatedFlowIds,
-      },
+      summary,
+      templatedFlowIds,
     },
   );
 
