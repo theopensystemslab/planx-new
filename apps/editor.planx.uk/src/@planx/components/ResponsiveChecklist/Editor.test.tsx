@@ -17,7 +17,7 @@ import { ResponsiveChecklist } from "./model";
 
 const { setState } = useStore;
 
-describe("Responsive Checklist editor component", async () => {
+describe("Responsive Checklist editor component", () => {
   beforeEach(() => {
     setState({
       user: {
