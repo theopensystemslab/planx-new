@@ -35,7 +35,7 @@ function getEnvForAllowedHosts(host: string) {
       return "staging";
 
     default:
-      return "pullrequest";
+      return "pizza";
   }
 }
 

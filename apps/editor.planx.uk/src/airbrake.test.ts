@@ -65,7 +65,7 @@ describe("logger", () => {
     expect(Notifier).toHaveBeenCalledWith({
       projectId: 1,
       projectKey: "a",
-      environment: "pullrequest",
+      environment: "pizza",
     });
     logger.notify({ some: "value" });
     expect(Notifier.prototype.notify).toHaveBeenCalledWith({ some: "value" });
