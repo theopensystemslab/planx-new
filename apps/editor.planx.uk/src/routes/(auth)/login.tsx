@@ -1,7 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import { useStore } from "pages/FlowEditor/lib/store";
 import Login from "pages/Login/Login";
 import { z } from "zod";
+
+const REDIRECT_KEY = "planx_redirect_after_login";
 
 const loginSearchSchema = z.object({
   redirectTo: z.string().optional(),
@@ -9,6 +12,30 @@ const loginSearchSchema = z.object({
 
 export const Route = createFileRoute("/(auth)/login")({
   validateSearch: loginSearchSchema,
+  beforeLoad: async ({ search }) => {
+    // store redirectTo in sessionStorage so we can access it after oauth returns
+    if (search.redirectTo) {
+      sessionStorage.setItem(REDIRECT_KEY, search.redirectTo);
+    }
+
+    const { authStatus, initAuthStore } = useStore.getState();
+    if (authStatus === "idle") {
+      await initAuthStore();
+    }
+
+    if (useStore.getState().authStatus === "authenticated") {
+      const pendingRedirect = sessionStorage.getItem(REDIRECT_KEY);
+      sessionStorage.removeItem(REDIRECT_KEY);
+      throw redirect({
+        to: isValidRedirect(pendingRedirect) ? pendingRedirect! : "/app",
+        replace: true,
+      });
+    }
+  },
   component: Login,
   pendingComponent: DelayedLoadingIndicator,
 });
+
+function isValidRedirect(path: string | null): path is string {
+  return Boolean(path && path.startsWith("/") && !path.startsWith("//"));
+}

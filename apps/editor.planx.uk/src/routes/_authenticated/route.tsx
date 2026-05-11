@@ -20,6 +20,19 @@ export const Route = createFileRoute("/_authenticated")({
         replace: true,
       });
     }
+
+    const pendingRedirect = sessionStorage.getItem(
+      "planx_redirect_after_login",
+    );
+    if (
+      pendingRedirect &&
+      pendingRedirect.startsWith("/") &&
+      !pendingRedirect.startsWith("//") &&
+      location.pathname !== pendingRedirect
+    ) {
+      sessionStorage.removeItem("planx_redirect_after_login");
+      throw redirect({ to: pendingRedirect, replace: true });
+    }
   },
   head: () => ({
     meta: [
