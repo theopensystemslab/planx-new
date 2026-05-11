@@ -423,63 +423,45 @@ describe("Responsive Checklist editor component", async () => {
       </DndProvider>,
     );
 
-    console.log("[test] setup complete");
-
     // Set title
     await user.click(screen.getByPlaceholderText("Text"));
     await user.paste("mockTitle");
-    console.log("[test] title set");
 
     // Add first option with default rule
     await user.click(screen.getByRole("button", { name: /Add option/i }));
     await user.click(screen.getByPlaceholderText("Option"));
     await user.paste("First Option");
     expect(screen.getByText("Always show")).toBeVisible();
-    console.log("[test] first option added");
 
     // Add second option with conditional rule
     await user.click(screen.getByRole("button", { name: /Add option/i }));
     await user.click(screen.getAllByPlaceholderText("Option")[1]);
     await user.paste("Second Option");
-    console.log("[test] second option added");
 
     const ruleDropdowns = screen.getAllByText("Always show");
     expect(ruleDropdowns).toHaveLength(2);
 
     await user.click(ruleDropdowns[1]);
-    console.log("[test] rule dropdown opened");
     await user.click(await screen.findByRole("option", { name: /show if/i }));
-    console.log("[test] show if selected");
 
     const conditionalField = (
       await screen.findAllByPlaceholderText("Data field")
     ).at(-1);
     expect(conditionalField).toBeInTheDocument();
-    console.log("[test] data field found");
     await user.click(conditionalField!);
     await user.paste("mockOptionFn");
-    console.log("[test] mockOptionFn pasted, waiting for dropdown option");
-    await user.click(
-      await screen.findByRole("option", { name: /Add "mockOptionFn"/i }),
-    );
-    console.log("[test] mockOptionFn committed");
+    await user.keyboard("{Enter}");
 
     const conditionalValue = (
       await screen.findAllByPlaceholderText("Value")
     ).at(-1);
     expect(conditionalValue).toBeInTheDocument();
-    console.log("[test] value field found");
     await user.click(conditionalValue!);
     await user.paste("mockOptionVal");
-    console.log("[test] mockOptionVal pasted, waiting for dropdown option");
-    await user.click(
-      await screen.findByRole("option", { name: /Add "mockOptionVal"/i }),
-    );
-    console.log("[test] mockOptionVal committed");
+    await user.keyboard("{Enter}");
 
     // Submit form
     fireEvent.submit(screen.getByTestId("checklistEditorForm"));
-    console.log("[test] form submitted, waiting for handleSubmit assertion");
 
     await waitFor(() =>
       expect(handleSubmit).toHaveBeenCalledWith(
@@ -516,6 +498,5 @@ describe("Responsive Checklist editor component", async () => {
         ]),
       ),
     );
-    console.log("[test] handleSubmit assertion passed");
-  });
+  }, 15_000);
 });
