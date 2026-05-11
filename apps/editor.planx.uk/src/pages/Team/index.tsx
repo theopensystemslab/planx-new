@@ -14,6 +14,7 @@ import Archive from "./components/Archive";
 import { DashboardList } from "./components/DashboardList";
 import { Card, CardContent } from "./components/FlowCard/styles";
 import Flows from "./components/Flows";
+import { useGetArchivedFlows } from "./components/hooks/useGetArchivedFlows";
 import { useGetFlows } from "./components/hooks/useGetFlows";
 import { sortOptions } from "./helpers/sortAndFilterOptions";
 import TeamLayout from "./TeamLayout";
@@ -55,9 +56,19 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
   const flows = data?.flows ?? initialFlows.flows;
   const [flowView, setFlowView] = useState<FlowView>("flows");
 
+  const {
+    data: archivedFlowsData,
+    loading: archivedFlowsLoading,
+    error: archivedFlowsError,
+  } = useGetArchivedFlows(teamId, flowView !== "archive");
+  const archivedFlows = archivedFlowsData?.flows ?? null;
+
   const [searchedFlows, setSearchedFlows] = useState<FlowSummary[] | null>(
     null,
   );
+  const [searchedArchivedFlows, setSearchedArchivedFlows] = useState<
+    FlowSummary[] | null
+  >(null);
   const [shouldClearSearch, setShouldClearSearch] = useState<boolean>(false);
   const searchParams = useSearch({ from: "/_authenticated/app/$team/" });
 
@@ -142,6 +153,10 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
   const flowsHaveBeenFiltered = sortedFlows?.length !== flows?.length;
 
+  const displayedArchivedFlows = searchedArchivedFlows ?? archivedFlows;
+  const archiveIsFiltered =
+    displayedArchivedFlows?.length !== archivedFlows?.length;
+
   return (
     <Box sx={{ bgcolor: "background.paper", flexGrow: 1 }}>
       <Container maxWidth="contentWide">
@@ -170,10 +185,14 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
               {isTrial && <InfoChip label="Trial account" />}
               {showAddFlowButton && flowView === "flows" && <AddFlow />}
             </Box>
-            {teamHasFlows && (
+            {(teamHasFlows || (flowView === "archive" && archivedFlows)) && (
               <SearchBox<FlowSummary>
-                records={flows}
-                setRecords={setSearchedFlows}
+                records={flowView === "archive" ? (archivedFlows ?? []) : flows}
+                setRecords={
+                  flowView === "archive"
+                    ? setSearchedArchivedFlows
+                    : setSearchedFlows
+                }
                 searchKey={["name", "slug"]}
                 clearSearch={shouldClearSearch}
               />
@@ -202,6 +221,14 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
             handleViewChange={handleViewChange}
             teamId={teamId}
             slug={slug}
+            archivedFlows={displayedArchivedFlows}
+            loading={archivedFlowsLoading && !displayedArchivedFlows}
+            error={archivedFlowsError}
+            isFiltered={archiveIsFiltered}
+            onClearSearch={() => {
+              setSearchedArchivedFlows(null);
+              setShouldClearSearch(true);
+            }}
           />
         )}
 
