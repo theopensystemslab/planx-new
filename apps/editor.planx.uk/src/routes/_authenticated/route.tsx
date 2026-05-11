@@ -1,5 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { REDIRECT_KEY } from "utils/routeUtils/redirectUtils";
 
 import { validateDomain } from "./-loader";
 
@@ -19,6 +20,17 @@ export const Route = createFileRoute("/_authenticated")({
         search: { redirectTo: location.pathname },
         replace: true,
       });
+    }
+
+    const pendingRedirect = sessionStorage.getItem(REDIRECT_KEY);
+    if (
+      pendingRedirect &&
+      pendingRedirect.startsWith("/") &&
+      !pendingRedirect.startsWith("//") &&
+      location.pathname !== pendingRedirect
+    ) {
+      sessionStorage.removeItem(REDIRECT_KEY);
+      throw redirect({ to: pendingRedirect, replace: true });
     }
   },
   head: () => ({
