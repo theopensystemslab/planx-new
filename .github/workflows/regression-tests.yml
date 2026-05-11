@@ -17,6 +17,9 @@ jobs:
   integration_tests:
     name: Run Integration tests
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-pizza-env
@@ -26,6 +29,12 @@ jobs:
       - uses: ./.github/actions/setup-node-pnpm
       - run: pnpm install --frozen-lockfile
         working-directory: ${{ env.EDITOR_DIRECTORY }}
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Build test images
@@ -35,8 +44,8 @@ jobs:
             ./docker-compose.yml
             ./docker-compose.e2e.yml
           set: |
-            *.cache-from=type=gha
-            *.cache-to=type=gha,mode=max
+            *.cache-from=type=registry,ref=ghcr.io/${{ github.repository }}/build-cache:e2e
+            *.cache-to=type=registry,ref=ghcr.io/${{ github.repository }}/build-cache:e2e,mode=max,image-manifest=true,oci-mediatypes=true
           load: true
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
@@ -87,6 +96,9 @@ jobs:
   end_to_end_tests:
     name: E2E tests
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -105,6 +117,12 @@ jobs:
       - name: Install Playwright Dependencies
         run: pnpm playwright install --with-deps
         working-directory: e2e/tests/ui-driven
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Build test images
@@ -114,8 +132,8 @@ jobs:
             ./docker-compose.yml
             ./docker-compose.e2e.yml
           set: |
-            *.cache-from=type=gha
-            *.cache-to=type=gha,mode=max
+            *.cache-from=type=registry,ref=ghcr.io/${{ github.repository }}/build-cache:e2e
+            *.cache-to=type=registry,ref=ghcr.io/${{ github.repository }}/build-cache:e2e,mode=max,image-manifest=true,oci-mediatypes=true
           load: true
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
