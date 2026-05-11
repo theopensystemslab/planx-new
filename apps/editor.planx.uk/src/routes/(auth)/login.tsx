@@ -36,6 +36,6 @@ export const Route = createFileRoute("/(auth)/login")({
   pendingComponent: DelayedLoadingIndicator,
 });
 
-function isValidRedirect(path: string | null): path is string {
+function isValidRedirect(path: string | null): boolean {
   return Boolean(path && path.startsWith("/") && !path.startsWith("//"));
 }
