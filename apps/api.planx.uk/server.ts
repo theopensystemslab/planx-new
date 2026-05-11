@@ -4,10 +4,12 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
 import express from "express";
-import { pinoHttp } from "pino-http";
 import helmet from "helmet";
 import { Server, type IncomingMessage } from "http";
 import "isomorphic-fetch";
+import { pinoHttp } from "pino-http";
+
+import { defaultCors } from "./cors.js";
 import { useSwaggerDocs } from "./docs/index.js";
 import { errorHandler, expiredJWTHandler } from "./errors/requestHandlers.js";
 import adminRoutes from "./modules/admin/routes.js";
@@ -33,7 +35,6 @@ import userRoutes from "./modules/user/routes.js";
 import webhookRoutes from "./modules/webhooks/routes.js";
 import { apiLimiter } from "./rateLimit.js";
 import { registerSessionStubs } from "./session.js";
-import { defaultCors } from "./cors.js";
 
 const app = express();
 

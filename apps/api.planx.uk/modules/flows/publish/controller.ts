@@ -1,9 +1,10 @@
 import type { Node } from "@opensystemslab/planx-core/types";
-import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 import { z } from "zod";
-import { publishFlow } from "./service.js";
+
 import { ServerError } from "../../../errors/index.js";
 import type { CreateScheduledEventResponse } from "../../../lib/hasura/metadata/types.js";
+import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
+import { publishFlow } from "./service.js";
 
 interface PublishFlowResponse {
   message: string;
@@ -15,7 +16,7 @@ export const publishFlowSchema = z.object({
   params: z.object({
     flowId: z.string(),
   }),
-  query: z.object({
+  body: z.object({
     summary: z.string(),
     templatedFlowIds: z.array(z.string()).optional(),
   }),
@@ -33,7 +34,7 @@ export const publishFlowController: PublishFlowController = async (
 ) => {
   try {
     const { flowId } = res.locals.parsedReq.params;
-    const { summary, templatedFlowIds } = res.locals.parsedReq.query;
+    const { summary, templatedFlowIds } = res.locals.parsedReq.body;
     const response = await publishFlow(flowId, summary, templatedFlowIds);
 
     return res.json({

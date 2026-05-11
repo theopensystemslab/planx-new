@@ -66,22 +66,25 @@ beforeEach(() => {
 });
 
 const auth = authHeader({ role: "platformAdmin" });
-const mockEndpoint = "/flows/1/publish?summary=test";
+const mockEndpoint = "/flows/1/publish";
+const mockMinBody = { summary: "test" };
 
 it("requires a user to be logged in", async () => {
-  await supertest(app).post("/flows/1/publish").expect(401);
+  await supertest(app).post(mockEndpoint).send(mockMinBody).expect(401);
 });
 
 it("requires a user to have the 'teamEditor' role", async () => {
   await supertest(app)
     .post(mockEndpoint)
+    .send(mockMinBody)
     .set(authHeader({ role: "teamViewer" }))
     .expect(403);
 });
 
 it("requires the summary query param to be present", async () => {
   await supertest(app)
-    .post(mockEndpoint.split("?")[0])
+    .post(mockEndpoint)
+    .send(undefined)
     .set(auth)
     .expect(400)
     .then((res) => {
@@ -116,12 +119,17 @@ describe("publish", () => {
       },
     });
 
-    await supertest(app).post(mockEndpoint).set(auth).expect(200);
+    await supertest(app)
+      .post(mockEndpoint)
+      .send(mockMinBody)
+      .set(auth)
+      .expect(200);
   });
 
   it("does not update if there are no new changes", async () => {
     await supertest(app)
       .post(mockEndpoint)
+      .send(mockMinBody)
       .set(auth)
       .expect(200)
       .then((res) => {
@@ -189,6 +197,7 @@ describe("publish", () => {
 
     await supertest(app)
       .post(mockEndpoint)
+      .send(mockMinBody)
       .set(auth)
       .expect(200)
       .then((res) => {
@@ -218,6 +227,7 @@ describe("publish", () => {
 
     await supertest(app)
       .post(mockEndpoint)
+      .send(mockMinBody)
       .set(auth)
       .expect(500)
       .then((res) => {
