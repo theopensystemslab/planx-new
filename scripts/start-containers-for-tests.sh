@@ -33,20 +33,9 @@ function setupContainers(){
   # Destroy any previous e2e containers and data
   e2e_compose down --volumes --remove-orphans
 
-  echo "Building images..."
-
-  if [ -n "$CI" ]; then
-    # In CI, build with GitHub Actions cache so layers are reused across runs.
-    # ACTIONS_CACHE_URL and ACTIONS_RUNTIME_TOKEN are injected into the BuildKit
-    # daemon container via driver-opts in the setup-buildx-action workflow step,
-    # so BuildKit can read them as env vars and authenticate with the GHA cache.
-    docker buildx bake \
-      -f docker-compose.yml \
-      -f docker-compose.e2e.yml \
-      --set "*.cache-from=type=gha" \
-      --set "*.cache-to=type=gha,mode=max" \
-      --load
-  else
+  if [ -z "$CI" ]; then
+    # In CI, images are built by docker/bake-action before this script runs.
+    echo "Building images..."
     DOCKER_BUILDKIT=1 e2e_compose build
   fi
 
