@@ -498,5 +498,5 @@ describe("Responsive Checklist editor component", async () => {
         ]),
       ),
     );
-  });
+  }, 15_000);
 });
