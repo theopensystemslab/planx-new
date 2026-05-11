@@ -37,13 +37,14 @@ function setupContainers(){
 
   if [ -n "$CI" ]; then
     # In CI, build with GitHub Actions cache so layers are reused across runs.
-    # url/token are passed explicitly because the BuildKit daemon runs in a
-    # container and cannot read ACTIONS_CACHE_URL / ACTIONS_RUNTIME_TOKEN directly.
+    # ACTIONS_CACHE_URL and ACTIONS_RUNTIME_TOKEN are injected into the BuildKit
+    # daemon container via driver-opts in the setup-buildx-action workflow step,
+    # so BuildKit can read them as env vars and authenticate with the GHA cache.
     docker buildx bake \
       -f docker-compose.yml \
       -f docker-compose.e2e.yml \
-      --set "*.cache-from=type=gha,url=${ACTIONS_CACHE_URL},token=${ACTIONS_RUNTIME_TOKEN}" \
-      --set "*.cache-to=type=gha,mode=max,url=${ACTIONS_CACHE_URL},token=${ACTIONS_RUNTIME_TOKEN}" \
+      --set "*.cache-from=type=gha" \
+      --set "*.cache-to=type=gha,mode=max" \
       --load
   else
     DOCKER_BUILDKIT=1 e2e_compose build
