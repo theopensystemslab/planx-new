@@ -7,6 +7,7 @@ import type { PublicProps } from "../shared/types";
 export interface EnhancementData {
   original: string;
   enhanced: string;
+  userAction: TaskActionDescription;
 }
 
 export const TaskActionMap = {
