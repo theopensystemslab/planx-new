@@ -69,16 +69,30 @@ export const useSendEmailAuth: RequestHandler = (req, res, next): void => {
     case "payment-expiry-agent":
     case "confirmation-agent":
     case "confirmation-payee":
+    case "general-reminder":
+    case "general-expiry":
+    case "general-confirmation":
+    case "general-invite-to-pay":
+    case "general-invite-to-pay-agent":
+    case "general-payment-reminder":
+    case "general-payment-reminder-agent":
+    case "general-payment-expiry":
+    case "general-payment-expiry-agent":
+    case "general-confirmation-agent":
+    case "general-confirmation-payee":
     case "welcome":
       return useHasuraAuth(req, res, next);
     // Public access
     case "save":
+    case "general-save":
       return next();
     // Handled by other routes
     case "submit":
     case "resume":
+    case "general-resume":
     case "lps-login":
     case "new-download-link":
+    case "general-new-download-link":
       return next();
     default: {
       return handleInvalidTemplate(template);

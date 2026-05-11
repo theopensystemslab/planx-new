@@ -5,7 +5,11 @@ import {
   DEVOPS_EMAIL_REPLY_TO_ID,
   type TemplateRegistry,
 } from "../../../../lib/notify/templates/index.js";
-import { sendEmail } from "../../../../lib/notify/index.js";
+import {
+  resolveNotifyTemplate,
+  sendEmail,
+  type GovNotifyEmailTemplate,
+} from "../../../../lib/notify/index.js";
 
 export const createAccessToken = async (
   sessionId: string,
@@ -25,7 +29,12 @@ export const getSession = async (sessionId: string) => {
   const { session } = await $api.client.request<{
     session: {
       submittedAt: string;
-      flow: { id: string; name: string; team: { id: number } };
+      flow: {
+        id: string;
+        name: string;
+        email_template: GovNotifyEmailTemplate;
+        team: { id: number };
+      };
     } | null;
   }>(
     gql`
@@ -36,6 +45,7 @@ export const getSession = async (sessionId: string) => {
           flow {
             id
             name
+            email_template
             team {
               id
             }
@@ -54,11 +64,13 @@ export const emailNewDownloadLink = async ({
   submissionEmailAddress,
   token,
   serviceName,
+  emailTemplate,
 }: {
   sessionId: string;
   submissionEmailAddress: string;
   token: string;
   serviceName: string;
+  emailTemplate: GovNotifyEmailTemplate;
 }) => {
   const config: TemplateRegistry["new-download-link"]["config"] = {
     personalisation: {
@@ -69,5 +81,6 @@ export const emailNewDownloadLink = async ({
     emailReplyToId: DEVOPS_EMAIL_REPLY_TO_ID,
   };
 
-  await sendEmail("new-download-link", submissionEmailAddress, config);
+  const template = resolveNotifyTemplate("new-download-link", emailTemplate);
+  await sendEmail(template, submissionEmailAddress, config);
 };

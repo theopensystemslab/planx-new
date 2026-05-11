@@ -6,6 +6,7 @@ import { sendEmail } from "../../../../lib/notify/index.js";
 
 vi.mock("../../../../lib/notify", () => ({
   sendEmail: vi.fn(),
+  resolveNotifyTemplate: vi.fn((template: string) => template),
 }));
 
 describe("sendAgentAndPayeeConfirmationEmail", () => {

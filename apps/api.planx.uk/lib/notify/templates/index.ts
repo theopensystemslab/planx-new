@@ -1,19 +1,61 @@
 import type { UUID } from "crypto";
-import { confirmationAgentTemplate } from "./inviteToPay/confirmation-agent.js";
-import { confirmationPayeeTemplate } from "./inviteToPay/confirmation-payee.js";
-import { invitationToPayTemplate } from "./inviteToPay/invitation-to-pay.js";
-import { invitationToPayAgentTemplate } from "./inviteToPay/invitation-to-pay-agent.js";
-import { paymentExpiryTemplate } from "./inviteToPay/payment-expiry.js";
-import { paymentExpiryAgentTemplate } from "./inviteToPay/payment-expiry-agent.js";
-import { paymentReminderTemplate } from "./inviteToPay/payment-reminder.js";
-import { paymentReminderAgentTemplate } from "./inviteToPay/payment-reminder-agent.js";
-import { expiryTemplate } from "./saveAndReturn/expiry.js";
-import { reminderTemplate } from "./saveAndReturn/reminder.js";
-import { saveTemplate } from "./saveAndReturn/save-application.js";
-import { userConfirmationTemplate } from "./saveAndReturn/user-confirmation.js";
-import { resumeTemplate } from "./saveAndReturn/resume-application.js";
+import {
+  confirmationAgentTemplate,
+  generalConfirmationAgentTemplate,
+} from "./inviteToPay/confirmation-agent.js";
+import {
+  confirmationPayeeTemplate,
+  generalConfirmationPayeeTemplate,
+} from "./inviteToPay/confirmation-payee.js";
+import {
+  invitationToPayTemplate,
+  generalInvitationToPayTemplate,
+} from "./inviteToPay/invitation-to-pay.js";
+import {
+  invitationToPayAgentTemplate,
+  generalInvitationToPayAgentTemplate,
+} from "./inviteToPay/invitation-to-pay-agent.js";
+import {
+  paymentExpiryTemplate,
+  generalPaymentExpiryTemplate,
+} from "./inviteToPay/payment-expiry.js";
+import {
+  paymentExpiryAgentTemplate,
+  generalPaymentExpiryAgentTemplate,
+} from "./inviteToPay/payment-expiry-agent.js";
+import {
+  paymentReminderTemplate,
+  generalPaymentReminderTemplate,
+} from "./inviteToPay/payment-reminder.js";
+import {
+  paymentReminderAgentTemplate,
+  generalPaymentReminderAgentTemplate,
+} from "./inviteToPay/payment-reminder-agent.js";
+import {
+  expiryTemplate,
+  generalExpiryTemplate,
+} from "./saveAndReturn/expiry.js";
+import {
+  reminderTemplate,
+  generalReminderTemplate,
+} from "./saveAndReturn/reminder.js";
+import {
+  saveTemplate,
+  generalSaveTemplate,
+} from "./saveAndReturn/save-application.js";
+import {
+  userConfirmationTemplate,
+  generalUserConfirmationTemplate,
+} from "./saveAndReturn/user-confirmation.js";
+import {
+  resumeTemplate,
+  generalResumeTemplate,
+} from "./saveAndReturn/resume-application.js";
 import { lpsLoginTemplate } from "./lps/lpsLoginTemplate.js";
-import { newDownloadLinkTemplate } from "./sendToEmail/new-download-link.js";
+import {
+  newDownloadLinkTemplate,
+  generalNewDownloadLinkTemplate,
+} from "./sendToEmail/new-download-link.js";
 
 export type NotifyConfig<T> = { personalisation: T; emailReplyToId: string };
 
@@ -44,7 +86,7 @@ export interface NotifyTemplate<T> {
 }
 
 export const templateRegistry = {
-  // Invite to pay
+  // Invite to pay — application
   "confirmation-agent": confirmationAgentTemplate,
   "confirmation-payee": confirmationPayeeTemplate,
   "invite-to-pay": invitationToPayTemplate,
@@ -53,14 +95,31 @@ export const templateRegistry = {
   "payment-expiry-agent": paymentExpiryAgentTemplate,
   "payment-reminder": paymentReminderTemplate,
   "payment-reminder-agent": paymentReminderAgentTemplate,
-  // Save & Return
+  // Invite to pay — general
+  "general-confirmation-agent": generalConfirmationAgentTemplate,
+  "general-confirmation-payee": generalConfirmationPayeeTemplate,
+  "general-invite-to-pay": generalInvitationToPayTemplate,
+  "general-invite-to-pay-agent": generalInvitationToPayAgentTemplate,
+  "general-payment-expiry": generalPaymentExpiryTemplate,
+  "general-payment-expiry-agent": generalPaymentExpiryAgentTemplate,
+  "general-payment-reminder": generalPaymentReminderTemplate,
+  "general-payment-reminder-agent": generalPaymentReminderAgentTemplate,
+  // Save & Return — application
   expiry: expiryTemplate,
   reminder: reminderTemplate,
   resume: resumeTemplate,
   save: saveTemplate,
   confirmation: userConfirmationTemplate,
-  // Send to email
+  // Save & Return — general
+  "general-expiry": generalExpiryTemplate,
+  "general-reminder": generalReminderTemplate,
+  "general-resume": generalResumeTemplate,
+  "general-save": generalSaveTemplate,
+  "general-confirmation": generalUserConfirmationTemplate,
+  // Send to email — application
   "new-download-link": newDownloadLinkTemplate,
+  // Send to email — general
+  "general-new-download-link": generalNewDownloadLinkTemplate,
   // localplanning.services
   "lps-login": lpsLoginTemplate,
 } as const;

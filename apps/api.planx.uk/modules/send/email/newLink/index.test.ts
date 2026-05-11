@@ -7,6 +7,7 @@ import { DEVOPS_EMAIL_REPLY_TO_ID } from "../../../../lib/notify/templates/index
 
 vi.mock("../../../../lib/notify/index.js", () => ({
   sendEmail: vi.fn(),
+  resolveNotifyTemplate: vi.fn((template: string) => template),
 }));
 
 const ENDPOINT = "/email-download-link";
