@@ -468,6 +468,10 @@ jobs:
         working-directory: e2e/tests/ui-driven
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: |
+            env.ACTIONS_CACHE_URL=${{ env.ACTIONS_CACHE_URL }}
+            env.ACTIONS_RUNTIME_TOKEN=${{ env.ACTIONS_RUNTIME_TOKEN }}
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
       - name: End-to-end Tests
