@@ -59,8 +59,8 @@ importers:
         specifier: 1.0.0-alpha.11
         version: 1.0.0-alpha.11
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#9b17bcd
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/9b17bcd9f037ba56f1349f0edb72011bec6f2637(@types/react@19.2.14)
+        specifier: github:theopensystemslab/planx-core#3991393
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/399139307bbe10c9fd91c7727e2b896232010c53(@types/react@19.2.14)
       '@tanstack/react-query':
         specifier: ^5.90.21
         version: 5.95.2(react@19.2.5)
@@ -1852,8 +1852,8 @@ packages:
   '@opensystemslab/map@1.0.0-alpha.11':
     resolution: {integrity: sha512-ETACPCk5Coef1L2kNT3MhIzLxVPDpyopxsTNcgeRyEqL71HBfTklGyC5+t7HgEgxRkX5wlUXqmKPNL9DdpVj8g==}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/9b17bcd9f037ba56f1349f0edb72011bec6f2637':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/9b17bcd9f037ba56f1349f0edb72011bec6f2637}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/399139307bbe10c9fd91c7727e2b896232010c53':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/399139307bbe10c9fd91c7727e2b896232010c53}
     version: 1.0.0
 
   '@parcel/watcher-android-arm64@2.5.6':
@@ -8649,7 +8649,7 @@ snapshots:
     transitivePeerDependencies:
       - preact
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/9b17bcd9f037ba56f1349f0edb72011bec6f2637(@types/react@19.2.14)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/399139307bbe10c9fd91c7727e2b896232010c53(@types/react@19.2.14)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.4)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.4)
@@ -13121,7 +13121,7 @@ snapshots:
       '@types/lodash': 4.17.24
       color: 4.2.3
       csstype: 3.2.3
-      lodash-es: 4.17.23
+      lodash-es: 4.18.1
 
   react-color@2.19.3(react@19.2.5):
     dependencies:
