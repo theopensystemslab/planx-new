@@ -450,7 +450,9 @@ describe("Responsive Checklist editor component", async () => {
     expect(conditionalField).toBeInTheDocument();
     await user.click(conditionalField!);
     await user.paste("mockOptionFn");
-    await user.keyboard("{Enter}");
+    await user.click(
+      await screen.findByRole("option", { name: /Add "mockOptionFn"/i }),
+    );
 
     const conditionalValue = (
       await screen.findAllByPlaceholderText("Value")
@@ -458,7 +460,9 @@ describe("Responsive Checklist editor component", async () => {
     expect(conditionalValue).toBeInTheDocument();
     await user.click(conditionalValue!);
     await user.paste("mockOptionVal");
-    await user.keyboard("{Enter}");
+    await user.click(
+      await screen.findByRole("option", { name: /Add "mockOptionVal"/i }),
+    );
 
     // Submit form
     fireEvent.submit(screen.getByTestId("checklistEditorForm"));
