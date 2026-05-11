@@ -2,9 +2,11 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
 import Login from "pages/Login/Login";
+import {
+  isSecureLocalRedirect,
+  REDIRECT_KEY,
+} from "utils/routeUtils/redirectUtils";
 import { z } from "zod";
-
-const REDIRECT_KEY = "planx_redirect_after_login";
 
 const loginSearchSchema = z.object({
   redirectTo: z.string().optional(),
@@ -27,7 +29,7 @@ export const Route = createFileRoute("/(auth)/login")({
       const pendingRedirect = sessionStorage.getItem(REDIRECT_KEY);
       sessionStorage.removeItem(REDIRECT_KEY);
       throw redirect({
-        to: isValidRedirect(pendingRedirect) ? pendingRedirect! : "/app",
+        to: isSecureLocalRedirect(pendingRedirect) ? pendingRedirect! : "/app",
         replace: true,
       });
     }
@@ -35,7 +37,3 @@ export const Route = createFileRoute("/(auth)/login")({
   component: Login,
   pendingComponent: DelayedLoadingIndicator,
 });
-
-function isValidRedirect(path: string | null): boolean {
-  return Boolean(path && path.startsWith("/") && !path.startsWith("//"));
-}
