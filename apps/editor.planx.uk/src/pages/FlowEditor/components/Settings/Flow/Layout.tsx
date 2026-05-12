@@ -41,7 +41,7 @@ const FlowSettingsLayout: React.FC<Props> = ({ children }) => {
       icon: StarIcon,
       condition: Boolean(data?.flow.templatedFrom),
     },
-    { label: "Notifications", path: "/notifications", icon: EmailIcon },
+    { label: "Emails", path: "/emails", icon: EmailIcon },
   ];
 
   return (

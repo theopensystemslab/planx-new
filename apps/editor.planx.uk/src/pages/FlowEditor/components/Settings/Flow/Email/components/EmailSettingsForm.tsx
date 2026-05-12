@@ -15,7 +15,7 @@ import type {
 } from "../types";
 import { defaultValues, validationSchema } from "../validationSchema";
 
-const EmailTemplateForm: React.FC = () => {
+const EmailSettingsForm: React.FC = () => {
   const [flowId] = useStore((state) => [state.id]);
 
   return (
@@ -28,7 +28,7 @@ const EmailTemplateForm: React.FC = () => {
       mutation={UPDATE_FLOW_EMAIL_TEMPLATE}
       validationSchema={validationSchema}
       legend="Email template"
-      description="Choose the email template category for notifications sent to users of this service. Use 'Application' for statutory planning services and 'General' for discretionary services."
+      description="Choose an email template for communicating with users of this service. Use 'Application' for statutory or apply-for services and 'General' for discretionary services."
       defaultValues={defaultValues}
       getInitialValues={({ flow }) => ({
         emailTemplate: flow.email_template,
@@ -79,4 +79,4 @@ const EmailTemplateForm: React.FC = () => {
   );
 };
 
-export default EmailTemplateForm;
+export default EmailSettingsForm;
