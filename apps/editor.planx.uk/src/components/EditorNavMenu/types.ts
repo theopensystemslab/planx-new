@@ -10,7 +10,7 @@ export interface Route {
   accessibleBy: Role[] | AllUsers;
   disabled?: boolean;
   isNew?: boolean;
-  badge?: number;
+  badgeCount?: number;
 }
 
 export interface MenuSection {

@@ -396,11 +396,12 @@ function EditorNavMenu() {
                 <NavMenuItem
                   title="Notifications"
                   Icon={NotificationsActiveIcon}
-                  badge={notificationsCount}
+                  badgeCount={notificationsCount}
                   isActive={notificationsPanelOpen}
                   isExternal={false}
                   compact={compact}
                   onClick={() => setNotificationsPanelOpen((prev) => !prev)}
+                  sx={{ minHeight: 44 }}
                 />
               </Box>
               <NotificationsPanel
