@@ -32,7 +32,6 @@ import { SectionNavBar } from "./Sections/NavBar";
 import SkipLink from "./SkipLink";
 
 export const HEADER_HEIGHT_PUBLIC = 74;
-export const HEADER_HEIGHT_EDITOR = 56;
 
 const Root = styled(AppBar)(({ theme }) => ({
   color: theme.palette.common.white,

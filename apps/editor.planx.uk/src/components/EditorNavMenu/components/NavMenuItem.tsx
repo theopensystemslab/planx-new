@@ -1,8 +1,7 @@
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
-import React from "react";
 
-import { MenuButton } from "../styles";
+import { BadgeChip, MenuButton } from "../styles";
 import NavMenuButton, { NavMenuButtonProps } from "./NavMenuButton";
 
 interface Props extends NavMenuButtonProps {
@@ -14,10 +13,12 @@ const NavMenuItem = ({
   Icon,
   disabled,
   isNew,
+  badgeCount,
   isActive,
   isExternal,
   compact,
   onClick,
+  sx,
 }: Props) => {
   const tooltipTitle = disabled ? `${title} unavailable` : title;
   const showTooltip = compact || disabled;
@@ -29,9 +30,21 @@ const NavMenuItem = ({
       disabled={disabled}
       disableRipple
       onClick={onClick}
-      sx={{ padding: "8px" }}
+      sx={{ padding: "8px", ...sx }}
     >
-      <Icon />
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 0.25,
+        }}
+      >
+        <Icon />
+        {badgeCount ? (
+          <BadgeChip label={badgeCount} color="info" sx={{ marginLeft: 0 }} />
+        ) : null}
+      </Box>
     </MenuButton>
   ) : (
     <NavMenuButton
@@ -41,7 +54,9 @@ const NavMenuItem = ({
       isExternal={isExternal}
       disabled={disabled}
       isNew={isNew}
+      badgeCount={badgeCount}
       onClick={onClick}
+      sx={sx}
     />
   );
 

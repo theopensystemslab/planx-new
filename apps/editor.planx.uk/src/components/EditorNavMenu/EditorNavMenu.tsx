@@ -7,6 +7,8 @@ import GroupIcon from "@mui/icons-material/Group";
 import LayersIcon from "@mui/icons-material/Layers";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
+import NorthEastIcon from "@mui/icons-material/NorthEast";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import SchoolIcon from "@mui/icons-material/School";
 import TuneIcon from "@mui/icons-material/Tune";
@@ -21,16 +23,20 @@ import {
 import AccountMenu from "components/AccountMenu";
 import { useFlowAnalyticsLink } from "hooks/analyticsLinks/useFlowAnalyticsLink";
 import { useTeamAnalyticsLink } from "hooks/analyticsLinks/useTeamAnalyticsLink";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import EditorIcon from "ui/icons/Editor";
 import LocalPlanningServicesIcon from "ui/icons/LocalPlanningServices";
 
+import { useNotificationsCount } from "../../hooks/data/useNotificationsCount";
+import { useRecentNotifications } from "../../hooks/data/useRecentNotifications";
 import { useLPS } from "../../hooks/useLPS";
 import AccordionItemButton from "./components/AccordionItemButton";
 import AccordionToggle from "./components/AccordionToggle";
 import NavMenuHeader from "./components/NavMenuHeader";
 import NavMenuItem from "./components/NavMenuItem";
+import NotificationsPanel from "./components/NotificationsPanel";
 import { TeamSelect } from "./components/TeamSelect";
 import {
   AccordionContent,
@@ -53,6 +59,8 @@ function EditorNavMenu() {
   const isTeamRoute = matches.some((match) => match.routeId.includes("$team"));
 
   const [openAccordions, setOpenAccordions] = useState<Set<string>>(new Set());
+  const [notificationsPanelOpen, setNotificationsPanelOpen] = useState(false);
+  const notificationsRef = useRef<HTMLDivElement>(null);
 
   const [role, team] = useStore((state) => [
     state.getUserRoleForCurrentTeam(),
@@ -87,6 +95,9 @@ function EditorNavMenu() {
 
   const teamAnalyticsLink = useTeamAnalyticsLink();
   const flowAnalyticsLink = useFlowAnalyticsLink();
+  const notificationsCount = useNotificationsCount(teamSlug);
+  const { active: activeNotifications, resolved: resolvedNotifications } =
+    useRecentNotifications(teamSlug);
 
   const globalLayoutSections: MenuSection[] = [
     {
@@ -377,6 +388,33 @@ function EditorNavMenu() {
             );
           })}
         </MenuWrap>
+        {isTeamRoute &&
+          hasFeatureFlag("NOTIFICATIONS") &&
+          (role === "platformAdmin" || role === "teamEditor") && (
+            <Box sx={(theme) => ({ padding: theme.spacing(0, 0.5, 1) })}>
+              <Box ref={notificationsRef}>
+                <NavMenuItem
+                  title="Notifications"
+                  Icon={NotificationsActiveIcon}
+                  badgeCount={notificationsCount}
+                  isActive={notificationsPanelOpen}
+                  isExternal={false}
+                  compact={compact}
+                  onClick={() => setNotificationsPanelOpen((prev) => !prev)}
+                  sx={{ minHeight: 44 }}
+                />
+              </Box>
+              <NotificationsPanel
+                anchorEl={
+                  notificationsPanelOpen ? notificationsRef.current : null
+                }
+                onClose={() => setNotificationsPanelOpen(false)}
+                activeNotifications={activeNotifications}
+                resolvedNotifications={resolvedNotifications}
+                teamSlug={teamSlug!}
+              />
+            </Box>
+          )}
         <AccountMenu compact={compact} />
       </NavBarContainer>
     </Root>

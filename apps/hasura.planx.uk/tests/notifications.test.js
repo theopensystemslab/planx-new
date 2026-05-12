@@ -38,8 +38,8 @@ describe("notifications", () => {
       i = await introspectAs("platformAdmin");
     });
 
-    test("cannot query notifications", () => {
-      expect(i.queries).not.toContain("notifications");
+    test("can query notifications", () => {
+      expect(i.queries).toContain("notifications");
     });
 
     test("cannot create, update, or delete notifications", () => {
@@ -53,8 +53,8 @@ describe("notifications", () => {
       i = await introspectAs("teamAdmin");
     });
 
-    test("cannot query notifications", () => {
-      expect(i.queries).not.toContain("notifications");
+    test("can query notifications", () => {
+      expect(i.queries).toContain("notifications");
     });
 
     test("cannot create, update, or delete notifications", () => {

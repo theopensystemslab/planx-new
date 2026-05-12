@@ -19,8 +19,6 @@ import React, { useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 const ProfileSection = styled(MuiToolbar)(({ theme }) => ({
-  position: "fixed",
-  bottom: 0,
   width: "inherit",
   display: "flex",
   justifyContent: "space-between",
