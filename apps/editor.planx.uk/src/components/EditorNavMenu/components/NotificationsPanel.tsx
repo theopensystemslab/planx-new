@@ -9,6 +9,7 @@ import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
+import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useNavigate } from "@tanstack/react-router";
 import NotificationCard from "pages/FlowEditor/components/Notifications/NotificationCard";
 import { Notification } from "pages/FlowEditor/components/Notifications/types";
@@ -122,11 +123,15 @@ const NotificationsPanel = ({
       <Divider />
       <Box sx={{ overflowY: "auto", flex: 1 }}>
         {!visibleNotifications.length && (
-          <Typography variant="body2" color="textSecondary">
-            {tab === 0
-              ? "No active notifications."
-              : "No resolved notifications."}
-          </Typography>
+          <Box sx={{ px: 2 }}>
+            <WarningContainer>
+              <Typography variant="body2" color="textSecondary">
+                {tab === 0
+                  ? "No active notifications."
+                  : "No resolved notifications."}
+              </Typography>
+            </WarningContainer>
+          </Box>
         )}
         <Stack>
           {visibleNotifications.map((notification) => (

@@ -67,20 +67,20 @@ export const Notifications = ({ notifications }: NotificationProps) => {
           <WarningContainer>
             <Typography variant="body2">
               {tab === 0
-                ? "No active notifications found."
-                : "No resolved notifications found."}
+                ? "No active notifications."
+                : "No resolved notifications."}
             </Typography>
           </WarningContainer>
         )}
-        <Stack sx={{ borderTop: "1px solid", borderColor: "border.main" }}>
-          {visibleNotifications.map((notification) => (
+        {visibleNotifications.map((notification) => (
+          <Stack sx={{ borderTop: "1px solid", borderColor: "border.main" }}>
             <NotificationCard
               key={notification.id}
               notification={notification}
               statusLabel={tab === 1 ? "Resolved" : undefined}
             />
-          ))}
-        </Stack>
+          </Stack>
+        ))}
       </Container>
     </Box>
   );
