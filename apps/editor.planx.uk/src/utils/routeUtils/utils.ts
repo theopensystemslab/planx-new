@@ -32,6 +32,10 @@ export const computePath = (
 //
 // TODO: Retire this, update docs
 const PREVIEW_ONLY_DOMAINS = [
+  // staging
+  "planningservices.planx.in",
+  "planningserviceslegacy.planx.in",
+  // production
   "planningservices.barnet.gov.uk",
   "planningservices.birmingham.gov.uk",
   "planningservices.buckinghamshire.gov.uk",
