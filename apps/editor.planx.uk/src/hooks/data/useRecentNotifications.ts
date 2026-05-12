@@ -2,7 +2,27 @@ import { gql, useQuery } from "@apollo/client";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { Notification } from "pages/FlowEditor/components/Notifications/types";
 
+const NOTIFICATION_FIELDS = gql`
+  fragment NotificationFields on notifications {
+    id
+    flow {
+      id
+      name
+      slug
+    }
+    team {
+      id
+      name
+      slug
+    }
+    type
+    createdAt: created_at
+    resolvedAt: resolved_at
+  }
+`;
+
 const GET_PANEL_NOTIFICATIONS = gql`
+  ${NOTIFICATION_FIELDS}
   query GetPanelNotificationsForTeam($teamSlug: String!) {
     active: notifications(
       where: {
@@ -11,18 +31,7 @@ const GET_PANEL_NOTIFICATIONS = gql`
       }
       order_by: { created_at: desc }
     ) {
-      id
-      flow {
-        name
-        slug
-      }
-      team {
-        name
-        slug
-      }
-      type
-      createdAt: created_at
-      resolvedAt: resolved_at
+      ...NotificationFields
     }
     resolved: notifications(
       where: {
@@ -32,18 +41,7 @@ const GET_PANEL_NOTIFICATIONS = gql`
       order_by: { created_at: desc }
       limit: 5
     ) {
-      id
-      flow {
-        name
-        slug
-      }
-      team {
-        name
-        slug
-      }
-      type
-      createdAt: created_at
-      resolvedAt: resolved_at
+      ...NotificationFields
     }
   }
 `;
