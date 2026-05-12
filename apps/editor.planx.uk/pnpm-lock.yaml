@@ -59,8 +59,8 @@ importers:
         specifier: 1.0.0-alpha.11
         version: 1.0.0-alpha.11
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#a150756
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/a150756a65b788bf6a30d3014aebb32e7fcd44ca(@types/react@19.2.14)
+        specifier: github:theopensystemslab/planx-core#8071dbb
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/8071dbb331843b44da338191d905ef8062409389(@types/react@19.2.14)
       '@tanstack/react-query':
         specifier: ^5.90.21
         version: 5.95.2(react@19.2.5)
@@ -1852,8 +1852,8 @@ packages:
   '@opensystemslab/map@1.0.0-alpha.11':
     resolution: {integrity: sha512-ETACPCk5Coef1L2kNT3MhIzLxVPDpyopxsTNcgeRyEqL71HBfTklGyC5+t7HgEgxRkX5wlUXqmKPNL9DdpVj8g==}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/a150756a65b788bf6a30d3014aebb32e7fcd44ca':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/a150756a65b788bf6a30d3014aebb32e7fcd44ca}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/8071dbb331843b44da338191d905ef8062409389':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/8071dbb331843b44da338191d905ef8062409389}
     version: 1.0.0
 
   '@parcel/watcher-android-arm64@2.5.6':
@@ -8649,7 +8649,7 @@ snapshots:
     transitivePeerDependencies:
       - preact
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/a150756a65b788bf6a30d3014aebb32e7fcd44ca(@types/react@19.2.14)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/8071dbb331843b44da338191d905ef8062409389(@types/react@19.2.14)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.4)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.4)
