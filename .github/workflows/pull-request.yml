@@ -473,9 +473,17 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
+      - name: Restore editor build cache
+        id: cache-e2e-editor-build
+        uses: actions/cache@v5
+        with:
+          path: apps/editor.planx.uk/build
+          key: editor-e2e-${{ hashFiles('apps/editor.planx.uk/src/**', 'apps/editor.planx.uk/package.json', 'apps/editor.planx.uk/vite.config.ts', 'apps/editor.planx.uk/tsconfig.json') }}
       - name: Setup Node and PNPM
         uses: ./.github/actions/setup-node-pnpm
       - name: PNPM Install
+        env:
+          SKIP_EDITOR_BUILD: ${{ steps.cache-e2e-editor-build.outputs.cache-hit == 'true' }}
         run: pnpm install --frozen-lockfile
         working-directory: e2e
       - name: Code checks
