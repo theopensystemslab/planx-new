@@ -23,6 +23,7 @@ jobs:
     secrets: inherit
     with:
       environment: production
+      vite-app-url: https://editor.planx.uk
       vite-api-url: https://api.editor.planx.uk
       vite-hasura-url: https://hasura.editor.planx.uk/v1/graphql
       vite-hasura-websocket: wss://hasura.editor.planx.uk/v1/graphql

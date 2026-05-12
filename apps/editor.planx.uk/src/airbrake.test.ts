@@ -50,6 +50,27 @@ describe("logger", () => {
     });
   });
 
+  test("Notifier is configured for pizza environments with pullrequest label", async () => {
+    Object.defineProperty(window, "location", {
+      value: { host: "1234.planx.pizza" },
+      writable: true,
+    });
+
+    vi.stubEnv("VITE_APP_ENV", "pizza");
+    vi.stubEnv("VITE_APP_AIRBRAKE_PROJECT_ID", "1");
+    vi.stubEnv("VITE_APP_AIRBRAKE_PROJECT_KEY", "a");
+
+    const logger = await instantiateLogger();
+
+    expect(Notifier).toHaveBeenCalledWith({
+      projectId: 1,
+      projectKey: "a",
+      environment: "pizza",
+    });
+    logger.notify({ some: "value" });
+    expect(Notifier.prototype.notify).toHaveBeenCalledWith({ some: "value" });
+  });
+
   test("Notifier is not configured for development environments", async () => {
     vi.stubEnv("VITE_APP_ENV", "development");
 

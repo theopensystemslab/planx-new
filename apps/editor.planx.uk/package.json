@@ -159,7 +159,7 @@
   "scripts": {
     "prestart": "../../scripts/check-containers.sh dev",
     "start": "vite --open",
-    "build": "tsc && vite build",
+    "build": "tsc && NODE_OPTIONS=--max-old-space-size=4096 vite build",
     "serve": "vite preview",
     "test": "vitest",
     "test:silent": "vitest --silent",

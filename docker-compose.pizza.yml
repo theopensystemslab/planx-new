@@ -11,6 +11,8 @@ services:
       - "/api/dist"
     environment:
       NODE_ENV: "pizza"
+      AIRBRAKE_PROJECT_ID: ${AIRBRAKE_PROJECT_ID}
+      AIRBRAKE_PROJECT_KEY: ${AIRBRAKE_PROJECT_KEY}
 
   editor:
     container_name: editor

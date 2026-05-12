@@ -29,6 +29,7 @@ export default defineConfig({
     commonjsOptions: { transformMixedEsModules: true },
     outDir: "build",
     emptyOutDir: true,
+    sourcemap: "hidden",
   },
   define: {
     "process.env.HASURA_GRAPHQL_URL": `"${process.env.HASURA_GRAPHQL_URL}"`,

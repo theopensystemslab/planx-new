@@ -9,6 +9,7 @@
     "moduleResolution": "nodenext",
     "noImplicitAny": true,
     "outDir": "dist",
+    "sourceMap": true,
     "resolveJsonModule": true,
     "rootDir": ".",
     "skipLibCheck": true,

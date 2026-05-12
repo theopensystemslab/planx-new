@@ -188,6 +188,21 @@ jobs:
           VITE_APP_MICROSOFT_OAUTH_OVERRIDE: https://api.editor.planx.dev
           VITE_APP_ENV: pizza
         working-directory: ${{ env.EDITOR_DIRECTORY }}
+      - name: Upload source maps to Airbrake
+        if: steps.cache-planx-frontend-build-assets.outputs.cache-hit != 'true'
+        working-directory: ${{ env.EDITOR_DIRECTORY }}
+        env:
+          AB_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
+          AB_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
+        run: |
+          for mapfile in build/assets/*.map; do
+            jsname=$(basename "${mapfile%.map}")
+            curl -sS --fail -X POST \
+              "https://api.airbrake.io/api/v4/projects/${AB_PROJECT_ID}/sourcemaps" \
+              -H "Authorization: Bearer ${AB_PROJECT_KEY}" \
+              -F "file=@${mapfile}" \
+              -F "name=https://${{ env.FULL_DOMAIN }}/assets/${jsname}"
+          done
       - run: pnpm build-storybook
         if: steps.cache-planx-frontend-build-assets.outputs.cache-hit != 'true'
         working-directory: ${{ env.EDITOR_DIRECTORY }}

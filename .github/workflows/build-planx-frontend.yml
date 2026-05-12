@@ -23,6 +23,10 @@ on:
         description: Value for VITE_APP_SHAREDB_URL
         required: true
         type: string
+      vite-app-url:
+        description: Public base URL of the deployed frontend (e.g. https://editor.planx.uk)
+        required: true
+        type: string
       editor-directory:
         description: Path to the editor app directory
         required: false
@@ -52,9 +56,25 @@ jobs:
           VITE_APP_HASURA_WEBSOCKET: ${{ inputs.vite-hasura-websocket }}
           VITE_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
           VITE_APP_SHAREDB_URL: ${{ inputs.vite-sharedb-url }}
+      - name: Upload source maps to Airbrake
+        working-directory: ${{ inputs.editor-directory }}
+        env:
+          AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
+          AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
+        run: |
+          for mapfile in build/assets/*.map; do
+            jsname=$(basename "${mapfile%.map}")
+            curl -sS --fail -X POST \
+              "https://api.airbrake.io/api/v4/projects/${AIRBRAKE_PROJECT_ID}/sourcemaps" \
+              -H "Authorization: Bearer ${AIRBRAKE_PROJECT_KEY}" \
+              -F "file=@${mapfile}" \
+              -F "name=${{ inputs.vite-app-url }}/assets/${jsname}"
+          done
       - name: Upload PlanX frontend build artifact
         uses: actions/upload-artifact@v7
         with:
           name: planx_frontend_build
-          path: ./${{ inputs.editor-directory }}/build
+          path: |
+            ./${{ inputs.editor-directory }}/build
+            !./${{ inputs.editor-directory }}/build/**/*.map
           if-no-files-found: error
