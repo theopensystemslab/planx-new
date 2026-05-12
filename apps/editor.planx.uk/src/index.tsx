@@ -33,6 +33,8 @@ if (!window.customElements.get("my-map")) {
   window.customElements.define("my-map", MyMap);
 }
 
+console.log("test change for build cache");
+
 // Refresh window if user hits "Failed to fetch dynamically imported module" due to renamed assets following re-build after deploy
 // Docs: https://vite.dev/guide/build#load-error-handling
 window.addEventListener("vite:preloadError", (event) => {
