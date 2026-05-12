@@ -77,7 +77,7 @@ export const Notifications = ({ notifications }: NotificationProps) => {
             </Typography>
           </WarningContainer>
         )}
-        <Stack spacing={2}>
+        <Stack sx={{ borderTop: "1px solid", borderColor: "border.main" }}>
           {visibleNotifications.map((notification) => (
             <NotificationCard
               key={notification.id}

@@ -124,7 +124,7 @@ const NotificationsPanel = ({
         </Tabs>
       </TabList>
       <Divider />
-      <Box sx={{ overflowY: "auto", flex: 1, p: 1.5 }}>
+      <Box sx={{ overflowY: "auto", flex: 1 }}>
         {!visibleNotifications.length && (
           <Typography variant="body2" color="textSecondary">
             {tab === 0
@@ -132,7 +132,7 @@ const NotificationsPanel = ({
               : "No resolved notifications."}
           </Typography>
         )}
-        <Stack spacing={1.5}>
+        <Stack>
           {visibleNotifications.map((notification) => (
             <Box key={notification.id} onClick={onClose}>
               <NotificationCard
