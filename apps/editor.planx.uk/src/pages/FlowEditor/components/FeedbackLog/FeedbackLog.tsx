@@ -3,12 +3,12 @@ import { BREADCRUMBS_HEIGHT } from "components/Breadcrumbs";
 import { format } from "date-fns";
 import capitalize from "lodash/capitalize";
 import React from "react";
+import { EmptyState } from "ui/editor/EmptyState";
 import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContainer";
 import SettingsSection from "ui/editor/SettingsSection";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
 import { dateFormatter } from "ui/shared/DataTable/utils";
-import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import { ChangeStatusTool } from "./components/ChangeStatusTool";
 import { ExpandableHelpText } from "./components/ExpandableHelpText";
@@ -154,15 +154,10 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({
         </Typography>
       </SettingsSection>
       {feedback.length === 0 ? (
-        <SettingsSection>
-          <ErrorSummary
-            format="info"
-            heading={`No feedback found for this ${
-              isFlowLevel ? "service" : "team"
-            }`}
-            message="If you're looking for feedback from more than six months ago, please contact a PlanX developer"
-          />
-        </SettingsSection>
+        <EmptyState
+          title={`No feedback found for this ${isFlowLevel ? "service" : "team"}`}
+          description="If you're looking for feedback from more than six months ago, please contact a PlanX developer"
+        />
       ) : (
         <DataTable
           rows={feedback}

@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import { useSearch } from "@tanstack/react-router";
 import { isEmpty, orderBy } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
+import { EmptyState } from "ui/editor/EmptyState";
 import { InfoChip } from "ui/editor/InfoChip";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 
@@ -11,8 +12,6 @@ import { useStore } from "../FlowEditor/lib/store";
 import { FlowCardView, FlowSummary } from "../FlowEditor/lib/store/editor";
 import { AddFlow } from "./components/AddFlow";
 import Archive from "./components/Archive";
-import { DashboardList } from "./components/DashboardList";
-import { Card, CardContent } from "./components/FlowCard/styles";
 import Flows from "./components/Flows";
 import { useGetArchivedFlows } from "./components/hooks/useGetArchivedFlows";
 import { useGetFlows } from "./components/hooks/useGetFlows";
@@ -22,15 +21,11 @@ import TeamLayout from "./TeamLayout";
 export type FlowView = "flows" | "archive";
 
 const GetStarted: React.FC = () => (
-  <DashboardList sx={{ paddingTop: 2 }}>
-    <Card>
-      <CardContent>
-        <Typography variant="h3">No services found</Typography>
-        <Typography>Get started by creating your first service</Typography>
-        <AddFlow />
-      </CardContent>
-    </Card>
-  </DashboardList>
+  <EmptyState
+    title="No flows found"
+    description="Get started by creating your first flow"
+    action={<AddFlow />}
+  />
 );
 
 interface TeamProps {
@@ -168,7 +163,7 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
               flexDirection: { xs: "column", contentWrap: "row" },
               justifyContent: "space-between",
               alignItems: { xs: "flex-start", contentWrap: "center" },
-              gap: 2,
+              minHeight: (theme) => theme.spacing(6),
             }}
           >
             <Box
@@ -185,7 +180,10 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
               {isTrial && <InfoChip label="Trial account" />}
               {showAddFlowButton && flowView === "flows" && <AddFlow />}
             </Box>
-            {(teamHasFlows || (flowView === "archive" && archivedFlows)) && (
+            {((flowView === "flows" && teamHasFlows) ||
+              (flowView === "archive" &&
+                archivedFlows &&
+                archivedFlows.length > 0)) && (
               <SearchBox<FlowSummary>
                 records={flowView === "archive" ? (archivedFlows ?? []) : flows}
                 setRecords={
@@ -232,7 +230,7 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
           />
         )}
 
-        {flows && !flows.length && <GetStarted />}
+        {flowView === "flows" && flows && !flows.length && <GetStarted />}
       </Container>
     </Box>
   );
