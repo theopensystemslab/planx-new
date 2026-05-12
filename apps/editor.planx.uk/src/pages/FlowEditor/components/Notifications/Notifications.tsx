@@ -10,7 +10,7 @@ import StyledTab from "ui/editor/StyledTab";
 
 import NotificationCard from "./NotificationCard";
 import { NotificationProps } from "./types";
-import { getStatusLabel, partitionBySuperseded } from "./utils";
+import { partitionBySuperseded } from "./utils";
 
 const TabList = styled(Box)(() => ({
   position: "relative",
@@ -27,15 +27,10 @@ export const Notifications = ({ notifications }: NotificationProps) => {
   const [tab, setTab] = useState(0);
 
   const unresolved = notifications.filter((n) => !n.resolvedAt);
-  const { current: activeNotifications, superseded } =
-    partitionBySuperseded(unresolved);
-  const supersededIds = new Set(superseded.map((n) => n.id));
-  const inactiveNotifications = [
-    ...superseded,
-    ...notifications.filter((n) => !!n.resolvedAt),
-  ];
+  const { current: activeNotifications } = partitionBySuperseded(unresolved);
+  const resolvedNotifications = notifications.filter((n) => !!n.resolvedAt);
   const visibleNotifications =
-    tab === 0 ? activeNotifications : inactiveNotifications;
+    tab === 0 ? activeNotifications : resolvedNotifications;
 
   return (
     <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
@@ -82,11 +77,7 @@ export const Notifications = ({ notifications }: NotificationProps) => {
             <NotificationCard
               key={notification.id}
               notification={notification}
-              statusLabel={
-                tab === 1
-                  ? getStatusLabel(notification.id, supersededIds)
-                  : undefined
-              }
+              statusLabel={tab === 1 ? "Resolved" : undefined}
             />
           ))}
         </Stack>

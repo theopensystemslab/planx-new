@@ -10,7 +10,7 @@ import CheckCircleIcon from "ui/icons/CheckCircle";
 
 import { Notification } from "./types";
 
-export type NotificationStatus = "Resolved" | "Superseded";
+export type NotificationStatus = "Resolved";
 
 export interface NotificationCardProps {
   notification: Notification;

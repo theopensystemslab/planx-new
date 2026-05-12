@@ -12,10 +12,7 @@ import Typography from "@mui/material/Typography";
 import { useNavigate } from "@tanstack/react-router";
 import NotificationCard from "pages/FlowEditor/components/Notifications/NotificationCard";
 import { Notification } from "pages/FlowEditor/components/Notifications/types";
-import {
-  getStatusLabel,
-  partitionBySuperseded,
-} from "pages/FlowEditor/components/Notifications/utils";
+import { partitionBySuperseded } from "pages/FlowEditor/components/Notifications/utils";
 import { useState } from "react";
 import StyledTab from "ui/editor/StyledTab";
 
@@ -63,11 +60,10 @@ const NotificationsPanel = ({
     navigate({ to: `/app/${teamSlug}/notifications` });
   };
 
-  const { current: currentNotifications, superseded } =
+  const { current: currentNotifications } =
     partitionBySuperseded(activeNotifications);
-  const supersededIds = new Set(superseded.map((n) => n.id));
-  const allInactive = [...superseded, ...resolvedNotifications];
-  const visibleNotifications = tab === 0 ? currentNotifications : allInactive;
+  const visibleNotifications =
+    tab === 0 ? currentNotifications : resolvedNotifications;
 
   return (
     <Popover
@@ -138,11 +134,7 @@ const NotificationsPanel = ({
               <NotificationCard
                 notification={notification}
                 compact
-                statusLabel={
-                  tab === 1
-                    ? getStatusLabel(notification.id, supersededIds)
-                    : undefined
-                }
+                statusLabel={tab === 1 ? "Resolved" : undefined}
               />
             </Box>
           ))}

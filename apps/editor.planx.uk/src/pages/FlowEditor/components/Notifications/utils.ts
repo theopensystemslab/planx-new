@@ -1,4 +1,3 @@
-import { NotificationStatus } from "./NotificationCard";
 import { Notification } from "./types";
 
 /**
@@ -24,8 +23,3 @@ export const partitionBySuperseded = (
 
   return { current, superseded };
 };
-
-export const getStatusLabel = (
-  id: number,
-  supersededIds: Set<number>,
-): NotificationStatus => (supersededIds.has(id) ? "Superseded" : "Resolved");
