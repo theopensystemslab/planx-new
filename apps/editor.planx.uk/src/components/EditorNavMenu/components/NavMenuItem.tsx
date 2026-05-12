@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
-import React from "react";
 
 import { MenuButton } from "../styles";
 import NavMenuButton, { NavMenuButtonProps } from "./NavMenuButton";
@@ -29,9 +28,8 @@ const NavMenuItem = ({
       disabled={disabled}
       disableRipple
       onClick={onClick}
-      sx={{ padding: "8px" }}
     >
-      <Icon />
+      <Icon sx={{ fontSize: "1.4rem" }} />
     </MenuButton>
   ) : (
     <NavMenuButton
