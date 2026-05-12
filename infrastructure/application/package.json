@@ -1,18 +1,18 @@
 {
   "name": "@planx/infrastructure-application",
   "dependencies": {
-    "@nodelib/fs.walk": "~3.0.1",
+    "@nodelib/fs.walk": "^3.0.1",
     "@pulumi/aws": "catalog:",
     "@pulumi/awsx": "catalog:",
     "@pulumi/cloudflare": "catalog:",
     "@pulumi/postgresql": "catalog:",
     "@pulumi/pulumi": "catalog:",
-    "tldjs": "~2.3.2"
+    "tldjs": "^2.3.2"
   },
   "devDependencies": {
     "@types/node": "catalog:",
-    "@types/tldjs": "~2.3.4",
-    "mime": "~4.1.0",
+    "@types/tldjs": "^2.3.4",
+    "mime": "^4.1.0",
     "typescript": "catalog:"
   },
   "private": true

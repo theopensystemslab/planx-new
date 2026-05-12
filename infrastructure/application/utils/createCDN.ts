@@ -27,6 +27,9 @@ const staticErrorResponses: aws.cloudfront.DistributionArgs["customErrorResponse
   },
 ];
 
+// TODO: should we just be using a pre-baked AWS policy to simplify this?
+// e.g. CORS-with-preflight-and-SecurityHeadersPolicy
+// see: https://github.com/theopensystemslab/planx-new/pull/6491#issue-4281272671
 const responseHeadersPolicy = new aws.cloudfront.ResponseHeadersPolicy(
   "shared-cdn-headers-policy",
   {
@@ -68,33 +71,39 @@ const responseHeadersPolicy = new aws.cloudfront.ResponseHeadersPolicy(
 );
 
 export const createCdn = ({
-  domain,
+  cdnName,
+  domains,
   acmCertificateArn,
   bucket,
   logsBucket,
   oai,
   mode = "spa",
-  includeWWW = false,
+  includeWww = false,
   lambdaFunctionAssociation,
 }: {
-  domain: string;
+  cdnName: string;
+  domains: string[];
   acmCertificateArn: pulumi.Input<string>;
   bucket: aws.s3.Bucket;
   logsBucket: aws.s3.Bucket;
   oai: aws.cloudfront.OriginAccessIdentity,
   mode?: "static" | "spa"
-  includeWWW?: boolean;
+  includeWww?: boolean;
   lambdaFunctionAssociation?: {
     lambdaArn: pulumi.Input<string>;
     eventType: string;
     includeBody?: boolean;
   };
 }) => {
-  const aliases = includeWWW 
-    ? [`www.${domain}`, domain]
-    : [domain]
+  let aliases = domains;
+  if (includeWww) {
+    aliases = domains.reduce((acc, domain) => {
+      acc.push(`www.${domain}`, domain);
+      return acc;
+    }, [] as string[]);
+  }
 
-  const cdn = new aws.cloudfront.Distribution(`${domain}-cdn`, {
+  const cdn = new aws.cloudfront.Distribution(`${cdnName}-cdn`, {
     enabled: true,
     aliases,
     origins: [
@@ -147,7 +156,7 @@ export const createCdn = ({
     loggingConfig: {
       bucket: logsBucket.bucketDomainName,
       includeCookies: false,
-      prefix: `${domain}/`,
+      prefix: `${cdnName}/`,
     },
   });
 

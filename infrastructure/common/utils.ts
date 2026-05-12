@@ -1,7 +1,7 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
-import { dbUrlArgs } from "./types";
+import type { DbUrlArgs, CustomDomain } from "./types";
 
 // PG docs: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING-URIS
 // the AWS DB host/endpoint/address/URI will be of the form `instance.xxx.region.rds.amazonaws.com`
@@ -11,7 +11,7 @@ export const getPostgresDbUrl = ({
   host,
   port = 5432,
   database = 'postgres',
-}: dbUrlArgs): string => {
+}: DbUrlArgs): string => {
   // the `postgres://` prefix provides a means of locating the resource, so this is a URL, not just a URI
   return `postgres://${role}:${password}@${host}:${port}/${database}`
 }
@@ -107,3 +107,15 @@ export const createDestinationSgEgressRule = (
     });
   }
 }
+
+// get domains still served by their own dedicated CloudFront distribution + imported cert
+export const getLegacyDomains = (customDomains: CustomDomain[]) =>
+  customDomains.filter(cd => cd.cloudFrontState === "single-plus-validation" || cd.cloudFrontState === "single-plus-shared");
+
+// get domains with DNS validation pending — added to 'mining' cert to surface records to send to council
+export const getPendingDomains = (customDomains: CustomDomain[]) =>
+  customDomains.filter(cd => cd.cloudFrontState === "validation-only" || cd.cloudFrontState === "single-plus-validation");
+
+// get domains validated and ready to be served by the shared CloudFront distribution + in-house cert
+export const getValidatedDomains = (customDomains: CustomDomain[]) =>
+  customDomains.filter(cd => cd.cloudFrontState === "single-plus-shared" || cd.cloudFrontState === "shared-only");

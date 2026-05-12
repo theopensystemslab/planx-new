@@ -2,7 +2,7 @@ import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
 import * as pulumi from "@pulumi/pulumi";
 
-import { CustomDomain } from "../common/teams";
+import type { CustomDomain } from "../common/types";
 
 export interface SetupLoadBalancer {
   serviceName: string,

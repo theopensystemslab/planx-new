@@ -1,6 +1,7 @@
 {
   "name": "@planx/infrastructure-certificates",
   "dependencies": {
+    "@pulumi/aws": "catalog:",
     "@pulumi/cloudflare": "catalog:",
     "@pulumi/pulumi": "catalog:"
   },
