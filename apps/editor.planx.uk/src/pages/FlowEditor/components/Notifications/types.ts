@@ -3,11 +3,11 @@ export interface Notification {
   flow: {
     name: string;
     slug: string;
-  }
+  };
   team: {
     name: string;
     slug: string;
-  }
+  };
   type: string;
   createdAt: string; // timestamp
   resolvedAt: string | null; // nullable timestamp
@@ -15,8 +15,4 @@ export interface Notification {
 
 export interface NotificationProps {
   notifications: Notification[];
-}
-
-export interface NotificationCardProps {
-  notification: Notification;
 }
