@@ -95,7 +95,6 @@ jobs:
             ./docker-compose.e2e.yml
           set: |
             *.cache-from=type=registry,ref=ghcr.io/${{ github.repository }}/build-cache:e2e
-            *.cache-to=type=registry,ref=ghcr.io/${{ github.repository }}/build-cache:e2e,mode=max,image-manifest=true,oci-mediatypes=true
           load: true
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
@@ -506,7 +505,6 @@ jobs:
             ./docker-compose.e2e.yml
           set: |
             *.cache-from=type=registry,ref=ghcr.io/${{ github.repository }}/build-cache:e2e
-            *.cache-to=type=registry,ref=ghcr.io/${{ github.repository }}/build-cache:e2e,mode=max,image-manifest=true,oci-mediatypes=true
           load: true
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
