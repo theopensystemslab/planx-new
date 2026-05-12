@@ -482,8 +482,6 @@ jobs:
       - name: Setup Node and PNPM
         uses: ./.github/actions/setup-node-pnpm
       - name: PNPM Install
-        env:
-          SKIP_EDITOR_BUILD: ${{ steps.cache-e2e-editor-build.outputs.cache-hit == 'true' }}
         run: pnpm install --frozen-lockfile
         working-directory: e2e
       - name: Code checks
