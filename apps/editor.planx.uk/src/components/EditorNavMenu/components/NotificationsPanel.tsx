@@ -124,7 +124,7 @@ const NotificationsPanel = ({
       <Box sx={{ overflowY: "auto", flex: 1 }}>
         {!visibleNotifications.length && (
           <EmptyState
-            compact
+            size="small"
             title={
               tab === 0
                 ? "No active notifications"

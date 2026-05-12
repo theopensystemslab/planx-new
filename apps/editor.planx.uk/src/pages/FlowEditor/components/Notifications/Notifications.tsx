@@ -65,7 +65,7 @@ export const Notifications = ({ notifications }: NotificationProps) => {
       <Container maxWidth="formWrap">
         {!visibleNotifications.length && (
           <EmptyState
-            compact
+            size="small"
             title={
               tab === 0
                 ? "No active notifications"
