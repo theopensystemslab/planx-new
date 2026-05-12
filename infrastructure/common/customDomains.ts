@@ -113,7 +113,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "test-legacy",
           domain: "planningserviceslegacy.planx.in",
-          cloudFrontState: "single-plus-shared",
+          cloudFrontState: "single-plus-validation",
         },
         {
           name: "test-new",
