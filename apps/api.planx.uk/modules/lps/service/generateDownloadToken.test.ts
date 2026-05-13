@@ -47,6 +47,27 @@ describe("generating a download token", () => {
       });
   });
 
+  /**
+   * lowcal_sessions_user_status() gives precedent to "submitted" over "expired"
+   * This means we need to explicity check for deleted_at value
+   * Otherwise, users could try to access data for a session which does not have data
+   */
+  it("returns 403 for a submitted session that has been soft-deleted", async () => {
+    queryMock.mockQuery({
+      name: "CheckDownloadableSessionExists",
+      matchOnVariables: false,
+      data: { lowcalSessions: [] },
+    });
+
+    await supertest(app)
+      .post(ENDPOINT)
+      .send({ email: NOTIFY_TEST_EMAIL, sessionId: uuidV4() })
+      .expect(403)
+      .then((res) => {
+        expect(res.body.error).toMatch(/Unauthorised/);
+      });
+  });
+
   it("handles GraphQL errors", async () => {
     queryMock.mockQuery({
       name: "CheckDownloadableSessionExists",

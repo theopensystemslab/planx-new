@@ -28,6 +28,7 @@ export const validateSessionStatus: GenerateDownloadToken = async (
           where: {
             system_status: { _eq: "active" }
             user_status: { _eq: "submitted" }
+            deleted_at: { _is_null: true }
             id: { _eq: $sessionId }
             email: { _eq: $email }
           }
