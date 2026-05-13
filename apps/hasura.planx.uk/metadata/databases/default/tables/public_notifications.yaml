@@ -14,6 +14,9 @@ object_relationships:
   - name: notification_type_enum
     using:
       foreign_key_constraint_on: type
+  - name: resolved_by_user
+    using:
+      foreign_key_constraint_on: resolved_by
   - name: team
     using:
       manual_configuration:
@@ -43,6 +46,7 @@ insert_permissions:
         - type
         - created_at
         - resolved_at
+        - resolved_by
         - flow_id
     comment: ""
 select_permissions:
@@ -55,6 +59,7 @@ select_permissions:
         - type
         - created_at
         - resolved_at
+        - resolved_by
         - flow_id
       filter: {}
     comment: ""
@@ -67,6 +72,7 @@ select_permissions:
         - type
         - created_at
         - resolved_at
+        - resolved_by
         - flow_id
       filter: {}
     comment: ""
@@ -79,6 +85,7 @@ select_permissions:
         - type
         - created_at
         - resolved_at
+        - resolved_by
         - flow_id
       filter:
         team:
@@ -99,6 +106,7 @@ update_permissions:
         - type
         - created_at
         - resolved_at
+        - resolved_by
         - flow_id
       filter: {}
       check: {}

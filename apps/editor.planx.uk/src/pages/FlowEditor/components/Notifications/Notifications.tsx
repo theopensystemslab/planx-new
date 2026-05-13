@@ -75,7 +75,13 @@ export const Notifications = ({ notifications }: NotificationProps) => {
           />
         )}
         {visibleNotifications.length > 0 && (
-          <Stack sx={{ borderTop: "1px solid", borderColor: "border.main" }}>
+          <Stack
+            sx={{
+              border: "1px solid",
+              borderColor: "border.main",
+              borderBottom: 0,
+            }}
+          >
             {visibleNotifications.map((notification) => (
               <NotificationCard
                 key={notification.id}
