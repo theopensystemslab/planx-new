@@ -11,7 +11,11 @@ import { pinoHttp } from "pino-http";
 
 import { defaultCors } from "./cors.js";
 import { useSwaggerDocs } from "./docs/index.js";
-import { errorHandler, expiredJWTHandler } from "./errors/requestHandlers.js";
+import {
+  errorHandler,
+  expiredJWTHandler,
+  noTokenHandler,
+} from "./errors/requestHandlers.js";
 import adminRoutes from "./modules/admin/routes.js";
 import aiRoutes from "./modules/ai/routes.js";
 import analyticsRoutes from "./modules/analytics/routes.js";
@@ -132,6 +136,7 @@ app.use(webhookRoutes);
 
 // Handle any server errors that were passed with next(err)
 // Order is significant, these should be the final app.use()
+app.use(noTokenHandler);
 app.use(expiredJWTHandler);
 app.use(errorHandler);
 
