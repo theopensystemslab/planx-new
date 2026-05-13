@@ -55,6 +55,7 @@ export function SelectMultiple<T>(props: Props<T>) {
   // MUI doesn't pass the Autocomplete value along to the TextField automatically
   const isSelectEmpty = !props.value?.length;
   const placeholder = isSelectEmpty ? props.placeholder : undefined;
+  const value = props.value || [];
 
   return (
     <FormControl sx={{ display: "flex", flexDirection: "column" }}>
@@ -95,6 +96,7 @@ export function SelectMultiple<T>(props: Props<T>) {
           },
         }}
         {...props}
+        value={value}
       />
     </FormControl>
   );
