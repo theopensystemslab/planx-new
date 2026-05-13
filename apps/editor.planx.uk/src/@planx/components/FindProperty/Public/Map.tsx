@@ -171,6 +171,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
               resetControlImage="trash"
               showScale
               showNorthArrow
+              showOSSearch
               osProxyEndpoint={`${
                 import.meta.env.VITE_APP_API_URL
               }/proxy/ordnance-survey`}
