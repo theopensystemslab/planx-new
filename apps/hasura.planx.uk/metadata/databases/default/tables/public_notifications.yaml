@@ -46,7 +46,6 @@ insert_permissions:
         - type
         - created_at
         - resolved_at
-        - resolved_by
         - flow_id
     comment: ""
 select_permissions:
@@ -106,8 +105,9 @@ update_permissions:
         - type
         - created_at
         - resolved_at
-        - resolved_by
         - flow_id
       filter: {}
       check: {}
+      set:
+        resolved_by: x-hasura-user-id
     comment: ""

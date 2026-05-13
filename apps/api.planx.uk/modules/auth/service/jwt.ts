@@ -23,12 +23,15 @@ export const buildUserJWT = async (
   return jwt.sign(data, process.env.JWT_SECRET!, { expiresIn: "24h" });
 };
 
-export const buildJWTForAPIRole = () =>
+export const buildJWTForAPIRole = (userId?: number) =>
   jwt.sign(
     {
       "https://hasura.io/jwt/claims": {
         "x-hasura-allowed-roles": ["api"],
         "x-hasura-default-role": "api",
+        ...(userId !== undefined && {
+          "x-hasura-user-id": String(userId),
+        }),
       },
     },
     process.env.JWT_SECRET!,
