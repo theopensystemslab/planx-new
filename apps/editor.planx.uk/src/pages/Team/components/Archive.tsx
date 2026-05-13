@@ -7,6 +7,7 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import React from "react";
+import { EmptyState } from "ui/editor/EmptyState";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import { FlowCardView, FlowSummary } from "../../FlowEditor/lib/store/editor";
@@ -66,6 +67,10 @@ const Archive: React.FC<Props> = ({
       </Box>
     );
   }
+  if (!isFiltered && archivedFlows !== null && archivedFlows.length === 0) {
+    return <EmptyState title="No archived flows found" />;
+  }
+
   return (
     <>
       <Box
@@ -86,11 +91,13 @@ const Archive: React.FC<Props> = ({
             minHeight: "50px",
           }}
         >
-          <ShowingServicesHeader
-            matchedFlowsCount={archivedFlows?.length || 0}
-            isArchived
-            isFiltered={isFiltered}
-          />
+          {archivedFlows && archivedFlows.length > 0 && (
+            <ShowingServicesHeader
+              matchedFlowsCount={archivedFlows.length}
+              isArchived
+              isFiltered={isFiltered}
+            />
+          )}
           {isFiltered && (
             <Button onClick={onClearSearch} variant="link">
               Clear filters

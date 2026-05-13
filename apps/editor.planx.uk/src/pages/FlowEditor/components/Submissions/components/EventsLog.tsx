@@ -4,7 +4,7 @@ import ErrorFallback from "components/Error/ErrorFallback";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import SettingsSection from "ui/editor/SettingsSection";
+import { EmptyState } from "ui/editor/EmptyState";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
 import {
@@ -12,7 +12,6 @@ import {
   dateFormatter,
   defaultStringFilterOperator,
 } from "ui/shared/DataTable/utils";
-import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import {
   submissionEventTypes,
@@ -48,15 +47,10 @@ const EventsLog: React.FC<EventsLogProps> = ({
 
   if (submissions.length === 0)
     return (
-      <SettingsSection>
-        <ErrorSummary
-          format="info"
-          heading={`No payment or send events found for this ${
-            filterByFlow ? "service" : "team"
-          }`}
-          message="If you're looking for events before 1st January 2024, please contact a PlanX developer"
-        />
-      </SettingsSection>
+      <EmptyState
+        title={`No payment or send events found for this ${filterByFlow ? "service" : "team"}`}
+        description="If you're looking for events before 1st January 2024, please contact a PlanX developer"
+      />
     );
 
   const rowData = submissions.map((submission, index) => ({

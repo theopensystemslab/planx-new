@@ -4,8 +4,8 @@ import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
-import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useState } from "react";
+import { EmptyState } from "ui/editor/EmptyState";
 import StyledTab from "ui/editor/StyledTab";
 
 import NotificationCard from "./NotificationCard";
@@ -64,13 +64,15 @@ export const Notifications = ({ notifications }: NotificationProps) => {
       </Box>
       <Container maxWidth="formWrap">
         {!visibleNotifications.length && (
-          <WarningContainer>
-            <Typography variant="body2">
-              {tab === 0
-                ? "No active notifications."
-                : "No resolved notifications."}
-            </Typography>
-          </WarningContainer>
+          <EmptyState
+            size="small"
+            title={
+              tab === 0
+                ? "No active notifications"
+                : "No resolved notifications"
+            }
+            sx={{ mt: 0 }}
+          />
         )}
         {visibleNotifications.length > 0 && (
           <Stack sx={{ borderTop: "1px solid", borderColor: "border.main" }}>

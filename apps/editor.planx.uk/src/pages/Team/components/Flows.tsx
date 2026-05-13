@@ -60,8 +60,9 @@ const Flows: React.FC<Props> = ({
   teamId,
   handleViewChange,
   slug,
+  flows,
 }) => {
-  const teamHasFlows = sortedFlows ? true : false;
+  const teamHasFlows = Boolean(flows && flows.length);
   const navigate = useNavigate();
 
   const sortedPinnedFlows =
@@ -101,10 +102,12 @@ const Flows: React.FC<Props> = ({
               minHeight: "50px",
             }}
           >
-            <ShowingServicesHeader
-              matchedFlowsCount={sortedFlows?.length || 0}
-              isFiltered={flowsHaveBeenFiltered}
-            />
+            {sortedFlows && sortedFlows.length > 0 && (
+              <ShowingServicesHeader
+                matchedFlowsCount={sortedFlows.length}
+                isFiltered={flowsHaveBeenFiltered}
+              />
+            )}
             {flowsHaveBeenFiltered && (
               <Button
                 onClick={() => {
