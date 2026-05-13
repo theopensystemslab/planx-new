@@ -229,7 +229,9 @@ const markSessionAsSubmitted = async (sessionId: string) => {
     `;
     await $api.client.request(mutation, { sessionId });
   } catch (error) {
-    throw new Error(`Error marking session ${sessionId} as submitted`);
+    throw new Error(
+      `Error marking session ${sessionId} as submitted. Error: ${error}`,
+    );
   }
 };
 
