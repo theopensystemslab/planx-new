@@ -2,12 +2,14 @@ import type { Node } from "@opensystemslab/planx-core/types";
 import { z } from "zod";
 
 import { ServerError } from "../../../errors/index.js";
+import type { CreateScheduledEventResponse } from "../../../lib/hasura/metadata/types.js";
 import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 import { publishFlow } from "./service.js";
 
 interface PublishFlowResponse {
   message: string;
   alteredNodes?: Node[];
+  templatedFlowsScheduledEventsResponse?: CreateScheduledEventResponse[];
 }
 
 export const publishFlowSchema = z.object({
@@ -40,6 +42,8 @@ export const publishFlowController: PublishFlowController = async (
         ? "Changes published"
         : "No new changes to publish",
       alteredNodes: response?.alteredNodes,
+      templatedFlowsScheduledEventsResponse:
+        response?.templatedFlowsScheduledEventsResponse,
     });
   } catch (error) {
     return next(
