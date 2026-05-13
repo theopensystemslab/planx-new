@@ -56,8 +56,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@mui/material@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(@mui/system@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@opensystemslab/map':
-        specifier: 1.0.0-alpha.11
-        version: 1.0.0-alpha.11
+        specifier: 1.0.0-alpha.12
+        version: 1.0.0-alpha.12(geotiff@3.0.5)
       '@opensystemslab/planx-core':
         specifier: github:theopensystemslab/planx-core#91e4296
         version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/91e4296a313276971ea5759d52b487048c4d8199(@types/react@19.2.14)
@@ -2045,8 +2045,8 @@ packages:
   '@open-draft/until@2.1.0':
     resolution: {integrity: sha512-U69T3ItWHvLwGg5eJ0n3I62nWuE6ilHlmz7zM0npLBRvPRd7e6NYmg54vvRtP5mZG7kZqZCFVdsTWo7BPtBujg==}
 
-  '@opensystemslab/map@1.0.0-alpha.11':
-    resolution: {integrity: sha512-ETACPCk5Coef1L2kNT3MhIzLxVPDpyopxsTNcgeRyEqL71HBfTklGyC5+t7HgEgxRkX5wlUXqmKPNL9DdpVj8g==}
+  '@opensystemslab/map@1.0.0-alpha.12':
+    resolution: {integrity: sha512-rF6ABnWNRNcixjWa1/jnOZanoNFBJ5SeHlHMy891NWhzdWZ/Bd4FOEDhvdyedlRZUDbbsL/NcQvAC7N7pcaxVg==}
 
   '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/91e4296a313276971ea5759d52b487048c4d8199':
     resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/91e4296a313276971ea5759d52b487048c4d8199}
@@ -3522,8 +3522,8 @@ packages:
   '@xobotyi/scrollbar-width@1.9.5':
     resolution: {integrity: sha512-N8tkAACJx2ww8vFMneJmaAgmjAG1tnVBZJRLRcx061tmsLRZHSEZSLuGWnwPtunsSLvSqXQ2wfp7Mgqg1I+2dQ==}
 
-  '@zarrita/storage@0.1.4':
-    resolution: {integrity: sha512-qURfJAQcQGRfDQ4J9HaCjGaj3jlJKc66bnRk6G/IeLUsM7WKyG7Bzsuf1EZurSXyc0I4LVcu6HaeQQ4d3kZ16g==}
+  '@zarrita/storage@0.2.0':
+    resolution: {integrity: sha512-855ZXqtnds7spnT8vNvD+MXa3QExP1m2GqShe8yt7uZXHnQLgJHgkpVwFjE1B0KDDRO0ki09hmk6OboTaIfPsQ==}
 
   accessible-autocomplete@3.0.1:
     resolution: {integrity: sha512-xMshgc2LT5addvvfCTGzIkRrvhbOFeylFSnSMfS/PdjvvvElZkakCwxO3/yJYBWyi1hi3tZloqOJQ5kqqJtH4g==}
@@ -4757,8 +4757,8 @@ packages:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
     engines: {node: '>= 0.4'}
 
-  govuk-frontend@5.14.0:
-    resolution: {integrity: sha512-MgfaXswIM6KpXS2T5gltEnzgVLgfM3UoE9+rYkhBiR0suaJ8Let31VZXQZqz9QhiPDbv28fW1nRjIyLujfZIBA==}
+  govuk-frontend@6.2.0:
+    resolution: {integrity: sha512-PCRyQT+7kiV2dUz0Ku6Co+Nx4anOwJ7mAduXYbTQHK2krppBSynv9dBXtOYha/8j+LIzK7FqesTbJl9HD6ekHg==}
     engines: {node: '>= 4.2.0'}
 
   graceful-fs@4.2.11:
@@ -5692,8 +5692,8 @@ packages:
     peerDependencies:
       ol: '*'
 
-  ol@10.8.0:
-    resolution: {integrity: sha512-kLk7jIlJvKyhVMAjORTXKjzlM6YIByZ1H/d0DBx3oq8nSPCG6/gbLr5RxukzPgwbhnAqh+xHNCmrvmFKhVMvoQ==}
+  ol@10.9.0:
+    resolution: {integrity: sha512-svbbgVQUmEHaKpLQ8kRySojs59Brvgl2zYIrqG9eQNXGfsbi55rQasZIDpwpQzDL6OlzrUb0H4hQaiX9wDoGmA==}
 
   once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
@@ -5931,8 +5931,13 @@ packages:
     resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
     engines: {node: '>= 0.6.0'}
 
-  proj4@2.20.4:
-    resolution: {integrity: sha512-/EEBoXjBw+zW1Lofinw0YFQ4OFOqC6XThnwRAgjEHw8WBN+wSy/6aeqRRdjy4b2igy3X0k3RNDuwcYqcQq7nDw==}
+  proj4@2.20.9:
+    resolution: {integrity: sha512-GLBGqXaTcdWnppre3o1sMmy4DcMGSGq/ng+9k2MTNddarRK6SveINqlqYzi3xEXuy06ljY1TTrC6H9C4f360IQ==}
+    peerDependencies:
+      geotiff: '*'
+    peerDependenciesMeta:
+      geotiff:
+        optional: true
 
   promise-polyfill@8.3.0:
     resolution: {integrity: sha512-H5oELycFml5yto/atYqmjyigJoAo3+OXwolYiH7OfQuYlAqhxNvTfiNMbV9hsC6Yp83yE5r2KTVmtrG6R9i6Pg==}
@@ -6053,8 +6058,8 @@ packages:
   raf@3.4.1:
     resolution: {integrity: sha512-Sq4CW4QhwOHE8ucn6J34MqtZCeWFP2aQSmrlroYgqAV1PjStIhJXxYuTgUIfkEk7zTLjmIjLmU5q+fbD1NnOJA==}
 
-  rambda@10.3.4:
-    resolution: {integrity: sha512-FbqeXxuxV/T1QHbIlh4YSvZ+MbDoaWgbKq0AfxeM+7tAcp2eqWN6jog2Fh2lz1jDmoVSqkiXhtdXGsaWAYYmow==}
+  rambda@11.2.0:
+    resolution: {integrity: sha512-Shzc8LTC+rhgDYddMEaTYhAo/U6kdp25/6dOymrCRyK3R9vVmt4a0Rl6zFtGEzh0dWYxTgrH3uff53RTzn1Rwg==}
 
   ramda@0.29.1:
     resolution: {integrity: sha512-OfxIeWzd4xdUNxlWhgFazxsA/nl3mS4/jGZI5n00uWOoSSFRhC1b6gl6xvmzUamgmqELraWp0J/qqVlXYPDPyA==}
@@ -7004,9 +7009,9 @@ packages:
     resolution: {integrity: sha512-KK8xQ1mkzZeg9inewmFVDNkg3l5LUhoq9kN6iWYB/CC9YMG8HA+c1Q8HwDe6dEX7kErrEVNVBO3fWsVq5iDgtw==}
     engines: {node: '>=8'}
 
-  unzipit@1.4.3:
-    resolution: {integrity: sha512-gsq2PdJIWWGhx5kcdWStvNWit9FVdTewm4SEG7gFskWs+XCVaULt9+BwuoBtJiRE8eo3L1IPAOrbByNLtLtIlg==}
-    engines: {node: '>=12'}
+  unzipit@2.0.0:
+    resolution: {integrity: sha512-DVeVIWUZCAQPNzm5sB0hpsG1GygTTdBnzNtYYEpInkttx5evkyqRgZi6rTczoySqp8hO5jHVKzrH0f23X8FZLg==}
+    engines: {node: '>=18'}
 
   update-browserslist-db@1.2.3:
     resolution: {integrity: sha512-Js0m9cx+qOgDxo0eMiFGEueWztz+d4+M3rGlmKPT+T4IS/jP4ylw3Nwpu6cpTTP8R1MAC1kF4VbdLt3ARf209w==}
@@ -7065,9 +7070,6 @@ packages:
   uuid@14.0.0:
     resolution: {integrity: sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg==}
     hasBin: true
-
-  uzip-module@1.0.3:
-    resolution: {integrity: sha512-AMqwWZaknLM77G+VPYNZLEruMGWGzyigPK3/Whg99B3S6vGHuqsyl5ZrOv1UUF3paGK1U6PM0cnayioaryg/fA==}
 
   vfile-message@4.0.3:
     resolution: {integrity: sha512-QTHzsGd1EhbZs4AsQ20JX1rC3cOlt/IWJruk893DfLRr57lcnOeMaWG4K0JrRta4mIJZKth2Au3mM3u03/JWKw==}
@@ -7239,8 +7241,8 @@ packages:
     engines: {node: '>=8'}
     hasBin: true
 
-  wkt-parser@1.5.4:
-    resolution: {integrity: sha512-heRp3QBynj8SAGepAkE8h2k4KhUGRqzgwlSRgqNhxjmSIeSvE5ZrV8n1uy5jk+iJO2jmfffIwjdAaTirBOOx0A==}
+  wkt-parser@1.5.5:
+    resolution: {integrity: sha512-/zMYi94/7D7fxcOSlVmWn6vnOMj3Gq5d1xvVjaYOS9n6h0qOJ4I7YYVxBWYcH1vq9+suhqzXkn05Yx47zQNUIA==}
 
   wkt@0.1.1:
     resolution: {integrity: sha512-2vtzYZOqN0VZdtDTMDUgbpXpE+MXRdsFTiCpS08FZ4yktT9pPylVMZaLxcIqT9pRkBp5FIAGVQyJ/kJa9b8uGg==}
@@ -7353,8 +7355,8 @@ packages:
     resolution: {integrity: sha512-Z2Fe1bn+eLstG8DRR6FTavGD+MeAwyfmouhHsIUgaADz8jvFKbO/fXc2trJKZg+5EBjh4gGm3iU/t3onKlXHIg==}
     engines: {node: '>=10'}
 
-  zarrita@0.6.1:
-    resolution: {integrity: sha512-YOMTW8FT55Rz+vadTIZeOFZ/F2h4svKizyldvPtMYSxPgSNcRkOzkxCsWpIWlWzB1I/LmISmi0bEekOhLlI+Zw==}
+  zarrita@0.7.3:
+    resolution: {integrity: sha512-wChTQ1Ox75INoQCzKAfLWAfB70JJ4KjdW8Sz5x4ZWrFB4Dw+YZdnxHTL0xSdsrB9EmKSeK7fS1Y+I2ibhfGbkw==}
 
   zen-observable-ts@1.2.5:
     resolution: {integrity: sha512-QZWQekv6iB72Naeake9hS1KxHlotfRpe+WGNbNx5/ta+R3DNjVO2bswf63gXlWDcs+EMd7XY8HfVQyP1X6T4Zg==}
@@ -9141,23 +9143,24 @@ snapshots:
 
   '@open-draft/until@2.1.0': {}
 
-  '@opensystemslab/map@1.0.0-alpha.11':
+  '@opensystemslab/map@1.0.0-alpha.12(geotiff@3.0.5)':
     dependencies:
       '@turf/helpers': 7.3.4
       '@turf/union': 7.3.4
       '@types/geojson': 7946.0.16
       accessible-autocomplete: 3.0.1
       file-saver: 2.0.5
-      govuk-frontend: 5.14.0
+      govuk-frontend: 6.2.0
       jspdf: 4.2.1
       lit: 3.3.2
-      ol: 10.8.0
-      ol-ext: 4.0.38(ol@10.8.0)
-      ol-mapbox-style: 12.6.1(ol@10.8.0)
+      ol: 10.9.0
+      ol-ext: 4.0.38(ol@10.9.0)
+      ol-mapbox-style: 12.6.1(ol@10.9.0)
       postcode: 5.1.0
-      proj4: 2.20.4
-      rambda: 10.3.4
+      proj4: 2.20.9(geotiff@3.0.5)
+      rambda: 11.2.0
     transitivePeerDependencies:
+      - geotiff
       - preact
 
   '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/91e4296a313276971ea5759d52b487048c4d8199(@types/react@19.2.14)':
@@ -10576,10 +10579,10 @@ snapshots:
 
   '@xobotyi/scrollbar-width@1.9.5': {}
 
-  '@zarrita/storage@0.1.4':
+  '@zarrita/storage@0.2.0':
     dependencies:
       reference-spec-reader: 0.2.0
-      unzipit: 1.4.3
+      unzipit: 2.0.0
 
   accessible-autocomplete@3.0.1: {}
 
@@ -12080,7 +12083,7 @@ snapshots:
 
   gopd@1.2.0: {}
 
-  govuk-frontend@5.14.0: {}
+  govuk-frontend@6.2.0: {}
 
   graceful-fs@4.2.11: {}
 
@@ -13196,24 +13199,24 @@ snapshots:
 
   obug@2.1.1: {}
 
-  ol-ext@4.0.38(ol@10.8.0):
+  ol-ext@4.0.38(ol@10.9.0):
     dependencies:
-      ol: 10.8.0
+      ol: 10.9.0
 
-  ol-mapbox-style@12.6.1(ol@10.8.0):
+  ol-mapbox-style@12.6.1(ol@10.9.0):
     dependencies:
       '@maplibre/maplibre-gl-style-spec': 23.3.0
       mapbox-to-css-font: 3.2.0
-      ol: 10.8.0
+      ol: 10.9.0
 
-  ol@10.8.0:
+  ol@10.9.0:
     dependencies:
       '@types/rbush': 4.0.0
       earcut: 3.0.2
       geotiff: 3.0.5
       pbf: 4.0.1
       rbush: 4.0.1
-      zarrita: 0.6.1
+      zarrita: 0.7.3
 
   once@1.4.0:
     dependencies:
@@ -13491,10 +13494,12 @@ snapshots:
 
   process@0.11.10: {}
 
-  proj4@2.20.4:
+  proj4@2.20.9(geotiff@3.0.5):
     dependencies:
       mgrs: 1.0.0
-      wkt-parser: 1.5.4
+      wkt-parser: 1.5.5
+    optionalDependencies:
+      geotiff: 3.0.5
 
   promise-polyfill@8.3.0: {}
 
@@ -13651,7 +13656,7 @@ snapshots:
       performance-now: 2.1.0
     optional: true
 
-  rambda@10.3.4: {}
+  rambda@11.2.0: {}
 
   ramda@0.29.1: {}
 
@@ -14704,9 +14709,7 @@ snapshots:
 
   untildify@4.0.0: {}
 
-  unzipit@1.4.3:
-    dependencies:
-      uzip-module: 1.0.3
+  unzipit@2.0.0: {}
 
   update-browserslist-db@1.2.3(browserslist@4.28.1):
     dependencies:
@@ -14768,8 +14771,6 @@ snapshots:
     optional: true
 
   uuid@14.0.0: {}
-
-  uzip-module@1.0.3: {}
 
   vfile-message@4.0.3:
     dependencies:
@@ -14933,7 +14934,7 @@ snapshots:
       siginfo: 2.0.0
       stackback: 0.0.2
 
-  wkt-parser@1.5.4: {}
+  wkt-parser@1.5.5: {}
 
   wkt@0.1.1: {}
 
@@ -15023,9 +15024,9 @@ snapshots:
       property-expr: 2.0.6
       toposort: 2.0.2
 
-  zarrita@0.6.1:
+  zarrita@0.7.3:
     dependencies:
-      '@zarrita/storage': 0.1.4
+      '@zarrita/storage': 0.2.0
       numcodecs: 0.3.2
 
   zen-observable-ts@1.2.5:
