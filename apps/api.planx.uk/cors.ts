@@ -15,7 +15,7 @@ const checkAllowedOrigins: CorsOptions["origin"] = (origin, callback) => {
 
   isTest || isDevelopment || isAllowed || isMapDocs
     ? callback(null, true)
-    : callback(new Error(`Not allowed by CORS. Origin: ${origin}`));
+    : callback(null, false);
 };
 
 const apiCors = cors({
