@@ -7,10 +7,9 @@ import { gql } from "graphql-request";
 import * as jsondiffpatch from "jsondiffpatch";
 import { getClient } from "../../../client/index.js";
 import { dataMerged, getMostRecentPublishedFlow } from "../../../helpers.js";
-import { createScheduledEvent } from "../../../lib/hasura/metadata/index.js";
-import type { CreateScheduledEventResponse } from "../../../lib/hasura/metadata/types.js";
 import { userContext } from "../../auth/middleware.js";
 import { resolveNotification } from "../../notifications/service.js";
+import { updateTemplatedFlow } from "../updateTemplatedFlow/service.js";
 import { buildNodeTypeSet, createFlowTypeMap } from "../validate/helpers.js";
 
 interface PublishFlow {
@@ -32,7 +31,6 @@ export const publishFlow = async (
   templatedFlowIds?: string[],
 ): Promise<{
   alteredNodes: Node[];
-  templatedFlowsScheduledEventsResponse?: CreateScheduledEventResponse[];
   resolvedNotificationIds?: { id: number }[];
 } | null> => {
   const userId = userContext.getStore()?.user?.sub;
@@ -121,24 +119,16 @@ export const publishFlow = async (
     ...publishedFlow[key],
   }));
 
-  // If we're publishing a source flow, queue up events to additionally update each of its' templated flows
-  let templatedFlowsScheduledEventsResponse:
-    | CreateScheduledEventResponse[]
-    | undefined;
-  if (templatedFlowIds && templatedFlowIds?.length > 0) {
-    templatedFlowsScheduledEventsResponse = await Promise.all(
-      templatedFlowIds.map((templatedFlowId, i) =>
-        createScheduledEvent({
-          webhook: `{{HASURA_PLANX_API_URL}}/flows/${flowId}/update-templated-flow/${templatedFlowId}`,
-          schedule_at: new Date(
-            new Date().getTime() + (i > 0 ? i * 2 : 0) * 1000,
-          ), // Stagger events by 2 seconds starting at "now"
-          payload: {
-            sourceFlowId: flowId,
-            templatedFlowId: templatedFlowId,
-          },
-          comment: `update_templated_flow_${templatedFlowId}`,
-        }),
+  // If we're publishing a source flow, directly update each templated flow without blocking the response
+  if (templatedFlowIds && templatedFlowIds.length > 0) {
+    Promise.all(
+      templatedFlowIds.map((templatedFlowId) =>
+        updateTemplatedFlow(flowId, templatedFlowId).catch((err) =>
+          console.error(
+            `Failed to update templated flow ${templatedFlowId}:`,
+            err,
+          ),
+        ),
       ),
     );
   }
@@ -154,7 +144,6 @@ export const publishFlow = async (
 
   return {
     alteredNodes,
-    templatedFlowsScheduledEventsResponse,
     resolvedNotificationIds,
   };
 };
