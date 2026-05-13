@@ -26,7 +26,9 @@ export const CONSUME_MAGIC_LINK_MUTATION = gql`
           where: {
             # Fetch non-expired sessions...
             user_status: { _neq: "expired" }
-            # ..for services which still exist
+            # ...which are not soft-deleted ("submitted" takes precedence over "expired")
+            deleted_at: { _is_null: true }
+            # ...for services which still exist
             flow: {
               _and: [
                 { id: { _is_null: false } }
