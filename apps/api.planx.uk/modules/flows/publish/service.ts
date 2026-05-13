@@ -130,8 +130,8 @@ export const publishFlow = async (
         createScheduledEvent({
           webhook: `{{HASURA_PLANX_API_URL}}/flows/${flowId}/update-templated-flow/${templatedFlowId}`,
           schedule_at: new Date(
-            new Date().getTime() + (i > 0 ? i * 2 : 0) * 1000,
-          ), // Stagger events by 2 seconds starting at "now"
+            new Date().getTime() + (i > 0 ? i * 5 : 0) * 1000,
+          ), // Stagger events by 5 seconds starting at "now"
           payload: {
             sourceFlowId: flowId,
             templatedFlowId: templatedFlowId,
