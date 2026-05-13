@@ -1,13 +1,11 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useSubscription } from "@apollo/client";
 import { hasFeatureFlag } from "lib/featureFlags";
+import { useStore } from "pages/FlowEditor/lib/store";
 
 const GET_UNRESOLVED_NOTIFICATIONS = gql`
-  query GetUnresolvedNotificationsForTeam($teamSlug: String!) {
+  subscription GetUnresolvedNotificationsForTeam($teamId: Int!) {
     notifications(
-      where: {
-        team: { slug: { _eq: $teamSlug } }
-        resolved_at: { _is_null: true }
-      }
+      where: { team_id: { _eq: $teamId }, resolved_at: { _is_null: true } }
       distinct_on: flow_id
     ) {
       id
@@ -19,10 +17,12 @@ interface QueryResult {
   notifications: { id: number }[];
 }
 
-export const useNotificationsCount = (teamSlug?: string): number => {
-  const { data } = useQuery<QueryResult>(GET_UNRESOLVED_NOTIFICATIONS, {
-    variables: { teamSlug },
-    skip: !teamSlug || !hasFeatureFlag("NOTIFICATIONS"),
+export const useNotificationsCount = (): number => {
+  const teamId = useStore((state) => state.teamId);
+
+  const { data } = useSubscription<QueryResult>(GET_UNRESOLVED_NOTIFICATIONS, {
+    variables: { teamId },
+    skip: !teamId || !hasFeatureFlag("NOTIFICATIONS"),
   });
 
   return data?.notifications?.length ?? 0;

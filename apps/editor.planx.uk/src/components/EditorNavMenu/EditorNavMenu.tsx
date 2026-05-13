@@ -95,9 +95,9 @@ function EditorNavMenu() {
 
   const teamAnalyticsLink = useTeamAnalyticsLink();
   const flowAnalyticsLink = useFlowAnalyticsLink();
-  const notificationsCount = useNotificationsCount(teamSlug);
+  const notificationsCount = useNotificationsCount();
   const { active: activeNotifications, resolved: resolvedNotifications } =
-    useRecentNotifications(teamSlug);
+    useRecentNotifications();
 
   const globalLayoutSections: MenuSection[] = [
     {

@@ -1,6 +1,7 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useSubscription } from "@apollo/client";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { Notification } from "pages/FlowEditor/components/Notifications/types";
+import { useStore } from "pages/FlowEditor/lib/store";
 
 const NOTIFICATION_FIELDS = gql`
   fragment NotificationFields on notifications {
@@ -21,23 +22,23 @@ const NOTIFICATION_FIELDS = gql`
   }
 `;
 
-const GET_PANEL_NOTIFICATIONS = gql`
+const GET_ACTIVE_NOTIFICATIONS = gql`
   ${NOTIFICATION_FIELDS}
-  query GetPanelNotificationsForTeam($teamSlug: String!) {
+  subscription GetActiveNotificationsForTeam($teamId: Int!) {
     active: notifications(
-      where: {
-        team: { slug: { _eq: $teamSlug } }
-        resolved_at: { _is_null: true }
-      }
+      where: { team_id: { _eq: $teamId }, resolved_at: { _is_null: true } }
       order_by: { created_at: desc }
     ) {
       ...NotificationFields
     }
+  }
+`;
+
+const GET_RESOLVED_NOTIFICATIONS = gql`
+  ${NOTIFICATION_FIELDS}
+  subscription GetResolvedNotificationsForTeam($teamId: Int!) {
     resolved: notifications(
-      where: {
-        team: { slug: { _eq: $teamSlug } }
-        resolved_at: { _is_null: false }
-      }
+      where: { team_id: { _eq: $teamId }, resolved_at: { _is_null: false } }
       order_by: { created_at: desc }
       limit: 5
     ) {
@@ -46,21 +47,25 @@ const GET_PANEL_NOTIFICATIONS = gql`
   }
 `;
 
-interface QueryResult {
+export const useRecentNotifications = (): {
   active: Notification[];
   resolved: Notification[];
-}
+} => {
+  const teamId = useStore((state) => state.teamId);
+  const skip = !teamId || !hasFeatureFlag("NOTIFICATIONS");
 
-export const useRecentNotifications = (
-  teamSlug?: string,
-): { active: Notification[]; resolved: Notification[] } => {
-  const { data } = useQuery<QueryResult>(GET_PANEL_NOTIFICATIONS, {
-    variables: { teamSlug },
-    skip: !teamSlug || !hasFeatureFlag("NOTIFICATIONS"),
-  });
+  const { data: activeData } = useSubscription<{ active: Notification[] }>(
+    GET_ACTIVE_NOTIFICATIONS,
+    { variables: { teamId }, skip },
+  );
+
+  const { data: resolvedData } = useSubscription<{ resolved: Notification[] }>(
+    GET_RESOLVED_NOTIFICATIONS,
+    { variables: { teamId }, skip },
+  );
 
   return {
-    active: data?.active ?? [],
-    resolved: data?.resolved ?? [],
+    active: activeData?.active ?? [],
+    resolved: resolvedData?.resolved ?? [],
   };
 };
