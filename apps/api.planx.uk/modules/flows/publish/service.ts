@@ -10,6 +10,7 @@ import { dataMerged, getMostRecentPublishedFlow } from "../../../helpers.js";
 import { createScheduledEvent } from "../../../lib/hasura/metadata/index.js";
 import type { CreateScheduledEventResponse } from "../../../lib/hasura/metadata/types.js";
 import { userContext } from "../../auth/middleware.js";
+import { resolveNotification } from "../../notifications/service.js";
 import { buildNodeTypeSet, createFlowTypeMap } from "../validate/helpers.js";
 
 interface PublishFlow {
@@ -32,7 +33,7 @@ export const publishFlow = async (
 ): Promise<{
   alteredNodes: Node[];
   templatedFlowsScheduledEventsResponse?: CreateScheduledEventResponse[];
-  resolveNotificationsScheduledEventResponse?: CreateScheduledEventResponse;
+  resolvedNotificationIds?: { id: number }[];
 } | null> => {
   const userId = userContext.getStore()?.user?.sub;
   if (!userId) throw Error("User details missing from request");
@@ -130,8 +131,8 @@ export const publishFlow = async (
         createScheduledEvent({
           webhook: `{{HASURA_PLANX_API_URL}}/flows/${flowId}/update-templated-flow/${templatedFlowId}`,
           schedule_at: new Date(
-            new Date().getTime() + (i > 0 ? i * 10 : 0) * 1000,
-          ), // Stagger events by 10 seconds starting at "now"
+            new Date().getTime() + (i > 0 ? i * 2 : 0) * 1000,
+          ), // Stagger events by 2 seconds starting at "now"
           payload: {
             sourceFlowId: flowId,
             templatedFlowId: templatedFlowId,
@@ -142,25 +143,18 @@ export const publishFlow = async (
     );
   }
 
-  // If we're publishing a templated flow, queue up an event to resolve any of its' active publish notifications
-  let resolveNotificationsScheduledEventResponse:
-    | CreateScheduledEventResponse
-    | undefined;
+  // If we're publishing a templated flow, directly resolve any of its' active publish notifications
+  let resolvedNotificationIds: { id: number }[] | undefined;
   if (response?.publishedFlow?.flow?.templatedFrom) {
-    resolveNotificationsScheduledEventResponse = await createScheduledEvent({
-      webhook: `{{HASURA_PLANX_API_URL}}/resolve-notification`,
-      schedule_at: new Date(), // now
-      payload: {
-        flowId: flowId,
-        type: "updated_templated_flow",
-      },
-      comment: `resolve_notification_on_templated_flow_publish_${flowId}`,
-    });
+    resolvedNotificationIds = await resolveNotification(
+      flowId,
+      "updated_templated_flow",
+    );
   }
 
   return {
     alteredNodes,
     templatedFlowsScheduledEventsResponse,
-    resolveNotificationsScheduledEventResponse,
+    resolvedNotificationIds,
   };
 };
