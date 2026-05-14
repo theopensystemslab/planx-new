@@ -1,3 +1,4 @@
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import { expect, test } from "@playwright/test";
 import {
   contextDefaults,
@@ -11,6 +12,7 @@ import {
   publishService,
   turnServiceOnline,
 } from "./helpers/navigateAndPublish.js";
+import { createTemplatedComponent } from "./helpers/addComponent.js";
 import { TestContext } from "./helpers/types.js";
 import { PlaywrightEditor } from "./pages/Editor.js";
 
@@ -121,17 +123,20 @@ test.describe("Templates", () => {
 
       const editor = new PlaywrightEditor(page);
 
-      await editor.createNodeWithTemplateConfig(
+      await createTemplatedComponent(
+        page,
+        editor.firstNode,
+        ComponentType.Question,
         REQUIRED_NODE_TITLE,
-        REQUIRED_NODE_INSTRUCTIONS,
-        true,
+        { instructions: REQUIRED_NODE_INSTRUCTIONS, required: true },
       );
 
-      await editor.createNodeWithTemplateConfig(
-        OPTIONAL_NODE_TITLE,
-        OPTIONAL_NODE_INSTRUCTIONS,
-        false,
+      await createTemplatedComponent(
+        page,
         editor.getNextNode(),
+        ComponentType.Question,
+        OPTIONAL_NODE_TITLE,
+        { instructions: OPTIONAL_NODE_INSTRUCTIONS, required: false },
       );
 
       // Check that the required node is visible and has the "Required" label

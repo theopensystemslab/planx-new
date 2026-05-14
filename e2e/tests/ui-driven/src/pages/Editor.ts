@@ -117,29 +117,6 @@ export class PlaywrightEditor {
     ).toBeVisible();
   }
 
-  // Create a new node in a templated flow
-  async createNodeWithTemplateConfig(
-    title: string,
-    instructions: string,
-    required: boolean,
-    locator?: Locator,
-  ): Promise<void> {
-    await (locator ?? this.firstNode).click();
-    await this.page.getByRole("dialog").waitFor();
-
-    await this.page.getByPlaceholder("Text").fill(title);
-
-    // force: true is necessary for MuiSwitch inputs
-    await this.page.getByLabel("Allow edits").click({ force: true });
-    await this.page.locator("#templatedNodeInstructions").fill(instructions);
-    if (required) {
-      await this.page.getByLabel("Require edits").click({ force: true });
-    }
-
-    await this.page.locator('button[form="modal"][type="submit"]').click();
-    await this.page.getByRole("dialog").waitFor({ state: "detached" });
-  }
-
   async createQuestion() {
     await createQuestionWithOptions(
       this.page,
