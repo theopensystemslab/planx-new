@@ -366,7 +366,9 @@ test.describe("Templates", () => {
       await page.getByRole("link", { name: REQUIRED_NODE_TITLE }).click();
       await page.getByRole("dialog").waitFor();
       await expect(page.getByText("Customise (required)")).toBeVisible();
-      await expect(page.getByText(REQUIRED_NODE_INSTRUCTIONS)).toBeVisible();
+      await expect(
+        page.getByText(REQUIRED_NODE_INSTRUCTIONS).first(),
+      ).toBeVisible();
       await page.locator('button[aria-label="close"]').click();
       await page.getByRole("dialog").waitFor({ state: "detached" });
     });
@@ -434,11 +436,10 @@ test.describe("Templates", () => {
       });
       await navigateToService(page, TEMPLATED_FLOW_SLUG);
 
-      // Navigate into the templated folder
       await page.getByRole("link", { name: TEMPLATED_FOLDER_NAME }).click();
       await page.locator("li.hanger > a").first().waitFor();
 
-      // Hangers inside a templated folder are visible (not hidden), enabling DnD
+      // Hangers inside a templated folder are visible (not hidden)
       await expect(page.locator("li.hanger").first()).not.toHaveClass(/hidden/);
 
       // Nodes inside the folder are fully editable (submit button enabled)
@@ -466,7 +467,38 @@ test.describe("Templates", () => {
       );
     });
 
-    // TODO - test("Cannot add new nodes in a templated flow");
+    test("cannot add new nodes or restructure a templated flow", async ({
+      browser,
+    }) => {
+      const page = await getTeamPage({
+        browser,
+        userId: context.user!.id!,
+        teamName: context.team.name,
+      });
+      await navigateToService(page, TEMPLATED_FLOW_SLUG);
+
+      await page
+        .getByRole("link", { name: NON_TEMPLATED_NODE_TITLE })
+        .waitFor();
+
+      // hidden hanger means no new nodes can be added
+      await expect(page.locator("li.hanger").first()).toHaveClass(/hidden/);
+
+      // Right-clicking a node shows Copy/Clone/Cut as disabled
+      await page
+        .getByRole("link", { name: NON_TEMPLATED_NODE_TITLE })
+        .click({ button: "right" });
+      await expect(
+        page.getByRole("menuitem", { name: "Copy" }),
+      ).toHaveAttribute("aria-disabled", "true");
+      await expect(
+        page.getByRole("menuitem", { name: "Clone" }),
+      ).toHaveAttribute("aria-disabled", "true");
+      await expect(page.getByRole("menuitem", { name: "Cut" })).toHaveAttribute(
+        "aria-disabled",
+        "true",
+      );
+    });
 
     test("cannot proceed past the Review step when required customisations are incomplete", async ({
       browser,
