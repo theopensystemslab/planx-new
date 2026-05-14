@@ -7,7 +7,8 @@
     "build": "astro check && astro build",
     "check": "astro check",
     "dev": "astro dev --mode dev --open",
-    "preview": "astro preview --open"
+    "preview": "astro preview --open",
+    "storybook": "storybook dev -p 6006"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.6",
@@ -34,8 +35,20 @@
   },
   "packageManager": "pnpm@10.30.2",
   "devDependencies": {
+    "@storybook/addon-a11y": "^10",
+    "@storybook/react": "^10",
+    "@storybook/react-vite": "^10",
+    "@storybook/test": "^8.6.15",
     "@types/node": "~24.10.15",
+    "msw": "^2.14.3",
+    "msw-storybook-addon": "^2.0.7",
+    "storybook": "^10",
     "typescript-plugin-css-modules": "^5.2.0",
     "vite": "^8.0.5"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }
