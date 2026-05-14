@@ -3,6 +3,7 @@
     "baseUrl": ".",
     "jsx": "react-jsx",
     "jsxImportSource": "react",
+    // Path aliases must be mirrored in .storybook/main.ts
     "paths": {
       "@components/*": [
         "src/components/*"
