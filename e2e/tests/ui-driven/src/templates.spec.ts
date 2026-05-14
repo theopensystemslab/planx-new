@@ -180,7 +180,9 @@ test.describe("Templates", () => {
       const nonTemplatedNode = await editor.checkNodeExists(
         NON_TEMPLATED_NODE_TITLE,
       );
-      await expect(nonTemplatedNode.locator(".template-card")).not.toBeAttached();
+      await expect(
+        nonTemplatedNode.locator(".template-card"),
+      ).not.toBeAttached();
     });
 
     test("can add a templated folder to the source template", async ({
@@ -203,7 +205,9 @@ test.describe("Templates", () => {
         { instructions: FOLDER_INSTRUCTIONS, required: false },
       );
 
-      const templatedFolder = await editor.checkNodeExists(TEMPLATED_FOLDER_NAME);
+      const templatedFolder = await editor.checkNodeExists(
+        TEMPLATED_FOLDER_NAME,
+      );
       await expect(
         templatedFolder.getByText("Optional", { exact: true }),
       ).toBeVisible();
@@ -251,7 +255,9 @@ test.describe("Templates", () => {
       await page.locator('[aria-labelledby~="create-flow-mode"]').click();
       await page.getByRole("option", { name: "From a template..." }).click();
 
-      await page.locator('[aria-labelledby~="available-templates-select"]').click();
+      await page
+        .locator('[aria-labelledby~="available-templates-select"]')
+        .click();
       await expect(
         page.getByRole("option", { name: SOURCE_TEMPLATE_NAME }),
       ).not.toBeVisible();
@@ -283,7 +289,9 @@ test.describe("Templates", () => {
       await page.locator('[aria-labelledby~="create-flow-mode"]').click();
       await page.getByRole("option", { name: "From a template..." }).click();
 
-      await page.locator('[aria-labelledby~="available-templates-select"]').click();
+      await page
+        .locator('[aria-labelledby~="available-templates-select"]')
+        .click();
       await expect(
         page.getByRole("option", { name: SOURCE_TEMPLATE_NAME }),
       ).toBeVisible();
@@ -353,6 +361,14 @@ test.describe("Templates", () => {
       const editor = new PlaywrightEditor(page);
       await editor.checkNodeExists(REQUIRED_NODE_TITLE);
       await editor.checkNodeExists(OPTIONAL_NODE_TITLE);
+
+      // Clicking a customise card opens its modal with instructions visible
+      await page.getByRole("link", { name: REQUIRED_NODE_TITLE }).click();
+      await page.getByRole("dialog").waitFor();
+      await expect(page.getByText("Customise (required)")).toBeVisible();
+      await expect(page.getByText(REQUIRED_NODE_INSTRUCTIONS)).toBeVisible();
+      await page.locator('button[aria-label="close"]').click();
+      await page.getByRole("dialog").waitFor({ state: "detached" });
     });
 
     test("can filter flows for templated flows only", async ({ browser }) => {
