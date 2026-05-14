@@ -1,4 +1,5 @@
 import { useQuery } from "@apollo/client";
+import EmailIcon from "@mui/icons-material/Email";
 import GavelIcon from "@mui/icons-material/Gavel";
 import HelpIcon from "@mui/icons-material/Help";
 import InfoIcon from "@mui/icons-material/Info";
@@ -40,6 +41,7 @@ const FlowSettingsLayout: React.FC<Props> = ({ children }) => {
       icon: StarIcon,
       condition: Boolean(data?.flow.templatedFrom),
     },
+    { label: "Emails", path: "/emails", icon: EmailIcon },
   ];
 
   return (
