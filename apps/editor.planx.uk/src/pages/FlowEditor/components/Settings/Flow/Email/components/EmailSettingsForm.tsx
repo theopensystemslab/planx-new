@@ -46,10 +46,6 @@ const EmailSettingsForm: React.FC = () => {
           onChange={(e) =>
             formik.setFieldValue("emailTemplate", e.target.value)
           }
-          sx={{
-            display: "flex",
-            gap: 2,
-          }}
         >
           <DescriptionRadio
             data={{
@@ -60,6 +56,7 @@ const EmailSettingsForm: React.FC = () => {
             onChange={(e) =>
               formik.setFieldValue("emailTemplate", e.target.value)
             }
+            variant="compact"
             id="application"
           />
           <DescriptionRadio
@@ -71,6 +68,7 @@ const EmailSettingsForm: React.FC = () => {
             onChange={(e) =>
               formik.setFieldValue("emailTemplate", e.target.value)
             }
+            variant="compact"
             id="general"
           />
         </RadioGroup>

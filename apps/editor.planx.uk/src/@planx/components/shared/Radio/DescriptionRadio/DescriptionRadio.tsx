@@ -8,6 +8,7 @@ import React from "react";
 
 export interface Props extends Option {
   onChange: RadioProps["onChange"];
+  variant?: "default" | "compact";
 }
 
 const StyledFormLabel = styled(FormLabel)(({ theme }) => ({
@@ -20,21 +21,25 @@ const DescriptionRadio: React.FC<Props> = ({
   data: { text: title, description },
   onChange,
   id,
+  variant = "default",
 }) => {
   return (
     <StyledFormLabel focused={false}>
-      <Radio value={id} onChange={onChange} />
+      <Radio value={id} onChange={onChange} variant={variant} />
       <Box>
         <Typography
           variant="body1"
           sx={{
             color: "text.primary",
-            pt: 0.95,
+            pt: variant === "default" ? 0.95 : 0.8,
           }}
         >
           {title}
         </Typography>
-        <Typography variant="body2" sx={{ pt: 0.5 }}>
+        <Typography
+          variant="body2"
+          sx={{ pt: variant === "default" ? 0.5 : 0.25 }}
+        >
           {description}
         </Typography>
       </Box>
