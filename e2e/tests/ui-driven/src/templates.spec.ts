@@ -12,7 +12,10 @@ import {
   publishService,
   turnServiceOnline,
 } from "./helpers/navigateAndPublish.js";
-import { createTemplatedComponent } from "./helpers/addComponent.js";
+import {
+  createNotice,
+  createTemplatedComponent,
+} from "./helpers/addComponent.js";
 import { TestContext } from "./helpers/types.js";
 import { PlaywrightEditor } from "./pages/Editor.js";
 
@@ -33,6 +36,13 @@ const TEMPLATED_FLOW_NAME = `${SOURCE_TEMPLATE_NAME} (templated)`;
 const TEMPLATED_FLOW_SLUG = `${SOURCE_TEMPLATE_SLUG}-templated`;
 
 const REGULAR_FLOW_NAME = "E2E Regular Flow";
+
+const NON_TEMPLATED_NODE_TITLE = "Non-templated node";
+
+const TEMPLATED_FOLDER_NAME = "Templated folder";
+const FOLDER_INSTRUCTIONS = "You can edit this folder";
+const FIRST_NODE_IN_FOLDER = "First node in folder";
+const SECOND_NODE_IN_FOLDER = "Second node in folder";
 
 const REPUBLISH_MESSAGE = "lorem ipsum";
 
@@ -152,7 +162,7 @@ test.describe("Templates", () => {
       ).toBeVisible();
     });
 
-    test("can publish the source template and make it available for use", async ({
+    test("can add a non-templated node to the source template", async ({
       browser,
     }) => {
       const page = await getTeamPage({
@@ -162,12 +172,123 @@ test.describe("Templates", () => {
       });
       await navigateToService(page, SOURCE_TEMPLATE_SLUG);
 
+      const editor = new PlaywrightEditor(page);
+
+      await createNotice(page, editor.getNextNode(), NON_TEMPLATED_NODE_TITLE);
+
+      // Non-templated nodes have no template-card wrapper
+      const nonTemplatedNode = await editor.checkNodeExists(
+        NON_TEMPLATED_NODE_TITLE,
+      );
+      await expect(nonTemplatedNode.locator(".template-card")).not.toBeAttached();
+    });
+
+    test("can add a templated folder to the source template", async ({
+      browser,
+    }) => {
+      const page = await getTeamPage({
+        browser,
+        userId: context.user!.id!,
+        teamName: context.team.name,
+      });
+      await navigateToService(page, SOURCE_TEMPLATE_SLUG);
+
+      const editor = new PlaywrightEditor(page);
+
+      await createTemplatedComponent(
+        page,
+        editor.getNextNode(),
+        ComponentType.InternalPortal,
+        TEMPLATED_FOLDER_NAME,
+        { instructions: FOLDER_INSTRUCTIONS, required: false },
+      );
+
+      const templatedFolder = await editor.checkNodeExists(TEMPLATED_FOLDER_NAME);
+      await expect(
+        templatedFolder.getByText("Optional", { exact: true }),
+      ).toBeVisible();
+
+      // Navigate into the folder and add two nodes for later drag-and-drop testing
+      await page.getByRole("link", { name: TEMPLATED_FOLDER_NAME }).click();
+      await page.locator("li.hanger > a").first().waitFor();
+
+      await createNotice(
+        page,
+        page.locator("li.hanger > a").first(),
+        FIRST_NODE_IN_FOLDER,
+      );
+      await createNotice(
+        page,
+        page.locator(".hanger > a").last(),
+        SECOND_NODE_IN_FOLDER,
+      );
+
+      await navigateToService(page, SOURCE_TEMPLATE_SLUG);
+      await expect(page.getByText(TEMPLATED_FOLDER_NAME)).toBeVisible();
+    });
+
+    test("can publish the source template", async ({ browser }) => {
+      const page = await getTeamPage({
+        browser,
+        userId: context.user!.id!,
+        teamName: context.team.name,
+      });
+      await navigateToService(page, SOURCE_TEMPLATE_SLUG);
+
       await publishService(page);
+    });
+
+    test("source template is not yet selectable in 'New flow' modal before going online", async ({
+      browser,
+    }) => {
+      const page = await getTeamPage({
+        browser,
+        userId: context.user!.id!,
+        teamName: context.team.name,
+      });
+
+      await page.locator("button", { hasText: "Add a new flow" }).click();
+      await page.locator('[aria-labelledby~="create-flow-mode"]').click();
+      await page.getByRole("option", { name: "From a template..." }).click();
+
+      await page.locator('[aria-labelledby~="available-templates-select"]').click();
+      await expect(
+        page.getByRole("option", { name: SOURCE_TEMPLATE_NAME }),
+      ).not.toBeVisible();
+
+      await page.keyboard.press("Escape");
+    });
+
+    test("can set the source template online", async ({ browser }) => {
+      const page = await getTeamPage({
+        browser,
+        userId: context.user!.id!,
+        teamName: context.team.name,
+      });
+      await navigateToService(page, SOURCE_TEMPLATE_SLUG);
 
       await turnServiceOnline(page);
+    });
 
-      await navigateToTeamPage(page);
-      await expect(page.getByText(SOURCE_TEMPLATE_NAME)).toBeVisible();
+    test("source template is selectable in 'New flow' modal after going online", async ({
+      browser,
+    }) => {
+      const page = await getTeamPage({
+        browser,
+        userId: context.user!.id!,
+        teamName: context.team.name,
+      });
+
+      await page.locator("button", { hasText: "Add a new flow" }).click();
+      await page.locator('[aria-labelledby~="create-flow-mode"]').click();
+      await page.getByRole("option", { name: "From a template..." }).click();
+
+      await page.locator('[aria-labelledby~="available-templates-select"]').click();
+      await expect(
+        page.getByRole("option", { name: SOURCE_TEMPLATE_NAME }),
+      ).toBeVisible();
+
+      await page.keyboard.press("Escape");
     });
 
     test("can filter flows for source templates only", async ({ browser }) => {
@@ -262,6 +383,71 @@ test.describe("Templates", () => {
       await expect(
         page.getByText(SOURCE_TEMPLATE_NAME, { exact: true }),
       ).not.toBeVisible();
+    });
+
+    test("non-templated node is read-only in the templated flow", async ({
+      browser,
+    }) => {
+      const page = await getTeamPage({
+        browser,
+        userId: context.user!.id!,
+        teamName: context.team.name,
+      });
+      await navigateToService(page, TEMPLATED_FLOW_SLUG);
+
+      // Click the non-templated node to open its edit modal
+      await page.getByRole("link", { name: NON_TEMPLATED_NODE_TITLE }).click();
+      await page.getByRole("dialog").waitFor();
+
+      // Submit button is disabled for non-templated nodes in a templated flow
+      await expect(
+        page.locator('button[form="modal"][type="submit"]'),
+      ).toBeDisabled();
+
+      await page.locator('button[aria-label="close"]').click();
+      await page.getByRole("dialog").waitFor({ state: "detached" });
+    });
+
+    test("templated folder is fully editable in the templated flow, including drag and drop", async ({
+      browser,
+    }) => {
+      const page = await getTeamPage({
+        browser,
+        userId: context.user!.id!,
+        teamName: context.team.name,
+      });
+      await navigateToService(page, TEMPLATED_FLOW_SLUG);
+
+      // Navigate into the templated folder
+      await page.getByRole("link", { name: TEMPLATED_FOLDER_NAME }).click();
+      await page.locator("li.hanger > a").first().waitFor();
+
+      // Hangers inside a templated folder are visible (not hidden), enabling DnD
+      await expect(page.locator("li.hanger").first()).not.toHaveClass(/hidden/);
+
+      // Nodes inside the folder are fully editable (submit button enabled)
+      await page.getByRole("link", { name: FIRST_NODE_IN_FOLDER }).click();
+      await page.getByRole("dialog").waitFor();
+      await expect(
+        page.locator('button[form="modal"][type="submit"]'),
+      ).not.toBeDisabled();
+      await page.locator('button[aria-label="close"]').click();
+      await page.getByRole("dialog").waitFor({ state: "detached" });
+
+      // Drag SECOND_NODE_IN_FOLDER to before FIRST_NODE_IN_FOLDER
+      const sourceNode = page
+        .locator(".card.decision")
+        .filter({ hasText: SECOND_NODE_IN_FOLDER });
+      const targetHanger = page.locator("li.hanger").first();
+      await sourceNode.dragTo(targetHanger);
+
+      // Assert SECOND now appears before FIRST in the folder
+      await expect(page.locator(".card.decision").first()).toContainText(
+        SECOND_NODE_IN_FOLDER,
+      );
+      await expect(page.locator(".card.decision").nth(1)).toContainText(
+        FIRST_NODE_IN_FOLDER,
+      );
     });
 
     // TODO - test("Cannot add new nodes in a templated flow");

@@ -164,7 +164,7 @@ const createBaseComponent = async (
     case ComponentType.Feedback:
       break;
     case ComponentType.InternalPortal:
-      await page.getByPlaceholder("Portal name").fill(title || "");
+      await page.getByPlaceholder("Enter a folder name").fill(title || "");
       break;
     case ComponentType.ExternalPortal:
       page.getByTestId("flowId").click();
@@ -184,7 +184,9 @@ const createBaseComponent = async (
 
   if (templateConfig) {
     await page.getByLabel("Allow edits").click({ force: true });
-    await page.locator("#templatedNodeInstructions").fill(templateConfig.instructions);
+    await page
+      .locator("#templatedNodeInstructions")
+      .fill(templateConfig.instructions);
     if (templateConfig.required) {
       await page.getByLabel("Require edits").click({ force: true });
     }
@@ -202,7 +204,14 @@ export const createTemplatedComponent = async (
   templateConfig: TemplateNodeConfig,
   options?: string[],
 ) => {
-  await createBaseComponent(page, locatingNode, type, title, options, templateConfig);
+  await createBaseComponent(
+    page,
+    locatingNode,
+    type,
+    title,
+    options,
+    templateConfig,
+  );
 };
 
 export const createQuestionWithOptions = async (
