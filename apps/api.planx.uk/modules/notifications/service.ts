@@ -30,7 +30,8 @@ export const resolveNotification = async (
 
   // If many unresolved notifications of the same "type" exist for this flow, resolve them all
   //   If no notifications match these conditions, it'll simply return [] and still "succeed"
-  const resolveNotificationResponse = await client.client.request<UpdateNotifications>(
+  const resolveNotificationResponse =
+    await client.client.request<UpdateNotifications>(
       gql`
         mutation UpdateNotifications(
           $flowId: uuid!
