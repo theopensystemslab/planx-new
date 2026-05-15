@@ -32,6 +32,7 @@ export const getLoggedInUserDetails: RequestHandler<
       jwt: jwt,
     });
   } catch (error) {
+    console.debug("testing 123");
     next(error);
   }
 };
