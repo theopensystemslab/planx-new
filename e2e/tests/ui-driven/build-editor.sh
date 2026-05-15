@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+# test change for editor.planx.uk build hash
+
 cd $(dirname "$0")
 
 EDITOR_HASH=$(git -C ../../../ rev-parse HEAD:apps/editor.planx.uk)
