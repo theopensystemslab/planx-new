@@ -179,6 +179,7 @@ interface FormModalProps {
   before?: string;
   parent?: string;
   extraProps?: any;
+  afterSubmit?: () => void;
 }
 
 const FormModal: React.FC<FormModalProps> = ({
@@ -189,6 +190,7 @@ const FormModal: React.FC<FormModalProps> = ({
   before,
   parent,
   extraProps,
+  afterSubmit,
 }) => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<BaseNodeData & unknown> | null>(null);
@@ -407,13 +409,17 @@ const FormModal: React.FC<FormModalProps> = ({
                   }
                 }
 
-                navigate({
-                  to: "/app/$team/$flow",
-                  params: {
-                    team: teamSlug,
-                    flow: flowSlug,
-                  },
-                });
+                if (afterSubmit) {
+                  afterSubmit();
+                } else {
+                  navigate({
+                    to: "/app/$team/$flow",
+                    params: {
+                      team: teamSlug,
+                      flow: flowSlug,
+                    },
+                  });
+                }
               }}
             />
           </ErrorBoundary>
