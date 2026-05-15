@@ -7,18 +7,18 @@ import type {
 import * as jsondiffpatch from "jsondiffpatch";
 
 import {
-  dataMerged,
   getHistory,
   getMostRecentPublishedFlow,
   getTemplatedFlows,
   type FlowHistoryEntry,
 } from "../../../../helpers.js";
+import { dataMerged } from "../../../../shared/dataMerged.js";
 import { validateFees } from "./fees.js";
 import { validateInviteToPay } from "./inviteToPay.js";
 import { validatePlanningConstraints } from "./planningConstraints.js";
 import { validateSections } from "./sections.js";
-import { validateTemplatedNodes } from "./templatedNodes.js";
 import { validateSend } from "./send.js";
+import { validateTemplatedNodes } from "./templatedNodes.js";
 
 type AlteredNode = {
   id: string;

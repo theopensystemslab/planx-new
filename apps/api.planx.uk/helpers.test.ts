@@ -1,16 +1,5 @@
-import { ComponentType } from "@opensystemslab/planx-core/types";
-import {
-  dataMerged,
-  getFlowData,
-  getFormattedEnvironment,
-  isLiveEnv,
-} from "./helpers.js";
+import { getFlowData, getFormattedEnvironment, isLiveEnv } from "./helpers.js";
 import { queryMock } from "./tests/graphqlQueryMock.js";
-import {
-  childFlow,
-  draftParentFlow,
-  flattenedParentFlow,
-} from "./tests/mocks/validateAndPublishMocks.js";
 
 describe("getFormattedEnvironment() function", () => {
   const OLD_ENV = process.env;
@@ -68,111 +57,6 @@ describe("isLiveEnv() function", () => {
       process.env.NODE_ENV = env;
       expect(isLiveEnv()).toBe(false);
     });
-  });
-});
-
-describe("dataMerged() function", () => {
-  beforeEach(() => {
-    queryMock.mockQuery({
-      name: "GetFlowData",
-      matchOnVariables: true,
-      variables: {
-        id: "parent-flow-with-external-portal",
-      },
-      data: {
-        flow: {
-          data: draftParentFlow,
-          slug: "parent-flow",
-          team_id: 1,
-          team: {
-            slug: "testing",
-          },
-          publishedFlows: [{ data: flattenedParentFlow }],
-        },
-      },
-    });
-  });
-
-  it("flattens published external portal nodes by overwriting their type", async () => {
-    queryMock.mockQuery({
-      name: "GetFlowData",
-      matchOnVariables: true,
-      variables: {
-        id: "child-flow-id",
-      },
-      data: {
-        flow: {
-          data: childFlow,
-          slug: "child-flow",
-          team_id: 1,
-          team: {
-            slug: "testing",
-          },
-          publishedFlows: [{ data: childFlow }],
-        },
-      },
-    });
-
-    const result = await dataMerged("parent-flow-with-external-portal");
-    const nodeTypes = Object.values(result).map((node) =>
-      "type" in node ? node.type : undefined,
-    );
-
-    expect(nodeTypes.includes(ComponentType.ExternalPortal)).toBe(false);
-  });
-
-  it("throws an error when an external portal is not published", async () => {
-    queryMock.mockQuery({
-      name: "GetFlowData",
-      matchOnVariables: true,
-      variables: {
-        id: "child-flow-id",
-      },
-      data: {
-        flow: {
-          data: childFlow,
-          slug: "child-flow",
-          team_id: 1,
-          team: {
-            slug: "testing",
-          },
-          publishedFlows: [],
-        },
-      },
-    });
-
-    await expect(
-      dataMerged("parent-flow-with-external-portal"),
-    ).rejects.toThrow();
-  });
-
-  it("flattens any published or draft external portal nodes when isDraftData only is set to true", async () => {
-    queryMock.mockQuery({
-      name: "GetFlowData",
-      matchOnVariables: true,
-      variables: {
-        id: "child-flow-id",
-      },
-      data: {
-        flow: {
-          data: childFlow,
-          slug: "child-flow",
-          team_id: 1,
-          team: {
-            slug: "testing",
-          },
-          publishedFlows: [],
-        },
-      },
-    });
-
-    const result = await dataMerged(
-      "parent-flow-with-external-portal",
-      {},
-      false,
-      true,
-    );
-    expect(result).toEqual(flattenedParentFlow);
   });
 });
 

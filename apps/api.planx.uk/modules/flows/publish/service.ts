@@ -6,9 +6,10 @@ import {
 import { gql } from "graphql-request";
 import * as jsondiffpatch from "jsondiffpatch";
 import { getClient } from "../../../client/index.js";
-import { dataMerged, getMostRecentPublishedFlow } from "../../../helpers.js";
+import { getMostRecentPublishedFlow } from "../../../helpers.js";
 import { createScheduledEvent } from "../../../lib/hasura/metadata/index.js";
 import type { CreateScheduledEventResponse } from "../../../lib/hasura/metadata/types.js";
+import { dataMerged } from "../../../shared/dataMerged.js";
 import { userContext } from "../../auth/middleware.js";
 import { buildNodeTypeSet, createFlowTypeMap } from "../validate/helpers.js";
 
