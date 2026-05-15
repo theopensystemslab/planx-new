@@ -23,34 +23,46 @@ object_relationships:
         remote_table:
           name: teams
           schema: public
+  - name: user
+    using:
+      manual_configuration:
+        column_mapping:
+          resolved_by: id
+        insertion_order: null
+        remote_table:
+          name: users
+          schema: public
 insert_permissions:
   - role: api
     permission:
       check: {}
       columns:
         - id
+        - resolved_by
+        - team_id
         - type
         - created_at
         - resolved_at
         - flow_id
-        - team_id
     comment: ""
 select_permissions:
   - role: api
     permission:
       columns:
         - id
+        - resolved_by
+        - team_id
         - type
         - created_at
         - resolved_at
         - flow_id
-        - team_id
       filter: {}
     comment: ""
   - role: platformAdmin
     permission:
       columns:
         - id
+        - resolved_by
         - team_id
         - type
         - created_at
@@ -62,6 +74,7 @@ select_permissions:
     permission:
       columns:
         - id
+        - resolved_by
         - team_id
         - type
         - created_at
@@ -81,6 +94,7 @@ update_permissions:
     permission:
       columns:
         - id
+        - resolved_by
         - team_id
         - type
         - created_at
