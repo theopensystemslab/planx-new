@@ -335,7 +335,8 @@ const ALL_PATTERNS: PatternItem[] = [
     id: "pay-and-submit",
     Icon: PaymentOutlined,
     title: "Pay and submit",
-    description: "Set fees and collect payment from the applicant",
+    description:
+      "Set fees, collect payment from the applicant, and submit the application",
     components: [
       { slug: "set-fee", title: "Set fees" },
       { slug: "pay", title: "Pay" },
@@ -349,6 +350,7 @@ const ALL_PATTERNS: PatternItem[] = [
     description:
       "Allow users to upload, label, and validate supporting documents",
     components: [
+      { slug: "section", title: "Section" },
       { slug: "file-upload-and-label", title: "Upload and label" },
       { slug: "file-upload", title: "File upload" },
     ],
@@ -471,7 +473,7 @@ const PatternCard: React.FC<PatternCardProps> = ({
       },
     }}
   >
-    <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.75 }}>
+    <Box sx={{ display: "flex", alignItems: "center", gap: 0.75, mb: 0.75 }}>
       <pattern.Icon sx={{ fontSize: 18 }} />
       <Typography variant="body2" sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
         {pattern.title}
@@ -493,7 +495,7 @@ const PatternCard: React.FC<PatternCardProps> = ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: 1,
+        gap: 1.25,
         border: 2,
         borderColor: isSelected ? "text.secondary" : "divider",
         position: "relative",
@@ -504,7 +506,7 @@ const PatternCard: React.FC<PatternCardProps> = ({
           left: "calc(50% - 1px)",
           width: "2px",
           height: "100%",
-          backgroundColor: "border.main",
+          backgroundColor: "divider",
         },
       }}
     >
@@ -996,7 +998,7 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
                 disabled={selectedSlugs.size === 0}
                 onClick={handleContinue}
               >
-                Add components
+                Add to flow
               </Button>
             </Box>
           </>
@@ -1020,7 +1022,7 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
                 disabled={!selectedPatternId}
                 onClick={handlePatternContinue}
               >
-                Add pattern
+                Add to flow
               </Button>
             </Box>
           </>
