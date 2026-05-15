@@ -68,7 +68,6 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
           name: "gloucester",
           domain: "planningservices.gloucester.gov.uk",
           cloudFrontState: "single-plus-validation",
-          certificateLocation: "pulumiConfig",
         },
         {
           name: "epsom-and-ewell",

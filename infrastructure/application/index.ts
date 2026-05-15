@@ -376,7 +376,7 @@ export = async () => {
   // note the mix of AWS and Cloudflare infra being provisioned here
   // TODO: should this be provisioned in the certs layer, or all consolidated here? should that be run in CI? etc.
   const editorSslCert = new aws.acm.Certificate(
-    `sslCert-editor`,
+    `sslCert`,
     {
       domainName: cloudfrontDomains[0],
       validationMethod: "DNS",
@@ -388,9 +388,9 @@ export = async () => {
   );
 
   // here we control the nameserver, so handle the DNS validation ourselves
-  const cloudfrontValidationRecords = cloudfrontDomains.map((_domain, index) => {
+  const editorCloudfrontValidationRecords = cloudfrontDomains.map((_domain, index) => {
     return new cloudflare.DnsRecord(
-      `sslCertValidationRecord-editor-${index}`,
+      `sslCertValidationRecord-${index}`,
       {
         name: editorSslCert.domainValidationOptions[index].resourceRecordName,
         type: editorSslCert.domainValidationOptions[index].resourceRecordType,
@@ -402,11 +402,11 @@ export = async () => {
     );
   });
 
-  const sslCertValidation = new aws.acm.CertificateValidation(
-    `sslCertValidation-editor`,
+  const editorSslCertValidation = new aws.acm.CertificateValidation(
+    `sslCertValidation`,
     {
       certificateArn: editorSslCert.arn,
-      validationRecordFqdns: cloudfrontValidationRecords.map(record => record.name),
+      validationRecordFqdns: editorCloudfrontValidationRecords.map(record => record.name),
     },
     { provider: usEast1 }
   );
@@ -437,7 +437,7 @@ export = async () => {
   });
 
   // ----------------------- LocalPlanning.services
-  createLocalPlanningServices(sslCertValidation.certificateArn);
+  createLocalPlanningServices(editorSslCertValidation.certificateArn);
 
   return {
     legacyDistributions,
