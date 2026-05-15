@@ -1,19 +1,14 @@
 #!/usr/bin/env bash
 set -e
 
+# test change for editor.planx.uk build hash
+
 cd $(dirname "$0")
 
 EDITOR_HASH=$(git -C ../../../ rev-parse HEAD:apps/editor.planx.uk)
 HASH_FILE="../../../apps/editor.planx.uk/build/.editor-hash"
 
-echo "build-editor: current editor hash: $EDITOR_HASH"
-
-if [ ! -f "$HASH_FILE" ]; then
-  echo "build-editor: no cached hash found, rebuilding"
-elif [ "$(cat $HASH_FILE)" != "$EDITOR_HASH" ]; then
-  echo "build-editor: hash mismatch (cached: $(cat $HASH_FILE)), rebuilding"
-else
-  echo "build-editor: hash match, skipping build"
+if [ -f "$HASH_FILE" ] && [ "$(cat $HASH_FILE)" = "$EDITOR_HASH" ]; then
   exit 0
 fi
 
