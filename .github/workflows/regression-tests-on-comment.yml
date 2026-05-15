@@ -8,7 +8,8 @@ jobs:
   dispatch:
     if: |
       github.event.issue.pull_request != null &&
-      startsWith(github.event.comment.body, '/regression-tests')
+      startsWith(github.event.comment.body, '/regression-tests') &&
+      contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association)
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -60,7 +61,6 @@ jobs:
               workflow_id: 'regression-tests.yml',
               ref: '${{ steps.pr.outputs.ref }}',
               inputs: {
-                pr_number: String(context.issue.number),
                 comment_id: String(${{ steps.comment.outputs.id }}),
               },
             });

@@ -8,10 +8,6 @@ on:
     - cron: "06 6 * * *"
   workflow_dispatch:
     inputs:
-      pr_number:
-        description: PR number to update comment on
-        required: false
-        type: string
       comment_id:
         description: Comment ID to update with pass/fail result
         required: false
