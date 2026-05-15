@@ -1,4 +1,3 @@
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Close from "@mui/icons-material/CloseOutlined";
 import CloudUpload from "@mui/icons-material/CloudUpload";
 import Home from "@mui/icons-material/Home";
@@ -89,7 +88,7 @@ const ALL_CATEGORIES: Category[] = [
         type: TYPES.NextSteps,
         slug: "next-steps",
         title: "Next steps",
-        description: "Tell the user what to do next",
+        description: "Offer a choice of next steps",
       },
     ],
   },
@@ -224,7 +223,7 @@ const ALL_CATEGORIES: Category[] = [
         type: TYPES.DrawBoundary,
         slug: "draw-boundary",
         title: "Draw boundary",
-        description: "Draw a boundary on a map",
+        description: "Confirm a boundary on a map",
       },
       {
         type: TYPES.PlanningConstraints,
@@ -247,7 +246,7 @@ const ALL_CATEGORIES: Category[] = [
         type: TYPES.ExternalPortal,
         slug: "nested-flow",
         title: "Flow",
-        description: "Link to another flow",
+        description: "Embed another flow",
       },
       {
         type: TYPES.InternalPortal,
@@ -415,7 +414,7 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
           width: 48,
           height: 48,
           border: 2,
-          borderColor: isSelected ? "border.input" : "divider",
+          borderColor: isSelected ? "text.secondary" : "divider",
           borderRadius: 1,
           display: "flex",
           alignItems: "center",
@@ -426,10 +425,18 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
         {Icon && <Icon />}
       </Box>
       <Box>
-        <Typography variant="body2" sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
+        <Typography
+          variant="body2"
+          sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD, mt: 0.2 }}
+        >
           {item.title}
         </Typography>
-        <Typography variant="body3" color="textSecondary" sx={{ mt: 0.25 }}>
+        <Typography
+          variant="body3"
+          color="textSecondary"
+          component="p"
+          sx={{ mt: 0.25 }}
+        >
           {item.description}
         </Typography>
       </Box>
@@ -488,7 +495,7 @@ const PatternCard: React.FC<PatternCardProps> = ({
         alignItems: "center",
         gap: 1,
         border: 2,
-        borderColor: isSelected ? "text.primary" : "divider",
+        borderColor: isSelected ? "text.secondary" : "divider",
         position: "relative",
         "&::before": {
           content: "''",
@@ -868,7 +875,7 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
                 overflowY: "auto",
                 pt: 2.5,
                 px: 2.5,
-                pb: "calc(100vh - 530px)",
+                pb: "calc(100vh - 500px)",
                 position: "relative",
               }}
             >
@@ -892,7 +899,6 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
                       variant="body3"
                       sx={{
                         fontWeight: FONT_WEIGHT_SEMI_BOLD,
-                        color: "text.secondary",
                         display: "block",
                         mb: 1.5,
                       }}
