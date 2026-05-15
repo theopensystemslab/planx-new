@@ -1,5 +1,9 @@
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Close from "@mui/icons-material/CloseOutlined";
+import CloudUpload from "@mui/icons-material/CloudUpload";
+import Home from "@mui/icons-material/Home";
+import LocationOnOutlined from "@mui/icons-material/LocationOnOutlined";
+import PaymentOutlined from "@mui/icons-material/PaymentOutlined";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -8,6 +12,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
+import { SvgIconProps } from "@mui/material/SvgIcon";
 import Tab from "@mui/material/Tab";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
@@ -32,6 +37,19 @@ interface ComponentItem {
   slug: string;
   title: string;
   description: string;
+}
+
+interface PatternComponent {
+  slug: string;
+  title: string;
+}
+
+interface PatternItem {
+  id: string;
+  title: string;
+  description: string;
+  components: PatternComponent[];
+  Icon: React.ComponentType<SvgIconProps>;
 }
 
 interface Category {
@@ -289,6 +307,55 @@ const ALL_CATEGORIES: Category[] = [
 
 const ALL_ITEMS: ComponentItem[] = ALL_CATEGORIES.flatMap((cat) => cat.items);
 
+const ALL_PATTERNS: PatternItem[] = [
+  {
+    id: "locate-and-see-constraints",
+    Icon: LocationOnOutlined,
+    title: "Locate and see constraints",
+    description:
+      "Help users find their property and view relevant planning constraints",
+    components: [
+      { slug: "find-property", title: "Find property" },
+      { slug: "property-information", title: "Property information" },
+      { slug: "draw-boundary", title: "Draw boundary" },
+      { slug: "planning-constraints", title: "Planning constraints" },
+    ],
+  },
+  {
+    id: "about-the-applicant",
+    Icon: Home,
+    title: "About the applicant",
+    description: "Collect contact and address details from the applicant",
+    components: [
+      { slug: "section", title: "Section" },
+      { slug: "address-input", title: "Address input" },
+      { slug: "contact-input", title: "Contact input" },
+    ],
+  },
+  {
+    id: "pay-and-submit",
+    Icon: PaymentOutlined,
+    title: "Pay and submit",
+    description: "Set fees and collect payment from the applicant",
+    components: [
+      { slug: "set-fee", title: "Set fees" },
+      { slug: "pay", title: "Pay" },
+      { slug: "send", title: "Send" },
+    ],
+  },
+  {
+    id: "upload-and-validate-files",
+    Icon: CloudUpload,
+    title: "Upload and validate files",
+    description:
+      "Allow users to upload, label, and validate supporting documents",
+    components: [
+      { slug: "file-upload-and-label", title: "Upload and label" },
+      { slug: "file-upload", title: "File upload" },
+    ],
+  },
+];
+
 // Mirrors the TabList pattern from NotificationsPanel
 const TabList = styled(Box)(({ theme }) => ({
   position: "relative",
@@ -310,6 +377,153 @@ const TabList = styled(Box)(({ theme }) => ({
   },
 }));
 
+interface ComponentCardProps {
+  item: ComponentItem;
+  isSelected: boolean;
+  onClick: () => void;
+}
+
+const ComponentCard: React.FC<ComponentCardProps> = ({
+  item,
+  isSelected,
+  onClick,
+}) => {
+  const Icon = ICONS[item.type];
+  return (
+    <Box
+      onClick={onClick}
+      sx={{
+        display: "flex",
+        alignItems: "flex-start",
+        gap: 1.25,
+        p: 1.5,
+        border: 2,
+        borderColor: isSelected ? "primary.main" : "divider",
+        borderRadius: 1,
+        cursor: "pointer",
+        backgroundColor: "background.default",
+        transition: "border-color 0.15s ease, background-color 0.15s ease",
+        "&:hover": {
+          borderColor: isSelected ? "primary.main" : "border.main",
+          backgroundColor: "background.paper",
+        },
+      }}
+    >
+      <Box
+        sx={{
+          flexShrink: 0,
+          width: 48,
+          height: 48,
+          border: 2,
+          borderColor: isSelected ? "border.input" : "divider",
+          borderRadius: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "background.paper",
+        }}
+      >
+        {Icon && <Icon />}
+      </Box>
+      <Box>
+        <Typography variant="body2" sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
+          {item.title}
+        </Typography>
+        <Typography variant="body3" color="textSecondary" sx={{ mt: 0.25 }}>
+          {item.description}
+        </Typography>
+      </Box>
+    </Box>
+  );
+};
+
+interface PatternCardProps {
+  pattern: PatternItem;
+  isSelected: boolean;
+  onClick: () => void;
+}
+
+const PatternCard: React.FC<PatternCardProps> = ({
+  pattern,
+  isSelected,
+  onClick,
+}) => (
+  <Box
+    onClick={onClick}
+    sx={{
+      p: 2,
+      border: 2,
+      borderColor: isSelected ? "primary.main" : "divider",
+      borderRadius: 1,
+      cursor: "pointer",
+      backgroundColor: "background.default",
+      transition: "border-color 0.15s ease, background-color 0.15s ease",
+      "&:hover": {
+        borderColor: isSelected ? "primary.main" : "border.main",
+        backgroundColor: "background.paper",
+      },
+    }}
+  >
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.75 }}>
+      <pattern.Icon sx={{ fontSize: 18 }} />
+      <Typography variant="body2" sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
+        {pattern.title}
+      </Typography>
+    </Box>
+    <Typography
+      variant="body3"
+      component="p"
+      color="textSecondary"
+      sx={{ mb: 1.5 }}
+    >
+      {pattern.description}
+    </Typography>
+    <Box
+      sx={{
+        backgroundColor: "background.paper",
+        borderRadius: 0.5,
+        p: 1.5,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 1,
+        border: 2,
+        borderColor: isSelected ? "text.primary" : "divider",
+        position: "relative",
+        "&::before": {
+          content: "''",
+          position: "absolute",
+          top: 0,
+          left: "calc(50% - 1px)",
+          width: "2px",
+          height: "100%",
+          backgroundColor: "border.main",
+        },
+      }}
+    >
+      {pattern.components.map((comp) => (
+        <Box
+          key={comp.slug}
+          sx={{
+            border: 1,
+            borderColor: "text.primary",
+            px: 2,
+            py: 0.5,
+            backgroundColor: "common.white",
+            minWidth: 180,
+            textAlign: "center",
+            zIndex: 1,
+          }}
+        >
+          <Typography variant="body4" component="p">
+            {comp.title}
+          </Typography>
+        </Box>
+      ))}
+    </Box>
+  </Box>
+);
+
 interface AddComponentModalProps {
   parent?: string;
   before?: string;
@@ -322,15 +536,21 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
   const navigate = useNavigate();
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
+  const [activeTab, setActiveTab] = useState<0 | 1>(0);
   const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
   const [searchedItems, setSearchedItems] = useState<ComponentItem[] | null>(
     null,
   );
+  const [searchedPatterns, setSearchedPatterns] = useState<
+    PatternItem[] | null
+  >(null);
   const [selectedSlugs, setSelectedSlugs] = useState<Set<string>>(new Set());
+  const [selectedPatternId, setSelectedPatternId] = useState<string | null>(
+    null,
+  );
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const categoryRefs = useRef<(HTMLDivElement | null)[]>([]);
-  // Prevent scroll-sync from overriding the active tab during programmatic scrolling
   const isProgrammaticScroll = useRef(false);
 
   const filteredCategories = useMemo<Category[]>(() => {
@@ -342,7 +562,11 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
     })).filter((cat) => cat.items.length > 0);
   }, [searchedItems]);
 
-  // Reset scroll and active tab when search results change
+  const filteredPatterns = useMemo<PatternItem[]>(() => {
+    if (!searchedPatterns) return ALL_PATTERNS;
+    return searchedPatterns;
+  }, [searchedPatterns]);
+
   useEffect(() => {
     setActiveCategoryIndex(0);
     if (scrollAreaRef.current) {
@@ -350,8 +574,6 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
     }
   }, [filteredCategories]);
 
-  // Scroll sync: update active tab based on which section is at the top of the scroll area.
-  // Uses offsetTop (relative to the scroll container via position:relative) + scrollTop.
   const syncTabsWithScroll = useCallback(() => {
     if (isProgrammaticScroll.current) return;
 
@@ -364,7 +586,6 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
     for (let i = 0; i < filteredCategories.length; i++) {
       const el = categoryRefs.current[i];
       if (!el) continue;
-      // A section is "active" once its top edge has scrolled within 80px of the container top
       if (el.offsetTop - scrollTop <= 80) {
         activeIdx = i;
       }
@@ -388,23 +609,32 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
     setActiveCategoryIndex(index);
     isProgrammaticScroll.current = true;
 
-    // offsetTop is relative to the scroll container (which has position: relative)
     container.scrollTo({
       top: Math.max(0, el.offsetTop - 16),
       behavior: "smooth",
     });
 
-    // Re-enable sync after the smooth scroll animation completes (~400ms)
     setTimeout(() => {
       isProgrammaticScroll.current = false;
     }, 400);
   }, []);
 
-  const handleTabChange = useCallback(
+  const handleCategoryTabChange = useCallback(
     (_: React.SyntheticEvent, value: number) => {
       handleCategoryClick(value);
     },
     [handleCategoryClick],
+  );
+
+  const handleTopTabChange = useCallback(
+    (_: React.SyntheticEvent, value: 0 | 1) => {
+      setActiveTab(value);
+      setSelectedSlugs(new Set());
+      setSelectedPatternId(null);
+      setSearchedItems(null);
+      setSearchedPatterns(null);
+    },
+    [],
   );
 
   const handleCardClick = useCallback((slug: string) => {
@@ -419,6 +649,10 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
     });
   }, []);
 
+  const handlePatternClick = useCallback((id: string) => {
+    setSelectedPatternId((prev) => (prev === id ? null : id));
+  }, []);
+
   const handleCancel = () => {
     navigate({ to: "/app/$team/$flow", params: { team, flow } });
   };
@@ -426,6 +660,28 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
   const handleContinue = () => {
     if (selectedSlugs.size === 0) return;
     const [firstSlug, ...remainingSlugs] = [...selectedSlugs];
+    navigate({
+      to: getNodeRoute(parent, before),
+      params: {
+        team,
+        flow,
+        ...(parent && { parent }),
+        ...(before && { before }),
+      },
+      search: {
+        type: firstSlug as NodeSearchParams["type"],
+        ...(remainingSlugs.length > 0 && { queue: remainingSlugs.join(",") }),
+      },
+    });
+  };
+
+  const handlePatternContinue = () => {
+    if (!selectedPatternId) return;
+    const pattern = ALL_PATTERNS.find((p) => p.id === selectedPatternId);
+    if (!pattern) return;
+    const [firstSlug, ...remainingSlugs] = pattern.components.map(
+      (c) => c.slug,
+    );
     navigate({
       to: getNodeRoute(parent, before),
       params: {
@@ -479,7 +735,7 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
       </DialogTitle>
 
       <TabList sx={{ px: 1 }}>
-        <Tabs value={0}>
+        <Tabs value={activeTab} onChange={handleTopTabChange}>
           <StyledTab
             label={
               <>
@@ -495,11 +751,10 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
               <>
                 Patterns{" "}
                 <Box component="span" sx={{ ml: 0.5, color: "text.secondary" }}>
-                  5
+                  {ALL_PATTERNS.length}
                 </Box>
               </>
             }
-            disabled
           />
         </Tabs>
       </TabList>
@@ -513,15 +768,27 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
           backgroundColor: "background.paper",
         }}
       >
-        <SearchBox<ComponentItem>
-          records={ALL_ITEMS}
-          setRecords={setSearchedItems}
-          searchKey={["title", "description"]}
-          compact
-          hideLabel
-          fullWidth
-          placeholder="Search components"
-        />
+        {activeTab === 0 ? (
+          <SearchBox<ComponentItem>
+            records={ALL_ITEMS}
+            setRecords={setSearchedItems}
+            searchKey={["title", "description"]}
+            compact
+            hideLabel
+            fullWidth
+            placeholder="Search components"
+          />
+        ) : (
+          <SearchBox<PatternItem>
+            records={ALL_PATTERNS}
+            setRecords={setSearchedPatterns}
+            searchKey={["title", "description"]}
+            compact
+            hideLabel
+            fullWidth
+            placeholder="Search patterns"
+          />
+        )}
       </Box>
 
       <DialogContent
@@ -534,176 +801,162 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
           backgroundColor: "background.paper",
         }}
       >
-        <Tabs
-          orientation="vertical"
-          value={clampedIndex}
-          onChange={handleTabChange}
-          sx={{
-            borderRight: 1,
-            borderColor: "divider",
-            minWidth: 160,
-            flexShrink: 0,
-            alignItems: "stretch",
-            [`& .${tabsClasses.indicator}`]: { display: "none" },
-            "& .MuiTab-root": {
-              alignItems: "flex-start",
-              textAlign: "left",
-              minHeight: 44,
-              px: 2,
-              py: 1,
-              borderBottom: 1,
-              borderColor: "divider",
-              color: "text.secondary",
-            },
-            "& .MuiTab-root.Mui-selected": {
-              boxShadow: (theme) => `inset -3px 0 0 ${theme.palette.info.main}`,
-              backgroundColor: "background.default",
-              color: "text.primary",
-              fontWeight: FONT_WEIGHT_SEMI_BOLD,
-            },
-          }}
-        >
-          {filteredCategories.map((cat) => (
-            <Tab
-              key={cat.label}
-              disableRipple
-              label={
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    width: "100%",
-                    gap: 1,
-                    textTransform: "none",
-                    fontSize: "0.875rem",
-                  }}
-                >
-                  <span>{cat.label}</span>
-                  <Box
-                    component="span"
-                    sx={{ color: "text.secondary", flexShrink: 0 }}
-                  >
-                    {cat.items.length}
-                  </Box>
-                </Box>
-              }
-            />
-          ))}
-        </Tabs>
-
-        <Box
-          ref={scrollAreaRef}
-          sx={{
-            flex: 1,
-            overflowY: "auto",
-            pt: 2.5,
-            px: 2.5,
-            pb: "calc(100vh - 530px)",
-            position: "relative",
-          }}
-        >
-          {filteredCategories.length === 0 ? (
-            <Typography
-              color="textSecondary"
-              sx={{ mt: 4, textAlign: "center" }}
+        {activeTab === 0 ? (
+          <>
+            <Tabs
+              orientation="vertical"
+              value={clampedIndex}
+              onChange={handleCategoryTabChange}
+              sx={{
+                borderRight: 1,
+                borderColor: "divider",
+                minWidth: 160,
+                flexShrink: 0,
+                alignItems: "stretch",
+                [`& .${tabsClasses.indicator}`]: { display: "none" },
+                "& .MuiTab-root": {
+                  alignItems: "flex-start",
+                  textAlign: "left",
+                  minHeight: 44,
+                  px: 2,
+                  py: 1,
+                  borderBottom: 1,
+                  borderColor: "divider",
+                  color: "text.secondary",
+                },
+                "& .MuiTab-root.Mui-selected": {
+                  boxShadow: (theme) =>
+                    `inset -3px 0 0 ${theme.palette.info.main}`,
+                  backgroundColor: "background.default",
+                  color: "text.primary",
+                  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+                },
+              }}
             >
-              No components match your search.
-            </Typography>
-          ) : (
-            filteredCategories.map((cat, catIndex) => (
-              <Box
-                key={cat.label}
-                ref={(el: HTMLDivElement | null) => {
-                  categoryRefs.current[catIndex] = el;
-                }}
-                sx={{ mb: 4 }}
-              >
-                <Typography
-                  variant="body3"
-                  sx={{
-                    fontWeight: FONT_WEIGHT_SEMI_BOLD,
-                    color: "text.secondary",
-                    display: "block",
-                    mb: 1.5,
-                  }}
-                >
-                  {cat.label}
-                </Typography>
-                <Box
-                  sx={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: 1.5,
-                  }}
-                >
-                  {cat.items.map((item) => {
-                    const Icon = ICONS[item.type];
-                    const isSelected = selectedSlugs.has(item.slug);
-                    return (
+              {filteredCategories.map((cat) => (
+                <Tab
+                  key={cat.label}
+                  disableRipple
+                  label={
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        width: "100%",
+                        gap: 1,
+                        textTransform: "none",
+                        fontSize: "0.875rem",
+                      }}
+                    >
+                      <span>{cat.label}</span>
                       <Box
-                        key={item.slug}
-                        onClick={() => handleCardClick(item.slug)}
-                        sx={{
-                          display: "flex",
-                          alignItems: "flex-start",
-                          gap: 1.5,
-                          p: 1.5,
-                          border: 2,
-                          borderColor: isSelected ? "primary.main" : "divider",
-                          borderRadius: 1,
-                          cursor: "pointer",
-                          backgroundColor: "background.default",
-                          transition:
-                            "border-color 0.15s ease, background-color 0.15s ease",
-                          "&:hover": {
-                            borderColor: isSelected
-                              ? "primary.main"
-                              : "border.main",
-                            backgroundColor: "background.paper",
-                          },
-                        }}
+                        component="span"
+                        sx={{ color: "text.secondary", flexShrink: 0 }}
                       >
-                        <Box
-                          sx={{
-                            flexShrink: 0,
-                            width: 48,
-                            height: 48,
-                            border: 2,
-                            borderColor: isSelected
-                              ? "border.input"
-                              : "divider",
-                            borderRadius: 1,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            backgroundColor: "background.paper",
-                          }}
-                        >
-                          {Icon && <Icon />}
-                        </Box>
-                        <Box>
-                          <Typography
-                            variant="body2"
-                            sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
-                          >
-                            {item.title}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            color="textSecondary"
-                            sx={{ mt: 0.25 }}
-                          >
-                            {item.description}
-                          </Typography>
-                        </Box>
+                        {cat.items.length}
                       </Box>
-                    );
-                  })}
-                </Box>
+                    </Box>
+                  }
+                />
+              ))}
+            </Tabs>
+
+            <Box
+              ref={scrollAreaRef}
+              sx={{
+                flex: 1,
+                overflowY: "auto",
+                pt: 2.5,
+                px: 2.5,
+                pb: "calc(100vh - 530px)",
+                position: "relative",
+              }}
+            >
+              {filteredCategories.length === 0 ? (
+                <Typography
+                  color="textSecondary"
+                  sx={{ mt: 4, textAlign: "center" }}
+                >
+                  No components match your search.
+                </Typography>
+              ) : (
+                filteredCategories.map((cat, catIndex) => (
+                  <Box
+                    key={cat.label}
+                    ref={(el: HTMLDivElement | null) => {
+                      categoryRefs.current[catIndex] = el;
+                    }}
+                    sx={{ mb: 4 }}
+                  >
+                    <Typography
+                      variant="body3"
+                      sx={{
+                        fontWeight: FONT_WEIGHT_SEMI_BOLD,
+                        color: "text.secondary",
+                        display: "block",
+                        mb: 1.5,
+                      }}
+                    >
+                      {cat.label}
+                    </Typography>
+                    <Box
+                      sx={{
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
+                        gap: 1.5,
+                      }}
+                    >
+                      {cat.items.map((item) => (
+                        <ComponentCard
+                          key={item.slug}
+                          item={item}
+                          isSelected={selectedSlugs.has(item.slug)}
+                          onClick={() => handleCardClick(item.slug)}
+                        />
+                      ))}
+                    </Box>
+                  </Box>
+                ))
+              )}
+            </Box>
+          </>
+        ) : (
+          <Box
+            sx={{
+              flex: 1,
+              overflowY: "auto",
+              pt: 2.5,
+              px: 2.5,
+              pb: 4,
+            }}
+          >
+            {filteredPatterns.length === 0 ? (
+              <Typography
+                color="textSecondary"
+                sx={{ mt: 4, textAlign: "center" }}
+              >
+                No patterns match your search.
+              </Typography>
+            ) : (
+              <Box
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: 2,
+                }}
+              >
+                {filteredPatterns.map((pattern) => (
+                  <PatternCard
+                    key={pattern.id}
+                    pattern={pattern}
+                    isSelected={selectedPatternId === pattern.id}
+                    onClick={() => handlePatternClick(pattern.id)}
+                  />
+                ))}
               </Box>
-            ))
-          )}
-        </Box>
+            )}
+          </Box>
+        )}
       </DialogContent>
 
       <DialogActions
@@ -715,29 +968,57 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
           borderColor: "border.main",
         }}
       >
-        <Typography variant="body2" color="textPrimary">
-          {selectedSlugs.size === 0
-            ? "No components selected"
-            : `${selectedSlugs.size} component${selectedSlugs.size > 1 ? "s" : ""} selected`}
-        </Typography>
-        <Box sx={{ display: "flex", gap: 1 }}>
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={{ backgroundColor: "common.white" }}
-            onClick={handleCancel}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            disabled={selectedSlugs.size === 0}
-            onClick={handleContinue}
-          >
-            Add components
-          </Button>
-        </Box>
+        {activeTab === 0 ? (
+          <>
+            <Typography variant="body2" color="textPrimary">
+              {selectedSlugs.size === 0
+                ? "No components selected"
+                : `${selectedSlugs.size} component${selectedSlugs.size > 1 ? "s" : ""} selected`}
+            </Typography>
+            <Box sx={{ display: "flex", gap: 1 }}>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ backgroundColor: "common.white" }}
+                onClick={handleCancel}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={selectedSlugs.size === 0}
+                onClick={handleContinue}
+              >
+                Add components
+              </Button>
+            </Box>
+          </>
+        ) : (
+          <>
+            <Typography variant="body2" color="textPrimary">
+              {selectedPatternId ? "1 pattern selected" : "No pattern selected"}
+            </Typography>
+            <Box sx={{ display: "flex", gap: 1 }}>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ backgroundColor: "common.white" }}
+                onClick={handleCancel}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={!selectedPatternId}
+                onClick={handlePatternContinue}
+              >
+                Add pattern
+              </Button>
+            </Box>
+          </>
+        )}
       </DialogActions>
     </Dialog>
   );
