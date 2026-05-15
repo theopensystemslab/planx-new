@@ -7,6 +7,11 @@ on:
     # Runs every morning at 06:06 (https://crontab.guru/#06_6_*_*_*)
     - cron: "06 6 * * *"
   workflow_dispatch:
+    inputs:
+      comment_id:
+        description: Comment ID to update with pass/fail result
+        required: false
+        type: string
 
 env:
   EDITOR_DIRECTORY: apps/editor.planx.uk
@@ -105,6 +110,32 @@ jobs:
           name: playwright-report
           path: e2e/tests/ui-driven/test-results/
           retention-days: 3
+
+  notify_pr:
+    name: Update PR Comment
+    runs-on: ubuntu-24.04
+    needs: [integration_tests, api_tests, test_react, end_to_end_tests]
+    if: always() && inputs.comment_id != ''
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Update PR comment with result
+        uses: actions/github-script@v7
+        env:
+          PASSED: ${{ needs.integration_tests.result == 'success' && needs.api_tests.result == 'success' && needs.test_react.result == 'success' && needs.end_to_end_tests.result == 'success' }}
+          COMMENT_ID: ${{ inputs.comment_id }}
+        with:
+          script: |
+            const passed = process.env.PASSED === 'true';
+            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            await github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: parseInt(process.env.COMMENT_ID),
+              body: passed
+                ? `✅ Regression tests passed - [view run](${runUrl})`
+                : `❌ Regression tests failed - [view run](${runUrl})`,
+            });
 
   notify:
     name: Notify On Failure
