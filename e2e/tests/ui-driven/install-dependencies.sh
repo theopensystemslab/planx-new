@@ -3,14 +3,16 @@ set -e
 
 cd $(dirname "$0")
 
+EDITOR_HASH=$(git -C ../../../ rev-parse HEAD:apps/editor.planx.uk)
+HASH_FILE="../../../apps/editor.planx.uk/build/.editor-hash"
+
+if [ -f "$HASH_FILE" ] && [ "$(cat $HASH_FILE)" = "$EDITOR_HASH" ]; then
+  exit 0
+fi
+
 source ../../../.env
 
-(cd ../../../apps/editor.planx.uk && pnpm install --frozen-lockfile && VITE_APP_ENV=test pnpm build)
-
-if [ -z "${CI}" ]; then
-  echo "Please make sure you have Chrome installed on this machine."
-else
-  echo "Installing E2E dependencies…"
-  sudo apt-get update
-  sudo apt-get install -y libappindicator3-1 fonts-liberation chromium-browser
-fi
+cd ../../../apps/editor.planx.uk
+pnpm install --frozen-lockfile
+VITE_APP_ENV=test pnpm build
+echo "$EDITOR_HASH" > build/.editor-hash
