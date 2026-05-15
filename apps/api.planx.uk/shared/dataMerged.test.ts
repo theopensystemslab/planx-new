@@ -47,8 +47,25 @@ describe("dataMerged() function", () => {
           publishedFlows: [
             {
               data: publishedNestedFlowA,
+              created_at: "2026-05-15T02:12:32.889893+00:00",
+              publisher_id: 1,
+              id: 9,
+              summary: "Testing a",
             },
           ],
+        },
+      },
+    });
+
+    queryMock.mockQuery({
+      name: "GetMostRecentPublishedFlowVersion",
+      matchOnVariables: true,
+      variables: {
+        id: "nested-a",
+      },
+      data: {
+        flow: {
+          publishedFlows: [{ id: 9 }],
         },
       },
     });
@@ -70,8 +87,25 @@ describe("dataMerged() function", () => {
           publishedFlows: [
             {
               data: publishedNestedFlowB,
+              created_at: "2026-05-15T02:12:48.760153+00:00",
+              publisher_id: 1,
+              id: 10,
+              summary: "Testing b",
             },
           ],
+        },
+      },
+    });
+
+    queryMock.mockQuery({
+      name: "GetMostRecentPublishedFlowVersion",
+      matchOnVariables: true,
+      variables: {
+        id: "nested-b",
+      },
+      data: {
+        flow: {
+          publishedFlows: [{ id: 10 }],
         },
       },
     });
@@ -393,6 +427,10 @@ const flattenedParentFlow: FlowGraph = {
       text: "testing/nested-a",
       flattenedFromExternalPortal: true,
       templatedFrom: undefined as unknown as Value,
+      publishedAt: "2026-05-15T02:12:32.889893+00:00",
+      publishedBy: 1,
+      publishedFlowId: 9,
+      summary: "Testing a",
     },
   },
   P3bEBTSeQd: {
@@ -434,6 +472,10 @@ const flattenedParentFlow: FlowGraph = {
       text: "testing/nested-b",
       flattenedFromExternalPortal: true,
       templatedFrom: undefined as unknown as Value,
+      publishedAt: "2026-05-15T02:12:48.760153+00:00",
+      publishedBy: 1,
+      publishedFlowId: 10,
+      summary: "Testing b",
     },
   },
   g4fB7FE0cz: {
@@ -621,7 +663,7 @@ const draftNestedFlowB: FlowGraph = {
     edges: ["g4fB7FE0cz"],
   },
   g4fB7FE0cz: {
-    type: 250,
+    type: ComponentType.Content,
     data: {
       content:
         "<h1>Nested B</h1><p>This is UNPUBLISHED nested flow content</p><p></p>",
@@ -635,7 +677,7 @@ const publishedNestedFlowB: FlowGraph = {
     edges: ["g4fB7FE0cz"],
   },
   g4fB7FE0cz: {
-    type: 250,
+    type: ComponentType.Content,
     data: {
       content: "<h1>Nested B</h1><p>This is nested flow content</p><p></p>",
       resetButton: false,
