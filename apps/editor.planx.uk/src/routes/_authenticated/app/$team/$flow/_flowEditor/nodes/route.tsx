@@ -4,6 +4,8 @@ import React from "react";
 import { z } from "zod";
 
 const nodeSearchSchema = z.object({
+  // Comma-separated list of type slugs to add sequentially after the current one
+  queue: z.string().optional(),
   type: z
     .enum([
       "question",

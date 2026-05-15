@@ -88,7 +88,7 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
           ...(parent && { parent }),
           ...(before && { before }),
         }}
-        search={{ type: "question" }}
+        search={{}}
         preload={false}
         onContextMenu={handleContextMenu}
       >
