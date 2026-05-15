@@ -468,6 +468,16 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
+      - name: Get editor git tree hash
+        id: editor-hash
+        run: echo "hash=$(git rev-parse HEAD:apps/editor.planx.uk)" >> $GITHUB_OUTPUT
+      - name: Restore editor build cache
+        id: cache-e2e-editor-build
+        uses: actions/cache@v5
+        with:
+          path: apps/editor.planx.uk/build
+          key: editor-e2e-pr-${{ github.event.number }}-${{ steps.editor-hash.outputs.hash }}
+          restore-keys: editor-e2e-pr-${{ github.event.number }}-
       - name: Setup Node and PNPM
         uses: ./.github/actions/setup-node-pnpm
       - name: PNPM Install
