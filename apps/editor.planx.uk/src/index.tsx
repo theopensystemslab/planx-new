@@ -42,6 +42,8 @@ window.addEventListener("vite:preloadError", (event) => {
 
 initFeatureFlags();
 
+console.log("test change which should trigger a rebuild");
+
 const Layout: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
