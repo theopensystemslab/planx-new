@@ -7,6 +7,13 @@ export const navigateToService = async (page: Page, slug: string) => {
   await expect(page.getByRole("link", { name: slug })).toBeVisible();
 };
 
+export const navigateToTeamPage = async (page: Page) => {
+  await page.goto(`/app/${contextDefaults.team.slug}`);
+
+  await expect(page.getByText(contextDefaults.team.name).first()).toBeVisible();
+  await expect(page.locator("h1", { hasText: "Flows" })).toBeVisible();
+};
+
 export const publishService = async (page: Page) => {
   // Open modal
   await page.getByTestId("check-for-changes-to-publish-button").click();
@@ -26,7 +33,9 @@ export const publishService = async (page: Page) => {
   await page.getByTestId("publish-button").click();
 
   // Wait for confirmation of success
-  await expect(page.getByText("Successfully published changes")).toBeVisible();
+  await expect(
+    page.getByText("Successfully published changes").first(),
+  ).toBeVisible();
 };
 
 export const turnServiceOnline = async (page: Page) => {

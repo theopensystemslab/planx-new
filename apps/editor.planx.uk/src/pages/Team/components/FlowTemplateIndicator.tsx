@@ -22,7 +22,10 @@ export const FlowTemplateIndicator: React.FC<Props> = ({
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: 0.25 }}>
       {isTemplatedFlow && (
-        <StarIcon sx={{ color: "#380F77", fontSize: "1rem" }} />
+        <StarIcon
+          data-testid="templated-flow-star"
+          sx={{ color: "#380F77", fontSize: "1rem" }}
+        />
       )}
       <Typography variant="body3" sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
         {text}
