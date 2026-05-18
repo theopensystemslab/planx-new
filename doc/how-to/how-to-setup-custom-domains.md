@@ -166,7 +166,7 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
 1. Do steps 3-5 from flow A.
 
     > NB. **If this is not the first domain on the shared CDN** and you want to expedite:
-    > - Skip the production deploy in step 3
+    > - Skip the production deploy in step 3 (**TODO**: does this make sense?)
     > - Send the council both DNS records together
 
 2. Advance the domain in question to the `cutover-init` state by updating `customDomains.ts`:
@@ -187,8 +187,19 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
 
     Then **merge your PR to `main`** and **deploy your changes to `production`** to deploy the `application` layer via CI.
 
-    This adds the domain to the shared cert and ensures the shared CDN exists (respectively), **while keeping the legacy per-domain CDN running**.
+    - The `certificates` deploy makes a new shared cert with the additional domain on it. At this point, we retain the old cert, because until the `application` deploy has run, the shared CDN still relies on it.
+    - The `application` deploy attaches the new cert to the shared CDN (and will create it first, if it doesn't already exist).
 
+    Keen observers will notice that we now have an orpaned cert which is not attached to any CDN - but we will clean that up later.
+
+4. Get the shared CDN name:
+
+    ```sh
+    cd infrastructure/application
+    pulumi stack output customDomainsCdnDomainName --stack production
+    ```
+
+    This returns a value like `d1234abcd.cloudfront.net`.
 
 4. **TODO**: Run the `associate-alias` command from AWS CLI to move the domain from the legacy CloudFront distribution to the shared CloudFront distribution. Explain why this works.
 
@@ -198,14 +209,6 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
     - cloudFrontState: "cutover-init",
     + cloudFrontState: "cutover-ongoing",
     ```
-6. Get the shared CDN name:
-
-    ```sh
-    cd infrastructure/application
-    pulumi stack output customDomainsCdnDomainName --stack production
-    ```
-
-    This returns a value like `d1234abcd.cloudfront.net`.
 
 7. Ask the council to switch their DNS target for the domain.
 

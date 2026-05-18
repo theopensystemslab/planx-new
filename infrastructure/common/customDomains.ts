@@ -112,13 +112,13 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "test-legacy",
           domain: "planningserviceslegacy.planx.in",
-          cloudFrontState: "legacy-with-validation",
+          cloudFrontState: "cutover-init",
         },
-        // {
-        //   name: "test-new",
-        //   domain: "planningservices.planx.in",
-        //   cloudFrontState: "shared-final",
-        // },
+        {
+          name: "test-new",
+          domain: "planningservices.planx.in",
+          cloudFrontState: "shared-final",
+        },
     ];
 
 // get domains for which we maintain a dedicated per-domain CloudFront distribution + imported cert

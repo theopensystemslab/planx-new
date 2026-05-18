@@ -77,7 +77,12 @@ if (validatedCustomDomains.length > 0) {
       subjectAlternativeNames: validatedCustomDomains.slice(1).map(d => d.domain),
       validationMethod: "DNS",
     },
-    { provider: usEast1 }
+    { provider: usEast1,
+      // ensure cert is replaced but *not* deleted - that is, deletion will be delayed to the next deployment of this layer
+      // (immediate deletion would fail since cert is in use by a CloudFront distribution, pending deployment of application layer)
+      deleteBeforeReplace: false,
+      retainOnDelete: true,
+     }
   );
 
   const customDomainsCertValidation = new aws.acm.CertificateValidation(
