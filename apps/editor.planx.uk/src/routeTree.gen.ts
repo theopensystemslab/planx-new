@@ -22,10 +22,12 @@ import { Route as AuthenticatedAppAdminPanelRouteImport } from './routes/_authen
 import { Route as PublicCustomDomainFlowRouteRouteImport } from './routes/_public/_customDomain/$flow/route'
 import { Route as AuthenticatedAppGlobalSettingsRouteRouteImport } from './routes/_authenticated/app/global-settings/route'
 import { Route as AuthenticatedAppTeamRouteRouteImport } from './routes/_authenticated/app/$team/route'
+import { Route as PublicPlanXDomainStripeTestIndexRouteImport } from './routes/_public/_planXDomain/stripe-test/index'
 import { Route as PublicPlanXDomainDownloadSubmissionIndexRouteImport } from './routes/_public/_planXDomain/download-submission/index'
 import { Route as PublicCustomDomainFlowIndexRouteImport } from './routes/_public/_customDomain/$flow/index'
 import { Route as AuthenticatedAppGlobalSettingsIndexRouteImport } from './routes/_authenticated/app/global-settings/index'
 import { Route as AuthenticatedAppTeamIndexRouteImport } from './routes/_authenticated/app/$team/index'
+import { Route as PublicPlanXDomainStripeTestSuccessRouteImport } from './routes/_public/_planXDomain/stripe-test/success'
 import { Route as PublicCustomDomainFlowViewApplicationRouteImport } from './routes/_public/_customDomain/$flow/view-application'
 import { Route as AuthenticatedAppGlobalSettingsFooterRouteImport } from './routes/_authenticated/app/global-settings/footer'
 import { Route as AuthenticatedAppTeamTutorialsRouteImport } from './routes/_authenticated/app/$team/tutorials'
@@ -169,6 +171,12 @@ const AuthenticatedAppTeamRouteRoute =
     path: '/$team',
     getParentRoute: () => AuthenticatedAppRouteRoute,
   } as any)
+const PublicPlanXDomainStripeTestIndexRoute =
+  PublicPlanXDomainStripeTestIndexRouteImport.update({
+    id: '/_public/_planXDomain/stripe-test/',
+    path: '/stripe-test/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const PublicPlanXDomainDownloadSubmissionIndexRoute =
   PublicPlanXDomainDownloadSubmissionIndexRouteImport.update({
     id: '/_public/_planXDomain/download-submission/',
@@ -192,6 +200,12 @@ const AuthenticatedAppTeamIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedAppTeamRouteRoute,
+  } as any)
+const PublicPlanXDomainStripeTestSuccessRoute =
+  PublicPlanXDomainStripeTestSuccessRouteImport.update({
+    id: '/_public/_planXDomain/stripe-test/success',
+    path: '/stripe-test/success',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const PublicCustomDomainFlowViewApplicationRoute =
   PublicCustomDomainFlowViewApplicationRouteImport.update({
@@ -675,10 +689,12 @@ export interface FileRoutesByFullPath {
   '/app/$team/tutorials': typeof AuthenticatedAppTeamTutorialsRoute
   '/app/global-settings/footer': typeof AuthenticatedAppGlobalSettingsFooterRoute
   '/$flow/view-application': typeof PublicCustomDomainFlowViewApplicationRoute
+  '/stripe-test/success': typeof PublicPlanXDomainStripeTestSuccessRoute
   '/app/$team/': typeof AuthenticatedAppTeamIndexRoute
   '/app/global-settings/': typeof AuthenticatedAppGlobalSettingsIndexRoute
   '/$flow/': typeof PublicCustomDomainFlowIndexRoute
   '/download-submission/': typeof PublicPlanXDomainDownloadSubmissionIndexRoute
+  '/stripe-test/': typeof PublicPlanXDomainStripeTestIndexRoute
   '/app/$team/$flow/settings': typeof AuthenticatedAppTeamFlowSettingsRouteRouteWithChildren
   '/$team/$flow/draft': typeof PublicPlanXDomainTeamFlowDraftRouteRouteWithChildren
   '/$team/$flow/pay': typeof PublicPlanXDomainTeamFlowPayRouteRouteWithChildren
@@ -759,10 +775,12 @@ export interface FileRoutesByTo {
   '/app/$team/tutorials': typeof AuthenticatedAppTeamTutorialsRoute
   '/app/global-settings/footer': typeof AuthenticatedAppGlobalSettingsFooterRoute
   '/$flow/view-application': typeof PublicCustomDomainFlowViewApplicationRoute
+  '/stripe-test/success': typeof PublicPlanXDomainStripeTestSuccessRoute
   '/app/$team': typeof AuthenticatedAppTeamIndexRoute
   '/app/global-settings': typeof AuthenticatedAppGlobalSettingsIndexRoute
   '/$flow': typeof PublicCustomDomainFlowIndexRoute
   '/download-submission': typeof PublicPlanXDomainDownloadSubmissionIndexRoute
+  '/stripe-test': typeof PublicPlanXDomainStripeTestIndexRoute
   '/app/$team/$flow/about': typeof AuthenticatedAppTeamFlowAboutRoute
   '/app/$team/$flow/feedback': typeof AuthenticatedAppTeamFlowFeedbackRoute
   '/app/$team/$flow/submissions': typeof AuthenticatedAppTeamFlowSubmissionsRoute
@@ -847,10 +865,12 @@ export interface FileRoutesById {
   '/_authenticated/app/$team/tutorials': typeof AuthenticatedAppTeamTutorialsRoute
   '/_authenticated/app/global-settings/footer': typeof AuthenticatedAppGlobalSettingsFooterRoute
   '/_public/_customDomain/$flow/view-application': typeof PublicCustomDomainFlowViewApplicationRoute
+  '/_public/_planXDomain/stripe-test/success': typeof PublicPlanXDomainStripeTestSuccessRoute
   '/_authenticated/app/$team/': typeof AuthenticatedAppTeamIndexRoute
   '/_authenticated/app/global-settings/': typeof AuthenticatedAppGlobalSettingsIndexRoute
   '/_public/_customDomain/$flow/': typeof PublicCustomDomainFlowIndexRoute
   '/_public/_planXDomain/download-submission/': typeof PublicPlanXDomainDownloadSubmissionIndexRoute
+  '/_public/_planXDomain/stripe-test/': typeof PublicPlanXDomainStripeTestIndexRoute
   '/_authenticated/app/$team/$flow/_flowEditor': typeof AuthenticatedAppTeamFlowFlowEditorRouteRouteWithChildren
   '/_authenticated/app/$team/$flow/settings': typeof AuthenticatedAppTeamFlowSettingsRouteRouteWithChildren
   '/_public/_planXDomain/$team/$flow/draft': typeof PublicPlanXDomainTeamFlowDraftRouteRouteWithChildren
@@ -941,10 +961,12 @@ export interface FileRouteTypes {
     | '/app/$team/tutorials'
     | '/app/global-settings/footer'
     | '/$flow/view-application'
+    | '/stripe-test/success'
     | '/app/$team/'
     | '/app/global-settings/'
     | '/$flow/'
     | '/download-submission/'
+    | '/stripe-test/'
     | '/app/$team/$flow/settings'
     | '/$team/$flow/draft'
     | '/$team/$flow/pay'
@@ -1025,10 +1047,12 @@ export interface FileRouteTypes {
     | '/app/$team/tutorials'
     | '/app/global-settings/footer'
     | '/$flow/view-application'
+    | '/stripe-test/success'
     | '/app/$team'
     | '/app/global-settings'
     | '/$flow'
     | '/download-submission'
+    | '/stripe-test'
     | '/app/$team/$flow/about'
     | '/app/$team/$flow/feedback'
     | '/app/$team/$flow/submissions'
@@ -1112,10 +1136,12 @@ export interface FileRouteTypes {
     | '/_authenticated/app/$team/tutorials'
     | '/_authenticated/app/global-settings/footer'
     | '/_public/_customDomain/$flow/view-application'
+    | '/_public/_planXDomain/stripe-test/success'
     | '/_authenticated/app/$team/'
     | '/_authenticated/app/global-settings/'
     | '/_public/_customDomain/$flow/'
     | '/_public/_planXDomain/download-submission/'
+    | '/_public/_planXDomain/stripe-test/'
     | '/_authenticated/app/$team/$flow/_flowEditor'
     | '/_authenticated/app/$team/$flow/settings'
     | '/_public/_planXDomain/$team/$flow/draft'
@@ -1186,7 +1212,9 @@ export interface RootRouteChildren {
   authLoginRoute: typeof authLoginRoute
   authLogoutRoute: typeof authLogoutRoute
   PublicPlanXDomainTeamFlowRouteRoute: typeof PublicPlanXDomainTeamFlowRouteRouteWithChildren
+  PublicPlanXDomainStripeTestSuccessRoute: typeof PublicPlanXDomainStripeTestSuccessRoute
   PublicPlanXDomainDownloadSubmissionIndexRoute: typeof PublicPlanXDomainDownloadSubmissionIndexRoute
+  PublicPlanXDomainStripeTestIndexRoute: typeof PublicPlanXDomainStripeTestIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1282,6 +1310,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppTeamRouteRouteImport
       parentRoute: typeof AuthenticatedAppRouteRoute
     }
+    '/_public/_planXDomain/stripe-test/': {
+      id: '/_public/_planXDomain/stripe-test/'
+      path: '/stripe-test'
+      fullPath: '/stripe-test/'
+      preLoaderRoute: typeof PublicPlanXDomainStripeTestIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_public/_planXDomain/download-submission/': {
       id: '/_public/_planXDomain/download-submission/'
       path: '/download-submission'
@@ -1309,6 +1344,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/$team/'
       preLoaderRoute: typeof AuthenticatedAppTeamIndexRouteImport
       parentRoute: typeof AuthenticatedAppTeamRouteRoute
+    }
+    '/_public/_planXDomain/stripe-test/success': {
+      id: '/_public/_planXDomain/stripe-test/success'
+      path: '/stripe-test/success'
+      fullPath: '/stripe-test/success'
+      preLoaderRoute: typeof PublicPlanXDomainStripeTestSuccessRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_public/_customDomain/$flow/view-application': {
       id: '/_public/_customDomain/$flow/view-application'
@@ -2305,8 +2347,11 @@ const rootRouteChildren: RootRouteChildren = {
   authLogoutRoute: authLogoutRoute,
   PublicPlanXDomainTeamFlowRouteRoute:
     PublicPlanXDomainTeamFlowRouteRouteWithChildren,
+  PublicPlanXDomainStripeTestSuccessRoute:
+    PublicPlanXDomainStripeTestSuccessRoute,
   PublicPlanXDomainDownloadSubmissionIndexRoute:
     PublicPlanXDomainDownloadSubmissionIndexRoute,
+  PublicPlanXDomainStripeTestIndexRoute: PublicPlanXDomainStripeTestIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
