@@ -2,84 +2,31 @@ import type { FlowGraph } from "@opensystemslab/planx-core/types";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 
 import { getFlowData, getMostRecentPublishedFlowVersion } from "../helpers.js";
-import type { Flow, Node } from "../types.js";
+import type { Node } from "../types.js";
 
 /**
- * Flatten a flow to create a single JSON representation of the main flow data and any external portals
+ * Flatten flows to create a single JSON representation of the main flow data and any external portals
  *   By default, requires that any external portals are published and flattens their latest published version
  *   When draftDataOnly = true, flattens the draft data of the main flow and the draft data of any external portals published or otherwise
  */
 export const dataMerged = async (
-  id: string,
+  flowId: string,
   ob: { [key: string]: Node } = {},
   isPortal = false,
   draftDataOnly = false,
 ): Promise<FlowGraph> => {
-  // get the primary draft flow data, including its' latest published version
-  const response = await getFlowData(id);
-  const { slug, team, publishedFlows } = response;
-  let { data } = response;
+  const stack: Array<{ flowId: string; isPortal: boolean }> = [
+    { flowId, isPortal },
+  ];
+  const merged = new Set<string>();
 
-  // only flatten external portals that are published, unless we're loading draftDataOnly
-  if (isPortal && !draftDataOnly) {
-    if (publishedFlows?.[0]?.data) {
-      data = publishedFlows[0].data;
-    } else {
-      throw new Error(
-        `Publish flow ${team.slug}/${slug} before proceeding. All flows used as external portals must be published.`,
-      );
-    }
+  if (stack.length > 0) {
+    ob = await fetchAndMergeStack(ob, draftDataOnly, stack, merged);
   }
 
-  // recursively get and flatten external portals
-  for (const [nodeId, node] of Object.entries(data)) {
-    const isExternalPortalRoot =
-      nodeId === "_root" && Object.keys(ob).length > 0;
-    const isExternalPortal = node.type === ComponentType.ExternalPortal;
-    const isMerged = ob[node.data?.flowId];
-
-    // merge external portal _root node as a new node in the graph using its' flowId as nodeId
-    if (isExternalPortalRoot) {
-      ob[id] = {
-        ...node, // includes _root edges for navigation to all child nodes in this portal
-        type: ComponentType.InternalPortal,
-        data: {
-          text: `${team.slug}/${slug}`,
-          flattenedFromExternalPortal: true,
-          templatedFrom: response.templatedFrom,
-          // add extra metadata about latest published version when applicable
-          ...(!draftDataOnly && {
-            publishedFlowId: publishedFlows?.[0]?.id,
-            publishedAt: publishedFlows?.[0]?.created_at,
-            publishedBy: publishedFlows?.[0]?.publisher_id,
-            summary: publishedFlows?.[0]?.summary,
-          }),
-        },
-      };
-    }
-
-    // merge external portal type node as an internal portal type node, with an edge pointing to flowId (to navigate to the externalPortalRoot set above)
-    else if (isExternalPortal) {
-      ob[nodeId] = {
-        type: ComponentType.InternalPortal,
-        edges: [node.data?.flowId],
-        data: {
-          flattenedFromExternalPortal: true,
-        },
-      };
-
-      // recursively merge flow
-      if (!isMerged) {
-        await dataMerged(node.data?.flowId, ob, true, draftDataOnly);
-      }
-    }
-
-    // merge all other nodes
-    else ob[nodeId] = node;
-  }
-
-  // for every external portal that has been merged, confirm its' latest version was merged. If not, overwrite older snapshot with newest version
-  //   ** this is a final/separate step because older snapshots can be nested in _already_ flattened data (eg not picked up as ComponentType.ExternalPortal above)
+  // For every external portal that has been merged, confirm its' latest version was merged
+  //   If not, overwrite stale snapshot with newest version
+  //   ** This requires a second/separate stack loop because stale snapshots can be nested in _already_ flattened data (eg not picked up as ComponentType.ExternalPortal above)
   if (!draftDataOnly) {
     for (const [nodeId, node] of Object.entries(ob).filter(
       ([_nodeId, node]) => node.data?.publishedFlowId,
@@ -87,10 +34,101 @@ export const dataMerged = async (
       const mostRecentPublishedFlowId =
         await getMostRecentPublishedFlowVersion(nodeId);
       if (mostRecentPublishedFlowId !== node.data?.publishedFlowId) {
-        await dataMerged(nodeId, ob, true, draftDataOnly);
+        const staleStack: Array<{ flowId: string; isPortal: boolean }> = [
+          { flowId: nodeId, isPortal: true },
+        ];
+        const staleMerged = new Set<string>();
+
+        if (staleStack.length > 0) {
+          ob = await fetchAndMergeStack(
+            ob,
+            draftDataOnly,
+            staleStack,
+            staleMerged,
+          );
+        }
       }
     }
   }
 
   return ob as FlowGraph;
+};
+
+const fetchAndMergeStack = async (
+  ob: { [key: string]: Node } = {},
+  draftDataOnly = false,
+  stack: Array<{ flowId: string; isPortal: boolean }>,
+  merged: Set<string>,
+): Promise<{ [key: string]: Node }> => {
+  while (stack.length > 0) {
+    // Traverse portals depth-first by using `pop`
+    const { flowId, isPortal: currentFlowIdIsPortal } = stack.pop()!;
+
+    // Prevent re-fetching flows we've already merged
+    if (merged.has(flowId)) continue;
+    merged.add(flowId);
+
+    // Fetch draft flow data, including its' latest published version
+    const response = await getFlowData(flowId);
+    const { slug, team, publishedFlows } = response;
+    let { data } = response;
+
+    // Only flatten external portals that are published, unless we're merging draftDataOnly
+    if (currentFlowIdIsPortal && !draftDataOnly) {
+      if (publishedFlows?.[0]?.data) {
+        data = publishedFlows[0].data;
+      } else {
+        throw new Error(
+          `Publish flow ${team.slug}/${slug} before proceeding. All nested flows must be published.`,
+        );
+      }
+    }
+
+    // Fetch portals/nested flows
+    for (const [nodeId, node] of Object.entries(data)) {
+      const isExternalPortalRoot =
+        nodeId === "_root" && Object.keys(ob).length > 0;
+      const isExternalPortal = node.type === ComponentType.ExternalPortal;
+      const isMerged = ob[node.data?.flowId];
+
+      if (isExternalPortalRoot) {
+        // Merge external portal's `_root` node as a new internal node type in the graph using its' flowId as nodeId
+        ob[flowId] = {
+          ...node, // includes `edges` in order to navigate to all child nodes
+          type: ComponentType.InternalPortal,
+          data: {
+            text: `${team.slug}/${slug}`,
+            flattenedFromExternalPortal: true,
+            templatedFrom: response.templatedFrom,
+            // Add extra metadata about latest published version when applicable
+            ...(!draftDataOnly && {
+              publishedFlowId: publishedFlows?.[0]?.id,
+              publishedAt: publishedFlows?.[0]?.created_at,
+              publishedBy: publishedFlows?.[0]?.publisher_id,
+              summary: publishedFlows?.[0]?.summary,
+            }),
+          },
+        };
+      } else if (isExternalPortal) {
+        // Merge external portal type node as an internal portal type node, with a single edge pointing to flowId (to navigate to the externalPortalRoot set above)
+        ob[nodeId] = {
+          type: ComponentType.InternalPortal,
+          edges: [node.data?.flowId],
+          data: {
+            flattenedFromExternalPortal: true,
+          },
+        };
+
+        // Push to stack
+        if (!isMerged) {
+          stack.push({ flowId: node.data?.flowId, isPortal: true });
+        }
+      } else {
+        // Merge all non-portal nodes
+        ob[nodeId] = node;
+      }
+    }
+  }
+
+  return ob;
 };
