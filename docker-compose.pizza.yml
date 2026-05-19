@@ -25,6 +25,7 @@ services:
     platform: linux/amd64
 
   editor:
+    platform: linux/amd64
     container_name: editor
     image: pierrezemb/gostatic
     volumes:
@@ -32,6 +33,7 @@ services:
     entrypoint: "/goStatic -fallback /index.html"
 
   localplanning:
+    platform: linux/amd64
     container_name: localplanning
     image: pierrezemb/gostatic
     volumes:
@@ -39,6 +41,7 @@ services:
     entrypoint: "/goStatic -fallback /404.html"
 
   storybook:
+    platform: linux/amd64
     container_name: storybook
     image: pierrezemb/gostatic
     volumes:
