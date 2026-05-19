@@ -35,7 +35,7 @@ export const Route = createFileRoute("/_authenticated/app/$team/notifications")(
               type
               createdAt: created_at
               resolvedAt: resolved_at
-              resolvedBy: user {
+              resolvedByUser: user {
                 firstName: first_name
                 lastName: last_name
               }
