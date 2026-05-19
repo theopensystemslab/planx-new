@@ -4,6 +4,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   api:
+    platform: linux/amd64
     build:
       target: production
     volumes:
@@ -14,7 +15,17 @@ services:
       AIRBRAKE_PROJECT_ID: ${AIRBRAKE_PROJECT_ID}
       AIRBRAKE_PROJECT_KEY: ${AIRBRAKE_PROJECT_KEY}
 
+  sharedb:
+    platform: linux/amd64
+
+  hasura:
+    platform: linux/amd64
+
+  hasura-proxy:
+    platform: linux/amd64
+
   editor:
+    platform: linux/amd64
     container_name: editor
     image: pierrezemb/gostatic
     volumes:
@@ -22,6 +33,7 @@ services:
     entrypoint: "/goStatic -fallback /index.html"
 
   localplanning:
+    platform: linux/amd64
     container_name: localplanning
     image: pierrezemb/gostatic
     volumes:
@@ -29,6 +41,7 @@ services:
     entrypoint: "/goStatic -fallback /404.html"
 
   storybook:
+    platform: linux/amd64
     container_name: storybook
     image: pierrezemb/gostatic
     volumes:
@@ -36,6 +49,7 @@ services:
     entrypoint: "/goStatic -port 8044 -fallback /index.html"
 
   caddy:
+    platform: linux/amd64
     image: lhr.vultrcr.com/planx/caddy-vultr:latest
     # default to pulling image from private Vultr registry (if not available)
     pull_policy: missing
