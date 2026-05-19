@@ -172,7 +172,7 @@ export const getExternalPortals = async (
   const { data } = await client.query({
     query: gql`
       query GetFlows {
-        flows(order_by: { slug: asc }) {
+        flows(order_by: {slug: asc}, where: {archived_at: {_is_null: true}}) {
           id
           slug
           name
