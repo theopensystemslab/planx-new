@@ -6,6 +6,7 @@ export interface StripeCheckoutBody {
   serviceCharge: number;
   metadata: Record<string, string>;
   paymentMethodTypes?: ("card" | "bacs_debit")[];
+  connectedAccountId?: string;
 }
 
 export const getStripeCheckoutSession: RequestHandler = async (req, res, next) => {
@@ -34,19 +35,31 @@ export const createStripeCheckoutSession: RequestHandler = async (
   next,
 ) => {
   const secretKey = process.env.STRIPE_SECRET_KEY;
-  const connectedAccountId = process.env.STRIPE_CONNECTED_ACCOUNT_ID;
 
-  if (!secretKey || !connectedAccountId) {
+  if (!secretKey) {
     return next({
       status: 500,
-      message:
-        "Stripe is not configured — set STRIPE_SECRET_KEY and STRIPE_CONNECTED_ACCOUNT_ID",
+      message: "Stripe is not configured — set STRIPE_SECRET_KEY",
     });
   }
 
   const stripe = new Stripe(secretKey);
-  const { amount, serviceCharge, metadata, paymentMethodTypes = ["card"] } =
-    req.body as StripeCheckoutBody;
+  const {
+    amount,
+    serviceCharge,
+    metadata,
+    paymentMethodTypes = ["card"],
+    connectedAccountId: bodyAccountId,
+  } = req.body as StripeCheckoutBody;
+
+  const connectedAccountId = bodyAccountId || process.env.STRIPE_CONNECTED_ACCOUNT_ID;
+  if (!connectedAccountId) {
+    return next({
+      status: 500,
+      message:
+        "No connected account ID — set STRIPE_CONNECTED_ACCOUNT_ID or pass connectedAccountId in the request",
+    });
+  }
 
   const editorUrl =
     process.env.EDITOR_URL_EXT ?? "http://localhost:3000";

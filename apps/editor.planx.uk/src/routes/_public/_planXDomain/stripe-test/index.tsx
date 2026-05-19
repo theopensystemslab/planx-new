@@ -33,6 +33,7 @@ function PayView() {
     council: "southwark",
     flow: "apply-for-a-lawful-development-certificate",
     sessionId: "test-session-abc123",
+    connectedAccountId: "acct_1TYMQfEJh4JGcbG7",
   });
 
   const set =
@@ -61,7 +62,15 @@ function PayView() {
       method === "card" ? ["card"] : ["bacs_debit"];
     const { data } = await apiClient.post<{ url: string }>(
       "/pay/stripe/checkout-session",
-      { amount: amountPence, serviceCharge, paymentMethodTypes, metadata },
+      {
+        amount: amountPence,
+        serviceCharge,
+        paymentMethodTypes,
+        metadata,
+        ...(fields.connectedAccountId
+          ? { connectedAccountId: fields.connectedAccountId }
+          : {}),
+      },
     );
     window.location.href = data.url;
   };
@@ -127,6 +136,13 @@ function PayView() {
               label="Session ID"
               value={fields.sessionId}
               onChange={set("sessionId")}
+              size="small"
+            />
+            <TextField
+              label="Connected account ID"
+              placeholder="acct_..."
+              value={fields.connectedAccountId}
+              onChange={set("connectedAccountId")}
               size="small"
             />
           </Stack>
