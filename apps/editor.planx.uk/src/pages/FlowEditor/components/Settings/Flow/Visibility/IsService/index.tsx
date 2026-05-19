@@ -25,8 +25,6 @@ const IsService: React.FC = () => {
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const isProduction = import.meta.env.VITE_APP_ENV === "production";
-
   return (
     <SettingsFormContainer<
       GetIsServiceResponse,
@@ -59,8 +57,6 @@ const IsService: React.FC = () => {
                 </Typography>
               </WarningContainer>
             )}
-          {isProduction && (
-            <>
             <Box sx={{ display: "flex-col", alignItems: "center", mb: 2 }}>
               <Typography
                 variant="body1"
@@ -81,22 +77,18 @@ const IsService: React.FC = () => {
                 </Typography>
               }
             </Box>
-              {formik.values.isService !== true &&
               <Box sx={{ display: "flex" }}>
                 <Button
                   id="set-is-service-button"
                   data-testid="set-is-service-button"
                   sx={{ mb: 2 }}
-                  disabled={data?.flow.team.settings.isTrial}
+                  disabled={isTrial}
                   variant="contained"
                   onClick={() => setDialogOpen(true)}
                 >
                   {"Make this a user-facing service"}
                 </Button>
-              </Box>}
-              </>
-            )}
-            {isProduction && (
+              </Box>
               <ConfirmationDialog
                 open={dialogOpen}
                 onClose={async () => {
@@ -114,7 +106,6 @@ const IsService: React.FC = () => {
               >
                 Are you sure you want to set this flow as a user-facing service?
               </ConfirmationDialog>
-            )}
           </>
         );
       }}
