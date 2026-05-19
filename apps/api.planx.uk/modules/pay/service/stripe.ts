@@ -9,9 +9,14 @@ export interface StripeCheckoutBody {
   connectedAccountId?: string;
 }
 
-export const getStripeCheckoutSession: RequestHandler = async (req, res, next) => {
+export const getStripeCheckoutSession: RequestHandler = async (
+  req,
+  res,
+  next,
+) => {
   const secretKey = process.env.STRIPE_SECRET_KEY;
-  if (!secretKey) return next({ status: 500, message: "Stripe is not configured" });
+  if (!secretKey)
+    return next({ status: 500, message: "Stripe is not configured" });
 
   const stripe = new Stripe(secretKey);
   const session = await stripe.checkout.sessions.retrieve(req.params.sessionId);
@@ -49,20 +54,17 @@ export const createStripeCheckoutSession: RequestHandler = async (
     serviceCharge,
     metadata,
     paymentMethodTypes = ["card"],
-    connectedAccountId: bodyAccountId,
+    connectedAccountId,
   } = req.body as StripeCheckoutBody;
 
-  const connectedAccountId = bodyAccountId || process.env.STRIPE_CONNECTED_ACCOUNT_ID;
   if (!connectedAccountId) {
     return next({
       status: 500,
-      message:
-        "No connected account ID — set STRIPE_CONNECTED_ACCOUNT_ID or pass connectedAccountId in the request",
+      message: "No connected account ID",
     });
   }
 
-  const editorUrl =
-    process.env.EDITOR_URL_EXT ?? "http://localhost:3000";
+  const editorUrl = process.env.EDITOR_URL_EXT ?? "http://localhost:3000";
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: paymentMethodTypes,
@@ -71,8 +73,7 @@ export const createStripeCheckoutSession: RequestHandler = async (
         price_data: {
           currency: "gbp",
           product_data: {
-            name:
-              metadata.application_type ?? "Planning Application Fee",
+            name: metadata.application_type ?? "Planning Application Fee",
             description: `${metadata.council} — ${metadata.property_address}`,
           },
           // Total charge is application fee + OSL service charge.
