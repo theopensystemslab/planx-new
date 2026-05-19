@@ -16,7 +16,7 @@ All custom domains are defined in [`infrastructure/common/customDomains.ts`](../
 | --- | --- |
 | `validation-only` | Domain is not associated with any CDN, but is on the "mining" certificate (cert) to surface DNS validation records (which we will send to council). |
 | `legacy-with-validation` | Domain is associated with (i.e. is an alias of) legacy CDN, which is backed by a council-provided cert. Domain is also on mining cert. |
-| `cutover-init` | Domain is still associated with legacy CDN, but shared CDN also certainly exists, and is backed by a shared cert provisioned by us, which includes the domain as an SAN.
+| `cutover-init` | Domain is still associated with legacy CDN, but shared CDN also certainly exists, and is backed by a shared cert provisioned by us, which includes the domain as an [SAN](https://support.dnsimple.com/articles/what-is-ssl-san/).
 | `cutover-ongoing` | Domain is now associated with the shared CDN, by virtue of us having run `associate-alias` to manually transfer it. The legacy CDN still exists but has no aliases.
 | `shared-final` | Domain is associated with shared CDN. The legacy CDN, if this was a migration, has been torn down (otherwise, it never existed). This will be the eventual final state for all domains. |
 
