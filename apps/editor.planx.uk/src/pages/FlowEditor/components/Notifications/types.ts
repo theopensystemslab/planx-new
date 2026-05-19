@@ -11,6 +11,10 @@ export interface Notification {
   type: string;
   createdAt: string; // timestamp
   resolvedAt: string | null; // nullable timestamp
+  resolvedByUser: {
+    firstName: string;
+    lastName: string;
+  } | null;
 }
 
 export interface NotificationProps {

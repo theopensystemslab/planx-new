@@ -1,6 +1,6 @@
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import { styled, SxProps, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { formatLastEditDate } from "pages/FlowEditor/utils";
@@ -91,7 +91,7 @@ const NotificationCardItem = ({
           sx={{
             display: "flex",
             alignItems: "center",
-            gap: 1,
+            gap: 0.75,
             flexWrap: "wrap",
           }}
         >
@@ -117,15 +117,40 @@ const NotificationCardItem = ({
         >
           {notification.flow.name}
         </Typography>
-        {!statusLabel && (
-          <Button
-            variant="contained"
-            size="small"
-            color="secondary"
-            sx={{ fontSize: "0.875rem", width: "fit-content", mt: 0.25 }}
+        {statusLabel === "Resolved" ? (
+          <Typography
+            variant={compact ? "body3" : "body2"}
+            sx={{ color: "text.secondary" }}
           >
-            Review and publish
-          </Button>
+            {notification.resolvedByUser ? (
+              <>
+                {"Published by "}
+                <Box
+                  component="span"
+                  sx={{
+                    color: "text.primary",
+                    fontWeight: FONT_WEIGHT_SEMI_BOLD,
+                  }}
+                >
+                  {`${notification.resolvedByUser.firstName} ${notification.resolvedByUser.lastName}`}
+                </Box>
+              </>
+            ) : (
+              "Published"
+            )}
+            {notification.resolvedAt &&
+              `, ${formatLastEditDate(notification.resolvedAt)}`}
+          </Typography>
+        ) : (
+          <Box sx={{ display: "flex", alignItems: "center", gap: 0.25 }}>
+            <Typography
+              variant={compact ? "body3" : "body2"}
+              sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+            >
+              Review and publish
+            </Typography>
+            <ArrowForwardIcon fontSize="small" />
+          </Box>
         )}
       </Box>
     </Box>
