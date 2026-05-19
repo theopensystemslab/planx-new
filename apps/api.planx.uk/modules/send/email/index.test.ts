@@ -31,6 +31,12 @@ vi.mock("../utils/exportZip", () => {
   };
 });
 
+vi.mock("../../../lib/resend/index.js", () => ({
+  sendEmail: vi
+    .fn()
+    .mockResolvedValue({ message: "submit email sent successfully" }),
+}));
+
 describe(`sending an application by email to a planning office`, () => {
   beforeEach(() => {
     queryMock.mockQuery({
