@@ -8,7 +8,7 @@
     "jsdom": "^28.1.0",
     "pg": "^8.19.0",
     "sharedb": "^5.2.2",
-    "ws": "^8.19.0"
+    "ws": "^8.20.1"
   },
   "scripts": {
     "dev": "node-dev server.js",
