@@ -12,7 +12,11 @@ interface UpdateNotifications {
 }
 
 // Currently only initiated via a Hasura event, so we don't have user context here and rely on $api client
-export const resolveNotification = async (flowId: string, type: string) => {
+export const resolveNotification = async (
+  flowId: string,
+  type: string,
+  resolvedBy?: number,
+) => {
   // If many unresolved notifications of the same "type" exist for this flow, resolve them all
   //   If no notifications match these conditions, it'll simply return [] and still "succeed"
   const resolveNotificationResponse =
@@ -22,6 +26,7 @@ export const resolveNotification = async (flowId: string, type: string) => {
           $flowId: uuid!
           $type: notification_type_enum_enum!
           $resolvedAt: timestamp!
+          $resolvedBy: Int
         ) {
           notifications: update_notifications_many(
             updates: {
@@ -30,7 +35,7 @@ export const resolveNotification = async (flowId: string, type: string) => {
                 type: { _eq: $type }
                 resolved_at: { _is_null: true }
               }
-              _set: { resolved_at: $resolvedAt }
+              _set: { resolved_at: $resolvedAt, resolved_by: $resolvedBy }
             }
           ) {
             returning {
@@ -43,6 +48,7 @@ export const resolveNotification = async (flowId: string, type: string) => {
         flowId: flowId,
         type: type,
         resolvedAt: new Date(),
+        resolvedBy: resolvedBy,
       },
     );
 
