@@ -107,15 +107,3 @@ export const createDestinationSgEgressRule = (
     });
   }
 }
-
-// get domains still served by their own dedicated CloudFront distribution + imported cert
-export const getLegacyDomains = (customDomains: CustomDomain[]) =>
-  customDomains.filter(cd => cd.cloudFrontState === "single-plus-validation" || cd.cloudFrontState === "single-plus-shared");
-
-// get domains with DNS validation pending — added to 'mining' cert to surface records to send to council
-export const getPendingDomains = (customDomains: CustomDomain[]) =>
-  customDomains.filter(cd => cd.cloudFrontState === "validation-only" || cd.cloudFrontState === "single-plus-validation");
-
-// get domains validated and ready to be served by the shared CloudFront distribution + in-house cert
-export const getValidatedDomains = (customDomains: CustomDomain[]) =>
-  customDomains.filter(cd => cd.cloudFrontState === "single-plus-shared" || cd.cloudFrontState === "shared-only");
