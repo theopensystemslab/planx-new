@@ -56,6 +56,6 @@ describe("checking several points against local planning authority lookup API", 
             ),
           ).toEqual(location.lpas);
         });
-    });
+    }, 20_000); // 20s request timeout
   });
 });
