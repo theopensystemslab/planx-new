@@ -32,7 +32,7 @@ export const flattenFlowDataController: FlattenFlowDataController = async (
     const { flowId } = res.locals.parsedReq.params;
 
     if (req.query?.draft?.toString().toLowerCase() === "true") {
-      const draftFlattenedFlowData = await dataMerged(flowId, {}, false, true);
+      const draftFlattenedFlowData = await dataMerged(flowId, false, true);
       res.status(200).send(draftFlattenedFlowData);
     } else {
       const flattenedFlowData = await dataMerged(flowId);

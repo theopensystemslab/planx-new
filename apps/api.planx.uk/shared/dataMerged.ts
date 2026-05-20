@@ -4,6 +4,9 @@ import { ComponentType } from "@opensystemslab/planx-core/types";
 import { getFlowData, getMostRecentPublishedFlowVersion } from "../helpers.js";
 import type { Node } from "../types.js";
 
+type Stack = Array<{ flowId: string; isPortal: boolean }>;
+type MergedGraph = { [key: string]: Node }; // *not* `FlowGraph` because we can't guarantee `_root` node while merge-in-progress
+
 /**
  * Flatten flows to create a single JSON representation of the main flow data and any external portals
  *   By default, requires that any external portals are published and flattens their latest published version
@@ -11,62 +14,59 @@ import type { Node } from "../types.js";
  */
 export const dataMerged = async (
   flowId: string,
-  ob: { [key: string]: Node } = {},
   isPortal = false,
   draftDataOnly = false,
 ): Promise<FlowGraph> => {
-  const stack: Array<{ flowId: string; isPortal: boolean }> = [
-    { flowId, isPortal },
-  ];
-  const merged = new Set<string>();
+  const stack: Stack = [{ flowId, isPortal }];
+  const mergedFlowIds = new Set<string>();
 
-  if (stack.length > 0) {
-    ob = await fetchAndMergeStack(ob, draftDataOnly, stack, merged);
-  }
+  let mergedGraph: MergedGraph = {};
+  mergedGraph = await fetchAndMergeStack(
+    mergedGraph,
+    draftDataOnly,
+    stack,
+    mergedFlowIds,
+  );
 
   // For every external portal that has been merged, confirm its' latest version was merged
   //   If not, overwrite stale snapshot with newest version
   //   ** This requires a second/separate stack loop because stale snapshots can be nested in _already_ flattened data (eg not picked up as ComponentType.ExternalPortal above)
   if (!draftDataOnly) {
-    for (const [nodeId, node] of Object.entries(ob).filter(
+    for (const [nodeId, node] of Object.entries(mergedGraph).filter(
       ([_nodeId, node]) => node.data?.publishedFlowId,
     )) {
       const mostRecentPublishedFlowId =
         await getMostRecentPublishedFlowVersion(nodeId);
       if (mostRecentPublishedFlowId !== node.data?.publishedFlowId) {
-        const staleStack: Array<{ flowId: string; isPortal: boolean }> = [
-          { flowId: nodeId, isPortal: true },
-        ];
-        const staleMerged = new Set<string>();
+        const staleStack: Stack = [{ flowId: nodeId, isPortal: true }];
+        const staleMergedFlowIds = new Set<string>();
 
-        if (staleStack.length > 0) {
-          ob = await fetchAndMergeStack(
-            ob,
-            draftDataOnly,
-            staleStack,
-            staleMerged,
-          );
-        }
+        mergedGraph = await fetchAndMergeStack(
+          mergedGraph,
+          draftDataOnly,
+          staleStack,
+          staleMergedFlowIds,
+        );
       }
     }
   }
 
-  return ob as FlowGraph;
+  return mergedGraph as FlowGraph;
 };
 
 const fetchAndMergeStack = async (
-  ob: { [key: string]: Node } = {},
+  mergedGraph: MergedGraph = {},
   draftDataOnly = false,
-  stack: Array<{ flowId: string; isPortal: boolean }>,
-  merged: Set<string>,
-): Promise<{ [key: string]: Node }> => {
+  stack: Stack,
+  mergedFlowIds: Set<string>,
+): Promise<MergedGraph> => {
   while (stack.length > 0) {
     // Traverse portals depth-first by using `pop`
     const { flowId, isPortal: currentFlowIdIsPortal } = stack.pop()!;
 
     // Prevent re-fetching flows we've already merged
-    if (merged.has(flowId)) continue;
-    merged.add(flowId);
+    if (mergedFlowIds.has(flowId)) continue;
+    mergedFlowIds.add(flowId);
 
     // Fetch draft flow data, including its' latest published version
     const response = await getFlowData(flowId);
@@ -87,13 +87,13 @@ const fetchAndMergeStack = async (
     // Fetch portals/nested flows
     for (const [nodeId, node] of Object.entries(data)) {
       const isExternalPortalRoot =
-        nodeId === "_root" && Object.keys(ob).length > 0;
+        nodeId === "_root" && Object.keys(mergedGraph).length > 0;
       const isExternalPortal = node.type === ComponentType.ExternalPortal;
-      const isMerged = ob[node.data?.flowId];
+      const isMerged = mergedGraph[node.data?.flowId];
 
       if (isExternalPortalRoot) {
         // Merge external portal's `_root` node as a new internal node type in the graph using its' flowId as nodeId
-        ob[flowId] = {
+        mergedGraph[flowId] = {
           ...node, // includes `edges` in order to navigate to all child nodes
           type: ComponentType.InternalPortal,
           data: {
@@ -111,7 +111,7 @@ const fetchAndMergeStack = async (
         };
       } else if (isExternalPortal) {
         // Merge external portal type node as an internal portal type node, with a single edge pointing to flowId (to navigate to the externalPortalRoot set above)
-        ob[nodeId] = {
+        mergedGraph[nodeId] = {
           type: ComponentType.InternalPortal,
           edges: [node.data?.flowId],
           data: {
@@ -125,10 +125,10 @@ const fetchAndMergeStack = async (
         }
       } else {
         // Merge all non-portal nodes
-        ob[nodeId] = node;
+        mergedGraph[nodeId] = node;
       }
     }
   }
 
-  return ob;
+  return mergedGraph;
 };

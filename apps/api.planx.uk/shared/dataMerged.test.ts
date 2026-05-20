@@ -153,7 +153,7 @@ describe("dataMerged() function", () => {
       },
     });
 
-    const result = await dataMerged("parent-flow", {}, false, true);
+    const result = await dataMerged("parent-flow", false, true);
     expect(result).toEqual(flattenedParentFlowDraftOnly);
   });
 
