@@ -3,12 +3,18 @@ import { expect, Locator, Page } from "@playwright/test";
 import { OptionWithDataValues } from "./types.js";
 import { selectedFlag } from "./globalHelpers.js";
 
+export type TemplateNodeConfig = {
+  instructions: string;
+  required: boolean;
+};
+
 const createBaseComponent = async (
   page: Page,
   locatingNode: Locator,
   type: ComponentType,
   title?: string,
   options?: string[],
+  templateConfig?: TemplateNodeConfig,
 ) => {
   await locatingNode.click();
   await page.getByRole("dialog").waitFor();
@@ -158,7 +164,7 @@ const createBaseComponent = async (
     case ComponentType.Feedback:
       break;
     case ComponentType.InternalPortal:
-      await page.getByPlaceholder("Portal name").fill(title || "");
+      await page.getByPlaceholder("Enter a folder name").fill(title || "");
       break;
     case ComponentType.ExternalPortal:
       page.getByTestId("flowId").click();
@@ -176,8 +182,36 @@ const createBaseComponent = async (
       throw new Error(`Unsupported type: ${type}`);
   }
 
+  if (templateConfig) {
+    await page.getByLabel("Allow edits").click({ force: true });
+    await page
+      .locator("#templatedNodeInstructions")
+      .fill(templateConfig.instructions);
+    if (templateConfig.required) {
+      await page.getByLabel("Require edits").click({ force: true });
+    }
+  }
+
   await page.locator('button[form="modal"][type="submit"]').click();
   await page.getByRole("dialog").waitFor({ state: "detached" });
+};
+
+export const createTemplatedComponent = async (
+  page: Page,
+  locatingNode: Locator,
+  type: ComponentType,
+  title: string,
+  templateConfig: TemplateNodeConfig,
+  options?: string[],
+) => {
+  await createBaseComponent(
+    page,
+    locatingNode,
+    type,
+    title,
+    options,
+    templateConfig,
+  );
 };
 
 export const createQuestionWithOptions = async (

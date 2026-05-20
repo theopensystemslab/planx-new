@@ -9,6 +9,7 @@ export const resolveNotificationEventSchema = z.object({
     payload: z.object({
       flowId: z.string(),
       type: z.string(), // one of `notification_type_enum.value`
+      resolvedBy: z.number().optional(),
     }),
   }),
 });
@@ -25,10 +26,10 @@ export type ResolveNotificationController = ValidatedRequestHandler<
 
 export const resolveNotificationController: ResolveNotificationController =
   async (_req, res, next) => {
-    const { flowId, type } = res.locals.parsedReq.body.payload;
+    const { flowId, type, resolvedBy } = res.locals.parsedReq.body.payload;
 
     try {
-      const response = await resolveNotification(flowId, type);
+      const response = await resolveNotification(flowId, type, resolvedBy);
 
       res.status(200).send({
         message: `Successfully resolved ${type} notification(s) for flow ID ${flowId}`,

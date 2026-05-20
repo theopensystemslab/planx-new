@@ -154,6 +154,7 @@ export const publishFlow = async (
       payload: {
         flowId: flowId,
         type: "updated_templated_flow",
+        resolvedBy: parseInt(userId),
       },
       comment: `resolve_notification_on_templated_flow_publish_${flowId}`,
     });

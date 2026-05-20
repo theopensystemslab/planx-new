@@ -95,11 +95,15 @@ $fontMonospace: "Source Code Pro", monospace;
 
     a:focus,
     a:active {
+      // Apply focus outline
       outline: 4px solid $focus;
       outline-offset: 0;
-      // Make focussed link outline more visible
-      z-index: 1;
     }
+  }
+
+  // Ensure focus outline is visible above visited outline when both are applied
+  .card-wrapper:not(.template-card) a:focus {
+    position: relative;
   }
 
   ol:empty {

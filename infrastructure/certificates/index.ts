@@ -4,8 +4,7 @@ import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 import * as cloudflare from "@pulumi/cloudflare";
 
-import { getCustomDomains } from "../common/customDomains";
-import { getPendingDomains, getValidatedDomains } from "../common/utils";
+import { getCustomDomains, getPendingDomains, getValidatedDomains } from "../common/customDomains";
 
 const config = new pulumi.Config();
 const env = pulumi.getStack();
@@ -47,9 +46,9 @@ const caaRecordWildcard = new cloudflare.DnsRecord("caa-record-wildcard", {
 // Manually deployed in the certificates layer because these resources change only when councils are
 // on-boarded or migrated, i.e. do not need to be recreated with every deploy of application layer by CI
 
-const CUSTOM_DOMAINS = getCustomDomains(env);
-const pendingCustomDomains = getPendingDomains(CUSTOM_DOMAINS);
-const validatedCustomDomains = getValidatedDomains(CUSTOM_DOMAINS);
+const customDomains = getCustomDomains(env);
+const pendingCustomDomains = getPendingDomains(customDomains);
+const validatedCustomDomains = getValidatedDomains(customDomains);
 
 // 'Mining' certificate — surfaces DNS validation records for pending domains.
 // NOT attached to any CloudFront distribution. Its sole purpose is to request DNS validation
@@ -78,7 +77,12 @@ if (validatedCustomDomains.length > 0) {
       subjectAlternativeNames: validatedCustomDomains.slice(1).map(d => d.domain),
       validationMethod: "DNS",
     },
-    { provider: usEast1 }
+    { provider: usEast1,
+      // ensure cert is replaced but *not* deleted - that is, deletion will be delayed to the next deployment of this layer
+      // (immediate deletion would fail since cert is in use by a CloudFront distribution, pending deployment of application layer)
+      deleteBeforeReplace: false,
+      retainOnDelete: true,
+     }
   );
 
   const customDomainsCertValidation = new aws.acm.CertificateValidation(

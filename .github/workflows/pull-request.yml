@@ -310,7 +310,7 @@ jobs:
 
       - if: steps.create.outputs.ip_address != null
         name: Create commands
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1
         with:
           host: ${{ env.FULL_DOMAIN }}
           username: root
@@ -346,7 +346,7 @@ jobs:
 
       - if: steps.create.outputs.ip_address == null
         name: Update commands
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1
         with:
           host: ${{ env.FULL_DOMAIN }}
           username: root
@@ -390,7 +390,7 @@ jobs:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
           key: ${{ runner.os }}-${{ hashFiles(format('{0}/**', env.EDITOR_DIRECTORY)) }}
       - name: upload built editor
-        uses: appleboy/scp-action@master
+        uses: appleboy/scp-action@v1
         with:
           host: ${{ env.FULL_DOMAIN }}
           username: root
@@ -411,7 +411,7 @@ jobs:
 
       - name: upload built localplanning.services
         continue-on-error: true
-        uses: appleboy/scp-action@master
+        uses: appleboy/scp-action@v1
         with:
           host: ${{ env.FULL_DOMAIN }}
           username: root

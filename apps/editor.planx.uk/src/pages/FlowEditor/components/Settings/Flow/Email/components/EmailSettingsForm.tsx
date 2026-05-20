@@ -28,7 +28,7 @@ const EmailSettingsForm: React.FC = () => {
       mutation={UPDATE_FLOW_EMAIL_TEMPLATE}
       validationSchema={validationSchema}
       legend="Email template"
-      description="Choose an email template for communicating with users of this service. Use 'Application' for statutory or apply-for services and 'General' for discretionary services."
+      description="Choose an email template to communicate with users of this service. We use GOV.UK Notify to send these."
       defaultValues={defaultValues}
       getInitialValues={({ flow }) => ({
         emailTemplate: flow.email_template,
@@ -51,7 +51,7 @@ const EmailSettingsForm: React.FC = () => {
             data={{
               text: "Application",
               description:
-                "Uses 'application' language, suitable for statutory planning services",
+                "Best for statutory planning applications and pre-application advice services. Uses planning and application specific language.",
             }}
             onChange={(e) =>
               formik.setFieldValue("emailTemplate", e.target.value)
@@ -61,9 +61,9 @@ const EmailSettingsForm: React.FC = () => {
           />
           <DescriptionRadio
             data={{
-              text: "General",
+              text: "Submission",
               description:
-                "Uses 'submission' language, suitable for discretionary services",
+                "Best for other services such as submissions of notices, reports and requests. Uses neutral submission language.",
             }}
             onChange={(e) =>
               formik.setFieldValue("emailTemplate", e.target.value)

@@ -12,6 +12,7 @@ const makeNotification = (
   type: "updated_templated_flow",
   createdAt: "2024-01-01T00:00:00Z",
   resolvedAt: null,
+  resolvedByUser: null,
   ...overrides,
 });
 
