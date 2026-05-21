@@ -28,7 +28,7 @@ const Header = styled(Box)({
   justifyContent: "space-between",
 });
 
-const WidgetLink = styled(CustomLink)(({ theme }) => ({
+export const WidgetLink = styled(CustomLink)(({ theme }) => ({
   fontSize: theme.typography.body3.fontSize,
   color: theme.palette.text.secondary,
   "&:hover": {
