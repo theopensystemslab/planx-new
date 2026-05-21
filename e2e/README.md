@@ -25,6 +25,11 @@ Run `pnpm test` to run the full end-to-end suite.
 
 Running tests requires a clean DB which can be set up with `../scripts/start-containers-for-tests.sh`
 
+This script also builds the editor automatically (skipping the build if nothing has changed). If you make changes to `apps/editor.planx.uk` after the containers are already running, you must re-build the editor, with one of:
+- `cd apps/editor.planx.uk && pnpm build` - if just the editor code has changed
+- `e2e/tests/ui-driven/build-editor.sh` - if the editor code and dependencies have changed
+- `pnpm tests` (from root) - if other containers also need to be restarted
+
 ## Debugging
 
 run `DEBUG_LOG=true pnpm test` to run with debug logging (useful for setup and teardown issues)
