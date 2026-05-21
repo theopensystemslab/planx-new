@@ -59,6 +59,7 @@ export const MembersTable = ({
   showAddMemberButton,
   showEditMemberButton,
   showRemoveMemberButton,
+  showTeamAdminSwitch,
 }: MembersTableProps) => {
   const [modal, setModal] = useState<ModalState>({ action: "closed" });
 
@@ -90,7 +91,7 @@ export const MembersTable = ({
             </TableBody>
           )}
         </Table>
-        {modal.action !== "closed" && <AddUserModal onClose={closeModal} />}
+        {modal.action !== "closed" && <AddUserModal onClose={closeModal} showTeamAdminSwitch={showTeamAdminSwitch}/>}
       </>
     );
   }
