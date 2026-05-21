@@ -19,6 +19,7 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
   member,
 }) => {
   const toast = useToast();
+  const teamId = useStore((state) => state.teamId);
 
   const handleCompleted = (successMessage: string) => {
     onClose();
