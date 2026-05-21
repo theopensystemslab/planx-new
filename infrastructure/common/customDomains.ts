@@ -112,7 +112,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "test-legacy",
           domain: "planningserviceslegacy.planx.in",
-          cloudFrontState: "cutover-init",
+          cloudFrontState: "shared-final",
         },
         {
           name: "test-new",
@@ -123,7 +123,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
 
 // get domains for which we maintain a dedicated per-domain CloudFront distribution + imported cert
 export const getLegacyDomains = (customDomains: CustomDomain[]) =>
-  customDomains.filter(cd => ["legacy-with-validation", "cutover-init", "cutover-ongoing"].includes(cd.cloudFrontState));
+  customDomains.filter(cd => ["legacy-with-validation", "cutover-ongoing"].includes(cd.cloudFrontState));
 
 // get domains to be added to 'mining' cert (which surfaces DNS validation records to send to council)
 export const getPendingDomains = (customDomains: CustomDomain[]) =>
@@ -131,4 +131,4 @@ export const getPendingDomains = (customDomains: CustomDomain[]) =>
 
 // get domains ready for DNS validation, for which we maintain a shared CDN + in-house cert
 export const getValidatedDomains = (customDomains: CustomDomain[]) =>
-  customDomains.filter(cd => ["cutover-init", "cutover-ongoing", "shared-final"].includes(cd.cloudFrontState));
+  customDomains.filter(cd => ["cutover-ongoing", "shared-final"].includes(cd.cloudFrontState));

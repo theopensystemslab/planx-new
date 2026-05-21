@@ -322,7 +322,7 @@ export = async () => {
       comment: `OAI for ${domain} CloudFront distribution`,
     });
 
-    // only include domains for which we have not yet moved alias to shared CDN by method of associate-alias (deploy would fail o/w)
+    // only include domains for which we have not yet moved alias to shared CDN via AWS CLI (deploy would fail o/w)
     const domains = cloudFrontState !== "cutover-ongoing" ? [domain] : [];
     const cdn = createCdn({
       cdnName: domain,
@@ -342,6 +342,7 @@ export = async () => {
   // ------------------- Single shared custom domain CDN (multi-tenant)
   // Here we only create the CloudFront distribution, consuming the validated cert ARN
   let customDomainsCdnDomainName: pulumi.Output<string> | undefined;
+  let customDomainsDistributionId: pulumi.Output<string> | undefined;
 
   const customDomainsCertArn = certificates.getOutput("customDomainsCertArn") as pulumi.Output<string | undefined>;
 
@@ -350,9 +351,9 @@ export = async () => {
       comment: "OAI for shared custom domain CloudFront distribution",
     });
 
-    // only include domains that have already been moved to shared CDN by method of associate-alias (deploy would fail o/w)
+    // only include domains that have already been moved to shared CDN via AWS CLI (deploy would fail o/w)
     const domains = validatedCustomDomains.reduce(
-      (acc, d) => d.cloudFrontState !== "cutover-init" ? [...acc, d.domain] : acc,
+      (acc, d) => d.cloudFrontState !== "cutover-ongoing" ? [...acc, d.domain] : acc,
       [] as string[],
     )
     const customDomainsCdn = createCdn({
@@ -369,6 +370,7 @@ export = async () => {
     });
 
     customDomainsCdnDomainName = customDomainsCdn.domainName;
+    customDomainsDistributionId = customDomainsCdn.id;
   }
 
   // domains served by CloudFront distributions (i.e. not already covered by serviceSslCert above)
@@ -421,7 +423,7 @@ export = async () => {
     comment: `OAI for ${DOMAIN} CloudFront distribution`,
   });
 
-  const cdn = createCdn({
+  const editorCdn = createCdn({
     cdnName: DOMAIN,
     domains: [DOMAIN],
     acmCertificateArn: editorSslCert.arn,
@@ -435,7 +437,7 @@ export = async () => {
     name: tldjs.getSubdomain(DOMAIN) || "@",
     type: "CNAME",
     zoneId: config.requireSecret("cloudflare-zone-id"),
-    content: cdn.domainName,
+    content: editorCdn.domainName,
     ttl: 1,
     proxied: false, // This was causing infinite HTTPS redirects, so let's just use CloudFront only
   });
@@ -445,13 +447,14 @@ export = async () => {
 
   return {
     legacyDistributions,
-    editorDistributionId: cdn.id,
+    editorDistributionId: editorCdn.id,
     metabaseServiceName: metabaseService.service.name,
     hasuraServiceName: hasuraService.service.name,
     apiServiceName: apiService.service.name,
     sharedbServiceName: sharedbService.service.name,
-    // shared CDN domain name — councils should CNAME their domain to this value (at the appropriate time)
-    ...(customDomainsCdnDomainName && { customDomainsCdnDomainName }),
+    // we export the shared CDN domain name, which councils should CNAME their domain to (at the appropriate time)
+    // we also export the distribution ID for confident transfer of alias between distributions
+    ...(customDomainsCdnDomainName && { customDomainsCdnDomainName, customDomainsDistributionId }),
   };
 };
 

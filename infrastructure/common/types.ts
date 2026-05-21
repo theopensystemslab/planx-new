@@ -21,16 +21,15 @@ export interface Team {
  * Describes which AWS ACM + CloudFront infrastructure serves a custom domain.
  *
  * On-boarding path for new councils: validation-only → shared-final
- * Migration path for existing councils: legacy-with-validation → cutover-init -> cutover-ongoing → shared-final
+ * Migration path for existing councils: legacy-with-validation → cutover-ongoing → shared-final
  * 
  * See doc/how-to/how-to-setup-custom-domains.md for more detail.
  */
 export type CloudFrontState =
   | "validation-only"           // no CDN yet; mining cert surfaces DNS validation records
   | "legacy-with-validation"    // legacy per-domain CDN running; mining cert surfaces validation records
-  | "cutover-init"              // initialise migration: shared CDN spun up if needed; alias still on legacy CDN
-  | "cutover-ongoing"           // mid-migration: alias transferred to shared CDN; legacy CDN still running
-  | "shared-final";             // shared CDN only; legacy CDN torn down (if it exists)
+  | "cutover-ongoing"           // migrating: shared CDN spun up if needed; alias to be transferred from legacy to shared CDN
+  | "shared-final";             // shared CDN only; legacy CDN torn down (if it existed)
 
 export interface CustomDomain {
   name: string,
