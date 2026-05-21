@@ -1,5 +1,4 @@
 import { gql, useSubscription } from "@apollo/client";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 const GET_UNRESOLVED_NOTIFICATIONS = gql`
@@ -22,7 +21,7 @@ export const useNotificationsCount = (): number => {
 
   const { data } = useSubscription<QueryResult>(GET_UNRESOLVED_NOTIFICATIONS, {
     variables: { teamId },
-    skip: !teamId || !hasFeatureFlag("NOTIFICATIONS"),
+    skip: !teamId,
   });
 
   return data?.notifications?.length ?? 0;

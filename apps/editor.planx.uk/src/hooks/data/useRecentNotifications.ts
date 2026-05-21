@@ -1,5 +1,4 @@
 import { gql, useSubscription } from "@apollo/client";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { Notification } from "pages/FlowEditor/components/Notifications/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
@@ -56,7 +55,7 @@ export const useRecentNotifications = (): {
   resolved: Notification[];
 } => {
   const teamId = useStore((state) => state.teamId);
-  const skip = !teamId || !hasFeatureFlag("NOTIFICATIONS");
+  const skip = !teamId;
 
   const { data: activeData } = useSubscription<{ active: Notification[] }>(
     GET_ACTIVE_NOTIFICATIONS,
