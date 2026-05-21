@@ -1,13 +1,35 @@
+import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import React from "react";
+import { DashboardWidget } from "ui/editor/DashboardWidget";
 
 export default function Explore() {
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" sx={{ py: 4 }}>
       <Typography variant="h2" component="h1" gutterBottom>
         Explore
       </Typography>
+      <Box
+        sx={(theme) => ({
+          display: "grid",
+          gap: theme.spacing(2),
+          gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
+        })}
+      >
+        <DashboardWidget title="Templates" linkText="view all templates">
+          <i>templates content</i>
+        </DashboardWidget>
+        <DashboardWidget title="What's happening">
+          <i>news content</i>
+        </DashboardWidget>
+        <DashboardWidget title="Help and resources">
+          <i>resources content</i>
+        </DashboardWidget>
+        <DashboardWidget title="Available content">
+          <i>available content</i>
+        </DashboardWidget>
+      </Box>
     </Container>
   );
 }
