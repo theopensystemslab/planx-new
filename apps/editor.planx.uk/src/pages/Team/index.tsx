@@ -65,7 +65,7 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
     FlowSummary[] | null
   >(null);
   const [shouldClearSearch, setShouldClearSearch] = useState<boolean>(false);
-  const searchParams = useSearch({ from: "/_authenticated/app/$team/flows" });
+  const searchParams = useSearch({ from: "/_authenticated/app/$team/" });
 
   const sortedFlows = useMemo(() => {
     // Use searchedFlows if available (from SearchBox), otherwise use all flows
