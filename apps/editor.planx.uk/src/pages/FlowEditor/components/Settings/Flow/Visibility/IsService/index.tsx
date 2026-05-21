@@ -9,10 +9,7 @@ import React, { useState } from "react";
 import { FONT_WEIGHT_BOLD } from "theme";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
-import {
-  GET_IS_SERVICE,
-  UPDATE_IS_SERVICE,
-} from "./queries";
+import { GET_IS_SERVICE, UPDATE_IS_SERVICE } from "./queries";
 import { validationSchema } from "./schema";
 import type {
   GetIsServiceResponse,
@@ -42,7 +39,7 @@ const IsService: React.FC = () => {
       queryVariables={{ flowId }}
       getMutationVariables={(values) => ({ flowId, ...values })}
       showActionButtons={false}
-      defaultValues={{isService: false}}
+      defaultValues={{ isService: false }}
     >
       {({ formik, data }) => {
         const isTrial = data?.flow.team.settings.isTrial;
@@ -62,21 +59,23 @@ const IsService: React.FC = () => {
                 variant="body1"
                 sx={{ fontWeight: FONT_WEIGHT_BOLD, mr: 1, mb: 2 }}
               >
-                {formik.values.isService === true ? "This is a service" : "This is currently a flow"}
+                {formik.values.isService === true
+                  ? "This is a service"
+                  : "This is currently a flow"}
               </Typography>
-              {formik.values.isService === true ? 
-                <Typography
-                  variant="body2"
-                >
-                  If this flow has been made a service in error, please contact an admin to revert it to a flow.
-                </Typography> :
-                <Typography
-                  variant="body1"
-                  >
-                  A flow is content that will be nested in other services, and cannot directly accept responses.
+              {formik.values.isService === true ? (
+                <Typography variant="body2">
+                  If this flow has been made a service in error, please contact
+                  an admin to revert it to a flow.
                 </Typography>
-              }
+              ) : (
+                <Typography variant="body1">
+                  A flow is content that will be nested in other services, and
+                  cannot directly accept responses.
+                </Typography>
+              )}
             </Box>
+            {formik.values.isService === false && (
               <Box sx={{ display: "flex" }}>
                 <Button
                   id="set-is-service-button"
@@ -89,23 +88,23 @@ const IsService: React.FC = () => {
                   {"Make this a user-facing service"}
                 </Button>
               </Box>
-              <ConfirmationDialog
-                open={dialogOpen}
-                onClose={async () => {
-                    setDialogOpen(false);
-                    await formik.setFieldValue(
-                      "isService",
-                      !formik.values.isService,
-                    );
-                    await formik.submitForm();
-                }
-                }
-                title="Confirm change to service"
-                confirmText={"Set to service"}
-                cancelText="Cancel"
-              >
-                Are you sure you want to set this flow as a user-facing service?
-              </ConfirmationDialog>
+            )}
+            <ConfirmationDialog
+              open={dialogOpen}
+              onClose={async () => {
+                setDialogOpen(false);
+                await formik.setFieldValue(
+                  "isService",
+                  !formik.values.isService,
+                );
+                await formik.submitForm();
+              }}
+              title="Confirm change to service"
+              confirmText={"Set to service"}
+              cancelText="Cancel"
+            >
+              Are you sure you want to set this flow as a user-facing service?
+            </ConfirmationDialog>
           </>
         );
       }}
