@@ -5,6 +5,7 @@ import React from "react";
 import { DashboardWidget } from "ui/editor/DashboardWidget";
 
 import { useStore } from "../../pages/FlowEditor/lib/store";
+import StatsBanner from "./components/StatsBanner";
 
 export default function Dashboard() {
   const team = useStore((state) => state.getTeam());
@@ -12,8 +13,9 @@ export default function Dashboard() {
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Typography variant="h2" component="h1" gutterBottom>
-        Dashboard
+        {team.name}
       </Typography>
+      <StatsBanner teamSlug={team.slug} />
       <Box
         sx={(theme) => ({
           display: "grid",
