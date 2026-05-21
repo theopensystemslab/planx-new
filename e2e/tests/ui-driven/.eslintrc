@@ -4,7 +4,7 @@
     "playwright/expect-expect": [
       "error",
       {
-        "additionalAssertFunctionNames": ["expectSections", "publishService", "turnServiceOnline"]
+        "additionalAssertFunctionNames": ["expectSections", "publishService", "turnServiceOnline", "makeFlowAService"]
       }
     ],
     "playwright/no-networkidle": "warn"

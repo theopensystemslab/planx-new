@@ -38,8 +38,18 @@ export const publishService = async (page: Page) => {
   ).toBeVisible();
 };
 
-export const turnServiceOnline = async (page: Page) => {
+export const navigateToFlowSettings = async (page: Page) => {
   await page.locator('[aria-label="Flow settings"]').click();
+};
+
+export const makeFlowAService = async (page: Page) => {
+  await page.getByText("Make this a user-facing service").click();
+  await page.getByText("Set to service").click();
+
+  await expect(page.getByText("Settings updated successfully")).toBeVisible();
+};
+
+export const turnServiceOnline = async (page: Page) => {
   await page.getByRole("tab", { name: "Visibility" }).click();
   await page.getByTestId("set-status-button").click();
 

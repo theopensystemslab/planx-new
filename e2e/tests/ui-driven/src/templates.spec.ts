@@ -7,7 +7,9 @@ import {
 } from "./helpers/context.js";
 import { getTeamPage } from "./helpers/getPage.js";
 import {
+  makeFlowAService,
   navigateToService,
+  navigateToFlowSettings,
   navigateToTeamPage,
   publishService,
   turnServiceOnline,
@@ -99,8 +101,8 @@ test.describe("Templates", () => {
       ).toBeVisible();
 
       // check "require edits" control and instructions are not initially visible
-      await expect(page.getByLabel("Require edits")).not.toBeVisible();
-      await expect(page.getByText("Instructions")).not.toBeVisible();
+      await expect(page.getByLabel("Require edits")).toBeHidden();
+      await expect(page.getByText("Instructions")).toBeHidden();
 
       // check "allow edits" control is visible then click it
       const allowEditsControl = page.getByLabel("Allow edits");
@@ -260,9 +262,20 @@ test.describe("Templates", () => {
         .click();
       await expect(
         page.getByRole("option", { name: SOURCE_TEMPLATE_NAME }),
-      ).not.toBeVisible();
+      ).toBeHidden();
 
       await page.keyboard.press("Escape");
+    });
+
+    test("can set the source template to be a Service", async ({ browser }) => {
+      const page = await getTeamPage({
+        browser,
+        userId: context.user!.id!,
+        teamName: context.team.name,
+      });
+      await navigateToService(page, SOURCE_TEMPLATE_SLUG);
+      await navigateToFlowSettings(page);
+      await makeFlowAService(page);
     });
 
     test("can set the source template online", async ({ browser }) => {
@@ -272,7 +285,7 @@ test.describe("Templates", () => {
         teamName: context.team.name,
       });
       await navigateToService(page, SOURCE_TEMPLATE_SLUG);
-
+      await navigateToFlowSettings(page);
       await turnServiceOnline(page);
     });
 
@@ -319,7 +332,7 @@ test.describe("Templates", () => {
       await page.getByRole("option", { name: "Source template" }).click();
 
       await expect(page.getByText(SOURCE_TEMPLATE_NAME)).toBeVisible();
-      await expect(page.getByText(REGULAR_FLOW_NAME)).not.toBeVisible();
+      await expect(page.getByText(REGULAR_FLOW_NAME)).toBeHidden();
     });
   });
 
@@ -400,7 +413,7 @@ test.describe("Templates", () => {
       // The source template should not appear in the filtered results
       await expect(
         page.getByText(SOURCE_TEMPLATE_NAME, { exact: true }),
-      ).not.toBeVisible();
+      ).toBeHidden();
     });
 
     test("non-templated node is read-only in the templated flow", async ({
@@ -447,7 +460,7 @@ test.describe("Templates", () => {
       await page.getByRole("dialog").waitFor();
       await expect(
         page.locator('button[form="modal"][type="submit"]'),
-      ).not.toBeDisabled();
+      ).toBeEnabled();
       await page.locator('button[aria-label="close"]').click();
       await page.getByRole("dialog").waitFor({ state: "detached" });
 
