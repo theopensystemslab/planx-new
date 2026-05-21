@@ -21,6 +21,12 @@ trap 'echo "Error detected! Saving logs..."; \
       echo "Logs saved to docker_compose_logs.txt"; \
       e2e_compose down --volumes --remove-orphans' ERR
 
+function buildEditor(){
+  echo "Building editor..."
+  bash e2e/tests/ui-driven/build-editor.sh
+  echo "Editor build complete."
+}
+
 function setupContainers(){
   # Bring down the dev environment containers
   # volumes are kept as they are a different docker project
@@ -44,4 +50,5 @@ function setupContainers(){
   echo "All containers ready."
 }
 
+buildEditor
 setupContainers
