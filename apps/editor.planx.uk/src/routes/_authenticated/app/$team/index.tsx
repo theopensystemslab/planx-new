@@ -1,6 +1,7 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import RouteLoadingIndicator from "components/RouteLoadingIndicator";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { startNewRecentFlowsJourney } from "pages/FlowEditor/components/RecentFlows/RecentFlowsContext";
 import Team from "pages/Team";
 import {
@@ -31,7 +32,15 @@ export const teamSearchSchema = z.object({
 export type TeamSearch = z.infer<typeof teamSearchSchema>;
 
 export const Route = createFileRoute("/_authenticated/app/$team/")({
-  beforeLoad: startNewRecentFlowsJourney,
+  beforeLoad: ({ params }) => {
+    if (hasFeatureFlag("DASHBOARD")) {
+      throw redirect({
+        to: "/app/$team/dashboard",
+        params: { team: params.team },
+      });
+    }
+    startNewRecentFlowsJourney();
+  },
   validateSearch: zodValidator(teamSearchSchema),
   pendingComponent: RouteLoadingIndicator,
   loader: async ({ context }) => {

@@ -1,6 +1,8 @@
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import CurrencyPoundIcon from "@mui/icons-material/CurrencyPound";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import ExploreIcon from "@mui/icons-material/Explore";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GroupIcon from "@mui/icons-material/Group";
@@ -132,12 +134,32 @@ function EditorNavMenu() {
     () => [
       {
         routes: [
+          ...(hasFeatureFlag("DASHBOARD")
+            ? [
+                {
+                  title: "Dashboard",
+                  Icon: DashboardIcon,
+                  route: `/app/${teamSlug}/dashboard`,
+                  accessibleBy: "*" as const,
+                },
+              ]
+            : []),
           {
             title: "Flows",
             Icon: EditorIcon,
             route: `/app/${teamSlug}`,
             accessibleBy: "*",
           },
+          ...(hasFeatureFlag("EXPLORE")
+            ? [
+                {
+                  title: "Explore",
+                  Icon: ExploreIcon,
+                  route: `/app/${teamSlug}/explore`,
+                  accessibleBy: "*" as const,
+                },
+              ]
+            : []),
         ],
       },
       {
