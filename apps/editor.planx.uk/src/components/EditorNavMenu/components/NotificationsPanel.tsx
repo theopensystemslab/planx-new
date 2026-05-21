@@ -127,7 +127,7 @@ const NotificationsPanel = ({
             size="small"
             title={
               tab === 0
-                ? "No active notifications"
+                ? "No notifications, you're all up to date"
                 : "No resolved notifications"
             }
             sx={{ mx: 2 }}

@@ -19,7 +19,7 @@ const NOTIFICATION_FIELDS = gql`
     type
     createdAt: created_at
     resolvedAt: resolved_at
-    resolvedBy: user {
+    resolvedByUser: user {
       firstName: first_name
       lastName: last_name
     }
