@@ -139,7 +139,7 @@ function EditorNavMenu() {
                 {
                   title: "Dashboard",
                   Icon: DashboardIcon,
-                  route: `/app/${teamSlug}/dashboard`,
+                  route: `/app/${teamSlug}`,
                   accessibleBy: "*" as const,
                 },
               ]
@@ -147,7 +147,7 @@ function EditorNavMenu() {
           {
             title: "Flows",
             Icon: EditorIcon,
-            route: `/app/${teamSlug}`,
+            route: `/app/${teamSlug}/flows`,
             accessibleBy: "*",
           },
           ...(hasFeatureFlag("EXPLORE")

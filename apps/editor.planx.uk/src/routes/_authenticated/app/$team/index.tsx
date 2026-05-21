@@ -1,67 +1,16 @@
-import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
-import { fallback, zodValidator } from "@tanstack/zod-adapter";
-import RouteLoadingIndicator from "components/RouteLoadingIndicator";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { hasFeatureFlag } from "lib/featureFlags";
-import { startNewRecentFlowsJourney } from "pages/FlowEditor/components/RecentFlows/RecentFlowsContext";
-import Team from "pages/Team";
-import {
-  GET_FLOWS,
-  GetAnyFlowsQuery,
-  GetAnyFlowsVars,
-} from "pages/Team/queries";
+import Dashboard from "pages/Dashboard";
 import React from "react";
-import { z } from "zod";
-
-import { client } from "../../../../lib/graphql";
-
-export const teamSearchSchema = z.object({
-  sort: fallback(
-    z.enum(["last-edited", "last-published", "name"]),
-    "last-edited",
-  ).default("last-edited"),
-  sortDirection: fallback(z.enum(["asc", "desc"]), "desc").default("desc"),
-  search: z.string().optional(),
-  "online-status": z.enum(["online", "offline"]).optional(),
-  "flow-type": z
-    .enum(["submission", "fee carrying", "service charge enabled"])
-    .optional(),
-  templates: z.enum(["templated", "source template"]).optional(),
-  "lps-listing": z.enum(["listed", "not listed"]).optional(),
-});
-
-export type TeamSearch = z.infer<typeof teamSearchSchema>;
 
 export const Route = createFileRoute("/_authenticated/app/$team/")({
   beforeLoad: ({ params }) => {
-    if (hasFeatureFlag("DASHBOARD")) {
+    if (!hasFeatureFlag("DASHBOARD")) {
       throw redirect({
-        to: "/app/$team/dashboard",
+        to: "/app/$team/flows",
         params: { team: params.team },
       });
     }
-    startNewRecentFlowsJourney();
   },
-  validateSearch: zodValidator(teamSearchSchema),
-  pendingComponent: RouteLoadingIndicator,
-  loader: async ({ context }) => {
-    const { team } = context;
-
-    try {
-      const result = await client.query<GetAnyFlowsQuery, GetAnyFlowsVars>({
-        query: GET_FLOWS,
-        variables: { teamId: team.id },
-        fetchPolicy: "network-only",
-      });
-
-      return { team, flows: result.data.flows };
-    } catch (error) {
-      throw notFound();
-    }
-  },
-  component: TeamComponent,
+  component: Dashboard,
 });
-
-function TeamComponent() {
-  const { flows, team } = Route.useLoaderData();
-  return <Team key={team.id} flows={flows} />;
-}

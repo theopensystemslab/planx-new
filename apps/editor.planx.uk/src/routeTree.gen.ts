@@ -35,10 +35,10 @@ import { Route as AuthenticatedAppTeamResourcesRouteImport } from './routes/_aut
 import { Route as AuthenticatedAppTeamOnboardingRouteImport } from './routes/_authenticated/app/$team/onboarding'
 import { Route as AuthenticatedAppTeamNotificationsRouteImport } from './routes/_authenticated/app/$team/notifications'
 import { Route as AuthenticatedAppTeamMembersRouteImport } from './routes/_authenticated/app/$team/members'
+import { Route as AuthenticatedAppTeamFlowsRouteImport } from './routes/_authenticated/app/$team/flows'
 import { Route as AuthenticatedAppTeamFeedbackRouteImport } from './routes/_authenticated/app/$team/feedback'
 import { Route as AuthenticatedAppTeamExploreRouteImport } from './routes/_authenticated/app/$team/explore'
 import { Route as AuthenticatedAppTeamDesignRouteImport } from './routes/_authenticated/app/$team/design'
-import { Route as AuthenticatedAppTeamDashboardRouteImport } from './routes/_authenticated/app/$team/dashboard'
 import { Route as PublicPlanXDomainTeamFlowRouteRouteImport } from './routes/_public/_planXDomain/$team/$flow/route'
 import { Route as PublicCustomDomainFlowPayRouteRouteImport } from './routes/_public/_customDomain/$flow/pay/route'
 import { Route as AuthenticatedAppTeamSettingsRouteRouteImport } from './routes/_authenticated/app/$team/settings/route'
@@ -249,6 +249,12 @@ const AuthenticatedAppTeamMembersRoute =
     path: '/members',
     getParentRoute: () => AuthenticatedAppTeamRouteRoute,
   } as any)
+const AuthenticatedAppTeamFlowsRoute =
+  AuthenticatedAppTeamFlowsRouteImport.update({
+    id: '/flows',
+    path: '/flows',
+    getParentRoute: () => AuthenticatedAppTeamRouteRoute,
+  } as any)
 const AuthenticatedAppTeamFeedbackRoute =
   AuthenticatedAppTeamFeedbackRouteImport.update({
     id: '/feedback',
@@ -265,12 +271,6 @@ const AuthenticatedAppTeamDesignRoute =
   AuthenticatedAppTeamDesignRouteImport.update({
     id: '/design',
     path: '/design',
-    getParentRoute: () => AuthenticatedAppTeamRouteRoute,
-  } as any)
-const AuthenticatedAppTeamDashboardRoute =
-  AuthenticatedAppTeamDashboardRouteImport.update({
-    id: '/dashboard',
-    path: '/dashboard',
     getParentRoute: () => AuthenticatedAppTeamRouteRoute,
   } as any)
 const PublicPlanXDomainTeamFlowRouteRoute =
@@ -678,10 +678,10 @@ export interface FileRoutesByFullPath {
   '/app/$team/settings': typeof AuthenticatedAppTeamSettingsRouteRouteWithChildren
   '/$flow/pay': typeof PublicCustomDomainFlowPayRouteRouteWithChildren
   '/$team/$flow': typeof PublicPlanXDomainTeamFlowRouteRouteWithChildren
-  '/app/$team/dashboard': typeof AuthenticatedAppTeamDashboardRoute
   '/app/$team/design': typeof AuthenticatedAppTeamDesignRoute
   '/app/$team/explore': typeof AuthenticatedAppTeamExploreRoute
   '/app/$team/feedback': typeof AuthenticatedAppTeamFeedbackRoute
+  '/app/$team/flows': typeof AuthenticatedAppTeamFlowsRoute
   '/app/$team/members': typeof AuthenticatedAppTeamMembersRoute
   '/app/$team/notifications': typeof AuthenticatedAppTeamNotificationsRoute
   '/app/$team/onboarding': typeof AuthenticatedAppTeamOnboardingRoute
@@ -764,10 +764,10 @@ export interface FileRoutesByTo {
   '/app/users': typeof AuthenticatedAppUsersRoute
   '/app': typeof AuthenticatedAppIndexRoute
   '/app/$team/$flow': typeof AuthenticatedAppTeamFlowFlowEditorIndexRoute
-  '/app/$team/dashboard': typeof AuthenticatedAppTeamDashboardRoute
   '/app/$team/design': typeof AuthenticatedAppTeamDesignRoute
   '/app/$team/explore': typeof AuthenticatedAppTeamExploreRoute
   '/app/$team/feedback': typeof AuthenticatedAppTeamFeedbackRoute
+  '/app/$team/flows': typeof AuthenticatedAppTeamFlowsRoute
   '/app/$team/members': typeof AuthenticatedAppTeamMembersRoute
   '/app/$team/notifications': typeof AuthenticatedAppTeamNotificationsRoute
   '/app/$team/onboarding': typeof AuthenticatedAppTeamOnboardingRoute
@@ -854,10 +854,10 @@ export interface FileRoutesById {
   '/_authenticated/app/$team/settings': typeof AuthenticatedAppTeamSettingsRouteRouteWithChildren
   '/_public/_customDomain/$flow/pay': typeof PublicCustomDomainFlowPayRouteRouteWithChildren
   '/_public/_planXDomain/$team/$flow': typeof PublicPlanXDomainTeamFlowRouteRouteWithChildren
-  '/_authenticated/app/$team/dashboard': typeof AuthenticatedAppTeamDashboardRoute
   '/_authenticated/app/$team/design': typeof AuthenticatedAppTeamDesignRoute
   '/_authenticated/app/$team/explore': typeof AuthenticatedAppTeamExploreRoute
   '/_authenticated/app/$team/feedback': typeof AuthenticatedAppTeamFeedbackRoute
+  '/_authenticated/app/$team/flows': typeof AuthenticatedAppTeamFlowsRoute
   '/_authenticated/app/$team/members': typeof AuthenticatedAppTeamMembersRoute
   '/_authenticated/app/$team/notifications': typeof AuthenticatedAppTeamNotificationsRoute
   '/_authenticated/app/$team/onboarding': typeof AuthenticatedAppTeamOnboardingRoute
@@ -950,10 +950,10 @@ export interface FileRouteTypes {
     | '/app/$team/settings'
     | '/$flow/pay'
     | '/$team/$flow'
-    | '/app/$team/dashboard'
     | '/app/$team/design'
     | '/app/$team/explore'
     | '/app/$team/feedback'
+    | '/app/$team/flows'
     | '/app/$team/members'
     | '/app/$team/notifications'
     | '/app/$team/onboarding'
@@ -1036,10 +1036,10 @@ export interface FileRouteTypes {
     | '/app/users'
     | '/app'
     | '/app/$team/$flow'
-    | '/app/$team/dashboard'
     | '/app/$team/design'
     | '/app/$team/explore'
     | '/app/$team/feedback'
+    | '/app/$team/flows'
     | '/app/$team/members'
     | '/app/$team/notifications'
     | '/app/$team/onboarding'
@@ -1125,10 +1125,10 @@ export interface FileRouteTypes {
     | '/_authenticated/app/$team/settings'
     | '/_public/_customDomain/$flow/pay'
     | '/_public/_planXDomain/$team/$flow'
-    | '/_authenticated/app/$team/dashboard'
     | '/_authenticated/app/$team/design'
     | '/_authenticated/app/$team/explore'
     | '/_authenticated/app/$team/feedback'
+    | '/_authenticated/app/$team/flows'
     | '/_authenticated/app/$team/members'
     | '/_authenticated/app/$team/notifications'
     | '/_authenticated/app/$team/onboarding'
@@ -1399,6 +1399,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppTeamMembersRouteImport
       parentRoute: typeof AuthenticatedAppTeamRouteRoute
     }
+    '/_authenticated/app/$team/flows': {
+      id: '/_authenticated/app/$team/flows'
+      path: '/flows'
+      fullPath: '/app/$team/flows'
+      preLoaderRoute: typeof AuthenticatedAppTeamFlowsRouteImport
+      parentRoute: typeof AuthenticatedAppTeamRouteRoute
+    }
     '/_authenticated/app/$team/feedback': {
       id: '/_authenticated/app/$team/feedback'
       path: '/feedback'
@@ -1418,13 +1425,6 @@ declare module '@tanstack/react-router' {
       path: '/design'
       fullPath: '/app/$team/design'
       preLoaderRoute: typeof AuthenticatedAppTeamDesignRouteImport
-      parentRoute: typeof AuthenticatedAppTeamRouteRoute
-    }
-    '/_authenticated/app/$team/dashboard': {
-      id: '/_authenticated/app/$team/dashboard'
-      path: '/dashboard'
-      fullPath: '/app/$team/dashboard'
-      preLoaderRoute: typeof AuthenticatedAppTeamDashboardRouteImport
       parentRoute: typeof AuthenticatedAppTeamRouteRoute
     }
     '/_public/_planXDomain/$team/$flow': {
@@ -2051,10 +2051,10 @@ const AuthenticatedAppTeamSettingsRouteRouteWithChildren =
 interface AuthenticatedAppTeamRouteRouteChildren {
   AuthenticatedAppTeamFlowRouteRoute: typeof AuthenticatedAppTeamFlowRouteRouteWithChildren
   AuthenticatedAppTeamSettingsRouteRoute: typeof AuthenticatedAppTeamSettingsRouteRouteWithChildren
-  AuthenticatedAppTeamDashboardRoute: typeof AuthenticatedAppTeamDashboardRoute
   AuthenticatedAppTeamDesignRoute: typeof AuthenticatedAppTeamDesignRoute
   AuthenticatedAppTeamExploreRoute: typeof AuthenticatedAppTeamExploreRoute
   AuthenticatedAppTeamFeedbackRoute: typeof AuthenticatedAppTeamFeedbackRoute
+  AuthenticatedAppTeamFlowsRoute: typeof AuthenticatedAppTeamFlowsRoute
   AuthenticatedAppTeamMembersRoute: typeof AuthenticatedAppTeamMembersRoute
   AuthenticatedAppTeamNotificationsRoute: typeof AuthenticatedAppTeamNotificationsRoute
   AuthenticatedAppTeamOnboardingRoute: typeof AuthenticatedAppTeamOnboardingRoute
@@ -2072,10 +2072,10 @@ const AuthenticatedAppTeamRouteRouteChildren: AuthenticatedAppTeamRouteRouteChil
       AuthenticatedAppTeamFlowRouteRouteWithChildren,
     AuthenticatedAppTeamSettingsRouteRoute:
       AuthenticatedAppTeamSettingsRouteRouteWithChildren,
-    AuthenticatedAppTeamDashboardRoute: AuthenticatedAppTeamDashboardRoute,
     AuthenticatedAppTeamDesignRoute: AuthenticatedAppTeamDesignRoute,
     AuthenticatedAppTeamExploreRoute: AuthenticatedAppTeamExploreRoute,
     AuthenticatedAppTeamFeedbackRoute: AuthenticatedAppTeamFeedbackRoute,
+    AuthenticatedAppTeamFlowsRoute: AuthenticatedAppTeamFlowsRoute,
     AuthenticatedAppTeamMembersRoute: AuthenticatedAppTeamMembersRoute,
     AuthenticatedAppTeamNotificationsRoute:
       AuthenticatedAppTeamNotificationsRoute,

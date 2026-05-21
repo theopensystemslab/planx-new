@@ -16,7 +16,7 @@ import {
 } from "utils/routeUtils/queryUtils";
 
 import { useStore } from "../../../../../pages/FlowEditor/lib/store";
-import { teamSearchSchema } from "..";
+import { teamSearchSchema } from "../flows";
 
 export const Route = createFileRoute("/_authenticated/app/$team/$flow")({
   pendingComponent: FlowSkeleton,
