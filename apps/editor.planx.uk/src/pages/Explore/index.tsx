@@ -4,7 +4,11 @@ import Typography from "@mui/material/Typography";
 import React from "react";
 import { DashboardWidget } from "ui/editor/DashboardWidget";
 
+import { useStore } from "../../pages/FlowEditor/lib/store";
+
 export default function Explore() {
+  const team = useStore((state) => state.getTeam());
+
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Typography variant="h2" component="h1" gutterBottom>
@@ -17,16 +21,25 @@ export default function Explore() {
           gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
         })}
       >
-        <DashboardWidget title="Templates" linkText="view all templates">
+        <DashboardWidget
+          title="Templates"
+          linkText="view all templates"
+          linkTarget={`/app/${team.slug}/flows?templates=source+template`}
+        >
           <i>templates content</i>
         </DashboardWidget>
-        <DashboardWidget title="What's happening">
-          <i>news content</i>
-        </DashboardWidget>
-        <DashboardWidget title="Help and resources">
+        <DashboardWidget
+          title="Help and resources"
+          linkText="view all help and resources"
+          linkTarget={`/app/${team.slug}/resources`}
+        >
           <i>resources content</i>
         </DashboardWidget>
-        <DashboardWidget title="Available content">
+        <DashboardWidget
+          title="Available content"
+          linkText="view analytics"
+          linkTarget={`/app/${team.slug}/analytics`}
+        >
           <i>available content</i>
         </DashboardWidget>
       </Box>
