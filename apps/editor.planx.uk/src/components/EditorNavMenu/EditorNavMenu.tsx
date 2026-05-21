@@ -7,7 +7,6 @@ import GroupIcon from "@mui/icons-material/Group";
 import LayersIcon from "@mui/icons-material/Layers";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
-import NorthEastIcon from "@mui/icons-material/NorthEast";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import SchoolIcon from "@mui/icons-material/School";
@@ -23,7 +22,6 @@ import {
 import AccountMenu from "components/AccountMenu";
 import { useFlowAnalyticsLink } from "hooks/analyticsLinks/useFlowAnalyticsLink";
 import { useTeamAnalyticsLink } from "hooks/analyticsLinks/useTeamAnalyticsLink";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useMemo, useRef, useState } from "react";
 import EditorIcon from "ui/icons/Editor";
@@ -388,9 +386,7 @@ function EditorNavMenu() {
             );
           })}
         </MenuWrap>
-        {isTeamRoute &&
-          hasFeatureFlag("NOTIFICATIONS") &&
-          (role === "platformAdmin" || role === "teamEditor") && (
+        {isTeamRoute && (role === "platformAdmin" || role === "teamEditor") && (
             <Box sx={(theme) => ({ padding: theme.spacing(0, 0.5, 1) })}>
               <Box ref={notificationsRef}>
                 <NavMenuItem
