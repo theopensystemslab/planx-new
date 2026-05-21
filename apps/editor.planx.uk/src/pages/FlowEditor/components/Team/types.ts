@@ -1,10 +1,10 @@
 import { Role, TeamRole, User } from "@opensystemslab/planx-core/types";
 
 export const ROLE_LABELS = {
-  platformAdmin: "Admin",
+  platformAdmin: "Platform admin",
   teamAdmin: "Team admin",
-  teamEditor: "Editor",
-  teamViewer: "Viewer",
+  teamEditor: "Team editor",
+  teamViewer: "Team viewer",
   public: "Public",
   analyst: "Analyst",
 } as const;
