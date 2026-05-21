@@ -1,10 +1,14 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { DashboardWidget } from "ui/editor/DashboardWidget";
 import React from "react";
+import { DashboardWidget } from "ui/editor/DashboardWidget";
+
+import { useStore } from "../../pages/FlowEditor/lib/store";
 
 export default function Dashboard() {
+  const team = useStore((state) => state.getTeam());
+
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Typography variant="h2" component="h1" gutterBottom>
@@ -19,28 +23,28 @@ export default function Dashboard() {
       >
         <DashboardWidget
           title="Flows"
-          linkTarget="/app/flows"
+          linkTarget={`/app/${team.slug}/flows`}
           linkText="view all flows"
         >
           <i>flows content</i>
         </DashboardWidget>
         <DashboardWidget
           title="Notifications"
-          linkTarget="/app/notifications"
+          linkTarget={`/app/${team.slug}/notifications`}
           linkText="view all notifications"
         >
           <i>notifications content</i>
         </DashboardWidget>
         <DashboardWidget
           title="Feedback"
-          linkTarget="/app/feedback"
+          linkTarget={`/app/${team.slug}/feedback`}
           linkText="view all feedback"
         >
           <i>feedback content</i>
         </DashboardWidget>
         <DashboardWidget
           title="Activity"
-          linkTarget="/app/activity"
+          linkTarget={`/app/${team.slug}/activity`}
           linkText="view analytics"
         >
           <i>activity content</i>

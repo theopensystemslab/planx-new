@@ -1,8 +1,8 @@
 import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
 import { styled, SxProps, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React from "react";
+import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 interface DashboardWidgetProps {
   title: string;
@@ -28,13 +28,13 @@ const Header = styled(Box)({
   justifyContent: "space-between",
 });
 
-const WidgetLink = styled(Link)(({ theme }) => ({
+const WidgetLink = styled(CustomLink)(({ theme }) => ({
   fontSize: theme.typography.body3.fontSize,
   color: theme.palette.text.secondary,
   "&:hover": {
     textDecorationThickness: "2px",
   },
-}));
+})) as typeof CustomLink;
 
 export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
   title,
@@ -49,7 +49,7 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
         {title}
       </Typography>
       {linkTarget && linkText && (
-        <WidgetLink href={linkTarget}>{linkText}</WidgetLink>
+        <WidgetLink to={linkTarget}>{linkText}</WidgetLink>
       )}
     </Header>
     {children}
