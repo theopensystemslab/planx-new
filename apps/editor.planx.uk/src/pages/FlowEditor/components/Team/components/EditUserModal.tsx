@@ -20,6 +20,8 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
 }) => {
   const toast = useToast();
   const teamId = useStore((state) => state.teamId);
+  const showTeamAdminSwitch =
+    member.role === "teamAdmin" || member.role === "teamEditor";
 
   const handleCompleted = (successMessage: string) => {
     onClose();
