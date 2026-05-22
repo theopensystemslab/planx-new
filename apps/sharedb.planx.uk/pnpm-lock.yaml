@@ -24,8 +24,8 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2
       ws:
-        specifier: ^8.20.1
-        version: 8.20.1
+        specifier: ^8.19.0
+        version: 8.19.0
     devDependencies:
       node-dev:
         specifier: ^8.0.0
@@ -356,7 +356,6 @@ packages:
 
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
-    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   w3c-xmlserializer@5.0.0:
@@ -380,8 +379,8 @@ packages:
     engines: {node: '>= 8'}
     hasBin: true
 
-  ws@8.20.1:
-    resolution: {integrity: sha512-It4dO0K5v//JtTXuPkfEOaI3uUN87iYPnqo/ZzqCoG3g8uhA66QUMs/SrM0YK7/NAu+r4LMh/9dq2A7k+rHs+w==}
+  ws@8.19.0:
+    resolution: {integrity: sha512-blAT2mjOEIi0ZzruJfIhb3nps74PRWTCz1IjglWEEpQl5XS/UNama6u2/rjFkDDouqr4L67ry+1aGIALViWjDg==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -739,7 +738,7 @@ snapshots:
     dependencies:
       isexe: 2.0.0
 
-  ws@8.20.1: {}
+  ws@8.19.0: {}
 
   xml-name-validator@5.0.0: {}
 
