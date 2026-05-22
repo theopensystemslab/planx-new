@@ -24,6 +24,8 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
 }) => {
   const toast = useToast();
   const teamId = useStore((state) => state.teamId);
+  const showTeamAdminSwitch =
+    member.role === "teamAdmin" || member.role === "teamEditor";
 
   const handleCompleted = (successMessage: string) => {
     onClose();
@@ -88,19 +90,21 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
               <Box sx={{ mt: 2, mb: 2 }}>
                 <NameFields />
               </Box>
-              <Switch
-                name="role"
-                checked={formik.values.role === "teamAdmin"}
-                onChange={() =>
-                  formik.setFieldValue(
-                    "role",
-                    formik.values.role === "teamEditor"
-                      ? "teamAdmin"
-                      : "teamEditor",
-                  )
-                }
-                label={"Is Team Admin"}
-              />
+              {showTeamAdminSwitch && (
+                <Switch
+                  name="role"
+                  checked={formik.values.role === "teamAdmin"}
+                  onChange={() =>
+                    formik.setFieldValue(
+                      "role",
+                      formik.values.role === "teamEditor"
+                        ? "teamAdmin"
+                        : "teamEditor",
+                    )
+                  }
+                  label={"Is Team Admin"}
+                />
+              )}
             </DialogContent>
             <DialogActions>
               <ModalActions
