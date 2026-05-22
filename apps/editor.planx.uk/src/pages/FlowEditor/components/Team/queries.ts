@@ -45,8 +45,8 @@ export const UPDATE_TEAM_MEMBER = gql`
     ) {
       returning {
         role
-        user_id
-        team_id
+        userId: user_id
+        teamId: team_id
       }
     }
   }
