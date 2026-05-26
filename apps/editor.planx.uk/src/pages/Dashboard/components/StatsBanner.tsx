@@ -45,7 +45,9 @@ export default function StatsBanner({ team }: StatsBannerProps) {
     <Root>
       <Header>
         <Typography variant="h3">Last 30 days</Typography>
-        <WidgetLink to={`/app/${team}/analytics`}>view analytics</WidgetLink>
+        <WidgetLink to="/app/$team" params={{ team }}>
+          view analytics
+        </WidgetLink>
       </Header>
       <StatsGrid>
         {STATS.map(({ label }) => (
