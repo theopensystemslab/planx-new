@@ -2,6 +2,7 @@ import { NodeId } from "@opensystemslab/planx-core/types";
 import { Link, useParams } from "@tanstack/react-router";
 import classnames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
+import { hangerAnchor } from "pages/FlowEditor/lib/hangerAnchor";
 import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
@@ -91,6 +92,15 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
         search={{}}
         preload={false}
         onContextMenu={handleContextMenu}
+        onClick={(e) => {
+          const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+          hangerAnchor.set({
+            top: rect.top,
+            bottom: rect.bottom,
+            left: rect.left,
+            right: rect.right,
+          });
+        }}
       >
         {canDrop && item && item.text}
       </Link>
