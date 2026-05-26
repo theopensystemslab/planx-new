@@ -7,8 +7,9 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 import fetch from "isomorphic-fetch";
-import { addDesignatedVariable } from "./helpers.js";
+import camelCase from "lodash/camelCase.js";
 import { $api } from "../../../client/index.js";
+import { addDesignatedVariable } from "./helpers.js";
 
 import * as adurAndWorthing from "./local_authorities/metadata/adurAndWorthing.js";
 import * as barkingAndDagenham from "./local_authorities/metadata/barkingAndDagenham.js";
@@ -39,7 +40,6 @@ import * as stoke from "./local_authorities/metadata/stoke.js";
 import * as tewkesbury from "./local_authorities/metadata/tewkesbury.js";
 import * as torbay from "./local_authorities/metadata/torbay.js";
 import * as westBerkshire from "./local_authorities/metadata/westBerkshire.js";
-import { camelCase } from "lodash";
 
 export interface LocalAuthorityMetadata {
   planningConstraints: {
