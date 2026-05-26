@@ -5,12 +5,7 @@ import { linkOptions } from "@tanstack/react-router";
 import React from "react";
 import { WidgetLink } from "ui/editor/DashboardWidget";
 
-const STATS = [
-  { label: "Total sessions" },
-  { label: "Submissions" },
-  { label: "Guidance sessions" },
-  { label: "Online flows" },
-];
+import { useTeamDashboardStats } from "./useTeamDashboardStats";
 
 interface StatsBannerProps {
   team: string;
@@ -43,7 +38,42 @@ const StatsGrid = styled(Box)(({ theme }) => ({
   },
 }));
 
+function formatDelta(delta: number): string {
+  return delta >= 0 ? `+${delta}` : `${delta}`;
+}
+
 export default function StatsBanner({ team }: StatsBannerProps) {
+  const { data } = useTeamDashboardStats(team);
+
+  const stats = data?.team_dashboard_stats[0];
+
+  const tiles = [
+    {
+      label: "Online flows",
+      value: stats?.online_flows ?? null,
+      delta: stats ? stats.online_flows - stats.online_flows_previous : null,
+    },
+    {
+      label: "Total sessions",
+      value: stats?.sessions_current ?? null,
+      delta: stats ? stats.sessions_current - stats.sessions_previous : null,
+    },
+    {
+      label: "Submissions",
+      value: stats?.submissions_current ?? null,
+      delta: stats
+        ? stats.submissions_current - stats.submissions_previous
+        : null,
+    },
+    {
+      label: "Total guidance sessions",
+      value: stats?.guidance_sessions_current ?? null,
+      delta: stats
+        ? stats.guidance_sessions_current - stats.guidance_sessions_previous
+        : null,
+    },
+  ];
+
   return (
     <Root>
       <Header>
@@ -57,14 +87,25 @@ export default function StatsBanner({ team }: StatsBannerProps) {
         />
       </Header>
       <StatsGrid>
-        {STATS.map(({ label }) => (
+        {tiles.map(({ label, value, delta }) => (
           <Box key={label}>
             <Typography variant="body2" sx={{ color: "text.secondary" }}>
               {label}
             </Typography>
             <Typography variant="h1" component="p">
-              —
+              {value ?? "—"}
             </Typography>
+            {delta !== null && (
+              <Typography
+                variant="body2"
+                sx={{
+                  color: delta >= 0 ? "success.main" : "error.main",
+                  fontWeight: "bold",
+                }}
+              >
+                {formatDelta(delta)}
+              </Typography>
+            )}
           </Box>
         ))}
       </StatsGrid>
