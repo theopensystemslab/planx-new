@@ -39,6 +39,7 @@ import * as stoke from "./local_authorities/metadata/stoke.js";
 import * as tewkesbury from "./local_authorities/metadata/tewkesbury.js";
 import * as torbay from "./local_authorities/metadata/torbay.js";
 import * as westBerkshire from "./local_authorities/metadata/westBerkshire.js";
+import { camelCase } from "lodash";
 
 export interface LocalAuthorityMetadata {
   planningConstraints: {
@@ -323,15 +324,8 @@ async function go(
     }
 
     // rename `articleFour.caz` to reflect localAuthority if applicable, ensuring `councilName` segment matches other A4 values (not always same as team-slug)
-    const customTeamSlugs: Record<string, string> = {
-      "barking-and-dagenham": "barkingAndDagenham",
-      "epsom-and-ewell": "epsomAndEwell",
-      "st-albans": "stAlbans",
-      "west-berkshire": "westBerkshire",
-    };
-    const localCaz = Object.keys(customTeamSlugs).includes(localAuthority)
-      ? `articleFour.${customTeamSlugs[localAuthority]}.caz`
-      : `articleFour.${localAuthority}.caz`;
+    const localCaz = `articleFour.${localAuthority.includes("-") ? camelCase(localAuthority) : localAuthority}.caz`;
+
     if (formattedResult["articleFour.caz"]) {
       formattedResult[localCaz] = formattedResult["articleFour.caz"];
       delete formattedResult["articleFour.caz"];
