@@ -9,8 +9,7 @@ import { axe } from "vitest-axe";
 import { setup } from "../../../../../test/utils";
 import { AddUserModal } from "../components/AddUserModal";
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
-import { userTriesToAddNewTeamAdmin } from "./helpers/userTriesToAddNewTeamAdmin";
-import { userTriesToAddNewTeamEditor } from "./helpers/userTriesToAddNewTeamEditor";
+import { userTriesToAddNewMember } from "./helpers/userTriesToAddNewMember";
 import { createUserHandler } from "./mocks/handlers";
 import { mockPlainUser, mockPlatformAdminUser } from "./mocks/users";
 
@@ -48,7 +47,7 @@ describe("when a user fills in the 'add a new member' form correctly", () => {
     server.use(createUserHandler());
 
     const { user } = await setupTeamMembersScreen();
-    await userTriesToAddNewTeamEditor(user);
+    await userTriesToAddNewMember(user);
   });
 
   it("adds the new user row to the Team Members table", async () => {
@@ -57,44 +56,6 @@ describe("when a user fills in the 'add a new member' form correctly", () => {
     await waitFor(() => {
       expect(
         within(membersTable).getByText(/Mickey Mouse/),
-      ).toBeInTheDocument();
-    });
-  });
-
-  it("closes the modal", async () => {
-    await waitFor(() => {
-      expect(screen.queryByTestId("modal-create-user")).not.toBeInTheDocument();
-    });
-  });
-
-  it("shows a success message", async () => {
-    expect(
-      await screen.findByText(/Successfully added a user/),
-    ).toBeInTheDocument();
-  });
-});
-
-describe("when a user adds a new teamAdmin", () => {
-  beforeAll(() => (initialState = useStore.getState()));
-  afterAll(() => useStore.setState(initialState));
-
-  beforeEach(async () => {
-    useStore.setState({
-      user: mockPlatformAdminUser,
-    });
-
-    server.use(createUserHandler());
-
-    const { user } = await setupTeamMembersScreen();
-    await userTriesToAddNewTeamAdmin(user);
-  });
-
-  it("adds the new user row to the Team Members table", async () => {
-    const membersTable = screen.getByTestId("members-table-add-member");
-
-    await waitFor(() => {
-      expect(
-        within(membersTable).getByText(/Minnie Mouse/),
       ).toBeInTheDocument();
     });
   });

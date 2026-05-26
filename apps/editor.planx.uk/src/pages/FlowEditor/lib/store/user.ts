@@ -7,10 +7,6 @@ import { TeamStore } from "./team";
 export const getDisplayRole = (user: User): string => {
   if (user.isPlatformAdmin) return "Platform Admin";
   if (user.isAnalyst) return "Analyst";
-
-  const isTeamAdmin = user.teams.some((team) => team.role === "teamAdmin");
-  if (isTeamAdmin) return "Team Admin";
-
   return "Team Editor";
 };
 

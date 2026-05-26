@@ -13,10 +13,8 @@ import { useTeamMembers } from "./hooks/useTeamMembers";
 export const TeamMembers = () => {
   const teamSlug = useStore((state) => state.teamSlug);
 
-  const { platformAdmins, activeMembers, archivedMembers, loading, error } =
-    useTeamMembers(teamSlug);
-  const { canManageActiveMembers, canManageAdmins } =
-    useTeamManagementPermissions();
+  const { platformAdmins, activeMembers, archivedMembers, loading, error } = useTeamMembers(teamSlug);
+  const { canManageActiveMembers, canManageAdmins } = useTeamManagementPermissions();
 
   if (error) return <ErrorSummary message={error.message} />;
 
@@ -31,29 +29,29 @@ export const TeamMembers = () => {
           your flows.
         </Typography>
         {loading && <DelayedLoadingIndicator />}
-        {activeMembers && (
+        {activeMembers &&
           <MembersTable
             members={activeMembers}
             showAddMemberButton={canManageActiveMembers}
             showEditMemberButton={canManageActiveMembers}
             showRemoveMemberButton={canManageActiveMembers}
           />
-        )}
+        }
       </SettingsSection>
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
-          Platform admins
+          Admins
         </Typography>
         <Typography variant="body1">
-          Platform admins have editor access across all teams.
+          Admins have editor access across all teams.
         </Typography>
         {loading && <DelayedLoadingIndicator />}
-        {platformAdmins && (
+        {platformAdmins &&
           <MembersTable
             members={platformAdmins}
             showEditMemberButton={canManageAdmins}
           />
-        )}
+        }
       </SettingsSection>
       {archivedMembers.length > 0 && (
         <SettingsSection data-testid="archived-members">

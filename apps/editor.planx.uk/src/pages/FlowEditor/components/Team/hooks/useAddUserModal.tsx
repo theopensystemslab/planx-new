@@ -34,6 +34,8 @@ export const useAddUserModal = ({ onClose }: { onClose: () => void }) => {
 
   const [step, setStep] = useState<Step>({ stage: "email" });
 
+  const role: Role = "teamEditor";
+
   const handleClose = () => {
     onClose();
     setStep({ stage: "email" });
@@ -103,16 +105,12 @@ export const useAddUserModal = ({ onClose }: { onClose: () => void }) => {
     }
 
     if (step.stage === "confirm-existing") {
-      assignUser({
-        variables: { userId: step.existingUser.id, teamId, role: values.role },
-      });
+      assignUser({ variables: { userId: step.existingUser.id, teamId, role } });
       return;
     }
 
     if (step.stage === "create-new") {
-      createUser({
-        variables: { ...values, email, teamId, role: values.role },
-      });
+      createUser({ variables: { ...values, email, teamId, role } });
     }
   };
 
@@ -123,6 +121,7 @@ export const useAddUserModal = ({ onClose }: { onClose: () => void }) => {
 
   return {
     step,
+    role,
     title,
     handleClose,
     handleSubmit,
