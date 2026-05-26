@@ -39,6 +39,19 @@ export const mockUsersData: (User & { __typename: "users" })[] = [
       { role: "teamEditor", team: { name: "Test Team", slug: "test", id: 1 } },
     ],
   },
+  {
+    __typename: "users",
+    firstName: "Donald",
+    lastName: "Duck",
+    email: "donaldduck@email.com",
+    id: 4,
+    isPlatformAdmin: true,
+    isAnalyst: false,
+    defaultTeamId: null,
+    teams: [
+      { role: "teamEditor", team: { name: "Test Team", slug: "test", id: 1 } },
+    ],
+  },
 ];
 
 export const mockPlainUser: User = {
@@ -66,7 +79,7 @@ export const mockPlatformAdminUser: User = {
   isPlatformAdmin: true,
 };
 
-export const newMember: User = {
+export const newTeamEditor: User = {
   id: 99,
   firstName: "Mickey",
   lastName: "Mouse",
@@ -76,6 +89,19 @@ export const newMember: User = {
   defaultTeamId: 2,
   teams: [
     { role: "teamEditor", team: { name: "Test Team", slug: "test", id: 2 } },
+  ],
+};
+
+export const newTeamAdmin: User = {
+  id: 100,
+  firstName: "Minnie",
+  lastName: "Mouse",
+  email: "minniemouse@email.com",
+  isPlatformAdmin: false,
+  isAnalyst: false,
+  defaultTeamId: 2,
+  teams: [
+    { role: "teamAdmin", team: { name: "Test Team", slug: "test", id: 2 } },
   ],
 };
 
