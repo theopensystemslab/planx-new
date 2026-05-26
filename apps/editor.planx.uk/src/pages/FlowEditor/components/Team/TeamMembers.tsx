@@ -13,8 +13,13 @@ import { useTeamMembers } from "./hooks/useTeamMembers";
 export const TeamMembers = () => {
   const teamSlug = useStore((state) => state.teamSlug);
 
-  const { platformAdmins, activeMembers, archivedMembers, loading, error } = useTeamMembers(teamSlug);
-  const { canManageActiveMembers, canManageAdmins } = useTeamManagementPermissions();
+  const { platformAdmins, activeMembers, archivedMembers, loading, error } =
+    useTeamMembers(teamSlug);
+  const {
+    canManageActiveMembers,
+    canManageTeamAdmins,
+    canManagePlatformAdmins,
+  } = useTeamManagementPermissions();
 
   if (error) return <ErrorSummary message={error.message} />;
 
@@ -35,6 +40,7 @@ export const TeamMembers = () => {
             showAddMemberButton={canManageActiveMembers}
             showEditMemberButton={canManageActiveMembers}
             showRemoveMemberButton={canManageActiveMembers}
+            showTeamAdminSwitch={canManagePlatformAdmins || canManageTeamAdmins}
           />
         }
       </SettingsSection>
@@ -49,7 +55,7 @@ export const TeamMembers = () => {
         {platformAdmins &&
           <MembersTable
             members={platformAdmins}
-            showEditMemberButton={canManageAdmins}
+            showEditMemberButton={canManagePlatformAdmins}
           />
         }
       </SettingsSection>
