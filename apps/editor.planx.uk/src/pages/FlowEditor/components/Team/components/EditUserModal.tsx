@@ -68,23 +68,42 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
         validateOnBlur={false}
         validateOnChange={false}
       >
-        <Form>
-          <DialogTitle variant="h3" component="h1" id="dialog-heading">
-            Edit member
-          </DialogTitle>
-          <DialogContent dividers data-testid="modal-edit-user">
-            <EmailField />
-            <NameFields />
-          </DialogContent>
-          <DialogActions>
-            <ModalActions
-              submitButtonText="Update user"
-              submitDataTestId="modal-edit-user-button"
-              isSubmitting={loading}
-              onCancel={onClose}
-            />
-          </DialogActions>
-        </Form>
+        {(formik) => (
+          <Form>
+            <DialogTitle variant="h3" component="h1" id="dialog-heading">
+              Edit member
+            </DialogTitle>
+            <DialogContent dividers data-testid="modal-edit-user">
+              <EmailField />
+              <Box sx={{ mt: 2, mb: 2 }}>
+                <NameFields />
+              </Box>
+              {showTeamAdminSwitch && (
+                <Switch
+                  name="role"
+                  checked={formik.values.role === "teamAdmin"}
+                  onChange={() =>
+                    formik.setFieldValue(
+                      "role",
+                      formik.values.role === "teamEditor"
+                        ? "teamAdmin"
+                        : "teamEditor",
+                    )
+                  }
+                  label={"Team Admin"}
+                />
+              )}
+            </DialogContent>
+            <DialogActions>
+              <ModalActions
+                submitButtonText="Update user"
+                submitDataTestId="modal-edit-user-button"
+                isSubmitting={loading}
+                onCancel={onClose}
+              />
+            </DialogActions>
+          </Form>
+        )}
       </Formik>
     </Dialog>
   );

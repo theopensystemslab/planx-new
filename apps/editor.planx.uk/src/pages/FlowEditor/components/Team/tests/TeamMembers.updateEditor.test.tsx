@@ -31,6 +31,8 @@ describe("when a user presses 'edit button'", () => {
     const firstNameInput = await screen.findByLabelText("First name");
     const lastNameInput = await screen.findByLabelText("Last name");
     const emailInput = await screen.findByLabelText("Email address");
+    const isTeamAdmin = await screen.findByLabelText("Team Admin");
+
     // Sorted based on first letter of first name Bill > Donella in Mocks
     expect(firstNameInput).toHaveDisplayValue("Bilbo");
     expect(lastNameInput).toHaveDisplayValue("Baggins");
@@ -131,6 +133,53 @@ describe("when a user correctly updates an Editor", () => {
   });
 });
 
+describe("when a user correctly makes a teamEditor a teamAdmin", () => {
+  beforeEach(async () => {
+    useStore.setState({ teamSlug: "planx" });
+
+    server.use(updateUserHandler());
+
+    const { user } = await setupTeamMembersScreen();
+
+    const teamMembersTable = screen.getByTestId("team-members");
+    const addMemberButton =
+      await within(teamMembersTable).findByTestId("edit-button-3");
+    await user.click(addMemberButton);
+
+    const teamAdminSwitch = await screen.findByLabelText("Team Admin");
+
+    await user.click(teamAdminSwitch);
+
+    const updateUserButton = await screen.findByRole("button", {
+      name: "Update user",
+    });
+
+    await user.click(updateUserButton);
+  });
+
+  it("updates the member table with new details", async () => {
+    const membersTable = await screen.findByTestId("members-table-add-member");
+    await waitFor(() => {
+      expect(within(membersTable).getByText(/Team admin/)).toBeInTheDocument();
+    });
+    expect(
+      await screen.findByText(/Successfully updated a user/),
+    ).toBeInTheDocument();
+  });
+
+  it("closes the modal", async () => {
+    await waitFor(() => {
+      expect(screen.queryByTestId("modal-edit-user")).not.toBeInTheDocument();
+    });
+  });
+
+  it("shows a success message", async () => {
+    expect(
+      await screen.findByText(/Successfully updated a user/),
+    ).toBeInTheDocument();
+  });
+});
+
 describe("'edit' button is hidden from Templates team", () => {
   beforeEach(async () => {
     useStore.setState({
@@ -162,5 +211,36 @@ describe("when a user is not a platform admin", () => {
       within(teamMembersTable).queryByTestId("edit-button-3");
 
     expect(addMemberButton).not.toBeInTheDocument();
+  });
+});
+
+describe("when editing a platform admin user", () => {
+  beforeEach(async () => {
+    useStore.setState({
+      user: mockPlatformAdminUser,
+    });
+
+    const { user } = await setupTeamMembersScreen();
+
+    const platformAdminsHeading = screen.getByRole("heading", {
+      name: /Platform admins/i,
+    });
+
+    const platformAdminsSection =
+      platformAdminsHeading.closest("section") ||
+      platformAdminsHeading.parentElement!;
+
+    const editButton = await within(platformAdminsSection).findByTestId(
+      "edit-button-4",
+    );
+
+    await user.click(editButton);
+  });
+
+  it("does not show the Team Admin switch for platform admins", async () => {
+    expect(await screen.findByTestId("modal-edit-user")).toBeVisible();
+
+    const teamAdminSwitch = screen.queryByLabelText("Team Admin");
+    expect(teamAdminSwitch).not.toBeInTheDocument();
   });
 });
