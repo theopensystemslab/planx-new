@@ -28,12 +28,16 @@ export const SchemaFields: React.FC<SchemaFieldsProps> = ({
   formik,
   sx,
   activeIndex = 0,
-}) => (
-  <Box sx={sx}>
-    {schema.fields.map((field, i) => (
-      <InputRow key={i}>
-        <InputFields {...field} activeIndex={activeIndex} formik={formik} />
-      </InputRow>
-    ))}
-  </Box>
-);
+}) => {
+  if (!formik.values.schemaData[activeIndex]) return null;
+
+  return (
+    <Box sx={sx}>
+      {schema.fields.map((field, i) => (
+        <InputRow key={i}>
+          <InputFields {...field} activeIndex={activeIndex} formik={formik} />
+        </InputRow>
+      ))}
+    </Box>
+  );
+};
