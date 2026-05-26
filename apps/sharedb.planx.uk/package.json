@@ -11,11 +11,8 @@
     "ws": "^8.20.1"
   },
   "scripts": {
-    "dev": "node-dev server.js",
+    "dev": "node --watch server.js",
     "start": "node server.js"
   },
-  "packageManager": "pnpm@10.30.2",
-  "devDependencies": {
-    "node-dev": "^8.0.0"
-  }
+  "packageManager": "pnpm@10.30.2"
 }
