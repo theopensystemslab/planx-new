@@ -22,13 +22,13 @@ team_submissions AS (
   GROUP BY f.team_id
 ),
 online_flows_current AS (
-  SELECT team_id, COUNT(*) AS cnt
+  SELECT team_id, COUNT(*)
   FROM flows
   WHERE status = 'online' AND deleted_at IS NULL
   GROUP BY team_id
 ),
 online_flows_previous AS (
-  SELECT f.team_id, COUNT(*) AS cnt
+  SELECT f.team_id, COUNT(*)
   FROM flows f
   WHERE f.deleted_at IS NULL
     AND EXISTS (
@@ -49,8 +49,8 @@ SELECT
   COALESCE(tsub.submissions_previous,     0) AS submissions_previous,
   COALESCE(ts.guidance_sessions_current,  0) AS guidance_sessions_current,
   COALESCE(ts.guidance_sessions_previous, 0) AS guidance_sessions_previous,
-  COALESCE(ofc.cnt,                       0) AS online_flows,
-  COALESCE(ofp.cnt,                       0) AS online_flows_previous
+  COALESCE(ofc.count,                       0) AS online_flows,
+  COALESCE(ofp.count,                       0) AS online_flows_previous
 FROM teams t
 LEFT JOIN team_sessions       ts   ON ts.team_id   = t.id
 LEFT JOIN team_submissions    tsub ON tsub.team_id  = t.id
