@@ -1,6 +1,8 @@
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import CurrencyPoundIcon from "@mui/icons-material/CurrencyPound";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import ExploreIcon from "@mui/icons-material/Explore";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GroupIcon from "@mui/icons-material/Group";
@@ -22,6 +24,7 @@ import {
 import AccountMenu from "components/AccountMenu";
 import { useFlowAnalyticsLink } from "hooks/analyticsLinks/useFlowAnalyticsLink";
 import { useTeamAnalyticsLink } from "hooks/analyticsLinks/useTeamAnalyticsLink";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useMemo, useRef, useState } from "react";
 import EditorIcon from "ui/icons/Editor";
@@ -132,12 +135,32 @@ function EditorNavMenu() {
     () => [
       {
         routes: [
+          ...(hasFeatureFlag("DASHBOARD")
+            ? [
+                {
+                  title: "Dashboard",
+                  Icon: DashboardIcon,
+                  route: `/app/${teamSlug}/dashboard`,
+                  accessibleBy: "*" as const,
+                },
+              ]
+            : []),
           {
             title: "Flows",
             Icon: EditorIcon,
             route: `/app/${teamSlug}`,
             accessibleBy: "*",
           },
+          ...(hasFeatureFlag("EXPLORE")
+            ? [
+                {
+                  title: "Explore",
+                  Icon: ExploreIcon,
+                  route: `/app/explore`,
+                  accessibleBy: "*" as const,
+                },
+              ]
+            : []),
         ],
       },
       {
@@ -387,30 +410,30 @@ function EditorNavMenu() {
           })}
         </MenuWrap>
         {isTeamRoute && (role === "platformAdmin" || role === "teamEditor") && (
-            <Box sx={(theme) => ({ padding: theme.spacing(0, 0.5, 1) })}>
-              <Box ref={notificationsRef}>
-                <NavMenuItem
-                  title="Notifications"
-                  Icon={NotificationsActiveIcon}
-                  badgeCount={notificationsCount}
-                  isActive={notificationsPanelOpen}
-                  isExternal={false}
-                  compact={compact}
-                  onClick={() => setNotificationsPanelOpen((prev) => !prev)}
-                  sx={{ minHeight: 44 }}
-                />
-              </Box>
-              <NotificationsPanel
-                anchorEl={
-                  notificationsPanelOpen ? notificationsRef.current : null
-                }
-                onClose={() => setNotificationsPanelOpen(false)}
-                activeNotifications={activeNotifications}
-                resolvedNotifications={resolvedNotifications}
-                teamSlug={teamSlug!}
+          <Box sx={(theme) => ({ padding: theme.spacing(0, 0.5, 1) })}>
+            <Box ref={notificationsRef}>
+              <NavMenuItem
+                title="Notifications"
+                Icon={NotificationsActiveIcon}
+                badgeCount={notificationsCount}
+                isActive={notificationsPanelOpen}
+                isExternal={false}
+                compact={compact}
+                onClick={() => setNotificationsPanelOpen((prev) => !prev)}
+                sx={{ minHeight: 44 }}
               />
             </Box>
-          )}
+            <NotificationsPanel
+              anchorEl={
+                notificationsPanelOpen ? notificationsRef.current : null
+              }
+              onClose={() => setNotificationsPanelOpen(false)}
+              activeNotifications={activeNotifications}
+              resolvedNotifications={resolvedNotifications}
+              teamSlug={teamSlug!}
+            />
+          </Box>
+        )}
         <AccountMenu compact={compact} />
       </NavBarContainer>
     </Root>

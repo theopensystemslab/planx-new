@@ -18,6 +18,7 @@ import { Route as PublicCustomDomainRouteRouteImport } from './routes/_public/_c
 import { Route as AuthenticatedAppRouteRouteImport } from './routes/_authenticated/app/route'
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app/index'
 import { Route as AuthenticatedAppUsersRouteImport } from './routes/_authenticated/app/users'
+import { Route as AuthenticatedAppExploreRouteImport } from './routes/_authenticated/app/explore'
 import { Route as AuthenticatedAppAdminPanelRouteImport } from './routes/_authenticated/app/admin-panel'
 import { Route as PublicCustomDomainFlowRouteRouteImport } from './routes/_public/_customDomain/$flow/route'
 import { Route as AuthenticatedAppGlobalSettingsRouteRouteImport } from './routes/_authenticated/app/global-settings/route'
@@ -37,6 +38,7 @@ import { Route as AuthenticatedAppTeamNotificationsRouteImport } from './routes/
 import { Route as AuthenticatedAppTeamMembersRouteImport } from './routes/_authenticated/app/$team/members'
 import { Route as AuthenticatedAppTeamFeedbackRouteImport } from './routes/_authenticated/app/$team/feedback'
 import { Route as AuthenticatedAppTeamDesignRouteImport } from './routes/_authenticated/app/$team/design'
+import { Route as AuthenticatedAppTeamDashboardRouteImport } from './routes/_authenticated/app/$team/dashboard'
 import { Route as PublicPlanXDomainTeamFlowRouteRouteImport } from './routes/_public/_planXDomain/$team/$flow/route'
 import { Route as PublicCustomDomainFlowPayRouteRouteImport } from './routes/_public/_customDomain/$flow/pay/route'
 import { Route as AuthenticatedAppTeamSettingsRouteRouteImport } from './routes/_authenticated/app/$team/settings/route'
@@ -143,6 +145,11 @@ const AuthenticatedAppIndexRoute = AuthenticatedAppIndexRouteImport.update({
 const AuthenticatedAppUsersRoute = AuthenticatedAppUsersRouteImport.update({
   id: '/users',
   path: '/users',
+  getParentRoute: () => AuthenticatedAppRouteRoute,
+} as any)
+const AuthenticatedAppExploreRoute = AuthenticatedAppExploreRouteImport.update({
+  id: '/explore',
+  path: '/explore',
   getParentRoute: () => AuthenticatedAppRouteRoute,
 } as any)
 const AuthenticatedAppAdminPanelRoute =
@@ -257,6 +264,12 @@ const AuthenticatedAppTeamDesignRoute =
   AuthenticatedAppTeamDesignRouteImport.update({
     id: '/design',
     path: '/design',
+    getParentRoute: () => AuthenticatedAppTeamRouteRoute,
+  } as any)
+const AuthenticatedAppTeamDashboardRoute =
+  AuthenticatedAppTeamDashboardRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
     getParentRoute: () => AuthenticatedAppTeamRouteRoute,
   } as any)
 const PublicPlanXDomainTeamFlowRouteRoute =
@@ -658,12 +671,14 @@ export interface FileRoutesByFullPath {
   '/app/global-settings': typeof AuthenticatedAppGlobalSettingsRouteRouteWithChildren
   '/$flow': typeof PublicCustomDomainFlowRouteRouteWithChildren
   '/app/admin-panel': typeof AuthenticatedAppAdminPanelRoute
+  '/app/explore': typeof AuthenticatedAppExploreRoute
   '/app/users': typeof AuthenticatedAppUsersRoute
   '/app/': typeof AuthenticatedAppIndexRoute
   '/app/$team/$flow': typeof AuthenticatedAppTeamFlowFlowEditorRouteRouteWithChildren
   '/app/$team/settings': typeof AuthenticatedAppTeamSettingsRouteRouteWithChildren
   '/$flow/pay': typeof PublicCustomDomainFlowPayRouteRouteWithChildren
   '/$team/$flow': typeof PublicPlanXDomainTeamFlowRouteRouteWithChildren
+  '/app/$team/dashboard': typeof AuthenticatedAppTeamDashboardRoute
   '/app/$team/design': typeof AuthenticatedAppTeamDesignRoute
   '/app/$team/feedback': typeof AuthenticatedAppTeamFeedbackRoute
   '/app/$team/members': typeof AuthenticatedAppTeamMembersRoute
@@ -745,9 +760,11 @@ export interface FileRoutesByTo {
   '/login': typeof authLoginRoute
   '/logout': typeof authLogoutRoute
   '/app/admin-panel': typeof AuthenticatedAppAdminPanelRoute
+  '/app/explore': typeof AuthenticatedAppExploreRoute
   '/app/users': typeof AuthenticatedAppUsersRoute
   '/app': typeof AuthenticatedAppIndexRoute
   '/app/$team/$flow': typeof AuthenticatedAppTeamFlowFlowEditorIndexRoute
+  '/app/$team/dashboard': typeof AuthenticatedAppTeamDashboardRoute
   '/app/$team/design': typeof AuthenticatedAppTeamDesignRoute
   '/app/$team/feedback': typeof AuthenticatedAppTeamFeedbackRoute
   '/app/$team/members': typeof AuthenticatedAppTeamMembersRoute
@@ -830,12 +847,14 @@ export interface FileRoutesById {
   '/_authenticated/app/global-settings': typeof AuthenticatedAppGlobalSettingsRouteRouteWithChildren
   '/_public/_customDomain/$flow': typeof PublicCustomDomainFlowRouteRouteWithChildren
   '/_authenticated/app/admin-panel': typeof AuthenticatedAppAdminPanelRoute
+  '/_authenticated/app/explore': typeof AuthenticatedAppExploreRoute
   '/_authenticated/app/users': typeof AuthenticatedAppUsersRoute
   '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
   '/_authenticated/app/$team/$flow': typeof AuthenticatedAppTeamFlowRouteRouteWithChildren
   '/_authenticated/app/$team/settings': typeof AuthenticatedAppTeamSettingsRouteRouteWithChildren
   '/_public/_customDomain/$flow/pay': typeof PublicCustomDomainFlowPayRouteRouteWithChildren
   '/_public/_planXDomain/$team/$flow': typeof PublicPlanXDomainTeamFlowRouteRouteWithChildren
+  '/_authenticated/app/$team/dashboard': typeof AuthenticatedAppTeamDashboardRoute
   '/_authenticated/app/$team/design': typeof AuthenticatedAppTeamDesignRoute
   '/_authenticated/app/$team/feedback': typeof AuthenticatedAppTeamFeedbackRoute
   '/_authenticated/app/$team/members': typeof AuthenticatedAppTeamMembersRoute
@@ -924,12 +943,14 @@ export interface FileRouteTypes {
     | '/app/global-settings'
     | '/$flow'
     | '/app/admin-panel'
+    | '/app/explore'
     | '/app/users'
     | '/app/'
     | '/app/$team/$flow'
     | '/app/$team/settings'
     | '/$flow/pay'
     | '/$team/$flow'
+    | '/app/$team/dashboard'
     | '/app/$team/design'
     | '/app/$team/feedback'
     | '/app/$team/members'
@@ -1011,9 +1032,11 @@ export interface FileRouteTypes {
     | '/login'
     | '/logout'
     | '/app/admin-panel'
+    | '/app/explore'
     | '/app/users'
     | '/app'
     | '/app/$team/$flow'
+    | '/app/$team/dashboard'
     | '/app/$team/design'
     | '/app/$team/feedback'
     | '/app/$team/members'
@@ -1095,12 +1118,14 @@ export interface FileRouteTypes {
     | '/_authenticated/app/global-settings'
     | '/_public/_customDomain/$flow'
     | '/_authenticated/app/admin-panel'
+    | '/_authenticated/app/explore'
     | '/_authenticated/app/users'
     | '/_authenticated/app/'
     | '/_authenticated/app/$team/$flow'
     | '/_authenticated/app/$team/settings'
     | '/_public/_customDomain/$flow/pay'
     | '/_public/_planXDomain/$team/$flow'
+    | '/_authenticated/app/$team/dashboard'
     | '/_authenticated/app/$team/design'
     | '/_authenticated/app/$team/feedback'
     | '/_authenticated/app/$team/members'
@@ -1254,6 +1279,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppUsersRouteImport
       parentRoute: typeof AuthenticatedAppRouteRoute
     }
+    '/_authenticated/app/explore': {
+      id: '/_authenticated/app/explore'
+      path: '/explore'
+      fullPath: '/app/explore'
+      preLoaderRoute: typeof AuthenticatedAppExploreRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
     '/_authenticated/app/admin-panel': {
       id: '/_authenticated/app/admin-panel'
       path: '/admin-panel'
@@ -1385,6 +1417,13 @@ declare module '@tanstack/react-router' {
       path: '/design'
       fullPath: '/app/$team/design'
       preLoaderRoute: typeof AuthenticatedAppTeamDesignRouteImport
+      parentRoute: typeof AuthenticatedAppTeamRouteRoute
+    }
+    '/_authenticated/app/$team/dashboard': {
+      id: '/_authenticated/app/$team/dashboard'
+      path: '/dashboard'
+      fullPath: '/app/$team/dashboard'
+      preLoaderRoute: typeof AuthenticatedAppTeamDashboardRouteImport
       parentRoute: typeof AuthenticatedAppTeamRouteRoute
     }
     '/_public/_planXDomain/$team/$flow': {
@@ -2011,6 +2050,7 @@ const AuthenticatedAppTeamSettingsRouteRouteWithChildren =
 interface AuthenticatedAppTeamRouteRouteChildren {
   AuthenticatedAppTeamFlowRouteRoute: typeof AuthenticatedAppTeamFlowRouteRouteWithChildren
   AuthenticatedAppTeamSettingsRouteRoute: typeof AuthenticatedAppTeamSettingsRouteRouteWithChildren
+  AuthenticatedAppTeamDashboardRoute: typeof AuthenticatedAppTeamDashboardRoute
   AuthenticatedAppTeamDesignRoute: typeof AuthenticatedAppTeamDesignRoute
   AuthenticatedAppTeamFeedbackRoute: typeof AuthenticatedAppTeamFeedbackRoute
   AuthenticatedAppTeamMembersRoute: typeof AuthenticatedAppTeamMembersRoute
@@ -2030,6 +2070,7 @@ const AuthenticatedAppTeamRouteRouteChildren: AuthenticatedAppTeamRouteRouteChil
       AuthenticatedAppTeamFlowRouteRouteWithChildren,
     AuthenticatedAppTeamSettingsRouteRoute:
       AuthenticatedAppTeamSettingsRouteRouteWithChildren,
+    AuthenticatedAppTeamDashboardRoute: AuthenticatedAppTeamDashboardRoute,
     AuthenticatedAppTeamDesignRoute: AuthenticatedAppTeamDesignRoute,
     AuthenticatedAppTeamFeedbackRoute: AuthenticatedAppTeamFeedbackRoute,
     AuthenticatedAppTeamMembersRoute: AuthenticatedAppTeamMembersRoute,
@@ -2073,6 +2114,7 @@ interface AuthenticatedAppRouteRouteChildren {
   AuthenticatedAppTeamRouteRoute: typeof AuthenticatedAppTeamRouteRouteWithChildren
   AuthenticatedAppGlobalSettingsRouteRoute: typeof AuthenticatedAppGlobalSettingsRouteRouteWithChildren
   AuthenticatedAppAdminPanelRoute: typeof AuthenticatedAppAdminPanelRoute
+  AuthenticatedAppExploreRoute: typeof AuthenticatedAppExploreRoute
   AuthenticatedAppUsersRoute: typeof AuthenticatedAppUsersRoute
   AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
 }
@@ -2082,6 +2124,7 @@ const AuthenticatedAppRouteRouteChildren: AuthenticatedAppRouteRouteChildren = {
   AuthenticatedAppGlobalSettingsRouteRoute:
     AuthenticatedAppGlobalSettingsRouteRouteWithChildren,
   AuthenticatedAppAdminPanelRoute: AuthenticatedAppAdminPanelRoute,
+  AuthenticatedAppExploreRoute: AuthenticatedAppExploreRoute,
   AuthenticatedAppUsersRoute: AuthenticatedAppUsersRoute,
   AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
 }
