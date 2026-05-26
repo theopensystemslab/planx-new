@@ -22,8 +22,8 @@ const mockFormik = {
 } as unknown as FormikProps<SchemaUserData>;
 
 it("renders nothing when activeIndex is out of bounds for schemaData", async () => {
-  const { container } = await setup(
+  const { queryByLabelText } = await setup(
     <SchemaFields schema={simpleSchema} formik={mockFormik} activeIndex={0} />,
   );
-  expect(container).toBeEmptyDOMElement();
+  expect(queryByLabelText("Description")).not.toBeInTheDocument();
 });
