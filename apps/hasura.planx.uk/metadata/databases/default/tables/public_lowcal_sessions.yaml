@@ -89,6 +89,7 @@ select_permissions:
         - system_status
         - user_status
       filter: {}
+      allow_aggregations: true
     comment: ""
   - role: public
     permission:
@@ -137,6 +138,7 @@ select_permissions:
             members:
               user_id:
                 _eq: x-hasura-user-id
+      allow_aggregations: true
     comment: TeamEditor can select sessions from teams they're a member of. Required to view submissions.
 update_permissions:
   - role: api
