@@ -12,7 +12,11 @@ import React from "react";
 import { Switch } from "ui/shared/Switch";
 
 import { upsertMemberSchema } from "../formSchema";
-import { GET_USERS_FOR_TEAM_QUERY, UPDATE_TEAM_MEMBER } from "../queries";
+import {
+  GET_USERS_FOR_TEAM_QUERY,
+  UPDATE_TEAM_MEMBER,
+  UPDATE_USER_DETAILS,
+} from "../queries";
 import { type EditUserModalProps, type UserFormValues } from "../types";
 import { EmailField } from "./Fields/EmailField";
 import { NameFields } from "./Fields/NameFields";
@@ -31,7 +35,18 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
     toast.success(successMessage);
   };
 
-  const [updateUser, { loading }] = useMutation(UPDATE_TEAM_MEMBER, {
+  const [updateUserOnly] = useMutation(UPDATE_USER_DETAILS, {
+    refetchQueries: [
+      {
+        query: GET_USERS_FOR_TEAM_QUERY,
+        variables: { teamSlug: useStore.getState().teamSlug },
+      },
+    ],
+    onCompleted: () => handleCompleted("Successfully updated user details"),
+    onError: () => toast.error("Failed to update the user, please try again"),
+  });
+
+  const [updateTeamMember, { loading }] = useMutation(UPDATE_TEAM_MEMBER, {
     refetchQueries: [
       {
         query: GET_USERS_FOR_TEAM_QUERY,
@@ -45,18 +60,31 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
   const handleSubmit = (values: UserFormValues) => {
     const formatted = { ...values, email: values.email.toLowerCase() };
 
-    updateUser({
-      variables: {
-        userId: member.id,
-        teamId: teamId,
-        role: values.role,
-        userValues: {
-          first_name: formatted.firstName,
-          last_name: formatted.lastName,
-          email: formatted.email,
+    if (showTeamAdminSwitch) {
+      updateTeamMember({
+        variables: {
+          userId: member.id,
+          teamId: teamId,
+          role: values.role,
+          userValues: {
+            first_name: formatted.firstName,
+            last_name: formatted.lastName,
+            email: formatted.email,
+          },
         },
-      },
-    });
+      });
+    } else {
+      updateUserOnly({
+        variables: {
+          userId: member.id,
+          userValues: {
+            first_name: formatted.firstName,
+            last_name: formatted.lastName,
+            email: formatted.email,
+          },
+        },
+      });
+    }
   };
 
   return (

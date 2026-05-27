@@ -7,10 +7,10 @@ export const useTeamManagementPermissions = () => {
     "teamEditor",
   ]);
   const isPlatformAdmin = usePermission(["platformAdmin"]);
-  const isTeamAdmin = usePermission(["teamAdmin"]);
+
   return {
     canManageActiveMembers: isTeamEditor,
     canManagePlatformAdmins: isPlatformAdmin,
-    canManageTeamAdmins: isTeamAdmin,
+    canManageTeamAdmins: isPlatformAdmin, // TODO: since managing team admin permissions are in a forthcoming ticket, this ability is limited to platform admin only now
   };
 };

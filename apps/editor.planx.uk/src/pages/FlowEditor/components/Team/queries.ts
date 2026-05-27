@@ -24,6 +24,19 @@ export const GET_USERS_FOR_TEAM_QUERY = gql`
   }
 `;
 
+export const UPDATE_USER_DETAILS = gql`
+  mutation UpdateUserDetails($userId: Int!, $userValues: users_set_input!) {
+    update_users(where: { id: { _eq: $userId } }, _set: $userValues) {
+      returning {
+        id
+        firstName: first_name
+        lastName: last_name
+        email
+      }
+    }
+  }
+`;
+
 export const UPDATE_TEAM_MEMBER = gql`
   mutation UpdateUser(
     $userId: Int
