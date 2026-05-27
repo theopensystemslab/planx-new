@@ -17,8 +17,7 @@ const Root = styled(Box)(({ theme }) => ({
   border: `1px solid ${theme.palette.border.light}`,
   display: "flex",
   flexDirection: "column",
-  gap: theme.spacing(2),
-  height: "400px",
+  height: "380px",
 }));
 
 const Header = styled(Box)(({ theme }) => ({
