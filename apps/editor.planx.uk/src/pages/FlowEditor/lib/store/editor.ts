@@ -23,6 +23,7 @@ import {
 } from "@planx/graph";
 import { OT } from "@planx/graph/types";
 import type { RegisteredRouter } from "@tanstack/react-router";
+import { logger } from "airbrake";
 import { client } from "lib/graphql";
 import debounce from "lodash/debounce";
 import { type } from "ot-json0";
@@ -45,7 +46,11 @@ let doc: Doc;
 const send = (ops: Array<any>) => {
   if (ops.length > 0) {
     console.log({ ops });
-    doc.submitOp(ops);
+    doc.submitOp(ops, {}, (err) => {
+      if (err) {
+        console.error("[ShareDB] Failed to submit operation:", err);
+      }
+    });
   }
 };
 
@@ -386,6 +391,11 @@ export const editorStore: StateCreator<
     doc.on("op", (_op: any, isLocalOp?: boolean) =>
       isLocalOp ? cloneStateFromLocalOps() : cloneStateFromRemoteOps(),
     );
+
+    doc.on("error", (err: unknown) => {
+      console.error("[ShareDB] Document error:", err);
+      logger.notify(err instanceof Error ? err : new Error(String(err)));
+    });
   },
 
   disconnectFromFlow: () => {
