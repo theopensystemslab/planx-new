@@ -20,9 +20,11 @@ const SendComponent: React.FC<Props> = ({
   ...props
 }) => {
   const fullProps = { destinations: destinations, ...props };
+  const environment = useStore((state) => state.previewEnvironment);
   if (
     window.location.pathname.endsWith("/draft") ||
-    window.location.pathname.endsWith("/preview")
+    window.location.pathname.endsWith("/preview") ||
+    environment !== "standalone" // editor Preview panel
   ) {
     return <SkipSendWarning {...fullProps} />;
   } else {
