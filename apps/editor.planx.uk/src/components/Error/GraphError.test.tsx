@@ -18,10 +18,6 @@ const ThrowError: React.FC = () => {
   throw new Error("Something broke");
 };
 
-const ThrowPlainObject: React.FC = () => {
-  throw { ops: [{ p: ["nodeId", "data"], oi: { title: "new" } }] };
-};
-
 const ThrowGraphError: React.FC = () => {
   throw new GraphError("nodeMustFollowFindProperty");
 };
@@ -60,24 +56,6 @@ it("renders if a child throws an error", async () => {
 
   expect(queryByText(/Something went wrong/)).not.toBeInTheDocument();
   expect(getByRole("heading", { name: /Invalid graph/ })).toBeInTheDocument();
-});
-
-it("normalises a plain object error and calls Airbrake with a proper Error", async () => {
-  const loggerSpy = vi.spyOn(logger, "notify");
-
-  await setup(
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <ThrowPlainObject />
-    </ErrorBoundary>,
-  );
-
-  expect(loggerSpy).toHaveBeenCalled();
-
-  // All calls should receive a proper Error instance (not a plain object)
-  for (const [notifiedError] of loggerSpy.mock.calls) {
-    expect(notifiedError).toBeInstanceOf(Error);
-    expect((notifiedError as Error).message).toContain("ops");
-  }
 });
 
 it("does not call Airbrake", async () => {

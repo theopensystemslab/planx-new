@@ -7,21 +7,10 @@ import type { FallbackProps } from "react-error-boundary";
 
 import { GraphErrorComponent, isGraphError } from "./GraphError";
 
-const normalizeError = (error: unknown): Error => {
-  if (error instanceof Error) return error;
-  if (typeof error === "string") return new Error(error);
-  try {
-    return new Error(JSON.stringify(error));
-  } catch {
-    return new Error(String(error));
-  }
-};
-
 const ErrorFallback: React.FC<FallbackProps> = ({ error }) => {
   if (isGraphError(error)) return <GraphErrorComponent error={error} />;
 
-  const normalizedError = normalizeError(error);
-  logger.notify(normalizedError);
+  logger.notify(error);
 
   return (
     <Card>
@@ -30,9 +19,9 @@ const ErrorFallback: React.FC<FallbackProps> = ({ error }) => {
           Something went wrong
         </Typography>
         <Typography>
-          {normalizedError.message && (
+          {(error as Error).message && (
             <pre style={{ color: "#E91B0C", whiteSpace: "pre-line" }}>
-              {normalizedError.message}
+              {(error as Error).message}
             </pre>
           )}
         </Typography>
