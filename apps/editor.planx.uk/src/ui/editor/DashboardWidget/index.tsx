@@ -1,13 +1,13 @@
 import Box from "@mui/material/Box";
 import { styled, SxProps, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { LinkOptions, RegisteredRouter } from "@tanstack/react-router";
 import React from "react";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 interface DashboardWidgetProps {
   title: string;
-  linkTarget?: string;
-  linkText?: string;
+  link?: LinkOptions<RegisteredRouter> & { label: string };
   children: React.ReactNode;
   sx?: SxProps<Theme>;
 }
@@ -28,7 +28,7 @@ const Header = styled(Box)(({ theme }) => ({
   padding: theme.spacing(1.5),
 }));
 
-export const WidgetLink = styled(CustomLink)(({ theme }) => ({
+const StyledWidgetLink = styled(CustomLink)(({ theme }) => ({
   fontSize: theme.typography.body3.fontSize,
   color: theme.palette.text.secondary,
   "&:hover": {
@@ -36,10 +36,19 @@ export const WidgetLink = styled(CustomLink)(({ theme }) => ({
   },
 })) as typeof CustomLink;
 
+type WidgetLinkProps = LinkOptions<RegisteredRouter> & { label: string };
+
+export const WidgetLink = ({ label, ...linkProps }: WidgetLinkProps) => (
+  <StyledWidgetLink
+    {...(linkProps as React.ComponentProps<typeof StyledWidgetLink>)}
+  >
+    {label}
+  </StyledWidgetLink>
+);
+
 export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
   title,
-  linkTarget,
-  linkText,
+  link,
   children,
   sx,
 }) => (
@@ -48,9 +57,7 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
       <Typography variant="h3" component="h2">
         {title}
       </Typography>
-      {linkTarget && linkText && (
-        <WidgetLink to={linkTarget}>{linkText}</WidgetLink>
-      )}
+      {link && <WidgetLink {...link} />}
     </Header>
     {children}
   </Root>

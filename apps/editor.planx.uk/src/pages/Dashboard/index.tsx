@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import { linkOptions } from "@tanstack/react-router";
 import React from "react";
 import { DashboardWidget } from "ui/editor/DashboardWidget";
 
@@ -26,30 +27,35 @@ export default function Dashboard() {
         >
           <DashboardWidget
             title="Flows"
-            linkTarget={`/app/${team.slug}/flows`}
-            linkText="view all flows"
+            link={linkOptions({
+              to: "/app/$team",
+              params: { team: team.slug },
+              label: "view all flows",
+            })}
           >
             <i>flows content</i>
           </DashboardWidget>
           <DashboardWidget
             title="Notifications"
-            linkTarget={`/app/${team.slug}/notifications`}
-            linkText="view all notifications"
+            link={linkOptions({
+              to: "/app/$team/notifications",
+              params: { team: team.slug },
+              label: "view all notifications",
+            })}
           >
             <i>notifications content</i>
           </DashboardWidget>
           <DashboardWidget
             title="Feedback"
-            linkTarget={`/app/${team.slug}/feedback`}
-            linkText="view all feedback"
+            link={linkOptions({
+              to: "/app/$team/feedback",
+              params: { team: team.slug },
+              label: "view all feedback",
+            })}
           >
             <i>feedback content</i>
           </DashboardWidget>
-          <DashboardWidget
-            title="Activity"
-            linkTarget={`/app/${team.slug}/activity`}
-            linkText="view analytics"
-          >
+          <DashboardWidget title="Activity">
             <i>activity content</i>
           </DashboardWidget>
         </Box>

@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { linkOptions } from "@tanstack/react-router";
 import React from "react";
 import { WidgetLink } from "ui/editor/DashboardWidget";
 
@@ -47,9 +48,13 @@ export default function StatsBanner({ team }: StatsBannerProps) {
     <Root>
       <Header>
         <Typography variant="h3">Last 30 days</Typography>
-        <WidgetLink to="/app/$team" params={{ team }}>
-          view analytics
-        </WidgetLink>
+        <WidgetLink
+          label="view analytics"
+          {...linkOptions({
+            to: "/app/$team",
+            params: { team },
+          })}
+        />
       </Header>
       <StatsGrid>
         {STATS.map(({ label }) => (

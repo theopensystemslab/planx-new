@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import { linkOptions } from "@tanstack/react-router";
 import React from "react";
 import { DashboardWidget } from "ui/editor/DashboardWidget";
 
@@ -21,25 +22,20 @@ export default function Explore() {
           gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
         })}
       >
-        <DashboardWidget
-          title="Templates"
-          linkText="view all templates"
-          linkTarget={`/app/${team.slug}/flows?templates=source+template`}
-        >
+        <DashboardWidget title="Templates">
           <i>templates content</i>
         </DashboardWidget>
         <DashboardWidget
           title="Help and resources"
-          linkText="view all help and resources"
-          linkTarget={`/app/${team.slug}/resources`}
+          link={linkOptions({
+            to: "/app/$team/resources",
+            params: { team: team.slug },
+            label: "view all help and resources",
+          })}
         >
           <i>resources content</i>
         </DashboardWidget>
-        <DashboardWidget
-          title="Available content"
-          linkText="view analytics"
-          linkTarget={`/app/${team.slug}/analytics`}
-        >
+        <DashboardWidget title="Available content">
           <i>available content</i>
         </DashboardWidget>
       </Box>
