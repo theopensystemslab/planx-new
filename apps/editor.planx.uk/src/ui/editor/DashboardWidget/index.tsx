@@ -13,11 +13,12 @@ interface DashboardWidgetProps {
 }
 
 const Root = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: theme.palette.background.default,
   border: `1px solid ${theme.palette.border.light}`,
   display: "flex",
   flexDirection: "column",
   height: "380px",
+  zIndex: 1,
 }));
 
 const Header = styled(Box)(({ theme }) => ({

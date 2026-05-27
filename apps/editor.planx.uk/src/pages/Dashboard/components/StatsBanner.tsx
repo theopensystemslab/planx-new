@@ -16,11 +16,13 @@ interface StatsBannerProps {
 }
 
 const Root = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: theme.palette.background.default,
   border: `1px solid ${theme.palette.border.light}`,
+  position: "relative",
   padding: theme.spacing(1.5),
   marginTop: theme.spacing(4),
   marginBottom: theme.spacing(2),
+  zIndex: 1,
 }));
 
 const Header = styled(Box)({
