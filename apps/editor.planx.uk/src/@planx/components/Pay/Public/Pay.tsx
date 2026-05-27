@@ -22,6 +22,7 @@ export type Props = PublicProps<Pay>;
 
 type ComponentState =
   | { status: "indeterminate"; displayText?: string }
+  | { status: "no_payment_found" } // landed on Pay, has not redirected to Gov Pay to initiate payment
   | { status: "init" }
   | { status: "redirecting"; displayText?: string }
   | { status: "fetching_payment"; displayText?: string }
@@ -77,7 +78,7 @@ function Component(props: Props) {
       case Action.NoFeeFound:
         return { status: "undefined_fee" };
       case Action.NoPaymentFound:
-        return { status: "init" };
+        return { status: "no_payment_found" };
       case Action.IncompletePaymentFound:
         return {
           status: "fetching_payment",
@@ -285,13 +286,14 @@ function Component(props: Props) {
       fee === 0 || props.hidePay || state.status === "unsupported_team";
 
     if (shouldContinueWithoutPaying) continueWithoutPaying();
-    if (state.status === "init") startNewPayment();
+    if (["no_payment_found", "init"].includes(state.status)) startNewPayment();
     if (state.status === "retry") resumeExistingPayment();
   };
 
   return (
     <>
-      {state.status === "init" ||
+      {state.status === "no_payment_found" ||
+      state.status === "init" ||
       state.status === "retry" ||
       state.status === "unsupported_team" ||
       state.status === "undefined_fee" ||
@@ -301,9 +303,9 @@ function Component(props: Props) {
           fee={fee}
           onConfirm={onConfirm}
           buttonTitle={
-            state.status === "init"
-              ? "Pay now using GOV.UK Pay"
-              : "Retry payment"
+            state.status === "retry"
+              ? "Retry payment"
+              : "Pay now using GOV.UK Pay"
           }
           error={
             (state.status === "unsupported_team" &&
