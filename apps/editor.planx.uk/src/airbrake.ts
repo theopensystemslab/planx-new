@@ -32,7 +32,6 @@ function getEnvForAllowedHosts(host: string) {
       return "production";
 
     case "planningservices.planx.in":
-    case "planningserviceslegacy.planx.in":
     case "editor.planx.dev":
       return "staging";
 

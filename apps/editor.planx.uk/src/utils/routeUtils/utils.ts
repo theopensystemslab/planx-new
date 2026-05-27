@@ -34,7 +34,6 @@ export const computePath = (
 const PREVIEW_ONLY_DOMAINS = [
   // staging
   "planningservices.planx.in",
-  "planningserviceslegacy.planx.in",
   // production
   "planningservices.barnet.gov.uk",
   "planningservices.birmingham.gov.uk",
