@@ -37,6 +37,26 @@ components:
             - type: "null"
         fileUrl:
           type: string
+    UnsupportedFileType:
+      description: The uploaded file has an unsupported MIME type or extension
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Unsupported file type. Mimetype: text/plain. Extension: .txt"
+    FileTooLarge:
+      description: The uploaded file exceeds the 30MB size limit
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "File too large"
     DownloadFile:
       description: Successful response
       content:
@@ -66,6 +86,10 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/UploadFile"
+        "413":
+          $ref: "#/components/responses/FileTooLarge"
+        "415":
+          $ref: "#/components/responses/UnsupportedFileType"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /file/public/upload:
@@ -81,6 +105,10 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/UploadFile"
+        "413":
+          $ref: "#/components/responses/FileTooLarge"
+        "415":
+          $ref: "#/components/responses/UnsupportedFileType"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /file/public/{fileKey}/{fileName}:

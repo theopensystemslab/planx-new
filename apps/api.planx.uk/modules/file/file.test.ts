@@ -47,6 +47,36 @@ describe("File upload", () => {
   });
 
   describe.each([PRIVATE_ENDPOINT, PUBLIC_ENDPOINT])(
+    "File size validation for %s",
+    (ENDPOINT) => {
+      it("should return 413 when file exceeds the 30MB limit", async () => {
+        const oversizedBuffer = Buffer.alloc(31 * 1024 * 1024); // 31MB
+        await supertest(app)
+          .post(ENDPOINT)
+          .field("filename", "")
+          .attach("file", oversizedBuffer, "large_file.pdf")
+          .expect(413)
+          .then((res) => {
+            expect(mockPutObject).not.toHaveBeenCalled();
+            expect(res.body.error).toMatch(/File too large/);
+          });
+      });
+
+      it("should return 400 when file is attached to an unexpected field", async () => {
+        await supertest(app)
+          .post(ENDPOINT)
+          .field("filename", "")
+          .attach("wrong_field", Buffer.from("some data"), "some_file.pdf")
+          .expect(400)
+          .then((res) => {
+            expect(mockPutObject).not.toHaveBeenCalled();
+            expect(res.body.error).toMatch(/Unexpected field/);
+          });
+      });
+    },
+  );
+
+  describe.each([PRIVATE_ENDPOINT, PUBLIC_ENDPOINT])(
     "File type validation for %s",
     (ENDPOINT) => {
       it("should not upload a file with an invalid extension", async () => {
@@ -54,7 +84,7 @@ describe("File upload", () => {
           .post(ENDPOINT)
           .field("filename", "")
           .attach("file", Buffer.from("some data"), "some_file.xlxs")
-          .expect(500)
+          .expect(415)
           .then((res) => {
             expect(mockPutObject).not.toHaveBeenCalled();
             expect(res.body.error).toMatch(/Unsupported file type/);
@@ -69,7 +99,7 @@ describe("File upload", () => {
             filename: "invalid_file.txt", // Invalid file type
             contentType: "text/plain", // Invalid MIME type
           })
-          .expect(500)
+          .expect(415)
           .then((res) => {
             expect(mockPutObject).not.toHaveBeenCalled();
             expect(res.body.error).toMatch(/Unsupported file type/);
@@ -84,7 +114,7 @@ describe("File upload", () => {
             filename: "invalid_file.png", // Valid file type
             contentType: "text/plain", // Invalid MIME type
           })
-          .expect(500)
+          .expect(415)
           .then((res) => {
             expect(mockPutObject).not.toHaveBeenCalled();
             expect(res.body.error).toMatch(/Unsupported file type/);
@@ -99,7 +129,7 @@ describe("File upload", () => {
             filename: "invalid_file.txt", // Invalid file type
             contentType: "application/pdf", // Valid MIME type
           })
-          .expect(500)
+          .expect(415)
           .then((res) => {
             expect(mockPutObject).not.toHaveBeenCalled();
             expect(res.body.error).toMatch(/Unsupported file type/);
@@ -141,7 +171,7 @@ describe("File upload", () => {
           filename: "my_file.jpg",
           contentType: "image/jpg",
         })
-        .expect(500)
+        .expect(415)
         .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
           expect(res.body.error).toMatch(/Unsupported file type/);
@@ -291,7 +321,7 @@ describe("File upload", () => {
           filename: "my_file.jpg",
           contentType: "image/jpg",
         })
-        .expect(500)
+        .expect(415)
         .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
           expect(res.body.error).toMatch(/Unsupported file type/);

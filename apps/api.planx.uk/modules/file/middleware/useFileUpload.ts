@@ -1,5 +1,6 @@
 import multer from "multer";
 import path from "path";
+import type { RequestHandler } from "express";
 
 /**
  * 30mb to match limit set in frontend
@@ -49,4 +50,20 @@ const multerOptions: multer.Options = {
   fileFilter,
 };
 
-export const useFileUpload = multer(multerOptions).single("file");
+const upload = multer(multerOptions).single("file");
+
+export const useFileUpload: RequestHandler = (req, res, next) => {
+  upload(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      const status = err.code === "LIMIT_FILE_SIZE" ? 413 : 400;
+      return res.status(status).json({ error: err.message });
+    }
+    if (err instanceof Error) {
+      // fileFilter rejection - unsupported file type
+      return res.status(415).json({ error: err.message });
+    }
+    // System error - log to Airbrake, return 5XX to user
+    if (err) return next(err);
+    next();
+  });
+};
