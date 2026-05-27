@@ -53,7 +53,7 @@ jobs:
           name: planx_frontend_build
           path: ./${{ env.EDITOR_DIRECTORY }}/build
 
-      - uses: pulumi/actions@v6
+      - uses: pulumi/actions@v7
         with:
           command: up
           refresh: true
