@@ -2,14 +2,15 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { linkOptions } from "@tanstack/react-router";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import React from "react";
 import { WidgetLink } from "ui/editor/DashboardWidget";
 
-import { useTeamDashboardStats } from "./useTeamDashboardStats";
-
-interface StatsBannerProps {
-  team: string;
-}
+import { useStore } from "../../FlowEditor/lib/store";
+import {
+  TeamDashboardStats,
+  useTeamDashboardStats,
+} from "./useTeamDashboardStats";
 
 const Root = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -42,11 +43,17 @@ function formatDelta(delta: number): string {
   return delta >= 0 ? `+${delta}` : `${delta}`;
 }
 
-export default function StatsBanner({ team }: StatsBannerProps) {
-  const { data } = useTeamDashboardStats(team);
+interface StatsBannerProps {
+  teamSlug: string;
+  stats?: TeamDashboardStats;
+  loading?: boolean;
+}
 
-  const stats = data?.team_dashboard_stats[0];
-
+export function StatsBanner({
+  teamSlug,
+  stats,
+  loading = false,
+}: StatsBannerProps) {
   const tiles = [
     {
       label: "Online flows",
@@ -82,33 +89,54 @@ export default function StatsBanner({ team }: StatsBannerProps) {
           label="view analytics"
           {...linkOptions({
             to: "/app/$team",
-            params: { team },
+            params: { team: teamSlug },
           })}
         />
       </Header>
-      <StatsGrid>
-        {tiles.map(({ label, value, delta }) => (
-          <Box key={label}>
-            <Typography variant="body2" sx={{ color: "text.secondary" }}>
-              {label}
-            </Typography>
-            <Typography variant="h1" component="p">
-              {value ?? "—"}
-            </Typography>
-            {delta !== null && (
-              <Typography
-                variant="body2"
-                sx={{
-                  color: delta >= 0 ? "success.main" : "error.main",
-                  fontWeight: "bold",
-                }}
-              >
-                {formatDelta(delta)}
+      {loading ? (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: 72,
+          }}
+        >
+          <DelayedLoadingIndicator inline msDelayBeforeVisible={300} />
+        </Box>
+      ) : (
+        <StatsGrid>
+          {tiles.map(({ label, value, delta }) => (
+            <Box key={label}>
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                {label}
               </Typography>
-            )}
-          </Box>
-        ))}
-      </StatsGrid>
+              <Typography variant="h1" component="p">
+                {value ?? "—"}
+              </Typography>
+              {delta !== null && (
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: delta >= 0 ? "success.main" : "error.main",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {formatDelta(delta)}
+                </Typography>
+              )}
+            </Box>
+          ))}
+        </StatsGrid>
+      )}
     </Root>
   );
+}
+
+export default function ConnectedStatsBanner() {
+  const teamSlug = useStore((state) => state.getTeam().slug);
+  const { data, loading } = useTeamDashboardStats(teamSlug);
+  const stats = data?.team_dashboard_stats[0];
+
+  return <StatsBanner teamSlug={teamSlug} stats={stats} loading={loading} />;
 }

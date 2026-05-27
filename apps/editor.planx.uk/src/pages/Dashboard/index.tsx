@@ -17,7 +17,7 @@ export default function Dashboard() {
         <Typography variant="h2" component="h1" gutterBottom>
           {team.name}
         </Typography>
-        <StatsBanner team={team.slug} />
+        <StatsBanner />
         <Box
           sx={(theme) => ({
             display: "grid",
