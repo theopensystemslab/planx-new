@@ -41,7 +41,7 @@ interface MapAndLabelContextValue {
     min: boolean;
     max: boolean;
   };
-  handleGeoJSONChange: (event: GeoJSONChangeEvent) => void,
+  handleGeoJSONChange: (event: GeoJSONChangeEvent) => void;
 }
 
 type MapAndLabelProviderProps = PropsWithChildren<PresentationalProps>;
@@ -163,7 +163,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     }
   };
 
-  const [features, setFeatures] = useState<Feature[] | undefined>(undefined)
+  const [features, setFeatures] = useState<Feature[] | undefined>(undefined);
 
   const [updateMapKey, setUpdateMapKey] = useState<number>(0);
 
@@ -270,7 +270,9 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     removeFeatureFromMap(index);
 
     // Set active index as highest tab after removal, so that when you "add" a new feature the tabs increment correctly
-    setActiveIndex((features && features.length - 2) || 0);
+    const remainingFeatureCount = (features?.length ?? 1) - 1;
+    const hasRemainingFeatures = remainingFeatureCount > 0;
+    setActiveIndex(hasRemainingFeatures ? remainingFeatureCount - 1 : -1);
   };
   return (
     <MapAndLabelContext.Provider
