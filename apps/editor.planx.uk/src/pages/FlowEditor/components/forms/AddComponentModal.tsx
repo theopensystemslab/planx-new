@@ -1,10 +1,18 @@
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import Box from "@mui/material/Box";
 import Popover from "@mui/material/Popover";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { ICONS } from "@planx/components/shared/icons";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { hangerAnchor } from "pages/FlowEditor/lib/hangerAnchor";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
@@ -17,51 +25,89 @@ import {
   type ComponentItem,
 } from "./componentData";
 
-const POPOVER_WIDTH = 640;
+const POPOVER_WIDTH = 300;
 
 interface ComponentRowProps {
   item: ComponentItem;
-  isHovered: boolean;
-  onHover: () => void;
-  onLeave: () => void;
   onClick: () => void;
+  scrollContainerRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const ComponentRow: React.FC<ComponentRowProps> = ({
   item,
-  isHovered,
-  onHover,
-  onLeave,
   onClick,
+  scrollContainerRef,
 }) => {
   const Icon = ICONS[item.type];
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+
+  useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const onScroll = () => setTooltipOpen(false);
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, [scrollContainerRef]);
+
   return (
-    <Box
-      onClick={onClick}
-      onMouseEnter={onHover}
-      onMouseLeave={onLeave}
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        gap: 1,
-        px: 1.5,
-        py: 0.875,
-        cursor: "pointer",
-        backgroundColor: isHovered ? "action.hover" : "transparent",
-      }}
+    <Tooltip
+      title={item.description}
+      placement="right"
+      arrow
+      open={tooltipOpen}
+      onOpen={() => setTooltipOpen(true)}
+      onClose={() => setTooltipOpen(false)}
+      slotProps={{ tooltip: { sx: { maxWidth: 240 } } }}
     >
-      {Icon && (
-        <Box sx={{ flexShrink: 0, lineHeight: 0, color: "text.primary" }}>
-          <Icon sx={{ fontSize: 20 }} />
-        </Box>
-      )}
-      <Typography
-        variant="body2"
-        sx={{ fontWeight: isHovered ? FONT_WEIGHT_SEMI_BOLD : "normal" }}
+      <Box
+        onClick={onClick}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 1,
+          px: 1.5,
+          py: 0.875,
+          cursor: "pointer",
+          "&:hover": {
+            backgroundColor: "action.hover",
+            "& .component-title": { fontWeight: FONT_WEIGHT_SEMI_BOLD },
+          },
+        }}
       >
-        {item.title}
-      </Typography>
-    </Box>
+        {Icon && (
+          <Box sx={{ flexShrink: 0, lineHeight: 0, color: "text.primary" }}>
+            <Icon sx={{ fontSize: 20 }} />
+          </Box>
+        )}
+        <Typography variant="body2" className="component-title">
+          {item.title}
+        </Typography>
+        {item.hasAiVariant && (
+          <Box
+            sx={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 0.4,
+              ml: "auto",
+              px: 0.4,
+              py: 0.25,
+              borderRadius: 2,
+              backgroundColor: "info.dark",
+              color: "primary.contrastText",
+              flexShrink: 0,
+            }}
+          >
+            <AutoAwesomeIcon sx={{ fontSize: 12 }} />
+            <Typography
+              variant="body3"
+              sx={{ lineHeight: 1, fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+            >
+              AI
+            </Typography>
+          </Box>
+        )}
+      </Box>
+    </Tooltip>
   );
 };
 
@@ -77,10 +123,10 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
   const navigate = useNavigate();
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
-  const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
   const [searchedItems, setSearchedItems] = useState<ComponentItem[] | null>(
     null,
   );
+  const listRef = useRef<HTMLDivElement>(null);
 
   const filteredCategories = useMemo<Category[]>(() => {
     if (!searchedItems) return ALL_CATEGORIES;
@@ -90,14 +136,6 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
       items: cat.items.filter((item) => visibleSlugs.has(item.slug)),
     })).filter((cat) => cat.items.length > 0);
   }, [searchedItems]);
-
-  const hoveredItem = useMemo(
-    () =>
-      hoveredSlug
-        ? (ALL_ITEMS.find((i) => i.slug === hoveredSlug) ?? null)
-        : null,
-    [hoveredSlug],
-  );
 
   const handleSelect = useCallback(
     (slug: string) => {
@@ -175,6 +213,7 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
         },
       }}
     >
+      {/* Search */}
       <Box
         sx={{
           px: 1.5,
@@ -195,65 +234,38 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
         />
       </Box>
 
-      <Box sx={{ display: "flex", flex: 1, minHeight: 0, overflow: "hidden" }}>
-        <Box
-          sx={{
-            flex: 1,
-            overflowY: "auto",
-            borderRight: 1,
-            borderColor: "divider",
-            pb: 2,
-          }}
-        >
-          {filteredCategories.length === 0 ? (
-            <Typography color="textSecondary" variant="body2" sx={{ p: 2 }}>
-              No components match your search.
-            </Typography>
-          ) : (
-            filteredCategories.map((cat) => (
-              <Box key={cat.label}>
-                <Typography
-                  variant="body3"
-                  sx={{
-                    fontWeight: FONT_WEIGHT_SEMI_BOLD,
-                    display: "block",
-                    p: 1.5,
-                    pb: 0.5,
-                    color: "text.primary",
-                  }}
-                >
-                  {cat.label}
-                </Typography>
-                {cat.items.map((item) => (
-                  <ComponentRow
-                    key={item.slug}
-                    item={item}
-                    isHovered={hoveredSlug === item.slug}
-                    onHover={() => setHoveredSlug(item.slug)}
-                    onLeave={() => setHoveredSlug(null)}
-                    onClick={() => handleSelect(item.slug)}
-                  />
-                ))}
-              </Box>
-            ))
-          )}
-        </Box>
-        <Box
-          sx={{
-            flex: 1,
-            p: 2.5,
-            display: "flex",
-            alignItems: "flex-start",
-            backgroundColor: "background.default",
-          }}
-        >
-          <Typography
-            variant="body2"
-            sx={{ fontStyle: hoveredItem ? "normal" : "italic" }}
-          >
-            {hoveredItem?.description ?? ""}
+      {/* Component list */}
+      <Box ref={listRef} sx={{ overflowY: "auto", pb: 2 }}>
+        {filteredCategories.length === 0 ? (
+          <Typography color="textSecondary" variant="body2" sx={{ p: 2 }}>
+            No components match your search.
           </Typography>
-        </Box>
+        ) : (
+          filteredCategories.map((cat) => (
+            <Box key={cat.label}>
+              <Typography
+                variant="body3"
+                sx={{
+                  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+                  display: "block",
+                  p: 1.5,
+                  pb: 0.5,
+                  color: "text.primary",
+                }}
+              >
+                {cat.label}
+              </Typography>
+              {cat.items.map((item) => (
+                <ComponentRow
+                  key={item.slug}
+                  item={item}
+                  onClick={() => handleSelect(item.slug)}
+                  scrollContainerRef={listRef}
+                />
+              ))}
+            </Box>
+          ))
+        )}
       </Box>
     </Popover>
   );

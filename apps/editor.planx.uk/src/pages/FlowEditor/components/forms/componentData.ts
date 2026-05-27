@@ -5,6 +5,7 @@ export interface ComponentItem {
   slug: string;
   title: string;
   description: string;
+  hasAiVariant?: boolean;
 }
 
 export interface Category {
@@ -55,7 +56,9 @@ export const ALL_CATEGORIES: Category[] = [
         type: TYPES.TextInput,
         slug: "text-input",
         title: "Text input",
-        description: "Collect a text response",
+        description:
+          "Collect a text response, or AI enhanced project description",
+        hasAiVariant: true,
       },
       {
         type: TYPES.FileUpload,
