@@ -1,14 +1,18 @@
 import { useMutation } from "@apollo/client";
+import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import { TeamRole } from "@opensystemslab/planx-core/types";
 import { Form, Formik } from "formik";
 import { useToast } from "hooks/useToast";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { Switch } from "ui/shared/Switch";
 
 import { upsertMemberSchema } from "../formSchema";
-import { UPDATE_TEAM_MEMBER } from "../queries";
+import { GET_USERS_FOR_TEAM_QUERY, UPDATE_TEAM_MEMBER } from "../queries";
 import { type EditUserModalProps, type UserFormValues } from "../types";
 import { EmailField } from "./Fields/EmailField";
 import { NameFields } from "./Fields/NameFields";
@@ -28,6 +32,12 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
   };
 
   const [updateUser, { loading }] = useMutation(UPDATE_TEAM_MEMBER, {
+    refetchQueries: [
+      {
+        query: GET_USERS_FOR_TEAM_QUERY,
+        variables: { teamSlug: useStore.getState().teamSlug },
+      },
+    ],
     onCompleted: () => handleCompleted("Successfully updated a user"),
     onError: () => toast.error("Failed to update the user, please try again"),
   });
@@ -38,6 +48,8 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
     updateUser({
       variables: {
         userId: member.id,
+        teamId: teamId,
+        role: values.role,
         userValues: {
           first_name: formatted.firstName,
           last_name: formatted.lastName,
@@ -59,7 +71,7 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
           firstName: member.firstName,
           lastName: member.lastName,
           email: member?.email ?? "",
-          role: "teamEditor",
+          role: member.role as TeamRole,
         }}
         validationSchema={upsertMemberSchema}
         onSubmit={handleSubmit}

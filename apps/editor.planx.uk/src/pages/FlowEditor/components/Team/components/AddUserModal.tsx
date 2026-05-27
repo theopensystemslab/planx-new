@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -5,6 +6,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
 import { Form, Formik } from "formik";
 import React from "react";
+import { Switch } from "ui/shared/Switch";
 
 import { useAddUserModal } from "../hooks/useAddUserModal";
 import { type AddUserModalProps, UserFormValues } from "../types";
@@ -18,7 +20,6 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
 }) => {
   const {
     step,
-    role,
     title,
     handleClose,
     handleSubmit,
@@ -35,7 +36,12 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
       onClose={onClose}
     >
       <Formik<UserFormValues>
-        initialValues={{ firstName: "", lastName: "", email: "", role }}
+        initialValues={{
+          firstName: "",
+          lastName: "",
+          email: "",
+          role: "teamEditor",
+        }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
         enableReinitialize
@@ -67,7 +73,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
                             : "teamEditor",
                         )
                       }
-                      label={"Is Team Admin"}
+                      label={"Team Admin"}
                     />
                   )}
                 </>
