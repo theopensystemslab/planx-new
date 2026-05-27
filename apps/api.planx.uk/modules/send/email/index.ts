@@ -33,6 +33,12 @@ export const sendToEmail: SendIntegrationController = async (
   try {
     const { teamId } = await getTeamEmailSettings(localAuthority);
     const flowId = await getFlowId(sessionId);
+    if (!flowId) {
+      return next({
+        status: 400,
+        message: `Unable to retrieve flowId for session ${sessionId}`,
+      });
+    }
 
     // Confirm this local authority (aka team) has an email configured
     const submissionEmailAddress = await getSubmissionEmail(teamId, flowId);

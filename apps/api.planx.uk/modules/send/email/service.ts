@@ -41,7 +41,7 @@ export async function getTeamEmailSettings(localAuthority: string) {
 
 interface GetFlowId {
   lowcalSessions: {
-    flowId: string;
+    flowId: string | null;
   }[];
 }
 
