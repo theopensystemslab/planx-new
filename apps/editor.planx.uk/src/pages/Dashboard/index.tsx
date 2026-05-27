@@ -57,7 +57,7 @@ export default function Dashboard() {
               label: "view all feedback",
             })}
           >
-            <FeedbackWidget teamSlug={team.slug} />
+            <FeedbackWidget />
           </DashboardWidget>
           <DashboardWidget title="Activity">
             <i>activity content</i>

@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 
 import { GET_UNREAD_FEEDBACK_SUMMARY } from "./queries";
 
-interface FlowSummary {
+export interface FlowSummary {
   flowName: string;
   count: number;
 }

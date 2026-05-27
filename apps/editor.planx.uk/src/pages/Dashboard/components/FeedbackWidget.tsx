@@ -1,16 +1,37 @@
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import React from "react";
 
-import { useUnreadFeedback } from "./useUnreadFeedback";
+import { useStore } from "../../FlowEditor/lib/store";
+import { FlowSummary, useUnreadFeedback } from "./useUnreadFeedback";
 
 interface FeedbackWidgetProps {
-  teamSlug: string;
+  flows: FlowSummary[];
+  total: number;
+  loading?: boolean;
 }
 
-export default function FeedbackWidget({ teamSlug }: FeedbackWidgetProps) {
-  const { flows, total } = useUnreadFeedback(teamSlug);
+export function FeedbackWidget({
+  flows,
+  total,
+  loading = false,
+}: FeedbackWidgetProps) {
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <DelayedLoadingIndicator inline msDelayBeforeVisible={300} />
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", overflow: "hidden" }}>
@@ -48,4 +69,11 @@ export default function FeedbackWidget({ teamSlug }: FeedbackWidgetProps) {
       </Box>
     </Box>
   );
+}
+
+export default function ConnectedFeedbackWidget() {
+  const teamSlug = useStore((state) => state.getTeam().slug);
+  const { flows, total, loading } = useUnreadFeedback(teamSlug);
+
+  return <FeedbackWidget flows={flows} total={total} loading={loading} />;
 }
