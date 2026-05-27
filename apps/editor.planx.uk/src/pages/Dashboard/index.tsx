@@ -8,6 +8,7 @@ import { DashboardWidget } from "ui/editor/DashboardWidget";
 import { useStore } from "../../pages/FlowEditor/lib/store";
 import FlowsPanel from "./components/FlowsPanel";
 import ConnectedNotificationsWidget from "./components/NotificationsWidget";
+import FeedbackWidget from "./components/FeedbackWidget";
 import StatsBanner from "./components/StatsBanner";
 
 export default function Dashboard() {
@@ -56,7 +57,7 @@ export default function Dashboard() {
               label: "view all feedback",
             })}
           >
-            <i>feedback content</i>
+            <FeedbackWidget teamSlug={team.slug} />
           </DashboardWidget>
           <DashboardWidget title="Activity">
             <i>activity content</i>
