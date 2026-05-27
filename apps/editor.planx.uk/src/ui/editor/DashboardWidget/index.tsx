@@ -15,18 +15,18 @@ interface DashboardWidgetProps {
 const Root = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   border: `1px solid ${theme.palette.border.light}`,
-  padding: theme.spacing(1.5),
   display: "flex",
   flexDirection: "column",
   gap: theme.spacing(2),
   height: "400px",
 }));
 
-const Header = styled(Box)({
+const Header = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "baseline",
   justifyContent: "space-between",
-});
+  padding: theme.spacing(1.5),
+}));
 
 export const WidgetLink = styled(CustomLink)(({ theme }) => ({
   fontSize: theme.typography.body3.fontSize,
