@@ -41,8 +41,8 @@ export const FlowsPanel: React.FC = () => {
         onChange={(_e, v) => setTab(v)}
         sx={{ minHeight: 0, borderBottom: 1, borderColor: "border.main" }}
       >
-        <StyledTab label="Recent flows" value="recent" />
-        <StyledTab label="Pinned flows" value="pinned" />
+        <StyledTab label="Recent flows" value="recent" fontSize="16px" />
+        <StyledTab label="Pinned flows" value="pinned" fontSize="16px" />
       </Tabs>
       <List disablePadding sx={{ overflowY: "auto", flex: 1 }}>
         {displayed.map((flow, i) => {
