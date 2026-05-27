@@ -1,7 +1,8 @@
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
-import { useActivityData } from "hooks/data/useActivityData";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import { ActivityItem, useActivityData } from "hooks/data/useActivityData";
 import React, { useState } from "react";
 import StyledTab from "ui/editor/StyledTab";
 
@@ -15,9 +16,25 @@ const Content = styled(Box)({
   overflow: "hidden",
 });
 
-export default function ActivityWidget() {
+const LoadingArea = styled(Box)({
+  flex: 1,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+});
+
+interface ActivityWidgetProps {
+  sessions: ActivityItem[];
+  submissions: ActivityItem[];
+  loading: boolean;
+}
+
+export function ActivityWidget({
+  sessions,
+  submissions,
+  loading,
+}: ActivityWidgetProps) {
   const [tab, setTab] = useState(0);
-  const { sessions, submissions } = useActivityData();
 
   return (
     <Content>
@@ -34,8 +51,27 @@ export default function ActivityWidget() {
         <StyledTab label="Sessions by service" />
         <StyledTab label="Submissions by service" />
       </Tabs>
-      {tab === 0 && <ServiceListWithCount items={sessions} />}
-      {tab === 1 && <ServiceListWithCount items={submissions} />}
+      {loading ? (
+        <LoadingArea>
+          <DelayedLoadingIndicator inline msDelayBeforeVisible={300} />
+        </LoadingArea>
+      ) : (
+        <>
+          {tab === 0 && <ServiceListWithCount items={sessions} />}
+          {tab === 1 && <ServiceListWithCount items={submissions} />}
+        </>
+      )}
     </Content>
+  );
+}
+
+export default function ConnectedActivityWidget() {
+  const { sessions, submissions, loading } = useActivityData();
+  return (
+    <ActivityWidget
+      sessions={sessions}
+      submissions={submissions}
+      loading={loading}
+    />
   );
 }

@@ -47,6 +47,22 @@ export default function ServiceListWithCount({
   const activeItems = items.filter((item) => item.count > 0);
   const maxCount = activeItems[0]?.count ?? 1;
 
+  if (activeItems.length === 0) {
+    return (
+      <ServiceList
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Typography variant="body2" sx={{ color: "text.secondary" }}>
+          No activity to show
+        </Typography>
+      </ServiceList>
+    );
+  }
+
   return (
     <ServiceList>
       {activeItems.map((item) => (
