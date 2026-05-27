@@ -54,7 +54,7 @@ describe("File upload", () => {
           .post(ENDPOINT)
           .field("filename", "")
           .attach("file", Buffer.from("some data"), "some_file.xlxs")
-          .expect(500)
+          .expect(400)
           .then((res) => {
             expect(mockPutObject).not.toHaveBeenCalled();
             expect(res.body.error).toMatch(/Unsupported file type/);
@@ -69,7 +69,7 @@ describe("File upload", () => {
             filename: "invalid_file.txt", // Invalid file type
             contentType: "text/plain", // Invalid MIME type
           })
-          .expect(500)
+          .expect(400)
           .then((res) => {
             expect(mockPutObject).not.toHaveBeenCalled();
             expect(res.body.error).toMatch(/Unsupported file type/);
@@ -84,7 +84,7 @@ describe("File upload", () => {
             filename: "invalid_file.png", // Valid file type
             contentType: "text/plain", // Invalid MIME type
           })
-          .expect(500)
+          .expect(400)
           .then((res) => {
             expect(mockPutObject).not.toHaveBeenCalled();
             expect(res.body.error).toMatch(/Unsupported file type/);
@@ -99,7 +99,7 @@ describe("File upload", () => {
             filename: "invalid_file.txt", // Invalid file type
             contentType: "application/pdf", // Valid MIME type
           })
-          .expect(500)
+          .expect(400)
           .then((res) => {
             expect(mockPutObject).not.toHaveBeenCalled();
             expect(res.body.error).toMatch(/Unsupported file type/);
@@ -141,7 +141,7 @@ describe("File upload", () => {
           filename: "my_file.jpg",
           contentType: "image/jpg",
         })
-        .expect(500)
+        .expect(400)
         .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
           expect(res.body.error).toMatch(/Unsupported file type/);
@@ -291,7 +291,7 @@ describe("File upload", () => {
           filename: "my_file.jpg",
           contentType: "image/jpg",
         })
-        .expect(500)
+        .expect(400)
         .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
           expect(res.body.error).toMatch(/Unsupported file type/);
