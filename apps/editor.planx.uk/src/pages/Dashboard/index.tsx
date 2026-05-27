@@ -9,6 +9,7 @@ import { useStore } from "../../pages/FlowEditor/lib/store";
 import FlowsPanel from "./components/FlowsPanel";
 import ConnectedNotificationsWidget from "./components/NotificationsWidget";
 import FeedbackWidget from "./components/FeedbackWidget";
+import ActivityWidget from "./components/ActivityWidget";
 import StatsBanner from "./components/StatsBanner";
 
 export default function Dashboard() {
@@ -60,7 +61,7 @@ export default function Dashboard() {
             <FeedbackWidget />
           </DashboardWidget>
           <DashboardWidget title="Activity">
-            <i>activity content</i>
+            <ActivityWidget />
           </DashboardWidget>
         </Box>
       </Container>
