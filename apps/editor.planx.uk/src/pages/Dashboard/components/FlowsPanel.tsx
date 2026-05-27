@@ -4,6 +4,8 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import React, { useState } from "react";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
@@ -16,12 +18,16 @@ type Tab = "recent" | "pinned";
 
 const MAX_FLOWS = 5;
 
-export const FlowsPanel: React.FC = () => {
-  const [tab, setTab] = useState<Tab>("recent");
-  const teamId = useStore((state) => state.getTeam().id);
-  const { data } = useGetFlows(teamId);
+interface FlowsPanelProps {
+  flows: FlowSummary[];
+  loading?: boolean;
+}
 
-  const flows = data?.flows ?? [];
+export const FlowsPanel: React.FC<FlowsPanelProps> = ({
+  flows,
+  loading = false,
+}) => {
+  const [tab, setTab] = useState<Tab>("recent");
 
   const recentFlows = [...flows]
     .sort(
@@ -44,53 +50,76 @@ export const FlowsPanel: React.FC = () => {
         <StyledTab label="Recent flows" value="recent" fontSize="16px" />
         <StyledTab label="Pinned flows" value="pinned" fontSize="16px" />
       </Tabs>
-      <List disablePadding sx={{ overflowY: "auto", flex: 1 }}>
-        {displayed.map((flow, i) => {
-          const isOnline = flow.status === "online";
-          const isAnyTemplate = flow.isTemplate || Boolean(flow.templatedFrom);
-          return (
-            <React.Fragment key={flow.id}>
-              {i > 0 && <Divider />}
-              <ListItem
-                sx={{
-                  px: 1.5,
-                  py: 1,
-                  backgroundColor: isAnyTemplate
-                    ? "template.light"
-                    : "transparent",
-                }}
-              >
-                <ListItemText
-                  primary={
-                    <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                      {flow.name}
-                    </Typography>
-                  }
-                />
-                <FlowTag
-                  tagType={FlowTagType.Status}
-                  statusVariant={
-                    isOnline ? StatusVariant.Online : StatusVariant.Offline
-                  }
+      {loading ? (
+        <List
+          disablePadding
+          sx={{
+            display: "flex",
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <DelayedLoadingIndicator inline msDelayBeforeVisible={300} />
+        </List>
+      ) : (
+        <List disablePadding sx={{ overflowY: "auto", flex: 1 }}>
+          {displayed.map((flow, i) => {
+            const isOnline = flow.status === "online";
+            const isAnyTemplate =
+              flow.isTemplate || Boolean(flow.templatedFrom);
+            return (
+              <React.Fragment key={flow.id}>
+                {i > 0 && <Divider />}
+                <ListItem
+                  sx={{
+                    px: 1.5,
+                    py: 1,
+                    backgroundColor: isAnyTemplate
+                      ? "template.light"
+                      : "transparent",
+                  }}
                 >
-                  {isOnline ? "Online" : "Offline"}
-                </FlowTag>
-              </ListItem>
-            </React.Fragment>
-          );
-        })}
-        {displayed.length === 0 && (
-          <ListItem sx={{ px: 1.5, py: 1 }}>
-            <ListItemText
-              primary={
-                <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  {tab === "pinned" ? "No pinned flows" : "No flows yet"}
-                </Typography>
-              }
-            />
-          </ListItem>
-        )}
-      </List>
+                  <ListItemText
+                    primary={
+                      <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                        {flow.name}
+                      </Typography>
+                    }
+                  />
+                  <FlowTag
+                    tagType={FlowTagType.Status}
+                    statusVariant={
+                      isOnline ? StatusVariant.Online : StatusVariant.Offline
+                    }
+                  >
+                    {isOnline ? "Online" : "Offline"}
+                  </FlowTag>
+                </ListItem>
+              </React.Fragment>
+            );
+          })}
+          {displayed.length === 0 && (
+            <ListItem sx={{ px: 1.5, py: 1 }}>
+              <ListItemText
+                primary={
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    {tab === "pinned" ? "No pinned flows" : "No flows yet"}
+                  </Typography>
+                }
+              />
+            </ListItem>
+          )}
+        </List>
+      )}
     </>
   );
 };
+
+export default function ConnectedFlowsPanel() {
+  const teamId = useStore((state) => state.getTeam().id);
+  const { data, loading } = useGetFlows(teamId);
+  const flows = data?.flows ?? [];
+
+  return <FlowsPanel flows={flows} loading={loading} />;
+}
