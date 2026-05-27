@@ -1,0 +1,34 @@
+import { screen, within } from "@testing-library/react";
+// eslint-disable-next-line no-restricted-imports
+import type { UserEvent } from "@testing-library/user-event";
+
+import { userEntersInput } from "./userEntersInput";
+
+export const userTriesToAddNewTeamAdmin = async (user: UserEvent) => {
+  const teamMembersTable = screen.getByTestId("team-members");
+  const addMemberButton =
+    await within(teamMembersTable).findByText("Add a new member");
+  user.click(addMemberButton);
+
+  const addNewEditorModal = await screen.findByTestId("modal-create-user");
+
+  await userEntersInput(
+    "Email address",
+    "minniemouse@email.com",
+    addNewEditorModal,
+    user,
+  );
+  const continueButton = await screen.findByTestId("modal-create-user-button");
+  await user.click(continueButton);
+
+  await userEntersInput("First name", "Minnie", addNewEditorModal, user);
+  await userEntersInput("Last name", "Mouse", addNewEditorModal, user);
+  const isTeamAdminToggle =
+    await within(addNewEditorModal).findByLabelText("Team Admin");
+  await user.click(isTeamAdminToggle);
+
+  const createUserButton = await screen.findByTestId(
+    "modal-create-user-button",
+  );
+  await user.click(createUserButton);
+};

@@ -37,6 +37,7 @@ describe("when a user presses 'edit button'", () => {
     expect(firstNameInput).toHaveDisplayValue("Bilbo");
     expect(lastNameInput).toHaveDisplayValue("Baggins");
     expect(emailInput).toHaveDisplayValue("bil.bags@email.com");
+    expect(isTeamAdmin).not.toBeChecked();
   });
 
   it("disables the update user button", async () => {
@@ -55,7 +56,7 @@ describe("when a user presses 'edit button'", () => {
 
 describe("when a user updates a field correctly", () => {
   beforeEach(async () => {
-    useStore.setState({ teamSlug: "planx" });
+    useStore.setState({ teamSlug: "test" });
     const { user } = await setupTeamMembersScreen();
 
     const teamMembersTable = screen.getByTestId("team-members");
@@ -88,7 +89,7 @@ describe("when a user updates a field correctly", () => {
 
 describe("when a user correctly updates an Editor", () => {
   beforeEach(async () => {
-    useStore.setState({ teamSlug: "planx" });
+    useStore.setState({ teamSlug: "test" });
 
     server.use(updateUserHandler());
 
@@ -135,16 +136,19 @@ describe("when a user correctly updates an Editor", () => {
 
 describe("when a user correctly makes a teamEditor a teamAdmin", () => {
   beforeEach(async () => {
-    useStore.setState({ teamSlug: "planx" });
+    useStore.setState({
+      user: mockPlatformAdminUser,
+      teamSlug: "test",
+    });
 
     server.use(updateUserHandler());
 
     const { user } = await setupTeamMembersScreen();
 
     const teamMembersTable = screen.getByTestId("team-members");
-    const addMemberButton =
+    const editMemberButton =
       await within(teamMembersTable).findByTestId("edit-button-3");
-    await user.click(addMemberButton);
+    await user.click(editMemberButton);
 
     const teamAdminSwitch = await screen.findByLabelText("Team Admin");
 
@@ -237,7 +241,7 @@ describe("when editing a platform admin user", () => {
     await user.click(editButton);
   });
 
-  it("does not show the Team Admin switch for platform admins", async () => {
+  it("does not show the Team Admin switch when editing platform admins", async () => {
     expect(await screen.findByTestId("modal-edit-user")).toBeVisible();
 
     const teamAdminSwitch = screen.queryByLabelText("Team Admin");
