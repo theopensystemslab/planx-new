@@ -34,7 +34,7 @@ export const TeamMembers = () => {
           your flows.
         </Typography>
         {loading && <DelayedLoadingIndicator />}
-        {activeMembers &&
+        {activeMembers && (
           <MembersTable
             members={activeMembers}
             showAddMemberButton={canManageActiveMembers}
@@ -42,22 +42,22 @@ export const TeamMembers = () => {
             showRemoveMemberButton={canManageActiveMembers}
             showTeamAdminSwitch={canManagePlatformAdmins || canManageTeamAdmins}
           />
-        }
+        )}
       </SettingsSection>
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
-          Admins
+          Platform admins
         </Typography>
         <Typography variant="body1">
-          Admins have editor access across all teams.
+          Platform admins have editor access across all teams.
         </Typography>
         {loading && <DelayedLoadingIndicator />}
-        {platformAdmins &&
+        {platformAdmins && (
           <MembersTable
             members={platformAdmins}
             showEditMemberButton={canManagePlatformAdmins}
           />
-        }
+        )}
       </SettingsSection>
       {archivedMembers.length > 0 && (
         <SettingsSection data-testid="archived-members">
