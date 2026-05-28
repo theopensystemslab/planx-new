@@ -4,15 +4,8 @@ import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import {
-  notFound,
-  useLocation,
-  useNavigate,
-  useRouter,
-} from "@tanstack/react-router";
-import { usePublicRouteContext } from "hooks/usePublicRouteContext";
+import { notFound, useLocation, useNavigate } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { FOOTER_ITEMS } from "types";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 

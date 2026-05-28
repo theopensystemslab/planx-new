@@ -1,4 +1,4 @@
-import { notFound, useMatches } from "@tanstack/react-router";
+import { useMatches } from "@tanstack/react-router";
 import { useMemo } from "react";
 
 type PublicRoutePattern =
@@ -12,15 +12,18 @@ type PublicRoutePattern =
  * Returns the correct route pattern for public links based on current domain context.
  * Custom domains use "/$flow" pattern, while editor.planx.uk uses "/$team/$flow/{mode}" pattern.
  *
+ * Returns undefined when called outside a public route context (e.g. Editor sidebar, Storybook).
+ * In those cases links will degrade to (broken) relative links - this will have no external user impact.
+ *
  * Must be used to ensure type-safety and accuracy on any internal links within the _public route structure
  */
-export const usePublicRouteContext = (): PublicRoutePattern => {
+export const usePublicRouteContext = (): PublicRoutePattern | undefined => {
   const matches = useMatches();
 
   return useMemo(() => {
     const currentRoute = matches.at(-1);
 
-    if (!currentRoute?.routeId) throw notFound();
+    if (!currentRoute?.routeId) return undefined;
 
     const { routeId } = currentRoute;
 
@@ -37,6 +40,6 @@ export const usePublicRouteContext = (): PublicRoutePattern => {
       if (routeId.includes("/download-application")) return "/$team/$flow";
     }
 
-    throw notFound();
+    return undefined;
   }, [matches]);
 };
