@@ -43,7 +43,7 @@ export const Route = createFileRoute("/_authenticated/app/$team/$flow")({
     const store = useStore.getState();
 
     // Don't re-connect to document when navigating to nested flows
-    if (store.flowSlug === rootFlow) return;
+    // if (store.flowSlug === rootFlow) return;
 
     try {
       // Ensure we only have a single active connection
