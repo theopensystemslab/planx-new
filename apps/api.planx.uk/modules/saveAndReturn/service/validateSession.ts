@@ -33,9 +33,15 @@ export async function validateSession(
   const sessionUpdatedAt = fetchedSession.updated_at!;
   const flowId = fetchedSession.flow_id!;
 
-  // if a user has paid, skip reconciliation
+  // If a user has at least redirected away to Gov Pay, skip reconciliation
   // Docs: https://docs.payments.service.gov.uk/api_reference/#payment-status-meanings
-  const paymentStartedStatuses = ["created", "submitted", "success"];
+  const paymentStartedStatuses = [
+    "created",
+    "started",
+    "capturable",
+    "submitted",
+    "success",
+  ];
   const userStatus = sessionData?.govUkPayment?.state?.status;
   const userHasPaid = userStatus && paymentStartedStatuses.includes(userStatus);
 
