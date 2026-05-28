@@ -1,9 +1,12 @@
+import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
-import Tabs from "@mui/material/Tabs";
+import { styled } from "@mui/material/styles";
+import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
+import { Link } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import React, { useState } from "react";
@@ -14,17 +17,25 @@ import StyledTab from "ui/editor/StyledTab";
 import { useStore } from "../../FlowEditor/lib/store";
 import { useGetFlows } from "../../Team/components/hooks/useGetFlows";
 
+const TabList = styled(Box)(() => ({
+  [`& .${tabsClasses.indicator}`]: {
+    display: "none",
+  },
+}));
+
 type Tab = "recent" | "pinned";
 
 const MAX_FLOWS = 5;
 
 interface FlowsPanelProps {
   flows: FlowSummary[];
+  teamSlug: string;
   loading?: boolean;
 }
 
 export const FlowsPanel: React.FC<FlowsPanelProps> = ({
   flows,
+  teamSlug,
   loading = false,
 }) => {
   const [tab, setTab] = useState<Tab>("recent");
@@ -42,14 +53,16 @@ export const FlowsPanel: React.FC<FlowsPanelProps> = ({
 
   return (
     <>
-      <Tabs
-        value={tab}
-        onChange={(_e, v) => setTab(v)}
-        sx={{ minHeight: 0, borderBottom: 1, borderColor: "border.main" }}
-      >
-        <StyledTab label="Recent flows" value="recent" fontSize="16px" />
-        <StyledTab label="Pinned flows" value="pinned" fontSize="16px" />
-      </Tabs>
+      <TabList>
+        <Tabs
+          value={tab}
+          onChange={(_e, v) => setTab(v)}
+          sx={{ minHeight: 0, borderBottom: 1, borderColor: "border.main" }}
+        >
+          <StyledTab label="Recent flows" value="recent" fontSize="16px" />
+          <StyledTab label="Pinned flows" value="pinned" fontSize="16px" />
+        </Tabs>
+      </TabList>
       {loading ? (
         <List
           disablePadding
@@ -70,16 +83,32 @@ export const FlowsPanel: React.FC<FlowsPanelProps> = ({
               flow.isTemplate || Boolean(flow.templatedFrom);
             return (
               <React.Fragment key={flow.id}>
-                {i > 0 && <Divider />}
+                {i > 0 && <Divider sx={{ borderColor: "border.main" }} />}
                 <ListItem
                   sx={{
+                    position: "relative",
                     px: 1.5,
                     py: 1,
                     backgroundColor: isAnyTemplate
                       ? "template.light"
                       : "transparent",
+                    "&:hover": {
+                      backgroundColor: isAnyTemplate
+                        ? "template.main"
+                        : "background.paper",
+                    },
                   }}
                 >
+                  <Link
+                    to="/app/$team/$flow"
+                    params={{ team: teamSlug, flow: flow.slug }}
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      zIndex: 1,
+                    }}
+                    aria-label={flow.name}
+                  />
                   <ListItemText
                     primary={
                       <Typography variant="body1" sx={{ fontWeight: "bold" }}>
@@ -117,9 +146,9 @@ export const FlowsPanel: React.FC<FlowsPanelProps> = ({
 };
 
 export default function ConnectedFlowsPanel() {
-  const teamId = useStore((state) => state.getTeam().id);
-  const { data, loading } = useGetFlows(teamId);
+  const team = useStore((state) => state.getTeam());
+  const { data, loading } = useGetFlows(team.id);
   const flows = data?.flows ?? [];
 
-  return <FlowsPanel flows={flows} loading={loading} />;
+  return <FlowsPanel flows={flows} teamSlug={team.slug} loading={loading} />;
 }

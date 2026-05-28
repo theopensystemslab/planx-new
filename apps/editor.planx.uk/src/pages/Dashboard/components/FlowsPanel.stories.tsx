@@ -84,6 +84,7 @@ const meta = {
   ],
   args: {
     flows: mockFlows,
+    teamSlug: "test-council",
     loading: false,
   },
 } satisfies Meta<typeof FlowsPanel>;
