@@ -23,7 +23,8 @@ CREATE TEMPORARY TABLE sync_flows (
   category text,
   submission_email_id uuid,
   deleted_at timestamptz,
-  email_template text
+  email_template text,
+  is_service boolean
   );
 \copy sync_flows FROM '/tmp/flows.csv' WITH (FORMAT csv, DELIMITER ';');
 
@@ -49,7 +50,8 @@ INSERT INTO flows (
   category,
   submission_email_id,
   deleted_at,
-  email_template
+  email_template,
+  is_service
 )
 SELECT
   id,
@@ -73,7 +75,8 @@ SELECT
   category,
   submission_email_id,
   deleted_at,
-  email_template
+  email_template,
+  is_service
 FROM sync_flows
 ON CONFLICT (id) DO UPDATE
 SET
@@ -96,7 +99,8 @@ SET
   category = EXCLUDED.category,
   submission_email_id = NULL,
   deleted_at = EXCLUDED.deleted_at,
-  email_template = EXCLUDED.email_template;
+  email_template = EXCLUDED.email_template,
+  is_service = EXCLUDED.is_service;
 
 -- ensure that original flows.version is overwritten to match new operation inserted below, else sharedb will fail
 UPDATE flows SET version = 1;
