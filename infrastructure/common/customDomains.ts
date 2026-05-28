@@ -108,12 +108,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         },
       ]
     : [
-        // we spin up makeshift 'custom domains' on staging for testing purposes
-        {
-          name: "test-legacy",
-          domain: "planningserviceslegacy.planx.in",
-          cloudFrontState: "shared-final",
-        },
+        // we keep one custom domain on staging to function as a canary (monitored by UptimeRobot)
         {
           name: "test-new",
           domain: "planningservices.planx.in",

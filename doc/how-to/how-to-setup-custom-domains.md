@@ -6,7 +6,9 @@ Teams can access PlanX via a custom subdomain on their own domain (e.g. `https:/
 
 Custom domains are ideally served by a **shared CloudFront distribution** backed by a single DNS-validated ACM certificate (which we abbreviate as 'cert' hereafter). This replaces the legacy model where each council's custom domain had its own dedicated CloudFront distribution and had to provide us with an SSL cert.
 
-Because the cert is DNS-validated and managed by AWS, **SSL certs auto-renew** — there is no manual renewal process (see [Appendix A](#appendix-a-automatic-certificate-renewal)). All that is required of council IT teams is for them to add 2 DNS records (possibly at different times).
+Because the shared cert is DNS-validated and managed by AWS, **it will auto-renew** — there is no manual renewal process (see [Appendix A](#appendix-a-automatic-certificate-renewal)). All that is required of council IT teams is for them to add 2 DNS records (usually, they can add both simultaneously).
+
+Note that we have a [public-facing onboarding document](https://opensystemslab.notion.site/9-Set-up-custom-subdomains-3000ef5212cc43a5a88f46563142f82a) that you can send to councils for an abbreviated explanation of this system from their perspective.
 
 NB. We generally assume a 1-to-1 relationship between councils and their custom domains, so we sometimes use these terms in place of each other.
 
@@ -98,8 +100,8 @@ Path: `validation-only` → `shared-final`
     This record proves they own the domain for purposes of certificate validation. It does not affect live traffic.
 
     > NB. **If this is not the first domain on the shared CDN** and you want to expedite:
-    > - Do steps 8-10 **now** and send the council both DNS records together.
-    > - Bundle the application-level changes into your current PR (to be merged in step 7).
+    > - Do steps 11-12 **now** and send the council both DNS records together.
+    > - Do step 13 **now** and bundle the application-level changes into your current PR (to be merged in step 9).
   
 5. **Wait** for the council to confirm they've added the record.
 
@@ -141,7 +143,9 @@ Path: `validation-only` → `shared-final`
 
     This deploy attaches the new cert to the shared CDN (and will also create it first, if it doesn't already exist).
 
-10. Get the shared CDN domain name:
+10. Clean up the old shared cert with another run of `certificates`.
+
+11. Get the shared CDN domain name:
 
     ```sh
     cd infrastructure/application
@@ -150,7 +154,7 @@ Path: `validation-only` → `shared-final`
 
     This returns a value like `d1234abcd.cloudfront.net`.
 
-11. Send CloudFront CNAME to the council, i.e. ask them to create a second DNS record:
+12. Send CloudFront CNAME to the council, i.e. ask them to create a second DNS record:
 
     | Type | Name | Target |
     | --- | --- | --- |
@@ -158,7 +162,7 @@ Path: `validation-only` → `shared-final`
 
     As soon as this propagates, live traffic to the custom domain will be routed to the shared CloudFront PlanX distribution.
 
-12. Application-level configuration should be included in the same PR or as a follow-up:
+13. Application-level configuration should be included in the same PR or as a follow-up:
 
     1. **Frontend route detection** — add the domain to `PREVIEW_ONLY_DOMAINS` in `apps/editor.planx.uk/src/utils/routeUtils/utils.ts`
 
@@ -166,16 +170,17 @@ Path: `validation-only` → `shared-final`
 
     3. **Database** — set `team.domain` to `planningservices.a-new-council.gov.uk` in the Hasura production console (this enables payment links and save-and-return URLs to use the custom domain)
 
-13. **TODO**: Cleanup the old shared cert.
+14. Implement monitoring as needed.
 
-    ...
+    *If* there are fewer than 5 monitors under the `custom-domains-production` tab on [UptimeRobot](https://dashboard.uptimerobot.com/monitors), then add this new domain by cloning one of the existing monitors (to preserve integrations e.g. Slack alerts for SSL expiry)
 
-14. Implement monitoring.
+    > **Note:** We share a single UptimeRobot login stored in the 1Password 'PlanX' vault. You may need to ask someone with access to do this step.
 
-- Add the domain to [UptimeRobot](https://dashboard.uptimerobot.com/monitors) — clone an existing custom domain monitor to preserve integrations (e.g. Slack alerts for SSL expiry)
-- Update the [PlanX CRM on Notion](https://www.notion.so/opensystemslab/Plan-CRM-27c35d469ad1806c8f4dd95067ccf4ff)
+15. Update the [PlanX CRM on Notion](https://www.notion.so/opensystemslab/Plan-CRM-27c35d469ad1806c8f4dd95067ccf4ff).
 
-> **Note:** We share a single UptimeRobot login stored in the 1Password 'PlanX' vault. You may need to ask someone with access to do this step.
+    Find the relevant council's page in our internal CRM, and do the following:
+    - Add the domain as it appears in our single source of truth (`customDomains.ts`) under the field 'Custom Subdomain'.
+
 
 ### B. Migrating a council from legacy setup
 
@@ -190,7 +195,7 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
 1. Do steps 3-5 from [flow A](#a-onboarding-a-new-council).
 
     > NB. **If this is not the first domain on the shared CDN** and you want to expedite:
-    > - Do steps 6-7 **now** and send the council both DNS records together (you still have to wait for them to add the records before proceeding to step 2).
+    > - Do steps 4-5 **now** and send the council both DNS records together (you still have to wait for them to add the records before proceeding to step 2).
 
 2. Advance the domain in question to the `cutover-ongoing` state by updating `customDomains.ts`:
 
@@ -201,24 +206,9 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
 
     Commit this, open a PR and get it approved.
 
-3. Deploy `certificates` manually:
+3. Do steps 7-10 from [flow A](#a-onboarding-a-new-council).
 
-    ```sh
-    cd infrastructure/certificates
-    pulumi up --refresh --stack production
-    ```
-
-    This deploy makes a new shared cert with the additional domain on it. At this point, we **retain the old cert**, because until the `application` deploy has run, the shared CDN still relies on it.
-
-4.  Before we proceed, we need to **verify the new certificate has issued**.
-
-    See step 8 in [flow A](#a-onboarding-a-new-council) for the details.
-
-5. Now **merge your PR to `main`** and **deploy your changes to `production`** to deploy the `application` layer via CI.
-
-    This deploy attaches the new cert to the shared CDN (and will also create it first, if it doesn't already exist).
-
-6. Get the shared distribution domain name and ID:
+4. Get the shared distribution domain name and ID:
 
     ```sh
     cd infrastructure/application
@@ -228,7 +218,7 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
 
     This should return values like `d1234abcd.cloudfront.net` and `E1234ABCD56YZ` respectively.
 
-7. Ask the council to switch their DNS target for the domain.
+5. Ask the council to switch their DNS target for the domain.
 
     That is, they will need to update their existing CNAME record to point at the shared CloudFront domain (replacing the old per-domain `xyz.cloudfront.net` value).
 
@@ -238,7 +228,7 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
 
     Because of the way that CloudFront works (see [Appendix B](#appendix-b-cloudfront-routing)) **we do not need to wait** for the council to do this before we can proceed (and equally, it's not an issue if they do it immediately).
 
-8. Run the AWS `update-domain-association` [command](https://docs.aws.amazon.com/cli/latest/reference/cloudfront/update-domain-association.html) from your terminal to move the domain (known as an 'alias' in the context of CloudFront) from the legacy distribution to the shared distribution ([docs](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/alternate-domain-names-move.html)).
+6. Run the AWS `update-domain-association` [command](https://docs.aws.amazon.com/cli/latest/reference/cloudfront/update-domain-association.html) from your terminal to move the domain (known as an 'alias' in the context of CloudFront) from the legacy distribution to the shared distribution ([docs](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/alternate-domain-names-move.html)).
 
     If you haven't used the AWS CLI from your terminal before, set that up first (see `../how-to-setup-aws-sso-credentials.md`). CloudFront distributions are global so the AWS region isn't important here.
 
@@ -264,11 +254,11 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
 
     If successful, this operation should return some json with the new `ETag`. You can confirm in the [AWS console](https://us-east-1.console.aws.amazon.com/cloudfront/v4/home?region=us-east-1#/distributions) (check the _Alternate domain names_ column).
 
-9. **Wait** for the council to confirm they've added the record.
+7. **Wait** for the council to confirm they've added the record.
 
     There is no particular rush at this point, but the sooner it happens, the sooner we can clean up the legacy infra and consider this domain resolved.
 
-10. Verify traffic has been re-routed:
+8. Verify traffic has been re-routed:
 
     ```sh
     dig planningservices.an-existing-council.gov.uk CNAME +short
@@ -278,7 +268,7 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
 
     It's also worth visiting the site in the browser and checking it works as expected.
 
-11. Finally, advance the domain to `shared-final`:
+9. Finally, advance the domain to `shared-final`:
 
     ```diff
     - cloudFrontState: "single-plus-shared",
@@ -293,16 +283,15 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
 
     Once again, commit these changes and open a PR.
 
-11. Deploy the `application` layer by merging said PR and rolling it out to prod, then deploy `certificates` (as in step 2).
+10. Deploy the `application` layer by merging said PR and rolling it out to prod.
 
-    - The `application` deploy tears down the legacy CloudFront distribution, which is now redundant because we have re-routed traffic to the shared distribution by swapping out the DNS record.
-    - The `certificates` deploy then tears down the legacy cert which was attached to said CloudFront distribution.
+    This deploy tears down the legacy CloudFront distribution, which is now redundant because we have re-routed traffic to the shared distribution by swapping out the DNS record. It will also destroy the legacy (imported) cert with which the distribution was associated.
 
-    NB. Application-level config (see step 10 in flow A) is already in place for legacy councils, so no changes are needed in that regard.
+    NB. Application-level config (see step 13 in [flow A](#a-onboarding-a-new-council)) is already in place for legacy councils, so no changes are needed in that regard.
 
-12. Clean up BYO certificate artefacts. Depending on where the old certificate was stored...
+11. Clean up BYO certificate artefacts. Depending on where the old certificate was stored...
 
-    - **AWS Secrets Manager** - delete the `ssl/<team>` secret in the AWS Console
+    - **AWS Secrets Manager** - delete the `ssl/[team]` secret in the [AWS console](https://eu-west-2.console.aws.amazon.com/secretsmanager/listsecrets?region=eu-west-2#) (you may only be able to _schedule_ the deletion)
     - **Pulumi config** - remove secrets via the terminal:
 
       ```sh
@@ -312,9 +301,18 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
       pulumi config rm ssl-<team>-chain --stack production
       ```
 
-13. **TODO**: Cleanup the old shared cert.
+14. Implement monitoring as needed.
 
-    ...
+    *If* there are more than 5 monitors under the `custom-domains-production` tab on [UptimeRobot](https://dashboard.uptimerobot.com/monitors), then delete the monitor for the domain you just migrated (we only maintain a few as canaries). Otherwise, do nothing.
+
+    > **Note:** We share a single UptimeRobot login stored in the 1Password 'PlanX' vault. You may need to ask someone with access to do this step.
+
+15. Update the [PlanX CRM on Notion](https://www.notion.so/opensystemslab/Plan-CRM-27c35d469ad1806c8f4dd95067ccf4ff).
+
+    Find the relevant council's page in our internal CRM, and do the following:
+    - Remove the date from the field 'SSL Expiry Date'.
+    - Add the domain as it appears in our single source of truth (`customDomains.ts`) under the field 'Custom Subdomain'.
+
 
 ## Appendix A. Automatic certificate renewal
 
@@ -327,7 +325,15 @@ If you must do the latter, you can find the old howto [here](https://github.com/
 
 ## Appendix B. CloudFront routing
 
-**TODO**: Write this bit
+There are some nuances to the way that CloudFront works which are useful to understand when reasoning about it, not all of which are immediately obvious from the [AWS docs](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html):
+
+- Aliases (read: domains) are unique across CloudFront distributions globally. That is, no two distributions can be associated with the same alias. Attempting to do so throws a `CNAMEAlreadyExists` error.
+- CloudFront domain names in the same AWS account are essentially interchangeable. They act as 'gateways' to the CloudFront network, but the request is handled based on the given `Host`, rather than the specific domain the request is made to.
+
+Some corollaries relevant to our scenario follow:
+
+- We have to move our custom domain manually between two already existing CloudFront distributions, rather than adding the alias to the shared CDN while it's still on the legacy CDN. That is, if we are creating the shared CDN for the first time, we have to spin it up as 'empty' first, rather than provisioning it immediately with the alias.
+- While both CDNs are up, the council's DNS `CNAME` record can point at _either_ of them, as long as both are attached to a certificate which includes the custom domain in question. CloudFront will serve the request regardless. That is, once the correct certs are in place, the order in which the alias is moved and the DNS record is replaced is unimportant!
 
 
 ## Troubleshooting
