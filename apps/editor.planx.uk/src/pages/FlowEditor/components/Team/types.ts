@@ -1,10 +1,10 @@
 import { Role, TeamRole, User } from "@opensystemslab/planx-core/types";
 
 export const ROLE_LABELS = {
-  platformAdmin: "Admin",
+  platformAdmin: "Platform admin",
   teamAdmin: "Team admin",
-  teamEditor: "Editor",
-  teamViewer: "Viewer",
+  teamEditor: "Team editor",
+  teamViewer: "Team viewer",
   public: "Public",
   analyst: "Analyst",
 } as const;
@@ -28,6 +28,7 @@ export interface MembersTableProps {
   showAddMemberButton?: boolean;
   showEditMemberButton?: boolean;
   showRemoveMemberButton?: boolean;
+  showTeamAdminSwitch?: boolean;
 }
 
 export interface UserFormValues {
@@ -46,6 +47,7 @@ export type ModalState =
 
 type SharedModalProps = {
   onClose: () => void;
+  showTeamAdminSwitch?: boolean;
 };
 
 export type AddUserModalProps = SharedModalProps;

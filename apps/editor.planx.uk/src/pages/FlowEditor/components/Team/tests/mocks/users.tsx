@@ -12,7 +12,7 @@ export const mockUsersData: (User & { __typename: "users" })[] = [
     isAnalyst: false,
     defaultTeamId: null,
     teams: [
-      { role: "teamEditor", team: { name: "Test Team", slug: "test", id: 1 } },
+      { role: "teamEditor", team: { name: "Test Team", slug: "test", id: 2 } },
     ],
   },
   {
@@ -36,7 +36,20 @@ export const mockUsersData: (User & { __typename: "users" })[] = [
     isAnalyst: false,
     defaultTeamId: null,
     teams: [
-      { role: "teamEditor", team: { name: "Test Team", slug: "test", id: 1 } },
+      { role: "teamEditor", team: { name: "Test Team", slug: "test", id: 2 } },
+    ],
+  },
+  {
+    __typename: "users",
+    firstName: "Donald",
+    lastName: "Duck",
+    email: "donaldduck@email.com",
+    id: 4,
+    isPlatformAdmin: true,
+    isAnalyst: false,
+    defaultTeamId: null,
+    teams: [
+      { role: "teamEditor", team: { name: "Test Team", slug: "test", id: 2 } },
     ],
   },
 ];
@@ -52,9 +65,9 @@ export const mockPlainUser: User = {
     {
       role: "teamEditor",
       team: {
-        name: "planX",
-        slug: "planx",
-        id: 0,
+        name: "Test Team",
+        slug: "test",
+        id: 2,
       },
     },
   ],
@@ -66,7 +79,17 @@ export const mockPlatformAdminUser: User = {
   isPlatformAdmin: true,
 };
 
-export const newMember: User = {
+export const mockTeamAdminUser: User = {
+  ...mockPlainUser,
+  teams: [
+    {
+      role: "teamAdmin",
+      team: { name: "Test Team", slug: "test", id: 2 },
+    },
+  ],
+};
+
+export const newTeamEditor: User = {
   id: 99,
   firstName: "Mickey",
   lastName: "Mouse",
@@ -76,6 +99,19 @@ export const newMember: User = {
   defaultTeamId: 2,
   teams: [
     { role: "teamEditor", team: { name: "Test Team", slug: "test", id: 2 } },
+  ],
+};
+
+export const newTeamAdmin: User = {
+  id: 100,
+  firstName: "Minnie",
+  lastName: "Mouse",
+  email: "minniemouse@email.com",
+  isPlatformAdmin: false,
+  isAnalyst: false,
+  defaultTeamId: 2,
+  teams: [
+    { role: "teamAdmin", team: { name: "Test Team", slug: "test", id: 2 } },
   ],
 };
 

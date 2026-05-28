@@ -4,20 +4,28 @@ import type { UserEvent } from "@testing-library/user-event";
 
 import { userEntersInput } from "./userEntersInput";
 
-export const userTriesToAddNewMember = async (user: UserEvent) => {
+export const userTriesToAddNewTeamEditor = async (user: UserEvent) => {
   const teamMembersTable = screen.getByTestId("team-members");
-  const addMemberButton = await within(teamMembersTable).findByText("Add a new member");
-  user.click(addMemberButton);
+  const addMemberButton =
+    await within(teamMembersTable).findByText("Add a new member");
+  await user.click(addMemberButton);
 
   const addNewEditorModal = await screen.findByTestId("modal-create-user");
 
-  await userEntersInput("Email address", "mickeymouse@email.com", addNewEditorModal, user);
+  await userEntersInput(
+    "Email address",
+    "mickeymouse@email.com",
+    addNewEditorModal,
+    user,
+  );
   const continueButton = await screen.findByTestId("modal-create-user-button");
   await user.click(continueButton);
 
   await userEntersInput("First name", "Mickey", addNewEditorModal, user);
   await userEntersInput("Last name", "Mouse", addNewEditorModal, user);
 
-  const createUserButton = await screen.findByTestId("modal-create-user-button");
+  const createUserButton = await screen.findByTestId(
+    "modal-create-user-button",
+  );
   await user.click(createUserButton);
 };

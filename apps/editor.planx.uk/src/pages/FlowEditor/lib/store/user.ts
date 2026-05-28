@@ -1,13 +1,20 @@
 import { Role, Team, User, UserTeams } from "@opensystemslab/planx-core/types";
+import { ROLE_LABELS } from "pages/FlowEditor/components/Team/types";
 import type { StateCreator } from "zustand";
 
 import type { AuthStore } from "./auth";
 import { TeamStore } from "./team";
 
-export const getDisplayRole = (user: User): string => {
-  if (user.isPlatformAdmin) return "Platform Admin";
-  if (user.isAnalyst) return "Analyst";
-  return "Team Editor";
+export const getDisplayRole = (
+  user: User,
+  currentUserTeam: UserTeams | undefined,
+): string => {
+  if (user.isPlatformAdmin) return ROLE_LABELS.platformAdmin;
+  if (user.isAnalyst) return ROLE_LABELS.analyst;
+  if (currentUserTeam?.role === "teamAdmin") return ROLE_LABELS.teamAdmin;
+  if (currentUserTeam?.role === "teamEditor") return ROLE_LABELS.teamEditor;
+
+  return ROLE_LABELS.teamViewer;
 };
 
 export interface UserStore {
@@ -48,8 +55,13 @@ export const userStore: StateCreator<
   },
 
   getUserRole: () => {
-    const user = get().user;
+    const { user, teamSlug } = get();
     if (!user) return;
-    return getDisplayRole(user);
+
+    const currentUserTeam = user.teams.find(
+      ({ team: { slug } }) => slug === teamSlug,
+    );
+
+    return getDisplayRole(user, currentUserTeam);
   },
 });

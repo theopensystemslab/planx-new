@@ -59,6 +59,7 @@ export const MembersTable = ({
   showAddMemberButton,
   showEditMemberButton,
   showRemoveMemberButton,
+  showTeamAdminSwitch,
 }: MembersTableProps) => {
   const [modal, setModal] = useState<ModalState>({ action: "closed" });
 
@@ -90,7 +91,12 @@ export const MembersTable = ({
             </TableBody>
           )}
         </Table>
-        {modal.action !== "closed" && <AddUserModal onClose={closeModal} />}
+        {modal.action !== "closed" && (
+          <AddUserModal
+            onClose={closeModal}
+            showTeamAdminSwitch={showTeamAdminSwitch}
+          />
+        )}
       </>
     );
   }
@@ -189,10 +195,19 @@ export const MembersTable = ({
         <RemoveUserModal onClose={closeModal} member={modal.member} />
       )}
 
-      {modal.action === "add" && <AddUserModal onClose={closeModal} />}
+      {modal.action === "add" && (
+        <AddUserModal
+          onClose={closeModal}
+          showTeamAdminSwitch={showTeamAdminSwitch}
+        />
+      )}
 
       {modal.action === "edit" && (
-        <EditUserModal onClose={closeModal} member={modal.member} />
+        <EditUserModal
+          onClose={closeModal}
+          member={modal.member}
+          showTeamAdminSwitch={showTeamAdminSwitch}
+        />
       )}
 
       {modal.action === "attemptedAdd" && (

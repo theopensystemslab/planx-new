@@ -24,14 +24,42 @@ export const GET_USERS_FOR_TEAM_QUERY = gql`
   }
 `;
 
-export const UPDATE_TEAM_MEMBER = gql`
-  mutation UpdateUser($userId: Int, $userValues: users_set_input) {
+export const UPDATE_USER_DETAILS = gql`
+  mutation UpdateUserDetails($userId: Int!, $userValues: users_set_input!) {
     update_users(where: { id: { _eq: $userId } }, _set: $userValues) {
       returning {
         id
         firstName: first_name
         lastName: last_name
         email
+      }
+    }
+  }
+`;
+
+export const UPDATE_TEAM_MEMBER = gql`
+  mutation UpdateUser(
+    $userId: Int
+    $userValues: users_set_input
+    $role: user_roles_enum
+    $teamId: Int
+  ) {
+    update_users(where: { id: { _eq: $userId } }, _set: $userValues) {
+      returning {
+        id
+        firstName: first_name
+        lastName: last_name
+        email
+      }
+    }
+    update_team_members(
+      where: { user_id: { _eq: $userId }, team_id: { _eq: $teamId } }
+      _set: { role: $role }
+    ) {
+      returning {
+        role
+        userId: user_id
+        teamId: team_id
       }
     }
   }
@@ -72,21 +100,25 @@ export const REMOVE_TEAM_MEMBER = gql`
 `;
 
 export const ADD_EXISTING_USER_TO_TEAM = gql`
-  mutation AddExistingUserToTeam($role: user_roles_enum, $teamId: Int!, $userId: Int!) {
-    insert_team_members_one(object: {
-      role: $role, 
-      team_id: $teamId, 
-      user_id: $userId
-    }) {
+  mutation AddExistingUserToTeam(
+    $role: user_roles_enum
+    $teamId: Int!
+    $userId: Int!
+  ) {
+    insert_team_members_one(
+      object: { role: $role, team_id: $teamId, user_id: $userId }
+    ) {
       id
     }
-  }`;
+  }
+`;
 
 export const GET_USER_BY_EMAIL = gql`
   query GetUserByEmail($email: String!) {
-    users(where: {email: {_eq: $email}}) {
+    users(where: { email: { _eq: $email } }) {
       id
       firstName: first_name
       lastName: last_name
     }
-  }`
+  }
+`;
