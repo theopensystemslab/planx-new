@@ -33,7 +33,7 @@ const IsService: React.FC = () => {
       validationSchema={validationSchema}
       legend={"Is this flow a service?"}
       description={
-        "A service is user-facing and can accept responses when turned online. Only services can accept responses."
+        "A service is user-facing and can accept responses from users when turned online."
       }
       getInitialValues={({ flow: { isService } }) => ({ isService })}
       queryVariables={{ flowId }}
@@ -65,13 +65,13 @@ const IsService: React.FC = () => {
               </Typography>
               {formik.values.isService === true ? (
                 <Typography variant="body2">
-                  If this flow has been made a service in error, please contact
-                  an admin to revert it to a flow.
+                  If this is a mistake, please contact an admin to revert it to
+                  a flow.
                 </Typography>
               ) : (
                 <Typography variant="body1">
-                  A flow is content that will be nested in other services, and
-                  cannot directly accept responses.
+                  A flow cannot accept responses from users. It can be nested in
+                  other services.
                 </Typography>
               )}
             </Box>
