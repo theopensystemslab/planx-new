@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import { Link } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
-import React, { useState } from "react";
+import React from "react";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
 import StyledTab from "ui/editor/StyledTab";
@@ -22,8 +22,6 @@ const TabList = styled(Box)(() => ({
     display: "none",
   },
 }));
-
-type Tab = "recent" | "pinned";
 
 const MAX_FLOWS = 5;
 
@@ -38,7 +36,8 @@ export const FlowsPanel: React.FC<FlowsPanelProps> = ({
   teamSlug,
   loading = false,
 }) => {
-  const [tab, setTab] = useState<Tab>("recent");
+  const tab = useStore((state) => state.dashboardFlowsTab);
+  const setTab = useStore((state) => state.setDashboardFlowsTab);
 
   const recentFlows = [...flows]
     .sort(

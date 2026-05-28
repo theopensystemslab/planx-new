@@ -63,6 +63,8 @@ export interface EditorUIStore {
   setLoadingCompleteCallback: (callback: (() => void) | undefined) => void;
   flowCardView: FlowCardView;
   setFlowCardView: (view: FlowCardView) => void;
+  dashboardFlowsTab: "recent" | "pinned";
+  setDashboardFlowsTab: (tab: "recent" | "pinned") => void;
   showTags: boolean;
   toggleShowTags: () => void;
   showImages: boolean;
@@ -120,6 +122,12 @@ export const editorUIStore: StateCreator<
 
     setFlowCardView: (view: FlowCardView) => {
       set({ flowCardView: view });
+    },
+
+    dashboardFlowsTab: "recent",
+
+    setDashboardFlowsTab: (tab) => {
+      set({ dashboardFlowsTab: tab });
     },
 
     showTags: true,
@@ -198,6 +206,7 @@ export const editorUIStore: StateCreator<
     partialize: (state) => ({
       showSidebar: state.showSidebar,
       flowCardView: state.flowCardView,
+      dashboardFlowsTab: state.dashboardFlowsTab,
       showTags: state.showTags,
       showImages: state.showImages,
       showNotes: state.showNotes,
