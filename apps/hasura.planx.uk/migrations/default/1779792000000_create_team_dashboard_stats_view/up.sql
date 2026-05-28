@@ -1,14 +1,19 @@
 CREATE OR REPLACE VIEW "public"."team_dashboard_stats" AS
-WITH team_sessions AS (
+WITH filtered_flows AS (
+  SELECT id, team_id, category, status
+  FROM flows
+  WHERE deleted_at IS NULL
+),
+team_sessions AS (
   SELECT
     f.team_id,
     COUNT(CASE WHEN a.created_at >= now() - INTERVAL '30 days' THEN a.id END) AS sessions_current,
     COUNT(CASE WHEN a.created_at >= now() - INTERVAL '60 days' AND a.created_at < now() - INTERVAL '30 days' THEN a.id END) AS sessions_previous,
     COUNT(CASE WHEN a.created_at >= now() - INTERVAL '30 days' AND f.category = 'guidance' THEN a.id END) AS guidance_sessions_current,
     COUNT(CASE WHEN a.created_at >= now() - INTERVAL '60 days' AND a.created_at < now() - INTERVAL '30 days' AND f.category = 'guidance' THEN a.id END) AS guidance_sessions_previous
-  FROM flows f
+  FROM filtered_flows f
   JOIN analytics a ON a.flow_id = f.id
-  WHERE f.deleted_at IS NULL AND a.created_at >= now() - INTERVAL '60 days'
+  WHERE a.created_at >= now() - INTERVAL '60 days'
   GROUP BY f.team_id
 ),
 team_submissions AS (
@@ -16,28 +21,27 @@ team_submissions AS (
     f.team_id,
     COUNT(CASE WHEN ls.submitted_at >= now() - INTERVAL '30 days' THEN ls.id END) AS submissions_current,
     COUNT(CASE WHEN ls.submitted_at >= now() - INTERVAL '60 days' AND ls.submitted_at < now() - INTERVAL '30 days' THEN ls.id END) AS submissions_previous
-  FROM flows f
+  FROM filtered_flows f
   JOIN lowcal_sessions ls ON ls.flow_id = f.id
-  WHERE f.deleted_at IS NULL AND ls.submitted_at IS NOT NULL AND ls.submitted_at >= now() - INTERVAL '60 days'
+  WHERE ls.submitted_at IS NOT NULL AND ls.submitted_at >= now() - INTERVAL '60 days'
   GROUP BY f.team_id
 ),
 online_flows_current AS (
   SELECT team_id, COUNT(*)
-  FROM flows
-  WHERE status = 'online' AND deleted_at IS NULL
+  FROM filtered_flows
+  WHERE status = 'online'
   GROUP BY team_id
 ),
 online_flows_previous AS (
   SELECT f.team_id, COUNT(*)
-  FROM flows f
-  WHERE f.deleted_at IS NULL
-    AND EXISTS (
-      SELECT 1 FROM flow_status_history fsh
-      WHERE fsh.flow_id = f.id
-        AND fsh.status = 'online'
-        AND fsh.event_start <= now() - INTERVAL '30 days'
-        AND (fsh.event_end IS NULL OR fsh.event_end >= now() - INTERVAL '30 days')
-    )
+  FROM filtered_flows f
+  WHERE EXISTS (
+    SELECT 1 FROM flow_status_history fsh
+    WHERE fsh.flow_id = f.id
+      AND fsh.status = 'online'
+      AND fsh.event_start <= now() - INTERVAL '30 days'
+      AND (fsh.event_end IS NULL OR fsh.event_end >= now() - INTERVAL '30 days')
+  )
   GROUP BY f.team_id
 )
 SELECT
