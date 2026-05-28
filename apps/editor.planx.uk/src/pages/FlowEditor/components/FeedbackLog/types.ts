@@ -10,6 +10,7 @@ export const FEEDBACK_STATUS = [
   "actioned",
   "in_progress",
   "urgent",
+  "not_relevant",
 ] as const;
 export type FeedbackStatus = (typeof FEEDBACK_STATUS)[number];
 

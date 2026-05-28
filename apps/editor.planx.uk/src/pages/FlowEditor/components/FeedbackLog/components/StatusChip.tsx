@@ -10,6 +10,7 @@ export const FEEDBACK_COLOURS = {
   urgent: "error",
   in_progress: "warning",
   actioned: "success",
+  not_relevant: "secondary",
 } as const;
 
 export const StatusChip = (
