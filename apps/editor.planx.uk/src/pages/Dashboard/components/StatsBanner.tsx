@@ -57,26 +57,26 @@ export function StatsBanner({
   const tiles = [
     {
       label: "Online flows",
-      value: stats?.online_flows ?? null,
-      delta: stats ? stats.online_flows - stats.online_flows_previous : null,
+      value: stats?.onlineFlows ?? null,
+      delta: stats ? stats.onlineFlows - stats.onlineFlowsPrevious : null,
     },
     {
       label: "Total sessions",
-      value: stats?.sessions_current ?? null,
-      delta: stats ? stats.sessions_current - stats.sessions_previous : null,
+      value: stats?.sessionsCurrent ?? null,
+      delta: stats ? stats.sessionsCurrent - stats.sessionsPrevious : null,
     },
     {
       label: "Submissions",
-      value: stats?.submissions_current ?? null,
+      value: stats?.submissionsCurrent ?? null,
       delta: stats
-        ? stats.submissions_current - stats.submissions_previous
+        ? stats.submissionsCurrent - stats.submissionsPrevious
         : null,
     },
     {
       label: "Total guidance sessions",
-      value: stats?.guidance_sessions_current ?? null,
+      value: stats?.guidanceSessionsCurrent ?? null,
       delta: stats
-        ? stats.guidance_sessions_current - stats.guidance_sessions_previous
+        ? stats.guidanceSessionsCurrent - stats.guidanceSessionsPrevious
         : null,
     },
   ];
@@ -136,7 +136,7 @@ export function StatsBanner({
 export default function ConnectedStatsBanner() {
   const teamSlug = useStore((state) => state.getTeam().slug);
   const { data, loading } = useTeamDashboardStats(teamSlug);
-  const stats = data?.team_dashboard_stats[0];
+  const stats = data?.teamDashboardStats[0];
 
   return <StatsBanner teamSlug={teamSlug} stats={stats} loading={loading} />;
 }
