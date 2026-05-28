@@ -8,7 +8,7 @@ WITH team_sessions AS (
     COUNT(CASE WHEN a.created_at >= now() - INTERVAL '60 days' AND a.created_at < now() - INTERVAL '30 days' AND f.category = 'guidance' THEN a.id END) AS guidance_sessions_previous
   FROM flows f
   JOIN analytics a ON a.flow_id = f.id
-  WHERE f.deleted_at IS NULL
+  WHERE f.deleted_at IS NULL AND a.created_at >= now() - INTERVAL '60 days'
   GROUP BY f.team_id
 ),
 team_submissions AS (
@@ -18,7 +18,7 @@ team_submissions AS (
     COUNT(CASE WHEN ls.submitted_at >= now() - INTERVAL '60 days' AND ls.submitted_at < now() - INTERVAL '30 days' THEN ls.id END) AS submissions_previous
   FROM flows f
   JOIN lowcal_sessions ls ON ls.flow_id = f.id
-  WHERE f.deleted_at IS NULL AND ls.submitted_at IS NOT NULL
+  WHERE f.deleted_at IS NULL AND ls.submitted_at IS NOT NULL AND ls.submitted_at >= now() - INTERVAL '60 days'
   GROUP BY f.team_id
 ),
 online_flows_current AS (
