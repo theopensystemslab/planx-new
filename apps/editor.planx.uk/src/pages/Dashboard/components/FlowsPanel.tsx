@@ -76,7 +76,15 @@ export const FlowsPanel: React.FC<FlowsPanelProps> = ({
           <DelayedLoadingIndicator inline msDelayBeforeVisible={300} />
         </List>
       ) : (
-        <List disablePadding sx={{ overflowY: "auto", flex: 1 }}>
+        <List
+          disablePadding
+          sx={{
+            overflowY: "auto",
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           {displayed.map((flow, i) => {
             const isOnline = flow.status === "online";
             const isAnyTemplate =
@@ -129,14 +137,17 @@ export const FlowsPanel: React.FC<FlowsPanelProps> = ({
             );
           })}
           {displayed.length === 0 && (
-            <ListItem sx={{ px: 1.5, py: 1 }}>
-              <ListItemText
-                primary={
-                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    {tab === "pinned" ? "No pinned flows" : "No flows yet"}
-                  </Typography>
-                }
-              />
+            <ListItem
+              sx={{
+                display: "flex",
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                {tab === "pinned" ? "No pinned flows" : "No flows yet"}
+              </Typography>
             </ListItem>
           )}
         </List>
