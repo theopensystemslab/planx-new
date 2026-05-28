@@ -1,4 +1,7 @@
-import { baseNodeDataValidationSchema } from "@planx/components/shared";
+import {
+  BaseNodeData,
+  baseNodeDataValidationSchema,
+} from "@planx/components/shared";
 import { object, string } from "yup";
 
 export const validationSchema = baseNodeDataValidationSchema.concat(
@@ -6,3 +9,7 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
     flowId: string().nullable().required("Add a flow to submit"),
   }),
 );
+
+export interface ExternalPortal extends BaseNodeData {
+  flowId: string;
+}
