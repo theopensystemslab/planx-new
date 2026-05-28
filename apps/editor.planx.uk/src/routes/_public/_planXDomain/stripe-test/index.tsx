@@ -33,7 +33,7 @@ function PayView() {
     council: "southwark",
     flow: "apply-for-a-lawful-development-certificate",
     sessionId: "test-session-abc123",
-    connectedAccountId: "acct_1TYMQfEJh4JGcbG7",
+    connectedAccountId: "acct_1RvdWNCjrQQexAs6",
   });
 
   const set =
