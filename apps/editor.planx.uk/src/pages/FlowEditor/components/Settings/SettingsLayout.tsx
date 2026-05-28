@@ -75,20 +75,22 @@ const SettingsLayout: React.FC<Props> = ({
           <Typography variant="h2" component="h1" gutterBottom>
             {title}
           </Typography>
-          <TabList>
-            <Tabs onChange={handleChange} value={activeTab} aria-label={title}>
-              {filteredLinks.map(({ label, path, icon: Icon }) => (
-                <StyledTab
-                  size="large"
-                  key={path}
-                  value={path}
-                  label={label}
-                  icon={Icon ? <Icon /> : undefined}
-                  iconPosition="start"
-                />
-              ))}
-            </Tabs>
-          </TabList>
+          {settingsLinks && (
+            <TabList>
+              <Tabs onChange={handleChange} value={activeTab} aria-label={title}>
+                {filteredLinks ? filteredLinks.map(({ label, path, icon: Icon }) => (
+                  <StyledTab
+                    size="large"
+                    key={path}
+                    value={path}
+                    label={label}
+                    icon={Icon ? <Icon /> : undefined}
+                    iconPosition="start"
+                  />
+                )) : <></>}
+              </Tabs>
+            </TabList>
+          )}
         </Container>
       </Box>
       <Container maxWidth="contentWrap">{children}</Container>

@@ -12,7 +12,9 @@ import {
   selectedFlag,
 } from "./helpers/globalHelpers.js";
 import {
+  makeFlowAService,
   navigateToService,
+  navigateToFlowSettings,
   publishService,
   turnServiceOnline,
 } from "./helpers/navigateAndPublish.js";
@@ -132,6 +134,18 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
   });
 
+  test("Make a flow a service", async ({ browser }) => {
+    const page = await createAuthenticatedSession({
+      browser,
+      userId: context.user!.id!,
+    });
+
+    await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
+    await navigateToFlowSettings(page);
+    await makeFlowAService(page);
+    await expect(page.getByTestId("set-is-service-button")).toBeHidden();
+  });
+
   test("Turn a flow online", async ({ browser }) => {
     const page = await createAuthenticatedSession({
       browser,
@@ -139,6 +153,7 @@ test.describe("Flow creation, publish and preview", () => {
     });
 
     await navigateToService(page, serviceProps.slug);
+    await navigateToFlowSettings(page);
     await turnServiceOnline(page);
 
     // Exit back to main Editor page
@@ -179,6 +194,8 @@ test.describe("Flow creation, publish and preview", () => {
 
     // We are publishing the Ext Portal service and turning it online
     await publishService(page);
+    await navigateToFlowSettings(page);
+    await makeFlowAService(page);
     await turnServiceOnline(page);
 
     // We switch back to the original service

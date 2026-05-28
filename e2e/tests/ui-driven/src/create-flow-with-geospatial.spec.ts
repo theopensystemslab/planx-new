@@ -8,7 +8,9 @@ import { getTeamPage } from "./helpers/getPage.js";
 import { answerQuestion, clickContinue } from "./helpers/userActions.js";
 import { PlaywrightEditor } from "./pages/Editor.js";
 import {
+  makeFlowAService,
   navigateToService,
+  navigateToFlowSettings,
   publishService,
   turnServiceOnline,
 } from "./helpers/navigateAndPublish.js";
@@ -117,6 +119,8 @@ test.describe("Flow creation, publish and preview", () => {
     await expect(previewLink).toBeVisible();
 
     await navigateToService(page, serviceProps.slug);
+    await navigateToFlowSettings(page);
+    await makeFlowAService(page);
     await turnServiceOnline(page);
 
     // Exit back to main Editor page

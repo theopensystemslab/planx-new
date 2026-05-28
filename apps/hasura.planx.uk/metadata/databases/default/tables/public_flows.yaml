@@ -321,6 +321,7 @@ select_permissions:
         - email_template
         - id
         - is_listed_on_lps
+        - is_service
         - is_template
         - limitations
         - name
@@ -376,17 +377,18 @@ select_permissions:
   - role: teamEditor
     permission:
       columns:
+        - archived_at
         - can_create_from_copy
         - category
         - copied_from
         - created_at
         - creator_id
         - data
-        - archived_at
         - description
         - email_template
         - id
         - is_listed_on_lps
+        - is_service
         - is_template
         - limitations
         - name
@@ -464,6 +466,7 @@ update_permissions:
         - description
         - email_template
         - is_listed_on_lps
+        - is_service
         - is_template
         - limitations
         - name
@@ -498,14 +501,15 @@ update_permissions:
   - role: teamEditor
     permission:
       columns:
+        - archived_at
         - can_create_from_copy
         - category
         - copied_from
         - data
-        - archived_at
         - description
         - email_template
         - is_listed_on_lps
+        - is_service
         - limitations
         - name
         - settings
