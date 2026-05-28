@@ -183,7 +183,7 @@ function EditorNavMenu() {
             title: "Subscription",
             Icon: CurrencyPoundIcon,
             route: `/app/${teamSlug}/subscription`,
-            accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"],
+            accessibleBy: ["platformAdmin", "teamAdmin"],
             isNew: true,
           },
         ],
