@@ -418,6 +418,8 @@ const flattenedParentFlow: FlowGraph = {
     edges: ["nested-a"],
     data: {
       flattenedFromExternalPortal: true,
+      isTemplatedNode: false,
+      areTemplatedNodeInstructionsRequired: false,
     },
   },
   "nested-a": {
@@ -463,6 +465,8 @@ const flattenedParentFlow: FlowGraph = {
     edges: ["nested-b"],
     data: {
       flattenedFromExternalPortal: true,
+      isTemplatedNode: false,
+      areTemplatedNodeInstructionsRequired: false,
     },
   },
   "nested-b": {
@@ -490,6 +494,8 @@ const flattenedParentFlow: FlowGraph = {
     edges: ["nested-a"],
     data: {
       flattenedFromExternalPortal: true,
+      isTemplatedNode: false,
+      areTemplatedNodeInstructionsRequired: false,
     },
   },
   f6zoaYuboI: {
@@ -534,6 +540,8 @@ const flattenedParentFlowDraftOnly: FlowGraph = {
     edges: ["nested-a"],
     data: {
       flattenedFromExternalPortal: true,
+      isTemplatedNode: false,
+      areTemplatedNodeInstructionsRequired: false,
     },
   },
   "nested-a": {
@@ -576,6 +584,8 @@ const flattenedParentFlowDraftOnly: FlowGraph = {
     edges: ["nested-b"],
     data: {
       flattenedFromExternalPortal: true,
+      isTemplatedNode: false,
+      areTemplatedNodeInstructionsRequired: false,
     },
   },
   "nested-b": {
@@ -600,6 +610,8 @@ const flattenedParentFlowDraftOnly: FlowGraph = {
     edges: ["nested-a"],
     data: {
       flattenedFromExternalPortal: true,
+      isTemplatedNode: false,
+      areTemplatedNodeInstructionsRequired: false,
     },
   },
   f6zoaYuboI: {

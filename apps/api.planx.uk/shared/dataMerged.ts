@@ -116,6 +116,10 @@ const fetchAndMergeStack = async (
           edges: [node.data?.flowId],
           data: {
             flattenedFromExternalPortal: true,
+            // Persist templated node fields for publish validation checks
+            isTemplatedNode: node.data?.isTemplatedNode,
+            areTemplatedNodeInstructionsRequired:
+              node.data?.areTemplatedNodeInstructionsRequired,
           },
         };
 
