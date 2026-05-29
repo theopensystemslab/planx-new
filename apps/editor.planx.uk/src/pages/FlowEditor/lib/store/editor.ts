@@ -521,11 +521,10 @@ export const editorStore: StateCreator<
 
     const newData = {
       ...(node.data || {}),
-      info: payload.info ?? node.data?.info,
-      policyRef: payload.policyRef ?? node.data?.policyRef,
-      howMeasured: payload.howMeasured ?? node.data?.howMeasured,
-      definitionImg:
-        payload.definitionImg ?? node.data?.definitionImg ?? undefined,
+      info: payload.info,
+      policyRef: payload.policyRef,
+      howMeasured: payload.howMeasured,
+      definitionImg: payload.definitionImg,
     };
 
     try {
