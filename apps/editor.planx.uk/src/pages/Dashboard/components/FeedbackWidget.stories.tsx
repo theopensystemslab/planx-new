@@ -18,8 +18,11 @@ const meta = {
     (Story) => (
       <DashboardWidget
         title="Feedback"
-        linkTarget="/app/test-council/feedback"
-        linkText="view all feedback"
+        link={{
+          to: "/app/$team/feedback",
+          params: { team: "test-council" },
+          label: "view all feedback",
+        }}
       >
         <Story />
       </DashboardWidget>
