@@ -75,8 +75,11 @@ const meta = {
     (Story) => (
       <DashboardWidget
         title="Flows"
-        linkTarget="/app/test-council"
-        linkText="view all flows"
+        link={{
+          to: "/app/$team",
+          params: { team: "test-council" },
+          label: "view all flows",
+        }}
       >
         <Story />
       </DashboardWidget>
