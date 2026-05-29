@@ -226,17 +226,10 @@ describe("when editing a platform admin user", () => {
 
     const { user } = await setupTeamMembersScreen();
 
-    const platformAdminsHeading = screen.getByRole("heading", {
-      name: /Platform admins/i,
-    });
+    const adminToggle = screen.getByTestId("platform-admins-toggle");
+    await user.click(adminToggle);
 
-    const platformAdminsSection =
-      platformAdminsHeading.closest("section") ||
-      platformAdminsHeading.parentElement!;
-
-    const editButton = await within(platformAdminsSection).findByTestId(
-      "edit-button-4",
-    );
+    const editButton = await screen.findByTestId("edit-button-4");
 
     await user.click(editButton);
   });
