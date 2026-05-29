@@ -9,11 +9,7 @@ const meta = {
   component: ActivityWidget,
   decorators: [
     (Story) => (
-      <DashboardWidget
-        title="Activity"
-        linkTarget="/app/test-team/activity"
-        linkText="view analytics"
-      >
+      <DashboardWidget title="Activity">
         <Story />
       </DashboardWidget>
     ),
