@@ -1,8 +1,7 @@
 import Box from "@mui/material/Box";
-import { styled } from "@mui/material/styles";
+import { keyframes, styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { linkOptions } from "@tanstack/react-router";
-import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import React from "react";
 import { WidgetLink } from "ui/editor/DashboardWidget";
 
@@ -29,6 +28,11 @@ const Header = styled(Box)({
   alignItems: "baseline",
   marginBottom: 12,
 });
+
+const pulse = keyframes`
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+`;
 
 const StatsGrid = styled(Box)(({ theme }) => ({
   display: "grid",
@@ -93,42 +97,37 @@ export function StatsBanner({
           })}
         />
       </Header>
-      {loading ? (
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            minHeight: 72,
-          }}
-        >
-          <DelayedLoadingIndicator inline msDelayBeforeVisible={300} />
-        </Box>
-      ) : (
-        <StatsGrid>
-          {tiles.map(({ label, value, delta }) => (
-            <Box key={label}>
-              <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                {label}
+      <StatsGrid>
+        {tiles.map(({ label, value, delta }) => (
+          <Box key={label}>
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
+              {label}
+            </Typography>
+            <Typography
+              variant="h1"
+              component="p"
+              sx={
+                loading
+                  ? { animation: `${pulse} 1.4s ease-in-out infinite` }
+                  : undefined
+              }
+            >
+              {value ?? "—"}
+            </Typography>
+            {!loading && delta !== null && (
+              <Typography
+                variant="body2"
+                sx={{
+                  color: delta >= 0 ? "success.main" : "error.main",
+                  fontWeight: "bold",
+                }}
+              >
+                {formatDelta(delta)}
               </Typography>
-              <Typography variant="h1" component="p">
-                {value ?? "—"}
-              </Typography>
-              {delta !== null && (
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: delta >= 0 ? "success.main" : "error.main",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {formatDelta(delta)}
-                </Typography>
-              )}
-            </Box>
-          ))}
-        </StatsGrid>
-      )}
+            )}
+          </Box>
+        ))}
+      </StatsGrid>
     </Root>
   );
 }
