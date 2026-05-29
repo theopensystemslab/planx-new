@@ -28,8 +28,11 @@ export function NotificationsWidget({
       <DashboardWidget
         title="Notifications"
         count={totalCount}
-        linkTarget={`/app/${teamSlug}/notifications`}
-        linkText="view all notifications"
+        link={{
+          to: "/app/$team/notifications",
+          params: { team: teamSlug },
+          label: "view all notifications",
+        }}
       >
         <DelayedLoadingIndicator inline msDelayBeforeVisible={300} />
       </DashboardWidget>
@@ -41,8 +44,11 @@ export function NotificationsWidget({
       <DashboardWidget
         title="Notifications"
         count={totalCount}
-        linkTarget={`/app/${teamSlug}/notifications`}
-        linkText="view all notifications"
+        link={{
+          to: "/app/$team/notifications",
+          params: { team: teamSlug },
+          label: "view all notifications",
+        }}
       >
         <EmptyState
           size="small"
@@ -57,8 +63,11 @@ export function NotificationsWidget({
     <DashboardWidget
       title="Notifications"
       count={totalCount}
-      linkTarget={`/app/${teamSlug}/notifications`}
-      linkText="view all notifications"
+      link={{
+        to: "/app/$team/notifications",
+        params: { team: teamSlug },
+        label: "view all notifications",
+      }}
     >
       <Stack component="ul" sx={{ overflowY: "auto", flex: 1, m: 0, p: 0 }}>
         {notifications.map((notification) => (
