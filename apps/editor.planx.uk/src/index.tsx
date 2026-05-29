@@ -1,3 +1,5 @@
+import "core-js/actual/array/at"; // array.at polyfill
+import "core-js/actual/string/at"; // string.at polyfill
 import "core-js/actual/string/replace-all"; // replace-all polyfill
 import "react-toastify/dist/ReactToastify.css";
 import "./app.css";

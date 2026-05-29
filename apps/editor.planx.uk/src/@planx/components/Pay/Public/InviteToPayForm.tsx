@@ -1,5 +1,3 @@
-import "core-js/stable/array/at"; // at polyfill
-
 import ErrorOutline from "@mui/icons-material/ErrorOutlined";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
