@@ -16,6 +16,7 @@ import StyledTab from "ui/editor/StyledTab";
 
 import { useStore } from "../../FlowEditor/lib/store";
 import { useGetFlows } from "../../Team/components/hooks/useGetFlows";
+import { NoFlowsGetStarted } from "../../Team/index";
 
 const TabList = styled(Box)(() => ({
   [`& .${tabsClasses.indicator}`]: {
@@ -144,9 +145,13 @@ export const FlowsPanel: React.FC<FlowsPanelProps> = ({
                 justifyContent: "center",
               }}
             >
-              <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                {tab === "pinned" ? "No pinned flows" : "No flows yet"}
-              </Typography>
+              {tab === "pinned" ? (
+                <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                  No pinned flows
+                </Typography>
+              ) : (
+                <NoFlowsGetStarted />
+              )}
             </ListItem>
           )}
         </List>
