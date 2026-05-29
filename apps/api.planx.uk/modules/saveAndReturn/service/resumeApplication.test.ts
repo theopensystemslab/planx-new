@@ -14,6 +14,10 @@ import { NOTIFY_TEST_EMAIL } from "../../../lib/notify/utils.js";
 const ENDPOINT = "/resume-application";
 
 describe("buildContentFromSessions function", () => {
+  // Use fake timers to allow mock data to persist
+  beforeAll(() => vi.setSystemTime(new Date("2026-05-15T12:00:00.000Z")));
+  afterAll(() => vi.useRealTimers());
+
   it("should return correctly formatted content for a single session", async () => {
     const sessions: PartialDeep<LowCalSession>[] = [
       {
@@ -28,7 +32,7 @@ describe("buildContentFromSessions function", () => {
           },
         },
         id: "123",
-        created_at: "2026-05-01T01:02:03.865452+00:00",
+        created_at: "2126-05-01T01:02:03.865452+00:00",
         flow: {
           slug: "apply-for-a-lawful-development-certificate",
           name: "Apply for a Lawful Development Certificate",
@@ -39,7 +43,7 @@ describe("buildContentFromSessions function", () => {
     const result = `Service: Apply for a Lawful Development Certificate
       Address: 1 High Street
       Project type: New offices
-      Expiry Date: 29 May 2026
+      Expiry Date: 29 May 2126
       Link: https://www.example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=123`;
     expect(
       await buildContentFromSessions(
@@ -63,7 +67,7 @@ describe("buildContentFromSessions function", () => {
           },
         },
         id: "123",
-        created_at: "2026-05-01T01:02:03.865452+00:00",
+        created_at: "2126-05-01T01:02:03.865452+00:00",
         flow: {
           slug: "apply-for-a-lawful-development-certificate",
           name: "Apply for a Lawful Development Certificate",
@@ -81,7 +85,7 @@ describe("buildContentFromSessions function", () => {
           },
         },
         id: "456",
-        created_at: "2026-05-01T01:02:03.865452+00:00",
+        created_at: "2126-05-01T01:02:03.865452+00:00",
         flow: {
           slug: "apply-for-a-lawful-development-certificate",
           name: "Apply for a Lawful Development Certificate",
@@ -99,7 +103,7 @@ describe("buildContentFromSessions function", () => {
           },
         },
         id: "789",
-        created_at: "2026-05-01T01:02:03.865452+00:00",
+        created_at: "2126-05-01T01:02:03.865452+00:00",
         flow: {
           slug: "apply-for-a-lawful-development-certificate",
           name: "Apply for a Lawful Development Certificate",
@@ -109,15 +113,15 @@ describe("buildContentFromSessions function", () => {
     const result = `Service: Apply for a Lawful Development Certificate
       Address: 1 High Street
       Project type: New offices
-      Expiry Date: 29 May 2026
+      Expiry Date: 29 May 2126
       Link: https://www.example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=123\n\nService: Apply for a Lawful Development Certificate
       Address: 2 High Street
       Project type: New offices
-      Expiry Date: 29 May 2026
+      Expiry Date: 29 May 2126
       Link: https://www.example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=456\n\nService: Apply for a Lawful Development Certificate
       Address: 3 High Street
       Project type: New offices
-      Expiry Date: 29 May 2026
+      Expiry Date: 29 May 2126
       Link: https://www.example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=789`;
     expect(
       await buildContentFromSessions(
@@ -141,7 +145,7 @@ describe("buildContentFromSessions function", () => {
           },
         },
         id: "123",
-        created_at: "2026-05-01T01:02:03.865452+00:00",
+        created_at: "2126-05-01T01:02:03.865452+00:00",
         flow: {
           slug: "apply-for-a-lawful-development-certificate",
           name: "Apply for a Lawful Development Certificate",
@@ -169,7 +173,7 @@ describe("buildContentFromSessions function", () => {
     const result = `Service: Apply for a Lawful Development Certificate
       Address: 1 High Street
       Project type: New offices
-      Expiry Date: 29 May 2026
+      Expiry Date: 29 May 2126
       Link: https://www.example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=123`;
     expect(
       await buildContentFromSessions(
@@ -191,7 +195,7 @@ describe("buildContentFromSessions function", () => {
           },
         },
         id: "123",
-        created_at: "2026-05-01T01:02:03.865452+00:00",
+        created_at: "2126-05-01T01:02:03.865452+00:00",
         flow: {
           slug: "apply-for-a-lawful-development-certificate",
           name: "Apply for a Lawful Development Certificate",
@@ -202,7 +206,7 @@ describe("buildContentFromSessions function", () => {
     const result = `Service: Apply for a Lawful Development Certificate
       Address: Address not submitted
       Project type: New offices
-      Expiry Date: 29 May 2026
+      Expiry Date: 29 May 2126
       Link: https://www.example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=123`;
     expect(
       await buildContentFromSessions(
@@ -225,7 +229,7 @@ describe("buildContentFromSessions function", () => {
           },
         },
         id: "123",
-        created_at: "2026-05-01T01:02:03.865452+00:00",
+        created_at: "2126-05-01T01:02:03.865452+00:00",
         flow: {
           slug: "apply-for-a-lawful-development-certificate",
           name: "Apply for a Lawful Development Certificate",
@@ -236,7 +240,7 @@ describe("buildContentFromSessions function", () => {
     const result = `Service: Apply for a Lawful Development Certificate
       Address: 1 High Street
       Project type: Project type not submitted
-      Expiry Date: 29 May 2026
+      Expiry Date: 29 May 2126
       Link: https://www.example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=123`;
     expect(
       await buildContentFromSessions(
