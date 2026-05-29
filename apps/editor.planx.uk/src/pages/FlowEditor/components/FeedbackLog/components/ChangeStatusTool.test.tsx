@@ -227,6 +227,7 @@ describe("ChangeStatusTool — changing status (the reported bug)", () => {
     ["Urgent", "urgent"],
     ["In progress", "in_progress"],
     ["Actioned", "actioned"],
+    ["Not relevant", "not_relevant"],
   ] as const)(
     "calls the mutation with status '%s' when '%s' menu item is clicked",
     async (label, status) => {
