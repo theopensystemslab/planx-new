@@ -303,7 +303,7 @@ export const mockFeedback: Feedback[] = [
     nodeId: "5SuQhstVL5",
     nodeText: null,
     projectType: null,
-    status: "in_progress",
+    status: "not_relevant",
     editorNotes: "No action needed",
   },
   {

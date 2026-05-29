@@ -32,6 +32,7 @@ export const feedbackStatusText: Record<FeedbackStatus, string> = {
   urgent: "Urgent",
   actioned: "Actioned",
   in_progress: "In progress",
+  not_relevant: "Not relevant",
 };
 
 export const getCombinedHelpText = (feedback: Feedback) => {
