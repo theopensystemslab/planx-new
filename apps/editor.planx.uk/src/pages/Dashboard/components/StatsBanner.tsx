@@ -1,20 +1,15 @@
 import Box from "@mui/material/Box";
-import { styled } from "@mui/material/styles";
+import { keyframes, styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { linkOptions } from "@tanstack/react-router";
 import React from "react";
 import { WidgetLink } from "ui/editor/DashboardWidget";
 
-const STATS = [
-  { label: "Total sessions" },
-  { label: "Submissions" },
-  { label: "Guidance sessions" },
-  { label: "Online flows" },
-];
-
-interface StatsBannerProps {
-  team: string;
-}
+import { useStore } from "../../FlowEditor/lib/store";
+import {
+  TeamDashboardStats,
+  useTeamDashboardStats,
+} from "./useTeamDashboardStats";
 
 const Root = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -34,6 +29,11 @@ const Header = styled(Box)({
   marginBottom: 12,
 });
 
+const pulse = keyframes`
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+`;
+
 const StatsGrid = styled(Box)(({ theme }) => ({
   display: "grid",
   gridTemplateColumns: "repeat(4, 1fr)",
@@ -43,7 +43,48 @@ const StatsGrid = styled(Box)(({ theme }) => ({
   },
 }));
 
-export default function StatsBanner({ team }: StatsBannerProps) {
+function formatDelta(delta: number): string {
+  return delta >= 0 ? `+${delta}` : `${delta}`;
+}
+
+interface StatsBannerProps {
+  teamSlug: string;
+  stats?: TeamDashboardStats;
+  loading?: boolean;
+}
+
+export function StatsBanner({
+  teamSlug,
+  stats,
+  loading = false,
+}: StatsBannerProps) {
+  const tiles = [
+    {
+      label: "Online flows",
+      value: stats?.onlineFlows ?? null,
+      delta: stats ? stats.onlineFlows - stats.onlineFlowsPrevious : null,
+    },
+    {
+      label: "Total sessions",
+      value: stats?.sessionsCurrent ?? null,
+      delta: stats ? stats.sessionsCurrent - stats.sessionsPrevious : null,
+    },
+    {
+      label: "Submissions",
+      value: stats?.submissionsCurrent ?? null,
+      delta: stats
+        ? stats.submissionsCurrent - stats.submissionsPrevious
+        : null,
+    },
+    {
+      label: "Total guidance sessions",
+      value: stats?.guidanceSessionsCurrent ?? null,
+      delta: stats
+        ? stats.guidanceSessionsCurrent - stats.guidanceSessionsPrevious
+        : null,
+    },
+  ];
+
   return (
     <Root>
       <Header>
@@ -52,22 +93,49 @@ export default function StatsBanner({ team }: StatsBannerProps) {
           label="view analytics"
           {...linkOptions({
             to: "/app/$team",
-            params: { team },
+            params: { team: teamSlug },
           })}
         />
       </Header>
       <StatsGrid>
-        {STATS.map(({ label }) => (
+        {tiles.map(({ label, value, delta }) => (
           <Box key={label}>
             <Typography variant="body2" sx={{ color: "text.secondary" }}>
               {label}
             </Typography>
-            <Typography variant="h1" component="p">
-              —
+            <Typography
+              variant="h1"
+              component="p"
+              sx={
+                loading
+                  ? { animation: `${pulse} 1.4s ease-in-out infinite` }
+                  : undefined
+              }
+            >
+              {value ?? "—"}
             </Typography>
+            {!loading && delta !== null && (
+              <Typography
+                variant="body2"
+                sx={{
+                  color: delta >= 0 ? "success.main" : "error.main",
+                  fontWeight: "bold",
+                }}
+              >
+                {formatDelta(delta)}
+              </Typography>
+            )}
           </Box>
         ))}
       </StatsGrid>
     </Root>
   );
+}
+
+export default function ConnectedStatsBanner() {
+  const teamSlug = useStore((state) => state.getTeam().slug);
+  const { data, loading } = useTeamDashboardStats(teamSlug);
+  const stats = data?.teamDashboardStats[0];
+
+  return <StatsBanner teamSlug={teamSlug} stats={stats} loading={loading} />;
 }
