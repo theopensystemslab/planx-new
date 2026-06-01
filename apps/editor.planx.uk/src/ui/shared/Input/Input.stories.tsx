@@ -16,6 +16,7 @@ export const Basic = {
     bordered: true,
     multiline: false,
     rows: 1,
+    "aria-label": "Input",
   },
 } satisfies Story;
 
@@ -24,6 +25,7 @@ export const Multiline = {
     bordered: true,
     multiline: true,
     rows: 3,
+    "aria-label": "Input",
   },
 } satisfies Story;
 
@@ -31,5 +33,6 @@ export const WithError = {
   args: {
     bordered: true,
     errorMessage: "Enter a value",
+    "aria-label": "Input",
   },
 } satisfies Story;

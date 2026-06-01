@@ -8,6 +8,7 @@ interface RenderFieldInput {
   label?: string;
   required: boolean;
   placeholder?: string;
+  ariaLabel?: string;
 }
 
 export const RenderDataFieldInput = ({
@@ -15,6 +16,7 @@ export const RenderDataFieldInput = ({
   label,
   required,
   placeholder,
+  ariaLabel,
 }: RenderFieldInput) => {
   return (
     <StyledDataField
@@ -22,6 +24,10 @@ export const RenderDataFieldInput = ({
       slotProps={{
         ...params.slotProps,
         input: { ...params.slotProps.input, notched: false },
+        htmlInput: {
+          ...params.slotProps?.htmlInput,
+          ...(ariaLabel && { "aria-label": ariaLabel }),
+        },
       }}
       label={label}
       placeholder={placeholder}

@@ -48,11 +48,13 @@ export const Basic = () => {
                 setValue(ev.target.value);
               }}
               errorMessage={undefined}
+              inputProps={{ "aria-label": "Editor" }}
             />
           </Box>
           <Box>
             <p>HTML result:</p>
             <textarea
+              aria-label="HTML result"
               style={{ display: "block", width: "100%", height: 120 }}
               value={value}
               readOnly
@@ -61,6 +63,7 @@ export const Basic = () => {
           <Box>
             <p>Interpolated HTML result:</p>
             <textarea
+              aria-label="Interpolated HTML result"
               style={{ display: "block", width: "100%", height: 120 }}
               value={injectVariables(value, { name: "Gary" })}
               readOnly
@@ -69,6 +72,7 @@ export const Basic = () => {
           <Box>
             <p>JSON result:</p>
             <textarea
+              aria-label="JSON result"
               style={{ display: "block", width: "100%", height: 120 }}
               value={JSON.stringify(fromHtml(value), null, 2)}
               readOnly

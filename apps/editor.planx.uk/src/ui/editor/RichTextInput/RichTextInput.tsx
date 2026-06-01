@@ -191,6 +191,7 @@ const RichTextInput: FC<Props> = (props) => {
             >
               <Input
                 sx={{ width: 300 }}
+                aria-label="URL"
                 ref={urlInputRef}
                 onKeyDown={(ev) => {
                   if (ev.key === "Enter") {

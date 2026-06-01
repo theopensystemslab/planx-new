@@ -117,6 +117,7 @@ const EnhancedTextInputComponent = (props: Props) => {
                   name="title"
                   value={formik.values.title}
                   placeholder="Title"
+                  aria-label="Title"
                   onChange={formik.handleChange}
                   disabled={props.disabled}
                   errorMessage={formik.errors.title}
@@ -130,6 +131,7 @@ const EnhancedTextInputComponent = (props: Props) => {
                   onChange={formik.handleChange}
                   disabled={props.disabled}
                   errorMessage={formik.errors.description}
+                  inputProps={{ "aria-label": "Description" }}
                 />
               </InputRow>
               <InputRow>
@@ -152,6 +154,7 @@ const EnhancedTextInputComponent = (props: Props) => {
                     name="revisionTitle"
                     value={formik.values.revisionTitle}
                     placeholder="Revision title"
+                    aria-label="Revision title"
                     onChange={formik.handleChange}
                     disabled={props.disabled}
                     errorMessage={formik.errors.revisionTitle}
@@ -165,6 +168,7 @@ const EnhancedTextInputComponent = (props: Props) => {
                     onChange={formik.handleChange}
                     disabled={props.disabled}
                     errorMessage={formik.errors.revisionDescription}
+                    inputProps={{ "aria-label": "Revision description" }}
                   />
                 </InputRow>
               </ModalSectionContent>
