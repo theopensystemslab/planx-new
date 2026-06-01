@@ -96,6 +96,7 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
             <InputRow>
               <InputLabel label="Disclaimer text" htmlFor="disclaimer">
                 <RichTextInput
+                  name="disclaimer"
                   value={formik.values.disclaimer}
                   onChange={formik.handleChange}
                   disabled

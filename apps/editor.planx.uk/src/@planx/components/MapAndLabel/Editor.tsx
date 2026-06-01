@@ -197,6 +197,8 @@ function MapAndLabelComponent(props: Props) {
           <InputRow>
             <InputRowItem>
               <SelectInput
+                name="Schema"
+                visuallyHiddenLabel
                 value={formik.values.schemaName}
                 onChange={(e) => {
                   formik.setFieldValue("schemaName", e.target.value);

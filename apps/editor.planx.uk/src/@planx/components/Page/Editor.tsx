@@ -90,6 +90,8 @@ function PageComponent(props: Props) {
             <InputRowLabel>Schema</InputRowLabel>
             <InputRowItem>
               <SelectInput
+                name="Schema"
+                visuallyHiddenLabel
                 value={formik.values.schemaName}
                 onChange={(e) => {
                   formik.setFieldValue("schemaName", e.target.value);

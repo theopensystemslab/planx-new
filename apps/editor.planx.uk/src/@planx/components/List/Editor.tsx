@@ -156,6 +156,8 @@ function ListComponent(props: Props) {
               <InputRowLabel>Schema</InputRowLabel>
               <InputRowItem>
                 <SelectInput
+                  name="Schema"
+                  visuallyHiddenLabel
                   value={formik.values.schemaName}
                   disabled={props.disabled}
                   onChange={(e) => {

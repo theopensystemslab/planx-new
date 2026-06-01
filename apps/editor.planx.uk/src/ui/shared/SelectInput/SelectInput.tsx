@@ -67,7 +67,7 @@ export default function SelectInput({
         variant="standard"
         size={size}
         value={value}
-        labelId={`${name?.replaceAll(" ", "-")}-label`}
+        {...(name && { labelId: `${name.replaceAll(" ", "-")}-label` })}
         classes={{
           select: classes.rootSelect,
           icon: classes.icon,
