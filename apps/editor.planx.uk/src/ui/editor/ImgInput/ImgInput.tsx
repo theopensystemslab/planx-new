@@ -60,6 +60,8 @@ export default function ImgInput({
     setAnchorEl(null);
   };
 
+  const uploadLabel = "Upload image";
+
   return img ? (
     <ImageUploadContainer>
       <StyledIconButton
@@ -103,6 +105,7 @@ export default function ImgInput({
     <Tooltip title="Drop file here" disableHoverListener={disabled}>
       <ImageUploadContainer>
         <PublicFileUploadButton
+          aria-label={uploadLabel}
           onChange={(newUrl) => {
             setAnchorEl(null);
             onChange && onChange(newUrl);
