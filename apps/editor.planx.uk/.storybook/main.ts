@@ -6,6 +6,7 @@ export default {
     "@storybook/addon-a11y",
     "@storybook/addon-docs",
     "@storybook/addon-links"
+    "@storybook/experimental-addon-test"
   ],
   staticDirs: ["../public"],
   framework: {

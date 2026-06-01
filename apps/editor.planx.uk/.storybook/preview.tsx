@@ -69,4 +69,9 @@ export const parameters = {
   msw: {
     handlers: [],
   },
+  a11y: {
+    config: {
+      rules: [{ id: "color-contrast", enabled: true }],
+    },
+  },
 };
