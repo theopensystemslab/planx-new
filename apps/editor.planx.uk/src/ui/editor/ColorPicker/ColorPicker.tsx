@@ -119,6 +119,7 @@ export default function ColorPicker(props: Props): FCReturn {
           onClick={handleClick}
           disableRipple
           disabled={props.disabled}
+          aria-label={props.label}
         >
           <Swatch sx={{ backgroundColor: props.color }} className="swatch" />
           {props.color}
