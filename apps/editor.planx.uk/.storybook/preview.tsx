@@ -46,18 +46,20 @@ initialize();
 
 export const decorators = [
   (Story) => (
-    <ApolloProvider client={testApolloClient}>
-      <QueryClientProvider client={testQueryClient}>
-        <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={defaultTheme}>
-            <CssBaseline />
-            <DndProvider backend={HTML5Backend} key={Date.now()}>
-              <Story />
-            </DndProvider>
-          </ThemeProvider>
-        </StyledEngineProvider>
-      </QueryClientProvider>
-    </ApolloProvider>
+    <main>
+      <ApolloProvider client={testApolloClient}>
+        <QueryClientProvider client={testQueryClient}>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={defaultTheme}>
+              <CssBaseline />
+              <DndProvider backend={HTML5Backend} key={Date.now()}>
+                <Story />
+              </DndProvider>
+            </ThemeProvider>
+          </StyledEngineProvider>
+        </QueryClientProvider>
+      </ApolloProvider>
+    </main>
   ),
 ];
 
