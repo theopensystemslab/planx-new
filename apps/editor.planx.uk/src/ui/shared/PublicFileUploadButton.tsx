@@ -1,6 +1,5 @@
 import ErrorIcon from "@mui/icons-material/Error";
 import Image from "@mui/icons-material/Image";
-import ButtonBase, { ButtonBaseProps } from "@mui/material/ButtonBase";
 import CircularProgress from "@mui/material/CircularProgress";
 import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
@@ -21,24 +20,30 @@ export interface Props {
   variant?: "tooltip";
   disabled?: boolean;
   acceptedFileTypes?: AcceptedFileTypes;
+  "aria-label"?: string;
 }
 
-interface RootProps extends ButtonBaseProps {
+interface RootProps {
   isDragActive?: boolean;
   variant?: "tooltip";
+  disabled?: boolean;
 }
 
-const Root = styled(ButtonBase, {
+const Root = styled("div", {
   shouldForwardProp: (prop) =>
-    !["isDragActive", "variant"].includes(prop.toString()),
+    !["isDragActive", "variant", "disabled"].includes(prop.toString()),
 })<RootProps>(({ theme, isDragActive, variant, disabled }) => ({
   borderRadius: 0,
   height: 50,
   width: 50,
   flexGrow: 0,
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
   backgroundColor: theme.palette.background.default,
   color: theme.palette.primary.dark,
   border: `1px solid ${theme.palette.border.main}`,
+  cursor: disabled ? "default" : "pointer",
   ...(isDragActive && {
     border: `2px dashed ${theme.palette.primary.dark}`,
   }),
@@ -54,6 +59,7 @@ const Root = styled(ButtonBase, {
 
 export default function PublicFileUploadButton(props: Props): FCReturn {
   const { onChange, variant, disabled, acceptedFileTypes } = props;
+  const ariaLabel = props["aria-label"] ?? "Upload image";
 
   const [status, setStatus] = useState<
     { type: "none" } | { type: "loading" } | { type: "error"; msg: string }
@@ -99,11 +105,12 @@ export default function PublicFileUploadButton(props: Props): FCReturn {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: acceptedFileTypes || DEFAULT_FILETYPES,
+    disabled,
   });
 
   if (status.type === "loading") {
     return (
-      <Root key="status-loading">
+      <Root key="status-loading" role="status" aria-label={ariaLabel} aria-busy>
         <CircularProgress size={24} />
       </Root>
     );
@@ -112,7 +119,7 @@ export default function PublicFileUploadButton(props: Props): FCReturn {
   if (status.type === "error") {
     return (
       <Tooltip open title={status.msg}>
-        <Root>
+        <Root role="alert" aria-label={status.msg}>
           <ErrorIcon titleAccess="Error" />
         </Root>
       </Tooltip>
@@ -124,11 +131,14 @@ export default function PublicFileUploadButton(props: Props): FCReturn {
       isDragActive={isDragActive}
       key="status-none"
       variant={variant}
-      {...getRootProps()}
       disabled={disabled}
+      {...getRootProps()}
+      role="button"
+      aria-label={ariaLabel}
+      tabIndex={disabled ? -1 : 0}
     >
       <input data-testid="upload-file-input" {...getInputProps()} />
-      <Image color={disabled ? "disabled" : "inherit"} />
+      <Image color={disabled ? "disabled" : "inherit"} aria-hidden />
     </Root>
   );
 }
