@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, StoryObj } from "@storybook/tanstack-react";
 import type { ExternalPortal } from "hooks/data/useExternalPortal";
 import { graphql, HttpResponse } from "msw";
 

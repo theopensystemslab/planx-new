@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from "@storybook/react-vite";
+import { Meta, StoryObj } from "@storybook/tanstack-react";
 
 import ResumePage, { EmailRequired } from ".";
 import { EmailError, EmailSuccess } from "./SendResumeEmail";

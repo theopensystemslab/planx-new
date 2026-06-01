@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { Meta } from "@storybook/react-vite";
+import { Meta } from "@storybook/tanstack-react";
 import { defaultTheme } from "theme";
 
 // The `PaletteOptions` exported by Material-UI are expressed as an interface,

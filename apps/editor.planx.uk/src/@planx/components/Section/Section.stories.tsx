@@ -1,5 +1,5 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { Meta, StoryObj } from "@storybook/react-vite";
+import { Meta, StoryObj } from "@storybook/tanstack-react";
 import { ComponentProps } from "react";
 import { SectionNode } from "types";
 

@@ -1,5 +1,5 @@
 import Wrapper from "@planx/components/fixtures/Wrapper";
-import { Meta, StoryObj } from "@storybook/react-vite";
+import { Meta, StoryObj } from "@storybook/tanstack-react";
 import { graphql, http, HttpResponse } from "msw";
 
 import Editor from "../Editor";

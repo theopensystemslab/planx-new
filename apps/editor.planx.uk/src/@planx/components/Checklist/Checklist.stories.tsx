@@ -1,5 +1,5 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { Meta, StoryObj } from "@storybook/react-vite";
+import { Meta, StoryObj } from "@storybook/tanstack-react";
 
 import Wrapper from "../fixtures/Wrapper";
 import {

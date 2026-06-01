@@ -9,7 +9,7 @@ export default {
   ],
   staticDirs: ["../public"],
   framework: {
-    name: "@storybook/react-vite",
+    name: "@storybook/tanstack-react",
     options: {}
   },
   docs: {},

@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
-import { Meta } from "@storybook/react-vite";
+import { Meta } from "@storybook/tanstack-react";
 import { useState } from "react";
 
 import RichTextInput from "./RichTextInput";

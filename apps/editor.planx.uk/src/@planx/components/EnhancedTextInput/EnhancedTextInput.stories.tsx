@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from "@storybook/react-vite";
+import { Meta, StoryObj } from "@storybook/tanstack-react";
 import { delay, http, HttpResponse } from "msw";
 import { userEvent, within } from "storybook/test";
 

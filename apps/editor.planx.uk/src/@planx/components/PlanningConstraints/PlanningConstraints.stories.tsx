@@ -1,5 +1,5 @@
 import Wrapper from "@planx/components/fixtures/Wrapper";
-import { Meta } from "@storybook/react-vite";
+import { Meta } from "@storybook/tanstack-react";
 
 import Editor from "./Editor";
 import classifiedRoadsNegativeResponseMock from "./mocks/classifiedRoadsNegativeResponseMock";

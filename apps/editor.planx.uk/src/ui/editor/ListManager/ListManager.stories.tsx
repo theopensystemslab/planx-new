@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import { Meta } from "@storybook/react-vite";
+import { Meta } from "@storybook/tanstack-react";
 import { ChangeEvent, useState } from "react";
 
 import Input from "../../shared/Input/Input";
