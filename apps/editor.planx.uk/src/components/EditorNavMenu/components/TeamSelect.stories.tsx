@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   createMemoryHistory,
   createRootRoute,
@@ -8,7 +8,6 @@ import {
 } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { TeamSummary } from "pages/FlowEditor/lib/store/team";
-import React from "react";
 
 import TeamSelect from "./TeamSelect";
 

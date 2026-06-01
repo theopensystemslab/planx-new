@@ -1,5 +1,4 @@
-import { Meta } from "@storybook/react";
-import React from "react";
+import { Meta } from "@storybook/react-vite";
 
 import SaveAndReturn, { ConfirmEmail } from "./SaveAndReturn";
 

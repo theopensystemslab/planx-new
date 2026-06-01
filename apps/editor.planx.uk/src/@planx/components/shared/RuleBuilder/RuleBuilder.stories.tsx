@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
-import { Meta, StoryObj } from "@storybook/react";
-import React, { useState } from "react";
+import { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
 
 import { Props, RuleBuilder } from ".";
 import { Condition, Operator } from "./types";

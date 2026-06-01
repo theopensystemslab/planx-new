@@ -1,7 +1,6 @@
 import type { GovUKPayment } from "@opensystemslab/planx-core/types";
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react-vite";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 
 import Wrapper from "../fixtures/Wrapper";
 import Editor from "./Editor";

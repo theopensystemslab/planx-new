@@ -1,7 +1,6 @@
 import Wrapper from "@planx/components/fixtures/Wrapper";
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react-vite";
 import { graphql, http, HttpResponse } from "msw";
-import React from "react";
 
 import Editor from "../Editor";
 import FindProperty from ".";

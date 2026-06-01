@@ -1,8 +1,7 @@
 import Box from "@mui/material/Box";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ExternalPortal } from "hooks/data/useExternalPortal";
 import { graphql, HttpResponse } from "msw";
-import React from "react";
 
 import RecentFlows from "./RecentFlows";
 import { RecentFlowsProvider, STORAGE_KEY } from "./RecentFlowsContext";
