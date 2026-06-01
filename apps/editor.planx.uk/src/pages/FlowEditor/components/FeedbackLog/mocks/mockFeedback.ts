@@ -211,9 +211,11 @@ export const mockFeedback: Feedback[] = [
         "The information collected here isn't monitored by planning officers. Don't use it to give extra information about your project or submission. If you do, it cannot be used to assess your project.",
       description:
         'This service is a work in progress, any feedback you share about your experience will help us to improve it.\n<br>\n<br>\nDon\'t share any personal or financial information in your feedback. If you do we will act according to our <a href="">privacy policy</a>.',
-      ratingQuestion: "How would you rate your experience with this service?",
+      ratingQuestion:
+        "How would you rate your experience with this digital service?",
       feedbackRequired: false,
-      freeformQuestion: "Please tell us more about your experience.",
+      freeformQuestion:
+        "Please tell us more about your experience using this service.",
     },
     nodeId: "BLx7CSrWDv",
     nodeText:
