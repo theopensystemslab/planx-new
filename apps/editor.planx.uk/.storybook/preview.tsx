@@ -1,9 +1,6 @@
 import React from "react";
 import CssBaseline from "@mui/material/CssBaseline";
-import { ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { defaultTheme } from "../src/theme";
+import { ThemeProvider, StyledEngineProvider, createTheme } from "@mui/material/styles";
 import { MyMap } from "@opensystemslab/map";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { initialize, mswLoader } from "msw-storybook-addon";
@@ -13,6 +10,31 @@ import {
   HttpLink,
   InMemoryCache,
 } from "@apollo/client";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { defaultTheme } from "../src/theme";
+import { tanstackRouterDecorator } from "./__mocks__/tanstack-router";
+
+// Override transition durations to 0 so Fade/Collapse animations are instant.
+// Without this, axe runs color-contrast checks mid-animation, seeing partially-opaque
+// dark text composited against a white background as near-white (#fbfbfb on #ffffff),
+// producing false-positive contrast violations with ~1.03 ratios.
+const storybookTheme = createTheme({
+  ...defaultTheme,
+  transitions: {
+    ...defaultTheme.transitions,
+    duration: {
+      ...defaultTheme.transitions.duration,
+      shortest: 0,
+      shorter: 0,
+      short: 0,
+      standard: 0,
+      complex: 0,
+      enteringScreen: 0,
+      leavingScreen: 0,
+    },
+  },
+});
 
 if (!window.customElements.get("my-map")) {
   window.customElements.define("my-map", MyMap);
@@ -50,7 +72,7 @@ export const decorators = [
       <ApolloProvider client={testApolloClient}>
         <QueryClientProvider client={testQueryClient}>
           <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={defaultTheme}>
+            <ThemeProvider theme={storybookTheme}>
               <CssBaseline />
               <DndProvider backend={HTML5Backend} key={Date.now()}>
                 <Story />
