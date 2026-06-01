@@ -14,6 +14,9 @@ export default {
   },
   docs: {},
   typescript: {
-    reactDocgen: "react-docgen-typescript"
+    reactDocgen: "react-docgen-typescript",
+    reactDocgenTypescriptOptions: {
+      exclude: ["**/*.stories.tsx", ".storybook/**"]
+    }
   }
 };
