@@ -98,7 +98,14 @@ services:
       HASURA_PROXY_PORT: ${HASURA_PROXY_PORT}
       HASURA_NETWORK_LOCATION: "hasura"
     healthcheck:
-      test: ["CMD", "wget", "--spider", "--quiet", "localhost:$HASURA_PROXY_PORT/healthz"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--spider",
+          "--quiet",
+          "localhost:$HASURA_PROXY_PORT/healthz",
+        ]
       interval: 15s
       timeout: 3s
       retries: 3
@@ -178,6 +185,8 @@ services:
       UNIFORM_CLIENT_LAMBETH: ${UNIFORM_CLIENT_LAMBETH}
       UNIFORM_CLIENT_SOUTHWARK: ${UNIFORM_CLIENT_SOUTHWARK}
       UNIFORM_CLIENT_BUCKINGHAMSHIRE: ${UNIFORM_CLIENT_BUCKINGHAMSHIRE}
+      # Stripe Connect
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
 
   sharedb:
     container_name: sharedb

@@ -17,8 +17,17 @@ import {
 } from "./types.js";
 import { validate } from "../../shared/middleware/validate.js";
 import { fetchPaymentRequestViaProxy } from "./service/inviteToPay/index.js";
+import {
+  createStripeCheckoutSession,
+  getStripeCheckoutSession,
+} from "./service/stripe.js";
 
 const router = Router();
+
+// Stripe test-harness routes — must be registered before /pay/:localAuthority
+// so Express doesn't match "stripe" as the :localAuthority param.
+router.post("/pay/stripe/checkout-session", createStripeCheckoutSession);
+router.get("/pay/stripe/session/:sessionId", getStripeCheckoutSession);
 
 router.post(
   "/pay/:localAuthority",
