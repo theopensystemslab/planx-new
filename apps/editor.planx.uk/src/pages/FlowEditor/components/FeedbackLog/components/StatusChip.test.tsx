@@ -32,6 +32,7 @@ describe("StatusChip", () => {
     ["urgent", "Urgent", "MuiChip-colorError"],
     ["in_progress", "In progress", "MuiChip-colorWarning"],
     ["actioned", "Actioned", "MuiChip-colorSuccess"],
+    ["not_relevant", "Not relevant", "MuiChip-colorSecondary"],
   ] as const)(
     "renders '%s' label with correct colour class for status '%s'",
     async (status, label, colourClass) => {

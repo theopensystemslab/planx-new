@@ -1,4 +1,4 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
 import { Subscription } from "pages/FlowEditor/components/Subscription/Subscription";
@@ -7,10 +7,15 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 export const Route = createFileRoute("/_authenticated/app/$team/subscription")({
-  loader: async ({ params }) => {
-    const isAuthorised = useStore.getState().canUserEditTeam(params.team);
+  loader: async ({ params, context }) => {
+    const isAuthorised =
+      context.user?.isPlatformAdmin ||
+      useStore.getState().getUserRoleForCurrentTeam() === "teamAdmin";
+
     if (!isAuthorised) {
-      throw notFound();
+      throw new Error(
+        "You do not have the necessary permissions to view this page. Please contact a platform administrator if you think this is an error.",
+      );
     }
 
     const {

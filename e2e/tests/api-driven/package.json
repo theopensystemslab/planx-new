@@ -7,9 +7,9 @@
   "type": "module",
   "packageManager": "pnpm@10.30.2",
   "dependencies": {
-    "@cucumber/cucumber": "^11.3.0",
+    "@cucumber/cucumber": "^12.8.3",
     "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#ddf1e2d",
-    "axios": "^1.15.2",
+    "axios": "^1.16.0",
     "dotenv": "^16.6.1",
     "dotenv-expand": "^10.0.0",
     "graphql": "^16.14.0",

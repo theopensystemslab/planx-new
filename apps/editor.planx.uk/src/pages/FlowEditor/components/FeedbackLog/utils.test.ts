@@ -28,6 +28,7 @@ describe("feedbackStatusText", () => {
     ["urgent", "Urgent"],
     ["actioned", "Actioned"],
     ["in_progress", "In progress"],
+    ["not_relevant", "Not relevant"],
   ] as const)("maps '%s' to '%s'", (status, expected) => {
     expect(feedbackStatusText[status]).toBe(expected);
   });
