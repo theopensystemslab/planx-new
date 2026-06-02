@@ -1,6 +1,9 @@
+import Box from "@mui/material/Box";
+import List from "@mui/material/List";
 import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
 import { useFormikContext } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import Permission from "ui/editor/Permission";
 import { URLPrefix } from "ui/editor/URLPrefix";
 import InputLabel from "ui/public/InputLabel";
@@ -14,6 +17,9 @@ import { CreateFromTemplateFormSection } from "./CreateFromTemplateFormSection";
 import { CREATE_FLOW_MODES, CreateFlow } from "./types";
 
 export const BaseFormSection: React.FC = () => {
+  const [nestedSourceTemplates, setNestedSourceTemplates] = useState<string[]>(
+    [],
+  );
   const { values, setFieldValue, getFieldProps, errors } =
     useFormikContext<CreateFlow>();
 
@@ -42,7 +48,9 @@ export const BaseFormSection: React.FC = () => {
           ))}
         </SelectInput>
       </InputLabel>
-      <CreateFromTemplateFormSection />
+      <CreateFromTemplateFormSection
+        setNestedSourceTemplates={setNestedSourceTemplates}
+      />
       <CreateFromCopyFormSection />
       <InputLabel label="Flow name" htmlFor="flow.name">
         <Input
@@ -77,6 +85,21 @@ export const BaseFormSection: React.FC = () => {
             label={"Source template"}
           />
         </Permission.IsPlatformAdmin>
+      )}
+      {values.mode === "template" && nestedSourceTemplates.length > 0 && (
+        <Box sx={{ py: 1 }}>
+          <Typography variant="h4" component="h2" gutterBottom>
+            {`This template relies on nested templates`}
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            {`If any of these templated flows are not yet in your workspace, please add them next before you begin customising this template.`}
+          </Typography>
+          <List>
+            {nestedSourceTemplates.map((name) => (
+              <ul key={name}>{name}</ul>
+            ))}
+          </List>
+        </Box>
       )}
     </>
   );
