@@ -91,13 +91,15 @@ const IsService: React.FC = () => {
             )}
             <ConfirmationDialog
               open={dialogOpen}
-              onClose={async () => {
+              onClose={async (isConfirmed) => {
                 setDialogOpen(false);
-                await formik.setFieldValue(
-                  "isService",
-                  !formik.values.isService,
-                );
-                await formik.submitForm();
+                if (isConfirmed) {
+                  await formik.setFieldValue(
+                    "isService",
+                    !formik.values.isService,
+                  );
+                  await formik.submitForm();
+                }
               }}
               title="Confirm change to service"
               confirmText={"Set to service"}
