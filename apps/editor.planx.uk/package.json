@@ -44,7 +44,7 @@
     "camelcase-keys": "^10.0.2",
     "classnames": "^2.5.1",
     "core-js": "^3.48.0",
-    "date-fns": "^2.30.0",
+    "date-fns": "^4.2.1",
     "dompurify": "^3.4.0",
     "formik": "^2.4.9",
     "fuse.js": "^7.1.0",
