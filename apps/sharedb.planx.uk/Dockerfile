@@ -1,5 +1,5 @@
 # 24.14.0 = LTS
-FROM node:24.14.0-alpine AS base
+FROM node:26.3.0-alpine AS base
 
 WORKDIR /sharedb
 RUN npm install -g pnpm@10.30.2
