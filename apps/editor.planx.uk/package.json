@@ -120,7 +120,7 @@
     "@types/sharedb": "^5.1.0",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
-    "@vitest/coverage-v8": "3.2.4",
+    "@vitest/coverage-v8": "4.1.7",
     "@vitest/eslint-plugin": "^1.6.9",
     "autoprefixer": "^10.4.27",
     "css-loader": "^7.1.4",
@@ -148,7 +148,7 @@
     "use-sync-external-store": "1.6.0",
     "vite-plugin-node-polyfills": "^0.24.0",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.2.4",
+    "vitest": "^4.1.7",
     "vitest-axe": "1.0.0-pre.5"
   },
   "packageManager": "pnpm@10.30.2",
