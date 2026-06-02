@@ -251,7 +251,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml,{0}/src/**,{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
             ${{ runner.os }}-
-      - uses: pulumi/actions@v5
+      - uses: pulumi/actions@v7
         with:
           command: preview
           stack-name: staging
