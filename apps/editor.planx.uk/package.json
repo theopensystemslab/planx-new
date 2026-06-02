@@ -133,7 +133,7 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-testing-library": "^7.16.0",
     "fake-indexeddb": "^6.2.5",
-    "husky": "^8.0.3",
+    "husky": "^9.1.7",
     "jsdom": "^26.1.0",
     "lint-staged": "^13.3.0",
     "msw-storybook-addon": "^2.0.7",
