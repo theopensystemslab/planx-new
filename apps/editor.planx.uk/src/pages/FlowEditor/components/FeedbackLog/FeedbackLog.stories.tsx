@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
-import { Meta, StoryObj } from "@storybook/react";
-import React from "react";
+import { Meta, StoryObj } from "@storybook/tanstack-react";
 
 import { FeedbackLog } from "./FeedbackLog";
 import { mockFeedback } from "./mocks/mockFeedback";

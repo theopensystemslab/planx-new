@@ -1,6 +1,5 @@
 import Wrapper from "@planx/components/fixtures/Wrapper";
-import { Meta, StoryObj } from "@storybook/react";
-import React from "react";
+import { Meta, StoryObj } from "@storybook/tanstack-react";
 
 import Editor from "./Editor";
 import { presentationalPropsMock } from "./mocks/propsMock";

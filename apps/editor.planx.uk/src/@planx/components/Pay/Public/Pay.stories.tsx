@@ -1,23 +1,10 @@
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/tanstack-react";
 
 import Confirm from "./Confirm";
 
 const meta = {
   title: "PlanX Components/Pay",
   component: Confirm,
-  parameters: {
-    tanstackRouter: {
-      params: {},
-      location: {
-        pathname: "/test-mountpath",
-        search: "",
-        hash: "",
-      },
-      context: {
-        mountpath: "test mountpath",
-      },
-    },
-  },
 } satisfies Meta<typeof Confirm>;
 
 type Story = StoryObj<typeof meta>;

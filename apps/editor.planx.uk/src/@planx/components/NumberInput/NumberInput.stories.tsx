@@ -1,6 +1,5 @@
-import { Meta, StoryObj } from "@storybook/react";
-import { userEvent, within } from "@storybook/test";
-import React from "react";
+import { Meta, StoryObj } from "@storybook/tanstack-react";
+import { userEvent, within } from "storybook/test";
 
 import Wrapper from "../fixtures/Wrapper";
 import Editor from "./Editor";

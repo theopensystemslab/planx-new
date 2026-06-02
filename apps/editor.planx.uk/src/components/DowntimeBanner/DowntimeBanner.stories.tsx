@@ -1,5 +1,4 @@
-import { Meta, StoryObj } from "@storybook/react";
-import React from "react";
+import { Meta, StoryObj } from "@storybook/tanstack-react";
 
 import DowntimeBanner from "./DowntimeBanner";
 

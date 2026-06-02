@@ -1,7 +1,6 @@
 import Check from "@mui/icons-material/Check";
 import Typography from "@mui/material/Typography";
-import { Meta, StoryObj } from "@storybook/react";
-import React from "react";
+import { Meta, StoryObj } from "@storybook/tanstack-react";
 
 import Banner from "./Banner";
 

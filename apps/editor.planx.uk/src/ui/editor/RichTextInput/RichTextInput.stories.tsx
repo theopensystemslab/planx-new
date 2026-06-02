@@ -2,8 +2,8 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
-import { Meta } from "@storybook/react";
-import React, { useState } from "react";
+import { Meta } from "@storybook/tanstack-react";
+import { useState } from "react";
 
 import RichTextInput from "./RichTextInput";
 import { fromHtml, injectVariables } from "./utils";

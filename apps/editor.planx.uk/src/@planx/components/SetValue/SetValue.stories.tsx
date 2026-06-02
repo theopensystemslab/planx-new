@@ -1,7 +1,6 @@
 import ErrorOutline from "@mui/icons-material/ErrorOutlined";
 import Typography from "@mui/material/Typography";
-import { Meta } from "@storybook/react";
-import React from "react";
+import { Meta } from "@storybook/tanstack-react";
 
 import Wrapper from "../fixtures/Wrapper";
 import { WarningContainer } from "../shared/Preview/WarningContainer";

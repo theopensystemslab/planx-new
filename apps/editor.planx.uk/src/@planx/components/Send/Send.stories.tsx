@@ -1,5 +1,4 @@
-import { Meta } from "@storybook/react";
-import React from "react";
+import { Meta } from "@storybook/tanstack-react";
 
 import Wrapper from "../fixtures/Wrapper";
 import Editor from "./Editor";

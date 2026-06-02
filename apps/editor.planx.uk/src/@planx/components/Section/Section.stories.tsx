@@ -1,7 +1,6 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/tanstack-react";
 import { ComponentProps } from "react";
-import React from "react";
 import { SectionNode } from "types";
 
 import Wrapper from "../fixtures/Wrapper";

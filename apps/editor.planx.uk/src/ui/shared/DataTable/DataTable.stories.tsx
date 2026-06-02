@@ -1,10 +1,9 @@
 import Box from "@mui/material/Box";
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/tanstack-react";
 import {
   formatDate,
   getFlowNamesForFilter,
 } from "pages/PlatformAdminPanel/utils";
-import React from "react";
 import type { AdminPanelData, LiveFlow } from "types";
 
 import { DataTable } from "./DataTable";

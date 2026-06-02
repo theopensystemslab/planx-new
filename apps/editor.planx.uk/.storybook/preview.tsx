@@ -14,8 +14,6 @@ import {
   InMemoryCache,
 } from "@apollo/client";
 
-import { tanstackRouterDecorator } from "./__mocks__/tanstack-router";
-
 if (!window.customElements.get("my-map")) {
   window.customElements.define("my-map", MyMap);
 }
@@ -61,7 +59,6 @@ export const decorators = [
       </QueryClientProvider>
     </ApolloProvider>
   ),
-  tanstackRouterDecorator,
 ];
 
 export const tags = ["autodocs"];

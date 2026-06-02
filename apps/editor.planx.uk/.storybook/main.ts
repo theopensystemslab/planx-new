@@ -3,17 +3,20 @@ export default {
     "../src/**/*.stories.@(js|jsx|ts|tsx)",
   ],
   addons: [
-    "@storybook/addon-links",
-    "@storybook/addon-essentials",
     "@storybook/addon-a11y",
+    "@storybook/addon-docs",
+    "@storybook/addon-links"
   ],
   staticDirs: ["../public"],
   framework: {
-    name: "@storybook/react-vite",
+    name: "@storybook/tanstack-react",
     options: {}
   },
   docs: {},
   typescript: {
-    reactDocgen: "react-docgen-typescript"
+    reactDocgen: "react-docgen-typescript",
+    reactDocgenTypescriptOptions: {
+      exclude: ["**/*.stories.tsx", ".storybook/**"]
+    }
   }
 };
