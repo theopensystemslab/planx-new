@@ -143,6 +143,8 @@ test.describe("Flow creation, publish and preview", () => {
     await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
     await navigateToFlowSettings(page);
     await makeFlowAService(page);
+    await page.reload();
+
     await expect(page.getByTestId("set-is-service-button")).toBeHidden();
   });
 
@@ -196,6 +198,7 @@ test.describe("Flow creation, publish and preview", () => {
     await publishService(page);
     await navigateToFlowSettings(page);
     await makeFlowAService(page);
+    await page.reload();
     await turnServiceOnline(page);
 
     // We switch back to the original service
