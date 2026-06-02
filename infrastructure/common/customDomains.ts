@@ -106,6 +106,11 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
           domain: "planningservices.canterbury.gov.uk",
           cloudFrontState: "legacy-with-validation",
         },
+        {
+          name: "northumberland",
+          domain: "planningservices.northumberland.gov.uk",
+          cloudFrontState: "validation-only",
+        }
       ]
     : [
         // we keep one custom domain on staging to function as a canary (monitored by UptimeRobot)
