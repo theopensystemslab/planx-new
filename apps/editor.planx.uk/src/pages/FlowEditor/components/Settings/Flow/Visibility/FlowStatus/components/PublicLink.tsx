@@ -82,11 +82,11 @@ export const PublicLink: React.FC<{
       case isFlowPublished && isFlowOnline:
         return undefined;
       case !isFlowPublished && isFlowOnline:
-        return "Publish your flow to activate the public link.";
+        return "Publish your service to activate the public link.";
       case isFlowPublished && !isFlowOnline:
-        return "Switch your flow to 'online' to activate the public link.";
+        return "Switch your service status to 'online' to activate the public link.";
       case !isFlowPublished && !isFlowOnline:
-        return "Publish your flow and switch it to 'online' to activate the public link.";
+        return "Publish your service and switch it to 'online' to activate the public link.";
     }
   };
 

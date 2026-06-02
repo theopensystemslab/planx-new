@@ -36,10 +36,10 @@ const LPSListingSettings: React.FC = () => {
       legend={"Local planning services"}
       description={
         <>
-          Control whether this flow is listed as a service on{" "}
+          Control whether this service is listed on{" "}
           <Link href={url} target="_blank" rel="noopener noreferrer">
             localplanning.services (opens in a new tab)
-          </Link>{" "}
+          </Link>
           . Listing your service makes it discoverable to applicants and agents
           browsing the services you offer through Plan✕.
         </>
