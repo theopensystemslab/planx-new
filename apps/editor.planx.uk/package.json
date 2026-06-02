@@ -146,7 +146,7 @@
     "tsconfig-paths-webpack-plugin": "^4.2.0",
     "typescript": "~5.9.3",
     "use-sync-external-store": "1.6.0",
-    "vite-plugin-node-polyfills": "^0.24.0",
+    "vite-plugin-node-polyfills": "^0.28.0",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4",
     "vitest-axe": "1.0.0-pre.5"
@@ -207,7 +207,8 @@
     "overrides": {
       "linkifyjs@<4.3.2": ">=4.3.2",
       "micromatch@<4.0.8": ">=4.0.8",
-      "serialize-javascript": "^7.0.3"
+      "serialize-javascript": "^7.0.3",
+      "qs@>=6.11.1 <=6.15.1": "6.15.2"
     },
     "ignoredBuiltDependencies": [
       "msw"
