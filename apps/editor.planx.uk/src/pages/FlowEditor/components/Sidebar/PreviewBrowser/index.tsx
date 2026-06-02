@@ -5,13 +5,10 @@ import {
   ThemeProvider,
   useTheme,
 } from "@mui/material/styles";
-import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
-import { isEmpty } from "lodash";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useMemo } from "react";
 import Reset from "ui/icons/Reset";
-
-import Questions from "../../../../Preview/Questions";
+import { FlattenedFlow } from "utils/routeUtils/FlattenedFlow";
 
 const ResetToggle = styled(Button)(({ theme }) => ({
   position: "absolute",
@@ -23,12 +20,10 @@ const ResetToggle = styled(Button)(({ theme }) => ({
 }));
 
 export const PreviewBrowser: React.FC = () => {
-  const [resetPreview, flow, currentCard] = useStore((state) => [
+  const [resetPreview, flowId] = useStore((state) => [
     state.resetPreview,
-    state.flow,
-    state.currentCard,
+    state.id,
   ]);
-  const isLoading = isEmpty(flow);
 
   const theme = useTheme();
   const mobileTheme = useMemo(
@@ -58,14 +53,7 @@ export const PreviewBrowser: React.FC = () => {
         <Reset fontSize="small" />
         Restart
       </ResetToggle>
-      {isLoading ? (
-        <DelayedLoadingIndicator
-          msDelayBeforeVisible={50}
-          text="Loading flow data..."
-        />
-      ) : (
-        <Questions previewEnvironment="editor" key={currentCard?.id} />
-      )}
+      <FlattenedFlow previewEnvironment="editor" mode="draft" flowId={flowId} />
     </ThemeProvider>
   );
 };

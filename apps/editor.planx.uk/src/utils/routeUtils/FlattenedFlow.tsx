@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { getFlattenedFlowData } from "lib/api/flow/requests";
 import { type Store } from "pages/FlowEditor/lib/store";
+import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
 import Questions from "pages/Preview/Questions";
 import React from "react";
 import { updateStoreWithFlowData } from "utils/routeUtils/publicRouteHelpers";
@@ -9,6 +10,7 @@ import { updateStoreWithFlowData } from "utils/routeUtils/publicRouteHelpers";
 interface Props {
   mode: "preview" | "draft";
   flowId: string;
+  previewEnvironment?: PreviewEnvironment;
 }
 
 /**
@@ -20,7 +22,11 @@ interface Props {
  * Should always be accompanied by a prefetch (non-awaited) request on the route `loader()` function
  * to ensure we always kick off this long-running request immediately in the background
  */
-export const FlattenedFlow: React.FC<Props> = ({ mode, flowId }) => {
+export const FlattenedFlow: React.FC<Props> = ({
+  mode,
+  flowId,
+  previewEnvironment,
+}) => {
   const { data, isPending, error } = useQuery({
     queryKey: ["flattenedFlowData", mode, flowId],
     queryFn: () =>
@@ -37,5 +43,5 @@ export const FlattenedFlow: React.FC<Props> = ({ mode, flowId }) => {
 
   updateStoreWithFlowData(data as Store.Flow);
 
-  return <Questions previewEnvironment="standalone" />;
+  return <Questions previewEnvironment={previewEnvironment ?? "standalone"} />;
 };
