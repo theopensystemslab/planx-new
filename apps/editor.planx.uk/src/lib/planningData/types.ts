@@ -25,3 +25,11 @@ export type SearchEntityResponse = FeatureCollection<
 >;
 
 export type Entity = Feature<Polygon | MultiPolygon, Record<string, unknown>>;
+
+export interface SearchEntityResponseExcludeGeom {
+  entities: {
+    entity: number;
+    name: string;
+    dataset: string;
+  }[];
+}

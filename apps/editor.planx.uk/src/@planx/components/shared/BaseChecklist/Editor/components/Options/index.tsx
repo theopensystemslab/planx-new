@@ -1,6 +1,7 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { AnyOption } from "@planx/components/Option/model";
 import { DEFAULT_RULE } from "@planx/components/ResponsiveChecklist/model";
+import { useLocalAuthorityDistricts } from "@planx/components/shared/hooks";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { partition } from "lodash";
 import React from "react";
@@ -33,6 +34,7 @@ export const Options = <T extends AnyChecklist>({
   const exclusiveOrOptionManagerShouldRender = nonExclusiveOptions.length > 0;
 
   const { schema, currentOptionVals } = useCurrentOptions(formik);
+  const { data: localAuthorityDistrictSchema } = useLocalAuthorityDistricts();
 
   return (
     <ModalSectionContent subtitle="Options">
@@ -77,6 +79,7 @@ export const Options = <T extends AnyChecklist>({
                 formik.values.fn,
                 schema,
                 currentOptionVals,
+                localAuthorityDistrictSchema,
               ),
             }}
             isTemplatedNode={isTemplatedNode}

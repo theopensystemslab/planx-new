@@ -69,6 +69,7 @@ export const getOptionsSchemaByFn = (
   fn?: string,
   defaultOptionsSchema?: string[],
   currentOptions?: (string | undefined)[],
+  localAuthorityDistrictSchema?: string[] | undefined,
 ) => {
   let schema = defaultOptionsSchema;
 
@@ -78,6 +79,10 @@ export const getOptionsSchemaByFn = (
   if (fn === "proposal.projectType")
     schema = getValidSchemaValues("ProjectType");
   if (fn === "property.type") schema = getValidSchemaValues("PropertyType");
+
+  // For other data fields, suggest based on external data source like Planning Data
+  if (fn === "property.localAuthorityDistrict" && localAuthorityDistrictSchema)
+    schema = localAuthorityDistrictSchema;
 
   // Ensure that any initial values outside of ODP Schema enums will still be recognised/pre-populated when modal loads
   currentOptions?.forEach((option) => {

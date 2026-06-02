@@ -8,6 +8,7 @@ import type {
   AnyChecklist,
   OptionGroup,
 } from "@planx/components/shared/BaseChecklist/model";
+import { useLocalAuthorityDistricts } from "@planx/components/shared/hooks";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { FormikValues, getIn } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -39,6 +40,7 @@ export const GroupedOptions = <T extends AnyChecklist>({
   isTemplatedNode,
 }: Props<T>) => {
   const { schema, currentOptionVals } = useCurrentOptions(formik);
+  const { data: localAuthorityDistrictSchema } = useLocalAuthorityDistricts();
 
   // Type-narrowing only - groupedOptions will be defined here
   if (!formik.values.groupedOptions)
@@ -153,6 +155,7 @@ export const GroupedOptions = <T extends AnyChecklist>({
                   formik.values.fn,
                   schema,
                   currentOptionVals,
+                  localAuthorityDistrictSchema,
                 ),
               }}
               isTemplatedNode={isTemplatedNode}
