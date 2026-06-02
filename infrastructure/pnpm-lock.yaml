@@ -25,8 +25,8 @@ catalogs:
       specifier: ~24.10.15
       version: 24.10.15
     typescript:
-      specifier: ~5.9.3
-      version: 5.9.3
+      specifier: ~6.0.3
+      version: 6.0.3
 
 importers:
 
@@ -43,19 +43,19 @@ importers:
         version: 3.0.1
       '@pulumi/aws':
         specifier: 'catalog:'
-        version: 7.28.0(typescript@5.9.3)
+        version: 7.28.0(typescript@6.0.3)
       '@pulumi/awsx':
         specifier: 'catalog:'
-        version: 3.5.0(typescript@5.9.3)
+        version: 3.5.0(typescript@6.0.3)
       '@pulumi/cloudflare':
         specifier: 'catalog:'
-        version: 6.15.0(typescript@5.9.3)
+        version: 6.15.0(typescript@6.0.3)
       '@pulumi/postgresql':
         specifier: 'catalog:'
-        version: 3.16.3(typescript@5.9.3)
+        version: 3.16.3(typescript@6.0.3)
       '@pulumi/pulumi':
         specifier: 'catalog:'
-        version: 3.234.0(typescript@5.9.3)
+        version: 3.234.0(typescript@6.0.3)
       tldjs:
         specifier: ^2.3.2
         version: 2.3.2
@@ -71,93 +71,93 @@ importers:
         version: 4.1.0
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
   certificates:
     dependencies:
       '@pulumi/aws':
         specifier: 'catalog:'
-        version: 7.28.0(typescript@5.9.3)
+        version: 7.28.0(typescript@6.0.3)
       '@pulumi/cloudflare':
         specifier: 'catalog:'
-        version: 6.15.0(typescript@5.9.3)
+        version: 6.15.0(typescript@6.0.3)
       '@pulumi/pulumi':
         specifier: 'catalog:'
-        version: 3.234.0(typescript@5.9.3)
+        version: 3.234.0(typescript@6.0.3)
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.15
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
   common:
     dependencies:
       '@pulumi/aws':
         specifier: 'catalog:'
-        version: 7.28.0(typescript@5.9.3)
+        version: 7.28.0(typescript@6.0.3)
       '@pulumi/pulumi':
         specifier: 'catalog:'
-        version: 3.234.0(typescript@5.9.3)
+        version: 3.234.0(typescript@6.0.3)
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.15
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
   data:
     dependencies:
       '@pulumi/aws':
         specifier: 'catalog:'
-        version: 7.28.0(typescript@5.9.3)
+        version: 7.28.0(typescript@6.0.3)
       '@pulumi/pulumi':
         specifier: 'catalog:'
-        version: 3.234.0(typescript@5.9.3)
+        version: 3.234.0(typescript@6.0.3)
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.15
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
   ml:
     dependencies:
       '@pulumi/aws':
         specifier: 'catalog:'
-        version: 7.28.0(typescript@5.9.3)
+        version: 7.28.0(typescript@6.0.3)
       '@pulumi/pulumi':
         specifier: 'catalog:'
-        version: 3.234.0(typescript@5.9.3)
+        version: 3.234.0(typescript@6.0.3)
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.15
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
   networking:
     dependencies:
       '@pulumi/aws':
         specifier: 'catalog:'
-        version: 7.28.0(typescript@5.9.3)
+        version: 7.28.0(typescript@6.0.3)
       '@pulumi/awsx':
         specifier: 'catalog:'
-        version: 3.5.0(typescript@5.9.3)
+        version: 3.5.0(typescript@6.0.3)
       '@pulumi/pulumi':
         specifier: 'catalog:'
-        version: 3.234.0(typescript@5.9.3)
+        version: 3.234.0(typescript@6.0.3)
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.15
       typescript:
         specifier: 'catalog:'
-        version: 5.9.3
+        version: 6.0.3
 
 packages:
 
@@ -1426,8 +1426,8 @@ packages:
     resolution: {integrity: sha512-50QV99kCKH5P/Vs4E2Gzp7BopNV+KzTXqWeaxrfu5IQJBOULRsTIS9seSsOVT8ZnGXzCyx55nYWAi4qJzpZKEQ==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  typescript@5.9.3:
-    resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
+  typescript@6.0.3:
+    resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -2161,24 +2161,24 @@ snapshots:
 
   '@protobufjs/utf8@1.1.1': {}
 
-  '@pulumi/aws@7.28.0(typescript@5.9.3)':
+  '@pulumi/aws@7.28.0(typescript@6.0.3)':
     dependencies:
-      '@pulumi/pulumi': 3.234.0(typescript@5.9.3)
+      '@pulumi/pulumi': 3.234.0(typescript@6.0.3)
       mime: 2.6.0
     transitivePeerDependencies:
       - supports-color
       - ts-node
       - typescript
 
-  '@pulumi/awsx@3.5.0(typescript@5.9.3)':
+  '@pulumi/awsx@3.5.0(typescript@6.0.3)':
     dependencies:
       '@aws-sdk/client-ecs': 3.1042.0
-      '@pulumi/aws': 7.28.0(typescript@5.9.3)
-      '@pulumi/docker': 4.11.2(typescript@5.9.3)
-      '@pulumi/docker-build': 0.0.14(typescript@5.9.3)
-      '@pulumi/pulumi': 3.234.0(typescript@5.9.3)
+      '@pulumi/aws': 7.28.0(typescript@6.0.3)
+      '@pulumi/docker': 4.11.2(typescript@6.0.3)
+      '@pulumi/docker-build': 0.0.14(typescript@6.0.3)
+      '@pulumi/pulumi': 3.234.0(typescript@6.0.3)
       '@types/aws-lambda': 8.10.161
-      docker-classic: '@pulumi/docker@3.6.1(typescript@5.9.3)'
+      docker-classic: '@pulumi/docker@3.6.1(typescript@6.0.3)'
       mime: 2.6.0
     transitivePeerDependencies:
       - aws-crt
@@ -2186,49 +2186,49 @@ snapshots:
       - ts-node
       - typescript
 
-  '@pulumi/cloudflare@6.15.0(typescript@5.9.3)':
+  '@pulumi/cloudflare@6.15.0(typescript@6.0.3)':
     dependencies:
-      '@pulumi/pulumi': 3.234.0(typescript@5.9.3)
+      '@pulumi/pulumi': 3.234.0(typescript@6.0.3)
     transitivePeerDependencies:
       - supports-color
       - ts-node
       - typescript
 
-  '@pulumi/docker-build@0.0.14(typescript@5.9.3)':
+  '@pulumi/docker-build@0.0.14(typescript@6.0.3)':
     dependencies:
-      '@pulumi/pulumi': 3.234.0(typescript@5.9.3)
+      '@pulumi/pulumi': 3.234.0(typescript@6.0.3)
     transitivePeerDependencies:
       - supports-color
       - ts-node
       - typescript
 
-  '@pulumi/docker@3.6.1(typescript@5.9.3)':
+  '@pulumi/docker@3.6.1(typescript@6.0.3)':
     dependencies:
-      '@pulumi/pulumi': 3.234.0(typescript@5.9.3)
+      '@pulumi/pulumi': 3.234.0(typescript@6.0.3)
       semver: 5.7.2
     transitivePeerDependencies:
       - supports-color
       - ts-node
       - typescript
 
-  '@pulumi/docker@4.11.2(typescript@5.9.3)':
+  '@pulumi/docker@4.11.2(typescript@6.0.3)':
     dependencies:
-      '@pulumi/pulumi': 3.234.0(typescript@5.9.3)
+      '@pulumi/pulumi': 3.234.0(typescript@6.0.3)
       semver: 5.7.2
     transitivePeerDependencies:
       - supports-color
       - ts-node
       - typescript
 
-  '@pulumi/postgresql@3.16.3(typescript@5.9.3)':
+  '@pulumi/postgresql@3.16.3(typescript@6.0.3)':
     dependencies:
-      '@pulumi/pulumi': 3.234.0(typescript@5.9.3)
+      '@pulumi/pulumi': 3.234.0(typescript@6.0.3)
     transitivePeerDependencies:
       - supports-color
       - ts-node
       - typescript
 
-  '@pulumi/pulumi@3.234.0(typescript@5.9.3)':
+  '@pulumi/pulumi@3.234.0(typescript@6.0.3)':
     dependencies:
       '@grpc/grpc-js': 1.14.3
       '@logdna/tail-file': 2.2.0
@@ -2258,7 +2258,7 @@ snapshots:
       tmp: 0.2.5
       upath: 1.2.0
     optionalDependencies:
-      typescript: 5.9.3
+      typescript: 6.0.3
     transitivePeerDependencies:
       - supports-color
 
@@ -3230,7 +3230,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  typescript@5.9.3: {}
+  typescript@6.0.3: {}
 
   undici-types@7.16.0: {}
 

@@ -22,7 +22,7 @@ catalog:
   '@pulumi/postgresql': ^3.16.2
   '@pulumi/pulumi': ^3.229.0
   '@types/node': ~24.10.15
-  typescript: ~5.9.3
+  typescript: ~6.0.3
 
 minimumReleaseAge: 10080
 
