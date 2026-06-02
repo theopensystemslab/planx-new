@@ -21,7 +21,7 @@ import DrawBoundaryComponent from "@planx/components/DrawBoundary/Public";
 import EnhancedTextInputComponent from "@planx/components/EnhancedTextInput/Public";
 import type { EnhancedTextInput } from "@planx/components/EnhancedTextInput/types";
 import type { ExternalPortal } from "@planx/components/ExternalPortal/model";
-import ExternalPortalComponent from "@planx/components/ExternalPortal/Public";
+import ExternalPortalComponent from "@planx/components/ExternalPortal/Public/index";
 import type { Feedback } from "@planx/components/Feedback/model";
 import FeedbackComponent from "@planx/components/Feedback/Public/Public";
 import type { FileUpload } from "@planx/components/FileUpload/model";
