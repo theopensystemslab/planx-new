@@ -48,8 +48,12 @@ const COMPONENT_TITLES: Record<number, string> = {
 const selectComponentFromPicker = async (page: Page, type: ComponentType) => {
   await expect(page.getByPlaceholder("Search components")).toBeVisible();
   const componentTitle = COMPONENT_TITLES[type];
-  if (!componentTitle) throw new Error(`No picker title for ComponentType: ${type}`);
-  await page.locator(".component-title").getByText(componentTitle, { exact: true }).click();
+  if (!componentTitle)
+    throw new Error(`No picker title for ComponentType: ${type}`);
+  await page
+    .locator(".component-title")
+    .getByText(componentTitle, { exact: true })
+    .click();
 };
 
 const createBaseComponent = async (
