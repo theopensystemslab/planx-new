@@ -8,6 +8,50 @@ export type TemplateNodeConfig = {
   required: boolean;
 };
 
+const COMPONENT_TITLES: Record<number, string> = {
+  [ComponentType.Question]: "Question",
+  101: "Responsive question", // ComponentType.ResponsiveQuestion
+  [ComponentType.Checklist]: "Checklist",
+  106: "Responsive checklist", // ComponentType.ResponsiveChecklist
+  [ComponentType.NextSteps]: "Next steps",
+  [ComponentType.TextInput]: "Text input",
+  [ComponentType.FileUpload]: "File upload",
+  [ComponentType.FileUploadAndLabel]: "Upload and label",
+  [ComponentType.NumberInput]: "Number input",
+  [ComponentType.DateInput]: "Date input",
+  [ComponentType.AddressInput]: "Address input",
+  [ComponentType.ContactInput]: "Contact input",
+  800: "List", // ComponentType.List
+  810: "Page", // ComponentType.Page
+  155: "Map and label", // ComponentType.MapAndLabel
+  900: "Feedback", // ComponentType.Feedback
+  [ComponentType.TaskList]: "Task list",
+  [ComponentType.Notice]: "Notice",
+  [ComponentType.Result]: "Result",
+  [ComponentType.Content]: "Content",
+  [ComponentType.Review]: "Review",
+  [ComponentType.Confirmation]: "Confirmation",
+  [ComponentType.FindProperty]: "Find property",
+  [ComponentType.PropertyInformation]: "Property information",
+  [ComponentType.DrawBoundary]: "Draw boundary",
+  [ComponentType.PlanningConstraints]: "Planning constraints",
+  [ComponentType.Filter]: "Filter",
+  [ComponentType.ExternalPortal]: "Flow",
+  [ComponentType.InternalPortal]: "Folder",
+  [ComponentType.Section]: "Section",
+  [ComponentType.SetValue]: "Set value",
+  381: "Set fees", // ComponentType.SetFee
+  [ComponentType.Pay]: "Pay",
+  [ComponentType.Send]: "Send",
+};
+
+const selectComponentFromPicker = async (page: Page, type: ComponentType) => {
+  await expect(page.getByPlaceholder("Search components")).toBeVisible();
+  const componentTitle = COMPONENT_TITLES[type];
+  if (!componentTitle) throw new Error(`No picker title for ComponentType: ${type}`);
+  await page.locator(".component-title").getByText(componentTitle, { exact: true }).click();
+};
+
 const createBaseComponent = async (
   page: Page,
   locatingNode: Locator,
@@ -17,9 +61,8 @@ const createBaseComponent = async (
   templateConfig?: TemplateNodeConfig,
 ) => {
   await locatingNode.click();
+  await selectComponentFromPicker(page, type);
   await page.getByRole("dialog").waitFor();
-  const headerSelect = page.getByRole("heading", { name: "Question close" });
-  await headerSelect.locator("select").selectOption({ value: type.toString() });
 
   await expect(page.getByTestId("header-select")).toHaveValue(type.toString());
 
@@ -135,7 +178,7 @@ const createBaseComponent = async (
         .fill(options?.[1] || "otherDocument");
       await page.getByRole("combobox", { name: "Data field" }).press("Enter");
       break;
-    case ComponentType.List:
+    case 800 as ComponentType: // ComponentType.List
       await page.getByPlaceholder("Title").fill(title || "");
       await page.getByRole("combobox", { name: "Data field" }).click();
       await page
@@ -161,7 +204,7 @@ const createBaseComponent = async (
         .getByTestId("flagset-category-select")
         .selectOption(selectedFlag);
       break;
-    case ComponentType.Feedback:
+    case 900 as ComponentType: // ComponentType.Feedback
       break;
     case ComponentType.InternalPortal:
       await page.getByPlaceholder("Enter a folder name").fill(title || "");
@@ -237,6 +280,7 @@ export const createQuestionWithDataFieldOptions = async (
   dataField: string,
 ) => {
   await locatingNode.click();
+  await selectComponentFromPicker(page, ComponentType.Question);
   await page.getByRole("dialog").waitFor();
   await page.getByPlaceholder("Text").fill(questionText);
   await page.getByRole("combobox", { name: "Data field" }).click();
@@ -461,7 +505,7 @@ export const createList = async (
   await createBaseComponent(
     page,
     locatingNode,
-    ComponentType.List,
+    800 as ComponentType, // ComponentType.List
     inputTitle,
     [inputDataField],
   );
@@ -522,7 +566,7 @@ export const createInternalPortal = async (
 };
 
 export const createFeedback = async (page: Page, locatingNode: Locator) => {
-  await createBaseComponent(page, locatingNode, ComponentType.Feedback);
+  await createBaseComponent(page, locatingNode, 900 as ComponentType); // ComponentType.Feedback
 };
 
 export const createExternalPortal = async (
