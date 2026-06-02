@@ -110,6 +110,11 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
           name: "northumberland",
           domain: "planningservices.northumberland.gov.uk",
           cloudFrontState: "validation-only",
+        },
+        {
+          name: "coventry",
+          domain: "planningservices.coventry.gov.uk",
+          cloudFrontState: "validation-only",
         }
       ]
     : [
