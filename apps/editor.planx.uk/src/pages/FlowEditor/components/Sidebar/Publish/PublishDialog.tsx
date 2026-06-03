@@ -60,7 +60,7 @@ export const NoChangesDialog = ({
     <DialogTitle variant="h3" component="h1" sx={{ px: 3, py: 2 }}>
       {`Check for changes to publish`}
     </DialogTitle>
-    <DialogContent sx={{ p: 3 }}>
+    <DialogContent sx={{ p: 3 }} dividers>
       <Typography variant="body2">{`No new changes to publish`}</Typography>
     </DialogContent>
     <DialogActions>
@@ -68,7 +68,6 @@ export const NoChangesDialog = ({
         onClick={() => setDialogOpen(false)}
         variant="contained"
         color="secondary"
-        sx={{ backgroundColor: "background.default" }}
       >
         Keep editing
       </Button>
@@ -149,7 +148,6 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
             onClick={() => setDialogOpen(false)}
             variant="contained"
             color="secondary"
-            sx={{ backgroundColor: "background.default" }}
           >
             Keep editing
           </Button>

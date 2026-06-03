@@ -24,7 +24,6 @@ export const ModalActions = ({
         type="reset"
         onClick={onCancel}
         data-testid="modal-cancel-button"
-        sx={{ backgroundColor: "background.default" }}
       >
         Cancel
       </Button>

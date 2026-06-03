@@ -151,7 +151,6 @@ export const MoveDialog: React.FC<Props> = ({
                   disabled={isSubmitting}
                   variant="contained"
                   color="secondary"
-                  sx={{ backgroundColor: "background.default" }}
                 >
                   Back
                 </Button>

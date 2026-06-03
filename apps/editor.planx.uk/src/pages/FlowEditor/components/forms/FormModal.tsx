@@ -508,7 +508,6 @@ const FormModal: React.FC<FormModalProps> = ({
             onClick={handleCancelClose}
             variant="contained"
             color="secondary"
-            sx={{ backgroundColor: "background.default" }}
           >
             Continue editing
           </Button>

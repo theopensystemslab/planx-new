@@ -133,7 +133,6 @@ export const AddFlow: React.FC = () => {
                     disabled={isSubmitting}
                     variant="contained"
                     color="secondary"
-                    sx={{ backgroundColor: "background.default" }}
                   >
                     Back
                   </Button>

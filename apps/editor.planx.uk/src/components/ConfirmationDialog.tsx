@@ -35,12 +35,7 @@ export const ConfirmationDialog: React.FC<
       </DialogTitle>
       <DialogContent dividers>{children}</DialogContent>
       <DialogActions>
-        <Button
-          onClick={onCancel}
-          variant="contained"
-          color="secondary"
-          sx={{ backgroundColor: "background.default" }}
-        >
+        <Button onClick={onCancel} variant="contained" color="secondary">
           {cancelText}
         </Button>
         <Button onClick={onConfirm} variant="contained" color="prompt">

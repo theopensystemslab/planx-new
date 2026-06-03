@@ -61,7 +61,6 @@ export const RemoveUserModal: React.FC<RemoveUserModalProps> = ({
           variant="contained"
           color="secondary"
           type="reset"
-          sx={{ backgroundColor: "background.default" }}
           onClick={onClose}
           data-testid="modal-cancel-button"
         >
