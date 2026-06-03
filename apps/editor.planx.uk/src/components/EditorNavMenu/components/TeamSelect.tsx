@@ -13,7 +13,7 @@ import ButtonBase from "@planx/components/shared/Buttons/ButtonBase";
 import { useLoaderData } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { TeamSummary } from "pages/FlowEditor/lib/store/team";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { focusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 
@@ -80,6 +80,7 @@ export const TeamSelect: React.FC<Props> = ({
     null,
   );
   const [clearSearch, setClearSearch] = useState<boolean>(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const viewOnlyTeams = useMemo(
     () => teams.filter((team) => !canUserEditTeam(team.slug)),
@@ -173,6 +174,10 @@ export const TeamSelect: React.FC<Props> = ({
         onClose={handleClose}
         maxWidth="xs"
         slotProps={{
+          transition: {
+            // Auto-focus search box
+            onEntered: () => searchInputRef.current?.focus(),
+          },
           paper: {
             sx: {
               position: "absolute",
@@ -207,6 +212,7 @@ export const TeamSelect: React.FC<Props> = ({
             clearSearch={clearSearch}
             hideLabel={true}
             compact={true}
+            inputRef={searchInputRef}
           />
           <Stack sx={{ gap: 2, pt: 2 }}>
             {displayEditableTeams.length > 0 && (
