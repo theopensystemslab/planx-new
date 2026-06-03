@@ -136,6 +136,25 @@ update_permissions:
         - last_name
       filter: {}
       check: {}
+  - role: teamAdmin
+    permission:
+      columns:
+        - created_at
+        - email
+        - first_name
+        - last_name
+        - updated_at
+      filter:
+        teams:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: X-Hasura-User-Id
+                - role:
+                    _eq: teamAdmin
+      check: null
+    comment: ""
   - role: teamEditor
     permission:
       columns:
