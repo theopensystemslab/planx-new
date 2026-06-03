@@ -9,6 +9,7 @@ This Lambda@Edge function intercepts crawler requests and returns minimal HTML w
 For non-crawler requests, the function passes the original request through without alteration.
 
 ### Crawler request
+
 ```mermaid
 sequenceDiagram
     participant Crawler as Link Preview Crawler
@@ -28,6 +29,7 @@ sequenceDiagram
 ```
 
 ### Normal browser request
+
 ```mermaid
 sequenceDiagram
     participant Browser
@@ -51,13 +53,11 @@ Run the test script against a live Hasura instance. `HASURA_URL` defaults to pro
 
 ```sh
 # Run both default URL types (planx.uk domain + custom council domain)
-node test_flow_link_preview.js
+node --test flow_link_preview.test.js
 
-# Test a specific planx.{dev,uk} URL
-HASURA_URL=https://hasura.editor.planx.dev/v1/graphql node test_flow_link_preview.js https://editor.planx.dev/barnet/find-out-if-you-need-planning-permission/published
+# Alternatively, run the following from project root -
 
-# Test a specific custom domain URL
-node test_flow_link_preview.js https://planningservices.camden.gov.uk/find-out-if-you-need-planning-permission
+pnpm test
 ```
 
 Each URL is tested against multiple scenarios: crawler request, normal browser request, non-flow URL, and (for planx.{dev,uk} URLs) draft/preview variants.
@@ -67,6 +67,7 @@ Each URL is tested against multiple scenarios: crawler request, normal browser r
 Deployed via Pulumi as a Lambda@Edge function attached to all CloudFront distributions — custom council domains (`planningservices.{council}.gov.uk`) and the main `editor.planx.uk` frontend.
 
 Key constraints:
+
 - Lambda@Edge functions must be created in `us-east-1`
 - Viewer-request triggers don't support environment variables — the Hasura URL is inlined by Pulumi at deploy time
 - The `__HASURA_URL__` placeholder in `flow_link_preview.js` is replaced per environment
