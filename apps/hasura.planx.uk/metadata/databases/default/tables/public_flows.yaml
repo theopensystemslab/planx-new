@@ -147,6 +147,7 @@ insert_permissions:
         - description
         - id
         - is_listed_on_lps
+        - is_service
         - is_template
         - limitations
         - name
@@ -179,6 +180,7 @@ insert_permissions:
         - description
         - id
         - is_listed_on_lps
+        - is_service
         - is_template
         - limitations
         - name
@@ -218,6 +220,7 @@ insert_permissions:
         - description
         - id
         - is_listed_on_lps
+        - is_service
         - is_template
         - limitations
         - name
@@ -286,6 +289,7 @@ select_permissions:
         - email_template
         - id
         - is_listed_on_lps
+        - is_service
         - is_template
         - limitations
         - name
@@ -354,6 +358,7 @@ select_permissions:
         - email_template
         - id
         - is_listed_on_lps
+        - is_service
         - is_template
         - limitations
         - name
