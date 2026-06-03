@@ -53,22 +53,22 @@ const GET_RESOLVED_NOTIFICATIONS = gql`
 export const useRecentNotifications = (): {
   active: Notification[];
   resolved: Notification[];
+  loading: boolean;
 } => {
   const teamId = useStore((state) => state.teamId);
   const skip = !teamId;
 
-  const { data: activeData } = useSubscription<{ active: Notification[] }>(
-    GET_ACTIVE_NOTIFICATIONS,
-    { variables: { teamId }, skip },
-  );
+  const { data: activeData, loading: activeLoading } = useSubscription<{
+    active: Notification[];
+  }>(GET_ACTIVE_NOTIFICATIONS, { variables: { teamId }, skip });
 
-  const { data: resolvedData } = useSubscription<{ resolved: Notification[] }>(
-    GET_RESOLVED_NOTIFICATIONS,
-    { variables: { teamId }, skip },
-  );
+  const { data: resolvedData, loading: resolvedLoading } = useSubscription<{
+    resolved: Notification[];
+  }>(GET_RESOLVED_NOTIFICATIONS, { variables: { teamId }, skip });
 
   return {
     active: activeData?.active ?? [],
     resolved: resolvedData?.resolved ?? [],
+    loading: activeLoading || resolvedLoading,
   };
 };

@@ -2,11 +2,13 @@ import Box from "@mui/material/Box";
 import { styled, SxProps, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { LinkOptions, RegisteredRouter } from "@tanstack/react-router";
+import { BadgeChip } from "components/EditorNavMenu/styles";
 import React from "react";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 interface DashboardWidgetProps {
   title: string;
+  count?: number;
   link?: LinkOptions<RegisteredRouter> & { label: string };
   children: React.ReactNode;
   sx?: SxProps<Theme>;
@@ -48,15 +50,21 @@ export const WidgetLink = ({ label, ...linkProps }: WidgetLinkProps) => (
 
 export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
   title,
+  count,
   link,
   children,
   sx,
 }) => (
   <Root sx={sx}>
     <Header>
-      <Typography variant="h3" component="h2">
-        {title}
-      </Typography>
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <Typography variant="h3" component="h2">
+          {title}
+        </Typography>
+        {count !== undefined && count > 0 && (
+          <BadgeChip label={count} color="info" />
+        )}
+      </Box>
       {link && <WidgetLink {...link} />}
     </Header>
     {children}

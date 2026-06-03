@@ -7,6 +7,7 @@ import { DashboardWidget } from "ui/editor/DashboardWidget";
 
 import { useStore } from "../../pages/FlowEditor/lib/store";
 import FlowsPanel from "./components/FlowsPanel";
+import ConnectedNotificationsWidget from "./components/NotificationsWidget";
 import StatsBanner from "./components/StatsBanner";
 
 export default function Dashboard() {
@@ -46,6 +47,7 @@ export default function Dashboard() {
           >
             <i>notifications content</i>
           </DashboardWidget>
+          <ConnectedNotificationsWidget />
           <DashboardWidget
             title="Feedback"
             link={linkOptions({
