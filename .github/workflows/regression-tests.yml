@@ -120,7 +120,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Update PR comment with result
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           PASSED: ${{ needs.integration_tests.result == 'success' && needs.api_tests.result == 'success' && needs.test_react.result == 'success' && needs.end_to_end_tests.result == 'success' }}
           COMMENT_ID: ${{ inputs.comment_id }}
