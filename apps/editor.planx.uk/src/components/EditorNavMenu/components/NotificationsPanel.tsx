@@ -152,7 +152,6 @@ const NotificationsPanel = ({
           size="small"
           variant="contained"
           color="secondary"
-          sx={{ backgroundColor: "background.default" }}
           fullWidth
         >
           View all notifications

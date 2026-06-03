@@ -148,7 +148,6 @@ export const AddTeamButton: React.FC = () => {
                     onClick={() => setDialogOpen(false)}
                     variant="contained"
                     color="secondary"
-                    sx={{ backgroundColor: "background.default" }}
                   >
                     Back
                   </Button>

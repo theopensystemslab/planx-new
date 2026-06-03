@@ -286,6 +286,17 @@ const getThemeOptions = ({
       MuiButton: {
         variants: [
           {
+            props: { variant: "contained", color: "secondary" },
+            style: {
+              backgroundColor: palette.background.default,
+              boxShadow: `inset 0 0 0 1px ${palette.border.main}, inset 0 -2px 0 rgba(0,0,0,0.25)`,
+              "&:hover": {
+                backgroundColor: palette.background.paper,
+                boxShadow: `inset 0 0 0 1px ${palette.border.main}, inset 0 -2px 0 rgba(0,0,0,0.5)`,
+              },
+            },
+          },
+          {
             props: { variant: "help" },
             style: {
               color: palette.link.main,

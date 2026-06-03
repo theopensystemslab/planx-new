@@ -172,7 +172,6 @@ export const UploadedFileCard: React.FC<Props> = ({
                   startIcon={changeIcon}
                   sx={{
                     minWidth: 120,
-                    backgroundColor: "white",
                   }}
                   size="small"
                   onClick={onChange}

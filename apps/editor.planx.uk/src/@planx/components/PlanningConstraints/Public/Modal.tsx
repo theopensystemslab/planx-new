@@ -222,7 +222,6 @@ export const OverrideEntitiesModal = ({
         <Button
           variant="contained"
           color="secondary"
-          sx={{ backgroundColor: "background.default" }}
           onClick={closeModal}
           data-testid="override-modal-cancel-button"
         >
