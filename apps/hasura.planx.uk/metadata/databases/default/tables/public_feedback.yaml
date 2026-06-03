@@ -67,6 +67,18 @@ select_permissions:
         - id
       filter: {}
     comment: ""
+  - role: teamAdmin
+    permission:
+      columns: []
+      filter:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: X-Hasura-User-Id
+              - role:
+                  _eq: teamAdmin
+    comment: ""
   - role: teamEditor
     permission:
       columns:
@@ -89,6 +101,19 @@ update_permissions:
         - status
       filter: {}
       check: null
+    comment: ""
+  - role: teamAdmin
+    permission:
+      columns: []
+      filter:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: X-Hasura-User-Id
+              - role:
+                  _eq: teamAdmin
+      check: {}
     comment: ""
   - role: teamEditor
     permission:

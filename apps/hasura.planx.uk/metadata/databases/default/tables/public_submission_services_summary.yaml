@@ -53,6 +53,45 @@ select_permissions:
         - submitted_at
       filter: {}
     comment: ""
+  - role: teamAdmin
+    permission:
+      columns:
+        - allow_list_answers
+        - application_declaration_connection
+        - bops_applications
+        - created_at
+        - draw_boundary_action
+        - email_applications
+        - find_property_action
+        - number_times_resumed
+        - payment_requests
+        - payment_status
+        - property_constraints_planning
+        - property_type
+        - proposal_project_type
+        - s3_applications
+        - sent_to_bops
+        - sent_to_email
+        - sent_to_s3_power_automate
+        - sent_to_uniform
+        - service_slug
+        - session_id
+        - session_length_days
+        - submitted_at
+        - team_slug
+        - uniform_applications
+        - user_clicked_save
+        - user_invited_to_pay
+        - user_role
+      filter:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: X-Hasura-User-Id
+              - id:
+                  _eq: teamAdmin
+    comment: ""
   - role: teamEditor
     permission:
       columns:

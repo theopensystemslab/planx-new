@@ -91,6 +91,24 @@ update_permissions:
       filter: {}
       check: null
     comment: ""
+  - role: teamAdmin
+    permission:
+      columns:
+        - action_colour
+        - favicon
+        - link_colour
+        - logo
+        - primary_colour
+      filter:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: X-Hasura-User-Id
+              - role:
+                  _eq: teamAdmin
+      check: null
+    comment: ""
   - role: teamEditor
     permission:
       columns:

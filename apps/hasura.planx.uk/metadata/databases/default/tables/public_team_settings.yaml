@@ -128,6 +128,27 @@ update_permissions:
       filter: {}
       check: null
     comment: ""
+  - role: teamAdmin
+    permission:
+      columns:
+        - boundary_bbox
+        - boundary_url
+        - email_reply_to_id
+        - help_email
+        - help_opening_hours
+        - help_phone
+        - homepage
+        - reference_code
+      filter:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: X-Hasura-User-Id
+              - role:
+                  _eq: teamAdmin
+      check: null
+    comment: ""
   - role: teamEditor
     permission:
       columns:

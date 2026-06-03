@@ -34,6 +34,22 @@ insert_permissions:
         - address
         - team_id
     comment: ""
+  - role: teamAdmin
+    permission:
+      check:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: X-Hasura-User-Id
+              - role:
+                  _eq: teamAdmin
+      columns:
+        - is_default
+        - team_id
+        - address
+        - id
+    comment: ""
   - role: teamEditor
     permission:
       check:

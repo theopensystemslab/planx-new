@@ -27,6 +27,28 @@ select_permissions:
         - online_flows_previous
       filter: {}
     comment: ""
+  - role: teamAdmin
+    permission:
+      columns:
+        - guidance_sessions_current
+        - guidance_sessions_previous
+        - online_flows
+        - online_flows_previous
+        - sessions_current
+        - sessions_previous
+        - submissions_current
+        - submissions_previous
+        - team_id
+        - team_slug
+      filter:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: X-Hasura-User-Id
+              - role:
+                  _eq: teamAdmin
+    comment: ""
   - role: teamEditor
     permission:
       columns:
