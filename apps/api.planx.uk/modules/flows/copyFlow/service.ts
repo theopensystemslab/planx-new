@@ -25,6 +25,7 @@ const copyFlow = async ({
       isTemplate: false,
       flowData: uniqueFlowData,
       copiedFrom: flowId,
+      isService: flow.isService,
     });
   }
 

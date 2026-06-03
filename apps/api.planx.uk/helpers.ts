@@ -13,6 +13,7 @@ export interface GetFlowDataResponse {
   data: Flow["data"];
   summary: string | null;
   description: string | null;
+  isService: boolean;
   limitations: string | null;
   team_id: number;
   team: { slug: string };
@@ -41,6 +42,7 @@ const getFlowData = async (id: string): Promise<GetFlowDataResponse> => {
           name
           summary
           description
+          isService: is_service
           limitations
           team_id
           team {
@@ -79,6 +81,7 @@ const createFlow = async ({
   summary,
   description,
   limitations,
+  isService,
 }: {
   teamId: number;
   slug: string;
@@ -90,6 +93,7 @@ const createFlow = async ({
   summary?: string;
   description?: string;
   limitations?: string;
+  isService?: boolean;
 }) => {
   const { client: $client } = getClient();
   const userId = userContext.getStore()?.user?.sub;
@@ -112,6 +116,7 @@ const createFlow = async ({
           $summary: String
           $description: String
           $limitations: String
+          $is_service: Boolean
         ) {
           insertFlow: insert_flows_one(
             object: {
@@ -126,6 +131,7 @@ const createFlow = async ({
               summary: $summary
               description: $description
               limitations: $limitations
+              is_service: $is_service
             }
           ) {
             id
@@ -143,6 +149,7 @@ const createFlow = async ({
         summary: summary,
         description: description,
         limitations: limitations,
+        is_service: isService,
       },
     );
 
