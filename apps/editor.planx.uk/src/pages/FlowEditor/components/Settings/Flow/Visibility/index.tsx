@@ -1,5 +1,7 @@
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import FlowCopy from "./FlowCopy";
 import FlowStatus from "./FlowStatus";
@@ -9,14 +11,20 @@ import LPSListing from "./LPS";
 
 const VisibilitySettings: React.FC = () => {
   const flowId = useStore((state) => state.id);
-  const { data: isServiceData } = useGetIsService(flowId);
-  const isService = isServiceData?.flow.isService;
+  const { data: isServiceData, loading, error } = useGetIsService(flowId);
+
+  if (loading) return <DelayedLoadingIndicator />;
+  if (error) return <ErrorSummary message={error.message} />;
+  if (!isServiceData?.flow)
+    return <ErrorSummary message="Flow data not found" />;
+
+  const isService = isServiceData.flow.isService;
 
   return (
     <>
       <IsService />
       {isService && <FlowStatus />}
-      <FlowCopy />
+      <FlowCopy isService={isService} />
       {isService && <LPSListing />}
     </>
   );

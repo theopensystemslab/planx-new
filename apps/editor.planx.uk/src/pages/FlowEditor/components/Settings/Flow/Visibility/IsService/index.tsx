@@ -1,6 +1,7 @@
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
@@ -65,8 +66,12 @@ const IsService: React.FC = () => {
               </Typography>
               {formik.values.isService === true ? (
                 <Typography variant="body2">
-                  If this is a mistake, please contact an admin to revert it to
-                  a flow.
+                  If this is a mistake, please contact a Platform Admin to
+                  revert it to a flow. You can also reach out to{" "}
+                  <Link href="mailto:devops@opensystemslab.io">
+                    devops@opensystemslab.io
+                  </Link>
+                  .
                 </Typography>
               ) : (
                 <Typography variant="body1">

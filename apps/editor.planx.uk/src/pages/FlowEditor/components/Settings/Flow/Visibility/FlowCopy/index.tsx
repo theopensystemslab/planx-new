@@ -14,7 +14,9 @@ import {
   VisibilityFormValues,
 } from "./types";
 
-const FlowCopySettings: React.FC = () => {
+type Props = { isService: boolean };
+
+const FlowCopySettings: React.FC<Props> = (isService) => {
   const [flowId, isTrial] = useStore((state) => [
     state.id,
     state.getTeam().settings.isTrial,
@@ -29,10 +31,8 @@ const FlowCopySettings: React.FC = () => {
       query={GET_FLOW_VISIBILITY}
       mutation={UPDATE_FLOW_VISIBILITY}
       validationSchema={validationSchema}
-      legend={"Flow copy permission"}
-      description={
-        "Control if this flow can be used to create new services in other teams. The flow can still be copied and modified within your team."
-      }
+      legend={`${isService ? "Service" : "Flow"} copy permission`}
+      description={`Control if this ${isService ? "service" : "flow"} can be used to create new ${isService ? "services" : "flows"} in other teams. It can still be copied and modified within your team.`}
       defaultValues={defaultValues}
       getInitialValues={({ flows: [flow] }) => ({
         canCreateFromCopy: flow.canCreateFromCopy,

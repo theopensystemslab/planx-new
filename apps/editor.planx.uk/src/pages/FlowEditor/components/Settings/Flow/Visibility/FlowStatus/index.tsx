@@ -66,7 +66,7 @@ const FlowStatus: React.FC = () => {
       query={GET_FLOW_STATUS}
       mutation={UPDATE_FLOW_STATUS}
       validationSchema={validationSchema}
-      legend={"Flow status"}
+      legend={"Service status"}
       description={<Description />}
       getInitialValues={({ flow: { status } }) => ({ status })}
       queryVariables={{ flowId }}

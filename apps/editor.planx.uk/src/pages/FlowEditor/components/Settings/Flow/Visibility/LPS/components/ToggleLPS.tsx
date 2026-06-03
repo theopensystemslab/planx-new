@@ -32,7 +32,7 @@ const ToggleLPS: React.FC = () => {
         <p>
           Listing your service requires a summary. This can be provided on{" "}
           <Link style={{ whiteSpace: "nowrap" }} href="../settings/about">
-            the "About this flow" page
+            the "About" page
           </Link>
           .
         </p>
