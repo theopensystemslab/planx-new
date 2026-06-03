@@ -67,16 +67,26 @@ export const BaseFormSection: React.FC = () => {
         />
       </InputLabel>
       {values.mode === "new" && (
-        <Permission.IsPlatformAdmin>
+        <>
+          <Permission.IsPlatformAdmin>
+            <Switch
+              name="isTemplate"
+              checked={values.flow.isTemplate}
+              onChange={() =>
+                setFieldValue("flow.isTemplate", !values.flow.isTemplate)
+              }
+              label={"Source template"}
+            />
+          </Permission.IsPlatformAdmin>
           <Switch
-            name="isTemplate"
-            checked={values.flow.isTemplate}
+            name="isService"
+            checked={values.flow.isService}
             onChange={() =>
-              setFieldValue("flow.isTemplate", !values.flow.isTemplate)
+              setFieldValue("flow.isService", !values.flow.isService)
             }
-            label={"Source template"}
+            label={"Is this a user-facing service?"}
           />
-        </Permission.IsPlatformAdmin>
+        </>
       )}
     </>
   );
