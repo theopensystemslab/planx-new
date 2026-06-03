@@ -1,7 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/tanstack-react";
+import {
+  createMemoryHistory,
+  createRootRoute,
+  createRoute,
+  createRouter,
+  RouterProvider,
+} from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { TeamSummary } from "pages/FlowEditor/lib/store/team";
-import { Route as AuthenticatedAppRoute } from "routes/_authenticated/app/route";
 
 import TeamSelect from "./TeamSelect";
 
@@ -46,29 +52,29 @@ const mockTeams: TeamSummary[] = [
 ] as TeamSummary[];
 
 export const Basic = {
-  parameters: {
-    tanstack: {
-      router: {
-        route: AuthenticatedAppRoute,
-        routeOverrides: {
-          "/_authenticated/app": {
-            loader: () => ({ teams: mockTeams }),
-            beforeLoad: () => {},
-          },
-        },
-      },
-    },
-  },
   render: () => {
     useStore.setState({
       canUserEditTeam: (slug: string) => slug === "open-systems-lab",
     });
 
-    return (
-      <TeamSelect
-        currentTeamSlug="open-systems-lab"
-        onTeamSelect={(teamSlug) => console.log(`Navigating to ${teamSlug}`)}
-      />
-    );
+    const rootRoute = createRootRoute();
+    const authenticatedAppRoute = createRoute({
+      getParentRoute: () => rootRoute,
+      id: "/_authenticated/app",
+      loader: () => ({ teams: mockTeams }),
+      component: () => (
+        <TeamSelect
+          currentTeamSlug="open-systems-lab"
+          onTeamSelect={(teamSlug) => console.log(`Navigating to ${teamSlug}`)}
+        />
+      ),
+    });
+
+    const router = createRouter({
+      routeTree: rootRoute.addChildren([authenticatedAppRoute]),
+      history: createMemoryHistory({ initialEntries: ["/"] }),
+    });
+
+    return <RouterProvider router={router} />;
   },
 } satisfies Story;

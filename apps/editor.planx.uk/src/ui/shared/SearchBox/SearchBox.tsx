@@ -23,6 +23,7 @@ interface SearchBoxProps<T> {
   clearSearch?: boolean;
   hideLabel?: boolean;
   compact?: boolean;
+  inputRef?: React.Ref<HTMLInputElement>;
 }
 
 export const SearchBox = <T extends object>({
@@ -32,6 +33,7 @@ export const SearchBox = <T extends object>({
   clearSearch = false,
   hideLabel = false,
   compact = false,
+  inputRef,
 }: SearchBoxProps<T>) => {
   const [isSearching, setIsSearching] = useState(false);
   const [searchedTerm, setSearchedTerm] = useState<string>();
@@ -102,6 +104,7 @@ export const SearchBox = <T extends object>({
                   padding: (theme) => theme.spacing(0.25, 0.5, 0.25, 1.25),
                 }),
               }}
+              ref={inputRef}
               name="search"
               id="search"
               aria-describedby="search-label"

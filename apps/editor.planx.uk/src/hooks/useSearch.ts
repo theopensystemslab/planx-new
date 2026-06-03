@@ -47,10 +47,12 @@ export const useSearch = <T extends object>({
   );
 
   useEffect(() => {
-    const fuseResults =
-      searchType === "include-match"
-        ? fuse.search(formatSearchPattern(pattern))
-        : fuse.search(pattern);
+    const query =
+      searchType === "include-match" ? formatSearchPattern(pattern) : pattern;
+
+    if (!query) return setResults([]);
+
+    const fuseResults = fuse.search(query);
     setResults(
       fuseResults.map((result) => {
         // Required type narrowing for FuseResult
