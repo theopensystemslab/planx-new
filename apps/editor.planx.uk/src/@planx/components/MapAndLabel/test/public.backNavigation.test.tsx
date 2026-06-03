@@ -16,11 +16,13 @@ beforeAll(() => {
     window.customElements.define("my-map", MyMap);
   }
 
-  const ResizeObserverMock = vi.fn(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }));
+  const ResizeObserverMock = vi.fn(function () {
+    return {
+      observe: vi.fn(),
+      unobserve: vi.fn(),
+      disconnect: vi.fn(),
+    };
+  });
 
   vi.stubGlobal("ResizeObserver", ResizeObserverMock);
 });
