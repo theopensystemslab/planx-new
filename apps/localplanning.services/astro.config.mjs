@@ -39,19 +39,17 @@ export default defineConfig({
       }
     ],
   },
-  experimental: {
-    fonts: [
-      {
-        name: "Inter",
-        cssVariable: "--font-inter",
-        provider: fontProviders.google(),
-        fallbacks: ["ui-sans-serif", "system-ui", "sans-serif"],
-        weights: ["100 900"],
-        styles: ["normal"],
-        subsets: ["latin"],
-      },
-    ]
-  },
+  fonts: [
+    {
+      name: "Inter",
+      cssVariable: "--font-inter",
+      provider: fontProviders.google(),
+      fallbacks: ["ui-sans-serif", "system-ui", "sans-serif"],
+      weights: ["100 900"],
+      styles: ["normal"],
+      subsets: ["latin"],
+    },
+  ],
   build: {
     // AWS Cloudfront requires /about.html not /about/index.html
     format: isCloudfrontBuild 

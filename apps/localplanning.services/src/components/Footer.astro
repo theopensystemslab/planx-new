@@ -47,9 +47,9 @@ const lastUpdatedAt = new Date(buildDateTime).toLocaleString("en-GB", {
             legalPages.map((page) => (
               <a
                 class="paragraph-link capitalize text-body-md"
-                href={`/${page.slug}`}
+                href={`/${page.id}`}
               >
-                {page.slug}
+                {page.id}
               </a>
             ))
           }

@@ -5,7 +5,7 @@ import { getCollection } from "astro:content";
 export async function getStaticPaths() {
   const legalPages = await getCollection("legal");
   return legalPages.map((page) => ({
-    params: { legal: page.slug },
+    params: { legal: page.id },
     props: { page },
   }));
 }

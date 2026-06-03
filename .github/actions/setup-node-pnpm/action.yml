@@ -10,6 +10,10 @@ inputs:
     description: The pnpm version to use
     required: false
     default: 10.30.2
+  cache:
+    description: setup-node cache strategy
+    required: false
+    default: "pnpm"
 
 runs:
   using: composite
@@ -17,11 +21,11 @@ runs:
     - uses: pnpm/action-setup@v5.0.0
       with:
         version: ${{ inputs.pnpm-version }}
-        
+
     - uses: actions/setup-node@v6
       with:
         node-version: ${{ inputs.node-version }}
-        cache: "pnpm"
+        cache: ${{ inputs.cache }}
         cache-dependency-path: "**/pnpm-lock.yaml"
         
     - name: Setup .gitconfig
