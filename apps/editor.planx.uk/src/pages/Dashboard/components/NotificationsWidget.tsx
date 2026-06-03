@@ -27,6 +27,7 @@ export function NotificationsWidget({
     return (
       <DashboardWidget
         title="Notifications"
+        count={totalCount}
         link={{
           to: "/app/$team/notifications",
           params: { team: teamSlug },
