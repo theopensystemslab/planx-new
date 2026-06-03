@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import { FONT_WEIGHT_BOLD } from "theme";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
-import { GET_IS_SERVICE, UPDATE_IS_SERVICE } from "./queries";
+import { GET_IS_SERVICE, UPDATE_IS_SERVICE, useGetIsService } from "./queries";
 import { validationSchema } from "./schema";
 import type {
   GetIsServiceResponse,
@@ -20,8 +20,8 @@ import type {
 
 const IsService: React.FC = () => {
   const [flowId] = useStore((state) => [state.id]);
-
   const [dialogOpen, setDialogOpen] = useState(false);
+  const { refetch } = useGetIsService(flowId);
 
   return (
     <SettingsFormContainer<
@@ -41,6 +41,9 @@ const IsService: React.FC = () => {
       getMutationVariables={(values) => ({ flowId, ...values })}
       showActionButtons={false}
       defaultValues={{ isService: false }}
+      onSuccess={async () => {
+        await refetch();
+      }}
     >
       {({ formik, data }) => {
         const isTrial = data?.flow.team.settings.isTrial;

@@ -16,7 +16,7 @@ import {
 
 type Props = { isService: boolean };
 
-const FlowCopySettings: React.FC<Props> = (isService) => {
+const FlowCopySettings: React.FC<Props> = ({ isService }) => {
   const [flowId, isTrial] = useStore((state) => [
     state.id,
     state.getTeam().settings.isTrial,
