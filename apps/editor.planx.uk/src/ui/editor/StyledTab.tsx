@@ -5,6 +5,7 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 interface StyledTabProps extends TabProps {
   size?: "default" | "large";
+  fontSize?: string;
 }
 
 const TabLabel = styled("span")(() => ({
@@ -34,7 +35,7 @@ const StyledTab = styled(
   {
     shouldForwardProp: (prop) => prop !== "size",
   },
-)<StyledTabProps>(({ theme, size = "default" }) => ({
+)<StyledTabProps>(({ theme, size = "default", fontSize }) => ({
   position: "relative",
   zIndex: 1,
   textTransform: "none",
@@ -45,7 +46,7 @@ const StyledTab = styled(
   minHeight: size === "large" ? "48px" : "36px",
   margin: theme.spacing(0, size === "large" ? 1 : 0.5),
   padding: "0.75em",
-  fontSize: size === "large" ? "1rem" : undefined,
+  fontSize: fontSize ?? (size === "large" ? "1rem" : undefined),
   "& svg": {
     marginRight: "7px !important",
     fontSize: 18,

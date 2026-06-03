@@ -20,7 +20,7 @@ import TeamLayout from "./TeamLayout";
 
 export type FlowView = "flows" | "archive";
 
-const GetStarted: React.FC = () => (
+export const NoFlowsGetStarted: React.FC = () => (
   <EmptyState
     title="No flows found"
     description="Get started by creating your first flow"
@@ -230,7 +230,9 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
           />
         )}
 
-        {flowView === "flows" && flows && !flows.length && <GetStarted />}
+        {flowView === "flows" && flows && !flows.length && (
+          <NoFlowsGetStarted />
+        )}
       </Container>
     </Box>
   );

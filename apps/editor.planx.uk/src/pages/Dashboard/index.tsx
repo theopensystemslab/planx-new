@@ -6,6 +6,7 @@ import React from "react";
 import { DashboardWidget } from "ui/editor/DashboardWidget";
 
 import { useStore } from "../../pages/FlowEditor/lib/store";
+import FlowsPanel from "./components/FlowsPanel";
 import StatsBanner from "./components/StatsBanner";
 
 export default function Dashboard() {
@@ -33,7 +34,7 @@ export default function Dashboard() {
               label: "view all flows",
             })}
           >
-            <i>flows content</i>
+            <FlowsPanel />
           </DashboardWidget>
           <DashboardWidget
             title="Notifications"
