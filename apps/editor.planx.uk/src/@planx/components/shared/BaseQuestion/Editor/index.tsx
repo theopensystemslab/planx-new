@@ -97,9 +97,21 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
             </InputRow>
             <ErrorWrapper error={formik.errors.fn}>
               <DataFieldAutocomplete
+                data-testid="question-data-field"
                 schema={schema?.nodes}
                 value={formik.values.fn}
-                onChange={(value) => formik.setFieldValue("fn", value)}
+                onChange={(value) => {
+                  formik.setFieldValue("fn", value);
+                  if (!value) {
+                    formik.setFieldValue(
+                      "options",
+                      formik.values.options?.map((option) => ({
+                        ...option,
+                        data: { ...option.data, val: "" },
+                      })),
+                    );
+                  }
+                }}
                 disabled={props.disabled}
               />
             </ErrorWrapper>
