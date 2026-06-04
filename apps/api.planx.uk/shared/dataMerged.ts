@@ -103,8 +103,8 @@ const fetchAndMergeStack = async (
             // Add extra metadata about latest published version when applicable
             ...(!draftDataOnly && {
               publishedFlowId: publishedFlows?.[0]?.id,
-              publishedAt: publishedFlows?.[0]?.created_at,
-              publishedBy: publishedFlows?.[0]?.publisher_id,
+              publishedAt: publishedFlows?.[0]?.createdAt,
+              publishedBy: publishedFlows?.[0]?.publisherId,
               summary: publishedFlows?.[0]?.summary,
             }),
           },

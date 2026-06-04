@@ -15,16 +15,16 @@ export interface GetFlowDataResponse {
   description: string | null;
   isService: boolean;
   limitations: string | null;
-  team_id: number;
+  teamId: number;
   team: { slug: string };
   templatedFrom: string | null;
   publishedFlows:
     | {
         data: Flow["data"];
         id: number;
-        created_at: string;
+        createdAt: string;
         summary: string;
-        publisher_id: number;
+        publisherId: number;
       }[]
     | [];
 }
@@ -44,7 +44,7 @@ const getFlowData = async (id: string): Promise<GetFlowDataResponse> => {
           description
           isService: is_service
           limitations
-          team_id
+          teamId: team_id
           team {
             slug
           }
@@ -55,9 +55,9 @@ const getFlowData = async (id: string): Promise<GetFlowDataResponse> => {
           ) {
             data
             id
-            created_at
+            createdAt: created_at
             summary
-            publisher_id
+            publisherId: publisher_id
           }
         }
       }

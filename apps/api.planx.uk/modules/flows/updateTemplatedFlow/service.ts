@@ -36,9 +36,9 @@ export const updateTemplatedFlow = async (
   templatedFlowId: string,
 ) => {
   const { data: sourceData, publishedFlows } = await getFlowData(sourceFlowId);
-  const { publisher_id: sourcePublisher, summary } = publishedFlows[0];
+  const { publisherId: sourcePublisher, summary } = publishedFlows[0];
 
-  const { team_id: templatedFlowTeamId } = await getFlowData(templatedFlowId);
+  const { teamId: templatedFlowTeamId } = await getFlowData(templatedFlowId);
 
   // Get templated flow edits (aka "customisations")
   //   Since initiated via a Hasura event, we don't have user context here and rely on $api client
