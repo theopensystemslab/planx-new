@@ -4,6 +4,7 @@ export interface GetFlowStatus {
   flow: {
     id: string;
     status: FlowStatus;
+    isService: boolean;
     hasPrivacyPage: boolean | null;
     team: {
       settings: {
