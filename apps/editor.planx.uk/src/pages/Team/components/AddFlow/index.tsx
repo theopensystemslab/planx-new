@@ -46,7 +46,6 @@ export const AddFlow: React.FC = () => {
     values,
     { setFieldError, setStatus },
   ) => {
-    console.log({ values });
     setLoadingCompleteCallback(() => {
       toast.success("Flow created successfully");
       setLoadingCompleteCallback(undefined);
