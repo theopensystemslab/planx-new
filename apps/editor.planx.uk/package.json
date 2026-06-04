@@ -172,8 +172,9 @@
     "lint:fix": "eslint --fix 'src/**/*.{js,jsx,ts,tsx}' && prettier -w ./src",
     "check": "tsc --noEmit && pnpm lint",
     "prepare": "cd ../.. && husky install apps/editor.planx.uk/.husky",
-    "test-storybook": "vitest --project=storybook --reporter=verbose --reporter=json --outputFile=a11y-report/vitest-results.json",
-    "a11y-report": "tsx scripts/generate-a11y-html-report.ts"
+    "test-storybook": "vitest run --project=storybook --reporter=verbose --reporter=json --outputFile=a11y-app/vitest-results.json",
+    "a11y-app": "vite --config ./a11y-app/vite.config.ts",
+    "a11y-report": "pnpm test-storybook; tsx scripts/generate-a11y-html-report.ts"
   },
   "eslintConfig": {
     "extends": [
