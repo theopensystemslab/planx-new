@@ -48,6 +48,8 @@ const Breadcrumbs: React.FC = () => {
   );
   const flowSlug = useStore((state) => state.flowSlug);
   const flowStatus = useStore((state) => state.flowStatus);
+  const isService = useStore((state) => state.isService);
+
   const canUserEditTeam = useStore((state) => state.canUserEditTeam);
 
   if (!params.flow) return null;
@@ -85,27 +87,21 @@ const Breadcrumbs: React.FC = () => {
           </>
         )}
       </BreadcrumbsRoot>
-      {params.flow && (
+      {params.flow && isService && flowStatus && canUserEditTeam(team.slug) && (
         <Box sx={(theme) => ({ color: theme.palette.text.primary })}>
-          {canUserEditTeam && canUserEditTeam(team.slug) ? (
-            <BreadcrumbsLink
-              to="/app/$team/$flow/settings"
-              params={{
-                team: team.slug,
-                flow: flowSlug,
-              }}
-              title="Update service status"
-              sx={{ textDecoration: "none" }}
-            >
-              <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
-                {flowStatus}
-              </FlowTag>
-            </BreadcrumbsLink>
-          ) : (
+          <BreadcrumbsLink
+            to="/app/$team/$flow/settings"
+            params={{
+              team: team.slug,
+              flow: flowSlug,
+            }}
+            title="Update service status"
+            sx={{ textDecoration: "none" }}
+          >
             <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
               {flowStatus}
             </FlowTag>
-          )}
+          </BreadcrumbsLink>
         </Box>
       )}
     </BreadcrumbsContainer>

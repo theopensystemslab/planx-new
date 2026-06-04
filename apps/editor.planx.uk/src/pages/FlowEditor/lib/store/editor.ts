@@ -300,6 +300,7 @@ export interface EditorStore extends Store.Store {
   setLastPublishedDate: (date: string) => void;
   isFlowPublished: boolean;
   isTemplate: boolean;
+  isService: boolean;
   isTemplatedFrom: boolean;
   template?: Template;
   makeUnique: (id: NodeId, parent?: NodeId) => void;
@@ -618,6 +619,8 @@ export const editorStore: StateCreator<
   isTemplatedFrom: false,
 
   template: undefined,
+
+  isService: false,
 
   makeUnique: (id, parent) => {
     const [, ops] = makeUnique(id, parent)(get().flow);
