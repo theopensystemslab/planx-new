@@ -31,8 +31,8 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const StyledWidgetLink = styled(CustomLink)(({ theme }) => ({
-  fontSize: theme.typography.body3.fontSize,
-  color: theme.palette.text.secondary,
+  fontSize: theme.typography.body2.fontSize,
+  color: theme.palette.text.primary,
   "&:hover": {
     textDecorationThickness: "2px",
   },

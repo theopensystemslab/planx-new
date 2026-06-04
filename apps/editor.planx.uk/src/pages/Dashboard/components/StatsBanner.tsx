@@ -16,18 +16,19 @@ const Root = styled(Box)(({ theme }) => ({
   border: `1px solid ${theme.palette.border.light}`,
   position: "relative",
   padding: theme.spacing(1.5),
-  marginTop: theme.spacing(4),
-  marginBottom: theme.spacing(2),
   zIndex: 1,
+  borderRadius: theme.shape.borderRadius,
 }));
 
-const Header = styled(Box)({
+const Header = styled(Box)(({ theme }) => ({
   display: "flex",
   justifyContent: "flex-start",
   gap: 16,
   alignItems: "baseline",
-  marginBottom: 12,
-});
+  marginBottom: theme.spacing(1),
+  paddingBottom: theme.spacing(1.5),
+  borderBottom: `1px solid ${theme.palette.border.light}`,
+}));
 
 const pulse = keyframes`
   0%, 100% { opacity: 1; }
@@ -88,7 +89,9 @@ export function StatsBanner({
   return (
     <Root>
       <Header>
-        <Typography variant="h3">Last 30 days</Typography>
+        <Typography variant="h4" component="h2">
+          Last 30 days
+        </Typography>
         <WidgetLink
           label="view analytics"
           {...linkOptions({

@@ -1,8 +1,9 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { linkOptions } from "@tanstack/react-router";
-import React from "react";
+import { DEFAULT_PRIMARY_COLOR } from "theme";
 import { DashboardWidget } from "ui/editor/DashboardWidget";
 
 import { useStore } from "../../pages/FlowEditor/lib/store";
@@ -14,14 +15,37 @@ import StatsBanner from "./components/StatsBanner";
 
 export default function Dashboard() {
   const team = useStore((state) => state.getTeam());
+  const muiTheme = useTheme();
 
+  const mastheadBg = team.theme?.primaryColour ?? DEFAULT_PRIMARY_COLOR;
   return (
     <Box sx={{ bgcolor: "background.paper", flexGrow: 1 }}>
+      <Box sx={{ bgcolor: mastheadBg, py: 3 }}>
+        <Container
+          maxWidth="contentWide"
+          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+        >
+          {team.theme?.logo ? (
+            <Box
+              component="img"
+              src={team.theme.logo}
+              alt={team.name}
+              sx={{ maxWidth: 160, width: "100%", display: "block" }}
+            />
+          ) : (
+            <Typography
+              variant="h2"
+              component="h1"
+              gutterBottom
+              sx={{ color: muiTheme.palette.getContrastText(mastheadBg) }}
+            >
+              {team.name}
+            </Typography>
+          )}
+          <StatsBanner />
+        </Container>
+      </Box>
       <Container maxWidth="contentWide" sx={{ py: 4 }}>
-        <Typography variant="h2" component="h1" gutterBottom>
-          {team.name}
-        </Typography>
-        <StatsBanner />
         <Box
           sx={(theme) => ({
             display: "grid",
