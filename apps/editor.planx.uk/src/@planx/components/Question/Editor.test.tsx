@@ -46,7 +46,7 @@ describe("data field", () => {
 
     await user.click(within(questionDataField).getByTitle("Clear"));
 
-    // Set a new fn value so option val fields become visible again
+    // Set a new data field value so option val fields become visible again
     await user.click(within(questionDataField).getByRole("combobox"));
     await user.paste("new.data.field");
     await user.keyboard("{Enter}");

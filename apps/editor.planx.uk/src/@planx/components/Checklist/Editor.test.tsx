@@ -509,7 +509,7 @@ describe("Checklist editor component", () => {
 
       await user.click(within(checklistDataField).getByTitle("Clear"));
 
-      // Set a new fn value so option val fields become visible again
+      // Set a new data field value so option val fields become visible again
       await user.click(within(checklistDataField).getByRole("combobox"));
       await user.paste("new.data.field");
       await user.keyboard("{Enter}");
@@ -550,7 +550,7 @@ describe("Checklist editor component", () => {
 
       await user.click(within(checklistDataField).getByTitle("Clear"));
 
-      // Set a new fn value so option val fields become visible again
+      // Set a new data field value so option val fields become visible again
       await user.click(within(checklistDataField).getByRole("combobox"));
       await user.paste("new.data.field");
       await user.keyboard("{Enter}");
