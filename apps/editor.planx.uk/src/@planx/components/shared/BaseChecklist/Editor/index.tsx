@@ -14,6 +14,7 @@ import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
 import { ICONS } from "../../icons";
+import { clearOptionsDataFields } from "../../utils";
 import { TypeNarrowedExpandableSwitch as ExpandableSwitch } from "./components/ExpandableSwitch";
 import { TypeNarrowedModalFooter as ModalFooter } from "./components/ModalFooter";
 import { TypeNarrowedOptions as Options } from "./components/Options";
@@ -83,7 +84,26 @@ export const BaseChecklistComponent: React.FC<Props> = (props) => {
               <DataFieldAutocomplete
                 data-testid="checklist-data-field"
                 value={formik.values.fn}
-                onChange={(value) => formik.setFieldValue("fn", value)}
+                onChange={(value) => {
+                  formik.setFieldValue("fn", value);
+                  if (!value) {
+                    if (formik.values.options) {
+                      formik.setFieldValue(
+                        "options",
+                        clearOptionsDataFields(formik.values.options),
+                      );
+                    }
+                    if (formik.values.groupedOptions) {
+                      formik.setFieldValue(
+                        "groupedOptions",
+                        formik.values.groupedOptions.map((group) => ({
+                          ...group,
+                          children: clearOptionsDataFields(group.children),
+                        })),
+                      );
+                    }
+                  }
+                }}
                 disabled={props.disabled}
               />
             </ErrorWrapper>

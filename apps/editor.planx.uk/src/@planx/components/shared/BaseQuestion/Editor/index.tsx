@@ -23,7 +23,7 @@ import { Switch } from "ui/shared/Switch";
 import { InternalNotes } from "../../../../../ui/editor/InternalNotes";
 import { DataFieldAutocomplete } from "../../DataFieldAutocomplete";
 import { ICONS } from "../../icons";
-import { getOptionsSchemaByFn } from "../../utils";
+import { clearOptionsDataFields, getOptionsSchemaByFn } from "../../utils";
 import MoreInformation from "./MoreInformation";
 import TemplatedNodeConfiguration from "./TemplatedNodeConfiguration";
 import { Props } from "./types";
@@ -105,10 +105,7 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
                   if (!value) {
                     formik.setFieldValue(
                       "options",
-                      formik.values.options?.map((option) => ({
-                        ...option,
-                        data: { ...option.data, val: "" },
-                      })),
+                      clearOptionsDataFields(formik.values.options ?? []),
                     );
                   }
                 }}
