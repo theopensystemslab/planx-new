@@ -16,6 +16,7 @@ import * as barkingAndDagenham from "./local_authorities/metadata/barkingAndDage
 import * as barnet from "./local_authorities/metadata/barnet.js";
 import * as birmingham from "./local_authorities/metadata/birmingham.js";
 import * as brent from "./local_authorities/metadata/brent.js";
+import * as bristolCity from "./local_authorities/metadata/bristol.js";
 import * as buckinghamshire from "./local_authorities/metadata/buckinghamshire.js";
 import * as camden from "./local_authorities/metadata/camden.js";
 import * as canterbury from "./local_authorities/metadata/canterbury.js";
@@ -59,6 +60,7 @@ export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   barnet,
   birmingham,
   brent,
+  "bristol-city": bristolCity,
   buckinghamshire,
   camden,
   canterbury,
