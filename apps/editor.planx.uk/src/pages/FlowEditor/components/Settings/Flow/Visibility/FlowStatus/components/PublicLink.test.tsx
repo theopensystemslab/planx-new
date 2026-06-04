@@ -3,6 +3,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { vi } from "vitest";
 
 import {
+  justFlow,
   offlinePublished,
   offlineUnpublished,
   onlinePublished,
@@ -268,4 +269,23 @@ describe("A team without a subdomain has an offline, unpublished service.", () =
 
   // eslint-disable-next-line @vitest/expect-expect
   it("has a disabled copy button", disabledCopyCheck);
+});
+
+describe("A team with a subdomain has an offline, unpublished flow (not service).", () => {
+  beforeEach(async () => {
+    setState({
+      ...nonSubdomainStateData,
+      id: "abc123",
+      flowStatus: "offline",
+      isService: false,
+      isFlowPublished: false,
+    });
+
+    await setupFlowStatusScreen(justFlow);
+  });
+
+  // eslint-disable-next-line @vitest/expect-expect
+  it("has no public link", async () => {
+    await inactiveLinkCheck(publishedUrl);
+  });
 });
