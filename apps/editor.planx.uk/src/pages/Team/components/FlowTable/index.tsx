@@ -59,7 +59,7 @@ export const FlowTable: React.FC<FlowTableProps> = ({
           <FlowTitleCell>Flow title</FlowTitleCell>
           {view === "flows" && (
             <>
-              <FlowStatusCell>Online status</FlowStatusCell>
+              <FlowStatusCell>Service status</FlowStatusCell>
               <FlowStatusCell>Flow type</FlowStatusCell>
               <FlowDateCell>{headerText}</FlowDateCell>
               {showDetails && <TableCell>Pinned</TableCell>}
