@@ -8,6 +8,7 @@ export const useFlowMetadata = (flow: FlowSummary) => {
     const isTemplatedFlow = Boolean(flow.templatedFrom);
     const isSourceTemplate = flow.isTemplate;
     const isAnyTemplate = isTemplatedFlow || isSourceTemplate;
+    const isService = flow.isService;
     const statusVariant =
       flow.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
 
@@ -15,6 +16,7 @@ export const useFlowMetadata = (flow: FlowSummary) => {
       isSubmissionService,
       isTemplatedFlow,
       isSourceTemplate,
+      isService,
       isAnyTemplate,
       statusVariant,
     };

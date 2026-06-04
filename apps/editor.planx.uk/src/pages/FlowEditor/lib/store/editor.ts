@@ -243,6 +243,7 @@ export interface FlowSummary {
   templatedFrom: string | null;
   isTemplate: boolean;
   isListedOnLPS: boolean;
+  isService: boolean;
   pinnedFlows: { flowId: string }[];
   template: {
     team: {
