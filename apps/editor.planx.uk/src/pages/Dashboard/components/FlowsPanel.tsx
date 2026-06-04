@@ -87,6 +87,7 @@ export const FlowsPanel: React.FC<FlowsPanelProps> = ({
         >
           {displayed.map((flow, i) => {
             const isOnline = flow.status === "online";
+            const isService = flow.isService;
             const isAnyTemplate =
               flow.isTemplate || Boolean(flow.templatedFrom);
             return (
@@ -124,14 +125,16 @@ export const FlowsPanel: React.FC<FlowsPanelProps> = ({
                       </Typography>
                     }
                   />
-                  <FlowTag
-                    tagType={FlowTagType.Status}
-                    statusVariant={
-                      isOnline ? StatusVariant.Online : StatusVariant.Offline
-                    }
-                  >
-                    {isOnline ? "Online" : "Offline"}
-                  </FlowTag>
+                  {isService && (
+                    <FlowTag
+                      tagType={FlowTagType.Status}
+                      statusVariant={
+                        isOnline ? StatusVariant.Online : StatusVariant.Offline
+                      }
+                    >
+                      {isOnline ? "Online" : "Offline"}
+                    </FlowTag>
+                  )}
                 </ListItem>
               </React.Fragment>
             );

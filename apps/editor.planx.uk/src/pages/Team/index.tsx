@@ -77,7 +77,9 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
     // Apply filters based on search params
     if (searchParams["online-status"]) {
       result = result.filter(
-        (flow) => flow.status === searchParams["online-status"],
+        (flow) =>
+          flow.status === searchParams["online-status"] &&
+          flow.isService === true,
       );
     }
 
