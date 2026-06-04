@@ -75,7 +75,7 @@ function EditorNavMenu() {
     const currentPath = pathname;
 
     // Factor in nested routes when determining active state
-    if (route.includes("/settings")) {
+    if (route.includes("settings")) {
       return currentPath.startsWith(route);
     }
 

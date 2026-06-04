@@ -1,4 +1,5 @@
 import ArticleIcon from "@mui/icons-material/Article";
+import FlagIcon from "@mui/icons-material/Flag";
 import React, { PropsWithChildren } from "react";
 
 import SettingsLayout, {
@@ -8,6 +9,7 @@ import SettingsLayout, {
 const GlobalSettingsLayout: React.FC<PropsWithChildren> = ({ children }) => {
   const settingsLinks: SettingsLink[] = [
     { label: "Footer elements", path: "/footer", icon: ArticleIcon },
+    { label: "Feature flags", path: "/feature-flags", icon: FlagIcon },
   ];
 
   return (
