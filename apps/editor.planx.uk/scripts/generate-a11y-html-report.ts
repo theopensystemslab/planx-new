@@ -2,7 +2,7 @@
 import { readFileSync, writeFileSync } from "fs";
 import path from "path";
 
-const INPUT = path.join(process.cwd(), "a11y-report/vitest-results.json");
+const INPUT = path.join(process.cwd(), "a11y-app/vitest-results.json");
 const OUTPUT = path.join(process.cwd(), "a11y-report/report.html");
 
 interface AssertionResult {
@@ -39,6 +39,7 @@ interface Violation {
   component: string;
   story: string;
   audience: Audience;
+  nodes: string[];
 }
 
 const IMPACT_ORDER: Record<string, number> = {
@@ -62,8 +63,6 @@ const IMPACT_BG: Record<string, string> = {
   minor: "#e8f5e9",
 };
 
-const VIOLATION_RE = /\[(critical|serious|moderate|minor)\] (\S+):/g;
-
 function componentName(suitePath: string): string {
   return suitePath
     .replace(/.*\/src\//, "")
@@ -71,14 +70,9 @@ function componentName(suitePath: string): string {
     .replace(/\.stories\.tsx$/, "");
 }
 
-// Components under @planx/components that contain "/Public" in their path are
-// citizen-facing form steps. Everything in pages/FlowEditor, pages/Dashboard,
-// pages/Team, pages/Teams, pages/Users, pages/GlobalSettings, ui/editor, and
-// EditorNavMenu is only seen by council/admin users building flows.
 function classifyComponent(comp: string): Audience {
   if (comp.includes("@planx/components/")) {
     if (comp.includes("/Public")) return "public";
-    // shared/Preview components are rendered inside public-facing flows
     if (comp.includes("shared/Preview")) return "public";
     return "editor";
   }
@@ -98,30 +92,49 @@ function classifyComponent(comp: string): Audience {
 
 function parseViolations(report: VitestReport): Violation[] {
   const violations: Violation[] = [];
+
   for (const suite of report.testResults) {
     const comp = componentName(suite.name);
     const audience = classifyComponent(comp);
     for (const ar of suite.assertionResults ?? []) {
       if (ar.status !== "failed") continue;
       for (const msg of ar.failureMessages) {
-        let match: RegExpExecArray | null;
-        VIOLATION_RE.lastIndex = 0;
-        while ((match = VIOLATION_RE.exec(msg)) !== null) {
-          const [, impact, ruleId] = match;
-          const descStart = match.index + match[0].length;
-          const descEnd = msg.indexOf("\n", descStart);
-          const description =
-            descEnd === -1
-              ? msg.slice(descStart).trim()
-              : msg.slice(descStart, descEnd).trim();
-          violations.push({
-            impact: impact as Violation["impact"],
-            ruleId,
-            description,
-            component: comp,
-            story: ar.fullName || ar.title,
-            audience,
-          });
+        const lines = msg.split("\n");
+        let i = 0;
+        while (i < lines.length) {
+          const line = lines[i];
+          const match = line.match(
+            /^\[(critical|serious|moderate|minor)\] (\S+): (.+)$/,
+          );
+          if (match) {
+            const [, impact, ruleId, description] = match;
+            const nodes: string[] = [];
+            i++;
+            while (i < lines.length) {
+              const next = lines[i];
+              // Stack trace lines signal end of violation block
+              if (next.startsWith("    at ")) break;
+              // Next violation line signals end of current block
+              if (/^\[(critical|serious|moderate|minor)\]/.test(next)) break;
+              // Indented non-stack lines are node targets
+              if (next.startsWith("    ")) {
+                const trimmed = next.trim();
+                if (trimmed) nodes.push(trimmed);
+              }
+              i++;
+            }
+            violations.push({
+              impact: impact as Violation["impact"],
+              ruleId,
+              description: description.trim(),
+              component: comp,
+              story: ar.fullName || ar.title,
+              audience,
+              nodes,
+            });
+          } else {
+            i++;
+          }
         }
       }
     }
@@ -175,16 +188,20 @@ function byRuleHtml(violations: Violation[]): string {
   return sorted
     .map(([ruleId, instances]) => {
       const { impact, description } = instances[0];
-      const comps = [...new Set(instances.map((v) => v.component))].sort();
+      const byComp = groupBy(instances, (v) => v.component);
+      const compsSorted = [...byComp.keys()].sort();
       return `
       <details>
         <summary>
           ${badge(impact)}
           <strong>${ruleId}</strong> — ${description}
-          <span class="count">${instances.length} instance${instances.length !== 1 ? "s" : ""} across ${comps.length} component${comps.length !== 1 ? "s" : ""}</span>
+          <span class="count">${instances.length} instance${instances.length !== 1 ? "s" : ""} across ${byComp.size} component${byComp.size !== 1 ? "s" : ""}</span>
         </summary>
         <ul class="comp-list">
-          ${comps.map((c) => `<li>${c}</li>`).join("")}
+          ${compsSorted.map((c) => {
+            const stories = [...new Set(byComp.get(c)!.map((v) => v.story))].sort();
+            return `<li>${c}<ul class="story-sublist">${stories.map((s) => `<li>${s}</li>`).join("")}</ul></li>`;
+          }).join("")}
         </ul>
       </details>`;
     })
@@ -199,6 +216,7 @@ function byComponentHtml(violations: Violation[]): string {
     return aWorst - bWorst || b[1].length - a[1].length;
   });
   if (sorted.length === 0) return "<p>No violations.</p>";
+
   return sorted
     .map(([comp, vs]) => {
       const worstImpact = vs.reduce(
@@ -209,24 +227,36 @@ function byComponentHtml(violations: Violation[]): string {
         "minor",
       );
       const colour = IMPACT_COLOUR[worstImpact];
-      const ruleBreakdown = [...groupBy(vs, (v) => v.ruleId).entries()]
-        .sort(
-          (a, b) =>
-            (IMPACT_ORDER[a[1][0].impact] ?? 9) -
-            (IMPACT_ORDER[b[1][0].impact] ?? 9),
-        )
-        .map(
-          ([ruleId, rvs]) =>
-            `<li>${badge(rvs[0].impact)} <code>${ruleId}</code> — ${rvs[0].description} <em>(${rvs.length}×)</em></li>`,
-        )
+
+      const byStory = groupBy(vs, (v) => v.story);
+      const storyBlocks = [...byStory.entries()]
+        .sort((a, b) => {
+          const aWorst = Math.min(...a[1].map((v) => IMPACT_ORDER[v.impact] ?? 9));
+          const bWorst = Math.min(...b[1].map((v) => IMPACT_ORDER[v.impact] ?? 9));
+          return aWorst - bWorst || b[1].length - a[1].length;
+        })
+        .map(([story, storyViolations]) => {
+          const violationItems = [...storyViolations]
+            .sort((a, b) => (IMPACT_ORDER[a.impact] ?? 9) - (IMPACT_ORDER[b.impact] ?? 9))
+            .map((v) => {
+              const nodeItems =
+                v.nodes.length > 0
+                  ? `<ul class="node-list">${v.nodes.map((n) => `<li><code>${n}</code></li>`).join("")}</ul>`
+                  : "";
+              return `<div class="violation-item">${badge(v.impact)} <code>${v.ruleId}</code> — ${v.description}${nodeItems}</div>`;
+            })
+            .join("");
+          return `<div class="story-block"><div class="story-name">${story}</div>${violationItems}</div>`;
+        })
         .join("");
+
       return `
       <details>
         <summary style="border-left: 3px solid ${colour}; padding-left: 8px">
           <strong>${comp}</strong>
           <span class="count">${vs.length} violation${vs.length !== 1 ? "s" : ""}</span>
         </summary>
-        <ul class="rule-list">${ruleBreakdown}</ul>
+        <div class="story-violations">${storyBlocks}</div>
       </details>`;
     })
     .join("\n");
@@ -250,101 +280,6 @@ function generateHtml(report: VitestReport): string {
 
   const date = new Date().toISOString().split("T")[0];
 
-  // ── Fix plan ────────────────────────────────────────────────────────────────
-  const planItems: Array<{
-    priority: string;
-    audience: Audience | "both";
-    title: string;
-    detail: string;
-  }> = [
-    {
-      priority: "P0 — Critical",
-      audience: "public",
-      title: "label: Add labels to all unlabelled form elements",
-      detail: `<strong>13 components</strong> including Checklist, DrawBoundary, FileUploadAndLabel, Question. Use <code>&lt;label htmlFor&gt;</code> or <code>aria-label</code>/<code>aria-labelledby</code> on every input, select, and textarea. Check MUI TextField usage — ensure <code>label</code> prop or <code>InputLabelProps</code> is set.`,
-    },
-    {
-      priority: "P0 — Critical",
-      audience: "both",
-      title: "button-name: Give all icon buttons an accessible name",
-      detail: `<strong>7 components</strong> including Checklist, Content, ImgInput. Add <code>aria-label</code> to icon-only <code>&lt;IconButton&gt;</code> instances. MUI's <code>IconButton</code> accepts an <code>aria-label</code> prop directly.`,
-    },
-    {
-      priority: "P1 — Serious",
-      audience: "both",
-      title:
-        "aria-input-field-name: Ensure every ARIA input field has an accessible name",
-      detail: `<strong>31 components</strong>. This often overlaps with <code>label</code> failures. For custom ARIA inputs (<code>role="textbox"</code> etc.) ensure <code>aria-label</code> or <code>aria-labelledby</code> is present. Check generated/dynamic field names in forms.`,
-    },
-    {
-      priority: "P1 — Serious",
-      audience: "both",
-      title: "nested-interactive: Remove nested interactive controls (26 components)",
-      detail: `Buttons and links inside other interactive elements. Common cause: clickable card wrappers containing buttons. Restructure so the outer element is not interactive, or use <code>aria-describedby</code>/<code>aria-labelledby</code> to link the two.`,
-    },
-    {
-      priority: "P1 — Serious",
-      audience: "both",
-      title: "color-contrast: Fix insufficient contrast ratios (9 components)",
-      detail: `AddressInput, ContactInput, DateInput, Feedback, NumberInput, SetFee, TextInput, EditorNavMenu, FeedbackForm. Use the browser DevTools contrast checker or the axe browser extension to identify specific colour pairs. Adjust MUI theme token values rather than one-off overrides.`,
-    },
-    {
-      priority: "P1 — Serious",
-      audience: "public",
-      title: "aria-prohibited-attr: Remove prohibited ARIA attributes (6 components)",
-      detail: `Checklist, FileUploadAndLabel, Question, ResponsiveChecklist, ResponsiveQuestion, ImgInput. Usually caused by putting <code>aria-label</code> or <code>aria-labelledby</code> on elements whose role doesn't permit them. Check role assignments and remove or move the attribute.`,
-    },
-    {
-      priority: "P2 — Moderate",
-      audience: "both",
-      title:
-        "region: Wrap page content in landmark regions (60 components — single shared fix)",
-      detail: `Almost every story fails this because the Storybook test harness doesn't wrap content in a <code>&lt;main&gt;</code>. The fix is a single change in <strong><code>.storybook/preview.tsx</code></strong>: add a <code>&lt;main&gt;</code> (or appropriate landmark) decorator so all stories render inside one. This will resolve ~162 violations in one go.`,
-    },
-    {
-      priority: "P2 — Moderate",
-      audience: "public",
-      title: "heading-order: Fix skipped heading levels (5 components)",
-      detail: `DrawBoundary, FileUploadAndLabel, Pay, Result, Section. Ensure headings follow a logical h1→h2→h3 sequence with no skips. Audit the rendered heading hierarchy with browser DevTools.`,
-    },
-    {
-      priority: "P3 — Minor",
-      audience: "both",
-      title: "aria-allowed-role / presentation-role-conflict (26 components)",
-      detail: `Both violations affect the same 26 components and likely come from the same MUI element. Check for <code>role="presentation"</code> or <code>role="none"</code> on elements that still have <code>tabindex</code> or global ARIA attributes. Often introduced by MUI's internal list/menu structures.`,
-    },
-  ];
-
-  const audienceBadge = (a: Audience | "both") => {
-    if (a === "public")
-      return `<span class="aud-badge aud-public">public-facing</span>`;
-    if (a === "editor")
-      return `<span class="aud-badge aud-editor">editor-facing</span>`;
-    return `<span class="aud-badge aud-public">public-facing</span><span class="aud-badge aud-editor">editor-facing</span>`;
-  };
-
-  const planHtml = planItems
-    .map((item) => {
-      const isP0 = item.priority.includes("P0");
-      const isP1 = item.priority.includes("P1");
-      const colour = isP0
-        ? IMPACT_COLOUR.critical
-        : isP1
-          ? IMPACT_COLOUR.serious
-          : item.priority.includes("P2")
-            ? IMPACT_COLOUR.moderate
-            : IMPACT_COLOUR.minor;
-      return `
-      <div class="plan-item">
-        <div class="plan-priority" style="background:${colour}">${item.priority}</div>
-        <div class="plan-body">
-          <div class="plan-title"><strong>${item.title}</strong>${audienceBadge(item.audience)}</div>
-          <p>${item.detail}</p>
-        </div>
-      </div>`;
-    })
-    .join("\n");
-
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -366,7 +301,6 @@ function generateHtml(report: VitestReport): string {
     h3 { margin-top: 1.5rem; font-size: 1rem; color: #444; }
     .meta { color: #666; font-size: 0.9em; margin-bottom: 2rem; }
 
-    /* Audience columns */
     .audience-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -387,7 +321,6 @@ function generateHtml(report: VitestReport): string {
       gap: 8px;
     }
 
-    /* Audience badges */
     .aud-badge {
       display: inline-block;
       font-size: 0.7rem;
@@ -401,7 +334,6 @@ function generateHtml(report: VitestReport): string {
     .aud-public { background: #e3f2fd; color: #0d47a1; }
     .aud-editor { background: #f3e5f5; color: #6a1b9a; }
 
-    /* Summary cards */
     .cards { display: flex; gap: 0.75rem; flex-wrap: wrap; margin: 0.75rem 0 1rem; }
     .card {
       flex: 1 1 110px;
@@ -412,16 +344,13 @@ function generateHtml(report: VitestReport): string {
     .card-count { font-size: 2rem; font-weight: 700; line-height: 1; }
     .card-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
 
-    /* Mini stats */
     .mini-stats { font-size: 0.85em; color: #555; margin: 0 0 0.5rem; }
     .mini-stats span { margin-right: 1rem; }
 
-    /* Overall stats table */
     .stats { border-collapse: collapse; margin-bottom: 1rem; }
     .stats td, .stats th { border: 1px solid #e0e0e0; padding: 8px 14px; }
     .stats th { background: #f5f5f5; text-align: left; }
 
-    /* Violations */
     details { margin: 6px 0; }
     summary {
       cursor: pointer;
@@ -457,6 +386,8 @@ function generateHtml(report: VitestReport): string {
       white-space: nowrap;
     }
 
+    .story-sublist { margin: 2px 0 4px; padding-left: 1.2em; list-style: disc; }
+    .story-sublist li { font-family: inherit; font-size: 0.85em; color: #555; padding: 1px 0; }
     .comp-list, .rule-list {
       margin: 8px 0 8px 24px;
       padding: 0;
@@ -465,39 +396,29 @@ function generateHtml(report: VitestReport): string {
     .rule-list li { padding: 4px 0; font-size: 0.9em; }
     code { background: #f4f4f4; padding: 1px 5px; border-radius: 3px; font-size: 0.85em; }
 
-    /* Fix plan */
-    .plan-item {
-      display: flex;
-      gap: 0;
-      margin: 1rem 0;
-      border-radius: 6px;
-      overflow: hidden;
-      border: 1px solid #e0e0e0;
-    }
-    .plan-priority {
-      writing-mode: vertical-rl;
-      text-orientation: mixed;
-      transform: rotate(180deg);
-      color: #fff;
-      padding: 12px 8px;
-      font-size: 0.72rem;
-      font-weight: 700;
+    .story-violations { padding: 4px 12px; }
+    .story-block { margin: 8px 0; }
+    .story-name {
+      font-size: 0.8rem;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      white-space: nowrap;
-      flex-shrink: 0;
+      letter-spacing: 0.05em;
+      color: #888;
+      margin-bottom: 4px;
     }
-    .plan-body {
-      padding: 12px 16px;
-      flex: 1;
+    .violation-item {
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 0.9em;
     }
-    .plan-title {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
+    .violation-item:last-child { border-bottom: none; }
+    .node-list {
+      margin: 6px 0 0 20px;
+      padding: 0;
+      list-style: disc;
     }
-    .plan-body p { margin: 6px 0 0; font-size: 0.9em; color: #444; }
+    .node-list li { padding: 2px 0; }
+    .node-list code { font-size: 0.82em; word-break: break-all; }
   </style>
 </head>
 <body>
@@ -541,7 +462,7 @@ function generateHtml(report: VitestReport): string {
   ${byRuleHtml(publicViolations)}
 
   <h3>By component</h3>
-  <p>Sorted by worst impact, then total count.</p>
+  <p>Sorted by worst impact. Expand a component to see each story and the specific elements affected.</p>
   ${byComponentHtml(publicViolations)}
 
   <h2><span class="aud-badge aud-editor" style="font-size:0.85rem;vertical-align:middle">editor-facing</span> Council / admin UI violations</h2>
@@ -552,12 +473,8 @@ function generateHtml(report: VitestReport): string {
   ${byRuleHtml(editorViolations)}
 
   <h3>By component</h3>
-  <p>Sorted by worst impact, then total count.</p>
+  <p>Sorted by worst impact. Expand a component to see each story and the specific elements affected.</p>
   ${byComponentHtml(editorViolations)}
-
-  <h2>Fix plan</h2>
-  <p>Ordered by priority. Addressing <strong>region</strong> (P2) first is the highest-leverage single change — it resolves ~162 violations across 60 components by updating the Storybook decorator once.</p>
-  ${planHtml}
 </body>
 </html>`;
 }
