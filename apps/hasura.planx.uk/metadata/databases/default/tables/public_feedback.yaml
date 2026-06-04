@@ -69,7 +69,9 @@ select_permissions:
     comment: ""
   - role: teamAdmin
     permission:
-      columns: []
+      columns:
+        - editor_notes
+        - id
       filter:
         team:
           members:
@@ -104,7 +106,9 @@ update_permissions:
     comment: ""
   - role: teamAdmin
     permission:
-      columns: []
+      columns:
+        - editor_notes
+        - status
       filter:
         team:
           members:
