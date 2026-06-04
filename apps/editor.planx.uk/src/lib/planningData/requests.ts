@@ -64,17 +64,17 @@ export const getEntity = async (
 };
 
 /**
- * Get all records in a single dataset to autosuggest data values for `property.localAuthorityDistrict`
+ * Get all named entities (omitting geometry) in a single dataset to autosuggest data values for `property.{dataset}`
  */
-export const getLocalAuthorityDistricts = async () => {
+export const getEntityNames = async (dataset: string) => {
   const { data } = await axios.get<SearchEntityResponseExcludeGeom>(
     `/entity.json`,
     {
       baseURL: PLANNING_DATA_URL,
       params: {
-        limit: 400, // ~344 local authority districts, this shouldn't change often (if anything will decrease with mergers)
-        entries: "all", // include "historic" ones
-        dataset: "local-authority-district",
+        limit: 500,
+        entries: "all", // include "historic" entities
+        dataset: dataset,
         exclude_field: "geometry,point", // don't return geometry for faster, lighter response
       },
       paramsSerializer: {

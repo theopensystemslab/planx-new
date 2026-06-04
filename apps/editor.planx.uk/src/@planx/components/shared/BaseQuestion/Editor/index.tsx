@@ -22,7 +22,7 @@ import { Switch } from "ui/shared/Switch";
 
 import { InternalNotes } from "../../../../../ui/editor/InternalNotes";
 import { DataFieldAutocomplete } from "../../DataFieldAutocomplete";
-import { useLocalAuthorityDistricts } from "../../hooks";
+import { usePlanningDataEntityNames } from "../../hooks";
 import { ICONS } from "../../icons";
 import { getOptionsSchemaByFn } from "../../utils";
 import MoreInformation from "./MoreInformation";
@@ -44,7 +44,9 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
   const currentOptionVals = formik.values.options?.map(
     (option) => option.data?.val,
   );
-  const { data: localAuthorityDistrictSchema } = useLocalAuthorityDistricts();
+  const { data: planningDataSchema } = usePlanningDataEntityNames(
+    formik.values.fn || "",
+  );
 
   const focusRef = useRef<HTMLInputElement | null>(null);
 
@@ -165,9 +167,8 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
                 showValueField: !!formik.values.fn,
                 schema: getOptionsSchemaByFn(
                   formik.values.fn,
-                  schema?.options,
+                  planningDataSchema ?? schema?.options,
                   currentOptionVals,
-                  localAuthorityDistrictSchema,
                 ),
               }}
               isTemplatedNode={props.node?.data?.isTemplatedNode}
