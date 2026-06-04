@@ -21,7 +21,7 @@ export const Route = createFileRoute("/_authenticated/app/$team/$flow")({
         "sort",
         "sortDirection",
         "templates",
-        "online-status",
+        "service-status",
         "flow-type",
         "lps-listing",
       ]),
