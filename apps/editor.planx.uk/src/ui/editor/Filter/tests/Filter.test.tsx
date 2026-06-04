@@ -76,7 +76,7 @@ describe("the UI interactions of the Filter component", () => {
   it("displays the filter options by default", async () => {
     await setupTestEnvironment();
 
-    expect(screen.getByLabelText("Online status")).toBeVisible();
+    expect(screen.getByLabelText("Service status")).toBeVisible();
     expect(screen.getByLabelText("Name")).toBeVisible();
   });
 });
@@ -123,7 +123,7 @@ describe("Filter functionality", () => {
     ).not.toBeInTheDocument();
 
     // Open combobox and select "Online"
-    await user.click(screen.getByRole("combobox", { name: "Online status" }));
+    await user.click(screen.getByRole("combobox", { name: "Service status" }));
     await user.click(screen.getByRole("option", { name: "Online" }));
 
     // Verify navigate was called to set the filter
@@ -142,7 +142,7 @@ describe("Filter functionality", () => {
     const { user } = await setupTestEnvironment();
 
     // Select "Offline" from dropdown
-    await user.click(screen.getByRole("combobox", { name: "Online status" }));
+    await user.click(screen.getByRole("combobox", { name: "Service status" }));
     await user.click(screen.getByRole("option", { name: "Offline" }));
 
     // Verify navigate was called with correct params
@@ -156,7 +156,7 @@ describe("Filter functionality", () => {
     const { user } = await setupTestEnvironment();
 
     // Select first filter
-    await user.click(screen.getByRole("combobox", { name: "Online status" }));
+    await user.click(screen.getByRole("combobox", { name: "Service status" }));
     await user.click(screen.getByRole("option", { name: "Online" }));
 
     // Select second filter

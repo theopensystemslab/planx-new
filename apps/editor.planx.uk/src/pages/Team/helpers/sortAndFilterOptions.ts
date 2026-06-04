@@ -57,7 +57,7 @@ const checkFlowTemplateType: FilterOptions<FlowSummary>["validationFn"] = (
 
 const baseFilterOptions: FilterOptions<FlowSummary>[] = [
   {
-    displayName: "Online status",
+    displayName: "Service status",
     optionKey: "status",
     optionValue: ["online", "offline"],
     validationFn: checkFlowStatus,
