@@ -1,3 +1,5 @@
+import { useQuery } from "@tanstack/react-query";
+import { getLocalAuthorityDistricts } from "lib/planningData/requests";
 import { useEffect, useState } from "react";
 
 export type UseFileUrlProps =
@@ -30,4 +32,15 @@ export const useFileUrl = (props: UseFileUrlProps) => {
   return {
     fileUrl,
   };
+};
+
+export const useLocalAuthorityDistricts = () => {
+  const query = useQuery({
+    queryKey: ["localAuthorityDistrictNames"],
+    queryFn: () => getLocalAuthorityDistricts(),
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+  });
+
+  return query;
 };
