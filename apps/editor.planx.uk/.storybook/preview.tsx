@@ -67,22 +67,29 @@ const testApolloClient = new ApolloClient({
 initialize();
 
 export const decorators = [
-  (Story) => (
-    <main>
-      <ApolloProvider client={testApolloClient}>
-        <QueryClientProvider client={testQueryClient}>
-          <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={storybookTheme}>
-              <CssBaseline />
-              <DndProvider backend={HTML5Backend} key={Date.now()}>
-                <Story />
-              </DndProvider>
-            </ThemeProvider>
-          </StyledEngineProvider>
-        </QueryClientProvider>
-      </ApolloProvider>
-    </main>
-  ),
+  (Story, context) => {
+    // Stories that render their own <main> landmark (e.g. pages that use the
+    // shared Main component) set parameters.noMainWrapper = true so we don't
+    // produce nested/duplicate <main> elements.
+    const Wrapper = context.parameters?.noMainWrapper ? "div" : "main";
+    return (
+      <Wrapper>
+        <ApolloProvider client={testApolloClient}>
+          <QueryClientProvider client={testQueryClient}>
+            <StyledEngineProvider injectFirst>
+              <ThemeProvider theme={storybookTheme}>
+                <CssBaseline />
+                <DndProvider backend={HTML5Backend} key={Date.now()}>
+                  <Story />
+                </DndProvider>
+              </ThemeProvider>
+            </StyledEngineProvider>
+          </QueryClientProvider>
+        </ApolloProvider>
+      </Wrapper>
+    );
+  },
+  tanstackRouterDecorator,
 ];
 
 export const tags = ["autodocs"];
