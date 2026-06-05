@@ -20,6 +20,8 @@ import type { DrawBoundary } from "@planx/components/DrawBoundary/model";
 import DrawBoundaryComponent from "@planx/components/DrawBoundary/Public";
 import EnhancedTextInputComponent from "@planx/components/EnhancedTextInput/Public";
 import type { EnhancedTextInput } from "@planx/components/EnhancedTextInput/types";
+import type { ExternalPortal } from "@planx/components/ExternalPortal/model";
+import ExternalPortalComponent from "@planx/components/ExternalPortal/Public/index";
 import type { Feedback } from "@planx/components/Feedback/model";
 import FeedbackComponent from "@planx/components/Feedback/Public/Public";
 import type { FileUpload } from "@planx/components/FileUpload/model";
@@ -206,6 +208,11 @@ const Node: React.FC<Props> = (props) => {
         />
       );
 
+    case TYPES.ExternalPortal:
+      return (
+        <ExternalPortalComponent {...getComponentProps<ExternalPortal>()} />
+      );
+
     case TYPES.Feedback:
       return <FeedbackComponent {...getComponentProps<Feedback>()} />;
 
@@ -363,7 +370,6 @@ const Node: React.FC<Props> = (props) => {
 
     // These types are never seen by users, nor do they leave their own breadcrumbs entry
     case TYPES.Answer:
-    case TYPES.ExternalPortal:
     case TYPES.Flow:
     case TYPES.InternalPortal:
     case undefined:
