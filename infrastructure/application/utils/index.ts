@@ -1,6 +1,7 @@
 export * from "./createCloudflareIngressRule";
 export * from "./createCDN";
 export * from "./createFlowLinkPreviewLambda";
+export * from "./createLpsUrlRewriteLambda";
 export * from "./generateCORSAllowList";
 export * from "./generateTeamSecrets";
 export * from "./helpers";

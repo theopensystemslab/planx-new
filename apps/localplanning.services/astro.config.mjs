@@ -51,8 +51,9 @@ export default defineConfig({
     },
   ],
   build: {
-    // AWS Cloudfront requires /about.html not /about/index.html
-    format: isCloudfrontBuild 
+    // Emit /about.html not /about/index.html for AWS Cloudfront
+    // The LPS URL rewrite Lambda@Edge function maps pretty URLs (/about) to *.html keys
+    format: isCloudfrontBuild
       ? "file"
       : "directory"
   }
