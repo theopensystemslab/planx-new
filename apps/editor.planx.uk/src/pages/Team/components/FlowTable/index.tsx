@@ -130,7 +130,7 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
   ]);
 
   const {
-    isSubmissionService,
+    hasSendComponent,
     isAnyTemplate,
     isSourceTemplate,
     isTemplatedFlow,
@@ -191,7 +191,7 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
             </Box>
           </FlowStatusCell>
           <FlowStatusCell>
-            {isSubmissionService && isService && (
+            {hasSendComponent && isService && (
               <Box sx={{ display: "inline-flex" }}>
                 <FlowTag tagType={FlowTagType.ServiceType}>Submission</FlowTag>
               </Box>
