@@ -490,4 +490,77 @@ describe("Checklist editor component", () => {
     expect(screen.getByDisplayValue("Coconut")).toBeVisible();
     expect(screen.getByDisplayValue("Date")).toBeVisible();
   });
+
+  describe("data field", () => {
+    it("clears option val fields when the data field is cleared (flat options)", async () => {
+      const { user } = await setup(
+        <DndProvider backend={HTML5Backend}>
+          <ChecklistEditor
+            node={{ data: { fn: "my.data.field", text: "A checklist" } }}
+            options={[
+              { id: "opt1", data: { text: "Yes", val: "yes" } },
+              { id: "opt2", data: { text: "No", val: "no" } },
+            ]}
+          />
+        </DndProvider>,
+      );
+
+      const checklistDataField = screen.getByTestId("checklist-data-field");
+
+      await user.click(within(checklistDataField).getByTitle("Clear"));
+
+      // Set a new data field value so option val fields become visible again
+      await user.click(within(checklistDataField).getByRole("combobox"));
+      await user.paste("new.data.field");
+      await user.keyboard("{Enter}");
+
+      const optionValFields = screen.getAllByTestId(
+        /data-field-autocomplete-option-/,
+      );
+      for (const field of optionValFields) {
+        expect(within(field).getByRole("combobox")).toHaveValue("");
+      }
+    });
+
+    it("clears option val fields when the data field is cleared (grouped options)", async () => {
+      const groupedOptions: Group<Option>[] = [
+        {
+          title: "Group A",
+          children: [
+            { id: "opt1", data: { text: "Apple", val: "apple" } },
+            { id: "opt2", data: { text: "Banana", val: "banana" } },
+          ],
+        },
+        {
+          title: "Group B",
+          children: [{ id: "opt3", data: { text: "Cherry", val: "cherry" } }],
+        },
+      ];
+
+      const { user } = await setup(
+        <DndProvider backend={HTML5Backend}>
+          <ChecklistEditor
+            node={{ data: { fn: "my.data.field", text: "A checklist" } }}
+            groupedOptions={groupedOptions}
+          />
+        </DndProvider>,
+      );
+
+      const checklistDataField = screen.getByTestId("checklist-data-field");
+
+      await user.click(within(checklistDataField).getByTitle("Clear"));
+
+      // Set a new data field value so option val fields become visible again
+      await user.click(within(checklistDataField).getByRole("combobox"));
+      await user.paste("new.data.field");
+      await user.keyboard("{Enter}");
+
+      const optionValFields = screen.getAllByTestId(
+        /data-field-autocomplete-option-/,
+      );
+      for (const field of optionValFields) {
+        expect(within(field).getByRole("combobox")).toHaveValue("");
+      }
+    });
+  });
 });

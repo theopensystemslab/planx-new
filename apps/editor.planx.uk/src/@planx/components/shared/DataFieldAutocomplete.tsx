@@ -58,7 +58,10 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
   }, [value]);
 
   const handleChange = (_event: React.SyntheticEvent, value: string | null) => {
-    skipBlurRef.current = true;
+    // Only skip the blur handler when a real value is committed
+    if (value !== null) {
+      skipBlurRef.current = true;
+    }
 
     // Adding a new option via the "Add" button
     if (
@@ -83,8 +86,8 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
     if (!allowCustomValues) return;
     const trimmed = inputValue.trim();
 
-    // Auto-commit a typed value on blur if it's new and not already set
-    if (trimmed && trimmed !== value && !options.includes(trimmed)) {
+    // Auto-commit a typed value on blur if it differs from the current value
+    if (trimmed && trimmed !== value) {
       props.onChange(trimmed);
     }
   };

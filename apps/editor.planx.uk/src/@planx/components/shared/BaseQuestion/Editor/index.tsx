@@ -24,7 +24,7 @@ import { InternalNotes } from "../../../../../ui/editor/InternalNotes";
 import { DataFieldAutocomplete } from "../../DataFieldAutocomplete";
 import { useLocalAuthorityDistricts } from "../../hooks";
 import { ICONS } from "../../icons";
-import { getOptionsSchemaByFn } from "../../utils";
+import { clearOptionsDataFields, getOptionsSchemaByFn } from "../../utils";
 import MoreInformation from "./MoreInformation";
 import TemplatedNodeConfiguration from "./TemplatedNodeConfiguration";
 import { Props } from "./types";
@@ -99,9 +99,18 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
             </InputRow>
             <ErrorWrapper error={formik.errors.fn}>
               <DataFieldAutocomplete
+                data-testid="question-data-field"
                 schema={schema?.nodes}
                 value={formik.values.fn}
-                onChange={(value) => formik.setFieldValue("fn", value)}
+                onChange={(value) => {
+                  formik.setFieldValue("fn", value);
+                  if (!value) {
+                    formik.setFieldValue(
+                      "options",
+                      clearOptionsDataFields(formik.values.options ?? []),
+                    );
+                  }
+                }}
                 disabled={props.disabled}
               />
             </ErrorWrapper>

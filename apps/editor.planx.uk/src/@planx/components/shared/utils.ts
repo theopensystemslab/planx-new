@@ -65,6 +65,11 @@ export const getPreviouslySubmittedData = ({
   return data;
 };
 
+export const clearOptionsDataFields = <T extends { data: { val?: string } }>(
+  options: T[],
+): T[] =>
+  options.map((option) => ({ ...option, data: { ...option.data, val: "" } }));
+
 export const getOptionsSchemaByFn = (
   fn?: string,
   defaultOptionsSchema?: string[],
