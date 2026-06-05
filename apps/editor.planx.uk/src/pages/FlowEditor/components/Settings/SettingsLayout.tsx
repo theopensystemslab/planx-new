@@ -48,7 +48,7 @@ const SettingsLayout: React.FC<Props> = ({
 
   const activeTab =
     filteredLinks.find((link) =>
-      pathname.href?.includes(`/settings${link.path}`),
+      pathname.href?.includes(getNavigationPath(link.path)),
     )?.path || filteredLinks[0]?.path;
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
@@ -77,17 +77,25 @@ const SettingsLayout: React.FC<Props> = ({
           </Typography>
           {settingsLinks && (
             <TabList>
-              <Tabs onChange={handleChange} value={activeTab} aria-label={title}>
-                {filteredLinks ? filteredLinks.map(({ label, path, icon: Icon }) => (
-                  <StyledTab
-                    size="large"
-                    key={path}
-                    value={path}
-                    label={label}
-                    icon={Icon ? <Icon /> : undefined}
-                    iconPosition="start"
-                  />
-                )) : <></>}
+              <Tabs
+                onChange={handleChange}
+                value={activeTab}
+                aria-label={title}
+              >
+                {filteredLinks ? (
+                  filteredLinks.map(({ label, path, icon: Icon }) => (
+                    <StyledTab
+                      size="large"
+                      key={path}
+                      value={path}
+                      label={label}
+                      icon={Icon ? <Icon /> : undefined}
+                      iconPosition="start"
+                    />
+                  ))
+                ) : (
+                  <></>
+                )}
               </Tabs>
             </TabList>
           )}

@@ -1,7 +1,7 @@
 // add/edit/remove feature flags in array below
-const AVAILABLE_FEATURE_FLAGS = ["DASHBOARD", "EXPLORE"] as const;
+export const AVAILABLE_FEATURE_FLAGS = ["DASHBOARD", "EXPLORE"] as const;
 
-type FeatureFlag = (typeof AVAILABLE_FEATURE_FLAGS)[number];
+export type FeatureFlag = (typeof AVAILABLE_FEATURE_FLAGS)[number];
 
 /**
  * get list of feature flags that have been enabled for this session
