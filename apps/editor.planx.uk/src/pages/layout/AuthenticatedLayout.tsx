@@ -55,10 +55,10 @@ const Layout: React.FC<PropsWithChildren> = ({ children }) => {
     <>
       <LoadingOverlay />
       <Header />
-      <Breadcrumbs />
       <DashboardWrap>
         <EditorNavMenu />
         <DashboardContainer>
+          <Breadcrumbs />
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             <WatermarkBackground variant="dark" opacity={0.05} />
             <DndProvider backend={HTML5Backend}>{children}</DndProvider>

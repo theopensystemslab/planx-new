@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import { useParams } from "@tanstack/react-router";
-import { MENU_WIDTH_COMPACT } from "components/EditorNavMenu/styles";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -15,9 +14,9 @@ const BreadcrumbsContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   gap: theme.spacing(1.5),
   alignItems: "center",
-  position: "fixed",
+  position: "absolute",
   top: 0,
-  left: MENU_WIDTH_COMPACT,
+  left: 0,
   zIndex: theme.zIndex.appBar,
   backgroundColor: `rgba(255, 255, 255, 0.2)`,
   padding: theme.spacing(1, 1.25, 1, 2),
