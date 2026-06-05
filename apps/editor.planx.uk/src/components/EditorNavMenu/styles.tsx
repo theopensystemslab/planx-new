@@ -117,4 +117,7 @@ export const BadgeChip = styled(Chip)(({ theme }) => ({
   [`& .${chipClasses.label}`]: {
     padding: theme.spacing(0, 0.75),
   },
+  [`&.${chipClasses.colorDefault}`]: {
+    backgroundColor: theme.palette.secondary.dark,
+  },
 }));

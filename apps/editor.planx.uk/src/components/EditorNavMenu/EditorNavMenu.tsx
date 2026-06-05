@@ -318,6 +318,18 @@ function EditorNavMenu() {
 
   const { sections, compact } = getRoutesForUrl();
 
+  const totalFlagCount = AVAILABLE_FEATURE_FLAGS.length;
+  const enabledFlagCount =
+    AVAILABLE_FEATURE_FLAGS.filter(hasFeatureFlag).length;
+  const featureFlagBadge =
+    totalFlagCount > 0
+      ? {
+          badgeCount: `${enabledFlagCount}/${totalFlagCount}`,
+          badgeColor:
+            enabledFlagCount > 0 ? ("info" as const) : ("default" as const),
+        }
+      : {};
+
   const isRouteAccessible = ({ accessibleBy }: Route) => {
     const accessibleByAll = accessibleBy === "*";
     if (accessibleByAll) return true;
@@ -420,43 +432,49 @@ function EditorNavMenu() {
             );
           })}
         </MenuWrap>
-        {!isFlowRoute && role === "platformAdmin" && (
+        {(role === "platformAdmin" ||
+          (isTeamRoute && role === "teamEditor")) && (
           <Box sx={(theme) => ({ padding: theme.spacing(0, 0.5, 1) })}>
-            <NavMenuItem
-              title="Feature flags"
-              Icon={FlagIcon}
-              badgeCount={AVAILABLE_FEATURE_FLAGS.filter(hasFeatureFlag).length}
-              isActive={isActive("/app/global-settings/feature-flags")}
-              isExternal={false}
-              compact={compact}
-              onClick={() => handleClick("/app/global-settings/feature-flags")}
-              sx={{ minHeight: 44 }}
-            />
-          </Box>
-        )}
-        {isTeamRoute && (role === "platformAdmin" || role === "teamEditor") && (
-          <Box sx={(theme) => ({ padding: theme.spacing(0, 0.5, 1) })}>
-            <Box ref={notificationsRef}>
+            {role === "platformAdmin" && (
               <NavMenuItem
-                title="Notifications"
-                Icon={NotificationsActiveIcon}
-                badgeCount={notificationsCount}
-                isActive={notificationsPanelOpen}
+                title="Feature flags"
+                Icon={FlagIcon}
+                {...featureFlagBadge}
+                isActive={isActive("/app/global-settings/feature-flags")}
                 isExternal={false}
                 compact={compact}
-                onClick={() => setNotificationsPanelOpen((prev) => !prev)}
+                onClick={() =>
+                  handleClick("/app/global-settings/feature-flags")
+                }
                 sx={{ minHeight: 44 }}
               />
-            </Box>
-            <NotificationsPanel
-              anchorEl={
-                notificationsPanelOpen ? notificationsRef.current : null
-              }
-              onClose={() => setNotificationsPanelOpen(false)}
-              activeNotifications={activeNotifications}
-              resolvedNotifications={resolvedNotifications}
-              teamSlug={teamSlug!}
-            />
+            )}
+            {isTeamRoute &&
+              (role === "platformAdmin" || role === "teamEditor") && (
+                <>
+                  <Box ref={notificationsRef}>
+                    <NavMenuItem
+                      title="Notifications"
+                      Icon={NotificationsActiveIcon}
+                      badgeCount={notificationsCount || undefined}
+                      isActive={notificationsPanelOpen}
+                      isExternal={false}
+                      compact={compact}
+                      onClick={() => setNotificationsPanelOpen((prev) => !prev)}
+                      sx={{ minHeight: 44 }}
+                    />
+                  </Box>
+                  <NotificationsPanel
+                    anchorEl={
+                      notificationsPanelOpen ? notificationsRef.current : null
+                    }
+                    onClose={() => setNotificationsPanelOpen(false)}
+                    activeNotifications={activeNotifications}
+                    resolvedNotifications={resolvedNotifications}
+                    teamSlug={teamSlug!}
+                  />
+                </>
+              )}
           </Box>
         )}
         <AccountMenu compact={compact} />

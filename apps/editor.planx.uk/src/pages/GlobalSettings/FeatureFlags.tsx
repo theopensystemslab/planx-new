@@ -53,8 +53,8 @@ function FeatureFlagsSettings() {
         <Grid size={{ xs: 12, md: 4 }}>
           <InputLegend>Feature flags</InputLegend>
           <SettingsDescription>
-            Enable experimental features in this environment. Changes take
-            effect after saving (the page will auto-refresh).
+            Enable experimental or in-development features in this environment.
+            Changes take effect after saving (the page will auto-refresh).
           </SettingsDescription>
         </Grid>
         <Grid size={{ xs: 12, md: 8 }}>
