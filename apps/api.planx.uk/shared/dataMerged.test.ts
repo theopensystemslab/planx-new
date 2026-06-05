@@ -19,7 +19,7 @@ describe("dataMerged() function", () => {
         flow: {
           data: draftParentFlow,
           slug: "parent-flow",
-          team_id: 1,
+          teamId: 1,
           team: {
             slug: "testing",
           },
@@ -40,15 +40,15 @@ describe("dataMerged() function", () => {
         flow: {
           data: draftNestedFlowA,
           slug: "nested-a",
-          team_id: 1,
+          teamId: 1,
           team: {
             slug: "testing",
           },
           publishedFlows: [
             {
               data: publishedNestedFlowA,
-              created_at: "2026-05-15T02:12:32.889893+00:00",
-              publisher_id: 1,
+              createdAt: "2026-05-15T02:12:32.889893+00:00",
+              publisherId: 1,
               id: 9,
               summary: "Testing a",
             },
@@ -80,15 +80,15 @@ describe("dataMerged() function", () => {
         flow: {
           data: draftNestedFlowB,
           slug: "nested-b",
-          team_id: 1,
+          teamId: 1,
           team: {
             slug: "testing",
           },
           publishedFlows: [
             {
               data: publishedNestedFlowB,
-              created_at: "2026-05-15T02:12:48.760153+00:00",
-              publisher_id: 1,
+              createdAt: "2026-05-15T02:12:48.760153+00:00",
+              publisherId: 1,
               id: 10,
               summary: "Testing b",
             },
@@ -125,7 +125,7 @@ describe("dataMerged() function", () => {
         flow: {
           data: draftNestedFlowA,
           slug: "nested-a",
-          team_id: 1,
+          teamId: 1,
           team: {
             slug: "testing",
           },
@@ -144,7 +144,7 @@ describe("dataMerged() function", () => {
         flow: {
           data: draftNestedFlowB,
           slug: "nested-b",
-          team_id: 1,
+          teamId: 1,
           team: {
             slug: "testing",
           },
@@ -168,7 +168,7 @@ describe("dataMerged() function", () => {
         flow: {
           data: draftNestedFlowA,
           slug: "nested-a",
-          team_id: 1,
+          teamId: 1,
           team: {
             slug: "testing",
           },
@@ -191,7 +191,7 @@ describe("dataMerged() function", () => {
         flow: {
           data: draftNestedFlowB,
           slug: "nested-b",
-          team_id: 1,
+          teamId: 1,
           team: {
             slug: "testing",
           },
@@ -219,7 +219,7 @@ describe("dataMerged() function", () => {
         flow: {
           data: draftNestedFlowA,
           slug: "nested-a",
-          team_id: 1,
+          teamId: 1,
           team: {
             slug: "testing",
           },
@@ -242,7 +242,7 @@ describe("dataMerged() function", () => {
         flow: {
           data: draftNestedFlowB,
           slug: "nested-b",
-          team_id: 1,
+          teamId: 1,
           team: {
             slug: "testing",
           },
@@ -275,7 +275,7 @@ describe("dataMerged() function", () => {
         flow: {
           data: draftNestedFlowA,
           slug: "nested-a",
-          team_id: 1,
+          teamId: 1,
           team: {
             slug: "testing",
           },
@@ -294,7 +294,7 @@ describe("dataMerged() function", () => {
         flow: {
           data: draftNestedFlowB,
           slug: "nested-b",
-          team_id: 1,
+          teamId: 1,
           team: {
             slug: "testing",
           },
