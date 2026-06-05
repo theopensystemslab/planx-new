@@ -8,6 +8,7 @@
   "scripts": {
     "format": "syncpack format",
     "lint": "syncpack lint",
+    "test": "node --test",
     "update": "syncpack update --target latest"
   }
 }
