@@ -39,16 +39,6 @@ export default function Dashboard() {
           >
             <FlowsPanel />
           </DashboardWidget>
-          <DashboardWidget
-            title="Notifications"
-            link={linkOptions({
-              to: "/app/$team/notifications",
-              params: { team: team.slug },
-              label: "view all notifications",
-            })}
-          >
-            <i>notifications content</i>
-          </DashboardWidget>
           <ConnectedNotificationsWidget />
           <DashboardWidget
             title="Feedback"
