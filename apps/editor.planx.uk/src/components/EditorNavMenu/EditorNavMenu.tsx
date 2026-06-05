@@ -435,59 +435,63 @@ function EditorNavMenu() {
             );
           })}
         </MenuWrap>
-        {(role === "platformAdmin" ||
-          (isTeamRoute && role === "teamEditor")) && (
-          <Box sx={(theme) => ({ padding: theme.spacing(0, 0.5, 1) })}>
-            {role === "platformAdmin" && (
+        <Box
+          sx={(theme) => ({
+            padding: theme.spacing(0, 0.5, 1),
+            gap: theme.spacing(0.5),
+            display: "flex",
+            flexDirection: "column",
+          })}
+        >
+          {role === "platformAdmin" && (
+            <>
+              <Box ref={featureFlagsRef}>
+                <NavMenuItem
+                  title="Feature flags"
+                  Icon={FlagIcon}
+                  {...featureFlagBadge}
+                  isActive={featureFlagsPanelOpen}
+                  isExternal={false}
+                  compact={compact}
+                  onClick={() => setFeatureFlagsPanelOpen((prev) => !prev)}
+                  sx={{ minHeight: 44 }}
+                />
+              </Box>
+              <FeatureFlagsPanel
+                anchorEl={
+                  featureFlagsPanelOpen ? featureFlagsRef.current : null
+                }
+                onClose={() => setFeatureFlagsPanelOpen(false)}
+              />
+            </>
+          )}
+          {isTeamRoute &&
+            (role === "platformAdmin" || role === "teamEditor") && (
               <>
-                <Box ref={featureFlagsRef}>
+                <Box ref={notificationsRef}>
                   <NavMenuItem
-                    title="Feature flags"
-                    Icon={FlagIcon}
-                    {...featureFlagBadge}
-                    isActive={featureFlagsPanelOpen}
+                    title="Notifications"
+                    Icon={NotificationsActiveIcon}
+                    badgeCount={notificationsCount || undefined}
+                    isActive={notificationsPanelOpen}
                     isExternal={false}
                     compact={compact}
-                    onClick={() => setFeatureFlagsPanelOpen((prev) => !prev)}
+                    onClick={() => setNotificationsPanelOpen((prev) => !prev)}
                     sx={{ minHeight: 44 }}
                   />
                 </Box>
-                <FeatureFlagsPanel
+                <NotificationsPanel
                   anchorEl={
-                    featureFlagsPanelOpen ? featureFlagsRef.current : null
+                    notificationsPanelOpen ? notificationsRef.current : null
                   }
-                  onClose={() => setFeatureFlagsPanelOpen(false)}
+                  onClose={() => setNotificationsPanelOpen(false)}
+                  activeNotifications={activeNotifications}
+                  resolvedNotifications={resolvedNotifications}
+                  teamSlug={teamSlug!}
                 />
               </>
             )}
-            {isTeamRoute &&
-              (role === "platformAdmin" || role === "teamEditor") && (
-                <>
-                  <Box ref={notificationsRef}>
-                    <NavMenuItem
-                      title="Notifications"
-                      Icon={NotificationsActiveIcon}
-                      badgeCount={notificationsCount || undefined}
-                      isActive={notificationsPanelOpen}
-                      isExternal={false}
-                      compact={compact}
-                      onClick={() => setNotificationsPanelOpen((prev) => !prev)}
-                      sx={{ minHeight: 44 }}
-                    />
-                  </Box>
-                  <NotificationsPanel
-                    anchorEl={
-                      notificationsPanelOpen ? notificationsRef.current : null
-                    }
-                    onClose={() => setNotificationsPanelOpen(false)}
-                    activeNotifications={activeNotifications}
-                    resolvedNotifications={resolvedNotifications}
-                    teamSlug={teamSlug!}
-                  />
-                </>
-              )}
-          </Box>
-        )}
+        </Box>
         <AccountMenu compact={compact} />
       </NavBarContainer>
     </Root>
