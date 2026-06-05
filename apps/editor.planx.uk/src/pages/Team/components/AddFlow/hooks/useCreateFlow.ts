@@ -24,7 +24,7 @@ export const useCreateFlow = () => {
       }[mode];
 
       await mutation(flow);
-      return { mode, flow };
+      return { mode, flow: flow };
     },
     onSuccess: ({ mode }) => {
       if (mode === "template") useStore.setState({ isTemplatedFrom: true });

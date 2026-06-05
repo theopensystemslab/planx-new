@@ -13,17 +13,18 @@ export interface GetFlowDataResponse {
   data: Flow["data"];
   summary: string | null;
   description: string | null;
+  isService: boolean;
   limitations: string | null;
-  team_id: number;
+  teamId: number;
   team: { slug: string };
   templatedFrom: string | null;
   publishedFlows:
     | {
         data: Flow["data"];
         id: number;
-        created_at: string;
+        createdAt: string;
         summary: string;
-        publisher_id: number;
+        publisherId: number;
       }[]
     | [];
 }
@@ -41,8 +42,9 @@ const getFlowData = async (id: string): Promise<GetFlowDataResponse> => {
           name
           summary
           description
+          isService: is_service
           limitations
-          team_id
+          teamId: team_id
           team {
             slug
           }
@@ -53,9 +55,9 @@ const getFlowData = async (id: string): Promise<GetFlowDataResponse> => {
           ) {
             data
             id
-            created_at
+            createdAt: created_at
             summary
-            publisher_id
+            publisherId: publisher_id
           }
         }
       }
@@ -79,6 +81,7 @@ const createFlow = async ({
   summary,
   description,
   limitations,
+  isService,
 }: {
   teamId: number;
   slug: string;
@@ -90,6 +93,7 @@ const createFlow = async ({
   summary?: string;
   description?: string;
   limitations?: string;
+  isService?: boolean;
 }) => {
   const { client: $client } = getClient();
   const userId = userContext.getStore()?.user?.sub;
@@ -112,6 +116,7 @@ const createFlow = async ({
           $summary: String
           $description: String
           $limitations: String
+          $is_service: Boolean
         ) {
           insertFlow: insert_flows_one(
             object: {
@@ -126,6 +131,7 @@ const createFlow = async ({
               summary: $summary
               description: $description
               limitations: $limitations
+              is_service: $is_service
             }
           ) {
             id
@@ -143,6 +149,7 @@ const createFlow = async ({
         summary: summary,
         description: description,
         limitations: limitations,
+        is_service: isService,
       },
     );
 

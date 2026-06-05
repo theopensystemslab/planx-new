@@ -4,6 +4,7 @@ export type NewFlow = {
   teamId: number;
   sourceId?: string;
   isTemplate?: boolean;
+  isService?: boolean;
 };
 
 export interface CreateFlowResponse {

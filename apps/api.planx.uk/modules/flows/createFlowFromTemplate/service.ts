@@ -28,6 +28,7 @@ const createFlowFromTemplate = async (
     limitations: isNull(sourceTemplate.limitations)
       ? undefined
       : sourceTemplate.limitations,
+    isService: sourceTemplate.isService,
   });
 
   return { id, slug };

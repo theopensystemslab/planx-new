@@ -1,4 +1,7 @@
 import MenuItem from "@mui/material/MenuItem";
+import RadioGroup from "@mui/material/RadioGroup";
+import Typography from "@mui/material/Typography";
+import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { useFormikContext } from "formik";
 import React from "react";
 import Permission from "ui/editor/Permission";
@@ -11,12 +14,11 @@ import { slugify } from "utils";
 
 import { CreateFromCopyFormSection } from "./CreateFromCopyFormSection";
 import { CreateFromTemplateFormSection } from "./CreateFromTemplateFormSection";
-import { CREATE_FLOW_MODES, CreateFlow } from "./types";
+import { CREATE_FLOW_MODES, CreateFlow, FLOW_SERVICE_OPTIONS } from "./types";
 
 export const BaseFormSection: React.FC = () => {
   const { values, setFieldValue, getFieldProps, errors } =
     useFormikContext<CreateFlow>();
-
   return (
     <>
       <InputLabel
@@ -67,16 +69,39 @@ export const BaseFormSection: React.FC = () => {
         />
       </InputLabel>
       {values.mode === "new" && (
-        <Permission.IsPlatformAdmin>
-          <Switch
-            name="isTemplate"
-            checked={values.flow.isTemplate}
-            onChange={() =>
-              setFieldValue("flow.isTemplate", !values.flow.isTemplate)
-            }
-            label={"Source template"}
-          />
-        </Permission.IsPlatformAdmin>
+        <>
+          <Permission.IsPlatformAdmin>
+            <Switch
+              name="isTemplate"
+              checked={values.flow.isTemplate}
+              onChange={() =>
+                setFieldValue("flow.isTemplate", !values.flow.isTemplate)
+              }
+              label={"Source template"}
+            />
+          </Permission.IsPlatformAdmin>
+          <Typography variant="h4">Is this a flow or a service?</Typography>
+          <RadioGroup
+            defaultValue={false}
+            value={values.flow.isService}
+            sx={{ gap: 1 }}
+          >
+            {FLOW_SERVICE_OPTIONS.map((option) => (
+              <BasicRadio
+                id={option.isService}
+                label={option.title}
+                description={option.description}
+                variant="compact"
+                onChange={(e) =>
+                  setFieldValue(
+                    "flow.isService",
+                    (e.target as HTMLInputElement).value === "true",
+                  )
+                }
+              />
+            ))}
+          </RadioGroup>
+        </>
       )}
     </>
   );

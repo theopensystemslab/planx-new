@@ -8,6 +8,7 @@ export const validationSchema = object().shape({
     name: string().required("Name is required"),
     teamId: number().integer().required("Team ID is required"),
     isTemplate: boolean(),
+    isService: boolean(),
     sourceId: string().when("$mode", {
       is: "new",
       then: string().notRequired(),
@@ -35,3 +36,16 @@ export const CREATE_FLOW_MODES = [
     title: "Copy an existing flow...",
   },
 ] as const;
+
+export const FLOW_SERVICE_OPTIONS = [
+  {
+    isService: false,
+    title: "Flow",
+    description: "Used as a modular building block within services",
+  },
+  {
+    isService: true,
+    title: "Service",
+    description: "A user-facing form that will be published and set online",
+  },
+];
