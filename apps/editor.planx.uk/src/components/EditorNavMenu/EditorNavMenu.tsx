@@ -36,6 +36,7 @@ import { useRecentNotifications } from "../../hooks/data/useRecentNotifications"
 import { useLPS } from "../../hooks/useLPS";
 import AccordionItemButton from "./components/AccordionItemButton";
 import AccordionToggle from "./components/AccordionToggle";
+import FeatureFlagsPanel from "./components/FeatureFlagsPanel";
 import NavMenuHeader from "./components/NavMenuHeader";
 import NavMenuItem from "./components/NavMenuItem";
 import NotificationsPanel from "./components/NotificationsPanel";
@@ -62,7 +63,9 @@ function EditorNavMenu() {
 
   const [openAccordions, setOpenAccordions] = useState<Set<string>>(new Set());
   const [notificationsPanelOpen, setNotificationsPanelOpen] = useState(false);
+  const [featureFlagsPanelOpen, setFeatureFlagsPanelOpen] = useState(false);
   const notificationsRef = useRef<HTMLDivElement>(null);
+  const featureFlagsRef = useRef<HTMLDivElement>(null);
 
   const [role, team] = useStore((state) => [
     state.getUserRoleForCurrentTeam(),
@@ -436,18 +439,26 @@ function EditorNavMenu() {
           (isTeamRoute && role === "teamEditor")) && (
           <Box sx={(theme) => ({ padding: theme.spacing(0, 0.5, 1) })}>
             {role === "platformAdmin" && (
-              <NavMenuItem
-                title="Feature flags"
-                Icon={FlagIcon}
-                {...featureFlagBadge}
-                isActive={isActive("/app/global-settings/feature-flags")}
-                isExternal={false}
-                compact={compact}
-                onClick={() =>
-                  handleClick("/app/global-settings/feature-flags")
-                }
-                sx={{ minHeight: 44 }}
-              />
+              <>
+                <Box ref={featureFlagsRef}>
+                  <NavMenuItem
+                    title="Feature flags"
+                    Icon={FlagIcon}
+                    {...featureFlagBadge}
+                    isActive={featureFlagsPanelOpen}
+                    isExternal={false}
+                    compact={compact}
+                    onClick={() => setFeatureFlagsPanelOpen((prev) => !prev)}
+                    sx={{ minHeight: 44 }}
+                  />
+                </Box>
+                <FeatureFlagsPanel
+                  anchorEl={
+                    featureFlagsPanelOpen ? featureFlagsRef.current : null
+                  }
+                  onClose={() => setFeatureFlagsPanelOpen(false)}
+                />
+              </>
             )}
             {isTeamRoute &&
               (role === "platformAdmin" || role === "teamEditor") && (

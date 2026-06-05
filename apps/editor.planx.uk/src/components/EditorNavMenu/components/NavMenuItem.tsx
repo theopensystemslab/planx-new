@@ -48,7 +48,6 @@ const NavMenuItem = ({
             color={badgeColor}
             sx={{
               marginLeft: 0,
-              minWidth: "20px",
               "& .MuiChip-label": { padding: "0 4px" },
             }}
           />
