@@ -2,11 +2,6 @@ const { test, mock } = require("node:test");
 const assert = require("node:assert/strict");
 const { handler } = require("./flow_link_preview");
 
-const DEFAULT_HASURA_URL = "https://hasura.editor.planx.uk/v1/graphql";
-if (!process.env.HASURA_URL) {
-  process.env.HASURA_URL = DEFAULT_HASURA_URL;
-}
-
 // Intercept native fetch calls to Hasura
 mock.method(globalThis, "fetch", async () => {
   return new Response(
