@@ -87,7 +87,6 @@ export const AddFlow: React.FC = () => {
   };
 
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-
   return (
     <Box>
       <AddButton onClick={() => setDialogOpen(true)}>Add a new flow</AddButton>
