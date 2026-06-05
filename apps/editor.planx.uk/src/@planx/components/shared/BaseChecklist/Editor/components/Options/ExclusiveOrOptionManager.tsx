@@ -7,7 +7,7 @@ import {
   AnyChecklist,
   OptionGroup,
 } from "@planx/components/shared/BaseChecklist/model";
-import { useLocalAuthorityDistricts } from "@planx/components/shared/hooks";
+import { usePlanningDataEntityNames } from "@planx/components/shared/hooks";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { getIn } from "formik";
 import React from "react";
@@ -40,7 +40,9 @@ export const ExclusiveOrOptionManager = <T extends AnyChecklist>({
   isTemplatedNode,
 }: Props<T>) => {
   const { schema, currentOptionVals } = useCurrentOptions(formik);
-  const { data: localAuthorityDistrictSchema } = useLocalAuthorityDistricts();
+  const { data: planningDataSchema } = usePlanningDataEntityNames(
+    formik.values.fn || "",
+  );
 
   return (
     <Box>
@@ -103,9 +105,8 @@ export const ExclusiveOrOptionManager = <T extends AnyChecklist>({
               optionPlaceholder: "Exclusive 'or' option",
               schema: getOptionsSchemaByFn(
                 formik.values.fn,
-                schema,
+                planningDataSchema ?? schema,
                 currentOptionVals,
-                localAuthorityDistrictSchema,
               ),
             }}
             isTemplatedNode={isTemplatedNode}

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getLocalAuthorityDistricts } from "lib/planningData/requests";
+import { getEntityNames } from "lib/planningData/requests";
 import { useEffect, useState } from "react";
 
 export type UseFileUrlProps =
@@ -34,10 +34,19 @@ export const useFileUrl = (props: UseFileUrlProps) => {
   };
 };
 
-export const useLocalAuthorityDistricts = () => {
+export const usePlanningDataEntityNames = (fn: string) => {
+  const fnToDataset: Record<string, string> = {
+    "property.localAuthorityDistrict": "local-authority-district",
+    "property.localPlanningAuthority": "local-planning-authority",
+    "property.region": "region",
+    "property.developmentCorporation": "development-corporation",
+    // "property.ward": "ward" // only 'turn on' once we setup query pagination and if UI is okay (current PD API limit = 500, but there's ~7k wards)
+  };
+
   const query = useQuery({
-    queryKey: ["localAuthorityDistrictNames"],
-    queryFn: () => getLocalAuthorityDistricts(),
+    queryKey: [fnToDataset[fn]],
+    queryFn: () => getEntityNames(fnToDataset[fn]),
+    enabled: Object.keys(fnToDataset).includes(fn),
     refetchOnWindowFocus: false,
     staleTime: Infinity,
   });
