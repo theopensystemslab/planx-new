@@ -103,7 +103,7 @@ const FeatureFlagsPanel = ({ anchorEl, onClose }: Props) => {
           Enable experimental or in-development features in this environment.
           Changes take effect after saving (the page will auto-refresh).
         </SettingsDescription>
-        {AVAILABLE_FEATURE_FLAGS.length === 0 ? (
+        {(AVAILABLE_FEATURE_FLAGS.length as number) === 0 ? (
           <EmptyState size="small" title="No feature flags available" />
         ) : (
           <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
