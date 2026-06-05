@@ -4,6 +4,7 @@ import CurrencyPoundIcon from "@mui/icons-material/CurrencyPound";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ExploreIcon from "@mui/icons-material/Explore";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
+import FlagIcon from "@mui/icons-material/Flag";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GroupIcon from "@mui/icons-material/Group";
 import LayersIcon from "@mui/icons-material/Layers";
@@ -24,7 +25,7 @@ import {
 import AccountMenu from "components/AccountMenu";
 import { useFlowAnalyticsLink } from "hooks/analyticsLinks/useFlowAnalyticsLink";
 import { useTeamAnalyticsLink } from "hooks/analyticsLinks/useTeamAnalyticsLink";
-import { hasFeatureFlag } from "lib/featureFlags";
+import { AVAILABLE_FEATURE_FLAGS, hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useMemo, useRef, useState } from "react";
 import EditorIcon from "ui/icons/Editor";
@@ -419,6 +420,20 @@ function EditorNavMenu() {
             );
           })}
         </MenuWrap>
+        {!isFlowRoute && role === "platformAdmin" && (
+          <Box sx={(theme) => ({ padding: theme.spacing(0, 0.5, 1) })}>
+            <NavMenuItem
+              title="Feature flags"
+              Icon={FlagIcon}
+              badgeCount={AVAILABLE_FEATURE_FLAGS.filter(hasFeatureFlag).length}
+              isActive={isActive("/app/global-settings/feature-flags")}
+              isExternal={false}
+              compact={compact}
+              onClick={() => handleClick("/app/global-settings/feature-flags")}
+              sx={{ minHeight: 44 }}
+            />
+          </Box>
+        )}
         {isTeamRoute && (role === "platformAdmin" || role === "teamEditor") && (
           <Box sx={(theme) => ({ padding: theme.spacing(0, 0.5, 1) })}>
             <Box ref={notificationsRef}>

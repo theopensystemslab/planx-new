@@ -8,6 +8,7 @@ import {
   toggleFeatureFlag,
 } from "lib/featureFlags";
 import { useMemo, useState } from "react";
+import { EmptyState } from "ui/editor/EmptyState";
 import InputLegend from "ui/editor/InputLegend";
 import NewSettingsSection from "ui/editor/NewSettingsSection";
 import SettingsDescription from "ui/editor/SettingsDescription";
@@ -57,39 +58,49 @@ function FeatureFlagsSettings() {
           </SettingsDescription>
         </Grid>
         <Grid size={{ xs: 12, md: 8 }}>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 1,
-              paddingTop: 0.25,
-            }}
-          >
-            {AVAILABLE_FEATURE_FLAGS.map((flag) => (
-              <Switch
-                key={flag}
-                label={flag.charAt(0) + flag.slice(1).toLowerCase()}
-                name={flag}
-                variant="editorPage"
-                capitalize
-                checked={workingFlags[flag]}
-                onChange={() => handleToggle(flag)}
-              />
-            ))}
-          </Box>
-          <Box sx={{ mt: 2.5, display: "flex", gap: 1.5 }}>
-            <Button variant="contained" disabled={!dirty} onClick={handleSave}>
-              Save
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              disabled={!dirty}
-              onClick={handleReset}
-            >
-              Reset changes
-            </Button>
-          </Box>
+          {(AVAILABLE_FEATURE_FLAGS.length as number) === 0 ? (
+            <EmptyState title="No feature flags available" />
+          ) : (
+            <>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 1,
+                  paddingTop: 0.25,
+                }}
+              >
+                {AVAILABLE_FEATURE_FLAGS.map((flag) => (
+                  <Switch
+                    key={flag}
+                    label={flag.charAt(0) + flag.slice(1).toLowerCase()}
+                    name={flag}
+                    variant="editorPage"
+                    capitalize
+                    checked={workingFlags[flag]}
+                    onChange={() => handleToggle(flag)}
+                  />
+                ))}
+              </Box>
+              <Box sx={{ mt: 2.5, display: "flex", gap: 1.5 }}>
+                <Button
+                  variant="contained"
+                  disabled={!dirty}
+                  onClick={handleSave}
+                >
+                  Save
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  disabled={!dirty}
+                  onClick={handleReset}
+                >
+                  Reset changes
+                </Button>
+              </Box>
+            </>
+          )}
         </Grid>
       </Grid>
     </NewSettingsSection>
