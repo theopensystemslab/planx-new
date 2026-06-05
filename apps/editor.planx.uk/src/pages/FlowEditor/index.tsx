@@ -28,6 +28,7 @@ const EditorContainer = styled(Box, {
   flexGrow: 1,
   maxHeight: "100vh",
   maxWidth: hasNavMenu ? `calc(100vw - ${MENU_WIDTH_COMPACT}px)` : "100vw",
+  position: "relative",
 }));
 
 const EditorVisualControls = styled(ButtonGroup)(({ theme }) => ({

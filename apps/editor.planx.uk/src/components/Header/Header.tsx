@@ -323,7 +323,7 @@ const Header: React.FC = () => {
   const showDowntimeBanner = data?.downtimeBanner?.isVisible || false;
 
   return (
-    <>
+    <Box>
       {showDowntimeBanner && <DowntimeBanner />}
       <Root
         position="static"
@@ -338,7 +338,7 @@ const Header: React.FC = () => {
       >
         <Toolbar />
       </Root>
-    </>
+    </Box>
   );
 };
 
