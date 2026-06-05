@@ -18,12 +18,12 @@ const staticErrorResponses: aws.cloudfront.DistributionArgs["customErrorResponse
   {
     errorCode: 404,
     responseCode: 404,
-    responsePagePath: "/404",
+    responsePagePath: "/404.html",
   },
   {
     errorCode: 403,
     responseCode: 404,
-    responsePagePath: "/404",
+    responsePagePath: "/404.html",
   },
 ];
 
@@ -115,7 +115,7 @@ export const createCdn = ({
         },
       },
     ],
-    defaultRootObject: mode === "spa" ? "index.html" : "index",
+    defaultRootObject: "index.html",
 
     // A CloudFront distribution can configure different cache behaviors based on the request path.
     // Here we just specify a single, default cache behavior which is just read-only requests to S3.

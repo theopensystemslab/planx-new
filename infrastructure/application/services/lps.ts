@@ -2,7 +2,7 @@ import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 import * as cloudflare from "@pulumi/cloudflare";
 
-import { createCdn, usEast1 } from "../utils";
+import { createCdn, createLpsUrlRewriteLambda, usEast1 } from "../utils";
 
 // The @pulumi/cloudflare package doesn't generate errors so this is here just to create a warning in case the Cloudflare API token is missing.
 new pulumi.Config("cloudflare").requireSecret("apiToken");
@@ -171,6 +171,8 @@ export const createLocalPlanningServices = (planXCertArn: pulumi.Output<string>)
 
   const acmCertificateArn = createLPSCertificates(domain, planXCertArn);
 
+  const urlRewriteLambda = createLpsUrlRewriteLambda();
+
   const cdn = createCdn({
     cdnName: domain,
     domains: [domain],
@@ -180,6 +182,10 @@ export const createLocalPlanningServices = (planXCertArn: pulumi.Output<string>)
     oai,
     mode: "static",
     includeWww: env === "production",
+    lambdaFunctionAssociation: {
+      lambdaArn: urlRewriteLambda.qualifiedArn,
+      eventType: "viewer-request",
+    },
   });
 
   createCNAMERecords(domain, cdn);
