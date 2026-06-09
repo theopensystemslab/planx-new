@@ -1,8 +1,10 @@
 import Box from "@mui/material/Box";
-import { keyframes, styled } from "@mui/material/styles";
+import MuiLink from "@mui/material/Link";
+import { keyframes, styled, type Theme } from "@mui/material/styles";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import { linkOptions } from "@tanstack/react-router";
-import { WidgetLink } from "ui/editor/DashboardWidget";
+import { useTeamAnalyticsLink } from "hooks/analyticsLinks/useTeamAnalyticsLink";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import { useStore } from "../../FlowEditor/lib/store";
 import {
@@ -47,14 +49,31 @@ function formatDelta(delta: number): string {
   return delta >= 0 ? `+${delta}` : `${delta}`;
 }
 
+const analyticsLinkBase = (theme: Theme) => ({
+  fontSize: theme.typography.body2.fontSize,
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+});
+
+const AnalyticsLink = styled(MuiLink)(({ theme }) => ({
+  ...analyticsLinkBase(theme),
+  color: theme.palette.text.primary,
+  "&:hover": { textDecorationThickness: "2px" },
+}));
+
+const AnalyticsLinkDisabled = styled(Typography)(({ theme }) => ({
+  ...analyticsLinkBase(theme),
+  color: theme.palette.text.disabled,
+  cursor: "default",
+}));
+
 interface StatsBannerProps {
-  teamSlug: string;
+  analyticsLink?: string;
   stats?: TeamDashboardStats;
   loading?: boolean;
 }
 
 export function StatsBanner({
-  teamSlug,
+  analyticsLink,
   stats,
   loading = false,
 }: StatsBannerProps) {
@@ -91,13 +110,22 @@ export function StatsBanner({
         <Typography variant="h4" component="h2">
           Last 30 days
         </Typography>
-        <WidgetLink
-          label="view analytics"
-          {...linkOptions({
-            to: "/app/$team",
-            params: { team: teamSlug },
-          })}
-        />
+        {analyticsLink ? (
+          <AnalyticsLink
+            href={analyticsLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            underline="always"
+          >
+            view analytics
+          </AnalyticsLink>
+        ) : (
+          <Tooltip title="Analytics unavailable" placement="bottom">
+            <AnalyticsLinkDisabled variant="body2">
+              view analytics
+            </AnalyticsLinkDisabled>
+          </Tooltip>
+        )}
       </Header>
       <StatsGrid>
         {tiles.map(({ label, value, delta }) => (
@@ -138,6 +166,7 @@ export default function ConnectedStatsBanner() {
   const teamSlug = useStore((state) => state.getTeam().slug);
   const { data, loading } = useTeamDashboardStats(teamSlug);
   const stats = data?.teamDashboardStats[0];
+  const analyticsLink = useTeamAnalyticsLink();
 
-  return <StatsBanner teamSlug={teamSlug} stats={stats} loading={loading} />;
+  return <StatsBanner analyticsLink={analyticsLink} stats={stats} loading={loading} />;
 }
