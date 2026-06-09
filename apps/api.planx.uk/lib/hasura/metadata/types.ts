@@ -18,7 +18,8 @@ export interface ScheduledEventRequestBody {
 export interface CreateScheduledEventArgs {
   headers: Record<string, string>[];
   retry_conf: {
-    num_retries: number;
+    num_retries: number; // default 0
+    retry_interval_seconds?: number; // default 10
   };
   webhook: string;
   schedule_at: Date;
