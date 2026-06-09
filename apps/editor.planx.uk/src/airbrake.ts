@@ -14,6 +14,7 @@ function getEnvForAllowedHosts(host: string) {
     case "planningservices.buckinghamshire.gov.uk":
     case "planningservices.camden.gov.uk":
     case "planningservices.canterbury.gov.uk":
+    case "planningservices.coventry.gov.uk":
     case "planningservices.doncaster.gov.uk":
     case "planningservices.epsom-ewell.gov.uk":
     case "planningservices.gateshead.gov.uk":

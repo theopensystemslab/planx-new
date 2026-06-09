@@ -40,6 +40,7 @@ const PREVIEW_ONLY_DOMAINS = [
   "planningservices.buckinghamshire.gov.uk",
   "planningservices.camden.gov.uk",
   "planningservices.canterbury.gov.uk",
+  "planningservices.coventry.gov.uk",
   "planningservices.doncaster.gov.uk",
   "planningservices.epsom-ewell.gov.uk",
   "planningservices.gateshead.gov.uk",
