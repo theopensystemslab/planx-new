@@ -87,4 +87,9 @@ export const setupStandaloneViewStore = (data: StandaloneViewData): void => {
   state.setGlobalSettings(globalSettings[0]);
   state.setFlowSettings(flowSettings);
   state.setTeam(team);
+
+  if (team.theme?.favicon) {
+    const faviconEl = document.getElementById("favicon") as HTMLLinkElement;
+    faviconEl.href = team.theme.favicon;
+  }
 };
