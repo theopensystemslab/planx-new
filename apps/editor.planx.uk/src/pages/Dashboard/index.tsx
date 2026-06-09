@@ -7,10 +7,10 @@ import { DEFAULT_PRIMARY_COLOR } from "theme";
 import { DashboardWidget } from "ui/editor/DashboardWidget";
 
 import { useStore } from "../../pages/FlowEditor/lib/store";
+import ActivityWidget from "./components/ActivityWidget";
+import FeedbackWidget from "./components/FeedbackWidget";
 import FlowsPanel from "./components/FlowsPanel";
 import ConnectedNotificationsWidget from "./components/NotificationsWidget";
-import FeedbackWidget from "./components/FeedbackWidget";
-import ActivityWidget from "./components/ActivityWidget";
 import StatsBanner from "./components/StatsBanner";
 
 export default function Dashboard() {
@@ -30,7 +30,14 @@ export default function Dashboard() {
               component="img"
               src={team.theme.logo}
               alt={team.name}
-              sx={{ maxWidth: 160, width: "100%", display: "block" }}
+              sx={{
+                maxWidth: 160,
+                width: "100%",
+                height: 60,
+                objectFit: "contain",
+                objectPosition: "left",
+                display: "block",
+              }}
             />
           ) : (
             <Typography

@@ -2,7 +2,6 @@ import Box from "@mui/material/Box";
 import { keyframes, styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { linkOptions } from "@tanstack/react-router";
-import React from "react";
 import { WidgetLink } from "ui/editor/DashboardWidget";
 
 import { useStore } from "../../FlowEditor/lib/store";
