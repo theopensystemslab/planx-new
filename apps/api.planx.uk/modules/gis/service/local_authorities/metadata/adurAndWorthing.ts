@@ -6,7 +6,7 @@ FID:
 
 */
 
-import type { LocalAuthorityMetadata } from "../../helpers.js;
+import type { LocalAuthorityMetadata } from "../../helpers.js";
 
 const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
   articleFour: {
