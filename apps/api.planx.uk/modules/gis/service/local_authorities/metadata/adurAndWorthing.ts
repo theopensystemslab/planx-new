@@ -6,7 +6,7 @@ FID:
 
 */
 
-import type { LocalAuthorityMetadata } from "../../digitalLand.js";
+import type { LocalAuthorityMetadata } from "../../helpers.js;
 
 const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
   articleFour: {

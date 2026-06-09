@@ -7,7 +7,7 @@ FID:
 https://www.planning.data.gov.uk/entity/?dataset=article-4-direction-area&q=&organisation_entity=314&entry_date_day=&entry_date_month=&entry_date_year=
 */
 
-import type { LocalAuthorityMetadata } from "../../digitalLand.js";
+import type { LocalAuthorityMetadata } from "../../helpers.js";
 
 const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
   articleFour: {
