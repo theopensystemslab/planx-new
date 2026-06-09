@@ -109,7 +109,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "northumberland",
           domain: "planningservices.northumberland.gov.uk",
-          cloudFrontState: "validation-only",
+          cloudFrontState: "shared-final",
         },
         {
           name: "coventry",
