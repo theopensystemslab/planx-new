@@ -52,7 +52,11 @@ export default function Dashboard() {
           <StatsBanner />
         </Container>
       </Box>
-      <Container maxWidth="contentWide" sx={{ py: 4 }}>
+      <Container 
+        maxWidth="contentWide" 
+        // Override default container padding to align with widgets
+        sx={{ py: "30px !important" }}
+      >
         <Box
           sx={(theme) => ({
             display: "grid",

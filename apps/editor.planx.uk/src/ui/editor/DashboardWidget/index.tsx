@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import { LinkOptions, RegisteredRouter } from "@tanstack/react-router";
 import { BadgeChip } from "components/EditorNavMenu/styles";
 import React from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 interface DashboardWidgetProps {
@@ -19,7 +20,7 @@ const Root = styled(Box)(({ theme }) => ({
   border: `1px solid ${theme.palette.border.light}`,
   display: "flex",
   flexDirection: "column",
-  height: "380px",
+  height: "400px",
   zIndex: 1,
 }));
 
@@ -27,12 +28,13 @@ const Header = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "baseline",
   justifyContent: "space-between",
-  padding: theme.spacing(1.5),
+  padding: theme.spacing(2),
 }));
 
 const StyledWidgetLink = styled(CustomLink)(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
   color: theme.palette.text.primary,
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,  
   "&:hover": {
     textDecorationThickness: "2px",
   },
