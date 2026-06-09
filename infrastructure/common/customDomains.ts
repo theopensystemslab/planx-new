@@ -25,7 +25,6 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
           name: "doncaster",
           domain: "planningservices.doncaster.gov.uk",
           cloudFrontState: "cutover-ongoing",
-          certificateLocation: "pulumiConfig",
         },
         {
           name: "medway",
