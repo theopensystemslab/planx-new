@@ -6,7 +6,7 @@ const meta = {
   title: "Editor Components/Dashboard/StatsBanner",
   component: StatsBanner,
   args: {
-    teamSlug: "test-council",
+    analyticsLink: "https://metabase.editor.planx.uk",
     loading: false,
     stats: {
       onlineFlows: 12,

@@ -95,6 +95,11 @@ export const updateStoreWithPublicRouteData = (
   state.setFlowSettings(data.flow.settings);
   state.setTeam(data.flow.team);
 
+  if (data.flow.team?.theme?.favicon) {
+    const faviconEl = document.getElementById("favicon") as HTMLLinkElement;
+    faviconEl.href = data.flow.team.theme.favicon;
+  }
+
   // Only /published routes use the SaveAndReturn layout, but this needs to be resolved on beforeLoad()
   if (mode === "published") {
     const hasSendComponent = data.flow.publishedFlows[0]?.hasSendComponent;

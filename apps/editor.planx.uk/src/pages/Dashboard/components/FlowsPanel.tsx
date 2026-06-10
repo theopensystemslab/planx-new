@@ -57,10 +57,10 @@ export const FlowsPanel: React.FC<FlowsPanelProps> = ({
         <Tabs
           value={tab}
           onChange={(_e, v) => setTab(v)}
-          sx={{ minHeight: 0, borderBottom: 1, borderColor: "border.main" }}
+          sx={{ minHeight: 0, borderBottom: 1, borderColor: "border.main", paddingX: 1.25, }}
         >
-          <StyledTab label="Recent flows" value="recent" fontSize="16px" />
-          <StyledTab label="Pinned flows" value="pinned" fontSize="16px" />
+          <StyledTab label="Recent flows" value="recent" />
+          <StyledTab label="Pinned flows" value="pinned" />
         </Tabs>
       </TabList>
       {loading ? (
@@ -95,8 +95,8 @@ export const FlowsPanel: React.FC<FlowsPanelProps> = ({
                 <ListItem
                   sx={{
                     position: "relative",
-                    px: 1.5,
-                    py: 1,
+                    px: 2,
+                    py: 1.25,
                     backgroundColor: isAnyTemplate
                       ? "template.light"
                       : "transparent",

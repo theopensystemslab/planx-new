@@ -44,6 +44,7 @@ export function ActivityWidget({
         sx={{
           minHeight: 36,
           borderBottom: 1,
+          paddingX: 1.25,
           borderColor: "divider",
           [`& .${tabsClasses.indicator}`]: { display: "none" },
         }}
