@@ -435,21 +435,8 @@ update_permissions:
         - team_id
         - updated_at
         - version
-      filter:
-        _and:
-          - is_template:
-              _eq: false
-          - deleted_at:
-              _is_null: true
-      check:
-        _not:
-          _and:
-            - status:
-                _eq: online
-            - team:
-                team_settings:
-                  is_trial:
-                    _eq: true
+      filter: {}
+      check: {}
       validate_input:
         definition:
           forward_client_headers: false
