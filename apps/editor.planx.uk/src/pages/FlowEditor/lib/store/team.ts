@@ -58,10 +58,6 @@ export const teamStore: StateCreator<
       teamDomain: team.domain,
     });
 
-    if (team.theme?.favicon) {
-      const favicon = document.getElementById("favicon") as HTMLLinkElement;
-      favicon.href = team.theme.favicon;
-    }
   },
 
   getTeam: () => ({

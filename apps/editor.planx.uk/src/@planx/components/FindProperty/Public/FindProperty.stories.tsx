@@ -6,6 +6,7 @@ import Editor from "../Editor";
 import FindProperty from ".";
 import fetchBLPUCodesMock from "./mocks/findAddressReturnMock";
 import localAuthorityMock from "./mocks/localAuthorityMock";
+import osDatastoreErrorMock from "./mocks/osDatastoreErrorMock";
 
 /** FindProperty relies on a custom web component that cannot be shown by React Storybook. Find additional docs here: https://oslmap.netlify.app/ */
 export default {
@@ -30,6 +31,24 @@ export const EmptyForm: StoryObj = {
     <FindProperty
       title="Find your property"
       description="For example, SE5 0HU"
+    />
+  ),
+};
+
+export const OSDatastoreError: StoryObj = {
+  parameters: {
+    msw: {
+      handlers: [
+        http.get("*/proxy/ordnance-survey/search/places/v1/postcode", () =>
+          HttpResponse.json(osDatastoreErrorMock, { status: 500 }),
+        ),
+      ],
+    },
+  },
+  render: () => (
+    <FindProperty
+      title="Enter the postcode of the property"
+      description="For example, HP9 2HA"
     />
   ),
 };

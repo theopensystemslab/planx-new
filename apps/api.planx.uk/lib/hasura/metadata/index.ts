@@ -57,6 +57,7 @@ export const createScheduledEvent = async (
         ],
         retry_conf: {
           num_retries: 1,
+          retry_interval_seconds: 30,
         },
       },
     });

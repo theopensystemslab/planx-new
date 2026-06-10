@@ -36,6 +36,13 @@ export const Route = createFileRoute("/_authenticated/app/$team")({
             integrations {
               hasPlanningData: has_planning_data
             }
+            theme {
+              primaryColour: primary_colour
+              actionColour: action_colour
+              linkColour: link_colour
+              logo
+              favicon
+            }
             settings: team_settings {
               id
               boundaryUrl: boundary_url
