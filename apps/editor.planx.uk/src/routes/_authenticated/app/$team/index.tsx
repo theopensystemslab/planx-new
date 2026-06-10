@@ -20,7 +20,7 @@ export const teamSearchSchema = z.object({
   ).default("last-edited"),
   sortDirection: fallback(z.enum(["asc", "desc"]), "desc").default("desc"),
   search: z.string().optional(),
-  "online-status": z.enum(["online", "offline"]).optional(),
+  "service-status": z.enum(["online", "offline"]).optional(),
   "flow-type": z
     .enum(["submission", "fee carrying", "service charge enabled"])
     .optional(),

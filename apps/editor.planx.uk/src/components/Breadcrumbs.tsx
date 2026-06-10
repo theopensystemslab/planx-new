@@ -8,6 +8,8 @@ import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType } from "ui/editor/FlowTag/types";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
+import { useGetFlowDetails } from "./useGetFlowDetails";
+
 export const BREADCRUMBS_HEIGHT = 3;
 
 const BreadcrumbsContainer = styled(Box)(({ theme }) => ({
@@ -42,15 +44,21 @@ const BreadcrumbsLink = styled(CustomLink)(({ theme }) => ({
 
 const Breadcrumbs: React.FC = () => {
   const params = useParams({ strict: false });
-  const team = useStore((state) => state.getTeam());
+  const { team: teamSlug, flow: flowParam } = params;
+  const flowSlug = flowParam?.split(",")[0]; // in folders, the node ID is appended to flow slug--so we need to separate it
+
+  const { data } = useGetFlowDetails(teamSlug, flowSlug);
   const isStandalone = useStore(
     (state) => state.previewEnvironment === "standalone",
   );
-  const flowSlug = useStore((state) => state.flowSlug);
-  const flowStatus = useStore((state) => state.flowStatus);
+
   const canUserEditTeam = useStore((state) => state.canUserEditTeam);
 
-  if (!params.flow) return null;
+  if (!teamSlug || !flowSlug || !data?.flows) return null;
+  const { status: flowStatus, isService } = data.flows[0];
+
+  const canUserEdit = canUserEditTeam(teamSlug);
+  console.log({ isService, flowStatus, canUserEdit });
 
   return (
     <BreadcrumbsContainer>
@@ -59,7 +67,7 @@ const Breadcrumbs: React.FC = () => {
           <BreadcrumbsLink
             to="/app/$team"
             params={{
-              team: params.team,
+              team: teamSlug,
             }}
             {...(isStandalone && { target: "_blank" })}
             variant="body1"
@@ -73,7 +81,7 @@ const Breadcrumbs: React.FC = () => {
             <BreadcrumbsLink
               to="/app/$team/$flow"
               params={{
-                team: team.slug,
+                team: teamSlug,
                 flow: flowSlug,
               }}
               {...(isStandalone && { target: "_blank" })}
@@ -85,27 +93,21 @@ const Breadcrumbs: React.FC = () => {
           </>
         )}
       </BreadcrumbsRoot>
-      {params.flow && (
+      {isService && flowStatus && canUserEditTeam(teamSlug) && (
         <Box sx={(theme) => ({ color: theme.palette.text.primary })}>
-          {canUserEditTeam && canUserEditTeam(team.slug) ? (
-            <BreadcrumbsLink
-              to="/app/$team/$flow/settings"
-              params={{
-                team: team.slug,
-                flow: flowSlug,
-              }}
-              title="Update service status"
-              sx={{ textDecoration: "none" }}
-            >
-              <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
-                {flowStatus}
-              </FlowTag>
-            </BreadcrumbsLink>
-          ) : (
+          <BreadcrumbsLink
+            to="/app/$team/$flow/settings"
+            params={{
+              team: teamSlug,
+              flow: flowSlug,
+            }}
+            title="Update service status"
+            sx={{ textDecoration: "none" }}
+          >
             <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
               {flowStatus}
             </FlowTag>
-          )}
+          </BreadcrumbsLink>
         </Box>
       )}
     </BreadcrumbsContainer>

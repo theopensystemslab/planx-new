@@ -59,8 +59,8 @@ export const FlowTable: React.FC<FlowTableProps> = ({
           <FlowTitleCell>Flow title</FlowTitleCell>
           {view === "flows" && (
             <>
-              <FlowStatusCell>Online status</FlowStatusCell>
-              <FlowStatusCell>Flow type</FlowStatusCell>
+              <FlowStatusCell>Service status</FlowStatusCell>
+              <FlowStatusCell>Service type</FlowStatusCell>
               <FlowDateCell>{headerText}</FlowDateCell>
               {showDetails && <TableCell>Pinned</TableCell>}
             </>
@@ -130,10 +130,11 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
   ]);
 
   const {
-    isSubmissionService,
+    hasSendComponent,
     isAnyTemplate,
     isSourceTemplate,
     isTemplatedFlow,
+    isService,
     statusVariant,
   } = useFlowMetadata(flow);
 
@@ -179,16 +180,18 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
         <>
           <FlowStatusCell>
             <Box sx={{ display: "inline-flex" }}>
-              <FlowTag
-                tagType={FlowTagType.Status}
-                statusVariant={statusVariant}
-              >
-                {statusVariant}
-              </FlowTag>
+              {isService && (
+                <FlowTag
+                  tagType={FlowTagType.Status}
+                  statusVariant={statusVariant}
+                >
+                  {statusVariant}
+                </FlowTag>
+              )}
             </Box>
           </FlowStatusCell>
           <FlowStatusCell>
-            {isSubmissionService && (
+            {hasSendComponent && isService && (
               <Box sx={{ display: "inline-flex" }}>
                 <FlowTag tagType={FlowTagType.ServiceType}>Submission</FlowTag>
               </Box>
