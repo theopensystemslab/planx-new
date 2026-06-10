@@ -49,7 +49,6 @@ const getComponentTitle = (type: ComponentType): string => {
   return COMPONENT_TITLES[type];
 };
 
-
 const createBaseComponent = async (
   page: Page,
   locatingNode: Locator,
