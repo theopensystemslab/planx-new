@@ -5,6 +5,7 @@ export const offlinePublished: GetFlowStatus = {
     id: "abc123",
     status: "offline",
     hasPrivacyPage: true,
+    isService: true,
     team: {
       settings: {
         isTrial: false,
@@ -25,6 +26,7 @@ export const onlineUnpublished: GetFlowStatus = {
     id: "abc123",
     status: "online",
     hasPrivacyPage: true,
+    isService: true,
     team: {
       settings: {
         isTrial: false,
@@ -41,6 +43,7 @@ export const offlineUnpublished: GetFlowStatus = {
     id: "abc123",
     status: "offline",
     hasPrivacyPage: true,
+    isService: true,
     team: {
       settings: {
         isTrial: false,
@@ -57,6 +60,28 @@ export const onlinePublished: GetFlowStatus = {
     id: "abc123",
     status: "online",
     hasPrivacyPage: true,
+    isService: true,
+    team: {
+      settings: {
+        isTrial: false,
+      },
+    },
+    templatedFrom: null,
+    publishedFlows: [
+      {
+        id: "4",
+      },
+    ],
+    firstOnlineAt: null,
+  },
+};
+
+export const justFlow: GetFlowStatus = {
+  flow: {
+    id: "abc123",
+    status: "offline",
+    hasPrivacyPage: true,
+    isService: false,
     team: {
       settings: {
         isTrial: false,

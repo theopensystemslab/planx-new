@@ -1,7 +1,9 @@
 import Wrapper from "@planx/components/fixtures/Wrapper";
 import { Meta, StoryObj } from "@storybook/tanstack-react";
+import { http, HttpResponse } from "msw";
 
 import Editor from "./Editor";
+import { osTileError } from "./mocks/osTileError";
 import { presentationalPropsMock } from "./mocks/propsMock";
 import { Presentational, PresentationalProps } from "./Public";
 
@@ -21,6 +23,24 @@ export const Basic: StoryObj = {
 };
 
 export const WithPropertyTypeOverride: StoryObj = {
+  render: () => (
+    <Presentational
+      {...defaultPresentationalProps}
+      showPropertyTypeOverride={true}
+    />
+  ),
+};
+
+export const OSTileError: StoryObj = {
+  parameters: {
+    msw: {
+      handlers: [
+        http.get("*/proxy/ordnance-survey/maps/vector/v1/", () =>
+          HttpResponse.json(osTileError, { status: 500 }),
+        ),
+      ],
+    },
+  },
   render: () => (
     <Presentational
       {...defaultPresentationalProps}

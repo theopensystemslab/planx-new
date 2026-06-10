@@ -70,6 +70,8 @@ const getWsLink = () => {
       uri: import.meta.env.VITE_APP_HASURA_WEBSOCKET!,
       options: {
         reconnect: true,
+        lazy: true,
+        inactivityTimeout: 30000, // 30s
         connectionParams: async () => {
           const jwt = await getJWT();
           return {

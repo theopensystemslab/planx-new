@@ -24,7 +24,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "doncaster",
           domain: "planningservices.doncaster.gov.uk",
-          cloudFrontState: "legacy-with-validation",
+          cloudFrontState: "cutover-ongoing",
           certificateLocation: "pulumiConfig",
         },
         {
@@ -106,6 +106,16 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
           domain: "planningservices.canterbury.gov.uk",
           cloudFrontState: "legacy-with-validation",
         },
+        {
+          name: "northumberland",
+          domain: "planningservices.northumberland.gov.uk",
+          cloudFrontState: "shared-final",
+        },
+        {
+          name: "coventry",
+          domain: "planningservices.coventry.gov.uk",
+          cloudFrontState: "validation-only",
+        }
       ]
     : [
         // we keep one custom domain on staging to function as a canary (monitored by UptimeRobot)

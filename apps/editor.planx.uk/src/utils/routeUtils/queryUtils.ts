@@ -16,6 +16,7 @@ export interface FlowEditorData {
   flowStatus: FlowStatus;
   templatedFrom: string;
   isTemplate: boolean;
+  isService: boolean;
   isFlowPublished: boolean;
   template?: {
     id: string;
@@ -35,6 +36,7 @@ export interface GetFlowEditorDataResponse {
     status: FlowStatus;
     templatedFrom: string;
     isTemplate: boolean;
+    isService: boolean;
     publishedFlowsAggregate: {
       aggregate: {
         count: number;
@@ -80,6 +82,7 @@ export const getFlowEditorData = async (
           status
           templatedFrom: templated_from
           isTemplate: is_template
+          isService: is_service
           publishedFlowsAggregate: published_flows_aggregate {
             aggregate {
               count
@@ -117,6 +120,7 @@ export const getFlowEditorData = async (
     flowStatus: flow.status,
     templatedFrom: flow.templatedFrom,
     isTemplate: flow.isTemplate,
+    isService: flow.isService,
     isFlowPublished: flow.publishedFlowsAggregate?.aggregate.count > 0,
     template: flow.template || undefined,
   };
@@ -172,7 +176,10 @@ export const getExternalPortals = async (
   const { data } = await client.query({
     query: gql`
       query GetFlows {
-        flows(order_by: {slug: asc}, where: {archived_at: {_is_null: true}}) {
+        flows(
+          order_by: { slug: asc }
+          where: { archived_at: { _is_null: true } }
+        ) {
           id
           slug
           name
