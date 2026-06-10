@@ -1,5 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { getEntityNames } from "lib/planningData/requests";
+import {
+  getEntityNames,
+  getPlanningConstraintsSchema,
+} from "lib/planningData/requests";
 import { useEffect, useState } from "react";
 
 export type UseFileUrlProps =
@@ -52,4 +55,16 @@ export const usePlanningDataEntityNames = (fn: string) => {
   });
 
   return query;
+};
+
+export const usePlanningConstraintsSchema = (fn: string, teamSlug?: string) => {
+  return useQuery({
+    queryKey: [
+      teamSlug ? `planning-constraints-${teamSlug}` : `planning-constraints`,
+    ],
+    queryFn: () => getPlanningConstraintsSchema(teamSlug),
+    enabled: fn === "property.constraints.planning",
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+  });
 };

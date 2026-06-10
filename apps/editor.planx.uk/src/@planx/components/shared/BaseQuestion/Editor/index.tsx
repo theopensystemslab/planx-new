@@ -22,7 +22,10 @@ import { Switch } from "ui/shared/Switch";
 
 import { InternalNotes } from "../../../../../ui/editor/InternalNotes";
 import { DataFieldAutocomplete } from "../../DataFieldAutocomplete";
-import { usePlanningDataEntityNames } from "../../hooks";
+import {
+  usePlanningConstraintsSchema,
+  usePlanningDataEntityNames,
+} from "../../hooks";
 import { ICONS } from "../../icons";
 import { clearOptionsDataFields, getOptionsSchemaByFn } from "../../utils";
 import MoreInformation from "./MoreInformation";
@@ -40,17 +43,24 @@ import { Props } from "./types";
 const BaseQuestionComponent: React.FC<Props> = (props) => {
   const { type, formik } = props;
 
-  const schema = useStore().getFlowSchema();
+  const [isTemplate, teamSlug, schema] = useStore((state) => [
+    state.isTemplate,
+    state.teamSlug,
+    state.getFlowSchema(),
+  ]);
+
   const currentOptionVals = formik.values.options?.map(
     (option) => option.data?.val,
   );
   const { data: planningDataSchema } = usePlanningDataEntityNames(
     formik.values.fn || "",
   );
+  const { data: planningConstraintsSchema } = usePlanningConstraintsSchema(
+    formik.values.fn || "",
+    teamSlug,
+  );
 
   const focusRef = useRef<HTMLInputElement | null>(null);
-
-  const isTemplate = useStore.getState().isTemplate;
 
   const title =
     type === ComponentType.Question ? "Question" : "Responsive question";
@@ -176,7 +186,9 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
                 showValueField: !!formik.values.fn,
                 schema: getOptionsSchemaByFn(
                   formik.values.fn,
-                  planningDataSchema ?? schema?.options,
+                  planningConstraintsSchema ??
+                    planningDataSchema ??
+                    schema?.options,
                   currentOptionVals,
                 ),
               }}

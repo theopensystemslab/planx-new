@@ -85,3 +85,20 @@ export const getEntityNames = async (dataset: string) => {
 
   return data.entities.map((entity) => entity.name).sort();
 };
+
+/**
+ * Get all possible data values for `property.constraints.planning`
+ *   Includes granular Article Four values for applicable teams
+ */
+export const getPlanningConstraintsSchema = async (teamSlug?: string) => {
+  const { data } = await axios.get<string[]>(`/planning-constraints-schema`, {
+    baseURL: import.meta.env.VITE_APP_API_URL,
+    ...(teamSlug && {
+      params: {
+        localAuthority: teamSlug,
+      },
+    }),
+  });
+
+  return data;
+};

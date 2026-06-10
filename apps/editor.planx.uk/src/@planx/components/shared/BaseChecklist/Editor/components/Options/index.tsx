@@ -1,10 +1,13 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { AnyOption } from "@planx/components/Option/model";
 import { DEFAULT_RULE } from "@planx/components/ResponsiveChecklist/model";
-import { usePlanningDataEntityNames } from "@planx/components/shared/hooks";
+import {
+  usePlanningConstraintsSchema,
+  usePlanningDataEntityNames,
+} from "@planx/components/shared/hooks";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { partition } from "lodash";
-import React from "react";
+import { useStore } from "pages/FlowEditor/lib/store";
 import { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -26,6 +29,8 @@ export const Options = <T extends AnyChecklist>({
   disabled?: boolean;
   isTemplatedNode?: boolean;
 }) => {
+  const teamSlug = useStore((state) => state.teamSlug);
+
   const [exclusiveOptions, nonExclusiveOptions] = partition<AnyOption>(
     formik.values.options,
     (option) => option.data.exclusive,
@@ -36,6 +41,10 @@ export const Options = <T extends AnyChecklist>({
   const { schema, currentOptionVals } = useCurrentOptions(formik);
   const { data: planningDataSchema } = usePlanningDataEntityNames(
     formik.values.fn || "",
+  );
+  const { data: planningConstraintsSchema } = usePlanningConstraintsSchema(
+    formik.values.fn || "",
+    teamSlug,
   );
 
   return (
@@ -79,7 +88,7 @@ export const Options = <T extends AnyChecklist>({
               showValueField: !!formik.values.fn,
               schema: getOptionsSchemaByFn(
                 formik.values.fn,
-                planningDataSchema ?? schema,
+                planningConstraintsSchema ?? planningDataSchema ?? schema,
                 currentOptionVals,
               ),
             }}
