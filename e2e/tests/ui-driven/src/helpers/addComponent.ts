@@ -30,7 +30,7 @@ const getComponentTitle = (type: ComponentType): string => {
     [ComponentType.Result]: "Result",
     [ComponentType.Confirmation]: "Confirmation",
     [ComponentType.NextSteps]: "Next steps",
-    [ComponentType.FileUpload]: "Upload",
+    [ComponentType.FileUpload]: "File upload",
     [ComponentType.FileUploadAndLabel]: "Upload and label",
     [ComponentType.List]: "List",
     [ComponentType.Content]: "Content",
@@ -40,7 +40,7 @@ const getComponentTitle = (type: ComponentType): string => {
     [ComponentType.ExternalPortal]: "Flow",
     [ComponentType.Section]: "Section",
     [ComponentType.SetValue]: "Set value",
-    [ComponentType.SetFee]: "Set fee",
+    [ComponentType.SetFee]: "Set fees",
     [ComponentType.Pay]: "Pay",
     [ComponentType.Send]: "Send",
     [ComponentType.Calculate]: "Calculate",
@@ -279,6 +279,8 @@ export const createQuestionWithDataFieldOptions = async (
   dataField: string,
 ) => {
   await locatingNode.click();
+  await page.getByTestId("add-component-modal").waitFor();
+  await page.getByText("Question", { exact: true }).click();
   await page.getByRole("dialog").waitFor();
   await page.getByPlaceholder("Text").fill(questionText);
   await page.getByRole("combobox", { name: "Data field" }).click();
