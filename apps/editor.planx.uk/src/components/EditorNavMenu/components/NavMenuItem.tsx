@@ -14,6 +14,7 @@ const NavMenuItem = ({
   disabled,
   isNew,
   badgeCount,
+  badgeColor = "info",
   isActive,
   isExternal,
   compact,
@@ -41,8 +42,15 @@ const NavMenuItem = ({
         }}
       >
         <Icon />
-        {badgeCount ? (
-          <BadgeChip label={badgeCount} color="info" sx={{ marginLeft: 0 }} />
+        {badgeCount !== undefined ? (
+          <BadgeChip
+            label={badgeCount}
+            color={badgeColor}
+            sx={{
+              marginLeft: 0,
+              "& .MuiChip-label": { padding: "0 4px" },
+            }}
+          />
         ) : null}
       </Box>
     </MenuButton>
@@ -55,6 +63,7 @@ const NavMenuItem = ({
       disabled={disabled}
       isNew={isNew}
       badgeCount={badgeCount}
+      badgeColor={badgeColor}
       onClick={onClick}
       sx={sx}
     />

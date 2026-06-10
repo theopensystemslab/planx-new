@@ -1,6 +1,6 @@
 import NorthEastIcon from "@mui/icons-material/NorthEast";
+import { ChipProps } from "@mui/material/Chip";
 import { SxProps, Theme } from "@mui/material/styles";
-import React from "react";
 
 import { BadgeChip, MenuButton, MenuTitle, StyledChip } from "../styles";
 import { Route } from "../types";
@@ -10,7 +10,8 @@ export interface NavMenuButtonProps {
   Icon: Route["Icon"];
   disabled?: boolean;
   isNew?: boolean;
-  badgeCount?: number;
+  badgeCount?: string | number;
+  badgeColor?: ChipProps["color"];
   isActive: boolean;
   isExternal: boolean;
   onClick: () => void;
@@ -23,6 +24,7 @@ const NavMenuButton = ({
   disabled,
   isNew,
   badgeCount,
+  badgeColor = "info",
   isActive,
   isExternal,
   onClick,
@@ -42,7 +44,9 @@ const NavMenuButton = ({
         {title}
       </MenuTitle>
       {isNew && <StyledChip label="new" size="small" color="success" />}
-      {badgeCount ? <BadgeChip label={badgeCount} color="info" /> : null}
+      {badgeCount !== undefined ? (
+        <BadgeChip label={badgeCount} color={badgeColor} />
+      ) : null}
       {showExternalIcon && (
         <NorthEastIcon sx={{ fontSize: "0.875rem", ml: "auto", mt: 0.2 }} />
       )}
