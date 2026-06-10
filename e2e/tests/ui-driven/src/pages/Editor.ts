@@ -1,5 +1,3 @@
-import { ComponentType } from "@opensystemslab/planx-core/types";
-
 import { expect, type Locator, type Page } from "@playwright/test";
 import {
   createAddressInput,
@@ -327,15 +325,11 @@ export class PlaywrightEditor {
     await internalPortalButton.click();
 
     // create a notice inside the portal
-    await this.page.locator(".hanger > a").last().click();
-    await this.page.getByRole("dialog").waitFor();
-    await this.page
-      .locator("select")
-      .selectOption({ value: ComponentType.Notice.toString() });
-    await this.page
-      .getByPlaceholder("Notice")
-      .fill("A notice inside a portal!");
-    await this.page.locator('button[form="modal"][type="submit"]').click();
+    await createNotice(
+      this.page,
+      this.page.locator(".hanger > a").last(),
+      "A notice inside a portal!",
+    );
   }
 
   async createExternalPortal() {

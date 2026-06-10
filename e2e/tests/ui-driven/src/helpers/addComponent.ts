@@ -8,6 +8,47 @@ export type TemplateNodeConfig = {
   required: boolean;
 };
 
+const getComponentTitle = (type: ComponentType): string => {
+  const COMPONENT_TITLES = {
+    [ComponentType.Question]: "Question",
+    [ComponentType.ResponsiveQuestion]: "Responsive question",
+    [ComponentType.Checklist]: "Checklist",
+    [ComponentType.ResponsiveChecklist]: "Responsive checklist",
+    [ComponentType.Notice]: "Notice",
+    [ComponentType.TextInput]: "Text input",
+    [ComponentType.NumberInput]: "Number input",
+    [ComponentType.DateInput]: "Date input",
+    [ComponentType.AddressInput]: "Address input",
+    [ComponentType.ContactInput]: "Contact input",
+    [ComponentType.TaskList]: "Task list",
+    [ComponentType.Review]: "Review",
+    [ComponentType.FindProperty]: "Find property",
+    [ComponentType.PropertyInformation]: "Property information",
+    [ComponentType.PlanningConstraints]: "Planning constraints",
+    [ComponentType.MapAndLabel]: "Map and label",
+    [ComponentType.DrawBoundary]: "Draw boundary",
+    [ComponentType.Result]: "Result",
+    [ComponentType.Confirmation]: "Confirmation",
+    [ComponentType.NextSteps]: "Next steps",
+    [ComponentType.FileUpload]: "File upload",
+    [ComponentType.FileUploadAndLabel]: "Upload and label",
+    [ComponentType.List]: "List",
+    [ComponentType.Content]: "Content",
+    [ComponentType.Filter]: "Filter",
+    [ComponentType.Feedback]: "Feedback",
+    [ComponentType.InternalPortal]: "Folder", // note that internal and external portals have different titles!
+    [ComponentType.ExternalPortal]: "Flow",
+    [ComponentType.Section]: "Section",
+    [ComponentType.SetValue]: "Set value",
+    [ComponentType.SetFee]: "Set fees",
+    [ComponentType.Pay]: "Pay",
+    [ComponentType.Send]: "Send",
+    [ComponentType.Calculate]: "Calculate",
+    [ComponentType.Page]: "Page",
+  } as const;
+  return COMPONENT_TITLES[type];
+};
+
 const createBaseComponent = async (
   page: Page,
   locatingNode: Locator,
@@ -17,11 +58,11 @@ const createBaseComponent = async (
   templateConfig?: TemplateNodeConfig,
 ) => {
   await locatingNode.click();
-  await page.getByRole("dialog").waitFor();
-  const headerSelect = page.getByRole("heading", { name: "Question close" });
-  await headerSelect.locator("select").selectOption({ value: type.toString() });
+  await page.getByTestId("add-component-modal").waitFor();
 
-  await expect(page.getByTestId("header-select")).toHaveValue(type.toString());
+  const componentTitle = getComponentTitle(type);
+  await page.getByText(componentTitle, { exact: true }).click();
+  await page.getByRole("dialog").waitFor();
 
   switch (type) {
     case ComponentType.Question:
@@ -237,6 +278,8 @@ export const createQuestionWithDataFieldOptions = async (
   dataField: string,
 ) => {
   await locatingNode.click();
+  await page.getByTestId("add-component-modal").waitFor();
+  await page.getByText("Question", { exact: true }).click();
   await page.getByRole("dialog").waitFor();
   await page.getByPlaceholder("Text").fill(questionText);
   await page.getByRole("combobox", { name: "Data field" }).click();
