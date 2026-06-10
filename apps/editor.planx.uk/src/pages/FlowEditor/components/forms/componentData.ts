@@ -15,7 +15,7 @@ export interface Category {
 
 export const ALL_CATEGORIES: Category[] = [
   {
-    label: "Question",
+    label: "Questions",
     items: [
       {
         type: TYPES.Question,

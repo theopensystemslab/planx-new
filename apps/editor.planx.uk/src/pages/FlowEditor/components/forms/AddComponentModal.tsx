@@ -192,6 +192,7 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
     <Popover
       open
       onClose={handleClose}
+      data-testid="add-component-modal"
       anchorReference="anchorPosition"
       anchorPosition={anchorPosition}
       transformOrigin={transformOrigin}
