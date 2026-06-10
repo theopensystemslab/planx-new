@@ -8,6 +8,8 @@ import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType } from "ui/editor/FlowTag/types";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
+import { useGetFlowDetails } from "./useGetFlowDetails";
+
 export const BREADCRUMBS_HEIGHT = 3;
 
 const BreadcrumbsContainer = styled(Box)(({ theme }) => ({
@@ -42,17 +44,18 @@ const BreadcrumbsLink = styled(CustomLink)(({ theme }) => ({
 
 const Breadcrumbs: React.FC = () => {
   const params = useParams({ strict: false });
-  const team = useStore((state) => state.getTeam());
+  const { team: teamSlug, flow: flowParam } = params;
+  const flowSlug = flowParam?.split(",")[0]; // in folders, the node ID is appended to flow slug--so we need to separate it
+
+  const { data } = useGetFlowDetails(teamSlug, flowSlug);
   const isStandalone = useStore(
     (state) => state.previewEnvironment === "standalone",
   );
-  const flowSlug = useStore((state) => state.flowSlug);
-  const flowStatus = useStore((state) => state.flowStatus);
-  const isService = useStore((state) => state.isService);
 
   const canUserEditTeam = useStore((state) => state.canUserEditTeam);
 
-  if (!params.flow) return null;
+  if (!params.team || !params.flow || !data?.flows) return null;
+  const { status: flowStatus, isService } = data.flows[0];
 
   return (
     <BreadcrumbsContainer>
@@ -75,8 +78,8 @@ const Breadcrumbs: React.FC = () => {
             <BreadcrumbsLink
               to="/app/$team/$flow"
               params={{
-                team: team.slug,
-                flow: flowSlug,
+                team: params.team,
+                flow: flowSlug ?? params.flow,
               }}
               {...(isStandalone && { target: "_blank" })}
               variant="body1"
@@ -87,13 +90,13 @@ const Breadcrumbs: React.FC = () => {
           </>
         )}
       </BreadcrumbsRoot>
-      {params.flow && isService && flowStatus && canUserEditTeam(team.slug) && (
+      {isService && flowStatus && canUserEditTeam(params.team) && (
         <Box sx={(theme) => ({ color: theme.palette.text.primary })}>
           <BreadcrumbsLink
             to="/app/$team/$flow/settings"
             params={{
-              team: team.slug,
-              flow: flowSlug,
+              team: teamSlug ?? params.team,
+              flow: flowSlug ?? params.flow,
             }}
             title="Update service status"
             sx={{ textDecoration: "none" }}
