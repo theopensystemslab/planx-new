@@ -71,7 +71,7 @@ export const updateTemplatedFlow = async (
   const updateTemplatedFlowTransactionResponse =
     await $api.client.request<UpdateTemplatedFlowTransactionResponse>(
       gql`
-        mutation UpdateTemplatedFlowTransation(
+        mutation UpdateTemplatedFlowTransaction(
           $data: jsonb!
           $flowId: uuid!
           $comment: String!

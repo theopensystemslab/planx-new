@@ -101,7 +101,7 @@ describe("success", () => {
     });
 
     queryMock.mockQuery({
-      name: "UpdateTemplatedFlowTransation",
+      name: "UpdateTemplatedFlowTransaction",
       matchOnVariables: false,
       data: {
         flow: {
@@ -145,7 +145,7 @@ describe("success", () => {
 
     // Without edits to merge or "reconcile", then the templated flow is updated to exactly match the source data
     queryMock.mockQuery({
-      name: "UpdateTemplatedFlowTransation",
+      name: "UpdateTemplatedFlowTransaction",
       matchOnVariables: false,
       data: {
         flow: {
