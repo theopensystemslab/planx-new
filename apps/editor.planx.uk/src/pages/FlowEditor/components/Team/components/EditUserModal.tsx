@@ -92,7 +92,6 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
       formatted.email !== (member.email ?? "").toLowerCase();
 
     const roleChanged = values.role !== member.role;
-    console.log({ userInfoChanged, roleChanged });
 
     if (userInfoChanged) {
       await updateUserOnly({
