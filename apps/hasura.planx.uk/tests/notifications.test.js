@@ -42,8 +42,13 @@ describe("notifications", () => {
       expect(i.queries).toContain("notifications");
     });
 
-    test("cannot create, update, or delete notifications", () => {
-      expect(i).toHaveNoMutationsFor("notifications");
+    test("can delete notifications", () => {
+      expect(i.mutations).toContain("delete_notifications");
+    });
+
+    test("cannot create or update notifications", () => {
+      expect(i.mutations).not.toContain("insert_notifications");
+      expect(i.mutations).not.toContain("update_notifications");
     });
   });
 
@@ -57,8 +62,33 @@ describe("notifications", () => {
       expect(i.queries).toContain("notifications");
     });
 
-    test("cannot create, update, or delete notifications", () => {
-      expect(i).toHaveNoMutationsFor("notifications");
+    test("can delete notifications in their own team", () => {
+      expect(i.mutations).toContain("delete_notifications");
+    });
+
+    test("cannot create or update notifications", () => {
+      expect(i.mutations).not.toContain("insert_notifications");
+      expect(i.mutations).not.toContain("update_notifications");
+    });
+  });
+
+  describe("teamEditor", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamEditor");
+    });
+
+    test("can query notifications", () => {
+      expect(i.queries).toContain("notifications");
+    });
+
+    test("can delete notifications in their own team", () => {
+      expect(i.mutations).toContain("delete_notifications");
+    });
+
+    test("cannot create or update notifications", () => {
+      expect(i.mutations).not.toContain("insert_notifications");
+      expect(i.mutations).not.toContain("update_notifications");
     });
   });
 
