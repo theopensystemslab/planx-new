@@ -115,17 +115,3 @@ delete_permissions:
               - role:
                   _eq: teamAdmin
     comment: ""
-  - role: teamEditor
-    permission:
-      filter:
-        _and:
-          - team:
-              members:
-                _and:
-                  - user_id:
-                      _eq: X-Hasura-User-Id
-                  - role:
-                      _eq: teamEditor
-          - role:
-              _eq: teamEditor
-    comment: teamEditors can revoke membership of other teamEditors in their team
