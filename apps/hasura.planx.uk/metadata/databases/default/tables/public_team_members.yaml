@@ -32,7 +32,7 @@ insert_permissions:
         - user_id
         - role
         - id
-    comment: "teamAdmins can assign other teamAdmins to their team"
+    comment: teamAdmins can assign other teamAdmins to their team
 select_permissions:
   - role: analyst
     permission:
@@ -104,6 +104,17 @@ delete_permissions:
   - role: platformAdmin
     permission:
       filter: {}
+  - role: teamAdmin
+    permission:
+      filter:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: X-Hasura-User-Id
+              - role:
+                  _eq: teamAdmin
+    comment: ""
   - role: teamEditor
     permission:
       filter:

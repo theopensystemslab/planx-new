@@ -66,7 +66,7 @@ insert_permissions:
         - id
         - last_name
         - updated_at
-    comment: "teamAdmin can insert other users. The permission boundary is enforced on the team_members table."
+    comment: teamAdmin can insert other users. The permission boundary is enforced on the team_members table.
 select_permissions:
   - role: analyst
     permission:
@@ -151,7 +151,7 @@ update_permissions:
                 - role:
                     _eq: teamAdmin
       check: null
-    comment: "teamAdmins can update the details of other teamEditors and teamAdmins, within their team"
+    comment: teamAdmins can update the details of other teamEditors and teamAdmins, within their team
 event_triggers:
   - name: send_user_welcome_emails
     definition:
