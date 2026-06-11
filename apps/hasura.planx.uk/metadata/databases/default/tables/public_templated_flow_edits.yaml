@@ -35,6 +35,24 @@ insert_permissions:
           url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
         type: http
     comment: ""
+  - role: teamAdmin
+    permission:
+      check:
+        flow:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: X-Hasura-User-Id
+                - role:
+                    _eq: teamAdmin
+      columns:
+        - data
+        - created_at
+        - updated_at
+        - flow_id
+        - id
+    comment: ""
   - role: teamEditor
     permission:
       check:

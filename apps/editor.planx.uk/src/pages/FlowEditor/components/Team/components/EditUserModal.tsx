@@ -12,11 +12,7 @@ import React from "react";
 import { Switch } from "ui/shared/Switch";
 
 import { upsertMemberSchema } from "../formSchema";
-import {
-  GET_USERS_FOR_TEAM_QUERY,
-  UPDATE_TEAM_MEMBER,
-  UPDATE_USER_DETAILS,
-} from "../queries";
+import { GET_USERS_FOR_TEAM_QUERY, UPDATE_TEAM_MEMBER } from "../queries";
 import { type EditUserModalProps, type UserFormValues } from "../types";
 import { EmailField } from "./Fields/EmailField";
 import { NameFields } from "./Fields/NameFields";
@@ -25,7 +21,6 @@ import { ModalActions } from "./ModalActions";
 export const EditUserModal: React.FC<EditUserModalProps> = ({
   onClose,
   member,
-  showTeamAdminSwitch,
 }) => {
   const toast = useToast();
   const teamId = useStore((state) => state.teamId);
@@ -34,17 +29,6 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
     onClose();
     toast.success(successMessage);
   };
-
-  const [updateUserOnly] = useMutation(UPDATE_USER_DETAILS, {
-    refetchQueries: [
-      {
-        query: GET_USERS_FOR_TEAM_QUERY,
-        variables: { teamSlug: useStore.getState().teamSlug },
-      },
-    ],
-    onCompleted: () => handleCompleted("Successfully updated user details"),
-    onError: () => toast.error("Failed to update the user, please try again"),
-  });
 
   const [updateTeamMember, { loading }] = useMutation(UPDATE_TEAM_MEMBER, {
     refetchQueries: [
@@ -60,31 +44,18 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
   const handleSubmit = (values: UserFormValues) => {
     const formatted = { ...values, email: values.email.toLowerCase() };
 
-    if (showTeamAdminSwitch) {
-      updateTeamMember({
-        variables: {
-          userId: member.id,
-          teamId: teamId,
-          role: values.role,
-          userValues: {
-            first_name: formatted.firstName,
-            last_name: formatted.lastName,
-            email: formatted.email,
-          },
+    updateTeamMember({
+      variables: {
+        userId: member.id,
+        teamId: teamId,
+        role: values.role,
+        userValues: {
+          first_name: formatted.firstName,
+          last_name: formatted.lastName,
+          email: formatted.email,
         },
-      });
-    } else {
-      updateUserOnly({
-        variables: {
-          userId: member.id,
-          userValues: {
-            first_name: formatted.firstName,
-            last_name: formatted.lastName,
-            email: formatted.email,
-          },
-        },
-      });
-    }
+      },
+    });
   };
 
   return (
@@ -117,21 +88,19 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
               <Box sx={{ mt: 2, mb: 2 }}>
                 <NameFields />
               </Box>
-              {showTeamAdminSwitch && (
-                <Switch
-                  name="role"
-                  checked={formik.values.role === "teamAdmin"}
-                  onChange={() =>
-                    formik.setFieldValue(
-                      "role",
-                      formik.values.role === "teamEditor"
-                        ? "teamAdmin"
-                        : "teamEditor",
-                    )
-                  }
-                  label={"Team Admin"}
-                />
-              )}
+              <Switch
+                name="role"
+                checked={formik.values.role === "teamAdmin"}
+                onChange={() =>
+                  formik.setFieldValue(
+                    "role",
+                    formik.values.role === "teamEditor"
+                      ? "teamAdmin"
+                      : "teamEditor",
+                  )
+                }
+                label={"Team Admin"}
+              />
             </DialogContent>
             <DialogActions>
               <ModalActions

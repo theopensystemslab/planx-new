@@ -200,6 +200,37 @@ insert_permissions:
           timeout: 10
           url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
         type: http
+  - role: teamAdmin
+    permission:
+      check:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: X-Hasura-User-Id
+              - role:
+                  _eq: teamAdmin
+      set:
+        creator_id: x-hasura-user-id
+      columns:
+        - copied_from
+        - created_at
+        - creator_id
+        - data
+        - description
+        - id
+        - is_listed_on_lps
+        - is_template
+        - limitations
+        - name
+        - settings
+        - slug
+        - summary
+        - team_id
+        - templated_from
+        - updated_at
+        - version
+    comment: ""
   - role: teamEditor
     permission:
       check:
@@ -503,6 +534,40 @@ update_permissions:
           timeout: 10
           url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
         type: http
+  - role: teamAdmin
+    permission:
+      columns:
+        - archived_at
+        - can_create_from_copy
+        - category
+        - copied_from
+        - data
+        - description
+        - email_template
+        - is_listed_on_lps
+        - is_service
+        - limitations
+        - name
+        - settings
+        - slug
+        - status
+        - submission_email_id
+        - summary
+        - team_id
+        - templated_from
+      filter:
+        _and:
+          - team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: X-Hasura-User-Id
+                  - role:
+                      _eq: teamAdmin
+          - deleted_at:
+              _is_null: true
+      check: {}
+    comment: ""
   - role: teamEditor
     permission:
       columns:

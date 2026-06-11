@@ -28,6 +28,29 @@ select_permissions:
         - team_id
       filter: {}
     comment: ""
+  - role: teamAdmin
+    permission:
+      columns:
+        - retry
+        - team_id
+        - response
+        - address
+        - event_id
+        - event_type
+        - flow_name
+        - status
+        - created_at
+        - flow_id
+        - session_id
+      filter:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: X-Hasura-User-Id
+              - role:
+                  _eq: teamAdmin
+    comment: ""
   - role: teamEditor
     permission:
       columns:

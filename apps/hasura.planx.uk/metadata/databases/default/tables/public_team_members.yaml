@@ -17,7 +17,7 @@ insert_permissions:
         - user_id
         - role
         - id
-  - role: teamEditor
+  - role: teamAdmin
     permission:
       check:
         _and:
@@ -27,15 +27,13 @@ insert_permissions:
                   - user_id:
                       _eq: X-Hasura-User-Id
                   - role:
-                      _eq: teamEditor
-          - role:
-              _eq: teamEditor
+                      _eq: teamAdmin
       columns:
         - team_id
         - user_id
         - role
         - id
-    comment: teamEditors can assign other teamEditors to their team
+    comment: ""
 select_permissions:
   - role: analyst
     permission:
@@ -80,10 +78,45 @@ update_permissions:
         - id
       filter: {}
       check: {}
+  - role: teamAdmin
+    permission:
+      columns:
+        - role
+      filter:
+        _and:
+          - team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: X-Hasura-User-Id
+                  - role:
+                      _eq: teamAdmin
+          - _or:
+              - role:
+                  _eq: teamEditor
+              - role:
+                  _eq: teamAdmin
+      check: null
+    comment: ""
 delete_permissions:
   - role: platformAdmin
     permission:
       filter: {}
+  - role: teamAdmin
+    permission:
+      filter:
+        _and:
+          - team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: X-Hasura-User-Id
+                  - _or:
+                      - role:
+                          _eq: teamEditor
+                      - role:
+                          _eq: teamAdmin
+    comment: ""
   - role: teamEditor
     permission:
       filter:

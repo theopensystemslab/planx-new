@@ -20,6 +20,26 @@ insert_permissions:
         - created_at
         - updated_at
         - flow_id
+  - role: teamAdmin
+    permission:
+      check:
+        flow:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: X-Hasura-User-Id
+                - role:
+                    _eq: teamAdmin
+      columns:
+        - id
+        - actor_id
+        - version
+        - data
+        - created_at
+        - updated_at
+        - flow_id
+    comment: ""
   - role: teamEditor
     permission:
       check:
@@ -87,6 +107,27 @@ update_permissions:
         - flow_id
       filter: {}
       check: {}
+  - role: teamAdmin
+    permission:
+      columns:
+        - id
+        - actor_id
+        - version
+        - data
+        - created_at
+        - updated_at
+        - flow_id
+      filter:
+        flow:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: X-Hasura-User-Id
+                - role:
+                    _eq: teamAdmin
+      check: {}
+    comment: ""
   - role: teamEditor
     permission:
       columns:

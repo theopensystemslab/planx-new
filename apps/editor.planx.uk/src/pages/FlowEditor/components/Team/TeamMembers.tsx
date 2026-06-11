@@ -37,11 +37,8 @@ export const TeamMembers = () => {
 
   const { platformAdmins, activeMembers, archivedMembers, loading, error } =
     useTeamMembers(teamSlug);
-  const {
-    canManageActiveMembers,
-    canManageTeamAdmins,
-    canManagePlatformAdmins,
-  } = useTeamManagementPermissions();
+  const { canManageActiveMembers, canManagePlatformAdmins } =
+    useTeamManagementPermissions();
   const [openAccordion, setOpenAccordion] = useState(false);
 
   if (error) return <ErrorSummary message={error.message} />;
@@ -63,7 +60,6 @@ export const TeamMembers = () => {
             showAddMemberButton={canManageActiveMembers}
             showEditMemberButton={canManageActiveMembers}
             showRemoveMemberButton={canManageActiveMembers}
-            showTeamAdminSwitch={canManagePlatformAdmins || canManageTeamAdmins}
           />
         )}
       </SettingsSection>
