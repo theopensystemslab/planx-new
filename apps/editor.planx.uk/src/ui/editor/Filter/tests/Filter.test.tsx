@@ -76,7 +76,7 @@ describe("the UI interactions of the Filter component", () => {
   it("displays the filter options by default", async () => {
     await setupTestEnvironment();
 
-    expect(screen.getByLabelText("Service status")).toBeVisible();
+    expect(screen.getByLabelText("Online status")).toBeVisible();
     expect(screen.getByLabelText("Name")).toBeVisible();
   });
 });
@@ -84,7 +84,7 @@ describe("the UI interactions of the Filter component", () => {
 describe("Filter functionality", () => {
   it("displays filter chips when URL params are set", async () => {
     // Setup with initial URL param for "online" filter
-    await setupTestEnvironment({ "service-status": "online" });
+    await setupTestEnvironment({ "online-status": "online" });
 
     // Expect online chip to be visible
     const onlineChip = screen.getByRole("button", { name: "Online" });
@@ -93,9 +93,7 @@ describe("Filter functionality", () => {
 
   it("clicking a chip toggles the filter off", async () => {
     // Setup with initial URL param
-    const { user } = await setupTestEnvironment({
-      "service-status": "offline",
-    });
+    const { user } = await setupTestEnvironment({ "online-status": "offline" });
 
     // Chip should be visible initially
     const offlineChip = screen.getByRole("button", { name: "Offline" });
@@ -112,8 +110,8 @@ describe("Filter functionality", () => {
     });
 
     // Verify the search function would set the value to undefined
-    const result = getSearchResult(0, { "service-status": "offline" });
-    expect(result["service-status"]).toBeUndefined();
+    const result = getSearchResult(0, { "online-status": "offline" });
+    expect(result["online-status"]).toBeUndefined();
   });
 
   it("selecting an option from dropdown applies the filter", async () => {
@@ -125,7 +123,7 @@ describe("Filter functionality", () => {
     ).not.toBeInTheDocument();
 
     // Open combobox and select "Online"
-    await user.click(screen.getByRole("combobox", { name: "Service status" }));
+    await user.click(screen.getByRole("combobox", { name: "Online status" }));
     await user.click(screen.getByRole("option", { name: "Online" }));
 
     // Verify navigate was called to set the filter
@@ -137,28 +135,28 @@ describe("Filter functionality", () => {
 
     // Verify the search function would set the correct value
     const result = getSearchResult(0);
-    expect(result["service-status"]).toBe("online");
+    expect(result["online-status"]).toBe("online");
   });
 
   it("applying a single filter updates URL correctly", async () => {
     const { user } = await setupTestEnvironment();
 
     // Select "Offline" from dropdown
-    await user.click(screen.getByRole("combobox", { name: "Service status" }));
+    await user.click(screen.getByRole("combobox", { name: "Online status" }));
     await user.click(screen.getByRole("option", { name: "Offline" }));
 
     // Verify navigate was called with correct params
     expect(mockNavigate).toHaveBeenCalledTimes(1);
 
     const result = getSearchResult(0);
-    expect(result["service-status"]).toBe("offline");
+    expect(result["online-status"]).toBe("offline");
   });
 
   it("applying multiple filters updates URL with multiple params", async () => {
     const { user } = await setupTestEnvironment();
 
     // Select first filter
-    await user.click(screen.getByRole("combobox", { name: "Service status" }));
+    await user.click(screen.getByRole("combobox", { name: "Online status" }));
     await user.click(screen.getByRole("option", { name: "Online" }));
 
     // Select second filter
@@ -168,20 +166,18 @@ describe("Filter functionality", () => {
     // Verify navigate was called twice (once for each filter)
     expect(mockNavigate).toHaveBeenCalledTimes(2);
 
-    // Verify first call set service-status
+    // Verify first call set online-status
     const firstResult = getSearchResult(0);
-    expect(firstResult["service-status"]).toBe("online");
+    expect(firstResult["online-status"]).toBe("online");
 
     // Verify second call set name filter
-    const secondResult = getSearchResult(1, { "service-status": "online" });
+    const secondResult = getSearchResult(1, { "online-status": "online" });
     expect(secondResult["name"]).toBe("online-mock-2");
   });
 
   it("removing a filter clears it from URL params", async () => {
     // Start with a filter already applied
-    const { user } = await setupTestEnvironment({
-      "service-status": "offline",
-    });
+    const { user } = await setupTestEnvironment({ "online-status": "offline" });
 
     // Chip should be visible
     const offlineChip = screen.getByRole("button", { name: "Offline" });
@@ -193,7 +189,7 @@ describe("Filter functionality", () => {
     // Verify navigate was called to clear the filter
     expect(mockNavigate).toHaveBeenCalledTimes(1);
 
-    const result = getSearchResult(0, { "service-status": "offline" });
-    expect(result["service-status"]).toBeUndefined();
+    const result = getSearchResult(0, { "online-status": "offline" });
+    expect(result["online-status"]).toBeUndefined();
   });
 });

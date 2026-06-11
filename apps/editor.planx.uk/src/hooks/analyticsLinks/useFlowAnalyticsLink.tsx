@@ -37,16 +37,16 @@ const DASHBOARD_SLUG_MAP: Record<string, string> = {
 
 export const getAnalyticsDashboardId = ({
   flowSlug,
-  hasSendComponent,
+  isSubmissionService,
 }: {
   flowSlug: string;
-  hasSendComponent: boolean;
+  isSubmissionService: boolean;
 }): string | undefined => {
   const dashboardId = DASHBOARD_SLUG_MAP[flowSlug];
   if (dashboardId) return dashboardId;
 
   // Fallback to check general submission services
-  if (hasSendComponent) return DASHBOARD_IDS.submission;
+  if (isSubmissionService) return DASHBOARD_IDS.submission;
 
   return undefined;
 };
@@ -120,10 +120,10 @@ export const useFlowAnalyticsLink = (): string | undefined => {
   const hasAnalytics = Boolean(flow.onlineHistory.length);
   if (!hasAnalytics) return;
 
-  const hasSendComponent = Boolean(flow.publishedFlows[0]?.hasSendComponent);
+  const isSubmissionService = Boolean(flow.publishedFlows[0]?.hasSendComponent);
   const dashboardId = getAnalyticsDashboardId({
     flowSlug,
-    hasSendComponent,
+    isSubmissionService,
   });
   if (!dashboardId) return;
 

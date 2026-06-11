@@ -19,7 +19,6 @@ export const FLOW_SUMMARY_FIELDS = gql`
     }
     templatedFrom: templated_from
     isTemplate: is_template
-    isService: is_service
     template {
       team {
         id
