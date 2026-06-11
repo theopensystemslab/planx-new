@@ -56,15 +56,10 @@ describe("team_members", () => {
       expect(i.queries).toContain("team_members");
     });
 
-    test("cannot update team_members", () => {
+    test("cannot update, add or remove team_members", () => {
       expect(i).not.toContain("update_team_members_by_pk");
-    });
-
-    // Row-level permissions in place
-    // teamEditor can only assign teamEditor roles to their team
-    test("can add and remove team_members", () => {
-      expect(i.mutations).toContain("insert_team_members");
-      expect(i.mutations).toContain("delete_team_members");
+      expect(i.mutations).not.toContain("insert_team_members");
+      expect(i.mutations).not.toContain("delete_team_members");
     });
   });
 
