@@ -30,11 +30,22 @@ vi.mock("pages/FlowEditor/lib/store", async () => ({
     selector({
       getTeam: () => ({ slug: "team-name" }),
       previewEnvironment: "editor",
-      flowSlug: "test-flow",
-      flowStatus: "online",
       canUserEditTeam: vi.fn(() => false),
     }),
   ),
+}));
+
+vi.mock("./useGetFlowDetails", () => ({
+  useGetFlowDetails: vi.fn(() => ({
+    data: {
+      flows: [
+        {
+          status: "online",
+          isService: true,
+        },
+      ],
+    },
+  })),
 }));
 
 const mockUseParams = vi.mocked(TanStackRouter.useParams);

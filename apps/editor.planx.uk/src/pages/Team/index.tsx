@@ -75,16 +75,18 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
     let result = [...sourceFlows];
 
     // Apply filters based on search params
-    if (searchParams["online-status"]) {
+    if (searchParams["service-status"]) {
       result = result.filter(
-        (flow) => flow.status === searchParams["online-status"],
+        (flow) =>
+          flow.status === searchParams["service-status"] &&
+          flow.isService === true,
       );
     }
 
     if (searchParams["flow-type"]) {
       if (searchParams["flow-type"] === "submission") {
         result = result.filter(
-          (flow) => flow.publishedFlows[0]?.hasSendComponent,
+          (flow) => flow.publishedFlows[0]?.hasSendComponent && flow.isService,
         );
       } else if (searchParams["flow-type"] === "fee carrying") {
         result = result.filter(
