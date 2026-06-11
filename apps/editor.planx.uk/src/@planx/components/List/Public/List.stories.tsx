@@ -1,8 +1,8 @@
 import { Meta, StoryObj } from "@storybook/tanstack-react";
 
 import Wrapper from "../../fixtures/Wrapper";
-import { SCHEMAS } from "../Editor";
 import Editor from "../Editor";
+import { SCHEMAS } from "../Editor";
 import ListComponent from ".";
 import Public from ".";
 

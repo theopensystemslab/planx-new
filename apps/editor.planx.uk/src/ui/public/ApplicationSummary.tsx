@@ -3,8 +3,8 @@ import { getValidSchemaDictionary } from "@opensystemslab/planx-core";
 import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
 import { type Store, useStore } from "pages/FlowEditor/lib/store";
-import { Fragment } from "react";
 import React from "react";
+import { Fragment } from "react";
 
 const getApplicationTypeDescriptionFromPassportValue = (
   passport: Store.Passport,
