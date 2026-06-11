@@ -7,8 +7,10 @@ import { useEffect, useState } from "react";
 import { isUserAlreadyExistsError } from "../errors/addNewEditorErrors";
 import { emailSchema, upsertMemberSchema } from "../formSchema";
 import {
-  ADD_EXISTING_USER_TO_TEAM,
-  CREATE_AND_ADD_USER_TO_TEAM,
+  ADD_EXISTING_USER_TO_TEAM_AS_ADMIN,
+  ADD_EXISTING_USER_TO_TEAM_AS_EDITOR,
+  CREATE_AND_ADD_ADMIN_TO_TEAM,
+  CREATE_AND_ADD_EDITOR_TO_TEAM,
   GET_USER_BY_EMAIL,
   GET_USERS_FOR_TEAM_QUERY,
 } from "../queries";
@@ -68,10 +70,10 @@ export const useAddUserModal = ({ onClose }: { onClose: () => void }) => {
     setStep({ stage: "create-new" });
   }, [emailCheckData, emailCheckError, toast]);
 
-  const [assignUser, { loading: assignLoading }] = useMutation<
+  const [assignEditor, { loading: assignLoadingEditor }] = useMutation<
     User[],
-    { teamId: number; role: Role; userId: number }
-  >(ADD_EXISTING_USER_TO_TEAM, {
+    { teamId: number; userId: number }
+  >(ADD_EXISTING_USER_TO_TEAM_AS_EDITOR, {
     onCompleted: () => handleCompleted("Successfully added user to team"),
     onError: (error) => {
       if (isUserAlreadyExistsError(error.message)) {
@@ -84,8 +86,36 @@ export const useAddUserModal = ({ onClose }: { onClose: () => void }) => {
     ],
   });
 
-  const [createUser, { loading: createLoading }] = useMutation(
-    CREATE_AND_ADD_USER_TO_TEAM,
+  const [assignAdmin, { loading: assignLoadingAdmin }] = useMutation<
+    User[],
+    { teamId: number; userId: number }
+  >(ADD_EXISTING_USER_TO_TEAM_AS_ADMIN, {
+    onCompleted: () => handleCompleted("Successfully added user to team"),
+    onError: (error) => {
+      if (isUserAlreadyExistsError(error.message)) {
+        return toast.error("User is already a member of this team");
+      }
+      toast.error("Failed to add user to team, please try again");
+    },
+    refetchQueries: [
+      { query: GET_USERS_FOR_TEAM_QUERY, variables: { teamSlug } },
+    ],
+  });
+
+  const [createTeamEditor, { loading: createEditorLoading }] = useMutation(
+    CREATE_AND_ADD_EDITOR_TO_TEAM,
+    {
+      onCompleted: () => handleCompleted("Successfully added a user"),
+      onError: () => toast.error("Failed to add new user, please try again"),
+      refetchQueries: [
+        { query: GET_USERS_FOR_TEAM_QUERY, variables: { teamSlug } },
+      ],
+    },
+  );
+
+  // we have two separate mutations here because teamAdmin model requires two entries in the team_members table (one mutation creates one teamEditor row and the other mutation creates both teamEditor and teamAdmin)
+  const [createTeamAdmin, { loading: createAdminLoading }] = useMutation(
+    CREATE_AND_ADD_ADMIN_TO_TEAM,
     {
       onCompleted: () => handleCompleted("Successfully added a user"),
       onError: () => toast.error("Failed to add new user, please try again"),
@@ -102,16 +132,29 @@ export const useAddUserModal = ({ onClose }: { onClose: () => void }) => {
       return;
     }
 
-    if (step.stage === "confirm-existing") {
-      assignUser({
-        variables: { userId: step.existingUser.id, teamId, role: values.role },
+    if (step.stage === "confirm-existing" && values.role === "teamEditor") {
+      assignEditor({
+        variables: { userId: step.existingUser.id, teamId },
       });
       return;
     }
 
-    if (step.stage === "create-new") {
-      createUser({
-        variables: { ...values, email, teamId, role: values.role },
+    if (step.stage === "confirm-existing" && values.role === "teamAdmin") {
+      assignAdmin({
+        variables: { userId: step.existingUser.id, teamId },
+      });
+      return;
+    }
+
+    if (step.stage === "create-new" && values.role === "teamEditor") {
+      createTeamEditor({
+        variables: { ...values, email, teamId },
+      });
+    }
+
+    if (step.stage === "create-new" && values.role === "teamAdmin") {
+      createTeamAdmin({
+        variables: { ...values, email, teamId },
       });
     }
   };
@@ -127,7 +170,12 @@ export const useAddUserModal = ({ onClose }: { onClose: () => void }) => {
     handleClose,
     handleSubmit,
     submitButtonText: SUBMIT_BUTTON_TEXT[step.stage],
-    isSubmitting: checkingEmail || assignLoading || createLoading,
+    isSubmitting:
+      checkingEmail ||
+      assignLoadingEditor ||
+      assignLoadingAdmin ||
+      createEditorLoading ||
+      createAdminLoading,
     validationSchema:
       step.stage === "create-new" ? upsertMemberSchema : emailSchema,
   };

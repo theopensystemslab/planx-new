@@ -12,7 +12,12 @@ import React from "react";
 import { Switch } from "ui/shared/Switch";
 
 import { upsertMemberSchema } from "../formSchema";
-import { GET_USERS_FOR_TEAM_QUERY, UPDATE_TEAM_MEMBER } from "../queries";
+import {
+  CREATE_TEAM_ADMIN_ONLY,
+  GET_USERS_FOR_TEAM_QUERY,
+  REMOVE_TEAM_ADMIN_ONLY,
+  UPDATE_USER_ONLY,
+} from "../queries";
 import { type EditUserModalProps, type UserFormValues } from "../types";
 import { EmailField } from "./Fields/EmailField";
 import { NameFields } from "./Fields/NameFields";
@@ -21,7 +26,6 @@ import { ModalActions } from "./ModalActions";
 export const EditUserModal: React.FC<EditUserModalProps> = ({
   onClose,
   member,
-  showTeamAdminSwitch,
 }) => {
   const toast = useToast();
   const teamId = useStore((state) => state.teamId);
@@ -31,32 +35,89 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
     toast.success(successMessage);
   };
 
-  const [updateTeamMember, { loading }] = useMutation(UPDATE_TEAM_MEMBER, {
-    refetchQueries: [
-      {
-        query: GET_USERS_FOR_TEAM_QUERY,
-        variables: { teamSlug: useStore.getState().teamSlug },
-      },
-    ],
-    onCompleted: () => handleCompleted("Successfully updated a user"),
-    onError: () => toast.error("Failed to update the user, please try again"),
-  });
+  const [updateUserOnly, { loading: loadingUser }] = useMutation(
+    UPDATE_USER_ONLY,
+    {
+      refetchQueries: [
+        {
+          query: GET_USERS_FOR_TEAM_QUERY,
+          variables: { teamSlug: useStore.getState().teamSlug },
+        },
+      ],
+      onCompleted: () => handleCompleted("Successfully updated a user"),
+      onError: () => toast.error("Failed to update the user, please try again"),
+    },
+  );
 
-  const handleSubmit = (values: UserFormValues) => {
+  const [createTeamAdmin, { loading: loadingCreateTeamAdmin }] = useMutation(
+    CREATE_TEAM_ADMIN_ONLY,
+    {
+      refetchQueries: [
+        {
+          query: GET_USERS_FOR_TEAM_QUERY,
+          variables: { teamSlug: useStore.getState().teamSlug },
+        },
+      ],
+      onCompleted: () => handleCompleted("Successfully updated a user"),
+      onError: () => toast.error("Failed to update the user, please try again"),
+    },
+  );
+
+  const [removeTeamAdmin, { loading: loadingRemoveTeamAdmin }] = useMutation(
+    REMOVE_TEAM_ADMIN_ONLY,
+    {
+      refetchQueries: [
+        {
+          query: GET_USERS_FOR_TEAM_QUERY,
+          variables: { teamSlug: useStore.getState().teamSlug },
+        },
+      ],
+      onCompleted: (data) => {
+        if (data.delete_team_members.affected_rows > 0) {
+          handleCompleted("Successfully updated a user");
+        } else {
+          toast.warning("No admin role found to remove");
+        }
+      },
+      onError: () => toast.error("Failed to update the user, please try again"),
+    },
+  );
+
+  const handleSubmit = async (values: UserFormValues) => {
     const formatted = { ...values, email: values.email.toLowerCase() };
 
-    updateTeamMember({
-      variables: {
-        userId: member.id,
-        teamId: teamId,
-        role: values.role,
-        userValues: {
-          first_name: formatted.firstName,
-          last_name: formatted.lastName,
-          email: formatted.email,
+    const userInfoChanged =
+      formatted.firstName !== member.firstName ||
+      formatted.lastName !== member.lastName ||
+      formatted.email !== (member.email ?? "").toLowerCase();
+
+    const roleChanged = values.role !== member.role;
+    console.log({ userInfoChanged, roleChanged });
+
+    if (userInfoChanged) {
+      await updateUserOnly({
+        variables: {
+          userId: member.id,
+          userValues: {
+            first_name: formatted.firstName,
+            last_name: formatted.lastName,
+            email: formatted.email,
+          },
         },
-      },
-    });
+      });
+    }
+
+    if (roleChanged) {
+      if (values.role === "teamAdmin") {
+        await createTeamAdmin({
+          variables: { userId: member.id, teamId },
+        });
+      } else {
+        await removeTeamAdmin({
+          variables: { userId: member.id, teamId },
+        });
+      }
+    }
   };
 
   return (
@@ -107,7 +168,11 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
               <ModalActions
                 submitButtonText="Update user"
                 submitDataTestId="modal-edit-user-button"
-                isSubmitting={loading}
+                isSubmitting={
+                  loadingUser ||
+                  loadingCreateTeamAdmin ||
+                  loadingRemoveTeamAdmin
+                }
                 onCancel={onClose}
               />
             </DialogActions>
