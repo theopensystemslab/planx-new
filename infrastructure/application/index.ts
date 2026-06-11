@@ -323,7 +323,7 @@ export = async () => {
     });
 
     // only include domains for which we have not yet moved alias to shared CDN via AWS CLI (deploy would fail o/w)
-    const domains = cloudFrontState !== "cutover-ongoing" ? [domain] : [];
+    const domains = [domain];
     const cdn = createCdn({
       cdnName: domain,
       domains,
