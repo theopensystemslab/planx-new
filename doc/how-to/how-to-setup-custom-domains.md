@@ -20,7 +20,7 @@ All custom domains are defined in [`infrastructure/common/customDomains.ts`](../
 | --- | --- |
 | `validation-only` | Domain is not associated with any CDN, but is on the "mining" certificate (cert) to surface DNS validation records (which we will send to council). |
 | `legacy-with-validation` | Domain is associated with (i.e. is an alias of) legacy CDN, which is backed by a council-provided cert. Domain is also on mining cert. |
-| `cutover-ongoing` | Initially, domain is still associated with legacy CDN. We ensure shared CDN exists, and is backed by a shared cert provisioned by us, which includes the domain as an [SAN](https://support.dnsimple.com/articles/what-is-ssl-san/). Then we associate the domain with the shared CDN. At this point, the legacy CDN still exists but has no aliases.
+| `cutover-ongoing` | Initially, domain is still associated with legacy CDN. We ensure shared CDN exists, and is backed by a shared cert provisioned by us, which includes the domain as an [SAN](https://support.dnsimple.com/articles/what-is-ssl-san/). Once the council swaps their DNS record, we associate the domain with the shared CDN. At this point, the legacy CDN still exists but has no aliases.
 | `shared-final` | Domain is associated with shared CDN. The legacy CDN, if this was a migration, has been torn down (otherwise, it never existed). This will be the eventual final state for all domains. |
 
 NB. We largely use 'CDN' and '[CloudFront] distribution' interchangeably throughout this document, although this is a simplification.
@@ -147,6 +147,8 @@ Path: `validation-only` → `shared-final`
 
 10. Clean up the old shared cert with another run of `certificates`.
 
+    NB. This may not work. Pulumi seems to keep track of the retained cert in some cases and not others. If the `pulumi up` run does not propose any changes, you can do this manually in the [AWS console](https://us-east-1.console.aws.amazon.com/acm/certificates/list?region=us-east-1#) instead. It's essentially harmless for these old shared certs to build up, but also confusing!
+
 11. Get the shared CDN domain name:
 
     ```sh
@@ -194,7 +196,7 @@ The usual prompt for this process will be an impending expiry of a council's SSL
 
 NB. No new councils will be onboarded in the legacy mode, so when we migrate the last council, we can revise our documentation (i.e. delete this section).
 
-1. Do steps 3-5 from [flow A](#a-onboarding-a-new-council).
+1. Do steps 3-5 from [flow A](#a-onboarding-a-new-council) (i.e. send the DNS validation record to the council).
 
     > NB. **If this is not the first domain on the shared CDN** and you want to expedite:
     > - Do steps 4-5 **now** and send the council both DNS records together (you still have to wait for them to add the records before proceeding to step 2).
@@ -208,7 +210,7 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
 
     Commit this, open a PR and get it approved.
 
-3. Do steps 7-10 from [flow A](#a-onboarding-a-new-council).
+3. Do steps 7-10 from [flow A](#a-onboarding-a-new-council) (i.e. initialise a new shared cert and attach the shared CDN to it).
 
 4. Get the shared distribution domain name and ID:
 
@@ -228,9 +230,11 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
     | --- | --- | --- |
     | CNAME | `planningservices.an-existing-council.gov.uk` | `d1234abcd.cloudfront.net` |
 
-    Because of the way that CloudFront works (see [Appendix B](#appendix-b-cloudfront-routing)) **we do not need to wait** for the council to do this before we can proceed (and equally, it's not an issue if they do it immediately).
+6. **Wait** for the council to confirm they've added the record.
 
-6. Run the AWS `update-domain-association` [command](https://docs.aws.amazon.com/cli/latest/reference/cloudfront/update-domain-association.html) from your terminal to move the domain (known as an 'alias' in the context of CloudFront) from the legacy distribution to the shared distribution ([docs](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/alternate-domain-names-move.html)).
+    Because of the way CloudFront works, traffic redirected to the domain name of the shared CloudFront distribution will still be directed to the legacy distribution by AWS (until we do the next step). See [Appendix B](#appendix-b-cloudfront-routing)) for a more thorough explanation!
+    
+7. Run the AWS `update-domain-association` [command](https://docs.aws.amazon.com/cli/latest/reference/cloudfront/update-domain-association.html) from your terminal to move the domain (known as an 'alias' in the context of CloudFront) from the legacy distribution to the shared distribution ([docs](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/alternate-domain-names-move.html)).
 
     If you haven't used the AWS CLI from your terminal before, set that up first (see `../how-to-setup-aws-sso-credentials.md`). CloudFront distributions are global so the AWS region isn't important here.
 
@@ -245,7 +249,7 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
 
     This should return a value like `E9876WXYZ12ABC`. Make sure to do this anew every time, since it's a hash of the object and will change.
 
-    Finally we can run the command to move the alias:
+    Finally we can run the command to move the alias, supplying the eTag to the `--if-match` option:
 
     ```sh
     aws cloudfront update-domain-association \
@@ -254,11 +258,9 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
       --if-match E9876WXYZ12ABC
     ```
 
-    If successful, this operation should return some json with the new `ETag`. You can confirm in the [AWS console](https://us-east-1.console.aws.amazon.com/cloudfront/v4/home?region=us-east-1#/distributions) (check the _Alternate domain names_ column).
+    If successful, this operation should return some json with the new `ETag` value. You can confirm in the [AWS console](https://us-east-1.console.aws.amazon.com/cloudfront/v4/home?region=us-east-1#/distributions) (check the _Alternate domain names_ column).
 
-7. **Wait** for the council to confirm they've added the record.
-
-    There is no particular rush at this point, but the sooner it happens, the sooner we can clean up the legacy infra and consider this domain resolved.
+    > **Warning**: As soon as you execute this step, you need to run through at least steps 8-10 immediately thereafter (or at the very least, before another production deploy can occur with the domain still in `cutover-ongoing` state).
 
 8. Verify traffic has been re-routed:
 
@@ -287,7 +289,7 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
 
 10. Deploy the `application` layer by merging said PR and rolling it out to prod.
 
-    This deploy tears down the legacy CloudFront distribution, which is now redundant because we have re-routed traffic to the shared distribution by swapping out the DNS record. It will also destroy the legacy (imported) cert with which the distribution was associated.
+    This deploy tears down the legacy CloudFront distribution, which is now redundant because we have re-routed traffic to the shared distribution by virtue of the council swapping out the DNS record, and us then moving the alias across. It will also destroy the legacy (imported) cert with which the distribution was associated.
 
     NB. Application-level config (see step 13 in [flow A](#a-onboarding-a-new-council)) is already in place for legacy councils, so no changes are needed in that regard.
 
