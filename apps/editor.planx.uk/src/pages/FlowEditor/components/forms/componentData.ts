@@ -15,7 +15,30 @@ export interface Category {
 
 export const ALL_CATEGORIES: Category[] = [
   {
-    label: "Questions",
+    label: "Structure",
+    items: [
+      {
+        type: TYPES.Section,
+        slug: "section",
+        title: "Section",
+        description: "Add a navigational section",
+      },
+      {
+        type: TYPES.InternalPortal,
+        slug: "folder",
+        title: "Folder",
+        description: "Add a folder to group nodes",
+      },
+      {
+        type: TYPES.ExternalPortal,
+        slug: "nested-flow",
+        title: "Flow",
+        description: "Embed another flow",
+      },
+    ],
+  },
+  {
+    label: "Choice",
     items: [
       {
         type: TYPES.Question,
@@ -50,7 +73,7 @@ export const ALL_CATEGORIES: Category[] = [
     ],
   },
   {
-    label: "Inputs",
+    label: "Input",
     items: [
       {
         type: TYPES.TextInput,
@@ -59,18 +82,6 @@ export const ALL_CATEGORIES: Category[] = [
         description:
           "Collect a text response, or AI enhanced project description",
         hasAiVariant: true,
-      },
-      {
-        type: TYPES.FileUpload,
-        slug: "file-upload",
-        title: "File upload",
-        description: "Upload one or more files",
-      },
-      {
-        type: TYPES.FileUploadAndLabel,
-        slug: "file-upload-and-label",
-        title: "Upload and label",
-        description: "Upload and label files",
       },
       {
         type: TYPES.NumberInput,
@@ -109,6 +120,18 @@ export const ALL_CATEGORIES: Category[] = [
         description: "Collect multiple inputs on a single page",
       },
       {
+        type: TYPES.FileUpload,
+        slug: "file-upload",
+        title: "File upload",
+        description: "Upload one or more files",
+      },
+      {
+        type: TYPES.FileUploadAndLabel,
+        slug: "file-upload-and-label",
+        title: "Upload and label",
+        description: "Upload and label files",
+      },
+      {
         type: TYPES.MapAndLabel,
         slug: "map-and-label",
         title: "Map and label",
@@ -126,10 +149,10 @@ export const ALL_CATEGORIES: Category[] = [
     label: "Information",
     items: [
       {
-        type: TYPES.TaskList,
-        slug: "task-list",
-        title: "Task list",
-        description: "Show a list of tasks",
+        type: TYPES.Content,
+        slug: "content",
+        title: "Content",
+        description: "Display rich content",
       },
       {
         type: TYPES.Notice,
@@ -138,22 +161,22 @@ export const ALL_CATEGORIES: Category[] = [
         description: "Show an important notice",
       },
       {
-        type: TYPES.Result,
-        slug: "result",
-        title: "Result",
-        description: "Show the result of the flow",
-      },
-      {
-        type: TYPES.Content,
-        slug: "content",
-        title: "Content",
-        description: "Display rich content",
+        type: TYPES.TaskList,
+        slug: "task-list",
+        title: "Task list",
+        description: "Show a list of tasks",
       },
       {
         type: TYPES.Review,
         slug: "review",
         title: "Review",
         description: "Let the user review and change their answers",
+      },
+      {
+        type: TYPES.Result,
+        slug: "result",
+        title: "Result",
+        description: "Show the result of the flow",
       },
       {
         type: TYPES.Confirmation,
@@ -193,7 +216,7 @@ export const ALL_CATEGORIES: Category[] = [
     ],
   },
   {
-    label: "Navigation",
+    label: "Data and automations",
     items: [
       {
         type: TYPES.Filter,
@@ -202,34 +225,11 @@ export const ALL_CATEGORIES: Category[] = [
         description: "Filter the flow based on conditions",
       },
       {
-        type: TYPES.ExternalPortal,
-        slug: "nested-flow",
-        title: "Flow",
-        description: "Embed another flow",
-      },
-      {
-        type: TYPES.InternalPortal,
-        slug: "folder",
-        title: "Folder",
-        description: "Add a folder to group nodes",
-      },
-      {
-        type: TYPES.Section,
-        slug: "section",
-        title: "Section",
-        description: "Add a navigational section",
-      },
-      {
         type: TYPES.SetValue,
         slug: "set-value",
         title: "Set value",
         description: "Set a data value in the passport",
       },
-    ],
-  },
-  {
-    label: "Payment",
-    items: [
       {
         type: TYPES.Calculate,
         slug: "calculate",
@@ -242,17 +242,17 @@ export const ALL_CATEGORIES: Category[] = [
         title: "Set fees",
         description: "Define fee amounts",
       },
+    ],
+  },
+  {
+    label: "Pay and send",
+    items: [
       {
         type: TYPES.Pay,
         slug: "pay",
         title: "Pay",
         description: "Collect payment",
       },
-    ],
-  },
-  {
-    label: "Outputs",
-    items: [
       {
         type: TYPES.Send,
         slug: "send",
