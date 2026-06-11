@@ -117,7 +117,7 @@ const Flows: React.FC<Props> = ({
                     to: ".",
                     search: (prev) => ({
                       ...prev,
-                      "service-status": undefined,
+                      "online-status": undefined,
                       "flow-type": undefined,
                       templates: undefined,
                       "lps-listing": undefined,

@@ -36,11 +36,10 @@ const FlowCard: React.FC<Props> = ({ flow, view }) => {
   ]);
 
   const {
-    hasSendComponent,
+    isSubmissionService,
     isAnyTemplate,
     isSourceTemplate,
     isTemplatedFlow,
-    isService,
     statusVariant,
   } = useFlowMetadata(flow);
 
@@ -50,12 +49,12 @@ const FlowCard: React.FC<Props> = ({ flow, view }) => {
     {
       type: FlowTagType.Status,
       displayName: statusVariant,
-      shouldAddTag: isService,
+      shouldAddTag: true,
     },
     {
       type: FlowTagType.ServiceType,
       displayName: "Submission",
-      shouldAddTag: isService && hasSendComponent,
+      shouldAddTag: isSubmissionService,
     },
   ];
 

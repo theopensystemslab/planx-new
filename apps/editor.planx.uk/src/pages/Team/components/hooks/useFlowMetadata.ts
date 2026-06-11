@@ -4,19 +4,17 @@ import { StatusVariant } from "ui/editor/FlowTag/types";
 
 export const useFlowMetadata = (flow: FlowSummary) => {
   return useMemo(() => {
-    const hasSendComponent = flow.publishedFlows?.[0]?.hasSendComponent;
+    const isSubmissionService = flow.publishedFlows?.[0]?.hasSendComponent;
     const isTemplatedFlow = Boolean(flow.templatedFrom);
     const isSourceTemplate = flow.isTemplate;
     const isAnyTemplate = isTemplatedFlow || isSourceTemplate;
-    const isService = flow.isService;
     const statusVariant =
       flow.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
 
     return {
-      hasSendComponent,
+      isSubmissionService,
       isTemplatedFlow,
       isSourceTemplate,
-      isService,
       isAnyTemplate,
       statusVariant,
     };

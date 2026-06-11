@@ -42,7 +42,6 @@ interface MenuItemCardProps {
   href?: string;
   onClick: () => void;
   isOnline?: boolean;
-  isService?: boolean;
   "data-testid"?: string;
 }
 
@@ -53,7 +52,6 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
   href,
   onClick,
   isOnline,
-  isService,
   "data-testid": dataTestId,
 }) => (
   <Card
@@ -89,7 +87,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
           >
             {description}
           </Typography>
-          {isService && isOnline !== undefined && (
+          {isOnline !== undefined && (
             <FlowTagRoot
               tagType={FlowTagType.Status}
               statusVariant={
@@ -112,10 +110,9 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
 );
 
 export const OpenServiceMenu: React.FC = () => {
-  const [flowStatus, isFlowPublished, isService] = useStore((state) => [
+  const [flowStatus, isFlowPublished] = useStore((state) => [
     state.flowStatus,
     state.isFlowPublished,
-    state.isService,
   ]);
   const isFlowOnline = flowStatus === "online";
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);

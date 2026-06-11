@@ -7,7 +7,7 @@ export type MockRecordType = {
 
 export const mockFilterOptions: FilterOptions<MockRecordType>[] = [
   {
-    displayName: "Service status",
+    displayName: "Online status",
     optionKey: "status",
     optionValue: ["online", "offline"],
     validationFn: (option: MockRecordType, value: string | undefined) =>
