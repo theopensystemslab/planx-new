@@ -45,12 +45,11 @@ export const userStore: StateCreator<
 
     if (user.isPlatformAdmin) return "platformAdmin";
     if (user.isAnalyst) return "analyst";
+    if (!teamSlug) return "teamViewer"; // for EditorNavMenu, before teamSlug is set
 
     const currentUserTeam = user.teams.filter(
       ({ team: { slug } }) => slug === teamSlug,
     );
-
-    if (!currentUserTeam) return;
 
     const isUserTeamAdmin = currentUserTeam.some(
       (user) => user.role === "teamAdmin",
