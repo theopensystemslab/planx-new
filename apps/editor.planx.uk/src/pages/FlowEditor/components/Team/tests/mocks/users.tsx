@@ -83,6 +83,10 @@ export const mockTeamAdminUser: User = {
   ...mockPlainUser,
   teams: [
     {
+      role: "teamEditor",
+      team: { name: "Test Team", slug: "test", id: 2 },
+    },
+    {
       role: "teamAdmin",
       team: { name: "Test Team", slug: "test", id: 2 },
     },
@@ -127,3 +131,21 @@ export const mockTeamMembersDataWithNoTeamEditors: User[] = [
     teams: [],
   },
 ];
+
+export const mockUsersWithTeamAdmin = mockUsersData.map((user) =>
+  user.id === 3
+    ? {
+        ...user,
+        teams: [
+          {
+            role: "teamEditor" as const,
+            team: { name: "Test Team", slug: "test", id: 2 },
+          },
+          {
+            role: "teamAdmin" as const,
+            team: { name: "Test Team", slug: "test", id: 2 },
+          },
+        ],
+      }
+    : user,
+);

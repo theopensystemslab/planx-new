@@ -11,7 +11,10 @@ import { AddUserModal } from "../components/AddUserModal";
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { userTriesToAddNewTeamAdmin } from "./helpers/userTriesToAddNewTeamAdmin";
 import { userTriesToAddNewTeamEditor } from "./helpers/userTriesToAddNewTeamEditor";
-import { createUserHandler } from "./mocks/handlers";
+import {
+  createTeamAdminHandler,
+  createTeamEditorHandler,
+} from "./mocks/handlers";
 import { mockPlainUser, mockPlatformAdminUser } from "./mocks/users";
 
 let initialState: FullStore;
@@ -20,6 +23,7 @@ describe("when a user presses 'add a new member'", () => {
   beforeEach(async () => {
     useStore.setState({
       user: mockPlatformAdminUser,
+      teamSlug: "test",
     });
 
     const { user } = await setupTeamMembersScreen();
@@ -43,9 +47,11 @@ describe("when a user fills in the 'add a new member' form correctly", () => {
   beforeEach(async () => {
     useStore.setState({
       user: mockPlatformAdminUser,
+      teamSlug: "test",
+      teamId: 2,
     });
 
-    server.use(createUserHandler());
+    server.use(createTeamEditorHandler());
 
     const { user } = await setupTeamMembersScreen();
     await userTriesToAddNewTeamEditor(user);
@@ -81,9 +87,10 @@ describe("when a user adds a new teamAdmin", () => {
   beforeEach(async () => {
     useStore.setState({
       user: mockPlatformAdminUser,
+      teamSlug: "test",
     });
 
-    server.use(createUserHandler());
+    server.use(createTeamAdminHandler());
 
     const { user } = await setupTeamMembersScreen();
     await userTriesToAddNewTeamAdmin(user);
@@ -130,6 +137,7 @@ describe("when a user is not a platform admin", () => {
   beforeEach(async () => {
     useStore.setState({
       user: mockPlainUser,
+      teamSlug: "test",
     });
 
     await setupTeamMembersScreen();

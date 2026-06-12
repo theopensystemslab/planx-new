@@ -108,7 +108,7 @@ export const REMOVE_TEAM_MEMBER = gql`
 `;
 
 export const ADD_EXISTING_USER_TO_TEAM_AS_EDITOR = gql`
-  mutation AddExistingUserToTeam($teamId: Int!, $userId: Int!) {
+  mutation AddExistingUserToTeamAsEditor($teamId: Int!, $userId: Int!) {
     insert_team_members_one(
       object: { role: teamEditor, team_id: $teamId, user_id: $userId }
     ) {
@@ -118,14 +118,14 @@ export const ADD_EXISTING_USER_TO_TEAM_AS_EDITOR = gql`
 `;
 
 export const ADD_EXISTING_USER_TO_TEAM_AS_ADMIN = gql`
-  mutation AddExistingUserToTeam($teamId: Int!, $userId: Int!) {
+  mutation AddExistingUserToTeamAsAdmin($teamId: Int!, $userId: Int!) {
     insert_team_members(
       objects: [
         { role: teamEditor, team_id: $teamId, user_id: $userId }
         { role: teamAdmin, team_id: $teamId, user_id: $userId }
       ]
     ) {
-      id
+      affected_rows
     }
   }
 `;

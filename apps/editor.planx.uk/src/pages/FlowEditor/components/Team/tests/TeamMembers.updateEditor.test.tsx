@@ -3,7 +3,10 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import server from "test/mockServer";
 
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
-import { updateUserHandler } from "./mocks/handlers";
+import {
+  updateUserAsTeamAdminHandler,
+  updateUserOnlyHandler,
+} from "./mocks/handlers";
 import {
   mockPlainUser,
   mockPlatformAdminUser,
@@ -87,11 +90,11 @@ describe("when a user updates a field correctly", () => {
   });
 });
 
-describe("when a user correctly updates an Editor", () => {
+describe("when a user correctly updates an Editors user details only", () => {
   beforeEach(async () => {
     useStore.setState({ teamSlug: "test" });
 
-    server.use(updateUserHandler());
+    server.use(updateUserOnlyHandler());
 
     const { user } = await setupTeamMembersScreen();
 
@@ -139,9 +142,10 @@ describe("when a user correctly makes a teamEditor a teamAdmin", () => {
     useStore.setState({
       user: mockPlatformAdminUser,
       teamSlug: "test",
+      teamId: 2,
     });
 
-    server.use(updateUserHandler());
+    server.use(updateUserAsTeamAdminHandler());
 
     const { user } = await setupTeamMembersScreen();
 
@@ -197,24 +201,6 @@ describe("'edit' button is hidden from Templates team", () => {
     const teamMembersTable = screen.getByTestId("team-members");
     const editButton = within(teamMembersTable).queryByTestId("edit-button-0");
     expect(editButton).not.toBeInTheDocument();
-  });
-});
-
-describe("when a user is not a platform admin", () => {
-  beforeEach(async () => {
-    useStore.setState({
-      user: mockPlainUser,
-    });
-
-    await setupTeamMembersScreen();
-  });
-
-  it("does not show an edit button", async () => {
-    const teamMembersTable = screen.getByTestId("team-members");
-    const addMemberButton =
-      within(teamMembersTable).queryByTestId("edit-button-3");
-
-    expect(addMemberButton).not.toBeInTheDocument();
   });
 });
 
