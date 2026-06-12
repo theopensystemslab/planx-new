@@ -75,7 +75,7 @@ export function NotificationsWidget({
           m: 0,
           p: 0,
           borderTop: "1px solid",
-          borderColor: "border.main",
+          borderColor: "divider",
         }}
       >
         {notifications.map((notification) => (
