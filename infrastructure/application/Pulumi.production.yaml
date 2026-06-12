@@ -47,11 +47,11 @@ config:
   application:hasura-admin-secret:
     secure: AAABAFXUOfERqmY2ht+UN/6j7fNncuB3uwqeEGGUhXzHLXLt5Mu7iGbuLfjMpRC0Niw301Zejtc=
   application:hasura-cpu: "1024"
-  application:hasura-memory: "2048"
+  application:hasura-memory: "4096"
   application:hasura-planx-api-key:
     secure: AAABAExsXFL7HabeK0Z1oSUJzI2NqVqEmKJ1ojYXyX4Hi8Sbt1Ht9QJc/Yn3cPBAB2r32HKa4HtqqLmfGjS+04lFB/I=
   application:hasura-proxy-cpu: "512"
-  application:hasura-proxy-memory: "1024"
+  application:hasura-proxy-memory: "2048"
   application:hasura-service-scaling-maximum: "4"
   application:hasura-service-scaling-minimum: "1"
   application:idox-nexus-client:
