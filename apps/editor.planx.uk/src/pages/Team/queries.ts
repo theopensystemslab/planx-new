@@ -71,6 +71,9 @@ export type GetAnyFlowsVars = {
   teamId: number;
 };
 
+/**
+ * Cascade to any notifications associated with this flow
+ */
 export const ARCHIVE_FLOW = gql`
   mutation ArchiveFlow($id: uuid!, $slug: String!) {
     flow: update_flows_by_pk(
@@ -78,6 +81,11 @@ export const ARCHIVE_FLOW = gql`
       _set: { archived_at: "now()", status: offline, slug: $slug }
     ) {
       id
+    }
+    notifications: delete_notifications(where: { flow_id: { _eq: $id } }) {
+      returning {
+        id
+      }
     }
   }
 `;
@@ -99,11 +107,24 @@ export type FlowMutationResponse = {
   };
 };
 
+export type FlowNotificationCascadeMutationResponse = FlowMutationResponse & {
+  notifications: {
+    returning:
+      | {
+          id: number;
+        }[]
+      | [];
+  };
+};
+
 export type FlowStatusMutationVars = {
   id: string;
   slug: string;
 };
 
+/**
+ * Cascade to any notifications associated with this flow
+ */
 export const DELETE_FLOW = gql`
   mutation DeleteFlow($id: uuid!, $slug: String!) {
     flow: update_flows_by_pk(
@@ -111,6 +132,11 @@ export const DELETE_FLOW = gql`
       _set: { deleted_at: "now()", slug: $slug }
     ) {
       id
+    }
+    notifications: delete_notifications(where: { flow_id: { _eq: $id } }) {
+      returning {
+        id
+      }
     }
   }
 `;
