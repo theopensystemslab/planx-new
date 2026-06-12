@@ -7,12 +7,14 @@ import { TeamStore } from "./team";
 
 export const getDisplayRole = (
   user: User,
-  currentUserTeam: UserTeams | undefined,
+  currentUserTeam: UserTeams[] | undefined,
 ): string => {
   if (user.isPlatformAdmin) return ROLE_LABELS.platformAdmin;
   if (user.isAnalyst) return ROLE_LABELS.analyst;
-  if (currentUserTeam?.role === "teamAdmin") return ROLE_LABELS.teamAdmin;
-  if (currentUserTeam?.role === "teamEditor") return ROLE_LABELS.teamEditor;
+  if (currentUserTeam?.some((team) => team.role === "teamAdmin"))
+    return ROLE_LABELS.teamAdmin;
+  if (currentUserTeam?.some((team) => team.role === "teamEditor"))
+    return ROLE_LABELS.teamEditor;
 
   return ROLE_LABELS.teamViewer;
 };
@@ -54,7 +56,6 @@ export const userStore: StateCreator<
     const isUserTeamAdmin = currentUserTeam.some(
       (user) => user.role === "teamAdmin",
     );
-
     if (isUserTeamAdmin) return "teamAdmin";
 
     return currentUserTeam[0].role;
@@ -64,7 +65,7 @@ export const userStore: StateCreator<
     const { user, teamSlug } = get();
     if (!user) return;
 
-    const currentUserTeam = user.teams.find(
+    const currentUserTeam = user.teams.filter(
       ({ team: { slug } }) => slug === teamSlug,
     );
 
