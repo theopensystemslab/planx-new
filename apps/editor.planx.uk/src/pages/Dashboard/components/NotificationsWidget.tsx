@@ -8,8 +8,6 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { DashboardWidget } from "ui/editor/DashboardWidget";
 import { EmptyState } from "ui/editor/EmptyState";
 
-const WIDGET_LIMIT = 3;
-
 interface NotificationsWidgetProps {
   notifications: Notification[];
   totalCount: number;
@@ -69,7 +67,17 @@ export function NotificationsWidget({
         label: "view all notifications",
       }}
     >
-      <Stack component="ul" sx={{ overflowY: "auto", flex: 1, m: 0, p: 0 }}>
+      <Stack
+        component="ul"
+        sx={{
+          overflowY: "auto",
+          flex: 1,
+          m: 0,
+          p: 0,
+          borderTop: "1px solid",
+          borderColor: "border.main",
+        }}
+      >
         {notifications.map((notification) => (
           <NotificationCardItem
             key={notification.id}
@@ -86,11 +94,9 @@ export default function ConnectedNotificationsWidget() {
   const team = useStore((state) => state.getTeam());
   const { active, loading } = useRecentNotifications();
   const { current: activeNotifications } = partitionBySuperseded(active);
-  const visibleNotifications = activeNotifications.slice(0, WIDGET_LIMIT);
-
   return (
     <NotificationsWidget
-      notifications={visibleNotifications}
+      notifications={activeNotifications}
       totalCount={activeNotifications.length}
       teamSlug={team.slug}
       loading={loading}
