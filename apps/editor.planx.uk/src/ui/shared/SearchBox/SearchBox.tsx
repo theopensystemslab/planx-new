@@ -24,6 +24,8 @@ interface SearchBoxProps<T> {
   hideLabel?: boolean;
   compact?: boolean;
   inputRef?: React.Ref<HTMLInputElement>;
+  fullWidth?: boolean;
+  placeholder?: string;
 }
 
 export const SearchBox = <T extends object>({
@@ -34,6 +36,8 @@ export const SearchBox = <T extends object>({
   hideLabel = false,
   compact = false,
   inputRef,
+  fullWidth = false,
+  placeholder = "",
 }: SearchBoxProps<T>) => {
   const [isSearching, setIsSearching] = useState(false);
   const [searchedTerm, setSearchedTerm] = useState<string>();
@@ -83,7 +87,7 @@ export const SearchBox = <T extends object>({
   }, [clearSearch, resetForm, submitForm]);
 
   return (
-    <Box sx={{ maxWidth: 360 }}>
+    <Box sx={{ maxWidth: fullWidth ? "100%" : 360 }}>
       <InputRow>
         <InputRowLabel
           inputProps={{
@@ -108,6 +112,7 @@ export const SearchBox = <T extends object>({
               name="search"
               id="search"
               aria-describedby="search-label"
+              placeholder={placeholder}
               value={values.pattern}
               onChange={(e) => {
                 setFieldValue("pattern", e.target.value);

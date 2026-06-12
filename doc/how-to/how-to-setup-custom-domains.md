@@ -58,7 +58,7 @@ Path: `validation-only` → `shared-final`
     },
     ```
 
-    Then commit this change. Note that `certificateLocation` is not necessary here.
+    Here `name` should match the `teams.slug` value in the [db](https://hasura.editor.planx.uk/console/data/default/schema/public/tables/teams/browse). Note also that `certificateLocation` is not necessary here. Then commit this change.
 
 2. Deploy the `certificates` stack. Make sure you have the appropriate AWS credentials/profile exported in your terminal, then run:
 
