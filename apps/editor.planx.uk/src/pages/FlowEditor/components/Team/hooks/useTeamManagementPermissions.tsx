@@ -5,7 +5,7 @@ export const useTeamManagementPermissions = () => {
   const isPlatformAdmin = usePermission(["platformAdmin"]);
 
   return {
-    canManageActiveMembers: isTeamAdmin,
+    canManageActiveMembers: isPlatformAdmin || isTeamAdmin,
     canManagePlatformAdmins: isPlatformAdmin,
   };
 };
