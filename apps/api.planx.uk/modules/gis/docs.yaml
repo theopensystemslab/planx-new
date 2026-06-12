@@ -26,3 +26,22 @@ paths:
                 type: array
                 items:
                   type: object
+  /planning-constraints-schema:
+    get:
+      tags: ["gis"]
+      summary: Get PlanX-supported data values for planning constraints
+      description: Returns PlanX-supported data values for planning constraints in-service automations, including granular Article 4 values for applicable local authorities
+      parameters:
+        - in: query
+          name: localAuthority
+          required: false
+          description: Local authority name, equivalent to PlanX team slug
+      responses:
+        "200":
+          description: A JSON array of data values
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string

@@ -59,8 +59,8 @@ importers:
         specifier: 1.0.0-alpha.11
         version: 1.0.0-alpha.11
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#ddf1e2d
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ddf1e2d3c33d5f76e16b56c136502400fb835378(@types/react@19.2.14)
+        specifier: github:theopensystemslab/planx-core#0ede8bd
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/0ede8bd37424a23d6b6b0f2e38d0695955154bb1(@types/react@19.2.14)
       '@tanstack/react-query':
         specifier: ^5.90.21
         version: 5.95.2(react@19.2.5)
@@ -1860,8 +1860,8 @@ packages:
   '@opensystemslab/map@1.0.0-alpha.11':
     resolution: {integrity: sha512-ETACPCk5Coef1L2kNT3MhIzLxVPDpyopxsTNcgeRyEqL71HBfTklGyC5+t7HgEgxRkX5wlUXqmKPNL9DdpVj8g==}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ddf1e2d3c33d5f76e16b56c136502400fb835378':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ddf1e2d3c33d5f76e16b56c136502400fb835378}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/0ede8bd37424a23d6b6b0f2e38d0695955154bb1':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/0ede8bd37424a23d6b6b0f2e38d0695955154bb1}
     version: 1.0.0
 
   '@oxc-parser/binding-android-arm-eabi@0.127.0':
@@ -8811,7 +8811,7 @@ snapshots:
     transitivePeerDependencies:
       - preact
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ddf1e2d3c33d5f76e16b56c136502400fb835378(@types/react@19.2.14)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/0ede8bd37424a23d6b6b0f2e38d0695955154bb1(@types/react@19.2.14)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.4)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.4)
