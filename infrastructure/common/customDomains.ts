@@ -111,7 +111,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
           cloudFrontState: "shared-final",
         },
         {
-          name: "coventry",
+          name: "coventry-city",
           domain: "planningservices.coventry.gov.uk",
           cloudFrontState: "validation-only",
         },
