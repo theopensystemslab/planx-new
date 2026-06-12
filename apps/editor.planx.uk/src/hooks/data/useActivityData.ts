@@ -2,13 +2,13 @@ import { gql, useQuery } from "@apollo/client";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 const GET_ACTIVITY_BY_SERVICE = gql`
-  query GetActivityByService($teamId: Int!) {
+  query GetActivityByService($teamId: Int!, $thirtyDaysAgo: timestamptz!) {
     flows(
       where: { team_id: { _eq: $teamId }, deleted_at: { _is_null: true } }
     ) {
       name
-      sessions: lowcal_sessions_aggregate(
-        where: { deleted_at: { _is_null: true } }
+      sessions: analytics_aggregate(
+        where: { created_at: { _gte: $thirtyDaysAgo } }
       ) {
         aggregate {
           count
@@ -17,7 +17,7 @@ const GET_ACTIVITY_BY_SERVICE = gql`
       submissions: lowcal_sessions_aggregate(
         where: {
           deleted_at: { _is_null: true }
-          submitted_at: { _is_null: false }
+          submitted_at: { _gte: $thirtyDaysAgo }
         }
       ) {
         aggregate {
@@ -52,10 +52,14 @@ export const useActivityData = (): {
 } => {
   const teamId = useStore((state) => state.teamId);
 
+  const thirtyDaysAgo = new Date(
+    Date.now() - 30 * 24 * 60 * 60 * 1000,
+  ).toISOString();
+
   const { data, loading } = useQuery<GetActivityByServiceQuery>(
     GET_ACTIVITY_BY_SERVICE,
     {
-      variables: { teamId },
+      variables: { teamId, thirtyDaysAgo },
       skip: !teamId,
     },
   );
