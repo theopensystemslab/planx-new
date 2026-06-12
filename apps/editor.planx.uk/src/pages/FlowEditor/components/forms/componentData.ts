@@ -120,6 +120,17 @@ export const ALL_CATEGORIES: Category[] = [
         description: "Collect multiple inputs on a single page",
       },
       {
+        type: TYPES.Feedback,
+        slug: "feedback",
+        title: "Feedback",
+        description: "Collect user feedback",
+      },
+    ],
+  },
+  {
+    label: "Upload",
+    items: [
+      {
         type: TYPES.FileUpload,
         slug: "file-upload",
         title: "File upload",
@@ -130,18 +141,6 @@ export const ALL_CATEGORIES: Category[] = [
         slug: "file-upload-and-label",
         title: "Upload and label",
         description: "Upload and label files",
-      },
-      {
-        type: TYPES.MapAndLabel,
-        slug: "map-and-label",
-        title: "Map and label",
-        description: "Draw and label areas on a map",
-      },
-      {
-        type: TYPES.Feedback,
-        slug: "feedback",
-        title: "Feedback",
-        description: "Collect user feedback",
       },
     ],
   },
@@ -213,6 +212,12 @@ export const ALL_CATEGORIES: Category[] = [
         title: "Planning constraints",
         description: "Show planning constraints",
       },
+      {
+        type: TYPES.MapAndLabel,
+        slug: "map-and-label",
+        title: "Map and label",
+        description: "Draw and label areas on a map",
+      },
     ],
   },
   {
@@ -236,17 +241,17 @@ export const ALL_CATEGORIES: Category[] = [
         title: "Calculate",
         description: "Calculate a value or fee",
       },
+    ],
+  },
+  {
+    label: "Pay and send",
+    items: [
       {
         type: TYPES.SetFee,
         slug: "set-fee",
         title: "Set fees",
         description: "Define fee amounts",
       },
-    ],
-  },
-  {
-    label: "Pay and send",
-    items: [
       {
         type: TYPES.Pay,
         slug: "pay",
