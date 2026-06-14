@@ -46,8 +46,8 @@ const SUPPORTED_INPUT_TYPES = [
   TYPES.TextInput,
 ];
 
-let memoizedPreviousCardId: string | undefined = undefined;
-let memoizedBreadcrumb: Store.Breadcrumbs | undefined = undefined;
+const memoizedPreviousCardId: string | undefined = undefined;
+const memoizedBreadcrumb: Store.Breadcrumbs | undefined = undefined;
 
 export interface Response {
   question: Node & { id: NodeId };
@@ -188,33 +188,32 @@ export const previewStore: StateCreator<
   },
 
   previousCard: (node: Store.Node | null) => {
-    const { breadcrumbs, flow, _nodesPendingEdit, changedNode } = get();
+    const { breadcrumbs, _nodesPendingEdit, changedNode } = get();
+
+    // Do not calculate "previous" if "changing" an answer rather than going "back"
+    if (changedNode && node?.id === changedNode) return;
+
+    // Only "go back" to nodes which were visible to the user (not automated) while navigating forwards
     const goBackable = Object.entries(breadcrumbs)
       .filter(([, v]) => !v.auto)
       .map(([k]) => k);
-    if (changedNode && node?.id === changedNode) return;
 
+    // Nodes pending edit capture dependencies like FindProp
     if (_nodesPendingEdit.length || goBackable.length <= 1) {
       return goBackable.pop();
     }
 
-    let previousCardId = memoizedPreviousCardId;
+    // Breadcrumbs are sequenced, find the most recent one which is eligible to go back to
+    const maxGoBackSeq = Math.max(
+      ...Object.entries(breadcrumbs)
+        .filter(([k]) => goBackable.includes(k))
+        .map(([, v]) => v.seq!),
+    );
+    const goBackId = Object.entries(breadcrumbs).filter(
+      ([, v]) => v.seq === maxGoBackSeq,
+    )?.[0]?.[0];
 
-    const shouldUpdateMemoizedValues =
-      !previousCardId || !isEqual(memoizedBreadcrumb, breadcrumbs);
-
-    // XXX: The functions `upcomingCardIds()` and `sortIdsDepthFirst()` are computationally heavy,
-    //      so we should call them only when needed to prevent UI slowness.
-    if (node?.id && shouldUpdateMemoizedValues) {
-      memoizedBreadcrumb = breadcrumbs;
-      const sorted = sortIdsDepthFirst(flow)(new Set([node.id, ...goBackable]));
-      const currentCardIndex = sorted.indexOf(node.id);
-      previousCardId =
-        currentCardIndex > 0 ? sorted[currentCardIndex - 1] : sorted[0];
-      memoizedPreviousCardId = previousCardId;
-    }
-
-    return previousCardId;
+    return goBackId;
   },
 
   canGoBack: (node: Store.Node | null) => {
