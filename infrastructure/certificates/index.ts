@@ -15,9 +15,14 @@ new pulumi.Config("cloudflare").requireSecret("apiToken");
 // ACM certificates for CloudFront must be provisioned in us-east-1
 const usEast1 = new aws.Provider("us-east-1", { region: "us-east-1" });
 
-// TODO: consider removing these records, or expand to include Cloudflare's CAs too
+// ----------------------- CAA records 
+// CAA records restrict which CAs can issue certificates for our domain
 // (they protect against a quite exotic attack scenario, where a compromised CA specifically targets our domain)
-// https://docs.aws.amazon.com/acm/latest/userguide/setup-caa.html
+// Three CAs are permitted:
+//   - amazon.com   — AWS ACM (used for CloudFront certs - main app, LPS and custom domains)
+//   - pki.goog     — Google Trust Services (used by Cloudflare Total TLS on staging)
+//   - letsencrypt.org — Let's Encrypt (used by Cloudflare Total TLS on production, and for backup on staging)
+// See: https://developers.cloudflare.com/ssl/reference/certificate-authorities/#caa-records
 const caaRecordRoot = new cloudflare.DnsRecord("caa-record-root", {
   name: `${config.require("domain")}`,
   ttl: 600,
@@ -39,6 +44,54 @@ const caaRecordWildcard = new cloudflare.DnsRecord("caa-record-wildcard", {
     flags: "0",
     tag: "issuewild",
     value: "amazon.com",
+  },
+});
+
+const caaRecordRootGoog = new cloudflare.DnsRecord("caa-record-root-gts", {
+  name: `${config.require("domain")}`,
+  ttl: 600,
+  type: "CAA",
+  zoneId: config.require("cloudflare-zone-id"),
+  data: {
+    flags: "0",
+    tag: "issue",
+    value: "pki.goog; cansignhttpexchanges=yes",
+  },
+});
+
+const caaRecordWildcardGoog = new cloudflare.DnsRecord("caa-record-wildcard-gts", {
+  name: `${config.require("domain")}`,
+  ttl: 600,
+  type: "CAA",
+  zoneId: config.require("cloudflare-zone-id"),
+  data: {
+    flags: "0",
+    tag: "issuewild",
+    value: "pki.goog; cansignhttpexchanges=yes",
+  },
+});
+
+const caaRecordRootLetsEncrypt = new cloudflare.DnsRecord("caa-record-root-letsencrypt", {
+  name: `${config.require("domain")}`,
+  ttl: 600,
+  type: "CAA",
+  zoneId: config.require("cloudflare-zone-id"),
+  data: {
+    flags: "0",
+    tag: "issue",
+    value: "letsencrypt.org",
+  },
+});
+
+const caaRecordWildcardLetsEncrypt = new cloudflare.DnsRecord("caa-record-wildcard-letsencrypt", {
+  name: `${config.require("domain")}`,
+  ttl: 600,
+  type: "CAA",
+  zoneId: config.require("cloudflare-zone-id"),
+  data: {
+    flags: "0",
+    tag: "issuewild",
+    value: "letsencrypt.org",
   },
 });
 
