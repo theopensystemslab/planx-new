@@ -10,7 +10,10 @@ export const Route = createFileRoute("/_authenticated/app/$team/subscription")({
   loader: async ({ params, context }) => {
     const isAuthorised =
       context.user?.isPlatformAdmin ||
-      useStore.getState().getUserRoleForCurrentTeam() === "teamAdmin";
+      // TODO limit *after* we assign teamAdmin roles to existing users
+      ["teamEditor", "teamAdmin"].includes(
+        useStore.getState().getUserRoleForCurrentTeam() || "",
+      );
 
     if (!isAuthorised) {
       throw new Error(
