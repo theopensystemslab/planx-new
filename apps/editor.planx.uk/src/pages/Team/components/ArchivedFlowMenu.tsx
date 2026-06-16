@@ -23,10 +23,11 @@ const ArchivedFlowMenu: React.FC<FlowMenuProps> = ({
     null,
   );
 
-  const unarchivedSlug = flow.slug.replace("-archived", "");
+  const unarchivedSlug = flow.slug.replace(/-archived\d+$/, "");
   const [unarchiveFlow] = useUnarchiveFlow(flow.id, unarchivedSlug, teamId);
 
-  const deletedSlug = flow.slug.replace("-archived", "-deleted");
+  const dateTime = Date.now();
+  const deletedSlug = flow.slug.replace(/-archived\d+$/, `-deleted${dateTime}`);
   const [deleteFlow] = useDeleteFlow(flow.id, deletedSlug, teamId);
 
   const toast = useToast();

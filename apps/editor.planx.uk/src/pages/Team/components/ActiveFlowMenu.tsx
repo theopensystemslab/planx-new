@@ -20,7 +20,8 @@ const ActiveFlowMenu: React.FC<FlowMenuProps> = ({
 }) => {
   type OpenDialog = "archive" | "copy" | "rename" | "move";
   const [openDialog, setOpenDialog] = useState<OpenDialog | null>(null);
-  const archivedSlug = flow.slug.concat("-archived");
+  const dateTime = Date.now();
+  const archivedSlug = flow.slug.concat(`-archived${dateTime}`);
   const [archiveFlow] = useArchiveFlow(flow.id, archivedSlug, teamId);
 
   const toast = useToast();
