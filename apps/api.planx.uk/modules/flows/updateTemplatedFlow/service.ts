@@ -31,6 +31,10 @@ interface InsertNotification {
   };
 }
 
+type UpdateTemplatedFlowTransactionResponse = UpdateTemplatedFlowData &
+  InsertComment &
+  InsertNotification;
+
 export const updateTemplatedFlow = async (
   sourceFlowId: string,
   templatedFlowId: string,
@@ -60,73 +64,53 @@ export const updateTemplatedFlow = async (
   // Apply templated flow edits on top of source data using Lodash's mergeWith (order of args matters!)
   const data = customMerge(sourceData, edits);
 
-  // Set merged data as `flows.data` for templatedFlowId
-  const updateFlowResponse = await $api.client.request<UpdateTemplatedFlowData>(
-    gql`
-      mutation UpdateTemplatedFlowData($data: jsonb!, $id: uuid!) {
-        flow: update_flows_by_pk(
-          pk_columns: { id: $id }
-          _set: { data: $data }
-        ) {
-          data
-        }
-      }
-    `,
-    {
-      data: data,
-      id: templatedFlowId,
-    },
-  );
-
-  // Insert a "History" comment for templatedFlowId to denote update with source summary & author
-  const insertCommentResponse = await $api.client.request<InsertComment>(
-    gql`
-      mutation InsertComment(
-        $flow_id: uuid!
-        $comment: String!
-        $actor_id: Int!
-      ) {
-        comment: insert_flow_comments_one(
-          object: { flow_id: $flow_id, comment: $comment, actor_id: $actor_id }
-        ) {
-          id
-        }
-      }
-    `,
-    {
-      flow_id: templatedFlowId,
-      comment: `Source template published: "${summary}"`,
-      actor_id: sourcePublisher,
-    },
-  );
-
-  // Insert a new "Notification" that the templatedFlowId is ready to review & publish
-  const insertNotificationResponse =
-    await $api.client.request<InsertNotification>(
+  // Batch updates into a single transaction to minimise number of network requests
+  //   1) Set merged data as `flows.data` for templatedFlowId
+  //   2) Insert a "History" comment for templatedFlowId to denote update with source summary & author
+  //   3) Insert a new "Notification" that the templatedFlowId is ready to review & publish
+  const updateTemplatedFlowTransactionResponse =
+    await $api.client.request<UpdateTemplatedFlowTransactionResponse>(
       gql`
-        mutation InsertNotification(
-          $flow_id: uuid!
-          $team_id: Int!
+        mutation UpdateTemplatedFlowTransaction(
+          $data: jsonb!
+          $flowId: uuid!
+          $comment: String!
+          $actorId: Int!
+          $teamId: Int!
           $type: notification_type_enum_enum!
         ) {
+          flow: update_flows_by_pk(
+            pk_columns: { id: $flowId }
+            _set: { data: $data }
+          ) {
+            data
+          }
+          comment: insert_flow_comments_one(
+            object: { flow_id: $flowId, comment: $comment, actor_id: $actorId }
+          ) {
+            id
+          }
           notification: insert_notifications_one(
-            object: { flow_id: $flow_id, team_id: $team_id, type: $type }
+            object: { flow_id: $flowId, team_id: $teamId, type: $type }
           ) {
             id
           }
         }
       `,
       {
-        flow_id: templatedFlowId,
-        team_id: templatedFlowTeamId,
+        flowId: templatedFlowId,
+        data: data,
+        comment: `Source template published: "${summary}"`,
+        actorId: sourcePublisher,
+        teamId: templatedFlowTeamId,
         type: "updated_templated_flow",
       },
     );
 
   return {
-    templatedFlowData: updateFlowResponse.flow.data,
-    commentId: insertCommentResponse.comment.id,
-    notificationId: insertNotificationResponse.notification.id,
+    templatedFlowData: updateTemplatedFlowTransactionResponse.flow.data,
+    commentId: updateTemplatedFlowTransactionResponse.comment.id,
+    notificationId: updateTemplatedFlowTransactionResponse.notification.id,
   };
 };
 

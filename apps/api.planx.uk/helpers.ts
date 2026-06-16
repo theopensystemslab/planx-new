@@ -160,8 +160,13 @@ const createFlow = async ({
 
     return { id: flowId };
   } catch (error) {
+    const copyInfo = copiedFrom ? ` (copied from ${copiedFrom})` : "";
+    const templateInfo = templatedFrom
+      ? ` (templated from ${templatedFrom})`
+      : "";
+
     throw Error(
-      `User ${userId} failed to insert flow to teamId ${teamId}. Please check permissions. Error: ${error}`,
+      `User ${userId} failed to insert flow to teamId ${teamId}${copyInfo}${templateInfo}. Please check permissions. Error: ${error}`,
     );
   }
 };

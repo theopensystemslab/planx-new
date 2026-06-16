@@ -57,9 +57,6 @@ const Breadcrumbs: React.FC = () => {
   if (!teamSlug || !flowSlug || !data?.flows) return null;
   const { status: flowStatus, isService } = data.flows[0];
 
-  const canUserEdit = canUserEditTeam(teamSlug);
-  console.log({ isService, flowStatus, canUserEdit });
-
   return (
     <BreadcrumbsContainer>
       <BreadcrumbsRoot>

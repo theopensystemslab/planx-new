@@ -103,3 +103,19 @@ update_permissions:
       filter: {}
       check: {}
     comment: ""
+delete_permissions:
+  - role: platformAdmin
+    permission:
+      filter: {}
+    comment: ""
+  - role: teamEditor
+    permission:
+      filter:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: x-hasura-user-id
+              - role:
+                  _eq: teamEditor
+    comment: ""

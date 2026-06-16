@@ -87,26 +87,6 @@ describe("success", () => {
         },
       },
     });
-
-    queryMock.mockQuery({
-      name: "InsertComment",
-      matchOnVariables: false,
-      data: {
-        comment: {
-          id: 1,
-        },
-      },
-    });
-
-    queryMock.mockQuery({
-      name: "InsertNotification",
-      matchOnVariables: false,
-      data: {
-        notification: {
-          id: 1,
-        },
-      },
-    });
   });
 
   it("correctly updates a templated flow that has been customised", async () => {
@@ -121,11 +101,17 @@ describe("success", () => {
     });
 
     queryMock.mockQuery({
-      name: "UpdateTemplatedFlowData",
+      name: "UpdateTemplatedFlowTransaction",
       matchOnVariables: false,
       data: {
         flow: {
           data: mockUpdatedTemplatedFlowData,
+        },
+        comment: {
+          id: 1,
+        },
+        notification: {
+          id: 1,
         },
       },
     });
@@ -159,11 +145,17 @@ describe("success", () => {
 
     // Without edits to merge or "reconcile", then the templated flow is updated to exactly match the source data
     queryMock.mockQuery({
-      name: "UpdateTemplatedFlowData",
+      name: "UpdateTemplatedFlowTransaction",
       matchOnVariables: false,
       data: {
         flow: {
           data: mockSourceTemplateFlowData,
+        },
+        comment: {
+          id: 1,
+        },
+        notification: {
+          id: 1,
         },
       },
     });
