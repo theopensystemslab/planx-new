@@ -65,7 +65,8 @@ export const CREATE_AND_ADD_EDITOR_TO_TEAM = gql`
   }
 `;
 
-/** Our teamAdmin permission is a layer _on top of_ teamEditor
+/**
+ * Our teamAdmin permission is a layer _on top of_ teamEditor
  * meaning there should be multiple records in team_members for the same user
  * so this mutation creates both a teamEditor _and_ teamAdmin record.
  */
@@ -107,6 +108,7 @@ export const REMOVE_TEAM_MEMBER = gql`
   }
 `;
 
+/** Grants the existing user editor permissions _only_ for this team */
 export const ADD_EXISTING_USER_TO_TEAM_AS_EDITOR = gql`
   mutation AddExistingUserToTeamAsEditor($teamId: Int!, $userId: Int!) {
     insert_team_members_one(
@@ -117,6 +119,7 @@ export const ADD_EXISTING_USER_TO_TEAM_AS_EDITOR = gql`
   }
 `;
 
+/** Grants the existing user both team editor _and_ team admin permissions */
 export const ADD_EXISTING_USER_TO_TEAM_AS_ADMIN = gql`
   mutation AddExistingUserToTeamAsAdmin($teamId: Int!, $userId: Int!) {
     insert_team_members(
@@ -142,7 +145,7 @@ export const CREATE_TEAM_ADMIN_ONLY = gql`
 
 export const REMOVE_TEAM_ADMIN_ONLY = gql`
   mutation RemoveTeamAdminOnly($teamId: Int!, $userId: Int!) {
-    delete_team_members(
+    DeleteTeamMembers: delete_team_members(
       where: {
         role: { _eq: teamAdmin }
         user_id: { _eq: $userId }

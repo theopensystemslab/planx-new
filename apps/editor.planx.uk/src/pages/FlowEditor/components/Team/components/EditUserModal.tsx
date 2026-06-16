@@ -74,7 +74,7 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
         },
       ],
       onCompleted: (data) => {
-        if (data.delete_team_members.affected_rows > 0) {
+        if (data.DeleteTeamMembers.affected_rows > 0) {
           handleCompleted("Successfully updated a user");
         } else {
           toast.warning("No admin role found to remove");
