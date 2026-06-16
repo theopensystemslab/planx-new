@@ -58,7 +58,9 @@ export const userStore: StateCreator<
     );
     if (isUserTeamAdmin) return "teamAdmin";
 
-    return currentUserTeam[0].role;
+    if (currentUserTeam[0]?.role) return currentUserTeam[0].role;
+
+    return "teamViewer";
   },
 
   getUserRole: () => {
