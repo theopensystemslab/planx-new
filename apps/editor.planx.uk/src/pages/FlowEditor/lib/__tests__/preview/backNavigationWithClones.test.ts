@@ -5,6 +5,7 @@ import { clickContinue, visitedNodes } from "../utils";
 
 const { getState, setState } = useStore;
 const {
+  record,
   resetPreview,
   upcomingCardIds,
   previousCard,
@@ -88,9 +89,15 @@ describe("Navigation", () => {
     expect(getCurrentCard()?.id).toBe("FinalNotice");
     expect(canGoBack(getCurrentCard())).toBe(true);
 
-    expect(previousCard(flow["FinalNotice"])).toBe("ClonedContent"); // currently returns "RightPathFirstQuestion"
-    // expect(previousCard(flow["ClonedContent"])).toBe("RightPathFirstQuestion");
-    // expect(previousCard(flow["RightPathFirstQuestion"])).toBe("RootQuestion"); // Skips ClonedSetValue because was automated
+    // Emulate clicking "back" via record(<previousCardId>)
+    expect(previousCard(flow["FinalNotice"])).toBe("ClonedContent");
+    record("ClonedContent");
+
+    expect(previousCard(flow["ClonedContent"])).toBe("RightPathFirstQuestion");
+    record("RightPathFirstQuestion");
+
+    // Skips ClonedSetValue because was automated
+    expect(previousCard(flow["RightPathFirstQuestion"])).toBe("RootQuestion");
   });
 });
 
