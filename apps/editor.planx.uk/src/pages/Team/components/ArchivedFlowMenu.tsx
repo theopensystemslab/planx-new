@@ -51,7 +51,7 @@ const ArchivedFlowMenu: React.FC<FlowMenuProps> = ({
       }
 
       toast.error(
-        "We are unable to unarchive this flow, refesh and try again or contact an admin",
+        "We are unable to unarchive this flow, refresh and try again or contact an admin",
       );
       setOpenFlowDialog(null);
     }
@@ -63,7 +63,7 @@ const ArchivedFlowMenu: React.FC<FlowMenuProps> = ({
       toast.success("Deleted flow");
     } catch (error) {
       toast.error(
-        "We are unable to delete this flow, refesh and try again or contact an admin",
+        "We are unable to delete this flow, refresh and try again or contact an admin",
       );
     } finally {
       setOpenFlowDialog(null);

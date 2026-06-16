@@ -35,7 +35,7 @@ const ActiveFlowMenu: React.FC<FlowMenuProps> = ({
       toast.success("Archived flow");
     } catch (error) {
       toast.error(
-        "We are unable to archive this flow, refesh and try again or contact an admin",
+        "We are unable to archive this flow, refresh and try again or contact an admin",
       );
     } finally {
       setOpenDialog(null);
