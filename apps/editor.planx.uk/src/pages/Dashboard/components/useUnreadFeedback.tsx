@@ -4,26 +4,29 @@ import { GET_UNREAD_FEEDBACK_SUMMARY } from "./queries";
 
 export interface FlowSummary {
   flowName: string;
+  flowSlug: string;
   count: number;
 }
 
 export const useUnreadFeedback = (teamSlug: string) => {
   const { data, loading, error } = useQuery<{
-    feedback_summary: { flowName: string }[];
+    feedback_summary: { flowName: string; flowSlug: string }[];
   }>(GET_UNREAD_FEEDBACK_SUMMARY, {
     variables: { teamSlug },
   });
 
-  const counts = (data?.feedback_summary ?? []).reduce<Record<string, number>>(
-    (acc, { flowName }) => {
-      acc[flowName] = (acc[flowName] ?? 0) + 1;
-      return acc;
-    },
-    {},
-  );
+  const aggregated = (data?.feedback_summary ?? []).reduce<
+    Record<string, { count: number; flowSlug: string }>
+  >((acc, { flowName, flowSlug }) => {
+    acc[flowName] = {
+      count: (acc[flowName]?.count ?? 0) + 1,
+      flowSlug,
+    };
+    return acc;
+  }, {});
 
-  const flows: FlowSummary[] = Object.entries(counts)
-    .map(([flowName, count]) => ({ flowName, count }))
+  const flows: FlowSummary[] = Object.entries(aggregated)
+    .map(([flowName, { count, flowSlug }]) => ({ flowName, flowSlug, count }))
     .sort((a, b) => b.count - a.count);
 
   const total = flows.reduce((sum, { count }) => sum + count, 0);
