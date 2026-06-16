@@ -7,11 +7,7 @@ import {
   updateUserAsTeamAdminHandler,
   updateUserOnlyHandler,
 } from "./mocks/handlers";
-import {
-  mockPlainUser,
-  mockPlatformAdminUser,
-  mockUsersData,
-} from "./mocks/users";
+import { mockPlatformAdminUser, mockUsersData } from "./mocks/users";
 
 describe("when a user presses 'edit button'", () => {
   beforeEach(async () => {
@@ -34,13 +30,13 @@ describe("when a user presses 'edit button'", () => {
     const firstNameInput = await screen.findByLabelText("First name");
     const lastNameInput = await screen.findByLabelText("Last name");
     const emailInput = await screen.findByLabelText("Email address");
-    const isTeamAdmin = await screen.findByLabelText("Team Admin");
+    const roleDropdown = await screen.findByRole("combobox");
 
     // Sorted based on first letter of first name Bill > Donella in Mocks
     expect(firstNameInput).toHaveDisplayValue("Bilbo");
     expect(lastNameInput).toHaveDisplayValue("Baggins");
     expect(emailInput).toHaveDisplayValue("bil.bags@email.com");
-    expect(isTeamAdmin).not.toBeChecked();
+    expect(roleDropdown).toHaveTextContent("Team editor");
   });
 
   it("disables the update user button", async () => {
@@ -154,9 +150,11 @@ describe("when a user correctly makes a teamEditor a teamAdmin", () => {
       await within(teamMembersTable).findByTestId("edit-button-3");
     await user.click(editMemberButton);
 
-    const teamAdminSwitch = await screen.findByLabelText("Team Admin");
+    const roleDropdown = await screen.findByRole("combobox");
+    await user.click(roleDropdown);
 
-    await user.click(teamAdminSwitch);
+    const teamAdminOption = await screen.findByTestId("teamAdmin-option");
+    await user.click(teamAdminOption);
 
     const updateUserButton = await screen.findByRole("button", {
       name: "Update user",

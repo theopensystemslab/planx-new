@@ -160,10 +160,11 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
                   </Typography>
                   <SelectInput
                     value={formik.values.role}
-                    name="mode"
+                    name="role"
                     bordered
                     required
                     title={"User role"}
+                    data-testid="user-role-select"
                     labelId="user-role-select"
                     onChange={() =>
                       formik.setFieldValue(
@@ -175,7 +176,11 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
                     }
                   >
                     {roleOptions.map(({ id, name }) => (
-                      <MenuItem key={id} value={id}>
+                      <MenuItem
+                        key={id}
+                        value={id}
+                        data-testid={`${id}-option`}
+                      >
                         {name}
                       </MenuItem>
                     ))}

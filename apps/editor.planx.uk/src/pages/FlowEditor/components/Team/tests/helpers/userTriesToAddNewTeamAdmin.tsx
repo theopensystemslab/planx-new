@@ -8,7 +8,7 @@ export const userTriesToAddNewTeamAdmin = async (user: UserEvent) => {
   const teamMembersTable = screen.getByTestId("team-members");
   const addMemberButton =
     await within(teamMembersTable).findByText("Add a new member");
-  user.click(addMemberButton);
+  await user.click(addMemberButton);
 
   const addNewEditorModal = await screen.findByTestId("modal-create-user");
 
@@ -23,9 +23,10 @@ export const userTriesToAddNewTeamAdmin = async (user: UserEvent) => {
 
   await userEntersInput("First name", "Minnie", addNewEditorModal, user);
   await userEntersInput("Last name", "Mouse", addNewEditorModal, user);
-  const isTeamAdminToggle =
-    await within(addNewEditorModal).findByLabelText("Team Admin");
-  await user.click(isTeamAdminToggle);
+  const roleDropdown = await within(addNewEditorModal).findByRole("combobox");
+  await user.click(roleDropdown);
+  const teamAdminOption = await screen.findByTestId("teamAdmin-option");
+  await user.click(teamAdminOption);
 
   const createUserButton = await screen.findByTestId(
     "modal-create-user-button",

@@ -72,11 +72,11 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ onClose }) => {
                   </Typography>
                   <SelectInput
                     value={formik.values.role}
-                    name="mode"
+                    name="User role"
                     bordered
                     required
                     title={"User role"}
-                    labelId="user-role-select"
+                    data-testid="user-role-select"
                     onChange={() =>
                       formik.setFieldValue(
                         "role",
@@ -87,7 +87,11 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ onClose }) => {
                     }
                   >
                     {roleOptions.map(({ id, name }) => (
-                      <MenuItem key={id} value={id}>
+                      <MenuItem
+                        key={id}
+                        value={id}
+                        data-testid={`${id}-option`}
+                      >
                         {name}
                       </MenuItem>
                     ))}
