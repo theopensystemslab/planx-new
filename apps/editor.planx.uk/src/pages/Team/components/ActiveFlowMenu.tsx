@@ -20,7 +20,8 @@ const ActiveFlowMenu: React.FC<FlowMenuProps> = ({
 }) => {
   type OpenDialog = "archive" | "copy" | "rename" | "move";
   const [openDialog, setOpenDialog] = useState<OpenDialog | null>(null);
-  const archivedSlug = flow.slug.concat("-archived");
+  const dateTime = Date.now();
+  const archivedSlug = flow.slug.concat(`-archived-${dateTime}`); // this is just to make the slug unique, not as an actual timestamp
   const [archiveFlow] = useArchiveFlow(flow.id, archivedSlug, teamId);
 
   const toast = useToast();
@@ -35,7 +36,7 @@ const ActiveFlowMenu: React.FC<FlowMenuProps> = ({
       toast.success("Archived flow");
     } catch (error) {
       toast.error(
-        "We are unable to archive this flow, refesh and try again or contact an admin",
+        "We are unable to archive this flow, refresh and try again or contact an admin",
       );
     } finally {
       setOpenDialog(null);

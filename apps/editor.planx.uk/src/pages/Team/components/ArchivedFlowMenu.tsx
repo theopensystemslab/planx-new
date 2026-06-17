@@ -22,11 +22,14 @@ const ArchivedFlowMenu: React.FC<FlowMenuProps> = ({
   const [openFlowDialog, setOpenFlowDialog] = useState<OpenFlowDialog | null>(
     null,
   );
-
-  const unarchivedSlug = flow.slug.replace("-archived", "");
+  const unarchivedSlug = flow.slug.replace(/-archived-\d+$/, "");
   const [unarchiveFlow] = useUnarchiveFlow(flow.id, unarchivedSlug, teamId);
 
-  const deletedSlug = flow.slug.replace("-archived", "-deleted");
+  const dateTime = Date.now();
+  const deletedSlug = flow.slug.replace(
+    /-archived-\d+$/,
+    `-deleted-${dateTime}`,
+  );
   const [deleteFlow] = useDeleteFlow(flow.id, deletedSlug, teamId);
 
   const toast = useToast();
@@ -51,7 +54,7 @@ const ArchivedFlowMenu: React.FC<FlowMenuProps> = ({
       }
 
       toast.error(
-        "We are unable to unarchive this flow, refesh and try again or contact an admin",
+        "We are unable to unarchive this flow, refresh and try again or contact an admin",
       );
       setOpenFlowDialog(null);
     }
@@ -63,7 +66,7 @@ const ArchivedFlowMenu: React.FC<FlowMenuProps> = ({
       toast.success("Deleted flow");
     } catch (error) {
       toast.error(
-        "We are unable to delete this flow, refesh and try again or contact an admin",
+        "We are unable to delete this flow, refresh and try again or contact an admin",
       );
     } finally {
       setOpenFlowDialog(null);

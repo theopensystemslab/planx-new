@@ -96,7 +96,7 @@ export const RenameDialog: React.FC<Props> = ({
   const initialFlowSlug =
     mode === "rename"
       ? flow.slug
-      : flow.slug.replace("-archived", "-unarchived");
+      : flow.slug.replace(/-archived-\d+$/, "-unarchived");
 
   return (
     <Formik<RenameFlow>
