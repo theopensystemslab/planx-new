@@ -5,6 +5,7 @@ import mergeWith from "lodash/mergeWith.js";
 
 import { $api } from "../../../client/index.js";
 import { getFlowData } from "../../../helpers.js";
+import { logDuration } from "../../../lib/performance.js";
 import type { Flow } from "../../../types.js";
 
 interface GetTemplatedFlowEdits {
@@ -62,50 +63,66 @@ export const updateTemplatedFlow = async (
   const edits = templatedFlowEditsResponse.edits?.[0]?.data || {};
 
   // Apply templated flow edits on top of source data using Lodash's mergeWith (order of args matters!)
-  const data = customMerge(sourceData, edits);
+  const data = await logDuration(`gpdo-timing-merge-${templatedFlowId}`, () =>
+    customMerge(sourceData, edits),
+  );
+
+  console.info("[gpdo-timing] update-templated-flow payload", {
+    sourceFlowId,
+    templatedFlowId,
+    nodeCount: Object.keys(data).length,
+    payloadBytes: Buffer.byteLength(JSON.stringify(data)),
+  });
 
   // Batch updates into a single transaction to minimise number of network requests
   //   1) Set merged data as `flows.data` for templatedFlowId
   //   2) Insert a "History" comment for templatedFlowId to denote update with source summary & author
   //   3) Insert a new "Notification" that the templatedFlowId is ready to review & publish
-  const updateTemplatedFlowTransactionResponse =
-    await $api.client.request<UpdateTemplatedFlowTransactionResponse>(
-      gql`
-        mutation UpdateTemplatedFlowTransaction(
-          $data: jsonb!
-          $flowId: uuid!
-          $comment: String!
-          $actorId: Int!
-          $teamId: Int!
-          $type: notification_type_enum_enum!
-        ) {
-          flow: update_flows_by_pk(
-            pk_columns: { id: $flowId }
-            _set: { data: $data }
+  const updateTemplatedFlowTransactionResponse = await logDuration(
+    `gpdo-timing-mutation-${templatedFlowId}`,
+    () =>
+      $api.client.request<UpdateTemplatedFlowTransactionResponse>(
+        gql`
+          mutation UpdateTemplatedFlowTransaction(
+            $data: jsonb!
+            $flowId: uuid!
+            $comment: String!
+            $actorId: Int!
+            $teamId: Int!
+            $type: notification_type_enum_enum!
           ) {
-            data
+            flow: update_flows_by_pk(
+              pk_columns: { id: $flowId }
+              _set: { data: $data }
+            ) {
+              data
+            }
+            comment: insert_flow_comments_one(
+              object: {
+                flow_id: $flowId
+                comment: $comment
+                actor_id: $actorId
+              }
+            ) {
+              id
+            }
+            notification: insert_notifications_one(
+              object: { flow_id: $flowId, team_id: $teamId, type: $type }
+            ) {
+              id
+            }
           }
-          comment: insert_flow_comments_one(
-            object: { flow_id: $flowId, comment: $comment, actor_id: $actorId }
-          ) {
-            id
-          }
-          notification: insert_notifications_one(
-            object: { flow_id: $flowId, team_id: $teamId, type: $type }
-          ) {
-            id
-          }
-        }
-      `,
-      {
-        flowId: templatedFlowId,
-        data: data,
-        comment: `Source template published: "${summary}"`,
-        actorId: sourcePublisher,
-        teamId: templatedFlowTeamId,
-        type: "updated_templated_flow",
-      },
-    );
+        `,
+        {
+          flowId: templatedFlowId,
+          data: data,
+          comment: `Source template published: "${summary}"`,
+          actorId: sourcePublisher,
+          teamId: templatedFlowTeamId,
+          type: "updated_templated_flow",
+        },
+      ),
+  );
 
   return {
     templatedFlowData: updateTemplatedFlowTransactionResponse.flow.data,

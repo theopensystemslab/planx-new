@@ -1,0 +1,7883 @@
+{
+  "_root": {
+    "edges": [
+      "agMQSaMc5H",
+      "HVdR8BiR8R",
+      "VYnyZQTRYW"
+    ]
+  },
+  "0BZ4OFkhrr": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "0D89AJ6dYF": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "0DUra9HHNH": {
+    "data": {
+      "val": "GPDO.part04.classCB_",
+      "text": "Part 4 Class CB"
+    },
+    "type": 200,
+    "edges": [
+      "x7TyptmRoe"
+    ]
+  },
+  "0LDgz9dy4x": {
+    "data": {
+      "text": "No"
+    },
+    "type": 200
+  },
+  "0Ppxnwg7oo": {
+    "data": {
+      "tags": [],
+      "text": "Part 2 Class D - electrical outlet for recharging vehicles",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "MvhG5mxocF"
+    ]
+  },
+  "0Y5nraZhJz": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "0ZrgpY9Nx3": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "r32Bhp6lbA",
+      "EgSC69NsOf"
+    ]
+  },
+  "0aitOPaSey": {
+    "data": {
+      "val": "GPDO.part05",
+      "text": "Part 5"
+    },
+    "type": 200,
+    "edges": [
+      "lIBqlUcsMi"
+    ]
+  },
+  "0nv5RvBdpf": {
+    "data": {
+      "text": "Part 11 Class C - demolition of gates, fences, walls etc",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "3FlndepgRf"
+    ]
+  },
+  "0ohQMituW2": {
+    "data": {
+      "fn": "permittedRoute",
+      "tags": [],
+      "text": "What GPDO Part 12A classes is the project under?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "oQB4Y7dobW",
+      "6qeV3nij9U"
+    ]
+  },
+  "0tSTDHb1QA": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "0yDRgOKMKL": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "6Mv5rtePO4",
+      "VBwhH2rP7k"
+    ]
+  },
+  "17wXeiHu4K": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "19CqAA3KoK": {
+    "data": {
+      "text": "Part 20 Class A - New dwellinghouses on detached blocks of flats",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "qUwJzMLgJu"
+    ]
+  },
+  "1AHDgJ22TD": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "1BIpTslZAj": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "1DbBS2OfZd": {
+    "data": {
+      "val": "GPDO.part02",
+      "text": "Part 2"
+    },
+    "type": 200,
+    "edges": [
+      "TDXjMdX9Oa"
+    ]
+  },
+  "1DmujVo01t": {
+    "data": {
+      "val": "GPDO.part10.classA_",
+      "text": "Part 10 Class A"
+    },
+    "type": 200,
+    "edges": [
+      "43UqMZLFkj"
+    ]
+  },
+  "1I23D0mXUO": {
+    "data": {
+      "tags": [],
+      "text": "Part 4 Class BB - moveable structures for historic visitor attractions and listed pubs, restaurants etc",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "YAz9L5BHVs"
+    ]
+  },
+  "1KQFqYSaMg": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "kv9Vswf4NE",
+      "KYVjpm783e"
+    ]
+  },
+  "1Kh4tlUH5a": {
+    "data": {
+      "val": "GPDO.part03.classG_",
+      "text": "Part 3 Class G"
+    },
+    "type": 200,
+    "edges": [
+      "p9XF8QGH0N"
+    ]
+  },
+  "1Ms2RWtXOb": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "1R5lHv92zh": {
+    "data": {
+      "val": "GPDO.part17",
+      "text": "Part 17"
+    },
+    "type": 200,
+    "edges": [
+      "EredCCwOqK"
+    ]
+  },
+  "1d3Ja6MtUz": {
+    "data": {
+      "val": "GPDO.part19",
+      "text": "Part 19"
+    },
+    "type": 200,
+    "edges": [
+      "KOpPYe3c0I"
+    ]
+  },
+  "1jt8Mv1AEN": {
+    "data": {
+      "tags": [],
+      "text": "Part 1 Class B - additions etc to the roof of a dwellinghouse",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "DZMAT4yqYf"
+    ]
+  },
+  "1kNWjVBucc": {
+    "data": {
+      "text": "Part 8 Class I - development by an air traffic services licence holder within an airport",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "SHuP1KCmIM"
+    ]
+  },
+  "1lvNP5lQuL": {
+    "data": {
+      "text": "Part 17 Class J - temporary use of land etc for mineral exploration",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "H4ggPKiuBX"
+    ]
+  },
+  "1nLcQ17Df9": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "y2aGvqrCGw",
+      "JAtmK0QC75"
+    ]
+  },
+  "1xoV61yB8z": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "vOt0Pagdxn",
+      "61Xijbywf6"
+    ]
+  },
+  "28MuWpmuFK": {
+    "data": {
+      "text": "Part 7 Class M - extensions etc for schools, colleges, universities, prisons and hospitals",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "wCFGAJZ4wm"
+    ]
+  },
+  "2Liu5w3a1H": {
+    "data": {
+      "val": "GPDO.part04.classDB_",
+      "text": "Part 4 Class DB"
+    },
+    "type": 200,
+    "edges": [
+      "HBrXnuFHzq"
+    ]
+  },
+  "2MnNpvgAdE": {
+    "data": {
+      "val": "GPDO.part07.classMA_",
+      "text": "Part 7 Class MA"
+    },
+    "type": 200,
+    "edges": [
+      "N6RUqswwmS"
+    ]
+  },
+  "2OlIIh85dj": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "2TyRtHHM2P": {
+    "data": {
+      "tags": [],
+      "text": "Part 4 Class D - commercial, business and service etc to temporary flexible use",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "KXEViUpiEf"
+    ]
+  },
+  "2UrsQ8jfIF": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "oe8b9iGdd5",
+      "xM949Vh6Su"
+    ]
+  },
+  "2X4aN6s8lX": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "PKUweBBGxp",
+      "Za2lzCvsd8"
+    ]
+  },
+  "2cROTj9JLW": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "2d1AGEIWMc": {
+    "data": {
+      "text": "Part 20 Class AC - new dwellinghouses on terrace buildings in use as dwellinghouses",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "ZTFCu0Wbi7"
+    ]
+  },
+  "2fhGJYULyU": {
+    "data": {
+      "text": "Part 7 Class J - hard surfaces for industrial and warehouse premises",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "Ha0vPX4Oby"
+    ]
+  },
+  "2sHBKcadz3": {
+    "data": {
+      "val": "GPDO.part08.classB_",
+      "text": "Part 8 Class B"
+    },
+    "type": 200,
+    "edges": [
+      "T1L4Nk2D0t"
+    ]
+  },
+  "2y38RIvCRK": {
+    "data": {
+      "fn": "permittedRoute",
+      "tags": [],
+      "text": "What GPDO Part 4 classes is the project under?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": false
+    },
+    "type": 105,
+    "edges": [
+      "oVj7CtvvR3",
+      "VuLzJfqgJH",
+      "5yHhVU6IVm",
+      "KtAQnWnqRr",
+      "kChqi7yVfg",
+      "pEDssAvoLO",
+      "rdg5C0tr40",
+      "0DUra9HHNH",
+      "NwS24WgyqI",
+      "yrHMXD6Lqq",
+      "2Liu5w3a1H",
+      "7v9cGtl8u0",
+      "q7ovrEC0gd"
+    ]
+  },
+  "312SiRRneJ": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "ANQTTXoRla",
+      "D4sEvnqofR"
+    ]
+  },
+  "3CxMhmYMIb": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "3DWRhdXDfR": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "3FlndepgRf": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "RGpLxp1HQp",
+      "sYdPOneJ9L"
+    ]
+  },
+  "3KtuR5GfS4": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "3M613r27SQ": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "3REZBiDGUX": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "RzL9fr1wwb",
+      "S9Pb0wvQq1"
+    ]
+  },
+  "3XILXH7CAV": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "3XMKpQTQ1Q": {
+    "data": {
+      "val": "GPDO.part18",
+      "text": "Part 18"
+    },
+    "type": 200,
+    "edges": [
+      "qeViC9Omf4"
+    ]
+  },
+  "3dsvjopzsq": {
+    "data": {
+      "text": "Part 8 Class A - railway or light railway undertakings",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "t7PulVwEgY"
+    ]
+  },
+  "3hsFrrvP6C": {
+    "data": {
+      "val": "GPDO.part09.classA_",
+      "text": "Part 9 Class A"
+    },
+    "type": 200,
+    "edges": [
+      "b0IPcoIMK9"
+    ]
+  },
+  "3wlcOVaK5c": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "zkOUZpm0o7",
+      "L08zxz0fvw"
+    ]
+  },
+  "3xOUq684KR": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "3xUJwZdR76": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "43UqMZLFkj": {
+    "data": {
+      "text": "Part 10 Class A - Repairs to services",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "hDoPFx2JIJ"
+    ]
+  },
+  "48WPfmuwRC": {
+    "data": {
+      "text": "Part 13 Class B - development by or on behalf of sewerage undertakers",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "E8EBDcb72T"
+    ]
+  },
+  "4Hd5SJI14Q": {
+    "data": {
+      "val": "GPDO.part09",
+      "text": "Part 9"
+    },
+    "type": 200,
+    "edges": [
+      "LpuOsD70d8"
+    ]
+  },
+  "4TzKiTWsse": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "4VWeLhLSEl": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "4b5rJk0xF7": {
+    "data": {
+      "tags": [],
+      "text": "Part 1 Class E - buildings etc incidental to the enjoyment of a dwellinghouse",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "1xoV61yB8z"
+    ]
+  },
+  "4cm4I4UPhX": {
+    "data": {
+      "tags": [],
+      "text": "Part 14 Class A - installation or alteration etc of solar equipment on domestic premises",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "OUpywyok2i"
+    ]
+  },
+  "4qP1Pltvh0": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "4qTfRqWeHj": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "VHvFk9XT5N",
+      "shmTH2N7Go"
+    ]
+  },
+  "4sFkmKNhzD": {
+    "data": {
+      "text": "Part 17 Class E - coal mining development by a licensee of the British Coal Corporation",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "EQJAZt7xWJ"
+    ]
+  },
+  "54VV89uNn6": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "58oRz3JyNR": {
+    "data": {
+      "tags": [],
+      "text": "Part 2 Class B - means of access to a highway",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "ga3jfJrpTx"
+    ]
+  },
+  "59M4olMFCQ": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "5ARYXjLMgv": {
+    "data": {
+      "tags": [],
+      "text": "Part 3 Class AA - drinking establishments with expanded food provision",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "wolcR11oBA"
+    ]
+  },
+  "5BxcR4IHRI": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "5PlpZJ7gLQ": {
+    "data": {
+      "val": "GPDO.part17.classKA_",
+      "text": "Part 17 Class KA"
+    },
+    "type": 200,
+    "edges": [
+      "F0XyfpcR5I"
+    ]
+  },
+  "5bQ3kvujBY": {
+    "data": {
+      "val": "GPDO.part18.classA_",
+      "text": "Part 18 Class A"
+    },
+    "type": 200,
+    "edges": [
+      "FTnvmFcpqy"
+    ]
+  },
+  "5bTHqvLmmq": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "FMDyH1NTag",
+      "4qP1Pltvh0"
+    ]
+  },
+  "5hthGoVNga": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "5jKy8VzXu7": {
+    "data": {
+      "val": "GPDO.part03",
+      "text": "Part 3"
+    },
+    "type": 200,
+    "edges": [
+      "pcjMWmK1xM"
+    ]
+  },
+  "5o1F3i93vc": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "5uIn6cUC69": {
+    "data": {
+      "text": "Part 18 Class B - development at amusement parks",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "QGqmPcx4YN"
+    ]
+  },
+  "5yHhVU6IVm": {
+    "data": {
+      "val": "GPDO.part04.classBA_",
+      "text": "Part 4 Class BA"
+    },
+    "type": 200,
+    "edges": [
+      "8bLJWb09vN"
+    ]
+  },
+  "5yb7i0MVNo": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "fnv3uN5miG",
+      "6TyM5TTZQ2"
+    ]
+  },
+  "61Xijbywf6": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "6Mv5rtePO4": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "6N39OHU223": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "6ODbhGVAb4": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "CIZLIaQ0Ru",
+      "yXwqJDG2R9"
+    ]
+  },
+  "6OTED3mskU": {
+    "data": {
+      "tags": [],
+      "text": "Part 2 Class C - exterior painting",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "bb7YrBSnDU"
+    ]
+  },
+  "6TyM5TTZQ2": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "6dVZGQRJwm": {
+    "data": {
+      "tags": [],
+      "text": "Part 3 Class U - return to previous use from converted state-funded school or registered nursery",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "wRYZYtKXet"
+    ]
+  },
+  "6dkeJXLB7W": {
+    "data": {
+      "tags": [],
+      "text": "Part 6 Class B - agricultural development on units of less than 5 hectares",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "RKxmF5saM4"
+    ]
+  },
+  "6gmFQFKHop": {
+    "data": {
+      "text": "Part 9 Class C - tramway or road transport undertakings",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "oZMPWkJ724"
+    ]
+  },
+  "6nJ30dXSf6": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "6oDqVlnHtD": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "6oXRdmI90U": {
+    "data": {
+      "text": "Part 17 Class I - waste tipping from a mine on sites used since 1948",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "CRPgiEN31t"
+    ]
+  },
+  "6qeV3nij9U": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "6sVS4te6eX": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "6vQa4aCW64": {
+    "data": {
+      "val": "GPDO.part15",
+      "text": "Part 15"
+    },
+    "type": 200,
+    "edges": [
+      "q9bVNz1Bf5"
+    ]
+  },
+  "6zPQqucLFt": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "6oDqVlnHtD",
+      "SOZiudS8fq"
+    ]
+  },
+  "780JA5fIv0": {
+    "data": {
+      "val": "GPDO.part07.classJ_",
+      "text": "Part 7 Class J"
+    },
+    "type": 200,
+    "edges": [
+      "2fhGJYULyU"
+    ]
+  },
+  "79WBPejjN6": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "7PTD3mxTUp": {
+    "data": {
+      "text": "Part 16 Class D - driver information systems",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "y8iGrBhZRI"
+    ]
+  },
+  "7SCT7urgtX": {
+    "data": {
+      "val": "GPDO.part16.classB_",
+      "text": "Part 16 Class B"
+    },
+    "type": 200,
+    "edges": [
+      "A6RkCNorzv"
+    ]
+  },
+  "7bq4h35dEw": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "7n39QJhKFN": {
+    "data": {
+      "fn": "permittedRoute",
+      "text": "What GPDO Part 16 classes is the project under?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "s9UhDBPnHs",
+      "7SCT7urgtX",
+      "oWLst4OgKt",
+      "JdhtoxgXfw",
+      "jhVXBK2vsY",
+      "3XILXH7CAV"
+    ]
+  },
+  "7tQnM91iX5": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "7uOu8if5NG": {
+    "data": {
+      "val": "GPDO.part17.classB_",
+      "text": "Part 17 Class B"
+    },
+    "type": 200,
+    "edges": [
+      "xukchNWxDj"
+    ]
+  },
+  "7v9cGtl8u0": {
+    "data": {
+      "val": "GPDO.part04.classE_",
+      "text": "Part 4 Class E"
+    },
+    "type": 200,
+    "edges": [
+      "UUyusgpVVq"
+    ]
+  },
+  "7vfU007iCD": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "XRX9pwOVKa",
+      "O6CckBYw7l"
+    ]
+  },
+  "80pR582OoO": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "OLvIfU6mnG",
+      "xfvf6jofhn"
+    ]
+  },
+  "85u3gBLg6s": {
+    "data": {
+      "tags": [],
+      "text": "Part 3 Class T - commercial, business and service, hotels etc to state-funded schools",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "0yDRgOKMKL"
+    ]
+  },
+  "88dC5NQR8H": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "8B1B1haDUe": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "8G9UVTiwcQ": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "8RZyWm7Fr6": {
+    "data": {
+      "val": "GPDO.part01",
+      "text": "Part 1"
+    },
+    "type": 200,
+    "edges": [
+      "gYMG98z7Bj"
+    ]
+  },
+  "8SBZVx2X4O": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "8SuRzxst1Y": {
+    "data": {
+      "val": "GPDO.part20.classZA_",
+      "text": "Part 20 Class ZA"
+    },
+    "type": 200,
+    "edges": [
+      "Q00EBgS7VW"
+    ]
+  },
+  "8TRt6RWOFV": {
+    "data": {
+      "tags": [],
+      "text": "Part 3 Class R - agricultural buildings to a flexible commercial use",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "Nq6AVkPIYf"
+    ]
+  },
+  "8bLJWb09vN": {
+    "data": {
+      "tags": [],
+      "text": "Part 4 Class BA - additional temporary use of land during the relevant period",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "3REZBiDGUX"
+    ]
+  },
+  "8gAfcoOYqG": {
+    "data": {
+      "text": "Part 14 Class L - installation or alteration etc of ground source heat pump on non-domestic premises",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "ovUuHsxbKH"
+    ]
+  },
+  "8gNm5hjL2Q": {
+    "data": {
+      "val": "GPDO.part15.classA_",
+      "text": "Part 15 Class A"
+    },
+    "type": 200,
+    "edges": [
+      "tHueehKO8N"
+    ]
+  },
+  "90MVXufpdQ": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "lFkBSuyw21",
+      "zbamnE02qX"
+    ]
+  },
+  "92zD4RaLNy": {
+    "data": {
+      "text": "Part 8 Class E - development for the aid of shipping",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "90MVXufpdQ"
+    ]
+  },
+  "95n1eYLnXE": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "i6vflIauwM",
+      "t410OwwI30"
+    ]
+  },
+  "97u4uoBTzX": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "9EmUoHuvdo": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "9EvFpm6wEF": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "9JzBqrhNVm": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "9Ru4xtZmKW": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "9TFOtgranU": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "9X3xDu4Hwt": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "9bWGPo9YZg": {
+    "data": {
+      "val": "GPDO.part03.classH_",
+      "text": "Part 3 Class H"
+    },
+    "type": 200,
+    "edges": [
+      "ShQg3KfUkY"
+    ]
+  },
+  "9dsYFwjpCq": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "9jTy0UPHP9": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "ZgPfGgK5dw",
+      "Dy7lxfDxwc"
+    ]
+  },
+  "9q56lS7Y0m": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "gE3WcK4qmd",
+      "3DWRhdXDfR"
+    ]
+  },
+  "9tApTgDsRG": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "MffwjYWCN6",
+      "3CxMhmYMIb"
+    ]
+  },
+  "9wtPFEEew2": {
+    "data": {
+      "text": "Part 14 Class N - installation etc of flue for biomass heating system on non-domestic premises",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "LhxBlqZcpY"
+    ]
+  },
+  "9yekkk9Kwi": {
+    "data": {
+      "tags": [],
+      "text": "Part 6 Class C - mineral working for agricultural purposes",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "flSRtnQUPY"
+    ]
+  },
+  "A08fuFaA2c": {
+    "data": {
+      "text": "Part 12 Class B",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "dyON3ilHBJ"
+    ]
+  },
+  "A6RkCNorzv": {
+    "data": {
+      "text": "Part 16 Class B - other electronic communications development",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "GGVE6KqPbM"
+    ]
+  },
+  "A98uB8Fw7x": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "AFwFh39ilj": {
+    "data": {
+      "val": "GPDO.part02.classE_",
+      "text": "Part 2 Class E"
+    },
+    "type": 200,
+    "edges": [
+      "edGmoEknU5"
+    ]
+  },
+  "ANQTTXoRla": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "AO9Nb4ILd2": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "APya86tP06": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "9X3xDu4Hwt",
+      "K9kxtlIFkm"
+    ]
+  },
+  "ATZJD9pkXH": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "AbKAq4FHxl": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "AfosVafNN0": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "AiEVCIBFR2": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "w5nd7TizzL",
+      "SjBew01rOs"
+    ]
+  },
+  "B2IhpmxU0F": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "B9phC2Hg0k": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "IGGoUFMmOn",
+      "H4G3Lz7dle"
+    ]
+  },
+  "BFh6EFk9bM": {
+    "data": {
+      "text": "Part 7 Class C - click and collect facilities",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "tt1jfnRyk9"
+    ]
+  },
+  "BH1kh2rgEh": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "yHVmK3ylEQ",
+      "rmJehvU1n1"
+    ]
+  },
+  "BKbPlzhX6C": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "uPoMsZK4hf",
+      "AO9Nb4ILd2"
+    ]
+  },
+  "BMQYsmdZV9": {
+    "data": {
+      "text": "Part 8 Class J - development by an air traffic services licence holder on operational land",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "9q56lS7Y0m"
+    ]
+  },
+  "BRG35lk139": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "BRKUf0yDva": {
+    "data": {
+      "val": "GPDO.part08.classI_",
+      "text": "Part 8 Class I"
+    },
+    "type": 200,
+    "edges": [
+      "1kNWjVBucc"
+    ]
+  },
+  "BaERvxEmIf": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "BqTRXTrraw": {
+    "data": {
+      "tags": [],
+      "text": "Part 4 Class B - temporary use of land",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "mYyeMAM6Rb"
+    ]
+  },
+  "C1hHT8dV0o": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "C4XVlDmnKf": {
+    "data": {
+      "val": "GPDO.part01.classAA_",
+      "text": "Part 1 Class AA"
+    },
+    "type": 200,
+    "edges": [
+      "HUF6h0hpiR"
+    ]
+  },
+  "C59YI2gimr": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "vRPEDQMBTY",
+      "79WBPejjN6"
+    ]
+  },
+  "C8z3gyL60t": {
+    "data": {
+      "tags": [],
+      "text": "Part 6 Class E - forestry developments Permitted development",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "laET4h64Di"
+    ]
+  },
+  "CC5rk1PA4d": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "CClhTFroNh": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "vOPSxgVQ7T",
+      "uszWEGAaX0"
+    ]
+  },
+  "CIZLIaQ0Ru": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "CJ0TVi0LTx": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "CQT3XFAd48": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "CREM5z3Z9S": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "CRPgiEN31t": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "rWUHVJaaDd",
+      "sIjTjo9w19"
+    ]
+  },
+  "CU1FJo9DBO": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "ECYRuEeQhc",
+      "z0a2kQIaoD"
+    ]
+  },
+  "CYVTVSyaNF": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "DNLLf8q5p0",
+      "3xUJwZdR76"
+    ]
+  },
+  "CaMd4rGLDd": {
+    "data": {
+      "val": "GPDO.part08.classG_",
+      "text": "Part 8 Class G"
+    },
+    "type": 200,
+    "edges": [
+      "SlTtKJbHbx"
+    ]
+  },
+  "CcdoGkABqz": {
+    "data": {
+      "val": "GPDO.part02.classC_",
+      "text": "Part 2 Class C"
+    },
+    "type": 200,
+    "edges": [
+      "6OTED3mskU"
+    ]
+  },
+  "CgdLVc0tax": {
+    "data": {
+      "val": "GPDO.part02.classB_",
+      "text": "Part 2 Class B"
+    },
+    "type": 200,
+    "edges": [
+      "58oRz3JyNR"
+    ]
+  },
+  "CsAqPHHkqa": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "KdEbe5d2FI",
+      "GwTYI62eQ1"
+    ]
+  },
+  "D058eskdgd": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "D4DkTAeWBe": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "D4sEvnqofR": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "DNLLf8q5p0": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "DNxo1DK3F1": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "DZMAT4yqYf": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "Jk1LRcybkg",
+      "R9SiUHzq6W"
+    ]
+  },
+  "Dkg7V2ZgC3": {
+    "data": {
+      "text": "Part 7 Class B - construction of shop trolley stores",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "IZYb130Iup"
+    ]
+  },
+  "Dy7lxfDxwc": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "E1pMQUQ5Hg": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "mzEpvHhQIm",
+      "2cROTj9JLW"
+    ]
+  },
+  "E2e1wfHVUu": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "E7eI2SyFBz": {
+    "data": {
+      "val": "GPDO.part17.classH_",
+      "text": "Part 17 Class H"
+    },
+    "type": 200,
+    "edges": [
+      "ygnDgWlQko"
+    ]
+  },
+  "E8EBDcb72T": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "s1gd1jK6EX",
+      "JVoI3mpHQl"
+    ]
+  },
+  "EAYQ9ltBNC": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "pAwcSd7PGO",
+      "5hthGoVNga"
+    ]
+  },
+  "ECYRuEeQhc": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "EEZo3zMG6M": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "EG2IHODZ2s": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "EMKmEc7soB": {
+    "data": {
+      "val": "GPDO.part07.classN_",
+      "text": "Part 7 Class N"
+    },
+    "type": 200,
+    "edges": [
+      "F0UQbfBFOL"
+    ]
+  },
+  "EQJAZt7xWJ": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "cn0pMSfzum",
+      "JIIv7Syeq3"
+    ]
+  },
+  "ETaTZzJjBd": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "EU63NEwzbU": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "EewGFiYWNj": {
+    "data": {
+      "tags": [],
+      "text": "Part 3 Class I - industrial conversions",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "qxkYNY7EGp"
+    ]
+  },
+  "EgSC69NsOf": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "EjQRumFJTR": {
+    "data": {
+      "tags": [],
+      "text": "Part 3 Class N - specified sui generis uses to dwellinghouses",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "sItr0Skmh4"
+    ]
+  },
+  "EredCCwOqK": {
+    "data": {
+      "fn": "permittedRoute",
+      "tags": [],
+      "text": "What GPDO Part 17 classes is the project under?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "lLeWXOcSx6",
+      "7uOu8if5NG",
+      "MOpv293x9R",
+      "Sunw07B34A",
+      "LSf6Ln4Sru",
+      "NaVKYb8dmS",
+      "L2wjp2tZKF",
+      "E7eI2SyFBz",
+      "PZT9qqSfvd",
+      "gkAFjyyh80",
+      "c31s3iB4pj",
+      "yII9f2X2WQ",
+      "5PlpZJ7gLQ",
+      "R4l2NktgCR",
+      "GyARRVe32y",
+      "TJyxN17xlB"
+    ]
+  },
+  "F0UQbfBFOL": {
+    "data": {
+      "text": "Part 7 Class N - hard surfaces for schools, colleges, universities or hospitals",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "EAYQ9ltBNC"
+    ]
+  },
+  "F0XyfpcR5I": {
+    "data": {
+      "text": "Part 17 Class KA - use of land etc in respect of petroleum exploration",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "G8DDwoTTiV"
+    ]
+  },
+  "F8Xnre7Aky": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "FMDyH1NTag": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "FTnvmFcpqy": {
+    "data": {
+      "text": "Part 18 Class A - development under local or private Acts or Order",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "tNHHU5xErw"
+    ]
+  },
+  "Fb1RXaDMjb": {
+    "data": {
+      "val": "GPDO.part14.classN_",
+      "text": "Part 14 Class N"
+    },
+    "type": 200,
+    "edges": [
+      "9wtPFEEew2"
+    ]
+  },
+  "FbVm7jKhxZ": {
+    "data": {
+      "val": "GPDO.part11",
+      "text": "Part 11"
+    },
+    "type": 200,
+    "edges": [
+      "ijxlkViMv0"
+    ]
+  },
+  "Fehoo8ZsWO": {
+    "data": {
+      "tags": [],
+      "text": "Part 3 Class P - storage or distribution centre to dwellinghouses",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "CsAqPHHkqa"
+    ]
+  },
+  "FzY4vJmbEW": {
+    "data": {
+      "val": "GPDO.part20.classAB_",
+      "text": "Part 20 Class AB"
+    },
+    "type": 200,
+    "edges": [
+      "erOaz396AA"
+    ]
+  },
+  "G8DDwoTTiV": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "8SBZVx2X4O",
+      "97u4uoBTzX"
+    ]
+  },
+  "G8qmlIzFWM": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "E2e1wfHVUu",
+      "xmSLEeWEdc"
+    ]
+  },
+  "G9an9MaL25": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "GE428LORHM": {
+    "data": {
+      "text": "Part 14 Class I - installation or alteration etc of stand-alone wind turbine on domestic premises",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "MAe81ScHvI"
+    ]
+  },
+  "GFKaM2t7dS": {
+    "data": {
+      "fn": "permittedRoute",
+      "tags": [],
+      "text": "What GPDO Part 20 classes is the project under?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "8SuRzxst1Y",
+      "m09lff33HI",
+      "r7SdmrEbWs",
+      "FzY4vJmbEW",
+      "Yi3HBVq8gx",
+      "sO47Rhh17n",
+      "2OlIIh85dj"
+    ]
+  },
+  "GGVE6KqPbM": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "a4EkYzQzLg",
+      "gVa3WOuMwu"
+    ]
+  },
+  "GHrQXla22x": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "GVUnzwOllT": {
+    "data": {
+      "val": "GPDO.part07.classL_",
+      "text": "Part 7 Class L"
+    },
+    "type": 200,
+    "edges": [
+      "Rr84YWG9P3"
+    ]
+  },
+  "GwTYI62eQ1": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "GyARRVe32y": {
+    "data": {
+      "val": "GPDO.part17.classM_",
+      "text": "Part 17 Class M"
+    },
+    "type": 200,
+    "edges": [
+      "Na86LJYMZ3"
+    ]
+  },
+  "H4G3Lz7dle": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "H4ggPKiuBX": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "qvULkKY9cK",
+      "SbN0dqrhlN"
+    ]
+  },
+  "H5YvsCMFf1": {
+    "data": {
+      "text": "example of PD right removal under certain conditions",
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": false
+    },
+    "type": 100
+  },
+  "H64nSrhaxC": {
+    "data": {
+      "tags": [],
+      "text": "Part 4 Class DA - Restaurants and cafes, drinking establishments and drinking establishments with expanded food provision to temporarily provide takeaway food",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "kyfH1LBFmv"
+    ]
+  },
+  "H7KahlERK0": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "KdRB4WPlBc",
+      "WORZpJAG34"
+    ]
+  },
+  "HBrXnuFHzq": {
+    "data": {
+      "tags": [],
+      "text": "Part 4 Class DB - Use of qualifying high-street premises changing to a suitable high-street use",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "0ZrgpY9Nx3"
+    ]
+  },
+  "HMbHJNxTvp": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "jVPpc6GClX",
+      "ruqikdpsqn"
+    ]
+  },
+  "HTpuFbSf3O": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "HUF6h0hpiR": {
+    "data": {
+      "tags": [],
+      "text": "Part 1 Class AA - enlargement of a dwellinghouse by construction of additional storeys",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "pByQc1S86Q"
+    ]
+  },
+  "HVA42RJgdQ": {
+    "data": {
+      "val": "GPDO.part01.classG_",
+      "text": "Part 1 Class G"
+    },
+    "type": 200,
+    "edges": [
+      "vjv1fKSdw1"
+    ]
+  },
+  "HVdR8BiR8R": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "tags": [],
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "p0lH4GoElX",
+      "qYJApLcJP1",
+      "5o1F3i93vc"
+    ]
+  },
+  "Ha0vPX4Oby": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "HTpuFbSf3O",
+      "IZUl4LofuU"
+    ]
+  },
+  "HbM0ekQ6oH": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "ixLprJu0ZU",
+      "6nJ30dXSf6"
+    ]
+  },
+  "Hdrhxq2eTj": {
+    "data": {
+      "text": "Part 8 Class F - development at an airport",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "vWy5nBl6kx"
+    ]
+  },
+  "HesZTgQKt3": {
+    "data": {
+      "fn": "permittedRoute",
+      "tags": [],
+      "text": "What GPDO Part 12 classes is the project under?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "KjYT0xBwuD",
+      "R27DSpNfjx",
+      "TEUq6pnEbT",
+      "t9QbUZlgF9"
+    ]
+  },
+  "HivVvlnloV": {
+    "data": {
+      "val": "GPDO.part03.classPA_",
+      "text": "Part 3 Class PA"
+    },
+    "type": 200,
+    "edges": [
+      "k8D6ohqTLr"
+    ]
+  },
+  "I7KRAqbAOw": {
+    "data": {
+      "tags": [],
+      "text": "Part 3  Class V - changes of use permitted under a permission granted on an application",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "fbSp0V6jGy"
+    ]
+  },
+  "ICM4m7Ppp3": {
+    "data": {
+      "val": "GPDO.part14.classE_",
+      "text": "Part 14 Class E"
+    },
+    "type": 200,
+    "edges": [
+      "YvdtGZyN3m"
+    ]
+  },
+  "IGGoUFMmOn": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "IOW6f1u014": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "IVm5kxTc36": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "IZUl4LofuU": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "IZYb130Iup": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "8G9UVTiwcQ",
+      "XT8QPMGF7Q"
+    ]
+  },
+  "IksMznq68k": {
+    "data": {
+      "val": "GPDO.part14.classC_",
+      "text": "Part 14 Class C"
+    },
+    "type": 200,
+    "edges": [
+      "vt3sLfUvce"
+    ]
+  },
+  "Il63uB3KHd": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "Ip5WGTOizv": {
+    "data": {
+      "val": "GPDO.part14.classJ_",
+      "text": "Part 14 Class J"
+    },
+    "type": 200,
+    "edges": [
+      "hHfZEbRUw4"
+    ]
+  },
+  "ItWe68Eh6S": {
+    "data": {
+      "tags": [],
+      "text": "Part 20 Class AD - new dwellinghouses on detached buildings in use as dwellinghouses",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "AiEVCIBFR2"
+    ]
+  },
+  "IvRFNgvgsL": {
+    "data": {
+      "val": "GPDO.part02.classD_",
+      "text": "Part 2 Class D"
+    },
+    "type": 200,
+    "edges": [
+      "0Ppxnwg7oo"
+    ]
+  },
+  "Iwd94d1h2J": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "J4wdPUFqKs": {
+    "data": {
+      "tags": [],
+      "text": "Part 2 Class A - gates, fences, walls etc",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "yAx755NLWO"
+    ]
+  },
+  "J9F4r523dV": {
+    "data": {
+      "val": "GPDO.part02.classA_",
+      "text": "Part 2 Class A"
+    },
+    "type": 200,
+    "edges": [
+      "J4wdPUFqKs"
+    ]
+  },
+  "JAXVHGmh8R": {
+    "data": {
+      "tags": [],
+      "text": "Part 4 Class A - temporary buildings and structures",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "Lbuv5cD9e5"
+    ]
+  },
+  "JAtmK0QC75": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "JGjDD6m4Jq": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "JIIv7Syeq3": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "JPulUBDfrh": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "JVoI3mpHQl": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "JWuxz1x30Y": {
+    "data": {
+      "text": "Part 7 Class E - hard surfaces for commercial, business or service etc premises",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "2X4aN6s8lX"
+    ]
+  },
+  "Ja2RKLdQKZ": {
+    "data": {
+      "text": "Part 16 Class E - universal postal service providers",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "pd8cQzZv3B"
+    ]
+  },
+  "Jdb5T4mODq": {
+    "data": {
+      "val": "GPDO.part03.classL_",
+      "text": "Part 3 Class L"
+    },
+    "type": 200,
+    "edges": [
+      "RTf7vPjWNq"
+    ]
+  },
+  "JdhtoxgXfw": {
+    "data": {
+      "val": "GPDO.part16.classD_",
+      "text": "Part 16 Class D"
+    },
+    "type": 200,
+    "edges": [
+      "7PTD3mxTUp"
+    ]
+  },
+  "Jgubeijg8L": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "JhxppfP0Fh": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "f5a91iafS3",
+      "Il63uB3KHd"
+    ]
+  },
+  "Ji8Le4eJoo": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "JiO6rCxmHJ": {
+    "data": {
+      "text": "Part 8 Class C - works to inland waterways",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "nt3EvFBfB2"
+    ]
+  },
+  "Jk1LRcybkg": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "Js5pAHjUqJ": {
+    "data": {
+      "tags": [],
+      "text": "Part 12A Class A - Emergency development by a local authority or health service body",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "G8qmlIzFWM"
+    ]
+  },
+  "JtDPfklz18": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "K1ybMlwsql": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "K5G7VU0sAc": {
+    "data": {
+      "val": "GPDO.part08.classJ_",
+      "text": "Part 8 Class J"
+    },
+    "type": 200,
+    "edges": [
+      "BMQYsmdZV9"
+    ]
+  },
+  "K9kxtlIFkm": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "KDmWAG81kD": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "KGNMwvTps1": {
+    "data": {
+      "fn": "permittedRoute",
+      "tags": [],
+      "text": "What GPDO Part 12 part?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "wrypRLhclH",
+      "w5S2avr2Pf",
+      "59M4olMFCQ"
+    ]
+  },
+  "KLIsO0klMY": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "KOpPYe3c0I": {
+    "data": {
+      "text": "Developments on behalf of the Crown. Not supported.",
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": false
+    },
+    "type": 100
+  },
+  "KXEViUpiEf": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "VHjZjBVjiQ",
+      "OzQPielr4L"
+    ]
+  },
+  "KYVjpm783e": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "KdEbe5d2FI": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "KdRB4WPlBc": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "Ke29iLtFPT": {
+    "data": {
+      "val": "GPDO.part14.classK_",
+      "text": "Part 14 Class K"
+    },
+    "type": 200,
+    "edges": [
+      "mjGzvxcQis"
+    ]
+  },
+  "KjYT0xBwuD": {
+    "data": {
+      "val": "GPDO.part12.classA_",
+      "text": "Part 12 Class A"
+    },
+    "type": 200,
+    "edges": [
+      "h8ow6dp7lr"
+    ]
+  },
+  "Kn8Ykg3wed": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "M2MOfQHopk",
+      "TJpbP5DlQ6"
+    ]
+  },
+  "KtAQnWnqRr": {
+    "data": {
+      "val": "GPDO.part04.classBB_",
+      "text": "Part 4 Class BB"
+    },
+    "type": 200,
+    "edges": [
+      "1I23D0mXUO"
+    ]
+  },
+  "KxPLrK0jQc": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "L08zxz0fvw": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "L2wjp2tZKF": {
+    "data": {
+      "val": "GPDO.part17.classG_",
+      "text": "Part 17 Class G"
+    },
+    "type": 200,
+    "edges": [
+      "RZPdMPF2yf"
+    ]
+  },
+  "LBRiTFTaSJ": {
+    "data": {
+      "text": "Do any parts of your changes face a highway, private road, or open space?",
+      "description": "<p>Open space refers to land laid out as a public garden or used for the purposes of public recreation.</p>",
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": false
+    },
+    "type": 100,
+    "edges": [
+      "issQF7mDTi",
+      "0LDgz9dy4x"
+    ]
+  },
+  "LGJlgE2ROw": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "LKWVJBfOLP": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "LP1UKY8xU8": {
+    "data": {
+      "val": "GPDO.part01.classD_",
+      "text": "Part 1 Class D"
+    },
+    "type": 200,
+    "edges": [
+      "k1C6DknhV8"
+    ]
+  },
+  "LSf6Ln4Sru": {
+    "data": {
+      "val": "GPDO.part17.classE_",
+      "text": "Part 17 Class E"
+    },
+    "type": 200,
+    "edges": [
+      "4sFkmKNhzD"
+    ]
+  },
+  "LWI8vTW5B1": {
+    "data": {
+      "tags": [],
+      "text": "Part 5 Class A - use of land as caravan site",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "YMGKqj9x3E"
+    ]
+  },
+  "Lbuv5cD9e5": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "ku3vsTnt1z",
+      "3M613r27SQ"
+    ]
+  },
+  "LhxBlqZcpY": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "THCvAlg0CV",
+      "r9o4qBoLvb"
+    ]
+  },
+  "LiQqg7l9dc": {
+    "data": {
+      "text": "Part 9 Class D - toll road facilities",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "xBXlXcPSII"
+    ]
+  },
+  "LlyhVoNt3i": {
+    "data": {
+      "tags": [],
+      "text": "Part 4 Class CA - provision of a temporary state-funded school on previously vacant commercial land",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "NfXwf0CuBK"
+    ]
+  },
+  "LpuOsD70d8": {
+    "data": {
+      "fn": "permittedRoute",
+      "text": "What GPDO Part 9 classes is the project under?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "3hsFrrvP6C",
+      "SHyS7uSnv5",
+      "WDiz3lcHAW",
+      "PlP9Lhj2Fw",
+      "pcVzrUumGZ",
+      "iq6M36lxV3"
+    ]
+  },
+  "LshKNcSnq0": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "M2MOfQHopk": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "M8i933328V": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "MAe81ScHvI": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "wFLKbIvL6e",
+      "JPulUBDfrh"
+    ]
+  },
+  "ME9YyI19Rr": {
+    "data": {
+      "text": "Part 14 Class M - installation or alteration etc of water source heat pump on non-domestic premises",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "5yb7i0MVNo"
+    ]
+  },
+  "MH4LNv9MEh": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "MMo8u4UHjT",
+      "uLmp9uUHd2"
+    ]
+  },
+  "MI1aLgCBvf": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "MMo8u4UHjT": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "MOpv293x9R": {
+    "data": {
+      "val": "GPDO.part17.classC_",
+      "text": "Part 17 Class C"
+    },
+    "type": 200,
+    "edges": [
+      "isDI6ied6p"
+    ]
+  },
+  "MeheFMATB9": {
+    "data": {
+      "val": "GPDO.part05.classB_",
+      "text": "Part 5 Class B"
+    },
+    "type": 200,
+    "edges": [
+      "naBtYxWFlP"
+    ]
+  },
+  "MffwjYWCN6": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "MiFPlP87Yl": {
+    "data": {
+      "val": "GPDO.part14.classA_",
+      "text": "Part 14 Class A"
+    },
+    "type": 200,
+    "edges": [
+      "4cm4I4UPhX"
+    ]
+  },
+  "MjQa2qXFqn": {
+    "data": {
+      "val": "GPDO.part14.classM_",
+      "text": "Part 14 Class M"
+    },
+    "type": 200,
+    "edges": [
+      "ME9YyI19Rr"
+    ]
+  },
+  "MlVEZjCtUx": {
+    "data": {
+      "text": "Part 7 Class D - modification of shop loading bays",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "B9phC2Hg0k"
+    ]
+  },
+  "MnG8U6xJBU": {
+    "data": {
+      "val": "GPDO.part08.classM_",
+      "text": "Part 8 Class M"
+    },
+    "type": 200,
+    "edges": [
+      "qAZdpjHvb6"
+    ]
+  },
+  "MogLm4BkGd": {
+    "data": {
+      "val": "GPDO.part07.classD_",
+      "text": "Part 7 Class D"
+    },
+    "type": 200,
+    "edges": [
+      "MlVEZjCtUx"
+    ]
+  },
+  "Mp3J9Ku4Qw": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "0D89AJ6dYF",
+      "onrtKWWSDP"
+    ]
+  },
+  "MvhG5mxocF": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "TKvDvgyG0E",
+      "GHrQXla22x"
+    ]
+  },
+  "N6RUqswwmS": {
+    "data": {
+      "text": "Part 7 Class MA - alteration etc. of prison fences",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "WxRgUSQoTI"
+    ]
+  },
+  "NBBloTcb29": {
+    "data": {
+      "val": "GPDO.part06.classE_",
+      "text": "Part 6 Class E"
+    },
+    "type": 200,
+    "edges": [
+      "C8z3gyL60t"
+    ]
+  },
+  "NGeNACT3Du": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "lkEUcTw8rI",
+      "IOW6f1u014"
+    ]
+  },
+  "NOtzhc1zGE": {
+    "data": {
+      "tags": [],
+      "text": "Part 14 Class OA - installation etc of a solar canopy on non-domestic, off-street parking",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "kwdy72qM3u"
+    ]
+  },
+  "NWV0YHAZvo": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "Na86LJYMZ3": {
+    "data": {
+      "tags": [],
+      "text": "Part 17 Class M - removal of material from mineral-working deposits",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "t94PbOT3d9"
+    ]
+  },
+  "NaVKYb8dmS": {
+    "data": {
+      "val": "GPDO.part17.classF_",
+      "text": "Part 17 Class F"
+    },
+    "type": 200,
+    "edges": [
+      "t03ZudeekN"
+    ]
+  },
+  "NbRWSmU8z6": {
+    "data": {
+      "text": "Part 7 Class K - waste deposits from an industrial process",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "rXLgOUnkhy"
+    ]
+  },
+  "NfXwf0CuBK": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "17wXeiHu4K",
+      "xahOB4CQKZ"
+    ]
+  },
+  "NgBUAtaSkr": {
+    "data": {
+      "val": "GPDO.part14.classG_",
+      "text": "Part 14 Class G"
+    },
+    "type": 200,
+    "edges": [
+      "RG6lvAfmmv"
+    ]
+  },
+  "NhzHPAPU4F": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "Nq6AVkPIYf": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "SInqKiNwfk",
+      "cNVvdQC2QJ"
+    ]
+  },
+  "NvVyw8cvCF": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "NwS24WgyqI": {
+    "data": {
+      "val": "GPDO.part04.classD_",
+      "text": "Part 4 Class D"
+    },
+    "type": 200,
+    "edges": [
+      "2TyRtHHM2P"
+    ]
+  },
+  "O6CckBYw7l": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "OGu7rzToLv": {
+    "data": {
+      "text": "Part 14 Class H - installation or alteration etc of wind turbine on domestic premises",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "fopoQgYPLE"
+    ]
+  },
+  "OLtAexGQtn": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "OLvIfU6mnG": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "OMLJbDelD1": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "6sVS4te6eX",
+      "xZMbsqn96a"
+    ]
+  },
+  "OOW6rQOkC9": {
+    "data": {
+      "val": "GPDO.part08.classE_",
+      "text": "Part 8 Class E"
+    },
+    "type": 200,
+    "edges": [
+      "92zD4RaLNy"
+    ]
+  },
+  "OUpywyok2i": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "7bq4h35dEw",
+      "QRpjKWPFr8"
+    ]
+  },
+  "OWG6rwO6Mn": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "OY2nc90UlN": {
+    "data": {
+      "val": "GPDO.part08.classL_",
+      "text": "Part 8 Class L"
+    },
+    "type": 200,
+    "edges": [
+      "WaEHd5EIzn"
+    ]
+  },
+  "OZdlsKC1rd": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "OstFCAgkLO": {
+    "data": {
+      "tags": [],
+      "text": "Part 6 Class A - agricultural development on units of 5 hectares or more",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "9jTy0UPHP9"
+    ]
+  },
+  "OvQUQ5Vzhs": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "OwAL3gZ7a3": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "0tSTDHb1QA",
+      "oLzCBA0IXL"
+    ]
+  },
+  "OzQPielr4L": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "PElefuOjPT": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "PKUweBBGxp": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "PLL70SyYhz": {
+    "data": {
+      "tags": [],
+      "text": "Part 17 Class D - coal mining development by the Coal Authority and licensed operators",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "1nLcQ17Df9"
+    ]
+  },
+  "PNvyjiPlMK": {
+    "data": {
+      "val": "GPDO.part07.classH_",
+      "text": "Part 7 Class H"
+    },
+    "type": 200,
+    "edges": [
+      "TEwR0Yf2ys"
+    ]
+  },
+  "PVDaLypi7d": {
+    "data": {
+      "val": "GPDO.part14.classH_",
+      "text": "Part 14 Class H"
+    },
+    "type": 200,
+    "edges": [
+      "OGu7rzToLv"
+    ]
+  },
+  "PZT9qqSfvd": {
+    "data": {
+      "val": "GPDO.part17.classI_",
+      "text": "Part 17 Class I"
+    },
+    "type": 200,
+    "edges": [
+      "6oXRdmI90U"
+    ]
+  },
+  "PZfTOgJLJo": {
+    "data": {
+      "val": "GPDO.part03.classI_",
+      "text": "Part 3 Class I"
+    },
+    "type": 200,
+    "edges": [
+      "EewGFiYWNj"
+    ]
+  },
+  "PbA96jtJSi": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "PiJeJsq0iu": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "PlP9Lhj2Fw": {
+    "data": {
+      "val": "GPDO.part09.classD_",
+      "text": "Part 9 Class D"
+    },
+    "type": 200,
+    "edges": [
+      "LiQqg7l9dc"
+    ]
+  },
+  "PpNwwOKOy2": {
+    "data": {
+      "val": "GPDO.part03.classN_",
+      "text": "Part 3 Class N"
+    },
+    "type": 200,
+    "edges": [
+      "EjQRumFJTR"
+    ]
+  },
+  "Pz1j2gk3kh": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "vBGrT5FBQD",
+      "9dsYFwjpCq"
+    ]
+  },
+  "Q00EBgS7VW": {
+    "data": {
+      "text": "Part 20 Class ZA - Demolition of buildings and construction of new dwellinghouses in their place",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "fUgKr6y6CN"
+    ]
+  },
+  "QGqmPcx4YN": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "EEZo3zMG6M",
+      "A98uB8Fw7x"
+    ]
+  },
+  "QRpjKWPFr8": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "QmdQ6wBhzM": {
+    "data": {
+      "tags": [],
+      "text": "Part 1 Class F - hard surfaces incidental to the enjoyment of a dwellinghouse",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "W9bgcZdTZi"
+    ]
+  },
+  "QnlqzxoxAK": {
+    "data": {
+      "val": "GPDO.part03.classO_",
+      "text": "Part 3 Class O"
+    },
+    "type": 200,
+    "edges": [
+      "SNEviGQwUH"
+    ]
+  },
+  "QqBiuOy0MQ": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "f3t5Dq6pWF",
+      "t6O5Oq3mH7"
+    ]
+  },
+  "Qvbc6ruDLF": {
+    "data": {
+      "text": "Part 17 Class K - use of land etc for mineral exploration",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "VtmBuZ1inm"
+    ]
+  },
+  "Qzm81EDgxn": {
+    "data": {
+      "val": "GPDO.part02.classG_",
+      "text": "Part 2 Class G"
+    },
+    "type": 200,
+    "edges": [
+      "t2iQgTkEoF"
+    ]
+  },
+  "R27DSpNfjx": {
+    "data": {
+      "val": "GPDO.part12.classB_",
+      "text": "Part 12 Class B"
+    },
+    "type": 200,
+    "edges": [
+      "A08fuFaA2c"
+    ]
+  },
+  "R4l2NktgCR": {
+    "data": {
+      "val": "GPDO.part17.classL_",
+      "text": "Part 17 Class L"
+    },
+    "type": 200,
+    "edges": [
+      "XFt9wnGG1N"
+    ]
+  },
+  "R9SiUHzq6W": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "RFujXfP54M": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "RG6lvAfmmv": {
+    "data": {
+      "text": "Part 14 Class G - installation or alteration etc of air source heat pumps on domestic premises",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "fTyZLkAfz7"
+    ]
+  },
+  "RGpLxp1HQp": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "RKxmF5saM4": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "VEqLRuYImM",
+      "PbA96jtJSi"
+    ]
+  },
+  "RLRVtt8YCn": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "RTf7vPjWNq": {
+    "data": {
+      "tags": [],
+      "text": "Part 3 Class L - small HMOs to dwellinghouses and vice versa",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "jVFuvTk25v"
+    ]
+  },
+  "RZPdMPF2yf": {
+    "data": {
+      "text": "Part 17 Class G - coal-mining development by the Coal Authority etc for maintenance or safety",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "OMLJbDelD1"
+    ]
+  },
+  "RcYkH01cpj": {
+    "data": {
+      "val": "GPDO.part03.classA_",
+      "text": "Part 3 Class A"
+    },
+    "type": 200,
+    "edges": [
+      "SWrb9UUttG"
+    ]
+  },
+  "Rdz50GzsFh": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "h6EQ1SvWIs",
+      "sCsdMs2BHp"
+    ]
+  },
+  "Rfg81exNDI": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "Rr84YWG9P3": {
+    "data": {
+      "text": "Part 7 Class L - development at waste management facilities",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "upb17d7pp1"
+    ]
+  },
+  "RtXTZmw7iQ": {
+    "data": {
+      "val": "GPDO.part05.classC_",
+      "text": "Part 5 Class C"
+    },
+    "type": 200,
+    "edges": [
+      "vuhcFbiD08"
+    ]
+  },
+  "RvKIUmUDSP": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "G9an9MaL25",
+      "hv5qOvwRSY"
+    ]
+  },
+  "RwytuaOob6": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "RzL9fr1wwb": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "S4dRT8Cbmc": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "S6yzWLudme": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "S9Pb0wvQq1": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "SHuP1KCmIM": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "CQT3XFAd48",
+      "AbKAq4FHxl"
+    ]
+  },
+  "SHyS7uSnv5": {
+    "data": {
+      "val": "GPDO.part09.classB_",
+      "text": "Part 9 Class B"
+    },
+    "type": 200,
+    "edges": [
+      "XDaovfEfYL"
+    ]
+  },
+  "SInqKiNwfk": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "SKRyd4m4KH": {
+    "data": {
+      "tags": [],
+      "text": "Part 3 Class S - agricultural buildings to state-funded school",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "vw8g4sP3VT"
+    ]
+  },
+  "SNEviGQwUH": {
+    "data": {
+      "tags": [],
+      "text": "Part 3 Class O - offices to dwellinghouses",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "6ODbhGVAb4"
+    ]
+  },
+  "SOZiudS8fq": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "SP90CYpX19": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "SSd9so5GGg": {
+    "data": {
+      "text": "Part 13 Class D - development by the Environment Agency",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "xjEFLJ4mkb"
+    ]
+  },
+  "SWrb9UUttG": {
+    "data": {
+      "tags": [],
+      "text": "Part 3 Class A - casino, betting office, pay day loan shop or hot food takeaway to commercial, business and service",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "hJoWFxuN6V"
+    ]
+  },
+  "SbN0dqrhlN": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "SfVdL6kDr0": {
+    "data": {
+      "tags": [],
+      "text": "Part 1 Class A - enlargement, improvement or other alteration of a dwellinghouse",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "JhxppfP0Fh"
+    ]
+  },
+  "ShQg3KfUkY": {
+    "data": {
+      "tags": [],
+      "text": "Part 3 Class H - mixed use to commercial, business and service or betting office or pay day loan shop",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "wX57oXOJR1"
+    ]
+  },
+  "Sj3y8T4izz": {
+    "data": {
+      "val": "GPDO.part08.classC_",
+      "text": "Part 8 Class C"
+    },
+    "type": 200,
+    "edges": [
+      "JiO6rCxmHJ"
+    ]
+  },
+  "SjBew01rOs": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "SlTtKJbHbx": {
+    "data": {
+      "text": "Part 8 Class G - air traffic services development at an airport",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "6zPQqucLFt"
+    ]
+  },
+  "SlmCbwt6Dv": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "Sunw07B34A": {
+    "data": {
+      "val": "GPDO.part17.classD_",
+      "text": "Part 17 Class D"
+    },
+    "type": 200,
+    "edges": [
+      "PLL70SyYhz"
+    ]
+  },
+  "SxgajLWW7Q": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "T1L4Nk2D0t": {
+    "data": {
+      "text": "Part 8 Class B - dock, pier, harbour, water transport, canal or inland navigation undertakings",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "E1pMQUQ5Hg"
+    ]
+  },
+  "T7hqoDpMDL": {
+    "data": {
+      "val": "GPDO.part06.classB_",
+      "text": "Part 6 Class B"
+    },
+    "type": 200,
+    "edges": [
+      "6dkeJXLB7W"
+    ]
+  },
+  "TBHEb3GCHg": {
+    "data": {
+      "text": "Part 13 Class C - development by drainage bodies",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "CYVTVSyaNF"
+    ]
+  },
+  "TDXjMdX9Oa": {
+    "data": {
+      "fn": "permittedRoute",
+      "tags": [],
+      "text": "What GPDO Part 2 classes is the project under?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "J9F4r523dV",
+      "CgdLVc0tax",
+      "CcdoGkABqz",
+      "IvRFNgvgsL",
+      "AFwFh39ilj",
+      "wHhFuhvXN9",
+      "Qzm81EDgxn",
+      "tsrJlVZXk4"
+    ]
+  },
+  "TEUq6pnEbT": {
+    "data": {
+      "val": "GPDO.part12.classBA_",
+      "text": "Part 12 Class BA"
+    },
+    "type": 200,
+    "edges": [
+      "bfgDtqdAjO"
+    ]
+  },
+  "TEwR0Yf2ys": {
+    "data": {
+      "text": "Part 7 Class H - extensions etc of industrial and warehouse",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "7vfU007iCD"
+    ]
+  },
+  "THCvAlg0CV": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "TJpbP5DlQ6": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "TJyxN17xlB": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "TKvDvgyG0E": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "TvXjiXGEMe": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "UCVz7vVkhg": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "UNyV5NvzPg": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "UUyusgpVVq": {
+    "data": {
+      "tags": [],
+      "text": "Part 4 Class E - temporary use of buildings or land for film-making purposes",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "tT00n2KDSd"
+    ]
+  },
+  "UWfmUEIwoQ": {
+    "data": {
+      "text": "Part 8 Class H - air traffic services development near an airport",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "t4qoioVsFd"
+    ]
+  },
+  "UkJTrvZBQr": {
+    "data": {
+      "tags": [],
+      "text": "Part 2 Class F - closed circuit television cameras",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "OwAL3gZ7a3"
+    ]
+  },
+  "UmdJ6ppj12": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "UyuBz1IyO5": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "dIWOuVuadu",
+      "Vxm5xW7O6x"
+    ]
+  },
+  "VBwhH2rP7k": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "VCvYsE6l19": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "VEqLRuYImM": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "VHjZjBVjiQ": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "VHvFk9XT5N": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "VYnyZQTRYW": {
+    "data": {
+      "fn": "permittedRoute",
+      "tags": [],
+      "text": "What GPDO parts is the project under?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "8RZyWm7Fr6",
+      "1DbBS2OfZd",
+      "5jKy8VzXu7",
+      "YCnS0cUbFH",
+      "0aitOPaSey",
+      "builkK2FB2",
+      "piBYclT08M",
+      "cTGoDrSNUc",
+      "4Hd5SJI14Q",
+      "sjZV1qKe7A",
+      "FbVm7jKhxZ",
+      "sIFjA7T4aN",
+      "qUDhN5p2sk",
+      "oMj8wls3s9",
+      "6vQa4aCW64",
+      "ZmEwrMubZD",
+      "1R5lHv92zh",
+      "3XMKpQTQ1Q",
+      "1d3Ja6MtUz",
+      "kgfRCHZGaS",
+      "umcgw0YmnP"
+    ]
+  },
+  "Vjs2yDOJ9V": {
+    "data": {
+      "val": "GPDO.part06.classC_",
+      "text": "Part 6 Class C"
+    },
+    "type": 200,
+    "edges": [
+      "9yekkk9Kwi"
+    ]
+  },
+  "VoNT5olOcg": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "VtmBuZ1inm": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "KDmWAG81kD",
+      "mPoUfpGwVN"
+    ]
+  },
+  "VuLzJfqgJH": {
+    "data": {
+      "val": "GPDO.part04.classB_",
+      "text": "Part 4 Class B"
+    },
+    "type": 200,
+    "edges": [
+      "BqTRXTrraw"
+    ]
+  },
+  "Vxm5xW7O6x": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "W9bgcZdTZi": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "EU63NEwzbU",
+      "RFujXfP54M"
+    ]
+  },
+  "WDiz3lcHAW": {
+    "data": {
+      "val": "GPDO.part09.classC_",
+      "text": "Part 9 Class C"
+    },
+    "type": 200,
+    "edges": [
+      "6gmFQFKHop"
+    ]
+  },
+  "WENK6o6DxI": {
+    "data": {
+      "text": "Part 8 Class D - dredging by transport undertakings",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "1KQFqYSaMg"
+    ]
+  },
+  "WKVTZp8wkv": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "WORZpJAG34": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "WPeyH1c3CH": {
+    "data": {
+      "val": "GPDO.part03.classQ_",
+      "text": "Part 3 Class Q"
+    },
+    "type": 200,
+    "edges": [
+      "rlEpiu9nay"
+    ]
+  },
+  "WRXdWdAPz8": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "iyAAnOkCpd",
+      "54VV89uNn6"
+    ]
+  },
+  "WaEHd5EIzn": {
+    "data": {
+      "text": "Part 8 Class L - development by an air traffic services licence holder involving moveable structures",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "Kn8Ykg3wed"
+    ]
+  },
+  "WeiztSUxnY": {
+    "data": {
+      "fn": "permittedRoute",
+      "text": "What GPDO Part 6 classes is the project under?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "vsDOmuQfQ2",
+      "T7hqoDpMDL",
+      "Vjs2yDOJ9V",
+      "NBBloTcb29",
+      "1AHDgJ22TD"
+    ]
+  },
+  "WmBXCNonRa": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "WxRgUSQoTI": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "3xOUq684KR",
+      "tg7WSHrsuN"
+    ]
+  },
+  "X0lIWB2AcU": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "X3axfKVEVy": {
+    "data": {
+      "val": "GPDO.part14.classOA_",
+      "text": "Part 14 Class OA"
+    },
+    "type": 200,
+    "edges": [
+      "NOtzhc1zGE"
+    ]
+  },
+  "XDaovfEfYL": {
+    "data": {
+      "text": "Part 9 Class B - development by the Secretary of State or a strategic highways company under the Highways Act 1980",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "HMbHJNxTvp"
+    ]
+  },
+  "XFt9wnGG1N": {
+    "data": {
+      "text": "Part 17 Class L - removal of material from a stockpile",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "5bTHqvLmmq"
+    ]
+  },
+  "XRX9pwOVKa": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "XT8QPMGF7Q": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "XYowwOu9qU": {
+    "data": {
+      "val": "GPDO.part07.classB_",
+      "text": "Part 7 Class B"
+    },
+    "type": 200,
+    "edges": [
+      "Dkg7V2ZgC3"
+    ]
+  },
+  "XjvPPuggF2": {
+    "data": {
+      "val": "GPDO.part15.classB_",
+      "text": "Part 11 Class B"
+    },
+    "type": 200,
+    "edges": [
+      "zYoFCwE6Ay"
+    ]
+  },
+  "XtpgmPSmtL": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "Y6rdqdbj3U": {
+    "data": {
+      "val": "GPDO.part14.classI_",
+      "text": "Part 14 Class I"
+    },
+    "type": 200,
+    "edges": [
+      "GE428LORHM"
+    ]
+  },
+  "Y9WrbzfuZp": {
+    "data": {
+      "val": "GPDO.part01.classA_",
+      "text": "Part 1 Class A"
+    },
+    "type": 200,
+    "edges": [
+      "SfVdL6kDr0"
+    ]
+  },
+  "YAz9L5BHVs": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "9EmUoHuvdo",
+      "NvVyw8cvCF"
+    ]
+  },
+  "YCnS0cUbFH": {
+    "data": {
+      "val": "GPDO.part04",
+      "text": "Part 4"
+    },
+    "type": 200,
+    "edges": [
+      "2y38RIvCRK"
+    ]
+  },
+  "YFiNLtT2US": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "YHM7oTxGTq": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "YMGKqj9x3E": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "loZ841bG5W",
+      "X0lIWB2AcU"
+    ]
+  },
+  "YbG5UMqwbG": {
+    "data": {
+      "val": "GPDO.part07.classM_",
+      "text": "Part 7 Class M"
+    },
+    "type": 200,
+    "edges": [
+      "28MuWpmuFK"
+    ]
+  },
+  "YdhKKJJUoB": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "YhrmgKEpXS": {
+    "data": {
+      "tags": [],
+      "text": "Part 4 Class BC - temporary recreational campsites",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "4qTfRqWeHj"
+    ]
+  },
+  "Yi3HBVq8gx": {
+    "data": {
+      "val": "GPDO.part20.classAC_",
+      "text": "Part 20 Class AC"
+    },
+    "type": 200,
+    "edges": [
+      "2d1AGEIWMc"
+    ]
+  },
+  "YvdtGZyN3m": {
+    "data": {
+      "text": "Part 14 Class E - installation or alteration etc of flue for biomass heating system on domestic premises",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "9tApTgDsRG"
+    ]
+  },
+  "ZCQGtD88aF": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "SlmCbwt6Dv",
+      "WmBXCNonRa"
+    ]
+  },
+  "ZOYM8NLRIO": {
+    "data": {
+      "val": "GPDO.part07.classA_",
+      "text": "Part 7 Class A"
+    },
+    "type": 200,
+    "edges": [
+      "mavdVsxKXG"
+    ]
+  },
+  "ZSrNiGBBor": {
+    "data": {
+      "text": "Part 20 Class AA - new dwellinghouses on detached buildings in commercial or mixed use",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "meUH42u59L"
+    ]
+  },
+  "ZTFCu0Wbi7": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "ATZJD9pkXH",
+      "KxPLrK0jQc"
+    ]
+  },
+  "Za2lzCvsd8": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "ZffYdfF7Oi": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "Zg6SjNmNyn": {
+    "data": {
+      "val": "GPDO.part03.classM_",
+      "text": "Part 3 Class M"
+    },
+    "type": 200,
+    "edges": [
+      "zl5rFWzFWj"
+    ]
+  },
+  "ZgPfGgK5dw": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "ZgoVPSuqio": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "lUruGPmACl",
+      "TvXjiXGEMe"
+    ]
+  },
+  "ZmEwrMubZD": {
+    "data": {
+      "val": "GPDO.part16",
+      "text": "Part 16"
+    },
+    "type": 200,
+    "edges": [
+      "7n39QJhKFN"
+    ]
+  },
+  "Ztu2XIY0GO": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "a4EkYzQzLg": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "aXeef0nIQ5": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "qCWAaAgAXC",
+      "Ji8Le4eJoo"
+    ]
+  },
+  "agMQSaMc5H": {
+    "data": {
+      "text": "EXAMPLE STRUCTURE",
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": false
+    },
+    "type": 100
+  },
+  "ajZbmea6w3": {
+    "data": {
+      "val": "GPDO.part07.classC_",
+      "text": "Part 7 Class C"
+    },
+    "type": 200,
+    "edges": [
+      "BFh6EFk9bM"
+    ]
+  },
+  "b0IPcoIMK9": {
+    "data": {
+      "text": "Part 9 Class A - development by highways authorities",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "HbM0ekQ6oH"
+    ]
+  },
+  "b2utIHxHg6": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "b3Jx1Tm50I": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "bC3KP9En7B": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "bLy7ELFju7": {
+    "data": {
+      "text": "Part 14 Class F - installation or alteration etc of flue for combined heat and power on domestic premises",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "Pz1j2gk3kh"
+    ]
+  },
+  "bOmKKkD6Yy": {
+    "data": {
+      "val": "GPDO.part13.classC_",
+      "text": "Part 13 Class C"
+    },
+    "type": 200,
+    "edges": [
+      "TBHEb3GCHg"
+    ]
+  },
+  "bTwOlFb1uq": {
+    "data": {
+      "tags": [],
+      "text": "Part 14 Class B - installation or alteration etc of stand-alone solar equipment on domestic premises",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "n72nZof71U"
+    ]
+  },
+  "bb7YrBSnDU": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "zzjtspIH6O",
+      "gSAmLw0eZf"
+    ]
+  },
+  "bfgDtqdAjO": {
+    "data": {
+      "text": "Part 12 Class BA - holding of a market by or on behalf of a local authority",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "jjHAnoYnWh"
+    ]
+  },
+  "bg35tQLRNa": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "g3uZUNE9ri",
+      "ETaTZzJjBd"
+    ]
+  },
+  "bmFCTAMfhH": {
+    "data": {
+      "val": "GPDO.part11.classC_",
+      "text": "Part 11 Class C"
+    },
+    "type": 200,
+    "edges": [
+      "0nv5RvBdpf"
+    ]
+  },
+  "builkK2FB2": {
+    "data": {
+      "val": "GPDO.part06",
+      "text": "Part 6"
+    },
+    "type": 200,
+    "edges": [
+      "WeiztSUxnY"
+    ]
+  },
+  "c31s3iB4pj": {
+    "data": {
+      "val": "GPDO.part17.classJA_",
+      "text": "Part 17 Class JA"
+    },
+    "type": 200,
+    "edges": [
+      "kjTCBYkh59"
+    ]
+  },
+  "c4iHs7wfv3": {
+    "data": {
+      "tags": [],
+      "text": "Part 4 Class C - use as a state-funded school for 2 academic years",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "95n1eYLnXE"
+    ]
+  },
+  "cNVvdQC2QJ": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "cTGoDrSNUc": {
+    "data": {
+      "val": "GPDO.part08",
+      "text": "Part 8"
+    },
+    "type": 200,
+    "edges": [
+      "u8rhfQFajb"
+    ]
+  },
+  "cWHT2I4mOV": {
+    "data": {
+      "val": "GPDO.part01.classC_",
+      "text": "Part 1 Class C"
+    },
+    "type": 200,
+    "edges": [
+      "sF6UEV81Ep"
+    ]
+  },
+  "cn0pMSfzum": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "d3EjM5tAyS": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "d3zCY3QMri": {
+    "data": {
+      "val": "GPDO.part01.classE_",
+      "text": "Part 1 Class E"
+    },
+    "type": 200,
+    "edges": [
+      "4b5rJk0xF7"
+    ]
+  },
+  "dAytDPqPM9": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "qRfPuhN74W",
+      "iQ10ey5eQ7"
+    ]
+  },
+  "dIWOuVuadu": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "dO8Icf1lfG": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "dPlcTzOQD3": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "dbGgzhiAT4": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "htOXHUnRUe",
+      "qhCBAOroHc"
+    ]
+  },
+  "dc2f7jklgK": {
+    "data": {
+      "text": "Part 11 Class A - development by Historic England",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "g9H0gTqPSK"
+    ]
+  },
+  "diisp9fYEN": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "dlIqZVv6HR": {
+    "data": {
+      "tags": [],
+      "text": "Part 3 Class MA - commercial, business and service uses to dwellinghouses",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "CU1FJo9DBO"
+    ]
+  },
+  "dxnFgNWEZL": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "dyON3ilHBJ": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "qtTGsLljIT",
+      "88dC5NQR8H"
+    ]
+  },
+  "e1AqGEHvHq": {
+    "data": {
+      "val": "GPDO.part03.classU_",
+      "text": "Part 3 Class U"
+    },
+    "type": 200,
+    "edges": [
+      "6dVZGQRJwm"
+    ]
+  },
+  "e2AuEiHL8P": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "eH42fJSxHB": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "eHDc3z0BaF": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "eSL1iH92Yp": {
+    "data": {
+      "val": "GPDO.part13.classB_",
+      "text": "Part 13 Class B"
+    },
+    "type": 200,
+    "edges": [
+      "48WPfmuwRC"
+    ]
+  },
+  "eTsGOuZcCi": {
+    "data": {
+      "val": "GPDO.part14.classB_",
+      "text": "Part 14 Class B"
+    },
+    "type": 200,
+    "edges": [
+      "bTwOlFb1uq"
+    ]
+  },
+  "ebMi60o0g2": {
+    "data": {
+      "val": "GPDO.part03.classR_",
+      "text": "Part 3 Class R"
+    },
+    "type": 200,
+    "edges": [
+      "8TRt6RWOFV"
+    ]
+  },
+  "edGmoEknU5": {
+    "data": {
+      "tags": [],
+      "text": "Part 2 Class E - electrical upstand etc for recharging vehicles",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "hnCtHQXBYR"
+    ]
+  },
+  "eftWHbAcQ4": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "erOaz396AA": {
+    "data": {
+      "text": "Part 20 Class AB - new dwellinghouses on terrace buildings in commercial or mixed use",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "vFbIjp0up4"
+    ]
+  },
+  "evo3BWqPBA": {
+    "data": {
+      "val": "GPDO.part08.classD_",
+      "text": "Part 8 Class D"
+    },
+    "type": 200,
+    "edges": [
+      "WENK6o6DxI"
+    ]
+  },
+  "f3t5Dq6pWF": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "f5a91iafS3": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "fACe4UWs1b": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "fTTX0NKfHk": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "CJ0TVi0LTx",
+      "sCtogbyg2G"
+    ]
+  },
+  "fTyZLkAfz7": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "o0JXMHKS2f",
+      "jwymuWndao"
+    ]
+  },
+  "fUgKr6y6CN": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "LshKNcSnq0",
+      "D4DkTAeWBe"
+    ]
+  },
+  "fVQiGhqOb2": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "fbSp0V6jGy": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "fwPdszxmLO",
+      "hN2lgptHqk"
+    ]
+  },
+  "fkx8pQdOYj": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "flSRtnQUPY": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "d3EjM5tAyS",
+      "eH42fJSxHB"
+    ]
+  },
+  "fnv3uN5miG": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "fopoQgYPLE": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "pTXzToBm8X",
+      "6N39OHU223"
+    ]
+  },
+  "fpYMNsMpgr": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "fwPdszxmLO": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "g1fLh7RaYs": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "g2XUN7DYXN": {
+    "data": {
+      "val": "GPDO.part03.classMA_",
+      "text": "Part 3 Class MA"
+    },
+    "type": 200,
+    "edges": [
+      "dlIqZVv6HR"
+    ]
+  },
+  "g3uZUNE9ri": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "g4GPkCp0Yd": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "g9H0gTqPSK": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "pUUV1YIAXd",
+      "p1T4ow3Jcj"
+    ]
+  },
+  "gCEV3QVSTI": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "gE3WcK4qmd": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "gGcvhGNrDC": {
+    "data": {
+      "text": "Part 11 Class B - demolition of buildings",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "rhT0HxiNME"
+    ]
+  },
+  "gKA07HmXOO": {
+    "data": {
+      "val": "GPDO.part03.classP_",
+      "text": "Part 3 Class P"
+    },
+    "type": 200,
+    "edges": [
+      "Fehoo8ZsWO"
+    ]
+  },
+  "gSAmLw0eZf": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "gVa3WOuMwu": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "gYMG98z7Bj": {
+    "data": {
+      "fn": "permittedRoute",
+      "tags": [],
+      "text": "What GPDO Part 1 classes is the project under?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "Y9WrbzfuZp",
+      "C4XVlDmnKf",
+      "jqyI7js79Z",
+      "cWHT2I4mOV",
+      "LP1UKY8xU8",
+      "d3zCY3QMri",
+      "zw8HMqX1JH",
+      "HVA42RJgdQ",
+      "kY0tGDwu24",
+      "g4GPkCp0Yd"
+    ]
+  },
+  "ga3jfJrpTx": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "eHDc3z0BaF",
+      "g1fLh7RaYs"
+    ]
+  },
+  "gkAFjyyh80": {
+    "data": {
+      "val": "GPDO.part17.classJ_",
+      "text": "Part 17 Class J"
+    },
+    "type": 200,
+    "edges": [
+      "1lvNP5lQuL"
+    ]
+  },
+  "h6EQ1SvWIs": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "h8ow6dp7lr": {
+    "data": {
+      "text": "Part 12 Class A",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "BKbPlzhX6C"
+    ]
+  },
+  "hBmKNeCbu0": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "hDoPFx2JIJ": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "fACe4UWs1b",
+      "C1hHT8dV0o"
+    ]
+  },
+  "hHfZEbRUw4": {
+    "data": {
+      "text": "Part 14 Class J - installation or alteration etc of solar equipment on non-domestic premises",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "ZgoVPSuqio"
+    ]
+  },
+  "hIM5iDUCQ4": {
+    "data": {
+      "val": "GPDO.part13.classA_",
+      "text": "Part 13 Class A"
+    },
+    "type": 200,
+    "edges": [
+      "rEE4ZkeKU4"
+    ]
+  },
+  "hJoWFxuN6V": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "EG2IHODZ2s",
+      "UCVz7vVkhg"
+    ]
+  },
+  "hN2lgptHqk": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "hUIVLiBuYl": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "fVQiGhqOb2",
+      "YFiNLtT2US"
+    ]
+  },
+  "har0KENOCv": {
+    "data": {
+      "text": "Part 16 Class A - electronic communications code operators",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "roBMfseR04"
+    ]
+  },
+  "hhuqdtstzP": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "hiaYcXZib8": {
+    "data": {
+      "val": "GPDO.part03.classS_",
+      "text": "Part 3 Class S"
+    },
+    "type": 200,
+    "edges": [
+      "SKRyd4m4KH"
+    ]
+  },
+  "hkI5if8rEt": {
+    "data": {
+      "fn": "permittedRoute",
+      "tags": [],
+      "text": "What GPDO Part 14 classes is the project under?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "MiFPlP87Yl",
+      "eTsGOuZcCi",
+      "IksMznq68k",
+      "lDtIqyjrlF",
+      "ICM4m7Ppp3",
+      "laCWJrkyN4",
+      "NgBUAtaSkr",
+      "PVDaLypi7d",
+      "Y6rdqdbj3U",
+      "Ip5WGTOizv",
+      "Ke29iLtFPT",
+      "jjmyPFQe2d",
+      "MjQa2qXFqn",
+      "Fb1RXaDMjb",
+      "ulpdxzu3X7",
+      "X3axfKVEVy",
+      "SP90CYpX19"
+    ]
+  },
+  "hliJXy8lbl": {
+    "data": {
+      "val": "GPDO.part03.classV_",
+      "text": "Part 3 Class V"
+    },
+    "type": 200,
+    "edges": [
+      "I7KRAqbAOw"
+    ]
+  },
+  "hnCtHQXBYR": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "jyIU9QEJ4m",
+      "re3lCo0riM"
+    ]
+  },
+  "htOXHUnRUe": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "htaZSdrDTU": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "hv5qOvwRSY": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "hxTSYJDphs": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "CC5rk1PA4d",
+      "F8Xnre7Aky"
+    ]
+  },
+  "i6vflIauwM": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "iQ10ey5eQ7": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "iRt0d3idj6": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "zf4IAeRBN0",
+      "YHM7oTxGTq"
+    ]
+  },
+  "ihpSpb4k8N": {
+    "data": {
+      "text": "Part 16 Class C - other electronic communications development: microwave antenna",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "iRt0d3idj6"
+    ]
+  },
+  "ijxlkViMv0": {
+    "data": {
+      "fn": "permittedRoute",
+      "text": "What GPDO Part 11 classes is the project under?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "zEbv3rjbVG",
+      "rB673S8k7y",
+      "bmFCTAMfhH",
+      "s9NmxLaoxv"
+    ]
+  },
+  "iq6M36lxV3": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "isDI6ied6p": {
+    "data": {
+      "tags": [],
+      "text": "Part 17 Class C - developments for maintenance or safety",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "WRXdWdAPz8"
+    ]
+  },
+  "issQF7mDTi": {
+    "data": {
+      "text": "Yes",
+      "flags": [
+        "flag.pp.permissionNeeded"
+      ]
+    },
+    "type": 200,
+    "edges": [
+      "H5YvsCMFf1"
+    ]
+  },
+  "ixLprJu0ZU": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "iyAAnOkCpd": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "j1luHtGoTA": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "jQLq0HLW8L": {
+    "data": {
+      "val": "GPDO.part13.classD_",
+      "text": "Part 13 Class D"
+    },
+    "type": 200,
+    "edges": [
+      "SSd9so5GGg"
+    ]
+  },
+  "jRs5jkf4OF": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "PElefuOjPT",
+      "BRG35lk139"
+    ]
+  },
+  "jVFuvTk25v": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "bC3KP9En7B",
+      "VCvYsE6l19"
+    ]
+  },
+  "jVPpc6GClX": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "jaqBNYe4Q3": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "jzkwWJnBWO",
+      "0Y5nraZhJz"
+    ]
+  },
+  "jhVXBK2vsY": {
+    "data": {
+      "val": "GPDO.part16.classE_",
+      "text": "Part 16 Class E"
+    },
+    "type": 200,
+    "edges": [
+      "Ja2RKLdQKZ"
+    ]
+  },
+  "jjHAnoYnWh": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "gCEV3QVSTI",
+      "wjP2fMTyX9"
+    ]
+  },
+  "jjmyPFQe2d": {
+    "data": {
+      "val": "GPDO.part14.classL_",
+      "text": "Part 14 Class L"
+    },
+    "type": 200,
+    "edges": [
+      "8gAfcoOYqG"
+    ]
+  },
+  "jqyI7js79Z": {
+    "data": {
+      "val": "GPDO.part01.classB_",
+      "text": "Part 1 Class B"
+    },
+    "type": 200,
+    "edges": [
+      "1jt8Mv1AEN"
+    ]
+  },
+  "jwymuWndao": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "jyIU9QEJ4m": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "jzkwWJnBWO": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "k1C6DknhV8": {
+    "data": {
+      "tags": [],
+      "text": "Part 1 Class D - porches",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "Mp3J9Ku4Qw"
+    ]
+  },
+  "k8D6ohqTLr": {
+    "data": {
+      "tags": [],
+      "text": "Part 3 Class PA - premises in light industrial use to dwellinghouses",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "BH1kh2rgEh"
+    ]
+  },
+  "kChqi7yVfg": {
+    "data": {
+      "val": "GPDO.part04.classBC_",
+      "text": "Part 4 Class BC"
+    },
+    "type": 200,
+    "edges": [
+      "YhrmgKEpXS"
+    ]
+  },
+  "kY0tGDwu24": {
+    "data": {
+      "val": "GPDO.part01.classH_",
+      "text": "Part 1 Class H"
+    },
+    "type": 200,
+    "edges": [
+      "nt6NWOtYRz"
+    ]
+  },
+  "kgfRCHZGaS": {
+    "data": {
+      "val": "GPDO.part20",
+      "text": "Part 20"
+    },
+    "type": 200,
+    "edges": [
+      "GFKaM2t7dS"
+    ]
+  },
+  "kjTCBYkh59": {
+    "data": {
+      "text": "Part 17 Class JA - temporary use of land etc in respect of petroleum exploration",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "MH4LNv9MEh"
+    ]
+  },
+  "ku3vsTnt1z": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "kv9Vswf4NE": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "kwdy72qM3u": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "SxgajLWW7Q",
+      "j1luHtGoTA"
+    ]
+  },
+  "kyfH1LBFmv": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "pWn5XdfCyA",
+      "1Ms2RWtXOb"
+    ]
+  },
+  "lDtIqyjrlF": {
+    "data": {
+      "val": "GPDO.part14.classD_",
+      "text": "Part 14 Class D"
+    },
+    "type": 200,
+    "edges": [
+      "xJPTgVTn0A"
+    ]
+  },
+  "lFPdAhtOdH": {
+    "data": {
+      "val": "GPDO.part05.classA_",
+      "text": "Part 5 Class A"
+    },
+    "type": 200,
+    "edges": [
+      "LWI8vTW5B1"
+    ]
+  },
+  "lFkBSuyw21": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "lIBqlUcsMi": {
+    "data": {
+      "fn": "permittedRoute",
+      "tags": [],
+      "text": "What GPDO Part 5 classes is the project under?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "lFPdAhtOdH",
+      "MeheFMATB9",
+      "RtXTZmw7iQ",
+      "XtpgmPSmtL"
+    ]
+  },
+  "lLeWXOcSx6": {
+    "data": {
+      "val": "GPDO.part17.classA_",
+      "text": "Part 17 Class A"
+    },
+    "type": 200,
+    "edges": [
+      "tPMx2MCELY"
+    ]
+  },
+  "lUruGPmACl": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "laCWJrkyN4": {
+    "data": {
+      "val": "GPDO.part14.classF_",
+      "text": "Part 14 Class F"
+    },
+    "type": 200,
+    "edges": [
+      "bLy7ELFju7"
+    ]
+  },
+  "laET4h64Di": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "D058eskdgd",
+      "diisp9fYEN"
+    ]
+  },
+  "lkEUcTw8rI": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "loZ841bG5W": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "ltoHk0kLFs": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "lyHWnfnpUs": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "m09lff33HI": {
+    "data": {
+      "val": "GPDO.part20.classA_",
+      "text": "Part 20 Class A"
+    },
+    "type": 200,
+    "edges": [
+      "19CqAA3KoK"
+    ]
+  },
+  "mG5H0nXBIt": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "mPAZsB1CCF": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "x2o3JDN2I5",
+      "MI1aLgCBvf"
+    ]
+  },
+  "mPoUfpGwVN": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "mYyeMAM6Rb": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "UmdJ6ppj12",
+      "b3Jx1Tm50I"
+    ]
+  },
+  "mavdVsxKXG": {
+    "data": {
+      "text": "Part 7 Class A - extensions etc of commercial, business or service premises",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "urLsvsWNXw"
+    ]
+  },
+  "meUH42u59L": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "3KtuR5GfS4",
+      "NWV0YHAZvo"
+    ]
+  },
+  "mjGzvxcQis": {
+    "data": {
+      "text": "Part 14 Class K - installation or alteration etc of stand-alone solar equipment on non-domestic premises",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "ZCQGtD88aF"
+    ]
+  },
+  "mmvxHVeNrm": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "mwOrekx7yi": {
+    "data": {
+      "val": "GPDO.part07.classI_",
+      "text": "Part 7 Class I"
+    },
+    "type": 200,
+    "edges": [
+      "um5hrLFt5k"
+    ]
+  },
+  "mzEpvHhQIm": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "n3mjojEMc6": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "n72nZof71U": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "fpYMNsMpgr",
+      "vijzKIrpDA"
+    ]
+  },
+  "nAasXWYgrq": {
+    "data": {
+      "val": "GPDO.part03.classAA_",
+      "text": "Part 3 Class AA"
+    },
+    "type": 200,
+    "edges": [
+      "5ARYXjLMgv"
+    ]
+  },
+  "naBtYxWFlP": {
+    "data": {
+      "tags": [],
+      "text": "Part 5 Class B - development on caravan site required by conditions",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "UyuBz1IyO5"
+    ]
+  },
+  "nt3EvFBfB2": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "sAjTC1fwsv",
+      "S4dRT8Cbmc"
+    ]
+  },
+  "nt6NWOtYRz": {
+    "data": {
+      "tags": [],
+      "text": "Part 1 Class H - microwave antenna on a dwellinghouse",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "hxTSYJDphs"
+    ]
+  },
+  "o0JXMHKS2f": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "oLzCBA0IXL": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "oMj8wls3s9": {
+    "data": {
+      "val": "GPDO.part14",
+      "text": "Part 14"
+    },
+    "type": 200,
+    "edges": [
+      "hkI5if8rEt"
+    ]
+  },
+  "oQB4Y7dobW": {
+    "data": {
+      "val": "GPDO.part12A.classA_",
+      "text": "Part 12A Class A"
+    },
+    "type": 200,
+    "edges": [
+      "Js5pAHjUqJ"
+    ]
+  },
+  "oVj7CtvvR3": {
+    "data": {
+      "val": "GPDO.part04.classA_",
+      "text": "Part 4 Class A"
+    },
+    "type": 200,
+    "edges": [
+      "JAXVHGmh8R"
+    ]
+  },
+  "oWLst4OgKt": {
+    "data": {
+      "val": "GPDO.part16.classC_",
+      "text": "Part 16 Class C"
+    },
+    "type": 200,
+    "edges": [
+      "ihpSpb4k8N"
+    ]
+  },
+  "oZMPWkJ724": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "UNyV5NvzPg",
+      "ltoHk0kLFs"
+    ]
+  },
+  "oe8b9iGdd5": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "onrtKWWSDP": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "otdOUNqWqg": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "ovUuHsxbKH": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "VoNT5olOcg",
+      "fkx8pQdOYj"
+    ]
+  },
+  "p0lH4GoElX": {
+    "data": {
+      "val": "articleFour.example.frognal",
+      "text": "Frognal Conservation Area",
+      "flags": [
+        "flag.pp.permissionNeeded"
+      ]
+    },
+    "type": 200,
+    "edges": [
+      "xr0ghBEi5z"
+    ]
+  },
+  "p1T4ow3Jcj": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "p9XF8QGH0N": {
+    "data": {
+      "tags": [],
+      "text": "Part 3 Class G - commercial, business and service or betting office or pay day loan shop to mixed use",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "hUIVLiBuYl"
+    ]
+  },
+  "pAwcSd7PGO": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "pByQc1S86Q": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "OLtAexGQtn",
+      "4TzKiTWsse"
+    ]
+  },
+  "pEDssAvoLO": {
+    "data": {
+      "val": "GPDO.part04.classC_",
+      "text": "Part 4 Class C"
+    },
+    "type": 200,
+    "edges": [
+      "c4iHs7wfv3"
+    ]
+  },
+  "pF9gFAO4ok": {
+    "data": {
+      "fn": "permittedRoute",
+      "text": "What GPDO Part 7 classes is the project under?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "ZOYM8NLRIO",
+      "XYowwOu9qU",
+      "ajZbmea6w3",
+      "MogLm4BkGd",
+      "yBUeH7lAEd",
+      "PNvyjiPlMK",
+      "mwOrekx7yi",
+      "780JA5fIv0",
+      "qUft5m61nY",
+      "GVUnzwOllT",
+      "YbG5UMqwbG",
+      "2MnNpvgAdE",
+      "EMKmEc7soB",
+      "yjgnYeUFoK"
+    ]
+  },
+  "pTXzToBm8X": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "pUUV1YIAXd": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "pWn5XdfCyA": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "pcVzrUumGZ": {
+    "data": {
+      "val": "GPDO.part09.classE_",
+      "text": "Part 9 Class E"
+    },
+    "type": 200,
+    "edges": [
+      "skSE9lDBUd"
+    ]
+  },
+  "pcjMWmK1xM": {
+    "data": {
+      "fn": "permittedRoute",
+      "tags": [],
+      "text": "What GPDO Part 3 classes is the project under?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "RcYkH01cpj",
+      "nAasXWYgrq",
+      "1Kh4tlUH5a",
+      "9bWGPo9YZg",
+      "PZfTOgJLJo",
+      "Jdb5T4mODq",
+      "Zg6SjNmNyn",
+      "g2XUN7DYXN",
+      "PpNwwOKOy2",
+      "QnlqzxoxAK",
+      "gKA07HmXOO",
+      "HivVvlnloV",
+      "WPeyH1c3CH",
+      "ebMi60o0g2",
+      "hiaYcXZib8",
+      "tufcU6Y8oo",
+      "e1AqGEHvHq",
+      "hliJXy8lbl",
+      "9JzBqrhNVm"
+    ]
+  },
+  "pd8cQzZv3B": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "4VWeLhLSEl",
+      "OvQUQ5Vzhs"
+    ]
+  },
+  "piBYclT08M": {
+    "data": {
+      "val": "GPDO.part07",
+      "text": "Part 7"
+    },
+    "type": 200,
+    "edges": [
+      "pF9gFAO4ok"
+    ]
+  },
+  "q7ovrEC0gd": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "q9bVNz1Bf5": {
+    "data": {
+      "fn": "permittedRoute",
+      "text": "What GPDO Part 15 classes is the project under?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "8gNm5hjL2Q",
+      "XjvPPuggF2",
+      "lyHWnfnpUs"
+    ]
+  },
+  "qAZdpjHvb6": {
+    "data": {
+      "text": "Part 8 Class M - development by the Civil Aviation Authority for surveys etc.",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "QqBiuOy0MQ"
+    ]
+  },
+  "qCWAaAgAXC": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "qRfPuhN74W": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "qUDhN5p2sk": {
+    "data": {
+      "val": "GPDO.part13",
+      "text": "Part 13"
+    },
+    "type": 200,
+    "edges": [
+      "vMyAUvX1Rl"
+    ]
+  },
+  "qUft5m61nY": {
+    "data": {
+      "val": "GPDO.part07.classK_",
+      "text": "Part 7 Class K"
+    },
+    "type": 200,
+    "edges": [
+      "NbRWSmU8z6"
+    ]
+  },
+  "qUwJzMLgJu": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "otdOUNqWqg",
+      "b2utIHxHg6"
+    ]
+  },
+  "qYJApLcJP1": {
+    "data": {
+      "val": "articleFour.example.langorf",
+      "text": "Langorf Conservation Area"
+    },
+    "type": 200,
+    "edges": [
+      "LBRiTFTaSJ"
+    ]
+  },
+  "qeViC9Omf4": {
+    "data": {
+      "fn": "permittedRoute",
+      "text": "What GPDO Part 18 classes is the project under?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "5bQ3kvujBY",
+      "sN4hkTTptn",
+      "S6yzWLudme"
+    ]
+  },
+  "qhCBAOroHc": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "qtTGsLljIT": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "qvULkKY9cK": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "qvvUqJAN4t": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "qxkYNY7EGp": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "0BZ4OFkhrr",
+      "hBmKNeCbu0"
+    ]
+  },
+  "r32Bhp6lbA": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "r7SdmrEbWs": {
+    "data": {
+      "val": "GPDO.part20.classAA_",
+      "text": "Part 20 Class AA"
+    },
+    "type": 200,
+    "edges": [
+      "ZSrNiGBBor"
+    ]
+  },
+  "r9o4qBoLvb": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "rB673S8k7y": {
+    "data": {
+      "val": "GPDO.part11.classB_",
+      "text": "Part 11 Class B"
+    },
+    "type": 200,
+    "edges": [
+      "gGcvhGNrDC"
+    ]
+  },
+  "rEE4ZkeKU4": {
+    "data": {
+      "text": "Part 13 Class A - Water or hydraulic power undertakings",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "xOCkBBqFcB"
+    ]
+  },
+  "rIuyVj34Gx": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "rRpwauYgat": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "rWUHVJaaDd": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "rXLgOUnkhy": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "OZdlsKC1rd",
+      "ypxnOcJmeC"
+    ]
+  },
+  "rdg5C0tr40": {
+    "data": {
+      "val": "GPDO.part04.classCA_",
+      "text": "Part 4 Class CA"
+    },
+    "type": 200,
+    "edges": [
+      "LlyhVoNt3i"
+    ]
+  },
+  "re3lCo0riM": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "rhT0HxiNME": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "t0sCcIPUuK",
+      "K1ybMlwsql"
+    ]
+  },
+  "rjD2W4pVwc": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "rlEpiu9nay": {
+    "data": {
+      "tags": [],
+      "text": "Part 3 Class Q - buildings on agricultural units and former agricultural buildings to dwellinghouses",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "dbGgzhiAT4"
+    ]
+  },
+  "rmDbIIVPo8": {
+    "data": {
+      "text": "Part 8 Class N - use of airport buildings managed by relevant airport operators",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "RvKIUmUDSP"
+    ]
+  },
+  "rmJehvU1n1": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "roBMfseR04": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "OWG6rwO6Mn",
+      "9TFOtgranU"
+    ]
+  },
+  "ruqikdpsqn": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "s1gd1jK6EX": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "s9NmxLaoxv": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "s9UhDBPnHs": {
+    "data": {
+      "val": "GPDO.part16.classA_",
+      "text": "Part 16 Class A"
+    },
+    "type": 200,
+    "edges": [
+      "har0KENOCv"
+    ]
+  },
+  "sAjTC1fwsv": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "sCsdMs2BHp": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "sCtogbyg2G": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "sF6UEV81Ep": {
+    "data": {
+      "tags": [],
+      "text": "Part 1 Class C - other alterations to the roof of a dwellinghouse",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "NGeNACT3Du"
+    ]
+  },
+  "sIFjA7T4aN": {
+    "data": {
+      "val": "GPDO.part12",
+      "text": "Part 12"
+    },
+    "type": 200,
+    "edges": [
+      "KGNMwvTps1"
+    ]
+  },
+  "sIjTjo9w19": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "sItr0Skmh4": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "M8i933328V",
+      "PiJeJsq0iu"
+    ]
+  },
+  "sN4hkTTptn": {
+    "data": {
+      "val": "GPDO.part18.classB_",
+      "text": "Part 18 Class B"
+    },
+    "type": 200,
+    "edges": [
+      "5uIn6cUC69"
+    ]
+  },
+  "sO47Rhh17n": {
+    "data": {
+      "val": "GPDO.part20.classAD_",
+      "text": "Part 20 Class AD"
+    },
+    "type": 200,
+    "edges": [
+      "ItWe68Eh6S"
+    ]
+  },
+  "sO7E7eB0Wf": {
+    "data": {
+      "text": "Part 14 Class O - installation etc of flue for combined heat and power on non-domestic premises",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "Rdz50GzsFh"
+    ]
+  },
+  "sTvdfBTrMV": {
+    "data": {
+      "val": "GPDO.part08.classN_",
+      "text": "Part 8 Class N"
+    },
+    "type": 200,
+    "edges": [
+      "rmDbIIVPo8"
+    ]
+  },
+  "sYdPOneJ9L": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "shmTH2N7Go": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "sjZV1qKe7A": {
+    "data": {
+      "val": "GPDO.part10",
+      "text": "Part 10"
+    },
+    "type": 200,
+    "edges": [
+      "tMmmSAxvAv"
+    ]
+  },
+  "skSE9lDBUd": {
+    "data": {
+      "text": "Part 9 Class E - repairs to unadopted streets and private ways",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "dAytDPqPM9"
+    ]
+  },
+  "t03ZudeekN": {
+    "data": {
+      "text": "Part 17 Class F - coal-mining development on an authorised site",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "fTTX0NKfHk"
+    ]
+  },
+  "t0sCcIPUuK": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "t2iQgTkEoF": {
+    "data": {
+      "tags": [],
+      "text": "Part 2 Class G - moveable structures for pubs, restaurants etc",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "bg35tQLRNa"
+    ]
+  },
+  "t410OwwI30": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "t4qoioVsFd": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "8B1B1haDUe",
+      "ZffYdfF7Oi"
+    ]
+  },
+  "t6O5Oq3mH7": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "t7PulVwEgY": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "5BxcR4IHRI",
+      "dxnFgNWEZL"
+    ]
+  },
+  "t94PbOT3d9": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "mmvxHVeNrm",
+      "Jgubeijg8L"
+    ]
+  },
+  "t9QbUZlgF9": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "tHueehKO8N": {
+    "data": {
+      "text": "Part 15 Class A - gas transporters",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "C59YI2gimr"
+    ]
+  },
+  "tMmmSAxvAv": {
+    "data": {
+      "fn": "permittedRoute",
+      "text": "What GPDO Part 10 classes is the project under?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "1DmujVo01t",
+      "LKWVJBfOLP"
+    ]
+  },
+  "tNHHU5xErw": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "RwytuaOob6",
+      "JGjDD6m4Jq"
+    ]
+  },
+  "tPMx2MCELY": {
+    "data": {
+      "tags": [],
+      "text": "Part 17 Class A - extensions, alterations etc ancillary to mining operations",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "3wlcOVaK5c"
+    ]
+  },
+  "tT00n2KDSd": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "n3mjojEMc6",
+      "1BIpTslZAj"
+    ]
+  },
+  "tUSCHUO1d5": {
+    "data": {
+      "val": "GPDO.part08.classH_",
+      "text": "Part 8 Class H"
+    },
+    "type": 200,
+    "edges": [
+      "UWfmUEIwoQ"
+    ]
+  },
+  "tg7WSHrsuN": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "tsrJlVZXk4": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "tt1jfnRyk9": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "eftWHbAcQ4",
+      "DNxo1DK3F1"
+    ]
+  },
+  "tufcU6Y8oo": {
+    "data": {
+      "val": "GPDO.part03.classT_",
+      "text": "Part 3 Class T"
+    },
+    "type": 200,
+    "edges": [
+      "85u3gBLg6s"
+    ]
+  },
+  "tvrkVUkaDa": {
+    "data": {
+      "val": "GPDO.part08.classK_",
+      "text": "Part 8 Class K"
+    },
+    "type": 200,
+    "edges": [
+      "zBRyYMTkdw"
+    ]
+  },
+  "u8rhfQFajb": {
+    "data": {
+      "fn": "permittedRoute",
+      "text": "What GPDO Part 8 classes is the project under?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "ylkcb7Hep5",
+      "2sHBKcadz3",
+      "Sj3y8T4izz",
+      "evo3BWqPBA",
+      "OOW6rQOkC9",
+      "vIC1B2gVaa",
+      "CaMd4rGLDd",
+      "tUSCHUO1d5",
+      "BRKUf0yDva",
+      "K5G7VU0sAc",
+      "tvrkVUkaDa",
+      "OY2nc90UlN",
+      "MnG8U6xJBU",
+      "sTvdfBTrMV",
+      "e2AuEiHL8P"
+    ]
+  },
+  "uLmp9uUHd2": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "uPoMsZK4hf": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "ulpdxzu3X7": {
+    "data": {
+      "val": "GPDO.part14.classO_",
+      "text": "Part 14 Class O"
+    },
+    "type": 200,
+    "edges": [
+      "sO7E7eB0Wf"
+    ]
+  },
+  "um5hrLFt5k": {
+    "data": {
+      "text": "Part 7 Class I - developments relating to an industrial process",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "APya86tP06"
+    ]
+  },
+  "umcgw0YmnP": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "upb17d7pp1": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "BaERvxEmIf",
+      "KLIsO0klMY"
+    ]
+  },
+  "urLsvsWNXw": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "Ztu2XIY0GO",
+      "9Ru4xtZmKW"
+    ]
+  },
+  "uszWEGAaX0": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "vBGrT5FBQD": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "vFbIjp0up4": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "rRpwauYgat",
+      "htaZSdrDTU"
+    ]
+  },
+  "vIC1B2gVaa": {
+    "data": {
+      "val": "GPDO.part08.classF_",
+      "text": "Part 8 Class F"
+    },
+    "type": 200,
+    "edges": [
+      "Hdrhxq2eTj"
+    ]
+  },
+  "vMyAUvX1Rl": {
+    "data": {
+      "fn": "permittedRoute",
+      "text": "What GPDO Part 13 classes is the project under?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "hIM5iDUCQ4",
+      "eSL1iH92Yp",
+      "bOmKKkD6Yy",
+      "jQLq0HLW8L",
+      "rjD2W4pVwc"
+    ]
+  },
+  "vOPSxgVQ7T": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "vOt0Pagdxn": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "vRPEDQMBTY": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "vWy5nBl6kx": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "LGJlgE2ROw",
+      "dPlcTzOQD3"
+    ]
+  },
+  "vijzKIrpDA": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "vjv1fKSdw1": {
+    "data": {
+      "tags": [],
+      "text": "Part 1 Class G - chimneys, flues etc on a dwellinghouse",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "CClhTFroNh"
+    ]
+  },
+  "vsDOmuQfQ2": {
+    "data": {
+      "val": "GPDO.part06.classA_",
+      "text": "Part 6 Class A"
+    },
+    "type": 200,
+    "edges": [
+      "OstFCAgkLO"
+    ]
+  },
+  "vt3sLfUvce": {
+    "data": {
+      "tags": [],
+      "text": "Part 14 Class C - installation or alteration etc of ground source heat pumps on domestic premises",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "aXeef0nIQ5"
+    ]
+  },
+  "vuhcFbiD08": {
+    "data": {
+      "tags": [],
+      "text": "Part 5 Class C - use of land by members of certain recreational organisations",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "2UrsQ8jfIF"
+    ]
+  },
+  "vw8g4sP3VT": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "CREM5z3Z9S",
+      "qvvUqJAN4t"
+    ]
+  },
+  "w3WJ0BUPjZ": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "JtDPfklz18",
+      "RLRVtt8YCn"
+    ]
+  },
+  "w5S2avr2Pf": {
+    "data": {
+      "val": "GPDO.part12A",
+      "text": "Part 12A - Development by Local Authorities and Health Service Bodies"
+    },
+    "type": 200,
+    "edges": [
+      "0ohQMituW2"
+    ]
+  },
+  "w5nd7TizzL": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "wCFGAJZ4wm": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "7tQnM91iX5",
+      "dO8Icf1lfG"
+    ]
+  },
+  "wFLKbIvL6e": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "wHhFuhvXN9": {
+    "data": {
+      "val": "GPDO.part02.classF_",
+      "text": "Part 2 Class F"
+    },
+    "type": 200,
+    "edges": [
+      "UkJTrvZBQr"
+    ]
+  },
+  "wRYZYtKXet": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "IVm5kxTc36",
+      "hhuqdtstzP"
+    ]
+  },
+  "wX57oXOJR1": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "rIuyVj34Gx",
+      "YdhKKJJUoB"
+    ]
+  },
+  "wjEag0MD11": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "wjP2fMTyX9": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "wolcR11oBA": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "mG5H0nXBIt",
+      "B2IhpmxU0F"
+    ]
+  },
+  "wrypRLhclH": {
+    "data": {
+      "val": "GPDO.part12",
+      "text": "Part 12 - Development by local authorities"
+    },
+    "type": 200,
+    "edges": [
+      "HesZTgQKt3"
+    ]
+  },
+  "x2o3JDN2I5": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "x7TyptmRoe": {
+    "data": {
+      "tags": [],
+      "text": "Part 4 Class CB - temporary provision of buildings for a school with a RAAC-affected building",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "w3WJ0BUPjZ"
+    ]
+  },
+  "xBXlXcPSII": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "AfosVafNN0",
+      "Iwd94d1h2J"
+    ]
+  },
+  "xCHdWPgKxl": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "xJPTgVTn0A": {
+    "data": {
+      "text": "Part 14 Class D - installation or alteration etc of water source heat pumps on domestic premises",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "jaqBNYe4Q3"
+    ]
+  },
+  "xM949Vh6Su": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "xOCkBBqFcB": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "zEeAsPblLJ",
+      "zKuJ3ovQoE"
+    ]
+  },
+  "xZMbsqn96a": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "xahOB4CQKZ": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "xfvf6jofhn": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "xjEFLJ4mkb": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "9EvFpm6wEF",
+      "xCHdWPgKxl"
+    ]
+  },
+  "xmSLEeWEdc": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "xr0ghBEi5z": {
+    "data": {
+      "text": "example of PD right removal with no conditions",
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": false
+    },
+    "type": 100
+  },
+  "xukchNWxDj": {
+    "data": {
+      "tags": [],
+      "text": "Part 17 Class B - other developments ancillary to mining operations",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "80pR582OoO"
+    ]
+  },
+  "y2aGvqrCGw": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "y8iGrBhZRI": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "NhzHPAPU4F",
+      "Rfg81exNDI"
+    ]
+  },
+  "yAx755NLWO": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is the property affected by any Article 4 directions removing this type of permitted development right?",
+      "allRequired": false,
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": true
+    },
+    "type": 105,
+    "edges": [
+      "WKVTZp8wkv",
+      "wjEag0MD11"
+    ]
+  },
+  "yBUeH7lAEd": {
+    "data": {
+      "val": "GPDO.part07.classE_",
+      "text": "Part 7 Class E"
+    },
+    "type": 200,
+    "edges": [
+      "JWuxz1x30Y"
+    ]
+  },
+  "yHVmK3ylEQ": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "yII9f2X2WQ": {
+    "data": {
+      "val": "GPDO.part17.classK_",
+      "text": "Part 17 Class K"
+    },
+    "type": 200,
+    "edges": [
+      "Qvbc6ruDLF"
+    ]
+  },
+  "yXwqJDG2R9": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "ygnDgWlQko": {
+    "data": {
+      "text": "Part 17 Class H - waste tipping at a mine",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "312SiRRneJ"
+    ]
+  },
+  "yjgnYeUFoK": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "ylkcb7Hep5": {
+    "data": {
+      "val": "GPDO.part08.classA_",
+      "text": "Part 8 Class A"
+    },
+    "type": 200,
+    "edges": [
+      "3dsvjopzsq"
+    ]
+  },
+  "ypxnOcJmeC": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "yrHMXD6Lqq": {
+    "data": {
+      "val": "GPDO.part04.classDA_",
+      "text": "Part 4 Class DA"
+    },
+    "type": 200,
+    "edges": [
+      "H64nSrhaxC"
+    ]
+  },
+  "z0a2kQIaoD": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "zBRyYMTkdw": {
+    "data": {
+      "text": "Part 8 Class K - development by an air traffic services licence holder in an emergency",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "mPAZsB1CCF"
+    ]
+  },
+  "zEbv3rjbVG": {
+    "data": {
+      "val": "GPDO.part11.classA_",
+      "text": "Part 11 Class A"
+    },
+    "type": 200,
+    "edges": [
+      "dc2f7jklgK"
+    ]
+  },
+  "zEeAsPblLJ": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "zKuJ3ovQoE": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "zYoFCwE6Ay": {
+    "data": {
+      "text": "Part 15 Class B - electricity undertakings",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "jRs5jkf4OF"
+    ]
+  },
+  "zbamnE02qX": {
+    "data": {
+      "text": "None of these",
+      "exclusive": true
+    },
+    "type": 200
+  },
+  "zf4IAeRBN0": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "zkOUZpm0o7": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  },
+  "zl5rFWzFWj": {
+    "data": {
+      "tags": [],
+      "text": "Part 3 Class M - certain uses to dwellinghouses",
+      "isTemplatedNode": true
+    },
+    "type": 300,
+    "edges": [
+      "H7KahlERK0"
+    ]
+  },
+  "zw8HMqX1JH": {
+    "data": {
+      "val": "GPDO.part01.classF_",
+      "text": "Part 1 Class F"
+    },
+    "type": 200,
+    "edges": [
+      "QmdQ6wBhzM"
+    ]
+  },
+  "zzjtspIH6O": {
+    "data": {
+      "val": "EDIT ME",
+      "text": "Placeholder Area"
+    },
+    "type": 200
+  }
+}
