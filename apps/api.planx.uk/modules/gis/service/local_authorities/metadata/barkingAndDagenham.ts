@@ -8,7 +8,7 @@ https://www.planning.data.gov.uk/entity/?dataset=article-4-direction-area&geomet
 https://docs.google.com/spreadsheets/d/1UmxQ95SjU72j0KaVIIkrIfhdE_k_lcFNhUWBc53GEIA/edit#gid=0
 */
 
-import type { LocalAuthorityMetadata } from "../../digitalLand.js";
+import type { LocalAuthorityMetadata } from "../../helpers.js";
 
 const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
   articleFour: {

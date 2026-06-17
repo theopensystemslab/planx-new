@@ -7,7 +7,7 @@ FID:
 https://docs.google.com/spreadsheets/d/14-a74XcdqfZku5Dbp6NkrlPFu-wlAX5R/edit?gid=517562037#gid=517562037
 */
 
-import type { LocalAuthorityMetadata } from "../../digitalLand.js";
+import type { LocalAuthorityMetadata } from "../../helpers.js";
 
 const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
   articleFour: {

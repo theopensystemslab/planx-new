@@ -8,7 +8,7 @@ https://geo.southwark.gov.uk/connect/analyst/mobile/#/main
 https://environment.data.gov.uk/arcgis/rest/services
 */
 
-import type { LocalAuthorityMetadata } from "../../digitalLand.js";
+import type { LocalAuthorityMetadata } from "../../helpers.js";
 
 const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
   articleFour: {

@@ -4,7 +4,7 @@ LAD20CD: E09000005
 https://drive.google.com/drive/folders/1ImyKADCOaYz9pljKyjs3cLWiiWxaI5HF
 */
 
-import type { LocalAuthorityMetadata } from "../../digitalLand.js";
+import type { LocalAuthorityMetadata } from "../../helpers.js";
 
 const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
   articleFour: {

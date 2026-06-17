@@ -5,7 +5,7 @@ LAD20NM: Stoke-on-Trent
 https://docs.google.com/spreadsheets/d/1Dhxg5RQo-fjvYfcmbm_JiPjXaj9GKoKSjfUHMaB-eck/edit
 */
 
-import type { LocalAuthorityMetadata } from "../../digitalLand.js";
+import type { LocalAuthorityMetadata } from "../../helpers.js";
 
 const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
   articleFour: {

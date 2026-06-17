@@ -9,83 +9,7 @@ import { gql } from "graphql-request";
 import fetch from "isomorphic-fetch";
 import camelCase from "lodash/camelCase.js";
 import { $api } from "../../../client/index.js";
-import { addDesignatedVariable } from "./helpers.js";
-
-import * as adurAndWorthing from "./local_authorities/metadata/adurAndWorthing.js";
-import * as barkingAndDagenham from "./local_authorities/metadata/barkingAndDagenham.js";
-import * as barnet from "./local_authorities/metadata/barnet.js";
-import * as birmingham from "./local_authorities/metadata/birmingham.js";
-import * as brent from "./local_authorities/metadata/brent.js";
-import * as bristolCity from "./local_authorities/metadata/bristolCity.js";
-import * as buckinghamshire from "./local_authorities/metadata/buckinghamshire.js";
-import * as camden from "./local_authorities/metadata/camden.js";
-import * as canterbury from "./local_authorities/metadata/canterbury.js";
-import * as coventry from "./local_authorities/metadata/coventry.js";
-import * as doncaster from "./local_authorities/metadata/doncaster.js";
-import * as eastRidingOfYorkshire from "./local_authorities/metadata/eastRidingOfYorkshire.js";
-import * as epsomAndEwell from "./local_authorities/metadata/epsomAndEwell.js";
-import * as gateshead from "./local_authorities/metadata/gateshead.js";
-import * as gloucester from "./local_authorities/metadata/gloucester.js";
-import * as greaterCambridge from "./local_authorities/metadata/greaterCambridge.js";
-import * as horsham from "./local_authorities/metadata/horsham.js";
-import * as lambeth from "./local_authorities/metadata/lambeth.js";
-import * as medway from "./local_authorities/metadata/medway.js";
-import * as newcastle from "./local_authorities/metadata/newcastle.js";
-import * as northumberland from "./local_authorities/metadata/northumberland.js";
-import * as southGloucestershire from "./local_authorities/metadata/southGloucestershire.js";
-import * as southStaffordshire from "./local_authorities/metadata/southStaffordshire.js";
-import * as southwark from "./local_authorities/metadata/southwark.js";
-import * as stAlbans from "./local_authorities/metadata/stAlbans.js";
-import * as stockport from "./local_authorities/metadata/stockport.js";
-import * as stoke from "./local_authorities/metadata/stoke.js";
-import * as tewkesbury from "./local_authorities/metadata/tewkesbury.js";
-import * as torbay from "./local_authorities/metadata/torbay.js";
-import * as westBerkshire from "./local_authorities/metadata/westBerkshire.js";
-
-export interface LocalAuthorityMetadata {
-  planningConstraints: {
-    articleFour: {
-      records: Record<string, string>;
-    };
-  };
-}
-
-/**
- * When a team publishes their granular Article 4 data, add them to this list. Key must match team slug
- * The database column team_setting.has_article4_schema also needs to be updated via the Hasura console
- */
-export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
-  "adur-worthing": adurAndWorthing,
-  "barking-and-dagenham": barkingAndDagenham,
-  barnet,
-  birmingham,
-  brent,
-  "bristol-city": bristolCity,
-  buckinghamshire,
-  camden,
-  canterbury,
-  coventry,
-  doncaster,
-  "east-riding-of-yorkshire": eastRidingOfYorkshire,
-  "epsom-and-ewell": epsomAndEwell,
-  gateshead,
-  gloucester,
-  "greater-cambridge-shared-planning": greaterCambridge,
-  horsham,
-  lambeth,
-  medway,
-  newcastle,
-  northumberland,
-  "south-gloucestershire": southGloucestershire,
-  "south-staffordshire": southStaffordshire,
-  southwark,
-  "st-albans": stAlbans,
-  "stockport-metropolitan": stockport,
-  "stoke-on-trent": stoke,
-  tewkesbury,
-  torbay,
-  "west-berkshire": westBerkshire,
-};
+import { getLocalAuthorityMetadata } from "./helpers.js";
 
 /**
  *
@@ -293,9 +217,10 @@ async function go(
 
   // --- ARTICLE 4S ---
   // only attempt to set granular a4s if we have metadata for this local authority; proceed with non-granular a4 queries under "opensystemslab" team etc
-  if (Object.keys(localAuthorityMetadata).includes(localAuthority)) {
+  const localAuthorityMetadata = getLocalAuthorityMetadata(localAuthority);
+  if (localAuthorityMetadata) {
     // get the article 4 schema map for this local authority
-    const { planningConstraints } = localAuthorityMetadata[localAuthority];
+    const { planningConstraints } = localAuthorityMetadata;
     const a4s = planningConstraints["articleFour"]["records"] || undefined;
 
     // loop through any intersecting a4 data entities and set granular planx values based on this local authority's schema
@@ -378,6 +303,38 @@ async function go(
     metadata: metadata,
   };
 }
+
+// Adds "designated" variable to response object, so we can auto-answer less granular questions like "are you on designated land"
+const addDesignatedVariable = (responseObject: any) => {
+  const resObjWithDesignated = {
+    ...responseObject,
+    designated: { value: false },
+  };
+
+  const subVariables = ["conservationArea", "AONB", "nationalPark", "WHS"];
+
+  // If any of the subvariables are true, then set "designated" to true
+  subVariables.forEach((s) => {
+    if (resObjWithDesignated[`designated.${s}`]?.value) {
+      resObjWithDesignated["designated"] = { value: true };
+    }
+  });
+
+  // Ensure that our response includes all the expected subVariables before returning "designated"
+  //   so we don't incorrectly auto-answer any questions for individual layer queries that may have failed
+  let subVariablesFound = 0;
+  Object.keys(responseObject).forEach((key) => {
+    if (key.startsWith(`designated.`)) {
+      subVariablesFound++;
+    }
+  });
+
+  if (subVariablesFound < subVariables.length) {
+    return responseObject;
+  } else {
+    return resObjWithDesignated;
+  }
+};
 
 async function locationSearch(
   localAuthority: string,
