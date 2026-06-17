@@ -32,9 +32,10 @@ export const publishFlowController: PublishFlowController = async (
   res,
   next,
 ) => {
+  const { flowId } = res.locals.parsedReq.params;
+  const { summary, templatedFlowIds } = res.locals.parsedReq.body;
+
   try {
-    const { flowId } = res.locals.parsedReq.params;
-    const { summary, templatedFlowIds } = res.locals.parsedReq.body;
     const response = await publishFlow(flowId, summary, templatedFlowIds);
 
     return res.json({
@@ -47,7 +48,9 @@ export const publishFlowController: PublishFlowController = async (
     });
   } catch (error) {
     return next(
-      new ServerError({ message: `Failed to publish flow: ${error}` }),
+      new ServerError({
+        message: `Failed to publish flow (${flowId}): ${error}`,
+      }),
     );
   }
 };
