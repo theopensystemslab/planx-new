@@ -40,6 +40,10 @@ export const isCleanHTML = (input: unknown): boolean => {
   // Skip validation for non-string values
   if (typeof input !== "string") return true;
 
+  // Only run sanitation on potential HTML (rich text), skip for plain strings
+  const isHTMLCandidate = input.includes("<") || input.includes("&");
+  if (!isHTMLCandidate) return true;
+
   const cleanHTML = DOMPurify.sanitize(input, { ADD_ATTR: ["target"] });
 
   // DOMPurify has not removed any attributes or values
