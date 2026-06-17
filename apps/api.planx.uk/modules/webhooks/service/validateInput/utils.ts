@@ -39,6 +39,10 @@ export const isObjectValid = (
 export const isCleanHTML = (input: unknown): boolean => {
   // Skip validation for non-string values
   if (typeof input !== "string") return true;
+  
+  // Optimisation: Only run sanitation on potential HTML (rich text), skip for plain strings
+  const isHTMLCandidate = input.includes("<") || input.includes("&");
+  if (!isHTMLCandidate) return true;
 
   // Only run sanitation on potential HTML (rich text), skip for plain strings
   const isHTMLCandidate = input.includes("<") || input.includes("&");
