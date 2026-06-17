@@ -29,8 +29,7 @@ interface ButtonProps {
   variant?: "tooltip";
 }
 
-// Plain div — handles drag-and-drop events only. No role/tabIndex so it is
-// never an "interactive control" and cannot trigger nested-interactive.
+// div for drag-and-drop events only - not considered an 'interactive' control
 const DropContainer = styled("div", {
   shouldForwardProp: (prop) => prop !== "isDragActive",
 })<{ isDragActive?: boolean }>(({ isDragActive, theme }) => ({
@@ -40,8 +39,7 @@ const DropContainer = styled("div", {
   }),
 }));
 
-// Native <button> — gets all the visual styling. Uses the `disabled` HTML
-// attribute so axe skips it in the nested-interactive check when inactive.
+// button for visual styling. uses the `disabled` attribute so its not considered interactive when inactive
 const UploadButton = styled("button", {
   shouldForwardProp: (prop) =>
     !["isDragActive", "variant"].includes(prop.toString()),
@@ -140,8 +138,8 @@ export default function PublicFileUploadButton(props: Props): FCReturn {
     );
   }
 
-  // Separate drag-and-drop props (go on the container) from click/keyboard
-  // handlers (go on the button). This keeps the container non-interactive.
+  // drag-and-drop props go on the container, click/keyboard handlers go on the button
+  // this keeps the container considered as non-interactive
   const {
     role: _role,
     tabIndex: _tabIndex,
