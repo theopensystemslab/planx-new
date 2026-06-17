@@ -158,15 +158,6 @@ insert_permissions:
         - templated_from
         - updated_at
         - version
-      validate_input:
-        definition:
-          forward_client_headers: false
-          headers:
-            - name: authorization
-              value: '{{HASURA_PLANX_API_KEY}}'
-          timeout: 10
-          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
-        type: http
   - role: platformAdmin
     permission:
       check: {}
@@ -191,15 +182,6 @@ insert_permissions:
         - templated_from
         - updated_at
         - version
-      validate_input:
-        definition:
-          forward_client_headers: false
-          headers:
-            - name: authorization
-              value: '{{HASURA_PLANX_API_KEY}}'
-          timeout: 10
-          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
-        type: http
   - role: teamEditor
     permission:
       check:
@@ -231,15 +213,6 @@ insert_permissions:
         - templated_from
         - updated_at
         - version
-      validate_input:
-        definition:
-          forward_client_headers: false
-          headers:
-            - name: authorization
-              value: '{{HASURA_PLANX_API_KEY}}'
-          timeout: 10
-          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
-        type: http
 select_permissions:
   - role: analyst
     permission:
@@ -450,15 +423,6 @@ update_permissions:
                 team_settings:
                   is_trial:
                     _eq: true
-      validate_input:
-        definition:
-          forward_client_headers: false
-          headers:
-            - name: authorization
-              value: '{{HASURA_PLANX_API_KEY}}'
-          timeout: 10
-          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
-        type: http
   - role: platformAdmin
     permission:
       columns:
@@ -494,15 +458,6 @@ update_permissions:
                 team_settings:
                   is_trial:
                     _eq: true
-      validate_input:
-        definition:
-          forward_client_headers: false
-          headers:
-            - name: authorization
-              value: '{{HASURA_PLANX_API_KEY}}'
-          timeout: 10
-          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
-        type: http
   - role: teamEditor
     permission:
       columns:
@@ -554,15 +509,6 @@ update_permissions:
                     team_settings:
                       is_trial:
                         _eq: true
-      validate_input:
-        definition:
-          forward_client_headers: false
-          headers:
-            - name: authorization
-              value: '{{HASURA_PLANX_API_KEY}}'
-          timeout: 10
-          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
-        type: http
 event_triggers:
   - name: update_templated_flow_edits
     definition:
