@@ -13,9 +13,7 @@ export const Route = createFileRoute("/_authenticated/app/$team/subscription")({
 
     const isAuthorised =
       context.user?.isPlatformAdmin ||
-      // TODO limit *after* we assign teamAdmin roles to existing users
-      role === "teamEditor" ||
-      role === "teamAdmin";
+      useStore.getState().getUserRoleForCurrentTeam() === "teamAdmin";
 
     if (!isAuthorised) {
       throw new Error("The user does not have permission to access this page.");
