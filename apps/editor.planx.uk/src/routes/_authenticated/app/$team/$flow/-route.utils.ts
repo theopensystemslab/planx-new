@@ -41,6 +41,7 @@ export async function connectToFlowRoute(teamSlug: string, rootFlow: string) {
 
     store.getFlowInformation(rootFlow, teamSlug);
   } catch (error) {
+    console.error("[connectToFlowRoute] threw:", error);
     throw notFound();
   }
 }
