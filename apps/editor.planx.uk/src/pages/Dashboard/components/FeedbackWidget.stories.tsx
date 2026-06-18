@@ -5,10 +5,26 @@ import { DashboardWidget } from "ui/editor/DashboardWidget";
 import { FeedbackWidget } from "./FeedbackWidget";
 
 const mockFlows = [
-  { flowName: "Apply for planning permission", count: 14 },
-  { flowName: "Apply for a lawful development certificate", count: 7 },
-  { flowName: "Report a planning breach", count: 3 },
-  { flowName: "Prior approval: larger home extension", count: 1 },
+  {
+    flowName: "Apply for planning permission",
+    flowSlug: "apply-for-planning-permission",
+    count: 14,
+  },
+  {
+    flowName: "Apply for a lawful development certificate",
+    flowSlug: "apply-for-a-lawful-development-certificate",
+    count: 7,
+  },
+  {
+    flowName: "Report a planning breach",
+    flowSlug: "report-a-planning-breach",
+    count: 3,
+  },
+  {
+    flowName: "Prior approval: larger home extension",
+    flowSlug: "prior-approval-larger-home-extension",
+    count: 1,
+  },
 ];
 
 const meta = {
@@ -31,6 +47,7 @@ const meta = {
   args: {
     flows: mockFlows,
     total: mockFlows.reduce((sum, { count }) => sum + count, 0),
+    teamSlug: "test-council",
     loading: false,
   },
 } satisfies Meta<typeof FeedbackWidget>;

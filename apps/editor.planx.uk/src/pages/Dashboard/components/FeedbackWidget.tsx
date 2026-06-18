@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
+import { Link } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import React from "react";
 
@@ -10,12 +11,14 @@ import { FlowSummary, useUnreadFeedback } from "./useUnreadFeedback";
 interface FeedbackWidgetProps {
   flows: FlowSummary[];
   total: number;
+  teamSlug: string;
   loading?: boolean;
 }
 
 export function FeedbackWidget({
   flows,
   total,
+  teamSlug,
   loading = false,
 }: FeedbackWidgetProps) {
   if (loading) {
@@ -53,9 +56,15 @@ export function FeedbackWidget({
       </Box>
       <Divider />
       <Box sx={{ overflowY: "auto" }}>
-        {flows.map(({ flowName, count }) => (
+        {flows.map(({ flowName, flowSlug, count }) => (
           <React.Fragment key={flowName}>
-            <Box sx={{ px: 1.5, py: 1 }}>
+            <Box sx={{ position: "relative", px: 1.5, py: 1 }}>
+              <Link
+                to="/app/$team/$flow/feedback"
+                params={{ team: teamSlug, flow: flowSlug }}
+                style={{ position: "absolute", inset: 0, zIndex: 1 }}
+                aria-label={`View feedback for ${flowName}`}
+              />
               <Typography variant="body2">
                 <strong>{flowName}</strong>
               </Typography>
@@ -75,5 +84,12 @@ export default function ConnectedFeedbackWidget() {
   const teamSlug = useStore((state) => state.getTeam().slug);
   const { flows, total, loading } = useUnreadFeedback(teamSlug);
 
-  return <FeedbackWidget flows={flows} total={total} loading={loading} />;
+  return (
+    <FeedbackWidget
+      flows={flows}
+      total={total}
+      teamSlug={teamSlug}
+      loading={loading}
+    />
+  );
 }
