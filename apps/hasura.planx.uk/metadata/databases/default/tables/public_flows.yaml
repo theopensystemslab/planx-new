@@ -137,8 +137,6 @@ insert_permissions:
   - role: api
     permission:
       check: {}
-      set:
-        creator_id: x-hasura-user-id
       columns:
         - copied_from
         - created_at

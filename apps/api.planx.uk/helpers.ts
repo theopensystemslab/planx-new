@@ -120,6 +120,7 @@ const createFlow = async ({
           $description: String
           $limitations: String
           $is_service: Boolean
+          $creator_id: Int
         ) {
           insertFlow: insert_flows_one(
             object: {
@@ -135,6 +136,7 @@ const createFlow = async ({
               description: $description
               limitations: $limitations
               is_service: $is_service
+              creator_id: $creator_id
             }
           ) {
             id
@@ -153,6 +155,7 @@ const createFlow = async ({
         description: description,
         limitations: limitations,
         is_service: isService,
+        creator_id: userId,
       },
     );
 
