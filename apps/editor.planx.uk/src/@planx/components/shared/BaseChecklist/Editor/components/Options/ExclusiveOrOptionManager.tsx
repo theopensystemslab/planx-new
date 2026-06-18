@@ -7,9 +7,13 @@ import {
   AnyChecklist,
   OptionGroup,
 } from "@planx/components/shared/BaseChecklist/model";
-import { usePlanningDataEntityNames } from "@planx/components/shared/hooks";
+import {
+  usePlanningConstraintsSchema,
+  usePlanningDataEntityNames,
+} from "@planx/components/shared/hooks";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { getIn } from "formik";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
@@ -39,9 +43,15 @@ export const ExclusiveOrOptionManager = <T extends AnyChecklist>({
   disabled,
   isTemplatedNode,
 }: Props<T>) => {
+  const teamSlug = useStore((state) => state.teamSlug);
   const { schema, currentOptionVals } = useCurrentOptions(formik);
+
   const { data: planningDataSchema } = usePlanningDataEntityNames(
     formik.values.fn || "",
+  );
+  const { data: planningConstraintsSchema } = usePlanningConstraintsSchema(
+    formik.values.fn || "",
+    teamSlug,
   );
 
   return (
@@ -105,7 +115,7 @@ export const ExclusiveOrOptionManager = <T extends AnyChecklist>({
               optionPlaceholder: "Exclusive 'or' option",
               schema: getOptionsSchemaByFn(
                 formik.values.fn,
-                planningDataSchema ?? schema,
+                planningDataSchema ?? planningConstraintsSchema ?? schema,
                 currentOptionVals,
               ),
             }}
