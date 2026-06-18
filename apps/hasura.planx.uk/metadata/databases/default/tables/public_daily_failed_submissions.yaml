@@ -1,0 +1,3 @@
+table:
+  name: daily_failed_submissions
+  schema: public
