@@ -3,12 +3,13 @@ import { Link, useParams } from "@tanstack/react-router";
 import classnames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
 import { hasFeatureFlag } from "lib/featureFlags";
+import { componentSelectorState } from "pages/FlowEditor/lib/componentSelectorState";
 import { hangerAnchor } from "pages/FlowEditor/lib/hangerAnchor";
 import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
 } from "pages/FlowEditor/utils";
-import React from "react";
+import React, { useCallback } from "react";
 import { useDrop } from "react-dnd";
 import { getNodeRoute } from "utils/routeUtils/utils";
 
@@ -75,6 +76,20 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
     relationships: { parent, before },
   });
 
+  const handleHangerButtonClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+      hangerAnchor.set({
+        top: rect.top,
+        bottom: rect.bottom,
+        left: rect.left,
+        right: rect.right,
+      });
+      componentSelectorState.open({ parent, before });
+    },
+    [parent, before],
+  );
+
   return (
     <li
       className={classnames("hanger", { hidden: hidden || hideHangerFromUser })}
@@ -82,29 +97,38 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
         drop(el);
       }}
     >
-      <Link
-        to={getNodeRoute(parent, before)}
-        params={{
-          team: teamSlug,
-          flow: flowSlug,
-          ...(parent && { parent }),
-          ...(before && { before }),
-        }}
-        search={hasFeatureFlag("COMPONENT_SELECT") ? {} : { type: "question" }}
-        preload={false}
-        onContextMenu={handleContextMenu}
-        onClick={(e) => {
-          const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-          hangerAnchor.set({
-            top: rect.top,
-            bottom: rect.bottom,
-            left: rect.left,
-            right: rect.right,
-          });
-        }}
-      >
-        {canDrop && item && item.text}
-      </Link>
+      {hasFeatureFlag("COMPONENT_SELECT") ? (
+        <button
+          onContextMenu={handleContextMenu}
+          onClick={handleHangerButtonClick}
+        >
+          {canDrop && item && item.text}
+        </button>
+      ) : (
+        <Link
+          to={getNodeRoute(parent, before)}
+          params={{
+            team: teamSlug,
+            flow: flowSlug,
+            ...(parent && { parent }),
+            ...(before && { before }),
+          }}
+          search={{ type: "question" }}
+          preload={false}
+          onContextMenu={handleContextMenu}
+          onClick={(e) => {
+            const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+            hangerAnchor.set({
+              top: rect.top,
+              bottom: rect.bottom,
+              left: rect.left,
+              right: rect.right,
+            });
+          }}
+        >
+          {canDrop && item && item.text}
+        </Link>
+      )}
     </li>
   );
 };

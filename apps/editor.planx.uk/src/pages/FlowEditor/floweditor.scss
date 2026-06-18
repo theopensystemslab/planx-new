@@ -456,10 +456,13 @@ $fontMonospace: "Source Code Pro", monospace;
     @include disabledHanger();
   }
 
-  > a {
+  > a,
+  > button {
     $size: $hangerWidth;
     display: inline-block;
     // width: $size;
+    font: inherit;
+    appearance: none;
     text-decoration: none;
     border: $nodeBorderWidth solid $nodeBorder;
     min-width: $size;
