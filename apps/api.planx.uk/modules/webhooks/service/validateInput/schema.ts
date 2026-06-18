@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { ValidatedRequestHandler } from "../../../../shared/middleware/validate.js";
-import { isCleanHTML, isObjectValid } from "./utils.js";
+import { HTMLSanitiser, isObjectValid, makeIsCleanHTML } from "./utils.js";
 
 // Definition: https://hasura.io/docs/latest/schema/postgres/input-validations/#response
 type HasuraValidateInputResponse = undefined | { message: string };
@@ -38,10 +38,18 @@ type isCleanJSONBSchema = z.ZodType<
  */
 export const isCleanJSONBSchema: isCleanJSONBSchema =
   hasuraValidateInputRequestSchema.transform((original) => {
-    const isClean = original.body.data.input.every((input) =>
-      isObjectValid(input, isCleanHTML),
-    );
-    return { body: { isClean } };
+    // Instantiate a single instance per-request to avoid memory leaks
+    const sanitiser = new HTMLSanitiser();
+
+    try {
+      const isCleanHTML = makeIsCleanHTML(sanitiser);
+      const isClean = original.body.data.input.every((input) =>
+        isObjectValid(input, isCleanHTML),
+      );
+      return { body: { isClean } };
+    } finally {
+      sanitiser.close();
+    }
   });
 
 export type IsCleanJSONBController = ValidatedRequestHandler<
