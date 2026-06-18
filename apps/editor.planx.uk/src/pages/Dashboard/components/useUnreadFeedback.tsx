@@ -10,12 +10,12 @@ export interface FlowSummary {
 
 export const useUnreadFeedback = (teamSlug: string) => {
   const { data, loading, error } = useQuery<{
-    feedback_summary: { flowName: string; flowSlug: string }[];
+    feedbackSummary: { flowName: string; flowSlug: string }[];
   }>(GET_UNREAD_FEEDBACK_SUMMARY, {
     variables: { teamSlug },
   });
 
-  const aggregated = (data?.feedback_summary ?? []).reduce<
+  const aggregated = (data?.feedbackSummary ?? []).reduce<
     Record<string, { count: number; flowSlug: string }>
   >((acc, { flowName, flowSlug }) => {
     acc[flowName] = {
