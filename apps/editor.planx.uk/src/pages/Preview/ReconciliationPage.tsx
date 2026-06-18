@@ -56,7 +56,6 @@ const ReconciliationPage: React.FC<Props> = ({
 
   const sortedBreadcrumbs = sortBreadcrumbs(
     reconciliationResponse.reconciledSessionData.breadcrumbs,
-    flow,
   );
 
   const theme = useTheme();

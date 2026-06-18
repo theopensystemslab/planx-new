@@ -7,7 +7,6 @@ import type {
   GovUKPayment,
   Node,
   NodeId,
-  Value,
 } from "@opensystemslab/planx-core/types";
 import {
   ComponentType,
@@ -45,9 +44,6 @@ const SUPPORTED_INPUT_TYPES = [
   TYPES.NumberInput,
   TYPES.TextInput,
 ];
-
-let memoizedPreviousCardId: string | undefined = undefined;
-let memoizedBreadcrumb: Store.Breadcrumbs | undefined = undefined;
 
 export interface Response {
   question: Node & { id: NodeId };
@@ -188,33 +184,32 @@ export const previewStore: StateCreator<
   },
 
   previousCard: (node: Store.Node | null) => {
-    const { breadcrumbs, flow, _nodesPendingEdit, changedNode } = get();
+    const { breadcrumbs, _nodesPendingEdit, changedNode } = get();
+
+    // Do not calculate "previous" if "changing" an answer rather than going "back"
+    if (changedNode && node?.id === changedNode) return;
+
+    // Only "go back" to nodes which were visible to the user (not automated) while navigating forwards
     const goBackable = Object.entries(breadcrumbs)
       .filter(([, v]) => !v.auto)
       .map(([k]) => k);
-    if (changedNode && node?.id === changedNode) return;
 
+    // Nodes pending edit capture dependencies like FindProp
     if (_nodesPendingEdit.length || goBackable.length <= 1) {
       return goBackable.pop();
     }
 
-    let previousCardId = memoizedPreviousCardId;
+    // Breadcrumbs are sequenced, find the most recent one which is eligible to go back to
+    const maxGoBackSeq = Math.max(
+      ...Object.entries(breadcrumbs)
+        .filter(([k]) => goBackable.includes(k))
+        .map(([, v]) => v.seq!),
+    );
+    const goBackId = Object.entries(breadcrumbs).filter(
+      ([, v]) => v.seq === maxGoBackSeq,
+    )?.[0]?.[0];
 
-    const shouldUpdateMemoizedValues =
-      !previousCardId || !isEqual(memoizedBreadcrumb, breadcrumbs);
-
-    // XXX: The functions `upcomingCardIds()` and `sortIdsDepthFirst()` are computationally heavy,
-    //      so we should call them only when needed to prevent UI slowness.
-    if (node?.id && shouldUpdateMemoizedValues) {
-      memoizedBreadcrumb = breadcrumbs;
-      const sorted = sortIdsDepthFirst(flow)(new Set([node.id, ...goBackable]));
-      const currentCardIndex = sorted.indexOf(node.id);
-      previousCardId =
-        currentCardIndex > 0 ? sorted[currentCardIndex - 1] : sorted[0];
-      memoizedPreviousCardId = previousCardId;
-    }
-
-    return previousCardId;
+    return goBackId;
   },
 
   canGoBack: (node: Store.Node | null) => {
@@ -378,7 +373,6 @@ export const previewStore: StateCreator<
       // Key order matters because it's the order in which components are displayed in the Review component
       const sortedBreadcrumbs = sortBreadcrumbs(
         nextBreadcrumbs,
-        flow,
         nodesPendingEdit,
       );
 
@@ -483,7 +477,7 @@ export const previewStore: StateCreator<
     // Hasura sorts JSONB data alphabetically by key value on insert/update
     // It is vital that we always re-sort breadcrumbs data (by flow depth) on resume
     // Without this, the user's passport will not generate correctly
-    const sortedBreadcrumbs = sortBreadcrumbs(session.breadcrumbs, get().flow);
+    const sortedBreadcrumbs = sortBreadcrumbs(session.breadcrumbs);
 
     set({ ...session, breadcrumbs: sortedBreadcrumbs });
     get().setCurrentCard();
@@ -811,7 +805,7 @@ export const previewStore: StateCreator<
     const { breadcrumbs, flow, record, changeAnswer } = get();
 
     // Order of breadcrumb insertion is not guaranteed, sort upfront to match flow order so that later "find()" methods behave as expected
-    const sortedBreadcrumbs = sortBreadcrumbs(breadcrumbs, flow);
+    const sortedBreadcrumbs = sortBreadcrumbs(breadcrumbs);
 
     // The first nodeId that set the passport value (fn) being changed (eg FindProperty)
     const originalNodeId: Node["id"] | undefined = Object.entries(
@@ -984,15 +978,13 @@ export const removeOrphansFromBreadcrumbs = ({
 
 export const sortBreadcrumbs = (
   nextBreadcrumbs: Store.Breadcrumbs,
-  flow: Store.Flow,
   editingNodes?: string[],
 ) => {
   return editingNodes?.length
     ? nextBreadcrumbs
-    : sortIdsDepthFirst(flow)(new Set(Object.keys(nextBreadcrumbs))).reduce(
-        (acc, id) => ({ ...acc, [id]: nextBreadcrumbs[id] }),
-        {} as Store.Breadcrumbs,
-      );
+    : (Object.fromEntries(
+        Object.entries(nextBreadcrumbs).sort(([, a], [, b]) => a.seq! - b.seq!),
+      ) as Store.Breadcrumbs);
 };
 
 function handleNodesWithPassport({

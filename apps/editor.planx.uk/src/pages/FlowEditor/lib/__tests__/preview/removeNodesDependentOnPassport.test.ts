@@ -269,7 +269,6 @@ describe("nodesDependentOnPassport with previousCard", () => {
     const breadcrumbs = {
       findProperty: breadcrumbsDependentOnPassport.findProperty,
       text: breadcrumbsDependentOnPassport.text,
-      text2: breadcrumbsDependentOnPassport.text2,
     };
     const flow = { ...flowWithPassportComponents };
 

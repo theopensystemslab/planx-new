@@ -21,13 +21,15 @@
         "title": "51, COBOURG ROAD, LONDON"
       },
       "property.type": ["residential.dwelling.house.terrace"]
-    }
+    },
+    "seq": 1
   },
   "text": {
     "auto": false,
     "data": {
       "text": "Test"
-    }
+    },
+    "seq": 2
   },
   "drawBoundary": {
     "auto": false,
@@ -49,7 +51,8 @@
         "properties": null
       },
       "proposal.site.area": 109.43
-    }
+    },
+    "seq": 3
   },
   "planningConstraints": {
     "auto": false,
@@ -134,13 +137,15 @@
           "designated"
         ]
       }
-    }
+    },
+    "seq": 4
   },
   "text2": {
     "auto": false,
     "data": {
       "text": "Test2"
-    }
+    },
+    "seq": 5
   },
   "mapAndLabel": {
     "auto": false,
@@ -164,6 +169,7 @@
           "species": "Elm"
         }
       }
-    }
+    },
+    "seq": 6
   }
 }
