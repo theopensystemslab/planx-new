@@ -244,7 +244,7 @@ test.describe("Templates", () => {
       await publishService(page);
     });
 
-    test("source template is not yet selectable in 'New flow' modal before going online", async ({
+    test("source template is not yet selectable in 'New flow' modal before being set as 'copiable'", async ({
       browser,
     }) => {
       const page = await getTeamPage({
@@ -267,6 +267,23 @@ test.describe("Templates", () => {
       await page.keyboard.press("Escape");
     });
 
+    test("can set the source template copiable", async ({ browser }) => {
+      const page = await getTeamPage({
+        browser,
+        userId: context.user!.id!,
+        teamName: context.team.name,
+      });
+      await navigateToService(page, SOURCE_TEMPLATE_SLUG);
+      await navigateToFlowSettings(page);
+
+      await page.getByLabel("Cannot be copied to create new services").click();
+      await page.getByTestId("settings-submit-button").click();
+
+      await expect(
+        page.getByText("Settings updated successfully"),
+      ).toBeVisible();
+    });
+
     test("can set the source template to be a Service", async ({ browser }) => {
       const page = await getTeamPage({
         browser,
@@ -278,18 +295,7 @@ test.describe("Templates", () => {
       await makeFlowAService(page);
     });
 
-    test("can set the source template online", async ({ browser }) => {
-      const page = await getTeamPage({
-        browser,
-        userId: context.user!.id!,
-        teamName: context.team.name,
-      });
-      await navigateToService(page, SOURCE_TEMPLATE_SLUG);
-      await navigateToFlowSettings(page);
-      await turnServiceOnline(page);
-    });
-
-    test("source template is selectable in 'New flow' modal after going online", async ({
+    test("source template is selectable in 'New flow' modal after being set to copiable", async ({
       browser,
     }) => {
       const page = await getTeamPage({
