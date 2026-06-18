@@ -82,6 +82,7 @@ const createFlow = async ({
   description,
   limitations,
   isService,
+  $apiClient,
 }: {
   teamId: number;
   slug: string;
@@ -94,8 +95,10 @@ const createFlow = async ({
   description?: string;
   limitations?: string;
   isService?: boolean;
+  $apiClient?: ReturnType<typeof getClient>["client"];
 }) => {
-  const { client: $client } = getClient();
+  const { client: $userClient } = getClient();
+  const $client = $apiClient ?? $userClient;
   const userId = userContext.getStore()?.user?.sub;
 
   try {
