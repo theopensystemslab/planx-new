@@ -1,4 +1,4 @@
-import { isCleanHTML, isObjectValid } from "./utils.js";
+import { HTMLSanitiser, isObjectValid, makeIsCleanHTML } from "./utils.js";
 
 describe("isObjectValid", () => {
   it("calls the callback for each child if validator returns true", () => {
@@ -81,6 +81,15 @@ describe("isObjectValid", () => {
 });
 
 describe("isCleanHTML() helper function", () => {
+  const checkIsClean = (input: string): boolean => {
+    const purifier = new HTMLSanitiser();
+    try {
+      return makeIsCleanHTML(purifier)(input);
+    } finally {
+      purifier.close();
+    }
+  };
+
   const dirtyHTML = [
     "<img src=x onerror=alert(1)//>",
     "<svg><g/onload=alert(2)//<p>",
@@ -92,7 +101,7 @@ describe("isCleanHTML() helper function", () => {
 
   for (const example of dirtyHTML) {
     it(`returns false for example ${example}`, () => {
-      expect(isCleanHTML(example)).toBe(false);
+      expect(checkIsClean(example)).toBe(false);
     });
   }
 
@@ -109,7 +118,7 @@ describe("isCleanHTML() helper function", () => {
 
   for (const example of cleanHTML) {
     it(`returns true for example ${example}`, () => {
-      expect(isCleanHTML(example)).toBe(true);
+      expect(checkIsClean(example)).toBe(true);
     });
   }
 });
