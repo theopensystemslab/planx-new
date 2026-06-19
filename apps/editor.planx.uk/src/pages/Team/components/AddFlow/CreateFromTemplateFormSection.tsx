@@ -25,6 +25,7 @@ export const CreateFromTemplateFormSection: React.FC = () => {
         where: {
           is_template: { _eq: true }
           can_create_from_copy: { _eq: true }
+          archived_at: { _is_null: true }
         }
       ) {
         id
