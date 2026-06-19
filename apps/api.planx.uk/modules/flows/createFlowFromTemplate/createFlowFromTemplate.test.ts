@@ -59,10 +59,42 @@ describe("validation and error handling", () => {
         expect(res.body).toHaveProperty("name", "ZodError");
       });
   });
+
+  it("returns an error if the user is not a member of the target team", async () => {
+    queryMock.mockQuery({
+      name: "GetUserById",
+      matchOnVariables: false,
+      data: {
+        user: {
+          id: 123,
+          isPlatformAdmin: false,
+          teams: [{ role: "teamEditor", team: { id: 2, slug: "other-team" } }],
+        },
+      },
+    });
+
+    await supertest(app)
+      .post("/flows/create-from-template/1")
+      .send(validBody)
+      .set(auth)
+      .expect(403);
+  });
 });
 
 describe("success", () => {
   beforeEach(() => {
+    queryMock.mockQuery({
+      name: "GetUserById",
+      matchOnVariables: false,
+      data: {
+        user: {
+          id: 123,
+          isPlatformAdmin: false,
+          teams: [{ role: "teamEditor", team: { id: 1, slug: "my-team" } }],
+        },
+      },
+    });
+
     queryMock.mockQuery({
       name: "GetFlowData",
       matchOnVariables: false,
