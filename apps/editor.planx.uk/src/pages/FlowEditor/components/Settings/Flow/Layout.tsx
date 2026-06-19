@@ -24,12 +24,17 @@ const FlowSettingsLayout: React.FC<Props> = ({ children }) => {
   const [flowId, flowSlug] = useStore((state) => [state.id, state.flowSlug]);
   const { team } = useParams({ from: "/_authenticated/app/$team" });
 
-  const { data: templateData } = useQuery<GetFlowTemplateStatus>(GET_FLOW_TEMPLATE_STATUS, {
-    variables: { flowId },
-  });
-  
-  const { data: isServiceData } = useGetIsService(flowId)
-  const isService = isServiceData?.flow.isService
+  const { data: templateData } = useQuery<GetFlowTemplateStatus>(
+    GET_FLOW_TEMPLATE_STATUS,
+    {
+      variables: { flowId },
+    },
+  );
+
+  const isTemplated = templateData?.flow.templatedFrom !== null;
+
+  const { data: isServiceData } = useGetIsService(flowId);
+  const isService = isServiceData?.flow.isService;
 
   // TODO: Make type-safe!
   const serviceSettingsLinks = [
@@ -47,10 +52,23 @@ const FlowSettingsLayout: React.FC<Props> = ({ children }) => {
     { label: "Emails", path: "/emails", icon: EmailIcon },
   ];
 
+  const flowSettingsLinks =
+    isTemplated === false
+      ? []
+      : [
+          { label: "Visibility", path: "/visibility", icon: VisibilityIcon },
+          {
+            label: "Templates",
+            path: "/templates",
+            icon: StarIcon,
+            condition: Boolean(templateData?.flow.templatedFrom),
+          },
+        ];
+
   return (
     <SettingsLayout
       title="Flow settings"
-      settingsLinks={isService ? serviceSettingsLinks : []}
+      settingsLinks={isService ? serviceSettingsLinks : flowSettingsLinks}
       getNavigationPath={(path) => `/app/${team}/${flowSlug}/settings${path}`}
       topOffset={BREADCRUMBS_HEIGHT}
     >
