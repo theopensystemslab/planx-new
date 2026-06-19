@@ -160,8 +160,6 @@ insert_permissions:
   - role: platformAdmin
     permission:
       check: {}
-      set:
-        creator_id: x-hasura-user-id
       columns:
         - copied_from
         - created_at
@@ -200,8 +198,6 @@ insert_permissions:
                   _eq: x-hasura-user-id
               - role:
                   _eq: teamEditor
-      set:
-        creator_id: x-hasura-user-id
       columns:
         - copied_from
         - created_at
