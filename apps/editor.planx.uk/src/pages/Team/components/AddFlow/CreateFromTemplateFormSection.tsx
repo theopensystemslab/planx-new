@@ -22,7 +22,11 @@ export const CreateFromTemplateFormSection: React.FC = () => {
   const { data } = useQuery<{ templates: TemplateOption[] }>(gql`
     query GetOnlineSourceTemplates {
       templates: flows(
-        where: { is_template: { _eq: true }, status: { _eq: online } }
+        where: {
+          is_template: { _eq: true }
+          can_create_from_copy: { _eq: true }
+          archived_at: { _is_null: true }
+        }
       ) {
         id
         slug

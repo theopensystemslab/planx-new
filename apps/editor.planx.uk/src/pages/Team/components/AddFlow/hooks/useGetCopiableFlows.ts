@@ -5,6 +5,7 @@ const GET_COPIABLE_FLOWS = gql`
     copiableFlows: flows(
       where: {
         can_create_from_copy: { _eq: true }
+        is_template: { _eq: false }
         archived_at: { _is_null: true }
       }
       order_by: { team: { name: asc }, name: asc }

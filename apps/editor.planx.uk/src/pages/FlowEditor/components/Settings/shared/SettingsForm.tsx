@@ -184,6 +184,7 @@ const SettingsFormContainer = <
                       disabled={
                         userPermissionError || !formik.dirty || updating
                       }
+                      data-testid="settings-submit-button"
                     >
                       Save
                     </Button>
