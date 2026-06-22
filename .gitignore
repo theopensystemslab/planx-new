@@ -47,3 +47,4 @@ __pycache__
 
 # Tooling
 .aider*
+apps/editor.planx.uk/a11y-app/vitest-results.json
