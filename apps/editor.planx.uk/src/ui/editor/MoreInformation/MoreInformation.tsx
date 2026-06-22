@@ -51,7 +51,14 @@ export const MoreInformation = <T extends BaseNodeData>({
             />
           </InputLabel>
           {/* ImgInput must be outside InputLabel: role="button" inside <label> = nested-interactive */}
-          <Box sx={{ display: "flex", gap: "5px", alignItems: "flex-end" }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: "5px",
+              alignItems: "flex-end",
+              width: "100%",
+            }}
+          >
             <Box sx={{ flex: 1 }}>
               <InputLabel
                 label="How it is defined?"
