@@ -9,6 +9,7 @@ export const GET_FLOW_TEMPLATE_STATUS = gql`
       team {
         id
         name
+        slug
       }
       template {
         id
