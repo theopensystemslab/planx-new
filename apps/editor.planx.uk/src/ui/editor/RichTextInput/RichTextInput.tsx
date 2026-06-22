@@ -280,6 +280,7 @@ const RichTextInput: FC<Props> = (props) => {
               <OrderedListButton editor={editor} />
               <PublicFileUploadButton
                 variant="tooltip"
+                aria-label="Insert image"
                 onChange={(src) =>
                   editor?.chain().focus().setImage({ src }).run()
                 }

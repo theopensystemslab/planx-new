@@ -1,6 +1,5 @@
 import ErrorIcon from "@mui/icons-material/Error";
 import Image from "@mui/icons-material/Image";
-import ButtonBase, { ButtonBaseProps } from "@mui/material/ButtonBase";
 import CircularProgress from "@mui/material/CircularProgress";
 import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
@@ -21,24 +20,46 @@ export interface Props {
   variant?: "tooltip";
   disabled?: boolean;
   acceptedFileTypes?: AcceptedFileTypes;
+  "aria-label"?: string;
+  tooltipTitle?: string;
 }
 
-interface RootProps extends ButtonBaseProps {
+interface ButtonProps {
   isDragActive?: boolean;
   variant?: "tooltip";
 }
 
-const Root = styled(ButtonBase, {
+// div for drag-and-drop events only - not considered an 'interactive' control
+const DropContainer = styled("div", {
+  shouldForwardProp: (prop) => prop !== "isDragActive",
+})<{ isDragActive?: boolean }>(({ isDragActive, theme }) => ({
+  display: "inline-flex",
+  ...(isDragActive && {
+    outline: `2px dashed ${theme.palette.primary.dark}`,
+  }),
+}));
+
+// button for visual styling. uses the `disabled` attribute so its not considered interactive when inactive
+const UploadButton = styled("button", {
   shouldForwardProp: (prop) =>
     !["isDragActive", "variant"].includes(prop.toString()),
-})<RootProps>(({ theme, isDragActive, variant, disabled }) => ({
+})<ButtonProps>(({ theme, isDragActive, variant }) => ({
   borderRadius: 0,
   height: 50,
   width: 50,
   flexGrow: 0,
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
   backgroundColor: theme.palette.background.default,
   color: theme.palette.primary.dark,
   border: `1px solid ${theme.palette.border.main}`,
+  cursor: "pointer",
+  padding: 0,
+  "&:disabled": {
+    backgroundColor: theme.palette.background.disabled,
+    cursor: "default",
+  },
   ...(isDragActive && {
     border: `2px dashed ${theme.palette.primary.dark}`,
   }),
@@ -46,14 +67,15 @@ const Root = styled(ButtonBase, {
     color: "#757575",
     height: "fitContent",
     width: "fitContent",
-  }),
-  ...(disabled && {
-    backgroundColor: theme.palette.background.disabled,
+    background: "transparent",
+    border: "none",
   }),
 }));
 
 export default function PublicFileUploadButton(props: Props): FCReturn {
-  const { onChange, variant, disabled, acceptedFileTypes } = props;
+  const { onChange, variant, disabled, acceptedFileTypes, tooltipTitle } =
+    props;
+  const ariaLabel = props["aria-label"] ?? "Upload image";
 
   const [status, setStatus] = useState<
     { type: "none" } | { type: "loading" } | { type: "error"; msg: string }
@@ -68,7 +90,7 @@ export default function PublicFileUploadButton(props: Props): FCReturn {
         clearTimeout(timeout);
       };
     }
-  }, [status, setStatus]);
+  }, [status]);
 
   const onDrop = useCallback(
     (files: FileWithPath[]) => {
@@ -76,14 +98,10 @@ export default function PublicFileUploadButton(props: Props): FCReturn {
       if (!file) {
         return;
       }
-      setStatus({
-        type: "loading",
-      });
+      setStatus({ type: "loading" });
       uploadPublicFile(file)
         .then(({ fileUrl }) => {
-          setStatus({
-            type: "none",
-          });
+          setStatus({ type: "none" });
           onChange && onChange(fileUrl);
         })
         .catch(() => {
@@ -93,42 +111,66 @@ export default function PublicFileUploadButton(props: Props): FCReturn {
           });
         });
     },
-    [onChange, setStatus],
+    [onChange],
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: acceptedFileTypes || DEFAULT_FILETYPES,
+    disabled,
   });
 
   if (status.type === "loading") {
     return (
-      <Root key="status-loading">
+      <UploadButton type="button" disabled aria-label={ariaLabel} aria-busy>
         <CircularProgress size={24} />
-      </Root>
+      </UploadButton>
     );
   }
 
   if (status.type === "error") {
     return (
       <Tooltip open title={status.msg}>
-        <Root>
+        <UploadButton type="button" disabled aria-label={status.msg}>
           <ErrorIcon titleAccess="Error" />
-        </Root>
+        </UploadButton>
       </Tooltip>
     );
   }
 
+  // drag-and-drop props go on the container, click/keyboard handlers go on the button
+  // this keeps the container considered as non-interactive
+  const {
+    role: _role,
+    tabIndex: _tabIndex,
+    onClick: openFilePicker,
+    onKeyDown: handleKeyDown,
+    ...dragProps
+  } = getRootProps();
+
   return (
-    <Root
-      isDragActive={isDragActive}
-      key="status-none"
-      variant={variant}
-      {...getRootProps()}
-      disabled={disabled}
-    >
-      <input data-testid="upload-file-input" {...getInputProps()} />
-      <Image color={disabled ? "disabled" : "inherit"} />
-    </Root>
+    <DropContainer {...dragProps} isDragActive={isDragActive}>
+      <input
+        data-testid="upload-file-input"
+        {...getInputProps()}
+        aria-label={ariaLabel}
+      />
+      <Tooltip
+        title={tooltipTitle ?? ""}
+        disableHoverListener={!tooltipTitle || disabled}
+      >
+        <UploadButton
+          type="button"
+          isDragActive={isDragActive}
+          variant={variant}
+          aria-label={ariaLabel}
+          disabled={disabled}
+          onClick={openFilePicker}
+          onKeyDown={handleKeyDown}
+        >
+          <Image color={disabled ? "disabled" : "inherit"} aria-hidden />
+        </UploadButton>
+      </Tooltip>
+    </DropContainer>
   );
 }
