@@ -15,5 +15,6 @@ export const Basic = {
   args: {
     id: "storybook-test-0",
     checked: false,
+    inputProps: { "aria-label": "Checkbox" },
   },
 } satisfies Story;

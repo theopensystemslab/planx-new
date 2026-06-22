@@ -46,7 +46,13 @@ const RichTextInput: FC<Props> = (props) => {
   const attributes = {
     // User provided props
     name: props.name,
-    id: props.id,
+    // Only set id when explicitly provided (undefined would render as the string "undefined")
+    ...(props.id !== undefined && { id: props.id }),
+    // div[role="textbox"] is not a native labelable element, so <label for> cannot provide
+    // an accessible name. Use aria-label from placeholder or name as fallback.
+    ...((props.placeholder || props.name) && {
+      "aria-label": props.placeholder || props.name,
+    }),
     ...props.inputProps,
     // Default props overwritted by assigning our own
     contenteditable: "false",
@@ -191,6 +197,7 @@ const RichTextInput: FC<Props> = (props) => {
             >
               <Input
                 sx={{ width: 300 }}
+                aria-label="URL"
                 ref={urlInputRef}
                 onKeyDown={(ev) => {
                   if (ev.key === "Enter") {
