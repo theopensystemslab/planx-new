@@ -24,6 +24,7 @@ export interface VitestReport {
   numTotalTests: number;
   numPassedTests: number;
   numFailedTests: number;
+  startTime: number;
   testResults: SuiteResult[];
 }
 

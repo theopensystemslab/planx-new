@@ -3,21 +3,53 @@ import type { VitestReport, Violation } from "./shared/types";
 import { parseViolations } from "./shared/parseViolations";
 import Header, { type RunStatus } from "./components/Header";
 import StreamLog from "./components/StreamLog";
-import SummaryCards from "./components/SummaryCards";
-import AudiencePanel from "./components/AudiencePanel";
 import ByRuleList from "./components/ByRuleList";
 import ByComponentList from "./components/ByComponentList";
 
-const thStyle: React.CSSProperties = {
-  border: "1px solid #e0e0e0",
-  padding: "8px 14px",
-  background: "#f5f5f5",
-  textAlign: "left",
-};
-const tdStyle: React.CSSProperties = {
-  border: "1px solid #e0e0e0",
-  padding: "8px 14px",
-};
+interface StatBadge {
+  label: string;
+  value: number;
+  color?: string;
+}
+
+function StatBadges({ badges }: { badges: StatBadge[] }) {
+  return (
+    <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", margin: "1rem 0 1.5rem" }}>
+      {badges.map(({ label, value, color }) => (
+        <span
+          key={label}
+          style={{
+            display: "inline-flex",
+            alignItems: "baseline",
+            gap: "0.3rem",
+            padding: "4px 12px",
+            borderRadius: 20,
+            background: "#f0f0f0",
+            fontSize: "0.85rem",
+            color: "#333",
+          }}
+        >
+          <strong style={{ color: color ?? "#111" }}>{value}</strong>
+          <span style={{ color: "#666" }}>{label}</span>
+        </span>
+      ))}
+    </div>
+  );
+}
+
+const sectionLabelStyle = (isPublic: boolean): React.CSSProperties => ({
+  display: "inline-block",
+  fontSize: "0.8rem",
+  fontWeight: 600,
+  textTransform: "uppercase",
+  letterSpacing: "0.05em",
+  padding: "2px 7px",
+  borderRadius: 3,
+  background: isPublic ? "#e3f2fd" : "#f3e5f5",
+  color: isPublic ? "#0d47a1" : "#6a1b9a",
+  verticalAlign: "middle",
+  marginRight: 8,
+});
 
 export default function App() {
   const [report, setReport] = useState<VitestReport | null>(null);
@@ -26,15 +58,21 @@ export default function App() {
   const [streamLines, setStreamLines] = useState<string[]>([]);
   const [exitCode, setExitCode] = useState<number | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [meta, setMeta] = useState<{ branch: string; commit: string } | null>(null);
   const esRef = useRef<EventSource | null>(null);
+
+  useEffect(() => {
+    fetch("/api/meta")
+      .then((r) => r.json())
+      .then(setMeta)
+      .catch(() => null);
+  }, []);
 
   const loadResults = useCallback(async () => {
     try {
       const res = await fetch("/api/results");
       if (!res.ok) {
-        setLoadError(
-          'No results yet — click "Run tests" to generate a report.',
-        );
+        setLoadError('No results yet — click "Run tests" to generate a report.');
         return;
       }
       const data: VitestReport = await res.json();
@@ -50,7 +88,6 @@ export default function App() {
     loadResults();
   }, [loadResults]);
 
-  // Clean up EventSource on unmount
   useEffect(() => {
     return () => esRef.current?.close();
   }, []);
@@ -116,6 +153,7 @@ export default function App() {
         exitCode={exitCode}
         onRun={handleRun}
         report={report}
+        meta={meta}
       />
 
       <StreamLog lines={streamLines} visible={status === "running"} />
@@ -124,109 +162,38 @@ export default function App() {
 
       {report && (
         <>
-          <h2 style={{ marginTop: "2rem" }}>Summary by audience</h2>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "2rem",
-              marginTop: "1rem",
-            }}
-          >
-            <AudiencePanel violations={publicViolations} audience="public" />
-            <AudiencePanel violations={editorViolations} audience="editor" />
-          </div>
-
-          <table style={{ borderCollapse: "collapse", marginTop: "1.5rem" }}>
-            <tbody>
-              <tr>
-                <th style={thStyle}>Total stories tested</th>
-                <td style={tdStyle}>{report.numTotalTests}</td>
-              </tr>
-              <tr>
-                <th style={thStyle}>Passing</th>
-                <td style={tdStyle}>{report.numPassedTests}</td>
-              </tr>
-              <tr>
-                <th style={thStyle}>Failing</th>
-                <td style={tdStyle}>{report.numFailedTests}</td>
-              </tr>
-              <tr>
-                <th style={thStyle}>Distinct violation rules</th>
-                <td style={tdStyle}>{uniqueRules}</td>
-              </tr>
-              <tr>
-                <th style={thStyle}>Components affected</th>
-                <td style={tdStyle}>{uniqueComponents}</td>
-              </tr>
-              <tr>
-                <th style={thStyle}>Total violation instances</th>
-                <td style={tdStyle}>{violations.length}</td>
-              </tr>
-            </tbody>
-          </table>
+          <StatBadges
+            badges={[
+              { label: "stories", value: report.numTotalTests },
+              { label: "passing", value: report.numPassedTests, color: "#2e7d32" },
+              { label: "failing", value: report.numFailedTests, color: report.numFailedTests > 0 ? "#c62828" : undefined },
+              { label: "violation rules", value: uniqueRules, color: uniqueRules > 0 ? "#b71c1c" : undefined },
+              { label: "components affected", value: uniqueComponents },
+              { label: "total violations", value: violations.length, color: violations.length > 0 ? "#b71c1c" : undefined },
+            ]}
+          />
 
           <h2>
-            <span
-              style={{
-                display: "inline-block",
-                fontSize: "0.8rem",
-                fontWeight: 600,
-                textTransform: "uppercase",
-                letterSpacing: "0.05em",
-                padding: "2px 7px",
-                borderRadius: 3,
-                background: "#e3f2fd",
-                color: "#0d47a1",
-                verticalAlign: "middle",
-                marginRight: 8,
-              }}
-            >
-              public-facing
-            </span>
+            <span style={sectionLabelStyle(true)}>public-facing</span>
             form violations
           </h2>
-          <h3>By rule</h3>
           <ByRuleList violations={publicViolations} />
 
           <h3>By component</h3>
           <p style={{ color: "#666", fontSize: "0.9em", marginTop: 0 }}>
-            Expand a component to see each story and the specific elements
-            affected.
+            Expand a component to see each story and the specific elements affected.
           </p>
           <ByComponentList violations={publicViolations} />
 
           <h2>
-            <span
-              style={{
-                display: "inline-block",
-                fontSize: "0.8rem",
-                fontWeight: 600,
-                textTransform: "uppercase",
-                letterSpacing: "0.05em",
-                padding: "2px 7px",
-                borderRadius: 3,
-                background: "#f3e5f5",
-                color: "#6a1b9a",
-                verticalAlign: "middle",
-                marginRight: 8,
-              }}
-            >
-              editor-facing
-            </span>
+            <span style={sectionLabelStyle(false)}>editor-facing</span>
             Council / admin UI violations
           </h2>
-          <p style={{ color: "#555", marginTop: 0 }}>
-            Components used by council officers and flow editors.
-          </p>
-
-          <h3>By rule</h3>
           <ByRuleList violations={editorViolations} />
 
           <h3>By component</h3>
           <p style={{ color: "#666", fontSize: "0.9em", marginTop: 0 }}>
-            Expand a component to see each story and the specific elements
-            affected.
+            Expand a component to see each story and the specific elements affected.
           </p>
           <ByComponentList violations={editorViolations} />
         </>

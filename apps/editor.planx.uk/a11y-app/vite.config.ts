@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import tsconfigPaths from "vite-tsconfig-paths";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { spawn } from "node:child_process";
+import { spawn, execSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import type { ChildProcess } from "node:child_process";
 import type { ServerResponse } from "node:http";
@@ -40,6 +40,20 @@ export default defineConfig({
           } catch {
             res.statusCode = 404;
             res.end(JSON.stringify({ error: "no results yet" }));
+          }
+        });
+
+        // GET /api/meta — current git branch and short commit hash
+        server.middlewares.use("/api/meta", (req, res, next) => {
+          if (req.method !== "GET") return next();
+          try {
+            const branch = execSync("git rev-parse --abbrev-ref HEAD", { cwd: EDITOR_ROOT }).toString().trim();
+            const commit = execSync("git rev-parse --short HEAD", { cwd: EDITOR_ROOT }).toString().trim();
+            res.setHeader("Content-Type", "application/json");
+            res.end(JSON.stringify({ branch, commit }));
+          } catch {
+            res.setHeader("Content-Type", "application/json");
+            res.end(JSON.stringify({ branch: "unknown", commit: "unknown" }));
           }
         });
 

@@ -8,9 +8,23 @@ interface Props {
   exitCode: number | null;
   onRun: () => void;
   report: VitestReport | null;
+  meta: { branch: string; commit: string } | null;
 }
 
-export default function Header({ status, exitCode, onRun, report }: Props) {
+const REPO = "https://github.com/theopensystemslab/planx-new";
+
+function formatRelativeTime(ms: number): string {
+  const diff = Date.now() - ms;
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return "just now";
+  if (mins === 1) return "1 min ago";
+  if (mins < 60) return `${mins} mins ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs === 1) return "1 hour ago";
+  return `${hrs} hours ago`;
+}
+
+export default function Header({ status, exitCode, onRun, report, meta }: Props) {
   const isRunning = status === "running";
 
   const chip =
@@ -22,53 +36,74 @@ export default function Header({ status, exitCode, onRun, report }: Props) {
           ? { bg: "#ffebee", color: "#c62828", text: "Violations found" }
           : null;
 
+  const linkStyle: React.CSSProperties = {
+    color: "inherit",
+    textDecoration: "underline dotted",
+  };
+
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 12,
-        marginBottom: "1.5rem",
-        flexWrap: "wrap",
-      }}
-    >
-      <h1 style={{ margin: 0, flex: 1 }}>Accessibility Audit</h1>
-      {report && (
-        <span style={{ fontSize: "0.85em", color: "#666" }}>
-          {report.numTotalTests} stories &nbsp;·&nbsp;{" "}
-          {report.numFailedTests} failing
-        </span>
-      )}
-      {chip && (
-        <span
+    <div style={{ marginBottom: "1.5rem" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+        <h1 style={{ margin: 0, flex: 1 }}>Accessibility Audit</h1>
+        {chip && (
+          <span
+            style={{
+              background: chip.bg,
+              color: chip.color,
+              padding: "4px 14px",
+              borderRadius: 20,
+              fontSize: "0.85rem",
+              fontWeight: 600,
+            }}
+          >
+            {chip.text}
+          </span>
+        )}
+        <button
+          onClick={onRun}
+          disabled={isRunning}
           style={{
-            background: chip.bg,
-            color: chip.color,
-            padding: "4px 14px",
-            borderRadius: 20,
-            fontSize: "0.85rem",
+            padding: "8px 18px",
+            borderRadius: 6,
+            border: "none",
+            cursor: isRunning ? "not-allowed" : "pointer",
+            background: isRunning ? "#ccc" : "#1565c0",
+            color: "#fff",
+            fontSize: "0.9rem",
             fontWeight: 600,
           }}
         >
-          {chip.text}
-        </span>
+          {isRunning ? "Running…" : "Run tests"}
+        </button>
+      </div>
+      {(report || meta) && (
+        <p style={{ margin: "6px 0 0", fontSize: "0.8em", color: "#888" }}>
+          {report && <>Last ran: {formatRelativeTime(report.startTime)}</>}
+          {report && meta && <>&nbsp;·&nbsp;</>}
+          {meta && (
+            <>
+              on branch{" "}
+              <a
+                href={`${REPO}/tree/${meta.branch}`}
+                target="_blank"
+                rel="noreferrer"
+                style={linkStyle}
+              >
+                <code style={{ fontSize: "0.95em" }}>{meta.branch}</code>
+              </a>
+              {" "}
+              <a
+                href={`${REPO}/commit/${meta.commit}`}
+                target="_blank"
+                rel="noreferrer"
+                style={linkStyle}
+              >
+                <code style={{ fontSize: "0.95em" }}>{meta.commit}</code>
+              </a>
+            </>
+          )}
+        </p>
       )}
-      <button
-        onClick={onRun}
-        disabled={isRunning}
-        style={{
-          padding: "8px 18px",
-          borderRadius: 6,
-          border: "none",
-          cursor: isRunning ? "not-allowed" : "pointer",
-          background: isRunning ? "#ccc" : "#1565c0",
-          color: "#fff",
-          fontSize: "0.9rem",
-          fontWeight: 600,
-        }}
-      >
-        {isRunning ? "Running…" : "Run tests"}
-      </button>
     </div>
   );
 }

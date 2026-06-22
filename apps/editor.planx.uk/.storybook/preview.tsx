@@ -1,6 +1,10 @@
 import React from "react";
 import CssBaseline from "@mui/material/CssBaseline";
-import { ThemeProvider, StyledEngineProvider, createTheme } from "@mui/material/styles";
+import {
+  ThemeProvider,
+  StyledEngineProvider,
+  createTheme,
+} from "@mui/material/styles";
 import { MyMap } from "@opensystemslab/map";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { initialize, mswLoader } from "msw-storybook-addon";
@@ -12,8 +16,8 @@ import {
 } from "@apollo/client";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import axe from "axe-core";
 import { defaultTheme } from "../src/theme";
-import { tanstackRouterDecorator } from "./__mocks__/tanstack-router";
 
 // Override transition durations to 0 so Fade/Collapse animations are instant.
 // Without this, axe runs color-contrast checks mid-animation, seeing partially-opaque
@@ -89,8 +93,31 @@ export const decorators = [
       </Wrapper>
     );
   },
-  tanstackRouterDecorator,
 ];
+
+// Runs within Storybook's story lifecycle (before DOM teardown), so axe
+// sees the rendered story content. Using vitest's afterEach instead would
+// fire after Storybook cleans up the DOM.
+export const afterEach = async () => {
+  const root = document.body;
+  if (!root || root.children.length === 0) return;
+
+  const results = await axe.run(root as Element);
+
+  if (results.violations.length > 0) {
+    const details = results.violations
+      .map((v) => {
+        const nodes = v.nodes
+          .slice(0, 2)
+          .map((n) => `    ${n.target}`)
+          .join("\n");
+        return `[${v.impact}] ${v.id}: ${v.description}\n${nodes}`;
+      })
+      .join("\n\n");
+
+    throw new Error(`Accessibility violations:\n\n${details}`);
+  }
+};
 
 export const tags = ["autodocs"];
 
