@@ -5,6 +5,7 @@ export interface GetFlowTemplateStatus {
     team: {
       id: number;
       name: string;
+      slug: string;
     };
     template: {
       id: string;
