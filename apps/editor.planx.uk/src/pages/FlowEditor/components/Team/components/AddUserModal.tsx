@@ -14,7 +14,10 @@ import { EmailField } from "./Fields/EmailField";
 import { NameFields } from "./Fields/NameFields";
 import { ModalActions } from "./ModalActions";
 
-export const AddUserModal: React.FC<AddUserModalProps> = ({ onClose }) => {
+export const AddUserModal: React.FC<AddUserModalProps> = ({
+  onClose,
+  userRole,
+}) => {
   const {
     step,
     title,
@@ -23,7 +26,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ onClose }) => {
     submitButtonText,
     isSubmitting,
     validationSchema,
-  } = useAddUserModal({ onClose });
+  } = useAddUserModal({ onClose, userRole });
 
   return (
     <Dialog

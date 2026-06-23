@@ -17,6 +17,7 @@ describe("when the maximum number of active users exists for a team", () => {
         <MembersTable
           members={mockTeamMembersAt20}
           showAddMemberButton={true}
+          userRole="platformAdmin"
         />
       </DndProvider>,
     );
@@ -36,6 +37,7 @@ describe(`when there are <${MAX_USER_COUNT} active users`, () => {
         <MembersTable
           members={mockTeamMembersAt19}
           showAddMemberButton={true}
+          userRole="platformAdmin"
         />
       </DndProvider>,
     );
@@ -56,6 +58,7 @@ describe("when the addNewMember modal is rendered", () => {
         <MembersTable
           members={mockTeamMembersAt20}
           showAddMemberButton={true}
+          userRole="platformAdmin"
         />
       </DndProvider>,
     );

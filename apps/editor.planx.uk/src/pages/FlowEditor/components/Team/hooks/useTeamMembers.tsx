@@ -4,16 +4,14 @@ import { partition } from "lodash";
 
 import { GET_USERS_FOR_TEAM_QUERY } from "../queries";
 import type { TeamMember } from "../types";
-import {
-  hasEmailPresent,
-  isPlatformAdmin,
-  userToTeamMember,
-} from "../utils";
+import { hasEmailPresent, isPlatformAdmin, userToTeamMember } from "../utils";
 
 export const useTeamMembers = (teamSlug: string) => {
   const { data, loading, error } = useQuery<{ users: User[] }>(
     GET_USERS_FOR_TEAM_QUERY,
-    { variables: { teamSlug } },
+    {
+      variables: { teamSlug },
+    },
   );
 
   const teamMembers: TeamMember[] = data?.users.map(userToTeamMember) ?? [];

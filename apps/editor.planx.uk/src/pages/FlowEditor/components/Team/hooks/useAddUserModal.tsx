@@ -27,16 +27,21 @@ const SUBMIT_BUTTON_TEXT: Record<Step["stage"], string> = {
   "create-new": "Create user",
 };
 
-export const useAddUserModal = ({ onClose }: { onClose: () => void }) => {
-  const [teamId, teamSlug, role] = useStore((state) => [
+export const useAddUserModal = ({
+  onClose,
+  userRole,
+}: {
+  onClose: () => void;
+  userRole: Role;
+}) => {
+  const [teamId, teamSlug] = useStore((state) => [
     state.teamId,
     state.teamSlug,
-    state.getUserRoleForCurrentTeam(),
   ]);
 
   const roleContext = {
     headers: {
-      "x-hasura-role": role,
+      "x-hasura-role": userRole,
     },
   };
 

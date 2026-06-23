@@ -26,12 +26,10 @@ import { ModalActions } from "./ModalActions";
 export const EditUserModal: React.FC<EditUserModalProps> = ({
   onClose,
   member,
+  userRole,
 }) => {
   const toast = useToast();
-  const [teamId, role] = useStore((state) => [
-    state.teamId,
-    state.getUserRoleForCurrentTeam(),
-  ]);
+  const teamId = useStore((state) => state.teamId);
   const isPlatformAdmin = member.role === "platformAdmin";
 
   const handleCompleted = (successMessage: string) => {
@@ -50,7 +48,7 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
       ],
       context: {
         headers: {
-          "x-hasura-role": role,
+          "x-hasura-role": userRole,
         },
       },
       onCompleted: () => handleCompleted("Successfully updated a user"),
@@ -69,7 +67,7 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
       ],
       context: {
         headers: {
-          "x-hasura-role": role,
+          "x-hasura-role": userRole,
         },
       },
       onCompleted: () => handleCompleted("Successfully updated a user"),
@@ -88,11 +86,11 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
       ],
       context: {
         headers: {
-          "x-hasura-role": role,
+          "x-hasura-role": userRole,
         },
       },
       onCompleted: (data) => {
-        if (data.DeleteTeamMembers.affected_rows > 0) {
+        if (data.deleteTeamMembers.affected_rows > 0) {
           handleCompleted("Successfully updated a user");
         } else {
           toast.warning("No admin role found to remove");

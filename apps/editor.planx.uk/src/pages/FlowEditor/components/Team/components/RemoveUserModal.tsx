@@ -6,7 +6,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
 import { useToast } from "hooks/useToast";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 import { REMOVE_TEAM_MEMBER } from "../queries";
@@ -14,14 +13,14 @@ import type { RemoveUserModalProps } from "../types";
 export const RemoveUserModal: React.FC<RemoveUserModalProps> = ({
   onClose,
   member,
+  userRole,
 }) => {
   const toast = useToast();
-  const role = useStore((state) => state.getUserRoleForCurrentTeam());
 
   const [removeUser, { loading }] = useMutation(REMOVE_TEAM_MEMBER, {
     context: {
       headers: {
-        "x-hasura-role": role,
+        "x-hasura-role": userRole,
       },
     },
     onCompleted: () => {
