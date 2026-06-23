@@ -18,6 +18,7 @@ import {
   createNotice,
   createTemplatedComponent,
 } from "./helpers/addComponent.js";
+import { setFeatureFlag } from "./helpers/globalHelpers.js";
 import { TestContext } from "./helpers/types.js";
 import { PlaywrightEditor } from "./pages/Editor.js";
 
@@ -89,10 +90,13 @@ test.describe("Templates", () => {
         userId: context.user!.id!,
         teamName: context.team.name,
       });
+      await setFeatureFlag(page, "COMPONENT_SELECT");
       await navigateToService(page, SOURCE_TEMPLATE_SLUG);
 
       const editor = new PlaywrightEditor(page);
       await editor.firstNode.click();
+      await page.getByTestId("add-component-modal").waitFor();
+      await page.getByText("Question", { exact: true }).click();
       await page.getByRole("dialog").waitFor();
 
       // check section is present

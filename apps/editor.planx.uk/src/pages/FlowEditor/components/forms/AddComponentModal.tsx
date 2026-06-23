@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import { ICONS } from "@planx/components/shared/icons";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { hangerAnchor } from "pages/FlowEditor/lib/hangerAnchor";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, {
   useCallback,
   useEffect,
@@ -187,6 +188,7 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
 
   const handleSelect = useCallback(
     (slug: string) => {
+      useStore.getState().closeComponentSelector();
       navigate({
         to: getNodeRoute(parent, before),
         params: {
@@ -202,8 +204,8 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
   );
 
   const handleClose = useCallback(() => {
-    navigate({ to: "/app/$team/$flow", params: { team, flow } });
-  }, [navigate, team, flow]);
+    useStore.getState().closeComponentSelector();
+  }, []);
 
   // Position the popover anchored to the hanger that triggered navigation
   const rect = hangerAnchor.get();

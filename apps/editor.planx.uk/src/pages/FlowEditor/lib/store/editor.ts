@@ -87,6 +87,11 @@ export interface EditorUIStore {
   contextMenuPosition: ContextMenuPosition | null;
   closeContextMenu: () => void;
   contextMenuSource: ContextMenuSource | null;
+  componentSelectorOpen: boolean;
+  componentSelectorParent?: string;
+  componentSelectorBefore?: string;
+  openComponentSelector: (params: { parent?: string; before?: string }) => void;
+  closeComponentSelector: () => void;
 }
 
 export const editorUIStore: StateCreator<
@@ -200,6 +205,24 @@ export const editorUIStore: StateCreator<
       }),
 
     contextMenuSource: null,
+
+    componentSelectorOpen: false,
+    componentSelectorParent: undefined,
+    componentSelectorBefore: undefined,
+
+    openComponentSelector: ({ parent, before }) =>
+      set({
+        componentSelectorOpen: true,
+        componentSelectorParent: parent,
+        componentSelectorBefore: before,
+      }),
+
+    closeComponentSelector: () =>
+      set({
+        componentSelectorOpen: false,
+        componentSelectorParent: undefined,
+        componentSelectorBefore: undefined,
+      }),
   }),
   {
     name: "editorUIStore",
