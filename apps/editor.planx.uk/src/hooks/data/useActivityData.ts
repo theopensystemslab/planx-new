@@ -1,5 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { useMemo } from "react";
 
 const GET_ACTIVITY_BY_SERVICE = gql`
   query GetActivityByService($teamId: Int!, $thirtyDaysAgo: timestamptz!) {
@@ -52,9 +53,10 @@ export const useActivityData = (): {
 } => {
   const teamId = useStore((state) => state.teamId);
 
-  const thirtyDaysAgo = new Date(
-    Date.now() - 30 * 24 * 60 * 60 * 1000,
-  ).toISOString();
+  const thirtyDaysAgo = useMemo(
+    () => new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+    [],
+  );
 
   const { data, loading } = useQuery<GetActivityByServiceQuery>(
     GET_ACTIVITY_BY_SERVICE,
