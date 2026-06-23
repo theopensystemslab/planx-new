@@ -75,10 +75,8 @@ export default function ModalSectionContent({
 
   return (
     <SectionContentGrid container>
-      <LeftGutter sx={suppressHeader ? { flex: "0 0 0" } : undefined}>
-        {!suppressHeader && Icon && <Icon />}
-      </LeftGutter>
-      <SectionContent sx={suppressHeader ? { paddingRight: 3 } : undefined}>
+      <LeftGutter>{!suppressHeader && Icon && <Icon />}</LeftGutter>
+      <SectionContent>
         {!suppressHeader && title && (
           <Title variant="h3">
             {title}
