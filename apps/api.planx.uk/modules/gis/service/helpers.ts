@@ -28,6 +28,7 @@ import * as stockport from "./local_authorities/metadata/stockport.js";
 import * as stoke from "./local_authorities/metadata/stoke.js";
 import * as tewkesbury from "./local_authorities/metadata/tewkesbury.js";
 import * as torbay from "./local_authorities/metadata/torbay.js";
+import * as walthamForest from "./local_authorities/metadata/walthamForest.js";
 import * as westBerkshire from "./local_authorities/metadata/westBerkshire.js";
 
 export interface LocalAuthorityMetadata {
@@ -73,6 +74,7 @@ export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   "stoke-on-trent": stoke,
   tewkesbury,
   torbay,
+  "waltham-forest": walthamForest,
   "west-berkshire": westBerkshire,
 };
 
