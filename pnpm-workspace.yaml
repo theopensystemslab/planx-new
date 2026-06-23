@@ -8,3 +8,7 @@ packages:
   - 'scripts/*'
   
 minimumReleaseAge: 10080
+
+minimumReleaseAgeExclude:
+  - dompurify@3.4.11
+  - '@opensystemslab/map@1.0.0-alpha.14'
