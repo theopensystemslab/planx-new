@@ -145,7 +145,7 @@ export const CREATE_TEAM_ADMIN_ONLY = gql`
 
 export const REMOVE_TEAM_ADMIN_ONLY = gql`
   mutation RemoveTeamAdminOnly($teamId: Int!, $userId: Int!) {
-    DeleteTeamMembers: delete_team_members(
+    deleteTeamMembers: delete_team_members(
       where: {
         role: { _eq: teamAdmin }
         user_id: { _eq: $userId }
