@@ -3,7 +3,8 @@ import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { styled } from "@mui/material/styles";
 import { SvgIconProps, SvgIconTypeMap } from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
-import React from "react";
+import { ModalFormContext } from "pages/FlowEditor/components/forms/FormModal";
+import React, { useContext } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 interface Props {
@@ -31,7 +32,7 @@ const LeftGutter = styled(Grid)(({ theme }) => ({
   flex: `0 0 ${theme.spacing(3)}`,
   textAlign: "center",
   [theme.breakpoints.up("md")]: {
-    flex: `0 0 ${theme.spacing(6)}`,
+    flex: `0 0 ${theme.spacing(4)}`,
   },
   [theme.breakpoints.up("lg")]: {
     paddingTop: theme.spacing(0.2),
@@ -42,7 +43,7 @@ const SectionContent = styled(Grid)(({ theme }) => ({
   flexGrow: 1,
   width: "100%",
   [theme.breakpoints.up("md")]: {
-    paddingRight: theme.spacing(6),
+    paddingRight: theme.spacing(4),
   },
 }));
 
@@ -69,11 +70,16 @@ export default function ModalSectionContent({
   author,
   Icon,
 }: Props): FCReturn {
+  const { hideComponentTypeHeader } = useContext(ModalFormContext);
+  const suppressHeader = hideComponentTypeHeader && Boolean(Icon) && Boolean(title);
+
   return (
     <SectionContentGrid container>
-      <LeftGutter>{Icon && <Icon />}</LeftGutter>
-      <SectionContent>
-        {title && (
+      <LeftGutter sx={suppressHeader ? { flex: "0 0 0" } : undefined}>
+        {!suppressHeader && Icon && <Icon />}
+      </LeftGutter>
+      <SectionContent sx={suppressHeader ? { paddingRight: 3 } : undefined}>
+        {!suppressHeader && title && (
           <Title variant="h3">
             {title}
             {author && <Author>by {author}</Author>}

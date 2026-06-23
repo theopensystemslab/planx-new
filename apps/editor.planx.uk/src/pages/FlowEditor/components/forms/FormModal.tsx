@@ -17,12 +17,13 @@ import { type BaseNodeData, parseFormValues } from "@planx/components/shared";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { FormikProps } from "formik";
+import { hasFeatureFlag } from "lib/featureFlags";
 import isEqual from "lodash/isEqual";
 import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
 } from "pages/FlowEditor/utils";
-import React, { useMemo, useRef, useState } from "react";
+import React, { createContext, useMemo, useRef, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
 import { Switch } from "ui/shared/Switch";
@@ -30,6 +31,9 @@ import { getNodeRoute } from "utils/routeUtils/utils";
 
 import { fromSlug, SLUGS } from "../../data/types";
 import { useStore } from "../../lib/store";
+import ChangeComponentHeader from "./ChangeComponentHeader";
+
+export const ModalFormContext = createContext({ hideComponentTypeHeader: false });
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   // Target all modal sections (the direct child is the backdrop, hence the double child selector)
@@ -353,13 +357,22 @@ const FormModal: React.FC<FormModalProps> = ({
         <DialogTitle
           sx={{
             py: 1,
+            px: 2.5,
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
           }}
         >
-          {!handleDelete && (
-            <NodeTypeSelect value={type} onChange={changeNodeType} />
+          {hasFeatureFlag("COMPONENT_SELECT") ? (
+            <ChangeComponentHeader
+              type={type}
+              onChange={changeNodeType}
+              canChange={!handleDelete}
+            />
+          ) : (
+            !handleDelete && (
+              <NodeTypeSelect value={type} onChange={changeNodeType} />
+            )
           )}
 
           <CloseButton aria-label="close" onClick={handleClose} size="large">
@@ -370,53 +383,59 @@ const FormModal: React.FC<FormModalProps> = ({
           {!handleDelete && (
             <TextInputToggle type={type} parent={parent} before={before} />
           )}
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <Component
-              formikRef={formikRef}
-              node={node}
-              {...node?.data}
-              {...extraProps}
-              id={id}
-              disabled={disabled}
-              handleSubmit={(
-                data: { data?: Record<string, unknown> },
-                children:
-                  | Array<Record<string, unknown>>
-                  | undefined = undefined,
-              ) => {
-                // Handle internal portals
-                if (typeof data === "string" && parent) {
-                  connect(parent, data, { before });
-                } else {
-                  const parsedData = parseFormValues(Object.entries(data));
-                  const parsedChildren =
-                    children?.map((o) => parseFormValues(Object.entries(o))) ||
-                    undefined;
-
-                  if (handleDelete) {
-                    updateNode(
-                      { id, ...parsedData },
-                      { children: parsedChildren },
-                    );
+          <ModalFormContext.Provider
+            value={{
+              hideComponentTypeHeader: hasFeatureFlag("COMPONENT_SELECT"),
+            }}
+          >
+            <ErrorBoundary FallbackComponent={ErrorFallback}>
+              <Component
+                formikRef={formikRef}
+                node={node}
+                {...node?.data}
+                {...extraProps}
+                id={id}
+                disabled={disabled}
+                handleSubmit={(
+                  data: { data?: Record<string, unknown> },
+                  children:
+                    | Array<Record<string, unknown>>
+                    | undefined = undefined,
+                ) => {
+                  // Handle internal portals
+                  if (typeof data === "string" && parent) {
+                    connect(parent, data, { before });
                   } else {
-                    addNode(parsedData, {
-                      children: parsedChildren,
-                      parent,
-                      before,
-                    });
-                  }
-                }
+                    const parsedData = parseFormValues(Object.entries(data));
+                    const parsedChildren =
+                      children?.map((o) => parseFormValues(Object.entries(o))) ||
+                      undefined;
 
-                navigate({
-                  to: "/app/$team/$flow",
-                  params: {
-                    team: teamSlug,
-                    flow: flowSlug,
-                  },
-                });
-              }}
-            />
-          </ErrorBoundary>
+                    if (handleDelete) {
+                      updateNode(
+                        { id, ...parsedData },
+                        { children: parsedChildren },
+                      );
+                    } else {
+                      addNode(parsedData, {
+                        children: parsedChildren,
+                        parent,
+                        before,
+                      });
+                    }
+                  }
+
+                  navigate({
+                    to: "/app/$team/$flow",
+                    params: {
+                      team: teamSlug,
+                      flow: flowSlug,
+                    },
+                  });
+                }}
+              />
+            </ErrorBoundary>
+          </ModalFormContext.Provider>
         </DialogContent>
         <DialogActions
           disableSpacing
@@ -523,4 +542,5 @@ const FormModal: React.FC<FormModalProps> = ({
     </>
   );
 };
+
 export default FormModal;
