@@ -1,0 +1,93 @@
+openapi: 3.1.0
+info:
+  title: Plan✕ API
+  version: 0.1.0
+paths:
+  /admin/feedback/{feedbackId}:
+    get:
+      summary: Returns a feedback entry with user data
+      description: Returns a feedback entry plus its associated session user data, including the passport and breadcrumbs
+      tags:
+        - admin
+      parameters:
+        - in: path
+          name: feedbackId
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+  /admin/session/{sessionId}/xml:
+    get:
+      summary: Generates a OneApp XML
+      description: Generates a OneApp XML
+      tags:
+        - admin
+      parameters:
+        - $ref: "#/components/parameters/sessionId"
+      security:
+        - bearerAuth: []
+  /admin/session/{sessionId}/html:
+    get:
+      summary: Generates an application overview HTML
+      description: Generates an application overview HTML
+      tags:
+        - admin
+      parameters:
+        - $ref: "#/components/parameters/sessionId"
+      security:
+        - bearerAuth: []
+  /admin/session/{sessionId}/zip:
+    get:
+      summary: Generates and downloads a zip file for integrations
+      description: Generates and downloads a zip file for integrations
+      tags:
+        - admin
+      parameters:
+        - $ref: "#/components/parameters/sessionId"
+        - in: query
+          name: includeOneAppXML
+          required: false
+          schema:
+            type: boolean
+          description: If the OneApp XML file should be included in the zip
+        - in: query
+          name: includeDigitalPlanningJSON
+          required: false
+          schema:
+            type: boolean
+          description: If the Digital Planning JSON file should be included in the zip (only generated for supported application types)
+        - in: query
+          name: onlyDigitalPlanningJSON
+          required: false
+          schema:
+            type: boolean
+          description: If the Digital Planning JSON file should be the ONLY file included in the zip (only generated for supported application types)
+      security:
+        - bearerAuth: []
+  /admin/session/{sessionId}/summary:
+    get:
+      summary: Returns a passport, breadcrumbs, and other key details about a session
+      description: Returns a passport, breadcrumbs, and other key details about a session
+      tags:
+        - admin
+      parameters:
+        - $ref: "#/components/parameters/sessionId"
+      security:
+        - bearerAuth: []
+  /admin/session/{sessionId}/digital-planning-application:
+    get:
+      summary: Generates a Digital Planning Application payload
+      description: Generates a Digital Planning Application payload and validates it against the Digital Planning Data JSON Schema
+      tags:
+        - admin
+      parameters:
+        - $ref: "#/components/parameters/sessionId"
+        - in: query
+          name: skipValidation
+          required: false
+          schema:
+            type: boolean
+          description: If invalid JSON data should still be returned, instead of logging validation errors
+      security:
+        - bearerAuth: []

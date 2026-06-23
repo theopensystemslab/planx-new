@@ -2,28 +2,6 @@ import * as digitalLand from "./digitalLand.js";
 
 const localAuthorities = { digitalLand };
 
-/**
- * @swagger
- * /gis/{localAuthority}:
- *  get:
- *    summary: Fetches planning constraints
- *    description: Fetches and formats planning constraints from planning.data.gov.uk that overlap with a geometry
- *    tags:
- *      - gis
- *    parameters:
- *      - $ref: '#/components/parameters/localAuthority'
- *        description: Name of the Local Authority, usually the same as Planx `team`. Required until Planning Data is available for any council
- *      - in: query
- *        name: geom
- *        type: string
- *        required: true
- *        description: Well-Known Text (WKT) formatted polygon or point
- *      - in: query
- *        name: vals
- *        type: string
- *        required: false
- *        description: Comma-separated list of planning constraint values (formatted using `fn` property names) that should be returned
- */
 export async function locationSearch(req, res, next) {
   // 'geom' param signals this localAuthority has data available via Planning Data
   if (req.query.geom) {
