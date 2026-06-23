@@ -28,7 +28,10 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
   member,
 }) => {
   const toast = useToast();
-  const teamId = useStore((state) => state.teamId);
+  const [teamId, role] = useStore((state) => [
+    state.teamId,
+    state.getUserRoleForCurrentTeam(),
+  ]);
   const isPlatformAdmin = member.role === "platformAdmin";
 
   const handleCompleted = (successMessage: string) => {
@@ -45,6 +48,11 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
           variables: { teamSlug: useStore.getState().teamSlug },
         },
       ],
+      context: {
+        headers: {
+          "x-hasura-role": role,
+        },
+      },
       onCompleted: () => handleCompleted("Successfully updated a user"),
       onError: () => toast.error("Failed to update the user, please try again"),
     },
@@ -59,6 +67,11 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
           variables: { teamSlug: useStore.getState().teamSlug },
         },
       ],
+      context: {
+        headers: {
+          "x-hasura-role": role,
+        },
+      },
       onCompleted: () => handleCompleted("Successfully updated a user"),
       onError: () => toast.error("Failed to update the user, please try again"),
     },
@@ -73,6 +86,11 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
           variables: { teamSlug: useStore.getState().teamSlug },
         },
       ],
+      context: {
+        headers: {
+          "x-hasura-role": role,
+        },
+      },
       onCompleted: (data) => {
         if (data.DeleteTeamMembers.affected_rows > 0) {
           handleCompleted("Successfully updated a user");

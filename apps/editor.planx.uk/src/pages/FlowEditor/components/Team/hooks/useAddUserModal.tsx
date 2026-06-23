@@ -28,10 +28,18 @@ const SUBMIT_BUTTON_TEXT: Record<Step["stage"], string> = {
 };
 
 export const useAddUserModal = ({ onClose }: { onClose: () => void }) => {
-  const [teamId, teamSlug] = useStore((state) => [
+  const [teamId, teamSlug, role] = useStore((state) => [
     state.teamId,
     state.teamSlug,
+    state.getUserRoleForCurrentTeam(),
   ]);
+
+  const roleContext = {
+    headers: {
+      "x-hasura-role": role,
+    },
+  };
+
   const toast = useToast();
 
   const [step, setStep] = useState<Step>({ stage: "email" });
@@ -84,6 +92,7 @@ export const useAddUserModal = ({ onClose }: { onClose: () => void }) => {
     refetchQueries: [
       { query: GET_USERS_FOR_TEAM_QUERY, variables: { teamSlug } },
     ],
+    context: roleContext,
   });
 
   const [assignAdmin, { loading: assignLoadingAdmin }] = useMutation<
@@ -100,6 +109,7 @@ export const useAddUserModal = ({ onClose }: { onClose: () => void }) => {
     refetchQueries: [
       { query: GET_USERS_FOR_TEAM_QUERY, variables: { teamSlug } },
     ],
+    context: roleContext,
   });
 
   const [createTeamEditor, { loading: createEditorLoading }] = useMutation(
@@ -110,6 +120,7 @@ export const useAddUserModal = ({ onClose }: { onClose: () => void }) => {
       refetchQueries: [
         { query: GET_USERS_FOR_TEAM_QUERY, variables: { teamSlug } },
       ],
+      context: roleContext,
     },
   );
 
@@ -122,6 +133,7 @@ export const useAddUserModal = ({ onClose }: { onClose: () => void }) => {
       refetchQueries: [
         { query: GET_USERS_FOR_TEAM_QUERY, variables: { teamSlug } },
       ],
+      context: roleContext,
     },
   );
 
@@ -135,6 +147,7 @@ export const useAddUserModal = ({ onClose }: { onClose: () => void }) => {
     if (step.stage === "confirm-existing" && values.role === "teamEditor") {
       assignEditor({
         variables: { userId: step.existingUser.id, teamId },
+        context: roleContext,
       });
       return;
     }
@@ -142,6 +155,7 @@ export const useAddUserModal = ({ onClose }: { onClose: () => void }) => {
     if (step.stage === "confirm-existing" && values.role === "teamAdmin") {
       assignAdmin({
         variables: { userId: step.existingUser.id, teamId },
+        context: roleContext,
       });
       return;
     }
@@ -149,12 +163,14 @@ export const useAddUserModal = ({ onClose }: { onClose: () => void }) => {
     if (step.stage === "create-new" && values.role === "teamEditor") {
       createTeamEditor({
         variables: { ...values, email, teamId },
+        context: roleContext,
       });
     }
 
     if (step.stage === "create-new" && values.role === "teamAdmin") {
       createTeamAdmin({
         variables: { ...values, email, teamId },
+        context: roleContext,
       });
     }
   };

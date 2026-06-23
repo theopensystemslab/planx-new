@@ -9,12 +9,13 @@ import React from "react";
 
 export const Route = createFileRoute("/_authenticated/app/$team/subscription")({
   loader: async ({ params, context }) => {
+    const role = useStore.getState().getUserRoleForCurrentTeam();
+
     const isAuthorised =
       context.user?.isPlatformAdmin ||
       // TODO limit *after* we assign teamAdmin roles to existing users
-      ["teamEditor", "teamAdmin"].includes(
-        useStore.getState().getUserRoleForCurrentTeam() || "",
-      );
+      role === "teamEditor" ||
+      role === "teamAdmin";
 
     if (!isAuthorised) {
       throw new Error("The user does not have permission to access this page.");
@@ -47,6 +48,11 @@ export const Route = createFileRoute("/_authenticated/app/$team/subscription")({
       `,
       variables: { teamSlug: params.team },
       fetchPolicy: "no-cache",
+      context: {
+        headers: {
+          "x-hasura-role": role,
+        },
+      },
     });
 
     return {
