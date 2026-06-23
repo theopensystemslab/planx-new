@@ -3,7 +3,6 @@ import { Link, useParams } from "@tanstack/react-router";
 import classnames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
 import { hasFeatureFlag } from "lib/featureFlags";
-import { componentSelectorState } from "pages/FlowEditor/lib/componentSelectorState";
 import { hangerAnchor } from "pages/FlowEditor/lib/hangerAnchor";
 import {
   nodeIsChildOfTemplatedInternalPortal,
@@ -85,7 +84,7 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
         left: rect.left,
         right: rect.right,
       });
-      componentSelectorState.open({ parent, before });
+      useStore.getState().openComponentSelector({ parent, before });
     },
     [parent, before],
   );

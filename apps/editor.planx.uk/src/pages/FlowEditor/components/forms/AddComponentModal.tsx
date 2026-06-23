@@ -4,8 +4,8 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { ICONS } from "@planx/components/shared/icons";
 import { useNavigate, useParams } from "@tanstack/react-router";
-import { componentSelectorState } from "pages/FlowEditor/lib/componentSelectorState";
 import { hangerAnchor } from "pages/FlowEditor/lib/hangerAnchor";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, {
   useCallback,
   useEffect,
@@ -188,7 +188,7 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
 
   const handleSelect = useCallback(
     (slug: string) => {
-      componentSelectorState.close();
+      useStore.getState().closeComponentSelector();
       navigate({
         to: getNodeRoute(parent, before),
         params: {
@@ -204,7 +204,7 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
   );
 
   const handleClose = useCallback(() => {
-    componentSelectorState.close();
+    useStore.getState().closeComponentSelector();
   }, []);
 
   // Position the popover anchored to the hanger that triggered navigation
