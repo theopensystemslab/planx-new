@@ -23,7 +23,7 @@ import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
 } from "pages/FlowEditor/utils";
-import React, { createContext, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
 import { Switch } from "ui/shared/Switch";
@@ -33,7 +33,6 @@ import { fromSlug, SLUGS } from "../../data/types";
 import { useStore } from "../../lib/store";
 import ChangeComponentHeader from "./ChangeComponentHeader";
 
-export const ModalFormContext = createContext({ hideComponentTypeHeader: false });
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   // Target all modal sections (the direct child is the backdrop, hence the double child selector)
@@ -382,11 +381,6 @@ const FormModal: React.FC<FormModalProps> = ({
           {!handleDelete && (
             <TextInputToggle type={type} parent={parent} before={before} />
           )}
-          <ModalFormContext.Provider
-            value={{
-              hideComponentTypeHeader: hasFeatureFlag("COMPONENT_SELECT"),
-            }}
-          >
             <ErrorBoundary FallbackComponent={ErrorFallback}>
               <Component
                 formikRef={formikRef}
@@ -434,7 +428,6 @@ const FormModal: React.FC<FormModalProps> = ({
                 }}
               />
             </ErrorBoundary>
-          </ModalFormContext.Provider>
         </DialogContent>
         <DialogActions
           disableSpacing
