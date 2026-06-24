@@ -4,12 +4,14 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
 import { TeamRole } from "@opensystemslab/planx-core/types";
 import { Form, Formik } from "formik";
 import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { Switch } from "ui/shared/Switch";
+import SelectInput from "ui/shared/SelectInput/SelectInput";
 
 import { upsertMemberSchema } from "../formSchema";
 import {
@@ -19,6 +21,7 @@ import {
   UPDATE_USER_ONLY,
 } from "../queries";
 import { type EditUserModalProps, type UserFormValues } from "../types";
+import { roleOptions } from "./AddUserModal";
 import { EmailField } from "./Fields/EmailField";
 import { NameFields } from "./Fields/NameFields";
 import { ModalActions } from "./ModalActions";
@@ -167,19 +170,38 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
                 <NameFields />
               </Box>
               {!isPlatformAdmin && (
-                <Switch
-                  name="role"
-                  checked={formik.values.role === "teamAdmin"}
-                  onChange={() =>
-                    formik.setFieldValue(
-                      "role",
-                      formik.values.role === "teamEditor"
-                        ? "teamAdmin"
-                        : "teamEditor",
-                    )
-                  }
-                  label={"Team Admin"}
-                />
+                <>
+                  <Typography sx={{ pb: 0.5 }} variant="body2">
+                    Role
+                  </Typography>
+                  <SelectInput
+                    value={formik.values.role}
+                    name="role"
+                    bordered
+                    required
+                    title={"User role"}
+                    data-testid="user-role-select"
+                    labelId="user-role-select"
+                    onChange={() =>
+                      formik.setFieldValue(
+                        "role",
+                        formik.values.role === roleOptions[0].id
+                          ? roleOptions[1].id
+                          : roleOptions[0].id,
+                      )
+                    }
+                  >
+                    {roleOptions.map(({ id, name }) => (
+                      <MenuItem
+                        key={id}
+                        value={id}
+                        data-testid={`${id}-option`}
+                      >
+                        {name}
+                      </MenuItem>
+                    ))}
+                  </SelectInput>
+                </>
               )}
             </DialogContent>
             <DialogActions>
