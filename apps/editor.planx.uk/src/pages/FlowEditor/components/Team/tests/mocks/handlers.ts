@@ -146,7 +146,6 @@ export const updateUserOnlyHandler = () =>
 export const updateUserAsTeamAdminHandler = () =>
   graphql.mutation("CreateTeamAdminOnly", ({ variables }) => {
     const { userId, teamId } = variables;
-    console.log({ userId, teamId });
 
     const updatedUsers = mockUsersData.map((user) =>
       user.id === userId
