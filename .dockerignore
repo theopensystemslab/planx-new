@@ -4,7 +4,8 @@
 node_modules
 e2e
 infrastructure
-apps/editor.planx.uk/build
-apps/editor.planx.uk/node_modules
-apps/localplanning.services/dist
-apps/localplanning.services/node_modules
+
+apps/editor.planx.uk/*
+!apps/editor.planx.uk/package.json
+apps/localplanning.services/*
+!apps/localplanning.services/package.json
