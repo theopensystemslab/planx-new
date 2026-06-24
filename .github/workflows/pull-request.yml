@@ -217,6 +217,14 @@ jobs:
           VITE_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
           VITE_APP_MICROSOFT_OAUTH_OVERRIDE: https://api.editor.planx.dev
           VITE_APP_ENV: pizza
+      - name: Upload PlanX frontend build artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: planx_frontend_build
+          path: |
+            ./${{ env.EDITOR_DIRECTORY }}/build
+            !./${{ env.EDITOR_DIRECTORY }}/build/**/*.map
+          if-no-files-found: error
 
   pulumi_preview:
     name: Run Pulumi Preview
@@ -233,14 +241,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
       - name: Setup Node and PNPM
         uses: ./.github/actions/setup-node-pnpm
-      - run: pnpm install --frozen-lockfile
-        working-directory: infrastructure/application
-      - name: Download PlanX frontend build assets
-        id: cache-planx-frontend-build-assets
-        uses: actions/cache@v5
+      - run: pnpm install --frozen-lockfile --filter "@planx/infrastructure-application..."
+      - name: Download PlanX frontend build artifact
+        uses: actions/download-artifact@v8
         with:
+          name: planx_frontend_build
           path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles(format('{0}/**', env.EDITOR_DIRECTORY)) }}
       - name: Download LPS build assets
         id: cache-localplanning-build-assets
         uses: actions/cache@v5

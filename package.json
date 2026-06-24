@@ -35,7 +35,7 @@
       "flatted@<=3.4.1": ">=3.4.2",
       "linkifyjs@<4.3.2": ">=4.3.2",
       "micromatch@<4.0.8": ">=4.0.8",
-      "minimatch@<3.1.5": ">=3.1.5",
+      "minimatch@<3.1.5": ">=3.1.5 <4",
       "on-headers@<1.1.0": ">=1.1.0",
       "qs@<6.14.1": ">=6.14.1",
       "serialize-javascript": "^7.0.3"
@@ -44,10 +44,17 @@
       "@kirillvakalov/hasura-cli",
       "@opensystemslab/planx-core",
       "@parcel/watcher",
+      "@pulumi/aws",
+      "@pulumi/cloudflare",
+      "@pulumi/docker",
+      "@pulumi/docker-build",
       "@swc/core",
+      "aws-sdk",
       "core-js",
       "esbuild",
-      "preact"
+      "preact",
+      "protobufjs",
+      "tldjs"
     ],
     "ignoredBuiltDependencies": [
       "msw"
