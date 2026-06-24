@@ -1,6 +1,8 @@
 import ContentCutIcon from "@mui/icons-material/ContentCut";
 import ContentPaste from "@mui/icons-material/ContentPaste";
 import HelpTextIcon from "@mui/icons-material/Help";
+import StickyNote2Icon from "@mui/icons-material/StickyNote2";
+import Divider from "@mui/material/Divider";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
@@ -9,6 +11,7 @@ import MenuList from "@mui/material/MenuList";
 import Paper from "@mui/material/Paper";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { ROOT_NODE_KEY } from "@planx/graph";
+import { useNavigate, useParams } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import {
   nodeIsChildOfTemplatedInternalPortal,
@@ -17,8 +20,9 @@ import {
 import * as React from "react";
 import CloneIcon from "ui/icons/Clone";
 import CopyIcon from "ui/icons/Copy";
+import { getNodeRoute } from "utils/routeUtils/utils";
 
-export type ContextMenuSource = "node" | "hanger" | null;
+export type ContextMenuSource = "node" | "hanger" | "option" | null;
 
 interface ContextMenuAction {
   id: string;
@@ -34,6 +38,11 @@ export interface ContextMenuPosition {
 }
 
 export const ContextMenu: React.FC = () => {
+  const { team, flow: flowSlug } = useParams({
+    from: "/_authenticated/app/$team/$flow",
+  });
+  const navigate = useNavigate();
+
   const [
     source,
     position,
@@ -123,6 +132,22 @@ export const ContextMenu: React.FC = () => {
   const handlePasteHelp = () => {
     if (!self) return;
     pasteHelpText(self);
+    closeMenu();
+  };
+
+  const handleAttachNote = () => {
+    if (!self) return;
+    const routeParent = parent === ROOT_NODE_KEY ? undefined : parent;
+    navigate({
+      to: getNodeRoute(routeParent, self),
+      params: {
+        team,
+        flow: flowSlug,
+        ...(routeParent && { parent: routeParent }),
+        before: self,
+      },
+      search: { type: "note" },
+    });
     closeMenu();
   };
 
@@ -255,6 +280,8 @@ export const ContextMenu: React.FC = () => {
     return [];
   };
 
+  const showAttachNote = source === "node" || source === "option";
+
   const actions = getActions();
 
   return (
@@ -266,6 +293,23 @@ export const ContextMenu: React.FC = () => {
     >
       <Paper sx={{ width: 320, maxWidth: "100%" }}>
         <MenuList dense>
+          {showAttachNote && (
+            <>
+              <MenuItem
+                onClick={handleAttachNote}
+                sx={{
+                  backgroundColor: "#fffdb0",
+                  "&:hover": { backgroundColor: "#f5f09e" },
+                }}
+              >
+                <ListItemIcon>
+                  <StickyNote2Icon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Attach note</ListItemText>
+              </MenuItem>
+              {actions.length > 0 && <Divider />}
+            </>
+          )}
           {actions.map((action) => (
             <MenuItem
               key={action.id}

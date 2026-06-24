@@ -42,6 +42,7 @@ const nodeSearchSchema = z.object({
       "responsive-checklist",
       "responsive-question",
       "enhanced-text-input",
+      "note",
     ])
     .optional(),
 });

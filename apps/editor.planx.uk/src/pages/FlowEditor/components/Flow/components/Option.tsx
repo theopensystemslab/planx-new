@@ -2,9 +2,12 @@ import { Flag, flatFlags } from "@opensystemslab/planx-core/types";
 import { Link } from "@tanstack/react-router";
 import { useParams } from "@tanstack/react-router";
 import classNames from "classnames";
+import { useContextMenu } from "hooks/useContextMenu";
 import React from "react";
 
 import { useStore } from "../../../lib/store";
+import { groupNotesWithNodes } from "../lib/notesUtils";
+import AttachedNotes from "./AttachedNotes";
 import { DataField } from "./DataField";
 import { FlagBand, NoFlagBand } from "./FlagBand";
 import Hanger from "./Hanger";
@@ -13,7 +16,20 @@ import { Thumbnail } from "./Thumbnail";
 
 const Option: React.FC<any> = (props) => {
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
-  const childNodes = useStore((state) => state.childNodesOf(props.id));
+  const [rawChildNodes, storeFlow] = useStore((state) => [
+    state.childNodesOf(props.id),
+    state.flow,
+  ]);
+  const childGroups = groupNotesWithNodes(rawChildNodes, storeFlow);
+
+  const handleContextMenu = useContextMenu({
+    source: "option",
+    relationships: {
+      self: props.id,
+      parent: props.parent,
+      before: props.id,
+    },
+  });
 
   let flags: Flag[] | undefined;
 
@@ -37,7 +53,7 @@ const Option: React.FC<any> = (props) => {
   return (
     <li
       className={classNames("card", "option", { wasVisited: props.wasVisited })}
-      onContextMenu={(e) => e.preventDefault()}
+      onContextMenu={handleContextMenu}
     >
       <Link
         to="/app/$team/$flow/nodes/$id/edit"
@@ -67,12 +83,18 @@ const Option: React.FC<any> = (props) => {
           <DataField value={props.data.val} variant="child" />
         )}
       </Link>
+      <AttachedNotes
+        notes={props.associatedNotes || []}
+        parentId={props.parent}
+      />
       <ol className="decisions">
-        {childNodes.map((child) => (
+        {childGroups.map(({ node, notes }) => (
           <Node
-            key={child.id}
+            key={node.id}
             parent={props.id}
-            {...child}
+            {...node}
+            associatedNotes={notes}
+            noteParentId={props.id}
             showTemplatedNodeStatus={props.showTemplatedNodeStatus}
           />
         ))}

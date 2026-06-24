@@ -15,7 +15,9 @@ import { useDrag } from "react-dnd";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 
 import { useStore } from "../../../lib/store";
+import { groupNotesWithNodes } from "../lib/notesUtils";
 import { getParentId } from "../lib/utils";
+import AttachedNotes from "./AttachedNotes";
 import { DataField } from "./DataField";
 import Hanger from "./Hanger";
 import Node from "./Node";
@@ -30,13 +32,13 @@ type Props = {
 };
 
 const Checklist: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes, showHelpText, showTags, showNotes] = useStore(
+  const [isClone, childNodes, showHelpText, showTags, storeFlow] = useStore(
     (state) => [
       state.isClone,
       state.childNodesOf(props.id),
       state.showHelpText,
       state.showTags,
-      state.showNotes,
+      state.flow,
     ],
   );
 
@@ -45,6 +47,11 @@ const Checklist: React.FC<Props> = React.memo((props) => {
   const parent = getParentId(props.parent);
 
   const isStickyNote = childNodes.length === 0;
+
+  const noteGroupedOptions = useMemo(
+    () => groupNotesWithNodes(childNodes, storeFlow),
+    [childNodes, storeFlow],
+  );
 
   const groupedOptions = useMemo(
     () =>
@@ -90,10 +97,8 @@ const Checklist: React.FC<Props> = React.memo((props) => {
   const hasHelpText =
     props.data?.policyRef || props.data?.info || props.data?.howMeasured;
 
-  // Hide sticky notes when toggled off
-  if (isStickyNote && !showNotes) {
-    return null;
-  }
+  // Sticky notes are now rendered via NotesPanel on the following non-note node
+  if (isStickyNote) return null;
 
   return (
     <>
@@ -102,7 +107,6 @@ const Checklist: React.FC<Props> = React.memo((props) => {
         className={classNames("card", "decision", "question", {
           isDragging,
           isClone: isClone(props.id),
-          isNote: isStickyNote,
           wasVisited: props.wasVisited,
         })}
       >
@@ -138,7 +142,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
               />
             )}
             <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
-              {Icon && <Icon />}
+              {Icon && !isStickyNote && <Icon />}
               <span>{props.text}</span>
               {showHelpText && hasHelpText && (
                 <Help fontSize="small" sx={{ marginLeft: "auto" }} />
@@ -155,6 +159,10 @@ const Checklist: React.FC<Props> = React.memo((props) => {
               ))}
             </Box>
           )}
+          <AttachedNotes
+            notes={props.associatedNotes || []}
+            parentId={parent}
+          />
         </TemplatedNodeContainer>
         {groupedOptions ? (
           <ol className="categories">
@@ -191,11 +199,12 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           </ol>
         ) : (
           <ol className="options">
-            {childNodes.map((child) => (
+            {noteGroupedOptions.map(({ node, notes }) => (
               <Node
                 parent={props.id}
-                key={child.id}
-                {...child}
+                key={node.id}
+                {...node}
+                associatedNotes={notes}
                 showTemplatedNodeStatus={props.showTemplatedNodeStatus}
               />
             ))}

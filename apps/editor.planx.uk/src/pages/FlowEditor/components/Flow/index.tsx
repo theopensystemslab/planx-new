@@ -9,6 +9,7 @@ import EndPoint from "./components/EndPoint";
 import Hanger from "./components/Hanger";
 import Node from "./components/Node";
 import { GetStarted } from "./GetStarted";
+import { groupNotesWithNodes } from "./lib/notesUtils";
 
 export enum FlowLayout {
   TOP_DOWN = "top-down",
@@ -26,11 +27,15 @@ const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
   });
   const { flow, team } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
-  const [childNodes, getNode, flowLayout] = useStore((state) => [
+  const [rawChildNodes, getNode, flowLayout, flowData] = useStore((state) => [
     state.childNodesOf(folderIds[folderIds.length - 1] || ROOT_NODE_KEY),
     state.getNode,
     state.flowLayout,
+    state.flow,
   ]);
+
+  const currentParentId = folderIds[folderIds.length - 1] || ROOT_NODE_KEY;
+  const childGroups = groupNotesWithNodes(rawChildNodes, flowData);
 
   const breadcrumbs = folderIds.map((id) => ({
     id,
@@ -39,7 +44,7 @@ const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
   }));
 
   const isFlowRoot = flow === rootFlow;
-  const showGetStarted = isFlowRoot && !childNodes.length;
+  const showGetStarted = isFlowRoot && !rawChildNodes.length;
 
   const flowName = useStore((state) => state.flowName);
 
@@ -91,10 +96,12 @@ const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
         })}
 
         <Box className="flow-child-nodes">
-          {childNodes.map((node) => (
+          {childGroups.map(({ node, notes }) => (
             <Node
               key={node.id}
               {...node}
+              associatedNotes={notes}
+              noteParentId={currentParentId}
               lockedFlow={lockedFlow}
               showTemplatedNodeStatus={showTemplatedNodeStatus}
             />

@@ -33,6 +33,7 @@ import Section from "@planx/components/Section/Editor";
 import Send from "@planx/components/Send/Editor";
 import SetFee from "@planx/components/SetFee/Editor";
 import SetValue from "@planx/components/SetValue/Editor";
+import StickyNote from "@planx/components/StickyNote/Editor";
 import TaskList from "@planx/components/TaskList/Editor";
 import TextInput from "@planx/components/TextInput/Editor";
 import React from "react";
@@ -42,7 +43,7 @@ import { SLUGS } from "../../data/types";
 const EmptyComponent: React.FC<any> = () => null;
 
 const components: {
-  [key in (typeof SLUGS)[TYPES]]: React.FC<any>;
+  [key in (typeof SLUGS)[TYPES] | "note"]: React.FC<any>;
 } = {
   "address-input": AddressInput,
   calculate: Calculate,
@@ -64,6 +65,7 @@ const components: {
   list: List,
   "map-and-label": MapAndLabel,
   "next-steps": NextSteps,
+  note: StickyNote,
   notice: Notice,
   "number-input": NumberInput,
   page: Page,

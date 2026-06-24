@@ -1,6 +1,7 @@
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import Close from "@mui/icons-material/CloseOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
+import StickyNote2Icon from "@mui/icons-material/StickyNote2";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -9,6 +10,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import {
   ComponentType,
   ComponentType as TYPES,
@@ -289,11 +291,24 @@ const FormModal: React.FC<FormModalProps> = ({
             justifyContent: "space-between",
           }}
         >
-          <ChangeComponentHeader
-            type={type}
-            onChange={changeNodeType}
-            canChange={!handleDelete}
-          />
+          {type === "note" ? (
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <StickyNote2Icon fontSize="small" />
+              <Typography
+                variant="h6"
+                component="span"
+                sx={{ fontSize: "1rem", fontWeight: 600 }}
+              >
+                Note
+              </Typography>
+            </Box>
+          ) : (
+            <ChangeComponentHeader
+              type={type}
+              onChange={changeNodeType}
+              canChange={!handleDelete}
+            />
+          )}
 
           <CloseButton aria-label="close" onClick={handleClose} size="large">
             <Close />
