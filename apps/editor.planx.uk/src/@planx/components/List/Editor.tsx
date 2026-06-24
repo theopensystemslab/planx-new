@@ -4,7 +4,7 @@ import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
-import ModalSectionContent from "ui/editor/ModalSectionContent";
+import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -123,7 +123,7 @@ function ListComponent(props: Props) {
         }
       />
       <ModalSection>
-        <ModalSectionContent title="List" Icon={ICONS[TYPES.List]}>
+        <ModalComponentHeader title="List" Icon={ICONS[TYPES.List]}>
           <InputRow>
             <Input
               format="large"
@@ -179,7 +179,7 @@ function ListComponent(props: Props) {
               </InputRowItem>
             </InputRow>
           </ErrorWrapper>
-        </ModalSectionContent>
+        </ModalComponentHeader>
       </ModalSection>
       <ModalFooter formik={formik} disabled={props.disabled} />
     </form>

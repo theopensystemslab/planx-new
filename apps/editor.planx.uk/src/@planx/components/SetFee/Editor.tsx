@@ -9,6 +9,7 @@ import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
@@ -63,7 +64,7 @@ function SetFeeComponent(props: Props) {
         }
       />
       <ModalSection>
-        <ModalSectionContent title="Set fees" Icon={ICONS[TYPES.SetFee]} />
+        <ModalComponentHeader title="Set fees" Icon={ICONS[TYPES.SetFee]} />
       </ModalSection>
       <ModalSection>
         <ModalSectionContent title="Application fee VAT">
