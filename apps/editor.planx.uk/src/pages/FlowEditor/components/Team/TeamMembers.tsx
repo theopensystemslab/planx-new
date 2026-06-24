@@ -33,18 +33,24 @@ const Accordion = ({ isOpen, onToggle }: AccordionProps) => {
 };
 
 export const TeamMembers = () => {
-  const teamSlug = useStore((state) => state.teamSlug);
+  const [teamSlug, role] = useStore((state) => [
+    state.teamSlug,
+    state.getUserRoleForCurrentTeam(),
+  ]);
 
   const { platformAdmins, activeMembers, archivedMembers, loading, error } =
     useTeamMembers(teamSlug);
-  const {
-    canManageActiveMembers,
-    canManageTeamAdmins,
-    canManagePlatformAdmins,
-  } = useTeamManagementPermissions();
+
+  const { canManageActiveMembers, canManagePlatformAdmins } =
+    useTeamManagementPermissions();
   const [openAccordion, setOpenAccordion] = useState(false);
 
-  if (error) return <ErrorSummary message={error.message} />;
+  if (error || !role)
+    return (
+      <ErrorSummary
+        message={error?.message || "Unable to load user role to check access"}
+      />
+    );
 
   return (
     <Container maxWidth="contentWrap">
@@ -63,7 +69,7 @@ export const TeamMembers = () => {
             showAddMemberButton={canManageActiveMembers}
             showEditMemberButton={canManageActiveMembers}
             showRemoveMemberButton={canManageActiveMembers}
-            showTeamAdminSwitch={canManagePlatformAdmins || canManageTeamAdmins}
+            userRole={role}
           />
         )}
       </SettingsSection>
@@ -87,6 +93,7 @@ export const TeamMembers = () => {
               <MembersTable
                 members={platformAdmins}
                 showEditMemberButton={canManagePlatformAdmins}
+                userRole={role}
               />
             )}
           </>
@@ -101,7 +108,7 @@ export const TeamMembers = () => {
             Past team members who no longer have access to the Editor, but may
             still appear in the edit history of your flows.
           </Typography>
-          <MembersTable members={archivedMembers} />
+          <MembersTable members={archivedMembers} userRole={role} />
         </SettingsSection>
       )}
     </Container>

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
+import ErrorPage from "pages/ErrorPage/ErrorPage";
 import { Subscription } from "pages/FlowEditor/components/Subscription/Subscription";
 import { ServiceCharge } from "pages/FlowEditor/components/Subscription/types";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -8,17 +9,16 @@ import React from "react";
 
 export const Route = createFileRoute("/_authenticated/app/$team/subscription")({
   loader: async ({ params, context }) => {
+    const role = useStore.getState().getUserRoleForCurrentTeam();
+
     const isAuthorised =
       context.user?.isPlatformAdmin ||
       // TODO limit *after* we assign teamAdmin roles to existing users
-      ["teamEditor", "teamAdmin"].includes(
-        useStore.getState().getUserRoleForCurrentTeam() || "",
-      );
+      role === "teamEditor" ||
+      role === "teamAdmin";
 
     if (!isAuthorised) {
-      throw new Error(
-        "You do not have the necessary permissions to view this page. Please contact a platform administrator if you think this is an error.",
-      );
+      throw new Error("The user does not have permission to access this page.");
     }
 
     const {
@@ -48,11 +48,30 @@ export const Route = createFileRoute("/_authenticated/app/$team/subscription")({
       `,
       variables: { teamSlug: params.team },
       fetchPolicy: "no-cache",
+      context: {
+        headers: {
+          "x-hasura-role": role,
+        },
+      },
     });
 
     return {
       serviceCharges,
     };
+  },
+  errorComponent: ({ error }) => {
+    if (
+      error?.message?.includes("permission") ||
+      error?.message?.includes("access")
+    ) {
+      return (
+        <ErrorPage title="Access denied">
+          You don't have permission to access this page. Please contact your
+          administrator if you believe this is an error.
+        </ErrorPage>
+      );
+    }
+    throw error;
   },
   component: SubscriptionRoute,
 });

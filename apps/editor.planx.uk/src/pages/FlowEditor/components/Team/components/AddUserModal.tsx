@@ -16,7 +16,7 @@ import { ModalActions } from "./ModalActions";
 
 export const AddUserModal: React.FC<AddUserModalProps> = ({
   onClose,
-  showTeamAdminSwitch,
+  userRole,
 }) => {
   const {
     step,
@@ -26,7 +26,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
     submitButtonText,
     isSubmitting,
     validationSchema,
-  } = useAddUserModal({ onClose });
+  } = useAddUserModal({ onClose, userRole });
 
   return (
     <Dialog
@@ -61,21 +61,19 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
                   <Box sx={{ mt: 2, mb: 2 }}>
                     <NameFields />
                   </Box>
-                  {showTeamAdminSwitch && (
-                    <Switch
-                      name="role"
-                      checked={formik.values.role === "teamAdmin"}
-                      onChange={() =>
-                        formik.setFieldValue(
-                          "role",
-                          formik.values.role === "teamEditor"
-                            ? "teamAdmin"
-                            : "teamEditor",
-                        )
-                      }
-                      label={"Team Admin"}
-                    />
-                  )}
+                  <Switch
+                    name="role"
+                    checked={formik.values.role === "teamAdmin"}
+                    onChange={() =>
+                      formik.setFieldValue(
+                        "role",
+                        formik.values.role === "teamEditor"
+                          ? "teamAdmin"
+                          : "teamEditor",
+                      )
+                    }
+                    label={"Team Admin"}
+                  />
                 </>
               )}
               {step.stage === "confirm-existing" && (

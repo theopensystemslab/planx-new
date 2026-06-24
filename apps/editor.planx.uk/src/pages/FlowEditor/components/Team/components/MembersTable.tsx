@@ -9,6 +9,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { Role } from "@opensystemslab/planx-core/types";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { AddButton } from "ui/editor/AddButton";
 
@@ -59,7 +60,7 @@ export const MembersTable = ({
   showAddMemberButton,
   showEditMemberButton,
   showRemoveMemberButton,
-  showTeamAdminSwitch,
+  userRole,
 }: MembersTableProps) => {
   const [modal, setModal] = useState<ModalState>({ action: "closed" });
 
@@ -92,10 +93,7 @@ export const MembersTable = ({
           )}
         </Table>
         {modal.action !== "closed" && (
-          <AddUserModal
-            onClose={closeModal}
-            showTeamAdminSwitch={showTeamAdminSwitch}
-          />
+          <AddUserModal onClose={closeModal} userRole={userRole} />
         )}
       </>
     );
@@ -192,26 +190,27 @@ export const MembersTable = ({
       </TableContainer>
 
       {modal.action === "remove" && (
-        <RemoveUserModal onClose={closeModal} member={modal.member} />
+        <RemoveUserModal
+          onClose={closeModal}
+          member={modal.member}
+          userRole={userRole}
+        />
       )}
 
       {modal.action === "add" && (
-        <AddUserModal
-          onClose={closeModal}
-          showTeamAdminSwitch={showTeamAdminSwitch}
-        />
+        <AddUserModal onClose={closeModal} userRole={userRole} />
       )}
 
       {modal.action === "edit" && (
         <EditUserModal
           onClose={closeModal}
           member={modal.member}
-          showTeamAdminSwitch={showTeamAdminSwitch}
+          userRole={userRole}
         />
       )}
 
       {modal.action === "attemptedAdd" && (
-        <MaximumUserModal onClose={closeModal} />
+        <MaximumUserModal onClose={closeModal} userRole={userRole} />
       )}
     </>
   );
