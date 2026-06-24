@@ -70,7 +70,12 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
                   <Box sx={{ mt: 2, mb: 2 }}>
                     <NameFields />
                   </Box>
-                  <Typography sx={{ pb: 0.5 }} variant="body2">
+                  <Typography
+                    component="label"
+                    id="User-role-label"
+                    sx={{ pb: 0.5 }}
+                    variant="body2"
+                  >
                     Role
                   </Typography>
                   <SelectInput
@@ -78,7 +83,6 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
                     name="User role"
                     bordered
                     required
-                    title={"User role"}
                     data-testid="user-role-select"
                     onChange={() =>
                       formik.setFieldValue(

@@ -171,7 +171,12 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
               </Box>
               {!isPlatformAdmin && (
                 <>
-                  <Typography sx={{ pb: 0.5 }} variant="body2">
+                  <Typography
+                    component="label"
+                    id="User-role-label"
+                    sx={{ pb: 0.5 }}
+                    variant="body2"
+                  >
                     Role
                   </Typography>
                   <SelectInput
@@ -179,7 +184,6 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
                     name="role"
                     bordered
                     required
-                    title={"User role"}
                     data-testid="user-role-select"
                     labelId="user-role-select"
                     onChange={() =>
