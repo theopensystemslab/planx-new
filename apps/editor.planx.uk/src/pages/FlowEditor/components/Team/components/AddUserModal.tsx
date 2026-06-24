@@ -84,14 +84,9 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
                     bordered
                     required
                     data-testid="user-role-select"
-                    onChange={() =>
-                      formik.setFieldValue(
-                        "role",
-                        formik.values.role === roleOptions[0].id
-                          ? roleOptions[1].id
-                          : roleOptions[0].id,
-                      )
-                    }
+                    onChange={(e) => {
+                      formik.setFieldValue("role", e.target.value);
+                    }}
                   >
                     {roleOptions.map(({ id, name }) => (
                       <MenuItem
