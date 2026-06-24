@@ -6,6 +6,8 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     clearMocks: true,
+    include: ["**/*.test.{ts,tsx}"],
+    exclude: ["**/*.visualRegression.test.{ts,tsx}"],
     setupFiles: [
       "./src/test/jsdom.ts",
       "./src/test/mockServer.ts",
