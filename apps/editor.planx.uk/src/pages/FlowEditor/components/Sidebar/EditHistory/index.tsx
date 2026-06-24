@@ -5,16 +5,14 @@ import Typography from "@mui/material/Typography";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { HistoryItem } from "lib/api/publishFlow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
+import Permission from "ui/editor/Permission";
 
 import { AddCommentDialog } from "./AddCommentDialog";
 import { EditHistoryTimeline } from "./Timeline";
 
 const EditHistory = () => {
-  const [flowId, canUserEditTeam, teamSlug, user] = useStore((state) => [
+  const [flowId, user] = useStore((state) => [
     state.id,
-    state.canUserEditTeam,
-    state.teamSlug,
     state.user,
   ]);
 
@@ -65,8 +63,10 @@ const EditHistory = () => {
 
   return (
     <Box sx={{ p: 2 }}>
-      {user?.id && canUserEditTeam(teamSlug) && (
-        <AddCommentDialog flowId={flowId} actorId={user.id} />
+      {user?.id && (
+        <Permission.CanEdit>
+          <AddCommentDialog flowId={flowId} actorId={user.id} />
+        </Permission.CanEdit>
       )}
       {data?.history && <EditHistoryTimeline events={data.history} />}
       {data?.history.length === 50 && (
