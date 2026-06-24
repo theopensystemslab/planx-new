@@ -3,8 +3,8 @@ import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { styled } from "@mui/material/styles";
 import { SvgIconProps, SvgIconTypeMap } from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
-import { ModalFormContext } from "pages/FlowEditor/components/forms/FormModal";
-import React, { useContext } from "react";
+import { hasFeatureFlag } from "lib/featureFlags";
+import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 interface Props {
@@ -70,8 +70,7 @@ export default function ModalSectionContent({
   author,
   Icon,
 }: Props): FCReturn {
-  const { hideComponentTypeHeader } = useContext(ModalFormContext);
-  const suppressHeader = hideComponentTypeHeader && Boolean(Icon) && Boolean(title);
+ const suppressHeader = hasFeatureFlag("COMPONENT_SELECT") && Boolean(Icon) && Boolean(title);
 
   return (
     <SectionContentGrid container>

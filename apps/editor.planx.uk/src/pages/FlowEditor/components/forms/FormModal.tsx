@@ -130,15 +130,14 @@ const TextInputToggle: React.FC<{
   before?: string;
 }> = ({ type, parent, before }) => {
   const navigate = useNavigate();
-  const [checked, setChecked] = useState(type === "enhanced-text-input");
   const { flow, team } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
   if (!["text-input", "enhanced-text-input"].includes(type)) return null;
 
-  const toggleTextInput = () => {
-    // Toggle visual state immediately without waiting for route change
-    setChecked(!checked);
+  // Ensure toggle stays in sync with component state
+  const checked = type === "enhanced-text-input";
 
+  const toggleTextInput = () => {
     const destinationType =
       type === "text-input" ? TYPES.EnhancedTextInput : TYPES.TextInput;
 
