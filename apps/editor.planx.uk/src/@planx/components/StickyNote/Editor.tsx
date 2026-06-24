@@ -8,12 +8,14 @@ import InputRow from "ui/shared/InputRow";
 import { EditorProps } from "../shared/types";
 import { parseStickyNote, StickyNote, validationSchema } from "./model";
 
-export type Props = EditorProps<TYPES.Question, StickyNote>;
+export type Props = EditorProps<TYPES.Question, StickyNote> & {
+  placement?: StickyNote["placement"];
+};
 
 const StickyNoteEditor: React.FC<Props> = (props) => {
   const formik = useFormikWithRef<StickyNote>(
     {
-      initialValues: parseStickyNote(props.node?.data),
+      initialValues: parseStickyNote(props.node?.data, props.placement),
       onSubmit: (newValues) => {
         if (props.handleSubmit) {
           props.handleSubmit({ type: TYPES.Question, data: newValues });

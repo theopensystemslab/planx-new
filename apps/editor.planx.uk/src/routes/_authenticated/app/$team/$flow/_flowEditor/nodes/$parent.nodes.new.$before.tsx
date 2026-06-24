@@ -7,15 +7,19 @@ import { loader } from "./-loader";
 export const Route = createFileRoute(
   "/_authenticated/app/$team/$flow/_flowEditor/nodes/$parent/nodes/new/$before",
 )({
-  loaderDeps: ({ search }) => ({ type: search.type }),
+  loaderDeps: ({ search }) => ({
+    type: search.type,
+    placement: search.placement,
+  }),
   loader: async ({ params, deps }) => {
-    const { type = "question" } = deps;
+    const { type = "question", placement } = deps;
     const { team, flow, parent, before } = params;
 
     return loader({
       team,
       flow,
       type,
+      placement,
       parent,
       before,
       includeHandleDelete: false,

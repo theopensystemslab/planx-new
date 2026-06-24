@@ -7,10 +7,11 @@ export interface GroupedNode {
   notes: Store.Node[];
 }
 
-const isNoteNode = (node: Store.Node, flow: Store.Flow): boolean =>
+const isAttachedNoteNode = (node: Store.Node, flow: Store.Flow): boolean =>
   node.type === TYPES.Question &&
   node.id !== undefined &&
-  (flow[node.id]?.edges ?? []).length === 0;
+  (flow[node.id]?.edges ?? []).length === 0 &&
+  node.data?.placement === "attached";
 
 /**
  * Groups consecutive note nodes (Questions with no children) with the next
@@ -25,7 +26,7 @@ export const groupNotesWithNodes = (
   let pendingNotes: Store.Node[] = [];
 
   for (const node of nodes) {
-    if (isNoteNode(node, flow)) {
+    if (isAttachedNoteNode(node, flow)) {
       pendingNotes.push(node);
     } else {
       result.push({ node, notes: pendingNotes });

@@ -257,6 +257,7 @@ export interface ExtraProps {
   flows?: ExternalPortalFlow[] | InternalPortalFlow[];
   options?: Store.Node[];
   groupedOptions?: GroupedOption[];
+  placement?: string;
 }
 
 /**

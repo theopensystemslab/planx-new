@@ -32,21 +32,27 @@ type Props = {
 };
 
 const Checklist: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes, showHelpText, showTags, storeFlow] = useStore(
-    (state) => [
+  const [isClone, childNodes, showHelpText, showTags, storeFlow, showNotes] =
+    useStore((state) => [
       state.isClone,
       state.childNodesOf(props.id),
       state.showHelpText,
       state.showTags,
       state.flow,
-    ],
-  );
+      state.showNotes,
+    ]);
 
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
   const parent = getParentId(props.parent);
 
-  const isStickyNote = childNodes.length === 0;
+  // Attached notes are grouped with and rendered on their sibling node
+  const isAttachedNote =
+    childNodes.length === 0 && props.data?.placement === "attached";
+
+  // Standalone/legacy notes render inline in the flow with the original sticky note styling
+  const isStandaloneNote =
+    childNodes.length === 0 && props.data?.placement !== "attached";
 
   const noteGroupedOptions = useMemo(
     () => groupNotesWithNodes(childNodes, storeFlow),
@@ -97,8 +103,8 @@ const Checklist: React.FC<Props> = React.memo((props) => {
   const hasHelpText =
     props.data?.policyRef || props.data?.info || props.data?.howMeasured;
 
-  // Sticky notes are now rendered via NotesPanel on the following non-note node
-  if (isStickyNote) return null;
+  if (isAttachedNote) return null;
+  if (isStandaloneNote && !showNotes) return null;
 
   return (
     <>
@@ -107,6 +113,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
         className={classNames("card", "decision", "question", {
           isDragging,
           isClone: isClone(props.id),
+          isNote: isStandaloneNote,
           wasVisited: props.wasVisited,
         })}
       >
@@ -142,7 +149,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
               />
             )}
             <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
-              {Icon && !isStickyNote && <Icon />}
+              {Icon && !isAttachedNote && !isStandaloneNote && <Icon />}
               <span>{props.text}</span>
               {showHelpText && hasHelpText && (
                 <Help fontSize="small" sx={{ marginLeft: "auto" }} />

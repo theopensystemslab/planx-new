@@ -146,7 +146,22 @@ export const ContextMenu: React.FC = () => {
         ...(routeParent && { parent: routeParent }),
         before: self,
       },
-      search: { type: "note" },
+      search: { type: "note", placement: "attached" },
+    });
+    closeMenu();
+  };
+
+  const handleAddNote = () => {
+    const routeParent = parent === ROOT_NODE_KEY ? undefined : parent;
+    navigate({
+      to: getNodeRoute(routeParent, before),
+      params: {
+        team,
+        flow: flowSlug,
+        ...(routeParent && { parent: routeParent }),
+        ...(before && { before }),
+      },
+      search: { type: "note", placement: "standalone" },
     });
     closeMenu();
   };
@@ -267,6 +282,13 @@ export const ContextMenu: React.FC = () => {
 
     if (source === "hanger") {
       return [
+        {
+          id: "add-note",
+          label: "Add note",
+          icon: <StickyNote2Icon fontSize="small" />,
+          disabled: false,
+          onClick: handleAddNote,
+        },
         {
           id: "paste",
           label: "Paste",

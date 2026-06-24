@@ -1,4 +1,5 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { NotePlacement } from "@planx/components/StickyNote/model";
 import { notFound } from "@tanstack/react-router";
 import { SLUGS } from "pages/FlowEditor/data/types";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -13,6 +14,7 @@ export async function loader({
   parent,
   before,
   type,
+  placement,
   isEdit,
   includeHandleDelete,
 }: {
@@ -22,6 +24,7 @@ export async function loader({
   parent?: string;
   before?: string;
   type?: NodeSearchParams["type"];
+  placement?: NotePlacement;
   isEdit?: boolean;
   includeHandleDelete: boolean;
 }) {
@@ -49,6 +52,10 @@ export async function loader({
     node,
     isEdit,
   });
+
+  if (actualType === "note" && placement) {
+    extraProps.placement = placement;
+  }
 
   const handleDelete = includeHandleDelete
     ? () => {
