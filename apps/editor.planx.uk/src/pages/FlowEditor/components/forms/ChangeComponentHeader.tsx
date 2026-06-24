@@ -33,7 +33,7 @@ const ChangeComponentHeader: React.FC<Props> = ({ type, onChange, canChange }) =
   return (
     <>
       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-        {Icon && <Icon sx={{ color: "text.primary" }} />}
+        {Icon && <Icon sx={{ color: "text.primary", fontSize: "1.6rem" }} />}
         <Typography variant="h3" component="h1">
           {componentTitle}
         </Typography>
