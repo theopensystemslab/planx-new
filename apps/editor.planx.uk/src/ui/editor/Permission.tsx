@@ -11,6 +11,8 @@ interface PermissionComponent extends FC {
   IsPlatformAdmin: FC;
   /** Everyone except platform admins */
   IsNotPlatformAdmin: FC;
+  /** Platform admins and team admins for the current team */
+  IsTeamAdmin: FC;
   /** Platform admins, team admins, and team editors for the current team */
   CanEdit: FC;
   /** Everyone without edit access (team viewers, analysts, etc.) */
@@ -27,6 +29,9 @@ const IsPlatformAdmin: FC = ({ children }) =>
 const IsNotPlatformAdmin: FC = ({ children }) =>
   !usePermission(["platformAdmin"]) ? children : null;
 
+const IsTeamAdmin: FC = ({ children }) =>
+  usePermission(["platformAdmin", "teamAdmin"]) ? children : null;
+
 const CanEdit: FC = ({ children }) =>
   usePermission(EDITOR_ROLES) ? children : null;
 
@@ -36,6 +41,7 @@ const CannotEdit: FC = ({ children }) =>
 // Attach permission specific components as static properties
 Permission.IsPlatformAdmin = IsPlatformAdmin;
 Permission.IsNotPlatformAdmin = IsNotPlatformAdmin;
+Permission.IsTeamAdmin = IsTeamAdmin;
 Permission.CanEdit = CanEdit;
 Permission.CannotEdit = CannotEdit;
 
