@@ -48,6 +48,7 @@ export const FlowTable: React.FC<FlowTableProps> = ({
   view,
 }) => {
   const { headerText } = useFlowSortDisplay();
+  const canUserEditTeam = useStore((state) => state.canUserEditTeam);
   const showDetails = view === "flows";
   const useSplitLayout =
     pinnedFlows !== undefined && unpinnedFlows !== undefined;
@@ -65,7 +66,9 @@ export const FlowTable: React.FC<FlowTableProps> = ({
               {showDetails && <TableCell>Pinned</TableCell>}
             </>
           )}
-          <FlowActionsCell align="center">Actions</FlowActionsCell>
+          {canUserEditTeam(teamSlug) && (
+            <FlowActionsCell align="center">Actions</FlowActionsCell>
+          )}
         </TableRow>
       </StyledTableHead>
       <TableBody>
