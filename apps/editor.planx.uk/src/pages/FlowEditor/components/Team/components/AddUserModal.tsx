@@ -3,16 +3,25 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import { Form, Formik } from "formik";
 import React from "react";
-import { Switch } from "ui/shared/Switch";
+import SelectInput from "ui/shared/SelectInput/SelectInput";
 
 import { useAddUserModal } from "../hooks/useAddUserModal";
 import { type AddUserModalProps, UserFormValues } from "../types";
 import { EmailField } from "./Fields/EmailField";
 import { NameFields } from "./Fields/NameFields";
 import { ModalActions } from "./ModalActions";
+
+export const roleOptions = [
+  { id: "teamEditor", name: "Team editor" },
+  {
+    id: "teamAdmin",
+    name: "Team admin",
+  },
+];
 
 export const AddUserModal: React.FC<AddUserModalProps> = ({
   onClose,
@@ -61,19 +70,34 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
                   <Box sx={{ mt: 2, mb: 2 }}>
                     <NameFields />
                   </Box>
-                  <Switch
-                    name="role"
-                    checked={formik.values.role === "teamAdmin"}
-                    onChange={() =>
-                      formik.setFieldValue(
-                        "role",
-                        formik.values.role === "teamEditor"
-                          ? "teamAdmin"
-                          : "teamEditor",
-                      )
-                    }
-                    label={"Team Admin"}
-                  />
+                  <Typography
+                    component="label"
+                    id="User-role-label"
+                    sx={{ pb: 0.5 }}
+                    variant="body2"
+                  >
+                    Role
+                  </Typography>
+                  <SelectInput
+                    value={formik.values.role}
+                    name="User role"
+                    bordered
+                    required
+                    data-testid="user-role-select"
+                    onChange={(e) => {
+                      formik.setFieldValue("role", e.target.value);
+                    }}
+                  >
+                    {roleOptions.map(({ id, name }) => (
+                      <MenuItem
+                        key={id}
+                        value={id}
+                        data-testid={`${id}-option`}
+                      >
+                        {name}
+                      </MenuItem>
+                    ))}
+                  </SelectInput>
                 </>
               )}
               {step.stage === "confirm-existing" && (

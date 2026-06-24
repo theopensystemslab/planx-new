@@ -8,11 +8,11 @@ export const userTriesToPromoteToTeamAdmin = async (user: UserEvent) => {
     await within(teamMembersTable).findByTestId("edit-button-3");
   await user.click(editButton);
 
-  const teamAdminSwitch = await screen.findByLabelText("Team Admin");
-  expect(teamAdminSwitch).not.toBeChecked();
-
-  await user.click(teamAdminSwitch);
-  expect(teamAdminSwitch).toBeChecked();
+  const roleDropdown = await screen.findByRole("combobox");
+  expect(roleDropdown).toHaveTextContent("Team editor");
+  await user.click(roleDropdown);
+  const teamAdminOption = await screen.findByTestId("teamAdmin-option");
+  await user.click(teamAdminOption);
 
   const updateUserButton = await screen.findByRole("button", {
     name: "Update user",
