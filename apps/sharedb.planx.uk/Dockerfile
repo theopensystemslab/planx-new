@@ -13,6 +13,8 @@ RUN pnpm fetch
 
 COPY . .
 RUN pnpm install --frozen-lockfile --prefer-offline
+# `pnpm deploy` refuses to run unless `inject-workspace-packages=true`, failing with ERR_PNPM_DEPLOY_NONINJECTED_WORKSPACE
+# It's not exposed as a CLI flag, so we set it via npm's `npm_config_<key>` env-var convention
 RUN npm_config_inject_workspace_packages=true pnpm --filter sharedb.planx.uk deploy --prod --prefer-offline /deploy/sharedb
 
 ## PRODUCTION ##
