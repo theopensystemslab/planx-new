@@ -19,7 +19,8 @@ interface Props {
 const ChangeComponentHeader: React.FC<Props> = ({ type, onChange, canChange }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const item = ALL_ITEMS.find((i) => i.slug === type);
+  const displaySlug = type === "enhanced-text-input" ? "text-input" : type;
+  const item = ALL_ITEMS.find((i) => i.slug === displaySlug);
   const Icon = item ? ICONS[item.type] : undefined;
   const componentTitle = item?.title ?? type;
 

@@ -159,7 +159,7 @@ const TextInputToggle: React.FC<{
   };
 
   return (
-    <Box sx={{ position: "absolute", right: 82, top: 30, zIndex: 1 }}>
+    <Box sx={{ px: 6, height: 0, py: 1.5 }}>
       <Switch
         label={
           <>
