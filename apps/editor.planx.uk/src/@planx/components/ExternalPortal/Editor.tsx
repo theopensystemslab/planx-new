@@ -9,6 +9,7 @@ import React, { MutableRefObject } from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import AutocompleteInput from "ui/shared/Autocomplete/AutocompleteInput";
 import { RenderGroupHeaderBlock } from "ui/shared/Autocomplete/components/RenderGroupHeaderBlock";
@@ -111,12 +112,12 @@ const ExternalPortalForm: React.FC<{
         }
       />
       <ModalSection>
-        <ModalSectionContent title="Flow" Icon={ICONS[TYPES.ExternalPortal]}>
+        <ModalComponentHeader title="Flow" Icon={ICONS[TYPES.ExternalPortal]}>
           <span>
             Nest all content from another flow inline within this flow. Deleting
             this node does NOT delete the flow that it references.
           </span>
-        </ModalSectionContent>
+        </ModalComponentHeader>
         <ModalSectionContent key={"flow-section"} title="Pick a flow">
           <ErrorWrapper error={formik.errors.flowId}>
             <AutocompleteInput<Flow>

@@ -12,6 +12,7 @@ interface Props {
   subtitle?: string;
   children?: React.JSX.Element[] | React.JSX.Element;
   author?: string;
+  isComponentHeader?: boolean;
   Icon?:
     | React.ComponentType<SvgIconProps>
     | (OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string });
@@ -68,9 +69,10 @@ export default function ModalSectionContent({
   subtitle,
   children,
   author,
+  isComponentHeader,
   Icon,
 }: Props): FCReturn {
- const suppressHeader = hasFeatureFlag("COMPONENT_SELECT") && Boolean(Icon) && Boolean(title);
+  const suppressHeader = hasFeatureFlag("COMPONENT_SELECT") && Boolean(isComponentHeader);
 
   return (
     <SectionContentGrid container>

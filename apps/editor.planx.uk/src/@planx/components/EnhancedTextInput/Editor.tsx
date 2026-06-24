@@ -9,6 +9,7 @@ import React from "react";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import { InternalNotes } from "ui/editor/InternalNotes";
 import ModalSection from "ui/editor/ModalSection";
+import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import { MoreInformation } from "ui/editor/MoreInformation/MoreInformation";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
@@ -59,7 +60,7 @@ const EnhancedTextInputComponent = (props: Props) => {
             }
           />
           <ModalSection>
-            <ModalSectionContent
+            <ModalComponentHeader
               title="Enhanced text input"
               Icon={ICONS[ComponentType.EnhancedTextInput]}
             >
@@ -89,7 +90,7 @@ const EnhancedTextInputComponent = (props: Props) => {
                   </RadioGroup>
                 </FormControl>
               </InputRow>
-            </ModalSectionContent>
+            </ModalComponentHeader>
           </ModalSection>
           <ModalSection>
             <ModalSectionContent>
