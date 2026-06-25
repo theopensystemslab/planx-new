@@ -19,7 +19,6 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
-import { ICONS } from "../shared/icons";
 import type { EditorProps } from "../shared/types";
 import {
   parseEnhancedTextInput,

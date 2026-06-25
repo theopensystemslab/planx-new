@@ -14,7 +14,6 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import { Switch } from "ui/shared/Switch";
 
-import { ICONS } from "../shared/icons";
 import type { FindProperty } from "./model";
 import { parseFindProperty, validationSchema } from "./model";
 
