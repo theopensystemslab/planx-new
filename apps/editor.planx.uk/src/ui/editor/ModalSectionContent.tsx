@@ -3,7 +3,6 @@ import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { styled } from "@mui/material/styles";
 import { SvgIconProps, SvgIconTypeMap } from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
-import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
@@ -72,7 +71,7 @@ export default function ModalSectionContent({
   isComponentHeader,
   Icon,
 }: Props): FCReturn {
-  const suppressHeader = hasFeatureFlag("COMPONENT_SELECT") && Boolean(isComponentHeader);
+  const suppressHeader = Boolean(isComponentHeader);
 
   return (
     <SectionContentGrid container>

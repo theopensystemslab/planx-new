@@ -17,7 +17,6 @@ import { type BaseNodeData, parseFormValues } from "@planx/components/shared";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { FormikProps } from "formik";
-import { hasFeatureFlag } from "lib/featureFlags";
 import isEqual from "lodash/isEqual";
 import {
   nodeIsChildOfTemplatedInternalPortal,
@@ -29,10 +28,9 @@ import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_fl
 import { Switch } from "ui/shared/Switch";
 import { getNodeRoute } from "utils/routeUtils/utils";
 
-import { fromSlug, SLUGS } from "../../data/types";
+import { SLUGS } from "../../data/types";
 import { useStore } from "../../lib/store";
 import ChangeComponentHeader from "./ChangeComponentHeader";
-
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   // Target all modal sections (the direct child is the backdrop, hence the double child selector)
@@ -46,76 +44,6 @@ const CloseButton = styled(IconButton)(({ theme }) => ({
   padding: theme.spacing(1),
   color: theme.palette.grey[600],
 }));
-
-const TypeSelect = styled("select")(() => ({
-  fontSize: "1em",
-  padding: "0.25em",
-}));
-
-const NodeTypeSelect: React.FC<{
-  value: string;
-  onChange: (newValue: TYPES) => void;
-}> = (props) => {
-  return (
-    <TypeSelect
-      value={fromSlug(props.value)}
-      data-testid="header-select"
-      onChange={(ev) => {
-        props.onChange(ev.target.value as unknown as TYPES);
-      }}
-    >
-      <optgroup label="Question">
-        <option value={TYPES.Question}>Question</option>
-        <option value={TYPES.ResponsiveQuestion}>Responsive question</option>
-        <option value={TYPES.Checklist}>Checklist</option>
-        <option value={TYPES.ResponsiveChecklist}>Responsive checklist</option>
-        <option value={TYPES.NextSteps}>Next steps</option>
-      </optgroup>
-      <optgroup label="Inputs">
-        <option value={TYPES.TextInput}>Text input</option>
-        <option value={TYPES.FileUpload}>File upload</option>
-        <option value={TYPES.FileUploadAndLabel}>Upload and label</option>
-        <option value={TYPES.NumberInput}>Number input</option>
-        <option value={TYPES.DateInput}>Date input</option>
-        <option value={TYPES.AddressInput}>Address input</option>
-        <option value={TYPES.ContactInput}>Contact input</option>
-        <option value={TYPES.List}>List</option>
-        <option value={TYPES.Page}>Page</option>
-        <option value={TYPES.MapAndLabel}>Map and label</option>
-        <option value={TYPES.Feedback}>Feedback</option>
-      </optgroup>
-      <optgroup label="Information">
-        <option value={TYPES.TaskList}>Task list</option>
-        <option value={TYPES.Notice}>Notice</option>
-        <option value={TYPES.Result}>Result</option>
-        <option value={TYPES.Content}>Content</option>
-        <option value={TYPES.Review}>Review</option>
-        <option value={TYPES.Confirmation}>Confirmation</option>
-      </optgroup>
-      <optgroup label="Location">
-        <option value={TYPES.FindProperty}>Find property</option>
-        <option value={TYPES.PropertyInformation}>Property information</option>
-        <option value={TYPES.DrawBoundary}>Draw boundary</option>
-        <option value={TYPES.PlanningConstraints}>Planning constraints</option>
-      </optgroup>
-      <optgroup label="Navigation">
-        <option value={TYPES.Filter}>Filter</option>
-        <option value={TYPES.ExternalPortal}>Flow</option>
-        <option value={TYPES.InternalPortal}>Folder</option>
-        <option value={TYPES.Section}>Section</option>
-        <option value={TYPES.SetValue}>Set value</option>
-      </optgroup>
-      <optgroup label="Payment">
-        <option value={TYPES.Calculate}>Calculate</option>
-        <option value={TYPES.SetFee}>Set fees</option>
-        <option value={TYPES.Pay}>Pay</option>
-      </optgroup>
-      <optgroup label="Outputs">
-        <option value={TYPES.Send}>Send</option>
-      </optgroup>
-    </TypeSelect>
-  );
-};
 
 /**
  * TextInput and EnhancedTextInput are uniquely controlled via a toggle,
@@ -361,17 +289,11 @@ const FormModal: React.FC<FormModalProps> = ({
             justifyContent: "space-between",
           }}
         >
-          {hasFeatureFlag("COMPONENT_SELECT") ? (
-            <ChangeComponentHeader
-              type={type}
-              onChange={changeNodeType}
-              canChange={!handleDelete}
-            />
-          ) : (
-            !handleDelete && (
-              <NodeTypeSelect value={type} onChange={changeNodeType} />
-            )
-          )}
+          <ChangeComponentHeader
+            type={type}
+            onChange={changeNodeType}
+            canChange={!handleDelete}
+          />
 
           <CloseButton aria-label="close" onClick={handleClose} size="large">
             <Close />
@@ -381,53 +303,53 @@ const FormModal: React.FC<FormModalProps> = ({
           {!handleDelete && (
             <TextInputToggle type={type} parent={parent} before={before} />
           )}
-            <ErrorBoundary FallbackComponent={ErrorFallback}>
-              <Component
-                formikRef={formikRef}
-                node={node}
-                {...node?.data}
-                {...extraProps}
-                id={id}
-                disabled={disabled}
-                handleSubmit={(
-                  data: { data?: Record<string, unknown> },
-                  children:
-                    | Array<Record<string, unknown>>
-                    | undefined = undefined,
-                ) => {
-                  // Handle internal portals
-                  if (typeof data === "string" && parent) {
-                    connect(parent, data, { before });
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <Component
+              formikRef={formikRef}
+              node={node}
+              {...node?.data}
+              {...extraProps}
+              id={id}
+              disabled={disabled}
+              handleSubmit={(
+                data: { data?: Record<string, unknown> },
+                children:
+                  | Array<Record<string, unknown>>
+                  | undefined = undefined,
+              ) => {
+                // Handle internal portals
+                if (typeof data === "string" && parent) {
+                  connect(parent, data, { before });
+                } else {
+                  const parsedData = parseFormValues(Object.entries(data));
+                  const parsedChildren =
+                    children?.map((o) => parseFormValues(Object.entries(o))) ||
+                    undefined;
+
+                  if (handleDelete) {
+                    updateNode(
+                      { id, ...parsedData },
+                      { children: parsedChildren },
+                    );
                   } else {
-                    const parsedData = parseFormValues(Object.entries(data));
-                    const parsedChildren =
-                      children?.map((o) => parseFormValues(Object.entries(o))) ||
-                      undefined;
-
-                    if (handleDelete) {
-                      updateNode(
-                        { id, ...parsedData },
-                        { children: parsedChildren },
-                      );
-                    } else {
-                      addNode(parsedData, {
-                        children: parsedChildren,
-                        parent,
-                        before,
-                      });
-                    }
+                    addNode(parsedData, {
+                      children: parsedChildren,
+                      parent,
+                      before,
+                    });
                   }
+                }
 
-                  navigate({
-                    to: "/app/$team/$flow",
-                    params: {
-                      team: teamSlug,
-                      flow: flowSlug,
-                    },
-                  });
-                }}
-              />
-            </ErrorBoundary>
+                navigate({
+                  to: "/app/$team/$flow",
+                  params: {
+                    team: teamSlug,
+                    flow: flowSlug,
+                  },
+                });
+              }}
+            />
+          </ErrorBoundary>
         </DialogContent>
         <DialogActions
           disableSpacing

@@ -1,8 +1,7 @@
 import { NodeId } from "@opensystemslab/planx-core/types";
-import { Link, useParams } from "@tanstack/react-router";
+import { useParams } from "@tanstack/react-router";
 import classnames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { hangerAnchor } from "pages/FlowEditor/lib/hangerAnchor";
 import {
   nodeIsChildOfTemplatedInternalPortal,
@@ -10,7 +9,6 @@ import {
 } from "pages/FlowEditor/utils";
 import React, { useCallback } from "react";
 import { useDrop } from "react-dnd";
-import { getNodeRoute } from "utils/routeUtils/utils";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
@@ -96,38 +94,12 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
         drop(el);
       }}
     >
-      {hasFeatureFlag("COMPONENT_SELECT") ? (
-        <button
-          onContextMenu={handleContextMenu}
-          onClick={handleHangerButtonClick}
-        >
-          {canDrop && item && item.text}
-        </button>
-      ) : (
-        <Link
-          to={getNodeRoute(parent, before)}
-          params={{
-            team: teamSlug,
-            flow: flowSlug,
-            ...(parent && { parent }),
-            ...(before && { before }),
-          }}
-          search={{ type: "question" }}
-          preload={false}
-          onContextMenu={handleContextMenu}
-          onClick={(e) => {
-            const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-            hangerAnchor.set({
-              top: rect.top,
-              bottom: rect.bottom,
-              left: rect.left,
-              right: rect.right,
-            });
-          }}
-        >
-          {canDrop && item && item.text}
-        </Link>
-      )}
+      <button
+        onContextMenu={handleContextMenu}
+        onClick={handleHangerButtonClick}
+      >
+        {canDrop && item && item.text}
+      </button>
     </li>
   );
 };
