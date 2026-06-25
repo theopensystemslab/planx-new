@@ -71,8 +71,8 @@ describe("AddressInputComponent - Editor Modal", () => {
     );
 
     await user.click(autocompleteInput);
-    await user.type(autocompleteInput, "my.data.value");
-    await user.keyboard("{Enter}");
+    await user.paste("my.data.value");
+    await user.tab();
 
     fireEvent.submit(screen.getByRole("form"));
 
