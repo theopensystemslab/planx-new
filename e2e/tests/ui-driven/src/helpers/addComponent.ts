@@ -236,7 +236,9 @@ export const createQuestionWithDataFieldOptions = async (
 ) => {
   await locatingNode.click();
   await page.getByTestId("add-component-modal").waitFor();
-  await page.locator(`[data-component-type="${ComponentType.Question}"]`).click();
+  await page
+    .locator(`[data-component-type="${ComponentType.Question}"]`)
+    .click();
   await page.getByRole("dialog").waitFor();
   await page.getByPlaceholder("Text").fill(questionText);
   await page.getByRole("combobox", { name: "Data field" }).click();
