@@ -28,12 +28,12 @@ describe("FileUploadAndLabel - Editor Modal", () => {
   });
 
   it("renders", async () => {
-    await setup(
+    const { container } = await setup(
       <DndProvider backend={HTML5Backend}>
         <FileUploadAndLabelComponent id="test" />
       </DndProvider>,
     );
-    expect(screen.getByRole("form")).toBeInTheDocument();
+    expect(container.querySelector("form")).toBeInTheDocument();
   });
 
   it("initialises with a single rule", async () => {

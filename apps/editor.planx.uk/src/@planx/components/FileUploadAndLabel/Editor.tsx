@@ -25,7 +25,6 @@ import InputRowItem from "ui/shared/InputRowItem";
 import { Switch } from "ui/shared/Switch";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
-import { ICONS } from "../shared/icons";
 import { RuleBuilder } from "../shared/RuleBuilder";
 import {
   FileType,
