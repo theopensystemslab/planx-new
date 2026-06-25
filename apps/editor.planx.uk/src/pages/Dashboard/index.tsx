@@ -85,7 +85,7 @@ export default function Dashboard() {
           >
             <FeedbackWidget />
           </DashboardWidget>
-          <DashboardWidget title="Activity" subtitle="Last 30 days">
+          <DashboardWidget title="User Activity" subtitle="Last 30 days">
             <ActivityWidget />
           </DashboardWidget>
         </Box>
