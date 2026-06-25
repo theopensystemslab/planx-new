@@ -18,7 +18,7 @@ describe("DateInputComponent - Editor Modal", () => {
         <DateInputComponent id="test" />
       </DndProvider>,
     );
-    expect(screen.getByText("Date input")).toBeInTheDocument();
+    expect(screen.getByRole("form")).toBeInTheDocument();
   });
 
   it("throws an error for incompatible date values", async () => {

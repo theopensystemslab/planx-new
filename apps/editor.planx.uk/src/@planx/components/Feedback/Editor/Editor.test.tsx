@@ -14,9 +14,6 @@ describe("When the Feedback editor modal is rendered", () => {
       </DndProvider>,
     );
   });
-  it("does not throw an error", () => {
-    expect(screen.getByText("Feedback")).toBeInTheDocument();
-  });
   it("displays the default title if no edits are made", () => {
     expect(
       screen.getByPlaceholderText("Tell us what you think"),

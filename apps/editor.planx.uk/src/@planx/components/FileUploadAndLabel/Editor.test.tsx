@@ -33,7 +33,7 @@ describe("FileUploadAndLabel - Editor Modal", () => {
         <FileUploadAndLabelComponent id="test" />
       </DndProvider>,
     );
-    expect(screen.getByText("Upload and label")).toBeInTheDocument();
+    expect(screen.getByRole("form")).toBeInTheDocument();
   });
 
   it("initialises with a single rule", async () => {

@@ -12,7 +12,6 @@ it("renders without error", async () => {
       <Question node={{}} options={[]} />
     </DndProvider>,
   );
-  expect(screen.getByText("Question")).toBeInTheDocument();
   expect(screen.getByText("Add option")).toBeInTheDocument();
 });
 

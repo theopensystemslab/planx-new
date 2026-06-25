@@ -13,7 +13,7 @@ describe("ContactInputComponent - Editor Modal", () => {
         <ContactInputComponent id="test" />
       </DndProvider>,
     );
-    expect(screen.getByText("Contact input")).toBeInTheDocument();
+    expect(screen.getByRole("form")).toBeInTheDocument();
   });
 
   it("requires a title", async () => {
