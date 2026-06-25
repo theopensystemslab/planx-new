@@ -56,8 +56,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@mui/material@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(@mui/system@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@opensystemslab/map':
-        specifier: 1.0.0-alpha.13
-        version: 1.0.0-alpha.13(geotiff@3.0.5)
+        specifier: 1.0.0-alpha.14
+        version: 1.0.0-alpha.14(geotiff@3.0.5)
       '@opensystemslab/planx-core':
         specifier: github:theopensystemslab/planx-core#91e4296
         version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/91e4296a313276971ea5759d52b487048c4d8199(@types/react@19.2.14)
@@ -2045,8 +2045,8 @@ packages:
   '@open-draft/until@2.1.0':
     resolution: {integrity: sha512-U69T3ItWHvLwGg5eJ0n3I62nWuE6ilHlmz7zM0npLBRvPRd7e6NYmg54vvRtP5mZG7kZqZCFVdsTWo7BPtBujg==}
 
-  '@opensystemslab/map@1.0.0-alpha.13':
-    resolution: {integrity: sha512-tVlB8y0lFpgIopE8MNnJFogkdl6U11NVdL8vOuDVxDEc0wOAK/BzhUP7JkAl3V4EleLEqTNzd0AWBbCvsC97pg==}
+  '@opensystemslab/map@1.0.0-alpha.14':
+    resolution: {integrity: sha512-kIVrXtq2rcOzayTtUkVUQWSJMGrhER7FuuMR9cJw5a8AOH69XnXrkDPGBMVQmNJOIoMkO4dOzTt6ofUchZxLQA==}
 
   '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/91e4296a313276971ea5759d52b487048c4d8199':
     resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/91e4296a313276971ea5759d52b487048c4d8199}
@@ -9139,7 +9139,7 @@ snapshots:
 
   '@open-draft/until@2.1.0': {}
 
-  '@opensystemslab/map@1.0.0-alpha.13(geotiff@3.0.5)':
+  '@opensystemslab/map@1.0.0-alpha.14(geotiff@3.0.5)':
     dependencies:
       '@turf/helpers': 7.3.4
       '@turf/union': 7.3.4
