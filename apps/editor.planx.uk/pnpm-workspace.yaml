@@ -1,4 +1,5 @@
 minimumReleaseAge: 10080
 
 minimumReleaseAgeExclude:
+  - '@opensystemslab/map'
   - dompurify@3.4.11
