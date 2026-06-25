@@ -218,16 +218,16 @@ test.describe("Templates", () => {
 
       // Navigate into the folder and add two nodes for later drag-and-drop testing
       await page.getByRole("link", { name: TEMPLATED_FOLDER_NAME }).click();
-      await page.locator("li.hanger > a").first().waitFor();
+      await page.locator("li.hanger > button").first().waitFor();
 
       await createNotice(
         page,
-        page.locator("li.hanger > a").first(),
+        page.locator("li.hanger > button").first(),
         FIRST_NODE_IN_FOLDER,
       );
       await createNotice(
         page,
-        page.locator(".hanger > a").last(),
+        page.locator(".hanger > button").last(),
         SECOND_NODE_IN_FOLDER,
       );
 
@@ -331,7 +331,7 @@ test.describe("Templates", () => {
       await page.locator("button", { hasText: "Add a new flow" }).click();
       await page.getByLabel("Flow name").fill(REGULAR_FLOW_NAME);
       await page.getByRole("button", { name: "Add flow" }).click();
-      await page.locator("li.hanger > a").first().waitFor();
+      await page.locator("li.hanger > button").first().waitFor();
 
       await navigateToTeamPage(page);
 
@@ -458,7 +458,7 @@ test.describe("Templates", () => {
       await navigateToService(page, TEMPLATED_FLOW_SLUG);
 
       await page.getByRole("link", { name: TEMPLATED_FOLDER_NAME }).click();
-      await page.locator("li.hanger > a").first().waitFor();
+      await page.locator("li.hanger > button").first().waitFor();
 
       // Hangers inside a templated folder are visible (not hidden)
       await expect(page.locator("li.hanger").first()).not.toHaveClass(/hidden/);
