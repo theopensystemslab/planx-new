@@ -12,9 +12,9 @@ import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { getIn } from "formik";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
+import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
-import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Checkbox from "ui/shared/Checkbox/Checkbox";
@@ -22,7 +22,6 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
-import { ICONS } from "../shared/icons";
 import {
   availableDatasets,
   parseContent,
@@ -85,10 +84,7 @@ function PlanningConstraintsComponent(props: Props) {
         }
       />
       <ModalSection>
-        <ModalSectionContent
-          title="Planning constraints"
-          Icon={ICONS[TYPES.PlanningConstraints]}
-        >
+        <ModalComponentHeader>
           <Typography variant="body2" sx={{ mb: 2 }}>
             Find documentation about{" "}
             <a
@@ -237,7 +233,7 @@ function PlanningConstraintsComponent(props: Props) {
               />
             </InputRow>
           </InputGroup>
-        </ModalSectionContent>
+        </ModalComponentHeader>
       </ModalSection>
       <ModalFooter
         formik={formik}

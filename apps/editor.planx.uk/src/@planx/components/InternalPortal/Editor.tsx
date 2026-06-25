@@ -5,10 +5,10 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
+import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -80,7 +80,7 @@ const InternalPortalForm: React.FC<Props> = (props) => {
         }
       />
       <ModalSection>
-        <ModalComponentHeader title="Folder" Icon={ICONS[TYPES.InternalPortal]}>
+        <ModalComponentHeader>
           <ErrorWrapper error={formik.errors.text}>
             <Input
               name="text"

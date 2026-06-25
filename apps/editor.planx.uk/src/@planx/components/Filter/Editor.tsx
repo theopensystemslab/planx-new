@@ -8,9 +8,9 @@ import {
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { FormikProps } from "formik";
 import React, { MutableRefObject } from "react";
+import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 
 import { ICONS } from "../shared/icons";
 
@@ -70,7 +70,7 @@ const Filter: React.FC<Props> = (props) => {
       data-testid="filter-component-form"
     >
       <ModalSection>
-        <ModalComponentHeader title="Filter" Icon={ICONS[TYPES.Filter]}>
+        <ModalComponentHeader>
           <Typography variant="body2">
             Filters automatically sort based on collected flags. Flags within a
             category are ordered heirarchically and the filter will route

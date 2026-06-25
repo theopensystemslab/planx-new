@@ -7,8 +7,8 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import ColorPicker from "ui/editor/ColorPicker/ColorPicker";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
-import ModalSection from "ui/editor/ModalSection";
 import ModalComponentHeader from "ui/editor/ModalComponentHeader";
+import ModalSection from "ui/editor/ModalSection";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeConfiguration } from "ui/editor/TemplatedNodeConfiguration";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
@@ -43,7 +43,7 @@ const NoticeEditor: React.FC<NoticeEditorProps> = ({ formik, disabled }) => {
         }
       />
       <ModalSection>
-        <ModalComponentHeader title="Notice" Icon={ICONS[TYPES.Notice]}>
+        <ModalComponentHeader>
           <InputRow>
             <Input
               name="title"

@@ -3,16 +3,15 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
 import React from "react";
+import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
-import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
-import { ICONS } from "../shared/icons";
 import { parseContent, PropertyInformation, validationSchema } from "./model";
 
 type Props = EditorProps<TYPES.PropertyInformation, PropertyInformation>;
@@ -43,10 +42,7 @@ function PropertyInformationComponent(props: Props) {
         }
       />
       <ModalSection>
-        <ModalSectionContent
-          title="Property information"
-          Icon={ICONS[TYPES.PropertyInformation]}
-        >
+        <ModalComponentHeader>
           <InputRow>
             <Input
               format="large"
@@ -87,7 +83,7 @@ function PropertyInformationComponent(props: Props) {
             <strong>Open Systems Lab - Property types</strong> flow must be
             nested immediately before this component.
           </Typography>
-        </ModalSectionContent>
+        </ModalComponentHeader>
       </ModalSection>
       <ModalFooter formik={formik} disabled={props.disabled} />
     </form>

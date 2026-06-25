@@ -12,9 +12,9 @@ import React, { ChangeEvent } from "react";
 import ListManager, {
   EditorProps as ListManagerEditorProps,
 } from "ui/editor/ListManager/ListManager";
+import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
@@ -94,7 +94,7 @@ const TaskListComponent: React.FC<Props> = (props) => (
           }
         />
         <ModalSection>
-          <ModalComponentHeader title="Task list" Icon={ICONS[TYPES.TaskList]}>
+          <ModalComponentHeader>
             <Box sx={{ mb: "1rem" }}>
               <InputRow>
                 <Input

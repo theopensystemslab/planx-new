@@ -6,10 +6,10 @@ import {
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { FormikProps } from "formik";
 import React, { MutableRefObject } from "react";
+import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import AutocompleteInput from "ui/shared/Autocomplete/AutocompleteInput";
 import { RenderGroupHeaderBlock } from "ui/shared/Autocomplete/components/RenderGroupHeaderBlock";
@@ -112,7 +112,7 @@ const ExternalPortalForm: React.FC<{
         }
       />
       <ModalSection>
-        <ModalComponentHeader title="Flow" Icon={ICONS[TYPES.ExternalPortal]}>
+        <ModalComponentHeader>
           <span>
             Nest all content from another flow inline within this flow. Deleting
             this node does NOT delete the flow that it references.

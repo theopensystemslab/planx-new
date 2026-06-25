@@ -5,9 +5,9 @@ import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import InputLabel from "ui/editor/InputLabel";
+import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
@@ -46,7 +46,7 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
         }
       />
       <ModalSection>
-        <ModalComponentHeader title="Feedback" Icon={ICONS[TYPES.Feedback]}>
+        <ModalComponentHeader>
           <InputGroup flowSpacing>
             <InputRow>
               <InputLabel label="Title">

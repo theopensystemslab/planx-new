@@ -2,16 +2,15 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
+import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
-import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
-import { ICONS } from "../shared/icons";
 import {
   AddressInput,
   editorValidationSchema,
@@ -47,10 +46,7 @@ const AddressInputComponent: React.FC<Props> = (props) => {
         }
       />
       <ModalSection>
-        <ModalSectionContent
-          title="Address input"
-          Icon={ICONS[TYPES.AddressInput]}
-        >
+        <ModalComponentHeader>
           <InputRow>
             <Input
               format="large"
@@ -80,7 +76,7 @@ const AddressInputComponent: React.FC<Props> = (props) => {
             disabled={props.disabled}
             errorMessage={formik.errors.fn}
           />
-        </ModalSectionContent>
+        </ModalComponentHeader>
       </ModalSection>
       <ModalFooter formik={formik} disabled={props.disabled} />
     </form>

@@ -10,10 +10,10 @@ import { Formik, getIn, useFormikContext } from "formik";
 import { SubmissionEmailInput } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useCallback } from "react";
+import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
@@ -72,7 +72,7 @@ const SendForm: React.FC<SendFormProps> = ({ disabled }) => {
         }
       />
       <ModalSection>
-        <ModalComponentHeader title="Send" Icon={ICONS[TYPES.Send]}>
+        <ModalComponentHeader>
           <InputRow>
             <Input
               format="large"

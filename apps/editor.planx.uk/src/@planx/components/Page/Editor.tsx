@@ -2,9 +2,9 @@ import MenuItem from "@mui/material/MenuItem";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
+import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
@@ -58,7 +58,7 @@ function PageComponent(props: Props) {
         }
       />
       <ModalSection>
-        <ModalComponentHeader title="Page" Icon={ICONS[TYPES.Page]}>
+        <ModalComponentHeader>
           <InputRow>
             <Input
               format="large"

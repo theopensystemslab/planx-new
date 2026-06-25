@@ -3,6 +3,7 @@ import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
+import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -43,10 +44,7 @@ function FindPropertyComponent(props: Props) {
         }
       />
       <ModalSection>
-        <ModalSectionContent
-          title="Find property"
-          Icon={ICONS[TYPES.FindProperty]}
-        >
+        <ModalComponentHeader>
           <InputRow>
             <Input
               format="large"
@@ -67,7 +65,7 @@ function FindPropertyComponent(props: Props) {
               errorMessage={formik.errors.description}
             />
           </InputRow>
-        </ModalSectionContent>
+        </ModalComponentHeader>
         <ModalSectionContent>
           <>
             <InputRow>

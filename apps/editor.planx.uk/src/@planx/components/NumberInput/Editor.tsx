@@ -7,9 +7,9 @@ import {
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
+import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
-import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
@@ -19,7 +19,6 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 import { Switch } from "ui/shared/Switch";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
-import { ICONS } from "../shared/icons";
 
 export type Props = EditorProps<TYPES.NumberInput, NumberInput>;
 
@@ -47,10 +46,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
         }
       />
       <ModalSection>
-        <ModalSectionContent
-          title="Number input"
-          Icon={ICONS[TYPES.NumberInput]}
-        >
+        <ModalComponentHeader>
           <InputRow>
             <Input
               format="large"
@@ -114,7 +110,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
               disabled={props.disabled}
             />
           </InputRow>
-        </ModalSectionContent>
+        </ModalComponentHeader>
       </ModalSection>
       <ModalFooter formik={formik} disabled={props.disabled} />
     </form>
