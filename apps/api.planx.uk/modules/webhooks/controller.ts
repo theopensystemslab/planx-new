@@ -22,6 +22,8 @@ import { sanitiseApplicationData } from "./service/sanitiseApplicationData/index
 import type { SanitiseApplicationData } from "./service/sanitiseApplicationData/types.js";
 import { sendSlackNotification } from "./service/sendNotification/index.js";
 import type { SendSlackNotification } from "./service/sendNotification/types.js";
+import type { SendSlackMessageController } from "./service/sendSlackMessage/schema.js";
+import { sendSlackMessage } from "../slack/utils.js";
 import type { UpdateTemplatedFlowEditsController } from "./service/updateTemplatedFlowEdits/schema.js";
 import type { IsCleanJSONBController } from "./service/validateInput/schema.js";
 import { updateTemplatedFlowEdits } from "./service/updateTemplatedFlowEdits/index.js";
@@ -49,6 +51,35 @@ export const sendSlackNotificationController: SendSlackNotification = async (
     return next(
       new ServerError({
         message: `Failed to send ${eventType} Slack notification`,
+        cause: error,
+      }),
+    );
+  }
+};
+
+export const sendSlackMessageController: SendSlackMessageController = async (
+  _req,
+  res,
+  next,
+) => {
+  const { channel, message, username } = res.locals.parsedReq.body;
+
+  const isProduction = process.env.APP_ENVIRONMENT === "production";
+  if (!isProduction) {
+    return res.status(200).send({
+      message: `Staging environment, skipping Slack notification to ${channel}. Message "${message}"`,
+    });
+  }
+
+  try {
+    await sendSlackMessage({ channel, text: message, username });
+    return res.status(200).send({
+      message: `Sent Slack notification to ${channel}. Message "${message}"`,
+    });
+  } catch (error) {
+    return next(
+      new ServerError({
+        message: `Failed to send Slack notification to ${channel}. Error ${error}`,
         cause: error,
       }),
     );
