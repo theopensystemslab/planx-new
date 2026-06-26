@@ -1,7 +1,7 @@
-import SlackNotify from "slack-notify";
 import { z } from "zod";
 import { ServerError } from "../../errors/index.js";
 import type { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
+import { sendSlackMessage } from "./utils.js";
 
 interface SendSlackNotificationResponse {
   message: string;
@@ -30,8 +30,7 @@ export const sendSlackNotificationController: SendSlackNotificationController =
     }
 
     try {
-      const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL!);
-      await slack.send(message);
+      await sendSlackMessage(message);
 
       return res.status(200).send({
         message: `Sent Slack notification. Message "${message}"`,

@@ -1,5 +1,4 @@
 import { Passport } from "@opensystemslab/planx-core";
-import SlackNotify from "slack-notify";
 import type {
   BOPSEventData,
   EmailEventData,
@@ -9,12 +8,12 @@ import type {
   UniformEventData,
 } from "./types.js";
 import { $api } from "../../../../client/index.js";
+import { sendSlackMessage } from "../../../slack/utils.js";
 
 export const sendSlackNotification = async (
   data: EventData,
   type: EventType,
 ) => {
-  const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL!);
   let message = getMessageForEventType(data, type);
 
   const sessionId = getSessionIdFromEvent(data, type);
@@ -64,7 +63,7 @@ export const sendSlackNotification = async (
   const baseMessage = ":incoming_envelope: " + message;
   message = isPilotEvent ? ":large_orange_square: " + baseMessage : baseMessage;
 
-  await slack.send(message);
+  await sendSlackMessage(message);
   return message;
 };
 
