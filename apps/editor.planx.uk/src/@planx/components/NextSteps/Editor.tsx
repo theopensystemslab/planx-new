@@ -21,8 +21,6 @@ import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
-import { ICONS } from "../shared/icons";
-
 type Props = EditorProps<TYPES.NextSteps, NextSteps>;
 
 const newStep = (): Step => ({

@@ -15,7 +15,6 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
-import { ICONS } from "../shared/icons";
 import { editorValidationSchema, parseTextInput, TextInput } from "./model";
 
 export type Props = EditorProps<TYPES.TextInput, TextInput>;

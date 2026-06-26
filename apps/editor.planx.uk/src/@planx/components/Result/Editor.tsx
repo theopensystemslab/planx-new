@@ -20,7 +20,6 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
-import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
 import { FlagDisplayText, Result, validationSchema } from "./model";
 

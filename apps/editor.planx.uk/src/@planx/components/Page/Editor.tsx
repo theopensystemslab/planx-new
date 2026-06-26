@@ -14,7 +14,6 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
-import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
 import { Page, parsePage, validationSchema } from "./model";
 import { ProposedAdvertisements } from "./schema/AdvertConsent";

@@ -16,7 +16,6 @@ import InputRow from "ui/shared/InputRow";
 import InputRowLabel from "ui/shared/InputRowLabel";
 import { Switch } from "ui/shared/Switch";
 
-import { ICONS } from "../shared/icons";
 import {
   DEFAULT_PAYMENT_PROCESSING_PERCENTAGE,
   DEFAULT_SERVICE_CHARGE_THRESHOLD,

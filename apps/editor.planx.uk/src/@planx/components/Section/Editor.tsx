@@ -16,7 +16,6 @@ import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
-import { ICONS } from "../shared/icons";
 import BasicRadio from "../shared/Radio/BasicRadio/BasicRadio";
 import {
   parseSection,

@@ -26,7 +26,6 @@ import {
   usePlanningConstraintsSchema,
   usePlanningDataEntityNames,
 } from "../../hooks";
-import { ICONS } from "../../icons";
 import { clearOptionsDataFields, getOptionsSchemaByFn } from "../../utils";
 import MoreInformation from "./MoreInformation";
 import TemplatedNodeConfiguration from "./TemplatedNodeConfiguration";

@@ -16,7 +16,6 @@ import { Switch } from "ui/shared/Switch";
 
 import { baseNodeDataValidationSchema } from "../shared";
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
-import { ICONS } from "../shared/icons";
 import type { Calculate } from "./model";
 import { evaluate, getVariables, parseCalculate } from "./model";
 

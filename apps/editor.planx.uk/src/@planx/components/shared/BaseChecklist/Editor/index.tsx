@@ -13,7 +13,6 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
-import { ICONS } from "../../icons";
 import { clearOptionsDataFields } from "../../utils";
 import { TypeNarrowedExpandableSwitch as ExpandableSwitch } from "./components/ExpandableSwitch";
 import { TypeNarrowedModalFooter as ModalFooter } from "./components/ModalFooter";

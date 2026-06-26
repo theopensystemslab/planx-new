@@ -11,8 +11,6 @@ import React, { MutableRefObject } from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 
-import { ICONS } from "../shared/icons";
-
 interface FilterData {
   fn: string;
   category: string;

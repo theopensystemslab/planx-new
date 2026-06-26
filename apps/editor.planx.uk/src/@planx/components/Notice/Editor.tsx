@@ -18,7 +18,6 @@ import { Switch } from "ui/shared/Switch";
 
 import { InternalNotes } from "../../../ui/editor/InternalNotes";
 import { MoreInformation } from "../../../ui/editor/MoreInformation/MoreInformation";
-import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
 
 export type Props = EditorProps<TYPES.Notice, Notice>;

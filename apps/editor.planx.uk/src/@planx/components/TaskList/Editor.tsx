@@ -20,8 +20,6 @@ import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
-import { ICONS } from "../shared/icons";
-
 export type Props = EditorProps<TYPES.TaskList, TaskList>;
 
 const newTask = (): Task => ({

@@ -14,7 +14,6 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 
-import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
 import {
   Flow,

@@ -12,7 +12,6 @@ import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
-import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
 import { FileUpload, parseFileUpload, validationSchema } from "./model";
 

@@ -16,8 +16,6 @@ import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
-import { ICONS } from "../shared/icons";
-
 export type Props = EditorProps<TYPES.Content, Content>;
 
 const ContentComponent: React.FC<Props> = (props) => {

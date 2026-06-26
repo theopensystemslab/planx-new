@@ -15,7 +15,6 @@ import { RenderGroupHeaderBlock } from "ui/shared/Autocomplete/components/Render
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { PopupIcon } from "ui/shared/PopUpIcon";
 
-import { ICONS } from "../shared/icons";
 import { validationSchema } from "./model";
 import { Flow, FlowAutocompleteListProps } from "./types";
 
