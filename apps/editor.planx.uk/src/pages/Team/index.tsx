@@ -1,9 +1,8 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { useSearch } from "@tanstack/react-router";
-import { isEmpty, orderBy } from "lodash";
-import React, { useEffect, useMemo, useState } from "react";
+import { isEmpty } from "lodash";
+import React, { useEffect, useState } from "react";
 import { EmptyState } from "ui/editor/EmptyState";
 import { InfoChip } from "ui/editor/InfoChip";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
@@ -13,9 +12,10 @@ import { FlowCardView, FlowSummary } from "../FlowEditor/lib/store/editor";
 import { AddFlow } from "./components/AddFlow";
 import Archive from "./components/Archive";
 import Flows from "./components/Flows";
+import { useFlowFilters } from "./components/hooks/useFlowFilters";
 import { useGetArchivedFlows } from "./components/hooks/useGetArchivedFlows";
 import { useGetFlows } from "./components/hooks/useGetFlows";
-import { sortOptions } from "./helpers/sortAndFilterOptions";
+import { filterOptions, sortOptions } from "./helpers/sortAndFilterOptions";
 import TeamLayout from "./TeamLayout";
 
 export type FlowView = "flows" | "archive";
@@ -65,71 +65,12 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
     FlowSummary[] | null
   >(null);
   const [shouldClearSearch, setShouldClearSearch] = useState<boolean>(false);
-  const searchParams = useSearch({ from: "/_authenticated/app/$team/" });
 
-  const sortedFlows = useMemo(() => {
-    // Use searchedFlows if available (from SearchBox), otherwise use all flows
-    const sourceFlows = searchedFlows || flows;
-    if (!sourceFlows) return null;
-
-    let result = [...sourceFlows];
-
-    // Apply filters based on search params
-    if (searchParams["service-status"]) {
-      result = result.filter(
-        (flow) =>
-          flow.status === searchParams["service-status"] &&
-          flow.isService === true,
-      );
-    }
-
-    if (searchParams["flow-type"]) {
-      if (searchParams["flow-type"] === "submission") {
-        result = result.filter(
-          (flow) => flow.publishedFlows[0]?.hasSendComponent && flow.isService,
-        );
-      } else if (searchParams["flow-type"] === "fee carrying") {
-        result = result.filter(
-          (flow) => flow.publishedFlows[0]?.hasVisiblePayComponent,
-        );
-      } else if (searchParams["flow-type"] === "service charge enabled") {
-        result = result.filter(
-          (flow) => flow.publishedFlows[0]?.hasEnabledServiceCharge,
-        );
-      }
-    }
-
-    if (searchParams.templates) {
-      if (searchParams.templates === "templated") {
-        result = result.filter((flow) => Boolean(flow.templatedFrom));
-      } else if (searchParams.templates === "source template") {
-        result = result.filter((flow) => Boolean(flow.isTemplate));
-      }
-    }
-
-    if (searchParams["lps-listing"]) {
-      if (searchParams["lps-listing"] === "listed") {
-        result = result.filter((flow) => flow.isListedOnLPS === true);
-      } else if (searchParams["lps-listing"] === "not listed") {
-        result = result.filter((flow) => flow.isListedOnLPS === false);
-      }
-    }
-
-    // Apply sorting
-    const sortObject =
-      sortOptions.find(
-        (option) =>
-          option.displayName
-            .toLowerCase()
-            .replace(/[^\w\s-]/g, "")
-            .replace(/[\s_-]+/g, "-")
-            .replace(/^-+|-+$/g, "") === searchParams.sort,
-      ) || sortOptions[0];
-
-    result = orderBy(result, sortObject.fieldName, searchParams.sortDirection);
-
-    return result;
-  }, [searchedFlows, flows, searchParams]);
+  const { sortedFlows } = useFlowFilters({
+    flows: searchedFlows ?? flows,
+    filterOptions,
+    sortOptions,
+  });
 
   const handleViewChange = (
     _event: React.MouseEvent<HTMLElement>,

@@ -23,17 +23,23 @@ export const sortOptions: SortableFields<FlowSummary>[] = [
 const checkFlowStatus: FilterOptions<FlowSummary>["validationFn"] = (
   flow,
   value,
-) => flow.status === value;
+) => flow.status === value && flow.isService;
 
 const checkFlowServiceType: FilterOptions<FlowSummary>["validationFn"] = (
   flow,
   value,
 ) => {
-  if (value === "submission") return flow.publishedFlows[0]?.hasSendComponent;
-  if (value === "fee carrying")
-    return flow.publishedFlows[0]?.hasVisiblePayComponent;
-  if (value === "service charge enabled")
-    return flow.publishedFlows[0]?.hasEnabledServiceCharge;
+  const hasSendComponent =
+    Boolean(flow.publishedFlows[0]?.hasSendComponent) && flow.isService;
+  const isFeeCarrying = Boolean(flow.publishedFlows[0]?.hasVisiblePayComponent);
+  const hasServiceChargesEnabled = Boolean(
+    flow.publishedFlows[0]?.hasEnabledServiceCharge,
+  );
+
+  if (value === "submission") return hasSendComponent;
+  if (value === "fee carrying") return isFeeCarrying;
+  if (value === "service charge enabled") return hasServiceChargesEnabled;
+
   return false;
 };
 
