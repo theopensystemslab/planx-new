@@ -131,11 +131,20 @@ case TYPES.SetValue:
   return <Question {...allProps} text="Set Value" />;
 ```
 
-4. `src/pages/FlowEditor/components/forms/FormModal.tsx`
+4. `src/pages/FlowEditor/components/forms/componentData.ts`
 
-```jsx
-<option value={TYPES.SetValue}>SetValue</option>
+Add an entry for the new component in the appropriate category within `ALL_CATEGORIES`. Each entry requires a `type`, `slug`, `title`, and `description`:
+
+```typescript
+{
+  type: TYPES.SetValue,
+  slug: "set-value",
+  title: t(TYPES.SetValue),
+  description: "Set a data value in the passport",
+},
 ```
+
+> Note: components are no longer categorised in `FormModal.tsx`. The component picker UI is driven entirely by `ALL_CATEGORIES` in `componentData.ts`.
 
 5. `src/pages/FlowEditor/components/forms/index.ts`
 
