@@ -1,3 +1,4 @@
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import Wrapper from "@planx/components/fixtures/Wrapper";
 import { Meta } from "@storybook/tanstack-react";
 
@@ -74,4 +75,10 @@ export const WithoutIntersections = {
   render: () => <Presentational {...propsWithoutIntersections} />,
 };
 
-export const WithEditor = () => <Wrapper Editor={Editor} Public={Public} />;
+export const WithEditor = () => (
+  <Wrapper
+    Editor={Editor}
+    Public={Public}
+    componentType={ComponentType.PlanningConstraints}
+  />
+);
