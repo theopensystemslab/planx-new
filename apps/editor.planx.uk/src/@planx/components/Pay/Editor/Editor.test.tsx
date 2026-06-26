@@ -17,7 +17,7 @@ describe("Pay component - Editor Modal", () => {
         <PayComponent id="test" />
       </DndProvider>,
     );
-    expect(screen.getByRole("form")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Page title")).toBeInTheDocument();
   });
 
   // Currently failing, Editor not a11y compliant

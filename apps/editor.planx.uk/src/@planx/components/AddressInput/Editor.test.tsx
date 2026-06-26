@@ -13,7 +13,7 @@ describe("AddressInputComponent - Editor Modal", () => {
         <AddressInputComponent id="test" />
       </DndProvider>,
     );
-    expect(screen.getByRole("form")).toBeInTheDocument();
+    expect(screen.getByTestId("address-input-data-field")).toBeInTheDocument();
   });
 
   it("requires a title", async () => {
