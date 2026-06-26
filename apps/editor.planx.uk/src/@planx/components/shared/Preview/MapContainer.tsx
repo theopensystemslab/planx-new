@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 interface MapContainerProps {
   environment: PreviewEnvironment;
@@ -14,6 +15,10 @@ export const MapContainer = styled(Box)<MapContainerProps>(
     width: "100%",
     maxWidth: "none",
     "& my-map": {
+      "--autocomplete__error__font-weight": FONT_WEIGHT_SEMI_BOLD,
+      "--autocomplete__input__max-width": `${theme.breakpoints.values.formWrap}px`,
+      "--govuk-error-colour": theme.palette.error.main,
+      "--autocomplete__font-family": "Inter",
       width: "100%",
       // Only increase map size in Published, Preview, and Draft routes
       height:

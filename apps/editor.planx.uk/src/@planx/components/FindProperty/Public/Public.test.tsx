@@ -1,4 +1,5 @@
 import { screen } from "@testing-library/react";
+import { Feature, Polygon } from "geojson";
 import {
   graphql,
   type GraphQLHandler,
@@ -6,7 +7,7 @@ import {
   type HttpHandler,
   HttpResponse,
 } from "msw";
-import React from "react";
+import { useStore } from "pages/FlowEditor/lib/store";
 import server from "test/mockServer";
 import { setup } from "test/utils";
 import { vi } from "vitest";
@@ -445,5 +446,81 @@ describe("plotting a new address that does not have a uprn yet", () => {
     expect(handleSubmit).toHaveBeenCalledWith({
       data: previousData,
     });
+  });
+});
+
+describe("OS address search on the 'propose a new address' page", () => {
+  const boundaryBBox: Feature<Polygon> = {
+    type: "Feature",
+    properties: {},
+    geometry: {
+      type: "Polygon",
+      coordinates: [
+        [
+          [-0.166, 51.535],
+          [-0.12, 51.535],
+          [-0.12, 51.557],
+          [-0.166, 51.557],
+          [-0.166, 51.535],
+        ],
+      ],
+    },
+  };
+
+  afterEach(() => {
+    useStore.setState({
+      teamSettings: {
+        ...useStore.getState().teamSettings,
+        boundaryBBox: undefined,
+      },
+    });
+  });
+
+  const newAddressProps = {
+    description: "Find your property",
+    title: "Type your postal code",
+    newAddressFirstPage: true,
+    newAddressTitle: "Plot a new address",
+  } as const;
+
+  it("enables the OS address search box on the map (showOSSearch)", async () => {
+    await setup(<FindProperty {...newAddressProps} />);
+
+    const map = await screen.findByTestId("map-web-component");
+    expect(map).toHaveAttribute("showOSSearch");
+  });
+
+  it("passes the team boundary to the map so out-of-boundary searches can be rejected", async () => {
+    useStore.setState({
+      teamSettings: { ...useStore.getState().teamSettings, boundaryBBox },
+    });
+
+    await setup(<FindProperty {...newAddressProps} />);
+
+    const map = await screen.findByTestId("map-web-component");
+    expect(map).toHaveAttribute("clipGeojsonData");
+  });
+
+  it("does not constrain the map when the team has no boundary set", async () => {
+    await setup(<FindProperty {...newAddressProps} />);
+
+    const map = await screen.findByTestId("map-web-component");
+    expect(map).not.toHaveAttribute("clipGeojsonData");
+  });
+
+  it("reflects a selected address as the map location and coordinate readout", async () => {
+    await setup(
+      <FindProperty
+        {...newAddressProps}
+        previouslySubmittedData={{ data: proposedAddressProps }}
+      />,
+    );
+
+    const map = await screen.findByTestId("map-web-component");
+    expect(map).toHaveAttribute("drawGeojsonData");
+
+    expect(
+      screen.getByText(/533662 Easting \(X\), 177899 Northing \(Y\)/),
+    ).toBeInTheDocument();
   });
 });
