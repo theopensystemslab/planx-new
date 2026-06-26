@@ -10,7 +10,6 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import { InternalNotes } from "ui/editor/InternalNotes";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import { MoreInformation } from "ui/editor/MoreInformation/MoreInformation";
@@ -56,7 +55,7 @@ const Component: React.FC<Props> = (props: Props) => {
             }
           />
           <ModalSection>
-            <ModalComponentHeader>
+            <ModalSectionContent>
               <InputRow>
                 <Input
                   format="large"
@@ -91,7 +90,7 @@ const Component: React.FC<Props> = (props: Props) => {
               <InputRow>
                 <Input format="data" name="fn" value={PAY_FN} disabled />
               </InputRow>
-            </ModalComponentHeader>
+            </ModalSectionContent>
             <ModalSectionContent>
               <InputRow>
                 <Input

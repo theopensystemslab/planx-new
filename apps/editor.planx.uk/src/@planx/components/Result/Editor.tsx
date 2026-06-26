@@ -10,9 +10,9 @@ import {
 import { Form, Formik, useFormikContext } from "formik";
 import groupBy from "lodash/groupBy";
 import React from "react";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
+import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import InputLabel from "ui/public/InputLabel";
@@ -116,7 +116,7 @@ const ResultComponent: React.FC<Props> = (props) => {
             }
           />
           <ModalSection>
-            <ModalComponentHeader>
+            <ModalSectionContent>
               <InputRow>
                 <Typography variant="h5" component="h6">
                   <label htmlFor="result-flagSet">Flag set</label>
@@ -181,7 +181,7 @@ const ResultComponent: React.FC<Props> = (props) => {
                   })}
                 </Box>
               </Box>
-            </ModalComponentHeader>
+            </ModalSectionContent>
           </ModalSection>
           <ModalFooter
             formik={formik}

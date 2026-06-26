@@ -11,7 +11,6 @@ import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
 import ListManager from "ui/editor/ListManager/ListManager";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
@@ -82,7 +81,7 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
         }
       />
       <ModalSection>
-        <ModalComponentHeader>
+        <ModalSectionContent>
           <InputGroup>
             <InputRow>
               <Input
@@ -162,7 +161,7 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
               </>
             )}
           </InputGroup>
-        </ModalComponentHeader>
+        </ModalSectionContent>
         <ModalSectionContent subtitle="Options">
           <ErrorWrapper error={getIn(formik.errors, "options")}>
             <ListManager

@@ -3,7 +3,6 @@ import { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -44,7 +43,7 @@ function DrawBoundaryComponent(props: Props) {
         }
       />
       <ModalSection>
-        <ModalComponentHeader>
+        <ModalSectionContent>
           <InputRow>
             <Input
               format="large"
@@ -80,7 +79,7 @@ function DrawBoundaryComponent(props: Props) {
               />
             </InputRow>
           </InputGroup>
-        </ModalComponentHeader>
+        </ModalSectionContent>
         <ModalSectionContent
           title={props.node?.data?.titleForUploading}
           Icon={ICONS[TYPES.DrawBoundary]}

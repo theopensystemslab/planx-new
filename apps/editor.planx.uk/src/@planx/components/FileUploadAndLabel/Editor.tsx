@@ -12,7 +12,6 @@ import ImgInput from "ui/editor/ImgInput/ImgInput";
 import ListManager, {
   EditorProps as ListManagerEditorProps,
 } from "ui/editor/ListManager/ListManager";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -61,7 +60,7 @@ function FileUploadAndLabelComponent(props: Props) {
         }
       />
       <ModalSection>
-        <ModalComponentHeader>
+        <ModalSectionContent>
           <InputRow>
             <Input
               errorMessage={formik.errors.title}
@@ -110,7 +109,7 @@ function FileUploadAndLabelComponent(props: Props) {
               disabled={props.disabled}
             />
           </InputRow>
-        </ModalComponentHeader>
+        </ModalSectionContent>
       </ModalSection>
       <ModalSection>
         <ModalSectionContent title="File types" Icon={RuleIcon}>

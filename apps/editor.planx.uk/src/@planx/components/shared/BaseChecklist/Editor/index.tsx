@@ -4,8 +4,8 @@ import { getIn } from "formik";
 import React, { useRef } from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import ModalSection from "ui/editor/ModalSection";
+import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -49,7 +49,7 @@ export const BaseChecklistComponent: React.FC<Props> = (props) => {
         }
       />
       <ModalSection>
-        <ModalComponentHeader>
+        <ModalSectionContent>
           <InputGroup>
             <InputRow>
               <Input
@@ -156,7 +156,7 @@ export const BaseChecklistComponent: React.FC<Props> = (props) => {
               </>
             )}
           </InputGroup>
-        </ModalComponentHeader>
+        </ModalSectionContent>
         <ErrorWrapper error={getIn(formik.errors, "options")}>
           <Options {...props} />
         </ErrorWrapper>

@@ -6,7 +6,6 @@ import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { FormikErrors } from "formik";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -126,7 +125,7 @@ export default function Component(props: Props) {
         }
       />
       <ModalSection>
-        <ModalComponentHeader>
+        <ModalSectionContent>
           <Typography variant="body2" sx={{ mb: 2 }}>
             This component does math! Write formulas using{" "}
             <a href="https://mathjs.org/index.html" target="_blank">
@@ -144,7 +143,7 @@ export default function Component(props: Props) {
               disabled={props.disabled}
             />
           </InputRow>
-        </ModalComponentHeader>
+        </ModalSectionContent>
         <ModalSectionContent title="Output">
           <DataFieldAutocomplete
             required

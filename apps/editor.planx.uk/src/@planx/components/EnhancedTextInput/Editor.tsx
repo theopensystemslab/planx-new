@@ -8,7 +8,6 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import { InternalNotes } from "ui/editor/InternalNotes";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import { MoreInformation } from "ui/editor/MoreInformation/MoreInformation";
@@ -59,7 +58,7 @@ const EnhancedTextInputComponent = (props: Props) => {
             }
           />
           <ModalSection>
-            <ModalComponentHeader>
+            <ModalSectionContent>
               <InputRow>
                 <FormControl component="fieldset">
                   <Typography component="legend" variant="body2" sx={{ py: 1 }}>
@@ -86,7 +85,7 @@ const EnhancedTextInputComponent = (props: Props) => {
                   </RadioGroup>
                 </FormControl>
               </InputRow>
-            </ModalComponentHeader>
+            </ModalSectionContent>
           </ModalSection>
           <ModalSection>
             <ModalSectionContent>

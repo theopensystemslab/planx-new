@@ -6,7 +6,6 @@ import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { FormattedResponse } from "pages/FlowEditor/components/Submissions/components/FormattedResponse";
 import { Store } from "pages/FlowEditor/lib/store";
 import React from "react";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -64,7 +63,7 @@ function SetFeeComponent(props: Props) {
         }
       />
       <ModalSection>
-        <ModalComponentHeader />
+        <ModalSectionContent />
       </ModalSection>
       <ModalSection>
         <ModalSectionContent title="Application fee VAT">

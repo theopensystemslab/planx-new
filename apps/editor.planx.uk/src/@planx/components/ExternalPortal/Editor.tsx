@@ -6,7 +6,6 @@ import {
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { FormikProps } from "formik";
 import React, { MutableRefObject } from "react";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -112,12 +111,12 @@ const ExternalPortalForm: React.FC<{
         }
       />
       <ModalSection>
-        <ModalComponentHeader>
+        <ModalSectionContent>
           <span>
             Nest all content from another flow inline within this flow. Deleting
             this node does NOT delete the flow that it references.
           </span>
-        </ModalComponentHeader>
+        </ModalSectionContent>
         <ModalSectionContent key={"flow-section"} title="Pick a flow">
           <ErrorWrapper error={formik.errors.flowId}>
             <AutocompleteInput<Flow>

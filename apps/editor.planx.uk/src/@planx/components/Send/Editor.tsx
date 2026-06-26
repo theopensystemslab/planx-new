@@ -10,7 +10,6 @@ import { Formik, getIn, useFormikContext } from "formik";
 import { SubmissionEmailInput } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useCallback } from "react";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -72,7 +71,7 @@ const SendForm: React.FC<SendFormProps> = ({ disabled }) => {
         }
       />
       <ModalSection>
-        <ModalComponentHeader>
+        <ModalSectionContent>
           <InputRow>
             <Input
               format="large"
@@ -84,7 +83,7 @@ const SendForm: React.FC<SendFormProps> = ({ disabled }) => {
               errorMessage={formik.errors.title}
             />
           </InputRow>
-        </ModalComponentHeader>
+        </ModalSectionContent>
       </ModalSection>
       <ModalSection>
         <ErrorWrapper error={getIn(formik.errors, "destinations")}>

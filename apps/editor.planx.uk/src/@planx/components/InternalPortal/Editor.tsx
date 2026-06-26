@@ -5,7 +5,6 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -80,7 +79,7 @@ const InternalPortalForm: React.FC<Props> = (props) => {
         }
       />
       <ModalSection>
-        <ModalComponentHeader>
+        <ModalSectionContent>
           <ErrorWrapper error={formik.errors.text}>
             <Input
               name="text"
@@ -92,7 +91,7 @@ const InternalPortalForm: React.FC<Props> = (props) => {
               id="portalFlowId"
             />
           </ErrorWrapper>
-        </ModalComponentHeader>
+        </ModalSectionContent>
         {props.flows && props.flows?.length > 0 && (
           <ModalSectionContent subtitle="Select an existing folder">
             <InputLabel

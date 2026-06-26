@@ -8,7 +8,6 @@ import {
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { FormikProps } from "formik";
 import React, { MutableRefObject } from "react";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 
@@ -70,13 +69,13 @@ const Filter: React.FC<Props> = (props) => {
       data-testid="filter-component-form"
     >
       <ModalSection>
-        <ModalComponentHeader>
+        <ModalSectionContent>
           <Typography variant="body2">
             Filters automatically sort based on collected flags. Flags within a
             category are ordered heirarchically and the filter will route
             through the left-most matching flag option only.
           </Typography>
-        </ModalComponentHeader>
+        </ModalSectionContent>
         <ModalSectionContent title="Pick a flagset category">
           <select
             data-testid="flagset-category-select"

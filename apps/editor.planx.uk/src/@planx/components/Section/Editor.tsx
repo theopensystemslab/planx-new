@@ -8,7 +8,6 @@ import { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -82,7 +81,7 @@ function SectionComponent(props: Props) {
         }
       />
       <ModalSection>
-        <ModalComponentHeader>
+        <ModalSectionContent>
           <InputRow>
             <Input
               required
@@ -105,7 +104,7 @@ function SectionComponent(props: Props) {
               errorMessage={formik.errors.description}
             />
           </InputRow>
-        </ModalComponentHeader>
+        </ModalSectionContent>
         <ModalSectionContent title="Section length" Icon={MoreTimeIcon}>
           <Typography variant="subtitle2" sx={{ mb: 2 }}>
             Please estimate the relative length of this section. This will be

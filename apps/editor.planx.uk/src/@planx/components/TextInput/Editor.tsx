@@ -6,7 +6,6 @@ import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -78,7 +77,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
         }
       />
       <ModalSection>
-        <ModalComponentHeader>
+        <ModalSectionContent>
           <InputRow>
             <Input
               format="large"
@@ -105,7 +104,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
             onChange={(value) => formik.setFieldValue("fn", value)}
             disabled={props.disabled}
           />
-        </ModalComponentHeader>
+        </ModalSectionContent>
         <ModalSectionContent title="Input style">
           <FormControl component="fieldset">
             <RadioGroup defaultValue="short" value={formik.values.type}>

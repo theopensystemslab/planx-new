@@ -7,7 +7,6 @@ import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import ColorPicker from "ui/editor/ColorPicker/ColorPicker";
 import InputGroup from "ui/editor/InputGroup";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -80,7 +79,7 @@ function MapAndLabelComponent(props: Props) {
         }
       />
       <ModalSection>
-        <ModalComponentHeader>
+        <ModalSectionContent>
           <InputGroup>
             <InputRow>
               <Input
@@ -110,7 +109,7 @@ function MapAndLabelComponent(props: Props) {
               disabled={props.disabled}
             />
           </InputGroup>
-        </ModalComponentHeader>
+        </ModalSectionContent>
         <ModalSectionContent title="Map options">
           <InputGroup>
             <Box sx={{ mb: 2 }}>
