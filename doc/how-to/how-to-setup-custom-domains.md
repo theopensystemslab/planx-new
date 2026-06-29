@@ -124,7 +124,7 @@ Path: `validation-only` → `shared-final`
 
     Commit this change, open a PR if you haven't already, and get the PR approved.
 
-8. Deploy `certificates` again (as in step 2).
+8. Deploy `certificates` again (as in step 3).
 
     This deploy removes the domain from the mining cert and adds it to the shared cert proper. It does this by creating a new cert, but we **retain the old cert**, because for now the shared CDN still relies on it.
 
