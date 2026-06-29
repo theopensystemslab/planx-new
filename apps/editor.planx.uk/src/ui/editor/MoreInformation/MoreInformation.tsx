@@ -1,4 +1,5 @@
 import Help from "@mui/icons-material/Help";
+import Box from "@mui/material/Box";
 import { BaseNodeData } from "@planx/components/shared";
 import { getIn } from "formik";
 import React from "react";
@@ -8,7 +9,6 @@ import InputLabel from "ui/editor/InputLabel";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
-import InputRow from "ui/shared/InputRow";
 
 import { MoreInformationProps } from "./types";
 
@@ -20,7 +20,7 @@ export const MoreInformation = <T extends BaseNodeData>({
     <ModalSection>
       <ModalSectionContent title="More information" Icon={Help}>
         <InputGroup flowSpacing>
-          <InputLabel label="Why it matters" htmlFor="info">
+          <InputLabel label="Why it matters" htmlFor="info" id="info-label">
             <RichTextInput
               multiline
               name="info"
@@ -30,9 +30,14 @@ export const MoreInformation = <T extends BaseNodeData>({
               onChange={formik.handleChange}
               disabled={disabled}
               variant="nestedContent"
+              inputProps={{ "aria-labelledby": "info-label" }}
             />
           </InputLabel>
-          <InputLabel label="Policy source" htmlFor="policyRef">
+          <InputLabel
+            label="Policy source"
+            htmlFor="policyRef"
+            id="policyRef-label"
+          >
             <RichTextInput
               multiline
               name="policyRef"
@@ -42,31 +47,47 @@ export const MoreInformation = <T extends BaseNodeData>({
               onChange={formik.handleChange}
               disabled={disabled}
               variant="nestedContent"
+              inputProps={{ "aria-labelledby": "policyRef-label" }}
             />
           </InputLabel>
-          <InputLabel label="How it is defined?" htmlFor="howMeasured">
-            <InputRow>
-              <RichTextInput
-                multiline
-                name="howMeasured"
-                id="howMeasured"
-                value={formik.values.howMeasured}
-                errorMessage={getIn(formik.errors, "howMeasured")}
-                onChange={formik.handleChange}
-                disabled={disabled}
-                variant="nestedContent"
-              />
-              <ImgInput
-                img={formik.values.definitionImg}
-                onChange={(newUrl) => {
-                  formik.handleChange({
-                    target: { name: "definitionImg", value: newUrl },
-                  });
-                }}
-                disabled={disabled}
-              />
-            </InputRow>
-          </InputLabel>
+          {/* ImgInput must be outside InputLabel: role="button" inside <label> = nested-interactive */}
+          <Box
+            sx={{
+              display: "flex",
+              gap: "5px",
+              alignItems: "flex-end",
+              width: "100%",
+            }}
+          >
+            <Box sx={{ flex: 1 }}>
+              <InputLabel
+                label="How it is defined?"
+                htmlFor="howMeasured"
+                id="howMeasured-label"
+              >
+                <RichTextInput
+                  multiline
+                  name="howMeasured"
+                  id="howMeasured"
+                  value={formik.values.howMeasured}
+                  errorMessage={getIn(formik.errors, "howMeasured")}
+                  onChange={formik.handleChange}
+                  disabled={disabled}
+                  variant="nestedContent"
+                  inputProps={{ "aria-labelledby": "howMeasured-label" }}
+                />
+              </InputLabel>
+            </Box>
+            <ImgInput
+              img={formik.values.definitionImg}
+              onChange={(newUrl) => {
+                formik.handleChange({
+                  target: { name: "definitionImg", value: newUrl },
+                });
+              }}
+              disabled={disabled}
+            />
+          </Box>
         </InputGroup>
       </ModalSectionContent>
     </ModalSection>

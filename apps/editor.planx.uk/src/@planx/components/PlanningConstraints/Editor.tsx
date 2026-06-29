@@ -106,6 +106,7 @@ function PlanningConstraintsComponent(props: Props) {
                 name="title"
                 placeholder={formik.values.title}
                 value={formik.values.title}
+                aria-label="Title"
                 onChange={formik.handleChange}
                 disabled={props.disabled}
               />
@@ -118,6 +119,7 @@ function PlanningConstraintsComponent(props: Props) {
                 onChange={formik.handleChange}
                 disabled={props.disabled}
                 errorMessage={formik.errors.description}
+                inputProps={{ "aria-label": "Description" }}
               />
             </InputRow>
             <InputRow>
@@ -126,6 +128,7 @@ function PlanningConstraintsComponent(props: Props) {
                 name="fn"
                 placeholder={formik.values.fn}
                 value={formik.values.fn}
+                aria-label="Planning data field"
                 disabled
               />
             </InputRow>
@@ -145,6 +148,9 @@ function PlanningConstraintsComponent(props: Props) {
                           }
                           onChange={changeSelectAll(formik.values.dataValues)}
                           disabled={props.disabled}
+                          inputProps={{
+                            "aria-label": "Select all constraints",
+                          }}
                         />
                       </TableCell>
                       <TableCell
@@ -171,6 +177,7 @@ function PlanningConstraintsComponent(props: Props) {
                               }
                               onChange={changeDataset(dataset.val)}
                               disabled={props.disabled}
+                              inputProps={{ "aria-label": dataset.text }}
                             />
                           </TableCell>
                           <TableCell>
@@ -180,6 +187,7 @@ function PlanningConstraintsComponent(props: Props) {
                                   format="large"
                                   name="text"
                                   value={dataset.text}
+                                  aria-label="Constraint name"
                                   disabled
                                 />
                               </InputRow>
@@ -188,6 +196,7 @@ function PlanningConstraintsComponent(props: Props) {
                                   format="data"
                                   name="val"
                                   value={dataset.val}
+                                  aria-label="Data field value"
                                   disabled
                                 />
                               </InputRow>
@@ -224,6 +233,7 @@ function PlanningConstraintsComponent(props: Props) {
                 onChange={formik.handleChange}
                 disabled={props.disabled}
                 errorMessage={formik.errors.disclaimer}
+                inputProps={{ "aria-label": "Planning conditions disclaimer" }}
               />
             </InputRow>
           </InputGroup>

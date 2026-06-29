@@ -42,7 +42,6 @@ export const StyledTableHead = styled(TableHead)(({ theme }) => ({
       borderLeft: `1px solid ${theme.palette.border.main}`,
     },
     "&:last-of-type": {
-      borderLeft: `1px solid ${theme.palette.border.main}`,
       borderRight: `1px solid ${theme.palette.border.main}`,
     },
   },

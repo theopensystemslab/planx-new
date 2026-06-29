@@ -4,7 +4,7 @@ import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
-import ModalSectionContent from "ui/editor/ModalSectionContent";
+import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
@@ -58,7 +58,7 @@ function PageComponent(props: Props) {
         }
       />
       <ModalSection>
-        <ModalSectionContent title="Page" Icon={ICONS[TYPES.Page]}>
+        <ModalComponentHeader title="Page" Icon={ICONS[TYPES.Page]}>
           <InputRow>
             <Input
               format="large"
@@ -90,6 +90,8 @@ function PageComponent(props: Props) {
             <InputRowLabel>Schema</InputRowLabel>
             <InputRowItem>
               <SelectInput
+                name="Schema"
+                visuallyHiddenLabel
                 value={formik.values.schemaName}
                 onChange={(e) => {
                   formik.setFieldValue("schemaName", e.target.value);
@@ -110,7 +112,7 @@ function PageComponent(props: Props) {
               </SelectInput>
             </InputRowItem>
           </InputRow>
-        </ModalSectionContent>
+        </ModalComponentHeader>
       </ModalSection>
       <ModalFooter formik={formik} disabled={props.disabled} />
     </form>

@@ -29,6 +29,7 @@ export interface MembersTableProps {
   showEditMemberButton?: boolean;
   showRemoveMemberButton?: boolean;
   showTeamAdminSwitch?: boolean;
+  userRole: Role;
 }
 
 export interface UserFormValues {
@@ -47,7 +48,7 @@ export type ModalState =
 
 type SharedModalProps = {
   onClose: () => void;
-  showTeamAdminSwitch?: boolean;
+  userRole: Role;
 };
 
 export type AddUserModalProps = SharedModalProps;

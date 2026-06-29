@@ -7,11 +7,11 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { AlteredNode, HistoryItem } from "lib/api/publishFlow/types";
-import { useStore } from "pages/FlowEditor/lib/store";
 import { formatLastEditDate } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import BlockQuote from "ui/editor/BlockQuote";
+import Permission from "ui/editor/Permission";
 import Caret from "ui/icons/Caret";
 
 import { isAutoComment } from "../utils";
@@ -92,8 +92,6 @@ export const AlteredNodesSummaryContent = (props: {
   const [expanded, setExpanded] = useState(false);
   const comments = history?.filter((item) => item.type === "comment") || [];
   const operations = history?.filter((item) => item.type === "operation") || [];
-
-  const isPlatformAdmin = useStore.getState().user?.isPlatformAdmin;
 
   const changeSummary: AlteredNodesSummary = {
     title,
@@ -192,7 +190,7 @@ export const AlteredNodesSummaryContent = (props: {
       {changeSummary["portals"].length > 0 && (
         <AlteredExternalPortalsSummary portals={changeSummary["portals"]} />
       )}
-      {isPlatformAdmin && (
+      <Permission.IsPlatformAdmin>
         <PublishModalAccordion
           sx={(theme) => ({
             borderTop: `1px solid ${theme.palette.border.main}`,
@@ -239,7 +237,7 @@ export const AlteredNodesSummaryContent = (props: {
             </List>
           </AccordionDetails>
         </PublishModalAccordion>
-      )}
+      </Permission.IsPlatformAdmin>
     </Box>
   );
 };

@@ -9,6 +9,7 @@ import React from "react";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import { InternalNotes } from "ui/editor/InternalNotes";
 import ModalSection from "ui/editor/ModalSection";
+import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import { MoreInformation } from "ui/editor/MoreInformation/MoreInformation";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
@@ -59,7 +60,7 @@ const EnhancedTextInputComponent = (props: Props) => {
             }
           />
           <ModalSection>
-            <ModalSectionContent
+            <ModalComponentHeader
               title="Enhanced text input"
               Icon={ICONS[ComponentType.EnhancedTextInput]}
             >
@@ -89,7 +90,7 @@ const EnhancedTextInputComponent = (props: Props) => {
                   </RadioGroup>
                 </FormControl>
               </InputRow>
-            </ModalSectionContent>
+            </ModalComponentHeader>
           </ModalSection>
           <ModalSection>
             <ModalSectionContent>
@@ -117,6 +118,7 @@ const EnhancedTextInputComponent = (props: Props) => {
                   name="title"
                   value={formik.values.title}
                   placeholder="Title"
+                  aria-label="Title"
                   onChange={formik.handleChange}
                   disabled={props.disabled}
                   errorMessage={formik.errors.title}
@@ -130,6 +132,7 @@ const EnhancedTextInputComponent = (props: Props) => {
                   onChange={formik.handleChange}
                   disabled={props.disabled}
                   errorMessage={formik.errors.description}
+                  inputProps={{ "aria-label": "Description" }}
                 />
               </InputRow>
               <InputRow>
@@ -152,6 +155,7 @@ const EnhancedTextInputComponent = (props: Props) => {
                     name="revisionTitle"
                     value={formik.values.revisionTitle}
                     placeholder="Revision title"
+                    aria-label="Revision title"
                     onChange={formik.handleChange}
                     disabled={props.disabled}
                     errorMessage={formik.errors.revisionTitle}
@@ -165,6 +169,7 @@ const EnhancedTextInputComponent = (props: Props) => {
                     onChange={formik.handleChange}
                     disabled={props.disabled}
                     errorMessage={formik.errors.revisionDescription}
+                    inputProps={{ "aria-label": "Revision description" }}
                   />
                 </InputRow>
               </ModalSectionContent>

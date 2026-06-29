@@ -15,19 +15,6 @@ import type {
 } from "../../../types.js";
 import { $api } from "../../../client/index.js";
 
-/**
- * @swagger
- * /admin/session/{sessionId}/summary:
- *  get:
- *    summary: Returns a passport, breadcrumbs, and other key details about a session
- *    description: Returns a passport, breadcrumbs, and other key details about a session
- *    tags:
- *      - admin
- *    parameters:
- *      - $ref: '#/components/parameters/sessionId'
- *    security:
- *      - bearerAuth: []
- */
 export async function getSessionSummary(
   req: Request,
   res: Response,
@@ -65,6 +52,7 @@ interface SessionSummary {
     email: LowCalSession["email"];
     passport: Passport["data"];
     breadcrumbs: Breadcrumb;
+    cachedBreadcrumbs?: Breadcrumb;
     payments?: Pick<
       GovUKPayment,
       "created_date" | "payment_id" | "amount" | "state"
@@ -100,6 +88,7 @@ const getSessionSummaryById = async (
           email
           passport: data(path: "passport.data")
           breadcrumbs: data(path: "breadcrumbs")
+          cachedBreadcrumbs: data(path: "cachedBreadcrumbs")
           payments: payment_status(order_by: { created_at: desc }) {
             created_at
             payment_id

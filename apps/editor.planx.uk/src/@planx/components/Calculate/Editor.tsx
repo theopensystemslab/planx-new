@@ -9,6 +9,7 @@ import InputGroup from "ui/editor/InputGroup";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
@@ -125,7 +126,7 @@ export default function Component(props: Props) {
         }
       />
       <ModalSection>
-        <ModalSectionContent title="Calculate" Icon={ICONS[TYPES.Calculate]}>
+        <ModalComponentHeader title="Calculate" Icon={ICONS[TYPES.Calculate]}>
           <Typography variant="body2" sx={{ mb: 2 }}>
             This component does math! Write formulas using{" "}
             <a href="https://mathjs.org/index.html" target="_blank">
@@ -143,7 +144,7 @@ export default function Component(props: Props) {
               disabled={props.disabled}
             />
           </InputRow>
-        </ModalSectionContent>
+        </ModalComponentHeader>
         <ModalSectionContent title="Output">
           <DataFieldAutocomplete
             required

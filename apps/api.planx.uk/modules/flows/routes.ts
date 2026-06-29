@@ -1,10 +1,12 @@
 import { Router } from "express";
+import type { z } from "zod";
 import { validate } from "../../shared/middleware/validate.js";
 import {
   useLoggedInUserAuth,
   usePlatformAdminAuth,
   useTeamEditorAuth,
 } from "../auth/middleware.js";
+import { requireTeamMembership } from "../auth/requireTeamMembership.js";
 import { copyFlowController, copyFlowSchema } from "./copyFlow/controller.js";
 import {
   copyFlowAsPortalSchema,
@@ -57,6 +59,10 @@ router.post(
   "/flows/create-from-template/:templateId",
   useTeamEditorAuth,
   validate(createFlowFromTemplateSchema),
+  requireTeamMembership(
+    (parsedReq: z.infer<typeof createFlowFromTemplateSchema>) =>
+      parsedReq.body.teamId,
+  ),
   createFlowFromTemplateController,
 );
 

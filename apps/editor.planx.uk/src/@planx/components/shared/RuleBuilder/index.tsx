@@ -62,6 +62,8 @@ export const RuleBuilder: React.FC<Props> = ({
           value={rule.condition}
           disabled={disabled}
           onChange={handleConditionChange}
+          name="Condition"
+          visuallyHiddenLabel
         >
           {conditions.map((condition) => (
             <MenuItem key={condition} value={condition}>
@@ -95,6 +97,7 @@ export const RuleBuilder: React.FC<Props> = ({
               value={rule.val}
               onChange={(e) => handleValChange(e.target.value)}
               placeholder="Value"
+              aria-label="Value"
               disabled={disabled}
             />
           )}

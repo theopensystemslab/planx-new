@@ -11,6 +11,7 @@ import { FlowTagType } from "ui/editor/FlowTag/types";
 import TruncatedText from "ui/editor/TruncatedText";
 
 import { useStore } from "../../../FlowEditor/lib/store";
+import Permission from "ui/editor/Permission";
 import ActiveFlowMenu from "../ActiveFlowMenu";
 import ArchivedFlowMenu from "../ArchivedFlowMenu";
 import { FlowPinButton } from "../FlowPinButton";
@@ -65,7 +66,9 @@ export const FlowTable: React.FC<FlowTableProps> = ({
               {showDetails && <TableCell>Pinned</TableCell>}
             </>
           )}
-          <FlowActionsCell align="center">Actions</FlowActionsCell>
+          <Permission.CanEdit>
+            <FlowActionsCell align="center">Actions</FlowActionsCell>
+          </Permission.CanEdit>
         </TableRow>
       </StyledTableHead>
       <TableBody>
@@ -124,10 +127,7 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
   view,
   showDetails,
 }) => {
-  const [canUserEditTeam, teamId] = useStore((state) => [
-    state.canUserEditTeam,
-    state.teamId,
-  ]);
+  const teamId = useStore((state) => state.teamId);
 
   const {
     hasSendComponent,
@@ -220,28 +220,25 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
           )}
         </>
       )}
-      {canUserEditTeam(teamSlug) && (
-        <>
-          <FlowActionsCell
-            className="actions-cell"
-            align="center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {view === "flows" && (
-              <ActiveFlowMenu
-                flow={flow}
-                isAnyTemplate={isAnyTemplate}
-                variant="table"
-                teamId={teamId}
-              />
-            )}
-
-            {view === "archive" && (
-              <ArchivedFlowMenu flow={flow} variant="table" teamId={teamId} />
-            )}
-          </FlowActionsCell>
-        </>
-      )}
+      <Permission.CanEdit>
+        <FlowActionsCell
+          className="actions-cell"
+          align="center"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {view === "flows" && (
+            <ActiveFlowMenu
+              flow={flow}
+              isAnyTemplate={isAnyTemplate}
+              variant="table"
+              teamId={teamId}
+            />
+          )}
+          {view === "archive" && (
+            <ArchivedFlowMenu flow={flow} variant="table" teamId={teamId} />
+          )}
+        </FlowActionsCell>
+      </Permission.CanEdit>
     </StyledTableRow>
   );
 };

@@ -26,6 +26,51 @@ paths:
                 type: array
                 items:
                   type: object
+  /gis/{localAuthority}:
+    get:
+      tags: ["gis"]
+      summary: Fetches planning constraints
+      description: Fetches and formats planning constraints from planning.data.gov.uk that overlap with a geometry
+      parameters:
+        - $ref: "#/components/parameters/localAuthority"
+        - in: query
+          name: geom
+          required: true
+          schema:
+            type: string
+          description: Well-Known Text (WKT) formatted polygon or point
+        - in: query
+          name: vals
+          required: false
+          schema:
+            type: string
+          description: Comma-separated list of planning constraint values (formatted using `fn` property names) that should be returned
+      responses:
+        "200":
+          description: A JSON object of planning constraints
+          content:
+            application/json:
+              schema:
+                type: object
+  /roads:
+    get:
+      tags: ["gis"]
+      summary: Fetches road classifications
+      description: Fetches and formats road classifications from Ordnance Survey MasterMap Highways via OS Features API for a USRN
+      parameters:
+        - in: query
+          name: usrn
+          required: true
+          schema:
+            type: string
+          description: Unique Street Reference Number (USRN)
+      responses:
+        "200":
+          description: A JSON object of road classifications
+          content:
+            application/json:
+              schema:
+                type: object
   /planning-constraints-schema:
     get:
       tags: ["gis"]

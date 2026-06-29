@@ -12,6 +12,7 @@ import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import { InternalNotes } from "ui/editor/InternalNotes";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { MoreInformation } from "ui/editor/MoreInformation/MoreInformation";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeConfiguration } from "ui/editor/TemplatedNodeConfiguration";
@@ -55,7 +56,7 @@ const Component: React.FC<Props> = (props: Props) => {
             }
           />
           <ModalSection>
-            <ModalSectionContent title="Payment" Icon={ICONS[TYPES.Pay]}>
+            <ModalComponentHeader title="Payment" Icon={ICONS[TYPES.Pay]}>
               <InputRow>
                 <Input
                   format="large"
@@ -90,7 +91,7 @@ const Component: React.FC<Props> = (props: Props) => {
               <InputRow>
                 <Input format="data" name="fn" value={PAY_FN} disabled />
               </InputRow>
-            </ModalSectionContent>
+            </ModalComponentHeader>
             <ModalSectionContent>
               <InputRow>
                 <Input

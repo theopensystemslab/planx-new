@@ -18,6 +18,7 @@ import {
   createNotice,
   createTemplatedComponent,
 } from "./helpers/addComponent.js";
+import { setFeatureFlag } from "./helpers/globalHelpers.js";
 import { TestContext } from "./helpers/types.js";
 import { PlaywrightEditor } from "./pages/Editor.js";
 
@@ -89,10 +90,13 @@ test.describe("Templates", () => {
         userId: context.user!.id!,
         teamName: context.team.name,
       });
+      await setFeatureFlag(page, "COMPONENT_SELECT");
       await navigateToService(page, SOURCE_TEMPLATE_SLUG);
 
       const editor = new PlaywrightEditor(page);
       await editor.firstNode.click();
+      await page.getByTestId("add-component-modal").waitFor();
+      await page.getByText("Question", { exact: true }).click();
       await page.getByRole("dialog").waitFor();
 
       // check section is present
@@ -590,88 +594,93 @@ test.describe("Templates", () => {
     });
   });
 
-  // relies on the templated flow being created in the "As a team editor" block
-  test.describe("As a platform admin", () => {
-    test("can publish changes to the source template and sees affected templated flows listed", async ({
-      browser,
-    }) => {
-      const page = await getTeamPage({
+  // The following tests rely on resources created above and must run sequentially after them
+  test.describe("Hybrid actions", () => {
+    test.describe("As a platform admin", () => {
+      test("can publish changes to the source template and sees affected templated flows listed", async ({
         browser,
-        userId: context.user!.id!,
-        teamName: context.team.name,
+      }) => {
+        const page = await getTeamPage({
+          browser,
+          userId: context.user!.id!,
+          teamName: context.team.name,
+        });
+        await navigateToService(page, SOURCE_TEMPLATE_SLUG);
+
+        // Make a change to the source template by editing the optional node
+        await page.getByRole("link", { name: OPTIONAL_NODE_TITLE }).click();
+        await page.getByRole("dialog").waitFor();
+        await page
+          .getByPlaceholder("Text")
+          .fill(`${OPTIONAL_NODE_TITLE} (source updated)`);
+        await page.locator('button[form="modal"][type="submit"]').click();
+        await page.getByRole("dialog").waitFor({ state: "detached" });
+
+        // Open the publish dialog and advance to the Publish step
+        await page.getByTestId("check-for-changes-to-publish-button").click();
+        await expect(
+          page.getByRole("heading", { name: "Review" }),
+        ).toBeVisible();
+        await page.getByTestId("next-step-test-button").click();
+
+        await expect(page.getByRole("heading", { name: "Test" })).toBeVisible();
+        await page.getByTestId("test-confirmation-checkbox").click();
+        await page.getByTestId("next-step-publish-button").click();
+
+        // The Publish step should show template-specific messaging and list affected flows
+        await expect(
+          page.getByRole("heading", { name: "Publish" }),
+        ).toBeVisible();
+        await expect(page.getByText("This flow is a template")).toBeVisible();
+        await expect(
+          page.getByText(new RegExp(TEMPLATED_FLOW_SLUG)),
+        ).toBeVisible();
+
+        // Complete the publish
+        await page.getByTestId("publish-summary-input").fill(REPUBLISH_MESSAGE);
+        await page.getByTestId("publish-button").click();
+        await expect(
+          page.getByText("Successfully published changes").first(),
+        ).toBeVisible();
       });
-      await navigateToService(page, SOURCE_TEMPLATE_SLUG);
-
-      // Make a change to the source template by editing the optional node
-      await page.getByRole("link", { name: OPTIONAL_NODE_TITLE }).click();
-      await page.getByRole("dialog").waitFor();
-      await page
-        .getByPlaceholder("Text")
-        .fill(`${OPTIONAL_NODE_TITLE} (source updated)`);
-      await page.locator('button[form="modal"][type="submit"]').click();
-      await page.getByRole("dialog").waitFor({ state: "detached" });
-
-      // Open the publish dialog and advance to the Publish step
-      await page.getByTestId("check-for-changes-to-publish-button").click();
-      await expect(page.getByRole("heading", { name: "Review" })).toBeVisible();
-      await page.getByTestId("next-step-test-button").click();
-
-      await expect(page.getByRole("heading", { name: "Test" })).toBeVisible();
-      await page.getByTestId("test-confirmation-checkbox").click();
-      await page.getByTestId("next-step-publish-button").click();
-
-      // The Publish step should show template-specific messaging and list affected flows
-      await expect(
-        page.getByRole("heading", { name: "Publish" }),
-      ).toBeVisible();
-      await expect(page.getByText("This flow is a template")).toBeVisible();
-      await expect(
-        page.getByText(new RegExp(TEMPLATED_FLOW_SLUG)),
-      ).toBeVisible();
-
-      // Complete the publish
-      await page.getByTestId("publish-summary-input").fill(REPUBLISH_MESSAGE);
-      await page.getByTestId("publish-button").click();
-      await expect(
-        page.getByText("Successfully published changes").first(),
-      ).toBeVisible();
     });
-  });
 
-  // relies on the source template being republished in the "As a platform admin" block above
-  test.describe("As a team editor", () => {
-    test("sees a History entry describing the source template update and still has Customise tasks to complete", async ({
-      browser,
-    }) => {
-      const page = await getTeamPage({
+    test.describe("As a team editor", () => {
+      test("sees a History entry describing the source template update and still has Customise tasks to complete", async ({
         browser,
-        userId: context.user!.id!,
-        teamName: context.team.name,
+      }) => {
+        const page = await getTeamPage({
+          browser,
+          userId: context.user!.id!,
+          teamName: context.team.name,
+        });
+        await navigateToService(page, TEMPLATED_FLOW_SLUG);
+
+        // The History tab should contain an auto-generated entry for the source template update
+        await page.getByRole("tab", { name: "History" }).click();
+        await expect(
+          page.getByText(`Source template published: "${REPUBLISH_MESSAGE}"`),
+        ).toBeVisible();
+
+        // The Customise tab should still list the required and optional tasks
+        await page.getByRole("tab", { name: "Customise" }).click();
+        await expect(page.getByText(REQUIRED_NODE_INSTRUCTIONS)).toBeVisible();
+        await expect(page.getByText(OPTIONAL_NODE_INSTRUCTIONS)).toBeVisible();
+
+        // Check that our required node is complete in the customisation task list
+        const requiredCustomisationTask = page
+          .locator("li")
+          .filter({
+            has: page.getByRole("button", {
+              name: UPDATED_REQUIRED_NODE_TITLE,
+            }),
+          })
+          .first();
+
+        await expect(
+          requiredCustomisationTask.getByTestId("customisation-complete"),
+        ).toBeVisible();
       });
-      await navigateToService(page, TEMPLATED_FLOW_SLUG);
-
-      // The History tab should contain an auto-generated entry for the source template update
-      await page.getByRole("tab", { name: "History" }).click();
-      await expect(
-        page.getByText(`Source template published: "${REPUBLISH_MESSAGE}"`),
-      ).toBeVisible();
-
-      // The Customise tab should still list the required and optional tasks
-      await page.getByRole("tab", { name: "Customise" }).click();
-      await expect(page.getByText(REQUIRED_NODE_INSTRUCTIONS)).toBeVisible();
-      await expect(page.getByText(OPTIONAL_NODE_INSTRUCTIONS)).toBeVisible();
-
-      // Check that our required node is complete in the customisation task list
-      const requiredCustomisationTask = page
-        .locator("li")
-        .filter({
-          has: page.getByRole("button", { name: UPDATED_REQUIRED_NODE_TITLE }),
-        })
-        .first();
-
-      await expect(
-        requiredCustomisationTask.getByTestId("customisation-complete"),
-      ).toBeVisible();
     });
   });
 });

@@ -14,7 +14,7 @@ import ListManager, {
 } from "ui/editor/ListManager/ListManager";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
-import ModalSectionContent from "ui/editor/ModalSectionContent";
+import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
@@ -94,7 +94,7 @@ const TaskListComponent: React.FC<Props> = (props) => (
           }
         />
         <ModalSection>
-          <ModalSectionContent title="Task list" Icon={ICONS[TYPES.TaskList]}>
+          <ModalComponentHeader title="Task list" Icon={ICONS[TYPES.TaskList]}>
             <Box sx={{ mb: "1rem" }}>
               <InputRow>
                 <Input
@@ -128,7 +128,7 @@ const TaskListComponent: React.FC<Props> = (props) => (
               collapsible={true}
               itemName="task"
             />
-          </ModalSectionContent>
+          </ModalComponentHeader>
         </ModalSection>
         <ModalFooter formik={formik} disabled={props.disabled} />
       </Form>

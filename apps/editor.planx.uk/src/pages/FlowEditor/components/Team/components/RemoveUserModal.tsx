@@ -10,14 +10,19 @@ import React from "react";
 
 import { REMOVE_TEAM_MEMBER } from "../queries";
 import type { RemoveUserModalProps } from "../types";
-
 export const RemoveUserModal: React.FC<RemoveUserModalProps> = ({
   onClose,
   member,
+  userRole,
 }) => {
   const toast = useToast();
 
   const [removeUser, { loading }] = useMutation(REMOVE_TEAM_MEMBER, {
+    context: {
+      headers: {
+        "x-hasura-role": userRole,
+      },
+    },
     onCompleted: () => {
       onClose();
       toast.success(

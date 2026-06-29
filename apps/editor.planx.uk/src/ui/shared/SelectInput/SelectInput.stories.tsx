@@ -14,6 +14,8 @@ export default meta;
 export const Basic = {
   args: {
     value: "admin",
+    name: "Role",
+    visuallyHiddenLabel: true,
     children: (
       <>
         <MenuItem value="admin">Admin</MenuItem>

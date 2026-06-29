@@ -4,7 +4,7 @@ import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
-import ModalSectionContent from "ui/editor/ModalSectionContent";
+import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
@@ -49,7 +49,7 @@ function Component(props: Props) {
         }
       />
       <ModalSection>
-        <ModalSectionContent title="File upload" Icon={ICONS[TYPES.FileUpload]}>
+        <ModalComponentHeader title="File upload" Icon={ICONS[TYPES.FileUpload]}>
           <InputRow>
             <Input
               required
@@ -105,7 +105,7 @@ function Component(props: Props) {
               disabled={props.disabled}
             />
           </InputRow>
-        </ModalSectionContent>
+        </ModalComponentHeader>
       </ModalSection>
       <ModalFooter formik={formik} disabled={props.disabled} />
     </form>

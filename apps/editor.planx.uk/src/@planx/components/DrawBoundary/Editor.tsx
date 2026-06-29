@@ -53,6 +53,7 @@ function DrawBoundaryComponent(props: Props) {
               placeholder={props.node?.data?.title}
               name="title"
               value={formik.values.title}
+              aria-label="Title"
               onChange={formik.handleChange}
               disabled={props.disabled}
               errorMessage={formik.errors.title}
@@ -66,6 +67,7 @@ function DrawBoundaryComponent(props: Props) {
               onChange={formik.handleChange}
               disabled={props.disabled}
               errorMessage={formik.errors.description}
+              inputProps={{ "aria-label": "Description" }}
             />
           </InputRow>
           <InputGroup label="Data field">
@@ -74,6 +76,7 @@ function DrawBoundaryComponent(props: Props) {
                 name="fn"
                 format="data"
                 value={formik.values.fn}
+                aria-label="Data field"
                 disabled
                 errorMessage={formik.errors.fn}
               />
@@ -90,6 +93,7 @@ function DrawBoundaryComponent(props: Props) {
               placeholder={props.node?.data?.titleForUploading}
               name="titleForUploading"
               value={formik.values.titleForUploading}
+              aria-label="Title for uploading"
               onChange={formik.handleChange}
               disabled={props.disabled}
               errorMessage={formik.errors.titleForUploading}
@@ -103,6 +107,7 @@ function DrawBoundaryComponent(props: Props) {
               onChange={formik.handleChange}
               disabled={props.disabled}
               errorMessage={formik.errors.descriptionForUploading}
+              inputProps={{ "aria-label": "Description for uploading" }}
             />
           </InputRow>
           <InputRow>

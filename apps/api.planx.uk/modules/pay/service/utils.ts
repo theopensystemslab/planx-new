@@ -2,8 +2,8 @@ import type { GovUKPayment } from "@opensystemslab/planx-core/types";
 import { $api } from "../../../client/index.js";
 import { gql } from "graphql-request";
 
-import SlackNotify from "slack-notify";
 import type { Request } from "express";
+import { sendSlackMessage } from "../../slack/utils.js";
 
 export const addGovPayPaymentIdToPaymentRequest = async (
   paymentRequestId: string,
@@ -60,7 +60,6 @@ export async function postPaymentNotificationToSlack(
 ) {
   if (isTestPayment(govUkResponse)) return;
 
-  const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL!);
   const getStatus = (state: GovUKPayment["state"]) =>
     state.status + (state.message ? ` (${state.message})` : "");
   const payMessage = `:coin: New GOV Pay payment ${label} *${
@@ -68,6 +67,6 @@ export async function postPaymentNotificationToSlack(
   }* with status *${getStatus(govUkResponse.state)}* [${
     req.params.localAuthority
   }]`;
-  await slack.send(payMessage);
+  await sendSlackMessage(payMessage);
   console.log("Payment notification posted to Slack");
 }

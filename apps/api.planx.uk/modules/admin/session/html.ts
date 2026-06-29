@@ -4,19 +4,6 @@ import { generateHTMLForSession } from "../../lps/service/generateHTML.js";
 
 type HTMLExportHandler = RequestHandler<{ sessionId: string }, string>;
 
-/**
- * @swagger
- * /admin/session/{sessionId}/html:
- *  get:
- *    summary: Generates an application overview HTML
- *    description: Generates an application overview HTML
- *    tags:
- *      - admin
- *    parameters:
- *      - $ref: '#/components/parameters/sessionId'
- *    security:
- *      - bearerAuth: []
- */
 export const getHTMLExport: HTMLExportHandler = async (req, res, next) => {
   try {
     const session = await $api.session.find(req.params.sessionId);

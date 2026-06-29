@@ -9,6 +9,7 @@ import TruncatedText from "ui/editor/TruncatedText";
 
 import { useStore } from "../../../FlowEditor/lib/store";
 import { FlowSummary } from "../../../FlowEditor/lib/store/editor";
+import Permission from "ui/editor/Permission";
 import ActiveFlowMenu from "../ActiveFlowMenu";
 import ArchivedFlowMenu from "../ArchivedFlowMenu";
 import { FlowPinButton } from "../FlowPinButton";
@@ -29,8 +30,7 @@ interface Props {
 }
 
 const FlowCard: React.FC<Props> = ({ flow, view }) => {
-  const [canUserEditTeam, teamSlug, teamId] = useStore((state) => [
-    state.canUserEditTeam,
+  const [teamSlug, teamId] = useStore((state) => [
     state.teamSlug,
     state.teamId,
   ]);
@@ -137,21 +137,25 @@ const FlowCard: React.FC<Props> = ({ flow, view }) => {
           )}
         </CardContent>
       </Box>
-      {canUserEditTeam(teamSlug) && view === "flows" && (
-        <ActiveFlowMenu
-          flow={flow}
-          isAnyTemplate={isAnyTemplate}
-          variant="card"
-          teamId={teamId}
-        />
+      {view === "flows" && (
+        <Permission.CanEdit>
+          <ActiveFlowMenu
+            flow={flow}
+            isAnyTemplate={isAnyTemplate}
+            variant="card"
+            teamId={teamId}
+          />
+        </Permission.CanEdit>
       )}
-      {canUserEditTeam(teamSlug) && view === "archive" && (
-        <ArchivedFlowMenu
-          flow={flow}
-          isAnyTemplate={isAnyTemplate}
-          variant="card"
-          teamId={teamId}
-        />
+      {view === "archive" && (
+        <Permission.CanEdit>
+          <ArchivedFlowMenu
+            flow={flow}
+            isAnyTemplate={isAnyTemplate}
+            variant="card"
+            teamId={teamId}
+          />
+        </Permission.CanEdit>
       )}
     </Card>
   );

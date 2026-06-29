@@ -51,26 +51,3 @@ select_permissions:
               - role:
                   _eq: teamAdmin
     comment: ""
-  - role: teamEditor
-    permission:
-      columns:
-        - fiscal_year
-        - fiscal_year_quarter
-        - month
-        - service_charge_amount
-        - flow_name
-        - flow_slug
-        - month_text
-        - payment_id
-        - team_slug
-        - paid_at
-        - session_id
-      filter:
-        team:
-          members:
-            _and:
-              - user_id:
-                  _eq: X-Hasura-User-Id
-              - role:
-                  _eq: teamEditor
-    comment: ""

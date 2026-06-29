@@ -1,5 +1,6 @@
 import isNull from "lodash/isNull.js";
 
+import { $api } from "../../../client/index.js";
 import { createFlow, getFlowData } from "../../../helpers.js";
 import type { NewFlow } from "./controller.js";
 
@@ -29,6 +30,9 @@ const createFlowFromTemplate = async (
       ? undefined
       : sourceTemplate.limitations,
     isService: sourceTemplate.isService,
+    // INSERT using the API client to bypass redundant input validation
+    // The source data is already pre-validated and comes directly from the DB
+    $apiClient: $api.client,
   });
 
   return { id, slug };

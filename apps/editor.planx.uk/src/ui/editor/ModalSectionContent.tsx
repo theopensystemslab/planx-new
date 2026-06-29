@@ -3,6 +3,7 @@ import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { styled } from "@mui/material/styles";
 import { SvgIconProps, SvgIconTypeMap } from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
+import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
@@ -11,6 +12,7 @@ interface Props {
   subtitle?: string;
   children?: React.JSX.Element[] | React.JSX.Element;
   author?: string;
+  isComponentHeader?: boolean;
   Icon?:
     | React.ComponentType<SvgIconProps>
     | (OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string });
@@ -31,7 +33,7 @@ const LeftGutter = styled(Grid)(({ theme }) => ({
   flex: `0 0 ${theme.spacing(3)}`,
   textAlign: "center",
   [theme.breakpoints.up("md")]: {
-    flex: `0 0 ${theme.spacing(6)}`,
+    flex: `0 0 ${theme.spacing(4)}`,
   },
   [theme.breakpoints.up("lg")]: {
     paddingTop: theme.spacing(0.2),
@@ -42,7 +44,7 @@ const SectionContent = styled(Grid)(({ theme }) => ({
   flexGrow: 1,
   width: "100%",
   [theme.breakpoints.up("md")]: {
-    paddingRight: theme.spacing(6),
+    paddingRight: theme.spacing(4),
   },
 }));
 
@@ -67,13 +69,16 @@ export default function ModalSectionContent({
   subtitle,
   children,
   author,
+  isComponentHeader,
   Icon,
 }: Props): FCReturn {
+  const suppressHeader = hasFeatureFlag("COMPONENT_SELECT") && Boolean(isComponentHeader);
+
   return (
     <SectionContentGrid container>
-      <LeftGutter>{Icon && <Icon />}</LeftGutter>
+      <LeftGutter>{!suppressHeader && Icon && <Icon />}</LeftGutter>
       <SectionContent>
-        {title && (
+        {!suppressHeader && title && (
           <Title variant="h3">
             {title}
             {author && <Author>by {author}</Author>}

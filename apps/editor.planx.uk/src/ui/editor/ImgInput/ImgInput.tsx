@@ -4,8 +4,7 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
-import Tooltip from "@mui/material/Tooltip";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import PublicFileUploadButton, {
   AcceptedFileTypes,
@@ -50,7 +49,6 @@ export default function ImgInput({
 }): FCReturn {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
-  // Auto-generate a random ID on mount
   const menuId = useMemo(() => {
     return `menu-${Math.floor(Math.random() * 1000000)}`;
   }, []);
@@ -100,17 +98,17 @@ export default function ImgInput({
       </ImageWrapper>
     </ImageUploadContainer>
   ) : (
-    <Tooltip title="Drop file here" disableHoverListener={disabled}>
-      <ImageUploadContainer>
-        <PublicFileUploadButton
-          onChange={(newUrl) => {
-            setAnchorEl(null);
-            onChange && onChange(newUrl);
-          }}
-          disabled={disabled}
-          acceptedFileTypes={acceptedFileTypes}
-        />
-      </ImageUploadContainer>
-    </Tooltip>
+    <ImageUploadContainer>
+      <PublicFileUploadButton
+        aria-label="Upload image"
+        tooltipTitle="Drop file here"
+        onChange={(newUrl) => {
+          setAnchorEl(null);
+          onChange && onChange(newUrl);
+        }}
+        disabled={disabled}
+        acceptedFileTypes={acceptedFileTypes}
+      />
+    </ImageUploadContainer>
   );
 }

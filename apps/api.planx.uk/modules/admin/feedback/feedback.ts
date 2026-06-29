@@ -5,22 +5,6 @@ import { gql } from "graphql-request";
 import { $api } from "../../../client/index.js";
 import type { Flow, Passport } from "../../../types.js";
 
-/**
- * @swagger
- * /admin/feedback/{feedbackId}:
- *  get:
- *    summary: Returns a feedback entry with user data
- *    description: Returns a feedback entry plus its' associated session user data, including the passport and breadcrumbs
- *    tags:
- *      - admin
- *    parameters:
- *      - in: path
- *        name: feedbackId
- *        type: string
- *        required: true
- *    security:
- *      - bearerAuth: []
- */
 export const getFeedbackWithUserData = async (
   req: Request,
   res: Response,

@@ -1,5 +1,3 @@
-import { ComponentType } from "@opensystemslab/planx-core/types";
-
 import { expect, type Locator, type Page } from "@playwright/test";
 import {
   createAddressInput,
@@ -46,7 +44,7 @@ export class PlaywrightEditor {
 
   constructor(page: Page) {
     this.page = page;
-    this.firstNode = page.locator("li.hanger > a").first();
+    this.firstNode = page.locator("li.hanger > :is(a, button)").first();
     this.yesBranch = page.locator("#flow .card .options .option").nth(0);
     this.noBranch = page.locator("#flow .card .options .option").nth(1);
     this.nodeList = page.locator(".card");
@@ -157,13 +155,13 @@ export class PlaywrightEditor {
     // Add a notice to the "Yes" path
     await createNotice(
       this.page,
-      this.yesBranch.locator(".hanger > a"),
+      this.yesBranch.locator(".hanger > :is(a, button)"),
       this.answers.yesBranchNoticeText,
     );
     // Add a notice to the "No" path
     await createNotice(
       this.page,
-      this.noBranch.locator(".hanger > a"),
+      this.noBranch.locator(".hanger > :is(a, button)"),
       this.answers.noBranchNoticeText,
     );
 
@@ -173,7 +171,7 @@ export class PlaywrightEditor {
   }
 
   getNextNode() {
-    return this.page.locator(".hanger > a").last();
+    return this.page.locator(".hanger > :is(a, button)").last();
   }
 
   async createChecklist() {
@@ -327,15 +325,11 @@ export class PlaywrightEditor {
     await internalPortalButton.click();
 
     // create a notice inside the portal
-    await this.page.locator(".hanger > a").last().click();
-    await this.page.getByRole("dialog").waitFor();
-    await this.page
-      .locator("select")
-      .selectOption({ value: ComponentType.Notice.toString() });
-    await this.page
-      .getByPlaceholder("Notice")
-      .fill("A notice inside a portal!");
-    await this.page.locator('button[form="modal"][type="submit"]').click();
+    await createNotice(
+      this.page,
+      this.page.locator(".hanger > :is(a, button)").last(),
+      "A notice inside a portal!",
+    );
   }
 
   async createExternalPortal() {

@@ -187,7 +187,7 @@ function EditorNavMenu() {
             title: "Subscription",
             Icon: CurrencyPoundIcon,
             route: `/app/${teamSlug}/subscription`,
-            accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"], // TODO update *after* we assign teamAdmin roles to existing users
+            accessibleBy: ["platformAdmin", "teamAdmin"],
             isNew: true,
           },
         ],

@@ -17,6 +17,9 @@ export default function AutocompleteInput<T>({
 }: Props<T>) {
   const isSelectEmpty = !value;
   const placeholder = isSelectEmpty ? restProps.placeholder : undefined;
+  // The display placeholder is hidden when input has a value, but accessible
+  // name must always be set — use the original placeholder for that purpose.
+  const ariaLabel = !restProps.label ? restProps.placeholder : undefined;
 
   return (
     <FormControl sx={{ display: "flex", flexDirection: "column" }}>
@@ -33,6 +36,7 @@ export default function AutocompleteInput<T>({
               label={restProps.label}
               required={restProps.required}
               placeholder={placeholder}
+              ariaLabel={ariaLabel}
             />
           ) : (
             <RenderTextFieldInput

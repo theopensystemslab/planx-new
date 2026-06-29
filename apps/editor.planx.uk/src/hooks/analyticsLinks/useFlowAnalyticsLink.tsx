@@ -20,33 +20,25 @@ const DASHBOARD_SLUG_MAP: Record<string, string> = {
   // RAB
   "camden-report-a-planning-breach": DASHBOARD_IDS.rab,
   "report-a-planning-breach": DASHBOARD_IDS.rab,
-
-  // Discretionary
-  "check-constraints-on-a-property": DASHBOARD_IDS.discretionary,
-  "check-whether-you-need-a-building-control-application":
-    DASHBOARD_IDS.discretionary,
-  "check-your-planning-constraints": DASHBOARD_IDS.discretionary,
-  "general-enquiries": DASHBOARD_IDS.discretionary,
-  "heritage-constraints": DASHBOARD_IDS.discretionary,
-  "notify-us-of-any-high-efficiency-alternative-energy-systems":
-    DASHBOARD_IDS.discretionary,
-  "report-a-potential-dangerous-structure": DASHBOARD_IDS.discretionary,
-  "request-a-building-control-quote": DASHBOARD_IDS.discretionary,
-  "validation-requirements-live": DASHBOARD_IDS.discretionary,
 };
 
 export const getAnalyticsDashboardId = ({
   flowSlug,
   hasSendComponent,
+  isService,
 }: {
   flowSlug: string;
   hasSendComponent: boolean;
+  isService: boolean;
 }): string | undefined => {
   const dashboardId = DASHBOARD_SLUG_MAP[flowSlug];
   if (dashboardId) return dashboardId;
 
   // Fallback to check general submission services
   if (hasSendComponent) return DASHBOARD_IDS.submission;
+
+  // Fallback to check general discretionary services
+  if (isService) return DASHBOARD_IDS.discretionary;
 
   return undefined;
 };
@@ -73,6 +65,7 @@ const GET_FLOW_ANALYTICS = gql`
       where: { slug: { _eq: $flowSlug }, team: { slug: { _eq: $teamSlug } } }
     ) {
       id
+      isService: is_service
       publishedFlows: published_flows(
         limit: 1
         order_by: { created_at: desc }
@@ -92,6 +85,7 @@ const GET_FLOW_ANALYTICS = gql`
 interface GetFlowAnalyticsResponse {
   flows: {
     id: string;
+    isService: boolean;
     publishedFlows: { hasSendComponent: boolean }[];
     onlineHistory: { status: string }[];
   }[];
@@ -121,9 +115,11 @@ export const useFlowAnalyticsLink = (): string | undefined => {
   if (!hasAnalytics) return;
 
   const hasSendComponent = Boolean(flow.publishedFlows[0]?.hasSendComponent);
+  const isService = flow.isService;
   const dashboardId = getAnalyticsDashboardId({
     flowSlug,
     hasSendComponent,
+    isService,
   });
   if (!dashboardId) return;
 

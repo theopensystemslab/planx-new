@@ -3,12 +3,11 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import server from "test/mockServer";
 
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
-import { updateUserHandler } from "./mocks/handlers";
 import {
-  mockPlainUser,
-  mockPlatformAdminUser,
-  mockUsersData,
-} from "./mocks/users";
+  updateUserAsTeamAdminHandler,
+  updateUserOnlyHandler,
+} from "./mocks/handlers";
+import { mockPlatformAdminUser, mockUsersData } from "./mocks/users";
 
 describe("when a user presses 'edit button'", () => {
   beforeEach(async () => {
@@ -31,13 +30,13 @@ describe("when a user presses 'edit button'", () => {
     const firstNameInput = await screen.findByLabelText("First name");
     const lastNameInput = await screen.findByLabelText("Last name");
     const emailInput = await screen.findByLabelText("Email address");
-    const isTeamAdmin = await screen.findByLabelText("Team Admin");
+    const roleDropdown = await screen.findByRole("combobox");
 
     // Sorted based on first letter of first name Bill > Donella in Mocks
     expect(firstNameInput).toHaveDisplayValue("Bilbo");
     expect(lastNameInput).toHaveDisplayValue("Baggins");
     expect(emailInput).toHaveDisplayValue("bil.bags@email.com");
-    expect(isTeamAdmin).not.toBeChecked();
+    expect(roleDropdown).toHaveTextContent("Team editor");
   });
 
   it("disables the update user button", async () => {
@@ -87,11 +86,11 @@ describe("when a user updates a field correctly", () => {
   });
 });
 
-describe("when a user correctly updates an Editor", () => {
+describe("when a user correctly updates an Editor's user details only", () => {
   beforeEach(async () => {
     useStore.setState({ teamSlug: "test" });
 
-    server.use(updateUserHandler());
+    server.use(updateUserOnlyHandler());
 
     const { user } = await setupTeamMembersScreen();
 
@@ -139,9 +138,10 @@ describe("when a user correctly makes a teamEditor a teamAdmin", () => {
     useStore.setState({
       user: mockPlatformAdminUser,
       teamSlug: "test",
+      teamId: 2,
     });
 
-    server.use(updateUserHandler());
+    server.use(updateUserAsTeamAdminHandler());
 
     const { user } = await setupTeamMembersScreen();
 
@@ -150,9 +150,11 @@ describe("when a user correctly makes a teamEditor a teamAdmin", () => {
       await within(teamMembersTable).findByTestId("edit-button-3");
     await user.click(editMemberButton);
 
-    const teamAdminSwitch = await screen.findByLabelText("Team Admin");
+    const roleDropdown = await screen.findByRole("combobox");
+    await user.click(roleDropdown);
 
-    await user.click(teamAdminSwitch);
+    const teamAdminOption = await screen.findByTestId("teamAdmin-option");
+    await user.click(teamAdminOption);
 
     const updateUserButton = await screen.findByRole("button", {
       name: "Update user",
@@ -200,24 +202,6 @@ describe("'edit' button is hidden from Templates team", () => {
   });
 });
 
-describe("when a user is not a platform admin", () => {
-  beforeEach(async () => {
-    useStore.setState({
-      user: mockPlainUser,
-    });
-
-    await setupTeamMembersScreen();
-  });
-
-  it("does not show an edit button", async () => {
-    const teamMembersTable = screen.getByTestId("team-members");
-    const addMemberButton =
-      within(teamMembersTable).queryByTestId("edit-button-3");
-
-    expect(addMemberButton).not.toBeInTheDocument();
-  });
-});
-
 describe("when editing a platform admin user", () => {
   beforeEach(async () => {
     useStore.setState({
@@ -237,7 +221,6 @@ describe("when editing a platform admin user", () => {
   it("does not show the Team Admin switch when editing platform admins", async () => {
     expect(await screen.findByTestId("modal-edit-user")).toBeVisible();
 
-    const teamAdminSwitch = screen.queryByLabelText("Team Admin");
-    expect(teamAdminSwitch).not.toBeInTheDocument();
+    expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
   });
 });

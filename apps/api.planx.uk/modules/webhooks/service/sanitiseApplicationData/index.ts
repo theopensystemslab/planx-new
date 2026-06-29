@@ -1,8 +1,7 @@
-import SlackNotify from "slack-notify";
-
 import { getOperations, operationHandler } from "./operations.js";
 import type { OperationResult } from "./types.js";
 import { getFormattedEnvironment } from "../../../../helpers.js";
+import { sendSlackMessage } from "../../../slack/utils.js";
 
 /**
  * Called by Hasura cron job `sanitise_application_data` on a nightly basis
@@ -27,7 +26,6 @@ export const postToSlack = async (
   results: OperationResult[],
   jobName: string,
 ) => {
-  const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL!);
   const text = results.map((result) =>
     result.status === "failure"
       ? `:x: ${result.operationName} failed. Error: ${result.errorMessage}`
@@ -35,7 +33,7 @@ export const postToSlack = async (
   );
   const env = getFormattedEnvironment();
 
-  await slack.send({
+  await sendSlackMessage({
     channel: "#planx-notifications-internal",
     text: text.join("\n"),
     username: `${jobName} Cron Job (${env})`,

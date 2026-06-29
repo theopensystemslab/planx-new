@@ -16,6 +16,7 @@ import * as gloucester from "./local_authorities/metadata/gloucester.js";
 import * as greaterCambridge from "./local_authorities/metadata/greaterCambridge.js";
 import * as horsham from "./local_authorities/metadata/horsham.js";
 import * as lambeth from "./local_authorities/metadata/lambeth.js";
+import * as liverpoolCity from "./local_authorities/metadata/liverpoolCity.js";
 import * as medway from "./local_authorities/metadata/medway.js";
 import * as newcastle from "./local_authorities/metadata/newcastle.js";
 import * as northumberland from "./local_authorities/metadata/northumberland.js";
@@ -27,6 +28,7 @@ import * as stockport from "./local_authorities/metadata/stockport.js";
 import * as stoke from "./local_authorities/metadata/stoke.js";
 import * as tewkesbury from "./local_authorities/metadata/tewkesbury.js";
 import * as torbay from "./local_authorities/metadata/torbay.js";
+import * as walthamForest from "./local_authorities/metadata/walthamForest.js";
 import * as westBerkshire from "./local_authorities/metadata/westBerkshire.js";
 
 export interface LocalAuthorityMetadata {
@@ -60,6 +62,7 @@ export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   "greater-cambridge-shared-planning": greaterCambridge,
   horsham,
   lambeth,
+  "liverpool-city": liverpoolCity,
   medway,
   newcastle,
   northumberland,
@@ -71,6 +74,7 @@ export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   "stoke-on-trent": stoke,
   tewkesbury,
   torbay,
+  "waltham-forest": walthamForest,
   "west-berkshire": westBerkshire,
 };
 

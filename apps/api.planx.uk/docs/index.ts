@@ -33,14 +33,14 @@ const parameters = {
   sessionId: {
     in: "path",
     name: "sessionId",
-    type: "string",
+    schema: { type: "string" },
     required: true,
     description: "Session ID",
   },
   localAuthority: {
     in: "path",
     name: "localAuthority",
-    type: "string",
+    schema: { type: "string" },
     required: true,
     description:
       "Name of the Local Authority, usually the same as PlanX `team`",
@@ -50,7 +50,7 @@ const parameters = {
     in: "header",
     description: "An authorisation header provided by Hasura",
     required: true,
-    type: "string",
+    schema: { type: "string" },
   },
 };
 
@@ -150,7 +150,7 @@ const options = {
       responses,
     },
   },
-  apis: ["./**/*.ts", "./**/*.js", "./**/docs.yaml"],
+  apis: ["./**/docs.yaml"],
 };
 
 export const useSwaggerDocs = (app: Express) => {

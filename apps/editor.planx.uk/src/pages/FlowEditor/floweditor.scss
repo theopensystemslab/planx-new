@@ -94,7 +94,9 @@ $fontMonospace: "Source Code Pro", monospace;
     width: max-content;
 
     a:focus,
-    a:active {
+    a:active,
+    button:focus,
+    button:active {
       // Apply focus outline
       outline: 4px solid $focus;
       outline-offset: 0;
@@ -456,10 +458,13 @@ $fontMonospace: "Source Code Pro", monospace;
     @include disabledHanger();
   }
 
-  > a {
+  > a,
+  > button {
     $size: $hangerWidth;
     display: inline-block;
     // width: $size;
+    font: inherit;
+    appearance: none;
     text-decoration: none;
     border: $nodeBorderWidth solid $nodeBorder;
     min-width: $size;

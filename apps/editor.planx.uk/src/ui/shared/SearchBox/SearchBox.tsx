@@ -1,9 +1,3 @@
-import ClearIcon from "@mui/icons-material/Clear";
-import Search from "@mui/icons-material/Search";
-import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
-import IconButton from "@mui/material/IconButton";
-import { visuallyHidden } from "@mui/utils";
 import { useFormik } from "formik";
 import { FuseOptionKey } from "fuse.js";
 import { useSearch } from "hooks/useSearch";
@@ -11,10 +5,7 @@ import { debounce } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
 
 import { SEARCH_DEBOUNCE_MS } from "../constants";
-import Input from "../Input/Input";
-import InputRow from "../InputRow";
-import InputRowItem from "../InputRowItem";
-import InputRowLabel from "../InputRowLabel";
+import { SearchInput } from "./SearchInput";
 
 interface SearchBoxProps<T> {
   records: T[] | null;
@@ -28,6 +19,13 @@ interface SearchBoxProps<T> {
   placeholder?: string;
 }
 
+/**
+ * Search field that owns a local Fuse search
+ * The parent passes the full list and gets the filtered results back via setRecords
+ *
+ * Used for simple, ephemeral searches with no URL updates, e.g.
+ * team search in navbar, or component search
+ */
 export const SearchBox = <T extends object>({
   records,
   setRecords,
@@ -86,90 +84,27 @@ export const SearchBox = <T extends object>({
     }
   }, [clearSearch, resetForm, submitForm]);
 
+  const handleClear = () => {
+    setSearchedTerm("");
+    resetForm();
+    submitForm();
+  };
+
   return (
-    <Box sx={{ maxWidth: fullWidth ? "100%" : 360 }}>
-      <InputRow>
-        <InputRowLabel
-          inputProps={{
-            id: "search-label",
-            htmlFor: "search",
-            hidden: hideLabel,
-          }}
-        >
-          <strong style={visuallyHidden}>Search</strong>
-        </InputRowLabel>
-        <InputRowItem>
-          <Box sx={{ position: "relative" }}>
-            <Input
-              sx={{
-                pr: 5,
-                ...(compact && {
-                  height: 40,
-                  padding: (theme) => theme.spacing(0.25, 0.5, 0.25, 1.25),
-                }),
-              }}
-              ref={inputRef}
-              name="search"
-              id="search"
-              aria-describedby="search-label"
-              placeholder={placeholder}
-              value={values.pattern}
-              onChange={(e) => {
-                setFieldValue("pattern", e.target.value);
-                submitForm();
-              }}
-              startAdornment={
-                <Search
-                  sx={{ ml: -0.5, mr: 0.5 }}
-                  fontSize={compact ? "small" : "medium"}
-                />
-              }
-            />
-            {searchedTerm && !isSearching && (
-              <IconButton
-                id="clear-search"
-                aria-label="clear search"
-                onClick={() => {
-                  setSearchedTerm("");
-                  resetForm();
-                  submitForm();
-                }}
-                size="small"
-                sx={{
-                  position: "absolute",
-                  right: (theme) => theme.spacing(1),
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  padding: 0.5,
-                  zIndex: 1,
-                }}
-              >
-                <ClearIcon fontSize="small" />
-              </IconButton>
-            )}
-            {isSearching && (
-              <IconButton
-                aria-label="is searching"
-                onClick={() => {
-                  setFieldValue("pattern", "");
-                  submitForm();
-                }}
-                size="small"
-                sx={{
-                  position: "absolute",
-                  right: (theme) => theme.spacing(1),
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  padding: 0.5,
-                  zIndex: 1,
-                }}
-              >
-                <CircularProgress size={"1.5rem"} />
-              </IconButton>
-            )}
-          </Box>
-        </InputRowItem>
-      </InputRow>
-    </Box>
+    <SearchInput
+      value={values.pattern}
+      onChange={(value) => {
+        setFieldValue("pattern", value);
+        submitForm();
+      }}
+      onClear={handleClear}
+      showClear={Boolean(searchedTerm)}
+      isSearching={isSearching}
+      hideLabel={hideLabel}
+      compact={compact}
+      fullWidth={fullWidth}
+      placeholder={placeholder}
+      inputRef={inputRef}
+    />
   );
 };

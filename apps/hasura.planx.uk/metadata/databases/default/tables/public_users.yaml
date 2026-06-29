@@ -55,7 +55,7 @@ insert_permissions:
         - is_staging_only
         - last_name
         - updated_at
-  - role: teamEditor
+  - role: teamAdmin
     permission:
       check: {}
       columns:
@@ -66,10 +66,7 @@ insert_permissions:
         - id
         - last_name
         - updated_at
-    comment: |-
-      teamEditor can insert other users.
-
-      The permission boundary is enforced on the team_members table.
+    comment: teamAdmin can insert other users. The permission boundary is enforced on the team_members table.
 select_permissions:
   - role: analyst
     permission:
@@ -136,7 +133,7 @@ update_permissions:
         - last_name
       filter: {}
       check: {}
-  - role: teamEditor
+  - role: teamAdmin
     permission:
       columns:
         - created_at
@@ -152,9 +149,9 @@ update_permissions:
                 - user_id:
                     _eq: X-Hasura-User-Id
                 - role:
-                    _eq: teamEditor
+                    _eq: teamAdmin
       check: null
-    comment: teamEditors can update the details of other teamEditors, within their team
+    comment: teamAdmins can update the details of other teamEditors and teamAdmins, within their team
 event_triggers:
   - name: send_user_welcome_emails
     definition:

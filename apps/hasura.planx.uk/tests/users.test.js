@@ -57,16 +57,14 @@ describe("users", () => {
     });
 
     // Row-level permissions tested in e2e/tests/api-driven
-    // teamEditors can only query their own record
+    // teamEditors can only query their own team's records
     test("can query users", async () => {
       expect(i.queries).toContain("users");
     });
 
-    // Row-level permissions in place
-    // teamEditor can only mutate other users from their team
-    test("has full access to create and update users", async () => {
-      expect(i.mutations).toContain("insert_users");
-      expect(i.mutations).toContain("update_users_by_pk");
+    test("cannot create and update users", async () => {
+      expect(i.mutations).not.toContain("insert_users");
+      expect(i.mutations).not.toContain("update_users_by_pk");
     });
   });
 

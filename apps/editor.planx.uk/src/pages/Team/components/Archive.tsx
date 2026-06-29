@@ -13,8 +13,10 @@ import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 import { FlowCardView, FlowSummary } from "../../FlowEditor/lib/store/editor";
 import { FlowTable } from "../components/FlowTable";
 import { ShowingServicesHeader } from "../components/ShowingServicesHeader";
+import { sortOptions } from "../helpers/sortAndFilterOptions";
 import { DashboardList } from "./DashboardList";
 import FlowCard from "./FlowCard";
+import { useDisplayedFlows } from "./hooks/useDisplayedFlows";
 import { StyledToggleButton } from "./StyledToggleButton";
 
 type Props = {
@@ -28,7 +30,6 @@ type Props = {
   archivedFlows: FlowSummary[] | null;
   loading: boolean;
   error: ApolloError | undefined;
-  isFiltered: boolean;
   onClearSearch: () => void;
 };
 
@@ -40,9 +41,13 @@ const Archive: React.FC<Props> = ({
   archivedFlows,
   loading,
   error,
-  isFiltered,
   onClearSearch,
 }) => {
+  const { displayedFlows, isFiltered } = useDisplayedFlows({
+    flows: archivedFlows,
+    sortOptions,
+  });
+
   if (error) {
     return (
       <Box sx={{ pt: 2 }}>
@@ -67,6 +72,7 @@ const Archive: React.FC<Props> = ({
       </Box>
     );
   }
+
   if (!isFiltered && archivedFlows !== null && archivedFlows.length === 0) {
     return <EmptyState title="No archived flows found" />;
   }
@@ -91,13 +97,11 @@ const Archive: React.FC<Props> = ({
             minHeight: "50px",
           }}
         >
-          {archivedFlows && archivedFlows.length > 0 && (
-            <ShowingServicesHeader
-              matchedFlowsCount={archivedFlows.length}
-              isArchived
-              isFiltered={isFiltered}
-            />
-          )}
+          <ShowingServicesHeader
+            matchedFlowsCount={displayedFlows?.length || 0}
+            isArchived
+            isFiltered={isFiltered}
+          />
           {isFiltered && (
             <Button onClick={onClearSearch} variant="link">
               Clear filters
@@ -122,17 +126,17 @@ const Archive: React.FC<Props> = ({
           </Tooltip>
         </ToggleButtonGroup>
       </Box>
-      {archivedFlows && (
+      {displayedFlows && (
         <>
           {flowCardView === "grid" ? (
             <DashboardList>
-              {archivedFlows.map((flow) => (
+              {displayedFlows.map((flow) => (
                 <FlowCard flow={flow} key={flow.slug} view={"archive"} />
               ))}
             </DashboardList>
           ) : (
             <FlowTable
-              flows={archivedFlows}
+              flows={displayedFlows}
               teamId={teamId}
               teamSlug={slug}
               view={"archive"}

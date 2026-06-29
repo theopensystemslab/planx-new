@@ -120,6 +120,11 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
           domain: "planningservices.stockport.gov.uk",
           cloudFrontState: "validation-only",
         },
+        {
+          name: "east-riding-of-yorkshire",
+          domain: "planningservices.eastriding.gov.uk",
+          cloudFrontState: "validation-only",
+        },
       ]
     : [
         // we keep one custom domain on staging to function as a canary (monitored by UptimeRobot)

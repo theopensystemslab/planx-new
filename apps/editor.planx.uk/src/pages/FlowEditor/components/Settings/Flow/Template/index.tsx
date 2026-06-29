@@ -21,7 +21,7 @@ import {
 } from "./types";
 
 const Template: React.FC = () => {
-  const flowId = useStore((state) => state.id);
+  const [flowId, flowSlug] = useStore((state) => [state.id, state.flowSlug]);
   const navigate = useNavigate();
   const { mutate: sendSlackMessage } = useSlackMessage();
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -29,10 +29,6 @@ const Template: React.FC = () => {
   const handleClose = () => setIsOpen(false);
 
   const handleSuccess = (data: GetFlowTemplateStatus | undefined) => {
-    // Navigate away from tab, as we're about to remove it
-    navigate({ to: "." });
-    setIsOpen(false);
-
     // Type-narrowing only, should not happen!
     if (!data)
       throw Error("Failed to get query data for template ejection form");
@@ -40,6 +36,14 @@ const Template: React.FC = () => {
     const {
       flow: { name, team, template },
     } = data;
+
+    // Navigate away from tab, as we're about to remove it
+    navigate({
+      to: "/app/$team/$flow/settings/visibility",
+      params: { team: team.slug, flow: flowSlug },
+    });
+    setIsOpen(false);
+
     const message = `:eject: *${team.name}* have ejected their "${name}" service from the "${template.name} "template`;
     sendSlackMessage(message);
   };

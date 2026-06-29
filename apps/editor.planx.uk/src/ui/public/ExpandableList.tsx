@@ -35,6 +35,8 @@ export function ExpandableListItem(props: {
     props.onToggle && props.onToggle();
   };
 
+  const groupId = props.groupId.replace(" ", "-").toLowerCase();
+
   return (
     <ListItem
       disablePadding
@@ -44,7 +46,7 @@ export function ExpandableListItem(props: {
       }}
     >
       <TitleButton
-        aria-controls={props.groupId}
+        aria-controls={groupId}
         aria-expanded={props.expanded}
         disableRipple
         onClick={handleToggle}
@@ -57,7 +59,7 @@ export function ExpandableListItem(props: {
           titleAccess={props.expanded ? "Less Information" : "More Information"}
         />
       </TitleButton>
-      {props.expanded && props.children}
+      {props.expanded && <div id={groupId}>{props.children}</div>}
     </ListItem>
   );
 }

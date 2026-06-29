@@ -4,6 +4,7 @@ import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
@@ -40,7 +41,7 @@ function Component(props: Props) {
         }
       />
       <ModalSection>
-        <ModalSectionContent title="Review" Icon={ICONS[TYPES.Review]}>
+        <ModalComponentHeader title="Review" Icon={ICONS[TYPES.Review]}>
           <InputRow>
             <Input
               format="large"
@@ -62,7 +63,7 @@ function Component(props: Props) {
               errorMessage={formik.errors.description}
             />
           </InputRow>
-        </ModalSectionContent>
+        </ModalComponentHeader>
         <ModalSectionContent subtitle="Disclaimer">
           <InputRow>
             <RichTextInput

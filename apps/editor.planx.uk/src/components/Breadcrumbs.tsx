@@ -54,7 +54,7 @@ const Breadcrumbs: React.FC = () => {
 
   const canUserEditTeam = useStore((state) => state.canUserEditTeam);
 
-  if (!teamSlug || !flowSlug || !data?.flows) return null;
+  if (!teamSlug || !flowSlug || !data?.flows.length) return null;
   const { status: flowStatus, isService } = data.flows[0];
 
   return (
