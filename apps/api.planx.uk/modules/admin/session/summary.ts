@@ -15,19 +15,6 @@ import type {
 } from "../../../types.js";
 import { $api } from "../../../client/index.js";
 
-/**
- * @swagger
- * /admin/session/{sessionId}/summary:
- *  get:
- *    summary: Returns a passport, breadcrumbs, and other key details about a session
- *    description: Returns a passport, breadcrumbs, and other key details about a session
- *    tags:
- *      - admin
- *    parameters:
- *      - $ref: '#/components/parameters/sessionId'
- *    security:
- *      - bearerAuth: []
- */
 export async function getSessionSummary(
   req: Request,
   res: Response,

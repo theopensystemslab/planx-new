@@ -79,8 +79,6 @@ api.planx.uk/
 
 API docs are written as `docs.yaml` files per module and served via Swagger UI at `/docs`.
 
-Inline JSDoc `@swagger` annotations are a legacy pattern — do not add new ones, and migrate them to `docs.yaml` if you come across them.
-
 ## Hasura clients
 
 When querying Hasura, use the right client for the context. All clients are exported from `client/index.ts`:
