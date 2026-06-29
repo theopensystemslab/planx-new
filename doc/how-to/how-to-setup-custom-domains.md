@@ -208,7 +208,7 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
 2. Do steps 4-6 from [flow A](#a-onboarding-a-new-council) (i.e. send the DNS validation record to the council).
 
     > NB. **If this is not the first domain on the shared CDN** and you want to expedite:
-    > - Do steps 4-5 **now** and send the council both DNS records together (you still have to wait for them to add the records before proceeding to step 2).
+    > - Do steps 5-6 **now** and send the council both DNS records together (you still have to wait for them to add the records before proceeding to step 2).
 
 3. Advance the domain in question to the `cutover-ongoing` state by updating `customDomains.ts`:
 
