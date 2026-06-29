@@ -300,7 +300,7 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
 
     This deploy tears down the legacy CloudFront distribution, which is now redundant because we have re-routed traffic to the shared distribution by virtue of the council swapping out the DNS record, and us then moving the alias across. It will also destroy the legacy (imported) cert with which the distribution was associated.
 
-    NB. Application-level config (see step 13 in [flow A](#a-onboarding-a-new-council)) is already in place for legacy councils, so no changes are needed in that regard.
+    NB. Application-level config (see step 14 in [flow A](#a-onboarding-a-new-council)) is already in place for legacy councils, so no changes are needed in that regard.
 
 12. Clean up BYO certificate artefacts. Depending on where the old certificate was stored...
 
