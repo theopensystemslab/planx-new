@@ -104,7 +104,7 @@ Path: `validation-only` → `shared-final`
     This record proves they own the domain for purposes of certificate validation. It does not affect live traffic.
 
     > NB. **If this is not the first domain on the shared CDN** and you want to expedite:
-    > - Do steps 11-12 **now** and send the council both DNS records together.
+    > - Do steps 12-13 **now** and send the council both DNS records together.
     > - Do step 13 **now** and bundle the application-level changes into your current PR (to be merged in step 9).
   
 6. **Wait** for the council to confirm they've added the record.
