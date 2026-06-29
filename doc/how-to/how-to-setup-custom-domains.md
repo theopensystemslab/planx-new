@@ -113,7 +113,7 @@ Path: `validation-only` → `shared-final`
 
     When it's done, you can then verify in the [AWS console](https://us-east-1.console.aws.amazon.com/acm/certificates/list) (make sure you're in the `us-east-1` region). The status of the specific domain on the mining cert should have changed from `Pending validation` to `Success`.
 
-    NB. The mining certs will 'fail' after 72hrs of attempting to validate their assigned domains, in which case you cannot use it to verify a correct DNS record. However, they can be re-created by simply deploying `certificates` again, as in step 2. Note that when these certs fail, Pulumi loses track of them, so it will not clean them up on next deploy (i.e. we should do that manually).
+    NB. The mining certs will 'fail' after 72hrs of attempting to validate their assigned domains, in which case you cannot use it to verify a correct DNS record. However, they can be re-created by simply deploying `certificates` again, as in step 3. Note that when these certs fail, Pulumi loses track of them, so it will not clean them up on next deploy (i.e. we should do that manually).
 
 7. Advance the state of the domain to `shared-final` by updating the entry in `customDomains.ts`:
 
