@@ -48,7 +48,11 @@ NB. We assume here that you want to run the relevant infra on production.
 
 Path: `validation-only` → `shared-final`
 
-1. Pull latest `main`, open a new branch, and add the desired new domain to the array in `infrastructure/common/customDomains.ts`:
+1. Update the [PlanX CRM on Notion](https://www.notion.so/opensystemslab/Plan-CRM-27c35d469ad1806c8f4dd95067ccf4ff).
+
+    Find the relevant council's page in our internal CRM, and set the 'Auto-SSL' column to "In progress"
+
+2. Pull latest `main`, open a new branch, and add the desired new domain to the array in `infrastructure/common/customDomains.ts`:
 
     ```ts
     {
@@ -60,7 +64,7 @@ Path: `validation-only` → `shared-final`
 
     Here `name` should match the `teams.slug` value in the [db](https://hasura.editor.planx.uk/console/data/default/schema/public/tables/teams/browse). Note also that `certificateLocation` is not necessary here. Then commit this change.
 
-2. Deploy the `certificates` stack. Make sure you have the appropriate AWS credentials/profile exported in your terminal, then run:
+3. Deploy the `certificates` stack. Make sure you have the appropriate AWS credentials/profile exported in your terminal, then run:
 
     ```sh
     cd infrastructure/certificates
@@ -69,7 +73,7 @@ Path: `validation-only` → `shared-final`
 
     This creates or updates the mining certificate (called thus because we 'mine' it for DNS validation records) with the new domain as an SAN. AWS ACM generates a CNAME record the council must add to prove domain ownership.
 
-3. Read the pending DNS records
+4. Read the pending DNS records
 
     ```sh
     pulumi stack output pendingCouncilDnsRecords --stack production --json
@@ -89,7 +93,7 @@ Path: `validation-only` → `shared-final`
     ]
     ```
 
-4. Send validation CNAME to the council
+5. Send validation CNAME to the council
 
     Ask the council IT team to create this DNS record on their nameserver:
 
@@ -103,7 +107,7 @@ Path: `validation-only` → `shared-final`
     > - Do steps 11-12 **now** and send the council both DNS records together.
     > - Do step 13 **now** and bundle the application-level changes into your current PR (to be merged in step 9).
   
-5. **Wait** for the council to confirm they've added the record.
+6. **Wait** for the council to confirm they've added the record.
 
     If this is likely to take a while, open a PR with your initial commit and get it merged, so that the `customDomains.ts` source of truth is accurate on `main`.
 
@@ -111,7 +115,7 @@ Path: `validation-only` → `shared-final`
 
     NB. The mining certs will 'fail' after 72hrs of attempting to validate their assigned domains, in which case you cannot use it to verify a correct DNS record. However, they can be re-created by simply deploying `certificates` again, as in step 2. Note that when these certs fail, Pulumi loses track of them, so it will not clean them up on next deploy (i.e. we should do that manually).
 
-6. Advance the state of the domain to `shared-final` by updating the entry in `customDomains.ts`:
+7. Advance the state of the domain to `shared-final` by updating the entry in `customDomains.ts`:
 
     ```diff
     - cloudFrontState: "validation-only",
@@ -120,11 +124,11 @@ Path: `validation-only` → `shared-final`
 
     Commit this change, open a PR if you haven't already, and get the PR approved.
 
-7. Deploy `certificates` again (as in step 2).
+8. Deploy `certificates` again (as in step 2).
 
     This deploy removes the domain from the mining cert and adds it to the shared cert proper. It does this by creating a new cert, but we **retain the old cert**, because for now the shared CDN still relies on it.
 
-8.  Before we proceed, we need to **verify the new certificate has issued**.
+9.  Before we proceed, we need to **verify the new certificate has issued**.
 
     **This will fail** if the council we are onboarding has not yet added the DNS validation record (which we should have already verified in step 5) - or if _any other council_ already using the shared CDN has removed their validation record since the last time the shared cert was replaced.
 
@@ -141,15 +145,15 @@ Path: `validation-only` → `shared-final`
     
     Note that at this point, the cert should display as **not** in use, because it's not yet attached to a CloudFront distribution.
 
-9. Now **merge your PR to `main`** and **deploy your changes to `production`** to deploy the `application` layer via CI.
+10. Now **merge your PR to `main`** and **deploy your changes to `production`** to deploy the `application` layer via CI.
 
     This deploy attaches the new cert to the shared CDN (and will also create it first, if it doesn't already exist).
 
-10. Clean up the old shared cert with another run of `certificates`.
+11. Clean up the old shared cert with another run of `certificates`.
 
     NB. This may not work. Pulumi seems to keep track of the retained cert in some cases and not others. If the `pulumi up` run does not propose any changes, you can do this manually in the [AWS console](https://us-east-1.console.aws.amazon.com/acm/certificates/list?region=us-east-1#) instead. It's essentially harmless for these old shared certs to build up, but also confusing!
 
-11. Get the shared CDN domain name:
+12. Get the shared CDN domain name:
 
     ```sh
     cd infrastructure/application
@@ -158,7 +162,7 @@ Path: `validation-only` → `shared-final`
 
     This returns a value like `d1234abcd.cloudfront.net`.
 
-12. Send CloudFront CNAME to the council, i.e. ask them to create a second DNS record:
+13. Send CloudFront CNAME to the council, i.e. ask them to create a second DNS record:
 
     | Type | Name | Target |
     | --- | --- | --- |
@@ -166,7 +170,7 @@ Path: `validation-only` → `shared-final`
 
     As soon as this propagates, live traffic to the custom domain will be routed to the shared CloudFront PlanX distribution.
 
-13. Application-level configuration should be included in the same PR or as a follow-up:
+14. Application-level configuration should be included in the same PR or as a follow-up:
 
     1. **Frontend route detection** — add the domain to `PREVIEW_ONLY_DOMAINS` in `apps/editor.planx.uk/src/utils/routeUtils/utils.ts`
 
@@ -174,16 +178,17 @@ Path: `validation-only` → `shared-final`
 
     3. **Database** — set `team.domain` to `planningservices.a-new-council.gov.uk` in the Hasura production console (this enables payment links and save-and-return URLs to use the custom domain)
 
-14. Implement monitoring as needed.
+15. Implement monitoring as needed.
 
     *If* there are fewer than 5 monitors under the `custom-domains-production` tab on [UptimeRobot](https://dashboard.uptimerobot.com/monitors), then add this new domain by cloning one of the existing monitors (to preserve integrations e.g. Slack alerts for SSL expiry)
 
     > **Note:** We share a single UptimeRobot login stored in the 1Password 'PlanX' vault. You may need to ask someone with access to do this step.
 
-15. Update the [PlanX CRM on Notion](https://www.notion.so/opensystemslab/Plan-CRM-27c35d469ad1806c8f4dd95067ccf4ff).
+16. Update the [PlanX CRM on Notion](https://www.notion.so/opensystemslab/Plan-CRM-27c35d469ad1806c8f4dd95067ccf4ff).
 
     Find the relevant council's page in our internal CRM, and do the following:
     - Add the domain as it appears in our single source of truth (`customDomains.ts`) under the field 'Custom Subdomain'.
+    - Set the 'Auto-SSL' column to "Done"
 
 
 ### B. Migrating a council from legacy setup
@@ -196,12 +201,16 @@ The usual prompt for this process will be an impending expiry of a council's SSL
 
 NB. No new councils will be onboarded in the legacy mode, so when we migrate the last council, we can revise our documentation (i.e. delete this section).
 
-1. Do steps 3-5 from [flow A](#a-onboarding-a-new-council) (i.e. send the DNS validation record to the council).
+1. Update the [PlanX CRM on Notion](https://www.notion.so/opensystemslab/Plan-CRM-27c35d469ad1806c8f4dd95067ccf4ff).
+
+    Find the relevant council's page in our internal CRM, and set the 'Auto-SSL' column to "In progress"
+
+2. Do steps 3-5 from [flow A](#a-onboarding-a-new-council) (i.e. send the DNS validation record to the council).
 
     > NB. **If this is not the first domain on the shared CDN** and you want to expedite:
     > - Do steps 4-5 **now** and send the council both DNS records together (you still have to wait for them to add the records before proceeding to step 2).
 
-2. Advance the domain in question to the `cutover-ongoing` state by updating `customDomains.ts`:
+3. Advance the domain in question to the `cutover-ongoing` state by updating `customDomains.ts`:
 
     ```diff
     - cloudFrontState: "legacy-with-validation",
@@ -210,9 +219,9 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
 
     Commit this, open a PR and get it approved.
 
-3. Do steps 7-10 from [flow A](#a-onboarding-a-new-council) (i.e. initialise a new shared cert and attach the shared CDN to it).
+4. Do steps 7-10 from [flow A](#a-onboarding-a-new-council) (i.e. initialise a new shared cert and attach the shared CDN to it).
 
-4. Get the shared distribution domain name and ID:
+5. Get the shared distribution domain name and ID:
 
     ```sh
     cd infrastructure/application
@@ -222,7 +231,7 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
 
     This should return values like `d1234abcd.cloudfront.net` and `E1234ABCD56YZ` respectively.
 
-5. Ask the council to switch their DNS target for the domain.
+6. Ask the council to switch their DNS target for the domain.
 
     That is, they will need to update their existing CNAME record to point at the shared CloudFront domain (replacing the old per-domain `xyz.cloudfront.net` value).
 
@@ -230,11 +239,11 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
     | --- | --- | --- |
     | CNAME | `planningservices.an-existing-council.gov.uk` | `d1234abcd.cloudfront.net` |
 
-6. **Wait** for the council to confirm they've added the record.
+7. **Wait** for the council to confirm they've added the record.
 
     Because of the way CloudFront works, traffic redirected to the domain name of the shared CloudFront distribution will still be directed to the legacy distribution by AWS (until we do the next step). See [Appendix B](#appendix-b-cloudfront-routing)) for a more thorough explanation!
     
-7. Run the AWS `update-domain-association` [command](https://docs.aws.amazon.com/cli/latest/reference/cloudfront/update-domain-association.html) from your terminal to move the domain (known as an 'alias' in the context of CloudFront) from the legacy distribution to the shared distribution ([docs](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/alternate-domain-names-move.html)).
+8. Run the AWS `update-domain-association` [command](https://docs.aws.amazon.com/cli/latest/reference/cloudfront/update-domain-association.html) from your terminal to move the domain (known as an 'alias' in the context of CloudFront) from the legacy distribution to the shared distribution ([docs](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/alternate-domain-names-move.html)).
 
     If you haven't used the AWS CLI from your terminal before, set that up first (see `../how-to-setup-aws-sso-credentials.md`). CloudFront distributions are global so the AWS region isn't important here.
 
@@ -262,7 +271,7 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
 
     > **Warning**: As soon as you execute this step, you need to run through at least steps 8-10 immediately thereafter (or at the very least, before another production deploy can occur with the domain still in `cutover-ongoing` state).
 
-8. Verify traffic has been re-routed:
+9. Verify traffic has been re-routed:
 
     ```sh
     dig planningservices.an-existing-council.gov.uk CNAME +short
@@ -272,7 +281,7 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
 
     It's also worth visiting the site in the browser and checking it works as expected.
 
-9. Finally, advance the domain to `shared-final`:
+10. Finally, advance the domain to `shared-final`:
 
     ```diff
     - cloudFrontState: "single-plus-shared",
@@ -287,13 +296,13 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
 
     Once again, commit these changes and open a PR.
 
-10. Deploy the `application` layer by merging said PR and rolling it out to prod.
+11. Deploy the `application` layer by merging said PR and rolling it out to prod.
 
     This deploy tears down the legacy CloudFront distribution, which is now redundant because we have re-routed traffic to the shared distribution by virtue of the council swapping out the DNS record, and us then moving the alias across. It will also destroy the legacy (imported) cert with which the distribution was associated.
 
     NB. Application-level config (see step 13 in [flow A](#a-onboarding-a-new-council)) is already in place for legacy councils, so no changes are needed in that regard.
 
-11. Clean up BYO certificate artefacts. Depending on where the old certificate was stored...
+12. Clean up BYO certificate artefacts. Depending on where the old certificate was stored...
 
     - **AWS Secrets Manager** - delete the `ssl/[team]` secret in the [AWS console](https://eu-west-2.console.aws.amazon.com/secretsmanager/listsecrets?region=eu-west-2#) (you may only be able to _schedule_ the deletion)
     - **Pulumi config** - remove secrets via the terminal:
@@ -305,17 +314,18 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
       pulumi config rm ssl-<team>-chain --stack production
       ```
 
-14. Implement monitoring as needed.
+13. Implement monitoring as needed.
 
     *If* there are more than 5 monitors under the `custom-domains-production` tab on [UptimeRobot](https://dashboard.uptimerobot.com/monitors), then delete the monitor for the domain you just migrated (we only maintain a few as canaries). Otherwise, do nothing.
 
     > **Note:** We share a single UptimeRobot login stored in the 1Password 'PlanX' vault. You may need to ask someone with access to do this step.
 
-15. Update the [PlanX CRM on Notion](https://www.notion.so/opensystemslab/Plan-CRM-27c35d469ad1806c8f4dd95067ccf4ff).
+14. Update the [PlanX CRM on Notion](https://www.notion.so/opensystemslab/Plan-CRM-27c35d469ad1806c8f4dd95067ccf4ff).
 
     Find the relevant council's page in our internal CRM, and do the following:
     - Remove the date from the field 'SSL Expiry Date'.
     - Add the domain as it appears in our single source of truth (`customDomains.ts`) under the field 'Custom Subdomain'.
+    - Set the 'Auto-SSL' column to "Done"
 
 
 ## Appendix A. Automatic certificate renewal
