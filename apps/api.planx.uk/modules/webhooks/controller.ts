@@ -265,3 +265,29 @@ export const updateTemplatedFlowEditsController: UpdateTemplatedFlowEditsControl
       );
     }
   };
+
+export const failedSubmissionsController: FaliedSubmissionController = async (
+  _req,
+  res,
+  next,
+) => {
+  try {
+    if (process.env.APP_ENVIRONMENT !== "production") {
+      return res.status(200).send({
+        message: `Not production, skipping failed submissions notification`,
+      });
+    }
+
+    const response = await getDailyFailedSubmissions();
+    return res.status(200).send({
+      message: `Logged any failed submissions to Slack #planx-notifications-internal`,
+    });
+  } catch (error) {
+    return next(
+      new ServerError({
+        message: `Failed to log submission failures today`,
+        cause: error,
+      }),
+    );
+  }
+};
