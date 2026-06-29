@@ -36,8 +36,6 @@ const FiltersContainer = styled(Box)(({ theme }) => ({
 
 type Props = {
   flowsHaveBeenFiltered: boolean;
-  setSearchedFlows: (searchedFlows: FlowSummary[] | null) => void;
-  setShouldClearSearch: (shouldClearSearch: boolean) => void;
   sortedFlows: FlowSummary[] | null;
   sortOptions: SortableFields<FlowSummary>[];
   flowCardView: FlowCardView;
@@ -52,8 +50,6 @@ type Props = {
 
 const Flows: React.FC<Props> = ({
   flowsHaveBeenFiltered,
-  setSearchedFlows,
-  setShouldClearSearch,
   sortedFlows,
   sortOptions,
   flowCardView,
@@ -111,8 +107,6 @@ const Flows: React.FC<Props> = ({
             {flowsHaveBeenFiltered && (
               <Button
                 onClick={() => {
-                  setSearchedFlows(null);
-                  setShouldClearSearch(true);
                   navigate({
                     to: ".",
                     search: (prev) => ({

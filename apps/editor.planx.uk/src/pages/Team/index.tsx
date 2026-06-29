@@ -1,18 +1,19 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import { isEmpty } from "lodash";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { EmptyState } from "ui/editor/EmptyState";
 import { InfoChip } from "ui/editor/InfoChip";
-import { SearchBox } from "ui/shared/SearchBox/SearchBox";
+import { DebouncedSearchInput } from "ui/shared/SearchBox/DebouncedSearchInput";
 
 import { useStore } from "../FlowEditor/lib/store";
 import { FlowCardView, FlowSummary } from "../FlowEditor/lib/store/editor";
 import { AddFlow } from "./components/AddFlow";
 import Archive from "./components/Archive";
 import Flows from "./components/Flows";
-import { useFlowFilters } from "./components/hooks/useFlowFilters";
+import { useDisplayedFlows } from "./components/hooks/useDisplayedFlows";
 import { useGetArchivedFlows } from "./components/hooks/useGetArchivedFlows";
 import { useGetFlows } from "./components/hooks/useGetFlows";
 import { filterOptions, sortOptions } from "./helpers/sortAndFilterOptions";
@@ -47,6 +48,9 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
     state.setFlowCardView,
   ]);
 
+  const navigate = useNavigate();
+  const searchParams = useSearch({ from: "/_authenticated/app/$team/" });
+
   const { data } = useGetFlows(teamId);
   const flows = data?.flows ?? initialFlows.flows;
   const [flowView, setFlowView] = useState<FlowView>("flows");
@@ -57,17 +61,8 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
     error: archivedFlowsError,
   } = useGetArchivedFlows(teamId, flowView !== "archive");
   const archivedFlows = archivedFlowsData?.flows ?? null;
-
-  const [searchedFlows, setSearchedFlows] = useState<FlowSummary[] | null>(
-    null,
-  );
-  const [searchedArchivedFlows, setSearchedArchivedFlows] = useState<
-    FlowSummary[] | null
-  >(null);
-  const [shouldClearSearch, setShouldClearSearch] = useState<boolean>(false);
-
-  const { sortedFlows } = useFlowFilters({
-    flows: searchedFlows ?? flows,
+  const { displayedFlows, isFiltered } = useDisplayedFlows({
+    flows,
     filterOptions,
     sortOptions,
   });
@@ -81,19 +76,16 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
     }
   };
 
-  useEffect(() => {
-    if (shouldClearSearch) {
-      setShouldClearSearch(false);
-    }
-  }, [shouldClearSearch]);
+  const handleSearchChange = (value: string) => {
+    navigate({
+      to: ".",
+      search: (prev) => ({ ...prev, search: value || undefined }),
+      replace: true,
+    });
+  };
 
   const teamHasFlows = !isEmpty(flows) && flows;
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
-  const flowsHaveBeenFiltered = sortedFlows?.length !== flows?.length;
-
-  const displayedArchivedFlows = searchedArchivedFlows ?? archivedFlows;
-  const archiveIsFiltered =
-    displayedArchivedFlows?.length !== archivedFlows?.length;
 
   return (
     <Box sx={{ bgcolor: "background.paper", flexGrow: 1 }}>
@@ -127,15 +119,9 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
               (flowView === "archive" &&
                 archivedFlows &&
                 archivedFlows.length > 0)) && (
-              <SearchBox<FlowSummary>
-                records={flowView === "archive" ? (archivedFlows ?? []) : flows}
-                setRecords={
-                  flowView === "archive"
-                    ? setSearchedArchivedFlows
-                    : setSearchedFlows
-                }
-                searchKey={["name", "slug"]}
-                clearSearch={shouldClearSearch}
+              <DebouncedSearchInput
+                value={searchParams.search ?? ""}
+                onChange={handleSearchChange}
               />
             )}
           </Box>
@@ -144,10 +130,8 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
 
         {flowView === "flows" && (
           <Flows
-            flowsHaveBeenFiltered={flowsHaveBeenFiltered}
-            setSearchedFlows={setSearchedFlows}
-            setShouldClearSearch={setShouldClearSearch}
-            sortedFlows={sortedFlows}
+            flowsHaveBeenFiltered={isFiltered}
+            sortedFlows={displayedFlows}
             sortOptions={sortOptions}
             flowCardView={flowCardView}
             teamId={teamId}
@@ -162,14 +146,10 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
             handleViewChange={handleViewChange}
             teamId={teamId}
             slug={slug}
-            archivedFlows={displayedArchivedFlows}
-            loading={archivedFlowsLoading && !displayedArchivedFlows}
+            archivedFlows={archivedFlows}
+            loading={archivedFlowsLoading && !archivedFlows}
             error={archivedFlowsError}
-            isFiltered={archiveIsFiltered}
-            onClearSearch={() => {
-              setSearchedArchivedFlows(null);
-              setShouldClearSearch(true);
-            }}
+            onClearSearch={() => handleSearchChange("")}
           />
         )}
 
