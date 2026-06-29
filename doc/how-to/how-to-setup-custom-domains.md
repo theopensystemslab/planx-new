@@ -130,7 +130,7 @@ Path: `validation-only` → `shared-final`
 
 9.  Before we proceed, we need to **verify the new certificate has issued**.
 
-    **This will fail** if the council we are onboarding has not yet added the DNS validation record (which we should have already verified in step 5) - or if _any other council_ already using the shared CDN has removed their validation record since the last time the shared cert was replaced.
+    **This will fail** if the council we are onboarding has not yet added the DNS validation record (which we should have already verified in step 6) - or if _any other council_ already using the shared CDN has removed their validation record since the last time the shared cert was replaced.
 
     First get the ID of the new cert:
 
