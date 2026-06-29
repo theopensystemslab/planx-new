@@ -219,7 +219,7 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
 
     Commit this, open a PR and get it approved.
 
-4. Do steps 7-10 from [flow A](#a-onboarding-a-new-council) (i.e. initialise a new shared cert and attach the shared CDN to it).
+4. Do steps 8-11 from [flow A](#a-onboarding-a-new-council) (i.e. initialise a new shared cert and attach the shared CDN to it).
 
 5. Get the shared distribution domain name and ID:
 
