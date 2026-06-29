@@ -137,8 +137,6 @@ insert_permissions:
   - role: api
     permission:
       check: {}
-      set:
-        creator_id: x-hasura-user-id
       columns:
         - copied_from
         - created_at
@@ -153,25 +151,15 @@ insert_permissions:
         - name
         - settings
         - slug
+        - status
         - summary
         - team_id
         - templated_from
         - updated_at
         - version
-      validate_input:
-        definition:
-          forward_client_headers: false
-          headers:
-            - name: authorization
-              value: '{{HASURA_PLANX_API_KEY}}'
-          timeout: 10
-          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
-        type: http
   - role: platformAdmin
     permission:
       check: {}
-      set:
-        creator_id: x-hasura-user-id
       columns:
         - copied_from
         - created_at
@@ -210,8 +198,6 @@ insert_permissions:
                   _eq: x-hasura-user-id
               - role:
                   _eq: teamEditor
-      set:
-        creator_id: x-hasura-user-id
       columns:
         - copied_from
         - created_at
@@ -450,15 +436,6 @@ update_permissions:
                 team_settings:
                   is_trial:
                     _eq: true
-      validate_input:
-        definition:
-          forward_client_headers: false
-          headers:
-            - name: authorization
-              value: '{{HASURA_PLANX_API_KEY}}'
-          timeout: 10
-          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
-        type: http
   - role: platformAdmin
     permission:
       columns:
