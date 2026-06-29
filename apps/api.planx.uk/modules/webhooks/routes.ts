@@ -13,6 +13,7 @@ import {
   deleteSessionController,
   isCleanJSONBController,
   sanitiseApplicationDataController,
+  sendSlackMessageController,
   sendSlackNotificationController,
   updateTemplatedFlowEditsController,
 } from "./controller.js";
@@ -23,6 +24,7 @@ import {
 } from "./service/lowcalSessionEvents/schema.js";
 import { createPaymentEventSchema } from "./service/paymentRequestEvents/schema.js";
 import { sendSlackNotificationSchema } from "./service/sendNotification/schema.js";
+import { sendSlackMessageSchema } from "./service/sendSlackMessage/schema.js";
 import { updateTemplatedFlowEditsEventSchema } from "./service/updateTemplatedFlowEdits/schema.js";
 import { isCleanJSONBSchema } from "./service/validateInput/schema.js";
 
@@ -48,6 +50,11 @@ router.post(
   "/webhooks/hasura/send-slack-notification",
   validate(sendSlackNotificationSchema),
   sendSlackNotificationController,
+);
+router.post(
+  "/webhooks/hasura/send-slack-message",
+  validate(sendSlackMessageSchema),
+  sendSlackMessageController,
 );
 router.post(
   "/webhooks/hasura/create-reminder-event",
