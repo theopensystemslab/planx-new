@@ -52,6 +52,7 @@ interface SessionSummary {
     email: LowCalSession["email"];
     passport: Passport["data"];
     breadcrumbs: Breadcrumb;
+    cachedBreadcrumbs?: Breadcrumb;
     payments?: Pick<
       GovUKPayment,
       "created_date" | "payment_id" | "amount" | "state"
@@ -87,6 +88,7 @@ const getSessionSummaryById = async (
           email
           passport: data(path: "passport.data")
           breadcrumbs: data(path: "breadcrumbs")
+          cachedBreadcrumbs: data(path: "cachedBreadcrumbs")
           payments: payment_status(order_by: { created_at: desc }) {
             created_at
             payment_id
