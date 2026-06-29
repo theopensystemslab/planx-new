@@ -37,6 +37,7 @@ export const Route = createFileRoute("/_authenticated/app/$team")({
               hasPlanningData: has_planning_data
             }
             theme {
+              id
               primaryColour: primary_colour
               actionColour: action_colour
               linkColour: link_colour
