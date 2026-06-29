@@ -105,7 +105,7 @@ Path: `validation-only` → `shared-final`
 
     > NB. **If this is not the first domain on the shared CDN** and you want to expedite:
     > - Do steps 12-13 **now** and send the council both DNS records together.
-    > - Do step 13 **now** and bundle the application-level changes into your current PR (to be merged in step 9).
+    > - Do step 14 **now** and bundle the application-level changes into your current PR (to be merged in step 10).
   
 6. **Wait** for the council to confirm they've added the record.
 
