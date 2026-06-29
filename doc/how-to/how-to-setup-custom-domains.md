@@ -203,7 +203,7 @@ NB. No new councils will be onboarded in the legacy mode, so when we migrate the
 
 1. Update the [PlanX CRM on Notion](https://www.notion.so/opensystemslab/Plan-CRM-27c35d469ad1806c8f4dd95067ccf4ff).
 
-    Find the relevant council's page in our internal CRM, and set the 'Auto-SSL' column to "In progress"
+    Find the relevant council's page in our internal CRM, and set the 'Auto-SSL' column to "In progress".
 
 2. Do steps 3-5 from [flow A](#a-onboarding-a-new-council) (i.e. send the DNS validation record to the council).
 
