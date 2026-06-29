@@ -28,6 +28,7 @@ export const Route = createFileRoute("/_authenticated/app")({
               isTrial: is_trial
             }
             theme {
+              id
               primaryColour: primary_colour
               logo
             }
