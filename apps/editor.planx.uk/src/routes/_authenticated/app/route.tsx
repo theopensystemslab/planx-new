@@ -1,12 +1,6 @@
-import {
-  createFileRoute,
-  isRedirect,
-  Outlet,
-  redirect,
-} from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import gql from "graphql-tag";
-import React from "react";
 import { CatchAllComponent } from "routes/$";
 
 import { useStore } from "../../../pages/FlowEditor/lib/store";
