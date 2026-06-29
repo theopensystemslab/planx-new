@@ -50,7 +50,7 @@ Path: `validation-only` → `shared-final`
 
 1. Update the [PlanX CRM on Notion](https://www.notion.so/opensystemslab/Plan-CRM-27c35d469ad1806c8f4dd95067ccf4ff).
 
-    Find the relevant council's page in our internal CRM, and set the 'Auto-SSL' column to "In progress"
+    Find the relevant council's page in our internal CRM, and set the 'Auto-SSL' column to "In progress".
 
 2. Pull latest `main`, open a new branch, and add the desired new domain to the array in `infrastructure/common/customDomains.ts`:
 
