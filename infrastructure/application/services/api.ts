@@ -92,9 +92,7 @@ export const createApiService = async ({
     repositoryUrl: repo.url,
     context: "../..",
     dockerfile: "../../apps/api.planx.uk/Dockerfile",
-    args: {
-      target: "production",
-    },
+    target: "production",
   });
   const apiLogGroup = new aws.cloudwatch.LogGroup("api", {
     name: "/ecs/api",

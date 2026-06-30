@@ -12,7 +12,7 @@ RUN npm install -g pnpm@10.30.2
 COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
 RUN pnpm fetch
 
-COPY apps/api.planx.uk ./apps/api.planx.uk
+COPY . .
 RUN pnpm install --frozen-lockfile --prefer-offline
 RUN pnpm --filter api.planx.uk build
 # `pnpm deploy` refuses to run unless `inject-workspace-packages=true`, failing with ERR_PNPM_DEPLOY_NONINJECTED_WORKSPACE
