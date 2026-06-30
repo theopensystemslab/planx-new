@@ -14,7 +14,7 @@ export interface Category {
   items: ComponentItem[];
 }
 
-const t = (type: TYPES): string => COMPONENT_TITLES[type] ?? String(type);
+const title = (type: TYPES): string => COMPONENT_TITLES[type] ?? String(type);
 
 export const ALL_CATEGORIES: Category[] = [
   {
@@ -23,19 +23,19 @@ export const ALL_CATEGORIES: Category[] = [
       {
         type: TYPES.Section,
         slug: "section",
-        title: t(TYPES.Section),
+        title: title(TYPES.Section),
         description: "Add a navigational section",
       },
       {
         type: TYPES.InternalPortal,
         slug: "folder",
-        title: t(TYPES.InternalPortal),
+        title: title(TYPES.InternalPortal),
         description: "Add a folder to group nodes",
       },
       {
         type: TYPES.ExternalPortal,
         slug: "nested-flow",
-        title: t(TYPES.ExternalPortal),
+        title: title(TYPES.ExternalPortal),
         description: "Embed another flow",
       },
     ],
@@ -46,31 +46,31 @@ export const ALL_CATEGORIES: Category[] = [
       {
         type: TYPES.Question,
         slug: "question",
-        title: t(TYPES.Question),
+        title: title(TYPES.Question),
         description: "Ask a single-choice question",
       },
       {
         type: TYPES.ResponsiveQuestion,
         slug: "responsive-question",
-        title: t(TYPES.ResponsiveQuestion),
+        title: title(TYPES.ResponsiveQuestion),
         description: "Question with response-dependent follow-ups",
       },
       {
         type: TYPES.Checklist,
         slug: "checklist",
-        title: t(TYPES.Checklist),
+        title: title(TYPES.Checklist),
         description: "Ask which of these apply",
       },
       {
         type: TYPES.ResponsiveChecklist,
         slug: "responsive-checklist",
-        title: t(TYPES.ResponsiveChecklist),
+        title: title(TYPES.ResponsiveChecklist),
         description: "Checklist with follow-up questions",
       },
       {
         type: TYPES.NextSteps,
         slug: "next-steps",
-        title: t(TYPES.NextSteps),
+        title: title(TYPES.NextSteps),
         description: "Offer a choice of next steps",
       },
     ],
@@ -81,7 +81,7 @@ export const ALL_CATEGORIES: Category[] = [
       {
         type: TYPES.TextInput,
         slug: "text-input",
-        title: t(TYPES.TextInput),
+        title: title(TYPES.TextInput),
         description:
           "Collect a text response, or AI enhanced project description",
         hasAiVariant: true,
@@ -89,43 +89,43 @@ export const ALL_CATEGORIES: Category[] = [
       {
         type: TYPES.NumberInput,
         slug: "number-input",
-        title: t(TYPES.NumberInput),
+        title: title(TYPES.NumberInput),
         description: "Collect a numeric response",
       },
       {
         type: TYPES.DateInput,
         slug: "date-input",
-        title: t(TYPES.DateInput),
+        title: title(TYPES.DateInput),
         description: "Collect a date",
       },
       {
         type: TYPES.AddressInput,
         slug: "address-input",
-        title: t(TYPES.AddressInput),
+        title: title(TYPES.AddressInput),
         description: "Collect an address",
       },
       {
         type: TYPES.ContactInput,
         slug: "contact-input",
-        title: t(TYPES.ContactInput),
+        title: title(TYPES.ContactInput),
         description: "Collect contact details",
       },
       {
         type: TYPES.List,
         slug: "list",
-        title: t(TYPES.List),
+        title: title(TYPES.List),
         description: "Collect groups of multiple inputs",
       },
       {
         type: TYPES.Page,
         slug: "page",
-        title: t(TYPES.Page),
+        title: title(TYPES.Page),
         description: "Collect multiple inputs on a single page",
       },
       {
         type: TYPES.Feedback,
         slug: "feedback",
-        title: t(TYPES.Feedback),
+        title: title(TYPES.Feedback),
         description: "Collect user feedback",
       },
     ],
@@ -136,13 +136,13 @@ export const ALL_CATEGORIES: Category[] = [
       {
         type: TYPES.FileUpload,
         slug: "file-upload",
-        title: t(TYPES.FileUpload),
+        title: title(TYPES.FileUpload),
         description: "Upload one or more files",
       },
       {
         type: TYPES.FileUploadAndLabel,
         slug: "file-upload-and-label",
-        title: t(TYPES.FileUploadAndLabel),
+        title: title(TYPES.FileUploadAndLabel),
         description: "Upload and label files",
       },
     ],
@@ -153,37 +153,37 @@ export const ALL_CATEGORIES: Category[] = [
       {
         type: TYPES.Content,
         slug: "content",
-        title: t(TYPES.Content),
+        title: title(TYPES.Content),
         description: "Display rich content",
       },
       {
         type: TYPES.Notice,
         slug: "notice",
-        title: t(TYPES.Notice),
+        title: title(TYPES.Notice),
         description: "Show an important notice",
       },
       {
         type: TYPES.TaskList,
         slug: "task-list",
-        title: t(TYPES.TaskList),
+        title: title(TYPES.TaskList),
         description: "Show a list of tasks",
       },
       {
         type: TYPES.Review,
         slug: "review",
-        title: t(TYPES.Review),
+        title: title(TYPES.Review),
         description: "Let the user review and change their answers",
       },
       {
         type: TYPES.Result,
         slug: "result",
-        title: t(TYPES.Result),
+        title: title(TYPES.Result),
         description: "Show the result of the flow",
       },
       {
         type: TYPES.Confirmation,
         slug: "confirmation",
-        title: t(TYPES.Confirmation),
+        title: title(TYPES.Confirmation),
         description: "Show a confirmation screen",
       },
     ],
@@ -194,31 +194,31 @@ export const ALL_CATEGORIES: Category[] = [
       {
         type: TYPES.FindProperty,
         slug: "find-property",
-        title: t(TYPES.FindProperty),
+        title: title(TYPES.FindProperty),
         description: "Search for a property",
       },
       {
         type: TYPES.PropertyInformation,
         slug: "property-information",
-        title: t(TYPES.PropertyInformation),
+        title: title(TYPES.PropertyInformation),
         description: "Show property details",
       },
       {
         type: TYPES.DrawBoundary,
         slug: "draw-boundary",
-        title: t(TYPES.DrawBoundary),
+        title: title(TYPES.DrawBoundary),
         description: "Confirm a red line boundary on a map",
       },
       {
         type: TYPES.PlanningConstraints,
         slug: "planning-constraints",
-        title: t(TYPES.PlanningConstraints),
+        title: title(TYPES.PlanningConstraints),
         description: "Show planning constraints",
       },
       {
         type: TYPES.MapAndLabel,
         slug: "map-and-label",
-        title: t(TYPES.MapAndLabel),
+        title: title(TYPES.MapAndLabel),
         description: "Draw and label areas on a map",
       },
     ],
@@ -229,19 +229,19 @@ export const ALL_CATEGORIES: Category[] = [
       {
         type: TYPES.Filter,
         slug: "filter",
-        title: t(TYPES.Filter),
+        title: title(TYPES.Filter),
         description: "Filter the flow based on conditions",
       },
       {
         type: TYPES.SetValue,
         slug: "set-value",
-        title: t(TYPES.SetValue),
+        title: title(TYPES.SetValue),
         description: "Set a data value in the passport",
       },
       {
         type: TYPES.Calculate,
         slug: "calculate",
-        title: t(TYPES.Calculate),
+        title: title(TYPES.Calculate),
         description: "Calculate a value or fee",
       },
     ],
@@ -252,19 +252,19 @@ export const ALL_CATEGORIES: Category[] = [
       {
         type: TYPES.SetFee,
         slug: "set-fee",
-        title: t(TYPES.SetFee),
+        title: title(TYPES.SetFee),
         description: "Define fee amounts",
       },
       {
         type: TYPES.Pay,
         slug: "pay",
-        title: t(TYPES.Pay),
+        title: title(TYPES.Pay),
         description: "Collect payment",
       },
       {
         type: TYPES.Send,
         slug: "send",
-        title: t(TYPES.Send),
+        title: title(TYPES.Send),
         description: "Send data to an external service",
       },
     ],
