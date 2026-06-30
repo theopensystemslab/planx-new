@@ -1,4 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
+import { subDays } from "date-fns";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useMemo } from "react";
 
@@ -54,7 +55,7 @@ export const useActivityData = (): {
   const teamId = useStore((state) => state.teamId);
 
   const thirtyDaysAgo = useMemo(
-    () => new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+    () => subDays(new Date(), 30).toISOString(),
     [],
   );
 
