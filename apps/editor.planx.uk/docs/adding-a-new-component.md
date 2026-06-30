@@ -139,7 +139,7 @@ Add an entry for the new component in the appropriate category within `ALL_CATEG
 {
   type: TYPES.SetValue,
   slug: "set-value",
-  title: t(TYPES.SetValue),
+  title: title(TYPES.SetValue),
   description: "Set a data value in the passport",
 },
 ```
