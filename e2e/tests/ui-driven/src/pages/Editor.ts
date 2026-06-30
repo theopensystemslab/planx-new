@@ -300,8 +300,8 @@ export class PlaywrightEditor {
     const filteredBranch = this.page
       .getByRole("listitem")
       .filter({ hasText: /^Material change of useflag\.mcou\.true$/ })
-      .getByRole("link")
-      .nth(1);
+      .locator("li.hanger > :is(a, button)")
+      .first();
 
     await createContent(
       this.page,

@@ -22,7 +22,6 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
-import { ICONS } from "../shared/icons";
 import {
   availableDatasets,
   parseContent,
@@ -85,10 +84,7 @@ function PlanningConstraintsComponent(props: Props) {
         }
       />
       <ModalSection>
-        <ModalSectionContent
-          title="Planning constraints"
-          Icon={ICONS[TYPES.PlanningConstraints]}
-        >
+        <ModalSectionContent>
           <Typography variant="body2" sx={{ mb: 2 }}>
             Find documentation about{" "}
             <a

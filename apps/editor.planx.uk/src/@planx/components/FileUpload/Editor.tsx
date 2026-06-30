@@ -4,7 +4,7 @@ import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
+import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
@@ -12,7 +12,6 @@ import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
-import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
 import { FileUpload, parseFileUpload, validationSchema } from "./model";
 
@@ -49,7 +48,7 @@ function Component(props: Props) {
         }
       />
       <ModalSection>
-        <ModalComponentHeader title="File upload" Icon={ICONS[TYPES.FileUpload]}>
+        <ModalSectionContent>
           <InputRow>
             <Input
               required
@@ -105,7 +104,7 @@ function Component(props: Props) {
               disabled={props.disabled}
             />
           </InputRow>
-        </ModalComponentHeader>
+        </ModalSectionContent>
       </ModalSection>
       <ModalFooter formik={formik} disabled={props.disabled} />
     </form>

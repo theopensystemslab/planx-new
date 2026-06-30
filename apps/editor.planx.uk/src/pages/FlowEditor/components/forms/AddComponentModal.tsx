@@ -62,6 +62,7 @@ const ComponentRow: React.FC<ComponentRowProps> = ({
     >
       <Box
         onClick={onClick}
+        data-component-type={item.type}
         sx={{
           display: "flex",
           alignItems: "center",

@@ -203,7 +203,7 @@ test.describe("Flow creation, publish and preview", () => {
     await navigateToService(page, serviceProps.slug);
 
     // Add our ext portal to the middle of the service
-    await createExternalPortal(page, page.locator("li.hanger > a").nth(6));
+    await createExternalPortal(page, page.locator("li.hanger > button").nth(6));
 
     await expect(
       page.getByRole("link", { name: "E2E/an-external-portal-service" }),

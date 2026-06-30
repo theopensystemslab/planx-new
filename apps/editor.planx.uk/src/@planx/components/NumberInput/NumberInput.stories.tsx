@@ -1,3 +1,4 @@
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import { Meta, StoryObj } from "@storybook/tanstack-react";
 import { userEvent, within } from "storybook/test";
 
@@ -43,5 +44,11 @@ export const FilledForm: StoryObj = {
 };
 
 export const WithEditor = () => {
-  return <Wrapper Editor={Editor} Public={Public} />;
+  return (
+    <Wrapper
+      Editor={Editor}
+      Public={Public}
+      componentType={ComponentType.NumberInput}
+    />
+  );
 };

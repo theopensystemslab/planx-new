@@ -39,7 +39,6 @@ describe("Checklist editor component", () => {
         <ChecklistEditor options={[]} />
       </DndProvider>,
     );
-    expect(screen.getByText("Checklist")).toBeInTheDocument();
     expect(screen.getByText("Add option")).toBeInTheDocument();
   });
 

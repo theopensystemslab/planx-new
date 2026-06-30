@@ -12,12 +12,12 @@ import PayComponent from "./Editor";
 
 describe("Pay component - Editor Modal", () => {
   it("renders", async () => {
-    const { getByText } = await setup(
+    await setup(
       <DndProvider backend={HTML5Backend}>
         <PayComponent id="test" />
       </DndProvider>,
     );
-    expect(getByText("Payment")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Page title")).toBeInTheDocument();
   });
 
   // Currently failing, Editor not a11y compliant

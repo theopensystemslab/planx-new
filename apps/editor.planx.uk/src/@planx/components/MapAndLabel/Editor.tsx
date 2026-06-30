@@ -19,7 +19,6 @@ import InputRowItem from "ui/shared/InputRowItem";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
-import { ICONS } from "../shared/icons";
 import BasicRadio from "../shared/Radio/BasicRadio/BasicRadio";
 import { EditorProps } from "../shared/types";
 import { MapAndLabel, parseContent, validationSchema } from "./model";
@@ -80,10 +79,7 @@ function MapAndLabelComponent(props: Props) {
         }
       />
       <ModalSection>
-        <ModalSectionContent
-          title="Map and label"
-          Icon={ICONS[TYPES.MapAndLabel]}
-        >
+        <ModalSectionContent>
           <InputGroup>
             <InputRow>
               <Input

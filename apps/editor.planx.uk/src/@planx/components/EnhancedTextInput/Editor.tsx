@@ -9,7 +9,6 @@ import React from "react";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import { InternalNotes } from "ui/editor/InternalNotes";
 import ModalSection from "ui/editor/ModalSection";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import { MoreInformation } from "ui/editor/MoreInformation/MoreInformation";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
@@ -19,7 +18,6 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
-import { ICONS } from "../shared/icons";
 import type { EditorProps } from "../shared/types";
 import {
   parseEnhancedTextInput,
@@ -60,10 +58,7 @@ const EnhancedTextInputComponent = (props: Props) => {
             }
           />
           <ModalSection>
-            <ModalComponentHeader
-              title="Enhanced text input"
-              Icon={ICONS[ComponentType.EnhancedTextInput]}
-            >
+            <ModalSectionContent>
               <InputRow>
                 <FormControl component="fieldset">
                   <Typography component="legend" variant="body2" sx={{ py: 1 }}>
@@ -90,7 +85,7 @@ const EnhancedTextInputComponent = (props: Props) => {
                   </RadioGroup>
                 </FormControl>
               </InputRow>
-            </ModalComponentHeader>
+            </ModalSectionContent>
           </ModalSection>
           <ModalSection>
             <ModalSectionContent>

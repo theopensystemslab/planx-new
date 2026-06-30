@@ -19,7 +19,6 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 import { Switch } from "ui/shared/Switch";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
-import { ICONS } from "../shared/icons";
 
 export type Props = EditorProps<TYPES.NumberInput, NumberInput>;
 
@@ -47,10 +46,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
         }
       />
       <ModalSection>
-        <ModalSectionContent
-          title="Number input"
-          Icon={ICONS[TYPES.NumberInput]}
-        >
+        <ModalSectionContent>
           <InputRow>
             <Input
               format="large"

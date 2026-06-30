@@ -24,7 +24,6 @@ import InputRowItem from "ui/shared/InputRowItem";
 import { Switch } from "ui/shared/Switch";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
-import { ICONS } from "../shared/icons";
 import { RuleBuilder } from "../shared/RuleBuilder";
 import {
   FileType,
@@ -61,10 +60,7 @@ function FileUploadAndLabelComponent(props: Props) {
         }
       />
       <ModalSection>
-        <ModalSectionContent
-          title="Upload and label"
-          Icon={ICONS[TYPES.FileUploadAndLabel]}
-        >
+        <ModalSectionContent>
           <InputRow>
             <Input
               errorMessage={formik.errors.title}

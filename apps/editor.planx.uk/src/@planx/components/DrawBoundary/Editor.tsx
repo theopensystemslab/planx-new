@@ -43,10 +43,7 @@ function DrawBoundaryComponent(props: Props) {
         }
       />
       <ModalSection>
-        <ModalSectionContent
-          title="Draw boundary"
-          Icon={ICONS[TYPES.DrawBoundary]}
-        >
+        <ModalSectionContent>
           <InputRow>
             <Input
               format="large"

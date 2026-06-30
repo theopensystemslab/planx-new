@@ -1,3 +1,4 @@
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import Wrapper from "@planx/components/fixtures/Wrapper";
 import { Meta } from "@storybook/tanstack-react";
 
@@ -10,4 +11,10 @@ export default {
   component: Public,
 } satisfies Meta<typeof Public>;
 
-export const WithEditor = () => <Wrapper Editor={Editor} Public={Public} />;
+export const WithEditor = () => (
+  <Wrapper
+    Editor={Editor}
+    Public={Public}
+    componentType={ComponentType.DrawBoundary}
+  />
+);

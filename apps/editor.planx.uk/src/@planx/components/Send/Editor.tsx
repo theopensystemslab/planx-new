@@ -13,14 +13,12 @@ import React, { useCallback } from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
-import { ICONS } from "../shared/icons";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
 import { EditorProps } from "../shared/types";
 import EmailSection from "./EmailSection";
@@ -72,7 +70,7 @@ const SendForm: React.FC<SendFormProps> = ({ disabled }) => {
         }
       />
       <ModalSection>
-        <ModalComponentHeader title="Send" Icon={ICONS[TYPES.Send]}>
+        <ModalSectionContent>
           <InputRow>
             <Input
               format="large"
@@ -84,7 +82,7 @@ const SendForm: React.FC<SendFormProps> = ({ disabled }) => {
               errorMessage={formik.errors.title}
             />
           </InputRow>
-        </ModalComponentHeader>
+        </ModalSectionContent>
       </ModalSection>
       <ModalSection>
         <ErrorWrapper error={getIn(formik.errors, "destinations")}>

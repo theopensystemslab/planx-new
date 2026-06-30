@@ -14,7 +14,6 @@ it("renders without error", async () => {
       <ResponsiveQuestion node={{}} options={[]} />
     </DndProvider>,
   );
-  expect(screen.getByText("Responsive question")).toBeInTheDocument();
   expect(screen.getByText("Add option")).toBeInTheDocument();
 });
 

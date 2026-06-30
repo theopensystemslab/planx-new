@@ -1,8 +1,10 @@
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { EditorProps, PublicProps } from "@planx/components/shared/types";
 import { nanoid } from "nanoid";
 import React, { useState } from "react";
+import ComponentTypeHeader from "ui/editor/ComponentTypeHeader";
 
 import { Option } from "../Option/model";
 
@@ -15,13 +17,14 @@ interface Props<
 > {
   Editor: React.FC<EditorProps<Type, Data, ExtraProps>>;
   Public: React.FC<PublicProps<Data>>;
+  componentType?: ComponentType;
 }
 
 function Wrapper<
   Type extends ComponentType,
   Data,
   ExtraProps extends Record<string, unknown>,
->({ Editor, Public }: Props<Type, Data, ExtraProps>) {
+>({ Editor, Public, componentType }: Props<Type, Data, ExtraProps>) {
   // Store node data locally, so that we can pass this into the generated public component
   const [data, setData] = useState<Data | null>(null);
   const [options, setOptions] = useState<Option[]>([]);
@@ -49,6 +52,11 @@ function Wrapper<
           margin: "1em",
         }}
       >
+        {componentType !== undefined && (
+          <Box sx={{ pt: 3, px: 2.5 }}>
+            <ComponentTypeHeader type={componentType} />
+          </Box>
+        )}
         <Editor {...editorProps} />
         <Button
           type="submit"

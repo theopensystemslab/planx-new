@@ -1,3 +1,4 @@
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import { Meta, StoryObj } from "@storybook/tanstack-react";
 
 import Wrapper from "../fixtures/Wrapper";
@@ -31,4 +32,10 @@ export const Basic = {
   },
 } satisfies Story;
 
-export const WithEditor = () => <Wrapper Editor={Editor} Public={Public} />;
+export const WithEditor = () => (
+  <Wrapper
+    Editor={Editor}
+    Public={Public}
+    componentType={ComponentType.TaskList}
+  />
+);

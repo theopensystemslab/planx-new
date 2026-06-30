@@ -73,5 +73,11 @@ const EditorWithFlatOptions = (
 };
 
 export const WithEditor = () => {
-  return <Wrapper Editor={EditorWithFlatOptions} Public={Checklist} />;
+  return (
+    <Wrapper
+      Editor={EditorWithFlatOptions}
+      Public={Checklist}
+      componentType={ComponentType.Checklist}
+    />
+  );
 };

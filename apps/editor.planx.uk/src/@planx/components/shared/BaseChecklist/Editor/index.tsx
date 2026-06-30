@@ -5,7 +5,7 @@ import React, { useRef } from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
 import ModalSection from "ui/editor/ModalSection";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
+import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -13,7 +13,6 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
-import { ICONS } from "../../icons";
 import { clearOptionsDataFields } from "../../utils";
 import { TypeNarrowedExpandableSwitch as ExpandableSwitch } from "./components/ExpandableSwitch";
 import { TypeNarrowedModalFooter as ModalFooter } from "./components/ModalFooter";
@@ -49,7 +48,7 @@ export const BaseChecklistComponent: React.FC<Props> = (props) => {
         }
       />
       <ModalSection>
-        <ModalComponentHeader title={title} Icon={ICONS[type]}>
+        <ModalSectionContent>
           <InputGroup>
             <InputRow>
               <Input
@@ -156,7 +155,7 @@ export const BaseChecklistComponent: React.FC<Props> = (props) => {
               </>
             )}
           </InputGroup>
-        </ModalComponentHeader>
+        </ModalSectionContent>
         <ErrorWrapper error={getIn(formik.errors, "options")}>
           <Options {...props} />
         </ErrorWrapper>

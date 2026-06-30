@@ -10,9 +10,6 @@ import { FormikProps } from "formik";
 import React, { MutableRefObject } from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
-
-import { ICONS } from "../shared/icons";
 
 interface FilterData {
   fn: string;
@@ -70,13 +67,13 @@ const Filter: React.FC<Props> = (props) => {
       data-testid="filter-component-form"
     >
       <ModalSection>
-        <ModalComponentHeader title="Filter" Icon={ICONS[TYPES.Filter]}>
+        <ModalSectionContent>
           <Typography variant="body2">
             Filters automatically sort based on collected flags. Flags within a
             category are ordered heirarchically and the filter will route
             through the left-most matching flag option only.
           </Typography>
-        </ModalComponentHeader>
+        </ModalSectionContent>
         <ModalSectionContent title="Pick a flagset category">
           <select
             data-testid="flagset-category-select"
