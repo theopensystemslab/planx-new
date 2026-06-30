@@ -11,7 +11,7 @@ RUN npm install -g pnpm@10.30.2
 COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
 RUN pnpm fetch
 
-COPY . .
+COPY apps/sharedb.planx.uk ./apps/sharedb.planx.uk
 RUN pnpm install --frozen-lockfile --prefer-offline
 # `pnpm deploy` refuses to run unless `inject-workspace-packages=true`, failing with ERR_PNPM_DEPLOY_NONINJECTED_WORKSPACE
 # It's not exposed as a CLI flag, so we set it via npm's `npm_config_<key>` env-var convention
