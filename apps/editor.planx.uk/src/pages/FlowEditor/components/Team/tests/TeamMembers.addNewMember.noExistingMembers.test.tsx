@@ -24,7 +24,7 @@ describe("when a user views the 'Team members' screen but there are no existing 
       </DndProvider>,
     );
 
-    screen.getByText("No members found");
+    screen.getByText("No team members found");
   });
 
   it("shows the 'add a new member' button", async () => {

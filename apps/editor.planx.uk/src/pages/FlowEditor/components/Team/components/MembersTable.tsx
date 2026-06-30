@@ -75,28 +75,16 @@ export const MembersTable = ({
   if (members.length === 0) {
     return (
       <>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>
-                <EmptyState
-                  size="small"
-                  title="No team members found"
-                  icon={<GroupIcon />}
-                />
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          {showAddMemberButton && (
-            <TableBody>
-              <TableRow>
-                <TableCell colSpan={3}>
-                  <AddButton onClick={addUser}>Add a new member</AddButton>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          )}
-        </Table>
+        <EmptyState
+          size="small"
+          title="No team members found"
+          icon={<GroupIcon />}
+        />
+        {showAddMemberButton && (
+          <Box sx={{ mt: 2 }}>
+            <AddButton onClick={addUser}>Add a new member</AddButton>
+          </Box>
+        )}
         {modal.action !== "closed" && (
           <AddUserModal onClose={closeModal} userRole={userRole} />
         )}
