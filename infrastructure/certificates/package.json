@@ -1,13 +1,14 @@
 {
   "name": "@planx/infrastructure-certificates",
   "dependencies": {
-    "@pulumi/aws": "catalog:",
-    "@pulumi/cloudflare": "catalog:",
-    "@pulumi/pulumi": "catalog:"
+    "@planx/infrastructure-common": "workspace:*",
+    "@pulumi/aws": "catalog:infrastructure",
+    "@pulumi/cloudflare": "catalog:infrastructure",
+    "@pulumi/pulumi": "catalog:infrastructure"
   },
   "devDependencies": {
     "@types/node": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:typescript"
   },
   "main": "index.ts",
   "private": true

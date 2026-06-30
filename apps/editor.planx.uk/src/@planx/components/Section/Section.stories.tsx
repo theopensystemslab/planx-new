@@ -1,4 +1,7 @@
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType,
+  ComponentType as TYPES,
+} from "@opensystemslab/planx-core/types";
 import { Meta, StoryObj } from "@storybook/tanstack-react";
 import { ComponentProps } from "react";
 import { SectionNode } from "types";
@@ -92,6 +95,10 @@ export const WithNewInformationNeeded = {
 
 export const WithEditor = () => {
   return (
-    <Wrapper Editor={Editor} Public={() => <Public {...defaultProps} />} />
+    <Wrapper
+      Editor={Editor}
+      Public={() => <Public {...defaultProps} />}
+      componentType={ComponentType.Section}
+    />
   );
 };

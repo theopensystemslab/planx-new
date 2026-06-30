@@ -16,6 +16,7 @@ import Typography from "@mui/material/Typography";
 import { getQuarter } from "date-fns";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { EmptyState } from "ui/editor/EmptyState";
 import SettingsSection from "ui/editor/SettingsSection";
 import Caret from "ui/icons/Caret";
 
@@ -47,7 +48,7 @@ export const ServiceCharges = ({ serviceCharges }: SubscriptionProps) => {
       {serviceCharges.length > 0 ? (
         <ActiveServiceCharges serviceCharges={serviceCharges} />
       ) : (
-        <Typography variant="body1">No service charges found.</Typography>
+        <EmptyState size="small" title="No service charges found" />
       )}
     </SettingsSection>
   );

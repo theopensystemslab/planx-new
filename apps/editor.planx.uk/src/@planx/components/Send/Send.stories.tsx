@@ -1,3 +1,4 @@
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import { Meta } from "@storybook/tanstack-react";
 
 import Wrapper from "../fixtures/Wrapper";
@@ -12,5 +13,11 @@ const meta = {
 export default meta;
 
 export const WithEditor = () => {
-  return <Wrapper Editor={Editor} Public={Public} />;
+  return (
+    <Wrapper
+      Editor={Editor}
+      Public={Public}
+      componentType={ComponentType.Send}
+    />
+  );
 };

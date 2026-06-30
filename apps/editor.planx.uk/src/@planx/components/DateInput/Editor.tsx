@@ -11,7 +11,7 @@ import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
+import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import DateInputUi from "ui/shared/DateInput/DateInput";
@@ -19,7 +19,6 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
-import { ICONS } from "../shared/icons";
 
 export type Props = EditorProps<TYPES.DateInput, DateInput>;
 
@@ -50,7 +49,7 @@ const DateInputComponent: React.FC<Props> = (props) => {
         }
       />
       <ModalSection>
-        <ModalComponentHeader title="Date input" Icon={ICONS[TYPES.DateInput]}>
+        <ModalSectionContent>
           <InputRow>
             <Input
               format="large"
@@ -106,7 +105,7 @@ const DateInputComponent: React.FC<Props> = (props) => {
               />
             </InputRow>
           </Box>
-        </ModalComponentHeader>
+        </ModalSectionContent>
       </ModalSection>
       <ModalFooter formik={formik} disabled={props.disabled} />
     </form>

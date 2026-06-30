@@ -5,7 +5,7 @@ import { formattedPriceWithCurrencySymbol } from "@planx/components/Pay/model";
 import { DEFAULT_SERVICE_CHARGE_AMOUNT } from "@planx/components/SetFee/model";
 import { getQuarter } from "date-fns";
 import sumBy from "lodash/sumBy";
-import React from "react";
+import { EmptyState } from "ui/editor/EmptyState";
 import SettingsSection from "ui/editor/SettingsSection";
 
 import { SubscriptionProps } from "../types";
@@ -44,7 +44,7 @@ export const Discount = ({ serviceCharges }: SubscriptionProps) => {
       {serviceChargesThisFiscalYear.length > 0 ? (
         <DiscountProgress serviceCharges={serviceChargesThisFiscalYear} />
       ) : (
-        <Typography variant="body1">{`No service charges found.`}</Typography>
+        <EmptyState size="small" title="No service charges found" />
       )}
     </SettingsSection>
   );

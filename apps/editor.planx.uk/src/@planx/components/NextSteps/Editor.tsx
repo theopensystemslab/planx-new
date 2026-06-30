@@ -15,13 +15,11 @@ import ListManager, {
 } from "ui/editor/ListManager/ListManager";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
+import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
-
-import { ICONS } from "../shared/icons";
 
 type Props = EditorProps<TYPES.NextSteps, NextSteps>;
 
@@ -110,7 +108,7 @@ const NextStepsComponent: React.FC<Props> = (props) => {
         }
       />
       <ModalSection>
-        <ModalComponentHeader title="Next steps" Icon={ICONS[TYPES.NextSteps]}>
+        <ModalSectionContent>
           <Typography variant="body2" sx={{ mb: 2 }}>
             If you want users to continue to the next step in the service from a
             given step, leave that URL section empty.
@@ -149,7 +147,7 @@ const NextStepsComponent: React.FC<Props> = (props) => {
             disabled={props.disabled}
             collapsible={true}
           />
-        </ModalComponentHeader>
+        </ModalSectionContent>
       </ModalSection>
       <ModalFooter formik={formik} disabled={props.disabled} />
     </form>

@@ -11,7 +11,6 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
-import { ICONS } from "../shared/icons";
 import {
   AddressInput,
   editorValidationSchema,
@@ -47,10 +46,7 @@ const AddressInputComponent: React.FC<Props> = (props) => {
         }
       />
       <ModalSection>
-        <ModalSectionContent
-          title="Address input"
-          Icon={ICONS[TYPES.AddressInput]}
-        >
+        <ModalSectionContent>
           <InputRow>
             <Input
               format="large"

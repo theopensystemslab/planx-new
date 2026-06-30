@@ -13,7 +13,7 @@ describe("ContactInputComponent - Editor Modal", () => {
         <ContactInputComponent id="test" />
       </DndProvider>,
     );
-    expect(screen.getByText("Contact input")).toBeInTheDocument();
+    expect(screen.getByTestId("contact-input-data-field")).toBeInTheDocument();
   });
 
   it("requires a title", async () => {
@@ -71,8 +71,8 @@ describe("ContactInputComponent - Editor Modal", () => {
     );
 
     await user.click(autocompleteInput);
-    await user.type(autocompleteInput, "my.data.value");
-    await user.keyboard("{Enter}");
+    await user.paste("my.data.value");
+    await user.tab();
 
     fireEvent.submit(screen.getByRole("form"));
 

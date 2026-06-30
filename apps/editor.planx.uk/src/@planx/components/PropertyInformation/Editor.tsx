@@ -12,7 +12,6 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
-import { ICONS } from "../shared/icons";
 import { parseContent, PropertyInformation, validationSchema } from "./model";
 
 type Props = EditorProps<TYPES.PropertyInformation, PropertyInformation>;
@@ -43,10 +42,7 @@ function PropertyInformationComponent(props: Props) {
         }
       />
       <ModalSection>
-        <ModalSectionContent
-          title="Property information"
-          Icon={ICONS[TYPES.PropertyInformation]}
-        >
+        <ModalSectionContent>
           <InputRow>
             <Input
               format="large"

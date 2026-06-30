@@ -1,3 +1,5 @@
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
@@ -67,11 +69,11 @@ export const Notifications = ({ notifications }: NotificationProps) => {
           <EmptyState
             size="small"
             title={
-              tab === 0
-                ? "No notifications, you're all up to date"
-                : "No resolved notifications"
+              tab === 0 ? "No notifications found" : "No resolved notifications"
             }
-            sx={{ mt: 0 }}
+            description={tab === 0 ? "You're all up to date" : ""}
+            icon={tab === 0 ? <NotificationsNoneIcon /> : <NotificationsIcon />}
+            sx={{ mt: -1 }}
           />
         )}
         {visibleNotifications.length > 0 && (

@@ -1,14 +1,11 @@
-import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Popover from "@mui/material/Popover";
-import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { ICONS } from "@planx/components/shared/icons";
 import React, { useState } from "react";
+import ComponentTypeHeader from "ui/editor/ComponentTypeHeader";
 
 import { fromSlug } from "../../data/types";
 import { AddComponentModalContent } from "./AddComponentModal";
-import { ALL_ITEMS } from "./componentData";
 
 interface Props {
   type: string;
@@ -16,13 +13,14 @@ interface Props {
   canChange: boolean;
 }
 
-const ChangeComponentHeader: React.FC<Props> = ({ type, onChange, canChange }) => {
+const ChangeComponentHeader: React.FC<Props> = ({
+  type,
+  onChange,
+  canChange,
+}) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const displaySlug = type === "enhanced-text-input" ? "text-input" : type;
-  const item = ALL_ITEMS.find((i) => i.slug === displaySlug);
-  const Icon = item ? ICONS[item.type] : undefined;
-  const componentTitle = item?.title ?? type;
+  const componentType = fromSlug(type);
 
   const handleSelect = (slug: string) => {
     setAnchorEl(null);
@@ -30,13 +28,11 @@ const ChangeComponentHeader: React.FC<Props> = ({ type, onChange, canChange }) =
     if (newType !== undefined) onChange(newType);
   };
 
+  if (!componentType) return null;
+
   return (
     <>
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-        {Icon && <Icon sx={{ color: "text.primary", fontSize: "1.6rem" }} />}
-        <Typography variant="h3" component="h1">
-          {componentTitle}
-        </Typography>
+      <ComponentTypeHeader type={componentType}>
         {canChange && (
           <Link
             component="button"
@@ -47,7 +43,7 @@ const ChangeComponentHeader: React.FC<Props> = ({ type, onChange, canChange }) =
             change
           </Link>
         )}
-      </Box>
+      </ComponentTypeHeader>
       <Popover
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}

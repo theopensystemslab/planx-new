@@ -2,7 +2,7 @@
 
 We use Pulumi to write Infrastructure-as-Code in TypeScript.
 
-This directory is structured as a **pnpm workspace**.
+Each layer below is a package in the repo's root [pnpm workspace](https://pnpm.io/workspaces). Shared Pulumi versions are pinned centrally via the named `infrastructure` [catalog](https://pnpm.io/catalogs) in the root `pnpm-workspace.yaml`, which the layers reference with `"catalog:infrastructure"`.
 
 The code is split up into separate layers, so as to isolate changes and minimize the chance of losing data:
 
@@ -14,7 +14,7 @@ The code is split up into separate layers, so as to isolate changes and minimize
 
 # CD/CI
 
-Only the `application` layer is automatically deployed via CI via the `pulumi_preview` job. The other stacks change infrequently and need to be manually deployed. 
+Only the `application` layer is automatically deployed via CI via the `pulumi_preview` job. The other stacks change infrequently and need to be manually deployed.
 
 # Provisioning the first three layers manually
 
@@ -31,9 +31,9 @@ Steps:
 2. Install the [Pulumi CLI](https://www.pulumi.com/docs/reference/cli/)
 3. Setup AWS credentials for Pulumi IAM role. Profile names should have the format `planx-<STACK>-pulumi`.
 4. Log in to the Pulumi CLI using your PAT (`pulumi login`)
-5. Install project dependencies from the infrastructure directory (`cd infrastructure && pnpm install`) - this will install dependencies for all layers via the pnpm workspace
+5. Install project dependencies by running `pnpm install` from the repo root - this installs dependencies for every workspace package, including all infrastructure layers
 6. Provision layers manually (`cd <LAYER_DIR> && pulumi up --stack <STACK>`)
 
 ### What about the secrets?
 
-Pulumi holds the encryption keys only. We hold the ciphertext. This means Pulumi can never access our secrets.  If we wanted to, we could set up pulumi to use an S3 bucket instead of relying on their services, but this would add complexity as using IaC to set up the S3 bucket to host IaC's secrets is a bit of a chicken-and-the-egg situation. It's good to know it's doable but not worth the effort at the moment.
+Pulumi holds the encryption keys only. We hold the ciphertext. This means Pulumi can never access our secrets. If we wanted to, we could set up pulumi to use an S3 bucket instead of relying on their services, but this would add complexity as using IaC to set up the S3 bucket to host IaC's secrets is a bit of a chicken-and-the-egg situation. It's good to know it's doable but not worth the effort at the moment.

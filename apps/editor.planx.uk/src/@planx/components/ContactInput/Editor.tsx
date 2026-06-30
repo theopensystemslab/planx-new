@@ -11,7 +11,6 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
-import { ICONS } from "../shared/icons";
 import {
   ContactInput,
   editorValidationSchema,
@@ -47,10 +46,7 @@ const ContactInputComponent: React.FC<Props> = (props) => {
         }
       />
       <ModalSection>
-        <ModalSectionContent
-          title="Contact input"
-          Icon={ICONS[TYPES.ContactInput]}
-        >
+        <ModalSectionContent>
           <InputRow>
             <Input
               format="large"

@@ -107,7 +107,8 @@ services:
     container_name: api
     restart: unless-stopped
     build:
-      context: ./apps/api.planx.uk
+      context: .
+      dockerfile: apps/api.planx.uk/Dockerfile
       target: production
     depends_on:
       hasura-proxy:
@@ -183,7 +184,8 @@ services:
     container_name: sharedb
     restart: unless-stopped
     build:
-      context: ./apps/sharedb.planx.uk
+      context: .
+      dockerfile: apps/sharedb.planx.uk/Dockerfile
       target: production
     volumes:
       - "./apps/sharedb.planx.uk:/sharedb"

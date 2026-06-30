@@ -1,0 +1,16 @@
+.git
+.claude
+.github
+node_modules
+**/node_modules
+e2e
+infrastructure
+
+apps/editor.planx.uk/*
+!apps/editor.planx.uk/package.json
+apps/hasura.planx.uk/*
+!apps/hasura.planx.uk/package.json
+apps/localplanning.services/*
+!apps/localplanning.services/package.json
+apps/postgres/*
+!apps/postgres/package.json

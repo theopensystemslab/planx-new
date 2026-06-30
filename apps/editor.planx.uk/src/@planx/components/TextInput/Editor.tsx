@@ -9,14 +9,12 @@ import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
-import { ICONS } from "../shared/icons";
 import { editorValidationSchema, parseTextInput, TextInput } from "./model";
 
 export type Props = EditorProps<TYPES.TextInput, TextInput>;
@@ -78,7 +76,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
         }
       />
       <ModalSection>
-        <ModalComponentHeader title="Text input" Icon={ICONS[TYPES.TextInput]}>
+        <ModalSectionContent>
           <InputRow>
             <Input
               format="large"
@@ -105,7 +103,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
             onChange={(value) => formik.setFieldValue("fn", value)}
             disabled={props.disabled}
           />
-        </ModalComponentHeader>
+        </ModalSectionContent>
         <ModalSectionContent title="Input style">
           <FormControl component="fieldset">
             <RadioGroup defaultValue="short" value={formik.values.type}>

@@ -8,14 +8,12 @@ import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 
-import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
 import {
   Flow,
@@ -80,7 +78,7 @@ const InternalPortalForm: React.FC<Props> = (props) => {
         }
       />
       <ModalSection>
-        <ModalComponentHeader title="Folder" Icon={ICONS[TYPES.InternalPortal]}>
+        <ModalSectionContent>
           <ErrorWrapper error={formik.errors.text}>
             <Input
               name="text"
@@ -92,7 +90,7 @@ const InternalPortalForm: React.FC<Props> = (props) => {
               id="portalFlowId"
             />
           </ErrorWrapper>
-        </ModalComponentHeader>
+        </ModalSectionContent>
         {props.flows && props.flows?.length > 0 && (
           <ModalSectionContent subtitle="Select an existing folder">
             <InputLabel

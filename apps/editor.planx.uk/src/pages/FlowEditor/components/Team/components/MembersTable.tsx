@@ -1,3 +1,4 @@
+import GroupIcon from "@mui/icons-material/Group";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
@@ -9,9 +10,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { Role } from "@opensystemslab/planx-core/types";
-import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useState } from "react";
+import { useState } from "react";
 import { AddButton } from "ui/editor/AddButton";
+import { EmptyState } from "ui/editor/EmptyState";
 
 import { StyledAvatar, StyledTableRow } from "../styles";
 import {
@@ -74,24 +75,16 @@ export const MembersTable = ({
   if (members.length === 0) {
     return (
       <>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>
-                <strong>No members found</strong>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          {showAddMemberButton && (
-            <TableBody>
-              <TableRow>
-                <TableCell colSpan={3}>
-                  <AddButton onClick={addUser}>Add a new member</AddButton>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          )}
-        </Table>
+        <EmptyState
+          size="small"
+          title="No team members found"
+          icon={<GroupIcon />}
+        />
+        {showAddMemberButton && (
+          <Box sx={{ mt: 2 }}>
+            <AddButton onClick={addUser}>Add a new member</AddButton>
+          </Box>
+        )}
         {modal.action !== "closed" && (
           <AddUserModal onClose={closeModal} userRole={userRole} />
         )}

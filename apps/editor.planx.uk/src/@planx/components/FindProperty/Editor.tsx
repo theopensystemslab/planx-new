@@ -13,7 +13,6 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import { Switch } from "ui/shared/Switch";
 
-import { ICONS } from "../shared/icons";
 import type { FindProperty } from "./model";
 import { parseFindProperty, validationSchema } from "./model";
 
@@ -43,10 +42,7 @@ function FindPropertyComponent(props: Props) {
         }
       />
       <ModalSection>
-        <ModalSectionContent
-          title="Find property"
-          Icon={ICONS[TYPES.FindProperty]}
-        >
+        <ModalSectionContent>
           <InputRow>
             <Input
               format="large"

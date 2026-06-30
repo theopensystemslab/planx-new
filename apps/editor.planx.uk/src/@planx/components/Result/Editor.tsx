@@ -12,7 +12,7 @@ import groupBy from "lodash/groupBy";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
+import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import InputLabel from "ui/public/InputLabel";
@@ -20,7 +20,6 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
-import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
 import { FlagDisplayText, Result, validationSchema } from "./model";
 
@@ -116,7 +115,7 @@ const ResultComponent: React.FC<Props> = (props) => {
             }
           />
           <ModalSection>
-            <ModalComponentHeader title="Result" Icon={ICONS[TYPES.Result]}>
+            <ModalSectionContent>
               <InputRow>
                 <Typography variant="h5" component="h6">
                   <label htmlFor="result-flagSet">Flag set</label>
@@ -181,7 +180,7 @@ const ResultComponent: React.FC<Props> = (props) => {
                   })}
                 </Box>
               </Box>
-            </ModalComponentHeader>
+            </ModalSectionContent>
           </ModalSection>
           <ModalFooter
             formik={formik}

@@ -11,13 +11,11 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
-import { ICONS } from "../shared/icons";
 import BasicRadio from "../shared/Radio/BasicRadio/BasicRadio";
 import {
   parseSection,
@@ -82,7 +80,7 @@ function SectionComponent(props: Props) {
         }
       />
       <ModalSection>
-        <ModalComponentHeader title="Section marker" Icon={ICONS[TYPES.Section]}>
+        <ModalSectionContent>
           <InputRow>
             <Input
               required
@@ -105,7 +103,7 @@ function SectionComponent(props: Props) {
               errorMessage={formik.errors.description}
             />
           </InputRow>
-        </ModalComponentHeader>
+        </ModalSectionContent>
         <ModalSectionContent title="Section length" Icon={MoreTimeIcon}>
           <Typography variant="subtitle2" sx={{ mb: 2 }}>
             Please estimate the relative length of this section. This will be

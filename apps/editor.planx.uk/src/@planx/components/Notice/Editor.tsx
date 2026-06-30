@@ -8,7 +8,7 @@ import React from "react";
 import ColorPicker from "ui/editor/ColorPicker/ColorPicker";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import ModalSection from "ui/editor/ModalSection";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
+import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeConfiguration } from "ui/editor/TemplatedNodeConfiguration";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
@@ -18,7 +18,6 @@ import { Switch } from "ui/shared/Switch";
 
 import { InternalNotes } from "../../../ui/editor/InternalNotes";
 import { MoreInformation } from "../../../ui/editor/MoreInformation/MoreInformation";
-import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
 
 export type Props = EditorProps<TYPES.Notice, Notice>;
@@ -43,7 +42,7 @@ const NoticeEditor: React.FC<NoticeEditorProps> = ({ formik, disabled }) => {
         }
       />
       <ModalSection>
-        <ModalComponentHeader title="Notice" Icon={ICONS[TYPES.Notice]}>
+        <ModalSectionContent>
           <InputRow>
             <Input
               name="title"
@@ -82,7 +81,7 @@ const NoticeEditor: React.FC<NoticeEditorProps> = ({ formik, disabled }) => {
               disabled={disabled}
             />
           </InputRow>
-        </ModalComponentHeader>
+        </ModalSectionContent>
       </ModalSection>
       <MoreInformation formik={formik} disabled={disabled} />
       <InternalNotes

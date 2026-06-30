@@ -4,7 +4,7 @@ import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
+import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
@@ -14,7 +14,6 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
-import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
 import { Page, parsePage, validationSchema } from "./model";
 import { ProposedAdvertisements } from "./schema/AdvertConsent";
@@ -58,7 +57,7 @@ function PageComponent(props: Props) {
         }
       />
       <ModalSection>
-        <ModalComponentHeader title="Page" Icon={ICONS[TYPES.Page]}>
+        <ModalSectionContent>
           <InputRow>
             <Input
               format="large"
@@ -112,7 +111,7 @@ function PageComponent(props: Props) {
               </SelectInput>
             </InputRowItem>
           </InputRow>
-        </ModalComponentHeader>
+        </ModalSectionContent>
       </ModalSection>
       <ModalFooter formik={formik} disabled={props.disabled} />
     </form>

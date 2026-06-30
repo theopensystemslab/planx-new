@@ -1,12 +1,12 @@
 {
   "name": "@planx/infrastructure-ml",
   "dependencies": {
-    "@pulumi/aws": "catalog:",
-    "@pulumi/pulumi": "catalog:"
+    "@pulumi/aws": "catalog:infrastructure",
+    "@pulumi/pulumi": "catalog:infrastructure"
   },
   "devDependencies": {
     "@types/node": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:typescript"
   },
   "main": "index.ts",
   "private": true

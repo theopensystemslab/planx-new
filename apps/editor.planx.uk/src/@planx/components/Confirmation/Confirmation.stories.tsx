@@ -1,4 +1,5 @@
 import type { GovUKPayment } from "@opensystemslab/planx-core/types";
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import { Meta, StoryObj } from "@storybook/tanstack-react";
 import { useStore } from "pages/FlowEditor/lib/store";
 
@@ -61,5 +62,9 @@ export const Basic = {
 } satisfies Story;
 
 export const WithEditor = () => (
-  <Wrapper Editor={Editor} Public={Confirmation} />
+  <Wrapper
+    Editor={Editor}
+    Public={Confirmation}
+    componentType={ComponentType.Confirmation}
+  />
 );

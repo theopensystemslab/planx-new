@@ -40,7 +40,6 @@ describe("Responsive Checklist editor component", () => {
         <ResponsiveChecklistEditor options={[]} />
       </DndProvider>,
     );
-    expect(screen.getByText("Responsive checklist")).toBeInTheDocument();
     expect(screen.getByText("Add option")).toBeInTheDocument();
   });
 

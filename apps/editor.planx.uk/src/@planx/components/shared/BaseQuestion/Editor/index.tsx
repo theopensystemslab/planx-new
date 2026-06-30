@@ -13,7 +13,6 @@ import InputGroup from "ui/editor/InputGroup";
 import ListManager from "ui/editor/ListManager/ListManager";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import ModalComponentHeader from "ui/editor/ModalComponentHeader";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -27,7 +26,6 @@ import {
   usePlanningConstraintsSchema,
   usePlanningDataEntityNames,
 } from "../../hooks";
-import { ICONS } from "../../icons";
 import { clearOptionsDataFields, getOptionsSchemaByFn } from "../../utils";
 import MoreInformation from "./MoreInformation";
 import TemplatedNodeConfiguration from "./TemplatedNodeConfiguration";
@@ -82,7 +80,7 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
         }
       />
       <ModalSection>
-        <ModalComponentHeader title={title} Icon={ICONS[type]}>
+        <ModalSectionContent>
           <InputGroup>
             <InputRow>
               <Input
@@ -162,7 +160,7 @@ const BaseQuestionComponent: React.FC<Props> = (props) => {
               </>
             )}
           </InputGroup>
-        </ModalComponentHeader>
+        </ModalSectionContent>
         <ModalSectionContent subtitle="Options">
           <ErrorWrapper error={getIn(formik.errors, "options")}>
             <ListManager

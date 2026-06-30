@@ -1,3 +1,4 @@
+import BarChartIcon from "@mui/icons-material/BarChart";
 import { GridFilterItem } from "@mui/x-data-grid";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import ErrorFallback from "components/Error/ErrorFallback";
@@ -50,6 +51,7 @@ const EventsLog: React.FC<EventsLogProps> = ({
       <EmptyState
         title={`No payment or send events found for this ${filterByFlow ? "service" : "team"}`}
         description="If you're looking for events before 1st January 2024, please contact a PlanX developer"
+        icon={<BarChartIcon />}
       />
     );
 

@@ -1,5 +1,6 @@
 import ErrorOutline from "@mui/icons-material/ErrorOutlined";
 import Typography from "@mui/material/Typography";
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import { Meta } from "@storybook/tanstack-react";
 
 import Wrapper from "../fixtures/Wrapper";
@@ -15,7 +16,11 @@ export default {
 export const WithEditor = () => {
   return (
     <>
-      <Wrapper Editor={Editor} Public={Public} />
+      <Wrapper
+        Editor={Editor}
+        Public={Public}
+        componentType={ComponentType.SetValue}
+      />
       <WarningContainer>
         <ErrorOutline />
         <Typography variant="body2" sx={{ ml: 2 }}>

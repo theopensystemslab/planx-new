@@ -1,3 +1,4 @@
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import { Meta, StoryObj } from "@storybook/tanstack-react";
 import { delay, http, HttpResponse } from "msw";
 import { userEvent, within } from "storybook/test";
@@ -128,5 +129,11 @@ export const RateLimitExceeded = {
 } satisfies Story;
 
 export const WithEditor = () => {
-  return <Wrapper Editor={Editor} Public={Public} />;
+  return (
+    <Wrapper
+      Editor={Editor}
+      Public={Public}
+      componentType={ComponentType.EnhancedTextInput}
+    />
+  );
 };

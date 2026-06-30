@@ -1,3 +1,4 @@
+import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import Stack from "@mui/material/Stack";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useRecentNotifications } from "hooks/data/useRecentNotifications";
@@ -50,8 +51,10 @@ export function NotificationsWidget({
       >
         <EmptyState
           size="small"
-          title="No notifications, you're all up to date"
-          sx={{ mx: 2 }}
+          icon={<NotificationsNoneIcon />}
+          title="No notifications found"
+          description="You're all up to date"
+          sx={{ mx: 1.5 }}
         />
       </DashboardWidget>
     );

@@ -90,10 +90,9 @@ export const createApiService = async ({
 
   const apiImage = new awsx.ecr.Image("api-image", {
     repositoryUrl: repo.url,
-    context: "../../apps/api.planx.uk",
-    args: {
-      target: "production",
-    },
+    context: "../..",
+    dockerfile: "../../apps/api.planx.uk/Dockerfile",
+    target: "production",
   });
   const apiLogGroup = new aws.cloudwatch.LogGroup("api", {
     name: "/ecs/api",

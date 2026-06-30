@@ -1,4 +1,5 @@
 {
+  "name": "@planx/e2e",
   "private": true,
   "scripts": {
     "pretest": "../scripts/check-containers.sh e2e",
@@ -12,7 +13,6 @@
     "lint": "eslint './tests/**/*.{js,ts}' && prettier -c ./tests",
     "lint:fix": "eslint --fix './tests/**/*.{js,ts}' && prettier -w ./tests",
     "check": "tsc && pnpm lint",
-    "postinstall": "cd tests/ui-driven && pnpm install && cd ../api-driven && pnpm install",
     "prepare": "cd .. && husky install e2e/.husky"
   },
   "lint-staged": {
@@ -21,16 +21,15 @@
       "prettier -w ./tests"
     ]
   },
-  "packageManager": "pnpm@10.30.2",
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "~24.10.15",
-    "@typescript-eslint/eslint-plugin": "^5.62.0",
-    "@typescript-eslint/parser": "^5.62.0",
-    "eslint": "^8.57.1",
-    "husky": "^8.0.3",
+    "@types/jsonwebtoken": "catalog:jwt",
+    "@types/node": "catalog:",
+    "@typescript-eslint/eslint-plugin": "catalog:typescript",
+    "@typescript-eslint/parser": "catalog:typescript",
+    "eslint": "catalog:",
+    "husky": "catalog:",
     "lint-staged": "^15.5.2",
-    "prettier": "^3.8.1",
-    "typescript": "~5.9.3"
+    "prettier": "catalog:",
+    "typescript": "catalog:typescript"
   }
 }

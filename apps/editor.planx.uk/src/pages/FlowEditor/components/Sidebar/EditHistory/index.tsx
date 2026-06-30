@@ -1,20 +1,19 @@
 import { gql, useSubscription } from "@apollo/client";
+import HistoryIcon from "@mui/icons-material/History";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { HistoryItem } from "lib/api/publishFlow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { EmptyState } from "ui/editor/EmptyState";
 import Permission from "ui/editor/Permission";
 
 import { AddCommentDialog } from "./AddCommentDialog";
 import { EditHistoryTimeline } from "./Timeline";
 
 const EditHistory = () => {
-  const [flowId, user] = useStore((state) => [
-    state.id,
-    state.user,
-  ]);
+  const [flowId, user] = useStore((state) => [state.id, state.user]);
 
   const { data, loading, error } = useSubscription<{ history: HistoryItem[] }>(
     gql`
@@ -69,6 +68,15 @@ const EditHistory = () => {
         </Permission.CanEdit>
       )}
       {data?.history && <EditHistoryTimeline events={data.history} />}
+      {data?.history.length === 0 && (
+        <>
+          <EmptyState
+            size="small"
+            title="No changes have been made in the last six months"
+            icon={<HistoryIcon />}
+          />
+        </>
+      )}
       {data?.history.length === 50 && (
         <>
           <Divider />
