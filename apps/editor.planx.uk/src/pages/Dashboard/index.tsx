@@ -52,8 +52,8 @@ export default function Dashboard() {
           <StatsBanner />
         </Container>
       </Box>
-      <Container 
-        maxWidth="contentWide" 
+      <Container
+        maxWidth="contentWide"
         // Override default container padding to align with widgets
         sx={{ py: "30px !important" }}
       >
@@ -85,7 +85,7 @@ export default function Dashboard() {
           >
             <FeedbackWidget />
           </DashboardWidget>
-          <DashboardWidget title="Activity">
+          <DashboardWidget title="User Activity" subtitle="Last 30 days">
             <ActivityWidget />
           </DashboardWidget>
         </Box>

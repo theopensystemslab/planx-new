@@ -9,6 +9,7 @@ import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 interface DashboardWidgetProps {
   title: string;
+  subtitle?: string;
   count?: number;
   link?: LinkOptions<RegisteredRouter> & { label: string };
   children: React.ReactNode;
@@ -34,7 +35,7 @@ const Header = styled(Box)(({ theme }) => ({
 const StyledWidgetLink = styled(CustomLink)(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
   color: theme.palette.text.primary,
-  fontWeight: FONT_WEIGHT_SEMI_BOLD,  
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
   "&:hover": {
     textDecorationThickness: "2px",
   },
@@ -52,6 +53,7 @@ export const WidgetLink = ({ label, ...linkProps }: WidgetLinkProps) => (
 
 export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
   title,
+  subtitle,
   count,
   link,
   children,
@@ -59,10 +61,15 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
 }) => (
   <Root sx={sx}>
     <Header>
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+      <Box sx={{ display: "flex", alignItems: "baseline", gap: 1 }}>
         <Typography variant="h3" component="h2">
           {title}
         </Typography>
+        {subtitle && (
+          <Typography variant="body2" color="textSecondary">
+            {subtitle}
+          </Typography>
+        )}
         {count !== undefined && count > 0 && (
           <BadgeChip label={count} color="info" />
         )}

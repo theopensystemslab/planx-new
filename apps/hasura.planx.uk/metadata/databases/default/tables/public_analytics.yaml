@@ -26,11 +26,27 @@ insert_permissions:
         - type
         - user_agent
 select_permissions:
+  - role: platformAdmin
+    permission:
+      columns:
+        - created_at
+        - flow_id
+        - id
+      filter: {}
+      allow_aggregations: true
   - role: public
     permission:
       columns:
         - id
       filter: {}
+  - role: teamEditor
+    permission:
+      columns:
+        - created_at
+        - flow_id
+        - id
+      filter: {}
+      allow_aggregations: true
 update_permissions:
   - role: public
     permission:
