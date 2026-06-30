@@ -1,3 +1,4 @@
+import BarChartIcon from "@mui/icons-material/BarChart";
 import Typography from "@mui/material/Typography";
 import { BREADCRUMBS_HEIGHT } from "components/Breadcrumbs";
 import { format } from "date-fns";
@@ -157,6 +158,7 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({
         <EmptyState
           title={`No feedback found for this ${isFlowLevel ? "service" : "team"}`}
           description="If you're looking for feedback from more than six months ago, please contact a PlanX developer"
+          icon={<BarChartIcon />}
         />
       ) : (
         <DataTable

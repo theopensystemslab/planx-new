@@ -1,4 +1,6 @@
 import CloseIcon from "@mui/icons-material/Close";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
@@ -126,11 +128,11 @@ const NotificationsPanel = ({
           <EmptyState
             size="small"
             title={
-              tab === 0
-                ? "No notifications, you're all up to date"
-                : "No resolved notifications"
+              tab === 0 ? "No notifications found" : "No resolved notifications"
             }
+            description={tab === 0 ? "You're all up to date" : ""}
             sx={{ mx: 2 }}
+            icon={tab === 0 ? <NotificationsNoneIcon /> : <NotificationsIcon />}
           />
         )}
         <Stack>

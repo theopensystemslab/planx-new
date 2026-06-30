@@ -88,7 +88,7 @@ export const AddFlow: React.FC = () => {
 
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   return (
-    <Box>
+    <Box sx={{ display: "flex", justifyContent: "center", mt: 0.5 }}>
       <AddButton onClick={() => setDialogOpen(true)}>Add a new flow</AddButton>
       <Formik<CreateFlow>
         initialValues={initialValues}
