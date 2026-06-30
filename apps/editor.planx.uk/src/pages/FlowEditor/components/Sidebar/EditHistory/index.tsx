@@ -11,10 +11,7 @@ import { AddCommentDialog } from "./AddCommentDialog";
 import { EditHistoryTimeline } from "./Timeline";
 
 const EditHistory = () => {
-  const [flowId, user] = useStore((state) => [
-    state.id,
-    state.user,
-  ]);
+  const [flowId, user] = useStore((state) => [state.id, state.user]);
 
   const { data, loading, error } = useSubscription<{ history: HistoryItem[] }>(
     gql`
@@ -69,6 +66,14 @@ const EditHistory = () => {
         </Permission.CanEdit>
       )}
       {data?.history && <EditHistoryTimeline events={data.history} />}
+      {data?.history.length === 0 && (
+        <>
+          <Divider />
+          <Typography variant="body2" sx={{ mt: 2 }} color="GrayText">
+            {`No changes have been made in the last six months.`}
+          </Typography>
+        </>
+      )}
       {data?.history.length === 50 && (
         <>
           <Divider />
