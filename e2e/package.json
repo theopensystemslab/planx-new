@@ -22,14 +22,14 @@
     ]
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "~24.10.15",
-    "@typescript-eslint/eslint-plugin": "^5.62.0",
-    "@typescript-eslint/parser": "^5.62.0",
-    "eslint": "^8.57.1",
-    "husky": "^8.0.3",
+    "@types/jsonwebtoken": "catalog:jwt",
+    "@types/node": "catalog:",
+    "@typescript-eslint/eslint-plugin": "catalog:typescript",
+    "@typescript-eslint/parser": "catalog:typescript",
+    "eslint": "catalog:",
+    "husky": "catalog:",
     "lint-staged": "^15.5.2",
-    "prettier": "^3.8.1",
-    "typescript": "~5.9.3"
+    "prettier": "catalog:",
+    "typescript": "catalog:typescript"
   }
 }

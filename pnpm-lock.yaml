@@ -5,6 +5,65 @@ settings:
   excludeLinksFromLockfile: false
 
 catalogs:
+  default:
+    '@opensystemslab/planx-core':
+      specifier: github:theopensystemslab/planx-core#91e4296
+      version: 1.0.0
+    '@types/jsdom':
+      specifier: ^28.0.1
+      version: 28.0.3
+    '@types/node':
+      specifier: ~24.10.15
+      version: 24.10.15
+    '@vitest/eslint-plugin':
+      specifier: ^1.6.9
+      version: 1.6.16
+    axios:
+      specifier: ^1.15.0
+      version: 1.18.0
+    dompurify:
+      specifier: ^3.4.11
+      version: 3.4.11
+    dotenv:
+      specifier: ^17.3.1
+      version: 17.4.2
+    eslint:
+      specifier: ^8.57.1
+      version: 8.57.1
+    eslint-config-prettier:
+      specifier: ^9.1.2
+      version: 9.1.2
+    husky:
+      specifier: ^8.0.3
+      version: 8.0.3
+    jsdom:
+      specifier: ^28.1.0
+      version: 28.1.0
+    nanoid:
+      specifier: ^5.1.6
+      version: 5.1.9
+    prettier:
+      specifier: ^3.8.1
+      version: 3.8.3
+    uuid:
+      specifier: ^14.0.0
+      version: 14.0.0
+    vite:
+      specifier: ^6.4.2
+      version: 6.4.3
+    vitest:
+      specifier: ^4.0.18
+      version: 4.1.9
+  graphql:
+    graphql:
+      specifier: ^16.13.2
+      version: 16.14.2
+    graphql-request:
+      specifier: 4.3.0
+      version: 4.3.0
+    graphql-tag:
+      specifier: ^2.12.6
+      version: 2.12.6
   infrastructure:
     '@pulumi/aws':
       specifier: ^7.24.0
@@ -21,9 +80,37 @@ catalogs:
     '@pulumi/pulumi':
       specifier: ^3.229.0
       version: 3.247.0
-    '@types/node':
-      specifier: ~24.10.15
-      version: 24.10.15
+  jwt:
+    '@types/jsonwebtoken':
+      specifier: ^9.0.10
+      version: 9.0.10
+    jsonwebtoken:
+      specifier: ^9.0.3
+      version: 9.0.3
+  lodash:
+    '@types/lodash':
+      specifier: ^4.17.24
+      version: 4.17.24
+    lodash:
+      specifier: ^4.18.1
+      version: 4.18.1
+  sharedb:
+    '@types/sharedb':
+      specifier: ^5.1.0
+      version: 5.1.1
+    sharedb:
+      specifier: ^5.2.2
+      version: 5.2.2
+  typescript:
+    '@babel/preset-typescript':
+      specifier: ^7.28.5
+      version: 7.28.5
+    '@typescript-eslint/eslint-plugin':
+      specifier: ^5.62.0
+      version: 5.62.0
+    '@typescript-eslint/parser':
+      specifier: ^5.62.0
+      version: 5.62.0
     typescript:
       specifier: ~5.9.3
       version: 5.9.3
@@ -44,7 +131,7 @@ importers:
   .:
     devDependencies:
       typescript:
-        specifier: ~5.9.3
+        specifier: catalog:typescript
         version: 5.9.3
 
   apps/api.planx.uk:
@@ -59,8 +146,11 @@ importers:
         specifier: ^3.1000.0
         version: 3.1032.0
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#91e4296
+        specifier: 'catalog:'
         version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/91e4296a313276971ea5759d52b487048c4d8199(@types/react@19.2.14)
+      '@types/geojson':
+        specifier: ^7946.0.16
+        version: 7946.0.16
       '@types/isomorphic-fetch':
         specifier: ^0.0.36
         version: 0.0.36
@@ -71,8 +161,8 @@ importers:
         specifier: ^6.0.116
         version: 6.0.168(zod@3.25.76)
       axios:
-        specifier: ^1.15.2
-        version: 1.15.2
+        specifier: 'catalog:'
+        version: 1.18.0
       body-parser:
         specifier: ^2.2.2
         version: 2.2.2
@@ -95,7 +185,7 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
       dompurify:
-        specifier: ^3.4.11
+        specifier: 'catalog:'
         version: 3.4.11
       express:
         specifier: ^4.22.1
@@ -113,10 +203,10 @@ importers:
         specifier: ^4.0.6
         version: 4.0.6
       graphql:
-        specifier: ^16.14.0
+        specifier: catalog:graphql
         version: 16.14.2
       graphql-request:
-        specifier: ^4.3.0
+        specifier: catalog:graphql
         version: 4.3.0(graphql@16.14.2)
       he:
         specifier: ^1.2.0
@@ -128,22 +218,22 @@ importers:
         specifier: ^2.0.9
         version: 2.0.9(@types/express@4.17.25)
       husky:
-        specifier: ^8.0.3
+        specifier: 'catalog:'
         version: 8.0.3
       isomorphic-fetch:
         specifier: ^3.0.0
         version: 3.0.0
       jsdom:
-        specifier: ^28.1.0
+        specifier: 'catalog:'
         version: 28.1.0(@noble/hashes@1.8.0)
       jsondiffpatch:
         specifier: ^0.7.3
         version: 0.7.3
       jsonwebtoken:
-        specifier: ^9.0.3
+        specifier: catalog:jwt
         version: 9.0.3
       lodash:
-        specifier: ^4.18.1
+        specifier: catalog:lodash
         version: 4.18.1
       mime:
         specifier: ^4.1.0
@@ -152,7 +242,7 @@ importers:
         specifier: ^2.2.0
         version: 2.2.0
       nanoid:
-        specifier: ^5.1.6
+        specifier: 'catalog:'
         version: 5.1.9
       notifications-node-client:
         specifier: ^8.3.0
@@ -198,7 +288,7 @@ importers:
         specifier: ^7.29.6
         version: 7.29.7
       '@babel/preset-typescript':
-        specifier: ^7.28.5
+        specifier: catalog:typescript
         version: 7.28.5(@babel/core@7.29.7)
       '@types/adm-zip':
         specifier: ^0.5.7
@@ -221,26 +311,23 @@ importers:
       '@types/express-pino-logger':
         specifier: ^4.0.6
         version: 4.0.6
-      '@types/geojson':
-        specifier: ^7946.0.16
-        version: 7946.0.16
       '@types/he':
         specifier: ^1.2.3
         version: 1.2.3
       '@types/jsdom':
-        specifier: ^27.0.0
-        version: 27.0.0
+        specifier: 'catalog:'
+        version: 28.0.3
       '@types/jsonwebtoken':
-        specifier: ^9.0.10
+        specifier: catalog:jwt
         version: 9.0.10
       '@types/lodash':
-        specifier: ^4.17.24
+        specifier: catalog:lodash
         version: 4.17.24
       '@types/multer':
         specifier: ^2.0.0
         version: 2.1.0
       '@types/node':
-        specifier: ~24.10.15
+        specifier: 'catalog:'
         version: 24.10.15
       '@types/passport':
         specifier: ^1.0.17
@@ -258,28 +345,28 @@ importers:
         specifier: ^4.1.8
         version: 4.1.8
       '@typescript-eslint/eslint-plugin':
-        specifier: ^5.62.0
+        specifier: catalog:typescript
         version: 5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)
       '@typescript-eslint/parser':
-        specifier: ^5.62.0
+        specifier: catalog:typescript
         version: 5.62.0(eslint@8.57.1)(typescript@5.9.3)
       '@vitest/coverage-istanbul':
         specifier: ^4.0.18
-        version: 4.1.4(vitest@4.1.4)
+        version: 4.1.4(vitest@4.1.9)
       '@vitest/eslint-plugin':
-        specifier: ^1.6.9
-        version: 1.6.16(@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)(vitest@4.1.4)
+        specifier: 'catalog:'
+        version: 1.6.16(@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)(vitest@4.1.9)
       '@vitest/ui':
         specifier: ^4.0.18
-        version: 4.1.4(vitest@4.1.4)
+        version: 4.1.4(vitest@4.1.9)
       dotenv:
-        specifier: ^17.3.1
+        specifier: 'catalog:'
         version: 17.4.2
       eslint:
-        specifier: ^8.57.1
+        specifier: 'catalog:'
         version: 8.57.1
       eslint-config-prettier:
-        specifier: ^9.1.2
+        specifier: 'catalog:'
         version: 9.1.2(eslint@8.57.1)
       graphql-query-test-mock:
         specifier: ^0.12.1
@@ -294,7 +381,7 @@ importers:
         specifier: ^13.5.6
         version: 13.5.6
       prettier:
-        specifier: ^3.8.1
+        specifier: 'catalog:'
         version: 3.8.3
       rimraf:
         specifier: ^6.1.3
@@ -306,17 +393,17 @@ importers:
         specifier: ^4.21.0
         version: 4.21.0
       typescript:
-        specifier: ~5.9.3
+        specifier: catalog:typescript
         version: 5.9.3
       uuid:
-        specifier: ^14.0.0
+        specifier: 'catalog:'
         version: 14.0.0
       vite:
-        specifier: ^6.4.3
+        specifier: 'catalog:'
         version: 6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3)
       vitest:
-        specifier: ^4.0.18
-        version: 4.1.4(@opentelemetry/api@1.9.0)(@types/node@24.10.15)(@vitest/coverage-istanbul@4.1.4)(@vitest/ui@4.1.4)(jsdom@28.1.0(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@24.10.15)(typescript@5.9.3))(vite@6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3))
+        specifier: 'catalog:'
+        version: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@24.10.15)(@vitest/coverage-istanbul@4.1.4)(@vitest/coverage-v8@4.1.9)(@vitest/ui@4.1.4)(jsdom@28.1.0(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@24.10.15)(typescript@5.9.3))(vite@6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3))
 
   apps/editor.planx.uk:
     dependencies:
@@ -325,7 +412,7 @@ importers:
         version: 2.1.9
       '@apollo/client':
         specifier: ^3.14.0
-        version: 3.14.1(@types/react@19.2.14)(graphql@16.13.2)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(subscriptions-transport-ws@0.11.0(graphql@16.13.2))
+        version: 3.14.1(@types/react@19.2.14)(graphql@16.14.2)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(subscriptions-transport-ws@0.11.0(graphql@16.14.2))
       '@ctrl/tinycolor':
         specifier: ^4.2.0
         version: 4.2.0
@@ -366,7 +453,7 @@ importers:
         specifier: 1.0.0-alpha.14
         version: 1.0.0-alpha.14
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#91e4296
+        specifier: 'catalog:'
         version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/91e4296a313276971ea5759d52b487048c4d8199(@types/react@19.2.14)
       '@tanstack/react-query':
         specifier: ^5.90.21
@@ -429,7 +516,7 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       axios:
-        specifier: ^1.16.0
+        specifier: 'catalog:'
         version: 1.18.0
       bowser:
         specifier: ^2.14.1
@@ -447,7 +534,7 @@ importers:
         specifier: ^2.30.0
         version: 2.30.0
       dompurify:
-        specifier: ^3.4.11
+        specifier: 'catalog:'
         version: 3.4.11
       formik:
         specifier: ^2.4.9
@@ -456,11 +543,11 @@ importers:
         specifier: 7.1.0
         version: 7.1.0
       graphql:
-        specifier: ^16.13.2
-        version: 16.13.2
+        specifier: catalog:graphql
+        version: 16.14.2
       graphql-tag:
-        specifier: ^2.12.6
-        version: 2.12.6(graphql@16.13.2)
+        specifier: catalog:graphql
+        version: 2.12.6(graphql@16.14.2)
       idb:
         specifier: ^8.0.3
         version: 8.0.3
@@ -471,7 +558,7 @@ importers:
         specifier: ^3.0.7
         version: 3.0.8
       lodash:
-        specifier: ^4.18.1
+        specifier: catalog:lodash
         version: 4.18.1
       mathjs:
         specifier: ^11.12.0
@@ -480,7 +567,7 @@ importers:
         specifier: ^2.12.10
         version: 2.13.4(@types/node@24.10.15)(typescript@5.9.3)
       nanoid:
-        specifier: ^5.1.6
+        specifier: 'catalog:'
         version: 5.1.9
       nanoid-good:
         specifier: ^3.1.0
@@ -543,11 +630,11 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       sharedb:
-        specifier: ^5.2.2
+        specifier: catalog:sharedb
         version: 5.2.2
       subscriptions-transport-ws:
         specifier: ^0.11.0
-        version: 0.11.0(graphql@16.13.2)
+        version: 0.11.0(graphql@16.14.2)
       tippy.js:
         specifier: ^6.3.7
         version: 6.3.7
@@ -555,10 +642,10 @@ importers:
         specifier: ^4.41.0
         version: 4.41.0
       uuid:
-        specifier: ^14.0.0
+        specifier: 'catalog:'
         version: 14.0.0
       vite:
-        specifier: ^6.4.3
+        specifier: 'catalog:'
         version: 6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3)
       wkt:
         specifier: ^0.1.1
@@ -592,7 +679,7 @@ importers:
         specifier: ^7.28.5
         version: 7.28.5(@babel/core@7.29.7)
       '@babel/preset-typescript':
-        specifier: ^7.28.5
+        specifier: catalog:typescript
         version: 7.28.5(@babel/core@7.29.7)
       '@storybook/addon-a11y':
         specifier: 10.4.1
@@ -637,10 +724,10 @@ importers:
         specifier: ^3.5.9
         version: 3.5.9
       '@types/lodash':
-        specifier: ^4.17.24
+        specifier: catalog:lodash
         version: 4.17.24
       '@types/node':
-        specifier: ~24.10.15
+        specifier: 'catalog:'
         version: 24.10.15
       '@types/ramda':
         specifier: ^0.28.25
@@ -655,13 +742,13 @@ importers:
         specifier: ^19.1.0
         version: 19.2.3(@types/react@19.2.14)
       '@types/sharedb':
-        specifier: ^5.1.0
+        specifier: catalog:sharedb
         version: 5.1.1
       '@typescript-eslint/eslint-plugin':
-        specifier: ^5.62.0
+        specifier: catalog:typescript
         version: 5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)
       '@typescript-eslint/parser':
-        specifier: ^5.62.0
+        specifier: catalog:typescript
         version: 5.62.0(eslint@8.57.1)(typescript@5.9.3)
       '@vitejs/plugin-react':
         specifier: ^4.7.0
@@ -670,7 +757,7 @@ importers:
         specifier: ^4.1.9
         version: 4.1.9(vitest@4.1.9)
       '@vitest/eslint-plugin':
-        specifier: ^1.6.9
+        specifier: 'catalog:'
         version: 1.6.16(@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)(vitest@4.1.9)
       autoprefixer:
         specifier: ^10.4.27
@@ -685,10 +772,10 @@ importers:
         specifier: 0.28.1
         version: 0.28.1
       eslint:
-        specifier: ^8.57.1
+        specifier: 'catalog:'
         version: 8.57.1
       eslint-config-prettier:
-        specifier: ^9.1.2
+        specifier: 'catalog:'
         version: 9.1.2(eslint@8.57.1)
       eslint-plugin-jest-dom:
         specifier: ^5.5.0
@@ -709,7 +796,7 @@ importers:
         specifier: ^6.2.5
         version: 6.2.5
       husky:
-        specifier: ^8.0.3
+        specifier: 'catalog:'
         version: 8.0.3
       jsdom:
         specifier: ^26.1.0
@@ -724,7 +811,7 @@ importers:
         specifier: ^8.5.10
         version: 8.5.10
       prettier:
-        specifier: ^3.8.1
+        specifier: 'catalog:'
         version: 3.8.3
       react-refresh:
         specifier: ^0.14.2
@@ -742,7 +829,7 @@ importers:
         specifier: ^4.2.0
         version: 4.2.0
       typescript:
-        specifier: ~5.9.3
+        specifier: catalog:typescript
         version: 5.9.3
       use-sync-external-store:
         specifier: 1.6.0
@@ -769,22 +856,22 @@ importers:
   apps/hasura.planx.uk/tests:
     dependencies:
       dotenv:
-        specifier: ^17.3.1
+        specifier: 'catalog:'
         version: 17.4.2
       isomorphic-fetch:
         specifier: ^3.0.0
         version: 3.0.0
       jsonwebtoken:
-        specifier: ^9.0.3
+        specifier: catalog:jwt
         version: 9.0.3
       uuid:
-        specifier: ^14.0.0
+        specifier: 'catalog:'
         version: 14.0.0
       vite:
         specifier: ^8.0.16
         version: 8.0.16(@types/node@24.10.15)(esbuild@0.28.1)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3)
       vitest:
-        specifier: ^4.1.0
+        specifier: 'catalog:'
         version: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@24.10.15)(@vitest/coverage-v8@4.1.9)(jsdom@29.1.1(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@24.10.15)(typescript@5.9.3))(vite@8.0.16(@types/node@24.10.15)(esbuild@0.28.1)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3))
 
   apps/localplanning.services:
@@ -826,11 +913,11 @@ importers:
         specifier: ^1.1.0
         version: 1.1.0(prettier@3.8.3)(typescript@5.9.3)
       graphql:
-        specifier: ^16.13.0
-        version: 16.13.2
+        specifier: catalog:graphql
+        version: 16.14.2
       graphql-tag:
-        specifier: ^2.12.6
-        version: 2.12.6(graphql@16.13.2)
+        specifier: catalog:graphql
+        version: 2.12.6(graphql@16.14.2)
       nanostores:
         specifier: ^1.1.1
         version: 1.3.0
@@ -850,7 +937,7 @@ importers:
         specifier: ^4.2.1
         version: 4.2.2
       typescript:
-        specifier: ~5.9.3
+        specifier: catalog:typescript
         version: 5.9.3
     devDependencies:
       '@storybook/addon-a11y':
@@ -863,7 +950,7 @@ importers:
         specifier: ^10
         version: 10.4.5(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(esbuild@0.28.1)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(rollup@4.60.2)(storybook@10.4.1(@testing-library/dom@10.4.1)(@types/react@19.2.14)(prettier@3.8.3)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(typescript@5.9.3)(vite@7.3.5(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3))
       '@types/node':
-        specifier: ~24.10.15
+        specifier: 'catalog:'
         version: 24.10.15
       msw:
         specifier: ^2.14.3
@@ -887,16 +974,16 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0
       dompurify:
-        specifier: ^3.4.11
+        specifier: 'catalog:'
         version: 3.4.11
       jsdom:
-        specifier: ^29.1.1
-        version: 29.1.1(@noble/hashes@1.8.0)
+        specifier: 'catalog:'
+        version: 28.1.0(@noble/hashes@1.8.0)
       pg:
         specifier: ^8.19.0
         version: 8.20.0
       sharedb:
-        specifier: ^5.2.2
+        specifier: catalog:sharedb
         version: 5.2.2
       ws:
         specifier: ^8.21.0
@@ -909,31 +996,31 @@ importers:
   e2e:
     devDependencies:
       '@types/jsonwebtoken':
-        specifier: ^9.0.10
+        specifier: catalog:jwt
         version: 9.0.10
       '@types/node':
-        specifier: ~24.10.15
+        specifier: 'catalog:'
         version: 24.10.15
       '@typescript-eslint/eslint-plugin':
-        specifier: ^5.62.0
+        specifier: catalog:typescript
         version: 5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)
       '@typescript-eslint/parser':
-        specifier: ^5.62.0
+        specifier: catalog:typescript
         version: 5.62.0(eslint@8.57.1)(typescript@5.9.3)
       eslint:
-        specifier: ^8.57.1
+        specifier: 'catalog:'
         version: 8.57.1
       husky:
-        specifier: ^8.0.3
+        specifier: 'catalog:'
         version: 8.0.3
       lint-staged:
         specifier: ^15.5.2
         version: 15.5.2
       prettier:
-        specifier: ^3.8.1
+        specifier: 'catalog:'
         version: 3.8.3
       typescript:
-        specifier: ~5.9.3
+        specifier: catalog:typescript
         version: 5.9.3
 
   e2e/tests/api-driven:
@@ -942,62 +1029,62 @@ importers:
         specifier: ^12.8.3
         version: 12.9.0
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#91e4296
+        specifier: 'catalog:'
         version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/91e4296a313276971ea5759d52b487048c4d8199(@types/react@19.2.14)
       axios:
-        specifier: ^1.16.0
+        specifier: 'catalog:'
         version: 1.18.0
       dotenv:
-        specifier: ^16.6.1
-        version: 16.6.1
+        specifier: 'catalog:'
+        version: 17.4.2
       dotenv-expand:
         specifier: ^10.0.0
         version: 10.0.0
       graphql:
-        specifier: ^16.14.0
+        specifier: catalog:graphql
         version: 16.14.2
       graphql-tag:
-        specifier: ^2.12.6
+        specifier: catalog:graphql
         version: 2.12.6(graphql@16.14.2)
       jsonwebtoken:
-        specifier: ^9.0.3
+        specifier: catalog:jwt
         version: 9.0.3
       nock:
         specifier: ^13.5.6
         version: 13.5.6
     devDependencies:
       '@types/jsonwebtoken':
-        specifier: ^9.0.10
+        specifier: catalog:jwt
         version: 9.0.10
       '@types/lodash.zipobject':
         specifier: ^4.1.9
         version: 4.1.9
       '@types/node':
-        specifier: ~24.10.15
+        specifier: 'catalog:'
         version: 24.10.15
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.30)(@types/node@24.10.15)(typescript@5.9.3)
       typescript:
-        specifier: ~5.9.3
+        specifier: catalog:typescript
         version: 5.9.3
 
   e2e/tests/ui-driven:
     dependencies:
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#91e4296
+        specifier: 'catalog:'
         version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/91e4296a313276971ea5759d52b487048c4d8199(@types/react@19.2.14)
       axios:
-        specifier: ^1.16.0
+        specifier: 'catalog:'
         version: 1.18.0
       dotenv:
-        specifier: ^16.6.1
-        version: 16.6.1
+        specifier: 'catalog:'
+        version: 17.4.2
       eslint:
-        specifier: ^8.57.1
+        specifier: 'catalog:'
         version: 8.57.1
       graphql:
-        specifier: ^16.14.0
+        specifier: catalog:graphql
         version: 16.14.2
       graphql-request:
         specifier: ^6.1.0
@@ -1006,13 +1093,13 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       jsonwebtoken:
-        specifier: ^9.0.3
+        specifier: catalog:jwt
         version: 9.0.3
       serve:
         specifier: ^14.2.5
         version: 14.2.6
       uuid:
-        specifier: ^14.0.0
+        specifier: 'catalog:'
         version: 14.0.0
     devDependencies:
       '@playwright/test':
@@ -1022,7 +1109,7 @@ importers:
         specifier: ^7946.0.16
         version: 7946.0.16
       '@types/node':
-        specifier: ~24.10.15
+        specifier: 'catalog:'
         version: 24.10.15
       eslint-plugin-playwright:
         specifier: ^0.20.0
@@ -1056,7 +1143,7 @@ importers:
         version: 2.3.2
     devDependencies:
       '@types/node':
-        specifier: catalog:infrastructure
+        specifier: 'catalog:'
         version: 24.10.15
       '@types/tldjs':
         specifier: ^2.3.4
@@ -1065,7 +1152,7 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
       typescript:
-        specifier: catalog:infrastructure
+        specifier: catalog:typescript
         version: 5.9.3
 
   infrastructure/certificates:
@@ -1084,10 +1171,10 @@ importers:
         version: 3.247.0(ts-node@10.9.2(@swc/core@1.15.30)(@types/node@24.10.15)(typescript@5.9.3))(typescript@5.9.3)
     devDependencies:
       '@types/node':
-        specifier: catalog:infrastructure
+        specifier: 'catalog:'
         version: 24.10.15
       typescript:
-        specifier: catalog:infrastructure
+        specifier: catalog:typescript
         version: 5.9.3
 
   infrastructure/common:
@@ -1100,10 +1187,10 @@ importers:
         version: 3.247.0(ts-node@10.9.2(@swc/core@1.15.30)(@types/node@24.10.15)(typescript@5.9.3))(typescript@5.9.3)
     devDependencies:
       '@types/node':
-        specifier: catalog:infrastructure
+        specifier: 'catalog:'
         version: 24.10.15
       typescript:
-        specifier: catalog:infrastructure
+        specifier: catalog:typescript
         version: 5.9.3
 
   infrastructure/data:
@@ -1119,10 +1206,10 @@ importers:
         version: 3.247.0(ts-node@10.9.2(@swc/core@1.15.30)(@types/node@24.10.15)(typescript@5.9.3))(typescript@5.9.3)
     devDependencies:
       '@types/node':
-        specifier: catalog:infrastructure
+        specifier: 'catalog:'
         version: 24.10.15
       typescript:
-        specifier: catalog:infrastructure
+        specifier: catalog:typescript
         version: 5.9.3
 
   infrastructure/ml:
@@ -1135,10 +1222,10 @@ importers:
         version: 3.247.0(ts-node@10.9.2(@swc/core@1.15.30)(@types/node@24.10.15)(typescript@5.9.3))(typescript@5.9.3)
     devDependencies:
       '@types/node':
-        specifier: catalog:infrastructure
+        specifier: 'catalog:'
         version: 24.10.15
       typescript:
-        specifier: catalog:infrastructure
+        specifier: catalog:typescript
         version: 5.9.3
 
   infrastructure/networking:
@@ -1154,17 +1241,17 @@ importers:
         version: 3.247.0(ts-node@10.9.2(@swc/core@1.15.30)(@types/node@24.10.15)(typescript@5.9.3))(typescript@5.9.3)
     devDependencies:
       '@types/node':
-        specifier: catalog:infrastructure
+        specifier: 'catalog:'
         version: 24.10.15
       typescript:
-        specifier: catalog:infrastructure
+        specifier: catalog:typescript
         version: 5.9.3
 
   scripts/encrypt:
     dependencies:
       '@opensystemslab/planx-core':
-        specifier: github:theopensystemslab/planx-core#2f19e28
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/2f19e28bf128822d03e55fdd05a779294ea06106(@types/react@19.2.14)
+        specifier: 'catalog:'
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/91e4296a313276971ea5759d52b487048c4d8199(@types/react@19.2.14)
       tsx:
         specifier: ^4.21.0
         version: 4.21.0
@@ -3600,10 +3687,6 @@ packages:
   '@opensystemslab/map@1.0.0-alpha.14':
     resolution: {integrity: sha512-kIVrXtq2rcOzayTtUkVUQWSJMGrhER7FuuMR9cJw5a8AOH69XnXrkDPGBMVQmNJOIoMkO4dOzTt6ofUchZxLQA==}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/2f19e28bf128822d03e55fdd05a779294ea06106':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/2f19e28bf128822d03e55fdd05a779294ea06106}
-    version: 1.0.0
-
   '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/91e4296a313276971ea5759d52b487048c4d8199':
     resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/91e4296a313276971ea5759d52b487048c4d8199}
     version: 1.0.0
@@ -5587,8 +5670,8 @@ packages:
   '@types/js-cookie@2.2.7':
     resolution: {integrity: sha512-aLkWa0C0vO5b4Sr798E26QgOkss68Un0bLjs7u9qxzPT5CG+8DuNTffWES58YzJs3hrVAOs1wonycqEBqNJubA==}
 
-  '@types/jsdom@27.0.0':
-    resolution: {integrity: sha512-NZyFl/PViwKzdEkQg96gtnB8wm+1ljhdDay9ahn4hgb+SfVtPCbm3TlmDUFXTA+MGN3CijicnMhG18SI5H3rFw==}
+  '@types/jsdom@28.0.3':
+    resolution: {integrity: sha512-/HQ2uFoetFTXuye8vzIcHw2z6Fwi7Hi/qcgC+RoS9NCyewiqxhVGqlG+ViGB6lkax481R6dmhf1I7lIGlzJStQ==}
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
@@ -5901,6 +5984,7 @@ packages:
 
   '@ungap/structured-clone@1.3.0':
     resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
+    deprecated: Potential CWE-502 - Update to 1.3.1 or higher
 
   '@vercel/oidc@3.2.0':
     resolution: {integrity: sha512-UycprH3T6n3jH0k44NHMa7pnFHGu/N05MjojYr+Mc6I7obkoLIJujSWwin1pCvdy/eOxrI/l3uDLQsmcrOb4ug==}
@@ -5951,22 +6035,8 @@ packages:
   '@vitest/expect@3.2.4':
     resolution: {integrity: sha512-Io0yyORnB6sikFlt8QW5K7slY4OjqNX9jmJQ02QDda8lyM6B5oNgVWoSoKPac8/kgnCUzuHQKrSLtu/uOqqrig==}
 
-  '@vitest/expect@4.1.4':
-    resolution: {integrity: sha512-iPBpra+VDuXmBFI3FMKHSFXp3Gx5HfmSCE8X67Dn+bwephCnQCaB7qWK2ldHa+8ncN8hJU8VTMcxjPpyMkUjww==}
-
   '@vitest/expect@4.1.9':
     resolution: {integrity: sha512-vl/rYsUKcBr3SnQn166+XR5ZQcgMx3DQhFWdfli/cWpLnLUmbxZvyrJZotLFUryib+LtArYMSTJ5RbQ57ZqrlA==}
-
-  '@vitest/mocker@4.1.4':
-    resolution: {integrity: sha512-R9HTZBhW6yCSGbGQnDnH3QHfJxokKN4KB+Yvk9Q1le7eQNYwiCyKxmLmurSpFy6BzJanSLuEUDrD+j97Q+ZLPg==}
-    peerDependencies:
-      msw: ^2.4.9
-      vite: ^6.0.0 || ^7.0.0 || ^8.0.0
-    peerDependenciesMeta:
-      msw:
-        optional: true
-      vite:
-        optional: true
 
   '@vitest/mocker@4.1.9':
     resolution: {integrity: sha512-EVkXzBjrPGM+cK8/ANWgBrkUCfJfb38/EfTSO8h7pWvKkyPkpWxvR7BkD2MyItMF62C97zAEoqdpUixwR/e+Rw==}
@@ -5988,23 +6058,14 @@ packages:
   '@vitest/pretty-format@4.1.9':
     resolution: {integrity: sha512-s0iufns3iIFitdgm+YR7g1whCAaGtXz459VS9/PqyKDEEFgYIhsHOQmXgIgDuYCt7DeQmiZT0Qe2OA2p4ZPu5A==}
 
-  '@vitest/runner@4.1.4':
-    resolution: {integrity: sha512-xTp7VZ5aXP5ZJrn15UtJUWlx6qXLnGtF6jNxHepdPHpMfz/aVPx+htHtgcAL2mDXJgKhpoo2e9/hVJsIeFbytQ==}
-
   '@vitest/runner@4.1.9':
     resolution: {integrity: sha512-KXLMDtc7oe70+3mJfGrPUWPesswH+3sTxAMAMl8DG7I8IUQT4XW718dY5ID3vPUcmlu27CcKfY4P3h3I29SLJg==}
-
-  '@vitest/snapshot@4.1.4':
-    resolution: {integrity: sha512-MCjCFgaS8aZz+m5nTcEcgk/xhWv0rEH4Yl53PPlMXOZ1/Ka2VcZU6CJ+MgYCZbcJvzGhQRjVrGQNZqkGPttIKw==}
 
   '@vitest/snapshot@4.1.9':
     resolution: {integrity: sha512-Jc7RKGNBo8Z28WYIm0Niej4xdSPByRf6mU58VpHQkd6Zh05rlnA+twjbK5HyeIGHxrzsc3mJgS43uM0CZKzaIA==}
 
   '@vitest/spy@3.2.4':
     resolution: {integrity: sha512-vAfasCOe6AIK70iP5UD11Ac4siNUNJ9i/9PZ3NKx07sG6sUxeag1LWdNrMWeKKYBLlzuK+Gn65Yd5nyL6ds+nw==}
-
-  '@vitest/spy@4.1.4':
-    resolution: {integrity: sha512-XxNdAsKW7C+FLydqFJLb5KhJtl3PGCMmYwFRfhvIgxJvLSXhhVI1zM8f1qD3Zg7RCjTSzDVyct6sghs9UEgBEQ==}
 
   '@vitest/spy@4.1.9':
     resolution: {integrity: sha512-fHpsS6mIi+PiEW+vcRVOMkX1oSaPKne3VOclSFICPcGOmfKgXPU5iAah+wcNcj2xPrCCmfq99IDGf+EojhhvhA==}
@@ -6341,9 +6402,6 @@ packages:
   axe-core@4.11.3:
     resolution: {integrity: sha512-zBQouZixDTbo3jMGqHKyePxYxr1e5W8UdTmBQ7sNtaA9M2bE32daxxPLS/jojhKOHxQ7LWwPjfiwf/fhaJWzlg==}
     engines: {node: '>=4'}
-
-  axios@1.15.2:
-    resolution: {integrity: sha512-wLrXxPtcrPTsNlJmKjkPnNPK2Ihe0hn0wGSaTEiHRPxwjvJwT3hKmXF4dpqxmPO9SoNb2FsYXj/xEo0gHN+D5A==}
 
   axios@1.18.0:
     resolution: {integrity: sha512-E32NzpYKp++W7XRe52rHiXV2ehxmh3wbdgO7MHeFM+vqxLBYHzt0ElkiImtOBxtOmyp0yoC8C6uESVV84Y2/hw==}
@@ -7999,10 +8057,6 @@ packages:
     engines: {node: '>= 6.x'}
     deprecated: 'No longer supported; please update to a newer version. Details: https://github.com/graphql/graphql-js#version-support'
 
-  graphql@16.13.2:
-    resolution: {integrity: sha512-5bJ+nf/UCpAjHM8i06fl7eLyVC9iuNAjm9qzkiu2ZGhM0VscSvS6WDPfAwkdkBuoXGM9FJSbKl6wylMwP9Ktig==}
-    engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
-
   graphql@16.14.2:
     resolution: {integrity: sha512-Chq1s4CY7jmh8gO2qvLIJyfCDIN+EHLFW/9iShnp1z8FjBQMoodWP1kDC36VAMXXIvAjj4ARa7ntfAV2BrjsbA==}
     engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
@@ -9443,11 +9497,6 @@ packages:
 
   nanoid-good@3.1.0:
     resolution: {integrity: sha512-gG9D+AVHAZ+t2mAk3sw+Bx08VzOBc8fc+JylIzCLbEoRYakvQK9RiI3U+bXjdlMc5Ec4W9zUQsZZKngjifv7Vw==}
-
-  nanoid@3.3.11:
-    resolution: {integrity: sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w==}
-    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
-    hasBin: true
 
   nanoid@3.3.12:
     resolution: {integrity: sha512-ZB9RH/39qpq5Vu6Y+NmUaFhQR6pp+M2Xt76XBnEwDaGcVAqhlvxrl3B2bKS5D3NH3QR76v3aSrKaF/Kiy7lEtQ==}
@@ -11708,6 +11757,9 @@ packages:
   undici-types@7.16.0:
     resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
 
+  undici-types@7.28.0:
+    resolution: {integrity: sha512-LJAfY+2w6HGeT8d8J1wNQsUGUEGio6NWWpwdwurQe4f6oojzCFuGLizl1KSve4irsTxyLly1QhEeE6iapdaIvQ==}
+
   undici@6.27.0:
     resolution: {integrity: sha512-YmfV3YnEDzXRC5lZ2jWtWWHKGUm1zIt8AhesR1tens+HTNv+YZlN/dp6G727LOvMJ8xjP9Be7Y2Sdr96LDm+pg==}
     engines: {node: '>=18.17'}
@@ -12113,47 +12165,6 @@ packages:
     resolution: {integrity: sha512-eUGxjpXnceha9lkqIVyMgOUeDmWU9LVjNiLTjAjDtMew0WbaBDtixoUvdftOhZfqRI03G2Ay4ZxaU1KG6jNCiQ==}
     peerDependencies:
       vitest: '>=1'
-
-  vitest@4.1.4:
-    resolution: {integrity: sha512-tFuJqTxKb8AvfyqMfnavXdzfy3h3sWZRWwfluGbkeR7n0HUev+FmNgZ8SDrRBTVrVCjgH5cA21qGbCffMNtWvg==}
-    engines: {node: ^20.0.0 || ^22.0.0 || >=24.0.0}
-    hasBin: true
-    peerDependencies:
-      '@edge-runtime/vm': '*'
-      '@opentelemetry/api': ^1.9.0
-      '@types/node': ^20.0.0 || ^22.0.0 || >=24.0.0
-      '@vitest/browser-playwright': 4.1.4
-      '@vitest/browser-preview': 4.1.4
-      '@vitest/browser-webdriverio': 4.1.4
-      '@vitest/coverage-istanbul': 4.1.4
-      '@vitest/coverage-v8': 4.1.4
-      '@vitest/ui': 4.1.4
-      happy-dom: '*'
-      jsdom: '*'
-      vite: ^6.0.0 || ^7.0.0 || ^8.0.0
-    peerDependenciesMeta:
-      '@edge-runtime/vm':
-        optional: true
-      '@opentelemetry/api':
-        optional: true
-      '@types/node':
-        optional: true
-      '@vitest/browser-playwright':
-        optional: true
-      '@vitest/browser-preview':
-        optional: true
-      '@vitest/browser-webdriverio':
-        optional: true
-      '@vitest/coverage-istanbul':
-        optional: true
-      '@vitest/coverage-v8':
-        optional: true
-      '@vitest/ui':
-        optional: true
-      happy-dom:
-        optional: true
-      jsdom:
-        optional: true
 
   vitest@4.1.9:
     resolution: {integrity: sha512-nE3/LEyc0z87uHYLZebqCUOaJr2hdtuPp7BQ4BosVFnfltxgAvMG08NyrSGlPpOUWvR27c5flSmYFTNr78L9GQ==}
@@ -12676,14 +12687,14 @@ snapshots:
       openapi-types: 12.1.3
       z-schema: 5.0.5
 
-  '@apollo/client@3.14.1(@types/react@19.2.14)(graphql@16.13.2)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(subscriptions-transport-ws@0.11.0(graphql@16.13.2))':
+  '@apollo/client@3.14.1(@types/react@19.2.14)(graphql@16.14.2)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(subscriptions-transport-ws@0.11.0(graphql@16.14.2))':
     dependencies:
-      '@graphql-typed-document-node/core': 3.2.0(graphql@16.13.2)
+      '@graphql-typed-document-node/core': 3.2.0(graphql@16.14.2)
       '@wry/caches': 1.0.1
       '@wry/equality': 0.5.7
       '@wry/trie': 0.5.0
-      graphql: 16.13.2
-      graphql-tag: 2.12.6(graphql@16.13.2)
+      graphql: 16.14.2
+      graphql-tag: 2.12.6(graphql@16.14.2)
       hoist-non-react-statics: 3.3.2
       optimism: 0.18.1
       prop-types: 15.8.1
@@ -12695,7 +12706,7 @@ snapshots:
     optionalDependencies:
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
-      subscriptions-transport-ws: 0.11.0(graphql@16.13.2)
+      subscriptions-transport-ws: 0.11.0(graphql@16.14.2)
     transitivePeerDependencies:
       - '@types/react'
 
@@ -12730,6 +12741,7 @@ snapshots:
       bidi-js: 1.0.3
       css-tree: 3.2.1
       is-potential-custom-element-name: 1.0.1
+    optional: true
 
   '@asamuzakjp/generational-cache@1.0.1': {}
 
@@ -13523,7 +13535,7 @@ snapshots:
   '@babel/helper-compilation-targets@7.28.6':
     dependencies:
       '@babel/compat-data': 7.29.0
-      '@babel/helper-validator-option': 7.27.1
+      '@babel/helper-validator-option': 7.29.7
       browserslist: 4.28.2
       lru-cache: 5.1.1
       semver: 6.3.1
@@ -13544,7 +13556,7 @@ snapshots:
       '@babel/helper-optimise-call-expression': 7.27.1
       '@babel/helper-replace-supers': 7.28.6(@babel/core@7.29.7)
       '@babel/helper-skip-transparent-expression-wrappers': 7.27.1
-      '@babel/traverse': 7.29.0
+      '@babel/traverse': 7.29.7
       semver: 6.3.1
     transitivePeerDependencies:
       - supports-color
@@ -13573,7 +13585,7 @@ snapshots:
 
   '@babel/helper-member-expression-to-functions@7.28.5':
     dependencies:
-      '@babel/traverse': 7.29.0
+      '@babel/traverse': 7.29.7
       '@babel/types': 7.29.7
     transitivePeerDependencies:
       - supports-color
@@ -13636,7 +13648,7 @@ snapshots:
 
   '@babel/helper-skip-transparent-expression-wrappers@7.27.1':
     dependencies:
-      '@babel/traverse': 7.29.0
+      '@babel/traverse': 7.29.7
       '@babel/types': 7.29.7
     transitivePeerDependencies:
       - supports-color
@@ -13656,7 +13668,7 @@ snapshots:
   '@babel/helper-wrap-function@7.28.6':
     dependencies:
       '@babel/template': 7.28.6
-      '@babel/traverse': 7.29.0
+      '@babel/traverse': 7.29.7
       '@babel/types': 7.29.7
     transitivePeerDependencies:
       - supports-color
@@ -13918,7 +13930,7 @@ snapshots:
   '@babel/plugin-transform-modules-commonjs@7.28.6(@babel/core@7.29.7)':
     dependencies:
       '@babel/core': 7.29.7
-      '@babel/helper-module-transforms': 7.28.6(@babel/core@7.29.7)
+      '@babel/helper-module-transforms': 7.29.7(@babel/core@7.29.7)
       '@babel/helper-plugin-utils': 7.28.6
     transitivePeerDependencies:
       - supports-color
@@ -14237,7 +14249,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.29.7
       '@babel/helper-plugin-utils': 7.28.6
-      '@babel/helper-validator-option': 7.27.1
+      '@babel/helper-validator-option': 7.29.7
       '@babel/plugin-syntax-jsx': 7.28.6(@babel/core@7.29.7)
       '@babel/plugin-transform-modules-commonjs': 7.28.6(@babel/core@7.29.7)
       '@babel/plugin-transform-typescript': 7.28.6(@babel/core@7.29.7)
@@ -14927,10 +14939,6 @@ snapshots:
       '@formatjs/fast-memoize': 3.1.6
 
   '@gar/promise-retry@1.0.3': {}
-
-  '@graphql-typed-document-node/core@3.2.0(graphql@16.13.2)':
-    dependencies:
-      graphql: 16.13.2
 
   '@graphql-typed-document-node/core@3.2.0(graphql@16.14.2)':
     dependencies:
@@ -15747,35 +15755,6 @@ snapshots:
       rambda: 11.2.0
     transitivePeerDependencies:
       - preact
-
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/2f19e28bf128822d03e55fdd05a779294ea06106(@types/react@19.2.14)':
-    dependencies:
-      '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.4)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
-      '@formatjs/intl-listformat': 8.3.10
-      '@mui/material': 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      ajv: 8.18.0
-      ajv-formats: 2.1.1(ajv@8.18.0)
-      cheerio: 1.2.0
-      copyfiles: 2.4.1
-      eslint: 8.57.1
-      fast-xml-parser: 5.7.1
-      graphql: 16.14.2
-      graphql-request: 6.1.0(graphql@16.14.2)
-      json-schema-to-typescript: 15.0.4
-      lodash-es: 4.18.1
-      marked: 18.0.2
-      prettier: 3.8.3
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
-      type-fest: 4.41.0
-      uuid: 14.0.0
-      zod: 3.25.76
-    transitivePeerDependencies:
-      - '@mui/material-pigment-css'
-      - '@types/react'
-      - encoding
-      - supports-color
 
   '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/91e4296a313276971ea5759d52b487048c4d8199(@types/react@19.2.14)':
     dependencies:
@@ -17816,11 +17795,12 @@ snapshots:
 
   '@types/js-cookie@2.2.7': {}
 
-  '@types/jsdom@27.0.0':
+  '@types/jsdom@28.0.3':
     dependencies:
       '@types/node': 24.10.15
       '@types/tough-cookie': 4.0.5
-      parse5: 7.3.0
+      parse5: 8.0.1
+      undici-types: 7.28.0
 
   '@types/json-schema@7.0.15': {}
 
@@ -18215,7 +18195,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/coverage-istanbul@4.1.4(vitest@4.1.4)':
+  '@vitest/coverage-istanbul@4.1.4(vitest@4.1.9)':
     dependencies:
       '@babel/core': 7.29.7
       '@istanbuljs/schema': 0.1.6
@@ -18227,7 +18207,7 @@ snapshots:
       magicast: 0.5.2
       obug: 2.1.1
       tinyrainbow: 3.1.0
-      vitest: 4.1.4(@opentelemetry/api@1.9.0)(@types/node@24.10.15)(@vitest/coverage-istanbul@4.1.4)(@vitest/ui@4.1.4)(jsdom@28.1.0(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@24.10.15)(typescript@5.9.3))(vite@6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3))
+      vitest: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@24.10.15)(@vitest/coverage-istanbul@4.1.4)(@vitest/coverage-v8@4.1.9)(@vitest/ui@4.1.4)(jsdom@28.1.0(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@24.10.15)(typescript@5.9.3))(vite@6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3))
     transitivePeerDependencies:
       - supports-color
 
@@ -18243,19 +18223,7 @@ snapshots:
       obug: 2.1.1
       std-env: 4.1.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@24.10.15)(@vitest/coverage-v8@4.1.9)(jsdom@29.1.1(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@24.10.15)(typescript@5.9.3))(vite@8.0.16(@types/node@24.10.15)(esbuild@0.28.1)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3))
-
-  '@vitest/eslint-plugin@1.6.16(@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)(vitest@4.1.4)':
-    dependencies:
-      '@typescript-eslint/scope-manager': 8.58.2
-      '@typescript-eslint/utils': 8.58.2(eslint@8.57.1)(typescript@5.9.3)
-      eslint: 8.57.1
-    optionalDependencies:
-      '@typescript-eslint/eslint-plugin': 5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)
-      typescript: 5.9.3
-      vitest: 4.1.4(@opentelemetry/api@1.9.0)(@types/node@24.10.15)(@vitest/coverage-istanbul@4.1.4)(@vitest/ui@4.1.4)(jsdom@28.1.0(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@24.10.15)(typescript@5.9.3))(vite@6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3))
-    transitivePeerDependencies:
-      - supports-color
+      vitest: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@24.10.15)(@vitest/coverage-istanbul@4.1.4)(@vitest/coverage-v8@4.1.9)(@vitest/ui@4.1.4)(jsdom@28.1.0(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@24.10.15)(typescript@5.9.3))(vite@6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3))
 
   '@vitest/eslint-plugin@1.6.16(@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)(vitest@4.1.9)':
     dependencies:
@@ -18265,7 +18233,7 @@ snapshots:
     optionalDependencies:
       '@typescript-eslint/eslint-plugin': 5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)
       typescript: 5.9.3
-      vitest: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@24.10.15)(@vitest/coverage-v8@4.1.9)(jsdom@26.1.0)(msw@2.13.4(@types/node@24.10.15)(typescript@5.9.3))(vite@6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3))
+      vitest: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@24.10.15)(@vitest/coverage-istanbul@4.1.4)(@vitest/coverage-v8@4.1.9)(@vitest/ui@4.1.4)(jsdom@28.1.0(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@24.10.15)(typescript@5.9.3))(vite@6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3))
     transitivePeerDependencies:
       - supports-color
 
@@ -18277,15 +18245,6 @@ snapshots:
       chai: 5.3.3
       tinyrainbow: 2.0.0
 
-  '@vitest/expect@4.1.4':
-    dependencies:
-      '@standard-schema/spec': 1.1.0
-      '@types/chai': 5.2.3
-      '@vitest/spy': 4.1.4
-      '@vitest/utils': 4.1.4
-      chai: 6.2.2
-      tinyrainbow: 3.1.0
-
   '@vitest/expect@4.1.9':
     dependencies:
       '@standard-schema/spec': 1.1.0
@@ -18295,15 +18254,6 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.0
 
-  '@vitest/mocker@4.1.4(msw@2.14.6(@types/node@24.10.15)(typescript@5.9.3))(vite@6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3))':
-    dependencies:
-      '@vitest/spy': 4.1.4
-      estree-walker: 3.0.3
-      magic-string: 0.30.21
-    optionalDependencies:
-      msw: 2.14.6(@types/node@24.10.15)(typescript@5.9.3)
-      vite: 6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3)
-
   '@vitest/mocker@4.1.9(msw@2.13.4(@types/node@24.10.15)(typescript@5.9.3))(vite@6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3))':
     dependencies:
       '@vitest/spy': 4.1.9
@@ -18311,6 +18261,15 @@ snapshots:
       magic-string: 0.30.21
     optionalDependencies:
       msw: 2.13.4(@types/node@24.10.15)(typescript@5.9.3)
+      vite: 6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3)
+
+  '@vitest/mocker@4.1.9(msw@2.14.6(@types/node@24.10.15)(typescript@5.9.3))(vite@6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3))':
+    dependencies:
+      '@vitest/spy': 4.1.9
+      estree-walker: 3.0.3
+      magic-string: 0.30.21
+    optionalDependencies:
+      msw: 2.14.6(@types/node@24.10.15)(typescript@5.9.3)
       vite: 6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3)
 
   '@vitest/mocker@4.1.9(msw@2.14.6(@types/node@24.10.15)(typescript@5.9.3))(vite@8.0.16(@types/node@24.10.15)(esbuild@0.28.1)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3))':
@@ -18334,21 +18293,9 @@ snapshots:
     dependencies:
       tinyrainbow: 3.1.0
 
-  '@vitest/runner@4.1.4':
-    dependencies:
-      '@vitest/utils': 4.1.4
-      pathe: 2.0.3
-
   '@vitest/runner@4.1.9':
     dependencies:
       '@vitest/utils': 4.1.9
-      pathe: 2.0.3
-
-  '@vitest/snapshot@4.1.4':
-    dependencies:
-      '@vitest/pretty-format': 4.1.4
-      '@vitest/utils': 4.1.4
-      magic-string: 0.30.21
       pathe: 2.0.3
 
   '@vitest/snapshot@4.1.9':
@@ -18362,11 +18309,9 @@ snapshots:
     dependencies:
       tinyspy: 4.0.4
 
-  '@vitest/spy@4.1.4': {}
-
   '@vitest/spy@4.1.9': {}
 
-  '@vitest/ui@4.1.4(vitest@4.1.4)':
+  '@vitest/ui@4.1.4(vitest@4.1.9)':
     dependencies:
       '@vitest/utils': 4.1.4
       fflate: 0.8.2
@@ -18375,7 +18320,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.16
       tinyrainbow: 3.1.0
-      vitest: 4.1.4(@opentelemetry/api@1.9.0)(@types/node@24.10.15)(@vitest/coverage-istanbul@4.1.4)(@vitest/ui@4.1.4)(jsdom@28.1.0(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@24.10.15)(typescript@5.9.3))(vite@6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3))
+      vitest: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@24.10.15)(@vitest/coverage-istanbul@4.1.4)(@vitest/coverage-v8@4.1.9)(@vitest/ui@4.1.4)(jsdom@28.1.0(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@24.10.15)(typescript@5.9.3))(vite@6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3))
 
   '@vitest/utils@3.2.4':
     dependencies:
@@ -18818,14 +18763,6 @@ snapshots:
 
   axe-core@4.11.3: {}
 
-  axios@1.15.2:
-    dependencies:
-      follow-redirects: 1.16.0
-      form-data: 4.0.6
-      proxy-from-env: 2.1.0
-    transitivePeerDependencies:
-      - debug
-
   axios@1.18.0:
     dependencies:
       follow-redirects: 1.16.0
@@ -18961,7 +18898,7 @@ snapshots:
     dependencies:
       ansi-align: 3.0.1
       camelcase: 7.0.1
-      chalk: 5.0.1
+      chalk: 5.6.2
       cli-boxes: 3.0.0
       string-width: 5.1.2
       type-fest: 2.19.0
@@ -19957,7 +19894,7 @@ snapshots:
       has-property-descriptors: 1.0.2
       has-proto: 1.2.0
       has-symbols: 1.1.0
-      hasown: 2.0.3
+      hasown: 2.0.4
       internal-slot: 1.1.0
       is-array-buffer: 3.0.5
       is-callable: 1.2.7
@@ -20009,7 +19946,7 @@ snapshots:
 
   es-shim-unscopables@1.1.0:
     dependencies:
-      hasown: 2.0.3
+      hasown: 2.0.4
 
   es-to-primitive@1.3.0:
     dependencies:
@@ -20543,7 +20480,7 @@ snapshots:
       asynckit: 0.4.0
       combined-stream: 1.0.8
       es-set-tostringtag: 2.1.0
-      hasown: 2.0.3
+      hasown: 2.0.4
       mime-types: 2.1.35
       safe-buffer: 5.2.1
 
@@ -20552,7 +20489,7 @@ snapshots:
       asynckit: 0.4.0
       combined-stream: 1.0.8
       es-set-tostringtag: 2.1.0
-      hasown: 2.0.3
+      hasown: 2.0.4
       mime-types: 2.1.35
 
   form-data@4.0.6:
@@ -20611,7 +20548,7 @@ snapshots:
       call-bound: 1.0.4
       define-properties: 1.2.1
       functions-have-names: 1.2.3
-      hasown: 2.0.3
+      hasown: 2.0.4
       is-callable: 1.2.7
 
   functions-have-names@1.2.3: {}
@@ -20647,7 +20584,7 @@ snapshots:
       get-proto: 1.0.1
       gopd: 1.2.0
       has-symbols: 1.1.0
-      hasown: 2.0.3
+      hasown: 2.0.4
       math-intrinsics: 1.1.0
 
   get-package-type@0.1.0: {}
@@ -20780,11 +20717,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  graphql-tag@2.12.6(graphql@16.13.2):
-    dependencies:
-      graphql: 16.13.2
-      tslib: 2.8.1
-
   graphql-tag@2.12.6(graphql@16.14.2):
     dependencies:
       graphql: 16.14.2
@@ -20793,8 +20725,6 @@ snapshots:
   graphql@14.1.1:
     dependencies:
       iterall: 1.3.0
-
-  graphql@16.13.2: {}
 
   graphql@16.14.2: {}
 
@@ -21172,7 +21102,7 @@ snapshots:
   internal-slot@1.1.0:
     dependencies:
       es-errors: 1.3.0
-      hasown: 2.0.3
+      hasown: 2.0.4
       side-channel: 1.1.0
 
   internmap@2.0.3: {}
@@ -21232,7 +21162,7 @@ snapshots:
 
   is-core-module@2.16.1:
     dependencies:
-      hasown: 2.0.3
+      hasown: 2.0.4
 
   is-data-view@1.0.2:
     dependencies:
@@ -21565,6 +21495,7 @@ snapshots:
       xml-name-validator: 5.0.0
     transitivePeerDependencies:
       - '@noble/hashes'
+    optional: true
 
   jsesc@3.1.0: {}
 
@@ -22577,10 +22508,8 @@ snapshots:
 
   nanoid-good@3.1.0:
     dependencies:
-      nanoid: 3.3.11
+      nanoid: 3.3.12
       naughty-words: 1.2.0
-
-  nanoid@3.3.11: {}
 
   nanoid@3.3.12: {}
 
@@ -22728,10 +22657,11 @@ snapshots:
 
   notifications-node-client@8.3.2:
     dependencies:
-      axios: 1.15.2
+      axios: 1.18.0
       jsonwebtoken: 9.0.3
     transitivePeerDependencies:
       - debug
+      - supports-color
 
   npm-bundled@5.0.0:
     dependencies:
@@ -23360,7 +23290,7 @@ snapshots:
 
   postcss@8.5.10:
     dependencies:
-      nanoid: 3.3.11
+      nanoid: 3.3.12
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
@@ -24826,11 +24756,11 @@ snapshots:
       - supports-color
     optional: true
 
-  subscriptions-transport-ws@0.11.0(graphql@16.13.2):
+  subscriptions-transport-ws@0.11.0(graphql@16.14.2):
     dependencies:
       backo2: 1.0.2
       eventemitter3: 3.1.2
-      graphql: 16.13.2
+      graphql: 16.14.2
       iterall: 1.3.0
       symbol-observable: 1.2.0
       ws: 7.5.10
@@ -25284,6 +25214,8 @@ snapshots:
 
   undici-types@7.16.0: {}
 
+  undici-types@7.28.0: {}
+
   undici@6.27.0: {}
 
   undici@7.25.0: {}
@@ -25513,9 +25445,9 @@ snapshots:
       esbuild: 0.25.12
       fdir: 6.5.0(picomatch@4.0.4)
       picomatch: 4.0.4
-      postcss: 8.5.10
+      postcss: 8.5.15
       rollup: 4.60.2
-      tinyglobby: 0.2.16
+      tinyglobby: 0.2.17
     optionalDependencies:
       '@types/node': 24.10.15
       fsevents: 2.3.3
@@ -25576,15 +25508,15 @@ snapshots:
       lodash-es: 4.18.1
       vitest: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@24.10.15)(@vitest/coverage-v8@4.1.9)(jsdom@26.1.0)(msw@2.13.4(@types/node@24.10.15)(typescript@5.9.3))(vite@6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3))
 
-  vitest@4.1.4(@opentelemetry/api@1.9.0)(@types/node@24.10.15)(@vitest/coverage-istanbul@4.1.4)(@vitest/ui@4.1.4)(jsdom@28.1.0(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@24.10.15)(typescript@5.9.3))(vite@6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3)):
+  vitest@4.1.9(@opentelemetry/api@1.9.0)(@types/node@24.10.15)(@vitest/coverage-istanbul@4.1.4)(@vitest/coverage-v8@4.1.9)(@vitest/ui@4.1.4)(jsdom@28.1.0(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@24.10.15)(typescript@5.9.3))(vite@6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3)):
     dependencies:
-      '@vitest/expect': 4.1.4
-      '@vitest/mocker': 4.1.4(msw@2.14.6(@types/node@24.10.15)(typescript@5.9.3))(vite@6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3))
-      '@vitest/pretty-format': 4.1.4
-      '@vitest/runner': 4.1.4
-      '@vitest/snapshot': 4.1.4
-      '@vitest/spy': 4.1.4
-      '@vitest/utils': 4.1.4
+      '@vitest/expect': 4.1.9
+      '@vitest/mocker': 4.1.9(msw@2.14.6(@types/node@24.10.15)(typescript@5.9.3))(vite@6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3))
+      '@vitest/pretty-format': 4.1.9
+      '@vitest/runner': 4.1.9
+      '@vitest/snapshot': 4.1.9
+      '@vitest/spy': 4.1.9
+      '@vitest/utils': 4.1.9
       es-module-lexer: 2.0.0
       expect-type: 1.3.0
       magic-string: 0.30.21
@@ -25594,15 +25526,16 @@ snapshots:
       std-env: 4.1.0
       tinybench: 2.9.0
       tinyexec: 1.1.1
-      tinyglobby: 0.2.16
+      tinyglobby: 0.2.17
       tinyrainbow: 3.1.0
       vite: 6.4.3(@types/node@24.10.15)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(stylus@0.62.0)(tsx@4.21.0)(yaml@2.8.3)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@opentelemetry/api': 1.9.0
       '@types/node': 24.10.15
-      '@vitest/coverage-istanbul': 4.1.4(vitest@4.1.4)
-      '@vitest/ui': 4.1.4(vitest@4.1.4)
+      '@vitest/coverage-istanbul': 4.1.4(vitest@4.1.9)
+      '@vitest/coverage-v8': 4.1.9(vitest@4.1.9)
+      '@vitest/ui': 4.1.4(vitest@4.1.9)
       jsdom: 28.1.0(@noble/hashes@1.8.0)
     transitivePeerDependencies:
       - msw
