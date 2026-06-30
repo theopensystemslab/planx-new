@@ -106,7 +106,7 @@
     "@typescript-eslint/eslint-plugin": "catalog:typescript",
     "@typescript-eslint/parser": "catalog:typescript",
     "@vitest/coverage-istanbul": "^4.0.18",
-    "@vitest/eslint-plugin": "^1.6.9",
+    "@vitest/eslint-plugin": "catalog:",
     "@vitest/ui": "^4.0.18",
     "dotenv": "catalog:",
     "eslint": "catalog:",

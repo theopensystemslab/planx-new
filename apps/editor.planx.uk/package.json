@@ -121,7 +121,7 @@
     "@typescript-eslint/eslint-plugin": "catalog:typescript",
     "@typescript-eslint/parser": "catalog:typescript",
     "@vitest/coverage-v8": "^4.1.9",
-    "@vitest/eslint-plugin": "^1.6.9",
+    "@vitest/eslint-plugin": "catalog:",
     "autoprefixer": "^10.4.27",
     "babel-plugin-react-compiler": "^1.0.0",
     "css-loader": "^7.1.4",

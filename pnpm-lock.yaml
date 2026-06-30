@@ -15,6 +15,9 @@ catalogs:
     '@types/node':
       specifier: ~24.10.15
       version: 24.10.15
+    '@vitest/eslint-plugin':
+      specifier: ^1.6.9
+      version: 1.6.16
     axios:
       specifier: ^1.15.0
       version: 1.18.0
@@ -351,7 +354,7 @@ importers:
         specifier: ^4.0.18
         version: 4.1.4(vitest@4.1.9)
       '@vitest/eslint-plugin':
-        specifier: ^1.6.9
+        specifier: 'catalog:'
         version: 1.6.16(@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)(vitest@4.1.9)
       '@vitest/ui':
         specifier: ^4.0.18
@@ -754,7 +757,7 @@ importers:
         specifier: ^4.1.9
         version: 4.1.9(vitest@4.1.9)
       '@vitest/eslint-plugin':
-        specifier: ^1.6.9
+        specifier: 'catalog:'
         version: 1.6.16(@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)(vitest@4.1.9)
       autoprefixer:
         specifier: ^10.4.27
