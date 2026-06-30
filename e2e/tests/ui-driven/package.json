@@ -1,11 +1,11 @@
 {
+  "name": "@planx/e2e-ui",
   "private": true,
   "scripts": {
     "test": "playwright test --grep-invert @regression",
     "test:regression": "playwright test",
     "test:debug": "DEBUG_LOG=true pnpm test",
-    "ui": "serve ../../../apps/editor.planx.uk/build --single --listen 3000",
-    "postinstall": "./build-editor.sh"
+    "ui": "serve ../../../apps/editor.planx.uk/build --single --listen 3000"
   },
   "type": "module",
   "dependencies": {
@@ -20,21 +20,10 @@
     "serve": "^14.2.5",
     "uuid": "^14.0.0"
   },
-  "packageManager": "pnpm@10.30.2",
   "devDependencies": {
     "@playwright/test": "^1.58.2",
     "@types/geojson": "^7946.0.16",
     "@types/node": "~24.10.15",
     "eslint-plugin-playwright": "^0.20.0"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@opensystemslab/planx-core"
-    ],
-    "overrides": {
-      "ajv": "^8.18.0",
-      "minimatch": "^3.1.5",
-      "on-headers@<1.1.0": ">=1.1.0"
-    }
   }
 }

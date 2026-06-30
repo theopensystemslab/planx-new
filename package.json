@@ -18,5 +18,46 @@
   "devDependencies": {
     "typescript": "~5.9.3"
   },
-  "packageManager": "pnpm@10.30.2"
+  "packageManager": "pnpm@10.30.2",
+  "pnpm": {
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "nock": "13"
+      },
+      "ignoreMissing": [
+        "react",
+        "react-dom"
+      ]
+    },
+    "overrides": {
+      "fast-xml-parser": "^5.4.1",
+      "fuse.js": "7.1.0",
+      "flatted@<=3.4.1": ">=3.4.2",
+      "linkifyjs@<4.3.2": ">=4.3.2",
+      "micromatch@<4.0.8": ">=4.0.8",
+      "minimatch@<3.1.5": ">=3.1.5 <4",
+      "on-headers@<1.1.0": ">=1.1.0",
+      "qs@<6.14.1": ">=6.14.1",
+      "serialize-javascript": "^7.0.3"
+    },
+    "onlyBuiltDependencies": [
+      "@kirillvakalov/hasura-cli",
+      "@opensystemslab/planx-core",
+      "@parcel/watcher",
+      "@pulumi/aws",
+      "@pulumi/cloudflare",
+      "@pulumi/docker",
+      "@pulumi/docker-build",
+      "@swc/core",
+      "aws-sdk",
+      "core-js",
+      "esbuild",
+      "preact",
+      "protobufjs",
+      "tldjs"
+    ],
+    "ignoredBuiltDependencies": [
+      "msw"
+    ]
+  }
 }

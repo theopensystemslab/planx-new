@@ -1,10 +1,10 @@
 {
+  "name": "@planx/hasura-tests",
   "scripts": {
     "test": "echo 'Running hasura tests…' && vitest run && echo 'Hasura tests passed.'",
     "test:watch": "vitest watch",
     "build-jwt": "DOTENV_CONFIG_PATH=../.env.test node -r dotenv/config scripts/buildJWT.js"
   },
-  "packageManager": "pnpm@10.30.2",
   "dependencies": {
     "dotenv": "^17.3.1",
     "isomorphic-fetch": "^3.0.0",

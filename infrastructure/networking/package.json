@@ -1,13 +1,13 @@
 {
   "name": "@planx/infrastructure-networking",
   "dependencies": {
-    "@pulumi/aws": "catalog:",
-    "@pulumi/awsx": "catalog:",
-    "@pulumi/pulumi": "catalog:"
+    "@pulumi/aws": "catalog:infrastructure",
+    "@pulumi/awsx": "catalog:infrastructure",
+    "@pulumi/pulumi": "catalog:infrastructure"
   },
   "devDependencies": {
-    "@types/node": "catalog:",
-    "typescript": "catalog:"
+    "@types/node": "catalog:infrastructure",
+    "typescript": "catalog:infrastructure"
   },
   "main": "index.ts",
   "private": true

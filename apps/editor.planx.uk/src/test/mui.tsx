@@ -1,5 +1,4 @@
 import "@testing-library/jest-dom";
-import "@testing-library/jest-dom/vitest";
 import "vitest-axe/extend-expect";
 
 import { CollapseProps } from "@mui/material/Collapse";
