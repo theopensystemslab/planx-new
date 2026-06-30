@@ -37,7 +37,7 @@
     "graphql": "catalog:graphql",
     "he": "^1.2.0",
     "helmet": "^8.1.0",
-    "http-proxy-middleware": "^2.0.9",
+    "http-proxy-middleware": "^2.0.10",
     "husky": "catalog:",
     "isomorphic-fetch": "^3.0.0",
     "jsdom": "catalog:",
