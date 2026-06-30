@@ -53,7 +53,7 @@ export const createSharedbService = async ({
   const sharedbImage = new awsx.ecr.Image("sharedb-image", {
     repositoryUrl: repo.repository.repositoryUrl,
     context: "../..",
-    dockerfile: "apps/sharedb.planx.uk/Dockerfile",
+    dockerfile: "../../apps/sharedb.planx.uk/Dockerfile",
   });
   const sharedbLogGroup = new aws.cloudwatch.LogGroup("sharedb", {
     name: "/ecs/sharedb",

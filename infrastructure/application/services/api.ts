@@ -91,7 +91,7 @@ export const createApiService = async ({
   const apiImage = new awsx.ecr.Image("api-image", {
     repositoryUrl: repo.url,
     context: "../..",
-    dockerfile: "apps/api.planx.uk/Dockerfile",
+    dockerfile: "../../apps/api.planx.uk/Dockerfile",
     args: {
       target: "production",
     },
