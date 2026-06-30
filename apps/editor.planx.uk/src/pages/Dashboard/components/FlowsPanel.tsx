@@ -1,3 +1,4 @@
+import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
@@ -10,6 +11,7 @@ import { Link } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import React from "react";
+import { EmptyState } from "ui/editor/EmptyState";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
 import StyledTab from "ui/editor/StyledTab";
@@ -57,7 +59,12 @@ export const FlowsPanel: React.FC<FlowsPanelProps> = ({
         <Tabs
           value={tab}
           onChange={(_e, v) => setTab(v)}
-          sx={{ minHeight: 0, borderBottom: 1, borderColor: "border.main", paddingX: 1.25, }}
+          sx={{
+            minHeight: 0,
+            borderBottom: 1,
+            borderColor: "border.main",
+            paddingX: 1.25,
+          }}
         >
           <StyledTab label="Recent flows" value="recent" />
           <StyledTab label="Pinned flows" value="pinned" />
@@ -142,18 +149,19 @@ export const FlowsPanel: React.FC<FlowsPanelProps> = ({
           {displayed.length === 0 && (
             <ListItem
               sx={{
-                display: "flex",
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
+                display: "block",
+                alignItems: "flex-start",
               }}
             >
               {tab === "pinned" ? (
-                <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  No pinned flows
-                </Typography>
+                <EmptyState
+                  size="small"
+                  icon={<PushPinOutlinedIcon />}
+                  title="No pinned flows"
+                  description="Use the pin icon on a flow to add it here"
+                />
               ) : (
-                <NoFlowsGetStarted />
+                <NoFlowsGetStarted size="small" />
               )}
             </ListItem>
           )}

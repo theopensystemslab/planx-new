@@ -6,6 +6,7 @@ import { isEmpty } from "lodash";
 import React, { useState } from "react";
 import { EmptyState } from "ui/editor/EmptyState";
 import { InfoChip } from "ui/editor/InfoChip";
+import EditorIcon from "ui/icons/Editor";
 import { DebouncedSearchInput } from "ui/shared/SearchBox/DebouncedSearchInput";
 
 import { useStore } from "../FlowEditor/lib/store";
@@ -21,8 +22,16 @@ import TeamLayout from "./TeamLayout";
 
 export type FlowView = "flows" | "archive";
 
-export const NoFlowsGetStarted: React.FC = () => (
+interface NoFlowsGetStartedProps {
+  size?: "medium" | "small";
+}
+
+export const NoFlowsGetStarted: React.FC<NoFlowsGetStartedProps> = ({
+  size,
+}) => (
   <EmptyState
+    size={size}
+    icon={<EditorIcon />}
     title="No flows found"
     description="Get started by creating your first flow"
     action={<AddFlow />}

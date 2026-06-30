@@ -1,8 +1,10 @@
+import BarChartIcon from "@mui/icons-material/BarChart";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { ActivityItem } from "hooks/data/useActivityData";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { EmptyState } from "ui/editor/EmptyState";
 
 const ServiceList = styled(Box)(({ theme }) => ({
   overflowY: "auto",
@@ -47,16 +49,12 @@ export default function ServiceListWithCount({
 
   if (activeItems.length === 0) {
     return (
-      <ServiceList
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          No activity to show
-        </Typography>
+      <ServiceList>
+        <EmptyState
+          size="small"
+          title="No activity to show"
+          icon={<BarChartIcon />}
+        />
       </ServiceList>
     );
   }

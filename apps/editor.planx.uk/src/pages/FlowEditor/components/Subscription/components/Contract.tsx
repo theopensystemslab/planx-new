@@ -1,5 +1,5 @@
 import Typography from "@mui/material/Typography";
-import React from "react";
+import { EmptyState } from "ui/editor/EmptyState";
 import SettingsSection from "ui/editor/SettingsSection";
 
 export const Contract = () => (
@@ -16,6 +16,6 @@ export const Contract = () => (
       Terms and key dates of your software contract. OSL invoices annually for
       the fixed subscription cost of Plan✕.
     </Typography>
-    <Typography variant="body1">[Coming soon]</Typography>
+    <EmptyState size="small" title="Contract details coming soon" />
   </SettingsSection>
 );

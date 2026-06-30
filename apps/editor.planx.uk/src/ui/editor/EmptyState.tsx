@@ -9,6 +9,7 @@ interface EmptyStateProps {
   title?: string;
   description?: string;
   action?: React.ReactNode;
+  icon?: React.ReactNode;
   size?: EmptyStateSize;
   sx?: BoxProps["sx"];
 }
@@ -16,23 +17,40 @@ interface EmptyStateProps {
 const Root = styled(Box, {
   shouldForwardProp: (prop) => prop !== "size",
 })<{ size?: EmptyStateSize }>(({ theme, size }) => ({
+  position: "relative",
   marginTop: theme.spacing(2),
-  padding: size === "small" ? theme.spacing(1.5) : theme.spacing(2.5),
-  border: `4px solid ${theme.palette.border.light}`,
+  padding:
+    size === "small"
+      ? theme.spacing(1.5, 1.5, 1.75)
+      : theme.spacing(2.5, 2.5, 2.75),
+  border: `2px solid ${theme.palette.border.light}`,
   backgroundColor: theme.palette.background.default,
   display: "flex",
   flexDirection: "column",
-  gap: size === "small" ? theme.spacing(0.5) : theme.spacing(1.5),
+  gap: size === "small" ? theme.spacing(0.75) : theme.spacing(1.5),
+  textAlign: "center",
 }));
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
   title,
   description,
   action,
+  icon,
   size = "medium",
   sx,
 }) => (
   <Root size={size} sx={sx}>
+    {icon && (
+      <Box
+        sx={(theme) => ({
+          display: "flex",
+          justifyContent: "center",
+          "& svg": { fontSize: "3rem", color: theme.palette.text.secondary },
+        })}
+      >
+        {icon}
+      </Box>
+    )}
     {title && (
       <Typography variant={size === "small" ? "h4" : "h3"}>{title}</Typography>
     )}

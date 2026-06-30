@@ -1,3 +1,4 @@
+import GroupIcon from "@mui/icons-material/Group";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
@@ -9,9 +10,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { Role } from "@opensystemslab/planx-core/types";
-import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useState } from "react";
+import { useState } from "react";
 import { AddButton } from "ui/editor/AddButton";
+import { EmptyState } from "ui/editor/EmptyState";
 
 import { StyledAvatar, StyledTableRow } from "../styles";
 import {
@@ -78,7 +79,11 @@ export const MembersTable = ({
           <TableHead>
             <TableRow>
               <TableCell>
-                <strong>No members found</strong>
+                <EmptyState
+                  size="small"
+                  title="No team members found"
+                  icon={<GroupIcon />}
+                />
               </TableCell>
             </TableRow>
           </TableHead>

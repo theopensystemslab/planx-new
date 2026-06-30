@@ -1,4 +1,5 @@
 import { ApolloError } from "@apollo/client";
+import DeleteIcon from "@mui/icons-material/Delete";
 import TableRowsIcon from "@mui/icons-material/TableRows";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import Box from "@mui/material/Box";
@@ -74,7 +75,7 @@ const Archive: React.FC<Props> = ({
   }
 
   if (!isFiltered && archivedFlows !== null && archivedFlows.length === 0) {
-    return <EmptyState title="No archived flows found" />;
+    return <EmptyState title="No archived flows found" icon={<DeleteIcon />} />;
   }
 
   return (
