@@ -144,8 +144,6 @@ Add an entry for the new component in the appropriate category within `ALL_CATEG
 },
 ```
 
-> Note: components are no longer categorised in `FormModal.tsx`. The component picker UI is driven entirely by `ALL_CATEGORIES` in `componentData.ts`.
-
 5. `src/pages/FlowEditor/components/forms/index.ts`
 
 ```typescript
