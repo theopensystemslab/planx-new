@@ -1,0 +1,7 @@
+{
+  "name": "@planx/prettier-config",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MPL-2.0",
+  "main": "index.json"
+}
