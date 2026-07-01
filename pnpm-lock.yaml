@@ -7,7 +7,7 @@ settings:
 catalogs:
   default:
     '@opensystemslab/planx-core':
-      specifier: github:theopensystemslab/planx-core#91e4296
+      specifier: github:theopensystemslab/planx-core#bcae17e
       version: 1.0.0
     '@types/jsdom':
       specifier: ^28.0.1
@@ -147,7 +147,7 @@ importers:
         version: 3.1032.0
       '@opensystemslab/planx-core':
         specifier: 'catalog:'
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/91e4296a313276971ea5759d52b487048c4d8199(@types/react@19.2.14)
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/bcae17eaa0c3806412454c3a738922984fbfa4d1(@types/react@19.2.14)
       '@types/geojson':
         specifier: ^7946.0.16
         version: 7946.0.16
@@ -454,7 +454,7 @@ importers:
         version: 1.0.0-alpha.14
       '@opensystemslab/planx-core':
         specifier: 'catalog:'
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/91e4296a313276971ea5759d52b487048c4d8199(@types/react@19.2.14)
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/bcae17eaa0c3806412454c3a738922984fbfa4d1(@types/react@19.2.14)
       '@tanstack/react-query':
         specifier: ^5.101.1
         version: 5.101.1(react@19.2.5)
@@ -1030,7 +1030,7 @@ importers:
         version: 12.9.0
       '@opensystemslab/planx-core':
         specifier: 'catalog:'
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/91e4296a313276971ea5759d52b487048c4d8199(@types/react@19.2.14)
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/bcae17eaa0c3806412454c3a738922984fbfa4d1(@types/react@19.2.14)
       axios:
         specifier: 'catalog:'
         version: 1.18.1
@@ -1073,7 +1073,7 @@ importers:
     dependencies:
       '@opensystemslab/planx-core':
         specifier: 'catalog:'
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/91e4296a313276971ea5759d52b487048c4d8199(@types/react@19.2.14)
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/bcae17eaa0c3806412454c3a738922984fbfa4d1(@types/react@19.2.14)
       axios:
         specifier: 'catalog:'
         version: 1.18.1
@@ -1251,7 +1251,7 @@ importers:
     dependencies:
       '@opensystemslab/planx-core':
         specifier: 'catalog:'
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/91e4296a313276971ea5759d52b487048c4d8199(@types/react@19.2.14)
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/bcae17eaa0c3806412454c3a738922984fbfa4d1(@types/react@19.2.14)
       tsx:
         specifier: ^4.21.0
         version: 4.21.0
@@ -3704,8 +3704,8 @@ packages:
   '@opensystemslab/map@1.0.0-alpha.14':
     resolution: {integrity: sha512-kIVrXtq2rcOzayTtUkVUQWSJMGrhER7FuuMR9cJw5a8AOH69XnXrkDPGBMVQmNJOIoMkO4dOzTt6ofUchZxLQA==}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/91e4296a313276971ea5759d52b487048c4d8199':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/91e4296a313276971ea5759d52b487048c4d8199}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/bcae17eaa0c3806412454c3a738922984fbfa4d1':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/bcae17eaa0c3806412454c3a738922984fbfa4d1}
     version: 1.0.0
 
   '@opentelemetry/api-logs@0.57.2':
@@ -15728,7 +15728,7 @@ snapshots:
 
   '@npmcli/fs@5.0.0':
     dependencies:
-      semver: 7.7.4
+      semver: 7.8.5
 
   '@npmcli/git@7.0.2':
     dependencies:
@@ -15738,7 +15738,7 @@ snapshots:
       lru-cache: 11.3.5
       npm-pick-manifest: 11.0.3
       proc-log: 6.1.0
-      semver: 7.7.4
+      semver: 7.8.5
       which: 6.0.1
 
   '@npmcli/installed-package-contents@4.0.0':
@@ -15759,7 +15759,7 @@ snapshots:
       json-parse-even-better-errors: 5.0.0
       pacote: 21.5.1
       proc-log: 6.1.0
-      semver: 7.7.4
+      semver: 7.8.5
     transitivePeerDependencies:
       - supports-color
 
@@ -15774,7 +15774,7 @@ snapshots:
       hosted-git-info: 9.0.3
       json-parse-even-better-errors: 5.0.0
       proc-log: 6.1.0
-      semver: 7.7.4
+      semver: 7.8.5
       spdx-expression-parse: 4.0.0
 
   '@npmcli/promise-spawn@9.0.1':
@@ -15844,7 +15844,7 @@ snapshots:
     transitivePeerDependencies:
       - preact
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/91e4296a313276971ea5759d52b487048c4d8199(@types/react@19.2.14)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/bcae17eaa0c3806412454c3a738922984fbfa4d1(@types/react@19.2.14)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.4)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
@@ -18247,7 +18247,7 @@ snapshots:
       '@typescript-eslint/visitor-keys': 8.58.2
       debug: 4.4.3(supports-color@8.1.1)
       minimatch: 10.2.5
-      semver: 7.7.4
+      semver: 7.8.5
       tinyglobby: 0.2.17
       ts-api-utils: 2.5.0(typescript@5.9.3)
       typescript: 5.9.3
@@ -19254,7 +19254,7 @@ snapshots:
       parse5: 7.3.0
       parse5-htmlparser2-tree-adapter: 7.1.0
       parse5-parser-stream: 7.1.2
-      undici: 7.25.0
+      undici: 7.28.0
       whatwg-mimetype: 4.0.0
 
   chokidar@3.6.0:
@@ -21993,7 +21993,7 @@ snapshots:
 
   make-dir@4.0.0:
     dependencies:
-      semver: 7.7.4
+      semver: 7.8.5
 
   make-error@1.3.6: {}
 
@@ -22709,7 +22709,7 @@ snapshots:
       graceful-fs: 4.2.11
       nopt: 9.0.0
       proc-log: 6.1.0
-      semver: 7.7.4
+      semver: 7.8.5
       tar: 7.5.13
       tinyglobby: 0.2.17
       undici: 6.27.0
@@ -22776,7 +22776,7 @@ snapshots:
   normalize-package-data@8.0.0:
     dependencies:
       hosted-git-info: 9.0.3
-      semver: 7.7.4
+      semver: 7.8.5
       validate-npm-package-license: 3.0.4
 
   normalize-path@3.0.0: {}
@@ -22795,7 +22795,7 @@ snapshots:
 
   npm-install-checks@8.0.0:
     dependencies:
-      semver: 7.7.4
+      semver: 7.8.5
 
   npm-normalize-package-bin@5.0.0: {}
 
@@ -22803,7 +22803,7 @@ snapshots:
     dependencies:
       hosted-git-info: 9.0.3
       proc-log: 6.1.0
-      semver: 7.7.4
+      semver: 7.8.5
       validate-npm-package-name: 7.0.2
 
   npm-packlist@10.0.4:
@@ -22816,7 +22816,7 @@ snapshots:
       npm-install-checks: 8.0.0
       npm-normalize-package-bin: 5.0.0
       npm-package-arg: 13.0.2
-      semver: 7.7.4
+      semver: 7.8.5
 
   npm-registry-fetch@19.1.1:
     dependencies:
@@ -25350,8 +25350,7 @@ snapshots:
 
   undici@7.25.0: {}
 
-  undici@7.28.0:
-    optional: true
+  undici@7.28.0: {}
 
   unicode-canonical-property-names-ecmascript@2.0.1: {}
 
