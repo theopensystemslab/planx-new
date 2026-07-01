@@ -36,7 +36,7 @@ jobs:
       - build_planx_frontend
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
@@ -71,7 +71,7 @@ jobs:
     needs: preview
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       # Airbrake notification - https://airbrake.io/docs/features/deploy-tracking
       - name: Notify Airbrake of deploy
         id: airbrake-deploy
