@@ -46,7 +46,7 @@ const StatsGrid = styled(Box)(({ theme }) => ({
 }));
 
 function formatDelta(delta: number): string {
-  const formatted = Math.abs(delta).toLocaleString();
+  const formatted = Math.abs(delta).toLocaleString("en-GB");
   return delta >= 0 ? `+${formatted}` : `-${formatted}`;
 }
 
@@ -143,7 +143,7 @@ export function StatsBanner({
                   : undefined
               }
             >
-              {value !== null ? value.toLocaleString() : "—"}
+              {value !== null ? value.toLocaleString("en-GB") : "—"}
             </Typography>
             {!loading && delta !== null && (
               <Typography
