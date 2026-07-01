@@ -11,6 +11,7 @@ import {
   createSessionExpiryEventController,
   createSessionReminderEventController,
   deleteSessionController,
+  failedSubmissionsController,
   isCleanJSONBController,
   sanitiseApplicationDataController,
   sendSlackMessageController,

@@ -1,12 +1,15 @@
 import isNull from "lodash/isNull.js";
+
 import { ServerError } from ".././../errors/index.js";
+import { sendSlackMessage } from "../slack/utils.js";
 import { analyzeSessions } from "./service/analyzeSessions/index.js";
+import { getDailyFailedSubmissions } from "./service/dailyFailedSubmissions/index.js";
 import { softDeleteSession } from "./service/deleteSession/index.js";
 import type { DeleteSessionController } from "./service/deleteSession/schema.js";
 import {
+  createSessionDeleteEvent,
   createSessionExpiryEvent,
   createSessionReminderEvent,
-  createSessionDeleteEvent,
 } from "./service/lowcalSessionEvents/index.js";
 import type {
   CreateSessionDeleteEventController,
@@ -23,10 +26,10 @@ import type { SanitiseApplicationData } from "./service/sanitiseApplicationData/
 import { sendSlackNotification } from "./service/sendNotification/index.js";
 import type { SendSlackNotification } from "./service/sendNotification/types.js";
 import type { SendSlackMessageController } from "./service/sendSlackMessage/schema.js";
-import { sendSlackMessage } from "../slack/utils.js";
+import { updateTemplatedFlowEdits } from "./service/updateTemplatedFlowEdits/index.js";
 import type { UpdateTemplatedFlowEditsController } from "./service/updateTemplatedFlowEdits/schema.js";
 import type { IsCleanJSONBController } from "./service/validateInput/schema.js";
-import { updateTemplatedFlowEdits } from "./service/updateTemplatedFlowEdits/index.js";
+import type { FailedSubmissionController } from "./service/dailyFailedSubmissions/types.js";
 
 export const sendSlackNotificationController: SendSlackNotification = async (
   _req,
@@ -297,7 +300,7 @@ export const updateTemplatedFlowEditsController: UpdateTemplatedFlowEditsControl
     }
   };
 
-export const failedSubmissionsController: FaliedSubmissionController = async (
+export const failedSubmissionsController: FailedSubmissionController = async (
   _req,
   res,
   next,
@@ -311,7 +314,7 @@ export const failedSubmissionsController: FaliedSubmissionController = async (
 
     const response = await getDailyFailedSubmissions();
     return res.status(200).send({
-      message: `Logged any failed submissions to Slack #planx-notifications-internal`,
+      message: response,
     });
   } catch (error) {
     return next(
