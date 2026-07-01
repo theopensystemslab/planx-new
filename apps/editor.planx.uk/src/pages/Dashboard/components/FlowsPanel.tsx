@@ -143,6 +143,9 @@ export const FlowsPanel: React.FC<FlowsPanelProps> = ({
                     </FlowTag>
                   )}
                 </ListItem>
+                {i === displayed.length - 1 && (
+                  <Divider sx={{ borderColor: "border.main" }} />
+                )}
               </React.Fragment>
             );
           })}

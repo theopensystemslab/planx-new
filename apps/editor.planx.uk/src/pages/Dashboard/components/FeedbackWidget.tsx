@@ -58,7 +58,14 @@ export function FeedbackWidget({
       <Box sx={{ overflowY: "auto" }}>
         {flows.map(({ flowName, flowSlug, count }) => (
           <React.Fragment key={flowName}>
-            <Box sx={{ position: "relative", px: 1.5, py: 1 }}>
+            <Box
+              sx={{
+                position: "relative",
+                px: 1.5,
+                py: 1,
+                "&:hover": { backgroundColor: "background.paper" },
+              }}
+            >
               <Link
                 to="/app/$team/$flow/feedback"
                 params={{ team: teamSlug, flow: flowSlug }}

@@ -71,7 +71,11 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
           </Typography>
         )}
         {count !== undefined && count > 0 && (
-          <BadgeChip label={count} color="info" />
+          <BadgeChip
+            label={count}
+            color="info"
+            sx={{ transform: "translateY(-4px)" }}
+          />
         )}
       </Box>
       {link && <WidgetLink {...link} />}

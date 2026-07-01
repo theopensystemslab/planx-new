@@ -79,7 +79,7 @@ export function StatsBanner({
 }: StatsBannerProps) {
   const tiles = [
     {
-      label: "Online flows",
+      label: "Online services",
       value: stats?.onlineFlows ?? null,
       delta: stats ? stats.onlineFlows - stats.onlineFlowsPrevious : null,
     },
@@ -168,5 +168,11 @@ export default function ConnectedStatsBanner() {
   const stats = data?.teamDashboardStats[0];
   const analyticsLink = useTeamAnalyticsLink();
 
-  return <StatsBanner analyticsLink={analyticsLink} stats={stats} loading={loading} />;
+  return (
+    <StatsBanner
+      analyticsLink={analyticsLink}
+      stats={stats}
+      loading={loading}
+    />
+  );
 }
