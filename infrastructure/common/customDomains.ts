@@ -71,8 +71,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "epsom-and-ewell",
           domain: "planningservices.epsom-ewell.gov.uk",
-          cloudFrontState: "cutover-ongoing",
-          certificateLocation: "pulumiConfig",
+          cloudFrontState: "shared-final",
         },
         {
           name: "newcastle",
