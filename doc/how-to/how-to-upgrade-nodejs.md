@@ -65,3 +65,17 @@ To upgrade, update the value in each stack:
 ```shell
 pulumi config set lambda-nodejs-runtime nodejs24.x --stack <stack>
 ```
+
+## Netlify
+
+[Netlify](https://www.netlify.com/) is used to deploy [storybook.planx.dev](https://storybook.planx.dev/) and [storybook.planx.uk](https://storybook.planx.uk/) on merge to `main` and `production` respectively.
+
+The Node (and pnpm) version used for the runners responsible for the build and deploy need to be kept up to date.
+
+This needs to be configured in the two following locations -
+
+1. Environmental variables
+   https://app.netlify.com/projects/planx-storybook/configuration/env#environment-variables
+
+2. Dependency management
+   https://app.netlify.com/projects/planx-storybook/configuration/deploys#dependency-management
