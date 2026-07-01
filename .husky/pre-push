@@ -1,4 +1,3 @@
-#!/bin/sh
 echo "Checking for git author…"
 git log -1 --pretty=format:%ae origin/main...HEAD | grep --silent "harles" && echo "Missing running command: gauthor" && exit 1
 git log -1 --pretty=format:%an origin/main...HEAD | grep --silent "harles" && echo "Missing running command: gauthor" && exit 1
