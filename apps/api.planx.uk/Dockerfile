@@ -1,5 +1,5 @@
 ## BASE ##
-FROM node:24.14.0-alpine AS base
+FROM node:24.18.0-alpine AS base
 
 # Git required for planx-core github dependency
 RUN apk add --no-cache git
@@ -20,7 +20,7 @@ RUN pnpm --filter api.planx.uk build
 RUN npm_config_inject_workspace_packages=true pnpm --filter api.planx.uk deploy --prod --prefer-offline /deploy/api
 
 ## PRODUCTION ##
-FROM node:24.14.0-alpine AS production
+FROM node:24.18.0-alpine AS production
 WORKDIR /api
 
 ENV NODE_ENV=production
