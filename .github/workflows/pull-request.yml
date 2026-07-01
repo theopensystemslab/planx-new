@@ -134,7 +134,7 @@ jobs:
       - uses: actions/checkout@v7
       - name: Cache localplanning build assets
         id: cache-localplanning-build-assets
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
           key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', format('{0}/src/**', env.LOCALPLANNING_SERVICES_DIRECTORY), format('{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
@@ -162,7 +162,7 @@ jobs:
       - uses: actions/checkout@v7
       - name: Cache PlanX frontend build assets
         id: cache-planx-frontend-build-assets
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
           key: ${{ runner.os }}-${{ hashFiles(format('{0}/**', env.EDITOR_DIRECTORY)) }}
@@ -249,7 +249,7 @@ jobs:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
       - name: Download LPS build assets
         id: cache-localplanning-build-assets
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
           key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', format('{0}/src/**', env.LOCALPLANNING_SERVICES_DIRECTORY), format('{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
@@ -390,7 +390,7 @@ jobs:
       - uses: actions/checkout@v7
       - name: Download React build assets
         id: cache-react-build-assets
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
           key: ${{ runner.os }}-${{ hashFiles(format('{0}/**', env.EDITOR_DIRECTORY)) }}
@@ -406,7 +406,7 @@ jobs:
 
       - name: Download localplanning.services build assets
         id: cache-localplanning-build-assets-restore
-        uses: actions/cache/restore@v5
+        uses: actions/cache/restore@v6
         with:
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
           key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', format('{0}/src/**', env.LOCALPLANNING_SERVICES_DIRECTORY), format('{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
@@ -478,7 +478,7 @@ jobs:
         run: echo "hash=$(git rev-parse HEAD:apps/editor.planx.uk)" >> $GITHUB_OUTPUT
       - name: Restore editor build cache
         id: cache-e2e-editor-build
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: apps/editor.planx.uk/build
           key: editor-e2e-pr-${{ github.event.number }}-${{ steps.editor-hash.outputs.hash }}
