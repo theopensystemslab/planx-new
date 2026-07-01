@@ -13,7 +13,7 @@ const ServiceList = styled(Box)(({ theme }) => ({
 }));
 
 const ServiceRow = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(1.5, 0),
+  padding: theme.spacing(1.3, 0),
   "&:last-child": {
     borderBottom: "none",
   },

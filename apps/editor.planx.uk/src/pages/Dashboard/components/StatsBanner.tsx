@@ -46,7 +46,8 @@ const StatsGrid = styled(Box)(({ theme }) => ({
 }));
 
 function formatDelta(delta: number): string {
-  return delta >= 0 ? `+${delta}` : `${delta}`;
+  const formatted = Math.abs(delta).toLocaleString("en-GB");
+  return delta >= 0 ? `+${formatted}` : `-${formatted}`;
 }
 
 const analyticsLinkBase = (theme: Theme) => ({
@@ -79,7 +80,7 @@ export function StatsBanner({
 }: StatsBannerProps) {
   const tiles = [
     {
-      label: "Online flows",
+      label: "Online services",
       value: stats?.onlineFlows ?? null,
       delta: stats ? stats.onlineFlows - stats.onlineFlowsPrevious : null,
     },
@@ -142,7 +143,7 @@ export function StatsBanner({
                   : undefined
               }
             >
-              {value ?? "—"}
+              {value !== null ? value.toLocaleString("en-GB") : "—"}
             </Typography>
             {!loading && delta !== null && (
               <Typography
@@ -168,5 +169,11 @@ export default function ConnectedStatsBanner() {
   const stats = data?.teamDashboardStats[0];
   const analyticsLink = useTeamAnalyticsLink();
 
-  return <StatsBanner analyticsLink={analyticsLink} stats={stats} loading={loading} />;
+  return (
+    <StatsBanner
+      analyticsLink={analyticsLink}
+      stats={stats}
+      loading={loading}
+    />
+  );
 }
