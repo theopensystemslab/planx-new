@@ -41,7 +41,7 @@ jobs:
     name: Build PlanX frontend
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-node-pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build

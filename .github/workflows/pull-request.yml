@@ -37,7 +37,7 @@ jobs:
       localplanning: ${{ steps.filter.outputs.localplanning }}
       commit: ${{ steps.commit.outputs.commit }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Get commit message
@@ -69,7 +69,7 @@ jobs:
     needs: [changes]
     if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.e2e == 'true' || needs.changes.outputs.editor == 'true' || needs.changes.outputs.sharedb == 'true' || needs.changes.outputs.hasura == 'true' }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-pizza-env
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
@@ -92,7 +92,7 @@ jobs:
     needs: [changes]
     if: ${{ needs.changes.outputs.api == 'true' }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-pizza-env
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
@@ -111,7 +111,7 @@ jobs:
     needs: [changes]
     if: ${{ needs.changes.outputs.editor == 'true' }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-pizza-env
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
@@ -131,7 +131,7 @@ jobs:
     needs: [changes]
     if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Cache localplanning build assets
         id: cache-localplanning-build-assets
         uses: actions/cache@v5
@@ -159,7 +159,7 @@ jobs:
     needs: [changes]
     if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Cache PlanX frontend build assets
         id: cache-planx-frontend-build-assets
         uses: actions/cache@v5
@@ -232,7 +232,7 @@ jobs:
     needs: [changes, build_planx_frontend]
     if: ${{ needs.changes.outputs.infrastructure == 'true' }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
@@ -271,7 +271,7 @@ jobs:
     needs: [changes]
     if: ${{ needs.changes.outputs.hasura == 'true' }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: Fieldguide/action-hasura-change-summary@v4
         id: hasura-change
         with:
@@ -387,7 +387,7 @@ jobs:
 
       # CREATE & UPDATE STEPS
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Download React build assets
         id: cache-react-build-assets
         uses: actions/cache@v5
@@ -468,7 +468,7 @@ jobs:
     if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.e2e == 'true' || needs.changes.outputs.editor == 'true' || needs.changes.outputs.sharedb == 'true' || needs.changes.outputs.hasura == 'true' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - uses: ./.github/actions/setup-pizza-env
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
