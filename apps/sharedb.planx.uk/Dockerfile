@@ -1,4 +1,4 @@
-FROM node:24.14.0-alpine AS base
+FROM node:24.18.0-alpine AS base
 
 # Git required for planx-core github dependency
 RUN apk add --no-cache git
@@ -18,7 +18,7 @@ RUN pnpm install --frozen-lockfile --prefer-offline
 RUN npm_config_inject_workspace_packages=true pnpm --filter sharedb.planx.uk deploy --prod --prefer-offline /deploy/sharedb
 
 ## PRODUCTION ##
-FROM node:24.14.0-alpine AS production
+FROM node:24.18.0-alpine AS production
 WORKDIR /sharedb
 ENV NODE_ENV=production
 COPY --from=base /deploy/sharedb ./
