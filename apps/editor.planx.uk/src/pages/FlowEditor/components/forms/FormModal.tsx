@@ -241,13 +241,14 @@ const FormModal: React.FC<FormModalProps> = ({
     ? !canUserEditTemplatedNode
     : !canUserEditNode(teamSlug);
 
-  // result and review components can be created without any changes
+  // result, review and feedback components can be created without any changes
   const canCreateWithoutChanges =
-    !isEditingExistingNode && (type === "result" || type === "review");
+    !isEditingExistingNode &&
+    (type === "result" || type === "review" || type === "feedback");
 
   // submit (create / update) button is disabled when:
   // 1. user cannot edit, OR
-  // 2. form needs to be dirty but isn't (unless it's result/review)
+  // 2. form needs to be dirty but isn't (unless it's result/review/feedback)
   const isSubmitDisabled =
     userCannotEdit || (!canCreateWithoutChanges && !isFormDirty);
 
