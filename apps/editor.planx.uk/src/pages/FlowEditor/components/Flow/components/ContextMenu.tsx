@@ -137,17 +137,35 @@ export const ContextMenu: React.FC = () => {
 
   const handleAttachNote = () => {
     if (!self) return;
-    const routeParent = parent === ROOT_NODE_KEY ? undefined : parent;
-    navigate({
-      to: getNodeRoute(routeParent, self),
-      params: {
-        team,
-        flow: flowSlug,
-        ...(routeParent && { parent: routeParent }),
-        before: self,
-      },
-      search: { type: "note", placement: "attached" },
-    });
+
+    if (source === "option") {
+      // Notes attached to options are stored as the first child of the option node
+      const firstChildId = useStore.getState().flow[self]?.edges?.[0];
+      navigate({
+        to: firstChildId
+          ? getNodeRoute(self, firstChildId)
+          : getNodeRoute(self),
+        params: {
+          team,
+          flow: flowSlug,
+          parent: self,
+          ...(firstChildId && { before: firstChildId }),
+        },
+        search: { type: "note", placement: "attached" },
+      });
+    } else {
+      const routeParent = parent === ROOT_NODE_KEY ? undefined : parent;
+      navigate({
+        to: getNodeRoute(routeParent, self),
+        params: {
+          team,
+          flow: flowSlug,
+          ...(routeParent && { parent: routeParent }),
+          before: self,
+        },
+        search: { type: "note", placement: "attached" },
+      });
+    }
     closeMenu();
   };
 

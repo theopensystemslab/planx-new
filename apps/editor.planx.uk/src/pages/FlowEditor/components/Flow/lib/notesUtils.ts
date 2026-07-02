@@ -7,7 +7,10 @@ export interface GroupedNode {
   notes: Store.Node[];
 }
 
-const isAttachedNoteNode = (node: Store.Node, flow: Store.Flow): boolean =>
+export const isAttachedNoteNode = (
+  node: Store.Node,
+  flow: Store.Flow,
+): boolean =>
   node.type === TYPES.Question &&
   node.id !== undefined &&
   (flow[node.id]?.edges ?? []).length === 0 &&

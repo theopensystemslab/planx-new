@@ -6,7 +6,7 @@ import { useContextMenu } from "hooks/useContextMenu";
 import React from "react";
 
 import { useStore } from "../../../lib/store";
-import { groupNotesWithNodes } from "../lib/notesUtils";
+import { groupNotesWithNodes, isAttachedNoteNode } from "../lib/notesUtils";
 import AttachedNotes from "./AttachedNotes";
 import { DataField } from "./DataField";
 import { FlagBand, NoFlagBand } from "./FlagBand";
@@ -20,7 +20,13 @@ const Option: React.FC<any> = (props) => {
     state.childNodesOf(props.id),
     state.flow,
   ]);
-  const childGroups = groupNotesWithNodes(rawChildNodes, storeFlow);
+
+  // Notes attached to an option are stored as leading children of the option node
+  const attachedOptionNotes = rawChildNodes.filter((n) =>
+    isAttachedNoteNode(n, storeFlow),
+  );
+  const branchNodes = rawChildNodes.slice(attachedOptionNotes.length);
+  const childGroups = groupNotesWithNodes(branchNodes, storeFlow);
 
   const handleContextMenu = useContextMenu({
     source: "option",
@@ -87,6 +93,7 @@ const Option: React.FC<any> = (props) => {
         notes={props.associatedNotes || []}
         parentId={props.parent}
       />
+      <AttachedNotes notes={attachedOptionNotes} parentId={props.id} />
       <ol className="decisions">
         {childGroups.map(({ node, notes }) => (
           <Node
