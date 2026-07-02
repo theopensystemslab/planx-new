@@ -84,7 +84,7 @@ const NotificationsPanel = ({
             height: 640,
             display: "flex",
             flexDirection: "column",
-            borderRadius: (theme) => theme.shape.borderRadius,
+            borderRadius: 1,
           },
         },
         backdrop: {
