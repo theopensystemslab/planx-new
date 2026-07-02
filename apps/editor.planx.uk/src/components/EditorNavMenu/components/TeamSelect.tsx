@@ -188,7 +188,7 @@ export const TeamSelect: React.FC<Props> = ({
               maxWidth: "260px",
               minWidth: "unset",
               borderTop: "none",
-              borderRadius: 1,
+              borderRadius: (theme) => `${theme.shape.borderRadius}px`,
             },
           },
         }}
