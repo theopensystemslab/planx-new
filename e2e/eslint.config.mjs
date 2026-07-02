@@ -15,4 +15,10 @@ export default [
     ...config,
     files: ["tests/ui-driven/**/*.{js,ts}"],
   })),
+  {
+    rules: {
+      // TODO: Turn on and auto-fix 35 imports
+      "@typescript-eslint/consistent-type-imports": "off",
+    },
+  },
 ];

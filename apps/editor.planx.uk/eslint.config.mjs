@@ -10,4 +10,10 @@ export default [
     ],
   },
   ...react,
+  {
+    rules: {
+      // TODO: Turn on and auto-fix 700+ imports
+      "@typescript-eslint/consistent-type-imports": "off",
+    },
+  },
 ];

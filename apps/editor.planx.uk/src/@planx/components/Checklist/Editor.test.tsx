@@ -3,7 +3,6 @@ import { Option } from "@planx/components/Option/model";
 import { Group } from "@planx/components/shared/BaseChecklist/model";
 import { EditorProps } from "@planx/components/shared/types";
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
-// eslint-disable-next-line no-restricted-imports
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { DndProvider } from "react-dnd";
