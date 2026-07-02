@@ -306,6 +306,10 @@ const insertApplicationAccessTokenRecord = async (
       ) {
         applicationAccessTokens: insert_application_access_tokens_one(
           object: { expires_at: $expiresAt, session_id: $sessionId }
+          on_conflict: {
+            constraint: application_access_tokens_session_id_key
+            update_columns: [expires_at]
+          }
         ) {
           token
         }
