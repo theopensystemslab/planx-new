@@ -11,6 +11,7 @@ import {
   createSessionExpiryEventController,
   createSessionReminderEventController,
   deleteSessionController,
+  failedSubmissionsController,
   isCleanJSONBController,
   sanitiseApplicationDataController,
   sendSlackMessageController,
@@ -86,12 +87,12 @@ router.post(
   validate(isCleanJSONBSchema),
   isCleanJSONBController,
 );
-
 router.post(
   "/webhooks/hasura/update-templated-flow-edits",
   validate(updateTemplatedFlowEditsEventSchema),
   updateTemplatedFlowEditsController,
 );
+router.post("webhooks/hasura/failed-submissions", failedSubmissionsController);
 
 // TODO: Convert to the new API module structure
 router.post(
