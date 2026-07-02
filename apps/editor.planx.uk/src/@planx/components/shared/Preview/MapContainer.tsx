@@ -9,28 +9,24 @@ interface MapContainerProps {
   size?: "large";
 }
 
-export const MapContainer = styled(Box)<MapContainerProps>(
-  ({ theme, environment, size }) => ({
-    padding: theme.spacing(0.5, 0, 0.5, 0),
+export const MapContainer = styled(Box)<MapContainerProps>(({ theme }) => ({
+  padding: theme.spacing(0.5, 0, 0.5, 0),
+  width: "100%",
+  maxWidth: "none",
+  "& my-map": {
+    "--autocomplete__error__font-weight": FONT_WEIGHT_SEMI_BOLD,
+    "--autocomplete__input__max-width": `${theme.breakpoints.values.formWrap}px`,
+    "--govuk-error-colour": theme.palette.error.main,
+    "--autocomplete__font-family": "Inter",
     width: "100%",
-    maxWidth: "none",
-    "& my-map": {
-      "--autocomplete__error__font-weight": FONT_WEIGHT_SEMI_BOLD,
-      "--autocomplete__input__max-width": `${theme.breakpoints.values.formWrap}px`,
-      "--govuk-error-colour": theme.palette.error.main,
-      "--autocomplete__font-family": "Inter",
-      width: "100%",
-      // Only increase map size in Published, Preview, and Draft routes
-      height:
-        size === "large" && environment === "standalone" ? "70vh" : "50vh",
-      // Ensure map is not reduced to an unusable height
-      minHeight: "400px",
-      [theme.breakpoints.up("md")]: {
-        minHeight: "480px",
-      },
+    maxHeight: "80vh",
+    // Ensure map is not reduced to an unusable height
+    minHeight: "400px",
+    [theme.breakpoints.up("md")]: {
+      minHeight: "480px",
     },
-  }),
-);
+  },
+}));
 
 export const MapFooter = styled(Box)(({ theme }) => ({
   display: "flex",
