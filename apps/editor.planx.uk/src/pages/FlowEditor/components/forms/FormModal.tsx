@@ -22,7 +22,7 @@ import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
 } from "pages/FlowEditor/utils";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
 import { Switch } from "ui/shared/Switch";
@@ -174,6 +174,20 @@ const FormModal: React.FC<FormModalProps> = ({
       normalizeFormValues(formik.initialValues),
     );
   };
+
+  const [isFormDirty, setIsFormDirty] = useState(false);
+
+  useEffect(() => {
+    const formik = formikRef.current;
+    if (!formik) return;
+
+    const checkDirty = () => {
+      const dirty = isDirty(formik);
+      setIsFormDirty(dirty);
+    };
+
+    checkDirty();
+  }, [formikRef.current?.values, formikRef.current?.initialValues, isDirty]);
 
   const hasUnsavedChanges = () => {
     const formik = formikRef.current;
@@ -408,7 +422,7 @@ const FormModal: React.FC<FormModalProps> = ({
               variant="contained"
               color="primary"
               form="modal"
-              disabled={disabled}
+              disabled={disabled || !isFormDirty}
             >
               {handleDelete ? `Update` : `Create`}
             </Button>
