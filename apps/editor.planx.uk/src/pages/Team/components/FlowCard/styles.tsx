@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
-import { inputFocusStyle } from "theme";
+import { cardBoxShadow, inputFocusStyle } from "theme";
 
 import { CustomLink } from "../../../../ui/shared/CustomLink/CustomLink";
 
@@ -10,10 +10,10 @@ export const Card = styled("li")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   justifyContent: "stretch",
-  borderRadius: "3px",
+  borderRadius: theme.shape.borderRadius,
   backgroundColor: theme.palette.background.default,
   border: `1px solid ${theme.palette.border.light}`,
-  boxShadow: "0 2px 6px 1px rgba(0, 0, 0, 0.1)",
+  boxShadow: cardBoxShadow,
   "&:hover": {
     backgroundColor: theme.palette.background.paper,
   },

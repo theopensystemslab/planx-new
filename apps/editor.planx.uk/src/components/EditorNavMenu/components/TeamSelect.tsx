@@ -14,7 +14,7 @@ import { useLoaderData } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { TeamSummary } from "pages/FlowEditor/lib/store/team";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { focusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { cardBoxShadow, focusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 
 const StyledButtonBase = styled(ButtonBase)<{ teamcolor?: string }>(
@@ -22,11 +22,10 @@ const StyledButtonBase = styled(ButtonBase)<{ teamcolor?: string }>(
     backgroundColor: theme.palette.background.default,
     width: "100%",
     borderLeft: `8px solid ${teamcolor || theme.palette.primary.main}`,
-    borderRadius: 3,
+    borderRadius: theme.shape.borderRadius,
     padding: theme.spacing(1, 0.5, 1, 1),
     justifyContent: "space-between",
-    // TODO: standardise box shadow across nav menu items
-    boxShadow: "0 1px 1.5px 0 rgba(0, 0, 0, 0.2)",
+    boxShadow: cardBoxShadow,
     "&:hover": {
       backgroundColor: theme.palette.background.paper,
       color: "inherit",
@@ -49,10 +48,10 @@ const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
 const StyledCard = styled(Card)<{ selected?: boolean; teamcolor?: string }>(
   ({ theme, teamcolor }) => ({
     backgroundColor: theme.palette.background.default,
-    borderRadius: theme.shape.borderRadius,
+    borderRadius: theme.shape.borderRadiusSm,
     borderLeft: `6px solid ${teamcolor || "OliveDrab"}`,
     padding: theme.spacing(0.75),
-    boxShadow: "0 1px 1.5px 0 rgba(0, 0, 0, 0.2)",
+    boxShadow: cardBoxShadow,
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
@@ -189,7 +188,7 @@ export const TeamSelect: React.FC<Props> = ({
               maxWidth: "260px",
               minWidth: "unset",
               borderTop: "none",
-              borderRadius: (theme) => theme.shape.borderRadius,
+              borderRadius: (theme) => `${theme.shape.borderRadius}px`,
             },
           },
         }}

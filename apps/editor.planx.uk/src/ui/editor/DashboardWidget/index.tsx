@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import { LinkOptions, RegisteredRouter } from "@tanstack/react-router";
 import { BadgeChip } from "components/EditorNavMenu/styles";
 import React from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { cardBoxShadow, FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 interface DashboardWidgetProps {
@@ -19,6 +19,8 @@ interface DashboardWidgetProps {
 const Root = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
   border: `1px solid ${theme.palette.border.light}`,
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: cardBoxShadow,
   display: "flex",
   flexDirection: "column",
   height: "400px",

@@ -4,7 +4,7 @@ import { keyframes, styled, type Theme } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useTeamAnalyticsLink } from "hooks/analyticsLinks/useTeamAnalyticsLink";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { cardBoxShadow, FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import { useStore } from "../../FlowEditor/lib/store";
 import {
@@ -19,6 +19,7 @@ const Root = styled(Box)(({ theme }) => ({
   padding: theme.spacing(1.5),
   zIndex: 1,
   borderRadius: theme.shape.borderRadius,
+  boxShadow: cardBoxShadow,
 }));
 
 const Header = styled(Box)(({ theme }) => ({

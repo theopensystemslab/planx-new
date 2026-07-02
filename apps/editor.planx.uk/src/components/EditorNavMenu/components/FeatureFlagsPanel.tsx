@@ -72,7 +72,7 @@ const FeatureFlagsPanel = ({ anchorEl, onClose }: Props) => {
             width: 360,
             display: "flex",
             flexDirection: "column",
-            borderRadius: (theme) => theme.shape.borderRadius,
+            borderRadius: (theme) => `${theme.shape.borderRadius}px`,
           },
         },
         backdrop: {

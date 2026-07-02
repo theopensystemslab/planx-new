@@ -134,6 +134,9 @@ export const borderedFocusStyle = {
   background: "transparent",
 };
 
+// Subtle elevation shadow used for cards and menu items throughout the editor
+export const cardBoxShadow = "0 1px 1.5px 0 rgba(0, 0, 0, 0.2)";
+
 export const linkStyle = (linkColour: string) => ({
   color: linkColour || "inherit",
   textDecoration: "underline",
@@ -259,7 +262,8 @@ const getThemeOptions = ({
       },
     },
     shape: {
-      borderRadius: 2,
+      borderRadius: 3,
+      borderRadiusSm: 2,
     },
     components: {
       MuiAccordion: {
