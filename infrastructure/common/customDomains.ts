@@ -122,7 +122,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "east-riding-of-yorkshire",
           domain: "planningservices.eastriding.gov.uk",
-          cloudFrontState: "validation-only",
+          cloudFrontState: "shared-final",
         },
       ]
     : [
