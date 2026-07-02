@@ -123,6 +123,8 @@ const FormModal: React.FC<FormModalProps> = ({
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<BaseNodeData & unknown> | null>(null);
   const [showUnsavedWarning, setShowUnsavedWarning] = useState(false);
+  const [isFormDirty, setIsFormDirty] = useState(false);
+
   const { team: teamSlug, flow: flowSlug } = useParams({
     from: "/_authenticated/app/$team/$flow",
   });
@@ -146,54 +148,33 @@ const FormModal: React.FC<FormModalProps> = ({
     store.orderedFlow,
     store.isClone,
   ]);
+
   const node = id ? flow[id] : undefined;
+  const isEditingExistingNode = Boolean(handleDelete);
 
-  const normalizeFormValues = (obj: any): any => {
-    if (obj === null || obj === undefined || obj === "") {
-      return "";
-    }
-
-    if (Array.isArray(obj)) {
-      return obj.map(normalizeFormValues);
-    }
-
-    if (typeof obj === "object") {
-      const normalized: any = {};
-      for (const key in obj) {
-        normalized[key] = normalizeFormValues(obj[key]);
-      }
-      return normalized;
-    }
-
-    return obj;
-  };
-
-  const isDirty = (formik: FormikProps<BaseNodeData & unknown>): boolean => {
-    return !isEqual(
-      normalizeFormValues(formik.values),
-      normalizeFormValues(formik.initialValues),
-    );
-  };
-
-  const [isFormDirty, setIsFormDirty] = useState(false);
-
+  // checking formik periodically because useEffect would create infinite re-render
   useEffect(() => {
-    const formik = formikRef.current;
-    if (!formik) return;
-
     const checkDirty = () => {
-      const dirty = isDirty(formik);
-      setIsFormDirty(dirty);
+      const formik = formikRef.current;
+      if (!formik) {
+        if (isFormDirty) setIsFormDirty(false);
+        return;
+      }
+
+      if (formik.dirty !== isFormDirty) {
+        setIsFormDirty(formik.dirty);
+      }
     };
 
     checkDirty();
-  }, [formikRef.current?.values, formikRef.current?.initialValues, isDirty]);
 
-  const hasUnsavedChanges = () => {
-    const formik = formikRef.current;
-    if (!formik) return false;
+    const interval = setInterval(checkDirty, 100);
 
-    return isDirty(formik);
+    return () => clearInterval(interval);
+  }, [isFormDirty]); // so this depends on our state, not formik--avoiding infinite rerender
+
+  const hasUnsavedChanges = (): boolean => {
+    return isFormDirty;
   };
 
   const handleClose = () => {
@@ -230,6 +211,8 @@ const FormModal: React.FC<FormModalProps> = ({
   //  2. The user has edit access to this team, but it is:
   //    - a templated flow
   //    - and the node itself is not marked "isTemplatedNode" or a child of an internal portal marked "isTemplatedNode"
+  //  3. The form is not dirty
+  //    - except for when a user is creating a 'review' or 'result' component (this is because they can be created and used as-is)
   const canUserEditNode = (teamSlug: string) => {
     return useStore.getState().canUserEditTeam(teamSlug);
   };
@@ -253,6 +236,20 @@ const FormModal: React.FC<FormModalProps> = ({
     Boolean(node?.data?.isTemplatedNode) &&
     (!parentIsTemplatedInternalPortal ||
       !parentIsChildOfTemplatedInternalPortal);
+
+  const userCannotEdit = isTemplatedFrom
+    ? !canUserEditTemplatedNode
+    : !canUserEditNode(teamSlug);
+
+  // result and review components can be created without any changes
+  const canCreateWithoutChanges =
+    !isEditingExistingNode && (type === "result" || type === "review");
+
+  // submit (create / update) button is disabled when:
+  // 1. user cannot edit, OR
+  // 2. form needs to be dirty but isn't (unless it's result/review)
+  const isSubmitDisabled =
+    userCannotEdit || (!canCreateWithoutChanges && !isFormDirty);
 
   const showDeleteButton = id && !isDisabledTemplatedNode;
 
@@ -422,7 +419,7 @@ const FormModal: React.FC<FormModalProps> = ({
               variant="contained"
               color="primary"
               form="modal"
-              disabled={disabled || !isFormDirty}
+              disabled={isSubmitDisabled}
             >
               {handleDelete ? `Update` : `Create`}
             </Button>
