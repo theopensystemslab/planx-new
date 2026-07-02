@@ -96,6 +96,10 @@ export const getOptionsSchemaByFn = (
     case "application.leadDeveloper":
       schema = getValidSchemaValuesByEnumPath("LeadDeveloper", "type");
       break;
+    case "application.preAppAdvice.form":
+      // this one is not defined/accessible _within_ ODP Schema JSON, but mappings do rely on "Yes" so we still want to auto-suggest !
+      schema = ["Yes"];
+      break;
     case "application.type":
       schema = getValidSchemaValues("ApplicationType");
       break;
