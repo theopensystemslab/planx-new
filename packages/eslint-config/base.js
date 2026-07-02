@@ -1,5 +1,6 @@
 import js from "@eslint/js";
 import eslintConfigPrettier from "eslint-config-prettier";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
 import tseslint from "typescript-eslint";
 
 /**
@@ -12,6 +13,9 @@ export default [
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    plugins: {
+      "simple-import-sort": simpleImportSort,
+    },
     rules: {
       "no-nested-ternary": "error",
       // New in ts-eslint v8 recommended
@@ -27,6 +31,8 @@ export default [
       ],
       "@typescript-eslint/no-non-null-assertion": "off",
       "@typescript-eslint/consistent-type-imports": "error",
+      "simple-import-sort/imports": "warn",
+      "simple-import-sort/exports": "warn",
     },
   },
   eslintConfigPrettier,
