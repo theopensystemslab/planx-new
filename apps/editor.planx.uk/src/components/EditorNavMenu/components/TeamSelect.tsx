@@ -48,7 +48,7 @@ const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
 const StyledCard = styled(Card)<{ selected?: boolean; teamcolor?: string }>(
   ({ theme, teamcolor }) => ({
     backgroundColor: theme.palette.background.default,
-    borderRadius: theme.shape.borderRadius,
+    borderRadius: theme.shape.borderRadiusSm,
     borderLeft: `6px solid ${teamcolor || "OliveDrab"}`,
     padding: theme.spacing(0.75),
     boxShadow: cardBoxShadow,
