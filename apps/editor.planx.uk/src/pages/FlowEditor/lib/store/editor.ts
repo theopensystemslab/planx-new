@@ -227,7 +227,6 @@ export const editorUIStore: StateCreator<
   {
     name: "editorUIStore",
     partialize: (state) => ({
-      showSidebar: state.showSidebar,
       flowCardView: state.flowCardView,
       dashboardFlowsTab: state.dashboardFlowsTab,
       showTags: state.showTags,
