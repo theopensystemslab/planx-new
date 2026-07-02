@@ -8,10 +8,10 @@ import { FlowView } from "pages/Team";
 import React from "react";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType } from "ui/editor/FlowTag/types";
+import Permission from "ui/editor/Permission";
 import TruncatedText from "ui/editor/TruncatedText";
 
 import { useStore } from "../../../FlowEditor/lib/store";
-import Permission from "ui/editor/Permission";
 import ActiveFlowMenu from "../ActiveFlowMenu";
 import ArchivedFlowMenu from "../ArchivedFlowMenu";
 import { FlowPinButton } from "../FlowPinButton";

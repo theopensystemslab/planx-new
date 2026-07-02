@@ -12,23 +12,16 @@
     "test:debug": "DEBUG_LOG=true pnpm test",
     "lint": "eslint './tests/**/*.{js,ts}' && prettier -c ./tests",
     "lint:fix": "eslint --fix './tests/**/*.{js,ts}' && prettier -w ./tests",
-    "check": "tsc && pnpm lint",
-    "prepare": "cd .. && husky install e2e/.husky"
+    "check": "tsc && pnpm lint"
   },
-  "lint-staged": {
-    "./tests/**/*.{js,ts}": [
-      "eslint --fix",
-      "prettier -w ./tests"
-    ]
-  },
+  "prettier": "@planx/prettier-config",
   "devDependencies": {
+    "@planx/eslint-config": "workspace:*",
+    "@planx/prettier-config": "workspace:*",
     "@types/jsonwebtoken": "catalog:jwt",
     "@types/node": "catalog:",
-    "@typescript-eslint/eslint-plugin": "catalog:typescript",
-    "@typescript-eslint/parser": "catalog:typescript",
     "eslint": "catalog:",
-    "husky": "catalog:",
-    "lint-staged": "^15.5.2",
+    "globals": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:typescript"
   }

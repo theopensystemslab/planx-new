@@ -1,0 +1,7 @@
+# Single source of truth for Prettier ignores across the monorepo
+# lint-staged runs prettier from the repo root and picks this up automatically
+# App lint scripts that run prettier from their own dir reference it 
+# explicitly via the --ignore-path flag
+
+pnpm-lock.yaml
+**/routeTree.gen.ts

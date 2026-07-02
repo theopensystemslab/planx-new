@@ -72,7 +72,7 @@ export function evaluate(input: string, scope = {}, defaults = {}): number {
     return node;
   }
 
-  function serializeKeys(object: any): Object {
+  function serializeKeys(object: any): object {
     return Object.fromEntries(
       Object.entries(object).map(([key, value]) => [serialize(key), value]),
     );

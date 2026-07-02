@@ -13,9 +13,20 @@
     "dev": "./scripts/start-containers-for-dev.sh",
     "tests": "./scripts/start-containers-for-tests.sh",
     "analytics": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services --profile analytics  up -d --quiet-pull",
-    "logs": "docker compose logs --tail 30 -f"
+    "logs": "docker compose logs --tail 30 -f",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "apps/editor.planx.uk/src/**/*.{js,jsx,ts,tsx}": "eslint --fix --flag v10_config_lookup_from_file",
+    "apps/api.planx.uk/**/*.{js,ts}": "eslint --fix --flag v10_config_lookup_from_file",
+    "e2e/tests/**/*.{js,ts}": "eslint --fix --flag v10_config_lookup_from_file",
+    "{apps/editor.planx.uk/src,apps/api.planx.uk,e2e/tests}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}": "prettier --write"
   },
   "devDependencies": {
+    "eslint": "catalog:",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.2",
+    "prettier": "catalog:",
     "typescript": "catalog:typescript"
   },
   "packageManager": "pnpm@10.30.2",
