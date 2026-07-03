@@ -1,5 +1,5 @@
 import { Link, useParams } from "@tanstack/react-router";
-import { FlowNodeNote } from "hooks/data/useFlowNodeNotes";
+import { DEFAULT_NOTE_COLOR, FlowNodeNote } from "hooks/data/useFlowNodeNotes";
 import React from "react";
 
 import { useStore } from "../../../lib/store";
@@ -46,7 +46,7 @@ const AttachedNotes: React.FC<Props> = ({ notes, parentId }) => {
         >
           <div
             className="attached-note"
-            style={{ background: note.color ?? "#fffdb0" }}
+            style={{ background: note.color ?? DEFAULT_NOTE_COLOR }}
           >
             {note.text || "Untitled note"}
           </div>

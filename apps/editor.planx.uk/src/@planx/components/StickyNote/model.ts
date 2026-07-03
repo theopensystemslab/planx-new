@@ -1,4 +1,4 @@
-import { NotePlacement } from "hooks/data/useFlowNodeNotes";
+import { DEFAULT_NOTE_COLOR, NotePlacement } from "hooks/data/useFlowNodeNotes";
 import { object, SchemaOf, string } from "yup";
 
 export type { NotePlacement };
@@ -8,8 +8,6 @@ export interface StickyNote {
   color?: string;
   placement: NotePlacement;
 }
-
-export const DEFAULT_NOTE_COLOR = "#fffdb0";
 
 export const parseStickyNote = (
   data: Record<string, any> | undefined,

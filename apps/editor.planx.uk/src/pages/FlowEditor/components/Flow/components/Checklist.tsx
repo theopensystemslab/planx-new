@@ -48,13 +48,12 @@ const Checklist: React.FC<Props> = React.memo((props) => {
 
   const parent = getParentId(props.parent);
 
-  // Attached notes are grouped with and rendered on their sibling node
   const isAttachedNote =
-    childNodes.length === 0 && props.data?.placement === "attached";
+    childNodes.length === 0 &&
+    (props.data?.placement === "attached_to_node" ||
+      props.data?.placement === "attached_to_option");
 
-  // Standalone/legacy notes render inline in the flow with the original sticky note styling
-  const isStandaloneNote =
-    childNodes.length === 0 && props.data?.placement !== "attached";
+  const isStandaloneNote = childNodes.length === 0 && !isAttachedNote;
 
   const groupedOptions = useMemo(
     () =>
@@ -146,7 +145,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
               />
             )}
             <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
-              {Icon && !isAttachedNote && !isStandaloneNote && <Icon />}
+              {Icon && !isStandaloneNote && <Icon />}
               <span>{props.text}</span>
               {showHelpText && hasHelpText && (
                 <Help fontSize="small" sx={{ marginLeft: "auto" }} />

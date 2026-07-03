@@ -1,6 +1,6 @@
 import { Link, useParams } from "@tanstack/react-router";
 import classNames from "classnames";
-import { FlowNodeNote } from "hooks/data/useFlowNodeNotes";
+import { DEFAULT_NOTE_COLOR, FlowNodeNote } from "hooks/data/useFlowNodeNotes";
 import React from "react";
 
 import { useStore } from "../../../lib/store";
@@ -20,7 +20,9 @@ const StickyNoteCard: React.FC<Props> = ({ note, parentId }) => {
     <li
       className={classNames("card", "decision", "question", "isNote")}
       style={
-        { "--note-bg-color": note.color ?? "#fffdb0" } as React.CSSProperties
+        {
+          "--note-bg-color": note.color ?? DEFAULT_NOTE_COLOR,
+        } as React.CSSProperties
       }
     >
       <Link

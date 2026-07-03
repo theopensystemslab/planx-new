@@ -21,6 +21,7 @@ import ErrorFallback from "components/Error/ErrorFallback";
 import { FormikProps } from "formik";
 import {
   addFlowNodeNote,
+  DEFAULT_NOTE_COLOR,
   deleteFlowNodeNote,
   updateFlowNodeNote,
 } from "hooks/data/useFlowNodeNotes";
@@ -158,6 +159,7 @@ const FormModal: React.FC<FormModalProps> = ({
     store.id,
     store.user,
   ]);
+
   let node;
   if (extraProps?.existingNote) {
     node = { data: extraProps.existingNote };
@@ -260,6 +262,27 @@ const FormModal: React.FC<FormModalProps> = ({
   const showDeleteButton = id && !isDisabledTemplatedNode;
   const isExistingDbNote = type === "note" && Boolean(extraProps?.dbNoteId);
 
+  const handleNoteSubmit = async (data: any): Promise<void> => {
+    const noteData = data?.data ?? {};
+    if (extraProps?.dbNoteId && user) {
+      await updateFlowNodeNote(client, {
+        id: extraProps.dbNoteId,
+        text: noteData.text ?? "",
+        color: noteData.color ?? DEFAULT_NOTE_COLOR,
+        updatedBy: user.id,
+      });
+    } else if (!id && flowId && user) {
+      await addFlowNodeNote(client, {
+        flowId,
+        nodeId: extraProps?.noteNodeId ?? before ?? "",
+        placement: extraProps?.placement ?? "before_node",
+        text: noteData.text ?? "",
+        color: noteData.color ?? DEFAULT_NOTE_COLOR,
+        createdBy: user.id,
+      });
+    }
+  };
+
   const showMakeUniqueButton = useMemo(
     () => id && isClone(id) && !isDisabledTemplatedNode,
     [isClone, id, isDisabledTemplatedNode],
@@ -348,24 +371,8 @@ const FormModal: React.FC<FormModalProps> = ({
                   | Array<Record<string, unknown>>
                   | undefined = undefined,
               ) => {
-                if (type === "note" && extraProps?.dbNoteId && user) {
-                  const noteData = (data as any)?.data ?? {};
-                  await updateFlowNodeNote(client, {
-                    id: extraProps.dbNoteId,
-                    text: noteData.text ?? "",
-                    color: noteData.color ?? "#fffdb0",
-                    updatedBy: user.id,
-                  });
-                } else if (type === "note" && !id && flowId && user) {
-                  const noteData = (data as any)?.data ?? {};
-                  await addFlowNodeNote(client, {
-                    flowId,
-                    nodeId: extraProps?.noteNodeId ?? before ?? "",
-                    placement: extraProps?.placement ?? "before_node",
-                    text: noteData.text ?? "",
-                    color: noteData.color ?? "#fffdb0",
-                    createdBy: user.id,
-                  });
+                if (type === "note") {
+                  await handleNoteSubmit(data);
                 } else if (typeof data === "string" && parent) {
                   // Handle internal portals
                   connect(parent, data, { before });

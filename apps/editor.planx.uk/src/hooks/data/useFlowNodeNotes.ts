@@ -4,12 +4,15 @@ import {
   useMutation,
   useSubscription,
 } from "@apollo/client";
+import { useCallback, useMemo } from "react";
 
 export type NotePlacement =
   | "attached_to_node"
   | "attached_to_option"
   | "after_node"
   | "before_node";
+
+export const DEFAULT_NOTE_COLOR = "#fffdb0";
 
 export interface FlowNodeNote {
   id: string;
@@ -135,6 +138,27 @@ export const DELETE_FLOW_NODE_NOTES_FOR_NODE = gql`
   }
 `;
 
+// when a node is deleted and it has a note before it,
+// move the note to the deleted node's next sibling
+export const MOVE_BEFORE_NODE_NOTES = gql`
+  mutation MoveBeforeNodeNotes(
+    $flowId: uuid!
+    $fromNodeId: String!
+    $toNodeId: String!
+  ) {
+    update_flow_node_notes(
+      where: {
+        flow_id: { _eq: $flowId }
+        node_id: { _eq: $fromNodeId }
+        placement: { _eq: "before_node" }
+      }
+      _set: { node_id: $toNodeId }
+    ) {
+      affected_rows
+    }
+  }
+`;
+
 interface AddNoteInput {
   flowId: string;
   nodeId: string;
@@ -168,8 +192,6 @@ export const useFlowNodeNotes = (flowId: string): UseFlowNodeNotesResult => {
     flow_node_notes: FlowNodeNote[];
   }>(GET_FLOW_NODE_NOTES, { variables: { flowId }, skip });
 
-  console.log("flow_node_notes", data?.flow_node_notes);
-
   const [addNoteMutation] = useMutation(ADD_FLOW_NODE_NOTE);
   const [updateNoteMutation] = useMutation(UPDATE_FLOW_NODE_NOTE);
   const [deleteNoteMutation] = useMutation(DELETE_FLOW_NODE_NOTE);
@@ -179,8 +201,20 @@ export const useFlowNodeNotes = (flowId: string): UseFlowNodeNotesResult => {
 
   const notes = data?.flow_node_notes ?? [];
 
-  const notesForNode = (nodeId: string): FlowNodeNote[] =>
-    notes.filter((n) => n.nodeId === nodeId);
+  const notesByNodeId = useMemo(() => {
+    const map = new Map<string, FlowNodeNote[]>();
+    for (const note of notes) {
+      const bucket = map.get(note.nodeId) ?? [];
+      bucket.push(note);
+      map.set(note.nodeId, bucket);
+    }
+    return map;
+  }, [notes]);
+
+  const notesForNode = useCallback(
+    (nodeId: string): FlowNodeNote[] => notesByNodeId.get(nodeId) ?? [],
+    [notesByNodeId],
+  );
 
   const addNote = async (input: AddNoteInput): Promise<void> => {
     await addNoteMutation({
@@ -189,7 +223,7 @@ export const useFlowNodeNotes = (flowId: string): UseFlowNodeNotesResult => {
         nodeId: input.nodeId,
         placement: input.placement,
         text: input.text,
-        color: input.color ?? "#fffdb0",
+        color: input.color ?? DEFAULT_NOTE_COLOR,
         createdBy: input.createdBy,
       },
     });
@@ -237,7 +271,7 @@ export const addFlowNodeNote = async (
       nodeId: input.nodeId,
       placement: input.placement,
       text: input.text,
-      color: input.color ?? "#fffdb0",
+      color: input.color ?? DEFAULT_NOTE_COLOR,
       createdBy: input.createdBy,
     },
   });

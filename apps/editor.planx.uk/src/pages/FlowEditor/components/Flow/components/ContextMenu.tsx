@@ -12,6 +12,7 @@ import Paper from "@mui/material/Paper";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import { useNavigate, useParams } from "@tanstack/react-router";
+import { DEFAULT_NOTE_COLOR } from "hooks/data/useFlowNodeNotes";
 import { useStore } from "pages/FlowEditor/lib/store";
 import {
   nodeIsChildOfTemplatedInternalPortal,
@@ -89,6 +90,8 @@ export const ContextMenu: React.FC = () => {
     state.pasteHelpText,
   ]);
 
+  const routeParent = parent === ROOT_NODE_KEY ? undefined : parent;
+
   const handleCopy = () => {
     if (!self)
       return alert(
@@ -154,7 +157,6 @@ export const ContextMenu: React.FC = () => {
         search: { type: "note", placement: "attached_to_option" },
       });
     } else {
-      const routeParent = parent === ROOT_NODE_KEY ? undefined : parent;
       navigate({
         to: getNodeRoute(routeParent, self),
         params: {
@@ -170,7 +172,6 @@ export const ContextMenu: React.FC = () => {
   };
 
   const handleAddNote = () => {
-    const routeParent = parent === ROOT_NODE_KEY ? undefined : parent;
     navigate({
       to: getNodeRoute(routeParent, before),
       params: {
@@ -341,7 +342,7 @@ export const ContextMenu: React.FC = () => {
               <MenuItem
                 onClick={handleAttachNote}
                 sx={{
-                  backgroundColor: "#fffdb0",
+                  backgroundColor: DEFAULT_NOTE_COLOR,
                   "&:hover": { backgroundColor: "#f5f09e" },
                 }}
               >

@@ -23,6 +23,10 @@ import {
 } from "@planx/graph";
 import { OT } from "@planx/graph/types";
 import type { RegisteredRouter } from "@tanstack/react-router";
+import {
+  DELETE_FLOW_NODE_NOTES_FOR_NODE,
+  MOVE_BEFORE_NODE_NOTES,
+} from "hooks/data/useFlowNodeNotes";
 import { client } from "lib/graphql";
 import debounce from "lodash/debounce";
 import { type } from "ot-json0";
@@ -778,44 +782,15 @@ export const editorStore: StateCreator<
     const deleteRemainingNotes = () =>
       client
         .mutate({
-          mutation: gql`
-            mutation DeleteFlowNodeNotesForNode(
-              $flowId: uuid!
-              $nodeId: String!
-            ) {
-              delete_flow_node_notes(
-                where: { flow_id: { _eq: $flowId }, node_id: { _eq: $nodeId } }
-              ) {
-                affected_rows
-              }
-            }
-          `,
+          mutation: DELETE_FLOW_NODE_NOTES_FOR_NODE,
           variables: { flowId, nodeId: id },
         })
         .catch(console.error);
 
     if (nextNodeId) {
-      // Move before_node notes to the next sibling, then delete everything else
       client
         .mutate({
-          mutation: gql`
-            mutation MoveBeforeNodeNotes(
-              $flowId: uuid!
-              $fromNodeId: String!
-              $toNodeId: String!
-            ) {
-              update_flow_node_notes(
-                where: {
-                  flow_id: { _eq: $flowId }
-                  node_id: { _eq: $fromNodeId }
-                  placement: { _eq: "before_node" }
-                }
-                _set: { node_id: $toNodeId }
-              ) {
-                affected_rows
-              }
-            }
-          `,
+          mutation: MOVE_BEFORE_NODE_NOTES,
           variables: { flowId, fromNodeId: id, toNodeId: nextNodeId },
         })
         .then(() => deleteRemainingNotes())

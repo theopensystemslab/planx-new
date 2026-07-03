@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 import { FlowStatus } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { notFound } from "@tanstack/react-router";
+import { NotePlacement } from "hooks/data/useFlowNodeNotes";
 import { sortBy } from "lodash";
 import natsort from "natsort";
 import mapAccum from "ramda/src/mapAccum";
@@ -257,7 +258,7 @@ export interface ExtraProps {
   flows?: ExternalPortalFlow[] | InternalPortalFlow[];
   options?: Store.Node[];
   groupedOptions?: GroupedOption[];
-  placement?: string;
+  placement?: NotePlacement;
   noteNodeId?: string;
 }
 

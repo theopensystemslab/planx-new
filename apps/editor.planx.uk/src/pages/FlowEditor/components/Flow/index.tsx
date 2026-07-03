@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import { Link, useParams, useRouteContext } from "@tanstack/react-router";
 import { useFlowNodeNotes } from "hooks/data/useFlowNodeNotes";
-import React from "react";
+import React, { useMemo } from "react";
 
 import { useStore } from "../../lib/store";
 import { ContextMenu } from "./components/ContextMenu";
@@ -37,7 +37,10 @@ const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
   ]);
 
   const currentParentId = folderIds[folderIds.length - 1] || ROOT_NODE_KEY;
+  const noteParentId =
+    currentParentId === ROOT_NODE_KEY ? undefined : currentParentId;
   const { notesForNode } = useFlowNodeNotes(flowId);
+  const notesContextValue = useMemo(() => ({ notesForNode }), [notesForNode]);
 
   const breadcrumbs = folderIds.map((id) => ({
     id,
@@ -51,7 +54,7 @@ const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
   const flowName = useStore((state) => state.flowName);
 
   return (
-    <FlowNotesContext.Provider value={{ notesForNode }}>
+    <FlowNotesContext.Provider value={notesContextValue}>
       <ol
         id="flow"
         data-layout={flowLayout}
@@ -102,8 +105,6 @@ const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
             const beforeNotes = notesForNode(node.id!).filter(
               (n) => n.placement === "before_node",
             );
-            const noteParentId =
-              currentParentId === ROOT_NODE_KEY ? undefined : currentParentId;
 
             return [
               ...beforeNotes.flatMap((note) => [
