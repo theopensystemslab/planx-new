@@ -7,7 +7,7 @@ settings:
 catalogs:
   default:
     '@opensystemslab/planx-core':
-      specifier: github:theopensystemslab/planx-core#4c82701
+      specifier: github:theopensystemslab/planx-core#8471b48
       version: 1.0.0
     '@types/jsdom':
       specifier: ^28.0.1
@@ -147,7 +147,7 @@ importers:
         version: 3.1032.0
       '@opensystemslab/planx-core':
         specifier: 'catalog:'
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/4c827019cb486ab2e61adf13d5da570ba676048a(@types/react@19.2.14)
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/8471b4811312872154dce3cd002a74a511d050eb(@types/react@19.2.14)
       '@types/geojson':
         specifier: ^7946.0.16
         version: 7946.0.16
@@ -454,7 +454,7 @@ importers:
         version: 1.0.0-alpha.14
       '@opensystemslab/planx-core':
         specifier: 'catalog:'
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/4c827019cb486ab2e61adf13d5da570ba676048a(@types/react@19.2.14)
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/8471b4811312872154dce3cd002a74a511d050eb(@types/react@19.2.14)
       '@tanstack/react-query':
         specifier: ^5.101.1
         version: 5.101.1(react@19.2.5)
@@ -1030,7 +1030,7 @@ importers:
         version: 12.9.0
       '@opensystemslab/planx-core':
         specifier: 'catalog:'
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/4c827019cb486ab2e61adf13d5da570ba676048a(@types/react@19.2.14)
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/8471b4811312872154dce3cd002a74a511d050eb(@types/react@19.2.14)
       axios:
         specifier: 'catalog:'
         version: 1.18.1
@@ -1073,7 +1073,7 @@ importers:
     dependencies:
       '@opensystemslab/planx-core':
         specifier: 'catalog:'
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/4c827019cb486ab2e61adf13d5da570ba676048a(@types/react@19.2.14)
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/8471b4811312872154dce3cd002a74a511d050eb(@types/react@19.2.14)
       axios:
         specifier: 'catalog:'
         version: 1.18.1
@@ -1251,7 +1251,7 @@ importers:
     dependencies:
       '@opensystemslab/planx-core':
         specifier: 'catalog:'
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/4c827019cb486ab2e61adf13d5da570ba676048a(@types/react@19.2.14)
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/8471b4811312872154dce3cd002a74a511d050eb(@types/react@19.2.14)
       tsx:
         specifier: ^4.21.0
         version: 4.21.0
@@ -3704,8 +3704,8 @@ packages:
   '@opensystemslab/map@1.0.0-alpha.14':
     resolution: {integrity: sha512-kIVrXtq2rcOzayTtUkVUQWSJMGrhER7FuuMR9cJw5a8AOH69XnXrkDPGBMVQmNJOIoMkO4dOzTt6ofUchZxLQA==}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/4c827019cb486ab2e61adf13d5da570ba676048a':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/4c827019cb486ab2e61adf13d5da570ba676048a}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/8471b4811312872154dce3cd002a74a511d050eb':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/8471b4811312872154dce3cd002a74a511d050eb}
     version: 1.0.0
 
   '@opentelemetry/api-logs@0.57.2':
@@ -14699,12 +14699,12 @@ snapshots:
 
   '@emotion/sheet@1.4.0': {}
 
-  '@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)':
+  '@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.4)':
     dependencies:
       '@babel/runtime': 7.29.2
       '@emotion/babel-plugin': 11.13.5
       '@emotion/is-prop-valid': 1.4.0
-      '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.4)
+      '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.5)
       '@emotion/serialize': 1.3.3
       '@emotion/use-insertion-effect-with-fallbacks': 1.2.0(react@19.2.4)
       '@emotion/utils': 1.4.2
@@ -15395,11 +15395,11 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5)
       '@types/react': 19.2.14
 
-  '@mui/material@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@mui/material@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@babel/runtime': 7.29.2
       '@mui/core-downloads-tracker': 9.0.0
-      '@mui/system': 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+      '@mui/system': 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.4)
       '@mui/types': 9.0.0(@types/react@19.2.14)
       '@mui/utils': 9.0.0(@types/react@19.2.14)(react@19.2.4)
       '@popperjs/core': 2.11.8
@@ -15412,8 +15412,8 @@ snapshots:
       react-is: 19.2.5
       react-transition-group: 4.4.5(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
     optionalDependencies:
-      '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.4)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+      '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.5)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5)
       '@types/react': 19.2.14
 
   '@mui/material@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)':
@@ -15455,7 +15455,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.14
 
-  '@mui/styled-engine@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4)':
+  '@mui/styled-engine@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(react@19.2.4)':
     dependencies:
       '@babel/runtime': 7.29.2
       '@emotion/cache': 11.14.0
@@ -15465,8 +15465,8 @@ snapshots:
       prop-types: 15.8.1
       react: 19.2.4
     optionalDependencies:
-      '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.4)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+      '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.5)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5)
 
   '@mui/styled-engine@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(react@19.2.5)':
     dependencies:
@@ -15481,11 +15481,11 @@ snapshots:
       '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.5)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5)
 
-  '@mui/system@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)':
+  '@mui/system@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.4)':
     dependencies:
       '@babel/runtime': 7.29.2
       '@mui/private-theming': 9.0.0(@types/react@19.2.14)(react@19.2.4)
-      '@mui/styled-engine': 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4)
+      '@mui/styled-engine': 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(react@19.2.4)
       '@mui/types': 9.0.0(@types/react@19.2.14)
       '@mui/utils': 9.0.0(@types/react@19.2.14)(react@19.2.4)
       clsx: 2.1.1
@@ -15493,8 +15493,8 @@ snapshots:
       prop-types: 15.8.1
       react: 19.2.4
     optionalDependencies:
-      '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.4)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+      '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.5)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5)
       '@types/react': 19.2.14
 
   '@mui/system@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5)':
@@ -15848,12 +15848,12 @@ snapshots:
     transitivePeerDependencies:
       - preact
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/4c827019cb486ab2e61adf13d5da570ba676048a(@types/react@19.2.14)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/8471b4811312872154dce3cd002a74a511d050eb(@types/react@19.2.14)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.4)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.4)
       '@formatjs/intl-listformat': 8.3.10
-      '@mui/material': 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@mui/material': 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       ajv: 8.18.0
       ajv-formats: 2.1.1(ajv@8.18.0)
       cheerio: 1.2.0

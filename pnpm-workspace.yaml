@@ -9,7 +9,7 @@ packages:
   - 'scripts/*'
 
 catalog:
-  "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#4c82701"
+  "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#8471b48"
   "@types/jsdom": ^28.0.1
   "@types/node": ~24.10.15
   axios: ^1.18.1
