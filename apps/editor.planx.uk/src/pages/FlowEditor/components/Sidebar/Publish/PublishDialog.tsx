@@ -253,7 +253,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
     );
     const [summary, setSummary] = useState<string>(
       isTemplatedFrom && onlySourceTemplateUpdates
-        ? "Latest source template updates"
+        ? "Publish latest source template updates"
         : "",
     );
     const [showError, setShowError] = useState<boolean>(false);
