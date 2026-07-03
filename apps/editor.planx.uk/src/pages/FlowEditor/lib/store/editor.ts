@@ -23,10 +23,6 @@ import {
 } from "@planx/graph";
 import { OT } from "@planx/graph/types";
 import type { RegisteredRouter } from "@tanstack/react-router";
-import {
-  DELETE_FLOW_NODE_NOTES_FOR_NODE,
-  MOVE_BEFORE_NODE_NOTES,
-} from "hooks/data/useFlowNodeNotes";
 import { client } from "lib/graphql";
 import debounce from "lodash/debounce";
 import { type } from "ot-json0";
@@ -767,37 +763,8 @@ export const editorStore: StateCreator<
   },
 
   removeNode: (id, parent) => {
-    const flow = get().flow;
-    const parentEdges = flow[parent]?.edges ?? [];
-    const deletedIndex = parentEdges.indexOf(id);
-    const nextNodeId =
-      deletedIndex >= 0 ? parentEdges[deletedIndex + 1] : undefined;
-
-    const [, ops] = remove(id, parent)(flow);
+    const [, ops] = remove(id, parent)(get().flow);
     send(ops);
-
-    const flowId = get().id;
-    if (!flowId) return;
-
-    const deleteRemainingNotes = () =>
-      client
-        .mutate({
-          mutation: DELETE_FLOW_NODE_NOTES_FOR_NODE,
-          variables: { flowId, nodeId: id },
-        })
-        .catch(console.error);
-
-    if (nextNodeId) {
-      client
-        .mutate({
-          mutation: MOVE_BEFORE_NODE_NOTES,
-          variables: { flowId, fromNodeId: id, toNodeId: nextNodeId },
-        })
-        .then(() => deleteRemainingNotes())
-        .catch(console.error);
-    } else {
-      deleteRemainingNotes();
-    }
   },
 
   updateNode: ({ id, data }, { children = undefined } = {}) => {

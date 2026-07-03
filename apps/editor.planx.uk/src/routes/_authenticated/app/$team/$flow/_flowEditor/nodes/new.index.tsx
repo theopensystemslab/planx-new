@@ -8,21 +8,15 @@ import { loader } from "./-loader";
 export const Route = createFileRoute(
   "/_authenticated/app/$team/$flow/_flowEditor/nodes/new/",
 )({
-  loaderDeps: ({ search }) => ({
-    type: search.type,
-    placement: search.placement,
-    dbNoteId: search.dbNoteId,
-  }),
+  loaderDeps: ({ search }) => ({ type: search.type }),
   loader: async ({ params, deps }) => {
-    const { type = "question", placement, dbNoteId } = deps;
+    const { type = "question" } = deps;
     const { team, flow } = params;
 
     return loader({
       team,
       flow,
       type,
-      placement,
-      dbNoteId,
       includeHandleDelete: false,
     });
   },

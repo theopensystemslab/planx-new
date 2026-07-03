@@ -14,9 +14,7 @@ import { useDrag } from "react-dnd";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 
 import { useStore } from "../../../lib/store";
-import { useFlowNotes } from "../lib/flowNotesContext";
 import { getParentId } from "../lib/utils";
-import AttachedNotes from "./AttachedNotes";
 import { DataField } from "./DataField";
 import Hanger from "./Hanger";
 import Node from "./Node";
@@ -37,8 +35,6 @@ const Question: React.FC<Props> = React.memo((props) => {
     state.showHelpText,
     state.showTags,
   ]);
-
-  const { notesForNode } = useFlowNotes();
 
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
@@ -137,7 +133,6 @@ const Question: React.FC<Props> = React.memo((props) => {
               ))}
             </Box>
           )}
-          <AttachedNotes notes={notesForNode(props.id)} parentId={parent} />
         </TemplatedNodeContainer>
         <ol className="options">
           {childNodes.map((child: any) => (

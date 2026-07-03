@@ -15,9 +15,7 @@ import { useDrag } from "react-dnd";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 import EditorIcon from "ui/icons/Editor";
 
-import { useFlowNotes } from "../lib/flowNotesContext";
 import { getParentId } from "../lib/utils";
-import AttachedNotes from "./AttachedNotes";
 import Hanger from "./Hanger";
 import Question from "./Question";
 import { Tag } from "./Tag";
@@ -36,8 +34,6 @@ const ExternalPortal: React.FC<any> = (props) => {
     state.addExternalPortal,
     state.showTags,
   ]);
-
-  const { notesForNode } = useFlowNotes();
 
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
@@ -86,15 +82,6 @@ const ExternalPortal: React.FC<any> = (props) => {
     }),
   });
 
-  const handleContextMenu = useContextMenu({
-    source: "node",
-    relationships: {
-      parent,
-      before: props.id,
-      self: props.id,
-    },
-  });
-
   // If the flow referenced by an external portal has been deleted (eg !data),
   //   still show a "Corrupted" node so that editors have a visual cue to "delete".
   //   Until deleted, the flow schema will still contain a node reference to this portal causing publishing to fail
@@ -141,7 +128,6 @@ const ExternalPortal: React.FC<any> = (props) => {
                   }}
                   onClick={() => addRecentFlow({ id, folderIds })}
                   preload={false}
-                  onContextMenu={handleContextMenu}
                   ref={(el) => {
                     drag(el);
                   }}
@@ -151,7 +137,6 @@ const ExternalPortal: React.FC<any> = (props) => {
                 </Link>
               ) : (
                 <span
-                  onContextMenu={handleContextMenu}
                   ref={(el) => {
                     drag(el);
                   }}
@@ -178,15 +163,14 @@ const ExternalPortal: React.FC<any> = (props) => {
                 <MoreVert titleAccess="Edit Portal" />
               </Link>
             </Box>
-            {showTags && props.data?.tags?.length > 0 && (
-              <Box className="card-tag-list">
-                {props.data.tags.map((tag: NodeTag) => (
-                  <Tag tag={tag} key={tag} />
-                ))}
-              </Box>
-            )}
-            <AttachedNotes notes={notesForNode(props.id)} parentId={parent} />
           </TemplatedNodeContainer>
+          {showTags && props.data?.tags?.length > 0 && (
+            <Box className="card-tag-list">
+              {props.data.tags.map((tag: NodeTag) => (
+                <Tag tag={tag} key={tag} />
+              ))}
+            </Box>
+          )}
         </Box>
       </li>
     </>

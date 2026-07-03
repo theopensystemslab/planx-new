@@ -1,7 +1,6 @@
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import Close from "@mui/icons-material/CloseOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
-import StickyNote2Icon from "@mui/icons-material/StickyNote2";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -10,7 +9,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
 import {
   ComponentType,
   ComponentType as TYPES,
@@ -19,13 +17,6 @@ import { type BaseNodeData, parseFormValues } from "@planx/components/shared";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { FormikProps } from "formik";
-import {
-  addFlowNodeNote,
-  DEFAULT_NOTE_COLOR,
-  deleteFlowNodeNote,
-  updateFlowNodeNote,
-} from "hooks/data/useFlowNodeNotes";
-import { client } from "lib/graphql";
 import isEqual from "lodash/isEqual";
 import {
   nodeIsChildOfTemplatedInternalPortal,
@@ -145,8 +136,6 @@ const FormModal: React.FC<FormModalProps> = ({
     isTemplatedFrom,
     orderedFlow,
     isClone,
-    flowId,
-    user,
   ] = useStore((store) => [
     store.addNode,
     store.updateNode,
@@ -156,16 +145,8 @@ const FormModal: React.FC<FormModalProps> = ({
     store.isTemplatedFrom,
     store.orderedFlow,
     store.isClone,
-    store.id,
-    store.user,
   ]);
-
-  let node;
-  if (extraProps?.existingNote) {
-    node = { data: extraProps.existingNote };
-  } else if (id) {
-    node = flow[id];
-  }
+  const node = id ? flow[id] : undefined;
 
   const normalizeFormValues = (obj: any): any => {
     if (obj === null || obj === undefined || obj === "") {
@@ -260,28 +241,6 @@ const FormModal: React.FC<FormModalProps> = ({
       !parentIsChildOfTemplatedInternalPortal);
 
   const showDeleteButton = id && !isDisabledTemplatedNode;
-  const isExistingDbNote = type === "note" && Boolean(extraProps?.dbNoteId);
-
-  const handleNoteSubmit = async (data: any): Promise<void> => {
-    const noteData = data?.data ?? {};
-    if (extraProps?.dbNoteId && user) {
-      await updateFlowNodeNote(client, {
-        id: extraProps.dbNoteId,
-        text: noteData.text ?? "",
-        color: noteData.color ?? DEFAULT_NOTE_COLOR,
-        updatedBy: user.id,
-      });
-    } else if (!id && flowId && user) {
-      await addFlowNodeNote(client, {
-        flowId,
-        nodeId: extraProps?.noteNodeId ?? before ?? "",
-        placement: extraProps?.placement ?? "before_node",
-        text: noteData.text ?? "",
-        color: noteData.color ?? DEFAULT_NOTE_COLOR,
-        createdBy: user.id,
-      });
-    }
-  };
 
   const showMakeUniqueButton = useMemo(
     () => id && isClone(id) && !isDisabledTemplatedNode,
@@ -330,24 +289,11 @@ const FormModal: React.FC<FormModalProps> = ({
             justifyContent: "space-between",
           }}
         >
-          {type === "note" ? (
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <StickyNote2Icon fontSize="small" />
-              <Typography
-                variant="h6"
-                component="span"
-                sx={{ fontSize: "1rem", fontWeight: 600 }}
-              >
-                Note
-              </Typography>
-            </Box>
-          ) : (
-            <ChangeComponentHeader
-              type={type}
-              onChange={changeNodeType}
-              canChange={!handleDelete}
-            />
-          )}
+          <ChangeComponentHeader
+            type={type}
+            onChange={changeNodeType}
+            canChange={!handleDelete}
+          />
 
           <CloseButton aria-label="close" onClick={handleClose} size="large">
             <Close />
@@ -365,16 +311,14 @@ const FormModal: React.FC<FormModalProps> = ({
               {...extraProps}
               id={id}
               disabled={disabled}
-              handleSubmit={async (
+              handleSubmit={(
                 data: { data?: Record<string, unknown> },
                 children:
                   | Array<Record<string, unknown>>
                   | undefined = undefined,
               ) => {
-                if (type === "note") {
-                  await handleNoteSubmit(data);
-                } else if (typeof data === "string" && parent) {
-                  // Handle internal portals
+                // Handle internal portals
+                if (typeof data === "string" && parent) {
                   connect(parent, data, { before });
                 } else {
                   const parsedData = parseFormValues(Object.entries(data));
@@ -432,27 +376,6 @@ const FormModal: React.FC<FormModalProps> = ({
               Delete
             </Button>
           )}
-          {isExistingDbNote && (
-            <Button
-              color="secondary"
-              variant="contained"
-              onClick={async () => {
-                await deleteFlowNodeNote(client, extraProps.dbNoteId);
-                navigate({
-                  to: "/app/$team/$flow",
-                  params: {
-                    team: teamSlug,
-                    flow: flowSlug,
-                  },
-                });
-              }}
-              disabled={disabled}
-              sx={{ backgroundColor: "background.default", gap: 1 }}
-            >
-              <DeleteIcon color="warning" fontSize="medium" />
-              Delete
-            </Button>
-          )}
           <Box
             sx={{
               display: "flex",
@@ -488,7 +411,7 @@ const FormModal: React.FC<FormModalProps> = ({
               form="modal"
               disabled={disabled}
             >
-              {handleDelete || isExistingDbNote ? `Update` : `Create`}
+              {handleDelete ? `Update` : `Create`}
             </Button>
           </Box>
         </DialogActions>

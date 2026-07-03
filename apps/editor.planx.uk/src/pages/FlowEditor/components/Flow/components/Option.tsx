@@ -2,12 +2,9 @@ import { Flag, flatFlags } from "@opensystemslab/planx-core/types";
 import { Link } from "@tanstack/react-router";
 import { useParams } from "@tanstack/react-router";
 import classNames from "classnames";
-import { useContextMenu } from "hooks/useContextMenu";
 import React from "react";
 
 import { useStore } from "../../../lib/store";
-import { useFlowNotes } from "../lib/flowNotesContext";
-import AttachedNotes from "./AttachedNotes";
 import { DataField } from "./DataField";
 import { FlagBand, NoFlagBand } from "./FlagBand";
 import Hanger from "./Hanger";
@@ -16,17 +13,7 @@ import { Thumbnail } from "./Thumbnail";
 
 const Option: React.FC<any> = (props) => {
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
-  const rawChildNodes = useStore((state) => state.childNodesOf(props.id));
-  const { notesForNode } = useFlowNotes();
-
-  const handleContextMenu = useContextMenu({
-    source: "option",
-    relationships: {
-      self: props.id,
-      parent: props.parent,
-      before: props.id,
-    },
-  });
+  const childNodes = useStore((state) => state.childNodesOf(props.id));
 
   let flags: Flag[] | undefined;
 
@@ -50,7 +37,7 @@ const Option: React.FC<any> = (props) => {
   return (
     <li
       className={classNames("card", "option", { wasVisited: props.wasVisited })}
-      onContextMenu={handleContextMenu}
+      onContextMenu={(e) => e.preventDefault()}
     >
       <Link
         to="/app/$team/$flow/nodes/$id/edit"
@@ -80,15 +67,12 @@ const Option: React.FC<any> = (props) => {
           <DataField value={props.data.val} variant="child" />
         )}
       </Link>
-      <AttachedNotes notes={notesForNode(props.id)} parentId={props.parent} />
-
       <ol className="decisions">
-        {rawChildNodes.map((node) => (
+        {childNodes.map((child) => (
           <Node
-            key={node.id}
+            key={child.id}
             parent={props.id}
-            {...node}
-            noteParentId={props.id}
+            {...child}
             showTemplatedNodeStatus={props.showTemplatedNodeStatus}
           />
         ))}
