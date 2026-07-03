@@ -15,7 +15,7 @@ import { useDrag } from "react-dnd";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 
 import { useStore } from "../../../lib/store";
-import { groupNotesWithNodes } from "../lib/notesUtils";
+import { useFlowNotes } from "../lib/flowNotesContext";
 import { getParentId } from "../lib/utils";
 import AttachedNotes from "./AttachedNotes";
 import { DataField } from "./DataField";
@@ -32,15 +32,17 @@ type Props = {
 };
 
 const Checklist: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes, showHelpText, showTags, storeFlow, showNotes] =
-    useStore((state) => [
+  const [isClone, childNodes, showHelpText, showTags, showNotes] = useStore(
+    (state) => [
       state.isClone,
       state.childNodesOf(props.id),
       state.showHelpText,
       state.showTags,
-      state.flow,
       state.showNotes,
-    ]);
+    ],
+  );
+
+  const { notesForNode } = useFlowNotes();
 
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
@@ -53,11 +55,6 @@ const Checklist: React.FC<Props> = React.memo((props) => {
   // Standalone/legacy notes render inline in the flow with the original sticky note styling
   const isStandaloneNote =
     childNodes.length === 0 && props.data?.placement !== "attached";
-
-  const noteGroupedOptions = useMemo(
-    () => groupNotesWithNodes(childNodes, storeFlow),
-    [childNodes, storeFlow],
-  );
 
   const groupedOptions = useMemo(
     () =>
@@ -166,10 +163,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
               ))}
             </Box>
           )}
-          <AttachedNotes
-            notes={props.associatedNotes || []}
-            parentId={parent}
-          />
+          <AttachedNotes notes={notesForNode(props.id)} parentId={parent} />
         </TemplatedNodeContainer>
         {groupedOptions ? (
           <ol className="categories">
@@ -206,12 +200,11 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           </ol>
         ) : (
           <ol className="options">
-            {noteGroupedOptions.map(({ node, notes }) => (
+            {childNodes.map((node) => (
               <Node
                 parent={props.id}
                 key={node.id}
                 {...node}
-                associatedNotes={notes}
                 showTemplatedNodeStatus={props.showTemplatedNodeStatus}
               />
             ))}

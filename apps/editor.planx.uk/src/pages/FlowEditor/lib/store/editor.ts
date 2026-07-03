@@ -765,6 +765,26 @@ export const editorStore: StateCreator<
   removeNode: (id, parent) => {
     const [, ops] = remove(id, parent)(get().flow);
     send(ops);
+    const flowId = get().id;
+    if (flowId) {
+      client
+        .mutate({
+          mutation: gql`
+            mutation DeleteFlowNodeNotesForNode(
+              $flowId: uuid!
+              $nodeId: String!
+            ) {
+              delete_flow_node_notes(
+                where: { flow_id: { _eq: $flowId }, node_id: { _eq: $nodeId } }
+              ) {
+                affected_rows
+              }
+            }
+          `,
+          variables: { flowId, nodeId: id },
+        })
+        .catch(console.error);
+    }
   },
 
   updateNode: ({ id, data }, { children = undefined } = {}) => {

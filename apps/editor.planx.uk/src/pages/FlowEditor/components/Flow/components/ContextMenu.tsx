@@ -151,7 +151,7 @@ export const ContextMenu: React.FC = () => {
           parent: self,
           ...(firstChildId && { before: firstChildId }),
         },
-        search: { type: "note", placement: "attached" },
+        search: { type: "note", placement: "attached_to_option" },
       });
     } else {
       const routeParent = parent === ROOT_NODE_KEY ? undefined : parent;
@@ -163,7 +163,7 @@ export const ContextMenu: React.FC = () => {
           ...(routeParent && { parent: routeParent }),
           before: self,
         },
-        search: { type: "note", placement: "attached" },
+        search: { type: "note", placement: "attached_to_node" },
       });
     }
     closeMenu();
@@ -179,7 +179,7 @@ export const ContextMenu: React.FC = () => {
         ...(routeParent && { parent: routeParent }),
         ...(before && { before }),
       },
-      search: { type: "note", placement: "standalone" },
+      search: { type: "note", placement: "before_node" },
     });
     closeMenu();
   };

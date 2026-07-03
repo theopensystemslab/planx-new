@@ -4,7 +4,10 @@ import React from "react";
 import { z } from "zod";
 
 const nodeSearchSchema = z.object({
-  placement: z.enum(["attached", "standalone"]).optional(),
+  placement: z
+    .enum(["attached_to_option", "attached_to_node", "before_node"])
+    .optional(),
+  dbNoteId: z.string().optional(),
   type: z
     .enum([
       "question",

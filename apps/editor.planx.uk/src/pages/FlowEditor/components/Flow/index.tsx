@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import { Link, useParams, useRouteContext } from "@tanstack/react-router";
+import { useFlowNodeNotes } from "hooks/data/useFlowNodeNotes";
 import React from "react";
 
 import { useStore } from "../../lib/store";
@@ -8,8 +9,9 @@ import { ContextMenu } from "./components/ContextMenu";
 import EndPoint from "./components/EndPoint";
 import Hanger from "./components/Hanger";
 import Node from "./components/Node";
+import StickyNoteCard from "./components/StickyNoteCard";
 import { GetStarted } from "./GetStarted";
-import { groupNotesWithNodes } from "./lib/notesUtils";
+import { FlowNotesContext } from "./lib/flowNotesContext";
 
 export enum FlowLayout {
   TOP_DOWN = "top-down",
@@ -27,15 +29,15 @@ const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
   });
   const { flow, team } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
-  const [rawChildNodes, getNode, flowLayout, flowData] = useStore((state) => [
+  const [rawChildNodes, getNode, flowLayout, flowId] = useStore((state) => [
     state.childNodesOf(folderIds[folderIds.length - 1] || ROOT_NODE_KEY),
     state.getNode,
     state.flowLayout,
-    state.flow,
+    state.id,
   ]);
 
   const currentParentId = folderIds[folderIds.length - 1] || ROOT_NODE_KEY;
-  const childGroups = groupNotesWithNodes(rawChildNodes, flowData);
+  const { notesForNode } = useFlowNodeNotes(flowId);
 
   const breadcrumbs = folderIds.map((id) => ({
     id,
@@ -49,7 +51,7 @@ const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
   const flowName = useStore((state) => state.flowName);
 
   return (
-    <>
+    <FlowNotesContext.Provider value={{ notesForNode }}>
       <ol
         id="flow"
         data-layout={flowLayout}
@@ -96,16 +98,35 @@ const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
         })}
 
         <Box className="flow-child-nodes">
-          {childGroups.map(({ node, notes }) => (
-            <Node
-              key={node.id}
-              {...node}
-              associatedNotes={notes}
-              noteParentId={currentParentId}
-              lockedFlow={lockedFlow}
-              showTemplatedNodeStatus={showTemplatedNodeStatus}
-            />
-          ))}
+          {rawChildNodes.flatMap((node) => {
+            const beforeNotes = notesForNode(node.id!).filter(
+              (n) => n.placement === "before_node",
+            );
+            const noteParentId =
+              currentParentId === ROOT_NODE_KEY ? undefined : currentParentId;
+
+            return [
+              ...beforeNotes.flatMap((note) => [
+                <Hanger
+                  key={`hanger-${note.id}`}
+                  before={node.id!}
+                  parent={noteParentId}
+                />,
+                <StickyNoteCard
+                  key={`note-${note.id}`}
+                  note={note}
+                  parentId={noteParentId}
+                />,
+              ]),
+              <Node
+                key={node.id}
+                {...node}
+                noteParentId={noteParentId}
+                lockedFlow={lockedFlow}
+                showTemplatedNodeStatus={showTemplatedNodeStatus}
+              />,
+            ];
+          })}
           <Hanger />
         </Box>
         {breadcrumbs.length ? (
@@ -122,7 +143,7 @@ const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
         <EndPoint text="end" />
       </ol>
       <ContextMenu />
-    </>
+    </FlowNotesContext.Provider>
   );
 };
 

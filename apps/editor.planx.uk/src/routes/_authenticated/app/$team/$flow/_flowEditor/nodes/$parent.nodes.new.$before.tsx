@@ -10,9 +10,10 @@ export const Route = createFileRoute(
   loaderDeps: ({ search }) => ({
     type: search.type,
     placement: search.placement,
+    dbNoteId: search.dbNoteId,
   }),
   loader: async ({ params, deps }) => {
-    const { type = "question", placement } = deps;
+    const { type = "question", placement, dbNoteId } = deps;
     const { team, flow, parent, before } = params;
 
     return loader({
@@ -20,6 +21,7 @@ export const Route = createFileRoute(
       flow,
       type,
       placement,
+      dbNoteId,
       parent,
       before,
       includeHandleDelete: false,

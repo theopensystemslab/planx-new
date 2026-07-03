@@ -19,6 +19,12 @@ import { type BaseNodeData, parseFormValues } from "@planx/components/shared";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { FormikProps } from "formik";
+import {
+  addFlowNodeNote,
+  deleteFlowNodeNote,
+  updateFlowNodeNote,
+} from "hooks/data/useFlowNodeNotes";
+import { client } from "lib/graphql";
 import isEqual from "lodash/isEqual";
 import {
   nodeIsChildOfTemplatedInternalPortal,
@@ -138,6 +144,8 @@ const FormModal: React.FC<FormModalProps> = ({
     isTemplatedFrom,
     orderedFlow,
     isClone,
+    flowId,
+    user,
   ] = useStore((store) => [
     store.addNode,
     store.updateNode,
@@ -147,8 +155,15 @@ const FormModal: React.FC<FormModalProps> = ({
     store.isTemplatedFrom,
     store.orderedFlow,
     store.isClone,
+    store.id,
+    store.user,
   ]);
-  const node = id ? flow[id] : undefined;
+  let node;
+  if (extraProps?.existingNote) {
+    node = { data: extraProps.existingNote };
+  } else if (id) {
+    node = flow[id];
+  }
 
   const normalizeFormValues = (obj: any): any => {
     if (obj === null || obj === undefined || obj === "") {
@@ -243,6 +258,7 @@ const FormModal: React.FC<FormModalProps> = ({
       !parentIsChildOfTemplatedInternalPortal);
 
   const showDeleteButton = id && !isDisabledTemplatedNode;
+  const isExistingDbNote = type === "note" && Boolean(extraProps?.dbNoteId);
 
   const showMakeUniqueButton = useMemo(
     () => id && isClone(id) && !isDisabledTemplatedNode,
@@ -326,14 +342,32 @@ const FormModal: React.FC<FormModalProps> = ({
               {...extraProps}
               id={id}
               disabled={disabled}
-              handleSubmit={(
+              handleSubmit={async (
                 data: { data?: Record<string, unknown> },
                 children:
                   | Array<Record<string, unknown>>
                   | undefined = undefined,
               ) => {
-                // Handle internal portals
-                if (typeof data === "string" && parent) {
+                if (type === "note" && extraProps?.dbNoteId && user) {
+                  const noteData = (data as any)?.data ?? {};
+                  await updateFlowNodeNote(client, {
+                    id: extraProps.dbNoteId,
+                    text: noteData.text ?? "",
+                    color: noteData.color ?? "#fffdb0",
+                    updatedBy: user.id,
+                  });
+                } else if (type === "note" && !id && flowId && user) {
+                  const noteData = (data as any)?.data ?? {};
+                  await addFlowNodeNote(client, {
+                    flowId,
+                    nodeId: extraProps?.noteNodeId ?? before ?? "",
+                    placement: extraProps?.placement ?? "before_node",
+                    text: noteData.text ?? "",
+                    color: noteData.color ?? "#fffdb0",
+                    createdBy: user.id,
+                  });
+                } else if (typeof data === "string" && parent) {
+                  // Handle internal portals
                   connect(parent, data, { before });
                 } else {
                   const parsedData = parseFormValues(Object.entries(data));
@@ -391,6 +425,27 @@ const FormModal: React.FC<FormModalProps> = ({
               Delete
             </Button>
           )}
+          {isExistingDbNote && (
+            <Button
+              color="secondary"
+              variant="contained"
+              onClick={async () => {
+                await deleteFlowNodeNote(client, extraProps.dbNoteId);
+                navigate({
+                  to: "/app/$team/$flow",
+                  params: {
+                    team: teamSlug,
+                    flow: flowSlug,
+                  },
+                });
+              }}
+              disabled={disabled}
+              sx={{ backgroundColor: "background.default", gap: 1 }}
+            >
+              <DeleteIcon color="warning" fontSize="medium" />
+              Delete
+            </Button>
+          )}
           <Box
             sx={{
               display: "flex",
@@ -426,7 +481,7 @@ const FormModal: React.FC<FormModalProps> = ({
               form="modal"
               disabled={disabled}
             >
-              {handleDelete ? `Update` : `Create`}
+              {handleDelete || isExistingDbNote ? `Update` : `Create`}
             </Button>
           </Box>
         </DialogActions>

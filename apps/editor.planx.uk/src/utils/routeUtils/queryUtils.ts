@@ -258,6 +258,7 @@ export interface ExtraProps {
   options?: Store.Node[];
   groupedOptions?: GroupedOption[];
   placement?: string;
+  noteNodeId?: string;
 }
 
 /**

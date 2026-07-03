@@ -6,7 +6,7 @@ import { useContextMenu } from "hooks/useContextMenu";
 import React from "react";
 
 import { useStore } from "../../../lib/store";
-import { groupNotesWithNodes, isAttachedNoteNode } from "../lib/notesUtils";
+import { useFlowNotes } from "../lib/flowNotesContext";
 import AttachedNotes from "./AttachedNotes";
 import { DataField } from "./DataField";
 import { FlagBand, NoFlagBand } from "./FlagBand";
@@ -16,17 +16,8 @@ import { Thumbnail } from "./Thumbnail";
 
 const Option: React.FC<any> = (props) => {
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
-  const [rawChildNodes, storeFlow] = useStore((state) => [
-    state.childNodesOf(props.id),
-    state.flow,
-  ]);
-
-  // Notes attached to an option are stored as leading children of the option node
-  const attachedOptionNotes = rawChildNodes.filter((n) =>
-    isAttachedNoteNode(n, storeFlow),
-  );
-  const branchNodes = rawChildNodes.slice(attachedOptionNotes.length);
-  const childGroups = groupNotesWithNodes(branchNodes, storeFlow);
+  const rawChildNodes = useStore((state) => state.childNodesOf(props.id));
+  const { notesForNode } = useFlowNotes();
 
   const handleContextMenu = useContextMenu({
     source: "option",
@@ -89,18 +80,14 @@ const Option: React.FC<any> = (props) => {
           <DataField value={props.data.val} variant="child" />
         )}
       </Link>
-      <AttachedNotes
-        notes={props.associatedNotes || []}
-        parentId={props.parent}
-      />
-      <AttachedNotes notes={attachedOptionNotes} parentId={props.id} />
+      <AttachedNotes notes={notesForNode(props.id)} parentId={props.parent} />
+
       <ol className="decisions">
-        {childGroups.map(({ node, notes }) => (
+        {rawChildNodes.map((node) => (
           <Node
             key={node.id}
             parent={props.id}
             {...node}
-            associatedNotes={notes}
             noteParentId={props.id}
             showTemplatedNodeStatus={props.showTemplatedNodeStatus}
           />

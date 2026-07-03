@@ -1,10 +1,13 @@
 import { Link, useParams } from "@tanstack/react-router";
+import { FlowNodeNote } from "hooks/data/useFlowNodeNotes";
 import React from "react";
 
-import { Store, useStore } from "../../../lib/store";
+import { useStore } from "../../../lib/store";
+
+const ATTACHED_PLACEMENTS = ["attached_to_node", "attached_to_option"] as const;
 
 interface Props {
-  notes: Store.Node[];
+  notes: FlowNodeNote[];
   parentId: string;
 }
 
@@ -12,28 +15,40 @@ const AttachedNotes: React.FC<Props> = ({ notes, parentId }) => {
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
   const showNotes = useStore((state) => state.showNotes);
 
-  if (!showNotes || !notes.length) return null;
+  const attachedNotes = notes.filter((n) =>
+    (ATTACHED_PLACEMENTS as readonly string[]).includes(n.placement),
+  );
+
+  if (!showNotes || !attachedNotes.length) return null;
 
   return (
     <div className="attached-notes">
-      {notes.map((note) => (
+      {attachedNotes.map((note) => (
         <Link
           key={note.id}
           to={
             parentId
-              ? "/app/$team/$flow/nodes/$parent/nodes/$id/edit"
-              : "/app/$team/$flow/nodes/$id/edit"
+              ? "/app/$team/$flow/nodes/$parent/nodes/new/$before"
+              : "/app/$team/$flow/nodes/new/$before"
           }
           params={{
             team,
             flow,
-            id: note.id!,
+            before: note.nodeId,
             ...(parentId && { parent: parentId }),
+          }}
+          search={{
+            type: "note",
+            placement: note.placement as any,
+            dbNoteId: note.id,
           }}
           preload={false}
         >
-          <div className="attached-note">
-            {note.data?.text || "Untitled note"}
+          <div
+            className="attached-note"
+            style={{ background: note.color ?? "#fffdb0" }}
+          >
+            {note.text || "Untitled note"}
           </div>
         </Link>
       ))}
