@@ -227,6 +227,9 @@ export const ContextMenu: React.FC = () => {
 
     if (source === "node") {
       const node = self ? getNode(self) : null;
+
+      if (node?.type === TYPES.ExternalPortal) return [];
+
       const excludedTypes = [
         TYPES.Result,
         TYPES.Review,
