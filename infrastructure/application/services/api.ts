@@ -104,8 +104,8 @@ export const createApiService = async ({
       name: "api",
       image: apiImage.imageUri,
       essential: true,
-      cpu: 2048,
-      memory: 4096 /*MB*/,
+      cpu: config.requireNumber("api-cpu"),
+      memory: config.requireNumber("api-memory"),
       portMappings: [{ targetGroup: apiTargetGroup }],
       environment: [
           { name: "NODE_ENV", value: env },
