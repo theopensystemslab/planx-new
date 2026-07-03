@@ -5,6 +5,8 @@ config:
     secure: AAABABxcp8r3CZAw1kXuXkwPZ8cKRDQyOg4+gVvqzKuCFWb8BEU=
   application:airbrake-project-key:
     secure: AAABAJ0llO2jfZjF0MsWRzA2gpcp/FyZg8tBe8ZwPCOvZy4EepGkUH74GoBzAiroVh1Om5uAoGmVWirlLhJ7cA==
+  application:api-cpu: "2048"
+  application:api-memory: "4096"
   application:cloudflare-zone-id:
     secure: AAABAPZz/bzFCZEZd+jzPpYP4HXAOLYQmLGf2YLQE2YPfMBUtDC83KCo2l2DJ4AL4OKL+jFFx8wrrJc6DDwXJQ==
   application:db-host:
@@ -45,12 +47,12 @@ config:
     secure: AAABACgwjEmlLmE19ofRO8e/JpD8sHDV2lcDmSXbU/Mw8ZRh5gTgll8DZ3BVjpDWfQfIecBAIf2TFgeo9CsBSLjfaRJ7eJyKDSWm7i8LlMC2JN/PN+Ig8oeI0H0oLkqJIziNKKjx+e97zDiXO9LZ1CVzrywR
   application:hasura-admin-secret:
     secure: AAABACnU/Z5aGH2DaNQ29YkJqx8bKKRYFEdXvJm0yswo0pK2Iqnz09j7H2kOaZOzY2fSfEDu8rU=
-  application:hasura-cpu: "2048"
-  application:hasura-memory: "4096"
+  application:hasura-cpu: "1024"
+  application:hasura-memory: "2048"
   application:hasura-planx-api-key:
     secure: AAABANHLs3ItPxkteh0chwMP2bKuHO3ovuRLi4FsIrCqerzXVIaTLFDqNR+4KBTeMPz4cnF5tCTwsrJv9GruZdXU+lg=
-  application:hasura-proxy-cpu: "1024"
-  application:hasura-proxy-memory: "2048"
+  application:hasura-proxy-cpu: "256"
+  application:hasura-proxy-memory: "512"
   application:hasura-service-scaling-maximum: "2"
   application:hasura-service-scaling-minimum: "1"
   application:idox-nexus-client:
@@ -59,6 +61,7 @@ config:
   application:idox-nexus-token-url: https://dev.identity.idoxgroup.com/uaa/oauth/token
   application:jwt-secret:
     secure: AAABAOo4AlDxNYjUfyS2yp8VjbhmziWGQvA54PfnGYOyi5i6o3Lt9GLwAeUCrQYnr663MFjWw49+0wXVdeumyvtRF49cdFEb
+  application:lambda-nodejs-runtime: nodejs24.x
   application:lps-domain: localplanning.editor.planx.dev
   application:mapbox-access-token:
     secure: AAABAMWf2zVq5/mKCLynpgzAidNsnbUEBpb47n7MRWp2xzRgwaf3kzOvnZax9N04ZScQqU6I5/tEKTBAbSb8MIBJ8mU2iTZbPg8FD6wYsetRyftm1K39KBsIl9aS7fXvZFOG7BsC4qMDEhlDkH8gbV2HTev3VvvRUe3lzVhjNGNHqQ==
@@ -76,8 +79,14 @@ config:
     secure: AAABAGYZX5lmaa/axrVQODrnHmVIaoWpHP+yN/KsBt0RHnTNcPx63LJhHD0MB5d3WAjVF/Q3RLD+81tuq2ZC1sAYF18YwiZp
   application:ordnance-survey-api-key:
     secure: AAABAMqkRWGvu4THnzddRYpNddFfIFFKCqEE3gm9DkYuVJRCjZBCWpKogsT+X4j3R2f9V8OyeZxHK53yIpl8rQ==
+  application:resend-api-key:
+    secure: AAABAFmzQejlInptwqtYYDEGS+U+aizq8a/+vGvFei2iMyHKwiwCgKmuGoN3o+7D/tbH0wgZIWtEW5p6nZ5p7DZTyyw=
+  application:resend-from-address:
+    secure: AAABAIyo5sjwMg+bJ1iRAU44fOPdQNsdpJqTdcazQibTLktJdxQHi+hDi/0rIyrbviDizNaMNtrWcf9EZE0=
   application:session-secret:
     secure: AAABALL3iIm9+wB88/0ig7H+Y8Rmhb9OqaIz6sSTHmb5jf8+vBvXzY79z4pG6mJq9YPCxg==
+  application:sharedb-cpu: "256"
+  application:sharedb-memory: "512"
   application:skip-rate-limit-secret:
     secure: AAABANwjBmGN73bwF6nqQP5i8tKMe3mi0NMBdae4uaLasG2VfPvC1D4mk7QWIFqVnzsD5jCN20Eqos/r2B+EAo2rAws3JeD/
   application:slack-internal-errors-webhook:
@@ -94,8 +103,3 @@ config:
   application:uniform-token-url: https://staging.identity.idoxgroup.com/uaa/oauth/token
   cloudflare:apiToken:
     secure: AAABABWhDm+7RstbxLXd1D8CcxkylHS6UKMqk4kOaY7Y0E7FJS4bZfvyGs0nks80hl3vjENH4eDuFbUgA82/sA4SmDlfpNXr
-  application:resend-api-key:
-    secure: AAABAFmzQejlInptwqtYYDEGS+U+aizq8a/+vGvFei2iMyHKwiwCgKmuGoN3o+7D/tbH0wgZIWtEW5p6nZ5p7DZTyyw=
-  application:resend-from-address:
-    secure: AAABAIyo5sjwMg+bJ1iRAU44fOPdQNsdpJqTdcazQibTLktJdxQHi+hDi/0rIyrbviDizNaMNtrWcf9EZE0=
-  application:lambda-nodejs-runtime: nodejs24.x

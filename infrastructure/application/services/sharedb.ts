@@ -66,7 +66,8 @@ export const createSharedbService = async ({
       name: "sharedb",
       image: sharedbImage.imageUri,
       essential: true,
-      memory: 1024 /*MB*/,
+      cpu: config.requireNumber("sharedb-cpu"),
+      memory: config.requireNumber("sharedb-memory"),
       portMappings: [{ targetGroup: sharedbTargetGroup }],
       environment: [
         { name: "PORT", value: String(SHAREDB_PORT) },
