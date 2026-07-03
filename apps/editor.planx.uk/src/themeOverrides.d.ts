@@ -162,3 +162,13 @@ declare module "@mui/material/Drawer" {
     "aria-label": string;
   }
 }
+
+// Add a smaller border radius variant, used for compact elements like menu items
+declare module "@mui/material/styles" {
+  interface Shape {
+    borderRadiusSm: number;
+  }
+  interface ShapeOptions {
+    borderRadiusSm?: number;
+  }
+}

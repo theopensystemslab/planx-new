@@ -3,7 +3,7 @@ import Chip, { chipClasses } from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { cardBoxShadow, FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export const MENU_WIDTH_COMPACT = 51;
 export const MENU_WIDTH_FULL = 200;
@@ -57,16 +57,16 @@ export const MenuButton = styled(IconButton, {
   justifyContent: "flex-start",
   gap: theme.spacing(0.65),
   alignItems: "center",
-  borderRadius: theme.shape.borderRadius,
+  borderRadius: theme.shape.borderRadiusSm,
   padding: theme.spacing(0.8, 0.5),
   "&:hover": {
     background: theme.palette.common.white,
-    boxShadow: "0 1px 1.5px 0 rgba(0, 0, 0, 0.2)",
+    boxShadow: cardBoxShadow,
   },
   ...(isActive && {
     background: theme.palette.common.white,
     color: theme.palette.text.primary,
-    boxShadow: "0 1px 1.5px 0 rgba(0, 0, 0, 0.2)",
+    boxShadow: cardBoxShadow,
   }),
   ...(disabled && {
     color: theme.palette.text.disabled,
@@ -99,7 +99,7 @@ export const StyledChip = styled(Chip)(({ theme }) => ({
   height: "16px",
   fontSize: "0.625rem",
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  borderRadius: "3px",
+  borderRadius: theme.shape.borderRadius,
   margin: theme.spacing(0.15, 0.2, 0, 0),
   marginLeft: "auto",
   [`& .${chipClasses.label}`]: {
@@ -111,7 +111,7 @@ export const BadgeChip = styled(Chip)(({ theme }) => ({
   height: "22px",
   fontSize: "0.75rem",
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  borderRadius: "3px",
+  borderRadius: theme.shape.borderRadius,
   margin: theme.spacing(0.15, 0, 0, 0),
   marginLeft: "auto",
   minWidth: "22px",
