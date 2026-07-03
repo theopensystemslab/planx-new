@@ -70,7 +70,7 @@ const Filter: React.FC<Props> = (props) => {
         <ModalSectionContent>
           <Typography variant="body2">
             Filters automatically sort based on collected flags. Flags within a
-            category are ordered heirarchically and the filter will route
+            category are ordered hierarchically and the filter will route
             through the left-most matching flag option only.
           </Typography>
         </ModalSectionContent>
