@@ -106,6 +106,7 @@ update_permissions:
   - role: platformAdmin
     permission:
       columns:
+        - node_id
         - text
         - color
         - updated_by
@@ -115,6 +116,7 @@ update_permissions:
   - role: teamEditor
     permission:
       columns:
+        - node_id
         - text
         - color
         - updated_by

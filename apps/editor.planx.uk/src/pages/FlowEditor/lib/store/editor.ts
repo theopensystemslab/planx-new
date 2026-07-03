@@ -763,10 +763,19 @@ export const editorStore: StateCreator<
   },
 
   removeNode: (id, parent) => {
-    const [, ops] = remove(id, parent)(get().flow);
+    const flow = get().flow;
+    const parentEdges = flow[parent]?.edges ?? [];
+    const deletedIndex = parentEdges.indexOf(id);
+    const nextNodeId =
+      deletedIndex >= 0 ? parentEdges[deletedIndex + 1] : undefined;
+
+    const [, ops] = remove(id, parent)(flow);
     send(ops);
+
     const flowId = get().id;
-    if (flowId) {
+    if (!flowId) return;
+
+    const deleteRemainingNotes = () =>
       client
         .mutate({
           mutation: gql`
@@ -784,6 +793,35 @@ export const editorStore: StateCreator<
           variables: { flowId, nodeId: id },
         })
         .catch(console.error);
+
+    if (nextNodeId) {
+      // Move before_node notes to the next sibling, then delete everything else
+      client
+        .mutate({
+          mutation: gql`
+            mutation MoveBeforeNodeNotes(
+              $flowId: uuid!
+              $fromNodeId: String!
+              $toNodeId: String!
+            ) {
+              update_flow_node_notes(
+                where: {
+                  flow_id: { _eq: $flowId }
+                  node_id: { _eq: $fromNodeId }
+                  placement: { _eq: "before_node" }
+                }
+                _set: { node_id: $toNodeId }
+              ) {
+                affected_rows
+              }
+            }
+          `,
+          variables: { flowId, fromNodeId: id, toNodeId: nextNodeId },
+        })
+        .then(() => deleteRemainingNotes())
+        .catch(console.error);
+    } else {
+      deleteRemainingNotes();
     }
   },
 
