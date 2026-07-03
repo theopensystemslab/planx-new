@@ -148,8 +148,8 @@ function EditorNavMenu() {
           {
             title: "Flows",
             Icon: EditorIcon,
-            route: `/app/${teamSlug}`,
-            accessibleBy: "*",
+            route: `/app/${teamSlug}/flows`,
+            accessibleBy: "*" as const,
           },
           ...(hasFeatureFlag("EXPLORE")
             ? [
