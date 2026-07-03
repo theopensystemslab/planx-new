@@ -139,16 +139,12 @@ function EditorNavMenu() {
     () => [
       {
         routes: [
-          ...(hasFeatureFlag("DASHBOARD")
-            ? [
-                {
-                  title: "Dashboard",
-                  Icon: DashboardIcon,
-                  route: `/app/${teamSlug}/dashboard`,
-                  accessibleBy: "*" as const,
-                },
-              ]
-            : []),
+          {
+            title: "Dashboard",
+            Icon: DashboardIcon,
+            route: `/app/${teamSlug}/dashboard`,
+            accessibleBy: "*" as const,
+          },
           {
             title: "Flows",
             Icon: EditorIcon,
