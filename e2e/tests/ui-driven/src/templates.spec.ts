@@ -466,10 +466,15 @@ test.describe("Templates", () => {
       // Nodes inside the folder are fully editable (submit button enabled)
       await page.getByRole("link", { name: FIRST_NODE_IN_FOLDER }).click();
       await page.getByRole("dialog").waitFor();
+
+      const editor = page.getByRole("textbox", { name: "Description" });
+      await editor.click();
+      await editor.pressSequentially("some text");
+
       await expect(
         page.locator('button[form="modal"][type="submit"]'),
       ).toBeEnabled();
-      await page.locator('button[aria-label="close"]').click();
+      await page.locator('button[form="modal"][type="submit"]').click();
       await page.getByRole("dialog").waitFor({ state: "detached" });
 
       // Drag SECOND_NODE_IN_FOLDER to before FIRST_NODE_IN_FOLDER
