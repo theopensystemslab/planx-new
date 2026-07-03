@@ -158,6 +158,56 @@ $fontMonospace: "Source Code Pro", monospace;
     }
   }
 
+  .attached-notes {
+    a {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      // Reset the card's global `& a` styles
+      background: transparent !important;
+      border: none !important;
+      padding: 0 !important;
+
+      &:hover .attached-note {
+        opacity: 0.85;
+      }
+    }
+
+    .attached-note {
+      background: #fffdb0;
+      border: $nodeBorderWidth solid $nodeBorder;
+      border-top: none;
+      padding: 8px 24px 8px 10px;
+      font-size: 0.8rem;
+      line-height: 1.4;
+      color: $black;
+      position: relative;
+
+      // Two-triangle fold — matches original .isNote technique
+      &::before {
+        content: "";
+        position: absolute;
+        right: -$nodeBorderWidth;
+        bottom: -$nodeBorderWidth;
+        width: 0;
+        height: 0;
+        border-bottom: 12px solid #fff;
+        border-left: 12px solid transparent;
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        right: -$nodeBorderWidth;
+        bottom: -$nodeBorderWidth;
+        width: 0;
+        height: 0;
+        border-top: 12px solid #555;
+        border-right: 12px solid transparent;
+      }
+    }
+  }
+
   &.portal .card-wrapper {
     max-width: 260px;
     & > a {
@@ -428,6 +478,9 @@ $fontMonospace: "Source Code Pro", monospace;
     margin: 0;
     padding: 6px 12px;
   }
+  .attached-notes {
+    align-self: stretch;
+  }
 }
 
 .hanger {
@@ -656,7 +709,7 @@ $fontMonospace: "Source Code Pro", monospace;
 
   &.question.isNote {
     a {
-      background: #fffdb0 !important;
+      background: var(--note-bg-color, #fffdb0) !important;
       position: relative;
       padding-right: 20px;
       .flow-locked & {
@@ -665,7 +718,7 @@ $fontMonospace: "Source Code Pro", monospace;
     }
     & .template-card > a {
       .flow-locked & {
-        background: #fffdb0 !important;
+        background: var(--note-bg-color, #fffdb0) !important;
         border-color: $nodeBorder;
       }
     }
