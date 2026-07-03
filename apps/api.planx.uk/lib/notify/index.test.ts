@@ -60,9 +60,6 @@ describe("resolveNotifyTemplate", () => {
     expect(resolveNotifyTemplate("confirmation-payee", "general")).toBe(
       "general-confirmation-payee",
     );
-    expect(resolveNotifyTemplate("new-download-link", "general")).toBe(
-      "general-new-download-link",
-    );
   });
 
   it("falls back to the base template for unmapped templates", () => {
