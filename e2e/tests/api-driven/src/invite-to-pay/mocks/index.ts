@@ -1,10 +1,11 @@
 import type {
-  FlowGraph,
   Breadcrumbs,
-  Passport,
+  FlowGraph,
   Node,
+  Passport,
 } from "@opensystemslab/planx-core/types";
 import { ComponentType } from "@opensystemslab/planx-core/types";
+
 import flow from "./flow.json" with { type: "json" };
 import session from "./session.json" with { type: "json" };
 

@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page } from "@playwright/test";
+
 import {
   createAddressInput,
   createChecklist,
@@ -27,8 +28,8 @@ import {
   createTextInput,
   createUploadAndLabel,
 } from "../helpers/addComponent.js";
-import { OptionWithDataValues } from "../helpers/types.js";
 import { selectedFlag } from "../helpers/globalHelpers.js";
+import type { OptionWithDataValues } from "../helpers/types.js";
 
 export class PlaywrightEditor {
   readonly page: Page;

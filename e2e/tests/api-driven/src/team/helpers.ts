@@ -1,7 +1,8 @@
+import { gql } from "graphql-tag";
+
 import { $admin } from "../client.js";
 import { createTeam, createUser } from "../globalHelpers.js";
 import { addUserToTeam } from "../permissions/helpers.js";
-import { gql } from "graphql-tag";
 
 const firstNames = [
   "Alice",

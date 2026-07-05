@@ -1,5 +1,10 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { expect, test } from "@playwright/test";
+
+import {
+  createNotice,
+  createTemplatedComponent,
+} from "./helpers/addComponent.js";
 import {
   contextDefaults,
   setUpTestContext,
@@ -8,17 +13,13 @@ import {
 import { getTeamPage } from "./helpers/getPage.js";
 import {
   makeFlowAService,
-  navigateToService,
   navigateToFlowSettings,
+  navigateToService,
   navigateToTeamPage,
   publishService,
   turnServiceOnline,
 } from "./helpers/navigateAndPublish.js";
-import {
-  createNotice,
-  createTemplatedComponent,
-} from "./helpers/addComponent.js";
-import { TestContext } from "./helpers/types.js";
+import type { TestContext } from "./helpers/types.js";
 import { PlaywrightEditor } from "./pages/Editor.js";
 
 const SOURCE_TEMPLATE_NAME = "E2E Source Template";

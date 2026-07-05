@@ -1,12 +1,14 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import type {
   FlowGraph,
   PaymentRequest,
 } from "@opensystemslab/planx-core/types";
 import axios from "axios";
 import { gql } from "graphql-tag";
-import { readFileSync } from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+
 import { $admin } from "../client.js";
 import { createTeam, createUser, TEST_EMAIL } from "../globalHelpers.js";
 import {
@@ -15,7 +17,7 @@ import {
   mockPassport,
   sendNodeWithDestination,
 } from "./mocks/index.js";
-import { CustomWorld } from "./steps.js";
+import type { CustomWorld } from "./steps.js";
 
 export async function setUpMocks() {
   // we can't directly access `__dirname` in ESM, so get equivalent using fileURLToPath

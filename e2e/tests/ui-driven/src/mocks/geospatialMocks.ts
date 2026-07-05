@@ -1,5 +1,6 @@
-import { OptionWithDataValues } from "../helpers/types.js";
-import { Feature, MultiPolygon, Polygon } from "geojson";
+import type { Feature, MultiPolygon, Polygon } from "geojson";
+
+import type { OptionWithDataValues } from "../helpers/types.js";
 
 type ChangeHandlerProperties = {
   label: string;

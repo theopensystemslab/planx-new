@@ -1,21 +1,10 @@
 import { expect, test } from "@playwright/test";
+
 import {
   contextDefaults,
   setUpTestContext,
   tearDownTestContext,
 } from "./helpers/context.js";
-import { getTeamPage } from "./helpers/getPage.js";
-import { answerQuestion, clickContinue } from "./helpers/userActions.js";
-import { PlaywrightEditor } from "./pages/Editor.js";
-import {
-  makeFlowAService,
-  navigateToService,
-  navigateToFlowSettings,
-  publishService,
-  turnServiceOnline,
-} from "./helpers/navigateAndPublish.js";
-import { TestContext } from "./helpers/types.js";
-import { serviceProps } from "./helpers/serviceData.js";
 import {
   alterDrawGeoJson,
   checkGeoJsonContent,
@@ -25,24 +14,36 @@ import {
   waitForMapComponent,
 } from "./helpers/geospatialChecks.js";
 import {
-  GeoJsonChangeHandler,
+  answerFindProperty,
+  userChallengesPlanningConstraint,
+} from "./helpers/geoSpatialUserActions.js";
+import { getTeamPage } from "./helpers/getPage.js";
+import {
+  makeFlowAService,
+  navigateToFlowSettings,
+  navigateToService,
+  publishService,
+  turnServiceOnline,
+} from "./helpers/navigateAndPublish.js";
+import { serviceProps } from "./helpers/serviceData.js";
+import type { TestContext } from "./helpers/types.js";
+import { answerQuestion, clickContinue } from "./helpers/userActions.js";
+import type { GeoJsonChangeHandler } from "./mocks/geospatialMocks.js";
+import {
   mockChangedMapGeoJson,
   mockPropertyTypeOptions,
   mockTitleBoundaryGeoJson,
 } from "./mocks/geospatialMocks.js";
-import {
-  setupOSMapsStyles,
-  setupOSMapsVectorTiles,
-} from "./mocks/osMapsResponse.js";
 import {
   planningConstraintHeadersMock,
   setupGISMockResponse,
   setupRoadsMockResponse,
 } from "./mocks/gisResponse.js";
 import {
-  answerFindProperty,
-  userChallengesPlanningConstraint,
-} from "./helpers/geoSpatialUserActions.js";
+  setupOSMapsStyles,
+  setupOSMapsVectorTiles,
+} from "./mocks/osMapsResponse.js";
+import { PlaywrightEditor } from "./pages/Editor.js";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: TestContext = {

@@ -1,4 +1,7 @@
 import { strict as assert } from "node:assert";
+
+import { gql } from "graphql-tag";
+
 import { $admin } from "../client.js";
 import {
   createFlow,
@@ -6,8 +9,7 @@ import {
   createUser,
   safely,
 } from "../globalHelpers.js";
-import { CustomWorld } from "./steps.js";
-import { gql } from "graphql-tag";
+import type { CustomWorld } from "./steps.js";
 
 export const setup = async ({
   email,

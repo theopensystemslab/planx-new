@@ -1,4 +1,5 @@
-import { Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+
 import { osMapsStylesResponse } from "./osMapsMockData.js";
 
 export async function setupOSMapsStyles(page: Page) {

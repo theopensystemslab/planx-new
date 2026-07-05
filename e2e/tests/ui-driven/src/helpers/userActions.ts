@@ -1,8 +1,9 @@
 import type { Locator, Page } from "@playwright/test";
 import { expect } from "@playwright/test";
+
 import { findSessionId, getGraphQLClient } from "./context.js";
-import { TEST_EMAIL, log, waitForDebugLog } from "./globalHelpers.js";
-import { TestContext } from "./types.js";
+import { log, TEST_EMAIL, waitForDebugLog } from "./globalHelpers.js";
+import type { TestContext } from "./types.js";
 
 export async function saveSession({
   page,

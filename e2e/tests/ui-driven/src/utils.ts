@@ -1,5 +1,5 @@
-import jwt from "jsonwebtoken";
 import Axios from "axios";
+import jwt from "jsonwebtoken";
 
 export const gqlAdmin = async (query, variables = {}) => {
   const HASURA_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;

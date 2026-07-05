@@ -1,16 +1,17 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+
 import {
   contextDefaults,
   setUpTestContext,
   tearDownTestContext,
 } from "../helpers/context.js";
+import type { TestContext } from "../helpers/types.js";
 import {
-  fillInEmail,
   answerQuestion,
   clickContinue,
+  fillInEmail,
 } from "../helpers/userActions.js";
 import { simpleSendFlow } from "../mocks/flows/save-and-return-flows.js";
-import { TestContext } from "../helpers/types.js";
 
 test.describe("Focus navigation accessibility", () => {
   let context: TestContext = {

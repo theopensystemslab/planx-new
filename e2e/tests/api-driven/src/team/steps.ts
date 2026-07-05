@@ -1,10 +1,13 @@
-import { When, Then, Before, After, World } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
+
+import type { World } from "@cucumber/cucumber";
+import { After, Before, Then, When } from "@cucumber/cucumber";
+
 import { $admin } from "../client.js";
 import {
-  setup20ActiveMembers,
-  setup19ActiveAnd2ArchivedMembers,
   cleanup,
+  setup19ActiveAnd2ArchivedMembers,
+  setup20ActiveMembers,
 } from "./helpers.js";
 import { CREATE_AND_ADD_USER_TO_TEAM } from "./queries.js";
 

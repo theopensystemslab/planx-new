@@ -1,6 +1,8 @@
-import { expect, Page } from "@playwright/test";
-import { setupOSMockResponse } from "../mocks/osPlacesResponse.js";
+import type { Page } from "@playwright/test";
+import { expect } from "@playwright/test";
+
 import { setupPlanningDataMockResponse } from "../mocks/gisResponse.js";
+import { setupOSMockResponse } from "../mocks/osPlacesResponse.js";
 
 export async function answerFindProperty(page: Page) {
   await setupOSMockResponse(page);

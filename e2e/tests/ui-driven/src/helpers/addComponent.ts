@@ -1,7 +1,9 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { expect, Locator, Page } from "@playwright/test";
-import { OptionWithDataValues } from "./types.js";
+import type { Locator, Page } from "@playwright/test";
+import { expect } from "@playwright/test";
+
 import { selectedFlag } from "./globalHelpers.js";
+import type { OptionWithDataValues } from "./types.js";
 
 export type TemplateNodeConfig = {
   instructions: string;
