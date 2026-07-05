@@ -1,5 +1,10 @@
 import { Meta, StoryObj } from "@storybook/tanstack-react";
-import React from "react";
+import {
+  createMemoryHistory,
+  createRootRoute,
+  createRouter,
+  RouterProvider,
+} from "@tanstack/react-router";
 import { DashboardWidget } from "ui/editor/DashboardWidget";
 
 import { FeedbackWidget } from "./FeedbackWidget";
@@ -31,18 +36,28 @@ const meta = {
   title: "Editor Components/Dashboard/FeedbackWidget",
   component: FeedbackWidget,
   decorators: [
-    (Story) => (
-      <DashboardWidget
-        title="Feedback"
-        link={{
-          to: "/app/$team/feedback",
-          params: { team: "test-council" },
-          label: "view all feedback",
-        }}
-      >
-        <Story />
-      </DashboardWidget>
-    ),
+    (Story) => {
+      const rootRoute = createRootRoute({
+        component: () => (
+          <DashboardWidget
+            title="Feedback"
+            link={{
+              to: "/app/$team/feedback",
+              params: { team: "test-council" },
+              label: "view all feedback",
+            }}
+          >
+            <Story />
+          </DashboardWidget>
+        ),
+      });
+      const router = createRouter({
+        routeTree: rootRoute,
+        history: createMemoryHistory({ initialEntries: ["/"] }),
+      });
+
+      return <RouterProvider router={router} />;
+    },
   ],
   args: {
     flows: mockFlows,
