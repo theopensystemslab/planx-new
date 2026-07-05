@@ -6,10 +6,8 @@ import { setup } from "test/utils";
 import { vi } from "vitest";
 
 import { presentationalPropsMock } from "./mocks/propsMock";
-import PropertyInformation, {
-  Presentational,
-  PresentationalProps,
-} from "./Public";
+import type { PresentationalProps } from "./Public";
+import PropertyInformation, { Presentational } from "./Public";
 
 const defaultPresentationalProps: PresentationalProps = {
   ...presentationalPropsMock,

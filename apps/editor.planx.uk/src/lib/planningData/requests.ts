@@ -1,11 +1,11 @@
 import axios from "axios";
 
-import {
-  type Entity,
+import type {
   SearchEntityParams,
   SearchEntityResponse,
   SearchEntityResponseExcludeGeom,
 } from "./types";
+import { type Entity } from "./types";
 
 const PLANNING_DATA_URL = "https://www.planning.data.gov.uk" as const;
 

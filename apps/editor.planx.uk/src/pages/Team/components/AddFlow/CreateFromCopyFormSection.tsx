@@ -1,5 +1,5 @@
 import MenuItem from "@mui/material/MenuItem";
-import { SelectChangeEvent } from "@mui/material/Select";
+import type { SelectChangeEvent } from "@mui/material/Select";
 import { useFormikContext } from "formik";
 import React from "react";
 import InputLabel from "ui/public/InputLabel";
@@ -7,7 +7,7 @@ import SelectInput from "ui/shared/SelectInput/SelectInput";
 import { slugify } from "utils";
 
 import { useGetCopiableFlows } from "./hooks/useGetCopiableFlows";
-import { CreateFlow } from "./types";
+import type { CreateFlow } from "./types";
 
 export const CreateFromCopyFormSection: React.FC = () => {
   const { values, setFieldValue } = useFormikContext<CreateFlow>();

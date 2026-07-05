@@ -1,7 +1,8 @@
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
+import React from "react";
 
 const Root = styled("label")(() => ({
   display: "block",

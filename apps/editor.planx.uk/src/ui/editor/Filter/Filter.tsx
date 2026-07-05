@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import React from "react";
-import { Paths } from "type-fest";
+import type { Paths } from "type-fest";
 import { slugify } from "utils";
 
 import { FiltersColumn } from "./FiltersColumn";

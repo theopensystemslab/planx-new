@@ -1,7 +1,7 @@
 import { slugify } from "utils";
 import { z } from "zod";
 
-import { SortableFields } from "./SortControl";
+import type { SortableFields } from "./SortControl";
 
 const routeQuerySchema = z.object({
   sort: z.string(),

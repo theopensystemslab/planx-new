@@ -1,6 +1,7 @@
 import { slugify } from "utils";
 
-import Filters, { FilterKey, FilterOptions, FilterValues } from "./Filter";
+import type Filters from "./Filter";
+import type { FilterKey, FilterOptions, FilterValues } from "./Filter";
 
 export interface MappedFilters {
   displayName: string;

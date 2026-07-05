@@ -29,7 +29,7 @@ import {
 import { clearOptionsDataFields, getOptionsSchemaByFn } from "../../utils";
 import MoreInformation from "./MoreInformation";
 import TemplatedNodeConfiguration from "./TemplatedNodeConfiguration";
-import { Props } from "./types";
+import type { Props } from "./types";
 
 /**
  * Shared editor component for Question and ResponsiveQuestion components

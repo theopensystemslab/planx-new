@@ -1,8 +1,9 @@
-import { Address } from "@opensystemslab/planx-core/types";
+import type { Address } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import type { PublicProps } from "@planx/components/shared/types";
-import { FormikErrors, useFormik } from "formik";
+import type { FormikErrors } from "formik";
+import { useFormik } from "formik";
 import React, { useEffect } from "react";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";

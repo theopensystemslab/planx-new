@@ -1,9 +1,12 @@
-import { GridRenderCellParams, GridTreeNodeWithRender } from "@mui/x-data-grid";
+import type {
+  GridRenderCellParams,
+  GridTreeNodeWithRender,
+} from "@mui/x-data-grid";
 import { screen } from "@testing-library/react";
 import { setup } from "test/utils";
 import { describe, expect, it } from "vitest";
 
-import { Feedback, FeedbackStatus } from "../types";
+import type { Feedback, FeedbackStatus } from "../types";
 import { StatusChip } from "./StatusChip";
 
 const makeParams = (value: FeedbackStatus | undefined) =>

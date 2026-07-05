@@ -1,11 +1,9 @@
 import { richText } from "lib/yupExtensions";
-import { boolean, number, object, SchemaOf, string } from "yup";
+import type { SchemaOf } from "yup";
+import { boolean, number, object, string } from "yup";
 
-import {
-  BaseNodeData,
-  baseNodeDataValidationSchema,
-  parseBaseNodeData,
-} from "../shared";
+import type { BaseNodeData } from "../shared";
+import { baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
 import { defaultContent } from "./components/defaultContent";
 
 export interface Feedback extends BaseNodeData {

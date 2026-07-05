@@ -1,5 +1,5 @@
 import { renderHook, waitFor } from "@testing-library/react";
-import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
+import type { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import {
   filterOptions,
   sortOptions,

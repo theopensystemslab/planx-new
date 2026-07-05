@@ -1,5 +1,5 @@
 import Typography from "@mui/material/Typography";
-import { IndexedNode } from "@opensystemslab/planx-core/types";
+import type { IndexedNode } from "@opensystemslab/planx-core/types";
 import type { SearchResult } from "hooks/useSearch";
 import React from "react";
 import { NodeCard } from "ui/editor/NodeCard";

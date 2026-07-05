@@ -2,12 +2,12 @@ import { useSearch } from "@tanstack/react-router";
 import { useSearch as useFuseSearch } from "hooks/useSearch";
 import { orderBy } from "lodash";
 import { useEffect, useMemo } from "react";
-import { FilterOptions } from "ui/editor/Filter/Filter";
-import { SortableFields } from "ui/editor/SortControl/SortControl";
+import type { FilterOptions } from "ui/editor/Filter/Filter";
+import type { SortableFields } from "ui/editor/SortControl/SortControl";
 import { getSortParams } from "ui/editor/SortControl/utils";
 import { slugify } from "utils";
 
-import { FlowSummary } from "../../../FlowEditor/lib/store/editor";
+import type { FlowSummary } from "../../../FlowEditor/lib/store/editor";
 
 interface UseDisplayedFlowsProps {
   flows: FlowSummary[] | null;

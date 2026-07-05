@@ -5,9 +5,11 @@ import visuallyHidden from "@mui/utils/visuallyHidden";
 import Tag, { TagType } from "@planx/components/shared/Buttons/Tag";
 import type { PublicProps } from "@planx/components/shared/types";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
-import { Store, useStore } from "pages/FlowEditor/lib/store";
+import type { Store } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { SectionNode, SectionStatus as SectionStatusEnum } from "types";
+import type { SectionNode } from "types";
+import { SectionStatus as SectionStatusEnum } from "types";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import Card from "../../shared/Preview/Card";

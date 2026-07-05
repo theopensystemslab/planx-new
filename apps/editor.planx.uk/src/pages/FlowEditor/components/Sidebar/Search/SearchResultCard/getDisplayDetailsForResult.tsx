@@ -1,10 +1,7 @@
-import {
-  ComponentType,
-  flatFlags,
-  IndexedNode,
-} from "@opensystemslab/planx-core/types";
-import { Calculate } from "@planx/components/Calculate/model";
-import { SearchResult } from "hooks/useSearch";
+import type { IndexedNode } from "@opensystemslab/planx-core/types";
+import { ComponentType, flatFlags } from "@opensystemslab/planx-core/types";
+import type { Calculate } from "@planx/components/Calculate/model";
+import type { SearchResult } from "hooks/useSearch";
 import { getDisplayDetailsForNodeCard } from "ui/editor/NodeCard/getDisplayDetailsForNodeCard";
 
 /**

@@ -1,13 +1,13 @@
 import { gql } from "@apollo/client";
-import { FlowStatus } from "@opensystemslab/planx-core/types";
+import type { FlowStatus } from "@opensystemslab/planx-core/types";
 import camelcaseKeys from "camelcase-keys";
 import { client } from "lib/graphql";
-import { FlowInformation } from "pages/FlowEditor/utils";
-import { FlowSettings, GlobalSettings } from "types";
+import type { FlowInformation } from "pages/FlowEditor/utils";
+import type { FlowSettings, GlobalSettings } from "types";
 import type { StateCreator } from "zustand";
 
-import { SharedStore } from "./shared";
-import { TeamStore } from "./team";
+import type { SharedStore } from "./shared";
+import type { TeamStore } from "./team";
 
 export interface SettingsStore {
   getFlowInformation: (

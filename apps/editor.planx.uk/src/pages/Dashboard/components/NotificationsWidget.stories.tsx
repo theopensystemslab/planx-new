@@ -1,5 +1,5 @@
-import { Meta, StoryObj } from "@storybook/tanstack-react";
-import { Notification } from "pages/FlowEditor/components/Notifications/types";
+import type { Meta, StoryObj } from "@storybook/tanstack-react";
+import type { Notification } from "pages/FlowEditor/components/Notifications/types";
 
 import { NotificationsWidget } from "./NotificationsWidget";
 

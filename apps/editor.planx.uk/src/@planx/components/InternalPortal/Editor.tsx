@@ -1,8 +1,6 @@
 import MenuItem from "@mui/material/MenuItem";
-import {
-  ComponentType as TYPES,
-  NodeId,
-} from "@opensystemslab/planx-core/types";
+import type { NodeId } from "@opensystemslab/planx-core/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -14,13 +12,9 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 
-import { EditorProps } from "../shared/types";
-import {
-  Flow,
-  InternalPortal,
-  parseInternalPortal,
-  validationSchema,
-} from "./model";
+import type { EditorProps } from "../shared/types";
+import type { Flow, InternalPortal } from "./model";
+import { parseInternalPortal, validationSchema } from "./model";
 
 type ExtraProps = {
   flows?: Flow[];

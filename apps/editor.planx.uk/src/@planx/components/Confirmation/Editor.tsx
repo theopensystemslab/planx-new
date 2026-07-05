@@ -1,12 +1,12 @@
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { EditorProps } from "@planx/components/shared/types";
+import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
-import React, { ChangeEvent } from "react";
-import ListManager, {
-  EditorProps as ListManagerEditorProps,
-} from "ui/editor/ListManager/ListManager";
+import type { ChangeEvent } from "react";
+import React from "react";
+import type { EditorProps as ListManagerEditorProps } from "ui/editor/ListManager/ListManager";
+import ListManager from "ui/editor/ListManager/ListManager";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -16,12 +16,8 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { ICONS } from "../shared/icons";
-import {
-  Confirmation,
-  parseConfirmation,
-  Step,
-  validationSchema,
-} from "./model";
+import type { Confirmation, Step } from "./model";
+import { parseConfirmation, validationSchema } from "./model";
 
 export type Props = EditorProps<TYPES.Confirmation, Confirmation>;
 

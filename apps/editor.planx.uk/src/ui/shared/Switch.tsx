@@ -1,10 +1,11 @@
-import Box from "@mui/material/Box";
 import FormControlLabel, {
   formControlLabelClasses,
 } from "@mui/material/FormControlLabel";
 // eslint-disable-next-line no-restricted-imports
-import MuiSwitch, { SwitchProps as MuiSwitchProps } from "@mui/material/Switch";
-import React, { type ReactElement, type ReactNode } from "react";
+import type { SwitchProps as MuiSwitchProps } from "@mui/material/Switch";
+// eslint-disable-next-line no-restricted-imports
+import MuiSwitch from "@mui/material/Switch";
+import React, { type ReactNode } from "react";
 import { FONT_WEIGHT_BOLD } from "theme";
 
 import ErrorWrapper from "./ErrorWrapper";

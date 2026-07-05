@@ -4,7 +4,8 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Form, Formik, FormikConfig } from "formik";
+import type { FormikConfig } from "formik";
+import { Form, Formik } from "formik";
 import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -14,7 +15,8 @@ import Input from "ui/shared/Input/Input";
 import { slugify } from "utils";
 
 import { useCreateFlow } from "./AddFlow/hooks/useCreateFlow";
-import { CreateFlow, validationSchema } from "./AddFlow/types";
+import type { CreateFlow } from "./AddFlow/types";
+import { validationSchema } from "./AddFlow/types";
 
 interface Props {
   isDialogOpen: boolean;

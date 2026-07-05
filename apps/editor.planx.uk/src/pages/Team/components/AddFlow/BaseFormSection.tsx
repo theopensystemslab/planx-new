@@ -14,7 +14,8 @@ import { slugify } from "utils";
 
 import { CreateFromCopyFormSection } from "./CreateFromCopyFormSection";
 import { CreateFromTemplateFormSection } from "./CreateFromTemplateFormSection";
-import { CREATE_FLOW_MODES, CreateFlow, FLOW_SERVICE_OPTIONS } from "./types";
+import type { CreateFlow } from "./types";
+import { CREATE_FLOW_MODES, FLOW_SERVICE_OPTIONS } from "./types";
 
 export const BaseFormSection: React.FC = () => {
   const { values, setFieldValue, getFieldProps, errors } =

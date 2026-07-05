@@ -1,21 +1,19 @@
-import {
-  ComponentType,
-  ComponentType as TYPES,
-} from "@opensystemslab/planx-core/types";
+import type { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 
-import { ConditionalOption } from "../Option/model";
+import type { ConditionalOption } from "../Option/model";
 import { BaseChecklistComponent } from "../shared/BaseChecklist/Editor";
-import {
+import type {
   FlatOptions,
-  generatePayload,
   GroupedOptions,
 } from "../shared/BaseChecklist/model";
-import { EditorProps } from "../shared/types";
+import { generatePayload } from "../shared/BaseChecklist/model";
+import type { EditorProps } from "../shared/types";
+import type { ResponsiveChecklist } from "./model";
 import {
   parseResponsiveChecklist,
-  ResponsiveChecklist,
   type ResponsiveChecklistWithOptions,
   validationSchema,
 } from "./model";

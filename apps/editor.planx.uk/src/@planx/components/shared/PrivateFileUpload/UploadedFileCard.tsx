@@ -1,11 +1,12 @@
 import FileIcon from "@mui/icons-material/AttachFile";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Box, { BoxProps } from "@mui/material/Box";
+import type { BoxProps } from "@mui/material/Box";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
-import { FileUploadSlot } from "@planx/components/FileUpload/model";
+import type { FileUploadSlot } from "@planx/components/FileUpload/model";
 import ImagePreview from "components/ImagePreview";
 import React from "react";
 import ErrorWrapper from "ui/shared/ErrorWrapper";

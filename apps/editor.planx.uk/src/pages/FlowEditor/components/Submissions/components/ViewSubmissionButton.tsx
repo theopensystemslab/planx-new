@@ -6,7 +6,7 @@ import { addDays, isBefore } from "date-fns";
 import { DAYS_UNTIL_EXPIRY } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { RenderCellParams } from "ui/shared/DataTable/types";
+import type { RenderCellParams } from "ui/shared/DataTable/types";
 
 export const ViewSubmissionButton = (params: RenderCellParams) => {
   const submissionDataExpirationDate = addDays(

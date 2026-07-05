@@ -12,7 +12,8 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import Input from "ui/shared/Input/Input";
 
-import { FileList, type FileType, type FileUploadAndLabelSlot } from "../model";
+import type { FileList } from "../model";
+import { type FileType, type FileUploadAndLabelSlot } from "../model";
 
 interface ChecklistProps {
   uploadedFile: FileUploadAndLabelSlot;

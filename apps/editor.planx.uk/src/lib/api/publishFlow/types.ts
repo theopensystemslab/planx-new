@@ -1,8 +1,8 @@
-import {
+import type {
   ComponentType as TYPES,
   FlowStatus,
 } from "@opensystemslab/planx-core/types";
-import { Operation } from "types";
+import type { Operation } from "types";
 
 export type HistoryItem =
   | OperationHistoryItem

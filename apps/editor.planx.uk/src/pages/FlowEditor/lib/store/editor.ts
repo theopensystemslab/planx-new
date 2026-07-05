@@ -1,13 +1,16 @@
 import { gql } from "@apollo/client";
 import { getPathForNode, sortFlow } from "@opensystemslab/planx-core";
-import {
-  ComponentType as TYPES,
-  flatFlags,
+import type {
   FlowGraph,
   FlowStatus,
   NodeId,
   OrderedFlow,
 } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType as TYPES,
+  flatFlags,
+} from "@opensystemslab/planx-core/types";
+import type { Relationships } from "@planx/graph";
 import {
   add,
   buildGraphFromNodes,
@@ -15,29 +18,28 @@ import {
   isClone,
   makeUnique,
   move,
-  Relationships,
   remove,
   ROOT_NODE_KEY,
   uniqueId,
   update,
 } from "@planx/graph";
-import { OT } from "@planx/graph/types";
+import type { OT } from "@planx/graph/types";
 import type { RegisteredRouter } from "@tanstack/react-router";
 import { client } from "lib/graphql";
 import debounce from "lodash/debounce";
 import { type } from "ot-json0";
-import {
+import type {
   ContextMenuPosition,
   ContextMenuSource,
 } from "pages/FlowEditor/components/Flow/components/ContextMenu";
-import { Doc } from "sharedb/lib/client";
+import type { Doc } from "sharedb/lib/client";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 
 import { FlowLayout } from "../../components/Flow";
 import { getFlowDoc, subscribeToDoc } from "./../sharedb";
 import { type Store } from ".";
-import { NavigationStore } from "./navigation";
+import type { NavigationStore } from "./navigation";
 import type { SharedStore } from "./shared";
 
 let doc: Doc;

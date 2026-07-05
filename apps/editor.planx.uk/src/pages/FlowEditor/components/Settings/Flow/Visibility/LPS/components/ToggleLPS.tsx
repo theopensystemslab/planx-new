@@ -5,7 +5,7 @@ import React from "react";
 import SettingsDescription from "ui/editor/SettingsDescription";
 import { Switch } from "ui/shared/Switch";
 
-import { LPSListingFormValues } from "../types";
+import type { LPSListingFormValues } from "../types";
 
 const ToggleLPS: React.FC = () => {
   const isTrial = useStore((state) => state.getTeam().settings.isTrial);

@@ -1,4 +1,5 @@
-import { ComponentType, IndexedNode } from "@opensystemslab/planx-core/types";
+import type { IndexedNode } from "@opensystemslab/planx-core/types";
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import { capitalize } from "lodash";
 import { SLUGS } from "pages/FlowEditor/data/types";
 import { useStore } from "pages/FlowEditor/lib/store";

@@ -1,8 +1,8 @@
 import { boolean, object } from "yup";
 
-import { Option } from "../Option/model";
+import type { Option } from "../Option/model";
+import type { BaseQuestion } from "../shared/BaseQuestion/model";
 import {
-  BaseQuestion,
   baseQuestionValidationSchema,
   parseBaseQuestion,
 } from "../shared/BaseQuestion/model";

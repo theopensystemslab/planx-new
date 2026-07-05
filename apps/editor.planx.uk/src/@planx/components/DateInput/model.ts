@@ -1,13 +1,11 @@
 import { isValid, parseISO } from "date-fns";
 import { richText } from "lib/yupExtensions";
-import { object, SchemaOf, string } from "yup";
+import type { SchemaOf } from "yup";
+import { object, string } from "yup";
 
-import {
-  BaseNodeData,
-  baseNodeDataValidationSchema,
-  parseBaseNodeData,
-} from "../shared";
-import { FieldValidationSchema } from "../shared/Schema/model";
+import type { BaseNodeData } from "../shared";
+import { baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
+import type { FieldValidationSchema } from "../shared/Schema/model";
 
 // Expected format: YYYY-MM-DD
 export type UserData = string;

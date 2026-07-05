@@ -1,4 +1,4 @@
-import { AutocompleteRenderGroupParams } from "@mui/material/Autocomplete";
+import type { AutocompleteRenderGroupParams } from "@mui/material/Autocomplete";
 import List from "@mui/material/List";
 import ListSubheader from "@mui/material/ListSubheader";
 import Typography from "@mui/material/Typography";

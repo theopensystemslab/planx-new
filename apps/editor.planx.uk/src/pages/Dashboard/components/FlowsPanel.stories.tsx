@@ -1,5 +1,5 @@
-import { Meta, StoryObj } from "@storybook/tanstack-react";
-import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
+import type { Meta, StoryObj } from "@storybook/tanstack-react";
+import type { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import React from "react";
 import { DashboardWidget } from "ui/editor/DashboardWidget";
 

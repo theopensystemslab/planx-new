@@ -6,7 +6,8 @@ import React from "react";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import BasicRadio from "../../Radio/BasicRadio/BasicRadio";
-import { getFieldProps, Props } from ".";
+import type { Props } from ".";
+import { getFieldProps } from ".";
 import { FieldInputDescription } from "./shared";
 
 export const RadioFieldInput: React.FC<Props<QuestionField>> = (props) => {

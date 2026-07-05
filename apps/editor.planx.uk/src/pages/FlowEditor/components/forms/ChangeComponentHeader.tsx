@@ -1,6 +1,6 @@
 import Link from "@mui/material/Link";
 import Popover from "@mui/material/Popover";
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import type { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import React, { useState } from "react";
 import ComponentTypeHeader from "ui/editor/ComponentTypeHeader";
 

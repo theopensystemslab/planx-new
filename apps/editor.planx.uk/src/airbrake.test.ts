@@ -1,5 +1,6 @@
 import { Notifier } from "@airbrake/browser";
-import { MockInstance, vi } from "vitest";
+import type { MockInstance } from "vitest";
+import { vi } from "vitest";
 
 vi.mock("@airbrake/browser");
 

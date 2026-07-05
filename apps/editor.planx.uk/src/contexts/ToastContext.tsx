@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import ToastContainer from "components/Toast/ToastContainer";
-import {
+import type {
   ToastContextType,
   ToastState,
   ToastType,
 } from "components/Toast/types";
-import React, { createContext, ReactNode, useReducer } from "react";
+import type { ReactNode } from "react";
+import React, { createContext, useReducer } from "react";
 import { toastReducer } from "reducers/toastReducer";
 import { v4 as uuidv4 } from "uuid";
 

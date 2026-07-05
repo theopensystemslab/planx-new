@@ -6,7 +6,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useNavigate } from "@tanstack/react-router";
 import { logger } from "airbrake";
-import { Form, Formik, FormikConfig } from "formik";
+import type { FormikConfig } from "formik";
+import { Form, Formik } from "formik";
 import { useToast } from "hooks/useToast";
 import React, { useState } from "react";
 import { AddButton } from "ui/editor/AddButton";
@@ -15,7 +16,8 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { useStore } from "../../../FlowEditor/lib/store";
 import { BaseFormSection } from "./BaseFormSection";
 import { useCreateFlow } from "./hooks/useCreateFlow";
-import { CreateFlow, validationSchema } from "./types";
+import type { CreateFlow } from "./types";
+import { validationSchema } from "./types";
 
 export const AddFlow: React.FC = () => {
   const navigate = useNavigate();

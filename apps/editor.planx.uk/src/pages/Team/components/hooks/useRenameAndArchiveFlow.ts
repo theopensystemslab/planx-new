@@ -1,11 +1,13 @@
 import { useMutation } from "@apollo/client";
 
-import {
+import type {
   FlowMutationResponse,
+  RenameFlowMutationVars,
+} from "../../queries";
+import {
   GET_ARCHIVED_FLOWS,
   GET_FLOWS,
   RENAME_AND_UNARCHIVE_FLOW,
-  RenameFlowMutationVars,
 } from "../../queries";
 
 export const useRenameAndUnarchiveFlow = (teamId: number) =>

@@ -1,6 +1,6 @@
 import apiClient from "lib/api/client";
 
-import { CombinedEventsPayload, SendResponse } from "./types";
+import type { CombinedEventsPayload, SendResponse } from "./types";
 
 /**
  * Send makes a single request to create scheduled events in Hasura, then those events make the actual submission requests with retries etc

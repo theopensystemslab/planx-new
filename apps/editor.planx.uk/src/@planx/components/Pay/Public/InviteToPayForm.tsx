@@ -12,11 +12,9 @@ import { notFound, useMatches, useNavigate } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { usePublicRouteContext } from "hooks/usePublicRouteContext";
-import { APIError } from "lib/api/client";
-import {
-  CreatePaymentRequest,
-  generateInviteToPayRequest,
-} from "lib/api/inviteToPay/requests";
+import type { APIError } from "lib/api/client";
+import type { CreatePaymentRequest } from "lib/api/inviteToPay/requests";
+import { generateInviteToPayRequest } from "lib/api/inviteToPay/requests";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 import InputLabel from "ui/public/InputLabel";

@@ -1,17 +1,17 @@
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { EditorProps } from "@planx/components/shared/types";
+import type { EditorProps } from "@planx/components/shared/types";
 import type { Task, TaskList } from "@planx/components/TaskList/model";
 import {
   parseTaskList,
   validationSchema,
 } from "@planx/components/TaskList/model";
 import { Form, Formik, getIn, useFormikContext } from "formik";
-import React, { ChangeEvent } from "react";
-import ListManager, {
-  EditorProps as ListManagerEditorProps,
-} from "ui/editor/ListManager/ListManager";
+import type { ChangeEvent } from "react";
+import React from "react";
+import type { EditorProps as ListManagerEditorProps } from "ui/editor/ListManager/ListManager";
+import ListManager from "ui/editor/ListManager/ListManager";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";

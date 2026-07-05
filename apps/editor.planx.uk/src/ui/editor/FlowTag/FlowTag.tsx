@@ -2,7 +2,8 @@ import Skeleton from "@mui/material/Skeleton";
 import React from "react";
 
 import { Root } from "./styles";
-import { FlowTagProps, FlowTagType } from "./types";
+import type { FlowTagProps } from "./types";
+import { FlowTagType } from "./types";
 
 const FlowTag: React.FC<FlowTagProps> = ({
   tagType,

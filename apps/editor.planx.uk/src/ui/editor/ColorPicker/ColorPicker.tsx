@@ -1,9 +1,12 @@
-import Box, { BoxProps } from "@mui/material/Box";
-import ButtonBase, { ButtonBaseProps } from "@mui/material/ButtonBase";
+import type { BoxProps } from "@mui/material/Box";
+import Box from "@mui/material/Box";
+import type { ButtonBaseProps } from "@mui/material/ButtonBase";
+import ButtonBase from "@mui/material/ButtonBase";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
-import { ChromePicker, ColorChangeHandler } from "react-color";
+import type { ColorChangeHandler } from "react-color";
+import { ChromePicker } from "react-color";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 export interface Props {

@@ -8,7 +8,7 @@ import { Switch } from "ui/shared/Switch";
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import { GET_FLOW_VISIBILITY, UPDATE_FLOW_VISIBILITY } from "./queries";
 import { defaultValues, validationSchema } from "./schema";
-import {
+import type {
   GetFlowVisibilityData,
   UpdateFlowVisibilityVariables,
   VisibilityFormValues,

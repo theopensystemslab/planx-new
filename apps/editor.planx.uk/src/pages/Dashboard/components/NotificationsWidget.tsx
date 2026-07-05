@@ -3,7 +3,7 @@ import Stack from "@mui/material/Stack";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useRecentNotifications } from "hooks/data/useRecentNotifications";
 import NotificationCardItem from "pages/FlowEditor/components/Notifications/NotificationCard";
-import { Notification } from "pages/FlowEditor/components/Notifications/types";
+import type { Notification } from "pages/FlowEditor/components/Notifications/types";
 import { partitionBySuperseded } from "pages/FlowEditor/components/Notifications/utils";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { DashboardWidget } from "ui/editor/DashboardWidget";

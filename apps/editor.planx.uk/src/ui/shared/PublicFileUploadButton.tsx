@@ -5,7 +5,8 @@ import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
 import { uploadPublicFile } from "lib/api/fileUpload/requests";
 import React, { useCallback, useEffect, useState } from "react";
-import { FileWithPath, useDropzone } from "react-dropzone";
+import type { FileWithPath } from "react-dropzone";
+import { useDropzone } from "react-dropzone";
 
 export type AcceptedFileTypes = Record<string, ImageFileExtensions[]>;
 

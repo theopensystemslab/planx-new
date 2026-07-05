@@ -21,8 +21,6 @@ export default [
       "@typescript-eslint/no-unsafe-function-type": "warn",
       "@typescript-eslint/no-wrapper-object-types": "warn",
       "@typescript-eslint/ban-ts-comment": "off",
-      // TODO: Turn on and auto-fix 700+ imports
-      "@typescript-eslint/consistent-type-imports": "off",
       "@typescript-eslint/naming-convention": [
         "error",
         {

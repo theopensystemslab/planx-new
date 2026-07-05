@@ -1,8 +1,10 @@
 import { richText } from "lib/yupExtensions";
 import { string } from "mathjs";
-import { array, object, SchemaOf } from "yup";
+import type { SchemaOf } from "yup";
+import { array, object } from "yup";
 
-import { BaseNodeData, parseBaseNodeData } from "../shared";
+import type { BaseNodeData } from "../shared";
+import { parseBaseNodeData } from "../shared";
 import { baseNodeDataValidationSchema } from "../shared/index";
 
 export interface Step {

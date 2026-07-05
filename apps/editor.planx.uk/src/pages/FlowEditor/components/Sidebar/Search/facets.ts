@@ -1,5 +1,6 @@
-import { flatFlags, IndexedNode } from "@opensystemslab/planx-core/types";
-import { FuseOptionKey, FuseOptionKeyObject } from "fuse.js";
+import type { IndexedNode } from "@opensystemslab/planx-core/types";
+import { flatFlags } from "@opensystemslab/planx-core/types";
+import type { FuseOptionKey, FuseOptionKeyObject } from "fuse.js";
 import { get } from "lodash";
 
 export type SearchFacets = Array<FuseOptionKey<IndexedNode>>;

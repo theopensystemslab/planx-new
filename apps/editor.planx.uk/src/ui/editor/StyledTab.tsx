@@ -1,5 +1,6 @@
 import { styled } from "@mui/material/styles";
-import Tab, { tabClasses, TabProps } from "@mui/material/Tab";
+import type { TabProps } from "@mui/material/Tab";
+import Tab, { tabClasses } from "@mui/material/Tab";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 

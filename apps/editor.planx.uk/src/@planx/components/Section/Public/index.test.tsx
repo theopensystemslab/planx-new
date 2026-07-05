@@ -1,11 +1,13 @@
 import { screen } from "@testing-library/react";
 import React from "react";
 import { setup } from "test/utils";
-import { SectionNode, SectionStatus } from "types";
+import type { SectionNode } from "types";
+import { SectionStatus } from "types";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import Section, { SectionsOverviewList, SectionsOverviewListProps } from ".";
+import type { SectionsOverviewListProps } from ".";
+import Section, { SectionsOverviewList } from ".";
 
 describe("Section component", () => {
   it("renders correctly", async () => {

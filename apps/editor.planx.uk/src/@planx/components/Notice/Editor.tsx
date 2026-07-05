@@ -2,7 +2,7 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { Notice } from "@planx/components/Notice/model";
 import { parseNotice, validationSchema } from "@planx/components/Notice/model";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
-import { useFormik } from "formik";
+import type { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import ColorPicker from "ui/editor/ColorPicker/ColorPicker";
@@ -18,7 +18,7 @@ import { Switch } from "ui/shared/Switch";
 
 import { InternalNotes } from "../../../ui/editor/InternalNotes";
 import { MoreInformation } from "../../../ui/editor/MoreInformation/MoreInformation";
-import { EditorProps } from "../shared/types";
+import type { EditorProps } from "../shared/types";
 
 export type Props = EditorProps<TYPES.Notice, Notice>;
 

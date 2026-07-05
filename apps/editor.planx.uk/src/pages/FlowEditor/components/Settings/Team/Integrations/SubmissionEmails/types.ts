@@ -1,5 +1,5 @@
-import { ApolloQueryResult } from "@apollo/client";
-import { SetStateAction } from "react";
+import type { ApolloQueryResult } from "@apollo/client";
+import type { SetStateAction } from "react";
 import type { SnakeCasedProperties } from "type-fest";
 
 export interface SubmissionEmail {

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { PublicProps } from "../shared/types";
+import type { PublicProps } from "../shared/types";
 import type { Props as Filter } from "./Editor";
 
 export type Props = PublicProps<Filter>;

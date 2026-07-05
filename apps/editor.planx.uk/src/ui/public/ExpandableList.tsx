@@ -3,7 +3,8 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
+import React from "react";
 
 import Caret from "../icons/Caret";
 

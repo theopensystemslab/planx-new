@@ -1,4 +1,4 @@
-import { OrderedFlow } from "@opensystemslab/planx-core/types";
+import type { OrderedFlow } from "@opensystemslab/planx-core/types";
 
 export const orderedFlow: OrderedFlow = [
   {

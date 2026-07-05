@@ -1,4 +1,4 @@
-import { ToastAction, ToastState } from "components/Toast/types";
+import type { ToastAction, ToastState } from "components/Toast/types";
 
 export const toastReducer = (state: ToastState, action: ToastAction) => {
   switch (action.type) {

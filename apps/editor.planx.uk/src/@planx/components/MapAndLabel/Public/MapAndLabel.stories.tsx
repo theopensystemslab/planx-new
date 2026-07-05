@@ -1,10 +1,11 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { Meta, StoryObj } from "@storybook/tanstack-react";
+import type { Meta, StoryObj } from "@storybook/tanstack-react";
 
 import Wrapper from "../../fixtures/Wrapper";
 import Editor from "../Editor";
 import { SketchPlanCA } from "../schemas/SketchPlanCA";
-import { Presentational as Public, PresentationalProps } from ".";
+import type { PresentationalProps } from ".";
+import { Presentational as Public } from ".";
 
 const meta = {
   title: "PlanX Components/MapAndLabel",

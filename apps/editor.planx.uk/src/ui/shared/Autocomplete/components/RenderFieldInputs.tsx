@@ -1,4 +1,4 @@
-import { AutocompleteRenderInputParams } from "@mui/material/Autocomplete";
+import type { AutocompleteRenderInputParams } from "@mui/material/Autocomplete";
 import React from "react";
 
 import { StyledDataField, StyledTextField } from "../styles";

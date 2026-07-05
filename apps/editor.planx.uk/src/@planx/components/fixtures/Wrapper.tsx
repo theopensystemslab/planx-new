@@ -1,12 +1,12 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { ComponentType } from "@opensystemslab/planx-core/types";
-import { EditorProps, PublicProps } from "@planx/components/shared/types";
+import type { ComponentType } from "@opensystemslab/planx-core/types";
+import type { EditorProps, PublicProps } from "@planx/components/shared/types";
 import { nanoid } from "nanoid";
 import React, { useState } from "react";
 import ComponentTypeHeader from "ui/editor/ComponentTypeHeader";
 
-import { Option } from "../Option/model";
+import type { Option } from "../Option/model";
 
 export default Wrapper;
 

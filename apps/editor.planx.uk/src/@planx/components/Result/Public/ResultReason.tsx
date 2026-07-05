@@ -3,13 +3,15 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary, {
   accordionSummaryClasses,
 } from "@mui/material/AccordionSummary";
-import Box, { BoxProps } from "@mui/material/Box";
+import type { BoxProps } from "@mui/material/Box";
+import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
-import { Store, useStore } from "pages/FlowEditor/lib/store";
+import type { Store } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useLayoutEffect, useRef, useState } from "react";
 import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";

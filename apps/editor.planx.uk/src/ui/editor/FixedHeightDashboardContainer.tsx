@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
+import React from "react";
 
 interface FixedHeightDashboardContainerProps {
   children: ReactNode;

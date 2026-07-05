@@ -1,4 +1,5 @@
-import SvgIcon, { SvgIconProps } from "@mui/material/SvgIcon";
+import type { SvgIconProps } from "@mui/material/SvgIcon";
+import SvgIcon from "@mui/material/SvgIcon";
 import * as React from "react";
 
 export default function CopyIcon(props: SvgIconProps) {

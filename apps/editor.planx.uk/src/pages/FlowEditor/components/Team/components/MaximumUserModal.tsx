@@ -4,7 +4,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
 import React from "react";
 
-import { AddUserModalProps } from "../types";
+import type { AddUserModalProps } from "../types";
 
 export const MaximumUserModal: React.FC<AddUserModalProps> = ({ onClose }) => {
   return (

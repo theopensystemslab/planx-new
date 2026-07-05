@@ -1,9 +1,8 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import type { Flag, FlagSet } from "@opensystemslab/planx-core/types";
 import {
   ComponentType as TYPES,
-  Flag,
-  FlagSet,
   flatFlags,
   getNoResultFlag,
 } from "@opensystemslab/planx-core/types";
@@ -20,8 +19,9 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
-import { EditorProps } from "../shared/types";
-import { FlagDisplayText, Result, validationSchema } from "./model";
+import type { EditorProps } from "../shared/types";
+import type { FlagDisplayText, Result } from "./model";
+import { validationSchema } from "./model";
 
 type FlagWithValue = Flag & { value: NonNullable<Flag["value"]> };
 

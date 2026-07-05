@@ -1,13 +1,15 @@
-import {
+import type {
   Node as PlanXCoreNode,
   NodeId,
   NodeTags,
   TemplatedNodeData,
 } from "@opensystemslab/planx-core/types";
 import { isPreviewOnlyDomain } from "utils/routeUtils/utils";
-import { create, StoreApi, UseBoundStore } from "zustand";
+import type { StoreApi, UseBoundStore } from "zustand";
+import { create } from "zustand";
 
-import { AuthStore, authStore } from "./auth";
+import type { AuthStore } from "./auth";
+import { authStore } from "./auth";
 import type { EditorStore, EditorUIStore } from "./editor";
 import { editorStore, editorUIStore } from "./editor";
 import type { NavigationStore } from "./navigation";
@@ -20,7 +22,8 @@ import type { SharedStore } from "./shared";
 import { sharedStore } from "./shared";
 import type { TeamStore } from "./team";
 import { teamStore } from "./team";
-import { UserStore, userStore } from "./user";
+import type { UserStore } from "./user";
+import { userStore } from "./user";
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export declare namespace Store {
@@ -61,7 +64,11 @@ export type PublicStore = SharedStore &
   SettingsStore &
   TeamStore;
 
-export type FullStore = PublicStore & EditorStore & EditorUIStore & UserStore & AuthStore;
+export type FullStore = PublicStore &
+  EditorStore &
+  EditorUIStore &
+  UserStore &
+  AuthStore;
 
 /**
  * If accessing the public preview, don't load editor store files

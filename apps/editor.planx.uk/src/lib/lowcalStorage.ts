@@ -1,6 +1,7 @@
-import { DefaultContext, gql } from "@apollo/client";
+import type { DefaultContext } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { Session } from "types";
+import type { Session } from "types";
 
 import { client } from "./graphql";
 

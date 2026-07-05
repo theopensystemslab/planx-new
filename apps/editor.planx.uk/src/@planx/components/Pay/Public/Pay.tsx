@@ -1,9 +1,9 @@
+import type { GovUKPayment } from "@opensystemslab/planx-core/types";
 import {
   GOV_PAY_PASSPORT_KEY,
-  GovUKPayment,
   PaymentStatus,
 } from "@opensystemslab/planx-core/types";
-import { PublicProps } from "@planx/components/shared/types";
+import type { PublicProps } from "@planx/components/shared/types";
 import { logger } from "airbrake";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import type { APIError } from "lib/api/client";
@@ -14,7 +14,8 @@ import React, { useEffect, useReducer } from "react";
 import { useErrorBoundary } from "react-error-boundary";
 
 import { makeData } from "../../shared/utils";
-import { createPayload, getDefaultContent, Pay } from "../model";
+import type { Pay } from "../model";
+import { createPayload, getDefaultContent } from "../model";
 import Confirm from "./Confirm";
 
 export default Component;

@@ -1,6 +1,7 @@
-import { NodeId } from "@opensystemslab/planx-core/types";
+import type { NodeId } from "@opensystemslab/planx-core/types";
 
-import { Store, useStore } from "../store";
+import type { Store } from "../store";
+import { useStore } from "../store";
 
 const { getState } = useStore;
 const { upcomingCardIds, record } = getState();

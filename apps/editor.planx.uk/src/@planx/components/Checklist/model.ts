@@ -1,16 +1,18 @@
 import { array, boolean, object, string } from "yup";
 
+import type { Option } from "../Option/model";
 import {
   type ConditionalOption,
-  Option,
   optionValidationSchema,
 } from "../Option/model";
-import {
+import type {
   BaseChecklist,
-  baseChecklistValidationSchema,
   FlatOptions,
-  getFlatOptions,
   GroupedOptions,
+} from "../shared/BaseChecklist/model";
+import {
+  baseChecklistValidationSchema,
+  getFlatOptions,
   parseBaseChecklist,
 } from "../shared/BaseChecklist/model";
 

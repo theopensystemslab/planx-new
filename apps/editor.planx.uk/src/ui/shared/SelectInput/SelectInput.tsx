@@ -1,8 +1,10 @@
 import ArrowIcon from "@mui/icons-material/KeyboardArrowDown";
-import Select, { selectClasses, SelectProps } from "@mui/material/Select";
+import type { SelectProps } from "@mui/material/Select";
+import Select, { selectClasses } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import { visuallyHidden } from "@mui/utils";
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
+import React from "react";
 
 import Input from "../../shared/Input/Input";
 

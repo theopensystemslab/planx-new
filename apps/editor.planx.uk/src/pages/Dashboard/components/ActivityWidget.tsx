@@ -2,7 +2,8 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
-import { ActivityItem, useActivityData } from "hooks/data/useActivityData";
+import type { ActivityItem } from "hooks/data/useActivityData";
+import { useActivityData } from "hooks/data/useActivityData";
 import React, { useState } from "react";
 import StyledTab from "ui/editor/StyledTab";
 

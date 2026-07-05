@@ -1,7 +1,7 @@
-import { ComponentType } from "@opensystemslab/planx-core/types";
-import { Option } from "@planx/components/Option/model";
-import { Group } from "@planx/components/shared/BaseChecklist/model";
-import { EditorProps } from "@planx/components/shared/types";
+import type { ComponentType } from "@opensystemslab/planx-core/types";
+import type { Option } from "@planx/components/Option/model";
+import type { Group } from "@planx/components/shared/BaseChecklist/model";
+import type { EditorProps } from "@planx/components/shared/types";
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -11,7 +11,7 @@ import { setup } from "test/utils";
 import { vi } from "vitest";
 
 import { ChecklistEditor } from "./Editor";
-import { Checklist } from "./model";
+import type { Checklist } from "./model";
 
 const { setState } = useStore;
 

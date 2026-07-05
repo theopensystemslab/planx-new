@@ -2,7 +2,7 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { ActivityItem } from "hooks/data/useActivityData";
+import type { ActivityItem } from "hooks/data/useActivityData";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { EmptyState } from "ui/editor/EmptyState";
 

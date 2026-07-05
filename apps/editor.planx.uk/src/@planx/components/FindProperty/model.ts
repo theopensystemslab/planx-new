@@ -1,11 +1,9 @@
 import { richText } from "lib/yupExtensions";
-import { boolean, object, SchemaOf, string } from "yup";
+import type { SchemaOf } from "yup";
+import { boolean, object, string } from "yup";
 
-import {
-  BaseNodeData,
-  baseNodeDataValidationSchema,
-  parseBaseNodeData,
-} from "../shared";
+import type { BaseNodeData } from "../shared";
+import { baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
 
 export enum FindPropertyUserAction {
   Existing = "Selected an existing address",

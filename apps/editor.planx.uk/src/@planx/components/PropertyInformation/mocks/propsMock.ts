@@ -1,4 +1,4 @@
-import { PresentationalProps } from "../Public";
+import type { PresentationalProps } from "../Public";
 
 export const presentationalPropsMock: Pick<
   PresentationalProps,

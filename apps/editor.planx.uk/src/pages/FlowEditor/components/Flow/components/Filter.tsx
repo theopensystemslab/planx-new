@@ -1,4 +1,4 @@
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import type { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
 import { Link } from "@tanstack/react-router";
 import { useParams } from "@tanstack/react-router";

@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { logger } from "airbrake";
 import { AxiosError } from "axios";
 import { checkForChanges, publishFlow } from "lib/api/publishFlow/requests";
-import { PublishFlowArgs } from "lib/api/publishFlow/types";
+import type { PublishFlowArgs } from "lib/api/publishFlow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 

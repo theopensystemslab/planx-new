@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
-import { Meta } from "@storybook/tanstack-react";
-import { ChangeEvent, useState } from "react";
+import type { Meta } from "@storybook/tanstack-react";
+import type { ChangeEvent } from "react";
+import { useState } from "react";
 
 import Input from "../../shared/Input/Input";
 import ColorPicker from "../ColorPicker/ColorPicker";

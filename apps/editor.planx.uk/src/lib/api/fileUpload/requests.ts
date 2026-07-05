@@ -1,7 +1,11 @@
-import { AxiosProgressEvent } from "axios";
+import type { AxiosProgressEvent } from "axios";
 import apiClient from "lib/api/client";
 
-import { UploadFileResponse, UploadFunction, UploadHandler } from "./types";
+import type {
+  UploadFileResponse,
+  UploadFunction,
+  UploadHandler,
+} from "./types";
 
 const handleUpload: UploadHandler = async (file, endpoint, onProgress) => {
   const formData = new FormData();

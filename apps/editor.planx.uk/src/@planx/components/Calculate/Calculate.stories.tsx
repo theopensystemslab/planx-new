@@ -1,7 +1,7 @@
 import ErrorOutline from "@mui/icons-material/ErrorOutlined";
 import Typography from "@mui/material/Typography";
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { Meta } from "@storybook/tanstack-react";
+import type { Meta } from "@storybook/tanstack-react";
 
 import Wrapper from "../fixtures/Wrapper";
 import { WarningContainer } from "../shared/Preview/WarningContainer";

@@ -1,10 +1,5 @@
-import {
-  ApolloClient,
-  from,
-  InMemoryCache,
-  Operation,
-  split,
-} from "@apollo/client";
+import type { Operation } from "@apollo/client";
+import { ApolloClient, from, InMemoryCache, split } from "@apollo/client";
 
 import { errorLink } from "./errors";
 import { authSplitLink, publicHttpLink, retryLink } from "./links";

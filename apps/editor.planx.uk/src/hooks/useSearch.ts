@@ -1,4 +1,5 @@
-import Fuse, { FuseOptionKey, IFuseOptions } from "fuse.js";
+import type { FuseOptionKey, IFuseOptions } from "fuse.js";
+import Fuse from "fuse.js";
 import { useEffect, useMemo, useState } from "react";
 
 interface UseSearchProps<T extends object> {

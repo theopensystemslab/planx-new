@@ -9,18 +9,14 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { Role } from "@opensystemslab/planx-core/types";
+import type { Role } from "@opensystemslab/planx-core/types";
 import { useState } from "react";
 import { AddButton } from "ui/editor/AddButton";
 import { EmptyState } from "ui/editor/EmptyState";
 
 import { StyledAvatar, StyledTableRow } from "../styles";
-import {
-  MembersTableProps,
-  type ModalState,
-  ROLE_LABELS,
-  TeamMember,
-} from "../types";
+import type { MembersTableProps, TeamMember } from "../types";
+import { type ModalState, ROLE_LABELS } from "../types";
 import { AddUserModal } from "./AddUserModal";
 import { EditUserModal } from "./EditUserModal";
 import { MaximumUserModal } from "./MaximumUserModal";

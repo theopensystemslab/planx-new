@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
+import type { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 
 export const FLOW_SUMMARY_FIELDS = gql`
   fragment FlowSummaryFields on flows {

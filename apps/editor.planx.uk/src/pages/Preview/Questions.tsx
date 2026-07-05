@@ -8,7 +8,7 @@ import { getLocalFlow, setLocalFlow } from "lib/local";
 import { getLocalFlowIdb, setLocalFlowIdb } from "lib/local.idb";
 import * as NEW from "lib/local.new";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
-import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
+import type { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
 import React, {
   useCallback,
   useEffect,
@@ -17,13 +17,15 @@ import React, {
   useState,
 } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { ApplicationPath, Session } from "types";
+import type { Session } from "types";
+import { ApplicationPath } from "types";
 import Main from "ui/shared/Main";
 
 import ErrorFallback from "../../components/Error/ErrorFallback";
 import OpenInEditorButton from "../../components/OpenInEditorButton";
 import { useStore } from "../FlowEditor/lib/store";
-import Node, { HandleSubmit } from "./Node";
+import type { HandleSubmit } from "./Node";
+import Node from "./Node";
 
 const BackBar = styled(Box)(() => ({
   top: 0,

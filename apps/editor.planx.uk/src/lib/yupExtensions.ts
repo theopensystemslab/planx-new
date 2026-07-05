@@ -1,6 +1,7 @@
-import { JSONContent } from "@tiptap/core";
-import { Variant } from "ui/editor/RichTextInput/types";
+import type { JSONContent } from "@tiptap/core";
+import type { Variant } from "ui/editor/RichTextInput/types";
 import { fromHtml } from "ui/editor/RichTextInput/utils";
+import type { RichTextValidator } from "ui/editor/RichTextInput/validationHelpers";
 import {
   getContentHierarchyError,
   getImageAltTextErrors,
@@ -8,7 +9,6 @@ import {
   getLinkNewTabError,
   getNonDescriptiveLinkError,
   getShortLinkTextError,
-  RichTextValidator,
 } from "ui/editor/RichTextInput/validationHelpers";
 import { mixed } from "yup";
 

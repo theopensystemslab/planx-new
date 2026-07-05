@@ -1,9 +1,10 @@
 import Box from "@mui/material/Box";
 import FormLabel from "@mui/material/FormLabel";
-import Radio, { RadioProps } from "@mui/material/Radio";
+import type { RadioProps } from "@mui/material/Radio";
+import Radio from "@mui/material/Radio";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { Option } from "@planx/components/Option/model";
+import type { Option } from "@planx/components/Option/model";
 import React from "react";
 
 export interface Props extends Option {

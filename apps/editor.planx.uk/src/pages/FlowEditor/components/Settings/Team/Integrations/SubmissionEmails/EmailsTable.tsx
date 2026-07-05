@@ -18,7 +18,7 @@ import { StyledTableRow } from "../../../../Team/styles";
 import { EmailsUpsertModal } from "./EmailsUpsertModal";
 import { GET_TEAM_SUBMISSION_EMAILS } from "./queries";
 import { RemoveEmailModal } from "./RemoveEmailModal";
-import {
+import type {
   GetSubmissionEmails,
   ModalState,
   SubmissionEmailInput,
@@ -144,9 +144,7 @@ const EmailsTableContent = () => {
                     {submissionEmail.address}
                   </TableCell>
                   <TableCell align="center">
-                    {submissionEmail.isDefault && (
-                      <CheckIcon color="primary" />
-                    )}
+                    {submissionEmail.isDefault && <CheckIcon color="primary" />}
                   </TableCell>
                   <TableCell>
                     <EditEmailButton
@@ -180,9 +178,7 @@ const EmailsTableContent = () => {
           modalState={modalState}
           setModalState={setModalState}
           refetch={refetch}
-          currentEmails={submissionEmails.map(
-            (email) => email.address,
-          )}
+          currentEmails={submissionEmails.map((email) => email.address)}
         />
       )}
       {modalState && modalState.type === "delete" && (

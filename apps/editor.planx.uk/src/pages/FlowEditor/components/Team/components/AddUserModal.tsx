@@ -10,7 +10,8 @@ import React from "react";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 
 import { useAddUserModal } from "../hooks/useAddUserModal";
-import { type AddUserModalProps, UserFormValues } from "../types";
+import type { UserFormValues } from "../types";
+import { type AddUserModalProps } from "../types";
 import { EmailField } from "./Fields/EmailField";
 import { NameFields } from "./Fields/NameFields";
 import { ModalActions } from "./ModalActions";

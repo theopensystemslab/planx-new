@@ -1,8 +1,10 @@
-import { DocumentNode, useMutation, useQuery } from "@apollo/client";
+import type { DocumentNode } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import { Form, Formik, FormikHelpers, FormikProps, FormikValues } from "formik";
+import type { FormikHelpers, FormikProps, FormikValues } from "formik";
+import { Form, Formik } from "formik";
 import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";

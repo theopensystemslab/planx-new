@@ -49,7 +49,7 @@ import {
   Root,
   Subtitle,
 } from "./styles";
-import { MenuSection, Route } from "./types";
+import type { MenuSection, Route } from "./types";
 
 function EditorNavMenu() {
   const navigate = useNavigate();

@@ -1,10 +1,12 @@
 import Delete from "@mui/icons-material/Delete";
 import DragHandle from "@mui/icons-material/DragHandle";
-import Box, { BoxProps } from "@mui/material/Box";
+import type { BoxProps } from "@mui/material/Box";
+import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import React, { PropsWithChildren, useRef } from "react";
+import type { PropsWithChildren } from "react";
+import React, { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 
 type Props = React.PropsWithChildren<{

@@ -1,5 +1,6 @@
 import { screen, waitFor, within } from "@testing-library/react";
-import { FullStore, useStore } from "pages/FlowEditor/lib/store";
+import type { FullStore } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import server from "test/mockServer";
 
 import {

@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
-import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
+import type { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 interface MapContainerProps {

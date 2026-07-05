@@ -1,5 +1,5 @@
 import { screen } from "@testing-library/react";
-import { Feature, Polygon } from "geojson";
+import type { Feature, Polygon } from "geojson";
 import {
   graphql,
   type GraphQLHandler,

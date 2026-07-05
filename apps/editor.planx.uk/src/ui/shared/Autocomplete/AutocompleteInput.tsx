@@ -6,7 +6,7 @@ import {
   RenderTextFieldInput,
 } from "./components/RenderFieldInputs";
 import { StyledAutocomplete } from "./styles";
-import { WithLabel, WithPlaceholder } from "./types";
+import type { WithLabel, WithPlaceholder } from "./types";
 
 type Props<T> = WithLabel<T> | WithPlaceholder<T>;
 

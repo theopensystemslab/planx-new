@@ -1,11 +1,12 @@
+import type { BaseNodeData } from "@planx/components/shared";
 import {
-  BaseNodeData,
   baseNodeDataValidationSchema,
   parseBaseNodeData,
 } from "@planx/components/shared";
 import { richText } from "lib/yupExtensions";
-import { FileWithPath } from "react-dropzone";
-import { array, boolean, number, object, SchemaOf, string } from "yup";
+import type { FileWithPath } from "react-dropzone";
+import type { SchemaOf } from "yup";
+import { array, boolean, number, object, string } from "yup";
 
 export interface FileUpload extends BaseNodeData {
   title: string;

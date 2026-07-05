@@ -1,5 +1,6 @@
-import { Condition, Operator, Rule } from "../shared/RuleBuilder/types";
-import { FileList, FileType } from "./model";
+import type { Rule } from "../shared/RuleBuilder/types";
+import { Condition, Operator } from "../shared/RuleBuilder/types";
+import type { FileList, FileType } from "./model";
 
 const mockAlwaysRequiredRule: Rule = {
   condition: Condition.AlwaysRequired,

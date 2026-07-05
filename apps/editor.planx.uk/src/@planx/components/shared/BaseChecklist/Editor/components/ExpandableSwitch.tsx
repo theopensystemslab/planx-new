@@ -3,7 +3,7 @@ import { toggleExpandableChecklist } from "@planx/components/shared/BaseChecklis
 import React from "react";
 import { Switch } from "ui/shared/Switch";
 
-import { Props } from "../types";
+import type { Props } from "../types";
 
 export const TypeNarrowedExpandableSwitch: React.FC<Props> = ({
   formik,

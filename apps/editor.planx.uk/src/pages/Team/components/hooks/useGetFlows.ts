@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 
-import { GET_FLOWS, GetAnyFlowsQuery, GetAnyFlowsVars } from "../../queries";
+import type { GetAnyFlowsQuery, GetAnyFlowsVars } from "../../queries";
+import { GET_FLOWS } from "../../queries";
 
 export const useGetFlows = (teamId: number) =>
   useQuery<GetAnyFlowsQuery, GetAnyFlowsVars>(GET_FLOWS, {

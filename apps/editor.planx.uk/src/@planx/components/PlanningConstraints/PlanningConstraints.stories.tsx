@@ -1,6 +1,6 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import Wrapper from "@planx/components/fixtures/Wrapper";
-import { Meta } from "@storybook/tanstack-react";
+import type { Meta } from "@storybook/tanstack-react";
 
 import Editor from "./Editor";
 import classifiedRoadsNegativeResponseMock from "./mocks/classifiedRoadsNegativeResponseMock";
@@ -8,7 +8,8 @@ import classifiedRoadsResponseMock from "./mocks/classifiedRoadsResponseMock";
 import digitalLandNegativeResponseMock from "./mocks/digitalLandNegativeResponseMock";
 import digitalLandResponseMock from "./mocks/digitalLandResponseMock";
 import Public from "./Public";
-import { Presentational, PresentationalProps } from "./Public/Presentational";
+import type { PresentationalProps } from "./Public/Presentational";
+import { Presentational } from "./Public/Presentational";
 
 /**
  * PlanningConstraints fetches data about constraints from DLUHC's planning.data.gov.uk & data about classified roads from the Ordnance Survey Features API.

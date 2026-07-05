@@ -13,7 +13,7 @@ import CheckCircleIcon from "ui/icons/CheckCircle";
 import FeedbackOption from "ui/public/FeedbackOption";
 
 import FeedbackForm from "../FeedbackForm/FeedbackForm";
-import { FeedbackFormInput, UserFeedback } from "../types";
+import type { FeedbackFormInput, UserFeedback } from "../types";
 
 const MoreInfoFeedback = styled(Box)(({ theme }) => ({
   borderTop: `2px solid ${theme.palette.border.main}`,

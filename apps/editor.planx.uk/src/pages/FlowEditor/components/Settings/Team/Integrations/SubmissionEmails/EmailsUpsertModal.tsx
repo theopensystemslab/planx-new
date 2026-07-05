@@ -18,7 +18,7 @@ import {
   GET_TEAM_SUBMISSION_EMAILS,
   UPSERT_TEAM_SUBMISSION_EMAILS,
 } from "./queries";
-import { EditorModalProps } from "./types";
+import type { EditorModalProps } from "./types";
 
 export const EmailsUpsertModal = ({
   modalState,
@@ -35,8 +35,7 @@ export const EmailsUpsertModal = ({
   }
 
   const isFirstEmail = !currentEmails || currentEmails.length === 0;
-  const isDefaultEmail =
-    isFirstEmail || modalState?.email?.isDefault || false;
+  const isDefaultEmail = isFirstEmail || modalState?.email?.isDefault || false;
 
   return (
     <Formik
@@ -60,7 +59,7 @@ export const EmailsUpsertModal = ({
             },
           ],
         };
-        console.log({variables})
+        console.log({ variables });
         await upsertEmail({
           variables,
           refetchQueries: [
@@ -118,9 +117,7 @@ export const EmailsUpsertModal = ({
                 <Switch
                   name="isDefault"
                   checked={values.isDefault}
-                  onChange={(e) =>
-                    setFieldValue("isDefault", e.target.checked)
-                  }
+                  onChange={(e) => setFieldValue("isDefault", e.target.checked)}
                   label={"Default email"}
                   disabled={isFirstEmail || isDefaultEmail}
                 />
@@ -138,10 +135,7 @@ export const EmailsUpsertModal = ({
               <Button
                 variant="contained"
                 type="submit"
-                disabled={
-                  !dirty ||
-                  (touched.address && !!errors.address)
-                }
+                disabled={!dirty || (touched.address && !!errors.address)}
               >
                 {modalState.actionType === "add" ? "Add" : "Update"}
               </Button>

@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import React from "react";
-import { Paths } from "type-fest";
+import type { Paths } from "type-fest";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 import { slugify } from "utils";
 

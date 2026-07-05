@@ -1,7 +1,8 @@
-import { SendIntegration } from "@opensystemslab/planx-core/types";
+import type { SendIntegration } from "@opensystemslab/planx-core/types";
 import { waitFor } from "@testing-library/react";
 import { delay, http, HttpResponse } from "msw";
-import { FullStore, useStore } from "pages/FlowEditor/lib/store";
+import type { FullStore } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react";
 import server from "test/mockServer";

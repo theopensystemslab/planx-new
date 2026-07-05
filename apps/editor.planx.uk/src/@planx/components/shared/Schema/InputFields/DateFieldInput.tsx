@@ -6,7 +6,8 @@ import React from "react";
 import InputLegend from "ui/editor/InputLegend";
 import DateInput from "ui/shared/DateInput/DateInput";
 
-import { getFieldProps, Props } from ".";
+import type { Props } from ".";
+import { getFieldProps } from ".";
 import { FieldInputDescription } from "./shared";
 
 export const DateFieldInput: React.FC<Props<DateField>> = (props) => {

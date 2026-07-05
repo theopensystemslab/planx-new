@@ -1,8 +1,8 @@
 import "@testing-library/jest-dom";
 import "vitest-axe/extend-expect";
 
-import { CollapseProps } from "@mui/material/Collapse";
-import { FadeProps } from "@mui/material/Fade";
+import type { CollapseProps } from "@mui/material/Collapse";
+import type { FadeProps } from "@mui/material/Fade";
 import React from "react";
 import { vi } from "vitest";
 

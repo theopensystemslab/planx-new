@@ -1,13 +1,12 @@
 import { richText } from "lib/yupExtensions";
 import type { Store } from "pages/FlowEditor/lib/store";
-import { SectionNode, SectionStatus } from "types";
-import { mixed, object, SchemaOf, string } from "yup";
+import type { SectionNode } from "types";
+import { SectionStatus } from "types";
+import type { SchemaOf } from "yup";
+import { mixed, object, string } from "yup";
 
-import {
-  BaseNodeData,
-  baseNodeDataValidationSchema,
-  parseBaseNodeData,
-} from "../shared";
+import type { BaseNodeData } from "../shared";
+import { baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
 
 export interface Section extends BaseNodeData {
   title: string;

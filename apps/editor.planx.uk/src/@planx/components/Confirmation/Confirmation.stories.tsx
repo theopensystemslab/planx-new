@@ -1,6 +1,6 @@
 import type { GovUKPayment } from "@opensystemslab/planx-core/types";
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { Meta, StoryObj } from "@storybook/tanstack-react";
+import type { Meta, StoryObj } from "@storybook/tanstack-react";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 import Wrapper from "../fixtures/Wrapper";

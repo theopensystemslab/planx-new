@@ -1,8 +1,8 @@
 import { useQuery } from "@apollo/client";
 import { GET_TEAM_SUBMISSION_EMAILS } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/queries";
-import { GetSubmissionEmails } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
+import type { GetSubmissionEmails } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 
-import { GetTeamSubmissionEmailsQueryVariables } from "../types";
+import type { GetTeamSubmissionEmailsQueryVariables } from "../types";
 
 export const useTeamSubmissionEmails = (teamId: number) => {
   const query = useQuery<

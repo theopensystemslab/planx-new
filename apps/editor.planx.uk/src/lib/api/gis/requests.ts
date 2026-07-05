@@ -1,4 +1,4 @@
-import { GISResponse } from "@opensystemslab/planx-core/types";
+import type { GISResponse } from "@opensystemslab/planx-core/types";
 
 import apiClient from "../client";
 import type { GISResponseWithAudit } from "./types";

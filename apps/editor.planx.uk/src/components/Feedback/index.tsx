@@ -28,7 +28,7 @@ import {
   FeedbackTitle,
   FeedbackWrapper,
 } from "./styled";
-import {
+import type {
   ClickEvents,
   FeedbackFormInput,
   FeedbackView,

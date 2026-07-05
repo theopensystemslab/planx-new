@@ -1,4 +1,4 @@
-import { PageSchema } from "../model";
+import type { PageSchema } from "../model";
 
 export const ProposedAdvertisements: PageSchema = {
   type: "Proposed advertisements",

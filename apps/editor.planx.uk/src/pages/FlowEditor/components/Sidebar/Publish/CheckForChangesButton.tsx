@@ -4,9 +4,9 @@ import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import { useToast } from "hooks/useToast";
-import { PublishFlowArgs } from "lib/api/publishFlow/types";
+import type { PublishFlowArgs } from "lib/api/publishFlow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { Template } from "pages/FlowEditor/lib/store/editor";
+import type { Template } from "pages/FlowEditor/lib/store/editor";
 import React, { useState } from "react";
 
 import { OpenServiceMenu } from "../OpenServiceMenu";

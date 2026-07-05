@@ -1,5 +1,5 @@
-import { SelectChangeEvent } from "@mui/material/Select";
-import { SubmissionEmailInput } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
+import type { SelectChangeEvent } from "@mui/material/Select";
+import type { SubmissionEmailInput } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 
 export interface GetFlowEmailIdQuery {
   flowsByPK: {

@@ -1,5 +1,5 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { Meta, StoryObj } from "@storybook/tanstack-react";
+import type { Meta, StoryObj } from "@storybook/tanstack-react";
 
 import Wrapper from "../fixtures/Wrapper";
 import {
@@ -11,9 +11,9 @@ import {
   withImagesArgs,
   withRepeatedOptionsArgs,
 } from "../shared/BaseChecklist/BaseChecklist.stories.config";
-import { EditorProps } from "../shared/types";
+import type { EditorProps } from "../shared/types";
 import Editor from "./Editor";
-import { ChecklistWithOptions } from "./model";
+import type { ChecklistWithOptions } from "./model";
 import Checklist from "./Public";
 
 const meta = {

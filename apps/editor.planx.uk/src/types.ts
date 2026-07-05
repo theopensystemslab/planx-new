@@ -1,16 +1,16 @@
-import {
+import type {
   FlowStatus,
   GovUKPayment,
   Team,
   TeamContactSettings,
 } from "@opensystemslab/planx-core/types";
-import { SectionLength } from "@planx/components/Section/model";
-import { OT } from "@planx/graph/types";
-import { FormikValues, useFormik } from "formik";
-import { Progress } from "pages/FlowEditor/lib/store/navigation";
+import type { SectionLength } from "@planx/components/Section/model";
+import type { OT } from "@planx/graph/types";
+import type { FormikValues, useFormik } from "formik";
+import type { Progress } from "pages/FlowEditor/lib/store/navigation";
 
-import { Store } from "./pages/FlowEditor/lib/store/index";
-import { SharedStore } from "./pages/FlowEditor/lib/store/shared";
+import type { Store } from "./pages/FlowEditor/lib/store/index";
+import type { SharedStore } from "./pages/FlowEditor/lib/store/shared";
 
 export type Maybe<T> = T | undefined;
 

@@ -1,6 +1,6 @@
 import type { Role, User } from "@opensystemslab/planx-core/types";
 
-import { TeamMember } from "./types";
+import type { TeamMember } from "./types";
 
 export const hasEmailPresent = (member: TeamMember) => !!member.email;
 

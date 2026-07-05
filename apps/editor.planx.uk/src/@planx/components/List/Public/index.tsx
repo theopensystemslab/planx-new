@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import { formatTitle } from "@planx/components/shared/Schema/InputFields";
 import { isMapFieldResponse } from "@planx/components/shared/Schema/model";
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
-import { PublicProps } from "@planx/components/shared/types";
+import type { PublicProps } from "@planx/components/shared/types";
 import React, { useEffect, useRef } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";

@@ -3,7 +3,7 @@ import { setup } from "test/utils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import { FeedbackFormInput } from "../types";
+import type { FeedbackFormInput } from "../types";
 import FeedbackForm from "./FeedbackForm";
 
 const mockHandleSubmit = vi.fn();

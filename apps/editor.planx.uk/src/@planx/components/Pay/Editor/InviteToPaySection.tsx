@@ -10,7 +10,7 @@ import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
 import { ICONS } from "../../shared/icons";
-import { Pay } from "../model";
+import type { Pay } from "../model";
 
 interface InviteToPaySectionProps {
   disabled?: boolean;

@@ -2,11 +2,12 @@ import EastIcon from "@mui/icons-material/East";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
 import Link from "@mui/material/Link";
-import { styled, Theme } from "@mui/material/styles";
+import type { Theme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { Step as StyledListItem } from "@planx/components/NextSteps/model";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
-import { HandleSubmit } from "pages/Preview/Node";
+import type { HandleSubmit } from "pages/Preview/Node";
 import React, { useState } from "react";
 
 interface NextStepsListProps {

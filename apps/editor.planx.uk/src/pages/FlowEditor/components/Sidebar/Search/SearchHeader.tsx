@@ -2,11 +2,11 @@ import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import React, { useEffect } from "react";
-import { Components } from "react-virtuoso";
+import type { Components } from "react-virtuoso";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import Input from "ui/shared/Input/Input";
 
-import { Context, Data } from ".";
+import type { Context, Data } from ".";
 import { ALL_FACETS, DATA_FACETS } from "./facets";
 
 export const SearchHeader: Components<Data, Context>["Header"] = ({

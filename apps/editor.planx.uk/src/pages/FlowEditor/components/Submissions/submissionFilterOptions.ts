@@ -1,4 +1,4 @@
-import { Submission } from "./types";
+import type { Submission } from "./types";
 
 export const submissionEventTypes: Array<Submission["eventType"]> = [
   "Send to email",

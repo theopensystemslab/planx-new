@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import { GridCellParams } from "@mui/x-data-grid";
+import type { GridCellParams } from "@mui/x-data-grid";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import React from "react";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";

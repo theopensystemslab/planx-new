@@ -1,6 +1,7 @@
-import { User } from "@opensystemslab/planx-core/types";
+import type { User } from "@opensystemslab/planx-core/types";
 
-import { FullStore, useStore } from "../store";
+import type { FullStore } from "../store";
+import { useStore } from "../store";
 
 const { getState, setState } = useStore;
 const { canUserEditTeam } = getState();

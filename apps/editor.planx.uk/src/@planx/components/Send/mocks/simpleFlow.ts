@@ -1,4 +1,4 @@
-import { Graph } from "@planx/graph";
+import type { Graph } from "@planx/graph";
 
 export const flow: Graph = {
   _root: {

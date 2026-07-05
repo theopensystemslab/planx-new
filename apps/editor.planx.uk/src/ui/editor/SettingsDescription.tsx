@@ -1,6 +1,8 @@
 import { styled } from "@mui/material/styles";
-import Typography, { TypographyProps } from "@mui/material/Typography";
-import React, { PropsWithChildren } from "react";
+import type { TypographyProps } from "@mui/material/Typography";
+import Typography from "@mui/material/Typography";
+import type { PropsWithChildren } from "react";
+import React from "react";
 
 const Description = styled(Typography)(({ theme }) => ({
   width: "100%",

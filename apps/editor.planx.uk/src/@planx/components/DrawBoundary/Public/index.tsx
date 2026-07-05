@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
-import { FileUploadSlot } from "@planx/components/FileUpload/model";
+import type { FileUploadSlot } from "@planx/components/FileUpload/model";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
@@ -15,17 +15,18 @@ import type { PublicProps } from "@planx/components/shared/types";
 import { squareMetresToHectares } from "@planx/components/shared/utils";
 import buffer from "@turf/buffer";
 import { point } from "@turf/helpers";
-import { Feature } from "geojson";
+import type { Feature } from "geojson";
 import type { GeoJSONChangeEvent } from "lib/gis";
-import { Store, useStore } from "pages/FlowEditor/lib/store";
+import type { Store } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { array } from "yup";
 
+import type { DrawBoundary } from "../model";
 import {
-  DrawBoundary,
   DrawBoundaryUserAction,
   PASSPORT_COMPONENT_ACTION_KEY,
   PASSPORT_UPLOAD_KEY,

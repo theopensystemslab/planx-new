@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { FlowView } from "pages/Team";
+import type { FlowView } from "pages/Team";
 import React from "react";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType } from "ui/editor/FlowTag/types";
@@ -9,7 +9,7 @@ import Permission from "ui/editor/Permission";
 import TruncatedText from "ui/editor/TruncatedText";
 
 import { useStore } from "../../../FlowEditor/lib/store";
-import { FlowSummary } from "../../../FlowEditor/lib/store/editor";
+import type { FlowSummary } from "../../../FlowEditor/lib/store/editor";
 import ActiveFlowMenu from "../ActiveFlowMenu";
 import ArchivedFlowMenu from "../ArchivedFlowMenu";
 import { FlowPinButton } from "../FlowPinButton";

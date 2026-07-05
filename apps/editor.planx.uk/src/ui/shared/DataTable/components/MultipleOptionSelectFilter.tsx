@@ -1,12 +1,12 @@
 import FormControl from "@mui/material/FormControl";
 import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import TextField from "@mui/material/TextField";
-import { GridFilterInputValueProps } from "@mui/x-data-grid";
-import {
+import type { GridFilterInputValueProps } from "@mui/x-data-grid";
+import type {
   OptionalAutocompleteProps,
   RequiredAutocompleteProps,
-  StyledAutocomplete,
 } from "ui/shared/SelectMultiple";
+import { StyledAutocomplete } from "ui/shared/SelectMultiple";
 
 type Props<T> = RequiredAutocompleteProps<T> &
   OptionalAutocompleteProps<T> &

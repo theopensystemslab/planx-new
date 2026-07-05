@@ -4,7 +4,7 @@ import {
   editorValidationSchema,
   parseNumberInput,
 } from "@planx/components/NumberInput/model";
-import { EditorProps } from "@planx/components/shared/types";
+import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";

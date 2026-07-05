@@ -1,4 +1,4 @@
-import { Feedback } from "../types";
+import type { Feedback } from "../types";
 
 export const mockFeedback: Feedback[] = [
   {

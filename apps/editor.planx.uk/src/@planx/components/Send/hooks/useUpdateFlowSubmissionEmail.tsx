@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/client";
 
 import { UPDATE_FLOW_SUBMISSION_EMAIL_ID } from "../queries";
-import {
+import type {
   UpdateFlowSubmissionEmailMutation,
   UpdateFlowSubmissionEmailMutationVariables,
 } from "../types";

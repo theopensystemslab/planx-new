@@ -1,7 +1,8 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import { styled, Theme } from "@mui/material/styles";
-import SvgIcon from "@mui/material/SvgIcon";
+import type { Theme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
+import type SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";

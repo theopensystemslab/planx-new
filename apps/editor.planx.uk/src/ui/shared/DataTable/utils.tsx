@@ -1,17 +1,18 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import {
-  getGridStringOperators,
+import type {
   GridFilterItem,
   GridValueOptionsParams,
   ValueOptions,
 } from "@mui/x-data-grid";
+import { getGridStringOperators } from "@mui/x-data-grid";
 import { format } from "date-fns";
 import capitalize from "lodash/capitalize";
 
 import { False, True } from "./components/cellIcons";
 import { MultipleOptionSelectFilter } from "./components/MultipleOptionSelectFilter";
-import { ColumnFilterType, ColumnRenderType } from "./types";
+import type { ColumnRenderType } from "./types";
+import { ColumnFilterType } from "./types";
 
 export const isValidFilterInput = (filterItem: GridFilterItem): boolean => {
   return (

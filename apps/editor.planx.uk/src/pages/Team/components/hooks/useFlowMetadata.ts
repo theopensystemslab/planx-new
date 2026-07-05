@@ -1,4 +1,4 @@
-import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
+import type { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import { useMemo } from "react";
 import { StatusVariant } from "ui/editor/FlowTag/types";
 

@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import MoreVert from "@mui/icons-material/MoreVert";
 import Box from "@mui/material/Box";
-import { NodeTag } from "@opensystemslab/planx-core/types";
+import type { NodeTag } from "@opensystemslab/planx-core/types";
 import { Link, useRouteContext } from "@tanstack/react-router";
 import { useParams } from "@tanstack/react-router";
 import classNames from "classnames";

@@ -2,9 +2,9 @@ import {
   ComponentType,
   ComponentType as TYPES,
 } from "@opensystemslab/planx-core/types";
-import { Meta, StoryObj } from "@storybook/tanstack-react";
-import { ComponentProps } from "react";
-import { SectionNode } from "types";
+import type { Meta, StoryObj } from "@storybook/tanstack-react";
+import type { ComponentProps } from "react";
+import type { SectionNode } from "types";
 
 import Wrapper from "../fixtures/Wrapper";
 import Editor from "./Editor";

@@ -3,7 +3,7 @@ import gql from "graphql-tag";
 import { client } from "lib/graphql";
 import ErrorPage from "pages/ErrorPage/ErrorPage";
 import { Subscription } from "pages/FlowEditor/components/Subscription/Subscription";
-import { ServiceCharge } from "pages/FlowEditor/components/Subscription/types";
+import type { ServiceCharge } from "pages/FlowEditor/components/Subscription/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 

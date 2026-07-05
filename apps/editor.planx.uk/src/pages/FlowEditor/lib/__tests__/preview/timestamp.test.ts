@@ -1,7 +1,8 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { isAfter, isEqual } from "date-fns";
 
-import { Store, useStore } from "../../store";
+import type { Store } from "../../store";
+import { useStore } from "../../store";
 
 const { getState, setState } = useStore;
 const { resetPreview, record, changeAnswer } = getState();

@@ -1,14 +1,14 @@
-import { NodeId } from "@opensystemslab/planx-core/types";
+import type { NodeId } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import SummaryLists from "@planx/components/shared/Preview/SummaryList";
 import { PrintButton } from "components/PrintButton";
-import { Store } from "pages/FlowEditor/lib/store";
+import type { Store } from "pages/FlowEditor/lib/store";
 import { sortBreadcrumbs } from "pages/FlowEditor/lib/store/preview";
 import type { HandleSubmit } from "pages/Preview/Node";
 import React from "react";
 
-import { Review } from "../model";
+import type { Review } from "../model";
 
 export default Component;
 

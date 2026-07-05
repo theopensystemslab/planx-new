@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { Flow, GlobalSettings } from "types";
+import type { Flow, GlobalSettings } from "types";
 
 interface StandaloneViewData {
   flows: Pick<Flow, "name" | "team" | "settings">[];

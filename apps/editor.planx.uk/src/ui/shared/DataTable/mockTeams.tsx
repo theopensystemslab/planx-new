@@ -1,4 +1,4 @@
-import { AdminPanelData } from "types";
+import type { AdminPanelData } from "types";
 
 export const mockTeams: AdminPanelData[] = [
   {

@@ -7,7 +7,7 @@ import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHead
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import type { PublicProps } from "@planx/components/shared/types";
 import { logger } from "airbrake";
-import { FeedbackView } from "components/Feedback/types";
+import type { FeedbackView } from "components/Feedback/types";
 import { useFormik } from "formik";
 import { usePublicRouteContext } from "hooks/usePublicRouteContext";
 import {
@@ -29,7 +29,8 @@ import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHt
 
 import { makeData } from "../../shared/utils";
 import { FaceBox } from "../components/FaceBox";
-import { createFeedbackSchema, Feedback, FormProps } from "../model";
+import type { Feedback, FormProps } from "../model";
+import { createFeedbackSchema } from "../model";
 import { StyledToggleButtonGroup } from "../styled";
 
 export const PASSPORT_FEEDBACK_KEY = "_feedback";

@@ -1,7 +1,8 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { cloneDeep, merge } from "lodash";
 
-import { Store, useStore } from "../store";
+import type { Store } from "../store";
+import { useStore } from "../store";
 
 const { getState, setState } = useStore;
 const { resetPreview, record, computePassport, getCurrentCard } = getState();

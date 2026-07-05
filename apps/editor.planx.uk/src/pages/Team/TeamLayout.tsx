@@ -1,11 +1,11 @@
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
+import type { Dispatch, SetStateAction } from "react";
 import React from "react";
-import { Dispatch, SetStateAction } from "react";
 import StyledTab from "ui/editor/StyledTab";
 
-import { FlowView } from "./index";
+import type { FlowView } from "./index";
 
 const tabs = [
   { label: "Flows", path: "flows" },

@@ -10,7 +10,7 @@ import EditorIcon from "ui/icons/Editor";
 import { DebouncedSearchInput } from "ui/shared/SearchBox/DebouncedSearchInput";
 
 import { useStore } from "../FlowEditor/lib/store";
-import { FlowCardView, FlowSummary } from "../FlowEditor/lib/store/editor";
+import type { FlowCardView, FlowSummary } from "../FlowEditor/lib/store/editor";
 import { AddFlow } from "./components/AddFlow";
 import Archive from "./components/Archive";
 import Flows from "./components/Flows";

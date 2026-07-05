@@ -2,7 +2,8 @@ import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
 
 import { BadgeChip, MenuButton } from "../styles";
-import NavMenuButton, { NavMenuButtonProps } from "./NavMenuButton";
+import type { NavMenuButtonProps } from "./NavMenuButton";
+import NavMenuButton from "./NavMenuButton";
 
 interface Props extends NavMenuButtonProps {
   compact: boolean;

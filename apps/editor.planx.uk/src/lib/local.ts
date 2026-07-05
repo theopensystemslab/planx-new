@@ -1,4 +1,4 @@
-import { Session } from "types";
+import type { Session } from "types";
 
 export const getLocalFlow = (id: string): Session | undefined => {
   console.info("getLocalFlow", id);

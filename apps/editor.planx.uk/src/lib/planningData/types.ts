@@ -1,10 +1,5 @@
-import {
-  type Feature,
-  FeatureCollection,
-  Geometry,
-  type MultiPolygon,
-  type Polygon,
-} from "geojson";
+import type { FeatureCollection, Geometry } from "geojson";
+import { type Feature, type MultiPolygon, type Polygon } from "geojson";
 
 export interface SearchEntityParams {
   latitude: number;

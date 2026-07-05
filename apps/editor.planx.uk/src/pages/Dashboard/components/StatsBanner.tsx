@@ -7,10 +7,8 @@ import { useTeamAnalyticsLink } from "hooks/analyticsLinks/useTeamAnalyticsLink"
 import { cardBoxShadow, FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import { useStore } from "../../FlowEditor/lib/store";
-import {
-  TeamDashboardStats,
-  useTeamDashboardStats,
-} from "./useTeamDashboardStats";
+import type { TeamDashboardStats } from "./useTeamDashboardStats";
+import { useTeamDashboardStats } from "./useTeamDashboardStats";
 
 const Root = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.default,

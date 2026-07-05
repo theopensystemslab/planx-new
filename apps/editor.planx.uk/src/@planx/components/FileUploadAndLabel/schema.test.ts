@@ -2,7 +2,8 @@ import type { FileWithPath } from "react-dropzone";
 
 import { Condition, Operator } from "../shared/RuleBuilder/types";
 import { mockFileList, mockFileTypes, mockRules } from "./mocks";
-import { type FileList, FileType, type FileUploadAndLabelSlot } from "./model";
+import type { FileType } from "./model";
+import { type FileList, type FileUploadAndLabelSlot } from "./model";
 import {
   fileTypeSchema,
   fileUploadAndLabelSchema,

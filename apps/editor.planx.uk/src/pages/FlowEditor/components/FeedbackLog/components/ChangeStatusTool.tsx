@@ -12,7 +12,7 @@ import * as React from "react";
 
 import { statusOptions } from "../feedbackFilterOptions";
 import { updateFeedbackStatus } from "../queries/updateFeedbackStatus";
-import { FeedbackStatus } from "../types";
+import type { FeedbackStatus } from "../types";
 import { FEEDBACK_COLOURS } from "./StatusChip";
 
 const StyledMenuItem = styled(MenuItem, {

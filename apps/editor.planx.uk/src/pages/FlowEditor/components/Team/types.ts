@@ -1,4 +1,4 @@
-import { Role, TeamRole, User } from "@opensystemslab/planx-core/types";
+import type { Role, TeamRole, User } from "@opensystemslab/planx-core/types";
 
 export const ROLE_LABELS = {
   platformAdmin: "Platform admin",

@@ -1,4 +1,4 @@
-import {
+import type {
   Team,
   TeamIntegrations,
   TeamSettings,
@@ -7,7 +7,7 @@ import {
 import { DEFAULT_PRIMARY_COLOR } from "theme";
 import type { StateCreator } from "zustand";
 
-import { SharedStore } from "./shared";
+import type { SharedStore } from "./shared";
 
 export type TeamSummary = Pick<Team, "id" | "name" | "slug"> & {
   settings: Pick<TeamSettings, "isTrial">;
@@ -57,7 +57,6 @@ export const teamStore: StateCreator<
       teamTheme: team.theme,
       teamDomain: team.domain,
     });
-
   },
 
   getTeam: () => ({

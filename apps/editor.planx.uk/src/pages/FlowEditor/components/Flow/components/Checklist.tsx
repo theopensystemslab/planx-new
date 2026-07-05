@@ -1,6 +1,6 @@
 import Help from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
-import {
+import type {
   ComponentType as TYPES,
   NodeTag,
 } from "@opensystemslab/planx-core/types";

@@ -1,4 +1,4 @@
-import { PublicProps } from "@planx/components/shared/types";
+import type { PublicProps } from "@planx/components/shared/types";
 import React from "react";
 
 import FlatChecklist from "../shared/BaseChecklist/Public/components/FlatChecklist";

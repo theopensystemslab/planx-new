@@ -7,7 +7,8 @@ import { capitalize, get } from "lodash";
 import React from "react";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 
-import Filters, { FilterKey, FilterValues } from "./Filter";
+import type Filters from "./Filter";
+import type { FilterKey, FilterValues } from "./Filter";
 import { StyledChip } from "./FilterStyles";
 
 interface FiltersColumnProps<T> {

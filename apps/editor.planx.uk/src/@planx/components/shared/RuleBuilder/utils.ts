@@ -1,6 +1,7 @@
-import { Store } from "pages/FlowEditor/lib/store";
+import type { Store } from "pages/FlowEditor/lib/store";
 
-import { Condition, Operator, Rule } from "./types";
+import type { Rule } from "./types";
+import { Condition, Operator } from "./types";
 
 export const isRuleMet = (passport: Store.Passport, rule: Rule): boolean => {
   // Simple (non-conditional) rules always evaluate to true

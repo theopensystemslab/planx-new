@@ -1,12 +1,9 @@
 import { richText } from "lib/yupExtensions";
 import { boolean, object, string } from "yup";
 
-import {
-  BaseNodeData,
-  baseNodeDataValidationSchema,
-  parseBaseNodeData,
-} from "../shared";
-import { FieldValidationSchema } from "../shared/Schema/model";
+import type { BaseNodeData } from "../shared";
+import { baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
+import type { FieldValidationSchema } from "../shared/Schema/model";
 
 export interface NumberInput extends BaseNodeData {
   title: string;

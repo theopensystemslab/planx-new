@@ -1,6 +1,6 @@
-import { Flag, FlagSet } from "@opensystemslab/planx-core/types";
+import type { Flag, FlagSet } from "@opensystemslab/planx-core/types";
 
-import { ALLOW_LIST } from "./provider";
+import type { ALLOW_LIST } from "./provider";
 
 /**
  * When analytics sessions are created localStorage is checked and if there's

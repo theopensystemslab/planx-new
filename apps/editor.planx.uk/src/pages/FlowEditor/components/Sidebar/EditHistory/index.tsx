@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
-import { HistoryItem } from "lib/api/publishFlow/types";
+import type { HistoryItem } from "lib/api/publishFlow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { EmptyState } from "ui/editor/EmptyState";
 import Permission from "ui/editor/Permission";

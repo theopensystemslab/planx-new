@@ -8,7 +8,8 @@ import { EmptyState } from "ui/editor/EmptyState";
 import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContainer";
 import SettingsSection from "ui/editor/SettingsSection";
 import { DataTable } from "ui/shared/DataTable/DataTable";
-import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
+import type { ColumnConfig } from "ui/shared/DataTable/types";
+import { ColumnFilterType } from "ui/shared/DataTable/types";
 import { dateFormatter } from "ui/shared/DataTable/utils";
 
 import { ChangeStatusTool } from "./components/ChangeStatusTool";
@@ -16,7 +17,7 @@ import { ExpandableHelpText } from "./components/ExpandableHelpText";
 import { StatusChip } from "./components/StatusChip";
 import { feedbackTypeOptions, statusOptions } from "./feedbackFilterOptions";
 import { updateEditorNotes } from "./queries/updateEditorNotes";
-import { Feedback, FeedbackLogProps } from "./types";
+import type { Feedback, FeedbackLogProps } from "./types";
 import { EmojiRating, feedbackTypeText, stripHTMLTags } from "./utils";
 
 export const FeedbackLog: React.FC<FeedbackLogProps> = ({

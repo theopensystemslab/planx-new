@@ -9,11 +9,11 @@ import Typography from "@mui/material/Typography";
 import { useNavigate } from "@tanstack/react-router";
 import React from "react";
 import Filters from "ui/editor/Filter/Filter";
+import type { SortableFields } from "ui/editor/SortControl/SortControl";
 import { SortControl } from "ui/editor/SortControl/SortControl";
-import { SortableFields } from "ui/editor/SortControl/SortControl";
 
-import { FlowSummary } from "../../FlowEditor/lib/store/editor";
-import { FlowCardView } from "../../FlowEditor/lib/store/editor";
+import type { FlowSummary } from "../../FlowEditor/lib/store/editor";
+import type { FlowCardView } from "../../FlowEditor/lib/store/editor";
 import FlowCard from "../components/FlowCard/";
 import { FlowTable } from "../components/FlowTable";
 import { ShowingServicesHeader } from "../components/ShowingServicesHeader";

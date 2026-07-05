@@ -1,5 +1,5 @@
 import { REQUIRED_GOVPAY_METADATA } from "../model";
-import { FormikGovPayMetadata } from "./GovPayMetadataSection";
+import type { FormikGovPayMetadata } from "./GovPayMetadataSection";
 
 /**
  * Helper method to handle Formik errors in arrays

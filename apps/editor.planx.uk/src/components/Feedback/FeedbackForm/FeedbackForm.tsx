@@ -10,7 +10,7 @@ import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 
-import { FeedbackFormInput, FormProps, UserFeedback } from "../types";
+import type { FeedbackFormInput, FormProps, UserFeedback } from "../types";
 
 const StyledForm = styled(Form)(({ theme }) => ({
   "& > *": contentFlowSpacing(theme),

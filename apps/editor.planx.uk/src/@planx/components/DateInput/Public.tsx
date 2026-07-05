@@ -1,14 +1,13 @@
 import Box from "@mui/material/Box";
+import type { DateInput, UserData } from "@planx/components/DateInput/model";
 import {
-  DateInput,
   dateInputValidationSchema,
   normalizeDate,
   paddedDate,
-  UserData,
 } from "@planx/components/DateInput/model";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
-import { PublicProps } from "@planx/components/shared/types";
+import type { PublicProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
 import React, { useEffect, useId } from "react";
 import DateInputComponent from "ui/shared/DateInput/DateInput";

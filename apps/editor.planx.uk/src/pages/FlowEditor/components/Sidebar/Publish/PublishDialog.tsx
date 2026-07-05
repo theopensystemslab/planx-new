@@ -14,7 +14,7 @@ import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import {
+import type {
   AlteredNode,
   HistoryItem,
   PublishFlowArgs,

@@ -1,18 +1,18 @@
-import { ApolloError } from "@apollo/client";
+import type { ApolloError } from "@apollo/client";
 import Link from "@mui/material/Link";
 import MenuItem from "@mui/material/MenuItem";
-import { SelectChangeEvent } from "@mui/material/Select";
+import type { SelectChangeEvent } from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
-import { Send } from "@planx/components/Send/model";
+import type { Send } from "@planx/components/Send/model";
 import { useFormikContext } from "formik";
-import { SubmissionEmailInput } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
+import type { SubmissionEmailInput } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 import React, { useEffect } from "react";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 
 import { useTeamSubmissionEmails } from "./hooks/useGetTeamSubmissionEmails";
-import { EmailSelectionProps } from "./types";
+import type { EmailSelectionProps } from "./types";
 
 interface EmailSectionProps {
   teamId: number;

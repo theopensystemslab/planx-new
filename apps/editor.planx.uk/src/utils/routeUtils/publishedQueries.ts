@@ -1,7 +1,7 @@
 import { notFound } from "@tanstack/react-router";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
-import { Flow, GlobalSettings } from "types";
+import type { Flow, GlobalSettings } from "types";
 
 export interface PublishedFlow extends Flow {
   publishedFlows: {

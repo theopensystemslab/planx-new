@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 
 import BaseQuestionComponent from "../shared/BaseQuestion/Public";
-import { PublicProps } from "../shared/types";
-import { QuestionWithOptions } from "./model";
+import type { PublicProps } from "../shared/types";
+import type { QuestionWithOptions } from "./model";
 
 const QuestionComponent: React.FC<PublicProps<QuestionWithOptions>> = (
   props,

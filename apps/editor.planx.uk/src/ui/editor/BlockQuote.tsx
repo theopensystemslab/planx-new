@@ -1,6 +1,7 @@
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
+import React from "react";
 
 const StyledBlockQuote = styled("blockquote")(({ theme }) => ({
   display: "block",

@@ -2,11 +2,11 @@ import PreviewIcon from "@mui/icons-material/Preview";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import { GridCellParams } from "@mui/x-data-grid";
+import type { GridCellParams } from "@mui/x-data-grid";
 import React, { useState } from "react";
 import { DataTableModal } from "ui/shared/DataTable/components/DataTableModal";
 
-import { Submission } from "../types";
+import type { Submission } from "../types";
 import { FormattedResponse } from "./FormattedResponse";
 
 export const OpenResponseButton = (props: GridCellParams) => {

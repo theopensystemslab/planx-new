@@ -1,5 +1,5 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { Meta } from "@storybook/tanstack-react";
+import type { Meta } from "@storybook/tanstack-react";
 
 import Wrapper from "../fixtures/Wrapper";
 import Editor from "./Editor";

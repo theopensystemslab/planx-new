@@ -1,6 +1,6 @@
-import { Schema } from "@planx/components/shared/Schema/model";
+import type { Schema } from "@planx/components/shared/Schema/model";
 
-import { Props } from "../../Public";
+import type { Props } from "../../Public";
 
 export const MaxOneTest: Schema = {
   type: "Parking spaces",

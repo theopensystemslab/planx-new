@@ -1,4 +1,4 @@
-import { TeamMember } from "../types";
+import type { TeamMember } from "../types";
 
 const firstNames = [
   "Alice",

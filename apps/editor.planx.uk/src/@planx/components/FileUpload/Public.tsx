@@ -6,9 +6,10 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { PASSPORT_REQUESTED_FILES_KEY } from "../FileUploadAndLabel/model";
 import { PrivateFileUpload } from "../shared/PrivateFileUpload/PrivateFileUpload";
-import { PublicProps } from "../shared/types";
+import type { PublicProps } from "../shared/types";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
-import { FileUpload, FileUploadSlot, slotsSchema } from "./model";
+import type { FileUpload, FileUploadSlot } from "./model";
+import { slotsSchema } from "./model";
 
 type Props = PublicProps<FileUpload>;
 

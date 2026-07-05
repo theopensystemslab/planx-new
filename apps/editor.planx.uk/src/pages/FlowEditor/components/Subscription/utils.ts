@@ -1,7 +1,7 @@
 import { formattedPriceWithCurrencySymbol } from "@planx/components/Pay/model";
 import sumBy from "lodash/sumBy";
 
-import { ServiceCharge } from "./types";
+import type { ServiceCharge } from "./types";
 
 export const sumServiceCharges = (serviceCharges: ServiceCharge[]) => {
   const sum = sumBy(serviceCharges, "amount") || 0;

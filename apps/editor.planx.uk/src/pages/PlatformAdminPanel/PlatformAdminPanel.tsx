@@ -1,11 +1,13 @@
 import Typography from "@mui/material/Typography";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
-import { AdminPanelData, type LiveFlow } from "types";
+import type { AdminPanelData } from "types";
+import { type LiveFlow } from "types";
 import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContainer";
 import SettingsSection from "ui/editor/SettingsSection";
 import { DataTable } from "ui/shared/DataTable/DataTable";
-import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
+import type { ColumnConfig } from "ui/shared/DataTable/types";
+import { ColumnFilterType } from "ui/shared/DataTable/types";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import {

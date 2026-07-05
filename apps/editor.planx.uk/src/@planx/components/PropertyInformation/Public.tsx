@@ -6,12 +6,12 @@ import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHead
 import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
 import type { PublicProps } from "@planx/components/shared/types";
 import { GraphError } from "components/Error/GraphError";
-import { Feature } from "geojson";
+import type { Feature } from "geojson";
 import { type BLPUCode, useBLPUCodes } from "hooks/data/useBLPUCodes";
 import find from "lodash/find";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { HandleSubmit } from "pages/Preview/Node";
+import type { HandleSubmit } from "pages/Preview/Node";
 import React, { useCallback } from "react";
 
 import type { SiteAddress } from "../FindProperty/model";

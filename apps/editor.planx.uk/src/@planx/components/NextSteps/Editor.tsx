@@ -7,12 +7,12 @@ import {
   parseNextSteps,
   validationSchema,
 } from "@planx/components/NextSteps/model";
-import { EditorProps } from "@planx/components/shared/types";
+import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
-import React, { ChangeEvent } from "react";
-import ListManager, {
-  EditorProps as ListManagerEditorProps,
-} from "ui/editor/ListManager/ListManager";
+import type { ChangeEvent } from "react";
+import React from "react";
+import type { EditorProps as ListManagerEditorProps } from "ui/editor/ListManager/ListManager";
+import ListManager from "ui/editor/ListManager/ListManager";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";

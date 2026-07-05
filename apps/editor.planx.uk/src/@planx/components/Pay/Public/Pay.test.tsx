@@ -3,15 +3,18 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { act, screen } from "@testing-library/react";
 import { logger } from "airbrake";
 import ErrorFallback from "components/Error/ErrorFallback";
-import { FullStore, Store, useStore } from "pages/FlowEditor/lib/store";
+import type { FullStore, Store } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { setup } from "test/utils";
-import { ApplicationPath, Breadcrumbs } from "types";
+import type { Breadcrumbs } from "types";
+import { ApplicationPath } from "types";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import Confirm, { Props } from "./Confirm";
+import type { Props } from "./Confirm";
+import Confirm from "./Confirm";
 import Pay from "./Pay";
 
 // Mock TanStack Router hooks

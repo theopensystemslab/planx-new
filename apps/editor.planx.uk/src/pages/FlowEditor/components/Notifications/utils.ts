@@ -1,4 +1,4 @@
-import { Notification } from "./types";
+import type { Notification } from "./types";
 
 /**
  * Splits unresolved notifications into current and superseded.

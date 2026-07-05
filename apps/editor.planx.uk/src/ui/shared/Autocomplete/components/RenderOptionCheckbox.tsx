@@ -1,6 +1,7 @@
-import { AutocompleteRenderOptionState } from "@mui/material/Autocomplete";
+import type { AutocompleteRenderOptionState } from "@mui/material/Autocomplete";
 import ListItem from "@mui/material/ListItem";
-import React, { ComponentProps } from "react";
+import type { ComponentProps } from "react";
+import React from "react";
 
 import { CustomCheckbox } from "../styles";
 

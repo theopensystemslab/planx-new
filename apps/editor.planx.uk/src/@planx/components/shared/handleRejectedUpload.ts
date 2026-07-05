@@ -1,4 +1,4 @@
-import { FileRejection } from "react-dropzone";
+import type { FileRejection } from "react-dropzone";
 
 /**
  * Shows an alert to the user with errors that are probably going to

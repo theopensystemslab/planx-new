@@ -3,7 +3,8 @@ import {
   clickContinue,
   visitedNodes,
 } from "pages/FlowEditor/lib/__tests__/utils";
-import { Store, useStore } from "pages/FlowEditor/lib/store";
+import type { Store } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 
 const { getState, setState } = useStore;
 const { upcomingCardIds, resetPreview, autoAnswerableOptions } = getState();

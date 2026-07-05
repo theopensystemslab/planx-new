@@ -1,7 +1,7 @@
-import { Relationships } from "@planx/graph";
-import { ContextMenuSource } from "pages/FlowEditor/components/Flow/components/ContextMenu";
+import type { Relationships } from "@planx/graph";
+import type { ContextMenuSource } from "pages/FlowEditor/components/Flow/components/ContextMenu";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { MouseEventHandler } from "react";
+import type { MouseEventHandler } from "react";
 
 interface Props {
   relationships: Relationships;

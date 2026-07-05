@@ -1,4 +1,5 @@
-import { debounce, DebouncedFunc } from "lodash";
+import type { DebouncedFunc } from "lodash";
+import { debounce } from "lodash";
 import { useEffect, useRef, useState } from "react";
 
 import { SearchInput } from "./SearchInput";

@@ -1,4 +1,4 @@
-import { Meta } from "@storybook/tanstack-react";
+import type { Meta } from "@storybook/tanstack-react";
 
 import { DEFAULT_REVIEW_DISCLAIMER } from "./model";
 import {

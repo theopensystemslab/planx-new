@@ -1,7 +1,8 @@
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import Box from "@mui/material/Box";
-import { Palette, useTheme } from "@mui/material/styles";
-import { NodeTag, Role } from "@opensystemslab/planx-core/types";
+import type { Palette } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
+import type { NodeTag, Role } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";

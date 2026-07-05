@@ -1,11 +1,8 @@
 import { richText } from "lib/yupExtensions";
 import { boolean, object, string } from "yup";
 
-import {
-  BaseNodeData,
-  baseNodeDataValidationSchema,
-  parseBaseNodeData,
-} from "../shared";
+import type { BaseNodeData } from "../shared";
+import { baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
 
 export interface PropertyInformation extends BaseNodeData {
   title: string;

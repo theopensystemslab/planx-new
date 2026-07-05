@@ -6,7 +6,8 @@ import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedL
 import React from "react";
 
 import { useStore } from "../../FlowEditor/lib/store";
-import { FlowSummary, useUnreadFeedback } from "./useUnreadFeedback";
+import type { FlowSummary } from "./useUnreadFeedback";
+import { useUnreadFeedback } from "./useUnreadFeedback";
 
 interface FeedbackWidgetProps {
   flows: FlowSummary[];

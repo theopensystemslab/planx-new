@@ -3,7 +3,7 @@ import { SLUGS } from "pages/FlowEditor/data/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { calculateExtraProps } from "utils/routeUtils/queryUtils";
 
-import { NodeSearchParams } from "./route";
+import type { NodeSearchParams } from "./route";
 
 export async function loader({
   team,

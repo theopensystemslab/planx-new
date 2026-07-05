@@ -1,5 +1,6 @@
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutlined";
-import ButtonBase, { ButtonBaseProps } from "@mui/material/ButtonBase";
+import type { ButtonBaseProps } from "@mui/material/ButtonBase";
+import ButtonBase from "@mui/material/ButtonBase";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";

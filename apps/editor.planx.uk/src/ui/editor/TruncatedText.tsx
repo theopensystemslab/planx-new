@@ -1,5 +1,6 @@
 import { styled } from "@mui/material/styles";
-import Typography, { TypographyProps } from "@mui/material/Typography";
+import type { TypographyProps } from "@mui/material/Typography";
+import Typography from "@mui/material/Typography";
 
 interface TruncatedTextProps extends TypographyProps {
   lineClamp?: number;

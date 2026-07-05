@@ -1,4 +1,4 @@
-import { Team } from "@opensystemslab/planx-core/types";
+import type { Team } from "@opensystemslab/planx-core/types";
 import * as TanStackRouter from "@tanstack/react-router";
 import { act, screen } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";

@@ -1,6 +1,6 @@
 import { boolean, object, type SchemaOf } from "yup";
 
-import { VisibilityFormValues } from "./types";
+import type { VisibilityFormValues } from "./types";
 
 export const validationSchema: SchemaOf<VisibilityFormValues> = object({
   canCreateFromCopy: boolean().required(),

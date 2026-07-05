@@ -8,7 +8,7 @@ import sumBy from "lodash/sumBy";
 import { EmptyState } from "ui/editor/EmptyState";
 import SettingsSection from "ui/editor/SettingsSection";
 
-import { SubscriptionProps } from "../types";
+import type { SubscriptionProps } from "../types";
 import {
   getUKFiscalYear,
   getUKFiscalYearQuarter,

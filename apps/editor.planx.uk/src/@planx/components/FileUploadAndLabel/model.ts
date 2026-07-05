@@ -1,11 +1,14 @@
 import cloneDeep from "lodash/cloneDeep";
 import sortBy from "lodash/sortBy";
-import { Store, useStore } from "pages/FlowEditor/lib/store";
+import type { Store } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import type { FileWithPath } from "react-dropzone";
 
-import { FileUploadSlot } from "../FileUpload/model";
-import { BaseNodeData, MoreInformation, parseBaseNodeData } from "../shared";
-import { Condition, Rule } from "../shared/RuleBuilder/types";
+import type { FileUploadSlot } from "../FileUpload/model";
+import type { BaseNodeData, MoreInformation } from "../shared";
+import { parseBaseNodeData } from "../shared";
+import type { Rule } from "../shared/RuleBuilder/types";
+import { Condition } from "../shared/RuleBuilder/types";
 import { isRuleMet } from "../shared/RuleBuilder/utils";
 
 export const PASSPORT_REQUESTED_FILES_KEY = "_requestedFiles" as const;

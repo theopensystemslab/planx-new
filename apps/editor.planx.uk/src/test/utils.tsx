@@ -15,7 +15,8 @@ import {
   Outlet,
   RouterProvider,
 } from "@tanstack/react-router";
-import { render, RenderResult, waitFor } from "@testing-library/react";
+import type { RenderResult } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import type { UserEvent } from "@testing-library/user-event";
 import userEvent from "@testing-library/user-event";
 import { ToastContextProvider } from "contexts/ToastContext";

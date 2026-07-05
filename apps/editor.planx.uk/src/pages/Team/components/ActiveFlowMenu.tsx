@@ -10,7 +10,8 @@ import { CopyDialog } from "./CopyDialog";
 import { useArchiveFlow } from "./hooks/useArchiveFlow";
 import { MoveDialog } from "./MoveDialog";
 import { RenameDialog } from "./RenameDialog";
-import { FlowMenuProps, StyledSimpleMenu } from "./StyledSimpleMenu";
+import type { FlowMenuProps } from "./StyledSimpleMenu";
+import { StyledSimpleMenu } from "./StyledSimpleMenu";
 
 const ActiveFlowMenu: React.FC<FlowMenuProps> = ({
   flow,

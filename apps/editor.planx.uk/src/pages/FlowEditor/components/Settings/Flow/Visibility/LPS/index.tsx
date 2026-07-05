@@ -11,7 +11,7 @@ import CategorySelection from "./components/CategorySelection";
 import ToggleLPS from "./components/ToggleLPS";
 import { GET_LPS_LISTING, UPDATE_LPS_LISTING } from "./queries";
 import { defaultValues, validationSchema } from "./schema";
-import {
+import type {
   GetLPSListingData,
   LPSListingFormValues,
   UpdateLPSListingVariables,

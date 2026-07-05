@@ -1,13 +1,10 @@
-import { Address } from "@opensystemslab/planx-core/types";
+import type { Address } from "@opensystemslab/planx-core/types";
 import { richText } from "lib/yupExtensions";
 import type { SchemaOf } from "yup";
 import { object, string } from "yup";
 
-import {
-  BaseNodeData,
-  baseNodeDataValidationSchema,
-  parseBaseNodeData,
-} from "../shared";
+import type { BaseNodeData } from "../shared";
+import { baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
 
 export const addressValidationSchema = (): SchemaOf<Address> =>
   object({

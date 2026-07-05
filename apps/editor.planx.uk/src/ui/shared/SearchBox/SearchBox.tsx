@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { FuseOptionKey } from "fuse.js";
+import type { FuseOptionKey } from "fuse.js";
 import { useSearch } from "hooks/useSearch";
 import { debounce } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";

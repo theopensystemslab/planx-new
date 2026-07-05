@@ -8,7 +8,7 @@ import type { Content } from "@planx/components/Content/model";
 import Card, {
   contentFlowSpacing,
 } from "@planx/components/shared/Preview/Card";
-import { PublicProps } from "@planx/components/shared/types";
+import type { PublicProps } from "@planx/components/shared/types";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";

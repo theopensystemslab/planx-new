@@ -2,9 +2,9 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { Components } from "react-virtuoso";
+import type { Components } from "react-virtuoso";
 
-import { Context, Data } from "..";
+import type { Context, Data } from "..";
 import { ExternalPortals } from "./ExternalPortals";
 
 export const ExternalPortalList: Components<Data, Context>["Footer"] = ({

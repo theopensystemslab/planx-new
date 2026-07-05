@@ -2,7 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
 import { Notifications } from "pages/FlowEditor/components/Notifications/Notifications";
-import { Notification } from "pages/FlowEditor/components/Notifications/types";
+import type { Notification } from "pages/FlowEditor/components/Notifications/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 export const Route = createFileRoute("/_authenticated/app/$team/notifications")(

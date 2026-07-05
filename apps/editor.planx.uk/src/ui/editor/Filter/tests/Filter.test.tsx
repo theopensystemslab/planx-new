@@ -7,7 +7,8 @@ import { describe, vi } from "vitest";
 import { axe } from "vitest-axe";
 
 import Filters from "../Filter";
-import { mockFilterOptions, MockRecordType } from "./mocks";
+import type { MockRecordType } from "./mocks";
+import { mockFilterOptions } from "./mocks";
 
 // Create a stateful mock for URL search params
 let mockSearchParams: Record<string, string | undefined> = {};

@@ -1,4 +1,4 @@
-import { AutocompleteProps } from "@mui/material/Autocomplete";
+import type { AutocompleteProps } from "@mui/material/Autocomplete";
 
 export interface Flow {
   id: string;

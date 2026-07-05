@@ -1,4 +1,4 @@
-import { Breadcrumbs } from "@opensystemslab/planx-core/types";
+import type { Breadcrumbs } from "@opensystemslab/planx-core/types";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
 import { act, screen, waitFor } from "@testing-library/react";
 import { uploadPrivateFile } from "lib/api/fileUpload/requests";

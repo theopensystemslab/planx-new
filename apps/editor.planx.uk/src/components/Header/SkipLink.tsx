@@ -1,5 +1,6 @@
 import { styled } from "@mui/material/styles";
-import React, { SyntheticEvent } from "react";
+import type { SyntheticEvent } from "react";
+import React from "react";
 import { focusStyle } from "theme";
 
 import { HEADER_HEIGHT_PUBLIC } from "./Header";

@@ -15,10 +15,10 @@ import {
   flatFlags,
 } from "@opensystemslab/planx-core/types";
 import { getNoResultFlag } from "@opensystemslab/planx-core/types";
-import { Contact } from "@planx/components/ContactInput/model";
-import { FileList } from "@planx/components/FileUploadAndLabel/model";
+import type { Contact } from "@planx/components/ContactInput/model";
+import type { FileList } from "@planx/components/FileUploadAndLabel/model";
 import { DEFAULT_FN as planningConstraintsFn } from "@planx/components/PlanningConstraints/model";
-import { SetValue } from "@planx/components/SetValue/model";
+import type { SetValue } from "@planx/components/SetValue/model";
 import { handleSetValue } from "@planx/components/SetValue/utils";
 import { sortIdsDepthFirst } from "@planx/graph";
 import { logger } from "airbrake";
@@ -33,7 +33,7 @@ import type { StateCreator } from "zustand";
 import type { Session } from "../../../../types";
 import { ApplicationPath } from "../../../../types";
 import type { Store } from ".";
-import { NavigationStore } from "./navigation";
+import type { NavigationStore } from "./navigation";
 import type { SharedStore } from "./shared";
 
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Question];

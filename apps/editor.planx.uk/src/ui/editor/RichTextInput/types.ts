@@ -1,5 +1,5 @@
 import type { InputBaseProps } from "@mui/material/InputBase";
-import { ChangeEvent } from "react";
+import type { ChangeEvent } from "react";
 
 export interface MentionListProps {
   items: Placeholder[];
