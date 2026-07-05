@@ -3,9 +3,11 @@ import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import RouteLoadingIndicator from "components/RouteLoadingIndicator";
 import { startNewRecentFlowsJourney } from "pages/FlowEditor/components/RecentFlows/RecentFlowsContext";
 import Team from "pages/Team";
-import type { GetAnyFlowsQuery, GetAnyFlowsVars } from "pages/Team/queries";
+import type {
+  GetAnyFlowsQuery,
+  GetAnyFlowsVars,
+} from "pages/Team/queries";
 import { GET_FLOWS } from "pages/Team/queries";
-import React from "react";
 import { z } from "zod";
 
 import { client } from "../../../../lib/graphql";
@@ -14,8 +16,12 @@ export const teamSearchSchema = z.object({
   sort: fallback(
     z.enum(["last-edited", "last-published", "name"]),
     "last-edited",
-  ).default("last-edited"),
-  sortDirection: fallback(z.enum(["asc", "desc"]), "desc").default("desc"),
+  )
+    .default("last-edited")
+    .optional(),
+  sortDirection: fallback(z.enum(["asc", "desc"]), "desc")
+    .default("desc")
+    .optional(),
   search: z.string().optional(),
   "service-status": z.enum(["online", "offline"]).optional(),
   "flow-type": z
