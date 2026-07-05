@@ -1,8 +1,9 @@
-import React from "react";
-import type { Application } from "./hooks/useFetchApplications";
-import { useDeleteApplication } from "./hooks/useDeleteApplication";
 import { formatDate } from "@lib/date";
 import { $applicationId } from "@stores/applicationId";
+import React from "react";
+
+import { useDeleteApplication } from "./hooks/useDeleteApplication";
+import type { Application } from "./hooks/useFetchApplications";
 import { StatusBadge } from "./StatusBadge";
 
 const ProgressText: React.FC<Application> = (application) => {
@@ -17,9 +18,7 @@ const ProgressText: React.FC<Application> = (application) => {
     }
   })();
 
-  return (
-    <StatusBadge status={application.status} date={date} />
-  );
+  return <StatusBadge status={application.status} date={date} />;
 };
 
 const ActionText: React.FC<Application> = (application) => {
@@ -28,29 +27,36 @@ const ActionText: React.FC<Application> = (application) => {
       case "draft":
         return (
           <>
-            You have until <strong className="font-semibold">{formatDate(application.expiresAt)}</strong> to complete this application
+            You have until{" "}
+            <strong className="font-semibold">
+              {formatDate(application.expiresAt)}
+            </strong>{" "}
+            to complete this application
           </>
         );
       case "awaitingPayment":
         return (
           <>
-            This application must be paid by <strong className="font-semibold">{formatDate(application.expiresAt)}</strong>
+            This application must be paid by{" "}
+            <strong className="font-semibold">
+              {formatDate(application.expiresAt)}
+            </strong>
           </>
         );
       case "submitted":
         return (
           <>
-            You have until <strong className="font-semibold">{formatDate(application.expiresAt)}</strong> to download application data
+            You have until{" "}
+            <strong className="font-semibold">
+              {formatDate(application.expiresAt)}
+            </strong>{" "}
+            to download application data
           </>
         );
     }
   })();
 
-  return (
-    <span className="text-body-md mb-0">
-      {actionText}
-    </span>
-  );
+  return <span className="text-body-md mb-0">{actionText}</span>;
 };
 
 const DeleteButton: React.FC<Application> = ({ id }) => {
@@ -61,7 +67,7 @@ const DeleteButton: React.FC<Application> = ({ id }) => {
       deleteApplication(id);
     }
   };
-  
+
   return (
     <button
       onClick={handleDelete}
@@ -69,19 +75,23 @@ const DeleteButton: React.FC<Application> = ({ id }) => {
     >
       Delete
     </button>
-  )
-}
+  );
+};
 
 const ViewApplicationButton: React.FC<Application> = (application) => {
   const handleClick = () => $applicationId.set(application.id);
-  const url = `applications/${application.team.slug}`
+  const url = `applications/${application.team.slug}`;
 
   return (
-    <a href={url} className="button button--primary button--small button-focus-style paragraph-link--external" onClick={handleClick}>
+    <a
+      href={url}
+      className="button button--primary button--small button-focus-style paragraph-link--external"
+      onClick={handleClick}
+    >
       View application
     </a>
-  )
-}
+  );
+};
 
 const ActionButtons: React.FC<Application> = (application) => {
   const buttons = (() => {
@@ -89,7 +99,7 @@ const ActionButtons: React.FC<Application> = (application) => {
       case "draft":
         return (
           <>
-            <DeleteButton {...application}/>
+            <DeleteButton {...application} />
             <a
               href={application.serviceUrl}
               target="_blank"
@@ -98,11 +108,11 @@ const ActionButtons: React.FC<Application> = (application) => {
               Resume
             </a>
           </>
-        )
+        );
       case "awaitingPayment":
         return (
           <>
-            <DeleteButton {...application}/>
+            <DeleteButton {...application} />
             <a
               href={application.paymentUrl}
               target="_blank"
@@ -111,26 +121,23 @@ const ActionButtons: React.FC<Application> = (application) => {
               Go to payment URL
             </a>
           </>
-        )
+        );
       case "submitted":
-       return <ViewApplicationButton {...application}/>
+        return <ViewApplicationButton {...application} />;
     }
   })();
 
-  return (
-    <div className="flex gap-2 shrink-0">
-      {buttons}
-    </div>
-  );
+  return <div className="flex gap-2 shrink-0">{buttons}</div>;
 };
 
-export const ApplicationCard: React.FC<Application> = (application) => {  
-
+export const ApplicationCard: React.FC<Application> = (application) => {
   return (
     <li className={`rounded overflow-hidden bg-bg-light`}>
       <ProgressText {...application} />
       <div className="clamp-[px,4,6] clamp-[py,3,5]">
-        <h3 className="text-heading-sm">{application.address || "[Address not yet declared]"}</h3>
+        <h3 className="text-heading-sm">
+          {application.address || "[Address not yet declared]"}
+        </h3>
         <div className="flex flex-col md:flex-row md:justify-start md:gap-2 md:items-center">
           <span className="text-body-lg mb-0">{application.team.name}</span>
           <span className="hidden md:inline">•</span>

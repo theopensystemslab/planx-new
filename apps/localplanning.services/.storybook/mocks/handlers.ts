@@ -1,7 +1,8 @@
-import { http, HttpResponse, delay } from "msw";
+import { delay, http, HttpResponse } from "msw";
+
 import type {
-  DraftApplication,
   AwaitingPaymentApplication,
+  DraftApplication,
   SubmittedApplication,
 } from "../../src/components/applications/hooks/useFetchApplications";
 
@@ -81,18 +82,18 @@ export const loadingHandlers = [
 
 export const errorInvalidLinkHandlers = [
   http.post("*/lps/applications", () =>
-    HttpResponse.json({ error: "LINK_INVALID" }, { status: 401 })
+    HttpResponse.json({ error: "LINK_INVALID" }, { status: 401 }),
   ),
 ];
 
 export const errorExpiredLinkHandlers = [
   http.post("*/lps/applications", () =>
-    HttpResponse.json({ error: "LINK_EXPIRED" }, { status: 401 })
+    HttpResponse.json({ error: "LINK_EXPIRED" }, { status: 401 }),
   ),
 ];
 
 export const errorConsumedLinkHandlers = [
   http.post("*/lps/applications", () =>
-    HttpResponse.json({ error: "LINK_CONSUMED" }, { status: 401 })
+    HttpResponse.json({ error: "LINK_CONSUMED" }, { status: 401 }),
   ),
 ];

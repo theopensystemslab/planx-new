@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import { CustomCheckbox } from "@components/CustomCheckbox.tsx";
+import React, { useState } from "react";
 
 type FilterState = {
   search: string;
@@ -19,7 +19,10 @@ type Props = {
   statusCounts: StatusCounts;
 };
 
-export const ApplicationFilters: React.FC<Props> = ({ onFilterChange, statusCounts }) => {
+export const ApplicationFilters: React.FC<Props> = ({
+  onFilterChange,
+  statusCounts,
+}) => {
   const [filters, setFilters] = useState<FilterState>({
     search: "",
     draft: true,
@@ -43,7 +46,9 @@ export const ApplicationFilters: React.FC<Props> = ({ onFilterChange, statusCoun
     onFilterChange(newFilters);
   };
 
-  const handleFilterChange = (filterType: keyof Omit<FilterState, "search">) => {
+  const handleFilterChange = (
+    filterType: keyof Omit<FilterState, "search">,
+  ) => {
     const newFilters = {
       ...filters,
       [filterType]: !filters[filterType],
@@ -67,9 +72,21 @@ export const ApplicationFilters: React.FC<Props> = ({ onFilterChange, statusCoun
   };
 
   const filterOptions = [
-    { key: "draft" as const, label: "Draft applications", count: statusCounts.draft },
-    { key: "awaitingPayment" as const, label: "Awaiting payment", count: statusCounts.awaitingPayment },
-    { key: "submitted" as const, label: "Submitted applications", count: statusCounts.submitted },
+    {
+      key: "draft" as const,
+      label: "Draft applications",
+      count: statusCounts.draft,
+    },
+    {
+      key: "awaitingPayment" as const,
+      label: "Awaiting payment",
+      count: statusCounts.awaitingPayment,
+    },
+    {
+      key: "submitted" as const,
+      label: "Submitted applications",
+      count: statusCounts.submitted,
+    },
   ];
 
   const isActive = isFiltersActive();
@@ -77,10 +94,15 @@ export const ApplicationFilters: React.FC<Props> = ({ onFilterChange, statusCoun
   return (
     <div className="bg-bg-light clamp-[p,4,6] rounded">
       <div className="mb-6">
-        <label htmlFor="search-applications" className="text-heading-xs block mb-0.5">
+        <label
+          htmlFor="search-applications"
+          className="text-heading-xs block mb-0.5"
+        >
           Search applications
         </label>
-        <legend className="text-text-secondary text-body-md">by address, service or local planning authority</legend>
+        <legend className="text-text-secondary text-body-md">
+          by address, service or local planning authority
+        </legend>
         <input
           type="text"
           id="search-applications"
@@ -108,9 +130,7 @@ export const ApplicationFilters: React.FC<Props> = ({ onFilterChange, statusCoun
         onClick={handleResetFilters}
         disabled={!isActive}
         className={`button button--secondary button--small button-focus-style ${
-          isActive 
-            ? "" 
-            : "button--disabled"
+          isActive ? "" : "button--disabled"
         }`}
       >
         Reset filters

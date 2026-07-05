@@ -19,9 +19,10 @@
   "lint-staged": {
     "apps/editor.planx.uk/src/**/*.{js,jsx,ts,tsx}": "eslint --fix --flag v10_config_lookup_from_file",
     "apps/api.planx.uk/**/*.{js,ts}": "eslint --fix --flag v10_config_lookup_from_file",
-    "apps/hasura.planx.uk/tests/**/*.{js,ts}": "eslint --fix --flag v10_config_lookup_from_file",
+    "apps/hasura.planx.uk/tests/**/*.js": "eslint --fix --flag v10_config_lookup_from_file",
+    "apps/tests/**/*.{js,ts}": "eslint --fix --flag v10_config_lookup_from_file",
     "e2e/tests/**/*.{js,ts}": "eslint --fix --flag v10_config_lookup_from_file",
-    "{apps/editor.planx.uk/src,apps/api.planx.uk,apps/hasura.planx.uk/tests,e2e/tests}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}": "prettier --write"
+    "{apps/editor.planx.uk/src,apps/api.planx.uk,apps/localplanning.services,e2e/tests,apps/hasura.planx.uk/tests}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}": "prettier --write"
   },
   "devDependencies": {
     "eslint": "catalog:",

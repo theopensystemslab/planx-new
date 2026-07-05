@@ -1,8 +1,8 @@
 import { queryClient } from "@lib/queryClient";
-import { useQuery } from "@tanstack/react-query";
-import { PUBLIC_PLANX_REST_API_URL } from "astro:env/client";
 import { useStore } from "@nanostores/react";
 import { $session } from "@stores/session";
+import { useQuery } from "@tanstack/react-query";
+import { PUBLIC_PLANX_REST_API_URL } from "astro:env/client";
 
 interface BaseApplication {
   id: string;
@@ -20,54 +20,67 @@ interface BaseApplication {
 }
 
 export type DraftApplication = BaseApplication & {
-  status: "draft",
+  status: "draft";
   serviceUrl: string;
 };
 
 export type AwaitingPaymentApplication = BaseApplication & {
-  status: "awaitingPayment"
+  status: "awaitingPayment";
   paymentUrl: string;
 };
 
 export type SubmittedApplication = BaseApplication & {
-  status: "submitted"
+  status: "submitted";
   submittedAt: string;
 };
 
-export type Application = DraftApplication | AwaitingPaymentApplication | SubmittedApplication;
+export type Application =
+  | DraftApplication
+  | AwaitingPaymentApplication
+  | SubmittedApplication;
 
 export type ApplicationsResponse = Application[];
 
-export const useFetchApplications = () => {  
+export const useFetchApplications = () => {
   const { token, email } = useStore($session);
 
-  const { data: applications = [], isLoading, error } = useQuery<ApplicationsResponse>({
-    queryKey: ["fetchApplications"],
-    queryFn: async () => {
-      const response = await fetch(`${PUBLIC_PLANX_REST_API_URL}/lps/applications`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, email })
-      });
+  const {
+    data: applications = [],
+    isLoading,
+    error,
+  } = useQuery<ApplicationsResponse>(
+    {
+      queryKey: ["fetchApplications", token, email],
+      queryFn: async () => {
+        const response = await fetch(
+          `${PUBLIC_PLANX_REST_API_URL}/lps/applications`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token, email }),
+          },
+        );
 
-      if (!response.ok) {
-        const { error = "UNHANDLED_ERROR" } = await response.json();
-        throw new Error(error);
-      }
+        if (!response.ok) {
+          const { error = "UNHANDLED_ERROR" } = await response.json();
+          throw new Error(error);
+        }
 
-      const applications = await response.json();
-      return applications;
+        const applications = await response.json();
+        return applications;
+      },
+      // Only run query once store values are populated
+      enabled: Boolean(token && email),
+      // Retain cache of applications for whilst tab remains open
+      // Data could only be refetch with a new magic link
+      staleTime: Infinity,
+      gcTime: Infinity,
+      // Do not allow retries - this is a single use endpoint
+      // Failures on retry may return a false error message, not matching the original reason for failure
+      retry: false,
     },
-    // Only run query once store values are populated
-    enabled: Boolean(token && email),
-    // Retain cache of applications for whilst tab remains open
-    // Data could only be refetch with a new magic link
-    staleTime: Infinity,
-    gcTime: Infinity,
-    // Do not allow retries - this is a single use endpoint
-    // Failures on retry may return a false error message, not matching the original reason for failure
-    retry: false,
-  }, queryClient);
+    queryClient,
+  );
 
   return {
     applications,

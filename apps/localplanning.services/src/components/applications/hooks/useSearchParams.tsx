@@ -7,4 +7,4 @@ export const useSearchParams = () => {
   const email = urlParams.get("email");
 
   return { token, email };
-}
+};

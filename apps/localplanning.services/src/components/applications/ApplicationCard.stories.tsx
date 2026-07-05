@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { ApplicationCard } from "./ApplicationCard";
+
 import {
-  mockDraft,
   mockAwaitingPayment,
+  mockDraft,
   mockSubmitted,
 } from "../../../.storybook/mocks/handlers";
+import { ApplicationCard } from "./ApplicationCard";
 
 const meta: Meta = {
   title: "Molecules/ApplicationCard",
@@ -34,5 +35,7 @@ export const Submitted: StoryObj = {
 };
 
 export const NoAddress: StoryObj = {
-  render: () => <ApplicationCard {...mockDraft} id="draft-no-address" address={null} />,
+  render: () => (
+    <ApplicationCard {...mockDraft} id="draft-no-address" address={null} />
+  ),
 };

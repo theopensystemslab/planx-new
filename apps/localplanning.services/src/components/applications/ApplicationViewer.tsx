@@ -1,6 +1,7 @@
-import { useHtmlDownload } from "./hooks/useHTMLDownload";
-import styles from "./ApplicationViewer.module.css";
 import { useEffect } from "react";
+
+import styles from "./ApplicationViewer.module.css";
+import { useHtmlDownload } from "./hooks/useHTMLDownload";
 export const ApplicationViewer = () => {
   const { data: htmlContent, isPending, error, refetch } = useHtmlDownload();
 

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "storybook/test";
+
 import { CustomCheckbox } from "./CustomCheckbox";
 
 const meta = {

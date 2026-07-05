@@ -29,19 +29,19 @@ export const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
         disabled={disabled}
         className="govuk-checkboxes__input absolute opacity-0 w-9 h-9 cursor-pointer z-10 disabled:cursor-not-allowed outline-none"
       />
-      <label 
+      <label
         htmlFor={id}
         className={`govuk-checkboxes__label flex items-start gap-4 cursor-pointer min-h-[36px] relative pl-12 ${
-          disabled ? 'opacity-50 cursor-not-allowed' : ''
+          disabled ? "opacity-50 cursor-not-allowed" : ""
         }`}
       >
-        <span 
+        <span
           className={`govuk-checkboxes__indicator absolute left-0 top-0 w-9 h-9 border-3 border-gray-900 bg-white block transition-all duration-150 ${
-            disabled ? 'opacity-50' : ''
+            disabled ? "opacity-50" : ""
           }`}
         >
           {checked && (
-            <span 
+            <span
               className="absolute block"
               style={{
                 top: "7px",
@@ -52,7 +52,7 @@ export const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
                 border: "solid",
                 borderWidth: "0 0 4px 4px",
                 borderColor: "#000",
-                borderTopColor: "transparent"
+                borderTopColor: "transparent",
               }}
             />
           )}
@@ -61,7 +61,9 @@ export const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
         <span className="text-body-lg mb-0 mt-1">
           {label}
           {count !== undefined && (
-            <span className="text-gray-600 text-body-md ml-1 mb-0">({count})</span>
+            <span className="text-gray-600 text-body-md ml-1 mb-0">
+              ({count})
+            </span>
           )}
         </span>
       </label>

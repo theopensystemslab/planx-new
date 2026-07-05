@@ -1,13 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { ApplicationsList } from "./ApplicationsList";
+
 import {
-  handlers,
   emptyHandlers,
-  loadingHandlers,
-  errorInvalidLinkHandlers,
-  errorExpiredLinkHandlers,
   errorConsumedLinkHandlers,
+  errorExpiredLinkHandlers,
+  errorInvalidLinkHandlers,
+  handlers,
+  loadingHandlers,
 } from "../../../.storybook/mocks/handlers";
+import { ApplicationsList } from "./ApplicationsList";
 
 /**
  * ApplicationsList is the full post-login dashboard view

@@ -1,13 +1,13 @@
-import { useState } from "react";
 import { PUBLIC_PLANX_REST_API_URL } from "astro:env/client";
 import { navigate } from "astro:transitions/client";
+import { useState } from "react";
 
 type UseLogin = () => {
   login: (email: string) => Promise<void>;
   isLoading: boolean;
   error: string | null;
   clearError: () => void;
-}
+};
 
 export const useLogin: UseLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +21,7 @@ export const useLogin: UseLogin = () => {
       const response = await fetch(`${PUBLIC_PLANX_REST_API_URL}/lps/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email }),
       });
 
       if (!response.ok) {
@@ -29,7 +29,8 @@ export const useLogin: UseLogin = () => {
       }
       navigate("/applications/check-your-inbox");
     } catch (err) {
-      const message = err instanceof Error ? err.message : "An unexpected error occurred";
+      const message =
+        err instanceof Error ? err.message : "An unexpected error occurred";
       setError(message);
     } finally {
       setIsLoading(false);
@@ -42,6 +43,6 @@ export const useLogin: UseLogin = () => {
     login,
     isLoading,
     error,
-    clearError
+    clearError,
   };
 };

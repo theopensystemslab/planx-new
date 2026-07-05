@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
-import { navigate } from "astro:transitions/client";
 import { PUBLIC_PLANX_REST_API_URL } from "astro:env/client";
+import { navigate } from "astro:transitions/client";
+import React, { useEffect, useRef, useState } from "react";
 
 interface Address {
   LPI: {
@@ -41,11 +41,11 @@ const lpaReferenceLookup: Record<string, string> = {
 interface AddressSearchElement extends HTMLElement {
   addEventListener(
     type: "addressSelection",
-    listener: (event: CustomEvent<AddressSelectionEventDetail>) => void
+    listener: (event: CustomEvent<AddressSelectionEventDetail>) => void,
   ): void;
   removeEventListener(
     type: "addressSelection",
-    listener: (event: CustomEvent<AddressSelectionEventDetail>) => void
+    listener: (event: CustomEvent<AddressSelectionEventDetail>) => void,
   ): void;
 }
 
@@ -63,13 +63,13 @@ const AddressSearch: React.FC = () => {
 
     if (!inputElement) {
       console.warn(
-        "<geocode-autocomplete> element not found for event listener."
+        "<geocode-autocomplete> element not found for event listener.",
       );
       return;
     }
 
     const handleAddressSelection = (
-      event: CustomEvent<AddressSelectionEventDetail>
+      event: CustomEvent<AddressSelectionEventDetail>,
     ) => {
       const { detail } = event;
       console.debug("Address selected:", detail);
@@ -82,7 +82,7 @@ const AddressSearch: React.FC = () => {
     return () => {
       inputElement.removeEventListener(
         "addressSelection",
-        handleAddressSelection
+        handleAddressSelection,
       );
     };
   }, []);
@@ -96,14 +96,16 @@ const AddressSearch: React.FC = () => {
     const { LAT, LNG } = address.LPI;
 
     try {
-      const response = await fetch(`${PUBLIC_PLANX_REST_API_URL}/lpa?lat=${LAT}&lon=${LNG}`);
+      const response = await fetch(
+        `${PUBLIC_PLANX_REST_API_URL}/lpa?lat=${LAT}&lon=${LNG}`,
+      );
       const data = await response.json();
-      
+
       setMatchingLpas(data.entities);
 
       // Case 1: No LPAs found
       if (!data.entities || data.entities.length === 0) {
-        setMatchingLpas([])
+        setMatchingLpas([]);
         return;
       }
 
@@ -136,16 +138,20 @@ const AddressSearch: React.FC = () => {
           <geocode-autocomplete
             ref={addressSearchRef}
             label="Enter an address to search"
-            osProxyEndpoint={
-              `${PUBLIC_PLANX_REST_API_URL}/proxy/ordnance-survey`
-            }
+            osProxyEndpoint={`${PUBLIC_PLANX_REST_API_URL}/proxy/ordnance-survey`}
           />
         </div>
-        <button type="submit" className="button button--primary button--medium button-focus-style">
+        <button
+          type="submit"
+          className="button button--primary button--medium button-focus-style"
+        >
           Find the local planning authority
         </button>
         {matchingLpas?.length === 0 && (
-          <p className="mt-2">We couldn't find a local planning authority for this address. At present we support only local planning authorities in England.</p>
+          <p className="mt-2">
+            We couldn't find a local planning authority for this address. At
+            present we support only local planning authorities in England.
+          </p>
         )}
       </div>
     </form>
