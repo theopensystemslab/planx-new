@@ -13,8 +13,4 @@ INSERT INTO
 SELECT
   id, user_id, team_id, role
 FROM
-  sync_team_members ON CONFLICT (id) DO UPDATE
-SET
-  user_id = EXCLUDED.user_id,
-  team_id = EXCLUDED.team_id,
-  role = EXCLUDED.role;
+  sync_team_members ON CONFLICT (user_id, team_id, role) DO NOTHING;
