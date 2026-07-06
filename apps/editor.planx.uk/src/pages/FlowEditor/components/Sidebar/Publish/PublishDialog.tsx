@@ -103,7 +103,10 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
     templatedFlows,
   } = props;
 
-  const [isTemplate] = useStore((state) => [state.isTemplate]);
+  const [isTemplate, isTemplatedFrom] = useStore((state) => [
+    state.isTemplate,
+    state.isTemplatedFrom,
+  ]);
 
   const steps = ["Review", "Test", "Publish"];
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -242,7 +245,17 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
   };
 
   const PublishStep = () => {
-    const [summary, setSummary] = useState<string>("");
+    // If this is a templated flow and the only changes are the source template updates (eg no 'operations' in history), set a default summary message
+    const onlySourceTemplateUpdates = history?.every(
+      (item) =>
+        item.type === "comment" &&
+        item.comment.startsWith("Source template published:"),
+    );
+    const [summary, setSummary] = useState<string>(
+      isTemplatedFrom && onlySourceTemplateUpdates
+        ? "Publish latest source template updates"
+        : "",
+    );
     const [showError, setShowError] = useState<boolean>(false);
 
     const changeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
