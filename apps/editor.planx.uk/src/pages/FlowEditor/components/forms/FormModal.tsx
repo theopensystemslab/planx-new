@@ -121,9 +121,14 @@ const FormModal: React.FC<FormModalProps> = ({
   extraProps,
 }) => {
   const navigate = useNavigate();
-  const formikRef = useRef<FormikProps<BaseNodeData & unknown> | null>(null);
+
   const [showUnsavedWarning, setShowUnsavedWarning] = useState(false);
   const [isFormDirty, setIsFormDirty] = useState(false);
+
+  const formikRef = useMemo<{
+    current: FormikProps<BaseNodeData & unknown> | null;
+    onDirtyChange: (dirty: boolean) => void;
+  }>(() => ({ current: null, onDirtyChange: setIsFormDirty }), []);
 
   const { team: teamSlug, flow: flowSlug } = useParams({
     from: "/_authenticated/app/$team/$flow",
@@ -151,27 +156,6 @@ const FormModal: React.FC<FormModalProps> = ({
 
   const node = id ? flow[id] : undefined;
   const isEditingExistingNode = Boolean(handleDelete);
-
-  // checking formik periodically because useEffect would create infinite re-render
-  useEffect(() => {
-    const checkDirty = () => {
-      const formik = formikRef.current;
-      if (!formik) {
-        if (isFormDirty) setIsFormDirty(false);
-        return;
-      }
-
-      if (formik.dirty !== isFormDirty) {
-        setIsFormDirty(formik.dirty);
-      }
-    };
-
-    checkDirty();
-
-    const interval = setInterval(checkDirty, 100);
-
-    return () => clearInterval(interval);
-  }, [isFormDirty]); // so this depends on our state, not formik--avoiding infinite rerender
 
   const hasUnsavedChanges = (): boolean => {
     return isFormDirty;

@@ -9,7 +9,10 @@ import { useEffect } from "react";
  */
 export function useFormikWithRef<T extends FormikValues>(
   formikConfig: FormikConfig<T>,
-  formikRef?: MutableRefObject<FormikProps<T> | null>,
+  formikRef?: {
+    current: FormikProps<T> | null;
+    onDirtyChange: (dirty: boolean) => void;
+  },
 ) {
   const formik = useFormik<T>({
     validateOnChange: false,
@@ -22,6 +25,12 @@ export function useFormikWithRef<T extends FormikValues>(
       formikRef.current = formik;
     }
   });
+
+  useEffect(() => {
+    if (formikRef) {
+      formikRef.onDirtyChange(formik.dirty);
+    }
+  }, [formik.dirty, formikRef]);
 
   return formik;
 }
