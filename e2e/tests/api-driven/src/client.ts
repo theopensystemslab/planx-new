@@ -1,5 +1,7 @@
 import assert from "node:assert";
+
 import { CoreDomainClient } from "@opensystemslab/planx-core";
+
 import { buildJWT } from "./jwt.js";
 
 // check env variables are defined

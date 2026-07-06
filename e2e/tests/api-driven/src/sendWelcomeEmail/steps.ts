@@ -1,6 +1,8 @@
-import { When, Then, Before, After, World } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
-import { callWelcomeEndpoint, cleanup, setUpMocks, setup } from "./helpers.js";
+
+import { After, Before, Then, When, World } from "@cucumber/cucumber";
+
+import { callWelcomeEndpoint, cleanup, setup, setUpMocks } from "./helpers.js";
 
 export class CustomWorld extends World {
   teamId!: number;

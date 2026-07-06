@@ -1,7 +1,8 @@
-import { FlowStatus } from "@opensystemslab/planx-core/types";
+import type { FlowStatus } from "@opensystemslab/planx-core/types";
+import { gql } from "graphql-tag";
+
 import { $admin } from "../client.js";
 import { createTeam, createUser } from "../globalHelpers.js";
-import { gql } from "graphql-tag";
 
 export const setup = async () => {
   const teamId = await createTeam();

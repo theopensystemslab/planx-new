@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+
 import {
   contextDefaults,
   setUpTestContext,
@@ -8,7 +9,7 @@ import {
   createAuthenticatedSession,
   isGetUserRequest,
 } from "./helpers/globalHelpers.js";
-import { TestContext } from "./helpers/types.js";
+import type { TestContext } from "./helpers/types.js";
 
 test.describe("Refresh page", () => {
   let context: TestContext = {

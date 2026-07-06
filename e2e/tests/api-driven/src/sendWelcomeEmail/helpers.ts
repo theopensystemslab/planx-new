@@ -1,7 +1,9 @@
-import axios from "axios";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+
+import axios from "axios";
+
 import { $admin } from "../client.js";
 import { createTeam, createUser } from "../globalHelpers.js";
 

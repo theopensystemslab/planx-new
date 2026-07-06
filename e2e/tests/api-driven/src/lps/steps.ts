@@ -1,5 +1,8 @@
 import { strict as assert } from "node:assert";
-import { Given, When, Then, Before, After, World } from "@cucumber/cucumber";
+
+import { After, Before, Given, Then, When, World } from "@cucumber/cucumber";
+
+import { TEST_EMAIL } from "../globalHelpers.js";
 import {
   cleanup,
   getApplications,
@@ -7,7 +10,6 @@ import {
   login,
   setup,
 } from "./helpers.js";
-import { TEST_EMAIL } from "../globalHelpers.js";
 
 interface Success {
   status: 200;

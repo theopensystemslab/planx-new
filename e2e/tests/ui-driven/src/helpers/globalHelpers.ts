@@ -1,9 +1,10 @@
-import { FlowGraph } from "@opensystemslab/planx-core/types";
+import type { FlowGraph } from "@opensystemslab/planx-core/types";
+import { flatFlags } from "@opensystemslab/planx-core/types";
 import { type Browser, type Page, type Request } from "@playwright/test";
 import { gql } from "graphql-request";
+
 import { generateAuthenticationToken, getGraphQLClient } from "./context.js";
-import { TestContext } from "./types.js";
-import { flatFlags } from "@opensystemslab/planx-core/types";
+import type { TestContext } from "./types.js";
 
 // Test card numbers to be used in gov.uk sandbox environment
 // reference: https://docs.payments.service.gov.uk/testing_govuk_pay/#if-you-39-re-using-a-test-39-sandbox-39-account

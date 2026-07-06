@@ -1,7 +1,9 @@
 import type { SessionData } from "@opensystemslab/planx-core/types";
 import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
-import { GraphQLClient, gql } from "graphql-request";
+import type { GraphQLClient } from "graphql-request";
+import { gql } from "graphql-request";
+
 import {
   contextDefaults,
   getGraphQLClient,
@@ -14,13 +16,13 @@ import {
   log,
   waitForPaymentResponse,
 } from "./helpers/globalHelpers.js";
+import type { TestContext } from "./helpers/types.js";
 import {
   fillGovUkCardDetails,
   fillInEmail,
   submitCardDetails,
 } from "./helpers/userActions.js";
 import payFlow from "./mocks/flows/pay-flow.json" with { type: "json" };
-import { TestContext } from "./helpers/types.js";
 
 let context: TestContext = {
   ...contextDefaults,

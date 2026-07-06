@@ -1,4 +1,6 @@
-import { BrowserContext, Page, expect, test } from "@playwright/test";
+import type { BrowserContext, Page } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+
 import {
   contextDefaults,
   getGraphQLClient,
@@ -6,6 +8,7 @@ import {
   tearDownTestContext,
 } from "../helpers/context.js";
 import { addSessionToContext, modifyFlow } from "../helpers/globalHelpers.js";
+import type { TestContext } from "../helpers/types.js";
 import {
   clickContinue,
   returnToSession,
@@ -19,7 +22,6 @@ import {
   navigateToPayComponent,
 } from "./helpers.js";
 import { mockPaymentRequest, modifiedInviteToPayFlow } from "./mocks.js";
-import { TestContext } from "../helpers/types.js";
 
 let context: TestContext = {
   ...contextDefaults,

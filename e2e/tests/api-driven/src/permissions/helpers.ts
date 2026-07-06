@@ -1,8 +1,10 @@
-import { DocumentNode, Kind } from "graphql/language/index.js";
+import type { DocumentNode } from "graphql/language/index.js";
+import { Kind } from "graphql/language/index.js";
+
 import { $admin, getClient } from "../client.js";
-import { CustomWorld } from "./steps.js";
-import { queries } from "./queries/index.js";
 import { createFlow, createTeam, createUser } from "../globalHelpers.js";
+import { queries } from "./queries/index.js";
+import type { CustomWorld } from "./steps.js";
 
 export type Action = "insert" | "update" | "delete" | "select";
 export type Table = keyof typeof queries;

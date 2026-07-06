@@ -1,5 +1,5 @@
-import { ComponentType } from "@opensystemslab/planx-core/types";
 import type { FlowGraph } from "@opensystemslab/planx-core/types";
+import { ComponentType } from "@opensystemslab/planx-core/types";
 
 const flow: FlowGraph = {
   _root: {

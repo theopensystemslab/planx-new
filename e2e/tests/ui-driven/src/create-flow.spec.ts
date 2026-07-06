@@ -1,4 +1,6 @@
-import { Browser, expect, test } from "@playwright/test";
+import type { Browser } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+
 import { createExternalPortal } from "./helpers/addComponent.js";
 import {
   contextDefaults,
@@ -13,8 +15,8 @@ import {
 } from "./helpers/globalHelpers.js";
 import {
   makeFlowAService,
-  navigateToService,
   navigateToFlowSettings,
+  navigateToService,
   publishService,
   turnServiceOnline,
 } from "./helpers/navigateAndPublish.js";
@@ -22,7 +24,7 @@ import {
   externalPortalFlowData,
   externalPortalServiceProps,
 } from "./helpers/serviceData.js";
-import { TestContext } from "./helpers/types.js";
+import type { TestContext } from "./helpers/types.js";
 import {
   answerAddressInput,
   answerChecklist,

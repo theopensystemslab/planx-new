@@ -1,9 +1,10 @@
-import {
-  ComponentType,
+import type {
   FlowGraph,
   PaymentRequest,
   SessionData,
 } from "@opensystemslab/planx-core/types";
+import { ComponentType } from "@opensystemslab/planx-core/types";
+
 import { TEST_EMAIL } from "../helpers/globalHelpers.js";
 import inviteToPayFlow from "../mocks/flows/invite-to-pay-flow.js";
 

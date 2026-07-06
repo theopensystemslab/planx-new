@@ -1,7 +1,10 @@
-import { PaymentRequest, Session } from "@opensystemslab/planx-core/types";
-import { APIRequestContext, Page, expect, test } from "@playwright/test";
-import { GraphQLClient, gql } from "graphql-request";
+import type { PaymentRequest, Session } from "@opensystemslab/planx-core/types";
+import type { APIRequestContext, Page } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+import type { GraphQLClient } from "graphql-request";
+import { gql } from "graphql-request";
 import { v4 as uuidV4 } from "uuid";
+
 import {
   contextDefaults,
   getGraphQLClient,
@@ -9,11 +12,11 @@ import {
   tearDownTestContext,
 } from "../helpers/context.js";
 import { cards } from "../helpers/globalHelpers.js";
+import type { TestContext } from "../helpers/types.js";
 import { fillGovUkCardDetails } from "../helpers/userActions.js";
 import inviteToPayFlow from "../mocks/flows/invite-to-pay-flow.js";
 import { getPaymentRequestBySessionId } from "./helpers.js";
 import { mockPaymentRequestDetails, mockSessionData } from "./mocks.js";
-import { TestContext } from "../helpers/types.js";
 
 let context: TestContext = {
   ...contextDefaults,

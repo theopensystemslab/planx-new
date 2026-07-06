@@ -1,5 +1,5 @@
-import { CoreDomainClient } from "@opensystemslab/planx-core";
-import { User } from "@opensystemslab/planx-core/types";
+import type { CoreDomainClient } from "@opensystemslab/planx-core";
+import type { User } from "@opensystemslab/planx-core/types";
 
 type NewTeam = Parameters<CoreDomainClient["team"]["create"]>[0];
 

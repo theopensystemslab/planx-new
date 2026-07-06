@@ -1,5 +1,6 @@
+import type { Role, User } from "@opensystemslab/planx-core/types";
 import JWT from "jsonwebtoken";
-import { User, Role } from "@opensystemslab/planx-core/types";
+
 import { $admin } from "./client.js";
 
 // This code is copied from apps/api.planx.uk/modules/auth/service.ts

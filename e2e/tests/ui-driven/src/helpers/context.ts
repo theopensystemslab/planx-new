@@ -1,8 +1,11 @@
-import { CoreDomainClient } from "@opensystemslab/planx-core";
-import { GraphQLClient, gql } from "graphql-request";
-import jwt from "jsonwebtoken";
 import assert from "node:assert";
-import { TestContext } from "./types.js";
+
+import { CoreDomainClient } from "@opensystemslab/planx-core";
+import type { GraphQLClient } from "graphql-request";
+import { gql } from "graphql-request";
+import jwt from "jsonwebtoken";
+
+import type { TestContext } from "./types.js";
 
 export const contextDefaults: TestContext = {
   user: {

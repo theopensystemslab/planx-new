@@ -1,5 +1,6 @@
-import { expect, Page } from "@playwright/test";
-import { Feature, MultiPolygon, Polygon } from "geojson";
+import type { Page } from "@playwright/test";
+import { expect } from "@playwright/test";
+import type { Feature, MultiPolygon, Polygon } from "geojson";
 
 export const waitForMapComponent = async (page: Page) => {
   await page.waitForFunction(() => {

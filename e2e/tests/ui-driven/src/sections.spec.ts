@@ -1,12 +1,14 @@
 import type { FlowGraph } from "@opensystemslab/planx-core/types";
 import { expect, test } from "@playwright/test";
 import { gql } from "graphql-request";
+
 import {
   contextDefaults,
   getGraphQLClient,
   setUpTestContext,
   tearDownTestContext,
 } from "./helpers/context.js";
+import type { TestContext } from "./helpers/types.js";
 import {
   answerChecklist,
   answerQuestion,
@@ -20,7 +22,6 @@ import {
   saveSession,
 } from "./helpers/userActions.js";
 import { flow, updatedQuestionAnswers } from "./mocks/flows/sections-flow.js";
-import { TestContext } from "./helpers/types.js";
 
 // TODO: move this type to planx-core
 // also defined in apps/editor.planx.uk/src/types.ts
