@@ -7,6 +7,9 @@ requires-python = ">=3.14"
 dependencies = [
   "har2locust>=0.9.3",
   "locust>=2.43.3",
+  "msgpack>=1.2.1",
+  "python-engineio>=4.13.3",
+  "python-socketio>=5.16.3",
   "ruff>=0.15.2",
   "websocket-client>=1.9.0",
 ]
