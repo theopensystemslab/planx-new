@@ -1,6 +1,7 @@
-import { runSQL } from "./index.js";
 import axios from "axios";
 import type { Mocked } from "vitest";
+
+import { runSQL } from "./index.js";
 
 describe("runSQL", () => {
   vi.mock("axios", async (importOriginal) => {

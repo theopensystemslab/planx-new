@@ -1,7 +1,7 @@
 import supertest from "supertest";
 
-import loadOrRecordNockRequests from "../../../tests/loadOrRecordNockRequests.js";
 import app from "../../../server.js";
+import loadOrRecordNockRequests from "../../../tests/loadOrRecordNockRequests.js";
 
 describe.skip("fetching GIS data from Digital Land for supported local authorities", () => {
   const locations = [

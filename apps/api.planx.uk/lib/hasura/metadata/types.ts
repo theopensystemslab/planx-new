@@ -3,9 +3,7 @@ import type { SendIntegration } from "@opensystemslab/planx-core/types";
 import type { IsoDateString } from "../../../types.js";
 
 type ScheduledEventRequestType =
-  | "create_scheduled_event"
-  | "get_scheduled_events"
-  | "delete_scheduled_event";
+  "create_scheduled_event" | "get_scheduled_events" | "delete_scheduled_event";
 
 export interface ScheduledEventRequestBody {
   type: ScheduledEventRequestType;
@@ -33,11 +31,7 @@ export type RequiredCreateScheduledEventArgs = Pick<
 >;
 
 type ScheduledEventStatus =
-  | "scheduled"
-  | "locked"
-  | "delivered"
-  | "error"
-  | "dead";
+  "scheduled" | "locked" | "delivered" | "error" | "dead";
 
 type BaseGetScheduledEventsArgs = {
   limit?: number;
@@ -57,8 +51,7 @@ type GetCronScheduledEventsArgs = BaseGetScheduledEventsArgs & {
 };
 
 export type GetScheduledEventsArgs =
-  | GetOneOffScheduledEventsArgs
-  | GetCronScheduledEventsArgs;
+  GetOneOffScheduledEventsArgs | GetCronScheduledEventsArgs;
 
 export interface DeleteScheduledEventArgs {
   type: "one_off" | "cron";

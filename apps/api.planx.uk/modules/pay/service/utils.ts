@@ -1,8 +1,8 @@
 import type { GovUKPayment } from "@opensystemslab/planx-core/types";
-import { $api } from "../../../client/index.js";
+import type { Request } from "express";
 import { gql } from "graphql-request";
 
-import type { Request } from "express";
+import { $api } from "../../../client/index.js";
 import { sendSlackMessage } from "../../slack/utils.js";
 
 export const addGovPayPaymentIdToPaymentRequest = async (

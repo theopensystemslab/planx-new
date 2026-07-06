@@ -2,11 +2,11 @@ import { Router } from "express";
 
 import { aiLimiter } from "../../rateLimit.js";
 import { validate } from "../../shared/middleware/validate.js";
-import { projectDescriptionController } from "./projectDescription/controller.js";
-import { projectDescriptionSchema } from "./projectDescription/types.js";
 import { detectPromptInjection } from "./middleware/detectPromptInjection.js";
 import { redactPii } from "./middleware/redactPii.js";
 import { sanitiseInput } from "./middleware/sanitiseInput.js";
+import { projectDescriptionController } from "./projectDescription/controller.js";
+import { projectDescriptionSchema } from "./projectDescription/types.js";
 
 const router = Router();
 

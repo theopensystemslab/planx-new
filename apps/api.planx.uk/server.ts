@@ -1,3 +1,5 @@
+import "isomorphic-fetch";
+
 import type { Role } from "@opensystemslab/planx-core/types";
 import assert from "assert";
 import bodyParser from "body-parser";
@@ -5,8 +7,7 @@ import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
 import express from "express";
 import helmet from "helmet";
-import { Server, type IncomingMessage } from "http";
-import "isomorphic-fetch";
+import { type IncomingMessage, Server } from "http";
 import { pinoHttp } from "pino-http";
 
 import { defaultCors } from "./cors.js";

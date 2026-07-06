@@ -1,4 +1,5 @@
 import type { FlowGraph } from "@opensystemslab/planx-core/types";
+
 import { validateSections } from "./sections.js";
 
 test("Fails when a nested external portal has sections", () => {

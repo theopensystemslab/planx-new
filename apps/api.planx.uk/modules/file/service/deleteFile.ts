@@ -1,4 +1,5 @@
 import type { DeleteObjectsCommandInput } from "@aws-sdk/client-s3";
+
 import { getS3KeyFromURL, s3Factory } from "./utils.js";
 
 export const deleteFilesByURL = async (

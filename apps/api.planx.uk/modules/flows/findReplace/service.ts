@@ -1,7 +1,8 @@
-import { gql } from "graphql-request";
-import { getFlowData } from "../../../helpers.js";
-import { $api } from "../../../client/index.js";
 import type { FlowGraph } from "@opensystemslab/planx-core/types";
+import { gql } from "graphql-request";
+
+import { $api } from "../../../client/index.js";
+import { getFlowData } from "../../../helpers.js";
 import type { Flow } from "../../../types.js";
 
 interface MatchResult {

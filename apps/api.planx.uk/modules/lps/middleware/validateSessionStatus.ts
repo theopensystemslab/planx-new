@@ -1,6 +1,7 @@
 import { gql } from "graphql-request";
-import type { GenerateDownloadToken } from "../types/downloadToken.js";
+
 import { $api } from "../../../client/index.js";
+import type { GenerateDownloadToken } from "../types/downloadToken.js";
 
 interface CheckDownloadableSessionExists {
   lowcalSessions: { id: string }[];

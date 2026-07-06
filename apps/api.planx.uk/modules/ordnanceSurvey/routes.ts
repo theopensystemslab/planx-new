@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { useOrdnanceSurveyProxy } from "./controller.js";
+
 import { osCors } from "../../cors.js";
+import { useOrdnanceSurveyProxy } from "./controller.js";
 
 const router = Router();
 

@@ -1,12 +1,12 @@
 import supertest from "supertest";
+import type { MockedFunction } from "vitest";
 
+import { createScheduledEvent } from "../../../lib/hasura/metadata/index.js";
+import app from "../../../server.js";
 import { queryMock } from "../../../tests/graphqlQueryMock.js";
 import { authHeader, getTestJWT } from "../../../tests/mockJWT.js";
-import app from "../../../server.js";
-import { userContext } from "../../auth/middleware.js";
 import { mockFlowData } from "../../../tests/mocks/validateAndPublishMocks.js";
-import { createScheduledEvent } from "../../../lib/hasura/metadata/index.js";
-import type { MockedFunction } from "vitest";
+import { userContext } from "../../auth/middleware.js";
 
 vi.mock("../../../lib/hasura/metadata");
 const mockedCreateScheduledEvent = createScheduledEvent as MockedFunction<

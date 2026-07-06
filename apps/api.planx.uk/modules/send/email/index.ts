@@ -2,21 +2,22 @@ import {
   formatRawProjectTypes,
   getFeeBreakdown,
 } from "@opensystemslab/planx-core";
+import type { SiteAddress } from "@opensystemslab/planx-core/types";
+
 import { ServerError } from "../../../errors/serverError.js";
+import { sendEmail } from "../../../lib/resend/index.js";
+import type { TemplateRegistry } from "../../../lib/resend/templates/index.js";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
 import type { SendIntegrationController } from "../types.js";
 import {
   checkEmailAuditTable,
-  getSubmissionEmail,
+  generateAccessToken,
+  getFlowId,
   getSessionEmailDetailsById,
+  getSubmissionEmail,
   getTeamEmailSettings,
   insertAuditEntry,
-  getFlowId,
-  generateAccessToken,
 } from "./service.js";
-import type { SiteAddress } from "@opensystemslab/planx-core/types";
-import { sendEmail } from "../../../lib/resend/index.js";
-import type { TemplateRegistry } from "../../../lib/resend/templates/index.js";
 
 export const sendToEmail: SendIntegrationController = async (
   req,
@@ -117,8 +118,7 @@ const getSubmitEmailConfig = async ({
     if (!submissionEmailAddress) throw Error("Submission email missing!");
 
     const projectTypes = passportData["proposal.projectType"] as
-      | string[]
-      | undefined;
+      string[] | undefined;
     const projectType =
       projectTypes?.length && formatRawProjectTypes(projectTypes);
 

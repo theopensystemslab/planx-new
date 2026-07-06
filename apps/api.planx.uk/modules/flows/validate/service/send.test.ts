@@ -1,6 +1,7 @@
 import type { FlowGraph } from "@opensystemslab/planx-core/types";
-import { validateSend } from "./send.js";
 import { ComponentType } from "@opensystemslab/planx-core/types";
+
+import { validateSend } from "./send.js";
 
 test("Fails when there are >1 Send", () => {
   const result = validateSend(invalidFlattenedFlow);

@@ -7,13 +7,13 @@ import type {
 import type { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 
+import { $api } from "../../../client/index.js";
 import type {
   Breadcrumb,
   Flow,
   LowCalSession,
   Passport,
 } from "../../../types.js";
-import { $api } from "../../../client/index.js";
 
 export async function getSessionSummary(
   req: Request,

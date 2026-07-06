@@ -1,13 +1,14 @@
-import { gql } from "graphql-request";
-import { $api } from "../../../client/index.js";
 import type {
   Session,
   TeamContactSettings,
 } from "@opensystemslab/planx-core/types";
 import { addDays } from "date-fns";
+import { gql } from "graphql-request";
+
+import { $api } from "../../../client/index.js";
 import { ServerError } from "../../../errors/serverError.js";
-import { DAYS_UNTIL_EXPIRY } from "../../saveAndReturn/service/utils.js";
 import type { TemplateRegistry } from "../../../lib/resend/templates/index.js";
+import { DAYS_UNTIL_EXPIRY } from "../../saveAndReturn/service/utils.js";
 
 interface GetTeamEmailSettings {
   teams: {

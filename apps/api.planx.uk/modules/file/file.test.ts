@@ -1,12 +1,11 @@
+import type * as s3Client from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import supertest from "supertest";
 import type { Mocked } from "vitest";
 
 import app from "../../server.js";
-import { deleteFilesByURL } from "./service/deleteFile.js";
 import { authHeader } from "../../tests/mockJWT.js";
-
-import type * as s3Client from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { deleteFilesByURL } from "./service/deleteFile.js";
 
 let mockPutObject: Mocked<() => void>;
 let mockGetObject: Mocked<() => void>;

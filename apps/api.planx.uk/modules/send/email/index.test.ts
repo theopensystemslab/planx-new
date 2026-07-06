@@ -1,8 +1,9 @@
-import supertest from "supertest";
 import type * as planxCore from "@opensystemslab/planx-core";
-import { queryMock } from "../../../tests/graphqlQueryMock.js";
-import app from "../../../server.js";
+import supertest from "supertest";
+
 import { sendEmail } from "../../../lib/resend/index.js";
+import app from "../../../server.js";
+import { queryMock } from "../../../tests/graphqlQueryMock.js";
 
 vi.mock("@opensystemslab/planx-core", async () => {
   const actualCore = await vi.importActual<typeof planxCore>(
@@ -21,7 +22,7 @@ vi.mock("@opensystemslab/planx-core", async () => {
 const mockBuildSubmissionExportZip = vi.fn().mockImplementation(() => ({
   write: () => "zip",
   toBuffer: () => Buffer.from("test"),
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+
   remove: () => {},
 }));
 

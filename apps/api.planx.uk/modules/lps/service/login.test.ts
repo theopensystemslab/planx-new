@@ -1,9 +1,10 @@
 import supertest from "supertest";
+import { v4 as uuidV4 } from "uuid";
+
+import { sendEmail } from "../../../lib/notify/index.js";
+import { NOTIFY_TEST_EMAIL } from "../../../lib/notify/utils.js";
 import app from "../../../server.js";
 import { queryMock } from "../../../tests/graphqlQueryMock.js";
-import { v4 as uuidV4 } from "uuid";
-import { NOTIFY_TEST_EMAIL } from "../../../lib/notify/utils.js";
-import { sendEmail } from "../../../lib/notify/index.js";
 import * as loginService from "./login.js";
 
 vi.mock("../../../lib/notify/index.js", () => ({

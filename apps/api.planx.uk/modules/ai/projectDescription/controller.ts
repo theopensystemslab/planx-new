@@ -1,6 +1,6 @@
 import { ServerError } from "../../../errors/serverError.js";
-import { enhanceProjectDescription } from "./service.js";
 import { GATEWAY_STATUS } from "../types.js";
+import { enhanceProjectDescription } from "./service.js";
 import type { ProjectDescriptionController } from "./types.js";
 
 export const projectDescriptionController: ProjectDescriptionController =

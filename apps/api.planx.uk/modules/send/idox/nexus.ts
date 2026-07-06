@@ -1,17 +1,19 @@
+import { Buffer } from "node:buffer";
+
 import type { AxiosRequestConfig } from "axios";
 import axios, { isAxiosError } from "axios";
 import FormData from "form-data";
 import fs from "fs";
 import { gql } from "graphql-request";
 import jwt from "jsonwebtoken";
-import { Buffer } from "node:buffer";
+
 import { $api } from "../../../client/index.js";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
-import { buildSubmissionExportZip } from "../utils/exportZip.js";
 import type {
   SendIntegrationController,
   SendIntegrationPayload,
 } from "../types.js";
+import { buildSubmissionExportZip } from "../utils/exportZip.js";
 
 interface IdoxNexusClient {
   clientId: string;
@@ -335,8 +337,9 @@ async function retrieveSubmission(
   token: string,
   submissionId: string,
 ): Promise<UniformSubmissionResponse> {
-  const getSubmissionEndpoint = `${process.env
-    .IDOX_NEXUS_SUBMISSION_URL!}/secure/submission/${submissionId}`;
+  const getSubmissionEndpoint = `${
+    process.env.IDOX_NEXUS_SUBMISSION_URL!
+  }/secure/submission/${submissionId}`;
 
   const getSubmissionConfig: AxiosRequestConfig = {
     url: getSubmissionEndpoint,

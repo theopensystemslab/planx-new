@@ -1,8 +1,9 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
+
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
-import { validateTemplatedNodes } from "./templatedNodes.js";
-import { userContext } from "../../../auth/middleware.js";
 import { getTestJWT } from "../../../../tests/mockJWT.js";
+import { userContext } from "../../../auth/middleware.js";
+import { validateTemplatedNodes } from "./templatedNodes.js";
 
 beforeAll(() => {
   const getStoreMock = vi.spyOn(userContext, "getStore");

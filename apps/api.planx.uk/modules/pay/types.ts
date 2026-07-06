@@ -1,6 +1,7 @@
-import { z } from "zod";
-import type { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
 import type { PaymentRequest } from "@opensystemslab/planx-core/types";
+import { z } from "zod";
+
+import type { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
 
 export const paymentProxySchema = z.object({
   query: z.object({

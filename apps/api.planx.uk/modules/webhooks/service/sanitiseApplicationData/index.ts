@@ -1,7 +1,7 @@
-import { getOperations, operationHandler } from "./operations.js";
-import type { OperationResult } from "./types.js";
 import { getFormattedEnvironment } from "../../../../helpers.js";
 import { sendSlackMessage } from "../../../slack/utils.js";
+import { getOperations, operationHandler } from "./operations.js";
+import type { OperationResult } from "./types.js";
 
 /**
  * Called by Hasura cron job `sanitise_application_data` on a nightly basis

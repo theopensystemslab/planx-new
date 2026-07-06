@@ -1,4 +1,5 @@
 import type { UUID } from "crypto";
+
 import {
   confirmationAgentTemplate,
   generalConfirmationAgentTemplate,
@@ -8,50 +9,50 @@ import {
   generalConfirmationPayeeTemplate,
 } from "./inviteToPay/confirmation-payee.js";
 import {
-  invitationToPayTemplate,
   generalInvitationToPayTemplate,
+  invitationToPayTemplate,
 } from "./inviteToPay/invitation-to-pay.js";
 import {
-  invitationToPayAgentTemplate,
   generalInvitationToPayAgentTemplate,
+  invitationToPayAgentTemplate,
 } from "./inviteToPay/invitation-to-pay-agent.js";
 import {
-  paymentExpiryTemplate,
   generalPaymentExpiryTemplate,
+  paymentExpiryTemplate,
 } from "./inviteToPay/payment-expiry.js";
 import {
-  paymentExpiryAgentTemplate,
   generalPaymentExpiryAgentTemplate,
+  paymentExpiryAgentTemplate,
 } from "./inviteToPay/payment-expiry-agent.js";
 import {
-  paymentReminderTemplate,
   generalPaymentReminderTemplate,
+  paymentReminderTemplate,
 } from "./inviteToPay/payment-reminder.js";
 import {
-  paymentReminderAgentTemplate,
   generalPaymentReminderAgentTemplate,
+  paymentReminderAgentTemplate,
 } from "./inviteToPay/payment-reminder-agent.js";
+import { lpsLoginTemplate } from "./lps/lpsLoginTemplate.js";
 import {
   expiryTemplate,
   generalExpiryTemplate,
 } from "./saveAndReturn/expiry.js";
 import {
-  reminderTemplate,
   generalReminderTemplate,
+  reminderTemplate,
 } from "./saveAndReturn/reminder.js";
 import {
-  saveTemplate,
+  generalResumeTemplate,
+  resumeTemplate,
+} from "./saveAndReturn/resume-application.js";
+import {
   generalSaveTemplate,
+  saveTemplate,
 } from "./saveAndReturn/save-application.js";
 import {
-  userConfirmationTemplate,
   generalUserConfirmationTemplate,
+  userConfirmationTemplate,
 } from "./saveAndReturn/user-confirmation.js";
-import {
-  resumeTemplate,
-  generalResumeTemplate,
-} from "./saveAndReturn/resume-application.js";
-import { lpsLoginTemplate } from "./lps/lpsLoginTemplate.js";
 
 export type NotifyConfig<T> = { personalisation: T; emailReplyToId: string };
 

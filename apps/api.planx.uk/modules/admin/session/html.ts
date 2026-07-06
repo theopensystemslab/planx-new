@@ -1,5 +1,6 @@
-import { $api } from "../../../client/index.js";
 import type { RequestHandler } from "express";
+
+import { $api } from "../../../client/index.js";
 import { generateHTMLForSession } from "../../lps/service/generateHTML.js";
 
 type HTMLExportHandler = RequestHandler<{ sessionId: string }, string>;

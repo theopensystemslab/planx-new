@@ -1,16 +1,15 @@
 import fs from "fs";
+import type { IssuerMetadata } from "openid-client";
+import { Issuer } from "openid-client";
+import type { Authenticator } from "passport";
+import passport from "passport";
 import path from "path";
 import { fileURLToPath } from "url";
 
-import { Issuer } from "openid-client";
-import type { IssuerMetadata } from "openid-client";
-import type { Authenticator } from "passport";
-import passport from "passport";
-
 import { googleStrategy } from "./strategy/google.js";
 import {
-  getMicrosoftOidcStrategy,
   getMicrosoftClientConfig,
+  getMicrosoftOidcStrategy,
   MICROSOFT_OPENID_CONFIG_URL,
 } from "./strategy/microsoft-oidc.js";
 

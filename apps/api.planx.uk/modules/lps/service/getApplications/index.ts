@@ -1,24 +1,25 @@
-import type {
-  DraftLPSApplication,
-  Success,
-  SubmittedLPSApplication,
-  AwaitingPaymentLPSApplication,
-} from "../../types/applications.js";
-import { $api } from "../../../../client/index.js";
 import { addDays, addMonths, subMinutes } from "date-fns";
+import { URLSearchParams } from "url";
+
+import { $api } from "../../../../client/index.js";
 import { ServerError } from "../../../../errors/serverError.js";
+import { getPaymentLink } from "../../../pay/service/inviteToPay/sendPaymentEmail.js";
 import { DAYS_UNTIL_EXPIRY } from "../../../saveAndReturn/service/utils.js";
+import { RETENTION_PERIOD_MONTHS } from "../../../webhooks/service/sanitiseApplicationData/operations.js";
 import type {
+  AwaitingPaymentLPSApplication,
+  DraftLPSApplication,
+  SubmittedLPSApplication,
+  Success,
+} from "../../types/applications.js";
+import { CONSUME_MAGIC_LINK_MUTATION } from "./mutation.js";
+import type {
+  Application,
+  AwaitingPayment,
   ConsumeMagicLink,
   Draft,
-  Application,
   Submitted,
-  AwaitingPayment,
 } from "./types.js";
-import { CONSUME_MAGIC_LINK_MUTATION } from "./mutation.js";
-import { URLSearchParams } from "url";
-import { RETENTION_PERIOD_MONTHS } from "../../../webhooks/service/sanitiseApplicationData/operations.js";
-import { getPaymentLink } from "../../../pay/service/inviteToPay/sendPaymentEmail.js";
 
 const MAGIC_LINK_EXPIRY_MINUTES =
   process.env.NODE_ENV === "test"

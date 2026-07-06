@@ -1,6 +1,7 @@
-import { v4 as uuidV4 } from "uuid";
-import type { LowCalSession, Flow } from "../../types.js";
 import type { Team } from "@opensystemslab/planx-core/types";
+import { v4 as uuidV4 } from "uuid";
+
+import type { Flow, LowCalSession } from "../../types.js";
 
 export const mockTeam = {
   id: 1,

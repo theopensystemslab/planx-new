@@ -1,7 +1,8 @@
+import type * as planxCore from "@opensystemslab/planx-core";
 import supertest from "supertest";
+
 import app from "../../../server.js";
 import { authHeader } from "../../../tests/mockJWT.js";
-import type * as planxCore from "@opensystemslab/planx-core";
 import { expectedPlanningPermissionPayload } from "../../../tests/mocks/digitalPlanningDataMocks.js";
 
 const endpoint = (strings: TemplateStringsArray) =>

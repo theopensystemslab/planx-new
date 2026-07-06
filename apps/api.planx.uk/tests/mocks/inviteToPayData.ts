@@ -1,9 +1,10 @@
 import {
-  type Session,
-  type PaymentRequest,
-  type FlowGraph,
   ComponentType,
+  type FlowGraph,
+  type PaymentRequest,
+  type Session,
 } from "@opensystemslab/planx-core/types";
+
 import type { Flow } from "../../types.js";
 
 export const validEmail = "the-payee@opensystemslab.io";

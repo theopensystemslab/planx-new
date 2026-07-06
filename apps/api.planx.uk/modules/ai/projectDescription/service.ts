@@ -1,7 +1,3 @@
-import { readFileSync } from "fs";
-import { dirname, join } from "path";
-import { fileURLToPath } from "url";
-
 import {
   generateText,
   InvalidPromptError,
@@ -9,12 +5,15 @@ import {
   NoObjectGeneratedError,
   Output,
 } from "ai";
+import { readFileSync } from "fs";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 
-import { logAiGatewayExchange } from "../logs.js";
-import { getModel } from "../utils.js";
-import { type GatewayResult, GATEWAY_STATUS } from "../types.js";
-import { projectDescriptionOutputSchema } from "./types.js";
 import { DEFAULT_MODEL_ID } from "../constants.js";
+import { logAiGatewayExchange } from "../logs.js";
+import { GATEWAY_STATUS, type GatewayResult } from "../types.js";
+import { getModel } from "../utils.js";
+import { projectDescriptionOutputSchema } from "./types.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

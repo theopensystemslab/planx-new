@@ -1,8 +1,8 @@
 import supertest from "supertest";
 
+import app from "../../../server.js";
 import { queryMock } from "../../../tests/graphqlQueryMock.js";
 import { authHeader } from "../../../tests/mockJWT.js";
-import app from "../../../server.js";
 
 describe("authentication", () => {
   it("returns an error if authorization headers are not set", async () => {

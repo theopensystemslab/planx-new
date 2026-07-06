@@ -1,5 +1,6 @@
+import type { Role, User } from "@opensystemslab/planx-core/types";
+
 import { $admin } from "../../../client/index.js";
-import type { User, Role } from "@opensystemslab/planx-core/types";
 
 /**
  * Get all possible roles for this user

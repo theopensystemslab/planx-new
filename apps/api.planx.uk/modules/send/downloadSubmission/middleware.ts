@@ -1,4 +1,5 @@
 import { gql } from "graphql-request";
+
 import { $api } from "../../../client/index.js";
 import type { UseAccessTokenAuth } from "./types.js";
 

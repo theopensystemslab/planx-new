@@ -1,7 +1,8 @@
+import type { User } from "@opensystemslab/planx-core/types";
+import type { RequestHandler } from "express";
+
 import { getClient } from "../../client/index.js";
 import { ServerError } from "../../errors/index.js";
-import type { RequestHandler } from "express";
-import type { User } from "@opensystemslab/planx-core/types";
 import { userContext } from "../auth/middleware.js";
 
 export const getLoggedInUserDetails: RequestHandler<

@@ -2,9 +2,9 @@ import { z } from "zod";
 
 import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 import {
+  type ApiErrorStatus,
   GATEWAY_STATUS,
   GATEWAY_SUCCESS_STATUSES,
-  type ApiErrorStatus,
   type GatewayFailureStatus,
 } from "../types.js";
 

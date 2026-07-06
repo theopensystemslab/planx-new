@@ -1,8 +1,9 @@
 import { gql } from "graphql-request";
+
 import { $admin } from "../../../client/index.js";
 import { ServerError } from "../../../errors/serverError.js";
-import type { DownloadHTML } from "../types/downloadHTML.js";
 import { getExpiry } from "../service/generateHTML.js";
+import type { DownloadHTML } from "../types/downloadHTML.js";
 
 export const validateDownloadToken: DownloadHTML = async (_req, res, next) => {
   const { sessionId } = res.locals.parsedReq.body;

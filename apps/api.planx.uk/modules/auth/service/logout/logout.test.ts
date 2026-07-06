@@ -1,7 +1,8 @@
 import supertest from "supertest";
+
 import app from "../../../../server.js";
-import { authHeader } from "../../../../tests/mockJWT.js";
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
+import { authHeader } from "../../../../tests/mockJWT.js";
 
 const ENDPOINT = "/auth/logout";
 

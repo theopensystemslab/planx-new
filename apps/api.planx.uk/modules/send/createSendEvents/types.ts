@@ -1,10 +1,11 @@
-import { z } from "zod";
-import type { CombinedResponse } from "../../../lib/hasura/metadata/types.js";
-import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 import {
   SEND_INTEGRATIONS,
   type SendIntegration,
 } from "@opensystemslab/planx-core/types";
+import { z } from "zod";
+
+import type { CombinedResponse } from "../../../lib/hasura/metadata/types.js";
+import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 
 const eventSchema = z.object({
   localAuthority: z.string(),

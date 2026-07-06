@@ -1,9 +1,10 @@
+import type { Role, User } from "@opensystemslab/planx-core/types";
+import { fromUnixTime } from "date-fns";
 import jwt from "jsonwebtoken";
+
 import { $admin } from "../../../client/index.js";
-import type { User, Role } from "@opensystemslab/planx-core/types";
 import type { HasuraClaims, JWTData } from "../types.js";
 import { checkUserCanAccessEnv, getAllowedRolesForUser } from "./utils.js";
-import { fromUnixTime } from "date-fns";
 
 export const buildUserJWT = async (
   email: string,

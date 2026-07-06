@@ -1,15 +1,16 @@
-import type {
-  RequiredCreateScheduledEventArgs,
-  GetScheduledEventsArgs,
-  DeleteScheduledEventArgs,
-} from "./types.js";
-import {
-  createScheduledEvent,
-  getScheduledEvents,
-  deleteScheduledEvent,
-} from "./index.js";
 import axios from "axios";
 import type { Mocked } from "vitest";
+
+import {
+  createScheduledEvent,
+  deleteScheduledEvent,
+  getScheduledEvents,
+} from "./index.js";
+import type {
+  DeleteScheduledEventArgs,
+  GetScheduledEventsArgs,
+  RequiredCreateScheduledEventArgs,
+} from "./types.js";
 
 describe("POST to Hasura Metadata API", () => {
   let mockAxios: Mocked<typeof axios>;

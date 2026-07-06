@@ -1,4 +1,6 @@
 import { Router } from "express";
+
+import { validate } from "../../shared/middleware/validate.js";
 import {
   fetchPaymentViaProxy,
   inviteToPay,
@@ -10,13 +12,12 @@ import {
   fetchPaymentRequestDetails,
   isTeamUsingGovPay,
 } from "./middleware.js";
+import { fetchPaymentRequestViaProxy } from "./service/inviteToPay/index.js";
 import {
   inviteToPaySchema,
   paymentProxySchema,
   paymentRequestProxySchema,
 } from "./types.js";
-import { validate } from "../../shared/middleware/validate.js";
-import { fetchPaymentRequestViaProxy } from "./service/inviteToPay/index.js";
 
 const router = Router();
 

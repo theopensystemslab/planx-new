@@ -1,8 +1,9 @@
-import { gql } from "graphql-request";
-import type { Request } from "express";
-import { fetchPaymentViaProxyWithCallback } from "../../controller.js";
 import type { GovUKPayment } from "@opensystemslab/planx-core/types";
+import type { Request } from "express";
+import { gql } from "graphql-request";
+
 import { $api } from "../../../../client/index.js";
+import { fetchPaymentViaProxyWithCallback } from "../../controller.js";
 import { postPaymentNotificationToSlack } from "../utils.js";
 
 export const fetchPaymentRequestViaProxy = fetchPaymentViaProxyWithCallback(

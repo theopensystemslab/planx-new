@@ -1,11 +1,12 @@
 import { gql } from "graphql-request";
+
 import { $api } from "../../../client/index.js";
+import { ServerError } from "../../../errors/serverError.js";
 import { sendEmail } from "../../../lib/notify/index.js";
 import {
   DEVOPS_EMAIL_REPLY_TO_ID,
   type TemplateRegistry,
 } from "../../../lib/notify/templates/index.js";
-import { ServerError } from "../../../errors/serverError.js";
 
 interface CreateMagicLink {
   magicLink: {

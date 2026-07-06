@@ -1,23 +1,24 @@
 import supertest from "supertest";
-import { queryMock } from "../../../../tests/graphqlQueryMock.js";
+
 import app from "../../../../server.js";
+import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 import {
-  validSessionQueryMock,
-  notFoundQueryMock,
-  notFoundLockSessionQueryMock,
-  detailedValidSessionQueryMock,
-  lockSessionQueryMock,
-  unlockSessionQueryMock,
-  getPublishedFlowDataQueryMock,
-  createPaymentRequestQueryMock,
-} from "../../../../tests/mocks/inviteToPayMocks.js";
-import {
-  payee,
   applicant,
-  validSession,
   notFoundSession,
+  payee,
   paymentRequestResponse,
+  validSession,
 } from "../../../../tests/mocks/inviteToPayData.js";
+import {
+  createPaymentRequestQueryMock,
+  detailedValidSessionQueryMock,
+  getPublishedFlowDataQueryMock,
+  lockSessionQueryMock,
+  notFoundLockSessionQueryMock,
+  notFoundQueryMock,
+  unlockSessionQueryMock,
+  validSessionQueryMock,
+} from "../../../../tests/mocks/inviteToPayMocks.js";
 
 describe("Invite to pay API route", () => {
   const inviteToPayBaseRoute = "/invite-to-pay";

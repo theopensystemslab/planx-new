@@ -1,7 +1,8 @@
 import supertest from "supertest";
+
 import app from "../../server.js";
-import { authHeader, getTestJWT } from "../../tests/mockJWT.js";
 import { queryMock } from "../../tests/graphqlQueryMock.js";
+import { authHeader, getTestJWT } from "../../tests/mockJWT.js";
 
 const mockRevokedToken = () => {
   queryMock.mockQuery({

@@ -4,12 +4,12 @@ import { addDays, format } from "date-fns";
 import { gql } from "graphql-request";
 
 import { $api } from "../../../client/index.js";
-import type { Template } from "../../../lib/notify/templates/index.js";
 import {
   getClientForTemplate,
   resolveNotifyTemplate,
   sendEmail,
 } from "../../../lib/notify/index.js";
+import type { Template } from "../../../lib/notify/templates/index.js";
 import type { LowCalSession } from "../../../types.js";
 
 const DAYS_UNTIL_EXPIRY = 28;
@@ -278,11 +278,11 @@ export const setupEmailEventTriggers = async (sessionId: string) => {
 };
 
 export {
-  DAYS_UNTIL_EXPIRY,
-  REMINDER_DAYS_FROM_EXPIRY,
   calculateExpiryDate,
+  DAYS_UNTIL_EXPIRY,
   getResumeLink,
   getSaveAndReturnPublicHeaders,
   markSessionAsSubmitted,
+  REMINDER_DAYS_FROM_EXPIRY,
   sendSingleApplicationEmail,
 };

@@ -4,6 +4,7 @@ import { ServerError } from ".././../errors/index.js";
 import { sendSlackMessage } from "../slack/utils.js";
 import { analyzeSessions } from "./service/analyzeSessions/index.js";
 import { getDailyFailedSubmissions } from "./service/dailyFailedSubmissions/index.js";
+import type { FailedSubmissionController } from "./service/dailyFailedSubmissions/types.js";
 import { softDeleteSession } from "./service/deleteSession/index.js";
 import type { DeleteSessionController } from "./service/deleteSession/schema.js";
 import {
@@ -29,7 +30,6 @@ import type { SendSlackMessageController } from "./service/sendSlackMessage/sche
 import { updateTemplatedFlowEdits } from "./service/updateTemplatedFlowEdits/index.js";
 import type { UpdateTemplatedFlowEditsController } from "./service/updateTemplatedFlowEdits/schema.js";
 import type { IsCleanJSONBController } from "./service/validateInput/schema.js";
-import type { FailedSubmissionController } from "./service/dailyFailedSubmissions/types.js";
 
 export const sendSlackNotificationController: SendSlackNotification = async (
   _req,

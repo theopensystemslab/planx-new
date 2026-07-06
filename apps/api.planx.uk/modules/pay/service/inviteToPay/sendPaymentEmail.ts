@@ -1,17 +1,18 @@
 import { formatRawProjectTypes } from "@opensystemslab/planx-core";
 import type { PaymentRequest, Team } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
-import type { Template } from "../../../../lib/notify/templates/index.js";
+
+import type { GovNotifyEmailTemplate } from "../../../../lib/notify/index.js";
 import {
   getClientForTemplate,
   resolveNotifyTemplate,
   sendEmail,
 } from "../../../../lib/notify/index.js";
+import type { Template } from "../../../../lib/notify/templates/index.js";
 import {
   calculateExpiryDate,
   getServiceLink,
 } from "../../../saveAndReturn/service/utils.js";
-import type { GovNotifyEmailTemplate } from "../../../../lib/notify/index.js";
 
 interface SessionDetails {
   email: string;

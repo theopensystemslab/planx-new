@@ -1,13 +1,14 @@
-import type { NextFunction, Request, RequestHandler, Response } from "express";
-import { gql } from "graphql-request";
-import { $api } from "../../client/index.js";
-import { ServerError } from "../../errors/index.js";
-import type { GovPayMetadata } from "./types.js";
 import { formatGovPayMetadata } from "@opensystemslab/planx-core";
 import type {
   GovPayMetadataValue,
   Passport,
 } from "@opensystemslab/planx-core/types";
+import type { NextFunction, Request, RequestHandler, Response } from "express";
+import { gql } from "graphql-request";
+
+import { $api } from "../../client/index.js";
+import { ServerError } from "../../errors/index.js";
+import type { GovPayMetadata } from "./types.js";
 
 /**
  * Confirm that this local authority (aka team) has a pay token

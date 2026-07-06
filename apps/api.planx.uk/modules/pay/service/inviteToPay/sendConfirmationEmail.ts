@@ -1,10 +1,11 @@
 import { formatRawProjectTypes } from "@opensystemslab/planx-core";
 import { gql } from "graphql-request";
+
 import { $api } from "../../../../client/index.js";
 import {
+  type GovNotifyEmailTemplate,
   resolveNotifyTemplate,
   sendEmail,
-  type GovNotifyEmailTemplate,
 } from "../../../../lib/notify/index.js";
 import type { TemplateRegistry } from "../../../../lib/notify/templates/index.js";
 

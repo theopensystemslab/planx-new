@@ -1,4 +1,5 @@
 import { gql } from "graphql-request";
+
 import { $public } from "../../../client/index.js";
 
 interface UpdateAnalyticsLogUserExit {

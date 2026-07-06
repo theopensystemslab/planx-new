@@ -1,5 +1,5 @@
-import type { CombinedResponse } from "../../../lib/hasura/metadata/types.js";
 import { createScheduledEvent } from "../../../lib/hasura/metadata/index.js";
+import type { CombinedResponse } from "../../../lib/hasura/metadata/types.js";
 import type { CreateSendEventsController } from "./types.js";
 
 // Create "One-off Scheduled Events" in Hasura from Send component for selected destinations
