@@ -1,4 +1,7 @@
 import { Passport } from "@opensystemslab/planx-core";
+
+import { $api } from "../../../../client/index.js";
+import { sendSlackMessage } from "../../../slack/utils.js";
 import type {
   BOPSEventData,
   EmailEventData,
@@ -7,8 +10,6 @@ import type {
   S3EventData,
   UniformEventData,
 } from "./types.js";
-import { $api } from "../../../../client/index.js";
-import { sendSlackMessage } from "../../../slack/utils.js";
 
 export const sendSlackNotification = async (
   data: EventData,
@@ -80,7 +81,7 @@ const getMessageForEventType = (data: EventData, type: EventType) => {
 
   if (type === "email-submission") {
     const { request, session_id, team_slug } = data as EmailEventData;
-    return `New email submission "${request.personalisation.serviceName}" *${session_id}* [${team_slug}]`;
+    return `New email submission "${request.serviceName}" *${session_id}* [${team_slug}]`;
   }
 
   if (type === "s3-submission") {
