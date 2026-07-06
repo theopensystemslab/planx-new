@@ -1,4 +1,4 @@
-const { introspectAs } = require("./utils");
+import { introspectAs } from "./utils.js";
 
 describe("application_access_tokens", () => {
   describe("public", () => {
@@ -88,7 +88,7 @@ describe("application_access_tokens", () => {
       expect(i.mutations).toContain("insert_application_access_tokens");
     });
 
-    test("can insert application_access_tokens", () => {
+    test("can update application_access_tokens", () => {
       expect(i.mutations).toContain("update_application_access_tokens");
     });
 

@@ -1,4 +1,4 @@
-const { introspectAs } = require("./utils");
+import { introspectAs } from "./utils.js";
 
 describe("planning_constraints_requests", () => {
   describe("public", () => {
@@ -26,7 +26,7 @@ describe("planning_constraints_requests", () => {
       expect(i.queries).toContain("planning_constraints_requests");
       expect(i.mutations).toContain("insert_planning_constraints_requests");
       expect(i.mutations).toContain(
-        "update_planning_constraints_requests_by_pk"
+        "update_planning_constraints_requests_by_pk",
       );
       expect(i.mutations).toContain("delete_planning_constraints_requests");
     });
@@ -91,9 +91,9 @@ describe("planning_constraints_requests", () => {
       expect(i.mutations).toContain("insert_planning_constraints_requests");
     });
 
-    test("cannot update or delete planning_constriants_requests", () => {
+    test("cannot update or delete planning_constraints_requests", () => {
       expect(i.mutations).not.toContain(
-        "update_planning_constraints_requests_by_pk"
+        "update_planning_constraints_requests_by_pk",
       );
       expect(i.mutations).not.toContain("delete_planning_constraints_requests");
     });

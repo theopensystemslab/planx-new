@@ -1,5 +1,5 @@
-const fetch = require("isomorphic-fetch");
-const jsonwebtoken = require("jsonwebtoken");
+import fetch from "isomorphic-fetch";
+import jsonwebtoken from "jsonwebtoken";
 
 async function gqlAdmin(query, variables = {}) {
   const res = await fetch(
@@ -10,7 +10,7 @@ async function gqlAdmin(query, variables = {}) {
         "X-Hasura-Admin-Secret": process.env.HASURA_ADMIN_SECRET,
       },
       body: JSON.stringify({ query, variables }),
-    }
+    },
   );
   const json = await res.json();
   if (json.errors && json.errors[0].message.includes("x-hasura-admin-secret")) {
@@ -26,7 +26,7 @@ async function gqlPublic(query, variables = {}, headers = {}) {
       method: "POST",
       headers: headers,
       body: JSON.stringify({ query: query, variables }),
-    }
+    },
   );
   return await res.json();
 }
@@ -50,7 +50,7 @@ function gqlWithRole(role, userId) {
           Authorization: `Bearer ${jwt}`,
         },
         body: JSON.stringify({ query: query, variables }),
-      }
+      },
     );
     return await res.json();
   };
@@ -111,12 +111,11 @@ const introspectAs = async (role, userId = undefined) => {
   `;
   const response = await gql(INTROSPECTION_QUERY);
   const { types } = response.data.__schema;
-  const queries = types
-    .find((x) => x.name === "query_root")
-    ?.fields.map((x) => x.name) || []
-  const mutations = types
-    .find((x) => x.name === "mutation_root")
-    ?.fields.map((x) => x.name) || []
+  const queries =
+    types.find((x) => x.name === "query_root")?.fields.map((x) => x.name) || [];
+  const mutations =
+    types.find((x) => x.name === "mutation_root")?.fields.map((x) => x.name) ||
+    [];
 
   return {
     types,
@@ -125,9 +124,4 @@ const introspectAs = async (role, userId = undefined) => {
   };
 };
 
-module.exports = {
-  gqlAdmin,
-  gqlPublic,
-  introspectAs,
-  buildJWTForRole,
-};
+export { buildJWTForRole, gqlAdmin, gqlPublic, introspectAs };

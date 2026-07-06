@@ -1,4 +1,4 @@
-const { introspectAs } = require("./utils");
+import { introspectAs } from "./utils.js";
 
 describe("lps_magic_links", () => {
   describe("public", () => {
@@ -25,9 +25,7 @@ describe("lps_magic_links", () => {
     test("has full access to query and mutate LPS magic links", () => {
       expect(i.queries).toContain("lps_magic_links");
       expect(i.mutations).toContain("insert_lps_magic_links");
-      expect(i.mutations).toContain(
-        "update_lps_magic_links_by_pk"
-      );
+      expect(i.mutations).toContain("update_lps_magic_links_by_pk");
       expect(i.mutations).toContain("delete_lps_magic_links");
     });
   });
@@ -92,9 +90,7 @@ describe("lps_magic_links", () => {
     });
 
     test("can update  LPS magic links", () => {
-      expect(i.mutations).toContain(
-        "update_lps_magic_links_by_pk"
-      );
+      expect(i.mutations).toContain("update_lps_magic_links_by_pk");
     });
 
     test("cannot delete LPS magic links", () => {
