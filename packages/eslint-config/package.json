@@ -1,0 +1,29 @@
+{
+  "name": "@planx/eslint-config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "MPL-2.0",
+  "exports": {
+    "./base": "./base.js",
+    "./react": "./react.js",
+    "./playwright": "./playwright.js",
+    "./vitest": "./vitest.js"
+  },
+  "dependencies": {
+    "@eslint/js": "^9.39.0",
+    "@tanstack/eslint-plugin-query": "^5.83.0",
+    "@vitest/eslint-plugin": "^1.6.9",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jest-dom": "^5.5.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-playwright": "^2.2.0",
+    "eslint-plugin-react-hooks": "^7.0.0",
+    "eslint-plugin-simple-import-sort": "^13.0.0",
+    "eslint-plugin-testing-library": "^7.16.0",
+    "typescript-eslint": "^8.46.0"
+  },
+  "peerDependencies": {
+    "eslint": "catalog:"
+  }
+}

@@ -100,7 +100,8 @@
     "@storybook/addon-docs": "10.4.1",
     "@storybook/addon-links": "10.4.1",
     "@storybook/tanstack-react": "10.4.1",
-    "@tanstack/eslint-plugin-query": "^5.91.4",
+    "@planx/eslint-config": "workspace:*",
+    "@planx/prettier-config": "workspace:*",
     "@tanstack/react-store": "0.11.0",
     "@tanstack/router-plugin": "^1.164.0",
     "@testing-library/dom": "^10.4.1",
@@ -118,25 +119,15 @@
     "@vitejs/plugin-react": "^4.7.0",
     "@types/react": "^19.1.0",
     "@types/sharedb": "catalog:sharedb",
-    "@typescript-eslint/eslint-plugin": "catalog:typescript",
-    "@typescript-eslint/parser": "catalog:typescript",
     "@vitest/coverage-v8": "^4.1.9",
     "@vitest/eslint-plugin": "catalog:",
     "autoprefixer": "^10.4.27",
     "babel-plugin-react-compiler": "^1.0.0",
     "css-loader": "^7.1.4",
     "esbuild": "0.28.1",
-    "eslint-config-prettier": "catalog:",
-    "eslint-plugin-jest-dom": "^5.5.0",
-    "eslint-plugin-jsx-a11y": "^6.10.2",
-    "eslint-plugin-react-hooks": "^7.0.1",
-    "eslint-plugin-simple-import-sort": "^13.0.0",
-    "eslint-plugin-testing-library": "^7.16.0",
     "eslint": "catalog:",
     "fake-indexeddb": "^6.2.5",
-    "husky": "catalog:",
     "jsdom": "^26.1.0",
-    "lint-staged": "^13.3.0",
     "msw-storybook-addon": "^2.0.7",
     "postcss": "^8.5.10",
     "prettier": "catalog:",
@@ -161,17 +152,12 @@
     "test:silent": "vitest --silent",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "mkdir -p build && storybook build --quiet --output-dir ./build/storybook",
-    "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' && prettier -c ./src",
-    "lint:error": "eslint --quiet 'src/**/*.{js,jsx,ts,tsx}' && prettier -c ./src",
-    "lint:fix": "eslint --fix 'src/**/*.{js,jsx,ts,tsx}' && prettier -w ./src",
-    "check": "tsc --noEmit && pnpm lint",
-    "prepare": "cd ../.. && husky install apps/editor.planx.uk/.husky"
+    "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' && prettier -c ./src --ignore-path ../../.prettierignore",
+    "lint:error": "eslint --quiet 'src/**/*.{js,jsx,ts,tsx}' && prettier -c ./src --ignore-path ../../.prettierignore",
+    "lint:fix": "eslint --fix 'src/**/*.{js,jsx,ts,tsx}' && prettier -w ./src --ignore-path ../../.prettierignore",
+    "check": "tsc --noEmit && pnpm lint"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
-  },
+  "prettier": "@planx/prettier-config",
   "browserslist": {
     "production": [
       ">0.2%",
@@ -182,17 +168,6 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
-    ]
-  },
-  "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx}": [
-      "eslint --fix"
-    ],
-    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}": [
-      "prettier --write"
-    ],
-    "src/**/*.{ts,tsx}": [
-      "scripts/tsc-lint.sh"
     ]
   }
 }
