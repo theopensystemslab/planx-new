@@ -79,11 +79,8 @@ components:
                     request:
                       type: object
                       properties:
-                        personalisation:
-                          type: object
-                          properties:
-                            serviceName:
-                              type: string
+                        serviceName:
+                          type: string
       required:
         - event
     S3Submission:

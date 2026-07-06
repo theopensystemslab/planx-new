@@ -46,9 +46,7 @@ export const emailSubmissionSchema = z.object({
           session_id: z.string(),
           team_slug: z.string(),
           request: z.object({
-            personalisation: z.object({
-              serviceName: z.string(),
-            }),
+            serviceName: z.string(),
           }),
         }),
       }),

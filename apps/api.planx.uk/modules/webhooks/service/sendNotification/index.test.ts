@@ -1,8 +1,9 @@
-import supertest from "supertest";
-import app from "../../../../server.js";
 import SlackNotify from "slack-notify";
-import type { BOPSBody, EmailBody, S3Body, UniformBody } from "./types.js";
+import supertest from "supertest";
+
 import { $api } from "../../../../client/index.js";
+import app from "../../../../server.js";
+import type { BOPSBody, EmailBody, S3Body, UniformBody } from "./types.js";
 
 const mockSessionWithFee = {
   data: {
@@ -287,9 +288,7 @@ describe("Send Slack notifications endpoint", () => {
             session_id: "abc123",
             team_slug: "testTeam",
             request: {
-              personalisation: {
-                serviceName: "testServiceName",
-              },
+              serviceName: "testServiceName",
             },
           },
         },
