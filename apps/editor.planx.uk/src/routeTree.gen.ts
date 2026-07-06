@@ -76,7 +76,6 @@ import { Route as PublicPlanXDomainTeamFlowPreviewViewApplicationRouteImport } f
 import { Route as PublicPlanXDomainTeamFlowPayViewApplicationRouteImport } from './routes/_public/_planXDomain/$team/$flow/pay/view-application'
 import { Route as PublicPlanXDomainTeamFlowPayNotFoundRouteImport } from './routes/_public/_planXDomain/$team/$flow/pay/not-found'
 import { Route as PublicPlanXDomainTeamFlowDraftViewApplicationRouteImport } from './routes/_public/_planXDomain/$team/$flow/draft/view-application'
-import { Route as PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRouteImport } from './routes/_public/_planXDomain/$team/$flow/$sessionId/download-application'
 import { Route as PublicCustomDomainFlowPayPagesPageRouteImport } from './routes/_public/_customDomain/$flow/pay/pages.$page'
 import { Route as PublicCustomDomainFlowPayInviteFailedRouteImport } from './routes/_public/_customDomain/$flow/pay/invite/failed'
 import { Route as AuthenticatedAppTeamFlowSettingsVisibilityRouteImport } from './routes/_authenticated/app/$team/$flow/settings/visibility'
@@ -493,12 +492,6 @@ const PublicPlanXDomainTeamFlowDraftViewApplicationRoute =
     path: '/view-application',
     getParentRoute: () => PublicPlanXDomainTeamFlowDraftRouteRoute,
   } as any)
-const PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute =
-  PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRouteImport.update({
-    id: '/$sessionId/download-application',
-    path: '/$sessionId/download-application',
-    getParentRoute: () => PublicPlanXDomainTeamFlowRouteRoute,
-  } as any)
 const PublicCustomDomainFlowPayPagesPageRoute =
   PublicCustomDomainFlowPayPagesPageRouteImport.update({
     id: '/pages/$page',
@@ -722,7 +715,6 @@ export interface FileRoutesByFullPath {
   '/app/$team/$flow/settings/visibility': typeof AuthenticatedAppTeamFlowSettingsVisibilityRoute
   '/$flow/pay/invite/failed': typeof PublicCustomDomainFlowPayInviteFailedRoute
   '/$flow/pay/pages/$page': typeof PublicCustomDomainFlowPayPagesPageRoute
-  '/$team/$flow/$sessionId/download-application': typeof PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute
   '/$team/$flow/draft/view-application': typeof PublicPlanXDomainTeamFlowDraftViewApplicationRoute
   '/$team/$flow/pay/not-found': typeof PublicPlanXDomainTeamFlowPayNotFoundRoute
   '/$team/$flow/pay/view-application': typeof PublicPlanXDomainTeamFlowPayViewApplicationRoute
@@ -803,7 +795,6 @@ export interface FileRoutesByTo {
   '/app/$team/$flow/settings/visibility': typeof AuthenticatedAppTeamFlowSettingsVisibilityRoute
   '/$flow/pay/invite/failed': typeof PublicCustomDomainFlowPayInviteFailedRoute
   '/$flow/pay/pages/$page': typeof PublicCustomDomainFlowPayPagesPageRoute
-  '/$team/$flow/$sessionId/download-application': typeof PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute
   '/$team/$flow/draft/view-application': typeof PublicPlanXDomainTeamFlowDraftViewApplicationRoute
   '/$team/$flow/pay/not-found': typeof PublicPlanXDomainTeamFlowPayNotFoundRoute
   '/$team/$flow/pay/view-application': typeof PublicPlanXDomainTeamFlowPayViewApplicationRoute
@@ -899,7 +890,6 @@ export interface FileRoutesById {
   '/_authenticated/app/$team/$flow/settings/visibility': typeof AuthenticatedAppTeamFlowSettingsVisibilityRoute
   '/_public/_customDomain/$flow/pay/invite/failed': typeof PublicCustomDomainFlowPayInviteFailedRoute
   '/_public/_customDomain/$flow/pay/pages/$page': typeof PublicCustomDomainFlowPayPagesPageRoute
-  '/_public/_planXDomain/$team/$flow/$sessionId/download-application': typeof PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute
   '/_public/_planXDomain/$team/$flow/draft/view-application': typeof PublicPlanXDomainTeamFlowDraftViewApplicationRoute
   '/_public/_planXDomain/$team/$flow/pay/not-found': typeof PublicPlanXDomainTeamFlowPayNotFoundRoute
   '/_public/_planXDomain/$team/$flow/pay/view-application': typeof PublicPlanXDomainTeamFlowPayViewApplicationRoute
@@ -994,7 +984,6 @@ export interface FileRouteTypes {
     | '/app/$team/$flow/settings/visibility'
     | '/$flow/pay/invite/failed'
     | '/$flow/pay/pages/$page'
-    | '/$team/$flow/$sessionId/download-application'
     | '/$team/$flow/draft/view-application'
     | '/$team/$flow/pay/not-found'
     | '/$team/$flow/pay/view-application'
@@ -1075,7 +1064,6 @@ export interface FileRouteTypes {
     | '/app/$team/$flow/settings/visibility'
     | '/$flow/pay/invite/failed'
     | '/$flow/pay/pages/$page'
-    | '/$team/$flow/$sessionId/download-application'
     | '/$team/$flow/draft/view-application'
     | '/$team/$flow/pay/not-found'
     | '/$team/$flow/pay/view-application'
@@ -1170,7 +1158,6 @@ export interface FileRouteTypes {
     | '/_authenticated/app/$team/$flow/settings/visibility'
     | '/_public/_customDomain/$flow/pay/invite/failed'
     | '/_public/_customDomain/$flow/pay/pages/$page'
-    | '/_public/_planXDomain/$team/$flow/$sessionId/download-application'
     | '/_public/_planXDomain/$team/$flow/draft/view-application'
     | '/_public/_planXDomain/$team/$flow/pay/not-found'
     | '/_public/_planXDomain/$team/$flow/pay/view-application'
@@ -1684,13 +1671,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/$team/$flow/draft/view-application'
       preLoaderRoute: typeof PublicPlanXDomainTeamFlowDraftViewApplicationRouteImport
       parentRoute: typeof PublicPlanXDomainTeamFlowDraftRouteRoute
-    }
-    '/_public/_planXDomain/$team/$flow/$sessionId/download-application': {
-      id: '/_public/_planXDomain/$team/$flow/$sessionId/download-application'
-      path: '/$sessionId/download-application'
-      fullPath: '/$team/$flow/$sessionId/download-application'
-      preLoaderRoute: typeof PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRouteImport
-      parentRoute: typeof PublicPlanXDomainTeamFlowRouteRoute
     }
     '/_public/_customDomain/$flow/pay/pages/$page': {
       id: '/_public/_customDomain/$flow/pay/pages/$page'
@@ -2316,7 +2296,6 @@ interface PublicPlanXDomainTeamFlowRouteRouteChildren {
   PublicPlanXDomainTeamFlowPreviewRouteRoute: typeof PublicPlanXDomainTeamFlowPreviewRouteRouteWithChildren
   PublicPlanXDomainTeamFlowPublishedRouteRoute: typeof PublicPlanXDomainTeamFlowPublishedRouteRouteWithChildren
   PublicPlanXDomainTeamFlowIndexRoute: typeof PublicPlanXDomainTeamFlowIndexRoute
-  PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute: typeof PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute
 }
 
 const PublicPlanXDomainTeamFlowRouteRouteChildren: PublicPlanXDomainTeamFlowRouteRouteChildren =
@@ -2330,8 +2309,6 @@ const PublicPlanXDomainTeamFlowRouteRouteChildren: PublicPlanXDomainTeamFlowRout
     PublicPlanXDomainTeamFlowPublishedRouteRoute:
       PublicPlanXDomainTeamFlowPublishedRouteRouteWithChildren,
     PublicPlanXDomainTeamFlowIndexRoute: PublicPlanXDomainTeamFlowIndexRoute,
-    PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute:
-      PublicPlanXDomainTeamFlowSessionIdDownloadApplicationRoute,
   }
 
 const PublicPlanXDomainTeamFlowRouteRouteWithChildren =

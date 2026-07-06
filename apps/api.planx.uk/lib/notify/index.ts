@@ -22,7 +22,6 @@ const GENERAL_TEMPLATE_MAP: Partial<Record<Template, Template>> = {
   "payment-expiry-agent": "general-payment-expiry-agent",
   "confirmation-agent": "general-confirmation-agent",
   "confirmation-payee": "general-confirmation-payee",
-  "new-download-link": "general-new-download-link",
 };
 
 export const resolveNotifyTemplate = (

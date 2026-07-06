@@ -52,10 +52,6 @@ import {
   generalResumeTemplate,
 } from "./saveAndReturn/resume-application.js";
 import { lpsLoginTemplate } from "./lps/lpsLoginTemplate.js";
-import {
-  newDownloadLinkTemplate,
-  generalNewDownloadLinkTemplate,
-} from "./sendToEmail/new-download-link.js";
 
 export type NotifyConfig<T> = { personalisation: T; emailReplyToId: string };
 
@@ -116,10 +112,6 @@ export const templateRegistry = {
   "general-resume": generalResumeTemplate,
   "general-save": generalSaveTemplate,
   "general-confirmation": generalUserConfirmationTemplate,
-  // Send to email — application
-  "new-download-link": newDownloadLinkTemplate,
-  // Send to email — general
-  "general-new-download-link": generalNewDownloadLinkTemplate,
   // localplanning.services
   "lps-login": lpsLoginTemplate,
 } as const;

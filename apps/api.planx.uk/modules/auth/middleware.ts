@@ -91,8 +91,6 @@ export const useSendEmailAuth: RequestHandler = (req, res, next): void => {
     case "resume":
     case "general-resume":
     case "lps-login":
-    case "new-download-link":
-    case "general-new-download-link":
       return next();
     default: {
       return handleInvalidTemplate(template);
