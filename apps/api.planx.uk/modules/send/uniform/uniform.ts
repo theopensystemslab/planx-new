@@ -1,17 +1,19 @@
+import { Buffer } from "node:buffer";
+
 import type { AxiosRequestConfig } from "axios";
 import axios, { isAxiosError } from "axios";
 import FormData from "form-data";
 import fs from "fs";
 import { gql } from "graphql-request";
 import jwt from "jsonwebtoken";
-import { Buffer } from "node:buffer";
+
 import { $api } from "../../../client/index.js";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
-import { buildSubmissionExportZip } from "../utils/exportZip.js";
 import type {
   SendIntegrationController,
   SendIntegrationPayload,
 } from "../types.js";
+import { buildSubmissionExportZip } from "../utils/exportZip.js";
 
 interface UniformClient {
   clientId: string;
@@ -263,8 +265,9 @@ async function createSubmission(
   organisationId: string,
   sessionId = "TEST",
 ): Promise<string> {
-  const createSubmissionEndpoint = `${process.env
-    .UNIFORM_SUBMISSION_URL!}/secure/submission`;
+  const createSubmissionEndpoint = `${
+    process.env.UNIFORM_SUBMISSION_URL!
+  }/secure/submission`;
 
   const isStaging = ["mock-server", "staging"].some((hostname) =>
     createSubmissionEndpoint.includes(hostname),
@@ -318,8 +321,9 @@ async function attachArchive(
     return false;
   }
 
-  const attachArchiveEndpoint = `${process.env
-    .UNIFORM_SUBMISSION_URL!}/secure/submission/${submissionId}/archive`;
+  const attachArchiveEndpoint = `${
+    process.env.UNIFORM_SUBMISSION_URL!
+  }/secure/submission/${submissionId}/archive`;
 
   const formData = new FormData();
   formData.append("file", fs.createReadStream(zipPath));
@@ -357,8 +361,9 @@ async function retrieveSubmission(
   token: string,
   submissionId: string,
 ): Promise<UniformSubmissionResponse> {
-  const getSubmissionEndpoint = `${process.env
-    .UNIFORM_SUBMISSION_URL!}/secure/submission/${submissionId}`;
+  const getSubmissionEndpoint = `${
+    process.env.UNIFORM_SUBMISSION_URL!
+  }/secure/submission/${submissionId}`;
 
   const getSubmissionConfig: AxiosRequestConfig = {
     url: getSubmissionEndpoint,

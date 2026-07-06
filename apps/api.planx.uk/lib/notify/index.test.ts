@@ -1,5 +1,6 @@
-import { resolveNotifyTemplate, sendEmail } from "./index.js";
 import { NotifyClient } from "notifications-node-client";
+
+import { resolveNotifyTemplate, sendEmail } from "./index.js";
 import type { TemplateRegistry } from "./templates/index.js";
 import { NOTIFY_TEST_EMAIL } from "./utils.js";
 

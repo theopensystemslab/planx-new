@@ -1,9 +1,10 @@
 import supertest from "supertest";
-import app from "../../../../server.js";
+import type { MockedFunction } from "vitest";
+
 import { createScheduledEvent } from "../../../../lib/hasura/metadata/index.js";
+import app from "../../../../server.js";
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 import { flowWithInviteToPay } from "../../../../tests/mocks/inviteToPayData.js";
-import type { MockedFunction } from "vitest";
 
 vi.mock("../../../../lib/hasura/metadata");
 const mockedCreateScheduledEvent = createScheduledEvent as MockedFunction<

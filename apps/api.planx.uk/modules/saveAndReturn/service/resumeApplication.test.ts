@@ -1,15 +1,16 @@
-import type { LowCalSession } from "../../../types.js";
+import type { Team } from "@opensystemslab/planx-core/types";
 import supertest from "supertest";
+import type { PartialDeep } from "type-fest";
+
+import { NOTIFY_TEST_EMAIL } from "../../../lib/notify/utils.js";
 import app from "../../../server.js";
 import { queryMock } from "../../../tests/graphqlQueryMock.js";
 import {
   mockLowcalSession,
   mockTeam,
 } from "../../../tests/mocks/saveAndReturnMocks.js";
+import type { LowCalSession } from "../../../types.js";
 import { buildContentFromSessions } from "./resumeApplication.js";
-import type { PartialDeep } from "type-fest";
-import type { Team } from "@opensystemslab/planx-core/types";
-import { NOTIFY_TEST_EMAIL } from "../../../lib/notify/utils.js";
 
 const ENDPOINT = "/resume-application";
 

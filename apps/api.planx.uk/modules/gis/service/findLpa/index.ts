@@ -1,4 +1,4 @@
-import type { Success, LocalPlanningAuthorityFeature } from "./types.js";
+import type { LocalPlanningAuthorityFeature, Success } from "./types.js";
 
 export const findLpa = async (lon: number, lat: number): Promise<Success> => {
   const params: Record<string, string> = {

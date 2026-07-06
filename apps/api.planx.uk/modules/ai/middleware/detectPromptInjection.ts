@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
 
 import { ServerError } from "../../../errors/index.js";
-import { GUARDRAIL_REJECTION_REASON, API_ERROR_STATUS } from "../types.js";
 import { logAiGuardrailRejection } from "../logs.js";
+import { API_ERROR_STATUS, GUARDRAIL_REJECTION_REASON } from "../types.js";
 
 // NB. we don't attempt to catch prompt injection attacks based on natural language with regex
 const INJECTION_PATTERNS = [

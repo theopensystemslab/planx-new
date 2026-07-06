@@ -1,8 +1,9 @@
 import type {
   GovUKPayment,
-  Team,
   PaymentRequest,
+  Team,
 } from "@opensystemslab/planx-core/types";
+
 import type { GovNotifyEmailTemplate } from "./lib/notify/index.js";
 
 /**

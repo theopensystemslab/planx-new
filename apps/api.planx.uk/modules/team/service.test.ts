@@ -1,11 +1,10 @@
 import { getTestJWT } from "../../tests/mockJWT.js";
 import { userContext } from "../auth/middleware.js";
-
 import {
-  getUserAndTeam,
   addMember,
-  removeMember,
   changeMemberRole,
+  getUserAndTeam,
+  removeMember,
 } from "./service.js";
 
 const getStoreMock = vi.spyOn(userContext, "getStore");

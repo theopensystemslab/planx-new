@@ -1,20 +1,21 @@
+import type { NextFunction } from "express";
+import { gql } from "graphql-request";
+
+import { $api } from "../../client/index.js";
+import { ServerError } from "../../errors/index.js";
+import { sendEmail } from "../../lib/resend/index.js";
+import type { TemplateRegistry } from "../../lib/resend/templates/index.js";
 import {
-  sendSinglePaymentEmail,
   sendAgentAndPayeeConfirmationEmail,
+  sendSinglePaymentEmail,
 } from "../pay/service/inviteToPay/index.js";
 import { sendSingleApplicationEmail } from "../saveAndReturn/service/utils.js";
-import { ServerError } from "../../errors/index.js";
-import type { NextFunction } from "express";
 import type {
   ConfirmationEmail,
   PaymentEmail,
   ResendEmail,
   SingleApplicationEmail,
 } from "./types.js";
-import { sendEmail } from "../../lib/resend/index.js";
-import { $api } from "../../client/index.js";
-import { gql } from "graphql-request";
-import type { TemplateRegistry } from "../../lib/resend/templates/index.js";
 
 export const singleApplicationEmailController: SingleApplicationEmail = async (
   _req,

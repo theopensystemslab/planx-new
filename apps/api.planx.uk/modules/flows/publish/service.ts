@@ -5,6 +5,7 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 import * as jsondiffpatch from "jsondiffpatch";
+
 import { getClient } from "../../../client/index.js";
 import { getMostRecentPublishedFlow } from "../../../helpers.js";
 import { createScheduledEvent } from "../../../lib/hasura/metadata/index.js";
@@ -123,8 +124,7 @@ export const publishFlow = async (
 
   // If we're publishing a source flow, queue up events to additionally update each of its' templated flows
   let templatedFlowsScheduledEventsResponse:
-    | CreateScheduledEventResponse[]
-    | undefined;
+    CreateScheduledEventResponse[] | undefined;
   if (templatedFlowIds && templatedFlowIds?.length > 0) {
     templatedFlowsScheduledEventsResponse = await Promise.all(
       templatedFlowIds.map((templatedFlowId, i) =>
@@ -145,8 +145,7 @@ export const publishFlow = async (
 
   // If we're publishing a templated flow, queue up an event to resolve any of its' active publish notifications
   let resolveNotificationsScheduledEventResponse:
-    | CreateScheduledEventResponse
-    | undefined;
+    CreateScheduledEventResponse | undefined;
   if (response?.publishedFlow?.flow?.templatedFrom) {
     resolveNotificationsScheduledEventResponse = await createScheduledEvent({
       webhook: `{{HASURA_PLANX_API_URL}}/resolve-notification`,

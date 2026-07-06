@@ -1,6 +1,7 @@
-import supertest from "supertest";
-import app from "../../../../server.js";
 import SlackNotify from "slack-notify";
+import supertest from "supertest";
+
+import app from "../../../../server.js";
 
 const mockSend = vi.fn();
 vi.mock("slack-notify", () => ({

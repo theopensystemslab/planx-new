@@ -1,4 +1,5 @@
 import { Notifier } from "@airbrake/node";
+
 import { isLiveEnv } from "./helpers.js";
 
 const airbrake =

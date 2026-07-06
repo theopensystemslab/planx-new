@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+import { validate } from "../../shared/middleware/validate.js";
 import {
   useFilePermission,
   useNoCache,
@@ -15,7 +16,6 @@ import {
   publicUploadController,
   uploadFileSchema,
 } from "./controller.js";
-import { validate } from "../../shared/middleware/validate.js";
 import { useFileUpload } from "./middleware/useFileUpload.js";
 
 const router = Router();

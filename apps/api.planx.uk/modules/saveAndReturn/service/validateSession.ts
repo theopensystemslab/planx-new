@@ -1,20 +1,21 @@
-import { gql } from "graphql-request";
-import omit from "lodash/omit.js";
-import { getMostRecentPublishedFlow } from "../../../helpers.js";
 import { sortBreadcrumbs } from "@opensystemslab/planx-core";
-import { ComponentType } from "@opensystemslab/planx-core/types";
 import type {
+  FlowGraph,
   NormalizedCrumb,
   OrderedBreadcrumbs,
-  FlowGraph,
 } from "@opensystemslab/planx-core/types";
+import { ComponentType } from "@opensystemslab/planx-core/types";
+import { gql } from "graphql-request";
+import omit from "lodash/omit.js";
+
+import { $api } from "../../../client/index.js";
+import { getMostRecentPublishedFlow } from "../../../helpers.js";
 import type {
   LowCalSession,
   LowCalSessionData,
-  PublishedFlow,
   Node,
+  PublishedFlow,
 } from "../../../types.js";
-import { $api } from "../../../client/index.js";
 import type { ValidationResponse } from "../types.js";
 
 export type ReconciledSession = {

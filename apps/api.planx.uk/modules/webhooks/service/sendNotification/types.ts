@@ -1,4 +1,5 @@
 import type { z } from "zod";
+
 import type { ValidatedRequestHandler } from "../../../../shared/middleware/validate.js";
 import type {
   bopsSubmissionSchema,
@@ -30,10 +31,7 @@ export type S3Body = z.infer<typeof s3SubmissionSchema>["body"];
 export type S3EventData = S3Body["event"]["data"]["new"];
 
 export type EventData =
-  | BOPSEventData
-  | UniformEventData
-  | EmailEventData
-  | S3EventData;
+  BOPSEventData | UniformEventData | EmailEventData | S3EventData;
 
 export type SendSlackNotification = ValidatedRequestHandler<
   typeof sendSlackNotificationSchema,

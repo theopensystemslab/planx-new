@@ -1,4 +1,6 @@
+import type * as planxCore from "@opensystemslab/planx-core";
 import supertest from "supertest";
+
 import app from "../../server.js";
 import {
   authHeader,
@@ -6,7 +8,6 @@ import {
   getTestJWT,
 } from "../../tests/mockJWT.js";
 import { userContext } from "../auth/middleware.js";
-import type * as planxCore from "@opensystemslab/planx-core";
 
 const getStoreMock = vi.spyOn(userContext, "getStore");
 

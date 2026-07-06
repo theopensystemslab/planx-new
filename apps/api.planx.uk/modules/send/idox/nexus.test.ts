@@ -1,4 +1,5 @@
 import supertest from "supertest";
+
 import app from "../../../server.js";
 
 describe(`sending an application to Idox Nexus`, () => {

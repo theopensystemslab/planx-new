@@ -1,3 +1,5 @@
+import type { Stream } from "node:stream";
+
 import {
   generateApplicationHTML,
   generateMapAndLabelHTML,
@@ -7,17 +9,16 @@ import {
 import type { PlanXExportData } from "@opensystemslab/planx-core/types";
 import AdmZip from "adm-zip";
 import fs from "fs";
-import type { Stream } from "node:stream";
 import os from "os";
 import path from "path";
 import sanitize from "sanitize-filename";
 import str from "string-to-stream";
 
 import { $api } from "../../../client/index.js";
+import { logDuration } from "../../../lib/performance.js";
 import type { Passport as IPassport } from "../../../types.js";
 import { getFileFromS3 } from "../../file/service/getFile.js";
 import { isApplicationTypeSupported } from "./helpers.js";
-import { logDuration } from "../../../lib/performance.js";
 
 export async function buildSubmissionExportZip({
   sessionId,

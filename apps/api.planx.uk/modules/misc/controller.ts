@@ -1,5 +1,6 @@
 import type { RequestHandler } from "express";
 import { z } from "zod";
+
 import type { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
 
 export const healthCheck: RequestHandler = (_req, res) =>

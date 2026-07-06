@@ -1,8 +1,9 @@
 import supertest from "supertest";
+
+import { sendEmail } from "../../../../lib/notify/index.js";
 import app from "../../../../server.js";
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 import { sendAgentAndPayeeConfirmationEmail } from "./sendConfirmationEmail.js";
-import { sendEmail } from "../../../../lib/notify/index.js";
 
 vi.mock("../../../../lib/notify", () => ({
   sendEmail: vi.fn(),

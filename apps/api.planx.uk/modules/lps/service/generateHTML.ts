@@ -1,14 +1,15 @@
-import type { Feature, GeoJsonProperties, Geometry } from "geojson";
-import { JSDOM } from "jsdom";
-import createDOMPurify, { type WindowLike } from "dompurify";
-import { subMinutes } from "date-fns";
-import { $api, $public } from "../../../client/index.js";
+import { generateApplicationHTML } from "@opensystemslab/planx-core";
 import type {
   DrawBoundaryUserAction,
   Session,
 } from "@opensystemslab/planx-core/types";
-import { generateApplicationHTML } from "@opensystemslab/planx-core";
+import { subMinutes } from "date-fns";
+import createDOMPurify, { type WindowLike } from "dompurify";
+import type { Feature, GeoJsonProperties, Geometry } from "geojson";
 import { gql } from "graphql-request";
+import { JSDOM } from "jsdom";
+
+import { $api, $public } from "../../../client/index.js";
 import { MY_MAP_ATTRS } from "../../../lib/map.js";
 import { isApplicationTypeSupported } from "../../send/utils/helpers.js";
 

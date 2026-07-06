@@ -1,6 +1,6 @@
+import type { RequestHandler } from "express";
 import multer from "multer";
 import path from "path";
-import type { RequestHandler } from "express";
 
 /**
  * 30mb to match limit set in frontend

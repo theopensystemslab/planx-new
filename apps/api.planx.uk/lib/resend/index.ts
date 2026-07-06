@@ -1,5 +1,6 @@
-import { Resend } from "resend";
 import type { ErrorResponse } from "resend";
+import { Resend } from "resend";
+
 import type { ResendTemplate, TemplateRegistry } from "./templates/index.js";
 
 const resend = new Resend(process.env.RESEND_API_KEY);

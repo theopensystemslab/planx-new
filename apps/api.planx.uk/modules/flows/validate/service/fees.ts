@@ -2,8 +2,9 @@ import {
   ComponentType,
   type FlowGraph,
 } from "@opensystemslab/planx-core/types";
-import type { FlowValidationResponse } from "./index.js";
+
 import { numberOfComponentType } from "../helpers.js";
+import type { FlowValidationResponse } from "./index.js";
 
 const validateFees = (flowGraph: FlowGraph): FlowValidationResponse => {
   const hasPay = numberOfComponentType(flowGraph, ComponentType.Pay) > 0;

@@ -1,9 +1,10 @@
 import { NotifyClient } from "notifications-node-client";
+
 import { $api, $public } from "../../client/index.js";
 import {
-  templateRegistry,
   type Template,
   type TemplateRegistry,
+  templateRegistry,
 } from "./templates/index.js";
 
 export type GovNotifyEmailTemplate = "application" | "general";
@@ -80,4 +81,4 @@ const getClientForTemplate = (template: Template) =>
     ? $api.client
     : $public.client;
 
-export { sendEmail, getClientForTemplate };
+export { getClientForTemplate, sendEmail };

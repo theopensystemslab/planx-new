@@ -1,12 +1,13 @@
-import jwt from "jsonwebtoken";
 import type { CookieOptions, RequestHandler, Response } from "express";
 import type { Request } from "express-jwt";
+import jwt from "jsonwebtoken";
+
+import { getToken } from "./middleware.js";
 import {
   createTokenDigest,
   isTokenRevoked,
   revokeToken,
 } from "./service/logout/revokeToken.js";
-import { getToken } from "./middleware.js";
 
 export const failedLogin: RequestHandler = (_req, _res, next) =>
   next({

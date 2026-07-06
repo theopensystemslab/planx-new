@@ -35,4 +35,4 @@ function expiredAuthHeader({ role }: { role: Role }) {
   return { Authorization: `Bearer ${getTestJWT({ role, isExpired: true })}` };
 }
 
-export { authHeader, getTestJWT, expiredAuthHeader };
+export { authHeader, expiredAuthHeader, getTestJWT };

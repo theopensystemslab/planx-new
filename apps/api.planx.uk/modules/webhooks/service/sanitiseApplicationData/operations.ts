@@ -1,11 +1,11 @@
-import { gql } from "graphql-request";
+import { Passport } from "@opensystemslab/planx-core";
 import { subMonths } from "date-fns";
+import { gql } from "graphql-request";
 
-import type { Operation, OperationResult, QueryResult } from "./types.js";
+import { $api } from "../../../../client/index.js";
 import { runSQL } from "../../../../lib/hasura/schema/index.js";
 import { deleteFilesByURL } from "../../../file/service/deleteFile.js";
-import { $api } from "../../../../client/index.js";
-import { Passport } from "@opensystemslab/planx-core";
+import type { Operation, OperationResult, QueryResult } from "./types.js";
 
 export const RETENTION_PERIOD_MONTHS = 6;
 export const getRetentionPeriod = () =>

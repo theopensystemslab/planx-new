@@ -1,7 +1,8 @@
-import isObject from "lodash/isObject.js";
 import createDOMPurify, { type WindowLike } from "dompurify";
 import he from "he";
 import { JSDOM } from "jsdom";
+import isObject from "lodash/isObject.js";
+
 import { reportError } from "../../../pay/helpers.js";
 
 export class HTMLSanitiser {

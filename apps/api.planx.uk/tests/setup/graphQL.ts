@@ -1,5 +1,6 @@
-import { queryMock } from "../graphqlQueryMock.js";
 import { type MockGraphQLConfig } from "graphql-query-test-mock";
+
+import { queryMock } from "../graphqlQueryMock.js";
 
 // Ensure that all API test run on the default assumption that tokens are not revoked
 // This avoid needing to manually mock this before each test

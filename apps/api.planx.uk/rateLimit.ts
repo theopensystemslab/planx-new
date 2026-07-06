@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import rateLimit from "express-rate-limit";
 import type { Options, ValueDeterminingMiddleware } from "express-rate-limit";
+import rateLimit from "express-rate-limit";
 
 const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
 const TEN_MINUTES_IN_MS = 10 * 60 * 1000;

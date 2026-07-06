@@ -1,6 +1,7 @@
-import supertest from "supertest";
-import app from "../../../server.js";
 import type * as planxCore from "@opensystemslab/planx-core";
+import supertest from "supertest";
+
+import app from "../../../server.js";
 import { authHeader } from "../../../tests/mockJWT.js";
 
 const endpoint = (strings: TemplateStringsArray) =>

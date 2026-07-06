@@ -1,4 +1,6 @@
 import supertest from "supertest";
+
+import { NOTIFY_TEST_EMAIL } from "../../lib/notify/utils.js";
 import app from "../../server.js";
 import { queryMock } from "../../tests/graphqlQueryMock.js";
 import {
@@ -8,7 +10,6 @@ import {
   mockValidateSingleSessionRequest,
   mockValidateSingleSessionRequestMissingSession,
 } from "../../tests/mocks/saveAndReturnMocks.js";
-import { NOTIFY_TEST_EMAIL } from "../../lib/notify/utils.js";
 
 const SAVE_ENDPOINT = "/send-email/save";
 

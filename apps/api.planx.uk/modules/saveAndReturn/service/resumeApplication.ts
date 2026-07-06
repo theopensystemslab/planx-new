@@ -7,8 +7,8 @@ import { $api } from "../../../client/index.js";
 import { resolveNotifyTemplate, sendEmail } from "../../../lib/notify/index.js";
 import type { LowCalSession } from "../../../types.js";
 import {
-  DAYS_UNTIL_EXPIRY,
   calculateExpiryDate,
+  DAYS_UNTIL_EXPIRY,
   getResumeLink,
 } from "./utils.js";
 

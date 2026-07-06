@@ -1,6 +1,5 @@
-import { gql } from "graphql-request";
-
 import { Passport } from "@opensystemslab/planx-core";
+import { gql } from "graphql-request";
 
 import { $api } from "../../../../client/index.js";
 import type { Operation } from "../sanitiseApplicationData/types.js";

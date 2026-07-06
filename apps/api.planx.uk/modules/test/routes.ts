@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import { testSessionMethods } from "./controller.js";
 
 const router = Router();

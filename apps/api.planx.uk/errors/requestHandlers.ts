@@ -1,6 +1,7 @@
 import type { ErrorRequestHandler } from "express";
-import { ServerError } from "./serverError.js";
+
 import airbrake from "../airbrake.js";
+import { ServerError } from "./serverError.js";
 
 /**
  * Check for expired JWTs, redirect to /logout if found

@@ -1,8 +1,9 @@
 import { createHash } from "crypto";
-import { $admin, $api } from "../../../../client/index.js";
 import { gql } from "graphql-request";
-import { getJWTExpiration } from "../jwt.js";
+
+import { $admin, $api } from "../../../../client/index.js";
 import { ServerError } from "../../../../errors/serverError.js";
+import { getJWTExpiration } from "../jwt.js";
 import type { IsRevokedQuery, RevokeTokenMutation } from "./types.js";
 
 /**

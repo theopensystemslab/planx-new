@@ -1,10 +1,11 @@
-import supertest from "supertest";
-import app from "../../../../server.js";
-import { v4 as uuidV4 } from "uuid";
-import { authHeader } from "../../../../tests/mockJWT.js";
 import type * as planxCore from "@opensystemslab/planx-core";
-import { expectedPlanningPermissionPayload } from "../../../../tests/mocks/digitalPlanningDataMocks.js";
+import supertest from "supertest";
+import { v4 as uuidV4 } from "uuid";
+
+import app from "../../../../server.js";
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
+import { authHeader } from "../../../../tests/mockJWT.js";
+import { expectedPlanningPermissionPayload } from "../../../../tests/mocks/digitalPlanningDataMocks.js";
 
 const mockGenerateHTMLData = vi
   .fn()

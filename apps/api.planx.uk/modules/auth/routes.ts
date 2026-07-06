@@ -1,7 +1,8 @@
 import { Router } from "express";
 import type { Authenticator } from "passport";
-import * as Middleware from "./middleware.js";
+
 import * as Controller from "./controller.js";
+import * as Middleware from "./middleware.js";
 
 export default (passport: Authenticator): Router => {
   const router = Router();

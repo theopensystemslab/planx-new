@@ -1,4 +1,5 @@
 import z from "zod";
+
 import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 
 export const useAccessTokenAuthSchema = z.object({
@@ -12,9 +13,7 @@ export const useAccessTokenAuthSchema = z.object({
 
 interface AuthFailure {
   error:
-    | "INVALID_ACCESS_TOKEN"
-    | "REVOKED_ACCESS_TOKEN"
-    | "EXPIRED_ACCESS_TOKEN";
+    "INVALID_ACCESS_TOKEN" | "REVOKED_ACCESS_TOKEN" | "EXPIRED_ACCESS_TOKEN";
 }
 
 type DownloadSubmissionLocals = {

@@ -1,4 +1,5 @@
 import supertest from "supertest";
+
 import app from "../../../server.js";
 import { queryMock } from "../../../tests/graphqlQueryMock.js";
 

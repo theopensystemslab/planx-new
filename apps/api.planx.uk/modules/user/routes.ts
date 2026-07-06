@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import { useLoggedInUserAuth } from "../auth/middleware.js";
 import { getLoggedInUserDetails } from "./controller.js";
 

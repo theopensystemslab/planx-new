@@ -2,6 +2,7 @@ import {
   ComponentType,
   type FlowGraph,
 } from "@opensystemslab/planx-core/types";
+
 import { numberOfComponentType } from "../helpers.js";
 import type { FlowValidationResponse } from "./index.js";
 

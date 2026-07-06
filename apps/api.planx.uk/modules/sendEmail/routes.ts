@@ -1,4 +1,7 @@
 import { Router } from "express";
+
+import { sendEmailLimiter } from "../../rateLimit.js";
+import { validate } from "../../shared/middleware/validate.js";
 import { useSendEmailAuth } from "../auth/middleware.js";
 import {
   confirmationEmailController,
@@ -6,8 +9,6 @@ import {
   resendEmailController,
   singleApplicationEmailController,
 } from "./controller.js";
-import { sendEmailLimiter } from "../../rateLimit.js";
-import { validate } from "../../shared/middleware/validate.js";
 import {
   confirmationEmailSchema,
   paymentEmailSchema,

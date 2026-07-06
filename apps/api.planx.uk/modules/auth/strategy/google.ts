@@ -1,4 +1,5 @@
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+
 import { buildUserJWT } from "../service/jwt.js";
 
 const GOOGLE_AUTH_BLOCKLIST = ["newcastle.gov.uk"];

@@ -6,6 +6,7 @@ import type {
   StrategyVerifyCallbackReq,
 } from "openid-client";
 import { Strategy } from "openid-client";
+
 import { buildUserJWT } from "../service/jwt.js";
 
 export const MICROSOFT_OPENID_CONFIG_URL =

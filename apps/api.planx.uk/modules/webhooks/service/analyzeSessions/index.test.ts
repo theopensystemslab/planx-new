@@ -1,8 +1,8 @@
 import supertest from "supertest";
 
 import app from "../../../../server.js";
-import * as operations from "./operations.js";
 import * as sharedOperations from "../sanitiseApplicationData/operations.js";
+import * as operations from "./operations.js";
 
 const mockSend = vi.fn();
 const mockSlackNotify = vi.fn().mockImplementation(() => {

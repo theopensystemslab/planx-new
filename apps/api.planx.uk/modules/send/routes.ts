@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import { validate } from "../../shared/middleware/validate.js";
 import {
   useFilePermission,
@@ -9,6 +10,9 @@ import {
 import { sendToBOPS } from "./bops/bops.js";
 import { createSendEvents } from "./createSendEvents/controller.js";
 import { combinedEventsPayloadSchema } from "./createSendEvents/types.js";
+import { downloadSubmission } from "./downloadSubmission/controller.js";
+import { useAccessTokenAuth } from "./downloadSubmission/middleware.js";
+import { useAccessTokenAuthSchema } from "./downloadSubmission/types.js";
 import { sendToEmail } from "./email/index.js";
 import { getSubmissionsController, getSubmissionsSchema } from "./fme/index.js";
 import { sendToIdoxNexus } from "./idox/nexus.js";
@@ -18,9 +22,6 @@ import { submissionSchema } from "./submission/schema.js";
 import { submissionZipController } from "./submission/zip/controller.js";
 import { sendIntegrationSchema } from "./types.js";
 import { sendToUniform } from "./uniform/uniform.js";
-import { useAccessTokenAuth } from "./downloadSubmission/middleware.js";
-import { useAccessTokenAuthSchema } from "./downloadSubmission/types.js";
-import { downloadSubmission } from "./downloadSubmission/controller.js";
 
 const router = Router();
 

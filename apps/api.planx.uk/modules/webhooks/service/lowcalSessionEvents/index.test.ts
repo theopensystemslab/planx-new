@@ -2,18 +2,18 @@ import { addDays } from "date-fns";
 import supertest from "supertest";
 import type { MockedFunction } from "vitest";
 
-import app from "../../../../server.js";
-import { MOCK_UUID } from "../../../../tests/mocks/lowcalSessionMocks.js";
 import {
   createScheduledEvent,
-  getScheduledEvents,
   deleteScheduledEvent,
+  getScheduledEvents,
 } from "../../../../lib/hasura/metadata/index.js";
 import type {
-  RequiredCreateScheduledEventArgs,
-  GetScheduledEventsArgs,
   DeleteScheduledEventArgs,
+  GetScheduledEventsArgs,
+  RequiredCreateScheduledEventArgs,
 } from "../../../../lib/hasura/metadata/types.js";
+import app from "../../../../server.js";
+import { MOCK_UUID } from "../../../../tests/mocks/lowcalSessionMocks.js";
 import { DAYS_UNTIL_EXPIRY } from "../../../saveAndReturn/service/utils.js";
 import { DELETE_EVENT_COMMENT_TEMPLATE } from "./index.js";
 

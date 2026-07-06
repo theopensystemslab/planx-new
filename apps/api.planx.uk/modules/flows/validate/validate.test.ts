@@ -1,15 +1,15 @@
-import supertest from "supertest";
-
-import { queryMock } from "../../../tests/graphqlQueryMock.js";
-import { authHeader, getTestJWT } from "../../../tests/mockJWT.js";
-import app from "../../../server.js";
-import { flowWithInviteToPay } from "../../../tests/mocks/inviteToPayData.js";
-import { userContext } from "../../auth/middleware.js";
 import {
   ComponentType,
   type FlowGraph,
 } from "@opensystemslab/planx-core/types";
+import supertest from "supertest";
+
+import app from "../../../server.js";
+import { queryMock } from "../../../tests/graphqlQueryMock.js";
+import { authHeader, getTestJWT } from "../../../tests/mockJWT.js";
+import { flowWithInviteToPay } from "../../../tests/mocks/inviteToPayData.js";
 import { mockFlowData } from "../../../tests/mocks/validateAndPublishMocks.js";
+import { userContext } from "../../auth/middleware.js";
 
 beforeAll(() => {
   const getStoreMock = vi.spyOn(userContext, "getStore");
