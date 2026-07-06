@@ -2,6 +2,7 @@ import supertest from "supertest";
 import type * as planxCore from "@opensystemslab/planx-core";
 import { queryMock } from "../../../tests/graphqlQueryMock.js";
 import app from "../../../server.js";
+import { sendEmail } from "../../../lib/resend/index.js";
 
 vi.mock("@opensystemslab/planx-core", async () => {
   const actualCore = await vi.importActual<typeof planxCore>(
@@ -166,6 +167,38 @@ describe(`sending an application by email to a planning office`, () => {
           inbox: "delivered@resend.dev",
           resendTemplate: "submit",
         });
+      });
+  });
+
+  it("passes an idempotency key scoped to the session so retries don't double-send", async () => {
+    await supertest(app)
+      .post("/email-submission/southwark")
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+      .send({ payload: { sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" } })
+      .expect(200);
+
+    expect(sendEmail).toHaveBeenCalledWith(
+      "submit",
+      "delivered@resend.dev",
+      expect.any(Object),
+      { idempotencyKey: "submit-33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
+    );
+  });
+
+  it("returns a 500 with the classified message when the Resend send fails", async () => {
+    vi.mocked(sendEmail).mockRejectedValueOnce(
+      new Error(
+        `Failed to send "submit" email using Resend [application_error]: Something went wrong`,
+      ),
+    );
+
+    await supertest(app)
+      .post("/email-submission/southwark")
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+      .send({ payload: { sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" } })
+      .expect(500)
+      .then((res) => {
+        expect(res.body.error).toMatch(/application_error/);
       });
   });
 

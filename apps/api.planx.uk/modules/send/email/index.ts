@@ -67,7 +67,10 @@ export const sendToEmail: SendIntegrationController = async (
     });
 
     // Send the email
-    const response = await sendEmail("submit", submissionEmailAddress, config);
+    const response = await sendEmail("submit", submissionEmailAddress, config, {
+      // Ensure a Hasura retry never sends a duplicate email
+      idempotencyKey: `submit-${sessionId}`,
+    });
 
     // Mark session as submitted so that reminder and expiry emails are not triggered
     markSessionAsSubmitted(sessionId);
