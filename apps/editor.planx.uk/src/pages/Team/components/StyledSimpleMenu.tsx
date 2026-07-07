@@ -1,5 +1,5 @@
 import { styled } from "@mui/material/styles";
-import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
+import type { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import SimpleMenu from "ui/editor/SimpleMenu";
 
 export interface FlowMenuProps {

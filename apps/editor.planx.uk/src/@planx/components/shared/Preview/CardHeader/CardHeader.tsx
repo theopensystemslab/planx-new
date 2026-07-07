@@ -15,7 +15,7 @@ import {
   Image,
   TitleWrapper,
 } from "./styled";
-import { ICardHeader } from "./types";
+import type { ICardHeader } from "./types";
 
 export const CardHeader: React.FC<ICardHeader> = ({
   title,

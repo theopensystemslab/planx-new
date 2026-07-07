@@ -8,7 +8,7 @@ import {
 import type { NewFlow } from "lib/api/flow/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
-import { CreateFlow } from "../types";
+import type { CreateFlow } from "../types";
 
 export const useCreateFlow = () => {
   return useMutation<

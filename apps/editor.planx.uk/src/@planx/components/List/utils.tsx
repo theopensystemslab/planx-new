@@ -2,17 +2,19 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 
 import { formatAsSingleLineAddress } from "../AddressInput/model";
-import {
+import type {
   Field,
+  NumberField,
+  ResponseValue,
+  SchemaUserResponse,
+} from "../shared/Schema/model";
+import {
   isAddressFieldResponse,
   isChecklistFieldResponse,
   isFileUploadFieldResponse,
   isMapFieldResponse,
   isNumberFieldResponse,
   isTextResponse,
-  NumberField,
-  ResponseValue,
-  SchemaUserResponse,
 } from "../shared/Schema/model";
 
 const List = styled("ul")(() => ({

@@ -1,5 +1,5 @@
 import { getData } from "../analytics/utils";
-import { Store } from "../store";
+import type { Store } from "../store";
 
 describe("Allow-list sanitisation: proposal.projectType and property.type", () => {
   test("preserves arrays for certain allow list answers", () => {

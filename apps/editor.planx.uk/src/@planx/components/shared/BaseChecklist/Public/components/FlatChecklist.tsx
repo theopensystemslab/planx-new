@@ -1,14 +1,12 @@
 import Grid from "@mui/material/Grid";
 import { visuallyHidden } from "@mui/utils";
-import {
-  checklistInputValidationSchema,
-  FlatChecklist,
-} from "@planx/components/Checklist/model";
-import { Option } from "@planx/components/Option/model";
+import type { FlatChecklist } from "@planx/components/Checklist/model";
+import { checklistInputValidationSchema } from "@planx/components/Checklist/model";
+import type { Option } from "@planx/components/Option/model";
 import { ChecklistLayout } from "@planx/components/shared/BaseChecklist/model";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
-import { PublicProps } from "@planx/components/shared/types";
+import type { PublicProps } from "@planx/components/shared/types";
 import { getIn, useFormik } from "formik";
 import { partition } from "lodash";
 import React, { useEffect } from "react";

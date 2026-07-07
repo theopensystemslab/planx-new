@@ -1,12 +1,13 @@
 import { formatGovPayMetadata } from "@opensystemslab/planx-core";
-import {
+import type {
   GovPayMetadata,
   GovUKCreatePaymentPayload,
   Passport as IPassport,
 } from "@opensystemslab/planx-core/types";
 import { richText } from "lib/yupExtensions";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { ApplicationPath, Passport } from "types";
+import type { Passport } from "types";
+import { ApplicationPath } from "types";
 import { array, boolean, mixed, object, string } from "yup";
 
 import { type BaseNodeData, parseBaseNodeData } from "../shared";

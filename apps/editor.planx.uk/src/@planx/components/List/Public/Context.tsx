@@ -1,6 +1,6 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useSchema } from "@planx/components/shared/Schema/hook";
-import {
+import type {
   Schema,
   SchemaUserData,
   SchemaUserResponse,
@@ -10,20 +10,17 @@ import {
   getRequestedFiles,
   partitionSchemaData,
 } from "@planx/components/shared/Schema/utils";
-import { PublicProps } from "@planx/components/shared/types";
+import type { PublicProps } from "@planx/components/shared/types";
 import {
   getPreviouslySubmittedData,
   makeData,
 } from "@planx/components/shared/utils";
-import { FormikProps, useFormik } from "formik";
-import React, {
-  createContext,
-  PropsWithChildren,
-  useContext,
-  useState,
-} from "react";
+import type { FormikProps } from "formik";
+import { useFormik } from "formik";
+import type { PropsWithChildren } from "react";
+import React, { createContext, useContext, useState } from "react";
 
-import { List } from "../model";
+import type { List } from "../model";
 import {
   flatten,
   sumIdenticalUnits,

@@ -1,5 +1,6 @@
 import { screen, waitFor, within } from "@testing-library/react";
-import { FullStore, useStore } from "pages/FlowEditor/lib/store";
+import type { FullStore } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";

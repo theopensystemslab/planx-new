@@ -1,5 +1,6 @@
 import { styled } from "@mui/material/styles";
-import React, { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
+import React from "react";
 
 const Root = styled("main")(() => ({
   width: "100%",

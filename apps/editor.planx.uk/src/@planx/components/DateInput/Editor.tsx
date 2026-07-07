@@ -1,12 +1,12 @@
 import Box from "@mui/material/Box";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import type { DateInput } from "@planx/components/DateInput/model";
 import {
-  DateInput,
   editorValidationSchema,
   paddedDate,
   parseDateInput,
 } from "@planx/components/DateInput/model";
-import { EditorProps } from "@planx/components/shared/types";
+import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";

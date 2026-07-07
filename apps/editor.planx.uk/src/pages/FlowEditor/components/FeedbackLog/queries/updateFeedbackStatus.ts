@@ -1,8 +1,8 @@
-import { GridRowId } from "@mui/x-data-grid";
+import type { GridRowId } from "@mui/x-data-grid";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
 
-import { FeedbackStatus } from "../types";
+import type { FeedbackStatus } from "../types";
 
 export const updateFeedbackStatus = async (
   selectedRowIds: readonly GridRowId[],

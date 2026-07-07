@@ -1,12 +1,13 @@
 import { QuestionLayout } from "@planx/components/shared/BaseQuestion/model";
 import { act, waitFor } from "@testing-library/react";
-import { Store, useStore } from "pages/FlowEditor/lib/store";
+import type { Store } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { setup } from "test/utils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import { Option } from "../Option/model";
+import type { Option } from "../Option/model";
 import QuestionComponent from "./Public";
 
 const { setState } = useStore;

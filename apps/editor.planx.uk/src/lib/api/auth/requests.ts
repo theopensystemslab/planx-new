@@ -1,4 +1,4 @@
-import { User } from "@opensystemslab/planx-core/types";
+import type { User } from "@opensystemslab/planx-core/types";
 import apiClient from "lib/api/client";
 
 export const getUser = async () => {

@@ -14,11 +14,8 @@ import SettingsDescription from "ui/editor/SettingsDescription";
 import SettingsFormContainer from "../../shared/SettingsForm";
 import { EJECT_FLOW_FROM_TEMPLATE, GET_FLOW_TEMPLATE_STATUS } from "./queries";
 import { validationSchema } from "./schema";
-import {
-  type EjectFlowFromTemplate,
-  type FormValues,
-  GetFlowTemplateStatus,
-} from "./types";
+import type { GetFlowTemplateStatus } from "./types";
+import { type EjectFlowFromTemplate, type FormValues } from "./types";
 
 const Template: React.FC = () => {
   const [flowId, flowSlug] = useStore((state) => [state.id, state.flowSlug]);

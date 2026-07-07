@@ -1,7 +1,9 @@
 import { richText } from "lib/yupExtensions";
-import { object, SchemaOf, string } from "yup";
+import type { SchemaOf } from "yup";
+import { object, string } from "yup";
 
-import { BaseNodeData, baseNodeDataValidationSchema } from "../shared";
+import type { BaseNodeData } from "../shared";
+import { baseNodeDataValidationSchema } from "../shared";
 
 export interface Review extends BaseNodeData {
   title: string;

@@ -1,5 +1,5 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { Meta, StoryObj } from "@storybook/tanstack-react";
+import type { Meta, StoryObj } from "@storybook/tanstack-react";
 import { userEvent, within } from "storybook/test";
 
 import Wrapper from "../fixtures/Wrapper";

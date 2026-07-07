@@ -1,6 +1,6 @@
 import type { JSONContent } from "@tiptap/core";
 
-import { Variant } from "./types";
+import type { Variant } from "./types";
 
 export type RichTextValidator = (
   content: JSONContent[],

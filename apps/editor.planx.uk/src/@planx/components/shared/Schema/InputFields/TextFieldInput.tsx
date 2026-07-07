@@ -6,7 +6,8 @@ import { CharacterCounter } from "ui/shared/CharacterCounter";
 import Input from "ui/shared/Input/Input";
 
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../../constants";
-import { getFieldProps, Props } from ".";
+import type { Props } from ".";
+import { getFieldProps } from ".";
 import { FieldInputDescription } from "./shared";
 
 export const TextFieldInput: React.FC<Props<TextField>> = (props) => {

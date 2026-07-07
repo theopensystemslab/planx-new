@@ -1,6 +1,6 @@
 import { usePrefetchClassifiedRoads } from "@planx/components/PlanningConstraints/Public/hooks/useClassifiedRoads";
 import { useQuery } from "@tanstack/react-query";
-import { Feature } from "geojson";
+import type { Feature } from "geojson";
 import { getFindPropertyData } from "lib/planningData/requests";
 import { useMemo } from "react";
 

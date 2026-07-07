@@ -1,11 +1,10 @@
 import { useMutation } from "@apollo/client";
 
-import {
+import type {
   FlowMutationResponse,
-  GET_FLOWS,
-  RENAME_FLOW,
   RenameFlowMutationVars,
 } from "../../queries";
+import { GET_FLOWS, RENAME_FLOW } from "../../queries";
 
 export const useRenameFlow = (teamId: number) =>
   useMutation<FlowMutationResponse, RenameFlowMutationVars>(RENAME_FLOW, {

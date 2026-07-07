@@ -1,4 +1,4 @@
-import { AutocompleteProps } from "@mui/material/Autocomplete";
+import type { AutocompleteProps } from "@mui/material/Autocomplete";
 
 type RequiredAutocompleteProps<T> = Pick<
   AutocompleteProps<T, false, false, boolean, "div">,

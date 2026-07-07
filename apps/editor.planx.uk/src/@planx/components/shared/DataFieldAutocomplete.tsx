@@ -1,7 +1,5 @@
-import {
-  AutocompleteProps,
-  createFilterOptions,
-} from "@mui/material/Autocomplete";
+import type { AutocompleteProps } from "@mui/material/Autocomplete";
+import { createFilterOptions } from "@mui/material/Autocomplete";
 import ListItem from "@mui/material/ListItem";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";

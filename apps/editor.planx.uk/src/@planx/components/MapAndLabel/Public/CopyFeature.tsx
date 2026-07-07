@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import { visuallyHidden } from "@mui/utils";
 import { useFormik } from "formik";
-import { Feature } from "geojson";
+import type { Feature } from "geojson";
 import React from "react";
 import InputLabel from "ui/public/InputLabel";
 import SelectInput from "ui/shared/SelectInput/SelectInput";

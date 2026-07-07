@@ -13,13 +13,14 @@ import {
   usePlanningDataEntityNames,
 } from "@planx/components/shared/hooks";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
-import { FormikValues, getIn } from "formik";
+import type { FormikValues } from "formik";
+import { getIn } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
 import React from "react";
-import { FormikHookReturn } from "types";
+import type { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import { StyledAddButton } from "ui/editor/ListManager/ListManager";
 import Input from "ui/shared/Input/Input";

@@ -1,4 +1,4 @@
-import { TeamRole } from "@opensystemslab/planx-core/types";
+import type { TeamRole } from "@opensystemslab/planx-core/types";
 import { graphql, HttpResponse } from "msw";
 import server from "test/mockServer";
 

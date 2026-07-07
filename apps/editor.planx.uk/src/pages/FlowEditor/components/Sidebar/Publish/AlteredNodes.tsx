@@ -6,7 +6,7 @@ import ListItemText from "@mui/material/ListItemText";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { AlteredNode, HistoryItem } from "lib/api/publishFlow/types";
+import type { AlteredNode, HistoryItem } from "lib/api/publishFlow/types";
 import { formatLastEditDate } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -15,10 +15,8 @@ import Permission from "ui/editor/Permission";
 import Caret from "ui/icons/Caret";
 
 import { isAutoComment } from "../utils";
-import {
-  AlteredExternalPortalsSummary,
-  ExternalPortal,
-} from "./AlteredExternalPortals";
+import type { ExternalPortal } from "./AlteredExternalPortals";
+import { AlteredExternalPortalsSummary } from "./AlteredExternalPortals";
 import {
   PublishModalAccordion,
   PublishModalAccordionSummary,

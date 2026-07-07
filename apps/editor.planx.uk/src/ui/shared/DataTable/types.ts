@@ -1,10 +1,10 @@
-import {
+import type {
   GridColDef,
   GridRenderCellParams,
   GridSingleSelectColDef,
   GridTreeNodeWithRender,
 } from "@mui/x-data-grid";
-import React from "react";
+import type React from "react";
 
 export const ColumnFilterType = {
   BOOLEAN: "boolean",

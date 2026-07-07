@@ -1,13 +1,14 @@
 import { useSlackMessage } from "pages/FlowEditor/components/Settings/hooks/useSlackMessage";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { ChangeEvent } from "react";
+import type { ChangeEvent } from "react";
+import React from "react";
 import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input/Input";
 
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import { GET_TEAM_SETTINGS, UPDATE_TEAM_SETTINGS } from "./queries";
 import { defaultValues, validationSchema } from "./schema";
-import {
+import type {
   ContactFormValues,
   GetTeamSettingsData,
   UpdateTeamSettingsVariables,

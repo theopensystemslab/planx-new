@@ -9,7 +9,7 @@ import {
 import ImageButton from "@planx/components/shared/Buttons/ImageButton";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
-import { PublicProps } from "@planx/components/shared/types";
+import type { PublicProps } from "@planx/components/shared/types";
 import { getIn, useFormik } from "formik";
 import React, { useEffect } from "react";
 import FormWrapper from "ui/public/FormWrapper";

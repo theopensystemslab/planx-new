@@ -4,7 +4,7 @@ import FormControl from "@mui/material/FormControl";
 import RadioGroup from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { EditorProps } from "@planx/components/shared/types";
+import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -17,12 +17,11 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import BasicRadio from "../shared/Radio/BasicRadio/BasicRadio";
+import type { Section, SectionLength } from "./model";
 import {
   parseSection,
-  Section,
   SECTION_LENGTH,
   SECTION_LENGTH_DESCRIPTIONS,
-  SectionLength,
   validationSchema,
 } from "./model";
 

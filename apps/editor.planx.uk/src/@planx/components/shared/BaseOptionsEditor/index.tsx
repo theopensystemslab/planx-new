@@ -7,12 +7,12 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
-import { Option } from "../../Option/model";
+import type { Option } from "../../Option/model";
 import { DataFieldAutocomplete } from "../DataFieldAutocomplete";
 import { FlagsSelect } from "../FlagsSelect";
 import { RuleBuilder } from "../RuleBuilder";
 import { Condition } from "../RuleBuilder/types";
-import { Props } from "./types";
+import type { Props } from "./types";
 
 export const BaseOptionsEditor: React.FC<Props> = (props) => {
   const updateSharedField = <K extends keyof Option["data"]>(

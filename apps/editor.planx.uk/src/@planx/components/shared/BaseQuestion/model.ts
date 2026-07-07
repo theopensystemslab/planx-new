@@ -1,14 +1,12 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { Option, optionValidationSchema } from "@planx/components/Option/model";
+import type { Option } from "@planx/components/Option/model";
+import { optionValidationSchema } from "@planx/components/Option/model";
 import { richText } from "lib/yupExtensions";
 import { array, object, SchemaOf, string } from "yup";
 
-import {
-  BaseNodeData,
-  baseNodeDataValidationSchema,
-  parseBaseNodeData,
-} from "..";
-import { Child } from "../types";
+import type { BaseNodeData } from "..";
+import { baseNodeDataValidationSchema, parseBaseNodeData } from "..";
+import type { Child } from "../types";
 
 /**
  * Base fields shared between Question and ResponsiveQuestion components

@@ -2,10 +2,11 @@ import { act, screen, waitFor, within } from "@testing-library/react";
 // eslint-disable-next-line no-restricted-imports
 import type { UserEvent } from "@testing-library/user-event";
 import { uploadPrivateFile } from "lib/api/fileUpload/requests";
-import { FullStore, useStore } from "pages/FlowEditor/lib/store";
+import type { FullStore } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { setup } from "test/utils";
-import { Breadcrumbs } from "types";
+import type { Breadcrumbs } from "types";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 

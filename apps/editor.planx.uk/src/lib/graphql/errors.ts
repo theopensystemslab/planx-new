@@ -1,7 +1,7 @@
-import { Operation } from "@apollo/client";
+import type { Operation } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
 import { logger } from "airbrake";
-import { GraphQLFormattedError } from "graphql";
+import type { GraphQLFormattedError } from "graphql";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { toast } from "react-toastify";
 

@@ -12,8 +12,9 @@ import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
-import { EditorProps } from "../shared/types";
-import { FileUpload, parseFileUpload, validationSchema } from "./model";
+import type { EditorProps } from "../shared/types";
+import type { FileUpload } from "./model";
+import { parseFileUpload, validationSchema } from "./model";
 
 type Props = EditorProps<TYPES.FileUpload, FileUpload>;
 

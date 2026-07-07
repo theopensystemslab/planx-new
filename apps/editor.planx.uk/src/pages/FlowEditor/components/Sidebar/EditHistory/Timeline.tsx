@@ -9,8 +9,8 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import { OT } from "@planx/graph/types";
-import {
+import type { OT } from "@planx/graph/types";
+import type {
   CommentHistoryItem,
   HistoryItem,
   OperationHistoryItem,

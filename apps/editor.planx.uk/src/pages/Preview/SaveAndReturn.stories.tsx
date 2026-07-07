@@ -1,4 +1,4 @@
-import { Meta } from "@storybook/tanstack-react";
+import type { Meta } from "@storybook/tanstack-react";
 
 import SaveAndReturn, { ConfirmEmail } from "./SaveAndReturn";
 

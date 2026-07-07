@@ -4,19 +4,13 @@ import {
 } from "@planx/components/shared";
 import { richText } from "lib/yupExtensions";
 import type { TestContext } from "vitest";
-import {
-  array,
-  boolean,
-  mixed,
-  object,
-  SchemaOf,
-  string,
-  ValidationError,
-} from "yup";
+import type { SchemaOf } from "yup";
+import { array, boolean, mixed, object, string, ValidationError } from "yup";
 
-import { Condition, Operator, Rule } from "../shared/RuleBuilder/types";
+import type { Rule } from "../shared/RuleBuilder/types";
+import { Condition, Operator } from "../shared/RuleBuilder/types";
 import { checkIfConditionalRule } from "../shared/RuleBuilder/utils";
-import {
+import type {
   FileList,
   FileType,
   FileUploadAndLabel,

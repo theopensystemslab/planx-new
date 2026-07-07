@@ -6,7 +6,7 @@ import { Switch } from "ui/shared/Switch";
 import SettingsFormContainer from "../../../shared/SettingsForm";
 import { GET_TEAM_SETTINGS, UPDATE_TEAM_SETTINGS } from "./queries";
 import { defaultValues, validationSchema } from "./schema";
-import {
+import type {
   GetTeamSettingsData,
   TrialAccountFormValues,
   UpdateTeamSettingsVariables,

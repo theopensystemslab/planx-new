@@ -1,6 +1,6 @@
 import apiClient from "lib/api/client";
 
-import {
+import type {
   ReconciliationResponse,
   SendResumeEmailPayload,
   SendSaveEmailResponse,

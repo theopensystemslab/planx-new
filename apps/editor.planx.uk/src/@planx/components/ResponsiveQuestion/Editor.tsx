@@ -1,23 +1,21 @@
-import {
-  ComponentType,
-  ComponentType as TYPES,
-} from "@opensystemslab/planx-core/types";
+import type { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
-import { FormikErrors, FormikValues } from "formik";
+import type { FormikErrors, FormikValues } from "formik";
 import React from "react";
 
-import { ConditionalOption } from "../Option/model";
+import type { ConditionalOption } from "../Option/model";
 import BaseQuestionComponent from "../shared/BaseQuestion/Editor";
 import {
   baseQuestionValidationSchema,
   buildChildren,
 } from "../shared/BaseQuestion/model";
-import { EditorProps } from "../shared/types";
-import {
-  parseResponsiveQuestion,
+import type { EditorProps } from "../shared/types";
+import type {
   ResponsiveQuestion,
   ResponsiveQuestionWithOptions,
 } from "./model";
+import { parseResponsiveQuestion } from "./model";
 
 export type Props = EditorProps<
   TYPES.ResponsiveQuestion,

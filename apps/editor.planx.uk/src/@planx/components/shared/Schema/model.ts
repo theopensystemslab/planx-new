@@ -1,30 +1,23 @@
-import { Address } from "@opensystemslab/planx-core/types";
-import {
-  AddressInput,
-  addressValidationSchema,
-} from "@planx/components/AddressInput/model";
+import type { Address } from "@opensystemslab/planx-core/types";
+import type { AddressInput } from "@planx/components/AddressInput/model";
+import { addressValidationSchema } from "@planx/components/AddressInput/model";
 import { checklistInputValidationSchema } from "@planx/components/Checklist/model";
-import {
-  DateInput,
-  dateInputValidationSchema,
-} from "@planx/components/DateInput/model";
-import {
+import type { DateInput } from "@planx/components/DateInput/model";
+import { dateInputValidationSchema } from "@planx/components/DateInput/model";
+import type {
   FileUpload,
   FileUploadSlot,
-  fileUploadValidationSchema,
 } from "@planx/components/FileUpload/model";
-import {
-  NumberInput,
-  numberInputValidationSchema,
-} from "@planx/components/NumberInput/model";
-import { Option } from "@planx/components/Option/model";
-import {
-  TextInput,
-  textInputValidationSchema,
-} from "@planx/components/TextInput/model";
-import { Feature } from "geojson";
+import { fileUploadValidationSchema } from "@planx/components/FileUpload/model";
+import type { NumberInput } from "@planx/components/NumberInput/model";
+import { numberInputValidationSchema } from "@planx/components/NumberInput/model";
+import type { Option } from "@planx/components/Option/model";
+import type { TextInput } from "@planx/components/TextInput/model";
+import { textInputValidationSchema } from "@planx/components/TextInput/model";
+import type { Feature } from "geojson";
 import { exhaustiveCheck } from "utils";
-import { array, BaseSchema, object, ObjectSchema, string } from "yup";
+import type { BaseSchema, ObjectSchema } from "yup";
+import { array, object, string } from "yup";
 
 /**
  * Simplified custom QuestionInput

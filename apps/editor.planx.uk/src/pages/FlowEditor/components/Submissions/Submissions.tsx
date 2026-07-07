@@ -8,7 +8,7 @@ import { slugify } from "utils";
 
 import { useStore } from "../../lib/store";
 import EventsLog from "./components/EventsLog";
-import { Submission, SubmissionsProps } from "./types";
+import type { Submission, SubmissionsProps } from "./types";
 
 const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
   const [teamId] = useStore((state) => [state.teamId]);

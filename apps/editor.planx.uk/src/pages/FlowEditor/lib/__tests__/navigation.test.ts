@@ -1,6 +1,7 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 
-import { FullStore, useStore } from "../store";
+import type { FullStore } from "../store";
+import { useStore } from "../store";
 import flowWithoutSections from "./mocks/flowWithClones.json";
 import flowWithSectionsInFolders from "./mocks/flowWithSectionsInFolders.json";
 import flowWithThreeSections from "./mocks/flowWithThreeSections.json";

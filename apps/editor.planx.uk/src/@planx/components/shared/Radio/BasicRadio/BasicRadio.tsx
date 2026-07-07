@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
-import FormControlLabel, {
-  FormControlLabelProps,
-} from "@mui/material/FormControlLabel";
+import type { FormControlLabelProps } from "@mui/material/FormControlLabel";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import { formControlLabelClasses } from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import React from "react";

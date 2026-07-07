@@ -1,9 +1,9 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { ChecklistWithOptions } from "@planx/components/Checklist/model";
-import { ResponsiveChecklistWithOptions } from "@planx/components/ResponsiveChecklist/model";
+import type { ChecklistWithOptions } from "@planx/components/Checklist/model";
+import type { ResponsiveChecklistWithOptions } from "@planx/components/ResponsiveChecklist/model";
 import React from "react";
 
-import { Props } from "../types";
+import type { Props } from "../types";
 import { Options } from "./Options/index";
 
 export const TypeNarrowedOptions: React.FC<Props> = ({

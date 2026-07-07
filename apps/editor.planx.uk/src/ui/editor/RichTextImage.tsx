@@ -6,11 +6,8 @@ import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Image } from "@tiptap/extension-image";
-import {
-  NodeViewProps,
-  NodeViewWrapper,
-  ReactNodeViewRenderer,
-} from "@tiptap/react";
+import type { NodeViewProps } from "@tiptap/react";
+import { NodeViewWrapper, ReactNodeViewRenderer } from "@tiptap/react";
 import React from "react";
 
 const StyledNodeViewWrapper = styled(NodeViewWrapper, {

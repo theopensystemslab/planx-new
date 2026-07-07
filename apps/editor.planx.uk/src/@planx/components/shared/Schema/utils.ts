@@ -5,7 +5,7 @@ import { convertNumberToText } from "@planx/components/List/utils";
 import { mergeWith, partition, unzip } from "lodash";
 import { useStore } from "pages/FlowEditor/lib/store";
 
-import {
+import type {
   Field,
   FileUploadField,
   ResponseValue,

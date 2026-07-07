@@ -1,7 +1,8 @@
 import Button from "@mui/material/Button";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { act, screen, waitFor } from "@testing-library/react";
-import { FullStore, useStore } from "pages/FlowEditor/lib/store";
+import type { FullStore } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { setup } from "test/utils";
 import { ApplicationPath } from "types";

@@ -1,5 +1,5 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { AnyOption } from "@planx/components/Option/model";
+import type { AnyOption } from "@planx/components/Option/model";
 import { DEFAULT_RULE } from "@planx/components/ResponsiveChecklist/model";
 import {
   usePlanningConstraintsSchema,
@@ -9,7 +9,7 @@ import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { partition } from "lodash";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { FormikHookReturn } from "types";
+import type { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 

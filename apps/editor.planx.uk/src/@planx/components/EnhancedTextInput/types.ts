@@ -1,4 +1,4 @@
-import { BaseNodeData } from "../shared";
+import type { BaseNodeData } from "../shared";
 import type { PublicProps } from "../shared/types";
 
 /**

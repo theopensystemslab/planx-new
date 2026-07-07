@@ -1,4 +1,5 @@
-import { FullStore, useStore } from "../store";
+import type { FullStore } from "../store";
+import { useStore } from "../store";
 import { flowWithDuplicatePassportVars } from "./mocks/computePassport/flowWithDuplicatePassportVars";
 import { flowWithMultipleSetValues } from "./mocks/computePassport/flowWithMultipleSetValues";
 

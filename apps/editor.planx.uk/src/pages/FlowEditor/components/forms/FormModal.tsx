@@ -16,7 +16,7 @@ import {
 import { type BaseNodeData, parseFormValues } from "@planx/components/shared";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import ErrorFallback from "components/Error/ErrorFallback";
-import { FormikProps } from "formik";
+import type { FormikProps } from "formik";
 import isEqual from "lodash/isEqual";
 import {
   nodeIsChildOfTemplatedInternalPortal,

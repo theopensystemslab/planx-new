@@ -1,5 +1,6 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { SectionNode, SectionStatus } from "types";
+import type { SectionNode } from "types";
+import { SectionStatus } from "types";
 
 import { computeSectionStatuses } from "./model";
 

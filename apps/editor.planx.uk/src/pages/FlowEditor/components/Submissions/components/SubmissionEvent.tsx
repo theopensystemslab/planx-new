@@ -1,6 +1,6 @@
 import Typography from "@mui/material/Typography";
 import React from "react";
-import { RenderCellParams } from "ui/shared/DataTable/types";
+import type { RenderCellParams } from "ui/shared/DataTable/types";
 
 export const SubmissionEvent = (params: RenderCellParams) => {
   return (

@@ -10,7 +10,7 @@ import { ArchiveDialog } from "./ArchiveDialog";
 import { useDeleteFlow } from "./hooks/useDeleteFlow";
 import { useUnarchiveFlow } from "./hooks/useUnarchiveFlow";
 import { RenameDialog } from "./RenameDialog";
-import { FlowMenuProps } from "./StyledSimpleMenu";
+import type { FlowMenuProps } from "./StyledSimpleMenu";
 import { StyledSimpleMenu } from "./StyledSimpleMenu";
 
 const ArchivedFlowMenu: React.FC<FlowMenuProps> = ({

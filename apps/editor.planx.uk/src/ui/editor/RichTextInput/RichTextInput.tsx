@@ -4,12 +4,13 @@ import Delete from "@mui/icons-material/Delete";
 import LinkIcon from "@mui/icons-material/Link";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
-import { type Editor, EditorOptions } from "@tiptap/core";
+import type { EditorOptions } from "@tiptap/core";
+import { type Editor } from "@tiptap/core";
 import Mention from "@tiptap/extension-mention";
 import { Placeholder } from "@tiptap/extensions";
 import { EditorContent, useEditor } from "@tiptap/react";
+import type { ChangeEvent } from "react";
 import React, {
-  ChangeEvent,
   type FC,
   useCallback,
   useEffect,
@@ -30,7 +31,7 @@ import {
 import { suggestion } from "./components/suggestion";
 import { RichContentContainer, StyledBubbleMenu } from "./styles";
 import { commonExtensions, passportClassName } from "./tiptapExtensions";
-import { Props } from "./types";
+import type { Props } from "./types";
 import { fromHtml, initialUrlValue, toHtml, trimUrlValue } from "./utils";
 
 const LINE_HEIGHT_REM = 1.5;

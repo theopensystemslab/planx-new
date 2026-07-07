@@ -1,11 +1,10 @@
 import ListItem from "@mui/material/ListItem";
-import {
-  ComponentType as TYPES,
-  NodeTag,
-} from "@opensystemslab/planx-core/types";
+import type { NodeTag } from "@opensystemslab/planx-core/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
-import { FormikProps } from "formik";
-import React, { MutableRefObject } from "react";
+import type { FormikProps } from "formik";
+import type { MutableRefObject } from "react";
+import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -16,7 +15,7 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { PopupIcon } from "ui/shared/PopUpIcon";
 
 import { validationSchema } from "./model";
-import { Flow, FlowAutocompleteListProps } from "./types";
+import type { Flow, FlowAutocompleteListProps } from "./types";
 
 const renderOption: FlowAutocompleteListProps["renderOption"] = (
   props,

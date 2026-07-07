@@ -1,7 +1,8 @@
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
-import { AutocompleteProps } from "@mui/material/Autocomplete";
+import type { AutocompleteProps } from "@mui/material/Autocomplete";
 import Chip from "@mui/material/Chip";
-import { NODE_TAGS, NodeTag, Role } from "@opensystemslab/planx-core/types";
+import type { NodeTag, Role } from "@opensystemslab/planx-core/types";
+import { NODE_TAGS } from "@opensystemslab/planx-core/types";
 import { TAG_DISPLAY_VALUES } from "pages/FlowEditor/components/Flow/components/Tag";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";

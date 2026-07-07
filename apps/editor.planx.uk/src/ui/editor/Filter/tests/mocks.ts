@@ -1,4 +1,4 @@
-import { FilterOptions } from "../Filter";
+import type { FilterOptions } from "../Filter";
 
 export type MockRecordType = {
   name: string;

@@ -9,8 +9,9 @@ import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
-import { EditorProps } from "../shared/types";
-import { parseContent, Review, validationSchema } from "./model";
+import type { EditorProps } from "../shared/types";
+import type { Review } from "./model";
+import { parseContent, validationSchema } from "./model";
 
 type Props = EditorProps<TYPES.Review, Review>;
 

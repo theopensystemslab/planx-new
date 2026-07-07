@@ -1,10 +1,7 @@
 import { useQuery } from "@apollo/client";
 
-import {
-  GET_ARCHIVED_FLOWS,
-  GetAnyFlowsQuery,
-  GetAnyFlowsVars,
-} from "../../queries";
+import type { GetAnyFlowsQuery, GetAnyFlowsVars } from "../../queries";
+import { GET_ARCHIVED_FLOWS } from "../../queries";
 
 export const useGetArchivedFlows = (teamId: number, skip?: boolean) =>
   useQuery<GetAnyFlowsQuery, GetAnyFlowsVars>(GET_ARCHIVED_FLOWS, {

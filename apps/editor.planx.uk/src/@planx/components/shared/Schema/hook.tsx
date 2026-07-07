@@ -1,12 +1,7 @@
-import { FormikConfig } from "formik";
+import type { FormikConfig } from "formik";
 
-import {
-  generateInitialValues,
-  generateValidationSchema,
-  Schema,
-  SchemaUserData,
-  SchemaUserResponse,
-} from "./model";
+import type { Schema, SchemaUserData, SchemaUserResponse } from "./model";
+import { generateInitialValues, generateValidationSchema } from "./model";
 
 type UseSchema = (props: {
   schema: Schema;

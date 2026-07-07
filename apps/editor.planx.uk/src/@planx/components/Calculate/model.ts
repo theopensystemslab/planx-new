@@ -1,6 +1,7 @@
 import * as math from "mathjs";
 
-import { BaseNodeData, parseBaseNodeData } from "../shared";
+import type { BaseNodeData } from "../shared";
+import { parseBaseNodeData } from "../shared";
 
 export interface Calculate extends BaseNodeData {
   title?: string;

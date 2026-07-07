@@ -1,6 +1,6 @@
 import Help from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
-import { BaseNodeData } from "@planx/components/shared";
+import type { BaseNodeData } from "@planx/components/shared";
 import { getIn } from "formik";
 import React from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
@@ -10,7 +10,7 @@ import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 
-import { MoreInformationProps } from "./types";
+import type { MoreInformationProps } from "./types";
 
 export const MoreInformation = <T extends BaseNodeData>({
   formik,

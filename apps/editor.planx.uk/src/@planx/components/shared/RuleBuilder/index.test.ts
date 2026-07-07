@@ -1,6 +1,7 @@
-import { Store } from "pages/FlowEditor/lib/store";
+import type { Store } from "pages/FlowEditor/lib/store";
 
-import { Condition, ConditionalRule, Operator, Rule } from "./types";
+import type { ConditionalRule, Rule } from "./types";
+import { Condition, Operator } from "./types";
 import { isRuleMet } from "./utils";
 
 describe("isRuleMet function", () => {

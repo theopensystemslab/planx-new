@@ -1,6 +1,6 @@
 import Wrapper from "@planx/components/fixtures/Wrapper";
-import { Meta, StoryObj } from "@storybook/tanstack-react";
-import { Feature, Polygon } from "geojson";
+import type { Meta, StoryObj } from "@storybook/tanstack-react";
+import type { Feature, Polygon } from "geojson";
 import { graphql, http, HttpResponse } from "msw";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { waitFor } from "storybook/test";

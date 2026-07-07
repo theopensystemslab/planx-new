@@ -3,7 +3,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import React from "react";
 
 import { MenuButton, MenuTitle } from "../styles";
-import { Route } from "../types";
+import type { Route } from "../types";
 
 interface Props {
   subtitle: string;

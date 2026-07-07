@@ -2,12 +2,9 @@ import { richText } from "lib/yupExtensions";
 import { cloneDeep } from "lodash";
 import { object, string } from "yup";
 
-import {
-  BaseNodeData,
-  baseNodeDataValidationSchema,
-  parseBaseNodeData,
-} from "../shared";
-import { Schema } from "../shared/Schema/model";
+import type { BaseNodeData } from "../shared";
+import { baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
+import type { Schema } from "../shared/Schema/model";
 import { PAGE_SCHEMAS } from "./Editor";
 
 export interface PageSchema extends Schema {

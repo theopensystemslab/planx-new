@@ -2,7 +2,7 @@ import type { ConditionalOption, Option } from "@planx/components/Option/model";
 import type { ResponsiveChecklistWithOptions } from "@planx/components/ResponsiveChecklist/model";
 import { merge } from "lodash";
 
-import { ChecklistWithOptions } from "../../Checklist/model";
+import type { ChecklistWithOptions } from "../../Checklist/model";
 import { Condition } from "../RuleBuilder/types";
 import { type PublicProps } from "../types";
 import { mockWithRepeatedOptions } from "./Public/tests/mockOptions";

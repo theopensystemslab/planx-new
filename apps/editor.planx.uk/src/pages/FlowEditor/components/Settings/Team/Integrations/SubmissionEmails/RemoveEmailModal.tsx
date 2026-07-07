@@ -13,7 +13,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 import { DELETE_TEAM_SUBMISSION_EMAILS } from "./queries";
-import { EditorModalProps, SubmissionEmailWithFlows } from "./types";
+import type { EditorModalProps, SubmissionEmailWithFlows } from "./types";
 
 export const RemoveEmailModal = ({
   modalState,

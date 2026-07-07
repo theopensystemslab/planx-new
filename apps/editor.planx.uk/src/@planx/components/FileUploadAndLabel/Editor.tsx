@@ -3,15 +3,14 @@ import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import { getValidSchemaValues } from "@opensystemslab/planx-core";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { EditorProps } from "@planx/components/shared/types";
+import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { getIn } from "formik";
 import { merge } from "lodash";
 import React from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
-import ListManager, {
-  EditorProps as ListManagerEditorProps,
-} from "ui/editor/ListManager/ListManager";
+import type { EditorProps as ListManagerEditorProps } from "ui/editor/ListManager/ListManager";
+import ListManager from "ui/editor/ListManager/ListManager";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -25,12 +24,8 @@ import { Switch } from "ui/shared/Switch";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { RuleBuilder } from "../shared/RuleBuilder";
-import {
-  FileType,
-  FileUploadAndLabel,
-  newFileType,
-  parseContent,
-} from "./model";
+import type { FileType, FileUploadAndLabel } from "./model";
+import { newFileType, parseContent } from "./model";
 import { fileUploadAndLabelSchema } from "./schema";
 
 type Props = EditorProps<TYPES.FileUploadAndLabel, FileUploadAndLabel>;

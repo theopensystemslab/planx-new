@@ -8,9 +8,9 @@ import { axe } from "vitest-axe";
 
 import { SearchBox } from "../SearchBox";
 import { checkForFirstSearchResults, waitForClearSearchIcon } from "./helpers";
+import type { MockRecords } from "./mocks";
 import {
   mockFirstSearchTerm,
-  MockRecords,
   mockRecords,
   mockSecondSearchTerm,
   mockSetRecords,

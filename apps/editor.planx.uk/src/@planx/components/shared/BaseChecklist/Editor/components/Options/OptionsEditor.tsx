@@ -1,8 +1,8 @@
-import { Option } from "@planx/components/Option/model";
+import type { Option } from "@planx/components/Option/model";
 import { BaseOptionsEditor } from "@planx/components/shared/BaseOptionsEditor";
-import { OptionEditor } from "@planx/components/shared/BaseOptionsEditor/types";
+import type { OptionEditor } from "@planx/components/shared/BaseOptionsEditor/types";
 import React from "react";
-import { EditorProps } from "ui/editor/ListManager/ListManager";
+import type { EditorProps } from "ui/editor/ListManager/ListManager";
 import SimpleMenu from "ui/editor/SimpleMenu";
 
 type ChecklistOptionsEditorProps = EditorProps<Option> | OptionEditor;

@@ -1,9 +1,9 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { AnyOption, AnyOptions } from "@planx/components/Option/model";
+import type { AnyOption, AnyOptions } from "@planx/components/Option/model";
 import { DEFAULT_RULE } from "@planx/components/ResponsiveChecklist/model";
-import {
+import type {
   AnyChecklist,
   OptionGroup,
 } from "@planx/components/shared/BaseChecklist/model";
@@ -15,7 +15,7 @@ import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { getIn } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { FormikHookReturn } from "types";
+import type { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 

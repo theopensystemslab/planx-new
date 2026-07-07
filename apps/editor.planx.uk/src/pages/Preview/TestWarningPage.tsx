@@ -2,7 +2,8 @@ import Box from "@mui/material/Box";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
+import React from "react";
 import WatermarkBackground from "ui/shared/WatermarkBackground";
 
 export const TestWarningPage = ({ children }: PropsWithChildren) => {

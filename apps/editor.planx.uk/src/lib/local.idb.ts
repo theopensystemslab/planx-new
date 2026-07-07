@@ -1,11 +1,6 @@
-import {
-  DBSchema,
-  IDBPDatabase,
-  IDBPTransaction,
-  openDB,
-  StoreNames,
-} from "idb";
-import { Session } from "types";
+import type { DBSchema, IDBPDatabase, IDBPTransaction, StoreNames } from "idb";
+import { openDB } from "idb";
+import type { Session } from "types";
 
 import { clearLocalFlow, getLocalFlow } from "./local";
 

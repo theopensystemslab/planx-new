@@ -1,14 +1,14 @@
+import type { NodeTag } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { NodeTag } from "@opensystemslab/planx-core/types";
-import { Section } from "@planx/components/Section/model";
+import type { Section } from "@planx/components/Section/model";
 import { ROOT_NODE_KEY, sortIdsDepthFirst } from "@planx/graph";
 import { findLast, pick, sum } from "lodash";
-import { Store } from "pages/FlowEditor/lib/store";
+import type { Store } from "pages/FlowEditor/lib/store";
 import type { StateCreator } from "zustand";
 
 import { SECTION_WEIGHTS } from "../../../../@planx/components/Section/model";
-import { PreviewStore } from "./preview";
-import { SharedStore } from "./shared";
+import type { PreviewStore } from "./preview";
+import type { SharedStore } from "./shared";
 
 export interface SectionNode extends Store.Node {
   data: Section;

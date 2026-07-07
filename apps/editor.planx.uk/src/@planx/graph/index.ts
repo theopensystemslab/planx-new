@@ -1,7 +1,5 @@
-import {
-  ComponentType as TYPES,
-  NodeId,
-} from "@opensystemslab/planx-core/types";
+import type { NodeId } from "@opensystemslab/planx-core/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { enablePatches, produceWithPatches } from "immer";
 import { isEqual } from "lodash";
 import difference from "lodash/difference";
@@ -9,9 +7,9 @@ import trim from "lodash/trim";
 import zip from "lodash/zip";
 import { customAlphabet } from "nanoid-good";
 import en from "nanoid-good/locale/en";
-import { Store } from "pages/FlowEditor/lib/store";
+import type { Store } from "pages/FlowEditor/lib/store";
 
-import { ImmerJSONPatch, OT } from "./types";
+import type { ImmerJSONPatch, OT } from "./types";
 
 enablePatches();
 

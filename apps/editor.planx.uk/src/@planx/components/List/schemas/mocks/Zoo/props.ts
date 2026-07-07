@@ -1,4 +1,4 @@
-import { Props } from "../../../Public";
+import type { Props } from "../../../Public";
 import { Zoo } from "./schema";
 
 export const mockZooProps: Props = {

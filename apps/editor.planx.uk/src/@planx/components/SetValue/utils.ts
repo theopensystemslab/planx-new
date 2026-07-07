@@ -1,6 +1,6 @@
-import { Store } from "pages/FlowEditor/lib/store";
+import type { Store } from "pages/FlowEditor/lib/store";
 
-import { SetValue } from "./model";
+import type { SetValue } from "./model";
 
 type PreviousValues = string | string[] | undefined;
 

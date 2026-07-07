@@ -3,14 +3,14 @@ import type { Constraint, GISResponse } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import capitalize from "lodash/capitalize";
-import { HandleSubmit } from "pages/Preview/Node";
+import type { HandleSubmit } from "pages/Preview/Node";
 import React from "react";
 
 import { Disclaimer } from "../../shared/Disclaimer";
 import { ErrorSummaryContainer } from "../../shared/Preview/ErrorSummaryContainer";
 import SimpleExpand from "../../shared/Preview/SimpleExpand";
 import { DEFAULT_PLANNING_CONDITIONS_DISCLAIMER } from "../model";
-import { InaccurateConstraints } from ".";
+import type { InaccurateConstraints } from ".";
 import ConstraintsList from "./List";
 
 export type PresentationalProps = {

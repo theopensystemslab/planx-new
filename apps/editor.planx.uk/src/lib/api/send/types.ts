@@ -1,4 +1,4 @@
-import { SendIntegration } from "@opensystemslab/planx-core/types";
+import type { SendIntegration } from "@opensystemslab/planx-core/types";
 
 export type SendResponse = Record<SendIntegration, { event_id: string }>;
 

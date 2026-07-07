@@ -4,7 +4,7 @@ import gql from "graphql-tag";
 import { CatchAllComponent } from "routes/$";
 
 import { useStore } from "../../../pages/FlowEditor/lib/store";
-import { TeamSummary } from "../../../pages/FlowEditor/lib/store/team";
+import type { TeamSummary } from "../../../pages/FlowEditor/lib/store/team";
 import AuthenticatedLayout from "../../../pages/layout/AuthenticatedLayout";
 
 export const Route = createFileRoute("/_authenticated/app")({

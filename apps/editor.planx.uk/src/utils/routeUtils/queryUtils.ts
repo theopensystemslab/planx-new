@@ -1,15 +1,16 @@
 import { gql } from "@apollo/client";
-import { FlowStatus } from "@opensystemslab/planx-core/types";
+import type { FlowStatus } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { notFound } from "@tanstack/react-router";
 import { sortBy } from "lodash";
 import natsort from "natsort";
 import mapAccum from "ramda/src/mapAccum";
-import { Flow } from "types";
+import type { Flow } from "types";
 
 import { client } from "../../lib/graphql";
-import { Store, useStore } from "../../pages/FlowEditor/lib/store";
-import { NodeSearchParams } from "../../routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
+import type { Store } from "../../pages/FlowEditor/lib/store";
+import { useStore } from "../../pages/FlowEditor/lib/store";
+import type { NodeSearchParams } from "../../routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
 
 export interface FlowEditorData {
   id: string;

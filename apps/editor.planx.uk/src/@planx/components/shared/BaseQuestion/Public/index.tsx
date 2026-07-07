@@ -3,8 +3,8 @@ import FormLabel from "@mui/material/FormLabel";
 import Grid from "@mui/material/Grid";
 import RadioGroup from "@mui/material/RadioGroup";
 import { visuallyHidden } from "@mui/utils";
-import { QuestionWithOptions } from "@planx/components/Question/model";
-import { ResponsiveQuestionWithOptions } from "@planx/components/ResponsiveQuestion/model";
+import type { QuestionWithOptions } from "@planx/components/Question/model";
+import type { ResponsiveQuestionWithOptions } from "@planx/components/ResponsiveQuestion/model";
 import { QuestionLayout } from "@planx/components/shared/BaseQuestion/model";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
@@ -18,7 +18,7 @@ import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { object, string } from "yup";
 
-import { PublicProps } from "../../types";
+import type { PublicProps } from "../../types";
 
 type Props = PublicProps<QuestionWithOptions | ResponsiveQuestionWithOptions>;
 

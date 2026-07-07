@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
 
-import { Feedback } from "../types";
+import type { Feedback } from "../types";
 
 export const updateEditorNotes = async (updatedRow: Feedback) => {
   await client.mutate({

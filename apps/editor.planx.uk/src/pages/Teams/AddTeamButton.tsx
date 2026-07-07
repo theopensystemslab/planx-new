@@ -6,7 +6,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "@tanstack/react-router";
-import { Form, Formik, FormikConfig } from "formik";
+import type { FormikConfig } from "formik";
+import { Form, Formik } from "formik";
 import React, { useState } from "react";
 import { AddButton } from "ui/editor/AddButton";
 import Permission from "ui/editor/Permission";
@@ -15,7 +16,8 @@ import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import { Switch } from "ui/shared/Switch";
 import { slugify } from "utils";
-import { boolean, object, SchemaOf, string } from "yup";
+import type { SchemaOf } from "yup";
+import { boolean, object, string } from "yup";
 
 import { useCreateTeam } from "./hooks/useCreateTeam";
 

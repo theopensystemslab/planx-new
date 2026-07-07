@@ -19,7 +19,8 @@ import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 
-import { DEFAULT_NEW_ADDRESS_LABEL, SiteAddress } from "../model";
+import type { SiteAddress } from "../model";
+import { DEFAULT_NEW_ADDRESS_LABEL } from "../model";
 
 interface PlotNewAddressProps {
   setAddress: React.Dispatch<React.SetStateAction<SiteAddress | undefined>>;

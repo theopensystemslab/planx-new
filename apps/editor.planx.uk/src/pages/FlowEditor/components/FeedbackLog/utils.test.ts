@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { Feedback } from "./types";
+import type { Feedback } from "./types";
 import {
   feedbackStatusText,
   feedbackTypeText,

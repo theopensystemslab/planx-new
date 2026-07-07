@@ -1,7 +1,7 @@
-import { ComponentType } from "@opensystemslab/planx-core/types";
-import { ReactNode } from "react";
+import type { ComponentType } from "@opensystemslab/planx-core/types";
+import type { ReactNode } from "react";
 
-import { ConditionalOption, Option } from "../../Option/model";
+import type { ConditionalOption, Option } from "../../Option/model";
 
 interface BaseOptionsEditorProps {
   type:

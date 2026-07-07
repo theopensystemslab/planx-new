@@ -8,9 +8,9 @@ import { client } from "lib/graphql";
 import isEmpty from "lodash/isEmpty";
 import isPlainObject from "lodash/isObject";
 
-import { Store } from "../store";
+import type { Store } from "../store";
 import { ALLOW_LIST } from "./provider";
-import {
+import type {
   AllowListKey,
   BackwardsNavigationInitiatorType,
   BackwardsNavigationMetadata,

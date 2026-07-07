@@ -2,7 +2,7 @@ import { ComponentType } from "@opensystemslab/planx-core/types";
 import React from "react";
 import { TemplatedNodeConfiguration } from "ui/editor/TemplatedNodeConfiguration";
 
-import { Props } from "./types";
+import type { Props } from "./types";
 
 const TypeGuardedTemplatedNodeConfiguration: React.FC<Props> = ({
   type,

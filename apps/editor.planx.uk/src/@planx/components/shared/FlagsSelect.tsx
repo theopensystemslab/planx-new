@@ -1,9 +1,10 @@
-import {
+import type {
   AutocompleteChangeReason,
   AutocompleteProps,
 } from "@mui/material/Autocomplete";
 import Chip from "@mui/material/Chip";
-import { Flag, flatFlags } from "@opensystemslab/planx-core/types";
+import type { Flag } from "@opensystemslab/planx-core/types";
+import { flatFlags } from "@opensystemslab/planx-core/types";
 import React, { useMemo } from "react";
 import { RenderOptionCheckbox } from "ui/shared/Autocomplete/components/RenderOptionCheckbox";
 import InputRow from "ui/shared/InputRow";

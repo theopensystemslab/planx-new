@@ -1,4 +1,4 @@
-import { Schema } from "@planx/components/shared/Schema/model";
+import type { Schema } from "@planx/components/shared/Schema/model";
 
 export const ResidentialUnitsExistingLDCE: Schema = {
   type: "Existing residential unit type",

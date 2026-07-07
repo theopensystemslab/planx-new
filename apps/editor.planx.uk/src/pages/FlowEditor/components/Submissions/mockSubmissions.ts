@@ -1,4 +1,4 @@
-import { Submission } from "./types";
+import type { Submission } from "./types";
 
 const sendToEmailSuccess: Submission = {
   flowId: "d0744118-f902-4538-b439-573f4b42a727",

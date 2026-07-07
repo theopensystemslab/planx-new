@@ -1,4 +1,4 @@
-import { ConditionalOption } from "@planx/components/Option/model";
+import type { ConditionalOption } from "@planx/components/Option/model";
 import { logger } from "airbrake";
 import { useStore } from "pages/FlowEditor/lib/store";
 

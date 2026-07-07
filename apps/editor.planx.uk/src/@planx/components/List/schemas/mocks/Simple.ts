@@ -1,7 +1,7 @@
-import { Schema } from "@planx/components/shared/Schema/model";
+import type { Schema } from "@planx/components/shared/Schema/model";
 import { TextInputType } from "@planx/components/TextInput/model";
 
-import { Props } from "../../Public";
+import type { Props } from "../../Public";
 
 /**
  * Lightweight 2-field schema for testing structural list behaviour

@@ -1,8 +1,8 @@
 import { boolean, object, type SchemaOf } from "yup";
 
-import { TeamConstraintsFormValues } from "./types";
+import type { TeamConstraintsFormValues } from "./types";
 
-export const validationSchema: SchemaOf<TeamConstraintsFormValues> = 
+export const validationSchema: SchemaOf<TeamConstraintsFormValues> =
   object().shape({
     hasPlanningData: boolean().required(),
   });

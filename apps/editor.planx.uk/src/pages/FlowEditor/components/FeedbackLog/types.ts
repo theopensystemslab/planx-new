@@ -1,6 +1,6 @@
-import { ComponentType, Node } from "@opensystemslab/planx-core/types";
-import { Sentiment } from "components/Feedback/MoreInfoFeedback/MoreInfoFeedback";
-import { FeedbackCategory } from "components/Feedback/types";
+import type { ComponentType, Node } from "@opensystemslab/planx-core/types";
+import type { Sentiment } from "components/Feedback/MoreInfoFeedback/MoreInfoFeedback";
+import type { FeedbackCategory } from "components/Feedback/types";
 
 export type FeedbackType = Sentiment | FeedbackCategory;
 

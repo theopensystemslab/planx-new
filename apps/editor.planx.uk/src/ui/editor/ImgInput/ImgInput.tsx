@@ -6,9 +6,8 @@ import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
 import { useMemo, useState } from "react";
 
-import PublicFileUploadButton, {
-  AcceptedFileTypes,
-} from "../../shared/PublicFileUploadButton";
+import type { AcceptedFileTypes } from "../../shared/PublicFileUploadButton";
+import PublicFileUploadButton from "../../shared/PublicFileUploadButton";
 
 const ImageUploadContainer = styled(Box)(() => ({
   height: 50,

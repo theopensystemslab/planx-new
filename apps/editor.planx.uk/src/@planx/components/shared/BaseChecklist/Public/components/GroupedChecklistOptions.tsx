@@ -1,11 +1,11 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { Option } from "@planx/components/Option/model";
-import { Group } from "@planx/components/shared/BaseChecklist/model";
+import type { Option } from "@planx/components/Option/model";
+import type { Group } from "@planx/components/shared/BaseChecklist/model";
 import { ChecklistLayout } from "@planx/components/shared/BaseChecklist/model";
 import ImageButton from "@planx/components/shared/Buttons/ImageButton";
-import { FormikProps } from "formik";
-import { Store } from "pages/FlowEditor/lib/store";
+import type { FormikProps } from "formik";
+import type { Store } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ExpandableList, ExpandableListItem } from "ui/public/ExpandableList";
 import FormWrapper from "ui/public/FormWrapper";

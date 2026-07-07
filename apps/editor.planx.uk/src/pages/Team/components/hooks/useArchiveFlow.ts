@@ -1,12 +1,10 @@
 import { useMutation } from "@apollo/client";
 
-import {
-  ARCHIVE_FLOW,
+import type {
   FlowNotificationCascadeMutationResponse,
   FlowStatusMutationVars,
-  GET_ARCHIVED_FLOWS,
-  GET_FLOWS,
 } from "../../queries";
+import { ARCHIVE_FLOW, GET_ARCHIVED_FLOWS, GET_FLOWS } from "../../queries";
 
 export const useArchiveFlow = (id: string, slug: string, teamId: number) =>
   useMutation<FlowNotificationCascadeMutationResponse, FlowStatusMutationVars>(

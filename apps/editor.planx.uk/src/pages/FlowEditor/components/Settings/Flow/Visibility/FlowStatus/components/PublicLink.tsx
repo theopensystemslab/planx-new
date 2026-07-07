@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import { FlowStatus } from "@opensystemslab/planx-core/types";
+import type { FlowStatus } from "@opensystemslab/planx-core/types";
 import React, { useState } from "react";
 import SettingsDescription from "ui/editor/SettingsDescription";
 

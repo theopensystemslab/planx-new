@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import ButtonBase from "@planx/components/shared/Buttons/ButtonBase";
 import { useLoaderData } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { TeamSummary } from "pages/FlowEditor/lib/store/team";
+import type { TeamSummary } from "pages/FlowEditor/lib/store/team";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { cardBoxShadow, focusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";

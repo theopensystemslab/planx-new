@@ -3,7 +3,7 @@ import type {
   ResponseValue,
   SchemaUserData,
 } from "@planx/components/shared/Schema/model";
-import { FormikProps } from "formik";
+import type { FormikProps } from "formik";
 import { get } from "lodash";
 import React from "react";
 import { exhaustiveCheck } from "utils";

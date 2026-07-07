@@ -13,7 +13,7 @@ import { GraphError } from "components/Error/GraphError";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 
-import { SiteAddress } from "../../FindProperty/model";
+import type { SiteAddress } from "../../FindProperty/model";
 import { ErrorSummaryContainer } from "../../shared/Preview/ErrorSummaryContainer";
 import {
   availableDatasets,

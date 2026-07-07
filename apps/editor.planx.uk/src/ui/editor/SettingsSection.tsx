@@ -1,8 +1,10 @@
-import Box, { BoxProps } from "@mui/material/Box";
+import type { BoxProps } from "@mui/material/Box";
+import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import ErrorFallback from "components/Error/ErrorFallback";
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
+import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 const Root = styled(Box, {

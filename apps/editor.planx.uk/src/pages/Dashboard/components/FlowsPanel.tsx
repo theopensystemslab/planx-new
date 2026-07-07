@@ -9,7 +9,7 @@ import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import { Link } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
-import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
+import type { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import React from "react";
 import { EmptyState } from "ui/editor/EmptyState";
 import FlowTag from "ui/editor/FlowTag/FlowTag";

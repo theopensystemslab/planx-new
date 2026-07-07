@@ -2,12 +2,10 @@ import FactCheckIcon from "@mui/icons-material/FactCheck";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import {
-  ComponentType as TYPES,
-  SendIntegration,
-} from "@opensystemslab/planx-core/types";
+import type { SendIntegration } from "@opensystemslab/planx-core/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { Formik, getIn, useFormikContext } from "formik";
-import { SubmissionEmailInput } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
+import type { SubmissionEmailInput } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useCallback } from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -20,13 +18,14 @@ import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
 import { WarningContainer } from "../shared/Preview/WarningContainer";
-import { EditorProps } from "../shared/types";
+import type { EditorProps } from "../shared/types";
 import EmailSection from "./EmailSection";
 import { useFlowEmailId } from "./hooks/useFlowEmailId";
 import { useTeamSubmissionEmails } from "./hooks/useGetTeamSubmissionEmails";
 import { useInsertSubmissionEmail } from "./hooks/useInsertSubmissionEmail";
 import { useUpdateFlowSubmissionEmail } from "./hooks/useUpdateFlowSubmissionEmail";
-import { parseSend, Send, validateSchema } from "./model";
+import type { Send } from "./model";
+import { parseSend, validateSchema } from "./model";
 
 export type Props = EditorProps<TYPES.Send, Send>;
 

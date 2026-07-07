@@ -1,4 +1,4 @@
-import { ApolloError } from "@apollo/client";
+import type { ApolloError } from "@apollo/client";
 import DeleteIcon from "@mui/icons-material/Delete";
 import TableRowsIcon from "@mui/icons-material/TableRows";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
@@ -11,7 +11,10 @@ import React from "react";
 import { EmptyState } from "ui/editor/EmptyState";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
-import { FlowCardView, FlowSummary } from "../../FlowEditor/lib/store/editor";
+import type {
+  FlowCardView,
+  FlowSummary,
+} from "../../FlowEditor/lib/store/editor";
 import { FlowTable } from "../components/FlowTable";
 import { ShowingServicesHeader } from "../components/ShowingServicesHeader";
 import { sortOptions } from "../helpers/sortAndFilterOptions";

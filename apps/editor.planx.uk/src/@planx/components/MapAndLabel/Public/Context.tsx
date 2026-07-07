@@ -1,5 +1,5 @@
 import { useSchema } from "@planx/components/shared/Schema/hook";
-import {
+import type {
   Schema,
   SchemaUserData,
   SchemaUserResponse,
@@ -8,19 +8,17 @@ import {
   getPreviouslySubmittedData,
   makeData,
 } from "@planx/components/shared/utils";
-import { FormikProps, useFormik } from "formik";
-import { Feature, FeatureCollection } from "geojson";
+import type { FormikProps } from "formik";
+import { useFormik } from "formik";
+import type { Feature, FeatureCollection } from "geojson";
 import type { GeoJSONChange, GeoJSONChangeEvent } from "lib/gis";
 import { get, omit } from "lodash";
-import { Store, useStore } from "pages/FlowEditor/lib/store";
-import React, {
-  createContext,
-  PropsWithChildren,
-  useContext,
-  useState,
-} from "react";
+import type { Store } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
+import type { PropsWithChildren } from "react";
+import React, { createContext, useContext, useState } from "react";
 
-import { PresentationalProps } from ".";
+import type { PresentationalProps } from ".";
 
 export const MAP_ID = "map-and-label-map";
 

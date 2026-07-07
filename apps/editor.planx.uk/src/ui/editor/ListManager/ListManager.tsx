@@ -1,11 +1,9 @@
-import {
-  DragDropContext,
-  Draggable,
+import type {
   DraggableProvided,
-  Droppable,
   DroppableProvided,
   DropResult,
 } from "@hello-pangea/dnd";
+import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutlined";
 import Delete from "@mui/icons-material/Delete";
 import DragHandle from "@mui/icons-material/DragHandle";
@@ -20,7 +18,7 @@ import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
 import { arrayMoveImmutable } from "array-move";
-import { FormikErrors } from "formik";
+import type { FormikErrors } from "formik";
 import { nanoid } from "nanoid";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef, useState } from "react";

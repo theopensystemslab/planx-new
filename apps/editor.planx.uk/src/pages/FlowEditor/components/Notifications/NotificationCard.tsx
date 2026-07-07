@@ -1,14 +1,15 @@
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
-import { styled, SxProps, Theme } from "@mui/material/styles";
+import type { SxProps, Theme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { formatLastEditDate } from "pages/FlowEditor/utils";
 import { FlowCardLink } from "pages/Team/components/FlowCard/styles";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import CheckCircleIcon from "ui/icons/CheckCircle";
 
-import { Notification } from "./types";
+import type { Notification } from "./types";
 
 export type NotificationStatus = "Resolved";
 

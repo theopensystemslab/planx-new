@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { PaymentStatus } from "@opensystemslab/planx-core/types";
+import type { PaymentStatus } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import SaveResumeButton from "@planx/components/shared/Preview/SaveResumeButton";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -14,13 +14,11 @@ import FormWrapper from "ui/public/FormWrapper";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
-import {
-  formattedPriceWithCurrencySymbol,
-  getDefaultContent,
-  Pay,
-} from "../model";
+import type { Pay } from "../model";
+import { formattedPriceWithCurrencySymbol, getDefaultContent } from "../model";
 import { FeeBreakdown } from "./FeeBreakdown/FeeBreakdown";
-import InviteToPayForm, { InviteToPayFormProps } from "./InviteToPayForm";
+import type { InviteToPayFormProps } from "./InviteToPayForm";
+import InviteToPayForm from "./InviteToPayForm";
 import { PAY_API_ERROR_UNSUPPORTED_TEAM } from "./Pay";
 
 type ComponentState =

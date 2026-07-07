@@ -1,8 +1,9 @@
 import Box from "@mui/material/Box";
-import { Meta, StoryObj } from "@storybook/tanstack-react";
+import type { Meta, StoryObj } from "@storybook/tanstack-react";
 import { useState } from "react";
 
-import { Props, RuleBuilder } from ".";
+import type { Props } from ".";
+import { RuleBuilder } from ".";
 import { Condition, Operator } from "./types";
 
 /**

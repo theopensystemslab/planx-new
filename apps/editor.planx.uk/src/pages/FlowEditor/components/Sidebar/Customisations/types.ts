@@ -1,4 +1,4 @@
-import { NodeId } from "@opensystemslab/planx-core/types";
+import type { NodeId } from "@opensystemslab/planx-core/types";
 
 // TODO: Correctly type detailed NodeData
 type NodeData = Record<string, unknown>;

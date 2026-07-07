@@ -1,5 +1,5 @@
 import MenuItem from "@mui/material/MenuItem";
-import { Meta, StoryObj } from "@storybook/tanstack-react";
+import type { Meta, StoryObj } from "@storybook/tanstack-react";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 
 const meta = {

@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { vi } from "vitest";
 
 export type MockRecords = {

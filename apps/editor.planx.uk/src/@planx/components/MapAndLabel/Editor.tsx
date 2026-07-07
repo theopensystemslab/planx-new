@@ -20,8 +20,9 @@ import SelectInput from "ui/shared/SelectInput/SelectInput";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import BasicRadio from "../shared/Radio/BasicRadio/BasicRadio";
-import { EditorProps } from "../shared/types";
-import { MapAndLabel, parseContent, validationSchema } from "./model";
+import type { EditorProps } from "../shared/types";
+import type { MapAndLabel } from "./model";
+import { parseContent, validationSchema } from "./model";
 import { BreachLocations } from "./schemas/BreachLocations";
 import { GenericFeature } from "./schemas/GenericFeature";
 import { SketchPlanCA } from "./schemas/SketchPlanCA";

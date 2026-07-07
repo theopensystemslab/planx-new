@@ -7,7 +7,7 @@ import {
   RouterProvider,
 } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { TeamSummary } from "pages/FlowEditor/lib/store/team";
+import type { TeamSummary } from "pages/FlowEditor/lib/store/team";
 
 import TeamSelect from "./TeamSelect";
 

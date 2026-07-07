@@ -2,7 +2,7 @@ import "fake-indexeddb/auto";
 
 import { deleteDB } from "idb";
 
-import { Session } from "../types";
+import type { Session } from "../types";
 import { getLocalFlow, setLocalFlow } from "./local";
 import {
   clearLocalFlowIdb,

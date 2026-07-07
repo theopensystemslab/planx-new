@@ -1,6 +1,6 @@
-import { Schema } from "@planx/components/shared/Schema/model";
+import type { Schema } from "@planx/components/shared/Schema/model";
 
-import { PresentationalProps } from "../../Public";
+import type { PresentationalProps } from "../../Public";
 import { SketchPlanCA } from "../../schemas/SketchPlanCA";
 import {
   previouslySubmittedDoubleFeature,

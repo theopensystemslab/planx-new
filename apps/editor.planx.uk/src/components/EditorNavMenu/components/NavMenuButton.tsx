@@ -1,9 +1,9 @@
 import NorthEastIcon from "@mui/icons-material/NorthEast";
-import { ChipProps } from "@mui/material/Chip";
-import { SxProps, Theme } from "@mui/material/styles";
+import type { ChipProps } from "@mui/material/Chip";
+import type { SxProps, Theme } from "@mui/material/styles";
 
 import { BadgeChip, MenuButton, MenuTitle, StyledChip } from "../styles";
-import { Route } from "../types";
+import type { Route } from "../types";
 
 export interface NavMenuButtonProps {
   title: string;

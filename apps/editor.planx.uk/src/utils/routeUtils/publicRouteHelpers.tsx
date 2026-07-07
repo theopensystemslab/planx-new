@@ -5,11 +5,11 @@ import React from "react";
 import type { PublicContext } from "routes/_public/-loader";
 import { z } from "zod";
 
+import type { PublishedViewSettings } from "./publishedQueries";
 import {
   fetchSettingsForPublishedView,
   GET_PUBLISHED_FLOW_DATA,
   type PublishedFlow,
-  PublishedViewSettings,
 } from "./publishedQueries";
 import { computePath } from "./utils";
 

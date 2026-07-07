@@ -1,26 +1,16 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import {
-  type Checklist,
-  ChecklistWithOptions,
-} from "@planx/components/Checklist/model";
-import {
-  type AnyOption,
-  ConditionalOption,
-  Option,
-} from "@planx/components/Option/model";
-import {
-  type ResponsiveChecklist,
-  ResponsiveChecklistWithOptions,
-} from "@planx/components/ResponsiveChecklist/model";
+import type { ChecklistWithOptions } from "@planx/components/Checklist/model";
+import { type Checklist } from "@planx/components/Checklist/model";
+import type { ConditionalOption, Option } from "@planx/components/Option/model";
+import { type AnyOption } from "@planx/components/Option/model";
+import type { ResponsiveChecklistWithOptions } from "@planx/components/ResponsiveChecklist/model";
+import { type ResponsiveChecklist } from "@planx/components/ResponsiveChecklist/model";
 import { richText } from "lib/yupExtensions";
 import { partition } from "lodash";
 import { array, number, object, string, type TestConfig } from "yup";
 
-import {
-  BaseNodeData,
-  baseNodeDataValidationSchema,
-  parseBaseNodeData,
-} from "..";
+import type { BaseNodeData } from "..";
+import { baseNodeDataValidationSchema, parseBaseNodeData } from "..";
 import type { Child } from "../types";
 
 export enum ChecklistLayout {

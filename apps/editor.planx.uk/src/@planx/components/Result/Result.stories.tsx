@@ -1,9 +1,9 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { Meta, StoryObj } from "@storybook/tanstack-react";
+import type { Meta, StoryObj } from "@storybook/tanstack-react";
 
 import Wrapper from "../fixtures/Wrapper";
 import Editor from "./Editor";
-import { PresentationalProps } from "./model";
+import type { PresentationalProps } from "./model";
 import { Presentational as Public } from "./Public";
 
 const meta = {

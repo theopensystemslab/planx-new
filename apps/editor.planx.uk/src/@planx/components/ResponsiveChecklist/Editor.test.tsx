@@ -1,7 +1,7 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { type ConditionalOption } from "@planx/components/Option/model";
-import { Group } from "@planx/components/shared/BaseChecklist/model";
-import { EditorProps } from "@planx/components/shared/types";
+import type { Group } from "@planx/components/shared/BaseChecklist/model";
+import type { EditorProps } from "@planx/components/shared/types";
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { DndProvider } from "react-dnd";
@@ -11,7 +11,7 @@ import { vi } from "vitest";
 
 import { Condition } from "../shared/RuleBuilder/types";
 import ResponsiveChecklistEditor from "./Editor";
-import { ResponsiveChecklist } from "./model";
+import type { ResponsiveChecklist } from "./model";
 
 const { setState } = useStore;
 

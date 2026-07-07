@@ -1,6 +1,6 @@
-import { FlowGraph, IndexedNode } from "@opensystemslab/planx-core/types";
+import type { FlowGraph, IndexedNode } from "@opensystemslab/planx-core/types";
 
-import { SearchResult } from "../../../../../../hooks/useSearch";
+import type { SearchResult } from "../../../../../../hooks/useSearch";
 
 /**
  * Flow which contains an example of each component which searchable text fields

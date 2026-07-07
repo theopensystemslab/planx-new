@@ -20,7 +20,7 @@ import { EmptyState } from "ui/editor/EmptyState";
 import SettingsSection from "ui/editor/SettingsSection";
 import Caret from "ui/icons/Caret";
 
-import { SubscriptionProps } from "../types";
+import type { SubscriptionProps } from "../types";
 import {
   formatUKFiscalYear,
   getUKFiscalYear,

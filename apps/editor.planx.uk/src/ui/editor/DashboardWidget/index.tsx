@@ -1,7 +1,8 @@
 import Box from "@mui/material/Box";
-import { styled, SxProps, Theme } from "@mui/material/styles";
+import type { SxProps, Theme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { LinkOptions, RegisteredRouter } from "@tanstack/react-router";
+import type { LinkOptions, RegisteredRouter } from "@tanstack/react-router";
 import { BadgeChip } from "components/EditorNavMenu/styles";
 import React from "react";
 import { cardBoxShadow, FONT_WEIGHT_SEMI_BOLD } from "theme";

@@ -7,7 +7,7 @@ import BlockQuote from "ui/editor/BlockQuote";
 import { NodeCard } from "ui/editor/NodeCard";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 
-import { FlowEdits, NodeEdits } from "./types";
+import type { FlowEdits, NodeEdits } from "./types";
 
 interface Props {
   nodeId: string;

@@ -1,9 +1,8 @@
-import InputBase, {
-  InputBaseClasses,
-  InputBaseProps,
-} from "@mui/material/InputBase";
+import type { InputBaseClasses, InputBaseProps } from "@mui/material/InputBase";
+import InputBase from "@mui/material/InputBase";
 import { styled } from "@mui/material/styles";
-import React, { ChangeEvent, forwardRef } from "react";
+import type { ChangeEvent } from "react";
+import React, { forwardRef } from "react";
 import {
   borderedFocusStyle,
   FONT_WEIGHT_SEMI_BOLD,

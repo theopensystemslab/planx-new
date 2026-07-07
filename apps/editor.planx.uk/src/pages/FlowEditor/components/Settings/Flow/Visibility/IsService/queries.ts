@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import gql from "graphql-tag";
 
-import { GetIsServiceResponse, IsServiceVars } from "./types";
+import type { GetIsServiceResponse, IsServiceVars } from "./types";
 
 export const GET_IS_SERVICE = gql`
   query GetIsService($flowId: uuid!) {

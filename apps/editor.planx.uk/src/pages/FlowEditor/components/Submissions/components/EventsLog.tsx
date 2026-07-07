@@ -1,5 +1,5 @@
 import BarChartIcon from "@mui/icons-material/BarChart";
-import { GridFilterItem } from "@mui/x-data-grid";
+import type { GridFilterItem } from "@mui/x-data-grid";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -7,7 +7,8 @@ import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { EmptyState } from "ui/editor/EmptyState";
 import { DataTable } from "ui/shared/DataTable/DataTable";
-import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
+import type { ColumnConfig } from "ui/shared/DataTable/types";
+import { ColumnFilterType } from "ui/shared/DataTable/types";
 import {
   containsItem,
   dateFormatter,
@@ -18,7 +19,7 @@ import {
   submissionEventTypes,
   submissionStatusOptions,
 } from "../submissionFilterOptions";
-import { EventsLogProps, Submission } from "../types";
+import type { EventsLogProps, Submission } from "../types";
 import { DownloadSubmissionButton } from "./DownloadSubmissionButton";
 import { OpenResponseButton } from "./OpenResponseButton";
 import { ResubmitButton } from "./ResubmitButton";

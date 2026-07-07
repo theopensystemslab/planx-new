@@ -2,7 +2,8 @@ import MoreVert from "@mui/icons-material/MoreVert";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import React, { PropsWithChildren, useState } from "react";
+import type { PropsWithChildren } from "react";
+import React, { useState } from "react";
 
 interface Props {
   className?: string;

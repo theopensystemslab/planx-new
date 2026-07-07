@@ -1,7 +1,7 @@
-import { FormikProps } from "formik";
+import type { FormikProps } from "formik";
 import { setup } from "test/utils";
 
-import { Schema, SchemaUserData } from "./model";
+import type { Schema, SchemaUserData } from "./model";
 import { SchemaFields } from "./SchemaFields";
 
 const simpleSchema: Schema = {

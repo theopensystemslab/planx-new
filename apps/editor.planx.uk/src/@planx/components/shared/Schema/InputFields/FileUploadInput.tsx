@@ -1,13 +1,14 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { FileUploadSlot } from "@planx/components/FileUpload/model";
+import type { FileUploadSlot } from "@planx/components/FileUpload/model";
 import type { FileUploadField } from "@planx/components/shared/Schema/model";
 import React, { useEffect, useState } from "react";
 import InputLegend from "ui/editor/InputLegend";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { PrivateFileUpload } from "../../PrivateFileUpload/PrivateFileUpload";
-import { getFieldProps, Props } from ".";
+import type { Props } from ".";
+import { getFieldProps } from ".";
 import { FieldInputDescription } from "./shared";
 
 export const FileUploadInput: React.FC<Props<FileUploadField>> = (props) => {

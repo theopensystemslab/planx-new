@@ -11,7 +11,8 @@ import CheckCircleIcon from "ui/icons/CheckCircle";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { UploadedFileCard } from "../../shared/PrivateFileUpload/UploadedFileCard";
-import { FileList, type FileUploadAndLabelSlot } from "../model";
+import type { FileList } from "../model";
+import { type FileUploadAndLabelSlot } from "../model";
 import { SelectMultipleFileTypes } from "./SelectMultipleFileTypes";
 
 const Root = styled(Box)(({ theme }) => ({

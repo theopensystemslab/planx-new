@@ -1,7 +1,7 @@
-import { Constraint } from "@opensystemslab/planx-core/types";
+import type { Constraint } from "@opensystemslab/planx-core/types";
 
-import { IntersectingConstraints } from "../model";
-import { InaccurateConstraints } from ".";
+import type { IntersectingConstraints } from "../model";
+import type { InaccurateConstraints } from ".";
 
 export function handleOverrides(
   fn: string,

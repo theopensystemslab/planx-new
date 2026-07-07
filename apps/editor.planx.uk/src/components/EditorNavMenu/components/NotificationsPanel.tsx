@@ -13,7 +13,7 @@ import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "@tanstack/react-router";
 import NotificationCard from "pages/FlowEditor/components/Notifications/NotificationCard";
-import { Notification } from "pages/FlowEditor/components/Notifications/types";
+import type { Notification } from "pages/FlowEditor/components/Notifications/types";
 import { partitionBySuperseded } from "pages/FlowEditor/components/Notifications/utils";
 import { useState } from "react";
 import { EmptyState } from "ui/editor/EmptyState";

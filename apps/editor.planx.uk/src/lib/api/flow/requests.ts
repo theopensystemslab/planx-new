@@ -1,7 +1,7 @@
-import { FlowGraph } from "@opensystemslab/planx-core/types";
+import type { FlowGraph } from "@opensystemslab/planx-core/types";
 import apiClient from "lib/api/client";
 
-import { CreateFlowResponse, NewFlow } from "./types";
+import type { CreateFlowResponse, NewFlow } from "./types";
 
 export const createFlow = async (newFlow: NewFlow) => {
   const { data } = await apiClient.post<CreateFlowResponse>(

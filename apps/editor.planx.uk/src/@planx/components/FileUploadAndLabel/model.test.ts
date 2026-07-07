@@ -1,16 +1,11 @@
-import { Store } from "pages/FlowEditor/lib/store";
-import { FileWithPath } from "react-dropzone";
+import type { Store } from "pages/FlowEditor/lib/store";
+import type { FileWithPath } from "react-dropzone";
 
-import { FileUploadAndLabelSlot } from "../FileUploadAndLabel/model";
+import type { FileUploadAndLabelSlot } from "../FileUploadAndLabel/model";
 import { Condition, Operator } from "../shared/RuleBuilder/types";
 import { mockFileTypes } from "./mocks";
-import {
-  createFileList,
-  FileList,
-  FileType,
-  generatePayload,
-  getRecoveredData,
-} from "./model";
+import type { FileList, FileType } from "./model";
+import { createFileList, generatePayload, getRecoveredData } from "./model";
 
 describe("createFileList function", () => {
   it("adds 'AlwaysRequired' FileTypes to the 'required' array", () => {

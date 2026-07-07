@@ -4,11 +4,8 @@ import Skeleton from "@mui/material/Skeleton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
-import {
-  ComponentType as TYPES,
-  GISResponse,
-  NodeId,
-} from "@opensystemslab/planx-core/types";
+import type { GISResponse, NodeId } from "@opensystemslab/planx-core/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
 import { formatSchemaDisplayValue } from "@planx/components/List/utils";
@@ -18,13 +15,14 @@ import format from "date-fns/format";
 import { useBLPUCodes } from "hooks/data/useBLPUCodes";
 import find from "lodash/find";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
-import { Store, useStore } from "pages/FlowEditor/lib/store";
+import type { Store } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import { formatTitle } from "../Schema/InputFields";
-import { SchemaUserResponse } from "../Schema/model";
+import type { SchemaUserResponse } from "../Schema/model";
 
 export default SummaryListsBySections;
 

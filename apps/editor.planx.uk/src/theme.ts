@@ -2,15 +2,14 @@ import "themeOverrides.d.ts";
 
 import { buttonClasses } from "@mui/material/Button";
 import { radioClasses } from "@mui/material/Radio";
+import type { Theme as MUITheme, ThemeOptions } from "@mui/material/styles";
+import type { PaletteOptions } from "@mui/material/styles";
 import {
   createTheme,
   darken,
   lighten,
   responsiveFontSizes,
-  Theme as MUITheme,
-  ThemeOptions,
 } from "@mui/material/styles";
-import { PaletteOptions } from "@mui/material/styles";
 import { svgIconClasses } from "@mui/material/SvgIcon";
 // eslint-disable-next-line no-restricted-imports
 import { switchClasses } from "@mui/material/Switch";
@@ -19,7 +18,7 @@ import { tooltipClasses } from "@mui/material/Tooltip";
 import { deepmerge } from "@mui/utils";
 import { gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
-import { TeamTheme } from "@opensystemslab/planx-core/types";
+import type { TeamTheme } from "@opensystemslab/planx-core/types";
 import { getContrastTextColor } from "styleUtils";
 
 export const DEFAULT_PRIMARY_COLOR = "#0010A4";

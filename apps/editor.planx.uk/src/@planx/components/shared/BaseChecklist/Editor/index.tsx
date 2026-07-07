@@ -17,7 +17,7 @@ import { clearOptionsDataFields } from "../../utils";
 import { TypeNarrowedExpandableSwitch as ExpandableSwitch } from "./components/ExpandableSwitch";
 import { TypeNarrowedModalFooter as ModalFooter } from "./components/ModalFooter";
 import { TypeNarrowedOptions as Options } from "./components/Options";
-import { Props } from "./types";
+import type { Props } from "./types";
 
 /**
  * Shared editor component for Checklist and ResponsiveChecklist components

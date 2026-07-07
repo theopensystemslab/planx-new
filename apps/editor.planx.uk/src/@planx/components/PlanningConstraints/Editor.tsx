@@ -7,7 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { EditorProps } from "@planx/components/shared/types";
+import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { getIn } from "formik";
 import React from "react";
@@ -22,12 +22,8 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
-import {
-  availableDatasets,
-  parseContent,
-  PlanningConstraints,
-  validationSchema,
-} from "./model";
+import type { PlanningConstraints } from "./model";
+import { availableDatasets, parseContent, validationSchema } from "./model";
 
 type Props = EditorProps<TYPES.PlanningConstraints, PlanningConstraints>;
 

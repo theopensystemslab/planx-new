@@ -8,7 +8,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 import { CustomisationCard } from "./CustomisationCard";
-import { FlowEdits } from "./types";
+import type { FlowEdits } from "./types";
 
 const Customisations = () => {
   const [flowId, flow] = useStore((state) => [state.id, state.flow]);

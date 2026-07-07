@@ -5,7 +5,8 @@ import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 
-import { getFieldProps, Props } from ".";
+import type { Props } from ".";
+import { getFieldProps } from ".";
 import { FieldInputDescription } from "./shared";
 
 export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {

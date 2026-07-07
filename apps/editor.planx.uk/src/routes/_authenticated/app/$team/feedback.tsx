@@ -3,7 +3,7 @@ import gql from "graphql-tag";
 import { FEEDBACK_SUMMARY_FIELDS } from "lib/feedback";
 import { client } from "lib/graphql";
 import { FeedbackLog } from "pages/FlowEditor/components/FeedbackLog/FeedbackLog";
-import { Feedback } from "pages/FlowEditor/components/FeedbackLog/types";
+import type { Feedback } from "pages/FlowEditor/components/FeedbackLog/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 

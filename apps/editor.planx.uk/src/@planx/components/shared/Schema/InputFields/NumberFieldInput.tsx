@@ -6,7 +6,8 @@ import InputRow from "ui/shared/InputRow";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../../constants";
-import { getFieldProps, Props } from ".";
+import type { Props } from ".";
+import { getFieldProps } from ".";
 import { FieldInputDescription } from "./shared";
 
 export const NumberFieldInput: React.FC<Props<NumberField>> = (props) => {

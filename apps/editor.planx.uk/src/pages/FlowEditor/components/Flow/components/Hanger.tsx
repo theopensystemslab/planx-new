@@ -1,4 +1,4 @@
-import { NodeId } from "@opensystemslab/planx-core/types";
+import type { NodeId } from "@opensystemslab/planx-core/types";
 import { useParams } from "@tanstack/react-router";
 import classnames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";

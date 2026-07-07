@@ -1,11 +1,12 @@
-import { DocumentNode } from "@apollo/client";
+import type { DocumentNode } from "@apollo/client";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import Bowser from "bowser";
 import { client } from "lib/graphql";
 import React, { createContext, useContext, useEffect } from "react";
 import { usePrevious } from "react-use";
 
-import { Store, useStore } from "../store";
+import type { Store } from "../store";
+import { useStore } from "../store";
 import {
   INSERT_NEW_ANALYTICS,
   INSERT_NEW_ANALYTICS_LOG,
@@ -18,7 +19,7 @@ import {
   UPDATE_HAS_CLICKED_SAVE,
   UPDATE_NEXT_LOG_CREATED_AT,
 } from "./mutations";
-import {
+import type {
   AnalyticsLogDirection,
   AnalyticsType,
   EventData,

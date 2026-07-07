@@ -1,14 +1,13 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import {
-  AddressFields,
-  AddressFieldsProps,
-} from "@planx/components/AddressInput/Public";
+import type { AddressFieldsProps } from "@planx/components/AddressInput/Public";
+import { AddressFields } from "@planx/components/AddressInput/Public";
 import React from "react";
 import InputLegend from "ui/editor/InputLegend";
 
-import { AddressField } from "../model";
-import { getFieldProps, Props } from ".";
+import type { AddressField } from "../model";
+import type { Props } from ".";
+import { getFieldProps } from ".";
 import { FieldInputDescription } from "./shared";
 
 export const AddressFieldInput: React.FC<Props<AddressField>> = (props) => {

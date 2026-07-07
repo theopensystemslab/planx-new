@@ -29,10 +29,10 @@ import Send from "@mui/icons-material/Send";
 import ShapeLine from "@mui/icons-material/ShapeLine";
 import SquareFoot from "@mui/icons-material/SquareFoot";
 import TextFields from "@mui/icons-material/TextFields";
-import { OverridableComponent } from "@mui/material/OverridableComponent";
-import { SvgIconProps, SvgIconTypeMap } from "@mui/material/SvgIcon";
+import type { OverridableComponent } from "@mui/material/OverridableComponent";
+import type { SvgIconProps, SvgIconTypeMap } from "@mui/material/SvgIcon";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import * as React from "react";
+import type * as React from "react";
 import EditorIcon from "ui/icons/Editor";
 
 // XXX: We define the Icon type in terms of one of the Icons so as not to have to repeat ourselves

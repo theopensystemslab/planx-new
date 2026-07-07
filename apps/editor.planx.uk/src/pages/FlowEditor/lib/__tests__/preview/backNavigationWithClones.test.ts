@@ -1,6 +1,7 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 
-import { Store, useStore } from "../../store";
+import type { Store } from "../../store";
+import { useStore } from "../../store";
 import { clickContinue, visitedNodes } from "../utils";
 
 const { getState, setState } = useStore;

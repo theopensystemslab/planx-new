@@ -1,7 +1,7 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import type { Pay } from "@planx/components/Pay/model";
 import {
   parsePay,
-  Pay,
   PAY_FN,
   validationSchema,
 } from "@planx/components/Pay/model";
@@ -20,7 +20,7 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
-import { EditorProps } from "../../shared/types";
+import type { EditorProps } from "../../shared/types";
 import { GovPayMetadataSection } from "./GovPayMetadataSection";
 import { InviteToPaySection } from "./InviteToPaySection";
 

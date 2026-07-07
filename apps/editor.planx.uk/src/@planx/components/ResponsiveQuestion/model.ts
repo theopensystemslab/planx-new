@@ -1,6 +1,8 @@
-import { ConditionalOption } from "../Option/model";
-import { BaseQuestion, parseBaseQuestion } from "../shared/BaseQuestion/model";
-import { Condition, Rule } from "../shared/RuleBuilder/types";
+import type { ConditionalOption } from "../Option/model";
+import type { BaseQuestion } from "../shared/BaseQuestion/model";
+import { parseBaseQuestion } from "../shared/BaseQuestion/model";
+import type { Rule } from "../shared/RuleBuilder/types";
+import { Condition } from "../shared/RuleBuilder/types";
 
 export type ResponsiveQuestion = BaseQuestion;
 

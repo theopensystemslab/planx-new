@@ -1,4 +1,5 @@
-import { FEEDBACK_STATUS, FeedbackStatus, FeedbackType } from "./types";
+import type { FeedbackStatus, FeedbackType } from "./types";
+import { FEEDBACK_STATUS } from "./types";
 import { feedbackStatusText, feedbackTypeText } from "./utils";
 
 export type FeedbackTypeOption = {

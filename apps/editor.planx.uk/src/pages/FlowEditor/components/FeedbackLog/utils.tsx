@@ -1,4 +1,4 @@
-import { Feedback, FeedbackStatus, FeedbackType } from "./types";
+import type { Feedback, FeedbackStatus, FeedbackType } from "./types";
 
 export const EmojiRating = [
   { value: 1, label: "Terrible" },

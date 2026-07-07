@@ -1,9 +1,10 @@
 import { gql } from "@apollo/client";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import Bowser from "bowser";
-import { Sentiment } from "components/Feedback/MoreInfoFeedback/MoreInfoFeedback";
-import { FeedbackView } from "components/Feedback/types";
-import { Store, useStore } from "pages/FlowEditor/lib/store";
+import type { Sentiment } from "components/Feedback/MoreInfoFeedback/MoreInfoFeedback";
+import type { FeedbackView } from "components/Feedback/types";
+import type { Store } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 
 import { client } from "./graphql";
 

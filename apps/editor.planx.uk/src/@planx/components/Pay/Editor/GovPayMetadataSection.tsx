@@ -3,15 +3,14 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import { GovPayMetadata } from "@opensystemslab/planx-core/types";
-import { Pay } from "@planx/components/Pay/model";
+import type { GovPayMetadata } from "@opensystemslab/planx-core/types";
+import type { Pay } from "@planx/components/Pay/model";
 import { DataFieldAutocomplete } from "@planx/components/shared/DataFieldAutocomplete";
 import { useFormikContext } from "formik";
 import React from "react";
 import { useCallback } from "react";
-import ListManager, {
-  EditorProps as ListManagerEditorProps,
-} from "ui/editor/ListManager/ListManager";
+import type { EditorProps as ListManagerEditorProps } from "ui/editor/ListManager/ListManager";
+import ListManager from "ui/editor/ListManager/ListManager";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import ErrorWrapper from "ui/shared/ErrorWrapper";

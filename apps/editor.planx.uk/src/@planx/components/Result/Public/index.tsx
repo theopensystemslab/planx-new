@@ -9,15 +9,15 @@ import Card, {
 } from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
-import { PublicProps } from "@planx/components/shared/types";
+import type { PublicProps } from "@planx/components/shared/types";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { Response } from "pages/FlowEditor/lib/store/preview";
+import type { Response } from "pages/FlowEditor/lib/store/preview";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
-import { PresentationalProps, Result } from "../model";
+import type { PresentationalProps, Result } from "../model";
 import ResultReason from "./ResultReason";
 import ResultSummary from "./ResultSummary";
 

@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
-import { PublicProps } from "@planx/components/shared/types";
+import type { PublicProps } from "@planx/components/shared/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import ApplicationSummary from "ui/public/ApplicationSummary";

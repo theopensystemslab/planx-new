@@ -1,4 +1,4 @@
-import { Breadcrumbs } from "@opensystemslab/planx-core/types";
+import type { Breadcrumbs } from "@opensystemslab/planx-core/types";
 import { act, waitFor } from "@testing-library/react";
 import {
   getInternalFeedbackMetadata,

@@ -1,14 +1,18 @@
 import { array, object, string } from "yup";
 
-import { ConditionalOption, optionValidationSchema } from "../Option/model";
-import {
+import type { ConditionalOption } from "../Option/model";
+import { optionValidationSchema } from "../Option/model";
+import type {
   BaseChecklist,
-  baseChecklistValidationSchema,
   FlatOptions,
   GroupedOptions,
+} from "../shared/BaseChecklist/model";
+import {
+  baseChecklistValidationSchema,
   parseBaseChecklist,
 } from "../shared/BaseChecklist/model";
-import { Condition, Rule } from "../shared/RuleBuilder/types";
+import type { Rule } from "../shared/RuleBuilder/types";
+import { Condition } from "../shared/RuleBuilder/types";
 
 export type ResponsiveChecklist = BaseChecklist;
 

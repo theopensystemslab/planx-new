@@ -1,7 +1,7 @@
 import React from "react";
 
 import Toast from "./Toast";
-import { Toast as ToastComponent } from "./types";
+import type { Toast as ToastComponent } from "./types";
 
 const ToastContainer = ({ toasts }: { toasts: ToastComponent[] }) => {
   return (

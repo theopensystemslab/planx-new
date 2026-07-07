@@ -1,5 +1,5 @@
 import { useSearch } from "@tanstack/react-router";
-import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
+import type { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import { getSortParams } from "ui/editor/SortControl/utils";
 
 import { sortOptions } from "../../helpers/sortAndFilterOptions";

@@ -1,5 +1,5 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { Meta, StoryObj } from "@storybook/tanstack-react";
+import type { Meta, StoryObj } from "@storybook/tanstack-react";
 
 import Wrapper from "../fixtures/Wrapper";
 import {
@@ -13,9 +13,10 @@ import {
   withDescriptionsResponsiveArgs,
   withImagesResponsiveArgs,
 } from "../shared/BaseQuestion/BaseQuestion.stories.config";
-import { EditorProps, type PublicProps } from "../shared/types";
+import type { EditorProps } from "../shared/types";
+import { type PublicProps } from "../shared/types";
 import Editor from "./Editor";
-import { ResponsiveChecklistWithOptions } from "./model";
+import type { ResponsiveChecklistWithOptions } from "./model";
 import ResponsiveChecklist from "./Public";
 
 const meta = {

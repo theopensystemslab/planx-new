@@ -1,6 +1,6 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import Wrapper from "@planx/components/fixtures/Wrapper";
-import { Meta } from "@storybook/tanstack-react";
+import type { Meta } from "@storybook/tanstack-react";
 
 import Editor from "./Editor";
 import Public from "./Public";

@@ -1,7 +1,8 @@
 import { mostReadable } from "@ctrl/tinycolor";
 import ErrorOutline from "@mui/icons-material/ErrorOutlined";
 import HelpIcon from "@mui/icons-material/Help";
-import Box, { BoxProps } from "@mui/material/Box";
+import type { BoxProps } from "@mui/material/Box";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -9,7 +10,7 @@ import type { Notice } from "@planx/components/Notice/model";
 import Card, {
   contentFlowSpacing,
 } from "@planx/components/shared/Preview/Card";
-import { PublicProps } from "@planx/components/shared/types";
+import type { PublicProps } from "@planx/components/shared/types";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";

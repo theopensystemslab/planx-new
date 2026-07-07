@@ -1,18 +1,14 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
-import { FormikErrors, FormikValues } from "formik";
+import type { FormikErrors, FormikValues } from "formik";
 import React from "react";
 
-import { Option } from "../Option/model";
+import type { Option } from "../Option/model";
 import BaseQuestionComponent from "../shared/BaseQuestion/Editor";
 import { buildChildren } from "../shared/BaseQuestion/model";
-import { EditorProps } from "../shared/types";
-import {
-  parseQuestion,
-  Question,
-  QuestionWithOptions,
-  validationSchema,
-} from "./model";
+import type { EditorProps } from "../shared/types";
+import type { Question, QuestionWithOptions } from "./model";
+import { parseQuestion, validationSchema } from "./model";
 
 export type Props = EditorProps<
   TYPES.Question,

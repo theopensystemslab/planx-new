@@ -1,15 +1,16 @@
 import CloudUpload from "@mui/icons-material/CloudUpload";
+import type { BoxProps } from "@mui/material/Box";
 import Box from "@mui/material/Box";
-import { BoxProps } from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { FileUploadSlot } from "@planx/components/FileUpload/model";
+import type { FileUploadSlot } from "@planx/components/FileUpload/model";
 import { useOptionalListContext } from "@planx/components/List/Public/Context";
 import handleRejectedUpload from "@planx/components/shared/handleRejectedUpload";
 import { uploadPrivateFile } from "lib/api/fileUpload/requests";
 import { nanoid } from "nanoid";
 import React, { useCallback } from "react";
-import { FileWithPath, useDropzone } from "react-dropzone";
+import type { FileWithPath } from "react-dropzone";
+import { useDropzone } from "react-dropzone";
 import { borderedFocusStyle } from "theme";
 
 interface Props<T extends FileUploadSlot = FileUploadSlot> {

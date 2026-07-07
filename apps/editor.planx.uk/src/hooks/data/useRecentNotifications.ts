@@ -1,5 +1,5 @@
 import { gql, useSubscription } from "@apollo/client";
-import { Notification } from "pages/FlowEditor/components/Notifications/types";
+import type { Notification } from "pages/FlowEditor/components/Notifications/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 const NOTIFICATION_FIELDS = gql`

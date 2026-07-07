@@ -1,7 +1,7 @@
 import { getCalculatedReductionOrExemption } from "@opensystemslab/planx-core";
-import { PassportFeeFields } from "@opensystemslab/planx-core/types";
-import { Store } from "pages/FlowEditor/lib/store";
-import { ConditionalPick } from "type-fest";
+import type { PassportFeeFields } from "@opensystemslab/planx-core/types";
+import type { Store } from "pages/FlowEditor/lib/store";
+import type { ConditionalPick } from "type-fest";
 
 import { PAY_FN } from "../Pay/model";
 import {

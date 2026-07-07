@@ -5,7 +5,8 @@ import Typography from "@mui/material/Typography";
 import { ICONS } from "@planx/components/shared/icons";
 import { useNavigate } from "@tanstack/react-router";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
+import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import { getDisplayDetailsForNodeCard } from "./getDisplayDetailsForNodeCard";

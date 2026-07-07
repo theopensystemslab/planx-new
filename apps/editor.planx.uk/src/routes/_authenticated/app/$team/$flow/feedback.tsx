@@ -3,7 +3,7 @@ import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedL
 import gql from "graphql-tag";
 import { FEEDBACK_SUMMARY_FIELDS } from "lib/feedback";
 import { FeedbackLog } from "pages/FlowEditor/components/FeedbackLog/FeedbackLog";
-import { Feedback } from "pages/FlowEditor/components/FeedbackLog/types";
+import type { Feedback } from "pages/FlowEditor/components/FeedbackLog/types";
 import React from "react";
 
 import { client } from "../../../../../lib/graphql";

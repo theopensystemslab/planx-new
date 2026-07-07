@@ -1,21 +1,18 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { Option } from "@planx/components/Option/model";
+import type { Option } from "@planx/components/Option/model";
 import { BaseChecklistComponent } from "@planx/components/shared/BaseChecklist/Editor";
-import {
+import type {
   FlatOptions,
-  generatePayload,
   GroupedOptions,
 } from "@planx/components/shared/BaseChecklist/model";
-import { EditorProps } from "@planx/components/shared/types";
+import { generatePayload } from "@planx/components/shared/BaseChecklist/model";
+import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 
-import {
-  ChecklistWithOptions,
-  parseChecklist,
-  validationSchema,
-} from "./model";
-import { Checklist } from "./model";
+import type { ChecklistWithOptions } from "./model";
+import type { Checklist } from "./model";
+import { parseChecklist, validationSchema } from "./model";
 
 type ExtraProps = FlatOptions<Option> | GroupedOptions<Option>;
 export type Props = EditorProps<TYPES.Checklist, Checklist, ExtraProps>;

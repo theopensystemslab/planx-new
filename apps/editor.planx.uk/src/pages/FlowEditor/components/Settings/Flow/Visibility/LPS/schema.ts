@@ -1,6 +1,6 @@
 import { boolean, mixed, object, type SchemaOf, string } from "yup";
 
-import { LPSListingFormValues } from "./types";
+import type { LPSListingFormValues } from "./types";
 
 export const validationSchema: SchemaOf<LPSListingFormValues> = object({
   isListedOnLPS: boolean()

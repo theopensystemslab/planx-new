@@ -1,12 +1,10 @@
 import { activePlanningConstraints } from "@opensystemslab/planx-core/types";
 import { richText } from "lib/yupExtensions";
-import { array, object, SchemaOf, string } from "yup";
+import type { SchemaOf } from "yup";
+import { array, object, string } from "yup";
 
-import {
-  BaseNodeData,
-  baseNodeDataValidationSchema,
-  parseBaseNodeData,
-} from "../shared";
+import type { BaseNodeData } from "../shared";
+import { baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
 
 export interface PlanningConstraints extends BaseNodeData {
   title: string;

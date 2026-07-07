@@ -3,8 +3,8 @@ import Container from "@mui/material/Container";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { formatRawProjectTypes } from "@opensystemslab/planx-core";
+import type { GovUKPayment } from "@opensystemslab/planx-core/types";
 import {
-  GovUKPayment,
   type PaymentRequest,
   PaymentStatus,
 } from "@opensystemslab/planx-core/types";

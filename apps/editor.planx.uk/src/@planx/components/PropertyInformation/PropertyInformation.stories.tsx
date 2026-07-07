@@ -1,11 +1,12 @@
 import Wrapper from "@planx/components/fixtures/Wrapper";
-import { Meta, StoryObj } from "@storybook/tanstack-react";
+import type { Meta, StoryObj } from "@storybook/tanstack-react";
 import { http, HttpResponse } from "msw";
 
 import Editor from "./Editor";
 import { osTileError } from "./mocks/osTileError";
 import { presentationalPropsMock } from "./mocks/propsMock";
-import { Presentational, PresentationalProps } from "./Public";
+import type { PresentationalProps } from "./Public";
+import { Presentational } from "./Public";
 
 /** PropertyInformation relies on a custom web component that cannot be rendered by React Storybook. Find additional docs here: https://oslmap.netlify.app/ */
 export default {

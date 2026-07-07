@@ -1,4 +1,4 @@
-import { User } from "@opensystemslab/planx-core/types";
+import type { User } from "@opensystemslab/planx-core/types";
 import ChecklistComponent from "@planx/components/Checklist/Editor";
 import { act, within } from "@testing-library/react";
 import { TAG_DISPLAY_VALUES } from "pages/FlowEditor/components/Flow/components/Tag";

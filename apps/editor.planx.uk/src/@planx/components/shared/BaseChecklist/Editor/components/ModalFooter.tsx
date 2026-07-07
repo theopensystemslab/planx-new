@@ -2,7 +2,7 @@ import { ComponentType } from "@opensystemslab/planx-core/types";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 
-import { Props } from "../types";
+import type { Props } from "../types";
 
 export const TypeNarrowedModalFooter: React.FC<Props> = ({
   type,

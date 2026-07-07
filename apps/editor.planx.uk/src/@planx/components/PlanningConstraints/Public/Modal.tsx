@@ -7,7 +7,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import { Constraint, Metadata } from "@opensystemslab/planx-core/types";
+import type { Constraint, Metadata } from "@opensystemslab/planx-core/types";
 import omit from "lodash/omit";
 import React, { useState } from "react";
 import InputLabel from "ui/public/InputLabel";
@@ -15,7 +15,7 @@ import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 
-import { InaccurateConstraints } from ".";
+import type { InaccurateConstraints } from ".";
 import { formatEntityName } from "./List";
 
 interface OverrideEntitiesModalProps {

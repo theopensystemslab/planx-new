@@ -1,10 +1,10 @@
 import Code from "@mui/icons-material/Code";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { EditorProps } from "@planx/components/shared/types";
+import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import { FormattedResponse } from "pages/FlowEditor/components/Submissions/components/FormattedResponse";
-import { Store } from "pages/FlowEditor/lib/store";
+import type { Store } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
@@ -16,11 +16,11 @@ import InputRow from "ui/shared/InputRow";
 import InputRowLabel from "ui/shared/InputRowLabel";
 import { Switch } from "ui/shared/Switch";
 
+import type { SetFee } from "./model";
 import {
   DEFAULT_PAYMENT_PROCESSING_PERCENTAGE,
   DEFAULT_SERVICE_CHARGE_THRESHOLD,
   parseSetFee,
-  SetFee,
   validationSchema,
   VAT_PERCENTAGE,
 } from "./model";

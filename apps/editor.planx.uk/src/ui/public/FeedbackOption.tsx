@@ -1,7 +1,7 @@
 import EastIcon from "@mui/icons-material/East";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
-import SvgIcon from "@mui/material/SvgIcon";
+import type SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
 import React from "react";
 

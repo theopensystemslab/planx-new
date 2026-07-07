@@ -1,16 +1,17 @@
 import Box from "@mui/material/Box";
-import { SiteAddress } from "@opensystemslab/planx-core/types";
+import type { SiteAddress } from "@opensystemslab/planx-core/types";
 import { MapContainer } from "@planx/components/shared/Preview/MapContainer";
 import type { MapField } from "@planx/components/shared/Schema/model";
 import { GraphError } from "components/Error/GraphError";
-import { Feature } from "geojson";
+import type { Feature } from "geojson";
 import type { GeoJSONChangeEvent } from "lib/gis";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
-import { getFieldProps, Props } from ".";
+import type { Props } from ".";
+import { getFieldProps } from ".";
 import { FieldInputDescription } from "./shared";
 
 export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
@@ -38,7 +39,9 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
     editableFeatures?.length > 0 ? editableFeatures : undefined,
   );
 
-  const geojsonChangeHandler = async ({ detail: geojson }: GeoJSONChangeEvent) => {
+  const geojsonChangeHandler = async ({
+    detail: geojson,
+  }: GeoJSONChangeEvent) => {
     if (geojson["EPSG:3857"]?.features) {
       setFeatures(geojson["EPSG:3857"].features);
       formik.setFieldValue(name, geojson["EPSG:3857"].features);
@@ -66,8 +69,7 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
               geojsonBuffer={30}
               drawMode
               drawGeojsonData={
-                features &&
-                {
+                features && {
                   type: "FeatureCollection",
                   features: features,
                 }
@@ -91,8 +93,7 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
                   : ``
               }
               clipGeojsonData={
-                teamSettings?.boundaryBBox &&
-                teamSettings?.boundaryBBox
+                teamSettings?.boundaryBBox && teamSettings?.boundaryBBox
               }
               mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
               collapseAttributions

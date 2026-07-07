@@ -1,12 +1,13 @@
 import Box from "@mui/material/Box";
 // eslint-disable-next-line no-restricted-imports
-import { SwitchProps } from "@mui/material/Switch";
+import type { SwitchProps } from "@mui/material/Switch";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import InputLabel from "ui/editor/InputLabel";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import SettingsDescription from "ui/editor/SettingsDescription";
-import Input, { Props as InputProps } from "ui/shared/Input/Input";
+import type { Props as InputProps } from "ui/shared/Input/Input";
+import Input from "ui/shared/Input/Input";
 import { Switch } from "ui/shared/Switch";
 
 export const TextInput: React.FC<{

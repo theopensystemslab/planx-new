@@ -1,5 +1,5 @@
 import MenuItem from "@mui/material/MenuItem";
-import { SelectProps } from "@mui/material/Select";
+import type { SelectProps } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { lowerCase, merge, upperFirst } from "lodash";
@@ -10,7 +10,8 @@ import InputRow from "ui/shared/InputRow";
 import SelectInput from "ui/shared/SelectInput/SelectInput";
 
 import { DataFieldAutocomplete } from "../DataFieldAutocomplete";
-import { Condition, Rule } from "./types";
+import type { Rule } from "./types";
+import { Condition } from "./types";
 import { checkIfConditionalRule, formatRule } from "./utils";
 
 const Operator = styled(Typography)(({ theme }) => ({

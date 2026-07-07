@@ -1,12 +1,9 @@
-import { SendIntegration } from "@opensystemslab/planx-core/types";
-import { CombinedEventsPayload } from "lib/api/send/types";
+import type { SendIntegration } from "@opensystemslab/planx-core/types";
+import type { CombinedEventsPayload } from "lib/api/send/types";
 import { array, mixed, object, SchemaOf, string } from "yup";
 
-import {
-  BaseNodeData,
-  baseNodeDataValidationSchema,
-  parseBaseNodeData,
-} from "../shared";
+import type { BaseNodeData } from "../shared";
+import { baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
 
 export interface Send extends BaseNodeData {
   title: string;

@@ -1,12 +1,13 @@
-import {
-  NODE_TAGS,
+import type {
   NodeTags,
   TemplatedNodeData,
 } from "@opensystemslab/planx-core/types";
+import { NODE_TAGS } from "@opensystemslab/planx-core/types";
 import { richText } from "lib/yupExtensions";
 import trim from "lodash/trim";
-import { Store } from "pages/FlowEditor/lib/store";
-import { array, boolean, object, SchemaOf, string } from "yup";
+import type { Store } from "pages/FlowEditor/lib/store";
+import type { SchemaOf } from "yup";
+import { array, boolean, object, string } from "yup";
 
 /** Shared properties across all node types */
 export type BaseNodeData = NodeTags & TemplatedNodeData & MoreInformation;

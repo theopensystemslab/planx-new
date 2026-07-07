@@ -1,9 +1,9 @@
 import React from "react";
-import { EditorProps } from "ui/editor/ListManager/ListManager";
+import type { EditorProps } from "ui/editor/ListManager/ListManager";
 
-import { ConditionalOption, Option } from "../Option/model";
+import type { ConditionalOption, Option } from "../Option/model";
 import { BaseOptionsEditor } from "../shared/BaseOptionsEditor";
-import { OptionEditor } from "../shared/BaseOptionsEditor/types";
+import type { OptionEditor } from "../shared/BaseOptionsEditor/types";
 
 const QuestionOptionsEditor: React.FC<
   EditorProps<Option | ConditionalOption> | OptionEditor

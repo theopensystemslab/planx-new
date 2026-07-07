@@ -1,4 +1,5 @@
-import { formatOps, Graph } from "../index";
+import type { Graph } from "../index";
+import { formatOps } from "../index";
 
 describe("Update operations", () => {
   test("Updating a single property of a node that is in `allowProps`", () => {

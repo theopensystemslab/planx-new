@@ -4,7 +4,7 @@ import {
   parseContent,
   validationSchema,
 } from "@planx/components/Content/model";
-import { EditorProps } from "@planx/components/shared/types";
+import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import ColorPicker from "ui/editor/ColorPicker/ColorPicker";

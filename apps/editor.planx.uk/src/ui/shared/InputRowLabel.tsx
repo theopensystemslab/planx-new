@@ -1,7 +1,8 @@
-import { InputLabelProps } from "@mui/material/InputLabel";
+import type { InputLabelProps } from "@mui/material/InputLabel";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
+import React from "react";
 
 const Label = styled(Typography)(({ theme }) => ({
   flexShrink: 1,

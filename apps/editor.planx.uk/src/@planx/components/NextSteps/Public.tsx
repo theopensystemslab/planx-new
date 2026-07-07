@@ -1,10 +1,10 @@
-import { PublicProps } from "@planx/components/shared/types";
+import type { PublicProps } from "@planx/components/shared/types";
 import React from "react";
 import NextStepsList from "ui/public/NextStepsList";
 
 import Card from "../shared/Preview/Card";
 import { CardHeader } from "../shared/Preview/CardHeader/CardHeader";
-import { NextSteps } from "./model";
+import type { NextSteps } from "./model";
 
 export type Props = PublicProps<NextSteps>;
 

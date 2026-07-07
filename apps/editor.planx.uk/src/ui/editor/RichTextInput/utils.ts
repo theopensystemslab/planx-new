@@ -3,7 +3,7 @@ import { map } from "ramda";
 import { create } from "zustand";
 
 import { conversionExtensions } from "./tiptapExtensions";
-import { VariablesState } from "./types";
+import type { VariablesState } from "./types";
 
 /**
  * Traverse a nested object/array and apply a modification at each level. If the modifier returns `null`, it leaves the result unchanged.

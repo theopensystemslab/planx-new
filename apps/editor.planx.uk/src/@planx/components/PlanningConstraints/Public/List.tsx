@@ -1,7 +1,8 @@
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
-import Box, { BoxProps } from "@mui/material/Box";
+import type { BoxProps } from "@mui/material/Box";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import Link from "@mui/material/Link";
@@ -17,14 +18,15 @@ import type {
 } from "@opensystemslab/planx-core/types";
 import groupBy from "lodash/groupBy";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { ReactNode, useState } from "react";
+import type { ReactNode } from "react";
+import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
-import { SiteAddress } from "../../FindProperty/model";
+import type { SiteAddress } from "../../FindProperty/model";
 import { availableDatasets } from "../model";
-import { InaccurateConstraints } from ".";
+import type { InaccurateConstraints } from ".";
 import { OverrideEntitiesModal } from "./Modal";
 
 const CATEGORY_COLORS: Record<string, string> = {

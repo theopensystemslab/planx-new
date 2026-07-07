@@ -1,5 +1,5 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { EditorProps } from "@planx/components/shared/types";
+import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
@@ -14,7 +14,8 @@ import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
 import { defaultContent } from "../components/defaultContent";
-import { Feedback, parseFeedback, validationSchema } from "../model";
+import type { Feedback } from "../model";
+import { parseFeedback, validationSchema } from "../model";
 
 type FeedbackEditorProps = EditorProps<TYPES.Feedback, Feedback>;
 

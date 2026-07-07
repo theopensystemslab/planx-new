@@ -2,7 +2,8 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import cloneDeep from "lodash/cloneDeep";
 import { expect } from "vitest";
 
-import { Store, useStore } from "../../store";
+import type { Store } from "../../store";
+import { useStore } from "../../store";
 import { removeNodesDependentOnPassport } from "../../store/preview";
 import breadcrumbsDependentOnPassportMock from "../mocks/breadcrumbsDependentOnPassport.json";
 import flowWithPassportComponentsMock from "../mocks/flowWithPassportComponents.json";

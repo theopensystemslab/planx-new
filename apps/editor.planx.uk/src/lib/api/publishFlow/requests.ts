@@ -1,5 +1,5 @@
 import apiClient from "../client";
-import {
+import type {
   CheckForChangesResponse,
   PublishFlowArgs,
   PublishFlowResponse,

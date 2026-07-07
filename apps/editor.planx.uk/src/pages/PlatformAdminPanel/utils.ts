@@ -1,5 +1,5 @@
 import { capitalize } from "lodash";
-import { AdminPanelData } from "types";
+import type { AdminPanelData } from "types";
 
 export const getFlowNamesForFilter = (data: AdminPanelData[]) => {
   const flattenedFlowNames = data

@@ -1,12 +1,12 @@
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import { PaymentRequest } from "@opensystemslab/planx-core/types";
+import type { PaymentRequest } from "@opensystemslab/planx-core/types";
 import { useMutation } from "@tanstack/react-query";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { usePublicRouteContext } from "hooks/usePublicRouteContext";
-import { APIError } from "lib/api/client";
+import type { APIError } from "lib/api/client";
 import { validateSession } from "lib/api/saveAndReturn/requests";
-import {
+import type {
   ReconciliationResponse,
   SessionAuthPayload,
 } from "lib/api/saveAndReturn/types";

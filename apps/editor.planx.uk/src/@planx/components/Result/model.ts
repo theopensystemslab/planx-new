@@ -1,13 +1,15 @@
-import { FLAG_SETS, FlagSet } from "@opensystemslab/planx-core/types";
+import type { FlagSet } from "@opensystemslab/planx-core/types";
+import { FLAG_SETS } from "@opensystemslab/planx-core/types";
 import { richText } from "lib/yupExtensions";
 import { mapValues } from "lodash";
-import { Store } from "pages/FlowEditor/lib/store";
-import { Response } from "pages/FlowEditor/lib/store/preview";
+import type { Store } from "pages/FlowEditor/lib/store";
+import type { Response } from "pages/FlowEditor/lib/store/preview";
 import type { HandleSubmit } from "pages/Preview/Node";
 import type { TextContent } from "types";
 import { boolean, lazy, mixed, object, string } from "yup";
 
-import { BaseNodeData, baseNodeDataValidationSchema } from "../shared";
+import type { BaseNodeData } from "../shared";
+import { baseNodeDataValidationSchema } from "../shared";
 
 export interface FlagDisplayText {
   heading?: string;

@@ -1,7 +1,7 @@
-import { Flag } from "@opensystemslab/planx-core/types";
+import type { Flag } from "@opensystemslab/planx-core/types";
 import { array, mixed, object, string } from "yup";
 
-import { Rule } from "../shared/RuleBuilder/types";
+import type { Rule } from "../shared/RuleBuilder/types";
 
 /**
  * The Option node doesn't have a direct Editor or Public interface

@@ -1,11 +1,10 @@
 import { useMutation } from "@apollo/client";
 
-import {
-  DELETE_FLOW,
+import type {
   FlowNotificationCascadeMutationResponse,
   FlowStatusMutationVars,
-  GET_ARCHIVED_FLOWS,
 } from "../../queries";
+import { DELETE_FLOW, GET_ARCHIVED_FLOWS } from "../../queries";
 
 export const useDeleteFlow = (id: string, slug: string, teamId: number) =>
   useMutation<FlowNotificationCascadeMutationResponse, FlowStatusMutationVars>(

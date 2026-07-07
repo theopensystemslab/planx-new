@@ -1,5 +1,5 @@
 import { getFeeBreakdown } from "@opensystemslab/planx-core";
-import { FeeBreakdown } from "@opensystemslab/planx-core/types";
+import type { FeeBreakdown } from "@opensystemslab/planx-core/types";
 import { logger } from "airbrake";
 import { useStore } from "pages/FlowEditor/lib/store";
 

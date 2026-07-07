@@ -1,11 +1,11 @@
 import Box from "@mui/material/Box";
-import { SxProps, Theme } from "@mui/material/styles";
-import { FormikProps } from "formik";
+import type { SxProps, Theme } from "@mui/material/styles";
+import type { FormikProps } from "formik";
 import React from "react";
 import InputRow from "ui/shared/InputRow";
 
 import { InputFields } from "./InputFields";
-import { Schema, SchemaUserData } from "./model";
+import type { Schema, SchemaUserData } from "./model";
 
 interface SchemaFieldsProps {
   /**

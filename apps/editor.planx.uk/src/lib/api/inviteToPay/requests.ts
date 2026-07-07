@@ -1,4 +1,4 @@
-import { KeyPath, PaymentRequest } from "@opensystemslab/planx-core/types";
+import type { KeyPath, PaymentRequest } from "@opensystemslab/planx-core/types";
 import apiClient from "lib/api/client";
 
 export type CreatePaymentRequest = {

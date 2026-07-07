@@ -1,5 +1,5 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { EditorProps } from "@planx/components/shared/types";
+import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -11,11 +11,8 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
-import {
-  ContactInput,
-  editorValidationSchema,
-  parseContactInput,
-} from "./model";
+import type { ContactInput } from "./model";
+import { editorValidationSchema, parseContactInput } from "./model";
 
 export type Props = EditorProps<TYPES.ContactInput, ContactInput>;
 

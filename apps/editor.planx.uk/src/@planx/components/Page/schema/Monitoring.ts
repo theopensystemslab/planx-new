@@ -1,6 +1,6 @@
 import { TextInputType } from "@planx/components/TextInput/model";
 
-import { PageSchema } from "../model";
+import type { PageSchema } from "../model";
 
 export const MonitoringGLA: PageSchema = {
   type: "Monitoring questions",

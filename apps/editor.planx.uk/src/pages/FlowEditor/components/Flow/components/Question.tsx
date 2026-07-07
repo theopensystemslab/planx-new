@@ -1,10 +1,8 @@
 import ErrorIcon from "@mui/icons-material/Error";
 import Help from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
-import {
-  ComponentType as TYPES,
-  NodeTag,
-} from "@opensystemslab/planx-core/types";
+import type { NodeTag } from "@opensystemslab/planx-core/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
 import { Link, useParams } from "@tanstack/react-router";
 import classNames from "classnames";

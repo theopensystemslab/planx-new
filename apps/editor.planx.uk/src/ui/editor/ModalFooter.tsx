@@ -1,5 +1,5 @@
-import { BaseNodeData } from "@planx/components/shared";
-import { FormikProps, useFormik } from "formik";
+import type { BaseNodeData } from "@planx/components/shared";
+import type { FormikProps, useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { InternalNotes } from "ui/editor/InternalNotes";

@@ -1,4 +1,5 @@
-import { Store, useStore } from "../../store";
+import type { Store } from "../../store";
+import { useStore } from "../../store";
 
 const { getState, setState } = useStore;
 const { resetPreview, autoAnswerableFlag } = getState();

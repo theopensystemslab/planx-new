@@ -5,7 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { TeamSummary } from "pages/FlowEditor/lib/store/team";
+import type { TeamSummary } from "pages/FlowEditor/lib/store/team";
 import React, { useEffect, useMemo, useState } from "react";
 import { focusStyle } from "theme";
 import { InfoChip } from "ui/editor/InfoChip";

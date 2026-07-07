@@ -1,4 +1,4 @@
-import { Notification } from "./types";
+import type { Notification } from "./types";
 import { partitionBySuperseded } from "./utils";
 
 const makeNotification = (

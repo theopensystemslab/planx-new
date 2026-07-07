@@ -1,13 +1,14 @@
 import Typography from "@mui/material/Typography";
+import type { Node } from "@opensystemslab/planx-core/types";
 import {
   ComponentType as TYPES,
   DEFAULT_FLAG_CATEGORY,
   flatFlags,
-  Node,
 } from "@opensystemslab/planx-core/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
-import { FormikProps } from "formik";
-import React, { MutableRefObject } from "react";
+import type { FormikProps } from "formik";
+import type { MutableRefObject } from "react";
+import React from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 

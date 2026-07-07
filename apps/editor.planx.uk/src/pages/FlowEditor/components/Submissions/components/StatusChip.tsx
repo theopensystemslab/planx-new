@@ -1,6 +1,6 @@
 import Chip from "@mui/material/Chip";
 import React from "react";
-import { RenderCellParams } from "ui/shared/DataTable/types";
+import type { RenderCellParams } from "ui/shared/DataTable/types";
 
 export const StatusChip = (params: RenderCellParams) => {
   return params.value === "Success" ? (

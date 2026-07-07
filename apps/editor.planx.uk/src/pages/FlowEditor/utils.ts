@@ -1,12 +1,9 @@
-import {
-  ComponentType as TYPES,
-  FlowStatus,
-  IndexedNode,
-} from "@opensystemslab/planx-core/types";
+import type { FlowStatus, IndexedNode } from "@opensystemslab/planx-core/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { formatDistanceToNow } from "date-fns";
-import { FlowSettings } from "types";
+import type { FlowSettings } from "types";
 
-import { Store } from "./lib/store";
+import type { Store } from "./lib/store";
 
 export interface FlowInformation {
   settings: FlowSettings;

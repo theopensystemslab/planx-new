@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from "@storybook/tanstack-react";
+import type { Meta, StoryObj } from "@storybook/tanstack-react";
 
 import DelayedLoadingIndicator from "./DelayedLoadingIndicator";
 

@@ -1,4 +1,4 @@
-import { Feedback } from "../model";
+import type { Feedback } from "../model";
 
 export const defaultContent: Feedback = {
   title: "Tell us what you think",

@@ -10,7 +10,7 @@ import { createSendEvents } from "lib/api/send/requests";
 import type { CombinedEventsPayload } from "lib/api/send/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
-import { RenderCellParams } from "ui/shared/DataTable/types";
+import type { RenderCellParams } from "ui/shared/DataTable/types";
 
 import type { Submission } from "../types";
 

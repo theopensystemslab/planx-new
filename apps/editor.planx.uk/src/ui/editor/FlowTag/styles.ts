@@ -2,7 +2,8 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
-import { FlowTagProps, FlowTagType, StatusVariant } from "./types";
+import type { FlowTagProps } from "./types";
+import { FlowTagType, StatusVariant } from "./types";
 
 export const Root = styled(Box, {
   shouldForwardProp: (prop) => prop !== "tagType" && prop !== "statusVariant",

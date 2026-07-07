@@ -1,4 +1,4 @@
-import { Store } from "pages/FlowEditor/lib/store";
+import type { Store } from "pages/FlowEditor/lib/store";
 
 export const flowWithDuplicatePassportVars: Store.Flow = {
   _root: {

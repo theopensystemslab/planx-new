@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import {
+import type {
   SubmissionEmailInput,
   SubmissionEmailMutation,
 } from "pages/FlowEditor/components/Settings/Team/Integrations/SubmissionEmails/types";

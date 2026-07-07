@@ -1,8 +1,8 @@
 import StarIcon from "@mui/icons-material/Star";
 import Typography from "@mui/material/Typography";
 import type { TemplatedNodeData } from "@opensystemslab/planx-core/types";
-import { BaseNodeData } from "@planx/components/shared";
-import { FormikProps, useFormik } from "formik";
+import type { BaseNodeData } from "@planx/components/shared";
+import type { FormikProps, useFormik } from "formik";
 import React from "react";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";

@@ -2,8 +2,8 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import classNames from "classnames";
+import type { PropsWithChildren } from "react";
 import React from "react";
-import { PropsWithChildren } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import CheckCircleIcon from "ui/icons/CheckCircle";
 

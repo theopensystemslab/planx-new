@@ -1,4 +1,5 @@
-import { Flag, flatFlags } from "@opensystemslab/planx-core/types";
+import type { Flag } from "@opensystemslab/planx-core/types";
+import { flatFlags } from "@opensystemslab/planx-core/types";
 import { Link } from "@tanstack/react-router";
 import { useParams } from "@tanstack/react-router";
 import classNames from "classnames";

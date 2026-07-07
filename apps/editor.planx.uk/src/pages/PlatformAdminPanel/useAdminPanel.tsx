@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { AdminPanelData } from "types";
+import type { AdminPanelData } from "types";
 
 import {
   PRODUCTION_ADMIN_PANEL_QUERY,

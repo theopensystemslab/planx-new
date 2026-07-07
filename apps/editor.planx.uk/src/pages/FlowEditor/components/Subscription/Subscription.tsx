@@ -6,7 +6,7 @@ import SettingsSection from "ui/editor/SettingsSection";
 import { Contract } from "./components/Contract";
 import { Discount } from "./components/Discount";
 import { ServiceCharges } from "./components/ServiceCharges";
-import { SubscriptionProps } from "./types";
+import type { SubscriptionProps } from "./types";
 
 export const Subscription = ({ serviceCharges }: SubscriptionProps) => (
   <Container maxWidth="formWrap">

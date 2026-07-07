@@ -1,7 +1,7 @@
-import { ChecklistWithOptions } from "@planx/components/Checklist/model";
-import { ResponsiveChecklistWithOptions } from "@planx/components/ResponsiveChecklist/model";
+import type { ChecklistWithOptions } from "@planx/components/Checklist/model";
+import type { ResponsiveChecklistWithOptions } from "@planx/components/ResponsiveChecklist/model";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { FormikHookReturn } from "types";
+import type { FormikHookReturn } from "types";
 
 export const useCurrentOptions = <
   T extends ChecklistWithOptions | ResponsiveChecklistWithOptions,

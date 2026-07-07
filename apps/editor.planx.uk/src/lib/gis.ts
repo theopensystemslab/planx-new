@@ -1,6 +1,7 @@
 import bbox from "@turf/bbox";
 import bboxPolygon from "@turf/bbox-polygon";
-import { Feature, type Polygon } from "geojson";
+import type { Feature } from "geojson";
+import { type Polygon } from "geojson";
 
 import type { Entity } from "./planningData/types";
 

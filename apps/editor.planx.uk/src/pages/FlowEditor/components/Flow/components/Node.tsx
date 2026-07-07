@@ -8,7 +8,8 @@ import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { exhaustiveCheck } from "utils";
 
-import { Store, useStore } from "../../../lib/store";
+import type { Store } from "../../../lib/store";
+import { useStore } from "../../../lib/store";
 import { stripTagsAndLimitLength } from "../lib/utils";
 import Breadcrumb from "./Breadcrumb";
 import Checklist from "./Checklist";

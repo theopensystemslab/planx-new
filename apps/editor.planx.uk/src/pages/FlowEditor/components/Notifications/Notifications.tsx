@@ -11,7 +11,7 @@ import { EmptyState } from "ui/editor/EmptyState";
 import StyledTab from "ui/editor/StyledTab";
 
 import NotificationCard from "./NotificationCard";
-import { NotificationProps } from "./types";
+import type { NotificationProps } from "./types";
 import { partitionBySuperseded } from "./utils";
 
 const TabList = styled(Box)(() => ({

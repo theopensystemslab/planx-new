@@ -3,19 +3,18 @@ import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
-import { PublicProps } from "@planx/components/shared/types";
+import type { PublicProps } from "@planx/components/shared/types";
 import { squareMetresToHectares } from "@planx/components/shared/utils";
 import area from "@turf/area";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
-import { Feature } from "geojson";
-import { Store } from "pages/FlowEditor/lib/store";
+import type { Feature } from "geojson";
+import type { Store } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 
+import type { FindProperty, SiteAddress } from "../model";
 import {
-  FindProperty,
   FindPropertyUserAction,
   PASSPORT_COMPONENT_ACTION_KEY,
-  SiteAddress,
 } from "../model";
 import PickOSAddress from "./Autocomplete";
 import { useFindPropertyData } from "./hooks/useFindPropertyData";

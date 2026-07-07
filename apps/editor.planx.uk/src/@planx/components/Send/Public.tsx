@@ -10,8 +10,9 @@ import React, { useEffect } from "react";
 
 import Card from "../shared/Preview/Card";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
-import { PublicProps } from "../shared/types";
-import { DEFAULT_DESTINATION, getCombinedEventsPayload, Send } from "./model";
+import type { PublicProps } from "../shared/types";
+import type { Send } from "./model";
+import { DEFAULT_DESTINATION, getCombinedEventsPayload } from "./model";
 
 export type Props = PublicProps<Send>;
 

@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import React from "react";
 
 import { Root } from "./styles";
-import { ExternalPortalsProps } from "./types";
+import type { ExternalPortalsProps } from "./types";
 
 export const ExternalPortals: React.FC<ExternalPortalsProps> = ({
   externalPortals,

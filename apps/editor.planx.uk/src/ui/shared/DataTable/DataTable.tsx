@@ -1,10 +1,13 @@
 /* eslint-disable no-restricted-imports */
 import Box from "@mui/material/Box";
-import type { GridToolbarProps, ToolbarPropsOverrides } from "@mui/x-data-grid";
-import {
-  DataGrid,
+import type {
   GridColDef,
   GridFilterModel,
+  GridToolbarProps,
+  ToolbarPropsOverrides,
+} from "@mui/x-data-grid";
+import {
+  DataGrid,
   GridToolbarColumnsButton,
   GridToolbarContainer,
   GridToolbarDensitySelector,
@@ -13,12 +16,8 @@ import {
 } from "@mui/x-data-grid";
 import React, { useState } from "react";
 
-import {
-  ColumnConfig,
-  ColumnFilterType,
-  DataGridProps,
-  RenderCellParams,
-} from "./types";
+import type { ColumnConfig, DataGridProps, RenderCellParams } from "./types";
+import { ColumnFilterType } from "./types";
 import {
   columnCellComponentRegistry,
   createArrayFilterOperator,

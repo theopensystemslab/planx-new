@@ -1,4 +1,5 @@
-import { Store, useStore } from "../../store";
+import type { Store } from "../../store";
+import { useStore } from "../../store";
 import { clickContinue } from "../utils";
 
 const { getState, setState } = useStore;

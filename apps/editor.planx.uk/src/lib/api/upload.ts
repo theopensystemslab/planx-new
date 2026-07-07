@@ -1,4 +1,5 @@
-import axios, { RawAxiosRequestHeaders } from "axios";
+import type { RawAxiosRequestHeaders } from "axios";
+import axios from "axios";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 export { uploadPrivateFile, uploadPublicFile };

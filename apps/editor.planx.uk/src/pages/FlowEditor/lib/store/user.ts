@@ -1,9 +1,14 @@
-import { Role, Team, User, UserTeams } from "@opensystemslab/planx-core/types";
+import type {
+  Role,
+  Team,
+  User,
+  UserTeams,
+} from "@opensystemslab/planx-core/types";
 import { ROLE_LABELS } from "pages/FlowEditor/components/Team/types";
 import type { StateCreator } from "zustand";
 
 import type { AuthStore } from "./auth";
-import { TeamStore } from "./team";
+import type { TeamStore } from "./team";
 
 export const getDisplayRole = (
   user: User,

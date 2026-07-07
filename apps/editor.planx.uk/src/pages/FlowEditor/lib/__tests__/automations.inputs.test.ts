@@ -1,4 +1,4 @@
-import { FlowGraph } from "@opensystemslab/planx-core/types";
+import type { FlowGraph } from "@opensystemslab/planx-core/types";
 
 import { useStore } from "../store";
 import { clickContinue } from "./utils";

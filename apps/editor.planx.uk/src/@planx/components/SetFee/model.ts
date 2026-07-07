@@ -1,11 +1,9 @@
-import { boolean, number, object, SchemaOf, string } from "yup";
+import type { SchemaOf } from "yup";
+import { boolean, number, object, string } from "yup";
 
 import { PAY_FN } from "../Pay/model";
-import {
-  BaseNodeData,
-  baseNodeDataValidationSchema,
-  parseBaseNodeData,
-} from "../shared";
+import type { BaseNodeData } from "../shared";
+import { baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
 
 export interface SetFee extends BaseNodeData {
   applyCalculatedVAT: boolean;

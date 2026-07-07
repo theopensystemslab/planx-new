@@ -1,7 +1,8 @@
-import { ConditionalOption } from "@planx/components/Option/model";
+import type { ConditionalOption } from "@planx/components/Option/model";
 import { renderHook } from "@testing-library/react";
 import { logger } from "airbrake";
-import { FullStore, useStore } from "pages/FlowEditor/lib/store";
+import type { FullStore } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 
 import type { Group } from "../../BaseChecklist/model";
 import { Condition, Operator } from "../types";

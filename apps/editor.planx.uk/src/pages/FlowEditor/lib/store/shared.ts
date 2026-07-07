@@ -1,10 +1,10 @@
-import { NodeId } from "@opensystemslab/planx-core/types";
+import type { NodeId } from "@opensystemslab/planx-core/types";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import { removeSessionIdSearchParam } from "utils";
 import type { StateCreator } from "zustand";
 
 import type { Store } from ".";
-import { NavigationStore } from "./navigation";
+import type { NavigationStore } from "./navigation";
 
 export type PreviewEnvironment = "editor" | "standalone";
 export interface SharedStore extends Store.Store {

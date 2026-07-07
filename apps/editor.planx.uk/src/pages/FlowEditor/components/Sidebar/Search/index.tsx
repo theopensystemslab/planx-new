@@ -1,7 +1,7 @@
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import { useTheme } from "@mui/material/styles";
-import { IndexedNode } from "@opensystemslab/planx-core/types";
+import type { IndexedNode } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import {
   type SearchResult,
@@ -11,11 +11,13 @@ import {
 import { debounce } from "lodash";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useMemo, useState } from "react";
-import { Components, Virtuoso } from "react-virtuoso";
+import type { Components } from "react-virtuoso";
+import { Virtuoso } from "react-virtuoso";
 import { SEARCH_DEBOUNCE_MS } from "ui/shared/constants";
 
 import { ExternalPortalList } from "./ExternalPortalList/ExternalPortalList";
-import { ALL_FACETS, SearchFacets } from "./facets";
+import type { SearchFacets } from "./facets";
+import { ALL_FACETS } from "./facets";
 import { SearchHeader } from "./SearchHeader";
 import { SearchResultCard } from "./SearchResultCard";
 

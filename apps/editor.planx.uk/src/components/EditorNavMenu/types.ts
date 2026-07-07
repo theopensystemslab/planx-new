@@ -1,5 +1,5 @@
-import { Role } from "@opensystemslab/planx-core/types";
-import React from "react";
+import type { Role } from "@opensystemslab/planx-core/types";
+import type React from "react";
 
 type AllUsers = "*";
 

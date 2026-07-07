@@ -1,4 +1,5 @@
-import { Screen, waitFor } from "@testing-library/react";
+import type { Screen } from "@testing-library/react";
+import { waitFor } from "@testing-library/react";
 
 import { mockSetRecords } from "./mocks";
 

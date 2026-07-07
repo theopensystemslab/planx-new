@@ -1,8 +1,9 @@
 import { computePosition } from "@floating-ui/dom";
-import { EmojiOptions } from "@tiptap/extension-emoji";
+import type { EmojiOptions } from "@tiptap/extension-emoji";
 import { ReactRenderer } from "@tiptap/react";
 
-import { EmojiList, EmojiListRef } from "./EmojiList.js";
+import type { EmojiListRef } from "./EmojiList.js";
+import { EmojiList } from "./EmojiList.js";
 
 // Implementation taken from https://tiptap.dev/docs/editor/extensions/nodes/emoji
 const EmojiSuggestions: EmojiOptions["suggestion"] = {
