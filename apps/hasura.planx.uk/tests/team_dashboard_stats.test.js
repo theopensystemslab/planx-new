@@ -1,4 +1,4 @@
-const { introspectAs } = require("./utils");
+import { introspectAs } from "./utils.js";
 
 describe("team_dashboard_stats", () => {
   describe("public", () => {

@@ -1,6 +1,6 @@
-const assert = require("assert");
+import assert from "node:assert";
 
-const { gqlAdmin } = require("./utils");
+import { gqlAdmin } from "./utils.js";
 
 describe("portals", () => {
   let ids;

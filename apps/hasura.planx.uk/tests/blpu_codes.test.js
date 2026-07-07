@@ -1,4 +1,4 @@
-const { introspectAs } = require("./utils");
+import { introspectAs } from "./utils.js";
 
 describe("blpu_codes", () => {
   describe("public", () => {

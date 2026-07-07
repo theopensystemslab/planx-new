@@ -1,15 +1,15 @@
-import { defineConfig } from 'vitest/config';
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
+import { defineConfig } from "vitest/config";
 
-dotenv.config({ path: './../.env.test' });
+dotenv.config({ path: "./../.env.test" });
 
 export default defineConfig({
   test: {
     globals: true,
-    setupFiles: ['./vitest.setup.js'],
+    setupFiles: ["./vitest.setup.js"],
     deps: {
-      inline: ['dotenv']
+      inline: ["dotenv"],
     },
-    fileParallelism: false
-  }
+    fileParallelism: false,
+  },
 });

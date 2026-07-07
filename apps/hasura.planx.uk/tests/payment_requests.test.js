@@ -1,6 +1,8 @@
-const { introspectAs, gqlAdmin, gqlPublic } = require("./utils");
-const { v4: uuidV4 } = require("uuid");
-const assert = require("assert");
+import assert from "node:assert";
+
+import { v4 as uuidV4 } from "uuid";
+
+import { gqlAdmin, gqlPublic, introspectAs } from "./utils.js";
 
 describe("payment_requests", () => {
   describe("public", () => {
@@ -49,7 +51,7 @@ describe("payment_requests", () => {
         `;
         const publicRes = await gqlPublic(query);
         expect(publicRes.errors[0].message).toMatch(
-          /missing session variable: "x-hasura-payment-request-id"/
+          /missing session variable: "x-hasura-payment-request-id"/,
         );
       });
 
@@ -232,7 +234,7 @@ const deleteSessions = async (sessionIds) => {
   const res = await gqlAdmin(`
     mutation {
       delete_lowcal_sessions(where: {id: {_in: ${JSON.stringify(
-        sessionIds
+        sessionIds,
       )}}}) {
         affected_rows
       }
@@ -240,6 +242,6 @@ const deleteSessions = async (sessionIds) => {
   `);
   assert.strictEqual(
     res.data.delete_lowcal_sessions.affected_rows,
-    sessionIds.length
+    sessionIds.length,
   );
 };

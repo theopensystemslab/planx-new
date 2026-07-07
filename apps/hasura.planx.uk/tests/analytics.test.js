@@ -1,4 +1,4 @@
-const { introspectAs } = require("./utils");
+import { introspectAs } from "./utils.js";
 
 describe("analytics and analytics_logs", () => {
   describe("public", () => {
@@ -76,7 +76,7 @@ describe("analytics and analytics_logs", () => {
     });
   });
 
-    describe("teamAdmin", () => {
+  describe("teamAdmin", () => {
     let i;
     beforeAll(async () => {
       i = await introspectAs("teamAdmin");

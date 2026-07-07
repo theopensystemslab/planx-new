@@ -1,6 +1,8 @@
-const { introspectAs, gqlAdmin, gqlPublic } = require("./utils");
-const { v4: uuidV4 } = require("uuid");
-const assert = require("assert");
+import assert from "node:assert";
+
+import { v4 as uuidV4 } from "uuid";
+
+import { gqlAdmin, gqlPublic, introspectAs } from "./utils.js";
 
 describe("lowcal_sessions", () => {
   describe("public role introspection", () => {
@@ -132,7 +134,7 @@ describe("lowcal_sessions", () => {
       `);
       assert.strictEqual(
         res.data.delete_lowcal_sessions.affected_rows,
-        ids.length
+        ids.length,
       );
     });
 
@@ -168,7 +170,7 @@ describe("lowcal_sessions", () => {
         const res = await gqlPublic(insertSession, payload, headers);
         expect(res).toHaveProperty("errors");
         expect(res.errors[0].message).toContain(
-          "check constraint of an insert/update permission has failed"
+          "check constraint of an insert/update permission has failed",
         );
       });
     });
@@ -178,11 +180,11 @@ describe("lowcal_sessions", () => {
         const res = await gqlPublic(
           updateByPK,
           { sessionId: alice1, data: { x: 1 } },
-          { "x-hasura-lowcal-email": "alice@opensystemslab.io" }
+          { "x-hasura-lowcal-email": "alice@opensystemslab.io" },
         );
         expect(res).toHaveProperty("errors");
         expect(res.errors[0].message).toContain(
-          'missing session variable: "x-hasura-lowcal-session-id"'
+          'missing session variable: "x-hasura-lowcal-session-id"',
         );
       });
 
@@ -190,11 +192,11 @@ describe("lowcal_sessions", () => {
         const res = await gqlPublic(
           updateByPK,
           { sessionId: alice1, data: { x: 1 } },
-          { "x-hasura-lowcal-session-id": uuidV4() }
+          { "x-hasura-lowcal-session-id": uuidV4() },
         );
         expect(res).toHaveProperty("errors");
         expect(res.errors[0].message).toContain(
-          'missing session variable: "x-hasura-lowcal-email"'
+          'missing session variable: "x-hasura-lowcal-email"',
         );
       });
 
@@ -205,11 +207,11 @@ describe("lowcal_sessions", () => {
           {
             "x-hasura-lowcal-session-id": null,
             "x-hasura-lowcal-email": "alice@opensystemslab.io",
-          }
+          },
         );
         expect(res).toHaveProperty("errors");
         expect(res.errors[0].message).toContain(
-          'invalid input syntax for type uuid: "null"'
+          'invalid input syntax for type uuid: "null"',
         );
       });
 
@@ -221,7 +223,7 @@ describe("lowcal_sessions", () => {
         const res = await gqlPublic(
           updateByPK,
           { sessionId: alice1, data: { x: 1 } },
-          headers
+          headers,
         );
         expect(res.data.update_lowcal_sessions_by_pk).toBeNull();
       });
@@ -234,7 +236,7 @@ describe("lowcal_sessions", () => {
         const res = await gqlPublic(
           updateByPK,
           { sessionId: alice1, data: { x: 1 } },
-          headers
+          headers,
         );
         expect(res.data.update_lowcal_sessions_by_pk).toBeNull();
       });
@@ -247,12 +249,12 @@ describe("lowcal_sessions", () => {
         const res = await gqlPublic(
           updateByPK,
           { sessionId: alice1, data: { x: 1 } },
-          headers
+          headers,
         );
         expect(res.data.update_lowcal_sessions_by_pk).toBeNull();
       });
 
-      test("Alice cannot update her own existing session with an empty email ", async () => {
+      test("Alice cannot update her own existing session with an empty email", async () => {
         const headers = {
           "x-hasura-lowcal-session-id": alice1,
           "x-hasura-lowcal-email": "",
@@ -260,7 +262,7 @@ describe("lowcal_sessions", () => {
         const res = await gqlPublic(
           updateByPK,
           { sessionId: alice1, data: { x: 1 } },
-          headers
+          headers,
         );
         expect(res.data.update_lowcal_sessions_by_pk).toBeNull();
       });
@@ -273,7 +275,7 @@ describe("lowcal_sessions", () => {
         const res = await gqlPublic(
           updateByPK,
           { sessionId: alice1, data: { x: 1 } },
-          headers
+          headers,
         );
         expect(res.data.update_lowcal_sessions_by_pk).toBeNull();
       });
@@ -294,7 +296,7 @@ describe("lowcal_sessions", () => {
           }
         `,
           null,
-          headers
+          headers,
         );
         expect(res.data.update_lowcal_sessions.returning).toHaveLength(0);
       });
@@ -315,7 +317,7 @@ describe("lowcal_sessions", () => {
           }
         `,
           null,
-          headers
+          headers,
         );
         expect(res.data.update_lowcal_sessions.returning).toHaveLength(1);
         expect(res.data.update_lowcal_sessions.returning[0].id).toEqual(bob1);
@@ -331,33 +333,33 @@ describe("lowcal_sessions", () => {
         const res1 = await gqlPublic(
           updateByPK,
           { sessionId: anon1, data: { x: 1 } },
-          headers
+          headers,
         );
         expect(res1.data.update_lowcal_sessions_by_pk).not.toBeNull();
         expect(res1.data.update_lowcal_sessions_by_pk.id).toEqual(anon1);
         expect(res1.data.update_lowcal_sessions_by_pk.data).toHaveProperty(
           "x",
-          1
+          1,
         );
 
         // update 1
         const res2 = await gqlPublic(
           updateByPK,
           { sessionId: anon1, data: { y: 2 } },
-          headers
+          headers,
         );
         expect(res2.data.update_lowcal_sessions_by_pk).not.toBeNull();
         expect(res2.data.update_lowcal_sessions_by_pk.id).toEqual(anon1);
         expect(res2.data.update_lowcal_sessions_by_pk.data).toHaveProperty(
           "y",
-          2
+          2,
         );
 
         // update 2
         const res3 = await gqlPublic(
           updateByPK,
           { sessionId: anon1, data: {} },
-          headers
+          headers,
         );
         expect(res3.data.update_lowcal_sessions_by_pk).not.toBeNull();
         expect(res3.data.update_lowcal_sessions_by_pk.data).toEqual({});
@@ -373,13 +375,13 @@ describe("lowcal_sessions", () => {
         const res = await gqlPublic(
           updateByPK,
           { sessionId: alice1, data: { x: 1 } },
-          headers
+          headers,
         );
         expect(res.data.update_lowcal_sessions_by_pk).not.toBeNull();
         expect(res.data.update_lowcal_sessions_by_pk.id).toEqual(alice1);
         expect(res.data.update_lowcal_sessions_by_pk.data).toHaveProperty(
           "x",
-          1
+          1,
         );
       });
 
@@ -391,7 +393,7 @@ describe("lowcal_sessions", () => {
         const res = await gqlPublic(
           updateByPK,
           { sessionId: alice1, data: { x: 1 } },
-          headers
+          headers,
         );
         expect(res).not.toHaveProperty("errors");
         expect(res.data.update_lowcal_sessions_by_pk).toBeNull();
@@ -405,7 +407,7 @@ describe("lowcal_sessions", () => {
         const res = await gqlPublic(
           updateByPK,
           { sessionId: robert1, data: { x: 1 } },
-          headers
+          headers,
         );
         expect(res).not.toHaveProperty("errors");
         expect(res.data.update_lowcal_sessions_by_pk).toBeNull();
@@ -417,7 +419,7 @@ describe("lowcal_sessions", () => {
         const res = await gqlPublic(selectByPK, { sessionId: alice1 });
         expect(res).toHaveProperty("errors");
         expect(res.errors[0].message).toContain(
-          'missing session variable: "x-hasura-lowcal-session-id"'
+          'missing session variable: "x-hasura-lowcal-session-id"',
         );
       });
 
@@ -425,11 +427,11 @@ describe("lowcal_sessions", () => {
         const res = await gqlPublic(
           selectByPK,
           { sessionId: alice1 },
-          { "x-hasura-lowcal-session-id": uuidV4() }
+          { "x-hasura-lowcal-session-id": uuidV4() },
         );
         expect(res).toHaveProperty("errors");
         expect(res.errors[0].message).toContain(
-          'missing session variable: "x-hasura-lowcal-email"'
+          'missing session variable: "x-hasura-lowcal-email"',
         );
       });
 
@@ -456,7 +458,7 @@ describe("lowcal_sessions", () => {
           }
         `,
           null,
-          headers
+          headers,
         );
         expect(res.data.lowcal_sessions).toHaveLength(0);
       });
@@ -475,7 +477,7 @@ describe("lowcal_sessions", () => {
           }
         `,
           null,
-          headers
+          headers,
         );
         expect(res.data.lowcal_sessions).toHaveLength(1);
         expect(res.data.lowcal_sessions[0].id).toEqual(bob1);
@@ -501,7 +503,7 @@ describe("lowcal_sessions", () => {
           }
         `,
           null,
-          headers
+          headers,
         );
         expect(res.data.lowcal_sessions).toHaveLength(1);
         expect(res.data.lowcal_sessions[0].id).toEqual(alice1);
@@ -525,7 +527,7 @@ describe("lowcal_sessions", () => {
           }
         `,
           null,
-          headers
+          headers,
         );
         expect(res.data.lowcal_sessions).toHaveLength(0);
       });

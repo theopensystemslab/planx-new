@@ -1,6 +1,8 @@
-const { introspectAs, gqlAdmin, gqlPublic } = require("./utils");
-const { v4: uuidV4 } = require("uuid");
-const assert = require("assert");
+import assert from "node:assert";
+
+import { v4 as uuidV4 } from "uuid";
+
+import { gqlAdmin, gqlPublic, introspectAs } from "./utils.js";
 
 describe("sessions", () => {
   describe("public role introspection", () => {
@@ -71,7 +73,7 @@ describe("sessions", () => {
         {
           name: "team1",
           slug: "team1",
-        }
+        },
       );
       teamId = res1.data.insert_teams_one.id;
       assert(teamId);
@@ -100,7 +102,7 @@ describe("sessions", () => {
           slug: "flow1",
           teamId: teamId,
           name: "flow 1",
-        }
+        },
       );
       flowId = res2.data.insert_flows_one.id;
       assert(flowId);
@@ -189,7 +191,7 @@ describe("sessions", () => {
             id
           }
         }`,
-        { id: flowId }
+        { id: flowId },
       );
       assert.strictEqual(res2.data.delete_flows_by_pk.id, flowId);
 
@@ -199,7 +201,7 @@ describe("sessions", () => {
           id
         }
       }`,
-        { id: teamId }
+        { id: teamId },
       );
       assert.strictEqual(res3.data.delete_teams_by_pk.id, teamId);
     });
@@ -236,7 +238,7 @@ describe("sessions", () => {
         const res = await gqlPublic(insertSession, payload, headers);
         expect(res).toHaveProperty("errors");
         expect(res.errors[0].message).toContain(
-          "check constraint of an insert/update permission has failed"
+          "check constraint of an insert/update permission has failed",
         );
       });
     });
@@ -246,11 +248,11 @@ describe("sessions", () => {
         const res = await gqlPublic(
           updateByPK,
           { sessionId: alice1, breadcrumbs: [{ x: 1 }] },
-          { "x-hasura-email": "alice@opensystemslab.io" }
+          { "x-hasura-email": "alice@opensystemslab.io" },
         );
         expect(res).toHaveProperty("errors");
         expect(res.errors[0].message).toContain(
-          'missing session variable: "x-hasura-session-id"'
+          'missing session variable: "x-hasura-session-id"',
         );
       });
 
@@ -258,11 +260,11 @@ describe("sessions", () => {
         const res = await gqlPublic(
           updateByPK,
           { sessionId: alice1, breadcrumbs: [{ x: 1 }] },
-          { "x-hasura-session-id": uuidV4() }
+          { "x-hasura-session-id": uuidV4() },
         );
         expect(res).toHaveProperty("errors");
         expect(res.errors[0].message).toContain(
-          'missing session variable: "x-hasura-email"'
+          'missing session variable: "x-hasura-email"',
         );
       });
 
@@ -273,11 +275,11 @@ describe("sessions", () => {
           {
             "x-hasura-session-id": null,
             "x-hasura-email": "alice@opensystemslab.io",
-          }
+          },
         );
         expect(res).toHaveProperty("errors");
         expect(res.errors[0].message).toContain(
-          'invalid input syntax for type uuid: "null"'
+          'invalid input syntax for type uuid: "null"',
         );
       });
 
@@ -289,7 +291,7 @@ describe("sessions", () => {
         const res = await gqlPublic(
           updateByPK,
           { sessionId: alice1, breadcrumbs: [{ x: 1 }] },
-          headers
+          headers,
         );
         expect(res.data.update_sessions_by_pk).toBeNull();
       });
@@ -302,7 +304,7 @@ describe("sessions", () => {
         const res = await gqlPublic(
           updateByPK,
           { sessionId: alice1, breadcrumbs: [{ x: 1 }] },
-          headers
+          headers,
         );
         expect(res.data.update_sessions_by_pk).toBeNull();
       });
@@ -315,12 +317,12 @@ describe("sessions", () => {
         const res = await gqlPublic(
           updateByPK,
           { sessionId: alice1, breadcrumbs: [{ x: 1 }] },
-          headers
+          headers,
         );
         expect(res.data.update_sessions_by_pk).toBeNull();
       });
 
-      test("Alice cannot update her own existing session with an empty email ", async () => {
+      test("Alice cannot update her own existing session with an empty email", async () => {
         const headers = {
           "x-hasura-session-id": alice1,
           "x-hasura-email": "",
@@ -328,7 +330,7 @@ describe("sessions", () => {
         const res = await gqlPublic(
           updateByPK,
           { sessionId: alice1, breadcrumbs: [{ x: 1 }] },
-          headers
+          headers,
         );
         expect(res.data.update_sessions_by_pk).toBeNull();
       });
@@ -341,7 +343,7 @@ describe("sessions", () => {
         const res = await gqlPublic(
           updateByPK,
           { sessionId: alice1, breadcrumbs: [{ x: 1 }] },
-          headers
+          headers,
         );
         expect(res.data.update_sessions_by_pk).toBeNull();
       });
@@ -362,7 +364,7 @@ describe("sessions", () => {
           }
         `,
           null,
-          headers
+          headers,
         );
         expect(res.data.update_sessions.returning).toHaveLength(0);
       });
@@ -383,7 +385,7 @@ describe("sessions", () => {
           }
         `,
           null,
-          headers
+          headers,
         );
         expect(res.data.update_sessions.returning).toHaveLength(1);
         expect(res.data.update_sessions.returning[0].id).toEqual(bob1);
@@ -399,7 +401,7 @@ describe("sessions", () => {
         const res1 = await gqlPublic(
           updateByPK,
           { sessionId: anon1, breadcrumbs: [{ x: 1 }] },
-          headers
+          headers,
         );
         expect(res1.data.update_sessions_by_pk).not.toBeNull();
         expect(res1.data.update_sessions_by_pk.id).toEqual(anon1);
@@ -409,7 +411,7 @@ describe("sessions", () => {
         const res2 = await gqlPublic(
           updateByPK,
           { sessionId: anon1, breadcrumbs: [{ y: 2 }] },
-          headers
+          headers,
         );
         expect(res2.data.update_sessions_by_pk).not.toBeNull();
         expect(res2.data.update_sessions_by_pk.id).toEqual(anon1);
@@ -419,7 +421,7 @@ describe("sessions", () => {
         const res3 = await gqlPublic(
           updateByPK,
           { sessionId: anon1, breadcrumbs: [] },
-          headers
+          headers,
         );
         expect(res3.data.update_sessions_by_pk).not.toBeNull();
         expect(res3.data.update_sessions_by_pk.breadcrumbs).toEqual([]);
@@ -435,7 +437,7 @@ describe("sessions", () => {
         const res = await gqlPublic(
           updateByPK,
           { sessionId: alice1, breadcrumbs: [{ x: 1 }] },
-          headers
+          headers,
         );
         expect(res.data.update_sessions_by_pk).not.toBeNull();
         expect(res.data.update_sessions_by_pk.id).toEqual(alice1);
@@ -450,7 +452,7 @@ describe("sessions", () => {
         const res = await gqlPublic(
           updateByPK,
           { sessionId: alice1, breadcrumbs: [{ x: 1 }] },
-          headers
+          headers,
         );
         expect(res).not.toHaveProperty("errors");
         expect(res.data.update_sessions_by_pk).toBeNull();
@@ -464,7 +466,7 @@ describe("sessions", () => {
         const res = await gqlPublic(
           updateByPK,
           { sessionId: robert1, breadcrumbs: [{ x: 1 }] },
-          headers
+          headers,
         );
         expect(res).not.toHaveProperty("errors");
         expect(res.data.update_sessions_by_pk).toBeNull();
@@ -476,7 +478,7 @@ describe("sessions", () => {
         const res = await gqlPublic(selectByPK, { sessionId: alice1 });
         expect(res).toHaveProperty("errors");
         expect(res.errors[0].message).toContain(
-          'missing session variable: "x-hasura-session-id"'
+          'missing session variable: "x-hasura-session-id"',
         );
       });
 
@@ -484,11 +486,11 @@ describe("sessions", () => {
         const res = await gqlPublic(
           selectByPK,
           { sessionId: alice1 },
-          { "x-hasura-session-id": uuidV4() }
+          { "x-hasura-session-id": uuidV4() },
         );
         expect(res).toHaveProperty("errors");
         expect(res.errors[0].message).toContain(
-          'missing session variable: "x-hasura-email"'
+          'missing session variable: "x-hasura-email"',
         );
       });
 
@@ -515,7 +517,7 @@ describe("sessions", () => {
           }
         `,
           null,
-          headers
+          headers,
         );
         expect(res.data.sessions).toHaveLength(0);
       });
@@ -534,7 +536,7 @@ describe("sessions", () => {
           }
         `,
           null,
-          headers
+          headers,
         );
         expect(res.data.sessions).toHaveLength(1);
         expect(res.data.sessions[0].id).toEqual(bob1);
@@ -561,7 +563,7 @@ describe("sessions", () => {
           }
         `,
           null,
-          headers
+          headers,
         );
         expect(res.data.sessions).toHaveLength(1);
         const session = res.data.sessions[0];
@@ -592,7 +594,7 @@ describe("sessions", () => {
           }
         `,
           null,
-          headers
+          headers,
         );
         expect(res.data.sessions).toHaveLength(0);
       });

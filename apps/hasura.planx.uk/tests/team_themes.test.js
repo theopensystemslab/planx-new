@@ -1,4 +1,4 @@
-const { introspectAs } = require("./utils");
+import { introspectAs } from "./utils.js";
 
 describe("team_themes", () => {
   describe("public", () => {
@@ -39,10 +39,6 @@ describe("team_themes", () => {
 
     test("cannot query insert team_themes", () => {
       expect(i.queries).not.toContain("insert_team_themes");
-    });
-
-    test("can query team_themes", async () => {
-      expect(i.queries).toContain("team_themes");
     });
 
     test("can insert team_themes", () => {

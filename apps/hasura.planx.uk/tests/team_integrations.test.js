@@ -1,4 +1,4 @@
-const { introspectAs } = require("./utils");
+import { introspectAs } from "./utils.js";
 
 describe("team_integrations", () => {
   describe("public", () => {
@@ -62,7 +62,6 @@ describe("team_integrations", () => {
     });
   });
 
-  
   describe("teamAdmin", () => {
     let i;
     beforeAll(async () => {

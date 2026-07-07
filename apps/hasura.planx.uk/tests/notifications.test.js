@@ -1,4 +1,4 @@
-const { introspectAs } = require("./utils");
+import { introspectAs } from "./utils.js";
 
 describe("notifications", () => {
   describe("public", () => {
@@ -25,9 +25,7 @@ describe("notifications", () => {
     test("has full access to query and mutate notifications", () => {
       expect(i.queries).toContain("notifications");
       expect(i.mutations).toContain("insert_notifications");
-      expect(i.mutations).toContain(
-        "update_notifications_by_pk"
-      );
+      expect(i.mutations).toContain("update_notifications_by_pk");
       expect(i.mutations).toContain("delete_notifications");
     });
   });
@@ -107,9 +105,7 @@ describe("notifications", () => {
     });
 
     test("can update  notifications", () => {
-      expect(i.mutations).toContain(
-        "update_notifications_by_pk"
-      );
+      expect(i.mutations).toContain("update_notifications_by_pk");
     });
 
     test("cannot delete notifications", () => {
