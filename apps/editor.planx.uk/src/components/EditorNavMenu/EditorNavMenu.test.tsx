@@ -119,8 +119,8 @@ describe("teamLayoutRoutes", () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("teamViewer");
 
     const { queryAllByRole, getByRole, user } = await setup(<EditorNavMenu />);
-    expect(queryAllByRole("listitem")).toHaveLength(3);
-    expect(queryAllByRole("listitem")[0]).toHaveTextContent("Flows");
+    expect(queryAllByRole("listitem")).toHaveLength(4);
+    expect(queryAllByRole("listitem")[0]).toHaveTextContent("Dashboard");
 
     await user.click(getByRole("button", { name: "Data" }));
     expect(getByRole("button", { name: /Planning Data/ })).toBeInTheDocument();
@@ -134,16 +134,16 @@ describe("teamLayoutRoutes", () => {
 
     const { getAllByRole } = await setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(4);
-    expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
+    expect(menuItems).toHaveLength(5);
+    expect(within(menuItems[0]).getByText("Dashboard")).toBeInTheDocument();
   });
 
   it("displays for platformAdmins", async () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("platformAdmin");
 
     const { getAllByRole, getByRole, user } = await setup(<EditorNavMenu />);
-    expect(getAllByRole("listitem")).toHaveLength(4);
-    expect(getAllByRole("listitem")[0]).toHaveTextContent("Flows");
+    expect(getAllByRole("listitem")).toHaveLength(5);
+    expect(getAllByRole("listitem")[0]).toHaveTextContent("Dashboard");
 
     await user.click(getByRole("button", { name: "Settings" }));
     expect(getByRole("button", { name: /Team settings/ })).toBeInTheDocument();
@@ -285,10 +285,10 @@ describe("layout", () => {
     const menuItems = queryAllByRole("listitem");
 
     // Tooltip not present
-    expect(queryByLabelText("Flows")).not.toBeInTheDocument();
+    expect(queryByLabelText("Dashboard")).not.toBeInTheDocument();
 
     // Full text present
-    expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
+    expect(within(menuItems[0]).getByText("Dashboard")).toBeInTheDocument();
   });
 
   it("displays in a compact mode on flow routes", async () => {
