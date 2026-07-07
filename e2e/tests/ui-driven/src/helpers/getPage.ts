@@ -17,7 +17,7 @@ export async function getAdminPage({
   return page;
 }
 
-export async function getTeamPage({
+export async function getFlowsPage({
   browser,
   userId,
   teamName,
@@ -28,5 +28,6 @@ export async function getTeamPage({
 }): Promise<Page> {
   const page = await getAdminPage({ browser, userId });
   await page.locator("h3", { hasText: teamName }).click();
+  await page.locator("button", { hasText: "Flows" }).click();
   return page;
 }

@@ -7,7 +7,7 @@ import {
   setUpTestContext,
   tearDownTestContext,
 } from "./helpers/context.js";
-import { getTeamPage } from "./helpers/getPage.js";
+import { getFlowsPage } from "./helpers/getPage.js";
 import {
   createAuthenticatedSession,
   filterFlags,
@@ -64,7 +64,7 @@ test.describe("Flow creation, publish and preview", () => {
   test("Create a flow", async ({ browser }) => {
     test.setTimeout(70_000);
 
-    const page = await getTeamPage({
+    const page = await getFlowsPage({
       browser,
       userId: context.user!.id!,
       teamName: context.team.name,
@@ -176,7 +176,7 @@ test.describe("Flow creation, publish and preview", () => {
       userId: context.user!.id!,
     });
 
-    await page.goto(`/app/${context.team.slug}`);
+    await page.goto(`/app/${context.team.slug}/flows`);
 
     const editor = new PlaywrightEditor(page);
 

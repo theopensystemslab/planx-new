@@ -10,12 +10,12 @@ import {
   setUpTestContext,
   tearDownTestContext,
 } from "./helpers/context.js";
-import { getTeamPage } from "./helpers/getPage.js";
+import { getFlowsPage } from "./helpers/getPage.js";
 import {
   makeFlowAService,
   navigateToFlowSettings,
+  navigateToFlowsPage,
   navigateToService,
-  navigateToTeamPage,
   publishService,
   turnServiceOnline,
 } from "./helpers/navigateAndPublish.js";
@@ -67,7 +67,7 @@ test.describe("Templates", () => {
 
   test.describe("As a platform admin", () => {
     test("can create a source template flow", async ({ browser }) => {
-      const page = await getTeamPage({
+      const page = await getFlowsPage({
         browser,
         userId: context.user!.id!,
         teamName: context.team.name,
@@ -85,7 +85,7 @@ test.describe("Templates", () => {
     test("component modals show a Templates section not present in regular flows", async ({
       browser,
     }) => {
-      const page = await getTeamPage({
+      const page = await getFlowsPage({
         browser,
         userId: context.user!.id!,
         teamName: context.team.name,
@@ -129,7 +129,7 @@ test.describe("Templates", () => {
     test("can add required and optional nodes to a source template flow", async ({
       browser,
     }) => {
-      const page = await getTeamPage({
+      const page = await getFlowsPage({
         browser,
         userId: context.user!.id!,
         teamName: context.team.name,
@@ -170,7 +170,7 @@ test.describe("Templates", () => {
     test("can add a non-templated node to the source template", async ({
       browser,
     }) => {
-      const page = await getTeamPage({
+      const page = await getFlowsPage({
         browser,
         userId: context.user!.id!,
         teamName: context.team.name,
@@ -193,7 +193,7 @@ test.describe("Templates", () => {
     test("can add a templated folder to the source template", async ({
       browser,
     }) => {
-      const page = await getTeamPage({
+      const page = await getFlowsPage({
         browser,
         userId: context.user!.id!,
         teamName: context.team.name,
@@ -237,7 +237,7 @@ test.describe("Templates", () => {
     });
 
     test("can publish the source template", async ({ browser }) => {
-      const page = await getTeamPage({
+      const page = await getFlowsPage({
         browser,
         userId: context.user!.id!,
         teamName: context.team.name,
@@ -250,7 +250,7 @@ test.describe("Templates", () => {
     test("source template is not yet selectable in 'New flow' modal before being set as 'copiable'", async ({
       browser,
     }) => {
-      const page = await getTeamPage({
+      const page = await getFlowsPage({
         browser,
         userId: context.user!.id!,
         teamName: context.team.name,
@@ -271,7 +271,7 @@ test.describe("Templates", () => {
     });
 
     test("can set the source template copiable", async ({ browser }) => {
-      const page = await getTeamPage({
+      const page = await getFlowsPage({
         browser,
         userId: context.user!.id!,
         teamName: context.team.name,
@@ -288,7 +288,7 @@ test.describe("Templates", () => {
     });
 
     test("can set the source template to be a Service", async ({ browser }) => {
-      const page = await getTeamPage({
+      const page = await getFlowsPage({
         browser,
         userId: context.user!.id!,
         teamName: context.team.name,
@@ -301,7 +301,7 @@ test.describe("Templates", () => {
     test("source template is selectable in 'New flow' modal after being set to copiable", async ({
       browser,
     }) => {
-      const page = await getTeamPage({
+      const page = await getFlowsPage({
         browser,
         userId: context.user!.id!,
         teamName: context.team.name,
@@ -322,7 +322,7 @@ test.describe("Templates", () => {
     });
 
     test("can filter flows for source templates only", async ({ browser }) => {
-      const page = await getTeamPage({
+      const page = await getFlowsPage({
         browser,
         userId: context.user!.id!,
         teamName: context.team.name,
@@ -334,7 +334,7 @@ test.describe("Templates", () => {
       await page.getByRole("button", { name: "Add flow" }).click();
       await page.locator("li.hanger > button").first().waitFor();
 
-      await navigateToTeamPage(page);
+      await navigateToFlowsPage(page);
 
       // Apply the "source template" filter from the Templates filter control
       await page.locator('[aria-labelledby~="Templates-label"]').click();
@@ -351,7 +351,7 @@ test.describe("Templates", () => {
     test("can create a templated flow from an available source template", async ({
       browser,
     }) => {
-      const page = await getTeamPage({
+      const page = await getFlowsPage({
         browser,
         userId: context.user!.id!,
         teamName: context.team.name,
@@ -368,7 +368,7 @@ test.describe("Templates", () => {
     test("sees the Customise tab open by default with required tasks listed", async ({
       browser,
     }) => {
-      const page = await getTeamPage({
+      const page = await getFlowsPage({
         browser,
         userId: context.user!.id!,
         teamName: context.team.name,
@@ -396,7 +396,7 @@ test.describe("Templates", () => {
     });
 
     test("can filter flows for templated flows only", async ({ browser }) => {
-      const page = await getTeamPage({
+      const page = await getFlowsPage({
         browser,
         userId: context.user!.id!,
         teamName: context.team.name,
@@ -428,7 +428,7 @@ test.describe("Templates", () => {
     test("non-templated node is read-only in the templated flow", async ({
       browser,
     }) => {
-      const page = await getTeamPage({
+      const page = await getFlowsPage({
         browser,
         userId: context.user!.id!,
         teamName: context.team.name,
@@ -451,7 +451,7 @@ test.describe("Templates", () => {
     test("templated folder is fully editable in the templated flow, including drag and drop", async ({
       browser,
     }) => {
-      const page = await getTeamPage({
+      const page = await getFlowsPage({
         browser,
         userId: context.user!.id!,
         teamName: context.team.name,
@@ -492,7 +492,7 @@ test.describe("Templates", () => {
     test("cannot add new nodes or restructure a templated flow", async ({
       browser,
     }) => {
-      const page = await getTeamPage({
+      const page = await getFlowsPage({
         browser,
         userId: context.user!.id!,
         teamName: context.team.name,
@@ -525,7 +525,7 @@ test.describe("Templates", () => {
     test("cannot proceed past the Review step when required customisations are incomplete", async ({
       browser,
     }) => {
-      const page = await getTeamPage({
+      const page = await getFlowsPage({
         browser,
         userId: context.user!.id!,
         teamName: context.team.name,
@@ -560,7 +560,7 @@ test.describe("Templates", () => {
     test("can complete a required customisation task and then publish successfully", async ({
       browser,
     }) => {
-      const page = await getTeamPage({
+      const page = await getFlowsPage({
         browser,
         userId: context.user!.id!,
         teamName: context.team.name,
@@ -588,7 +588,7 @@ test.describe("Templates", () => {
 
       await publishService(page);
 
-      await navigateToTeamPage(page);
+      await navigateToFlowsPage(page);
       await expect(page.getByText(TEMPLATED_FLOW_NAME)).toBeVisible();
     });
   });
@@ -599,7 +599,7 @@ test.describe("Templates", () => {
       test("can publish changes to the source template and sees affected templated flows listed", async ({
         browser,
       }) => {
-        const page = await getTeamPage({
+        const page = await getFlowsPage({
           browser,
           userId: context.user!.id!,
           teamName: context.team.name,
@@ -648,7 +648,7 @@ test.describe("Templates", () => {
       test("sees a History entry describing the source template update and still has Customise tasks to complete", async ({
         browser,
       }) => {
-        const page = await getTeamPage({
+        const page = await getFlowsPage({
           browser,
           userId: context.user!.id!,
           teamName: context.team.name,
