@@ -65,6 +65,7 @@
     "start": "node --enable-source-maps ./dist/index.js",
     "lint": "eslint '**/*.{js,ts}' && prettier -c .",
     "lint:fix": "eslint --fix '**/*.{js,ts}' && prettier -w .",
+    "lint:error": "eslint --quiet '**/*.{js,ts}' && prettier -c . --ignore-path ../../.prettierignore",
     "check": "tsc --noEmit && pnpm lint",
     "test": "TZ=Europe/London vitest run",
     "test:coverage": "TZ=Europe/London vitest run --coverage && open coverage/lcov-report/index.html",

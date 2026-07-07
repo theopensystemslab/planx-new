@@ -5,3 +5,6 @@
 
 pnpm-lock.yaml
 **/routeTree.gen.ts
+
+apps/api.planx.uk/dist
+apps/api.planx.uk/coverage

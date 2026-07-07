@@ -75,9 +75,7 @@ describe("Input sanitisation middleware - integration tests", () => {
       .post("/ai/project-description/enhance")
       .send({ original: "Building\x00 an\x0B extension", flowId: mockFlowId })
       .expect(200)
-      .expect((res) => {
-        res.body.original === "Building an extension";
-      });
+      .expect((res) => res.body.original === "Building an extension");
 
     expect(mockEnhanceProjectDescription).toHaveBeenCalled();
   });
