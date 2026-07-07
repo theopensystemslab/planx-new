@@ -18,10 +18,8 @@ export default [
     },
     rules: {
       "no-nested-ternary": "error",
-      // New in ts-eslint v8 recommended
-      // TODO: fix outstanding warnings and promote back to "error"
       "@typescript-eslint/no-unused-expressions": [
-        "warn",
+        "error",
         { allowShortCircuit: true, allowTernary: true, allowTaggedTemplates: true },
       ],
       "@typescript-eslint/no-explicit-any": "warn",

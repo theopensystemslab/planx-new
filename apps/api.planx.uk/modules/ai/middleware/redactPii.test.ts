@@ -97,9 +97,9 @@ describe("PII redaction middleware - integration tests", () => {
         flowId: mockFlowId,
       })
       .expect(200)
-      .expect((res) => {
-        res.body.original === "Contact me at [EMAIL] about extension";
-      });
+      .expect(
+        (res) => res.body.original === "Contact me at [EMAIL] about extension",
+      );
 
     expect(mockEnhanceProjectDescription).toHaveBeenCalled();
   });
@@ -117,9 +117,9 @@ describe("PII redaction middleware - integration tests", () => {
         flowId: mockFlowId,
       })
       .expect(200)
-      .expect((res) => {
-        res.body.original === "Property at [POSTCODE] needs extension";
-      });
+      .expect(
+        (res) => res.body.original === "Property at [POSTCODE] needs extension",
+      );
 
     expect(mockEnhanceProjectDescription).toHaveBeenCalled();
   });
@@ -137,9 +137,9 @@ describe("PII redaction middleware - integration tests", () => {
         flowId: mockFlowId,
       })
       .expect(200)
-      .expect((res) => {
-        res.body.original === "My number is [NINO] for the extension";
-      });
+      .expect(
+        (res) => res.body.original === "My number is [NINO] for the extension",
+      );
 
     expect(mockEnhanceProjectDescription).toHaveBeenCalled();
   });
@@ -157,9 +157,9 @@ describe("PII redaction middleware - integration tests", () => {
         flowId: mockFlowId,
       })
       .expect(200)
-      .expect((res) => {
-        res.body.original === "Extension at [ADDRESS] for my family";
-      });
+      .expect(
+        (res) => res.body.original === "Extension at [ADDRESS] for my family",
+      );
 
     expect(mockEnhanceProjectDescription).toHaveBeenCalled();
   });

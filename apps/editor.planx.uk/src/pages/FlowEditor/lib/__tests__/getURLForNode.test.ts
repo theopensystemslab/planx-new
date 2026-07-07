@@ -5,11 +5,11 @@ const { getState, setState } = useStore;
 const { getURLForNode } = getState();
 
 beforeAll(() => {
-  (setState({ orderedFlow, teamSlug: "testTeam", flowSlug: "testFlow" }),
-    Object.defineProperty(window, "location", {
-      value: { host: "editor.planx.uk" },
-      writable: true,
-    }));
+  setState({ orderedFlow, teamSlug: "testTeam", flowSlug: "testFlow" });
+  Object.defineProperty(window, "location", {
+    value: { host: "editor.planx.uk" },
+    writable: true,
+  });
 });
 
 describe("constructing URLs for nodes", () => {
