@@ -25,7 +25,7 @@ const TabList = styled(Box)(() => ({
   },
 })); // TODO: a lot of this is copied from SettingsLayout, is there a better pattern for reusing them?
 
-const TeamLayout: React.FC<Props> = ({ flowView, setFlowView }) => {
+const FlowsLayout: React.FC<Props> = ({ flowView, setFlowView }) => {
   const handleChange = () => {
     flowView === "flows" ? setFlowView("archive") : setFlowView("flows");
   };
@@ -50,4 +50,4 @@ const TeamLayout: React.FC<Props> = ({ flowView, setFlowView }) => {
   );
 };
 
-export default TeamLayout;
+export default FlowsLayout;

@@ -1,6 +1,6 @@
 import { styled } from "@mui/material/styles";
 
-export const DashboardList = styled("ul")(({ theme }) => ({
+export const FlowGrid = styled("ul")(({ theme }) => ({
   padding: theme.spacing(2, 0, 3),
   margin: 0,
   gap: theme.spacing(2),

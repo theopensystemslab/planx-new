@@ -3,7 +3,7 @@ import type { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import {
   filterOptions,
   sortOptions,
-} from "pages/Team/helpers/sortAndFilterOptions";
+} from "pages/Flows/helpers/sortAndFilterOptions";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useDisplayedFlows } from "./useDisplayedFlows";

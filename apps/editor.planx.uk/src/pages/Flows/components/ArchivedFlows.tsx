@@ -15,12 +15,12 @@ import type {
   FlowCardView,
   FlowSummary,
 } from "../../FlowEditor/lib/store/editor";
-import { FlowTable } from "../components/FlowTable";
-import { ShowingServicesHeader } from "../components/ShowingServicesHeader";
 import { sortOptions } from "../helpers/sortAndFilterOptions";
-import { DashboardList } from "./DashboardList";
 import FlowCard from "./FlowCard";
+import { FlowGrid } from "./FlowGrid";
+import { FlowTable } from "./FlowTable";
 import { useDisplayedFlows } from "./hooks/useDisplayedFlows";
+import { ShowingServicesHeader } from "./ShowingServicesHeader";
 import { StyledToggleButton } from "./StyledToggleButton";
 
 type Props = {
@@ -37,7 +37,7 @@ type Props = {
   onClearSearch: () => void;
 };
 
-const Archive: React.FC<Props> = ({
+const ArchivedFlows: React.FC<Props> = ({
   flowCardView,
   handleViewChange,
   teamId,
@@ -133,11 +133,11 @@ const Archive: React.FC<Props> = ({
       {displayedFlows && (
         <>
           {flowCardView === "grid" ? (
-            <DashboardList>
+            <FlowGrid>
               {displayedFlows.map((flow) => (
                 <FlowCard flow={flow} key={flow.slug} view={"archive"} />
               ))}
-            </DashboardList>
+            </FlowGrid>
           ) : (
             <FlowTable
               flows={displayedFlows}
@@ -151,4 +151,4 @@ const Archive: React.FC<Props> = ({
     </>
   );
 };
-export default Archive;
+export default ArchivedFlows;

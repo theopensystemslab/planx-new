@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/client";
 import gql from "graphql-tag";
 import type { FlowSummary } from "pages/FlowEditor/lib/store/editor";
-import { FLOW_SUMMARY_FIELDS, GET_FLOWS } from "pages/Team/queries";
+import { FLOW_SUMMARY_FIELDS, GET_FLOWS } from "pages/Flows/queries";
 
 export const PIN_FLOW = gql`
   ${FLOW_SUMMARY_FIELDS}

@@ -5,7 +5,7 @@ import type { SxProps, Theme } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { formatLastEditDate } from "pages/FlowEditor/utils";
-import { FlowCardLink } from "pages/Team/components/FlowCard/styles";
+import { FlowCardLink } from "pages/Flows/components/FlowCard/styles";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import CheckCircleIcon from "ui/icons/CheckCircle";
 
