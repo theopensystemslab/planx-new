@@ -1,8 +1,12 @@
 CREATE TABLE "public"."flow_notes" (
 	"id" uuid NOT NULL DEFAULT gen_random_uuid(),
 	"flow_id" uuid NOT NULL,
-	"node_id" text NOT NULL,
-	"placement" text NOT NULL CHECK (placement IN ('attached_to_node', 'attached_to_option', 'after_node', 'before_node')),
+	"node_id" text,
+	"placement" jsonb,
+	CHECK (
+		(node_id IS NOT NULL AND placement IS NULL) OR
+		(node_id IS NULL AND placement IS NOT NULL)
+	),
 	"text" text NOT NULL DEFAULT '',
 	"color" text NOT NULL DEFAULT '#fffdb0',
 	"created_by" integer NOT NULL,

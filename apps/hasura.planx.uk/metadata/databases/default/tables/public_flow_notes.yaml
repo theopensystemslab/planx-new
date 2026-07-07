@@ -107,6 +107,7 @@ update_permissions:
     permission:
       columns:
         - node_id
+        - placement
         - text
         - color
         - updated_by
@@ -117,6 +118,7 @@ update_permissions:
     permission:
       columns:
         - node_id
+        - placement
         - text
         - color
         - updated_by
