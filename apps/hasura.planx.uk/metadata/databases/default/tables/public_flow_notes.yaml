@@ -1,5 +1,5 @@
 table:
-  name: flow_node_notes
+  name: flow_notes
   schema: public
 object_relationships:
   - name: createdByUser

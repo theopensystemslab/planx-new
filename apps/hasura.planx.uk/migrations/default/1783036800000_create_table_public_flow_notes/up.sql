@@ -11,7 +11,7 @@ CREATE TABLE "public"."flow_notes" (
 	"updated_at" timestamptz NOT NULL DEFAULT now(),
 	PRIMARY KEY ("id")
 );
-COMMENT ON TABLE "public"."flow_notes" IS E'Private notes attached to flow nodes, visible only to team editors';
+COMMENT ON TABLE "public"."flow_notes" IS E'Private sticky notes attached to flow nodes, visible only to team editors';
 CREATE INDEX ON "public"."flow_notes" ("flow_id");
 
 CREATE OR REPLACE FUNCTION "public"."set_current_timestamp_updated_at"()
