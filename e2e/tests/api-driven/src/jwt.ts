@@ -48,7 +48,6 @@ const getAllowedRolesForUser = (user: User): Role[] => {
  * This is the role of least privilege for the user
  */
 const getDefaultRoleForUser = (user: User): Role => {
-  const teamRoles = user.teams.map((teamRole) => teamRole.role);
   if (user.isPlatformAdmin) return "platformAdmin";
 
   return "teamEditor";

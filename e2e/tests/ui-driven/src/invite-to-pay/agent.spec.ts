@@ -34,7 +34,7 @@ let context: TestContext = {
   sessionIds: [], // used to collect and clean up sessions
 };
 
-test.describe("Agent journey @regression", async () => {
+test.describe("Agent journey @regression", () => {
   const adminGQLClient = getGraphQLClient();
 
   test.beforeAll(async () => {

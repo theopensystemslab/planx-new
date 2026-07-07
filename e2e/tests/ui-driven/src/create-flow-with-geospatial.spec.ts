@@ -268,9 +268,9 @@ test.describe("Flow creation, publish and preview", () => {
       .getByRole("button", { name: "Constraints that don't apply" })
       .click();
 
-    const dontApplyHeadings = await page.getByRole("heading").allTextContents();
+    const dontApplyHeadings = page.getByRole("heading");
 
-    expect(dontApplyHeadings).toEqual(planningConstraintHeadersMock);
+    await expect(dontApplyHeadings).toHaveText(planningConstraintHeadersMock);
 
     // TODO: answer uploadAndLabel
     // TODO: answerPropertyInfo, answerPlanningConstraints

@@ -39,7 +39,7 @@ const previewURL = `/${context.team!.slug!}/${context.flow?.slug}/published?anal
 
 const payButtonText = "Pay now using GOV.UK Pay";
 
-test.describe("Gov Pay integration @regression", async () => {
+test.describe("Gov Pay integration @regression", () => {
   const adminGQLClient = getGraphQLClient();
 
   test.beforeAll(async () => {
