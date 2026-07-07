@@ -10,3 +10,5 @@ apps/api.planx.uk/dist
 apps/api.planx.uk/coverage
 
 apps/localplanning.services/public/mockServiceWorker.js
+apps/localplanning.services/dist/
+apps/localplanning.services/.astro/

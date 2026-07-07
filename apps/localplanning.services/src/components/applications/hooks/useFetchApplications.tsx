@@ -35,9 +35,7 @@ export type SubmittedApplication = BaseApplication & {
 };
 
 export type Application =
-  | DraftApplication
-  | AwaitingPaymentApplication
-  | SubmittedApplication;
+  DraftApplication | AwaitingPaymentApplication | SubmittedApplication;
 
 export type ApplicationsResponse = Application[];
 

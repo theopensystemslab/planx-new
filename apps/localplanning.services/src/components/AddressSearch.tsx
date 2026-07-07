@@ -37,7 +37,7 @@ const lpaReferenceLookup: Record<string, string> = {
   E60000230: "west-berkshire",
 };
 
-// @ts-expect-error
+// @ts-expect-error - addEventListener/removeEventListener overloads are intentionally narrowed here
 interface AddressSearchElement extends HTMLElement {
   addEventListener(
     type: "addressSelection",
@@ -134,7 +134,7 @@ const AddressSearch: React.FC = () => {
     <form onSubmit={handleSubmit}>
       <div className="flex flex-col gap-4 items-start">
         <div className="max-w-3xl w-full">
-          {/* @ts-ignore-error */}
+          {/* @ts-expect-error - custom web component registered at runtime */}
           <geocode-autocomplete
             ref={addressSearchRef}
             label="Enter an address to search"
