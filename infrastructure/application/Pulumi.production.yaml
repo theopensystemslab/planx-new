@@ -47,7 +47,7 @@ config:
   application:govuk-notify-api-key:
     secure: AAABADo05EPv/HWj7Rkf19nBeTcPJd4pEcRi2/uhyB3agraFODpLvNMx2bXfISf5pZ4HA41GYCE4f7OLcJN6hIV6ZMWUlEriPzvkoUAixbLlz1LIERiyk73R8E4F2bV65/9aFqi4l7caLS5c8iDJrE+JAvu2i7oS
   application:hasura-admin-secret:
-    secure: AAABAFXUOfERqmY2ht+UN/6j7fNncuB3uwqeEGGUhXzHLXLt5Mu7iGbuLfjMpRC0Niw301Zejtc=
+    secure: AAABAI+T8RFROAmmTg7ahXUuUX/85OcJ47pVKetKKoVjQklpXjvKE6mUc/wDcjIbA330+XoWufw=
   application:hasura-cpu: "2048"
   application:hasura-memory: "4096"
   application:hasura-planx-api-key:
