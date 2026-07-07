@@ -55,7 +55,7 @@ jobs:
       - uses: pulumi/actions@v7
         with:
           command: up
-          refresh: true
+          # refresh: true
           stack-name: production
           work-dir: infrastructure/application
           edit-pr-comment: true
