@@ -39,7 +39,7 @@ const parameterGroup = new aws.rds.ParameterGroup("parameterGroup", {
     },
     {
       name: "shared_preload_libraries",
-      value: "rdsutils,pg_tle,pg_stat_statements,pg_cron",
+      value: "pg_tle,pg_stat_statements,pg_cron",
       applyMethod: "pending-reboot",
     }
   ],
