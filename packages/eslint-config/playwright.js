@@ -19,8 +19,6 @@ export default [
         },
       ],
       "playwright/no-networkidle": "warn",
-      // TODO: refactor and promote back to "error"
-      "playwright/valid-describe-callback": "warn",
     },
   },
 ];
