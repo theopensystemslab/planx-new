@@ -87,7 +87,6 @@ SET
   version = EXCLUDED.version,
   settings = EXCLUDED.settings,
   copied_from = EXCLUDED.copied_from,
-  status = EXCLUDED.status,
   name = EXCLUDED.name,
   description = EXCLUDED.description,
   templated_from = EXCLUDED.templated_from,
@@ -99,8 +98,7 @@ SET
   category = EXCLUDED.category,
   submission_email_id = NULL,
   deleted_at = EXCLUDED.deleted_at,
-  email_template = EXCLUDED.email_template,
-  is_service = EXCLUDED.is_service;
+  email_template = EXCLUDED.email_template;
 
 -- ensure that original flows.version is overwritten to match new operation inserted below, else sharedb will fail
 UPDATE flows SET version = 1;
