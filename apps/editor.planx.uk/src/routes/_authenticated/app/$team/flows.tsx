@@ -2,18 +2,15 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import RouteLoadingIndicator from "components/RouteLoadingIndicator";
 import { startNewRecentFlowsJourney } from "pages/FlowEditor/components/RecentFlows/RecentFlowsContext";
-import Team from "pages/Team";
-import {
-  GET_FLOWS,
-  GetAnyFlowsQuery,
-  GetAnyFlowsVars,
-} from "pages/Team/queries";
+import Flows from "pages/Flows";
+import type { GetAnyFlowsQuery, GetAnyFlowsVars } from "pages/Flows/queries";
+import { GET_FLOWS } from "pages/Flows/queries";
 import React from "react";
 import { z } from "zod";
 
 import { client } from "../../../../lib/graphql";
 
-export const teamSearchSchema = z.object({
+export const flowsSearchSchema = z.object({
   sort: fallback(
     z.enum(["last-edited", "last-published", "name"]),
     "last-edited",
@@ -28,11 +25,11 @@ export const teamSearchSchema = z.object({
   "lps-listing": z.enum(["listed", "not listed"]).optional(),
 });
 
-export type TeamSearch = z.infer<typeof teamSearchSchema>;
+export type FlowSearch = z.infer<typeof flowsSearchSchema>;
 
 export const Route = createFileRoute("/_authenticated/app/$team/flows")({
   beforeLoad: startNewRecentFlowsJourney,
-  validateSearch: zodValidator(teamSearchSchema),
+  validateSearch: zodValidator(flowsSearchSchema),
   pendingComponent: RouteLoadingIndicator,
   loader: async ({ context }) => {
     const { team } = context;
@@ -49,10 +46,10 @@ export const Route = createFileRoute("/_authenticated/app/$team/flows")({
       throw notFound();
     }
   },
-  component: TeamComponent,
+  component: FlowsComponent,
 });
 
-function TeamComponent() {
+function FlowsComponent() {
   const { flows, team } = Route.useLoaderData();
-  return <Team key={team.id} flows={flows} />;
+  return <Flows key={team.id} flows={flows} />;
 }

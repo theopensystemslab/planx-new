@@ -14,11 +14,11 @@ import { SortControl } from "ui/editor/SortControl/SortControl";
 
 import type { FlowSummary } from "../../FlowEditor/lib/store/editor";
 import type { FlowCardView } from "../../FlowEditor/lib/store/editor";
-import FlowCard from "../components/FlowCard/";
-import { FlowTable } from "../components/FlowTable";
-import { ShowingServicesHeader } from "../components/ShowingServicesHeader";
 import { filterOptions } from "../helpers/sortAndFilterOptions";
-import { DashboardList } from "./DashboardList";
+import FlowCard from "./FlowCard";
+import { FlowGrid } from "./FlowGrid";
+import { FlowTable } from "./FlowTable";
+import { ShowingServicesHeader } from "./ShowingServicesHeader";
 import { StyledToggleButton } from "./StyledToggleButton";
 
 const FiltersContainer = styled(Box)(({ theme }) => ({
@@ -48,7 +48,7 @@ type Props = {
   slug: string;
 };
 
-const Flows: React.FC<Props> = ({
+const ActiveFlows: React.FC<Props> = ({
   flowsHaveBeenFiltered,
   sortedFlows,
   sortOptions,
@@ -147,19 +147,19 @@ const Flows: React.FC<Props> = ({
         {flowCardView === "grid" ? (
           <>
             {sortedPinnedFlows.length > 0 && (
-              <DashboardList>
+              <FlowGrid>
                 {sortedPinnedFlows.map((flow) => (
                   <FlowCard flow={flow} key={flow.slug} view={"flows"} />
                 ))}
-              </DashboardList>
+              </FlowGrid>
             )}
             {sortedUnpinnedFlows && sortedUnpinnedFlows.length > 0 && (
               <Box>
-                <DashboardList>
+                <FlowGrid>
                   {sortedUnpinnedFlows.map((flow) => (
                     <FlowCard flow={flow} key={flow.slug} view={"flows"} />
                   ))}
-                </DashboardList>
+                </FlowGrid>
               </Box>
             )}
           </>
@@ -177,4 +177,4 @@ const Flows: React.FC<Props> = ({
   );
 };
 
-export default Flows;
+export default ActiveFlows;

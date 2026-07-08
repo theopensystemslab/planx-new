@@ -11,14 +11,14 @@ import { DebouncedSearchInput } from "ui/shared/SearchBox/DebouncedSearchInput";
 
 import { useStore } from "../FlowEditor/lib/store";
 import type { FlowCardView, FlowSummary } from "../FlowEditor/lib/store/editor";
+import ActiveFlows from "./components/ActiveFlows";
 import { AddFlow } from "./components/AddFlow";
-import Archive from "./components/Archive";
-import Flows from "./components/Flows";
+import ArchivedFlows from "./components/ArchivedFlows";
 import { useDisplayedFlows } from "./components/hooks/useDisplayedFlows";
 import { useGetArchivedFlows } from "./components/hooks/useGetArchivedFlows";
 import { useGetFlows } from "./components/hooks/useGetFlows";
+import FlowsLayout from "./FlowsLayout";
 import { filterOptions, sortOptions } from "./helpers/sortAndFilterOptions";
-import TeamLayout from "./TeamLayout";
 
 export type FlowView = "flows" | "archive";
 
@@ -38,11 +38,11 @@ export const NoFlowsGetStarted: React.FC<NoFlowsGetStartedProps> = ({
   />
 );
 
-interface TeamProps {
+interface FlowsProps {
   flows: FlowSummary[];
 }
 
-const Team: React.FC<TeamProps> = (initialFlows) => {
+const Flows: React.FC<FlowsProps> = (initialFlows) => {
   const [
     { id: teamId, slug },
     canUserEditTeam,
@@ -134,11 +134,11 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
               />
             )}
           </Box>
-          <TeamLayout flowView={flowView} setFlowView={setFlowView} />
+          <FlowsLayout flowView={flowView} setFlowView={setFlowView} />
         </Box>
 
         {flowView === "flows" && (
-          <Flows
+          <ActiveFlows
             flowsHaveBeenFiltered={isFiltered}
             sortedFlows={displayedFlows}
             sortOptions={sortOptions}
@@ -150,7 +150,7 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
           />
         )}
         {flowView === "archive" && (
-          <Archive
+          <ArchivedFlows
             flowCardView={flowCardView}
             handleViewChange={handleViewChange}
             teamId={teamId}
@@ -170,4 +170,4 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
   );
 };
 
-export default Team;
+export default Flows;

@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import type { FlowView } from "pages/Team";
+import type { FlowView } from "pages/Flows";
 import React from "react";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType } from "ui/editor/FlowTag/types";

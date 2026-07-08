@@ -57,8 +57,7 @@ export const useDisplayedFlows = ({
   for (const option of filterOptions) {
     const paramKey = option.paramKey ?? slugify(option.displayName);
     const paramValue = searchParams[paramKey as keyof typeof searchParams] as
-      | string
-      | undefined;
+      string | undefined;
     if (paramValue) {
       result = result.filter((flow) => option.validationFn(flow, paramValue));
     }

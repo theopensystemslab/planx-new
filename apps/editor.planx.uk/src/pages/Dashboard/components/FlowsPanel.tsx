@@ -17,8 +17,8 @@ import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
 import StyledTab from "ui/editor/StyledTab";
 
 import { useStore } from "../../FlowEditor/lib/store";
-import { useGetFlows } from "../../Team/components/hooks/useGetFlows";
-import { NoFlowsGetStarted } from "../../Team/index";
+import { useGetFlows } from "../../Flows/components/hooks/useGetFlows";
+import { NoFlowsGetStarted } from "../../Flows/index";
 
 const TabList = styled(Box)(() => ({
   [`& .${tabsClasses.indicator}`]: {

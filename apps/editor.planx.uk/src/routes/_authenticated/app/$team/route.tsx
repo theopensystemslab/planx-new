@@ -76,10 +76,10 @@ export const Route = createFileRoute("/_authenticated/app/$team")({
     }
     return context.team;
   },
-  component: TeamLayout,
+  component: FlowsLayout,
   notFoundComponent: CatchAllComponent,
 });
 
-function TeamLayout() {
+function FlowsLayout() {
   return <Outlet />;
 }
