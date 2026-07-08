@@ -30,11 +30,7 @@ export const INSERT_TEAM_SUBMISSION_EMAIL = gql`
     $isDefault: Boolean!
   ) {
     insertSubmissionEmailsOne: insert_submission_emails_one(
-      object: {
-        is_default: $isDefault
-        address: $address
-        team_id: $teamId
-      }
+      object: { is_default: $isDefault, address: $address, team_id: $teamId }
     ) {
       is_default
       id

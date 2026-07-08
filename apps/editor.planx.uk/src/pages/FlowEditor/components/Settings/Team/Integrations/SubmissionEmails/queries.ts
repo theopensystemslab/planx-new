@@ -20,9 +20,7 @@ export const GET_TEAM_SUBMISSION_EMAILS = gql`
 `;
 
 export const UPSERT_TEAM_SUBMISSION_EMAILS = gql`
-  mutation UpsertSubmissionEmails(
-    $emails: [submission_emails_insert_input!]!
-  ) {
+  mutation UpsertSubmissionEmails($emails: [submission_emails_insert_input!]!) {
     insert_submission_emails(
       objects: $emails
       on_conflict: {

@@ -154,195 +154,183 @@ describe("Building a list", () => {
     ).toBeInTheDocument();
   });
 
-  test(
-    "Removing an item when all cards are inactive",
-    async () => {
-      // Setup three cards
-      const {
-        getByTestId,
-        getAllByTestId,
-        user,
-        getByLabelText,
-        queryAllByTestId,
-      } = await setup(<ListComponent {...mockSimpleProps} />);
+  test("Removing an item when all cards are inactive", async () => {
+    // Setup three cards
+    const {
+      getByTestId,
+      getAllByTestId,
+      user,
+      getByLabelText,
+      queryAllByTestId,
+    } = await setup(<ListComponent {...mockSimpleProps} />);
 
-      await fillInSimpleResponse(user);
+    await fillInSimpleResponse(user);
 
-      const addItemButton = getByTestId("list-add-button");
+    const addItemButton = getByTestId("list-add-button");
 
-      await user.click(addItemButton);
-      await fillInSimpleResponse(user);
+    await user.click(addItemButton);
+    await fillInSimpleResponse(user);
 
-      await user.click(addItemButton);
-      await fillInSimpleResponse(user);
+    await user.click(addItemButton);
+    await fillInSimpleResponse(user);
 
-      let cards = getAllByTestId(/list-card/);
-      expect(cards).toHaveLength(3);
+    let cards = getAllByTestId(/list-card/);
+    expect(cards).toHaveLength(3);
 
-      let [firstCard, secondCard, thirdCard] = cards;
+    let [firstCard, secondCard, thirdCard] = cards;
 
-      // Remove third card
-      const thirdCardRemoveButton = within(thirdCard!).getByRole("button", {
-        name: /Remove/,
-      });
+    // Remove third card
+    const thirdCardRemoveButton = within(thirdCard!).getByRole("button", {
+      name: /Remove/,
+    });
 
-      await user.click(thirdCardRemoveButton);
-      cards = getAllByTestId(/list-card/);
-      expect(cards).toHaveLength(2);
+    await user.click(thirdCardRemoveButton);
+    cards = getAllByTestId(/list-card/);
+    expect(cards).toHaveLength(2);
 
-      [firstCard, secondCard, thirdCard] = getAllByTestId(/list-card/);
+    [firstCard, secondCard, thirdCard] = getAllByTestId(/list-card/);
 
-      // Previous items remain inactive
-      expect(
-        within(firstCard!).queryByLabelText(/What's their name?/),
-      ).not.toBeInTheDocument();
-      expect(
-        within(secondCard!).queryByLabelText(/What's their name?/),
-      ).not.toBeInTheDocument();
+    // Previous items remain inactive
+    expect(
+      within(firstCard!).queryByLabelText(/What's their name?/),
+    ).not.toBeInTheDocument();
+    expect(
+      within(secondCard!).queryByLabelText(/What's their name?/),
+    ).not.toBeInTheDocument();
 
-      // Remove second card
-      const secondCardRemoveButton = within(secondCard!).getByRole("button", {
-        name: /Remove/,
-      });
-      await user.click(secondCardRemoveButton);
-      cards = getAllByTestId(/list-card/);
-      expect(cards).toHaveLength(1);
+    // Remove second card
+    const secondCardRemoveButton = within(secondCard!).getByRole("button", {
+      name: /Remove/,
+    });
+    await user.click(secondCardRemoveButton);
+    cards = getAllByTestId(/list-card/);
+    expect(cards).toHaveLength(1);
 
-      [firstCard] = getAllByTestId(/list-card/);
+    [firstCard] = getAllByTestId(/list-card/);
 
-      // Previous items remain inactive
-      expect(
-        within(firstCard!).queryByLabelText(/What's their name?/),
-      ).not.toBeInTheDocument();
+    // Previous items remain inactive
+    expect(
+      within(firstCard!).queryByLabelText(/What's their name?/),
+    ).not.toBeInTheDocument();
 
-      // Remove first card
-      const firstCardRemoveButton = within(firstCard!).getByRole("button", {
-        name: /Remove/,
-      });
-      await user.click(firstCardRemoveButton);
-      cards = queryAllByTestId(/list-card/);
-      expect(cards).toHaveLength(0);
+    // Remove first card
+    const firstCardRemoveButton = within(firstCard!).getByRole("button", {
+      name: /Remove/,
+    });
+    await user.click(firstCardRemoveButton);
+    cards = queryAllByTestId(/list-card/);
+    expect(cards).toHaveLength(0);
 
-      // Add item back
-      await user.click(addItemButton);
+    // Add item back
+    await user.click(addItemButton);
 
-      // This is now editable and active
-      const newFirstCardInput = getByLabelText(/What's their name?/);
-      expect(newFirstCardInput).toBeInTheDocument();
-    },
-  );
+    // This is now editable and active
+    const newFirstCardInput = getByLabelText(/What's their name?/);
+    expect(newFirstCardInput).toBeInTheDocument();
+  });
 
-  test(
-    "Removing an item when another card is active",
-    async () => {
-      // Setup two cards
-      const { getAllByTestId, getByTestId, user } = await setup(
-        <ListComponent {...mockSimpleProps} />,
-      );
+  test("Removing an item when another card is active", async () => {
+    // Setup two cards
+    const { getAllByTestId, getByTestId, user } = await setup(
+      <ListComponent {...mockSimpleProps} />,
+    );
 
-      await fillInSimpleResponse(user);
+    await fillInSimpleResponse(user);
 
-      const addItemButton = getByTestId("list-add-button");
+    const addItemButton = getByTestId("list-add-button");
 
-      await user.click(addItemButton);
+    await user.click(addItemButton);
 
-      const [firstCard, secondCard] = getAllByTestId(/list-card/);
+    const [firstCard, secondCard] = getAllByTestId(/list-card/);
 
-      // Second card is active
-      expect(
-        within(secondCard!).getByLabelText(/What's their name?/),
-      ).toBeInTheDocument();
+    // Second card is active
+    expect(
+      within(secondCard!).getByLabelText(/What's their name?/),
+    ).toBeInTheDocument();
 
-      // Remove first
-      const firstCardRemoveButton = within(firstCard!).getByRole("button", {
-        name: /Remove/,
-      });
-      await user.click(firstCardRemoveButton);
-      const cards = getAllByTestId(/list-card/);
-      expect(cards).toHaveLength(1);
+    // Remove first
+    const firstCardRemoveButton = within(firstCard!).getByRole("button", {
+      name: /Remove/,
+    });
+    await user.click(firstCardRemoveButton);
+    const cards = getAllByTestId(/list-card/);
+    expect(cards).toHaveLength(1);
 
-      // First card is active
-      expect(
-        within(cards[0]!).getByLabelText(/What's their name?/),
-      ).toBeInTheDocument();
-    },
-  );
+    // First card is active
+    expect(
+      within(cards[0]!).getByLabelText(/What's their name?/),
+    ).toBeInTheDocument();
+  });
 
-  test(
-    "Cancelling an invalid (new) item removes it",
-    async () => {
-      const { getAllByTestId, getByText, user, queryAllByTestId, getByTestId } =
-        await setup(<ListComponent {...mockSimpleProps} />);
+  test("Cancelling an invalid (new) item removes it", async () => {
+    const { getAllByTestId, getByText, user, queryAllByTestId, getByTestId } =
+      await setup(<ListComponent {...mockSimpleProps} />);
 
-      let cards = getAllByTestId(/list-card/);
-      expect(cards).toHaveLength(1);
+    let cards = getAllByTestId(/list-card/);
+    expect(cards).toHaveLength(1);
 
-      // "Cancel" is hidden from initial item, so fill out an item first
-      await fillInSimpleResponse(user);
+    // "Cancel" is hidden from initial item, so fill out an item first
+    await fillInSimpleResponse(user);
 
-      const addItemButton = getByTestId("list-add-button");
-      await user.click(addItemButton);
+    const addItemButton = getByTestId("list-add-button");
+    await user.click(addItemButton);
 
-      const [_firstCard, secondCard] = getAllByTestId(/list-card/);
+    const [_firstCard, secondCard] = getAllByTestId(/list-card/);
 
-      // Second card is active
-      expect(
-        within(secondCard!).getByLabelText(/What's their name?/),
-      ).toBeInTheDocument();
+    // Second card is active
+    expect(
+      within(secondCard!).getByLabelText(/What's their name?/),
+    ).toBeInTheDocument();
 
-      const cancelButton = getByText(/Cancel/, { selector: "button" });
-      await user.click(cancelButton);
+    const cancelButton = getByText(/Cancel/, { selector: "button" });
+    await user.click(cancelButton);
 
-      cards = queryAllByTestId(/list-card/);
-      expect(cards).toHaveLength(1);
-    },
-  );
+    cards = queryAllByTestId(/list-card/);
+    expect(cards).toHaveLength(1);
+  });
 
-  test(
-    "Cancelling a valid (existing) item resets previous state",
-    async () => {
-      const {
-        getByLabelText,
-        getByText,
-        user,
-        queryByText,
-        getByTestId,
-        getAllByTestId,
-        getAllByText,
-      } = await setup(<ListComponent {...mockSimpleProps} />);
+  test("Cancelling a valid (existing) item resets previous state", async () => {
+    const {
+      getByLabelText,
+      getByText,
+      user,
+      queryByText,
+      getByTestId,
+      getAllByTestId,
+      getAllByText,
+    } = await setup(<ListComponent {...mockSimpleProps} />);
 
-      await fillInSimpleResponse(user);
+    await fillInSimpleResponse(user);
 
-      const addItemButton = getByTestId("list-add-button");
-      await user.click(addItemButton);
+    const addItemButton = getByTestId("list-add-button");
+    await user.click(addItemButton);
 
-      const [_firstCard, secondCard] = getAllByTestId(/list-card/);
+    const [_firstCard, secondCard] = getAllByTestId(/list-card/);
 
-      // Second card is active
-      expect(
-        within(secondCard!).getByLabelText(/What's their name?/),
-      ).toBeInTheDocument();
+    // Second card is active
+    expect(
+      within(secondCard!).getByLabelText(/What's their name?/),
+    ).toBeInTheDocument();
 
-      // "Cancel" button was hidden on first item, so fill in second item
-      await fillInSimpleResponse(user);
+    // "Cancel" button was hidden on first item, so fill in second item
+    await fillInSimpleResponse(user);
 
-      const secondEmail = getAllByText("richard.parker@pi.com")[1];
-      expect(secondEmail).toBeInTheDocument();
+    const secondEmail = getAllByText("richard.parker@pi.com")[1];
+    expect(secondEmail).toBeInTheDocument();
 
-      const secondEditButton = getAllByText(/Edit/, { selector: "button" })[1];
-      await user.click(secondEditButton);
+    const secondEditButton = getAllByText(/Edit/, { selector: "button" })[1];
+    await user.click(secondEditButton);
 
-      const emailInput = getByLabelText(/email/);
-      await user.click(emailInput);
-      await user.paste("my.new.email@test.com");
+    const emailInput = getByLabelText(/email/);
+    await user.click(emailInput);
+    await user.paste("my.new.email@test.com");
 
-      const secondCancelButton = getAllByText(/Cancel/, {
-        selector: "button",
-      })[1];
-      await user.click(secondCancelButton);
+    const secondCancelButton = getAllByText(/Cancel/, {
+      selector: "button",
+    })[1];
+    await user.click(secondCancelButton);
 
-      expect(queryByText("my.new.email@test.com")).not.toBeInTheDocument();
-      expect(getByText("richard.parker@pi.com")).toBeInTheDocument();
-    },
-  );
+    expect(queryByText("my.new.email@test.com")).not.toBeInTheDocument();
+    expect(getByText("richard.parker@pi.com")).toBeInTheDocument();
+  });
 });

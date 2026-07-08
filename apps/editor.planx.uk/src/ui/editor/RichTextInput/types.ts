@@ -42,10 +42,7 @@ type NestedContent = "nestedContent";
 type ParagraphContent = "paragraphContent";
 
 export type Variant =
-  | Default
-  | RootLevelContent
-  | NestedContent
-  | ParagraphContent;
+  Default | RootLevelContent | NestedContent | ParagraphContent;
 
 export interface Props extends InputBaseProps {
   className?: string;

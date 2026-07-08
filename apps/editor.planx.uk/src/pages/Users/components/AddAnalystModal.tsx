@@ -34,26 +34,20 @@ interface Props {
 export const AddAnalystModal: React.FC<Props> = ({ onClose }) => {
   const toast = useToast();
 
-  const [insertAnalyst, { loading }] = useMutation<InsertAnalystResponse, NewAnalyst>(
-    INSERT_ANALYST,
-    {
-      onCompleted: ({ analyst: { firstName, lastName } }) => {
-        onClose();
-        toast.success(`Successfully added ${firstName} ${lastName}`);
-      },
-      onError: () => toast.error("Failed to add analyst, try again"),
-      refetchQueries: [
-        { query: GET_ANALYSTS_QUERY }
-      ],
+  const [insertAnalyst, { loading }] = useMutation<
+    InsertAnalystResponse,
+    NewAnalyst
+  >(INSERT_ANALYST, {
+    onCompleted: ({ analyst: { firstName, lastName } }) => {
+      onClose();
+      toast.success(`Successfully added ${firstName} ${lastName}`);
     },
-  );
+    onError: () => toast.error("Failed to add analyst, try again"),
+    refetchQueries: [{ query: GET_ANALYSTS_QUERY }],
+  });
 
   return (
-    <Dialog
-      aria-labelledby="dialog-heading"
-      open
-      onClose={onClose}
-    >
+    <Dialog aria-labelledby="dialog-heading" open onClose={onClose}>
       <Formik<NewAnalyst>
         initialValues={{ firstName: "", lastName: "", email: "" }}
         validationSchema={upsertMemberSchema}
@@ -83,7 +77,9 @@ export const AddAnalystModal: React.FC<Props> = ({ onClose }) => {
                     type="text"
                     {...getFieldProps("firstName")}
                     errorMessage={
-                      touched.firstName && errors.firstName ? errors.firstName : undefined
+                      touched.firstName && errors.firstName
+                        ? errors.firstName
+                        : undefined
                     }
                   />
                 </InputLabel>
@@ -92,7 +88,9 @@ export const AddAnalystModal: React.FC<Props> = ({ onClose }) => {
                     type="text"
                     {...getFieldProps("lastName")}
                     errorMessage={
-                      touched.lastName && errors.lastName ? errors.lastName : undefined
+                      touched.lastName && errors.lastName
+                        ? errors.lastName
+                        : undefined
                     }
                   />
                 </InputLabel>

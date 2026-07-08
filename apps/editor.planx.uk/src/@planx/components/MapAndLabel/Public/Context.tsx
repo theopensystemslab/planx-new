@@ -97,8 +97,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
       const extraPassportData: Store.UserData["data"] = {};
 
       const priorComponents = passportData?.["_mapAndLabelVisitedNodes"] as
-        | string[]
-        | undefined;
+        string[] | undefined;
       extraPassportData["_mapAndLabelVisitedNodes"] =
         props.id && priorComponents?.length
           ? priorComponents.concat([props.id])

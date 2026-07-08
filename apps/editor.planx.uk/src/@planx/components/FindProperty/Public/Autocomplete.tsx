@@ -61,72 +61,72 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
   const { setAddress } = props;
 
   const addressSelectionHandler = ({
-      detail,
-    }: {
-      detail: Record<"address", Record<string, any>>;
-    }) => {
-      if (!data?.blpuCodes) return;
+    detail,
+  }: {
+    detail: Record<"address", Record<string, any>>;
+  }) => {
+    if (!data?.blpuCodes) return;
 
-      const selectedAddress: Record<string, any> | undefined =
-        detail?.address?.LPI;
-      if (selectedAddress) {
-        setAddress({
-          uprn: selectedAddress.UPRN.padStart(12, "0"),
-          usrn: selectedAddress.USRN, // padStart(8, "0") will break /roads API request
-          blpu_code: selectedAddress.BLPU_STATE_CODE,
-          latitude: selectedAddress.LAT,
-          longitude: selectedAddress.LNG,
-          organisation: selectedAddress.ORGANISATION || null,
-          sao:
-            [
-              selectedAddress.SAO_START_NUMBER,
-              selectedAddress.SAO_START_SUFFIX,
-              selectedAddress.SAO_TEXT, // populated in cases of building name only, no street number
-            ]
-              .filter(Boolean)
-              .join("") || undefined,
-          saoEnd:
-            [selectedAddress.SAO_END_NUMBER, selectedAddress.SAO_END_SUFFIX]
-              .filter(Boolean)
-              .join("") || undefined,
-          pao:
-            [
-              selectedAddress.PAO_START_NUMBER,
-              selectedAddress.PAO_START_SUFFIX,
-              selectedAddress.PAO_TEXT, // populated in cases of building name only, no street number
-            ]
-              .filter(Boolean)
-              .join("") || undefined,
-          paoEnd:
-            [selectedAddress.PAO_END_NUMBER, selectedAddress.PAO_END_SUFFIX]
-              .filter(Boolean)
-              .join("") || undefined,
-          street: selectedAddress.STREET_DESCRIPTION,
-          town: selectedAddress.TOWN_NAME,
-          postcode: selectedAddress.POSTCODE_LOCATOR,
-          parish: selectedAddress.PARISH__CODE,
-          ward: selectedAddress.WARD_CODE,
-          x: selectedAddress.X_COORDINATE,
-          y: selectedAddress.Y_COORDINATE,
-          planx_description:
-            find(data.blpuCodes, {
-              code: selectedAddress.CLASSIFICATION_CODE,
-            })?.description ?? undefined,
-          planx_value:
-            find(data.blpuCodes, {
-              code: selectedAddress.CLASSIFICATION_CODE,
-            })?.value ?? undefined,
-          single_line_address: selectedAddress.ADDRESS,
-          title: selectedAddress.ADDRESS.slice(
-            0,
-            selectedAddress.ADDRESS.lastIndexOf(
-              `, ${selectedAddress.ADMINISTRATIVE_AREA}`,
-            ),
-          ), // display value shown on PropertyInformation, should match <address-autocomplete /> options formatting
-          source: "os",
-        });
-      }
-    };
+    const selectedAddress: Record<string, any> | undefined =
+      detail?.address?.LPI;
+    if (selectedAddress) {
+      setAddress({
+        uprn: selectedAddress.UPRN.padStart(12, "0"),
+        usrn: selectedAddress.USRN, // padStart(8, "0") will break /roads API request
+        blpu_code: selectedAddress.BLPU_STATE_CODE,
+        latitude: selectedAddress.LAT,
+        longitude: selectedAddress.LNG,
+        organisation: selectedAddress.ORGANISATION || null,
+        sao:
+          [
+            selectedAddress.SAO_START_NUMBER,
+            selectedAddress.SAO_START_SUFFIX,
+            selectedAddress.SAO_TEXT, // populated in cases of building name only, no street number
+          ]
+            .filter(Boolean)
+            .join("") || undefined,
+        saoEnd:
+          [selectedAddress.SAO_END_NUMBER, selectedAddress.SAO_END_SUFFIX]
+            .filter(Boolean)
+            .join("") || undefined,
+        pao:
+          [
+            selectedAddress.PAO_START_NUMBER,
+            selectedAddress.PAO_START_SUFFIX,
+            selectedAddress.PAO_TEXT, // populated in cases of building name only, no street number
+          ]
+            .filter(Boolean)
+            .join("") || undefined,
+        paoEnd:
+          [selectedAddress.PAO_END_NUMBER, selectedAddress.PAO_END_SUFFIX]
+            .filter(Boolean)
+            .join("") || undefined,
+        street: selectedAddress.STREET_DESCRIPTION,
+        town: selectedAddress.TOWN_NAME,
+        postcode: selectedAddress.POSTCODE_LOCATOR,
+        parish: selectedAddress.PARISH__CODE,
+        ward: selectedAddress.WARD_CODE,
+        x: selectedAddress.X_COORDINATE,
+        y: selectedAddress.Y_COORDINATE,
+        planx_description:
+          find(data.blpuCodes, {
+            code: selectedAddress.CLASSIFICATION_CODE,
+          })?.description ?? undefined,
+        planx_value:
+          find(data.blpuCodes, {
+            code: selectedAddress.CLASSIFICATION_CODE,
+          })?.value ?? undefined,
+        single_line_address: selectedAddress.ADDRESS,
+        title: selectedAddress.ADDRESS.slice(
+          0,
+          selectedAddress.ADDRESS.lastIndexOf(
+            `, ${selectedAddress.ADMINISTRATIVE_AREA}`,
+          ),
+        ), // display value shown on PropertyInformation, should match <address-autocomplete /> options formatting
+        source: "os",
+      });
+    }
+  };
 
   const handleCheckPostcode = () => {
     if (!sanitizedPostcode) setShowPostcodeError(true);

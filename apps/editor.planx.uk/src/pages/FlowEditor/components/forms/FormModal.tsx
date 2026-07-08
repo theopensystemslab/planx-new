@@ -314,8 +314,7 @@ const FormModal: React.FC<FormModalProps> = ({
               handleSubmit={(
                 data: { data?: Record<string, unknown> },
                 children:
-                  | Array<Record<string, unknown>>
-                  | undefined = undefined,
+                  Array<Record<string, unknown>> | undefined = undefined,
               ) => {
                 // Handle internal portals
                 if (typeof data === "string" && parent) {

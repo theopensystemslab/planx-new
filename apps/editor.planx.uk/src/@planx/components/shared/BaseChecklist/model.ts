@@ -24,8 +24,7 @@ export enum ChecklistLayout {
  * Utility type for where checklist types are interchangeable
  */
 export type AnyChecklist =
-  | ChecklistWithOptions
-  | ResponsiveChecklistWithOptions;
+  ChecklistWithOptions | ResponsiveChecklistWithOptions;
 
 export interface FlatOptions<T extends Option | ConditionalOption> {
   options: Array<T>;

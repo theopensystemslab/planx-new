@@ -7,7 +7,9 @@ describe("Reference code validation", () => {
         validationSchema.validate({
           referenceCode: "123XYZ",
         }),
-      ).rejects.toThrow(/Invalid format for Local Planning Authority reference code/);
+      ).rejects.toThrow(
+        /Invalid format for Local Planning Authority reference code/,
+      );
     });
 
     it("accepts a valid code", async () => {
@@ -22,11 +24,15 @@ describe("Reference code validation", () => {
         validationSchema.validate({
           referenceCode: "123-UVWXYZ",
         }),
-      ).rejects.toThrow(/Invalid format for Local Planning Group reference code/);
+      ).rejects.toThrow(
+        /Invalid format for Local Planning Group reference code/,
+      );
     });
 
     it("accepts a valid code", async () => {
-      const result = await validationSchema.isValid({ referenceCode: "CAB-SCA" });
+      const result = await validationSchema.isValid({
+        referenceCode: "CAB-SCA",
+      });
       expect(result).toBe(true);
     });
   });

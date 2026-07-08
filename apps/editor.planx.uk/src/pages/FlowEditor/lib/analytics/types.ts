@@ -18,11 +18,7 @@ export type AnalyticsType = "init" | "resume";
  * also stored.
  */
 export type AnalyticsLogDirection =
-  | AnalyticsType
-  | "forwards"
-  | "backwards"
-  | "reset"
-  | "save";
+  AnalyticsType | "forwards" | "backwards" | "reset" | "save";
 
 export type AllowListKey = (typeof ALLOW_LIST)[number];
 

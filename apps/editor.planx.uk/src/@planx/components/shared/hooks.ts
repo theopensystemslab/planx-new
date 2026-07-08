@@ -6,9 +6,7 @@ import {
 import { useEffect, useState } from "react";
 
 export type UseFileUrlProps =
-  | { file: File }
-  | { url: string }
-  | { file: File; url: string };
+  { file: File } | { url: string } | { file: File; url: string };
 
 /**
  * Returns fileUrl for uploaded files, either private or public.

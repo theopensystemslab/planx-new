@@ -23,9 +23,7 @@ const GOVPAY_DOCS_URL =
   "https://docs.payments.service.gov.uk/reporting/#add-more-information-to-a-payment-39-custom-metadata-39-or-39-reporting-columns-39";
 
 export type FormikGovPayMetadata =
-  | Record<keyof GovPayMetadata, string>[]
-  | string
-  | undefined;
+  Record<keyof GovPayMetadata, string>[] | string | undefined;
 
 interface GovPayMetadataSectionProps {
   disabled?: boolean;

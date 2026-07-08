@@ -5,9 +5,7 @@ import type {
 import type { Operation } from "types";
 
 export type HistoryItem =
-  | OperationHistoryItem
-  | CommentHistoryItem
-  | PublishHistoryItem;
+  OperationHistoryItem | CommentHistoryItem | PublishHistoryItem;
 
 interface BaseHistoryItem {
   id: number;
