@@ -1,7 +1,9 @@
 # LocalPlanning.services
+
 LocalPlanning.services is a static site generated using Astro, which serves as a directory of PlanX services and a dashboard for ongoing planning applications.
 
 ## 🛠️ Tech Stack
+
 - [Astro](https://astro.build/) - Static Site Generator
 - [React](https://react.dev/) - UI components
 - [Tailwind CSS](https://tailwindcss.com/) - Styling
@@ -18,7 +20,6 @@ pnpm dev
 ```
 
 Open http://localhost:4321 in your browser.
-
 
 ## 🚀 Project structure
 
@@ -45,9 +46,9 @@ To learn more about the folder structure of an Astro project, refer to [the Astr
 
 All commands are run from the root of the project, from a terminal:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
+| Command                | Action                                           |
+| :--------------------- | :----------------------------------------------- |
+| `pnpm install`         | Installs dependencies                            |
 | `pnpm dev`             | Starts local dev server at `localhost:4321`      |
 | `pnpm build`           | Build your production site to `./dist/`          |
 | `pnpm preview`         | Preview your build locally, before deploying     |
@@ -58,19 +59,21 @@ All commands are run from the root of the project, from a terminal:
 
 ### Deployment Pipeline
 
-LocalPlanning.services is built and deployed automatically via GitHub Actions - 
+LocalPlanning.services is built and deployed automatically via GitHub Actions -
 
 **Staging**: Triggered on push to `main` branch
+
 - Domain: `https://localplanning.editor.planx.dev`
 - Workflow: `.github/workflows/push-main.yml`
 
 **Production**: Triggered on push to `production` branch
+
 - Domain: `https://localplanning.services`
 - Workflow: `.github/workflows/push-production.yml`
 
 ### Static site generation
 
-The site is pre-rendered at build time using Astro's static generation (SSG) - 
+The site is pre-rendered at build time using Astro's static generation (SSG) -
 
 1. **Build command**: `pnpm build --site <domain> --mode <staging|production>`
 2. **Data fetching**: Pages query the PlanX API during build to fetch team and service data

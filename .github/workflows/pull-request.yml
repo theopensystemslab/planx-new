@@ -124,6 +124,20 @@ jobs:
       - run: pnpm test:silent --retry=1
         working-directory: ${{ env.EDITOR_DIRECTORY }}
 
+  check_localplanning_services:
+    name: Check localplanning.services (types + lint)
+    runs-on: ubuntu-24.04
+    needs: [changes]
+    if: ${{ needs.changes.outputs.localplanning == 'true' }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Setup Node and PNPM
+        uses: ./.github/actions/setup-node-pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Type-check and lint
+        run: pnpm check
+        working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
+
   build_localplanning_services:
     name: Build localplanning.services
     runs-on: ubuntu-24.04

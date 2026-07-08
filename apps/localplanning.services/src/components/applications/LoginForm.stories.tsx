@@ -1,8 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { userEvent, within, expect } from "storybook/test";
-import { http, HttpResponse, delay } from "msw";
+import { delay, http, HttpResponse } from "msw";
+import { expect, userEvent, within } from "storybook/test";
+
+import {
+  handlers,
+  loginErrorHandlers,
+} from "../../../.storybook/mocks/handlers";
 import LoginForm from "./LoginForm";
-import { handlers, loginErrorHandlers } from "../../../.storybook/mocks/handlers";
 
 const meta = {
   title: "Molecules/LoginForm",

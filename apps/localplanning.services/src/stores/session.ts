@@ -8,4 +8,4 @@ interface Session {
 export const $session = atom<Session>({
   token: null,
   email: null,
-})
+});

@@ -1,9 +1,11 @@
-import type { Preview, Decorator } from "@storybook/react";
+import "../src/styles/global.css";
+
+import type { Decorator, Preview } from "@storybook/react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { initialize, mswLoader } from "msw-storybook-addon";
-import { $session } from "../src/stores/session";
+
 import { queryClient } from "../src/lib/queryClient";
-import "../src/styles/global.css";
+import { $session } from "../src/stores/session";
 
 // Initialise MSW to intercept network requests before any story renders
 initialize();

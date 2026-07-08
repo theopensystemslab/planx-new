@@ -1,4 +1,5 @@
 import type { FormEventHandler } from "react";
+
 import { useLogin } from "./hooks/useLogin";
 
 const LoginForm: React.FC = () => {
@@ -6,7 +7,7 @@ const LoginForm: React.FC = () => {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    
+
     const formData = new FormData(e.target as HTMLFormElement);
     const email = formData.get("email")?.toString();
     if (!email) return;
@@ -37,9 +38,9 @@ const LoginForm: React.FC = () => {
           </div>
         )}
 
-        <button 
-          type="submit" 
-          disabled={isLoading} 
+        <button
+          type="submit"
+          disabled={isLoading}
           className="button button--primary button--medium button-focus-style"
         >
           {isLoading ? "Submitting..." : "Submit"}

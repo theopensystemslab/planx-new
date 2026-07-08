@@ -1,9 +1,10 @@
-import { useEffect } from "react";
+import { useStore } from "@nanostores/react";
 import { $session } from "@stores/session";
+import { useEffect } from "react";
+
 import { ApplicationsList } from "./ApplicationsList";
 import { useSearchParams } from "./hooks/useSearchParams";
 import LoginForm from "./LoginForm";
-import { useStore } from "@nanostores/react";
 
 export const ApplicationsAuth: React.FC = () => {
   const { token, email } = useSearchParams();

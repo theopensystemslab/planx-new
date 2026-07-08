@@ -1,8 +1,10 @@
 import React from "react";
-import type { Application } from "./hooks/useFetchApplications";
+
 import draftIcon from "/icons/draft-icon.svg?url";
-import successIcon from "/icons/success-icon.svg?url";
 import paymentIcon from "/icons/payment-icon.svg?url";
+import successIcon from "/icons/success-icon.svg?url";
+
+import type { Application } from "./hooks/useFetchApplications";
 
 interface StatusBadgeProps {
   status: Application["status"];

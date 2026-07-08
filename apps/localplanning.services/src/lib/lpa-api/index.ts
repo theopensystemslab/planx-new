@@ -1,5 +1,5 @@
-import { PUBLIC_PLANX_BUILD_TIME_GRAPHQL_API_URL } from "astro:env/client";
 import { GET_LPAS_QUERY } from "@lib/lpa-api/query";
+import { PUBLIC_PLANX_BUILD_TIME_GRAPHQL_API_URL } from "astro:env/client";
 import { print } from "graphql";
 
 export interface Service {
@@ -62,7 +62,7 @@ export async function fetchAllLPAs(): Promise<LPA[]> {
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(
-        `GraphQL query failed: ${response.status} ${response.statusText} - ${errorText}`
+        `GraphQL query failed: ${response.status} ${response.statusText} - ${errorText}`,
       );
     }
 

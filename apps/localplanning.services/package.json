@@ -5,8 +5,10 @@
   "scripts": {
     "astro": "astro",
     "build": "astro check && astro build",
-    "check": "astro check",
+    "check": "astro check && pnpm lint",
     "dev": "astro dev --mode dev --open",
+    "lint": "eslint . && prettier -c . --ignore-path ../../.prettierignore",
+    "lint:fix": "eslint --fix . && prettier -w . --ignore-path ../../.prettierignore",
     "preview": "astro preview --open",
     "storybook": "storybook dev -p 6006"
   },
@@ -34,6 +36,10 @@
     "typescript": "catalog:typescript"
   },
   "devDependencies": {
+    "@planx/eslint-config": "workspace:*",
+    "@planx/prettier-config": "workspace:*",
+    "eslint": "catalog:",
+    "globals": "catalog:",
     "@storybook/addon-a11y": "^10",
     "@storybook/react-vite": "^10",
     "@storybook/react": "^10",

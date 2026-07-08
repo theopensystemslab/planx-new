@@ -2,7 +2,6 @@
 @plugin "tailwind-clamp";
 
 @theme {
-
   /* Custom xs breakpoint */
   --breakpoint-xs: 26rem;
 
@@ -11,12 +10,12 @@
   */
 
   /* Global colors */
-  --color-black: #1A1B1B;
-  --color-white: #FFFFFF;
+  --color-black: #1a1b1b;
+  --color-white: #ffffff;
 
   /* Background colors */
-  --color-bg-main: #DDF0EC;
-  --color-bg-light: #F2F5F5;
+  --color-bg-main: #ddf0ec;
+  --color-bg-light: #f2f5f5;
   --color-bg-dark: var(--color-black);
   --color-bg-mid: #326565;
 
@@ -25,20 +24,21 @@
   --color-text-secondary: #464949;
 
   /* Action colors */
-  --color-action-main: #FECE85;
-  --color-action-main-hover: #FFDFAE;
-  --color-action-secondary: #1F2F2B;
+  --color-action-main: #fece85;
+  --color-action-main-hover: #ffdfae;
+  --color-action-secondary: #1f2f2b;
   --color-action-secondary-hover: var(--color-black);
 
- /* Focus colors */
-  --color-focus-yellow: #FFDD00;
-  --color-focus-black: #0B0C0C;
-  
+  /* Focus colors */
+  --color-focus-yellow: #ffdd00;
+  --color-focus-black: #0b0c0c;
+
   /*
   / Typography
   */
 
-  --default-font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --default-font-family:
+    var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
   /*
   / Form styles
@@ -57,11 +57,9 @@
   --input-focus-outline: var(--color-focus-yellow) solid 3px;
   --input-focus-outline-offset: 0px;
   --input-focus-box-shadow: 0px 0px 0px 2px inset;
-
 }
 
 @layer components {
-
   /*
   / Fluid type styles
   */
@@ -118,7 +116,7 @@
     @apply text-text-secondary;
   }
   .styled-content p {
-     margin-bottom: 0.5em;
+    margin-bottom: 0.5em;
   }
   .styled-content p a {
     @apply text-text-main;
@@ -128,10 +126,10 @@
     @apply clamp-[text,base,lg];
   }
   .styled-content ul {
-    @apply list-disc ml-10
+    @apply list-disc ml-10;
   }
   .styled-content hr {
-    @apply my-8
+    @apply my-8;
   }
   .styled-content a:not(.button),
   .paragraph-link,
@@ -162,7 +160,7 @@
   .button--secondary {
     @apply bg-action-secondary hover:bg-action-secondary-hover text-white;
   }
-   .button--disabled {
+  .button--disabled {
     @apply bg-gray-300 text-gray-500 hover:bg-gray-300 cursor-default;
   }
 
@@ -195,7 +193,9 @@
   input[type="text"]:focus,
   input[type="email"]:focus,
   input[type="search"]:focus,
-  .govuk-checkboxes__input:focus + .govuk-checkboxes__label .govuk-checkboxes__indicator {
+  .govuk-checkboxes__input:focus
+    + .govuk-checkboxes__label
+    .govuk-checkboxes__indicator {
     outline: var(--input-focus-outline);
     outline-offset: var(--input-focus-outline-offset);
     box-shadow: var(--input-focus-box-shadow);
@@ -217,16 +217,15 @@
     box-shadow: inset 0 -4px var(--color-focus-black);
     border-radius: 0.25rem 0.25rem 0 0;
   }
-  
 }
-
 
 :root {
   --postcode__input__height: var(--input-height);
   --postcode__input__padding: var(--input-padding-y) var(--input-padding-x);
   --postcode__font-family: var(--default-font-family);
   --postcode__input__font-size: var(--input-font-size);
-  --postcode__input__border: var(--input-border-width) solid var(--input-border-color);
+  --postcode__input__border: var(--input-border-width) solid
+    var(--input-border-color);
   --postcode__input__width: var(--input-width);
   --postcode__input__max-width: var(--input-max-width);
 

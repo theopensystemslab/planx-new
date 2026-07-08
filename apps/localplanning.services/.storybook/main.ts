@@ -6,10 +6,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const config: StorybookConfig = {
   stories: ["../src/**/*.stories.@(ts|tsx)"],
-  addons: [
-    "@storybook/addon-a11y",
-    "msw-storybook-addon",
-  ],
+  addons: ["@storybook/addon-a11y", "msw-storybook-addon"],
   framework: {
     name: "@storybook/react-vite",
     options: {},
@@ -25,7 +22,10 @@ const config: StorybookConfig = {
         ...(config.resolve?.alias ?? {}),
         // Mock Astro's virtual modules
         "astro:env/client": path.resolve(__dirname, "./mocks/astro-env.ts"),
-        "astro:transitions/client": path.resolve(__dirname, "./mocks/astro-transitions.ts"),
+        "astro:transitions/client": path.resolve(
+          __dirname,
+          "./mocks/astro-transitions.ts",
+        ),
         // Resolve path aliases to match tsconfig.json
         "@components": path.resolve(__dirname, "../src/components"),
         "@lib": path.resolve(__dirname, "../src/lib"),
