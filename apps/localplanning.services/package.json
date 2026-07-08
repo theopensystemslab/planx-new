@@ -33,6 +33,7 @@
     "sharp": "^0.34.5",
     "tailwind-clamp": "^4.4.0",
     "tailwindcss": "^4.2.1",
+    "@planx/typescript-config": "workspace:*",
     "typescript": "catalog:typescript"
   },
   "devDependencies": {

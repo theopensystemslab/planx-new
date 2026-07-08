@@ -1,23 +1,12 @@
 {
-  // as of July 24, esnext == es2022 and nodenext == node16
+  "extends": "@planx/typescript-config/node.json",
   "compilerOptions": {
-    "allowJs": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "lib": ["esnext"],
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "noImplicitAny": true,
     "outDir": "dist",
-    "sourceMap": true,
-    "resolveJsonModule": true,
     "rootDir": ".",
-    "skipLibCheck": true,
-    "strict": true,
-    "target": "esnext",
-    "types": ["vitest/globals"],
+    "sourceMap": true,
     // ensure the code is ready for per-file transpilation by tsx (used in dev mode)
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "types": ["vitest/globals"]
   },
   "exclude": ["node_modules", "dist"]
 }

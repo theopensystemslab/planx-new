@@ -1,11 +1,15 @@
 {
   "name": "@planx/infrastructure-common",
+  "scripts": {
+    "check": "tsc --noEmit"
+  },
   "dependencies": {
     "@pulumi/aws": "catalog:infrastructure",
     "@pulumi/pulumi": "catalog:infrastructure"
   },
   "devDependencies": {
     "@types/node": "catalog:",
+    "@planx/typescript-config": "workspace:*",
     "typescript": "catalog:typescript"
   },
   "private": true

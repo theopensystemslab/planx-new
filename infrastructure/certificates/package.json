@@ -1,5 +1,8 @@
 {
   "name": "@planx/infrastructure-certificates",
+  "scripts": {
+    "check": "tsc --noEmit"
+  },
   "dependencies": {
     "@planx/infrastructure-common": "workspace:*",
     "@pulumi/aws": "catalog:infrastructure",
@@ -8,6 +11,7 @@
   },
   "devDependencies": {
     "@types/node": "catalog:",
+    "@planx/typescript-config": "workspace:*",
     "typescript": "catalog:typescript"
   },
   "main": "index.ts",

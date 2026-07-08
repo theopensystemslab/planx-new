@@ -1,5 +1,8 @@
 {
   "name": "@planx/infrastructure-application",
+  "scripts": {
+    "check": "tsc --noEmit"
+  },
   "dependencies": {
     "@nodelib/fs.walk": "^3.0.1",
     "@planx/infrastructure-common": "workspace:*",
@@ -14,6 +17,7 @@
     "@types/node": "catalog:",
     "@types/tldjs": "^2.3.4",
     "mime": "^4.1.0",
+    "@planx/typescript-config": "workspace:*",
     "typescript": "catalog:typescript"
   },
   "private": true
