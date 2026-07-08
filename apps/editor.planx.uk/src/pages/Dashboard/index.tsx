@@ -67,7 +67,7 @@ export default function Dashboard() {
           <DashboardWidget
             title="Flows"
             link={linkOptions({
-              to: "/app/$team",
+              to: "/app/$team/flows",
               params: { team: team.slug },
               label: "view all flows",
             })}

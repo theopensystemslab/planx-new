@@ -6,7 +6,7 @@ import { useMemo } from "react";
 const GET_ACTIVITY_BY_SERVICE = gql`
   query GetActivityByService($teamId: Int!, $thirtyDaysAgo: timestamptz!) {
     flows(
-      where: { team_id: { _eq: $teamId }, deleted_at: { _is_null: true } }
+      where: { team_id: { _eq: $teamId }, archived_at: { _is_null: true } }
     ) {
       name
       sessions: analytics_aggregate(

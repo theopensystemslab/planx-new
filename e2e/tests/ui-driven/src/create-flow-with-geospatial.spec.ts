@@ -17,7 +17,7 @@ import {
   answerFindProperty,
   userChallengesPlanningConstraint,
 } from "./helpers/geoSpatialUserActions.js";
-import { getTeamPage } from "./helpers/getPage.js";
+import { getFlowsPage } from "./helpers/getPage.js";
 import {
   makeFlowAService,
   navigateToFlowSettings,
@@ -70,7 +70,7 @@ test.describe("Flow creation, publish and preview", () => {
   }) => {
     test.setTimeout(140_000);
 
-    const page = await getTeamPage({
+    const page = await getFlowsPage({
       browser,
       userId: context.user!.id!,
       teamName: context.team.name,

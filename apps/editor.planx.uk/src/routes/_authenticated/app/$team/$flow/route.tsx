@@ -9,7 +9,7 @@ import FlowSkeleton from "pages/FlowEditor/FlowSkeleton";
 import { ErrorBoundary } from "react-error-boundary";
 import { CatchAllComponent } from "routes/$";
 
-import { teamSearchSchema } from "..";
+import { teamSearchSchema } from "../flows";
 import { connectToFlowRoute } from "./-route.utils";
 
 export const Route = createFileRoute("/_authenticated/app/$team/$flow")({

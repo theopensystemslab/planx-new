@@ -58,7 +58,7 @@ const Team: React.FC<TeamProps> = (initialFlows) => {
   ]);
 
   const navigate = useNavigate();
-  const searchParams = useSearch({ from: "/_authenticated/app/$team/" });
+  const searchParams = useSearch({ from: "/_authenticated/app/$team/flows" });
 
   const { data } = useGetFlows(teamId);
   const flows = data?.flows ?? initialFlows.flows;

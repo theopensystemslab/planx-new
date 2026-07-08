@@ -34,7 +34,7 @@ export const useDisplayedFlows = ({
   sortOptions,
   filterOptions = [],
 }: UseDisplayedFlowsProps): UseDisplayedFlowsResult => {
-  const searchParams = useSearch({ from: "/_authenticated/app/$team/" });
+  const searchParams = useSearch({ from: "/_authenticated/app/$team/flows" });
 
   const searchList = useMemo(() => flows ?? [], [flows]);
 

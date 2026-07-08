@@ -9,8 +9,8 @@ export const navigateToService = async (page: Page, slug: string) => {
   await expect(page.getByRole("link", { name: slug })).toBeVisible();
 };
 
-export const navigateToTeamPage = async (page: Page) => {
-  await page.goto(`/app/${contextDefaults.team.slug}`);
+export const navigateToFlowsPage = async (page: Page) => {
+  await page.goto(`/app/${contextDefaults.team.slug}/flows`);
 
   await expect(page.getByText(contextDefaults.team.name).first()).toBeVisible();
   await expect(page.locator("h1", { hasText: "Flows" })).toBeVisible();

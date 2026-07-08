@@ -52,6 +52,7 @@ test.describe("Login", () => {
     await page.goto("/");
 
     const teamLink = page.locator("h3").filter({ hasText: context.team.name });
+    const flowsLink = page.locator("button").filter({ hasText: "Flows" });
     await teamLink.waitFor(); // wait for this to be visible
 
     // drop graphql requests
@@ -60,6 +61,7 @@ test.describe("Login", () => {
     });
 
     await teamLink.click();
+    await flowsLink.click();
     const toastText = "Network error, attempting to reconnect…";
     await expect(page.getByText(toastText)).toBeVisible();
 
