@@ -19,8 +19,7 @@ import {
 } from "./model";
 
 type ExtraProps =
-  | FlatOptions<ConditionalOption>
-  | GroupedOptions<ConditionalOption>;
+  FlatOptions<ConditionalOption> | GroupedOptions<ConditionalOption>;
 export type Props = EditorProps<
   TYPES.ResponsiveChecklist,
   ResponsiveChecklist,

@@ -1,4 +1,9 @@
-import { createFileRoute, notFound, Outlet, rootRouteId } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  notFound,
+  Outlet,
+  rootRouteId,
+} from "@tanstack/react-router";
 import { client } from "lib/graphql";
 import GlobalSettingsLayout from "pages/GlobalSettings/Layout";
 import { GET_GLOBAL_SETTINGS } from "pages/GlobalSettings/queries";

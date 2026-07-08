@@ -278,7 +278,7 @@ describe("navigating back to the EnhancedTextInput component", () => {
         "proposal.description": {
           original: "my first attempt",
           enhanced: "our LLM-enhanced suggestion",
-          userAction: "Re-wrote their description after AI feedback"
+          userAction: "Re-wrote their description after AI feedback",
         },
       },
     },

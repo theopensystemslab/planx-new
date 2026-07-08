@@ -1,9 +1,7 @@
 import { object, string } from "yup";
 
 const emailField = string()
-  .email(
-    "Enter an email address in the correct format, like example@email.com",
-  )
+  .email("Enter an email address in the correct format, like example@email.com")
   .required("Enter a valid email address");
 
 export const emailSchema = object({

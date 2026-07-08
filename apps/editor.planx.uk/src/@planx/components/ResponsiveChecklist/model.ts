@@ -26,8 +26,7 @@ export type GroupedResponsiveChecklist = ResponsiveChecklist &
  * Contains options derived from child Answer nodes
  */
 export type ResponsiveChecklistWithOptions =
-  | FlatResponsiveChecklist
-  | GroupedResponsiveChecklist;
+  FlatResponsiveChecklist | GroupedResponsiveChecklist;
 
 export const parseResponsiveChecklist = (
   data: Record<string, any> | undefined,

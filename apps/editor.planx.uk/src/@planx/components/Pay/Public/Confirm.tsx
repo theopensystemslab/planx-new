@@ -22,11 +22,7 @@ import InviteToPayForm from "./InviteToPayForm";
 import { PAY_API_ERROR_UNSUPPORTED_TEAM } from "./Pay";
 
 type ComponentState =
-  | "error"
-  | "informationOnly"
-  | "inviteToPay"
-  | "zeroFee"
-  | "pay";
+  "error" | "informationOnly" | "inviteToPay" | "zeroFee" | "pay";
 
 export interface Props extends Omit<Pay, "title" | "fn" | "govPayMetadata"> {
   title?: string;

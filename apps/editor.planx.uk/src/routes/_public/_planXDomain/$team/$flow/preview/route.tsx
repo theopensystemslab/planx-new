@@ -23,7 +23,7 @@ export const Route = createFileRoute(
           flowId: context.flow.id,
           isDraft: false,
         }),
-    })
+    });
   },
   head: createPublicRouteHead("preview"),
   errorComponent: createPublicRouteErrorComponent("preview"),

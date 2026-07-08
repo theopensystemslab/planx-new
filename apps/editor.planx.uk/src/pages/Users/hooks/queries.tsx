@@ -23,7 +23,9 @@ export const ANALYST_FRAGMENT = gql`
 export const GET_ANALYSTS_QUERY = gql`
   ${ANALYST_FRAGMENT}
   query GetAnalysts {
-    analysts: users(where: {is_analyst: {_eq: true}, email: {_is_null: false}}) {
+    analysts: users(
+      where: { is_analyst: { _eq: true }, email: { _is_null: false } }
+    ) {
       ...AnalystFragment
     }
   }
@@ -31,12 +33,16 @@ export const GET_ANALYSTS_QUERY = gql`
 
 export const INSERT_ANALYST = gql`
   ${ANALYST_FRAGMENT}
-  mutation InsertAnalyst($email: String!, $firstName: String!, $lastName: String!) {
+  mutation InsertAnalyst(
+    $email: String!
+    $firstName: String!
+    $lastName: String!
+  ) {
     analyst: insert_users_one(
       object: {
-        email: $email, 
-        first_name: $firstName, 
-        is_analyst: true, 
+        email: $email
+        first_name: $firstName
+        is_analyst: true
         last_name: $lastName
       }
     ) {

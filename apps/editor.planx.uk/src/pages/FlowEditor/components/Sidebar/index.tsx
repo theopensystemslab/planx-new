@@ -20,12 +20,7 @@ import Reviews from "./Review";
 import Search from "./Search";
 
 type SidebarTabs =
-  | "PreviewBrowser"
-  | "History"
-  | "Search"
-  | "Console"
-  | "Customise"
-  | "Review";
+  "PreviewBrowser" | "History" | "Search" | "Console" | "Customise" | "Review";
 
 const SIDEBAR_WIDTH = "500px";
 const SIDEBAR_WIDTH_MINIMISED = "20px";

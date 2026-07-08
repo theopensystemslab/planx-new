@@ -65,8 +65,7 @@ export const defaultStringFilterOperator = getGridStringOperators().find(
 
 export const getValueOptions = (
   options:
-    | ValueOptions[]
-    | ((params: GridValueOptionsParams<any>) => ValueOptions[]),
+    ValueOptions[] | ((params: GridValueOptionsParams<any>) => ValueOptions[]),
 ): ValueOptions[] | undefined => {
   if (Array.isArray(options)) {
     return options.filter((val) => val !== null);

@@ -6,7 +6,9 @@ import Input from "ui/shared/Input/Input";
 
 import type { UserFormValues } from "../../types";
 
-export const EmailField: React.FC<{ disabled?: boolean }> = ({ disabled = false }) => {
+export const EmailField: React.FC<{ disabled?: boolean }> = ({
+  disabled = false,
+}) => {
   const { getFieldProps, touched, errors, values } =
     useFormikContext<UserFormValues>();
 

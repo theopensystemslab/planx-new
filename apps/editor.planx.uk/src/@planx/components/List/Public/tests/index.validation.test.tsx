@@ -213,62 +213,56 @@ describe("Form validation and error handling", () => {
     });
   });
 
-  test(
-    "an error displays if the minimum number of items is not met",
-    async () => {
-      const mockWithMinTwo = merge(cloneDeep(mockSimpleProps), {
-        schema: { min: 2 },
-      });
-      const { user, getByTestId, getByText } = await setup(
-        <ListComponent {...mockWithMinTwo} />,
+  test("an error displays if the minimum number of items is not met", async () => {
+    const mockWithMinTwo = merge(cloneDeep(mockSimpleProps), {
+      schema: { min: 2 },
+    });
+    const { user, getByTestId, getByText } = await setup(
+      <ListComponent {...mockWithMinTwo} />,
+    );
+
+    const minNumberOfItems = mockWithMinTwo.schema.min;
+    expect(minNumberOfItems).toEqual(2);
+
+    // Fill in one response only
+    await fillInSimpleResponse(user);
+
+    await user.click(getByTestId("continue-button"));
+
+    const minItemsErrorMessage = getByText(
+      `Error: You must provide at least ${minNumberOfItems} response(s)`,
+    );
+    expect(minItemsErrorMessage).toBeVisible();
+  });
+
+  test("an error displays if the maximum number of items is exceeded", async () => {
+    const { user, getAllByTestId, getByTestId, getByText } = await setup(
+      <ListComponent {...mockSimpleProps} />,
+    );
+    const addItemButton = getByTestId(/list-add-button/);
+
+    const maxNumberOfItems = mockSimpleProps.schema.max;
+    expect(maxNumberOfItems).toEqual(3);
+
+    // Complete three items
+    await fillInSimpleResponse(user);
+    await user.click(addItemButton);
+    await fillInSimpleResponse(user);
+    await user.click(addItemButton);
+    await fillInSimpleResponse(user);
+
+    const cards = getAllByTestId(/list-card/);
+    waitFor(() => expect(cards).toHaveLength(3));
+
+    // Try to add a fourth
+    await user.click(getByTestId(/list-add-button/));
+    waitFor(() => {
+      const maxItemsErrorMessage = getByText(
+        `Error: You can provide at most ${maxNumberOfItems} response(s)`,
       );
-
-      const minNumberOfItems = mockWithMinTwo.schema.min;
-      expect(minNumberOfItems).toEqual(2);
-
-      // Fill in one response only
-      await fillInSimpleResponse(user);
-
-      await user.click(getByTestId("continue-button"));
-
-      const minItemsErrorMessage = getByText(
-        `Error: You must provide at least ${minNumberOfItems} response(s)`,
-      );
-      expect(minItemsErrorMessage).toBeVisible();
-    },
-  );
-
-  test(
-    "an error displays if the maximum number of items is exceeded",
-    async () => {
-      const { user, getAllByTestId, getByTestId, getByText } = await setup(
-        <ListComponent {...mockSimpleProps} />,
-      );
-      const addItemButton = getByTestId(/list-add-button/);
-
-      const maxNumberOfItems = mockSimpleProps.schema.max;
-      expect(maxNumberOfItems).toEqual(3);
-
-      // Complete three items
-      await fillInSimpleResponse(user);
-      await user.click(addItemButton);
-      await fillInSimpleResponse(user);
-      await user.click(addItemButton);
-      await fillInSimpleResponse(user);
-
-      const cards = getAllByTestId(/list-card/);
-      waitFor(() => expect(cards).toHaveLength(3));
-
-      // Try to add a fourth
-      await user.click(getByTestId(/list-add-button/));
-      waitFor(() => {
-        const maxItemsErrorMessage = getByText(
-          `Error: You can provide at most ${maxNumberOfItems} response(s)`,
-        );
-        expect(maxItemsErrorMessage).toBeVisible();
-      });
-    },
-  );
+      expect(maxItemsErrorMessage).toBeVisible();
+    });
+  });
 
   test(
     "an error displays if you add a new item, without saving the active item",

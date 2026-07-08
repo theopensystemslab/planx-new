@@ -936,8 +936,7 @@ export const removeOrphansFromBreadcrumbs = ({
   userData,
   breadcrumbs,
 }: RemoveOrphansFromBreadcrumbsProps):
-  | Store.CachedBreadcrumbs
-  | Store.Breadcrumbs => {
+  Store.CachedBreadcrumbs | Store.Breadcrumbs => {
   const result: Store.Breadcrumbs = { ...breadcrumbs };
   const userAnswers = new Set(userData?.answers ?? []);
   const edges = flow[id].edges ?? [];

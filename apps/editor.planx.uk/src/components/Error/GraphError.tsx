@@ -4,8 +4,7 @@ import { ErrorSummaryContainer } from "@planx/components/shared/Preview/ErrorSum
 import React from "react";
 
 type GraphErrorType =
-  | "nodeMustFollowFindProperty"
-  | "mapInputFieldMustFollowFindProperty";
+  "nodeMustFollowFindProperty" | "mapInputFieldMustFollowFindProperty";
 
 const GRAPH_ERROR_MESSAGES: Record<GraphErrorType, string> = {
   nodeMustFollowFindProperty:
