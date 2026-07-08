@@ -18,6 +18,7 @@
   "devDependencies": {
     "@planx/eslint-config": "workspace:*",
     "@planx/prettier-config": "workspace:*",
+    "@planx/typescript-config": "workspace:*",
     "@types/jsonwebtoken": "catalog:jwt",
     "@types/node": "catalog:",
     "eslint": "catalog:",

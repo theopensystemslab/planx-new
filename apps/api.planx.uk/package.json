@@ -80,6 +80,7 @@
     "@babel/preset-typescript": "catalog:typescript",
     "@planx/eslint-config": "workspace:*",
     "@planx/prettier-config": "workspace:*",
+    "@planx/typescript-config": "workspace:*",
     "@types/adm-zip": "^0.5.8",
     "@types/body-parser": "^1.19.6",
     "@types/cookie-parser": "^1.4.10",

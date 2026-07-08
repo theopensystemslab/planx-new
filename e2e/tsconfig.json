@@ -1,18 +1,10 @@
 {
+  "extends": "@planx/typescript-config/node.json",
   "compilerOptions": {
-    "allowJs": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "rootDir": "tests",
-    "skipLibCheck": true,
-    "strict": true,
-    "noImplicitAny": false,
-    "target": "es2021",
     "noEmit": true,
-    "lib": ["DOM", "ESNext"],
-    "module": "NodeNext",
-    "moduleResolution": "nodenext"
+    "rootDir": "tests",
+    "noImplicitAny": false,
+    "lib": ["DOM", "ESNext"]
   },
   "exclude": ["node_modules", "eslint.config.mjs"]
 }
