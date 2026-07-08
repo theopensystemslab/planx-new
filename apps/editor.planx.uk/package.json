@@ -145,18 +145,19 @@
     "vitest": "^4.1.9"
   },
   "scripts": {
-    "prestart": "../../scripts/check-containers.sh dev",
-    "start": "vite --open",
-    "build": "tsc && NODE_OPTIONS=--max-old-space-size=4096 vite build",
-    "serve": "vite preview",
-    "test": "vitest",
-    "test:silent": "vitest --silent",
-    "storybook": "storybook dev -p 6006",
     "build-storybook": "mkdir -p build && storybook build --quiet --output-dir ./build/storybook",
-    "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' && prettier -c ./src --ignore-path ../../.prettierignore",
+    "build": "tsc && NODE_OPTIONS=--max-old-space-size=4096 vite build",
+    "check": "pnpm typecheck && pnpm lint",
     "lint:error": "eslint --quiet 'src/**/*.{js,jsx,ts,tsx}' && prettier -c ./src --ignore-path ../../.prettierignore",
     "lint:fix": "eslint --fix 'src/**/*.{js,jsx,ts,tsx}' && prettier -w ./src --ignore-path ../../.prettierignore",
-    "check": "tsc --noEmit && pnpm lint"
+    "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' && prettier -c ./src --ignore-path ../../.prettierignore",
+    "prestart": "../../scripts/check-containers.sh dev",
+    "serve": "vite preview",
+    "start": "vite --open",
+    "storybook": "storybook dev -p 6006",
+    "test:silent": "vitest --silent",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit"
   },
   "prettier": "@planx/prettier-config",
   "browserslist": {

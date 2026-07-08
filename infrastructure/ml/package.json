@@ -1,7 +1,8 @@
 {
   "name": "@planx/infrastructure-ml",
   "scripts": {
-    "check": "tsc --noEmit"
+    "check": "pnpm typecheck",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@pulumi/aws": "catalog:infrastructure",

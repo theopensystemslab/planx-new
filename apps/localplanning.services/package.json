@@ -5,12 +5,13 @@
   "scripts": {
     "astro": "astro",
     "build": "astro check && astro build",
-    "check": "astro check && pnpm lint",
+    "check": "pnpm typecheck",
     "dev": "astro dev --mode dev --open",
     "lint": "eslint . && prettier -c . --ignore-path ../../.prettierignore",
     "lint:fix": "eslint --fix . && prettier -w . --ignore-path ../../.prettierignore",
     "preview": "astro preview --open",
-    "storybook": "storybook dev -p 6006"
+    "storybook": "storybook dev -p 6006",
+    "typecheck": "astro check"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",

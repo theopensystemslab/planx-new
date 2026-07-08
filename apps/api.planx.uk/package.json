@@ -61,18 +61,19 @@
     "zod": "^3.25.76"
   },
   "scripts": {
+    "build": "rimraf ./dist && npx tsc && pnpm copy-swagger-files && pnpm copy-prompt-files",
+    "check": "pnpm typecheck && pnpm lint",
+    "copy-prompt-files": "copyfiles 'modules/ai/**/*.md' dist",
+    "copy-swagger-files": "copyfiles '**/docs.yaml' dist",
     "dev": "tsx watch index.ts",
-    "start": "node --enable-source-maps ./dist/index.js",
-    "lint": "eslint '**/*.{js,ts}' && prettier -c .",
-    "lint:fix": "eslint --fix '**/*.{js,ts}' && prettier -w .",
     "lint:error": "eslint --quiet '**/*.{js,ts}' && prettier -c . --ignore-path ../../.prettierignore",
-    "check": "tsc --noEmit && pnpm lint",
-    "test": "TZ=Europe/London vitest run",
+    "lint:fix": "eslint --fix '**/*.{js,ts}' && prettier -w .",
+    "lint": "eslint '**/*.{js,ts}' && prettier -c .",
+    "start": "node --enable-source-maps ./dist/index.js",
     "test:coverage": "TZ=Europe/London vitest run --coverage && open coverage/lcov-report/index.html",
     "test:watch": "TZ=Europe/London vitest --ui --coverage",
-    "build": "rimraf ./dist && npx tsc && pnpm copy-swagger-files && pnpm copy-prompt-files",
-    "copy-swagger-files": "copyfiles '**/docs.yaml' dist",
-    "copy-prompt-files": "copyfiles 'modules/ai/**/*.md' dist"
+    "test": "TZ=Europe/London vitest run",
+    "typecheck": "tsc --noEmit"
   },
   "prettier": "@planx/prettier-config",
   "devDependencies": {
