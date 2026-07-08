@@ -111,7 +111,12 @@ function EditorNavMenu() {
           title: "Select a team",
           Icon: FormatListBulletedIcon,
           route: "/app",
-          accessibleBy: "*",
+          accessibleBy: [
+            "platformAdmin",
+            "teamAdmin",
+            "teamEditor",
+            "teamViewer",
+          ],
         },
         {
           title: "Global settings",

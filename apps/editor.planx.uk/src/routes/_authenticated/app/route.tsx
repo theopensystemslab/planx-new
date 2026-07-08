@@ -1,7 +1,14 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  notFound,
+  Outlet,
+  redirect,
+  rootRouteId,
+} from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import gql from "graphql-tag";
 import { CatchAllComponent } from "routes/$";
+import { isAnalystOnly } from "utils/routeUtils/analystAccess";
 
 import { useStore } from "../../../pages/FlowEditor/lib/store";
 import type { TeamSummary } from "../../../pages/FlowEditor/lib/store/team";
@@ -10,6 +17,12 @@ import AuthenticatedLayout from "../../../pages/layout/AuthenticatedLayout";
 export const Route = createFileRoute("/_authenticated/app")({
   pendingComponent: DelayedLoadingIndicator,
   loader: async () => {
+    const user = useStore.getState().user;
+
+    if (isAnalystOnly(user)) {
+      return { teams: [] };
+    }
+
     const { client } = await import("lib/graphql");
     const { data } = await client.query<{ teams: TeamSummary[] }>({
       query: gql`
@@ -40,6 +53,20 @@ export const Route = createFileRoute("/_authenticated/app")({
     useStore.getState().setPreviewEnvironment("editor");
 
     const user = useStore.getState().user;
+
+    if (isAnalystOnly(user)) {
+      if (pathname === "/app/admin-panel") {
+        return { user, isPublicRoute: false };
+      }
+
+      if (pathname === "/app" || pathname === "/app/") {
+        throw redirect({
+          to: "/app/admin-panel",
+        });
+      }
+
+      throw notFound({ routeId: rootRouteId });
+    }
 
     // Handle default team redirect for initial session load
     if (pathname === "/app" && user?.defaultTeamId) {
