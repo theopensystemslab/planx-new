@@ -183,12 +183,12 @@ const createBaseComponent = async (
   }
 
   if (templateConfig) {
-    await page.getByLabel("Allow edits").click({ force: true });
+    await page.getByLabel("Allow edits").click();
     await page
       .locator("#templatedNodeInstructions")
       .fill(templateConfig.instructions);
     if (templateConfig.required) {
-      await page.getByLabel("Require edits").click({ force: true });
+      await page.getByLabel("Require edits").click();
     }
   }
 

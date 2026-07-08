@@ -17,7 +17,6 @@ import {
   navigateToFlowsPage,
   navigateToService,
   publishService,
-  turnServiceOnline,
 } from "./helpers/navigateAndPublish.js";
 import type { TestContext } from "./helpers/types.js";
 import { PlaywrightEditor } from "./pages/Editor.js";
@@ -110,12 +109,12 @@ test.describe("Templates", () => {
       // check "allow edits" control is visible then click it
       const allowEditsControl = page.getByLabel("Allow edits");
       await expect(allowEditsControl).toBeVisible();
-      await allowEditsControl.click({ force: true });
+      await allowEditsControl.click();
 
       // check "require edits" control and instructions fields are now visible after clicking "allow edits"
       await expect(page.getByLabel("Require edits")).toBeVisible();
       await expect(page.getByText("Instructions")).toBeVisible();
-      await page.getByLabel("Require edits").click({ force: true });
+      await page.getByLabel("Require edits").click();
 
       // Close modal without saving
       await page.locator('button[aria-label="close"]').click();
