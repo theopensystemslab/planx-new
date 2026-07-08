@@ -7,7 +7,7 @@ import {
   parseTaskList,
   validationSchema,
 } from "@planx/components/TaskList/model";
-import { Form, Formik, getIn, useFormikContext } from "formik";
+import { FormikProvider, getIn, useFormikContext } from "formik";
 import type { ChangeEvent } from "react";
 import React from "react";
 import type { EditorProps as ListManagerEditorProps } from "ui/editor/ListManager/ListManager";
@@ -17,8 +17,11 @@ import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
+
+import { useFormikWithRef } from "../shared/useFormikWithRef";
 
 export type Props = EditorProps<TYPES.TaskList, TaskList>;
 
@@ -28,7 +31,7 @@ const newTask = (): Task => ({
 });
 
 const TaskEditor: React.FC<ListManagerEditorProps<Task>> = (props) => {
-  const { errors } = useFormikContext<Task>();
+  const { errors } = useFormikContext<TaskList>();
 
   return (
     <Box sx={{ flex: 1 }}>
@@ -69,21 +72,23 @@ const TaskEditor: React.FC<ListManagerEditorProps<Task>> = (props) => {
   );
 };
 
-const TaskListComponent: React.FC<Props> = (props) => (
-  <Formik<TaskList>
-    innerRef={props.formikRef}
-    initialValues={parseTaskList(props.node?.data)}
-    onSubmit={(newValues) => {
-      if (props.handleSubmit) {
-        props.handleSubmit({ type: TYPES.TaskList, data: newValues });
-      }
-    }}
-    validationSchema={validationSchema}
-    validateOnChange={false}
-    validateOnBlur={false}
-  >
-    {(formik) => (
-      <Form id="modal">
+const TaskListComponent: React.FC<Props> = (props) => {
+  const formik = useFormikWithRef<TaskList>(
+    {
+      initialValues: parseTaskList(props.node?.data),
+      onSubmit: (newValues) => {
+        if (props.handleSubmit) {
+          props.handleSubmit({ type: TYPES.TaskList, data: newValues });
+        }
+      },
+      validationSchema: validationSchema,
+    },
+    props.formikRef,
+  );
+
+  return (
+    <FormikProvider value={formik}>
+      <form id="modal" onSubmit={formik.handleSubmit}>
         <TemplatedNodeInstructions
           isTemplatedNode={formik.values.isTemplatedNode}
           templatedNodeInstructions={formik.values.templatedNodeInstructions}
@@ -95,14 +100,16 @@ const TaskListComponent: React.FC<Props> = (props) => (
           <ModalSectionContent>
             <Box sx={{ mb: "1rem" }}>
               <InputRow>
-                <Input
-                  name="title"
-                  value={formik.values.title}
-                  onChange={formik.handleChange}
-                  placeholder="Main title"
-                  format="large"
-                  disabled={props.disabled}
-                />
+                <ErrorWrapper error={formik.errors.title}>
+                  <Input
+                    name="title"
+                    value={formik.values.title}
+                    onChange={formik.handleChange}
+                    placeholder="Main title"
+                    format="large"
+                    disabled={props.disabled}
+                  />
+                </ErrorWrapper>
               </InputRow>
               <InputRow>
                 <RichTextInput
@@ -115,23 +122,31 @@ const TaskListComponent: React.FC<Props> = (props) => (
                 />
               </InputRow>
             </Box>
-            <ListManager
-              values={formik.values.tasks}
-              onChange={(tasks: Array<Task>) => {
-                formik.setFieldValue("tasks", tasks);
-              }}
-              Editor={TaskEditor}
-              newValue={newTask}
-              disabled={props.disabled}
-              collapsible={true}
-              itemName="task"
-            />
+            <ErrorWrapper
+              error={
+                typeof formik.errors.tasks === "string"
+                  ? formik.errors.tasks
+                  : undefined
+              }
+            >
+              <ListManager
+                values={formik.values.tasks}
+                onChange={(tasks: Array<Task>) => {
+                  formik.setFieldValue("tasks", tasks);
+                }}
+                Editor={TaskEditor}
+                newValue={newTask}
+                disabled={props.disabled}
+                collapsible={true}
+                itemName="task"
+              />
+            </ErrorWrapper>
           </ModalSectionContent>
         </ModalSection>
         <ModalFooter formik={formik} disabled={props.disabled} />
-      </Form>
-    )}
-  </Formik>
-);
+      </form>
+    </FormikProvider>
+  );
+};
 
 export default TaskListComponent;

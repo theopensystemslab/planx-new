@@ -111,6 +111,20 @@ interface FormModalProps {
   extraProps?: any;
 }
 
+const CAN_CREATE_WITHOUT_CONFIG_ALLOW_LIST = [
+  "feedback",
+  "review",
+  "result",
+  "confirmation",
+  "find-property",
+  "property-information",
+  "draw-boundary",
+  "planning-constraints",
+  "filter",
+  "pay",
+  "send",
+];
+
 const FormModal: React.FC<FormModalProps> = ({
   type,
   Component,
@@ -196,7 +210,7 @@ const FormModal: React.FC<FormModalProps> = ({
   //    - a templated flow
   //    - and the node itself is not marked "isTemplatedNode" or a child of an internal portal marked "isTemplatedNode"
   //  3. The form is not dirty
-  //    - except for when a user is creating a 'review' or 'result' component (this is because they can be created and used as-is)
+  //    - except for when a user is creating an allow-listed component (this is because they can be created and used as-is)
   const canUserEditNode = (teamSlug: string) => {
     return useStore.getState().canUserEditTeam(teamSlug);
   };
@@ -228,11 +242,11 @@ const FormModal: React.FC<FormModalProps> = ({
   // result, review and feedback components can be created without any changes
   const canCreateWithoutChanges =
     !isEditingExistingNode &&
-    (type === "result" || type === "review" || type === "feedback");
+    CAN_CREATE_WITHOUT_CONFIG_ALLOW_LIST.includes(type);
 
   // submit (create / update) button is disabled when:
   // 1. user cannot edit, OR
-  // 2. form needs to be dirty but isn't (unless it's result/review/feedback)
+  // 2. form needs to be dirty but isn't (unless it's allow list component)
   const isSubmitDisabled =
     userCannotEdit || (!canCreateWithoutChanges && !isFormDirty);
 

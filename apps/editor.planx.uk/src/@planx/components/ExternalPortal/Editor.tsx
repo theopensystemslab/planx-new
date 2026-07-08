@@ -78,26 +78,23 @@ const ExternalPortalForm: React.FC<{
   areTemplatedNodeInstructionsRequired = false,
   formikRef,
 }) => {
-  const formik = useFormikWithRef<ExternalPortalFormData>(
-    {
-      initialValues: {
-        flow: flows.find((flow) => flow.id === flowId) || null,
-        flowId: flowId || null,
-        tags,
-        notes,
-        isTemplatedNode,
-        templatedNodeInstructions,
-        areTemplatedNodeInstructionsRequired,
-      },
-      onSubmit: (data) => {
-        if (handleSubmit) {
-          handleSubmit({ type: TYPES.ExternalPortal, data });
-        }
-      },
-      validationSchema,
+  const formik = useFormikWithRef<ExternalPortalFormData>({
+    initialValues: {
+      flow: flows.find((flow) => flow.id === flowId) || null,
+      flowId: flowId || null,
+      tags,
+      notes,
+      isTemplatedNode,
+      templatedNodeInstructions,
+      areTemplatedNodeInstructionsRequired,
     },
-    formikRef,
-  );
+    onSubmit: (data) => {
+      if (handleSubmit) {
+        handleSubmit({ type: TYPES.ExternalPortal, data });
+      }
+    },
+    validationSchema,
+  });
 
   return (
     <form id="modal" onSubmit={formik.handleSubmit} data-testid="form">

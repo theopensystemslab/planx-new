@@ -18,7 +18,10 @@ export type EditorProps<
   Data,
   ExtraProps extends object = Record<string, unknown>,
 > = {
-  formikRef?: MutableRefObject<FormikProps<any> | null>;
+  formikRef?: {
+    current: FormikProps<any> | null;
+    onDirtyChange: (dirty: boolean) => void;
+  };
   id?: string;
   handleSubmit?: (data: { type: Type; data: Data }, children?: Child[]) => void;
   node?: any;

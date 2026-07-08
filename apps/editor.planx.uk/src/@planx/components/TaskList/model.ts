@@ -37,9 +37,11 @@ const taskSchema = object({
 
 export const validationSchema = baseNodeDataValidationSchema.concat(
   object({
-    title: string().required(),
+    title: string().required("Please enter a title"),
     description: richText(),
-    tasks: array(taskSchema).required().min(1),
+    tasks: array(taskSchema)
+      .required()
+      .min(1, "Please enter at least one task"),
     taskList: object({
       tasks: array(taskSchema).min(1),
     }).optional(),
