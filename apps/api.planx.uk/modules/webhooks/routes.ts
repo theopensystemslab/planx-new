@@ -93,7 +93,7 @@ router.post(
   validate(updateTemplatedFlowEditsEventSchema),
   updateTemplatedFlowEditsController,
 );
-router.post("webhooks/hasura/failed-submissions", failedSubmissionsController);
+router.post("/webhooks/hasura/failed-submissions", failedSubmissionsController);
 
 // TODO: Convert to the new API module structure
 router.post(
