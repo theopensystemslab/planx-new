@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import { linkOptions } from "@tanstack/react-router";
 import { DEFAULT_PRIMARY_COLOR } from "theme";
 import { DashboardWidget } from "ui/editor/DashboardWidget";
+import Permission from "ui/editor/Permission";
 
 import { useStore } from "../../pages/FlowEditor/lib/store";
 import ActivityWidget from "./components/ActivityWidget";
@@ -74,18 +75,20 @@ export default function Dashboard() {
           >
             <FlowsPanel />
           </DashboardWidget>
-          <ConnectedNotificationsWidget />
-          <DashboardWidget
-            title="Feedback"
-            link={linkOptions({
-              to: "/app/$team/feedback",
-              params: { team: team.slug },
-              label: "view all feedback",
-            })}
-          >
-            <FeedbackWidget />
-          </DashboardWidget>
-          <DashboardWidget title="User Activity" subtitle="Last 30 days">
+          <Permission.CanEdit>
+            <ConnectedNotificationsWidget />
+            <DashboardWidget
+              title="Feedback"
+              link={linkOptions({
+                to: "/app/$team/feedback",
+                params: { team: team.slug },
+                label: "view all feedback",
+              })}
+            >
+              <FeedbackWidget />
+            </DashboardWidget>
+          </Permission.CanEdit>
+          <DashboardWidget title="User activity" subtitle="Last 30 days">
             <ActivityWidget />
           </DashboardWidget>
         </Box>
