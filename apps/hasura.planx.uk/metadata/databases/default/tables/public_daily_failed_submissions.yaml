@@ -1,3 +1,15 @@
 table:
   name: daily_failed_submissions
   schema: public
+select_permissions:
+  - role: api
+    permission:
+      columns:
+        - statuses
+        - event_type
+        - flow_name
+        - name
+        - last_event
+        - session_id
+      filter: {}
+    comment: ""
