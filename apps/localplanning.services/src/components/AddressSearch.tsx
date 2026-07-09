@@ -1,4 +1,4 @@
-import type { Action } from "@stores/action";
+import type { Action } from "@content/action";
 import { PUBLIC_PLANX_REST_API_URL } from "astro:env/client";
 import { navigate } from "astro:transitions/client";
 import React, { useEffect, useRef, useState } from "react";

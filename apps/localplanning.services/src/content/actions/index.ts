@@ -1,4 +1,4 @@
-import type { Action } from "@stores/action";
+import type { Action } from "@content/action";
 
 export const actions: Record<Action, { title: string; description: string }> = {
   apply: {
