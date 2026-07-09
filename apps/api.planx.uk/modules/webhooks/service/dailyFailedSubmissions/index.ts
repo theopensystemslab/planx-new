@@ -26,7 +26,7 @@ export const getDailyFailedSubmissions = async (): Promise<string> => {
     }
   `);
 
-  if (data.failedSubmissions?.length === 0)
+  if (!data || data.failedSubmissions?.length === 0)
     return "No recent submission failures";
 
   const failures: string[] = [];

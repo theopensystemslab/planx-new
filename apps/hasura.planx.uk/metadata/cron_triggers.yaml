@@ -9,7 +9,7 @@
   comment: Parses allow-list answers for submitted sessions to retain for analytics post-sanitation
 - name: log_failed_submissions
   webhook: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/failed-submissions'
-  schedule: 0 17 * * *
+  schedule: 0 9,17 * * *
   include_in_metadata: true
   payload: {}
   headers:
