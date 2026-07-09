@@ -10,7 +10,7 @@ CREATE TABLE "public"."flow_notes" (
 	"text" text NOT NULL DEFAULT '',
 	"color" text NOT NULL DEFAULT '#fffdb0',
 	"created_by" integer NOT NULL,
-	"updated_by" integer,
+	"updated_by" integer NOT NULL,
 	"created_at" timestamptz NOT NULL DEFAULT now(),
 	"updated_at" timestamptz NOT NULL DEFAULT now(),
 	PRIMARY KEY ("id")
