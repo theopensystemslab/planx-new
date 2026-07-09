@@ -12,6 +12,21 @@ object_relationships:
           name: teams
           schema: public
 select_permissions:
+  - role: analyst
+    permission:
+      columns:
+        - team_id
+        - team_slug
+        - sessions_current
+        - sessions_previous
+        - submissions_current
+        - submissions_previous
+        - guidance_sessions_current
+        - guidance_sessions_previous
+        - online_flows
+        - online_flows_previous
+      filter: {}
+    comment: ""
   - role: platformAdmin
     permission:
       columns:
@@ -40,12 +55,20 @@ select_permissions:
         - guidance_sessions_previous
         - online_flows
         - online_flows_previous
-      filter:
-        team:
-          members:
-            _and:
-              - user_id:
-                  _eq: x-hasura-user-id
-              - role:
-                  _eq: teamEditor
+      filter: {}
+    comment: ""
+  - role: teamViewer
+    permission:
+      columns:
+        - team_id
+        - team_slug
+        - sessions_current
+        - sessions_previous
+        - submissions_current
+        - submissions_previous
+        - guidance_sessions_current
+        - guidance_sessions_previous
+        - online_flows
+        - online_flows_previous
+      filter: {}
     comment: ""

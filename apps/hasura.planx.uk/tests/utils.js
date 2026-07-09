@@ -93,6 +93,7 @@ const introspectAs = async (role, userId = undefined) => {
     platformAdmin: gqlWithRole("platformAdmin", userId),
     teamEditor: gqlWithRole("teamEditor", userId),
     teamAdmin: gqlWithRole("teamAdmin", userId),
+    teamViewer: gqlWithRole("teamViewer", userId),
     api: gqlWithRole("api"),
     analyst: gqlWithRole("analyst", userId),
   }[role];
