@@ -22,12 +22,13 @@ Shared dependency versions are pinned via `catalog:`/`catalog:<name>` entries in
 The full write-up lives at [`doc/guides/data-fetching-and-state-management.md`](doc/guides/data-fetching-and-state-management.md) and [ADR 0011](doc/architecture/decisions/0011-standardised-data-fetching-and-state-management.md) — read those before touching store code. Summary:
 
 **Decision tree for new state:**
+
 - GraphQL data (Hasura) → Apollo Client `useQuery`/`useMutation`
 - REST data → TanStack Query, via the typed API layer in `src/lib/api`, never `axios` directly in components
 - UI state (modals, sidebar, clipboard) → Zustand
 - Flow-graph state (breadcrumbs, passport, current node) → Zustand
 
-**Critical rule: do not put server data in Zustand.** Storing `teamSettings`, `teamMembers`, `planningConstraints`, etc. in the global store is the "God Store" anti-pattern that ADR 0011 is actively migrating *away* from — don't add more of it. Server data belongs in the Apollo/TanStack Query cache; Zustand is for client/UI state and derived flow data.
+**Critical rule: do not put server data in Zustand.** Storing `teamSettings`, `teamMembers`, `planningConstraints`, etc. in the global store is the "God Store" anti-pattern that ADR 0011 is actively migrating _away_ from — don't add more of it. Server data belongs in the Apollo/TanStack Query cache; Zustand is for client/UI state and derived flow data.
 
 **Structure** — the store lives in `apps/editor.planx.uk/src/pages/FlowEditor/lib/store/` as a set of slices combined in `index.ts`:
 
@@ -35,6 +36,7 @@ The full write-up lives at [`doc/guides/data-fetching-and-state-management.md`](
 - `editor.ts`, `user.ts`, `auth.ts` — editor-only (do things like connect to ShareDB; not loaded on public preview domains)
 
 `index.ts` builds two stores depending on context (`isPreviewOnlyDomain` / URL contains `/published`):
+
 - `createPublicStore()` — only the public slices, typed as `PublicStore`
 - `createFullStore()` — every slice, typed as `FullStore`
 
@@ -51,6 +53,7 @@ Some slices use the `zustand/persist` middleware (e.g. `editorUIStore` in `edito
 **Dates — `date-fns`, not `Date` methods or Moment/Luxon.** Used throughout both `editor.planx.uk` and `api.planx.uk` (e.g. `format`, `subDays`). Prefer composing `date-fns` functions over manual date arithmetic or custom formatting strings.
 
 **MUI v9** (`^9.0.0`, not v5 — this is a common trap): sub-component prop APIs have moved to `slotProps`.
+
 - `PaperProps` on `Dialog` → `slotProps={{ paper: {...} }}`
 - `InputProps` on `TextField` → `slotProps={{ input: {...} }}`
 - Don't set `fontWeight="bold"` directly on `Typography` — use `sx={{ fontWeight: "bold" }}`
@@ -64,7 +67,9 @@ Some slices use the `zustand/persist` middleware (e.g. `editorUIStore` in `edito
 
 **Testing** — Vitest everywhere (`editor.planx.uk`, `api.planx.uk`), Playwright + Gherkin for `e2e`. `api.planx.uk` tests run with `TZ=Europe/London` pinned — don't assume UTC when writing date-sensitive backend tests.
 
-**Linting/formatting** — ESLint (flat config, `eslint.config.*`) + Prettier per-package, wired into `lint-staged`/Husky at the repo root. Run `pnpm lint:fix` (or the package's `check` script, which also runs `tsc --noEmit`) rather than hand-formatting.
+**Task running** — [Turborepo](https://turborepo.com) (`turbo.json`) orchestrates tasks over the workspace. From the repo root, `pnpm typecheck` / `pnpm lint` / `pnpm check` / `pnpm build` fan out across all packages with caching; use `--filter` to scope. `test` is intentionally not a root Turbo task currently (some tests are container dependent).
+
+**Linting/formatting** — ESLint (flat config, `eslint.config.*`) + Prettier per-package, wired into `lint-staged`/Husky at the repo root. Run `pnpm lint:fix` (or a package's `check` script, which also runs `tsc --noEmit`) rather than hand-formatting.
 
 **Hasura clients** (`api.planx.uk`) — multiple clients exported from `client/index.ts` (`$api`, `$public`, `$admin`, ...) for different auth contexts; pick the least-privileged one that works, don't default to an elevated client out of convenience.
 

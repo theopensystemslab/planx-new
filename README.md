@@ -99,6 +99,17 @@ The root of the project has several scripts set up to help you manage your docke
 - `pnpm analytics` will recreate your docker containers and include [Metabase](https://www.metabase.com/)
 - `pnpm logs` will print docker log entries (this can be filtered by appending `-- [service name]`, for example `pnpm logs -- api`)
 
+### Task running (Turborepo)
+
+[Turborepo](https://turborepo.com) runs and caches tasks across the pnpm workspace. From the project root:
+
+- `pnpm typecheck` - type-check every workspace (`tsc --noEmit` / `astro check`)
+- `pnpm lint` - ESLint + Prettier checks (Editor, API, E2E)
+- `pnpm check` - `typecheck` and `lint` together
+- `pnpm build` - build the Editor, API and LPS
+
+Turbo caches by content hash, so re-running an unchanged task is near-instant (`>>> FULL TURBO`). This can be scoped to one package with `--filter` (e.g. `pnpm turbo run build --filter=api.planx.uk`).
+
 ### Documentation
 
 This project uses Architecture Decision Records (ADRs) to record significant changes and decisions. Further details of this can be [found here](https://github.com/theopensystemslab/planx-new/blob/main/doc/architecture/decisions/0001-record-architecture-decisions.md).
