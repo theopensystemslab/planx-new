@@ -114,7 +114,10 @@ export const CheckForChangesToPublishButton: React.FC<{
               alignItems: "flex-start",
             }}
           >
-            <StarIcon sx={{ color: "#380F77", mr: 0.5 }} fontSize="small" />
+            <StarIcon
+              sx={{ color: "template.icon", mr: 0.5 }}
+              fontSize="small"
+            />
             <Box>
               <Typography variant="body2">
                 {`Templated from ${template.team.name}`}

@@ -97,7 +97,7 @@ const NotificationCardItem = ({
           }}
         >
           <TemplateChip>
-            <StarIcon sx={{ color: "#380F77", fontSize: "1rem" }} />
+            <StarIcon sx={{ color: "template.icon", fontSize: "1rem" }} />
             <Typography
               variant="body3"
               sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
