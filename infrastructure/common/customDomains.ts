@@ -117,7 +117,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "stockport-metropolitan",
           domain: "planningservices.stockport.gov.uk",
-          cloudFrontState: "validation-only",
+          cloudFrontState: "shared-final",
         },
         {
           name: "east-riding-of-yorkshire",
