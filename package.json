@@ -14,7 +14,11 @@
     "tests": "./scripts/start-containers-for-tests.sh",
     "analytics": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services --profile analytics  up -d --quiet-pull",
     "logs": "docker compose logs --tail 30 -f",
-    "prepare": "husky"
+    "prepare": "husky",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint",
+    "check": "turbo run typecheck lint",
+    "build": "turbo run build"
   },
   "lint-staged": {
     "apps/editor.planx.uk/src/**/*.{js,jsx,ts,tsx}": "eslint --fix --flag v10_config_lookup_from_file",
@@ -30,6 +34,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
     "prettier": "catalog:",
+    "turbo": "^2.10.2",
     "typescript": "catalog:typescript"
   },
   "packageManager": "pnpm@10.30.2",

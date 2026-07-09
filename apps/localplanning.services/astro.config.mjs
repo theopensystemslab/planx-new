@@ -1,16 +1,19 @@
+/* eslint-disable no-restricted-syntax */
+
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, envField, fontProviders } from "astro/config";
 import icon from "astro-icon";
 
-// Check args to access Astro mode
-// Env var is not available in Astro config files
-const mode = process.argv.at(-1).replaceAll("-", "");
+// BUILD_MODE must be an env var for Turbo caching
+// The dev / pizza / staging / prod builds must have their own cache-key
+const mode = process.env.BUILD_MODE ?? "dev";
 const isCloudfrontBuild = ["staging", "production"].includes(mode);
 
 // https://astro.build/config
 export default defineConfig({
+  site: process.env.SITE_URL,
   integrations: [react(), icon(), sitemap()],
   env: {
     schema: {

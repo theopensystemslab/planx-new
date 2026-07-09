@@ -1,13 +1,11 @@
 #!/bin/bash
 set -e
 
-REQUIRED_VARS=("BUCKET_NAME" "DIST_ID" "SITE_URL" "BUILD_MODE")
-
-for var in "${REQUIRED_VARS[@]}"; do
-  if [ -z "${!var}" ]; then
-    echo "Error: Environment variable '$var' is not set."
-  fi
-done
+# Fail loudly if any required variable are missing or empty
+: "${BUCKET_NAME:?is not set}"
+: "${DIST_ID:?is not set}"
+: "${SITE_URL:?is not set}"
+: "${BUILD_MODE:?is not set}"
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd "$SCRIPT_DIR/../apps/localplanning.services"
@@ -18,7 +16,7 @@ echo "Starting Deployment..."
 echo "Site: $SITE_URL ($BUILD_MODE)"
 
 echo "Building LPS..."
-pnpm build --site "$SITE_URL" --mode "$BUILD_MODE"
+pnpm build
 
 echo "Syncing Astro assets..."
 aws s3 sync $BUILD_DIR/_astro s3://$BUCKET_NAME/_astro \

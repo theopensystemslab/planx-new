@@ -2,17 +2,18 @@
   "name": "@planx/e2e",
   "private": true,
   "scripts": {
+    "check": "pnpm typecheck && pnpm lint",
+    "lint:fix": "eslint --fix './tests/**/*.{js,ts}' && prettier -w ./tests",
+    "lint": "eslint './tests/**/*.{js,ts}' && prettier -c ./tests",
     "pretest": "../scripts/check-containers.sh e2e",
-    "test": "pnpm test:api && pnpm test:ui",
-    "test:ui": "cd tests/ui-driven && pnpm test",
+    "test:api-regression": "cd tests/api-driven && pnpm test:regression",
     "test:api": "cd tests/api-driven && pnpm test",
+    "test:debug": "DEBUG_LOG=true pnpm test",
     "test:regression": "pnpm test:api-regression && pnpm test:ui-regression",
     "test:ui-regression": "cd tests/ui-driven && pnpm test:regression",
-    "test:api-regression": "cd tests/api-driven && pnpm test:regression",
-    "test:debug": "DEBUG_LOG=true pnpm test",
-    "lint": "eslint './tests/**/*.{js,ts}' && prettier -c ./tests",
-    "lint:fix": "eslint --fix './tests/**/*.{js,ts}' && prettier -w ./tests",
-    "check": "tsc && pnpm lint"
+    "test:ui": "cd tests/ui-driven && pnpm test",
+    "test": "pnpm test:api && pnpm test:ui",
+    "typecheck": "tsc --noEmit"
   },
   "prettier": "@planx/prettier-config",
   "devDependencies": {
