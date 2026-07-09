@@ -290,12 +290,7 @@ function EditorNavMenu() {
             title: "Analytics",
             Icon: LeaderboardIcon,
             route: flowAnalyticsLink ? flowAnalyticsLink : `#`,
-            accessibleBy: [
-              "platformAdmin",
-              "teamAdmin",
-              "teamEditor",
-              "analyst",
-            ],
+            accessibleBy: "*",
             disabled: !flowAnalyticsLink,
           },
         ],
