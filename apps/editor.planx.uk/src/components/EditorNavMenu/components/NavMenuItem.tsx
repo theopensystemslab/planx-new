@@ -42,7 +42,7 @@ const NavMenuItem = ({
           gap: 0.25,
         }}
       >
-        <Icon />
+        <Icon sx={{ fontSize: "1.4rem" }} />
         {badgeCount !== undefined ? (
           <BadgeChip
             label={badgeCount}

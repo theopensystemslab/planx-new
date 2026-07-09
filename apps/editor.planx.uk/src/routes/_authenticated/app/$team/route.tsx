@@ -33,6 +33,13 @@ export const Route = createFileRoute("/_authenticated/app/$team")({
                 }
               }
             }
+            theme {
+              primaryColour: primary_colour
+              actionColour: action_colour
+              linkColour: link_colour
+              logo
+              favicon
+            }
             integrations {
               hasPlanningData: has_planning_data
             }
@@ -72,7 +79,7 @@ export const Route = createFileRoute("/_authenticated/app/$team")({
   },
   loader: ({ context, cause }) => {
     if (cause !== "preload") {
-      useStore.getState().setTeam(context.team);
+      useStore.getState().setTeam(context.team, { useCustomFavicon: false });
     }
     return context.team;
   },
