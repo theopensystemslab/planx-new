@@ -209,12 +209,7 @@ function EditorNavMenu() {
             title: "Analytics",
             Icon: LeaderboardIcon,
             route: teamAnalyticsLink ? teamAnalyticsLink : `#`,
-            accessibleBy: [
-              "platformAdmin",
-              "teamAdmin",
-              "teamEditor",
-              "analyst",
-            ],
+            accessibleBy: "*",
             disabled: !teamAnalyticsLink,
           },
           {

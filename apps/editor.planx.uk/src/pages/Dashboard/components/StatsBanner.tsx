@@ -5,7 +5,6 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useTeamAnalyticsLink } from "hooks/analyticsLinks/useTeamAnalyticsLink";
 import { cardBoxShadow, FONT_WEIGHT_SEMI_BOLD } from "theme";
-import Permission from "ui/editor/Permission";
 
 import { useStore } from "../../FlowEditor/lib/store";
 import type { TeamDashboardStats } from "./useTeamDashboardStats";
@@ -111,24 +110,22 @@ export function StatsBanner({
         <Typography variant="h4" component="h2">
           Last 30 days
         </Typography>
-        <Permission.CanEdit>
-          {analyticsLink ? (
-            <AnalyticsLink
-              href={analyticsLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              underline="always"
-            >
+        {analyticsLink ? (
+          <AnalyticsLink
+            href={analyticsLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            underline="always"
+          >
+            view analytics
+          </AnalyticsLink>
+        ) : (
+          <Tooltip title="Analytics unavailable" placement="bottom">
+            <AnalyticsLinkDisabled variant="body2">
               view analytics
-            </AnalyticsLink>
-          ) : (
-            <Tooltip title="Analytics unavailable" placement="bottom">
-              <AnalyticsLinkDisabled variant="body2">
-                view analytics
-              </AnalyticsLinkDisabled>
-            </Tooltip>
-          )}
-        </Permission.CanEdit>
+            </AnalyticsLinkDisabled>
+          </Tooltip>
+        )}
       </Header>
       <StatsGrid>
         {tiles.map(({ label, value, delta }) => (
