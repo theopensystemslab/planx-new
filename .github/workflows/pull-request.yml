@@ -20,6 +20,8 @@ env:
   LOCALPLANNING_SERVICES_DIRECTORY: apps/localplanning.services
   API_DIRECTORY: apps/api.planx.uk
   HASURA_DIRECTORY: apps/hasura.planx.uk
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
 jobs:
   changes:
