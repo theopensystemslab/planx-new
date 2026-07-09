@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "astro": "astro",
-    "build": "astro check && astro build",
+    "build": "astro check && astro build --mode ${BUILD_MODE:-dev}",
     "check": "pnpm typecheck",
     "dev": "astro dev --mode dev --open",
     "lint": "eslint . && prettier -c . --ignore-path ../../.prettierignore",
