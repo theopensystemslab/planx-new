@@ -67,6 +67,22 @@ jobs:
               - 'pnpm-workspace.yaml'
             
 
+  verify:
+    name: Verify (typecheck + lint)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - name: Setup Node and PNPM
+        uses: ./.github/actions/setup-node-pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Restore Turbo cache
+        uses: actions/cache@v6
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-turbo-
+      - run: pnpm turbo run typecheck lint
+
   integration_tests:
     name: Run Integration tests
     runs-on: ubuntu-24.04
