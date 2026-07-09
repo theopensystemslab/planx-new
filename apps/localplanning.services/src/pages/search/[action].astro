@@ -14,4 +14,4 @@ const { action } = Astro.params;
 const { title, description } = actions[action];
 ---
 
-<SearchLayout title={title} description={description} />
+<SearchLayout title={title} description={description} action={action} />

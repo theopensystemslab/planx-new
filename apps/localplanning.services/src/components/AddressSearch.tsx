@@ -1,3 +1,4 @@
+import type { Action } from "@stores/action";
 import { PUBLIC_PLANX_REST_API_URL } from "astro:env/client";
 import { navigate } from "astro:transitions/client";
 import React, { useEffect, useRef, useState } from "react";
@@ -49,7 +50,11 @@ interface AddressSearchElement extends HTMLElement {
   ): void;
 }
 
-const AddressSearch: React.FC = () => {
+interface Props {
+  action?: Action | undefined;
+}
+
+const AddressSearch: React.FC<Props> = ({ action }) => {
   const addressSearchRef = useRef<AddressSearchElement>(null);
 
   const [address, setAddress] = useState<Address | null>(null);
@@ -113,7 +118,8 @@ const AddressSearch: React.FC = () => {
       for (const entity of data.entities) {
         if (entity.reference in lpaReferenceLookup) {
           const matchingLpaRoute = lpaReferenceLookup[entity.reference];
-          return navigate(`/${matchingLpaRoute}`);
+          const openParam = action ? `?open=${action}` : "";
+          return navigate(`/${matchingLpaRoute}${openParam}`);
         }
       }
 

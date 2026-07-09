@@ -95,15 +95,17 @@ const getFallbackMessage = (serviceType: string) =>
 </Layout>
 
 <script>
-  import { $action } from "@stores/action";
+  import { ACTIONS, type Action } from "@stores/action";
 
   /**
-   * Open accordion based on "action" value from nanostore
-   * Defaults to all accordions closed
+   * Open accordion based on the "open" query param, e.g. ?open=apply
+   * Read directly from the URL so this works identically whether the
+   * page is reached via in-app (soft) navigation or a direct/hard visit.
+   * Defaults to all accordions closed.
    */
   const openAccordion = () => {
-    const action = $action.get();
-    if (!action) return;
+    const action = new URLSearchParams(window.location.search).get("open");
+    if (!action || !ACTIONS.includes(action as Action)) return;
 
     const detailsEl = document.getElementById(
       `${action}-accordion`
@@ -111,9 +113,6 @@ const getFallbackMessage = (serviceType: string) =>
     if (!detailsEl) return;
 
     detailsEl.open = true;
-
-    // Clear store - we've now used this action, it can only be reset by landing page cards
-    $action.set(null);
   };
 
   document.addEventListener("astro:page-load", () => {
