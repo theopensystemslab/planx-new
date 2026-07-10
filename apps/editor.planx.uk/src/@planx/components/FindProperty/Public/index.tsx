@@ -9,6 +9,7 @@ import area from "@turf/area";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import type { Feature } from "geojson";
 import type { Store } from "pages/FlowEditor/lib/store";
+import { parse } from "postcode";
 import React, { useState } from "react";
 
 import type { FindProperty, SiteAddress } from "../model";
@@ -71,6 +72,27 @@ function Component(props: Props) {
       } else {
         // Fallback to "unclassified" if OS did not return a value or user is proposing new address
         newPassportData["property.type"] = ["unclassified"];
+      }
+
+      if (address?.title) {
+        newPassportData["property.address.title"] = [address.title];
+      }
+
+      if (address?.street) {
+        newPassportData["property.address.street"] = [address.street];
+      }
+
+      if (address?.postcode) {
+        const parsedPostcode = parse(address.postcode);
+        newPassportData["property.address.postcode"] = [
+          parsedPostcode.postcode,
+        ];
+        newPassportData["property.address.postcode.outcode"] = [
+          parsedPostcode.outcode,
+        ];
+        newPassportData["property.address.postcode.incode"] = [
+          parsedPostcode.incode,
+        ];
       }
 
       if (localAuthorityDistricts) {
