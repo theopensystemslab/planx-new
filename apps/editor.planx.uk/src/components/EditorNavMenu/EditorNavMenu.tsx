@@ -26,6 +26,7 @@ import AccountMenu from "components/AccountMenu";
 import { useFlowAnalyticsLink } from "hooks/analyticsLinks/useFlowAnalyticsLink";
 import { useTeamAnalyticsLink } from "hooks/analyticsLinks/useTeamAnalyticsLink";
 import { AVAILABLE_FEATURE_FLAGS, hasFeatureFlag } from "lib/featureFlags";
+import { isSystemTeam } from "lib/systemTeams";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useMemo, useRef, useState } from "react";
 import EditorIcon from "ui/icons/Editor";
@@ -139,12 +140,16 @@ function EditorNavMenu() {
     () => [
       {
         routes: [
-          {
-            title: "Dashboard",
-            Icon: DashboardIcon,
-            route: `/app/${teamSlug}/dashboard`,
-            accessibleBy: "*" as const,
-          },
+          ...(teamSlug && !isSystemTeam(teamSlug)
+            ? [
+                {
+                  title: "Dashboard",
+                  Icon: DashboardIcon,
+                  route: `/app/${teamSlug}/dashboard`,
+                  accessibleBy: "*" as const,
+                },
+              ]
+            : []),
           {
             title: "Flows",
             Icon: EditorIcon,
