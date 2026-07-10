@@ -1,5 +1,7 @@
 import Box from "@mui/material/Box";
 import Popover from "@mui/material/Popover";
+import { styled } from "@mui/material/styles";
+import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { ICONS } from "@planx/components/shared/icons";
@@ -16,6 +18,7 @@ import React, {
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { AiChip } from "ui/editor/AiChip";
+import StyledTab from "ui/editor/StyledTab";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { getNodeRoute } from "utils/routeUtils/utils";
 
@@ -25,6 +28,26 @@ import {
   type Category,
   type ComponentItem,
 } from "./componentData";
+import {
+  DETAIL_PANEL_WIDTH,
+  PatternsTabContent,
+} from "./Patterns/PatternsTabContent";
+
+export type ModalTab = "components" | "patterns";
+
+const TabList = styled(Box)(({ theme }) => ({
+  position: "relative",
+  borderBottom: `1px solid ${theme.palette.divider}`,
+  backgroundColor: theme.palette.background.paper,
+  width: "100%",
+  [`& .${tabsClasses.root}`]: {
+    minHeight: 0,
+    padding: theme.spacing(0, 1),
+  },
+  [`& .${tabsClasses.indicator}`]: {
+    display: "none",
+  },
+}));
 
 const POPOVER_WIDTH = 300;
 
@@ -92,15 +115,19 @@ const ComponentRow: React.FC<ComponentRowProps> = ({
 
 interface AddComponentModalContentProps {
   onSelect: (slug: string) => void;
+  activeTab: ModalTab;
+  onTabChange: (tab: ModalTab) => void;
+  showPatternsTab?: boolean;
 }
 
 export const AddComponentModalContent: React.FC<
   AddComponentModalContentProps
-> = ({ onSelect }) => {
+> = ({ onSelect, activeTab, onTabChange, showPatternsTab = true }) => {
   const [searchedItems, setSearchedItems] = useState<ComponentItem[] | null>(
     null,
   );
   const listRef = useRef<HTMLDivElement>(null);
+  const effectiveTab: ModalTab = showPatternsTab ? activeTab : "components";
 
   const filteredCategories = useMemo<Category[]>(() => {
     if (!searchedItems) return ALL_CATEGORIES;
@@ -112,65 +139,86 @@ export const AddComponentModalContent: React.FC<
   }, [searchedItems]);
 
   useEffect(() => {
+    if (effectiveTab !== "components") return;
     const timer = setTimeout(() => {
       (document.getElementById("search") as HTMLInputElement | null)?.focus();
     }, 50);
     return () => clearTimeout(timer);
-  }, []);
+  }, [effectiveTab]);
 
   return (
     <>
-      <Box
-        sx={{
-          px: 1.5,
-          py: 1.25,
-          borderBottom: 1,
-          borderColor: "divider",
-          backgroundColor: "background.paper",
-        }}
-      >
-        <SearchBox<ComponentItem>
-          records={ALL_ITEMS}
-          setRecords={setSearchedItems}
-          searchKey={["title", "description"]}
-          compact
-          hideLabel
-          fullWidth
-          placeholder="Search components"
-        />
-      </Box>
-      <Box ref={listRef} sx={{ overflowY: "auto", pb: 2 }}>
-        {filteredCategories.length === 0 ? (
-          <Typography color="textSecondary" variant="body2" sx={{ p: 2 }}>
-            No components match your search.
-          </Typography>
-        ) : (
-          filteredCategories.map((cat) => (
-            <Box key={cat.label}>
-              <Typography
-                variant="body3"
-                sx={{
-                  fontWeight: FONT_WEIGHT_SEMI_BOLD,
-                  display: "block",
-                  p: 1.5,
-                  pb: 0.5,
-                  color: "text.primary",
-                }}
-              >
-                {cat.label}
+      {showPatternsTab && (
+        <TabList>
+          <Box sx={{ maxWidth: "300px" }}>
+            <Tabs
+              value={effectiveTab}
+              onChange={(_event, value: ModalTab) => onTabChange(value)}
+              aria-label="Add component modal tabs"
+              variant="fullWidth"
+            >
+              <StyledTab value="components" label="Components" />
+              <StyledTab value="patterns" label="Patterns" />
+            </Tabs>
+          </Box>
+        </TabList>
+      )}
+      {effectiveTab === "components" && (
+        <>
+          <Box
+            sx={{
+              px: 1.5,
+              py: 1.25,
+              borderBottom: 1,
+              borderColor: "divider",
+              backgroundColor: "background.paper",
+            }}
+          >
+            <SearchBox<ComponentItem>
+              records={ALL_ITEMS}
+              setRecords={setSearchedItems}
+              searchKey={["title", "description"]}
+              compact
+              hideLabel
+              fullWidth
+              placeholder="Search components"
+            />
+          </Box>
+          <Box ref={listRef} sx={{ overflowY: "auto", pb: 2 }}>
+            {filteredCategories.length === 0 ? (
+              <Typography color="textSecondary" variant="body2" sx={{ p: 2 }}>
+                No components match your search.
               </Typography>
-              {cat.items.map((item) => (
-                <ComponentRow
-                  key={item.slug}
-                  item={item}
-                  onClick={() => onSelect(item.slug)}
-                  scrollContainerRef={listRef}
-                />
-              ))}
-            </Box>
-          ))
-        )}
-      </Box>
+            ) : (
+              filteredCategories.map((cat) => (
+                <Box key={cat.label}>
+                  <Typography
+                    variant="body3"
+                    sx={{
+                      fontWeight: FONT_WEIGHT_SEMI_BOLD,
+                      display: "block",
+                      p: 1.5,
+                      pb: 0.5,
+                      color: "text.primary",
+                    }}
+                  >
+                    {cat.label}
+                  </Typography>
+                  {cat.items.map((item) => (
+                    <ComponentRow
+                      key={item.slug}
+                      item={item}
+                      onClick={() => onSelect(item.slug)}
+                      scrollContainerRef={listRef}
+                    />
+                  ))}
+                </Box>
+              ))
+            )}
+          </Box>
+        </>
+      )}
+      {effectiveTab === "patterns" && <PatternsTabContent />}
     </>
   );
 };
@@ -180,12 +228,17 @@ interface AddComponentModalProps {
   before?: string;
 }
 
+const PATTERNS_POPOVER_WIDTH = POPOVER_WIDTH + DETAIL_PANEL_WIDTH;
+
 const AddComponentModal: React.FC<AddComponentModalProps> = ({
   parent,
   before,
 }) => {
   const navigate = useNavigate();
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
+  const [activeTab, setActiveTab] = useState<ModalTab>("components");
+  const popoverWidth =
+    activeTab === "patterns" ? PATTERNS_POPOVER_WIDTH : POPOVER_WIDTH;
 
   const handleSelect = useCallback(
     (slug: string) => {
@@ -215,10 +268,10 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
 
   const buttonCenterX = rect
     ? Math.max(
-        POPOVER_WIDTH / 2 + 8,
+        popoverWidth / 2 + 8,
         Math.min(
           rect.left + (rect.right - rect.left) / 2,
-          window.innerWidth - POPOVER_WIDTH / 2 - 8,
+          window.innerWidth - popoverWidth / 2 - 8,
         ),
       )
     : window.innerWidth / 2;
@@ -244,7 +297,7 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
       slotProps={{
         paper: {
           sx: {
-            width: POPOVER_WIDTH,
+            width: popoverWidth,
             maxHeight: "min(480px, 85vh)",
             display: "flex",
             flexDirection: "column",
@@ -258,7 +311,11 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
         },
       }}
     >
-      <AddComponentModalContent onSelect={handleSelect} />
+      <AddComponentModalContent
+        onSelect={handleSelect}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+      />
     </Popover>
   );
 };
