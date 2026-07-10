@@ -7,6 +7,9 @@ import ComponentTypeHeader from "ui/editor/ComponentTypeHeader";
 import { fromSlug } from "../../data/types";
 import { AddComponentModalContent, type ModalTab } from "./AddComponentModal";
 
+// The Patterns tab is hidden here (showPatternsTab={false}), so this is never called
+const noop = () => undefined;
+
 interface Props {
   type: string;
   onChange: (newType: TYPES) => void;
@@ -68,7 +71,7 @@ const ChangeComponentHeader: React.FC<Props> = ({
       >
         <AddComponentModalContent
           onSelect={handleSelect}
-          onInsertPattern={() => {}}
+          onInsertPattern={noop}
           activeTab={activeTab}
           onTabChange={setActiveTab}
           showPatternsTab={false}
