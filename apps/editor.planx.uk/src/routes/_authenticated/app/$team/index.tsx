@@ -4,7 +4,7 @@ import { isSystemTeam } from "lib/systemTeams";
 export const Route = createFileRoute("/_authenticated/app/$team/")({
   beforeLoad: ({ params, context }) => {
     throw redirect({
-      to: isSystemTeam(context.team.name)
+      to: isSystemTeam(context.team.slug)
         ? "/app/$team/flows"
         : "/app/$team/dashboard",
       params: { team: params.team },

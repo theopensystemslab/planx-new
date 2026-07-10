@@ -140,7 +140,7 @@ function EditorNavMenu() {
     () => [
       {
         routes: [
-          ...(team && !isSystemTeam(team.name)
+          ...(teamSlug && !isSystemTeam(teamSlug)
             ? [
                 {
                   title: "Dashboard",
@@ -260,7 +260,7 @@ function EditorNavMenu() {
         ],
       },
     ],
-    [teamSlug, lpsBaseUrl, referenceCode, teamAnalyticsLink, team],
+    [teamSlug, lpsBaseUrl, referenceCode, teamAnalyticsLink],
   );
 
   const flowLayoutSections: MenuSection[] = useMemo(
