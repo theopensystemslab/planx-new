@@ -146,20 +146,6 @@ jobs:
       - run: pnpm test:silent --retry=1
         working-directory: ${{ env.EDITOR_DIRECTORY }}
 
-  check_localplanning_services:
-    name: Check localplanning.services (types + lint)
-    runs-on: ubuntu-24.04
-    needs: [changes]
-    if: ${{ needs.changes.outputs.localplanning == 'true' }}
-    steps:
-      - uses: actions/checkout@v7
-      - name: Setup Node and PNPM
-        uses: ./.github/actions/setup-node-pnpm
-      - run: pnpm install --frozen-lockfile
-      - name: Type-check and lint
-        run: pnpm check
-        working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
-
   build_localplanning_services:
     name: Build localplanning.services
     runs-on: ubuntu-24.04
@@ -168,28 +154,26 @@ jobs:
     if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
       - uses: actions/checkout@v7
-      - name: Cache localplanning build assets
-        id: cache-localplanning-build-assets
-        uses: actions/cache@v6
-        with:
-          path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
-          key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', format('{0}/src/**', env.LOCALPLANNING_SERVICES_DIRECTORY), format('{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
-          restore-keys: |
-            ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', format('{0}/src/**', env.LOCALPLANNING_SERVICES_DIRECTORY), format('{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
-            ${{ runner.os }}-
       - name: Setup Node and PNPM
         uses: ./.github/actions/setup-node-pnpm
-        with:
-          cache: ${{ steps.cache-localplanning-build-assets.outputs.cache-hit != 'true' && 'pnpm' || '' }}
       - run: pnpm install --frozen-lockfile
-        if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
-      - run: pnpm build
+      - name: Restore Turbo cache
+        uses: actions/cache@v6
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-turbo-
+      - run: pnpm turbo run build --filter=localplanning.services
         env:
           BUILD_MODE: pizza
           SITE_URL: https://localplanning.${{ env.FULL_DOMAIN }}
           ROOT_DOMAIN: ${{ env.FULL_DOMAIN }}
-        if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
-        working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
+      - name: Upload localplanning.services build artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: localplanning_services_build
+          path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
+          if-no-files-found: error
 
   build_planx_frontend:
     name: Build PlanX frontend
@@ -267,7 +251,7 @@ jobs:
   pulumi_preview:
     name: Run Pulumi Preview
     runs-on: ubuntu-24.04
-    needs: [changes, build_planx_frontend]
+    needs: [changes, build_planx_frontend, build_localplanning_services]
     if: ${{ needs.changes.outputs.infrastructure == 'true' }}
     steps:
       - uses: actions/checkout@v7
@@ -285,15 +269,11 @@ jobs:
         with:
           name: planx_frontend_build
           path: ./${{ env.EDITOR_DIRECTORY }}/build
-      - name: Download LPS build assets
-        id: cache-localplanning-build-assets
-        uses: actions/cache@v6
+      - name: Download localplanning.services build artifact
+        uses: actions/download-artifact@v8
         with:
+          name: localplanning_services_build
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
-          key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', format('{0}/src/**', env.LOCALPLANNING_SERVICES_DIRECTORY), format('{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
-          restore-keys: |
-            ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', format('{0}/src/**', env.LOCALPLANNING_SERVICES_DIRECTORY), format('{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
-            ${{ runner.os }}-
       - uses: pulumi/actions@v7
         with:
           command: preview
@@ -331,7 +311,7 @@ jobs:
 
   create_or_update_vultr_instance:
     name: Upsert Vultr Instance
-    needs: [changes, build_planx_frontend]
+    needs: [changes, build_planx_frontend, build_localplanning_services]
     runs-on: ubuntu-24.04
     if: "${{ success() && !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
@@ -442,15 +422,11 @@ jobs:
           target: "planx-new/"
           overwrite: true
 
-      - name: Download localplanning.services build assets
-        id: cache-localplanning-build-assets-restore
-        uses: actions/cache/restore@v6
+      - name: Download localplanning.services build artifact
+        uses: actions/download-artifact@v8
         with:
+          name: localplanning_services_build
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
-          key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', format('{0}/src/**', env.LOCALPLANNING_SERVICES_DIRECTORY), format('{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
-          restore-keys: |
-            ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', format('{0}/src/**', env.LOCALPLANNING_SERVICES_DIRECTORY), format('{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
-            ${{ runner.os }}-
 
       - name: upload built localplanning.services
         continue-on-error: true
