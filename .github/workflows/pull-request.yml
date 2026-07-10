@@ -35,6 +35,7 @@ jobs:
       infrastructure: ${{ steps.filter.outputs.infrastructure }}
       sharedb: ${{ steps.filter.outputs.sharedb }}
       localplanning: ${{ steps.filter.outputs.localplanning }}
+      pnpmworkspace: $${{ steps.filter.outputs.pnpmworkspace }}
       commit: ${{ steps.commit.outputs.commit }}
     steps:
       - uses: actions/checkout@v7
@@ -62,12 +63,15 @@ jobs:
               - 'apps/sharedb.planx.uk/**'
             localplanning:
               - 'apps/localplanning.services/**'
+            pnpmworkspace:
+              - 'pnpm-workspace.yaml'
+            
 
   integration_tests:
     name: Run Integration tests
     runs-on: ubuntu-24.04
     needs: [changes]
-    if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.e2e == 'true' || needs.changes.outputs.editor == 'true' || needs.changes.outputs.sharedb == 'true' || needs.changes.outputs.hasura == 'true' }}
+    if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.e2e == 'true' || needs.changes.outputs.editor == 'true' || needs.changes.outputs.sharedb == 'true' || needs.changes.outputs.hasura == 'true' || needs.changes.outputs.pnpmworkspace == 'true' }}
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-pizza-env
@@ -90,7 +94,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     needs: [changes]
-    if: ${{ needs.changes.outputs.api == 'true' }}
+    if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.pnpmworkspace == 'true' }}
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-pizza-env
@@ -109,7 +113,7 @@ jobs:
     name: Run React Tests
     runs-on: ubuntu-24.04
     needs: [changes]
-    if: ${{ needs.changes.outputs.editor == 'true' }}
+    if: ${{ needs.changes.outputs.editor == 'true' || needs.changes.outputs.pnpmworkspace == 'true' }}
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-pizza-env
@@ -481,7 +485,7 @@ jobs:
     name: E2E tests
     runs-on: ubuntu-24.04
     needs: [changes]
-    if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.e2e == 'true' || needs.changes.outputs.editor == 'true' || needs.changes.outputs.sharedb == 'true' || needs.changes.outputs.hasura == 'true' }}
+    if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.e2e == 'true' || needs.changes.outputs.editor == 'true' || needs.changes.outputs.sharedb == 'true' || needs.changes.outputs.hasura == 'true' || needs.changes.outputs.pnpmworkspace == 'true' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
