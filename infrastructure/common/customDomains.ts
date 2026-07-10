@@ -18,8 +18,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "lambeth",
           domain: "planningservices.lambeth.gov.uk",
-          cloudFrontState: "cutover-ongoing",
-          certificateLocation: "pulumiConfig",
+          cloudFrontState: "shared-final",
         },
         {
           name: "doncaster",
