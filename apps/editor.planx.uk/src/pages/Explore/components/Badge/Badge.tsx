@@ -48,6 +48,7 @@ export const Badge: React.FC<BadgeProps> = (props) => {
       <Root
         size={size}
         sx={{ backgroundColor: "template.light" }}
+        role="img"
         aria-label="Source template"
         data-testid="badge-source-template"
       >
@@ -79,10 +80,11 @@ export const Badge: React.FC<BadgeProps> = (props) => {
       <Root
         size={size}
         sx={{ backgroundColor: backgroundColour }}
+        role="img"
         aria-label={team.name}
         data-testid="badge-team-logo"
       >
-        <Logo src={team.theme.logo} alt={`${team.name} logo`} />
+        <Logo src={team.theme.logo} alt="" />
       </Root>
     );
   }
@@ -93,6 +95,7 @@ export const Badge: React.FC<BadgeProps> = (props) => {
     <Root
       size={size}
       sx={{ backgroundColor: backgroundColour }}
+      role="img"
       aria-label={team.name}
       data-testid="badge-team-initial"
     >
