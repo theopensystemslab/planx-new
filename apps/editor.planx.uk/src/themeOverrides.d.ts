@@ -47,6 +47,7 @@ declare module "@mui/material/styles" {
       main: string;
       light: string;
       dark: string;
+      icon: string;
     };
   }
 
@@ -76,6 +77,7 @@ declare module "@mui/material/styles" {
       main: string;
       light: string;
       dark: string;
+      icon: string;
     };
   }
 

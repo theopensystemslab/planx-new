@@ -24,7 +24,7 @@ export const FlowTemplateIndicator: React.FC<Props> = ({
       {isTemplatedFlow && (
         <StarIcon
           data-testid="templated-flow-star"
-          sx={{ color: "#380F77", fontSize: "1rem" }}
+          sx={{ color: "template.icon", fontSize: "1rem" }}
         />
       )}
       <Typography variant="body3" sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
