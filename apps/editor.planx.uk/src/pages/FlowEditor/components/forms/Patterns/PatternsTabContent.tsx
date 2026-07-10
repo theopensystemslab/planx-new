@@ -1,13 +1,13 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import type { Graph } from "@planx/graph";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import React, { useMemo, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 
-import { buildPatternGraphLayout } from "./buildPatternGraphLayout";
+import { countPatternComponents } from "./countPatternComponents";
 import { PatternDetailPanel } from "./PatternDetailPanel";
-import { PatternThumbnail } from "./PatternThumbnail";
 import type { PatternFlow } from "./queries";
 import { usePatterns } from "./usePatterns";
 
@@ -24,11 +24,10 @@ const PatternRow: React.FC<PatternRowProps> = ({
   selected,
   onClick,
 }) => {
-  const layout = useMemo(
-    () => (pattern.data ? buildPatternGraphLayout(pattern.data) : null),
+  const componentCount = useMemo(
+    () => (pattern.data ? countPatternComponents(pattern.data) : 0),
     [pattern],
   );
-  const componentCount = layout?.nodes.length ?? 0;
 
   return (
     <Box
@@ -38,16 +37,18 @@ const PatternRow: React.FC<PatternRowProps> = ({
         display: "flex",
         alignItems: "center",
         gap: 1.5,
-        px: 1.5,
+        pl: 1.5,
+        pr: 1.5,
         py: 1,
         cursor: "pointer",
+        borderLeft: "3px solid",
+        borderLeftColor: selected ? "info.main" : "transparent",
         backgroundColor: selected ? "action.selected" : "transparent",
         "&:hover": {
           backgroundColor: selected ? "action.selected" : "action.hover",
         },
       }}
     >
-      <PatternThumbnail layout={layout} size={40} />
       <Box sx={{ minWidth: 0 }}>
         <Typography
           variant="body2"
@@ -68,7 +69,13 @@ const PatternRow: React.FC<PatternRowProps> = ({
   );
 };
 
-export const PatternsTabContent: React.FC = () => {
+interface PatternsTabContentProps {
+  onInsertPattern: (graph: Graph) => void;
+}
+
+export const PatternsTabContent: React.FC<PatternsTabContentProps> = ({
+  onInsertPattern,
+}) => {
   const { data, loading, error } = usePatterns();
   const [searchedPatterns, setSearchedPatterns] = useState<
     PatternFlow[] | null
@@ -138,7 +145,10 @@ export const PatternsTabContent: React.FC = () => {
         </Box>
       </Box>
       <Box sx={{ width: DETAIL_PANEL_WIDTH, flexShrink: 0, overflowY: "auto" }}>
-        <PatternDetailPanel pattern={selectedPattern} />
+        <PatternDetailPanel
+          pattern={selectedPattern}
+          onInsertPattern={onInsertPattern}
+        />
       </Box>
     </Box>
   );

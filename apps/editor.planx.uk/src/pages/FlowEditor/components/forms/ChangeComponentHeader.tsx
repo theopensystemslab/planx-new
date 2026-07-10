@@ -68,6 +68,7 @@ const ChangeComponentHeader: React.FC<Props> = ({
       >
         <AddComponentModalContent
           onSelect={handleSelect}
+          onInsertPattern={() => {}}
           activeTab={activeTab}
           onTabChange={setActiveTab}
           showPatternsTab={false}

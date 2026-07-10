@@ -23,7 +23,7 @@ const AddComponentModalContentDemo: React.FC = () => {
     <Paper
       sx={{
         width: activeTab === "patterns" ? 560 : 300,
-        maxHeight: "min(480px, 85vh)",
+        height: "min(480px, 85vh)",
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
@@ -33,6 +33,7 @@ const AddComponentModalContentDemo: React.FC = () => {
     >
       <AddComponentModalContent
         onSelect={() => {}}
+        onInsertPattern={() => {}}
         activeTab={activeTab}
         onTabChange={setActiveTab}
       />

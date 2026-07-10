@@ -5,6 +5,7 @@ import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { ICONS } from "@planx/components/shared/icons";
+import type { Graph } from "@planx/graph";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { hangerAnchor } from "pages/FlowEditor/lib/hangerAnchor";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -115,6 +116,7 @@ const ComponentRow: React.FC<ComponentRowProps> = ({
 
 interface AddComponentModalContentProps {
   onSelect: (slug: string) => void;
+  onInsertPattern: (graph: Graph) => void;
   activeTab: ModalTab;
   onTabChange: (tab: ModalTab) => void;
   showPatternsTab?: boolean;
@@ -122,7 +124,13 @@ interface AddComponentModalContentProps {
 
 export const AddComponentModalContent: React.FC<
   AddComponentModalContentProps
-> = ({ onSelect, activeTab, onTabChange, showPatternsTab = true }) => {
+> = ({
+  onSelect,
+  onInsertPattern,
+  activeTab,
+  onTabChange,
+  showPatternsTab = true,
+}) => {
   const [searchedItems, setSearchedItems] = useState<ComponentItem[] | null>(
     null,
   );
@@ -218,7 +226,9 @@ export const AddComponentModalContent: React.FC<
           </Box>
         </>
       )}
-      {effectiveTab === "patterns" && <PatternsTabContent />}
+      {effectiveTab === "patterns" && (
+        <PatternsTabContent onInsertPattern={onInsertPattern} />
+      )}
     </>
   );
 };
@@ -255,6 +265,14 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
       });
     },
     [navigate, team, flow, parent, before],
+  );
+
+  const handleInsertPattern = useCallback(
+    (graph: Graph) => {
+      useStore.getState().insertPatternGraph(graph, parent, before);
+      useStore.getState().closeComponentSelector();
+    },
+    [parent, before],
   );
 
   const handleClose = useCallback(() => {
@@ -298,7 +316,7 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
         paper: {
           sx: {
             width: popoverWidth,
-            maxHeight: "min(480px, 85vh)",
+            height: "min(480px, 85vh)",
             display: "flex",
             flexDirection: "column",
             overflow: "hidden",
@@ -313,6 +331,7 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
     >
       <AddComponentModalContent
         onSelect={handleSelect}
+        onInsertPattern={handleInsertPattern}
         activeTab={activeTab}
         onTabChange={setActiveTab}
       />
