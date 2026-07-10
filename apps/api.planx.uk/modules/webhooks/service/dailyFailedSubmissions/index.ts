@@ -4,40 +4,42 @@ import { $api } from "../../../../client/index.js";
 import { sendSlackMessage } from "../../../slack/utils.js";
 
 interface FailedSubmissions {
-  data: {
-    failedSubmissions:
-      | {
-          sessionId: string;
-          eventType: string;
-          teamName: string;
-        }[]
-      | [];
-  };
+  failedSubmissions:
+    | {
+        sessionId: string;
+        eventType: string;
+        teamName: string;
+      }[]
+    | [];
 }
 
 export const getDailyFailedSubmissions = async (): Promise<string> => {
-  const { data } = await $api.client.request<FailedSubmissions>(gql`
-    query GetDailyFailedSubmissions {
-      failedSubmissions: daily_failed_submissions {
-        sessionId: session_id
-        eventType: event_type
-        teamName: name
+  const { failedSubmissions } = await $api.client.request<FailedSubmissions>(
+    gql`
+      query GetDailyFailedSubmissions {
+        failedSubmissions: daily_failed_submissions {
+          sessionId: session_id
+          eventType: event_type
+          teamName: name
+        }
       }
-    }
-  `);
+    `,
+  );
 
-  if (!data || data.failedSubmissions?.length === 0)
-    return "No recent submission failures";
+  if (failedSubmissions?.length === 0) return "No recent submission failures";
 
   const failures: string[] = [];
-  for (const failure of data.failedSubmissions) {
+  for (const failure of failedSubmissions) {
     // Skip notifications related to Southwark Power Automate, which we expect to fail as of June 2026
     if (
-      failure.teamName !== "Southwark" &&
-      failure.eventType !== "Upload to AWS S3"
+      failure.teamName === "Southwark" &&
+      failure.eventType === "Upload to AWS S3"
     ) {
-      failures.push(`- *${failure.sessionId}* ${failure.eventType}`);
+      continue;
     }
+    failures.push(
+      `- *${failure.sessionId}* ${failure.eventType} [${failure.teamName}]`,
+    );
   }
 
   // If we have failures, send a Slack notification
