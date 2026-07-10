@@ -45,7 +45,7 @@ export type ActivityItem = {
   count: number;
 };
 
-const TOP_LIMIT = 5;
+const TOP_LIMIT = 50;
 
 export const useActivityData = (): {
   sessions: ActivityItem[];
