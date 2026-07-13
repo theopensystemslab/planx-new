@@ -1,6 +1,7 @@
 import ContentCutIcon from "@mui/icons-material/ContentCut";
 import ContentPaste from "@mui/icons-material/ContentPaste";
 import HelpTextIcon from "@mui/icons-material/Help";
+import StickyNote2Icon from "@mui/icons-material/StickyNote2";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
@@ -17,6 +18,8 @@ import {
 import * as React from "react";
 import CloneIcon from "ui/icons/Clone";
 import CopyIcon from "ui/icons/Copy";
+
+import { resolveNotePlacement } from "../notes/lib/notePlacement";
 
 export type ContextMenuSource = "node" | "hanger" | null;
 
@@ -56,6 +59,7 @@ export const ContextMenu: React.FC = () => {
     copyHelpText,
     getCopiedHelpText,
     pasteHelpText,
+    openNoteEditor,
   ] = useStore((state) => [
     state.contextMenuSource,
     state.contextMenuPosition,
@@ -78,6 +82,7 @@ export const ContextMenu: React.FC = () => {
     state.copyHelpText,
     state.getCopiedHelpText(),
     state.pasteHelpText,
+    state.openNoteEditor,
   ]);
 
   const handleCopy = () => {
@@ -123,6 +128,24 @@ export const ContextMenu: React.FC = () => {
   const handlePasteHelp = () => {
     if (!self) return;
     pasteHelpText(self);
+    closeMenu();
+  };
+
+  const handleAttachNote = () => {
+    if (!self)
+      return alert(
+        "Unable to attach note, missing value for relationship 'self' (nodeId)",
+      );
+
+    openNoteEditor({ mode: "create", nodeId: self });
+    closeMenu();
+  };
+
+  const handleAddNote = () => {
+    openNoteEditor({
+      mode: "create",
+      placement: resolveNotePlacement(flow, parent, before),
+    });
     closeMenu();
   };
 
@@ -237,11 +260,26 @@ export const ContextMenu: React.FC = () => {
         });
       }
 
+      actions.push({
+        id: "attach-note",
+        label: "Attach note",
+        icon: <StickyNote2Icon fontSize="small" />,
+        disabled: false,
+        onClick: handleAttachNote,
+      });
+
       return actions;
     }
 
     if (source === "hanger") {
       return [
+        {
+          id: "add-note",
+          label: "Add note",
+          icon: <StickyNote2Icon fontSize="small" />,
+          disabled: false,
+          onClick: handleAddNote,
+        },
         {
           id: "paste",
           label: "Paste",

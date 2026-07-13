@@ -40,6 +40,7 @@ insert_permissions:
         - text
         - color
         - created_by
+        - updated_by
     comment: ""
   - role: teamEditor
     permission:
@@ -62,6 +63,7 @@ insert_permissions:
         - text
         - color
         - created_by
+        - updated_by
     comment: ""
 select_permissions:
   - role: platformAdmin

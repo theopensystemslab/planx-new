@@ -25,6 +25,7 @@ import {
 } from "@planx/graph";
 import type { OT } from "@planx/graph/types";
 import type { RegisteredRouter } from "@tanstack/react-router";
+import type { FlowNote, NotePlacement } from "hooks/data/useFlowNotes";
 import { client } from "lib/graphql";
 import debounce from "lodash/debounce";
 import { type } from "ot-json0";
@@ -40,6 +41,7 @@ import { FlowLayout } from "../../components/Flow";
 import { getFlowDoc, subscribeToDoc } from "./../sharedb";
 import { type Store } from ".";
 import type { NavigationStore } from "./navigation";
+import type { NotesStore } from "./notes";
 import type { SharedStore } from "./shared";
 
 let doc: Doc;
@@ -94,6 +96,17 @@ export interface EditorUIStore {
   componentSelectorBefore?: string;
   openComponentSelector: (params: { parent?: string; before?: string }) => void;
   closeComponentSelector: () => void;
+  noteEditorOpen: boolean;
+  noteEditorMode: "create" | "edit" | null;
+  noteEditorNote?: FlowNote;
+  noteEditorNodeId?: string;
+  noteEditorPlacement?: NotePlacement;
+  openNoteEditor: (
+    params:
+      | { mode: "create"; nodeId?: string; placement?: NotePlacement }
+      | { mode: "edit"; note: FlowNote },
+  ) => void;
+  closeNoteEditor: () => void;
 }
 
 export const editorUIStore: StateCreator<
@@ -224,6 +237,40 @@ export const editorUIStore: StateCreator<
         componentSelectorOpen: false,
         componentSelectorParent: undefined,
         componentSelectorBefore: undefined,
+      }),
+
+    noteEditorOpen: false,
+    noteEditorMode: null,
+    noteEditorNote: undefined,
+    noteEditorNodeId: undefined,
+    noteEditorPlacement: undefined,
+
+    openNoteEditor: (params) =>
+      set(
+        params.mode === "edit"
+          ? {
+              noteEditorOpen: true,
+              noteEditorMode: "edit",
+              noteEditorNote: params.note,
+              noteEditorNodeId: undefined,
+              noteEditorPlacement: undefined,
+            }
+          : {
+              noteEditorOpen: true,
+              noteEditorMode: "create",
+              noteEditorNote: undefined,
+              noteEditorNodeId: params.nodeId,
+              noteEditorPlacement: params.placement,
+            },
+      ),
+
+    closeNoteEditor: () =>
+      set({
+        noteEditorOpen: false,
+        noteEditorMode: null,
+        noteEditorNote: undefined,
+        noteEditorNodeId: undefined,
+        noteEditorPlacement: undefined,
       }),
   }),
   {
@@ -364,7 +411,7 @@ export interface EditorStore extends Store.Store {
 }
 
 export const editorStore: StateCreator<
-  SharedStore & EditorStore & NavigationStore,
+  SharedStore & EditorStore & NavigationStore & NotesStore,
   [],
   [],
   EditorStore
@@ -658,6 +705,8 @@ export const editorStore: StateCreator<
     toParent = undefined,
   ) {
     try {
+      // TODO(deferred): reconcile note positions for the moved node - see
+      // components/Flow/notes/_deferred/reconcileNotesForMovedNode.ts
       const [, ops] = move(id, parent as unknown as string, {
         toParent,
         toBefore,
@@ -765,8 +814,14 @@ export const editorStore: StateCreator<
   },
 
   removeNode: (id, parent) => {
-    const [, ops] = remove(id, parent)(get().flow);
+    const before = get().flow;
+    const [after, ops] = remove(id, parent)(before);
     send(ops);
+
+    const deletedNodeIds = Object.keys(before).filter((k) => !after[k]);
+    if (deletedNodeIds.length > 0) {
+      get().reconcileNotesForDeletedNodes(deletedNodeIds, before, after);
+    }
   },
 
   updateNode: ({ id, data }, { children = undefined } = {}) => {

@@ -294,6 +294,44 @@ $fontMonospace: "Source Code Pro", monospace;
     border-top: none;
   }
 
+  // A note attached directly to a node - rendered as an extra row
+  & .attached-note {
+    position: relative;
+    display: block;
+    width: 100%;
+    font: inherit;
+    text-align: left;
+    appearance: none;
+    padding: 8px 20px 8px 8px;
+    border: $nodeBorderWidth solid $nodeBorder;
+    border-top: none;
+    cursor: pointer;
+    overflow-wrap: break-word;
+    word-break: break-word;
+
+    // Triangle shapes to simulate a paper fold on the note's corner
+    &::before {
+      content: "";
+      position: absolute;
+      right: -$nodeBorderWidth;
+      bottom: -$nodeBorderWidth;
+      width: 0;
+      height: 0;
+      border-bottom: 12px solid #fff;
+      border-left: 12px solid transparent;
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      right: -$nodeBorderWidth;
+      bottom: -$nodeBorderWidth;
+      width: 0;
+      height: 0;
+      border-top: 12px solid #555;
+      border-right: 12px solid transparent;
+    }
+  }
+
   & .card-tag {
     &.automation {
       width: 100%;
@@ -458,6 +496,18 @@ $fontMonospace: "Source Code Pro", monospace;
     @include disabledHanger();
   }
 
+  // decorative connector
+  &.note-connector {
+    [data-layout="top-down"] & {
+      min-height: $padding * 2;
+      min-width: $hangerWidth;
+    }
+    [data-layout="left-right"] & {
+      min-width: $padding * 2;
+      min-height: $hangerWidth;
+    }
+  }
+
   > a,
   > button {
     $size: $hangerWidth;
@@ -490,6 +540,47 @@ $fontMonospace: "Source Code Pro", monospace;
 
     &:empty {
       padding: 0;
+    }
+  }
+}
+
+// positioned note i.e. rendered on a container line
+.note-card {
+  align-self: center;
+
+  > button {
+    position: relative;
+    display: inline-block;
+    font: inherit;
+    text-align: left;
+    appearance: none;
+    border: $nodeBorderWidth solid $nodeBorder;
+    cursor: pointer;
+    max-width: $nodeMaxWidth;
+    padding: 8px 20px 8px 8px;
+    overflow-wrap: break-word;
+    word-break: break-word;
+
+    // Triangle shapes to simulate a paper fold on the note's corner
+    &::before {
+      content: "";
+      position: absolute;
+      right: -$nodeBorderWidth;
+      bottom: -$nodeBorderWidth;
+      width: 0;
+      height: 0;
+      border-bottom: 10px solid #fff;
+      border-left: 10px solid transparent;
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      right: -$nodeBorderWidth;
+      bottom: -$nodeBorderWidth;
+      width: 0;
+      height: 0;
+      border-top: 10px solid #999;
+      border-right: 10px solid transparent;
     }
   }
 }
