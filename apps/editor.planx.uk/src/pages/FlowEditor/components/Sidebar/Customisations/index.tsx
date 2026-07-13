@@ -5,13 +5,25 @@ import Typography from "@mui/material/Typography";
 import { sortIdsDepthFirst } from "@planx/graph";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { CustomisationCard } from "./CustomisationCard";
 import type { FlowEdits } from "./types";
 
 const Customisations = () => {
-  const [flowId, flow] = useStore((state) => [state.id, state.flow]);
+  const [flowId, flow, isTemplatedFrom, isTemplate, setOrderedFlow] = useStore(
+    (state) => [
+      state.id,
+      state.flow,
+      state.isTemplatedFrom,
+      state.isTemplate,
+      state.setOrderedFlow,
+    ],
+  );
+
+  useEffect(() => {
+    if (flow) setOrderedFlow();
+  }, [flow, setOrderedFlow]);
 
   // Get the nodes within this flow that are customisable and sort them top-down to match graph
   const customisableNodeIds = new Set(
@@ -37,6 +49,7 @@ const Customisations = () => {
       variables: {
         flow_id: flowId,
       },
+      skip: !isTemplatedFrom,
     },
   );
 
@@ -60,12 +73,24 @@ const Customisations = () => {
 
   return (
     <Box sx={{ p: 2, backgroundColor: "background.paper", minHeight: "100%" }}>
-      <Typography variant="h4" sx={{ mb: 1 }}>
-        {`Customise`}
-      </Typography>
-      <Typography variant="body2">
-        {`When editing a templated flow, this tab tracks your progress updating nodes that can be customised`}
-      </Typography>
+      {isTemplatedFrom && (
+        <>
+          <Typography variant="h4" sx={{ mb: 1 }}>
+            Customise
+          </Typography>
+          <Typography variant="body2">
+            When editing a templated flow, this tab tracks your progress
+            updating nodes that can be customised
+          </Typography>
+        </>
+      )}
+      {isTemplate && (
+        <>
+          <Typography variant="h4" sx={{ mb: 1 }}>
+            Nodes set to 'Allow edits'
+          </Typography>
+        </>
+      )}
       <List sx={{ mt: 1 }}>
         {sortedCustomisableNodeIds.map((nodeId) => (
           <CustomisationCard
