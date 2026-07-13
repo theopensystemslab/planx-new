@@ -7,7 +7,7 @@ settings:
 catalogs:
   default:
     '@opensystemslab/planx-core':
-      specifier: github:theopensystemslab/planx-core#34004ae
+      specifier: github:theopensystemslab/planx-core#ef82f6b
       version: 1.0.0
     '@types/jsdom':
       specifier: ^28.0.3
@@ -152,7 +152,7 @@ importers:
         version: 3.1076.0
       '@opensystemslab/planx-core':
         specifier: 'catalog:'
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/34004ae8e8c5b6d0d7d64b909bb3ae6084c8c190(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ef82f6bd69a74e18cff4ca02946307f13f4b9035(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@types/geojson':
         specifier: ^7946.0.16
         version: 7946.0.16
@@ -456,7 +456,7 @@ importers:
         version: 1.0.0-alpha.14
       '@opensystemslab/planx-core':
         specifier: 'catalog:'
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/34004ae8e8c5b6d0d7d64b909bb3ae6084c8c190(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ef82f6bd69a74e18cff4ca02946307f13f4b9035(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@tanstack/react-query':
         specifier: ^5.101.1
         version: 5.101.1(react@19.2.5)
@@ -1036,7 +1036,7 @@ importers:
         version: 12.9.0
       '@opensystemslab/planx-core':
         specifier: 'catalog:'
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/34004ae8e8c5b6d0d7d64b909bb3ae6084c8c190(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ef82f6bd69a74e18cff4ca02946307f13f4b9035(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       axios:
         specifier: 'catalog:'
         version: 1.18.1
@@ -1079,7 +1079,7 @@ importers:
     dependencies:
       '@opensystemslab/planx-core':
         specifier: 'catalog:'
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/34004ae8e8c5b6d0d7d64b909bb3ae6084c8c190(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ef82f6bd69a74e18cff4ca02946307f13f4b9035(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       axios:
         specifier: 'catalog:'
         version: 1.18.1
@@ -1322,7 +1322,7 @@ importers:
     dependencies:
       '@opensystemslab/planx-core':
         specifier: 'catalog:'
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/34004ae8e8c5b6d0d7d64b909bb3ae6084c8c190(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ef82f6bd69a74e18cff4ca02946307f13f4b9035(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       tsx:
         specifier: ^4.21.0
         version: 4.21.0
@@ -3761,8 +3761,8 @@ packages:
   '@opensystemslab/map@1.0.0-alpha.14':
     resolution: {integrity: sha512-kIVrXtq2rcOzayTtUkVUQWSJMGrhER7FuuMR9cJw5a8AOH69XnXrkDPGBMVQmNJOIoMkO4dOzTt6ofUchZxLQA==}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/34004ae8e8c5b6d0d7d64b909bb3ae6084c8c190':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/34004ae8e8c5b6d0d7d64b909bb3ae6084c8c190}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ef82f6bd69a74e18cff4ca02946307f13f4b9035':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ef82f6bd69a74e18cff4ca02946307f13f4b9035}
     version: 1.0.0
     peerDependencies:
       react: ^19.2.4
@@ -15604,14 +15604,14 @@ snapshots:
     transitivePeerDependencies:
       - preact
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/34004ae8e8c5b6d0d7d64b909bb3ae6084c8c190(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ef82f6bd69a74e18cff4ca02946307f13f4b9035(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.5)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5)
       '@formatjs/intl-listformat': 8.3.10
       '@mui/material': 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
-      ajv: 8.18.0
-      ajv-formats: 2.1.1(ajv@8.18.0)
+      ajv: 8.20.0
+      ajv-formats: 2.1.1(ajv@8.20.0)
       cheerio: 1.2.0
       copyfiles: 2.4.1
       eslint: 8.57.1
@@ -18183,9 +18183,9 @@ snapshots:
     optionalDependencies:
       ajv: 8.20.0
 
-  ajv-formats@2.1.1(ajv@8.18.0):
+  ajv-formats@2.1.1(ajv@8.20.0):
     optionalDependencies:
-      ajv: 8.18.0
+      ajv: 8.20.0
 
   ajv@6.15.0:
     dependencies:
