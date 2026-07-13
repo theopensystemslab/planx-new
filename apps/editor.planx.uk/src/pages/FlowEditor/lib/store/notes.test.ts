@@ -250,3 +250,53 @@ describe("repositionNotesForDeletedNodes", () => {
     expect(mutationCalled).toBe(false);
   });
 });
+
+describe("repositionNotesForMovedNode", () => {
+  it("re-anchors own leading notes to the new first child of the old parent", async () => {
+    const reanchored: any[] = [];
+
+    server.use(
+      graphql.query("GetFlowNotesForReposition", () =>
+        HttpResponse.json({
+          data: {
+            flow_notes: [
+              {
+                id: "note-before-moved",
+                node_id: null,
+                placement: { parent: "old-parent", before: "moved-node" },
+                created_by: 42,
+              },
+              {
+                id: "note-elsewhere",
+                node_id: null,
+                placement: { parent: "old-parent", before: "some-other-node" },
+                created_by: 42,
+              },
+            ],
+          },
+        }),
+      ),
+      graphql.mutation("ReanchorFlowNote", ({ variables }) => {
+        reanchored.push(variables);
+        return HttpResponse.json({
+          data: { update_flow_notes_by_pk: { id: variables.id } },
+        });
+      }),
+    );
+
+    await useStore
+      .getState()
+      .repositionNotesForMovedNode(
+        "moved-node",
+        "old-parent",
+        "new-first-child",
+      );
+
+    expect(reanchored).toEqual([
+      {
+        id: "note-before-moved",
+        placement: { parent: "old-parent", before: "new-first-child" },
+      },
+    ]);
+  });
+});

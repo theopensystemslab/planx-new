@@ -705,12 +705,20 @@ export const editorStore: StateCreator<
     toParent = undefined,
   ) {
     try {
-      // TODO: reposition notes for the moved node - see
-      const [, ops] = move(id, parent as unknown as string, {
+      const [after, ops] = move(id, parent as unknown as string, {
         toParent,
         toBefore,
       })(get().flow);
       send(ops);
+
+      if (parent) {
+        const oldParent = parent as unknown as string;
+        get().repositionNotesForMovedNode(
+          id,
+          oldParent,
+          after[oldParent]?.edges?.[0],
+        );
+      }
     } catch (err: any) {
       alert(err.message);
     }

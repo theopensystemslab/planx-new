@@ -92,6 +92,15 @@ export interface NotesStore {
     flowBeforeDelete: Graph,
     flowAfterDelete: Graph,
   ) => Promise<void>;
+
+  /**
+   * Called after a node is moved to a new parent
+   */
+  repositionNotesForMovedNode: (
+    movedId: string,
+    oldParent: string,
+    newFirstChildOfOldParent: string | undefined,
+  ) => Promise<void>;
 }
 
 export const notesStore: StateCreator<
@@ -214,5 +223,42 @@ export const notesStore: StateCreator<
         }),
       ),
     ]);
+  },
+
+  repositionNotesForMovedNode: async (
+    movedId,
+    oldParent,
+    newFirstChildOfOldParent,
+  ) => {
+    const flowId = get().id;
+    const userId = get().user?.id;
+    if (!flowId || !userId) return;
+
+    const { data } = await client.query<{
+      flow_notes: FlowNoteRowForReposition[];
+    }>({
+      query: GET_FLOW_NOTES_FOR_REPOSITION,
+      variables: { flowId },
+      fetchPolicy: "network-only",
+    });
+
+    const notesToReposition = (data?.flow_notes ?? []).filter(
+      (note) =>
+        note.created_by === userId &&
+        note.placement?.parent === oldParent &&
+        note.placement?.before === movedId,
+    );
+
+    await Promise.all(
+      notesToReposition.map((note) =>
+        client.mutate({
+          mutation: REANCHOR_FLOW_NOTE,
+          variables: {
+            id: note.id,
+            placement: { parent: oldParent, before: newFirstChildOfOldParent },
+          },
+        }),
+      ),
+    );
   },
 });
