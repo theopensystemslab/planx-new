@@ -26,7 +26,6 @@ export const NoteEditorDialog: React.FC = () => {
     createFlowNote,
     updateFlowNote,
     deleteFlowNote,
-    userId,
   ] = useStore((state) => [
     state.noteEditorOpen,
     state.noteEditorMode,
@@ -37,7 +36,6 @@ export const NoteEditorDialog: React.FC = () => {
     state.createFlowNote,
     state.updateFlowNote,
     state.deleteFlowNote,
-    state.user?.id,
   ]);
 
   const [text, setText] = useState(note?.text ?? "");

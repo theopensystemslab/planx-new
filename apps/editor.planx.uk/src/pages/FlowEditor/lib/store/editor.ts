@@ -814,14 +814,10 @@ export const editorStore: StateCreator<
   },
 
   removeNode: (id, parent) => {
-    const before = get().flow;
-    const [after, ops] = remove(id, parent)(before);
+    // TODO(deferred): reconcile note positions for deleted nodes - see
+    // components/Flow/notes/_deferred/reconcileNotesForDeletedNodes.ts
+    const [, ops] = remove(id, parent)(get().flow);
     send(ops);
-
-    const deletedNodeIds = Object.keys(before).filter((k) => !after[k]);
-    if (deletedNodeIds.length > 0) {
-      get().reconcileNotesForDeletedNodes(deletedNodeIds, before, after);
-    }
   },
 
   updateNode: ({ id, data }, { children = undefined } = {}) => {
