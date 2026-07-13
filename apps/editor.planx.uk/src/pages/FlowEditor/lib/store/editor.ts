@@ -705,8 +705,7 @@ export const editorStore: StateCreator<
     toParent = undefined,
   ) {
     try {
-      // TODO(deferred): reconcile note positions for the moved node - see
-      // components/Flow/notes/_deferred/reconcileNotesForMovedNode.ts
+      // TODO: reposition notes for the moved node - see
       const [, ops] = move(id, parent as unknown as string, {
         toParent,
         toBefore,
@@ -814,10 +813,14 @@ export const editorStore: StateCreator<
   },
 
   removeNode: (id, parent) => {
-    // TODO(deferred): reconcile note positions for deleted nodes - see
-    // components/Flow/notes/_deferred/reconcileNotesForDeletedNodes.ts
-    const [, ops] = remove(id, parent)(get().flow);
+    const before = get().flow;
+    const [after, ops] = remove(id, parent)(before);
     send(ops);
+
+    const deletedNodeIds = Object.keys(before).filter((k) => !after[k]);
+    if (deletedNodeIds.length > 0) {
+      get().repositionNotesForDeletedNodes(deletedNodeIds, before, after);
+    }
   },
 
   updateNode: ({ id, data }, { children = undefined } = {}) => {

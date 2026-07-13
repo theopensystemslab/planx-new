@@ -57,3 +57,33 @@ export const resolveNoteRenderCoordinate = (
   const index = siblings.indexOf(placement.parent);
   return { container, before: siblings[index + 1] };
 };
+
+/**
+ * Given a set of just-deleted node ids, re-position a note's placement if it was a child (via `placement.parent`) of one of them.
+ *
+ * Walks back through the flow as it was before the deletion to find the nearest surviving sibling and re-positions there.
+ *
+ * Skips nodes that were deleted in the same operation.
+ *
+ * Falls back to the container if nothing precedes the deleted node.
+ *
+ * Returns `null` if the container itself was also deleted, in which case there's no valid position left.
+ */
+export const repositionPlacementAfterDeletion = (
+  flowBeforeDelete: Graph,
+  flowAfterDelete: Graph,
+  deletedAnchorId: string,
+  deletedIds: Set<string>,
+): NotePlacement | null => {
+  const container = findContainerOf(flowBeforeDelete, deletedAnchorId);
+  if (!container || deletedIds.has(container)) return null;
+
+  const oldSiblings = flowBeforeDelete[container]?.edges ?? [];
+  let index = oldSiblings.indexOf(deletedAnchorId) - 1;
+
+  while (index >= 0 && deletedIds.has(oldSiblings[index])) index -= 1;
+
+  if (index >= 0) return { parent: oldSiblings[index] };
+
+  return { parent: container, before: flowAfterDelete[container]?.edges?.[0] };
+};

@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   findContainerOf,
+  repositionPlacementAfterDeletion,
   resolveNotePlacement,
   resolveNoteRenderCoordinate,
 } from "./notePlacement";
@@ -99,5 +100,89 @@ describe("resolveNoteRenderCoordinate (decode)", () => {
       );
       expect(resolveNoteRenderCoordinate(linearFlow, placement)).toEqual(gap);
     }
+  });
+});
+
+describe("repositionPlacementAfterDeletion", () => {
+  it("re-anchors to the surviving sibling before the deleted anchor", () => {
+    // nodeB deleted; a note anchored to nodeB (i.e. after nodeB) should
+    // move to being anchored after nodeA instead
+    const after = {
+      _root: { edges: ["nodeA", "nodeC"] },
+      nodeA: linearFlow.nodeA,
+      nodeC: linearFlow.nodeC,
+    };
+
+    expect(
+      repositionPlacementAfterDeletion(
+        linearFlow,
+        after,
+        "nodeB",
+        new Set(["nodeB"]),
+      ),
+    ).toEqual({ parent: "nodeA" });
+  });
+
+  it("walks back past other siblings deleted in the same operation", () => {
+    // nodeA and nodeB both deleted (e.g. a cascade); a note anchored to
+    // nodeB should fall back to leading position in _root
+    const after = { _root: { edges: ["nodeC"] }, nodeC: linearFlow.nodeC };
+
+    expect(
+      repositionPlacementAfterDeletion(
+        linearFlow,
+        after,
+        "nodeB",
+        new Set(["nodeA", "nodeB"]),
+      ),
+    ).toEqual({ parent: "_root", before: "nodeC" });
+  });
+
+  it("falls back to leading-in-container when the deleted anchor had no preceding sibling", () => {
+    const after = {
+      _root: { edges: ["nodeB", "nodeC"] },
+      nodeB: linearFlow.nodeB,
+      nodeC: linearFlow.nodeC,
+    };
+
+    expect(
+      repositionPlacementAfterDeletion(
+        linearFlow,
+        after,
+        "nodeA",
+        new Set(["nodeA"]),
+      ),
+    ).toEqual({ parent: "_root", before: "nodeB" });
+  });
+
+  it("returns an empty-container leading placement when nothing survives", () => {
+    const after = { _root: {} };
+
+    expect(
+      repositionPlacementAfterDeletion(
+        linearFlow,
+        after,
+        "nodeA",
+        new Set(["nodeA", "nodeB", "nodeC"]),
+      ),
+    ).toEqual({ parent: "_root", before: undefined });
+  });
+
+  it("returns null when the deleted anchor's own container was also deleted", () => {
+    const flow = {
+      _root: { edges: ["folder"] },
+      folder: { type: 300, edges: ["child"] },
+      child: { type: 8 },
+    };
+    const after = { _root: {} };
+
+    expect(
+      repositionPlacementAfterDeletion(
+        flow,
+        after,
+        "child",
+        new Set(["folder", "child"]),
+      ),
+    ).toBeNull();
   });
 });
