@@ -326,13 +326,20 @@ export const previewStore: StateCreator<
     if (!flow[id]) throw new Error(`id "${id}" not found`);
 
     if (userData) {
-      // add breadcrumb
-      const { answers = [], data = {}, auto = false, override } = userData;
+      // When navigating forwards, record adds a breadcrumb
+      const {
+        answers = [],
+        data = {},
+        auto = false,
+        override,
+        seq,
+        createdAt,
+      } = userData;
 
       const breadcrumb: Store.UserData = {
         auto: Boolean(auto),
-        createdAt: new Date().toISOString(),
-        seq: Object.keys(breadcrumbs).length + 1,
+        createdAt: createdAt ?? new Date().toISOString(),
+        seq: seq ?? Object.keys(breadcrumbs).length + 1,
       };
       if (answers?.length > 0) breadcrumb.answers = answers;
 
@@ -388,7 +395,7 @@ export const previewStore: StateCreator<
         changedNode: shouldRemovedChangedNode ? undefined : changedNode,
       });
     } else {
-      // remove breadcrumbs that were stored from id onwards because user has 'gone back'
+      // When navigating backwards or via "change", do not expect userData and remove any breadcrumbs that were stored from id onwards
       const breadcrumbIds = Object.keys(breadcrumbs);
       const idx = breadcrumbIds.indexOf(id);
       const remainingBreadcrumbs = pick(
@@ -407,8 +414,8 @@ export const previewStore: StateCreator<
         });
       }
     }
-    setCurrentCard();
 
+    setCurrentCard();
     updateSectionData();
   },
 
@@ -822,6 +829,9 @@ export const previewStore: StateCreator<
           ...omit(breadcrumbs?.[originalNodeId]?.data, fn),
           _overrides: { [fn]: breadcrumbs?.[originalNodeId]?.data?.[fn] },
         },
+        // Retain original sequence to ensure correct navigation
+        seq: breadcrumbs?.[originalNodeId]?.seq,
+        createdAt: breadcrumbs?.[originalNodeId]?.createdAt,
       });
     }
 
