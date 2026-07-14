@@ -9,26 +9,31 @@ describe("simple flow", () => {
     mBFPszBssY: {
       auto: false,
       answers: ["IzT93uCmyF", "4FRZMfNlXf"],
+      seq: 1,
     },
     "1eJjMmhGBU": {
       auto: false,
       answers: ["GxcDrNTW26"],
+      seq: 2,
     },
     J5SvQgzuK0: {
       auto: false,
       answers: ["DTXNs02JmU"],
+      seq: 3,
     },
     AHOdMRaRGK: {
       auto: false,
       data: {
         AHOdMRaRGK: "Answer",
       },
+      seq: 4,
     },
     OjcsvOxVum: {
       auto: false,
       data: {
         OjcsvOxVum: "Test",
       },
+      seq: 5,
     },
   };
 

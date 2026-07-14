@@ -62,13 +62,13 @@ test("record(id, undefined) clears up breadcrumbs", () => {
       answers: ["c"],
       auto: false,
       createdAt: expect.any(String),
-      seq: expect.any(Number),
+      seq: 1,
     },
     d: {
       answers: ["e", "f"],
       auto: false,
       createdAt: expect.any(String),
-      seq: expect.any(Number),
+      seq: 2,
     },
   });
 
