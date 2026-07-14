@@ -214,6 +214,13 @@ export const ContextMenu: React.FC = () => {
 
       const actions: ContextMenuAction[] = [
         {
+          id: "attach-note",
+          label: "Add note",
+          icon: <StickyNote2Icon fontSize="small" />,
+          disabled: false,
+          onClick: handleAttachNote,
+        },
+        {
           id: "copy",
           label: "Copy",
           icon: <CopyIcon fontSize="small" />,
@@ -259,14 +266,6 @@ export const ContextMenu: React.FC = () => {
           onClick: handlePasteHelp,
         });
       }
-
-      actions.push({
-        id: "attach-note",
-        label: "Attach note",
-        icon: <StickyNote2Icon fontSize="small" />,
-        disabled: false,
-        onClick: handleAttachNote,
-      });
 
       return actions;
     }
