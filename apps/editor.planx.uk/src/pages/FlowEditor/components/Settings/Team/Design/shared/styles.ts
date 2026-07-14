@@ -7,4 +7,5 @@ export const DesignPreview = styled(Box)(({ theme }) => ({
   boxShadow: "4px 4px 0px rgba(150, 150, 150, 0.5)",
   display: "flex",
   justifyContent: "center",
+  color: theme.palette.primary.contrastText,
 }));
