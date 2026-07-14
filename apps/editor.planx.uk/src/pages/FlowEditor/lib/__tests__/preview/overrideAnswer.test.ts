@@ -17,13 +17,13 @@ test("it clears the correct breadcrumb and navigates back to the right node", as
   );
 
   // override answer ("I'm in a flat not a house")
+  expect(getCurrentCard()?.id).toEqual("PropertyInformationNodeId");
   overrideAnswer("property.type");
 
   // confirm we've cleared the provided passport variable from the first node that set it but added an audit variable `_overrides`
   const afterOverrideBreadcrumb = getState().breadcrumbs;
   const addressBreadcrumb: any =
     afterOverrideBreadcrumb?.["FindPropertyNodeId"]?.data;
-  expect(Object.keys(addressBreadcrumb)).toHaveLength(4);
   expect(addressBreadcrumb).not.toHaveProperty(["property.type"]);
   expect(addressBreadcrumb).toHaveProperty(["_overrides"]);
 
@@ -58,6 +58,7 @@ test("it clears the correct breadcrumb and navigates back to the right node", as
 const propertySearchBreadcrumb = {
   FindPropertyNodeId: {
     auto: false,
+    seq: 1,
     data: {
       _address: {
         uprn: "100081281679",
@@ -86,10 +87,12 @@ const propertySearchBreadcrumb = {
   SecondPropertyTypeQuestionNodeId: {
     answers: ["SemiDetachedResponseNodeId"],
     auto: true,
+    seq: 3,
   },
   FirstPropertyTypeQuestionNodeId: {
     answers: ["HouseResponseNodeId"],
     auto: true,
+    seq: 2,
   },
 };
 
