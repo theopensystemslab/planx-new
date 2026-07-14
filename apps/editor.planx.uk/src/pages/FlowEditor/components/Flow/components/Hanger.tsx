@@ -100,8 +100,8 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
 
   return (
     <>
-      {/* decoartive only - connector between parent node and note*/}
       {showNoteCards && (
+        /* decoartive only - connector between parent node and note*/
         <li className="hanger note-connector" aria-hidden="true" />
       )}
       {showNoteCards &&

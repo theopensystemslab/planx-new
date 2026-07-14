@@ -59,6 +59,29 @@ $fontMonospace: "Source Code Pro", monospace;
   }
 }
 
+// Triangle shapes to simulate a paper fold on a note's corner
+@mixin paperFoldFront($size: 12px, $background: #fff) {
+  content: "";
+  position: absolute;
+  right: -$nodeBorderWidth;
+  bottom: -$nodeBorderWidth;
+  width: 0;
+  height: 0;
+  border-bottom: $size solid $background;
+  border-left: $size solid transparent;
+}
+
+@mixin paperFoldBack($size: 12px, $foldColor: #555) {
+  content: "";
+  position: absolute;
+  right: -$nodeBorderWidth;
+  bottom: -$nodeBorderWidth;
+  width: 0;
+  height: 0;
+  border-top: $size solid $foldColor;
+  border-right: $size solid transparent;
+}
+
 @mixin cloneStyle {
   content: "";
   position: absolute;
@@ -309,26 +332,11 @@ $fontMonospace: "Source Code Pro", monospace;
     overflow-wrap: break-word;
     word-break: break-word;
 
-    // Triangle shapes to simulate a paper fold on the note's corner
     &::before {
-      content: "";
-      position: absolute;
-      right: -$nodeBorderWidth;
-      bottom: -$nodeBorderWidth;
-      width: 0;
-      height: 0;
-      border-bottom: 12px solid #fff;
-      border-left: 12px solid transparent;
+      @include paperFoldFront;
     }
     &::after {
-      content: "";
-      position: absolute;
-      right: -$nodeBorderWidth;
-      bottom: -$nodeBorderWidth;
-      width: 0;
-      height: 0;
-      border-top: 12px solid #555;
-      border-right: 12px solid transparent;
+      @include paperFoldBack;
     }
   }
 
@@ -561,26 +569,11 @@ $fontMonospace: "Source Code Pro", monospace;
     overflow-wrap: break-word;
     word-break: break-word;
 
-    // Triangle shapes to simulate a paper fold on the note's corner
     &::before {
-      content: "";
-      position: absolute;
-      right: -$nodeBorderWidth;
-      bottom: -$nodeBorderWidth;
-      width: 0;
-      height: 0;
-      border-bottom: 10px solid #fff;
-      border-left: 10px solid transparent;
+      @include paperFoldFront(10px);
     }
     &::after {
-      content: "";
-      position: absolute;
-      right: -$nodeBorderWidth;
-      bottom: -$nodeBorderWidth;
-      width: 0;
-      height: 0;
-      border-top: 10px solid #999;
-      border-right: 10px solid transparent;
+      @include paperFoldBack(10px, #999);
     }
   }
 }
@@ -763,27 +756,13 @@ $fontMonospace: "Source Code Pro", monospace;
     // Triangle shapes to simulate paper fold on sticky note
     &:not(.isClone) a {
       &::before {
-        content: "";
-        position: absolute;
-        right: -$nodeBorderWidth;
-        bottom: -$nodeBorderWidth;
-        width: 0;
-        height: 0;
-        border-bottom: 12px solid #fff;
-        border-left: 12px solid transparent;
+        @include paperFoldFront;
         .flow-locked & {
           border-bottom-color: $lockedNodeBackground;
         }
       }
       &::after {
-        content: "";
-        position: absolute;
-        right: -$nodeBorderWidth;
-        bottom: -$nodeBorderWidth;
-        width: 0;
-        height: 0;
-        border-top: 12px solid #555;
-        border-right: 12px solid transparent;
+        @include paperFoldBack;
       }
     }
   }
