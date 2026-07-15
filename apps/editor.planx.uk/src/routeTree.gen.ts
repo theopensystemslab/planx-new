@@ -28,7 +28,6 @@ import { Route as PublicCustomDomainFlowIndexRouteImport } from './routes/_publi
 import { Route as AuthenticatedAppGlobalSettingsIndexRouteImport } from './routes/_authenticated/app/global-settings/index'
 import { Route as AuthenticatedAppTeamIndexRouteImport } from './routes/_authenticated/app/$team/index'
 import { Route as PublicCustomDomainFlowViewApplicationRouteImport } from './routes/_public/_customDomain/$flow/view-application'
-import { Route as AuthenticatedAppGlobalSettingsPatternsRouteImport } from './routes/_authenticated/app/global-settings/patterns'
 import { Route as AuthenticatedAppGlobalSettingsFooterRouteImport } from './routes/_authenticated/app/global-settings/footer'
 import { Route as AuthenticatedAppTeamTutorialsRouteImport } from './routes/_authenticated/app/$team/tutorials'
 import { Route as AuthenticatedAppTeamSubscriptionRouteImport } from './routes/_authenticated/app/$team/subscription'
@@ -206,12 +205,6 @@ const PublicCustomDomainFlowViewApplicationRoute =
     id: '/view-application',
     path: '/view-application',
     getParentRoute: () => PublicCustomDomainFlowRouteRoute,
-  } as any)
-const AuthenticatedAppGlobalSettingsPatternsRoute =
-  AuthenticatedAppGlobalSettingsPatternsRouteImport.update({
-    id: '/patterns',
-    path: '/patterns',
-    getParentRoute: () => AuthenticatedAppGlobalSettingsRouteRoute,
   } as any)
 const AuthenticatedAppGlobalSettingsFooterRoute =
   AuthenticatedAppGlobalSettingsFooterRouteImport.update({
@@ -697,7 +690,6 @@ export interface FileRoutesByFullPath {
   '/app/$team/subscription': typeof AuthenticatedAppTeamSubscriptionRoute
   '/app/$team/tutorials': typeof AuthenticatedAppTeamTutorialsRoute
   '/app/global-settings/footer': typeof AuthenticatedAppGlobalSettingsFooterRoute
-  '/app/global-settings/patterns': typeof AuthenticatedAppGlobalSettingsPatternsRoute
   '/$flow/view-application': typeof PublicCustomDomainFlowViewApplicationRoute
   '/app/$team/': typeof AuthenticatedAppTeamIndexRoute
   '/app/global-settings/': typeof AuthenticatedAppGlobalSettingsIndexRoute
@@ -784,7 +776,6 @@ export interface FileRoutesByTo {
   '/app/$team/subscription': typeof AuthenticatedAppTeamSubscriptionRoute
   '/app/$team/tutorials': typeof AuthenticatedAppTeamTutorialsRoute
   '/app/global-settings/footer': typeof AuthenticatedAppGlobalSettingsFooterRoute
-  '/app/global-settings/patterns': typeof AuthenticatedAppGlobalSettingsPatternsRoute
   '/$flow/view-application': typeof PublicCustomDomainFlowViewApplicationRoute
   '/app/$team': typeof AuthenticatedAppTeamIndexRoute
   '/app/global-settings': typeof AuthenticatedAppGlobalSettingsIndexRoute
@@ -875,7 +866,6 @@ export interface FileRoutesById {
   '/_authenticated/app/$team/subscription': typeof AuthenticatedAppTeamSubscriptionRoute
   '/_authenticated/app/$team/tutorials': typeof AuthenticatedAppTeamTutorialsRoute
   '/_authenticated/app/global-settings/footer': typeof AuthenticatedAppGlobalSettingsFooterRoute
-  '/_authenticated/app/global-settings/patterns': typeof AuthenticatedAppGlobalSettingsPatternsRoute
   '/_public/_customDomain/$flow/view-application': typeof PublicCustomDomainFlowViewApplicationRoute
   '/_authenticated/app/$team/': typeof AuthenticatedAppTeamIndexRoute
   '/_authenticated/app/global-settings/': typeof AuthenticatedAppGlobalSettingsIndexRoute
@@ -972,7 +962,6 @@ export interface FileRouteTypes {
     | '/app/$team/subscription'
     | '/app/$team/tutorials'
     | '/app/global-settings/footer'
-    | '/app/global-settings/patterns'
     | '/$flow/view-application'
     | '/app/$team/'
     | '/app/global-settings/'
@@ -1059,7 +1048,6 @@ export interface FileRouteTypes {
     | '/app/$team/subscription'
     | '/app/$team/tutorials'
     | '/app/global-settings/footer'
-    | '/app/global-settings/patterns'
     | '/$flow/view-application'
     | '/app/$team'
     | '/app/global-settings'
@@ -1149,7 +1137,6 @@ export interface FileRouteTypes {
     | '/_authenticated/app/$team/subscription'
     | '/_authenticated/app/$team/tutorials'
     | '/_authenticated/app/global-settings/footer'
-    | '/_authenticated/app/global-settings/patterns'
     | '/_public/_customDomain/$flow/view-application'
     | '/_authenticated/app/$team/'
     | '/_authenticated/app/global-settings/'
@@ -1361,13 +1348,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/$flow/view-application'
       preLoaderRoute: typeof PublicCustomDomainFlowViewApplicationRouteImport
       parentRoute: typeof PublicCustomDomainFlowRouteRoute
-    }
-    '/_authenticated/app/global-settings/patterns': {
-      id: '/_authenticated/app/global-settings/patterns'
-      path: '/patterns'
-      fullPath: '/app/global-settings/patterns'
-      preLoaderRoute: typeof AuthenticatedAppGlobalSettingsPatternsRouteImport
-      parentRoute: typeof AuthenticatedAppGlobalSettingsRouteRoute
     }
     '/_authenticated/app/global-settings/footer': {
       id: '/_authenticated/app/global-settings/footer'
@@ -2116,7 +2096,6 @@ const AuthenticatedAppTeamRouteRouteWithChildren =
 
 interface AuthenticatedAppGlobalSettingsRouteRouteChildren {
   AuthenticatedAppGlobalSettingsFooterRoute: typeof AuthenticatedAppGlobalSettingsFooterRoute
-  AuthenticatedAppGlobalSettingsPatternsRoute: typeof AuthenticatedAppGlobalSettingsPatternsRoute
   AuthenticatedAppGlobalSettingsIndexRoute: typeof AuthenticatedAppGlobalSettingsIndexRoute
 }
 
@@ -2124,8 +2103,6 @@ const AuthenticatedAppGlobalSettingsRouteRouteChildren: AuthenticatedAppGlobalSe
   {
     AuthenticatedAppGlobalSettingsFooterRoute:
       AuthenticatedAppGlobalSettingsFooterRoute,
-    AuthenticatedAppGlobalSettingsPatternsRoute:
-      AuthenticatedAppGlobalSettingsPatternsRoute,
     AuthenticatedAppGlobalSettingsIndexRoute:
       AuthenticatedAppGlobalSettingsIndexRoute,
   }

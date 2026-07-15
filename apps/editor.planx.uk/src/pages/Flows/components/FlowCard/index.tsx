@@ -16,12 +16,14 @@ import { FlowPinButton } from "../FlowPinButton";
 import { FlowTemplateIndicator } from "../FlowTemplateIndicator";
 import { useFlowDates } from "../hooks/useFlowDates";
 import { useFlowMetadata } from "../hooks/useFlowMetadata";
+import { PatternIndicator } from "../PatternIndicator";
 import {
   Card,
   CardBanner,
   CardContent,
   FlowCardLink,
   LinkSubText,
+  PatternCardBanner,
 } from "./styles";
 
 interface Props {
@@ -41,6 +43,7 @@ const FlowCard: React.FC<Props> = ({ flow, view }) => {
     isSourceTemplate,
     isTemplatedFlow,
     isService,
+    isPattern,
     statusVariant,
   } = useFlowMetadata(flow);
 
@@ -78,6 +81,11 @@ const FlowCard: React.FC<Props> = ({ flow, view }) => {
               teamName={flow.template?.team.name}
             />
           </CardBanner>
+        )}
+        {isPattern && (
+          <PatternCardBanner>
+            <PatternIndicator />
+          </PatternCardBanner>
         )}
         <CardContent>
           <Stack

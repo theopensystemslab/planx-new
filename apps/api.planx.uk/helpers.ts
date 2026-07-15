@@ -14,6 +14,7 @@ export interface GetFlowDataResponse {
   summary: string | null;
   description: string | null;
   isService: boolean;
+  isPattern: boolean;
   limitations: string | null;
   teamId: number;
   team: { slug: string };
@@ -43,6 +44,7 @@ const getFlowData = async (id: string): Promise<GetFlowDataResponse> => {
           summary
           description
           isService: is_service
+          isPattern: is_pattern
           limitations
           teamId: team_id
           team {
@@ -82,6 +84,7 @@ const createFlow = async ({
   description,
   limitations,
   isService,
+  isPattern,
   $apiClient,
 }: {
   teamId: number;
@@ -95,6 +98,7 @@ const createFlow = async ({
   description?: string;
   limitations?: string;
   isService?: boolean;
+  isPattern?: boolean;
   $apiClient?: ReturnType<typeof getClient>["client"];
 }) => {
   const { client: $userClient } = getClient();
@@ -120,6 +124,7 @@ const createFlow = async ({
           $description: String
           $limitations: String
           $is_service: Boolean
+          $is_pattern: Boolean
           $creator_id: Int
         ) {
           insertFlow: insert_flows_one(
@@ -136,6 +141,7 @@ const createFlow = async ({
               description: $description
               limitations: $limitations
               is_service: $is_service
+              is_pattern: $is_pattern
               creator_id: $creator_id
             }
           ) {
@@ -155,6 +161,7 @@ const createFlow = async ({
         description: description,
         limitations: limitations,
         is_service: isService,
+        is_pattern: isPattern,
         creator_id: userId,
       },
     );

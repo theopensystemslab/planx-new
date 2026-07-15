@@ -268,6 +268,7 @@ export interface FlowSummary {
   isTemplate: boolean;
   isListedOnLPS: boolean;
   isService: boolean;
+  isPattern: boolean;
   pinnedFlows: { flowId: string }[];
   template: {
     team: {
@@ -323,6 +324,7 @@ export interface EditorStore extends Store.Store {
   lastPublishedDate?: string;
   setLastPublishedDate: (date: string) => void;
   isFlowPublished: boolean;
+  isPattern: boolean;
   isTemplate: boolean;
   isService: boolean;
   isTemplatedFrom: boolean;
@@ -637,6 +639,8 @@ export const editorStore: StateCreator<
   },
 
   isFlowPublished: false,
+
+  isPattern: false,
 
   isTemplate: false,
 

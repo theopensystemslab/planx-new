@@ -61,6 +61,7 @@ const Flows: React.FC<FlowsProps> = (initialFlows) => {
   const searchParams = useSearch({ from: "/_authenticated/app/$team/flows" });
 
   const { data } = useGetFlows(teamId);
+  // TODO filter out patterns for non-admins
   const flows = data?.flows ?? initialFlows.flows;
   const [flowView, setFlowView] = useState<FlowView>("flows");
 

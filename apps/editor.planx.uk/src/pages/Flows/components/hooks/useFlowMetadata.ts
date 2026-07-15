@@ -11,6 +11,7 @@ export const useFlowMetadata = (flow: FlowSummary) => {
     const isService = flow.isService;
     const statusVariant =
       flow.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
+    const isPattern = flow.isPattern;
 
     return {
       hasSendComponent,
@@ -19,6 +20,7 @@ export const useFlowMetadata = (flow: FlowSummary) => {
       isService,
       isAnyTemplate,
       statusVariant,
+      isPattern,
     };
   }, [flow]);
 };

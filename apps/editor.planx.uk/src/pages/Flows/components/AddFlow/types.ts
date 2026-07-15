@@ -7,6 +7,7 @@ export const validationSchema = object().shape({
     slug: string().required("Slug is required"),
     name: string().required("Name is required"),
     teamId: number().integer().required("Team ID is required"),
+    isPattern: boolean(), // TODO error if isTemplate or isService are true?
     isTemplate: boolean(),
     isService: boolean(),
     sourceId: string().when("$mode", {

@@ -21,7 +21,11 @@ interface Props {
 }
 
 const FlowSettingsLayout: React.FC<Props> = ({ children }) => {
-  const [flowId, flowSlug] = useStore((state) => [state.id, state.flowSlug]);
+  const [flowId, flowSlug, isPattern] = useStore((state) => [
+    state.id,
+    state.flowSlug,
+    state.isPattern,
+  ]);
   const { team } = useParams({ from: "/_authenticated/app/$team" });
 
   const { data: templateData } = useQuery<GetFlowTemplateStatus>(
@@ -65,10 +69,22 @@ const FlowSettingsLayout: React.FC<Props> = ({ children }) => {
           },
         ];
 
+  // TODO handle granularity with these visible tabs? Eg copyable doesn't apply, only need one 'about' summary
+  const patternsSettingsLinks = [
+    { label: "Visibility", path: "/visibility", icon: VisibilityIcon },
+    { label: "About", path: "/about", icon: InfoIcon },
+  ];
+
+  const getSettingsLinks = (isPattern: boolean, isService?: boolean) => {
+    if (isPattern) return patternsSettingsLinks;
+    if (isService) return serviceSettingsLinks;
+    return flowSettingsLinks;
+  };
+
   return (
     <SettingsLayout
       title="Flow settings"
-      settingsLinks={isService ? serviceSettingsLinks : flowSettingsLinks}
+      settingsLinks={getSettingsLinks(isPattern, isService)}
       getNavigationPath={(path) => `/app/${team}/${flowSlug}/settings${path}`}
       topOffset={BREADCRUMBS_HEIGHT}
     >

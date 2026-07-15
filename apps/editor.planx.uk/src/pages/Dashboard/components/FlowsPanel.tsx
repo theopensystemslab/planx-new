@@ -97,6 +97,26 @@ export const FlowsPanel: React.FC<FlowsPanelProps> = ({
             const isService = flow.isService;
             const isAnyTemplate =
               flow.isTemplate || Boolean(flow.templatedFrom);
+            const isPattern = flow.isPattern;
+
+            const getBackgroundColor = (
+              isAnyTemplate: boolean,
+              isPattern: boolean,
+            ): string => {
+              if (isAnyTemplate) return "template.light";
+              if (isPattern) return "pattern.main";
+              return "transparent";
+            };
+
+            const getHoverBackgroundColor = (
+              isAnyTemplate: boolean,
+              isPattern: boolean,
+            ): string => {
+              if (isAnyTemplate) return "template.main";
+              if (isPattern) return "pattern.main";
+              return "background.paper";
+            };
+
             return (
               <React.Fragment key={flow.id}>
                 {i > 0 && <Divider sx={{ borderColor: "border.main" }} />}
@@ -105,13 +125,15 @@ export const FlowsPanel: React.FC<FlowsPanelProps> = ({
                     position: "relative",
                     px: 2,
                     py: 1.25,
-                    backgroundColor: isAnyTemplate
-                      ? "template.light"
-                      : "transparent",
+                    backgroundColor: getBackgroundColor(
+                      isAnyTemplate,
+                      isPattern,
+                    ),
                     "&:hover": {
-                      backgroundColor: isAnyTemplate
-                        ? "template.main"
-                        : "background.paper",
+                      backgroundColor: getHoverBackgroundColor(
+                        isAnyTemplate,
+                        isPattern,
+                      ),
                     },
                   }}
                 >
@@ -177,6 +199,8 @@ export const FlowsPanel: React.FC<FlowsPanelProps> = ({
 export default function ConnectedFlowsPanel() {
   const team = useStore((state) => state.getTeam());
   const { data, loading } = useGetFlows(team.id);
+
+  // TODO filter out patterns for non-admins
   const flows = data?.flows ?? [];
 
   return <FlowsPanel flows={flows} teamSlug={team.slug} loading={loading} />;

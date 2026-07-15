@@ -19,10 +19,11 @@ import { FlowTemplateIndicator } from "../FlowTemplateIndicator";
 import { useFlowDates } from "../hooks/useFlowDates";
 import { useFlowMetadata } from "../hooks/useFlowMetadata";
 import { useFlowSortDisplay } from "../hooks/useFlowSortDisplay";
-import { FlowRowLink } from "./styles";
+import { PatternIndicator } from "../PatternIndicator";
 import {
   FlowActionsCell,
   FlowDateCell,
+  FlowRowLink,
   FlowStatusCell,
   FlowTitleCell,
   SpacerTableRow,
@@ -135,13 +136,18 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
     isSourceTemplate,
     isTemplatedFlow,
     isService,
+    isPattern,
     statusVariant,
   } = useFlowMetadata(flow);
 
   const { displayTimeAgo, displayActor } = useFlowDates(flow);
 
   return (
-    <StyledTableRow isTemplated={isAnyTemplate} clickable={showDetails}>
+    <StyledTableRow
+      isTemplated={isAnyTemplate}
+      isPattern={isPattern}
+      clickable={showDetails}
+    >
       <FlowTitleCell>
         <Box>
           {isAnyTemplate && (
@@ -151,6 +157,11 @@ const FlowTableRow: React.FC<FlowTableRowProps> = ({
                 isTemplatedFlow={isTemplatedFlow}
                 teamName={flow.template?.team.name}
               />
+            </Box>
+          )}
+          {isPattern && (
+            <Box sx={{ mb: 0.5 }}>
+              <PatternIndicator />
             </Box>
           )}
           <Typography variant="h4" component="span">

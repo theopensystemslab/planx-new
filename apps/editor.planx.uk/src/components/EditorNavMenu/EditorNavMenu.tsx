@@ -68,9 +68,10 @@ function EditorNavMenu() {
   const notificationsRef = useRef<HTMLDivElement>(null);
   const featureFlagsRef = useRef<HTMLDivElement>(null);
 
-  const [role, team] = useStore((state) => [
+  const [role, team, isPattern] = useStore((state) => [
     state.getUserRoleForCurrentTeam(),
     state.getTeam(),
+    state.isPattern,
   ]);
 
   const referenceCode = team?.settings?.referenceCode;
@@ -284,24 +285,26 @@ function EditorNavMenu() {
             Icon: RateReviewIcon,
             route: `/app/${teamSlug}/${flowSlug}/feedback`,
             accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"],
+            disabled: isPattern, // TODO fully hide
           },
           {
             title: "Submissions",
             Icon: FactCheckIcon,
             route: `/app/${teamSlug}/${flowSlug}/submissions`,
             accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"],
+            disabled: isPattern, // TODO fully hide
           },
           {
             title: "Analytics",
             Icon: LeaderboardIcon,
             route: flowAnalyticsLink ? flowAnalyticsLink : `#`,
             accessibleBy: "*",
-            disabled: !flowAnalyticsLink,
+            disabled: !flowAnalyticsLink || isPattern, // TODO fully hide
           },
         ],
       },
     ],
-    [teamSlug, flowSlug, flowAnalyticsLink],
+    [teamSlug, flowSlug, flowAnalyticsLink, isPattern],
   );
 
   const getRoutesForUrl = (): { sections: MenuSection[]; compact: boolean } => {

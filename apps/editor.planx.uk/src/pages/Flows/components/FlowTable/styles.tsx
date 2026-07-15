@@ -1,9 +1,12 @@
+import type { Theme } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { inputFocusStyle } from "theme";
+
+import { CustomLink } from "../../../../ui/shared/CustomLink/CustomLink";
 
 export const SpacerTableRow = styled(TableRow)(({ theme }) => ({
   height: theme.spacing(3),
@@ -14,8 +17,6 @@ export const SpacerTableRow = styled(TableRow)(({ theme }) => ({
     borderBottom: `1px solid ${theme.palette.border.main} !important`,
   },
 }));
-
-import { CustomLink } from "../../../../ui/shared/CustomLink/CustomLink";
 
 export const StyledTable = styled(Table)(({ theme }) => ({
   marginTop: theme.spacing(2),
@@ -48,24 +49,34 @@ export const StyledTableHead = styled(TableHead)(({ theme }) => ({
 }));
 
 export const StyledTableRow = styled(TableRow, {
-  shouldForwardProp: (prop) => prop !== "isTemplated" && prop !== "clickable",
-})<{ isTemplated?: boolean; clickable?: boolean }>(({
+  shouldForwardProp: (prop) =>
+    prop !== "isTemplated" && prop !== "isPattern" && prop !== "clickable",
+})<{ isTemplated?: boolean; isPattern?: boolean; clickable?: boolean }>(({
   theme,
   isTemplated,
+  isPattern,
   clickable = true,
 }) => {
   let hoverBackground: string | undefined;
-  if (clickable && isTemplated) {
+  if (clickable && isTemplated && isPattern) {
     hoverBackground = theme.palette.template.main;
   } else if (clickable) {
     hoverBackground = theme.palette.background.paper;
   }
 
+  const getBackgroundColor = (
+    theme: Theme,
+    isTemplated?: boolean,
+    isPattern?: boolean,
+  ): string => {
+    if (isTemplated) return theme.palette.template.light;
+    if (isPattern) return theme.palette.pattern.light;
+    return theme.palette.background.default;
+  };
+
   return {
     position: "relative",
-    backgroundColor: isTemplated
-      ? theme.palette.template.light
-      : theme.palette.background.default,
+    backgroundColor: getBackgroundColor(theme, isTemplated, isPattern),
     "&:hover": {
       backgroundColor: hoverBackground,
     },

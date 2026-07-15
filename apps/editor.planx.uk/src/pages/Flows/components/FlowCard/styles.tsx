@@ -29,6 +29,23 @@ export const CardBanner = styled(Box)(({ theme }) => ({
   gap: theme.spacing(0.4),
 }));
 
+export const PatternCardBanner = styled(Box)(({ theme }) => ({
+  width: "100%",
+  // TODO Ian to update? Fun but a bit easter egg
+  background: `repeating-linear-gradient(
+    45deg, 
+    ${theme.palette.pattern.light}, 
+    ${theme.palette.pattern.light} 5px,
+    ${theme.palette.pattern.dark} 5px,
+    ${theme.palette.pattern.dark} 10px
+  )`,
+  padding: theme.spacing(0.5, 2),
+  borderBottom: `1px solid ${theme.palette.border.main}`,
+  display: "flex",
+  alignItems: "center",
+  gap: theme.spacing(0.4),
+}));
+
 export const CardContent = styled(Box)(({ theme }) => ({
   height: "100%",
   textDecoration: "none",

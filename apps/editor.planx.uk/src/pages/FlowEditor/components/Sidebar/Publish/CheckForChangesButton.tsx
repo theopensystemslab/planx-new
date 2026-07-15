@@ -96,6 +96,7 @@ export const CheckForChangesToPublishButton: React.FC<{
 
   const isDisabled =
     !useStore.getState().canUserEditTeam(teamSlug) ||
+    useStore.getState().isPattern ||
     checkForChangesMutation.isPending ||
     publishMutation.isPending;
 

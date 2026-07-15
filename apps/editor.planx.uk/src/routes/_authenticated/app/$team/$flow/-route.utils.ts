@@ -33,6 +33,7 @@ export async function connectToFlowRoute(teamSlug: string, rootFlow: string) {
       isService: flowEditorData.isService,
       isTemplatedFrom: Boolean(flowEditorData.templatedFrom),
       template: flowEditorData.template,
+      isPattern: flowEditorData.isPattern,
     });
 
     if (flowEditorData.templatedFrom) {

@@ -19,6 +19,7 @@ export const createFlowSchema = z.object({
     name: z.string().trim(),
     isTemplate: z.boolean().optional().default(false),
     isService: z.boolean().optional().default(false),
+    isPattern: z.boolean().optional().default(false),
   }),
 });
 
@@ -33,7 +34,7 @@ export const createFlowController: CreateFlowController = async (
   next,
 ) => {
   try {
-    const { teamId, slug, name, isTemplate, isService } =
+    const { teamId, slug, name, isTemplate, isService, isPattern } =
       res.locals.parsedReq.body;
     const flowData: FlowGraph = { _root: { edges: [] } };
 
@@ -44,6 +45,7 @@ export const createFlowController: CreateFlowController = async (
       name,
       isTemplate,
       isService,
+      isPattern,
       flowData,
     });
 

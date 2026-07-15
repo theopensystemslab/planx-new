@@ -145,6 +145,7 @@ insert_permissions:
         - description
         - id
         - is_listed_on_lps
+        - is_pattern
         - is_service
         - is_template
         - limitations
@@ -168,6 +169,7 @@ insert_permissions:
         - description
         - id
         - is_listed_on_lps
+        - is_pattern
         - is_service
         - is_template
         - limitations
@@ -230,27 +232,32 @@ select_permissions:
   - role: analyst
     permission:
       columns:
-        - archived_at
-        - can_create_from_copy
-        - category
-        - created_at
+        - is_pattern
+        - is_service
+        - is_template
+        - summary
         - creator_id
-        - data
+        - team_id
+        - settings
         - description
         - email_template
-        - id
-        - is_listed_on_lps
-        - is_template
         - limitations
-        - name
-        - settings
         - slug
         - status
-        - summary
-        - team_id
-        - templated_from
+        - archived_at
+        - created_at
+        - deleted_at
         - updated_at
+        - copied_from
+        - id
+        - submission_email_id
+        - templated_from
+        - category
+        - can_create_from_copy
+        - is_listed_on_lps
         - version
+        - data
+        - name
       computed_fields:
         - data_merged
         - first_online_at
@@ -263,31 +270,32 @@ select_permissions:
   - role: api
     permission:
       columns:
-        - archived_at
-        - can_create_from_copy
-        - category
-        - copied_from
-        - created_at
-        - creator_id
-        - data
-        - deleted_at
-        - description
-        - email_template
-        - id
-        - is_listed_on_lps
+        - is_pattern
         - is_service
         - is_template
-        - limitations
-        - name
+        - summary
+        - creator_id
+        - team_id
         - settings
+        - description
+        - email_template
+        - limitations
         - slug
         - status
-        - submission_email_id
-        - summary
-        - team_id
-        - templated_from
+        - archived_at
+        - created_at
+        - deleted_at
         - updated_at
+        - copied_from
+        - id
+        - submission_email_id
+        - templated_from
+        - category
+        - can_create_from_copy
+        - is_listed_on_lps
         - version
+        - data
+        - name
       computed_fields:
         - data_merged
         - first_online_at
@@ -299,31 +307,32 @@ select_permissions:
   - role: platformAdmin
     permission:
       columns:
-        - archived_at
-        - can_create_from_copy
-        - category
-        - copied_from
-        - created_at
-        - creator_id
-        - data
-        - deleted_at
-        - description
-        - email_template
-        - id
-        - is_listed_on_lps
+        - is_pattern
         - is_service
         - is_template
-        - limitations
-        - name
+        - summary
+        - creator_id
+        - team_id
         - settings
+        - description
+        - email_template
+        - limitations
         - slug
         - status
-        - submission_email_id
-        - summary
-        - team_id
-        - templated_from
+        - archived_at
+        - created_at
+        - deleted_at
         - updated_at
+        - copied_from
+        - id
+        - submission_email_id
+        - templated_from
+        - category
+        - can_create_from_copy
+        - is_listed_on_lps
         - version
+        - data
+        - name
       computed_fields:
         - data_merged
         - first_online_at
@@ -344,6 +353,7 @@ select_permissions:
         - email_template
         - id
         - is_listed_on_lps
+        - is_pattern
         - is_service
         - is_template
         - limitations
@@ -368,30 +378,32 @@ select_permissions:
   - role: teamEditor
     permission:
       columns:
-        - archived_at
-        - can_create_from_copy
-        - category
-        - copied_from
-        - created_at
-        - creator_id
-        - data
-        - description
-        - email_template
-        - id
-        - is_listed_on_lps
+        - is_pattern
         - is_service
         - is_template
-        - limitations
-        - name
+        - summary
+        - creator_id
+        - team_id
         - settings
+        - description
+        - email_template
+        - limitations
         - slug
         - status
-        - submission_email_id
-        - summary
-        - team_id
-        - templated_from
+        - archived_at
+        - created_at
+        - deleted_at
         - updated_at
+        - copied_from
+        - id
+        - submission_email_id
+        - templated_from
+        - category
+        - can_create_from_copy
+        - is_listed_on_lps
         - version
+        - data
+        - name
       computed_fields:
         - data_merged
         - first_online_at
@@ -448,6 +460,7 @@ update_permissions:
         - description
         - email_template
         - is_listed_on_lps
+        - is_pattern
         - is_service
         - is_template
         - limitations
