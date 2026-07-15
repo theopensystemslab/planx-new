@@ -10,6 +10,7 @@ $dataBackground: #f0f0f0;
 $lockedDataBackground: #e2e2e2;
 $folderBackground: #b5d1f7;
 $folderBorder: #2c4b88;
+$primaryAction: #0010a4;
 
 $endpointWidth: 50px;
 $hangerWidth: 16px;
@@ -183,9 +184,27 @@ $fontMonospace: "Source Code Pro", monospace;
   }
 
   &.isDragging {
-    opacity: 0.3;
+    opacity: 0.5;
+    & > .card-wrapper > a {
+      border-style: dashed;
+    }
     & + .hanger {
       @include disabledHanger();
+
+      // Don't show sibling hangers as drop targets while dragging a node
+      &.hanger--drop-target,
+      &.hanger--drop-target-active {
+        > a,
+        > button {
+          background-color: $hangerBackground;
+          transform: none;
+
+          &::before,
+          &::after {
+            content: none;
+          }
+        }
+      }
     }
     > ol {
       visibility: hidden;
@@ -490,6 +509,60 @@ $fontMonospace: "Source Code Pro", monospace;
 
     &:empty {
       padding: 0;
+    }
+  }
+
+  // Highlight available hangers as drop targets while node is being dragged
+  &.hanger--drop-target {
+    $dropTargetScale: 1.5;
+
+    > a,
+    > button {
+      position: relative;
+      width: $hangerWidth;
+      background-color: white;
+      transform: scale($dropTargetScale);
+      transition:
+        background-color 0.2s,
+        transform 0.2s,
+        width 0.1s;
+
+      // Show a "+" indicator in the center of the hanger
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        background-color: $black;
+        transform: translate(-50%, -50%);
+      }
+      &::before {
+        width: 5px;
+        height: 1px;
+      }
+      &::after {
+        width: 1px;
+        height: 5px;
+      }
+    }
+
+    // Show a preview of the node while over a drop target hanger
+    &.hanger--drop-target-active {
+      > a,
+      > button {
+        transition: none;
+        width: auto;
+        min-width: 134px;
+        transform: none;
+        background-color: $hangerBackground;
+        border-radius: 0;
+
+        &::before,
+        &::after {
+          content: none;
+        }
+      }
     }
   }
 }
