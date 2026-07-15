@@ -131,7 +131,7 @@ describe("repositionNotesForDeletedNodes", () => {
 
     expect(reanchored).toEqual({
       id: "note-after-deleted",
-      placement: { parent: "survivor" },
+      placement: { parent: "survivor", container: "_root" },
     });
   });
 

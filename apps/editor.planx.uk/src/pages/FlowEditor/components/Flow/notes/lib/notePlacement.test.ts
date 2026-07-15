@@ -31,12 +31,14 @@ describe("resolveNotePlacement (encode)", () => {
     // note between nodeA and nodeB
     expect(resolveNotePlacement(linearFlow, "_root", "nodeB")).toEqual({
       parent: "nodeA",
+      container: "_root",
     });
   });
 
   it("anchors to the last child when trailing (no `before` given, preceding sibling exists)", () => {
     expect(resolveNotePlacement(linearFlow, "_root", undefined)).toEqual({
       parent: "nodeC",
+      container: "_root",
     });
   });
 
@@ -155,6 +157,50 @@ describe("resolveNoteRenderCoordinate (decode)", () => {
     const placement = resolveNotePlacement(flow, gap.container, gap.before);
     expect(resolveNoteRenderCoordinate(flow, placement)).toEqual(gap);
   });
+
+  describe("cloned anchor nodes", () => {
+    // "shared" is a cloned node i.e. referenced from two different parents ("b" and "a")
+    // key order would place the note before b due to order but actually we want it to use a
+    const cloneFlow: Graph = {
+      _root: { edges: ["a", "b"] },
+      b: { type: 8, edges: ["shared"] },
+      a: { type: 8, edges: ["shared"] },
+      shared: { type: 8 },
+    };
+
+    it("encode stores the container a cloned sibling was resolved against", () => {
+      expect(resolveNotePlacement(cloneFlow, "a", undefined)).toEqual({
+        parent: "shared",
+        container: "a",
+      });
+    });
+
+    it("decode uses the stored container rather than guessing via findContainerOf", () => {
+      expect(findContainerOf(cloneFlow, "shared")).toBe("b");
+      expect(
+        resolveNoteRenderCoordinate(cloneFlow, {
+          parent: "shared",
+          container: "a",
+        }),
+      ).toEqual({ container: "a", before: undefined });
+    });
+
+    it("falls back to findContainerOf's (possibly wrong) match for legacy placements with no stored container", () => {
+      expect(
+        resolveNoteRenderCoordinate(cloneFlow, { parent: "shared" }),
+      ).toEqual({ container: "b", before: undefined });
+    });
+
+    it("round-trips a note anchored after a cloned sibling", () => {
+      const gap = { container: "a", before: undefined };
+      const placement = resolveNotePlacement(
+        cloneFlow,
+        gap.container,
+        gap.before,
+      );
+      expect(resolveNoteRenderCoordinate(cloneFlow, placement)).toEqual(gap);
+    });
+  });
 });
 
 describe("repositionPlacementAfterDeletion", () => {
@@ -174,7 +220,7 @@ describe("repositionPlacementAfterDeletion", () => {
         "nodeB",
         new Set(["nodeB"]),
       ),
-    ).toEqual({ parent: "nodeA" });
+    ).toEqual({ parent: "nodeA", container: "_root" });
   });
 
   it("walks back past other siblings deleted in the same operation", () => {
@@ -224,6 +270,34 @@ describe("repositionPlacementAfterDeletion", () => {
       before: undefined,
       parentIsContainer: true,
     });
+  });
+
+  it("carries the container through when the re-anchored sibling is itself a clone", () => {
+    // "shared" is referenced from both "x" and "y" - the note being repositioned lives under "y" (anchored to "deleteMe", which is being removed); it must re-anchor to "shared" WITHIN "y", not resolve to "x"
+    const before: Graph = {
+      _root: { edges: ["x", "y"] },
+      x: { type: 8, edges: ["shared"] },
+      y: { type: 8, edges: ["shared", "deleteMe"] },
+      shared: { type: 8 },
+      deleteMe: { type: 8 },
+    };
+    const after = {
+      _root: { edges: ["x", "y"] },
+      x: { type: 8, edges: ["shared"] },
+      y: { type: 8, edges: ["shared"] },
+      shared: { type: 8 },
+    };
+
+    expect(findContainerOf(before, "shared")).toBe("x");
+
+    expect(
+      repositionPlacementAfterDeletion(
+        before,
+        after,
+        "deleteMe",
+        new Set(["deleteMe"]),
+      ),
+    ).toEqual({ parent: "shared", container: "y" });
   });
 
   it("returns null when the deleted anchor's own container was also deleted", () => {

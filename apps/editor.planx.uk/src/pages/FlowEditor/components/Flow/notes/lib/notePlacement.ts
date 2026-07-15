@@ -31,7 +31,7 @@ export const resolveNotePlacement = (
     : containerEdges[containerEdges.length - 1];
 
   if (precedingId) {
-    return { parent: precedingId };
+    return { parent: precedingId, container };
   }
 
   return { parent: container, before, parentIsContainer: true };
@@ -52,7 +52,8 @@ export const resolveNoteRenderCoordinate = (
     return { container: placement.parent, before: placement.before };
   }
 
-  const container = findContainerOf(flow, placement.parent);
+  const container =
+    placement.container ?? findContainerOf(flow, placement.parent);
   if (!container) {
     return { container: placement.parent, before: undefined };
   }
@@ -87,7 +88,7 @@ export const repositionPlacementAfterDeletion = (
 
   while (index >= 0 && deletedIds.has(oldSiblings[index])) index -= 1;
 
-  if (index >= 0) return { parent: oldSiblings[index] };
+  if (index >= 0) return { parent: oldSiblings[index], container };
 
   return {
     parent: container,
