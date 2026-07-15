@@ -21,10 +21,12 @@ describe("changeAnswer", () => {
       rCjETwjwE3: {
         auto: false,
         answers: ["b0qdvLAxIL"],
+        seq: 1,
       },
       vgj2UNYK9r: {
         answers: ["X9JjnbPpnd"],
         auto: true,
+        seq: 2,
       },
     } as Store.Breadcrumbs;
     const cachedBreadcrumbs = {} as Store.CachedBreadcrumbs;
@@ -47,6 +49,7 @@ describe("changeAnswer", () => {
     record("rCjETwjwE3", {
       answers: ["ykNZocRJtQ"],
       auto: false,
+      seq: 3,
     });
 
     expect(getState().changedNode).toEqual("rCjETwjwE3");
@@ -62,6 +65,7 @@ describe("changeAnswer", () => {
       vgj2UNYK9r: {
         answers: ["X9JjnbPpnd"],
         auto: true,
+        seq: 2,
       },
     } as Store.CachedBreadcrumbs;
 

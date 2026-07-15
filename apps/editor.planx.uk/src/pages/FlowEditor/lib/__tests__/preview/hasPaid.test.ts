@@ -36,12 +36,12 @@ test("hasPaid is updated if a Pay component has been recorded", () => {
       answers: ["c"],
       auto: false,
       createdAt: expect.any(String),
-      seq: expect.any(Number),
+      seq: 1,
     },
     c: {
       auto: false,
       createdAt: expect.any(String),
-      seq: expect.any(Number),
+      seq: 2,
     },
   });
 

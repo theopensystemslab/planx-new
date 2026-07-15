@@ -1,8 +1,8 @@
 import Link from "@mui/material/Link";
-import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ColorPicker from "ui/editor/ColorPicker/ColorPicker";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
 import InputRow from "ui/shared/InputRow";
@@ -17,11 +17,10 @@ import { defaultValues, validationSchema } from "../shared/validationSchema";
 import type { FormValues, MutationVars } from "./types";
 
 const ThemeAndLogo: React.FC = () => {
-  const [teamId, teamSlug] = useStore((state) => [
+  const [teamId, teamName] = useStore((state) => [
     state.teamId,
-    state.teamSlug,
+    state.teamName,
   ]);
-  const muiTheme = useTheme();
 
   return (
     <SettingsFormContainer<GetTeamTheme, MutationVars, FormValues>
@@ -44,8 +43,8 @@ const ThemeAndLogo: React.FC = () => {
           {formik.values.logo ? (
             <img width="140" src={formik.values.logo} alt="council logo" />
           ) : (
-            <Typography color={muiTheme.palette.primary.contrastText}>
-              Plan✕ / {teamSlug}
+            <Typography variant="h4" sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
+              {teamName}
             </Typography>
           )}
         </DesignPreview>,
