@@ -34,7 +34,7 @@ export const resolveNotePlacement = (
     return { parent: precedingId };
   }
 
-  return { parent: container, before };
+  return { parent: container, before, parentIsContainer: true };
 };
 
 /**
@@ -44,7 +44,11 @@ export const resolveNoteRenderCoordinate = (
   flow: Graph,
   placement: NotePlacement,
 ): { container: string; before?: string } => {
-  if (placement.parent === ROOT_NODE_KEY || placement.before !== undefined) {
+  if (
+    placement.parentIsContainer ||
+    placement.parent === ROOT_NODE_KEY ||
+    placement.before !== undefined
+  ) {
     return { container: placement.parent, before: placement.before };
   }
 
@@ -85,5 +89,9 @@ export const repositionPlacementAfterDeletion = (
 
   if (index >= 0) return { parent: oldSiblings[index] };
 
-  return { parent: container, before: flowAfterDelete[container]?.edges?.[0] };
+  return {
+    parent: container,
+    before: flowAfterDelete[container]?.edges?.[0],
+    parentIsContainer: true,
+  };
 };

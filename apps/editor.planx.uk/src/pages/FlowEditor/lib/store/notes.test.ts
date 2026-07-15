@@ -181,7 +181,11 @@ describe("repositionNotesForDeletedNodes", () => {
 
     expect(reanchored).toEqual({
       id: "note-leading",
-      placement: { parent: "parent-container", before: "other-child" },
+      placement: {
+        parent: "parent-container",
+        before: "other-child",
+        parentIsContainer: true,
+      },
     });
   });
 
@@ -295,7 +299,11 @@ describe("repositionNotesForMovedNode", () => {
     expect(reanchored).toEqual([
       {
         id: "note-before-moved",
-        placement: { parent: "old-parent", before: "new-first-child" },
+        placement: {
+          parent: "old-parent",
+          before: "new-first-child",
+          parentIsContainer: true,
+        },
       },
     ]);
   });

@@ -187,6 +187,7 @@ export const notesStore: StateCreator<
           placement: {
             parent: note.placement.parent,
             before: flowAfterDelete[note.placement.parent]?.edges?.[0],
+            parentIsContainer: true,
           },
         });
         continue;
@@ -255,7 +256,11 @@ export const notesStore: StateCreator<
           mutation: REANCHOR_FLOW_NOTE,
           variables: {
             id: note.id,
-            placement: { parent: oldParent, before: newFirstChildOfOldParent },
+            placement: {
+              parent: oldParent,
+              before: newFirstChildOfOldParent,
+              parentIsContainer: true,
+            },
           },
         }),
       ),

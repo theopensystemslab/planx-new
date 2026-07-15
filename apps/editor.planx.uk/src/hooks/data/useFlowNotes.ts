@@ -6,6 +6,8 @@ export const DEFAULT_NOTE_COLOR = "#fffdb0";
 export interface NotePlacement {
   parent: string;
   before?: string;
+  /** True when `parent` is the container to insert into (leading/first-child slot), not a preceding sibling to anchor after */
+  parentIsContainer?: boolean;
 }
 
 export interface FlowNote {

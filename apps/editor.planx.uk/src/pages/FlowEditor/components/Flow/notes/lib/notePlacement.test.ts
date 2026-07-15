@@ -44,6 +44,7 @@ describe("resolveNotePlacement (encode)", () => {
     expect(resolveNotePlacement(linearFlow, "_root", "nodeA")).toEqual({
       parent: "_root",
       before: "nodeA",
+      parentIsContainer: true,
     });
   });
 
@@ -52,6 +53,19 @@ describe("resolveNotePlacement (encode)", () => {
     expect(resolveNotePlacement(flow, "_root", undefined)).toEqual({
       parent: "_root",
       before: undefined,
+      parentIsContainer: true,
+    });
+  });
+
+  it("marks the placement as container-anchored when added as the first child of an empty, non-root folder", () => {
+    const flow: Graph = {
+      _root: { edges: ["folder"] },
+      folder: { type: 300, edges: [] },
+    };
+    expect(resolveNotePlacement(flow, "folder", undefined)).toEqual({
+      parent: "folder",
+      before: undefined,
+      parentIsContainer: true,
     });
   });
 });
@@ -74,14 +88,43 @@ describe("resolveNoteRenderCoordinate (decode)", () => {
       resolveNoteRenderCoordinate(linearFlow, {
         parent: "_root",
         before: "nodeA",
+        parentIsContainer: true,
       }),
     ).toEqual({ container: "_root", before: "nodeA" });
   });
 
-  it("treats parent === _root as a container even with no before", () => {
+  it("treats parent === _root as a container even with no before (legacy placement without the flag)", () => {
     expect(
       resolveNoteRenderCoordinate(linearFlow, { parent: "_root" }),
     ).toEqual({ container: "_root", before: undefined });
+  });
+
+  it("resolves a container-anchored placement into an empty, non-root folder", () => {
+    const flow: Graph = {
+      _root: { edges: ["folder"] },
+      folder: { type: 300, edges: [] },
+    };
+    expect(
+      resolveNoteRenderCoordinate(flow, {
+        parent: "folder",
+        before: undefined,
+        parentIsContainer: true,
+      }),
+    ).toEqual({ container: "folder", before: undefined });
+  });
+
+  it("still resolves a sibling-anchored placement pointing at an (empty) folder to after that folder, not inside it", () => {
+    // folder is the last child of _root and happens to be empty - without
+    // `parentIsContainer` this must NOT be mistaken for "insert inside folder"
+    const flow: Graph = {
+      _root: { edges: ["nodeA", "folder"] },
+      nodeA: linearFlow.nodeA,
+      folder: { type: 300, edges: [] },
+    };
+    expect(resolveNoteRenderCoordinate(flow, { parent: "folder" })).toEqual({
+      container: "_root",
+      before: undefined,
+    });
   });
 
   it("round-trips through encode then decode back to the original gap", () => {
@@ -100,6 +143,17 @@ describe("resolveNoteRenderCoordinate (decode)", () => {
       );
       expect(resolveNoteRenderCoordinate(linearFlow, placement)).toEqual(gap);
     }
+  });
+
+  it("round-trips a note added as the first child of an empty, non-root folder", () => {
+    const flow: Graph = {
+      _root: { edges: ["folder"] },
+      folder: { type: 300, edges: [] },
+    };
+    const gap = { container: "folder", before: undefined };
+
+    const placement = resolveNotePlacement(flow, gap.container, gap.before);
+    expect(resolveNoteRenderCoordinate(flow, placement)).toEqual(gap);
   });
 });
 
@@ -135,7 +189,7 @@ describe("repositionPlacementAfterDeletion", () => {
         "nodeB",
         new Set(["nodeA", "nodeB"]),
       ),
-    ).toEqual({ parent: "_root", before: "nodeC" });
+    ).toEqual({ parent: "_root", before: "nodeC", parentIsContainer: true });
   });
 
   it("falls back to leading-in-container when the deleted anchor had no preceding sibling", () => {
@@ -152,7 +206,7 @@ describe("repositionPlacementAfterDeletion", () => {
         "nodeA",
         new Set(["nodeA"]),
       ),
-    ).toEqual({ parent: "_root", before: "nodeB" });
+    ).toEqual({ parent: "_root", before: "nodeB", parentIsContainer: true });
   });
 
   it("returns an empty-container leading placement when nothing survives", () => {
@@ -165,7 +219,11 @@ describe("repositionPlacementAfterDeletion", () => {
         "nodeA",
         new Set(["nodeA", "nodeB", "nodeC"]),
       ),
-    ).toEqual({ parent: "_root", before: undefined });
+    ).toEqual({
+      parent: "_root",
+      before: undefined,
+      parentIsContainer: true,
+    });
   });
 
   it("returns null when the deleted anchor's own container was also deleted", () => {
