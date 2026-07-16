@@ -7,6 +7,7 @@ import { ICONS } from "@planx/components/shared/icons";
 import { Link, useParams } from "@tanstack/react-router";
 import classNames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
+import useFlashOnNodeAdded from "hooks/useFlashOnNodeAdded";
 import React from "react";
 import { useDrag } from "react-dnd";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
@@ -66,10 +67,13 @@ const Question: React.FC<Props> = React.memo((props) => {
   const hasHelpText =
     props.data?.policyRef || props.data?.info || props.data?.howMeasured;
 
+  const ref = useFlashOnNodeAdded<HTMLLIElement>(props.id);
+
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li
+        ref={ref}
         className={classNames(
           "card",
           "decision",

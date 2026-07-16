@@ -301,7 +301,9 @@ export interface Template {
 export interface EditorStore extends Store.Store {
   cutNode: (id: NodeId, parent: NodeId) => void;
   getCutNode: () => CutPayload | null;
-  addNode: (node: any, relationships?: Relationships) => void;
+  addNode: (node: any, relationships?: Relationships) => NodeId;
+  lastAddedNodeId?: NodeId;
+  clearLastAddedNodeId: () => void;
   connect: (src: NodeId, tgt: NodeId, object?: any) => void;
   connectToFlow: (id: NodeId) => Promise<void>;
   disconnectFromFlow: () => void;
@@ -370,7 +372,7 @@ export const editorStore: StateCreator<
   EditorStore
 > = (set, get) => ({
   addNode: (
-    { id = undefined, type, data },
+    { id = uniqueId(), type, data },
     { children = undefined, parent = ROOT_NODE_KEY, before = undefined } = {},
   ) => {
     const [, ops] = add(
@@ -378,7 +380,13 @@ export const editorStore: StateCreator<
       { children, parent, before },
     )(get().flow);
     send(ops);
+    set({ lastAddedNodeId: id });
+    return id;
   },
+
+  lastAddedNodeId: undefined,
+
+  clearLastAddedNodeId: () => set({ lastAddedNodeId: undefined }),
 
   connect: (src, tgt, { before = undefined } = {}) => {
     try {
