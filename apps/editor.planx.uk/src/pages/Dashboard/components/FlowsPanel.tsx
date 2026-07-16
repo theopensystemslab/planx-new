@@ -200,8 +200,8 @@ export default function ConnectedFlowsPanel() {
   const team = useStore((state) => state.getTeam());
   const { data, loading } = useGetFlows(team.id);
 
-  // TODO filter out patterns for non-admins
-  const flows = data?.flows ?? [];
+  // Patterns never need to be visible on dashboard
+  const flows = data?.flows?.filter((flow) => !flow.isPattern) ?? [];
 
   return <FlowsPanel flows={flows} teamSlug={team.slug} loading={loading} />;
 }

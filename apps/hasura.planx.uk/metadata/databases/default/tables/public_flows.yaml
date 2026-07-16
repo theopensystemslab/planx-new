@@ -232,32 +232,27 @@ select_permissions:
   - role: analyst
     permission:
       columns:
-        - is_pattern
-        - is_service
-        - is_template
-        - summary
+        - archived_at
+        - can_create_from_copy
+        - category
+        - created_at
         - creator_id
-        - team_id
-        - settings
+        - data
         - description
         - email_template
+        - id
+        - is_listed_on_lps
+        - is_template
         - limitations
+        - name
+        - settings
         - slug
         - status
-        - archived_at
-        - created_at
-        - deleted_at
-        - updated_at
-        - copied_from
-        - id
-        - submission_email_id
+        - summary
+        - team_id
         - templated_from
-        - category
-        - can_create_from_copy
-        - is_listed_on_lps
+        - updated_at
         - version
-        - data
-        - name
       computed_fields:
         - data_merged
         - first_online_at
@@ -378,32 +373,31 @@ select_permissions:
   - role: teamEditor
     permission:
       columns:
+        - archived_at
+        - can_create_from_copy
+        - category
+        - copied_from
+        - created_at
+        - creator_id
+        - data
+        - description
+        - email_template
+        - id
+        - is_listed_on_lps
         - is_pattern
         - is_service
         - is_template
-        - summary
-        - creator_id
-        - team_id
-        - settings
-        - description
-        - email_template
         - limitations
+        - name
+        - settings
         - slug
         - status
-        - archived_at
-        - created_at
-        - deleted_at
-        - updated_at
-        - copied_from
-        - id
         - submission_email_id
+        - summary
+        - team_id
         - templated_from
-        - category
-        - can_create_from_copy
-        - is_listed_on_lps
+        - updated_at
         - version
-        - data
-        - name
       computed_fields:
         - data_merged
         - first_online_at
