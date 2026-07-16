@@ -112,7 +112,7 @@ export interface PreviewStore extends Store.Store {
     id: NodeId,
   ) => AutoAnswerableInputMap[T];
   autoAnswerableOptions: (id: NodeId) => Array<NodeId> | undefined;
-  autoAnswerableFlag: (filterId: NodeId) => NodeId | undefined;
+  autoAnswerableFlag: (filterId: NodeId) => NodeId[] | undefined;
   hasAcknowledgedWarning: boolean;
   setHasAcknowledgedWarning: () => void;
   currentCardURL: () => string | null;
@@ -789,7 +789,7 @@ export const previewStore: StateCreator<
     }
 
     // Filters 'select one' and therefore can only auto-answer the single left-most matching flag option
-    return optionsThatCanBeAutoAnswered.slice(0, 1).toString();
+    return optionsThatCanBeAutoAnswered.slice(0, 1);
   },
 
   isFinalCard: () => {

@@ -223,12 +223,7 @@ const Node: React.FC<Props> = (props) => {
       const filterProps = getComponentProps<FilterData>();
       const autoAnswers = nodeId ? autoAnswerableFlag(nodeId) : undefined;
 
-      return (
-        <FilterComponent
-          {...filterProps}
-          autoAnswers={autoAnswers ? [autoAnswers] : undefined}
-        />
-      );
+      return <FilterComponent {...filterProps} autoAnswers={autoAnswers} />;
     }
 
     case TYPES.FindProperty:
