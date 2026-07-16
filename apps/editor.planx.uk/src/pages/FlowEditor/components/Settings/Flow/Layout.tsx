@@ -69,7 +69,6 @@ const FlowSettingsLayout: React.FC<Props> = ({ children }) => {
           },
         ];
 
-  // TODO handle granularity with these visible tabs? Eg copyable doesn't apply, only need one 'about' summary
   const patternsSettingsLinks = [
     { label: "Visibility", path: "/visibility", icon: VisibilityIcon },
     { label: "About", path: "/about", icon: InfoIcon },

@@ -94,9 +94,14 @@ export const CheckForChangesToPublishButton: React.FC<{
     lastPublishedQuery.data,
   );
 
+  const [isPattern, flowStatus] = useStore((state) => [
+    state.isPattern,
+    state.flowStatus,
+  ]);
+
   const isDisabled =
     !useStore.getState().canUserEditTeam(teamSlug) ||
-    useStore.getState().isPattern ||
+    isPattern ||
     checkForChangesMutation.isPending ||
     publishMutation.isPending;
 
@@ -129,6 +134,28 @@ export const CheckForChangesToPublishButton: React.FC<{
                     ? "Due to review and publish"
                     : "Up to date"}
                 </strong>
+              </Typography>
+            </Box>
+          </Box>
+        )}
+        {isPattern && (
+          <Box
+            sx={{
+              background: (theme) => theme.palette.pattern.dark,
+              width: "100%",
+              padding: (theme) => theme.spacing(1),
+              marginBottom: (theme) => theme.spacing(1),
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "flex-start",
+            }}
+          >
+            <Box>
+              <Typography variant="body2">
+                <strong>{`This flow is a pattern`}</strong>
+              </Typography>
+              <Typography variant="body2">
+                {`Patterns are made available to team editors when adding components only. This pattern is ${flowStatus} and therefore ${flowStatus === "online" ? "discoverable" : "not discoverable yet"}.`}
               </Typography>
             </Box>
           </Box>

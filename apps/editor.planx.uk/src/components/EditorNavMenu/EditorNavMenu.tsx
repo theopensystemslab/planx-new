@@ -285,30 +285,54 @@ function EditorNavMenu() {
             Icon: RateReviewIcon,
             route: `/app/${teamSlug}/${flowSlug}/feedback`,
             accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"],
-            disabled: isPattern, // TODO fully hide
           },
           {
             title: "Submissions",
             Icon: FactCheckIcon,
             route: `/app/${teamSlug}/${flowSlug}/submissions`,
             accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"],
-            disabled: isPattern, // TODO fully hide
           },
           {
             title: "Analytics",
             Icon: LeaderboardIcon,
             route: flowAnalyticsLink ? flowAnalyticsLink : `#`,
             accessibleBy: "*",
-            disabled: !flowAnalyticsLink || isPattern, // TODO fully hide
+            disabled: !flowAnalyticsLink,
           },
         ],
       },
     ],
-    [teamSlug, flowSlug, flowAnalyticsLink, isPattern],
+    [teamSlug, flowSlug, flowAnalyticsLink],
+  );
+
+  const patternLayoutSections: MenuSection[] = useMemo(
+    () => [
+      {
+        routes: [
+          {
+            title: "Editor",
+            Icon: EditorIcon,
+            route: `/app/${teamSlug}/${flowSlug}`,
+            accessibleBy: ["platformAdmin"],
+          },
+          {
+            title: "Flow settings",
+            Icon: TuneIcon,
+            route: `/app/${teamSlug}/${flowSlug}/settings`,
+            accessibleBy: ["platformAdmin"],
+          },
+        ],
+      },
+    ],
+    [teamSlug, flowSlug],
   );
 
   const getRoutesForUrl = (): { sections: MenuSection[]; compact: boolean } => {
-    if (isFlowRoute) return { sections: flowLayoutSections, compact: true };
+    if (isFlowRoute)
+      return {
+        sections: isPattern ? patternLayoutSections : flowLayoutSections,
+        compact: true,
+      };
     if (isTeamRoute) return { sections: teamLayoutSections, compact: false };
     return { sections: globalLayoutSections, compact: false };
   };
