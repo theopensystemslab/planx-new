@@ -65,7 +65,10 @@ const ExternalPortalForm: React.FC<{
   isTemplatedNode?: boolean;
   templatedNodeInstructions?: string;
   areTemplatedNodeInstructionsRequired?: boolean;
-  formikRef?: MutableRefObject<FormikProps<ExternalPortalFormData> | null>;
+  formikRef?: {
+    current: FormikProps<ExternalPortalFormData> | null;
+    onDirtyChange: (dirty: boolean) => void;
+  };
 }> = ({
   handleSubmit,
   flowId,
@@ -78,23 +81,26 @@ const ExternalPortalForm: React.FC<{
   areTemplatedNodeInstructionsRequired = false,
   formikRef,
 }) => {
-  const formik = useFormikWithRef<ExternalPortalFormData>({
-    initialValues: {
-      flow: flows.find((flow) => flow.id === flowId) || null,
-      flowId: flowId || null,
-      tags,
-      notes,
-      isTemplatedNode,
-      templatedNodeInstructions,
-      areTemplatedNodeInstructionsRequired,
+  const formik = useFormikWithRef<ExternalPortalFormData>(
+    {
+      initialValues: {
+        flow: flows.find((flow) => flow.id === flowId) || null,
+        flowId: flowId || null,
+        tags,
+        notes,
+        isTemplatedNode,
+        templatedNodeInstructions,
+        areTemplatedNodeInstructionsRequired,
+      },
+      onSubmit: (data) => {
+        if (handleSubmit) {
+          handleSubmit({ type: TYPES.ExternalPortal, data });
+        }
+      },
+      validationSchema,
     },
-    onSubmit: (data) => {
-      if (handleSubmit) {
-        handleSubmit({ type: TYPES.ExternalPortal, data });
-      }
-    },
-    validationSchema,
-  });
+    formikRef,
+  );
 
   return (
     <form id="modal" onSubmit={formik.handleSubmit} data-testid="form">
