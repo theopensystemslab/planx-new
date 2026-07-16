@@ -114,41 +114,45 @@ export const AddFlow: React.FC = () => {
             <DialogTitle variant="h3" component="h1" id="dialog-heading">
               Add a new flow
             </DialogTitle>
-            <Box>
-              <Form>
-                <DialogContent dividers>
-                  <ErrorWrapper error={status?.error}>
-                    <Box
-                      sx={{
-                        gap: 2,
-                        display: "flex",
-                        flexDirection: "column",
-                      }}
-                    >
-                      <BaseFormSection />
-                    </Box>
-                  </ErrorWrapper>
-                </DialogContent>
-                <DialogActions>
-                  <Button
-                    onClick={() => setDialogOpen(false)}
-                    disabled={isSubmitting}
-                    variant="contained"
-                    color="secondary"
+            <Form
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                overflow: "hidden",
+              }}
+            >
+              <DialogContent dividers>
+                <ErrorWrapper error={status?.error}>
+                  <Box
+                    sx={{
+                      gap: 2,
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
                   >
-                    Back
-                  </Button>
-                  <Button
-                    type="submit"
-                    color="primary"
-                    variant="contained"
-                    disabled={isSubmitting}
-                  >
-                    Add flow
-                  </Button>
-                </DialogActions>
-              </Form>
-            </Box>
+                    <BaseFormSection />
+                  </Box>
+                </ErrorWrapper>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={() => setDialogOpen(false)}
+                  disabled={isSubmitting}
+                  variant="contained"
+                  color="secondary"
+                >
+                  Back
+                </Button>
+                <Button
+                  type="submit"
+                  color="primary"
+                  variant="contained"
+                  disabled={isSubmitting}
+                >
+                  Add flow
+                </Button>
+              </DialogActions>
+            </Form>
           </Dialog>
         )}
       </Formik>
