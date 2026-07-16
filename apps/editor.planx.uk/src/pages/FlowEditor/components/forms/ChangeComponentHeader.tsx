@@ -5,7 +5,10 @@ import React, { useState } from "react";
 import ComponentTypeHeader from "ui/editor/ComponentTypeHeader";
 
 import { fromSlug } from "../../data/types";
-import { AddComponentModalContent } from "./AddComponentModal";
+import { AddComponentModalContent, type ModalTab } from "./AddComponentModal";
+
+// The Patterns tab is hidden here (showPatternsTab={false}), so this is never called
+const noop = () => undefined;
 
 interface Props {
   type: string;
@@ -19,6 +22,7 @@ const ChangeComponentHeader: React.FC<Props> = ({
   canChange,
 }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [activeTab, setActiveTab] = useState<ModalTab>("components");
 
   const componentType = fromSlug(type);
 
@@ -65,7 +69,13 @@ const ChangeComponentHeader: React.FC<Props> = ({
           },
         }}
       >
-        <AddComponentModalContent onSelect={handleSelect} />
+        <AddComponentModalContent
+          onSelect={handleSelect}
+          onInsertPattern={noop}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          showPatternsTab={false}
+        />
       </Popover>
     </>
   );

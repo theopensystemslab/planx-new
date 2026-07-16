@@ -1,8 +1,10 @@
 import Paper from "@mui/material/Paper";
 import type { Meta, StoryObj } from "@storybook/tanstack-react";
+import React, { useState } from "react";
 
 import AddComponentModal, {
   AddComponentModalContent,
+  type ModalTab,
 } from "./AddComponentModal";
 
 const meta: Meta<typeof AddComponentModal> = {
@@ -14,12 +16,14 @@ export default meta;
 
 type Story = StoryObj<typeof AddComponentModal>;
 
-export const Default: Story = {
-  render: () => (
+const AddComponentModalContentDemo: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<ModalTab>("components");
+
+  return (
     <Paper
       sx={{
-        width: 300,
-        maxHeight: "min(480px, 85vh)",
+        width: activeTab === "patterns" ? 560 : 300,
+        height: "min(480px, 85vh)",
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
@@ -27,7 +31,16 @@ export const Default: Story = {
         borderColor: "divider",
       }}
     >
-      <AddComponentModalContent onSelect={() => {}} />
+      <AddComponentModalContent
+        onSelect={() => {}}
+        onInsertPattern={() => {}}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+      />
     </Paper>
-  ),
+  );
+};
+
+export const Default: Story = {
+  render: () => <AddComponentModalContentDemo />,
 };

@@ -10,7 +10,7 @@ import {
   ComponentType as TYPES,
   flatFlags,
 } from "@opensystemslab/planx-core/types";
-import type { Relationships } from "@planx/graph";
+import type { Graph, Relationships } from "@planx/graph";
 import {
   add,
   buildGraphFromNodes,
@@ -342,6 +342,17 @@ export interface EditorStore extends Store.Store {
    * Recursively inserts all nested children
    */
   pasteNode: (toParent: NodeId, toBefore?: NodeId) => void;
+  /**
+   * Insert every node reachable from a pattern flow's own root into this
+   * flow at the given position, generating new IDs throughout (same
+   * remap-and-insert approach as pasteNode, but sourced from an arbitrary
+   * fetched flow graph instead of the clipboard)
+   */
+  insertPatternGraph: (
+    patternGraph: Graph,
+    toParent?: NodeId,
+    toBefore?: NodeId,
+  ) => void;
   removeNode: (id: NodeId, parent: NodeId) => void;
   updateNode: (node: any, relationships?: any) => void;
   undoOperation: (ops: OT.Op[]) => void;
@@ -759,6 +770,79 @@ export const editorStore: StateCreator<
 
       // 4. Finally, insert the original pasted node, and all its nested children
       get().addNode({ id, ...nodeData }, { parent, before, children });
+    } catch (err) {
+      alert((err as Error).message);
+    }
+  },
+
+  insertPatternGraph(patternGraph, toParent, toBefore) {
+    const rootChildIds = patternGraph[ROOT_NODE_KEY]?.edges ?? [];
+    if (rootChildIds.length === 0) return;
+
+    try {
+      // 1. Collect every node reachable from the pattern's own root, across
+      // all of its top-level branches
+      const nodesToCopy: { originalId: string; nodeData: Store.Node }[] = [];
+      const collected = new Set<string>();
+
+      const collectDescendants = (nodeId: string) => {
+        if (!nodeId || collected.has(nodeId)) return;
+        collected.add(nodeId);
+
+        const currentNode = patternGraph[nodeId];
+        if (!currentNode) return;
+
+        nodesToCopy.push({
+          originalId: nodeId,
+          nodeData: currentNode as Store.Node,
+        });
+        currentNode.edges?.forEach((edgeId) => collectDescendants(edgeId));
+      };
+      rootChildIds.forEach(collectDescendants);
+
+      // 2. Create new nodes and build the ID map
+      const idMap = new Map<string, string>();
+      const newNodes: { [id: string]: Store.Node } = {};
+
+      nodesToCopy.forEach(({ originalId, nodeData }) => {
+        const newId = uniqueId();
+        idMap.set(originalId, newId);
+        // Patterns aren't templates - strip any templated-node config that
+        // may have been left on a node authored inside a template flow
+        const cloned = structuredClone(nodeData);
+        delete cloned.data?.["isTemplatedNode"];
+        delete cloned.data?.["templatedNodeInstructions"];
+        delete cloned.data?.["areTemplatedNodeInstructionsRequired"];
+        newNodes[newId] = cloned;
+      });
+
+      // 3. Re-link edges using the ID map
+      Object.values(newNodes).forEach((node) => {
+        if (node.edges && node.edges.length > 0) {
+          node.edges = node.edges
+            .map((oldEdgeId) => idMap.get(oldEdgeId))
+            .filter((id): id is string => !!id);
+        }
+      });
+
+      // 4. Rebuild each top-level branch and insert it, in order, at the
+      // same position - sharing one `visited` set across calls so a node
+      // referenced from more than one top-level branch isn't duplicated
+      const visited = new Set<string>();
+      rootChildIds.forEach((originalRootId) => {
+        const newRootId = idMap.get(originalRootId);
+        if (!newRootId) return;
+
+        const { id, children, ...nodeData } = buildGraphFromNodes(
+          newRootId,
+          newNodes,
+          visited,
+        );
+        get().addNode(
+          { id, ...nodeData },
+          { parent: toParent, before: toBefore, children },
+        );
+      });
     } catch (err) {
       alert((err as Error).message);
     }
