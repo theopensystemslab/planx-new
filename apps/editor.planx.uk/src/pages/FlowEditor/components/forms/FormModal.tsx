@@ -69,7 +69,11 @@ const MODAL_TABS: {
 }[] = [
   { label: "Configure", value: "configure" },
   { label: "Preview", value: "preview", icon: <Visibility /> },
-  { label: "Resources", value: "resources", icon: <MenuBook /> },
+  {
+    label: "How to use this component",
+    value: "resources",
+    icon: <MenuBook />,
+  },
 ];
 
 /**
