@@ -219,7 +219,7 @@ const SectionRow: React.FC<SectionRowProps> = ({
                 }
               >
                 {showChange && status === SectionStatusEnum.Completed && (
-                  <span style={visuallyHidden}>{`Change `}</span>
+                  <span style={visuallyHidden}>Change </span>
                 )}
                 {sectionNode.data.title}
               </Link>

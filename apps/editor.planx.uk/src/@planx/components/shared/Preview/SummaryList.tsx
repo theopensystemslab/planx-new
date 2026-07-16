@@ -335,7 +335,7 @@ function SummaryList(props: SummaryListProps) {
                     component="button"
                     sx={{ fontSize: "body2.fontSize" }}
                   >
-                    Change
+                    Change{" "}
                     <span style={visuallyHidden}>
                       {(node.type === TYPES.FindProperty && FIND_PROPERTY_DT) ||
                         (node.type === TYPES.DrawBoundary &&

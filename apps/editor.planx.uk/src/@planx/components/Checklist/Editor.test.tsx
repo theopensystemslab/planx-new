@@ -335,7 +335,7 @@ describe("Checklist editor component", () => {
     await user.paste("my.data.value");
     await user.keyboard("{Enter}");
 
-    user.click(screen.getByLabelText(/Never put to user/));
+    await user.click(screen.getByLabelText(/Never put to user/));
 
     const addNewOptionButton = screen.getByRole("button", {
       name: /Add option/i,

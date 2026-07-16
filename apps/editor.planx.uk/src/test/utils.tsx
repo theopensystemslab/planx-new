@@ -18,7 +18,9 @@ import {
 import type { RenderResult } from "@testing-library/react";
 import { render, waitFor } from "@testing-library/react";
 import type { UserEvent } from "@testing-library/user-event";
-import userEvent from "@testing-library/user-event";
+import userEvent, {
+  PointerEventsCheckLevel,
+} from "@testing-library/user-event";
 import { ToastContextProvider } from "contexts/ToastContext";
 import React from "react";
 import { CatchAllComponent } from "routes/$";
@@ -67,7 +69,13 @@ export const setup = async (
   jsx: React.JSX.Element,
 ): Promise<Record<"user", UserEvent> & RenderResult> => {
   testQueryClient.clear();
-  const user = userEvent.setup();
+  const user = userEvent.setup({
+    delay: null,
+    // jsdom 27 has a severe getComputedStyle/CSS performance regression
+    // Drop this Never check if resolved
+    // Source: https://github.com/jsdom/jsdom/issues/3985
+    pointerEventsCheck: PointerEventsCheckLevel.Never,
+  });
 
   const rootRoute = createRootRoute({
     component: () => (
