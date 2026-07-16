@@ -18,8 +18,8 @@ export const flow: FlowGraph = {
   VhSydY2fTe: {
     type: 200,
     data: {
-      text: "Spain",
-      val: "spain",
+      text: "Norway",
+      val: "norway",
     },
   },
   tR9tdaWOvF: {

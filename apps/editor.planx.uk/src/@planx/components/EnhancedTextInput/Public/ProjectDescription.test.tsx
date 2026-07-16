@@ -1,4 +1,4 @@
-import { act, screen } from "@testing-library/react";
+import { act, screen, waitFor } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import server from "test/mockServer";
 import { setup } from "test/utils";
@@ -788,7 +788,7 @@ describe("basic layout and behaviour", () => {
 
     await user.click(screen.getByTestId("continue-button"));
 
-    expect(requestSpy).toHaveBeenCalledTimes(2);
+    await waitFor(() => expect(requestSpy).toHaveBeenCalledTimes(2));
     expect(requestSpy).toHaveBeenLastCalledWith(
       expect.objectContaining({
         original: expect.stringMatching(NEW_INPUT),
