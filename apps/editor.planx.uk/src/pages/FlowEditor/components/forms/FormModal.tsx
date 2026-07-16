@@ -9,20 +9,16 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
-import {
-  ComponentType,
-  ComponentType as TYPES,
-} from "@opensystemslab/planx-core/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { type BaseNodeData, parseFormValues } from "@planx/components/shared";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import ErrorFallback from "components/Error/ErrorFallback";
 import type { FormikProps } from "formik";
-import isEqual from "lodash/isEqual";
 import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
 } from "pages/FlowEditor/utils";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
 import { Switch } from "ui/shared/Switch";
@@ -110,20 +106,6 @@ interface FormModalProps {
   parent?: string;
   extraProps?: any;
 }
-
-const CAN_CREATE_WITHOUT_CONFIG_ALLOW_LIST = [
-  "feedback",
-  "review",
-  "result",
-  "confirmation",
-  "find-property",
-  "property-information",
-  "draw-boundary",
-  "planning-constraints",
-  "filter",
-  "pay",
-  "send",
-];
 
 const FormModal: React.FC<FormModalProps> = ({
   type,
@@ -239,16 +221,11 @@ const FormModal: React.FC<FormModalProps> = ({
     ? !canUserEditTemplatedNode
     : !canUserEditNode(teamSlug);
 
-  // result, review and feedback components can be created without any changes
-  const canCreateWithoutChanges =
-    !isEditingExistingNode &&
-    CAN_CREATE_WITHOUT_CONFIG_ALLOW_LIST.includes(type);
-
   // submit (create / update) button is disabled when:
   // 1. user cannot edit, OR
   // 2. form needs to be dirty but isn't (unless it's allow list component)
   const isSubmitDisabled =
-    userCannotEdit || (!canCreateWithoutChanges && !isFormDirty);
+    userCannotEdit || (isEditingExistingNode && !isFormDirty);
 
   const showDeleteButton = id && !isDisabledTemplatedNode;
 
