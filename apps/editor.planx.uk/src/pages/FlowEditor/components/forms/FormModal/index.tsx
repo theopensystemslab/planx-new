@@ -1,5 +1,7 @@
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import DeleteIcon from "@mui/icons-material/Delete";
+import MenuBook from "@mui/icons-material/MenuBook";
+import Visibility from "@mui/icons-material/Visibility";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -7,6 +9,8 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
+import Tabs, { tabsClasses } from "@mui/material/Tabs";
+import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { type BaseNodeData, parseFormValues } from "@planx/components/shared";
 import { useNavigate, useParams } from "@tanstack/react-router";
@@ -18,6 +22,7 @@ import {
 } from "pages/FlowEditor/utils";
 import React, { useMemo, useState } from "react";
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
+import StyledTab from "ui/editor/StyledTab";
 import { CloseButton } from "ui/shared/CloseButton";
 import { Switch } from "ui/shared/Switch";
 import { getNodeRoute } from "utils/routeUtils/utils";
@@ -32,6 +37,29 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
   },
 }));
+
+const TabList = styled(Box)(() => ({
+  position: "relative",
+  marginLeft: "-6px",
+  "& > div": {
+    minHeight: "0px",
+  },
+  [`& .${tabsClasses.indicator}`]: {
+    display: "none",
+  },
+}));
+
+type ModalTab = "configure" | "preview" | "resources";
+
+const MODAL_TABS: {
+  label: string;
+  value: ModalTab;
+  icon?: React.ReactElement;
+}[] = [
+  { label: "Configure", value: "configure" },
+  { label: "Preview", value: "preview", icon: <Visibility /> },
+  { label: "Resources", value: "resources", icon: <MenuBook /> },
+];
 
 /**
  * TextInput and EnhancedTextInput are uniquely controlled via a toggle,
@@ -118,6 +146,7 @@ const FormModal: React.FC<FormModalProps> = ({
     onDirtyChange: (dirty: boolean) => void;
   }>(() => ({ current: null, onDirtyChange: setIsFormDirty }), []);
 
+  const [activeTab, setActiveTab] = useState<ModalTab>("configure");
   const { team: teamSlug, flow: flowSlug } = useParams({
     from: "/_authenticated/app/$team/$flow",
   });
@@ -269,56 +298,92 @@ const FormModal: React.FC<FormModalProps> = ({
 
           <CloseButton onClick={handleClose} sx={{ marginRight: -1 }} />
         </DialogTitle>
+        <TabList sx={{ px: 2.5 }}>
+          <Tabs
+            onChange={(_event, newValue: ModalTab) => setActiveTab(newValue)}
+            value={activeTab}
+            aria-label="Node editor tabs"
+          >
+            {MODAL_TABS.map(({ label, value, icon }) => (
+              <StyledTab
+                key={value}
+                value={value}
+                label={label}
+                icon={icon}
+                iconPosition="start"
+              />
+            ))}
+          </Tabs>
+        </TabList>
         <DialogContent dividers sx={{ p: 0, position: "relative" }}>
-          {!handleDelete && (
-            <TextInputToggle type={type} parent={parent} before={before} />
-          )}
-          <AppErrorBoundary>
-            <Component
-              formikRef={formikRef}
-              node={node}
-              {...node?.data}
-              {...extraProps}
-              id={id}
-              disabled={disabled}
-              handleSubmit={(
-                data: { data?: Record<string, unknown> },
-                children:
-                  Array<Record<string, unknown>> | undefined = undefined,
-              ) => {
-                // Handle internal portals
-                if (typeof data === "string" && parent) {
-                  connect(parent, data, { before });
-                } else {
-                  const parsedData = parseFormValues(Object.entries(data));
-                  const parsedChildren =
-                    children?.map((o) => parseFormValues(Object.entries(o))) ||
-                    undefined;
+          {activeTab === "configure" && (
+            <>
+              {!handleDelete && (
+                <TextInputToggle type={type} parent={parent} before={before} />
+              )}
+              <AppErrorBoundary>
+                <Component
+                  formikRef={formikRef}
+                  node={node}
+                  {...node?.data}
+                  {...extraProps}
+                  id={id}
+                  disabled={disabled}
+                  handleSubmit={(
+                    data: { data?: Record<string, unknown> },
+                    children:
+                      Array<Record<string, unknown>> | undefined = undefined,
+                  ) => {
+                    // Handle internal portals
+                    if (typeof data === "string" && parent) {
+                      connect(parent, data, { before });
+                    } else {
+                      const parsedData = parseFormValues(Object.entries(data));
+                      const parsedChildren =
+                        children?.map((o) =>
+                          parseFormValues(Object.entries(o)),
+                        ) || undefined;
 
-                  if (handleDelete) {
-                    updateNode(
-                      { id, ...parsedData },
-                      { children: parsedChildren },
-                    );
-                  } else {
-                    addNode(parsedData, {
-                      children: parsedChildren,
-                      parent,
-                      before,
+                      if (handleDelete) {
+                        updateNode(
+                          { id, ...parsedData },
+                          { children: parsedChildren },
+                        );
+                      } else {
+                        addNode(parsedData, {
+                          children: parsedChildren,
+                          parent,
+                          before,
+                        });
+                      }
+                    }
+
+                    navigate({
+                      to: "/app/$team/$flow",
+                      params: {
+                        team: teamSlug,
+                        flow: flowSlug,
+                      },
                     });
-                  }
-                }
-
-                navigate({
-                  to: "/app/$team/$flow",
-                  params: {
-                    team: teamSlug,
-                    flow: flowSlug,
-                  },
-                });
-              }}
-            />
-          </AppErrorBoundary>
+                  }}
+                />
+              </AppErrorBoundary>
+            </>
+          )}
+          {activeTab === "preview" && (
+            <Box sx={{ p: 2.5 }}>
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                Preview coming soon.
+              </Typography>
+            </Box>
+          )}
+          {activeTab === "resources" && (
+            <Box sx={{ p: 2.5 }}>
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                Resources coming soon.
+              </Typography>
+            </Box>
+          )}
         </DialogContent>
         <DialogActions
           disableSpacing
