@@ -26,7 +26,7 @@ import type { FileUpload } from "@planx/components/FileUpload/model";
 import FileUploadComponent from "@planx/components/FileUpload/Public";
 import type { FileUploadAndLabel } from "@planx/components/FileUploadAndLabel/model";
 import FileUploadAndLabelComponent from "@planx/components/FileUploadAndLabel/Public";
-import type { Props as Filter } from "@planx/components/Filter/Editor";
+import type { FilterData } from "@planx/components/Filter/Editor";
 import FilterComponent from "@planx/components/Filter/Public";
 import type { FindProperty } from "@planx/components/FindProperty/model";
 import FindPropertyComponent from "@planx/components/FindProperty/Public";
@@ -220,10 +220,15 @@ const Node: React.FC<Props> = (props) => {
       );
 
     case TYPES.Filter: {
-      const filterProps = getComponentProps<Filter>();
-      const autoAnswer = nodeId ? autoAnswerableFlag(nodeId) : undefined;
+      const filterProps = getComponentProps<FilterData>();
+      const autoAnswers = nodeId ? autoAnswerableFlag(nodeId) : undefined;
 
-      return <FilterComponent {...filterProps} autoAnswer={autoAnswer} />;
+      return (
+        <FilterComponent
+          {...filterProps}
+          autoAnswers={autoAnswers ? [autoAnswers] : undefined}
+        />
+      );
     }
 
     case TYPES.FindProperty:
