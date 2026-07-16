@@ -191,8 +191,7 @@ const FormModal: React.FC<FormModalProps> = ({
   //  2. The user has edit access to this team, but it is:
   //    - a templated flow
   //    - and the node itself is not marked "isTemplatedNode" or a child of an internal portal marked "isTemplatedNode"
-  //  3. The form is not dirty
-  //    - except for when a user is creating an allow-listed component (this is because they can be created and used as-is)
+  //  3. The form is being updated and not dirty
   const canUserEditNode = (teamSlug: string) => {
     return useStore.getState().canUserEditTeam(teamSlug);
   };
@@ -221,9 +220,6 @@ const FormModal: React.FC<FormModalProps> = ({
     ? !canUserEditTemplatedNode
     : !canUserEditNode(teamSlug);
 
-  // submit (create / update) button is disabled when:
-  // 1. user cannot edit, OR
-  // 2. form needs to be dirty but isn't (unless it's allow list component)
   const isSubmitDisabled =
     userCannotEdit || (isEditingExistingNode && !isFormDirty);
 
