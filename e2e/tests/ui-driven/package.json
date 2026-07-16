@@ -17,7 +17,7 @@
     "graphql": "catalog:graphql",
     "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "catalog:jwt",
-    "serve": "^14.2.5",
+    "serve": "^14.2.6",
     "uuid": "catalog:"
   },
   "devDependencies": {
