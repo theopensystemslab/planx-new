@@ -3,6 +3,7 @@ import Collapse from "@mui/material/Collapse";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
+import { useStore } from "pages/FlowEditor/lib/store";
 import type { ChangeEvent } from "react";
 import React from "react";
 import type { EditorProps as ListManagerEditorProps } from "ui/editor/ListManager/ListManager";
@@ -62,9 +63,10 @@ function NextStepEditor(props: ListManagerEditorProps<Step>) {
 
 export default function ConfirmationEditor(props: Props) {
   const type = TYPES.Confirmation;
+  const helpEmail = useStore((state) => state.teamSettings?.helpEmail);
   const formik = useFormikWithRef<Confirmation>(
     {
-      initialValues: parseConfirmation(props.node?.data),
+      initialValues: parseConfirmation(props.node?.data, helpEmail),
       onSubmit: (values) => {
         if (props.handleSubmit) {
           props.handleSubmit({ type, data: values });
