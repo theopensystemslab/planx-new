@@ -1,14 +1,16 @@
-import type { Theme } from "@mui/material/styles";
+import { alpha, type Theme } from "@mui/material/styles";
 
 export const flashHighlight = (el: HTMLElement, theme: Theme) => {
+  const flashColor = theme.palette.info.dark;
+
   const keyframes: Keyframe[] = [
-    { outline: `12px solid ${theme.palette.action.focus}`, outlineOffset: 0 },
-    { outline: `4px solid transparent`, outlineOffset: 0 },
+    { boxShadow: `0 0 0 0px ${alpha(flashColor, 1)}`, borderRadius: "2px" },
+    { boxShadow: `0 0 0 16px ${alpha(flashColor, 0)}`, borderRadius: "8px" },
   ];
 
   const animationOptions: KeyframeAnimationOptions = {
-    duration: 5000,
-    easing: "ease-in",
+    duration: 900,
+    easing: "ease-out",
   };
 
   el.animate(keyframes, animationOptions);

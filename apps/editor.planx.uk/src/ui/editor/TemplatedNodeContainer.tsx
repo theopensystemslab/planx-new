@@ -3,7 +3,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import classNames from "classnames";
 import type { PropsWithChildren } from "react";
-import React from "react";
+import { forwardRef } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import CheckCircleIcon from "ui/icons/CheckCircle";
 
@@ -82,14 +82,20 @@ const getTemplatedNodeStatus = (
   return "Optional";
 };
 
-export const TemplatedNodeContainer: React.FC<TemplatedNodeContainerProps> = ({
-  children,
-  isTemplatedNode = false,
-  areTemplatedNodeInstructionsRequired = false,
-  isComplete = false,
-  showStatus = false,
-  className,
-}) => {
+export const TemplatedNodeContainer = forwardRef<
+  HTMLDivElement,
+  TemplatedNodeContainerProps
+>(function TemplatedNodeContainer(
+  {
+    children,
+    isTemplatedNode = false,
+    areTemplatedNodeInstructionsRequired = false,
+    isComplete = false,
+    showStatus = false,
+    className,
+  },
+  ref,
+) {
   const containerClasses = classNames(
     "card-wrapper",
     {
@@ -99,11 +105,16 @@ export const TemplatedNodeContainer: React.FC<TemplatedNodeContainerProps> = ({
   );
 
   if (!isTemplatedNode) {
-    return <Box className={containerClasses}>{children}</Box>;
+    return (
+      <Box ref={ref} className={containerClasses}>
+        {children}
+      </Box>
+    );
   }
 
   return (
     <StyledContainer
+      ref={ref}
       className={containerClasses}
       isTemplatedNode={isTemplatedNode}
       areTemplatedNodeInstructionsRequired={
@@ -134,4 +145,4 @@ export const TemplatedNodeContainer: React.FC<TemplatedNodeContainerProps> = ({
       {children}
     </StyledContainer>
   );
-};
+});
