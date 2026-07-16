@@ -53,7 +53,7 @@ const FlowCard: React.FC<Props> = ({ flow, view }) => {
     {
       type: FlowTagType.Status,
       displayName: statusVariant,
-      shouldAddTag: isService,
+      shouldAddTag: isService || isPattern,
     },
     {
       type: FlowTagType.ServiceType,
