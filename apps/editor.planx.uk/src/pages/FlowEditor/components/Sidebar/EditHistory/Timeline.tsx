@@ -21,6 +21,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { formatLastEditDate } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import Permission from "ui/editor/Permission";
 
 import {
   CommentTimelineItem,
@@ -39,14 +40,11 @@ export const EditHistoryTimeline = ({
     undefined,
   );
 
-  const [flow, teamSlug, canUserEditTeam, undoOperation, deleteFlowComment] =
-    useStore((state) => [
-      state.flow,
-      state.teamSlug,
-      state.canUserEditTeam,
-      state.undoOperation,
-      state.deleteFlowComment,
-    ]);
+  const [flow, undoOperation, deleteFlowComment] = useStore((state) => [
+    state.flow,
+    state.undoOperation,
+    state.deleteFlowComment,
+  ]);
 
   const handleUndo = (i: number) => {
     // Get all events since the selected one, excluding it
@@ -86,7 +84,6 @@ export const EditHistoryTimeline = ({
   // Show restore only for editable, undoable operations that have something newer to undo
   const showUndoButton = (event: HistoryItem, i: number): boolean => {
     if (event.type !== "operation") return false;
-    if (!canUserEditTeam(teamSlug)) return false;
 
     const hasNewerOperation = events
       .slice(0, i)
@@ -188,23 +185,25 @@ export const EditHistoryTimeline = ({
                 </Typography>
               </Box>
               {showUndoButton(op, i) && (
-                <Tooltip title="Restore to this point" placement="left">
-                  <IconButton
-                    aria-label="Restore to this point"
-                    onClick={() => handleUndo(i)}
-                    onMouseEnter={() => setFocusedOpIndex(i)}
-                    onMouseLeave={() => setFocusedOpIndex(undefined)}
-                  >
-                    <RestoreOutlined
-                      fontSize="medium"
-                      color={
-                        inUndoScope(i) && isUndoType(op.type)
-                          ? "inherit"
-                          : "primary"
-                      }
-                    />
-                  </IconButton>
-                </Tooltip>
+                <Permission.CanEdit>
+                  <Tooltip title="Restore to this point" placement="left">
+                    <IconButton
+                      aria-label="Restore to this point"
+                      onClick={() => handleUndo(i)}
+                      onMouseEnter={() => setFocusedOpIndex(i)}
+                      onMouseLeave={() => setFocusedOpIndex(undefined)}
+                    >
+                      <RestoreOutlined
+                        fontSize="medium"
+                        color={
+                          inUndoScope(i) && isUndoType(op.type)
+                            ? "inherit"
+                            : "primary"
+                        }
+                      />
+                    </IconButton>
+                  </Tooltip>
+                </Permission.CanEdit>
               )}
             </Box>
             {
