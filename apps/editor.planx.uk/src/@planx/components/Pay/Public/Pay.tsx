@@ -47,6 +47,18 @@ enum Action {
 
 export const PAY_API_ERROR_UNSUPPORTED_TEAM = "GOV.UK Pay is not enabled for";
 
+const redirectToGovPay = (payment: GovUKPayment) => {
+  const nextUrl = payment._links.next_url?.href;
+  if (!nextUrl) {
+    logger.notify("Payment did not include a 'next_url' link.");
+    return;
+  }
+  // assign() is used to preserve history
+  // This allows browser "back" navigation to work from GOV.UK Pay,
+  // meaning that users can resume sessions by confirming their email
+  window.location.assign(nextUrl);
+};
+
 function Component(props: Props) {
   const [
     flowId,
@@ -231,11 +243,7 @@ function Component(props: Props) {
       case PaymentStatus.started:
       case PaymentStatus.created:
       case PaymentStatus.submitted: {
-        if (govUkPayment._links.next_url?.href) {
-          window.location.replace(govUkPayment._links.next_url.href);
-        } else {
-          logger.notify("Payment did not include a 'next_url' link.");
-        }
+        redirectToGovPay(govUkPayment);
         break;
       }
       default: {
@@ -262,8 +270,7 @@ function Component(props: Props) {
     })
       .then(async (data) => {
         const payment = await resolvePaymentResponse(data);
-        if (payment._links.next_url?.href)
-          window.location.replace(payment._links.next_url.href);
+        redirectToGovPay(payment);
       })
       .catch((error: APIError<{ error: string }>) => {
         const apiErrorMessage = error.data.error;
