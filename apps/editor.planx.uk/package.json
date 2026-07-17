@@ -128,7 +128,7 @@
     "esbuild": "0.28.1",
     "eslint": "catalog:",
     "fake-indexeddb": "^6.2.5",
-    "jsdom": "^26.1.0",
+    "jsdom": "catalog:",
     "msw-storybook-addon": "^2.0.7",
     "postcss": "^8.5.10",
     "prettier": "catalog:",

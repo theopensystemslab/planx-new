@@ -17,7 +17,7 @@ test("const { user } = setups correctly", async () => {
 
   expect(content()).toHaveTextContent("hello");
   expect(content()).toHaveStyle({
-    background: "#fff",
+    backgroundColor: "#fff",
     color: "#0B0C0C",
   });
   expect(screen.queryByTestId("more-info-button")).not.toBeInTheDocument();
@@ -30,7 +30,7 @@ test("const { user } = setups correctly", async () => {
 test("use light text color if color param is dark", async () => {
   await setup(<Content content="dark" color="#000" />);
   expect(content()).toHaveStyle({
-    background: "#000",
+    backgroundColor: "#000",
     color: "#fff",
   });
 });
