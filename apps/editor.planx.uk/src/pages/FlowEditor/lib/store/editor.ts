@@ -94,6 +94,8 @@ export interface EditorUIStore {
   componentSelectorBefore?: string;
   openComponentSelector: (params: { parent?: string; before?: string }) => void;
   closeComponentSelector: () => void;
+  lastAddedNodeId?: NodeId;
+  clearLastAddedNodeId: () => void;
 }
 
 export const editorUIStore: StateCreator<
@@ -225,6 +227,10 @@ export const editorUIStore: StateCreator<
         componentSelectorParent: undefined,
         componentSelectorBefore: undefined,
       }),
+
+    lastAddedNodeId: undefined,
+
+    clearLastAddedNodeId: () => set({ lastAddedNodeId: undefined }),
   }),
   {
     name: "editorUIStore",
@@ -302,8 +308,6 @@ export interface EditorStore extends Store.Store {
   cutNode: (id: NodeId, parent: NodeId) => void;
   getCutNode: () => CutPayload | null;
   addNode: (node: any, relationships?: Relationships) => NodeId;
-  lastAddedNodeId?: NodeId;
-  clearLastAddedNodeId: () => void;
   connect: (src: NodeId, tgt: NodeId, object?: any) => void;
   connectToFlow: (id: NodeId) => Promise<void>;
   disconnectFromFlow: () => void;
@@ -366,7 +370,7 @@ export interface EditorStore extends Store.Store {
 }
 
 export const editorStore: StateCreator<
-  SharedStore & EditorStore & NavigationStore,
+  SharedStore & EditorStore & EditorUIStore & NavigationStore,
   [],
   [],
   EditorStore
@@ -383,10 +387,6 @@ export const editorStore: StateCreator<
     set({ lastAddedNodeId: id });
     return id;
   },
-
-  lastAddedNodeId: undefined,
-
-  clearLastAddedNodeId: () => set({ lastAddedNodeId: undefined }),
 
   connect: (src, tgt, { before = undefined } = {}) => {
     try {

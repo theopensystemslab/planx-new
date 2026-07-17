@@ -107,7 +107,7 @@ const Question: React.FC<Props> = React.memo((props) => {
             }}
             preload={false}
             onContextMenu={handleContextMenu}
-            ref={(el: HTMLAnchorElement | null) => {
+            ref={(el) => {
               drag(el);
             }}
           >
