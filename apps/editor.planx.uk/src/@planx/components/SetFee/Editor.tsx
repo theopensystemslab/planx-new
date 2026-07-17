@@ -62,9 +62,6 @@ function SetFeeComponent(props: Props) {
         }
       />
       <ModalSection>
-        <ModalSectionContent />
-      </ModalSection>
-      <ModalSection>
         <ModalSectionContent title="Application fee VAT">
           <InputRow>
             <Switch
