@@ -22,6 +22,7 @@ export interface Confirmation extends BaseNodeData {
 
 export const parseConfirmation = (
   data: Record<string, any> | undefined,
+  helpEmail?: string,
 ): Confirmation => ({
   heading: data?.heading || "Form sent",
   description:
@@ -37,7 +38,11 @@ export const parseConfirmation = (
         </ul>`,
   contactInfo:
     data?.contactInfo ||
-    `You can contact us at <em>ADD YOUR COUNCIL CONTACT</em>
+    `You can contact us at ${
+      helpEmail
+        ? `<a href="mailto:${helpEmail}">${helpEmail}</a>.`
+        : `<em>ADD YOUR COUNCIL CONTACT</em>.`
+    }
           <br><br>
           <p>What did you think of this service? Please give us your feedback on the next page.</p>`,
   nextSteps: data?.nextSteps || [],
