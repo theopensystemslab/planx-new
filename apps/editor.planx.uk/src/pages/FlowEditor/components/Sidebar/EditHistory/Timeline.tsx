@@ -48,8 +48,8 @@ export const EditHistoryTimeline = ({
     ]);
 
   const handleUndo = (i: number) => {
-    // Get all events since & including the selected one
-    const eventsToUndo = events.slice(0, i + 1);
+    // Get all events since the selected one, excluding it
+    const eventsToUndo = events.slice(0, i);
 
     const isOperation = (event: HistoryItem): event is OperationHistoryItem =>
       event.type === "operation";
@@ -82,12 +82,15 @@ export const EditHistoryTimeline = ({
     return ["operation", "comment"].includes(type);
   };
 
-  const showUndoButton = (event: HistoryItem): boolean => {
-    // Only show the restore button for operations within teams I can edit, omitting the intial default operation for new flows which won't have an actor
+  const showUndoButton = (event: HistoryItem, i: number): boolean => {
+    // Only show the restore button for operations within teams I can edit, and only when an operation to actually restore from exists
+    const hasNewerOperation = events
+      .slice(0, i)
+      .some((e) => e.type === "operation");
     return (
       event.type === "operation" &&
-      Boolean(event.actorId) &&
-      canUserEditTeam(teamSlug)
+      canUserEditTeam(teamSlug) &&
+      hasNewerOperation
     );
   };
 
@@ -177,7 +180,7 @@ export const EditHistoryTimeline = ({
                   {`${formatLastEditDate(op.createdAt)}`}
                 </Typography>
               </Box>
-              {showUndoButton(op) && (
+              {showUndoButton(op, i) && (
                 <Tooltip title="Restore to this point" placement="left">
                   <IconButton
                     aria-label="Restore to this point"
