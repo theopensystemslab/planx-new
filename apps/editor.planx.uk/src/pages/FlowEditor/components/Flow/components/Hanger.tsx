@@ -8,7 +8,7 @@ import {
   nodeIsTemplatedInternalPortal,
 } from "pages/FlowEditor/utils";
 import React, { useCallback } from "react";
-import { useDrop } from "react-dnd";
+import { useDragLayer, useDrop } from "react-dnd";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
@@ -24,6 +24,8 @@ interface Item {
   parent: string;
   text: string;
 }
+
+const DROPPABLE_TYPES = ["DECISION", "PORTAL", "PAGE"];
 
 const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   parent = getParentId(parent);
@@ -56,8 +58,8 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
     ? hideHangerInTemplatedFlow
     : !useStore.getState().canUserEditTeam(teamSlug);
 
-  const [{ canDrop, item }, drop] = useDrop({
-    accept: ["DECISION", "PORTAL", "PAGE"],
+  const [{ isOver, canDrop, item }, drop] = useDrop({
+    accept: DROPPABLE_TYPES,
     drop: (item: Item) => {
       moveNode(item.id, item.parent, before, parent);
     },
@@ -67,6 +69,13 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
       item: monitor.isOver() && monitor.getItem(),
     }),
   });
+
+  // Highlight every valid hanger as a drop target while a node is being dragged on the canvas
+  const isDropTargetVisible = useDragLayer(
+    (monitor) =>
+      monitor.isDragging() &&
+      DROPPABLE_TYPES.includes(monitor.getItemType() as string),
+  );
 
   const handleContextMenu = useContextMenu({
     source: "hanger",
@@ -87,9 +96,16 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
     [parent, before],
   );
 
+  const isHidden = hidden || hideHangerFromUser;
+
   return (
     <li
-      className={classnames("hanger", { hidden: hidden || hideHangerFromUser })}
+      className={classnames("hanger", {
+        hidden: isHidden,
+        "hanger--drop-target": isDropTargetVisible && !isHidden,
+        "hanger--drop-target-active":
+          isDropTargetVisible && !isHidden && isOver && canDrop,
+      })}
       ref={(el) => {
         drop(el);
       }}

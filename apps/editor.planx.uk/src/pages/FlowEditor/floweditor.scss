@@ -10,6 +10,7 @@ $dataBackground: #f0f0f0;
 $lockedDataBackground: #e2e2e2;
 $folderBackground: #b5d1f7;
 $folderBorder: #2c4b88;
+$primaryAction: #0010a4;
 
 $endpointWidth: 50px;
 $hangerWidth: 16px;
@@ -183,9 +184,25 @@ $fontMonospace: "Source Code Pro", monospace;
   }
 
   &.isDragging {
-    opacity: 0.3;
+    opacity: 0.5;
+    & > .card-wrapper > a {
+      border-style: dashed;
+    }
     & + .hanger {
       @include disabledHanger();
+
+      // Don't show sibling hangers as drop targets while dragging a node
+      &.hanger--drop-target,
+      &.hanger--drop-target-active {
+        > a,
+        > button {
+          background-color: $hangerBackground;
+          transform: none;
+          width: $hangerWidth;
+          border-style: solid;
+          transition: none;
+        }
+      }
     }
     > ol {
       visibility: hidden;
@@ -490,6 +507,42 @@ $fontMonospace: "Source Code Pro", monospace;
 
     &:empty {
       padding: 0;
+    }
+  }
+
+  // Highlight available hangers as drop targets while node is being dragged
+  &.hanger--drop-target {
+    $dropTargetScale: 1.3;
+
+    > a,
+    > button {
+      position: relative;
+      width: $hangerWidth;
+      background-color: white;
+      transform: scale($dropTargetScale);
+      border-style: dashed;
+      width: 60px;
+      transition:
+        background-color 0.2s,
+        transform 0.2s,
+        width 0.2s;
+    }
+
+    // Show a preview of the node while over a drop target hanger
+    &.hanger--drop-target-active {
+      > a,
+      > button {
+        transition: none;
+        width: auto;
+        min-width: 150px;
+        transform: none;
+        background-color: $hangerBackground;
+        border-radius: 0;
+
+        &::before {
+          content: none;
+        }
+      }
     }
   }
 }

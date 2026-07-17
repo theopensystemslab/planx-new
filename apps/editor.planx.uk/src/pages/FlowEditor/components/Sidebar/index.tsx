@@ -99,13 +99,17 @@ const TabList = styled(Box)(({ theme }) => ({
 }));
 
 const Sidebar: React.FC = React.memo(() => {
-  const [toggleSidebar, showSidebar, isTemplatedFrom] = useStore((state) => [
-    state.toggleSidebar,
-    state.showSidebar,
-    state.isTemplatedFrom,
-  ]);
+  const [toggleSidebar, showSidebar, isTemplatedFrom, isTemplate] = useStore(
+    (state) => [
+      state.toggleSidebar,
+      state.showSidebar,
+      state.isTemplatedFrom,
+      state.isTemplate,
+    ],
+  );
 
-  const defaultActiveTab = isTemplatedFrom ? "Customise" : "PreviewBrowser";
+  const defaultActiveTab =
+    isTemplatedFrom || isTemplate ? "Customise" : "PreviewBrowser";
   const [activeTab, setActiveTab] = useState<SidebarTabs>(defaultActiveTab);
   const { team } = useParams({ from: "/_authenticated/app/$team/$flow" });
   const { rootFlow } = useRouteContext({
@@ -149,10 +153,12 @@ const Sidebar: React.FC = React.memo(() => {
 
           <TabList>
             <Tabs onChange={handleChange} value={activeTab} aria-label="">
-              {isTemplatedFrom && (
+              {(isTemplatedFrom || isTemplate) && (
                 <StyledTab value="Customise" label="Customise" />
               )}
-              <StyledTab value="PreviewBrowser" label="Preview" />
+              {!isTemplate && (
+                <StyledTab value="PreviewBrowser" label="Preview" />
+              )}
               <StyledTab value="History" label="History" />
               <StyledTab value="Search" label="Search" />
               {!isTemplatedFrom && (

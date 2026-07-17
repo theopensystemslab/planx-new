@@ -18,7 +18,7 @@ catalog:
   dotenv: ^17.4.2
   eslint: ^9.39.4
   globals: ^16.5.0
-  jsdom: ^28.1.0
+  jsdom: ^29.1.1
   nanoid: ^5.1.16
   prettier: ^3.9.3
   uuid: ^14.0.1
@@ -31,11 +31,11 @@ catalogs:
     graphql-request: 4.3.0
     graphql-tag: ^2.12.6
   infrastructure:
-    '@pulumi/aws': ^7.24.0
-    '@pulumi/awsx': ^3.4.0
+    '@pulumi/aws': ^7.35.0
+    '@pulumi/awsx': ^3.7.0
     '@pulumi/cloudflare': ^6.14.0
     '@pulumi/postgresql': ^3.16.2
-    '@pulumi/pulumi': ^3.229.0
+    '@pulumi/pulumi': ^3.250.0
   jwt:
     '@types/jsonwebtoken': ^9.0.10
     jsonwebtoken: ^9.0.3

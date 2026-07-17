@@ -4,6 +4,7 @@ import { Link } from "@tanstack/react-router";
 import { useParams } from "@tanstack/react-router";
 import classNames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
+import useFlashOnNodeAdded from "hooks/useFlashOnNodeAdded";
 import React from "react";
 import { useDrag } from "react-dnd";
 
@@ -50,10 +51,13 @@ const Filter: React.FC<Props> = React.memo((props) => {
 
   const Icon = ICONS[props.type];
 
+  const ref = useFlashOnNodeAdded<HTMLLIElement>(props.id);
+
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li
+        ref={ref}
         className={classNames("card", "decision", "type-Filter", {
           isDragging,
           isClone: isClone(props.id),

@@ -9,6 +9,7 @@ import { Link } from "@tanstack/react-router";
 import { useParams } from "@tanstack/react-router";
 import classNames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
+import useFlashOnNodeAdded from "hooks/useFlashOnNodeAdded";
 import mapAccum from "ramda/src/mapAccum";
 import React, { useMemo } from "react";
 import { useDrag } from "react-dnd";
@@ -90,6 +91,8 @@ const Checklist: React.FC<Props> = React.memo((props) => {
   const hasHelpText =
     props.data?.policyRef || props.data?.info || props.data?.howMeasured;
 
+  const ref = useFlashOnNodeAdded<HTMLLIElement>(props.id);
+
   // Hide sticky notes when toggled off
   if (isStickyNote && !showNotes) {
     return null;
@@ -99,6 +102,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li
+        ref={ref}
         className={classNames("card", "decision", "question", {
           isDragging,
           isClone: isClone(props.id),

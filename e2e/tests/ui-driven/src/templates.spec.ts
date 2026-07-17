@@ -232,7 +232,9 @@ test.describe("Templates", () => {
       );
 
       await navigateToService(page, SOURCE_TEMPLATE_SLUG);
-      await expect(page.getByText(TEMPLATED_FOLDER_NAME)).toBeVisible();
+      await expect(
+        page.getByRole("link", { name: TEMPLATED_FOLDER_NAME }),
+      ).toBeVisible();
     });
 
     test("can publish the source template", async ({ browser }) => {

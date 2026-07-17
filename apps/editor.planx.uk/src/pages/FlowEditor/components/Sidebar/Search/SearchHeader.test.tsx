@@ -1,6 +1,5 @@
 import { waitFor } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
 import { setup } from "test/utils";
 import { vi } from "vitest";
 
@@ -24,7 +23,7 @@ it("Displays a warning if no results are returned", async () => {
   );
 
   const searchInput = getByLabelText("Search this flow");
-  user.type(searchInput, "Timbuktu");
+  await user.type(searchInput, "Timbuktu");
 
   await waitFor(() =>
     expect(getByText("No matches found")).toBeInTheDocument(),
@@ -41,7 +40,8 @@ it("Displays the count for a single result", async () => {
     );
 
   const searchInput = getByLabelText("Search this flow");
-  user.type(searchInput, "Spain");
+  // "Norway" shares no letters with the other country options, so there's no fuzzy match from Fuse.js
+  await user.type(searchInput, "Norway");
 
   await waitFor(() => expect(getByText("1 result:")).toBeInTheDocument());
   expect(getByRole("list")).not.toBeEmptyDOMElement();
@@ -58,7 +58,7 @@ it("Displays the count for multiple results", async () => {
 
   const searchInput = getByLabelText("Search this flow");
   // Matches "India" and "Indonesia"
-  user.type(searchInput, "Ind");
+  await user.type(searchInput, "Ind");
 
   await waitFor(() => expect(getByText("2 results:")).toBeInTheDocument());
   expect(getByRole("list")).not.toBeEmptyDOMElement();

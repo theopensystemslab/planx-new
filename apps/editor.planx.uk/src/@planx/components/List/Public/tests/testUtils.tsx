@@ -86,10 +86,13 @@ export const fillInResponse = async (user: UserEvent) => {
   expect(mockFile1).toBeVisible();
   expect(mockFile2).toBeVisible();
 
-  const saveButton = screen.getByRole("button", {
-    name: /Save/,
+  await waitFor(async () => {
+    const saveButton = screen.queryByRole("button", { name: /Save/ });
+    if (saveButton) await user.click(saveButton);
+    expect(
+      screen.queryByRole("button", { name: /Save/ }),
+    ).not.toBeInTheDocument();
   });
-  await user.click(saveButton);
 };
 
 /**

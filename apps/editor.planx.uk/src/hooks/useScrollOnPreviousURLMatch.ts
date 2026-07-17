@@ -2,6 +2,8 @@ import { useTheme } from "@mui/material/styles";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useEffect, useRef } from "react";
 
+import { flashHighlight } from "./flashHighlight";
+
 const useScrollOnPreviousURLMatch = <T extends HTMLElement>(
   urlMatcher: string,
 ) => {
@@ -22,17 +24,7 @@ const useScrollOnPreviousURLMatch = <T extends HTMLElement>(
     });
 
     // Visually highlight node
-    const keyframes: Keyframe[] = [
-      { outline: `4px solid ${theme.palette.action.focus}`, outlineOffset: 0 },
-      { outline: `4px solid transparent`, outlineOffset: 0 },
-    ];
-
-    const animationOptions: KeyframeAnimationOptions = {
-      duration: 1500,
-      easing: "ease-in",
-    };
-
-    ref.current.animate(keyframes, animationOptions);
+    flashHighlight(ref.current, theme);
   }, [previousURL, urlMatcher, theme]);
 
   return ref;
