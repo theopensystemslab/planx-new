@@ -9,6 +9,7 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import { ROOT_NODE_KEY } from "@planx/graph";
 import type { OT } from "@planx/graph/types";
 import type {
   CommentHistoryItem,
@@ -20,6 +21,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { formatLastEditDate } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import Permission from "ui/editor/Permission";
 
 import {
   CommentTimelineItem,
@@ -38,18 +40,15 @@ export const EditHistoryTimeline = ({
     undefined,
   );
 
-  const [flow, teamSlug, canUserEditTeam, undoOperation, deleteFlowComment] =
-    useStore((state) => [
-      state.flow,
-      state.teamSlug,
-      state.canUserEditTeam,
-      state.undoOperation,
-      state.deleteFlowComment,
-    ]);
+  const [flow, undoOperation, deleteFlowComment] = useStore((state) => [
+    state.flow,
+    state.undoOperation,
+    state.deleteFlowComment,
+  ]);
 
   const handleUndo = (i: number) => {
-    // Get all events since & including the selected one
-    const eventsToUndo = events.slice(0, i + 1);
+    // Get all events since the selected one, excluding it
+    const eventsToUndo = events.slice(0, i);
 
     const isOperation = (event: HistoryItem): event is OperationHistoryItem =>
       event.type === "operation";
@@ -82,13 +81,21 @@ export const EditHistoryTimeline = ({
     return ["operation", "comment"].includes(type);
   };
 
-  const showUndoButton = (event: HistoryItem): boolean => {
-    // Only show the restore button for operations within teams I can edit, omitting the intial default operation for new flows which won't have an actor
-    return (
-      event.type === "operation" &&
-      Boolean(event.actorId) &&
-      canUserEditTeam(teamSlug)
-    );
+  // Show restore only for editable, undoable operations that have something newer to undo
+  const showUndoButton = (event: HistoryItem, i: number): boolean => {
+    if (event.type !== "operation") return false;
+
+    const hasNewerOperation = events
+      .slice(0, i)
+      .some((e) => e.type === "operation");
+    if (!hasNewerOperation) return false;
+
+    // Once the flow is already empty, do not allow restoring to the initial "Created flow" operation
+    const isInitialOperation = !event.actorId;
+    const flowIsEmpty = !flow[ROOT_NODE_KEY]?.edges?.length;
+    if (isInitialOperation && flowIsEmpty) return false;
+
+    return true;
   };
 
   return (
@@ -177,24 +184,26 @@ export const EditHistoryTimeline = ({
                   {`${formatLastEditDate(op.createdAt)}`}
                 </Typography>
               </Box>
-              {showUndoButton(op) && (
-                <Tooltip title="Restore to this point" placement="left">
-                  <IconButton
-                    aria-label="Restore to this point"
-                    onClick={() => handleUndo(i)}
-                    onMouseEnter={() => setFocusedOpIndex(i)}
-                    onMouseLeave={() => setFocusedOpIndex(undefined)}
-                  >
-                    <RestoreOutlined
-                      fontSize="medium"
-                      color={
-                        inUndoScope(i) && isUndoType(op.type)
-                          ? "inherit"
-                          : "primary"
-                      }
-                    />
-                  </IconButton>
-                </Tooltip>
+              {showUndoButton(op, i) && (
+                <Permission.CanEdit>
+                  <Tooltip title="Restore to this point" placement="left">
+                    <IconButton
+                      aria-label="Restore to this point"
+                      onClick={() => handleUndo(i)}
+                      onMouseEnter={() => setFocusedOpIndex(i)}
+                      onMouseLeave={() => setFocusedOpIndex(undefined)}
+                    >
+                      <RestoreOutlined
+                        fontSize="medium"
+                        color={
+                          inUndoScope(i) && isUndoType(op.type)
+                            ? "inherit"
+                            : "primary"
+                        }
+                      />
+                    </IconButton>
+                  </Tooltip>
+                </Permission.CanEdit>
               )}
             </Box>
             {
