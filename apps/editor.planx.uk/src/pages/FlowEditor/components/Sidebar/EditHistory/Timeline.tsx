@@ -83,22 +83,22 @@ export const EditHistoryTimeline = ({
     return ["operation", "comment"].includes(type);
   };
 
+  // Show restore only for editable, undoable operations that have something newer to undo
   const showUndoButton = (event: HistoryItem, i: number): boolean => {
-    // Only show the restore button for operations within teams I can edit, and only when an operation to actually restore from exists
+    if (event.type !== "operation") return false;
+    if (!canUserEditTeam(teamSlug)) return false;
+
     const hasNewerOperation = events
       .slice(0, i)
       .some((e) => e.type === "operation");
+    if (!hasNewerOperation) return false;
 
     // Once the flow is already empty, do not allow restoring to the initial "Created flow" operation
-    const isAlreadyAtInitialState =
-      !event.actorId && !flow[ROOT_NODE_KEY]?.edges?.length;
+    const isInitialOperation = !event.actorId;
+    const flowIsEmpty = !flow[ROOT_NODE_KEY]?.edges?.length;
+    if (isInitialOperation && flowIsEmpty) return false;
 
-    return (
-      event.type === "operation" &&
-      canUserEditTeam(teamSlug) &&
-      hasNewerOperation &&
-      !isAlreadyAtInitialState
-    );
+    return true;
   };
 
   return (
