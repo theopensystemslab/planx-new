@@ -9,6 +9,7 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import { ROOT_NODE_KEY } from "@planx/graph";
 import type { OT } from "@planx/graph/types";
 import type {
   CommentHistoryItem,
@@ -87,10 +88,16 @@ export const EditHistoryTimeline = ({
     const hasNewerOperation = events
       .slice(0, i)
       .some((e) => e.type === "operation");
+
+    // Once the flow is already empty, do not allow restoring to the initial "Created flow" operation
+    const isAlreadyAtInitialState =
+      !event.actorId && !flow[ROOT_NODE_KEY]?.edges?.length;
+
     return (
       event.type === "operation" &&
       canUserEditTeam(teamSlug) &&
-      hasNewerOperation
+      hasNewerOperation &&
+      !isAlreadyAtInitialState
     );
   };
 
