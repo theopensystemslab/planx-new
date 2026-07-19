@@ -78,9 +78,7 @@ export const BaseFormSection: React.FC = () => {
               onChange={() =>
                 setFieldValue("flow.isPattern", !values.flow.isPattern)
               }
-              label={
-                "Pattern (exclusive; cannot be source template or service)"
-              }
+              label={"Pattern"}
             />
             <Switch
               name="isTemplate"
