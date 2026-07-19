@@ -23,8 +23,8 @@ const VisibilitySettings: React.FC = () => {
   return (
     <>
       {!isPattern && <IsService />}
-      {(isService || isPattern) && <FlowStatus />}
-      {!isPattern && <FlowCopy isService={isService} />}
+      {isService && <FlowStatus />}
+      {isPattern && <FlowCopy isService={isService} />}
       {isService && <LPSListing />}
     </>
   );
