@@ -24,7 +24,7 @@ const VisibilitySettings: React.FC = () => {
     <>
       {!isPattern && <IsService />}
       {isService && <FlowStatus />}
-      {isPattern && <FlowCopy isService={isService} />}
+      {<FlowCopy isService={isService} />}
       {isService && <LPSListing />}
     </>
   );
