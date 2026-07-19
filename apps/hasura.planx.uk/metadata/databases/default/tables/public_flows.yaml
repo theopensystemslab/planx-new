@@ -193,13 +193,18 @@ insert_permissions:
   - role: teamEditor
     permission:
       check:
-        team:
-          members:
-            _and:
-              - user_id:
-                  _eq: x-hasura-user-id
-              - role:
-                  _eq: teamEditor
+        _and:
+          - team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamEditor
+          - is_pattern:
+              _eq: false
+          - is_template:
+              _eq: false
       columns:
         - copied_from
         - created_at
@@ -208,6 +213,7 @@ insert_permissions:
         - description
         - id
         - is_listed_on_lps
+        - is_pattern
         - is_service
         - is_template
         - limitations
@@ -228,6 +234,7 @@ insert_permissions:
           timeout: 10
           url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
         type: http
+    comment: Team members can insert flows (from scratch, copied, templated) into their own teams; they can never insert source templates nor patterns
 select_permissions:
   - role: analyst
     permission:
@@ -521,6 +528,8 @@ update_permissions:
               _is_null: true
           - is_template:
               _eq: false
+          - is_pattern:
+              _eq: false
       check:
         _and:
           - team:
@@ -547,6 +556,7 @@ update_permissions:
           timeout: 10
           url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
         type: http
+    comment: Team editors can update flows in their own teams; they can never update source templates nor patterns and they cannot set flows as deleted
 event_triggers:
   - name: update_templated_flow_edits
     definition:
