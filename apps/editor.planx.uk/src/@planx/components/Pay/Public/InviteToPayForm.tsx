@@ -121,7 +121,9 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   });
 
   // Scroll to top when loading component
-  useEffect(() => window.scrollTo(0, 0), []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const formik = useFormik<FormValues>({
     initialValues: {
