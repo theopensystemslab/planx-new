@@ -19,6 +19,8 @@ env:
   BUILD_MODE: staging
   SITE_URL: https://localplanning.editor.planx.dev
   DIST_ID: ${{ secrets.LPS_STAGING_DIST_ID }}
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
 jobs:
   deploy:

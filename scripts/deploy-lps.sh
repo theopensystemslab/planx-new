@@ -16,7 +16,8 @@ echo "Starting Deployment..."
 echo "Site: $SITE_URL ($BUILD_MODE)"
 
 echo "Building LPS..."
-pnpm build
+# Build via Turbo from the repo root
+( cd "$SCRIPT_DIR/.." && pnpm turbo run build --filter=localplanning.services )
 
 echo "Syncing Astro assets..."
 aws s3 sync $BUILD_DIR/_astro s3://$BUCKET_NAME/_astro \
