@@ -12,6 +12,7 @@ export default [
         {
           assertFunctionNames: [
             "expectSections",
+            "expectSessionResumedAtRetryPayment",
             "publishService",
             "turnServiceOnline",
             "makeFlowAService",

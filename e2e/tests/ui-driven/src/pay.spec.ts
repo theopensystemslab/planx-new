@@ -348,6 +348,47 @@ test.describe("Gov Pay integration @regression", () => {
     await page.locator("a").getByText("View your payment summary").click();
     await expect(page.getByText("Form sent")).toBeVisible();
   });
+
+  // A user who abandons a payment by hitting "back" in their browser should
+  // return to their session ("Confirm your email") not start a new one ("Enter your email" x2)
+  test("navigating back from GOV.UK Pay via the browser during an in-flight payment", async ({
+    page,
+  }) => {
+    const sessionId = await navigateToPayComponent(page, context);
+    context.sessionIds!.push(sessionId);
+
+    await startPaymentAndWaitForGovPay(page);
+
+    // Navigate "back" via browser
+    await page.goBack();
+
+    await expectSessionResumedAtRetryPayment({
+      page,
+      context,
+      sessionId,
+      adminGQLClient,
+    });
+  });
+
+  // As above, but navigating directly to the resume URL rather than using "back"
+  test("navigating to the resume URL during an in-flight payment", async ({
+    page,
+  }) => {
+    const sessionId = await navigateToPayComponent(page, context);
+    context.sessionIds!.push(sessionId);
+
+    await startPaymentAndWaitForGovPay(page);
+
+    // Abandon the payment by navigating directly back to PlanX
+    await page.goto(`${previewURL}&sessionId=${sessionId}`);
+
+    await expectSessionResumedAtRetryPayment({
+      page,
+      context,
+      sessionId,
+      adminGQLClient,
+    });
+  });
 });
 
 async function navigateToPayComponent(
@@ -360,6 +401,51 @@ async function navigateToPayComponent(
   await page.getByLabel("Pay test").fill("Test");
   await page.getByTestId("continue-button").click();
   return getSessionId(page);
+}
+
+async function startPaymentAndWaitForGovPay(page: Page) {
+  await page.getByText(payButtonText).click();
+  await expect(page.locator("#card-no")).toBeVisible();
+}
+
+/**
+ * A user who returns to PlanX mid-payment lands on the resume page for their
+ * session. After confirming their email they're returned to the Pay component,
+ * on their original session, with the option to pick the payment back up.
+ */
+async function expectSessionResumedAtRetryPayment({
+  page,
+  context,
+  sessionId,
+  adminGQLClient,
+}: {
+  page: Page;
+  context: TestContext;
+  sessionId: string;
+  adminGQLClient: GraphQLClient;
+}) {
+  // The original payment is still attached to the session
+  const abandonedSession = await findSession({ adminGQLClient, sessionId });
+  const originalPaymentId = abandonedSession?.data?.govUkPayment?.payment_id;
+  expect(originalPaymentId).toBeTruthy();
+
+  // The user is prompted to re-enter their email to resume...
+  await page.locator("#email").fill(context.user.email);
+  const validateResponse = page.waitForResponse((response) =>
+    response.url().includes("/validate-session"),
+  );
+  await page.getByTestId("continue-button").click();
+  await validateResponse;
+
+  // ...and are returned to the Pay component to retry
+  await expect(page.getByText("Retry payment")).toBeVisible();
+
+  // The retry resumes the same payment rather than starting a second one
+  const resumedSession = await findSession({ adminGQLClient, sessionId });
+  expect(resumedSession?.data?.govUkPayment?.payment_id).toEqual(
+    originalPaymentId,
+  );
+  expect(resumedSession?.data?.govUkPayment?.state?.status).toEqual("started");
 }
 
 async function hasPaymentStatus({
