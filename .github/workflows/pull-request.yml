@@ -74,6 +74,8 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
       - name: Setup Node and PNPM
         uses: ./.github/actions/setup-node-pnpm
       - run: pnpm install --frozen-lockfile
@@ -83,7 +85,9 @@ jobs:
           path: .turbo
           key: ${{ runner.os }}-turbo-${{ github.sha }}
           restore-keys: ${{ runner.os }}-turbo-
-      - run: pnpm turbo run typecheck lint
+      - run: pnpm turbo run typecheck lint --affected
+        env:
+          TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha }}
 
   integration_tests:
     name: Run Integration tests
