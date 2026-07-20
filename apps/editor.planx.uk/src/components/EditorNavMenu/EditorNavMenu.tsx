@@ -68,9 +68,10 @@ function EditorNavMenu() {
   const notificationsRef = useRef<HTMLDivElement>(null);
   const featureFlagsRef = useRef<HTMLDivElement>(null);
 
-  const [role, team] = useStore((state) => [
+  const [role, team, isPattern] = useStore((state) => [
     state.getUserRoleForCurrentTeam(),
     state.getTeam(),
+    state.isPattern,
   ]);
 
   const referenceCode = team?.settings?.referenceCode;
@@ -304,8 +305,34 @@ function EditorNavMenu() {
     [teamSlug, flowSlug, flowAnalyticsLink],
   );
 
+  const patternLayoutSections: MenuSection[] = useMemo(
+    () => [
+      {
+        routes: [
+          {
+            title: "Editor",
+            Icon: EditorIcon,
+            route: `/app/${teamSlug}/${flowSlug}`,
+            accessibleBy: ["platformAdmin"],
+          },
+          {
+            title: "Flow settings",
+            Icon: TuneIcon,
+            route: `/app/${teamSlug}/${flowSlug}/settings`,
+            accessibleBy: ["platformAdmin"],
+          },
+        ],
+      },
+    ],
+    [teamSlug, flowSlug],
+  );
+
   const getRoutesForUrl = (): { sections: MenuSection[]; compact: boolean } => {
-    if (isFlowRoute) return { sections: flowLayoutSections, compact: true };
+    if (isFlowRoute)
+      return {
+        sections: isPattern ? patternLayoutSections : flowLayoutSections,
+        compact: true,
+      };
     if (isTeamRoute) return { sections: teamLayoutSections, compact: false };
     return { sections: globalLayoutSections, compact: false };
   };

@@ -54,6 +54,8 @@ const Breadcrumbs: React.FC = () => {
 
   const canUserEditTeam = useStore((state) => state.canUserEditTeam);
 
+  const isPattern = useStore((state) => state.isPattern);
+
   if (!teamSlug || !flowSlug || !data?.flows.length) return null;
   const { status: flowStatus, isService } = data.flows[0];
 
@@ -90,7 +92,7 @@ const Breadcrumbs: React.FC = () => {
           </>
         )}
       </BreadcrumbsRoot>
-      {isService && flowStatus && canUserEditTeam(teamSlug) && (
+      {(isService || isPattern) && flowStatus && canUserEditTeam(teamSlug) && (
         <Box sx={(theme) => ({ color: theme.palette.text.primary })}>
           <BreadcrumbsLink
             to="/app/$team/$flow/settings"

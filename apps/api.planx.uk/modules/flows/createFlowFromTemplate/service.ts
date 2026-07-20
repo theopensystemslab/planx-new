@@ -30,6 +30,7 @@ const createFlowFromTemplate = async (
       ? undefined
       : sourceTemplate.limitations,
     isService: sourceTemplate.isService,
+    isPattern: false,
     // INSERT using the API client to bypass redundant input validation
     // The source data is already pre-validated and comes directly from the DB
     $apiClient: $api.client,

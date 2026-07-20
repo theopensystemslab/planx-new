@@ -104,6 +104,12 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     dark: "#C099FF",
     icon: "#380F77",
   },
+  pattern: {
+    main: "#f5ffdb",
+    light: "#f5ffdb",
+    dark: "#e3f1be",
+    icon: "#568203",
+  },
   tonalOffset: DEFAULT_TONAL_OFFSET,
   contrastThreshold: DEFAULT_CONTRAST_THRESHOLD,
 };

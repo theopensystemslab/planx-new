@@ -49,6 +49,12 @@ declare module "@mui/material/styles" {
       dark: string;
       icon: string;
     };
+    pattern: {
+      main: string;
+      light: string;
+      dark: string;
+      icon: string;
+    };
   }
 
   interface PaletteOptions {
@@ -74,6 +80,12 @@ declare module "@mui/material/styles" {
       serviceType: string;
     };
     template?: {
+      main: string;
+      light: string;
+      dark: string;
+      icon: string;
+    };
+    pattern?: {
       main: string;
       light: string;
       dark: string;

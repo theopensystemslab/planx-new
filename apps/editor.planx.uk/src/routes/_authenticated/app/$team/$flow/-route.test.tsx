@@ -44,6 +44,7 @@ describe("connectToFlowRoute (ShareDB connection guard)", () => {
       isService: true,
       templatedFrom: "template-uuid",
       template: undefined,
+      isPattern: false,
     });
   });
 

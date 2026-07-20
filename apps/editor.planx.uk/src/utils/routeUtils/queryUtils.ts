@@ -18,6 +18,7 @@ export interface FlowEditorData {
   templatedFrom: string;
   isTemplate: boolean;
   isService: boolean;
+  isPattern: boolean;
   isFlowPublished: boolean;
   template?: {
     id: string;
@@ -38,6 +39,7 @@ export interface GetFlowEditorDataResponse {
     templatedFrom: string;
     isTemplate: boolean;
     isService: boolean;
+    isPattern: boolean;
     publishedFlowsAggregate: {
       aggregate: {
         count: number;
@@ -84,6 +86,7 @@ export const getFlowEditorData = async (
           templatedFrom: templated_from
           isTemplate: is_template
           isService: is_service
+          isPattern: is_pattern
           publishedFlowsAggregate: published_flows_aggregate {
             aggregate {
               count
@@ -122,6 +125,7 @@ export const getFlowEditorData = async (
     templatedFrom: flow.templatedFrom,
     isTemplate: flow.isTemplate,
     isService: flow.isService,
+    isPattern: flow.isPattern,
     isFlowPublished: flow.publishedFlowsAggregate?.aggregate.count > 0,
     template: flow.template || undefined,
   };
@@ -168,6 +172,7 @@ export const getBasicFlowData = async (
  *   - All flows in my team or `opensystemslab`
  *   - Flows set to copiable by others
  *   - Not source templates
+ *   - Not patterns
  *   - Not the parent flow I am currently nesting within
  */
 export const getExternalPortals = async (
@@ -186,6 +191,7 @@ export const getExternalPortals = async (
           name
           isTemplate: is_template
           canCreateFromCopy: can_create_from_copy
+          isPattern: is_pattern
           team {
             slug
             name
@@ -195,11 +201,12 @@ export const getExternalPortals = async (
     `,
   });
 
-  // Always filter out the parent flow I am currently nesting within
+  // Always filter out patterns and the parent flow I am currently nesting within
   let filteredFlows = data.flows.filter(
     (flow: Flow) =>
-      flow.team &&
-      `${currentTeam}/${currentFlow}` !== `${flow.team.slug}/${flow.slug}`,
+      !flow.isPattern ||
+      (flow.team &&
+        `${currentTeam}/${currentFlow}` !== `${flow.team.slug}/${flow.slug}`),
   );
 
   // For non admins, also filter out: source templates, flows not copiable by others, and flows not in my team (excl OSL) for a less-overwhelming selection

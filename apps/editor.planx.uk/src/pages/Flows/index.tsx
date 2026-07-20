@@ -49,19 +49,25 @@ const Flows: React.FC<FlowsProps> = (initialFlows) => {
     isTrial,
     flowCardView,
     setFlowCardView,
+    userRole,
   ] = useStore((state) => [
     state.getTeam(),
     state.canUserEditTeam,
     state.teamSettings?.isTrial,
     state.flowCardView,
     state.setFlowCardView,
+    state.getUserRole(),
   ]);
 
   const navigate = useNavigate();
   const searchParams = useSearch({ from: "/_authenticated/app/$team/flows" });
 
   const { data } = useGetFlows(teamId);
-  const flows = data?.flows ?? initialFlows.flows;
+  // Ensure only platform admins see "patterns"
+  let flows = data?.flows ?? initialFlows.flows;
+  if (flows && userRole !== "Platform admin") {
+    flows = flows.filter((flow) => !flow.isPattern);
+  }
   const [flowView, setFlowView] = useState<FlowView>("flows");
 
   const {
@@ -69,7 +75,12 @@ const Flows: React.FC<FlowsProps> = (initialFlows) => {
     loading: archivedFlowsLoading,
     error: archivedFlowsError,
   } = useGetArchivedFlows(teamId, flowView !== "archive");
-  const archivedFlows = archivedFlowsData?.flows ?? null;
+  let archivedFlows = archivedFlowsData?.flows ?? null;
+  // Ensure only platform admins see archived "patterns"
+  if (archivedFlows && userRole !== "Platform admin") {
+    archivedFlows = archivedFlows.filter((flow) => !flow.isPattern);
+  }
+
   const { displayedFlows, isFiltered } = useDisplayedFlows({
     flows,
     filterOptions,

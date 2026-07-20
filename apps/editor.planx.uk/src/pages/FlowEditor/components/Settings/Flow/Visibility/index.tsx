@@ -10,7 +10,7 @@ import { useGetIsService } from "./IsService/queries";
 import LPSListing from "./LPS";
 
 const VisibilitySettings: React.FC = () => {
-  const flowId = useStore((state) => state.id);
+  const [flowId, isPattern] = useStore((state) => [state.id, state.isPattern]);
   const { data: isServiceData, loading, error } = useGetIsService(flowId);
 
   if (loading) return <DelayedLoadingIndicator />;
@@ -22,9 +22,9 @@ const VisibilitySettings: React.FC = () => {
 
   return (
     <>
-      <IsService />
+      {!isPattern && <IsService />}
       {isService && <FlowStatus />}
-      <FlowCopy isService={isService} />
+      {<FlowCopy isService={isService} />}
       {isService && <LPSListing />}
     </>
   );

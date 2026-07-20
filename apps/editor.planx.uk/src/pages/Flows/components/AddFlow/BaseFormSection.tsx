@@ -73,6 +73,14 @@ export const BaseFormSection: React.FC = () => {
         <>
           <Permission.IsPlatformAdmin>
             <Switch
+              name="isPattern"
+              checked={values.flow.isPattern}
+              onChange={() =>
+                setFieldValue("flow.isPattern", !values.flow.isPattern)
+              }
+              label={"Pattern"}
+            />
+            <Switch
               name="isTemplate"
               checked={values.flow.isTemplate}
               onChange={() =>
