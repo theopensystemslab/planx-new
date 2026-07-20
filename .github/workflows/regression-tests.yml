@@ -17,6 +17,8 @@ env:
   EDITOR_DIRECTORY: apps/editor.planx.uk
   API_DIRECTORY: apps/api.planx.uk
   HASURA_DIRECTORY: apps/hasura.planx.uk
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
 jobs:
   integration_tests:
@@ -69,8 +71,13 @@ jobs:
       - name: Setup Node and PNPM
         uses: ./.github/actions/setup-node-pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm build
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
+      - name: Restore Turbo cache
+        uses: actions/cache@v6
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-turbo-
+      - run: pnpm turbo run build --filter=editor.planx.uk
       - run: pnpm test:silent --retry=1
         working-directory: ${{ env.EDITOR_DIRECTORY }}
 
@@ -94,9 +101,16 @@ jobs:
       - name: Install Playwright Dependencies
         run: pnpm playwright install --with-deps chromium
         working-directory: e2e/tests/ui-driven
+      - name: Restore Turbo cache
+        uses: actions/cache@v6
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-turbo-
       - name: Build editor (test mode)
-        run: VITE_APP_ENV=test pnpm build
-        working-directory: apps/editor.planx.uk
+        run: pnpm turbo run build --filter=editor.planx.uk
+        env:
+          VITE_APP_ENV: test
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
       - name: End-to-end Tests
