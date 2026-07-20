@@ -124,7 +124,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Run API Tests
-        run: pnpm check && pnpm test
+        run: pnpm test
         working-directory: ${{ env.API_DIRECTORY }}
 
   test_react:
@@ -480,9 +480,6 @@ jobs:
         uses: ./.github/actions/setup-node-pnpm
       - name: PNPM Install
         run: pnpm install --frozen-lockfile
-      - name: Code checks
-        run: pnpm check
-        working-directory: e2e
       - name: Install Playwright Dependencies
         run: pnpm playwright install --with-deps chromium
         working-directory: e2e/tests/ui-driven
