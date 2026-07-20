@@ -35,7 +35,7 @@ jobs:
       infrastructure: ${{ steps.filter.outputs.infrastructure }}
       sharedb: ${{ steps.filter.outputs.sharedb }}
       localplanning: ${{ steps.filter.outputs.localplanning }}
-      pnpmworkspace: $${{ steps.filter.outputs.pnpmworkspace }}
+      pnpmworkspace: ${{ steps.filter.outputs.pnpmworkspace }}
       commit: ${{ steps.commit.outputs.commit }}
     steps:
       - uses: actions/checkout@v7
