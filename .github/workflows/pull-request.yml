@@ -141,8 +141,13 @@ jobs:
       - name: Setup Node and PNPM
         uses: ./.github/actions/setup-node-pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm build
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
+      - name: Restore Turbo cache
+        uses: actions/cache@v6
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-turbo-
+      - run: pnpm turbo run build --filter=editor.planx.uk
       - run: pnpm test:silent --retry=1
         working-directory: ${{ env.EDITOR_DIRECTORY }}
 
@@ -466,28 +471,25 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
-      - name: Get editor git tree hash
-        id: editor-hash
-        run: echo "hash=$(git rev-parse HEAD:apps/editor.planx.uk)" >> $GITHUB_OUTPUT
-      - name: Restore editor build cache
-        id: cache-e2e-editor-build
-        uses: actions/cache@v6
-        with:
-          path: apps/editor.planx.uk/build
-          key: editor-e2e-pr-${{ github.event.number }}-${{ steps.editor-hash.outputs.hash }}
-          restore-keys: editor-e2e-pr-${{ github.event.number }}-
       - name: Setup Node and PNPM
         uses: ./.github/actions/setup-node-pnpm
       - name: PNPM Install
         run: pnpm install --frozen-lockfile
+      - name: Restore Turbo cache
+        uses: actions/cache@v6
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-turbo-
       - name: Install Playwright Dependencies
         run: pnpm playwright install --with-deps chromium
         working-directory: e2e/tests/ui-driven
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
       - name: Build editor (test mode)
-        run: VITE_APP_ENV=test pnpm build
-        working-directory: apps/editor.planx.uk
+        run: pnpm turbo run build --filter=editor.planx.uk
+        env:
+          VITE_APP_ENV: test
       - name: End-to-end Tests
         run: pnpm test
         working-directory: e2e
