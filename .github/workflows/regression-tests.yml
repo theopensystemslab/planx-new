@@ -55,9 +55,14 @@ jobs:
         uses: ./.github/actions/setup-node-pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Restore Turbo cache
+        uses: actions/cache@v6
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-turbo-
       - name: Run API Tests
-        run: pnpm check --quiet && pnpm test
-        working-directory: ${{ env.API_DIRECTORY }}
+        run: pnpm turbo run test --filter=api.planx.uk
 
   test_react:
     name: Run React Tests
@@ -78,8 +83,7 @@ jobs:
           key: ${{ runner.os }}-turbo-${{ github.sha }}
           restore-keys: ${{ runner.os }}-turbo-
       - run: pnpm turbo run build --filter=editor.planx.uk
-      - run: pnpm test:silent --retry=1
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
+      - run: pnpm turbo run test --filter=editor.planx.uk
 
   end_to_end_tests:
     name: E2E tests

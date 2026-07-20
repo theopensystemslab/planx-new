@@ -9,6 +9,7 @@
   "tasks": {
     "typecheck": {},
     "lint": {},
+    "test": {},
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", "build/**"]
