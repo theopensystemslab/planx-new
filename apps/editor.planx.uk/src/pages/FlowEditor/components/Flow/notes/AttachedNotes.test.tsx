@@ -12,7 +12,7 @@ const makeNote = (overrides: Partial<FlowNote> = {}): FlowNote => ({
   flowId: "flow-1",
   nodeId: "node-a",
   placement: null,
-  text: "Remember to check this",
+  text: "an attached note",
   color: "#fffdb0",
   createdBy: 1,
   updatedBy: 1,
@@ -40,12 +40,12 @@ beforeEach(() => {
 describe("AttachedNotes", () => {
   it("renders the note text directly, for a node with an attached note", async () => {
     const attached = new Map([
-      ["node-a", [makeNote({ text: "Remember to check this" })]],
+      ["node-a", [makeNote({ text: "an attached note" })]],
     ]);
 
     const { getByText } = await renderWithNotes("node-a", attached);
 
-    expect(getByText("Remember to check this")).toBeInTheDocument();
+    expect(getByText("an attached note")).toBeInTheDocument();
   });
 
   it("renders nothing for a node with no attached notes", async () => {
@@ -53,7 +53,7 @@ describe("AttachedNotes", () => {
 
     const { queryByText } = await renderWithNotes("node-b", attached);
 
-    expect(queryByText("Remember to check this")).not.toBeInTheDocument();
+    expect(queryByText("an attached note")).not.toBeInTheDocument();
   });
 
   it("renders nothing when showNotes is false", async () => {
@@ -62,7 +62,7 @@ describe("AttachedNotes", () => {
 
     const { queryByText } = await renderWithNotes("node-a", attached);
 
-    expect(queryByText("Remember to check this")).not.toBeInTheDocument();
+    expect(queryByText("an attached note")).not.toBeInTheDocument();
   });
 
   it("renders a row for each attached note when there are several", async () => {

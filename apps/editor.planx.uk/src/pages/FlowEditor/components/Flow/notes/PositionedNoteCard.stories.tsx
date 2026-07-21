@@ -1,6 +1,3 @@
-// Only pages/FlowEditor/index.tsx imports this normally - Storybook never
-// mounts that page, so it has to be pulled in here for the note-card styling
-// (and the .card / paper-fold styling it composes with) to apply at all.
 import "pages/FlowEditor/floweditor.scss";
 
 import type { Meta, StoryObj } from "@storybook/tanstack-react";
@@ -24,7 +21,6 @@ const note: FlowNote = {
   updatedAt: "2026-01-01T00:00:00Z",
 };
 
-
 const meta = {
   title: "Editor Components/Notes/PositionedNoteCard",
   component: PositionedNoteCard,
@@ -34,56 +30,60 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
+const PositionedNoteCardDemo: React.FC = () => {
+  useStore.setState({
+    updateFlowNote: async (id, patch) => {
+      console.log("updateFlowNote", id, patch);
+    },
+    deleteFlowNote: async (id) => {
+      console.log("deleteFlowNote", id);
+    },
+  });
+
+  const noteEditorOpen = useStore((state) => state.noteEditorOpen);
+
+  return (
+    <ul
+      data-layout="top-down"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        listStyle: "none",
+        padding: 0,
+        margin: 0,
+      }}
+    >
+      <li className="card decision type-Question">
+        <div className="card-wrapper">
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid -- decorative mock of the real node markup */}
+          <a>
+            <span>Node A</span>
+          </a>
+        </div>
+      </li>
+      <li className="hanger">
+        <button type="button" />
+      </li>
+      <li className="hanger note-connector" aria-hidden="true" />
+      <PositionedNoteCard note={note} />
+      <li className="hanger">
+        <button type="button" />
+      </li>
+      <li className="card decision type-Question">
+        <div className="card-wrapper">
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid -- decorative mock of the real node markup */}
+          <a>
+            <span>Node B</span>
+          </a>
+        </div>
+      </li>
+      {noteEditorOpen && <NoteEditorDialog />}
+    </ul>
+  );
+};
+
 export const Default = {
   args: { note },
-  render: () => {
-    useStore.setState({
-      updateFlowNote: async (id, patch) => {
-        console.log("updateFlowNote", id, patch);
-      },
-      deleteFlowNote: async (id) => {
-        console.log("deleteFlowNote", id);
-      },
-    });
-
-    return (
-      <ul
-        data-layout="top-down"
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          listStyle: "none",
-          padding: 0,
-          margin: 0,
-        }}
-      >
-        <li className="card decision type-Question">
-          <div className="card-wrapper">
-            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid -- decorative mock of the real node markup for CSS purposes only */}
-            <a>
-              <span>Node A</span>
-            </a>
-          </div>
-        </li>
-        <li className="hanger">
-          <button type="button" />
-        </li>
-        <li className="hanger note-connector" aria-hidden="true" />
-        <PositionedNoteCard note={note} />
-        <li className="hanger">
-          <button type="button" />
-        </li>
-        <li className="card decision type-Question">
-          <div className="card-wrapper">
-            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid -- decorative mock of the real node markup for CSS purposes only */}
-            <a>
-              <span>Node B</span>
-            </a>
-          </div>
-        </li>
-        <NoteEditorDialog />
-      </ul>
-    );
-  },
+  render: () => <PositionedNoteCardDemo />,
 } satisfies Story;

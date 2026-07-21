@@ -37,7 +37,6 @@ const meta = {
         }}
       >
         <Story />
-        <NoteEditorDialog />
       </FlowNotesContext.Provider>
     ),
   ],
@@ -47,39 +46,52 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
+const AttachedNotesDemo: React.FC = () => {
+  useStore.setState({
+    updateFlowNote: async (id, patch) => {
+      console.log("updateFlowNote", id, patch);
+    },
+    deleteFlowNote: async (id) => {
+      console.log("deleteFlowNote", id);
+    },
+  });
+
+  const noteEditorOpen = useStore((state) => state.noteEditorOpen);
+
+  return (
+    <ul
+      style={{
+        display: "flex",
+        gap: 24,
+        alignItems: "flex-start",
+        listStyle: "none",
+        padding: 0,
+        margin: 0,
+      }}
+    >
+      <li className="card decision type-Question">
+        <div className="card-wrapper">
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid -- decorative mock of the real node markup  */}
+          <a>
+            <span>A regular node, for comparison</span>
+          </a>
+        </div>
+      </li>
+      <li className="card decision type-Question">
+        <div className="card-wrapper">
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid -- decorative mock of the real node markup */}
+          <a>
+            <span>A node with an attached note</span>
+          </a>
+          <AttachedNotes nodeId="node-a" />
+        </div>
+      </li>
+      {noteEditorOpen && <NoteEditorDialog />}
+    </ul>
+  );
+};
+
 export const Default = {
   args: { nodeId: "node-a" },
-  render: () => {
-    useStore.setState({
-      updateFlowNote: async (id, patch) => {
-        console.log("updateFlowNote", id, patch);
-      },
-      deleteFlowNote: async (id) => {
-        console.log("deleteFlowNote", id);
-      },
-    });
-
-    return (
-      <ul
-        style={{
-          display: "flex",
-          gap: 24,
-          alignItems: "flex-start",
-          listStyle: "none",
-          padding: 0,
-          margin: 0,
-        }}
-      >
-        <li className="card decision type-Question">
-          <div className="card-wrapper">
-            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid -- decorative mock of the real node markup for CSS purposes only */}
-            <a>
-              <span>A node with an attached note</span>
-            </a>
-            <AttachedNotes nodeId="node-a" />
-          </div>
-        </li>
-      </ul>
-    );
-  },
+  render: () => <AttachedNotesDemo />,
 } satisfies Story;
