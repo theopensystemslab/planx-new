@@ -83,8 +83,8 @@ jobs:
         uses: actions/cache@v6
         with:
           path: .turbo
-          key: ${{ runner.os }}-turbo-${{ github.sha }}
-          restore-keys: ${{ runner.os }}-turbo-
+          key: ${{ runner.os }}-turbo-${{ github.job }}-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-turbo-${{ github.job }}-
       - run: pnpm turbo run typecheck lint --affected
         env:
           TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha }}
@@ -131,8 +131,8 @@ jobs:
         uses: actions/cache@v6
         with:
           path: .turbo
-          key: ${{ runner.os }}-turbo-${{ github.sha }}
-          restore-keys: ${{ runner.os }}-turbo-
+          key: ${{ runner.os }}-turbo-${{ github.job }}-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-turbo-${{ github.job }}-
       - name: Run API Tests
         run: pnpm turbo run test --filter=api.planx.uk
 
@@ -154,8 +154,8 @@ jobs:
         uses: actions/cache@v6
         with:
           path: .turbo
-          key: ${{ runner.os }}-turbo-${{ github.sha }}
-          restore-keys: ${{ runner.os }}-turbo-
+          key: ${{ runner.os }}-turbo-${{ github.job }}-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-turbo-${{ github.job }}-
       - run: pnpm turbo run build --filter=editor.planx.uk
       - run: pnpm turbo run test --filter=editor.planx.uk
 
@@ -174,8 +174,8 @@ jobs:
         uses: actions/cache@v6
         with:
           path: .turbo
-          key: ${{ runner.os }}-turbo-${{ github.sha }}
-          restore-keys: ${{ runner.os }}-turbo-
+          key: ${{ runner.os }}-turbo-${{ github.job }}-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-turbo-${{ github.job }}-
       - run: pnpm turbo run build --filter=localplanning.services
         env:
           BUILD_MODE: pizza
@@ -202,8 +202,8 @@ jobs:
         uses: actions/cache@v6
         with:
           path: .turbo
-          key: ${{ runner.os }}-turbo-${{ github.sha }}
-          restore-keys: ${{ runner.os }}-turbo-
+          key: ${{ runner.os }}-turbo-${{ github.job }}-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-turbo-${{ github.job }}-
       - name: Build editor + Storybook
         run: pnpm turbo run build build-storybook --filter=editor.planx.uk
         env:
@@ -487,8 +487,8 @@ jobs:
         uses: actions/cache@v6
         with:
           path: .turbo
-          key: ${{ runner.os }}-turbo-${{ github.sha }}
-          restore-keys: ${{ runner.os }}-turbo-
+          key: ${{ runner.os }}-turbo-${{ github.job }}-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-turbo-${{ github.job }}-
       - name: Install Playwright Dependencies
         run: pnpm playwright install --with-deps chromium
         working-directory: e2e/tests/ui-driven

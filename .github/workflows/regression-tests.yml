@@ -59,8 +59,8 @@ jobs:
         uses: actions/cache@v6
         with:
           path: .turbo
-          key: ${{ runner.os }}-turbo-${{ github.sha }}
-          restore-keys: ${{ runner.os }}-turbo-
+          key: ${{ runner.os }}-turbo-${{ github.job }}-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-turbo-${{ github.job }}-
       - name: Run API Tests
         run: pnpm turbo run test --filter=api.planx.uk
 
@@ -80,8 +80,8 @@ jobs:
         uses: actions/cache@v6
         with:
           path: .turbo
-          key: ${{ runner.os }}-turbo-${{ github.sha }}
-          restore-keys: ${{ runner.os }}-turbo-
+          key: ${{ runner.os }}-turbo-${{ github.job }}-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-turbo-${{ github.job }}-
       - run: pnpm turbo run build --filter=editor.planx.uk
       - run: pnpm turbo run test --filter=editor.planx.uk
 
@@ -109,8 +109,8 @@ jobs:
         uses: actions/cache@v6
         with:
           path: .turbo
-          key: ${{ runner.os }}-turbo-${{ github.sha }}
-          restore-keys: ${{ runner.os }}-turbo-
+          key: ${{ runner.os }}-turbo-${{ github.job }}-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-turbo-${{ github.job }}-
       - name: Build editor (test mode)
         run: pnpm turbo run build --filter=editor.planx.uk
         env:
