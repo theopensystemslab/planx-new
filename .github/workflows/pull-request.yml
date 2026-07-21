@@ -115,8 +115,6 @@ jobs:
     name: Run API Tests
     runs-on: ubuntu-24.04
     timeout-minutes: 10
-    needs: [changes]
-    if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.pnpmworkspace == 'true' }}
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-pizza-env
@@ -139,8 +137,6 @@ jobs:
   test_react:
     name: Run React Tests
     runs-on: ubuntu-24.04
-    needs: [changes]
-    if: ${{ needs.changes.outputs.editor == 'true' || needs.changes.outputs.pnpmworkspace == 'true' }}
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-pizza-env
