@@ -1,8 +1,6 @@
 import { gql, useSubscription } from "@apollo/client";
 import { useStore } from "pages/FlowEditor/lib/store";
 
-export const DEFAULT_NOTE_COLOR = "#fffdb0";
-
 export interface NotePlacement {
   parent: string;
   before?: string;

@@ -2,8 +2,10 @@ import "pages/FlowEditor/floweditor.scss";
 
 import type { Meta, StoryObj } from "@storybook/tanstack-react";
 import type { FlowNote } from "hooks/data/useFlowNotes";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
+import { NoteEditorDialog } from "./NoteEditorDialog";
 import { PositionedNoteCard } from "./PositionedNoteCard";
 
 const note: FlowNote = {
@@ -28,9 +30,20 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default = {
-  args: { note },
-  render: () => (
+const PositionedNoteCardDemo: React.FC = () => {
+  useStore.setState({
+    updateFlowNote: async (id, patch) => {
+      console.log("updateFlowNote", id, patch);
+    },
+    deleteFlowNote: async (id) => {
+      console.log("deleteFlowNote", id);
+    },
+  });
+
+
+  const noteEditorOpen = useStore((state) => state.noteEditorOpen);
+
+  return (
     <ul
       data-layout="top-down"
       style={{
@@ -66,6 +79,12 @@ export const Default = {
           </a>
         </div>
       </li>
+      {noteEditorOpen && <NoteEditorDialog />}
     </ul>
-  ),
+  );
+};
+
+export const Default = {
+  args: { note },
+  render: () => <PositionedNoteCardDemo />,
 } satisfies Story;
