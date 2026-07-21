@@ -41,6 +41,7 @@ import { FlowLayout } from "../../components/Flow";
 import { getFlowDoc, subscribeToDoc } from "./../sharedb";
 import { type Store } from ".";
 import type { NavigationStore } from "./navigation";
+import type { NotesStore } from "./notes";
 import type { SharedStore } from "./shared";
 
 let doc: Doc;
@@ -410,7 +411,7 @@ export interface EditorStore extends Store.Store {
 }
 
 export const editorStore: StateCreator<
-  SharedStore & EditorStore & NavigationStore,
+  SharedStore & EditorStore & NavigationStore & NotesStore,
   [],
   [],
   EditorStore
@@ -704,11 +705,20 @@ export const editorStore: StateCreator<
     toParent = undefined,
   ) {
     try {
-      const [, ops] = move(id, parent as unknown as string, {
+      const [after, ops] = move(id, parent as unknown as string, {
         toParent,
         toBefore,
       })(get().flow);
       send(ops);
+
+      if (parent) {
+        const oldParent = parent as unknown as string;
+        get().repositionNotesForMovedNode(
+          id,
+          oldParent,
+          after[oldParent]?.edges?.[0],
+        );
+      }
     } catch (err: any) {
       alert(err.message);
     }
@@ -811,8 +821,14 @@ export const editorStore: StateCreator<
   },
 
   removeNode: (id, parent) => {
-    const [, ops] = remove(id, parent)(get().flow);
+    const before = get().flow;
+    const [after, ops] = remove(id, parent)(before);
     send(ops);
+
+    const deletedNodeIds = Object.keys(before).filter((k) => !after[k]);
+    if (deletedNodeIds.length > 0) {
+      get().repositionNotesForDeletedNodes(deletedNodeIds, before, after);
+    }
   },
 
   updateNode: ({ id, data }, { children = undefined } = {}) => {
