@@ -6,7 +6,7 @@ import {
   flatFlags,
   getNoResultFlag,
 } from "@opensystemslab/planx-core/types";
-import { Form, Formik, useFormikContext } from "formik";
+import { FormikProvider, useFormikContext } from "formik";
 import groupBy from "lodash/groupBy";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -20,8 +20,9 @@ import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
 import type { EditorProps } from "../shared/types";
-import type { FlagDisplayText, Result } from "./model";
-import { validationSchema } from "./model";
+import { useFormikWithRef } from "../shared/useFormikWithRef";
+import type { FlagDisplayText, Result } from "./model"
+import {  parseResult, validationSchema } from "./model";
 
 type FlagWithValue = Flag & { value: NonNullable<Flag["value"]> };
 
@@ -84,112 +85,108 @@ const FlagEditor: React.FC<{
 type Props = EditorProps<TYPES.Result, Result>;
 
 const ResultComponent: React.FC<Props> = (props) => {
+  const formik = useFormikWithRef<Result>(
+    {
+      initialValues: parseResult(props.node?.data),
+      onSubmit: (newValues) => {
+        if (props.handleSubmit) {
+          props.handleSubmit({ type: TYPES.Result, data: newValues });
+        }
+      },
+      validationSchema: validationSchema,
+    },
+    props.formikRef,
+  );
+
   const allFlagsForSet = (flagSet: FlagSet): FlagWithValue[] => [
     ...(flags[flagSet] ?? []),
     getNoResultFlag(flagSet) as FlagWithValue,
   ];
 
   return (
-    <Formik<Result>
-      innerRef={props.formikRef}
-      initialValues={{
-        flagSet: props.node?.data?.flagSet || Object.keys(flags)[0],
-        overrides: props.node?.data?.overrides || {},
-      }}
-      onSubmit={(newValues) => {
-        if (props.handleSubmit) {
-          props.handleSubmit({ type: TYPES.Result, data: newValues });
-        }
-      }}
-      validationSchema={validationSchema}
-      validateOnBlur={false}
-      validateOnChange={false}
-    >
-      {(formik) => (
-        <Form name="modal" id="modal">
-          <TemplatedNodeInstructions
-            isTemplatedNode={formik.values.isTemplatedNode}
-            templatedNodeInstructions={formik.values.templatedNodeInstructions}
-            areTemplatedNodeInstructionsRequired={
-              formik.values.areTemplatedNodeInstructionsRequired
-            }
-          />
-          <ModalSection>
-            <ModalSectionContent>
-              <InputRow>
-                <Typography variant="h5" component="h6">
-                  <label htmlFor="result-flagSet">Flag set</label>
-                </Typography>
-                <select
-                  id="result-flagSet"
-                  name="flagSet"
-                  value={formik.values.flagSet}
-                  onChange={formik.handleChange}
-                  required
-                  disabled={props.disabled}
-                >
-                  {Object.keys(flags).map((flagSet) => (
-                    <option key={flagSet} value={flagSet}>
-                      {flagSet}
-                    </option>
-                  ))}
-                </select>
-              </InputRow>
+    <FormikProvider value={formik}>
+      <form name="modal" id="modal" onSubmit={formik.handleSubmit}>
+        <TemplatedNodeInstructions
+          isTemplatedNode={formik.values.isTemplatedNode}
+          templatedNodeInstructions={formik.values.templatedNodeInstructions}
+          areTemplatedNodeInstructionsRequired={
+            formik.values.areTemplatedNodeInstructionsRequired
+          }
+        />
+        <ModalSection>
+          <ModalSectionContent>
+            <InputRow>
+              <Typography variant="h5" component="h6">
+                <label htmlFor="result-flagSet">Flag set</label>
+              </Typography>
+              <select
+                id="result-flagSet"
+                name="flagSet"
+                value={formik.values.flagSet}
+                onChange={formik.handleChange}
+                required
+                disabled={props.disabled}
+              >
+                {Object.keys(flags).map((flagSet) => (
+                  <option key={flagSet} value={flagSet}>
+                    {flagSet}
+                  </option>
+                ))}
+              </select>
+            </InputRow>
 
+            <Box sx={{ mt: 2 }}>
+              <Typography variant="h5" component="h6">
+                Flag text overrides (optional)
+              </Typography>
+              <Typography variant="body2">
+                The overrides you set here will change what is displayed to the
+                user upon arriving at this result. If you provide no overrides,
+                the flag title will be used.
+              </Typography>
               <Box sx={{ mt: 2 }}>
-                <Typography variant="h5" component="h6">
-                  Flag text overrides (optional)
-                </Typography>
-                <Typography variant="body2">
-                  The overrides you set here will change what is displayed to
-                  the user upon arriving at this result. If you provide no
-                  overrides, the flag title will be used.
-                </Typography>
-                <Box sx={{ mt: 2 }}>
-                  {allFlagsForSet(formik.values.flagSet).map((flag) => {
-                    const override =
-                      formik.values.overrides?.[flag.value] || {};
-                    return (
-                      <FlagEditor
-                        key={flag.value}
-                        flag={flag}
-                        existingOverrides={override}
-                        onChange={(newValues) => {
+                {allFlagsForSet(formik.values.flagSet).map((flag) => {
+                  const override = formik.values.overrides?.[flag.value] || {};
+                  return (
+                    <FlagEditor
+                      key={flag.value}
+                      flag={flag}
+                      existingOverrides={override}
+                      onChange={(newValues) => {
+                        formik.setFieldValue("overrides", {
+                          ...formik.values.overrides,
+                          [flag.value]: newValues,
+                        });
+                      }}
+                      disabled={props.disabled}
+                    >
+                      <Switch
+                        checked={Boolean(override.resetButton)}
+                        onChange={() =>
                           formik.setFieldValue("overrides", {
                             ...formik.values.overrides,
-                            [flag.value]: newValues,
-                          });
-                        }}
-                        disabled={props.disabled}
-                      >
-                        <Switch
-                          checked={Boolean(override.resetButton)}
-                          onChange={() =>
-                            formik.setFieldValue("overrides", {
-                              ...formik.values.overrides,
-                              [flag.value]: {
-                                ...override,
-                                resetButton: !override.resetButton,
-                              },
-                            })
-                          }
-                          label="Reset to start of service"
-                        />
-                      </FlagEditor>
-                    );
-                  })}
-                </Box>
+                            [flag.value]: {
+                              ...override,
+                              resetButton: !override.resetButton,
+                            },
+                          })
+                        }
+                        label="Reset to start of service"
+                      />
+                    </FlagEditor>
+                  );
+                })}
               </Box>
-            </ModalSectionContent>
-          </ModalSection>
-          <ModalFooter
-            formik={formik}
-            showMoreInformation={false}
-            disabled={props.disabled}
-          />
-        </Form>
-      )}
-    </Formik>
+            </Box>
+          </ModalSectionContent>
+        </ModalSection>
+        <ModalFooter
+          formik={formik}
+          showMoreInformation={false}
+          disabled={props.disabled}
+        />
+      </form>
+    </FormikProvider>
   );
 };
 

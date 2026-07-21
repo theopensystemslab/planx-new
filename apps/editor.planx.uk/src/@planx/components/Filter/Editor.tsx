@@ -5,26 +5,22 @@ import {
   DEFAULT_FLAG_CATEGORY,
   flatFlags,
 } from "@opensystemslab/planx-core/types";
+import type { Child, EditorProps } from "@planx/components/shared/types";
 import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
-import type { FormikProps } from "formik";
-import type { MutableRefObject } from "react";
 import React from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 
-interface FilterData {
+export interface FilterData {
   fn: string;
   category: string;
 }
 
-export interface Props {
-  id?: string;
-  handleSubmit?: (data: any, children?: any) => void;
-  node?: any;
-  autoAnswer?: Node["id"];
-  disabled?: boolean;
-  formikRef?: MutableRefObject<FormikProps<FilterData> | null>;
-}
+export type Props = EditorProps<
+  TYPES.Filter,
+  FilterData,
+  { autoAnswer?: Node["id"] }
+>;
 
 const Filter: React.FC<Props> = (props) => {
   const formik = useFormikWithRef<FilterData>(
@@ -35,7 +31,7 @@ const Filter: React.FC<Props> = (props) => {
       },
       onSubmit: (newValues) => {
         if (props?.handleSubmit) {
-          const children = [
+          const children: Child[] = [
             ...flatFlags,
             {
               category: formik.values.category,

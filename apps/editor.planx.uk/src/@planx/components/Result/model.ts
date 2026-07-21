@@ -9,7 +9,7 @@ import type { TextContent } from "types";
 import { boolean, lazy, mixed, object, string } from "yup";
 
 import type { BaseNodeData } from "../shared";
-import { baseNodeDataValidationSchema } from "../shared";
+import { baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
 
 export interface FlagDisplayText {
   heading?: string;
@@ -51,6 +51,13 @@ const overridesSchema = lazy((obj) =>
     ),
   ),
 );
+
+export const parseResult = (data: Store.Node["data"] | undefined): Result => ({
+  ...parseBaseNodeData(data),
+  flagSet: data?.flagSet || FLAG_SETS[0],
+  overrides: data?.overrides,
+  resetButton: data?.resetButton,
+});
 
 export const validationSchema = baseNodeDataValidationSchema.concat(
   object({

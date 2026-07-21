@@ -9,20 +9,16 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
-import {
-  ComponentType,
-  ComponentType as TYPES,
-} from "@opensystemslab/planx-core/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { type BaseNodeData, parseFormValues } from "@planx/components/shared";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import ErrorFallback from "components/Error/ErrorFallback";
 import type { FormikProps } from "formik";
-import isEqual from "lodash/isEqual";
 import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
 } from "pages/FlowEditor/utils";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
 import { Switch } from "ui/shared/Switch";
@@ -121,8 +117,15 @@ const FormModal: React.FC<FormModalProps> = ({
   extraProps,
 }) => {
   const navigate = useNavigate();
-  const formikRef = useRef<FormikProps<BaseNodeData & unknown> | null>(null);
+
   const [showUnsavedWarning, setShowUnsavedWarning] = useState(false);
+  const [isFormDirty, setIsFormDirty] = useState(false);
+
+  const formikRef = useMemo<{
+    current: FormikProps<BaseNodeData & unknown> | null;
+    onDirtyChange: (dirty: boolean) => void;
+  }>(() => ({ current: null, onDirtyChange: setIsFormDirty }), []);
+
   const { team: teamSlug, flow: flowSlug } = useParams({
     from: "/_authenticated/app/$team/$flow",
   });
@@ -146,40 +149,12 @@ const FormModal: React.FC<FormModalProps> = ({
     store.orderedFlow,
     store.isClone,
   ]);
+
   const node = id ? flow[id] : undefined;
+  const isEditingExistingNode = Boolean(handleDelete);
 
-  const normalizeFormValues = (obj: any): any => {
-    if (obj === null || obj === undefined || obj === "") {
-      return "";
-    }
-
-    if (Array.isArray(obj)) {
-      return obj.map(normalizeFormValues);
-    }
-
-    if (typeof obj === "object") {
-      const normalized: any = {};
-      for (const key in obj) {
-        normalized[key] = normalizeFormValues(obj[key]);
-      }
-      return normalized;
-    }
-
-    return obj;
-  };
-
-  const isDirty = (formik: FormikProps<BaseNodeData & unknown>): boolean => {
-    return !isEqual(
-      normalizeFormValues(formik.values),
-      normalizeFormValues(formik.initialValues),
-    );
-  };
-
-  const hasUnsavedChanges = () => {
-    const formik = formikRef.current;
-    if (!formik) return false;
-
-    return isDirty(formik);
+  const hasUnsavedChanges = (): boolean => {
+    return isFormDirty;
   };
 
   const handleClose = () => {
@@ -216,6 +191,7 @@ const FormModal: React.FC<FormModalProps> = ({
   //  2. The user has edit access to this team, but it is:
   //    - a templated flow
   //    - and the node itself is not marked "isTemplatedNode" or a child of an internal portal marked "isTemplatedNode"
+  //  3. The form is being updated and not dirty
   const canUserEditNode = (teamSlug: string) => {
     return useStore.getState().canUserEditTeam(teamSlug);
   };
@@ -239,6 +215,13 @@ const FormModal: React.FC<FormModalProps> = ({
     Boolean(node?.data?.isTemplatedNode) &&
     (!parentIsTemplatedInternalPortal ||
       !parentIsChildOfTemplatedInternalPortal);
+
+  const userCannotEdit = isTemplatedFrom
+    ? !canUserEditTemplatedNode
+    : !canUserEditNode(teamSlug);
+
+  const isSubmitDisabled =
+    userCannotEdit || (isEditingExistingNode && !isFormDirty);
 
   const showDeleteButton = id && !isDisabledTemplatedNode;
 
@@ -408,7 +391,7 @@ const FormModal: React.FC<FormModalProps> = ({
               variant="contained"
               color="primary"
               form="modal"
-              disabled={disabled}
+              disabled={isSubmitDisabled}
             >
               {handleDelete ? `Update` : `Create`}
             </Button>

@@ -65,7 +65,10 @@ const ExternalPortalForm: React.FC<{
   isTemplatedNode?: boolean;
   templatedNodeInstructions?: string;
   areTemplatedNodeInstructionsRequired?: boolean;
-  formikRef?: MutableRefObject<FormikProps<ExternalPortalFormData> | null>;
+  formikRef?: {
+    current: FormikProps<ExternalPortalFormData> | null;
+    onDirtyChange: (dirty: boolean) => void;
+  };
 }> = ({
   handleSubmit,
   flowId,

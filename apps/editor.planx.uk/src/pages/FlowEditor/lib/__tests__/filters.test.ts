@@ -34,7 +34,7 @@ describe("A filter on the root of the graph", () => {
     });
 
     expect(upcomingCardIds()?.[0]).toEqual("RootFilter");
-    expect(autoAnswerableFlag("RootFilter")).toEqual("RootFilterYes");
+    expect(autoAnswerableFlag("RootFilter")).toEqual(["RootFilterYes"]);
   });
 
   test("Filter options are auto-answered correctly when a lower order flag is collected first", () => {
@@ -55,7 +55,7 @@ describe("A filter on the root of the graph", () => {
     });
 
     expect(upcomingCardIds()?.[0]).toEqual("RootFilter");
-    expect(autoAnswerableFlag("RootFilter")).toEqual("RootFilterYes");
+    expect(autoAnswerableFlag("RootFilter")).toEqual(["RootFilterYes"]);
   });
 
   test("Filter 'No flag result' option is auto-answered correctly when no flags in this category have been collected", () => {
@@ -76,7 +76,9 @@ describe("A filter on the root of the graph", () => {
     });
 
     expect(upcomingCardIds()?.[0]).toEqual("RootFilter");
-    expect(autoAnswerableFlag("RootFilter")).toEqual("RootFilterNoFlagResult");
+    expect(autoAnswerableFlag("RootFilter")).toEqual([
+      "RootFilterNoFlagResult",
+    ]);
   });
 });
 
@@ -112,7 +114,7 @@ describe("A filter on a branch", () => {
     });
 
     expect(upcomingCardIds()?.[0]).toEqual("BranchFilter");
-    expect(autoAnswerableFlag("BranchFilter")).toEqual("BranchFilterYes");
+    expect(autoAnswerableFlag("BranchFilter")).toEqual(["BranchFilterYes"]);
   });
 
   test("Filter options are auto-answered correctly when a lower order flag is collected first", () => {
@@ -141,7 +143,7 @@ describe("A filter on a branch", () => {
     });
 
     expect(upcomingCardIds()?.[0]).toEqual("BranchFilter");
-    expect(autoAnswerableFlag("BranchFilter")).toEqual("BranchFilterYes");
+    expect(autoAnswerableFlag("BranchFilter")).toEqual(["BranchFilterYes"]);
   });
 
   test("Filter 'No flag result' option is auto-answered correctly when no flags in this category have been collected", () => {
@@ -163,9 +165,9 @@ describe("A filter on a branch", () => {
     });
 
     expect(upcomingCardIds()?.[0]).toEqual("BranchFilter");
-    expect(autoAnswerableFlag("BranchFilter")).toEqual(
+    expect(autoAnswerableFlag("BranchFilter")).toEqual([
       "BranchFilterNoFlagResult",
-    );
+    ]);
   });
 });
 
@@ -187,7 +189,7 @@ describe("Auto-answerable Questions or Checklists on filter paths", () => {
     expect(visitedNodes()).not.toContain("AutoAnswerableChecklist");
 
     expect(upcomingCardIds()?.[0]).toEqual("RootFilter");
-    expect(autoAnswerableFlag("RootFilter")).toEqual("RootFilterYes");
+    expect(autoAnswerableFlag("RootFilter")).toEqual(["RootFilterYes"]);
     clickContinue("RootFilter", { answers: ["RootFilterYes"], auto: true });
 
     expect(upcomingCardIds()?.[0]).toEqual("AutoAnswerableChecklist");
@@ -209,7 +211,7 @@ describe("Auto-answerable Questions or Checklists on filter paths", () => {
     expect(visitedNodes()).not.toContain("AutoAnswerableChecklist");
 
     expect(upcomingCardIds()?.[0]).toEqual("RootFilter");
-    expect(autoAnswerableFlag("RootFilter")).toEqual("RootFilterNo");
+    expect(autoAnswerableFlag("RootFilter")).toEqual(["RootFilterNo"]);
     clickContinue("RootFilter", { answers: ["RootFilterNo"], auto: true });
 
     expect(upcomingCardIds()).not.toContain("AutoAnswerableChecklist");
