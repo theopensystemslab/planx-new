@@ -9,6 +9,7 @@ import { useDrag } from "react-dnd";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
+import { AttachedNotes } from "../notes/AttachedNotes";
 import Hanger from "./Hanger";
 import Node from "./Node";
 
@@ -82,6 +83,7 @@ const Filter: React.FC<Props> = React.memo((props) => {
           {Icon && <Icon />}
           <span>{props.text}</span>
         </Link>
+        <AttachedNotes nodeId={props.id} />
         <ol className="options">
           {childNodes.map((child) => (
             <Node

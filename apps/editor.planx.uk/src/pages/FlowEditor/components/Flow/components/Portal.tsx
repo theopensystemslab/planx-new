@@ -16,6 +16,7 @@ import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 import EditorIcon from "ui/icons/Editor";
 
 import { getParentId } from "../lib/utils";
+import { AttachedNotes } from "../notes/AttachedNotes";
 import Hanger from "./Hanger";
 import Question from "./Question";
 import { Tag } from "./Tag";
@@ -171,6 +172,7 @@ const ExternalPortal: React.FC<any> = (props) => {
               ))}
             </Box>
           )}
+          <AttachedNotes nodeId={props.id} />
         </Box>
       </li>
     </>
@@ -270,6 +272,7 @@ const InternalPortal: React.FC<any> = (props) => {
                 ))}
               </Box>
             )}
+            <AttachedNotes nodeId={props.id} />
           </TemplatedNodeContainer>
         </Box>
       </li>
