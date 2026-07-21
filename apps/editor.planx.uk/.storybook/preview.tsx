@@ -1,18 +1,19 @@
-import React from "react";
-import CssBaseline from "@mui/material/CssBaseline";
-import { ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { defaultTheme } from "../src/theme";
-import { MyMap } from "@opensystemslab/map";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { initialize, mswLoader } from "msw-storybook-addon";
 import {
   ApolloClient,
   ApolloProvider,
   HttpLink,
   InMemoryCache,
 } from "@apollo/client";
+import CssBaseline from "@mui/material/CssBaseline";
+import { StyledEngineProvider,ThemeProvider } from "@mui/material/styles";
+import { MyMap } from "@opensystemslab/map";
+import type { Decorator } from "@storybook/tanstack-react"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { initialize, mswLoader } from "msw-storybook-addon";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+
+import { defaultTheme } from "../src/theme";
 
 if (!window.customElements.get("my-map")) {
   window.customElements.define("my-map", MyMap);
@@ -44,14 +45,14 @@ const testApolloClient = new ApolloClient({
 
 initialize();
 
-export const decorators = [
-  (Story) => (
+export const decorators: Decorator[] = [
+  (Story, context) => (
     <ApolloProvider client={testApolloClient}>
       <QueryClientProvider client={testQueryClient}>
         <StyledEngineProvider injectFirst>
           <ThemeProvider theme={defaultTheme}>
             <CssBaseline />
-            <DndProvider backend={HTML5Backend} key={Date.now()}>
+            <DndProvider backend={HTML5Backend} key={context.id}>
               <Story />
             </DndProvider>
           </ThemeProvider>
