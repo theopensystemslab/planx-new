@@ -12,6 +12,9 @@ import { useDrop } from "react-dnd";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
+import { useFlowNotesContext } from "../notes/FlowNotesContext";
+import { placementKey } from "../notes/lib/partitionNotes";
+import { PositionedNoteCard } from "../notes/PositionedNoteCard";
 
 interface HangerProps {
   hidden?: boolean;
@@ -31,12 +34,18 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
     from: "/_authenticated/app/$team/$flow",
   });
 
-  const [moveNode, isTemplatedFrom, flow, orderedFlow] = useStore((state) => [
-    state.moveNode,
-    state.isTemplatedFrom,
-    state.flow,
-    state.orderedFlow,
-  ]);
+  const [moveNode, isTemplatedFrom, flow, orderedFlow, showNotes] = useStore(
+    (state) => [
+      state.moveNode,
+      state.isTemplatedFrom,
+      state.flow,
+      state.orderedFlow,
+      state.showNotes,
+    ],
+  );
+
+  const { positioned } = useFlowNotesContext();
+  const notes = positioned.get(placementKey(parent, before)) ?? [];
 
   // When working in a templated flow, if any internal portal is marked as "isTemplatedNode", then the Hanger should be visible to add children
   const indexedParent = orderedFlow?.find(({ id }) => id === parent);
@@ -87,20 +96,32 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
     [parent, before],
   );
 
+  const showNoteCards = showNotes && notes.length > 0;
+
   return (
-    <li
-      className={classnames("hanger", { hidden: hidden || hideHangerFromUser })}
-      ref={(el) => {
-        drop(el);
-      }}
-    >
-      <button
-        onContextMenu={handleContextMenu}
-        onClick={handleHangerButtonClick}
+    <>
+      {showNoteCards && (
+        /* decoartive only - connector between parent node and note*/
+        <li className="hanger note-connector" aria-hidden="true" />
+      )}
+      {showNoteCards &&
+        notes.map((note) => <PositionedNoteCard key={note.id} note={note} />)}
+      <li
+        className={classnames("hanger", {
+          hidden: hidden || hideHangerFromUser,
+        })}
+        ref={(el) => {
+          drop(el);
+        }}
       >
-        {canDrop && item && item.text}
-      </button>
-    </li>
+        <button
+          onContextMenu={handleContextMenu}
+          onClick={handleHangerButtonClick}
+        >
+          {canDrop && item && item.text}
+        </button>
+      </li>
+    </>
   );
 };
 

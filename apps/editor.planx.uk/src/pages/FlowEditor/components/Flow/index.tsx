@@ -9,6 +9,7 @@ import EndPoint from "./components/EndPoint";
 import Hanger from "./components/Hanger";
 import Node from "./components/Node";
 import { GetStarted } from "./GetStarted";
+import { FlowNotesProvider } from "./notes/FlowNotesContext";
 
 export enum FlowLayout {
   TOP_DOWN = "top-down",
@@ -44,7 +45,7 @@ const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
   const flowName = useStore((state) => state.flowName);
 
   return (
-    <>
+    <FlowNotesProvider>
       <ol
         id="flow"
         data-layout={flowLayout}
@@ -115,7 +116,7 @@ const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
         <EndPoint text="end" />
       </ol>
       <ContextMenu />
-    </>
+    </FlowNotesProvider>
   );
 };
 
