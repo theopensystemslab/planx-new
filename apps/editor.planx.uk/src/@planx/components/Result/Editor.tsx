@@ -21,8 +21,8 @@ import { Switch } from "ui/shared/Switch";
 
 import type { EditorProps } from "../shared/types";
 import { useFormikWithRef } from "../shared/useFormikWithRef";
-import type { FlagDisplayText, Result } from "./model"
-import {  parseResult, validationSchema } from "./model";
+import type { FlagDisplayText, Result } from "./model";
+import { parseResult, validationSchema } from "./model";
 
 type FlagWithValue = Flag & { value: NonNullable<Flag["value"]> };
 

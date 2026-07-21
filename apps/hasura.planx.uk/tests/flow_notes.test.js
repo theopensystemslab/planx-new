@@ -1,4 +1,4 @@
-const { introspectAs } = require("./utils");
+import { introspectAs } from "./utils";
 
 describe("flow notes", () => {
   describe("public", () => {
