@@ -10,7 +10,7 @@ export const URLPrefix: React.FC = () => {
   // Store in component state so this does not update when user submits form
   const [urlPrefix] = useState(() => {
     const { origin, pathname } = window.location;
-    const path = pathname !== "/" ? pathname : "";
+    const path = pathname !== "/" ? pathname.replace("/flows", "") : "";
     return `${origin}${path}/`;
   });
 
