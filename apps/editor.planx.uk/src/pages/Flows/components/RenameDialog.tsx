@@ -162,7 +162,7 @@ export const RenameDialog: React.FC<Props> = ({
                     disabled
                     id="flowSlug"
                     type="text"
-                    startAdornment={<URLPrefix />}
+                    startAdornment={<URLPrefix mode="flow" />}
                   />
                 </InputLabel>
               </DialogContent>

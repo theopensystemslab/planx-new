@@ -124,7 +124,7 @@ export const AddTeamButton: React.FC = () => {
                       {...getFieldProps("slug")}
                       disabled
                       type="text"
-                      startAdornment={<URLPrefix />}
+                      startAdornment={<URLPrefix mode="team" />}
                     />
                   </InputLabel>
                   <Switch

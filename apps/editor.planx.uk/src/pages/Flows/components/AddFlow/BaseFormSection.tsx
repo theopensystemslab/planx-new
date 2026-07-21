@@ -66,7 +66,7 @@ export const BaseFormSection: React.FC = () => {
           disabled
           id="flow.slug"
           type="text"
-          startAdornment={<URLPrefix />}
+          startAdornment={<URLPrefix mode="flow" />}
         />
       </InputLabel>
       {values.mode === "new" && (
