@@ -30,6 +30,7 @@ interface Props {
   activeTab: ModalTab;
   onTabChange: (tab: ModalTab) => void;
   onComponentSelect: (slug: string) => void;
+  onSelectNote?: () => void;
   onInsertPattern: (patternId: string) => void;
 }
 
@@ -43,6 +44,7 @@ export const ModalTabs: React.FC<Props> = ({
   activeTab,
   onTabChange,
   onComponentSelect,
+  onSelectNote,
   onInsertPattern,
 }) => {
   return (
@@ -87,7 +89,10 @@ export const ModalTabs: React.FC<Props> = ({
         }}
       >
         {activeTab === "components" ? (
-          <ComponentsTab onSelect={onComponentSelect} />
+          <ComponentsTab
+            onSelect={onComponentSelect}
+            onSelectNote={onSelectNote}
+          />
         ) : (
           <PatternsTab onInsert={onInsertPattern} />
         )}
