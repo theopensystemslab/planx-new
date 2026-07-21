@@ -1,4 +1,4 @@
-import react, { noProcessEnv } from "@planx/eslint-config/react";
+import react, { noImplicitEffectReturn, noProcessEnv } from "@planx/eslint-config/react";
 
 export default [
   {
@@ -82,6 +82,7 @@ export default [
       "no-restricted-syntax": [
         "error",
         noProcessEnv,
+        noImplicitEffectReturn,
         {
           selector:
             "JSXAttribute[name.name=/^(color|bgcolor|backgroundColor|borderColor|fill|stroke)$/] Literal[value=/\\./]",
