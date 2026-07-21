@@ -1,4 +1,5 @@
 import type { FlowNote } from "hooks/data/useFlowNotes";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 interface Props {
@@ -6,9 +7,16 @@ interface Props {
 }
 
 export const PositionedNoteCard: React.FC<Props> = ({ note }) => {
+  const openNoteEditor = useStore((state) => state.openNoteEditor);
+
   return (
     <li className="note-card">
-      <button type="button">{note.text || "Untitled note"}</button>
+      <button
+        type="button"
+        onClick={() => openNoteEditor({ mode: "edit", note })}
+      >
+        {note.text || "Untitled note"}
+      </button>
     </li>
   );
 };
