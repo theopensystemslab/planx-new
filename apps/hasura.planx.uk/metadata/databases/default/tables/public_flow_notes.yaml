@@ -40,6 +40,7 @@ insert_permissions:
         - text
         - color
         - created_by
+        - updated_by
     comment: ""
   - role: teamEditor
     permission:
@@ -62,6 +63,7 @@ insert_permissions:
         - text
         - color
         - created_by
+        - updated_by
     comment: ""
 select_permissions:
   - role: platformAdmin
@@ -123,11 +125,23 @@ update_permissions:
         - color
         - updated_by
       filter:
-        created_by:
-          _eq: x-hasura-user-id
+        flow:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
       check:
-        created_by:
-          _eq: x-hasura-user-id
+        flow:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
     comment: ""
 delete_permissions:
   - role: platformAdmin
@@ -137,15 +151,12 @@ delete_permissions:
   - role: teamEditor
     permission:
       filter:
-        _and:
-          - created_by:
-              _eq: x-hasura-user-id
-          - flow:
-              team:
-                members:
-                  _and:
-                    - user_id:
-                        _eq: x-hasura-user-id
-                    - role:
-                        _eq: teamEditor
+        flow:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
     comment: ""

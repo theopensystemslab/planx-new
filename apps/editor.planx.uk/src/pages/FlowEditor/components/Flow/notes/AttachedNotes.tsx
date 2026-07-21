@@ -10,7 +10,10 @@ interface Props {
 
 export const AttachedNotes: React.FC<Props> = ({ nodeId }) => {
   const { attached } = useFlowNotesContext();
-  const showNotes = useStore((state) => state.showNotes);
+  const [showNotes, openNoteEditor] = useStore((state) => [
+    state.showNotes,
+    state.openNoteEditor,
+  ]);
   const notes = attached.get(nodeId) ?? [];
 
   if (!showNotes || notes.length === 0) return null;
@@ -18,7 +21,15 @@ export const AttachedNotes: React.FC<Props> = ({ nodeId }) => {
   return (
     <>
       {notes.map((note: FlowNote) => (
-        <button key={note.id} type="button" className="attached-note">
+        <button
+          key={note.id}
+          type="button"
+          className="attached-note"
+          onClick={(event) => {
+            event.stopPropagation();
+            openNoteEditor({ mode: "edit", note });
+          }}
+        >
           {note.text || "Untitled note"}
         </button>
       ))}
