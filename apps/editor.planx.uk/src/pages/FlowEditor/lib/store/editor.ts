@@ -25,6 +25,7 @@ import {
 } from "@planx/graph";
 import type { OT } from "@planx/graph/types";
 import type { RegisteredRouter } from "@tanstack/react-router";
+import type { FlowNote, NotePlacement } from "hooks/data/useFlowNotes";
 import { client } from "lib/graphql";
 import debounce from "lodash/debounce";
 import { type } from "ot-json0";
@@ -94,6 +95,17 @@ export interface EditorUIStore {
   componentSelectorBefore?: string;
   openComponentSelector: (params: { parent?: string; before?: string }) => void;
   closeComponentSelector: () => void;
+  noteEditorOpen: boolean;
+  noteEditorMode: "create" | "edit" | null;
+  noteEditorNote?: FlowNote;
+  noteEditorNodeId?: string;
+  noteEditorPlacement?: NotePlacement;
+  openNoteEditor: (
+    params:
+      | { mode: "create"; nodeId?: string; placement?: NotePlacement }
+      | { mode: "edit"; note: FlowNote },
+  ) => void;
+  closeNoteEditor: () => void;
 }
 
 export const editorUIStore: StateCreator<
@@ -224,6 +236,40 @@ export const editorUIStore: StateCreator<
         componentSelectorOpen: false,
         componentSelectorParent: undefined,
         componentSelectorBefore: undefined,
+      }),
+
+    noteEditorOpen: false,
+    noteEditorMode: null,
+    noteEditorNote: undefined,
+    noteEditorNodeId: undefined,
+    noteEditorPlacement: undefined,
+
+    openNoteEditor: (params) =>
+      set(
+        params.mode === "edit"
+          ? {
+              noteEditorOpen: true,
+              noteEditorMode: "edit",
+              noteEditorNote: params.note,
+              noteEditorNodeId: undefined,
+              noteEditorPlacement: undefined,
+            }
+          : {
+              noteEditorOpen: true,
+              noteEditorMode: "create",
+              noteEditorNote: undefined,
+              noteEditorNodeId: params.nodeId,
+              noteEditorPlacement: params.placement,
+            },
+      ),
+
+    closeNoteEditor: () =>
+      set({
+        noteEditorOpen: false,
+        noteEditorMode: null,
+        noteEditorNote: undefined,
+        noteEditorNodeId: undefined,
+        noteEditorPlacement: undefined,
       }),
   }),
   {
