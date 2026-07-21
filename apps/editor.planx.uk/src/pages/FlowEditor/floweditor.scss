@@ -11,6 +11,7 @@ $lockedDataBackground: #e2e2e2;
 $folderBackground: #b5d1f7;
 $folderBorder: #2c4b88;
 $primaryAction: #0010a4;
+$noteBackground: #fffdb0;
 
 $endpointWidth: 50px;
 $hangerWidth: 16px;
@@ -58,6 +59,29 @@ $fontMonospace: "Source Code Pro", monospace;
     border-top-left-radius: 2px;
     z-index: -1;
   }
+}
+
+// Triangle shapes to simulate a paper fold on a note's corner
+@mixin paperFoldFront($size: 12px, $background: #fff) {
+  content: "";
+  position: absolute;
+  right: -$nodeBorderWidth;
+  bottom: -$nodeBorderWidth;
+  width: 0;
+  height: 0;
+  border-bottom: $size solid $background;
+  border-left: $size solid transparent;
+}
+
+@mixin paperFoldBack($size: 12px, $foldColor: #555) {
+  content: "";
+  position: absolute;
+  right: -$nodeBorderWidth;
+  bottom: -$nodeBorderWidth;
+  width: 0;
+  height: 0;
+  border-top: $size solid $foldColor;
+  border-right: $size solid transparent;
 }
 
 @mixin cloneStyle {
@@ -311,6 +335,30 @@ $fontMonospace: "Source Code Pro", monospace;
     border-top: none;
   }
 
+  // A note attached directly to a node - rendered as an extra row
+  & .attached-note {
+    position: relative;
+    display: block;
+    width: 100%;
+    font: inherit;
+    text-align: left;
+    appearance: none;
+    padding: 8px 20px 8px 8px;
+    border: $nodeBorderWidth solid $nodeBorder;
+    border-top: none;
+    background: $noteBackground;
+    cursor: pointer;
+    overflow-wrap: break-word;
+    word-break: break-word;
+
+    &::before {
+      @include paperFoldFront($background: $noteBackground);
+    }
+    &::after {
+      @include paperFoldBack;
+    }
+  }
+
   & .card-tag {
     &.automation {
       width: 100%;
@@ -475,6 +523,18 @@ $fontMonospace: "Source Code Pro", monospace;
     @include disabledHanger();
   }
 
+  // decorative connector
+  &.note-connector {
+    [data-layout="top-down"] & {
+      min-height: $padding * 2;
+      min-width: $hangerWidth;
+    }
+    [data-layout="left-right"] & {
+      min-width: $padding * 2;
+      min-height: $hangerWidth;
+    }
+  }
+
   > a,
   > button {
     $size: $hangerWidth;
@@ -543,6 +603,33 @@ $fontMonospace: "Source Code Pro", monospace;
           content: none;
         }
       }
+    }
+  }
+}
+
+// positioned note i.e. rendered on a container line
+.note-card {
+  align-self: center;
+
+  > button {
+    position: relative;
+    display: inline-block;
+    font: inherit;
+    text-align: left;
+    appearance: none;
+    border: $nodeBorderWidth solid $nodeBorder;
+    background: $noteBackground;
+    cursor: pointer;
+    max-width: $nodeMaxWidth;
+    padding: 8px 20px 8px 8px;
+    overflow-wrap: break-word;
+    word-break: break-word;
+
+    &::before {
+      @include paperFoldFront(10px, $noteBackground);
+    }
+    &::after {
+      @include paperFoldBack(10px, #999);
     }
   }
 }
@@ -725,27 +812,13 @@ $fontMonospace: "Source Code Pro", monospace;
     // Triangle shapes to simulate paper fold on sticky note
     &:not(.isClone) a {
       &::before {
-        content: "";
-        position: absolute;
-        right: -$nodeBorderWidth;
-        bottom: -$nodeBorderWidth;
-        width: 0;
-        height: 0;
-        border-bottom: 12px solid #fff;
-        border-left: 12px solid transparent;
+        @include paperFoldFront;
         .flow-locked & {
           border-bottom-color: $lockedNodeBackground;
         }
       }
       &::after {
-        content: "";
-        position: absolute;
-        right: -$nodeBorderWidth;
-        bottom: -$nodeBorderWidth;
-        width: 0;
-        height: 0;
-        border-top: 12px solid #555;
-        border-right: 12px solid transparent;
+        @include paperFoldBack;
       }
     }
   }
