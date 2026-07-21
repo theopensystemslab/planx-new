@@ -10,6 +10,7 @@ $dataBackground: #f0f0f0;
 $lockedDataBackground: #e2e2e2;
 $folderBackground: #b5d1f7;
 $folderBorder: #2c4b88;
+$noteBackground: #fffdb0;
 
 $endpointWidth: 50px;
 $hangerWidth: 16px;
@@ -328,12 +329,13 @@ $fontMonospace: "Source Code Pro", monospace;
     padding: 8px 20px 8px 8px;
     border: $nodeBorderWidth solid $nodeBorder;
     border-top: none;
+    background: $noteBackground;
     cursor: pointer;
     overflow-wrap: break-word;
     word-break: break-word;
 
     &::before {
-      @include paperFoldFront;
+      @include paperFoldFront($background: $noteBackground);
     }
     &::after {
       @include paperFoldBack;
@@ -563,6 +565,7 @@ $fontMonospace: "Source Code Pro", monospace;
     text-align: left;
     appearance: none;
     border: $nodeBorderWidth solid $nodeBorder;
+    background: $noteBackground;
     cursor: pointer;
     max-width: $nodeMaxWidth;
     padding: 8px 20px 8px 8px;
@@ -570,7 +573,7 @@ $fontMonospace: "Source Code Pro", monospace;
     word-break: break-word;
 
     &::before {
-      @include paperFoldFront(10px);
+      @include paperFoldFront(10px, $noteBackground);
     }
     &::after {
       @include paperFoldBack(10px, #999);

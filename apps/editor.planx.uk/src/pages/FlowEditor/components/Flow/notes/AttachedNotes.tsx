@@ -25,7 +25,6 @@ export const AttachedNotes: React.FC<Props> = ({ nodeId }) => {
           key={note.id}
           type="button"
           className="attached-note"
-          style={{ background: note.color }}
           onClick={(event) => {
             event.stopPropagation();
             openNoteEditor({ mode: "edit", note });

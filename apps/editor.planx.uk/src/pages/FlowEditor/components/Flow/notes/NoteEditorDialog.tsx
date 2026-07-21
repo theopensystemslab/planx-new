@@ -9,10 +9,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { DEFAULT_NOTE_COLOR } from "hooks/data/useFlowNotes";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
-import ColorPicker from "ui/editor/ColorPicker/ColorPicker";
 import Input from "ui/shared/Input/Input";
 
 export const NoteEditorDialog: React.FC = () => {
@@ -39,7 +37,6 @@ export const NoteEditorDialog: React.FC = () => {
   ]);
 
   const [text, setText] = useState(note?.text ?? "");
-  const [color, setColor] = useState(note?.color ?? DEFAULT_NOTE_COLOR);
 
   if (!noteEditorOpen) return null;
 
@@ -47,9 +44,9 @@ export const NoteEditorDialog: React.FC = () => {
 
   const handleSave = async () => {
     if (isEditing && note) {
-      await updateFlowNote(note.id, { text, color });
+      await updateFlowNote(note.id, { text });
     } else {
-      await createFlowNote({ nodeId, placement, text, color });
+      await createFlowNote({ nodeId, placement, text });
     }
     closeNoteEditor();
   };
@@ -95,14 +92,6 @@ export const NoteEditorDialog: React.FC = () => {
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        <Box sx={{ mt: 2 }}>
-          <ColorPicker
-            label="Colour"
-            inline
-            color={color}
-            onChange={setColor}
-          />
-        </Box>
       </DialogContent>
       <DialogActions
         disableSpacing

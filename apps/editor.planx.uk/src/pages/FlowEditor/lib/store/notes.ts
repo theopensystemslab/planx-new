@@ -34,15 +34,11 @@ export interface CreateFlowNoteInput {
   nodeId?: string;
   placement?: NotePlacement;
   text: string;
-  color?: string;
 }
 
 export interface NotesStore {
   createFlowNote: (input: CreateFlowNoteInput) => Promise<string | undefined>;
-  updateFlowNote: (
-    id: string,
-    patch: { text?: string; color?: string },
-  ) => Promise<void>;
+  updateFlowNote: (id: string, patch: { text?: string }) => Promise<void>;
   deleteFlowNote: (id: string) => Promise<void>;
 }
 
@@ -52,7 +48,7 @@ export const notesStore: StateCreator<
   [],
   NotesStore
 > = (_set, get) => ({
-  createFlowNote: async ({ nodeId, placement, text, color }) => {
+  createFlowNote: async ({ nodeId, placement, text }) => {
     const flowId = get().id;
     const userId = get().user?.id;
     if (!flowId || !userId) return undefined;
@@ -65,7 +61,6 @@ export const notesStore: StateCreator<
           node_id: nodeId ?? null,
           placement: placement ?? null,
           text,
-          ...(color && { color }),
           created_by: userId,
           updated_by: userId,
         },

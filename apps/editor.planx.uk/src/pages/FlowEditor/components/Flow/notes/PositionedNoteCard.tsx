@@ -13,7 +13,6 @@ export const PositionedNoteCard: React.FC<Props> = ({ note }) => {
     <li className="note-card">
       <button
         type="button"
-        style={{ background: note.color }}
         onClick={() => openNoteEditor({ mode: "edit", note })}
       >
         {note.text || "Untitled note"}
