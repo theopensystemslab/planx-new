@@ -58,6 +58,7 @@ export const DataTable = <T,>({
   onProcessRowUpdate,
   checkboxSelection,
   customTools,
+  onRowClick,
 }: DataGridProps<T>) => {
   const renderCellComponentByType = (
     params: RenderCellParams,
@@ -131,11 +132,22 @@ export const DataTable = <T,>({
         <DataGrid
           rows={rows}
           columns={dataColumns}
+          onRowClick={onRowClick}
           onFilterModelChange={handleFilterChange}
           getRowHeight={() => "auto"}
           getRowClassName={(params) =>
             params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
           }
+          sx={{
+            ...(onRowClick && {
+              "& .MuiDataGrid-row": {
+                cursor: "pointer",
+              },
+              "& .MuiDataGrid-row:hover": {
+                backgroundColor: "action.hover",
+              },
+            }),
+          }}
           slots={{
             toolbar: CustomToolbar,
           }}
