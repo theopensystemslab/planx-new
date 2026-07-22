@@ -352,7 +352,7 @@ $fontMonospace: "Source Code Pro", monospace;
     word-break: break-word;
 
     &::before {
-      @include paperFoldFront($background: $noteBackground);
+      @include paperFoldFront;
     }
     &::after {
       @include paperFoldBack;
@@ -626,10 +626,10 @@ $fontMonospace: "Source Code Pro", monospace;
     word-break: break-word;
 
     &::before {
-      @include paperFoldFront(10px, $noteBackground);
+      @include paperFoldFront($size: 10px);
     }
     &::after {
-      @include paperFoldBack(10px, #999);
+      @include paperFoldBack($size: 10px, $foldColor: #999);
     }
   }
 }
