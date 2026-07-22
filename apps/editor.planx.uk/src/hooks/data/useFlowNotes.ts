@@ -1,5 +1,6 @@
 import { gql, useSubscription } from "@apollo/client";
 import { useStore } from "pages/FlowEditor/lib/store";
+import type { SnakeCasedProperties } from "type-fest";
 
 export const DEFAULT_NOTE_COLOR = "#fffdb0";
 
@@ -24,6 +25,7 @@ export interface FlowNote {
   createdAt: string;
   updatedAt: string;
 }
+type FlowNoteRow = SnakeCasedProperties<FlowNote>;
 
 const GET_FLOW_NOTES = gql`
   subscription GetFlowNotes($flowId: uuid!) {
@@ -41,19 +43,6 @@ const GET_FLOW_NOTES = gql`
     }
   }
 `;
-
-interface FlowNoteRow {
-  id: string;
-  flow_id: string;
-  node_id: string | null;
-  placement: NotePlacement | null;
-  text: string;
-  color: string;
-  created_by: number;
-  updated_by: number;
-  created_at: string;
-  updated_at: string;
-}
 
 interface QueryResult {
   flow_notes: FlowNoteRow[];
