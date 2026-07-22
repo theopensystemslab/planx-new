@@ -26,6 +26,13 @@ export const resolveNotePlacement = (
   before?: string,
 ): NotePlacement => {
   const containerEdges = flow[container]?.edges ?? [];
+
+  if (before && !containerEdges.includes(before)) {
+    throw new Error(
+      `before node ${before} not found in container ${container}`,
+    );
+  }
+
   const precedingId = before
     ? containerEdges[containerEdges.indexOf(before) - 1]
     : containerEdges[containerEdges.length - 1];

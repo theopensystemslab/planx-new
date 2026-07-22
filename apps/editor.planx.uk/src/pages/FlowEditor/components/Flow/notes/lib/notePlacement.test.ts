@@ -69,6 +69,16 @@ describe("resolveNotePlacement (encode)", () => {
       parentIsContainer: true,
     });
   });
+
+  it("throws an error when before node is not found in container", () => {
+    const flow: Graph = {
+      _root: { edges: ["folder"] },
+      folder: { type: 300, edges: ["nodeA"] },
+    };
+    expect(() => resolveNotePlacement(flow, "folder", "nodeB")).toThrow(
+      "before node nodeB not found in container folder",
+    );
+  });
 });
 
 describe("resolveNoteRenderCoordinate (decode)", () => {
@@ -201,4 +211,3 @@ describe("resolveNoteRenderCoordinate (decode)", () => {
     });
   });
 });
-
