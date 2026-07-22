@@ -67,17 +67,21 @@ const toFlowNote = (row: FlowNoteRow): FlowNote => ({
 interface UseFlowNotesResult {
   notes: FlowNote[];
   loading: boolean;
+  error: unknown;
 }
 
 export const useFlowNotes = (): UseFlowNotesResult => {
   const flowId = useStore((state) => state.id);
 
-  const { data, loading } = useSubscription<QueryResult>(GET_FLOW_NOTES, {
-    variables: { flowId },
-    skip: !flowId,
-  });
+  const { data, loading, error } = useSubscription<QueryResult>(
+    GET_FLOW_NOTES,
+    {
+      variables: { flowId },
+      skip: !flowId,
+    },
+  );
 
   const notes = (data?.flow_notes ?? []).map(toFlowNote);
 
-  return { notes, loading };
+  return { notes, loading, error };
 };
