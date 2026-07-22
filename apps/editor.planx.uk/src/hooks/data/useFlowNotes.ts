@@ -4,20 +4,31 @@ import type { SnakeCasedProperties } from "type-fest";
 
 export const DEFAULT_NOTE_COLOR = "#fffdb0";
 
-export interface NotePlacement {
+/** Anchored immediately after a sibling node */
+export interface SiblingAnchoredPlacement {
+  /** id of the preceding sibling node */
   parent: string;
-  before?: string;
-  /** True when `parent` is the container to insert into (leading/first-child slot) */
-  parentIsContainer?: boolean;
   /** The container `parent` was resolved against at creation time - disambiguates `parent` when it's a cloned node referenced from multiple containers */
   container?: string;
+  parentIsContainer?: false;
+  before?: undefined;
 }
 
-export interface FlowNote {
+/** Anchored to a container's leading/first-child slot (no preceding sibling to anchor to) */
+export interface ContainerAnchoredPlacement {
+  /** id of the container to insert into */
+  parent: string;
+  parentIsContainer: true;
+  before?: string;
+  container?: undefined;
+}
+
+export type NotePlacement =
+  SiblingAnchoredPlacement | ContainerAnchoredPlacement;
+
+interface FlowNoteBase {
   id: string;
   flowId: string;
-  nodeId: string | null;
-  placement: NotePlacement | null;
   text: string;
   color: string;
   createdBy: number;
@@ -25,6 +36,18 @@ export interface FlowNote {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface AttachedNote extends FlowNoteBase {
+  nodeId: string;
+  placement: null;
+}
+
+export interface PositionedNote extends FlowNoteBase {
+  nodeId: null;
+  placement: NotePlacement;
+}
+
+export type FlowNote = AttachedNote | PositionedNote;
 type FlowNoteRow = SnakeCasedProperties<FlowNote>;
 
 const GET_FLOW_NOTES = gql`
@@ -51,18 +74,22 @@ interface QueryResult {
   flow_notes: FlowNoteRow[];
 }
 
-const toFlowNote = (row: FlowNoteRow): FlowNote => ({
-  id: row.id,
-  flowId: row.flow_id,
-  nodeId: row.node_id,
-  placement: row.placement,
-  text: row.text,
-  color: row.color,
-  createdBy: row.created_by,
-  updatedBy: row.updated_by,
-  createdAt: row.created_at,
-  updatedAt: row.updated_at,
-});
+const toFlowNote = (row: FlowNoteRow): FlowNote => {
+  const base = {
+    id: row.id,
+    flowId: row.flow_id,
+    text: row.text,
+    color: row.color,
+    createdBy: row.created_by,
+    updatedBy: row.updated_by,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+
+  return row.node_id
+    ? { ...base, nodeId: row.node_id, placement: null }
+    : { ...base, nodeId: null, placement: row.placement as NotePlacement };
+};
 
 interface UseFlowNotesResult {
   notes: FlowNote[];

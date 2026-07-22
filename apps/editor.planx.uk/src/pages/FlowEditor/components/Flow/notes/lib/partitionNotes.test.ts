@@ -1,26 +1,35 @@
-import type { FlowNote } from "hooks/data/useFlowNotes";
+import type { FlowNote, NotePlacement } from "hooks/data/useFlowNotes";
 import { describe, expect, it } from "vitest";
 
 import { partitionNotes, placementKey } from "./partitionNotes";
 
 let noteCounter = 0;
 
-const makeNote = (overrides: Partial<FlowNote> = {}): FlowNote => {
+const baseNote = () => {
   noteCounter += 1;
   return {
     id: `note-${noteCounter}`,
     flowId: "flow-1",
-    nodeId: null,
-    placement: null,
     text: `Note ${noteCounter}`,
     color: "#fffdb0",
     createdBy: 1,
     updatedBy: 1,
     createdAt: "2026-01-01T00:00:00Z",
     updatedAt: "2026-01-01T00:00:00Z",
-    ...overrides,
   };
 };
+
+const makeAttachedNote = (nodeId: string): FlowNote => ({
+  ...baseNote(),
+  nodeId,
+  placement: null,
+});
+
+const makePositionedNote = (placement: NotePlacement): FlowNote => ({
+  ...baseNote(),
+  nodeId: null,
+  placement,
+});
 
 describe("partitionNotes", () => {
   it("returns empty maps for empty input", () => {
@@ -30,7 +39,7 @@ describe("partitionNotes", () => {
   });
 
   it("buckets a node_id-set note under attached, keyed by nodeId", () => {
-    const note = makeNote({ nodeId: "node-a" });
+    const note = makeAttachedNote("node-a");
     const { attached, positioned } = partitionNotes([note], {});
 
     expect(attached.get("node-a")).toEqual([note]);
@@ -38,15 +47,17 @@ describe("partitionNotes", () => {
   });
 
   it("never places an attached note in the positioned map", () => {
-    const note = makeNote({ nodeId: "node-a" });
+    const note = makeAttachedNote("node-a");
     const { positioned } = partitionNotes([note], {});
 
     expect(positioned.get(placementKey("node-a"))).toBeUndefined();
   });
 
   it("buckets a container-anchored placement note under its exact (parent, before) key", () => {
-    const note = makeNote({
-      placement: { parent: "container-a", before: "X" },
+    const note = makePositionedNote({
+      parent: "container-a",
+      before: "X",
+      parentIsContainer: true,
     });
     const { positioned } = partitionNotes([note], {});
 
@@ -54,10 +65,12 @@ describe("partitionNotes", () => {
   });
 
   it("buckets a placement note with no `before` into a distinct trailing bucket", () => {
-    const before = makeNote({
-      placement: { parent: "container-a", before: "X" },
+    const before = makePositionedNote({
+      parent: "container-a",
+      before: "X",
+      parentIsContainer: true,
     });
-    const trailing = makeNote({ placement: { parent: "container-a" } });
+    const trailing = makePositionedNote({ parent: "container-a" });
     const { positioned } = partitionNotes([before, trailing], {});
 
     expect(positioned.get(placementKey("container-a", "X"))).toEqual([before]);
@@ -68,11 +81,15 @@ describe("partitionNotes", () => {
   });
 
   it("does not leak notes across different parents sharing the same `before`", () => {
-    const noteA = makeNote({
-      placement: { parent: "container-a", before: "X" },
+    const noteA = makePositionedNote({
+      parent: "container-a",
+      before: "X",
+      parentIsContainer: true,
     });
-    const noteB = makeNote({
-      placement: { parent: "container-b", before: "X" },
+    const noteB = makePositionedNote({
+      parent: "container-b",
+      before: "X",
+      parentIsContainer: true,
     });
     const { positioned } = partitionNotes([noteA, noteB], {});
 
@@ -81,11 +98,15 @@ describe("partitionNotes", () => {
   });
 
   it("preserves insertion order for multiple notes at the same coordinate", () => {
-    const first = makeNote({
-      placement: { parent: "container-a", before: "X" },
+    const first = makePositionedNote({
+      parent: "container-a",
+      before: "X",
+      parentIsContainer: true,
     });
-    const second = makeNote({
-      placement: { parent: "container-a", before: "X" },
+    const second = makePositionedNote({
+      parent: "container-a",
+      before: "X",
+      parentIsContainer: true,
     });
     const { positioned } = partitionNotes([first, second], {});
 
@@ -101,7 +122,7 @@ describe("partitionNotes", () => {
       nodeA: { type: 8 },
       nodeB: { type: 8 },
     };
-    const note = makeNote({ placement: { parent: "nodeA" } });
+    const note = makePositionedNote({ parent: "nodeA" });
     const { positioned } = partitionNotes([note], flow);
 
     expect(positioned.get(placementKey("_root", "nodeB"))).toEqual([note]);
