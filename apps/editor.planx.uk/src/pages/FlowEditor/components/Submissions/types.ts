@@ -33,7 +33,7 @@ export interface Submission {
 }
 
 export interface SubmissionSummary {
-  sessionId: string;
+  id: string;
   flowId: string;
   flowName: string;
   address: string | null;
@@ -50,11 +50,19 @@ export interface SubmissionSummary {
 }
 
 export interface EventsLogProps {
+  submissions: Submission[]; // TODO: remove extra type after removing GROUPED_SUBMISSIONS feature flag
+  loading: boolean;
+  error: Error | undefined;
+  filterByFlow?: boolean;
+}
+
+export interface EventsLogGroupedProps {
   submissions: SubmissionSummary[];
   loading: boolean;
   error: Error | undefined;
   filterByFlow?: boolean;
 }
+
 export interface SubmissionsProps {
   flowSlug?: string;
 }
