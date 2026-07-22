@@ -29,7 +29,10 @@ type FlowNoteRow = SnakeCasedProperties<FlowNote>;
 
 const GET_FLOW_NOTES = gql`
   subscription GetFlowNotes($flowId: uuid!) {
-    flow_notes(where: { flow_id: { _eq: $flowId } }) {
+    flow_notes(
+      where: { flow_id: { _eq: $flowId } }
+      order_by: { created_at: asc, id: asc }
+    ) {
       id
       flow_id
       node_id
