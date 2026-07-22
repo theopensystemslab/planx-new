@@ -122,7 +122,7 @@ export const CopyDialog: React.FC<Props> = ({
                     disabled
                     id="flow.slug"
                     type="text"
-                    startAdornment={<URLPrefix />}
+                    startAdornment={<URLPrefix mode="flow" />}
                   />
                 </InputLabel>
               </DialogContent>
