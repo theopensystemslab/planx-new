@@ -23,7 +23,7 @@ const notes: FlowNote[] = [
 ];
 
 const meta = {
-  title: "Editor Components/Notes/AttachedNotes",
+  title: "Editor Components/Graph/Notes/AttachedNotes",
   component: AttachedNotes,
   decorators: [
     (Story) => (
