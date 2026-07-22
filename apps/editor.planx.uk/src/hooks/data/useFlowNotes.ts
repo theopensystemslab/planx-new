@@ -2,8 +2,6 @@ import { gql, useSubscription } from "@apollo/client";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { SnakeCasedProperties } from "type-fest";
 
-export const DEFAULT_NOTE_COLOR = "#fffdb0";
-
 /** Anchored immediately after a sibling node */
 export interface SiblingAnchoredPlacement {
   /** id of the preceding sibling node */
