@@ -107,6 +107,16 @@ describe("globalLayoutRoutes", () => {
     expect(menuItems).toHaveLength(4);
     expect(within(menuItems[0]).getByText("Select a team")).toBeInTheDocument();
   });
+
+  it("only displays the admin panel for analysts", async () => {
+    mockGetUserRoleForCurrentTeam.mockReturnValue("analyst");
+
+    const { getAllByRole, queryByText } = await setup(<EditorNavMenu />);
+    const menuItems = getAllByRole("listitem");
+    expect(menuItems).toHaveLength(1);
+    expect(within(menuItems[0]).getByText("Admin panel")).toBeInTheDocument();
+    expect(queryByText("Select a team")).not.toBeInTheDocument();
+  });
 });
 
 describe("teamLayoutRoutes", () => {
