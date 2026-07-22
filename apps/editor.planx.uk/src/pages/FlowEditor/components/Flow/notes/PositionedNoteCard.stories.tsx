@@ -53,7 +53,6 @@ export const Default = {
       <li className="hanger">
         <button type="button" />
       </li>
-      <li className="hanger note-connector" aria-hidden="true" />
       <PositionedNoteCard note={note} />
       <li className="hanger">
         <button type="button" />
