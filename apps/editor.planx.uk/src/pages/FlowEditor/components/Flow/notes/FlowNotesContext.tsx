@@ -1,6 +1,6 @@
 import { useFlowNotes } from "hooks/data/useFlowNotes";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { createContext, useContext, useMemo } from "react";
+import React, { createContext, useContext } from "react";
 
 import type { PartitionedNotes } from "./lib/partitionNotes";
 import { partitionNotes } from "./lib/partitionNotes";
@@ -26,18 +26,10 @@ export const FlowNotesProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const { notes, loading } = useFlowNotes();
   const flow = useStore((state) => state.flow);
-  const { attached, positioned } = useMemo(
-    () => partitionNotes(notes, flow),
-    [notes, flow],
-  );
-
-  const value = useMemo(
-    () => ({ attached, positioned, loading }),
-    [attached, positioned, loading],
-  );
+  const { attached, positioned } = partitionNotes(notes, flow);
 
   return (
-    <FlowNotesContext.Provider value={value}>
+    <FlowNotesContext.Provider value={{ attached, positioned, loading }}>
       {children}
     </FlowNotesContext.Provider>
   );
