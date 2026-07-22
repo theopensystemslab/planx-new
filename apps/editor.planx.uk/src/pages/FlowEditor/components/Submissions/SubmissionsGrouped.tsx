@@ -49,6 +49,11 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
   const submissions = useMemo(() => data?.submissions || [], [data]);
 
   const sessionSummaries = useMemo(() => {
+    type PartialSummary = Omit<
+      SubmissionSummary,
+      "eventCount" | "mostRecentEventType" | "mostRecentStatus" | "status"
+    >;
+
     const grouped = submissions.reduce(
       (acc, submission) => {
         if (!acc[submission.sessionId]) {
@@ -71,17 +76,26 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
 
         return acc;
       },
-      {} as Record<string, SubmissionSummary>,
+      {} as Record<string, PartialSummary>,
     );
 
-    return Object.values(grouped).map((session) => ({
-      ...session,
-      eventCount: session.events.length,
-      // if ANY most recent event failed, session fails
-      sessionStatus: session.events.some((e) => e.status !== "Success")
-        ? "Failed"
-        : "Success",
-    }));
+    return Object.values(grouped).map((session) => {
+      // Find the most recent event
+      const mostRecentEvent = session.events.reduce((latest, event) =>
+        event.createdAt > latest.createdAt ? event : latest,
+      );
+
+      return {
+        ...session,
+        eventCount: session.events.length,
+        mostRecentEventType: mostRecentEvent.eventType,
+        mostRecentStatus: mostRecentEvent.status,
+        // if ANY most recent event failed, session fails
+        status: session.events.some((e) => e.status !== "Success")
+          ? ("Failed" as const)
+          : ("Success" as const),
+      };
+    });
   }, [submissions]);
 
   // filter by flow if flowId prop is passed from route params

@@ -3,7 +3,6 @@ import type { GridFilterItem } from "@mui/x-data-grid";
 import { useNavigate } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import ErrorFallback from "components/Error/ErrorFallback";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { EmptyState } from "ui/editor/EmptyState";
@@ -12,26 +11,21 @@ import type { ColumnConfig } from "ui/shared/DataTable/types";
 import { ColumnFilterType } from "ui/shared/DataTable/types";
 import { dateFormatter } from "ui/shared/DataTable/utils";
 
-import {
-  submissionEventTypes,
-  submissionStatusOptions,
-} from "../submissionFilterOptions";
-import type { EventsLogProps, Submission, SubmissionSummary } from "../types";
-import { ResubmitButton } from "./ResubmitButton";
+import { submissionStatusOptions } from "../submissionFilterOptions";
+import type {
+  EventsLogGroupedProps,
+  Submission,
+  SubmissionSummary,
+} from "../types";
 import { StatusChip } from "./StatusChip";
 import SubmissionDetailModal from "./SubmissionDetailModal";
-import { SubmissionEvent } from "./SubmissionEvent";
 
-const EventsLog: React.FC<EventsLogProps> = ({
+const EventsLog: React.FC<EventsLogGroupedProps> = ({
   submissions,
   loading,
   error,
   filterByFlow,
 }) => {
-  const isPlatformAdmin = useStore((state) =>
-    Boolean(state.user?.isPlatformAdmin),
-  );
-
   const [selectedSubmission, setSelectedSubmission] =
     useState<Submission | null>(null);
 
@@ -90,7 +84,7 @@ const EventsLog: React.FC<EventsLogProps> = ({
       },
       type: ColumnFilterType.DATE,
     },
-    { field: "sessionId", headerName: "Session ID", width: 400 },
+    { field: "id", headerName: "Session ID", width: 400 },
   ];
 
   return (
@@ -102,7 +96,7 @@ const EventsLog: React.FC<EventsLogProps> = ({
       />
       <SubmissionDetailModal
         open={!!selectedSubmission}
-        submission={selectedSubmission}
+        sessionId={selectedSubmission?.sessionId}
         handleClose={() => setSelectedSubmission(null)}
       />
     </ErrorBoundary>

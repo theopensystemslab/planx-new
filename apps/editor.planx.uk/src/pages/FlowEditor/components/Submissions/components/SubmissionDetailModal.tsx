@@ -11,7 +11,7 @@ import { OpenResponseButton } from "./OpenResponseButton";
 import { ViewSubmissionButton } from "./ViewSubmissionButton";
 
 interface RowModalProps {
-  sessionId: string;
+  sessionId?: string;
   open: boolean;
   handleClose: () => void;
 }
