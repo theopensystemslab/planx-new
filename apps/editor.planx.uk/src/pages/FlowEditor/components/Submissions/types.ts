@@ -29,8 +29,26 @@ export interface Submission {
   flowName: string;
   address: string | null;
 }
+
+export interface SubmissionSummary {
+  sessionId: string;
+  flowId: string;
+  flowName: string;
+  address: string | null;
+
+  // aggregated/computed fields
+  eventCount: number;
+  mostRecentDate: string;
+  mostRecentEventType: Submission["eventType"];
+  mostRecentStatus: Submission["status"];
+  status: "Success" | "Failed";
+
+  // accumulate underlying events for modal
+  events: Submission[];
+}
+
 export interface EventsLogProps {
-  submissions: Submission[];
+  submissions: SubmissionSummary[];
   loading: boolean;
   error: Error | undefined;
   filterByFlow?: boolean;
