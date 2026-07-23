@@ -7,7 +7,7 @@ settings:
 catalogs:
   default:
     '@opensystemslab/planx-core':
-      specifier: github:theopensystemslab/planx-core#ef82f6b
+      specifier: github:theopensystemslab/planx-core#ef82f6bd69a74e18cff4ca02946307f13f4b9035
       version: 1.0.0
     '@types/jsdom':
       specifier: ^28.0.3

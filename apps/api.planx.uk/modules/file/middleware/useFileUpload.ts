@@ -9,45 +9,86 @@ import path from "path";
 const FILE_SIZE_LIMIT = 30 * 1024 * 1024;
 
 /**
- * Should match MIME type restrictions in frontend
+ * Must be kept synchronised with the ALLOWED_EXTENSIONS_BY_MIME_TYPE map in the frontend.
  * See apps/editor.planx.uk/src/@planx/components/shared/PrivateFileUpload/Dropzone.tsx
+ *
+ * Validation is based on extension, since many formats do not have reliable MIME types.
+ * Uploaded files are then checked by Scanii (managed via a pair of Lambdas) after reaching S3.
  */
-const ALLOWED_MIME_TYPES = [
-  "image/jpeg",
-  "image/png",
-  "application/pdf",
-  "image/svg+xml",
+const ALLOWED_EXTENSIONS = [
+  // PDFs
+  ".pdf",
+  // raster images
+  ".bmp",
+  ".gif",
+  ".jpg",
+  ".jpeg",
+  ".png",
+  ".tif",
+  ".tiff",
+  ".webp",
+  // vector graphics
+  ".svg",
+  // CAD and BIM
+  ".bim",
+  ".dwg",
+  ".dxf",
+  ".ifc",
+  ".plt",
+  ".rvt",
+  ".skp",
+  // Text, MS Office documents and spreadsheets
+  ".csv",
+  ".doc",
+  ".docx",
+  ".rtf",
+  ".txt",
+  ".xls",
+  ".xlsx",
+  // videos
+  ".avi",
+  ".mkv",
+  ".mov",
+  ".mp4",
+  ".mpg",
+  ".mpeg",
+  ".webm",
+  ".wmv",
+  // GML (Geographic Markup Language)
+  ".gml",
 ];
-const ALLOWED_EXTENSIONS = [".jpg", ".jpeg", ".png", ".pdf", ".svg"];
+
+export const getFileExtension = (filename: string): string => {
+  return path.extname(filename).toLowerCase();
+};
 
 export const validateExtension = (filename: string): boolean => {
-  const extension = path.extname(filename).toLowerCase();
-  return ALLOWED_EXTENSIONS.includes(extension);
+  return ALLOWED_EXTENSIONS.includes(getFileExtension(filename));
 };
 
 /**
- * Filter out invalid files
+ * Filter out invalid files based on their extension
+ *
+ * NB. We would also validate ext against magic number here, but fileFilter runs before file is read into memory (i.e. no buffer)
  */
 const fileFilter: multer.Options["fileFilter"] = (_req, file, callback) => {
-  const isValidMimeType = ALLOWED_MIME_TYPES.includes(file.mimetype);
-  const isValidExtension = validateExtension(file.originalname);
-
-  if (isValidMimeType && isValidExtension) {
-    callback(null, true);
-  } else {
+  if (!validateExtension(file.originalname)) {
     callback(
       new Error(
-        `Unsupported file type. Mimetype: ${file.mimetype}. Extension: ${path.extname(file.originalname).toLowerCase()}`,
+        `Unsupported file type. Extension: ${getFileExtension(file.originalname)}`,
       ),
     );
   }
+  callback(null, true);
 };
 
 const multerOptions: multer.Options = {
+  // multer defaults to in-memory (RAM) storage, so we make this explicit here
+  storage: multer.memoryStorage(),
+  fileFilter,
   limits: {
     fileSize: FILE_SIZE_LIMIT,
   },
-  fileFilter,
 };
 
 const upload = multer(multerOptions).single("file");
