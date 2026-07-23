@@ -79,3 +79,46 @@ This needs to be configured in the two following locations -
 
 2. Dependency management
    https://app.netlify.com/projects/planx-storybook/configuration/deploys#dependency-management
+
+## `vultr-action` GitHub action
+
+[`vultr-action`](https://github.com/theopensystemslab/vultr-action) is a GitHub action used to create instances and DNS records on the Vultr cloud service. PlanX CI/CD runs this each time a PR is opened or updated.
+
+Unlike our other repos, this action runs a pre-bundled file (`dist/index.js`), and is consumed by git tag rather than published to npm. Upgrading Node here means rebuilding the bundle and making a new release.
+
+1. Update the Node runtime and `engines`:
+
+   ```yaml
+   # action.yml
+   runs:
+     using: "node24"
+     main: "dist/index.js"
+   ```
+
+   ```jsonc
+   // package.json
+   "engines": {
+     "pnpm": ">=10.0.0 <11.0.0",
+     "node": ">=24.0.0 <25.0.0"
+   },
+   ```
+
+2. Update the TypeScript config to match. Swap the base config dependency and `@types/node`:
+
+   ```shell
+   pnpm remove @tsconfig/node20 @types/node
+   pnpm add -D @tsconfig/node24 @types/node@^24
+   ```
+
+   Then point `tsconfig.json` at the new base config:
+
+   ```jsonc
+   // tsconfig.json
+   "extends": "@tsconfig/node24/tsconfig.json",
+   ```
+
+3. Fix any type issues flagged by the above change
+
+4. Publish `vultr-action`, as per the [README.md](https://github.com/theopensystemslab/vultr-action/blob/main/README.md)
+
+5. Upgrade to the new version in `planx-new`
