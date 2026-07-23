@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import { Link, useParams, useRouteContext } from "@tanstack/react-router";
+import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
 
 import { useStore } from "../../lib/store";
@@ -44,8 +45,12 @@ const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
 
   const flowName = useStore((state) => state.flowName);
 
+  const NotesWrapper = hasFeatureFlag("NOTES")
+    ? FlowNotesProvider
+    : React.Fragment;
+
   return (
-    <FlowNotesProvider>
+    <NotesWrapper>
       <ol
         id="flow"
         data-layout={flowLayout}
@@ -116,7 +121,7 @@ const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
         <EndPoint text="end" />
       </ol>
       <ContextMenu />
-    </FlowNotesProvider>
+    </NotesWrapper>
   );
 };
 
