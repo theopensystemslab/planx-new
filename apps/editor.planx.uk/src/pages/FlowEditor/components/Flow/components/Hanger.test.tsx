@@ -19,19 +19,20 @@ vi.mock("@tanstack/react-router", async () => {
   };
 });
 
-const makeNote = (overrides: Partial<FlowNote> = {}): FlowNote => ({
-  id: "note-1",
-  flowId: "flow-1",
-  nodeId: null,
-  placement: { parent: "root" },
-  text: "A positioned note",
-  color: "#fffdb0",
-  createdBy: 1,
-  updatedBy: 1,
-  createdAt: "2026-01-01T00:00:00Z",
-  updatedAt: "2026-01-01T00:00:00Z",
-  ...overrides,
-});
+const makeNote = (overrides: Partial<FlowNote> = {}): FlowNote =>
+  ({
+    id: "note-1",
+    flowId: "flow-1",
+    nodeId: null,
+    placement: { parent: "root" },
+    text: "A positioned note",
+    color: "#fffdb0",
+    createdBy: 1,
+    updatedBy: 1,
+    createdAt: "2026-01-01T00:00:00Z",
+    updatedAt: "2026-01-01T00:00:00Z",
+    ...overrides,
+  }) as FlowNote;
 
 const renderHanger = (
   props: React.ComponentProps<typeof Hanger>,
