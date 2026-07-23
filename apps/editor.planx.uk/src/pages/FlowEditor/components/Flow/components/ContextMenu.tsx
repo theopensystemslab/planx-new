@@ -10,6 +10,7 @@ import MenuList from "@mui/material/MenuList";
 import Paper from "@mui/material/Paper";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { ROOT_NODE_KEY } from "@planx/graph";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import {
   nodeIsChildOfTemplatedInternalPortal,
@@ -213,13 +214,17 @@ export const ContextMenu: React.FC = () => {
       const hasCopiedHelper = Boolean(getCopiedHelpText);
 
       const actions: ContextMenuAction[] = [
-        {
-          id: "attach-note",
-          label: "Add note",
-          icon: <StickyNote2Icon fontSize="small" />,
-          disabled: false,
-          onClick: handleAttachNote,
-        },
+        ...(hasFeatureFlag("NOTES")
+          ? [
+              {
+                id: "attach-note",
+                label: "Add note",
+                icon: <StickyNote2Icon fontSize="small" />,
+                disabled: false,
+                onClick: handleAttachNote,
+              },
+            ]
+          : []),
         {
           id: "copy",
           label: "Copy",
@@ -272,13 +277,17 @@ export const ContextMenu: React.FC = () => {
 
     if (source === "hanger") {
       return [
-        {
-          id: "add-note",
-          label: "Add note",
-          icon: <StickyNote2Icon fontSize="small" />,
-          disabled: false,
-          onClick: handleAddNote,
-        },
+        ...(hasFeatureFlag("NOTES")
+          ? [
+              {
+                id: "add-note",
+                label: "Add note",
+                icon: <StickyNote2Icon fontSize="small" />,
+                disabled: false,
+                onClick: handleAddNote,
+              },
+            ]
+          : []),
         {
           id: "paste",
           label: "Paste",

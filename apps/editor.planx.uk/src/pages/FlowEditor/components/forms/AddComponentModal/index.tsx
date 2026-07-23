@@ -108,13 +108,13 @@ const AddComponentModal: React.FC<Props> = ({
           activeTab={activeTab}
           onTabChange={setActiveTab}
           onComponentSelect={handleComponentSelect}
-          onSelectNote={handleSelectNote}
+          onSelectNote={hasFeatureFlag("NOTES") ? handleSelectNote : undefined}
           onInsertPattern={handleInsertPattern}
         />
       ) : (
         <ComponentsTab
           onSelect={handleComponentSelect}
-          onSelectNote={handleSelectNote}
+          onSelectNote={hasFeatureFlag("NOTES") ? handleSelectNote : undefined}
         />
       )}
     </Popover>
