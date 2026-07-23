@@ -14,7 +14,12 @@ RUN pnpm fetch
 
 COPY . .
 RUN pnpm install --frozen-lockfile --prefer-offline
-RUN pnpm --filter api.planx.uk build
+
+# `...` includes api.planx.uk's workspace dependencies (e.g. @planx/file-upload),
+# built first in topological order - a plain `--filter api.planx.uk build` would
+# skip building them, since it bypasses Turborepo's `^build` dependency graph
+RUN pnpm --filter api.planx.uk... build
+
 # `pnpm deploy` refuses to run unless `inject-workspace-packages=true`, failing with ERR_PNPM_DEPLOY_NONINJECTED_WORKSPACE
 # It's not exposed as a CLI flag, so we set it via npm's `npm_config_<key>` env-var convention
 RUN npm_config_inject_workspace_packages=true pnpm --filter api.planx.uk deploy --prod --prefer-offline /deploy/api

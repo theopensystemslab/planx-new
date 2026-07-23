@@ -1,0 +1,28 @@
+{
+  "name": "@planx/file-upload",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MPL-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "lint:fix": "eslint --fix '*.ts' && prettier -w .",
+    "lint": "eslint '*.ts' && prettier -c .",
+    "typecheck": "tsc --noEmit"
+  },
+  "prettier": "@planx/prettier-config",
+  "devDependencies": {
+    "@planx/eslint-config": "workspace:*",
+    "@planx/prettier-config": "workspace:*",
+    "@planx/typescript-config": "workspace:*",
+    "eslint": "catalog:",
+    "globals": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:typescript"
+  }
+}

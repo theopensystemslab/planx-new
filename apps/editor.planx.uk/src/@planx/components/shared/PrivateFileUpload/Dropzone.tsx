@@ -6,63 +6,16 @@ import Typography from "@mui/material/Typography";
 import type { FileUploadSlot } from "@planx/components/FileUpload/model";
 import { useOptionalListContext } from "@planx/components/List/Public/Context";
 import handleRejectedUpload from "@planx/components/shared/handleRejectedUpload";
+import {
+  ALLOWED_EXTENSIONS_BY_MIME_TYPE,
+  MAX_UPLOAD_SIZE_BYTES,
+} from "@planx/file-upload";
 import { uploadPrivateFile } from "lib/api/fileUpload/requests";
 import { nanoid } from "nanoid";
 import React, { useCallback } from "react";
-import type { Accept, FileWithPath } from "react-dropzone";
+import type { FileWithPath } from "react-dropzone";
 import { useDropzone } from "react-dropzone";
 import { borderedFocusStyle } from "theme";
-
-/**
- * Must be kept synchronised with the ALLOWED_EXTENSIONS list in the backend.
- * See apps/api.planx.uk/modules/file/middleware/useFileUpload.ts
- *
- * Some formats do not have reliable MIME types, so files are checked API-side against extension only.
- * The MIME keys below are best-effort hints for the native file picker.
- *
- * Refer to MDN for common MIME types: https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types
- * And IANA for the source of truth: https://www.iana.org/assignments/media-types/media-types.xhtml
- */
-const ALLOWED_EXTENSIONS_BY_MIME_TYPE: Accept = {
-  // PDFs
-  "application/pdf": [".pdf"],
-  // raster images
-  "image/bmp": [".bmp"],
-  "image/gif": [".gif"],
-  "image/jpeg": [".jpg", ".jpeg"],
-  "image/png": [".png"],
-  "image/tiff": [".tif", ".tiff"],
-  "image/webp": [".webp"],
-  // vector graphics
-  "image/svg+xml": [".svg"],
-  // CAD and BIM
-  "image/vnd.dwg": [".dwg"],
-  "image/vnd.dxf": [".dxf"],
-  // Text, MS Office documents and spreadsheets
-  "text/csv": [".csv"],
-  "text/plain": [".txt"],
-  "application/msword": [".doc"],
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
-    ".docx",
-  ],
-  "application/rtf": [".rtf"],
-  "application/vnd.ms-excel": [".xls"],
-  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [
-    ".xlsx",
-  ],
-  // videos
-  "video/x-msvideo": [".avi"],
-  "video/x-matroska": [".mkv"],
-  "video/quicktime": [".mov"],
-  "video/mp4": [".mp4"],
-  "video/mpeg": [".mpg", ".mpeg"],
-  "video/webm": [".webm"],
-  "video/x-ms-wmv": [".wmv"],
-  // GML (Geographic Markup Language)
-  "application/gml+xml": [".gml"],
-  // binary files without custom MIME, for which we fall back to default
-  "application/octet-stream": [".bim", ".ifc", ".plt", ".rvt", ".skp"],
-};
 
 const ALLOWED_EXTENSIONS_BY_MIME_TYPE_LABEL = Array.from(
   new Set(
@@ -146,8 +99,6 @@ export function Dropzone<T extends FileUploadSlot>({
   createSlot,
   maxFiles = 0,
 }: Props<T>) {
-  const MAX_UPLOAD_SIZE_MB = 30;
-
   const isWithinListCard = Boolean(useOptionalListContext());
 
   const handleFileUpload = useCallback(
@@ -222,7 +173,7 @@ export function Dropzone<T extends FileUploadSlot>({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: ALLOWED_EXTENSIONS_BY_MIME_TYPE,
-    maxSize: MAX_UPLOAD_SIZE_MB * 1e6,
+    maxSize: MAX_UPLOAD_SIZE_BYTES,
     multiple: maxFiles !== 1,
     disabled: Boolean(maxFiles && slots.length >= maxFiles),
     onDrop,
