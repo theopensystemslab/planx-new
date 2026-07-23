@@ -17,6 +17,7 @@ import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
+import { AttachedNotes } from "../notes/AttachedNotes";
 import { DataField } from "./DataField";
 import Hanger from "./Hanger";
 import Node from "./Node";
@@ -159,6 +160,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
               ))}
             </Box>
           )}
+          <AttachedNotes nodeId={props.id} />
         </TemplatedNodeContainer>
         {groupedOptions ? (
           <ol className="categories">
