@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import { ICONS } from "@planx/components/shared/icons";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import { useNavigate, useParams } from "@tanstack/react-router";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { resolveNotePlacement } from "pages/FlowEditor/components/Flow/notes/lib/notePlacement";
 import { hangerAnchor } from "pages/FlowEditor/lib/hangerAnchor";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -333,7 +334,7 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
     >
       <AddComponentModalContent
         onSelect={handleSelect}
-        onSelectNote={handleSelectNote}
+        onSelectNote={hasFeatureFlag("NOTES") ? handleSelectNote : undefined}
       />
     </Popover>
   );
