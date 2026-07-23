@@ -126,7 +126,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "south-staffordshire",
           domain: "planningservices.sstaffs.gov.uk",
-          cloudFrontState: "validation-only",
+          cloudFrontState: "shared-final",
         },
         {
           name: "kingston",
