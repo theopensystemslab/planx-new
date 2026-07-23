@@ -31,6 +31,7 @@ import * as tewkesbury from "./local_authorities/metadata/tewkesbury.js";
 import * as torbay from "./local_authorities/metadata/torbay.js";
 import * as walthamForest from "./local_authorities/metadata/walthamForest.js";
 import * as westBerkshire from "./local_authorities/metadata/westBerkshire.js";
+import * as westminster from "./local_authorities/metadata/westminster.js";
 
 export interface LocalAuthorityMetadata {
   planningConstraints: {
@@ -78,6 +79,7 @@ export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   torbay,
   "waltham-forest": walthamForest,
   "west-berkshire": westBerkshire,
+  westminster,
 };
 
 // Return the full metadata, if applicable, for a local authority
