@@ -6,6 +6,7 @@ import { CreateService } from './../types';
 import {
   generateCORSAllowList,
   generateTeamSecrets,
+  setupAutoScaling,
   setupDnsRecord,
   setupLoadBalancer,
   setupNotificationForDeploymentRollback,
@@ -300,7 +301,9 @@ export const createApiService = async ({
       assignPublicIp: true,
       securityGroups: [apiServiceSecurityGroup.id],
     },
-    desiredCount: 1,
+    // run 2 replicas at baseline (ECS schedules these into different AZs) rather than a single instance,
+    // so a task/AZ failure doesn't cause a service interruption
+    desiredCount: 2,
     deploymentCircuitBreaker: {
       enable: true,
       rollback: true,
@@ -308,6 +311,14 @@ export const createApiService = async ({
   },
   {
     dependsOn: [apiLb],
+  });
+
+  setupAutoScaling({
+    serviceName: "api",
+    cluster,
+    service: apiService,
+    maxCapacity: parseInt(config.require("api-service-scaling-maximum")),
+    minCapacity: parseInt(config.require("api-service-scaling-minimum")),
   });
 
   setupNotificationForDeploymentRollback(env, "api", cluster, apiService);

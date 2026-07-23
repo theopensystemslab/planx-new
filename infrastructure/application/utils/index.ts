@@ -6,4 +6,5 @@ export * from "./generateCORSAllowList";
 export * from "./generateTeamSecrets";
 export * from "./helpers";
 export * from "./providers"
+export * from "./setupAutoScaling";
 export * from "./setupService";

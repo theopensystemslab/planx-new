@@ -7,6 +7,8 @@ config:
     secure: AAABAMykToEvR6LGE6kUIjNeKfV/MsLtGq1Uv8dk6wAHp5og8/UIFF7yoo8rAZX5brx08nUnqwqrDrS8/I16+g==
   application:api-cpu: "4096"
   application:api-memory: "8192"
+  application:api-service-scaling-maximum: "4"
+  application:api-service-scaling-minimum: "2"
   application:cloudflare-zone-id:
     secure: AAABAMvLmULFOFiKvka1nnX/mMlFocCVlBtBXrXuJbkdJeS1xKRxloKX10LYMoScqaMHSNlFSAMA6SeWFkm4Pw==
   application:db-host:

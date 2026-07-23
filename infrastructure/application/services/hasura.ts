@@ -4,6 +4,7 @@ import * as pulumi from "@pulumi/pulumi";
 
 import { CreateService } from './../types';
 import {
+  setupAutoScaling,
   setupDnsRecord,
   setupLoadBalancer,
   setupNotificationForDeploymentRollback,
@@ -209,46 +210,15 @@ export const createHasuraService = async ({
   });
   
   // XXX: consider setting up similar auto-scaling policies for services other than Hasura?
-  const hasuraScalingTarget = new aws.appautoscaling.Target("hasura-scaling-target", {
+  setupAutoScaling({
+    serviceName: "hasura",
+    cluster,
+    service: hasuraService,
     // maxCapacity should consider compute power of the RDS instance which Hasura relies on
     maxCapacity: parseInt(config.require("hasura-service-scaling-maximum")),
     // minCapacity should reflect the baseline load expected
     // see: https://hasura.io/docs/2.0/deployment/performance-tuning/#scalability
     minCapacity: parseInt(config.require("hasura-service-scaling-minimum")),
-    resourceId: pulumi.interpolate`service/${cluster.name}/${hasuraService.service.name}`,
-    scalableDimension: "ecs:service:DesiredCount",
-    serviceNamespace: "ecs",
-  });
-  
-  const hasuraCpuScaling = new aws.appautoscaling.Policy("hasura-cpu-scaling", {
-    policyType: "TargetTrackingScaling",
-    resourceId: hasuraScalingTarget.resourceId,
-    scalableDimension: hasuraScalingTarget.scalableDimension,
-    serviceNamespace: hasuraScalingTarget.serviceNamespace,
-    targetTrackingScalingPolicyConfiguration: {
-      predefinedMetricSpecification: {
-        predefinedMetricType: "ECSServiceAverageCPUUtilization",
-      },
-      // scale out quickly for responsiveness, but scale in more slowly to avoid thrashing
-      targetValue: 30.0,
-      scaleInCooldown: 300,
-      scaleOutCooldown: 60,
-    },
-  });
-  
-  const hasuraMemoryScaling = new aws.appautoscaling.Policy("hasura-memory-scaling", {
-    policyType: "TargetTrackingScaling",
-    resourceId: hasuraScalingTarget.resourceId,
-    scalableDimension: hasuraScalingTarget.scalableDimension,
-    serviceNamespace: hasuraScalingTarget.serviceNamespace,
-    targetTrackingScalingPolicyConfiguration: {
-      predefinedMetricSpecification: {
-        predefinedMetricType: "ECSServiceAverageMemoryUtilization",
-      },
-      targetValue: 30.0,
-      scaleInCooldown: 300,
-      scaleOutCooldown: 60,
-    },
   });
   
   setupNotificationForDeploymentRollback(env, "hasura", cluster, hasuraService);
