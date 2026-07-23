@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Remove vultr resources
-        uses: theopensystemslab/vultr-action@v2.3.1
+        uses: theopensystemslab/vultr-action@v3.0
         with:
           action: destroy
           api_key: ${{ secrets.VULTR_API_KEY }}
