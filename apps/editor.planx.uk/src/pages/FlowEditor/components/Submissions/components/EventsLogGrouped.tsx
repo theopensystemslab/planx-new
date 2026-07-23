@@ -76,7 +76,7 @@ const EventsLog: React.FC<EventsLogGroupedProps> = ({
       },
     },
     {
-      field: "mostRecentDate",
+      field: "eventCreatedAt",
       headerName: "Date",
       width: 125,
       columnOptions: {
