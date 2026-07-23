@@ -147,6 +147,8 @@ Update the entry:
 
 Deploy `certificates` again (as in step 2). This removes the domain from the mining cert and adds it to the shared cert (creating a **new** shared cert; the old one is retained because the shared CDN still relies on it for now).
 
+The `cloudFrontState` values affect provisioning in both the `certificates` and `application` layer. Make the change locally (don't merge yet), deploy `certificates` to provision the new cert, verify it issued correctly (step 6), _then_ merge and deploy application (step 7).
+
 ### 6. Verify the new shared cert has issued
 
 ```sh
@@ -174,8 +176,8 @@ In the same PR or a follow-up:
 
 ### 9. Clean up & finish
 
-- **Old shared cert** - re-run `certificates`; it _may_ propose deleting the retained old cert. If it proposes nothing, delete it manually in the [ACM console](https://us-east-1.console.aws.amazon.com/acm/certificates/list?region=us-east-1) (harmless to leave, but they accumulate).
-- **Monitoring** - if there are fewer than 5 monitors under `custom-domains-production` on [UptimeRobot](https://dashboard.uptimerobot.com/monitors), clone an existing one for this domain (preserves Slack SSL-expiry alerts). Login is in the 1Password 'PlanX' vault.
+- **Old shared cert** - Delete it manually in the [ACM console](https://us-east-1.console.aws.amazon.com/acm/certificates/list?region=us-east-1) (harmless to leave, but they accumulate). Look for an older cert with the same common name to the newly updated one, it will be missing the newly added domain and will _not_ be 'in use'. 
+- **Monitoring** - Clone an existing `custom-domains-production` monitor for this domain (preserves Slack SSL-expiry alerts). Login is in the 1Password 'PlanX' vault.
 - **CRM** - add the domain under `Custom Subdomain` and set `Auto-SSL` to **Done**.
 
 ## Process B: migrate a legacy council
