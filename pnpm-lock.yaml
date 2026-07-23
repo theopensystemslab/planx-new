@@ -159,6 +159,9 @@ importers:
       '@opensystemslab/planx-core':
         specifier: 'catalog:'
         version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/fd0d1c4aa3879f1b73afef7ef7eb27579a0d2acb(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@mui/material@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      '@planx/file-upload':
+        specifier: workspace:*
+        version: link:../../packages/file-upload
       '@types/geojson':
         specifier: ^7946.0.16
         version: 7946.0.16
@@ -460,6 +463,9 @@ importers:
       '@opensystemslab/planx-core':
         specifier: 'catalog:'
         version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/fd0d1c4aa3879f1b73afef7ef7eb27579a0d2acb(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@mui/material@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      '@planx/file-upload':
+        specifier: workspace:*
+        version: link:../../packages/file-upload
       '@tanstack/react-query':
         specifier: ^5.101.1
         version: 5.101.1(react@19.2.5)
@@ -1260,6 +1266,30 @@ importers:
       typescript-eslint:
         specifier: ^8.46.0
         version: 8.62.0(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)
+
+  packages/file-upload:
+    devDependencies:
+      '@planx/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@planx/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
+      '@planx/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      eslint:
+        specifier: 'catalog:'
+        version: 9.39.4(jiti@2.7.0)
+      globals:
+        specifier: 'catalog:'
+        version: 16.5.0
+      prettier:
+        specifier: 'catalog:'
+        version: 3.9.3
+      typescript:
+        specifier: catalog:typescript
+        version: 5.9.3
 
   packages/prettier-config: {}
 
