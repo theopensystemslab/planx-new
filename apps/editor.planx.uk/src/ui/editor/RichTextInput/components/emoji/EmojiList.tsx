@@ -80,7 +80,9 @@ export const EmojiList = forwardRef<EmojiListRef, EmojiListProps>(
       selectItem(selectedIndex);
     }, [selectItem, selectedIndex]);
 
-    useEffect(() => setSelectedIndex(0), [items]);
+    useEffect(() => {
+      setSelectedIndex(0);
+    }, [items]);
 
     useImperativeHandle(ref, () => {
       return {

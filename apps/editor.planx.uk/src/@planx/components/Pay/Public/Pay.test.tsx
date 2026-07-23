@@ -462,6 +462,23 @@ describe("Confirm component with inviteToPay", () => {
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
+
+  it("does not crash on unmount when window.scrollTo returns a non-function value", async () => {
+    const originalScrollTo = window.scrollTo;
+    window.scrollTo = vi.fn(() => "someString" as unknown as void);
+
+    try {
+      const { user } = await setup(<Confirm {...inviteProps} />);
+
+      await user.click(screen.getByText(invitePrompt));
+      expect(screen.getByText("Details of your nominee")).toBeInTheDocument();
+
+      await user.click(screen.getByText(payPrompt));
+      expect(screen.getByText("How to pay")).toBeInTheDocument();
+    } finally {
+      window.scrollTo = originalScrollTo;
+    }
+  });
 });
 
 describe("Confirm component in information-only mode", () => {

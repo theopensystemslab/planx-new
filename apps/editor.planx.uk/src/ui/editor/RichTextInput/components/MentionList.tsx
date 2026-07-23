@@ -37,7 +37,9 @@ export const MentionList = forwardRef((props: MentionListProps, ref) => {
     selectItem(selectedIndex);
   };
 
-  useEffect(() => setSelectedIndex(0), [props.items]);
+  useEffect(() => {
+    setSelectedIndex(0);
+  }, [props.items]);
 
   useImperativeHandle(ref, () => ({
     onKeyDown: ({ event }: any) => {

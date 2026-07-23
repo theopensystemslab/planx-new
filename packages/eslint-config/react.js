@@ -11,6 +11,13 @@ export const noProcessEnv = {
   message: "Use import.meta.env instead of process.env in client-side code",
 };
 
+export const noImplicitEffectReturn = {
+  selector:
+    "CallExpression[callee.name=/^(useEffect|useLayoutEffect|useInsertionEffect)$/] > ArrowFunctionExpression[body.type='CallExpression']",
+  message:
+    "Give effect callbacks a block body. An implicit return crashes on unmount if it isn't a function. Use `() => { someFunction(); }`.",
+};
+
 /**
  * Config for React apps
  *
@@ -30,7 +37,7 @@ export default [
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",
       "@tanstack/query/exhaustive-deps": "warn",
-      "no-restricted-syntax": ["error", noProcessEnv],
+      "no-restricted-syntax": ["error", noProcessEnv, noImplicitEffectReturn],
     },
   },
   ...vitestConfig(["expect"]),
