@@ -8,33 +8,26 @@ import { slugify } from "utils";
 
 import { useStore } from "../../lib/store";
 import EventsLogGrouped from "./components/EventsLogGrouped";
-import type { Submission, SubmissionsProps, SubmissionSummary } from "./types";
+import type { SubmissionsProps, SubmissionSummary } from "./types";
 
 const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
   const [teamId] = useStore((state) => [state.teamId]);
 
-  // submission_services_log view is already filtered for events >= Jan 1 2024
-  const { data, loading, error } = useQuery<{ submissions: Submission[] }>(
+  const { data, loading, error } = useQuery<{
+    submissions: SubmissionSummary[];
+  }>(
     gql`
       query GetSubmissions($team_id: Int!) {
-        submissions: submission_services_log(
+        submissions: submissions_grouped(
           where: { team_id: { _eq: $team_id } }
-          order_by: [
-            { session_id: asc }
-            { event_type: asc }
-            { created_at: desc }
-          ]
-          distinct_on: [session_id, event_type]
+          order_by: [{ session_id: asc }, { created_at: desc }]
+          distinct_on: session_id
         ) {
           flowId: flow_id
-          sessionId: session_id
-          eventId: event_id
-          eventType: event_type
+          id: session_id
           status: status
-          retry: retry
-          response: response
           address: address
-          createdAt: created_at
+          eventCreatedAt: created_at
           flowName: flow_name
         }
       }
@@ -47,59 +40,8 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
   );
 
   const submissions = useMemo(() => data?.submissions || [], [data]);
-
-  const sessionSummaries = useMemo(() => {
-    type PartialSummary = Omit<
-      SubmissionSummary,
-      "eventCount" | "mostRecentEventType" | "mostRecentStatus" | "status"
-    >;
-
-    const grouped = submissions.reduce(
-      (acc, submission) => {
-        if (!acc[submission.sessionId]) {
-          acc[submission.sessionId] = {
-            id: submission.sessionId,
-            flowId: submission.flowId,
-            flowName: submission.flowName,
-            address: submission.address,
-            events: [],
-            mostRecentDate: submission.createdAt,
-          };
-        }
-
-        acc[submission.sessionId].events.push(submission);
-
-        // most recent date (eg for events after created date)
-        if (submission.createdAt > acc[submission.sessionId].mostRecentDate) {
-          acc[submission.sessionId].mostRecentDate = submission.createdAt;
-        }
-
-        return acc;
-      },
-      {} as Record<string, PartialSummary>,
-    );
-
-    return Object.values(grouped).map((session) => {
-      // Find the most recent event
-      const mostRecentEvent = session.events.reduce((latest, event) =>
-        event.createdAt > latest.createdAt ? event : latest,
-      );
-
-      return {
-        ...session,
-        eventCount: session.events.length,
-        mostRecentEventType: mostRecentEvent.eventType,
-        mostRecentStatus: mostRecentEvent.status,
-        // if ANY most recent event failed, session fails
-        status: session.events.some((e) => e.status !== "Success")
-          ? ("Failed" as const)
-          : ("Success" as const),
-      };
-    });
-  }, [submissions]);
-
   // filter by flow if flowId prop is passed from route params
-  const filteredSubmissions = sessionSummaries.filter(
+  const filteredSubmissions = submissions.filter(
     (submission) => !flowSlug || slugify(submission.flowName) === flowSlug,
   );
 
