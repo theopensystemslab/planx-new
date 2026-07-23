@@ -1,5 +1,5 @@
 import { screen } from "@testing-library/react";
-import type { FlowNote } from "hooks/data/useFlowNotes";
+import type { AttachedNote } from "hooks/data/useFlowNotes";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { setup } from "test/utils";
@@ -7,7 +7,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { NoteEditorDialog } from "./NoteEditorDialog";
 
-const makeNote = (overrides: Partial<FlowNote> = {}): FlowNote => ({
+const makeNote = (overrides: Partial<AttachedNote> = {}): AttachedNote => ({
   id: "note-1",
   flowId: "flow-1",
   nodeId: "node-a",
@@ -77,7 +77,11 @@ describe("create mode", () => {
   it("closes the editor after saving", async () => {
     useStore.setState({
       noteEditorMode: "create",
-      noteEditorPlacement: { parent: "root", before: "node-a" },
+      noteEditorPlacement: {
+        parent: "root",
+        parentIsContainer: true,
+        before: "node-a",
+      },
     });
 
     const { user } = await setup(<NoteEditorDialog />);
