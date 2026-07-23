@@ -65,6 +65,8 @@ const db = new aws.rds.Instance("app", {
   finalSnapshotIdentifier: "final-before-deletion",
   publiclyAccessible: true,
   storageEncrypted: true,
+  // enable synchronous standby in a second AZ, with automatic failover (~60-120s) on primary failure
+  multiAz: true,
   backupRetentionPeriod: env === "production" ? 35 : 1,
   applyImmediately: true,
   parameterGroupName: parameterGroup.name,
