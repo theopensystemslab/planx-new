@@ -1,5 +1,6 @@
-import type { AxiosResponse } from "axios";
+import type { AxiosError, AxiosResponse } from "axios";
 import axios, { isAxiosError } from "axios";
+import { z } from "zod";
 
 export interface RunSQLArgs {
   source: "default";
@@ -10,6 +11,24 @@ interface SchemaAPIQuery {
   type: "run_sql";
   args: RunSQLArgs;
 }
+
+/**
+ * Error response from Hasura
+ * Docs: https://hasura.io/docs/latest/api-reference/schema-api/run-sql/#response
+ */
+const hasuraErrorSchema = z.object({ error: z.string() });
+
+const getHasuraErrorMessage = (error: AxiosError): string | undefined =>
+  hasuraErrorSchema.safeParse(error.response?.data).data?.error;
+
+const formatErrorMessage = (error: unknown): string => {
+  if (!isAxiosError(error)) return (error as Error).message;
+
+  const hasuraError = getHasuraErrorMessage(error);
+  if (!hasuraError) return error.message;
+
+  return `${error.message} - ${hasuraError}`;
+};
 
 /**
  * POST a request to the Hasura Schema API
@@ -29,10 +48,8 @@ const postToSchemaAPI = async <T>(
       },
     );
   } catch (error) {
-    const errorMessage = isAxiosError(error)
-      ? JSON.stringify(error.toJSON())
-      : (error as Error).message;
-    throw Error(`Failed to POST to Hasura Schema API: ${errorMessage}`);
+    const message = formatErrorMessage(error);
+    throw Error(`Failed to POST to Hasura Schema API: ${message}`);
   }
 };
 

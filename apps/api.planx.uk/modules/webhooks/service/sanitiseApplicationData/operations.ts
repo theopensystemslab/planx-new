@@ -1,6 +1,7 @@
 import { Passport } from "@opensystemslab/planx-core";
+import { isAxiosError } from "axios";
 import { subMonths } from "date-fns";
-import { gql } from "graphql-request";
+import { ClientError, gql } from "graphql-request";
 
 import { $api } from "../../../../client/index.js";
 import { runSQL } from "../../../../lib/hasura/schema/index.js";
@@ -53,14 +54,40 @@ export const operationHandler = async (
       count: result.length,
     };
   } catch (error) {
+    const errorMessage = formatOperationError(error);
+    console.error(
+      `Sanitation operation "${operation.name}" failed: ${errorMessage}`,
+      (error as Error)?.stack,
+    );
     operationResult = {
       ...operationResult,
       status: "failure",
-      errorMessage: (error as Error).message,
+      errorMessage,
     };
   }
 
   return operationResult;
+};
+
+/**
+ * Format caught errors to concise, safe, messages
+ * Full error objects can leak sensitive values (e.g. request headers, queries, variables) into Slack
+ */
+export const formatOperationError = (error: unknown): string => {
+  if (error instanceof ClientError) {
+    return (
+      error.response.errors?.[0]?.message ??
+      `GraphQL Error (Code: ${error.response.status})`
+    );
+  }
+
+  if (isAxiosError(error)) {
+    return error.response?.data?.message ?? error.message;
+  }
+
+  if (error instanceof Error) return error.message;
+
+  return String(error);
 };
 
 /**

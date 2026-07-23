@@ -1,5 +1,8 @@
 import type * as s3Client from "@aws-sdk/client-s3";
 import type * as planxCore from "@opensystemslab/planx-core";
+import type { InternalAxiosRequestConfig } from "axios";
+import { AxiosError } from "axios";
+import { ClientError } from "graphql-request";
 import type { MockedFunction } from "vitest";
 
 import { runSQL } from "../../../../lib/hasura/schema/index.js";
@@ -22,6 +25,7 @@ import {
   deleteHasuraScheduledEventsForSubmittedSessions,
   deletePaymentRequests,
   deleteReconciliationRequests,
+  formatOperationError,
   getExpiredSessionIds,
   getRetentionPeriod,
   operationHandler,
@@ -66,6 +70,14 @@ vi.mock("@aws-sdk/client-s3", async (importOriginal) => {
 });
 
 describe("'operationHandler' helper function", () => {
+  beforeEach(() => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it("returns a success result when an operation succeeds", async () => {
     const successOperation = vi
       .fn()
@@ -86,6 +98,103 @@ describe("'operationHandler' helper function", () => {
       status: "failure",
       errorMessage: "Something went wrong",
     });
+  });
+
+  it("logs failures server-side", async () => {
+    const failureOperation = vi
+      .fn()
+      .mockRejectedValue(new Error("Something went wrong"));
+
+    await operationHandler(failureOperation);
+
+    expect(console.error).toHaveBeenCalledWith(
+      expect.stringContaining("Something went wrong"),
+      expect.any(String),
+    );
+  });
+});
+
+describe("'formatOperationError' helper function", () => {
+  it("returns concise details for failed GraphQL requests, without the query or variables included", () => {
+    const error = new ClientError(
+      {
+        error: "",
+        status: 502,
+        headers: {},
+      } as unknown as ClientError["response"],
+      {
+        query:
+          "query GetExpiredSessionIds($retentionPeriod: timestamptz) { lowcal_sessions { id } }",
+        variables: { retentionPeriod: "2026-01-23T04:46:22.557Z" },
+      },
+    );
+
+    const result = formatOperationError(error);
+
+    expect(result).toEqual("GraphQL Error (Code: 502)");
+    expect(result).not.toContain("lowcal_sessions");
+    expect(result).not.toContain("retentionPeriod");
+  });
+
+  it("returns the first GraphQL error message when present", () => {
+    const error = new ClientError(
+      {
+        errors: [{ message: "postgres query error" }],
+        status: 400,
+      } as unknown as ClientError["response"],
+      { query: "mutation DeleteFeedback { id }" },
+    );
+
+    expect(formatOperationError(error)).toEqual("postgres query error");
+  });
+
+  it("does not leak request config (e.g. auth headers) from AxiosErrors", () => {
+    const error = new AxiosError(
+      "Request failed with status code 502",
+      AxiosError.ERR_BAD_RESPONSE,
+      {
+        headers: { "x-hasura-admin-secret": "super-secret-value" },
+      } as unknown as InternalAxiosRequestConfig,
+      null,
+      {
+        status: 502,
+        data: "<html>Bad Gateway</html>",
+      } as AxiosError["response"],
+    );
+
+    const result = formatOperationError(error);
+
+    expect(result).toEqual("Request failed with status code 502");
+    expect(result).not.toContain("super-secret-value");
+    expect(JSON.stringify(error.toJSON())).toContain("super-secret-value");
+  });
+
+  it("prefers the API's error message when an AxiosError has one", () => {
+    const error = new AxiosError(
+      "Request failed with status code 500",
+      AxiosError.ERR_BAD_RESPONSE,
+      undefined,
+      null,
+      {
+        status: 500,
+        data: { message: "Internal server error from API" },
+      } as AxiosError["response"],
+    );
+
+    expect(formatOperationError(error)).toEqual(
+      "Internal server error from API",
+    );
+  });
+
+  it("handles plain Error instances", () => {
+    expect(formatOperationError(new Error("Something went wrong"))).toEqual(
+      "Something went wrong",
+    );
+  });
+
+  it("handles non-Error cases", () => {
+    expect(formatOperationError("a thrown string")).toEqual("a thrown string");
+    expect(formatOperationError(undefined)).toEqual("undefined");
   });
 });
 
