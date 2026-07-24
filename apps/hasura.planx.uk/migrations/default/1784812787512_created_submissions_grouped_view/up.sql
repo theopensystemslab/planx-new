@@ -17,6 +17,18 @@ CREATE OR REPLACE VIEW "public"."submissions_grouped" AS WITH payments AS (
       )
     )
 ),
+invitations_to_pay AS (
+  SELECT
+    pr.session_id,
+    'Invite to pay' :: text AS event_type,
+    CASE
+      WHEN pr.paid_at IS NULL THEN 'Invited to pay' :: text
+      ELSE 'Paid' :: text
+    END AS status,
+    pr.created_at
+  FROM
+    payment_requests pr
+),
 submissions AS (
   SELECT
     (
@@ -80,6 +92,14 @@ all_events AS (
     payments.created_at
   FROM
     payments
+  UNION ALL
+  SELECT
+    invitations_to_pay.session_id,
+    invitations_to_pay.event_type,
+    invitations_to_pay.status,
+    invitations_to_pay.created_at
+  FROM
+    invitations_to_pay
   UNION ALL
   SELECT
     submissions.session_id,
