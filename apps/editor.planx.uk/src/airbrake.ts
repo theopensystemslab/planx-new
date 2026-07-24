@@ -53,7 +53,7 @@ function log(...args: any[]) {
     : console.log(...args);
 }
 
-// forward all JS errors to airbrake.io
+// forward all JS errors to Airbrake
 function getErrorLogger(): ErrorLogger {
   const hasConfig =
     isLiveEnv() &&
