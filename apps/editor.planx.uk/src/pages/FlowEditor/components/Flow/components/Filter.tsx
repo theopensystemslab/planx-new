@@ -66,28 +66,30 @@ const Filter: React.FC<Props> = React.memo((props) => {
           wasVisited: props.wasVisited,
         })}
       >
-        <Link
-          to={
-            parent
-              ? "/app/$team/$flow/nodes/$parent/nodes/$id/edit"
-              : "/app/$team/$flow/nodes/$id/edit"
-          }
-          params={{
-            team,
-            flow,
-            id: props.id,
-            ...(parent && { parent }),
-          }}
-          preload={false}
-          onContextMenu={handleContextMenu}
-          ref={(el) => {
-            drag(el);
-          }}
-        >
-          {Icon && <Icon />}
-          <span>{props.text}</span>
-        </Link>
-        <AttachedNotes nodeId={props.id} />
+        <div className="card-wrapper">
+          <Link
+            to={
+              parent
+                ? "/app/$team/$flow/nodes/$parent/nodes/$id/edit"
+                : "/app/$team/$flow/nodes/$id/edit"
+            }
+            params={{
+              team,
+              flow,
+              id: props.id,
+              ...(parent && { parent }),
+            }}
+            preload={false}
+            onContextMenu={handleContextMenu}
+            ref={(el) => {
+              drag(el);
+            }}
+          >
+            {Icon && <Icon />}
+            <span>{props.text}</span>
+          </Link>
+          <AttachedNotes nodeId={props.id} />
+        </div>
         <ol className="options">
           {childNodes.map((child) => (
             <Node
