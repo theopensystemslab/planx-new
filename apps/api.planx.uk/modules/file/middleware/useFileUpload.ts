@@ -1,53 +1,41 @@
+import { ALLOWED_EXTENSIONS, MAX_UPLOAD_SIZE_BYTES } from "@planx/file-upload";
 import type { RequestHandler } from "express";
 import multer from "multer";
 import path from "path";
 
-/**
- * 30mb to match limit set in frontend
- * See apps/editor.planx.uk/src/@planx/components/shared/PrivateFileUpload/Dropzone.tsx
- */
-const FILE_SIZE_LIMIT = 30 * 1024 * 1024;
-
-/**
- * Should match MIME type restrictions in frontend
- * See apps/editor.planx.uk/src/@planx/components/shared/PrivateFileUpload/Dropzone.tsx
- */
-const ALLOWED_MIME_TYPES = [
-  "image/jpeg",
-  "image/png",
-  "application/pdf",
-  "image/svg+xml",
-];
-const ALLOWED_EXTENSIONS = [".jpg", ".jpeg", ".png", ".pdf", ".svg"];
+export const getFileExtension = (filename: string): string => {
+  return path.extname(filename).toLowerCase();
+};
 
 export const validateExtension = (filename: string): boolean => {
-  const extension = path.extname(filename).toLowerCase();
-  return ALLOWED_EXTENSIONS.includes(extension);
+  return ALLOWED_EXTENSIONS.includes(getFileExtension(filename));
 };
 
 /**
- * Filter out invalid files
+ * Filter out invalid files based on their extension.
+ * See @planx/file-upload for the shared, canonical ALLOWED_EXTENSIONS list
+ * (kept in sync with the frontend dropzone's ALLOWED_EXTENSIONS_BY_MIME_TYPE map).
+ *
+ * NB. We would also validate ext against magic number here, but fileFilter runs before file is read into memory (i.e. no buffer)
  */
 const fileFilter: multer.Options["fileFilter"] = (_req, file, callback) => {
-  const isValidMimeType = ALLOWED_MIME_TYPES.includes(file.mimetype);
-  const isValidExtension = validateExtension(file.originalname);
-
-  if (isValidMimeType && isValidExtension) {
-    callback(null, true);
-  } else {
+  if (!validateExtension(file.originalname)) {
     callback(
       new Error(
-        `Unsupported file type. Mimetype: ${file.mimetype}. Extension: ${path.extname(file.originalname).toLowerCase()}`,
+        `Unsupported file type. Extension: ${getFileExtension(file.originalname)}`,
       ),
     );
   }
+  callback(null, true);
 };
 
 const multerOptions: multer.Options = {
-  limits: {
-    fileSize: FILE_SIZE_LIMIT,
-  },
+  // multer defaults to in-memory (RAM) storage, so we make this explicit here
+  storage: multer.memoryStorage(),
   fileFilter,
+  limits: {
+    fileSize: MAX_UPLOAD_SIZE_BYTES,
+  },
 };
 
 const upload = multer(multerOptions).single("file");

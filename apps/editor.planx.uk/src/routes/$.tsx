@@ -6,6 +6,7 @@ export const Route = createFileRoute("/$")({
   component: CatchAllComponent,
 });
 
+// TODO: export from elsewhere (and import here) to avoid code-split warning
 export function CatchAllComponent() {
   return (
     <ErrorPage title="Page not found">

@@ -17,6 +17,7 @@
     "prepare": "husky",
     "typecheck": "turbo run typecheck",
     "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
     "check": "turbo run typecheck lint",
     "build": "turbo run build"
   },
@@ -27,7 +28,8 @@
     "apps/tests/**/*.{js,ts}": "eslint --fix --flag v10_config_lookup_from_file",
     "e2e/tests/**/*.{js,ts}": "eslint --fix --flag v10_config_lookup_from_file",
     "apps/localplanning.services/**/*.{js,jsx,ts,tsx,mjs}": "eslint --fix --flag v10_config_lookup_from_file",
-    "{apps/editor.planx.uk/src,apps/api.planx.uk,apps/localplanning.services,e2e/tests,apps/hasura.planx.uk/tests}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}": "prettier --write"
+    "packages/file-upload/**/*.ts": "eslint --fix --flag v10_config_lookup_from_file",
+    "{apps/editor.planx.uk/src,apps/api.planx.uk,apps/localplanning.services,e2e/tests,apps/hasura.planx.uk/tests,packages/file-upload}/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}": "prettier --write"
   },
   "devDependencies": {
     "eslint": "catalog:",
