@@ -1,6 +1,6 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { EditorProps } from "@planx/components/shared/types";
-import { useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -21,17 +21,20 @@ export type Props = EditorProps<TYPES.FindProperty, FindProperty>;
 export default FindPropertyComponent;
 
 function FindPropertyComponent(props: Props) {
-  const formik = useFormik<FindProperty>({
-    initialValues: parseFindProperty(props.node?.data),
-    onSubmit: (newValues) => {
-      if (props.handleSubmit) {
-        props.handleSubmit({ type: TYPES.FindProperty, data: newValues });
-      }
+  const formik = useFormikWithRef<FindProperty>(
+    {
+      initialValues: parseFindProperty(props.node?.data),
+      onSubmit: (newValues) => {
+        if (props.handleSubmit) {
+          props.handleSubmit({ type: TYPES.FindProperty, data: newValues });
+        }
+      },
+      validationSchema,
+      validateOnBlur: false,
+      validateOnChange: false,
     },
-    validationSchema,
-    validateOnBlur: false,
-    validateOnChange: false,
-  });
+    props.formikRef,
+  );
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <TemplatedNodeInstructions
