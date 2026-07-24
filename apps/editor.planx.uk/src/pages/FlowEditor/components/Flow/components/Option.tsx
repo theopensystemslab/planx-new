@@ -53,36 +53,38 @@ const Option: React.FC<any> = (props) => {
     <li
       className={classNames("card", "option", { wasVisited: props.wasVisited })}
     >
-      <Link
-        to="/app/$team/$flow/nodes/$id/edit"
-        params={{
-          team,
-          flow,
-          id: props.parent,
-        }}
-        hash={props.id}
-        preload={false}
-        onContextMenu={handleContextMenu}
-      >
-        {props.data?.img && (
-          <Thumbnail
-            imageSource={props.data?.img}
-            imageAltText={props.data.text}
-          />
-        )}
-        {flags && flags.length > 0 ? (
-          flags.map((flag) => (
-            <FlagBand key={`${props.id}-${flag.value}`} flag={flag} />
-          ))
-        ) : (
-          <NoFlagBand />
-        )}
-        <div className="text">{props.data.text}</div>
-        {props.data?.val && (
-          <DataField value={props.data.val} variant="child" />
-        )}
-      </Link>
-      <AttachedNotes nodeId={props.id} />
+      <div className="card-wrapper">
+        <Link
+          to="/app/$team/$flow/nodes/$id/edit"
+          params={{
+            team,
+            flow,
+            id: props.parent,
+          }}
+          hash={props.id}
+          preload={false}
+          onContextMenu={handleContextMenu}
+        >
+          {props.data?.img && (
+            <Thumbnail
+              imageSource={props.data?.img}
+              imageAltText={props.data.text}
+            />
+          )}
+          {flags && flags.length > 0 ? (
+            flags.map((flag) => (
+              <FlagBand key={`${props.id}-${flag.value}`} flag={flag} />
+            ))
+          ) : (
+            <NoFlagBand />
+          )}
+          <div className="text">{props.data.text}</div>
+          {props.data?.val && (
+            <DataField value={props.data.val} variant="child" />
+          )}
+        </Link>
+        <AttachedNotes nodeId={props.id} />
+      </div>
       <ol className="decisions">
         {childNodes.map((child) => (
           <Node
