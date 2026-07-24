@@ -29,12 +29,31 @@ export interface Submission {
   flowName: string;
   address: string | null;
 }
+
+export interface SubmissionSummary {
+  id: string;
+  flowId: string;
+  flowName: string;
+  address: string | null;
+  eventCreatedAt: string;
+  mostRecentEventType: Submission["eventType"];
+  status: Submission["status"];
+}
+
 export interface EventsLogProps {
-  submissions: Submission[];
+  submissions: Submission[]; // TODO: remove extra type after removing GROUPED_SUBMISSIONS feature flag
   loading: boolean;
   error: Error | undefined;
   filterByFlow?: boolean;
 }
+
+export interface EventsLogGroupedProps {
+  submissions: SubmissionSummary[];
+  loading: boolean;
+  error: Error | undefined;
+  filterByFlow?: boolean;
+}
+
 export interface SubmissionsProps {
   flowSlug?: string;
 }

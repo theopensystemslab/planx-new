@@ -1,6 +1,7 @@
 import type {
   GridColDef,
   GridRenderCellParams,
+  GridRowParams,
   GridSingleSelectColDef,
   GridTreeNodeWithRender,
 } from "@mui/x-data-grid";
@@ -52,4 +53,5 @@ export interface DataGridProps<T> {
   onProcessRowUpdate?: (updatedRow: T) => void;
   checkboxSelection?: boolean;
   customTools?: React.FC[];
+  onRowClick?: (params: GridRowParams) => void;
 }
