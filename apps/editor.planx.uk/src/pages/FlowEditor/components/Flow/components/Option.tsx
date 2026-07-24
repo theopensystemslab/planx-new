@@ -6,6 +6,7 @@ import classNames from "classnames";
 import React from "react";
 
 import { useStore } from "../../../lib/store";
+import { AttachedNotes } from "../notes/AttachedNotes";
 import { DataField } from "./DataField";
 import { FlagBand, NoFlagBand } from "./FlagBand";
 import Hanger from "./Hanger";
@@ -68,6 +69,7 @@ const Option: React.FC<any> = (props) => {
           <DataField value={props.data.val} variant="child" />
         )}
       </Link>
+      <AttachedNotes nodeId={props.id} />
       <ol className="decisions">
         {childNodes.map((child) => (
           <Node

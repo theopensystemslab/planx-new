@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import { Link, useParams, useRouteContext } from "@tanstack/react-router";
+import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
 
 import { useStore } from "../../lib/store";
@@ -9,6 +10,7 @@ import EndPoint from "./components/EndPoint";
 import Hanger from "./components/Hanger";
 import Node from "./components/Node";
 import { GetStarted } from "./GetStarted";
+import { FlowNotesProvider } from "./notes/FlowNotesContext";
 
 export enum FlowLayout {
   TOP_DOWN = "top-down",
@@ -43,8 +45,12 @@ const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
 
   const flowName = useStore((state) => state.flowName);
 
+  const NotesWrapper = hasFeatureFlag("NOTES")
+    ? FlowNotesProvider
+    : React.Fragment;
+
   return (
-    <>
+    <NotesWrapper>
       <ol
         id="flow"
         data-layout={flowLayout}
@@ -115,7 +121,7 @@ const Flow: React.FC<Props> = ({ lockedFlow, showTemplatedNodeStatus }) => {
         <EndPoint text="end" />
       </ol>
       <ContextMenu />
-    </>
+    </NotesWrapper>
   );
 };
 
