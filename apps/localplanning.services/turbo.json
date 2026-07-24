@@ -5,7 +5,8 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"],
-      "env": ["BUILD_MODE", "SITE_URL", "ROOT_DOMAIN"]
+      "env": ["BUILD_MODE", "SITE_URL", "ROOT_DOMAIN"],
+      "cache": false
     }
   }
 }

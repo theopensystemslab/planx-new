@@ -94,10 +94,9 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     useStore((state) => state.path) === ApplicationPath.SingleSession;
   const isInitialLoad = useRef(true);
 
-  useEffect(
-    () => setPreviewEnvironment(previewEnvironment),
-    [previewEnvironment, setPreviewEnvironment],
-  );
+  useEffect(() => {
+    setPreviewEnvironment(previewEnvironment);
+  }, [previewEnvironment, setPreviewEnvironment]);
 
   // Initial setup
   useEffect(() => {
