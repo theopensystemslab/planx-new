@@ -481,7 +481,7 @@ $fontMonospace: "Source Code Pro", monospace;
 }
 
 .option {
-  > a {
+  > .card-wrapper > a {
     border-color: $optionBorder;
     flex-direction: column;
     padding: 0;
