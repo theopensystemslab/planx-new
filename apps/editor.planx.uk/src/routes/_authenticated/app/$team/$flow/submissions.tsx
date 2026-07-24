@@ -1,8 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
-import { hasFeatureFlag } from "lib/featureFlags";
 import Submissions from "pages/FlowEditor/components/Submissions/Submissions";
-import SubmissionsGrouped from "pages/FlowEditor/components/Submissions/SubmissionsGrouped";
 import React from "react";
 
 export const Route = createFileRoute(
@@ -18,9 +16,5 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const data = Route.useLoaderData();
-  if (hasFeatureFlag("GROUPED_SUBMISSIONS")) {
-    return <SubmissionsGrouped flowSlug={data.flow} />;
-  } else {
-    return <Submissions flowSlug={data.flow} />;
-  }
+  return <Submissions flowSlug={data.flow} />;
 }
