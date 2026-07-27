@@ -45,7 +45,7 @@ config:
   application:google-client-secret:
     secure: AAABAN5E+De3A3HtpLVaSNTDwk9Uz4r2d5g8SIRVbNOd2fj3eU+lGJXjVbEAnxezr14hwabbfwW2ptjcFzqkhG7OmQ==
   application:govuk-notify-api-key:
-    secure: AAABADo05EPv/HWj7Rkf19nBeTcPJd4pEcRi2/uhyB3agraFODpLvNMx2bXfISf5pZ4HA41GYCE4f7OLcJN6hIV6ZMWUlEriPzvkoUAixbLlz1LIERiyk73R8E4F2bV65/9aFqi4l7caLS5c8iDJrE+JAvu2i7oS
+    secure: AAABAGnNAydaUYfiP0CZg1hctj1cHvR000SMEwNhycjohmbeWC+KCRc37ns9FkcbfWlnCvabr9MvtRT9YSTtUb4W/b8lDsMtsFQ2cgq4ewVpIiyFFC3ICrc0vA5WpbIIeCDs4mRiHIlKr0AAWAGF4KuECMYmWRuO3uVE7w==
   application:hasura-admin-secret:
     secure: AAABAI+T8RFROAmmTg7ahXUuUX/85OcJ47pVKetKKoVjQklpXjvKE6mUc/wDcjIbA330+XoWufw=
   application:hasura-cpu: "2048"
