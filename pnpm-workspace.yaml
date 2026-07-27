@@ -14,7 +14,7 @@ catalog:
   '@types/node': ~24.10.15
   '@vitest/eslint-plugin': ^1.6.20
   axios: ^1.18.1
-  dompurify: ^3.4.11
+  dompurify: ^3.4.12
   dotenv: ^17.4.2
   eslint: ^9.39.4
   globals: ^16.5.0
