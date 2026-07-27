@@ -47,8 +47,8 @@ export = async () => {
     lifecyclePolicy: {
       rules: [
         {
-          description: "Keep last 100 images",
-          maximumNumberOfImages: 100,
+          description: "Keep last 1000 images",
+          maximumNumberOfImages: 1000,
           tagStatus: "any",
         },
       ],
