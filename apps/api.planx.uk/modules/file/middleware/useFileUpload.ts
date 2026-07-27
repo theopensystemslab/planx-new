@@ -1,11 +1,8 @@
 import { ALLOWED_EXTENSIONS, MAX_UPLOAD_SIZE_BYTES } from "@planx/file-upload";
 import type { RequestHandler } from "express";
 import multer from "multer";
-import path from "path";
 
-export const getFileExtension = (filename: string): string => {
-  return path.extname(filename).toLowerCase();
-};
+import { getFileExtension } from "./utils.js";
 
 export const validateExtension = (filename: string): boolean => {
   return ALLOWED_EXTENSIONS.includes(getFileExtension(filename));
