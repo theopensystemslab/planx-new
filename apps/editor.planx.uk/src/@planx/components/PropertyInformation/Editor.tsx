@@ -1,7 +1,7 @@
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { EditorProps } from "@planx/components/shared/types";
-import { useFormik } from "formik";
+import { useFormikWithRef } from "@planx/components/shared/useFormikWithRef";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
@@ -20,18 +20,21 @@ type Props = EditorProps<TYPES.PropertyInformation, PropertyInformation>;
 export default PropertyInformationComponent;
 
 function PropertyInformationComponent(props: Props) {
-  const formik = useFormik({
-    initialValues: parseContent(props.node?.data),
-    onSubmit: (newValues) => {
-      props.handleSubmit?.({
-        type: TYPES.PropertyInformation,
-        data: newValues,
-      });
+  const formik = useFormikWithRef<PropertyInformation>(
+    {
+      initialValues: parseContent(props.node?.data),
+      onSubmit: (newValues) => {
+        props.handleSubmit?.({
+          type: TYPES.PropertyInformation,
+          data: newValues,
+        });
+      },
+      validationSchema: validationSchema,
+      validateOnChange: false,
+      validateOnBlur: false,
     },
-    validationSchema: validationSchema,
-    validateOnChange: false,
-    validateOnBlur: false,
-  });
+    props.formikRef,
+  );
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
