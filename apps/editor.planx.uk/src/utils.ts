@@ -89,3 +89,9 @@ export const removeSessionIdSearchParam = async (flowId: string) => {
 export const exhaustiveCheck = (type: never): never => {
   throw new Error(`Missing type ${type}`);
 };
+
+export function formatDelta(delta: number): string {
+  if (delta === 0) return "0";
+  const formatted = Math.abs(delta).toLocaleString("en-GB");
+  return delta > 0 ? `+${formatted}` : `-${formatted}`;
+}

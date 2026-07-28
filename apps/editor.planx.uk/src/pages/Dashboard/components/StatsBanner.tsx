@@ -1,10 +1,12 @@
 import Box from "@mui/material/Box";
 import MuiLink from "@mui/material/Link";
-import { keyframes, styled, type Theme } from "@mui/material/styles";
+import { styled, type Theme } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useTeamAnalyticsLink } from "hooks/analyticsLinks/useTeamAnalyticsLink";
 import { cardBoxShadow, FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { EmptyLoadingBar, LoadingBar } from "ui/editor/LoadingBar";
+import { formatDelta } from "utils";
 
 import { useStore } from "../../FlowEditor/lib/store";
 import type { TeamDashboardStats } from "./useTeamDashboardStats";
@@ -30,11 +32,6 @@ const Header = styled(Box)(({ theme }) => ({
   borderBottom: `1px solid ${theme.palette.border.light}`,
 }));
 
-const pulse = keyframes`
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-`;
-
 const StatsGrid = styled(Box)(({ theme }) => ({
   display: "grid",
   gridTemplateColumns: "repeat(4, 1fr)",
@@ -44,9 +41,39 @@ const StatsGrid = styled(Box)(({ theme }) => ({
   },
 }));
 
-function formatDelta(delta: number): string {
-  const formatted = Math.abs(delta).toLocaleString("en-GB");
-  return delta >= 0 ? `+${formatted}` : `-${formatted}`;
+const LoadingBarContainer = styled(Box)(({ theme }) => ({
+  height: 80,
+  display: "flex-start",
+  paddingTop: theme.spacing(2),
+  alignItems: "center",
+}));
+
+interface StatValueProps {
+  loading: boolean;
+  value: number | null;
+  label: string;
+}
+
+function StatValue({ loading, value, label }: StatValueProps) {
+  if (loading) {
+    return (
+      <LoadingBarContainer>
+        <LoadingBar aria-label={`Loading ${label}`} />
+      </LoadingBarContainer>
+    );
+  }
+  if (value !== null) {
+    return (
+      <Typography variant="h1" component="p" sx={{ height: 56 }}>
+        {value.toLocaleString("en-GB")}
+      </Typography>
+    );
+  }
+  return (
+    <LoadingBarContainer>
+      <EmptyLoadingBar />
+    </LoadingBarContainer>
+  );
 }
 
 const analyticsLinkBase = (theme: Theme) => ({
@@ -133,23 +160,14 @@ export function StatsBanner({
             <Typography variant="body2" sx={{ color: "text.secondary" }}>
               {label}
             </Typography>
-            <Typography
-              variant="h1"
-              component="p"
-              sx={
-                loading
-                  ? { animation: `${pulse} 1.4s ease-in-out infinite` }
-                  : undefined
-              }
-            >
-              {value !== null ? value.toLocaleString("en-GB") : "—"}
-            </Typography>
-            {!loading && delta !== null && (
+            <StatValue loading={loading} value={value} label={label} />
+            {!loading && delta !== null && delta !== 0 && (
               <Typography
                 variant="body2"
                 sx={{
-                  color: delta >= 0 ? "success.main" : "error.main",
+                  color: delta > 0 ? "success.main" : "error.main",
                   fontWeight: "bold",
+                  height: 24,
                 }}
               >
                 {formatDelta(delta)}
