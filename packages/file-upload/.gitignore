@@ -1,1 +1,15 @@
+<<<<<<< Updated upstream
 dist/
+=======
+# build output
+dist/
+
+# dependencies
+node_modules/
+
+# environment variables
+.env
+
+# macOS-specific files
+.DS_Store
+>>>>>>> Stashed changes

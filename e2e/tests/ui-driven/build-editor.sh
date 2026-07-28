@@ -16,5 +16,5 @@ source ../../../.env
 
 cd ../../../apps/editor.planx.uk
 pnpm install --frozen-lockfile
-VITE_APP_ENV=test pnpm build
+VITE_APP_ENV=test pnpm --dir ../.. build --filter=editor.planx.uk... 
 echo "$EDITOR_HASH" > build/.editor-hash
