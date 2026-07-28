@@ -195,6 +195,7 @@ jobs:
       - name: Setup Node and PNPM
         uses: ./.github/actions/setup-node-pnpm
       - run: pnpm install --frozen-lockfile
+<<<<<<< HEAD
       - name: Restore Turbo cache
         uses: actions/cache@v6
         with:
@@ -203,6 +204,11 @@ jobs:
           restore-keys: ${{ runner.os }}-turbo-${{ github.job }}-
       - name: Build Storybook + editor (with workspace dependencies)
         run: pnpm turbo run build build-storybook --filter=editor.planx.uk...
+=======
+        if: steps.cache-planx-frontend-build-assets.outputs.cache-hit != 'true'
+      - name: Build editor and its workspace dependencies
+        if: steps.cache-planx-frontend-build-assets.outputs.cache-hit != 'true'
+>>>>>>> 4a42cba8b ([ci] ensure file-upload package is built as needed (i.e. make CI play with turbo))
         env:
           VITE_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
           VITE_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
@@ -215,6 +221,10 @@ jobs:
           VITE_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
           VITE_APP_MICROSOFT_OAUTH_OVERRIDE: https://api.editor.planx.dev
           VITE_APP_ENV: pizza
+<<<<<<< HEAD
+=======
+        run: pnpm build --filter=editor.planx.uk...
+>>>>>>> 4a42cba8b ([ci] ensure file-upload package is built as needed (i.e. make CI play with turbo))
       - name: Upload source maps to Airbrake
         working-directory: ${{ env.EDITOR_DIRECTORY }}
         env:
