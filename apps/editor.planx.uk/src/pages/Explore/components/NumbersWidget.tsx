@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import React from "react";
+import { formatDelta } from "utils";
 
 export interface NumbersWidgetStats {
   lpasOnPlanX: number;
@@ -16,11 +17,6 @@ export interface NumbersWidgetStats {
 
 interface NumbersWidgetProps {
   stats?: NumbersWidgetStats;
-}
-
-function formatDelta(delta: number): string {
-  const formatted = Math.abs(delta).toLocaleString("en-GB");
-  return delta >= 0 ? `+${formatted}` : `-${formatted}`;
 }
 
 export function NumbersWidget({ stats }: NumbersWidgetProps) {

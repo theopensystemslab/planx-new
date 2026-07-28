@@ -5,6 +5,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useTeamAnalyticsLink } from "hooks/analyticsLinks/useTeamAnalyticsLink";
 import { cardBoxShadow, FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { formatDelta } from "utils";
 
 import { useStore } from "../../FlowEditor/lib/store";
 import type { TeamDashboardStats } from "./useTeamDashboardStats";
@@ -43,11 +44,6 @@ const StatsGrid = styled(Box)(({ theme }) => ({
     gridTemplateColumns: "repeat(2, 1fr)",
   },
 }));
-
-function formatDelta(delta: number): string {
-  const formatted = Math.abs(delta).toLocaleString("en-GB");
-  return delta >= 0 ? `+${formatted}` : `-${formatted}`;
-}
 
 const analyticsLinkBase = (theme: Theme) => ({
   fontSize: theme.typography.body2.fontSize,
