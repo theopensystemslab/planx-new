@@ -3,10 +3,10 @@ import { hasFeatureFlag } from "lib/featureFlags";
 import Explore from "pages/Explore";
 import React from "react";
 
-export const Route = createFileRoute("/_authenticated/app/explore")({
-  beforeLoad: () => {
+export const Route = createFileRoute("/_authenticated/app/$team/explore")({
+  beforeLoad: ({ params }) => {
     if (!hasFeatureFlag("EXPLORE")) {
-      throw redirect({ to: "/app" });
+      throw redirect({ to: "/app/$team", params });
     }
   },
   component: Explore,

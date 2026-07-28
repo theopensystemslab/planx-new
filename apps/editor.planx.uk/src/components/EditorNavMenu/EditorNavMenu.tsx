@@ -162,7 +162,7 @@ function EditorNavMenu() {
                 {
                   title: "Explore",
                   Icon: ExploreIcon,
-                  route: `/app/explore`,
+                  route: `/app/${teamSlug}/explore`,
                   accessibleBy: "*" as const,
                 },
               ]
