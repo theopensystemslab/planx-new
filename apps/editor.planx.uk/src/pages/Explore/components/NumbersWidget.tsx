@@ -110,11 +110,11 @@ export function NumbersWidget({ stats, loading = false }: NumbersWidgetProps) {
                 <Typography variant="body2" sx={{ color: "text.secondary" }}>
                   {label}
                 </Typography>
-                {!loading && delta !== null && (
+                {!loading && delta !== null && delta !== 0 && (
                   <Typography
                     variant="body2"
                     sx={{
-                      color: delta >= 0 ? "success.main" : "error.main",
+                      color: delta > 0 ? "success.main" : "error.main",
                       fontWeight: "bold",
                     }}
                   >

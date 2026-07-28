@@ -91,6 +91,7 @@ export const exhaustiveCheck = (type: never): never => {
 };
 
 export function formatDelta(delta: number): string {
+  if (delta === 0) return "0";
   const formatted = Math.abs(delta).toLocaleString("en-GB");
-  return delta >= 0 ? `+${formatted}` : `-${formatted}`;
+  return delta > 0 ? `+${formatted}` : `-${formatted}`;
 }

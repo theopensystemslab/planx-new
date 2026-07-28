@@ -161,11 +161,11 @@ export function StatsBanner({
               {label}
             </Typography>
             <StatValue loading={loading} value={value} label={label} />
-            {!loading && delta !== null && (
+            {!loading && delta !== null && delta !== 0 && (
               <Typography
                 variant="body2"
                 sx={{
-                  color: delta >= 0 ? "success.main" : "error.main",
+                  color: delta > 0 ? "success.main" : "error.main",
                   fontWeight: "bold",
                   height: 24,
                 }}
