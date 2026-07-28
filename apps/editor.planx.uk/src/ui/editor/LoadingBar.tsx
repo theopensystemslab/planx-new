@@ -28,7 +28,7 @@ const StyledBar = styled(LinearProgress)(({ theme }) => ({
   },
   [`& .${linearProgressClasses.bar2}`]: {
     width: "100%",
-    backgroundColor: theme.palette.secondary.dark,
+    backgroundColor: theme.palette.grey[300],
     animation: `${loadFollow} 1.6s ease-in-out infinite`,
   },
 }));
