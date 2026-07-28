@@ -16,7 +16,7 @@ const meta = {
   args: {
     stats: {
       lpasOnPlanX: 29,
-      lpasOnPlanXPrevious: 27,
+      lpasOnPlanXPrevious: 29,
       onlineServices: 168,
       onlineServicesPrevious: 149,
       totalSessions: 12421,
@@ -35,6 +35,13 @@ export const Default: Story = {};
 
 export const Empty: Story = {
   args: {
+    stats: undefined,
+  },
+};
+
+export const Loading: Story = {
+  args: {
+    loading: true,
     stats: undefined,
   },
 };

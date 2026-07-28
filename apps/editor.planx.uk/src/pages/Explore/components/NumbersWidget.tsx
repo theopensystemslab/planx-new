@@ -1,7 +1,9 @@
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React from "react";
+import { EmptyLoadingBar, LoadingBar } from "ui/editor/LoadingBar";
 import { formatDelta } from "utils";
 
 export interface NumbersWidgetStats {
@@ -17,9 +19,55 @@ export interface NumbersWidgetStats {
 
 interface NumbersWidgetProps {
   stats?: NumbersWidgetStats;
+  loading?: boolean;
 }
 
-export function NumbersWidget({ stats }: NumbersWidgetProps) {
+// Container for loading bar to keep it aligned when data is present
+const LoadingBarContainer = styled(Box)({
+  height: 56,
+  display: "flex",
+  alignItems: "flex-end",
+  paddingBottom: "7px",
+});
+
+interface StatValueProps {
+  loading: boolean;
+  value: number | null;
+  label: string;
+}
+
+function StatValue({ loading, value, label }: StatValueProps) {
+  if (loading) {
+    return (
+      <LoadingBarContainer>
+        <LoadingBar aria-label={`Loading ${label}`} />
+      </LoadingBarContainer>
+    );
+  }
+  if (value !== null) {
+    return (
+      // Fixed size and height to keep layout consistent
+      <Typography
+        variant="h1"
+        component="p"
+        sx={{
+          height: 56,
+          lineHeight: 1.35,
+          fontSize: "3rem !important",
+        }}
+      >
+        {value.toLocaleString("en-GB")}
+      </Typography>
+    );
+  }
+  return (
+    <LoadingBarContainer>
+      <EmptyLoadingBar />
+    </LoadingBarContainer>
+  );
+}
+
+export function NumbersWidget({ stats, loading = false }: NumbersWidgetProps) {
   const rows = [
     {
       label: "LPAs on PlanX",
@@ -50,15 +98,19 @@ export function NumbersWidget({ stats }: NumbersWidgetProps) {
       <Box sx={{ overflowY: "auto" }}>
         {rows.map(({ label, value, delta }, index) => (
           <React.Fragment key={label}>
-            <Box sx={{ px: 2, pb: 1, pt: 1.5 }}>
-              <Box sx={{ display: "flex", alignItems: "baseline", gap: 1 }}>
-                <Typography variant="h1" component="p">
-                  {value !== null ? value.toLocaleString("en-GB") : "—"}
-                </Typography>
+            <Box sx={{ px: 2, pb: 1.25, pt: 1.25 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "flex-end",
+                  gap: 1,
+                }}
+              >
+                <StatValue loading={loading} value={value} label={label} />
                 <Typography variant="body2" sx={{ color: "text.secondary" }}>
                   {label}
                 </Typography>
-                {delta !== null && (
+                {!loading && delta !== null && (
                   <Typography
                     variant="body2"
                     sx={{
