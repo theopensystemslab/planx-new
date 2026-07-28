@@ -4,7 +4,12 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["build/**"],
+      "outputs": ["build/**", "!build/storybook/**"],
+      "env": ["VITE_*"]
+    },
+    "build-storybook": {
+      "dependsOn": ["build"],
+      "outputs": ["build/storybook/**"],
       "env": ["VITE_*"]
     }
   }

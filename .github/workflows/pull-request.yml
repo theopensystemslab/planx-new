@@ -20,6 +20,8 @@ env:
   LOCALPLANNING_SERVICES_DIRECTORY: apps/localplanning.services
   API_DIRECTORY: apps/api.planx.uk
   HASURA_DIRECTORY: apps/hasura.planx.uk
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
 jobs:
   changes:
@@ -67,6 +69,26 @@ jobs:
               - 'pnpm-workspace.yaml'
             
 
+  verify:
+    name: Verify (typecheck + lint)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Setup Node and PNPM
+        uses: ./.github/actions/setup-node-pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Restore Turbo cache
+        uses: actions/cache@v6
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.job }}-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-turbo-${{ github.job }}-
+      - run: pnpm turbo run typecheck lint --affected
+        env:
+          TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha }}
+
   integration_tests:
     name: Run Integration tests
     runs-on: ubuntu-24.04
@@ -93,8 +115,6 @@ jobs:
     name: Run API Tests
     runs-on: ubuntu-24.04
     timeout-minutes: 10
-    needs: [changes]
-    if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.pnpmworkspace == 'true' }}
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-pizza-env
@@ -105,15 +125,18 @@ jobs:
         uses: ./.github/actions/setup-node-pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Restore Turbo cache
+        uses: actions/cache@v6
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.job }}-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-turbo-${{ github.job }}-
       - name: Run API Tests
-        run: pnpm check && pnpm test
-        working-directory: ${{ env.API_DIRECTORY }}
+        run: pnpm turbo run test --filter=api.planx.uk
 
   test_react:
     name: Run React Tests
     runs-on: ubuntu-24.04
-    needs: [changes]
-    if: ${{ needs.changes.outputs.editor == 'true' || needs.changes.outputs.pnpmworkspace == 'true' }}
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-pizza-env
@@ -123,24 +146,14 @@ jobs:
       - name: Setup Node and PNPM
         uses: ./.github/actions/setup-node-pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm build
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
-      - run: pnpm test:silent --retry=1
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
-
-  check_localplanning_services:
-    name: Check localplanning.services (types + lint)
-    runs-on: ubuntu-24.04
-    needs: [changes]
-    if: ${{ needs.changes.outputs.localplanning == 'true' }}
-    steps:
-      - uses: actions/checkout@v7
-      - name: Setup Node and PNPM
-        uses: ./.github/actions/setup-node-pnpm
-      - run: pnpm install --frozen-lockfile
-      - name: Type-check and lint
-        run: pnpm check
-        working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
+      - name: Restore Turbo cache
+        uses: actions/cache@v6
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.job }}-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-turbo-${{ github.job }}-
+      - run: pnpm turbo run build --filter=editor.planx.uk
+      - run: pnpm turbo run test --filter=editor.planx.uk
 
   build_localplanning_services:
     name: Build localplanning.services
@@ -150,28 +163,26 @@ jobs:
     if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
       - uses: actions/checkout@v7
-      - name: Cache localplanning build assets
-        id: cache-localplanning-build-assets
-        uses: actions/cache@v6
-        with:
-          path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
-          key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', format('{0}/src/**', env.LOCALPLANNING_SERVICES_DIRECTORY), format('{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
-          restore-keys: |
-            ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', format('{0}/src/**', env.LOCALPLANNING_SERVICES_DIRECTORY), format('{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
-            ${{ runner.os }}-
       - name: Setup Node and PNPM
         uses: ./.github/actions/setup-node-pnpm
-        with:
-          cache: ${{ steps.cache-localplanning-build-assets.outputs.cache-hit != 'true' && 'pnpm' || '' }}
       - run: pnpm install --frozen-lockfile
-        if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
-      - run: pnpm build
+      - name: Restore Turbo cache
+        uses: actions/cache@v6
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.job }}-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-turbo-${{ github.job }}-
+      - run: pnpm turbo run build --filter=localplanning.services
         env:
           BUILD_MODE: pizza
           SITE_URL: https://localplanning.${{ env.FULL_DOMAIN }}
           ROOT_DOMAIN: ${{ env.FULL_DOMAIN }}
-        if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
-        working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
+      - name: Upload localplanning.services build artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: localplanning_services_build
+          path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
+          if-no-files-found: error
 
   build_planx_frontend:
     name: Build PlanX frontend
@@ -180,20 +191,17 @@ jobs:
     if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
       - uses: actions/checkout@v7
-      - name: Cache PlanX frontend build assets
-        id: cache-planx-frontend-build-assets
-        uses: actions/cache@v6
-        with:
-          path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles(format('{0}/**', env.EDITOR_DIRECTORY)) }}
       - name: Setup Node and PNPM
         uses: ./.github/actions/setup-node-pnpm
-        with:
-          cache: ${{ steps.cache-planx-frontend-build-assets.outputs.cache-hit != 'true' && 'pnpm' || '' }}
       - run: pnpm install --frozen-lockfile
-        if: steps.cache-planx-frontend-build-assets.outputs.cache-hit != 'true'
-      - run: pnpm build
-        if: steps.cache-planx-frontend-build-assets.outputs.cache-hit != 'true'
+      - name: Restore Turbo cache
+        uses: actions/cache@v6
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.job }}-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-turbo-${{ github.job }}-
+      - name: Build editor + Storybook
+        run: pnpm turbo run build build-storybook --filter=editor.planx.uk
         env:
           VITE_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
           VITE_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
@@ -206,9 +214,7 @@ jobs:
           VITE_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
           VITE_APP_MICROSOFT_OAUTH_OVERRIDE: https://api.editor.planx.dev
           VITE_APP_ENV: pizza
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
       - name: Upload source maps to Airbrake
-        if: steps.cache-planx-frontend-build-assets.outputs.cache-hit != 'true'
         working-directory: ${{ env.EDITOR_DIRECTORY }}
         env:
           AB_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
@@ -222,21 +228,6 @@ jobs:
               -F "file=@${mapfile}" \
               -F "name=https://${{ env.FULL_DOMAIN }}/assets/${jsname}"
           done
-      - run: pnpm build-storybook
-        if: steps.cache-planx-frontend-build-assets.outputs.cache-hit != 'true'
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
-        env:
-          # same env as above, if it's job.env it can't access existing env.[variable]
-          VITE_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
-          VITE_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
-          VITE_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
-          VITE_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
-          VITE_APP_HASURA_WEBSOCKET: wss://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
-          VITE_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
-          VITE_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
-          VITE_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
-          VITE_APP_MICROSOFT_OAUTH_OVERRIDE: https://api.editor.planx.dev
-          VITE_APP_ENV: pizza
       - name: Upload PlanX frontend build artifact
         uses: actions/upload-artifact@v7
         with:
@@ -249,7 +240,7 @@ jobs:
   pulumi_preview:
     name: Run Pulumi Preview
     runs-on: ubuntu-24.04
-    needs: [changes, build_planx_frontend]
+    needs: [changes, build_planx_frontend, build_localplanning_services]
     if: ${{ needs.changes.outputs.infrastructure == 'true' }}
     steps:
       - uses: actions/checkout@v7
@@ -267,15 +258,11 @@ jobs:
         with:
           name: planx_frontend_build
           path: ./${{ env.EDITOR_DIRECTORY }}/build
-      - name: Download LPS build assets
-        id: cache-localplanning-build-assets
-        uses: actions/cache@v6
+      - name: Download localplanning.services build artifact
+        uses: actions/download-artifact@v8
         with:
+          name: localplanning_services_build
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
-          key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', format('{0}/src/**', env.LOCALPLANNING_SERVICES_DIRECTORY), format('{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
-          restore-keys: |
-            ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', format('{0}/src/**', env.LOCALPLANNING_SERVICES_DIRECTORY), format('{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
-            ${{ runner.os }}-
       - uses: pulumi/actions@v7
         with:
           command: preview
@@ -313,7 +300,7 @@ jobs:
 
   create_or_update_vultr_instance:
     name: Upsert Vultr Instance
-    needs: [changes, build_planx_frontend]
+    needs: [changes, build_planx_frontend, build_localplanning_services]
     runs-on: ubuntu-24.04
     if: "${{ success() && !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
@@ -409,11 +396,10 @@ jobs:
 
       - uses: actions/checkout@v7
       - name: Download React build assets
-        id: cache-react-build-assets
-        uses: actions/cache@v6
+        uses: actions/download-artifact@v8
         with:
+          name: planx_frontend_build
           path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles(format('{0}/**', env.EDITOR_DIRECTORY)) }}
       - name: upload built editor
         uses: appleboy/scp-action@v1
         with:
@@ -424,15 +410,11 @@ jobs:
           target: "planx-new/"
           overwrite: true
 
-      - name: Download localplanning.services build assets
-        id: cache-localplanning-build-assets-restore
-        uses: actions/cache/restore@v6
+      - name: Download localplanning.services build artifact
+        uses: actions/download-artifact@v8
         with:
+          name: localplanning_services_build
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
-          key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', format('{0}/src/**', env.LOCALPLANNING_SERVICES_DIRECTORY), format('{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
-          restore-keys: |
-            ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', format('{0}/src/**', env.LOCALPLANNING_SERVICES_DIRECTORY), format('{0}/public/**', env.LOCALPLANNING_SERVICES_DIRECTORY)) }}
-            ${{ runner.os }}-
 
       - name: upload built localplanning.services
         continue-on-error: true
@@ -493,31 +475,25 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
-      - name: Get editor git tree hash
-        id: editor-hash
-        run: echo "hash=$(git rev-parse HEAD:apps/editor.planx.uk)" >> $GITHUB_OUTPUT
-      - name: Restore editor build cache
-        id: cache-e2e-editor-build
-        uses: actions/cache@v6
-        with:
-          path: apps/editor.planx.uk/build
-          key: editor-e2e-pr-${{ github.event.number }}-${{ steps.editor-hash.outputs.hash }}
-          restore-keys: editor-e2e-pr-${{ github.event.number }}-
       - name: Setup Node and PNPM
         uses: ./.github/actions/setup-node-pnpm
       - name: PNPM Install
         run: pnpm install --frozen-lockfile
-      - name: Code checks
-        run: pnpm check
-        working-directory: e2e
+      - name: Restore Turbo cache
+        uses: actions/cache@v6
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.job }}-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-turbo-${{ github.job }}-
       - name: Install Playwright Dependencies
         run: pnpm playwright install --with-deps chromium
         working-directory: e2e/tests/ui-driven
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
       - name: Build editor (test mode)
-        run: VITE_APP_ENV=test pnpm build
-        working-directory: apps/editor.planx.uk
+        run: pnpm turbo run build --filter=editor.planx.uk
+        env:
+          VITE_APP_ENV: test
       - name: End-to-end Tests
         run: pnpm test
         working-directory: e2e

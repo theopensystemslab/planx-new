@@ -49,3 +49,6 @@ __pycache__
 .aider*
 .claude
 .turbo/
+
+# Output of turbo prune
+/out

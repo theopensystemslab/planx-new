@@ -1,4 +1,4 @@
-import { introspectAs } from "./utils";
+import { introspectAs } from "./utils.js";
 
 describe("flow notes", () => {
   describe("public", () => {

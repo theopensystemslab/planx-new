@@ -21,6 +21,8 @@ env:
   BUILD_MODE: production
   SITE_URL: https://localplanning.services
   DIST_ID: ${{ secrets.LPS_PROD_DIST_ID }}
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
 jobs:
   deploy:
