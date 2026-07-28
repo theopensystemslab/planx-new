@@ -17,14 +17,6 @@ import type { FileWithPath } from "react-dropzone";
 import { useDropzone } from "react-dropzone";
 import { borderedFocusStyle } from "theme";
 
-const ALLOWED_EXTENSIONS_BY_MIME_TYPE_LABEL = Array.from(
-  new Set(
-    Object.values(ALLOWED_EXTENSIONS_BY_MIME_TYPE)
-      .flat()
-      .map((extension) => extension.replace(".", "")),
-  ),
-).join(", ");
-
 interface Props<T extends FileUploadSlot = FileUploadSlot> {
   setSlots: React.Dispatch<React.SetStateAction<T[]>>;
   setFileUploadStatus: React.Dispatch<React.SetStateAction<string | undefined>>;
@@ -225,14 +217,6 @@ export function Dropzone<T extends FileUploadSlot>({
               to upload
             </>
           )}
-        </Typography>
-        <Typography
-          variant="body2"
-          sx={{
-            color: "text.secondary",
-          }}
-        >
-          {ALLOWED_EXTENSIONS_BY_MIME_TYPE_LABEL}
         </Typography>
         <Typography
           variant="body2"
