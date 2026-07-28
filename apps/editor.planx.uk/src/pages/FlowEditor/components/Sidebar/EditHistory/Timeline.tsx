@@ -11,6 +11,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import type { OT } from "@planx/graph/types";
+import { format, parseISO } from "date-fns";
 import type {
   CommentHistoryItem,
   HistoryItem,
@@ -162,27 +163,32 @@ export const EditHistoryTimeline = ({
                       : `Created flow`
                   }`}
                 </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    fontSize: "small",
-                    pt: 0.25,
-                    pb: 0.75,
-                    color:
-                      inUndoScope(i) && isUndoType(op.type)
-                        ? "GrayText"
-                        : "text.secondary",
-                  }}
+                <Tooltip
+                  placement="right"
+                  title={format(parseISO(op.createdAt), "MMM d, yyyy, HH:mm O")}
                 >
-                  <strong>{`${
-                    {
-                      publish: "Published",
-                      comment: "Commented",
-                      operation: "Edited",
-                    }[op.type]
-                  }`}</strong>{" "}
-                  {`${formatLastEditDate(op.createdAt)}`}
-                </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontSize: "small",
+                      pt: 0.25,
+                      pb: 0.75,
+                      color:
+                        inUndoScope(i) && isUndoType(op.type)
+                          ? "GrayText"
+                          : "text.secondary",
+                    }}
+                  >
+                    <strong>{`${
+                      {
+                        publish: "Published",
+                        comment: "Commented",
+                        operation: "Edited",
+                      }[op.type]
+                    }`}</strong>{" "}
+                    {formatLastEditDate(op.createdAt)}
+                  </Typography>
+                </Tooltip>
               </Box>
               {showUndoButton(op, i) && (
                 <Permission.CanEdit>
