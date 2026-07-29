@@ -28,6 +28,7 @@ type OSFeatures = {
 type OSHighwayFeature = {
   OBJECTID: number;
   Identifier: string;
+  GmlID: string;
   RoadClassification: string;
   RoadName1: string;
   FormsPartOf: string;
@@ -115,7 +116,7 @@ export const classifiedRoadsSearch = async (
             fn: PASSPORT_FN,
             value: true,
             text: activePlanningConstraints[PASSPORT_FN].pos,
-            data: features.map((feature: any) => ({
+            data: features.map((feature: OSFeatures["features"][0]) => ({
               name: `${feature.properties["RoadName1"]} - ${feature.properties["RoadClassification"]}`,
               entity: feature.properties["GmlID"], // match Planning Data "entity" identifier for convenience when reporting inaccurate constraints
               properties: feature.properties,
@@ -137,9 +138,9 @@ export const classifiedRoadsSearch = async (
         },
       } as GISResponse);
     }
-  } catch (error: any) {
+  } catch (error) {
     return next({
-      message: "Failed to fetch classified roads: " + error?.message,
+      message: "Failed to fetch classified roads: " + (error as Error)?.message,
     });
   }
 };

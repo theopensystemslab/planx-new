@@ -19,7 +19,7 @@ export type UpdateTemplatedFlowEditsEvent = z.infer<
 
 export interface UpdateTemplatedFlowEditsEventResponse {
   message: string;
-  data?: any;
+  data?: unknown;
 }
 
 export type UpdateTemplatedFlowEditsController = ValidatedRequestHandler<

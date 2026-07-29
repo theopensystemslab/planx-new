@@ -3,7 +3,6 @@ import { writeFileSync } from "fs";
 import stringify from "json-stringify-pretty-compact";
 import nock from "nock";
 import path from "path";
-import { fileURLToPath } from "url";
 
 /**
  * Attempts to load HTTP requests that have been made in previous tests.
@@ -29,7 +28,7 @@ function loadOrRecordNockRequests(filename, hashKey) {
     try {
       // attempt to load existing recorded nocks
       nock.load(filePath);
-    } catch (err) {
+    } catch {
       // no existing nocks found, let's start recording HTTP requests
       // https://github.com/nock/nock#recording
       nock.recorder.rec({

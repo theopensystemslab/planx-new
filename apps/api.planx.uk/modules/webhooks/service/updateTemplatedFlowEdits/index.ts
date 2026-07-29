@@ -28,7 +28,17 @@ export const updateTemplatedFlowEdits = async (
     data,
   );
 
-  const response = await $api.client.request<any>(
+  interface UpsertTemplatedFlowEditsResponse {
+    insert_templated_flow_edits_one: {
+      id: string;
+      flow_id: string;
+      data: unknown;
+      created_at: string;
+      updated_at: string;
+    };
+  }
+
+  const response = await $api.client.request<UpsertTemplatedFlowEditsResponse>(
     gql`
       mutation UpsertTemplatedFlowEdits($flow_id: uuid!, $data: jsonb = {}) {
         insert_templated_flow_edits_one(

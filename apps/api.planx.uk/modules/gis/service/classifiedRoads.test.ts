@@ -17,6 +17,7 @@ it("returns an error if required query param is missing", async () => {
 
 // "Success" test commented out due to reliance on external API calls and fallibility of nocks
 //   Please comment in and run locally if making changes to /roads functionality
+// eslint-disable-next-line vitest/no-disabled-tests -- intentionally disabled in CI, see comment above
 describe.skip("fetching classified roads data from OS Features API for any local authority", () => {
   vi.setConfig({ testTimeout: 1000 });
 

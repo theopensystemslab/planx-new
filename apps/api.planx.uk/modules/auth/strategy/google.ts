@@ -21,7 +21,7 @@ export const googleStrategy = new GoogleStrategy(
         status: 404,
         message:
           "Domain is blocked from using Google authentication. Please try another method, such as Microsoft single sign-on.",
-      } as any);
+      });
     }
 
     const jwt = await buildUserJWT(email);
@@ -30,7 +30,7 @@ export const googleStrategy = new GoogleStrategy(
       return done({
         status: 404,
         message: `User (${email}) not found. Do you need to log in to a different Google Account?`,
-      } as any);
+      });
     }
 
     done(null, { jwt });

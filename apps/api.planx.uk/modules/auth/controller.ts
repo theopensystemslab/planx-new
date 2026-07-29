@@ -101,7 +101,7 @@ export const logout: RequestHandler = async (req, res) => {
   if (origin) {
     try {
       cookieDomain = `.${new URL(origin).host}`;
-    } catch (e) {
+    } catch {
       console.warn(
         "Could not parse origin to set cookie domain during logout:",
         origin,

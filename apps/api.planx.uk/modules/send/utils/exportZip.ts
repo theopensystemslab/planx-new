@@ -161,6 +161,7 @@ export async function buildSubmissionExportZip({
     const mapAndLabelNodes = passport?.data?.["_mapAndLabelVisitedNodes"];
     if (mapAndLabelNodes && mapAndLabelNodes?.length > 0) {
       mapAndLabelNodes.forEach((nodeId: string) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- arbitrary MapAndLabel node data, doesn't fit planx-core's recursive Value/DataObject types
         const breadcrumbData: any =
           breadcrumbs[nodeId]?.data?.["_mapAndLabelNodeData"];
         const fn = breadcrumbData?.["fn"] as string;
@@ -179,6 +180,7 @@ export async function buildSubmissionExportZip({
             boundingBox: breadcrumbData?.["boundaryBBox"],
             drawColor: breadcrumbData?.["drawColor"],
             schemaFieldValues: breadcrumbData?.["schema"]?.["fields"]?.map(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any -- see breadcrumbData above
               (field: any) => field.data?.fn,
             ),
             schemaName: schemaName,

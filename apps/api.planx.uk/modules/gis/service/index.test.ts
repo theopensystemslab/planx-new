@@ -3,6 +3,7 @@ import supertest from "supertest";
 import app from "../../../server.js";
 import loadOrRecordNockRequests from "../../../tests/loadOrRecordNockRequests.js";
 
+// eslint-disable-next-line vitest/no-disabled-tests -- relies on external API calls, run locally when changing GIS functionality
 describe.skip("fetching GIS data from Digital Land for supported local authorities", () => {
   const locations = [
     {

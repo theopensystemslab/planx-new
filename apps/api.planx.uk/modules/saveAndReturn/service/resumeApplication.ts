@@ -101,7 +101,7 @@ const validateRequest = async (
       team: teams[0],
       sessions: lowcalSessions || [],
     };
-  } catch (error) {
+  } catch {
     throw Error("Unable to validate request");
   }
 };

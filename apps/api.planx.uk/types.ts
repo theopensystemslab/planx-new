@@ -11,6 +11,7 @@ import type { GovNotifyEmailTemplate } from "./lib/notify/index.js";
  */
 export interface Node {
   id?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- arbitrary, dynamically-shaped node data
   data?: Record<string, any>;
   edges?: Array<string>;
   type?: number;
@@ -47,14 +48,17 @@ export interface PublishedFlow {
 
 export interface UserData {
   answers?: Array<string>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- arbitrary, dynamically-shaped passport/breadcrumb data
   data?: Record<string, any>;
   auto?: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- arbitrary, dynamically-shaped passport/breadcrumb data
   override?: Record<string, any>;
 }
 
 export type Breadcrumb = Record<string, UserData>;
 
 export interface Passport {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- arbitrary, dynamically-shaped passport/breadcrumb data
   data: Record<string, any>;
 }
 

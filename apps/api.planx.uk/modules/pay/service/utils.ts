@@ -27,7 +27,7 @@ export const addGovPayPaymentIdToPaymentRequest = async (
       paymentRequestId,
       govPayPaymentId: govUKPayment.payment_id,
     });
-  } catch (error) {
+  } catch {
     throw Error(`payment request ${paymentRequestId} not updated`);
   }
 };

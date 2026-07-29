@@ -168,7 +168,7 @@ const getFee = (passportData: Record<string, unknown>): string | undefined => {
     });
 
     return fee;
-  } catch (error) {
+  } catch {
     // Ignore (valid) error - this may not be a fee-carrying service
     return undefined;
   }

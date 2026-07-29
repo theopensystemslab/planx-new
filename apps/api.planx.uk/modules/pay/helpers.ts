@@ -159,7 +159,7 @@ async function insertPaymentStatus({
 }
 
 // tmp explicit error handling
-export function reportError(report: { error: any; context: object }) {
+export function reportError(report: { error: string; context: object }) {
   if (airbrake) {
     airbrake.notify(report);
     return;

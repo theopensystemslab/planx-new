@@ -134,7 +134,7 @@ export const updateLowcalSessionAllowListAnswers = async (
       allowListAnswers,
     });
     return id;
-  } catch (error) {
+  } catch {
     throw new Error(
       `Error updating allow_list_answers for lowcal_session ${sessionId}`,
     );

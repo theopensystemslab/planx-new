@@ -34,7 +34,7 @@ export const generateDownloadToken = async (
     );
 
     return token;
-  } catch (error) {
+  } catch {
     throw new ServerError({
       message: "GraphQL query CreateLPSDownloadToken failed",
       status: 500,

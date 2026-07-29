@@ -1,29 +1,9 @@
-import type * as planxCore from "@opensystemslab/planx-core";
 import supertest from "supertest";
 import { v4 as uuidV4 } from "uuid";
 
 import app from "../../../../server.js";
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 import { authHeader } from "../../../../tests/mockJWT.js";
-import { expectedPlanningPermissionPayload } from "../../../../tests/mocks/digitalPlanningDataMocks.js";
-
-// const mockGenerateHTMLData = vi
-//   .fn()
-//   .mockResolvedValue(expectedPlanningPermissionPayload);
-
-// vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
-//   const originalModule = await importOriginal<typeof planxCore>();
-
-//   return {
-//     ...originalModule,
-//     CoreDomainClient: class extends originalModule.CoreDomainClient {
-//       constructor() {
-//         super();
-//         this.export.digitalPlanningDataPayload = () => mockGenerateHTMLData();
-//       }
-//     },
-//   };
-// });
 
 vi.mock("../../send/utils/exportZip", () => ({
   buildSubmissionExportZip: vi.fn().mockResolvedValue({
@@ -130,6 +110,7 @@ describe("getting an application by ID", () => {
       );
   });
 
+  // eslint-disable-next-line vitest/no-disabled-tests -- pre-existing skip, module-level exportZip mock conflicts with the "zip generation fails" test above
   it.skip("returns a zip buffer on success", async () => {
     queryMock.mockQuery({
       name: "GetSessionById",

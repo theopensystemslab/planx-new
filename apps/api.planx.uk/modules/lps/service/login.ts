@@ -32,7 +32,7 @@ const createMagicLinkToken = async (email: string): Promise<string> => {
     );
 
     return token;
-  } catch (error) {
+  } catch {
     throw new ServerError({
       message: "GraphQL query CreateLPSLoginToken failed",
       status: 500,

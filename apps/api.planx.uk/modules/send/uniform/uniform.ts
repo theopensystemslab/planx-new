@@ -236,7 +236,9 @@ async function authenticate({
   }
 
   // Decode access_token to get "organisation-name" & "organisation-id"
-  const decodedAccessToken = jwt.decode(response.data.access_token) as any;
+  const decodedAccessToken = jwt.decode(
+    response.data.access_token,
+  ) as jwt.JwtPayload | null;
   const organisation = decodedAccessToken?.["organisation-name"];
   const organisationId = decodedAccessToken?.["organisation-id"];
 

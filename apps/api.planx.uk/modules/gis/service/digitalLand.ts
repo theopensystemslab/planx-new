@@ -4,6 +4,7 @@ import {
   type DigitalLandConstraint,
   type GISResponse,
   type Metadata,
+  type MinimumDigitalLandEntity,
 } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 import fetch from "isomorphic-fetch";
@@ -11,6 +12,17 @@ import camelCase from "lodash/camelCase.js";
 
 import { $api } from "../../../client/index.js";
 import { getLocalAuthorityMetadata } from "./helpers.js";
+
+/** A Digital Land API entity, extended with the granular fields this module reads off it */
+interface DigitalLandEntity extends MinimumDigitalLandEntity {
+  reference?: string;
+  notes?: string;
+  description?: string;
+  "article-4-direction"?: string;
+  "flood-risk-level"?: string;
+  "listed-building-grade"?: string;
+  [key: string]: unknown;
+}
 
 /**
  *
@@ -74,8 +86,8 @@ async function go(
     options,
   )}${datasets}`;
   const res = await fetch(url)
-    .then((response: { json: () => any }) => response.json())
-    .catch((error: any) => console.log(error));
+    .then((response) => response.json())
+    .catch((error) => console.log(error));
 
   // if analytics are "on", store an audit record of the raw response
   if (extras?.analytics !== "false") {
@@ -109,7 +121,7 @@ async function go(
   // check for & add any 'positive' constraints to the formattedResult
   let formattedResult: Record<string, Constraint> = {};
   if (res && res.count > 0 && res.entities) {
-    res.entities.forEach((entity: { dataset: any }) => {
+    res.entities.forEach((entity: DigitalLandEntity) => {
       // get the planx variable that corresponds to this entity's 'dataset', should never be null because our initial request is filtered on 'dataset'
       const key = Object.keys(baseSchema).find((key) =>
         baseSchema[key]["digital-land-datasets"]?.includes(entity.dataset),
@@ -158,7 +170,8 @@ async function go(
     formattedResult["designated.nationalPark"] &&
     formattedResult["designated.nationalPark"].value
   ) {
-    formattedResult["designated.nationalPark"]?.data?.forEach((entity: any) => {
+    formattedResult["designated.nationalPark"]?.data?.forEach((rawEntity) => {
+      const entity = rawEntity as DigitalLandEntity;
       if (
         baseSchema[broads]["digital-land-entities"]?.includes(entity.entity)
       ) {
@@ -226,12 +239,14 @@ async function go(
 
     // loop through any intersecting a4 data entities and set granular planx values based on this local authority's schema
     if (a4s && formattedResult["articleFour"]?.value) {
-      formattedResult["articleFour"]?.data?.forEach((entity: any) => {
+      formattedResult["articleFour"]?.data?.forEach((rawEntity) => {
+        const entity = rawEntity as DigitalLandEntity;
         Object.keys(a4s)?.forEach((key) => {
           // For Brent LPA, as they have shared article-4-direction values across multiple granular constraints that we can identify via refrence
           const brentSkip =
             localAuthority === "brent" &&
             entity?.["article-4-direction"] === "A4D_CA" &&
+            entity.reference !== undefined &&
             Object.values(a4s).includes(entity.reference);
 
           if (
@@ -283,15 +298,19 @@ async function go(
   await Promise.all(
     urls.map((url) =>
       fetch(url)
-        .then((response: { json: () => any }) => response.json())
-        .catch((error: any) => console.log(error)),
+        .then((response) => response.json())
+        .catch((error) => console.log(error)),
     ),
   )
     .then((responses) => {
-      responses.forEach((response: any) => {
+      responses.forEach((response: Metadata) => {
         // get the planx variable that corresponds to this 'dataset', should never be null because we only requested known datasets
-        const key = Object.keys(baseSchema).find((key) =>
-          baseSchema[key]["digital-land-datasets"]?.includes(response.dataset),
+        const key = Object.keys(baseSchema).find(
+          (key) =>
+            response.dataset !== undefined &&
+            baseSchema[key]["digital-land-datasets"]?.includes(
+              response.dataset,
+            ),
         );
         if (key) metadata[key] = response;
       });
@@ -306,10 +325,10 @@ async function go(
 }
 
 // Adds "designated" variable to response object, so we can auto-answer less granular questions like "are you on designated land"
-const addDesignatedVariable = (responseObject: any) => {
-  const resObjWithDesignated = {
+const addDesignatedVariable = (responseObject: Record<string, Constraint>) => {
+  const resObjWithDesignated: Record<string, Constraint> = {
     ...responseObject,
-    designated: { value: false },
+    designated: { fn: "designated", value: false },
   };
 
   const subVariables = ["conservationArea", "AONB", "nationalPark", "WHS"];
@@ -317,7 +336,7 @@ const addDesignatedVariable = (responseObject: any) => {
   // If any of the subvariables are true, then set "designated" to true
   subVariables.forEach((s) => {
     if (resObjWithDesignated[`designated.${s}`]?.value) {
-      resObjWithDesignated["designated"] = { value: true };
+      resObjWithDesignated["designated"] = { fn: "designated", value: true };
     }
   });
 

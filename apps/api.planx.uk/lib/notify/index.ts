@@ -1,3 +1,4 @@
+import { isAxiosError } from "axios";
 import { NotifyClient } from "notifications-node-client";
 
 import { $api, $public } from "../../client/index.js";
@@ -60,10 +61,11 @@ const sendEmail: SendEmail = async (template, emailAddress, config) => {
     }
 
     return returnValue;
-  } catch (error: any) {
-    const notifyError = error?.response?.data?.errors?.length
-      ? JSON.stringify(error?.response?.data?.errors?.[0])
-      : error?.message;
+  } catch (error) {
+    const notifyErrors = isAxiosError(error) && error.response?.data?.errors;
+    const notifyError = notifyErrors?.length
+      ? JSON.stringify(notifyErrors[0])
+      : (error as Error)?.message;
     throw Error(
       `Error: Failed to send email using Notify client. Details: ${JSON.stringify(
         {

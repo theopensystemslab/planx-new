@@ -10,6 +10,7 @@ export const validate =
     schema:
       | z.AnyZodObject
       | z.ZodUnion<readonly [z.ZodTypeAny, ...z.ZodTypeAny[]]>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- catch-all for any other Zod schema shape (eg ZodEffects); `unknown` breaks structural matching here
       | z.ZodType<any, z.ZodTypeDef, any>,
   ) =>
   async (

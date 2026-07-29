@@ -19,7 +19,7 @@ export const softDeleteSession = async (sessionId: string) => {
       }
     `;
     await $api.client.request(mutation, { sessionId });
-  } catch (error) {
+  } catch {
     throw new Error(`Error deleting session ${sessionId}`);
   }
 };

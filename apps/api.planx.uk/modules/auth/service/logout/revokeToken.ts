@@ -42,7 +42,7 @@ export const isTokenRevoked = async (tokenDigest: string): Promise<boolean> => {
     );
 
     return Boolean(revokedToken?.revokedAt);
-  } catch (error) {
+  } catch {
     throw new ServerError({
       message: "Failed to check if token is already revoked",
     });
@@ -79,7 +79,7 @@ const trackRevokedToken = async (
       );
 
     return Boolean(insertRevokedTokensOne?.revokedAt);
-  } catch (error) {
+  } catch {
     throw new ServerError({
       message: "Failed to add token to revoked list",
     });
