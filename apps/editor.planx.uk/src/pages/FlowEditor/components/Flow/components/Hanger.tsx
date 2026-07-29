@@ -46,7 +46,7 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
     ],
   );
 
-  const { positioned } = useFlowNotesContext();
+  const { positioned, clonedContentIds } = useFlowNotesContext();
   const notes = positioned.get(placementKey(parent, before)) ?? [];
 
   // When working in a templated flow, if any internal portal is marked as "isTemplatedNode", then the Hanger should be visible to add children
@@ -115,7 +115,13 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
         <li className="hanger note-connector" aria-hidden="true" />
       )}
       {showNoteCards &&
-        notes.map((note) => <PositionedNoteCard key={note.id} note={note} />)}
+        notes.map((note) => (
+          <PositionedNoteCard
+            key={note.positionId}
+            note={note}
+            isClone={clonedContentIds.has(note.contentId)}
+          />
+        ))}
       <li
         className={classnames("hanger", {
           hidden: isHidden,

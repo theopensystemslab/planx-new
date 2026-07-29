@@ -11,7 +11,8 @@ import { NoteEditorDialog } from "./NoteEditorDialog";
 
 const notes: FlowNote[] = [
   {
-    id: "note-1",
+    positionId: "note-1",
+    contentId: "note-content-1",
     flowId: "flow-1",
     nodeId: "node-a",
     placement: null,
@@ -34,6 +35,7 @@ const meta = {
           attached: new Map([["node-a", notes]]),
           positioned: new Map(),
           loading: false,
+          clonedContentIds: new Set(),
         }}
       >
         <Story />
@@ -85,5 +87,24 @@ const AttachedNotesDemo: React.FC = () => {
 
 export const Default = {
   args: { nodeId: "node-a" },
+  render: () => <AttachedNotesDemo />,
+} satisfies Story;
+
+export const Cloned = {
+  args: { nodeId: "node-a" },
+  decorators: [
+    (Story) => (
+      <FlowNotesContext.Provider
+        value={{
+          attached: new Map([["node-a", notes]]),
+          positioned: new Map(),
+          loading: false,
+          clonedContentIds: new Set(["note-content-1"]),
+        }}
+      >
+        <Story />
+      </FlowNotesContext.Provider>
+    ),
+  ],
   render: () => <AttachedNotesDemo />,
 } satisfies Story;

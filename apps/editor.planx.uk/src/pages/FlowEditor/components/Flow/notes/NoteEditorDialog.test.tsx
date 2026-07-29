@@ -8,7 +8,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { NoteEditorDialog } from "./NoteEditorDialog";
 
 const makeNote = (overrides: Partial<AttachedNote> = {}): AttachedNote => ({
-  id: "note-1",
+  positionId: "note-1",
+  contentId: "note-content-1",
   flowId: "flow-1",
   nodeId: "node-a",
   placement: null,
@@ -119,7 +120,7 @@ describe("edit mode - own note", () => {
     await user.click(screen.getByRole("button", { name: /update/i }));
 
     expect(useStore.getState().updateFlowNote).toHaveBeenCalledWith(
-      "note-1",
+      "note-content-1",
       expect.objectContaining({ text: "Updated text" }),
     );
   });
@@ -152,7 +153,7 @@ describe("edit mode - another author's note", () => {
     await user.click(screen.getByRole("button", { name: /update/i }));
 
     expect(useStore.getState().updateFlowNote).toHaveBeenCalledWith(
-      "note-1",
+      "note-content-1",
       expect.objectContaining({ text: "Edited by another user" }),
     );
   });

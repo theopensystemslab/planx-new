@@ -44,7 +44,7 @@ export const NoteEditorDialog: React.FC = () => {
 
   const handleSave = async () => {
     if (isEditing && note) {
-      await updateFlowNote(note.id, { text });
+      await updateFlowNote(note.contentId, { text });
     } else {
       await createFlowNote({ nodeId, placement, text });
     }
@@ -53,7 +53,7 @@ export const NoteEditorDialog: React.FC = () => {
 
   const handleDelete = async () => {
     if (!note) return;
-    await deleteFlowNote(note.id);
+    await deleteFlowNote(note.positionId);
     closeNoteEditor();
   };
 

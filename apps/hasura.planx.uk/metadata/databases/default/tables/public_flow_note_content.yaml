@@ -1,5 +1,5 @@
 table:
-  name: flow_notes
+  name: flow_note_content
   schema: public
 object_relationships:
   - name: createdByUser
@@ -11,15 +11,6 @@ object_relationships:
         remote_table:
           name: users
           schema: public
-  - name: flow
-    using:
-      manual_configuration:
-        column_mapping:
-          flow_id: id
-        insertion_order: null
-        remote_table:
-          name: flows
-          schema: public
   - name: updatedByUser
     using:
       manual_configuration:
@@ -29,14 +20,21 @@ object_relationships:
         remote_table:
           name: users
           schema: public
+array_relationships:
+  - name: positions
+    using:
+      manual_configuration:
+        column_mapping:
+          id: note_id
+        insertion_order: null
+        remote_table:
+          name: flow_note_positions
+          schema: public
 insert_permissions:
   - role: platformAdmin
     permission:
       check: {}
       columns:
-        - flow_id
-        - node_id
-        - placement
         - text
         - color
         - created_by
@@ -45,21 +43,9 @@ insert_permissions:
   - role: teamEditor
     permission:
       check:
-        _and:
-          - created_by:
-              _eq: x-hasura-user-id
-          - flow:
-              team:
-                members:
-                  _and:
-                    - user_id:
-                        _eq: x-hasura-user-id
-                    - role:
-                        _eq: teamEditor
+        created_by:
+          _eq: x-hasura-user-id
       columns:
-        - flow_id
-        - node_id
-        - placement
         - text
         - color
         - created_by
@@ -70,9 +56,6 @@ select_permissions:
     permission:
       columns:
         - id
-        - flow_id
-        - node_id
-        - placement
         - text
         - color
         - created_by
@@ -85,9 +68,6 @@ select_permissions:
     permission:
       columns:
         - id
-        - flow_id
-        - node_id
-        - placement
         - text
         - color
         - created_by
@@ -95,21 +75,20 @@ select_permissions:
         - created_at
         - updated_at
       filter:
-        flow:
-          team:
-            members:
-              _and:
-                - user_id:
-                    _eq: x-hasura-user-id
-                - role:
-                    _eq: teamEditor
+        positions:
+          flow:
+            team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamEditor
     comment: ""
 update_permissions:
   - role: platformAdmin
     permission:
       columns:
-        - node_id
-        - placement
         - text
         - color
         - updated_by
@@ -119,29 +98,29 @@ update_permissions:
   - role: teamEditor
     permission:
       columns:
-        - node_id
-        - placement
         - text
         - color
         - updated_by
       filter:
-        flow:
-          team:
-            members:
-              _and:
-                - user_id:
-                    _eq: x-hasura-user-id
-                - role:
-                    _eq: teamEditor
+        positions:
+          flow:
+            team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamEditor
       check:
-        flow:
-          team:
-            members:
-              _and:
-                - user_id:
-                    _eq: x-hasura-user-id
-                - role:
-                    _eq: teamEditor
+        positions:
+          flow:
+            team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamEditor
     comment: ""
 delete_permissions:
   - role: platformAdmin
@@ -151,12 +130,13 @@ delete_permissions:
   - role: teamEditor
     permission:
       filter:
-        flow:
-          team:
-            members:
-              _and:
-                - user_id:
-                    _eq: x-hasura-user-id
-                - role:
-                    _eq: teamEditor
+        positions:
+          flow:
+            team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamEditor
     comment: ""

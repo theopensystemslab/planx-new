@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import type { FlowNote } from "hooks/data/useFlowNotes";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -9,7 +10,7 @@ interface Props {
 }
 
 export const AttachedNotes: React.FC<Props> = ({ nodeId }) => {
-  const { attached } = useFlowNotesContext();
+  const { attached, clonedContentIds } = useFlowNotesContext();
   const [showNotes, openNoteEditor] = useStore((state) => [
     state.showNotes,
     state.openNoteEditor,
@@ -21,17 +22,23 @@ export const AttachedNotes: React.FC<Props> = ({ nodeId }) => {
   return (
     <>
       {notes.map((note: FlowNote) => (
-        <button
-          key={note.id}
-          type="button"
-          className="attached-note"
-          onClick={(event) => {
-            event.stopPropagation();
-            openNoteEditor({ mode: "edit", note });
-          }}
+        <div
+          key={note.positionId}
+          className={classNames("attached-note-wrapper", {
+            isClone: clonedContentIds.has(note.contentId),
+          })}
         >
-          {note.text || "Untitled note"}
-        </button>
+          <button
+            type="button"
+            className="attached-note"
+            onClick={(event) => {
+              event.stopPropagation();
+              openNoteEditor({ mode: "edit", note });
+            }}
+          >
+            {note.text || "Untitled note"}
+          </button>
+        </div>
       ))}
     </>
   );

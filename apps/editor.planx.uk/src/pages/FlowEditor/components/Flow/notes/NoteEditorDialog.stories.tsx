@@ -6,7 +6,8 @@ import React from "react";
 import { NoteEditorDialog } from "./NoteEditorDialog";
 
 const note: FlowNote = {
-  id: "note-1",
+  positionId: "note-1",
+  contentId: "note-content-1",
   flowId: "flow-1",
   nodeId: "node-a",
   placement: null,

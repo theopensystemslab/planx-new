@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { useStore } from ".";
 
 beforeEach(() => {
+  localStorage.clear();
   useStore.setState({
     id: "flow-1",
     jwt: "test-jwt",
@@ -26,10 +27,10 @@ describe("createFlowNote", () => {
     let capturedObject: any;
 
     server.use(
-      graphql.mutation("CreateFlowNote", ({ variables }) => {
+      graphql.mutation("CreateFlowNotePosition", ({ variables }) => {
         capturedObject = variables.object;
         return HttpResponse.json({
-          data: { insert_flow_notes_one: { id: "new-note-id" } },
+          data: { insert_flow_note_positions_one: { id: "new-note-id" } },
         });
       }),
     );
@@ -43,10 +44,97 @@ describe("createFlowNote", () => {
       flow_id: "flow-1",
       node_id: "node-a",
       placement: null,
-      text: "Hello",
       created_by: 42,
-      updated_by: 42,
+      note: {
+        data: {
+          text: "Hello",
+          created_by: 42,
+          updated_by: 42,
+        },
+      },
     });
+  });
+});
+
+describe("cloneFlowNote / pasteFlowNoteClone", () => {
+  it("pastes a new position referencing the same content, without creating new content", async () => {
+    let capturedObject: any;
+
+    server.use(
+      graphql.mutation("CreateFlowNotePosition", ({ variables }) => {
+        capturedObject = variables.object;
+        return HttpResponse.json({
+          data: { insert_flow_note_positions_one: { id: "new-position-id" } },
+        });
+      }),
+    );
+
+    useStore.getState().cloneFlowNote("note-content-1");
+    expect(useStore.getState().getClonedFlowNoteId()).toBe("note-content-1");
+
+    const id = await useStore.getState().pasteFlowNoteClone({
+      placement: { parent: "_root", before: "node-a", parentIsContainer: true },
+    });
+
+    expect(id).toBe("new-position-id");
+    expect(capturedObject).toMatchObject({
+      flow_id: "flow-1",
+      note_id: "note-content-1",
+      created_by: 42,
+      placement: { parent: "_root", before: "node-a", parentIsContainer: true },
+    });
+    expect(capturedObject.note).toBeUndefined();
+  });
+});
+
+describe("copyFlowNote / pasteFlowNoteCopy", () => {
+  it("pastes an independent copy of the content", async () => {
+    let capturedObject: any;
+
+    server.use(
+      graphql.query("GetFlowNoteContent", () =>
+        HttpResponse.json({
+          data: {
+            flow_note_content_by_pk: {
+              text: "Source note text",
+              color: "#fffdb0",
+            },
+          },
+        }),
+      ),
+      graphql.mutation("CreateFlowNotePosition", ({ variables }) => {
+        capturedObject = variables.object;
+        return HttpResponse.json({
+          data: { insert_flow_note_positions_one: { id: "new-position-id" } },
+        });
+      }),
+    );
+
+    await useStore.getState().copyFlowNote("note-content-1");
+    expect(useStore.getState().getCopiedFlowNote()).toEqual({
+      text: "Source note text",
+      color: "#fffdb0",
+    });
+
+    const id = await useStore.getState().pasteFlowNoteCopy({
+      placement: { parent: "_root", before: "node-a", parentIsContainer: true },
+    });
+
+    expect(id).toBe("new-position-id");
+    expect(capturedObject).toMatchObject({
+      flow_id: "flow-1",
+      created_by: 42,
+      placement: { parent: "_root", before: "node-a", parentIsContainer: true },
+      note: {
+        data: {
+          text: "Source note text",
+          color: "#fffdb0",
+          created_by: 42,
+          updated_by: 42,
+        },
+      },
+    });
+    expect(capturedObject.note_id).toBeUndefined();
   });
 });
 
@@ -55,10 +143,10 @@ describe("repositionNotesForDeletedNodes", () => {
     let deleteIds: string[] | undefined;
 
     server.use(
-      graphql.query("GetFlowNotesForReposition", () =>
+      graphql.query("GetFlowNotePositionsForReposition", () =>
         HttpResponse.json({
           data: {
-            flow_notes: [
+            flow_note_positions: [
               {
                 id: "note-attached",
                 node_id: "deleted-node",
@@ -75,10 +163,12 @@ describe("repositionNotesForDeletedNodes", () => {
           },
         }),
       ),
-      graphql.mutation("DeleteFlowNotes", ({ variables }) => {
+      graphql.mutation("DeleteFlowNotePositions", ({ variables }) => {
         deleteIds = variables.ids;
         return HttpResponse.json({
-          data: { delete_flow_notes: { affected_rows: variables.ids.length } },
+          data: {
+            delete_flow_note_positions: { affected_rows: variables.ids.length },
+          },
         });
       }),
     );
@@ -103,10 +193,10 @@ describe("repositionNotesForDeletedNodes", () => {
     let reanchored: any;
 
     server.use(
-      graphql.query("GetFlowNotesForReposition", () =>
+      graphql.query("GetFlowNotePositionsForReposition", () =>
         HttpResponse.json({
           data: {
-            flow_notes: [
+            flow_note_positions: [
               {
                 id: "note-after-deleted",
                 node_id: null,
@@ -117,10 +207,10 @@ describe("repositionNotesForDeletedNodes", () => {
           },
         }),
       ),
-      graphql.mutation("ReanchorFlowNote", ({ variables }) => {
+      graphql.mutation("ReanchorFlowNotePosition", ({ variables }) => {
         reanchored = variables;
         return HttpResponse.json({
-          data: { update_flow_notes_by_pk: { id: variables.id } },
+          data: { update_flow_note_positions_by_pk: { id: variables.id } },
         });
       }),
     );
@@ -150,10 +240,10 @@ describe("repositionNotesForDeletedNodes", () => {
     let reanchored: any;
 
     server.use(
-      graphql.query("GetFlowNotesForReposition", () =>
+      graphql.query("GetFlowNotePositionsForReposition", () =>
         HttpResponse.json({
           data: {
-            flow_notes: [
+            flow_note_positions: [
               {
                 id: "note-leading",
                 node_id: null,
@@ -167,10 +257,10 @@ describe("repositionNotesForDeletedNodes", () => {
           },
         }),
       ),
-      graphql.mutation("ReanchorFlowNote", ({ variables }) => {
+      graphql.mutation("ReanchorFlowNotePosition", ({ variables }) => {
         reanchored = variables;
         return HttpResponse.json({
-          data: { update_flow_notes_by_pk: { id: variables.id } },
+          data: { update_flow_note_positions_by_pk: { id: variables.id } },
         });
       }),
     );
@@ -199,10 +289,10 @@ describe("repositionNotesForDeletedNodes", () => {
     let deleteIds: string[] | undefined;
 
     server.use(
-      graphql.query("GetFlowNotesForReposition", () =>
+      graphql.query("GetFlowNotePositionsForReposition", () =>
         HttpResponse.json({
           data: {
-            flow_notes: [
+            flow_note_positions: [
               {
                 id: "note-orphaned",
                 node_id: null,
@@ -213,10 +303,12 @@ describe("repositionNotesForDeletedNodes", () => {
           },
         }),
       ),
-      graphql.mutation("DeleteFlowNotes", ({ variables }) => {
+      graphql.mutation("DeleteFlowNotePositions", ({ variables }) => {
         deleteIds = variables.ids;
         return HttpResponse.json({
-          data: { delete_flow_notes: { affected_rows: variables.ids.length } },
+          data: {
+            delete_flow_note_positions: { affected_rows: variables.ids.length },
+          },
         });
       }),
     );
@@ -236,13 +328,13 @@ describe("repositionNotesForDeletedNodes", () => {
     let mutationCalled = false;
 
     server.use(
-      graphql.query("GetFlowNotesForReposition", () =>
-        HttpResponse.json({ data: { flow_notes: [] } }),
+      graphql.query("GetFlowNotePositionsForReposition", () =>
+        HttpResponse.json({ data: { flow_note_positions: [] } }),
       ),
-      graphql.mutation("DeleteFlowNotes", () => {
+      graphql.mutation("DeleteFlowNotePositions", () => {
         mutationCalled = true;
         return HttpResponse.json({
-          data: { delete_flow_notes: { affected_rows: 0 } },
+          data: { delete_flow_note_positions: { affected_rows: 0 } },
         });
       }),
     );
@@ -260,10 +352,10 @@ describe("repositionNotesForMovedNode", () => {
     const reanchored: any[] = [];
 
     server.use(
-      graphql.query("GetFlowNotesForReposition", () =>
+      graphql.query("GetFlowNotePositionsForReposition", () =>
         HttpResponse.json({
           data: {
-            flow_notes: [
+            flow_note_positions: [
               {
                 id: "note-before-moved",
                 node_id: null,
@@ -280,10 +372,10 @@ describe("repositionNotesForMovedNode", () => {
           },
         }),
       ),
-      graphql.mutation("ReanchorFlowNote", ({ variables }) => {
+      graphql.mutation("ReanchorFlowNotePosition", ({ variables }) => {
         reanchored.push(variables);
         return HttpResponse.json({
-          data: { update_flow_notes_by_pk: { id: variables.id } },
+          data: { update_flow_note_positions_by_pk: { id: variables.id } },
         });
       }),
     );

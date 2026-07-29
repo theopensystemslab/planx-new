@@ -9,7 +9,8 @@ import { NoteEditorDialog } from "./NoteEditorDialog";
 import { PositionedNoteCard } from "./PositionedNoteCard";
 
 const note: FlowNote = {
-  id: "note-1",
+  positionId: "note-1",
+  contentId: "note-content-1",
   flowId: "flow-1",
   nodeId: null,
   placement: { parent: "_root", before: "node-a", parentIsContainer: true },
@@ -30,7 +31,9 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-const PositionedNoteCardDemo: React.FC = () => {
+const PositionedNoteCardDemo: React.FC<{ isClone?: boolean }> = ({
+  isClone,
+}) => {
   useStore.setState({
     updateFlowNote: async (id, patch) => {
       console.log("updateFlowNote", id, patch);
@@ -39,7 +42,6 @@ const PositionedNoteCardDemo: React.FC = () => {
       console.log("deleteFlowNote", id);
     },
   });
-
 
   const noteEditorOpen = useStore((state) => state.noteEditorOpen);
 
@@ -66,7 +68,7 @@ const PositionedNoteCardDemo: React.FC = () => {
       <li className="hanger">
         <button type="button" />
       </li>
-      <PositionedNoteCard note={note} />
+      <PositionedNoteCard note={note} isClone={isClone} />
       <li className="hanger">
         <button type="button" />
       </li>
@@ -86,4 +88,9 @@ const PositionedNoteCardDemo: React.FC = () => {
 export const Default = {
   args: { note },
   render: () => <PositionedNoteCardDemo />,
+} satisfies Story;
+
+export const Cloned = {
+  args: { note, isClone: true },
+  render: () => <PositionedNoteCardDemo isClone />,
 } satisfies Story;
