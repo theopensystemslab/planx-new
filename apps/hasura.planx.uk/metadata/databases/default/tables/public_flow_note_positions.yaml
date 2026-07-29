@@ -1,5 +1,5 @@
 table:
-  name: flow_notes
+  name: flow_note_positions
   schema: public
 object_relationships:
   - name: createdByUser
@@ -20,62 +20,57 @@ object_relationships:
         remote_table:
           name: flows
           schema: public
-  - name: updatedByUser
+  - name: note
     using:
       manual_configuration:
         column_mapping:
-          updated_by: id
+          note_id: id
         insertion_order: null
         remote_table:
-          name: users
+          name: flow_note_content
           schema: public
 insert_permissions:
   - role: platformAdmin
     permission:
       check: {}
-      set:
-        created_by: x-hasura-user-id
-        updated_by: x-hasura-user-id
       columns:
+        - note_id
         - flow_id
         - node_id
         - placement
-        - text
-        - color
+        - created_by
     comment: ""
   - role: teamEditor
     permission:
       check:
-        flow:
-          team:
-            members:
-              _and:
-                - user_id:
-                    _eq: x-hasura-user-id
-                - role:
-                    _eq: teamEditor
-      set:
-        created_by: x-hasura-user-id
-        updated_by: x-hasura-user-id
+        _and:
+          - created_by:
+              _eq: x-hasura-user-id
+          - flow:
+              team:
+                members:
+                  _and:
+                    - user_id:
+                        _eq: x-hasura-user-id
+                    - role:
+                        _eq: teamEditor
       columns:
+        - note_id
         - flow_id
         - node_id
         - placement
-        - text
-        - color
+        - created_by
     comment: ""
 select_permissions:
   - role: platformAdmin
     permission:
       columns:
         - id
+        - note_id
         - flow_id
         - node_id
         - placement
-        - text
-        - color
         - created_by
-        - updated_by
         - created_at
         - updated_at
       filter: {}
@@ -84,13 +79,11 @@ select_permissions:
     permission:
       columns:
         - id
+        - note_id
         - flow_id
         - node_id
         - placement
-        - text
-        - color
         - created_by
-        - updated_by
         - created_at
         - updated_at
       filter:
@@ -109,10 +102,6 @@ update_permissions:
       columns:
         - node_id
         - placement
-        - text
-        - color
-      set:
-        updated_by: x-hasura-user-id
       filter: {}
       check: {}
     comment: ""
@@ -121,10 +110,6 @@ update_permissions:
       columns:
         - node_id
         - placement
-        - text
-        - color
-      set:
-        updated_by: x-hasura-user-id
       filter:
         flow:
           team:
