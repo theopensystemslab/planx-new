@@ -4,8 +4,6 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { ICONS } from "@planx/components/shared/icons";
 import { useNavigate, useParams } from "@tanstack/react-router";
-import { hangerAnchor } from "pages/FlowEditor/lib/hangerAnchor";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React, {
   useCallback,
   useEffect,
@@ -176,20 +174,24 @@ export const AddComponentModalContent: React.FC<
 };
 
 interface AddComponentModalProps {
+  anchorEl: HTMLElement | null;
   parent?: string;
   before?: string;
+  onClose: () => void;
 }
 
 const AddComponentModal: React.FC<AddComponentModalProps> = ({
+  anchorEl,
   parent,
   before,
+  onClose,
 }) => {
   const navigate = useNavigate();
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
   const handleSelect = useCallback(
     (slug: string) => {
-      useStore.getState().closeComponentSelector();
+      onClose();
       navigate({
         to: getNodeRoute(parent, before),
         params: {
@@ -201,51 +203,34 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
         search: { type: slug as NodeSearchParams["type"] },
       });
     },
-    [navigate, team, flow, parent, before],
+    [navigate, team, flow, parent, before, onClose],
   );
 
-  const handleClose = useCallback(() => {
-    useStore.getState().closeComponentSelector();
-  }, []);
-
-  // Position the popover anchored to the hanger that triggered navigation
-  const rect = hangerAnchor.get();
-  const spaceBelow = rect ? window.innerHeight - rect.bottom : 0;
-  const showBelow = !rect || spaceBelow >= 450;
-
-  const buttonCenterX = rect
-    ? Math.max(
-        POPOVER_WIDTH / 2 + 8,
-        Math.min(
-          rect.left + (rect.right - rect.left) / 2,
-          window.innerWidth - POPOVER_WIDTH / 2 - 8,
-        ),
-      )
-    : window.innerWidth / 2;
-
-  const anchorPosition = rect
-    ? { top: showBelow ? rect.bottom + 4 : rect.top - 4, left: buttonCenterX }
-    : { top: window.innerHeight / 2, left: window.innerWidth / 2 };
-
-  const transformOrigin = {
-    vertical: rect && !showBelow ? ("bottom" as const) : ("top" as const),
-    horizontal: "center" as const,
-  };
+  // Flip the popover above the hanger when there isn't room below it
+  const rect = anchorEl?.getBoundingClientRect();
+  const showBelow = !rect || window.innerHeight - rect.bottom >= 450;
 
   return (
     <Popover
       open
-      onClose={handleClose}
+      onClose={onClose}
       data-testid="add-component-modal"
-      anchorReference="anchorPosition"
-      anchorPosition={anchorPosition}
-      transformOrigin={transformOrigin}
+      anchorEl={anchorEl}
+      anchorOrigin={{
+        vertical: showBelow ? "bottom" : "top",
+        horizontal: "center",
+      }}
+      transformOrigin={{
+        vertical: showBelow ? "top" : "bottom",
+        horizontal: "center",
+      }}
       disableScrollLock
       slotProps={{
         paper: {
           sx: {
             width: POPOVER_WIDTH,
             maxHeight: "min(480px, 85vh)",
+            mt: showBelow ? "4px" : "-4px",
             display: "flex",
             flexDirection: "column",
             overflow: "hidden",

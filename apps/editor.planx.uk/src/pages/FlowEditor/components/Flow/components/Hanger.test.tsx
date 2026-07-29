@@ -16,6 +16,7 @@ vi.mock("@tanstack/react-router", async () => {
   return {
     ...actual,
     useParams: () => ({ team: "test-team", flow: "test-flow" }),
+    useNavigate: () => vi.fn(),
   };
 });
 
@@ -66,9 +67,6 @@ beforeEach(() => {
       email: "test@example.com",
       defaultTeamId: null,
     } as any,
-    componentSelectorOpen: false,
-    componentSelectorParent: undefined,
-    componentSelectorBefore: undefined,
     contextMenuSource: null,
     contextMenuPosition: null,
   });
@@ -132,12 +130,12 @@ describe("positioned notes", () => {
 });
 
 describe("hanger interactions", () => {
-  it("opens the component selector on click, unchanged", async () => {
+  it("opens the component selector on click", async () => {
     await renderHanger({ parent: "root", before: "node-a" });
 
     fireEvent.click(screen.getByRole("button"));
 
-    expect(useStore.getState().componentSelectorOpen).toBe(true);
+    expect(screen.getByTestId("add-component-modal")).toBeInTheDocument();
   });
 
   it("sets the context menu source to hanger on right-click", async () => {
