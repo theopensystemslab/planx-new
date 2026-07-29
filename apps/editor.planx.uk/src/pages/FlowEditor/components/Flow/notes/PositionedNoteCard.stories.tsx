@@ -22,7 +22,7 @@ const note: FlowNote = {
 };
 
 const meta = {
-  title: "Editor Components/Notes/PositionedNoteCard",
+  title: "Editor Components/Graph/Notes/PositionedNoteCard",
   component: PositionedNoteCard,
 } satisfies Meta<typeof PositionedNoteCard>;
 
@@ -39,7 +39,6 @@ const PositionedNoteCardDemo: React.FC = () => {
       console.log("deleteFlowNote", id);
     },
   });
-
 
   const noteEditorOpen = useStore((state) => state.noteEditorOpen);
 

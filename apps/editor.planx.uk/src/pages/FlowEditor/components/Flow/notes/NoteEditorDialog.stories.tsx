@@ -19,7 +19,7 @@ const note: FlowNote = {
 };
 
 const meta = {
-  title: "Editor Components/Notes/NoteEditorDialog",
+  title: "Editor Components/Graph/Notes/NoteEditorDialog",
   component: NoteEditorDialog,
 } satisfies Meta<typeof NoteEditorDialog>;
 
