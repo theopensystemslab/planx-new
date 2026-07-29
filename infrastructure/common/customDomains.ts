@@ -68,7 +68,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
           cloudFrontState: "legacy-with-validation",
         },
         {
-          name: "epsom-and-ewell",
+          name: "epsom-ewell",
           domain: "planningservices.epsom-ewell.gov.uk",
           cloudFrontState: "shared-final",
         },
@@ -79,12 +79,12 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
           certificateLocation: "pulumiConfig",
         },
         {
-          name: "barking-and-dagenham",
+          name: "lbbd",
           domain: "planningservices.lbbd.gov.uk",
           cloudFrontState: "legacy-with-validation",
         },
         {
-          name: "south-gloucestershire",
+          name: "southglos",
           domain: "planningservices.southglos.gov.uk",
           cloudFrontState: "legacy-with-validation",
         },
@@ -109,22 +109,22 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
           cloudFrontState: "shared-final",
         },
         {
-          name: "coventry-city",
+          name: "coventry",
           domain: "planningservices.coventry.gov.uk",
           cloudFrontState: "validation-only",
         },
         {
-          name: "stockport-metropolitan",
+          name: "stockport",
           domain: "planningservices.stockport.gov.uk",
           cloudFrontState: "shared-final",
         },
         {
-          name: "east-riding-of-yorkshire",
+          name: "eastriding",
           domain: "planningservices.eastriding.gov.uk",
           cloudFrontState: "shared-final",
         },
         {
-          name: "south-staffordshire",
+          name: "sstaffs",
           domain: "planningservices.sstaffs.gov.uk",
           cloudFrontState: "shared-final",
         },
