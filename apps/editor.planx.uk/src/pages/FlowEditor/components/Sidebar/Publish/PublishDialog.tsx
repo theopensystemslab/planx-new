@@ -225,10 +225,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
           </Box>
         </DialogContent>
         <DialogFooterActions>
-          <Button
-            onClick={handleBack}
-            sx={{ backgroundColor: "background.default" }}
-          >
+          <Button onClick={handleBack} variant="contained" color="secondary">
             Back
           </Button>
           <Button
@@ -341,10 +338,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
           )}
         </DialogContent>
         <DialogFooterActions>
-          <Button
-            onClick={handleBack}
-            sx={{ backgroundColor: "background.default" }}
-          >
+          <Button onClick={handleBack} variant="contained" color="secondary">
             Back
           </Button>
           <Button

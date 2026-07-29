@@ -119,7 +119,6 @@ const Template: React.FC = () => {
                     onClick={handleClose}
                     color="secondary"
                     variant="contained"
-                    sx={{ backgroundColor: "background.default" }}
                   >
                     Cancel
                   </Button>

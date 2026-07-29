@@ -128,7 +128,6 @@ export const EmailsUpsertModal = ({
                 onClick={() => setModalState(null)}
                 color="secondary"
                 variant="contained"
-                sx={{ backgroundColor: "background.default" }}
               >
                 Cancel
               </Button>
