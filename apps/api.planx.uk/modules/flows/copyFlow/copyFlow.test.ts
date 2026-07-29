@@ -60,6 +60,14 @@ beforeEach(() => {
       },
     },
   });
+
+  queryMock.mockQuery({
+    name: "GetFlowNotesForCopy",
+    matchOnVariables: false,
+    data: {
+      flow_note_positions: [],
+    },
+  });
 });
 
 const auth = authHeader({ role: "teamEditor" });
@@ -193,6 +201,121 @@ it("inserts copied unique flow data", async () => {
     name: "test (copy)",
     slug: "test-copy",
   };
+
+  await supertest(app)
+    .post("/flows/1/copy")
+    .send(body)
+    .set(auth)
+    .expect(200)
+    .then((res) => {
+      expect(res.body).toEqual(mockCopyFlowResponseInserted);
+    });
+});
+
+it("copies a flow's notes, preserving clone relationships between notes but not to the original flow's notes", async () => {
+  const body = {
+    insert: true,
+    replaceValue: "T3ST1",
+    teamId: 1,
+    name: "test (copy)",
+    slug: "test-copy",
+  };
+
+  queryMock.mockQuery({
+    name: "GetFlowNotesForCopy",
+    matchOnVariables: false,
+    data: {
+      flow_note_positions: [
+        {
+          // a standalone note
+          note_id: "note-a",
+          node_id: "Yh7t91FisE",
+          placement: null,
+          note: { text: "Solo note", color: "#fffdb0" },
+        },
+        {
+          // first of a clone pair - shares note_id "note-b" with the row below
+          note_id: "note-b",
+          node_id: null,
+          placement: { parent: "_root", before: "kNX8Rej9rk" },
+          note: { text: "Cloned note", color: "#ffd6a5" },
+        },
+        {
+          // second of the clone pair
+          note_id: "note-b",
+          node_id: "h8DSw40zNr",
+          placement: null,
+          note: { text: "Cloned note", color: "#ffd6a5" },
+        },
+      ],
+    },
+  });
+
+  // One new flow_note_content row created per unique original note, via its first position
+  queryMock.mockQuery({
+    name: "InsertFlowNotePositionWithContentForCopy",
+    variables: {
+      object: {
+        flow_id: 2,
+        node_id: "Yh7t9T3ST1",
+        placement: null,
+        created_by: "123",
+        note: {
+          data: {
+            text: "Solo note",
+            color: "#fffdb0",
+            created_by: "123",
+            updated_by: "123",
+          },
+        },
+      },
+    },
+    data: {
+      insert_flow_note_positions_one: { note_id: "new-note-a" },
+    },
+  });
+
+  queryMock.mockQuery({
+    name: "InsertFlowNotePositionWithContentForCopy",
+    variables: {
+      object: {
+        flow_id: 2,
+        node_id: null,
+        placement: { parent: "_root", before: "kNX8RT3ST1" },
+        created_by: "123",
+        note: {
+          data: {
+            text: "Cloned note",
+            color: "#ffd6a5",
+            created_by: "123",
+            updated_by: "123",
+          },
+        },
+      },
+    },
+    data: {
+      insert_flow_note_positions_one: { note_id: "new-note-b" },
+    },
+  });
+
+  // The clone pair's second position points at the shared new note, not a new content row
+  queryMock.mockQuery({
+    name: "InsertFlowNotePositionsForCopy",
+    variables: {
+      objects: [
+        {
+          flow_id: 2,
+          node_id: "h8DSwT3ST1",
+          placement: null,
+          created_by: "123",
+          note_id: "new-note-b",
+        },
+      ],
+    },
+    data: {
+      insert_flow_note_positions: { affected_rows: 1 },
+    },
+  });
 
   await supertest(app)
     .post("/flows/1/copy")
