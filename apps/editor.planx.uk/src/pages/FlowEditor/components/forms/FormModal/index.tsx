@@ -12,6 +12,9 @@ import { styled } from "@mui/material/styles";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import type { Option } from "@planx/components/Option/model";
+import type { QuestionWithOptions } from "@planx/components/Question/model";
+import QuestionPublic from "@planx/components/Question/Public";
 import { type BaseNodeData, parseFormValues } from "@planx/components/shared";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { AppErrorBoundary } from "components/Error/AppErrorBoundary";
@@ -28,7 +31,7 @@ import { CloseButton } from "ui/shared/CloseButton";
 import { Switch } from "ui/shared/Switch";
 import { getNodeRoute } from "utils/routeUtils/utils";
 
-import { SLUGS } from "../../../data/types";
+import { fromSlug, SLUGS } from "../../../data/types";
 import { useStore } from "../../../lib/store";
 import ChangeComponentHeader from "./ChangeComponentHeader";
 
@@ -56,6 +59,8 @@ const TabList = styled(Box)(() => ({
 }));
 
 type ModalTab = "configure" | "preview" | "resources";
+
+const noopHandleSubmit = () => undefined;
 
 const MODAL_TABS: {
   label: string;
@@ -170,6 +175,7 @@ const FormModal: React.FC<FormModalProps> = ({
     isTemplatedFrom,
     orderedFlow,
     isClone,
+    childNodesOf,
   ] = useStore((store) => [
     store.addNode,
     store.updateNode,
@@ -179,6 +185,7 @@ const FormModal: React.FC<FormModalProps> = ({
     store.isTemplatedFrom,
     store.orderedFlow,
     store.isClone,
+    store.childNodesOf,
   ]);
 
   const node = id ? flow[id] : undefined;
@@ -335,65 +342,78 @@ const FormModal: React.FC<FormModalProps> = ({
             minHeight: 0,
           }}
         >
-          {activeTab === "configure" && (
-            <>
-              {!handleDelete && (
-                <TextInputToggle type={type} parent={parent} before={before} />
-              )}
-              <AppErrorBoundary>
-                <Component
-                  formikRef={formikRef}
-                  node={node}
-                  {...node?.data}
-                  {...extraProps}
-                  id={id}
-                  disabled={disabled}
-                  handleSubmit={(
-                    data: { data?: Record<string, unknown> },
-                    children:
-                      Array<Record<string, unknown>> | undefined = undefined,
-                  ) => {
-                    // Handle internal portals
-                    if (typeof data === "string" && parent) {
-                      connect(parent, data, { before });
+          <Box sx={{ display: activeTab === "configure" ? "block" : "none" }}>
+            {!handleDelete && (
+              <TextInputToggle type={type} parent={parent} before={before} />
+            )}
+            <AppErrorBoundary>
+              <Component
+                formikRef={formikRef}
+                node={node}
+                {...node?.data}
+                {...extraProps}
+                id={id}
+                disabled={disabled}
+                handleSubmit={(
+                  data: { data?: Record<string, unknown> },
+                  children:
+                    Array<Record<string, unknown>> | undefined = undefined,
+                ) => {
+                  // Handle internal portals
+                  if (typeof data === "string" && parent) {
+                    connect(parent, data, { before });
+                  } else {
+                    const parsedData = parseFormValues(Object.entries(data));
+                    const parsedChildren =
+                      children?.map((o) =>
+                        parseFormValues(Object.entries(o)),
+                      ) || undefined;
+
+                    if (handleDelete) {
+                      updateNode(
+                        { id, ...parsedData },
+                        { children: parsedChildren },
+                      );
                     } else {
-                      const parsedData = parseFormValues(Object.entries(data));
-                      const parsedChildren =
-                        children?.map((o) =>
-                          parseFormValues(Object.entries(o)),
-                        ) || undefined;
-
-                      if (handleDelete) {
-                        updateNode(
-                          { id, ...parsedData },
-                          { children: parsedChildren },
-                        );
-                      } else {
-                        addNode(parsedData, {
-                          children: parsedChildren,
-                          parent,
-                          before,
-                        });
-                      }
+                      addNode(parsedData, {
+                        children: parsedChildren,
+                        parent,
+                        before,
+                      });
                     }
+                  }
 
-                    navigate({
-                      to: "/app/$team/$flow",
-                      params: {
-                        team: teamSlug,
-                        flow: flowSlug,
-                      },
-                    });
-                  }}
-                />
-              </AppErrorBoundary>
-            </>
-          )}
+                  navigate({
+                    to: "/app/$team/$flow",
+                    params: {
+                      team: teamSlug,
+                      flow: flowSlug,
+                    },
+                  });
+                }}
+              />
+            </AppErrorBoundary>
+          </Box>
           {activeTab === "preview" && (
-            <Box sx={{ p: 2.5 }}>
-              <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                Preview coming soon.
-              </Typography>
+            <Box
+              sx={{ p: 2.5, height: "100%", backgroundColor: "common.white" }}
+            >
+              {fromSlug(type) === TYPES.Question && id ? (
+                <AppErrorBoundary>
+                  <QuestionPublic
+                    {...((formikRef.current?.values ??
+                      node?.data ??
+                      {}) as unknown as QuestionWithOptions)}
+                    id={id}
+                    options={childNodesOf(id) as Option[]}
+                    handleSubmit={noopHandleSubmit}
+                  />
+                </AppErrorBoundary>
+              ) : (
+                <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                  Preview coming soon.
+                </Typography>
+              )}
             </Box>
           )}
           {activeTab === "resources" && (
