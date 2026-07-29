@@ -36,6 +36,11 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   // Target all modal sections (the direct child is the backdrop, hence the double child selector)
   "& > * > *": {
     backgroundColor: theme.palette.background.paper,
+    // Matches MUI Dialog's own default paper max-height
+    height: "calc(100vh - 64px)",
+    maxHeight: "calc(100vh - 64px)",
+    display: "flex",
+    flexDirection: "column",
   },
 }));
 
@@ -320,7 +325,16 @@ const FormModal: React.FC<FormModalProps> = ({
             ))}
           </Tabs>
         </TabList>
-        <DialogContent dividers sx={{ p: 0, position: "relative" }}>
+        <DialogContent
+          dividers
+          sx={{
+            p: 0,
+            position: "relative",
+            flexGrow: 1,
+            overflowY: "auto",
+            minHeight: 0,
+          }}
+        >
           {activeTab === "configure" && (
             <>
               {!handleDelete && (
@@ -383,7 +397,7 @@ const FormModal: React.FC<FormModalProps> = ({
             </Box>
           )}
           {activeTab === "resources" && (
-            <Box sx={{ height: "70vh" }}>
+            <Box sx={{ height: "100%" }}>
               <NotionEmbed
                 page="howToUseComponent"
                 title="How to use this component"
