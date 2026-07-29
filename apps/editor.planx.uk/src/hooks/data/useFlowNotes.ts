@@ -1,6 +1,5 @@
 import { gql, useSubscription } from "@apollo/client";
 import { useStore } from "pages/FlowEditor/lib/store";
-import type { SnakeCasedProperties } from "type-fest";
 
 /** Anchored immediately after a sibling node */
 export interface SiblingAnchoredPlacement {
@@ -25,7 +24,10 @@ export type NotePlacement =
   SiblingAnchoredPlacement | ContainerAnchoredPlacement;
 
 interface FlowNoteBase {
-  id: string;
+  /** Identifies this specific placement/clone instance - used for deletion */
+  positionId: string;
+  /** The same across every clone of this note - used for updating/cloning/copying */
+  contentId: string;
   flowId: string;
   text: string;
   color: string;
@@ -46,11 +48,10 @@ export interface PositionedNote extends FlowNoteBase {
 }
 
 export type FlowNote = AttachedNote | PositionedNote;
-type FlowNoteRow = SnakeCasedProperties<FlowNote>;
 
 const GET_FLOW_NOTES = gql`
   subscription GetFlowNotes($flowId: uuid!) {
-    flow_notes(
+    flow_note_positions(
       where: { flow_id: { _eq: $flowId } }
       order_by: { created_at: asc, id: asc }
     ) {
@@ -58,30 +59,50 @@ const GET_FLOW_NOTES = gql`
       flow_id
       node_id
       placement
-      text
-      color
-      created_by
-      updated_by
-      created_at
-      updated_at
+      note {
+        id
+        text
+        color
+        created_by
+        updated_by
+        created_at
+        updated_at
+      }
     }
   }
 `;
 
-interface QueryResult {
-  flow_notes: FlowNoteRow[];
+interface FlowNotePositionRow {
+  id: string;
+  flow_id: string;
+  node_id: string | null;
+  placement: NotePlacement | null;
+  note: {
+    id: string;
+    text: string;
+    color: string;
+    created_by: number;
+    updated_by: number;
+    created_at: string;
+    updated_at: string;
+  };
 }
 
-const toFlowNote = (row: FlowNoteRow): FlowNote => {
+interface QueryResult {
+  flow_note_positions: FlowNotePositionRow[];
+}
+
+const toFlowNote = (row: FlowNotePositionRow): FlowNote => {
   const base = {
-    id: row.id,
+    positionId: row.id,
+    contentId: row.note.id,
     flowId: row.flow_id,
-    text: row.text,
-    color: row.color,
-    createdBy: row.created_by,
-    updatedBy: row.updated_by,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at,
+    text: row.note.text,
+    color: row.note.color,
+    createdBy: row.note.created_by,
+    updatedBy: row.note.updated_by,
+    createdAt: row.note.created_at,
+    updatedAt: row.note.updated_at,
   };
 
   return row.node_id
@@ -106,7 +127,7 @@ export const useFlowNotes = (): UseFlowNotesResult => {
     },
   );
 
-  const notes = (data?.flow_notes ?? []).map(toFlowNote);
+  const notes = (data?.flow_note_positions ?? []).map(toFlowNote);
 
   return { notes, loading, error };
 };

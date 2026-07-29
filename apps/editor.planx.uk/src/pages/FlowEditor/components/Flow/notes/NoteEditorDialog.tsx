@@ -61,7 +61,7 @@ export const NoteEditorDialog: React.FC<NoteEditorDialogProps> = ({
     onSubmit: async ({ text }) => {
       try {
         if (isEditing && note) {
-          await updateFlowNote(note.id, { text });
+          await updateFlowNote(note.contentId, { text });
         } else {
           await createFlowNote({ nodeId, placement, text });
         }
@@ -75,7 +75,7 @@ export const NoteEditorDialog: React.FC<NoteEditorDialogProps> = ({
   const handleDelete = async () => {
     if (!note) return;
     try {
-      await deleteFlowNote(note.id);
+      await deleteFlowNote(note.positionId);
       onClose();
     } catch {
       toast.error("Failed to delete note, try again");

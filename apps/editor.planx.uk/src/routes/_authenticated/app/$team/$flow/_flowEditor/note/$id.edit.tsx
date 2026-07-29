@@ -16,7 +16,7 @@ function EditNoteModal() {
 
   const note = useMemo(() => {
     for (const notes of [...attached.values(), ...positioned.values()]) {
-      const found = notes.find((note) => note.id === id);
+      const found = notes.find((note) => note.positionId === id);
       if (found) return found;
     }
     return undefined;

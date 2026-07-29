@@ -244,6 +244,11 @@ export type Relationships = {
    */
   before?: NodeId;
   self?: NodeId;
+  /**
+   * The shared content id of a positioned note
+   * set when right-clicking a PositionedNoteCard, used for Clone/Copy actions
+   */
+  contentId?: string;
 };
 
 export const add =

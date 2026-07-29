@@ -4,29 +4,28 @@ import { useStore } from "pages/FlowEditor/lib/store";
 
 import { CREATE_FLOW_NOTE_POSITION } from "./mutations";
 
-export interface CreateFlowNoteInput {
+export interface PasteFlowNoteTarget {
   nodeId?: string;
   placement?: NotePlacement;
-  text: string;
 }
 
 interface CreateFlowNotePositionResult {
   insert_flow_note_positions_one: { id: string } | null;
 }
 
-export const useCreateFlowNote = () => {
+export const usePasteFlowNoteCopy = () => {
   const flowId = useStore((state) => state.id);
   const [mutate, mutationState] = useMutation<CreateFlowNotePositionResult>(
     CREATE_FLOW_NOTE_POSITION,
   );
 
-  const createFlowNote = async ({
+  const pasteFlowNoteCopy = async ({
     nodeId,
     placement,
-    text,
-  }: CreateFlowNoteInput) => {
+  }: PasteFlowNoteTarget) => {
     const userId = useStore.getState().user?.id;
-    if (!flowId || !userId) return undefined;
+    const copied = useStore.getState().getCopiedFlowNote();
+    if (!flowId || !userId || !copied) return undefined;
 
     const { data } = await mutate({
       variables: {
@@ -37,7 +36,8 @@ export const useCreateFlowNote = () => {
           created_by: userId,
           note: {
             data: {
-              text,
+              text: copied.text,
+              color: copied.color,
               created_by: userId,
               updated_by: userId,
             },
@@ -49,5 +49,5 @@ export const useCreateFlowNote = () => {
     return data?.insert_flow_note_positions_one?.id;
   };
 
-  return { createFlowNote, ...mutationState };
+  return { pasteFlowNoteCopy, ...mutationState };
 };

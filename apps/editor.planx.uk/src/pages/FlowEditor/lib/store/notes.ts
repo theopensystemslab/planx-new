@@ -8,16 +8,16 @@ import type { StateCreator } from "zustand";
 import type { AuthStore } from "./auth";
 import type { SharedStore } from "./shared";
 
-interface FlowNoteRowForReposition {
+interface FlowNotePositionRowForReposition {
   id: string;
   node_id: string | null;
   placement: NotePlacement | null;
   created_by: number;
 }
 
-const GET_FLOW_NOTES_FOR_REPOSITION = gql`
-  query GetFlowNotesForReposition($flowId: uuid!) {
-    flow_notes(where: { flow_id: { _eq: $flowId } }) {
+const GET_FLOW_NOTE_POSITIONS_FOR_REPOSITION = gql`
+  query GetFlowNotePositionsForReposition($flowId: uuid!) {
+    flow_note_positions(where: { flow_id: { _eq: $flowId } }) {
       id
       node_id
       placement
@@ -26,17 +26,17 @@ const GET_FLOW_NOTES_FOR_REPOSITION = gql`
   }
 `;
 
-const DELETE_FLOW_NOTES = gql`
-  mutation DeleteFlowNotes($ids: [uuid!]!) {
-    delete_flow_notes(where: { id: { _in: $ids } }) {
+const DELETE_FLOW_NOTE_POSITIONS = gql`
+  mutation DeleteFlowNotePositions($ids: [uuid!]!) {
+    delete_flow_note_positions(where: { id: { _in: $ids } }) {
       affected_rows
     }
   }
 `;
 
-const REANCHOR_FLOW_NOTE = gql`
-  mutation ReanchorFlowNote($id: uuid!, $placement: jsonb!) {
-    update_flow_notes_by_pk(
+const REANCHOR_FLOW_NOTE_POSITION = gql`
+  mutation ReanchorFlowNotePosition($id: uuid!, $placement: jsonb!) {
+    update_flow_note_positions_by_pk(
       pk_columns: { id: $id }
       _set: { placement: $placement }
     ) {
@@ -45,7 +45,24 @@ const REANCHOR_FLOW_NOTE = gql`
   }
 `;
 
+export interface CopiedFlowNoteContent {
+  text: string;
+  color: string;
+}
+
 export interface NotesStore {
+  /**
+   * Clipboard: cloning a note means clones will be linked to the original note, so editing one will affect the other.
+   */
+  cloneFlowNote: (noteContentId: string) => void;
+  getClonedFlowNoteId: () => string | null;
+
+  /**
+   * Clipboard: copying a note means the copied note will not be linked to the original note, so editing one will not affect the other.
+   */
+  setCopiedFlowNote: (content: CopiedFlowNoteContent) => void;
+  getCopiedFlowNote: () => CopiedFlowNoteContent | undefined;
+
   /**
    * Called after a node is removed from the flow, with the flow as it was immediately before and immediately after.
    */
@@ -71,6 +88,23 @@ export const notesStore: StateCreator<
   [],
   NotesStore
 > = (_set, get) => ({
+  cloneFlowNote: (noteContentId) => {
+    localStorage.setItem("clonedFlowNoteId", noteContentId);
+    localStorage.removeItem("copiedFlowNote");
+  },
+
+  getClonedFlowNoteId: () => localStorage.getItem("clonedFlowNoteId"),
+
+  setCopiedFlowNote: (content) => {
+    localStorage.setItem("copiedFlowNote", JSON.stringify(content));
+    localStorage.removeItem("clonedFlowNoteId");
+  },
+
+  getCopiedFlowNote: () => {
+    const payload = localStorage.getItem("copiedFlowNote");
+    return payload ? JSON.parse(payload) : undefined;
+  },
+
   repositionNotesForDeletedNodes: async (
     deletedNodeIds,
     flowBeforeDelete,
@@ -83,9 +117,9 @@ export const notesStore: StateCreator<
     const deleted = new Set(deletedNodeIds);
 
     const { data } = await client.query<{
-      flow_notes: FlowNoteRowForReposition[];
+      flow_note_positions: FlowNotePositionRowForReposition[];
     }>({
-      query: GET_FLOW_NOTES_FOR_REPOSITION,
+      query: GET_FLOW_NOTE_POSITIONS_FOR_REPOSITION,
       variables: { flowId },
       fetchPolicy: "network-only",
     });
@@ -93,7 +127,7 @@ export const notesStore: StateCreator<
     const toDelete: string[] = [];
     const toReanchor: Array<{ id: string; placement: NotePlacement }> = [];
 
-    for (const note of data.flow_notes) {
+    for (const note of data.flow_note_positions) {
       if (note.node_id) {
         if (deleted.has(note.node_id)) toDelete.push(note.id);
         continue;
@@ -134,14 +168,14 @@ export const notesStore: StateCreator<
       ...(toDelete.length > 0
         ? [
             client.mutate({
-              mutation: DELETE_FLOW_NOTES,
+              mutation: DELETE_FLOW_NOTE_POSITIONS,
               variables: { ids: toDelete },
             }),
           ]
         : []),
       ...toReanchor.map(({ id, placement }) =>
         client.mutate({
-          mutation: REANCHOR_FLOW_NOTE,
+          mutation: REANCHOR_FLOW_NOTE_POSITION,
           variables: { id, placement },
         }),
       ),
@@ -158,14 +192,14 @@ export const notesStore: StateCreator<
     if (!flowId || !userId) return;
 
     const { data } = await client.query<{
-      flow_notes: FlowNoteRowForReposition[];
+      flow_note_positions: FlowNotePositionRowForReposition[];
     }>({
-      query: GET_FLOW_NOTES_FOR_REPOSITION,
+      query: GET_FLOW_NOTE_POSITIONS_FOR_REPOSITION,
       variables: { flowId },
       fetchPolicy: "network-only",
     });
 
-    const notesToReposition = (data?.flow_notes ?? []).filter(
+    const notesToReposition = (data?.flow_note_positions ?? []).filter(
       (note) =>
         note.created_by === userId &&
         note.placement?.parent === oldParent &&
@@ -175,7 +209,7 @@ export const notesStore: StateCreator<
     await Promise.all(
       notesToReposition.map((note) =>
         client.mutate({
-          mutation: REANCHOR_FLOW_NOTE,
+          mutation: REANCHOR_FLOW_NOTE_POSITION,
           variables: {
             id: note.id,
             placement: {

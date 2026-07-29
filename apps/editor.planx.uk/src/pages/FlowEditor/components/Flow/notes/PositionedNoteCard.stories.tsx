@@ -15,7 +15,8 @@ import React from "react";
 import { PositionedNoteCard } from "./PositionedNoteCard";
 
 const note: FlowNote = {
-  id: "note-1",
+  positionId: "note-1",
+  contentId: "note-content-1",
   flowId: "flow-1",
   nodeId: null,
   placement: { parent: "_root", before: "node-a", parentIsContainer: true },
@@ -29,7 +30,8 @@ const note: FlowNote = {
 
 const longNote: FlowNote = {
   ...note,
-  id: "note-2",
+  positionId: "note-2",
+  contentId: "note-content-2",
   text: "This note has a lot more text in it than usual, so long in fact that it must be truncated with ellipses and line clamping, the full version is visible in the note editor.",
 };
 
@@ -42,9 +44,10 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-const PositionedNoteCardDemo: React.FC<{ note: FlowNote }> = ({
-  note: noteToRender,
-}) => {
+const PositionedNoteCardDemo: React.FC<{
+  note: FlowNote;
+  isClone?: boolean;
+}> = ({ note: noteToRender, isClone }) => {
   // disable the edit modal by registering a no-op child route for it
   const rootRoute = createRootRoute();
   const authenticatedRoute = createRoute({
@@ -78,7 +81,7 @@ const PositionedNoteCardDemo: React.FC<{ note: FlowNote }> = ({
           <li className="hanger">
             <button type="button" />
           </li>
-          <PositionedNoteCard note={noteToRender} />
+          <PositionedNoteCard note={noteToRender} isClone={isClone} />
           <li className="hanger">
             <button type="button" />
           </li>
@@ -121,4 +124,9 @@ export const Default = {
 export const LongText = {
   args: { note: longNote },
   render: () => <PositionedNoteCardDemo note={longNote} />,
+} satisfies Story;
+
+export const Cloned = {
+  args: { note, isClone: true },
+  render: () => <PositionedNoteCardDemo note={note} isClone />,
 } satisfies Story;

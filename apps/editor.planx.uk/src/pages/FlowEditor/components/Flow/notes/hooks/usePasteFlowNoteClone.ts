@@ -4,29 +4,28 @@ import { useStore } from "pages/FlowEditor/lib/store";
 
 import { CREATE_FLOW_NOTE_POSITION } from "./mutations";
 
-export interface CreateFlowNoteInput {
+export interface PasteFlowNoteTarget {
   nodeId?: string;
   placement?: NotePlacement;
-  text: string;
 }
 
 interface CreateFlowNotePositionResult {
   insert_flow_note_positions_one: { id: string } | null;
 }
 
-export const useCreateFlowNote = () => {
+export const usePasteFlowNoteClone = () => {
   const flowId = useStore((state) => state.id);
   const [mutate, mutationState] = useMutation<CreateFlowNotePositionResult>(
     CREATE_FLOW_NOTE_POSITION,
   );
 
-  const createFlowNote = async ({
+  const pasteFlowNoteClone = async ({
     nodeId,
     placement,
-    text,
-  }: CreateFlowNoteInput) => {
+  }: PasteFlowNoteTarget) => {
     const userId = useStore.getState().user?.id;
-    if (!flowId || !userId) return undefined;
+    const noteContentId = useStore.getState().getClonedFlowNoteId();
+    if (!flowId || !userId || !noteContentId) return undefined;
 
     const { data } = await mutate({
       variables: {
@@ -35,13 +34,7 @@ export const useCreateFlowNote = () => {
           node_id: nodeId ?? null,
           placement: placement ?? null,
           created_by: userId,
-          note: {
-            data: {
-              text,
-              created_by: userId,
-              updated_by: userId,
-            },
-          },
+          note_id: noteContentId,
         },
       },
     });
@@ -49,5 +42,5 @@ export const useCreateFlowNote = () => {
     return data?.insert_flow_note_positions_one?.id;
   };
 
-  return { createFlowNote, ...mutationState };
+  return { pasteFlowNoteClone, ...mutationState };
 };

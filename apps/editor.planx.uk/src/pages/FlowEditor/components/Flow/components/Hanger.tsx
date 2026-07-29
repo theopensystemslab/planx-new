@@ -46,7 +46,7 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
     ],
   );
 
-  const { positioned } = useFlowNotesContext();
+  const { positioned, clonedContentIds } = useFlowNotesContext();
   const notes = [...(positioned.get(placementKey(parent, before)) ?? [])].sort(
     (a, b) => a.createdAt.localeCompare(b.createdAt),
   );
@@ -104,9 +104,12 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
       {showNoteCards &&
         notes.map((note) => (
           /* decorative only - connector line before each note, oldest to newest */
-          <React.Fragment key={note.id}>
+          <React.Fragment key={note.positionId}>
             <li className="hanger note-connector" aria-hidden="true" />
-            <PositionedNoteCard note={note} />
+            <PositionedNoteCard
+              note={note}
+              isClone={clonedContentIds.has(note.contentId)}
+            />
           </React.Fragment>
         ))}
       <li

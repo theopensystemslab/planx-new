@@ -21,7 +21,8 @@ vi.mock("@tanstack/react-router", async () => {
 
 const makeNote = (overrides: Partial<FlowNote> = {}): FlowNote =>
   ({
-    id: "note-1",
+    positionId: "note-1",
+    contentId: "note-content-1",
     flowId: "flow-1",
     nodeId: "node-a",
     placement: null,
@@ -37,10 +38,16 @@ const makeNote = (overrides: Partial<FlowNote> = {}): FlowNote =>
 const renderWithNotes = async (
   nodeId: string,
   attached: Map<string, FlowNote[]>,
+  clonedContentIds: Set<string> = new Set(),
 ) =>
   setup(
     <FlowNotesContext.Provider
-      value={{ attached, positioned: new Map(), loading: false }}
+      value={{
+        attached,
+        positioned: new Map(),
+        loading: false,
+        clonedContentIds,
+      }}
     >
       <AttachedNotes nodeId={nodeId} />
     </FlowNotesContext.Provider>,
@@ -84,8 +91,8 @@ describe("AttachedNotes", () => {
       [
         "node-a",
         [
-          makeNote({ id: "note-1", text: "First note" }),
-          makeNote({ id: "note-2", text: "Second note" }),
+          makeNote({ positionId: "note-1", text: "First note" }),
+          makeNote({ positionId: "note-2", text: "Second note" }),
         ],
       ],
     ]);
@@ -98,7 +105,10 @@ describe("AttachedNotes", () => {
 
   it("navigates to the note's edit route when clicked", async () => {
     const attached = new Map([
-      ["node-a", [makeNote({ id: "note-1", text: "Remember to check this" })]],
+      [
+        "node-a",
+        [makeNote({ positionId: "note-1", text: "Remember to check this" })],
+      ],
     ]);
 
     await renderWithNotes("node-a", attached);
@@ -111,5 +121,33 @@ describe("AttachedNotes", () => {
         params: { team: "test-team", flow: "test-flow", id: "note-1" },
       }),
     );
+  });
+
+  it("marks a note as a clone when its contentId is shared with another position", async () => {
+    const attached = new Map([
+      ["node-a", [makeNote({ contentId: "shared-content" })]],
+    ]);
+
+    const { container } = await renderWithNotes(
+      "node-a",
+      attached,
+      new Set(["shared-content"]),
+    );
+
+    expect(
+      container.querySelector(".attached-note-wrapper.isClone"),
+    ).toBeInTheDocument();
+  });
+
+  it("does not mark a note as a clone when its contentId is unique", async () => {
+    const attached = new Map([
+      ["node-a", [makeNote({ contentId: "unique-content" })]],
+    ]);
+
+    const { container } = await renderWithNotes("node-a", attached);
+
+    expect(
+      container.querySelector(".attached-note-wrapper.isClone"),
+    ).not.toBeInTheDocument();
   });
 });

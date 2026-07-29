@@ -373,6 +373,15 @@ $fontMonospace: "Source Code Pro", monospace;
     }
   }
 
+  // Wraps .attached-note so the clone outline (its own ::before) doesn't collide with the paper-fold pseudo-elements above
+  & .attached-note-wrapper {
+    position: relative;
+
+    &.isClone::before {
+      @include cloneStyle;
+    }
+  }
+
   & .card-tag {
     &.automation {
       width: 100%;
@@ -624,6 +633,12 @@ $fontMonospace: "Source Code Pro", monospace;
 // positioned note i.e. rendered on a container line
 .note-card {
   align-self: center;
+  position: relative;
+  z-index: 1;
+
+  &.isClone::before {
+    @include cloneStyle;
+  }
 
   > button {
     position: relative;
