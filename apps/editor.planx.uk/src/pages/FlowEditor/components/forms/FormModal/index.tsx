@@ -22,6 +22,7 @@ import {
 } from "pages/FlowEditor/utils";
 import React, { useMemo, useState } from "react";
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
+import NotionEmbed from "ui/editor/NotionEmbed";
 import StyledTab from "ui/editor/StyledTab";
 import { CloseButton } from "ui/shared/CloseButton";
 import { Switch } from "ui/shared/Switch";
@@ -382,10 +383,11 @@ const FormModal: React.FC<FormModalProps> = ({
             </Box>
           )}
           {activeTab === "resources" && (
-            <Box sx={{ p: 2.5 }}>
-              <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                Resources coming soon.
-              </Typography>
+            <Box sx={{ height: "70vh" }}>
+              <NotionEmbed
+                page="howToUseComponent"
+                title="How to use this component"
+              />
             </Box>
           )}
         </DialogContent>
