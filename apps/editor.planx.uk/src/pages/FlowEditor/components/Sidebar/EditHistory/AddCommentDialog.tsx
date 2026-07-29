@@ -84,7 +84,6 @@ export const AddCommentDialog = ({
             color="secondary"
             variant="contained"
             onClick={() => setDialogOpen(false)}
-            sx={{ backgroundColor: "background.default" }}
           >
             Back
           </Button>

@@ -381,7 +381,6 @@ const FormModal: React.FC<FormModalProps> = ({
                   });
                 }}
                 disabled={disabled}
-                sx={{ backgroundColor: "background.default" }}
               >
                 Make unique
               </Button>
