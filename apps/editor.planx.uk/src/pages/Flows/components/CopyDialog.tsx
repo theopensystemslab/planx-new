@@ -7,6 +7,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import type { FormikConfig } from "formik";
 import { Form, Formik } from "formik";
 import { useToast } from "hooks/useToast";
+import { client } from "lib/graphql";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { URLPrefix } from "ui/editor/URLPrefix";
@@ -14,6 +15,7 @@ import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import { slugify } from "utils";
 
+import { GET_FLOWS } from "../queries";
 import { useCreateFlow } from "./AddFlow/hooks/useCreateFlow";
 import type { CreateFlow } from "./AddFlow/types";
 import { validationSchema } from "./AddFlow/types";
@@ -54,6 +56,7 @@ export const CopyDialog: React.FC<Props> = ({
   ) => {
     createFlow(values, {
       onSuccess: () => {
+        client.refetchQueries({ include: [GET_FLOWS] });
         handleClose();
         toast.success(`Created new flow "${values.flow.name}"`);
       },
