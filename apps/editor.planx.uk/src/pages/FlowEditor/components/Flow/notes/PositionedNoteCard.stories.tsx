@@ -11,6 +11,8 @@ import {
 } from "@tanstack/react-router";
 import type { FlowNote } from "hooks/data/useFlowNotes";
 import React from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 import { PositionedNoteCard } from "./PositionedNoteCard";
 
@@ -113,7 +115,11 @@ const PositionedNoteCardDemo: React.FC<{
     }),
   });
 
-  return <RouterProvider router={router} />;
+  return (
+    <DndProvider backend={HTML5Backend}>
+      <RouterProvider router={router} />
+    </DndProvider>
+  );
 };
 
 export const Default = {

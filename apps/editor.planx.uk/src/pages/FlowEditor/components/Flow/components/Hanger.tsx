@@ -13,6 +13,7 @@ import { useDragLayer, useDrop } from "react-dnd";
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
 import { useFlowNotesContext } from "../notes/FlowNotesContext";
+import { useMoveFlowNotePosition } from "../notes/hooks/useMoveFlowNotePosition";
 import { placementKey } from "../notes/lib/partitionNotes";
 import { PositionedNoteCard } from "../notes/PositionedNoteCard";
 
@@ -28,7 +29,12 @@ interface Item {
   text: string;
 }
 
-const DROPPABLE_TYPES = ["DECISION", "PORTAL", "PAGE"];
+interface NoteItem {
+  positionId: string;
+  text: string;
+}
+
+const DROPPABLE_TYPES = ["DECISION", "PORTAL", "PAGE", "NOTE"];
 
 const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   parent = getParentId(parent);
@@ -45,6 +51,7 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
       state.showNotes,
     ],
   );
+  const { moveFlowNotePosition } = useMoveFlowNotePosition();
 
   const { positioned, clonedContentIds } = useFlowNotesContext();
   const notes = [...(positioned.get(placementKey(parent, before)) ?? [])].sort(
@@ -71,8 +78,13 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
 
   const [{ isOver, canDrop, item }, drop] = useDrop({
     accept: DROPPABLE_TYPES,
-    drop: (item: Item) => {
-      moveNode(item.id, item.parent, before, parent);
+    drop: (item: Item | NoteItem, monitor) => {
+      if (monitor.getItemType() === "NOTE") {
+        moveFlowNotePosition((item as NoteItem).positionId, parent, before);
+      } else {
+        const nodeItem = item as Item;
+        moveNode(nodeItem.id, nodeItem.parent, before, parent);
+      }
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
@@ -81,7 +93,7 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
     }),
   });
 
-  // Highlight every valid hanger as a drop target while a node is being dragged on the canvas
+  // Highlight every valid hanger as a drop target while a node or note is being dragged on the canvas
   const isDropTargetVisible = useDragLayer(
     (monitor) =>
       monitor.isDragging() &&

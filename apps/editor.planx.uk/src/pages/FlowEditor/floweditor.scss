@@ -640,6 +640,13 @@ $fontMonospace: "Source Code Pro", monospace;
     @include cloneStyle;
   }
 
+  &.isDragging {
+    opacity: 0.5;
+    > button {
+      border-style: dashed;
+    }
+  }
+
   > button {
     position: relative;
     display: inline-block;
