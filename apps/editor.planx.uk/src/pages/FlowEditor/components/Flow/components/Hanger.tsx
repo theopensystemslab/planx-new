@@ -47,7 +47,9 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   );
 
   const { positioned } = useFlowNotesContext();
-  const notes = positioned.get(placementKey(parent, before)) ?? [];
+  const notes = [...(positioned.get(placementKey(parent, before)) ?? [])].sort(
+    (a, b) => a.createdAt.localeCompare(b.createdAt),
+  );
 
   // When working in a templated flow, if any internal portal is marked as "isTemplatedNode", then the Hanger should be visible to add children
   const indexedParent = orderedFlow?.find(({ id }) => id === parent);
@@ -99,12 +101,14 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
 
   return (
     <>
-      {showNoteCards && (
-        /* decoartive only - connector between parent node and note*/
-        <li className="hanger note-connector" aria-hidden="true" />
-      )}
       {showNoteCards &&
-        notes.map((note) => <PositionedNoteCard key={note.id} note={note} />)}
+        notes.map((note) => (
+          /* decorative only - connector line before each note, oldest to newest */
+          <React.Fragment key={note.id}>
+            <li className="hanger note-connector" aria-hidden="true" />
+            <PositionedNoteCard note={note} />
+          </React.Fragment>
+        ))}
       <li
         className={classnames("hanger", {
           hidden: isHidden,

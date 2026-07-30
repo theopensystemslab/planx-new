@@ -127,6 +127,43 @@ describe("positioned notes", () => {
       container.querySelector("li.note-connector"),
     ).not.toBeInTheDocument();
   });
+
+  it("orders multiple notes on the same hanger by createdAt ascending, with a connector before each", async () => {
+    const positioned = new Map([
+      [
+        placementKey("root", "node-a"),
+        [
+          makeNote({
+            id: "note-newest",
+            text: "Newest",
+            createdAt: "2026-01-03T00:00:00Z",
+          }),
+          makeNote({
+            id: "note-oldest",
+            text: "Oldest",
+            createdAt: "2026-01-01T00:00:00Z",
+          }),
+          makeNote({
+            id: "note-middle",
+            text: "Middle",
+            createdAt: "2026-01-02T00:00:00Z",
+          }),
+        ],
+      ],
+    ]);
+
+    const { container } = await renderHanger(
+      { parent: "root", before: "node-a" },
+      positioned,
+    );
+
+    const renderedTexts = Array.from(
+      container.querySelectorAll(".note-card .note-text"),
+    ).map((el) => el.textContent);
+    expect(renderedTexts).toEqual(["Oldest", "Middle", "Newest"]);
+
+    expect(container.querySelectorAll("li.note-connector")).toHaveLength(3);
+  });
 });
 
 describe("hanger interactions", () => {
