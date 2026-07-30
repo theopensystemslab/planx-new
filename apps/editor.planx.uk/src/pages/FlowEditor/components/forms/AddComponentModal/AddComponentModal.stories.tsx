@@ -1,9 +1,8 @@
 import Paper from "@mui/material/Paper";
 import type { Meta, StoryObj } from "@storybook/tanstack-react";
 
-import AddComponentModal, {
-  AddComponentModalContent,
-} from "../AddComponentModal";
+import AddComponentModal from "../AddComponentModal";
+import { ComponentsTab } from "./ComponentsTab";
 
 const meta: Meta<typeof AddComponentModal> = {
   title: "Editor Components/Modal/AddComponentModal",
@@ -27,7 +26,7 @@ export const Default: Story = {
         borderColor: "divider",
       }}
     >
-      <AddComponentModalContent onSelect={() => {}} />
+      <ComponentsTab onSelect={() => {}} />
     </Paper>
   ),
 };

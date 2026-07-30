@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import ComponentTypeHeader from "ui/editor/ComponentTypeHeader";
 
 import { fromSlug } from "../../data/types";
-import { AddComponentModalContent } from "./AddComponentModal";
+import { ComponentsTab } from "./AddComponentModal/ComponentsTab";
 
 interface Props {
   type: string;
@@ -65,7 +65,7 @@ const ChangeComponentHeader: React.FC<Props> = ({
           },
         }}
       >
-        <AddComponentModalContent onSelect={handleSelect} />
+        <ComponentsTab onSelect={handleSelect} />
       </Popover>
     </>
   );
