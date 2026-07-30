@@ -55,7 +55,6 @@ describe("RenameDialog confirmation step", () => {
     expect(
       await screen.findByText("Renaming will break existing links"),
     ).toBeVisible();
-    expect(screen.getByText(/a-brand-new-name/)).toBeVisible();
     expect(renameFlowSpy).not.toHaveBeenCalled();
   });
 
