@@ -5,7 +5,10 @@ import { fromSlug } from "pages/FlowEditor/data/types";
 import React, { useState } from "react";
 import ComponentTypeHeader from "ui/editor/ComponentTypeHeader";
 
-import { ComponentsTab } from "../AddComponentModal/ComponentsTab";
+import {
+  componentListFrameSx,
+  ComponentsTab,
+} from "../AddComponentModal/ComponentsTab";
 
 interface Props {
   type: string;
@@ -53,15 +56,7 @@ const ChangeComponentHeader: React.FC<Props> = ({
         disableScrollLock
         slotProps={{
           paper: {
-            sx: {
-              width: 300,
-              maxHeight: "min(480px, 85vh)",
-              display: "flex",
-              flexDirection: "column",
-              overflow: "hidden",
-              border: 1,
-              borderColor: "divider",
-            },
+            sx: componentListFrameSx,
           },
         }}
       >

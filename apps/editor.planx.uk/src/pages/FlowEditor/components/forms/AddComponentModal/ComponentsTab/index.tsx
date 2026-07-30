@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import type { SxProps, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -7,6 +8,21 @@ import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import type { Category, ComponentItem } from "./componentData";
 import { ALL_CATEGORIES, ALL_ITEMS } from "./componentData";
 import { ComponentRow } from "./ComponentRow";
+
+export const COMPONENT_LIST_WIDTH = 300;
+
+/**
+ * Shared frame for the component list wherever it's rendered (both popovers + Story)
+ */
+export const componentListFrameSx = {
+  width: COMPONENT_LIST_WIDTH,
+  maxHeight: "min(480px, 85vh)",
+  display: "flex",
+  flexDirection: "column",
+  overflow: "hidden",
+  border: 1,
+  borderColor: "divider",
+} satisfies SxProps<Theme>;
 
 interface Props {
   onSelect: (slug: string) => void;

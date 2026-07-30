@@ -4,9 +4,7 @@ import React, { useCallback } from "react";
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
 import { getNodeRoute } from "utils/routeUtils/utils";
 
-import { ComponentsTab } from "./ComponentsTab";
-
-const POPOVER_WIDTH = 300;
+import { componentListFrameSx, ComponentsTab } from "./ComponentsTab";
 
 interface Props {
   anchorEl: HTMLElement | null;
@@ -62,16 +60,7 @@ const AddComponentModal: React.FC<Props> = ({
       disableScrollLock
       slotProps={{
         paper: {
-          sx: {
-            width: POPOVER_WIDTH,
-            maxHeight: "min(480px, 85vh)",
-            mt: showBelow ? "4px" : "-4px",
-            display: "flex",
-            flexDirection: "column",
-            overflow: "hidden",
-            border: 1,
-            borderColor: "divider",
-          },
+          sx: { ...componentListFrameSx, mt: showBelow ? "4px" : "-4px" },
         },
         backdrop: {
           sx: { backgroundColor: "rgba(0, 0, 0, 0.3)" },
