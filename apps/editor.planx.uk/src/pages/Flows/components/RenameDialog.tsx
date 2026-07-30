@@ -1,16 +1,20 @@
 import { isApolloError } from "@apollo/client";
+import WarningAmber from "@mui/icons-material/WarningAmber";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
 import Typography from "@mui/material/Typography";
 import type { FormikConfig } from "formik";
 import { Form, Formik } from "formik";
 import { useToast } from "hooks/useToast";
 import React, { useState } from "react";
 import { URLPrefix } from "ui/editor/URLPrefix";
+import CheckCircleIcon from "ui/icons/CheckCircle";
 import InputLabel from "ui/public/InputLabel";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 import Input from "ui/shared/Input/Input";
@@ -158,8 +162,50 @@ export const RenameDialog: React.FC<Props> = ({
                     <ErrorSummary
                       format="warning"
                       heading="Renaming will break existing links"
-                      message={`This will change the service's URL. Anyone using a link or bookmark to the old URL will get an error. Coordinate with your web team to update links before continuing.`}
-                    />
+                    >
+                      <Typography variant="body2" sx={{ mt: 2 }}>
+                        If applicable:
+                        <List>
+                          <ListItem>
+                            <CheckCircleIcon
+                              color="success"
+                              fontSize="small"
+                              sx={{ mr: 1 }}
+                            />
+                            Any nested flow references will update automatically
+                          </ListItem>
+                          <ListItem>
+                            <CheckCircleIcon
+                              color="success"
+                              fontSize="small"
+                              sx={{ mr: 1 }}
+                            />
+                            Local Planning Services (LPS) listing will update
+                            automatically
+                          </ListItem>
+                          <ListItem>
+                            <WarningAmber
+                              color="warning"
+                              fontSize="small"
+                              sx={{ mr: 1 }}
+                            />
+                            Any Next Steps components pointing to this service
+                            will need to be updated and published
+                          </ListItem>
+                          <ListItem>
+                            <WarningAmber
+                              color="warning"
+                              fontSize="small"
+                              sx={{ mr: 1 }}
+                            />
+                            Any users with active magic links or bookmarks will
+                            get an error If this is a public-facing service,
+                            please coordinate with your IT team to update links
+                            on your website before continuing.
+                          </ListItem>
+                        </List>
+                      </Typography>
+                    </ErrorSummary>
                   </DialogContent>
                   <DialogActions>
                     <Button

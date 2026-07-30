@@ -1,9 +1,9 @@
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import React from "react";
+import type { PropsWithChildren } from "react";
 
-interface Props {
+interface Props extends PropsWithChildren {
   heading?: string;
   message?: string;
   format?: "error" | "warning" | "info";
@@ -29,7 +29,10 @@ function ErrorSummary(props: Props) {
       <Typography variant="h4" gutterBottom>
         {props.heading}
       </Typography>
-      <Typography variant="body2">{props.message}</Typography>
+      {props.message && (
+        <Typography variant="body2">{props.message}</Typography>
+      )}
+      {props.children && props.children}
     </Root>
   );
 }
