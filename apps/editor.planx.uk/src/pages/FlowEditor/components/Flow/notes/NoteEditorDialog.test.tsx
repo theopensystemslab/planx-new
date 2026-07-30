@@ -1,7 +1,9 @@
 import { screen } from "@testing-library/react";
 import type { AttachedNote } from "hooks/data/useFlowNotes";
+import { graphql, HttpResponse } from "msw";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import server from "test/mockServer";
 import { setup } from "test/utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -32,13 +34,37 @@ const currentUser = {
   defaultTeamId: null,
 } as any;
 
+let createFlowNote: (object: unknown) => void;
+let updateFlowNote: (id: unknown, set: unknown) => void;
+let deleteFlowNote: (id: unknown) => void;
+
 beforeEach(() => {
-  useStore.setState({
-    user: currentUser,
-    createFlowNote: vi.fn().mockResolvedValue("new-id"),
-    updateFlowNote: vi.fn().mockResolvedValue(undefined),
-    deleteFlowNote: vi.fn().mockResolvedValue(undefined),
-  });
+  useStore.setState({ id: "flow-1", user: currentUser });
+
+  createFlowNote = vi.fn();
+  updateFlowNote = vi.fn();
+  deleteFlowNote = vi.fn();
+
+  server.use(
+    graphql.mutation("CreateFlowNote", ({ variables }) => {
+      createFlowNote(variables.object);
+      return HttpResponse.json({
+        data: { insert_flow_notes_one: { id: "new-id" } },
+      });
+    }),
+    graphql.mutation("UpdateFlowNote", ({ variables }) => {
+      updateFlowNote(variables.id, variables.set);
+      return HttpResponse.json({
+        data: { update_flow_notes_by_pk: { id: variables.id as string } },
+      });
+    }),
+    graphql.mutation("DeleteFlowNote", ({ variables }) => {
+      deleteFlowNote(variables.id);
+      return HttpResponse.json({
+        data: { delete_flow_notes_by_pk: { id: variables.id as string } },
+      });
+    }),
+  );
 });
 
 describe("create mode", () => {
@@ -59,8 +85,11 @@ describe("create mode", () => {
     await user.type(screen.getByRole("textbox"), "A brand new note");
     await user.click(screen.getByRole("button", { name: /create/i }));
 
-    expect(useStore.getState().createFlowNote).toHaveBeenCalledWith(
-      expect.objectContaining({ nodeId: "node-a", text: "A brand new note" }),
+    expect(createFlowNote).toHaveBeenCalledWith(
+      expect.objectContaining({
+        node_id: "node-a",
+        text: "A brand new note",
+      }),
     );
   });
 
@@ -118,7 +147,7 @@ describe("create mode", () => {
     );
     await user.click(screen.getByRole("button", { name: /create/i }));
 
-    expect(useStore.getState().createFlowNote).not.toHaveBeenCalled();
+    expect(createFlowNote).not.toHaveBeenCalled();
     expect(onClose).not.toHaveBeenCalled();
   });
 
@@ -132,6 +161,25 @@ describe("create mode", () => {
     await user.tab();
 
     expect(await screen.findByText(/Enter a note/)).toBeInTheDocument();
+  });
+
+  it("shows an error toast if the note fails to save", async () => {
+    server.use(
+      graphql.mutation("CreateFlowNote", () => {
+        return HttpResponse.json(
+          { errors: [{ message: "Something went wrong" }] },
+          { status: 200 },
+        );
+      }),
+    );
+    const { user } = await setup(
+      <NoteEditorDialog mode="create" onClose={vi.fn()} />,
+    );
+
+    await user.type(screen.getByRole("textbox"), "A brand new note");
+    await user.click(screen.getByRole("button", { name: /create/i }));
+
+    expect(await screen.findByText(/Failed to save note/i)).toBeInTheDocument();
   });
 });
 
@@ -152,7 +200,7 @@ describe("edit mode - own note", () => {
     await user.type(screen.getByRole("textbox"), "Updated text");
     await user.click(screen.getByRole("button", { name: /update/i }));
 
-    expect(useStore.getState().updateFlowNote).toHaveBeenCalledWith(
+    expect(updateFlowNote).toHaveBeenCalledWith(
       "note-1",
       expect.objectContaining({ text: "Updated text" }),
     );
@@ -165,7 +213,7 @@ describe("edit mode - own note", () => {
     );
     await user.click(screen.getByRole("button", { name: /delete/i }));
 
-    expect(useStore.getState().deleteFlowNote).toHaveBeenCalledWith("note-1");
+    expect(deleteFlowNote).toHaveBeenCalledWith("note-1");
     expect(onClose).toHaveBeenCalled();
   });
 });
@@ -187,7 +235,7 @@ describe("edit mode - another author's note", () => {
     await user.type(screen.getByRole("textbox"), "Edited by another user");
     await user.click(screen.getByRole("button", { name: /update/i }));
 
-    expect(useStore.getState().updateFlowNote).toHaveBeenCalledWith(
+    expect(updateFlowNote).toHaveBeenCalledWith(
       "note-1",
       expect.objectContaining({ text: "Edited by another user" }),
     );

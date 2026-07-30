@@ -10,7 +10,6 @@ import {
   RouterProvider,
 } from "@tanstack/react-router";
 import type { FlowNote } from "hooks/data/useFlowNotes";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 import { AttachedNotes } from "./AttachedNotes";
@@ -51,15 +50,6 @@ type Story = StoryObj<typeof meta>;
 const AttachedNotesDemo: React.FC<{ notes: FlowNote[] }> = ({
   notes: notesToRender,
 }) => {
-  useStore.setState({
-    updateFlowNote: async (id, patch) => {
-      console.log("updateFlowNote", id, patch);
-    },
-    deleteFlowNote: async (id) => {
-      console.log("deleteFlowNote", id);
-    },
-  });
-
   // disable the edit modal by registering a no-op child route for it
   const rootRoute = createRootRoute();
   const authenticatedRoute = createRoute({

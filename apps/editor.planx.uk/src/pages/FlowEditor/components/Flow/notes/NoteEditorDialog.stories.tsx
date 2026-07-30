@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/tanstack-react";
 import type { FlowNote } from "hooks/data/useFlowNotes";
+import { graphql, HttpResponse } from "msw";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
@@ -29,28 +30,46 @@ type Story = StoryObj<typeof meta>;
 
 export const Create = {
   args: { mode: "create", nodeId: "node-a", onClose: () => {} },
+  parameters: {
+    msw: {
+      handlers: [
+        graphql.mutation("CreateFlowNote", ({ variables }) => {
+          console.log("createFlowNote", variables.object);
+          return HttpResponse.json({
+            data: { insert_flow_notes_one: { id: "new-note-id" } },
+          });
+        }),
+      ],
+    },
+  },
   render: (args) => {
-    useStore.setState({
-      createFlowNote: async (input) => {
-        console.log("createFlowNote", input);
-        return "new-note-id";
-      },
-    });
+    useStore.setState({ id: "flow-1", user: { id: 1 } as any });
     return <NoteEditorDialog {...args} />;
   },
 } satisfies Story;
 
 export const Edit = {
   args: { mode: "edit", note, onClose: () => {} },
+  parameters: {
+    msw: {
+      handlers: [
+        graphql.mutation("UpdateFlowNote", ({ variables }) => {
+          console.log("updateFlowNote", variables.id, variables.set);
+          return HttpResponse.json({
+            data: { update_flow_notes_by_pk: { id: variables.id as string } },
+          });
+        }),
+        graphql.mutation("DeleteFlowNote", ({ variables }) => {
+          console.log("deleteFlowNote", variables.id);
+          return HttpResponse.json({
+            data: { delete_flow_notes_by_pk: { id: variables.id as string } },
+          });
+        }),
+      ],
+    },
+  },
   render: (args) => {
-    useStore.setState({
-      updateFlowNote: async (id, patch) => {
-        console.log("updateFlowNote", id, patch);
-      },
-      deleteFlowNote: async (id) => {
-        console.log("deleteFlowNote", id);
-      },
-    });
+    useStore.setState({ id: "flow-1", user: { id: 1 } as any });
     return <NoteEditorDialog {...args} />;
   },
 } satisfies Story;
