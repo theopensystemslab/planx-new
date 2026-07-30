@@ -1,10 +1,12 @@
 import Popover from "@mui/material/Popover";
 import { useNavigate, useParams } from "@tanstack/react-router";
-import React, { useCallback } from "react";
+import { hasFeatureFlag } from "lib/featureFlags";
+import React from "react";
 import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_flowEditor/nodes/route";
 import { getNodeRoute } from "utils/routeUtils/utils";
 
 import { componentListFrameSx, ComponentsTab } from "./ComponentsTab";
+import { ModalTabs } from "./ModalTabs";
 
 interface Props {
   anchorEl: HTMLElement | null;
@@ -19,25 +21,27 @@ const AddComponentModal: React.FC<Props> = ({
   before,
   onClose,
 }) => {
+  const showPatterns = hasFeatureFlag("PATTERN_SELECT");
+
   const navigate = useNavigate();
   const { team, flow } = useParams({ from: "/_authenticated/app/$team/$flow" });
 
-  const handleSelect = useCallback(
-    (slug: string) => {
-      onClose();
-      navigate({
-        to: getNodeRoute(parent, before),
-        params: {
-          team,
-          flow,
-          ...(parent && { parent }),
-          ...(before && { before }),
-        },
-        search: { type: slug as NodeSearchParams["type"] },
-      });
-    },
-    [navigate, team, flow, parent, before, onClose],
-  );
+  const handleComponentSelect = (slug: string) => {
+    onClose();
+    navigate({
+      to: getNodeRoute(parent, before),
+      params: {
+        team,
+        flow,
+        ...(parent && { parent }),
+        ...(before && { before }),
+      },
+      search: { type: slug as NodeSearchParams["type"] },
+    });
+  };
+
+  const handlePatternSelect = (patternId: string) =>
+    console.log(`Inserting pattern ${patternId}!`);
 
   // Flip the popover above the hanger when there isn't room below it
   const rect = anchorEl?.getBoundingClientRect();
@@ -67,7 +71,14 @@ const AddComponentModal: React.FC<Props> = ({
         },
       }}
     >
-      <ComponentsTab onSelect={handleSelect} />
+      {showPatterns ? (
+        <ModalTabs
+          onComponentSelect={handleComponentSelect}
+          onPatternSelect={handlePatternSelect}
+        />
+      ) : (
+        <ComponentsTab onSelect={handleComponentSelect} />
+      )}
     </Popover>
   );
 };
