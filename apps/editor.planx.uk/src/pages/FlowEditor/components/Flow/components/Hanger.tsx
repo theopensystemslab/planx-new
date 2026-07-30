@@ -2,12 +2,12 @@ import type { NodeId } from "@opensystemslab/planx-core/types";
 import { useParams } from "@tanstack/react-router";
 import classnames from "classnames";
 import { useContextMenu } from "hooks/useContextMenu";
-import { hangerAnchor } from "pages/FlowEditor/lib/hangerAnchor";
+import AddComponentModal from "pages/FlowEditor/components/forms/AddComponentModal";
 import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
 } from "pages/FlowEditor/utils";
-import React, { useCallback } from "react";
+import React, { useRef, useState } from "react";
 import { useDragLayer, useDrop } from "react-dnd";
 
 import { useStore } from "../../../lib/store";
@@ -91,19 +91,8 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
     relationships: { parent, before },
   });
 
-  const handleHangerButtonClick = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-      hangerAnchor.set({
-        top: rect.top,
-        bottom: rect.bottom,
-        left: rect.left,
-        right: rect.right,
-      });
-      useStore.getState().openComponentSelector({ parent, before });
-    },
-    [parent, before],
-  );
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [selectorOpen, setSelectorOpen] = useState(false);
 
   const isHidden = hidden || hideHangerFromUser;
   const showNoteCards = showNotes && notes.length > 0;
@@ -128,12 +117,21 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
         }}
       >
         <button
+          ref={buttonRef}
           onContextMenu={handleContextMenu}
-          onClick={handleHangerButtonClick}
+          onClick={() => setSelectorOpen(true)}
         >
           {canDrop && item && item.text}
         </button>
       </li>
+      {selectorOpen && (
+        <AddComponentModal
+          anchorEl={buttonRef.current}
+          parent={parent}
+          before={before}
+          onClose={() => setSelectorOpen(false)}
+        />
+      )}
     </>
   );
 };
