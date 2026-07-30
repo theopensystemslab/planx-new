@@ -131,7 +131,7 @@ case TYPES.SetValue:
   return <Question {...allProps} text="Set Value" />;
 ```
 
-4. `src/pages/FlowEditor/components/forms/ComponentsTab/componentData.ts`
+4. `src/pages/FlowEditor/components/forms/AddComponentModal/ComponentsTab/componentData.ts`
 
 Add an entry for the new component in the appropriate category within `ALL_CATEGORIES`. Each entry requires a `type`, `slug`, `title`, and `description`:
 
