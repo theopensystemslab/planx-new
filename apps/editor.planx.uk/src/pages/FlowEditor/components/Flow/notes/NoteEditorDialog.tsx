@@ -9,9 +9,19 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
+import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useState } from "react";
+import React from "react";
 import Input from "ui/shared/Input/Input";
+import { object, string } from "yup";
+
+interface NoteForm {
+  text: string;
+}
+
+const validationSchema = object().shape({
+  text: string().trim().required("Enter a note"),
+});
 
 export const NoteEditorDialog: React.FC = () => {
   const [
@@ -36,20 +46,23 @@ export const NoteEditorDialog: React.FC = () => {
     state.deleteFlowNote,
   ]);
 
-  const [text, setText] = useState(note?.text ?? "");
-
-  if (!noteEditorOpen) return null;
-
   const isEditing = noteEditorMode === "edit";
 
-  const handleSave = async () => {
-    if (isEditing && note) {
-      await updateFlowNote(note.id, { text });
-    } else {
-      await createFlowNote({ nodeId, placement, text });
-    }
-    closeNoteEditor();
-  };
+  const formik = useFormik<NoteForm>({
+    initialValues: { text: note?.text ?? "" },
+    validationSchema,
+    validateOnMount: true,
+    onSubmit: async ({ text }) => {
+      if (isEditing && note) {
+        await updateFlowNote(note.id, { text });
+      } else {
+        await createFlowNote({ nodeId, placement, text });
+      }
+      closeNoteEditor();
+    },
+  });
+
+  if (!noteEditorOpen) return null;
 
   const handleDelete = async () => {
     if (!note) return;
@@ -83,42 +96,44 @@ export const NoteEditorDialog: React.FC = () => {
           <Close />
         </IconButton>
       </DialogTitle>
-      <DialogContent dividers>
-        <Input
-          multiline
-          rows={5}
-          name="note-text"
-          placeholder="Write a note..."
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
-      </DialogContent>
-      <DialogActions
-        disableSpacing
-        sx={{ justifyContent: "flex-start", alignItems: "stretch" }}
-      >
-        {isEditing && (
-          <Button
-            color="secondary"
-            variant="contained"
-            onClick={handleDelete}
-            sx={{ backgroundColor: "background.default", gap: 1 }}
-          >
-            <DeleteIcon color="warning" fontSize="medium" />
-            Delete
-          </Button>
-        )}
-        <Box sx={{ marginLeft: "auto" }}>
-          <Button
-            type="button"
-            variant="contained"
-            color="primary"
-            onClick={handleSave}
-          >
-            {isEditing ? "Update" : "Create"}
-          </Button>
-        </Box>
-      </DialogActions>
+      <Box component="form" onSubmit={formik.handleSubmit}>
+        <DialogContent dividers sx={{ px: 2.5, py: 3 }}>
+          <Input
+            multiline
+            rows={5}
+            placeholder="Write a note..."
+            errorMessage={formik.touched.text ? formik.errors.text : undefined}
+            {...formik.getFieldProps("text")}
+          />
+        </DialogContent>
+        <DialogActions
+          disableSpacing
+          sx={{ justifyContent: "flex-start", alignItems: "stretch" }}
+        >
+          {isEditing && (
+            <Button
+              type="button"
+              color="secondary"
+              variant="contained"
+              onClick={handleDelete}
+              sx={{ backgroundColor: "background.default", gap: 1 }}
+            >
+              <DeleteIcon color="warning" fontSize="medium" />
+              Delete
+            </Button>
+          )}
+          <Box sx={{ marginLeft: "auto" }}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={!formik.isValid}
+            >
+              {isEditing ? "Update" : "Create"}
+            </Button>
+          </Box>
+        </DialogActions>
+      </Box>
     </Dialog>
   );
 };

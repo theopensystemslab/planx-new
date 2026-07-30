@@ -85,6 +85,7 @@ describe("create mode", () => {
     });
 
     const { user } = await setup(<NoteEditorDialog />);
+    await user.type(screen.getByRole("textbox"), "A brand new note");
     await user.click(screen.getByRole("button", { name: /create/i }));
 
     expect(useStore.getState().noteEditorOpen).toBe(false);
@@ -98,6 +99,50 @@ describe("create mode", () => {
     expect(
       screen.queryByRole("button", { name: /delete/i }),
     ).not.toBeInTheDocument();
+  });
+
+  it("disables the Create button while the note is empty", async () => {
+    useStore.setState({ noteEditorMode: "create" });
+
+    await setup(<NoteEditorDialog />);
+
+    expect(screen.getByRole("button", { name: /create/i })).toBeDisabled();
+  });
+
+  it("enables the Create button once text is entered, and disables it again if cleared", async () => {
+    useStore.setState({ noteEditorMode: "create" });
+
+    const { user } = await setup(<NoteEditorDialog />);
+    const createButton = screen.getByRole("button", { name: /create/i });
+    const textbox = screen.getByRole("textbox");
+
+    await user.type(textbox, "A brand new note");
+    expect(createButton).toBeEnabled();
+
+    await user.clear(textbox);
+    expect(createButton).toBeDisabled();
+  });
+
+  it("does not call createFlowNote when the note is empty", async () => {
+    useStore.setState({ noteEditorMode: "create" });
+
+    const { user } = await setup(<NoteEditorDialog />);
+    await user.click(screen.getByRole("button", { name: /create/i }));
+
+    expect(useStore.getState().createFlowNote).not.toHaveBeenCalled();
+    expect(useStore.getState().noteEditorOpen).toBe(true);
+  });
+
+  it("shows a validation error once an empty note is touched", async () => {
+    useStore.setState({ noteEditorMode: "create" });
+
+    const { user } = await setup(<NoteEditorDialog />);
+    const textbox = screen.getByRole("textbox");
+
+    await user.click(textbox);
+    await user.tab();
+
+    expect(await screen.findByText(/Enter a note/)).toBeInTheDocument();
   });
 });
 
