@@ -1,11 +1,11 @@
 import Link from "@mui/material/Link";
 import Popover from "@mui/material/Popover";
 import type { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { fromSlug } from "pages/FlowEditor/data/types";
 import React, { useState } from "react";
 import ComponentTypeHeader from "ui/editor/ComponentTypeHeader";
 
-import { fromSlug } from "../../data/types";
-import { ComponentsTab } from "./AddComponentModal/ComponentsTab";
+import { ComponentsTab } from "../AddComponentModal/ComponentsTab";
 
 interface Props {
   type: string;

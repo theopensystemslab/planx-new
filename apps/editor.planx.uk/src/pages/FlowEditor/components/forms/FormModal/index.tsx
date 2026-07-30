@@ -24,8 +24,8 @@ import type { NodeSearchParams } from "routes/_authenticated/app/$team/$flow/_fl
 import { Switch } from "ui/shared/Switch";
 import { getNodeRoute } from "utils/routeUtils/utils";
 
-import { SLUGS } from "../../data/types";
-import { useStore } from "../../lib/store";
+import { SLUGS } from "../../../data/types";
+import { useStore } from "../../../lib/store";
 import ChangeComponentHeader from "./ChangeComponentHeader";
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
