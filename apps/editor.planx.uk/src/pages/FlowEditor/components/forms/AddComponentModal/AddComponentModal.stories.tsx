@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/tanstack-react";
 
 import AddComponentModal, {
   AddComponentModalContent,
-} from "./AddComponentModal";
+} from "../AddComponentModal";
 
 const meta: Meta<typeof AddComponentModal> = {
   title: "Editor Components/Modal/AddComponentModal",

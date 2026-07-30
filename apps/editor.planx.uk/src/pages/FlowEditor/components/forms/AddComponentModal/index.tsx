@@ -22,7 +22,7 @@ import {
   ALL_ITEMS,
   type Category,
   type ComponentItem,
-} from "./componentData";
+} from "./ComponentsTab/componentData";
 
 const POPOVER_WIDTH = 300;
 
