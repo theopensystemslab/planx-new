@@ -136,7 +136,7 @@ export const getCustomDomains = (env: string): CustomDomain[] =>
         {
           name: "stoke",
           domain: "planningservices.stoke.gov.uk",
-          cloudFrontState: "validation-only",
+          cloudFrontState: "shared-final",
         },
       ]
     : [
