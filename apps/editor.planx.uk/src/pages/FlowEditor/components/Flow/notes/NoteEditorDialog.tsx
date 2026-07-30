@@ -97,7 +97,7 @@ export const NoteEditorDialog: React.FC = () => {
         </IconButton>
       </DialogTitle>
       <Box component="form" onSubmit={formik.handleSubmit}>
-        <DialogContent dividers sx={{ px: 2.5, py: 3 }}>
+        <DialogContent dividers sx={{ px: 4, py: 3 }}>
           <Input
             multiline
             rows={5}
